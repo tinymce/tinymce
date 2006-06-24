@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{$lang_searchreplace_search_title}</title>
+	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script language="javascript" type="text/javascript" src="jscripts/search.js"></script>
+	<base target="_self" />
+</head>
+<body onload="tinyMCEPopup.executeOnLoad('init();');" style="display: none; margin: 4px;">
+<form onsubmit="searchNext();return false;" action="#">
+  <table border="0" cellspacing="0" cellpadding="2">
+        <tr>
+          <td><label for="searchstring">{$lang_searchreplace_findwhat}</label>&nbsp;<input type="text" id="searchstring" name="searchstring" style="width: 200px" /></td>
+        </tr>
+        <tr>
+          <td><table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><label>{$lang_searchreplace_direction}</label></td>
+              <td><input id="backwardsu" name="backwards" class="radio" type="radio" value="true" /></td>
+              <td><label for="backwardsu">{$lang_searchreplace_up}</label></td>
+              <td><input id="backwardsd" name="backwards" class="radio" type="radio" value="false" /></td>
+              <td><label for="backwardsd">{$lang_searchreplace_down}</label></td>
+            </tr>
+          </table></td>
+        </tr>
+        <tr>
+<td><table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><input id="casesensitivebox" name="casesensitivebox" class="checkbox" type="checkbox" value="true" /></td>
+    <td><label for="casesensitivebox">{$lang_searchreplace_case}</label></td>
+  </tr>
+</table></td>
+</tr>
+      </table>
+  <table border="0" width="300" cellspacing="0" cellpadding="4">
+    <tr>
+      <td><input id="insert" name="insert" type="submit" value="{$lang_searchreplace_findnext}" /></td>
+      <td align="right"><input id="cancel" name="cancel" type="button" value="{$lang_searchreplace_cancel}" onclick="cancelAction();" /></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>
