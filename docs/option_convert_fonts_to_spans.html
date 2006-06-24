@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: convert_fonts_to_spans</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: convert_fonts_to_spans</h1>
+</div>
+
+<div class="content">
+	<p>If you set this option to true, all TinyMCE will convert all font elements to span elements and generate span elements instead of font elements. This option should be used inorder to get more W3C compatible code, since font elements are deprecated. How sizes gets converted can be controlled by the <a href="option_font_size_classes.html">font_size_classes</a> and <a href="option_font_size_style_values.html">font_size_style_values</a> options.</p>
+	<p>
+		More information about this subject can be found in this article: <a href="http://www.microsoft.com/typography/web/designer/face7.htm">What's wrong with FONT FACE</a>
+	</p>
+	<div class="separator"></div>
+
+	<h3>Example of usage of the convert_fonts_to_spans option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>convert_fonts_to_spans : false</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

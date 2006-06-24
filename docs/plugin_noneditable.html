@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: noneditable</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: noneditable</h1>
+</div>
+
+<div class="content">
+	<p>Adds non editable elements support for MSIE and Mozilla/FF. Any element with the &quot;mceItemNonEditable&quot; class will be blocked from modifications and treated as a single character. This class name is configurable using the &quot;noneditable_noneditable_class&quot;. Any elements with the MSIE specific attribute &quot;contenteditable&quot; will be converted into classes instead.</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;<strong>noneditable</strong>&quot;,
+	noneditable_leave_contenteditable : true
+});</pre>
+	</div>
+	</p>
+
+	<p>
+	<h3>Options</h3>
+	<table border="1" cellspacing="0" cellpadding="4">
+		<tr>
+			<td>[noneditable_editable_class]</td>
+			<td>Class name to be used for editable elements, this would be the the same as contenteditable=true, forcing a element to be editable. This option defaults to: &quot;mceItemEditable&quot;. Notice that classes with the mceItem prefix is invisible within TinyMCE.</td>
+		</tr>
+		<tr>
+			<td>[noneditable_noneditable_class]</td>
+			<td>Class name to be used for non editable elements, this would be the same as contenteditable=false. This option defaults to: &quot;mceItemNonEditable&quot;. Notice that classes with the mceItem prefix is invisible within TinyMCE.</td>
+		</tr>
+		<tr>
+			<td>[noneditable_leave_contenteditable]</td>
+			<td>If the value of this option is set to true, all contenteditable attributes will be left intact. This option is set to false by default, since this attribute is not a valid W3C attribute and the class approach is better.</td>
+		</tr>
+	</table>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

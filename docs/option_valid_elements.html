@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: valid_elements</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: valid_elements</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option should contain a comma separated list element convertion chunks. Each chunk contains information about how one element and it's attributes should be treated. The default rule set for this option is specified below.
+	</p>
+	<p>
+		
+		<table border="1" cellspacing="0" cellpadding="4">
+			 <thead><td colspan="2">Control characters:</td></thead>
+			 <tbody>
+				 <tr><td><strong>,</strong></td><td>Separates element chunk definitions.</td></tr>
+				 <tr><td><strong>/</strong></td><td>Separates element synonymous. The first element is the one that will be outputted.</td></tr>
+				 <tr><td><strong>|</strong></td><td>Separates attribute definitions.</td></tr>
+				 <tr><td><strong>[</strong></td><td>Starts a new attribute list for a element definition.</td></tr>
+				 <tr><td><strong>]</strong></td><td>Ends a attribute list for a element definition.</td></tr>
+				 <tr><td><strong>=</strong></td><td>Makes the attribute to default to the specified value. For example &quot;target=_blank&quot;</td></tr>
+				 <tr><td><strong>:</strong></td><td>Makes the attribute to be forced to the specified value. For example &quot;border:0&quot;</td></tr>
+				 <tr><td><strong>&lt;</strong></td><td>Verifies the value of a attribute. For example &quot;target&lt;_blank?_self&quot;</td></tr>
+				 <tr><td><strong>?</strong></td><td>Separates attribute verification values, see above.</td></tr>
+				 <tr><td><strong>+</strong></td><td>Makes the element open if no child nodes exists. Example: +a.</td></tr>
+				 <tr><td><strong>-</strong></td><td>Enables removal of empty elements such as &gt;strong /&lt;. Example: -strong.</td></tr>
+				 <tr><td><strong>#</strong></td><td>Enables padding of empty elements, this will padd with &amp;nbsp; if they are empty. Example: #p.</td></tr>
+			</tbody>
+		</table>
+		Wildcards such as *,+,? may be used in element or attribute name matching. 
+	</p>
+	<p>
+		Special variables:<br />
+		<strong>{$uid}</strong> Results in a unique ID. For example &quot;p[id:{$uid}]&quot;.<br />
+		<br />
+		Use *[*] to include all elements and all attributes this can be very useful when used with the <a href="option_invalid_elements.html">invalid_elements</a> option.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the valid_elements option:</h3>
+	<p>
+		This example string tells TinyMCE to remove all elements that are not a "a, strong, div or br" element, convert b elements to strong elements, default target to "_blank" and keep the href, target and align attributes of the elements.
+	</p>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>valid_elements : "a[href|target=_blank],strong/b,div[align],br"</strong>
+});
+</pre>
+	</div>
+
+	<div class="separator"></div>
+
+	<h3>Default rule set:</h3>
+	<p>
+		This is the default string used by TinyMCE to cleanup the HTML contents.
+	</p>
+	<div class="example">
+<pre>
++a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],-td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang]
+</pre>
+	</div>
+
+	<div class="separator"></div>
+
+	<h3>Full XHTML rule set:</h3>
+	<p>
+		The following will validate that the page complies fully with the XHTML specification. 
+	</p>
+	<div class="example">
+<pre>
+valid_elements : &quot;&quot;
++&quot;a[accesskey|charset|class|coords|dir&lt;ltr?rtl|href|hreflang|id|lang|name&quot;
+  +&quot;|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|rel|rev&quot;
+  +&quot;|shape&lt;circle?default?poly?rect|style|tabindex|title|target|type],&quot;
++&quot;abbr[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;acronym[class|dir&lt;ltr?rtl|id|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;address[class|align|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;applet[align&lt;bottom?left?middle?right?top|alt|archive|class|code|codebase&quot;
+  +&quot;|height|hspace|id|name|object|style|title|vspace|width],&quot;
++&quot;area[accesskey|alt|class|coords|dir&lt;ltr?rtl|href|id|lang|nohref&lt;nohref&quot;
+  +&quot;|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup&quot;
+  +&quot;|shape&lt;circle?default?poly?rect|style|tabindex|title|target],&quot;
++&quot;base[href|target],&quot;
++&quot;basefont[color|face|id|size],&quot;
++&quot;bdo[class|dir&lt;ltr?rtl|id|lang|style|title],&quot;
++&quot;big[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;blockquote[dir|style|cite|class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick&quot;
+  +&quot;|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout&quot;
+  +&quot;|onmouseover|onmouseup|style|title],&quot;
++&quot;body[alink|background|bgcolor|class|dir&lt;ltr?rtl|id|lang|link|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onload|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|onunload|style|title|text|vlink],&quot;
++&quot;br[class|clear&lt;all?left?none?right|id|style|title],&quot;
++&quot;button[accesskey|class|dir&lt;ltr?rtl|disabled&lt;disabled|id|lang|name|onblur&quot;
+  +&quot;|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup|onmousedown&quot;
+  +&quot;|onmousemove|onmouseout|onmouseover|onmouseup|style|tabindex|title|type&quot;
+  +&quot;|value],&quot;
++&quot;caption[align&lt;bottom?left?right?top|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;center[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;cite[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;code[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;col[align&lt;center?char?justify?left?right|char|charoff|class|dir&lt;ltr?rtl|id&quot;
+  +&quot;|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown&quot;
+  +&quot;|onmousemove|onmouseout|onmouseover|onmouseup|span|style|title&quot;
+  +&quot;|valign&lt;baseline?bottom?middle?top|width],&quot;
++&quot;colgroup[align&lt;center?char?justify?left?right|char|charoff|class|dir&lt;ltr?rtl&quot;
+  +&quot;|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown&quot;
+  +&quot;|onmousemove|onmouseout|onmouseover|onmouseup|span|style|title&quot;
+  +&quot;|valign&lt;baseline?bottom?middle?top|width],&quot;
++&quot;dd[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;del[cite|class|datetime|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;dfn[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;dir[class|compact&lt;compact|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;div[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;dl[class|compact&lt;compact|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;dt[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;em/i[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;fieldset[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;font[class|color|dir&lt;ltr?rtl|face|id|lang|size|style|title],&quot;
++&quot;form[accept|accept-charset|action|class|dir&lt;ltr?rtl|enctype|id|lang&quot;
+  +&quot;|method&lt;get?post|name|onclick|ondblclick|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onreset|onsubmit&quot;
+  +&quot;|style|title|target],&quot;
++&quot;frame[class|frameborder|id|longdesc|marginheight|marginwidth|name&quot;
+  +&quot;|noresize&lt;noresize|scrolling&lt;auto?no?yes|src|style|title],&quot;
++&quot;frameset[class|cols|id|onload|onunload|rows|style|title],&quot;
++&quot;h1[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;h2[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;h3[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;h4[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;h5[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;h6[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;head[dir&lt;ltr?rtl|lang|profile],&quot;
++&quot;hr[align&lt;center?left?right|class|dir&lt;ltr?rtl|id|lang|noshade&lt;noshade|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|size|style|title|width],&quot;
++&quot;html[dir&lt;ltr?rtl|lang|version],&quot;
++&quot;iframe[align&lt;bottom?left?middle?right?top|class|frameborder|height|id&quot;
+  +&quot;|longdesc|marginheight|marginwidth|name|scrolling&lt;auto?no?yes|src|style&quot;
+  +&quot;|title|width],&quot;
++&quot;img[align&lt;bottom?left?middle?right?top|alt|border|class|dir&lt;ltr?rtl|height&quot;
+  +&quot;|hspace|id|ismap&lt;ismap|lang|longdesc|name|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|src|style|title|usemap|vspace|width],&quot;
++&quot;input[accept|accesskey|align&lt;bottom?left?middle?right?top|alt&quot;
+  +&quot;|checked&lt;checked|class|dir&lt;ltr?rtl|disabled&lt;disabled|id|ismap&lt;ismap|lang&quot;
+  +&quot;|maxlength|name|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onselect&quot;
+  +&quot;|readonly&lt;readonly|size|src|style|tabindex|title&quot;
+  +&quot;|type&lt;button?checkbox?file?hidden?image?password?radio?reset?submit?text&quot;
+  +&quot;|usemap|value],&quot;
++&quot;ins[cite|class|datetime|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;isindex[class|dir&lt;ltr?rtl|id|lang|prompt|style|title],&quot;
++&quot;kbd[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;label[accesskey|class|dir&lt;ltr?rtl|for|id|lang|onblur|onclick|ondblclick&quot;
+  +&quot;|onfocus|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout&quot;
+  +&quot;|onmouseover|onmouseup|style|title],&quot;
++&quot;legend[align&lt;bottom?left?right?top|accesskey|class|dir&lt;ltr?rtl|id|lang&quot;
+  +&quot;|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;li[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title|type&quot;
+  +&quot;|value],&quot;
++&quot;link[charset|class|dir&lt;ltr?rtl|href|hreflang|id|lang|media|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|rel|rev|style|title|target|type],&quot;
++&quot;map[class|dir&lt;ltr?rtl|id|lang|name|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;menu[class|compact&lt;compact|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;meta[content|dir&lt;ltr?rtl|http-equiv|lang|name|scheme],&quot;
++&quot;noframes[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;noscript[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;object[align&lt;bottom?left?middle?right?top|archive|border|class|classid&quot;
+  +&quot;|codebase|codetype|data|declare|dir&lt;ltr?rtl|height|hspace|id|lang|name&quot;
+  +&quot;|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|standby|style|tabindex|title|type|usemap&quot;
+  +&quot;|vspace|width],&quot;
++&quot;ol[class|compact&lt;compact|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|start|style|title|type],&quot;
++&quot;optgroup[class|dir&lt;ltr?rtl|disabled&lt;disabled|id|label|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;option[class|dir&lt;ltr?rtl|disabled&lt;disabled|id|label|lang|onclick|ondblclick&quot;
+  +&quot;|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout&quot;
+  +&quot;|onmouseover|onmouseup|selected&lt;selected|style|title|value],&quot;
++&quot;p[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;param[id|name|type|value|valuetype&lt;DATA?OBJECT?REF],&quot;
++&quot;pre/listing/plaintext/xmp[align|class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick&quot;
+  +&quot;|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout&quot;
+  +&quot;|onmouseover|onmouseup|style|title|width],&quot;
++&quot;q[cite|class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;s[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;samp[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;script[charset|defer|language|src|type],&quot;
++&quot;select[class|dir&lt;ltr?rtl|disabled&lt;disabled|id|lang|multiple&lt;multiple|name&quot;
+  +&quot;|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|size|style&quot;
+  +&quot;|tabindex|title],&quot;
++&quot;small[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;span[align&lt;center?justify?left?right|class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;strike[class|class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title],&quot;
++&quot;strong/b[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;style[dir&lt;ltr?rtl|lang|media|title|type],&quot;
++&quot;sub[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;sup[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title],&quot;
++&quot;table[align&lt;center?left?right|bgcolor|border|cellpadding|cellspacing|class&quot;
+  +&quot;|dir&lt;ltr?rtl|frame|height|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|rules&quot;
+  +&quot;|style|summary|title|width],&quot;
++&quot;tbody[align&lt;center?char?justify?left?right|char|class|charoff|dir&lt;ltr?rtl|id&quot;
+  +&quot;|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown&quot;
+  +&quot;|onmousemove|onmouseout|onmouseover|onmouseup|style|title&quot;
+  +&quot;|valign&lt;baseline?bottom?middle?top],&quot;
++&quot;td[abbr|align&lt;center?char?justify?left?right|axis|bgcolor|char|charoff|class&quot;
+  +&quot;|colspan|dir&lt;ltr?rtl|headers|height|id|lang|nowrap&lt;nowrap|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|rowspan|scope&lt;col?colgroup?row?rowgroup&quot;
+  +&quot;|style|title|valign&lt;baseline?bottom?middle?top|width],&quot;
++&quot;textarea[accesskey|class|cols|dir&lt;ltr?rtl|disabled&lt;disabled|id|lang|name&quot;
+  +&quot;|onblur|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onselect&quot;
+  +&quot;|readonly&lt;readonly|rows|style|tabindex|title],&quot;
++&quot;tfoot[align&lt;center?char?justify?left?right|char|charoff|class|dir&lt;ltr?rtl|id&quot;
+  +&quot;|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown&quot;
+  +&quot;|onmousemove|onmouseout|onmouseover|onmouseup|style|title&quot;
+  +&quot;|valign&lt;baseline?bottom?middle?top],&quot;
++&quot;th[abbr|align&lt;center?char?justify?left?right|axis|bgcolor|char|charoff|class&quot;
+  +&quot;|colspan|dir&lt;ltr?rtl|headers|height|id|lang|nowrap&lt;nowrap|onclick&quot;
+  +&quot;|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove&quot;
+  +&quot;|onmouseout|onmouseover|onmouseup|rowspan|scope&lt;col?colgroup?row?rowgroup&quot;
+  +&quot;|style|title|valign&lt;baseline?bottom?middle?top|width],&quot;
++&quot;thead[align&lt;center?char?justify?left?right|char|charoff|class|dir&lt;ltr?rtl|id&quot;
+  +&quot;|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup|onmousedown&quot;
+  +&quot;|onmousemove|onmouseout|onmouseover|onmouseup|style|title&quot;
+  +&quot;|valign&lt;baseline?bottom?middle?top],&quot;
++&quot;title[dir&lt;ltr?rtl|lang],&quot;
++&quot;tr[abbr|align&lt;center?char?justify?left?right|bgcolor|char|charoff|class&quot;
+  +&quot;|rowspan|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title|valign&lt;baseline?bottom?middle?top],&quot;
++&quot;tt[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;u[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress|onkeyup&quot;
+  +&quot;|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style|title],&quot;
++&quot;ul[class|compact&lt;compact|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown&quot;
+  +&quot;|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover&quot;
+  +&quot;|onmouseup|style|title|type],&quot;
++&quot;var[class|dir&lt;ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress&quot;
+  +&quot;|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style&quot;
+  +&quot;|title]&quot;
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

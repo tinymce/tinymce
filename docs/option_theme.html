@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: theme</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: theme</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to specify what theme to use when rendering the TinyMCE WYSIWYG editor instances. This name matches the directories located in &quot;tinymce/jscripts/tiny_mce/themes&quot;. The default value of this option is &quot;advanced&quot;. TinyMCE has three built in themes and these are described in greater detail below.
+	</p>
+
+	<p>
+		<h3>advanced</h3>
+		This is the advanced theme of TinyMCE, this theme enables users to add/remove buttons and panels and is a lot more flexible than the simple or default theme. For more information about this themes specific options check the &quot;Advanced theme&quot; configuration section.
+	</p>
+
+	<p>
+		<h3>simple</h3>
+		This is the most simple theme for TinyMCE it contains only the basic functions.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the theme option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>theme : "advanced",</strong>
+	theme_advanced_buttons3_add_before : "tablecontrols,separator"
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

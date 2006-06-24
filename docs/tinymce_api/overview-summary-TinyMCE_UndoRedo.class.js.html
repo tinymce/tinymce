@@ -1,0 +1,296 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_UndoRedo.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_UndoRedo.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_UndoRedo.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+    <table border="1" cellpadding="3" cellspacing="0" width="100%">
+    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+    <td colspan=2><font size="+2">
+    
+        <b>Class Summary</b>
+    
+    </font></td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="TinyMCE_UndoRedo.html">TinyMCE_UndoRedo</a></b></td>
+    <td>&nbsp;</td>
+    </tr>
+    
+    </table>
+    <hr/> 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_UndoRedo.class.js.html,v $
+ * $Revision: 1.42 $
+ * $Date: 2006/04/14 20:00:31 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ */</span>
+
+<span class="comment">/**
+ * Constructs a undo redo instance, this instance handles the custom undo/redo handeling in TinyMCE.
+ *
+ * <span class="attrib">@param</span> {TinyMCE_Control} inst TinyMCE editor control instance.
+ * <span class="attrib">@constructor</span>
+ */</span>
+<span class="reserved">function</span> TinyMCE_UndoRedo(inst) {
+	<span class="reserved">this</span>.instance = inst;
+	<span class="reserved">this</span>.undoLevels = new Array();
+	<span class="reserved">this</span>.undoIndex = 0;
+	<span class="reserved">this</span>.typingUndoIndex = -1;
+	<span class="reserved">this</span>.undoRedo = true;
+};
+
+TinyMCE_UndoRedo.<span class="reserved">prototype</span> = {
+	<span class="comment">/**
+	 * Adds a new undo level, this will take a snapshot of the current instance HTML or use the specified level.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_UndoRedoLevel} l Optional undo/redo level to add.
+	 * <span class="attrib">@return</span> true/false on success or failure.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	add : <span class="reserved">function</span>(l) {
+		var b;
+
+		<span class="reserved">if</span> (l) {
+			<span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoLevels.length] = l;
+			<span class="reserved">return</span> true;
+		}
+
+		var inst = <span class="reserved">this</span>.instance;
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.typingUndoIndex != -1) {
+			<span class="reserved">this</span>.undoIndex = <span class="reserved">this</span>.typingUndoIndex;
+			<span class="comment">// tinyMCE.debug("Override: " + this.undoIndex);</span>
+		}
+
+		var newHTML = tinyMCE.trim(inst.getBody().innerHTML);
+		<span class="reserved">if</span> (<span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoIndex] &amp;&amp; newHTML != <span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoIndex].content) {
+			<span class="comment">//tinyMCE.debug(newHTML, this.undoLevels[this.undoIndex]);</span>
+
+			tinyMCE.dispatchCallback(inst, <span class="literal">'onchange_callback'</span>, <span class="literal">'onChange'</span>, inst);
+
+			<span class="comment">// Time to compress</span>
+			var customUndoLevels = tinyMCE.settings[<span class="literal">'custom_undo_redo_levels'</span>];
+			<span class="reserved">if</span> (customUndoLevels != -1 &amp;&amp; <span class="reserved">this</span>.undoLevels.length &gt; customUndoLevels) {
+				<span class="reserved">for</span> (var i=0; i&lt;<span class="reserved">this</span>.undoLevels.length-1; i++) {
+					<span class="comment">//tinyMCE.debug(this.undoLevels[i] + "=" + this.undoLevels[i+1]);</span>
+					<span class="reserved">this</span>.undoLevels[i] = <span class="reserved">this</span>.undoLevels[i+1];
+				}
+
+				<span class="reserved">this</span>.undoLevels.length--;
+				<span class="reserved">this</span>.undoIndex--;
+			}
+
+			b = inst.undoBookmark;
+			<span class="reserved">if</span> (!b)
+				b = inst.selection.getBookmark();
+
+			<span class="reserved">this</span>.undoIndex++;
+			<span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoIndex] = {
+				content : newHTML,
+				bookmark : b
+			};
+
+			<span class="reserved">this</span>.undoLevels.length = <span class="reserved">this</span>.undoIndex + 1;
+
+			<span class="comment">//tinyMCE.debug("level added" + this.undoIndex);</span>
+			<span class="reserved">return</span> true;
+
+			<span class="comment">// tinyMCE.debug(this.undoIndex + "," + (this.undoLevels.length-1));</span>
+		}
+
+		<span class="reserved">return</span> false;
+	},
+
+	<span class="comment">/**
+	 * Performes a undo action, this will restore the HTML contents of the editor to a former state.
+	 */</span>
+	undo : <span class="reserved">function</span>() {
+		var inst = <span class="reserved">this</span>.instance;
+
+		<span class="comment">// Do undo</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.undoIndex &gt; 0) {
+			<span class="reserved">this</span>.undoIndex--;
+			tinyMCE.setInnerHTML(inst.getBody(), <span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoIndex].content);
+			inst.repaint();
+			<span class="reserved">if</span> (inst.settings.custom_undo_redo_restore_selection)
+				inst.selection.moveToBookmark(<span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoIndex].bookmark);
+		}
+
+		<span class="comment">// tinyMCE.debug("Undo - undo levels:" + this.undoLevels.length + ", undo index: " + this.undoIndex);</span>
+	},
+
+	<span class="comment">/**
+	 * Performes a undo action, this will restore the HTML contents of the editor to a former undoed state.
+	 */</span>
+	redo : <span class="reserved">function</span>() {
+		var inst = <span class="reserved">this</span>.instance;
+
+		tinyMCE.execCommand(<span class="literal">"mceEndTyping"</span>);
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.undoIndex &lt; (<span class="reserved">this</span>.undoLevels.length-1)) {
+			<span class="reserved">this</span>.undoIndex++;
+			tinyMCE.setInnerHTML(inst.getBody(), <span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoIndex].content);
+			inst.repaint();
+<span class="comment">//					if (this.undoIndex &gt; 0)</span>
+<span class="comment">//						inst.selection.moveToBookmark(this.undoLevels[this.undoIndex-1].bookmark);</span>
+			<span class="reserved">if</span> (inst.settings.custom_undo_redo_restore_selection)
+				inst.selection.moveToBookmark(<span class="reserved">this</span>.undoLevels[<span class="reserved">this</span>.undoIndex].bookmark);
+			<span class="comment">// tinyMCE.debug("Redo - undo levels:" + this.undoLevels.length + ", undo index: " + this.undoIndex);</span>
+		}
+
+		tinyMCE.triggerNodeChange();
+	}
+};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

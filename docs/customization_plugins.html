@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Customization - Creating a plugin</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Customization - Creating a plugin</h1>
+</div>
+
+<div class="content">
+	
+<h2>Creating your own plugins</h2>
+<p>
+Creating you own plugins for the TinyMCE application is fairly easy if you know the basics of HTML, CSS and Javascript. The most easy way is to copy the &quot;_template&quot; directory or one of the other core plugins and work from there. The &quot;_template&quot; directory is a tutorial plugin that shows how to create a plugin. After you copy the template you need to change the red sections marked below to the name of your plugin this is needed so that plugins don't overlap in other words it gives the plugin a unique name.
+</p>
+<p>If you want you may add plugin specific options/settings but remember to namespace them in the following format &quot;&lt;your plugin&gt;_&lt;option&gt;&quot; for example &quot;yourplugin_someoption&quot;.</p>
+<p>Specific callback functions that you don't need or doesn't do anything can be removed.</p>
+
+<div class="separator"></div>
+<h3>Plugin directory structure</h3>
+<p>
+<table class="btable">
+<thead>
+	<th>File/Directory</td>	
+	<th>Description</td>	
+</thead>
+<tbody>
+	<tr><td>css</td><td>Plugin specific CSS files</td></tr>
+	<tr><td>docs</td><td>Plugin specific documentation</td></tr>
+	<tr><td>images</td><td>Plugin specific images</td></tr>
+	<tr><td>jscripts</td><td>Plugin specific jscripts for HTML dialogs</td></tr>
+	<tr><td>langs</td><td>Plugin specific language files</td></tr>
+	<tr><td>editor_plugin.js</td><td>Editor plugin file (compressed).</td></tr>
+	<tr><td>editor_plugin_src.js</td><td>Editor plugin file (source).</td></tr>
+	<tr><td>somedialog.htm</td><td>Plugin specific dialog HTML file.</td></tr>
+</table>
+</p>
+<div class="separator"></div>
+<h3>Plugin example source</h3>
+<p>
+The example below shows a simple empty plugin and all possible callbacks.
+</p>
+<p>
+<div class="example">
+<pre>
+var TinyMCE_<span class="marked">SomeName</span>Plugin = {
+	/**
+	 * Returns information about the plugin as a name/value array.
+	 * The current keys are longname, author, authorurl, infourl and version.
+	 *
+	 * @returns Name/value array containing information about the plugin.
+	 * @type Array 
+	 */
+	getInfo : function() {
+		return {
+			longname : 'Your plugin',
+			author : 'Your name',
+			authorurl : 'http://www.yoursite.com',
+			infourl : 'http://www.yoursite.com/docs/template.html',
+			version : "1.0"
+		};
+	},
+
+	/**
+	 * Gets executed when a TinyMCE editor instance is initialized.
+	 *
+	 * @param {TinyMCE_Control} Initialized TinyMCE editor control instance. 
+	 */
+	initInstance : function(inst) {
+		// You can take out plugin specific parameters
+		alert("Initialization parameter:" + tinyMCE.getParam("<span class="marked">somename</span>_someparam", false));
+
+		// Register custom keyboard shortcut
+		inst.addShortcut('ctrl', 't', 'lang_<span class="marked">somename</span>_desc', 'mceSomeCommand');
+	},
+
+	/**
+	 * Returns the HTML code for a specific control or empty string if this plugin doesn't have that control.
+	 * A control can be a button, select list or any other HTML item to present in the TinyMCE user interface.
+	 * The variable {$editor_id} will be replaced with the current editor instance id and {$pluginurl} will be replaced
+	 * with the URL of the plugin. Language variables such as {$lang_somekey} will also be replaced with contents from
+	 * the language packs.
+	 *
+	 * @param {string} cn Editor control/button name to get HTML for.
+	 * @return HTML code for a specific control or empty string.
+	 * @type string
+	 */
+	getControlHTML : function(cn) {
+		switch (cn) {
+			case "<span class="marked">SomeControl</span>":
+				return tinyMCE.getButtonHTML(cn, 'lang_<span class="marked">someplugin</span>_<span class="marked">button</span>_desc', '{$pluginurl}/images/<span class="marked">someimage</span>.gif', '<span class="marked">mceSomeCommand</span>');
+		}
+
+		return "";
+	},
+
+	getControlHTML : function(cn) {
+		switch (cn) {
+			case "advhr":
+				return tinyMCE.getButtonHTML(cn, 'lang_insert_advhr_desc', '{$pluginurl}/images/advhr.gif', 'mceAdvancedHr');
+		}
+
+		return "";
+	},
+
+
+	/**
+	 * Executes a specific command, this function handles plugin commands.
+	 *
+	 * @param {string} editor_id TinyMCE editor instance id that issued the command.
+	 * @param {HTMLElement} element Body or root element for the editor instance.
+	 * @param {string} command Command name to be executed.
+	 * @param {string} user_interface True/false if a user interface should be presented.
+	 * @param {mixed} value Custom value argument, can be anything.
+	 * @return true/false if the command was executed by this plugin or not.
+	 * @type
+	 */
+	execCommand : function(editor_id, element, command, user_interface, value) {
+		// Handle commands
+		switch (command) {
+			// Remember to have the "mce" prefix for commands so they don't intersect with built in ones in the browser.
+			case "mce<span class="marked">SomeCommand</span>":
+				// Do your custom command logic here.
+
+				return true;
+		}
+
+		// Pass to next handler in chain
+		return false;
+	},
+
+	/**
+	 * Gets called ones the cursor/selection in a TinyMCE instance changes. This is useful to enable/disable
+	 * button controls depending on where the user are and what they have selected. This method gets executed
+	 * alot and should be as performance tuned as possible.
+	 *
+	 * @param {string} editor_id TinyMCE editor instance id that was changed.
+	 * @param {HTMLNode} node Current node location, where the cursor is in the DOM tree.
+	 * @param {int} undo_index The current undo index, if this is -1 custom undo/redo is disabled.
+	 * @param {int} undo_levels The current undo levels, if this is -1 custom undo/redo is disabled.
+	 * @param {boolean} visual_aid Is visual aids enabled/disabled ex: dotted lines on tables.
+	 * @param {boolean} any_selection Is there any selection at all or is there only a cursor.
+	 */
+	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
+	},
+
+	/**
+	 * Gets called when a TinyMCE editor instance gets filled with content on startup.
+	 *
+	 * @param {string} editor_id TinyMCE editor instance id that was filled with content.
+	 * @param {HTMLElement} body HTML body element of editor instance.
+	 * @param {HTMLDocument} doc HTML document instance.
+	 */
+	setupContent : function(editor_id, body, doc) {
+	},
+
+	/**
+	 * Gets called when the contents of a TinyMCE area is modified, in other words when a undo level is
+	 * added.
+	 *
+	 * @param {TinyMCE_Control} inst TinyMCE editor area control instance that got modified.
+	 */
+	onChange : function(inst) {
+	},
+
+	/**
+	 * Gets called when TinyMCE handles events such as keydown, mousedown etc. TinyMCE
+	 * doesn't listen on all types of events so custom event handling may be required for
+	 * some purposes.
+	 *
+	 * @param {Event} e HTML editor event reference.
+	 * @return true - pass to next handler in chain, false - stop chain execution
+	 * @type boolean
+	 */
+	handleEvent : function(e) {
+		return true;
+	},
+
+	/**
+	 * Gets called when HTML contents is inserted or retrived from a TinyMCE editor instance.
+	 * The type parameter contains what type of event that was performed and what format the content is in.
+	 * Possible valuses for type is get_from_editor, insert_to_editor, get_from_editor_dom, insert_to_editor_dom.
+	 *
+	 * @param {string} type Cleanup event type.
+	 * @param {mixed} content Editor contents that gets inserted/extracted can be a string or DOM element.
+	 * @param {TinyMCE_Control} inst TinyMCE editor instance control that performes the cleanup.
+	 * @return New content or the input content depending on action.
+	 * @type string
+	 */
+	cleanup : function(type, content, inst) {
+		return content;
+	},
+
+	// Private plugin internal methods
+
+	/**
+	 * This is just a internal plugin method, prefix all internal methods with a _ character.
+	 * The prefix is needed so they doesn't collide with future TinyMCE callback functions.
+	 *
+	 * @param {string} a Some arg1.
+	 * @param {string} b Some arg2.
+	 * @return Some return.
+	 * @type string
+	 */
+	_someInternalFunction : function(a, b) {
+		return 1;
+	}
+};
+
+// Adds the plugin class to the list of available TinyMCE plugins
+tinyMCE.addPlugin("<span class="marked">someplugin</span>", TinyMCE_<span class="marked">SomePlugin</span>Plugin);
+</pre>
+</div>
+</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

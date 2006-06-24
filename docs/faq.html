@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Frequently Asked Questions</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Frequently Asked Questions</h1>
+</div>
+
+<div class="content">
+	<p>Here are some common answers to common questions. If you need more help you can always visit the <a href="http://tinymce.moxiecode.com/">TinyMCE Forum</a> on the TinyMCE web site.</p>
+	<p>
+		<ul class="plist">
+			<li><a href="#broken">TinyMCE is broken, what should I do?</a></li>
+			<li><a href="#paths">Why is my paths incorrect, I want absolute/relative URLs?</a></li>
+			<li><a href="#strip">Why does TinyMCE strip aways attributes or tags from my source?</a></li>
+			<li><a href="#font">How do I change the default font size/face color of the editor?</a></li>
+			<li><a href="#remove">How do I remove/add buttons/controls to TinyMCE?</a></li>
+			<li><a href="#quotes">Why does my HTML output include lots of \&quot; like &lt;a href=\&quot;mylink.htm\&quot;&gt;link&lt;/a&gt;?</a></li>
+			<li><a href="#load">TinyMCE takes ages to load, is there a way to make it load quicker?</a></li>
+			<li><a href="#hidden">TinyMCE stops working when placed in tabs or hidden divs?</a></li>
+			<li><a href="#commercial">Can I use TinyMCE in my commercial application?</a></li>
+			<li><a href="#commercial2">Are there any restrictions to using TinyMCE in my commercial application?</a></li>
+			<li><a href="#lgpl">I don't like LGPL, is there a commercial license available for me?</a></li>
+			<li><a href="#support">Do you provide support?</a></li>
+			<li><a href="#who">Who made this software?</a></li>
+		</ul>
+	</p>
+
+	<div class="separator"></div>
+
+	<a name="broken"></a>
+	<h2>TinyMCE is broken, what should I do?</h2>
+	<div class="section">
+		<p>There are a few things you should check before posting questions about your problem at the forum or sourceforge.</p>
+		<p>
+			<ul>
+				<li>Does TinyMCE work on the <a href="http://tinymce.moxiecode.com/example_full.php?example=true">TinyMCE website</a>. Then you know that TinyMCE works with your browser.</li>
+				<li>Try to disable any other JavaScripts on the page, some scripts interfere with internal functions that TinyMCE uses. Those scripts are probably poorly written.</li>
+				<li>Check that you havn't missed removing the last , character in your initialization code and that all the other rows have a trailing , character.</li>
+				<li>Verify that the path/URL to TinyMCE is correct, you can use the excellent tool <a href="http://www.fiddlertool.com/fiddler/">Fiddler</a> for this and other HTTP debugging.</li>
+				<li>Do not cross domain load TinyMCE or any other script unless you really really must, since this will invoke various browser security features. In other words, try placing everything on the same server.</li>
+				<li>Don't place textareas within paragraph elements since this is not valid HTML and it will break MSIE and TinyMCE.</li>
+			</ul>
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="paths"></a>
+	<h2>Why is my paths incorrect, I want absolute/relative URLs?</h2>
+	<div class="section">
+		<p>
+			These are the diffrent configuration scenarios for URLs within TinyMCE:
+			<table class="btable">
+				<thead>
+					<th>Output</th>
+					<th>Config</th>
+					<th>Description</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td><strong>http://www.site.com/path1/path2/file.htm</strong> will be converted to <strong>path2/file.htm</strong></td>
+						<td nowrap="nowrap">
+<a href="option_relative_urls.html">relative_urls</a> : true,<br />
+<a href="option_document_base_url.html">document_base_url</a> : &quot;http://www.site.com/path1/&quot;<br />
+</td>
+						<td>This will convert all URLs within the same domain to relative URLs.<br /> <strong>The URLs will be relative from the <a href="option_document_base_url.html">document_base_url</a></strong>.</td>
+					</tr>
+
+					<tr>
+						<td><strong>path2/file.htm</strong> will be converted to <strong>/path1/path2/file.htm</strong></td>
+						<td nowrap="nowrap">
+<a href="option_relative_urls.html">relative_urls</a> : false,<br />
+<a href="option_remove_script_host.html">remove_script_host</a> : true,<br />
+<a href="option_document_base_url.html">document_base_url</a> : &quot;http://www.site.com/path1/&quot;<br />
+</td>
+						<td>This will convert all relative URLs to absolute URLs.<br /> <strong>The URLs will be absolute based on the <a href="option_document_base_url.html">document_base_url</a></strong>.</td>
+					</tr>
+
+					<tr>
+						<td><strong>path2/file.htm</strong> will be converted to <strong>http://www.site.com/path1/path2/file.htm</strong></td>
+						<td nowrap="nowrap">
+<a href="option_relative_urls.html">relative_urls</a> : false,<br />
+<a href="option_remove_script_host.html">remove_script_host</a> : false,<br />
+<a href="option_document_base_url.html">document_base_url</a> : &quot;http://www.site.com/path1/&quot;<br />
+</td>
+						<td>This will convert all relative URLs to absolute URLs.<br /> <strong>The URLs will be absolute based on the <a href="option_document_base_url.html">document_base_url</a></strong>.</td>
+					</tr>
+
+					<tr>
+						<td><strong>path2/file.htm</strong> or <strong>http://www.site.com/path1/path2/file.htm</strong> will not be converted at all.</td>
+						<td nowrap="nowrap">
+<a href="option_convert_urls.html">convert_urls</a> : false<br />
+</td>
+						<td>This option will preserve the URLs as they are in a separate attribute while editing, <strong>since browsers tend to auto convert URLs</strong>.</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="strip"></a>
+	<h2>Why does TinyMCE strip aways attributes or tags from my source?</h2>
+	<div class="section">
+		<p>You need to check out the &quot;<a href="option_valid_elements.html">valid_elements</a>&quot; and &quot;<a href="option_extended_valid_elements.html">extended_valid_elements</a>&quot; option in the configuration. By default, TinyMCE only allows certain tags and attributes. TinyMCE also tries to follow the XHTML specification as much as possible (and so should you), this can cause some unexpected source changes, there are however configuration options to battle this issue, study the configuration options in details.</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="font"></a>
+	<h2>How do I change the default font size/face color of the editor?</h2>
+	<div class="section">
+		<p>
+			We recommend that you have a look at the <a href="option_content_css.html">content_css</a> option, this enables you to switch the CSS file TinyMCE uses for it's editing area with a file with your CSS rules for font size and so forth.
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="remove"></a>
+	<h2>How do I remove/add buttons/controls to TinyMCE?</h2>
+	<div class="section">
+		<p>
+			There are quite a few options for this but a reference of all available buttons/control names can be found in the <a href="reference_buttons.html">button/control reference</a>.
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="quotes"></a>
+	<h2>Why does my HTML output include lots of \&quot; like &lt;a href=\&quot;mylink.htm\&quot;&gt;link&lt;/a&gt;?</h2>
+	<div class="section">
+		<p>This is probably because you are using PHP and it has a feature that's called magic quotes that is enabled by default. You can read more about this at the <a href="http://se2.php.net/magic_quotes/">PHP website</a> or use the <a href="http://www.php.net/manual/en/function.stripslashes.php">stripslashes</a> function.</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="load"></a>
+	<h2>TinyMCE takes ages to load, is there a way to make it load quicker?</h2>
+	<div class="section">
+		<p>
+			If you use PHP on your server you can use tiny_mce_gzip.php instead of tiny_mce.js in page script call. This PHP file bundles all .js files together into two HTTP requests instead of one for each plugin, language file and theme and it also GZip compresses these files.
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="hidden"></a>
+	<h2>TinyMCE stops working when placed in tabs or hidden divs?</h2>
+	<div class="section">
+		<p>Since Gecko based browsers Mozilla/Firefox has a bug where it looses designMode on iframes that are hidden a special option is needed that re-enables the design mode when reappearing after being hidden. Enable this option to resolve the issue: &quot;<a href="option_auto_reset_designmode.html">auto_reset_designmode</a>&quot;.</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="commercial"></a>
+	<h2>Can I use TinyMCE in my commercial application?</h2>
+	<div class="section">
+		<p>Yes you can, the LGPL license is a Free Software License. You can read the whole license <a href="license.html">here</a> or visit Free Software Foundation web site <a href="http://www.fsf.org/" target="_blank">here</a></p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="commercial2"></a>
+	<h2>Are there any restrictions to using TinyMCE in my commercial application?</h2>
+	<div class="section">
+		<p>
+			Yes, all copyright notices must be intact. Moxiecode Systems are still the copyright holders of the source code, so you can not use the code for other applications. Any modifications or add-ons you make to the source has to be contributes back to the TinyMCE community.
+		</p>
+		<p>
+			If you start to make a lot of revenue from using TinyMCE, please remember the time and dedication that has been put into this by other developers, respect this and give credit to those who deserve it.
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="lgpl"></a>
+	<h2>I don't like LGPL, is there a commercial license available for me?</h2>
+	<div class="section">
+		<p>
+			Yes, we can draw up a license for you that enables you to remove copyright restrictions or anything else you would like to have in this license agreement. Contact us through email, sales (at) moxiecode (dot) com.
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="support"></a>
+	<h2>Do you provide support?</h2>
+	<div class="section">
+		<p>
+			We do not provide any non-commercial support outside the forum on the <a href="http://tinymce.moxiecode.com/">TinyMCE</a> web site. If you require commercial support, contact us by email, sales (at) moxiecode (dot) com.
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<a name="who"></a>
+	<h2>Who made this software?</h2>
+	<div class="section">
+		<p>
+			The author of TinyMCE is <a href="http://www.moxiecode.com/" target="_blank">Moxiecode Systems</a>, parts of code has also been contributed by others, <a href="credits.html">here</a> are the credits list.
+		</p>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

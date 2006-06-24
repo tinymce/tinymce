@@ -1,0 +1,511 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_Popup.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_Popup.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_Popup.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+    <table border="1" cellpadding="3" cellspacing="0" width="100%">
+    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+    <td colspan=2><font size="+2">
+    
+        <b>Class Summary</b>
+    
+    </font></td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="TinyMCE_Popup.html">TinyMCE_Popup</a></b></td>
+    <td>&nbsp;</td>
+    </tr>
+    
+    </table>
+    <hr/> 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_Popup.class.js.html,v $
+ * $Revision: 1.24 $
+ * $Date: 2006/04/14 20:00:30 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ */</span>
+
+<span class="comment">// Some global instances, this will be filled later</span>
+var tinyMCE = null, tinyMCELang = null;
+
+<span class="comment">/**
+ * Constructor for the popup class. This class contains base logic for popup/dialogs and sets up
+ * object references to the TinyMCE core.
+ */</span>
+<span class="reserved">function</span> TinyMCE_Popup() {
+};
+
+<span class="comment">/**
+ * Initializes the TinyMCE Popup class. This will setup the TinyMCE core references and other popup/dialog related functions.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.init = <span class="reserved">function</span>() {
+	var win = window.opener ? window.opener : window.dialogArguments;
+	var inst;
+
+	<span class="reserved">if</span> (!win) {
+		<span class="comment">// Try parent</span>
+		win = parent.parent;
+
+		<span class="comment">// Try top</span>
+		<span class="reserved">if</span> (typeof(win.tinyMCE) == <span class="literal">"undefined"</span>)
+			win = top;
+	}
+
+	window.opener = win;
+	<span class="reserved">this</span>.windowOpener = win;
+	<span class="reserved">this</span>.onLoadEval = <span class="literal">""</span>;
+
+	<span class="comment">// Setup parent references</span>
+	tinyMCE = win.tinyMCE;
+	tinyMCELang = win.tinyMCELang;
+
+	<span class="reserved">if</span> (!tinyMCE) {
+		alert(<span class="literal">"tinyMCE object reference not found from popup."</span>);
+		<span class="reserved">return</span>;
+	}
+
+	inst = tinyMCE.selectedInstance;
+	<span class="reserved">this</span>.isWindow = tinyMCE.getWindowArg(<span class="literal">'mce_inside_iframe'</span>, false) == false;
+	<span class="reserved">this</span>.storeSelection = (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) &amp;&amp; !<span class="reserved">this</span>.isWindow &amp;&amp; tinyMCE.getWindowArg(<span class="literal">'mce_store_selection'</span>, true);
+
+	<span class="reserved">if</span> (<span class="reserved">this</span>.isWindow)
+		window.focus();
+
+	<span class="comment">// Store selection</span>
+	<span class="reserved">if</span> (<span class="reserved">this</span>.storeSelection)
+		inst.selectionBookmark = inst.selection.getBookmark(true);
+
+	<span class="comment">// Setup dir</span>
+	<span class="reserved">if</span> (tinyMCELang[<span class="literal">'lang_dir'</span>])
+		document.dir = tinyMCELang[<span class="literal">'lang_dir'</span>];
+
+	<span class="comment">// Setup title</span>
+	var re = new RegExp(<span class="literal">'{|\\\$|}'</span>, <span class="literal">'g'</span>);
+	var title = document.title.replace(re, <span class="literal">""</span>);
+	<span class="reserved">if</span> (typeof tinyMCELang[title] != <span class="literal">"undefined"</span>) {
+		var divElm = document.createElement(<span class="literal">"div"</span>);
+		divElm.innerHTML = tinyMCELang[title];
+		document.title = divElm.innerHTML;
+
+		<span class="reserved">if</span> (tinyMCE.setWindowTitle != null)
+			tinyMCE.setWindowTitle(window, divElm.innerHTML);
+	}
+
+	<span class="comment">// Output Popup CSS class</span>
+	document.write(<span class="literal">'&lt;link href="'</span> + tinyMCE.getParam(<span class="literal">"popups_css"</span>) + <span class="literal">'" rel="stylesheet" type="text/css"&gt;'</span>);
+
+	tinyMCE.addEvent(window, <span class="literal">"load"</span>, <span class="reserved">this</span>.onLoad);
+};
+
+<span class="comment">/**
+ * Gets executed when the window has finished loading it's contents. This function will then
+ * replace language variables with their real values.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.onLoad = <span class="reserved">function</span>() {
+	var dir, i, elms, body = document.body;
+
+	<span class="reserved">if</span> (tinyMCE.getWindowArg(<span class="literal">'mce_replacevariables'</span>, true))
+		body.innerHTML = tinyMCE.applyTemplate(body.innerHTML, tinyMCE.windowArgs);
+
+	dir = tinyMCE.selectedInstance.settings[<span class="literal">'directionality'</span>];
+	<span class="reserved">if</span> (dir == <span class="literal">"rtl"</span> &amp;&amp; document.forms &amp;&amp; document.forms.length &gt; 0) {
+		elms = document.forms[0].elements;
+		<span class="reserved">for</span> (i=0; i&lt;elms.length; i++) {
+			<span class="reserved">if</span> ((elms[i].type == <span class="literal">"text"</span> || elms[i].type == <span class="literal">"textarea"</span>) &amp;&amp; elms[i].getAttribute(<span class="literal">"dir"</span>) != <span class="literal">"ltr"</span>)
+				elms[i].dir = dir;
+		}
+	}
+
+	<span class="reserved">if</span> (body.style.display == <span class="literal">'none'</span>)
+		body.style.display = <span class="literal">'block'</span>;
+
+	<span class="comment">// Execute real onload (Opera fix)</span>
+	<span class="reserved">if</span> (tinyMCEPopup.onLoadEval != <span class="literal">""</span>)
+		eval(tinyMCEPopup.onLoadEval);
+};
+
+<span class="comment">/**
+ * Executes the specified string onload. This is a workaround for Opera since it
+ * doesn't execute the events in the same order than MSIE and Firefox.
+ *
+ * <span class="attrib">@param</span> {string} str String to evaluate on load.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.executeOnLoad = <span class="reserved">function</span>(str) {
+	<span class="reserved">if</span> (tinyMCE.isOpera)
+		<span class="reserved">this</span>.onLoadEval = str;
+	<span class="reserved">else</span>
+		eval(str);
+};
+
+<span class="comment">/**
+ * Resizes the current window to it's inner body size. This function
+ * was needed since MSIE makes the visible dialog area diffrent depending
+ * on what Theme/Skin you use.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.resizeToInnerSize = <span class="reserved">function</span>() {
+	<span class="comment">// Netscape 7.1 workaround</span>
+	<span class="reserved">if</span> (<span class="reserved">this</span>.isWindow &amp;&amp; tinyMCE.isNS71) {
+		window.resizeBy(0, 10);
+		<span class="reserved">return</span>;
+	}
+
+	<span class="reserved">if</span> (<span class="reserved">this</span>.isWindow) {
+		var doc = document;
+		var body = doc.body;
+		var oldMargin, wrapper, iframe, nodes, dx, dy;
+
+		<span class="reserved">if</span> (body.style.display == <span class="literal">'none'</span>)
+			body.style.display = <span class="literal">'block'</span>;
+
+		<span class="comment">// Remove margin</span>
+		oldMargin = body.style.margin;
+		body.style.margin = <span class="literal">'0'</span>;
+
+		<span class="comment">// Create wrapper</span>
+		wrapper = doc.createElement(<span class="literal">"div"</span>);
+		wrapper.id = <span class="literal">'mcBodyWrapper'</span>;
+		wrapper.style.display = <span class="literal">'none'</span>;
+		wrapper.style.margin = <span class="literal">'0'</span>;
+
+		<span class="comment">// Wrap body elements</span>
+		nodes = doc.body.childNodes;
+		<span class="reserved">for</span> (var i=nodes.length-1; i&gt;=0; i--) {
+			<span class="reserved">if</span> (wrapper.hasChildNodes())
+				wrapper.insertBefore(nodes[i].cloneNode(true), wrapper.firstChild);
+			<span class="reserved">else</span>
+				wrapper.appendChild(nodes[i].cloneNode(true));
+
+			nodes[i].parentNode.removeChild(nodes[i]);
+		}
+
+		<span class="comment">// Add wrapper</span>
+		doc.body.appendChild(wrapper);
+
+		<span class="comment">// Create iframe</span>
+		iframe = document.createElement(<span class="literal">"iframe"</span>);
+		iframe.id = <span class="literal">"mcWinIframe"</span>;
+		iframe.src = document.location.href.toLowerCase().indexOf(<span class="literal">'https'</span>) == -1 ? <span class="literal">"about:blank"</span> : tinyMCE.settings[<span class="literal">'default_document'</span>];
+		iframe.width = <span class="literal">"100%"</span>;
+		iframe.height = <span class="literal">"100%"</span>;
+		iframe.style.margin = <span class="literal">'0'</span>;
+
+		<span class="comment">// Add iframe</span>
+		doc.body.appendChild(iframe);
+
+		<span class="comment">// Measure iframe</span>
+		iframe = document.getElementById(<span class="literal">'mcWinIframe'</span>);
+		dx = tinyMCE.getWindowArg(<span class="literal">'mce_width'</span>) - iframe.clientWidth;
+		dy = tinyMCE.getWindowArg(<span class="literal">'mce_height'</span>) - iframe.clientHeight;
+
+		<span class="comment">// Resize window</span>
+		<span class="comment">// tinyMCE.debug(tinyMCE.getWindowArg('mce_width') + "," + tinyMCE.getWindowArg('mce_height') + " - " + dx + "," + dy);</span>
+		window.resizeBy(dx, dy);
+
+		<span class="comment">// Hide iframe and show wrapper</span>
+		body.style.margin = oldMargin;
+		iframe.style.display = <span class="literal">'none'</span>;
+		wrapper.style.display = <span class="literal">'block'</span>;
+	}
+};
+
+<span class="comment">/**
+ * Resizes the current window to the dimensions of the body.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.resizeToContent = <span class="reserved">function</span>() {
+	var isMSIE = (navigator.appName == <span class="literal">"Microsoft Internet Explorer"</span>);
+	var isOpera = (navigator.userAgent.indexOf(<span class="literal">"Opera"</span>) != -1);
+
+	<span class="reserved">if</span> (isOpera)
+		<span class="reserved">return</span>;
+
+	<span class="reserved">if</span> (isMSIE) {
+		try { window.resizeTo(10, 10); } catch (e) {}
+
+		var elm = document.body;
+		var width = elm.offsetWidth;
+		var height = elm.offsetHeight;
+		var dx = (elm.scrollWidth - width) + 4;
+		var dy = elm.scrollHeight - height;
+
+		try { window.resizeBy(dx, dy); } catch (e) {}
+	} <span class="reserved">else</span> {
+		window.scrollBy(1000, 1000);
+		<span class="reserved">if</span> (window.scrollX &gt; 0 || window.scrollY &gt; 0) {
+			window.resizeBy(window.innerWidth * 2, window.innerHeight * 2);
+			window.sizeToContent();
+			window.scrollTo(0, 0);
+			var x = parseInt(screen.width / 2.0) - (window.outerWidth / 2.0);
+			var y = parseInt(screen.height / 2.0) - (window.outerHeight / 2.0);
+			window.moveTo(x, y);
+		}
+	}
+};
+
+<span class="comment">/**
+ * Returns a window argument, window arguments can be passed from a plugin to a window
+ * by using the tinyMCE.openWindow function.
+ *
+ * <span class="attrib">@param</span> {string} name Argument name to retrive.
+ * <span class="attrib">@param</span> {string} default_value Optional default value to assign if the argument wasn't set.
+ * <span class="attrib">@return</span> Argument value object.
+ * <span class="attrib">@type</span> Object
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.getWindowArg = <span class="reserved">function</span>(name, default_value) {
+	<span class="reserved">return</span> tinyMCE.getWindowArg(name, default_value);
+};
+
+<span class="comment">/**
+ * Restores the selection back to the one stored after executing a command.
+ * This function was needed in MSIE when using inlinepopups, the selection
+ * would otherwice get lost if the user focused another field.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.restoreSelection = <span class="reserved">function</span>() {
+	<span class="reserved">if</span> (<span class="reserved">this</span>.storeSelection) {
+		var inst = tinyMCE.selectedInstance;
+
+		inst.getWin().focus();
+
+		<span class="reserved">if</span> (inst.selectionBookmark)
+			inst.selection.moveToBookmark(inst.selectionBookmark);
+	}
+};
+
+<span class="comment">/**
+ * Executes the specific command on the parent instance that opened the window. This method
+ * will also take care of the storage and restorage of the current selection in MSIE when
+ * using inlinepopups. So we suggest using this method instead of tinyMCE.execCommand when using
+ * popup windows.
+ *
+ * <span class="attrib">@param</span> {string} command Command name to execute, for example mceLink or Bold.
+ * <span class="attrib">@param</span> {boolean} user_interface True/false state if a UI (dialog) should be presented or not.
+ * <span class="attrib">@param</span> {mixed} value Optional command value, this can be anything.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.execCommand = <span class="reserved">function</span>(command, user_interface, value) {
+	var inst = tinyMCE.selectedInstance;
+
+	<span class="reserved">this</span>.restoreSelection();
+	inst.execCommand(command, user_interface, value);
+
+	<span class="comment">// Store selection</span>
+	<span class="reserved">if</span> (<span class="reserved">this</span>.storeSelection)
+		inst.selectionBookmark = inst.selection.getBookmark(true);
+};
+
+<span class="comment">/**
+ * Closes the current window. This should be used instead of window.close. Since this will
+ * also handle inlinepopups closing.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.close = <span class="reserved">function</span>() {
+	tinyMCE.closeWindow(window);
+};
+
+<span class="comment">/**
+ * Executes a color picker on the specified element id. When the user
+ * then selects a color it will be set as the value of the specified element.
+ *
+ * <span class="attrib">@param</span> {DOMEvent} e DOM event object.
+ * <span class="attrib">@param</span> {string} element_id Element id to be filled with the color value from the picker.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.pickColor = <span class="reserved">function</span>(e, element_id) {
+	tinyMCE.selectedInstance.execCommand(<span class="literal">'mceColorPicker'</span>, true, {
+		element_id : element_id,
+		document : document,
+		window : window,
+		store_selection : false
+	});
+};
+
+<span class="comment">/**
+ * Opens a filebrowser/imagebrowser this will set the output value from
+ * the browser as a value on the specified element.
+ *
+ * <span class="attrib">@param</span> {string} element_id Id of the element to set value in.
+ * <span class="attrib">@param</span> {string} type Type of browser to open image/file/flash.
+ * <span class="attrib">@param</span> {string} option Option name to get the file_broswer_callback function name from.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.openBrowser = <span class="reserved">function</span>(element_id, type, option) {
+	var cb = tinyMCE.getParam(option, tinyMCE.getParam(<span class="literal">"file_browser_callback"</span>));
+	var url = document.getElementById(element_id).value;
+
+	tinyMCE.setWindowArg(<span class="literal">"window"</span>, window);
+	tinyMCE.setWindowArg(<span class="literal">"document"</span>, document);
+
+	<span class="comment">// Call to external callback</span>
+	<span class="reserved">if</span> (eval(<span class="literal">'typeof(tinyMCEPopup.windowOpener.'</span> + cb + <span class="literal">')'</span>) == <span class="literal">"undefined"</span>)
+		alert(<span class="literal">"Callback function: "</span> + cb + <span class="literal">" could not be found."</span>);
+	<span class="reserved">else</span>
+		eval(<span class="literal">"tinyMCEPopup.windowOpener."</span> + cb + <span class="literal">"(element_id, url, type, window);"</span>);
+};
+
+<span class="comment">/**
+ * Imports the specified class into the current popup. This will setup a local class definition
+ * by importing from the parent window.
+ *
+ * <span class="attrib">@param</span> {string} c Class name to import to current page.
+ */</span>
+TinyMCE_Popup.<span class="reserved">prototype</span>.importClass = <span class="reserved">function</span>(c) {
+	window[c] = <span class="reserved">function</span>() {};
+
+	<span class="reserved">for</span> (var n in window.opener[c].<span class="reserved">prototype</span>)
+		window[c].<span class="reserved">prototype</span>[n] = window.opener[c].<span class="reserved">prototype</span>[n];
+
+	window[c].constructor = window.opener[c].constructor;
+};
+
+<span class="comment">// Setup global instance</span>
+var tinyMCEPopup = new TinyMCE_Popup();
+
+tinyMCEPopup.init();
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

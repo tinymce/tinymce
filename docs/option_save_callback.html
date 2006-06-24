@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: save_callback</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: save_callback</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to add custom logic to be executed when the contents is extracted/saved. This custom logic can then modify the contents before it's submited to a serverside page. This can be useful if you want to do your own regexp cleanups and so forth. The format of this function is: saveContent(element_id, html, body). Where element id is the form element/div id of the editor and HTML is the HTML contents after the built in cleanup process has executed. This function should return the new HTML contents.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the save_callback option:</h3>
+	<div class="example">
+<pre>
+function <strong>myCustomSaveContent</strong>(element_id, html, body) {
+	// Do some custom HTML cleanup
+	html = html.replace(/a/g,'b');
+
+	return html;
+}
+
+tinyMCE.init({
+	...
+	<strong>save_callback : "myCustomSaveContent"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

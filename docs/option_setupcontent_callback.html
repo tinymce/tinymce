@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: setupcontent_callback</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: setupcontent_callback</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to execute custom setup content logic when the editor initializes. The format of this callback is:
+		setupContent(editor_id, body, doc). Where editor_id is the TinyMCE editor instance id the editor instance object reference can be retrived by using tinyMCE.getInstanceById(editor_id). The body parameter is a reference to the iframes body element and doc is the iframes document element. This option is not used if it's not specified.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the setupcontent_callback option:</h3>
+	<div class="example">
+<pre>
+function myCustomSetupContent(editor_id, body, doc) {
+	body.innerHTML = "my new content" + body.innerHTML;
+}
+
+tinyMCE.init({
+	...
+	<strong>setupcontent_callback : "myCustomSetupContent"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

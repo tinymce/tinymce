@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: mode</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: mode</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option specifies how elements is to be converted into TinyMCE WYSIWYG editor instances. This option can be set to any of the values below.
+	</p>
+
+	<p>
+		<h3>textareas</h3>
+		Converts all textarea elements to editors when the page loads.
+	</p>
+
+	<p>
+		<h3>specific_textareas</h3>
+		Converts all textarea elements with the a <a href="option_textarea_trigger.html">textarea_trigger</a> attribute set to &quot;true&quot;.
+	</p>
+
+	<p>
+		<h3>exact</h3>
+		exact - Converts only explicit elements, these are listed in the <a href="option_elements.html">elements</a> option. These elements can be any kind for example textareas or divs.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the mode option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>mode : "exact",</strong>
+	elements : "elm1,elm2"
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

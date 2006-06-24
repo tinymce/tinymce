@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Selector/deselector testcase</title>
+
+<!-- tinyMCE -->
+<script language="javascript" type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		mode : "specific_textareas",
+		theme : "advanced",
+		plugins : "table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,zoom,flash,searchreplace,print",
+		theme_advanced_buttons1_add_before : "save,separator",
+		theme_advanced_buttons1_add : "fontselect,fontsizeselect",
+		theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor",
+		theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator",
+		theme_advanced_buttons3_add_before : "tablecontrols,separator",
+		theme_advanced_buttons3_add : "emotions,iespell,flash,advhr,separator,print",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_path_location : "bottom",
+		content_css : "../example_full.css",
+	    plugin_insertdate_dateFormat : "%Y-%m-%d",
+	    plugin_insertdate_timeFormat : "%H:%M:%S",
+		extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		file_browser_callback : "fileBrowserCallBack",
+		editor_selector : "mceEditor",
+		editor_deselector : "mceNoEditor"
+	});
+
+	function fileBrowserCallBack(field_name, url, type) {
+		// This is where you insert your custom filebrowser logic
+		alert("Filebrowser callback: " + field_name + "," + url + "," + type);
+	}
+</script>
+<!-- /tinyMCE -->
+
+</head>
+<body>
+
+<a href="index.htm">&lt;&lt; Back</a><br />
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+
+<h3>Selector/deselector testcase</h3>
+This page is used to test selector/deselectors with TinyMCE two editors should be visible the first and the third.<br />
+<br />
+
+<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%" class="mceEditor">
+	Link tests:<br />
+	<a href="../example_advanced.htm">../example_advanced..htm</a><br />
+	<a href="http://www.moxiecode.com">www.moxiecode.com</a><br />
+	<a href="../example_advanced.htm?query=something#anchor">../example_advanced.htm?query=something#anchor</a><br />
+	<a href="hide_show_divs.htm">hide_show_divs.htm</a><br />
+	<br />
+	Image tests:<br />
+	<img src="../logo.jpg" />
+	<img src="http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png" />
+<img border="0" src="images/gotmoxie.png" onmouseover="this.src='images/gotmoxie.png';" onmouseout="this.src='images/gotmoxie.png';" />
+	<img src="http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png?query=something" />
+<img border="0" src="http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png?query=something" onmouseover="this.src='http://tinymce.sourceforge.net/buttons/powered_by_tinymce_v2.png';" onmouseout="this.src='http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png?query=something';" />
+</textarea>
+
+<br />
+
+<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 100%" class="mceNoEditor">
+	NO EDITOR
+</textarea>
+
+<br />
+
+<textarea id="elm3" name="elm3" rows="15" cols="80" style="width: 100%" class="someOtherClass mceEditor">
+	Link tests:<br />
+	<a href="../example_advanced.htm">../example_advanced..htm</a><br />
+	<a href="http://www.moxiecode.com">www.moxiecode.com</a><br />
+	<a href="../example_advanced.htm?query=something#anchor">../example_advanced.htm?query=something#anchor</a><br />
+	<a href="hide_show_divs.htm">hide_show_divs.htm</a><br />
+	<br />
+	Image tests:<br />
+	<img src="../logo.jpg" />
+	<img src="http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png" />
+<img border="0" src="images/gotmoxie.png" onmouseover="this.src='images/gotmoxie.png';" onmouseout="this.src='images/gotmoxie.png';" />
+	<img src="http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png?query=something" />
+<img border="0" src="http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png?query=something" onmouseover="this.src='http://tinymce.sourceforge.net/buttons/powered_by_tinymce_v2.png';" onmouseout="this.src='http://tinymce.sourceforge.net/buttons/powered_by_tinymce.png?query=something';" />
+</textarea>
+
+<br />
+
+<textarea id="elm4" name="elm4" rows="15" cols="80" style="width: 100%" class="someOtherClass mceNoEditor someOtherClass">
+	NO EDITOR
+</textarea>
+
+<br />
+
+<input type="submit" name="save" value="Submit" />
+<input type="reset" name="reset" value="Reset" />
+
+</form>
+
+</body>
+</html>

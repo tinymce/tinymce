@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Show/Hide divs (tabs) testcase</title>
+
+<!-- tinyMCE -->
+<script language="javascript" type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		mode : "textareas",
+		theme : "advanced",
+		plugins : "table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,zoom,flash,searchreplace,print",
+		theme_advanced_buttons1_add_before : "save,separator",
+		theme_advanced_buttons1_add : "fontselect,fontsizeselect",
+		theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor",
+		theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator",
+		theme_advanced_buttons3_add_before : "tablecontrols,separator",
+		theme_advanced_buttons3_add : "emotions,iespell,flash,advhr,separator,print",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_path_location : "bottom",
+		content_css : "../example_full.css",
+	    plugin_insertdate_dateFormat : "%Y-%m-%d",
+	    plugin_insertdate_timeFormat : "%H:%M:%S",
+		extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		file_browser_callback : "fileBrowserCallBack",
+		auto_reset_designmode : true,
+		hidden_tab_class : 'hideTab',
+		display_tab_class : 'showTab'
+	});
+
+	function fileBrowserCallBack(field_name, url, type) {
+		// This is where you insert your custom filebrowser logic
+		alert("Filebrowser callback: " + field_name + "," + url + "," + type);
+	}
+
+	function toggleDisplay(div_id) {
+		var elm = document.getElementById(div_id);
+		elm.className = elm.className == "hideTab" ? "showTab" : "hideTab";
+	}
+</script>
+<!-- /tinyMCE -->
+<style>
+.hideTab {
+	display: none;
+}
+
+.showTab {
+	display: block;
+}
+</style>
+</head>
+<body>
+
+<a href="index.htm">&lt;&lt; Back</a><br />
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+
+<h3>Show/Hide divs (tabs) testcase</h3>
+This page is used to test the TinyMCE auto_reset_designmode option that is useful when the editor is placed within hidden divs (tabs).<br />
+<br />
+Hidden div:<br />
+<a href="javascript:toggleDisplay('div1');">[show/hide]</a><br />
+<div id="div1" class="hideTab">
+<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 50%">
+	<img width="250" height="48" border="0" src="../logo.jpg" />
+</textarea>
+</div>
+<br />
+Visible div:<br />
+<a href="javascript:toggleDisplay('div2');">[show/hide]</a><br />
+<div id="div2" class="showTab">
+<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 100%">
+	<img border="0" src="../logo.jpg" />
+</textarea>
+</div>
+
+<br />
+
+<input type="submit" name="save" value="Submit" />
+<input type="reset" name="reset" value="Reset" />
+
+</form>
+
+<a href="javascript:tinyMCE.triggerSave();">Trigger save</a>
+
+</body>
+</html>

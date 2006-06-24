@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: merge_styles_invalid_parents</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: merge_styles_invalid_parents</h1>
+</div>
+
+<div class="content">
+	<p>This option enables you to specify a regexp with elements you want to exclude from parent mergeing. By default style information are attached to the parent element of a selection if all childrent/the whole element contents is selected. For example if you select a whole strong element and select a font size, the font-size style will be applied to the strong element and not with a wrapping style element. But sometimes you want to force a span element, this is where this option comes in to place. This option is set to nothing by default and applies to the font size/face/color and class drop drown lists.</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the merge_styles_invalid_parents option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	// Excludes table cells and strong elements from any parent merge operation
+	<strong>merge_styles_invalid_parents : "^TD|STRONG$"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: plugins</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: plugins</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option should contain a comma separated list of plugins. Plugins are loaded from the &quot;tinymce/jscripts/tiny_mce/plugins&quot; directory and the plugin name matches the name of the directory. TinyMCE is shipped with some core plugins these are described in greater detail in the <a href="reference_plugins.html">Plugins reference</a>.
+	</p>
+	<p>
+		TinyMCE also supports the ability to have plugins added from a external resource, these plugins needs to be self registrering and loaded after the tinyMCE.init call. You should also prefix these plugins with a &quot;-&quot; character so that TinyMCE doesn't try to load it from the TinyMCE plugins directory.
+	</p>
+
+	<p>
+		There are many third party plugins for TinyMCE some of these may be found under &quot;Plugins&quot; at <a href="http://sourceforge.net/projects/tinymce/">SourceForge</a> and if you have developed one of your own please contribute it to this project by uploading it to SourceForge.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the plugins option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>plugins : &quot;table,contextmenu,paste,-externalplugin&quot;</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

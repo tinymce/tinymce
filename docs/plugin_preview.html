@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: preview</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: preview</h1>
+</div>
+
+<div class="content">
+	<p>This plugin adds a preview button to TinyMCE, pressing the button opens a popup showing the current content.</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Copy the preview directory to the plugins directory of TinyMCE (/jscripts/tiny_mce/plugins).</li>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;preview&quot;.</li>
+		<li>Add the button name to button list, example: theme_advanced_buttons3_add : &quot;preview&quot;.</li>
+	</ul>
+	</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;preview&quot;,
+	theme_advanced_buttons3_add : &quot;preview&quot;,
+	plugin_preview_width : &quot;500&quot;,
+	plugin_preview_height : &quot;600&quot;
+});</pre>
+	</div>
+	</p>
+	<p>
+	<h3>Options</h3>
+	</p>
+	<p>
+	<table border="1" cellspacing="0" cellpadding="4">
+	<tr>
+		<td>[plugin_preview_width]</td>
+		<td>Preview window width. Defaults to 550.</td>
+	</tr>
+	<tr>
+		<td>[plugin_preview_height]</td>
+		<td>Preview window height. Defaults to 600.</td>
+	</tr>
+	<tr>
+		<td>[plugin_preview_pageurl]</td>
+		<td>Custom preview page URL relative from theme use "../../plugins/preview/example.html" for a example.</td>
+	</tr>
+	</table>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

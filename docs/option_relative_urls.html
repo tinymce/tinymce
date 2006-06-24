@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: relative_urls</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: relative_urls</h1>
+</div>
+
+<div class="content">
+	<p>If this option is set to true, all URLs returned from the MCFileManager will be relative from the specified <a href="option_document_base_url.html">document_base_url</a> if it's set to false all URLs will be converted to absolute URLs. This feature can not be disabled since MSIE and FF modifies the URLs of DOM objects by them self so TinyMCE tries to solve this problem by reconverting them. This option is set to true by default.</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the relative_urls option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>relative_urls : false</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

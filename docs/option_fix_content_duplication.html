@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: fix_content_duplication</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: fix_content_duplication</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option is available since MSIE has a serious bug where the DOM tree sometimes can include the same node twice. This produces duplication of content when the cleanup process runs. This option is enabled by default and removes any duplicated nodes.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the fix_content_duplication option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>fix_content_duplication : false</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

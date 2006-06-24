@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: fix_list_elements</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: fix_list_elements</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to specify that list elements UL/OL is to be converted to valid XHTML. This option is disabled by default.<br /><br />
+	<div class="example">
+<pre>
+This invalid list:
+&lt;ol&gt;
+	&lt;li&gt;a&lt;/li&gt;
+	&lt;ol&gt;
+		&lt;li&gt;b&lt;/li&gt;
+		&lt;li&gt;c&lt;/li&gt;
+	&lt;/ol&gt;
+	&lt;li&gt;e&lt;/li&gt;
+&lt;/ol>
+
+Gets converted into this valid list:
+&lt;ol&gt;
+	&lt;li&gt;a
+		&lt;ol&gt;
+			&lt;li>b&lt;/li&gt;
+			&lt;li>c&lt;/li&gt;
+		&lt;/ol&gt;
+	&lt;/li&gt;
+	&lt;li&gt;e&lt;/li&gt;
+&lt;/ol&gt;
+</pre>
+	</div>
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the fix_list_elements option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>fix_list_elements : true</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

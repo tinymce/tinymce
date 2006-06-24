@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: table</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: table</h1>
+</div>
+
+<div class="content">
+	<p>
+		This plugin adds table management functionality to TinyMCE.
+	</p>
+
+	<p>
+		<table border="1" cellspacing="0" cellpadding="4">
+			 <thead><td colspan="2">Table controls/buttons</td></thead>
+			 <tbody>
+				  <tr><td><strong>tablecontrols</strong></td><td>All table control below and some separators between them.</td></tr>
+				  <tr><td><strong>table</strong></td><td>Insert table control.</td></tr>
+				  <tr><td><strong>row_props</strong></td><td>Edit row properties (tr).</td></tr>
+				  <tr><td><strong>cell_props</strong></td><td>Edit cell properties (td).</td></tr>
+				  <tr><td><strong>delete_col</strong></td><td>Delete column control.</td></tr>
+				  <tr><td><strong>delete_row</strong></td><td>Delete row control.</td></tr>
+				  <tr><td><strong>col_after</strong></td><td>Column after control.</td></tr>
+				  <tr><td><strong>col_before</strong></td><td>Column before control.</td></tr>
+				  <tr><td><strong>row_after</strong></td><td>Row after control.</td></tr>
+				  <tr><td><strong>row_before</strong></td><td>Row before control.</td></tr>
+				  <tr><td><strong>row_after</strong></td><td>Row after control.</td></tr>
+				  <tr><td><strong>row_before</strong></td><td>Row before control.</td></tr>
+				  <tr><td><strong>split_cells</strong></td><td>Splits a merged cell into rows and columns.</td></tr>
+				  <tr><td><strong>merge_cells</strong></td><td>Mergers selected cells into one cell.</td></tr>
+			</tbody>
+		</table>
+	</p>
+
+	<p>
+		<table border="1" cellspacing="0" cellpadding="4">
+			 <thead><td colspan="2">Table commands to use with execCommand</td></thead>
+			 <tbody>
+				<tr><td><strong>mceInsertTable</strong></td><td>Inserts a new table at cursor location the default size is 2x2. If the value parameter is specified it should contain a name/value array, this array has the following options cols, rows, border, cellspacing, cellpadding. The default border is set to: 0.</td></tr>
+				<tr><td><strong>mceTableInsertRowBefore</strong></td><td>Inserts a row before/above the current cursor location.</td></tr>
+				<tr><td><strong>mceTableInsertRowAfter</strong></td><td>Inserts a row after/under the current cursor location.</td></tr>
+				<tr><td><strong>mceTableDeleteRow</strong></td><td>Deletes the row at the current cursor location.</td></tr>
+				<tr><td><strong>mceTableInsertColBefore</strong></td><td>Inserts a column before the current cursor location.</td></tr>
+				<tr><td><strong>mceTableInsertColAfter</strong></td><td>Inserts a column after the current cursor location.</td></tr>
+				<tr><td><strong>mceTableDeleteCol</strong></td><td>Deletes the column at the current cursor location.</td></tr>
+			</tbody>
+		</table>
+	</p>
+
+	<p>
+		<table border="1" cellspacing="0" cellpadding="4">
+			 <thead><td colspan="2">Options</td></thead>
+			 <tbody>
+				<tr><td><strong>table_styles</strong></td><td>This option should contain a semicolon separated list of class titles and class names separated by =. The titles are the ones that get presented to the user in the styles drop down list and and the class names is the classes that gets inserted.</td></tr>
+				<tr><td><strong>table_cell_styles</strong></td><td>This option should contain a semicolon separated list of class titles and class names separated by =. The titles are the ones that get presented to the user in the styles drop down list and and the class names is the classes that gets inserted.</td></tr>
+				<tr><td><strong>table_row_styles</strong></td><td>This option should contain a semicolon separated list of class titles and class names separated by =. The titles are the ones that get presented to the user in the styles drop down list and and the class names is the classes that gets inserted.</td></tr>
+				<tr><td><strong>table_cell_limit</strong></td><td>Enables you to specify the max number of cells for a table.</td></tr>
+				<tr><td><strong>table_row_limit</strong></td><td>Enables you to specify the max number of rows for a table.</td></tr>
+				<tr><td><strong>table_col_limit</strong></td><td>Enables you to specify the max number of columns for a table.</td></tr>
+			</tbody>
+		</table>
+		<br />
+	</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;directionality&quot;.</li>
+		<li>Add the ltr, rtl button names to button list, example: theme_advanced_buttons3_add : &quot;ltr,rtl&quot;.</li>
+	</ul>
+	</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;<strong>table</strong>&quot;,
+	theme_advanced_buttons3_add : &quot;<strong>tablecontrols</strong>&quot;,
+	table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
+	table_cell_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Cell=tableCel1",
+	table_row_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1",
+	table_cell_limit : 100,
+	table_row_limit : 5,
+	table_col_limit : 5
+});</pre>
+	</div>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Table testcase</title>
+
+<!-- tinyMCE -->
+<script language="javascript" type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		mode : "textareas",
+		theme : "advanced",
+		plugins : "table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,zoom,flash,searchreplace,print",
+		theme_advanced_buttons1_add_before : "save,separator",
+		theme_advanced_buttons1_add : "fontselect,fontsizeselect",
+		theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor",
+		theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator",
+		theme_advanced_buttons3_add_before : "tablecontrols,separator",
+		theme_advanced_buttons3_add : "emotions,iespell,flash,advhr,separator,print",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_path_location : "bottom",
+		content_css : "../example_full.css",
+	    plugin_insertdate_dateFormat : "%Y-%m-%d",
+	    plugin_insertdate_timeFormat : "%H:%M:%S",
+		extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		file_browser_callback : "fileBrowserCallBack"
+	});
+
+	function fileBrowserCallBack(field_name, url, type) {
+		// This is where you insert your custom filebrowser logic
+		alert("Filebrowser callback: " + field_name + "," + url + "," + type);
+	}
+</script>
+<!-- /tinyMCE -->
+
+</head>
+<body>
+<a href="index.htm">&lt;&lt; Back</a><br />
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+
+<h3>Table testcase</h3>
+This page is used to test the table plugin.<br />
+<br />
+
+<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">
+	<table border="0" width="100%" height="50">
+		<tr>
+			<td>Cell 1</td>
+			<td>Cell 2</td>
+		</tr>
+		<tr>
+			<td>Cell 3</td>
+			<td>Cell 4</td>
+		</tr>
+	</table>
+
+	<table>
+		<tr>
+			<td>Cell 1</td>
+			<td>Cell 2</td>
+		</tr>
+		<tr>
+			<td>Cell 3</td>
+			<td>Cell 4</td>
+		</tr>
+	</table>
+
+	<table border="1" width="150" height="50">
+		<tr class="tablerow1">
+			<td>Cell 1</td>
+			<td>Cell 2</td>
+		</tr>
+		<tr>
+			<td class="tablerow1">Cell 3</td>
+			<td>Cell 4</td>
+		</tr>
+	</table>
+
+	<table width="300">
+		<tr>
+			<td>Cell 1</td>
+			<td>Cell 2</td>
+		</tr>
+		<tr>
+			<td>Cell 3</td>
+			<td>Cell 4</td>
+		</tr>
+	</table>
+
+	<table style="width: 300px">
+		<tr>
+			<td>Cell 1</td>
+			<td>Cell 2</td>
+		</tr>
+		<tr>
+			<td>Cell 3</td>
+			<td>Cell 4</td>
+		</tr>
+	</table>
+</textarea>
+
+<br />
+
+<input type="submit" name="save" value="Submit" />
+<input type="reset" name="reset" value="Reset" />
+
+</form>
+
+</body>
+</html>

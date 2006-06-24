@@ -1,0 +1,646 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_Selection.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_Selection.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_Selection.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+    <table border="1" cellpadding="3" cellspacing="0" width="100%">
+    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+    <td colspan=2><font size="+2">
+    
+        <b>Class Summary</b>
+    
+    </font></td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="TinyMCE_Selection.html">TinyMCE_Selection</a></b></td>
+    <td>&nbsp;</td>
+    </tr>
+    
+    </table>
+    <hr/> 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_Selection.class.js.html,v $
+ * $Revision: 1.42 $
+ * $Date: 2006/04/14 20:00:31 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ */</span>
+
+<span class="comment">/**
+ * Constructs a Selection instance and binds it to the specificed TinyMCE editor control.
+ *
+ * <span class="attrib">@param</span> {TinyMCE_Control} inst TinyMCE editor control instance.
+ * <span class="attrib">@constructor</span>
+ */</span>
+<span class="reserved">function</span> TinyMCE_Selection(inst) {
+	<span class="reserved">this</span>.instance = inst;
+};
+
+TinyMCE_Selection.<span class="reserved">prototype</span> = {
+	<span class="comment">/**
+	 * Returns the selected HTML code.
+	 *
+	 * <span class="attrib">@return</span> Selected HTML contents.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	getSelectedHTML : <span class="reserved">function</span>() {
+		var inst = <span class="reserved">this</span>.instance;
+		var e, r = <span class="reserved">this</span>.getRng(), h;
+
+		<span class="reserved">if</span> (tinyMCE.isSafari) {
+			<span class="comment">// Not realy perfect!!</span>
+			<span class="reserved">return</span> r.toString();
+		}
+
+		e = document.createElement(<span class="literal">"body"</span>);
+
+		<span class="reserved">if</span> (tinyMCE.isGecko)
+			e.appendChild(r.cloneContents());
+		<span class="reserved">else</span> 
+			e.innerHTML = r.item ? r.item(0).outerHTML : r.htmlText;
+
+		h = tinyMCE._cleanupHTML(inst, inst.contentDocument, inst.settings, e, e, false, true, false);
+
+		<span class="comment">// When editing always use fonts internaly</span>
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
+			tinyMCE.convertSpansToFonts(inst.getDoc());
+
+		<span class="reserved">return</span> h;
+	},
+
+	<span class="comment">/**
+	 * Returns the selected text.
+	 *
+	 * <span class="attrib">@return</span> Selected text contents.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	getSelectedText : <span class="reserved">function</span>() {
+		var inst = <span class="reserved">this</span>.instance;
+		var d, r, s, t;
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+			d = inst.getDoc();
+
+			<span class="reserved">if</span> (d.selection.type == <span class="literal">"Text"</span>) {
+				r = d.selection.createRange();
+				t = r.text;
+			} <span class="reserved">else</span>
+				t = <span class="literal">''</span>;
+		} <span class="reserved">else</span> {
+			s = <span class="reserved">this</span>.getSel();
+
+			<span class="reserved">if</span> (s &amp;&amp; s.toString)
+				t = s.toString();
+			<span class="reserved">else</span>
+				t = <span class="literal">''</span>;
+		}
+
+		<span class="reserved">return</span> t;
+	},
+
+	<span class="comment">/**
+	 * Returns a selection bookmark that can be restored later with moveToBookmark.
+	 * This acts much like the one MSIE has built in but this one is persistent if between DOM
+	 * tree rewritings. The simple mode enables a quicker and non persistent bookmark.
+	 *
+	 * <span class="attrib">@param</span> {boolean} simple If this is set to true, the selection bookmark will not me dom persistent.
+	 * <span class="attrib">@return</span> Selection bookmark that can be restored later with moveToBookmark.
+	 * <span class="attrib">@type</span> TinyMCE_Bookmark
+	 */</span>
+	getBookmark : <span class="reserved">function</span>(simple) {
+		var rng = <span class="reserved">this</span>.getRng();
+		var doc = <span class="reserved">this</span>.instance.getDoc();
+		var sp, le, s, e, nl, i, si, ei;
+		var trng, sx, sy, xx = -999999999;
+
+		<span class="comment">// Skip Opera for now</span>
+		<span class="reserved">if</span> (tinyMCE.isOpera)
+			<span class="reserved">return</span> null;
+
+		sx = doc.body.scrollLeft + doc.documentElement.scrollLeft;
+		sy = doc.body.scrollTop + doc.documentElement.scrollTop;
+
+		<span class="reserved">if</span> (tinyMCE.isSafari || tinyMCE.isGecko)
+			<span class="reserved">return</span> {rng : rng, scrollX : sx, scrollY : sy};
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+			<span class="reserved">if</span> (simple)
+				<span class="reserved">return</span> {rng : rng};
+
+			<span class="reserved">if</span> (rng.item) {
+				e = rng.item(0);
+
+				nl = doc.getElementsByTagName(e.nodeName);
+				<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
+					<span class="reserved">if</span> (e == nl[i]) {
+						sp = i;
+						break;
+					}
+				}
+
+				<span class="reserved">return</span> {
+					tag : e.nodeName,
+					index : sp,
+					scrollX : sx,
+					scrollY : sy
+				};
+			} <span class="reserved">else</span> {
+				trng = rng.duplicate();
+				trng.collapse(true);
+				sp = Math.abs(trng.move(<span class="literal">'character'</span>, xx));
+
+				trng = rng.duplicate();
+				trng.collapse(false);
+				le = Math.abs(trng.move(<span class="literal">'character'</span>, xx)) - sp;
+
+				<span class="reserved">return</span> {
+					start : sp,
+					length : le,
+					scrollX : sx,
+					scrollY : sy
+				};
+			}
+		}
+
+		<span class="reserved">if</span> (tinyMCE.isGecko) {
+			s = tinyMCE.getParentElement(rng.startContainer);
+			<span class="reserved">for</span> (si=0; si&lt;s.childNodes.length &amp;&amp; s.childNodes[si] != rng.startContainer; si++) ;
+
+			nl = doc.getElementsByTagName(s.nodeName);
+			<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
+					<span class="reserved">if</span> (s == nl[i]) {
+						sp = i;
+						break;
+					}
+			}
+
+			e = tinyMCE.getParentElement(rng.endContainer);
+			<span class="reserved">for</span> (ei=0; ei&lt;e.childNodes.length &amp;&amp; e.childNodes[ei] != rng.endContainer; ei++) ;
+
+			nl = doc.getElementsByTagName(e.nodeName);
+			<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
+					<span class="reserved">if</span> (e == nl[i]) {
+						le = i;
+						break;
+					}
+			}
+
+			<span class="comment">//tinyMCE.debug(s.nodeName, sp, rng.startOffset, '-' , e.nodeName, le, rng.endOffset);</span>
+			<span class="comment">//tinyMCE.debug(sx, sy);</span>
+
+			<span class="reserved">return</span> {
+				startTag : s.nodeName,
+				start : sp,
+				startIndex : si,
+				endTag : e.nodeName,
+				end : le,
+				endIndex : ei,
+				startOffset : rng.startOffset,
+				endOffset : rng.endOffset,
+				scrollX : sx,
+				scrollY : sy
+			};
+		}
+
+		<span class="reserved">return</span> null;
+	},
+
+	<span class="comment">/**
+	 * Restores the selection to the specified bookmark.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Bookmark} bookmark Bookmark to restore selection from.
+	 * <span class="attrib">@return</span> true/false if it was successful or not.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	moveToBookmark : <span class="reserved">function</span>(bookmark) {
+		var rng, nl, i;
+		var inst = <span class="reserved">this</span>.instance;
+		var doc = inst.getDoc();
+		var win = inst.getWin();
+		var sel = <span class="reserved">this</span>.getSel();
+
+		<span class="reserved">if</span> (!bookmark)
+			<span class="reserved">return</span> false;
+
+		<span class="reserved">if</span> (tinyMCE.isSafari) {
+			sel.setBaseAndExtent(bookmark.startContainer, bookmark.startOffset, bookmark.endContainer, bookmark.endOffset);
+			<span class="reserved">return</span> true;
+		}
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+			<span class="reserved">if</span> (bookmark.rng) {
+				bookmark.rng.select();
+				<span class="reserved">return</span> true;
+			}
+
+			win.focus();
+
+			<span class="reserved">if</span> (bookmark.tag) {
+				rng = inst.getBody().createControlRange();
+
+				nl = doc.getElementsByTagName(bookmark.tag);
+
+				<span class="reserved">if</span> (nl.length &gt; bookmark.index) {
+					try {
+						rng.addElement(nl[bookmark.index]);
+					} catch (ex) {
+						<span class="comment">// Might be thrown if the node no longer exists</span>
+					}
+				}
+			} <span class="reserved">else</span> {
+				rng = inst.getSel().createRange();
+				rng.moveToElementText(inst.getBody());
+				rng.collapse(true);
+				rng.moveStart(<span class="literal">'character'</span>, bookmark.start);
+				rng.moveEnd(<span class="literal">'character'</span>, bookmark.length);
+			}
+
+			rng.select();
+
+			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
+			<span class="reserved">return</span> true;
+		}
+
+		<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; bookmark.rng) {
+			sel.removeAllRanges();
+			sel.addRange(bookmark.rng);
+			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
+			<span class="reserved">return</span> true;
+		}
+
+		<span class="reserved">if</span> (tinyMCE.isGecko) {
+	<span class="comment">//		try {</span>
+				rng = doc.createRange();
+
+				nl = doc.getElementsByTagName(bookmark.startTag);
+				<span class="reserved">if</span> (nl.length &gt; bookmark.start)
+					rng.setStart(nl[bookmark.start].childNodes[bookmark.startIndex], bookmark.startOffset);
+
+				nl = doc.getElementsByTagName(bookmark.endTag);
+				<span class="reserved">if</span> (nl.length &gt; bookmark.end)
+					rng.setEnd(nl[bookmark.end].childNodes[bookmark.endIndex], bookmark.endOffset);
+
+				sel.removeAllRanges();
+				sel.addRange(rng);
+	<span class="comment">/*		} catch {
+				// Ignore
+			}*/</span>
+
+			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
+			<span class="reserved">return</span> true;
+		}
+
+		<span class="reserved">return</span> false;
+	},
+
+	<span class="comment">/**
+	 * Selects the specified node.
+	 *
+	 * <span class="attrib">@param</span> {HTMLNode} node Node object to move selection to.
+	 * <span class="attrib">@param</span> {boolean} collapse True/false if it will be collasped.
+	 * <span class="attrib">@param</span> {boolean} select_text_node True/false if the text contents should be selected or not.
+	 * <span class="attrib">@param</span> {boolean} to_start True/false if the collapse should be to start or end of range.
+	 */</span>
+	selectNode : <span class="reserved">function</span>(node, collapse, select_text_node, to_start) {
+		var inst = <span class="reserved">this</span>.instance, sel, rng, nodes;
+
+		<span class="reserved">if</span> (!node)
+			<span class="reserved">return</span>;
+
+		<span class="reserved">if</span> (typeof(collapse) == <span class="literal">"undefined"</span>)
+			collapse = true;
+
+		<span class="reserved">if</span> (typeof(select_text_node) == <span class="literal">"undefined"</span>)
+			select_text_node = false;
+
+		<span class="reserved">if</span> (typeof(to_start) == <span class="literal">"undefined"</span>)
+			to_start = true;
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+			rng = inst.getBody().createTextRange();
+
+			try {
+				rng.moveToElementText(node);
+
+				<span class="reserved">if</span> (collapse)
+					rng.collapse(to_start);
+
+				rng.select();
+			} catch (e) {
+				<span class="comment">// Throws illigal agrument in MSIE some times</span>
+			}
+		} <span class="reserved">else</span> {
+			sel = <span class="reserved">this</span>.getSel();
+
+			<span class="reserved">if</span> (!sel)
+				<span class="reserved">return</span>;
+
+			<span class="reserved">if</span> (tinyMCE.isSafari) {
+				sel.setBaseAndExtent(node, 0, node, node.innerText.length);
+
+				<span class="reserved">if</span> (collapse) {
+					<span class="reserved">if</span> (to_start)
+						sel.collapseToStart();
+					<span class="reserved">else</span>
+						sel.collapseToEnd();
+				}
+
+				<span class="reserved">this</span>.scrollToNode(node);
+
+				<span class="reserved">return</span>;
+			}
+
+			rng = inst.getDoc().createRange();
+
+			<span class="reserved">if</span> (select_text_node) {
+				<span class="comment">// Find first textnode in tree</span>
+				nodes = tinyMCE.getNodeTree(node, new Array(), 3);
+				<span class="reserved">if</span> (nodes.length &gt; 0)
+					rng.selectNodeContents(nodes[0]);
+				<span class="reserved">else</span>
+					rng.selectNodeContents(node);
+			} <span class="reserved">else</span>
+				rng.selectNode(node);
+
+			<span class="reserved">if</span> (collapse) {
+				<span class="comment">// Special treatment of textnode collapse</span>
+				<span class="reserved">if</span> (!to_start &amp;&amp; node.nodeType == 3) {
+					rng.setStart(node, node.nodeValue.length);
+					rng.setEnd(node, node.nodeValue.length);
+				} <span class="reserved">else</span>
+					rng.collapse(to_start);
+			}
+
+			sel.removeAllRanges();
+			sel.addRange(rng);
+		}
+
+		<span class="reserved">this</span>.scrollToNode(node);
+
+		<span class="comment">// Set selected element</span>
+		tinyMCE.selectedElement = null;
+		<span class="reserved">if</span> (node.nodeType == 1)
+			tinyMCE.selectedElement = node;
+	},
+
+	<span class="comment">/**
+	 * Scrolls to the specified node location.
+	 *
+	 * <span class="attrib">@param</span> {HTMLNode} node Node to scroll to.
+	 */</span>
+	scrollToNode : <span class="reserved">function</span>(node) {
+		var inst = <span class="reserved">this</span>.instance;
+		var pos, doc, scrollX, scrollY, height;
+
+		<span class="comment">// Scroll to node position</span>
+		pos = tinyMCE.getAbsPosition(node);
+		doc = inst.getDoc();
+		scrollX = doc.body.scrollLeft + doc.documentElement.scrollLeft;
+		scrollY = doc.body.scrollTop + doc.documentElement.scrollTop;
+		height = tinyMCE.isMSIE ? document.getElementById(inst.editorId).style.pixelHeight : inst.targetElement.clientHeight;
+
+		<span class="comment">// Only scroll if out of visible area</span>
+		<span class="reserved">if</span> (!tinyMCE.settings[<span class="literal">'auto_resize'</span>] &amp;&amp; !(pos.absTop &gt; scrollY &amp;&amp; pos.absTop &lt; (scrollY - 25 + height)))
+			inst.contentWindow.scrollTo(pos.absLeft, pos.absTop - height + 25); 
+	},
+
+	<span class="comment">/**
+	 * Returns the browsers selection instance.
+	 *
+	 * <span class="attrib">@return</span> Browser selection instance.
+	 * <span class="attrib">@type</span> DOMSelection
+	 */</span>
+	getSel : <span class="reserved">function</span>() {
+		var inst = <span class="reserved">this</span>.instance;
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
+			<span class="reserved">return</span> inst.getDoc().selection;
+
+		<span class="reserved">return</span> inst.contentWindow.getSelection();
+	},
+
+	<span class="comment">/**
+	 * Returns the browsers selections first range instance.
+	 *
+	 * <span class="attrib">@return</span> Browsers selections first range instance.
+	 * <span class="attrib">@type</span> DOMRange
+	 */</span>
+	getRng : <span class="reserved">function</span>() {
+		var inst = <span class="reserved">this</span>.instance;
+		var sel = <span class="reserved">this</span>.getSel();
+
+		<span class="reserved">if</span> (sel == null)
+			<span class="reserved">return</span> null;
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
+			<span class="reserved">return</span> sel.createRange();
+
+		<span class="reserved">if</span> (tinyMCE.isSafari &amp;&amp; !sel.getRangeAt)
+			<span class="reserved">return</span> <span class="literal">''</span> + window.getSelection();
+
+		<span class="reserved">return</span> sel.getRangeAt(0);
+	},
+
+	<span class="comment">/**
+	 * Returns the currently selected/focused element.
+	 *
+	 * <span class="attrib">@return</span> Currently selected element.
+	 * <span class="attrib">@type</span> HTMLElement
+	 */</span>
+	getFocusElement : <span class="reserved">function</span>() {
+		var inst = <span class="reserved">this</span>.instance;
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) {
+			var doc = inst.getDoc();
+			var rng = doc.selection.createRange();
+
+	<span class="comment">//		if (rng.collapse)</span>
+	<span class="comment">//			rng.collapse(true);</span>
+
+			var elm = rng.item ? rng.item(0) : rng.parentElement();
+		} <span class="reserved">else</span> {
+			<span class="reserved">if</span> (inst.isHidden())
+				<span class="reserved">return</span> inst.getBody();
+
+			var sel = <span class="reserved">this</span>.getSel();
+			var rng = <span class="reserved">this</span>.getRng();
+
+			<span class="reserved">if</span> (!sel || !rng)
+				<span class="reserved">return</span> null;
+
+			var elm = rng.commonAncestorContainer;
+			<span class="comment">//var elm = (sel &amp;&amp; sel.anchorNode) ? sel.anchorNode : null;</span>
+
+			<span class="comment">// Handle selection a image or other control like element such as anchors</span>
+			<span class="reserved">if</span> (!rng.collapsed) {
+				<span class="comment">// Is selection small</span>
+				<span class="reserved">if</span> (rng.startContainer == rng.endContainer) {
+					<span class="reserved">if</span> (rng.startOffset - rng.endOffset &lt; 2) {
+						<span class="reserved">if</span> (rng.startContainer.hasChildNodes())
+							elm = rng.startContainer.childNodes[rng.startOffset];
+					}
+				}
+			}
+
+			<span class="comment">// Get the element parent of the node</span>
+			elm = tinyMCE.getParentElement(elm);
+
+			<span class="comment">//if (tinyMCE.selectedElement != null &amp;&amp; tinyMCE.selectedElement.nodeName.toLowerCase() == "img")</span>
+			<span class="comment">//	elm = tinyMCE.selectedElement;</span>
+		}
+
+		<span class="reserved">return</span> elm;
+	}
+};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

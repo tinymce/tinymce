@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: textarea_trigger</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: textarea_trigger</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to specify the name of the attribute to check if it's value is true/false. If the <a href="option_mode.html">mode</a> option is set to &quot;specific_textareas&quot;, only specific textareas with a attribute by the name of the value of this option gets converted and only if it's set to true. This option defaults to &quot;mce_editable&quot;.
+	</p>
+
+	<p>
+		If the mode is set to textareas and the textarea trigger attribute value is set to false, these textareas will not be converted.
+	</p>
+
+	<p>
+		<strong>Notice: This option is deprecated.</strong>
+		We strongly recommend you to use the <a href="option_editor_selector.html">editor_selector</a>/<a href="option_editor_deselector.html">editor_deselector</a> options instead since they validate with W3C specifications.<strong>
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the textarea_trigger option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>textarea_trigger : "convert_this"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

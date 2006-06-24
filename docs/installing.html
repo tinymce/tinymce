@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Installation instructions</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Installation instructions</h1>
+</div>
+
+<div class="content">
+	<p>Installing TinyMCE is very simple, follow the instructions here. We give a few examples of to integrate TinyMCE, also look at the extensive <a href="reference_configuration.html">options</a> for configuration.</p>
+
+	<div class="separator"></div>
+
+	<h2>Requirements</h2>
+	<div class="section">
+		<p>TinyMCE has no direct requirements except for <a href="compatiblity_chart.html">browser compatibility</a> and of course JavaScript needs to be turned on. There is NO backend code distributed with TinyMCE.
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<h2>Downloading</h2>
+	<div class="section">
+		<p>For download instructions check our <a href="http://tinymce.moxiecode.com">web site.</a></p>
+	</div>
+
+	<div class="separator"></div>
+
+	<h2>Extracting the archives</h2>
+	<div class="section">
+		<p>On windows you could use <a href="http://www.winzip.com">WinZip</a> or something similar. And on other operating systems such as Linux you simply extract the archive with the tar command. You can find a example on how to extract the archived file on Linux below.</p>
+		<p>
+			You should extract TinyMCE in your wwwroot or site domain root folder
+		</p>
+		<h3>Extract example using a shell:</h3>
+		<div class="example">
+<pre>
+$ cd wwwroot
+$ gzip -d tinymce_1_44.tar.gz
+$ tar xvf tinymce_1_44.tar
+</pre>
+		</div>
+		<p>
+			<h3>A folder structure looking like this is created:</h3>
+		<div class="example">
+<pre>
+/tinymce/
+/tinymce/docs/
+/tinymce/docs/zh_cn/
+/tinymce/examples/
+/tinymce/examples/zh_cn/
+/tinymce/jscripts/
+/tinymce/jscripts/tiny_mce/
+/tinymce/jscripts/tiny_mce/langs/
+/tinymce/jscripts/tiny_mce/plugins/
+/tinymce/jscripts/tiny_mce/plugins/&lt;plugin folders&gt;
+/tinymce/jscripts/tiny_mce/themes/
+/tinymce/jscripts/tiny_mce/themes/advanced/
+/tinymce/jscripts/tiny_mce/themes/default/
+/tinymce/jscripts/tiny_mce/themes/simple/
+</pre>
+		</div>
+		</p>
+	</div>
+
+	<div class="separator"></div>
+
+	<h2>Making changes on your web site</h2>
+	<div class="section">
+		<p>Once you have extracted the archive you will need to edit the pages to include the configuration and javascript for TinyMCE. Please note that you should probably only include the TinyMCE javascript on the pages that need it, not all the pages of the web site. Remember to change the URL to the .js below to match your installation path.</p>
+		<p>
+		<h3>The most basic page integration (converts all textarea elements into editors):</h3>
+		<div class="example">
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;TinyMCE Test&lt;/title&gt;
+<strong>&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; src=&quot;../jscripts/tiny_mce/tiny_mce.js&quot;&gt;&lt;/script&gt;
+&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;
+tinyMCE.init({
+	mode : &quot;textareas&quot;
+});
+&lt;/script&gt;</strong>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form method=&quot;post&quot;&gt;
+	&lt;textarea name=&quot;content&quot; cols=&quot;50&quot; rows=&quot;15&quot;&gt;This is some content that will be editable with TinyMCE.&lt;/textarea&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+		</div>
+		</p>
+		<p>
+			Here are a few different example of how you could integrate TinyMCE.
+		</p>
+		<p>
+			<ul>
+				<li><a href="installation_example_00.html">Example 00</a> - Simple Theme</li>
+				<li><a href="installation_example_01.html">Example 01</a> - Advanced Theme</li>
+				<li><a href="installation_example_02.html">Example 02</a> - Advanced Theme Full</li>
+				<li><a href="installation_example_03.html">Example 03</a> - Advanced Theme Simplified</li>
+			</ul>
+		</p>
+		<p>
+			If you have any problems, you should check the forum on the <a href="http://tinymce.moxiecode.com/" target="_blank">TinyMCE web site.</a></p>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

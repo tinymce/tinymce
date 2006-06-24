@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: theme_advanced_container_align</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: theme_advanced_container_&lt;container&gt;_align</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option is used to set the alignment of a specific containerer. The &lt;container&gt; part of this option should be replaced with a name within the <a href="option_theme_advanced_containers.html">theme_advanced_containers</a> list. This option can only be used when <a href="option_theme.html">theme</a> is set to advanced and when the <a href="option_theme_advanced_layout_manager.html">theme_advanced_layout_manager</a> option is set to the value of &quot;RowLayout&quot;.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the theme_advanced_container_&lt;container&gt;_align option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>theme_advanced_container_somecontainer1_align : "left"</strong>
+	<strong>theme_advanced_container_somecontainer2_align : "right"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

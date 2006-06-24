@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>External plugin testcase</title>
+<script language="javascript" type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		mode : "textareas",
+		theme : "advanced",
+		plugins : "table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,zoom,flash,searchreplace,print,-test",
+		theme_advanced_buttons1_add_before : "test,save,separator",
+		theme_advanced_buttons1_add : "fontselect,fontsizeselect",
+		theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor",
+		theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator",
+		theme_advanced_buttons3_add_before : "tablecontrols,separator",
+		theme_advanced_buttons3_add : "emotions,iespell,flash,advhr,separator,print",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_path_location : "bottom",
+		auto_reset_designmode : true
+	});
+
+	tinyMCE.loadPlugin('test', 'test');
+</script>
+</head>
+<body>
+
+<a href="index.htm">&lt;&lt; Back</a><br />
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+
+<h3>External plugin testcase</h3>
+This is a test case for loading external plugins.<br />
+<br />
+<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">
+	Some <strong>element</strong>, this is to be editor 1.
+	<p>Some paragraph. <a title="Some popup link title" href="#" target="http://tinymce.moxiecode.com" onclick="window.open('http://www.sourceforge.net/','popup','left='+(screen.availWidth/2-320)+',top='+(screen.availHeight/2-240)+',width=640,height=480,resizable=yes');return false;">Some popup link</a></p>
+	<img width="250" height="48" border="0" onmouseover="this.src='../logo_over.jpg';" onmouseout="this.src='../logo.jpg';" src="../logo.jpg" />
+</textarea>
+
+</form>
+
+</body>
+</html>

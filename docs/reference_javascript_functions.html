@@ -1,0 +1,597 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Javascript Functions</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Javascript Functions</h1>
+</div>
+
+<div class="content">
+<p>This is for advanced users, TinyMCE has a global instance with some public functions that can be called from the page.</p>
+<h3>tinyMCE.triggerSave([skip_cleanup], [skip_callback]);</h3>
+<p>
+Makes a cleanup and moves the contents from the editor to the form field. This method is automaticly called by tinyMCE by adding a trigger on the forms submit method.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>[skip_cleanup]</td>
+	<td>Disables the cleanup process of trigger save. Defaults to false. (Optional)</td>
+</tr>
+<tr>
+	<td>[skip_callback]</td>
+	<td>Disables the execution of the <a href="option_save_callback.html">save_callback</a> function. Defaults to false. (Optional)</td>
+</tr>
+</tbody>
+</table>
+
+skip_callback
+</p>
+<p>
+Returns: Nothing
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.updateContent(form_element_name);</h3>
+<p>
+Moves the contents from the form element to the editor, this does the opposite of triggerSave(). This method can be used when you want to change the contents of the editor dynamicly.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>form_element_name</td>
+	<td>The name of the form element to get contents from.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: Nothing
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.execInstanceCommand(editor_id, command, [user_interface], [value]);</h3>
+<p>
+This method executes a command by name on the editor instance specified by the editor_id parameter.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>editor_id</td>
+	<td>ID of editor instance or element id/name of the replaced element.</td>
+</tr>
+<tr>
+	<td>command</td>
+	<td>Command to execute check the execCommand function for details.</td>
+</tr>
+<tr>
+	<td>[user_interface]</td>
+	<td>Is a user interface to be used or not.</td>
+</tr>
+<tr>
+	<td>[value]</td>
+	<td>Value to pass with command for example a URL..</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: Nothing 
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.execCommand(command, [user_interface], [value]);</h3>
+<p>
+This method executes a command by name on the selected editor instance.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>command</td>
+	<td>Command to execute for example &quot;Bold&quot; or &quot;Italic&quot;. These are defined by Mozilla <a href="http://www.mozilla.org/editor/midas-spec.html">Midas specification</a> or <a href="http://msdn.microsoft.com/workshop/author/dhtml/reference/commandids.asp">Microsoft specification</a>. But there are a some TinyMCE specific commands many other commands are available within plugins and themes.<br /><br />
+	<table border="0" cellspacing="0" cellpadding="2">
+	<tr>
+		<td>mceLink</td>
+		<td>Opens the insert link dialog and inserts a link.</td>
+	</tr>
+	<tr>
+		<td>mceImage</td>
+		<td>Opens the insert image dialog and inserts a image.</td>
+	</tr>
+	<tr>
+		<td>mceCleanup</td>
+		<td>Removed unwanted elements and attributes from the HTML code.</td>
+	</tr>
+	<tr>
+		<td>mceHelp</td>
+		<td>Opens the manual pages.</td>
+	</tr>
+	<tr>
+		<td>mceAddControl</td>
+		<td>Adds a editor control to the element id/name specified as value.</td>
+	</tr>
+	<tr>
+		<td>mceRemoveControl</td>
+		<td>Removes a specific control by editor_id name. The value is the editor_id to remove, editor ids are in the following format: &quot;mce_editor_&lt;index&gt;&quot;. DOM element ids and form element names can allso be used.</td>
+	</tr>
+	<tr>
+		<td>mceFocus</td>
+		<td>Focuses the editor by the id placed in value. Editor id's are in the format "mce_editor_<index>". DOM element ids and form element names can allso be used.</td>
+	</tr>
+	<tr>
+		<td>mceSetCSSClass</td>
+		<td>Sets the CSS class attribute or creates a new span of the selection. The value is the css class name to assign to selected element or new span element.</td>
+	</tr>
+	<tr>
+		<td>mceInsertContent</td>
+		<td>Inserts contents of value parameter to current cursor position.</td>
+	</tr>
+	<tr>
+		<td>mceReplaceContent</td>
+		<td>Replaces the current selection with the HTML code in value. The {$selection} variable gets replaced with the currently selected text contents.</td>
+	</tr>
+	<tr>
+		<td>mceSetAttribute</td>
+		<td>Sets a attribute of the currenly selected element. The value of this command should be a name/value array with the following parameters.<br /><br />
+		name - Attribute name to set.<br />
+		value - Attrbute value to set.<br />
+		[targets] - Target elements to add attribute on. Default: p,img,span,div,td,h1,h2,h3,h4,h5,h6,pre,address.<br /><br />
+		Example of usage:<br />
+		tinyMCE.execCommand('mceSetAttribute',false,{name:'align',value:'right'});<br />
+		</td>
+	</tr>
+	<tr>
+		<td>mceToggleVisualAid</td>
+		<td>Toggles visual aid/guidelines mode on/off.</td>
+	</tr>
+	<tr>
+		<td>mceAnchor</td>
+		<td>Inserts a named anchor element, the value is the name of the anchor.</td>
+	</tr>
+	<tr>
+		<td>mceResetDesignMode</td>
+		<td>Resets the designMode state of all editor instances, this command is useful on Firefox if the editor is placed in tabs or shown/hidden with style.display="none/block". Call this command after the editor displayed again.</td>
+	</tr>
+	<tr>
+		<td>mceSelectNode</td>
+		<td>Selects the node/element passed as value. This command will also scroll to the elements location within the editor.</td>
+	</tr>
+	<tr>
+		<td>mceSelectNodeDepth</td>
+		<td>Selects the node/element by depth relative from the current node. So a value of 0 will select the currently focused node. This command will also scroll to the elements location within the editor.</td>
+	</tr>
+	<tr>
+		<td>mceRemoveNode</td>
+		<td>Removes the specified node and places the contents of the node in the same location. Specify the node reference to remove in the value parameter or null if the currently selected node is to be removed.</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
+	</tbody>
+</table>
+	</td>
+</tr>
+<tr>
+	<td>[user_interface]</td>
+	<td>Tells if the command is to display a user interface or not. True/False option.</td>
+</tr>
+<tr>
+	<td>[value]</td>
+	<td>Value to pass for the command for example to insertLink it's the URL of the link.</td>
+</tr>
+</tbody>
+</table>
+
+</p>
+<p>
+Returns: Nothing
+</p>
+<p>
+Example:
+</p>
+<p>
+<div class="example">
+<pre>
+&lt;a href=&quot;javascript:tinymce.execCommand('Bold');&quot;&gt;[Do bold]&lt;/a&gt;
+</pre>
+</div>
+</p>
+<div class="separator"></div>
+<h3><span class="marked">(Deprecated)</span> tinyMCE.insertLink(href, target);</h3>
+<p>This method is deprecated and removed as of 2.0.3. Use tinyMCE.execCommand('mceInsertContent',false,'custom html'); instead and tinyMCE.getInstanceById('&lt;inst&gt;').selection.getFocusElement() to retrive/update the selected element.</p>
+<p>But if you realy need the old function it's marked internal but is available in the advanced theme and you can call it by using tinyMCE.themes['advanced']._insertLink(href, target);. But the recommended way is to modify your code to use the logic above.</p>
+<p>This method inserts a link a the cursor position of the selected editor instance or updates the selected link with new data. This method should be called upon "ok" in the insertLink popup when you create custom themes.
+</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>href</td>
+	<td>HREF/URL of the link.</td>
+</tr>
+<tr>
+	<td>target</td>
+	<td>Target of the link.</td>
+</tr>
+</tbody>
+</table>
+<p>
+Returns: Nothing
+</p>
+<div class="separator"></div>
+<h3><span class="marked">(Deprecated)</span> tinyMCE.insertImage(src, alt, border, hspace, vspace, width, height, align, title, onmouseover, onmouseout);</h4>
+<p>This method is deprecated and removed as of 2.0.3. Use tinyMCE.execCommand('mceInsertContent',false,'custom html'); instead or if you realy need the old function it's marked internal but is available in the advanced theme and you can call it by using tinyMCE.themes['advanced']._insertImage(src, alt, border, hspace, vspace, width, height, align, title, onmouseover, onmouseout);. But the recommended way is to modify your code to use the logic above.</p>
+<p>
+This method inserts a image a the cursor position of the selected editor instance or updates the selected image with new data. This method should be called upon "ok" in the insertImage popup when you create custom themes.
+</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>src</td>
+	<td>Image src url.</td>
+</tr>
+<tr>
+	<td>alt</td>
+	<td>Alternative text of img element.</td>
+</tr>
+<tr>
+	<td>border</td>
+	<td>Border of image element.</td>
+</tr>
+<tr>
+	<td>hspace</td>
+	<td>Horizontal spacing of image element.</td>
+</tr>
+<tr>
+	<td>vspace</td>
+	<td>Vertical spacing of image element.</td>
+</tr>
+<tr>
+	<td>width</td>
+	<td>Width of image element.</td>
+</tr>
+<tr>
+	<td>height</td>
+	<td>Height of image element.</td>
+</tr>
+<tr>
+	<td>align</td>
+	<td>Alignment of image element.</td>
+</tr>
+<tr>
+	<td>title</td>
+	<td>Link title of image element.</td>
+</tr>
+<tr>
+	<td>onmouseover</td>
+	<td>On mouse over event handler of image element.</td>
+</tr>
+<tr>
+	<td>onmouseout</td>
+	<td>On mouse out event handler of image element.</td>
+</tr>
+</tbody>
+</table>
+<p>
+Returns: Nothing
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.triggerNodeChange();</h3>
+<p>This method is to be called when external changes is made to the editor. This method will then call the "handleNodeChangeCallback" callback in the theme.
+</p>
+<p>
+Parameters:
+</p>
+<p>
+None
+</p>
+<p>
+Returns: Nothing
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.getContent();</h3>
+<p>
+This method returns the HTML contents of the currently selected editor or null if no editor was selected.
+</p>
+<p>
+Parameters:
+</p>
+<p>
+None
+</p>
+<p>
+Returns: HTML contents of the currently selected editor or null. 
+</p>
+<div class="separator"></div>
+<h3>Syntax: tinyMCE.setContent(html);</h3>
+
+<p>This method sets the HTML contents of the currently selected editor.</p>
+
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>html</td>
+	<td>HTML Source code to set.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: None.
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.getInstanceById(editor_id);</h3>
+<p>
+This method returns a editor instance by editor id.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>editor_id</td>
+	<td>Editor instance to retrive.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: TinyMCE Editor instance (TinyMCE_Control). 
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.importThemeLanguagePack([theme]);</h3>
+<p>
+This method imports/loads theme specific language packs. This may be called from custom themes.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>[theme]</td>
+	<td>Name of the current theme. This is a optional parameter it defaults to the global "theme" setting. This parameter is useful within theme plugins.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: None.
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.importPluginLanguagePack(plugin, valid_languages);</h3>
+<p>
+This method imports/loads plugin specific language packs. This may be called from custom plugins.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>plugin</td>
+	<td>Name of the current plugin.</td>
+</tr>
+<tr>
+	<td>valid_languages</td>
+	<td>Comma separated list of supported languagepacks.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: None.
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.applyTemplate(html);</h3>
+<p>
+This method replaces settings and lang variables in the theme.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>html</td>
+	<td>HTML code to apply theme variable substitution on.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: New converted, HTML code. 
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.openWindow(template, [args]);</h3>
+<p>This method opens a new window by the template data assigned, it will get the width, height and html data from template parameters. The args array contains variable names to be substituted.</p>
+<p>
+There are some custom window arguments:
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>mce_replacevariables</td>
+	<td>Enables/Disables the language/variable replacement of the document HTML. Enabled by default.</td>
+</tr>
+<tr>
+	<td>mce_windowresize</td>
+	<td>Enables/Disables the auto resize feature of popupwindows. Enabled by default.</td>
+</tr>
+</tbody>
+</table>
+</p>
+
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>template</td>
+	<td>Name/Value array with width, height, html and file keys in it.</td>
+</tr>
+<tr>
+	<td>[args]</td>
+	<td>Name/Value array with variable names to replace. Variables in the template file key value (URL) gets replaced with the argument list.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: None.
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.getWindowArg(name, [default_value]);</h3>
+<p>
+This method returns a window argument defined by name. This function is to be used in theme popup windows to retrive dialog parameters.
+</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>name</td>
+	<td>Name of window argument to get.</td>
+</tr>
+<tr>
+	<td>[default_value]</td>
+	<td>Default value to be returned if window argument is missing.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: Window argument value.
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.setWindowArg(name, value);</h3>
+<p>This method sets a window argument by name. This can for example be useful if plugin are to call other plugins.</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>name</td>
+	<td>Name of window argument to set.</td>
+</tr>
+<tr>
+	<td>value</td>
+	<td>Value to set in window argument.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: Window argument value.
+</p>
+<div class="separator"></div>
+<h3>tinyMCE.getParam(name, [default_value], [strip_whitespace]);</h3>
+<p>This method returns a TinyMCE configuration parameter.</p>
+<p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+	<td colspan="2">Parameters:</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>name</td>
+	<td>Name of window argument to get.</td>
+</tr>
+<tr>
+	<td>[default_value]</td>
+	<td>Default value to be returned if window argument is missing.</td>
+</tr>
+<tr>
+	<td>[strip_whitespace]</td>
+	<td>If true all whitespace will be removed from return value, default: false.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>
+Returns: TinyMCE configuration parameter.
+</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

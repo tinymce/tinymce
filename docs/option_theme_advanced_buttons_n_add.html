@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: theme_advanced_buttons&lt;1-n_add&gt;</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: theme_advanced_buttons&lt;1-n_add&gt;</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option should contain a comma separated list of button/control names to add to the end of the specified toolbar row. The number 1-n is the row number to add the buttons/controls to. Below is a list of built in controls, plugins may include other controls names that can be inserted but these are documented in the individual plugins.
+		This option can only be used when <a href="option_theme.html">theme</a> is set to advanced and when the <a href="option_theme_advanced_layout_manager.html">theme_advanced_layout_manager</a> option is set to the default value of &quot;SimpleLayout&quot;.
+	</p>
+	<p>
+		A complete reference of all built in buttons and controls can be found in the <a href="reference_buttons.html">button/control reference</a> page.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the theme_advanced_buttons&lt;1-n&gt;_add option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>theme_advanced_buttons1_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor"</strong>
+	<strong>theme_advanced_buttons2_add : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,help,code"</strong>
+	<strong>theme_advanced_buttons3_add : "hr,removeformat,visualaid,separator,sub,sup,separator,charmap"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_ForceParagraphs.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_ForceParagraphs.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_ForceParagraphs.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_ForceParagraphs.class.js.html,v $
+ * $Revision: 1.42 $
+ * $Date: 2006/04/14 20:00:30 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ */</span>
+
+<span class="comment">/**
+ * Forces P tags on return/enter in Gecko browsers.
+ */</span>
+var TinyMCE_ForceParagraphs = {
+	<span class="comment">/**
+	 * Inserts a paragraph at the current cursor location.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Control} inst TinyMCE editor control instance.
+	 * <span class="attrib">@param</span> {DOMEvent} e DOM event object.
+	 * <span class="attrib">@return</span> true on success or false if it fails.
+	 * <span class="attrib">@type</span> boolean
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_insertPara : <span class="reserved">function</span>(inst, e) {
+		<span class="reserved">function</span> isEmpty(para) {
+			<span class="reserved">function</span> isEmptyHTML(html) {
+				<span class="reserved">return</span> html.replace(new RegExp(<span class="literal">'[ \t\r\n]+'</span>, <span class="literal">'g'</span>), <span class="literal">''</span>).toLowerCase() == <span class="literal">""</span>;
+			}
+
+			<span class="comment">// Check for images</span>
+			<span class="reserved">if</span> (para.getElementsByTagName(<span class="literal">"img"</span>).length &gt; 0)
+				<span class="reserved">return</span> false;
+
+			<span class="comment">// Check for tables</span>
+			<span class="reserved">if</span> (para.getElementsByTagName(<span class="literal">"table"</span>).length &gt; 0)
+				<span class="reserved">return</span> false;
+
+			<span class="comment">// Check for HRs</span>
+			<span class="reserved">if</span> (para.getElementsByTagName(<span class="literal">"hr"</span>).length &gt; 0)
+				<span class="reserved">return</span> false;
+
+			<span class="comment">// Check all textnodes</span>
+			var nodes = tinyMCE.getNodeTree(para, new Array(), 3);
+			<span class="reserved">for</span> (var i=0; i&lt;nodes.length; i++) {
+				<span class="reserved">if</span> (!isEmptyHTML(nodes[i].nodeValue))
+					<span class="reserved">return</span> false;
+			}
+
+			<span class="comment">// No images, no tables, no hrs, no text content then it's empty</span>
+			<span class="reserved">return</span> true;
+		}
+
+		var doc = inst.getDoc();
+		var sel = inst.getSel();
+		var win = inst.contentWindow;
+		var rng = sel.getRangeAt(0);
+		var body = doc.body;
+		var rootElm = doc.documentElement;
+		var blockName = <span class="literal">"P"</span>;
+
+	<span class="comment">//	tinyMCE.debug(body.innerHTML);</span>
+
+	<span class="comment">//	debug(e.target, sel.anchorNode.nodeName, sel.focusNode.nodeName, rng.startContainer, rng.endContainer, rng.commonAncestorContainer, sel.anchorOffset, sel.focusOffset, rng.toString());</span>
+
+		<span class="comment">// Setup before range</span>
+		var rngBefore = doc.createRange();
+		rngBefore.setStart(sel.anchorNode, sel.anchorOffset);
+		rngBefore.collapse(true);
+
+		<span class="comment">// Setup after range</span>
+		var rngAfter = doc.createRange();
+		rngAfter.setStart(sel.focusNode, sel.focusOffset);
+		rngAfter.collapse(true);
+
+		<span class="comment">// Setup start/end points</span>
+		var direct = rngBefore.compareBoundaryPoints(rngBefore.START_TO_END, rngAfter) &lt; 0;
+		var startNode = direct ? sel.anchorNode : sel.focusNode;
+		var startOffset = direct ? sel.anchorOffset : sel.focusOffset;
+		var endNode = direct ? sel.focusNode : sel.anchorNode;
+		var endOffset = direct ? sel.focusOffset : sel.anchorOffset;
+
+		startNode = startNode.nodeName == <span class="literal">"BODY"</span> ? startNode.firstChild : startNode;
+		endNode = endNode.nodeName == <span class="literal">"BODY"</span> ? endNode.firstChild : endNode;
+
+		<span class="comment">// tinyMCE.debug(startNode, endNode);</span>
+
+		<span class="comment">// Get block elements</span>
+		var startBlock = tinyMCE.getParentBlockElement(startNode);
+		var endBlock = tinyMCE.getParentBlockElement(endNode);
+
+		<span class="comment">// If absolute force paragraph generation within</span>
+		<span class="reserved">if</span> (startBlock &amp;&amp; new RegExp(<span class="literal">'absolute|relative|static'</span>, <span class="literal">'gi'</span>).test(startBlock.style.position))
+			startBlock = null;
+
+		<span class="reserved">if</span> (endBlock &amp;&amp; new RegExp(<span class="literal">'absolute|relative|static'</span>, <span class="literal">'gi'</span>).test(endBlock.style.position))
+			endBlock = null;
+
+		<span class="comment">// Use current block name</span>
+		<span class="reserved">if</span> (startBlock != null) {
+			blockName = startBlock.nodeName;
+
+			<span class="comment">// Use P instead</span>
+			<span class="reserved">if</span> (blockName == <span class="literal">"TD"</span> || blockName == <span class="literal">"TABLE"</span> || (blockName == <span class="literal">"DIV"</span> &amp;&amp; new RegExp(<span class="literal">'left|right'</span>, <span class="literal">'gi'</span>).test(startBlock.style.cssFloat)))
+				blockName = <span class="literal">"P"</span>;
+		}
+
+		<span class="comment">// Within a list use normal behaviour</span>
+		<span class="reserved">if</span> (tinyMCE.getParentElement(startBlock, <span class="literal">"OL,UL"</span>) != null)
+			<span class="reserved">return</span> false;
+
+		<span class="comment">// Within a table create new paragraphs</span>
+		<span class="reserved">if</span> ((startBlock != null &amp;&amp; startBlock.nodeName == <span class="literal">"TABLE"</span>) || (endBlock != null &amp;&amp; endBlock.nodeName == <span class="literal">"TABLE"</span>))
+			startBlock = endBlock = null;
+
+		<span class="comment">// Setup new paragraphs</span>
+		var paraBefore = (startBlock != null &amp;&amp; startBlock.nodeName == blockName) ? startBlock.cloneNode(false) : doc.createElement(blockName);
+		var paraAfter = (endBlock != null &amp;&amp; endBlock.nodeName == blockName) ? endBlock.cloneNode(false) : doc.createElement(blockName);
+
+		<span class="comment">// Is header, then force paragraph under</span>
+		<span class="reserved">if</span> (/^(H[1-6])$/.test(blockName))
+			paraAfter = doc.createElement(<span class="literal">"p"</span>);
+
+		<span class="comment">// Setup chop nodes</span>
+		var startChop = startNode;
+		var endChop = endNode;
+
+		<span class="comment">// Get startChop node</span>
+		node = startChop;
+		do {
+			<span class="reserved">if</span> (node == body || node.nodeType == 9 || tinyMCE.isBlockElement(node))
+				break;
+
+			startChop = node;
+		} <span class="reserved">while</span> ((node = node.previousSibling ? node.previousSibling : node.parentNode));
+
+		<span class="comment">// Get endChop node</span>
+		node = endChop;
+		do {
+			<span class="reserved">if</span> (node == body || node.nodeType == 9 || tinyMCE.isBlockElement(node))
+				break;
+
+			endChop = node;
+		} <span class="reserved">while</span> ((node = node.nextSibling ? node.nextSibling : node.parentNode));
+
+		<span class="comment">// Fix when only a image is within the TD</span>
+		<span class="reserved">if</span> (startChop.nodeName == <span class="literal">"TD"</span>)
+			startChop = startChop.firstChild;
+
+		<span class="reserved">if</span> (endChop.nodeName == <span class="literal">"TD"</span>)
+			endChop = endChop.lastChild;
+
+		<span class="comment">// If not in a block element</span>
+		<span class="reserved">if</span> (startBlock == null) {
+			<span class="comment">// Delete selection</span>
+			rng.deleteContents();
+			sel.removeAllRanges();
+
+			<span class="reserved">if</span> (startChop != rootElm &amp;&amp; endChop != rootElm) {
+				<span class="comment">// Insert paragraph before</span>
+				rngBefore = rng.cloneRange();
+
+				<span class="reserved">if</span> (startChop == body)
+					rngBefore.setStart(startChop, 0);
+				<span class="reserved">else</span>
+					rngBefore.setStartBefore(startChop);
+
+				paraBefore.appendChild(rngBefore.cloneContents());
+
+				<span class="comment">// Insert paragraph after</span>
+				<span class="reserved">if</span> (endChop.parentNode.nodeName == blockName)
+					endChop = endChop.parentNode;
+
+				<span class="comment">// If not after image</span>
+				<span class="comment">//if (rng.startContainer.nodeName != "BODY" &amp;&amp; rng.endContainer.nodeName != "BODY")</span>
+					rng.setEndAfter(endChop);
+
+				<span class="reserved">if</span> (endChop.nodeName != <span class="literal">"#text"</span> &amp;&amp; endChop.nodeName != <span class="literal">"BODY"</span>)
+					rngBefore.setEndAfter(endChop);
+
+				var contents = rng.cloneContents();
+				<span class="reserved">if</span> (contents.firstChild &amp;&amp; (contents.firstChild.nodeName == blockName || contents.firstChild.nodeName == <span class="literal">"BODY"</span>))
+					paraAfter.innerHTML = contents.firstChild.innerHTML;
+				<span class="reserved">else</span>
+					paraAfter.appendChild(contents);
+
+				<span class="comment">// Check if it's a empty paragraph</span>
+				<span class="reserved">if</span> (isEmpty(paraBefore))
+					paraBefore.innerHTML = <span class="literal">"&amp;nbsp;"</span>;
+
+				<span class="comment">// Check if it's a empty paragraph</span>
+				<span class="reserved">if</span> (isEmpty(paraAfter))
+					paraAfter.innerHTML = <span class="literal">"&amp;nbsp;"</span>;
+
+				<span class="comment">// Delete old contents</span>
+				rng.deleteContents();
+				rngAfter.deleteContents();
+				rngBefore.deleteContents();
+
+				<span class="comment">// Insert new paragraphs</span>
+				paraAfter.normalize();
+				rngBefore.insertNode(paraAfter);
+				paraBefore.normalize();
+				rngBefore.insertNode(paraBefore);
+
+				<span class="comment">// tinyMCE.debug("1: ", paraBefore.innerHTML, paraAfter.innerHTML);</span>
+			} <span class="reserved">else</span> {
+				body.innerHTML = <span class="literal">"&lt;"</span> + blockName + <span class="literal">"&gt;&amp;nbsp;&lt;/"</span> + blockName + <span class="literal">"&gt;&lt;"</span> + blockName + <span class="literal">"&gt;&amp;nbsp;&lt;/"</span> + blockName + <span class="literal">"&gt;"</span>;
+				paraAfter = body.childNodes[1];
+			}
+
+			inst.selection.selectNode(paraAfter, true, true);
+
+			<span class="reserved">return</span> true;
+		}
+
+		<span class="comment">// Place first part within new paragraph</span>
+		<span class="reserved">if</span> (startChop.nodeName == blockName)
+			rngBefore.setStart(startChop, 0);
+		<span class="reserved">else</span>
+			rngBefore.setStartBefore(startChop);
+
+		rngBefore.setEnd(startNode, startOffset);
+		paraBefore.appendChild(rngBefore.cloneContents());
+
+		<span class="comment">// Place secound part within new paragraph</span>
+		rngAfter.setEndAfter(endChop);
+		rngAfter.setStart(endNode, endOffset);
+		var contents = rngAfter.cloneContents();
+
+		<span class="reserved">if</span> (contents.firstChild &amp;&amp; contents.firstChild.nodeName == blockName) {
+	<span class="comment">/*		var nodes = contents.firstChild.childNodes;
+			for (var i=0; i&lt;nodes.length; i++) {
+				//tinyMCE.debug(nodes[i].nodeName);
+				if (nodes[i].nodeName != "BODY")
+					paraAfter.appendChild(nodes[i]);
+			}
+	*/</span>
+			paraAfter.innerHTML = contents.firstChild.innerHTML;
+		} <span class="reserved">else</span>
+			paraAfter.appendChild(contents);
+
+		<span class="comment">// Check if it's a empty paragraph</span>
+		<span class="reserved">if</span> (isEmpty(paraBefore))
+			paraBefore.innerHTML = <span class="literal">"&amp;nbsp;"</span>;
+
+		<span class="comment">// Check if it's a empty paragraph</span>
+		<span class="reserved">if</span> (isEmpty(paraAfter))
+			paraAfter.innerHTML = <span class="literal">"&amp;nbsp;"</span>;
+
+		<span class="comment">// Create a range around everything</span>
+		var rng = doc.createRange();
+
+		<span class="reserved">if</span> (!startChop.previousSibling &amp;&amp; startChop.parentNode.nodeName.toUpperCase() == blockName) {
+			rng.setStartBefore(startChop.parentNode);
+		} <span class="reserved">else</span> {
+			<span class="reserved">if</span> (rngBefore.startContainer.nodeName.toUpperCase() == blockName &amp;&amp; rngBefore.startOffset == 0)
+				rng.setStartBefore(rngBefore.startContainer);
+			<span class="reserved">else</span>
+				rng.setStart(rngBefore.startContainer, rngBefore.startOffset);
+		}
+
+		<span class="reserved">if</span> (!endChop.nextSibling &amp;&amp; endChop.parentNode.nodeName.toUpperCase() == blockName)
+			rng.setEndAfter(endChop.parentNode);
+		<span class="reserved">else</span>
+			rng.setEnd(rngAfter.endContainer, rngAfter.endOffset);
+
+		<span class="comment">// Delete all contents and insert new paragraphs</span>
+		rng.deleteContents();
+		rng.insertNode(paraAfter);
+		rng.insertNode(paraBefore);
+		<span class="comment">//tinyMCE.debug("2", paraBefore.innerHTML, paraAfter.innerHTML);</span>
+
+		<span class="comment">// Normalize</span>
+		paraAfter.normalize();
+		paraBefore.normalize();
+
+		inst.selection.selectNode(paraAfter, true, true);
+
+		<span class="reserved">return</span> true;
+	},
+
+	<span class="comment">/**
+	 * Handles the backspace action in Gecko. This will remove the weird BR element
+	 * that gets generated when a user hits backspace in the beginning of a paragraph.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Control} inst TinyMCE editor control instance.
+	 * <span class="attrib">@return</span> true/false if the event should be canceled or not.
+	 * <span class="attrib">@type</span>
+	 */</span>
+	_handleBackSpace : <span class="reserved">function</span>(inst) {
+		var r = inst.getRng(), sn = r.startContainer, nv, s = false;
+
+		<span class="reserved">if</span> (sn &amp;&amp; sn.nextSibling &amp;&amp; sn.nextSibling.nodeName == <span class="literal">"BR"</span>) {
+			nv = sn.nodeValue;
+
+			<span class="comment">// Handle if a backspace is pressed after a space character #bug 1466054</span>
+			<span class="reserved">if</span> (nv != null &amp;&amp; nv.length &gt;= r.startOffset &amp;&amp; nv.charAt(r.startOffset - 1) == <span class="literal">' '</span>)
+				s = true;
+
+			<span class="comment">// Only remove BRs if we are at the end of line #bug 1464152</span>
+			<span class="reserved">if</span> (nv != null &amp;&amp; r.startOffset == nv.length)
+				sn.nextSibling.parentNode.removeChild(sn.nextSibling);
+		}
+
+		<span class="reserved">return</span> s;
+	}
+};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

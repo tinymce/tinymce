@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: save</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: save</h1>
+</div>
+
+<div class="content">
+	<p>This plugin adds a save button to TinyMCE this save button will submit the form that the editor is within.</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;save&quot;.</li>
+		<li>Add the ltr, rtl button names to button list, example: theme_advanced_buttons3_add : &quot;save&quot;.</li>
+	</ul>
+	</p>
+
+	<p>
+	<h3>Options</h3>
+	</p>
+	<p>
+	<table border="1" cellspacing="0" cellpadding="4">
+	<tr>
+		<td>[save_enablewhendirty]</td>
+		<td>If you set this option to true, the edit button will be disabled/dimmed until modifications are made. This is disabled by default.</td>
+	</tr>
+	<tr>
+		<td>[onchange_callback]</td>
+		<td>This option enables you to add a custom function to be called when the save button/command is invoked. This is not used by default.</td>
+	</tr>
+	</table>
+	</p>
+
+	<p>
+	<h3>Initialization Example</h3>
+	</p>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;<strong>save</strong>&quot;,
+	theme_advanced_buttons3_add : &quot;<strong>save</strong>&quot;,
+	save_enablewhendirty : true,
+	onchange_callback : "mysave"
+});</pre>
+	</div>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

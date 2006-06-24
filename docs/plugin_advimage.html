@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: advimage</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: advimage</h1>
+</div>
+
+<div class="content">
+	<p>This is a more advanced image dialog mostly based on code contributed by Michael Keck. This one supports mouseover/out image swapping.</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Copy the advimage directory to the plugins directory of TinyMCE (/jscripts/tiny_mce/plugins).</li>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;advimage&quot;.</li>
+		<li>Add this &quot;a[name|href|target|title|onclick]&quot; to extended_valid_elements option.</li>
+	</ul>
+	</p>
+
+	<p>
+		<table border="1" cellspacing="0" cellpadding="4">
+			 <thead><td colspan="2">Advimage plugin options</td></thead>
+			 <tbody>
+				 <tr><td><strong>advimage_styles</strong></td><td>This option should contain a semicolon separated list of class titles and class names separated by =. The titles are the ones that get presented to the user in the styles drop down list and and the class names is the classes that gets inserted.</td></tr>
+				 <tr><td><strong>advimage_update_dimensions_onchange</strong></td><td>This option enables you to control if the image dimensions should be updated with new data if the image src field is changed. This option is enabled by default.</td></tr>
+			</tbody>
+		</table>
+		<br />
+	</p>
+
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;preview&quot;
+});
+</pre>
+	</div>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1480 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_Cleanup.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_Cleanup.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_Cleanup.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+    <table border="1" cellpadding="3" cellspacing="0" width="100%">
+    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+    <td colspan=2><font size="+2">
+    
+        <b>Class Summary</b>
+    
+    </font></td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="TinyMCE_Cleanup.html">TinyMCE_Cleanup</a></b></td>
+    <td>&nbsp;</td>
+    </tr>
+    
+    </table>
+    <hr/> 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_Cleanup.class.js.html,v $
+ * $Revision: 1.42 $
+ * $Date: 2006/04/14 20:00:28 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ *
+ * Some of the contents of this file will be wrapped in a class later on it will also be replaced with the new cleanup logic.
+ */</span>
+
+<span class="comment">/**
+ * Makes some preprocessing cleanup routines on the specified HTML string.
+ * This includes forcing some tags to be open so MSIE doesn't fail. Forcing other to close and
+ * padding paragraphs with non breaking spaces. This function is used when the editor gets
+ * initialized with content.
+ *
+ * <span class="attrib">@param</span> {string} s HTML string to cleanup.
+ * <span class="attrib">@return</span> Cleaned HTML string.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.cleanupHTMLCode = <span class="reserved">function</span>(s) {
+	s = s.replace(new RegExp(<span class="literal">'&lt;p \\/&gt;'</span>, <span class="literal">'gi'</span>), <span class="literal">'&lt;p&gt;&amp;nbsp;&lt;/p&gt;'</span>);
+	s = s.replace(new RegExp(<span class="literal">'&lt;p&gt;\\s*&lt;\\/p&gt;'</span>, <span class="literal">'gi'</span>), <span class="literal">'&lt;p&gt;&amp;nbsp;&lt;/p&gt;'</span>);
+
+	<span class="comment">// Fix close BR elements</span>
+	s = s.replace(new RegExp(<span class="literal">'&lt;br&gt;\\s*&lt;\\/br&gt;'</span>, <span class="literal">'gi'</span>), <span class="literal">'&lt;br /&gt;'</span>);
+
+	<span class="comment">// Open closed tags like &lt;b/&gt; to &lt;b&gt;&lt;/b&gt;</span>
+	s = s.replace(new RegExp(<span class="literal">'&lt;(h[1-6]|p|div|address|pre|form|table|li|ol|ul|td|b|font|em|strong|i|strike|u|span|a|ul|ol|li|blockquote)([a-z]*)([^\\\\|&gt;]*)\\/&gt;'</span>, <span class="literal">'gi'</span>), <span class="literal">'&lt;$1$2$3&gt;&lt;/$1$2&gt;'</span>);
+
+	<span class="comment">// Remove trailing space &lt;b &gt; to &lt;b&gt;</span>
+	s = s.replace(new RegExp(<span class="literal">'\\s+&gt;&lt;/'</span>, <span class="literal">'gi'</span>), <span class="literal">'&gt;&lt;/'</span>);
+
+	<span class="comment">// Close tags &lt;img&gt;&lt;/img&gt; to &lt;img/&gt;</span>
+	s = s.replace(new RegExp(<span class="literal">'&lt;(img|br|hr)([^&gt;]*)&gt;&lt;\\/(img|br|hr)&gt;'</span>, <span class="literal">'gi'</span>), <span class="literal">'&lt;$1$2 /&gt;'</span>);
+
+	<span class="comment">// Weird MSIE bug, &lt;p&gt;&lt;hr /&gt;&lt;/p&gt; breaks runtime?</span>
+	<span class="reserved">if</span> (tinyMCE.isMSIE)
+		s = s.replace(new RegExp(<span class="literal">'&lt;p&gt;&lt;hr \\/&gt;&lt;\\/p&gt;'</span>, <span class="literal">'gi'</span>), <span class="literal">"&lt;hr&gt;"</span>);
+
+	<span class="comment">// Convert relative anchors to absolute URLs ex: #something to file.htm#something</span>
+	<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">'convert_urls'</span>))
+		s = s.replace(new RegExp(<span class="literal">'(href=\"{0,1})(\\s*#)'</span>, <span class="literal">'gi'</span>), <span class="literal">'$1'</span> + tinyMCE.settings[<span class="literal">'document_base_url'</span>] + <span class="literal">"#"</span>);
+
+	<span class="reserved">return</span> s;
+};
+
+<span class="comment">/**
+ * Parses the specified HTML style data. This will parse for example
+ * "border-left: 1px; background-color: red" into an key/value array.
+ *
+ * <span class="attrib">@param</span> {string} str Style data to parse.
+ * <span class="attrib">@return</span> Name/Value array of style items.
+ * <span class="attrib">@type</span> Array
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.parseStyle = <span class="reserved">function</span>(str) {
+	var ar = new Array();
+
+	<span class="reserved">if</span> (str == null)
+		<span class="reserved">return</span> ar;
+
+	var st = str.split(<span class="literal">';'</span>);
+
+	tinyMCE.clearArray(ar);
+
+	<span class="reserved">for</span> (var i=0; i&lt;st.length; i++) {
+		<span class="reserved">if</span> (st[i] == <span class="literal">''</span>)
+			continue;
+
+		var re = new RegExp(<span class="literal">'^\\s*([^:]*):\\s*(.*)\\s*$'</span>);
+		var pa = st[i].replace(re, <span class="literal">'$1||$2'</span>).split(<span class="literal">'||'</span>);
+<span class="comment">//tinyMCE.debug(str, pa[0] + "=" + pa[1], st[i].replace(re, '$1||$2'));</span>
+		<span class="reserved">if</span> (pa.length == 2)
+			ar[pa[0].toLowerCase()] = pa[1];
+	}
+
+	<span class="reserved">return</span> ar;
+};
+
+<span class="comment">/**
+ * Compresses larger styles into a smaller. Since MSIE automaticly converts
+ * border: 1px solid red to border-left: 1px solid red, border-righ: 1px solid red and so forth.'
+ * This will bundle them together again if the information is the same in each item.
+ *
+ * <span class="attrib">@param</span> {Array} ar Style name/value array with items.
+ * <span class="attrib">@param</span> {string} pr Style item prefix to bundle for example border.
+ * <span class="attrib">@param</span> {string} sf Style item suffix to bunlde for example -width or -width.
+ * <span class="attrib">@param</span> {string} res Result name, for example border-width.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.compressStyle = <span class="reserved">function</span>(ar, pr, sf, res) {
+	var box = new Array();
+
+	box[0] = ar[pr + <span class="literal">'-top'</span> + sf];
+	box[1] = ar[pr + <span class="literal">'-left'</span> + sf];
+	box[2] = ar[pr + <span class="literal">'-right'</span> + sf];
+	box[3] = ar[pr + <span class="literal">'-bottom'</span> + sf];
+
+	<span class="reserved">for</span> (var i=0; i&lt;box.length; i++) {
+		<span class="reserved">if</span> (box[i] == null)
+			<span class="reserved">return</span>;
+
+		<span class="reserved">for</span> (var a=0; a&lt;box.length; a++) {
+			<span class="reserved">if</span> (box[a] != box[i])
+				<span class="reserved">return</span>;
+		}
+	}
+
+	<span class="comment">// They are all the same</span>
+	ar[res] = box[0];
+	ar[pr + <span class="literal">'-top'</span> + sf] = null;
+	ar[pr + <span class="literal">'-left'</span> + sf] = null;
+	ar[pr + <span class="literal">'-right'</span> + sf] = null;
+	ar[pr + <span class="literal">'-bottom'</span> + sf] = null;
+};
+
+<span class="comment">/**
+ * Serializes the specified style item name/value array into a HTML string. This function
+ * will force HEX colors in Firefox and convert the URL items of a style correctly.
+ *
+ * <span class="attrib">@param</span> {Array} ar Name/Value array of items to serialize.
+ * <span class="attrib">@return</span> Serialized HTML string containing the items.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.serializeStyle = <span class="reserved">function</span>(ar) {
+	var str = <span class="literal">""</span>;
+
+	<span class="comment">// Compress box</span>
+	tinyMCE.compressStyle(ar, <span class="literal">"border"</span>, <span class="literal">""</span>, <span class="literal">"border"</span>);
+	tinyMCE.compressStyle(ar, <span class="literal">"border"</span>, <span class="literal">"-width"</span>, <span class="literal">"border-width"</span>);
+	tinyMCE.compressStyle(ar, <span class="literal">"border"</span>, <span class="literal">"-color"</span>, <span class="literal">"border-color"</span>);
+	tinyMCE.compressStyle(ar, <span class="literal">"border"</span>, <span class="literal">"-style"</span>, <span class="literal">"border-style"</span>);
+	tinyMCE.compressStyle(ar, <span class="literal">"padding"</span>, <span class="literal">""</span>, <span class="literal">"padding"</span>);
+	tinyMCE.compressStyle(ar, <span class="literal">"margin"</span>, <span class="literal">""</span>, <span class="literal">"margin"</span>);
+
+	<span class="reserved">for</span> (var key in ar) {
+		var val = ar[key];
+
+		<span class="reserved">if</span> (typeof(val) == <span class="literal">'function'</span>)
+			continue;
+
+		<span class="reserved">if</span> (key.indexOf(<span class="literal">'mso-'</span>) == 0)
+			continue;
+
+		<span class="reserved">if</span> (val != null &amp;&amp; val != <span class="literal">''</span>) {
+			val = <span class="literal">''</span> + val; <span class="comment">// Force string</span>
+
+			<span class="comment">// Fix style URL</span>
+			val = val.replace(new RegExp(<span class="literal">"url\\(\\'?([^\\']*)\\'?\\)"</span>, <span class="literal">'gi'</span>), <span class="literal">"url('$1')"</span>);
+
+			<span class="comment">// Convert URL</span>
+			<span class="reserved">if</span> (val.indexOf(<span class="literal">'url('</span>) != -1 &amp;&amp; tinyMCE.getParam(<span class="literal">'convert_urls'</span>)) {
+				var m = new RegExp(<span class="literal">"url\\('(.*?)'\\)"</span>).exec(val);
+
+				<span class="reserved">if</span> (m.length &gt; 1)
+					val = <span class="literal">"url('"</span> + eval(tinyMCE.getParam(<span class="literal">'urlconverter_callback'</span>) + <span class="literal">"(m[1], null, true);"</span>) + <span class="literal">"')"</span>;
+			}
+
+			<span class="comment">// Force HEX colors</span>
+			<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"force_hex_style_colors"</span>))
+				val = tinyMCE.convertRGBToHex(val, true);
+
+			<span class="reserved">if</span> (val != <span class="literal">"url('')"</span>)
+				str += key.toLowerCase() + <span class="literal">": "</span> + val + <span class="literal">"; "</span>;
+		}
+	}
+
+	<span class="reserved">if</span> (new RegExp(<span class="literal">'; $'</span>).test(str))
+		str = str.substring(0, str.length - 2);
+
+	<span class="reserved">return</span> str;
+};
+
+<span class="comment">/**
+ * Returns a hexadecimal version of the specified rgb(1,2,3) string.
+ *
+ * <span class="attrib">@param</span> {string} s RGB string to parse, if this doesn't isn't a rgb(n,n,n) it will passthrough the string.
+ * <span class="attrib">@param</span> {boolean} k Keep before/after contents. If enabled contents before after the rgb(n,n,n) will be intact.
+ * <span class="attrib">@return</span> Hexadecimal version of the specified rgb(1,2,3) string.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.convertRGBToHex = <span class="reserved">function</span>(s, k) {
+	<span class="reserved">if</span> (s.toLowerCase().indexOf(<span class="literal">'rgb'</span>) != -1) {
+		var re = new RegExp(<span class="literal">"(.*?)rgb\\s*?\\(\\s*?([0-9]+).*?,\\s*?([0-9]+).*?,\\s*?([0-9]+).*?\\)(.*?)"</span>, <span class="literal">"gi"</span>);
+		var rgb = s.replace(re, <span class="literal">"$1,$2,$3,$4,$5"</span>).split(<span class="literal">','</span>);
+		<span class="reserved">if</span> (rgb.length == 5) {
+			r = parseInt(rgb[1]).toString(16);
+			g = parseInt(rgb[2]).toString(16);
+			b = parseInt(rgb[3]).toString(16);
+
+			r = r.length == 1 ? <span class="literal">'0'</span> + r : r;
+			g = g.length == 1 ? <span class="literal">'0'</span> + g : g;
+			b = b.length == 1 ? <span class="literal">'0'</span> + b : b;
+
+			s = <span class="literal">"#"</span> + r + g + b;
+
+			<span class="reserved">if</span> (k)
+				s = rgb[0] + s + rgb[4];
+		}
+	}
+
+	<span class="reserved">return</span> s;
+};
+
+<span class="comment">/**
+ * Returns a rgb(n,n,n) string from a hexadecimal value.
+ *
+ * <span class="attrib">@param</span> {string} s Hexadecimal string to parse.
+ * <span class="attrib">@return</span> rgb(n,n,n) string from a hexadecimal value.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.convertHexToRGB = <span class="reserved">function</span>(s) {
+	<span class="reserved">if</span> (s.indexOf(<span class="literal">'#'</span>) != -1) {
+		s = s.replace(new RegExp(<span class="literal">'[^0-9A-F]'</span>, <span class="literal">'gi'</span>), <span class="literal">''</span>);
+		<span class="reserved">return</span> <span class="literal">"rgb("</span> + parseInt(s.substring(0, 2), 16) + <span class="literal">","</span> + parseInt(s.substring(2, 4), 16) + <span class="literal">","</span> + parseInt(s.substring(4, 6), 16) + <span class="literal">")"</span>;
+	}
+
+	<span class="reserved">return</span> s;
+};
+
+<span class="comment">/**
+ * Converts span elements to font elements in the specified document instance.
+ * Todo: Move this function into a XHTML plugin or simmilar.
+ *
+ * <span class="attrib">@param</span> {DOMDocument} doc Document instance to convert spans in.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.convertSpansToFonts = <span class="reserved">function</span>(doc) {
+	var sizes = tinyMCE.getParam(<span class="literal">'font_size_style_values'</span>).replace(/\s+/, <span class="literal">''</span>).split(<span class="literal">','</span>);
+
+	var h = doc.body.innerHTML;
+	h = h.replace(/&lt;span/gi, <span class="literal">'&lt;font'</span>);
+	h = h.replace(/&lt;\/span/gi, <span class="literal">'&lt;/font'</span>);
+	doc.body.innerHTML = h;
+
+	var s = doc.getElementsByTagName(<span class="literal">"font"</span>);
+	<span class="reserved">for</span> (var i=0; i&lt;s.length; i++) {
+		var size = tinyMCE.trim(s[i].style.fontSize).toLowerCase();
+		var fSize = 0;
+
+		<span class="reserved">for</span> (var x=0; x&lt;sizes.length; x++) {
+			<span class="reserved">if</span> (sizes[x] == size) {
+				fSize = x + 1;
+				break;
+			}
+		}
+
+		<span class="reserved">if</span> (fSize &gt; 0) {
+			tinyMCE.setAttrib(s[i], <span class="literal">'size'</span>, fSize);
+			s[i].style.fontSize = <span class="literal">''</span>;
+		}
+
+		var fFace = s[i].style.fontFamily;
+		<span class="reserved">if</span> (fFace != null &amp;&amp; fFace != <span class="literal">""</span>) {
+			tinyMCE.setAttrib(s[i], <span class="literal">'face'</span>, fFace);
+			s[i].style.fontFamily = <span class="literal">''</span>;
+		}
+
+		var fColor = s[i].style.color;
+		<span class="reserved">if</span> (fColor != null &amp;&amp; fColor != <span class="literal">""</span>) {
+			tinyMCE.setAttrib(s[i], <span class="literal">'color'</span>, tinyMCE.convertRGBToHex(fColor));
+			s[i].style.color = <span class="literal">''</span>;
+		}
+	}
+};
+
+<span class="comment">/**
+ * Convers fonts to spans in the specified document.
+ * Todo: Move this function into a XHTML plugin or simmilar.
+ *
+ * <span class="attrib">@param</span> {DOMDocument} doc Document instance to convert fonts in.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.convertFontsToSpans = <span class="reserved">function</span>(doc) {
+	var sizes = tinyMCE.getParam(<span class="literal">'font_size_style_values'</span>).replace(/\s+/, <span class="literal">''</span>).split(<span class="literal">','</span>);
+
+	var h = doc.body.innerHTML;
+	h = h.replace(/&lt;font/gi, <span class="literal">'&lt;span'</span>);
+	h = h.replace(/&lt;\/font/gi, <span class="literal">'&lt;/span'</span>);
+	doc.body.innerHTML = h;
+
+	var fsClasses = tinyMCE.getParam(<span class="literal">'font_size_classes'</span>);
+	<span class="reserved">if</span> (fsClasses != <span class="literal">''</span>)
+		fsClasses = fsClasses.replace(/\s+/, <span class="literal">''</span>).split(<span class="literal">','</span>);
+	<span class="reserved">else</span>
+		fsClasses = null;
+
+	var s = doc.getElementsByTagName(<span class="literal">"span"</span>);
+	<span class="reserved">for</span> (var i=0; i&lt;s.length; i++) {
+		var fSize, fFace, fColor;
+
+		fSize = tinyMCE.getAttrib(s[i], <span class="literal">'size'</span>);
+		fFace = tinyMCE.getAttrib(s[i], <span class="literal">'face'</span>);
+		fColor = tinyMCE.getAttrib(s[i], <span class="literal">'color'</span>);
+
+		<span class="reserved">if</span> (fSize != <span class="literal">""</span>) {
+			fSize = parseInt(fSize);
+
+			<span class="reserved">if</span> (fSize &gt; 0 &amp;&amp; fSize &lt; 8) {
+				<span class="reserved">if</span> (fsClasses != null)
+					tinyMCE.setAttrib(s[i], <span class="literal">'class'</span>, fsClasses[fSize-1]);
+				<span class="reserved">else</span>
+					s[i].style.fontSize = sizes[fSize-1];
+			}
+
+			s[i].removeAttribute(<span class="literal">'size'</span>);
+		}
+
+		<span class="reserved">if</span> (fFace != <span class="literal">""</span>) {
+			s[i].style.fontFamily = fFace;
+			s[i].removeAttribute(<span class="literal">'face'</span>);
+		}
+
+		<span class="reserved">if</span> (fColor != <span class="literal">""</span>) {
+			s[i].style.color = fColor;
+			s[i].removeAttribute(<span class="literal">'color'</span>);
+		}
+	}
+};
+
+<span class="comment">/**
+ * Moves the contents of a anchor outside and after the anchor. Only if the anchor doesn't
+ * have a href.
+ *
+ * <span class="attrib">@param</span> {DOMDocument} doc DOM document instance to fix anchors in.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.cleanupAnchors = <span class="reserved">function</span>(doc) {
+	var i, cn, x, an = doc.getElementsByTagName(<span class="literal">"a"</span>);
+
+	<span class="comment">// Loops backwards due to bug #1467987</span>
+	<span class="reserved">for</span> (i=an.length-1; i&gt;=0; i--) {
+		<span class="reserved">if</span> (tinyMCE.getAttrib(an[i], <span class="literal">"name"</span>) != <span class="literal">""</span> &amp;&amp; tinyMCE.getAttrib(an[i], <span class="literal">"href"</span>) == <span class="literal">""</span>) {
+			cn = an[i].childNodes;
+
+			<span class="reserved">for</span> (x=cn.length-1; x&gt;=0; x--)
+				tinyMCE.insertAfter(cn[x], an[i]);
+		}
+	}
+};
+
+<span class="comment">/**
+ * Returns the HTML contents of the specified editor instance id.
+ *
+ * <span class="attrib">@param</span> {string} editor_id Editor instance id to retrive HTML code from.
+ * <span class="attrib">@return</span> HTML contents of editor id or null if it wasn't found.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getContent = <span class="reserved">function</span>(editor_id) {
+	var h;
+
+	<span class="reserved">if</span> (typeof(editor_id) != <span class="literal">"undefined"</span>)
+		tinyMCE.selectedInstance = tinyMCE.getInstanceById(editor_id);
+
+	<span class="reserved">if</span> (tinyMCE.selectedInstance) {
+		h = tinyMCE._cleanupHTML(<span class="reserved">this</span>.selectedInstance, <span class="reserved">this</span>.selectedInstance.getDoc(), tinyMCE.settings, <span class="reserved">this</span>.selectedInstance.getBody(), false, true);
+
+		<span class="comment">// When editing always use fonts internaly</span>
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
+			tinyMCE.convertSpansToFonts(<span class="reserved">this</span>.selectedInstance.getDoc());
+
+		<span class="reserved">return</span> h;
+	}
+
+	<span class="reserved">return</span> null;
+};
+
+<span class="comment">/**
+ * Fixes invalid ul/ol elements so the document is more XHTML valid.
+ *
+ * <span class="attrib">@param</span> {DOMDocument} d HTML DOM document to fix list elements in.
+ * <span class="attrib">@private</span>
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>._fixListElements = <span class="reserved">function</span>(d) {
+	var nl, x, a = [<span class="literal">'ol'</span>, <span class="literal">'ul'</span>], i, n, p, r = new RegExp(<span class="literal">'^(OL|UL)$'</span>), np;
+
+	<span class="reserved">for</span> (x=0; x&lt;a.length; x++) {
+		nl = d.getElementsByTagName(a[x]);
+
+		<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
+			n = nl[i];
+			p = n.parentNode;
+
+			<span class="reserved">if</span> (r.test(p.nodeName)) {
+				np = tinyMCE.prevNode(n, <span class="literal">'LI'</span>);
+
+				<span class="reserved">if</span> (!np) {
+					np = d.createElement(<span class="literal">'li'</span>);
+					np.innerHTML = <span class="literal">'&amp;nbsp;'</span>;
+					np.appendChild(n);
+					p.insertBefore(np, p.firstChild);
+				} <span class="reserved">else</span>
+					np.appendChild(n);
+			}
+		}
+	}
+};
+
+<span class="comment">/**
+ * Moves table elements out of block elements to produce more valid XHTML.
+ *
+ * <span class="attrib">@param</span> {DOMDocument} d HTML DOM document to fix list elements in.
+ * <span class="attrib">@private</span>
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>._fixTables = <span class="reserved">function</span>(d) {
+	var nl, i, n, p, np, x, t;
+
+	nl = d.getElementsByTagName(<span class="literal">'table'</span>);
+	<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
+		n = nl[i];
+
+		<span class="reserved">if</span> ((p = tinyMCE.getParentElement(n, <span class="literal">'p,div,h1,h2,h3,h4,h5,h6'</span>)) != null) {
+			np = p.cloneNode(false);
+			np.removeAttribute(<span class="literal">'id'</span>);
+
+			t = n;
+
+			<span class="reserved">while</span> ((n = n.nextSibling))
+				np.appendChild(n);
+
+			tinyMCE.insertAfter(np, p);
+			tinyMCE.insertAfter(t, p);
+		}
+	}
+};
+
+<span class="comment">/**
+ * Performces cleanup of the contents of the specified instance.
+ * Todo: Finish documentation, and remove useless parameters.
+ *
+ * <span class="attrib">@param</span> {TinyMCE_Control} inst Editor instance.
+ * <span class="attrib">@param</span> {DOMDocument} doc ...
+ * <span class="attrib">@param</span> {Array} config ...
+ * <span class="attrib">@param</span> {HTMLElement} elm ...
+ * <span class="attrib">@param</span> {boolean} visual ...
+ * <span class="attrib">@param</span> {boolean} on_save ...
+ * <span class="attrib">@param</span> {boolean} on_submit ...
+ * <span class="attrib">@return</span> Cleaned HTML contents of editor instance.
+ * <span class="attrib">@type</span> string
+ * <span class="attrib">@private</span>
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>._cleanupHTML = <span class="reserved">function</span>(inst, doc, config, elm, visual, on_save, on_submit) {
+	var h, d, t1, t2, t3, t4, t5, c, s;
+
+	<span class="reserved">if</span> (!tinyMCE.getParam(<span class="literal">'cleanup'</span>))
+		<span class="reserved">return</span> elm.innerHTML;
+
+	on_save = typeof(on_save) == <span class="literal">'undefined'</span> ? false : on_save;
+
+	c = inst.cleanup;
+	s = inst.settings;
+	d = c.settings.debug;
+
+	<span class="reserved">if</span> (d)
+		t1 = new Date().getTime();
+
+	<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
+		tinyMCE.convertFontsToSpans(doc);
+
+	<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"fix_list_elements"</span>))
+		tinyMCE._fixListElements(doc);
+
+	<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"fix_table_elements"</span>))
+		tinyMCE._fixTables(doc);
+
+	<span class="comment">// Call custom cleanup code</span>
+	tinyMCE._customCleanup(inst, on_save ? <span class="literal">"get_from_editor_dom"</span> : <span class="literal">"insert_to_editor_dom"</span>, doc.body);
+
+	<span class="reserved">if</span> (d)
+		t2 = new Date().getTime();
+
+	c.settings.on_save = on_save;
+	<span class="comment">//for (var i=0; i&lt;100; i++)</span>
+
+	c.idCount = 0;
+	c.serializationId++;
+	c.serializedNodes = new Array();
+	c.sourceIndex = -1;
+
+	<span class="reserved">if</span> (s.cleanup_serializer == <span class="literal">"xml"</span>)
+		h = c.serializeNodeAsXML(elm);
+	<span class="reserved">else</span>
+		h = c.serializeNodeAsHTML(elm);
+
+	<span class="reserved">if</span> (d)
+		t3 = new Date().getTime();
+
+	<span class="comment">// Post processing</span>
+	h = h.replace(/&lt;\/?(body|head|html)[^&gt;]*&gt;/gi, <span class="literal">''</span>);
+	h = h.replace(new RegExp(<span class="literal">' (rowspan="1"|colspan="1")'</span>, <span class="literal">'g'</span>), <span class="literal">''</span>);
+	h = h.replace(/&lt;p&gt;&lt;hr \/&gt;&lt;\/p&gt;/g, <span class="literal">'&lt;hr /&gt;'</span>);
+	h = h.replace(/&lt;p&gt;(&amp;nbsp;|&amp;#160;)&lt;\/p&gt;&lt;hr \/&gt;&lt;p&gt;(&amp;nbsp;|&amp;#160;)&lt;\/p&gt;/g, <span class="literal">'&lt;hr /&gt;'</span>);
+	h = h.replace(/&lt;td&gt;\s*&lt;br \/&gt;\s*&lt;\/td&gt;/g, <span class="literal">'&lt;td&gt;&amp;nbsp;&lt;/td&gt;'</span>);
+	h = h.replace(/&lt;p&gt;\s*&lt;br \/&gt;\s*&lt;\/p&gt;/g, <span class="literal">'&lt;p&gt;&amp;nbsp;&lt;/p&gt;'</span>);
+	h = h.replace(/&lt;p&gt;\s*(&amp;nbsp;|&amp;#160;)\s*&lt;br \/&gt;\s*(&amp;nbsp;|&amp;#160;)\s*&lt;\/p&gt;/g, <span class="literal">'&lt;p&gt;&amp;nbsp;&lt;/p&gt;'</span>);
+	h = h.replace(/&lt;p&gt;\s*(&amp;nbsp;|&amp;#160;)\s*&lt;br \/&gt;\s*&lt;\/p&gt;/g, <span class="literal">'&lt;p&gt;&amp;nbsp;&lt;/p&gt;'</span>);
+	h = h.replace(/&lt;p&gt;\s*&lt;br \/&gt;\s*&amp;nbsp;\s*&lt;\/p&gt;/g, <span class="literal">'&lt;p&gt;&amp;nbsp;&lt;/p&gt;'</span>);
+	h = h.replace(new RegExp(<span class="literal">'&lt;a&gt;(.*?)&lt;\\/a&gt;'</span>, <span class="literal">'g'</span>), <span class="literal">'$1'</span>);
+	h = h.replace(/&lt;p([^&gt;]*)&gt;\s*&lt;\/p&gt;/g, <span class="literal">'&lt;p$1&gt;&amp;nbsp;&lt;/p&gt;'</span>);
+
+	<span class="comment">// Clean body</span>
+	<span class="reserved">if</span> (/^\s*(&lt;br \/&gt;|&lt;p&gt;&amp;nbsp;&lt;\/p&gt;|&lt;p&gt;&amp;#160;&lt;\/p&gt;|&lt;p&gt;&lt;\/p&gt;)\s*$/.test(h))
+		h = <span class="literal">''</span>;
+
+	<span class="comment">// If preformatted</span>
+	<span class="reserved">if</span> (s.preformatted) {
+		h = h.replace(/^&lt;pre&gt;/, <span class="literal">''</span>);
+		h = h.replace(/&lt;\/pre&gt;$/, <span class="literal">''</span>);
+		h = <span class="literal">'&lt;pre&gt;'</span> + h + <span class="literal">'&lt;/pre&gt;'</span>;
+	}
+
+	<span class="comment">// Gecko specific processing</span>
+	<span class="reserved">if</span> (tinyMCE.isGecko) {
+		h = h.replace(/&lt;o:p _moz-userdefined=<span class="literal">""</span> \/&gt;/g, <span class="literal">''</span>);
+		h = h.replace(/&lt;td([^&gt;]*)&gt;\s*&lt;br \/&gt;\s*&lt;\/td&gt;/g, <span class="literal">'&lt;td$1&gt;&amp;nbsp;&lt;/td&gt;'</span>);
+	}
+
+	<span class="reserved">if</span> (s.force_br_newlines)
+		h = h.replace(/&lt;p&gt;(&amp;nbsp;|&amp;#160;)&lt;\/p&gt;/g, <span class="literal">'&lt;br /&gt;'</span>);
+
+	<span class="comment">// Call custom cleanup code</span>
+	h = tinyMCE._customCleanup(inst, on_save ? <span class="literal">"get_from_editor"</span> : <span class="literal">"insert_to_editor"</span>, h);
+
+	<span class="comment">// Remove internal classes</span>
+	<span class="reserved">if</span> (on_save) {
+		h = h.replace(new RegExp(<span class="literal">' ?(mceItem[a-zA-Z0-9]*|'</span> + s.visual_table_class + <span class="literal">')'</span>, <span class="literal">'g'</span>), <span class="literal">''</span>);
+		h = h.replace(new RegExp(<span class="literal">' ?class=""'</span>, <span class="literal">'g'</span>), <span class="literal">''</span>);
+	}
+
+	<span class="reserved">if</span> (s.remove_linebreaks &amp;&amp; !c.settings.indent)
+		h = h.replace(/\n|\r/g, <span class="literal">' '</span>);
+
+	<span class="reserved">if</span> (d)
+		t4 = new Date().getTime();
+
+	<span class="reserved">if</span> (on_save &amp;&amp; c.settings.indent)
+		h = c.formatHTML(h);
+
+	<span class="comment">// If encoding (not recommended option)</span>
+	<span class="reserved">if</span> (on_submit &amp;&amp; (s.encoding == <span class="literal">"xml"</span> || s.encoding == <span class="literal">"html"</span>))
+		h = c.xmlEncode(h);
+
+	<span class="reserved">if</span> (d)
+		t5 = new Date().getTime();
+
+	<span class="reserved">if</span> (c.settings.debug)
+		tinyMCE.debug(<span class="literal">"Cleanup in ms: Pre="</span> + (t2-t1) + <span class="literal">", Serialize: "</span> + (t3-t2) + <span class="literal">", Post: "</span> + (t4-t3) + <span class="literal">", Format: "</span> + (t5-t4) + <span class="literal">", Sum: "</span> + (t5-t1) + <span class="literal">"."</span>);
+
+	<span class="reserved">return</span> h;
+};
+
+<span class="comment">/**
+ * TinyMCE_Cleanup class.
+ */</span>
+<span class="reserved">function</span> TinyMCE_Cleanup() {
+	<span class="reserved">this</span>.isMSIE = (navigator.appName == <span class="literal">"Microsoft Internet Explorer"</span>);
+	<span class="reserved">this</span>.rules = tinyMCE.clearArray(new Array());
+
+	<span class="comment">// Default config</span>
+	<span class="reserved">this</span>.settings = {
+		indent_elements : <span class="literal">'head,table,tbody,thead,tfoot,form,tr,ul,ol,blockquote,object'</span>,
+		newline_before_elements : <span class="literal">'h1,h2,h3,h4,h5,h6,pre,address,div,ul,ol,li,meta,option,area,title,link,base,script,td'</span>,
+		newline_after_elements : <span class="literal">'br,hr,p,pre,address,div,ul,ol,meta,option,area,link,base,script'</span>,
+		newline_before_after_elements : <span class="literal">'html,head,body,table,thead,tbody,tfoot,tr,form,ul,ol,blockquote,p,object,param,hr,div'</span>,
+		indent_char : <span class="literal">'\t'</span>,
+		indent_levels : 1,
+		entity_encoding : <span class="literal">'raw'</span>,
+		valid_elements : <span class="literal">'*[*]'</span>,
+		entities : <span class="literal">''</span>,
+		url_converter : <span class="literal">''</span>,
+		invalid_elements : <span class="literal">''</span>,
+		verify_html : false
+	};
+
+	<span class="reserved">this</span>.vElements = tinyMCE.clearArray(new Array());
+	<span class="reserved">this</span>.vElementsRe = <span class="literal">''</span>;
+	<span class="reserved">this</span>.closeElementsRe = /^(IMG|BR|HR|LINK|META|BASE|INPUT|BUTTON|AREA)$/;
+	<span class="reserved">this</span>.codeElementsRe = /^(SCRIPT|STYLE)$/;
+	<span class="reserved">this</span>.serializationId = 0;
+	<span class="reserved">this</span>.mceAttribs = {
+		href : <span class="literal">'mce_href'</span>,
+		src : <span class="literal">'mce_src'</span>,
+		type : <span class="literal">'mce_type'</span>
+	};
+}
+
+TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
+	<span class="comment">/**
+	 * Initializes the cleanup engine with the specified config.
+	 *
+	 * <span class="attrib">@param</span> {Array} s Name/Value array with config settings.
+	 */</span>
+	init : <span class="reserved">function</span>(s) {
+		var n, a, i, ir, or, st;
+
+		<span class="reserved">for</span> (n in s)
+			<span class="reserved">this</span>.settings[n] = s[n];
+
+		<span class="comment">// Setup code formating</span>
+		s = <span class="reserved">this</span>.settings;
+
+		<span class="comment">// Setup regexps</span>
+		<span class="reserved">this</span>.inRe = <span class="reserved">this</span>._arrayToRe(s.indent_elements.split(<span class="literal">','</span>), <span class="literal">''</span>, <span class="literal">'^&lt;('</span>, <span class="literal">')[^&gt;]*'</span>);
+		<span class="reserved">this</span>.ouRe = <span class="reserved">this</span>._arrayToRe(s.indent_elements.split(<span class="literal">','</span>), <span class="literal">''</span>, <span class="literal">'^&lt;\\/('</span>, <span class="literal">')[^&gt;]*'</span>);
+		<span class="reserved">this</span>.nlBeforeRe = <span class="reserved">this</span>._arrayToRe(s.newline_before_elements.split(<span class="literal">','</span>), <span class="literal">'gi'</span>, <span class="literal">'&lt;('</span>,  <span class="literal">')([^&gt;]*)&gt;'</span>);
+		<span class="reserved">this</span>.nlAfterRe = <span class="reserved">this</span>._arrayToRe(s.newline_after_elements.split(<span class="literal">','</span>), <span class="literal">'gi'</span>, <span class="literal">'&lt;('</span>,  <span class="literal">')([^&gt;]*)&gt;'</span>);
+		<span class="reserved">this</span>.nlBeforeAfterRe = <span class="reserved">this</span>._arrayToRe(s.newline_before_after_elements.split(<span class="literal">','</span>), <span class="literal">'gi'</span>, <span class="literal">'&lt;(\\/?)('</span>, <span class="literal">')([^&gt;]*)&gt;'</span>);
+
+		<span class="reserved">if</span> (s.invalid_elements != <span class="literal">''</span>)
+			<span class="reserved">this</span>.iveRe = <span class="reserved">this</span>._arrayToRe(s.invalid_elements.toUpperCase().split(<span class="literal">','</span>), <span class="literal">'g'</span>, <span class="literal">'^('</span>, <span class="literal">')$'</span>);
+		<span class="reserved">else</span>
+			<span class="reserved">this</span>.iveRe = null;
+
+		<span class="comment">// Setup separator</span>
+		st = <span class="literal">''</span>;
+		<span class="reserved">for</span> (i=0; i&lt;s.indent_levels; i++)
+			st += s.indent_char;
+
+		<span class="reserved">this</span>.inStr = st;
+
+		<span class="comment">// If verify_html if false force *[*]</span>
+		<span class="reserved">if</span> (!s.verify_html) {
+			s.valid_elements = <span class="literal">'*[*]'</span>;
+			s.extended_valid_elements = <span class="literal">''</span>;
+		}
+
+		<span class="reserved">this</span>.fillStr = s.entity_encoding == <span class="literal">"named"</span> ? <span class="literal">"&amp;nbsp;"</span> : <span class="literal">"&amp;#160;"</span>;
+		<span class="reserved">this</span>.idCount = 0;
+	},
+
+	<span class="comment">/**
+	 * Adds a cleanup rule string, for example: a[href|name|title=title|class=class1?class2?class3].
+	 * These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility
+	 * to control the valid elements and attributes and force attribute values or default them.
+	 *
+	 * <span class="attrib">@param</span> {string} s Rule string to parse and add to the cleanup rules array.
+	 */</span>
+	addRuleStr : <span class="reserved">function</span>(s) {
+		var r = <span class="reserved">this</span>.parseRuleStr(s);
+		var n;
+
+		<span class="reserved">for</span> (n in r) {
+			<span class="reserved">if</span> (r[n])
+				<span class="reserved">this</span>.rules[n] = r[n];
+		}
+
+		<span class="reserved">this</span>.vElements = tinyMCE.clearArray(new Array());
+
+		<span class="reserved">for</span> (n in <span class="reserved">this</span>.rules) {
+			<span class="reserved">if</span> (<span class="reserved">this</span>.rules[n])
+				<span class="reserved">this</span>.vElements[<span class="reserved">this</span>.vElements.length] = <span class="reserved">this</span>.rules[n].tag;
+		}
+
+		<span class="reserved">this</span>.vElementsRe = <span class="reserved">this</span>._arrayToRe(<span class="reserved">this</span>.vElements, <span class="literal">''</span>);
+	},
+
+	<span class="comment">/**
+	 * Parses a cleanup rule string, for example: a[href|name|title=title|class=class1?class2?class3].
+	 * These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility
+	 * to control the valid elements and attributes and force attribute values or default them.
+	 *
+	 * <span class="attrib">@param</span> {string} s Rule string to parse as a name/value rule array.
+	 * <span class="attrib">@return</span> Parsed name/value rule array.
+	 * <span class="attrib">@type</span> Array
+	 */</span>
+	parseRuleStr : <span class="reserved">function</span>(s) {
+		var ta, p, r, a, i, x, px, t, tn, y, av, or = tinyMCE.clearArray(new Array()), dv;
+
+		<span class="reserved">if</span> (s == null || s.length == 0)
+			<span class="reserved">return</span> or;
+
+		ta = s.split(<span class="literal">','</span>);
+		<span class="reserved">for</span> (x=0; x&lt;ta.length; x++) {
+			s = ta[x];
+			<span class="reserved">if</span> (s.length == 0)
+				continue;
+
+			<span class="comment">// Split tag/attrs</span>
+			p = <span class="reserved">this</span>.split(/\[|\]/, s);
+			<span class="reserved">if</span> (p == null || p.length &lt; 1)
+				t = s.toUpperCase();
+			<span class="reserved">else</span>
+				t = p[0].toUpperCase();
+
+			<span class="comment">// Handle all tag names</span>
+			tn = <span class="reserved">this</span>.split(<span class="literal">'/'</span>, t);
+			<span class="reserved">for</span> (y=0; y&lt;tn.length; y++) {
+				r = {};
+
+				r.tag = tn[y];
+				r.forceAttribs = null;
+				r.defaultAttribs = null;
+				r.validAttribValues = null;
+
+				<span class="comment">// Handle prefixes</span>
+				px = r.tag.charAt(0);
+				r.forceOpen = px == <span class="literal">'+'</span>;
+				r.removeEmpty = px == <span class="literal">'-'</span>;
+				r.fill = px == <span class="literal">'#'</span>;
+				r.tag = r.tag.replace(/\+|-|#/g, <span class="literal">''</span>);
+				r.oTagName = tn[0].replace(/\+|-|#/g, <span class="literal">''</span>).toLowerCase();
+				r.isWild = new RegExp(<span class="literal">'\\*|\\?|\\+'</span>, <span class="literal">'g'</span>).test(r.tag);
+				r.validRe = new RegExp(<span class="reserved">this</span>._wildcardToRe(<span class="literal">'^'</span> + r.tag + <span class="literal">'$'</span>));
+
+				<span class="comment">// Setup valid attributes</span>
+				<span class="reserved">if</span> (p.length &gt; 1) {
+					r.vAttribsRe = <span class="literal">'^('</span>;
+					a = <span class="reserved">this</span>.split(/\|/, p[1]);
+
+					<span class="reserved">for</span> (i=0; i&lt;a.length; i++) {
+						t = a[i];
+
+						av = new RegExp(<span class="literal">'(=|:|&lt;)(.*?)$'</span>).exec(t);
+						t = t.replace(new RegExp(<span class="literal">'(=|:|&lt;).*?$'</span>), <span class="literal">''</span>);
+						<span class="reserved">if</span> (av &amp;&amp; av.length &gt; 0) {
+							<span class="reserved">if</span> (av[0].charAt(0) == <span class="literal">':'</span>) {
+								<span class="reserved">if</span> (!r.forceAttribs)
+									r.forceAttribs = tinyMCE.clearArray(new Array());
+
+								r.forceAttribs[t.toLowerCase()] = av[0].substring(1);
+							} <span class="reserved">else</span> <span class="reserved">if</span> (av[0].charAt(0) == <span class="literal">'='</span>) {
+								<span class="reserved">if</span> (!r.defaultAttribs)
+									r.defaultAttribs = tinyMCE.clearArray(new Array());
+
+								dv = av[0].substring(1);
+
+								r.defaultAttribs[t.toLowerCase()] = dv == <span class="literal">""</span> ? <span class="literal">"mce_empty"</span> : dv;
+							} <span class="reserved">else</span> <span class="reserved">if</span> (av[0].charAt(0) == <span class="literal">'&lt;'</span>) {
+								<span class="reserved">if</span> (!r.validAttribValues)
+									r.validAttribValues = tinyMCE.clearArray(new Array());
+
+								r.validAttribValues[t.toLowerCase()] = <span class="reserved">this</span>._arrayToRe(<span class="reserved">this</span>.split(<span class="literal">'?'</span>, av[0].substring(1)), <span class="literal">''</span>);
+							}
+						}
+
+						r.vAttribsRe += <span class="literal">''</span> + t.toLowerCase() + (i != a.length - 1 ? <span class="literal">'|'</span> : <span class="literal">''</span>);
+
+						a[i] = t.toLowerCase();
+					}
+
+					r.vAttribsRe += <span class="literal">')$'</span>;
+					r.vAttribsRe = <span class="reserved">this</span>._wildcardToRe(r.vAttribsRe);
+					r.vAttribsReIsWild = new RegExp(<span class="literal">'\\*|\\?|\\+'</span>, <span class="literal">'g'</span>).test(r.vAttribsRe);
+					r.vAttribsRe = new RegExp(r.vAttribsRe);
+					r.vAttribs = a.reverse();
+
+					<span class="comment">//tinyMCE.debug(r.tag, r.oTagName, r.vAttribsRe, r.vAttribsReWC);</span>
+				} <span class="reserved">else</span> {
+					r.vAttribsRe = <span class="literal">''</span>;
+					r.vAttribs = tinyMCE.clearArray(new Array());
+					r.vAttribsReIsWild = false;
+				}
+
+				or[r.tag] = r;
+			}
+		}
+
+		<span class="reserved">return</span> or;
+	},
+
+	<span class="comment">/**
+	 * Serializes the specified node as a HTML string. This uses the XML parser and serializer
+	 * to generate a XHTML string.
+	 *
+	 * <span class="attrib">@param</span> {HTMLNode} n Node to serialize as a XHTML string.
+	 * <span class="attrib">@return</span> Serialized XHTML string based on specified node.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	serializeNodeAsXML : <span class="reserved">function</span>(n) {
+		var s, b;
+
+		<span class="reserved">if</span> (!<span class="reserved">this</span>.xmlDoc) {
+			<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE) {
+				try {<span class="reserved">this</span>.xmlDoc = new ActiveXObject(<span class="literal">'MSXML2.DOMDocument'</span>);} catch (e) {}
+
+				<span class="reserved">if</span> (!<span class="reserved">this</span>.xmlDoc)
+					try {<span class="reserved">this</span>.xmlDoc = new ActiveXObject(<span class="literal">'Microsoft.XmlDom'</span>);} catch (e) {}
+			} <span class="reserved">else</span>
+				<span class="reserved">this</span>.xmlDoc = document.implementation.createDocument(<span class="literal">''</span>, <span class="literal">''</span>, null);
+
+			<span class="reserved">if</span> (!<span class="reserved">this</span>.xmlDoc)
+				alert(<span class="literal">"Error XML Parser could not be found."</span>);
+		}
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.xmlDoc.firstChild)
+			<span class="reserved">this</span>.xmlDoc.removeChild(<span class="reserved">this</span>.xmlDoc.firstChild);
+
+		b = <span class="reserved">this</span>.xmlDoc.createElement(<span class="literal">"html"</span>);
+		b = <span class="reserved">this</span>.xmlDoc.appendChild(b);
+
+		<span class="reserved">this</span>._convertToXML(n, b);
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE)
+			<span class="reserved">return</span> <span class="reserved">this</span>.xmlDoc.xml;
+		<span class="reserved">else</span>
+			<span class="reserved">return</span> new XMLSerializer().serializeToString(<span class="reserved">this</span>.xmlDoc);
+	},
+
+	<span class="comment">/**
+	 * Converts and adds the specified HTML DOM node to a XML DOM node.
+	 *
+	 * <span class="attrib">@param</span> {HTMLNode} n HTML Node to add as a XML node.
+	 * <span class="attrib">@param</span> {XMLNode} xn XML Node to add the HTML node to.
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_convertToXML : <span class="reserved">function</span>(n, xn) {
+		var xd, el, i, l, cn, at, no, hc = false;
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>._isDuplicate(n))
+			<span class="reserved">return</span>;
+
+		xd = <span class="reserved">this</span>.xmlDoc;
+
+		switch (n.nodeType) {
+			case 1: <span class="comment">// Element</span>
+				hc = n.hasChildNodes();
+
+				el = xd.createElement(n.nodeName.toLowerCase());
+
+				at = n.attributes;
+				<span class="reserved">for</span> (i=at.length-1; i&gt;-1; i--) {
+					no = at[i];
+
+					<span class="reserved">if</span> (no.specified &amp;&amp; no.nodeValue)
+						el.setAttribute(no.nodeName.toLowerCase(), no.nodeValue);
+				}
+
+				<span class="reserved">if</span> (!hc &amp;&amp; !<span class="reserved">this</span>.closeElementsRe.test(n.nodeName))
+					el.appendChild(xd.createTextNode(<span class="literal">""</span>));
+
+				xn = xn.appendChild(el);
+				break;
+
+			case 3: <span class="comment">// Text</span>
+				xn.appendChild(xd.createTextNode(n.nodeValue));
+				<span class="reserved">return</span>;
+
+			case 8: <span class="comment">// Comment</span>
+				xn.appendChild(xd.createComment(n.nodeValue));
+				<span class="reserved">return</span>;
+		}
+
+		<span class="reserved">if</span> (hc) {
+			cn = n.childNodes;
+
+			<span class="reserved">for</span> (i=0, l=cn.length; i&lt;l; i++)
+				<span class="reserved">this</span>._convertToXML(cn[i], xn);
+		}
+	},
+
+	<span class="comment">/**
+	 * Serializes the specified node as a XHTML string. This uses the TinyMCE serializer logic since it gives more
+	 * control over the output than the build in browser XML serializer.
+	 *
+	 * <span class="attrib">@param</span> {HTMLNode} n Node to serialize as a XHTML string.
+	 * <span class="attrib">@return</span> Serialized XHTML string based on specified node.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	serializeNodeAsHTML : <span class="reserved">function</span>(n) {
+		var en, no, h = <span class="literal">''</span>, i, l, r, cn, va = false, f = false, at, hc;
+
+		<span class="reserved">this</span>._setupRules(); <span class="comment">// Will initialize cleanup rules</span>
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>._isDuplicate(n))
+			<span class="reserved">return</span> <span class="literal">''</span>;
+
+		switch (n.nodeType) {
+			case 1: <span class="comment">// Element</span>
+				hc = n.hasChildNodes();
+
+				<span class="comment">// MSIE sometimes produces &lt;//tag&gt;</span>
+				<span class="reserved">if</span> ((tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) &amp;&amp; n.nodeName.indexOf(<span class="literal">'/'</span>) != -1)
+					break;
+
+				<span class="reserved">if</span> (<span class="reserved">this</span>.vElementsRe.test(n.nodeName) &amp;&amp; (!<span class="reserved">this</span>.iveRe || !<span class="reserved">this</span>.iveRe.test(n.nodeName))) {
+					va = true;
+
+					r = <span class="reserved">this</span>.rules[n.nodeName];
+					<span class="reserved">if</span> (!r) {
+						at = <span class="reserved">this</span>.rules;
+						<span class="reserved">for</span> (no in at) {
+							<span class="reserved">if</span> (at[no] &amp;&amp; at[no].validRe.test(n.nodeName)) {
+								r = at[no];
+								break;
+							}
+						}
+					}
+
+					en = r.isWild ? n.nodeName.toLowerCase() : r.oTagName;
+					f = r.fill;
+
+					<span class="reserved">if</span> (r.removeEmpty &amp;&amp; !hc)
+						<span class="reserved">return</span> <span class="literal">""</span>;
+
+					h += <span class="literal">'&lt;'</span> + en;
+
+					<span class="reserved">if</span> (r.vAttribsReIsWild) {
+						<span class="comment">// Serialize wildcard attributes</span>
+						at = n.attributes;
+						<span class="reserved">for</span> (i=at.length-1; i&gt;-1; i--) {
+							no = at[i];
+							<span class="reserved">if</span> (no.specified &amp;&amp; r.vAttribsRe.test(no.nodeName))
+								h += <span class="reserved">this</span>._serializeAttribute(n, r, no.nodeName);
+						}
+					} <span class="reserved">else</span> {
+						<span class="comment">// Serialize specific attributes</span>
+						<span class="reserved">for</span> (i=r.vAttribs.length-1; i&gt;-1; i--)
+							h += <span class="reserved">this</span>._serializeAttribute(n, r, r.vAttribs[i]);
+					}
+
+					<span class="comment">// Serialize mce_ atts</span>
+					<span class="reserved">if</span> (!<span class="reserved">this</span>.settings.on_save) {
+						at = <span class="reserved">this</span>.mceAttribs;
+
+						<span class="reserved">for</span> (no in at) {
+							<span class="reserved">if</span> (at[no])
+								h += <span class="reserved">this</span>._serializeAttribute(n, r, at[no]);
+						}
+					}
+
+					<span class="comment">// Close these</span>
+					<span class="reserved">if</span> (<span class="reserved">this</span>.closeElementsRe.test(n.nodeName))
+						<span class="reserved">return</span> h + <span class="literal">' /&gt;'</span>;
+
+					h += <span class="literal">'&gt;'</span>;
+
+					<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; <span class="reserved">this</span>.codeElementsRe.test(n.nodeName))
+						h += n.innerHTML;
+				}
+			break;
+
+			case 3: <span class="comment">// Text</span>
+				<span class="reserved">if</span> (n.parentNode &amp;&amp; <span class="reserved">this</span>.codeElementsRe.test(n.parentNode.nodeName))
+					<span class="reserved">return</span> <span class="reserved">this</span>.isMSIE ? <span class="literal">''</span> : n.nodeValue;
+
+				<span class="reserved">return</span> <span class="reserved">this</span>.xmlEncode(n.nodeValue);
+
+			case 8: <span class="comment">// Comment</span>
+				<span class="reserved">return</span> <span class="literal">"&lt;!--"</span> + <span class="reserved">this</span>._trimComment(n.nodeValue) + <span class="literal">"--&gt;"</span>;
+		}
+
+		<span class="reserved">if</span> (hc) {
+			cn = n.childNodes;
+
+			<span class="reserved">for</span> (i=0, l=cn.length; i&lt;l; i++)
+				h += <span class="reserved">this</span>.serializeNodeAsHTML(cn[i]);
+		}
+
+		<span class="comment">// Fill empty nodes</span>
+		<span class="reserved">if</span> (f &amp;&amp; !hc)
+			h += <span class="reserved">this</span>.fillStr;
+
+		<span class="comment">// End element</span>
+		<span class="reserved">if</span> (va)
+			h += <span class="literal">'&lt;/'</span> + en + <span class="literal">'&gt;'</span>;
+
+		<span class="reserved">return</span> h;
+	},
+
+	<span class="comment">/**
+	 * Serializes the specified attribute as a XHTML string chunk.
+	 *
+	 * <span class="attrib">@param</span> {HTMLNode} n HTML node to get attribute from.
+	 * <span class="attrib">@param</span> {TinyMCE_CleanupRule} r Cleanup rule to use in serialization.
+	 * <span class="attrib">@param</span> {string} an Attribute name to lookfor and serialize.
+	 * <span class="attrib">@return</span> XHTML chunk containing attribute data if it was found.
+	 * <span class="attrib">@type</span> string
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_serializeAttribute : <span class="reserved">function</span>(n, r, an) {
+		var av = <span class="literal">''</span>, t, os = <span class="reserved">this</span>.settings.on_save;
+
+		<span class="reserved">if</span> (os &amp;&amp; (an.indexOf(<span class="literal">'mce_'</span>) == 0 || an.indexOf(<span class="literal">'_moz'</span>) == 0))
+			<span class="reserved">return</span> <span class="literal">''</span>;
+
+		<span class="reserved">if</span> (os &amp;&amp; <span class="reserved">this</span>.mceAttribs[an])
+			av = <span class="reserved">this</span>._getAttrib(n, <span class="reserved">this</span>.mceAttribs[an]);
+
+		<span class="reserved">if</span> (av.length == 0)
+			av = <span class="reserved">this</span>._getAttrib(n, an);
+
+		<span class="reserved">if</span> (av.length == 0 &amp;&amp; r.defaultAttribs &amp;&amp; (t = r.defaultAttribs[an])) {
+			av = t;
+
+			<span class="reserved">if</span> (av == <span class="literal">"mce_empty"</span>)
+				<span class="reserved">return</span> <span class="literal">" "</span> + an + <span class="literal">'=""'</span>;
+		}
+
+		<span class="reserved">if</span> (r.forceAttribs &amp;&amp; (t = r.forceAttribs[an]))
+			av = t;
+
+		<span class="reserved">if</span> (os &amp;&amp; av.length != 0 &amp;&amp; <span class="reserved">this</span>.settings.url_converter.length != 0 &amp;&amp; /^(src|href|longdesc)$/.test(an))
+			av = eval(<span class="reserved">this</span>.settings.url_converter + <span class="literal">'(this, n, av)'</span>);
+
+		<span class="reserved">if</span> (av.length != 0 &amp;&amp; r.validAttribValues &amp;&amp; r.validAttribValues[an] &amp;&amp; !r.validAttribValues[an].test(av))
+			<span class="reserved">return</span> <span class="literal">""</span>;
+
+		<span class="reserved">if</span> (av.length != 0 &amp;&amp; av == <span class="literal">"{$uid}"</span>)
+			av = <span class="literal">"uid_"</span> + (<span class="reserved">this</span>.idCount++);
+
+		<span class="reserved">if</span> (av.length != 0)
+			<span class="reserved">return</span> <span class="literal">" "</span> + an + <span class="literal">"="</span> + <span class="literal">'"'</span> + <span class="reserved">this</span>.xmlEncode(av) + <span class="literal">'"'</span>;
+
+		<span class="reserved">return</span> <span class="literal">""</span>;
+	},
+
+	<span class="comment">/**
+	 * Applies source formatting/indentation on the specified HTML string.
+	 *
+	 * <span class="attrib">@param</span> {string} h HTML string to apply formatting to.
+	 * <span class="attrib">@return</span> Formatted HTML string.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	formatHTML : <span class="reserved">function</span>(h) {
+		var s = <span class="reserved">this</span>.settings, p = <span class="literal">''</span>, i = 0, li = 0, o = <span class="literal">''</span>, l;
+
+		h = h.replace(/\r/g, <span class="literal">''</span>); <span class="comment">// Windows sux, isn't carriage return a thing of the past :)</span>
+		h = <span class="literal">'\n'</span> + h;
+		h = h.replace(new RegExp(<span class="literal">'\\n\\s+'</span>, <span class="literal">'gi'</span>), <span class="literal">'\n'</span>); <span class="comment">// Remove previous formatting</span>
+		h = h.replace(<span class="reserved">this</span>.nlBeforeRe, <span class="literal">'\n&lt;$1$2&gt;'</span>);
+		h = h.replace(<span class="reserved">this</span>.nlAfterRe, <span class="literal">'&lt;$1$2&gt;\n'</span>);
+		h = h.replace(<span class="reserved">this</span>.nlBeforeAfterRe, <span class="literal">'\n&lt;$1$2$3&gt;\n'</span>);
+		h += <span class="literal">'\n'</span>;
+
+		<span class="comment">//tinyMCE.debug(h);</span>
+
+		<span class="reserved">while</span> ((i = h.indexOf(<span class="literal">'\n'</span>, i + 1)) != -1) {
+			<span class="reserved">if</span> ((l = h.substring(li + 1, i)).length != 0) {
+				<span class="reserved">if</span> (<span class="reserved">this</span>.ouRe.test(l) &amp;&amp; p.length &gt;= s.indent_levels)
+					p = p.substring(s.indent_levels);
+
+				o += p + l + <span class="literal">'\n'</span>;
+	
+				<span class="reserved">if</span> (<span class="reserved">this</span>.inRe.test(l))
+					p += <span class="reserved">this</span>.inStr;
+			}
+
+			li = i;
+		}
+
+		<span class="comment">//tinyMCE.debug(h);</span>
+
+		<span class="reserved">return</span> o;
+	},
+
+	<span class="comment">/**
+	 * XML Encodes the specified string based on configured entity encoding. The entity encoding modes
+	 * are raw, numeric and named. Where raw is the fastest and named is default.
+	 *
+	 * <span class="attrib">@param</span> {string} s String to convert to XML.
+	 * <span class="attrib">@return</span> Encoded XML string based on configured entity encoding.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	xmlEncode : <span class="reserved">function</span>(s) {
+		var i, l, e, o = <span class="literal">''</span>, c;
+
+		<span class="reserved">this</span>._setupEntities(); <span class="comment">// Will intialize lookup table</span>
+
+		switch (<span class="reserved">this</span>.settings.entity_encoding) {
+			case <span class="literal">"raw"</span>:
+				<span class="reserved">return</span> tinyMCE.xmlEncode(s);
+
+			case <span class="literal">"named"</span>:
+				<span class="reserved">for</span> (i=0, l=s.length; i&lt;l; i++) {
+					c = s.charCodeAt(i);
+					e = <span class="reserved">this</span>.entities[c];
+
+					<span class="reserved">if</span> (e &amp;&amp; e != <span class="literal">''</span>)
+						o += <span class="literal">'&amp;'</span> + e + <span class="literal">';'</span>;
+					<span class="reserved">else</span>
+						o += String.fromCharCode(c);
+				}
+
+				<span class="reserved">return</span> o;
+
+			case <span class="literal">"numeric"</span>:
+				<span class="reserved">for</span> (i=0, l=s.length; i&lt;l; i++) {
+					c = s.charCodeAt(i);
+
+					<span class="reserved">if</span> (c &gt; 127 || c == 60 || c == 62 || c == 38 || c == 39 || c == 34)
+						o += <span class="literal">'&amp;#'</span> + c + <span class="literal">";"</span>;
+					<span class="reserved">else</span>
+						o += String.fromCharCode(c);
+				}
+
+				<span class="reserved">return</span> o;
+		}
+
+		<span class="reserved">return</span> s;
+	},
+
+	<span class="comment">/**
+	 * Splits the specified string and removed empty chunks.
+	 *
+	 * <span class="attrib">@param</span> {RegEx} re RegEx to split string by.
+	 * <span class="attrib">@param</span> {string} s String value to split.
+	 * <span class="attrib">@return</span> Array with parts from specified string.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	split : <span class="reserved">function</span>(re, s) {
+		var c = s.split(re);
+		var i, l, o = new Array();
+
+		<span class="reserved">for</span> (i=0, l=c.length; i&lt;l; i++) {
+			<span class="reserved">if</span> (c[i] != <span class="literal">''</span>)
+				o[i] = c[i];
+		}
+
+		<span class="reserved">return</span> o;
+	},
+
+	<span class="comment">/**
+	 * Removes contents that got added by TinyMCE to comments.
+	 *
+	 * <span class="attrib">@param</span> {string} s Comment string data to trim.
+	 * <span class="attrib">@return</span> Cleaned string from TinyMCE specific content.
+	 * <span class="attrib">@type</span> string
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_trimComment : <span class="reserved">function</span>(s) {
+		<span class="comment">// Remove mce_src, mce_href</span>
+		s = s.replace(new RegExp(<span class="literal">'\\smce_src=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
+		s = s.replace(new RegExp(<span class="literal">'\\smce_href=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
+
+		<span class="reserved">return</span> s;
+	},
+
+	<span class="comment">/**
+	 * Returns the value of the specified attribute name or default value if it wasn't found.
+	 *
+	 * <span class="attrib">@param</span> {HTMLElement} e HTML element to get attribute from.
+	 * <span class="attrib">@param</span> {string} n Attribute name to get from element.
+	 * <span class="attrib">@param</span> {string} d Default value to return if attribute wasn't found.
+	 * <span class="attrib">@return</span> Attribute value based on specified attribute name.
+	 * <span class="attrib">@type</span> string
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_getAttrib : <span class="reserved">function</span>(e, n, d) {
+		<span class="reserved">if</span> (typeof(d) == <span class="literal">"undefined"</span>)
+			d = <span class="literal">""</span>;
+
+		<span class="reserved">if</span> (!e || e.nodeType != 1)
+			<span class="reserved">return</span> d;
+
+		var v = e.getAttribute(n, 0);
+
+		<span class="reserved">if</span> (n == <span class="literal">"class"</span> &amp;&amp; !v)
+			v = e.className;
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; n == <span class="literal">"http-equiv"</span>)
+			v = e.httpEquiv;
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; e.nodeName == <span class="literal">"FORM"</span> &amp;&amp; n == <span class="literal">"enctype"</span> &amp;&amp; v == <span class="literal">"application/x-www-form-urlencoded"</span>)
+			v = <span class="literal">""</span>;
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; e.nodeName == <span class="literal">"INPUT"</span> &amp;&amp; n == <span class="literal">"size"</span> &amp;&amp; v == <span class="literal">"20"</span>)
+			v = <span class="literal">""</span>;
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; e.nodeName == <span class="literal">"INPUT"</span> &amp;&amp; n == <span class="literal">"maxlength"</span> &amp;&amp; v == <span class="literal">"2147483647"</span>)
+			v = <span class="literal">""</span>;
+
+		<span class="reserved">if</span> (n == <span class="literal">"style"</span> &amp;&amp; !tinyMCE.isOpera)
+			v = e.style.cssText;
+
+		<span class="reserved">if</span> (n == <span class="literal">'style'</span>)
+			v = tinyMCE.serializeStyle(tinyMCE.parseStyle(v));
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.settings.on_save &amp;&amp; n.indexOf(<span class="literal">'on'</span>) != -1 &amp;&amp; <span class="reserved">this</span>.settings.on_save &amp;&amp; v &amp;&amp; v != <span class="literal">""</span>)
+			v = tinyMCE.cleanupEventStr(v);
+
+		<span class="reserved">return</span> (v &amp;&amp; v != <span class="literal">""</span>) ? <span class="literal">''</span> + v : d;
+	},
+
+	<span class="comment">/**
+	 * Internal URL converter callback function. This simply converts URLs based
+	 * on some settings.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Cleanup} c Cleanup instance.
+	 * <span class="attrib">@param</span> {HTMLNode} n HTML node that holds the URL.
+	 * <span class="attrib">@param</span> {string} v URL value to convert.
+	 * <span class="attrib">@return</span> Converted URL value.
+	 * <span class="attrib">@type</span> string
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_urlConverter : <span class="reserved">function</span>(c, n, v) {
+		<span class="reserved">if</span> (!c.settings.on_save)
+			<span class="reserved">return</span> tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, v);
+		<span class="reserved">else</span> <span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">'convert_urls'</span>))
+			<span class="reserved">return</span> eval(tinyMCE.settings.urlconverter_callback + <span class="literal">"(v, n, true);"</span>);
+
+		<span class="reserved">return</span> v;
+	},
+
+	<span class="comment">/**
+	 * Converts a array into a regex.
+	 *
+	 * <span class="attrib">@param</span> {Array} a Array to convert into a regex.
+	 * <span class="attrib">@param</span> {string} op RegEx options like, gi.
+	 * <span class="attrib">@param</span> {string} be Before chunk, beginning of expression.
+	 * <span class="attrib">@param</span> {string} af After chunk, end of expression.
+	 * <span class="attrib">@return</span> RegEx instance based in input information.
+	 * <span class="attrib">@type</span> string
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_arrayToRe : <span class="reserved">function</span>(a, op, be, af) {
+		var i, r;
+
+		op = typeof(op) == <span class="literal">"undefined"</span> ? <span class="literal">"gi"</span> : op;
+		be = typeof(be) == <span class="literal">"undefined"</span> ? <span class="literal">"^("</span> : be;
+		af = typeof(af) == <span class="literal">"undefined"</span> ? <span class="literal">")$"</span> : af;
+
+		r = be;
+
+		<span class="reserved">for</span> (i=0; i&lt;a.length; i++)
+			r += <span class="reserved">this</span>._wildcardToRe(a[i]) + (i != a.length-1 ? <span class="literal">"|"</span> : <span class="literal">""</span>);
+
+		r += af;
+
+		<span class="reserved">return</span> new RegExp(r, op);
+	},
+
+	<span class="comment">/**
+	 * Converts a wildcard string into a regex.
+	 *
+	 * <span class="attrib">@param</span> {string} s Wildcard string to convert into RegEx.
+	 * <span class="attrib">@return</span> RegEx string based on input.
+	 * <span class="attrib">@type</span> string
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_wildcardToRe : <span class="reserved">function</span>(s) {
+		s = s.replace(/\?/g, <span class="literal">'(\\S?)'</span>);
+		s = s.replace(/\+/g, <span class="literal">'(\\S+)'</span>);
+		s = s.replace(/\*/g, <span class="literal">'(\\S*)'</span>);
+
+		<span class="reserved">return</span> s;
+	},
+
+	<span class="comment">/**
+	 * Sets up the entity name lookup table ones. This moves the entity lookup pasing time
+	 * from init to first xmlEncode call.
+	 *
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_setupEntities : <span class="reserved">function</span>() {
+		var n, a, i, s = <span class="reserved">this</span>.settings;
+
+		<span class="comment">// Setup entities</span>
+		<span class="reserved">if</span> (!<span class="reserved">this</span>.entitiesDone) {
+			<span class="reserved">if</span> (s.entity_encoding == <span class="literal">"named"</span>) {
+				n = tinyMCE.clearArray(new Array());
+				a = <span class="reserved">this</span>.split(<span class="literal">','</span>, s.entities);
+				<span class="reserved">for</span> (i=0; i&lt;a.length; i+=2)
+					n[a[i]] = a[i+1];
+
+				<span class="reserved">this</span>.entities = n;
+			}
+
+			<span class="reserved">this</span>.entitiesDone = true;
+		}
+	},
+
+	<span class="comment">/**
+	 * Sets up the cleanup rules ones. This moves the cleanup rule pasing time
+	 * from init to first cleanup call.
+	 *
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_setupRules : <span class="reserved">function</span>() {
+		var s = <span class="reserved">this</span>.settings;
+
+		<span class="comment">// Setup default rule</span>
+		<span class="reserved">if</span> (!<span class="reserved">this</span>.rulesDone) {
+			<span class="reserved">this</span>.addRuleStr(s.valid_elements);
+			<span class="reserved">this</span>.addRuleStr(s.extended_valid_elements);
+
+			<span class="reserved">this</span>.rulesDone = true;
+		}
+	},
+
+	<span class="comment">/**
+	 * Checks if the specified node is a duplicate in other words has it been processed/serialized before.
+	 *
+	 * <span class="attrib">@param</span> {DOMNode} n DOM Node that is to be checked.
+	 * <span class="attrib">@return</span> true/false if the node is a duplicate or not.
+	 * <span class="attrib">@type</span> boolean
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_isDuplicate : <span class="reserved">function</span>(n) {
+		var i;
+
+		<span class="reserved">if</span> (!<span class="reserved">this</span>.settings.fix_content_duplication)
+			<span class="reserved">return</span> false;
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera &amp;&amp; n.nodeType == 1) {
+			<span class="comment">// Mark elements</span>
+			<span class="reserved">if</span> (n.mce_serialized == <span class="reserved">this</span>.serializationId)
+				<span class="reserved">return</span> true;
+
+			n.setAttribute(<span class="literal">'mce_serialized'</span>, <span class="reserved">this</span>.serializationId);
+		} <span class="reserved">else</span> {
+			<span class="comment">// Search lookup table for text nodes  and comments</span>
+			<span class="reserved">for</span> (i=0; i&lt;<span class="reserved">this</span>.serializedNodes.length; i++) {
+				<span class="reserved">if</span> (<span class="reserved">this</span>.serializedNodes[i] == n)
+					<span class="reserved">return</span> true;
+			}
+
+			<span class="reserved">this</span>.serializedNodes[<span class="reserved">this</span>.serializedNodes.length] = n;
+		}
+
+		<span class="reserved">return</span> false;
+	}
+};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

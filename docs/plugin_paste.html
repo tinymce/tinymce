@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: paste</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: paste</h1>
+</div>
+
+<div class="content">
+	<p>This plugin adds paste as plain text and paste from Word icons to TinyMCE. This plugin was developed by Ryan Demmer and modified by the TinyMCE crew to be more general and some extra features where added.</p>
+	<p>
+	On 25 May 2005, this plugin was modified by speednet: IE now pastes directly into the editor, bypassing the extra steps of opening the Insert box, selecting options, and clicking Insert. Speednet also added the Select All command, which highlights all the content in the editor when the user clicks the toolbar button (Other miscellaneous cleanup also).
+	</p>
+	<p>On 28 October 2005, this plugin was modified by monkeybrain: Added the paste_strip_class_attributes option.</p>
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Copy the paste directory to the plugins directory of TinyMCE (/jscripts/tiny_mce/plugins).</li>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;paste&quot;.</li>
+		<li>Add the button names to button list, example: theme_advanced_buttons3_add : &quot;pastetext,pasteword,selectall&quot;.</li>
+	</ul>
+	</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;paste&quot;,
+	theme_advanced_buttons3_add : &quot;pastetext,pasteword,selectall&quot;,
+	paste_create_paragraphs : false,
+	paste_create_linebreaks : false,
+	paste_use_dialog : true,
+	paste_auto_cleanup_on_paste : true,
+	paste_convert_middot_lists : false,
+	paste_unindented_list_class : "unindentedList",
+	paste_convert_headers_to_strong : true,
+	paste_insert_word_content_callback : "convertWord"
+});
+
+function convertWord(type, content) {
+	switch (type) {
+		// Gets executed before the built in logic performes it's cleanups
+		case "before":
+			content = content.toLowerCase(); // Some dummy logic
+			break;
+
+		// Gets executed after the built in logic performes it's cleanups
+		case "after":
+			content = content.toLowerCase(); // Some dummy logic
+			break;
+	}
+
+	return content;
+}
+</pre>
+	</div>
+	</p>
+	<p>
+	<h3>Options</h3>
+	</p>
+	<p>
+	<table border="1" cellspacing="0" cellpadding="4">
+	<tr>
+		<td>[paste_create_paragraphs]</td>
+		<td>If enabled double linefeeds are converted to paragraph elements when using the plain text dialog. This is enabled by default.</td>
+	</tr>
+  	<tr>
+ 		<td>[paste_create_linebreaks]</td>
+ 		<td>If enabled single linefeeds are converted to hard line break elements when using the plain text dialog. This is enabled by default.</td>
+ 	</tr>
+	<tr>
+		<td>[paste_use_dialog]</td>
+		<td>MSIE specific option, if you set this to true both Mozilla and MSIE will present a paste dialog. If you set it to false pasting in MSIE will be done directly. This option is set to false by default.</td>
+	</tr>
+	<tr>
+		<td>[paste_auto_cleanup_on_paste]</td>
+		<td>MSIE specific option. If you enable this feature, a word paste will be executed when the user copy/paste content to the editor. This feature is disabled by default.</td>
+	</tr>
+	<tr>
+		<td>[paste_convert_middot_lists]</td>
+		<td>If this feature is enabled middot lists are converted into UL lists, these will be assign a special class.</td>
+	</tr>
+	<tr>
+		<td>[paste_unindented_list_class]</td>
+		<td>This option enables you to specify what class to assign to the UL list of middot converted lists. Middot lists are unindented in MS Office. This option defaults to &quot;unIndentedList&quot;.</td>
+	</tr>
+	<tr>
+		<td>[paste_convert_headers_to_strong]</td>
+		<td>This feature converts H1-6 elements to strong elements on paste, this is feature is disabled by default.</td>
+	</tr>
+	<tr>
+		<td>[paste_remove_spans]</td>
+		<td>This enables you to control if the word parse operation should remove or keep span elements, they will be removed by default.</td>
+	</tr>
+	<tr>
+		<td>[paste_remove_styles]</td>
+		<td>This enables you to control if the word parse operation should remove or keep style attributes, they will be removed by default.</td>
+	</tr>
+	<tr>
+		<td>[paste_replace_list]</td>
+		<td>Comma separated list of search/replace chunks. Where even items is the regexp that is to be used for the search and odd values are the contents that are to be replaced.
+		<p>This option defaults to: &quot;\u2122,&lt;sup&gt;TM&lt;/sup&gt;,\u2026,...,\u201c|\u201d,&quot;,\u2019,\',\u2013|\u2014|\u2015|\u2212,-&quot; this list replaces some  custom MS 1250 characters.
+		</p>
+		The \uXXXX values is the hex values of the Unicode characters. Trick use javascript:alert('&lt;unicode char&gt;'.charCodeAt(0).toString(16)); to retive these numbers.</td>
+	</tr>
+	<tr>
+		<td>[paste_strip_class_attributes]</td>
+		<td>This feature allows you to control whether or not class attributes are stripped when using pasteword.  Valid values are:
+			<ul>
+				<li>all - will strip all class attributes from the pasted content.  This is the default value.</li>
+				<li>none - will not strip any class attributes from the pasted content.</li>
+				<li>mso - will strip out all of the class attribute values that start with "Mso", but retain all others.</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>[paste_insert_word_content_callback]</td>
+		<td>This option enables you to specify a callback function. This callback is executed when the user pastes word content, the return value of this function will be the new content string. Check the example above for more details.
+		</td>
+	</tr>
+	</table>
+	</p>
+
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

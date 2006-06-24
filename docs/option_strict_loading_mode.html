@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Option: strict_loading_mode</title>
+	<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: strict_loading_mode</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option will force TinyMCE to load script using a DOM insert method instead of document.write on Gecko browsers. Since this results in asynchronous script loading a build in synchronized will ensure that themes, plugins and language packs files are loaded in the correct order. This will on the otherhand make the initialization procedure of TinyMCE a bit slower thats why this isn't the default behavior. So this option is set to true by default if the document content type is application/xhtml+xml.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the strict_loading_mode option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>strict_loading_mode : true</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: execcommand_callback</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: execcommand_callback</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option allows you to add a custom callback function for execCommand handling. This enables you to override internal
+		command functions in TinyMCE. The example below shows how the mceLink and mceImage are overriden.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the execcommand_callback option:</h3>
+	<div class="example">
+<pre>
+function <strong>myCustomExecCommandHandler</strong>(editor_id, elm, command, user_interface, value) {
+	var linkElm, imageElm, inst;
+
+	switch (command) {
+		case "mceLink":
+			inst = tinyMCE.getInstanceById(editor_id);
+			linkElm = tinyMCE.getParentElement(inst.selection.getFocusElement(), "a");
+
+			if (linkElm)
+				alert("Link dialog has been overriden. Found link href: " + tinyMCE.getAttrib(linkElm, "href"));
+			else
+				alert("Link dialog has been overriden.");
+
+			return true;
+
+		case "mceImage":
+			inst = tinyMCE.getInstanceById(editor_id);
+			imageElm = tinyMCE.getParentElement(inst.selection.getFocusElement(), "img");
+
+			if (imageElm)
+				alert("Image dialog has been overriden. Found image src: " + tinyMCE.getAttrib(imageElm, "src"));
+			else
+				alert("Image dialog has been overriden.");
+
+			return true;
+	}
+
+	return false; // Pass to next handler in chain
+}
+
+tinyMCE.init({
+	...
+	<strong>execcommand_callback : "myCustomExecCommandHandler"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

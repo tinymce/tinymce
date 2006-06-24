@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Customization - Creating a language pack</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Customization - Creating a language pack</h1>
+</div>
+
+<div class="content">
+	<h2>Making language packs</h2>
+	<p>Language packs are simply JavaScript name/value arrays placed in the &quot;<ISO-639-1 code>.js&quot; files in the &quot;lang&quot; directory. Remember to allways use the &quot;lang_&quot; prefix for these value names so that they don't override other variables in the templates. The example below shows how the cut, copy and paste texts are lang packed. Notice there are three kinds of language packs the first one is the general one shared by all themes these are located in the &quot;jscripts/tiny_mce/langs&quot; directory the secound ones are theme specific language packs these are contained in &quot;jscripts/tiny_mce/themes/&lt;some theme&gt;/langs&quot; and the last one is plugin specific language packs located in each plugin.
+	</p>
+	<p>
+	<div class="example">
+<pre>
+tinyMCE.addToLang('',{
+cut_desc : 'Cut (Ctrl+X)',
+copy_desc : 'Copy (Ctrl+C)',
+paste_desc : 'Paste (Ctrl+P)'
+);
+</pre>
+	</div>
+	</p>
+	<p>
+	Remember the last translation line should not have a , character at the end. The first parameter to the addToLang is the prefix to add before each variable, this was added to reduce the overall size of the language packs to reduce the overall download time.
+	</p>
+	<h3>Files to edit</h3>
+	<p>
+	When translating TinyMCE, these are the files that currently needs to be translated:
+	</p>
+	<p>
+	/tinymce/jscripts/tiny_mce/langs/en.js<br />
+	/tinymce/jscripts/tiny_mce/plugins/&lt;plugin&gt;/langs/en.js<br />
+	/tinymce/jscripts/tiny_mce/themes/advanced/langs/en.js<br />
+	</p>
+	<p>
+	Notice some language variables may include a name/url of a gif image or simmilar, for example the button for bold has a "F" character in the Swedish language pack. There are also relative window sizes located in the language packs, for example is the link dialog needs to be bigger inorder to fit a specific translation you can alter the width of the window by modifying these variables.
+	</p>
+	<h3>Contributing your language pack</h3>
+	<p>
+	Go to the <a href="http://sourceforge.net/tracker/?atid=635684&group_id=103281&func=browse">sourceforge patch page</a> and upload a zip containing all the language files in the correct directory structure.<br /><br />
+	Please translate all the plugins, even if you aren't using them.<br />
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

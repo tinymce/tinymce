@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: custom_undo_redo_levels</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: custom_undo_redo_levels</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option should contain the number of undo levels to keep in memory. This is set to -1 by default and such a value tells TinyMCE to use a unlimited number of undo levels. But this steals lots of memory so for low end systems a value of 10 may be better.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the custom_undo_redo_levels option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>custom_undo_redo_levels : 10</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: fullpage</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: fullpage</h1>
+</div>
+
+<div class="content">
+	<p>This plugin adds fullpage editing support. This enables you to edit whole documents with both head and body.</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;fullpage&quot;.</li>
+		<li>Add the fullpage button name to button list, example: theme_advanced_buttons3_add : &quot;fullpage&quot;.</li>
+	</ul>
+	</p>
+
+	<p>
+	<h3>Options</h3>
+	</p>
+	<p>
+	<table border="1" cellspacing="0" cellpadding="4">
+	<tr>
+		<td>[fullpage_doctypes]</td>
+		<td>This is a name/value list of possible document types. The value format of this option is name=value,name=value. These document types will be presented in the document type selection list. The default value of this option is: XHTML 1.0 Transitional=&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;,XHTML 1.0 Frameset=&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Frameset//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd&quot;&gt;,XHTML 1.0 Strict=&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;,XHTML 1.1=&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot; &quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;&gt;&quot;&gt;,HTML 4.01 Transitional=&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;,HTML 4.01 Strict=&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;,HTML 4.01 Frameset=&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Frameset//EN&quot; &quot;http://www.w3.org/TR/html4/frameset.dtd&quot;&gt;.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_fonts]</td>
+		<td>This option enables you specify what font family style values that can be added to the body element. The value format of this option is name=value;name=value. The default value of this option is:	Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;Georgia=georgia,times new roman,times,serif;Tahoma=tahoma,arial,helvetica,sans-serif;Times New Roman=times new roman,times,serif;Verdana=verdana,arial,helvetica,sans-serif;Impact=impact;WingDings=wingdings
+		</td>
+	</tr>
+	<tr>
+		<td>[fullpage_fontsizes]</td>
+		<td>This is a comma separated list of possible font sizes for the style attribute of the body element. This option defaults to: 10px,11px,12px,13px,14px,15px,16px.</td>
+	</tr>
+<!--	<tr>
+		<td>[fullpage_media_types]</td>
+		<td>This is a name/value list of possible media types. The default value of this option is: all=all,screen=screen,print=print,tty=tty,tv=tv,projection=projection,handheld=handheld,braille=braille,aural=aural.</td>
+	</tr> -->
+	<tr>
+		<td>[fullpage_encodings]</td>
+		<td>This option enables you to specify what the document character encoding sets the user may select from. The default value of this option is: Western european (iso-8859-1)=iso-8859-1,Central European (iso-8859-2)=iso-8859-2,Unicode (UTF-8)=utf-8,Chinese traditional (Big5)=big5,Cyrillic (iso-8859-5)=iso-8859-5,Japanese (iso-2022-jp)=iso-2022-jp,Greek (iso-8859-7)=iso-8859-7,Korean (iso-2022-kr)=iso-2022-kr,ASCII (us-ascii)=us-ascii
+		</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_doctype]</td>
+		<td>This option enables you to specify the default doctype for the output HTML.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_encoding]</td>
+		<td>This option enables you to specify the default encoding for the output HTML.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_title]</td>
+		<td>This option enables you to specify the default title for the output HTML.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_font_size]</td>
+		<td>This option enables you to specify the default font size for body element.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_font_family]</td>
+		<td>This option enables you to specify the default font family for body element.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_text_color]</td>
+		<td>This option enables you to specify the default text color for body element.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_langcode]</td>
+		<td>This option enables you to specify the default langcode for the output HTML.</td>
+	</tr>
+	<tr>
+		<td>[fullpage_default_xml_pi]</td>
+		<td>This option enables you to specify if a XML declaration should be added or not true/false option.</td>
+	</tr>
+	</table>
+	</p>
+	<p>
+	<h3>Initialization Example</h3>
+	</p>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;<strong>fullpage</strong>&quot;,
+	theme_advanced_buttons3_add : &quot;<strong>fullpage</strong>&quot;,
+	fullpage_fontsizes : '13px,14px,15px,18pt,xx-large',
+	fullpage_default_xml_pi : false,
+	fullpage_default_langcode : 'en',
+	fullpage_default_title : "My document title"
+});</pre>
+	</div>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

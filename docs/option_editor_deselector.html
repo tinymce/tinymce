@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: editor_deselector</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: editor_deselector</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to specify a CSS class name that will be deselect textareas from being converted into editor instances. If this option isn't set to a value this option will not have any effect and the <a href="option_mode.html">mode</a> option will choose textareas instead. The default value of this option is &quot;mceNoEditor&quot; so if mceNoEditor is added to the class attribute of a textarea it will be excluded for convertion.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the editor_deselector option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>editor_deselector : "mceNoEditor"</strong>
+});
+</pre>
+	</div>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage in the HTML:</h3>
+	<div class="example">
+<pre>
+&lt;textarea id=&quot;myarea1&quot; class=&quot;<strong>mceNoEditor</strong>&quot;&gt;This will be a NOT be a editor.&lt;/textarea&gt;
+
+&lt;textarea id=&quot;myarea2&quot;&gt;This will be a editor.&lt;/textarea&gt;
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

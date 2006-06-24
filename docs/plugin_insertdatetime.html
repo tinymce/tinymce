@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: insertdatetime</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: insertdatetime</h1>
+</div>
+
+<div class="content">
+	<p></p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Copy the iespell directory to the plugins directory of TinyMCE (/jscripts/tiny_mce/plugins).</li>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;iespell&quot;.</li>
+		<li>Add the insertdate or inserttime button name to button list, example: theme_advanced_buttons3_add : &quot;insertdate,inserttime&quot;.</li>
+	</ul>
+	</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;insertdatetime&quot;,
+	theme_advanced_buttons3_add : &quot;insertdate,inserttime&quot;
+    plugin_insertdate_dateFormat : &quot;%Y-%m-%d&quot;,
+    plugin_insertdate_timeFormat : &quot;%H:%M:%S&quot;
+});</pre>
+	</div>
+	</p>
+	<p>
+	<h3>Options</h3>
+	</p>
+	<p>
+	plugin_insertdate_dateFormat - Format that the date is output as. Defaults to: "%Y-%m-%d".<br />
+	plugin_insertdate_timeFormat - Format that the time is output as. Defaults to: "%H:%M:%S".
+	</p>
+	<p>Replacement variables</p>
+	<p>
+	<table border="1" cellspacing="0" cellpadding="4">
+	<tr>
+		<td>%y</td>
+		<td>year as a decimal number without a century (range 00 to 99)</td>
+	</tr>
+	<tr>
+		<td>%Y</td>
+		<td>year as a decimal number including the century</td>
+	</tr>
+	<tr>
+		<td>%d</td>
+		<td>day of the month as a decimal number (range 01 to 31)</td>
+	</tr>
+	<tr>
+		<td>%m</td>
+		<td>month as a decimal number (range 01 to 12)</td>
+	</tr>
+	<tr>
+		<td>%D</td>
+		<td>same as %m/%d/%y</td>
+	</tr>
+	<tr>
+		<td>%r</td>
+		<td>time in a.m. and p.m. notation</td>
+	</tr>
+	<tr>
+		<td>%H</td>
+		<td>hour as a decimal number using a 24-hour clock (range 00 to 23)</td>
+	</tr>
+	<tr>
+		<td>%I</td>
+		<td>hour as a decimal number using a 12-hour clock (range 01 to 12)</td>
+	</tr>
+	<tr>
+		<td>%M</td>
+		<td>minute as a decimal number (range 00-59)</td>
+	</tr>
+	<tr>
+		<td>%S</td>
+		<td>second as a decimal number (range 00-59)</td>
+	</tr>
+	<tr>
+		<td>%p</td>
+		<td>either &quot;am&quot; or &quot;pm&quot; according to the given time value</td>
+	</tr>
+	<tr>
+		<td>%%</td>
+		<td>a literal &quot;%&quot; character</td>
+	</tr>
+	</table>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

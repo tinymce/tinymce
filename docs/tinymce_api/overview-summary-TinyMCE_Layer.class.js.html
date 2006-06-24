@@ -1,0 +1,455 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_Layer.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_Layer.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_Layer.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+    <table border="1" cellpadding="3" cellspacing="0" width="100%">
+    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+    <td colspan=2><font size="+2">
+    
+        <b>Class Summary</b>
+    
+    </font></td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="TinyMCE_Layer.html">TinyMCE_Layer</a></b></td>
+    <td>&nbsp;</td>
+    </tr>
+    
+    </table>
+    <hr/> 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_Layer.class.js.html,v $
+ * $Revision: 1.19 $
+ * $Date: 2006/04/14 20:00:30 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ */</span>
+
+<span class="comment">/**
+ * Constructor for the TinyMCE Layer. This class enables you to construct
+ * floating layers that is visible on top of select input fields, flashes and iframes.
+ *
+ * <span class="attrib">@param</span> {string} id Unique ID name for the layer.
+ * <span class="attrib">@param</span> {boolean} bm Block mode, defaults to true.
+ */</span>
+<span class="reserved">function</span> TinyMCE_Layer(id, bm) {
+	<span class="reserved">this</span>.id = id;
+	<span class="reserved">this</span>.blockerElement = null;
+	<span class="reserved">this</span>.events = false;
+	<span class="reserved">this</span>.element = null;
+	<span class="reserved">this</span>.blockMode = typeof(bm) != <span class="literal">'undefined'</span> ? bm : true;
+	<span class="reserved">this</span>.doc = document;
+};
+
+TinyMCE_Layer.<span class="reserved">prototype</span> = {
+	<span class="comment">/**
+	 * Moves the layer relative to the specified HTML element.
+	 *
+	 * <span class="attrib">@param</span> {HTMLElement} re Element to move the layer relative to.
+	 * <span class="attrib">@param</span> {string} p Position of the layer tl = top left, tr = top right, bl = bottom left, br = bottom right.
+	 */</span>
+	moveRelativeTo : <span class="reserved">function</span>(re, p) {
+		var rep = <span class="reserved">this</span>.getAbsPosition(re);
+		var w = parseInt(re.offsetWidth);
+		var h = parseInt(re.offsetHeight);
+		var e = <span class="reserved">this</span>.getElement();
+		var ew = parseInt(e.offsetWidth);
+		var eh = parseInt(e.offsetHeight);
+		var x, y;
+
+		switch (p) {
+			case <span class="literal">"tl"</span>:
+				x = rep.absLeft;
+				y = rep.absTop;
+				break;
+
+			case <span class="literal">"tr"</span>:
+				x = rep.absLeft + w;
+				y = rep.absTop;
+				break;
+
+			case <span class="literal">"bl"</span>:
+				x = rep.absLeft;
+				y = rep.absTop + h;
+				break;
+
+			case <span class="literal">"br"</span>:
+				x = rep.absLeft + w;
+				y = rep.absTop + h;
+				break;
+
+			case <span class="literal">"cc"</span>:
+				x = rep.absLeft + (w / 2) - (ew / 2);
+				y = rep.absTop + (h / 2) - (eh / 2);
+				break;
+		}
+
+		<span class="reserved">this</span>.moveTo(x, y);
+	},
+
+	<span class="comment">/**
+	 * Moves the layer relative in pixels.
+	 *
+	 * <span class="attrib">@param</span> {int} x Horizontal relative position in pixels.
+	 * <span class="attrib">@param</span> {int} y Vertical relative position in pixels.
+	 */</span>
+	moveBy : <span class="reserved">function</span>(x, y) {
+		var e = <span class="reserved">this</span>.getElement();
+		<span class="reserved">this</span>.moveTo(parseInt(e.style.left) + x, parseInt(e.style.top) + y);
+	},
+
+	<span class="comment">/**
+	 * Moves the layer absolute in pixels.
+	 *
+	 * <span class="attrib">@param</span> {int} x Horizontal absolute position in pixels.
+	 * <span class="attrib">@param</span> {int} y Vertical absolute position in pixels.
+	 */</span>
+	moveTo : <span class="reserved">function</span>(x, y) {
+		var e = <span class="reserved">this</span>.getElement();
+
+		e.style.left = x + <span class="literal">"px"</span>;
+		e.style.top = y + <span class="literal">"px"</span>;
+
+		<span class="reserved">this</span>.updateBlocker();
+	},
+
+	<span class="comment">/**
+	 * Resizes the layer by the specified relative width and height.
+	 *
+	 * <span class="attrib">@param</span> {int} w Relative width value.
+	 * <span class="attrib">@param</span> {int} h Relative height value.
+	 */</span>
+	resizeBy : <span class="reserved">function</span>(w, h) {
+		var e = <span class="reserved">this</span>.getElement();
+		<span class="reserved">this</span>.resizeTo(parseInt(e.style.width) + w, parseInt(e.style.height) + h);
+	},
+
+	<span class="comment">/**
+	 * Resizes the layer to the specified width and height.
+	 *
+	 * <span class="attrib">@param</span> {int} w Width value.
+	 * <span class="attrib">@param</span> {int} h Height value.
+	 */</span>
+	resizeTo : <span class="reserved">function</span>(w, h) {
+		var e = <span class="reserved">this</span>.getElement();
+
+		<span class="reserved">if</span> (w != null)
+			e.style.width = w + <span class="literal">"px"</span>;
+
+		<span class="reserved">if</span> (h != null)
+			e.style.height = h + <span class="literal">"px"</span>;
+
+		<span class="reserved">this</span>.updateBlocker();
+	},
+
+	<span class="comment">/**
+	 * Shows the layer.
+	 */</span>
+	show : <span class="reserved">function</span>() {
+		<span class="reserved">this</span>.getElement().style.display = <span class="literal">'block'</span>;
+		<span class="reserved">this</span>.updateBlocker();
+	},
+
+	<span class="comment">/**
+	 * Hides the layer.
+	 */</span>
+	hide : <span class="reserved">function</span>() {
+		<span class="reserved">this</span>.getElement().style.display = <span class="literal">'none'</span>;
+		<span class="reserved">this</span>.updateBlocker();
+	},
+
+	<span class="comment">/**
+	 * Returns true/false if the layer is visible or not.
+	 *
+	 * <span class="attrib">@return</span> true/false if it's visible or not.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	isVisible : <span class="reserved">function</span>() {
+		<span class="reserved">return</span> <span class="reserved">this</span>.getElement().style.display == <span class="literal">'block'</span>;
+	},
+
+	<span class="comment">/**
+	 * Returns the DOM element that the layer is binded to.
+	 *
+	 * <span class="attrib">@return</span> DOM HTML element.
+	 * <span class="attrib">@type</span> HTMLElement
+	 */</span>
+	getElement : <span class="reserved">function</span>() {
+		<span class="reserved">if</span> (!<span class="reserved">this</span>.element)
+			<span class="reserved">this</span>.element = <span class="reserved">this</span>.doc.getElementById(<span class="reserved">this</span>.id);
+
+		<span class="reserved">return</span> <span class="reserved">this</span>.element;
+	},
+
+	<span class="comment">/**
+	 * Sets the block mode. If you set this property to true a control box blocker iframe
+	 * will be added to the document since MSIE has a issue where select boxes are visible
+	 * through layers.
+	 *
+	 * <span class="attrib">@param</span> {boolean} s Block mode state, true is the default value.
+	 */</span>
+	setBlockMode : <span class="reserved">function</span>(s) {
+		<span class="reserved">this</span>.blockMode = s;
+	},
+
+	<span class="comment">/**
+	 * Updates the select/iframe/flash blocker this will also block the caret in Firefox.
+	 */</span>
+	updateBlocker : <span class="reserved">function</span>() {
+		var e, b, x, y, w, h;
+
+		b = <span class="reserved">this</span>.getBlocker();
+		<span class="reserved">if</span> (b) {
+			<span class="reserved">if</span> (<span class="reserved">this</span>.blockMode) {
+				e = <span class="reserved">this</span>.getElement();
+				x = <span class="reserved">this</span>.parseInt(e.style.left);
+				y = <span class="reserved">this</span>.parseInt(e.style.top);
+				w = <span class="reserved">this</span>.parseInt(e.offsetWidth);
+				h = <span class="reserved">this</span>.parseInt(e.offsetHeight);
+
+				b.style.left = x + <span class="literal">'px'</span>;
+				b.style.top = y + <span class="literal">'px'</span>;
+				b.style.width = w + <span class="literal">'px'</span>;
+				b.style.height = h + <span class="literal">'px'</span>;
+				b.style.display = e.style.display;
+			} <span class="reserved">else</span>
+				b.style.display = <span class="literal">'none'</span>;
+		}
+	},
+
+	<span class="comment">/**
+	 * Returns the blocker DOM element, this is a invisible iframe.
+	 *
+	 * <span class="attrib">@return</span> DOM HTML element.
+	 * <span class="attrib">@type</span> HTMLElement
+	 */</span>
+	getBlocker : <span class="reserved">function</span>() {
+		var d, b;
+
+		<span class="reserved">if</span> (!<span class="reserved">this</span>.blockerElement &amp;&amp; <span class="reserved">this</span>.blockMode) {
+			d = <span class="reserved">this</span>.doc;
+			b = d.createElement(<span class="literal">"iframe"</span>);
+
+			b.style.cssText = <span class="literal">'display: none; position: absolute; left: 0; top: 0'</span>;
+			b.src = <span class="literal">'javascript:false;'</span>;
+			b.frameBorder = <span class="literal">'0'</span>;
+			b.scrolling = <span class="literal">'no'</span>;
+
+			d.body.appendChild(b);
+			<span class="reserved">this</span>.blockerElement = b;
+		}
+
+		<span class="reserved">return</span> <span class="reserved">this</span>.blockerElement;
+	},
+
+	<span class="comment">/**
+	 * Returns the absolute x, y cordinate of the specified node.
+	 *
+	 * <span class="attrib">@param</span> {DOMElement} n DOM node to retrive x, y of.
+	 * <span class="attrib">@return</span> Object containing absLeft and absTop properties.
+	 * <span class="attrib">@type</span> Object
+	 */</span>
+	getAbsPosition : <span class="reserved">function</span>(n) {
+		var p = {absLeft : 0, absTop : 0};
+
+		<span class="reserved">while</span> (n) {
+			p.absLeft += n.offsetLeft;
+			p.absTop += n.offsetTop;
+			n = n.offsetParent;
+		}
+
+		<span class="reserved">return</span> p;
+	},
+
+	<span class="comment">/**
+	 * Creates a element for the layer based on the id and specified name.
+	 *
+	 * <span class="attrib">@param</span> {string} n Element tag name, like div.
+	 * <span class="attrib">@param</span> {string} c Optional class name to set as class attribute value.
+	 * <span class="attrib">@param</span> {HTMLElement} p Optional parent element reference, defaults to body.
+	 * <span class="attrib">@return</span> HTML DOM element that got created.
+	 * <span class="attrib">@type</span> HTMLElement
+	 */</span>
+	create : <span class="reserved">function</span>(n, c, p) {
+		var d = <span class="reserved">this</span>.doc, e = d.createElement(n);
+
+		e.setAttribute(<span class="literal">'id'</span>, <span class="reserved">this</span>.id);
+
+		<span class="reserved">if</span> (c)
+			e.className = c;
+
+		<span class="reserved">if</span> (!p)
+			p = d.body;
+
+		p.appendChild(e);
+
+		<span class="reserved">return</span> <span class="reserved">this</span>.element = e;
+	},
+
+	<span class="comment">/**
+	 * Parses a int value this method will return 0 if the string is empty.
+	 *
+	 * <span class="attrib">@param</span> {string} s String to parse value of.
+	 * <span class="attrib">@return</span> Parsed number.
+	 * <span class="attrib">@type</span> int
+	 */</span>
+	parseInt : <span class="reserved">function</span>(s) {
+		<span class="reserved">if</span> (s == null || s == <span class="literal">''</span>)
+			<span class="reserved">return</span> 0;
+
+		<span class="reserved">return</span> parseInt(s);
+	}
+};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

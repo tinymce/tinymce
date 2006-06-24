@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: fix_table_elements</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: fix_table_elements</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to specify that list table elements should be moved outside paragraphs or other block elements. If you enable this option block elements will be split into two chunks when a table is found within it, see the example below for details. This option is disabled by default.<br /><br />
+	<div class="example">
+<pre>
+This invalid table:
+&lt;p&gt;
+a
+&lt;table&gt;
+	&lt;tr>&lt;td&gt;b&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr>&lt;td&gt;c&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+d
+&lt;/p&gt;
+
+Gets converted into this valid XHTML:
+&lt;p&gt;
+a
+&lt;/p&gt;
+&lt;table&gt;
+	&lt;tr>&lt;td&gt;b&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr>&lt;td&gt;c&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;p&gt;
+d
+&lt;/p&gt;
+</pre>
+	</div>
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the fix_table_elements option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>fix_table_elements : true</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

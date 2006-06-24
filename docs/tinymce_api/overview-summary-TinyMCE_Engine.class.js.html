@@ -1,0 +1,2890 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_Engine.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_Engine.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_Engine.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+    <table border="1" cellpadding="3" cellspacing="0" width="100%">
+    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+    <td colspan=2><font size="+2">
+    
+        <b>Class Summary</b>
+    
+    </font></td>
+    </tr>
+    
+    <tr bgcolor="white" class="TableRowColor">
+    <td width="15%"><b><a href="TinyMCE_Engine.html">TinyMCE_Engine</a></b></td>
+    <td>&nbsp;</td>
+    </tr>
+    
+    </table>
+    <hr/> 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_Engine.class.js.html,v $
+ * $Revision: 1.42 $
+ * $Date: 2006/04/14 20:00:29 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ */</span>
+
+<span class="comment">/**
+ * Core engine class for TinyMCE, a instance of this class is available as a global called tinyMCE.
+ *
+ * <span class="attrib">@constructor</span>
+ */</span>
+<span class="reserved">function</span> TinyMCE_Engine() {
+	<span class="reserved">this</span>.majorVersion = <span class="literal">"2"</span>;
+	<span class="reserved">this</span>.minorVersion = <span class="literal">"0.6"</span>;
+	<span class="reserved">this</span>.releaseDate = <span class="literal">"2006-xx-xx"</span>;
+
+	<span class="reserved">this</span>.instances = new Array();
+	<span class="reserved">this</span>.switchClassCache = new Array();
+	<span class="reserved">this</span>.windowArgs = new Array();
+	<span class="reserved">this</span>.loadedFiles = new Array();
+	<span class="reserved">this</span>.configs = new Array();
+	<span class="reserved">this</span>.currentConfig = 0;
+	<span class="reserved">this</span>.eventHandlers = new Array();
+
+	<span class="comment">// Browser check</span>
+	var ua = navigator.userAgent;
+	<span class="reserved">this</span>.isMSIE = (navigator.appName == <span class="literal">"Microsoft Internet Explorer"</span>);
+	<span class="reserved">this</span>.isMSIE5 = <span class="reserved">this</span>.isMSIE &amp;&amp; (ua.indexOf(<span class="literal">'MSIE 5'</span>) != -1);
+	<span class="reserved">this</span>.isMSIE5_0 = <span class="reserved">this</span>.isMSIE &amp;&amp; (ua.indexOf(<span class="literal">'MSIE 5.0'</span>) != -1);
+	<span class="reserved">this</span>.isGecko = ua.indexOf(<span class="literal">'Gecko'</span>) != -1;
+	<span class="reserved">this</span>.isSafari = ua.indexOf(<span class="literal">'Safari'</span>) != -1;
+	<span class="reserved">this</span>.isOpera = ua.indexOf(<span class="literal">'Opera'</span>) != -1;
+	<span class="reserved">this</span>.isMac = ua.indexOf(<span class="literal">'Mac'</span>) != -1;
+	<span class="reserved">this</span>.isNS7 = ua.indexOf(<span class="literal">'Netscape/7'</span>) != -1;
+	<span class="reserved">this</span>.isNS71 = ua.indexOf(<span class="literal">'Netscape/7.1'</span>) != -1;
+	<span class="reserved">this</span>.dialogCounter = 0;
+	<span class="reserved">this</span>.plugins = new Array();
+	<span class="reserved">this</span>.themes = new Array();
+	<span class="reserved">this</span>.menus = new Array();
+	<span class="reserved">this</span>.loadedPlugins = new Array();
+	<span class="reserved">this</span>.buttonMap = new Array();
+	<span class="reserved">this</span>.isLoaded = false;
+
+	<span class="comment">// Fake MSIE on Opera and if Opera fakes IE, Gecko or Safari cancel those</span>
+	<span class="reserved">if</span> (<span class="reserved">this</span>.isOpera) {
+		<span class="reserved">this</span>.isMSIE = true;
+		<span class="reserved">this</span>.isGecko = false;
+		<span class="reserved">this</span>.isSafari =  false;
+	}
+
+	<span class="comment">// TinyMCE editor id instance counter</span>
+	<span class="reserved">this</span>.idCounter = 0;
+};
+
+TinyMCE_Engine.<span class="reserved">prototype</span> = {
+	<span class="comment">/**
+	 * Initializes TinyMCE with the specific configuration settings. This method
+	 * may be called multiple times when multiple instances with diffrent settings is to be created.
+	 *
+	 * <span class="attrib">@param</span> {Array} Name/Value array of initialization settings.
+	 */</span>
+	init : <span class="reserved">function</span>(settings) {
+		var theme;
+
+		<span class="reserved">this</span>.settings = settings;
+
+		<span class="comment">// Check if valid browser has execcommand support</span>
+		<span class="reserved">if</span> (typeof(document.execCommand) == <span class="literal">'undefined'</span>)
+			<span class="reserved">return</span>;
+
+		<span class="comment">// Get script base path</span>
+		<span class="reserved">if</span> (!tinyMCE.baseURL) {
+			var elements = document.getElementsByTagName(<span class="literal">'script'</span>);
+
+			<span class="reserved">for</span> (var i=0; i&lt;elements.length; i++) {
+				<span class="reserved">if</span> (elements[i].src &amp;&amp; (elements[i].src.indexOf(<span class="literal">"tiny_mce.js"</span>) != -1 || elements[i].src.indexOf(<span class="literal">"tiny_mce_dev.js"</span>) != -1 || elements[i].src.indexOf(<span class="literal">"tiny_mce_src.js"</span>) != -1 || elements[i].src.indexOf(<span class="literal">"tiny_mce_gzip"</span>) != -1)) {
+					var src = elements[i].src;
+
+					tinyMCE.srcMode = (src.indexOf(<span class="literal">'_src'</span>) != -1 || src.indexOf(<span class="literal">'_dev'</span>) != -1) ? <span class="literal">'_src'</span> : <span class="literal">''</span>;
+					tinyMCE.gzipMode = src.indexOf(<span class="literal">'_gzip'</span>) != -1;
+					src = src.substring(0, src.lastIndexOf(<span class="literal">'/'</span>));
+
+					<span class="reserved">if</span> (settings.exec_mode == <span class="literal">"src"</span> || settings.exec_mode == <span class="literal">"normal"</span>)
+						tinyMCE.srcMode = settings.exec_mode == <span class="literal">"src"</span> ? <span class="literal">'_src'</span> : <span class="literal">''</span>;
+
+					tinyMCE.baseURL = src;
+					break;
+				}
+			}
+		}
+
+		<span class="comment">// Get document base path</span>
+		<span class="reserved">this</span>.documentBasePath = document.location.href;
+		<span class="reserved">if</span> (<span class="reserved">this</span>.documentBasePath.indexOf(<span class="literal">'?'</span>) != -1)
+			<span class="reserved">this</span>.documentBasePath = <span class="reserved">this</span>.documentBasePath.substring(0, <span class="reserved">this</span>.documentBasePath.indexOf(<span class="literal">'?'</span>));
+		<span class="reserved">this</span>.documentURL = <span class="reserved">this</span>.documentBasePath;
+		<span class="reserved">this</span>.documentBasePath = <span class="reserved">this</span>.documentBasePath.substring(0, <span class="reserved">this</span>.documentBasePath.lastIndexOf(<span class="literal">'/'</span>));
+
+		<span class="comment">// If not HTTP absolute</span>
+		<span class="reserved">if</span> (tinyMCE.baseURL.indexOf(<span class="literal">'://'</span>) == -1 &amp;&amp; tinyMCE.baseURL.charAt(0) != <span class="literal">'/'</span>) {
+			<span class="comment">// If site absolute</span>
+			tinyMCE.baseURL = <span class="reserved">this</span>.documentBasePath + <span class="literal">"/"</span> + tinyMCE.baseURL;
+		}
+
+		<span class="comment">// Set default values on settings</span>
+		<span class="reserved">this</span>._def(<span class="literal">"mode"</span>, <span class="literal">"none"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"theme"</span>, <span class="literal">"advanced"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"plugins"</span>, <span class="literal">""</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"language"</span>, <span class="literal">"en"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"docs_language"</span>, <span class="reserved">this</span>.settings[<span class="literal">'language'</span>]);
+		<span class="reserved">this</span>._def(<span class="literal">"elements"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"textarea_trigger"</span>, <span class="literal">"mce_editable"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"editor_selector"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"editor_deselector"</span>, <span class="literal">"mceNoEditor"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"valid_elements"</span>, <span class="literal">"+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],-td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang]"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"extended_valid_elements"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"invalid_elements"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"encoding"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"urlconverter_callback"</span>, tinyMCE.getParam(<span class="literal">"urlconvertor_callback"</span>, <span class="literal">"TinyMCE_Engine.prototype.convertURL"</span>));
+		<span class="reserved">this</span>._def(<span class="literal">"save_callback"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"debug"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"force_br_newlines"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"force_p_newlines"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"add_form_submit_trigger"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"relative_urls"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"remove_script_host"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"focus_alert"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"document_base_url"</span>, <span class="reserved">this</span>.documentURL);
+		<span class="reserved">this</span>._def(<span class="literal">"visual"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"visual_table_class"</span>, <span class="literal">"mceVisualAid"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"setupcontent_callback"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"fix_content_duplication"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"custom_undo_redo"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"custom_undo_redo_levels"</span>, -1);
+		<span class="reserved">this</span>._def(<span class="literal">"custom_undo_redo_keyboard_shortcuts"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"custom_undo_redo_restore_selection"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"verify_html"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"apply_source_formatting"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"directionality"</span>, <span class="literal">"ltr"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"cleanup_on_startup"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"inline_styles"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"convert_newlines_to_brs"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"auto_reset_designmode"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"entities"</span>, <span class="literal">"39,#39,160,nbsp,161,iexcl,162,cent,163,pound,164,curren,165,yen,166,brvbar,167,sect,168,uml,169,copy,170,ordf,171,laquo,172,not,173,shy,174,reg,175,macr,176,deg,177,plusmn,178,sup2,179,sup3,180,acute,181,micro,182,para,183,middot,184,cedil,185,sup1,186,ordm,187,raquo,188,frac14,189,frac12,190,frac34,191,iquest,192,Agrave,193,Aacute,194,Acirc,195,Atilde,196,Auml,197,Aring,198,AElig,199,Ccedil,200,Egrave,201,Eacute,202,Ecirc,203,Euml,204,Igrave,205,Iacute,206,Icirc,207,Iuml,208,ETH,209,Ntilde,210,Ograve,211,Oacute,212,Ocirc,213,Otilde,214,Ouml,215,times,216,Oslash,217,Ugrave,218,Uacute,219,Ucirc,220,Uuml,221,Yacute,222,THORN,223,szlig,224,agrave,225,aacute,226,acirc,227,atilde,228,auml,229,aring,230,aelig,231,ccedil,232,egrave,233,eacute,234,ecirc,235,euml,236,igrave,237,iacute,238,icirc,239,iuml,240,eth,241,ntilde,242,ograve,243,oacute,244,ocirc,245,otilde,246,ouml,247,divide,248,oslash,249,ugrave,250,uacute,251,ucirc,252,uuml,253,yacute,254,thorn,255,yuml,402,fnof,913,Alpha,914,Beta,915,Gamma,916,Delta,917,Epsilon,918,Zeta,919,Eta,920,Theta,921,Iota,922,Kappa,923,Lambda,924,Mu,925,Nu,926,Xi,927,Omicron,928,Pi,929,Rho,931,Sigma,932,Tau,933,Upsilon,934,Phi,935,Chi,936,Psi,937,Omega,945,alpha,946,beta,947,gamma,948,delta,949,epsilon,950,zeta,951,eta,952,theta,953,iota,954,kappa,955,lambda,956,mu,957,nu,958,xi,959,omicron,960,pi,961,rho,962,sigmaf,963,sigma,964,tau,965,upsilon,966,phi,967,chi,968,psi,969,omega,977,thetasym,978,upsih,982,piv,8226,bull,8230,hellip,8242,prime,8243,Prime,8254,oline,8260,frasl,8472,weierp,8465,image,8476,real,8482,trade,8501,alefsym,8592,larr,8593,uarr,8594,rarr,8595,darr,8596,harr,8629,crarr,8656,lArr,8657,uArr,8658,rArr,8659,dArr,8660,hArr,8704,forall,8706,part,8707,exist,8709,empty,8711,nabla,8712,isin,8713,notin,8715,ni,8719,prod,8721,sum,8722,minus,8727,lowast,8730,radic,8733,prop,8734,infin,8736,ang,8743,and,8744,or,8745,cap,8746,cup,8747,int,8756,there4,8764,sim,8773,cong,8776,asymp,8800,ne,8801,equiv,8804,le,8805,ge,8834,sub,8835,sup,8836,nsub,8838,sube,8839,supe,8853,oplus,8855,otimes,8869,perp,8901,sdot,8968,lceil,8969,rceil,8970,lfloor,8971,rfloor,9001,lang,9002,rang,9674,loz,9824,spades,9827,clubs,9829,hearts,9830,diams,34,quot,38,amp,60,lt,62,gt,338,OElig,339,oelig,352,Scaron,353,scaron,376,Yuml,710,circ,732,tilde,8194,ensp,8195,emsp,8201,thinsp,8204,zwnj,8205,zwj,8206,lrm,8207,rlm,8211,ndash,8212,mdash,8216,lsquo,8217,rsquo,8218,sbquo,8220,ldquo,8221,rdquo,8222,bdquo,8224,dagger,8225,Dagger,8240,permil,8249,lsaquo,8250,rsaquo,8364,euro"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"entity_encoding"</span>, <span class="literal">"named"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"cleanup_callback"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"add_unload_trigger"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"ask"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"nowrap"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"auto_resize"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"auto_focus"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"cleanup"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"remove_linebreaks"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"button_tile_map"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"submit_patch"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"browsers"</span>, <span class="literal">"msie,safari,gecko,opera"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"dialog_type"</span>, <span class="literal">"window"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"accessibility_warnings"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"accessibility_focus"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"merge_styles_invalid_parents"</span>, <span class="literal">""</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"force_hex_style_colors"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"trim_span_elements"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"convert_fonts_to_spans"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"doctype"</span>, <span class="literal">'&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt;'</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"font_size_classes"</span>, <span class="literal">''</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"font_size_style_values"</span>, <span class="literal">'xx-small,x-small,small,medium,large,x-large,xx-large'</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"event_elements"</span>, <span class="literal">'a,img'</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"convert_urls"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"table_inline_editing"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"object_resizing"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"custom_shortcuts"</span>, true);
+		<span class="reserved">this</span>._def(<span class="literal">"convert_on_click"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"content_css"</span>, <span class="literal">''</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"fix_list_elements"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"fix_table_elements"</span>, false);
+
+		<span class="comment">// Browser check IE</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; <span class="reserved">this</span>.settings[<span class="literal">'browsers'</span>].indexOf(<span class="literal">'msie'</span>) == -1)
+			<span class="reserved">return</span>;
+
+		<span class="comment">// Browser check Gecko</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isGecko &amp;&amp; <span class="reserved">this</span>.settings[<span class="literal">'browsers'</span>].indexOf(<span class="literal">'gecko'</span>) == -1)
+			<span class="reserved">return</span>;
+
+		<span class="comment">// Browser check Safari</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isSafari &amp;&amp; <span class="reserved">this</span>.settings[<span class="literal">'browsers'</span>].indexOf(<span class="literal">'safari'</span>) == -1)
+			<span class="reserved">return</span>;
+
+		<span class="comment">// Browser check Opera</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isOpera &amp;&amp; <span class="reserved">this</span>.settings[<span class="literal">'browsers'</span>].indexOf(<span class="literal">'opera'</span>) == -1)
+			<span class="reserved">return</span>;
+
+		<span class="comment">// If not super absolute make it so</span>
+		var baseHREF = tinyMCE.settings[<span class="literal">'document_base_url'</span>];
+		var h = document.location.href;
+		var p = h.indexOf(<span class="literal">'://'</span>);
+		<span class="reserved">if</span> (p &gt; 0 &amp;&amp; document.location.protocol != <span class="literal">"file:"</span>) {
+			p = h.indexOf(<span class="literal">'/'</span>, p + 3);
+			h = h.substring(0, p);
+
+			<span class="reserved">if</span> (baseHREF.indexOf(<span class="literal">'://'</span>) == -1)
+				baseHREF = h + baseHREF;
+
+			tinyMCE.settings[<span class="literal">'document_base_url'</span>] = baseHREF;
+			tinyMCE.settings[<span class="literal">'document_base_prefix'</span>] = h;
+		}
+
+		<span class="comment">// Trim away query part</span>
+		<span class="reserved">if</span> (baseHREF.indexOf(<span class="literal">'?'</span>) != -1)
+			baseHREF = baseHREF.substring(0, baseHREF.indexOf(<span class="literal">'?'</span>));
+
+		<span class="reserved">this</span>.settings[<span class="literal">'base_href'</span>] = baseHREF.substring(0, baseHREF.lastIndexOf(<span class="literal">'/'</span>)) + <span class="literal">"/"</span>;
+
+		theme = <span class="reserved">this</span>.settings[<span class="literal">'theme'</span>];
+		<span class="reserved">this</span>.blockRegExp = new RegExp(<span class="literal">"^(h[1-6]|p|div|address|pre|form|table|li|ol|ul|td|blockquote|center|dl|dt|dd|dir|fieldset|form|noscript|noframes|menu|isindex|samp)$"</span>, <span class="literal">"i"</span>);
+		<span class="reserved">this</span>.posKeyCodes = new Array(13,45,36,35,33,34,37,38,39,40);
+		<span class="reserved">this</span>.uniqueURL = <span class="literal">'javascript:TINYMCE_UNIQUEURL();'</span>; <span class="comment">// Make unique URL non real URL</span>
+		<span class="reserved">this</span>.uniqueTag = <span class="literal">'&lt;div id="mceTMPElement" style="display: none"&gt;TMP&lt;/div&gt;'</span>;
+		<span class="reserved">this</span>.callbacks = new Array(<span class="literal">'onInit'</span>, <span class="literal">'getInfo'</span>, <span class="literal">'getEditorTemplate'</span>, <span class="literal">'setupContent'</span>, <span class="literal">'onChange'</span>, <span class="literal">'onPageLoad'</span>, <span class="literal">'handleNodeChange'</span>, <span class="literal">'initInstance'</span>, <span class="literal">'execCommand'</span>, <span class="literal">'getControlHTML'</span>, <span class="literal">'handleEvent'</span>, <span class="literal">'cleanup'</span>);
+
+		<span class="comment">// Theme url</span>
+		<span class="reserved">this</span>.settings[<span class="literal">'theme_href'</span>] = tinyMCE.baseURL + <span class="literal">"/themes/"</span> + theme;
+
+		<span class="reserved">if</span> (!tinyMCE.isMSIE)
+			<span class="reserved">this</span>.settings[<span class="literal">'force_br_newlines'</span>] = false;
+
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"popups_css"</span>, false)) {
+			var cssPath = tinyMCE.getParam(<span class="literal">"popups_css"</span>, <span class="literal">""</span>);
+
+			<span class="comment">// Is relative</span>
+			<span class="reserved">if</span> (cssPath.indexOf(<span class="literal">'://'</span>) == -1 &amp;&amp; cssPath.charAt(0) != <span class="literal">'/'</span>)
+				<span class="reserved">this</span>.settings[<span class="literal">'popups_css'</span>] = <span class="reserved">this</span>.documentBasePath + <span class="literal">"/"</span> + cssPath;
+			<span class="reserved">else</span>
+				<span class="reserved">this</span>.settings[<span class="literal">'popups_css'</span>] = cssPath;
+		} <span class="reserved">else</span>
+			<span class="reserved">this</span>.settings[<span class="literal">'popups_css'</span>] = tinyMCE.baseURL + <span class="literal">"/themes/"</span> + theme + <span class="literal">"/css/editor_popup.css"</span>;
+
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"editor_css"</span>, false)) {
+			var cssPath = tinyMCE.getParam(<span class="literal">"editor_css"</span>, <span class="literal">""</span>);
+
+			<span class="comment">// Is relative</span>
+			<span class="reserved">if</span> (cssPath.indexOf(<span class="literal">'://'</span>) == -1 &amp;&amp; cssPath.charAt(0) != <span class="literal">'/'</span>)
+				<span class="reserved">this</span>.settings[<span class="literal">'editor_css'</span>] = <span class="reserved">this</span>.documentBasePath + <span class="literal">"/"</span> + cssPath;
+			<span class="reserved">else</span>
+				<span class="reserved">this</span>.settings[<span class="literal">'editor_css'</span>] = cssPath;
+		} <span class="reserved">else</span>
+			<span class="reserved">this</span>.settings[<span class="literal">'editor_css'</span>] = tinyMCE.baseURL + <span class="literal">"/themes/"</span> + theme + <span class="literal">"/css/editor_ui.css"</span>;
+
+		<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'debug'</span>]) {
+			var msg = <span class="literal">"Debug: \n"</span>;
+
+			msg += <span class="literal">"baseURL: "</span> + <span class="reserved">this</span>.baseURL + <span class="literal">"\n"</span>;
+			msg += <span class="literal">"documentBasePath: "</span> + <span class="reserved">this</span>.documentBasePath + <span class="literal">"\n"</span>;
+			msg += <span class="literal">"content_css: "</span> + <span class="reserved">this</span>.settings[<span class="literal">'content_css'</span>] + <span class="literal">"\n"</span>;
+			msg += <span class="literal">"popups_css: "</span> + <span class="reserved">this</span>.settings[<span class="literal">'popups_css'</span>] + <span class="literal">"\n"</span>;
+			msg += <span class="literal">"editor_css: "</span> + <span class="reserved">this</span>.settings[<span class="literal">'editor_css'</span>] + <span class="literal">"\n"</span>;
+
+			alert(msg);
+		}
+
+		<span class="comment">// Only do this once</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.configs.length == 0) {
+			<span class="comment">// Is Safari enabled</span>
+			<span class="reserved">if</span> (<span class="reserved">this</span>.isSafari &amp;&amp; <span class="reserved">this</span>.getParam(<span class="literal">'safari_warning'</span>, false))
+				alert(<span class="literal">"Safari support is very limited and should be considered experimental.\nSo there is no need to even submit bugreports on this early version.\nYou can disable this message by setting: safari_warning option to false"</span>);
+
+			<span class="reserved">if</span> (typeof(TinyMCECompressed) == <span class="literal">"undefined"</span>) {
+				tinyMCE.addEvent(window, <span class="literal">"DOMContentLoaded"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.onLoad);
+
+				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) {
+					<span class="reserved">if</span> (document.body)
+						tinyMCE.addEvent(document.body, <span class="literal">"readystatechange"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.onLoad);
+					<span class="reserved">else</span>
+						tinyMCE.addEvent(document, <span class="literal">"readystatechange"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.onLoad);
+				}
+
+				tinyMCE.addEvent(window, <span class="literal">"load"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.onLoad);
+				tinyMCE._addUnloadEvents();
+			}
+		}
+
+		<span class="reserved">this</span>.loadScript(tinyMCE.baseURL + <span class="literal">'/themes/'</span> + <span class="reserved">this</span>.settings[<span class="literal">'theme'</span>] + <span class="literal">'/editor_template'</span> + tinyMCE.srcMode + <span class="literal">'.js'</span>);
+		<span class="reserved">this</span>.loadScript(tinyMCE.baseURL + <span class="literal">'/langs/'</span> + <span class="reserved">this</span>.settings[<span class="literal">'language'</span>] +  <span class="literal">'.js'</span>);
+		<span class="reserved">this</span>.loadCSS(<span class="reserved">this</span>.settings[<span class="literal">'editor_css'</span>]);
+
+		<span class="comment">// Add plugins</span>
+		var p = tinyMCE.getParam(<span class="literal">'plugins'</span>, <span class="literal">''</span>, true, <span class="literal">','</span>);
+		<span class="reserved">if</span> (p.length &gt; 0) {
+			<span class="reserved">for</span> (var i=0; i&lt;p.length; i++) {
+				<span class="reserved">if</span> (p[i].charAt(0) != <span class="literal">'-'</span>)
+					<span class="reserved">this</span>.loadScript(tinyMCE.baseURL + <span class="literal">'/plugins/'</span> + p[i] + <span class="literal">'/editor_plugin'</span> + tinyMCE.srcMode + <span class="literal">'.js'</span>);
+			}
+		}
+
+		<span class="comment">// Setup entities</span>
+		settings[<span class="literal">'cleanup_entities'</span>] = new Array();
+		var entities = tinyMCE.getParam(<span class="literal">'entities'</span>, <span class="literal">''</span>, true, <span class="literal">','</span>);
+		<span class="reserved">for</span> (var i=0; i&lt;entities.length; i+=2)
+			settings[<span class="literal">'cleanup_entities'</span>][<span class="literal">'c'</span> + entities[i]] = entities[i+1];
+
+		<span class="comment">// Save away this config</span>
+		settings[<span class="literal">'index'</span>] = <span class="reserved">this</span>.configs.length;
+		<span class="reserved">this</span>.configs[<span class="reserved">this</span>.configs.length] = settings;
+	},
+
+	<span class="comment">/**
+	 * Adds unload event handles to execute triggerSave.
+	 *
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_addUnloadEvents : <span class="reserved">function</span>() {
+		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'add_unload_trigger'</span>]) {
+				tinyMCE.addEvent(window, <span class="literal">"unload"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.unloadHandler);
+				tinyMCE.addEvent(window.document, <span class="literal">"beforeunload"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.unloadHandler);
+			}
+		} <span class="reserved">else</span> {
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'add_unload_trigger'</span>])
+				tinyMCE.addEvent(window, <span class="literal">"unload"</span>, <span class="reserved">function</span> () {tinyMCE.triggerSave(true, true);});
+		}
+	},
+
+	<span class="comment">/**
+	 * Assigns a default value for a specific config parameter.
+	 *
+	 * <span class="attrib">@param</span> {string} key Settings key to add default value to.
+	 * <span class="attrib">@param</span> {object} def_val Default value to assign if the settings option isn't defined.
+	 * <span class="attrib">@param</span> {boolean} t Trim all white space, if true all whitespace will be removed from option value.
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_def : <span class="reserved">function</span>(key, def_val, t) {
+		var v = tinyMCE.getParam(key, def_val);
+
+		v = t ? v.replace(/\s+/g,<span class="literal">""</span>) : v;
+
+		<span class="reserved">this</span>.settings[key] = v;
+	},
+
+	<span class="comment">/**
+	 * Returns true/false if the specified plugin is loaded or not.
+	 *
+	 * <span class="attrib">@param</span> {string} n Plugin name to look for.
+	 * <span class="attrib">@return</span> true/false if the specified plugin is loaded or not.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	hasPlugin : <span class="reserved">function</span>(n) {
+		<span class="reserved">return</span> typeof(<span class="reserved">this</span>.plugins[n]) != <span class="literal">"undefined"</span> &amp;&amp; <span class="reserved">this</span>.plugins[n] != null;
+	},
+
+	<span class="comment">/**
+	 * Adds the specified plugin to the list of loaded plugins, this will also setup the baseURL
+	 * property of the plugin.
+	 *
+	 * <span class="attrib">@param</span> {string} Plugin name/id.
+	 * <span class="attrib">@param</span> {TinyMCE_Plugin} p Plugin instance to add.
+	 */</span>
+	addPlugin : <span class="reserved">function</span>(n, p) {
+		var op = <span class="reserved">this</span>.plugins[n];
+
+		<span class="comment">// Use the previous plugin object base URL used when loading external plugins</span>
+		p.baseURL = op ? op.baseURL : tinyMCE.baseURL + <span class="literal">"/plugins/"</span> + n;
+		<span class="reserved">this</span>.plugins[n] = p;
+	},
+
+	<span class="comment">/**
+	 * Sets the baseURL of the specified plugin, this is useful if the plugin is loaded from
+	 * a external location.
+	 *
+	 * <span class="attrib">@param</span> {string} n Plugin name/id to set base URL on. This have to be added before.
+	 * <span class="attrib">@param</span> {string} u Base URL of plugin, this string should be the URL prefix for the plugin without a trailing slash.
+	 */</span>
+	setPluginBaseURL : <span class="reserved">function</span>(n, u) {
+		var op = <span class="reserved">this</span>.plugins[n];
+
+		<span class="reserved">if</span> (op)
+			op.baseURL = u;
+		<span class="reserved">else</span>
+			<span class="reserved">this</span>.plugins[n] = {baseURL : u};
+	},
+
+	<span class="comment">/**
+	 * Load plugin from external URL.
+	 *
+	 * <span class="attrib">@param</span> {string} n Plugin name for example \"emotions\".
+	 * <span class="attrib">@param</span> {string} u URL of plugin directory to load.
+	 */</span>
+	loadPlugin : <span class="reserved">function</span>(n, u) {
+		u = u.indexOf(<span class="literal">'.js'</span>) != -1 ? u.substring(0, u.lastIndexOf(<span class="literal">'/'</span>)) : u;
+		u = u.charAt(u.length-1) == <span class="literal">'/'</span> ? u.substring(0, u.length-1) : u;
+		<span class="reserved">this</span>.plugins[n] = {baseURL : u};
+		<span class="reserved">this</span>.loadScript(u + <span class="literal">"/editor_plugin"</span> + (tinyMCE.srcMode ? <span class="literal">'_src'</span> : <span class="literal">''</span>) + <span class="literal">".js"</span>);
+	},
+
+	<span class="comment">/**
+	 * Returns true/false if the specified theme is loaded or not.
+	 *
+	 * <span class="attrib">@param</span> {string} n Theme name/id to check for.
+	 * <span class="attrib">@return</span> true/false if the specified theme is loaded or not.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	hasTheme : <span class="reserved">function</span>(n) {
+		<span class="reserved">return</span> typeof(<span class="reserved">this</span>.themes[n]) != <span class="literal">"undefined"</span> &amp;&amp; <span class="reserved">this</span>.themes[n] != null;
+	},
+
+	<span class="comment">/**
+	 * Adds the specified theme in to the list of loaded themes.
+	 *
+	 * <span class="attrib">@param</span> {string} n Theme name/id to add the object reference to.
+	 * <span class="attrib">@param</span> {TinyMCE_Theme} t Theme instance to add to the loaded list.
+	 */</span>
+	addTheme : <span class="reserved">function</span>(n, t) {
+		<span class="reserved">this</span>.themes[n] = t;
+	},
+
+	<span class="comment">/**
+	 * Adds a floating menu instance to TinyMCE.
+	 *
+	 * <span class="attrib">@param</span> {string} n TinyMCE menu id.
+	 * <span class="attrib">@param</span> {TinyMCE_Menu} m TinyMCE menu instance.
+	 */</span>
+	addMenu : <span class="reserved">function</span>(n, m) {
+		<span class="reserved">this</span>.menus[n] = m;
+	},
+
+	<span class="comment">/**
+	 * Checks if the specified menu by name is added to TinyMCE.
+	 *
+	 * <span class="attrib">@param</span> {string} n TinyMCE menu id.
+	 * <span class="attrib">@return</span> true/false if it exists or not.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	hasMenu : <span class="reserved">function</span>(n) {
+		<span class="reserved">return</span> typeof(<span class="reserved">this</span>.plugins[n]) != <span class="literal">"undefined"</span> &amp;&amp; <span class="reserved">this</span>.plugins[n] != null;
+	},
+
+	<span class="comment">/**
+	 * Loads the specified script by writing the a script tag to the current page.
+	 * This will also check if the file has been loaded before. This function should only be used
+	 * when the page is loading.
+	 *
+	 * <span class="attrib">@param</span> {string} url Script URL to load.
+	 */</span>
+	loadScript : <span class="reserved">function</span>(url) {
+		<span class="reserved">for</span> (var i=0; i&lt;<span class="reserved">this</span>.loadedFiles.length; i++) {
+			<span class="reserved">if</span> (<span class="reserved">this</span>.loadedFiles[i] == url)
+				<span class="reserved">return</span>;
+		}
+
+		document.write(<span class="literal">'&lt;sc'</span>+<span class="literal">'ript language="javascript" type="text/javascript" src="'</span> + url + <span class="literal">'"&gt;&lt;/script&gt;'</span>);
+
+		<span class="reserved">this</span>.loadedFiles[<span class="reserved">this</span>.loadedFiles.length] = url;
+	},
+
+	<span class="comment">/**
+	 * Loads the specified CSS by writing the a link tag to the current page.
+	 * This will also check if the file has been loaded before. This function should only be used
+	 * when the page is loading.
+	 *
+	 * <span class="attrib">@param</span> {string} url CSS file URL to load or comma separated list of files.
+	 */</span>
+	loadCSS : <span class="reserved">function</span>(url) {
+		var ar = url.replace(/\s+/, <span class="literal">''</span>).split(<span class="literal">','</span>);
+		var lflen = 0, csslen = 0;
+		var skip = false;
+		var x = 0, i = 0;
+
+		<span class="reserved">for</span> (x = 0,csslen = ar.length; x&lt;csslen; x++) {
+			ignore_css = false;
+
+			<span class="reserved">if</span> (ar[x] != null &amp;&amp; ar[x] != <span class="literal">'null'</span> &amp;&amp; ar[x].length &gt; 0) {
+				<span class="comment">/* Make sure it doesn't exist. */</span>
+				<span class="reserved">for</span> (i=0, lflen=<span class="reserved">this</span>.loadedFiles.length; i&lt;lflen; i++) {
+					<span class="reserved">if</span> (<span class="reserved">this</span>.loadedFiles[i] == ar[x]) {
+						skip = true;
+						break;
+					}
+				}
+
+				<span class="reserved">if</span> (!skip) {
+					document.write(<span class="literal">'&lt;link href="'</span> + ar[x] + <span class="literal">'" rel="stylesheet" type="text/css" /&gt;'</span>);
+					<span class="reserved">this</span>.loadedFiles[<span class="reserved">this</span>.loadedFiles.length] = ar[x];
+				}
+			}
+		}
+	},
+
+	<span class="comment">/**
+	 * Imports a CSS file into a allready loaded document. This will add a link element
+	 * to the head element of the document.
+	 *
+	 * <span class="attrib">@param</span> {DOMDocument} doc DOM Document to load CSS into.
+	 * <span class="attrib">@param</span> {string} css CSS File URL to load or comma separated list of files.
+	 */</span>
+	importCSS : <span class="reserved">function</span>(doc, css) {
+		var css_ary = css.replace(/\s+/, <span class="literal">''</span>).split(<span class="literal">','</span>);
+		var csslen, elm, headArr, x, css_file;
+
+		<span class="reserved">for</span> (x = 0, csslen = css_ary.length; x&lt;csslen; x++) {
+			css_file = css_ary[x];
+
+			<span class="reserved">if</span> (css_file != null &amp;&amp; css_file != <span class="literal">'null'</span> &amp;&amp; css_file.length &gt; 0) {
+				<span class="comment">// Is relative, make absolute</span>
+				<span class="reserved">if</span> (css_file.indexOf(<span class="literal">'://'</span>) == -1 &amp;&amp; css_file.charAt(0) != <span class="literal">'/'</span>)
+					css_file = <span class="reserved">this</span>.documentBasePath + <span class="literal">"/"</span> + css_file;
+
+				<span class="reserved">if</span> (typeof(doc.createStyleSheet) == <span class="literal">"undefined"</span>) {
+					elm = doc.createElement(<span class="literal">"link"</span>);
+
+					elm.rel = <span class="literal">"stylesheet"</span>;
+					elm.href = css_file;
+
+					<span class="reserved">if</span> ((headArr = doc.getElementsByTagName(<span class="literal">"head"</span>)) != null &amp;&amp; headArr.length &gt; 0)
+						headArr[0].appendChild(elm);
+				} <span class="reserved">else</span>
+					doc.createStyleSheet(css_file);
+			}
+		}
+	},
+
+	<span class="comment">/**
+	 * Displays a confirm dialog when a user clicks/focus a textarea that is to be converted into
+	 * a TinyMCE instance.
+	 *
+	 * <span class="attrib">@param</span> {DOMEvent} e DOM event instance.
+	 * <span class="attrib">@param</span> {Array} settings Name/Value array of initialization settings.
+	 */</span>
+	confirmAdd : <span class="reserved">function</span>(e, settings) {
+		var elm = tinyMCE.isMSIE ? event.srcElement : e.target;
+		var elementId = elm.name ? elm.name : elm.id;
+
+		tinyMCE.settings = settings;
+
+		<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'convert_on_click'</span>] || (!elm.getAttribute(<span class="literal">'mce_noask'</span>) &amp;&amp; confirm(tinyMCELang[<span class="literal">'lang_edit_confirm'</span>])))
+			tinyMCE.addMCEControl(elm, elementId);
+
+		elm.setAttribute(<span class="literal">'mce_noask'</span>, <span class="literal">'true'</span>);
+	},
+
+	<span class="comment">/**
+	 * Moves the contents from the hidden textarea to the editor that gets inserted.
+	 *
+	 * <span class="attrib">@param</span> {string} form_element_name Form element name to move contents from.
+	 * <span class="attrib">@deprecated</span>
+	 */</span>
+	updateContent : <span class="reserved">function</span>(form_element_name) {
+		<span class="comment">// Find MCE instance linked to given form element and copy it's value</span>
+		var formElement = document.getElementById(form_element_name);
+		<span class="reserved">for</span> (var n in tinyMCE.instances) {
+			var inst = tinyMCE.instances[n];
+			<span class="reserved">if</span> (!tinyMCE.isInstance(inst))
+				continue;
+
+			inst.switchSettings();
+
+			<span class="reserved">if</span> (inst.formElement == formElement) {
+				var doc = inst.getDoc();
+		
+				tinyMCE._setHTML(doc, inst.formElement.value);
+
+				<span class="reserved">if</span> (!tinyMCE.isMSIE)
+					doc.body.innerHTML = tinyMCE._cleanupHTML(inst, doc, <span class="reserved">this</span>.settings, doc.body, inst.visualAid);
+			}
+		}
+	},
+
+	<span class="comment">/**
+	 * Adds a TinyMCE editor control instance to a specific form element.
+	 *
+	 * <span class="attrib">@param</span> {HTMLElement} replace_element HTML element object to replace.
+	 * <span class="attrib">@param</span> {string} form_element_name HTML form element name,
+	 * <span class="attrib">@param</span> {DOMDocument} target_document Target document that holds the element.
+	 */</span>
+	addMCEControl : <span class="reserved">function</span>(replace_element, form_element_name, target_document) {
+		var id = <span class="literal">"mce_editor_"</span> + tinyMCE.idCounter++;
+		var inst = new TinyMCE_Control(tinyMCE.settings);
+
+		inst.editorId = id;
+		<span class="reserved">this</span>.instances[id] = inst;
+
+		inst._onAdd(replace_element, form_element_name, target_document);
+	},
+
+	<span class="comment">/**
+	 * Removes a TinyMCE editor control instance by id.
+	 *
+	 * <span class="attrib">@param</span> {string} editor_id Id of editor instance to remove.
+	 */</span>
+	removeMCEControl : <span class="reserved">function</span>(editor_id) {
+		var inst = tinyMCE.getInstanceById(editor_id);
+
+		<span class="reserved">if</span> (inst) {
+			inst.switchSettings();
+
+			editor_id = inst.editorId;
+			var html = tinyMCE.getContent(editor_id);
+
+			<span class="comment">// Remove editor instance from instances array</span>
+			var tmpInstances = new Array();
+			<span class="reserved">for</span> (var instanceName in tinyMCE.instances) {
+				var instance = tinyMCE.instances[instanceName];
+				<span class="reserved">if</span> (!tinyMCE.isInstance(instance))
+					continue;
+
+				<span class="reserved">if</span> (instanceName != editor_id)
+						tmpInstances[instanceName] = instance;
+			}
+			tinyMCE.instances = tmpInstances;
+
+			tinyMCE.selectedElement = null;
+			tinyMCE.selectedInstance = null;
+
+			<span class="comment">// Remove element</span>
+			var replaceElement = document.getElementById(editor_id + <span class="literal">"_parent"</span>);
+			var oldTargetElement = inst.oldTargetElement;
+			var targetName = oldTargetElement.nodeName.toLowerCase();
+
+			<span class="reserved">if</span> (targetName == <span class="literal">"textarea"</span> || targetName == <span class="literal">"input"</span>) {
+				<span class="comment">// Just show the old text area</span>
+				replaceElement.parentNode.removeChild(replaceElement);
+				oldTargetElement.style.display = <span class="literal">"inline"</span>;
+				oldTargetElement.value = html;
+			} <span class="reserved">else</span> {
+				oldTargetElement.innerHTML = html;
+				oldTargetElement.style.display = <span class="literal">'block'</span>;
+
+				replaceElement.parentNode.insertBefore(oldTargetElement, replaceElement);
+				replaceElement.parentNode.removeChild(replaceElement);
+			}
+		}
+	},
+
+	<span class="comment">/**
+	 * Moves the contents from a TinyMCE editor control instance to the hidden textarea
+	 * that got replaced with TinyMCE. This is executed automaticly on for example form submit.
+	 *
+	 * <span class="attrib">@param</span> {boolean} skip_cleanup Optional Skip cleanup, simply move the contents as fast as possible.
+	 * <span class="attrib">@param</span> {boolean} skip_callback Optional Skip callback, don't call the save_callback function.
+	 */</span>
+	triggerSave : <span class="reserved">function</span>(skip_cleanup, skip_callback) {
+		var inst, n;
+
+		<span class="comment">// Default to false</span>
+		<span class="reserved">if</span> (typeof(skip_cleanup) == <span class="literal">"undefined"</span>)
+			skip_cleanup = false;
+
+		<span class="comment">// Default to false</span>
+		<span class="reserved">if</span> (typeof(skip_callback) == <span class="literal">"undefined"</span>)
+			skip_callback = false;
+
+		<span class="comment">// Cleanup and set all form fields</span>
+		<span class="reserved">for</span> (n in tinyMCE.instances) {
+			inst = tinyMCE.instances[n];
+
+			<span class="reserved">if</span> (!tinyMCE.isInstance(inst))
+				continue;
+
+			inst.triggerSave(skip_cleanup, skip_callback);
+		}
+	},
+
+	<span class="comment">/**
+	 * Resets a forms TinyMCE instances based on form index.
+	 *
+	 * <span class="attrib">@param</span> {int} form_index Form index to reset.
+	 */</span>
+	resetForm : <span class="reserved">function</span>(form_index) {
+		var i, inst, n, formObj = document.forms[form_index];
+
+		<span class="reserved">for</span> (n in tinyMCE.instances) {
+			inst = tinyMCE.instances[n];
+
+			<span class="reserved">if</span> (!tinyMCE.isInstance(inst))
+				continue;
+
+			inst.switchSettings();
+
+			<span class="reserved">for</span> (i=0; i&lt;formObj.elements.length; i++) {
+				<span class="reserved">if</span> (inst.formTargetElementId == formObj.elements[i].name)
+					inst.getBody().innerHTML = inst.startContent;
+			}
+		}
+	},
+
+	<span class="comment">/**
+	 * Executes a command on a specific editor instance by id.
+	 *
+	 * <span class="attrib">@param</span> {string} editor_id TinyMCE editor control instance id to perform comman on.
+	 * <span class="attrib">@param</span> {string} command Command name to execute, for example mceLink or Bold.
+	 * <span class="attrib">@param</span> {boolean} user_interface True/false state if a UI (dialog) should be presented or not.
+	 * <span class="attrib">@param</span> {object} value Optional command value, this can be anything.
+	 * <span class="attrib">@param</span> {boolean} focus True/false if the editor instance should be focused first.
+	 */</span>
+	execInstanceCommand : <span class="reserved">function</span>(editor_id, command, user_interface, value, focus) {
+		var inst = tinyMCE.getInstanceById(editor_id);
+		<span class="reserved">if</span> (inst) {
+			<span class="reserved">if</span> (typeof(focus) == <span class="literal">"undefined"</span>)
+				focus = true;
+
+			<span class="reserved">if</span> (focus)
+				inst.contentWindow.focus();
+
+			<span class="comment">// Reset design mode if lost</span>
+			inst.autoResetDesignMode();
+
+			<span class="reserved">this</span>.selectedElement = inst.getFocusElement();
+			<span class="reserved">this</span>.selectedInstance = inst;
+			tinyMCE.execCommand(command, user_interface, value);
+
+			<span class="comment">// Cancel event so it doesn't call onbeforeonunlaod</span>
+			<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; window.event != null)
+				tinyMCE.cancelEvent(window.event);
+		}
+	},
+
+	<span class="comment">/**
+	 * Executes a command on the selected or last selected TinyMCE editor control instance. This function also handles
+	 * some non instance specific commands like mceAddControl, mceRemoveControl, mceHelp or mceFocus.
+	 *
+	 * <span class="attrib">@param</span> {string} command Command name to execute, for example mceLink or Bold.
+	 * <span class="attrib">@param</span> {boolean} user_interface True/false state if a UI (dialog) should be presented or not.
+	 * <span class="attrib">@param</span> {object} value Optional command value, this can be anything.
+	 */</span>
+	execCommand : <span class="reserved">function</span>(command, user_interface, value) {
+		<span class="comment">// Default input</span>
+		user_interface = user_interface ? user_interface : false;
+		value = value ? value : null;
+
+		<span class="reserved">if</span> (tinyMCE.selectedInstance)
+			tinyMCE.selectedInstance.switchSettings();
+
+		switch (command) {
+			case <span class="literal">'mceHelp'</span>:
+				tinyMCE.openWindow({
+					file : <span class="literal">'about.htm'</span>,
+					width : 480,
+					height : 380
+				}, {
+					tinymce_version : tinyMCE.majorVersion + <span class="literal">"."</span> + tinyMCE.minorVersion,
+					tinymce_releasedate : tinyMCE.releaseDate,
+					inline : <span class="literal">"yes"</span>
+				});
+			<span class="reserved">return</span>;
+
+			case <span class="literal">'mceFocus'</span>:
+				var inst = tinyMCE.getInstanceById(value);
+				<span class="reserved">if</span> (inst)
+					inst.contentWindow.focus();
+			<span class="reserved">return</span>;
+
+			case <span class="literal">"mceAddControl"</span>:
+			case <span class="literal">"mceAddEditor"</span>:
+				tinyMCE.addMCEControl(tinyMCE._getElementById(value), value);
+				<span class="reserved">return</span>;
+
+			case <span class="literal">"mceAddFrameControl"</span>:
+				tinyMCE.addMCEControl(tinyMCE._getElementById(value[<span class="literal">'element'</span>], value[<span class="literal">'document'</span>]), value[<span class="literal">'element'</span>], value[<span class="literal">'document'</span>]);
+				<span class="reserved">return</span>;
+
+			case <span class="literal">"mceRemoveControl"</span>:
+			case <span class="literal">"mceRemoveEditor"</span>:
+				tinyMCE.removeMCEControl(value);
+				<span class="reserved">return</span>;
+
+			case <span class="literal">"mceResetDesignMode"</span>:
+				<span class="comment">// Resets the designmode state of the editors in Gecko</span>
+				<span class="reserved">if</span> (!tinyMCE.isMSIE) {
+					<span class="reserved">for</span> (var n in tinyMCE.instances) {
+						<span class="reserved">if</span> (!tinyMCE.isInstance(tinyMCE.instances[n]))
+							continue;
+
+						try {
+							tinyMCE.instances[n].getDoc().designMode = <span class="literal">"on"</span>;
+						} catch (e) {
+							<span class="comment">// Ignore any errors</span>
+						}
+					}
+				}
+
+				<span class="reserved">return</span>;
+		}
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.selectedInstance) {
+			<span class="reserved">this</span>.selectedInstance.execCommand(command, user_interface, value);
+		} <span class="reserved">else</span> <span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'focus_alert'</span>])
+			alert(tinyMCELang[<span class="literal">'lang_focus_alert'</span>]);
+	},
+
+	<span class="comment">/**
+	 * Creates a iframe editor container for the specified element.
+	 *
+	 * <span class="attrib">@param</span> {HTMLElement} replace_element Element to replace with iframe element.
+	 * <span class="attrib">@param</span> {DOMDocument} doc Optional document to use with iframe replacement.
+	 * <span class="attrib">@param</span> {DOMWindow} win Optional window to use with iframe replacement.
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_createIFrame : <span class="reserved">function</span>(replace_element, doc, win) {
+		var iframe, id = replace_element.getAttribute(<span class="literal">"id"</span>);
+		var aw, ah;
+
+		<span class="reserved">if</span> (typeof(doc) == <span class="literal">"undefined"</span>)
+			doc = document;
+
+		<span class="reserved">if</span> (typeof(win) == <span class="literal">"undefined"</span>)
+			win = window;
+
+		iframe = doc.createElement(<span class="literal">"iframe"</span>);
+
+		aw = <span class="literal">""</span> + tinyMCE.settings[<span class="literal">'area_width'</span>];
+		ah = <span class="literal">""</span> + tinyMCE.settings[<span class="literal">'area_height'</span>];
+
+		<span class="reserved">if</span> (aw.indexOf(<span class="literal">'%'</span>) == -1) {
+			aw = parseInt(aw);
+			aw = aw &lt; 0 ? 300 : aw;
+			aw = aw + <span class="literal">"px"</span>;
+		}
+
+		<span class="reserved">if</span> (ah.indexOf(<span class="literal">'%'</span>) == -1) {
+			ah = parseInt(ah);
+			ah = ah &lt; 0 ? 240 : ah;
+			ah = ah + <span class="literal">"px"</span>;
+		}
+
+		iframe.setAttribute(<span class="literal">"id"</span>, id);
+		iframe.setAttribute(<span class="literal">"className"</span>, <span class="literal">"mceEditorIframe"</span>);
+		iframe.setAttribute(<span class="literal">"border"</span>, <span class="literal">"0"</span>);
+		iframe.setAttribute(<span class="literal">"frameBorder"</span>, <span class="literal">"0"</span>);
+		iframe.setAttribute(<span class="literal">"marginWidth"</span>, <span class="literal">"0"</span>);
+		iframe.setAttribute(<span class="literal">"marginHeight"</span>, <span class="literal">"0"</span>);
+		iframe.setAttribute(<span class="literal">"leftMargin"</span>, <span class="literal">"0"</span>);
+		iframe.setAttribute(<span class="literal">"topMargin"</span>, <span class="literal">"0"</span>);
+		iframe.setAttribute(<span class="literal">"width"</span>, aw);
+		iframe.setAttribute(<span class="literal">"height"</span>, ah);
+		iframe.setAttribute(<span class="literal">"allowtransparency"</span>, <span class="literal">"true"</span>);
+
+		<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">"auto_resize"</span>])
+			iframe.setAttribute(<span class="literal">"scrolling"</span>, <span class="literal">"no"</span>);
+
+		<span class="comment">// Must have a src element in MSIE HTTPs breaks aswell as absoute URLs</span>
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
+			iframe.setAttribute(<span class="literal">"src"</span>, <span class="reserved">this</span>.settings[<span class="literal">'default_document'</span>]);
+
+		iframe.style.width = aw;
+		iframe.style.height = ah;
+
+		<span class="comment">// MSIE 5.0 issue</span>
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
+			replace_element.outerHTML = iframe.outerHTML;
+		<span class="reserved">else</span>
+			replace_element.parentNode.replaceChild(iframe, replace_element);
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
+			<span class="reserved">return</span> win.frames[id];
+		<span class="reserved">else</span>
+			<span class="reserved">return</span> iframe;
+	},
+
+	<span class="comment">/**
+	 * Setups the contents of TinyMCE editor instance and fills it with contents.
+	 *
+	 * <span class="attrib">@param</span> {string} editor_id TinyMCE editor instance control id to fill.
+	 */</span>
+	setupContent : <span class="reserved">function</span>(editor_id) {
+		var inst = tinyMCE.instances[editor_id];
+		var doc = inst.getDoc();
+		var head = doc.getElementsByTagName(<span class="literal">'head'</span>).item(0);
+		var content = inst.startContent;
+
+		inst.switchSettings();
+
+		<span class="comment">// Not loaded correctly hit it again, Mozilla bug #997860</span>
+		<span class="reserved">if</span> (!tinyMCE.isMSIE &amp;&amp; tinyMCE.getParam(<span class="literal">"setupcontent_reload"</span>, false) &amp;&amp; doc.title != <span class="literal">"blank_page"</span>) {
+			<span class="comment">// This part will remove the designMode status</span>
+			<span class="comment">// Failes first time in Firefox 1.5b2 on Mac</span>
+			try {doc.location.href = tinyMCE.baseURL + <span class="literal">"/blank.htm"</span>;} catch (ex) {}
+			window.setTimeout(<span class="literal">"tinyMCE.setupContent('"</span> + editor_id + <span class="literal">"');"</span>, 1000);
+			<span class="reserved">return</span>;
+		}
+
+		<span class="reserved">if</span> (!head) {
+			window.setTimeout(<span class="literal">"tinyMCE.setupContent('"</span> + editor_id + <span class="literal">"');"</span>, 10);
+			<span class="reserved">return</span>;
+		}
+
+		<span class="comment">// Import theme specific content CSS the user specific</span>
+		tinyMCE.importCSS(inst.getDoc(), tinyMCE.baseURL + <span class="literal">"/themes/"</span> + inst.settings[<span class="literal">'theme'</span>] + <span class="literal">"/css/editor_content.css"</span>);
+		tinyMCE.importCSS(inst.getDoc(), inst.settings[<span class="literal">'content_css'</span>]);
+		tinyMCE.dispatchCallback(inst, <span class="literal">'init_instance_callback'</span>, <span class="literal">'initInstance'</span>, inst);
+
+		<span class="comment">// Setup keyboard shortcuts</span>
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">'custom_undo_redo_keyboard_shortcuts'</span>)) {
+			inst.addShortcut(<span class="literal">'ctrl'</span>, <span class="literal">'z'</span>, <span class="literal">'lang_undo_desc'</span>, <span class="literal">'Undo'</span>);
+			inst.addShortcut(<span class="literal">'ctrl'</span>, <span class="literal">'y'</span>, <span class="literal">'lang_redo_desc'</span>, <span class="literal">'Redo'</span>);
+		}
+
+		<span class="comment">// Add default shortcuts for gecko</span>
+		<span class="reserved">if</span> (tinyMCE.isGecko) {
+			inst.addShortcut(<span class="literal">'ctrl'</span>, <span class="literal">'b'</span>, <span class="literal">'lang_bold_desc'</span>, <span class="literal">'Bold'</span>);
+			inst.addShortcut(<span class="literal">'ctrl'</span>, <span class="literal">'i'</span>, <span class="literal">'lang_italic_desc'</span>, <span class="literal">'Italic'</span>);
+			inst.addShortcut(<span class="literal">'ctrl'</span>, <span class="literal">'u'</span>, <span class="literal">'lang_underline_desc'</span>, <span class="literal">'Underline'</span>);
+		}
+
+		<span class="comment">// Setup span styles</span>
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
+			inst.getDoc().body.setAttribute(<span class="literal">'id'</span>, <span class="literal">'mceSpanFonts'</span>);
+
+		<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'nowrap'</span>])
+			doc.body.style.whiteSpace = <span class="literal">"nowrap"</span>;
+
+		doc.body.dir = <span class="reserved">this</span>.settings[<span class="literal">'directionality'</span>];
+		doc.editorId = editor_id;
+
+		<span class="comment">// Add on document element in Mozilla</span>
+		<span class="reserved">if</span> (!tinyMCE.isMSIE)
+			doc.documentElement.editorId = editor_id;
+
+		inst.setBaseHREF(tinyMCE.settings[<span class="literal">'base_href'</span>]);
+
+		<span class="comment">// Replace new line characters to BRs</span>
+		<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'convert_newlines_to_brs'</span>]) {
+			content = tinyMCE.regexpReplace(content, <span class="literal">"\r\n"</span>, <span class="literal">"&lt;br /&gt;"</span>, <span class="literal">"gi"</span>);
+			content = tinyMCE.regexpReplace(content, <span class="literal">"\r"</span>, <span class="literal">"&lt;br /&gt;"</span>, <span class="literal">"gi"</span>);
+			content = tinyMCE.regexpReplace(content, <span class="literal">"\n"</span>, <span class="literal">"&lt;br /&gt;"</span>, <span class="literal">"gi"</span>);
+		}
+
+		<span class="comment">// Open closed anchors</span>
+	<span class="comment">//	content = content.replace(new RegExp('&lt;a(.*?)/&gt;', 'gi'), '&lt;a$1&gt;&lt;/a&gt;');</span>
+
+		<span class="comment">// Call custom cleanup code</span>
+		content = tinyMCE.storeAwayURLs(content);
+		content = tinyMCE._customCleanup(inst, <span class="literal">"insert_to_editor"</span>, content);
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+			<span class="comment">// Ugly!!!</span>
+			window.setInterval(<span class="literal">'try{tinyMCE.getCSSClasses(tinyMCE.instances["'</span> + editor_id + <span class="literal">'"].getDoc(), "'</span> + editor_id + <span class="literal">'");}catch(e){}'</span>, 500);
+
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">"force_br_newlines"</span>])
+				doc.styleSheets[0].addRule(<span class="literal">"p"</span>, <span class="literal">"margin: 0;"</span>);
+
+			var body = inst.getBody();
+			body.editorId = editor_id;
+		}
+
+		content = tinyMCE.cleanupHTMLCode(content);
+
+		<span class="comment">// Fix for bug #958637</span>
+		<span class="reserved">if</span> (!tinyMCE.isMSIE) {
+			var contentElement = inst.getDoc().createElement(<span class="literal">"body"</span>);
+			var doc = inst.getDoc();
+
+			contentElement.innerHTML = content;
+
+			<span class="comment">// Remove weridness!</span>
+			<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; tinyMCE.settings[<span class="literal">'remove_lt_gt'</span>])
+				content = content.replace(new RegExp(<span class="literal">'&amp;lt;&amp;gt;'</span>, <span class="literal">'g'</span>), <span class="literal">""</span>);
+
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'cleanup_on_startup'</span>])
+				tinyMCE.setInnerHTML(inst.getBody(), tinyMCE._cleanupHTML(inst, doc, <span class="reserved">this</span>.settings, contentElement));
+			<span class="reserved">else</span> {
+				<span class="comment">// Convert all strong/em to b/i</span>
+				content = tinyMCE.regexpReplace(content, <span class="literal">"&lt;strong"</span>, <span class="literal">"&lt;b"</span>, <span class="literal">"gi"</span>);
+				content = tinyMCE.regexpReplace(content, <span class="literal">"&lt;em(/?)&gt;"</span>, <span class="literal">"&lt;i$1&gt;"</span>, <span class="literal">"gi"</span>);
+				content = tinyMCE.regexpReplace(content, <span class="literal">"&lt;em "</span>, <span class="literal">"&lt;i "</span>, <span class="literal">"gi"</span>);
+				content = tinyMCE.regexpReplace(content, <span class="literal">"&lt;/strong&gt;"</span>, <span class="literal">"&lt;/b&gt;"</span>, <span class="literal">"gi"</span>);
+				content = tinyMCE.regexpReplace(content, <span class="literal">"&lt;/em&gt;"</span>, <span class="literal">"&lt;/i&gt;"</span>, <span class="literal">"gi"</span>);
+				tinyMCE.setInnerHTML(inst.getBody(), content);
+			}
+
+			tinyMCE.convertAllRelativeURLs(inst.getBody());
+		} <span class="reserved">else</span> {
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'cleanup_on_startup'</span>]) {
+				tinyMCE._setHTML(inst.getDoc(), content);
+
+				<span class="comment">// Produces permission denied error in MSIE 5.5</span>
+				eval(<span class="literal">'try {tinyMCE.setInnerHTML(inst.getBody(), tinyMCE._cleanupHTML(inst, inst.contentDocument, this.settings, inst.getBody()));} catch(e) {}'</span>);
+			} <span class="reserved">else</span>
+				tinyMCE._setHTML(inst.getDoc(), content);
+		}
+
+		<span class="comment">// Fix for bug #957681</span>
+		<span class="comment">//inst.getDoc().designMode = inst.getDoc().designMode;</span>
+
+		<span class="comment">// Setup element references</span>
+		var parentElm = inst.targetDoc.getElementById(inst.editorId + <span class="literal">'_parent'</span>);
+		inst.formElement = tinyMCE.isGecko ? parentElm.previousSibling : parentElm.nextSibling;
+
+		tinyMCE.handleVisualAid(inst.getBody(), true, tinyMCE.settings[<span class="literal">'visual'</span>], inst);
+		tinyMCE.dispatchCallback(inst, <span class="literal">'setupcontent_callback'</span>, <span class="literal">'setupContent'</span>, editor_id, inst.getBody(), inst.getDoc());
+
+		<span class="comment">// Re-add design mode on mozilla</span>
+		<span class="reserved">if</span> (!tinyMCE.isMSIE)
+			tinyMCE.addEventHandlers(inst);
+
+		<span class="comment">// Add blur handler</span>
+		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+			tinyMCE.addEvent(inst.getBody(), <span class="literal">"blur"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
+			tinyMCE.addEvent(inst.getBody(), <span class="literal">"beforedeactivate"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch); <span class="comment">// Bug #1439953</span>
+
+			<span class="comment">// Workaround for drag drop/copy paste base href bug</span>
+			<span class="reserved">if</span> (!tinyMCE.isOpera) {
+				tinyMCE.addEvent(doc.body, <span class="literal">"mousemove"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.onMouseMove);
+				tinyMCE.addEvent(doc.body, <span class="literal">"beforepaste"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
+				tinyMCE.addEvent(doc.body, <span class="literal">"drop"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
+			}
+		}
+
+		<span class="comment">// Trigger node change, this call locks buttons for tables and so forth</span>
+		tinyMCE.selectedInstance = inst;
+		tinyMCE.selectedElement = inst.contentWindow.document.body;
+
+		<span class="comment">// Call custom DOM cleanup</span>
+		tinyMCE._customCleanup(inst, <span class="literal">"insert_to_editor_dom"</span>, inst.getBody());
+		tinyMCE._customCleanup(inst, <span class="literal">"setup_content_dom"</span>, inst.getBody());
+		tinyMCE._setEventsEnabled(inst.getBody(), false);
+		tinyMCE.cleanupAnchors(inst.getDoc());
+
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
+			tinyMCE.convertSpansToFonts(inst.getDoc());
+
+		inst.startContent = tinyMCE.trim(inst.getBody().innerHTML);
+		inst.undoRedo.add({ content : inst.startContent });
+
+		<span class="comment">// Cleanup any mess left from storyAwayURLs</span>
+		<span class="reserved">if</span> (tinyMCE.isGecko) {
+			<span class="comment">// Remove mce_src from textnodes and comments</span>
+			tinyMCE.selectNodes(inst.getBody(), <span class="reserved">function</span>(n) {
+				<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8) {
+					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_src=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
+					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_href=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
+				}
+
+				<span class="reserved">return</span> false;
+			});
+		}
+
+		<span class="comment">// Cleanup any mess left from storyAwayURLs</span>
+		tinyMCE._removeInternal(inst.getBody());
+
+		tinyMCE.selectedInstance = inst;
+		tinyMCE.triggerNodeChange(false, true);
+	},
+
+	<span class="comment">/**
+	 * Stores away the src and href attribute values in separate mce_src and mce_href attributes.
+	 * This is needed since both MSIE and Gecko messes with these attributes. The old
+	 * src and href will be intact, this simply adds them to a separate attribute.
+	 *
+	 * <span class="attrib">@param</span> {string} s HTML string to replace src and href attributes in.
+	 * <span class="attrib">@return</span> HTML string with replaced src and href attributes.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	storeAwayURLs : <span class="reserved">function</span>(s) {
+		<span class="comment">// Remove all mce_src, mce_href and replace them with new ones</span>
+	<span class="comment">//	s = s.replace(new RegExp('mce_src\\s*=\\s*\"[^ &gt;\"]*\"', 'gi'), '');</span>
+	<span class="comment">//	s = s.replace(new RegExp('mce_href\\s*=\\s*\"[^ &gt;\"]*\"', 'gi'), '');</span>
+
+		<span class="reserved">if</span> (!s.match(/(mce_src|mce_href)/gi, s)) {
+			s = s.replace(new RegExp(<span class="literal">'src\\s*=\\s*\"([^ &gt;\"]*)\"'</span>, <span class="literal">'gi'</span>), <span class="literal">'src="$1" mce_src="$1"'</span>);
+			s = s.replace(new RegExp(<span class="literal">'href\\s*=\\s*\"([^ &gt;\"]*)\"'</span>, <span class="literal">'gi'</span>), <span class="literal">'href="$1" mce_href="$1"'</span>);
+		}
+
+		<span class="reserved">return</span> s;
+	},
+
+	<span class="comment">/**
+	 * Removes any internal content inserted by regexps.
+	 *
+	 * <span class="attrib">@param</span> {DOMNode} n Node to remove internal content from.
+	 */</span>
+	_removeInternal : <span class="reserved">function</span>(n) {
+		<span class="reserved">if</span> (tinyMCE.isGecko) {
+			<span class="comment">// Remove mce_src from textnodes and comments</span>
+			tinyMCE.selectNodes(n, <span class="reserved">function</span>(n) {
+				<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8) {
+					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_src=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
+					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_href=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
+				}
+
+				<span class="reserved">return</span> false;
+			});
+		}
+	},
+
+	<span class="comment">/**
+	 * Removes/disables TinyMCE built in form elements such as select boxes for font sizes etc.
+	 * These are disabled when the user submits a form so they don't get picked up by the backend script
+	 * that intercepts the contents.
+	 *
+	 * <span class="attrib">@param</span> {HTMLElement} form_obj Form object to loop through for TinyMCE specific form elements.
+	 */</span>
+	removeTinyMCEFormElements : <span class="reserved">function</span>(form_obj) {
+		<span class="comment">// Check if form is valid</span>
+		<span class="reserved">if</span> (typeof(form_obj) == <span class="literal">"undefined"</span> || form_obj == null)
+			<span class="reserved">return</span>;
+
+		<span class="comment">// If not a form, find the form</span>
+		<span class="reserved">if</span> (form_obj.nodeName != <span class="literal">"FORM"</span>) {
+			<span class="reserved">if</span> (form_obj.form)
+				form_obj = form_obj.form;
+			<span class="reserved">else</span>
+				form_obj = tinyMCE.getParentElement(form_obj, <span class="literal">"form"</span>);
+		}
+
+		<span class="comment">// Still nothing</span>
+		<span class="reserved">if</span> (form_obj == null)
+			<span class="reserved">return</span>;
+
+		<span class="comment">// Disable all UI form elements that TinyMCE created</span>
+		<span class="reserved">for</span> (var i=0; i&lt;form_obj.elements.length; i++) {
+			var elementId = form_obj.elements[i].name ? form_obj.elements[i].name : form_obj.elements[i].id;
+
+			<span class="reserved">if</span> (elementId.indexOf(<span class="literal">'mce_editor_'</span>) == 0)
+				form_obj.elements[i].disabled = true;
+		}
+	},
+
+	<span class="comment">/**
+	 * Event handler function that gets executed each time a event occurs in a TinyMCE editor control instance.
+	 * Todo: Fix the return statements so they return true or false.
+	 *
+	 * <span class="attrib">@param</span> {DOMEvent} e DOM event object reference.
+	 * <span class="attrib">@return</span> true - if the event is to be chained, false - if the event chain is to be canceled.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	handleEvent : <span class="reserved">function</span>(e) {
+		var inst = tinyMCE.selectedInstance;
+
+		<span class="comment">// Remove odd, error</span>
+		<span class="reserved">if</span> (typeof(tinyMCE) == <span class="literal">"undefined"</span>)
+			<span class="reserved">return</span> true;
+
+		<span class="comment">//tinyMCE.debug(e.type + " " + e.target.nodeName + " " + (e.relatedTarget ? e.relatedTarget.nodeName : ""));</span>
+
+		<span class="reserved">if</span> (tinyMCE.executeCallback(tinyMCE.selectedInstance, <span class="literal">'handle_event_callback'</span>, <span class="literal">'handleEvent'</span>, e))
+			<span class="reserved">return</span> false;
+
+		switch (e.type) {
+			case <span class="literal">"beforedeactivate"</span>: <span class="comment">// Was added due to bug #1439953</span>
+			case <span class="literal">"blur"</span>:
+				<span class="reserved">if</span> (tinyMCE.selectedInstance)
+					tinyMCE.selectedInstance.execCommand(<span class="literal">'mceEndTyping'</span>);
+
+				tinyMCE.hideMenus();
+
+				<span class="reserved">return</span>;
+
+			<span class="comment">// Workaround for drag drop/copy paste base href bug</span>
+			case <span class="literal">"drop"</span>:
+			case <span class="literal">"beforepaste"</span>:
+				<span class="reserved">if</span> (tinyMCE.selectedInstance)
+					tinyMCE.selectedInstance.setBaseHREF(null);
+
+				window.setTimeout(<span class="literal">"tinyMCE.selectedInstance.setBaseHREF(tinyMCE.settings['base_href']);"</span>, 1);
+				<span class="reserved">return</span>;
+
+			case <span class="literal">"submit"</span>:
+				tinyMCE.removeTinyMCEFormElements(tinyMCE.isMSIE ? window.event.srcElement : e.target);
+				tinyMCE.triggerSave();
+				tinyMCE.isNotDirty = true;
+				<span class="reserved">return</span>;
+
+			case <span class="literal">"reset"</span>:
+				var formObj = tinyMCE.isMSIE ? window.event.srcElement : e.target;
+
+				<span class="reserved">for</span> (var i=0; i&lt;document.forms.length; i++) {
+					<span class="reserved">if</span> (document.forms[i] == formObj)
+						window.setTimeout(<span class="literal">'tinyMCE.resetForm('</span> + i + <span class="literal">');'</span>, 10);
+				}
+
+				<span class="reserved">return</span>;
+
+			case <span class="literal">"keypress"</span>:
+				<span class="reserved">if</span> (inst &amp;&amp; inst.handleShortcut(e))
+					<span class="reserved">return</span> false;
+
+				<span class="reserved">if</span> (e.target.editorId) {
+					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+				} <span class="reserved">else</span> {
+					<span class="reserved">if</span> (e.target.ownerDocument.editorId)
+						tinyMCE.selectedInstance = tinyMCE.instances[e.target.ownerDocument.editorId];
+				}
+
+				<span class="reserved">if</span> (tinyMCE.selectedInstance)
+					tinyMCE.selectedInstance.switchSettings();
+
+				<span class="comment">// Insert P element</span>
+				<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; tinyMCE.settings[<span class="literal">'force_p_newlines'</span>] &amp;&amp; e.keyCode == 13 &amp;&amp; !e.shiftKey) {
+					<span class="comment">// Insert P element instead of BR</span>
+					<span class="reserved">if</span> (TinyMCE_ForceParagraphs._insertPara(tinyMCE.selectedInstance, e)) {
+						<span class="comment">// Cancel event</span>
+						tinyMCE.execCommand(<span class="literal">"mceAddUndoLevel"</span>);
+						tinyMCE.cancelEvent(e);
+						<span class="reserved">return</span> false;
+					}
+				}
+
+				<span class="comment">// Handle backspace</span>
+				<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; tinyMCE.settings[<span class="literal">'force_p_newlines'</span>] &amp;&amp; (e.keyCode == 8 || e.keyCode == 46) &amp;&amp; !e.shiftKey) {
+					<span class="comment">// Insert P element instead of BR</span>
+					<span class="reserved">if</span> (TinyMCE_ForceParagraphs._handleBackSpace(tinyMCE.selectedInstance, e.type)) {
+						<span class="comment">// Cancel event</span>
+						tinyMCE.execCommand(<span class="literal">"mceAddUndoLevel"</span>);
+						tinyMCE.cancelEvent(e);
+						<span class="reserved">return</span> false;
+					}
+				}
+
+				<span class="comment">// Return key pressed</span>
+				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; tinyMCE.settings[<span class="literal">'force_br_newlines'</span>] &amp;&amp; e.keyCode == 13) {
+					<span class="reserved">if</span> (e.target.editorId)
+						tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+
+					<span class="reserved">if</span> (tinyMCE.selectedInstance) {
+						var sel = tinyMCE.selectedInstance.getDoc().selection;
+						var rng = sel.createRange();
+
+						<span class="reserved">if</span> (tinyMCE.getParentElement(rng.parentElement(), <span class="literal">"li"</span>) != null)
+							<span class="reserved">return</span> false;
+
+						<span class="comment">// Cancel event</span>
+						e.returnValue = false;
+						e.cancelBubble = true;
+
+						<span class="comment">// Insert BR element</span>
+						rng.pasteHTML(<span class="literal">"&lt;br /&gt;"</span>);
+						rng.collapse(false);
+						rng.select();
+
+						tinyMCE.execCommand(<span class="literal">"mceAddUndoLevel"</span>);
+						tinyMCE.triggerNodeChange(false);
+						<span class="reserved">return</span> false;
+					}
+				}
+
+				<span class="comment">// Backspace or delete</span>
+				<span class="reserved">if</span> (e.keyCode == 8 || e.keyCode == 46) {
+					tinyMCE.selectedElement = e.target;
+					tinyMCE.linkElement = tinyMCE.getParentElement(e.target, <span class="literal">"a"</span>);
+					tinyMCE.imgElement = tinyMCE.getParentElement(e.target, <span class="literal">"img"</span>);
+					tinyMCE.triggerNodeChange(false);
+				}
+
+				<span class="reserved">return</span> false;
+			break;
+
+			case <span class="literal">"keyup"</span>:
+			case <span class="literal">"keydown"</span>:
+				tinyMCE.hideMenus();
+				tinyMCE.hasMouseMoved = false;
+
+				<span class="reserved">if</span> (inst &amp;&amp; inst.handleShortcut(e))
+					<span class="reserved">return</span> false;
+
+				<span class="reserved">if</span> (e.target.editorId)
+					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+				<span class="reserved">else</span>
+					<span class="reserved">return</span>;
+
+				<span class="reserved">if</span> (tinyMCE.selectedInstance)
+					tinyMCE.selectedInstance.switchSettings();
+
+				var inst = tinyMCE.selectedInstance;
+
+				<span class="comment">// Handle backspace</span>
+				<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; tinyMCE.settings[<span class="literal">'force_p_newlines'</span>] &amp;&amp; (e.keyCode == 8 || e.keyCode == 46) &amp;&amp; !e.shiftKey) {
+					<span class="comment">// Insert P element instead of BR</span>
+					<span class="reserved">if</span> (TinyMCE_ForceParagraphs._handleBackSpace(tinyMCE.selectedInstance, e.type)) {
+						<span class="comment">// Cancel event</span>
+						tinyMCE.execCommand(<span class="literal">"mceAddUndoLevel"</span>);
+						e.preventDefault();
+						<span class="reserved">return</span> false;
+					}
+				}
+
+				tinyMCE.selectedElement = null;
+				tinyMCE.selectedNode = null;
+				var elm = tinyMCE.selectedInstance.getFocusElement();
+				tinyMCE.linkElement = tinyMCE.getParentElement(elm, <span class="literal">"a"</span>);
+				tinyMCE.imgElement = tinyMCE.getParentElement(elm, <span class="literal">"img"</span>);
+				tinyMCE.selectedElement = elm;
+
+				<span class="comment">// Update visualaids on tabs</span>
+				<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; e.type == <span class="literal">"keyup"</span> &amp;&amp; e.keyCode == 9)
+					tinyMCE.handleVisualAid(tinyMCE.selectedInstance.getBody(), true, tinyMCE.settings[<span class="literal">'visual'</span>], tinyMCE.selectedInstance);
+
+				<span class="comment">// Fix empty elements on return/enter, check where enter occured</span>
+				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; e.type == <span class="literal">"keydown"</span> &amp;&amp; e.keyCode == 13)
+					tinyMCE.enterKeyElement = tinyMCE.selectedInstance.getFocusElement();
+
+				<span class="comment">// Fix empty elements on return/enter</span>
+				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; e.type == <span class="literal">"keyup"</span> &amp;&amp; e.keyCode == 13) {
+					var elm = tinyMCE.enterKeyElement;
+					<span class="reserved">if</span> (elm) {
+						var re = new RegExp(<span class="literal">'^HR|IMG|BR$'</span>,<span class="literal">'g'</span>); <span class="comment">// Skip these</span>
+						var dre = new RegExp(<span class="literal">'^H[1-6]$'</span>,<span class="literal">'g'</span>); <span class="comment">// Add double on these</span>
+
+						<span class="reserved">if</span> (!elm.hasChildNodes() &amp;&amp; !re.test(elm.nodeName)) {
+							<span class="reserved">if</span> (dre.test(elm.nodeName))
+								elm.innerHTML = <span class="literal">"&amp;nbsp;&amp;nbsp;"</span>;
+							<span class="reserved">else</span>
+								elm.innerHTML = <span class="literal">"&amp;nbsp;"</span>;
+						}
+					}
+				}
+
+				<span class="comment">// Check if it's a position key</span>
+				var keys = tinyMCE.posKeyCodes;
+				var posKey = false;
+				<span class="reserved">for</span> (var i=0; i&lt;keys.length; i++) {
+					<span class="reserved">if</span> (keys[i] == e.keyCode) {
+						posKey = true;
+						break;
+					}
+				}
+
+				<span class="comment">// MSIE custom key handling</span>
+				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; tinyMCE.settings[<span class="literal">'custom_undo_redo'</span>]) {
+					var keys = new Array(8,46); <span class="comment">// Backspace,Delete</span>
+					<span class="reserved">for</span> (var i=0; i&lt;keys.length; i++) {
+						<span class="reserved">if</span> (keys[i] == e.keyCode) {
+							<span class="reserved">if</span> (e.type == <span class="literal">"keyup"</span>)
+								tinyMCE.triggerNodeChange(false);
+						}
+					}
+				}
+
+				<span class="comment">// If Ctrl key</span>
+				<span class="reserved">if</span> (e.keyCode == 17)
+					<span class="reserved">return</span> true;
+
+				<span class="comment">// Handle Undo/Redo when typing content</span>
+
+				<span class="comment">// Start typing (non position key)</span>
+				<span class="reserved">if</span> (!posKey &amp;&amp; e.type == <span class="literal">"keyup"</span>)
+					tinyMCE.execCommand(<span class="literal">"mceStartTyping"</span>);
+
+				<span class="comment">// Store undo bookmark</span>
+				<span class="reserved">if</span> (e.type == <span class="literal">"keydown"</span> &amp;&amp; (posKey || e.ctrlKey) &amp;&amp; inst)
+					inst.undoBookmark = inst.selection.getBookmark();
+
+				<span class="comment">// End typing (position key) or some Ctrl event</span>
+				<span class="reserved">if</span> (e.type == <span class="literal">"keyup"</span> &amp;&amp; (posKey || e.ctrlKey))
+					tinyMCE.execCommand(<span class="literal">"mceEndTyping"</span>);
+
+				<span class="reserved">if</span> (posKey &amp;&amp; e.type == <span class="literal">"keyup"</span>)
+					tinyMCE.triggerNodeChange(false);
+
+				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; e.ctrlKey)
+					window.setTimeout(<span class="literal">'tinyMCE.triggerNodeChange(false);'</span>, 1);
+			break;
+
+			case <span class="literal">"mousedown"</span>:
+			case <span class="literal">"mouseup"</span>:
+			case <span class="literal">"click"</span>:
+			case <span class="literal">"focus"</span>:
+				tinyMCE.hideMenus();
+
+				<span class="reserved">if</span> (tinyMCE.selectedInstance) {
+					tinyMCE.selectedInstance.switchSettings();
+					tinyMCE.selectedInstance.isFocused = true;
+				}
+
+				<span class="comment">// Check instance event trigged on</span>
+				var targetBody = tinyMCE.getParentElement(e.target, <span class="literal">"body"</span>);
+				<span class="reserved">for</span> (var instanceName in tinyMCE.instances) {
+					<span class="reserved">if</span> (!tinyMCE.isInstance(tinyMCE.instances[instanceName]))
+						continue;
+
+					var inst = tinyMCE.instances[instanceName];
+
+					<span class="comment">// Reset design mode if lost (on everything just in case)</span>
+					inst.autoResetDesignMode();
+
+					<span class="reserved">if</span> (inst.getBody() == targetBody) {
+						tinyMCE.selectedInstance = inst;
+						tinyMCE.selectedElement = e.target;
+						tinyMCE.linkElement = tinyMCE.getParentElement(tinyMCE.selectedElement, <span class="literal">"a"</span>);
+						tinyMCE.imgElement = tinyMCE.getParentElement(tinyMCE.selectedElement, <span class="literal">"img"</span>);
+						break;
+					}
+				}
+
+				<span class="comment">// Add first bookmark location</span>
+				<span class="reserved">if</span> (!tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark)
+					tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark = tinyMCE.selectedInstance.selection.getBookmark();
+
+				<span class="reserved">if</span> (tinyMCE.isSafari) {
+					tinyMCE.selectedInstance.lastSafariSelection = tinyMCE.selectedInstance.selection.getBookmark();
+					tinyMCE.selectedInstance.lastSafariSelectedElement = tinyMCE.selectedElement;
+
+					var lnk = tinyMCE.getParentElement(tinyMCE.selectedElement, <span class="literal">"a"</span>);
+
+					<span class="comment">// Patch the darned link</span>
+					<span class="reserved">if</span> (lnk &amp;&amp; e.type == <span class="literal">"mousedown"</span>) {
+						lnk.setAttribute(<span class="literal">"mce_real_href"</span>, lnk.getAttribute(<span class="literal">"href"</span>));
+						lnk.setAttribute(<span class="literal">"href"</span>, <span class="literal">"javascript:void(0);"</span>);
+					}
+
+					<span class="comment">// Patch back</span>
+					<span class="reserved">if</span> (lnk &amp;&amp; e.type == <span class="literal">"click"</span>) {
+						window.setTimeout(<span class="reserved">function</span>() {
+							lnk.setAttribute(<span class="literal">"href"</span>, lnk.getAttribute(<span class="literal">"mce_real_href"</span>));
+							lnk.removeAttribute(<span class="literal">"mce_real_href"</span>);
+						}, 10);
+					}
+				}
+
+				<span class="comment">// Reset selected node</span>
+				<span class="reserved">if</span> (e.type != <span class="literal">"focus"</span>)
+					tinyMCE.selectedNode = null;
+
+				tinyMCE.triggerNodeChange(false);
+				tinyMCE.execCommand(<span class="literal">"mceEndTyping"</span>);
+
+				<span class="reserved">if</span> (e.type == <span class="literal">"mouseup"</span>)
+					tinyMCE.execCommand(<span class="literal">"mceAddUndoLevel"</span>);
+
+				<span class="comment">// Just in case</span>
+				<span class="reserved">if</span> (!tinyMCE.selectedInstance &amp;&amp; e.target.editorId)
+					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+
+				<span class="reserved">return</span> false;
+			break;
+		}
+	},
+
+	<span class="comment">/**
+	 * Returns the HTML code for a normal button control.
+	 *
+	 * <span class="attrib">@param</span> {string} id Button control id, this will be the suffix for the element id, the prefix is the editor id.
+	 * <span class="attrib">@param</span> {string} lang Language variable key name to insert as the title/alt of the button image.
+	 * <span class="attrib">@param</span> {string} img Image URL to insert, {$themeurl} and {$pluginurl} will be replaced.
+	 * <span class="attrib">@param</span> {string} cmd Command to execute when the user clicks the button.
+	 * <span class="attrib">@param</span> {string} ui Optional user interface boolean for command.
+	 * <span class="attrib">@param</span> {string} val Optional value for command.
+	 * <span class="attrib">@return</span> HTML code for a normal button based in input information.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	getButtonHTML : <span class="reserved">function</span>(id, lang, img, cmd, ui, val) {
+		var h = <span class="literal">''</span>, m, x;
+
+		cmd = <span class="literal">'tinyMCE.execInstanceCommand(\'</span>{$editor_id}\<span class="literal">',\'</span><span class="literal">' + cmd + '</span>\<span class="literal">''</span>;
+
+		<span class="reserved">if</span> (typeof(ui) != <span class="literal">"undefined"</span> &amp;&amp; ui != null)
+			cmd += <span class="literal">','</span> + ui;
+
+		<span class="reserved">if</span> (typeof(val) != <span class="literal">"undefined"</span> &amp;&amp; val != null)
+			cmd += <span class="literal">",'"</span> + val + <span class="literal">"'"</span>;
+
+		cmd += <span class="literal">');'</span>;
+
+		<span class="comment">// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled</span>
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">'button_tile_map'</span>) &amp;&amp; (!tinyMCE.isMSIE || tinyMCE.isOpera) &amp;&amp; (m = <span class="reserved">this</span>.buttonMap[id]) != null &amp;&amp; (tinyMCE.getParam(<span class="literal">"language"</span>) == <span class="literal">"en"</span> || img.indexOf(<span class="literal">'$lang'</span>) == -1)) {
+			<span class="comment">// Tiled button</span>
+			x = 0 - (m * 20) == 0 ? <span class="literal">'0'</span> : 0 - (m * 20);
+			h += <span class="literal">'&lt;a id="{$editor_id}_'</span> + id + <span class="literal">'" href="javascript:'</span> + cmd + <span class="literal">'" onclick="'</span> + cmd + <span class="literal">'return false;" onmousedown="return false;" class="mceTiledButton mceButtonNormal" target="_self"&gt;'</span>;
+			h += <span class="literal">'&lt;img src="{$themeurl}/images/spacer.gif" style="background-position: '</span> + x + <span class="literal">'px 0" title="{$'</span> + lang + <span class="literal">'}" /&gt;'</span>;
+			h += <span class="literal">'&lt;/a&gt;'</span>;
+		} <span class="reserved">else</span> {
+			<span class="comment">// Normal button</span>
+			h += <span class="literal">'&lt;a id="{$editor_id}_'</span> + id + <span class="literal">'" href="javascript:'</span> + cmd + <span class="literal">'" onclick="'</span> + cmd + <span class="literal">'return false;" onmousedown="return false;" class="mceButtonNormal" target="_self"&gt;'</span>;
+			h += <span class="literal">'&lt;img src="'</span> + img + <span class="literal">'" title="{$'</span> + lang + <span class="literal">'}" /&gt;'</span>;
+			h += <span class="literal">'&lt;/a&gt;'</span>;
+		}
+
+		<span class="reserved">return</span> h;
+	},
+
+	<span class="comment">/**
+	 * Adds a list of buttons available in the tiled button image used by the button_tile_map option.
+	 *
+	 * <span class="attrib">@param</span> {string} m Comma separated list of buttons that are available in tiled image.
+	 */</span>
+	addButtonMap : <span class="reserved">function</span>(m) {
+		var i, a = m.replace(/\s+/, <span class="literal">''</span>).split(<span class="literal">','</span>);
+
+		<span class="reserved">for</span> (i=0; i&lt;a.length; i++)
+			<span class="reserved">this</span>.buttonMap[a[i]] = i;
+	},
+
+	<span class="comment">/**
+	 * Piggyback onsubmit event handler function, this will remove/hide the TinyMCE specific form elements
+	 * call triggerSave to fill the textarea with the correct contents then call the old piggy backed event handler.
+	 */</span>
+	submitPatch : <span class="reserved">function</span>() {
+		tinyMCE.removeTinyMCEFormElements(<span class="reserved">this</span>);
+		tinyMCE.triggerSave();
+		<span class="reserved">this</span>.mceOldSubmit();
+		tinyMCE.isNotDirty = true;
+	},
+
+	<span class="comment">/**
+	 * Gets executed when the page loads or get intitialized. This function will then convert all textareas/divs that
+	 * is to be converted into TinyMCE editor controls.
+	 *
+	 * <span class="attrib">@return</span> true - if the event is to be chained, false - if the event chain is to be canceled.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	onLoad : <span class="reserved">function</span>() {
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera &amp;&amp; window.event.type == <span class="literal">"readystatechange"</span> &amp;&amp; document.readyState != <span class="literal">"complete"</span>)
+			<span class="reserved">return</span> true;
+
+		<span class="reserved">if</span> (tinyMCE.isLoaded)
+			<span class="reserved">return</span> true;
+
+		tinyMCE.isLoaded = true;
+
+		tinyMCE.dispatchCallback(null, <span class="literal">'onpageload'</span>, <span class="literal">'onPageLoad'</span>);
+
+		<span class="reserved">for</span> (var c=0; c&lt;tinyMCE.configs.length; c++) {
+			tinyMCE.settings = tinyMCE.configs[c];
+
+			var selector = tinyMCE.getParam(<span class="literal">"editor_selector"</span>);
+			var deselector = tinyMCE.getParam(<span class="literal">"editor_deselector"</span>);
+			var elementRefAr = new Array();
+
+			<span class="comment">// Add submit triggers</span>
+			<span class="reserved">if</span> (document.forms &amp;&amp; tinyMCE.settings[<span class="literal">'add_form_submit_trigger'</span>] &amp;&amp; !tinyMCE.submitTriggers) {
+				<span class="reserved">for</span> (var i=0; i&lt;document.forms.length; i++) {
+					var form = document.forms[i];
+
+					tinyMCE.addEvent(form, <span class="literal">"submit"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.handleEvent);
+					tinyMCE.addEvent(form, <span class="literal">"reset"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.handleEvent);
+					tinyMCE.submitTriggers = true; <span class="comment">// Do it only once</span>
+
+					<span class="comment">// Patch the form.submit function</span>
+					<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'submit_patch'</span>]) {
+						try {
+							form.mceOldSubmit = form.submit;
+							form.submit = TinyMCE_Engine.<span class="reserved">prototype</span>.submitPatch;
+						} catch (e) {
+							<span class="comment">// Do nothing</span>
+						}
+					}
+				}
+			}
+
+			<span class="comment">// Add editor instances based on mode</span>
+			var mode = tinyMCE.settings[<span class="literal">'mode'</span>];
+			switch (mode) {
+				case <span class="literal">"exact"</span>:
+					var elements = tinyMCE.getParam(<span class="literal">'elements'</span>, <span class="literal">''</span>, true, <span class="literal">','</span>);
+
+					<span class="reserved">for</span> (var i=0; i&lt;elements.length; i++) {
+						var element = tinyMCE._getElementById(elements[i]);
+						var trigger = element ? element.getAttribute(tinyMCE.settings[<span class="literal">'textarea_trigger'</span>]) : <span class="literal">""</span>;
+
+						<span class="reserved">if</span> (tinyMCE.getAttrib(element, <span class="literal">"class"</span>).indexOf(deselector) != -1)
+							continue;
+
+						<span class="reserved">if</span> (trigger == <span class="literal">"false"</span>)
+							continue;
+
+						<span class="reserved">if</span> ((tinyMCE.settings[<span class="literal">'ask'</span>] || tinyMCE.settings[<span class="literal">'convert_on_click'</span>]) &amp;&amp; element) {
+							elementRefAr[elementRefAr.length] = element;
+							continue;
+						}
+
+						<span class="reserved">if</span> (element)
+							tinyMCE.addMCEControl(element, elements[i]);
+						<span class="reserved">else</span> <span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'debug'</span>])
+							alert(<span class="literal">"Error: Could not find element by id or name: "</span> + elements[i]);
+					}
+				break;
+
+				case <span class="literal">"specific_textareas"</span>:
+				case <span class="literal">"textareas"</span>:
+					var nodeList = document.getElementsByTagName(<span class="literal">"textarea"</span>);
+
+					<span class="reserved">for</span> (var i=0; i&lt;nodeList.length; i++) {
+						var elm = nodeList.item(i);
+						var trigger = elm.getAttribute(tinyMCE.settings[<span class="literal">'textarea_trigger'</span>]);
+
+						<span class="reserved">if</span> (selector != <span class="literal">''</span> &amp;&amp; tinyMCE.getAttrib(elm, <span class="literal">"class"</span>).indexOf(selector) == -1)
+							continue;
+
+						<span class="reserved">if</span> (selector != <span class="literal">''</span>)
+							trigger = selector != <span class="literal">""</span> ? <span class="literal">"true"</span> : <span class="literal">""</span>;
+
+						<span class="reserved">if</span> (tinyMCE.getAttrib(elm, <span class="literal">"class"</span>).indexOf(deselector) != -1)
+							continue;
+
+						<span class="reserved">if</span> ((mode == <span class="literal">"specific_textareas"</span> &amp;&amp; trigger == <span class="literal">"true"</span>) || (mode == <span class="literal">"textareas"</span> &amp;&amp; trigger != <span class="literal">"false"</span>))
+							elementRefAr[elementRefAr.length] = elm;
+					}
+				break;
+			}
+
+			<span class="reserved">for</span> (var i=0; i&lt;elementRefAr.length; i++) {
+				var element = elementRefAr[i];
+				var elementId = element.name ? element.name : element.id;
+
+				<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'ask'</span>] || tinyMCE.settings[<span class="literal">'convert_on_click'</span>]) {
+					<span class="comment">// Focus breaks in Mozilla</span>
+					<span class="reserved">if</span> (tinyMCE.isGecko) {
+						var settings = tinyMCE.settings;
+
+						tinyMCE.addEvent(element, <span class="literal">"focus"</span>, <span class="reserved">function</span> (e) {window.setTimeout(<span class="reserved">function</span>() {TinyMCE_Engine.<span class="reserved">prototype</span>.confirmAdd(e, settings);}, 10);});
+
+						<span class="reserved">if</span> (element.nodeName != <span class="literal">"TEXTAREA"</span> &amp;&amp; element.nodeName != <span class="literal">"INPUT"</span>)
+							tinyMCE.addEvent(element, <span class="literal">"click"</span>, <span class="reserved">function</span> (e) {window.setTimeout(<span class="reserved">function</span>() {TinyMCE_Engine.<span class="reserved">prototype</span>.confirmAdd(e, settings);}, 10);});
+						<span class="comment">// tinyMCE.addEvent(element, "mouseover", function (e) {window.setTimeout(function() {TinyMCE_Engine.prototype.confirmAdd(e, settings);}, 10);});</span>
+					} <span class="reserved">else</span> {
+						var settings = tinyMCE.settings;
+
+						tinyMCE.addEvent(element, <span class="literal">"focus"</span>, <span class="reserved">function</span> () { TinyMCE_Engine.<span class="reserved">prototype</span>.confirmAdd(null, settings); });
+						tinyMCE.addEvent(element, <span class="literal">"click"</span>, <span class="reserved">function</span> () { TinyMCE_Engine.<span class="reserved">prototype</span>.confirmAdd(null, settings); });
+						<span class="comment">// tinyMCE.addEvent(element, "mouseenter", function () { TinyMCE_Engine.prototype.confirmAdd(null, settings); });</span>
+					}
+				} <span class="reserved">else</span>
+					tinyMCE.addMCEControl(element, elementId);
+			}
+
+			<span class="comment">// Handle auto focus</span>
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'auto_focus'</span>]) {
+				window.setTimeout(<span class="reserved">function</span> () {
+					var inst = tinyMCE.getInstanceById(tinyMCE.settings[<span class="literal">'auto_focus'</span>]);
+					inst.selection.selectNode(inst.getBody(), true, true);
+					inst.contentWindow.focus();
+				}, 10);
+			}
+
+			tinyMCE.dispatchCallback(null, <span class="literal">'oninit'</span>, <span class="literal">'onInit'</span>);
+		}
+	},
+
+	<span class="comment">/**
+	 * Returns true/false if a specific object is a TinyMCE_Control instance or not.
+	 *
+	 * <span class="attrib">@param</span> {object} o Object to check.
+	 * <span class="attrib">@return</span> true/false if it's a control or not.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	isInstance : <span class="reserved">function</span>(o) {
+		<span class="reserved">return</span> o != null &amp;&amp; typeof(o) == <span class="literal">"object"</span> &amp;&amp; o.isTinyMCE_Control;
+	},
+
+	<span class="comment">/**
+	 * Returns a specific configuration setting or the default value if it wasn't found.
+	 *
+	 * <span class="attrib">@param</span> {string} name Configuration setting to get.
+	 * <span class="attrib">@param</span> {string} default_value Default value to return if it wasn't found.
+	 * <span class="attrib">@param</span> {boolean} strip_whitespace Optional remove all whitespace.
+	 * <span class="attrib">@param</span> {string} split_chr Split char/regex/string.
+	 * <span class="attrib">@return</span> Number, string or other object based in parameter and default_value.
+	 * <span class="attrib">@type</span> object
+	 */</span>
+	getParam : <span class="reserved">function</span>(name, default_value, strip_whitespace, split_chr) {
+		var value = (typeof(<span class="reserved">this</span>.settings[name]) == <span class="literal">"undefined"</span>) ? default_value : <span class="reserved">this</span>.settings[name];
+
+		<span class="comment">// Fix bool values</span>
+		<span class="reserved">if</span> (value == <span class="literal">"true"</span> || value == <span class="literal">"false"</span>)
+			<span class="reserved">return</span> (value == <span class="literal">"true"</span>);
+
+		<span class="reserved">if</span> (strip_whitespace)
+			value = tinyMCE.regexpReplace(value, <span class="literal">"[ \t\r\n]"</span>, <span class="literal">""</span>);
+
+		<span class="reserved">if</span> (typeof(split_chr) != <span class="literal">"undefined"</span> &amp;&amp; split_chr != null) {
+			value = value.split(split_chr);
+			var outArray = new Array();
+
+			<span class="reserved">for</span> (var i=0; i&lt;value.length; i++) {
+				<span class="reserved">if</span> (value[i] &amp;&amp; value[i] != <span class="literal">""</span>)
+					outArray[outArray.length] = value[i];
+			}
+
+			value = outArray;
+		}
+
+		<span class="reserved">return</span> value;
+	},
+
+	<span class="comment">/**
+	 * Returns a language variable value from the language packs.
+	 *
+	 * <span class="attrib">@param</span> {string} name Name of the key to retrive.
+	 * <span class="attrib">@param</span> {string} default_value Optional default value to return if it wasn't found.
+	 * <span class="attrib">@param</span> {boolean} parse_entities Is HTML entities to be resolved or not.
+	 * <span class="attrib">@param</span> {Array} va Optional name/value array of variables to replace in language string.	 
+	 * <span class="attrib">@return</span> Language string value could be a number if it's a relative dimenstion.
+	 * <span class="attrib">@type</span> object
+	 */</span>
+	getLang : <span class="reserved">function</span>(name, default_value, parse_entities, va) {
+		var v = (typeof(tinyMCELang[name]) == <span class="literal">"undefined"</span>) ? default_value : tinyMCELang[name], n;
+
+		<span class="reserved">if</span> (parse_entities)
+			v = tinyMCE.entityDecode(v);
+
+		<span class="reserved">if</span> (va) {
+			<span class="reserved">for</span> (n in va)
+				v = <span class="reserved">this</span>.replaceVar(v, n, va[n]);
+		}
+
+		<span class="reserved">return</span> v;
+	},
+
+	<span class="comment">/**
+	 * HTML entity decode a string, replaces &amp;lt; with &lt;.
+	 *
+	 * <span class="attrib">@param</span> {string} s Entity string to decode into normal string.
+	 * <span class="attrib">@return</span> Entity decoded string.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	entityDecode : <span class="reserved">function</span>(s) {
+		var e = document.createElement(<span class="literal">"div"</span>);
+		e.innerHTML = s;
+		<span class="reserved">return</span> e.innerHTML;
+	},
+
+	<span class="comment">/**
+	 * Adds language items to the global language array.
+	 *
+	 * <span class="attrib">@param</span> {string} prefix Prefix string to add infront of every array item before adding it.
+	 * <span class="attrib">@param</span> {Array} ar Language item array to add to global language array.
+	 */</span>
+	addToLang : <span class="reserved">function</span>(prefix, ar) {
+		<span class="reserved">for</span> (var key in ar) {
+			<span class="reserved">if</span> (typeof(ar[key]) == <span class="literal">'function'</span>)
+				continue;
+
+			tinyMCELang[(key.indexOf(<span class="literal">'lang_'</span>) == -1 ? <span class="literal">'lang_'</span> : <span class="literal">''</span>) + (prefix != <span class="literal">''</span> ? (prefix + <span class="literal">"_"</span>) : <span class="literal">''</span>) + key] = ar[key];
+		}
+
+	<span class="comment">//	for (var key in ar)</span>
+	<span class="comment">//		tinyMCELang[(key.indexOf('lang_') == -1 ? 'lang_' : '') + (prefix != '' ? (prefix + "_") : '') + key] = "|" + ar[key] + "|";</span>
+	},
+
+	<span class="comment">/**
+	 * Triggers a nodeChange event to every theme and plugin. This will be executed when the cursor moves or
+	 * when a command that modifies the editor contents is executed.
+	 *
+	 * <span class="attrib">@param</span> {boolean} focus Optional state if the last selected editor instance is to be focused or not.
+	 * <span class="attrib">@param</span> {boolean} setup_content Optional state if it's called from setup content function or not.
+	 */</span>
+	triggerNodeChange : <span class="reserved">function</span>(focus, setup_content) {
+		<span class="reserved">if</span> (tinyMCE.selectedInstance) {
+			var inst = tinyMCE.selectedInstance;
+			var editorId = inst.editorId;
+			var elm = (typeof(setup_content) != <span class="literal">"undefined"</span> &amp;&amp; setup_content) ? tinyMCE.selectedElement : inst.getFocusElement();
+			var undoIndex = -1;
+			var undoLevels = -1;
+			var anySelection = false;
+			var selectedText = inst.selection.getSelectedText();
+
+			<span class="reserved">if</span> (setup_content &amp;&amp; tinyMCE.isGecko &amp;&amp; inst.isHidden())
+				elm = inst.getBody();
+
+			inst.switchSettings();
+
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">"auto_resize"</span>]) {
+				var doc = inst.getDoc();
+
+				inst.iframeElement.style.width = doc.body.offsetWidth + <span class="literal">"px"</span>;
+				inst.iframeElement.style.height = doc.body.offsetHeight + <span class="literal">"px"</span>;
+			}
+
+			<span class="reserved">if</span> (tinyMCE.selectedElement)
+				anySelection = (tinyMCE.selectedElement.nodeName.toLowerCase() == <span class="literal">"img"</span>) || (selectedText &amp;&amp; selectedText.length &gt; 0);
+
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'custom_undo_redo'</span>]) {
+				undoIndex = inst.undoRedo.undoIndex;
+				undoLevels = inst.undoRedo.undoLevels.length;
+			}
+
+			tinyMCE.dispatchCallback(inst, <span class="literal">'handle_node_change_callback'</span>, <span class="literal">'handleNodeChange'</span>, editorId, elm, undoIndex, undoLevels, inst.visualAid, anySelection, setup_content);
+		}
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.selectedInstance &amp;&amp; (typeof(focus) == <span class="literal">"undefined"</span> || focus))
+			<span class="reserved">this</span>.selectedInstance.contentWindow.focus();
+	},
+
+	<span class="comment">/**
+	 * Executes the custom cleanup functions on the specified content.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Control} inst TinyMCE editor control instance.
+	 * <span class="attrib">@param</span> {string} type Event type to call.
+	 * <span class="attrib">@param</span> {object} content DOM element or string to pass to handlers depending on type.
+	 * <span class="attrib">@return</span> string or DOM element depending on type.
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_customCleanup : <span class="reserved">function</span>(inst, type, content) {
+		var pl, po, i;
+
+		<span class="comment">// Call custom cleanup</span>
+		var customCleanup = tinyMCE.settings[<span class="literal">'cleanup_callback'</span>];
+		<span class="reserved">if</span> (customCleanup != <span class="literal">""</span> &amp;&amp; eval(<span class="literal">"typeof("</span> + customCleanup + <span class="literal">")"</span>) != <span class="literal">"undefined"</span>)
+			content = eval(customCleanup + <span class="literal">"(type, content, inst);"</span>);
+
+		<span class="comment">// Trigger plugin cleanups</span>
+		pl = inst.plugins;
+		<span class="reserved">for</span> (i=0; i&lt;pl.length; i++) {
+			po = tinyMCE.plugins[pl[i]];
+
+			<span class="reserved">if</span> (po &amp;&amp; po.cleanup)
+				content = po.cleanup(type, content, inst);
+		}
+
+		<span class="reserved">return</span> content;
+	},
+
+	<span class="comment">/**
+	 * Sets the HTML contents of the selected editor instance.
+	 *
+	 * <span class="attrib">@param</span> {string} h HTML contents to set in the selected instance.
+	 * <span class="attrib">@deprecated</span>
+	 */</span>
+	setContent : <span class="reserved">function</span>(h) {
+		<span class="reserved">if</span> (tinyMCE.selectedInstance) {
+			tinyMCE.selectedInstance.execCommand(<span class="literal">'mceSetContent'</span>, false, h);
+			tinyMCE.selectedInstance.repaint();
+		}
+	},
+
+	<span class="comment">/**
+	 * Loads a theme specific language pack.
+	 *
+	 * <span class="attrib">@param</span> {string} name Optional name of the theme to load language pack from.
+	 */</span>
+	importThemeLanguagePack : <span class="reserved">function</span>(name) {
+		<span class="reserved">if</span> (typeof(name) == <span class="literal">"undefined"</span>)
+			name = tinyMCE.settings[<span class="literal">'theme'</span>];
+
+		tinyMCE.loadScript(tinyMCE.baseURL + <span class="literal">'/themes/'</span> + name + <span class="literal">'/langs/'</span> + tinyMCE.settings[<span class="literal">'language'</span>] + <span class="literal">'.js'</span>);
+	},
+
+	<span class="comment">/**
+	 * Loads a plugin specific language pack.
+	 *
+	 * <span class="attrib">@param</span> {string} name Plugin name/id to load language pack for.
+	 * <span class="attrib">@param</span> {string} valid_languages Comma separated list of valid languages for the plugin.
+	 */</span>
+	importPluginLanguagePack : <span class="reserved">function</span>(name, valid_languages) {
+		var lang = <span class="literal">"en"</span>, b = tinyMCE.baseURL + <span class="literal">'/plugins/'</span> + name;
+
+		valid_languages = valid_languages.split(<span class="literal">','</span>);
+		<span class="reserved">for</span> (var i=0; i&lt;valid_languages.length; i++) {
+			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'language'</span>] == valid_languages[i])
+				lang = tinyMCE.settings[<span class="literal">'language'</span>];
+		}
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.plugins[name])
+			b = <span class="reserved">this</span>.plugins[name].baseURL;
+
+		tinyMCE.loadScript(b + <span class="literal">'/langs/'</span> + lang +  <span class="literal">'.js'</span>);
+	},
+
+	<span class="comment">/**
+	 * Replaces language, args and settings variables in a HTML string.
+	 *
+	 * <span class="attrib">@param</span> {string} h HTML string to replace language variables in.
+	 * <span class="attrib">@param</span> {Array} as Optional arguments array to take variables from.
+	 * <span class="attrib">@return</span> HTML string with replaced varliables.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	applyTemplate : <span class="reserved">function</span>(h, as) {
+		var i, s, ar = h.match(new RegExp(<span class="literal">'\\{\\$[a-z0-9_]+\\}'</span>, <span class="literal">'gi'</span>));
+
+		<span class="reserved">if</span> (ar &amp;&amp; ar.length &gt; 0) {
+			<span class="reserved">for</span> (i=ar.length-1; i&gt;=0; i--) {
+				s = ar[i].substring(2, ar[i].length-1);
+
+				<span class="reserved">if</span> (s.indexOf(<span class="literal">'lang_'</span>) == 0 &amp;&amp; tinyMCELang[s])
+					h = tinyMCE.replaceVar(h, s, tinyMCELang[s]);
+				<span class="reserved">else</span> <span class="reserved">if</span> (as &amp;&amp; as[s])
+					h = tinyMCE.replaceVar(h, s, as[s]);
+				<span class="reserved">else</span> <span class="reserved">if</span> (tinyMCE.settings[s])
+					h = tinyMCE.replaceVar(h, s, tinyMCE.settings[s]);
+			}
+		}
+
+		h = tinyMCE.replaceVar(h, <span class="literal">"themeurl"</span>, tinyMCE.themeURL);
+
+		<span class="reserved">return</span> h;
+	},
+
+	<span class="comment">/**
+	 * Replaces a specific variable in the string with a nother string.
+	 *
+	 * <span class="attrib">@param</span> {string} h String to search in for the variable.
+	 * <span class="attrib">@param</span> {string} r Variable name to search for.
+	 * <span class="attrib">@param</span> {string} v Value to insert where a variable is found.
+	 * <span class="attrib">@return</span> String with replaced variable.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	replaceVar : <span class="reserved">function</span>(h, r, v) {
+		<span class="reserved">return</span> h.replace(new RegExp(<span class="literal">'{\\\$'</span> + r + <span class="literal">'}'</span>, <span class="literal">'g'</span>), v);
+	},
+
+	<span class="comment">/**
+	 * Opens a popup window based in the specified input data. This function
+	 * is used for all popup windows in TinyMCE.
+	 *
+	 * These are the current template keys: file, width, height, close_previous.
+	 *
+	 * <span class="attrib">@param</span> {Array} template Popup template data such as with, height etc.
+	 * <span class="attrib">@param</span> {Array} args Popup arguments that is to be passed to the popup such as custom data.
+	 */</span>
+	openWindow : <span class="reserved">function</span>(template, args) {
+		var html, width, height, x, y, resizable, scrollbars, url;
+
+		args[<span class="literal">'mce_template_file'</span>] = template[<span class="literal">'file'</span>];
+		args[<span class="literal">'mce_width'</span>] = template[<span class="literal">'width'</span>];
+		args[<span class="literal">'mce_height'</span>] = template[<span class="literal">'height'</span>];
+		tinyMCE.windowArgs = args;
+
+		html = template[<span class="literal">'html'</span>];
+		<span class="reserved">if</span> (!(width = parseInt(template[<span class="literal">'width'</span>])))
+			width = 320;
+
+		<span class="reserved">if</span> (!(height = parseInt(template[<span class="literal">'height'</span>])))
+			height = 200;
+
+		<span class="comment">// Add to height in M$ due to SP2 WHY DON'T YOU GUYS IMPLEMENT innerWidth of windows!!</span>
+		<span class="reserved">if</span> (tinyMCE.isMSIE)
+			height += 40;
+		<span class="reserved">else</span>
+			height += 20;
+
+		x = parseInt(screen.width / 2.0) - (width / 2.0);
+		y = parseInt(screen.height / 2.0) - (height / 2.0);
+
+		resizable = (args &amp;&amp; args[<span class="literal">'resizable'</span>]) ? args[<span class="literal">'resizable'</span>] : <span class="literal">"no"</span>;
+		scrollbars = (args &amp;&amp; args[<span class="literal">'scrollbars'</span>]) ? args[<span class="literal">'scrollbars'</span>] : <span class="literal">"no"</span>;
+
+		<span class="reserved">if</span> (template[<span class="literal">'file'</span>].charAt(0) != <span class="literal">'/'</span> &amp;&amp; template[<span class="literal">'file'</span>].indexOf(<span class="literal">'://'</span>) == -1)
+			url = tinyMCE.baseURL + <span class="literal">"/themes/"</span> + tinyMCE.getParam(<span class="literal">"theme"</span>) + <span class="literal">"/"</span> + template[<span class="literal">'file'</span>];
+		<span class="reserved">else</span>
+			url = template[<span class="literal">'file'</span>];
+
+		<span class="comment">// Replace all args as variables in URL</span>
+		<span class="reserved">for</span> (var name in args) {
+			<span class="reserved">if</span> (typeof(args[name]) == <span class="literal">'function'</span>)
+				continue;
+
+			url = tinyMCE.replaceVar(url, name, escape(args[name]));
+		}
+
+		<span class="reserved">if</span> (html) {
+			html = tinyMCE.replaceVar(html, <span class="literal">"css"</span>, <span class="reserved">this</span>.settings[<span class="literal">'popups_css'</span>]);
+			html = tinyMCE.applyTemplate(html, args);
+
+			var win = window.open(<span class="literal">""</span>, <span class="literal">"mcePopup"</span> + new Date().getTime(), <span class="literal">"top="</span> + y + <span class="literal">",left="</span> + x + <span class="literal">",scrollbars="</span> + scrollbars + <span class="literal">",dialog=yes,minimizable="</span> + resizable + <span class="literal">",modal=yes,width="</span> + width + <span class="literal">",height="</span> + height + <span class="literal">",resizable="</span> + resizable);
+			<span class="reserved">if</span> (win == null) {
+				alert(tinyMCELang[<span class="literal">'lang_popup_blocked'</span>]);
+				<span class="reserved">return</span>;
+			}
+
+			win.document.write(html);
+			win.document.close();
+			win.resizeTo(width, height);
+			win.focus();
+		} <span class="reserved">else</span> {
+			<span class="reserved">if</span> ((tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) &amp;&amp; resizable != <span class="literal">'yes'</span> &amp;&amp; tinyMCE.settings[<span class="literal">"dialog_type"</span>] == <span class="literal">"modal"</span>) {
+				height += 10;
+
+				var features = <span class="literal">"resizable:"</span> + resizable 
+					+ <span class="literal">";scroll:"</span>
+					+ scrollbars + <span class="literal">";status:yes;center:yes;help:no;dialogWidth:"</span>
+					+ width + <span class="literal">"px;dialogHeight:"</span> + height + <span class="literal">"px;"</span>;
+
+				window.showModalDialog(url, window, features);
+			} <span class="reserved">else</span> {
+				var modal = (resizable == <span class="literal">"yes"</span>) ? <span class="literal">"no"</span> : <span class="literal">"yes"</span>;
+
+				<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; tinyMCE.isMac)
+					modal = <span class="literal">"no"</span>;
+
+				<span class="reserved">if</span> (template[<span class="literal">'close_previous'</span>] != <span class="literal">"no"</span>)
+					try {tinyMCE.lastWindow.close();} catch (ex) {}
+
+				var win = window.open(url, <span class="literal">"mcePopup"</span> + new Date().getTime(), <span class="literal">"top="</span> + y + <span class="literal">",left="</span> + x + <span class="literal">",scrollbars="</span> + scrollbars + <span class="literal">",dialog="</span> + modal + <span class="literal">",minimizable="</span> + resizable + <span class="literal">",modal="</span> + modal + <span class="literal">",width="</span> + width + <span class="literal">",height="</span> + height + <span class="literal">",resizable="</span> + resizable);
+				<span class="reserved">if</span> (win == null) {
+					alert(tinyMCELang[<span class="literal">'lang_popup_blocked'</span>]);
+					<span class="reserved">return</span>;
+				}
+
+				<span class="reserved">if</span> (template[<span class="literal">'close_previous'</span>] != <span class="literal">"no"</span>)
+					tinyMCE.lastWindow = win;
+
+				eval(<span class="literal">'try { win.resizeTo(width, height); } catch(e) { }'</span>);
+
+				<span class="comment">// Make it bigger if statusbar is forced</span>
+				<span class="reserved">if</span> (tinyMCE.isGecko) {
+					<span class="reserved">if</span> (win.document.defaultView.statusbar.visible)
+						win.resizeBy(0, tinyMCE.isMac ? 10 : 24);
+				}
+
+				win.focus();
+			}
+		}
+	},
+
+	<span class="comment">/**
+	 * Closes the specified window. This function is deprecated and should be replaced with
+	 * tinyMCEPopup.close();.
+	 *
+	 * <span class="attrib">@param</span> {DOMWindow} win Window reference to close.
+	 * <span class="attrib">@deprecated</span>
+	 */</span>
+	closeWindow : <span class="reserved">function</span>(win) {
+		win.close();
+	},
+
+	<span class="comment">/**
+	 * Returns the visual aid class string, this will add/remove the visual aid class.
+	 *
+	 * <span class="attrib">@param</span> {string} class_name Class name value to add/remove visual aid classes from.
+	 * <span class="attrib">@param</span> {boolean} state true/false if the classes should be added or removed.
+	 * <span class="attrib">@return</span> New class value containing the visual aid classes or not.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	getVisualAidClass : <span class="reserved">function</span>(class_name, state) {
+		var aidClass = tinyMCE.settings[<span class="literal">'visual_table_class'</span>];
+
+		<span class="reserved">if</span> (typeof(state) == <span class="literal">"undefined"</span>)
+			state = tinyMCE.settings[<span class="literal">'visual'</span>];
+
+		<span class="comment">// Split</span>
+		var classNames = new Array();
+		var ar = class_name.split(<span class="literal">' '</span>);
+		<span class="reserved">for</span> (var i=0; i&lt;ar.length; i++) {
+			<span class="reserved">if</span> (ar[i] == aidClass)
+				ar[i] = <span class="literal">""</span>;
+
+			<span class="reserved">if</span> (ar[i] != <span class="literal">""</span>)
+				classNames[classNames.length] = ar[i];
+		}
+
+		<span class="reserved">if</span> (state)
+			classNames[classNames.length] = aidClass;
+
+		<span class="comment">// Glue</span>
+		var className = <span class="literal">""</span>;
+		<span class="reserved">for</span> (var i=0; i&lt;classNames.length; i++) {
+			<span class="reserved">if</span> (i &gt; 0)
+				className += <span class="literal">" "</span>;
+
+			className += classNames[i];
+		}
+
+		<span class="reserved">return</span> className;
+	},
+
+	<span class="comment">/**
+	 * Adds visual aid classes to all elements that need them recursive in the DOM tree.
+	 *
+	 * <span class="attrib">@param</span> {HTMLElement} el HTML element to add visual aid classes to.
+	 * <span class="attrib">@param</span> {boolean} deep Should they be added to all children aswell.
+	 * <span class="attrib">@param</span> {boolean} state Should they be added or removed.
+	 * <span class="attrib">@param</span> {TinyMCE_Control} inst TinyMCE editor control instance to add/remove them to/from.
+	 */</span>
+	handleVisualAid : <span class="reserved">function</span>(el, deep, state, inst, skip_dispatch) {
+		<span class="reserved">if</span> (!el)
+			<span class="reserved">return</span>;
+
+		<span class="reserved">if</span> (!skip_dispatch)
+			tinyMCE.dispatchCallback(inst, <span class="literal">'handle_visual_aid_callback'</span>, <span class="literal">'handleVisualAid'</span>, el, deep, state, inst);
+
+		var tableElement = null;
+
+		switch (el.nodeName) {
+			case <span class="literal">"TABLE"</span>:
+				var oldW = el.style.width;
+				var oldH = el.style.height;
+				var bo = tinyMCE.getAttrib(el, <span class="literal">"border"</span>);
+
+				bo = bo == <span class="literal">""</span> || bo == <span class="literal">"0"</span> ? true : false;
+
+				tinyMCE.setAttrib(el, <span class="literal">"class"</span>, tinyMCE.getVisualAidClass(tinyMCE.getAttrib(el, <span class="literal">"class"</span>), state &amp;&amp; bo));
+
+				el.style.width = oldW;
+				el.style.height = oldH;
+
+				<span class="reserved">for</span> (var y=0; y&lt;el.rows.length; y++) {
+					<span class="reserved">for</span> (var x=0; x&lt;el.rows[y].cells.length; x++) {
+						var cn = tinyMCE.getVisualAidClass(tinyMCE.getAttrib(el.rows[y].cells[x], <span class="literal">"class"</span>), state &amp;&amp; bo);
+						tinyMCE.setAttrib(el.rows[y].cells[x], <span class="literal">"class"</span>, cn);
+					}
+				}
+
+				break;
+
+			case <span class="literal">"A"</span>:
+				var anchorName = tinyMCE.getAttrib(el, <span class="literal">"name"</span>);
+
+				<span class="reserved">if</span> (anchorName != <span class="literal">''</span> &amp;&amp; state) {
+					el.title = anchorName;
+					el.className = <span class="literal">'mceItemAnchor'</span>;
+				} <span class="reserved">else</span> <span class="reserved">if</span> (anchorName != <span class="literal">''</span> &amp;&amp; !state)
+					el.className = <span class="literal">''</span>;
+
+				break;
+		}
+
+		<span class="reserved">if</span> (deep &amp;&amp; el.hasChildNodes()) {
+			<span class="reserved">for</span> (var i=0; i&lt;el.childNodes.length; i++)
+				tinyMCE.handleVisualAid(el.childNodes[i], deep, state, inst, true);
+		}
+	},
+
+	<span class="comment">/*
+	applyClassesToFonts : function(doc, size) {
+		var f = doc.getElementsByTagName("font");
+		for (var i=0; i&lt;f.length; i++) {
+			var s = tinyMCE.getAttrib(f[i], "size");
+
+			if (s != "")
+				tinyMCE.setAttrib(f[i], 'class', "mceItemFont" + s);
+		}
+
+		if (typeof(size) != "undefined") {
+			var css = "";
+
+			for (var x=0; x&lt;doc.styleSheets.length; x++) {
+				for (var i=0; i&lt;doc.styleSheets[x].rules.length; i++) {
+					if (doc.styleSheets[x].rules[i].selectorText == '#mceSpanFonts .mceItemFont' + size) {
+						css = doc.styleSheets[x].rules[i].style.cssText;
+						break;
+					}
+				}
+
+				if (css != "")
+					break;
+			}
+
+			if (doc.styleSheets[0].rules[0].selectorText == "FONT")
+				doc.styleSheets[0].removeRule(0);
+
+			doc.styleSheets[0].addRule("FONT", css, 0);
+		}
+	},
+	*/</span>
+
+	<span class="comment">/**
+	 * Fixes a Gecko specific bug where href, src attribute values gets converted incorrectly
+	 * when inserted into editor. This function will replace all src, href with mce_tsrc and mce_thref
+	 * to keep the values from chaging when they get inserted.
+	 *
+	 * <span class="attrib">@param</span> {boolean} m Mode state, true is to replace the src, href attributes to mce_tsrc and mce_thref.
+	 * <span class="attrib">@param</span> {HTMLElement} e HTML element to replace them in. (Will be used if m is 0)
+	 * <span class="attrib">@param</span> {string} h HTML code to replace them in. (Will be used if m is 1)
+	 * <span class="attrib">@return</span> Converted string or the specified HTML value depending on mode.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	fixGeckoBaseHREFBug : <span class="reserved">function</span>(m, e, h) {
+		var nl, i, a, n, xsrc, xhref, el;
+
+		<span class="reserved">if</span> (tinyMCE.isGecko) {
+			<span class="reserved">if</span> (m == 1) {
+				h = h.replace(/\ssrc=/gi, <span class="literal">" mce_tsrc="</span>);
+				h = h.replace(/\shref=/gi, <span class="literal">" mce_thref="</span>);
+
+				<span class="reserved">return</span> h;
+			} <span class="reserved">else</span> {
+				el = new Array(<span class="literal">'a'</span>,<span class="literal">'img'</span>,<span class="literal">'select'</span>,<span class="literal">'area'</span>,<span class="literal">'iframe'</span>,<span class="literal">'base'</span>,<span class="literal">'input'</span>,<span class="literal">'script'</span>,<span class="literal">'embed'</span>,<span class="literal">'object'</span>,<span class="literal">'link'</span>);
+
+				<span class="reserved">for</span> (a=0; a&lt;el.length; a++) {
+					n = e.getElementsByTagName(el[a]);
+
+					<span class="reserved">for</span> (i=0; i&lt;n.length; i++) {
+						xsrc = tinyMCE.getAttrib(n[i], <span class="literal">"mce_tsrc"</span>);
+						xhref = tinyMCE.getAttrib(n[i], <span class="literal">"mce_thref"</span>);
+
+						<span class="reserved">if</span> (xsrc != <span class="literal">""</span>) {
+							try {
+								n[i].src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings[<span class="literal">'base_href'</span>], xsrc);
+							} catch (e) {
+								<span class="comment">// Ignore, Firefox cast exception if local file wasn't found</span>
+							}
+
+							n[i].removeAttribute(<span class="literal">"mce_tsrc"</span>);
+						}
+
+						<span class="reserved">if</span> (xhref != <span class="literal">""</span>) {
+							try {
+								n[i].href = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings[<span class="literal">'base_href'</span>], xhref);
+							} catch (e) {
+								<span class="comment">// Ignore, Firefox cast exception if local file wasn't found</span>
+							}
+
+							n[i].removeAttribute(<span class="literal">"mce_thref"</span>);
+						}
+					}
+				}
+
+				el = tinyMCE.selectNodes(e, <span class="reserved">function</span>(n) {
+					<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8) {
+						n.nodeValue = n.nodeValue.replace(/\smce_tsrc=/gi, <span class="literal">" src="</span>);
+						n.nodeValue = n.nodeValue.replace(/\smce_thref=/gi, <span class="literal">" href="</span>);
+					}
+
+					<span class="reserved">return</span> false;
+				});
+			}
+		}
+
+		<span class="reserved">return</span> h;
+	},
+
+	<span class="comment">/**
+	 * Sets the HTML code of a specific document.
+	 * Todo: Try to merge/remove this one.
+	 *
+	 * <span class="attrib">@param</span> {DOMDocument} doc DOM document to set the HTML code in.
+	 * <span class="attrib">@param</span> {string} html_content HTML contents to set in DOM document.
+	 * <span class="attrib">@private</span>
+	 */</span>
+	_setHTML : <span class="reserved">function</span>(doc, html_content) {
+		<span class="comment">// Force closed anchors open</span>
+		<span class="comment">//html_content = html_content.replace(new RegExp('&lt;a(.*?)/&gt;', 'gi'), '&lt;a$1&gt;&lt;/a&gt;');</span>
+
+		html_content = tinyMCE.cleanupHTMLCode(html_content);
+
+		<span class="comment">// Try innerHTML if it fails use pasteHTML in MSIE</span>
+		try {
+			tinyMCE.setInnerHTML(doc.body, html_content);
+		} catch (e) {
+			<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE)
+				doc.body.createTextRange().pasteHTML(html_content);
+		}
+
+		<span class="comment">// Content duplication bug fix</span>
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; tinyMCE.settings[<span class="literal">'fix_content_duplication'</span>]) {
+			<span class="comment">// Remove P elements in P elements</span>
+			var paras = doc.getElementsByTagName(<span class="literal">"P"</span>);
+			<span class="reserved">for</span> (var i=0; i&lt;paras.length; i++) {
+				var node = paras[i];
+				<span class="reserved">while</span> ((node = node.parentNode) != null) {
+					<span class="reserved">if</span> (node.nodeName == <span class="literal">"P"</span>)
+						node.outerHTML = node.innerHTML;
+				}
+			}
+
+			<span class="comment">// Content duplication bug fix (Seems to be word crap)</span>
+			var html = doc.body.innerHTML;
+<span class="comment">/*
+			if (html.indexOf('="mso') != -1) {
+				for (var i=0; i&lt;doc.body.all.length; i++) {
+					var el = doc.body.all[i];
+					el.removeAttribute("className","",0);
+					el.removeAttribute("style","",0);
+				}
+
+				html = doc.body.innerHTML;
+				html = tinyMCE.regexpReplace(html, "&lt;o:p&gt;&lt;\/o:p&gt;", "&lt;br /&gt;");
+				html = tinyMCE.regexpReplace(html, "&lt;o:p&gt;&amp;nbsp;&lt;\/o:p&gt;", "");
+				html = tinyMCE.regexpReplace(html, "&lt;st1:.*?&gt;", "");
+				html = tinyMCE.regexpReplace(html, "&lt;p&gt;&lt;\/p&gt;", "");
+				html = tinyMCE.regexpReplace(html, "&lt;p&gt;&lt;\/p&gt;\r\n&lt;p&gt;&lt;\/p&gt;", "");
+				html = tinyMCE.regexpReplace(html, "&lt;p&gt;&amp;nbsp;&lt;\/p&gt;", "&lt;br /&gt;");
+				html = tinyMCE.regexpReplace(html, "&lt;p&gt;\s*(&lt;p&gt;\s*)?", "&lt;p&gt;");
+				html = tinyMCE.regexpReplace(html, "&lt;\/p&gt;\s*(&lt;\/p&gt;\s*)?", "&lt;/p&gt;");
+			}*/</span>
+
+			<span class="comment">// Always set the htmlText output</span>
+			tinyMCE.setInnerHTML(doc.body, html);
+		}
+
+		tinyMCE.cleanupAnchors(doc);
+
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
+			tinyMCE.convertSpansToFonts(doc);
+	},
+
+	<span class="comment">/**
+	 * Returns the editor instance id of a specific form element.
+	 *
+	 * <span class="attrib">@param</span> {string} form_element Form element name to get instance id for.
+	 * <span class="attrib">@return</span> TinyMCE editor instance id or null if it wasn't found.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	getEditorId : <span class="reserved">function</span>(form_element) {
+		var inst = <span class="reserved">this</span>.getInstanceById(form_element);
+		<span class="reserved">if</span> (!inst)
+			<span class="reserved">return</span> null;
+
+		<span class="reserved">return</span> inst.editorId;
+	},
+
+	<span class="comment">/**
+	 * Returns a TinyMCE editor instance by the specified editor id or null if it wasn't found.
+	 *
+	 * <span class="attrib">@param</span> {string} editor_id Editor id to get instance for.
+	 * <span class="attrib">@return</span> TinyMCE editor control instance or null if it wasn't found.
+	 * <span class="attrib">@type</span> TinyMCE_Control
+	 */</span>
+	getInstanceById : <span class="reserved">function</span>(editor_id) {
+		var inst = <span class="reserved">this</span>.instances[editor_id];
+		<span class="reserved">if</span> (!inst) {
+			<span class="reserved">for</span> (var n in tinyMCE.instances) {
+				var instance = tinyMCE.instances[n];
+				<span class="reserved">if</span> (!tinyMCE.isInstance(instance))
+					continue;
+
+				<span class="reserved">if</span> (instance.formTargetElementId == editor_id) {
+					inst = instance;
+					break;
+				}
+			}
+		}
+
+		<span class="reserved">return</span> inst;
+	},
+
+	<span class="comment">/**
+	 * Queries a command value for a specific command on a specific editor instance.
+	 *
+	 * <span class="attrib">@param</span> {string} editor_id Editor id to query command value on.
+	 * <span class="attrib">@param</span> {string} command Command to query for.
+	 * <span class="attrib">@return</span> Command value passed from browser.
+	 * <span class="attrib">@type</span> object
+	 */</span>
+	queryInstanceCommandValue : <span class="reserved">function</span>(editor_id, command) {
+		var inst = tinyMCE.getInstanceById(editor_id);
+		<span class="reserved">if</span> (inst)
+			<span class="reserved">return</span> inst.queryCommandValue(command);
+
+		<span class="reserved">return</span> false;
+	},
+
+	<span class="comment">/**
+	 * Queries a command state for a specific command on a specific editor instance.
+	 *
+	 * <span class="attrib">@param</span> {string} editor_id Editor id to query command state on.
+	 * <span class="attrib">@param</span> {string} command Command to query for.
+	 * <span class="attrib">@return</span> Command state passed from browser.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	queryInstanceCommandState : <span class="reserved">function</span>(editor_id, command) {
+		var inst = tinyMCE.getInstanceById(editor_id);
+		<span class="reserved">if</span> (inst)
+			<span class="reserved">return</span> inst.queryCommandState(command);
+
+		<span class="reserved">return</span> null;
+	},
+
+	<span class="comment">/**
+	 * Sets the window argument to be passed to TinyMCE popup.
+	 *
+	 * <span class="attrib">@param</span> {string} n Window argument name.
+	 * <span class="attrib">@param</span> {string} v Window argument value.
+	 */</span>
+	setWindowArg : <span class="reserved">function</span>(n, v) {
+		<span class="reserved">this</span>.windowArgs[n] = v;
+	},
+
+	<span class="comment">/**
+	 * Returns the window argument to be passed to TinyMCE popup.
+	 * Use: tinyMCEPopup.getWindowArg instead.
+	 *
+	 * <span class="attrib">@param</span> {string} n Window argument name.
+	 * <span class="attrib">@return</span> Argument value or default value if it wasn't found.
+	 * <span class="attrib">@deprecated</span>
+	 */</span>
+	getWindowArg : <span class="reserved">function</span>(n, d) {
+		<span class="reserved">return</span> (typeof(<span class="reserved">this</span>.windowArgs[n]) == <span class="literal">"undefined"</span>) ? d : <span class="reserved">this</span>.windowArgs[n];
+	},
+
+	<span class="comment">/**
+	 * Returns a array of CSS classes that is available in a document.
+	 * Todo: Fix this one, it's so ugly. :)
+	 *
+	 * <span class="attrib">@param</span> {string} editor_id Editor id to get CSS classes from.
+	 * <span class="attrib">@param</span> {DOMDocument} doc DOM document to get the CSS classes from.
+	 * <span class="attrib">@return</span> Array of CSS classes that is available in a document.
+	 * <span class="attrib">@type</span> Array
+	 */</span>
+	getCSSClasses : <span class="reserved">function</span>(editor_id, doc) {
+		var output = new Array();
+
+		<span class="comment">// Is cached, use that</span>
+		<span class="reserved">if</span> (typeof(tinyMCE.cssClasses) != <span class="literal">"undefined"</span>)
+			<span class="reserved">return</span> tinyMCE.cssClasses;
+
+		<span class="reserved">if</span> (typeof(editor_id) == <span class="literal">"undefined"</span> &amp;&amp; typeof(doc) == <span class="literal">"undefined"</span>) {
+			var instance;
+
+			<span class="reserved">for</span> (var instanceName in tinyMCE.instances) {
+				instance = tinyMCE.instances[instanceName];
+				<span class="reserved">if</span> (!tinyMCE.isInstance(instance))
+					continue;
+
+				break;
+			}
+
+			doc = instance.getDoc();
+		}
+
+		<span class="reserved">if</span> (typeof(doc) == <span class="literal">"undefined"</span>) {
+			var instance = tinyMCE.getInstanceById(editor_id);
+			doc = instance.getDoc();
+		}
+
+		<span class="reserved">if</span> (doc) {
+			var styles = doc.styleSheets;
+
+			<span class="reserved">if</span> (styles &amp;&amp; styles.length &gt; 0) {
+				<span class="reserved">for</span> (var x=0; x&lt;styles.length; x++) {
+					var csses = null;
+
+					<span class="comment">// Just ignore any errors</span>
+					eval(<span class="literal">"try {var csses = tinyMCE.isMSIE ? doc.styleSheets("</span> + x + <span class="literal">").rules : styles["</span> + x + <span class="literal">"].cssRules;} catch(e) {}"</span>);
+					<span class="reserved">if</span> (!csses)
+						<span class="reserved">return</span> new Array();
+
+					<span class="reserved">for</span> (var i=0; i&lt;csses.length; i++) {
+						var selectorText = csses[i].selectorText;
+
+						<span class="comment">// Can be multiple rules per selector</span>
+						<span class="reserved">if</span> (selectorText) {
+							var rules = selectorText.split(<span class="literal">','</span>);
+							<span class="reserved">for</span> (var c=0; c&lt;rules.length; c++) {
+								var rule = rules[c];
+
+								<span class="comment">// Strip spaces between selectors</span>
+								<span class="reserved">while</span> (rule.indexOf(<span class="literal">' '</span>) == 0)
+									rule = rule.substring(1);
+
+								<span class="comment">// Invalid rule</span>
+								<span class="reserved">if</span> (rule.indexOf(<span class="literal">' '</span>) != -1 || rule.indexOf(<span class="literal">':'</span>) != -1 || rule.indexOf(<span class="literal">'mceItem'</span>) != -1)
+									continue;
+
+								<span class="reserved">if</span> (rule.indexOf(tinyMCE.settings[<span class="literal">'visual_table_class'</span>]) != -1 || rule.indexOf(<span class="literal">'mceEditable'</span>) != -1 || rule.indexOf(<span class="literal">'mceNonEditable'</span>) != -1)
+									continue;
+
+								<span class="comment">// Is class rule</span>
+								<span class="reserved">if</span> (rule.indexOf(<span class="literal">'.'</span>) != -1) {
+									var cssClass = rule.substring(rule.indexOf(<span class="literal">'.'</span>) + 1);
+									var addClass = true;
+
+									<span class="reserved">for</span> (var p=0; p&lt;output.length &amp;&amp; addClass; p++) {
+										<span class="reserved">if</span> (output[p] == cssClass)
+											addClass = false;
+									}
+
+									<span class="reserved">if</span> (addClass)
+										output[output.length] = cssClass;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		<span class="comment">// Cache em</span>
+		<span class="reserved">if</span> (output.length &gt; 0)
+			tinyMCE.cssClasses = output;
+
+		<span class="reserved">return</span> output;
+	},
+
+	<span class="comment">/**
+	 * Regexp replaces the contents of a string. Use normal replace instead.
+	 *
+	 * <span class="attrib">@param</span> {string} in_str String to replace in.
+	 * <span class="attrib">@param</span> {string} reg_exp Regexp to replace.
+	 * <span class="attrib">@param</span> {string} replace_str String to replace with.
+	 * <span class="attrib">@param</span> {string} in_str Optional regexp options like "gi".
+	 * <span class="attrib">@return</span> Replaced string value.
+	 * <span class="attrib">@type</span> string
+	 * <span class="attrib">@deprecated</span>
+	 */</span>
+	regexpReplace : <span class="reserved">function</span>(in_str, reg_exp, replace_str, opts) {
+		<span class="reserved">if</span> (in_str == null)
+			<span class="reserved">return</span> in_str;
+
+		<span class="reserved">if</span> (typeof(opts) == <span class="literal">"undefined"</span>)
+			opts = <span class="literal">'g'</span>;
+
+		var re = new RegExp(reg_exp, opts);
+		<span class="reserved">return</span> in_str.replace(re, replace_str);
+	},
+
+	<span class="comment">/**
+	 * Removes all prefix, suffix whitespace of a string.
+	 *
+	 * <span class="attrib">@param</span> {string} s String to replace whitespace in.
+	 * <span class="attrib">@return</span> Replaced string value.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	trim : <span class="reserved">function</span>(s) {
+		<span class="reserved">return</span> s.replace(/^\s*|\s*$/g, <span class="literal">""</span>);
+	},
+
+	<span class="comment">/**
+	 * Removes MSIE 5.5 specific event wrapper function form a event string.
+	 * This will also remove the event blocker if it's added in front of the event.
+	 *
+	 * <span class="attrib">@param</span> {string} s String to replace event data in.
+	 * <span class="attrib">@return</span> Replaced string value.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	cleanupEventStr : <span class="reserved">function</span>(s) {
+		s = <span class="literal">""</span> + s;
+		s = s.replace(<span class="literal">'function anonymous()\n{\n'</span>, <span class="literal">''</span>);
+		s = s.replace(<span class="literal">'\n}'</span>, <span class="literal">''</span>);
+		s = s.replace(/^<span class="reserved">return</span> true;/gi, <span class="literal">''</span>); <span class="comment">// Remove event blocker</span>
+
+		<span class="reserved">return</span> s;
+	},
+
+	<span class="comment">/**
+	 * Returns the HTML for the specified control this will loop through
+	 * the theme and all plugins inorder to find the control. The callback for each
+	 * theme and plugin is called getControlHTML.
+	 *
+	 * <span class="attrib">@param</span> {string} c Control name/id to get HTML code for.
+	 * <span class="attrib">@return</span> HTML code for the specified control or empty string if it wasn't found.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	getControlHTML : <span class="reserved">function</span>(c) {
+		var i, l, n, o, v;
+
+		l = tinyMCE.plugins;
+		<span class="reserved">for</span> (n in l) {
+			o = l[n];
+
+			<span class="reserved">if</span> (o.getControlHTML &amp;&amp; (v = o.getControlHTML(c)) != <span class="literal">''</span>)
+				<span class="reserved">return</span> tinyMCE.replaceVar(v, <span class="literal">"pluginurl"</span>, o.baseURL);
+		}
+
+		o = tinyMCE.themes[tinyMCE.settings[<span class="literal">'theme'</span>]];
+		<span class="reserved">if</span> (o.getControlHTML &amp;&amp; (v = o.getControlHTML(c)) != <span class="literal">''</span>)
+			<span class="reserved">return</span> v;
+
+		<span class="reserved">return</span> <span class="literal">''</span>;
+	},
+
+	<span class="comment">/**
+	 * Evaluates the specified function and uses the array of arguments.
+	 *
+	 * <span class="attrib">@param</span> {string} f Function reference to execute.
+	 * <span class="attrib">@param</span> {int} idx Index in array to start grabbing arguments from.
+	 * <span class="attrib">@param</span> {Array} a Array of function arguments.
+	 * <span class="attrib">@return</span> Value returned from the evaluated function.
+	 * <span class="attrib">@type</span> object
+	 */</span>
+	evalFunc : <span class="reserved">function</span>(f, idx, a) {
+		var s = <span class="literal">'('</span>, i;
+
+		<span class="reserved">for</span> (i=idx; i&lt;a.length; i++) {
+			s += <span class="literal">'a['</span> + i + <span class="literal">']'</span>;
+
+			<span class="reserved">if</span> (i &lt; a.length-1)
+				s += <span class="literal">','</span>;
+		}
+
+		s += <span class="literal">');'</span>;
+
+		<span class="reserved">return</span> eval(<span class="literal">"f"</span> + s);
+	},
+
+	<span class="comment">/**
+	 * Dispatches the specified callback on all options, plugins and themes. This will not
+	 * chain them, so all functions callbacks will be executed regardless if the return true/false.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Control} i TinyMCE editor control instance to execute callback on.
+	 * <span class="attrib">@param</span> {string} p TinyMCE callback parameter to execute.
+	 * <span class="attrib">@param</span> {string} n Function name to execute.
+	 * <span class="attrib">@return</span> true/false if they where dispatched.
+	 */</span>
+	dispatchCallback : <span class="reserved">function</span>(i, p, n) {
+		<span class="reserved">return</span> <span class="reserved">this</span>.callFunc(i, p, n, 0, <span class="reserved">this</span>.dispatchCallback.arguments);
+	},
+
+	<span class="comment">/**
+	 * Executes the specified callback on all options, plugins and themes. This will
+	 * chain them, so callback chain will be broken if one function returns false.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Control} i TinyMCE editor control instance to execute callback on.
+	 * <span class="attrib">@param</span> {string} p TinyMCE callback parameter to execute.
+	 * <span class="attrib">@param</span> {string} n Function name to execute.
+	 * <span class="attrib">@return</span> true/false if a callback was executed.
+	 */</span>
+	executeCallback : <span class="reserved">function</span>(i, p, n) {
+		<span class="reserved">return</span> <span class="reserved">this</span>.callFunc(i, p, n, 1, <span class="reserved">this</span>.executeCallback.arguments);
+	},
+
+	<span class="comment">/**
+	 * Executes the specified execcommand callback on all options, plugins and themes. This will
+	 * chain them, so callback chain will be broken if one function returns true.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Control} i TinyMCE editor control instance to execute callback on.
+	 * <span class="attrib">@param</span> {string} p TinyMCE callback parameter to execute.
+	 * <span class="attrib">@param</span> {string} n Function name to execute.
+	 * <span class="attrib">@return</span> true/false if a callback was executed.
+	 */</span>
+	execCommandCallback : <span class="reserved">function</span>(i, p, n) {
+		<span class="reserved">return</span> <span class="reserved">this</span>.callFunc(i, p, n, 2, <span class="reserved">this</span>.execCommandCallback.arguments);
+	},
+
+	<span class="comment">/**
+	 * Executes callback chain. Callback order: Option, Plugins, Themes.
+	 *
+	 * <span class="attrib">@param</span> {TinyMCE_Control} ins TinyMCE editor control instance to execute callback on.
+	 * <span class="attrib">@param</span> {string} p TinyMCE callback parameter name.
+	 * <span class="attrib">@param</span> {string} n Function name to execute.
+	 * <span class="attrib">@param</span> {int} m Execution mode value, 0 = no chain, 1 = event chain, 2 = execcommand chain.
+	 * <span class="attrib">@param</span> {Array} a Array with function arguments.
+	 * <span class="attrib">@return</span> true - if the callback was executed, false if it wasn't.
+	 * <span class="attrib">@type</span> boolean
+	 */</span>
+	callFunc : <span class="reserved">function</span>(ins, p, n, m, a) {
+		var l, i, on, o, s, v;
+
+		s = m == 2;
+
+		l = tinyMCE.getParam(p, <span class="literal">''</span>);
+
+		<span class="reserved">if</span> (l != <span class="literal">''</span> &amp;&amp; (v = tinyMCE.evalFunc(typeof(l) == <span class="literal">"function"</span> ? l : eval(l), 3, a)) == s &amp;&amp; m &gt; 0)
+			<span class="reserved">return</span> true;
+
+		<span class="reserved">if</span> (ins != null) {
+			<span class="reserved">for</span> (i=0, l = ins.plugins; i&lt;l.length; i++) {
+				o = tinyMCE.plugins[l[i]];
+
+				<span class="reserved">if</span> (o[n] &amp;&amp; (v = tinyMCE.evalFunc(o[n], 3, a)) == s &amp;&amp; m &gt; 0)
+					<span class="reserved">return</span> true;
+			}
+		}
+
+		l = tinyMCE.themes;
+		<span class="reserved">for</span> (on in l) {
+			o = l[on];
+
+			<span class="reserved">if</span> (o[n] &amp;&amp; (v = tinyMCE.evalFunc(o[n], 3, a)) == s &amp;&amp; m &gt; 0)
+				<span class="reserved">return</span> true;
+		}
+
+		<span class="reserved">return</span> false;
+	},
+
+	<span class="comment">/**
+	 * Encodes the string to raw XML entities. This will only convert the most common ones.
+	 * For real entity encoding use the xmlEncode method of the Cleanup class.
+	 *
+	 * <span class="attrib">@param</span> {string} s String to encode.
+	 * <span class="attrib">@return</span> XML Encoded string.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	xmlEncode : <span class="reserved">function</span>(s) {
+		s = <span class="literal">""</span> + s;
+		s = s.replace(/&amp;/g, <span class="literal">'&amp;amp;'</span>);
+		s = s.replace(new RegExp(<span class="literal">'"'</span>, <span class="literal">'g'</span>), <span class="literal">'&amp;quot;'</span>);
+		s = s.replace(/\<span class="literal">'/g, '</span>&amp;#39;<span class="literal">'); // &amp;apos; is not working in MSIE
+		s = s.replace(/&lt;/g, '</span>&amp;lt;<span class="literal">');
+		s = s.replace(/&gt;/g, '</span>&amp;gt;');
+
+		<span class="reserved">return</span> s;
+	},
+
+	<span class="comment">/**
+	 * Extends the specified prototype with new methods.
+	 *
+	 * <span class="attrib">@param</span> {Object} p Prototype to extend with new methods.
+	 * <span class="attrib">@param</span> {Object} np New prototype to extend the other one with.
+	 * <span class="attrib">@return</span> Extended prototype array.
+	 * <span class="attrib">@type</span> Object
+	 */</span>
+	extend : <span class="reserved">function</span>(p, np) {
+		var o = {};
+
+		o.parent = p;
+
+		<span class="reserved">for</span> (n in p)
+			o[n] = p[n];
+
+		<span class="reserved">for</span> (n in np)
+			o[n] = np[n];
+
+		<span class="reserved">return</span> o;
+	},
+
+	<span class="comment">/**
+	 * Hides any visible menu layers.
+	 *
+	 * <span class="attrib">@private</span>
+	 */</span>
+	hideMenus : <span class="reserved">function</span>() {
+		var e = tinyMCE.lastSelectedMenuBtn;
+
+		<span class="reserved">if</span> (tinyMCE.lastMenu) {
+			tinyMCE.lastMenu.hide();
+			tinyMCE.lastMenu = null;
+		}
+
+		<span class="reserved">if</span> (e) {
+			tinyMCE.switchClass(e, tinyMCE.lastMenuBtnClass);
+			tinyMCE.lastSelectedMenuBtn = null;
+		}
+	},
+
+	<span class="comment">/**
+	 * Splits a string by the specified delimiter and skips any empty items.
+	 *
+	 * <span class="attrib">@param</span> {string} d Delimiter to split by.
+	 * <span class="attrib">@param</span> {string} s String to split.
+	 * <span class="attrib">@return</span> Array with chunks from string.
+	 * <span class="attrib">@type</span> Array
+	 */</span>
+	explode : <span class="reserved">function</span>(d, s) {
+		var ar = s.split(d), oar = new Array(), i;
+	
+		<span class="reserved">for</span> (i = 0; i&lt;ar.length; i++) {
+			<span class="reserved">if</span> (ar[i] != <span class="literal">""</span>)
+				oar[oar.length] = ar[i];
+		}
+	
+		<span class="reserved">return</span> oar;
+	}
+};
+
+<span class="comment">// Global instances</span>
+var TinyMCE = TinyMCE_Engine; <span class="comment">// Compatiblity with gzip compressors</span>
+var tinyMCE = new TinyMCE_Engine();
+var tinyMCELang = {};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

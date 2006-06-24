@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: hidden_tab_class</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: hidden_tab_class</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option is useful when TinyMCE is used within tabs in MSIE. This property is needed since MSIE has a bug where it's impossible to retrive the width/height on elements like images while it's hidden using display:none. So use this property to define the class name that is used to hide a specific tab, this will help TinyMCE to display the tab while getting the image data.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the hidden_tab_class option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>hidden_tab_class : "hideTab"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

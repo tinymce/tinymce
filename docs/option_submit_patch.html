@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: submit_patch</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: submit_patch</h1>
+</div>
+
+<div class="content">
+	<p>
+		This toggle option enables you to turn on/off the auto patching of the submit function in forms. TinyMCE will auto move contents from the iframe to the hidden textarea field if for example a JavaScript uses a form[0].submit() call. This is the same as using the tinyMCE.triggerSave() call. This option is set to true by default.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the submit_patch option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>submit_patch : false</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

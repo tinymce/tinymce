@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: flash</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: flash</h1>
+</div>
+
+<div class="content">
+	<p>This is the &quot;Insert Flash&quot; Dialog, it enables users to insert flash movies into TinyMCE.</p>
+	<p>You can control the wmode, quality and menu by setting the flash_wmode, flash_quality and flash_menu options.</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Copy the flash directory to the plugins directory of TinyMCE (/jscripts/tiny_mce/plugins).</li>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;flash&quot;.</li>
+		<li>Add this &quot;img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]&quot; to extended_valid_elements option.</li>
+		<li>Add the flash button name to button list, example: theme_advanced_buttons3_add : &quot;flash&quot;.</li>
+	</ul>
+	</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;flash&quot;,
+	extended_valid_elements : &quot;img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]&quot;
+	flash_external_list_url : &quot;example_flash_list.js&quot;, // Optional URL to a list of SWF movies
+	flash_wmode : &quot;transparent&quot;,
+	flash_quality : &quot;high&quot;,
+	flash_menu : &quot;false&quot;
+});</pre>
+	</div>
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Additional note</h3>
+	<p>
+	The flash plugin has been heavily modified (the original is editor_plugin_original.js) since the original did not play nicely with html content that already contained existing flash tags and in fact stripped out the object
+	tags for existing flash html. The rewrite corrects this as well attempts
+	to preserve the existing flash tags where possible. The tinyMCE.init call
+	should be be something like: 
+	</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;flash&quot;,
+	extended_valid_elements : &quot;img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|obj|param|embed]&quot;
+});</pre>
+	</div>
+	</p>
+	<p>Note the extra obj,param,embed attributes for the img tag. These attributes
+	are used to serialize data from existing flash tags so that they can be
+	properly restored. Editing a flash tag with the plugin will cause this
+	information to be lost (sorry!) but still produces a working flash nevertheless.	
+	</p>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

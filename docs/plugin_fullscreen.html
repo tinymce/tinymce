@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: fullscreen</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: fullscreen</h1>
+</div>
+
+<div class="content">
+	<p>This plugin adds fullscreen editing mode to TinyMCE.</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;fullscreen&quot;.</li>
+		<li>Add the fullscreen button name to button list, example: theme_advanced_buttons3_add : &quot;fullscreen&quot;.</li>
+	</ul>
+	</p>
+
+	<p>
+		<table border="1" cellspacing="0" cellpadding="4">
+			 <thead><td colspan="2">Fullscreen plugin options</td></thead>
+			 <tbody>
+				  <tr><td><strong>fullscreen_settings</strong></td><td>This option gives you the ability to have diffrent settings applied when the editor is in fullscreen mode for example more tools.</td></tr>
+			</tbody>
+		</table>
+		<br />
+	</p>
+
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;<strong>fullscreen</strong>&quot;,
+	theme_advanced_buttons3_add : &quot;<strong>fullscreen</strong>&quot;,
+	fullscreen_settings : {
+		theme_advanced_path_location : "top"
+	}
+});</pre>
+	</div>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

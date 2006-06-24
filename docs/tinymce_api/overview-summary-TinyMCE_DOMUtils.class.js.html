@@ -1,0 +1,707 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+ Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="TinyMCE_DOMUtils.class.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>TinyMCE_DOMUtils.class.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		No overview generated for 'TinyMCE_DOMUtils.class.js'<BR/><BR/>
+	
+</p>
+
+<hr>
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * $RCSfile: overview-summary-TinyMCE_DOMUtils.class.js.html,v $
+ * $Revision: 1.42 $
+ * $Date: 2006/04/14 20:00:29 $
+ *
+ * <span class="attrib">@author</span> Moxiecode
+ * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ *
+ * The contents of this file will be wrapped in a class later on.
+ */</span>
+
+<span class="comment">/**
+ * Returns a element by a specific attribute and it's value.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} n Element to search in.
+ * <span class="attrib">@param</span> {string} e Element name to search for.
+ * <span class="attrib">@param</span> {string} a Attribute name to search for.
+ * <span class="attrib">@param</span> {string} v Attribute value to search for.
+ * <span class="attrib">@return</span> HTML element that matched the criterias or null on failure.
+ * <span class="attrib">@type</span> HTMLElement
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getElementByAttributeValue = <span class="reserved">function</span>(n, e, a, v) {
+	<span class="reserved">return</span> (n = <span class="reserved">this</span>.getElementsByAttributeValue(n, e, a, v)).length == 0 ? null : n[0];
+};
+
+<span class="comment">/**
+ * Returns a element array by a specific attribute and it's value.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} n Element to search in.
+ * <span class="attrib">@param</span> {string} e Element name to search for.
+ * <span class="attrib">@param</span> {string} a Attribute name to search for.
+ * <span class="attrib">@param</span> {string} v Attribute value to search for.
+ * <span class="attrib">@return</span> HTML element array that matched the criterias or null on failure.
+ * <span class="attrib">@type</span> Array
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getElementsByAttributeValue = <span class="reserved">function</span>(n, e, a, v) {
+	var i, nl = n.getElementsByTagName(e), o = new Array();
+
+	<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
+		<span class="reserved">if</span> (tinyMCE.getAttrib(nl[i], a).indexOf(v) != -1)
+			o[o.length] = nl[i];
+	}
+
+	<span class="reserved">return</span> o;
+};
+
+<span class="comment">/**
+ * Returns true/false if the specified node is a block element or not.
+ *
+ * <span class="attrib">@param</span> {HTMLNode} n Node to verify.
+ * <span class="attrib">@return</span> true/false if the specified node is a block element or not.
+ * <span class="attrib">@type</span> boolean
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.isBlockElement = <span class="reserved">function</span>(n) {
+	<span class="reserved">return</span> n != null &amp;&amp; n.nodeType == 1 &amp;&amp; <span class="reserved">this</span>.blockRegExp.test(n.nodeName);
+};
+
+<span class="comment">/**
+ * Returns the first block element parent of the specified node.
+ *
+ * <span class="attrib">@param</span> {HTMLNode} n Node get parent block element for.
+ * <span class="attrib">@return</span> First block element parent of the specified node or null if it wasn't found.
+ * <span class="attrib">@type</span> HTMLElement
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getParentBlockElement = <span class="reserved">function</span>(n) {
+	<span class="reserved">while</span> (n) {
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isBlockElement(n))
+			<span class="reserved">return</span> n;
+
+		n = n.parentNode;
+	}
+
+	<span class="reserved">return</span> null;
+};
+
+<span class="comment">/**
+ * Inserts a node after the specific node.
+ *
+ * <span class="attrib">@param</span> {HTMLNode} n New node to insert.
+ * <span class="attrib">@param</span> {HTMLNode} r Reference node to insert after.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.insertAfter = <span class="reserved">function</span>(n, r){
+	<span class="reserved">if</span> (r.nextSibling)
+		r.parentNode.insertBefore(n, r.nextSibling);
+	<span class="reserved">else</span>
+		r.parentNode.appendChild(n);
+};
+
+<span class="comment">/**
+ * Sets the innerHTML property of a element, this function also
+ * fixes a MSIE bug where the first comment is removed.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} e Element to insert HTML in.
+ * <span class="attrib">@param</span> {string} h HTML code to insert into innerHTML.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.setInnerHTML = <span class="reserved">function</span>(e, h) {
+	var i, nl, n;
+
+	<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) {
+		<span class="comment">// Since MSIE handles invalid HTML better that valid XHTML we</span>
+		<span class="comment">// need to make some things invalid. &lt;hr /&gt; gets converted to &lt;hr&gt;.</span>
+		h = h.replace(/\s\/&gt;/g, <span class="literal">'&gt;'</span>);
+
+		<span class="comment">// Since MSIE auto generated emtpy P tags some times we must tell it to keep the real ones</span>
+		h = h.replace(/&lt;p([^&gt;]*)&gt;\u00A0?&lt;\/p&gt;/gi, <span class="literal">'&lt;p$1 mce_keep="true"&gt;&amp;nbsp;&lt;/p&gt;'</span>); <span class="comment">// Keep empty paragraphs</span>
+		h = h.replace(/&lt;p([^&gt;]*)&gt;\s*&amp;nbsp;\s*&lt;\/p&gt;/gi, <span class="literal">'&lt;p$1 mce_keep="true"&gt;&amp;nbsp;&lt;/p&gt;'</span>); <span class="comment">// Keep empty paragraphs</span>
+		h = h.replace(/&lt;p([^&gt;]*)&gt;\s+&lt;\/p&gt;/gi, <span class="literal">'&lt;p$1 mce_keep="true"&gt;&amp;nbsp;&lt;/p&gt;'</span>); <span class="comment">// Keep empty paragraphs</span>
+
+		<span class="comment">// Remove first comment</span>
+		e.innerHTML = tinyMCE.uniqueTag + h;
+		e.firstChild.removeNode(true);
+
+		<span class="comment">// Remove weird auto generated empty paragraphs unless it's supposed to be there</span>
+		nl = e.getElementsByTagName(<span class="literal">"p"</span>);
+		<span class="reserved">for</span> (i=nl.length-1; i&gt;=0; i--) {
+			n = nl[i];
+
+			<span class="reserved">if</span> (n.nodeName == <span class="literal">'P'</span> &amp;&amp; !n.hasChildNodes() &amp;&amp; !n.mce_keep)
+				n.parentNode.removeChild(n);
+		}
+	} <span class="reserved">else</span> {
+		h = <span class="reserved">this</span>.fixGeckoBaseHREFBug(1, e, h);
+		e.innerHTML = h;
+		<span class="reserved">this</span>.fixGeckoBaseHREFBug(2, e, h);
+	}
+};
+
+<span class="comment">/**
+ * Returns the outer HTML of a element, this uses the outerHTML
+ * property in MSIE and Opera and a workaround for Gecko.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} e HTML element to get outerHTML from.
+ * <span class="attrib">@return</span> HTML content string.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getOuterHTML = <span class="reserved">function</span>(e) {
+	<span class="reserved">if</span> (tinyMCE.isMSIE)
+		<span class="reserved">return</span> e.outerHTML;
+
+	var d = e.ownerDocument.createElement(<span class="literal">"body"</span>);
+	d.appendChild(e);
+	<span class="reserved">return</span> d.innerHTML;
+};
+
+<span class="comment">/**
+ * Sets the outer HTML of a element, this uses the outerHTML
+ * property in MSIE and Opera and a workaround for Gecko.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} e HTML element to set outerHTML on.
+ * <span class="attrib">@param</span> {string} h HTML string to set in property.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.setOuterHTML = <span class="reserved">function</span>(e, h) {
+	<span class="reserved">if</span> (tinyMCE.isMSIE) {
+		e.outerHTML = h;
+		<span class="reserved">return</span>;
+	}
+
+	var d = e.ownerDocument.createElement(<span class="literal">"body"</span>);
+	d.innerHTML = h;
+	e.parentNode.replaceChild(d.firstChild, e);
+};
+
+<span class="comment">/**
+ * Returns a element by id, this will also search the form names to match the id.
+ *
+ * <span class="attrib">@param</span> {string} id Id of element.
+ * <span class="attrib">@param</span> {DOMDocument} d Optional document.
+ * <span class="attrib">@return</span> HTML element that matches the id.
+ * <span class="attrib">@type</span> HTMLElement
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>._getElementById = <span class="reserved">function</span>(id, d) {
+	var e, i, j, f;
+
+	<span class="reserved">if</span> (typeof(d) == <span class="literal">"undefined"</span>)
+		d = document;
+
+	e = d.getElementById(id);
+	<span class="reserved">if</span> (!e) {
+		f = d.forms;
+
+		<span class="reserved">for</span> (i=0; i&lt;f.length; i++) {
+			<span class="reserved">for</span> (j=0; j&lt;f[i].elements.length; j++) {
+				<span class="reserved">if</span> (f[i].elements[j].name == id) {
+					e = f[i].elements[j];
+					break;
+				}
+			}
+		}
+	}
+
+	<span class="reserved">return</span> e;
+};
+
+<span class="comment">/**
+ * Returns a array of nodes selected retrived from the child nodes of the specified node.
+ *
+ * <span class="attrib">@param</span> {HTMLNode} n Node to get children from.
+ * <span class="attrib">@param</span> {Array} na Array to fill with children.
+ * <span class="attrib">@param</span> {int} t Node type to get.
+ * <span class="attrib">@param</span> {string} nn Node name of items to retrive.
+ * <span class="attrib">@return</span> Node array.
+ * <span class="attrib">@type</span> Array
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getNodeTree = <span class="reserved">function</span>(n, na, t, nn) {
+	var i;
+
+	<span class="reserved">if</span> (typeof(t) == <span class="literal">"undefined"</span> || n.nodeType == t &amp;&amp; (typeof(nn) == <span class="literal">"undefined"</span> || n.nodeName == nn))
+		na[na.length] = n;
+
+	<span class="reserved">if</span> (n.hasChildNodes()) {
+		<span class="reserved">for</span> (i=0; i&lt;n.childNodes.length; i++)
+			tinyMCE.getNodeTree(n.childNodes[i], na, t, nn);
+	}
+
+	<span class="reserved">return</span> na;
+};
+
+<span class="comment">/**
+ * Returns the parent element of the specified node based on the search criteria.
+ *
+ * <span class="attrib">@param</span> {HTMLNode} node Node to get parent element of.
+ * <span class="attrib">@param</span> {string} names Comma separated list of element names to get.
+ * <span class="attrib">@param</span> {string} attrib_name Optional attribute name to match.
+ * <span class="attrib">@param</span> {string} attrib_value Optional attribute value to match.
+ * <span class="attrib">@return</span> HTMLElement or null based on search criteras.
+ * <span class="attrib">@type</span> HTMLElement
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getParentElement = <span class="reserved">function</span>(node, names, attrib_name, attrib_value) {
+	<span class="reserved">if</span> (typeof(names) == <span class="literal">"undefined"</span>) {
+		<span class="reserved">if</span> (node.nodeType == 1)
+			<span class="reserved">return</span> node;
+
+		<span class="comment">// Find parent node that is a element</span>
+		<span class="reserved">while</span> ((node = node.parentNode) != null &amp;&amp; node.nodeType != 1) ;
+
+		<span class="reserved">return</span> node;
+	}
+
+	<span class="reserved">if</span> (node == null)
+		<span class="reserved">return</span> null;
+
+	var namesAr = names.toUpperCase().split(<span class="literal">','</span>);
+
+	do {
+		<span class="reserved">for</span> (var i=0; i&lt;namesAr.length; i++) {
+			<span class="reserved">if</span> (node.nodeName == namesAr[i] || names == <span class="literal">"*"</span>) {
+				<span class="reserved">if</span> (typeof(attrib_name) == <span class="literal">"undefined"</span>)
+					<span class="reserved">return</span> node;
+				<span class="reserved">else</span> <span class="reserved">if</span> (node.getAttribute(attrib_name)) {
+					<span class="reserved">if</span> (typeof(attrib_value) == <span class="literal">"undefined"</span>) {
+						<span class="reserved">if</span> (node.getAttribute(attrib_name) != <span class="literal">""</span>)
+							<span class="reserved">return</span> node;
+					} <span class="reserved">else</span> <span class="reserved">if</span> (node.getAttribute(attrib_name) == attrib_value)
+						<span class="reserved">return</span> node;
+				}
+			}
+		}
+	} <span class="reserved">while</span> ((node = node.parentNode) != null);
+
+	<span class="reserved">return</span> null;
+};
+
+<span class="comment">/**
+ * Returns a node by the specified selector function. This function will
+ * loop through all parent nodes and call the specified function for each node.
+ * If the function then returns true it will stop the execution and return that node.
+ *
+ * <span class="attrib">@param</span> {DOMNode} n HTML node to search parents on.
+ * <span class="attrib">@param</span> {function} f Selection function to execute on each node.
+ * <span class="attrib">@return</span> DOMNode or null if it wasn't found.
+ * <span class="attrib">@type</span> DOMNode
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getParentNode = <span class="reserved">function</span>(n, f) {
+	<span class="reserved">while</span> (n) {
+		<span class="reserved">if</span> (f(n))
+			<span class="reserved">return</span> n;
+
+		n = n.parentNode;
+	}
+
+	<span class="reserved">return</span> null;
+};
+
+<span class="comment">/**
+ * Returns the attribute value of a element or the default value if it wasn't found.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} elm HTML element to get attribute from.
+ * <span class="attrib">@param</span> {string} name Attribute name to retrive.
+ * <span class="attrib">@param</span> {string} default_value Optional default value to return, this value defaults to a empty string.
+ * <span class="attrib">@return</span> Attribute value or default value if it wasn't found in element.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getAttrib = <span class="reserved">function</span>(elm, name, default_value) {
+	<span class="reserved">if</span> (typeof(default_value) == <span class="literal">"undefined"</span>)
+		default_value = <span class="literal">""</span>;
+
+	<span class="comment">// Not a element</span>
+	<span class="reserved">if</span> (!elm || elm.nodeType != 1)
+		<span class="reserved">return</span> default_value;
+
+	var v = elm.getAttribute(name);
+
+	<span class="comment">// Try className for class attrib</span>
+	<span class="reserved">if</span> (name == <span class="literal">"class"</span> &amp;&amp; !v)
+		v = elm.className;
+
+	<span class="comment">// Workaround for a issue with Firefox 1.5rc2+</span>
+	<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; name == <span class="literal">"src"</span> &amp;&amp; elm.src != null &amp;&amp; elm.src != <span class="literal">""</span>)
+		v = elm.src;
+
+	<span class="comment">// Workaround for a issue with Firefox 1.5rc2+</span>
+	<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; name == <span class="literal">"href"</span> &amp;&amp; elm.href != null &amp;&amp; elm.href != <span class="literal">""</span>)
+		v = elm.href;
+
+	<span class="reserved">if</span> (name == <span class="literal">"http-equiv"</span> &amp;&amp; tinyMCE.isMSIE)
+		v = elm.httpEquiv;
+
+	<span class="reserved">if</span> (name == <span class="literal">"style"</span> &amp;&amp; !tinyMCE.isOpera)
+		v = elm.style.cssText;
+
+	<span class="reserved">return</span> (v &amp;&amp; v != <span class="literal">""</span>) ? v : default_value;
+};
+
+<span class="comment">/**
+ * Sets the attribute value for a specific attribute.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} element HTML element to set attribute on.
+ * <span class="attrib">@param</span> {string} name Attribute name to set.
+ * <span class="attrib">@param</span> {string} value Attribute value to set.
+ * <span class="attrib">@param</span> {boolean} fix_value Optional fix value state, if true only number data will be accepted.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.setAttrib = <span class="reserved">function</span>(element, name, value, fix_value) {
+	<span class="reserved">if</span> (typeof(value) == <span class="literal">"number"</span> &amp;&amp; value != null)
+		value = <span class="literal">""</span> + value;
+
+	<span class="reserved">if</span> (fix_value) {
+		<span class="reserved">if</span> (value == null)
+			value = <span class="literal">""</span>;
+
+		var re = new RegExp(<span class="literal">'[^0-9%]'</span>, <span class="literal">'g'</span>);
+		value = value.replace(re, <span class="literal">''</span>);
+	}
+
+	<span class="reserved">if</span> (name == <span class="literal">"style"</span>)
+		element.style.cssText = value;
+
+	<span class="reserved">if</span> (name == <span class="literal">"class"</span>)
+		element.className = value;
+
+	<span class="reserved">if</span> (value != null &amp;&amp; value != <span class="literal">""</span> &amp;&amp; value != -1)
+		element.setAttribute(name, value);
+	<span class="reserved">else</span>
+		element.removeAttribute(name);
+};
+
+<span class="comment">/**
+ * Sets a style attribute item value.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} elm HTML element to set style attribute item on.
+ * <span class="attrib">@param</span> {string} name Style item name to set.
+ * <span class="attrib">@param</span> {string} value Style item value to set.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.setStyleAttrib = <span class="reserved">function</span>(elm, name, value) {
+	eval(<span class="literal">'elm.style.'</span> + name + <span class="literal">'=value;'</span>);
+
+	<span class="comment">// Style attrib deleted</span>
+	<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; value == null || value == <span class="literal">''</span>) {
+		var str = tinyMCE.serializeStyle(tinyMCE.parseStyle(elm.style.cssText));
+		elm.style.cssText = str;
+		elm.setAttribute(<span class="literal">"style"</span>, str);
+	}
+};
+
+<span class="comment">/**
+ * Switches the CSS class of the specified element. This method also caches the
+ * elements in a lookup table for performance. This should only be used for TinyMCE main UI controls
+ * like buttons or select elements.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} ei Element to set CSS class on.
+ * <span class="attrib">@param</span> {string} c CSS class to set.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.switchClass = <span class="reserved">function</span>(ei, c) {
+	var e;
+
+	<span class="reserved">if</span> (tinyMCE.switchClassCache[ei])
+		e = tinyMCE.switchClassCache[ei];
+	<span class="reserved">else</span>
+		e = tinyMCE.switchClassCache[ei] = document.getElementById(ei);
+
+	<span class="reserved">if</span> (e) {
+		<span class="comment">// Keep tile mode</span>
+		<span class="reserved">if</span> (tinyMCE.settings.button_tile_map &amp;&amp; e.className &amp;&amp; e.className.indexOf(<span class="literal">'mceTiledButton'</span>) == 0)
+			c = <span class="literal">'mceTiledButton '</span> + c;
+
+		e.className = c;
+	}
+};
+
+<span class="comment">/**
+ * Returns the absolute x, y position of a node. The position will be returned in a object with
+ * two properties absLeft and absTop.
+ *
+ * <span class="attrib">@param</span> {HTMLNode} n HTML element to get x, y position from.
+ * <span class="attrib">@return</span> Absolute position of the specified element.
+ * <span class="attrib">@type</span> TinyMCE_ElementPosition
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getAbsPosition = <span class="reserved">function</span>(n) {
+	var p = {absLeft : 0, absTop : 0};
+
+	<span class="reserved">while</span> (n) {
+		p.absLeft += n.offsetLeft;
+		p.absTop += n.offsetTop;
+		n = n.offsetParent;
+	}
+
+	<span class="reserved">return</span> p;
+};
+
+<span class="comment">/**
+ * Finds any previous element by name. This will loop through the siblings
+ * inorder to find the specified element by name. If the element wasn't found
+ * it will return a null value. 
+ *
+ * <span class="attrib">@param</span> {HTMLNode} e HTML node to search from.
+ * <span class="attrib">@param</span> {string} n Comma separated list of element names to search for.
+ * <span class="attrib">@return</span> HTML Element or null if it wasn't found.
+ * <span class="attrib">@type</span> HTMLElement 
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.prevNode = <span class="reserved">function</span>(e, n) {
+	var a = n.split(<span class="literal">','</span>), i;
+
+	<span class="reserved">while</span> ((e = e.previousSibling) != null) {
+		<span class="reserved">for</span> (i=0; i&lt;a.length; i++) {
+			<span class="reserved">if</span> (e.nodeName == a[i])
+				<span class="reserved">return</span> e;
+		}
+	}
+
+	<span class="reserved">return</span> null;
+};
+
+<span class="comment">/**
+ * Finds any element after the current one by name. This will loop through the siblings
+ * inorder to find the specified element by name. If the element wasn't found
+ * it will return a null value. 
+ *
+ * <span class="attrib">@param</span> {HTMLNode} e HTML node to search from.
+ * <span class="attrib">@param</span> {string} n Comma separated list of element names to search for.
+ * <span class="attrib">@return</span> HTML Element or null if it wasn't found.
+ * <span class="attrib">@type</span> HTMLElement 
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.nextNode = <span class="reserved">function</span>(e, n) {
+	var a = n.split(<span class="literal">','</span>), i;
+
+	<span class="reserved">while</span> ((e = e.nextSibling) != null) {
+		<span class="reserved">for</span> (i=0; i&lt;a.length; i++) {
+			<span class="reserved">if</span> (e.nodeName == a[i])
+				<span class="reserved">return</span> e;
+		}
+	}
+
+	<span class="reserved">return</span> null;
+};
+
+<span class="comment">/**
+ * Returns a array of nodes when the specified function matches a node.
+ *
+ * <span class="attrib">@param</span> {DOMNode} n Node to select children from.
+ * <span class="attrib">@param</span> {function} f Function that returns true/false if the node is to be added or not.
+ * <span class="attrib">@param</span> {Array} a Optional array to fill with nodes.
+ * <span class="attrib">@return</span> Array with selected nodes.
+ * <span class="attrib">@type</span> Array
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.selectNodes = <span class="reserved">function</span>(n, f, a) {
+	var i;
+
+	<span class="reserved">if</span> (!a)
+		a = new Array();
+
+	<span class="reserved">if</span> (f(n))
+		a[a.length] = n;
+
+	<span class="reserved">if</span> (n.hasChildNodes()) {
+		<span class="reserved">for</span> (i=0; i&lt;n.childNodes.length; i++)
+			tinyMCE.selectNodes(n.childNodes[i], f, a);
+	}
+
+	<span class="reserved">return</span> a;
+};
+
+<span class="comment">/**
+ * Adds a CSS class to the specified element. It will remove any previous item with the same name
+ * so adding a class that already exists will move it to the end.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} e HTML element to add CSS class to.
+ * <span class="attrib">@param</span> {string] c CSS class to add to HTML element.
+ * <span class="attrib">@param</span> {boolean] b Optional parameter, if set to true, class will be added to the beginning.
+ * <span class="attrib">@return</span> Returns the new class attribute value.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.addCSSClass = <span class="reserved">function</span>(e, c, b) {
+	var o = <span class="reserved">this</span>.removeCSSClass(e, c);
+
+	<span class="reserved">return</span> e.className = b ? c + (o != <span class="literal">''</span> ? (<span class="literal">' '</span> + o) : <span class="literal">''</span>) : (o != <span class="literal">''</span> ? (o + <span class="literal">' '</span>) : <span class="literal">''</span>) + c;
+};
+
+<span class="comment">/**
+ * Removes the specified CSS class from the element.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} e HTML element to remove CSS class to.
+ * <span class="attrib">@param</span> {string] c CSS class to remove to HTML element.
+ * <span class="attrib">@return</span> Returns the new class attribute value.
+ * <span class="attrib">@type</span> string
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.removeCSSClass = <span class="reserved">function</span>(e, c) {
+	var a = <span class="reserved">this</span>.explode(<span class="literal">' '</span>, e.className), i;
+
+	<span class="reserved">for</span> (i=0; i&lt;a.length; i++) {
+		<span class="reserved">if</span> (a[i] == c)
+			a[i] = <span class="literal">''</span>;
+	}
+
+	<span class="reserved">return</span> e.className = a.join(<span class="literal">' '</span>);
+};
+
+<span class="comment">/**
+ * Renames the specified element to the specified name.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} e Element to rename.
+ * <span class="attrib">@param</span> {string} n New name of the element.
+ * <span class="attrib">@param</span> {DOMDocument} d Optional document reference.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.renameElement = <span class="reserved">function</span>(e, n, d) {
+	var ne, i, ar;
+
+	d = typeof(d) == <span class="literal">"undefined"</span> ? tinyMCE.selectedInstance.getDoc() : d;
+
+	<span class="reserved">if</span> (e) {
+		ne = d.createElement(n);
+
+		ar = e.attributes;
+		<span class="reserved">for</span> (i=ar.length-1; i&gt;-1; i--) {
+			<span class="reserved">if</span> (ar[i].specified &amp;&amp; ar[i].nodeValue)
+				ne.setAttribute(ar[i].nodeName.toLowerCase(), ar[i].nodeValue);
+		}
+
+		ar = e.childNodes;
+		<span class="reserved">for</span> (i=0; i&lt;ar.length; i++)
+			ne.appendChild(ar[i].cloneNode(true));
+
+		e.parentNode.replaceChild(ne, e);
+	}
+};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b></b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+</body>
+</html>

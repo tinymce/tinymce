@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Advanced example</title>
+<!-- tinyMCE -->
+<script language="javascript" type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		theme : "advanced",
+		mode : "exact",
+		elements : "elm1,elm2",
+		save_callback : "customSave",
+		content_css : "example_advanced.css",
+		extended_valid_elements : "a[href|target|name]",
+		plugins : "table",
+		theme_advanced_buttons3_add_before : "tablecontrols,separator",
+		//invalid_elements : "a",
+		theme_advanced_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1", // Theme specific setting CSS classes
+		//execcommand_callback : "myCustomExecCommandHandler",
+		debug : false
+	});
+
+	// Custom event handler
+	function myCustomExecCommandHandler(editor_id, elm, command, user_interface, value) {
+		var linkElm, imageElm, inst;
+
+		switch (command) {
+			case "mceLink":
+				inst = tinyMCE.getInstanceById(editor_id);
+				linkElm = tinyMCE.getParentElement(inst.selection.getFocusElement(), "a");
+
+				if (linkElm)
+					alert("Link dialog has been overriden. Found link href: " + tinyMCE.getAttrib(linkElm, "href"));
+				else
+					alert("Link dialog has been overriden.");
+
+				return true;
+
+			case "mceImage":
+				inst = tinyMCE.getInstanceById(editor_id);
+				imageElm = tinyMCE.getParentElement(inst.selection.getFocusElement(), "img");
+
+				if (imageElm)
+					alert("Image dialog has been overriden. Found image src: " + tinyMCE.getAttrib(imageElm, "src"));
+				else
+					alert("Image dialog has been overriden.");
+
+				return true;
+		}
+
+		return false; // Pass to next handler in chain
+	}
+
+	// Custom save callback, gets called when the contents is to be submitted
+	function customSave(id, content) {
+		alert(id + "=" + content);
+	}
+</script>
+<!-- /tinyMCE -->
+
+</head>
+<body>
+
+<a href="example_full.htm">[Full featured example]</a> [Advanced example] <a href="example_simple.htm">[Simple example]</a> <a href="example_word.htm">[Word example]</a>
+
+<h3>Advanced example</h3>
+This page shows a more complex usage of TinyMCE. On this page the mode is set to convert specific elements in this case a DIV element and a TEXTAREA into editor instances. The example below uses a custom CSS, thats why the text is red and it allso uses the &quot;advanced&quot; theme that includes more options than the default one. The code allso includes examples of custom call back functions and much more. Notice the submit button at the end of the page, this button triggers a save action. Read more about the features and possible settings of TinyMCE in the <a href="../docs/index.html">manual</a>.<br />
+<br />
+
+<!-- Form with textare element with width: 100% -->
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+<textarea name="elm1" style="width:100%" rows="15">
+	Some &lt;b&gt;element&lt;/b&gt;, this is to be editor 1. &lt;br /&gt; This editor instance has a 100% width to it.
+	&lt;p&gt;Some paragraph. &lt;a href=&quot;http://www.sourceforge.net&quot;&gt;Some link&lt;/a&gt;&lt;/p&gt;
+	&lt;img src=&quot;logo.jpg&quot;&gt;
+</textarea>
+<br />
+<input type="button" name="save" value="save" onclick="tinyMCE.triggerSave();" />
+</form>
+
+<!-- Div elements that gets to be a editor instance aswell -->
+<div id="elm2" style="width:450px; height:250px">
+	Some <b>element</b>, this is to be editor 2. <br /> This editor instance is a DIV element instead of a textarea.
+	<p>Some paragraph. <a href="http://www.sourceforge.net">Some link</a></p>
+	<img src="logo.jpg" />
+</div>
+
+<br />
+
+Some custom actions:
+<a href="javascript:tinyMCE.execCommand('Bold');">[Bold]</a> | 
+<a href="javascript:tinyMCE.execCommand('Italic');">[Italic]</a>
+<a href="javascript:void(0);" onclick="tinyMCE.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');">[Insert some HTML]</a>
+<a href="javascript:void(0);" onclick="tinyMCE.execCommand('mceReplaceContent',false,'<!-- comment --><b>{$selection}</b>');">[Replace selection]</a>
+
+<br />
+
+</body>
+</html>

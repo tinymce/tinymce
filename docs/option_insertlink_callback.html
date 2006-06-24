@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: insertlink_callback</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1><span class="marked">(deprecated)</span> Option: insertlink_callback</h1>
+</div>
+
+<div class="content">
+	<p>
+		This callback was removed in 2.0.3, use <a href="option_execcommand_callback.html">execcommand_callback</a> instead this also enables you to override other things than the image and link dialogs.
+	</p>
+	<p>
+		This option enables you to override the built in functionality for inserting links. This option should contain a function name to be executed when a new link is inserted into TinyMCE. The format of this callback function is: insertLink(href, target, title, onclick, action). Where most of these options are self explained the action can be &quot;update&quot; or &quot;insert&quot; depending on what operation type. This function should return an array with the same values as the incomming parameters, the example below describes how this is done. This option is set to a internal TinyMCE function by default.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the insertlink_callback option:</h3>
+	<div class="example">
+<pre>
+function <strong>myCustomInsertLink</strong>(href, target, title, onclick, action) {
+	var result = new Array();
+
+	// Do some custom logic
+	result['href'] = "some_page.htm";
+	result['target'] = "_self";
+	result['title'] = "Some link title";
+	result['onclick'] = "";
+
+	return data;
+}
+
+tinyMCE.init({
+	...
+	<strong>insertlink_callback : "myCustomInsertLink"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

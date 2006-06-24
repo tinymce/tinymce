@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: cleanup_callback</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: cleanup_callback</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to add custom cleanup logic to TinyMCE. This function is called when the cleanup process is executed this process occures when the editor saves/submits content, user hits the cleanup button and when the HTML editor dialog is presented. The format of this function is: customCleanup(type, value). Where type can be &quot;get_from_editor&quot; when the contents is extracted from TinyMCE for example when the user submits the form. The &quot;insert_to_editor&quot; type value gets passed when new contents is inserted into the editor on initialization or when the HTML editor dialog commits new content. The &quot;get_from_editor_dom&quot; value is executed when cleanup process has a valid DOM tree and is extracted from the editor. The &quot;insert_to_editor_dom&quot; gets passed when the editor has a valid DOM tree and contents has been inserted into the editor. The example below illustrated all these types.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the cleanup_callback option:</h3>
+	<div class="example">
+<pre>
+function <strong>myCustomCleanup</strong>(type, value) {
+	switch (type) {
+		case "get_from_editor":
+			alert("Value HTML string: " + value);
+
+			// Do custom cleanup code here
+
+			break;
+
+		case "insert_to_editor":
+			alert("Value HTML string: " + value);
+
+			// Do custom cleanup code here
+
+			break;
+
+		case "get_from_editor_dom":
+			alert("Value DOM Element " + value);
+
+			// Do custom cleanup code here
+
+			break;
+
+		case "insert_to_editor_dom":
+			alert("Value DOM Element: " + value);
+
+			// Do custom cleanup code here
+
+			break;
+	}
+
+	return value;
+}
+
+tinyMCE.init({
+	...
+	<strong>cleanup_callback : "myCustomCleanup"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

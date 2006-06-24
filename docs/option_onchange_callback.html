@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: onchange_callback</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: onchange_callback</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option should contain a function name to be executed each time contents is modified by TinyMCE. This function is called each time a undo level is added to TinyMCE. The format of this function is: onchange(inst), where inst is the editor instance object reference.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the onchange_callback option:</h3>
+	<div class="example">
+<pre>
+function <strong>myCustomOnChangeHandler</strong>(inst) {
+	alert("Some one modified something");
+	alert("The HTML is now:" + inst.getBody().innerHTML);
+}
+
+tinyMCE.init({
+	...
+	<strong>onchange_callback : "myCustomOnChangeHandler"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

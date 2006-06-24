@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: file_browser_callback</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: file_browser_callback</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option enables you to add your own file browser/image browser to TinyMCE. This function is executed each time a user clicks on the &quot;browse&quot; buttons in various dialogs. The format of this callback function is: fileBrowser(field_name, url, type, win) where field_name is the id/name of the form element that the browser should insert it's URL into. The url parameter contains the URL value that is currently inside the field. The type parameter contains what type of browser to present this value can be file, image or flash depending on what dialog is calling the function. The win parameter contains a reference to the dialog/window that executes the function.
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the file_browser_callback option:</h3>
+	<div class="example">
+<pre>
+function <strong>myCustomFileBrowser</strong>(field_name, url, type, win) {
+	// Do custom browser logic
+	win.document.forms[0].elements[field_name].value = 'my browser value';
+}
+
+tinyMCE.init({
+	...
+	<strong>file_browser_callback : "myCustomFileBrowser"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>
