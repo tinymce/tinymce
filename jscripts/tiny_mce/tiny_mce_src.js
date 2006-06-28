@@ -4553,8 +4553,12 @@ TinyMCE_Cleanup.prototype = {
 		if (av.length != 0 && av == "{$uid}")
 			av = "uid_" + (this.idCount++);
 
-		if (av.length != 0)
-			return " " + an + "=" + '"' + this.xmlEncode(av) + '"';
+		if (av.length != 0) {
+			if (an.indexOf('on') != 0)
+				av = this.xmlEncode(av);
+
+			return " " + an + "=" + '"' + av + '"';
+		}
 
 		return "";
 	},
