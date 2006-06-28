@@ -9,7 +9,7 @@ if (url != null) {
 }
 
 function init() {
-	var pl = "", f;
+	var pl = "", f, val;
 	var type = "flash", fe, i;
 
 	tinyMCEPopup.resizeToInnerSize();
@@ -154,6 +154,12 @@ function init() {
 		setStr(pl, null, 'align');
 		setStr(pl, null, 'width');
 		setStr(pl, null, 'height');
+
+		if ((val = tinyMCE.getAttrib(fe, "width")) != "")
+			pl.width = f.width.value = val;
+
+		if ((val = tinyMCE.getAttrib(fe, "height")) != "")
+			pl.height = f.height.value = val;
 
 		oldWidth = pl.width ? parseInt(pl.width) : 100;
 		oldHeight = pl.height ? parseInt(pl.height) : 100;
