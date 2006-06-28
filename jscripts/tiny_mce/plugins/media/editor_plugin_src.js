@@ -168,7 +168,7 @@ var TinyMCE_MediaPlugin = {
 						if (!tinyMCE.getParam("relative_urls"))
 							pl.src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], pl.src);
 
-						embedHTML = TinyMCE_MediaPlugin._getEmbed(ci, cb, mt, pl);
+						embedHTML = TinyMCE_MediaPlugin._getEmbed(ci, cb, mt, pl, attribs);
 					} else {
 						// Use script version
 						switch (attribs['class']) {
@@ -278,8 +278,11 @@ var TinyMCE_MediaPlugin = {
 		return ne;
 	},
 
-	_getEmbed : function(cls, cb, mt, p) {
+	_getEmbed : function(cls, cb, mt, p, at) {
 		var h = '', n;
+
+		p.width = at.width ? at.width : p.width;
+		p.height = at.height ? at.height : p.height;
 
 		h += '<object classid="clsid:' + cls + '" codebase="' + cb + '"';
 		h += typeof(p.id) != "undefined" ? ' id="' + p.id + '"' : '';
