@@ -1,7 +1,0 @@
-Version 1.0.2 (2006-05-xx)
-	Fixed bug where the spellchecker wasn't working in MSIE if the editor was placed in a P tag.
-Version 1.0.1 (2006-05-05)
-	Since sourceforge has a serious bug when it comes to replacing files with the same name this release was necessary.
-	Goggle spellchecker class was added.
-Version 1.0 (2006-05-03)
-	Official first release.
