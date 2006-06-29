@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Selection.class.js 8 2006-06-10 20:13:32Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -438,7 +438,7 @@ TinyMCE_Selection.prototype = {
 
 			var elm = rng.item ? rng.item(0) : rng.parentElement();
 		} else {
-			if (inst.isHidden())
+			if (!tinyMCE.isSafari && inst.isHidden())
 				return inst.getBody();
 
 			var sel = this.getSel();

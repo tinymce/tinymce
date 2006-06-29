@@ -1,6 +1,7 @@
 Version 2.0.7 (2006-xx-xx)
 	Added new text and hilite color picker layers to the advanced theme.
 	Added new media plugin, this handles flash, quicktime, windows media player, real player.
+	Fixed bugs and issues with the lastest Safari Nightly build.
 	Fixed bug where script element contents and event attributes where HTML encoded.
 	Fixed bug where TinyMCE didn't load if a base element and relative URL to TinyMCE where used in MSIE.
 	Fixed bug where TinyMCE didn't function in MSIE 5.0.1 because call method wasn't available.

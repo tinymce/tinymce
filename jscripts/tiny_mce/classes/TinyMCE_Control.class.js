@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Control.class.js 5 2006-06-05 19:51:22Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -379,11 +379,6 @@ TinyMCE_Control.prototype = {
 		if (!new RegExp('mceStartTyping|mceEndTyping|mceBeginUndoLevel|mceEndUndoLevel|mceAddUndoLevel', 'gi').test(command))
 			this.undoBookmark = null;
 
-		if (this.lastSafariSelection && !new RegExp('mceStartTyping|mceEndTyping|mceBeginUndoLevel|mceEndUndoLevel|mceAddUndoLevel', 'gi').test(command)) {
-			this.selection.moveToBookmark(this.lastSafariSelection);
-			tinyMCE.selectedElement = this.lastSafariSelectedElement;
-		}
-
 		// Mozilla issue
 		if (!tinyMCE.isMSIE && !this.useCSS) {
 			this._setUseCSS(false);
@@ -501,22 +496,12 @@ TinyMCE_Control.prototype = {
 
 			case "InsertUnorderedList":
 			case "InsertOrderedList":
-				var tag = (command == "InsertUnorderedList") ? "ul" : "ol";
-
-				if (tinyMCE.isSafari)
-					this.execCommand("mceInsertContent", false, "<" + tag + "><li>&nbsp;</li><" + tag + ">");
-				else
-					this.getDoc().execCommand(command, user_interface, value);
-
+				this.getDoc().execCommand(command, user_interface, value);
 				tinyMCE.triggerNodeChange();
 				break;
 
 			case "Strikethrough":
-				if (tinyMCE.isSafari)
-					this.execCommand("mceInsertContent", false, "<strike>" + this.selection.getSelectedHTML() + "</strike>");
-				else
-					this.getDoc().execCommand(command, user_interface, value);
-
+				this.getDoc().execCommand(command, user_interface, value);
 				tinyMCE.triggerNodeChange();
 				break;
 

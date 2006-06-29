@@ -1076,7 +1076,7 @@ TinyMCE_Engine.prototype = {
 					tinyMCE.selectedInstance.switchSettings();
 
 				// Insert P element
-				if (tinyMCE.isGecko && tinyMCE.settings['force_p_newlines'] && e.keyCode == 13 && !e.shiftKey) {
+				if ((tinyMCE.isGecko && !tinyMCE.isSafari) && tinyMCE.settings['force_p_newlines'] && e.keyCode == 13 && !e.shiftKey) {
 					// Insert P element instead of BR
 					if (TinyMCE_ForceParagraphs._insertPara(tinyMCE.selectedInstance, e)) {
 						// Cancel event
@@ -1087,7 +1087,7 @@ TinyMCE_Engine.prototype = {
 				}
 
 				// Handle backspace
-				if (tinyMCE.isGecko && tinyMCE.settings['force_p_newlines'] && (e.keyCode == 8 || e.keyCode == 46) && !e.shiftKey) {
+				if ((tinyMCE.isGecko && !tinyMCE.isSafari) && tinyMCE.settings['force_p_newlines'] && (e.keyCode == 8 || e.keyCode == 46) && !e.shiftKey) {
 					// Insert P element instead of BR
 					if (TinyMCE_ForceParagraphs._handleBackSpace(tinyMCE.selectedInstance, e.type)) {
 						// Cancel event
@@ -1276,6 +1276,7 @@ TinyMCE_Engine.prototype = {
 				if (!tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark)
 					tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark = tinyMCE.selectedInstance.selection.getBookmark();
 
+/*
 				if (tinyMCE.isSafari) {
 					tinyMCE.selectedInstance.lastSafariSelection = tinyMCE.selectedInstance.selection.getBookmark();
 					tinyMCE.selectedInstance.lastSafariSelectedElement = tinyMCE.selectedElement;
@@ -1296,6 +1297,7 @@ TinyMCE_Engine.prototype = {
 						}, 10);
 					}
 				}
+*/
 
 				// Reset selected node
 				if (e.type != "focus")
@@ -2594,11 +2596,6 @@ TinyMCE_Control.prototype = {
 		if (!new RegExp('mceStartTyping|mceEndTyping|mceBeginUndoLevel|mceEndUndoLevel|mceAddUndoLevel', 'gi').test(command))
 			this.undoBookmark = null;
 
-		if (this.lastSafariSelection && !new RegExp('mceStartTyping|mceEndTyping|mceBeginUndoLevel|mceEndUndoLevel|mceAddUndoLevel', 'gi').test(command)) {
-			this.selection.moveToBookmark(this.lastSafariSelection);
-			tinyMCE.selectedElement = this.lastSafariSelectedElement;
-		}
-
 		// Mozilla issue
 		if (!tinyMCE.isMSIE && !this.useCSS) {
 			this._setUseCSS(false);
@@ -2716,22 +2713,12 @@ TinyMCE_Control.prototype = {
 
 			case "InsertUnorderedList":
 			case "InsertOrderedList":
-				var tag = (command == "InsertUnorderedList") ? "ul" : "ol";
-
-				if (tinyMCE.isSafari)
-					this.execCommand("mceInsertContent", false, "<" + tag + "><li>&nbsp;</li><" + tag + ">");
-				else
-					this.getDoc().execCommand(command, user_interface, value);
-
+				this.getDoc().execCommand(command, user_interface, value);
 				tinyMCE.triggerNodeChange();
 				break;
 
 			case "Strikethrough":
-				if (tinyMCE.isSafari)
-					this.execCommand("mceInsertContent", false, "<strike>" + this.selection.getSelectedHTML() + "</strike>");
-				else
-					this.getDoc().execCommand(command, user_interface, value);
-
+				this.getDoc().execCommand(command, user_interface, value);
 				tinyMCE.triggerNodeChange();
 				break;
 
@@ -6036,7 +6023,7 @@ TinyMCE_Selection.prototype = {
 
 			var elm = rng.item ? rng.item(0) : rng.parentElement();
 		} else {
-			if (inst.isHidden())
+			if (!tinyMCE.isSafari && inst.isHidden())
 				return inst.getBody();
 
 			var sel = this.getSel();
