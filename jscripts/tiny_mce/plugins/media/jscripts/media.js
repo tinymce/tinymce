@@ -270,7 +270,7 @@ function getMediaListHTML() {
 }
 
 function getType(v) {
-	var fo = tinyMCE.getParam("media_types", "flash=swf;shockwave=dcr;qt=mov,qt,mpg,mp3,mpeg;shockwave=dcr;wmp=avi,wmv,wm,asf,asx,wmx,wvx;rmp=rm,ra,ram").split(';'), i, c, el, x;
+	var fo = tinyMCE.getParam("media_types", "flash=swf;shockwave=dcr;qt=mov,qt,mpg,mp3,mp4,mpeg;shockwave=dcr;wmp=avi,wmv,wm,asf,asx,wmx,wvx;rmp=rm,ra,ram").split(';'), i, c, el, x;
 
 	for (i=0; i<fo.length; i++) {
 		c = fo[i].split('=');
@@ -495,7 +495,7 @@ function generatePreview() {
 			break;
 
 		case "wmp":
-			cls = 'clsid:6BF52A52-394A-11D3-B153-00C04F79FAA6';
+			cls = tinyMCE.getParam('media_wmp6_compatible') ? 'clsid:05589FA1-C356-11CE-BF01-00AA0055595A' : 'clsid:6BF52A52-394A-11D3-B153-00C04F79FAA6';
 			codebase = 'http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701';
 			type = 'application/x-mplayer2';
 			break;
@@ -523,7 +523,7 @@ function generatePreview() {
 	pl.width = !pl.width ? 100 : pl.width;
 	pl.height = !pl.height ? 100 : pl.height;
 	pl.id = !pl.id ? 'obj' : pl.id;
-	pl.name = !pl.name ? 'obj' : pl.name;
+	pl.name = !pl.name ? 'eobj' : pl.name;
 	pl.align = !pl.align ? '' : pl.align;
 
 	h += '<object classid="clsid:' + cls + '" codebase="' + codebase + '" width="' + pl.width + '" height="' + pl.height + '" id="' + pl.id + '" name="' + pl.name + '" align="' + pl.align + '">';
@@ -531,7 +531,7 @@ function generatePreview() {
 	for (n in pl)
 		h += '<param name="' + n + '" value="' + pl[n] + '">';
 
-	h += '<embed type="' + type + '"';
+	h += '<embed type="' + type + '" ';
 
 	for (n in pl)
 		h += n + '="' + pl[n] + '" ';

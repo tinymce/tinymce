@@ -103,6 +103,8 @@ var TinyMCE_MediaPlugin = {
 								break;
 
 							case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
+							case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
+							case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
 								ar[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemRealMedia', d, ar[i]), ar[i]);
 								break;
 						}
@@ -146,7 +148,7 @@ var TinyMCE_MediaPlugin = {
 								break;
 
 							case 'mceItemWindowsMedia':
-								ci = '6BF52A52-394A-11D3-B153-00C04F79FAA6';
+								ci = tinyMCE.getParam('media_wmp6_compatible') ? '05589FA1-C356-11CE-BF01-00AA0055595A' : '6BF52A52-394A-11D3-B153-00C04F79FAA6';
 								cb = 'http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701';
 								mt = 'application/x-mplayer2';
 								break;
