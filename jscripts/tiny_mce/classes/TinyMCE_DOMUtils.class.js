@@ -148,14 +148,19 @@ TinyMCE_Engine.prototype.getOuterHTML = function(e) {
  * @param {string} h HTML string to set in property.
  */
 TinyMCE_Engine.prototype.setOuterHTML = function(e, h) {
-	if (tinyMCE.isMSIE) {
-		e.outerHTML = h;
-		return;
-	}
+	var d, i, nl;
 
-	var d = e.ownerDocument.createElement("body");
-	d.innerHTML = h;
-	e.parentNode.replaceChild(d.firstChild, e);
+	if (tinyMCE.isMSIE)
+		e.outerHTML = h;
+	else {
+		var d = e.ownerDocument.createElement("body");
+		d.innerHTML = h;
+
+		for (i=0, nl=d.childNodes; i<nl.length; i++)
+			e.parentNode.insertBefore(nl[i], e);
+
+		e.parentNode.removeChild(e);
+	}
 };
 
 /**
