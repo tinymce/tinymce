@@ -456,6 +456,8 @@ function jsEncode(s) {
 function generatePreview() {
 	var f = document.forms[0], p = document.getElementById('prev'), h = '', cls, pl = serializeParameters(), n, type, codebase, wp, hp, nw, nh;
 
+	p.innerHTML = '<!-- x --->';
+
 	nw = parseInt(f.width.value);
 	nh = parseInt(f.height.value);
 
@@ -528,8 +530,13 @@ function generatePreview() {
 
 	h += '<object classid="clsid:' + cls + '" codebase="' + codebase + '" width="' + pl.width + '" height="' + pl.height + '" id="' + pl.id + '" name="' + pl.name + '" align="' + pl.align + '">';
 
-	for (n in pl)
+	for (n in pl) {
 		h += '<param name="' + n + '" value="' + pl[n] + '">';
+
+		// Add extra url parameter if it's an absolute URL
+		if (n == 'src' && pl[n].indexOf('://') != -1)
+			h += '<param name="url" value="' + pl[n] + '" />';
+	}
 
 	h += '<embed type="' + type + '" ';
 

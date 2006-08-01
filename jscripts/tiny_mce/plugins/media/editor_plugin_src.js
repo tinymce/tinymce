@@ -294,13 +294,23 @@ var TinyMCE_MediaPlugin = {
 		h += typeof(p.align) != "undefined" ? ' align="' + p.align + '"' : '';
 		h += '>';
 
-		for (n in p)
-			h += '<param name="' + n + '" value="' + p[n] + '" />';
+		for (n in p) {
+			if (p[n]) {
+				h += '<param name="' + n + '" value="' + p[n] + '" />';
+
+				// Add extra url parameter if it's an absolute URL on WMP
+				if (n == 'src' && p[n].indexOf('://') != -1 && mt == 'application/x-mplayer2')
+					h += '<param name="url" value="' + p[n] + '" />';
+			}
+		}
 
 		h += '<embed type="' + mt + '"';
 
-		for (n in p)
-			h += ' ' + n + '="' + p[n] + '"';
+		for (n in p) {
+			// Skip url parameter for embed tag on WMP
+			if (n != 'url' && mt == 'application/x-mplayer2')
+				h += ' ' + n + '="' + p[n] + '"';
+		}
 
 		h += '></embed></object>';
 
