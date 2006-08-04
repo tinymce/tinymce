@@ -16,6 +16,8 @@ Version 2.0.7 (2006-xx-xx)
 	Fixed bug where images lost focus in IE if they where placed in a resizable div.
 	Fixed bug where isDirty state was set after calling user specific onsubmit function.
 	Fixed bug where editor_selector/editor_deselector matched incorrectly on some names.
+	Fixed bug where contextmenu was placed in the wrong location in FF.
+	Fixed issue with language variable in replace dialog in the searchreplace plugin.
 	Renamed some image names in style and layer plugins for compatiblity with Drupal.
 	Fixed some HTML and CSS issues with the style properties plugin.
 	Fixed so the addMCEControl method returns the new editor instance id.

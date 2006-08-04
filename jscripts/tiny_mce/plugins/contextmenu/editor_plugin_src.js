@@ -328,14 +328,16 @@ TinyMCE_ContextMenu.prototype = {
 		} else {
 			vp = this.getViewPort();
 			yo = tinyMCE.isMSIE5_0 ? document.body.scrollTop : self.pageYOffset;
-			this.contextMenuDiv.style.left = (x > vp.width - width ? vp.width - width : x) + 'px';
-			this.contextMenuDiv.style.top = (y - yo > vp.height - height ? vp.height - height + yo : y) + 'px';
+			this.contextMenuDiv.style.left = (x > vp.left + vp.width - width ? vp.left + vp.width - width : x) + 'px';
+			this.contextMenuDiv.style.top = (y > vp.top + vp.height - height ? vp.top + vp.height - height : y) + 'px';
 			this.contextMenuDiv.style.display = "block";
 		}
 	},
 
 	getViewPort : function() {
 		return {
+			left : self.pageXOffset || self.document.documentElement.scrollLeft || self.document.body.scrollLeft,
+			top: self.pageYOffset || self.document.documentElement.scrollTop || self.document.body.scrollTop,
 			width : document.documentElement.offsetWidth || document.body.offsetWidth,
 			height : self.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
 		};

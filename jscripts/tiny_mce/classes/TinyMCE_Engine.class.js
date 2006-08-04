@@ -764,7 +764,7 @@ TinyMCE_Engine.prototype = {
 			if (typeof(focus) == "undefined")
 				focus = true;
 
-			// IE bug lost focus on images in absolute divs Bug #
+			// IE bug lost focus on images in absolute divs Bug #1534575
 			if (focus && !tinyMCE.isMSIE)
 				inst.contentWindow.focus();
 

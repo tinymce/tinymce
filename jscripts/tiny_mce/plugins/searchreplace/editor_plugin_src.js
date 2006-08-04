@@ -83,7 +83,7 @@ var TinyMCE_SearchReplacePlugin = {
 						template['width'] = 310;
 						template['height'] = 105 + (tinyMCE.isNS7 ? 25 : 0);
 						template['width'] += tinyMCE.getLang('lang_searchreplace_search_delta_width', 0);
-						template['height'] += tinyMCE.getLang('lang_searchreplace_replace_delta_height', 0);
+						template['height'] += tinyMCE.getLang('lang_searchreplace_search_delta_width', 0);
 					}
 
 					instance.execCommand('SelectAll');
