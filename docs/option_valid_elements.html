@@ -29,8 +29,9 @@
 				 <tr><td><strong>&lt;</strong></td><td>Verifies the value of a attribute. For example &quot;target&lt;_blank?_self&quot;</td></tr>
 				 <tr><td><strong>?</strong></td><td>Separates attribute verification values, see above.</td></tr>
 				 <tr><td><strong>+</strong></td><td>Makes the element open if no child nodes exists. Example: +a.</td></tr>
-				 <tr><td><strong>-</strong></td><td>Enables removal of empty elements such as &gt;strong /&lt;. Example: -strong.</td></tr>
+				 <tr><td><strong>-</strong></td><td>Enables removal of empty elements such as &lt;strong /&gt;. Example: -strong.</td></tr>
 				 <tr><td><strong>#</strong></td><td>Enables padding of empty elements, this will padd with &amp;nbsp; if they are empty. Example: #p.</td></tr>
+				 <tr><td><strong>!</strong></td><td>Makes attributes required. If non of the required attribures are set the element will be removed. Example: !href.</td></tr>
 			</tbody>
 		</table>
 		Wildcards such as *,+,? may be used in element or attribute name matching. 

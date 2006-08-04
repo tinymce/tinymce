@@ -12,7 +12,7 @@
 
 <div class="content">
 	<p>
-		This option enables you to specify a CSS class name that will be required on the text areas that is to be converted. This enables you to select specific text areas for convertion by adding this CSS class name to the class attribute of the text area. If this option isn't set to a value this option will not have any effect and the <a href="option_mode.html">mode</a> option will choose textareas instead. If you want all editors to be converted and just specific editors to be excluded check the <a href="option_editor_deselector.html">editor_deselector</a> option.
+		This option enables you to specify a CSS class name that will be required on the text areas that is to be converted. This enables you to select specific text areas for convertion by adding this CSS class name to the class attribute of the text area. If this option isn't set to a value this option will not have any effect and the <a href="option_mode.html">mode</a> option will choose textareas instead. If you want all editors to be converted and just specific editors to be excluded check the <a href="option_editor_deselector.html">editor_deselector</a> option. This option also enables you to use regual expressions like myNoEditor|orMyNoOtherEditor or .*noeditor.
 	</p>
 
 	<div class="separator"></div>
@@ -22,7 +22,7 @@
 <pre>
 tinyMCE.init({
 	...
-	<strong>editor_selector : "mceEditor"</strong>
+	<strong>editor_selector : &quot;mceEditor&quot;</strong>
 });
 </pre>
 	</div>

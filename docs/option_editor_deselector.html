@@ -12,7 +12,7 @@
 
 <div class="content">
 	<p>
-		This option enables you to specify a CSS class name that will be deselect textareas from being converted into editor instances. If this option isn't set to a value this option will not have any effect and the <a href="option_mode.html">mode</a> option will choose textareas instead. The default value of this option is &quot;mceNoEditor&quot; so if mceNoEditor is added to the class attribute of a textarea it will be excluded for convertion.
+		This option enables you to specify a CSS class name that will be deselect textareas from being converted into editor instances. If this option isn't set to a value this option will not have any effect and the <a href="option_mode.html">mode</a> option will choose textareas instead. The default value of this option is &quot;mceNoEditor&quot; so if mceNoEditor is added to the class attribute of a textarea it will be excluded for convertion. This option also enables you to use regual expressions like myEditor|orMyOtherEditor or .*editor.
 	</p>
 
 	<div class="separator"></div>
@@ -22,7 +22,7 @@
 <pre>
 tinyMCE.init({
 	...
-	<strong>editor_deselector : "mceNoEditor"</strong>
+	<strong>editor_deselector : &quot;mceNoEditor&quot;</strong>
 });
 </pre>
 	</div>

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Option: valid_child_elements</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Option: valid_child_elements</h1>
+</div>
+
+<div class="content">
+	<p>
+		This option gives you the ability to specify what elements is to be valid in diffrent parent elements. For example you may force that only thead,tbody,tfoot is to be valid within a table element. This option gives you a lot more control of the output XHTML and to ensure that is's more valid according to W3C specifications.
+	</p>
+
+	<h3>Format:</h3>
+	<p>
+		<table border="1" cellspacing="0" cellpadding="4">
+			 <thead><td colspan="2">Control characters:</td></thead>
+			 <tbody>
+				 <tr><td><strong>/</strong></td><td>Separates elements. Multiple elements may match a set of child nodes.</td></tr>
+				 <tr><td><strong>,</strong></td><td>Separates element chunks.</td></tr>
+				 <tr><td><strong>[</strong></td><td>Starts a new child node list for a element definition.</td></tr>
+				 <tr><td><strong>]</strong></td><td>Ends a new child node list for a element definition.</td></tr>
+				 <tr><td><strong>%itrans</strong></td><td>Variable for inline XHTML transitional elements.</td></tr>
+				 <tr><td><strong>%itrans_na</strong></td><td>Variable for inline XHTML transitional elements excluding A elements.</td></tr>
+				 <tr><td><strong>%btrans</strong></td><td>Variable for block XHTML transitional elements.</td></tr>
+				 <tr><td><strong>%istrict</strong></td><td>Variable for inline XHTML strict elements.</td></tr>
+				 <tr><td><strong>%istrict_na</strong></td><td>Variable for inline XHTML strict elements excluding A elements.</td></tr>
+				 <tr><td><strong>%bstrict</strong></td><td>Variable for block XHTML strict elements.</td></tr>
+				 <tr><td><strong>#text</strong></td><td>Name for text nodes.</td></tr>
+				 <tr><td><strong>#comment</strong></td><td>Name for comment nodes.</td></tr>
+			</tbody>
+		</table>
+	</p>
+
+	<div class="separator"></div>
+
+	<h3>Example of usage of the valid_child_elements option:</h3>
+	<div class="example">
+<pre>
+tinyMCE.init({
+	...
+	<strong>valid_child_elements : "h1/h2/h3/h4/h5/h6/a[%itrans_na],table[thead|tbody|tfoot|tr|td],strong/b/p/div/em/i/td[%itrans|#text],body[%btrans|#text]"</strong>
+});
+</pre>
+	</div>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

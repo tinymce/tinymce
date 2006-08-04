@@ -33,6 +33,7 @@ function TinyMCE_Control(settings) {
 	this.cleanup.init({
 		valid_elements : s.valid_elements,
 		extended_valid_elements : s.extended_valid_elements,
+		valid_child_elements : s.valid_child_elements,
 		entities : s.entities,
 		entity_encoding : s.entity_encoding,
 		debug : s.cleanup_debug,

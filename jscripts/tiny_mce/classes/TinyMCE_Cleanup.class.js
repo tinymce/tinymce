@@ -624,7 +624,7 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	/**
-	 * Adds a cleanup rule string, for example: a[href|name|title=title|class=class1?class2?class3].
+	 * Adds a cleanup rule string, for example: a[!href|!name|title=title|class=class1?class2?class3].
 	 * These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility
 	 * to control the valid elements and attributes and force attribute values or default them.
 	 *
@@ -650,7 +650,67 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	/**
-	 * Parses a cleanup rule string, for example: a[href|name|title=title|class=class1?class2?class3].
+	 *
+	 * format: h1/h2/h3/h4/h5/h6[%inline_trans_no_a],table[thead|tbody|tfoot|tr|td],body[%btrans]=>p
+	 */
+	addChildRemoveRuleStr : function(s) {
+		var x, y, p, i, t, tn, ta, cl, r;
+
+		if (!s)
+			return;
+
+		ta = s.split(',');
+		for (x=0; x<ta.length; x++) {
+			s = ta[x];
+
+			// Split tag/children
+			p = this.split(/\[|\]/, s);
+			if (p == null || p.length < 1)
+				t = s.toUpperCase();
+			else
+				t = p[0].toUpperCase();
+
+			// Handle all tag names
+			tn = this.split('/', t);
+			for (y=0; y<tn.length; y++) {
+				r = "^(";
+
+				// Build regex
+				cl = this.split(/\|/, p[1]);
+				for (i=0; i<cl.length; i++) {
+					if (cl[i] == '%istrict')
+						r += tinyMCE.inlineStrict;
+					else if (cl[i] == '%itrans')
+						r += tinyMCE.inlineTransitional;
+					else if (cl[i] == '%istrict_na')
+						r += tinyMCE.inlineStrict.substring(2);
+					else if (cl[i] == '%itrans_na')
+						r += tinyMCE.inlineTransitional.substring(2);
+					else if (cl[i] == '%btrans')
+						r += tinyMCE.blockElms;
+					else if (cl[i] == '%strict')
+						r += tinyMCE.blockStrict;
+					else
+						r += (cl[i].charAt(0) != '#' ? cl[i].toUpperCase() : cl[i]);
+
+					r += (i != cl.length - 1 ? '|' : '');
+				}
+
+				r += ')$';
+//tinyMCE.debug(t + "=" + r);
+				if (this.childRules == null)
+					this.childRules = tinyMCE.clearArray(new Array());
+
+				this.childRules[tn[y]] = new RegExp(r);
+
+				if (p.length > 1)
+					this.childRules[tn[y]].wrapTag = p[2];
+			}
+		}
+	},
+
+	/**
+	 * Parses a cleanup rule string, for example: a[!href|name|title=title|class=class1?class2?class3].
 	 * These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility
 	 * to control the valid elements and attributes and force attribute values or default them.
 	 *
@@ -704,6 +764,15 @@ TinyMCE_Cleanup.prototype = {
 
 					for (i=0; i<a.length; i++) {
 						t = a[i];
+
+						if (t.charAt(0) == '!') {
+							a[i] = t = t.substring(1);
+
+							if (!r.reqAttribs)
+								r.reqAttribs = tinyMCE.clearArray(new Array());
+
+							r.reqAttribs[r.reqAttribs.length] = t;
+						}
 
 						av = new RegExp('(=|:|<)(.*?)$').exec(t);
 						t = t.replace(new RegExp('(=|:|<).*?$'), '');
@@ -852,16 +921,29 @@ TinyMCE_Cleanup.prototype = {
 	 * @type string
 	 */
 	serializeNodeAsHTML : function(n) {
-		var en, no, h = '', i, l, r, cn, va = false, f = false, at, hc;
+		var en, no, h = '', i, l, t, st, r, cn, va = false, f = false, at, hc, cr;
 
 		this._setupRules(); // Will initialize cleanup rules
 
 		if (this._isDuplicate(n))
 			return '';
 
+		// Skip non valid child elements
+		if (n.parentNode && this.childRules != null) {
+			cr = this.childRules[n.parentNode.nodeName];
+
+			if (typeof(cr) != "undefined" && !cr.test(n.nodeName)) {
+				st = true;
+				t = null;
+			}
+		}
+
 		switch (n.nodeType) {
 			case 1: // Element
 				hc = n.hasChildNodes();
+
+				if (st)
+					break;
 
 				// MSIE sometimes produces <//tag>
 				if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && n.nodeName.indexOf('/') != -1)
@@ -887,7 +969,7 @@ TinyMCE_Cleanup.prototype = {
 					if (r.removeEmpty && !hc)
 						return "";
 
-					h += '<' + en;
+					t = '<' + en;
 
 					if (r.vAttribsReIsWild) {
 						// Serialize wildcard attributes
@@ -895,12 +977,12 @@ TinyMCE_Cleanup.prototype = {
 						for (i=at.length-1; i>-1; i--) {
 							no = at[i];
 							if (no.specified && r.vAttribsRe.test(no.nodeName))
-								h += this._serializeAttribute(n, r, no.nodeName);
+								t += this._serializeAttribute(n, r, no.nodeName);
 						}
 					} else {
 						// Serialize specific attributes
 						for (i=r.vAttribs.length-1; i>-1; i--)
-							h += this._serializeAttribute(n, r, r.vAttribs[i]);
+							t += this._serializeAttribute(n, r, r.vAttribs[i]);
 					}
 
 					// Serialize mce_ atts
@@ -909,15 +991,30 @@ TinyMCE_Cleanup.prototype = {
 
 						for (no in at) {
 							if (at[no])
-								h += this._serializeAttribute(n, r, at[no]);
+								t += this._serializeAttribute(n, r, at[no]);
 						}
 					}
 
-					// Close these
-					if (this.closeElementsRe.test(n.nodeName))
-						return h + ' />';
+					// Check for required attribs
+					if (r.reqAttribs) {
+						st = false;
+						for (i=0; i<r.reqAttribs.length; i++) {
+							if (t.indexOf(r.reqAttribs[i] + '="') == -1) {
+								st = true;
+								break;
+							}
+						}
 
-					h += '>';
+						if (!st)
+							t = null;
+					}
+
+					// Close these
+					if (t != null && this.closeElementsRe.test(n.nodeName))
+						return t + ' />';
+
+					if (t != null)
+						h += t + '>';
 
 					if (this.isMSIE && this.codeElementsRe.test(n.nodeName))
 						h += n.innerHTML;
@@ -925,12 +1022,18 @@ TinyMCE_Cleanup.prototype = {
 			break;
 
 			case 3: // Text
+				if (st)
+					break;
+
 				if (n.parentNode && this.codeElementsRe.test(n.parentNode.nodeName))
 					return this.isMSIE ? '' : n.nodeValue;
 
 				return this.xmlEncode(n.nodeValue);
 
 			case 8: // Comment
+				if (st)
+					break;
+
 				return "<!--" + this._trimComment(n.nodeValue) + "-->";
 		}
 
@@ -946,7 +1049,7 @@ TinyMCE_Cleanup.prototype = {
 			h += this.fillStr;
 
 		// End element
-		if (va)
+		if (t != null && va)
 			h += '</' + en + '>';
 
 		return h;
@@ -1271,6 +1374,7 @@ TinyMCE_Cleanup.prototype = {
 		if (!this.rulesDone) {
 			this.addRuleStr(s.valid_elements);
 			this.addRuleStr(s.extended_valid_elements);
+			this.addChildRemoveRuleStr(s.valid_child_elements);
 
 			this.rulesDone = true;
 		}

@@ -287,12 +287,13 @@ var TinyMCE_ForceParagraphs = {
 	_handleBackSpace : function(inst) {
 		var r = inst.getRng(), sn = r.startContainer, nv, s = false;
 
-		if (sn && sn.nextSibling && sn.nextSibling.nodeName == "BR") {
+		// Added body check for bug #1527787
+		if (sn && sn.nextSibling && sn.nextSibling.nodeName == "BR" && sn.parentNode.nodeName != "BODY") {
 			nv = sn.nodeValue;
 
-			// Handle if a backspace is pressed after a space character #bug 1466054
-			if (nv != null && nv.length >= r.startOffset && nv.charAt(r.startOffset - 1) == ' ')
-				s = true;
+			// Handle if a backspace is pressed after a space character #bug 1466054 removed since fix for #1527787
+			/*if (nv != null && nv.length >= r.startOffset && nv.charAt(r.startOffset - 1) == ' ')
+				s = true;*/
 
 			// Only remove BRs if we are at the end of line #bug 1464152
 			if (nv != null && r.startOffset == nv.length)

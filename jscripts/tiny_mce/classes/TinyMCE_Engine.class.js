@@ -234,7 +234,10 @@ TinyMCE_Engine.prototype = {
 		this.settings['base_href'] = baseHREF.substring(0, baseHREF.lastIndexOf('/')) + "/";
 
 		theme = this.settings['theme'];
-		this.blockRegExp = new RegExp("^(h[1-6]|p|div|address|pre|form|table|li|ol|ul|td|blockquote|center|dl|dt|dd|dir|fieldset|form|noscript|noframes|menu|isindex|samp)$", "i");
+		this.inlineStrict = 'A|BR|SPAN|BDO|MAP|OBJECT|IMG|TT|I|B|BIG|SMALL|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|#text|#comment';
+		this.inlineTransitional = 'A|BR|SPAN|BDO|OBJECT|APPLET|IMG|MAP|IFRAME|TT|I|B|U|S|STRIKE|BIG|SMALL|FONT|BASEFONT|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|INPUT|SELECT|TEXTAREA|LABEL|BUTTON|#text|#comment';
+		this.blockElms = 'H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP';
+		this.blockRegExp = new RegExp("^(" + this.blockElms + ")$", "i");
 		this.posKeyCodes = new Array(13,45,36,35,33,34,37,38,39,40);
 		this.uniqueURL = 'javascript:TINYMCE_UNIQUEURL();'; // Make unique URL non real URL
 		this.uniqueTag = '<div id="mceTMPElement" style="display: none">TMP</div>';
@@ -761,7 +764,8 @@ TinyMCE_Engine.prototype = {
 			if (typeof(focus) == "undefined")
 				focus = true;
 
-			if (focus)
+			// IE bug lost focus on images in absolute divs Bug #
+			if (focus && !tinyMCE.isMSIE)
 				inst.contentWindow.focus();
 
 			// Reset design mode if lost
@@ -1646,8 +1650,8 @@ TinyMCE_Engine.prototype = {
 	submitPatch : function() {
 		tinyMCE.removeTinyMCEFormElements(this);
 		tinyMCE.triggerSave();
-		this.mceOldSubmit();
 		tinyMCE.isNotDirty = true;
+		this.mceOldSubmit();
 	},
 
 	/**
@@ -1712,7 +1716,7 @@ TinyMCE_Engine.prototype = {
 						var element = tinyMCE._getElementById(elements[i]);
 						var trigger = element ? element.getAttribute(tinyMCE.settings['textarea_trigger']) : "";
 
-						if (tinyMCE.getAttrib(element, "class").indexOf(deselector) != -1)
+						if (new RegExp('\\b' + deselector + '\\b').test(tinyMCE.getAttrib(element, "class")))
 							continue;
 
 						if (trigger == "false")
@@ -1738,13 +1742,13 @@ TinyMCE_Engine.prototype = {
 						var elm = nodeList.item(i);
 						var trigger = elm.getAttribute(tinyMCE.settings['textarea_trigger']);
 
-						if (selector != '' && tinyMCE.getAttrib(elm, "class").indexOf(selector) == -1)
+						if (selector != '' && !new RegExp('\\b' + selector + '\\b').test(tinyMCE.getAttrib(elm, "class")))
 							continue;
 
 						if (selector != '')
 							trigger = selector != "" ? "true" : "";
 
-						if (tinyMCE.getAttrib(elm, "class").indexOf(deselector) != -1)
+						if (new RegExp('\\b' + deselector + '\\b').test(tinyMCE.getAttrib(elm, "class")))
 							continue;
 
 						if ((mode == "specific_textareas" && trigger == "true") || (mode == "textareas" && trigger != "false"))
