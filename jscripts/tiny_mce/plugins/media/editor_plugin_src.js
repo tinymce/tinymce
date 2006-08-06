@@ -308,7 +308,7 @@ var TinyMCE_MediaPlugin = {
 
 		for (n in p) {
 			// Skip url parameter for embed tag on WMP
-			if (n != 'url' && mt == 'application/x-mplayer2')
+			if (!(n == 'url' && mt == 'application/x-mplayer2'))
 				h += ' ' + n + '="' + p[n] + '"';
 		}
 

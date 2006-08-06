@@ -80,5 +80,6 @@ swstretchhalign : 'Stretch H-Align',
 swstretchvalign : 'Stretch V-Align',
 sound : 'Sound',
 progress : 'Progress',
-qtsrc : 'QT Src'
+qtsrc : 'QT Src',
+qt_stream_warn : 'Streamed rtsp resources should be added to the QT Src field under the advanced tab.\nYou should also add a non streamed version to the Src field..'
 });

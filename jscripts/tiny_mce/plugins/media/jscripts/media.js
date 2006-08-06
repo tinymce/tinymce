@@ -161,10 +161,10 @@ function init() {
 		if ((val = tinyMCE.getAttrib(fe, "height")) != "")
 			pl.height = f.height.value = val;
 
-		oldWidth = pl.width ? parseInt(pl.width) : 100;
-		oldHeight = pl.height ? parseInt(pl.height) : 100;
+		oldWidth = pl.width ? parseInt(pl.width) : 0;
+		oldHeight = pl.height ? parseInt(pl.height) : 0;
 	} else
-		oldWidth = oldHeight = 100;
+		oldWidth = oldHeight = 0;
 
 	selectByValue(f, 'media_type', type);
 	changedType(type);
@@ -281,14 +281,25 @@ function getType(v) {
 			return c[0];
 	}
 
-	return 'flash';
+	return null;
 }
 
 function switchType(v) {
-	var t = getType(v), d = document;
+	var t = getType(v), d = document, f = d.forms[0];
+
+	if (!t)
+		return;
 
 	selectByValue(d.forms[0], 'media_type', t);
 	changedType(t);
+
+	// Update qtsrc also
+	if (t == 'qt' && f.src.value.toLowerCase().indexOf('rtsp://') != -1) {
+		alert(tinyMCE.getLang("lang_media_qt_stream_warn"));
+
+		if (f.qt_qtsrc.value == '')
+			f.qt_qtsrc.value = f.src.value;
+	}
 }
 
 function changedType(t) {
@@ -453,8 +464,8 @@ function jsEncode(s) {
 	return s;
 }
 
-function generatePreview() {
-	var f = document.forms[0], p = document.getElementById('prev'), h = '', cls, pl = serializeParameters(), n, type, codebase, wp, hp, nw, nh;
+function generatePreview(c) {
+	var f = document.forms[0], p = document.getElementById('prev'), h = '', cls, pl, n, type, codebase, wp, hp, nw, nh;
 
 	p.innerHTML = '<!-- x --->';
 
@@ -463,19 +474,26 @@ function generatePreview() {
 
 	if (f.width.value != "" && f.height.value != "") {
 		if (f.constrain.checked) {
-			wp = nw / oldWidth;
-			hp = nh / oldHeight;
-
-			nw = Math.round(hp * nw);
-			nh = Math.round(wp * nh);
-
-			f.width.value = nw;
-			f.height.value = nh;
+			if (c == 'width' && oldWidth != 0) {
+				wp = nw / oldWidth;
+				nh = Math.round(wp * nh);
+				f.height.value = nh;
+			} else if (c == 'height' && oldHeight != 0) {
+				hp = nh / oldHeight;
+				nw = Math.round(hp * nw);
+				f.width.value = nw;
+			}
 		}
-
-		oldWidth = nw;
-		oldHeight = nh;
 	}
+
+	if (f.width.value != "")
+		oldWidth = nw;
+
+	if (f.height.value != "")
+		oldHeight = nh;
+
+	// After constrain
+	pl = serializeParameters();
 
 	switch (f.media_type.options[f.media_type.selectedIndex].value) {
 		case "flash":
