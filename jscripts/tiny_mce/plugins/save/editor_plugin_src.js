@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('save', 'en,tr,sv,zh_cn,cs,fa,fr_ca,fr,de,pl,pt_br,nl,he,nb,hu,ru,ru_KOI8-R,ru_UTF-8,nn,fi,da,es,cy,is,zh_tw,zh_tw_utf8,sk');
+tinyMCE.importPluginLanguagePack('save');
 
 var TinyMCE_SavePlugin = {
 	getInfo : function() {

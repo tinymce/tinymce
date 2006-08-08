@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('fullpage', 'en,tr,sv');
+tinyMCE.importPluginLanguagePack('fullpage');
 
 var TinyMCE_FullPagePlugin = {
 	getInfo : function() {

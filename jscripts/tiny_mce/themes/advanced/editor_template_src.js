@@ -155,6 +155,18 @@ var TinyMCE_AdvancedTheme = {
 	 */
 	execCommand : function(editor_id, element, command, user_interface, value) {
 		switch (command) {
+			case 'mceHelp':
+				tinyMCE.openWindow({
+					file : 'about.htm',
+					width : 480,
+					height : 380
+				}, {
+					tinymce_version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion,
+					tinymce_releasedate : tinyMCE.releaseDate,
+					inline : "yes"
+				});
+			return true;
+
 			case "mceLink":
 				var inst = tinyMCE.getInstanceById(editor_id);
 				var doc = inst.getDoc();
@@ -859,7 +871,7 @@ var TinyMCE_AdvancedTheme = {
 					nodeData += "src: " + src + " ";
 				}
 
-				if (getAttrib(path[i], 'href') != "") {
+				if (path[i].nodeName == 'A' && getAttrib(path[i], 'href') != "") {
 					var href = tinyMCE.getAttrib(path[i], "mce_href");
 
 					if (href == "")

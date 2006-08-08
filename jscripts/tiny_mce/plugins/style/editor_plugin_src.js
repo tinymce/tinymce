@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('style', 'en,fr');
+tinyMCE.importPluginLanguagePack('style');
 
 var TinyMCE_StylePlugin = {
 	getInfo : function() {

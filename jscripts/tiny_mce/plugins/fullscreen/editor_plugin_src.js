@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('fullscreen', 'en,tr,sv,cs,fr_ca,zh_cn,da,he,nb,de,hu,ru,ru_KOI8-R,ru_UTF-8,nn,es,cy,is,pl,nl,fr,pt_br');
+tinyMCE.importPluginLanguagePack('fullscreen');
 
 var TinyMCE_FullScreenPlugin = {
 	getInfo : function() {

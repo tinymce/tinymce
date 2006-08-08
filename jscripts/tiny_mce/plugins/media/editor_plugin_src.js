@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('media', 'en,sv');
+tinyMCE.importPluginLanguagePack('media');
 
 var TinyMCE_MediaPlugin = {
 	getInfo : function() {
@@ -54,14 +54,15 @@ var TinyMCE_MediaPlugin = {
 	},
 
 	cleanup : function(type, content, inst) {
-		var nl, img, i, ne, d, s, ar, ci;
+		var nl, img, i, ne, d, s, ci;
 
 		switch (type) {
 			case "insert_to_editor":
 				img = tinyMCE.getParam("theme_href") + '/images/spacer.gif';
 				content = content.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, '<img class="mceItem$1" title="$2" src="' + img + '" />');
 				content = content.replace(/<object([^>]*)>/gi, '<span class="mceItemObject" $1>');
-				content = content.replace(/<\/object([^>]*)>/gi, '</span>');
+				content = content.replace(/<embed([^>]*)>/gi, '<span class="mceItemObjectEmbed" $1>');
+				content = content.replace(/<\/(object|embed)([^>]*)>/gi, '</span>');
 				content = content.replace(/<param([^>]*)>/gi, '<span $1 class="mceItemParam"></span>');
 				content = content.replace(new RegExp('\\/ class="mceItemParam"><\\/span>', 'gi'), 'class="mceItemParam"></span>');
 				break;
@@ -77,40 +78,62 @@ var TinyMCE_MediaPlugin = {
 					}
 				}
 
-				nl = content.getElementsByTagName("span");
-				for (i=0, ar = new Array(); i<nl.length; i++)
-					ar[ar.length] = nl[i];
-
-				for (i=0; i<ar.length; i++) {
-					if (ar[i].className == 'mceItemObject') {
-						ci = tinyMCE.getAttrib(ar[i], "classid").toLowerCase().replace(/\s+/g, '');
+				nl = tinyMCE.selectNodes(content, function (n) {return n.className == 'mceItemObject';});
+				for (i=0; i<nl.length; i++) {
+					if (nl[i].className == 'mceItemObject') {
+						ci = tinyMCE.getAttrib(nl[i], "classid").toLowerCase().replace(/\s+/g, '');
 
 						switch (ci) {
 							case 'clsid:d27cdb6e-ae6d-11cf-96b8-444553540000':
-								ar[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemFlash', d, ar[i]), ar[i]);
+								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemFlash', d, nl[i]), nl[i]);
 								break;
 
 							case 'clsid:166b1bca-3f9c-11cf-8075-444553540000':
-								ar[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemShockWave', d, ar[i]), ar[i]);
+								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemShockWave', d, nl[i]), nl[i]);
 								break;
 
 							case 'clsid:6bf52a52-394a-11d3-b153-00c04f79faa6':
-								ar[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemWindowsMedia', d, ar[i]), ar[i]);
+								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemWindowsMedia', d, nl[i]), nl[i]);
 								break;
 
 							case 'clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b':
-								ar[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemQuickTime', d, ar[i]), ar[i]);
+								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemQuickTime', d, nl[i]), nl[i]);
 								break;
 
 							case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
 							case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
 							case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
-								ar[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemRealMedia', d, ar[i]), ar[i]);
+								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemRealMedia', d, nl[i]), nl[i]);
 								break;
 						}
 					}
 				}
 
+				// Handle embed (if any)
+				nl = tinyMCE.selectNodes(content, function (n) {return n.className == 'mceItemObjectEmbed';});
+				for (i=0; i<nl.length; i++) {
+					switch (tinyMCE.getAttrib(nl[i], 'type')) {
+						case 'application/x-shockwave-flash':
+							TinyMCE_MediaPlugin._createImgFromEmbed(nl[i], d, 'mceItemFlash');
+							break;
+
+						case 'application/x-director':
+							TinyMCE_MediaPlugin._createImgFromEmbed(nl[i], d, 'mceItemShockWave');
+							break;
+
+						case 'application/x-mplayer2':
+							TinyMCE_MediaPlugin._createImgFromEmbed(nl[i], d, 'mceItemWindowsMedia');
+							break;
+
+						case 'video/quicktime':
+							TinyMCE_MediaPlugin._createImgFromEmbed(nl[i], d, 'mceItemQuickTime');
+							break;
+
+						case 'audio/x-pn-realaudio-plugin':
+							TinyMCE_MediaPlugin._createImgFromEmbed(nl[i], d, 'mceItemRealMedia');
+							break;
+					}
+				}
 				break;
 
 			case "get_from_editor":
@@ -235,6 +258,37 @@ var TinyMCE_MediaPlugin = {
 		tinyMCE.switchClass(editor_id + '_media', 'mceButtonNormal');
 
 		return true;
+	},
+
+	_createImgFromEmbed : function(n, d, cl) {
+		var ne, at, i, ti = '', an;
+
+		ne = d.createElement('img');
+		ne.src = tinyMCE.getParam("theme_href") + '/images/spacer.gif';
+		ne.width = tinyMCE.getAttrib(n, 'width');
+		ne.height = tinyMCE.getAttrib(n, 'height');
+		ne.className = cl;
+
+		at = n.attributes;
+		for (i=0; i<at.length; i++) {
+			if (at[i].specified && at[i].nodeValue) {
+				an = at[i].nodeName.toLowerCase();
+
+				if (an == 'src')
+					continue;
+
+				if (an == 'mce_src')
+					an = 'src';
+
+				if (an.indexOf('mce_') == -1 && !new RegExp('^(class|type)$').test(an))
+					ti += an.toLowerCase() + ':\'' + at[i].nodeValue + "',";
+			}
+		}
+
+		ti = ti.length > 0 ? ti.substring(0, ti.length - 1) : ti;
+		ne.title = ti;
+
+		n.parentNode.replaceChild(ne, n);
 	},
 
 	_createImg : function(cl, d, n) {

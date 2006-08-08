@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('autosave', 'en,tr,sv,cs,he,nb,hu,de,da,ru,ru_KOI8-R,ru_UTF-8,nn,fi,cy,es,is,pl,pt_br');
+tinyMCE.importPluginLanguagePack('autosave');
 
 var TinyMCE_AutoSavePlugin = {
 	getInfo : function() {

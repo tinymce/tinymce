@@ -7,7 +7,7 @@
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
-tinyMCE.importPluginLanguagePack('test', 'en,tr,he,nb,ru,ru_KOI8-R,ru_UTF-8,nn,fi,cy,es,is,pl');
+tinyMCE.importPluginLanguagePack('test');
 
 var TinyMCE_TestPlugin = {
 	getInfo : function() {

@@ -315,7 +315,8 @@ TinyMCE_Control.prototype = {
 		var stc = tinyMCE.parseStyle(tinyMCE.getAttrib(ch, "style"));
 		var className = tinyMCE.getAttrib(pa, "class");
 
-		className += " " + tinyMCE.getAttrib(ch, "class");
+		// Removed class adding due to bug #1478272
+		className = tinyMCE.getAttrib(ch, "class");
 
 		if (override) {
 			for (var n in st) {

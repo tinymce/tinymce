@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('insertdatetime', 'en,tr,cs,el,fr_ca,it,ko,sv,zh_cn,fa,fr,de,pl,pt_br,nl,da,he,nb,ru,ru_KOI8-R,ru_UTF-8,nn,fi,es,cy,is,pl');
+tinyMCE.importPluginLanguagePack('insertdatetime');
 
 var TinyMCE_InsertDateTimePlugin = {
 	getInfo : function() {

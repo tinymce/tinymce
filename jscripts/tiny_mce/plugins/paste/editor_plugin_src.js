@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */ 
-tinyMCE.importPluginLanguagePack('paste', 'en,tr,sv,cs,zh_cn,fr_ca,da,he,nb,de,hu,ru,ru_KOI8-R,ru_UTF-8,nn,fi,es,cy,is,pl,nl,fr,pt_br');
+tinyMCE.importPluginLanguagePack('paste');
 
 var TinyMCE_PastePlugin = {
 	getInfo : function() {

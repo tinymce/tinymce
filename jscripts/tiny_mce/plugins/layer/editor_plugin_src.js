@@ -6,7 +6,7 @@
  */
 
 /* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('layer', 'en');
+tinyMCE.importPluginLanguagePack('layer');
 
 var TinyMCE_LayerPlugin = {
 	getInfo : function() {

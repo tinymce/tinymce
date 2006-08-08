@@ -17,11 +17,13 @@ Version 2.0.7 (2006-xx-xx)
 	Fixed bug where isDirty state was set after calling user specific onsubmit function.
 	Fixed bug where editor_selector/editor_deselector matched incorrectly on some names.
 	Fixed bug where contextmenu was placed in the wrong location in FF.
+	Fixed bug where images had a href attribute displayed in it's element path title.
 	Fixed issue with language variable in replace dialog in the searchreplace plugin.
 	Renamed some image names in style and layer plugins for compatiblity with Drupal.
 	Fixed some HTML and CSS issues with the style properties plugin.
 	Fixed so the addMCEControl method returns the new editor instance id.
 	Fixed translation issues with the style properties dialog, patch contributed by TOMASIAN.
+	Removed the need for adding language codes to plugins. Since the online service now merges old ones with en.
 Version 2.0.6.1 (2006-05-04)
 	Fixed issue where the layer and style plugins couldn't be added in incorrect order.
 	Fixed issue with Firefox nl not beeing defined in triggerSave correctly.

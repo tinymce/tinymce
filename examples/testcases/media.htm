@@ -86,6 +86,13 @@ This page is used to test the media plugin.<br />
 		<object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0" width="320" height="240"><param name="src" value="media/sample.mov" /><param name="width" value="320" /><param name="height" value="240" /><param name="qtsrc" value="rtsp://realaudio.ncsu.edu/unity/lockers/project/mediasource/video/carshowaudio.mov" /><embed type="video/quicktime" src="media/sample.mov" qtsrc="rtsp://realaudio.ncsu.edu/unity/lockers/project/mediasource/video/carshowaudio.mov" width="320" height="240"></embed></object>
 
 		<object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" width="320" height="240"><param name="src" value="media/sample.ram" /><param name="width" value="320" /><param name="height" value="240" /><embed type="audio/x-pn-realaudio-plugin" src="media/sample.ram" width="320" height="240"></embed></object>
+
+		<h3>Only embed element:</h3>
+
+		<embed type="application/x-mplayer2" src="media/sample.avi" width="320" height="240"></embed>
+		<embed type="video/quicktime" src="media/sample.mov" width="320" height="240"></embed>
+		<embed type="audio/x-pn-realaudio-plugin" src="media/sample.rm" width="320" height="240"></embed>
+		<embed type="application/x-director" src="media/sample.dcr" width="320" height="240"></embed>
 	</textarea>
 	<br />
 	<input type="submit" name="save" value="Submit" />

@@ -270,10 +270,6 @@ TinyMCE_Engine.prototype = {
 
 		// Only do this once
 		if (this.configs.length == 0) {
-			// Is Safari enabled
-			if (this.isSafari && this.getParam('safari_warning', false))
-				alert("Safari support is very limited and should be considered experimental.\nSo there is no need to even submit bugreports on this early version.\nYou can disable this message by setting: safari_warning option to false");
-
 			if (typeof(TinyMCECompressed) == "undefined") {
 				tinyMCE.addEvent(window, "DOMContentLoaded", TinyMCE_Engine.prototype.onLoad);
 
@@ -303,10 +299,12 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Setup entities
-		settings['cleanup_entities'] = new Array();
-		var entities = tinyMCE.getParam('entities', '', true, ',');
-		for (var i=0; i<entities.length; i+=2)
-			settings['cleanup_entities']['c' + entities[i]] = entities[i+1];
+		if (tinyMCE.getParam('entity_encoding') == 'named') {
+			settings['cleanup_entities'] = new Array();
+			var entities = tinyMCE.getParam('entities', '', true, ',');
+			for (var i=0; i<entities.length; i+=2)
+				settings['cleanup_entities']['c' + entities[i]] = entities[i+1];
+		}
 
 		// Save away this config
 		settings['index'] = this.configs.length;
@@ -608,13 +606,16 @@ TinyMCE_Engine.prototype = {
 	},
 
 	execInstanceCommand : function(editor_id, command, user_interface, value, focus) {
-		var inst = tinyMCE.getInstanceById(editor_id);
+		var inst = tinyMCE.getInstanceById(editor_id), r;
+
 		if (inst) {
+			r = inst.selection.getRng();
+
 			if (typeof(focus) == "undefined")
 				focus = true;
 
 			// IE bug lost focus on images in absolute divs Bug #1534575
-			if (focus && !tinyMCE.isMSIE)
+			if (focus && (!r || !r.item))
 				inst.contentWindow.focus();
 
 			// Reset design mode if lost
@@ -639,18 +640,6 @@ TinyMCE_Engine.prototype = {
 			tinyMCE.selectedInstance.switchSettings();
 
 		switch (command) {
-			case 'mceHelp':
-				tinyMCE.openWindow({
-					file : 'about.htm',
-					width : 480,
-					height : 380
-				}, {
-					tinymce_version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion,
-					tinymce_releasedate : tinyMCE.releaseDate,
-					inline : "yes"
-				});
-			return;
-
 			case 'mceFocus':
 				var inst = tinyMCE.getInstanceById(value);
 				if (inst)
@@ -933,10 +922,8 @@ TinyMCE_Engine.prototype = {
 		if (tinyMCE.isGecko) {
 			// Remove mce_src from textnodes and comments
 			tinyMCE.selectNodes(inst.getBody(), function(n) {
-				if (n.nodeType == 3 || n.nodeType == 8) {
-					n.nodeValue = n.nodeValue.replace(new RegExp('\\smce_src=\"[^\"]*\"', 'gi'), "");
-					n.nodeValue = n.nodeValue.replace(new RegExp('\\smce_href=\"[^\"]*\"', 'gi'), "");
-				}
+				if (n.nodeType == 3 || n.nodeType == 8)
+					n.nodeValue = n.nodeValue.replace(new RegExp('\\s(mce_src|mce_href)=\"[^\"]*\"', 'gi'), "");
 
 				return false;
 			});
@@ -966,10 +953,8 @@ TinyMCE_Engine.prototype = {
 		if (tinyMCE.isGecko) {
 			// Remove mce_src from textnodes and comments
 			tinyMCE.selectNodes(n, function(n) {
-				if (n.nodeType == 3 || n.nodeType == 8) {
-					n.nodeValue = n.nodeValue.replace(new RegExp('\\smce_src=\"[^\"]*\"', 'gi'), "");
-					n.nodeValue = n.nodeValue.replace(new RegExp('\\smce_href=\"[^\"]*\"', 'gi'), "");
-				}
+				if (n.nodeType == 3 || n.nodeType == 8)
+					n.nodeValue = n.nodeValue.replace(new RegExp('\\s(mce_src|mce_href)=\"[^\"]*\"', 'gi'), "");
 
 				return false;
 			});
@@ -1279,29 +1264,6 @@ TinyMCE_Engine.prototype = {
 				// Add first bookmark location
 				if (!tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark)
 					tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark = tinyMCE.selectedInstance.selection.getBookmark();
-
-/*
-				if (tinyMCE.isSafari) {
-					tinyMCE.selectedInstance.lastSafariSelection = tinyMCE.selectedInstance.selection.getBookmark();
-					tinyMCE.selectedInstance.lastSafariSelectedElement = tinyMCE.selectedElement;
-
-					var lnk = tinyMCE.getParentElement(tinyMCE.selectedElement, "a");
-
-					// Patch the darned link
-					if (lnk && e.type == "mousedown") {
-						lnk.setAttribute("mce_real_href", lnk.getAttribute("href"));
-						lnk.setAttribute("href", "javascript:void(0);");
-					}
-
-					// Patch back
-					if (lnk && e.type == "click") {
-						window.setTimeout(function() {
-							lnk.setAttribute("href", lnk.getAttribute("mce_real_href"));
-							lnk.removeAttribute("mce_real_href");
-						}, 10);
-					}
-				}
-*/
 
 				// Reset selected node
 				if (e.type != "focus")
@@ -1681,19 +1643,13 @@ TinyMCE_Engine.prototype = {
 		tinyMCE.loadScript(tinyMCE.baseURL + '/themes/' + name + '/langs/' + tinyMCE.settings['language'] + '.js');
 	},
 
-	importPluginLanguagePack : function(name, valid_languages) {
-		var lang = "en", b = tinyMCE.baseURL + '/plugins/' + name;
-
-		valid_languages = valid_languages.split(',');
-		for (var i=0; i<valid_languages.length; i++) {
-			if (tinyMCE.settings['language'] == valid_languages[i])
-				lang = tinyMCE.settings['language'];
-		}
+	importPluginLanguagePack : function(name) {
+		var b = tinyMCE.baseURL + '/plugins/' + name;
 
 		if (this.plugins[name])
 			b = this.plugins[name].baseURL;
 
-		tinyMCE.loadScript(b + '/langs/' + lang +  '.js');
+		tinyMCE.loadScript(b + '/langs/' + tinyMCE.settings['language'] +  '.js');
 	},
 
 	applyTemplate : function(h, as) {
@@ -2553,7 +2509,8 @@ TinyMCE_Control.prototype = {
 		var stc = tinyMCE.parseStyle(tinyMCE.getAttrib(ch, "style"));
 		var className = tinyMCE.getAttrib(pa, "class");
 
-		className += " " + tinyMCE.getAttrib(ch, "class");
+		// Removed class adding due to bug #1478272
+		className = tinyMCE.getAttrib(ch, "class");
 
 		if (override) {
 			for (var n in st) {
