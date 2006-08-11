@@ -146,18 +146,19 @@ TinyMCE_Engine.prototype.getOuterHTML = function(e) {
  *
  * @param {HTMLElement} e HTML element to set outerHTML on.
  * @param {string} h HTML string to set in property.
+ * @param {DOMDocument} d Optional document instance (Required in old IE versions).
  */
-TinyMCE_Engine.prototype.setOuterHTML = function(e, h) {
-	var d, i, nl;
+TinyMCE_Engine.prototype.setOuterHTML = function(e, h, d) {
+	var d = typeof(d) == "undefined" ? e.ownerDocument : d, i, nl, t;
 
-	if (tinyMCE.isMSIE)
+	if (tinyMCE.isMSIE && e.nodeType == 1)
 		e.outerHTML = h;
 	else {
-		var d = e.ownerDocument.createElement("body");
-		d.innerHTML = h;
+		t = d.createElement("body");
+		t.innerHTML = h;
 
-		for (i=0, nl=d.childNodes; i<nl.length; i++)
-			e.parentNode.insertBefore(nl[i], e);
+		for (i=0, nl=t.childNodes; i<nl.length; i++)
+			e.parentNode.insertBefore(nl[i].cloneNode(true), e);
 
 		e.parentNode.removeChild(e);
 	}

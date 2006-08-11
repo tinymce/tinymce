@@ -30,6 +30,7 @@ function TinyMCE_Engine() {
 	this.isMSIE = (navigator.appName == "Microsoft Internet Explorer");
 	this.isMSIE5 = this.isMSIE && (ua.indexOf('MSIE 5') != -1);
 	this.isMSIE5_0 = this.isMSIE && (ua.indexOf('MSIE 5.0') != -1);
+	this.isMSIE7 = this.isMSIE && (ua.indexOf('MSIE 7') != -1);
 	this.isGecko = ua.indexOf('Gecko') != -1;
 	this.isSafari = ua.indexOf('Safari') != -1;
 	this.isOpera = ua.indexOf('Opera') != -1;
@@ -1836,8 +1837,10 @@ TinyMCE_Engine.prototype = {
 	 */
 	entityDecode : function(s) {
 		var e = document.createElement("div");
+
 		e.innerHTML = s;
-		return e.innerHTML;
+
+		return e.firstChild.nodeValue;
 	},
 
 	/**
@@ -2280,6 +2283,10 @@ TinyMCE_Engine.prototype = {
 
 				return h;
 			} else {
+				// Why bother if there is no src or href broken
+				if (!new RegExp('(src|href)=', 'g').test(h))
+					return h;
+
 				el = new Array('a','img','select','area','iframe','base','input','script','embed','object','link');
 
 				for (a=0; a<el.length; a++) {

@@ -21,6 +21,7 @@ function TinyMCE_Engine() {
 	this.isMSIE = (navigator.appName == "Microsoft Internet Explorer");
 	this.isMSIE5 = this.isMSIE && (ua.indexOf('MSIE 5') != -1);
 	this.isMSIE5_0 = this.isMSIE && (ua.indexOf('MSIE 5.0') != -1);
+	this.isMSIE7 = this.isMSIE && (ua.indexOf('MSIE 7') != -1);
 	this.isGecko = ua.indexOf('Gecko') != -1;
 	this.isSafari = ua.indexOf('Safari') != -1;
 	this.isOpera = ua.indexOf('Opera') != -1;
@@ -1554,8 +1555,10 @@ TinyMCE_Engine.prototype = {
 
 	entityDecode : function(s) {
 		var e = document.createElement("div");
+
 		e.innerHTML = s;
-		return e.innerHTML;
+
+		return e.firstChild.nodeValue;
 	},
 
 	addToLang : function(prefix, ar) {
@@ -1900,6 +1903,10 @@ TinyMCE_Engine.prototype = {
 
 				return h;
 			} else {
+				// Why bother if there is no src or href broken
+				if (!new RegExp('(src|href)=', 'g').test(h))
+					return h;
+
 				el = new Array('a','img','select','area','iframe','base','input','script','embed','object','link');
 
 				for (a=0; a<el.length; a++) {
@@ -3696,6 +3703,10 @@ TinyMCE_Engine.prototype.cleanupHTMLCode = function(s) {
 	if (tinyMCE.isMSIE)
 		s = s.replace(new RegExp('<p><hr \\/><\\/p>', 'gi'), "<hr>");
 
+	// Weird tags will make IE error #bug: 1538495
+	if (tinyMCE.isMSIE)
+		s = s.replace(/<!(\s*)\/>/g, '');
+
 	// Convert relative anchors to absolute URLs ex: #something to file.htm#something
 	if (tinyMCE.getParam('convert_urls'))
 		s = s.replace(new RegExp('(href=\"{0,1})(\\s*#)', 'gi'), '$1' + tinyMCE.settings['document_base_url'] + "#");
@@ -4908,17 +4919,17 @@ TinyMCE_Engine.prototype.getOuterHTML = function(e) {
 	return d.innerHTML;
 };
 
-TinyMCE_Engine.prototype.setOuterHTML = function(e, h) {
-	var d, i, nl;
+TinyMCE_Engine.prototype.setOuterHTML = function(e, h, d) {
+	var d = typeof(d) == "undefined" ? e.ownerDocument : d, i, nl, t;
 
-	if (tinyMCE.isMSIE)
+	if (tinyMCE.isMSIE && e.nodeType == 1)
 		e.outerHTML = h;
 	else {
-		var d = e.ownerDocument.createElement("body");
-		d.innerHTML = h;
+		t = d.createElement("body");
+		t.innerHTML = h;
 
-		for (i=0, nl=d.childNodes; i<nl.length; i++)
-			e.parentNode.insertBefore(nl[i], e);
+		for (i=0, nl=t.childNodes; i<nl.length; i++)
+			e.parentNode.insertBefore(nl[i].cloneNode(true), e);
 
 		e.parentNode.removeChild(e);
 	}

@@ -37,6 +37,10 @@ TinyMCE_Engine.prototype.cleanupHTMLCode = function(s) {
 	if (tinyMCE.isMSIE)
 		s = s.replace(new RegExp('<p><hr \\/><\\/p>', 'gi'), "<hr>");
 
+	// Weird tags will make IE error #bug: 1538495
+	if (tinyMCE.isMSIE)
+		s = s.replace(/<!(\s*)\/>/g, '');
+
 	// Convert relative anchors to absolute URLs ex: #something to file.htm#something
 	if (tinyMCE.getParam('convert_urls'))
 		s = s.replace(new RegExp('(href=\"{0,1})(\\s*#)', 'gi'), '$1' + tinyMCE.settings['document_base_url'] + "#");

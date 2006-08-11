@@ -50,26 +50,25 @@ var TinyMCE_InsertDateTimePlugin = {
 			return value;
 		}
 
-		/* Returns the date object in the specified format */
-		function getDateTime(date, format) {
-			format = tinyMCE.regexpReplace(format, "%D", "%m/%d/%y");
-			format = tinyMCE.regexpReplace(format, "%r", "%I:%M:%S %p");
-			format = tinyMCE.regexpReplace(format, "%Y", "" + date.getFullYear());
-			format = tinyMCE.regexpReplace(format, "%y", "" + date.getYear());
-			format = tinyMCE.regexpReplace(format, "%m", addZeros(date.getMonth()+1, 2));
-			format = tinyMCE.regexpReplace(format, "%d", addZeros(date.getDate(), 2));
-			format = tinyMCE.regexpReplace(format, "%H", "" + addZeros(date.getHours(), 2));
-			format = tinyMCE.regexpReplace(format, "%M", "" + addZeros(date.getMinutes(), 2));
-			format = tinyMCE.regexpReplace(format, "%S", "" + addZeros(date.getSeconds(), 2));
-			format = tinyMCE.regexpReplace(format, "%I", "" + ((date.getHours() + 11) % 12 + 1));
-			format = tinyMCE.regexpReplace(format, "%p", "" + (date.getHours() < 12 ? "AM" : "PM"));
-			format = tinyMCE.regexpReplace(format, "%B", "" + tinyMCE.getLang("lang_inserttime_months_long")[date.getMonth()]);
-			format = tinyMCE.regexpReplace(format, "%b", "" + tinyMCE.getLang("lang_inserttime_months_short")[date.getMonth()]);
-			format = tinyMCE.regexpReplace(format, "%A", "" + tinyMCE.getLang("lang_inserttime_day_long")[date.getDay()]);
-			format = tinyMCE.regexpReplace(format, "%a", "" + tinyMCE.getLang("lang_inserttime_day_short")[date.getDay()]);
-			format = tinyMCE.regexpReplace(format, "%%", "%");
+		function getDateTime(d, fmt) {
+			fmt = fmt.replace("%D", "%m/%d/%y");
+			fmt = fmt.replace("%r", "%I:%M:%S %p");
+			fmt = fmt.replace("%Y", "" + d.getFullYear());
+			fmt = fmt.replace("%y", "" + d.getYear());
+			fmt = fmt.replace("%m", addZeros(d.getMonth()+1, 2));
+			fmt = fmt.replace("%d", addZeros(d.getDate(), 2));
+			fmt = fmt.replace("%H", "" + addZeros(d.getHours(), 2));
+			fmt = fmt.replace("%M", "" + addZeros(d.getMinutes(), 2));
+			fmt = fmt.replace("%S", "" + addZeros(d.getSeconds(), 2));
+			fmt = fmt.replace("%I", "" + ((d.getHours() + 11) % 12 + 1));
+			fmt = fmt.replace("%p", "" + (d.getHours() < 12 ? "AM" : "PM"));
+			fmt = fmt.replace("%B", "" + tinyMCE.getLang("lang_inserttime_months_long")[d.getMonth()]);
+			fmt = fmt.replace("%b", "" + tinyMCE.getLang("lang_inserttime_months_short")[d.getMonth()]);
+			fmt = fmt.replace("%A", "" + tinyMCE.getLang("lang_inserttime_day_long")[d.getDay()]);
+			fmt = fmt.replace("%a", "" + tinyMCE.getLang("lang_inserttime_day_short")[d.getDay()]);
+			fmt = fmt.replace("%%", "%");
 
-			return format;
+			return fmt;
 		}
 
 		// Handle commands

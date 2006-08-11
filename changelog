@@ -1,4 +1,7 @@
 Version 2.0.7 (2006-xx-xx)
+	Added new visualchars plugin. Enables users to see custom chars like &nbsp;.
+	Added new nonbreaking plugin. Enables users to insert &nbsp; characters.
+	Added new xhtmlxtras plugin. Based on work contributed by Andrew Tetlaw.
 	Added new text and hilite color picker layers to the advanced theme.
 	Added new media plugin, this handles flash, quicktime, windows media player, real player.
 	Added new valid_child_elements option. Enables you to remove non valid child nodes from parents.
@@ -19,7 +22,9 @@ Version 2.0.7 (2006-xx-xx)
 	Fixed bug where contextmenu was placed in the wrong location in FF.
 	Fixed bug where images had a href attribute displayed in it's element path title.
 	Fixed bug where forms_utils.js function where using a relative URL to the current theme.
+	Fixed bug where cursor was placed at a incorrect location after mceInsertContent call in Gecko.
 	Fixed issue with language variable in replace dialog in the searchreplace plugin.
+	Fixed various CSS compatiblity issues with MSIE 7 beta 3.
 	Renamed some image names in style and layer plugins for compatiblity with Drupal.
 	Fixed some HTML and CSS issues with the style properties plugin.
 	Fixed so the addMCEControl method returns the new editor instance id.

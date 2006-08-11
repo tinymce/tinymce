@@ -1,4 +1,6 @@
 function init() {
+	tinyMCEPopup.resizeToInnerSize();
+
 	var formObj = document.forms[0];
 	formObj.width.value  = tinyMCE.getWindowArg('width');
 	formObj.size.value   = tinyMCE.getWindowArg('size');
