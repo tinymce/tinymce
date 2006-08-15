@@ -6,6 +6,8 @@ Version 2.0.7 (2006-xx-xx)
 	Added new media plugin, this handles flash, quicktime, windows media player, real player.
 	Added new valid_child_elements option. Enables you to remove non valid child nodes from parents.
 	Added new required attribute flag to the valid_elements option.
+	Added new popup_css add option. Enables you to add an additional css to all popups.
+	Added new table_default_border, table_default_cellpadding, table_default_cellspacing options to table plugin.
 	Added lightbox as rel value in the advanced link dialog.
 	Added new RegExp support for editor_selector/editor_deselector options.
 	Added new validation class. Implemented in various dialogs.
