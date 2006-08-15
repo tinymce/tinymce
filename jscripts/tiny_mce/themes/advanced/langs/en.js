@@ -77,5 +77,6 @@ loaded_plugins : 'Loaded plugins',
 help : 'Help',
 not_set : '-- Not set --',
 close : 'Close',
-toolbar_focus : 'Jump to tool buttons - Alt+Q, Jump to editor - Alt-Z, Jump to element path - Alt-X'
+toolbar_focus : 'Jump to tool buttons - Alt+Q, Jump to editor - Alt-Z, Jump to element path - Alt-X',
+invalid_data : 'Error: Invalid values entered, these are marked in red.'
 });

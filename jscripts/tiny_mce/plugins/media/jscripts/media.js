@@ -177,6 +177,11 @@ function init() {
 function insertMedia() {
 	var fe, f = document.forms[0], h;
 
+	if (!AutoValidator.validate(f)) {
+		alert(tinyMCE.getLang('lang_invalid_data'));
+		return false;
+	}
+
 	f.width.value = f.width.value == "" ? 100 : f.width.value;
 	f.height.value = f.height.value == "" ? 100 : f.height.value;
 

@@ -11,6 +11,11 @@ function mergeCells() {
 	var args = new Array();
 	var formObj = document.forms[0];
 
+	if (!AutoValidator.validate(formObj)) {
+		alert(tinyMCE.getLang('lang_invalid_data'));
+		return false;
+	}
+
 	args["numcols"] = formObj.numcols.value;
 	args["numrows"] = formObj.numrows.value;
 

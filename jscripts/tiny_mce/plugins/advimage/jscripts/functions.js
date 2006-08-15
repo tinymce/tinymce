@@ -272,6 +272,11 @@ function insertAction() {
 	var onmouseoversrc = formObj.onmouseoversrc.value;
 	var onmouseoutsrc = formObj.onmouseoutsrc.value;
 
+	if (!AutoValidator.validate(formObj)) {
+		alert(tinyMCE.getLang('lang_invalid_data'));
+		return false;
+	}
+
 	if (tinyMCE.getParam("accessibility_warnings")) {
 		if (formObj.alt.value == "") {
 			var answer = confirm(tinyMCE.getLang('lang_advimage_missing_alt', '', true));

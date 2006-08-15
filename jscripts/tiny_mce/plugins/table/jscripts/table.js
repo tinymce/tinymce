@@ -8,6 +8,11 @@ function insertTable() {
 	var elm = tinyMCE.tableElm;
 	var cellLimit, rowLimit, colLimit;
 
+	if (!AutoValidator.validate(formObj)) {
+		alert(tinyMCE.getLang('lang_invalid_data'));
+		return false;
+	}
+
 	tinyMCEPopup.restoreSelection();
 
 	// Get form data

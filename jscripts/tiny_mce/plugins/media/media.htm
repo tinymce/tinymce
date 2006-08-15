@@ -4,6 +4,7 @@
 	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script language="javascript" type="text/javascript" src="jscripts/media.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/mctabs.js"></script>
+	<script language="javascript" type="text/javascript" src="../../utils/validate.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/editable_selects.js"></script>
 	<link href="css/media.css" rel="stylesheet" type="text/css" />
@@ -56,7 +57,7 @@
 								<td>
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
-										<td><input type="text" id="width" name="width" value="" onchange="generatePreview('width');" /> x <input type="text" id="height" name="height" value="" onchange="generatePreview('height');" /></td>
+										<td><input type="text" id="width" name="width" value="" class="size" onchange="generatePreview('width');" /> x <input type="text" id="height" name="height" value="" class="size"  onchange="generatePreview('height');" /></td>
 										<td>&nbsp;&nbsp;<input id="constrain" type="checkbox" name="constrain" class="checkbox" checked="checked" /></td>
 										<td><label id="constrainlabel" for="constrain">{$lang_media_constrain_proportions}</label></td>
 									</tr>
@@ -108,9 +109,9 @@
 
 						<tr>
 							<td><label for="vspace">{$lang_media_vspace}</label></td>
-							<td><input type="text" id="vspace" name="vspace" onchange="generatePreview();" /></td>
+							<td><input type="text" id="vspace" name="vspace" class="number" onchange="generatePreview();" /></td>
 							<td><label for="hspace">{$lang_media_hspace}</label></td>
-							<td><input type="text" id="hspace" name="hspace" onchange="generatePreview();" /></td>
+							<td><input type="text" id="hspace" name="hspace" class="number" onchange="generatePreview();" /></td>
 						</tr>
 					</table>
 				</fieldset>

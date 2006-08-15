@@ -8,6 +8,7 @@ Version 2.0.7 (2006-xx-xx)
 	Added new required attribute flag to the valid_elements option.
 	Added lightbox as rel value in the advanced link dialog.
 	Added new RegExp support for editor_selector/editor_deselector options.
+	Added new validation class. Implemented in various dialogs.
 	Fixed bugs and issues with the lastest Safari Nightly build.
 	Fixed bug where script element contents and event attributes where HTML encoded.
 	Fixed bug where TinyMCE didn't load if a base element and relative URL to TinyMCE where used in MSIE.
