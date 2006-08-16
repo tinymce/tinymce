@@ -1347,24 +1347,21 @@ var TinyMCE_AdvancedTheme = {
 	},
 
 	_getColorHTML : function(id, n, cm) {
-		var x, y, h, cl;
+		var i, h, cl;
 
 		h = '<span class="mceMenuLine"></span>';
 		cl = tinyMCE.getParam(n, TinyMCE_AdvancedTheme._defColors).split(',');
 
-		h += '<table class="mceColors">';
-		for (y=0; y<Math.round(cl.length / 8); y++) {
-			h += '<tr>';
+		h += '<table class="mceColors"><tr>';
+		for (i=0; i<cl.length; i++) {
+			c = 'tinyMCE.execInstanceCommand(\'' + id + '\', \'' + cm + '\', false, \'#' + cl[i] + '\');';
+			h += '<td><a href="javascript:' + c + '" style="background-color: #' + cl[i] + '" onclick="' + c + ';return false;"></a></td>';
 
-			for (x=0; x<8; x++) {
-				c = 'tinyMCE.execInstanceCommand(\'' + id + '\', \'' + cm + '\', false, \'#' + cl[y * 8 + x] + '\');';
-				h += '<td><a href="javascript:' + c + '" style="background-color: #' + cl[y * 8 + x] + '" onclick="' + c + ';return false;"></a></td>';
-			}
-
-			h += '</tr>';
+			if ((i+1) % 8 == 0)
+				h += '</tr><tr>';
 		}
 
-		h += '</table>';
+		h += '</tr></table>';
 		/*
 		h += '<a href="" class="mceMoreColors">More colors</a>';
 		*/
