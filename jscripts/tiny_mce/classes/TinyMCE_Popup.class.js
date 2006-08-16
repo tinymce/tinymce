@@ -19,7 +19,7 @@ function TinyMCE_Popup() {
  * Initializes the TinyMCE Popup class. This will setup the TinyMCE core references and other popup/dialog related functions.
  */
 TinyMCE_Popup.prototype.init = function() {
-	var win = window.opener ? window.opener : window.dialogArguments;
+	var win = window.opener ? window.opener : window.dialogArguments, c;
 	var inst;
 
 	if (!win) {
@@ -73,6 +73,16 @@ TinyMCE_Popup.prototype.init = function() {
 
 	// Output Popup CSS class
 	document.write('<link href="' + tinyMCE.getParam("popups_css") + '" rel="stylesheet" type="text/css">');
+
+	if (tinyMCE.getParam("popups_css_add")) {
+		c = tinyMCE.getParam("popups_css_add");
+
+		// Is relative
+		if (c.indexOf('://') == -1 && c.charAt(0) != '/')
+			c = tinyMCE.documentBasePath + "/" + c;
+
+		document.write('<link href="' + c + '" rel="stylesheet" type="text/css">');
+	}
 
 	tinyMCE.addEvent(window, "load", this.onLoad);
 };
