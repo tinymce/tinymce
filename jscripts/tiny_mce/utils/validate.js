@@ -7,6 +7,20 @@
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
+/**
+	// String validation:
+
+	if (!Validator.isEmail('myemail'))
+		alert('Invalid email.');
+
+	// Form validation:
+
+	var f = document.forms['myform'];
+
+	if (!Validator.isEmail(f.myemail))
+		alert('Invalid email.');
+*/
+
 var Validator = {
 	isEmail : function(s) {
 		return this.test(s, '^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+@[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$');
@@ -127,14 +141,14 @@ var AutoValidator = {
 
 			if (this.hasClass(n, s.min_cls, true)) {
 				v = this.getNum(n, s.min_cls);
-				
+
 				if (isNaN(v) || parseInt(n.value) < parseInt(v))
 					st = this.mark(f, n);
 			}
 
 			if (this.hasClass(n, s.max_cls, true)) {
 				v = this.getNum(n, s.max_cls);
-				
+
 				if (isNaN(v) || parseInt(n.value) > parseInt(v))
 					st = this.mark(f, n);
 			}
@@ -148,7 +162,8 @@ var AutoValidator = {
 	},
 
 	getNum : function(n, c) {
-		n.className.replace(new RegExp('\\b' + c + '([0-9]+)\\b', 'g'), function (a, b) {c = b;});
+		c = n.className.match(new RegExp('\\b' + c + '([0-9]+)\\b', 'g'))[0];
+		c = c.replace(/[^0-9]/g, '');
 
 		return c;
 	},
