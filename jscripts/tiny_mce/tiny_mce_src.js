@@ -4317,10 +4317,10 @@ TinyMCE_Cleanup.prototype = {
 						if (t.charAt(0) == '!') {
 							a[i] = t = t.substring(1);
 
-							if (!r.reqAttribs)
-								r.reqAttribs = tinyMCE.clearArray(new Array());
-
-							r.reqAttribs[r.reqAttribs.length] = t;
+							if (!r.reqAttribsRe)
+								r.reqAttribsRe = '\\s+(' + t;
+							else
+								r.reqAttribsRe += '|' + t;
 						}
 
 						av = new RegExp('(=|:|<)(.*?)$').exec(t);
@@ -4350,6 +4350,9 @@ TinyMCE_Cleanup.prototype = {
 
 						a[i] = t.toLowerCase();
 					}
+
+					if (r.reqAttribsRe)
+						r.reqAttribsRe = new RegExp(r.reqAttribsRe + ')=\"', 'g');
 
 					r.vAttribsRe += ')$';
 					r.vAttribsRe = this._wildcardToRe(r.vAttribsRe);
@@ -4522,18 +4525,8 @@ TinyMCE_Cleanup.prototype = {
 					}
 
 					// Check for required attribs
-					if (r.reqAttribs) {
-						st = false;
-						for (i=0; i<r.reqAttribs.length; i++) {
-							if (t.indexOf(r.reqAttribs[i] + '="') == -1) {
-								st = true;
-								break;
-							}
-						}
-
-						if (!st)
-							t = null;
-					}
+					if (r.reqAttribsRe && !r.reqAttribsRe.test(t))
+						t = null;
 
 					// Close these
 					if (t != null && this.closeElementsRe.test(n.nodeName))
