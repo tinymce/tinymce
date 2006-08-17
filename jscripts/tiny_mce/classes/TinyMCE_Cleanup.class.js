@@ -1003,7 +1003,7 @@ TinyMCE_Cleanup.prototype = {
 					}
 
 					// Check for required attribs
-					if (r.reqAttribsRe && !r.reqAttribsRe.test(t))
+					if (r.reqAttribsRe && !t.match(r.reqAttribsRe))
 						t = null;
 
 					// Close these
