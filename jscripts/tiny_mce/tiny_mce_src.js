@@ -5786,9 +5786,10 @@ TinyMCE_Selection.prototype = {
 	},
 
 	getBookmark : function(simple) {
+		var inst = this.instance;
 		var rng = this.getRng();
-		var doc = this.instance.getDoc();
-		var sp, le, s, e, nl, i, si, ei;
+		var doc = inst.getDoc(), b = inst.getBody();
+		var sp, le, s, e, nl, i, si, ei, w;
 		var trng, sx, sy, xx = -999999999;
 
 		// Skip Opera for now
@@ -5798,13 +5799,10 @@ TinyMCE_Selection.prototype = {
 		sx = doc.body.scrollLeft + doc.documentElement.scrollLeft;
 		sy = doc.body.scrollTop + doc.documentElement.scrollTop;
 
-		if (tinyMCE.isSafari || tinyMCE.isGecko)
+		if (tinyMCE.isSafari || simple)
 			return {rng : rng, scrollX : sx, scrollY : sy};
 
 		if (tinyMCE.isMSIE) {
-			if (simple)
-				return {rng : rng};
-
 			if (rng.item) {
 				e = rng.item(0);
 
@@ -5841,51 +5839,48 @@ TinyMCE_Selection.prototype = {
 		}
 
 		if (tinyMCE.isGecko) {
-			s = tinyMCE.getParentElement(rng.startContainer);
-			for (si=0; si<s.childNodes.length && s.childNodes[si] != rng.startContainer; si++) ;
+			s = this.getSel();
+			e = this.getFocusElement();
 
-			nl = doc.getElementsByTagName(s.nodeName);
-			for (i=0; i<nl.length; i++) {
-					if (s == nl[i]) {
-						sp = i;
-						break;
-					}
+			if (e && e.nodeName == 'IMG') {
+				return {
+					start : -1,
+					end : -1,
+					scrollX : sx,
+					scrollY : sy
+				};
 			}
 
-			e = tinyMCE.getParentElement(rng.endContainer);
-			for (ei=0; ei<e.childNodes.length && e.childNodes[ei] != rng.endContainer; ei++) ;
+			// Caret or selection
+			if (s.anchorNode == s.focusNode && s.anchorOffset == s.focusOffset) {
+				e = this._getPosText(b, s.anchorNode, s.focusNode);
+				if (!e)
+					return {scrollX : sx, scrollY : sy};
 
-			nl = doc.getElementsByTagName(e.nodeName);
-			for (i=0; i<nl.length; i++) {
-					if (e == nl[i]) {
-						le = i;
-						break;
-					}
+				return {
+					start : e.start + s.anchorOffset,
+					end : e.end + s.focusOffset,
+					scrollX : sx,
+					scrollY : sy
+				};
+			} else {
+				e = this._getPosText(b, rng.startContainer, rng.endContainer);
+
+				return {
+					start : e.start + rng.startOffset,
+					end : e.end + rng.endOffset,
+					scrollX : sx,
+					scrollY : sy
+				};
 			}
-
-			//tinyMCE.debug(s.nodeName, sp, rng.startOffset, '-' , e.nodeName, le, rng.endOffset);
-			//tinyMCE.debug(sx, sy);
-
-			return {
-				startTag : s.nodeName,
-				start : sp,
-				startIndex : si,
-				endTag : e.nodeName,
-				end : le,
-				endIndex : ei,
-				startOffset : rng.startOffset,
-				endOffset : rng.endOffset,
-				scrollX : sx,
-				scrollY : sy
-			};
 		}
 
 		return null;
 	},
 
 	moveToBookmark : function(bookmark) {
-		var rng, nl, i;
 		var inst = this.instance;
+		var rng, nl, i, ex, b = inst.getBody(), sd;
 		var doc = inst.getDoc();
 		var win = inst.getWin();
 		var sel = this.getSel();
@@ -5919,11 +5914,16 @@ TinyMCE_Selection.prototype = {
 					}
 				}
 			} else {
-				rng = inst.getSel().createRange();
-				rng.moveToElementText(inst.getBody());
-				rng.collapse(true);
-				rng.moveStart('character', bookmark.start);
-				rng.moveEnd('character', bookmark.length);
+				// Try/catch needed since this operation breaks when TinyMCE is placed in hidden divs/tabs
+				try {
+					rng = inst.getSel().createRange();
+					rng.moveToElementText(inst.getBody());
+					rng.collapse(true);
+					rng.moveStart('character', bookmark.start);
+					rng.moveEnd('character', bookmark.length);
+				} catch (ex) {
+					return true;
+				}
 			}
 
 			rng.select();
@@ -5932,36 +5932,71 @@ TinyMCE_Selection.prototype = {
 			return true;
 		}
 
-		if (tinyMCE.isGecko && bookmark.rng) {
-			sel.removeAllRanges();
-			sel.addRange(bookmark.rng);
-			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
-			return true;
-		}
-
 		if (tinyMCE.isGecko) {
-	//		try {
-				rng = doc.createRange();
-
-				nl = doc.getElementsByTagName(bookmark.startTag);
-				if (nl.length > bookmark.start)
-					rng.setStart(nl[bookmark.start].childNodes[bookmark.startIndex], bookmark.startOffset);
-
-				nl = doc.getElementsByTagName(bookmark.endTag);
-				if (nl.length > bookmark.end)
-					rng.setEnd(nl[bookmark.end].childNodes[bookmark.endIndex], bookmark.endOffset);
-
+			if (bookmark.rng) {
 				sel.removeAllRanges();
-				sel.addRange(rng);
-	/*		} catch {
-				// Ignore
-			}*/
+				sel.addRange(bookmark.rng);
+			}
+
+			if (bookmark.start != -1 && bookmark.end != -1) {
+				try {
+					sd = this._getTextPos(b, bookmark.start, bookmark.end);
+					rng = doc.createRange();
+					rng.setStart(sd.startNode, sd.startOffset);
+					rng.setEnd(sd.endNode, sd.endOffset);
+					//doc.execCommand('selectall', false, null);
+					sel.removeAllRanges();
+					sel.addRange(rng);
+				} catch (ex) {
+					// Ignore
+				}
+			}
 
 			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
 			return true;
 		}
 
 		return false;
+	},
+
+	_getPosText : function(r, sn, en) {
+		var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
+
+		while ((n = w.nextNode()) != null) {
+			if (n == sn)
+				d.start = p;
+
+			if (n == en) {
+				d.end = p;
+				return d;
+			}
+
+			p += n.nodeValue ? n.nodeValue.length : 0;
+		}
+
+		return null;
+	},
+
+	_getTextPos : function(r, sp, ep) {
+		var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
+
+		while ((n = w.nextNode()) != null) {
+			p += n.nodeValue ? n.nodeValue.length : 0;
+
+			if (p >= sp && !d.startNode) {
+				d.startNode = n;
+				d.startOffset = sp - (p - n.nodeValue.length);
+			}
+
+			if (p >= ep) {
+				d.endNode = n;
+				d.endOffset = ep - (p - n.nodeValue.length);
+
+				return d;
+			}
+		}
+
+		return null;
 	},
 
 	selectNode : function(node, collapse, select_text_node, to_start) {
