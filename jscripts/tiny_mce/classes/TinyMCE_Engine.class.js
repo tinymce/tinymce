@@ -1557,12 +1557,17 @@ TinyMCE_Engine.prototype = {
 
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isMSIE || tinyMCE.isOpera) && (m = tinyMCE.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
-			// Tiled button
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
-			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceTiledButton mceButtonNormal" target="_self">';
-			h += '<img src="{$themeurl}/images/spacer.gif" style="background-position: ' + x + 'px 0" title="{$' + lang + '}" />';
-			h += '<img src="{$themeurl}/images/button_menu.gif" title="{$' + lang + '}" class="mceMenuButton" onclick="' + mcmd + 'return false;" />';
-			h += '</a>';
+
+			if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
+			else
+				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
+
+			h += '<a href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceTiledButton mceMenuButtonNormal" target="_self">';
+			h += '<img src="{$themeurl}/images/spacer.gif" style="width: 20px; height: 20px; background-position: ' + x + 'px 0" title="{$' + lang + '}" /></a>';
+			h += '<a href="javascript:' + mcmd + '" onclick="' + mcmd + 'return false;" onmousedown="return false;"><img src="{$themeurl}/images/button_menu.gif" title="{$' + lang + '}" class="mceMenuButton" />';
+			h += '</a></span>';
 		} else {
 			if (tinyMCE.isMSIE && !tinyMCE.isOpera)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
