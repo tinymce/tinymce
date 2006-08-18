@@ -5854,6 +5854,7 @@ TinyMCE_Selection.prototype = {
 			// Caret or selection
 			if (s.anchorNode == s.focusNode && s.anchorOffset == s.focusOffset) {
 				e = this._getPosText(b, s.anchorNode, s.focusNode);
+
 				if (!e)
 					return {scrollX : sx, scrollY : sy};
 
@@ -5865,6 +5866,9 @@ TinyMCE_Selection.prototype = {
 				};
 			} else {
 				e = this._getPosText(b, rng.startContainer, rng.endContainer);
+
+				if (!e)
+					return {scrollX : sx, scrollY : sy};
 
 				return {
 					start : e.start + rng.startOffset,
@@ -5944,7 +5948,6 @@ TinyMCE_Selection.prototype = {
 					rng = doc.createRange();
 					rng.setStart(sd.startNode, sd.startOffset);
 					rng.setEnd(sd.endNode, sd.endOffset);
-					//doc.execCommand('selectall', false, null);
 					sel.removeAllRanges();
 					sel.addRange(rng);
 				} catch (ex) {
