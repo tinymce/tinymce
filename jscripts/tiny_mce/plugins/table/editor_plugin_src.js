@@ -116,7 +116,7 @@ var TinyMCE_TablePlugin = {
 	},
 
 	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
-		var colspan = "1", rowspan = "1";
+		var colspan = "1", rowspan = "1", tdElm;
 
 		var inst = tinyMCE.getInstanceById(editor_id);
 

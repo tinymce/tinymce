@@ -26,6 +26,9 @@ TinyMCE_Selection.prototype = {
 		var inst = this.instance;
 		var e, r = this.getRng(), h;
 
+		if (!r)
+			return null;
+
 		if (tinyMCE.isSafari) {
 			// Not realy perfect!!
 			return r.toString();

@@ -423,8 +423,6 @@ TinyMCE_Engine.prototype = {
 		var x = 0, i = 0, nl, le;
 
 		for (x = 0,csslen = ar.length; x<csslen; x++) {
-			ignore_css = false;
-
 			if (ar[x] != null && ar[x] != 'null' && ar[x].length > 0) {
 				/* Make sure it doesn't exist. */
 				for (i=0, lflen=this.loadedFiles.length; i<lflen; i++) {
@@ -1661,24 +1659,21 @@ TinyMCE_Engine.prototype = {
 	},
 
 	applyTemplate : function(h, as) {
-		var i, s, ar = h.match(new RegExp('\\{\\$[a-z0-9_]+\\}', 'gi'));
+		return h.replace(new RegExp('\\{\\$([a-z0-9_]+)\\}', 'gi'), function(m, s) {
+			if (s.indexOf('lang_') == 0 && tinyMCELang[s])
+				return tinyMCELang[s];
 
-		if (ar && ar.length > 0) {
-			for (i=ar.length-1; i>=0; i--) {
-				s = ar[i].substring(2, ar[i].length-1);
+			if (as && as[s])
+				return as[s];
 
-				if (s.indexOf('lang_') == 0 && tinyMCELang[s])
-					h = tinyMCE.replaceVar(h, s, tinyMCELang[s]);
-				else if (as && as[s])
-					h = tinyMCE.replaceVar(h, s, as[s]);
-				else if (tinyMCE.settings[s])
-					h = tinyMCE.replaceVar(h, s, tinyMCE.settings[s]);
-			}
-		}
+			if (tinyMCE.settings[s])
+				return tinyMCE.settings[s];
 
-		h = tinyMCE.replaceVar(h, "themeurl", tinyMCE.themeURL);
+			if (m == 'themeurl')
+				return tinyMCE.themeURL;
 
-		return h;
+			return m;
+		});
 	},
 
 	replaceVar : function(h, r, v) {
@@ -2191,7 +2186,7 @@ TinyMCE_Engine.prototype = {
 		return '';
 	},
 
-	evalFunc : function(f, idx, a) {
+	evalFunc : function(f, idx, a, o) {
 		var s = '(', i;
 
 		for (i=idx; i<a.length; i++) {
@@ -2203,7 +2198,7 @@ TinyMCE_Engine.prototype = {
 
 		s += ');';
 
-		return eval("f" + s);
+		return o ? eval("o." + f + s) : eval("f" + s);
 	},
 
 	dispatchCallback : function(i, p, n) {
@@ -2232,7 +2227,7 @@ TinyMCE_Engine.prototype = {
 			for (i=0, l = ins.plugins; i<l.length; i++) {
 				o = tinyMCE.plugins[l[i]];
 
-				if (o[n] && (v = tinyMCE.evalFunc(o[n], 3, a)) == s && m > 0)
+				if (o[n] && (v = tinyMCE.evalFunc(n, 3, a, o)) == s && m > 0)
 					return true;
 			}
 		}
@@ -2241,7 +2236,7 @@ TinyMCE_Engine.prototype = {
 		for (on in l) {
 			o = l[on];
 
-			if (o[n] && (v = tinyMCE.evalFunc(o[n], 3, a)) == s && m > 0)
+			if (o[n] && (v = tinyMCE.evalFunc(n, 3, a, o)) == s && m > 0)
 				return true;
 		}
 
@@ -3599,6 +3594,20 @@ TinyMCE_Control.prototype = {
 		}
 	},
 
+	getHTML : function(r) {
+		var h, d = this.getDoc(), b = this.getBody();
+
+		if (r)
+			return b.innerHTML;
+
+		h = tinyMCE._cleanupHTML(this, d, this.settings, b, false, true);
+
+		if (tinyMCE.getParam("convert_fonts_to_spans"))
+			tinyMCE.convertSpansToFonts(d);
+
+		return h;
+	},
+
 	getFocusElement : function() {
 		return this.selection.getFocusElement();
 	},
@@ -3951,20 +3960,11 @@ TinyMCE_Engine.prototype.cleanupAnchors = function(doc) {
 };
 
 TinyMCE_Engine.prototype.getContent = function(editor_id) {
-	var h;
-
 	if (typeof(editor_id) != "undefined")
 		tinyMCE.selectedInstance = tinyMCE.getInstanceById(editor_id);
 
-	if (tinyMCE.selectedInstance) {
-		h = tinyMCE._cleanupHTML(this.selectedInstance, this.selectedInstance.getDoc(), tinyMCE.settings, this.selectedInstance.getBody(), false, true);
-
-		// When editing always use fonts internaly
-		if (tinyMCE.getParam("convert_fonts_to_spans"))
-			tinyMCE.convertSpansToFonts(this.selectedInstance.getDoc());
-
-		return h;
-	}
+	if (tinyMCE.selectedInstance)
+		return tinyMCE.selectedInstance.getHTML();
 
 	return null;
 };
@@ -5360,7 +5360,7 @@ TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, ur
 };
 
 TinyMCE_Engine.prototype.convertRelativeToAbsoluteURL = function(base_url, relative_url) {
-	var baseURL = this.parseURL(base_url);
+	var baseURL = this.parseURL(base_url), baseURLParts, relURLParts;
 	var relURL = this.parseURL(relative_url);
 
 	if (relative_url == "" || relative_url.charAt(0) == '/' || relative_url.indexOf('://') != -1 || relative_url.indexOf('mailto:') != -1 || relative_url.indexOf('javascript:') != -1)
@@ -5739,6 +5739,9 @@ TinyMCE_Selection.prototype = {
 	getSelectedHTML : function() {
 		var inst = this.instance;
 		var e, r = this.getRng(), h;
+
+		if (!r)
+			return null;
 
 		if (tinyMCE.isSafari) {
 			// Not realy perfect!!

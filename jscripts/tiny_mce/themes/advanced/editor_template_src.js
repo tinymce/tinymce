@@ -500,7 +500,7 @@ var TinyMCE_AdvancedTheme = {
 	 */
 	getEditorTemplate : function(settings, editorId) {
 		function removeFromArray(in_array, remove_array) {
-			var outArray = new Array();
+			var outArray = new Array(), skip;
 			
 			for (var i=0; i<in_array.length; i++) {
 				skip = false;
@@ -757,6 +757,8 @@ var TinyMCE_AdvancedTheme = {
 	 * Node change handler.
 	 */
 	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection, setup_content) {
+		var alignNode, breakOut, classNode;
+
 		function selectByValue(select_elm, value, first_index) {
 			first_index = typeof(first_index) == "undefined" ? false : true;
 

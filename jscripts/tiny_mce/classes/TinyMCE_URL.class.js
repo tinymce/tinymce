@@ -202,7 +202,7 @@ TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, ur
  * @type string
  */
 TinyMCE_Engine.prototype.convertRelativeToAbsoluteURL = function(base_url, relative_url) {
-	var baseURL = this.parseURL(base_url);
+	var baseURL = this.parseURL(base_url), baseURLParts, relURLParts;
 	var relURL = this.parseURL(relative_url);
 
 	if (relative_url == "" || relative_url.charAt(0) == '/' || relative_url.indexOf('://') != -1 || relative_url.indexOf('mailto:') != -1 || relative_url.indexOf('javascript:') != -1)

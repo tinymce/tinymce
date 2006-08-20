@@ -35,11 +35,11 @@ var TinyMCE_VisualCharsPlugin = {
 	},
 
 	execCommand : function(editor_id, element, command, user_interface, value) {
-		var self = TinyMCE_VisualCharsPlugin, inst = tinyMCE.getInstanceById(editor_id);
+		var inst = tinyMCE.getInstanceById(editor_id);
 
 		switch (command) {
 			case "mceVisualChars":
-				self._toggleVisualChars(editor_id, inst);
+				this._toggleVisualChars(editor_id, inst);
 				return true;
 		}
 

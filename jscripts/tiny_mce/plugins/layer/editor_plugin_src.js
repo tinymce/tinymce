@@ -25,11 +25,11 @@ var TinyMCE_LayerPlugin = {
 	},
 
 	handleEvent : function(e) {
-		var inst = tinyMCE.selectedInstance, self = TinyMCE_LayerPlugin;
+		var inst = tinyMCE.selectedInstance;
 		var w = inst.getWin(), le = inst._lastStyleElm, e;
 
 		if (tinyMCE.isGecko) {
-			e = self._getParentLayer(inst.getFocusElement());
+			e = this._getParentLayer(inst.getFocusElement());
 
 			if (e) {
 				if (!inst._lastStyleElm) {
@@ -80,24 +80,22 @@ var TinyMCE_LayerPlugin = {
 	},
 
 	execCommand : function(editor_id, element, command, user_interface, value) {
-		var self = TinyMCE_LayerPlugin;
-
 		// Handle commands
 		switch (command) {
 			case "mceInsertLayer":
-				self._insertLayer();
+				this._insertLayer();
 				return true;
 
 			case "mceMoveForward":
-				self._move(1);
+				this._move(1);
 				return true;
 
 			case "mceMoveBackward":
-				self._move(-1);
+				this._move(-1);
 				return true;
 
 			case "mceMakeAbsolute":
-				self._toggleAbsolute();
+				this._toggleAbsolute();
 				return true;
 		}
 
@@ -106,8 +104,8 @@ var TinyMCE_LayerPlugin = {
 	},
 
 	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
-		var inst = tinyMCE.getInstanceById(editor_id), self = TinyMCE_LayerPlugin;
-		var le = self._getParentLayer(inst.getFocusElement());
+		var inst = tinyMCE.getInstanceById(editor_id);
+		var le = this._getParentLayer(inst.getFocusElement());
 		var p = tinyMCE.getParentElement(inst.getFocusElement(), 'div,p,img');
 
 		tinyMCE.switchClass(editor_id + '_absolute', 'mceButtonDisabled');
@@ -127,8 +125,8 @@ var TinyMCE_LayerPlugin = {
 	// Private plugin specific methods
 
 	_move : function(d) {
-		var inst = tinyMCE.selectedInstance, self = TinyMCE_LayerPlugin, i, z = new Array();
-		var le = self._getParentLayer(inst.getFocusElement()), ci = -1, fi = -1;
+		var inst = tinyMCE.selectedInstance, i, z = new Array();
+		var le = this._getParentLayer(inst.getFocusElement()), ci = -1, fi = -1;
 		var nl = tinyMCE.selectNodes(inst.getBody(), function(n) {
 			return n.nodeType == 1 && new RegExp('absolute|relative|static', 'gi').test(n.style.position);
 		});
@@ -212,8 +210,8 @@ var TinyMCE_LayerPlugin = {
 	},
 
 	_toggleAbsolute : function() {
-		var inst = tinyMCE.selectedInstance, self = TinyMCE_LayerPlugin;
-		var le = self._getParentLayer(inst.getFocusElement());
+		var inst = tinyMCE.selectedInstance;
+		var le = this._getParentLayer(inst.getFocusElement());
 
 		if (le == null)
 			le = tinyMCE.getParentElement(inst.getFocusElement(), 'div,p,img');

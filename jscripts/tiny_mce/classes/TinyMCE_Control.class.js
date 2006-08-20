@@ -1441,6 +1441,27 @@ TinyMCE_Control.prototype = {
 	},
 
 	/**
+	 * Returns the cleaned HTML of the editor control instance.
+	 *
+	 * @param {bool} r Optional raw parameter, if set to true. Cleanup will be skipped.
+	 * @return Cleaned HTML content string.
+	 * @type string
+	 */
+	getHTML : function(r) {
+		var h, d = this.getDoc(), b = this.getBody();
+
+		if (r)
+			return b.innerHTML;
+
+		h = tinyMCE._cleanupHTML(this, d, this.settings, b, false, true);
+
+		if (tinyMCE.getParam("convert_fonts_to_spans"))
+			tinyMCE.convertSpansToFonts(d);
+
+		return h;
+	},
+
+	/**
 	 * Returns the currently selected element. This is was added for compatiblity and is deprecated.
 	 * Please use inst.selection.getFocusElement instead.
 	 *

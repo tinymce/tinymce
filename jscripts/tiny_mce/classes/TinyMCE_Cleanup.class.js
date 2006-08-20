@@ -346,20 +346,11 @@ TinyMCE_Engine.prototype.cleanupAnchors = function(doc) {
  * @type string
  */
 TinyMCE_Engine.prototype.getContent = function(editor_id) {
-	var h;
-
 	if (typeof(editor_id) != "undefined")
 		tinyMCE.selectedInstance = tinyMCE.getInstanceById(editor_id);
 
-	if (tinyMCE.selectedInstance) {
-		h = tinyMCE._cleanupHTML(this.selectedInstance, this.selectedInstance.getDoc(), tinyMCE.settings, this.selectedInstance.getBody(), false, true);
-
-		// When editing always use fonts internaly
-		if (tinyMCE.getParam("convert_fonts_to_spans"))
-			tinyMCE.convertSpansToFonts(this.selectedInstance.getDoc());
-
-		return h;
-	}
+	if (tinyMCE.selectedInstance)
+		return tinyMCE.selectedInstance.getHTML();
 
 	return null;
 };

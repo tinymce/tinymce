@@ -521,8 +521,6 @@ TinyMCE_Engine.prototype = {
 		var x = 0, i = 0, nl, le;
 
 		for (x = 0,csslen = ar.length; x<csslen; x++) {
-			ignore_css = false;
-
 			if (ar[x] != null && ar[x] != 'null' && ar[x].length > 0) {
 				/* Make sure it doesn't exist. */
 				for (i=0, lflen=this.loadedFiles.length; i<lflen; i++) {
@@ -1989,24 +1987,21 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	applyTemplate : function(h, as) {
-		var i, s, ar = h.match(new RegExp('\\{\\$[a-z0-9_]+\\}', 'gi'));
+		return h.replace(new RegExp('\\{\\$([a-z0-9_]+)\\}', 'gi'), function(m, s) {
+			if (s.indexOf('lang_') == 0 && tinyMCELang[s])
+				return tinyMCELang[s];
 
-		if (ar && ar.length > 0) {
-			for (i=ar.length-1; i>=0; i--) {
-				s = ar[i].substring(2, ar[i].length-1);
+			if (as && as[s])
+				return as[s];
 
-				if (s.indexOf('lang_') == 0 && tinyMCELang[s])
-					h = tinyMCE.replaceVar(h, s, tinyMCELang[s]);
-				else if (as && as[s])
-					h = tinyMCE.replaceVar(h, s, as[s]);
-				else if (tinyMCE.settings[s])
-					h = tinyMCE.replaceVar(h, s, tinyMCE.settings[s]);
-			}
-		}
+			if (tinyMCE.settings[s])
+				return tinyMCE.settings[s];
 
-		h = tinyMCE.replaceVar(h, "themeurl", tinyMCE.themeURL);
+			if (m == 'themeurl')
+				return tinyMCE.themeURL;
 
-		return h;
+			return m;
+		});
 	},
 
 	/**
@@ -2673,10 +2668,11 @@ TinyMCE_Engine.prototype = {
 	 * @param {string} f Function reference to execute.
 	 * @param {int} idx Index in array to start grabbing arguments from.
 	 * @param {Array} a Array of function arguments.
+	 * @param {Object} o Optional object reference to call function on.
 	 * @return Value returned from the evaluated function.
 	 * @type object
 	 */
-	evalFunc : function(f, idx, a) {
+	evalFunc : function(f, idx, a, o) {
 		var s = '(', i;
 
 		for (i=idx; i<a.length; i++) {
@@ -2688,7 +2684,7 @@ TinyMCE_Engine.prototype = {
 
 		s += ');';
 
-		return eval("f" + s);
+		return o ? eval("o." + f + s) : eval("f" + s);
 	},
 
 	/**
@@ -2755,7 +2751,7 @@ TinyMCE_Engine.prototype = {
 			for (i=0, l = ins.plugins; i<l.length; i++) {
 				o = tinyMCE.plugins[l[i]];
 
-				if (o[n] && (v = tinyMCE.evalFunc(o[n], 3, a)) == s && m > 0)
+				if (o[n] && (v = tinyMCE.evalFunc(n, 3, a, o)) == s && m > 0)
 					return true;
 			}
 		}
@@ -2764,7 +2760,7 @@ TinyMCE_Engine.prototype = {
 		for (on in l) {
 			o = l[on];
 
-			if (o[n] && (v = tinyMCE.evalFunc(o[n], 3, a)) == s && m > 0)
+			if (o[n] && (v = tinyMCE.evalFunc(n, 3, a, o)) == s && m > 0)
 				return true;
 		}
 
