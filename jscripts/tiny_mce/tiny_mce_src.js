@@ -5484,7 +5484,7 @@ TinyMCE_Engine.prototype.clearArray = function(a) {
 	var n;
 
 	for (n in a)
-		delete a[n];
+		a[n] = null;
 
 	return a;
 };
