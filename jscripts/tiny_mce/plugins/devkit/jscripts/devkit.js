@@ -48,7 +48,7 @@ function debug(s) {
 }
 
 function renderInfo() {
-	var se = document.getElementById('info'), n, sn, inst, h = '', sel, rng;
+	var se = document.getElementById('info'), n, sn, inst, h = '', sel, rng, instCount = 0;
 
 	h += '<h2>Browser info:</h2>';
 
@@ -80,6 +80,7 @@ function renderInfo() {
 	h += addRenderInfo('baseURL', tinyMCE.baseURL);
 	h += addRenderInfo('selectedInstance.editorId', tinyMCE.selectedInstance ? tinyMCE.selectedInstance.editorId : null);
 	h += addRenderInfo('selectedElement.nodeName', tinyMCE.selectedElement ? tinyMCE.selectedElement.nodeName : null, 'dep');
+	h += addRenderInfo('loadedFiles',tinyMCE.loadedFiles.join(','));
 	h += addRenderInfo('isMSIE', tinyMCE.isMSIE);
 	h += addRenderInfo('isMSIE5', tinyMCE.isMSIE5);
 	h += addRenderInfo('isMSIE5_0', tinyMCE.isMSIE5_0);
@@ -108,7 +109,7 @@ function renderInfo() {
 		sel = inst.selection.getSel();
 		rng = inst.selection.getRng();
 
-		h += '<h2>TinyMCE_Control id: ' + inst.editorId + '</h2>';
+		h += '<h2>TinyMCE_Control(' + (instCount++) + ') id: ' + inst.editorId + '</h2>';
 		h += '<table border="0" cellpadding="0" cellspacing="0" class="data">';
 
 		h += addRenderInfo('editorId', inst.editorId);
@@ -122,7 +123,6 @@ function renderInfo() {
 		h += addRenderInfo('getBody().nodeName', inst.getBody() ? inst.getBody().nodeName : null);
 		h += addRenderInfo('getBody().getAttribute("id")', inst.getBody() ? inst.getBody().getAttribute("id") : null);
 		h += addRenderInfo('getDoc().location', inst.getDoc() ? inst.getDoc().location : null);
-		h += addRenderInfo('formTargetElementId', inst.formTargetElementId);
 		h += addRenderInfo('startContent', inst.startContent);
 		h += addRenderInfo('isHidden()', inst.isHidden());
 		h += addRenderInfo('isDirty()', inst.isDirty());
@@ -133,17 +133,17 @@ function renderInfo() {
 		h += addRenderInfo('selection.getFocusElement().nodeName', inst.selection.getFocusElement().nodeName);
 
 		if ((tinyMCE.isGecko || tinyMCE.isOpera) && sel && rng) {
-			h += addRenderInfo('selection.getSel().anchorNode.nodeName', sel.anchorNode.nodeName, 'bspec');
+			h += addRenderInfo('selection.getSel().anchorNode.nodeName', sel.anchorNode ? sel.anchorNode.nodeName : null, 'bspec');
 			h += addRenderInfo('selection.getSel().anchorOffset', sel.anchorOffset, 'bspec');
-			h += addRenderInfo('selection.getSel().focusNode.nodeName', sel.focusNode.nodeName, 'bspec');
+			h += addRenderInfo('selection.getSel().focusNode.nodeName', sel.focusNode ? sel.focusNode.nodeName : null, 'bspec');
 			h += addRenderInfo('selection.getSel().focusOffset', sel.focusOffset, 'bspec');
-			h += addRenderInfo('selection.getRng().startContainer.nodeName', rng.startContainer.nodeName, 'bspec');
+			h += addRenderInfo('selection.getRng().startContainer.nodeName', rng.startContainer ? rng.startContainer.nodeName : null, 'bspec');
 			h += addRenderInfo('selection.getRng().startOffset', rng.startOffset, 'bspec');
-			h += addRenderInfo('selection.getRng().endContainer.nodeName', rng.endContainer.nodeName, 'bspec');
+			h += addRenderInfo('selection.getRng().endContainer.nodeName', rng.endContainer ? rng.endContainer.nodeName : null, 'bspec');
 			h += addRenderInfo('selection.getRng().endOffset', rng.endOffset, 'bspec');
 		}
 
-		if (tinyMCE.isMSIE) {
+		if (typeof(rng.item) != 'undefined' || typeof(rng.htmlText) != 'undefined') {
 			if (!rng.item) {
 				h += addRenderInfo('selection.getSel().type', sel.type, 'bspec');
 				h += addRenderInfo('selection.getRng().htmlText', rng.htmlText, 'bspec');
@@ -180,7 +180,7 @@ function renderSettings() {
 		for (sn in inst.settings) {
 			v = inst.settings[sn];
 
-			h += '<tr><td><input type="text" value="' + tinyMCE.xmlEncode(sn) + '" /></td><td><input type="text" value="' + tinyMCE.xmlEncode(v) + '" /></td></tr>';
+			h += '<tr><td class="col1">' + tinyMCE.xmlEncode(sn) + '</td><td><input type="text" value="' + tinyMCE.xmlEncode(v) + '" /></td></tr>';
 		}
 
 		h += '</table>';

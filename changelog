@@ -32,6 +32,7 @@ Version 2.0.7 (2006-xx-xx)
 	Fixed bug where cursor was placed at a incorrect location after mceInsertContent call in Gecko.
 	Fixed bug where selection/caret is moved to top of document on a cleanup in Gecko.
 	Fixed so that the initialization is even faster both editor instanced and dialogs.
+	Fixed so that the force_p_newlines option works on Opera & Safari. This is enabled by default.
 	Fixed issue with language variable in replace dialog in the searchreplace plugin.
 	Fixed various CSS compatiblity issues with MSIE 7 beta 3.
 	Renamed some image names in style and layer plugins for compatiblity with Drupal.

@@ -29,17 +29,14 @@ TinyMCE_Selection.prototype = {
 		if (!r)
 			return null;
 
-		if (tinyMCE.isSafari) {
-			// Not realy perfect!!
-			return r.toString();
-		}
-
 		e = document.createElement("body");
 
-		if (tinyMCE.isGecko)
+		if (r.cloneContents)
 			e.appendChild(r.cloneContents());
-		else 
+		else if (typeof(r.item) != 'undefined' || typeof(r.htmlText) != 'undefined')
 			e.innerHTML = r.item ? r.item(0).outerHTML : r.htmlText;
+		else
+			e.innerHTML = r.toString(); // Failed, use text for now
 
 		h = tinyMCE._cleanupHTML(inst, inst.contentDocument, inst.settings, e, e, false, true, false);
 

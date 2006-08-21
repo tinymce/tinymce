@@ -6,7 +6,7 @@
  */
 
 /**
- * Forces P tags on return/enter in Gecko browsers.
+ * Forces P tags on return/enter in Gecko, Opera and Safari.
  */
 var TinyMCE_ForceParagraphs = {
 	/**
@@ -150,7 +150,9 @@ var TinyMCE_ForceParagraphs = {
 		if (startBlock == null) {
 			// Delete selection
 			rng.deleteContents();
-			sel.removeAllRanges();
+
+			if (!tinyMCE.isSafari)
+				sel.removeAllRanges();
 
 			if (startChop != rootElm && endChop != rootElm) {
 				// Insert paragraph before
@@ -194,10 +196,17 @@ var TinyMCE_ForceParagraphs = {
 				rngBefore.deleteContents();
 
 				// Insert new paragraphs
-				paraAfter.normalize();
-				rngBefore.insertNode(paraAfter);
-				paraBefore.normalize();
-				rngBefore.insertNode(paraBefore);
+				if (tinyMCE.isOpera) {
+					paraBefore.normalize();
+					rngBefore.insertNode(paraBefore);
+					paraAfter.normalize();
+					rngBefore.insertNode(paraAfter);
+				} else {
+					paraAfter.normalize();
+					rngBefore.insertNode(paraAfter);
+					paraBefore.normalize();
+					rngBefore.insertNode(paraBefore);
+				}
 
 				// tinyMCE.debug("1: ", paraBefore.innerHTML, paraAfter.innerHTML);
 			} else {
@@ -263,8 +272,15 @@ var TinyMCE_ForceParagraphs = {
 
 		// Delete all contents and insert new paragraphs
 		rng.deleteContents();
-		rng.insertNode(paraAfter);
-		rng.insertNode(paraBefore);
+
+		if (tinyMCE.isOpera) {
+			rng.insertNode(paraBefore);
+			rng.insertNode(paraAfter);
+		} else {
+			rng.insertNode(paraAfter);
+			rng.insertNode(paraBefore);
+		}
+
 		//tinyMCE.debug("2", paraBefore.innerHTML, paraAfter.innerHTML);
 
 		// Normalize

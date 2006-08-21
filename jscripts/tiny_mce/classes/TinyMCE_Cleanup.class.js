@@ -425,11 +425,12 @@ TinyMCE_Engine.prototype._fixTables = function(d) {
  * @param {boolean} visual ...
  * @param {boolean} on_save ...
  * @param {boolean} on_submit ...
+ * @param {boolean} inn inner html.
  * @return Cleaned HTML contents of editor instance.
  * @type string
  * @private
  */
-TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual, on_save, on_submit) {
+TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual, on_save, on_submit, inn) {
 	var h, d, t1, t2, t3, t4, t5, c, s;
 
 	if (!tinyMCE.getParam('cleanup'))
@@ -468,9 +469,9 @@ TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual,
 	c.sourceIndex = -1;
 
 	if (s.cleanup_serializer == "xml")
-		h = c.serializeNodeAsXML(elm);
+		h = c.serializeNodeAsXML(elm, inn);
 	else
-		h = c.serializeNodeAsHTML(elm);
+		h = c.serializeNodeAsHTML(elm, inn);
 
 	if (d)
 		t3 = new Date().getTime();
@@ -915,10 +916,11 @@ TinyMCE_Cleanup.prototype = {
 	 * control over the output than the build in browser XML serializer.
 	 *
 	 * @param {HTMLNode} n Node to serialize as a XHTML string.
+	 * @param {bool} inn Optional inner HTML mode. Will only output child nodes and not the parent.
 	 * @return Serialized XHTML string based on specified node.
 	 * @type string
 	 */
-	serializeNodeAsHTML : function(n) {
+	serializeNodeAsHTML : function(n, inn) {
 		var en, no, h = '', i, l, t, st, r, cn, va = false, f = false, at, hc, cr;
 
 		this._setupRules(); // Will initialize cleanup rules
@@ -947,7 +949,7 @@ TinyMCE_Cleanup.prototype = {
 				if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && n.nodeName.indexOf('/') != -1)
 					break;
 
-				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName))) {
+				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName)) && !inn) {
 					va = true;
 
 					r = this.rules[n.nodeName];

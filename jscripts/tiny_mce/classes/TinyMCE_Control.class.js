@@ -156,7 +156,7 @@ TinyMCE_Control.prototype = {
 	 * @type HTMLElement
 	 */
 	getBody : function() {
-		return this.getDoc().body;
+		return this.contentBody ? this.contentBody : this.getDoc().body;
 	},
 
 	/**
@@ -911,8 +911,8 @@ TinyMCE_Control.prototype = {
 				this.execCommand('mceInsertContent', false, key);
 
 				// Store away scroll pos
-				var scrollX = this.getDoc().body.scrollLeft + this.getDoc().documentElement.scrollLeft;
-				var scrollY = this.getDoc().body.scrollTop + this.getDoc().documentElement.scrollTop;
+				var scrollX = this.getBody().scrollLeft + this.getDoc().documentElement.scrollLeft;
+				var scrollY = this.getBody().scrollTop + this.getDoc().documentElement.scrollTop;
 
 				// Find marker and replace with RAW HTML
 				var html = this.getBody().innerHTML;
@@ -1453,7 +1453,7 @@ TinyMCE_Control.prototype = {
 		if (r)
 			return b.innerHTML;
 
-		h = tinyMCE._cleanupHTML(this, d, this.settings, b, false, true);
+		h = tinyMCE._cleanupHTML(this, d, this.settings, b, false, true, false, true);
 
 		if (tinyMCE.getParam("convert_fonts_to_spans"))
 			tinyMCE.convertSpansToFonts(d);

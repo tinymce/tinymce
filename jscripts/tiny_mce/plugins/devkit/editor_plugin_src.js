@@ -9,7 +9,7 @@ tinyMCE.importPluginLanguagePack('devkit');
 
 var TinyMCE_DevKitPlugin = {
 	_logRows : new Array(),
-	_logFilter : '\\[(importCSS|execCommand|execInstanceCommand)\\]',
+	_logFilter : '\\[(importCSS|execCommand|execInstanceCommand|debug)\\]',
 	_logPadding : '',
 	_startTime : null,
 	_benchMark : false,
@@ -26,28 +26,37 @@ var TinyMCE_DevKitPlugin = {
 
 	initInstance : function(inst) {
 		if (!this._loaded) {
-			// Register a document reference for more easy access in the FF DOM inspector
-			document.___TinyMCE = tinyMCE;
-
-			// Setup devkit by settings
-			this._logFilter = tinyMCE.getParam('devkit_log_filter', this._logFilter);
-			this._benchMark = tinyMCE.getParam('devkit_bench_mark', false);
-
-			var ifr = document.createElement('iframe');
-
-			ifr.setAttribute("id", "devkit");
-			ifr.setAttribute("frameBorder", "0");
-			ifr.setAttribute("src", tinyMCE.baseURL + '/plugins/devkit/devkit.htm');
-
-			document.body.appendChild(ifr);
-
-			tinyMCE.importCSS(document, tinyMCE.baseURL + '/plugins/devkit/css/devkit_ui.css');
 			this._loaded = true;
+			this._setup();
 		}
+	},
+
+	_setup : function() {
+		// Register a document reference for more easy access in the FF DOM inspector
+		document.___TinyMCE = tinyMCE;
+
+		// Setup devkit by settings
+		this._logFilter = tinyMCE.getParam('devkit_log_filter', this._logFilter);
+		this._benchMark = tinyMCE.getParam('devkit_bench_mark', false);
+
+		var ifr = document.createElement('iframe');
+
+		ifr.setAttribute("id", "devkit");
+		ifr.setAttribute("frameBorder", "0");
+		ifr.setAttribute("src", tinyMCE.baseURL + '/plugins/devkit/devkit.htm');
+
+		document.body.appendChild(ifr);
+
+		// Workaround for strange IE reload bug
+		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+			document.getElementById('devkit').outerHTML = document.getElementById('devkit').outerHTML;
+
+		tinyMCE.importCSS(document, tinyMCE.baseURL + '/plugins/devkit/css/devkit_ui.css');
 	},
 
 	_start : function() {
 		this._logPadding += '\u00a0';
+
 		return new Date().getTime();
 	},
 

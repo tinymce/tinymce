@@ -51,6 +51,10 @@ TinyMCE_Engine.prototype = {
 	init : function(settings) {
 		var theme, nl, baseHREF = "";
 
+		// IE 5.0x is no longer supported since 5.5, 6.0 and 7.0 now exists. We can't support old browsers forever, sorry.
+		if (this.isMSIE5_0)
+			return;
+
 		this.settings = settings;
 
 		// Check if valid browser has execcommand support
@@ -799,7 +803,7 @@ TinyMCE_Engine.prototype = {
 
 		// Setup span styles
 		if (tinyMCE.getParam("convert_fonts_to_spans"))
-			inst.getDoc().body.setAttribute('id', 'mceSpanFonts');
+			inst.getBody().setAttribute('id', 'mceSpanFonts');
 
 		if (tinyMCE.settings['nowrap'])
 			doc.body.style.whiteSpace = "nowrap";
@@ -1064,7 +1068,7 @@ TinyMCE_Engine.prototype = {
 					tinyMCE.selectedInstance.switchSettings();
 
 				// Insert P element
-				if ((tinyMCE.isGecko && !tinyMCE.isSafari) && tinyMCE.settings['force_p_newlines'] && e.keyCode == 13 && !e.shiftKey) {
+				if ((tinyMCE.isGecko || tinyMCE.isOpera || tinyMCE.isSafari) && tinyMCE.settings['force_p_newlines'] && e.keyCode == 13 && !e.shiftKey) {
 					// Insert P element instead of BR
 					if (TinyMCE_ForceParagraphs._insertPara(tinyMCE.selectedInstance, e)) {
 						// Cancel event
@@ -1596,8 +1600,8 @@ TinyMCE_Engine.prototype = {
 			if (tinyMCE.settings["auto_resize"]) {
 				var doc = inst.getDoc();
 
-				inst.iframeElement.style.width = doc.body.offsetWidth + "px";
-				inst.iframeElement.style.height = doc.body.offsetHeight + "px";
+				inst.iframeElement.style.width = inst.getBody().offsetWidth + "px";
+				inst.iframeElement.style.height = inst.getBody().offsetHeight + "px";
 			}
 
 			if (tinyMCE.selectedElement)
@@ -2418,7 +2422,7 @@ TinyMCE_Control.prototype = {
 	},
 
 	getBody : function() {
-		return this.getDoc().body;
+		return this.contentBody ? this.contentBody : this.getDoc().body;
 	},
 
 	getDoc : function() {
@@ -3095,8 +3099,8 @@ TinyMCE_Control.prototype = {
 				this.execCommand('mceInsertContent', false, key);
 
 				// Store away scroll pos
-				var scrollX = this.getDoc().body.scrollLeft + this.getDoc().documentElement.scrollLeft;
-				var scrollY = this.getDoc().body.scrollTop + this.getDoc().documentElement.scrollTop;
+				var scrollX = this.getBody().scrollLeft + this.getDoc().documentElement.scrollLeft;
+				var scrollY = this.getBody().scrollTop + this.getDoc().documentElement.scrollTop;
 
 				// Find marker and replace with RAW HTML
 				var html = this.getBody().innerHTML;
@@ -3600,7 +3604,7 @@ TinyMCE_Control.prototype = {
 		if (r)
 			return b.innerHTML;
 
-		h = tinyMCE._cleanupHTML(this, d, this.settings, b, false, true);
+		h = tinyMCE._cleanupHTML(this, d, this.settings, b, false, true, false, true);
 
 		if (tinyMCE.getParam("convert_fonts_to_spans"))
 			tinyMCE.convertSpansToFonts(d);
@@ -4016,7 +4020,7 @@ TinyMCE_Engine.prototype._fixTables = function(d) {
 	}
 };
 
-TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual, on_save, on_submit) {
+TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual, on_save, on_submit, inn) {
 	var h, d, t1, t2, t3, t4, t5, c, s;
 
 	if (!tinyMCE.getParam('cleanup'))
@@ -4055,9 +4059,9 @@ TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual,
 	c.sourceIndex = -1;
 
 	if (s.cleanup_serializer == "xml")
-		h = c.serializeNodeAsXML(elm);
+		h = c.serializeNodeAsXML(elm, inn);
 	else
-		h = c.serializeNodeAsHTML(elm);
+		h = c.serializeNodeAsHTML(elm, inn);
 
 	if (d)
 		t3 = new Date().getTime();
@@ -4454,7 +4458,7 @@ TinyMCE_Cleanup.prototype = {
 		}
 	},
 
-	serializeNodeAsHTML : function(n) {
+	serializeNodeAsHTML : function(n, inn) {
 		var en, no, h = '', i, l, t, st, r, cn, va = false, f = false, at, hc, cr;
 
 		this._setupRules(); // Will initialize cleanup rules
@@ -4483,7 +4487,7 @@ TinyMCE_Cleanup.prototype = {
 				if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && n.nodeName.indexOf('/') != -1)
 					break;
 
-				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName))) {
+				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName)) && !inn) {
 					va = true;
 
 					r = this.rules[n.nodeName];
@@ -5743,17 +5747,14 @@ TinyMCE_Selection.prototype = {
 		if (!r)
 			return null;
 
-		if (tinyMCE.isSafari) {
-			// Not realy perfect!!
-			return r.toString();
-		}
-
 		e = document.createElement("body");
 
-		if (tinyMCE.isGecko)
+		if (r.cloneContents)
 			e.appendChild(r.cloneContents());
-		else 
+		else if (typeof(r.item) != 'undefined' || typeof(r.htmlText) != 'undefined')
 			e.innerHTML = r.item ? r.item(0).outerHTML : r.htmlText;
+		else
+			e.innerHTML = r.toString(); // Failed, use text for now
 
 		h = tinyMCE._cleanupHTML(inst, inst.contentDocument, inst.settings, e, e, false, true, false);
 
@@ -6409,7 +6410,9 @@ var TinyMCE_ForceParagraphs = {
 		if (startBlock == null) {
 			// Delete selection
 			rng.deleteContents();
-			sel.removeAllRanges();
+
+			if (!tinyMCE.isSafari)
+				sel.removeAllRanges();
 
 			if (startChop != rootElm && endChop != rootElm) {
 				// Insert paragraph before
@@ -6453,10 +6456,17 @@ var TinyMCE_ForceParagraphs = {
 				rngBefore.deleteContents();
 
 				// Insert new paragraphs
-				paraAfter.normalize();
-				rngBefore.insertNode(paraAfter);
-				paraBefore.normalize();
-				rngBefore.insertNode(paraBefore);
+				if (tinyMCE.isOpera) {
+					paraBefore.normalize();
+					rngBefore.insertNode(paraBefore);
+					paraAfter.normalize();
+					rngBefore.insertNode(paraAfter);
+				} else {
+					paraAfter.normalize();
+					rngBefore.insertNode(paraAfter);
+					paraBefore.normalize();
+					rngBefore.insertNode(paraBefore);
+				}
 
 				// tinyMCE.debug("1: ", paraBefore.innerHTML, paraAfter.innerHTML);
 			} else {
@@ -6522,8 +6532,15 @@ var TinyMCE_ForceParagraphs = {
 
 		// Delete all contents and insert new paragraphs
 		rng.deleteContents();
-		rng.insertNode(paraAfter);
-		rng.insertNode(paraBefore);
+
+		if (tinyMCE.isOpera) {
+			rng.insertNode(paraBefore);
+			rng.insertNode(paraAfter);
+		} else {
+			rng.insertNode(paraAfter);
+			rng.insertNode(paraBefore);
+		}
+
 		//tinyMCE.debug("2", paraBefore.innerHTML, paraAfter.innerHTML);
 
 		// Normalize

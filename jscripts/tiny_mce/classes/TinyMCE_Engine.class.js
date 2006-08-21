@@ -66,6 +66,10 @@ TinyMCE_Engine.prototype = {
 	init : function(settings) {
 		var theme, nl, baseHREF = "";
 
+		// IE 5.0x is no longer supported since 5.5, 6.0 and 7.0 now exists. We can't support old browsers forever, sorry.
+		if (this.isMSIE5_0)
+			return;
+
 		this.settings = settings;
 
 		// Check if valid browser has execcommand support
@@ -971,7 +975,7 @@ TinyMCE_Engine.prototype = {
 
 		// Setup span styles
 		if (tinyMCE.getParam("convert_fonts_to_spans"))
-			inst.getDoc().body.setAttribute('id', 'mceSpanFonts');
+			inst.getBody().setAttribute('id', 'mceSpanFonts');
 
 		if (tinyMCE.settings['nowrap'])
 			doc.body.style.whiteSpace = "nowrap";
@@ -1265,7 +1269,7 @@ TinyMCE_Engine.prototype = {
 					tinyMCE.selectedInstance.switchSettings();
 
 				// Insert P element
-				if ((tinyMCE.isGecko && !tinyMCE.isSafari) && tinyMCE.settings['force_p_newlines'] && e.keyCode == 13 && !e.shiftKey) {
+				if ((tinyMCE.isGecko || tinyMCE.isOpera || tinyMCE.isSafari) && tinyMCE.settings['force_p_newlines'] && e.keyCode == 13 && !e.shiftKey) {
 					// Insert P element instead of BR
 					if (TinyMCE_ForceParagraphs._insertPara(tinyMCE.selectedInstance, e)) {
 						// Cancel event
@@ -1891,8 +1895,8 @@ TinyMCE_Engine.prototype = {
 			if (tinyMCE.settings["auto_resize"]) {
 				var doc = inst.getDoc();
 
-				inst.iframeElement.style.width = doc.body.offsetWidth + "px";
-				inst.iframeElement.style.height = doc.body.offsetHeight + "px";
+				inst.iframeElement.style.width = inst.getBody().offsetWidth + "px";
+				inst.iframeElement.style.height = inst.getBody().offsetHeight + "px";
 			}
 
 			if (tinyMCE.selectedElement)
