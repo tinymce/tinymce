@@ -8,7 +8,6 @@
 tinyMCE.importPluginLanguagePack('devkit');
 
 var TinyMCE_DevKitPlugin = {
-	_logRows : new Array(),
 	_logFilter : '\\[(importCSS|execCommand|execInstanceCommand|debug)\\]',
 	_logPadding : '',
 	_startTime : null,
@@ -95,7 +94,7 @@ var TinyMCE_DevKitPlugin = {
 		}
 
 		if (!win || !win.debug)
-			this._logRows[this._logRows.length] = m;
+			tinyMCE.log[tinyMCE.log.length] = m;
 		else
 			win.debug(m);
 	}

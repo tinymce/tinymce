@@ -61,12 +61,9 @@ TinyMCE_Engine.prototype.isBlockElement = function(n) {
  * @type HTMLElement
  */
 TinyMCE_Engine.prototype.getParentBlockElement = function(n) {
-	while (n) {
-		if (this.isBlockElement(n))
-			return n;
-
-		n = n.parentNode;
-	}
+	return this.getParentNode(n, function(n) {
+		return this.isBlockElement(n);
+	});
 
 	return null;
 };
@@ -204,64 +201,28 @@ TinyMCE_Engine.prototype._getElementById = function(id, d) {
  * @param {string} nn Node name of items to retrive.
  * @return Node array.
  * @type Array
+ * @deprecated
  */
 TinyMCE_Engine.prototype.getNodeTree = function(n, na, t, nn) {
-	var i;
-
-	if (typeof(t) == "undefined" || n.nodeType == t && (typeof(nn) == "undefined" || n.nodeName == nn))
-		na[na.length] = n;
-
-	if (n.hasChildNodes()) {
-		for (i=0; i<n.childNodes.length; i++)
-			tinyMCE.getNodeTree(n.childNodes[i], na, t, nn);
-	}
-
-	return na;
+	return this.selectNodes(n, function(n) {
+		return (!t || n.nodeType == t) && (!nn || n.nodeName == nn);
+	}, na ? na : new Array());
 };
 
 /**
  * Returns the parent element of the specified node based on the search criteria.
  *
  * @param {HTMLNode} node Node to get parent element of.
- * @param {string} names Comma separated list of element names to get.
- * @param {string} attrib_name Optional attribute name to match.
- * @param {string} attrib_value Optional attribute value to match.
+ * @param {string} na Comma separated list of element names to get.
  * @return HTMLElement or null based on search criteras.
  * @type HTMLElement
  */
-TinyMCE_Engine.prototype.getParentElement = function(node, names, attrib_name, attrib_value) {
-	if (typeof(names) == "undefined") {
-		if (node.nodeType == 1)
-			return node;
+TinyMCE_Engine.prototype.getParentElement = function(n, na) {
+	var re = na ? new RegExp('^(' + na.toUpperCase().replace(/,/g, '|') + ')$') : null, v;
 
-		// Find parent node that is a element
-		while ((node = node.parentNode) != null && node.nodeType != 1) ;
-
-		return node;
-	}
-
-	if (node == null)
-		return null;
-
-	var namesAr = names.toUpperCase().split(',');
-
-	do {
-		for (var i=0; i<namesAr.length; i++) {
-			if (node.nodeName == namesAr[i] || names == "*") {
-				if (typeof(attrib_name) == "undefined")
-					return node;
-				else if (node.getAttribute(attrib_name)) {
-					if (typeof(attrib_value) == "undefined") {
-						if (node.getAttribute(attrib_name) != "")
-							return node;
-					} else if (node.getAttribute(attrib_name) == attrib_value)
-						return node;
-				}
-			}
-		}
-	} while ((node = node.parentNode) != null);
-
-	return null;
+	return this.getParentNode(n, function(n) {
+		return (n.nodeType == 1 && !re) || (re && re.test(n.nodeName));
+	});
 };
 
 /**
@@ -290,19 +251,21 @@ TinyMCE_Engine.prototype.getParentNode = function(n, f) {
  *
  * @param {HTMLElement} elm HTML element to get attribute from.
  * @param {string} name Attribute name to retrive.
- * @param {string} default_value Optional default value to return, this value defaults to a empty string.
+ * @param {string} dv Optional default value to return, this value defaults to a empty string.
  * @return Attribute value or default value if it wasn't found in element.
  * @type string
  */
-TinyMCE_Engine.prototype.getAttrib = function(elm, name, default_value) {
-	if (typeof(default_value) == "undefined")
-		default_value = "";
+TinyMCE_Engine.prototype.getAttrib = function(elm, name, dv) {
+	var v;
+
+	if (typeof(dv) == "undefined")
+		dv = "";
 
 	// Not a element
 	if (!elm || elm.nodeType != 1)
-		return default_value;
+		return dv;
 
-	var v = elm.getAttribute(name);
+	v = elm.getAttribute(name);
 
 	// Try className for class attrib
 	if (name == "class" && !v)
@@ -322,39 +285,38 @@ TinyMCE_Engine.prototype.getAttrib = function(elm, name, default_value) {
 	if (name == "style" && !tinyMCE.isOpera)
 		v = elm.style.cssText;
 
-	return (v && v != "") ? v : default_value;
+	return (v && v != "") ? v : dv;
 };
 
 /**
  * Sets the attribute value for a specific attribute.
  *
- * @param {HTMLElement} element HTML element to set attribute on.
+ * @param {HTMLElement} el HTML element to set attribute on.
  * @param {string} name Attribute name to set.
- * @param {string} value Attribute value to set.
- * @param {boolean} fix_value Optional fix value state, if true only number data will be accepted.
+ * @param {string} va Attribute value to set.
+ * @param {boolean} fix Optional fix value state, if true only number data will be accepted.
  */
-TinyMCE_Engine.prototype.setAttrib = function(element, name, value, fix_value) {
-	if (typeof(value) == "number" && value != null)
-		value = "" + value;
+TinyMCE_Engine.prototype.setAttrib = function(el, name, va, fix) {
+	if (typeof(va) == "number" && va != null)
+		va = "" + va;
 
-	if (fix_value) {
-		if (value == null)
-			value = "";
+	if (fix) {
+		if (va == null)
+			va = "";
 
-		var re = new RegExp('[^0-9%]', 'g');
-		value = value.replace(re, '');
+		va = va.replace(/[^0-9%]/g, '');
 	}
 
 	if (name == "style")
-		element.style.cssText = value;
+		el.style.cssText = va;
 
 	if (name == "class")
-		element.className = value;
+		el.className = va;
 
-	if (value != null && value != "" && value != -1)
-		element.setAttribute(name, value);
+	if (va != null && va != "" && va != -1)
+		el.setAttribute(name, va);
 	else
-		element.removeAttribute(name);
+		el.removeAttribute(name);
 };
 
 /**
@@ -365,13 +327,15 @@ TinyMCE_Engine.prototype.setAttrib = function(element, name, value, fix_value) {
  * @param {string} value Style item value to set.
  */
 TinyMCE_Engine.prototype.setStyleAttrib = function(elm, name, value) {
+	var s;
+
 	eval('elm.style.' + name + '=value;');
 
 	// Style attrib deleted
 	if (tinyMCE.isMSIE && value == null || value == '') {
-		var str = tinyMCE.serializeStyle(tinyMCE.parseStyle(elm.style.cssText));
-		elm.style.cssText = str;
-		elm.setAttribute("style", str);
+		s = tinyMCE.serializeStyle(tinyMCE.parseStyle(elm.style.cssText));
+		elm.style.cssText = s;
+		elm.setAttribute("style", s);
 	}
 };
 
@@ -410,15 +374,15 @@ TinyMCE_Engine.prototype.switchClass = function(ei, c) {
  * @type TinyMCE_ElementPosition
  */
 TinyMCE_Engine.prototype.getAbsPosition = function(n, cn) {
-	var p = {absLeft : 0, absTop : 0};
+	var l = 0, t = 0;
 
 	while (n && n != cn) {
-		p.absLeft += n.offsetLeft;
-		p.absTop += n.offsetTop;
+		l += n.offsetLeft;
+		t += n.offsetTop;
 		n = n.offsetParent;
 	}
 
-	return p;
+	return {absLeft : l, absTop : t};
 };
 
 /**
@@ -505,8 +469,9 @@ TinyMCE_Engine.prototype.selectNodes = function(n, f, a) {
  */
 TinyMCE_Engine.prototype.addCSSClass = function(e, c, b) {
 	var o = this.removeCSSClass(e, c);
-
-	return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
+	e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
+	alert(e.className);
+	return e.className;
 };
 
 /**
@@ -518,14 +483,20 @@ TinyMCE_Engine.prototype.addCSSClass = function(e, c, b) {
  * @type string
  */
 TinyMCE_Engine.prototype.removeCSSClass = function(e, c) {
-	var a = this.explode(' ', e.className), i;
+	c = e.className.replace(new RegExp("(^|\\s+)" + c + "(\\s+|$)"), ' ');
+	return e.className = c != ' ' ? c : '';
+};
 
-	for (i=0; i<a.length; i++) {
-		if (a[i] == c)
-			a[i] = '';
-	}
-
-	return e.className = a.join(' ');
+/**
+ * Returns true if the specified element has the specified class.
+ *
+ * @param {HTMLElement} n HTML element to check CSS class on.
+ * @param {string] c CSS class to check for.
+ * @return true/false if the specified element has the specified class.
+ * @type bool
+ */
+TinyMCE_Engine.prototype.hasCSSClass = function(n, c) {
+	return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 };
 
 /**

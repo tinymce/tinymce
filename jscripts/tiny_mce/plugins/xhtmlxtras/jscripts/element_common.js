@@ -109,18 +109,18 @@ function setAttrib(elm, attrib, value) {
 	}
 
 	if (value != "") {
-		elm.setAttribute(attrib.toLowerCase(), value);
-
 		if (attrib == "style")
 			attrib = "style.cssText";
 
 		if (attrib.substring(0, 2) == 'on')
 			value = 'return true;' + value;
 
-		if (attrib == "class")
-			attrib = "className";
+		if (attrib == "class") {
+			tinyMCE.addCSSClass(elm, value);
+			return;
+		}
 
-		eval('elm.' + attrib + '=value;');
+		elm.setAttribute(attrib.toLowerCase(), value);
 	} else
 		elm.removeAttribute(attrib);
 }
@@ -169,14 +169,21 @@ SXE.initElementDialog = function(element_name) {
 }
 
 SXE.insertElement = function(element_name) {
+	var elm = tinyMCE.getParentElement(SXE.focusElement, element_name), h;
+
 	element_name = element_name.toLowerCase();
-	var elm = tinyMCE.getParentElement(SXE.focusElement, element_name);
 
 	tinyMCEPopup.execCommand('mceBeginUndoLevel');
 	if (elm == null) {
 		var s = SXE.inst.selection.getSelectedHTML();
 		if(s.length > 0) {
-			tinyMCEPopup.execCommand('mceInsertContent', false, '<' + element_name + ' id="#sxe_temp_' + element_name + '#">' + s + '</' + element_name + '>');
+			if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && element_name == 'abbr') {
+				element_name = 'span';
+				h = '<span id="#sxe_temp_' + element_name + '#" class="mceItemAbbr">' + s + '</span>';
+			} else
+				h = '<' + element_name + ' id="#sxe_temp_' + element_name + '#">' + s + '</' + element_name + '>';
+
+			tinyMCEPopup.execCommand('mceInsertContent', false, h);
 			var elementArray = tinyMCE.getElementsByAttributeValue(SXE.inst.getBody(), element_name, 'id', '#sxe_temp_' + element_name + '#');
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];

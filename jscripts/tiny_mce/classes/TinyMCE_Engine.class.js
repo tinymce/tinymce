@@ -24,6 +24,7 @@ function TinyMCE_Engine() {
 	this.configs = new Array();
 	this.currentConfig = 0;
 	this.eventHandlers = new Array();
+	this.log = new Array();
 
 	// Browser check
 	var ua = navigator.userAgent;
@@ -362,7 +363,7 @@ TinyMCE_Engine.prototype = {
 	_def : function(key, def_val, t) {
 		var v = tinyMCE.getParam(key, def_val);
 
-		v = t ? v.replace(/\s+/g,"") : v;
+		v = t ? v.replace(/\s+/g, "") : v;
 
 		this.settings[key] = v;
 	},

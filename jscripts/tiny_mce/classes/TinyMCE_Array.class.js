@@ -9,16 +9,18 @@
 
 /**
  * Returns a cleared array, since some external libraries tend to extend the Array core object
- * arrays needs to be cleaned from these extended functions. So this function simply sets any
- * named properties back to null.
+ * arrays needs to be cleaned from these extended functions. So this function simply deletes any
+ * named properties.
  *
  * @param {Array} Name/Value array to clear.
  * @return Cleared name/value array.
  * @type Array
  */
 TinyMCE_Engine.prototype.clearArray = function(a) {
-	for (var k in a)
-		a[k] = null;
+	var n;
+
+	for (n in a)
+		delete a[n];
 
 	return a;
 };

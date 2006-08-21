@@ -90,6 +90,17 @@ var TinyMCE_XHTMLXtrasPlugin = {
 		return false;
 	},
 
+	cleanup : function(type, content, inst) {
+		if (type == 'get_from_editor_dom') {
+			tinyMCE.selectNodes(content, function(n) {
+				if (n.nodeName == 'SPAN' && n.className == 'mceItemAbbr')
+					tinyMCE.renameElement(n, 'ABBR', inst.getDoc());
+			});
+		}
+
+		return content;
+	},
+
 	handleNodeChange : function(editor_id, node, undo_index,undo_levels, visual_aid, any_selection) {
 		if (node == null)
 			return;

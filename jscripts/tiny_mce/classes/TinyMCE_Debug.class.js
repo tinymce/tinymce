@@ -8,30 +8,20 @@
  */
 
 /**
- * Debugs the specified message to a screen.
+ * Debugs the specified message to devkit if it's loaded.
  *
  * @param {1..n} Numerous arguments that will be outputed.
  */
 TinyMCE_Engine.prototype.debug = function() {
-	var m = "", e, a, i;
+	var m = "", a, i, l = tinyMCE.log.length;
 
-	e = document.getElementById("tinymce_debug");
-	if (!e) {
-		var d = document.createElement("div");
-		d.setAttribute("className", "debugger");
-		d.className = "debugger";
-		d.innerHTML = 'Debug output:<textarea id="tinymce_debug" style="width: 100%; height: 300px" wrap="nowrap" mce_editable="false"></textarea>';
-
-		document.body.appendChild(d);
-		e = document.getElementById("tinymce_debug");
-	}
-
-	a = this.debug.arguments;
-	for (i=0; i<a.length; i++) {
+	for (i=0, a = this.debug.arguments; i<a.length; i++) {
 		m += a[i];
+
 		if (i<a.length-1)
 			m += ', ';
 	}
 
-	e.value += m + "\n";
+	if (l < 1000)
+		tinyMCE.log[l] = "[debug] " + m;
 };

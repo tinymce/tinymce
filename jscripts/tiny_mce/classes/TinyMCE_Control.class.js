@@ -122,12 +122,14 @@ TinyMCE_Control.prototype = {
 	 * and other trailing graphics.
 	 */
 	repaint : function() {
+		var s, b, ex;
+
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
 			return;
 
 		try {
-			var s = this.selection;
-			var b = s.getBookmark(true);
+			s = this.selection;
+			b = s.getBookmark(true);
 			this.getBody().style.display = 'none';
 			this.getDoc().execCommand('selectall', false, null);
 			this.getSel().collapseToStart();
@@ -197,8 +199,7 @@ TinyMCE_Control.prototype = {
 	 * @type boolean
 	 */
 	addShortcut : function(m, k, d, cmd, ui, va) {
-		var n = typeof(k) == "number", ie = tinyMCE.isMSIE, c, sc, i;
-		var scl = this.shortcuts;
+		var n = typeof(k) == "number", ie = tinyMCE.isMSIE, c, sc, i, scl = this.shortcuts;
 
 		if (!tinyMCE.getParam('custom_shortcuts'))
 			return false;
@@ -276,10 +277,12 @@ TinyMCE_Control.prototype = {
 	 * @type boolean
 	 */
 	isHidden : function() {
+		var s;
+
 		if (tinyMCE.isMSIE)
 			return false;
 
-		var s = this.getSel();
+		s = this.getSel();
 
 		// Weird, wheres that cursor selection?
 		return (!s || !s.rangeCount || s.rangeCount == 0);
@@ -373,11 +376,10 @@ TinyMCE_Control.prototype = {
 	 * @param {mixed} value Optional command value, this can be anything.
 	 */
 	execCommand : function(command, user_interface, value) {
-		var doc = this.getDoc();
-		var win = this.getWin();
+		var doc = this.getDoc(), win = this.getWin();
 		var focusElm = this.getFocusElement();
 
-		// Is non udno specific command
+		// Is not a undo specific command
 		if (!new RegExp('mceStartTyping|mceEndTyping|mceBeginUndoLevel|mceEndUndoLevel|mceAddUndoLevel', 'gi').test(command))
 			this.undoBookmark = null;
 
@@ -968,14 +970,6 @@ TinyMCE_Control.prototype = {
 					}
 				}
 
-				// Ugly hack in Opera due to non working "inserthtml"
-				if (tinyMCE.isOpera && insertHTMLFailed) {
-					this.getDoc().execCommand("insertimage", false, tinyMCE.uniqueURL);
-					var ar = tinyMCE.getElementsByAttributeValue(this.getBody(), "img", "src", tinyMCE.uniqueURL);
-					ar[0].outerHTML = value;
-					return;
-				}
-
 				if (!tinyMCE.isMSIE) {
 					var isHTML = value.indexOf('<') != -1;
 					var sel = this.getSel();
@@ -1063,7 +1057,6 @@ TinyMCE_Control.prototype = {
 				if (tinyMCE.settings['custom_undo_redo'] && this.undoRedo.typingUndoIndex == -1) {
 					this.undoRedo.typingUndoIndex = this.undoRedo.undoIndex;
 					this.execCommand('mceAddUndoLevel');
-					//tinyMCE.debug("mceStartTyping");
 				}
 				break;
 
@@ -1071,7 +1064,6 @@ TinyMCE_Control.prototype = {
 				if (tinyMCE.settings['custom_undo_redo'] && this.undoRedo.typingUndoIndex != -1) {
 					this.execCommand('mceAddUndoLevel');
 					this.undoRedo.typingUndoIndex = -1;
-					//tinyMCE.debug("mceEndTyping");
 				}
 				break;
 
@@ -1118,6 +1110,7 @@ TinyMCE_Control.prototype = {
 			case "Indent":
 				this.getDoc().execCommand(command, user_interface, value);
 				tinyMCE.triggerNodeChange();
+
 				if (tinyMCE.isMSIE) {
 					var n = tinyMCE.getParentElement(this.getFocusElement(), "blockquote");
 					do {

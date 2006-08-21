@@ -883,7 +883,7 @@ var TinyMCE_AdvancedTheme = {
 				}
 
 				className = tinyMCE.getAttrib(path[i], "class");
-				if (nodeName == "img" && className.indexOf('mceItem') != -1) {
+				if ((nodeName == "img" || nodeName == "span") && className.indexOf('mceItem') != -1) {
 					nodeName = className.replace(/mceItem([a-z]+)/gi, '$1').toLowerCase();
 					nodeData = path[i].getAttribute('title');
 				}

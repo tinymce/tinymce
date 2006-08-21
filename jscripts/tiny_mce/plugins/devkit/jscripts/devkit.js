@@ -4,7 +4,7 @@ function init() {
 	var log, i, f = document.forms[0];
 
 	devkit = tinyMCE.plugins['devkit'];
-	log = devkit._logRows;
+	log = tinyMCE.log;
 
 	for (i=0; i<log.length; i++)
 		debug(log[i]);
