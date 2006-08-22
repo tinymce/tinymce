@@ -62,7 +62,7 @@ TinyMCE_Engine.prototype.isBlockElement = function(n) {
  */
 TinyMCE_Engine.prototype.getParentBlockElement = function(n) {
 	return this.getParentNode(n, function(n) {
-		return this.isBlockElement(n);
+		return tinyMCE.isBlockElement(n);
 	});
 
 	return null;
