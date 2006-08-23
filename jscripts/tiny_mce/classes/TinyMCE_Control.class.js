@@ -168,7 +168,7 @@ TinyMCE_Control.prototype = {
 	 * @type DOMDocument
 	 */
 	getDoc : function() {
-		return this.contentWindow.document;
+		return this.contentDocument ? this.contentDocument : this.contentWindow.document;
 	},
 
 	/**
@@ -179,6 +179,35 @@ TinyMCE_Control.prototype = {
 	 */
 	getWin : function() {
 		return this.contentWindow;
+	},
+
+	/**
+	 * Returns the container window of a editor instance. The container window is the window where the current instance lives in.
+	 *
+	 * @return container window of a editor instance.
+	 * @type DOMDocument
+	 */
+	getContainerWin : function() {
+		return this.containerWindow ? this.containerWindow : window;
+	},
+
+	/**
+	 * Returns the viewport of the editor instance.
+	 *
+	 * @return Viewport object with fields top, left, width and height.
+	 * @type Object
+	 */
+	getViewPort : function() {
+		return tinyMCE.getViewPort(this.getWin());
+	},
+
+	/**
+	 * Auto resizes the current editor instance to match the inner document size.
+	 */
+	resizeToContent : function() {
+		var d = this.getDoc(), b = d.body, de = d.documentElement;
+
+		this.iframeElement.style.height = (tinyMCE.isMSIE && !tinyMCE.isOpera) ? b.scrollHeight : de.offsetHeight + 'px';
 	},
 
 	/**

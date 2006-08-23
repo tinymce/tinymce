@@ -1,15 +1,16 @@
-var devkit, logEnabled = true, flip = false;
+var devkit = parent.tinyMCE.plugins['devkit'], logEnabled = true, flip = false, isLoaded = false;
 
 function init() {
 	var log, i, f = document.forms[0];
 
-	devkit = tinyMCE.plugins['devkit'];
 	log = tinyMCE.log;
 
 	for (i=0; i<log.length; i++)
 		debug(log[i]);
 
 	f.logfilter.value = devkit._logFilter;
+
+	isLoaded = true;
 }
 
 function changeFilter(f) {
@@ -120,6 +121,7 @@ function renderInfo() {
 		h += addRenderInfo('linkElement', inst.linkElement ? inst.linkElement.nodeName : null, 'dep');
 		h += addRenderInfo('imgElement', inst.imgElement ? inst.imgElement.nodeName : null, 'dep');
 		h += addRenderInfo('selectedNode', inst.selectedNode ? inst.selectedNode.nodeName : null, 'dep');
+		h += addRenderInfo('targetElement', inst.targetElement ? inst.targetElement.nodeName : null);
 		h += addRenderInfo('getBody().nodeName', inst.getBody() ? inst.getBody().nodeName : null);
 		h += addRenderInfo('getBody().getAttribute("id")', inst.getBody() ? inst.getBody().getAttribute("id") : null);
 		h += addRenderInfo('getDoc().location', inst.getDoc() ? inst.getDoc().location : null);

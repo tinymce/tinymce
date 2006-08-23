@@ -19,6 +19,11 @@ var TinyMCE_ForceParagraphs = {
 	 * @private
 	 */
 	_insertPara : function(inst, e) {
+		var doc = inst.getDoc(), sel = inst.getSel(), body = inst.getBody(), win = inst.contentWindow, rng = sel.getRangeAt(0);
+		var rootElm = doc.documentElement, blockName = "P", startNode, endNode, startBlock, endBlock;
+		var rngBefore, rngAfter, direct, startNode, startOffset, endNode, endOffset, b = tinyMCE.isOpera ? inst.selection.getBookmark() : null;
+		var paraBefore, paraAfter, startChop, endChop, contents;
+
 		function isEmpty(para) {
 			function isEmptyHTML(html) {
 				return html.replace(new RegExp('[ \t\r\n]+', 'g'), '').toLowerCase() == "";
@@ -47,43 +52,33 @@ var TinyMCE_ForceParagraphs = {
 			return true;
 		}
 
-		var doc = inst.getDoc();
-		var sel = inst.getSel();
-		var win = inst.contentWindow;
-		var rng = sel.getRangeAt(0);
-		var body = doc.body;
-		var rootElm = doc.documentElement;
-		var blockName = "P";
-
 	//	tinyMCE.debug(body.innerHTML);
 
 	//	debug(e.target, sel.anchorNode.nodeName, sel.focusNode.nodeName, rng.startContainer, rng.endContainer, rng.commonAncestorContainer, sel.anchorOffset, sel.focusOffset, rng.toString());
 
 		// Setup before range
-		var rngBefore = doc.createRange();
+		rngBefore = doc.createRange();
 		rngBefore.setStart(sel.anchorNode, sel.anchorOffset);
 		rngBefore.collapse(true);
 
 		// Setup after range
-		var rngAfter = doc.createRange();
+		rngAfter = doc.createRange();
 		rngAfter.setStart(sel.focusNode, sel.focusOffset);
 		rngAfter.collapse(true);
 
 		// Setup start/end points
-		var direct = rngBefore.compareBoundaryPoints(rngBefore.START_TO_END, rngAfter) < 0;
-		var startNode = direct ? sel.anchorNode : sel.focusNode;
-		var startOffset = direct ? sel.anchorOffset : sel.focusOffset;
-		var endNode = direct ? sel.focusNode : sel.anchorNode;
-		var endOffset = direct ? sel.focusOffset : sel.anchorOffset;
+		direct = rngBefore.compareBoundaryPoints(rngBefore.START_TO_END, rngAfter) < 0;
+		startNode = direct ? sel.anchorNode : sel.focusNode;
+		startOffset = direct ? sel.anchorOffset : sel.focusOffset;
+		endNode = direct ? sel.focusNode : sel.anchorNode;
+		endOffset = direct ? sel.focusOffset : sel.anchorOffset;
 
 		startNode = startNode.nodeName == "BODY" ? startNode.firstChild : startNode;
 		endNode = endNode.nodeName == "BODY" ? endNode.firstChild : endNode;
 
-		// tinyMCE.debug(startNode, endNode);
-
 		// Get block elements
-		var startBlock = tinyMCE.getParentBlockElement(startNode);
-		var endBlock = tinyMCE.getParentBlockElement(endNode);
+		startBlock = tinyMCE.getParentBlockElement(startNode, body);
+		endBlock = tinyMCE.getParentBlockElement(endNode, body);
 
 		// If absolute force paragraph generation within
 		if (startBlock && new RegExp('absolute|relative|static', 'gi').test(startBlock.style.position))
@@ -102,7 +97,7 @@ var TinyMCE_ForceParagraphs = {
 		}
 
 		// Within a list use normal behaviour
-		if (tinyMCE.getParentElement(startBlock, "OL,UL") != null)
+		if (tinyMCE.getParentElement(startBlock, "OL,UL", body) != null)
 			return false;
 
 		// Within a table create new paragraphs
@@ -110,16 +105,16 @@ var TinyMCE_ForceParagraphs = {
 			startBlock = endBlock = null;
 
 		// Setup new paragraphs
-		var paraBefore = (startBlock != null && startBlock.nodeName == blockName) ? startBlock.cloneNode(false) : doc.createElement(blockName);
-		var paraAfter = (endBlock != null && endBlock.nodeName == blockName) ? endBlock.cloneNode(false) : doc.createElement(blockName);
+		paraBefore = (startBlock != null && startBlock.nodeName == blockName) ? startBlock.cloneNode(false) : doc.createElement(blockName);
+		paraAfter = (endBlock != null && endBlock.nodeName == blockName) ? endBlock.cloneNode(false) : doc.createElement(blockName);
 
 		// Is header, then force paragraph under
 		if (/^(H[1-6])$/.test(blockName))
 			paraAfter = doc.createElement("p");
 
 		// Setup chop nodes
-		var startChop = startNode;
-		var endChop = endNode;
+		startChop = startNode;
+		endChop = endNode;
 
 		// Get startChop node
 		node = startChop;
@@ -176,7 +171,7 @@ var TinyMCE_ForceParagraphs = {
 				if (endChop.nodeName != "#text" && endChop.nodeName != "BODY")
 					rngBefore.setEndAfter(endChop);
 
-				var contents = rng.cloneContents();
+				contents = rng.cloneContents();
 				if (contents.firstChild && (contents.firstChild.nodeName == blockName || contents.firstChild.nodeName == "BODY"))
 					paraAfter.innerHTML = contents.firstChild.innerHTML;
 				else
@@ -208,12 +203,13 @@ var TinyMCE_ForceParagraphs = {
 					rngBefore.insertNode(paraBefore);
 				}
 
-				// tinyMCE.debug("1: ", paraBefore.innerHTML, paraAfter.innerHTML);
+				//tinyMCE.debug("1: ", paraBefore.innerHTML, paraAfter.innerHTML);
 			} else {
 				body.innerHTML = "<" + blockName + ">&nbsp;</" + blockName + "><" + blockName + ">&nbsp;</" + blockName + ">";
 				paraAfter = body.childNodes[1];
 			}
 
+			inst.selection.moveToBookmark(b);
 			inst.selection.selectNode(paraAfter, true, true);
 
 			return true;
@@ -231,7 +227,7 @@ var TinyMCE_ForceParagraphs = {
 		// Place secound part within new paragraph
 		rngAfter.setEndAfter(endChop);
 		rngAfter.setStart(endNode, endOffset);
-		var contents = rngAfter.cloneContents();
+		contents = rngAfter.cloneContents();
 
 		if (contents.firstChild && contents.firstChild.nodeName == blockName) {
 	/*		var nodes = contents.firstChild.childNodes;
@@ -254,7 +250,7 @@ var TinyMCE_ForceParagraphs = {
 			paraAfter.innerHTML = "&nbsp;";
 
 		// Create a range around everything
-		var rng = doc.createRange();
+		rng = doc.createRange();
 
 		if (!startChop.previousSibling && startChop.parentNode.nodeName.toUpperCase() == blockName) {
 			rng.setStartBefore(startChop.parentNode);
@@ -287,6 +283,7 @@ var TinyMCE_ForceParagraphs = {
 		paraAfter.normalize();
 		paraBefore.normalize();
 
+		inst.selection.moveToBookmark(b);
 		inst.selection.selectNode(paraAfter, true, true);
 
 		return true;
@@ -315,6 +312,9 @@ var TinyMCE_ForceParagraphs = {
 			if (nv != null && r.startOffset == nv.length)
 				sn.nextSibling.parentNode.removeChild(sn.nextSibling);
 		}
+
+		if (inst.settings.auto_resize)
+			inst.resizeToContent();
 
 		return s;
 	}

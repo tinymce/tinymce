@@ -91,16 +91,12 @@ TinyMCE_Selection.prototype = {
 		var rng = this.getRng();
 		var doc = inst.getDoc(), b = inst.getBody();
 		var sp, le, s, e, nl, i, si, ei, w;
-		var trng, sx, sy, xx = -999999999;
+		var trng, sx, sy, xx = -999999999, vp = inst.getViewPort();
 
-		// Skip Opera for now
-		if (tinyMCE.isOpera)
-			return null;
+		sx = vp.left;
+		sy = vp.top;
 
-		sx = doc.body.scrollLeft + doc.documentElement.scrollLeft;
-		sy = doc.body.scrollTop + doc.documentElement.scrollTop;
-
-		if (tinyMCE.isSafari || simple)
+		if (tinyMCE.isSafari || tinyMCE.isOpera || simple)
 			return {rng : rng, scrollX : sx, scrollY : sy};
 
 		if (tinyMCE.isMSIE) {
@@ -205,7 +201,7 @@ TinyMCE_Selection.prototype = {
 			return true;
 		}
 
-		if (tinyMCE.isMSIE) {
+		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
 			if (bookmark.rng) {
 				bookmark.rng.select();
 				return true;
@@ -244,7 +240,7 @@ TinyMCE_Selection.prototype = {
 			return true;
 		}
 
-		if (tinyMCE.isGecko) {
+		if (tinyMCE.isGecko || tinyMCE.isOpera) {
 			if (bookmark.rng) {
 				sel.removeAllRanges();
 				sel.addRange(bookmark.rng);
@@ -337,7 +333,7 @@ TinyMCE_Selection.prototype = {
 	 * @param {boolean} to_start True/false if the collapse should be to start or end of range.
 	 */
 	selectNode : function(node, collapse, select_text_node, to_start) {
-		var inst = this.instance, sel, rng, nodes;
+		var inst = this.instance, sel, rng, nodes, cwin, sx, sy, vp, pos, ipos;
 
 		if (!node)
 			return;
@@ -350,6 +346,22 @@ TinyMCE_Selection.prototype = {
 
 		if (typeof(to_start) == "undefined")
 			to_start = true;
+
+		// Auto resize iframe if needed and also scroll main window if needed
+		if (inst.settings.auto_resize) {
+			cwin = inst.getContainerWin();
+			vp = tinyMCE.getViewPort(cwin);
+			pos = tinyMCE.getAbsPosition(node);
+			ipos = tinyMCE.getAbsPosition(inst.targetElement);
+
+			inst.resizeToContent();
+
+			sx = ipos.absLeft + pos.absLeft;
+			sy = ipos.absTop + pos.absTop;
+
+			if (sx < vp.left || sx > vp.left + vp.width || sy < vp.top || sy > vp.top + vp.height)
+				cwin.scrollTo(sx, sy - vp.height + 25);
+		}
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
 			rng = inst.getBody().createTextRange();
@@ -424,19 +436,13 @@ TinyMCE_Selection.prototype = {
 	 * @param {HTMLNode} node Node to scroll to.
 	 */
 	scrollToNode : function(node) {
-		var inst = this.instance;
-		var pos, doc, scrollX, scrollY, height;
+		var inst = this.instance, w = inst.getWin(), vp = inst.getViewPort(), pos = tinyMCE.getAbsPosition(node);
 
-		// Scroll to node position
-		pos = tinyMCE.getAbsPosition(node);
-		doc = inst.getDoc();
-		scrollX = doc.body.scrollLeft + doc.documentElement.scrollLeft;
-		scrollY = doc.body.scrollTop + doc.documentElement.scrollTop;
-		height = tinyMCE.isMSIE ? document.getElementById(inst.editorId).style.pixelHeight : inst.targetElement.clientHeight;
+//		tinyMCE.debug(vp.left, vp.top, vp.width, vp.height, pos.absLeft, pos.absTop, (pos.absTop < vp.top || pos.absTop > vp.top + vp.height || pos.absLeft < vp.left || pos.absLeft > vp.left + vp.width));
 
 		// Only scroll if out of visible area
-		if (!tinyMCE.settings['auto_resize'] && !(pos.absTop > scrollY && pos.absTop < (scrollY - 25 + height)))
-			inst.contentWindow.scrollTo(pos.absLeft, pos.absTop - height + 25); 
+		if (pos.absTop < vp.top || pos.absTop > vp.top + vp.height || pos.absLeft < vp.left || pos.absLeft > vp.left + vp.width)
+			w.scrollTo(pos.absLeft, pos.absTop - vp.height + 25);
 	},
 
 	/**

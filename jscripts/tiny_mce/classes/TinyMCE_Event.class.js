@@ -165,6 +165,8 @@ TinyMCE_Engine.prototype.onMouseMove = function() {
  * Cancels the specified event, this will disable the event from be passed to other listeners in event chain.
  *
  * @param {DOMEvent} e Event to cancel.
+ * @return Returns false.
+ * @type bool
  */
 TinyMCE_Engine.prototype.cancelEvent = function(e) {
 	if (tinyMCE.isMSIE) {
@@ -172,6 +174,8 @@ TinyMCE_Engine.prototype.cancelEvent = function(e) {
 		e.cancelBubble = true;
 	} else
 		e.preventDefault();
+
+	return false;
 };
 
 /**

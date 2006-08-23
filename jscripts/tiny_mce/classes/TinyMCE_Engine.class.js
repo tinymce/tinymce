@@ -1275,8 +1275,7 @@ TinyMCE_Engine.prototype = {
 					if (TinyMCE_ForceParagraphs._insertPara(tinyMCE.selectedInstance, e)) {
 						// Cancel event
 						tinyMCE.execCommand("mceAddUndoLevel");
-						tinyMCE.cancelEvent(e);
-						return false;
+						return tinyMCE.cancelEvent(e);
 					}
 				}
 
@@ -1286,8 +1285,7 @@ TinyMCE_Engine.prototype = {
 					if (TinyMCE_ForceParagraphs._handleBackSpace(tinyMCE.selectedInstance, e.type)) {
 						// Cancel event
 						tinyMCE.execCommand("mceAddUndoLevel");
-						tinyMCE.cancelEvent(e);
-						return false;
+						return tinyMCE.cancelEvent(e);
 					}
 				}
 
@@ -1402,6 +1400,7 @@ TinyMCE_Engine.prototype = {
 				// MSIE custom key handling
 				if (tinyMCE.isMSIE && tinyMCE.settings['custom_undo_redo']) {
 					var keys = new Array(8,46); // Backspace,Delete
+
 					for (var i=0; i<keys.length; i++) {
 						if (keys[i] == e.keyCode) {
 							if (e.type == "keyup")
@@ -1883,22 +1882,18 @@ TinyMCE_Engine.prototype = {
 			var inst = tinyMCE.selectedInstance;
 			var editorId = inst.editorId;
 			var elm = (typeof(setup_content) != "undefined" && setup_content) ? tinyMCE.selectedElement : inst.getFocusElement();
-			var undoIndex = -1;
+			var undoIndex = -1, doc;
 			var undoLevels = -1;
 			var anySelection = false;
 			var selectedText = inst.selection.getSelectedText();
+
+			if (tinyMCE.settings.auto_resize)
+				inst.resizeToContent();
 
 			if (setup_content && tinyMCE.isGecko && inst.isHidden())
 				elm = inst.getBody();
 
 			inst.switchSettings();
-
-			if (tinyMCE.settings["auto_resize"]) {
-				var doc = inst.getDoc();
-
-				inst.iframeElement.style.width = inst.getBody().offsetWidth + "px";
-				inst.iframeElement.style.height = inst.getBody().offsetHeight + "px";
-			}
 
 			if (tinyMCE.selectedElement)
 				anySelection = (tinyMCE.selectedElement.nodeName.toLowerCase() == "img") || (selectedText && selectedText.length > 0);

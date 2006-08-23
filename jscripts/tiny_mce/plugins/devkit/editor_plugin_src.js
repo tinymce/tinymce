@@ -93,7 +93,7 @@ var TinyMCE_DevKitPlugin = {
 			return;
 		}
 
-		if (!win || !win.debug)
+		if (!win || !win.debug || !win.isLoaded)
 			tinyMCE.log[tinyMCE.log.length] = m;
 		else
 			win.debug(m);

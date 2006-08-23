@@ -57,13 +57,14 @@ TinyMCE_Engine.prototype.isBlockElement = function(n) {
  * Returns the first block element parent of the specified node.
  *
  * @param {HTMLNode} n Node get parent block element for.
+ * @param {HTMLNode} r Optional root element, never go below this point.
  * @return First block element parent of the specified node or null if it wasn't found.
  * @type HTMLElement
  */
-TinyMCE_Engine.prototype.getParentBlockElement = function(n) {
+TinyMCE_Engine.prototype.getParentBlockElement = function(n, r) {
 	return this.getParentNode(n, function(n) {
 		return tinyMCE.isBlockElement(n);
-	});
+	}, r);
 
 	return null;
 };
@@ -214,15 +215,16 @@ TinyMCE_Engine.prototype.getNodeTree = function(n, na, t, nn) {
  *
  * @param {HTMLNode} node Node to get parent element of.
  * @param {string} na Comma separated list of element names to get.
+ * @param {HTMLNode} r Optional root element, never go below this point.
  * @return HTMLElement or null based on search criteras.
  * @type HTMLElement
  */
-TinyMCE_Engine.prototype.getParentElement = function(n, na) {
+TinyMCE_Engine.prototype.getParentElement = function(n, na, r) {
 	var re = na ? new RegExp('^(' + na.toUpperCase().replace(/,/g, '|') + ')$') : null, v;
 
 	return this.getParentNode(n, function(n) {
 		return (n.nodeType == 1 && !re) || (re && re.test(n.nodeName));
-	});
+	}, r);
 };
 
 /**
@@ -232,11 +234,15 @@ TinyMCE_Engine.prototype.getParentElement = function(n, na) {
  *
  * @param {DOMNode} n HTML node to search parents on.
  * @param {function} f Selection function to execute on each node.
+ * @param {HTMLNode} r Optional root element, never go below this point.
  * @return DOMNode or null if it wasn't found.
  * @type DOMNode
  */
-TinyMCE_Engine.prototype.getParentNode = function(n, f) {
+TinyMCE_Engine.prototype.getParentNode = function(n, f, r) {
 	while (n) {
+		if (n == r)
+			return null;
+
 		if (f(n))
 			return n;
 
@@ -526,4 +532,22 @@ TinyMCE_Engine.prototype.renameElement = function(e, n, d) {
 
 		e.parentNode.replaceChild(ne, e);
 	}
+};
+
+/**
+ * Returns the viewport of the specificed window instance.
+ *
+ * @param {Window} w Window to get viewport of.
+ * @return Viewport object with fields top, left, width and height.
+ * @type Object
+ */
+TinyMCE_Engine.prototype.getViewPort = function(w) {
+	var d = w.document, m = d.compatMode == 'CSS1Compat', b = d.body, de = d.documentElement;
+
+	return {
+		left : w.pageXOffset || (m ? de.scrollLeft : b.scrollLeft),
+		top : w.pageYOffset || (m ? de.scrollTop : b.scrollTop),
+		width : w.innerWidth || (m ? de.clientWidth : b.clientWidth),
+		height : w.innerHeight || (m ? de.clientHeight : b.clientHeight)
+	};
 };
