@@ -12,6 +12,7 @@ var TinyMCE_DevKitPlugin = {
 	_logPadding : '',
 	_startTime : null,
 	_benchMark : false,
+	_winLoaded : false,
 
 	getInfo : function() {
 		return {
@@ -24,13 +25,15 @@ var TinyMCE_DevKitPlugin = {
 	},
 
 	initInstance : function(inst) {
-		if (!this._loaded) {
-			this._loaded = true;
-			this._setup();
-		}
+		this._setup();
 	},
 
 	_setup : function() {
+		if (this._loaded)
+			return;
+
+		this._loaded = true;
+
 		// Register a document reference for more easy access in the FF DOM inspector
 		document.___TinyMCE = tinyMCE;
 
@@ -68,7 +71,7 @@ var TinyMCE_DevKitPlugin = {
 	},
 
 	_log : function(t) {
-		var m, a, i, e = document.getElementById('devkit'), win = e ? e.contentWindow : null, now = new Date().getTime();
+		var m, a, i, e = document.getElementById('devkit'), now = new Date().getTime();
 
 		if (!this._startTime)
 			this._startTime = now;
@@ -93,10 +96,10 @@ var TinyMCE_DevKitPlugin = {
 			return;
 		}
 
-		if (!win || !win.debug || !win.isLoaded)
+		if (!this._winLoaded)
 			tinyMCE.log[tinyMCE.log.length] = m;
 		else
-			win.debug(m);
+			e.contentWindow.debug(m);
 	}
 };
 

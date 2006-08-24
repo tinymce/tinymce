@@ -333,7 +333,7 @@ TinyMCE_Selection.prototype = {
 	 * @param {boolean} to_start True/false if the collapse should be to start or end of range.
 	 */
 	selectNode : function(node, collapse, select_text_node, to_start) {
-		var inst = this.instance, sel, rng, nodes, cwin, sx, sy, vp, pos, ipos;
+		var inst = this.instance, sel, rng, nodes;
 
 		if (!node)
 			return;
@@ -347,21 +347,8 @@ TinyMCE_Selection.prototype = {
 		if (typeof(to_start) == "undefined")
 			to_start = true;
 
-		// Auto resize iframe if needed and also scroll main window if needed
-		if (inst.settings.auto_resize) {
-			cwin = inst.getContainerWin();
-			vp = tinyMCE.getViewPort(cwin);
-			pos = tinyMCE.getAbsPosition(node);
-			ipos = tinyMCE.getAbsPosition(inst.targetElement);
-
+		if (inst.settings.auto_resize)
 			inst.resizeToContent();
-
-			sx = ipos.absLeft + pos.absLeft;
-			sy = ipos.absTop + pos.absTop;
-
-			if (sx < vp.left || sx > vp.left + vp.width || sy < vp.top || sy > vp.top + vp.height)
-				cwin.scrollTo(sx, sy - vp.height + 25);
-		}
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
 			rng = inst.getBody().createTextRange();
@@ -436,13 +423,35 @@ TinyMCE_Selection.prototype = {
 	 * @param {HTMLNode} node Node to scroll to.
 	 */
 	scrollToNode : function(node) {
-		var inst = this.instance, w = inst.getWin(), vp = inst.getViewPort(), pos = tinyMCE.getAbsPosition(node);
-
-//		tinyMCE.debug(vp.left, vp.top, vp.width, vp.height, pos.absLeft, pos.absTop, (pos.absTop < vp.top || pos.absTop > vp.top + vp.height || pos.absLeft < vp.left || pos.absLeft > vp.left + vp.width));
+		var inst = this.instance, w = inst.getWin(), vp = inst.getViewPort(), pos = tinyMCE.getAbsPosition(node), cvp, p, cwin;
 
 		// Only scroll if out of visible area
-		if (pos.absTop < vp.top || pos.absTop > vp.top + vp.height || pos.absLeft < vp.left || pos.absLeft > vp.left + vp.width)
+		if (pos.absLeft < vp.left || pos.absLeft > vp.left + vp.width || pos.absTop < vp.top || pos.absTop > vp.top + (vp.height-25))
 			w.scrollTo(pos.absLeft, pos.absTop - vp.height + 25);
+
+		// Scroll container window
+		if (inst.settings.auto_resize) {
+			cwin = inst.getContainerWin();
+			cvp = tinyMCE.getViewPort(cwin);
+			p = this.getAbsPosition(node);
+
+			if (p.absLeft < cvp.left || p.absLeft > cvp.left + cvp.width || p.absTop < cvp.top || p.absTop > cvp.top + cvp.height)
+				cwin.scrollTo(p.absLeft, p.absTop - cvp.height + 25);
+		}
+	},
+
+	/**
+	 * Returns a global absolute position calculating both the container iframe location and the position within.
+	 *
+	 * @param {HTMLNode} n node.
+	 */
+	getAbsPosition : function(n) {
+		var pos = tinyMCE.getAbsPosition(n), ipos = tinyMCE.getAbsPosition(this.instance.iframeElement);
+
+		return {
+			absLeft : ipos.absLeft + pos.absLeft,
+			absTop : ipos.absTop + pos.absTop
+		};
 	},
 
 	/**

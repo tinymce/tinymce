@@ -1,7 +1,9 @@
-var devkit = parent.tinyMCE.plugins['devkit'], logEnabled = true, flip = false, isLoaded = false;
+var devkit = parent.tinyMCE.plugins['devkit'], logEnabled = true, flip = false;
 
 function init() {
 	var log, i, f = document.forms[0];
+
+	devkit._winLoaded = true;
 
 	log = tinyMCE.log;
 
@@ -9,8 +11,6 @@ function init() {
 		debug(log[i]);
 
 	f.logfilter.value = devkit._logFilter;
-
-	isLoaded = true;
 }
 
 function changeFilter(f) {

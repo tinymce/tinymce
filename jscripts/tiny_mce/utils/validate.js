@@ -109,6 +109,20 @@ var AutoValidator = {
 		this.mark(n.form, n);
 	},
 
+	reset : function(e) {
+		var t = new Array('label', 'input', 'select', 'textarea');
+		var i, j, nl, s = this.settings;
+
+		if (e == null)
+			return;
+
+		for (i=0; i<t.length; i++) {
+			nl = this.tags(e.form ? e.form : e, t[i]);
+			for (j=0; j<nl.length; j++)
+				this.removeClass(nl[j], s.invalid_cls);
+		}
+	},
+
 	validateElms : function(f, e) {
 		var nl, i, n, s = this.settings, st = true, va = Validator, v;
 
