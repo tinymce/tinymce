@@ -152,6 +152,17 @@ TinyMCE_Control.prototype = {
 	},
 
 	/**
+	 * Selects this instance as the currently selected instance. This will also dispatch a selectInstance call to all
+	 * themes, plugins and other listeners.
+	 */
+	select : function() {
+		if (tinyMCE.selectedInstance != this) {
+			tinyMCE.dispatchCallback(this, 'select_instance_callback', 'selectInstance', this, tinyMCE.selectedInstance);
+			tinyMCE.selectedInstance = this;
+		}
+	},
+
+	/**
 	 * Returns the body element of a editor instance.
 	 *
 	 * @return Body element of a editor instance.

@@ -347,7 +347,7 @@ TinyMCE_Engine.prototype.cleanupAnchors = function(doc) {
  */
 TinyMCE_Engine.prototype.getContent = function(editor_id) {
 	if (typeof(editor_id) != "undefined")
-		tinyMCE.selectedInstance = tinyMCE.getInstanceById(editor_id);
+		 tinyMCE.getInstanceById(editor_id).select();
 
 	if (tinyMCE.selectedInstance)
 		return tinyMCE.selectedInstance.getHTML();

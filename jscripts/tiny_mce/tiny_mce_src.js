@@ -626,7 +626,7 @@ TinyMCE_Engine.prototype = {
 			inst.autoResetDesignMode();
 
 			this.selectedElement = inst.getFocusElement();
-			this.selectedInstance = inst;
+			inst.select();
 			tinyMCE.execCommand(command, user_interface, value);
 
 			// Cancel event so it doesn't call onbeforeonunlaod
@@ -907,7 +907,7 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Trigger node change, this call locks buttons for tables and so forth
-		tinyMCE.selectedInstance = inst;
+		inst.select();
 		tinyMCE.selectedElement = inst.contentWindow.document.body;
 
 		// Call custom DOM cleanup
@@ -936,7 +936,7 @@ TinyMCE_Engine.prototype = {
 		// Cleanup any mess left from storyAwayURLs
 		tinyMCE._removeInternal(inst.getBody());
 
-		tinyMCE.selectedInstance = inst;
+		inst.select();
 		tinyMCE.triggerNodeChange(false, true);
 	},
 
@@ -1059,10 +1059,10 @@ TinyMCE_Engine.prototype = {
 					return false;
 
 				if (e.target.editorId) {
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 				} else {
 					if (e.target.ownerDocument.editorId)
-						tinyMCE.selectedInstance = tinyMCE.instances[e.target.ownerDocument.editorId];
+						tinyMCE.instances[e.target.ownerDocument.editorId].select();
 				}
 
 				if (tinyMCE.selectedInstance)
@@ -1091,7 +1091,7 @@ TinyMCE_Engine.prototype = {
 				// Return key pressed
 				if (tinyMCE.isMSIE && tinyMCE.settings['force_br_newlines'] && e.keyCode == 13) {
 					if (e.target.editorId)
-						tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+						tinyMCE.instances[e.target.editorId].select();
 
 					if (tinyMCE.selectedInstance) {
 						var sel = tinyMCE.selectedInstance.getDoc().selection;
@@ -1135,7 +1135,7 @@ TinyMCE_Engine.prototype = {
 					return false;
 
 				if (e.target.editorId)
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 				else
 					return;
 
@@ -1256,7 +1256,7 @@ TinyMCE_Engine.prototype = {
 					inst.autoResetDesignMode();
 
 					if (inst.getBody() == targetBody) {
-						tinyMCE.selectedInstance = inst;
+						inst.select();
 						tinyMCE.selectedElement = e.target;
 						tinyMCE.linkElement = tinyMCE.getParentElement(tinyMCE.selectedElement, "a");
 						tinyMCE.imgElement = tinyMCE.getParentElement(tinyMCE.selectedElement, "img");
@@ -1280,7 +1280,7 @@ TinyMCE_Engine.prototype = {
 
 				// Just in case
 				if (!tinyMCE.selectedInstance && e.target.editorId)
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 
 				return false;
 			break;
@@ -2416,6 +2416,13 @@ TinyMCE_Control.prototype = {
 		if (tinyMCE.configs.length > 1 && tinyMCE.currentConfig != this.settings['index']) {
 			tinyMCE.settings = this.settings;
 			tinyMCE.currentConfig = this.settings['index'];
+		}
+	},
+
+	select : function() {
+		if (tinyMCE.selectedInstance != this) {
+			tinyMCE.dispatchCallback(this, 'select_instance_callback', 'selectInstance', this, tinyMCE.selectedInstance);
+			tinyMCE.selectedInstance = this;
 		}
 	},
 
@@ -3968,7 +3975,7 @@ TinyMCE_Engine.prototype.cleanupAnchors = function(doc) {
 
 TinyMCE_Engine.prototype.getContent = function(editor_id) {
 	if (typeof(editor_id) != "undefined")
-		tinyMCE.selectedInstance = tinyMCE.getInstanceById(editor_id);
+		 tinyMCE.getInstanceById(editor_id).select();
 
 	if (tinyMCE.selectedInstance)
 		return tinyMCE.selectedInstance.getHTML();
@@ -5571,7 +5578,7 @@ TinyMCE_Engine.prototype._eventPatch = function(editor_id) {
 			if (!tinyMCE.isInstance(inst))
 				continue;
 
-			tinyMCE.selectedInstance = inst;
+			inst.select();
 			win = inst.getWin();
 
 			if (win && win.event) {
@@ -6124,28 +6131,28 @@ TinyMCE_Selection.prototype = {
 	},
 
 	getFocusElement : function() {
-		var inst = this.instance;
+		var inst = this.instance, doc, rng, sel, elm;
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
-			var doc = inst.getDoc();
-			var rng = doc.selection.createRange();
+			doc = inst.getDoc();
+			rng = doc.selection.createRange();
 
 	//		if (rng.collapse)
 	//			rng.collapse(true);
 
-			var elm = rng.item ? rng.item(0) : rng.parentElement();
+			elm = rng.item ? rng.item(0) : rng.parentElement();
 		} else {
 			if (!tinyMCE.isSafari && inst.isHidden())
 				return inst.getBody();
 
-			var sel = this.getSel();
-			var rng = this.getRng();
+			sel = this.getSel();
+			rng = this.getRng();
 
 			if (!sel || !rng)
 				return null;
 
-			var elm = rng.commonAncestorContainer;
-			//var elm = (sel && sel.anchorNode) ? sel.anchorNode : null;
+			elm = rng.commonAncestorContainer;
+			//elm = (sel && sel.anchorNode) ? sel.anchorNode : null;
 
 			// Handle selection a image or other control like element such as anchors
 			if (!rng.collapsed) {

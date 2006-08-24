@@ -777,7 +777,7 @@ TinyMCE_Engine.prototype = {
 			inst.autoResetDesignMode();
 
 			this.selectedElement = inst.getFocusElement();
-			this.selectedInstance = inst;
+			inst.select();
 			tinyMCE.execCommand(command, user_interface, value);
 
 			// Cancel event so it doesn't call onbeforeonunlaod
@@ -1079,7 +1079,7 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Trigger node change, this call locks buttons for tables and so forth
-		tinyMCE.selectedInstance = inst;
+		inst.select();
 		tinyMCE.selectedElement = inst.contentWindow.document.body;
 
 		// Call custom DOM cleanup
@@ -1108,7 +1108,7 @@ TinyMCE_Engine.prototype = {
 		// Cleanup any mess left from storyAwayURLs
 		tinyMCE._removeInternal(inst.getBody());
 
-		tinyMCE.selectedInstance = inst;
+		inst.select();
 		tinyMCE.triggerNodeChange(false, true);
 	},
 
@@ -1260,10 +1260,10 @@ TinyMCE_Engine.prototype = {
 					return false;
 
 				if (e.target.editorId) {
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 				} else {
 					if (e.target.ownerDocument.editorId)
-						tinyMCE.selectedInstance = tinyMCE.instances[e.target.ownerDocument.editorId];
+						tinyMCE.instances[e.target.ownerDocument.editorId].select();
 				}
 
 				if (tinyMCE.selectedInstance)
@@ -1292,7 +1292,7 @@ TinyMCE_Engine.prototype = {
 				// Return key pressed
 				if (tinyMCE.isMSIE && tinyMCE.settings['force_br_newlines'] && e.keyCode == 13) {
 					if (e.target.editorId)
-						tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+						tinyMCE.instances[e.target.editorId].select();
 
 					if (tinyMCE.selectedInstance) {
 						var sel = tinyMCE.selectedInstance.getDoc().selection;
@@ -1336,7 +1336,7 @@ TinyMCE_Engine.prototype = {
 					return false;
 
 				if (e.target.editorId)
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 				else
 					return;
 
@@ -1457,7 +1457,7 @@ TinyMCE_Engine.prototype = {
 					inst.autoResetDesignMode();
 
 					if (inst.getBody() == targetBody) {
-						tinyMCE.selectedInstance = inst;
+						inst.select();
 						tinyMCE.selectedElement = e.target;
 						tinyMCE.linkElement = tinyMCE.getParentElement(tinyMCE.selectedElement, "a");
 						tinyMCE.imgElement = tinyMCE.getParentElement(tinyMCE.selectedElement, "img");
@@ -1481,7 +1481,7 @@ TinyMCE_Engine.prototype = {
 
 				// Just in case
 				if (!tinyMCE.selectedInstance && e.target.editorId)
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 
 				return false;
 			break;

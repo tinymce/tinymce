@@ -498,28 +498,28 @@ TinyMCE_Selection.prototype = {
 	 * @type HTMLElement
 	 */
 	getFocusElement : function() {
-		var inst = this.instance;
+		var inst = this.instance, doc, rng, sel, elm;
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
-			var doc = inst.getDoc();
-			var rng = doc.selection.createRange();
+			doc = inst.getDoc();
+			rng = doc.selection.createRange();
 
 	//		if (rng.collapse)
 	//			rng.collapse(true);
 
-			var elm = rng.item ? rng.item(0) : rng.parentElement();
+			elm = rng.item ? rng.item(0) : rng.parentElement();
 		} else {
 			if (!tinyMCE.isSafari && inst.isHidden())
 				return inst.getBody();
 
-			var sel = this.getSel();
-			var rng = this.getRng();
+			sel = this.getSel();
+			rng = this.getRng();
 
 			if (!sel || !rng)
 				return null;
 
-			var elm = rng.commonAncestorContainer;
-			//var elm = (sel && sel.anchorNode) ? sel.anchorNode : null;
+			elm = rng.commonAncestorContainer;
+			//elm = (sel && sel.anchorNode) ? sel.anchorNode : null;
 
 			// Handle selection a image or other control like element such as anchors
 			if (!rng.collapsed) {

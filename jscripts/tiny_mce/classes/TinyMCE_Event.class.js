@@ -80,7 +80,7 @@ TinyMCE_Engine.prototype._eventPatch = function(editor_id) {
 			if (!tinyMCE.isInstance(inst))
 				continue;
 
-			tinyMCE.selectedInstance = inst;
+			inst.select();
 			win = inst.getWin();
 
 			if (win && win.event) {
