@@ -2825,25 +2825,6 @@ TinyMCE_Engine.prototype = {
 			tinyMCE.switchClass(e, tinyMCE.lastMenuBtnClass);
 			tinyMCE.lastSelectedMenuBtn = null;
 		}
-	},
-
-	/**
-	 * Splits a string by the specified delimiter and skips any empty items.
-	 *
-	 * @param {string} d Delimiter to split by.
-	 * @param {string} s String to split.
-	 * @return Array with chunks from string.
-	 * @type Array
-	 */
-	explode : function(d, s) {
-		var ar = s.split(d), oar = new Array(), i;
-	
-		for (i = 0; i<ar.length; i++) {
-			if (ar[i] != "")
-				oar[oar.length] = ar[i];
-		}
-	
-		return oar;
 	}
 };
 

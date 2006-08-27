@@ -77,8 +77,8 @@ var TinyMCE_ForceParagraphs = {
 		endNode = endNode.nodeName == "BODY" ? endNode.firstChild : endNode;
 
 		// Get block elements
-		startBlock = tinyMCE.getParentBlockElement(startNode, body);
-		endBlock = tinyMCE.getParentBlockElement(endNode, body);
+		startBlock = inst.getParentBlockElement(startNode);
+		endBlock = inst.getParentBlockElement(endNode);
 
 		// If absolute force paragraph generation within
 		if (startBlock && new RegExp('absolute|relative|static', 'gi').test(startBlock.style.position))

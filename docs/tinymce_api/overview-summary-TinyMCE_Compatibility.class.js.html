@@ -8,7 +8,7 @@
 <script>
 function asd() {
 	
-		parent.document.title="TinyMCE_Array.class.js Overview";
+		parent.document.title="TinyMCE_Compatibility.class.js Overview";
 	
 }
 </script>
@@ -68,7 +68,7 @@ function asd() {
 <hr>
 <center>
 	
-	   <h2>TinyMCE_Array.class.js</h2>
+	   <h2>TinyMCE_Compatibility.class.js</h2>
 	
 </center>
 
@@ -78,7 +78,7 @@ function asd() {
 <h4>Summary</h4>
 <p>
 	
-		No overview generated for 'TinyMCE_Array.class.js'<BR/><BR/>
+		No overview generated for 'TinyMCE_Compatibility.class.js'<BR/><BR/>
 	
 </p>
 
@@ -92,49 +92,32 @@ function asd() {
 
 
         <pre class="sourceview"><span class="comment">/**
- * $Id: TinyMCE_Array.class.js 62 2006-08-21 21:34:25Z spocke $
+ * $Id: TinyMCE_Compatibility.class.js 61 2006-08-21 21:02:03Z spocke $
  *
  * <span class="attrib">@author</span> Moxiecode
  * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
- *
- * The contents of this file will be wrapped in a class later on.
  */</span>
 
 <span class="comment">/**
- * Returns a cleared array, since some external libraries tend to extend the Array core object
- * arrays needs to be cleaned from these extended functions. So this function simply setting any
- * named properties to null.
- *
- * <span class="attrib">@param</span> {Array} Name/Value array to clear.
- * <span class="attrib">@return</span> Cleared name/value array.
- * <span class="attrib">@type</span> Array
+ * I'm going agains my own rule here by patching in the call method for objects.
+ * But since this is absolutly vital for OOP JavaScript and that it checks if it exists before
+ * patching it's not the same as paching in new functions that might break future versions
+ * of JavaScript like some common libraries out there do.
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.clearArray = <span class="reserved">function</span>(a) {
-	var n;
+<span class="reserved">if</span> (!Function.<span class="reserved">prototype</span>.call) {
+	Function.<span class="reserved">prototype</span>.call = <span class="reserved">function</span>() {
+		var a = arguments, s = a[0], i, as = <span class="literal">''</span>, r, o;
 
-	<span class="reserved">for</span> (n in a)
-		a[n] = null;
+		<span class="reserved">for</span> (i=1; i&lt;a.length; i++)
+			as += (i &gt; 1 ? <span class="literal">','</span> : <span class="literal">''</span>) + <span class="literal">'a['</span> + i + <span class="literal">']'</span>;
 
-	<span class="reserved">return</span> a;
-};
+		o = s._fu;
+		s._fu = <span class="reserved">this</span>;
+		r = eval(<span class="literal">'s._fu('</span> + as + <span class="literal">')'</span>);
+		s._fu = o;
 
-<span class="comment">/**
- * Splits a string by the specified delimiter and skips any empty items.
- *
- * <span class="attrib">@param</span> {string} d Delimiter to split by.
- * <span class="attrib">@param</span> {string} s String to split.
- * <span class="attrib">@return</span> Array with chunks from string.
- * <span class="attrib">@type</span> Array
- */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.explode = <span class="reserved">function</span>(d, s) {
-	var ar = s.split(d), oar = new Array(), i;
-
-	<span class="reserved">for</span> (i = 0; i&lt;ar.length; i++) {
-		<span class="reserved">if</span> (ar[i] != <span class="literal">""</span>)
-			oar[oar.length] = ar[i];
-	}
-
-	<span class="reserved">return</span> oar;
+		<span class="reserved">return</span> r;
+	};
 };</pre>
 	<hr>
 

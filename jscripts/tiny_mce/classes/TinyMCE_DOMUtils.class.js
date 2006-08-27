@@ -475,8 +475,7 @@ TinyMCE_Engine.prototype.selectNodes = function(n, f, a) {
  */
 TinyMCE_Engine.prototype.addCSSClass = function(e, c, b) {
 	var o = this.removeCSSClass(e, c);
-	e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
-	return e.className;
+	return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
 };
 
 /**

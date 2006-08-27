@@ -109,9 +109,7 @@ function asd() {
 
 
         <pre class="sourceview"><span class="comment">/**
- * $RCSfile: overview-summary-TinyMCE_Engine.class.js.html,v $
- * $Revision: 1.42 $
- * $Date: 2006/04/14 20:00:29 $
+ * $Id: TinyMCE_Engine.class.js 66 2006-08-24 22:15:47Z spocke $
  *
  * <span class="attrib">@author</span> Moxiecode
  * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -124,22 +122,26 @@ function asd() {
  */</span>
 <span class="reserved">function</span> TinyMCE_Engine() {
 	<span class="reserved">this</span>.majorVersion = <span class="literal">"2"</span>;
-	<span class="reserved">this</span>.minorVersion = <span class="literal">"0.6"</span>;
+	<span class="reserved">this</span>.minorVersion = <span class="literal">"0.7"</span>;
 	<span class="reserved">this</span>.releaseDate = <span class="literal">"2006-xx-xx"</span>;
 
 	<span class="reserved">this</span>.instances = new Array();
 	<span class="reserved">this</span>.switchClassCache = new Array();
 	<span class="reserved">this</span>.windowArgs = new Array();
 	<span class="reserved">this</span>.loadedFiles = new Array();
+	<span class="reserved">this</span>.pendingFiles = new Array();
+	<span class="reserved">this</span>.loadingIndex = 0;
 	<span class="reserved">this</span>.configs = new Array();
 	<span class="reserved">this</span>.currentConfig = 0;
 	<span class="reserved">this</span>.eventHandlers = new Array();
+	<span class="reserved">this</span>.log = new Array();
 
 	<span class="comment">// Browser check</span>
 	var ua = navigator.userAgent;
 	<span class="reserved">this</span>.isMSIE = (navigator.appName == <span class="literal">"Microsoft Internet Explorer"</span>);
 	<span class="reserved">this</span>.isMSIE5 = <span class="reserved">this</span>.isMSIE &amp;&amp; (ua.indexOf(<span class="literal">'MSIE 5'</span>) != -1);
 	<span class="reserved">this</span>.isMSIE5_0 = <span class="reserved">this</span>.isMSIE &amp;&amp; (ua.indexOf(<span class="literal">'MSIE 5.0'</span>) != -1);
+	<span class="reserved">this</span>.isMSIE7 = <span class="reserved">this</span>.isMSIE &amp;&amp; (ua.indexOf(<span class="literal">'MSIE 7'</span>) != -1);
 	<span class="reserved">this</span>.isGecko = ua.indexOf(<span class="literal">'Gecko'</span>) != -1;
 	<span class="reserved">this</span>.isSafari = ua.indexOf(<span class="literal">'Safari'</span>) != -1;
 	<span class="reserved">this</span>.isOpera = ua.indexOf(<span class="literal">'Opera'</span>) != -1;
@@ -173,7 +175,11 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@param</span> {Array} Name/Value array of initialization settings.
 	 */</span>
 	init : <span class="reserved">function</span>(settings) {
-		var theme;
+		var theme, nl, baseHREF = <span class="literal">""</span>;
+
+		<span class="comment">// IE 5.0x is no longer supported since 5.5, 6.0 and 7.0 now exists. We can't support old browsers forever, sorry.</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE5_0)
+			<span class="reserved">return</span>;
 
 		<span class="reserved">this</span>.settings = settings;
 
@@ -184,6 +190,13 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="comment">// Get script base path</span>
 		<span class="reserved">if</span> (!tinyMCE.baseURL) {
 			var elements = document.getElementsByTagName(<span class="literal">'script'</span>);
+
+			<span class="comment">// If base element found, add that infront of baseURL</span>
+			nl = document.getElementsByTagName(<span class="literal">'base'</span>);
+			<span class="reserved">for</span> (var i=0; i&lt;nl.length; i++) {
+				<span class="reserved">if</span> (nl[i].href)
+					baseHREF = nl[i].href;
+			}
 
 			<span class="reserved">for</span> (var i=0; i&lt;elements.length; i++) {
 				<span class="reserved">if</span> (elements[i].src &amp;&amp; (elements[i].src.indexOf(<span class="literal">"tiny_mce.js"</span>) != -1 || elements[i].src.indexOf(<span class="literal">"tiny_mce_dev.js"</span>) != -1 || elements[i].src.indexOf(<span class="literal">"tiny_mce_src.js"</span>) != -1 || elements[i].src.indexOf(<span class="literal">"tiny_mce_gzip"</span>) != -1)) {
@@ -196,7 +209,12 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 					<span class="reserved">if</span> (settings.exec_mode == <span class="literal">"src"</span> || settings.exec_mode == <span class="literal">"normal"</span>)
 						tinyMCE.srcMode = settings.exec_mode == <span class="literal">"src"</span> ? <span class="literal">'_src'</span> : <span class="literal">''</span>;
 
-					tinyMCE.baseURL = src;
+					<span class="comment">// Force it absolute if page has a base href</span>
+					<span class="reserved">if</span> (baseHREF != <span class="literal">""</span> &amp;&amp; src.indexOf(<span class="literal">'://'</span>) == -1)
+						tinyMCE.baseURL = baseHREF + src;
+					<span class="reserved">else</span>
+						tinyMCE.baseURL = src;
+
 					break;
 				}
 			}
@@ -286,6 +304,13 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="reserved">this</span>._def(<span class="literal">"content_css"</span>, <span class="literal">''</span>);
 		<span class="reserved">this</span>._def(<span class="literal">"fix_list_elements"</span>, false);
 		<span class="reserved">this</span>._def(<span class="literal">"fix_table_elements"</span>, false);
+		<span class="reserved">this</span>._def(<span class="literal">"strict_loading_mode"</span>, document.contentType == <span class="literal">'application/xhtml+xml'</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"hidden_tab_class"</span>, <span class="literal">''</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"display_tab_class"</span>, <span class="literal">''</span>);
+
+		<span class="comment">// Force strict loading mode to false on non Gecko browsers</span>
+		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; !<span class="reserved">this</span>.isOpera)
+			<span class="reserved">this</span>.settings.strict_loading_mode = false;
 
 		<span class="comment">// Browser check IE</span>
 		<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; <span class="reserved">this</span>.settings[<span class="literal">'browsers'</span>].indexOf(<span class="literal">'msie'</span>) == -1)
@@ -304,7 +329,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 			<span class="reserved">return</span>;
 
 		<span class="comment">// If not super absolute make it so</span>
-		var baseHREF = tinyMCE.settings[<span class="literal">'document_base_url'</span>];
+		baseHREF = tinyMCE.settings[<span class="literal">'document_base_url'</span>];
 		var h = document.location.href;
 		var p = h.indexOf(<span class="literal">'://'</span>);
 		<span class="reserved">if</span> (p &gt; 0 &amp;&amp; document.location.protocol != <span class="literal">"file:"</span>) {
@@ -325,7 +350,10 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="reserved">this</span>.settings[<span class="literal">'base_href'</span>] = baseHREF.substring(0, baseHREF.lastIndexOf(<span class="literal">'/'</span>)) + <span class="literal">"/"</span>;
 
 		theme = <span class="reserved">this</span>.settings[<span class="literal">'theme'</span>];
-		<span class="reserved">this</span>.blockRegExp = new RegExp(<span class="literal">"^(h[1-6]|p|div|address|pre|form|table|li|ol|ul|td|blockquote|center|dl|dt|dd|dir|fieldset|form|noscript|noframes|menu|isindex|samp)$"</span>, <span class="literal">"i"</span>);
+		<span class="reserved">this</span>.inlineStrict = <span class="literal">'A|BR|SPAN|BDO|MAP|OBJECT|IMG|TT|I|B|BIG|SMALL|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|#text|#comment'</span>;
+		<span class="reserved">this</span>.inlineTransitional = <span class="literal">'A|BR|SPAN|BDO|OBJECT|APPLET|IMG|MAP|IFRAME|TT|I|B|U|S|STRIKE|BIG|SMALL|FONT|BASEFONT|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|INPUT|SELECT|TEXTAREA|LABEL|BUTTON|#text|#comment'</span>;
+		<span class="reserved">this</span>.blockElms = <span class="literal">'H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP'</span>;
+		<span class="reserved">this</span>.blockRegExp = new RegExp(<span class="literal">"^("</span> + <span class="reserved">this</span>.blockElms + <span class="literal">")$"</span>, <span class="literal">"i"</span>);
 		<span class="reserved">this</span>.posKeyCodes = new Array(13,45,36,35,33,34,37,38,39,40);
 		<span class="reserved">this</span>.uniqueURL = <span class="literal">'javascript:TINYMCE_UNIQUEURL();'</span>; <span class="comment">// Make unique URL non real URL</span>
 		<span class="reserved">this</span>.uniqueTag = <span class="literal">'&lt;div id="mceTMPElement" style="display: none"&gt;TMP&lt;/div&gt;'</span>;
@@ -373,10 +401,6 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 
 		<span class="comment">// Only do this once</span>
 		<span class="reserved">if</span> (<span class="reserved">this</span>.configs.length == 0) {
-			<span class="comment">// Is Safari enabled</span>
-			<span class="reserved">if</span> (<span class="reserved">this</span>.isSafari &amp;&amp; <span class="reserved">this</span>.getParam(<span class="literal">'safari_warning'</span>, false))
-				alert(<span class="literal">"Safari support is very limited and should be considered experimental.\nSo there is no need to even submit bugreports on this early version.\nYou can disable this message by setting: safari_warning option to false"</span>);
-
 			<span class="reserved">if</span> (typeof(TinyMCECompressed) == <span class="literal">"undefined"</span>) {
 				tinyMCE.addEvent(window, <span class="literal">"DOMContentLoaded"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>.onLoad);
 
@@ -406,14 +430,19 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		}
 
 		<span class="comment">// Setup entities</span>
-		settings[<span class="literal">'cleanup_entities'</span>] = new Array();
-		var entities = tinyMCE.getParam(<span class="literal">'entities'</span>, <span class="literal">''</span>, true, <span class="literal">','</span>);
-		<span class="reserved">for</span> (var i=0; i&lt;entities.length; i+=2)
-			settings[<span class="literal">'cleanup_entities'</span>][<span class="literal">'c'</span> + entities[i]] = entities[i+1];
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">'entity_encoding'</span>) == <span class="literal">'named'</span>) {
+			settings[<span class="literal">'cleanup_entities'</span>] = new Array();
+			var entities = tinyMCE.getParam(<span class="literal">'entities'</span>, <span class="literal">''</span>, true, <span class="literal">','</span>);
+			<span class="reserved">for</span> (var i=0; i&lt;entities.length; i+=2)
+				settings[<span class="literal">'cleanup_entities'</span>][<span class="literal">'c'</span> + entities[i]] = entities[i+1];
+		}
 
 		<span class="comment">// Save away this config</span>
 		settings[<span class="literal">'index'</span>] = <span class="reserved">this</span>.configs.length;
 		<span class="reserved">this</span>.configs[<span class="reserved">this</span>.configs.length] = settings;
+
+		<span class="comment">// Start loading first one in chain</span>
+		<span class="reserved">this</span>.loadNextScript();
 	},
 
 	<span class="comment">/**
@@ -444,7 +473,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	_def : <span class="reserved">function</span>(key, def_val, t) {
 		var v = tinyMCE.getParam(key, def_val);
 
-		v = t ? v.replace(/\s+/g,<span class="literal">""</span>) : v;
+		v = t ? v.replace(/\s+/g, <span class="literal">""</span>) : v;
 
 		<span class="reserved">this</span>.settings[key] = v;
 	},
@@ -473,6 +502,8 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="comment">// Use the previous plugin object base URL used when loading external plugins</span>
 		p.baseURL = op ? op.baseURL : tinyMCE.baseURL + <span class="literal">"/plugins/"</span> + n;
 		<span class="reserved">this</span>.plugins[n] = p;
+
+		<span class="reserved">this</span>.loadNextScript();
 	},
 
 	<span class="comment">/**
@@ -523,6 +554,8 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 */</span>
 	addTheme : <span class="reserved">function</span>(n, t) {
 		<span class="reserved">this</span>.themes[n] = t;
+
+		<span class="reserved">this</span>.loadNextScript();
 	},
 
 	<span class="comment">/**
@@ -554,14 +587,39 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@param</span> {string} url Script URL to load.
 	 */</span>
 	loadScript : <span class="reserved">function</span>(url) {
-		<span class="reserved">for</span> (var i=0; i&lt;<span class="reserved">this</span>.loadedFiles.length; i++) {
+		var i;
+
+		<span class="reserved">for</span> (i=0; i&lt;<span class="reserved">this</span>.loadedFiles.length; i++) {
 			<span class="reserved">if</span> (<span class="reserved">this</span>.loadedFiles[i] == url)
 				<span class="reserved">return</span>;
 		}
 
-		document.write(<span class="literal">'&lt;sc'</span>+<span class="literal">'ript language="javascript" type="text/javascript" src="'</span> + url + <span class="literal">'"&gt;&lt;/script&gt;'</span>);
+		<span class="reserved">if</span> (tinyMCE.settings.strict_loading_mode)
+			<span class="reserved">this</span>.pendingFiles[<span class="reserved">this</span>.pendingFiles.length] = url;
+		<span class="reserved">else</span>
+			document.write(<span class="literal">'&lt;sc'</span>+<span class="literal">'ript language="javascript" type="text/javascript" src="'</span> + url + <span class="literal">'"&gt;&lt;/script&gt;'</span>);
 
 		<span class="reserved">this</span>.loadedFiles[<span class="reserved">this</span>.loadedFiles.length] = url;
+	},
+
+	<span class="comment">/**
+	 * Loads the next script in chain.
+	 */</span>
+	loadNextScript : <span class="reserved">function</span>() {
+		var d = document, se;
+
+		<span class="reserved">if</span> (!tinyMCE.settings.strict_loading_mode)
+			<span class="reserved">return</span>;
+
+		<span class="reserved">if</span> (<span class="reserved">this</span>.loadingIndex &lt; <span class="reserved">this</span>.pendingFiles.length) {
+			se = d.createElementNS(<span class="literal">'http://www.w3.org/1999/xhtml'</span>, <span class="literal">'script'</span>);
+			se.setAttribute(<span class="literal">'language'</span>, <span class="literal">'javascript'</span>);
+			se.setAttribute(<span class="literal">'type'</span>, <span class="literal">'text/javascript'</span>);
+			se.setAttribute(<span class="literal">'src'</span>, <span class="reserved">this</span>.pendingFiles[<span class="reserved">this</span>.loadingIndex++]);
+
+			d.getElementsByTagName(<span class="literal">"head"</span>)[0].appendChild(se);
+		} <span class="reserved">else</span>
+			<span class="reserved">this</span>.loadingIndex = -1; <span class="comment">// Done with loading</span>
 	},
 
 	<span class="comment">/**
@@ -575,11 +633,9 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		var ar = url.replace(/\s+/, <span class="literal">''</span>).split(<span class="literal">','</span>);
 		var lflen = 0, csslen = 0;
 		var skip = false;
-		var x = 0, i = 0;
+		var x = 0, i = 0, nl, le;
 
 		<span class="reserved">for</span> (x = 0,csslen = ar.length; x&lt;csslen; x++) {
-			ignore_css = false;
-
 			<span class="reserved">if</span> (ar[x] != null &amp;&amp; ar[x] != <span class="literal">'null'</span> &amp;&amp; ar[x].length &gt; 0) {
 				<span class="comment">/* Make sure it doesn't exist. */</span>
 				<span class="reserved">for</span> (i=0, lflen=<span class="reserved">this</span>.loadedFiles.length; i&lt;lflen; i++) {
@@ -590,7 +646,18 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 				}
 
 				<span class="reserved">if</span> (!skip) {
-					document.write(<span class="literal">'&lt;link href="'</span> + ar[x] + <span class="literal">'" rel="stylesheet" type="text/css" /&gt;'</span>);
+					<span class="reserved">if</span> (tinyMCE.settings.strict_loading_mode) {
+						nl = document.getElementsByTagName(<span class="literal">"head"</span>);
+
+						le = document.createElement(<span class="literal">'link'</span>);
+						le.setAttribute(<span class="literal">'href'</span>, ar[x]);
+						le.setAttribute(<span class="literal">'rel'</span>, <span class="literal">'stylesheet'</span>);
+						le.setAttribute(<span class="literal">'type'</span>, <span class="literal">'text/css'</span>);
+
+						nl[0].appendChild(le);			
+					} <span class="reserved">else</span>
+						document.write(<span class="literal">'&lt;link href="'</span> + ar[x] + <span class="literal">'" rel="stylesheet" type="text/css" /&gt;'</span>);
+
 					<span class="reserved">this</span>.loadedFiles[<span class="reserved">this</span>.loadedFiles.length] = ar[x];
 				}
 			}
@@ -804,19 +871,23 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@param</span> {boolean} focus True/false if the editor instance should be focused first.
 	 */</span>
 	execInstanceCommand : <span class="reserved">function</span>(editor_id, command, user_interface, value, focus) {
-		var inst = tinyMCE.getInstanceById(editor_id);
+		var inst = tinyMCE.getInstanceById(editor_id), r;
+
 		<span class="reserved">if</span> (inst) {
+			r = inst.selection.getRng();
+
 			<span class="reserved">if</span> (typeof(focus) == <span class="literal">"undefined"</span>)
 				focus = true;
 
-			<span class="reserved">if</span> (focus)
+			<span class="comment">// IE bug lost focus on images in absolute divs Bug #1534575</span>
+			<span class="reserved">if</span> (focus &amp;&amp; (!r || !r.item))
 				inst.contentWindow.focus();
 
 			<span class="comment">// Reset design mode if lost</span>
 			inst.autoResetDesignMode();
 
 			<span class="reserved">this</span>.selectedElement = inst.getFocusElement();
-			<span class="reserved">this</span>.selectedInstance = inst;
+			inst.select();
 			tinyMCE.execCommand(command, user_interface, value);
 
 			<span class="comment">// Cancel event so it doesn't call onbeforeonunlaod</span>
@@ -842,18 +913,6 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 			tinyMCE.selectedInstance.switchSettings();
 
 		switch (command) {
-			case <span class="literal">'mceHelp'</span>:
-				tinyMCE.openWindow({
-					file : <span class="literal">'about.htm'</span>,
-					width : 480,
-					height : 380
-				}, {
-					tinymce_version : tinyMCE.majorVersion + <span class="literal">"."</span> + tinyMCE.minorVersion,
-					tinymce_releasedate : tinyMCE.releaseDate,
-					inline : <span class="literal">"yes"</span>
-				});
-			<span class="reserved">return</span>;
-
 			case <span class="literal">'mceFocus'</span>:
 				var inst = tinyMCE.getInstanceById(value);
 				<span class="reserved">if</span> (inst)
@@ -934,7 +993,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		}
 
 		iframe.setAttribute(<span class="literal">"id"</span>, id);
-		iframe.setAttribute(<span class="literal">"className"</span>, <span class="literal">"mceEditorIframe"</span>);
+		iframe.setAttribute(<span class="literal">"class"</span>, <span class="literal">"mceEditorIframe"</span>);
 		iframe.setAttribute(<span class="literal">"border"</span>, <span class="literal">"0"</span>);
 		iframe.setAttribute(<span class="literal">"frameBorder"</span>, <span class="literal">"0"</span>);
 		iframe.setAttribute(<span class="literal">"marginWidth"</span>, <span class="literal">"0"</span>);
@@ -944,6 +1003,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		iframe.setAttribute(<span class="literal">"width"</span>, aw);
 		iframe.setAttribute(<span class="literal">"height"</span>, ah);
 		iframe.setAttribute(<span class="literal">"allowtransparency"</span>, <span class="literal">"true"</span>);
+		iframe.className = <span class="literal">'mceEditorIframe'</span>;
 
 		<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">"auto_resize"</span>])
 			iframe.setAttribute(<span class="literal">"scrolling"</span>, <span class="literal">"no"</span>);
@@ -954,6 +1014,10 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 
 		iframe.style.width = aw;
 		iframe.style.height = ah;
+
+		<span class="comment">// Ugly hack for Gecko problem in strict mode</span>
+		<span class="reserved">if</span> (tinyMCE.settings.strict_loading_mode)
+			iframe.style.marginBottom = <span class="literal">'-5px'</span>;
 
 		<span class="comment">// MSIE 5.0 issue</span>
 		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
@@ -977,6 +1041,14 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		var doc = inst.getDoc();
 		var head = doc.getElementsByTagName(<span class="literal">'head'</span>).item(0);
 		var content = inst.startContent;
+
+		<span class="comment">// HTML values get XML encoded in strict mode</span>
+		<span class="reserved">if</span> (tinyMCE.settings.strict_loading_mode) {
+			content = content.replace(/&amp;lt;/g, <span class="literal">'&lt;'</span>);
+			content = content.replace(/&amp;gt;/g, <span class="literal">'&gt;'</span>);
+			content = content.replace(/&amp;quot;/g, <span class="literal">'"'</span>);
+			content = content.replace(/&amp;amp;/g, <span class="literal">'&amp;'</span>);
+		}
 
 		inst.switchSettings();
 
@@ -1014,7 +1086,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 
 		<span class="comment">// Setup span styles</span>
 		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
-			inst.getDoc().body.setAttribute(<span class="literal">'id'</span>, <span class="literal">'mceSpanFonts'</span>);
+			inst.getBody().setAttribute(<span class="literal">'id'</span>, <span class="literal">'mceSpanFonts'</span>);
 
 		<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'nowrap'</span>])
 			doc.body.style.whiteSpace = <span class="literal">"nowrap"</span>;
@@ -1117,7 +1189,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		}
 
 		<span class="comment">// Trigger node change, this call locks buttons for tables and so forth</span>
-		tinyMCE.selectedInstance = inst;
+		inst.select();
 		tinyMCE.selectedElement = inst.contentWindow.document.body;
 
 		<span class="comment">// Call custom DOM cleanup</span>
@@ -1136,10 +1208,8 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="reserved">if</span> (tinyMCE.isGecko) {
 			<span class="comment">// Remove mce_src from textnodes and comments</span>
 			tinyMCE.selectNodes(inst.getBody(), <span class="reserved">function</span>(n) {
-				<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8) {
-					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_src=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
-					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_href=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
-				}
+				<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8)
+					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\s(mce_src|mce_href)=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
 
 				<span class="reserved">return</span> false;
 			});
@@ -1148,7 +1218,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="comment">// Cleanup any mess left from storyAwayURLs</span>
 		tinyMCE._removeInternal(inst.getBody());
 
-		tinyMCE.selectedInstance = inst;
+		inst.select();
 		tinyMCE.triggerNodeChange(false, true);
 	},
 
@@ -1183,10 +1253,8 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="reserved">if</span> (tinyMCE.isGecko) {
 			<span class="comment">// Remove mce_src from textnodes and comments</span>
 			tinyMCE.selectNodes(n, <span class="reserved">function</span>(n) {
-				<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8) {
-					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_src=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
-					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\smce_href=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
-				}
+				<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8)
+					n.nodeValue = n.nodeValue.replace(new RegExp(<span class="literal">'\\s(mce_src|mce_href)=\"[^\"]*\"'</span>, <span class="literal">'gi'</span>), <span class="literal">""</span>);
 
 				<span class="reserved">return</span> false;
 			});
@@ -1262,7 +1330,23 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 				<span class="reserved">if</span> (tinyMCE.selectedInstance)
 					tinyMCE.selectedInstance.setBaseHREF(null);
 
-				window.setTimeout(<span class="literal">"tinyMCE.selectedInstance.setBaseHREF(tinyMCE.settings['base_href']);"</span>, 1);
+				<span class="comment">// Fixes odd MSIE bug where drag/droping elements in a iframe with height 100% breaks</span>
+				<span class="comment">// This logic forces the width/height to be in pixels while the user is drag/dropping</span>
+				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) {
+					var ife = tinyMCE.selectedInstance.iframeElement;
+
+					<span class="comment">/*if (ife.style.width.indexOf('%') != -1) {
+						ife._oldWidth = ife.width.height;
+						ife.style.width = ife.clientWidth;
+					}*/</span>
+
+					<span class="reserved">if</span> (ife.style.height.indexOf(<span class="literal">'%'</span>) != -1) {
+						ife._oldHeight = ife.style.height;
+						ife.style.height = ife.clientHeight;
+					}
+				}
+
+				window.setTimeout(<span class="literal">"tinyMCE.selectedInstance.setBaseHREF(tinyMCE.settings['base_href']);tinyMCE._resetIframeHeight();"</span>, 1);
 				<span class="reserved">return</span>;
 
 			case <span class="literal">"submit"</span>:
@@ -1286,41 +1370,39 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 					<span class="reserved">return</span> false;
 
 				<span class="reserved">if</span> (e.target.editorId) {
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 				} <span class="reserved">else</span> {
 					<span class="reserved">if</span> (e.target.ownerDocument.editorId)
-						tinyMCE.selectedInstance = tinyMCE.instances[e.target.ownerDocument.editorId];
+						tinyMCE.instances[e.target.ownerDocument.editorId].select();
 				}
 
 				<span class="reserved">if</span> (tinyMCE.selectedInstance)
 					tinyMCE.selectedInstance.switchSettings();
 
 				<span class="comment">// Insert P element</span>
-				<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; tinyMCE.settings[<span class="literal">'force_p_newlines'</span>] &amp;&amp; e.keyCode == 13 &amp;&amp; !e.shiftKey) {
+				<span class="reserved">if</span> ((tinyMCE.isGecko || tinyMCE.isOpera || tinyMCE.isSafari) &amp;&amp; tinyMCE.settings[<span class="literal">'force_p_newlines'</span>] &amp;&amp; e.keyCode == 13 &amp;&amp; !e.shiftKey) {
 					<span class="comment">// Insert P element instead of BR</span>
 					<span class="reserved">if</span> (TinyMCE_ForceParagraphs._insertPara(tinyMCE.selectedInstance, e)) {
 						<span class="comment">// Cancel event</span>
 						tinyMCE.execCommand(<span class="literal">"mceAddUndoLevel"</span>);
-						tinyMCE.cancelEvent(e);
-						<span class="reserved">return</span> false;
+						<span class="reserved">return</span> tinyMCE.cancelEvent(e);
 					}
 				}
 
 				<span class="comment">// Handle backspace</span>
-				<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; tinyMCE.settings[<span class="literal">'force_p_newlines'</span>] &amp;&amp; (e.keyCode == 8 || e.keyCode == 46) &amp;&amp; !e.shiftKey) {
+				<span class="reserved">if</span> ((tinyMCE.isGecko &amp;&amp; !tinyMCE.isSafari) &amp;&amp; tinyMCE.settings[<span class="literal">'force_p_newlines'</span>] &amp;&amp; (e.keyCode == 8 || e.keyCode == 46) &amp;&amp; !e.shiftKey) {
 					<span class="comment">// Insert P element instead of BR</span>
 					<span class="reserved">if</span> (TinyMCE_ForceParagraphs._handleBackSpace(tinyMCE.selectedInstance, e.type)) {
 						<span class="comment">// Cancel event</span>
 						tinyMCE.execCommand(<span class="literal">"mceAddUndoLevel"</span>);
-						tinyMCE.cancelEvent(e);
-						<span class="reserved">return</span> false;
+						<span class="reserved">return</span> tinyMCE.cancelEvent(e);
 					}
 				}
 
 				<span class="comment">// Return key pressed</span>
 				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; tinyMCE.settings[<span class="literal">'force_br_newlines'</span>] &amp;&amp; e.keyCode == 13) {
 					<span class="reserved">if</span> (e.target.editorId)
-						tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+						tinyMCE.instances[e.target.editorId].select();
 
 					<span class="reserved">if</span> (tinyMCE.selectedInstance) {
 						var sel = tinyMCE.selectedInstance.getDoc().selection;
@@ -1364,7 +1446,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 					<span class="reserved">return</span> false;
 
 				<span class="reserved">if</span> (e.target.editorId)
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 				<span class="reserved">else</span>
 					<span class="reserved">return</span>;
 
@@ -1428,6 +1510,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 				<span class="comment">// MSIE custom key handling</span>
 				<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; tinyMCE.settings[<span class="literal">'custom_undo_redo'</span>]) {
 					var keys = new Array(8,46); <span class="comment">// Backspace,Delete</span>
+
 					<span class="reserved">for</span> (var i=0; i&lt;keys.length; i++) {
 						<span class="reserved">if</span> (keys[i] == e.keyCode) {
 							<span class="reserved">if</span> (e.type == <span class="literal">"keyup"</span>)
@@ -1484,7 +1567,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 					inst.autoResetDesignMode();
 
 					<span class="reserved">if</span> (inst.getBody() == targetBody) {
-						tinyMCE.selectedInstance = inst;
+						inst.select();
 						tinyMCE.selectedElement = e.target;
 						tinyMCE.linkElement = tinyMCE.getParentElement(tinyMCE.selectedElement, <span class="literal">"a"</span>);
 						tinyMCE.imgElement = tinyMCE.getParentElement(tinyMCE.selectedElement, <span class="literal">"img"</span>);
@@ -1495,27 +1578,6 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 				<span class="comment">// Add first bookmark location</span>
 				<span class="reserved">if</span> (!tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark)
 					tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark = tinyMCE.selectedInstance.selection.getBookmark();
-
-				<span class="reserved">if</span> (tinyMCE.isSafari) {
-					tinyMCE.selectedInstance.lastSafariSelection = tinyMCE.selectedInstance.selection.getBookmark();
-					tinyMCE.selectedInstance.lastSafariSelectedElement = tinyMCE.selectedElement;
-
-					var lnk = tinyMCE.getParentElement(tinyMCE.selectedElement, <span class="literal">"a"</span>);
-
-					<span class="comment">// Patch the darned link</span>
-					<span class="reserved">if</span> (lnk &amp;&amp; e.type == <span class="literal">"mousedown"</span>) {
-						lnk.setAttribute(<span class="literal">"mce_real_href"</span>, lnk.getAttribute(<span class="literal">"href"</span>));
-						lnk.setAttribute(<span class="literal">"href"</span>, <span class="literal">"javascript:void(0);"</span>);
-					}
-
-					<span class="comment">// Patch back</span>
-					<span class="reserved">if</span> (lnk &amp;&amp; e.type == <span class="literal">"click"</span>) {
-						window.setTimeout(<span class="reserved">function</span>() {
-							lnk.setAttribute(<span class="literal">"href"</span>, lnk.getAttribute(<span class="literal">"mce_real_href"</span>));
-							lnk.removeAttribute(<span class="literal">"mce_real_href"</span>);
-						}, 10);
-					}
-				}
 
 				<span class="comment">// Reset selected node</span>
 				<span class="reserved">if</span> (e.type != <span class="literal">"focus"</span>)
@@ -1529,7 +1591,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 
 				<span class="comment">// Just in case</span>
 				<span class="reserved">if</span> (!tinyMCE.selectedInstance &amp;&amp; e.target.editorId)
-					tinyMCE.selectedInstance = tinyMCE.instances[e.target.editorId];
+					tinyMCE.instances[e.target.editorId].select();
 
 				<span class="reserved">return</span> false;
 			break;
@@ -1579,6 +1641,77 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	},
 
 	<span class="comment">/**
+	 * Returns the HTML code for a normal button control.
+	 *
+	 * <span class="attrib">@param</span> {string} id Button control id, this will be the suffix for the element id, the prefix is the editor id.
+	 * <span class="attrib">@param</span> {string} lang Language variable key name to insert as the title/alt of the button image.
+	 * <span class="attrib">@param</span> {string} img Image URL to insert, {$themeurl} and {$pluginurl} will be replaced.
+	 * <span class="attrib">@param</span> {string} mcmd Command to execute when the user clicks the menu arrow button.
+	 * <span class="attrib">@param</span> {string} cmd Command to execute when the user clicks the main button.
+	 * <span class="attrib">@param</span> {string} ui Optional user interface boolean for command.
+	 * <span class="attrib">@param</span> {string} val Optional value for command.
+	 * <span class="attrib">@return</span> HTML code for a normal button based in input information.
+	 * <span class="attrib">@type</span> string
+	 */</span>
+	getMenuButtonHTML : <span class="reserved">function</span>(id, lang, img, mcmd, cmd, ui, val) {
+		var h = <span class="literal">''</span>, m, x;
+
+		mcmd = <span class="literal">'tinyMCE.execInstanceCommand(\'</span>{$editor_id}\<span class="literal">',\'</span><span class="literal">' + mcmd + '</span>\<span class="literal">');'</span>;
+		cmd = <span class="literal">'tinyMCE.execInstanceCommand(\'</span>{$editor_id}\<span class="literal">',\'</span><span class="literal">' + cmd + '</span>\<span class="literal">''</span>;
+
+		<span class="reserved">if</span> (typeof(ui) != <span class="literal">"undefined"</span> &amp;&amp; ui != null)
+			cmd += <span class="literal">','</span> + ui;
+
+		<span class="reserved">if</span> (typeof(val) != <span class="literal">"undefined"</span> &amp;&amp; val != null)
+			cmd += <span class="literal">",'"</span> + val + <span class="literal">"'"</span>;
+
+		cmd += <span class="literal">');'</span>;
+
+		<span class="comment">// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled</span>
+		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">'button_tile_map'</span>) &amp;&amp; (!tinyMCE.isMSIE || tinyMCE.isOpera) &amp;&amp; (m = tinyMCE.buttonMap[id]) != null &amp;&amp; (tinyMCE.getParam(<span class="literal">"language"</span>) == <span class="literal">"en"</span> || img.indexOf(<span class="literal">'$lang'</span>) == -1)) {
+			x = 0 - (m * 20) == 0 ? <span class="literal">'0'</span> : 0 - (m * 20);
+
+			<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
+				h += <span class="literal">'&lt;span id="{$editor_id}_'</span> + id + <span class="literal">'" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'</span>over\<span class="literal">',this);" onmouseout="tinyMCE._menuButtonEvent(\'</span>out\<span class="literal">',this);"&gt;'</span>;
+			<span class="reserved">else</span>
+				h += <span class="literal">'&lt;span id="{$editor_id}_'</span> + id + <span class="literal">'" class="mceMenuButton"&gt;'</span>;
+
+			h += <span class="literal">'&lt;a href="javascript:'</span> + cmd + <span class="literal">'" onclick="'</span> + cmd + <span class="literal">'return false;" onmousedown="return false;" class="mceTiledButton mceMenuButtonNormal" target="_self"&gt;'</span>;
+			h += <span class="literal">'&lt;img src="{$themeurl}/images/spacer.gif" style="width: 20px; height: 20px; background-position: '</span> + x + <span class="literal">'px 0" title="{$'</span> + lang + <span class="literal">'}" /&gt;&lt;/a&gt;'</span>;
+			h += <span class="literal">'&lt;a href="javascript:'</span> + mcmd + <span class="literal">'" onclick="'</span> + mcmd + <span class="literal">'return false;" onmousedown="return false;"&gt;&lt;img src="{$themeurl}/images/button_menu.gif" title="{$'</span> + lang + <span class="literal">'}" class="mceMenuButton" /&gt;'</span>;
+			h += <span class="literal">'&lt;/a&gt;&lt;/span&gt;'</span>;
+		} <span class="reserved">else</span> {
+			<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera)
+				h += <span class="literal">'&lt;span id="{$editor_id}_'</span> + id + <span class="literal">'" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'</span>over\<span class="literal">',this);" onmouseout="tinyMCE._menuButtonEvent(\'</span>out\<span class="literal">',this);"&gt;'</span>;
+			<span class="reserved">else</span>
+				h += <span class="literal">'&lt;span id="{$editor_id}_'</span> + id + <span class="literal">'" class="mceMenuButton"&gt;'</span>;
+
+			h += <span class="literal">'&lt;a href="javascript:'</span> + cmd + <span class="literal">'" onclick="'</span> + cmd + <span class="literal">'return false;" onmousedown="return false;" class="mceMenuButtonNormal" target="_self"&gt;'</span>;
+			h += <span class="literal">'&lt;img src="'</span> + img + <span class="literal">'" title="{$'</span> + lang + <span class="literal">'}" /&gt;&lt;/a&gt;'</span>;
+			h += <span class="literal">'&lt;a href="javascript:'</span> + mcmd + <span class="literal">'" onclick="'</span> + mcmd + <span class="literal">'return false;" onmousedown="return false;"&gt;&lt;img src="{$themeurl}/images/button_menu.gif" title="{$'</span> + lang + <span class="literal">'}" class="mceMenuButton" /&gt;'</span>;
+			h += <span class="literal">'&lt;/a&gt;&lt;/span&gt;'</span>;
+		}
+
+		<span class="reserved">return</span> h;
+	},
+
+	<span class="comment">/**
+	 * Switched classes on menu elements in MSIE.
+	 *
+	 * <span class="attrib">@param</span> {string} e Event name	out, over.
+	 * <span class="attrib">@param</span> {HTMLElement} o HTML element to set class on.
+	 */</span>
+	_menuButtonEvent : <span class="reserved">function</span>(e, o) {
+		<span class="reserved">if</span> (o.className == <span class="literal">'mceMenuButtonFocus'</span>)
+			<span class="reserved">return</span>;
+
+		<span class="reserved">if</span> (e == <span class="literal">'over'</span>)
+			o.className = o.className + <span class="literal">' mceMenuHover'</span>;
+		<span class="reserved">else</span>
+			o.className = o.className.replace(/\s.*$/, <span class="literal">''</span>);
+	},
+
+	<span class="comment">/**
 	 * Adds a list of buttons available in the tiled button image used by the button_tile_map option.
 	 *
 	 * <span class="attrib">@param</span> {string} m Comma separated list of buttons that are available in tiled image.
@@ -1597,8 +1730,8 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	submitPatch : <span class="reserved">function</span>() {
 		tinyMCE.removeTinyMCEFormElements(<span class="reserved">this</span>);
 		tinyMCE.triggerSave();
-		<span class="reserved">this</span>.mceOldSubmit();
 		tinyMCE.isNotDirty = true;
+		<span class="reserved">this</span>.mceOldSubmit();
 	},
 
 	<span class="comment">/**
@@ -1609,6 +1742,12 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> boolean
 	 */</span>
 	onLoad : <span class="reserved">function</span>() {
+		<span class="comment">// Wait for everything to be loaded first</span>
+		<span class="reserved">if</span> (tinyMCE.settings.strict_loading_mode &amp;&amp; <span class="reserved">this</span>.loadingIndex != -1) {
+			window.setTimeout(<span class="literal">'tinyMCE.onLoad();'</span>, 1);
+			<span class="reserved">return</span>;
+		}
+
 		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera &amp;&amp; window.event.type == <span class="literal">"readystatechange"</span> &amp;&amp; document.readyState != <span class="literal">"complete"</span>)
 			<span class="reserved">return</span> true;
 
@@ -1657,7 +1796,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 						var element = tinyMCE._getElementById(elements[i]);
 						var trigger = element ? element.getAttribute(tinyMCE.settings[<span class="literal">'textarea_trigger'</span>]) : <span class="literal">""</span>;
 
-						<span class="reserved">if</span> (tinyMCE.getAttrib(element, <span class="literal">"class"</span>).indexOf(deselector) != -1)
+						<span class="reserved">if</span> (new RegExp(<span class="literal">'\\b'</span> + deselector + <span class="literal">'\\b'</span>).test(tinyMCE.getAttrib(element, <span class="literal">"class"</span>)))
 							continue;
 
 						<span class="reserved">if</span> (trigger == <span class="literal">"false"</span>)
@@ -1683,13 +1822,13 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 						var elm = nodeList.item(i);
 						var trigger = elm.getAttribute(tinyMCE.settings[<span class="literal">'textarea_trigger'</span>]);
 
-						<span class="reserved">if</span> (selector != <span class="literal">''</span> &amp;&amp; tinyMCE.getAttrib(elm, <span class="literal">"class"</span>).indexOf(selector) == -1)
+						<span class="reserved">if</span> (selector != <span class="literal">''</span> &amp;&amp; !new RegExp(<span class="literal">'\\b'</span> + selector + <span class="literal">'\\b'</span>).test(tinyMCE.getAttrib(elm, <span class="literal">"class"</span>)))
 							continue;
 
 						<span class="reserved">if</span> (selector != <span class="literal">''</span>)
 							trigger = selector != <span class="literal">""</span> ? <span class="literal">"true"</span> : <span class="literal">""</span>;
 
-						<span class="reserved">if</span> (tinyMCE.getAttrib(elm, <span class="literal">"class"</span>).indexOf(deselector) != -1)
+						<span class="reserved">if</span> (new RegExp(<span class="literal">'\\b'</span> + deselector + <span class="literal">'\\b'</span>).test(tinyMCE.getAttrib(elm, <span class="literal">"class"</span>)))
 							continue;
 
 						<span class="reserved">if</span> ((mode == <span class="literal">"specific_textareas"</span> &amp;&amp; trigger == <span class="literal">"true"</span>) || (mode == <span class="literal">"textareas"</span> &amp;&amp; trigger != <span class="literal">"false"</span>))
@@ -1815,8 +1954,10 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 */</span>
 	entityDecode : <span class="reserved">function</span>(s) {
 		var e = document.createElement(<span class="literal">"div"</span>);
+
 		e.innerHTML = s;
-		<span class="reserved">return</span> e.innerHTML;
+
+		<span class="reserved">return</span> e.firstChild.nodeValue;
 	},
 
 	<span class="comment">/**
@@ -1832,6 +1973,8 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 
 			tinyMCELang[(key.indexOf(<span class="literal">'lang_'</span>) == -1 ? <span class="literal">'lang_'</span> : <span class="literal">''</span>) + (prefix != <span class="literal">''</span> ? (prefix + <span class="literal">"_"</span>) : <span class="literal">''</span>) + key] = ar[key];
 		}
+
+		<span class="reserved">this</span>.loadNextScript();
 
 	<span class="comment">//	for (var key in ar)</span>
 	<span class="comment">//		tinyMCELang[(key.indexOf('lang_') == -1 ? 'lang_' : '') + (prefix != '' ? (prefix + "_") : '') + key] = "|" + ar[key] + "|";</span>
@@ -1849,22 +1992,18 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 			var inst = tinyMCE.selectedInstance;
 			var editorId = inst.editorId;
 			var elm = (typeof(setup_content) != <span class="literal">"undefined"</span> &amp;&amp; setup_content) ? tinyMCE.selectedElement : inst.getFocusElement();
-			var undoIndex = -1;
+			var undoIndex = -1, doc;
 			var undoLevels = -1;
 			var anySelection = false;
 			var selectedText = inst.selection.getSelectedText();
+
+			<span class="reserved">if</span> (tinyMCE.settings.auto_resize)
+				inst.resizeToContent();
 
 			<span class="reserved">if</span> (setup_content &amp;&amp; tinyMCE.isGecko &amp;&amp; inst.isHidden())
 				elm = inst.getBody();
 
 			inst.switchSettings();
-
-			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">"auto_resize"</span>]) {
-				var doc = inst.getDoc();
-
-				inst.iframeElement.style.width = doc.body.offsetWidth + <span class="literal">"px"</span>;
-				inst.iframeElement.style.height = doc.body.offsetHeight + <span class="literal">"px"</span>;
-			}
 
 			<span class="reserved">if</span> (tinyMCE.selectedElement)
 				anySelection = (tinyMCE.selectedElement.nodeName.toLowerCase() == <span class="literal">"img"</span>) || (selectedText &amp;&amp; selectedText.length &gt; 0);
@@ -1939,21 +2078,14 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * Loads a plugin specific language pack.
 	 *
 	 * <span class="attrib">@param</span> {string} name Plugin name/id to load language pack for.
-	 * <span class="attrib">@param</span> {string} valid_languages Comma separated list of valid languages for the plugin.
 	 */</span>
-	importPluginLanguagePack : <span class="reserved">function</span>(name, valid_languages) {
-		var lang = <span class="literal">"en"</span>, b = tinyMCE.baseURL + <span class="literal">'/plugins/'</span> + name;
-
-		valid_languages = valid_languages.split(<span class="literal">','</span>);
-		<span class="reserved">for</span> (var i=0; i&lt;valid_languages.length; i++) {
-			<span class="reserved">if</span> (tinyMCE.settings[<span class="literal">'language'</span>] == valid_languages[i])
-				lang = tinyMCE.settings[<span class="literal">'language'</span>];
-		}
+	importPluginLanguagePack : <span class="reserved">function</span>(name) {
+		var b = tinyMCE.baseURL + <span class="literal">'/plugins/'</span> + name;
 
 		<span class="reserved">if</span> (<span class="reserved">this</span>.plugins[name])
 			b = <span class="reserved">this</span>.plugins[name].baseURL;
 
-		tinyMCE.loadScript(b + <span class="literal">'/langs/'</span> + lang +  <span class="literal">'.js'</span>);
+		tinyMCE.loadScript(b + <span class="literal">'/langs/'</span> + tinyMCE.settings[<span class="literal">'language'</span>] +  <span class="literal">'.js'</span>);
 	},
 
 	<span class="comment">/**
@@ -1965,24 +2097,21 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> string
 	 */</span>
 	applyTemplate : <span class="reserved">function</span>(h, as) {
-		var i, s, ar = h.match(new RegExp(<span class="literal">'\\{\\$[a-z0-9_]+\\}'</span>, <span class="literal">'gi'</span>));
+		<span class="reserved">return</span> h.replace(new RegExp(<span class="literal">'\\{\\$([a-z0-9_]+)\\}'</span>, <span class="literal">'gi'</span>), <span class="reserved">function</span>(m, s) {
+			<span class="reserved">if</span> (s.indexOf(<span class="literal">'lang_'</span>) == 0 &amp;&amp; tinyMCELang[s])
+				<span class="reserved">return</span> tinyMCELang[s];
 
-		<span class="reserved">if</span> (ar &amp;&amp; ar.length &gt; 0) {
-			<span class="reserved">for</span> (i=ar.length-1; i&gt;=0; i--) {
-				s = ar[i].substring(2, ar[i].length-1);
+			<span class="reserved">if</span> (as &amp;&amp; as[s])
+				<span class="reserved">return</span> as[s];
 
-				<span class="reserved">if</span> (s.indexOf(<span class="literal">'lang_'</span>) == 0 &amp;&amp; tinyMCELang[s])
-					h = tinyMCE.replaceVar(h, s, tinyMCELang[s]);
-				<span class="reserved">else</span> <span class="reserved">if</span> (as &amp;&amp; as[s])
-					h = tinyMCE.replaceVar(h, s, as[s]);
-				<span class="reserved">else</span> <span class="reserved">if</span> (tinyMCE.settings[s])
-					h = tinyMCE.replaceVar(h, s, tinyMCE.settings[s]);
-			}
-		}
+			<span class="reserved">if</span> (tinyMCE.settings[s])
+				<span class="reserved">return</span> tinyMCE.settings[s];
 
-		h = tinyMCE.replaceVar(h, <span class="literal">"themeurl"</span>, tinyMCE.themeURL);
+			<span class="reserved">if</span> (m == <span class="literal">'themeurl'</span>)
+				<span class="reserved">return</span> tinyMCE.themeURL;
 
-		<span class="reserved">return</span> h;
+			<span class="reserved">return</span> m;
+		});
 	},
 
 	<span class="comment">/**
@@ -2264,6 +2393,10 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 
 				<span class="reserved">return</span> h;
 			} <span class="reserved">else</span> {
+				<span class="comment">// Why bother if there is no src or href broken</span>
+				<span class="reserved">if</span> (!new RegExp(<span class="literal">'(src|href)='</span>, <span class="literal">'g'</span>).test(h))
+					<span class="reserved">return</span> h;
+
 				el = new Array(<span class="literal">'a'</span>,<span class="literal">'img'</span>,<span class="literal">'select'</span>,<span class="literal">'area'</span>,<span class="literal">'iframe'</span>,<span class="literal">'base'</span>,<span class="literal">'input'</span>,<span class="literal">'script'</span>,<span class="literal">'embed'</span>,<span class="literal">'object'</span>,<span class="literal">'link'</span>);
 
 				<span class="reserved">for</span> (a=0; a&lt;el.length; a++) {
@@ -2645,10 +2778,11 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@param</span> {string} f Function reference to execute.
 	 * <span class="attrib">@param</span> {int} idx Index in array to start grabbing arguments from.
 	 * <span class="attrib">@param</span> {Array} a Array of function arguments.
+	 * <span class="attrib">@param</span> {Object} o Optional object reference to call function on.
 	 * <span class="attrib">@return</span> Value returned from the evaluated function.
 	 * <span class="attrib">@type</span> object
 	 */</span>
-	evalFunc : <span class="reserved">function</span>(f, idx, a) {
+	evalFunc : <span class="reserved">function</span>(f, idx, a, o) {
 		var s = <span class="literal">'('</span>, i;
 
 		<span class="reserved">for</span> (i=idx; i&lt;a.length; i++) {
@@ -2660,7 +2794,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 
 		s += <span class="literal">');'</span>;
 
-		<span class="reserved">return</span> eval(<span class="literal">"f"</span> + s);
+		<span class="reserved">return</span> o ? eval(<span class="literal">"o."</span> + f + s) : eval(<span class="literal">"f"</span> + s);
 	},
 
 	<span class="comment">/**
@@ -2727,7 +2861,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 			<span class="reserved">for</span> (i=0, l = ins.plugins; i&lt;l.length; i++) {
 				o = tinyMCE.plugins[l[i]];
 
-				<span class="reserved">if</span> (o[n] &amp;&amp; (v = tinyMCE.evalFunc(o[n], 3, a)) == s &amp;&amp; m &gt; 0)
+				<span class="reserved">if</span> (o[n] &amp;&amp; (v = tinyMCE.evalFunc(n, 3, a, o)) == s &amp;&amp; m &gt; 0)
 					<span class="reserved">return</span> true;
 			}
 		}
@@ -2736,7 +2870,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="reserved">for</span> (on in l) {
 			o = l[on];
 
-			<span class="reserved">if</span> (o[n] &amp;&amp; (v = tinyMCE.evalFunc(o[n], 3, a)) == s &amp;&amp; m &gt; 0)
+			<span class="reserved">if</span> (o[n] &amp;&amp; (v = tinyMCE.evalFunc(n, 3, a, o)) == s &amp;&amp; m &gt; 0)
 				<span class="reserved">return</span> true;
 		}
 
@@ -2801,25 +2935,6 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 			tinyMCE.switchClass(e, tinyMCE.lastMenuBtnClass);
 			tinyMCE.lastSelectedMenuBtn = null;
 		}
-	},
-
-	<span class="comment">/**
-	 * Splits a string by the specified delimiter and skips any empty items.
-	 *
-	 * <span class="attrib">@param</span> {string} d Delimiter to split by.
-	 * <span class="attrib">@param</span> {string} s String to split.
-	 * <span class="attrib">@return</span> Array with chunks from string.
-	 * <span class="attrib">@type</span> Array
-	 */</span>
-	explode : <span class="reserved">function</span>(d, s) {
-		var ar = s.split(d), oar = new Array(), i;
-	
-		<span class="reserved">for</span> (i = 0; i&lt;ar.length; i++) {
-			<span class="reserved">if</span> (ar[i] != <span class="literal">""</span>)
-				oar[oar.length] = ar[i];
-		}
-	
-		<span class="reserved">return</span> oar;
 	}
 };
 
@@ -2885,6 +3000,6 @@ var tinyMCELang = {};
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Aug 27 18:02:23 2006</div>
 </body>
 </html>

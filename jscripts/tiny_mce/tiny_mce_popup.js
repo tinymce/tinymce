@@ -1,12 +1,8 @@
-
-
 // Some global instances, this will be filled later
 var tinyMCE = null, tinyMCELang = null;
 
-
 function TinyMCE_Popup() {
 };
-
 
 TinyMCE_Popup.prototype.init = function() {
 	var win = window.opener ? window.opener : window.dialogArguments, c;
@@ -77,7 +73,6 @@ TinyMCE_Popup.prototype.init = function() {
 	tinyMCE.addEvent(window, "load", this.onLoad);
 };
 
-
 TinyMCE_Popup.prototype.onLoad = function() {
 	var dir, i, elms, body = document.body;
 
@@ -101,14 +96,12 @@ TinyMCE_Popup.prototype.onLoad = function() {
 		eval(tinyMCEPopup.onLoadEval);
 };
 
-
 TinyMCE_Popup.prototype.executeOnLoad = function(str) {
 	if (tinyMCE.isOpera)
 		this.onLoadEval = str;
 	else
 		eval(str);
 };
-
 
 TinyMCE_Popup.prototype.resizeToInnerSize = function() {
 	// Netscape 7.1 workaround
@@ -176,7 +169,6 @@ TinyMCE_Popup.prototype.resizeToInnerSize = function() {
 	}
 };
 
-
 TinyMCE_Popup.prototype.resizeToContent = function() {
 	var isMSIE = (navigator.appName == "Microsoft Internet Explorer");
 	var isOpera = (navigator.userAgent.indexOf("Opera") != -1);
@@ -207,11 +199,9 @@ TinyMCE_Popup.prototype.resizeToContent = function() {
 	}
 };
 
-
 TinyMCE_Popup.prototype.getWindowArg = function(name, default_value) {
 	return tinyMCE.getWindowArg(name, default_value);
 };
-
 
 TinyMCE_Popup.prototype.restoreSelection = function() {
 	if (this.storeSelection) {
@@ -224,7 +214,6 @@ TinyMCE_Popup.prototype.restoreSelection = function() {
 	}
 };
 
-
 TinyMCE_Popup.prototype.execCommand = function(command, user_interface, value) {
 	var inst = tinyMCE.selectedInstance;
 
@@ -236,11 +225,9 @@ TinyMCE_Popup.prototype.execCommand = function(command, user_interface, value) {
 		inst.selectionBookmark = inst.selection.getBookmark(true);
 };
 
-
 TinyMCE_Popup.prototype.close = function() {
 	tinyMCE.closeWindow(window);
 };
-
 
 TinyMCE_Popup.prototype.pickColor = function(e, element_id) {
 	tinyMCE.selectedInstance.execCommand('mceColorPicker', true, {
@@ -250,7 +237,6 @@ TinyMCE_Popup.prototype.pickColor = function(e, element_id) {
 		store_selection : false
 	});
 };
-
 
 TinyMCE_Popup.prototype.openBrowser = function(element_id, type, option) {
 	var cb = tinyMCE.getParam(option, tinyMCE.getParam("file_browser_callback"));
@@ -265,7 +251,6 @@ TinyMCE_Popup.prototype.openBrowser = function(element_id, type, option) {
 	else
 		eval("tinyMCEPopup.windowOpener." + cb + "(element_id, url, type, window);");
 };
-
 
 TinyMCE_Popup.prototype.importClass = function(c) {
 	window[c] = function() {};

@@ -92,16 +92,14 @@ function asd() {
 
 
         <pre class="sourceview"><span class="comment">/**
- * $RCSfile: overview-summary-TinyMCE_ForceParagraphs.class.js.html,v $
- * $Revision: 1.42 $
- * $Date: 2006/04/14 20:00:30 $
+ * $Id: TinyMCE_ForceParagraphs.class.js 64 2006-08-23 19:37:28Z spocke $
  *
  * <span class="attrib">@author</span> Moxiecode
  * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */</span>
 
 <span class="comment">/**
- * Forces P tags on return/enter in Gecko browsers.
+ * Forces P tags on return/enter in Gecko, Opera and Safari.
  */</span>
 var TinyMCE_ForceParagraphs = {
 	<span class="comment">/**
@@ -114,6 +112,11 @@ var TinyMCE_ForceParagraphs = {
 	 * <span class="attrib">@private</span>
 	 */</span>
 	_insertPara : <span class="reserved">function</span>(inst, e) {
+		var doc = inst.getDoc(), sel = inst.getSel(), body = inst.getBody(), win = inst.contentWindow, rng = sel.getRangeAt(0);
+		var rootElm = doc.documentElement, blockName = <span class="literal">"P"</span>, startNode, endNode, startBlock, endBlock;
+		var rngBefore, rngAfter, direct, startNode, startOffset, endNode, endOffset, b = tinyMCE.isOpera ? inst.selection.getBookmark() : null;
+		var paraBefore, paraAfter, startChop, endChop, contents;
+
 		<span class="reserved">function</span> isEmpty(para) {
 			<span class="reserved">function</span> isEmptyHTML(html) {
 				<span class="reserved">return</span> html.replace(new RegExp(<span class="literal">'[ \t\r\n]+'</span>, <span class="literal">'g'</span>), <span class="literal">''</span>).toLowerCase() == <span class="literal">""</span>;
@@ -142,43 +145,33 @@ var TinyMCE_ForceParagraphs = {
 			<span class="reserved">return</span> true;
 		}
 
-		var doc = inst.getDoc();
-		var sel = inst.getSel();
-		var win = inst.contentWindow;
-		var rng = sel.getRangeAt(0);
-		var body = doc.body;
-		var rootElm = doc.documentElement;
-		var blockName = <span class="literal">"P"</span>;
-
 	<span class="comment">//	tinyMCE.debug(body.innerHTML);</span>
 
 	<span class="comment">//	debug(e.target, sel.anchorNode.nodeName, sel.focusNode.nodeName, rng.startContainer, rng.endContainer, rng.commonAncestorContainer, sel.anchorOffset, sel.focusOffset, rng.toString());</span>
 
 		<span class="comment">// Setup before range</span>
-		var rngBefore = doc.createRange();
+		rngBefore = doc.createRange();
 		rngBefore.setStart(sel.anchorNode, sel.anchorOffset);
 		rngBefore.collapse(true);
 
 		<span class="comment">// Setup after range</span>
-		var rngAfter = doc.createRange();
+		rngAfter = doc.createRange();
 		rngAfter.setStart(sel.focusNode, sel.focusOffset);
 		rngAfter.collapse(true);
 
 		<span class="comment">// Setup start/end points</span>
-		var direct = rngBefore.compareBoundaryPoints(rngBefore.START_TO_END, rngAfter) &lt; 0;
-		var startNode = direct ? sel.anchorNode : sel.focusNode;
-		var startOffset = direct ? sel.anchorOffset : sel.focusOffset;
-		var endNode = direct ? sel.focusNode : sel.anchorNode;
-		var endOffset = direct ? sel.focusOffset : sel.anchorOffset;
+		direct = rngBefore.compareBoundaryPoints(rngBefore.START_TO_END, rngAfter) &lt; 0;
+		startNode = direct ? sel.anchorNode : sel.focusNode;
+		startOffset = direct ? sel.anchorOffset : sel.focusOffset;
+		endNode = direct ? sel.focusNode : sel.anchorNode;
+		endOffset = direct ? sel.focusOffset : sel.anchorOffset;
 
 		startNode = startNode.nodeName == <span class="literal">"BODY"</span> ? startNode.firstChild : startNode;
 		endNode = endNode.nodeName == <span class="literal">"BODY"</span> ? endNode.firstChild : endNode;
 
-		<span class="comment">// tinyMCE.debug(startNode, endNode);</span>
-
 		<span class="comment">// Get block elements</span>
-		var startBlock = tinyMCE.getParentBlockElement(startNode);
-		var endBlock = tinyMCE.getParentBlockElement(endNode);
+		startBlock = inst.getParentBlockElement(startNode);
+		endBlock = inst.getParentBlockElement(endNode);
 
 		<span class="comment">// If absolute force paragraph generation within</span>
 		<span class="reserved">if</span> (startBlock &amp;&amp; new RegExp(<span class="literal">'absolute|relative|static'</span>, <span class="literal">'gi'</span>).test(startBlock.style.position))
@@ -197,7 +190,7 @@ var TinyMCE_ForceParagraphs = {
 		}
 
 		<span class="comment">// Within a list use normal behaviour</span>
-		<span class="reserved">if</span> (tinyMCE.getParentElement(startBlock, <span class="literal">"OL,UL"</span>) != null)
+		<span class="reserved">if</span> (tinyMCE.getParentElement(startBlock, <span class="literal">"OL,UL"</span>, body) != null)
 			<span class="reserved">return</span> false;
 
 		<span class="comment">// Within a table create new paragraphs</span>
@@ -205,16 +198,16 @@ var TinyMCE_ForceParagraphs = {
 			startBlock = endBlock = null;
 
 		<span class="comment">// Setup new paragraphs</span>
-		var paraBefore = (startBlock != null &amp;&amp; startBlock.nodeName == blockName) ? startBlock.cloneNode(false) : doc.createElement(blockName);
-		var paraAfter = (endBlock != null &amp;&amp; endBlock.nodeName == blockName) ? endBlock.cloneNode(false) : doc.createElement(blockName);
+		paraBefore = (startBlock != null &amp;&amp; startBlock.nodeName == blockName) ? startBlock.cloneNode(false) : doc.createElement(blockName);
+		paraAfter = (endBlock != null &amp;&amp; endBlock.nodeName == blockName) ? endBlock.cloneNode(false) : doc.createElement(blockName);
 
 		<span class="comment">// Is header, then force paragraph under</span>
 		<span class="reserved">if</span> (/^(H[1-6])$/.test(blockName))
 			paraAfter = doc.createElement(<span class="literal">"p"</span>);
 
 		<span class="comment">// Setup chop nodes</span>
-		var startChop = startNode;
-		var endChop = endNode;
+		startChop = startNode;
+		endChop = endNode;
 
 		<span class="comment">// Get startChop node</span>
 		node = startChop;
@@ -245,7 +238,9 @@ var TinyMCE_ForceParagraphs = {
 		<span class="reserved">if</span> (startBlock == null) {
 			<span class="comment">// Delete selection</span>
 			rng.deleteContents();
-			sel.removeAllRanges();
+
+			<span class="reserved">if</span> (!tinyMCE.isSafari)
+				sel.removeAllRanges();
 
 			<span class="reserved">if</span> (startChop != rootElm &amp;&amp; endChop != rootElm) {
 				<span class="comment">// Insert paragraph before</span>
@@ -269,7 +264,7 @@ var TinyMCE_ForceParagraphs = {
 				<span class="reserved">if</span> (endChop.nodeName != <span class="literal">"#text"</span> &amp;&amp; endChop.nodeName != <span class="literal">"BODY"</span>)
 					rngBefore.setEndAfter(endChop);
 
-				var contents = rng.cloneContents();
+				contents = rng.cloneContents();
 				<span class="reserved">if</span> (contents.firstChild &amp;&amp; (contents.firstChild.nodeName == blockName || contents.firstChild.nodeName == <span class="literal">"BODY"</span>))
 					paraAfter.innerHTML = contents.firstChild.innerHTML;
 				<span class="reserved">else</span>
@@ -289,17 +284,25 @@ var TinyMCE_ForceParagraphs = {
 				rngBefore.deleteContents();
 
 				<span class="comment">// Insert new paragraphs</span>
-				paraAfter.normalize();
-				rngBefore.insertNode(paraAfter);
-				paraBefore.normalize();
-				rngBefore.insertNode(paraBefore);
+				<span class="reserved">if</span> (tinyMCE.isOpera) {
+					paraBefore.normalize();
+					rngBefore.insertNode(paraBefore);
+					paraAfter.normalize();
+					rngBefore.insertNode(paraAfter);
+				} <span class="reserved">else</span> {
+					paraAfter.normalize();
+					rngBefore.insertNode(paraAfter);
+					paraBefore.normalize();
+					rngBefore.insertNode(paraBefore);
+				}
 
-				<span class="comment">// tinyMCE.debug("1: ", paraBefore.innerHTML, paraAfter.innerHTML);</span>
+				<span class="comment">//tinyMCE.debug("1: ", paraBefore.innerHTML, paraAfter.innerHTML);</span>
 			} <span class="reserved">else</span> {
 				body.innerHTML = <span class="literal">"&lt;"</span> + blockName + <span class="literal">"&gt;&amp;nbsp;&lt;/"</span> + blockName + <span class="literal">"&gt;&lt;"</span> + blockName + <span class="literal">"&gt;&amp;nbsp;&lt;/"</span> + blockName + <span class="literal">"&gt;"</span>;
 				paraAfter = body.childNodes[1];
 			}
 
+			inst.selection.moveToBookmark(b);
 			inst.selection.selectNode(paraAfter, true, true);
 
 			<span class="reserved">return</span> true;
@@ -317,7 +320,7 @@ var TinyMCE_ForceParagraphs = {
 		<span class="comment">// Place secound part within new paragraph</span>
 		rngAfter.setEndAfter(endChop);
 		rngAfter.setStart(endNode, endOffset);
-		var contents = rngAfter.cloneContents();
+		contents = rngAfter.cloneContents();
 
 		<span class="reserved">if</span> (contents.firstChild &amp;&amp; contents.firstChild.nodeName == blockName) {
 	<span class="comment">/*		var nodes = contents.firstChild.childNodes;
@@ -340,7 +343,7 @@ var TinyMCE_ForceParagraphs = {
 			paraAfter.innerHTML = <span class="literal">"&amp;nbsp;"</span>;
 
 		<span class="comment">// Create a range around everything</span>
-		var rng = doc.createRange();
+		rng = doc.createRange();
 
 		<span class="reserved">if</span> (!startChop.previousSibling &amp;&amp; startChop.parentNode.nodeName.toUpperCase() == blockName) {
 			rng.setStartBefore(startChop.parentNode);
@@ -358,14 +361,22 @@ var TinyMCE_ForceParagraphs = {
 
 		<span class="comment">// Delete all contents and insert new paragraphs</span>
 		rng.deleteContents();
-		rng.insertNode(paraAfter);
-		rng.insertNode(paraBefore);
+
+		<span class="reserved">if</span> (tinyMCE.isOpera) {
+			rng.insertNode(paraBefore);
+			rng.insertNode(paraAfter);
+		} <span class="reserved">else</span> {
+			rng.insertNode(paraAfter);
+			rng.insertNode(paraBefore);
+		}
+
 		<span class="comment">//tinyMCE.debug("2", paraBefore.innerHTML, paraAfter.innerHTML);</span>
 
 		<span class="comment">// Normalize</span>
 		paraAfter.normalize();
 		paraBefore.normalize();
 
+		inst.selection.moveToBookmark(b);
 		inst.selection.selectNode(paraAfter, true, true);
 
 		<span class="reserved">return</span> true;
@@ -382,17 +393,21 @@ var TinyMCE_ForceParagraphs = {
 	_handleBackSpace : <span class="reserved">function</span>(inst) {
 		var r = inst.getRng(), sn = r.startContainer, nv, s = false;
 
-		<span class="reserved">if</span> (sn &amp;&amp; sn.nextSibling &amp;&amp; sn.nextSibling.nodeName == <span class="literal">"BR"</span>) {
+		<span class="comment">// Added body check for bug #1527787</span>
+		<span class="reserved">if</span> (sn &amp;&amp; sn.nextSibling &amp;&amp; sn.nextSibling.nodeName == <span class="literal">"BR"</span> &amp;&amp; sn.parentNode.nodeName != <span class="literal">"BODY"</span>) {
 			nv = sn.nodeValue;
 
-			<span class="comment">// Handle if a backspace is pressed after a space character #bug 1466054</span>
-			<span class="reserved">if</span> (nv != null &amp;&amp; nv.length &gt;= r.startOffset &amp;&amp; nv.charAt(r.startOffset - 1) == <span class="literal">' '</span>)
-				s = true;
+			<span class="comment">// Handle if a backspace is pressed after a space character #bug 1466054 removed since fix for #1527787</span>
+			<span class="comment">/*if (nv != null &amp;&amp; nv.length &gt;= r.startOffset &amp;&amp; nv.charAt(r.startOffset - 1) == ' ')
+				s = true;*/</span>
 
 			<span class="comment">// Only remove BRs if we are at the end of line #bug 1464152</span>
 			<span class="reserved">if</span> (nv != null &amp;&amp; r.startOffset == nv.length)
 				sn.nextSibling.parentNode.removeChild(sn.nextSibling);
 		}
+
+		<span class="reserved">if</span> (inst.settings.auto_resize)
+			inst.resizeToContent();
 
 		<span class="reserved">return</span> s;
 	}
@@ -455,6 +470,6 @@ var TinyMCE_ForceParagraphs = {
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Aug 27 18:02:23 2006</div>
 </body>
 </html>

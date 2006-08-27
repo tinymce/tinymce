@@ -24,3 +24,22 @@ TinyMCE_Engine.prototype.clearArray = function(a) {
 
 	return a;
 };
+
+/**
+ * Splits a string by the specified delimiter and skips any empty items.
+ *
+ * @param {string} d Delimiter to split by.
+ * @param {string} s String to split.
+ * @return Array with chunks from string.
+ * @type Array
+ */
+TinyMCE_Engine.prototype.explode = function(d, s) {
+	var ar = s.split(d), oar = new Array(), i;
+
+	for (i = 0; i<ar.length; i++) {
+		if (ar[i] != "")
+			oar[oar.length] = ar[i];
+	}
+
+	return oar;
+};

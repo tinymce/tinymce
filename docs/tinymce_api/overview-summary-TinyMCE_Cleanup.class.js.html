@@ -85,33 +85,46 @@ function asd() {
 <hr>
 
 
-    <table border="1" cellpadding="3" cellspacing="0" width="100%">
-    <tr bgcolor="#CCCCFF" class="TableHeadingColor">
-    <td colspan=2><font size="+2">
-    
-        <b>Class Summary</b>
-    
-    </font></td>
-    </tr>
-    
-    <tr bgcolor="white" class="TableRowColor">
-    <td width="15%"><b><a href="TinyMCE_Cleanup.html">TinyMCE_Cleanup</a></b></td>
-    <td>&nbsp;</td>
-    </tr>
-    
-    </table>
-    <hr/> 
-
 
 <!-- ========== METHOD SUMMARY =========== -->
+
+	<a name="method_summary"><!-- --></a>
+	<table border="1" cellpadding="3" cellspacing="0" width="100%">
+		<tr bgcolor="#CCCCFF" class="TableHeadingColor">
+			<td colspan=2>
+				<font size="+2">
+					<b>Method Summary</b>
+				</font>
+			</td>
+		</tr>
+	
+		
+		   <tr bgcolor="white" class="TableRowColor">
+		      <td align="right" valign="top" width="1%">
+			 <font size="-1">
+			    <code>static&nbsp;void</code>
+			 </font>
+		      </td>
+		      <td>
+			 <code>
+			    <b>
+			       <a href="GLOBALS.html#!s!TinyMCE_Cleanup">TinyMCE_Cleanup</a></b>()
+			 </code>
+			 <br>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 TinyMCE_Cleanup class.
+		      </td>
+		   </tr>
+		
+	
+	</table>
+    <p>
 
 <!-- ========== END METHOD SUMMARY =========== -->
 
 
         <pre class="sourceview"><span class="comment">/**
- * $RCSfile: overview-summary-TinyMCE_Cleanup.class.js.html,v $
- * $Revision: 1.42 $
- * $Date: 2006/04/14 20:00:28 $
+ * $Id: TinyMCE_Cleanup.class.js 66 2006-08-24 22:15:47Z spocke $
  *
  * <span class="attrib">@author</span> Moxiecode
  * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -148,6 +161,10 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.cleanupHTMLCode = <span c
 	<span class="comment">// Weird MSIE bug, &lt;p&gt;&lt;hr /&gt;&lt;/p&gt; breaks runtime?</span>
 	<span class="reserved">if</span> (tinyMCE.isMSIE)
 		s = s.replace(new RegExp(<span class="literal">'&lt;p&gt;&lt;hr \\/&gt;&lt;\\/p&gt;'</span>, <span class="literal">'gi'</span>), <span class="literal">"&lt;hr&gt;"</span>);
+
+	<span class="comment">// Weird tags will make IE error #bug: 1538495</span>
+	<span class="reserved">if</span> (tinyMCE.isMSIE)
+		s = s.replace(/&lt;!(\s*)\/&gt;/g, <span class="literal">''</span>);
 
 	<span class="comment">// Convert relative anchors to absolute URLs ex: #something to file.htm#something</span>
 	<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">'convert_urls'</span>))
@@ -454,20 +471,11 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.cleanupAnchors = <span cl
  * <span class="attrib">@type</span> string
  */</span>
 TinyMCE_Engine.<span class="reserved">prototype</span>.getContent = <span class="reserved">function</span>(editor_id) {
-	var h;
-
 	<span class="reserved">if</span> (typeof(editor_id) != <span class="literal">"undefined"</span>)
-		tinyMCE.selectedInstance = tinyMCE.getInstanceById(editor_id);
+		 tinyMCE.getInstanceById(editor_id).select();
 
-	<span class="reserved">if</span> (tinyMCE.selectedInstance) {
-		h = tinyMCE._cleanupHTML(<span class="reserved">this</span>.selectedInstance, <span class="reserved">this</span>.selectedInstance.getDoc(), tinyMCE.settings, <span class="reserved">this</span>.selectedInstance.getBody(), false, true);
-
-		<span class="comment">// When editing always use fonts internaly</span>
-		<span class="reserved">if</span> (tinyMCE.getParam(<span class="literal">"convert_fonts_to_spans"</span>))
-			tinyMCE.convertSpansToFonts(<span class="reserved">this</span>.selectedInstance.getDoc());
-
-		<span class="reserved">return</span> h;
-	}
+	<span class="reserved">if</span> (tinyMCE.selectedInstance)
+		<span class="reserved">return</span> tinyMCE.selectedInstance.getHTML();
 
 	<span class="reserved">return</span> null;
 };
@@ -542,11 +550,12 @@ TinyMCE_Engine.<span class="reserved">prototype</span>._fixTables = <span class=
  * <span class="attrib">@param</span> {boolean} visual ...
  * <span class="attrib">@param</span> {boolean} on_save ...
  * <span class="attrib">@param</span> {boolean} on_submit ...
+ * <span class="attrib">@param</span> {boolean} inn inner html.
  * <span class="attrib">@return</span> Cleaned HTML contents of editor instance.
  * <span class="attrib">@type</span> string
  * <span class="attrib">@private</span>
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>._cleanupHTML = <span class="reserved">function</span>(inst, doc, config, elm, visual, on_save, on_submit) {
+TinyMCE_Engine.<span class="reserved">prototype</span>._cleanupHTML = <span class="reserved">function</span>(inst, doc, config, elm, visual, on_save, on_submit, inn) {
 	var h, d, t1, t2, t3, t4, t5, c, s;
 
 	<span class="reserved">if</span> (!tinyMCE.getParam(<span class="literal">'cleanup'</span>))
@@ -585,9 +594,9 @@ TinyMCE_Engine.<span class="reserved">prototype</span>._cleanupHTML = <span clas
 	c.sourceIndex = -1;
 
 	<span class="reserved">if</span> (s.cleanup_serializer == <span class="literal">"xml"</span>)
-		h = c.serializeNodeAsXML(elm);
+		h = c.serializeNodeAsXML(elm, inn);
 	<span class="reserved">else</span>
-		h = c.serializeNodeAsHTML(elm);
+		h = c.serializeNodeAsHTML(elm, inn);
 
 	<span class="reserved">if</span> (d)
 		t3 = new Date().getTime();
@@ -736,7 +745,7 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 	},
 
 	<span class="comment">/**
-	 * Adds a cleanup rule string, for example: a[href|name|title=title|class=class1?class2?class3].
+	 * Adds a cleanup rule string, for example: a[!href|!name|title=title|class=class1?class2?class3].
 	 * These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility
 	 * to control the valid elements and attributes and force attribute values or default them.
 	 *
@@ -762,7 +771,67 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 	},
 
 	<span class="comment">/**
-	 * Parses a cleanup rule string, for example: a[href|name|title=title|class=class1?class2?class3].
+	 *
+	 * format: h1/h2/h3/h4/h5/h6[%inline_trans_no_a],table[thead|tbody|tfoot|tr|td],body[%btrans]=&gt;p
+	 */</span>
+	addChildRemoveRuleStr : <span class="reserved">function</span>(s) {
+		var x, y, p, i, t, tn, ta, cl, r;
+
+		<span class="reserved">if</span> (!s)
+			<span class="reserved">return</span>;
+
+		ta = s.split(<span class="literal">','</span>);
+		<span class="reserved">for</span> (x=0; x&lt;ta.length; x++) {
+			s = ta[x];
+
+			<span class="comment">// Split tag/children</span>
+			p = <span class="reserved">this</span>.split(/\[|\]/, s);
+			<span class="reserved">if</span> (p == null || p.length &lt; 1)
+				t = s.toUpperCase();
+			<span class="reserved">else</span>
+				t = p[0].toUpperCase();
+
+			<span class="comment">// Handle all tag names</span>
+			tn = <span class="reserved">this</span>.split(<span class="literal">'/'</span>, t);
+			<span class="reserved">for</span> (y=0; y&lt;tn.length; y++) {
+				r = <span class="literal">"^("</span>;
+
+				<span class="comment">// Build regex</span>
+				cl = <span class="reserved">this</span>.split(/\|/, p[1]);
+				<span class="reserved">for</span> (i=0; i&lt;cl.length; i++) {
+					<span class="reserved">if</span> (cl[i] == <span class="literal">'%istrict'</span>)
+						r += tinyMCE.inlineStrict;
+					<span class="reserved">else</span> <span class="reserved">if</span> (cl[i] == <span class="literal">'%itrans'</span>)
+						r += tinyMCE.inlineTransitional;
+					<span class="reserved">else</span> <span class="reserved">if</span> (cl[i] == <span class="literal">'%istrict_na'</span>)
+						r += tinyMCE.inlineStrict.substring(2);
+					<span class="reserved">else</span> <span class="reserved">if</span> (cl[i] == <span class="literal">'%itrans_na'</span>)
+						r += tinyMCE.inlineTransitional.substring(2);
+					<span class="reserved">else</span> <span class="reserved">if</span> (cl[i] == <span class="literal">'%btrans'</span>)
+						r += tinyMCE.blockElms;
+					<span class="reserved">else</span> <span class="reserved">if</span> (cl[i] == <span class="literal">'%strict'</span>)
+						r += tinyMCE.blockStrict;
+					<span class="reserved">else</span>
+						r += (cl[i].charAt(0) != <span class="literal">'#'</span> ? cl[i].toUpperCase() : cl[i]);
+
+					r += (i != cl.length - 1 ? <span class="literal">'|'</span> : <span class="literal">''</span>);
+				}
+
+				r += <span class="literal">')$'</span>;
+<span class="comment">//tinyMCE.debug(t + "=" + r);</span>
+				<span class="reserved">if</span> (<span class="reserved">this</span>.childRules == null)
+					<span class="reserved">this</span>.childRules = tinyMCE.clearArray(new Array());
+
+				<span class="reserved">this</span>.childRules[tn[y]] = new RegExp(r);
+
+				<span class="reserved">if</span> (p.length &gt; 1)
+					<span class="reserved">this</span>.childRules[tn[y]].wrapTag = p[2];
+			}
+		}
+	},
+
+	<span class="comment">/**
+	 * Parses a cleanup rule string, for example: a[!href|name|title=title|class=class1?class2?class3].
 	 * These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility
 	 * to control the valid elements and attributes and force attribute values or default them.
 	 *
@@ -817,6 +886,15 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 					<span class="reserved">for</span> (i=0; i&lt;a.length; i++) {
 						t = a[i];
 
+						<span class="reserved">if</span> (t.charAt(0) == <span class="literal">'!'</span>) {
+							a[i] = t = t.substring(1);
+
+							<span class="reserved">if</span> (!r.reqAttribsRe)
+								r.reqAttribsRe = <span class="literal">'\\s+('</span> + t;
+							<span class="reserved">else</span>
+								r.reqAttribsRe += <span class="literal">'|'</span> + t;
+						}
+
 						av = new RegExp(<span class="literal">'(=|:|&lt;)(.*?)$'</span>).exec(t);
 						t = t.replace(new RegExp(<span class="literal">'(=|:|&lt;).*?$'</span>), <span class="literal">''</span>);
 						<span class="reserved">if</span> (av &amp;&amp; av.length &gt; 0) {
@@ -844,6 +922,9 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 
 						a[i] = t.toLowerCase();
 					}
+
+					<span class="reserved">if</span> (r.reqAttribsRe)
+						r.reqAttribsRe = new RegExp(r.reqAttribsRe + <span class="literal">')=\"'</span>, <span class="literal">'g'</span>);
 
 					r.vAttribsRe += <span class="literal">')$'</span>;
 					r.vAttribsRe = <span class="reserved">this</span>._wildcardToRe(r.vAttribsRe);
@@ -960,26 +1041,40 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 	 * control over the output than the build in browser XML serializer.
 	 *
 	 * <span class="attrib">@param</span> {HTMLNode} n Node to serialize as a XHTML string.
+	 * <span class="attrib">@param</span> {bool} inn Optional inner HTML mode. Will only output child nodes and not the parent.
 	 * <span class="attrib">@return</span> Serialized XHTML string based on specified node.
 	 * <span class="attrib">@type</span> string
 	 */</span>
-	serializeNodeAsHTML : <span class="reserved">function</span>(n) {
-		var en, no, h = <span class="literal">''</span>, i, l, r, cn, va = false, f = false, at, hc;
+	serializeNodeAsHTML : <span class="reserved">function</span>(n, inn) {
+		var en, no, h = <span class="literal">''</span>, i, l, t, st, r, cn, va = false, f = false, at, hc, cr;
 
 		<span class="reserved">this</span>._setupRules(); <span class="comment">// Will initialize cleanup rules</span>
 
 		<span class="reserved">if</span> (<span class="reserved">this</span>._isDuplicate(n))
 			<span class="reserved">return</span> <span class="literal">''</span>;
 
+		<span class="comment">// Skip non valid child elements</span>
+		<span class="reserved">if</span> (n.parentNode &amp;&amp; <span class="reserved">this</span>.childRules != null) {
+			cr = <span class="reserved">this</span>.childRules[n.parentNode.nodeName];
+
+			<span class="reserved">if</span> (typeof(cr) != <span class="literal">"undefined"</span> &amp;&amp; !cr.test(n.nodeName)) {
+				st = true;
+				t = null;
+			}
+		}
+
 		switch (n.nodeType) {
 			case 1: <span class="comment">// Element</span>
 				hc = n.hasChildNodes();
+
+				<span class="reserved">if</span> (st)
+					break;
 
 				<span class="comment">// MSIE sometimes produces &lt;//tag&gt;</span>
 				<span class="reserved">if</span> ((tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) &amp;&amp; n.nodeName.indexOf(<span class="literal">'/'</span>) != -1)
 					break;
 
-				<span class="reserved">if</span> (<span class="reserved">this</span>.vElementsRe.test(n.nodeName) &amp;&amp; (!<span class="reserved">this</span>.iveRe || !<span class="reserved">this</span>.iveRe.test(n.nodeName))) {
+				<span class="reserved">if</span> (<span class="reserved">this</span>.vElementsRe.test(n.nodeName) &amp;&amp; (!<span class="reserved">this</span>.iveRe || !<span class="reserved">this</span>.iveRe.test(n.nodeName)) &amp;&amp; !inn) {
 					va = true;
 
 					r = <span class="reserved">this</span>.rules[n.nodeName];
@@ -999,7 +1094,7 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 					<span class="reserved">if</span> (r.removeEmpty &amp;&amp; !hc)
 						<span class="reserved">return</span> <span class="literal">""</span>;
 
-					h += <span class="literal">'&lt;'</span> + en;
+					t = <span class="literal">'&lt;'</span> + en;
 
 					<span class="reserved">if</span> (r.vAttribsReIsWild) {
 						<span class="comment">// Serialize wildcard attributes</span>
@@ -1007,12 +1102,12 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 						<span class="reserved">for</span> (i=at.length-1; i&gt;-1; i--) {
 							no = at[i];
 							<span class="reserved">if</span> (no.specified &amp;&amp; r.vAttribsRe.test(no.nodeName))
-								h += <span class="reserved">this</span>._serializeAttribute(n, r, no.nodeName);
+								t += <span class="reserved">this</span>._serializeAttribute(n, r, no.nodeName);
 						}
 					} <span class="reserved">else</span> {
 						<span class="comment">// Serialize specific attributes</span>
 						<span class="reserved">for</span> (i=r.vAttribs.length-1; i&gt;-1; i--)
-							h += <span class="reserved">this</span>._serializeAttribute(n, r, r.vAttribs[i]);
+							t += <span class="reserved">this</span>._serializeAttribute(n, r, r.vAttribs[i]);
 					}
 
 					<span class="comment">// Serialize mce_ atts</span>
@@ -1021,15 +1116,20 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 
 						<span class="reserved">for</span> (no in at) {
 							<span class="reserved">if</span> (at[no])
-								h += <span class="reserved">this</span>._serializeAttribute(n, r, at[no]);
+								t += <span class="reserved">this</span>._serializeAttribute(n, r, at[no]);
 						}
 					}
 
-					<span class="comment">// Close these</span>
-					<span class="reserved">if</span> (<span class="reserved">this</span>.closeElementsRe.test(n.nodeName))
-						<span class="reserved">return</span> h + <span class="literal">' /&gt;'</span>;
+					<span class="comment">// Check for required attribs</span>
+					<span class="reserved">if</span> (r.reqAttribsRe &amp;&amp; !t.match(r.reqAttribsRe))
+						t = null;
 
-					h += <span class="literal">'&gt;'</span>;
+					<span class="comment">// Close these</span>
+					<span class="reserved">if</span> (t != null &amp;&amp; <span class="reserved">this</span>.closeElementsRe.test(n.nodeName))
+						<span class="reserved">return</span> t + <span class="literal">' /&gt;'</span>;
+
+					<span class="reserved">if</span> (t != null)
+						h += t + <span class="literal">'&gt;'</span>;
 
 					<span class="reserved">if</span> (<span class="reserved">this</span>.isMSIE &amp;&amp; <span class="reserved">this</span>.codeElementsRe.test(n.nodeName))
 						h += n.innerHTML;
@@ -1037,12 +1137,18 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 			break;
 
 			case 3: <span class="comment">// Text</span>
+				<span class="reserved">if</span> (st)
+					break;
+
 				<span class="reserved">if</span> (n.parentNode &amp;&amp; <span class="reserved">this</span>.codeElementsRe.test(n.parentNode.nodeName))
 					<span class="reserved">return</span> <span class="reserved">this</span>.isMSIE ? <span class="literal">''</span> : n.nodeValue;
 
 				<span class="reserved">return</span> <span class="reserved">this</span>.xmlEncode(n.nodeValue);
 
 			case 8: <span class="comment">// Comment</span>
+				<span class="reserved">if</span> (st)
+					break;
+
 				<span class="reserved">return</span> <span class="literal">"&lt;!--"</span> + <span class="reserved">this</span>._trimComment(n.nodeValue) + <span class="literal">"--&gt;"</span>;
 		}
 
@@ -1058,7 +1164,7 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 			h += <span class="reserved">this</span>.fillStr;
 
 		<span class="comment">// End element</span>
-		<span class="reserved">if</span> (va)
+		<span class="reserved">if</span> (t != null &amp;&amp; va)
 			h += <span class="literal">'&lt;/'</span> + en + <span class="literal">'&gt;'</span>;
 
 		<span class="reserved">return</span> h;
@@ -1105,8 +1211,12 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 		<span class="reserved">if</span> (av.length != 0 &amp;&amp; av == <span class="literal">"{$uid}"</span>)
 			av = <span class="literal">"uid_"</span> + (<span class="reserved">this</span>.idCount++);
 
-		<span class="reserved">if</span> (av.length != 0)
-			<span class="reserved">return</span> <span class="literal">" "</span> + an + <span class="literal">"="</span> + <span class="literal">'"'</span> + <span class="reserved">this</span>.xmlEncode(av) + <span class="literal">'"'</span>;
+		<span class="reserved">if</span> (av.length != 0) {
+			<span class="reserved">if</span> (an.indexOf(<span class="literal">'on'</span>) != 0)
+				av = <span class="reserved">this</span>.xmlEncode(av);
+
+			<span class="reserved">return</span> <span class="literal">" "</span> + an + <span class="literal">"="</span> + <span class="literal">'"'</span> + av + <span class="literal">'"'</span>;
+		}
 
 		<span class="reserved">return</span> <span class="literal">""</span>;
 	},
@@ -1379,6 +1489,7 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 		<span class="reserved">if</span> (!<span class="reserved">this</span>.rulesDone) {
 			<span class="reserved">this</span>.addRuleStr(s.valid_elements);
 			<span class="reserved">this</span>.addRuleStr(s.extended_valid_elements);
+			<span class="reserved">this</span>.addChildRemoveRuleStr(s.valid_child_elements);
 
 			<span class="reserved">this</span>.rulesDone = true;
 		}
@@ -1475,6 +1586,6 @@ TinyMCE_Cleanup.<span class="reserved">prototype</span> = {
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Aug 27 18:02:23 2006</div>
 </body>
 </html>

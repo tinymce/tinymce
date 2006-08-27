@@ -2280,17 +2280,6 @@ TinyMCE_Engine.prototype = {
 			tinyMCE.switchClass(e, tinyMCE.lastMenuBtnClass);
 			tinyMCE.lastSelectedMenuBtn = null;
 		}
-	},
-
-	explode : function(d, s) {
-		var ar = s.split(d), oar = new Array(), i;
-	
-		for (i = 0; i<ar.length; i++) {
-			if (ar[i] != "")
-				oar[oar.length] = ar[i];
-		}
-	
-		return oar;
 	}
 };
 
@@ -2444,6 +2433,18 @@ TinyMCE_Control.prototype = {
 
 	getViewPort : function() {
 		return tinyMCE.getViewPort(this.getWin());
+	},
+
+	getParentNode : function(n, f) {
+		return tinyMCE.getParentNode(n, f, this.getBody());
+	},
+
+	getParentElement : function(n, na) {
+		return tinyMCE.getParentElement(n, na, this.getBody());
+	},
+
+	getParentBlockElement : function(n) {
+		return tinyMCE.getParentBlockElement(n, this.getBody());
 	},
 
 	resizeToContent : function() {
@@ -5138,8 +5139,7 @@ TinyMCE_Engine.prototype.selectNodes = function(n, f, a) {
 
 TinyMCE_Engine.prototype.addCSSClass = function(e, c, b) {
 	var o = this.removeCSSClass(e, c);
-	e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
-	return e.className;
+	return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
 };
 
 TinyMCE_Engine.prototype.removeCSSClass = function(e, c) {
@@ -5518,6 +5518,16 @@ TinyMCE_Engine.prototype.clearArray = function(a) {
 	return a;
 };
 
+TinyMCE_Engine.prototype.explode = function(d, s) {
+	var ar = s.split(d), oar = new Array(), i;
+
+	for (i = 0; i<ar.length; i++) {
+		if (ar[i] != "")
+			oar[oar.length] = ar[i];
+	}
+
+	return oar;
+};
 /* file:jscripts/tiny_mce/classes/TinyMCE_Event.class.js */
 
 TinyMCE_Engine.prototype._setEventsEnabled = function(node, state) {
@@ -6338,8 +6348,8 @@ var TinyMCE_ForceParagraphs = {
 		endNode = endNode.nodeName == "BODY" ? endNode.firstChild : endNode;
 
 		// Get block elements
-		startBlock = tinyMCE.getParentBlockElement(startNode, body);
-		endBlock = tinyMCE.getParentBlockElement(endNode, body);
+		startBlock = inst.getParentBlockElement(startNode);
+		endBlock = inst.getParentBlockElement(endNode);
 
 		// If absolute force paragraph generation within
 		if (startBlock && new RegExp('absolute|relative|static', 'gi').test(startBlock.style.position))

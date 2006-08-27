@@ -109,9 +109,7 @@ function asd() {
 
 
         <pre class="sourceview"><span class="comment">/**
- * $RCSfile: overview-summary-TinyMCE_Selection.class.js.html,v $
- * $Revision: 1.42 $
- * $Date: 2006/04/14 20:00:31 $
+ * $Id: TinyMCE_Selection.class.js 66 2006-08-24 22:15:47Z spocke $
  *
  * <span class="attrib">@author</span> Moxiecode
  * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -138,17 +136,17 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 		var inst = <span class="reserved">this</span>.instance;
 		var e, r = <span class="reserved">this</span>.getRng(), h;
 
-		<span class="reserved">if</span> (tinyMCE.isSafari) {
-			<span class="comment">// Not realy perfect!!</span>
-			<span class="reserved">return</span> r.toString();
-		}
+		<span class="reserved">if</span> (!r)
+			<span class="reserved">return</span> null;
 
 		e = document.createElement(<span class="literal">"body"</span>);
 
-		<span class="reserved">if</span> (tinyMCE.isGecko)
+		<span class="reserved">if</span> (r.cloneContents)
 			e.appendChild(r.cloneContents());
-		<span class="reserved">else</span> 
+		<span class="reserved">else</span> <span class="reserved">if</span> (typeof(r.item) != <span class="literal">'undefined'</span> || typeof(r.htmlText) != <span class="literal">'undefined'</span>)
 			e.innerHTML = r.item ? r.item(0).outerHTML : r.htmlText;
+		<span class="reserved">else</span>
+			e.innerHTML = r.toString(); <span class="comment">// Failed, use text for now</span>
 
 		h = tinyMCE._cleanupHTML(inst, inst.contentDocument, inst.settings, e, e, false, true, false);
 
@@ -199,25 +197,19 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> TinyMCE_Bookmark
 	 */</span>
 	getBookmark : <span class="reserved">function</span>(simple) {
+		var inst = <span class="reserved">this</span>.instance;
 		var rng = <span class="reserved">this</span>.getRng();
-		var doc = <span class="reserved">this</span>.instance.getDoc();
-		var sp, le, s, e, nl, i, si, ei;
-		var trng, sx, sy, xx = -999999999;
+		var doc = inst.getDoc(), b = inst.getBody();
+		var sp, le, s, e, nl, i, si, ei, w;
+		var trng, sx, sy, xx = -999999999, vp = inst.getViewPort();
 
-		<span class="comment">// Skip Opera for now</span>
-		<span class="reserved">if</span> (tinyMCE.isOpera)
-			<span class="reserved">return</span> null;
+		sx = vp.left;
+		sy = vp.top;
 
-		sx = doc.body.scrollLeft + doc.documentElement.scrollLeft;
-		sy = doc.body.scrollTop + doc.documentElement.scrollTop;
-
-		<span class="reserved">if</span> (tinyMCE.isSafari || tinyMCE.isGecko)
+		<span class="reserved">if</span> (tinyMCE.isSafari || tinyMCE.isOpera || simple)
 			<span class="reserved">return</span> {rng : rng, scrollX : sx, scrollY : sy};
 
 		<span class="reserved">if</span> (tinyMCE.isMSIE) {
-			<span class="reserved">if</span> (simple)
-				<span class="reserved">return</span> {rng : rng};
-
 			<span class="reserved">if</span> (rng.item) {
 				e = rng.item(0);
 
@@ -254,43 +246,44 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 		}
 
 		<span class="reserved">if</span> (tinyMCE.isGecko) {
-			s = tinyMCE.getParentElement(rng.startContainer);
-			<span class="reserved">for</span> (si=0; si&lt;s.childNodes.length &amp;&amp; s.childNodes[si] != rng.startContainer; si++) ;
+			s = <span class="reserved">this</span>.getSel();
+			e = <span class="reserved">this</span>.getFocusElement();
 
-			nl = doc.getElementsByTagName(s.nodeName);
-			<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
-					<span class="reserved">if</span> (s == nl[i]) {
-						sp = i;
-						break;
-					}
+			<span class="reserved">if</span> (e &amp;&amp; e.nodeName == <span class="literal">'IMG'</span>) {
+				<span class="reserved">return</span> {
+					start : -1,
+					end : -1,
+					scrollX : sx,
+					scrollY : sy
+				};
 			}
 
-			e = tinyMCE.getParentElement(rng.endContainer);
-			<span class="reserved">for</span> (ei=0; ei&lt;e.childNodes.length &amp;&amp; e.childNodes[ei] != rng.endContainer; ei++) ;
+			<span class="comment">// Caret or selection</span>
+			<span class="reserved">if</span> (s.anchorNode == s.focusNode &amp;&amp; s.anchorOffset == s.focusOffset) {
+				e = <span class="reserved">this</span>._getPosText(b, s.anchorNode, s.focusNode);
 
-			nl = doc.getElementsByTagName(e.nodeName);
-			<span class="reserved">for</span> (i=0; i&lt;nl.length; i++) {
-					<span class="reserved">if</span> (e == nl[i]) {
-						le = i;
-						break;
-					}
+				<span class="reserved">if</span> (!e)
+					<span class="reserved">return</span> {scrollX : sx, scrollY : sy};
+
+				<span class="reserved">return</span> {
+					start : e.start + s.anchorOffset,
+					end : e.end + s.focusOffset,
+					scrollX : sx,
+					scrollY : sy
+				};
+			} <span class="reserved">else</span> {
+				e = <span class="reserved">this</span>._getPosText(b, rng.startContainer, rng.endContainer);
+
+				<span class="reserved">if</span> (!e)
+					<span class="reserved">return</span> {scrollX : sx, scrollY : sy};
+
+				<span class="reserved">return</span> {
+					start : e.start + rng.startOffset,
+					end : e.end + rng.endOffset,
+					scrollX : sx,
+					scrollY : sy
+				};
 			}
-
-			<span class="comment">//tinyMCE.debug(s.nodeName, sp, rng.startOffset, '-' , e.nodeName, le, rng.endOffset);</span>
-			<span class="comment">//tinyMCE.debug(sx, sy);</span>
-
-			<span class="reserved">return</span> {
-				startTag : s.nodeName,
-				start : sp,
-				startIndex : si,
-				endTag : e.nodeName,
-				end : le,
-				endIndex : ei,
-				startOffset : rng.startOffset,
-				endOffset : rng.endOffset,
-				scrollX : sx,
-				scrollY : sy
-			};
 		}
 
 		<span class="reserved">return</span> null;
@@ -304,8 +297,8 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> boolean
 	 */</span>
 	moveToBookmark : <span class="reserved">function</span>(bookmark) {
-		var rng, nl, i;
 		var inst = <span class="reserved">this</span>.instance;
+		var rng, nl, i, ex, b = inst.getBody(), sd;
 		var doc = inst.getDoc();
 		var win = inst.getWin();
 		var sel = <span class="reserved">this</span>.getSel();
@@ -314,11 +307,11 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 			<span class="reserved">return</span> false;
 
 		<span class="reserved">if</span> (tinyMCE.isSafari) {
-			sel.setBaseAndExtent(bookmark.startContainer, bookmark.startOffset, bookmark.endContainer, bookmark.endOffset);
+			sel.setBaseAndExtent(bookmark.rng.startContainer, bookmark.rng.startOffset, bookmark.rng.endContainer, bookmark.rng.endOffset);
 			<span class="reserved">return</span> true;
 		}
 
-		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) {
 			<span class="reserved">if</span> (bookmark.rng) {
 				bookmark.rng.select();
 				<span class="reserved">return</span> true;
@@ -339,11 +332,16 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 					}
 				}
 			} <span class="reserved">else</span> {
-				rng = inst.getSel().createRange();
-				rng.moveToElementText(inst.getBody());
-				rng.collapse(true);
-				rng.moveStart(<span class="literal">'character'</span>, bookmark.start);
-				rng.moveEnd(<span class="literal">'character'</span>, bookmark.length);
+				<span class="comment">// Try/catch needed since this operation breaks when TinyMCE is placed in hidden divs/tabs</span>
+				try {
+					rng = inst.getSel().createRange();
+					rng.moveToElementText(inst.getBody());
+					rng.collapse(true);
+					rng.moveStart(<span class="literal">'character'</span>, bookmark.start);
+					rng.moveEnd(<span class="literal">'character'</span>, bookmark.length);
+				} catch (ex) {
+					<span class="reserved">return</span> true;
+				}
 			}
 
 			rng.select();
@@ -352,36 +350,88 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 			<span class="reserved">return</span> true;
 		}
 
-		<span class="reserved">if</span> (tinyMCE.isGecko &amp;&amp; bookmark.rng) {
-			sel.removeAllRanges();
-			sel.addRange(bookmark.rng);
-			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
-			<span class="reserved">return</span> true;
-		}
-
-		<span class="reserved">if</span> (tinyMCE.isGecko) {
-	<span class="comment">//		try {</span>
-				rng = doc.createRange();
-
-				nl = doc.getElementsByTagName(bookmark.startTag);
-				<span class="reserved">if</span> (nl.length &gt; bookmark.start)
-					rng.setStart(nl[bookmark.start].childNodes[bookmark.startIndex], bookmark.startOffset);
-
-				nl = doc.getElementsByTagName(bookmark.endTag);
-				<span class="reserved">if</span> (nl.length &gt; bookmark.end)
-					rng.setEnd(nl[bookmark.end].childNodes[bookmark.endIndex], bookmark.endOffset);
-
+		<span class="reserved">if</span> (tinyMCE.isGecko || tinyMCE.isOpera) {
+			<span class="reserved">if</span> (bookmark.rng) {
 				sel.removeAllRanges();
-				sel.addRange(rng);
-	<span class="comment">/*		} catch {
-				// Ignore
-			}*/</span>
+				sel.addRange(bookmark.rng);
+			}
+
+			<span class="reserved">if</span> (bookmark.start != -1 &amp;&amp; bookmark.end != -1) {
+				try {
+					sd = <span class="reserved">this</span>._getTextPos(b, bookmark.start, bookmark.end);
+					rng = doc.createRange();
+					rng.setStart(sd.startNode, sd.startOffset);
+					rng.setEnd(sd.endNode, sd.endOffset);
+					sel.removeAllRanges();
+					sel.addRange(rng);
+				} catch (ex) {
+					<span class="comment">// Ignore</span>
+				}
+			}
 
 			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
 			<span class="reserved">return</span> true;
 		}
 
 		<span class="reserved">return</span> false;
+	},
+
+	<span class="comment">/**
+	 * Returns the character start and end position of a start end end node. This is Gecko specific logic.
+	 *
+	 * <span class="attrib">@param</span> {Element} r Root element to loop through.
+	 * <span class="attrib">@param</span> {Node} sn Start node to get char position of.
+	 * <span class="attrib">@param</span> {Node} en End node to get char position of.
+	 * <span class="attrib">@return</span> Data container with start/end properties.
+	 * <span class="attrib">@type</span> Object
+	 */</span>
+	_getPosText : <span class="reserved">function</span>(r, sn, en) {
+		var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
+
+		<span class="reserved">while</span> ((n = w.nextNode()) != null) {
+			<span class="reserved">if</span> (n == sn)
+				d.start = p;
+
+			<span class="reserved">if</span> (n == en) {
+				d.end = p;
+				<span class="reserved">return</span> d;
+			}
+
+			p += n.nodeValue ? n.nodeValue.length : 0;
+		}
+
+		<span class="reserved">return</span> null;
+	},
+
+	<span class="comment">/**
+	 * Returns the node and offset of start and end character positions. This is Gecko specific logic.
+	 *
+	 * <span class="attrib">@param</span> {Element} r Root element to loop through.
+	 * <span class="attrib">@param</span> {int} sp Start character position.
+	 * <span class="attrib">@param</span> {Node} ep End character position.
+	 * <span class="attrib">@return</span> Data container with startNode/startOffset/endNode/endOffset properties.
+	 * <span class="attrib">@type</span> Object
+	 */</span>
+	_getTextPos : <span class="reserved">function</span>(r, sp, ep) {
+		var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
+
+		<span class="reserved">while</span> ((n = w.nextNode()) != null) {
+			p += n.nodeValue ? n.nodeValue.length : 0;
+
+			<span class="reserved">if</span> (p &gt;= sp &amp;&amp; !d.startNode) {
+				d.startNode = n;
+				d.startOffset = sp - (p - n.nodeValue.length);
+			}
+
+			<span class="reserved">if</span> (p &gt;= ep) {
+				d.endNode = n;
+				d.endOffset = ep - (p - n.nodeValue.length);
+
+				<span class="reserved">return</span> d;
+			}
+		}
+
+		<span class="reserved">return</span> null;
 	},
 
 	<span class="comment">/**
@@ -407,7 +457,10 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 		<span class="reserved">if</span> (typeof(to_start) == <span class="literal">"undefined"</span>)
 			to_start = true;
 
-		<span class="reserved">if</span> (tinyMCE.isMSIE) {
+		<span class="reserved">if</span> (inst.settings.auto_resize)
+			inst.resizeToContent();
+
+		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) {
 			rng = inst.getBody().createTextRange();
 
 			try {
@@ -480,19 +533,35 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@param</span> {HTMLNode} node Node to scroll to.
 	 */</span>
 	scrollToNode : <span class="reserved">function</span>(node) {
-		var inst = <span class="reserved">this</span>.instance;
-		var pos, doc, scrollX, scrollY, height;
-
-		<span class="comment">// Scroll to node position</span>
-		pos = tinyMCE.getAbsPosition(node);
-		doc = inst.getDoc();
-		scrollX = doc.body.scrollLeft + doc.documentElement.scrollLeft;
-		scrollY = doc.body.scrollTop + doc.documentElement.scrollTop;
-		height = tinyMCE.isMSIE ? document.getElementById(inst.editorId).style.pixelHeight : inst.targetElement.clientHeight;
+		var inst = <span class="reserved">this</span>.instance, w = inst.getWin(), vp = inst.getViewPort(), pos = tinyMCE.getAbsPosition(node), cvp, p, cwin;
 
 		<span class="comment">// Only scroll if out of visible area</span>
-		<span class="reserved">if</span> (!tinyMCE.settings[<span class="literal">'auto_resize'</span>] &amp;&amp; !(pos.absTop &gt; scrollY &amp;&amp; pos.absTop &lt; (scrollY - 25 + height)))
-			inst.contentWindow.scrollTo(pos.absLeft, pos.absTop - height + 25); 
+		<span class="reserved">if</span> (pos.absLeft &lt; vp.left || pos.absLeft &gt; vp.left + vp.width || pos.absTop &lt; vp.top || pos.absTop &gt; vp.top + (vp.height-25))
+			w.scrollTo(pos.absLeft, pos.absTop - vp.height + 25);
+
+		<span class="comment">// Scroll container window</span>
+		<span class="reserved">if</span> (inst.settings.auto_resize) {
+			cwin = inst.getContainerWin();
+			cvp = tinyMCE.getViewPort(cwin);
+			p = <span class="reserved">this</span>.getAbsPosition(node);
+
+			<span class="reserved">if</span> (p.absLeft &lt; cvp.left || p.absLeft &gt; cvp.left + cvp.width || p.absTop &lt; cvp.top || p.absTop &gt; cvp.top + cvp.height)
+				cwin.scrollTo(p.absLeft, p.absTop - cvp.height + 25);
+		}
+	},
+
+	<span class="comment">/**
+	 * Returns a global absolute position calculating both the container iframe location and the position within.
+	 *
+	 * <span class="attrib">@param</span> {HTMLNode} n node.
+	 */</span>
+	getAbsPosition : <span class="reserved">function</span>(n) {
+		var pos = tinyMCE.getAbsPosition(n), ipos = tinyMCE.getAbsPosition(<span class="reserved">this</span>.instance.iframeElement);
+
+		<span class="reserved">return</span> {
+			absLeft : ipos.absLeft + pos.absLeft,
+			absTop : ipos.absTop + pos.absTop
+		};
 	},
 
 	<span class="comment">/**
@@ -539,28 +608,28 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> HTMLElement
 	 */</span>
 	getFocusElement : <span class="reserved">function</span>() {
-		var inst = <span class="reserved">this</span>.instance;
+		var inst = <span class="reserved">this</span>.instance, doc, rng, sel, elm;
 
 		<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; !tinyMCE.isOpera) {
-			var doc = inst.getDoc();
-			var rng = doc.selection.createRange();
+			doc = inst.getDoc();
+			rng = doc.selection.createRange();
 
 	<span class="comment">//		if (rng.collapse)</span>
 	<span class="comment">//			rng.collapse(true);</span>
 
-			var elm = rng.item ? rng.item(0) : rng.parentElement();
+			elm = rng.item ? rng.item(0) : rng.parentElement();
 		} <span class="reserved">else</span> {
-			<span class="reserved">if</span> (inst.isHidden())
+			<span class="reserved">if</span> (!tinyMCE.isSafari &amp;&amp; inst.isHidden())
 				<span class="reserved">return</span> inst.getBody();
 
-			var sel = <span class="reserved">this</span>.getSel();
-			var rng = <span class="reserved">this</span>.getRng();
+			sel = <span class="reserved">this</span>.getSel();
+			rng = <span class="reserved">this</span>.getRng();
 
 			<span class="reserved">if</span> (!sel || !rng)
 				<span class="reserved">return</span> null;
 
-			var elm = rng.commonAncestorContainer;
-			<span class="comment">//var elm = (sel &amp;&amp; sel.anchorNode) ? sel.anchorNode : null;</span>
+			elm = rng.commonAncestorContainer;
+			<span class="comment">//elm = (sel &amp;&amp; sel.anchorNode) ? sel.anchorNode : null;</span>
 
 			<span class="comment">// Handle selection a image or other control like element such as anchors</span>
 			<span class="reserved">if</span> (!rng.collapsed) {
@@ -641,6 +710,6 @@ TinyMCE_Selection.<span class="reserved">prototype</span> = {
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Aug 27 18:02:23 2006</div>
 </body>
 </html>

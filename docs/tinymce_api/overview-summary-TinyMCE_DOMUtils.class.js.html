@@ -92,9 +92,7 @@ function asd() {
 
 
         <pre class="sourceview"><span class="comment">/**
- * $RCSfile: overview-summary-TinyMCE_DOMUtils.class.js.html,v $
- * $Revision: 1.42 $
- * $Date: 2006/04/14 20:00:29 $
+ * $Id: TinyMCE_DOMUtils.class.js 65 2006-08-24 15:54:55Z spocke $
  *
  * <span class="attrib">@author</span> Moxiecode
  * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -152,16 +150,14 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.isBlockElement = <span cl
  * Returns the first block element parent of the specified node.
  *
  * <span class="attrib">@param</span> {HTMLNode} n Node get parent block element for.
+ * <span class="attrib">@param</span> {HTMLNode} r Optional root element, never go below this point.
  * <span class="attrib">@return</span> First block element parent of the specified node or null if it wasn't found.
  * <span class="attrib">@type</span> HTMLElement
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.getParentBlockElement = <span class="reserved">function</span>(n) {
-	<span class="reserved">while</span> (n) {
-		<span class="reserved">if</span> (<span class="reserved">this</span>.isBlockElement(n))
-			<span class="reserved">return</span> n;
-
-		n = n.parentNode;
-	}
+TinyMCE_Engine.<span class="reserved">prototype</span>.getParentBlockElement = <span class="reserved">function</span>(n, r) {
+	<span class="reserved">return</span> <span class="reserved">this</span>.getParentNode(n, <span class="reserved">function</span>(n) {
+		<span class="reserved">return</span> tinyMCE.isBlockElement(n);
+	}, r);
 
 	<span class="reserved">return</span> null;
 };
@@ -241,16 +237,22 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.getOuterHTML = <span clas
  *
  * <span class="attrib">@param</span> {HTMLElement} e HTML element to set outerHTML on.
  * <span class="attrib">@param</span> {string} h HTML string to set in property.
+ * <span class="attrib">@param</span> {DOMDocument} d Optional document instance (Required in old IE versions).
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.setOuterHTML = <span class="reserved">function</span>(e, h) {
-	<span class="reserved">if</span> (tinyMCE.isMSIE) {
-		e.outerHTML = h;
-		<span class="reserved">return</span>;
-	}
+TinyMCE_Engine.<span class="reserved">prototype</span>.setOuterHTML = <span class="reserved">function</span>(e, h, d) {
+	var d = typeof(d) == <span class="literal">"undefined"</span> ? e.ownerDocument : d, i, nl, t;
 
-	var d = e.ownerDocument.createElement(<span class="literal">"body"</span>);
-	d.innerHTML = h;
-	e.parentNode.replaceChild(d.firstChild, e);
+	<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; e.nodeType == 1)
+		e.outerHTML = h;
+	<span class="reserved">else</span> {
+		t = d.createElement(<span class="literal">"body"</span>);
+		t.innerHTML = h;
+
+		<span class="reserved">for</span> (i=0, nl=t.childNodes; i&lt;nl.length; i++)
+			e.parentNode.insertBefore(nl[i].cloneNode(true), e);
+
+		e.parentNode.removeChild(e);
+	}
 };
 
 <span class="comment">/**
@@ -293,64 +295,29 @@ TinyMCE_Engine.<span class="reserved">prototype</span>._getElementById = <span c
  * <span class="attrib">@param</span> {string} nn Node name of items to retrive.
  * <span class="attrib">@return</span> Node array.
  * <span class="attrib">@type</span> Array
+ * <span class="attrib">@deprecated</span>
  */</span>
 TinyMCE_Engine.<span class="reserved">prototype</span>.getNodeTree = <span class="reserved">function</span>(n, na, t, nn) {
-	var i;
-
-	<span class="reserved">if</span> (typeof(t) == <span class="literal">"undefined"</span> || n.nodeType == t &amp;&amp; (typeof(nn) == <span class="literal">"undefined"</span> || n.nodeName == nn))
-		na[na.length] = n;
-
-	<span class="reserved">if</span> (n.hasChildNodes()) {
-		<span class="reserved">for</span> (i=0; i&lt;n.childNodes.length; i++)
-			tinyMCE.getNodeTree(n.childNodes[i], na, t, nn);
-	}
-
-	<span class="reserved">return</span> na;
+	<span class="reserved">return</span> <span class="reserved">this</span>.selectNodes(n, <span class="reserved">function</span>(n) {
+		<span class="reserved">return</span> (!t || n.nodeType == t) &amp;&amp; (!nn || n.nodeName == nn);
+	}, na ? na : new Array());
 };
 
 <span class="comment">/**
  * Returns the parent element of the specified node based on the search criteria.
  *
  * <span class="attrib">@param</span> {HTMLNode} node Node to get parent element of.
- * <span class="attrib">@param</span> {string} names Comma separated list of element names to get.
- * <span class="attrib">@param</span> {string} attrib_name Optional attribute name to match.
- * <span class="attrib">@param</span> {string} attrib_value Optional attribute value to match.
+ * <span class="attrib">@param</span> {string} na Comma separated list of element names to get.
+ * <span class="attrib">@param</span> {HTMLNode} r Optional root element, never go below this point.
  * <span class="attrib">@return</span> HTMLElement or null based on search criteras.
  * <span class="attrib">@type</span> HTMLElement
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.getParentElement = <span class="reserved">function</span>(node, names, attrib_name, attrib_value) {
-	<span class="reserved">if</span> (typeof(names) == <span class="literal">"undefined"</span>) {
-		<span class="reserved">if</span> (node.nodeType == 1)
-			<span class="reserved">return</span> node;
+TinyMCE_Engine.<span class="reserved">prototype</span>.getParentElement = <span class="reserved">function</span>(n, na, r) {
+	var re = na ? new RegExp(<span class="literal">'^('</span> + na.toUpperCase().replace(/,/g, <span class="literal">'|'</span>) + <span class="literal">')$'</span>) : null, v;
 
-		<span class="comment">// Find parent node that is a element</span>
-		<span class="reserved">while</span> ((node = node.parentNode) != null &amp;&amp; node.nodeType != 1) ;
-
-		<span class="reserved">return</span> node;
-	}
-
-	<span class="reserved">if</span> (node == null)
-		<span class="reserved">return</span> null;
-
-	var namesAr = names.toUpperCase().split(<span class="literal">','</span>);
-
-	do {
-		<span class="reserved">for</span> (var i=0; i&lt;namesAr.length; i++) {
-			<span class="reserved">if</span> (node.nodeName == namesAr[i] || names == <span class="literal">"*"</span>) {
-				<span class="reserved">if</span> (typeof(attrib_name) == <span class="literal">"undefined"</span>)
-					<span class="reserved">return</span> node;
-				<span class="reserved">else</span> <span class="reserved">if</span> (node.getAttribute(attrib_name)) {
-					<span class="reserved">if</span> (typeof(attrib_value) == <span class="literal">"undefined"</span>) {
-						<span class="reserved">if</span> (node.getAttribute(attrib_name) != <span class="literal">""</span>)
-							<span class="reserved">return</span> node;
-					} <span class="reserved">else</span> <span class="reserved">if</span> (node.getAttribute(attrib_name) == attrib_value)
-						<span class="reserved">return</span> node;
-				}
-			}
-		}
-	} <span class="reserved">while</span> ((node = node.parentNode) != null);
-
-	<span class="reserved">return</span> null;
+	<span class="reserved">return</span> <span class="reserved">this</span>.getParentNode(n, <span class="reserved">function</span>(n) {
+		<span class="reserved">return</span> (n.nodeType == 1 &amp;&amp; !re) || (re &amp;&amp; re.test(n.nodeName));
+	}, r);
 };
 
 <span class="comment">/**
@@ -360,11 +327,15 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.getParentElement = <span 
  *
  * <span class="attrib">@param</span> {DOMNode} n HTML node to search parents on.
  * <span class="attrib">@param</span> {function} f Selection function to execute on each node.
+ * <span class="attrib">@param</span> {HTMLNode} r Optional root element, never go below this point.
  * <span class="attrib">@return</span> DOMNode or null if it wasn't found.
  * <span class="attrib">@type</span> DOMNode
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.getParentNode = <span class="reserved">function</span>(n, f) {
+TinyMCE_Engine.<span class="reserved">prototype</span>.getParentNode = <span class="reserved">function</span>(n, f, r) {
 	<span class="reserved">while</span> (n) {
+		<span class="reserved">if</span> (n == r)
+			<span class="reserved">return</span> null;
+
 		<span class="reserved">if</span> (f(n))
 			<span class="reserved">return</span> n;
 
@@ -379,19 +350,21 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.getParentNode = <span cla
  *
  * <span class="attrib">@param</span> {HTMLElement} elm HTML element to get attribute from.
  * <span class="attrib">@param</span> {string} name Attribute name to retrive.
- * <span class="attrib">@param</span> {string} default_value Optional default value to return, this value defaults to a empty string.
+ * <span class="attrib">@param</span> {string} dv Optional default value to return, this value defaults to a empty string.
  * <span class="attrib">@return</span> Attribute value or default value if it wasn't found in element.
  * <span class="attrib">@type</span> string
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.getAttrib = <span class="reserved">function</span>(elm, name, default_value) {
-	<span class="reserved">if</span> (typeof(default_value) == <span class="literal">"undefined"</span>)
-		default_value = <span class="literal">""</span>;
+TinyMCE_Engine.<span class="reserved">prototype</span>.getAttrib = <span class="reserved">function</span>(elm, name, dv) {
+	var v;
+
+	<span class="reserved">if</span> (typeof(dv) == <span class="literal">"undefined"</span>)
+		dv = <span class="literal">""</span>;
 
 	<span class="comment">// Not a element</span>
 	<span class="reserved">if</span> (!elm || elm.nodeType != 1)
-		<span class="reserved">return</span> default_value;
+		<span class="reserved">return</span> dv;
 
-	var v = elm.getAttribute(name);
+	v = elm.getAttribute(name);
 
 	<span class="comment">// Try className for class attrib</span>
 	<span class="reserved">if</span> (name == <span class="literal">"class"</span> &amp;&amp; !v)
@@ -411,39 +384,38 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.getAttrib = <span class="
 	<span class="reserved">if</span> (name == <span class="literal">"style"</span> &amp;&amp; !tinyMCE.isOpera)
 		v = elm.style.cssText;
 
-	<span class="reserved">return</span> (v &amp;&amp; v != <span class="literal">""</span>) ? v : default_value;
+	<span class="reserved">return</span> (v &amp;&amp; v != <span class="literal">""</span>) ? v : dv;
 };
 
 <span class="comment">/**
  * Sets the attribute value for a specific attribute.
  *
- * <span class="attrib">@param</span> {HTMLElement} element HTML element to set attribute on.
+ * <span class="attrib">@param</span> {HTMLElement} el HTML element to set attribute on.
  * <span class="attrib">@param</span> {string} name Attribute name to set.
- * <span class="attrib">@param</span> {string} value Attribute value to set.
- * <span class="attrib">@param</span> {boolean} fix_value Optional fix value state, if true only number data will be accepted.
+ * <span class="attrib">@param</span> {string} va Attribute value to set.
+ * <span class="attrib">@param</span> {boolean} fix Optional fix value state, if true only number data will be accepted.
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.setAttrib = <span class="reserved">function</span>(element, name, value, fix_value) {
-	<span class="reserved">if</span> (typeof(value) == <span class="literal">"number"</span> &amp;&amp; value != null)
-		value = <span class="literal">""</span> + value;
+TinyMCE_Engine.<span class="reserved">prototype</span>.setAttrib = <span class="reserved">function</span>(el, name, va, fix) {
+	<span class="reserved">if</span> (typeof(va) == <span class="literal">"number"</span> &amp;&amp; va != null)
+		va = <span class="literal">""</span> + va;
 
-	<span class="reserved">if</span> (fix_value) {
-		<span class="reserved">if</span> (value == null)
-			value = <span class="literal">""</span>;
+	<span class="reserved">if</span> (fix) {
+		<span class="reserved">if</span> (va == null)
+			va = <span class="literal">""</span>;
 
-		var re = new RegExp(<span class="literal">'[^0-9%]'</span>, <span class="literal">'g'</span>);
-		value = value.replace(re, <span class="literal">''</span>);
+		va = va.replace(/[^0-9%]/g, <span class="literal">''</span>);
 	}
 
 	<span class="reserved">if</span> (name == <span class="literal">"style"</span>)
-		element.style.cssText = value;
+		el.style.cssText = va;
 
 	<span class="reserved">if</span> (name == <span class="literal">"class"</span>)
-		element.className = value;
+		el.className = va;
 
-	<span class="reserved">if</span> (value != null &amp;&amp; value != <span class="literal">""</span> &amp;&amp; value != -1)
-		element.setAttribute(name, value);
+	<span class="reserved">if</span> (va != null &amp;&amp; va != <span class="literal">""</span> &amp;&amp; va != -1)
+		el.setAttribute(name, va);
 	<span class="reserved">else</span>
-		element.removeAttribute(name);
+		el.removeAttribute(name);
 };
 
 <span class="comment">/**
@@ -454,13 +426,15 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.setAttrib = <span class="
  * <span class="attrib">@param</span> {string} value Style item value to set.
  */</span>
 TinyMCE_Engine.<span class="reserved">prototype</span>.setStyleAttrib = <span class="reserved">function</span>(elm, name, value) {
+	var s;
+
 	eval(<span class="literal">'elm.style.'</span> + name + <span class="literal">'=value;'</span>);
 
 	<span class="comment">// Style attrib deleted</span>
 	<span class="reserved">if</span> (tinyMCE.isMSIE &amp;&amp; value == null || value == <span class="literal">''</span>) {
-		var str = tinyMCE.serializeStyle(tinyMCE.parseStyle(elm.style.cssText));
-		elm.style.cssText = str;
-		elm.setAttribute(<span class="literal">"style"</span>, str);
+		s = tinyMCE.serializeStyle(tinyMCE.parseStyle(elm.style.cssText));
+		elm.style.cssText = s;
+		elm.setAttribute(<span class="literal">"style"</span>, s);
 	}
 };
 
@@ -494,19 +468,20 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.switchClass = <span class
  * two properties absLeft and absTop.
  *
  * <span class="attrib">@param</span> {HTMLNode} n HTML element to get x, y position from.
+ * <span class="attrib">@param</span> {HTMLNode} cn Optional HTML element to to stop position calcualtion by.
  * <span class="attrib">@return</span> Absolute position of the specified element.
  * <span class="attrib">@type</span> TinyMCE_ElementPosition
  */</span>
-TinyMCE_Engine.<span class="reserved">prototype</span>.getAbsPosition = <span class="reserved">function</span>(n) {
-	var p = {absLeft : 0, absTop : 0};
+TinyMCE_Engine.<span class="reserved">prototype</span>.getAbsPosition = <span class="reserved">function</span>(n, cn) {
+	var l = 0, t = 0;
 
-	<span class="reserved">while</span> (n) {
-		p.absLeft += n.offsetLeft;
-		p.absTop += n.offsetTop;
+	<span class="reserved">while</span> (n &amp;&amp; n != cn) {
+		l += n.offsetLeft;
+		t += n.offsetTop;
 		n = n.offsetParent;
 	}
 
-	<span class="reserved">return</span> p;
+	<span class="reserved">return</span> {absLeft : l, absTop : t};
 };
 
 <span class="comment">/**
@@ -593,7 +568,6 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.selectNodes = <span class
  */</span>
 TinyMCE_Engine.<span class="reserved">prototype</span>.addCSSClass = <span class="reserved">function</span>(e, c, b) {
 	var o = <span class="reserved">this</span>.removeCSSClass(e, c);
-
 	<span class="reserved">return</span> e.className = b ? c + (o != <span class="literal">''</span> ? (<span class="literal">' '</span> + o) : <span class="literal">''</span>) : (o != <span class="literal">''</span> ? (o + <span class="literal">' '</span>) : <span class="literal">''</span>) + c;
 };
 
@@ -606,14 +580,20 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.addCSSClass = <span class
  * <span class="attrib">@type</span> string
  */</span>
 TinyMCE_Engine.<span class="reserved">prototype</span>.removeCSSClass = <span class="reserved">function</span>(e, c) {
-	var a = <span class="reserved">this</span>.explode(<span class="literal">' '</span>, e.className), i;
+	c = e.className.replace(new RegExp(<span class="literal">"(^|\\s+)"</span> + c + <span class="literal">"(\\s+|$)"</span>), <span class="literal">' '</span>);
+	<span class="reserved">return</span> e.className = c != <span class="literal">' '</span> ? c : <span class="literal">''</span>;
+};
 
-	<span class="reserved">for</span> (i=0; i&lt;a.length; i++) {
-		<span class="reserved">if</span> (a[i] == c)
-			a[i] = <span class="literal">''</span>;
-	}
-
-	<span class="reserved">return</span> e.className = a.join(<span class="literal">' '</span>);
+<span class="comment">/**
+ * Returns true if the specified element has the specified class.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} n HTML element to check CSS class on.
+ * <span class="attrib">@param</span> {string] c CSS class to check for.
+ * <span class="attrib">@return</span> true/false if the specified element has the specified class.
+ * <span class="attrib">@type</span> bool
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.hasCSSClass = <span class="reserved">function</span>(n, c) {
+	<span class="reserved">return</span> new RegExp(<span class="literal">'\\b'</span> + c + <span class="literal">'\\b'</span>, <span class="literal">'g'</span>).test(n.className);
 };
 
 <span class="comment">/**
@@ -643,6 +623,24 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.renameElement = <span cla
 
 		e.parentNode.replaceChild(ne, e);
 	}
+};
+
+<span class="comment">/**
+ * Returns the viewport of the specificed window instance.
+ *
+ * <span class="attrib">@param</span> {Window} w Window to get viewport of.
+ * <span class="attrib">@return</span> Viewport object with fields top, left, width and height.
+ * <span class="attrib">@type</span> Object
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.getViewPort = <span class="reserved">function</span>(w) {
+	var d = w.document, m = d.compatMode == <span class="literal">'CSS1Compat'</span>, b = d.body, de = d.documentElement;
+
+	<span class="reserved">return</span> {
+		left : w.pageXOffset || (m ? de.scrollLeft : b.scrollLeft),
+		top : w.pageYOffset || (m ? de.scrollTop : b.scrollTop),
+		width : w.innerWidth || (m ? de.clientWidth : b.clientWidth),
+		height : w.innerHeight || (m ? de.clientHeight : b.clientHeight)
+	};
 };
 </pre>
 	<hr>
@@ -702,6 +700,6 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.renameElement = <span cla
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Apr 14 21:59:23 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun Aug 27 18:02:23 2006</div>
 </body>
 </html>

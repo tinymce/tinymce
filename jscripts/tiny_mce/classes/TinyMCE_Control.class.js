@@ -213,6 +213,46 @@ TinyMCE_Control.prototype = {
 	},
 
 	/**
+	 * Returns a node by the specified selector function. This function will
+	 * loop through all parent nodes and call the specified function for each node.
+	 * If the function then returns true it will stop the execution and return that node.
+	 * This function will not go below the instance body element.
+	 *
+	 * @param {DOMNode} n HTML node to search parents on.
+	 * @param {function} f Selection function to execute on each node.
+	 * @return DOMNode or null if it wasn't found.
+	 * @type DOMNode
+	 */
+	getParentNode : function(n, f) {
+		return tinyMCE.getParentNode(n, f, this.getBody());
+	},
+
+	/**
+	 * Returns the parent element of the specified node based on the search criteria.
+	 * This method will not go below the point of the instance body.
+	 *
+	 * @param {HTMLNode} node Node to get parent element of.
+	 * @param {string} na Comma separated list of element names to get.
+	 * @return HTMLElement or null based on search criteras.
+	 * @type HTMLElement
+	 */
+	getParentElement : function(n, na) {
+		return tinyMCE.getParentElement(n, na, this.getBody());
+	},
+
+	/**
+	 * Returns the first block element parent of the specified node.
+	 * This method will not go below the point of the instance body.
+	 *
+	 * @param {HTMLNode} n Node get parent block element for.
+	 * @return First block element parent of the specified node or null if it wasn't found.
+	 * @type HTMLElement
+	 */
+	getParentBlockElement : function(n) {
+		return tinyMCE.getParentBlockElement(n, this.getBody());
+	},
+
+	/**
 	 * Auto resizes the current editor instance to match the inner document size.
 	 */
 	resizeToContent : function() {
