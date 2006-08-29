@@ -3140,7 +3140,9 @@ TinyMCE_Control.prototype = {
 					value = '';
 
 				var insertHTMLFailed = false;
-				this.getWin().focus();
+
+				// Removed since it produced problems in IE
+				// this.getWin().focus();
 
 				if (tinyMCE.isGecko || tinyMCE.isOpera) {
 					try {
@@ -5118,6 +5120,17 @@ TinyMCE_Engine.prototype.nextNode = function(e, n) {
 	}
 
 	return null;
+};
+
+TinyMCE_Engine.prototype.selectElements = function(n, na, f) {
+	var i, a = new Array(), nl;
+
+	for (i=0, nl = n.getElementsByTagName(na); i<nl.length; i++) {
+		if (f(nl[i]))
+			a.push(nl[i]);
+	}
+
+	return a;
 };
 
 TinyMCE_Engine.prototype.selectNodes = function(n, f, a) {

@@ -1014,7 +1014,9 @@ TinyMCE_Control.prototype = {
 					value = '';
 
 				var insertHTMLFailed = false;
-				this.getWin().focus();
+
+				// Removed since it produced problems in IE
+				// this.getWin().focus();
 
 				if (tinyMCE.isGecko || tinyMCE.isOpera) {
 					try {

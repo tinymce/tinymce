@@ -438,6 +438,26 @@ TinyMCE_Engine.prototype.nextNode = function(e, n) {
 };
 
 /**
+ * Returns a array of elements when the specified function matches a node.
+ *
+ * @param {DOMNode} n Node to select children from.
+ * @param {string} na Element name to search for.
+ * @param {function} f Function that returns true/false if the node is to be added or not.
+ * @return Array with selected elements.
+ * @type Array
+ */
+TinyMCE_Engine.prototype.selectElements = function(n, na, f) {
+	var i, a = new Array(), nl;
+
+	for (i=0, nl = n.getElementsByTagName(na); i<nl.length; i++) {
+		if (f(nl[i]))
+			a.push(nl[i]);
+	}
+
+	return a;
+};
+
+/**
  * Returns a array of nodes when the specified function matches a node.
  *
  * @param {DOMNode} n Node to select children from.
