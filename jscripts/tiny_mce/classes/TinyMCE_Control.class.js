@@ -377,7 +377,7 @@ TinyMCE_Control.prototype = {
 	 */
 	isDirty : function() {
 		// Is content modified and not in a submit procedure
-		return this.startContent != tinyMCE.trim(this.getBody().innerHTML) && !tinyMCE.isNotDirty;
+		return tinyMCE.trim(this.startContent) != tinyMCE.trim(this.getBody().innerHTML) && !tinyMCE.isNotDirty;
 	},
 
 	/**
@@ -1534,6 +1534,16 @@ TinyMCE_Control.prototype = {
 			tinyMCE.convertSpansToFonts(d);
 
 		return h;
+	},
+
+	/**
+	 * Sets the HTML contents of the instance.
+	 *
+	 * @param {string} h HTML content string to replace body with.
+	 */
+	setHTML : function(h) {
+		this.execCommand('mceSetContent', false, h);
+		this.repaint();
 	},
 
 	/**

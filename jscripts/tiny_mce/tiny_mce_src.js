@@ -44,6 +44,8 @@ function TinyMCE_Engine() {
 		this.isSafari =  false;
 	}
 
+	this.isIE = this.isMSIE;
+
 	// TinyMCE editor id instance counter
 	this.idCounter = 0;
 };
@@ -118,7 +120,7 @@ TinyMCE_Engine.prototype = {
 		this._def("textarea_trigger", "mce_editable");
 		this._def("editor_selector", "");
 		this._def("editor_deselector", "mceNoEditor");
-		this._def("valid_elements", "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],-td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang]");
+		this._def("valid_elements", "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],#td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang]");
 		this._def("extended_valid_elements", "");
 		this._def("invalid_elements", "");
 		this._def("encoding", "");
@@ -2244,14 +2246,26 @@ TinyMCE_Engine.prototype = {
 	},
 
 	xmlEncode : function(s) {
-		s = "" + s;
-		s = s.replace(/&/g, '&amp;');
-		s = s.replace(new RegExp('"', 'g'), '&quot;');
-		s = s.replace(/\'/g, '&#39;'); // &apos; is not working in MSIE
-		s = s.replace(/</g, '&lt;');
-		s = s.replace(/>/g, '&gt;');
+		return s.replace(new RegExp('[<>&"\']', 'g'), function (c, b) {
+			switch (c) {
+				case '&':
+					return '&amp;';
 
-		return s;
+				case '"':
+					return '&quot;';
+
+				case '\'':
+					return '&#39;'; // &apos; is not working in MSIE
+
+				case '<':
+					return '&lt;';
+
+				case '>':
+					return '&gt;';
+			}
+
+			return c;
+		});
 	},
 
 	extend : function(p, np) {
@@ -2525,7 +2539,7 @@ TinyMCE_Control.prototype = {
 
 	isDirty : function() {
 		// Is content modified and not in a submit procedure
-		return this.startContent != tinyMCE.trim(this.getBody().innerHTML) && !tinyMCE.isNotDirty;
+		return tinyMCE.trim(this.startContent) != tinyMCE.trim(this.getBody().innerHTML) && !tinyMCE.isNotDirty;
 	},
 
 	_mergeElements : function(scmd, pa, ch, override) {
@@ -3625,6 +3639,11 @@ TinyMCE_Control.prototype = {
 		return h;
 	},
 
+	setHTML : function(h) {
+		this.execCommand('mceSetContent', false, h);
+		this.repaint();
+	},
+
 	getFocusElement : function() {
 		return this.selection.getFocusElement();
 	},
@@ -4670,7 +4689,7 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	xmlEncode : function(s) {
-		var i, l, e, o = '', c;
+		var cl = this;
 
 		this._setupEntities(); // Will intialize lookup table
 
@@ -4679,29 +4698,16 @@ TinyMCE_Cleanup.prototype = {
 				return tinyMCE.xmlEncode(s);
 
 			case "named":
-				for (i=0, l=s.length; i<l; i++) {
-					c = s.charCodeAt(i);
-					e = this.entities[c];
+				return s.replace(new RegExp('[\u007F-\uFFFF<>&"\']', 'g'), function (c, b) {
+					b = cl.entities[c.charCodeAt(0)];
 
-					if (e && e != '')
-						o += '&' + e + ';';
-					else
-						o += String.fromCharCode(c);
-				}
-
-				return o;
+					return b ? '&' + b + ';' : c;
+				});
 
 			case "numeric":
-				for (i=0, l=s.length; i<l; i++) {
-					c = s.charCodeAt(i);
-
-					if (c > 127 || c == 60 || c == 62 || c == 38 || c == 39 || c == 34)
-						o += '&#' + c + ";";
-					else
-						o += String.fromCharCode(c);
-				}
-
-				return o;
+				return s.replace(new RegExp('[\u007F-\uFFFF<>&"\']', 'g'), function (c, b) {
+					return b ? '&#' + c.charCodeAt(0) + ';' : c;
+				});
 		}
 
 		return s;
@@ -5054,16 +5060,14 @@ TinyMCE_Engine.prototype.setAttrib = function(el, name, va, fix) {
 		el.removeAttribute(name);
 };
 
-TinyMCE_Engine.prototype.setStyleAttrib = function(elm, name, value) {
-	var s;
+TinyMCE_Engine.prototype.setStyleAttrib = function(e, n, v) {
+	e.style[n] = v;
 
-	eval('elm.style.' + name + '=value;');
-
-	// Style attrib deleted
-	if (tinyMCE.isMSIE && value == null || value == '') {
-		s = tinyMCE.serializeStyle(tinyMCE.parseStyle(elm.style.cssText));
-		elm.style.cssText = s;
-		elm.setAttribute("style", s);
+	// Style attrib deleted in IE
+	if (tinyMCE.isIE && v == null || v == '') {
+		v = tinyMCE.serializeStyle(tinyMCE.parseStyle(e.style.cssText));
+		e.style.cssText = v;
+		e.setAttribute("style", v);
 	}
 };
 
@@ -6035,7 +6039,7 @@ TinyMCE_Selection.prototype = {
 			inst.resizeToContent();
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
-			rng = inst.getBody().createTextRange();
+			rng = inst.getDoc().body.createTextRange();
 
 			try {
 				rng.moveToElementText(node);

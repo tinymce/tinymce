@@ -328,20 +328,18 @@ TinyMCE_Engine.prototype.setAttrib = function(el, name, va, fix) {
 /**
  * Sets a style attribute item value.
  *
- * @param {HTMLElement} elm HTML element to set style attribute item on.
- * @param {string} name Style item name to set.
- * @param {string} value Style item value to set.
+ * @param {HTMLElement} e HTML element to set style attribute item on.
+ * @param {string} n Style item name to set.
+ * @param {string} v Style item value to set.
  */
-TinyMCE_Engine.prototype.setStyleAttrib = function(elm, name, value) {
-	var s;
+TinyMCE_Engine.prototype.setStyleAttrib = function(e, n, v) {
+	e.style[n] = v;
 
-	eval('elm.style.' + name + '=value;');
-
-	// Style attrib deleted
-	if (tinyMCE.isMSIE && value == null || value == '') {
-		s = tinyMCE.serializeStyle(tinyMCE.parseStyle(elm.style.cssText));
-		elm.style.cssText = s;
-		elm.setAttribute("style", s);
+	// Style attrib deleted in IE
+	if (tinyMCE.isIE && v == null || v == '') {
+		v = tinyMCE.serializeStyle(tinyMCE.parseStyle(e.style.cssText));
+		e.style.cssText = v;
+		e.setAttribute("style", v);
 	}
 };
 

@@ -163,6 +163,8 @@ function asd() {
 		<span class="reserved">this</span>.isSafari =  false;
 	}
 
+	<span class="reserved">this</span>.isIE = <span class="reserved">this</span>.isMSIE;
+
 	<span class="comment">// TinyMCE editor id instance counter</span>
 	<span class="reserved">this</span>.idCounter = 0;
 };
@@ -243,7 +245,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="reserved">this</span>._def(<span class="literal">"textarea_trigger"</span>, <span class="literal">"mce_editable"</span>);
 		<span class="reserved">this</span>._def(<span class="literal">"editor_selector"</span>, <span class="literal">""</span>);
 		<span class="reserved">this</span>._def(<span class="literal">"editor_deselector"</span>, <span class="literal">"mceNoEditor"</span>);
-		<span class="reserved">this</span>._def(<span class="literal">"valid_elements"</span>, <span class="literal">"+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],-td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang]"</span>);
+		<span class="reserved">this</span>._def(<span class="literal">"valid_elements"</span>, <span class="literal">"+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],#td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang]"</span>);
 		<span class="reserved">this</span>._def(<span class="literal">"extended_valid_elements"</span>, <span class="literal">""</span>);
 		<span class="reserved">this</span>._def(<span class="literal">"invalid_elements"</span>, <span class="literal">""</span>);
 		<span class="reserved">this</span>._def(<span class="literal">"encoding"</span>, <span class="literal">""</span>);
@@ -2886,14 +2888,26 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> string
 	 */</span>
 	xmlEncode : <span class="reserved">function</span>(s) {
-		s = <span class="literal">""</span> + s;
-		s = s.replace(/&amp;/g, <span class="literal">'&amp;amp;'</span>);
-		s = s.replace(new RegExp(<span class="literal">'"'</span>, <span class="literal">'g'</span>), <span class="literal">'&amp;quot;'</span>);
-		s = s.replace(/\<span class="literal">'/g, '</span>&amp;#39;<span class="literal">'); // &amp;apos; is not working in MSIE
-		s = s.replace(/&lt;/g, '</span>&amp;lt;<span class="literal">');
-		s = s.replace(/&gt;/g, '</span>&amp;gt;');
+		<span class="reserved">return</span> s.replace(new RegExp(<span class="literal">'[&lt;&gt;&amp;"\'</span>]<span class="literal">', '</span>g<span class="literal">'), function (c, b) {
+			switch (c) {
+				case '</span>&amp;<span class="literal">':
+					return '</span>&amp;amp;<span class="literal">';
 
-		<span class="reserved">return</span> s;
+				case '</span>"<span class="literal">':
+					return '</span>&amp;quot;<span class="literal">';
+
+				case '</span>\<span class="literal">''</span>:
+					<span class="reserved">return</span> <span class="literal">'&amp;#39;'</span>; <span class="comment">// &amp;apos; is not working in MSIE</span>
+
+				case <span class="literal">'&lt;'</span>:
+					<span class="reserved">return</span> <span class="literal">'&amp;lt;'</span>;
+
+				case <span class="literal">'&gt;'</span>:
+					<span class="reserved">return</span> <span class="literal">'&amp;gt;'</span>;
+			}
+
+			<span class="reserved">return</span> c;
+		});
 	},
 
 	<span class="comment">/**
@@ -3000,6 +3014,6 @@ var tinyMCELang = {};
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Tue Aug 29 23:10:45 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep  6 12:26:30 2006</div>
 </body>
 </html>

@@ -1144,7 +1144,7 @@ TinyMCE_Cleanup.prototype = {
 	 * @type string
 	 */
 	xmlEncode : function(s) {
-		var i, l, e, o = '', c;
+		var cl = this;
 
 		this._setupEntities(); // Will intialize lookup table
 
@@ -1153,29 +1153,16 @@ TinyMCE_Cleanup.prototype = {
 				return tinyMCE.xmlEncode(s);
 
 			case "named":
-				for (i=0, l=s.length; i<l; i++) {
-					c = s.charCodeAt(i);
-					e = this.entities[c];
+				return s.replace(new RegExp('[\u007F-\uFFFF<>&"\']', 'g'), function (c, b) {
+					b = cl.entities[c.charCodeAt(0)];
 
-					if (e && e != '')
-						o += '&' + e + ';';
-					else
-						o += String.fromCharCode(c);
-				}
-
-				return o;
+					return b ? '&' + b + ';' : c;
+				});
 
 			case "numeric":
-				for (i=0, l=s.length; i<l; i++) {
-					c = s.charCodeAt(i);
-
-					if (c > 127 || c == 60 || c == 62 || c == 38 || c == 39 || c == 34)
-						o += '&#' + c + ";";
-					else
-						o += String.fromCharCode(c);
-				}
-
-				return o;
+				return s.replace(new RegExp('[\u007F-\uFFFF<>&"\']', 'g'), function (c, b) {
+					return b ? '&#' + c.charCodeAt(0) + ';' : c;
+				});
 		}
 
 		return s;

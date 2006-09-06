@@ -351,7 +351,7 @@ TinyMCE_Selection.prototype = {
 			inst.resizeToContent();
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
-			rng = inst.getBody().createTextRange();
+			rng = inst.getDoc().body.createTextRange();
 
 			try {
 				rng.moveToElementText(node);

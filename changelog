@@ -9,9 +9,9 @@ Version 2.0.7 (2006-xx-xx)
 	Added new required attribute flag to the valid_elements option.
 	Added new popup_css add option. Enables you to add an additional css to all popups.
 	Added new table_default_border, table_default_cellpadding, table_default_cellspacing options to table plugin.
-	Added lightbox as rel value in the advanced link dialog.
 	Added new RegExp support for editor_selector/editor_deselector options.
 	Added new validation class. Implemented in various dialogs.
+	Added lightbox, nofollow and tag as possible rel attribute values in the advlink dialog.
 	Fixed bugs and issues with the lastest Safari Nightly build.
 	Fixed bugs where data was set outside the current function scopes.
 	Fixed bug where all plugin and theme callback methods had the "this" reference incorrectly set to window.
@@ -33,6 +33,8 @@ Version 2.0.7 (2006-xx-xx)
 	Fixed bug where selection/caret is moved to top of document on a cleanup in Gecko.
 	Fixed so that the initialization is even faster both editor instanced and dialogs.
 	Fixed so that the force_p_newlines option works on Opera & Safari. This is enabled by default.
+	Fixed so that empty td cells are padded with &nbsp; by default. This can be changed with the extended_valid_elements option.
+	Fixed so that string serialization is alot faster in all browsers. Makes the cleanup logic a lot faster.
 	Fixed issue with language variable in replace dialog in the searchreplace plugin.
 	Fixed various CSS compatiblity issues with MSIE 7 beta 3.
 	Renamed some image names in style and layer plugins for compatiblity with Drupal.
