@@ -653,50 +653,60 @@ TinyMCE_Engine.prototype = {
 	},
 
 	/**
+	 * Removes the specified instance from TinyMCE Engine.
+	 *
+	 * @param {MCEControl} ti Target instance to remove from TinyMCE.
+	 * @return Removed MCEControl instance.
+	 * @type MCEControl
+	 */
+	removeInstance : function(ti) {
+		var t = new Array(), n, i;
+
+		for (n in tinyMCE.instances) {
+			i = tinyMCE.instances[n];
+
+			if (tinyMCE.isInstance(i) && ti != i)
+					t[n] = i;
+		}
+
+		tinyMCE.instances = t;
+
+		return ti;
+	},
+
+	/**
 	 * Removes a TinyMCE editor control instance by id.
 	 *
 	 * @param {string} editor_id Id of editor instance to remove.
 	 */
 	removeMCEControl : function(editor_id) {
-		var inst = tinyMCE.getInstanceById(editor_id);
+		var inst = tinyMCE.getInstanceById(editor_id), h, re, ot, tn;
 
 		if (inst) {
 			inst.switchSettings();
 
 			editor_id = inst.editorId;
-			var html = tinyMCE.getContent(editor_id);
+			h = tinyMCE.getContent(editor_id);
 
-			// Remove editor instance from instances array
-			var tmpInstances = new Array();
-			for (var instanceName in tinyMCE.instances) {
-				var instance = tinyMCE.instances[instanceName];
-				if (!tinyMCE.isInstance(instance))
-					continue;
-
-				if (instanceName != editor_id)
-						tmpInstances[instanceName] = instance;
-			}
-			tinyMCE.instances = tmpInstances;
+			this.removeInstance(inst);
 
 			tinyMCE.selectedElement = null;
 			tinyMCE.selectedInstance = null;
 
 			// Remove element
-			var replaceElement = document.getElementById(editor_id + "_parent");
-			var oldTargetElement = inst.oldTargetElement;
-			var targetName = oldTargetElement.nodeName.toLowerCase();
+			re = document.getElementById(editor_id + "_parent");
+			ot = inst.oldTargetElement;
+			tn = ot.nodeName.toLowerCase();
 
-			if (targetName == "textarea" || targetName == "input") {
-				// Just show the old text area
-				replaceElement.parentNode.removeChild(replaceElement);
-				oldTargetElement.style.display = "inline";
-				oldTargetElement.value = html;
+			if (tn == "textarea" || tn == "input") {
+				re.parentNode.removeChild(re);
+				ot.style.display = "inline";
+				ot.value = h;
 			} else {
-				oldTargetElement.innerHTML = html;
-				oldTargetElement.style.display = 'block';
-
-				replaceElement.parentNode.insertBefore(oldTargetElement, replaceElement);
-				replaceElement.parentNode.removeChild(replaceElement);
+				ot.innerHTML = h;
+				ot.style.display = 'block';
+				re.parentNode.insertBefore(ot, re);
+				re.parentNode.removeChild(re);
 			}
 		}
 	},
