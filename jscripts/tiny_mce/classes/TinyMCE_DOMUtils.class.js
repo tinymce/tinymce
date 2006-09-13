@@ -8,6 +8,55 @@
  */
 
 /**
+ * Creates a HTML tag by name and attributes array. This will XML encode all attribute values.
+ *
+ * @param {string} tn Tag name to create.
+ * @param {Array} a Optional name/Value array of attributes.
+ * @param {string} h Optional inner HTML of new tag, raw HTML code.
+ */
+TinyMCE_Engine.prototype.createTagHTML = function(tn, a, h) {
+	var o = '', f = tinyMCE.xmlEncode;
+
+	o = '<' + tn;
+
+	if (a) {
+		for (n in a) {
+			if (typeof(a[n]) != 'function' && a[n] != null)
+				o += ' ' + f(n) + '="' + f('' + a[n]) + '"';
+		}
+	}
+
+	o += !h ? ' />' : '>' + h + '</' + tn + '>';
+
+	return o;
+};
+
+/**
+ * Creates a tag by name and attributes array. This will create a DOM node out of the specified
+ * data.
+ *
+ * @param {string} d Document to create DOM node in.
+ * @param {string} tn Tag name to create.
+ * @param {Array} a Optional name/Value array of attributes.
+ * @param {string} h Optional inner HTML of new tag, raw HTML code.
+ */
+TinyMCE_Engine.prototype.createTag = function(d, tn, a, h) {
+	var o = d.createElement(tn);
+
+	if (a) {
+		for (n in a) {
+			if (typeof(a[n]) != 'function' && a[n] != null)
+				o.setAttribute(n, a[n]);
+		}
+	}
+
+	if (h)
+		o.innerHTML = h;
+
+	return o;
+};
+
+/**
  * Returns a element by a specific attribute and it's value.
  *
  * @param {HTMLElement} n Element to search in.
@@ -439,18 +488,17 @@ TinyMCE_Engine.prototype.nextNode = function(e, n) {
  * Returns a array of elements when the specified function matches a node.
  *
  * @param {DOMNode} n Node to select children from.
- * @param {string} na Element name to search for.
+ * @param {string} na Element name(s) to search for separated by commas.
  * @param {function} f Function that returns true/false if the node is to be added or not.
  * @return Array with selected elements.
  * @type Array
  */
 TinyMCE_Engine.prototype.selectElements = function(n, na, f) {
-	var i, a = new Array(), nl;
+	var i, a = new Array(), nl, x;
 
-	for (i=0, nl = n.getElementsByTagName(na); i<nl.length; i++) {
-		if (f(nl[i]))
-			a.push(nl[i]);
-	}
+	for (x=0, na = na.split(','); x<na.length; x++)
+		for (i=0, nl = n.getElementsByTagName(na[x]); i<nl.length; i++)
+			f(nl[i]) && a.push(nl[i]);
 
 	return a;
 };

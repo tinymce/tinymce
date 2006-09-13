@@ -1939,6 +1939,11 @@ TinyMCE_Engine.prototype = {
 		if (customCleanup != "" && eval("typeof(" + customCleanup + ")") != "undefined")
 			content = eval(customCleanup + "(type, content, inst);");
 
+		// Trigger theme cleanup
+		po = tinyMCE.themes[tinyMCE.settings['theme']];
+		if (po && po.cleanup)
+			content = po.cleanup(type, content, inst);
+
 		// Trigger plugin cleanups
 		pl = inst.plugins;
 		for (i=0; i<pl.length; i++) {
@@ -2286,7 +2291,7 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	fixGeckoBaseHREFBug : function(m, e, h) {
-		var nl, i, a, n, xsrc, xhref, el;
+		var xsrc, xhref;
 
 		if (tinyMCE.isGecko) {
 			if (m == 1) {
@@ -2299,38 +2304,36 @@ TinyMCE_Engine.prototype = {
 				if (!new RegExp('(src|href)=', 'g').test(h))
 					return h;
 
-				el = new Array('a','img','select','area','iframe','base','input','script','embed','object','link');
+				// Restore src and href that gets messed up by Gecko
+				tinyMCE.selectElements(e, 'A,IMG,SELECT,AREA,IFRAME,BASE,INPUT,SCRIPT,EMBED,OBJECT,LINK', function (n) {
+					xsrc = tinyMCE.getAttrib(n, "mce_tsrc");
+					xhref = tinyMCE.getAttrib(n, "mce_thref");
 
-				for (a=0; a<el.length; a++) {
-					n = e.getElementsByTagName(el[a]);
-
-					for (i=0; i<n.length; i++) {
-						xsrc = tinyMCE.getAttrib(n[i], "mce_tsrc");
-						xhref = tinyMCE.getAttrib(n[i], "mce_thref");
-
-						if (xsrc != "") {
-							try {
-								n[i].src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], xsrc);
-							} catch (e) {
-								// Ignore, Firefox cast exception if local file wasn't found
-							}
-
-							n[i].removeAttribute("mce_tsrc");
+					if (xsrc != "") {
+						try {
+							n.src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], xsrc);
+						} catch (e) {
+							// Ignore, Firefox cast exception if local file wasn't found
 						}
 
-						if (xhref != "") {
-							try {
-								n[i].href = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], xhref);
-							} catch (e) {
-								// Ignore, Firefox cast exception if local file wasn't found
-							}
-
-							n[i].removeAttribute("mce_thref");
-						}
+						n.removeAttribute("mce_tsrc");
 					}
-				}
 
-				el = tinyMCE.selectNodes(e, function(n) {
+					if (xhref != "") {
+						try {
+							n.href = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], xhref);
+						} catch (e) {
+							// Ignore, Firefox cast exception if local file wasn't found
+						}
+
+						n.removeAttribute("mce_thref");
+					}
+
+					return false;
+				});
+
+				// Restore text/comment nodes
+				tinyMCE.selectNodes(e, function(n) {
 					if (n.nodeType == 3 || n.nodeType == 8) {
 						n.nodeValue = n.nodeValue.replace(/\smce_tsrc=/gi, " src=");
 						n.nodeValue = n.nodeValue.replace(/\smce_thref=/gi, " href=");
@@ -2788,7 +2791,7 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	xmlEncode : function(s) {
-		return s.replace(new RegExp('[<>&"\']', 'g'), function (c, b) {
+		return s ? s.replace(new RegExp('[<>&"\']', 'g'), function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';
@@ -2807,7 +2810,7 @@ TinyMCE_Engine.prototype = {
 			}
 
 			return c;
-		});
+		}) : s;
 	},
 
 	/**

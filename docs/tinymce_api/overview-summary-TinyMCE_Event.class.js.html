@@ -109,17 +109,18 @@ function asd() {
  * <span class="attrib">@private</span>
  */</span>
 TinyMCE_Engine.<span class="reserved">prototype</span>._setEventsEnabled = <span class="reserved">function</span>(node, state) {
-	var events = new Array(<span class="literal">'onfocus'</span>,<span class="literal">'onblur'</span>,<span class="literal">'onclick'</span>,<span class="literal">'ondblclick'</span>,
+	var evs, x, y, elms, i, event;
+	var events = [<span class="literal">'onfocus'</span>,<span class="literal">'onblur'</span>,<span class="literal">'onclick'</span>,<span class="literal">'ondblclick'</span>,
 				<span class="literal">'onmousedown'</span>,<span class="literal">'onmouseup'</span>,<span class="literal">'onmouseover'</span>,<span class="literal">'onmousemove'</span>,
-				<span class="literal">'onmouseout'</span>,<span class="literal">'onkeypress'</span>,<span class="literal">'onkeydown'</span>,<span class="literal">'onkeydown'</span>,<span class="literal">'onkeyup'</span>);
+				<span class="literal">'onmouseout'</span>,<span class="literal">'onkeypress'</span>,<span class="literal">'onkeydown'</span>,<span class="literal">'onkeydown'</span>,<span class="literal">'onkeyup'</span>];
 
-	var evs = tinyMCE.settings[<span class="literal">'event_elements'</span>].split(<span class="literal">','</span>);
-	<span class="reserved">for</span> (var y=0; y&lt;evs.length; y++){
-		var elms = node.getElementsByTagName(evs[y]);
-		<span class="reserved">for</span> (var i=0; i&lt;elms.length; i++) {
-			var event = <span class="literal">""</span>;
+	evs = tinyMCE.settings[<span class="literal">'event_elements'</span>].split(<span class="literal">','</span>);
+	<span class="reserved">for</span> (y=0; y&lt;evs.length; y++){
+		elms = node.getElementsByTagName(evs[y]);
+		<span class="reserved">for</span> (i=0; i&lt;elms.length; i++) {
+			event = <span class="literal">""</span>;
 
-			<span class="reserved">for</span> (var x=0; x&lt;events.length; x++) {
+			<span class="reserved">for</span> (x=0; x&lt;events.length; x++) {
 				<span class="reserved">if</span> ((event = tinyMCE.getAttrib(elms[i], events[x])) != <span class="literal">''</span>) {
 					event = tinyMCE.cleanupEventStr(<span class="literal">""</span> + event);
 
@@ -207,26 +208,28 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.unloadHandler = <span cla
  * <span class="attrib">@param</span> {inst} inst Editor control instance to add event handler to.
  */</span>
 TinyMCE_Engine.<span class="reserved">prototype</span>.addEventHandlers = <span class="reserved">function</span>(inst) {
-	var doc = inst.getDoc();
+	<span class="reserved">this</span>.setEventHandlers(inst, 1);
+};
+
+<span class="comment">/**
+ * Sets or removes event handles form the specified instance.
+ *
+ * <span class="attrib">@param</span> {bool} s True/false state if to add or remove event handlers.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.setEventHandlers = <span class="reserved">function</span>(inst, s) {
+	var doc = inst.getDoc(), ie, ot, i, f = s ? tinyMCE.addEvent : tinyMCE.removeEvent;
+
+	ie = [<span class="literal">'keypress'</span>, <span class="literal">'keyup'</span>, <span class="literal">'keydown'</span>, <span class="literal">'click'</span>, <span class="literal">'mouseup'</span>, <span class="literal">'mousedown'</span>, <span class="literal">'controlselect'</span>];
+	ot = [<span class="literal">'keypress'</span>, <span class="literal">'keyup'</span>, <span class="literal">'keydown'</span>, <span class="literal">'click'</span>, <span class="literal">'mouseup'</span>, <span class="literal">'mousedown'</span>, <span class="literal">'focus'</span>, <span class="literal">'blur'</span>];
 
 	inst.switchSettings();
 
-	<span class="reserved">if</span> (tinyMCE.isMSIE) {
-		tinyMCE.addEvent(doc, <span class="literal">"keypress"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
-		tinyMCE.addEvent(doc, <span class="literal">"keyup"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
-		tinyMCE.addEvent(doc, <span class="literal">"keydown"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
-		tinyMCE.addEvent(doc, <span class="literal">"mouseup"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
-		tinyMCE.addEvent(doc, <span class="literal">"mousedown"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
-		tinyMCE.addEvent(doc, <span class="literal">"click"</span>, TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
+	<span class="reserved">if</span> (tinyMCE.isIE) {
+		<span class="reserved">for</span> (i=0; i&lt;ie.length; i++)
+			f(doc, ie[i], TinyMCE_Engine.<span class="reserved">prototype</span>._eventPatch);
 	} <span class="reserved">else</span> {
-		tinyMCE.addEvent(doc, <span class="literal">"keypress"</span>, tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, <span class="literal">"keydown"</span>, tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, <span class="literal">"keyup"</span>, tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, <span class="literal">"click"</span>, tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, <span class="literal">"mouseup"</span>, tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, <span class="literal">"mousedown"</span>, tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, <span class="literal">"focus"</span>, tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, <span class="literal">"blur"</span>, tinyMCE.handleEvent);
+		<span class="reserved">for</span> (i=0; i&lt;ot.length; i++)
+			f(doc, ot[i], tinyMCE.handleEvent);
 
 		eval(<span class="literal">'try { doc.designMode = "On"; } catch(e) {}'</span>); <span class="comment">// Force designmode</span>
 	}
@@ -283,6 +286,20 @@ TinyMCE_Engine.<span class="reserved">prototype</span>.addEvent = <span class="r
 		o.attachEvent(<span class="literal">"on"</span> + n, h);
 	<span class="reserved">else</span>
 		o.addEventListener(n, h, false);
+};
+
+<span class="comment">/**
+ * Removes a event handler function from the specified object.
+ *
+ * <span class="attrib">@param</span> {HTMLElement} o Object to remove event handler from.
+ * <span class="attrib">@param</span> {string} n Event name to stop listening for. Example "click".
+ * <span class="attrib">@param</span> {function} h Function handler to detach from the event.
+ */</span>
+TinyMCE_Engine.<span class="reserved">prototype</span>.removeEvent = <span class="reserved">function</span>(o, n, h) {
+	<span class="reserved">if</span> (o.detachEvent)
+		o.detachEvent(<span class="literal">"on"</span> + n, h);
+	<span class="reserved">else</span>
+		o.removeEventListener(n, h, false);
 };
 
 <span class="comment">/**
@@ -423,6 +440,6 @@ TinyMCE_Engine.<span class="reserved">prototype</span>._resetIframeHeight = <spa
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep  6 12:26:30 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep 13 17:44:10 2006</div>
 </body>
 </html>

@@ -61,10 +61,7 @@ var TinyMCE_PastePlugin = {
 			case "mcePasteWord": 
 				if (user_interface) {
 					if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && !tinyMCE.getParam('paste_use_dialog', false)) {
-						var html = TinyMCE_PastePlugin._clipboardHTML();
-
-						if (html && html.length > 0)
-							TinyMCE_PastePlugin._insertWordContent(html);
+						TinyMCE_PastePlugin._insertWordContent(TinyMCE_PastePlugin._clipboardHTML());
 					} else { 
 						var template = new Array(); 
 						template['file']	= '../../plugins/paste/pasteword.htm'; // Relative to theme 
@@ -262,7 +259,9 @@ var TinyMCE_PastePlugin = {
 
 			// Insert cleaned content
 			tinyMCE.execCommand("mceInsertContent", false, content);
-			window.setTimeout('tinyMCE.execCommand("mceCleanup");', 1); // Do normal cleanup detached from this thread
+
+			if (tinyMCE.getParam('paste_force_cleanup_wordpaste', true))
+				window.setTimeout('tinyMCE.execCommand("mceCleanup");', 1); // Do normal cleanup detached from this thread
 		}
 	},
 

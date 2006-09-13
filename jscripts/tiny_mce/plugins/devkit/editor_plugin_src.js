@@ -13,6 +13,7 @@ var TinyMCE_DevKitPlugin = {
 	_startTime : null,
 	_benchMark : false,
 	_winLoaded : false,
+	_isDebugEvents : false,
 
 	getInfo : function() {
 		return {
@@ -100,6 +101,93 @@ var TinyMCE_DevKitPlugin = {
 			tinyMCE.log[tinyMCE.log.length] = m;
 		else
 			e.contentWindow.debug(m);
+	},
+
+	_debugEvents : function(s) {
+		var i, ld, inst, n, ev = ['CheckboxStateChange','DOMAttrModified','DOMMenuItemActive',
+				'DOMMenuItemInactive','DOMMouseScroll','DOMNodeInserted','DOMNodeRemoved',
+				'RadioStateChange','blur','broadcast','change','click','close','command',
+				'commandupdate','contextmenu','dblclick','dragdrop','dragenter','dragexit',
+				'draggesture','dragover','focus','input','keydown','keypress','keyup','load',
+				'mousedown','mouseout','mouseover','mouseup','overflow','overflowchanged','popuphidden',
+				'popuphiding','popupshowing','popupshown','select','syncfrompreference','synctopreference',
+				'underflow','unload','abort','activate','afterprint','afterupdate','beforeactivate',
+				'beforecopy','beforecut','beforedeactivate','beforeeditfocus','beforepaste','beforeprint',
+				'beforeunload','beforeupdate','bounce','cellchange','controlselect','copy','cut',
+				'dataavailable','datasetchanged','datasetcomplete','deactivate','dragend','dragleave',
+				'dragstart','drop','error','errorupdate','filterchange','finish','focusin','focusout',
+				'help','layoutcomplete','losecapture','mouseenter','mouseleave','mousewheel',
+				'move','moveend','movestart','paste','propertychange','readystatechange','reset','resize',
+				'resizeend','resizestart','rowenter','rowexit','rowsdelete','rowsinserted','scroll',
+				'selectionchange','selectstart','start','stop','submit'];
+		// mousemove
+
+		if (TinyMCE_DevKitPlugin._isDebugEvents == s)
+			return;
+
+		TinyMCE_DevKitPlugin._isDebugEvents = s;
+
+		for (n in tinyMCE.instances) {
+			inst = tinyMCE.instances[n];
+
+			if (!tinyMCE.isInstance(inst) || inst.getDoc() == ld)
+				continue;
+
+			ld = inst.getDoc();
+
+			for (i=0; i<ev.length; i++) {
+				if (s)
+					tinyMCE.addEvent(ld, ev[i], TinyMCE_DevKitPlugin._debugEvent);
+				else
+					tinyMCE.removeEvent(ld, ev[i], TinyMCE_DevKitPlugin._debugEvent);
+			}
+		}
+	},
+
+	_debugEvent : function(e) {
+		e = e ? e : tinyMCE.selectedInstance.getWin().event;
+
+		tinyMCE.debug(e.type, e.target);
+	},
+
+	_serialize : function(o) {
+		var i, v, s = TinyMCE_DevKitPlugin._serialize;
+
+		if (o == null)
+			return 'null';
+
+		switch (typeof o) {
+			case 'string':
+				v = '\bb\tt\nn\ff\rr\""\'\'\\\\';
+
+				return '"' + o.replace(new RegExp('([\u0080-\uFFFF\\x00-\\x1f\\"])', 'g'), function(a, b) {
+					i = v.indexOf(b);
+
+					if (i+1)
+						return '\\' + v.charAt(i + 1);
+
+					a = b.charCodeAt().toString(16);
+
+					return '\\u' + '0000'.substring(a.length) + a;
+				}) + '"';
+
+			case 'object':
+				if (o instanceof Array) {
+					for (i=0, v = '['; i<o.length; i++)
+						v += (i > 0 ? ',' : '') + s(o[i]);
+
+					return v + ']';
+				}
+
+				v = '{';
+
+				for (i in o)
+					v += typeof o[i] != 'function' ? (v.length > 1 ? ',"' : '"') + i + '":' + s(o[i]) : '';
+
+				return v + '}';
+		}
+
+		return '' + o;
 	}
 };
 
@@ -123,6 +211,10 @@ tinyMCE.debug = function() {
 	}
 
 	TinyMCE_DevKitPlugin._log('debug', m);
+};
+
+tinyMCE.dump = function(o) {
+	tinyMCE.debug(TinyMCE_DevKitPlugin._serialize(o));
 };
 
 tinyMCE.__execCommand = tinyMCE.execCommand;

@@ -255,3 +255,7 @@ function clearLog() {
 function cancelAction() {
 	parent.document.getElementById('devkit').style.display = 'none';
 }
+
+function toggleDebugEvents(s) {
+	devkit._debugEvents(s);
+}

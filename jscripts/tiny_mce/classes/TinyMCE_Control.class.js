@@ -29,6 +29,7 @@ function TinyMCE_Control(settings) {
 	this.shortcuts = new Array();
 	this.hasMouseMoved = false;
 	this.foreColor = this.backColor = "#999999";
+	this.data = {};
 
 	this.cleanup.init({
 		valid_elements : s.valid_elements,
@@ -86,6 +87,24 @@ function TinyMCE_Control(settings) {
 };
 
 TinyMCE_Control.prototype = {
+	/**
+	 * Get custom data storage object by name. The name should be for example the theme name or plugin name.
+	 * The custom data storage can be used to store plugin/theme specific information on a editor instance. A empty
+	 * object will be created automaticly the first time called.
+	 *
+	 * @param {String} na Name of data storate to retrive.
+	 * @return Data storage object
+	 * @type Object
+	 */
+	getData : function(na) {
+		var o = this.data[na];
+
+		if (!o)
+			o = this.data[na] = {};
+
+		return o;
+	},
+
 	/**
 	 * Returns true/false if the instance has the current plugin available.
 	 *

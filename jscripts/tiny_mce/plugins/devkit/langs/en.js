@@ -13,5 +13,6 @@ refresh : 'Refresh',
 info_help : 'Press Refresh to view info.',
 settings_help : 'Press Refresh to display the settings array for each TinyMCE_Control instance.',
 content_help : 'Press Refresh to display the raw and cleaned HTML content for each TinyMCE_Control instance.',
-command_states_help : 'Press Refresh to display the current command states from inst.queryCommandState. This list will also mark unsupported commands.'
+command_states_help : 'Press Refresh to display the current command states from inst.queryCommandState. This list will also mark unsupported commands.',
+debug_events : 'Debug events'
 });

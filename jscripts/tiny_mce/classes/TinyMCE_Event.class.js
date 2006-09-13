@@ -16,17 +16,18 @@
  * @private
  */
 TinyMCE_Engine.prototype._setEventsEnabled = function(node, state) {
-	var events = new Array('onfocus','onblur','onclick','ondblclick',
+	var evs, x, y, elms, i, event;
+	var events = ['onfocus','onblur','onclick','ondblclick',
 				'onmousedown','onmouseup','onmouseover','onmousemove',
-				'onmouseout','onkeypress','onkeydown','onkeydown','onkeyup');
+				'onmouseout','onkeypress','onkeydown','onkeydown','onkeyup'];
 
-	var evs = tinyMCE.settings['event_elements'].split(',');
-	for (var y=0; y<evs.length; y++){
-		var elms = node.getElementsByTagName(evs[y]);
-		for (var i=0; i<elms.length; i++) {
-			var event = "";
+	evs = tinyMCE.settings['event_elements'].split(',');
+	for (y=0; y<evs.length; y++){
+		elms = node.getElementsByTagName(evs[y]);
+		for (i=0; i<elms.length; i++) {
+			event = "";
 
-			for (var x=0; x<events.length; x++) {
+			for (x=0; x<events.length; x++) {
 				if ((event = tinyMCE.getAttrib(elms[i], events[x])) != '') {
 					event = tinyMCE.cleanupEventStr("" + event);
 
@@ -114,26 +115,28 @@ TinyMCE_Engine.prototype.unloadHandler = function() {
  * @param {inst} inst Editor control instance to add event handler to.
  */
 TinyMCE_Engine.prototype.addEventHandlers = function(inst) {
-	var doc = inst.getDoc();
+	this.setEventHandlers(inst, 1);
+};
+
+/**
+ * Sets or removes event handles form the specified instance.
+ *
+ * @param {bool} s True/false state if to add or remove event handlers.
+ */
+TinyMCE_Engine.prototype.setEventHandlers = function(inst, s) {
+	var doc = inst.getDoc(), ie, ot, i, f = s ? tinyMCE.addEvent : tinyMCE.removeEvent;
+
+	ie = ['keypress', 'keyup', 'keydown', 'click', 'mouseup', 'mousedown', 'controlselect'];
+	ot = ['keypress', 'keyup', 'keydown', 'click', 'mouseup', 'mousedown', 'focus', 'blur'];
 
 	inst.switchSettings();
 
-	if (tinyMCE.isMSIE) {
-		tinyMCE.addEvent(doc, "keypress", TinyMCE_Engine.prototype._eventPatch);
-		tinyMCE.addEvent(doc, "keyup", TinyMCE_Engine.prototype._eventPatch);
-		tinyMCE.addEvent(doc, "keydown", TinyMCE_Engine.prototype._eventPatch);
-		tinyMCE.addEvent(doc, "mouseup", TinyMCE_Engine.prototype._eventPatch);
-		tinyMCE.addEvent(doc, "mousedown", TinyMCE_Engine.prototype._eventPatch);
-		tinyMCE.addEvent(doc, "click", TinyMCE_Engine.prototype._eventPatch);
+	if (tinyMCE.isIE) {
+		for (i=0; i<ie.length; i++)
+			f(doc, ie[i], TinyMCE_Engine.prototype._eventPatch);
 	} else {
-		tinyMCE.addEvent(doc, "keypress", tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, "keydown", tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, "keyup", tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, "click", tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, "mouseup", tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, "mousedown", tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, "focus", tinyMCE.handleEvent);
-		tinyMCE.addEvent(doc, "blur", tinyMCE.handleEvent);
+		for (i=0; i<ot.length; i++)
+			f(doc, ot[i], tinyMCE.handleEvent);
 
 		eval('try { doc.designMode = "On"; } catch(e) {}'); // Force designmode
 	}
@@ -190,6 +193,20 @@ TinyMCE_Engine.prototype.addEvent = function(o, n, h) {
 		o.attachEvent("on" + n, h);
 	else
 		o.addEventListener(n, h, false);
+};
+
+/**
+ * Removes a event handler function from the specified object.
+ *
+ * @param {HTMLElement} o Object to remove event handler from.
+ * @param {string} n Event name to stop listening for. Example "click".
+ * @param {function} h Function handler to detach from the event.
+ */
+TinyMCE_Engine.prototype.removeEvent = function(o, n, h) {
+	if (o.detachEvent)
+		o.detachEvent("on" + n, h);
+	else
+		o.removeEventListener(n, h, false);
 };
 
 /**

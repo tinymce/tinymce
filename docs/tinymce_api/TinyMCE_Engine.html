@@ -757,6 +757,40 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#createTag">createTag</A></B>(&lt;string&gt; d, &lt;string&gt; tn, &lt;Array&gt; a, &lt;string&gt; h)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Creates a tag by name and attributes array.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#createTagHTML">createTagHTML</A></B>(&lt;string&gt; tn, &lt;Array&gt; a, &lt;string&gt; h)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Creates a HTML tag by name and attributes array.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
 	    <CODE>&nbsp;void</CODE>
 	 </FONT>
       </TD>
@@ -1139,6 +1173,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       <TD>
 	 <CODE>
 	    <B>
+	       <A HREF="#removeEvent">removeEvent</A></B>(&lt;HTMLElement&gt; o, &lt;string&gt; n, &lt;function&gt; h)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Removes a event handler function from the specified object.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
 	       <A HREF="#renameElement">renameElement</A></B>(&lt;HTMLElement&gt; e, &lt;string&gt; n, &lt;DOMDocument&gt; d)
 	 </CODE>
 	 <BR>
@@ -1229,6 +1280,23 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 	 <BR>
 	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	 Sets the attribute value for a specific attribute.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;void</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#setEventHandlers">setEventHandlers</A></B>(inst, &lt;bool&gt; s)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Sets or removes event handles form the specified instance.
       </TD>
    </TR>
 
@@ -2321,6 +2389,74 @@ TinyMCE_Engine</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="createTag"><!-- --></A>
+   <H3>createTag</H3>
+   <PRE>Object <B>createTag</B>(&lt;string&gt; d, &lt;string&gt; tn, &lt;Array&gt; a, &lt;string&gt; h)</PRE>
+   
+      <UL>Creates a tag by name and attributes array. This will create a DOM node out of the specified
+ data.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>d</CODE> -  Document to create DOM node in.  
+      </UL> 
+   
+     <UL><CODE>tn</CODE> -  Tag name to create.  
+      </UL> 
+   
+     <UL><CODE>a</CODE> -  Optional name/Value array of attributes.  
+      </UL> 
+   
+     <UL><CODE>h</CODE> -  Optional inner HTML of new tag, raw HTML code.
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="createTagHTML"><!-- --></A>
+   <H3>createTagHTML</H3>
+   <PRE>Object <B>createTagHTML</B>(&lt;string&gt; tn, &lt;Array&gt; a, &lt;string&gt; h)</PRE>
+   
+      <UL>Creates a HTML tag by name and attributes array. This will XML encode all attribute values.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>tn</CODE> -  Tag name to create.  
+      </UL> 
+   
+     <UL><CODE>a</CODE> -  Optional name/Value array of attributes.  
+      </UL> 
+   
+     <UL><CODE>h</CODE> -  Optional inner HTML of new tag, raw HTML code.
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="debug"><!-- --></A>
    <H3>debug</H3>
    <PRE>void <B>debug</B>()</PRE>
@@ -3102,6 +3238,38 @@ TinyMCE_Engine</H3>
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="removeEvent"><!-- --></A>
+   <H3>removeEvent</H3>
+   <PRE>void <B>removeEvent</B>(&lt;HTMLElement&gt; o, &lt;string&gt; n, &lt;function&gt; h)</PRE>
+   
+      <UL>Removes a event handler function from the specified object.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>o</CODE> -  Object to remove event handler from.  
+      </UL> 
+   
+     <UL><CODE>n</CODE> -  Event name to stop listening for. Example "click".  
+      </UL> 
+   
+     <UL><CODE>h</CODE> -  Function handler to detach from the event.    
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="renameElement"><!-- --></A>
    <H3>renameElement</H3>
    <PRE>void <B>renameElement</B>(&lt;HTMLElement&gt; e, &lt;string&gt; n, &lt;DOMDocument&gt; d)</PRE>
@@ -3149,7 +3317,7 @@ TinyMCE_Engine</H3>
      <UL><CODE>n</CODE> -  Node to select children from.  
       </UL> 
    
-     <UL><CODE>na</CODE> -  Element name to search for.  
+     <UL><CODE>na</CODE> -  Element name(s) to search for separated by commas.  
       </UL> 
    
      <UL><CODE>f</CODE> -  Function that returns true/false if the node is to be added or not.  
@@ -3301,6 +3469,32 @@ TinyMCE_Engine</H3>
       </UL> 
    
      <UL><CODE>fix</CODE> -  Optional fix value state, if true only number data will be accepted.    
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="setEventHandlers"><!-- --></A>
+   <H3>setEventHandlers</H3>
+   <PRE>void <B>setEventHandlers</B>(inst, &lt;bool&gt; s)</PRE>
+   
+      <UL>Sets or removes event handles form the specified instance.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>s</CODE> -  True/false state if to add or remove event handlers.    
       </UL> 
    
    </UL>
@@ -3527,6 +3721,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep  6 12:26:30 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep 13 17:44:10 2006</div>
 </BODY>
 </HTML>

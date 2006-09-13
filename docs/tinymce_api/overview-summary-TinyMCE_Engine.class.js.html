@@ -109,7 +109,7 @@ function asd() {
 
 
         <pre class="sourceview"><span class="comment">/**
- * $Id: TinyMCE_Engine.class.js 67 2006-08-27 16:04:40Z spocke $
+ * $Id: TinyMCE_Engine.class.js 78 2006-09-06 10:28:24Z spocke $
  *
  * <span class="attrib">@author</span> Moxiecode
  * <span class="attrib">@copyright</span> Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -763,50 +763,60 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	},
 
 	<span class="comment">/**
+	 * Removes the specified instance from TinyMCE Engine.
+	 *
+	 * <span class="attrib">@param</span> {MCEControl} ti Target instance to remove from TinyMCE.
+	 * <span class="attrib">@return</span> Removed MCEControl instance.
+	 * <span class="attrib">@type</span> MCEControl
+	 */</span>
+	removeInstance : <span class="reserved">function</span>(ti) {
+		var t = new Array(), n, i;
+
+		<span class="reserved">for</span> (n in tinyMCE.instances) {
+			i = tinyMCE.instances[n];
+
+			<span class="reserved">if</span> (tinyMCE.isInstance(i) &amp;&amp; ti != i)
+					t[n] = i;
+		}
+
+		tinyMCE.instances = t;
+
+		<span class="reserved">return</span> ti;
+	},
+
+	<span class="comment">/**
 	 * Removes a TinyMCE editor control instance by id.
 	 *
 	 * <span class="attrib">@param</span> {string} editor_id Id of editor instance to remove.
 	 */</span>
 	removeMCEControl : <span class="reserved">function</span>(editor_id) {
-		var inst = tinyMCE.getInstanceById(editor_id);
+		var inst = tinyMCE.getInstanceById(editor_id), h, re, ot, tn;
 
 		<span class="reserved">if</span> (inst) {
 			inst.switchSettings();
 
 			editor_id = inst.editorId;
-			var html = tinyMCE.getContent(editor_id);
+			h = tinyMCE.getContent(editor_id);
 
-			<span class="comment">// Remove editor instance from instances array</span>
-			var tmpInstances = new Array();
-			<span class="reserved">for</span> (var instanceName in tinyMCE.instances) {
-				var instance = tinyMCE.instances[instanceName];
-				<span class="reserved">if</span> (!tinyMCE.isInstance(instance))
-					continue;
-
-				<span class="reserved">if</span> (instanceName != editor_id)
-						tmpInstances[instanceName] = instance;
-			}
-			tinyMCE.instances = tmpInstances;
+			<span class="reserved">this</span>.removeInstance(inst);
 
 			tinyMCE.selectedElement = null;
 			tinyMCE.selectedInstance = null;
 
 			<span class="comment">// Remove element</span>
-			var replaceElement = document.getElementById(editor_id + <span class="literal">"_parent"</span>);
-			var oldTargetElement = inst.oldTargetElement;
-			var targetName = oldTargetElement.nodeName.toLowerCase();
+			re = document.getElementById(editor_id + <span class="literal">"_parent"</span>);
+			ot = inst.oldTargetElement;
+			tn = ot.nodeName.toLowerCase();
 
-			<span class="reserved">if</span> (targetName == <span class="literal">"textarea"</span> || targetName == <span class="literal">"input"</span>) {
-				<span class="comment">// Just show the old text area</span>
-				replaceElement.parentNode.removeChild(replaceElement);
-				oldTargetElement.style.display = <span class="literal">"inline"</span>;
-				oldTargetElement.value = html;
+			<span class="reserved">if</span> (tn == <span class="literal">"textarea"</span> || tn == <span class="literal">"input"</span>) {
+				re.parentNode.removeChild(re);
+				ot.style.display = <span class="literal">"inline"</span>;
+				ot.value = h;
 			} <span class="reserved">else</span> {
-				oldTargetElement.innerHTML = html;
-				oldTargetElement.style.display = <span class="literal">'block'</span>;
-
-				replaceElement.parentNode.insertBefore(oldTargetElement, replaceElement);
-				replaceElement.parentNode.removeChild(replaceElement);
+				ot.innerHTML = h;
+				ot.style.display = <span class="literal">'block'</span>;
+				re.parentNode.insertBefore(ot, re);
+				re.parentNode.removeChild(re);
 			}
 		}
 	},
@@ -2039,6 +2049,11 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 		<span class="reserved">if</span> (customCleanup != <span class="literal">""</span> &amp;&amp; eval(<span class="literal">"typeof("</span> + customCleanup + <span class="literal">")"</span>) != <span class="literal">"undefined"</span>)
 			content = eval(customCleanup + <span class="literal">"(type, content, inst);"</span>);
 
+		<span class="comment">// Trigger theme cleanup</span>
+		po = tinyMCE.themes[tinyMCE.settings[<span class="literal">'theme'</span>]];
+		<span class="reserved">if</span> (po &amp;&amp; po.cleanup)
+			content = po.cleanup(type, content, inst);
+
 		<span class="comment">// Trigger plugin cleanups</span>
 		pl = inst.plugins;
 		<span class="reserved">for</span> (i=0; i&lt;pl.length; i++) {
@@ -2386,7 +2401,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> string
 	 */</span>
 	fixGeckoBaseHREFBug : <span class="reserved">function</span>(m, e, h) {
-		var nl, i, a, n, xsrc, xhref, el;
+		var xsrc, xhref;
 
 		<span class="reserved">if</span> (tinyMCE.isGecko) {
 			<span class="reserved">if</span> (m == 1) {
@@ -2399,38 +2414,36 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 				<span class="reserved">if</span> (!new RegExp(<span class="literal">'(src|href)='</span>, <span class="literal">'g'</span>).test(h))
 					<span class="reserved">return</span> h;
 
-				el = new Array(<span class="literal">'a'</span>,<span class="literal">'img'</span>,<span class="literal">'select'</span>,<span class="literal">'area'</span>,<span class="literal">'iframe'</span>,<span class="literal">'base'</span>,<span class="literal">'input'</span>,<span class="literal">'script'</span>,<span class="literal">'embed'</span>,<span class="literal">'object'</span>,<span class="literal">'link'</span>);
+				<span class="comment">// Restore src and href that gets messed up by Gecko</span>
+				tinyMCE.selectElements(e, <span class="literal">'A,IMG,SELECT,AREA,IFRAME,BASE,INPUT,SCRIPT,EMBED,OBJECT,LINK'</span>, <span class="reserved">function</span> (n) {
+					xsrc = tinyMCE.getAttrib(n, <span class="literal">"mce_tsrc"</span>);
+					xhref = tinyMCE.getAttrib(n, <span class="literal">"mce_thref"</span>);
 
-				<span class="reserved">for</span> (a=0; a&lt;el.length; a++) {
-					n = e.getElementsByTagName(el[a]);
-
-					<span class="reserved">for</span> (i=0; i&lt;n.length; i++) {
-						xsrc = tinyMCE.getAttrib(n[i], <span class="literal">"mce_tsrc"</span>);
-						xhref = tinyMCE.getAttrib(n[i], <span class="literal">"mce_thref"</span>);
-
-						<span class="reserved">if</span> (xsrc != <span class="literal">""</span>) {
-							try {
-								n[i].src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings[<span class="literal">'base_href'</span>], xsrc);
-							} catch (e) {
-								<span class="comment">// Ignore, Firefox cast exception if local file wasn't found</span>
-							}
-
-							n[i].removeAttribute(<span class="literal">"mce_tsrc"</span>);
+					<span class="reserved">if</span> (xsrc != <span class="literal">""</span>) {
+						try {
+							n.src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings[<span class="literal">'base_href'</span>], xsrc);
+						} catch (e) {
+							<span class="comment">// Ignore, Firefox cast exception if local file wasn't found</span>
 						}
 
-						<span class="reserved">if</span> (xhref != <span class="literal">""</span>) {
-							try {
-								n[i].href = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings[<span class="literal">'base_href'</span>], xhref);
-							} catch (e) {
-								<span class="comment">// Ignore, Firefox cast exception if local file wasn't found</span>
-							}
-
-							n[i].removeAttribute(<span class="literal">"mce_thref"</span>);
-						}
+						n.removeAttribute(<span class="literal">"mce_tsrc"</span>);
 					}
-				}
 
-				el = tinyMCE.selectNodes(e, <span class="reserved">function</span>(n) {
+					<span class="reserved">if</span> (xhref != <span class="literal">""</span>) {
+						try {
+							n.href = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings[<span class="literal">'base_href'</span>], xhref);
+						} catch (e) {
+							<span class="comment">// Ignore, Firefox cast exception if local file wasn't found</span>
+						}
+
+						n.removeAttribute(<span class="literal">"mce_thref"</span>);
+					}
+
+					<span class="reserved">return</span> false;
+				});
+
+				<span class="comment">// Restore text/comment nodes</span>
+				tinyMCE.selectNodes(e, <span class="reserved">function</span>(n) {
 					<span class="reserved">if</span> (n.nodeType == 3 || n.nodeType == 8) {
 						n.nodeValue = n.nodeValue.replace(/\smce_tsrc=/gi, <span class="literal">" src="</span>);
 						n.nodeValue = n.nodeValue.replace(/\smce_thref=/gi, <span class="literal">" href="</span>);
@@ -2888,7 +2901,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 	 * <span class="attrib">@type</span> string
 	 */</span>
 	xmlEncode : <span class="reserved">function</span>(s) {
-		<span class="reserved">return</span> s.replace(new RegExp(<span class="literal">'[&lt;&gt;&amp;"\'</span>]<span class="literal">', '</span>g<span class="literal">'), function (c, b) {
+		<span class="reserved">return</span> s ? s.replace(new RegExp(<span class="literal">'[&lt;&gt;&amp;"\'</span>]<span class="literal">', '</span>g<span class="literal">'), function (c, b) {
 			switch (c) {
 				case '</span>&amp;<span class="literal">':
 					return '</span>&amp;amp;<span class="literal">';
@@ -2907,7 +2920,7 @@ TinyMCE_Engine.<span class="reserved">prototype</span> = {
 			}
 
 			<span class="reserved">return</span> c;
-		});
+		}) : s;
 	},
 
 	<span class="comment">/**
@@ -3014,6 +3027,6 @@ var tinyMCELang = {};
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep  6 12:26:30 2006</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Wed Sep 13 17:44:10 2006</div>
 </body>
 </html>

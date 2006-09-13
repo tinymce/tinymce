@@ -203,7 +203,12 @@ TinyMCE_Selection.prototype = {
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
 			if (bookmark.rng) {
-				bookmark.rng.select();
+				try {
+					bookmark.rng.select();
+				} catch (ex) {
+					// Ignore
+				}
+
 				return true;
 			}
 
