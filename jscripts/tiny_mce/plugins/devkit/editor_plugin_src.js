@@ -221,9 +221,9 @@ tinyMCE.dump = function(o) {
 };
 
 tinyMCE.sleep = function(t) {
-	var s = new Date().getTime();
+	var s = new Date().getTime(), b;
 
-	while (new Date().getTime() - s < t) ;
+	while (new Date().getTime() - s < t) b=1;
 };
 
 tinyMCE.__execCommand = tinyMCE.execCommand;
