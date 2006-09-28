@@ -1,4 +1,4 @@
-var devkit = parent.tinyMCE.plugins['devkit'], logEnabled = true, flip = false;
+var devkit = parent.tinyMCE.plugins['devkit'], logEnabled = true, flip = false, book = null;
 
 function init() {
 	var log, i, f = document.forms[0];
@@ -49,7 +49,7 @@ function debug(s) {
 }
 
 function renderInfo() {
-	var se = document.getElementById('info'), n, sn, inst, h = '', sel, rng, instCount = 0;
+	var se = document.getElementById('info'), n, sn, inst, h = '', sel, rng, instCount = 0, rc;
 
 	h += '<h2>Browser info:</h2>';
 
@@ -133,6 +133,7 @@ function renderInfo() {
 		h += addRenderInfo('selection.getSelectedHTML()', inst.selection.getSelectedHTML());
 		h += addRenderInfo('selection.getSelectedText()', inst.selection.getSelectedText());
 		h += addRenderInfo('selection.getFocusElement().nodeName', inst.selection.getFocusElement().nodeName);
+		h += addRenderInfo('selection.getFocusElement().outerHTML', tinyMCE.getOuterHTML(inst.selection.getFocusElement()));
 
 		if ((tinyMCE.isGecko || tinyMCE.isOpera) && sel && rng) {
 			h += addRenderInfo('selection.getSel().anchorNode.nodeName', sel.anchorNode ? sel.anchorNode.nodeName : null, 'bspec');
@@ -210,6 +211,11 @@ function renderContent() {
 
 		h += '<h3>Cleaned content - inst.getHTML():</h3>';
 		h += '<div>' + tinyMCE.xmlEncode(inst.getHTML()) + '</div>';
+
+		if (inst.serializedHTML) {
+			h += '<h3>Serialized HTML content - inst.serializedHTML:</h3>';
+			h += '<div>' + tinyMCE.xmlEncode(inst.serializedHTML) + '</div>';
+		}
 	}
 
 	se.innerHTML = h;
@@ -247,6 +253,55 @@ function renderCommandStates() {
 	se.innerHTML = h;
 }
 
+function renderUndoRedo() {
+	var se = document.getElementById('undo_redo'), inst, n, h = '', i, le, id, d, ur;
+	var f = document.forms[0];	
+
+	if (tinyMCE.undoLevels) {
+		le = tinyMCE.undoLevels;
+
+		h += '<h2>Global undo/redo</h2>';
+		h += '<table border="0" cellpadding="0" cellspacing="0" width="50%" class="data">';
+		h += '<tr><td>undoLevels.length</td><td>' + le.length + '</td></tr>';
+		h += '<tr><td>undoIndex</td><td>' + tinyMCE.undoIndex + '</td></tr>';
+		h += '</table>';
+
+		for (i=0; i<le.length; i++)
+			h += '<h3>Level: ' + i + ', Instance: ' + (le[i] ? le[i].editorId : 'null') + '</h3>';
+	}
+
+	for (n in tinyMCE.instances) {
+		inst = tinyMCE.instances[n];
+
+		if (!tinyMCE.isInstance(inst))
+			continue;
+
+		ur = inst.undoRedo;
+		le = ur.undoLevels;
+
+		h += '<hr /><h2>Instance id: ' + inst.editorId + '</h2>';
+		h += '<table border="0" cellpadding="0" cellspacing="0" width="50%" class="data">';
+		h += '<tr><td>undoLevels.length</td><td>' + le.length + '</td></tr>';
+		h += '<tr><td>undoIndex</td><td>' + ur.undoIndex + '</td></tr>';
+		h += '<tr><td>typingUndoIndex</td><td>' + ur.typingUndoIndex + '</td></tr>';
+		h += '<tr><td>undoRedo</td><td>' + ur.undoRedo + '</td></tr>';
+		h += '</table>';
+
+		for (i=0; i<le.length; i++) {
+			h += '<h3>Level: ' + i + (!le[i].bookmark ? "" : " [bookmark]") + '</h3>';
+			h += '<div class="undodata">' + tinyMCE.xmlEncode(le[i].content) + '</div>';
+
+			if (i > 0 && f.undo_diff.checked) {
+				d = diff_main(i > 0 ? le[i-1].content.replace(/[\r\n]+/g, '') : null, le[i].content.replace(/[\r\n]+/g, ''), false);
+				diff_cleanup_semantic(d);
+				h += '<h3>Diff ' + (i-1) + ',' + i + '</h3><div class="undodata">' + diff_prettyhtml(d) + '</div>';
+			}
+		}
+	}
+
+	se.innerHTML = h;
+}
+
 function clearLog() {
 	document.getElementById('log').innerHTML = '';
 	devkit._startTime = null;
@@ -258,4 +313,16 @@ function cancelAction() {
 
 function toggleDebugEvents(s) {
 	devkit._debugEvents(s);
+}
+
+function storeSelection() {
+	book = tinyMCE.selectedInstance.selection.getBookmark();
+
+	return false;
+}
+
+function restoreSelection() {
+	tinyMCE.selectedInstance.selection.moveToBookmark(book);
+
+	return false;
 }

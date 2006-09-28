@@ -103,7 +103,7 @@ TinyMCE_Selection.prototype = {
 			if (rng.item) {
 				e = rng.item(0);
 
-				nl = doc.getElementsByTagName(e.nodeName);
+				nl = b.getElementsByTagName(e.nodeName);
 				for (i=0; i<nl.length; i++) {
 					if (e == nl[i]) {
 						sp = i;
@@ -118,6 +118,11 @@ TinyMCE_Selection.prototype = {
 					scrollY : sy
 				};
 			} else {
+				trng = doc.body.createTextRange();
+				trng.moveToElementText(inst.getBody());
+				trng.collapse(true);
+				bp = Math.abs(trng.move('character', xx));
+
 				trng = rng.duplicate();
 				trng.collapse(true);
 				sp = Math.abs(trng.move('character', xx));
@@ -127,7 +132,7 @@ TinyMCE_Selection.prototype = {
 				le = Math.abs(trng.move('character', xx)) - sp;
 
 				return {
-					start : sp,
+					start : sp - bp,
 					length : le,
 					scrollX : sx,
 					scrollY : sy
@@ -139,10 +144,22 @@ TinyMCE_Selection.prototype = {
 			s = this.getSel();
 			e = this.getFocusElement();
 
+			if (!s)
+				return null;
+
 			if (e && e.nodeName == 'IMG') {
+				/*nl = b.getElementsByTagName('IMG');
+				for (i=0; i<nl.length; i++) {
+					if (e == nl[i]) {
+						sp = i;
+						break;
+					}
+				}*/
+
 				return {
 					start : -1,
 					end : -1,
+					index : sp,
 					scrollX : sx,
 					scrollY : sy
 				};
@@ -215,9 +232,9 @@ TinyMCE_Selection.prototype = {
 			win.focus();
 
 			if (bookmark.tag) {
-				rng = inst.getBody().createControlRange();
+				rng = b.createControlRange();
 
-				nl = doc.getElementsByTagName(bookmark.tag);
+				nl = b.getElementsByTagName(bookmark.tag);
 
 				if (nl.length > bookmark.index) {
 					try {
@@ -229,6 +246,10 @@ TinyMCE_Selection.prototype = {
 			} else {
 				// Try/catch needed since this operation breaks when TinyMCE is placed in hidden divs/tabs
 				try {
+					// Incorrect bookmark
+					if (bookmark.start < 0)
+						return true;
+
 					rng = inst.getSel().createRange();
 					rng.moveToElementText(inst.getBody());
 					rng.collapse(true);
@@ -259,10 +280,23 @@ TinyMCE_Selection.prototype = {
 					rng.setEnd(sd.endNode, sd.endOffset);
 					sel.removeAllRanges();
 					sel.addRange(rng);
+					win.focus();
 				} catch (ex) {
 					// Ignore
 				}
 			}
+
+			/*
+			if (typeof(bookmark.index) != 'undefined') {
+				tinyMCE.selectElements(b, 'IMG', function (n) {
+					if (bookmark.index-- == 0) {
+						// Select image in Gecko here
+					}
+
+					return false;
+				});
+			}
+			*/
 
 			win.scrollTo(bookmark.scrollX, bookmark.scrollY);
 			return true;
@@ -481,19 +515,18 @@ TinyMCE_Selection.prototype = {
 	 * @type DOMRange
 	 */
 	getRng : function() {
-		var inst = this.instance;
-		var sel = this.getSel();
+		var s = this.getSel();
 
-		if (sel == null)
+		if (s == null)
 			return null;
 
 		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
-			return sel.createRange();
+			return s.createRange();
 
-		if (tinyMCE.isSafari && !sel.getRangeAt)
+		if (tinyMCE.isSafari && !s.getRangeAt)
 			return '' + window.getSelection();
 
-		return sel.getRangeAt(0);
+		return s.getRangeAt(0);
 	},
 
 	/**

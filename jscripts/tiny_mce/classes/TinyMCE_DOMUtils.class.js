@@ -46,7 +46,7 @@ TinyMCE_Engine.prototype.createTag = function(d, tn, a, h) {
 	if (a) {
 		for (n in a) {
 			if (typeof(a[n]) != 'function' && a[n] != null)
-				o.setAttribute(n, a[n]);
+				tinyMCE.setAttrib(o, n, a[n]);
 		}
 	}
 
@@ -183,7 +183,7 @@ TinyMCE_Engine.prototype.getOuterHTML = function(e) {
 		return e.outerHTML;
 
 	var d = e.ownerDocument.createElement("body");
-	d.appendChild(e);
+	d.appendChild(e.cloneNode(true));
 	return d.innerHTML;
 };
 
@@ -264,15 +264,16 @@ TinyMCE_Engine.prototype.getNodeTree = function(n, na, t, nn) {
  *
  * @param {HTMLNode} node Node to get parent element of.
  * @param {string} na Comma separated list of element names to get.
+ * @param {function} f Optional function to call for each node, if it returns true the node is valid.
  * @param {HTMLNode} r Optional root element, never go below this point.
  * @return HTMLElement or null based on search criteras.
  * @type HTMLElement
  */
-TinyMCE_Engine.prototype.getParentElement = function(n, na, r) {
-	var re = na ? new RegExp('^(' + na.toUpperCase().replace(/,/g, '|') + ')$') : null, v;
+TinyMCE_Engine.prototype.getParentElement = function(n, na, f, r) {
+	var re = na ? new RegExp('^(' + na.toUpperCase().replace(/,/g, '|') + ')$') : 0, v;
 
 	return this.getParentNode(n, function(n) {
-		return (n.nodeType == 1 && !re) || (re && re.test(n.nodeName));
+		return ((n.nodeType == 1 && !re) || (re && re.test(n.nodeName))) && (!f || f(n));
 	}, r);
 };
 

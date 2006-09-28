@@ -11,6 +11,8 @@
  * @constructor
  */
 function TinyMCE_Engine() {
+	var ua;
+
 	this.majorVersion = "2";
 	this.minorVersion = "0.7";
 	this.releaseDate = "2006-xx-xx";
@@ -25,9 +27,12 @@ function TinyMCE_Engine() {
 	this.currentConfig = 0;
 	this.eventHandlers = new Array();
 	this.log = new Array();
+	this.undoLevels = [];
+	this.undoIndex = 0;
+	this.typingUndoIndex = -1;
 
 	// Browser check
-	var ua = navigator.userAgent;
+	ua = navigator.userAgent;
 	this.isMSIE = (navigator.appName == "Microsoft Internet Explorer");
 	this.isMSIE5 = this.isMSIE && (ua.indexOf('MSIE 5') != -1);
 	this.isMSIE5_0 = this.isMSIE && (ua.indexOf('MSIE 5.0') != -1);
@@ -67,7 +72,7 @@ TinyMCE_Engine.prototype = {
 	 * @param {Array} Name/Value array of initialization settings.
 	 */
 	init : function(settings) {
-		var theme, nl, baseHREF = "";
+		var theme, nl, baseHREF = "", i;
 
 		// IE 5.0x is no longer supported since 5.5, 6.0 and 7.0 now exists. We can't support old browsers forever, sorry.
 		if (this.isMSIE5_0)
@@ -85,7 +90,7 @@ TinyMCE_Engine.prototype = {
 
 			// If base element found, add that infront of baseURL
 			nl = document.getElementsByTagName('base');
-			for (var i=0; i<nl.length; i++) {
+			for (i=0; i<nl.length; i++) {
 				if (nl[i].href)
 					baseHREF = nl[i].href;
 			}
@@ -157,6 +162,7 @@ TinyMCE_Engine.prototype = {
 		this._def("custom_undo_redo_levels", -1);
 		this._def("custom_undo_redo_keyboard_shortcuts", true);
 		this._def("custom_undo_redo_restore_selection", true);
+		this._def("custom_undo_redo_global", false);
 		this._def("verify_html", true);
 		this._def("apply_source_formatting", false);
 		this._def("directionality", "ltr");
@@ -276,8 +282,10 @@ TinyMCE_Engine.prototype = {
 				this.settings['editor_css'] = this.documentBasePath + "/" + cssPath;
 			else
 				this.settings['editor_css'] = cssPath;
-		} else
-			this.settings['editor_css'] = tinyMCE.baseURL + "/themes/" + theme + "/css/editor_ui.css";
+		} else {
+			if (this.settings.editor_css != '')
+				this.settings['editor_css'] = tinyMCE.baseURL + "/themes/" + theme + "/css/editor_ui.css";
+		}
 
 		if (tinyMCE.settings['debug']) {
 			var msg = "Debug: \n";
@@ -660,8 +668,9 @@ TinyMCE_Engine.prototype = {
 	 * @type MCEControl
 	 */
 	removeInstance : function(ti) {
-		var t = new Array(), n, i;
+		var t = [], n, i;
 
+		// Remove from instances
 		for (n in tinyMCE.instances) {
 			i = tinyMCE.instances[n];
 
@@ -670,6 +679,18 @@ TinyMCE_Engine.prototype = {
 		}
 
 		tinyMCE.instances = t;
+
+		// Remove from global undo/redo
+		n = [];
+		t = tinyMCE.undoLevels;
+
+		for (i=0; i<t.length; i++) {
+			if (t[i] != ti)
+				n.push(t[i]);
+		}
+
+		tinyMCE.undoLevels = n;
+		tinyMCE.undoIndex = n.length;
 
 		return ti;
 	},
@@ -807,18 +828,49 @@ TinyMCE_Engine.prototype = {
 	 * @param {object} value Optional command value, this can be anything.
 	 */
 	execCommand : function(command, user_interface, value) {
+		var inst = tinyMCE.selectedInstance;
+
 		// Default input
 		user_interface = user_interface ? user_interface : false;
 		value = value ? value : null;
 
-		if (tinyMCE.selectedInstance)
-			tinyMCE.selectedInstance.switchSettings();
+		if (inst)
+			inst.switchSettings();
 
 		switch (command) {
+			case "Undo":
+				if (this.getParam('custom_undo_redo_global')) {
+					if (this.undoIndex > 0) {
+						tinyMCE.nextUndoRedoAction = 'Undo';
+						inst = this.undoLevels[--this.undoIndex];
+						inst.select();
+
+						if (!tinyMCE.nextUndoRedoInstanceId)
+							inst.execCommand('Undo');
+					}
+				} else
+					inst.execCommand('Undo');
+				return true;
+
+			case "Redo":
+				if (this.getParam('custom_undo_redo_global')) {
+					if (this.undoIndex <= this.undoLevels.length - 1) {
+						tinyMCE.nextUndoRedoAction = 'Redo';
+						inst = this.undoLevels[this.undoIndex++];
+						inst.select();
+
+						if (!tinyMCE.nextUndoRedoInstanceId)
+							inst.execCommand('Redo');
+					}
+				} else
+					inst.execCommand('Redo');
+
+				return true;
+
 			case 'mceFocus':
 				var inst = tinyMCE.getInstanceById(value);
 				if (inst)
-					inst.contentWindow.focus();
+					inst.getWin().focus();
 			return;
 
 			case "mceAddControl":
@@ -853,8 +905,8 @@ TinyMCE_Engine.prototype = {
 				return;
 		}
 
-		if (this.selectedInstance) {
-			this.selectedInstance.execCommand(command, user_interface, value);
+		if (inst) {
+			inst.execCommand(command, user_interface, value);
 		} else if (tinyMCE.settings['focus_alert'])
 			alert(tinyMCELang['lang_focus_alert']);
 	},
@@ -1349,8 +1401,6 @@ TinyMCE_Engine.prototype = {
 
 				if (e.target.editorId)
 					tinyMCE.instances[e.target.editorId].select();
-				else
-					return;
 
 				if (tinyMCE.selectedInstance)
 					tinyMCE.selectedInstance.switchSettings();
@@ -1427,9 +1477,15 @@ TinyMCE_Engine.prototype = {
 
 				// Handle Undo/Redo when typing content
 
-				// Start typing (non position key)
-				if (!posKey && e.type == "keyup")
-					tinyMCE.execCommand("mceStartTyping");
+				if (tinyMCE.isGecko) {
+					// Start typing (not a position key or ctrl key, but ctrl+x and ctrl+p is ok)
+					if (!posKey && e.type == "keyup" && !e.ctrlKey || (e.ctrlKey && (e.keyCode == 86 || e.keyCode == 88)))
+						tinyMCE.execCommand("mceStartTyping");
+				} else {
+					// IE seems to be working better with this setting
+					if (!posKey && e.type == "keyup")
+						tinyMCE.execCommand("mceStartTyping");
+				}
 
 				// Store undo bookmark
 				if (e.type == "keydown" && (posKey || e.ctrlKey) && inst)
@@ -1449,6 +1505,7 @@ TinyMCE_Engine.prototype = {
 			case "mousedown":
 			case "mouseup":
 			case "click":
+			case "dblclick":
 			case "focus":
 				tinyMCE.hideMenus();
 
@@ -1478,7 +1535,7 @@ TinyMCE_Engine.prototype = {
 				}
 
 				// Add first bookmark location
-				if (!tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark)
+				if (!tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark && (e.type == "mouseup" || e.type == "dblclick"))
 					tinyMCE.selectedInstance.undoRedo.undoLevels[0].bookmark = tinyMCE.selectedInstance.selection.getBookmark();
 
 				// Reset selected node
@@ -2791,7 +2848,7 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	xmlEncode : function(s) {
-		return s ? s.replace(new RegExp('[<>&"\']', 'g'), function (c, b) {
+		return s ? ('' + s).replace(new RegExp('[<>&"\']', 'g'), function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';

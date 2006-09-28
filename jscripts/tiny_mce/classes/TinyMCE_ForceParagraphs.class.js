@@ -97,7 +97,7 @@ var TinyMCE_ForceParagraphs = {
 		}
 
 		// Within a list use normal behaviour
-		if (tinyMCE.getParentElement(startBlock, "OL,UL", body) != null)
+		if (tinyMCE.getParentElement(startBlock, "OL,UL", null, body) != null)
 			return false;
 
 		// Within a table create new paragraphs

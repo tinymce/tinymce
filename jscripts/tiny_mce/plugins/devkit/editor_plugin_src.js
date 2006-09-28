@@ -145,9 +145,12 @@ var TinyMCE_DevKitPlugin = {
 	},
 
 	_debugEvent : function(e) {
-		e = e ? e : tinyMCE.selectedInstance.getWin().event;
+		var t;
 
-		tinyMCE.debug(e.type, e.target);
+		e = e ? e : tinyMCE.selectedInstance.getWin().event;
+		t = e.srcElement ? e.srcElement : e.target;
+
+		tinyMCE.debug(e.type, t ? t.nodeName : '');
 	},
 
 	_serialize : function(o) {
@@ -215,6 +218,12 @@ tinyMCE.debug = function() {
 
 tinyMCE.dump = function(o) {
 	tinyMCE.debug(TinyMCE_DevKitPlugin._serialize(o));
+};
+
+tinyMCE.sleep = function(t) {
+	var s = new Date().getTime();
+
+	while (new Date().getTime() - s < t) ;
 };
 
 tinyMCE.__execCommand = tinyMCE.execCommand;

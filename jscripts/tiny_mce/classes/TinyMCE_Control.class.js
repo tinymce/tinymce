@@ -175,8 +175,13 @@ TinyMCE_Control.prototype = {
 	 * themes, plugins and other listeners.
 	 */
 	select : function() {
-		if (tinyMCE.selectedInstance != this) {
-			tinyMCE.dispatchCallback(this, 'select_instance_callback', 'selectInstance', this, tinyMCE.selectedInstance);
+		var oldInst = tinyMCE.selectedInstance;
+
+		if (oldInst != this) {
+			if (oldInst)
+				oldInst.execCommand('mceEndTyping');
+
+			tinyMCE.dispatchCallback(this, 'select_instance_callback', 'selectInstance', this, oldInst);
 			tinyMCE.selectedInstance = this;
 		}
 	},
@@ -252,11 +257,12 @@ TinyMCE_Control.prototype = {
 	 *
 	 * @param {HTMLNode} node Node to get parent element of.
 	 * @param {string} na Comma separated list of element names to get.
+	 * @param {function} f Optional function to call for each node, if it returns true the node is valid.
 	 * @return HTMLElement or null based on search criteras.
 	 * @type HTMLElement
 	 */
-	getParentElement : function(n, na) {
-		return tinyMCE.getParentElement(n, na, this.getBody());
+	getParentElement : function(n, na, f) {
+		return tinyMCE.getParentElement(n, na, f, this.getBody());
 	},
 
 	/**
@@ -344,6 +350,7 @@ TinyMCE_Control.prototype = {
 
 		for (i=0; i<s.length; i++) {
 			o = s[i];
+
 			if (o.alt == e.altKey && o.ctrl == e.ctrlKey && (o.keyCode == e.keyCode || o.charCode == e.charCode)) {
 				if (o.cmd && (e.type == "keydown" || (e.type == "keypress" && !tinyMCE.isOpera)))
 					tinyMCE.execCommand(o.cmd, o.ui, o.val);
@@ -475,8 +482,7 @@ TinyMCE_Control.prototype = {
 	 * @param {mixed} value Optional command value, this can be anything.
 	 */
 	execCommand : function(command, user_interface, value) {
-		var doc = this.getDoc(), win = this.getWin();
-		var focusElm = this.getFocusElement();
+		var doc = this.getDoc(), win = this.getWin(), focusElm = this.getFocusElement();
 
 		// Is not a undo specific command
 		if (!new RegExp('mceStartTyping|mceEndTyping|mceBeginUndoLevel|mceEndUndoLevel|mceAddUndoLevel', 'gi').test(command))
@@ -887,12 +893,17 @@ TinyMCE_Control.prototype = {
 
 			case "forecolor":
 				value = value == null ? this.foreColor : value;
+				value = tinyMCE.trim(value);
+				value = value.charAt(0) != '#' ? (isNaN('0x' + value) ? value : '#' + value) : value;
+
 				this.foreColor = value;
 				this.getDoc().execCommand('forecolor', false, value);
 				break;
 
 			case "HiliteColor":
 				value = value == null ? this.backColor : value;
+				value = tinyMCE.trim(value);
+				value = value.charAt(0) != '#' ? (isNaN('0x' + value) ? value : '#' + value) : value;
 				this.backColor = value;
 
 				if (tinyMCE.isGecko) {
@@ -932,9 +943,14 @@ TinyMCE_Control.prototype = {
 				// Call custom cleanup code
 				value = tinyMCE.storeAwayURLs(value);
 				value = tinyMCE._customCleanup(this, "insert_to_editor", value);
-				tinyMCE._setHTML(doc, value);
-				tinyMCE.setInnerHTML(doc.body, tinyMCE._cleanupHTML(this, doc, tinyMCE.settings, doc.body));
-				tinyMCE.convertAllRelativeURLs(doc.body);
+
+				if (this.getBody().nodeName == 'BODY')
+					tinyMCE._setHTML(doc, value);
+				else
+					this.getBody().innerHTML = value;
+
+				tinyMCE.setInnerHTML(this.getBody(), tinyMCE._cleanupHTML(this, doc, this.settings, this.getBody(), false, true, false, true));
+				tinyMCE.convertAllRelativeURLs(this.getBody());
 
 				// Cleanup any mess left from storyAwayURLs
 				tinyMCE._removeInternal(this.getBody());
@@ -943,8 +959,8 @@ TinyMCE_Control.prototype = {
 				if (tinyMCE.getParam("convert_fonts_to_spans"))
 					tinyMCE.convertSpansToFonts(doc);
 
-				tinyMCE.handleVisualAid(doc.body, true, this.visualAid, this);
-				tinyMCE._setEventsEnabled(doc.body, false);
+				tinyMCE.handleVisualAid(this.getBody(), true, this.visualAid, this);
+				tinyMCE._setEventsEnabled(this.getBody(), false);
 				return true;
 
 			case "mceCleanup":
@@ -1139,10 +1155,14 @@ TinyMCE_Control.prototype = {
 					if (c)
 						value = tinyMCE.uniqueTag + value;
 
+					var tmpRng = rng.duplicate(); // Store away range (Fixes Undo bookmark bug in IE)
+
 					if (rng.item)
 						rng.item(0).outerHTML = value;
 					else
 						rng.pasteHTML(value);
+
+					tmpRng.select(); // Restore range  (Fixes Undo bookmark bug in IE)
 
 					// Remove unique tag
 					if (c) {
@@ -1157,6 +1177,7 @@ TinyMCE_Control.prototype = {
 			case "mceStartTyping":
 				if (tinyMCE.settings['custom_undo_redo'] && this.undoRedo.typingUndoIndex == -1) {
 					this.undoRedo.typingUndoIndex = this.undoRedo.undoIndex;
+					tinyMCE.typingUndoIndex = tinyMCE.undoIndex;
 					this.execCommand('mceAddUndoLevel');
 				}
 				break;
@@ -1166,6 +1187,8 @@ TinyMCE_Control.prototype = {
 					this.execCommand('mceAddUndoLevel');
 					this.undoRedo.typingUndoIndex = -1;
 				}
+
+				tinyMCE.typingUndoIndex = -1;
 				break;
 
 			case "mceBeginUndoLevel":

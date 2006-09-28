@@ -99,6 +99,22 @@ TinyMCE_Engine.prototype._eventPatch = function(editor_id) {
 	}
 };
 
+TinyMCE_Engine.prototype.findEvent = function(e) {
+	var n, inst;
+
+	if (e)
+		return e;
+
+	for (n in tinyMCE.instances) {
+		inst = tinyMCE.instances[n];
+
+		if (tinyMCE.isInstance(inst) && inst.getWin().event)
+			return inst.getWin().event;
+	}
+
+	return null;
+};
+
 /**
  * Unload document event handler function. This function will be executed when the
  * page is unloaded, this will automaticly move the current editor contents to the textarea element this enables
@@ -126,8 +142,8 @@ TinyMCE_Engine.prototype.addEventHandlers = function(inst) {
 TinyMCE_Engine.prototype.setEventHandlers = function(inst, s) {
 	var doc = inst.getDoc(), ie, ot, i, f = s ? tinyMCE.addEvent : tinyMCE.removeEvent;
 
-	ie = ['keypress', 'keyup', 'keydown', 'click', 'mouseup', 'mousedown', 'controlselect'];
-	ot = ['keypress', 'keyup', 'keydown', 'click', 'mouseup', 'mousedown', 'focus', 'blur'];
+	ie = ['keypress', 'keyup', 'keydown', 'click', 'mouseup', 'mousedown', 'controlselect', 'dblclick'];
+	ot = ['keypress', 'keyup', 'keydown', 'click', 'mouseup', 'mousedown', 'focus', 'blur', 'dragdrop'];
 
 	inst.switchSettings();
 
@@ -172,11 +188,16 @@ TinyMCE_Engine.prototype.onMouseMove = function() {
  * @type bool
  */
 TinyMCE_Engine.prototype.cancelEvent = function(e) {
+	if (!e)
+		return false;
+
 	if (tinyMCE.isMSIE) {
 		e.returnValue = false;
 		e.cancelBubble = true;
-	} else
+	} else {
 		e.preventDefault();
+		e.stopPropagation && e.stopPropagation();
+	}
 
 	return false;
 };

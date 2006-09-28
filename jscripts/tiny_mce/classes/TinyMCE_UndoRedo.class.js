@@ -28,39 +28,40 @@ TinyMCE_UndoRedo.prototype = {
 	 * @type boolean
 	 */
 	add : function(l) {
-		var b;
+		var b, customUndoLevels, newHTML, inst = this.instance, i, ul, ur;
 
 		if (l) {
 			this.undoLevels[this.undoLevels.length] = l;
 			return true;
 		}
 
-		var inst = this.instance;
-
 		if (this.typingUndoIndex != -1) {
 			this.undoIndex = this.typingUndoIndex;
-			// tinyMCE.debug("Override: " + this.undoIndex);
+
+			if (tinyMCE.typingUndoIndex != -1)
+				tinyMCE.undoIndex = tinyMCE.typingUndoIndex;
 		}
 
-		var newHTML = tinyMCE.trim(inst.getBody().innerHTML);
+		newHTML = tinyMCE.trim(inst.getBody().innerHTML);
 		if (this.undoLevels[this.undoIndex] && newHTML != this.undoLevels[this.undoIndex].content) {
-			//tinyMCE.debug(newHTML, this.undoLevels[this.undoIndex]);
+			//tinyMCE.debug(newHTML, this.undoLevels[this.undoIndex].content);
 
 			tinyMCE.dispatchCallback(inst, 'onchange_callback', 'onChange', inst);
 
 			// Time to compress
-			var customUndoLevels = tinyMCE.settings['custom_undo_redo_levels'];
+			customUndoLevels = tinyMCE.settings['custom_undo_redo_levels'];
 			if (customUndoLevels != -1 && this.undoLevels.length > customUndoLevels) {
-				for (var i=0; i<this.undoLevels.length-1; i++) {
-					//tinyMCE.debug(this.undoLevels[i] + "=" + this.undoLevels[i+1]);
+				for (i=0; i<this.undoLevels.length-1; i++)
 					this.undoLevels[i] = this.undoLevels[i+1];
-				}
 
 				this.undoLevels.length--;
 				this.undoIndex--;
+
+				// Todo: Implement global undo/redo logic here
 			}
 
 			b = inst.undoBookmark;
+
 			if (!b)
 				b = inst.selection.getBookmark();
 
@@ -70,12 +71,24 @@ TinyMCE_UndoRedo.prototype = {
 				bookmark : b
 			};
 
+			// Remove all above from global undo/redo
+			ul = tinyMCE.undoLevels;
+			for (i=tinyMCE.undoIndex + 1; i<ul.length; i++) {
+				ur = ul[i].undoRedo;
+
+				if (ur.undoIndex == ur.undoLevels.length -1)
+					ur.undoIndex--;
+
+				ur.undoLevels.length--;
+			}
+
+			// Add global undo level
+			tinyMCE.undoLevels[tinyMCE.undoIndex++] = inst;
+			tinyMCE.undoLevels.length = tinyMCE.undoIndex;
+
 			this.undoLevels.length = this.undoIndex + 1;
 
-			//tinyMCE.debug("level added" + this.undoIndex);
 			return true;
-
-			// tinyMCE.debug(this.undoIndex + "," + (this.undoLevels.length-1));
 		}
 
 		return false;
@@ -90,13 +103,13 @@ TinyMCE_UndoRedo.prototype = {
 		// Do undo
 		if (this.undoIndex > 0) {
 			this.undoIndex--;
+
 			tinyMCE.setInnerHTML(inst.getBody(), this.undoLevels[this.undoIndex].content);
 			inst.repaint();
+
 			if (inst.settings.custom_undo_redo_restore_selection)
 				inst.selection.moveToBookmark(this.undoLevels[this.undoIndex].bookmark);
 		}
-
-		// tinyMCE.debug("Undo - undo levels:" + this.undoLevels.length + ", undo index: " + this.undoIndex);
 	},
 
 	/**
@@ -109,13 +122,12 @@ TinyMCE_UndoRedo.prototype = {
 
 		if (this.undoIndex < (this.undoLevels.length-1)) {
 			this.undoIndex++;
+
 			tinyMCE.setInnerHTML(inst.getBody(), this.undoLevels[this.undoIndex].content);
 			inst.repaint();
-//					if (this.undoIndex > 0)
-//						inst.selection.moveToBookmark(this.undoLevels[this.undoIndex-1].bookmark);
+
 			if (inst.settings.custom_undo_redo_restore_selection)
 				inst.selection.moveToBookmark(this.undoLevels[this.undoIndex].bookmark);
-			// tinyMCE.debug("Redo - undo levels:" + this.undoLevels.length + ", undo index: " + this.undoIndex);
 		}
 
 		tinyMCE.triggerNodeChange();

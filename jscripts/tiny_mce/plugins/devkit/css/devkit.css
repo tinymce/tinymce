@@ -49,7 +49,7 @@ h3 {
 	border: 0;
 }
 
-#settings_panel span, #info_panel span, #content_panel span, #command_states_panel span {
+#settings_panel span, #info_panel span, #content_panel span, #command_states_panel span, #undo_redo_panel span {
 	display: block;
 	margin: 5px 0 5px 0;
 }
@@ -58,6 +58,10 @@ div.data {
 	width: 100%; height: 240px;
 	overflow: scroll;
 	border: 1px solid gray;
+}
+
+#misc_panel div.data {
+	height: 270px;
 }
 
 .data input {
@@ -107,4 +111,7 @@ table, td {
 
 .col1 {
 	width: 265px;
+}
+
+div.undodata {
 }

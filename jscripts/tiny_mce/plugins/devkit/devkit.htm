@@ -5,6 +5,7 @@
 	<script language="javascript" type="text/javascript" src="../../utils/mctabs.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
 	<script language="javascript" type="text/javascript" src="jscripts/devkit.js"></script>
+	<script language="javascript" type="text/javascript" src="jscripts/diff.js"></script>
 	<link href="css/devkit.css" rel="stylesheet" type="text/css" />
 	<base target="_self" />
 </head>
@@ -19,6 +20,8 @@
 				<li id="settings_tab"><span><a href="javascript:mcTabs.displayTab('settings_tab','settings_panel');" onmousedown="return false;">{$lang_devkit_settings_tab}</a></span></li>
 				<li id="content_tab"><span><a href="javascript:mcTabs.displayTab('content_tab','content_panel');" onmousedown="return false;">{$lang_devkit_content_tab}</a></span></li>
 				<!-- <li id="command_states_tab"><span><a href="javascript:mcTabs.displayTab('command_states_tab','command_states_panel');" onmousedown="return false;">{$lang_devkit_command_states_tab}</a></span></li> -->
+				<li id="undo_redo_tab"><span><a href="javascript:mcTabs.displayTab('undo_redo_tab','undo_redo_panel');" onmousedown="return false;">{$lang_devkit_undo_redo_tab}</a></span></li>
+				<li id="misc_tab"><span><a href="javascript:mcTabs.displayTab('misc_tab','misc_panel');" onmousedown="return false;">{$lang_devkit_misc_tab}</a></span></li>
 			</ul>
 		</div>
 
@@ -92,6 +95,31 @@
 
 					<div id="command_states" class="data">
 						<p>{$lang_devkit_command_states_help}</p>
+					</div>
+				</fieldset>
+			</div>
+
+			<div id="undo_redo_panel" class="panel">
+				<fieldset>
+					<legend>{$lang_devkit_undo_redo_tab}</legend>
+
+					<span><a href="javascript:renderUndoRedo();">[{$lang_devkit_refresh}]</a></span>
+
+					<div id="undo_redo" class="data">
+						<p>{$lang_devkit_undo_redo_help}</p>
+					</div>
+
+					<input type="checkbox" id="undo_diff" name="undo_diff" class="checkbox" /><label for="undo_diff">{$lang_devkit_undo_diff}</label>
+				</fieldset>
+			</div>
+
+			<div id="misc_panel" class="panel">
+				<fieldset>
+					<legend>{$lang_devkit_misc_tab}</legend>
+
+					<div class="data">
+						<p>{$lang_devkit_misc_help}</p>
+						<p>Selection: <a href="#" onmousedown="return storeSelection();">[Store selection]</a> <a href="#" onmousedown="return restoreSelection();">[Restore selection]</a></p>
 					</div>
 				</fieldset>
 			</div>
