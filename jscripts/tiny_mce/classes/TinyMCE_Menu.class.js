@@ -7,6 +7,10 @@
 
 /**
  * Constructor for the menu layer class.
+ *
+ * @constructor
+ * @base TinyMCE_Layer
+ * @member TinyMCE_Menu
  */
 function TinyMCE_Menu() {
 	var id;
@@ -23,8 +27,14 @@ function TinyMCE_Menu() {
 	this.needsUpdate = true;
 };
 
-// Extends the TinyMCE_Layer class
+/**#@+
+ * @member TinyMCE_Menu
+ */
 TinyMCE_Menu.prototype = tinyMCE.extend(TinyMCE_Layer.prototype, {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Initializes the Menu with settings. This will also create the menu
 	 * as a DIV element if it doesn't exists in the DOM.
@@ -170,4 +180,6 @@ TinyMCE_Menu.prototype = tinyMCE.extend(TinyMCE_Layer.prototype, {
 
 		tinyMCE.lastMenu = this;
 	}
+
+	/**#@-*/
 });

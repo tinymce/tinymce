@@ -7,6 +7,11 @@
  * The contents of this file will be wrapped in a class later on.
  */
 
+/**#@+
+ * @member TinyMCE_Engine
+ * @method
+ */
+
 /**
  * Debugs the specified message to devkit if it's loaded.
  *
@@ -25,3 +30,5 @@ TinyMCE_Engine.prototype.debug = function() {
 	if (l < 1000)
 		tinyMCE.log[l] = "[debug] " + m;
 };
+
+/**#@-*/

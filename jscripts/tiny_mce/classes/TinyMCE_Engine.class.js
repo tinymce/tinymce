@@ -64,7 +64,14 @@ function TinyMCE_Engine() {
 	this.idCounter = 0;
 };
 
+/**#@+
+ * @member TinyMCE_Engine
+ */
 TinyMCE_Engine.prototype = {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Initializes TinyMCE with the specific configuration settings. This method
 	 * may be called multiple times when multiple instances with diffrent settings is to be created.
@@ -2910,6 +2917,8 @@ TinyMCE_Engine.prototype = {
 			tinyMCE.lastSelectedMenuBtn = null;
 		}
 	}
+
+	/**#@-*/
 };
 
 // Global instances

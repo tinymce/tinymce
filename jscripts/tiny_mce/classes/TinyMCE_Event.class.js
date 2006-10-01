@@ -7,6 +7,11 @@
  * The contents of this file will be wrapped in a class later on.
  */
 
+/**#@+
+ * @member TinyMCE_Engine
+ * @method
+ */
+
 /**
  * Sets the enabled/disabled state of build in events on the specific node.
  * This function is needed since some events gets executed in WYSIWYG mode.
@@ -310,3 +315,5 @@ TinyMCE_Engine.prototype._resetIframeHeight = function() {
 		}
 	}
 };
+
+/**#@-*/

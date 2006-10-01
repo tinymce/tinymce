@@ -11,6 +11,8 @@
  *
  * @param {string} id Unique ID name for the layer.
  * @param {boolean} bm Block mode, defaults to true.
+ * @constructor
+ * @member TinyMCE_Layer
  */
 function TinyMCE_Layer(id, bm) {
 	this.id = id;
@@ -21,7 +23,14 @@ function TinyMCE_Layer(id, bm) {
 	this.doc = document;
 };
 
+/**#@+
+ * @member TinyMCE_Layer
+ */
 TinyMCE_Layer.prototype = {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Moves the layer relative to the specified HTML element.
 	 *
@@ -299,4 +308,6 @@ TinyMCE_Layer.prototype = {
 
 		return parseInt(s);
 	}
+
+	/**#@-*/
 };

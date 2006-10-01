@@ -7,6 +7,11 @@
  * The contents of this file will be wrapped in a class later on.
  */
 
+/**#@+
+ * @member TinyMCE_Engine
+ * @method
+ */
+
 /**
  * Parses a URL in to its diffrent components.
  *
@@ -372,3 +377,5 @@ TinyMCE_Engine.prototype.convertAllRelativeURLs = function(body) {
 		}
 	}
 };
+
+/**#@-*/

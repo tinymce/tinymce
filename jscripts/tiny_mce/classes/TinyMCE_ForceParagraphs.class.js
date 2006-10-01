@@ -6,9 +6,19 @@
  */
 
 /**
- * Forces P tags on return/enter in Gecko, Opera and Safari.
+ * @class Forces P tags on return/enter in Gecko, Opera and Safari.
+ * @member TinyMCE_ForceParagraphs
+ * @private
+ * @abstract
  */
 var TinyMCE_ForceParagraphs = {
+	/**#@+
+	 * @member TinyMCE_ForceParagraphs
+	 * @method
+	 * @private
+	 * @static
+	 */
+
 	/**
 	 * Inserts a paragraph at the current cursor location.
 	 *
@@ -295,7 +305,7 @@ var TinyMCE_ForceParagraphs = {
 	 *
 	 * @param {TinyMCE_Control} inst TinyMCE editor control instance.
 	 * @return true/false if the event should be canceled or not.
-	 * @type
+	 * @type bool
 	 */
 	_handleBackSpace : function(inst) {
 		var r = inst.getRng(), sn = r.startContainer, nv, s = false;
@@ -318,4 +328,6 @@ var TinyMCE_ForceParagraphs = {
 
 		return s;
 	}
+
+	/**#@-*/
 };

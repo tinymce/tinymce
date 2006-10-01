@@ -10,6 +10,7 @@
  *
  * @param {TinyMCE_Control} inst TinyMCE editor control instance.
  * @constructor
+ * @member TinyMCE_UndoRedo
  */
 function TinyMCE_UndoRedo(inst) {
 	this.instance = inst;
@@ -19,7 +20,14 @@ function TinyMCE_UndoRedo(inst) {
 	this.undoRedo = true;
 };
 
+/**#@+
+ * @member TinyMCE_UndoRedo
+ */
 TinyMCE_UndoRedo.prototype = {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Adds a new undo level, this will take a snapshot of the current instance HTML or use the specified level.
 	 *
@@ -132,4 +140,6 @@ TinyMCE_UndoRedo.prototype = {
 
 		tinyMCE.triggerNodeChange();
 	}
+
+	/**#@-*/
 };

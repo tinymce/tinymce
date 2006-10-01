@@ -7,6 +7,11 @@
  * Some of the contents of this file will be wrapped in a class later on it will also be replaced with the new cleanup logic.
  */
 
+/**#@+
+ * @member TinyMCE_Engine
+ * @method
+ */
+
 /**
  * Makes some preprocessing cleanup routines on the specified HTML string.
  * This includes forcing some tags to be open so MSIE doesn't fail. Forcing other to close and
@@ -540,8 +545,12 @@ TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual,
 	return h;
 };
 
+/**#@-*/
+
 /**
  * TinyMCE_Cleanup class.
+ *
+ * @constructor
  */
 function TinyMCE_Cleanup() {
 	this.isMSIE = (navigator.appName == "Microsoft Internet Explorer");
@@ -575,7 +584,14 @@ function TinyMCE_Cleanup() {
 	};
 }
 
+/**#@+
+ * @member TinyMCE_Cleanup
+ */
 TinyMCE_Cleanup.prototype = {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Initializes the cleanup engine with the specified config.
 	 *
@@ -1389,4 +1405,6 @@ TinyMCE_Cleanup.prototype = {
 
 		return false;
 	}
+
+	/**#@-*/
 };

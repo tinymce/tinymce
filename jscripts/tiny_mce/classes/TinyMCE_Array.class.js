@@ -7,6 +7,11 @@
  * The contents of this file will be wrapped in a class later on.
  */
 
+/**#@+
+ * @member TinyMCE_Engine
+ * @method
+ */
+
 /**
  * Returns a cleared array, since some external libraries tend to extend the Array core object
  * arrays needs to be cleaned from these extended functions. So this function simply setting any
@@ -43,3 +48,5 @@ TinyMCE_Engine.prototype.explode = function(d, s) {
 
 	return oar;
 };
+
+/**#@-*/

@@ -86,7 +86,14 @@ function TinyMCE_Control(settings) {
 	}
 };
 
+/**#@+
+ * @member TinyMCE_Control
+ */
 TinyMCE_Control.prototype = {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Get custom data storage object by name. The name should be for example the theme name or plugin name.
 	 * The custom data storage can be used to store plugin/theme specific information on a editor instance. A empty
@@ -1704,4 +1711,6 @@ TinyMCE_Control.prototype = {
 				nl[i].elm.className = s.hidden_tab_class;
 		}
 	}
+
+	/**#@-*/
 };

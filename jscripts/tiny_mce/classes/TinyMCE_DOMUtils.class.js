@@ -7,6 +7,11 @@
  * The contents of this file will be wrapped in a class later on.
  */
 
+/**#@+
+ * @member TinyMCE_Engine
+ * @method
+ */
+
 /**
  * Creates a HTML tag by name and attributes array. This will XML encode all attribute values.
  *
@@ -616,3 +621,5 @@ TinyMCE_Engine.prototype.getViewPort = function(w) {
 		height : w.innerHeight || (m ? de.clientHeight : b.clientHeight)
 	};
 };
+
+/**#@-*/

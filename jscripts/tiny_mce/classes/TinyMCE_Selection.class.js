@@ -10,12 +10,20 @@
  *
  * @param {TinyMCE_Control} inst TinyMCE editor control instance.
  * @constructor
+ * @member TinyMCE_Selection
  */
 function TinyMCE_Selection(inst) {
 	this.instance = inst;
 };
 
+/**#@+
+ * @member TinyMCE_Selection
+ */
 TinyMCE_Selection.prototype = {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Returns the selected HTML code.
 	 *
@@ -313,6 +321,7 @@ TinyMCE_Selection.prototype = {
 	 * @param {Node} en End node to get char position of.
 	 * @return Data container with start/end properties.
 	 * @type Object
+	 * @private
 	 */
 	_getPosText : function(r, sn, en) {
 		var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
@@ -340,6 +349,7 @@ TinyMCE_Selection.prototype = {
 	 * @param {Node} ep End character position.
 	 * @return Data container with startNode/startOffset/endNode/endOffset properties.
 	 * @type Object
+	 * @private
 	 */
 	_getTextPos : function(r, sp, ep) {
 		var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
@@ -579,4 +589,6 @@ TinyMCE_Selection.prototype = {
 
 		return elm;
 	}
+
+	/**#@-*/
 };
