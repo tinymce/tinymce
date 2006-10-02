@@ -51,8 +51,8 @@ var Search = {
 						h += '<div><a href="javascript:Search.open(\'class_' + cl + '.htm#' + na + '\');">' + na + '</a> Method (<a href="javascript:Search.open(\'class_' + cl + '.htm\');">' + cl + '</a>)</div>';
 						break;
 
-					case 'p':
-						h += '<div><a href="javascript:Search.open(\'class_' + cl + '.htm#' + na + '\');">' + na + '</a> Property (<a href="javascript:Search.open(\'class_' + cl + '.htm\');">' + cl + '</a>)</div>';
+					case 'f':
+						h += '<div><a href="javascript:Search.open(\'class_' + cl + '.htm#' + na + '\');">' + na + '</a> Field (<a href="javascript:Search.open(\'class_' + cl + '.htm\');">' + cl + '</a>)</div>';
 						break;
 
 					case 'c':

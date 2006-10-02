@@ -91,6 +91,31 @@ function TinyMCE_Control(settings) {
  */
 TinyMCE_Control.prototype = {
 	/**#@+
+	 * @field
+	 */
+
+	/**
+	 * Contains methods for handling the current instance selection.
+	 *
+	 * @type TinyMCE_Selection
+	 */
+	selection : null,
+
+	/**
+	 * Name/Value array containing all instance settings.
+	 *
+	 * @type Array
+	 */
+	settings : null,
+
+	/**
+	 * Cleanup engine reference, handles all XHTML serialization and cleanup.
+	 *
+	 * @type TinyMCE_Cleanup
+	 */
+	cleanup : null,
+
+	/**#@+
 	 * @method
 	 */
 

@@ -57,11 +57,11 @@
 
 							<!-- Short summaries -->
 
-							<xsl:if	test="count(property) != 0">
+							<xsl:if	test="count(field) != 0">
 								<div class="section">
 									<table class="fieldsummary">
 										<caption>Field Summary</caption>
-										<xsl:for-each select="property">
+										<xsl:for-each select="field">
 											<xsl:sort select="@name" />
 											<tr>
 												<td class="datatype"><xsl:call-template	name="data_type" /></td>
@@ -116,12 +116,12 @@
 
 							<!-- Details -->
 
-							<xsl:if	test="count(property) != 0">
-								<div class="section property details">
-									<h3><a name="property_detail">Field Detail</a></h3>
+							<xsl:if	test="count(field) != 0">
+								<div class="section field details">
+									<h3><a name="field_detail">Field Detail</a></h3>
 
 									<div class="content">
-										<xsl:for-each select="property">
+										<xsl:for-each select="field">
 											<xsl:sort select="@name" />
 											<h4><a><xsl:attribute name="name"><xsl:value-of	select="@name"/></xsl:attribute><xsl:value-of select="@name"/></a></h4>
 											<div class="layout"><xsl:call-template name="function_layout" /></div>
@@ -269,9 +269,7 @@
 		<xsl:if	test="$get = 'return'">
 			<xsl:variable name="returntype"><xsl:value-of select="return/@type" /></xsl:variable>
 
-			<xsl:if	test="@private = '1'">&lt;private&gt; </xsl:if>
-			<xsl:if	test="@abstract = '1'">&lt;abstract&gt; </xsl:if>
-			<xsl:if	test="@static = '1'">&lt;static&gt; </xsl:if>
+			<xsl:call-template name="member_prefix" />
 
 			<xsl:if	test="count(//class[@name=$returntype])	!= 0">
 				<a><xsl:attribute name="href">class_<xsl:value-of select="$returntype"/>.htm</xsl:attribute><xsl:value-of select="$returntype"/></a>
@@ -297,6 +295,8 @@
 		<xsl:if	test="$get = 'argument'">
 			<xsl:variable name="type"><xsl:value-of	select="@type" /></xsl:variable>
 
+			<xsl:call-template name="member_prefix" />
+
 			<xsl:if	test="count(//class[@name=$type]) != 0">
 				<a><xsl:attribute name="href">class_<xsl:value-of select="@type"/>.htm</xsl:attribute><xsl:value-of select="@type"/></a>
 			</xsl:if>
@@ -307,12 +307,16 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="function_layout">
-		<xsl:param name="mode" select="'full'" />
-
+	<xsl:template name="member_prefix">
 		<xsl:if	test="@private = '1'">&lt;private&gt; </xsl:if>
 		<xsl:if	test="@abstract = '1'">&lt;abstract&gt; </xsl:if>
 		<xsl:if	test="@static = '1'">&lt;static&gt; </xsl:if>
+	</xsl:template>
+
+	<xsl:template name="function_layout">
+		<xsl:param name="mode" select="'full'" />
+
+		<xsl:call-template name="member_prefix" />
 
 		<xsl:if	test="name() !=	'constructor'">
 			<xsl:if	test="$mode='full'">
@@ -322,14 +326,14 @@
 		</xsl:if>
 
 		<xsl:if	test="name() = 'constructor'">
-			<xsl:if	test="$mode='full'"><xsl:value-of select="@name"/></xsl:if>(<xsl:for-each select="param">&lt;<xsl:call-template	name="data_type" />&gt;	<xsl:value-of select="@name"/><xsl:if test="position() != last()">, </xsl:if></xsl:for-each>)
+			<xsl:if	test="$mode='full'"><xsl:value-of select="@name"/></xsl:if>(<xsl:for-each select="param">&lt;<xsl:call-template name="data_type" />&gt;	<xsl:value-of select="@name"/><xsl:if test="position() != last()">, </xsl:if></xsl:for-each>)
 		</xsl:if>
 
 		<xsl:if	test="name() = 'method'">
-			<xsl:if	test="$mode='full'"><xsl:value-of select="@name"/></xsl:if>(<xsl:for-each select="param">&lt;<xsl:call-template	name="data_type" />&gt;	<xsl:value-of select="@name"/><xsl:if test="position() != last()">, </xsl:if></xsl:for-each>)
+			<xsl:if	test="$mode='full'"><xsl:value-of select="@name"/></xsl:if>(<xsl:for-each select="param">&lt;<xsl:call-template name="data_type" />&gt;	<xsl:value-of select="@name"/><xsl:if test="position() != last()">, </xsl:if></xsl:for-each>)
 		</xsl:if>
 
-		<xsl:if	test="name() = 'property'">
+		<xsl:if	test="name() = 'field'">
 			<xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>
 		</xsl:if>
 	</xsl:template>

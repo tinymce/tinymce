@@ -2,38 +2,42 @@
   <footer>JavaScript API documentation was generated with &lt;a href="http://www.moxiecode.com"&gt;moxiedoc&lt;/a&gt;</footer>
   <class name="TinyMCE_Engine">
     <method name="clearArray">
-      <summary>Returns a cleared array, since some external libraries tend to extend the Array core objectarrays needs to be cleaned from these extended functions. So this function simply setting anynamed properties to null.</summary>
+      <summary>Returns a cleared array, since some external libraries tend to extend the Array core object arrays needs to be cleaned from these extended functions. So this function simply setting any named properties to null.</summary>
       <return type="Array" summary="Cleared name/value array." />
     </method>
     <method name="explode">
       <summary>Splits a string by the specified delimiter and skips any empty items.</summary>
       <param name="d" type="string" summary="Delimiter to split by." />
+      <param name="s" type="string" summary="String to split." />
       <return type="Array" summary="Array with chunks from string." />
     </method>
     <method name="cleanupHTMLCode">
-      <summary>Makes some preprocessing cleanup routines on the specified HTML string.This includes forcing some tags to be open so MSIE doesn't fail. Forcing other to close andpadding paragraphs with non breaking spaces. This function is used when the editor getsinitialized with content.</summary>
+      <summary>Makes some preprocessing cleanup routines on the specified HTML string. This includes forcing some tags to be open so MSIE doesn't fail. Forcing other to close and padding paragraphs with non breaking spaces. This function is used when the editor gets initialized with content.</summary>
       <param name="s" type="string" summary="HTML string to cleanup." />
       <return type="string" summary="Cleaned HTML string." />
     </method>
     <method name="parseStyle">
-      <summary>Parses the specified HTML style data. This will parse for example"border-left: 1px; background-color: red" into an key/value array.</summary>
+      <summary>Parses the specified HTML style data. This will parse for example "border-left: 1px; background-color: red" into an key/value array.</summary>
       <param name="str" type="string" summary="Style data to parse." />
       <return type="Array" summary="Name/Value array of style items." />
     </method>
     <method name="compressStyle">
-      <summary>Compresses larger styles into a smaller. Since MSIE automaticly convertsborder: 1px solid red to border-left: 1px solid red, border-righ: 1px solid red and so forth.'This will bundle them together again if the information is the same in each item.</summary>
+      <summary>Compresses larger styles into a smaller. Since MSIE automaticly converts border: 1px solid red to border-left: 1px solid red, border-righ: 1px solid red and so forth.' This will bundle them together again if the information is the same in each item.</summary>
       <param name="ar" type="Array" summary="Style name/value array with items." />
+      <param name="pr" type="string" summary="Style item prefix to bundle for example border." />
       <param name="sf" type="string" summary="Style item suffix to bunlde for example -width or -width." />
+      <param name="res" type="string" summary="Result name, for example border-width." />
       <return type="void" />
     </method>
     <method name="serializeStyle">
-      <summary>Serializes the specified style item name/value array into a HTML string. This functionwill force HEX colors in Firefox and convert the URL items of a style correctly.</summary>
+      <summary>Serializes the specified style item name/value array into a HTML string. This function will force HEX colors in Firefox and convert the URL items of a style correctly.</summary>
       <param name="ar" type="Array" summary="Name/Value array of items to serialize." />
       <return type="string" summary="Serialized HTML string containing the items." />
     </method>
     <method name="convertRGBToHex">
       <summary>Returns a hexadecimal version of the specified rgb(1,2,3) string.</summary>
       <param name="s" type="string" summary="RGB string to parse, if this doesn't isn't a rgb(n,n,n) it will passthrough the string." />
+      <param name="k" type="boolean" summary="Keep before/after contents. If enabled contents before after the rgb(n,n,n) will be intact." />
       <return type="string" summary="Hexadecimal version of the specified rgb(1,2,3) string." />
     </method>
     <method name="convertHexToRGB">
@@ -42,17 +46,17 @@
       <return type="string" summary="rgb(n,n,n) string from a hexadecimal value." />
     </method>
     <method name="convertSpansToFonts">
-      <summary>Converts span elements to font elements in the specified document instance.Todo: Move this function into a XHTML plugin or simmilar.</summary>
+      <summary>Converts span elements to font elements in the specified document instance. Todo: Move this function into a XHTML plugin or simmilar.</summary>
       <param name="doc" type="DOMDocument" summary="Document instance to convert spans in." />
       <return type="void" />
     </method>
     <method name="convertFontsToSpans">
-      <summary>Convers fonts to spans in the specified document.Todo: Move this function into a XHTML plugin or simmilar.</summary>
+      <summary>Convers fonts to spans in the specified document. Todo: Move this function into a XHTML plugin or simmilar.</summary>
       <param name="doc" type="DOMDocument" summary="Document instance to convert fonts in." />
       <return type="void" />
     </method>
     <method name="cleanupAnchors">
-      <summary>Moves the contents of a anchor outside and after the anchor. Only if the anchor doesn'thave a href.</summary>
+      <summary>Moves the contents of a anchor outside and after the anchor. Only if the anchor doesn't have a href.</summary>
       <param name="doc" type="DOMDocument" summary="DOM document instance to fix anchors in." />
       <return type="void" />
     </method>
@@ -68,25 +72,32 @@
     <method name="createTagHTML">
       <summary>Creates a HTML tag by name and attributes array. This will XML encode all attribute values.</summary>
       <param name="tn" type="string" summary="Tag name to create." />
+      <param name="a" type="Array" summary="Optional name/Value array of attributes." />
       <param name="h" type="string" summary="Optional inner HTML of new tag, raw HTML code." />
       <return type="void" />
     </method>
     <method name="createTag">
-      <summary>Creates a tag by name and attributes array. This will create a DOM node out of the specifieddata.</summary>
+      <summary>Creates a tag by name and attributes array. This will create a DOM node out of the specified data.</summary>
       <param name="d" type="string" summary="Document to create DOM node in." />
+      <param name="tn" type="string" summary="Tag name to create." />
       <param name="a" type="Array" summary="Optional name/Value array of attributes." />
+      <param name="h" type="string" summary="Optional inner HTML of new tag, raw HTML code." />
       <return type="void" />
     </method>
     <method name="getElementByAttributeValue">
       <summary>Returns a element by a specific attribute and it's value.</summary>
       <param name="n" type="HTMLElement" summary="Element to search in." />
+      <param name="e" type="string" summary="Element name to search for." />
       <param name="a" type="string" summary="Attribute name to search for." />
+      <param name="v" type="string" summary="Attribute value to search for." />
       <return type="HTMLElement" summary="HTML element that matched the criterias or null on failure." />
     </method>
     <method name="getElementsByAttributeValue">
       <summary>Returns a element array by a specific attribute and it's value.</summary>
       <param name="n" type="HTMLElement" summary="Element to search in." />
+      <param name="e" type="string" summary="Element name to search for." />
       <param name="a" type="string" summary="Attribute name to search for." />
+      <param name="v" type="string" summary="Attribute value to search for." />
       <return type="Array" summary="HTML element array that matched the criterias or null on failure." />
     </method>
     <method name="isBlockElement">
@@ -97,104 +108,124 @@
     <method name="getParentBlockElement">
       <summary>Returns the first block element parent of the specified node.</summary>
       <param name="n" type="HTMLNode" summary="Node get parent block element for." />
+      <param name="r" type="HTMLNode" summary="Optional root element, never go below this point." />
       <return type="HTMLElement" summary="First block element parent of the specified node or null if it wasn't found." />
     </method>
     <method name="insertAfter">
       <summary>Inserts a node after the specific node.</summary>
       <param name="n" type="HTMLNode" summary="New node to insert." />
+      <param name="r" type="HTMLNode" summary="Reference node to insert after." />
       <return type="void" />
     </method>
     <method name="setInnerHTML">
-      <summary>Sets the innerHTML property of a element, this function alsofixes a MSIE bug where the first comment is removed.</summary>
+      <summary>Sets the innerHTML property of a element, this function also fixes a MSIE bug where the first comment is removed.</summary>
       <param name="e" type="HTMLElement" summary="Element to insert HTML in." />
+      <param name="h" type="string" summary="HTML code to insert into innerHTML." />
       <return type="void" />
     </method>
     <method name="getOuterHTML">
-      <summary>Returns the outer HTML of a element, this uses the outerHTMLproperty in MSIE and Opera and a workaround for Gecko.</summary>
+      <summary>Returns the outer HTML of a element, this uses the outerHTML property in MSIE and Opera and a workaround for Gecko.</summary>
       <param name="e" type="HTMLElement" summary="HTML element to get outerHTML from." />
       <return type="string" summary="HTML content string." />
     </method>
     <method name="setOuterHTML">
-      <summary>Sets the outer HTML of a element, this uses the outerHTMLproperty in MSIE and Opera and a workaround for Gecko.</summary>
+      <summary>Sets the outer HTML of a element, this uses the outerHTML property in MSIE and Opera and a workaround for Gecko.</summary>
       <param name="e" type="HTMLElement" summary="HTML element to set outerHTML on." />
+      <param name="h" type="string" summary="HTML string to set in property." />
       <param name="d" type="DOMDocument" summary="Optional document instance (Required in old IE versions)." />
       <return type="void" />
     </method>
     <method name="_getElementById">
       <summary>Returns a element by id, this will also search the form names to match the id.</summary>
       <param name="id" type="string" summary="Id of element." />
+      <param name="d" type="DOMDocument" summary="Optional document." />
       <return type="HTMLElement" summary="HTML element that matches the id." />
     </method>
     <method name="getNodeTree" deprecated="1">
       <summary>Returns a array of nodes selected retrived from the child nodes of the specified node.</summary>
       <param name="n" type="HTMLNode" summary="Node to get children from." />
+      <param name="na" type="Array" summary="Array to fill with children." />
       <param name="t" type="int" summary="Node type to get." />
+      <param name="nn" type="string" summary="Node name of items to retrive." />
       <return type="Array" summary="Node array." />
     </method>
     <method name="getParentElement">
       <summary>Returns the parent element of the specified node based on the search criteria.</summary>
       <param name="node" type="HTMLNode" summary="Node to get parent element of." />
+      <param name="na" type="string" summary="Comma separated list of element names to get." />
       <param name="f" type="function" summary="Optional function to call for each node, if it returns true the node is valid." />
+      <param name="r" type="HTMLNode" summary="Optional root element, never go below this point." />
       <return type="HTMLElement" summary="HTMLElement or null based on search criteras." />
     </method>
     <method name="getParentNode">
-      <summary>Returns a node by the specified selector function. This function willloop through all parent nodes and call the specified function for each node.If the function then returns true it will stop the execution and return that node.</summary>
+      <summary>Returns a node by the specified selector function. This function will loop through all parent nodes and call the specified function for each node. If the function then returns true it will stop the execution and return that node.</summary>
       <param name="n" type="DOMNode" summary="HTML node to search parents on." />
+      <param name="f" type="function" summary="Selection function to execute on each node." />
       <param name="r" type="HTMLNode" summary="Optional root element, never go below this point." />
       <return type="DOMNode" summary="DOMNode or null if it wasn't found." />
     </method>
     <method name="getAttrib">
       <summary>Returns the attribute value of a element or the default value if it wasn't found.</summary>
       <param name="elm" type="HTMLElement" summary="HTML element to get attribute from." />
+      <param name="name" type="string" summary="Attribute name to retrive." />
       <param name="dv" type="string" summary="Optional default value to return, this value defaults to a empty string." />
       <return type="string" summary="Attribute value or default value if it wasn't found in element." />
     </method>
     <method name="setAttrib">
       <summary>Sets the attribute value for a specific attribute.</summary>
       <param name="el" type="HTMLElement" summary="HTML element to set attribute on." />
+      <param name="name" type="string" summary="Attribute name to set." />
       <param name="va" type="string" summary="Attribute value to set." />
+      <param name="fix" type="boolean" summary="Optional fix value state, if true only number data will be accepted." />
       <return type="void" />
     </method>
     <method name="setStyleAttrib">
       <summary>Sets a style attribute item value.</summary>
       <param name="e" type="HTMLElement" summary="HTML element to set style attribute item on." />
+      <param name="n" type="string" summary="Style item name to set." />
       <param name="v" type="string" summary="Style item value to set." />
       <return type="void" />
     </method>
     <method name="switchClass">
-      <summary>Switches the CSS class of the specified element. This method also caches theelements in a lookup table for performance. This should only be used for TinyMCE main UI controlslike buttons or select elements.</summary>
+      <summary>Switches the CSS class of the specified element. This method also caches the elements in a lookup table for performance. This should only be used for TinyMCE main UI controls like buttons or select elements.</summary>
       <param name="ei" type="HTMLElement" summary="Element to set CSS class on." />
+      <param name="c" type="string" summary="CSS class to set." />
       <return type="void" />
     </method>
     <method name="getAbsPosition">
-      <summary>Returns the absolute x, y position of a node. The position will be returned in a object withtwo properties absLeft and absTop.</summary>
+      <summary>Returns the absolute x, y position of a node. The position will be returned in a object with two properties absLeft and absTop.</summary>
       <param name="n" type="HTMLNode" summary="HTML element to get x, y position from." />
+      <param name="cn" type="HTMLNode" summary="Optional HTML element to to stop position calcualtion by." />
       <return type="TinyMCE_ElementPosition" summary="Absolute position of the specified element." />
     </method>
     <method name="prevNode">
-      <summary>Finds any previous element by name. This will loop through the siblingsinorder to find the specified element by name. If the element wasn't foundit will return a null value.</summary>
+      <summary>Finds any previous element by name. This will loop through the siblings inorder to find the specified element by name. If the element wasn't found it will return a null value.</summary>
       <param name="e" type="HTMLNode" summary="HTML node to search from." />
+      <param name="n" type="string" summary="Comma separated list of element names to search for." />
       <return type="HTMLElement" summary="HTML Element or null if it wasn't found." />
     </method>
     <method name="nextNode">
-      <summary>Finds any element after the current one by name. This will loop through the siblingsinorder to find the specified element by name. If the element wasn't foundit will return a null value.</summary>
+      <summary>Finds any element after the current one by name. This will loop through the siblings inorder to find the specified element by name. If the element wasn't found it will return a null value.</summary>
       <param name="e" type="HTMLNode" summary="HTML node to search from." />
+      <param name="n" type="string" summary="Comma separated list of element names to search for." />
       <return type="HTMLElement" summary="HTML Element or null if it wasn't found." />
     </method>
     <method name="selectElements">
       <summary>Returns a array of elements when the specified function matches a node.</summary>
       <param name="n" type="DOMNode" summary="Node to select children from." />
+      <param name="na" type="string" summary="Element name(s) to search for separated by commas." />
       <param name="f" type="function" summary="Function that returns true/false if the node is to be added or not." />
       <return type="Array" summary="Array with selected elements." />
     </method>
     <method name="selectNodes">
       <summary>Returns a array of nodes when the specified function matches a node.</summary>
       <param name="n" type="DOMNode" summary="Node to select children from." />
+      <param name="f" type="function" summary="Function that returns true/false if the node is to be added or not." />
       <param name="a" type="Array" summary="Optional array to fill with nodes." />
       <return type="Array" summary="Array with selected nodes." />
     </method>
     <method name="addCSSClass">
-      <summary>Adds a CSS class to the specified element. It will remove any previous item with the same nameso adding a class that already exists will move it to the end.</summary>
+      <summary>Adds a CSS class to the specified element. It will remove any previous item with the same name so adding a class that already exists will move it to the end.</summary>
       <param name="e" type="HTMLElement" summary="HTML element to add CSS class to." />
       <return type="string" summary="Returns the new class attribute value." />
     </method>
@@ -211,6 +242,7 @@
     <method name="renameElement">
       <summary>Renames the specified element to the specified name.</summary>
       <param name="e" type="HTMLElement" summary="Element to rename." />
+      <param name="n" type="string" summary="New name of the element." />
       <param name="d" type="DOMDocument" summary="Optional document reference." />
       <return type="void" />
     </method>
@@ -223,7 +255,7 @@
       <summary>Core engine class for TinyMCE, a instance of this class is available as a global called tinyMCE.</summary>
     </constructor>
     <method name="init">
-      <summary>Initializes TinyMCE with the specific configuration settings. This methodmay be called multiple times when multiple instances with diffrent settings is to be created.</summary>
+      <summary>Initializes TinyMCE with the specific configuration settings. This method may be called multiple times when multiple instances with diffrent settings is to be created.</summary>
       <return type="void" />
     </method>
     <method name="hasPlugin">
@@ -232,18 +264,21 @@
       <return type="boolean" summary="true/false if the specified plugin is loaded or not." />
     </method>
     <method name="addPlugin">
-      <summary>Adds the specified plugin to the list of loaded plugins, this will also setup the baseURLproperty of the plugin.</summary>
+      <summary>Adds the specified plugin to the list of loaded plugins, this will also setup the baseURL property of the plugin.</summary>
       <param name="Plugin" type="string" summary="name/id." />
+      <param name="p" type="TinyMCE_Plugin" summary="Plugin instance to add." />
       <return type="void" />
     </method>
     <method name="setPluginBaseURL">
-      <summary>Sets the baseURL of the specified plugin, this is useful if the plugin is loaded froma external location.</summary>
+      <summary>Sets the baseURL of the specified plugin, this is useful if the plugin is loaded from a external location.</summary>
       <param name="n" type="string" summary="Plugin name/id to set base URL on. This have to be added before." />
+      <param name="u" type="string" summary="Base URL of plugin, this string should be the URL prefix for the plugin without a trailing slash." />
       <return type="void" />
     </method>
     <method name="loadPlugin">
       <summary>Load plugin from external URL.</summary>
       <param name="n" type="string" summary="Plugin name for example \&quot;emotions\&quot;." />
+      <param name="u" type="string" summary="URL of plugin directory to load." />
       <return type="void" />
     </method>
     <method name="hasTheme">
@@ -254,11 +289,13 @@
     <method name="addTheme">
       <summary>Adds the specified theme in to the list of loaded themes.</summary>
       <param name="n" type="string" summary="Theme name/id to add the object reference to." />
+      <param name="t" type="TinyMCE_Theme" summary="Theme instance to add to the loaded list." />
       <return type="void" />
     </method>
     <method name="addMenu">
       <summary>Adds a floating menu instance to TinyMCE.</summary>
       <param name="n" type="string" summary="TinyMCE menu id." />
+      <param name="m" type="TinyMCE_Menu" summary="TinyMCE menu instance." />
       <return type="void" />
     </method>
     <method name="hasMenu">
@@ -267,7 +304,7 @@
       <return type="boolean" summary="true/false if it exists or not." />
     </method>
     <method name="loadScript">
-      <summary>Loads the specified script by writing the a script tag to the current page.This will also check if the file has been loaded before. This function should only be usedwhen the page is loading.</summary>
+      <summary>Loads the specified script by writing the a script tag to the current page. This will also check if the file has been loaded before. This function should only be used when the page is loading.</summary>
       <param name="url" type="string" summary="Script URL to load." />
       <return type="void" />
     </method>
@@ -276,18 +313,20 @@
       <return type="void" />
     </method>
     <method name="loadCSS">
-      <summary>Loads the specified CSS by writing the a link tag to the current page.This will also check if the file has been loaded before. This function should only be usedwhen the page is loading.</summary>
+      <summary>Loads the specified CSS by writing the a link tag to the current page. This will also check if the file has been loaded before. This function should only be used when the page is loading.</summary>
       <param name="url" type="string" summary="CSS file URL to load or comma separated list of files." />
       <return type="void" />
     </method>
     <method name="importCSS">
-      <summary>Imports a CSS file into a allready loaded document. This will add a link elementto the head element of the document.</summary>
+      <summary>Imports a CSS file into a allready loaded document. This will add a link element to the head element of the document.</summary>
       <param name="doc" type="DOMDocument" summary="DOM Document to load CSS into." />
+      <param name="css" type="string" summary="CSS File URL to load or comma separated list of files." />
       <return type="void" />
     </method>
     <method name="confirmAdd">
-      <summary>Displays a confirm dialog when a user clicks/focus a textarea that is to be converted intoa TinyMCE instance.</summary>
+      <summary>Displays a confirm dialog when a user clicks/focus a textarea that is to be converted into a TinyMCE instance.</summary>
       <param name="e" type="DOMEvent" summary="DOM event instance." />
+      <param name="settings" type="Array" summary="Name/Value array of initialization settings." />
       <return type="void" />
     </method>
     <method name="updateContent" deprecated="1">
@@ -298,6 +337,7 @@
     <method name="addMCEControl">
       <summary>Adds a TinyMCE editor control instance to a specific form element.</summary>
       <param name="replace_element" type="HTMLElement" summary="HTML element object to replace." />
+      <param name="form_element_name" type="string" summary="HTML form element name," />
       <param name="target_document" type="DOMDocument" summary="Target document that holds the element." />
       <return type="void" />
     </method>
@@ -312,8 +352,9 @@
       <return type="void" />
     </method>
     <method name="triggerSave">
-      <summary>Moves the contents from a TinyMCE editor control instance to the hidden textareathat got replaced with TinyMCE. This is executed automaticly on for example form submit.</summary>
+      <summary>Moves the contents from a TinyMCE editor control instance to the hidden textarea that got replaced with TinyMCE. This is executed automaticly on for example form submit.</summary>
       <param name="skip_cleanup" type="boolean" summary="Optional Skip cleanup, simply move the contents as fast as possible." />
+      <param name="skip_callback" type="boolean" summary="Optional Skip callback, don't call the save_callback function." />
       <return type="void" />
     </method>
     <method name="resetForm">
@@ -324,13 +365,16 @@
     <method name="execInstanceCommand">
       <summary>Executes a command on a specific editor instance by id.</summary>
       <param name="editor_id" type="string" summary="TinyMCE editor control instance id to perform comman on." />
+      <param name="command" type="string" summary="Command name to execute, for example mceLink or Bold." />
       <param name="user_interface" type="boolean" summary="True/false state if a UI (dialog) should be presented or not." />
+      <param name="value" type="object" summary="Optional command value, this can be anything." />
       <param name="focus" type="boolean" summary="True/false if the editor instance should be focused first." />
       <return type="void" />
     </method>
     <method name="execCommand">
-      <summary>Executes a command on the selected or last selected TinyMCE editor control instance. This function also handlessome non instance specific commands like mceAddControl, mceRemoveControl, mceHelp or mceFocus.</summary>
+      <summary>Executes a command on the selected or last selected TinyMCE editor control instance. This function also handles some non instance specific commands like mceAddControl, mceRemoveControl, mceHelp or mceFocus.</summary>
       <param name="command" type="string" summary="Command name to execute, for example mceLink or Bold." />
+      <param name="user_interface" type="boolean" summary="True/false state if a UI (dialog) should be presented or not." />
       <param name="value" type="object" summary="Optional command value, this can be anything." />
       <return type="void" />
     </method>
@@ -340,7 +384,7 @@
       <return type="void" />
     </method>
     <method name="storeAwayURLs">
-      <summary>Stores away the src and href attribute values in separate mce_src and mce_href attributes.This is needed since both MSIE and Gecko messes with these attributes. The oldsrc and href will be intact, this simply adds them to a separate attribute.</summary>
+      <summary>Stores away the src and href attribute values in separate mce_src and mce_href attributes. This is needed since both MSIE and Gecko messes with these attributes. The old src and href will be intact, this simply adds them to a separate attribute.</summary>
       <param name="s" type="string" summary="HTML string to replace src and href attributes in." />
       <return type="string" summary="HTML string with replaced src and href attributes." />
     </method>
@@ -350,33 +394,40 @@
       <return type="void" />
     </method>
     <method name="removeTinyMCEFormElements">
-      <summary>Removes/disables TinyMCE built in form elements such as select boxes for font sizes etc.These are disabled when the user submits a form so they don't get picked up by the backend scriptthat intercepts the contents.</summary>
+      <summary>Removes/disables TinyMCE built in form elements such as select boxes for font sizes etc. These are disabled when the user submits a form so they don't get picked up by the backend script that intercepts the contents.</summary>
       <param name="form_obj" type="HTMLElement" summary="Form object to loop through for TinyMCE specific form elements." />
       <return type="void" />
     </method>
     <method name="handleEvent">
-      <summary>Event handler function that gets executed each time a event occurs in a TinyMCE editor control instance.Todo: Fix the return statements so they return true or false.</summary>
+      <summary>Event handler function that gets executed each time a event occurs in a TinyMCE editor control instance. Todo: Fix the return statements so they return true or false.</summary>
       <param name="e" type="DOMEvent" summary="DOM event object reference." />
       <return type="boolean" summary="true - if the event is to be chained, false - if the event chain is to be canceled." />
     </method>
     <method name="getButtonHTML">
       <summary>Returns the HTML code for a normal button control.</summary>
       <param name="id" type="string" summary="Button control id, this will be the suffix for the element id, the prefix is the editor id." />
+      <param name="lang" type="string" summary="Language variable key name to insert as the title/alt of the button image." />
       <param name="img" type="string" summary="Image URL to insert, {$themeurl} and {$pluginurl} will be replaced." />
+      <param name="cmd" type="string" summary="Command to execute when the user clicks the button." />
       <param name="ui" type="string" summary="Optional user interface boolean for command." />
+      <param name="val" type="string" summary="Optional value for command." />
       <return type="string" summary="HTML code for a normal button based in input information." />
     </method>
     <method name="getMenuButtonHTML">
       <summary>Returns the HTML code for a normal button control.</summary>
       <param name="id" type="string" summary="Button control id, this will be the suffix for the element id, the prefix is the editor id." />
+      <param name="lang" type="string" summary="Language variable key name to insert as the title/alt of the button image." />
       <param name="img" type="string" summary="Image URL to insert, {$themeurl} and {$pluginurl} will be replaced." />
+      <param name="mcmd" type="string" summary="Command to execute when the user clicks the menu arrow button." />
       <param name="cmd" type="string" summary="Command to execute when the user clicks the main button." />
+      <param name="ui" type="string" summary="Optional user interface boolean for command." />
       <param name="val" type="string" summary="Optional value for command." />
       <return type="string" summary="HTML code for a normal button based in input information." />
     </method>
     <method name="_menuButtonEvent">
       <summary>Switched classes on menu elements in MSIE.</summary>
       <param name="e" type="string" summary="Event name	out, over." />
+      <param name="o" type="HTMLElement" summary="HTML element to set class on." />
       <return type="void" />
     </method>
     <method name="addButtonMap">
@@ -385,11 +436,11 @@
       <return type="void" />
     </method>
     <method name="submitPatch">
-      <summary>Piggyback onsubmit event handler function, this will remove/hide the TinyMCE specific form elementscall triggerSave to fill the textarea with the correct contents then call the old piggy backed event handler.</summary>
+      <summary>Piggyback onsubmit event handler function, this will remove/hide the TinyMCE specific form elements call triggerSave to fill the textarea with the correct contents then call the old piggy backed event handler.</summary>
       <return type="void" />
     </method>
     <method name="onLoad">
-      <summary>Gets executed when the page loads or get intitialized. This function will then convert all textareas/divs thatis to be converted into TinyMCE editor controls.</summary>
+      <summary>Gets executed when the page loads or get intitialized. This function will then convert all textareas/divs that is to be converted into TinyMCE editor controls.</summary>
       <return type="boolean" summary="true - if the event is to be chained, false - if the event chain is to be canceled." />
     </method>
     <method name="isInstance">
@@ -400,13 +451,17 @@
     <method name="getParam">
       <summary>Returns a specific configuration setting or the default value if it wasn't found.</summary>
       <param name="name" type="string" summary="Configuration setting to get." />
+      <param name="default_value" type="string" summary="Default value to return if it wasn't found." />
       <param name="strip_whitespace" type="boolean" summary="Optional remove all whitespace." />
+      <param name="split_chr" type="string" summary="Split char/regex/string." />
       <return type="object" summary="Number, string or other object based in parameter and default_value." />
     </method>
     <method name="getLang">
       <summary>Returns a language variable value from the language packs.</summary>
       <param name="name" type="string" summary="Name of the key to retrive." />
+      <param name="default_value" type="string" summary="Optional default value to return if it wasn't found." />
       <param name="parse_entities" type="boolean" summary="Is HTML entities to be resolved or not." />
+      <param name="va" type="Array" summary="Optional name/value array of variables to replace in language string." />
       <return type="object" summary="Language string value could be a number if it's a relative dimenstion." />
     </method>
     <method name="entityDecode">
@@ -417,11 +472,13 @@
     <method name="addToLang">
       <summary>Adds language items to the global language array.</summary>
       <param name="prefix" type="string" summary="Prefix string to add infront of every array item before adding it." />
+      <param name="ar" type="Array" summary="Language item array to add to global language array." />
       <return type="void" />
     </method>
     <method name="triggerNodeChange">
-      <summary>Triggers a nodeChange event to every theme and plugin. This will be executed when the cursor moves orwhen a command that modifies the editor contents is executed.</summary>
+      <summary>Triggers a nodeChange event to every theme and plugin. This will be executed when the cursor moves or when a command that modifies the editor contents is executed.</summary>
       <param name="focus" type="boolean" summary="Optional state if the last selected editor instance is to be focused or not." />
+      <param name="setup_content" type="boolean" summary="Optional state if it's called from setup content function or not." />
       <return type="void" />
     </method>
     <method name="setContent" deprecated="1">
@@ -442,38 +499,45 @@
     <method name="applyTemplate">
       <summary>Replaces language, args and settings variables in a HTML string.</summary>
       <param name="h" type="string" summary="HTML string to replace language variables in." />
+      <param name="as" type="Array" summary="Optional arguments array to take variables from." />
       <return type="string" summary="HTML string with replaced varliables." />
     </method>
     <method name="replaceVar">
       <summary>Replaces a specific variable in the string with a nother string.</summary>
       <param name="h" type="string" summary="String to search in for the variable." />
+      <param name="r" type="string" summary="Variable name to search for." />
       <param name="v" type="string" summary="Value to insert where a variable is found." />
       <return type="string" summary="String with replaced variable." />
     </method>
     <method name="openWindow">
-      <summary>Opens a popup window based in the specified input data. This functionis used for all popup windows in TinyMCE.These are the current template keys: file, width, height, close_previous.</summary>
+      <summary>Opens a popup window based in the specified input data. This function is used for all popup windows in TinyMCE. These are the current template keys: file, width, height, close_previous.</summary>
       <param name="template" type="Array" summary="Popup template data such as with, height etc." />
+      <param name="args" type="Array" summary="Popup arguments that is to be passed to the popup such as custom data." />
       <return type="void" />
     </method>
     <method name="closeWindow" deprecated="1">
-      <summary>Closes the specified window. This function is deprecated and should be replaced withtinyMCEPopup.close();.</summary>
+      <summary>Closes the specified window. This function is deprecated and should be replaced with tinyMCEPopup.close();.</summary>
       <param name="win" type="DOMWindow" summary="Window reference to close." />
       <return type="void" />
     </method>
     <method name="getVisualAidClass">
       <summary>Returns the visual aid class string, this will add/remove the visual aid class.</summary>
       <param name="class_name" type="string" summary="Class name value to add/remove visual aid classes from." />
+      <param name="state" type="boolean" summary="true/false if the classes should be added or removed." />
       <return type="string" summary="New class value containing the visual aid classes or not." />
     </method>
     <method name="handleVisualAid">
       <summary>Adds visual aid classes to all elements that need them recursive in the DOM tree.</summary>
       <param name="el" type="HTMLElement" summary="HTML element to add visual aid classes to." />
+      <param name="deep" type="boolean" summary="Should they be added to all children aswell." />
       <param name="state" type="boolean" summary="Should they be added or removed." />
+      <param name="inst" type="TinyMCE_Control" summary="TinyMCE editor control instance to add/remove them to/from." />
       <return type="void" />
     </method>
     <method name="fixGeckoBaseHREFBug">
-      <summary>Fixes a Gecko specific bug where href, src attribute values gets converted incorrectlywhen inserted into editor. This function will replace all src, href with mce_tsrc and mce_threfto keep the values from chaging when they get inserted.</summary>
+      <summary>Fixes a Gecko specific bug where href, src attribute values gets converted incorrectly when inserted into editor. This function will replace all src, href with mce_tsrc and mce_thref to keep the values from chaging when they get inserted.</summary>
       <param name="m" type="boolean" summary="Mode state, true is to replace the src, href attributes to mce_tsrc and mce_thref." />
+      <param name="e" type="HTMLElement" summary="HTML element to replace them in. (Will be used if m is 0)" />
       <param name="h" type="string" summary="HTML code to replace them in. (Will be used if m is 1)" />
       <return type="string" summary="Converted string or the specified HTML value depending on mode." />
     </method>
@@ -490,32 +554,38 @@
     <method name="queryInstanceCommandValue">
       <summary>Queries a command value for a specific command on a specific editor instance.</summary>
       <param name="editor_id" type="string" summary="Editor id to query command value on." />
+      <param name="command" type="string" summary="Command to query for." />
       <return type="object" summary="Command value passed from browser." />
     </method>
     <method name="queryInstanceCommandState">
       <summary>Queries a command state for a specific command on a specific editor instance.</summary>
       <param name="editor_id" type="string" summary="Editor id to query command state on." />
+      <param name="command" type="string" summary="Command to query for." />
       <return type="boolean" summary="Command state passed from browser." />
     </method>
     <method name="setWindowArg">
       <summary>Sets the window argument to be passed to TinyMCE popup.</summary>
       <param name="n" type="string" summary="Window argument name." />
+      <param name="v" type="string" summary="Window argument value." />
       <return type="void" />
     </method>
     <method name="getWindowArg" deprecated="1">
-      <summary>Returns the window argument to be passed to TinyMCE popup.Use: tinyMCEPopup.getWindowArg instead.</summary>
+      <summary>Returns the window argument to be passed to TinyMCE popup. Use: tinyMCEPopup.getWindowArg instead.</summary>
       <param name="n" type="string" summary="Window argument name." />
       <return type="" summary="Argument value or default value if it wasn't found." />
     </method>
     <method name="getCSSClasses">
-      <summary>Returns a array of CSS classes that is available in a document.Todo: Fix this one, it's so ugly. :)</summary>
+      <summary>Returns a array of CSS classes that is available in a document. Todo: Fix this one, it's so ugly. :)</summary>
       <param name="editor_id" type="string" summary="Editor id to get CSS classes from." />
+      <param name="doc" type="DOMDocument" summary="DOM document to get the CSS classes from." />
       <return type="Array" summary="Array of CSS classes that is available in a document." />
     </method>
     <method name="regexpReplace" deprecated="1">
       <summary>Regexp replaces the contents of a string. Use normal replace instead.</summary>
       <param name="in_str" type="string" summary="String to replace in." />
+      <param name="reg_exp" type="string" summary="Regexp to replace." />
       <param name="replace_str" type="string" summary="String to replace with." />
+      <param name="in_str" type="string" summary="Optional regexp options like &quot;gi&quot;." />
       <return type="string" summary="Replaced string value." />
     </method>
     <method name="trim">
@@ -524,58 +594,66 @@
       <return type="string" summary="Replaced string value." />
     </method>
     <method name="cleanupEventStr">
-      <summary>Removes MSIE 5.5 specific event wrapper function form a event string.This will also remove the event blocker if it's added in front of the event.</summary>
+      <summary>Removes MSIE 5.5 specific event wrapper function form a event string. This will also remove the event blocker if it's added in front of the event.</summary>
       <param name="s" type="string" summary="String to replace event data in." />
       <return type="string" summary="Replaced string value." />
     </method>
     <method name="getControlHTML">
-      <summary>Returns the HTML for the specified control this will loop throughthe theme and all plugins inorder to find the control. The callback for eachtheme and plugin is called getControlHTML.</summary>
+      <summary>Returns the HTML for the specified control this will loop through the theme and all plugins inorder to find the control. The callback for each theme and plugin is called getControlHTML.</summary>
       <param name="c" type="string" summary="Control name/id to get HTML code for." />
       <return type="string" summary="HTML code for the specified control or empty string if it wasn't found." />
     </method>
     <method name="evalFunc">
       <summary>Evaluates the specified function and uses the array of arguments.</summary>
       <param name="f" type="string" summary="Function reference to execute." />
+      <param name="idx" type="int" summary="Index in array to start grabbing arguments from." />
       <param name="a" type="Array" summary="Array of function arguments." />
+      <param name="o" type="Object" summary="Optional object reference to call function on." />
       <return type="object" summary="Value returned from the evaluated function." />
     </method>
     <method name="dispatchCallback">
-      <summary>Dispatches the specified callback on all options, plugins and themes. This will notchain them, so all functions callbacks will be executed regardless if the return true/false.</summary>
+      <summary>Dispatches the specified callback on all options, plugins and themes. This will not chain them, so all functions callbacks will be executed regardless if the return true/false.</summary>
       <param name="i" type="TinyMCE_Control" summary="TinyMCE editor control instance to execute callback on." />
+      <param name="p" type="string" summary="TinyMCE callback parameter to execute." />
       <param name="n" type="string" summary="Function name to execute." />
       <return type="" summary="true/false if they where dispatched." />
     </method>
     <method name="executeCallback">
-      <summary>Executes the specified callback on all options, plugins and themes. This willchain them, so callback chain will be broken if one function returns false.</summary>
+      <summary>Executes the specified callback on all options, plugins and themes. This will chain them, so callback chain will be broken if one function returns false.</summary>
       <param name="i" type="TinyMCE_Control" summary="TinyMCE editor control instance to execute callback on." />
+      <param name="p" type="string" summary="TinyMCE callback parameter to execute." />
       <param name="n" type="string" summary="Function name to execute." />
       <return type="" summary="true/false if a callback was executed." />
     </method>
     <method name="execCommandCallback">
-      <summary>Executes the specified execcommand callback on all options, plugins and themes. This willchain them, so callback chain will be broken if one function returns true.</summary>
+      <summary>Executes the specified execcommand callback on all options, plugins and themes. This will chain them, so callback chain will be broken if one function returns true.</summary>
       <param name="i" type="TinyMCE_Control" summary="TinyMCE editor control instance to execute callback on." />
+      <param name="p" type="string" summary="TinyMCE callback parameter to execute." />
       <param name="n" type="string" summary="Function name to execute." />
       <return type="" summary="true/false if a callback was executed." />
     </method>
     <method name="callFunc">
       <summary>Executes callback chain. Callback order: Option, Plugins, Themes.</summary>
       <param name="ins" type="TinyMCE_Control" summary="TinyMCE editor control instance to execute callback on." />
+      <param name="p" type="string" summary="TinyMCE callback parameter name." />
       <param name="n" type="string" summary="Function name to execute." />
+      <param name="m" type="int" summary="Execution mode value, 0 = no chain, 1 = event chain, 2 = execcommand chain." />
       <param name="a" type="Array" summary="Array with function arguments." />
       <return type="boolean" summary="true - if the callback was executed, false if it wasn't." />
     </method>
     <method name="xmlEncode">
-      <summary>Encodes the string to raw XML entities. This will only convert the most common ones.For real entity encoding use the xmlEncode method of the Cleanup class.</summary>
+      <summary>Encodes the string to raw XML entities. This will only convert the most common ones. For real entity encoding use the xmlEncode method of the Cleanup class.</summary>
       <param name="s" type="string" summary="String to encode." />
       <return type="string" summary="XML Encoded string." />
     </method>
     <method name="extend">
       <summary>Extends the specified prototype with new methods.</summary>
       <param name="p" type="Object" summary="Prototype to extend with new methods." />
+      <param name="np" type="Object" summary="New prototype to extend the other one with." />
       <return type="Object" summary="Extended prototype array." />
     </method>
     <method name="unloadHandler">
-      <summary>Unload document event handler function. This function will be executed when thepage is unloaded, this will automaticly move the current editor contents to the textarea element this enablesthe editor to restore it's state when the user presses the back button in the browser.This will execute the triggerSave function.</summary>
+      <summary>Unload document event handler function. This function will be executed when the page is unloaded, this will automaticly move the current editor contents to the textarea element this enables the editor to restore it's state when the user presses the back button in the browser. This will execute the triggerSave function.</summary>
       <return type="void" />
     </method>
     <method name="addEventHandlers">
@@ -589,7 +667,7 @@
       <return type="void" />
     </method>
     <method name="onMouseMove">
-      <summary>Mouse move handler function, this will be executed each timethe mouse is moved within a editor instance. This function stores away the current selection in MSIEthis will then be used when a undo/redo level is added.</summary>
+      <summary>Mouse move handler function, this will be executed each time the mouse is moved within a editor instance. This function stores away the current selection in MSIE this will then be used when a undo/redo level is added.</summary>
       <return type="void" />
     </method>
     <method name="cancelEvent">
@@ -600,28 +678,31 @@
     <method name="addEvent">
       <summary>Adds a event handler function to the specified object.</summary>
       <param name="o" type="HTMLElement" summary="Object to add event handler to." />
+      <param name="n" type="string" summary="Event name to listen to for example &quot;click&quot;." />
       <param name="h" type="function" summary="Function handler to execute when event occurs." />
       <return type="void" />
     </method>
     <method name="removeEvent">
       <summary>Removes a event handler function from the specified object.</summary>
       <param name="o" type="HTMLElement" summary="Object to remove event handler from." />
+      <param name="n" type="string" summary="Event name to stop listening for. Example &quot;click&quot;." />
       <param name="h" type="function" summary="Function handler to detach from the event." />
       <return type="void" />
     </method>
     <method name="addSelectAccessibility">
       <summary>Adds accessibility keydown handler to the specified select element.</summary>
       <param name="e" type="DOMEvent" summary="Event that gets passed when the element is focused." />
+      <param name="s" type="HTMLElement" summary="Select element that the keydown handler gets added to." />
       <param name="w" type="DOMWindow" summary="DOM window reference to add." />
       <return type="void" />
     </method>
     <method name="accessibleEventHandler">
-      <summary>Accessibility handler that gets executed when the user hits a key in a select element.This handler trams the enter/return or space key and then executes the onchange event handler.</summary>
+      <summary>Accessibility handler that gets executed when the user hits a key in a select element. This handler trams the enter/return or space key and then executes the onchange event handler.</summary>
       <param name="e" type="DOMEvent" summary="DOM event object instance." />
       <return type="void" />
     </method>
     <method name="_resetIframeHeight">
-      <summary>Resets the iframe width and height to it's old values before a drag/drop operation occured.This function is used in a workaround for a MSIE bug where drag/drop fails in iframes with width/height in %.</summary>
+      <summary>Resets the iframe width and height to it's old values before a drag/drop operation occured. This function is used in a workaround for a MSIE bug where drag/drop fails in iframes with width/height in %.</summary>
       <return type="void" />
     </method>
     <method name="parseURL">
@@ -637,21 +718,24 @@
     <method name="convertAbsoluteURLToRelativeURL">
       <summary>Converts an absolute path to relative path.</summary>
       <param name="base_url" type="string" summary="URL to make as a base path, URLs will be converted relative from this point." />
+      <param name="url_to_relative" type="string" summary="URL to convert into a relative URL." />
       <return type="string" summary="Relative URL based in input." />
     </method>
     <method name="convertRelativeToAbsoluteURL">
       <summary>Converts an relative path to absolute path.</summary>
       <param name="base_url" type="string" summary="URL to make as a base path, URLs will be converted absolute from this point." />
+      <param name="relative_url" type="string" summary="URL to convert into a absolute URL." />
       <return type="string" summary="Absolute URL based in input." />
     </method>
     <method name="convertURL">
       <summary>Converts the specified URL based in TinyMCE configuration settings.</summary>
       <param name="url" type="string" summary="URL to convert based on config." />
+      <param name="node" type="HTMLElement" summary="HTML element that holds the URL." />
       <param name="on_save" type="boolean" summary="Is this convertion the final output URL." />
       <return type="string" summary="Converted URL string." />
     </method>
     <method name="convertAllRelativeURLs">
-      <summary>Converts all img and a element URLs to absolute URLs. This will use the mce_src or mce_href attribute valuesif they are provided. This function is used when the editor is initialized.</summary>
+      <summary>Converts all img and a element URLs to absolute URLs. This will use the mce_src or mce_href attribute values if they are provided. This function is used when the editor is initialized.</summary>
       <param name="body" type="HTMLElement" summary="HTML element to convert all URLs in." />
       <return type="void" />
     </method>
@@ -666,7 +750,7 @@
       <return type="void" />
     </method>
     <method name="addRuleStr">
-      <summary>Adds a cleanup rule string, for example: a[!href|!name|title=title|class=class1?class2?class3].These rules are then used when serializing the DOM tree as a HTML string, it gives the possibilityto control the valid elements and attributes and force attribute values or default them.</summary>
+      <summary>Adds a cleanup rule string, for example: a[!href|!name|title=title|class=class1?class2?class3]. These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility to control the valid elements and attributes and force attribute values or default them.</summary>
       <param name="s" type="string" summary="Rule string to parse and add to the cleanup rules array." />
       <return type="void" />
     </method>
@@ -675,18 +759,19 @@
       <return type="void" />
     </method>
     <method name="parseRuleStr">
-      <summary>Parses a cleanup rule string, for example: a[!href|name|title=title|class=class1?class2?class3].These rules are then used when serializing the DOM tree as a HTML string, it gives the possibilityto control the valid elements and attributes and force attribute values or default them.</summary>
+      <summary>Parses a cleanup rule string, for example: a[!href|name|title=title|class=class1?class2?class3]. These rules are then used when serializing the DOM tree as a HTML string, it gives the possibility to control the valid elements and attributes and force attribute values or default them.</summary>
       <param name="s" type="string" summary="Rule string to parse as a name/value rule array." />
       <return type="Array" summary="Parsed name/value rule array." />
     </method>
     <method name="serializeNodeAsXML">
-      <summary>Serializes the specified node as a HTML string. This uses the XML parser and serializerto generate a XHTML string.</summary>
+      <summary>Serializes the specified node as a HTML string. This uses the XML parser and serializer to generate a XHTML string.</summary>
       <param name="n" type="HTMLNode" summary="Node to serialize as a XHTML string." />
       <return type="string" summary="Serialized XHTML string based on specified node." />
     </method>
     <method name="serializeNodeAsHTML">
-      <summary>Serializes the specified node as a XHTML string. This uses the TinyMCE serializer logic since it gives morecontrol over the output than the build in browser XML serializer.</summary>
+      <summary>Serializes the specified node as a XHTML string. This uses the TinyMCE serializer logic since it gives more control over the output than the build in browser XML serializer.</summary>
       <param name="n" type="HTMLNode" summary="Node to serialize as a XHTML string." />
+      <param name="inn" type="bool" summary="Optional inner HTML mode. Will only output child nodes and not the parent." />
       <return type="string" summary="Serialized XHTML string based on specified node." />
     </method>
     <method name="formatHTML">
@@ -695,23 +780,33 @@
       <return type="string" summary="Formatted HTML string." />
     </method>
     <method name="xmlEncode">
-      <summary>XML Encodes the specified string based on configured entity encoding. The entity encoding modesare raw, numeric and named. Where raw is the fastest and named is default.</summary>
+      <summary>XML Encodes the specified string based on configured entity encoding. The entity encoding modes are raw, numeric and named. Where raw is the fastest and named is default.</summary>
       <param name="s" type="string" summary="String to convert to XML." />
       <return type="string" summary="Encoded XML string based on configured entity encoding." />
     </method>
     <method name="split">
       <summary>Splits the specified string and removed empty chunks.</summary>
       <param name="re" type="RegEx" summary="RegEx to split string by." />
+      <param name="s" type="string" summary="String value to split." />
       <return type="string" summary="Array with parts from specified string." />
     </method>
   </class>
   <class name="TinyMCE_Control">
     <constructor name="TinyMCE_Control">
-      <summary>This is the TinyMCE editor control instance class. A instance of this class will is made for eachconverted text area.</summary>
+      <summary>This is the TinyMCE editor control instance class. A instance of this class will is made for each converted text area.</summary>
       <param name="settings" type="Array" summary="Name/Value array of instance specific configuration settings." />
     </constructor>
+    <field name="selection" type="TinyMCE_Selection">
+      <summary>Contains methods for handling the current instance selection.</summary>
+    </field>
+    <field name="settings" type="Array">
+      <summary>Name/Value array containing all instance settings.</summary>
+    </field>
+    <field name="cleanup" type="TinyMCE_Cleanup">
+      <summary>Cleanup engine reference, handles all XHTML serialization and cleanup.</summary>
+    </field>
     <method name="getData">
-      <summary>Get custom data storage object by name. The name should be for example the theme name or plugin name.The custom data storage can be used to store plugin/theme specific information on a editor instance. A emptyobject will be created automaticly the first time called.</summary>
+      <summary>Get custom data storage object by name. The name should be for example the theme name or plugin name. The custom data storage can be used to store plugin/theme specific information on a editor instance. A empty object will be created automaticly the first time called.</summary>
       <param name="na" type="String" summary="Name of data storate to retrive." />
       <return type="Object" summary="Data storage object" />
     </method>
@@ -723,18 +818,19 @@
     <method name="addPlugin">
       <summary>Adds a plugin to the editor instance. This will also add it globaly.</summary>
       <param name="n" type="string" summary="Plugin name to check for." />
+      <param name="n" type="TinyMCE_Plugin" summary="TinyMCE plugin instance." />
       <return type="void" />
     </method>
     <method name="repaint">
-      <summary>Repaints the editarea in Gecko browsers. This method removes ghost resize handlersand other trailing graphics.</summary>
+      <summary>Repaints the editarea in Gecko browsers. This method removes ghost resize handlers and other trailing graphics.</summary>
       <return type="void" />
     </method>
     <method name="switchSettings">
-      <summary>Switches the global TinyMCE settings to the current instance settings. This method isused to handle multiple configurations.</summary>
+      <summary>Switches the global TinyMCE settings to the current instance settings. This method is used to handle multiple configurations.</summary>
       <return type="void" />
     </method>
     <method name="select">
-      <summary>Selects this instance as the currently selected instance. This will also dispatch a selectInstance call to allthemes, plugins and other listeners.</summary>
+      <summary>Selects this instance as the currently selected instance. This will also dispatch a selectInstance call to all themes, plugins and other listeners.</summary>
       <return type="void" />
     </method>
     <method name="getBody">
@@ -758,18 +854,20 @@
       <return type="Object" summary="Viewport object with fields top, left, width and height." />
     </method>
     <method name="getParentNode">
-      <summary>Returns a node by the specified selector function. This function willloop through all parent nodes and call the specified function for each node.If the function then returns true it will stop the execution and return that node.This function will not go below the instance body element.</summary>
+      <summary>Returns a node by the specified selector function. This function will loop through all parent nodes and call the specified function for each node. If the function then returns true it will stop the execution and return that node. This function will not go below the instance body element.</summary>
       <param name="n" type="DOMNode" summary="HTML node to search parents on." />
+      <param name="f" type="function" summary="Selection function to execute on each node." />
       <return type="DOMNode" summary="DOMNode or null if it wasn't found." />
     </method>
     <method name="getParentElement">
-      <summary>Returns the parent element of the specified node based on the search criteria.This method will not go below the point of the instance body.</summary>
+      <summary>Returns the parent element of the specified node based on the search criteria. This method will not go below the point of the instance body.</summary>
       <param name="node" type="HTMLNode" summary="Node to get parent element of." />
+      <param name="na" type="string" summary="Comma separated list of element names to get." />
       <param name="f" type="function" summary="Optional function to call for each node, if it returns true the node is valid." />
       <return type="HTMLElement" summary="HTMLElement or null based on search criteras." />
     </method>
     <method name="getParentBlockElement">
-      <summary>Returns the first block element parent of the specified node.This method will not go below the point of the instance body.</summary>
+      <summary>Returns the first block element parent of the specified node. This method will not go below the point of the instance body.</summary>
       <param name="n" type="HTMLNode" summary="Node get parent block element for." />
       <return type="HTMLElement" summary="First block element parent of the specified node or null if it wasn't found." />
     </method>
@@ -778,10 +876,13 @@
       <return type="void" />
     </method>
     <method name="addShortcut">
-      <summary>Adds a keyboard shortcut to a specific command. These shortcuts can for example be addedat the initInstance callback of a plugin. The shortcut description can be a language variable nameor a string describing the function. If you don't specify a command, the shortcut will simply be a blockershortcut. This enables you to remove built in shortcuts or remove theme specific shortcuts from a plugin.&lt;br /&gt;Example shortcut inst.addShortcut('ctrl,alt', 'k', 'mceSomeCommand', false, 'somevalue');Example blocker inst.addShortcut('ctrl,alt', 'k');</summary>
+      <summary>Adds a keyboard shortcut to a specific command. These shortcuts can for example be added at the initInstance callback of a plugin. The shortcut description can be a language variable name or a string describing the function. If you don't specify a command, the shortcut will simply be a blocker shortcut. This enables you to remove built in shortcuts or remove theme specific shortcuts from a plugin.&lt;br /&gt; Example shortcut inst.addShortcut('ctrl,alt', 'k', 'mceSomeCommand', false, 'somevalue'); Example blocker inst.addShortcut('ctrl,alt', 'k');</summary>
       <param name="m" type="string" summary="List of shortcut modifiers keys, for example &quot;ctrl,alt&quot;." />
+      <param name="k" type="Object" summary="Shortcut key char for example &quot;s&quot; or a keycode value &quot;13&quot;." />
       <param name="d" type="string" summary="Optional Shortcut description, this will be presented in the about dialog." />
+      <param name="cmd" type="string" summary="Optional Command name to execute, for example mceLink or Bold." />
       <param name="ui" type="boolean" summary="Optional True/false state if a UI (dialog) should be presented or not." />
+      <param name="va" type="Object" summary="Optional command value, this can be anything." />
       <return type="boolean" summary="true/false if the shortcut was added or not" />
     </method>
     <method name="handleShortcut">
@@ -790,20 +891,21 @@
       <return type="boolean" summary="true/false if the shortcut was found and executed or not." />
     </method>
     <method name="autoResetDesignMode">
-      <summary>Auto resets the design mode of the document if it gets lost.This is a Gecko specific function since it's a workaround for a bug where Gecko browsersloose the designMode state if the editor is hidden and shown in a tab or div.</summary>
+      <summary>Auto resets the design mode of the document if it gets lost. This is a Gecko specific function since it's a workaround for a bug where Gecko browsers loose the designMode state if the editor is hidden and shown in a tab or div.</summary>
       <return type="void" />
     </method>
     <method name="isHidden">
-      <summary>Returns if the instance is hidden or not. This is a Gecko specific functionother browsers will always return false. This function is used to workaround the lostdesignMode bug in Gecko browsers.</summary>
+      <summary>Returns if the instance is hidden or not. This is a Gecko specific function other browsers will always return false. This function is used to workaround the lost designMode bug in Gecko browsers.</summary>
       <return type="boolean" summary="Returns if the instance is hidden or not." />
     </method>
     <method name="isDirty">
-      <summary>Returns true/false if the editor instance is dirty or not. In other words if it has been modifiedor not.</summary>
+      <summary>Returns true/false if the editor instance is dirty or not. In other words if it has been modified or not.</summary>
       <return type="boolean" summary="Editor instance dirty state." />
     </method>
     <method name="execCommand">
-      <summary>Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" orthey can be build in browser commands such as "Bold". A compleate list of browser commands is available on MSDN or Mozilla.org.This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of thesereturn true it will handle the command as a internal browser command.</summary>
+      <summary>Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" or they can be build in browser commands such as "Bold". A compleate list of browser commands is available on MSDN or Mozilla.org. This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of these return true it will handle the command as a internal browser command.</summary>
       <param name="command" type="string" summary="Command name to execute, for example mceLink or Bold." />
+      <param name="user_interface" type="boolean" summary="True/false state if a UI (dialog) should be presented or not." />
       <param name="value" type="mixed" summary="Optional command value, this can be anything." />
       <return type="void" />
     </method>
@@ -818,7 +920,7 @@
       <return type="boolean" summary="Command specific state, for example if bold is enabled or not." />
     </method>
     <method name="setBaseHREF">
-      <summary>Sets the base href url of the current document instance. This method is usedto temporarly remove the base url during copy/paste and drag/drop operationsof relative links from external sites into TinyMCE. MSIE has a bug and convertsrelative links from external sites to absolute links incorrectly.</summary>
+      <summary>Sets the base href url of the current document instance. This method is used to temporarly remove the base url during copy/paste and drag/drop operations of relative links from external sites into TinyMCE. MSIE has a bug and converts relative links from external sites to absolute links incorrectly.</summary>
       <param name="u" type="string" summary="URL to set as base URL or null to remove it." />
       <return type="void" />
     </method>
@@ -833,51 +935,58 @@
       <return type="void" />
     </method>
     <method name="getFocusElement" deprecated="1">
-      <summary>Returns the currently selected element. This is was added for compatiblity and is deprecated.Please use inst.selection.getFocusElement instead.</summary>
+      <summary>Returns the currently selected element. This is was added for compatiblity and is deprecated. Please use inst.selection.getFocusElement instead.</summary>
       <return type="HTMLElement" summary="Currently selected element." />
     </method>
     <method name="getSel" deprecated="1">
-      <summary>Returns the browsers selection instance. This is was added for compatiblity and is deprecated.Please use inst.selection.getSel instead.</summary>
+      <summary>Returns the browsers selection instance. This is was added for compatiblity and is deprecated. Please use inst.selection.getSel instead.</summary>
       <return type="DOMSelection" summary="Browser selection instance." />
     </method>
     <method name="getRng" deprecated="1">
-      <summary>Returns the browsers selections first range instance. This is was added for compatiblity and is deprecated.Please use inst.selection.getRng instead.</summary>
+      <summary>Returns the browsers selections first range instance. This is was added for compatiblity and is deprecated. Please use inst.selection.getRng instead.</summary>
       <return type="DOMRange" summary="Browsers selections first range instance." />
     </method>
     <method name="triggerSave">
-      <summary>Moves the contents from the TinyMCE editor control instance to the hidden textareathat got replaced with TinyMCE. This is executed automaticly on for example form submit unless you configure otherwice.</summary>
+      <summary>Moves the contents from the TinyMCE editor control instance to the hidden textarea that got replaced with TinyMCE. This is executed automaticly on for example form submit unless you configure otherwice.</summary>
       <param name="skip_cleanup" type="boolean" summary="Optional Skip cleanup, simply move the contents as fast as possible." />
+      <param name="skip_callback" type="boolean" summary="Optional Skip callback, don't call the save_callback function." />
       <return type="void" />
     </method>
   </class>
   <class name="TinyMCE_Layer">
     <constructor name="TinyMCE_Layer">
-      <summary>Constructor for the TinyMCE Layer. This class enables you to constructfloating layers that is visible on top of select input fields, flashes and iframes.</summary>
+      <summary>Constructor for the TinyMCE Layer. This class enables you to construct floating layers that is visible on top of select input fields, flashes and iframes.</summary>
       <param name="id" type="string" summary="Unique ID name for the layer." />
+      <param name="bm" type="boolean" summary="Block mode, defaults to true." />
     </constructor>
     <method name="moveRelativeTo">
       <summary>Moves the layer relative to the specified HTML element.</summary>
       <param name="re" type="HTMLElement" summary="Element to move the layer relative to." />
+      <param name="p" type="string" summary="Position of the layer tl = top left, tr = top right, bl = bottom left, br = bottom right." />
       <return type="void" />
     </method>
     <method name="moveBy">
       <summary>Moves the layer relative in pixels.</summary>
       <param name="x" type="int" summary="Horizontal relative position in pixels." />
+      <param name="y" type="int" summary="Vertical relative position in pixels." />
       <return type="void" />
     </method>
     <method name="moveTo">
       <summary>Moves the layer absolute in pixels.</summary>
       <param name="x" type="int" summary="Horizontal absolute position in pixels." />
+      <param name="y" type="int" summary="Vertical absolute position in pixels." />
       <return type="void" />
     </method>
     <method name="resizeBy">
       <summary>Resizes the layer by the specified relative width and height.</summary>
       <param name="w" type="int" summary="Relative width value." />
+      <param name="h" type="int" summary="Relative height value." />
       <return type="void" />
     </method>
     <method name="resizeTo">
       <summary>Resizes the layer to the specified width and height.</summary>
       <param name="w" type="int" summary="Width value." />
+      <param name="h" type="int" summary="Height value." />
       <return type="void" />
     </method>
     <method name="show">
@@ -897,7 +1006,7 @@
       <return type="HTMLElement" summary="DOM HTML element." />
     </method>
     <method name="setBlockMode">
-      <summary>Sets the block mode. If you set this property to true a control box blocker iframewill be added to the document since MSIE has a issue where select boxes are visiblethrough layers.</summary>
+      <summary>Sets the block mode. If you set this property to true a control box blocker iframe will be added to the document since MSIE has a issue where select boxes are visible through layers.</summary>
       <param name="s" type="boolean" summary="Block mode state, true is the default value." />
       <return type="void" />
     </method>
@@ -917,7 +1026,9 @@
     <method name="create">
       <summary>Creates a element for the layer based on the id and specified name.</summary>
       <param name="n" type="string" summary="Element tag name, like div." />
+      <param name="c" type="string" summary="Optional class name to set as class attribute value." />
       <param name="p" type="HTMLElement" summary="Optional parent element reference, defaults to body." />
+      <param name="h" type="string" summary="Optional HTML code to insert into element." />
       <return type="HTMLElement" summary="HTML DOM element that got created." />
     </method>
     <method name="exists">
@@ -935,7 +1046,7 @@
       <summary>Constructor for the menu layer class.</summary>
     </constructor>
     <method name="init">
-      <summary>Initializes the Menu with settings. This will also create the menuas a DIV element if it doesn't exists in the DOM.</summary>
+      <summary>Initializes the Menu with settings. This will also create the menu as a DIV element if it doesn't exists in the DOM.</summary>
       <param name="s" type="Array" summary="Name/Value array with settings." />
       <return type="void" />
     </method>
@@ -960,6 +1071,7 @@
     <method name="addItem">
       <summary>Adds a menu item.</summary>
       <param name="t" type="string" summary="Menu item text." />
+      <param name="js" type="string" summary="JS string to evaluate on click." />
       <return type="void" />
     </method>
     <method name="add">
@@ -978,23 +1090,23 @@
   </class>
   <class name="TinyMCE_Popup">
     <constructor name="TinyMCE_Popup">
-      <summary>Constructor for the popup class. This class contains base logic for popup/dialogs and sets upobject references to the TinyMCE core.</summary>
+      <summary>Constructor for the popup class. This class contains base logic for popup/dialogs and sets up object references to the TinyMCE core.</summary>
     </constructor>
     <method name="init">
       <summary>Initializes the TinyMCE Popup class. This will setup the TinyMCE core references and other popup/dialog related functions.</summary>
       <return type="void" />
     </method>
     <method name="onLoad">
-      <summary>Gets executed when the window has finished loading it's contents. This function will thenreplace language variables with their real values.</summary>
+      <summary>Gets executed when the window has finished loading it's contents. This function will then replace language variables with their real values.</summary>
       <return type="void" />
     </method>
     <method name="executeOnLoad">
-      <summary>Executes the specified string onload. This is a workaround for Opera since itdoesn't execute the events in the same order than MSIE and Firefox.</summary>
+      <summary>Executes the specified string onload. This is a workaround for Opera since it doesn't execute the events in the same order than MSIE and Firefox.</summary>
       <param name="str" type="string" summary="String to evaluate on load." />
       <return type="void" />
     </method>
     <method name="resizeToInnerSize">
-      <summary>Resizes the current window to it's inner body size. This functionwas needed since MSIE makes the visible dialog area diffrent dependingon what Theme/Skin you use.</summary>
+      <summary>Resizes the current window to it's inner body size. This function was needed since MSIE makes the visible dialog area diffrent depending on what Theme/Skin you use.</summary>
       <return type="void" />
     </method>
     <method name="resizeToContent">
@@ -1002,37 +1114,41 @@
       <return type="void" />
     </method>
     <method name="getWindowArg">
-      <summary>Returns a window argument, window arguments can be passed from a plugin to a windowby using the tinyMCE.openWindow function.</summary>
+      <summary>Returns a window argument, window arguments can be passed from a plugin to a window by using the tinyMCE.openWindow function.</summary>
       <param name="name" type="string" summary="Argument name to retrive." />
+      <param name="default_value" type="string" summary="Optional default value to assign if the argument wasn't set." />
       <return type="Object" summary="Argument value object." />
     </method>
     <method name="restoreSelection">
-      <summary>Restores the selection back to the one stored after executing a command.This function was needed in MSIE when using inlinepopups, the selectionwould otherwice get lost if the user focused another field.</summary>
+      <summary>Restores the selection back to the one stored after executing a command. This function was needed in MSIE when using inlinepopups, the selection would otherwice get lost if the user focused another field.</summary>
       <return type="void" />
     </method>
     <method name="execCommand">
-      <summary>Executes the specific command on the parent instance that opened the window. This methodwill also take care of the storage and restorage of the current selection in MSIE whenusing inlinepopups. So we suggest using this method instead of tinyMCE.execCommand when usingpopup windows.</summary>
+      <summary>Executes the specific command on the parent instance that opened the window. This method will also take care of the storage and restorage of the current selection in MSIE when using inlinepopups. So we suggest using this method instead of tinyMCE.execCommand when using popup windows.</summary>
       <param name="command" type="string" summary="Command name to execute, for example mceLink or Bold." />
+      <param name="user_interface" type="boolean" summary="True/false state if a UI (dialog) should be presented or not." />
       <param name="value" type="mixed" summary="Optional command value, this can be anything." />
       <return type="void" />
     </method>
     <method name="close">
-      <summary>Closes the current window. This should be used instead of window.close. Since this willalso handle inlinepopups closing.</summary>
+      <summary>Closes the current window. This should be used instead of window.close. Since this will also handle inlinepopups closing.</summary>
       <return type="void" />
     </method>
     <method name="pickColor">
-      <summary>Executes a color picker on the specified element id. When the userthen selects a color it will be set as the value of the specified element.</summary>
+      <summary>Executes a color picker on the specified element id. When the user then selects a color it will be set as the value of the specified element.</summary>
       <param name="e" type="DOMEvent" summary="DOM event object." />
+      <param name="element_id" type="string" summary="Element id to be filled with the color value from the picker." />
       <return type="void" />
     </method>
     <method name="openBrowser">
-      <summary>Opens a filebrowser/imagebrowser this will set the output value fromthe browser as a value on the specified element.</summary>
+      <summary>Opens a filebrowser/imagebrowser this will set the output value from the browser as a value on the specified element.</summary>
       <param name="element_id" type="string" summary="Id of the element to set value in." />
+      <param name="type" type="string" summary="Type of browser to open image/file/flash." />
       <param name="option" type="string" summary="Option name to get the file_broswer_callback function name from." />
       <return type="void" />
     </method>
     <method name="importClass">
-      <summary>Imports the specified class into the current popup. This will setup a local class definitionby importing from the parent window.</summary>
+      <summary>Imports the specified class into the current popup. This will setup a local class definition by importing from the parent window.</summary>
       <param name="c" type="string" summary="Class name to import to current page." />
       <return type="void" />
     </method>
@@ -1051,7 +1167,7 @@
       <return type="string" summary="Selected text contents." />
     </method>
     <method name="getBookmark">
-      <summary>Returns a selection bookmark that can be restored later with moveToBookmark.This acts much like the one MSIE has built in but this one is persistent if between DOMtree rewritings. The simple mode enables a quicker and non persistent bookmark.</summary>
+      <summary>Returns a selection bookmark that can be restored later with moveToBookmark. This acts much like the one MSIE has built in but this one is persistent if between DOM tree rewritings. The simple mode enables a quicker and non persistent bookmark.</summary>
       <param name="simple" type="boolean" summary="If this is set to true, the selection bookmark will not me dom persistent." />
       <return type="TinyMCE_Bookmark" summary="Selection bookmark that can be restored later with moveToBookmark." />
     </method>
@@ -1063,7 +1179,9 @@
     <method name="selectNode">
       <summary>Selects the specified node.</summary>
       <param name="node" type="HTMLNode" summary="Node object to move selection to." />
+      <param name="collapse" type="boolean" summary="True/false if it will be collasped." />
       <param name="select_text_node" type="boolean" summary="True/false if the text contents should be selected or not." />
+      <param name="to_start" type="boolean" summary="True/false if the collapse should be to start or end of range." />
       <return type="void" />
     </method>
     <method name="scrollToNode">
