@@ -5122,6 +5122,10 @@ TinyMCE_Engine.prototype.getNodeTree = function(n, na, t, nn) {
 TinyMCE_Engine.prototype.getParentElement = function(n, na, f, r) {
 	var re = na ? new RegExp('^(' + na.toUpperCase().replace(/,/g, '|') + ')$') : 0, v;
 
+	// Compatiblity with old scripts where f param was a attribute string
+	if (f && typeof(f) == 'string')
+		return this.getParentElement(n, na, function(no) {return tinyMCE.getAttrib(no, f) != '';});
+
 	return this.getParentNode(n, function(n) {
 		return ((n.nodeType == 1 && !re) || (re && re.test(n.nodeName))) && (!f || f(n));
 	}, r);
