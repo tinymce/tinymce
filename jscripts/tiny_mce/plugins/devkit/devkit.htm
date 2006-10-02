@@ -119,7 +119,16 @@
 
 					<div class="data">
 						<p>{$lang_devkit_misc_help}</p>
+						<hr />
 						<p>Selection: <a href="#" onmousedown="return storeSelection();">[Store selection]</a> <a href="#" onmousedown="return restoreSelection();">[Restore selection]</a></p>
+						<hr />
+						<div><strong>Insert custom HTML content</strong></div>
+						<div><textarea id="htmlcont" name="htmlcont" style="width: 90%" rows="5"></textarea></div>
+						<div><a href="#" onclick="return tinyMCE.execCommand('mceInsertContent',false,document.getElementById('htmlcont').value);">[Insert content]</a></div>
+						<hr />
+						<div><strong>Eval JS:</strong></div>
+						<div><textarea id="jscont" name="jscont" style="width: 90%" rows="5">tinyMCE.execCommand('Bold',false,null);</textarea></div>
+						<div><a href="#" onclick="return parent.window.eval(document.getElementById('jscont').value);">[Evaluate]</a></div>
 					</div>
 				</fieldset>
 			</div>

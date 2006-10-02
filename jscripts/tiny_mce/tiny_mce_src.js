@@ -3348,21 +3348,22 @@ TinyMCE_Control.prototype = {
 
 					tinyMCE.fixGeckoBaseHREFBug(2, this.getDoc(), value);
 				} else {
-					var rng = doc.selection.createRange();
+					var rng = doc.selection.createRange(), tmpRng = null;
 					var c = value.indexOf('<!--') != -1;
 
 					// Fix comment bug, add tag before comments
 					if (c)
 						value = tinyMCE.uniqueTag + value;
 
-					var tmpRng = rng.duplicate(); // Store away range (Fixes Undo bookmark bug in IE)
+					//	tmpRng = rng.duplicate(); // Store away range (Fixes Undo bookmark bug in IE)
 
 					if (rng.item)
 						rng.item(0).outerHTML = value;
 					else
 						rng.pasteHTML(value);
 
-					tmpRng.select(); // Restore range  (Fixes Undo bookmark bug in IE)
+					//if (tmpRng)
+					//	tmpRng.select(); // Restore range  (Fixes Undo bookmark bug in IE)
 
 					// Remove unique tag
 					if (c) {
