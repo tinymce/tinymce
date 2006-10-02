@@ -2358,7 +2358,8 @@ TinyMCE_Engine.prototype = {
 			tinyMCE.lastSelectedMenuBtn = null;
 		}
 	}
-};
+
+	};
 
 // Global instances
 var TinyMCE = TinyMCE_Engine; // Compatiblity with gzip compressors
@@ -2442,6 +2443,12 @@ function TinyMCE_Control(settings) {
 };
 
 TinyMCE_Control.prototype = {
+	selection : null,
+
+	settings : null,
+
+	cleanup : null,
+
 	getData : function(na) {
 		var o = this.data[na];
 
@@ -3824,7 +3831,8 @@ TinyMCE_Control.prototype = {
 				nl[i].elm.className = s.hidden_tab_class;
 		}
 	}
-};
+
+	};
 
 /* file:jscripts/tiny_mce/classes/TinyMCE_Cleanup.class.js */
 
@@ -4953,7 +4961,8 @@ TinyMCE_Cleanup.prototype = {
 
 		return false;
 	}
-};
+
+	};
 
 /* file:jscripts/tiny_mce/classes/TinyMCE_DOMUtils.class.js */
 
@@ -5672,6 +5681,7 @@ TinyMCE_Engine.prototype.explode = function(d, s) {
 
 	return oar;
 };
+
 /* file:jscripts/tiny_mce/classes/TinyMCE_Event.class.js */
 
 TinyMCE_Engine.prototype._setEventsEnabled = function(node, state) {
@@ -6392,7 +6402,8 @@ TinyMCE_Selection.prototype = {
 
 		return elm;
 	}
-};
+
+	};
 
 /* file:jscripts/tiny_mce/classes/TinyMCE_UndoRedo.class.js */
 
@@ -6504,7 +6515,8 @@ TinyMCE_UndoRedo.prototype = {
 
 		tinyMCE.triggerNodeChange();
 	}
-};
+
+	};
 
 /* file:jscripts/tiny_mce/classes/TinyMCE_ForceParagraphs.class.js */
 
@@ -6801,7 +6813,8 @@ var TinyMCE_ForceParagraphs = {
 
 		return s;
 	}
-};
+
+	};
 
 /* file:jscripts/tiny_mce/classes/TinyMCE_Layer.class.js */
 
@@ -6998,7 +7011,8 @@ TinyMCE_Layer.prototype = {
 
 		return parseInt(s);
 	}
-};
+
+	};
 
 /* file:jscripts/tiny_mce/classes/TinyMCE_Menu.class.js */
 
@@ -7017,7 +7031,6 @@ function TinyMCE_Menu() {
 	this.needsUpdate = true;
 };
 
-// Extends the TinyMCE_Layer class
 TinyMCE_Menu.prototype = tinyMCE.extend(TinyMCE_Layer.prototype, {
 	init : function(s) {
 		var n;
@@ -7125,7 +7138,8 @@ TinyMCE_Menu.prototype = tinyMCE.extend(TinyMCE_Layer.prototype, {
 
 		tinyMCE.lastMenu = this;
 	}
-});
+
+	});
 
 /* file:jscripts/tiny_mce/classes/TinyMCE_Compatibility.class.js */
 
@@ -7144,6 +7158,7 @@ if (!Function.prototype.call) {
 		return r;
 	};
 };
+
 /* file:jscripts/tiny_mce/classes/TinyMCE_Debug.class.js */
 
 TinyMCE_Engine.prototype.debug = function() {
@@ -7159,3 +7174,4 @@ TinyMCE_Engine.prototype.debug = function() {
 	if (l < 1000)
 		tinyMCE.log[l] = "[debug] " + m;
 };
+
