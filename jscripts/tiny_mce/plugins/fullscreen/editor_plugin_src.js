@@ -80,7 +80,7 @@ var TinyMCE_FullScreenPlugin = {
 			iframe.style.height = h + "px";
 
 			tinyMCE.selectElements(cd, 'SELECT,INPUT,BUTTON,TEXTAREA', function (n) {
-				tinyMCE.addCSSClass(n, 'mceFullScreenHidden');
+				tinyMCE.addCSSClass(n, 'mceItemFullScreenHidden');
 
 				return false;
 			});
@@ -100,7 +100,7 @@ var TinyMCE_FullScreenPlugin = {
 			iframe.style.height = ds.oldHeight ? ds.oldHeight : '';
 
 			tinyMCE.selectElements(cd, 'SELECT,INPUT,BUTTON,TEXTAREA', function (n) {
-				tinyMCE.removeCSSClass(n, 'mceFullScreenHidden');
+				tinyMCE.removeCSSClass(n, 'mceItemFullScreenHidden');
 
 				return false;
 			});
