@@ -165,28 +165,34 @@ SXE.initElementDialog = function(element_name) {
 		initCommonAttributes(elm);
 		SXE.updateElement = elm;
 	}
+
 	document.forms[0].insert.value = tinyMCE.getLang('lang_' + SXE.currentAction, 'Insert', true); 
 }
 
 SXE.insertElement = function(element_name) {
-	var elm = tinyMCE.getParentElement(SXE.focusElement, element_name), h;
-
-	element_name = element_name.toLowerCase();
+	var elm = tinyMCE.getParentElement(SXE.focusElement, element_name), h, tagName;
 
 	tinyMCEPopup.execCommand('mceBeginUndoLevel');
 	if (elm == null) {
 		var s = SXE.inst.selection.getSelectedHTML();
 		if(s.length > 0) {
-			if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && element_name == 'abbr') {
-				element_name = 'span';
-				h = '<span id="#sxe_temp_' + element_name + '#" class="mceItemAbbr">' + s + '</span>';
-			} else
-				h = '<' + element_name + ' id="#sxe_temp_' + element_name + '#">' + s + '</' + element_name + '>';
+			tagName = element_name;
+
+			if (tinyMCE.isIE && !tinyMCE.isOpera && element_name.indexOf('html:') == 0)
+				element_name = element_name.substring(5).toLowerCase();
+
+			h = '<' + tagName + ' id="#sxe_temp_' + element_name + '#">' + s + '</' + tagName + '>';
 
 			tinyMCEPopup.execCommand('mceInsertContent', false, h);
+
 			var elementArray = tinyMCE.getElementsByAttributeValue(SXE.inst.getBody(), element_name, 'id', '#sxe_temp_' + element_name + '#');
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
+
+				elm.id = '';
+				elm.setAttribute('id', '');
+				elm.removeAttribute('id');
+
 				setAllCommonAttribs(elm);
 			}
 		}

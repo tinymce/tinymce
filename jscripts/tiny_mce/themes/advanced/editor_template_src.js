@@ -819,6 +819,9 @@ var TinyMCE_AdvancedTheme = {
 				var nodeName = path[i].nodeName.toLowerCase();
 				var nodeData = "";
 
+				if (nodeName.indexOf("html:") == 0)
+					nodeName = nodeName.substring(5);
+
 				if (nodeName == "b") {
 					nodeName = "strong";
 				}

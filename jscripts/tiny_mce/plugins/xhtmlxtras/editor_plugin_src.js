@@ -91,11 +91,9 @@ var TinyMCE_XHTMLXtrasPlugin = {
 	},
 
 	cleanup : function(type, content, inst) {
-		if (type == 'get_from_editor_dom') {
-			tinyMCE.selectNodes(content, function(n) {
-				if (n.nodeName == 'SPAN' && n.className == 'mceItemAbbr')
-					tinyMCE.renameElement(n, 'ABBR', inst.getDoc());
-			});
+		if (type == 'insert_to_editor' && tinyMCE.isIE && !tinyMCE.isOpera) {
+			content = content.replace(/<abbr([^>]+)>/gi, '<html:ABBR $1>');
+			content = content.replace(/<\/abbr>/gi, '</html:ABBR>');
 		}
 
 		return content;
@@ -130,6 +128,8 @@ var TinyMCE_XHTMLXtrasPlugin = {
 				tinyMCE.switchClass(editor_id + '_acronym', 'mceButtonSelected');
 				return true;
 
+			case "abbr": // IE
+			case "HTML:ABBR": // FF
 			case "ABBR":
 				tinyMCE.switchClass(editor_id + '_abbr', 'mceButtonSelected');
 				return true;

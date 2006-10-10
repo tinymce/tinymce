@@ -19,7 +19,7 @@ function init() {
 }
 
 function insertAbbr() {
-	SXE.insertElement('abbr');
+	SXE.insertElement(tinyMCE.isIE && !tinyMCE.isOpera ? 'html:ABBR' : 'abbr');
 	tinyMCEPopup.close();
 }
 

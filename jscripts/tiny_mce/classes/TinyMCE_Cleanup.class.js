@@ -1024,7 +1024,8 @@ TinyMCE_Cleanup.prototype = {
 
 					if (this.isMSIE && this.codeElementsRe.test(n.nodeName))
 						h += n.innerHTML;
-				}
+				} else
+					tinyMCE.debug(n.nodeName);
 			break;
 
 			case 3: // Text
