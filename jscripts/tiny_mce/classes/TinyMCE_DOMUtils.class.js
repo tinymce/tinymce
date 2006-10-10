@@ -504,7 +504,7 @@ TinyMCE_Engine.prototype.nextNode = function(e, n) {
  * @type Array
  */
 TinyMCE_Engine.prototype.selectElements = function(n, na, f) {
-	var i, a = new Array(), nl, x;
+	var i, a = [], nl, x;
 
 	for (x=0, na = na.split(','); x<na.length; x++)
 		for (i=0, nl = n.getElementsByTagName(na[x]); i<nl.length; i++)

@@ -19,6 +19,11 @@ var TinyMCE_FullScreenPlugin = {
 		};
 	},
 
+	initInstance : function(inst) {
+		if (!tinyMCE.settings['fullscreen_skip_plugin_css'])
+			tinyMCE.importCSS(inst.getDoc(), tinyMCE.baseURL + "/plugins/fullscreen/css/content.css");
+	},
+
 	getControlHTML : function(cn) {
 		switch (cn) {
 			case "fullscreen":
@@ -32,17 +37,7 @@ var TinyMCE_FullScreenPlugin = {
 		// Handle commands
 		switch (command) {
 			case "mceFullScreen":
-				if (tinyMCE.getParam('fullscreen_is_enabled')) {
-					// In fullscreen mode
-					window.opener.tinyMCE.execInstanceCommand(tinyMCE.getParam('fullscreen_editor_id'), 'mceSetContent', false, tinyMCE.getContent(editor_id));
-					top.close();
-				} else {
-					tinyMCE.setWindowArg('editor_id', editor_id);
-
-					var win = window.open(tinyMCE.baseURL + "/plugins/fullscreen/fullscreen.htm", "mceFullScreenPopup", "fullscreen=yes,menubar=no,toolbar=no,scrollbars=no,resizable=yes,left=0,top=0,width=" + screen.availWidth + ",height=" + screen.availHeight);
-					try { win.resizeTo(screen.availWidth, screen.availHeight); } catch (e) {}
-				}
-		
+				this._toggleFullscreen(tinyMCE.getInstanceById(editor_id));
 				return true;
 		}
 
@@ -50,11 +45,69 @@ var TinyMCE_FullScreenPlugin = {
 		return false;
 	},
 
-	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
-		if (tinyMCE.getParam('fullscreen_is_enabled'))
-			tinyMCE.switchClass(editor_id + '_fullscreen', 'mceButtonSelected');
+	_toggleFullscreen : function(inst) {
+		var ds = inst.getData('fullscreen'), editorContainer, tableElm, iframe, vp, cw, cd, re;
 
-		return true;
+		cw = inst.getContainerWin();
+		cd = cw.document;
+		editorContainer = cd.getElementById(inst.editorId + '_parent');
+		tableElm = editorContainer.firstChild;
+		iframe = inst.iframeElement;
+		re = cd.getElementById(inst.editorId + '_resize');
+
+		if (!ds.enabled) {
+			ds.oldOverflow = cd.body.style.overflow;
+			cd.body.style.overflow = 'hidden';
+
+			re.style.display = 'none';
+
+			vp = tinyMCE.getViewPort(cw);
+
+			tableElm.style.position = 'absolute';
+			tableElm.style.zIndex = 1000;
+			tableElm.style.left = tableElm.style.top = '0';
+
+			tableElm.style.width = vp.width + 'px';
+			tableElm.style.height = vp.height + 'px';
+
+			ds.oldWidth = iframe.style.width;
+			ds.oldHeight = iframe.style.height;
+
+			var w = iframe.parentNode.clientWidth;
+			var h = iframe.parentNode.clientHeight;
+
+			iframe.style.width = w + "px";
+			iframe.style.height = h + "px";
+
+			tinyMCE.selectElements(cd, 'SELECT,INPUT,BUTTON,TEXTAREA', function (n) {
+				tinyMCE.addCSSClass(n, 'mceFullScreenHidden');
+
+				return false;
+			});
+
+			tinyMCE.switchClass(inst.editorId + '_fullscreen', 'mceButtonSelected');
+			ds.enabled = true;
+		} else {
+			cd.body.style.overflow = ds.oldOverflow ? ds.oldOverflow : '';
+
+			re.style.display = 'block';
+
+			tableElm.style.position = 'static';
+			tableElm.style.width = '';
+			tableElm.style.height = '';
+
+			iframe.style.width = ds.oldWidth ? ds.oldWidth : '';
+			iframe.style.height = ds.oldHeight ? ds.oldHeight : '';
+
+			tinyMCE.selectElements(cd, 'SELECT,INPUT,BUTTON,TEXTAREA', function (n) {
+				tinyMCE.removeCSSClass(n, 'mceFullScreenHidden');
+
+				return false;
+			});
+
+			tinyMCE.switchClass(inst.editorId + '_fullscreen', 'mceButtonNormal');
+			ds.enabled = false;
+		}
 	}
 };
 

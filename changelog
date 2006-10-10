@@ -33,6 +33,7 @@ Version 2.0.7 (2006-xx-xx)
 	Fixed bug where cursor was placed at a incorrect location after mceInsertContent call in Gecko.
 	Fixed bug where selection/caret is moved to top of document on a cleanup in Gecko.
 	Fixed bugs with table selection not beeing restored correctly when actions where performed.
+	Fixed so that the fullscreen plugin uses the current document area instead of a new window/popup.
 	Fixed so that the cleanup callback is executed on themes.
 	Fixed so that the initialization is even faster both editor instanced and dialogs.
 	Fixed so that the force_p_newlines option works on Opera & Safari. This is enabled by default.
