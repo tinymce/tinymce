@@ -34,6 +34,7 @@ Version 2.0.7 (2006-10-xx)
 	Fixed bug where selection/caret is moved to top of document on a cleanup in Gecko.
 	Fixed bug where button elements was forced closed.
 	Fixed bug where comma separated content_css option wasn't working with the preview plugin.
+	Fixed bug where DIV element named doc and inlinepopups plugin caused errors.
 	Fixed bugs with table selection not beeing restored correctly when actions where performed.
 	Fixed so that the fullscreen plugin uses the current document area instead of a new window/popup.
 	Fixed so that the cleanup callback is executed on themes.

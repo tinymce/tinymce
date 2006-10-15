@@ -431,7 +431,7 @@ TinyMCE_Windows.prototype.onLoad = function(name) {
 
 TinyMCE_Windows.prototype.createFloatingIFrame = function(id_prefix, left, top, width, height, html) {
 	var iframe = document.createElement("iframe");
-	var div = document.createElement("div");
+	var div = document.createElement("div"), doc;
 
 	width = parseInt(width);
 	height = parseInt(height)+1;
@@ -483,7 +483,7 @@ TinyMCE_Windows.prototype.createFloatingIFrame = function(id_prefix, left, top, 
 	if (this.isSafari) {
 		// Give Safari some time to setup
 		window.setTimeout(function() {
-			doc = window.frames[id_prefix + '_iframe'].document;
+			var doc = window.frames[id_prefix + '_iframe'].document;
 			doc.open();
 			doc.write(html);
 			doc.close();
