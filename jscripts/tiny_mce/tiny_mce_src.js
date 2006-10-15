@@ -4288,7 +4288,7 @@ function TinyMCE_Cleanup() {
 
 	this.vElements = tinyMCE.clearArray(new Array());
 	this.vElementsRe = '';
-	this.closeElementsRe = /^(IMG|BR|HR|LINK|META|BASE|INPUT|BUTTON|AREA)$/;
+	this.closeElementsRe = /^(IMG|BR|HR|LINK|META|BASE|INPUT|AREA)$/;
 	this.codeElementsRe = /^(SCRIPT|STYLE)$/;
 	this.serializationId = 0;
 	this.mceAttribs = {

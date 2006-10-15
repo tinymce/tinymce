@@ -1,4 +1,4 @@
-Version 2.0.7 (2006-xx-xx)
+Version 2.0.7 (2006-10-xx)
 	Added new visualchars plugin. Enables users to see custom chars like &nbsp;.
 	Added new nonbreaking plugin. Enables users to insert &nbsp; characters.
 	Added new devkit plugin. Gives TinyMCE developers more information.
@@ -32,6 +32,8 @@ Version 2.0.7 (2006-xx-xx)
 	Fixed bug where forms_utils.js function where using a relative URL to the current theme.
 	Fixed bug where cursor was placed at a incorrect location after mceInsertContent call in Gecko.
 	Fixed bug where selection/caret is moved to top of document on a cleanup in Gecko.
+	Fixed bug where button elements was forced closed.
+	Fixed bug where comma separated content_css option wasn't working with the preview plugin.
 	Fixed bugs with table selection not beeing restored correctly when actions where performed.
 	Fixed so that the fullscreen plugin uses the current document area instead of a new window/popup.
 	Fixed so that the cleanup callback is executed on themes.
