@@ -15,6 +15,7 @@ Version 2.0.7 (2006-10-xx)
 	Added new shortcut keys for h1-h6,p,div,address elements by keys Ctrl+1-9.
 	Added lightbox, nofollow and tag as possible rel attribute values in the advlink dialog.
 	Added new table delete control for the table plugin.
+	Added new updated search/replace dialogs. Contributed by Felix Riesterer.
 	Added image browser support for style plugin.
 	Fixed bugs and issues with the lastest Safari Nightly build.
 	Fixed bugs where data was set outside the current function scopes.
