@@ -649,6 +649,8 @@ TinyMCE_Control.prototype = {
 
 				tinyMCE.isGecko && this.getSel().collapseToEnd();
 
+				tinyMCE.triggerNodeChange();
+
 				return true;
 
 			case "InsertUnorderedList":
