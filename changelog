@@ -12,6 +12,7 @@ Version 2.0.7 (2006-10-xx)
 	Added new RegExp support for editor_selector/editor_deselector options.
 	Added new validation class. Implemented in various dialogs.
 	Added new createTag and createTagHTML methods to the API.
+	Added new shortcut keys for h1-h6,p,div,address elements by keys Ctrl+1-9.
 	Added lightbox, nofollow and tag as possible rel attribute values in the advlink dialog.
 	Fixed bugs and issues with the lastest Safari Nightly build.
 	Fixed bugs where data was set outside the current function scopes.

@@ -812,7 +812,7 @@ TinyMCE_Engine.prototype = {
 	},
 
 	setupContent : function(editor_id) {
-		var inst = tinyMCE.instances[editor_id];
+		var inst = tinyMCE.instances[editor_id], i;
 		var doc = inst.getDoc();
 		var head = doc.getElementsByTagName('head').item(0);
 		var content = inst.startContent;
@@ -851,6 +851,14 @@ TinyMCE_Engine.prototype = {
 			inst.addShortcut('ctrl', 'z', 'lang_undo_desc', 'Undo');
 			inst.addShortcut('ctrl', 'y', 'lang_redo_desc', 'Redo');
 		}
+
+		// BlockFormat shortcuts keys
+		for (i=1; i<=6; i++)
+			inst.addShortcut('ctrl', '' + i, '', 'FormatBlock', false, '<h' + i + '>');
+
+		inst.addShortcut('ctrl', '7', '', 'FormatBlock', false, '<p>');
+		inst.addShortcut('ctrl', '8', '', 'FormatBlock', false, '<div>');
+		inst.addShortcut('ctrl', '9', '', 'FormatBlock', false, '<address>');
 
 		// Add default shortcuts for gecko
 		if (tinyMCE.isGecko) {
