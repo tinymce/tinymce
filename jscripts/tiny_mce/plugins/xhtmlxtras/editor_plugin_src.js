@@ -45,44 +45,61 @@ var TinyMCE_XHTMLXtrasPlugin = {
 	},
 
 	execCommand : function(editor_id, element, command, user_interface, value) {
+		var template;
+
 		switch (command) {
 			case "mceCite":
-				var template = new Array();
+				if (!this._anySel(editor_id))
+					return true;
+
+				template = new Array();
 				template['file'] = '../../plugins/xhtmlxtras/cite.htm';
 				template['width'] = 350;
-				template['height'] = 400;
+				template['height'] = 250;
 				tinyMCE.openWindow(template, {editor_id : editor_id});
 				return true;
 
 			case "mceAcronym":
-				var template = new Array();
+				if (!this._anySel(editor_id))
+					return true;
+
+				template = new Array();
 				template['file'] = '../../plugins/xhtmlxtras/acronym.htm';
 				template['width'] = 350;
-				template['height'] = 400;
+				template['height'] = 250;
 				tinyMCE.openWindow(template, {editor_id : editor_id});
 				return true;
 
 			case "mceAbbr":
-				var template = new Array();
+				if (!this._anySel(editor_id))
+					return true;
+
+				template = new Array();
 				template['file'] = '../../plugins/xhtmlxtras/abbr.htm';
 				template['width'] = 350;
-				template['height'] = 400;
+				template['height'] = 250;
 				tinyMCE.openWindow(template, {editor_id : editor_id});
 				return true;
 
 			case "mceIns":
-				var template = new Array();
+				if (!this._anySel(editor_id))
+					return true;
+
+				template = new Array();
 				template['file'] = '../../plugins/xhtmlxtras/ins.htm';
 				template['width'] = 350;
-				template['height'] = 400;
+				template['height'] = 310;
 				tinyMCE.openWindow(template, {editor_id : editor_id});
 				return true;
 
 			case "mceDel":
-				var template = new Array();
+				if (!this._anySel(editor_id))
+					return true;
+
+				template = new Array();
 				template['file'] = '../../plugins/xhtmlxtras/del.htm';
 				template['width'] = 350;
-				template['height'] = 400;
+				template['height'] = 310;
 				tinyMCE.openWindow(template, {editor_id : editor_id});
 				return true;
 		}
@@ -144,6 +161,12 @@ var TinyMCE_XHTMLXtrasPlugin = {
 		}
 
 		return true;
+	},
+
+	_anySel : function(editor_id) {
+		var inst = tinyMCE.getInstanceById(editor_id), t = inst.selection.getSelectedText();
+
+		return inst.getFocusElement().nodeName == "IMG" || (t && t.length > 0);
 	}
 };
 

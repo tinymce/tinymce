@@ -14,6 +14,7 @@ Version 2.0.7 (2006-10-xx)
 	Added new createTag and createTagHTML methods to the API.
 	Added new shortcut keys for h1-h6,p,div,address elements by keys Ctrl+1-9.
 	Added lightbox, nofollow and tag as possible rel attribute values in the advlink dialog.
+	Added image browser support for style plugin.
 	Fixed bugs and issues with the lastest Safari Nightly build.
 	Fixed bugs where data was set outside the current function scopes.
 	Fixed bug where all plugin and theme callback methods had the "this" reference incorrectly set to window.
@@ -35,10 +36,24 @@ Version 2.0.7 (2006-10-xx)
 	Fixed bug where selection/caret is moved to top of document on a cleanup in Gecko.
 	Fixed bug where button elements was forced closed.
 	Fixed bug where comma separated content_css option wasn't working with the preview plugin.
-	Fixed bug where DIV element named doc and inlinepopups plugin caused errors.
+	Fixed bug where DIV element named doc caused errors in IE.
+	Fixed bug where the selectedInstance wasn't updated correctly if the user clicked outside of the body of a editor area.
+	Fixed bug where strong and em wasn't handled correctly in Gecko browsers if the user added them by using the source editor.
+	Fixed bug where script tag was removed if it was the first element in IE and convert_fonts_to_span option was enabled.
+	Fixed bug when converting empty divs to editor instances didn't work in IE.
+	Fixed bug where Gecko produces a BR tag at the end of a single line of content.
+	Fixed bug where the entity_encoding numeric wasn't converting &nbsp; to &#160;.
+	Fixed bug where fullpage plugin produced an error if the first thing was to edit the header data.
+	Fixed bug where background attribute of body element in fullpage plugin produced error in IE.
+	Fixed bug where Opera was reporting errors if the width/height of a editor area was set to a percent value.
+	Fixed bug where JS error was produced in IE if you tried to insert a row/column.
+	Fixed bug where IE was causing flicker if the browser cache was disabled and the button_tile_map option is enabled.
 	Fixed bugs with table selection not beeing restored correctly when actions where performed.
+	Fixed issue where a link wasn't removed on unlink in gecko if only the caret was placed within the link.
+	Fixed so that the valid attribute values for the valid_elements rules are case insensitive.
 	Fixed so that the fullscreen plugin uses the current document area instead of a new window/popup.
 	Fixed so that the cleanup callback is executed on themes.
+	Fixed so that document local anchors isn't forced absolute.
 	Fixed so that the initialization is even faster both editor instanced and dialogs.
 	Fixed so that the force_p_newlines option works on Opera & Safari. This is enabled by default.
 	Fixed so that empty td cells are padded with &nbsp; by default. This can be changed with the extended_valid_elements option.

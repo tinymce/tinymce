@@ -39,16 +39,17 @@ TinyMCE_Engine.prototype.cleanupHTMLCode = function(s) {
 	s = s.replace(new RegExp('<(img|br|hr)([^>]*)><\\/(img|br|hr)>', 'gi'), '<$1$2 />');
 
 	// Weird MSIE bug, <p><hr /></p> breaks runtime?
-	if (tinyMCE.isMSIE)
+	if (tinyMCE.isIE)
 		s = s.replace(new RegExp('<p><hr \\/><\\/p>', 'gi'), "<hr>");
 
 	// Weird tags will make IE error #bug: 1538495
-	if (tinyMCE.isMSIE)
+	if (tinyMCE.isIE)
 		s = s.replace(/<!(\s*)\/>/g, '');
 
 	// Convert relative anchors to absolute URLs ex: #something to file.htm#something
-	if (tinyMCE.getParam('convert_urls'))
-		s = s.replace(new RegExp('(href=\"{0,1})(\\s*#)', 'gi'), '$1' + tinyMCE.settings['document_base_url'] + "#");
+	// Removed: Since local document anchors should never be forced absolute example edit.php?id=something
+	//if (tinyMCE.getParam('convert_urls'))
+	//	s = s.replace(new RegExp('(href=\"{0,1})(\\s*#)', 'gi'), '$1' + tinyMCE.settings['document_base_url'] + "#");
 
 	return s;
 };
@@ -237,7 +238,7 @@ TinyMCE_Engine.prototype.convertSpansToFonts = function(doc) {
 	var h = doc.body.innerHTML;
 	h = h.replace(/<span/gi, '<font');
 	h = h.replace(/<\/span/gi, '</font');
-	doc.body.innerHTML = h;
+	tinyMCE.setInnerHTML(doc.body, h);
 
 	var s = doc.getElementsByTagName("font");
 	for (var i=0; i<s.length; i++) {
@@ -282,7 +283,7 @@ TinyMCE_Engine.prototype.convertFontsToSpans = function(doc) {
 	var h = doc.body.innerHTML;
 	h = h.replace(/<font/gi, '<span');
 	h = h.replace(/<\/font/gi, '</span');
-	doc.body.innerHTML = h;
+	tinyMCE.setInnerHTML(doc.body, h);
 
 	var fsClasses = tinyMCE.getParam('font_size_classes');
 	if (fsClasses != '')
@@ -436,7 +437,7 @@ TinyMCE_Engine.prototype._fixTables = function(d) {
  * @private
  */
 TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual, on_save, on_submit, inn) {
-	var h, d, t1, t2, t3, t4, t5, c, s;
+	var h, d, t1, t2, t3, t4, t5, c, s, nb;
 
 	if (!tinyMCE.getParam('cleanup'))
 		return elm.innerHTML;
@@ -482,17 +483,20 @@ TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual,
 		t3 = new Date().getTime();
 
 	// Post processing
+	nb = tinyMCE.getParam('entity_encoding') == 'numeric' ? '&#160;' : '&nbsp;';
 	h = h.replace(/<\/?(body|head|html)[^>]*>/gi, '');
 	h = h.replace(new RegExp(' (rowspan="1"|colspan="1")', 'g'), '');
 	h = h.replace(/<p><hr \/><\/p>/g, '<hr />');
 	h = h.replace(/<p>(&nbsp;|&#160;)<\/p><hr \/><p>(&nbsp;|&#160;)<\/p>/g, '<hr />');
-	h = h.replace(/<td>\s*<br \/>\s*<\/td>/g, '<td>&nbsp;</td>');
-	h = h.replace(/<p>\s*<br \/>\s*<\/p>/g, '<p>&nbsp;</p>');
-	h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*(&nbsp;|&#160;)\s*<\/p>/g, '<p>&nbsp;</p>');
-	h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*<\/p>/g, '<p>&nbsp;</p>');
-	h = h.replace(/<p>\s*<br \/>\s*&nbsp;\s*<\/p>/g, '<p>&nbsp;</p>');
+	h = h.replace(/<td>\s*<br \/>\s*<\/td>/g, '<td>' + nb + '</td>');
+	h = h.replace(/<p>\s*<br \/>\s*<\/p>/g, '<p>' + nb + '</p>');
+	h = h.replace(/<br \/>$/, ''); // Remove last BR for Gecko
+	h = h.replace(/<br \/><\/p>/g, '</p>'); // Remove last BR in P tags for Gecko
+	h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*(&nbsp;|&#160;)\s*<\/p>/g, '<p>' + nb + '</p>');
+	h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*<\/p>/g, '<p>' + nb + '</p>');
+	h = h.replace(/<p>\s*<br \/>\s*&nbsp;\s*<\/p>/g, '<p>' + nb + '</p>');
 	h = h.replace(new RegExp('<a>(.*?)<\\/a>', 'g'), '$1');
-	h = h.replace(/<p([^>]*)>\s*<\/p>/g, '<p$1>&nbsp;</p>');
+	h = h.replace(/<p([^>]*)>\s*<\/p>/g, '<p$1>' + nb + '</p>');
 
 	// Clean body
 	if (/^\s*(<br \/>|<p>&nbsp;<\/p>|<p>&#160;<\/p>|<p><\/p>)\s*$/.test(h))
@@ -508,7 +512,7 @@ TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual,
 	// Gecko specific processing
 	if (tinyMCE.isGecko) {
 		h = h.replace(/<o:p _moz-userdefined="" \/>/g, '');
-		h = h.replace(/<td([^>]*)>\s*<br \/>\s*<\/td>/g, '<td$1>&nbsp;</td>');
+		h = h.replace(/<td([^>]*)>\s*<br \/>\s*<\/td>/g, '<td$1>' + nb + '</td>');
 	}
 
 	if (s.force_br_newlines)
@@ -553,7 +557,7 @@ TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual,
  * @constructor
  */
 function TinyMCE_Cleanup() {
-	this.isMSIE = (navigator.appName == "Microsoft Internet Explorer");
+	this.isIE = (navigator.appName == "Microsoft Internet Explorer");
 	this.rules = tinyMCE.clearArray(new Array());
 
 	// Default config
@@ -612,6 +616,7 @@ TinyMCE_Cleanup.prototype = {
 		this.nlBeforeRe = this._arrayToRe(s.newline_before_elements.split(','), 'gi', '<(',  ')([^>]*)>');
 		this.nlAfterRe = this._arrayToRe(s.newline_after_elements.split(','), 'gi', '<(',  ')([^>]*)>');
 		this.nlBeforeAfterRe = this._arrayToRe(s.newline_before_after_elements.split(','), 'gi', '<(\\/?)(', ')([^>]*)>');
+		this.serializedNodes = [];
 
 		if (s.invalid_elements != '')
 			this.iveRe = this._arrayToRe(s.invalid_elements.toUpperCase().split(','), 'g', '^(', ')$');
@@ -805,7 +810,7 @@ TinyMCE_Cleanup.prototype = {
 								if (!r.validAttribValues)
 									r.validAttribValues = tinyMCE.clearArray(new Array());
 
-								r.validAttribValues[t.toLowerCase()] = this._arrayToRe(this.split('?', av[0].substring(1)), '');
+								r.validAttribValues[t.toLowerCase()] = this._arrayToRe(this.split('?', av[0].substring(1)), 'i');
 							}
 						}
 
@@ -849,7 +854,7 @@ TinyMCE_Cleanup.prototype = {
 		var s, b;
 
 		if (!this.xmlDoc) {
-			if (this.isMSIE) {
+			if (this.isIE) {
 				try {this.xmlDoc = new ActiveXObject('MSXML2.DOMDocument');} catch (e) {}
 
 				if (!this.xmlDoc)
@@ -869,7 +874,7 @@ TinyMCE_Cleanup.prototype = {
 
 		this._convertToXML(n, b);
 
-		if (this.isMSIE)
+		if (this.isIE)
 			return this.xmlDoc.xml;
 		else
 			return new XMLSerializer().serializeToString(this.xmlDoc);
@@ -962,7 +967,7 @@ TinyMCE_Cleanup.prototype = {
 					break;
 
 				// MSIE sometimes produces <//tag>
-				if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && n.nodeName.indexOf('/') != -1)
+				if ((tinyMCE.isIE && !tinyMCE.isOpera) && n.nodeName.indexOf('/') != -1)
 					break;
 
 				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName)) && !inn) {
@@ -1022,10 +1027,9 @@ TinyMCE_Cleanup.prototype = {
 					if (t != null)
 						h += t + '>';
 
-					if (this.isMSIE && this.codeElementsRe.test(n.nodeName))
+					if (this.isIE && this.codeElementsRe.test(n.nodeName))
 						h += n.innerHTML;
-				} else
-					tinyMCE.debug(n.nodeName);
+				}
 			break;
 
 			case 3: // Text
@@ -1033,7 +1037,7 @@ TinyMCE_Cleanup.prototype = {
 					break;
 
 				if (n.parentNode && this.codeElementsRe.test(n.parentNode.nodeName))
-					return this.isMSIE ? '' : n.nodeValue;
+					return this.isIE ? '' : n.nodeValue;
 
 				return this.xmlEncode(n.nodeValue);
 
@@ -1243,16 +1247,16 @@ TinyMCE_Cleanup.prototype = {
 		if (n == "class" && !v)
 			v = e.className;
 
-		if (this.isMSIE && n == "http-equiv")
+		if (this.isIE && n == "http-equiv")
 			v = e.httpEquiv;
 
-		if (this.isMSIE && e.nodeName == "FORM" && n == "enctype" && v == "application/x-www-form-urlencoded")
+		if (this.isIE && e.nodeName == "FORM" && n == "enctype" && v == "application/x-www-form-urlencoded")
 			v = "";
 
-		if (this.isMSIE && e.nodeName == "INPUT" && n == "size" && v == "20")
+		if (this.isIE && e.nodeName == "INPUT" && n == "size" && v == "20")
 			v = "";
 
-		if (this.isMSIE && e.nodeName == "INPUT" && n == "maxlength" && v == "2147483647")
+		if (this.isIE && e.nodeName == "INPUT" && n == "maxlength" && v == "2147483647")
 			v = "";
 
 		if (n == "style" && !tinyMCE.isOpera)
@@ -1388,7 +1392,7 @@ TinyMCE_Cleanup.prototype = {
 		if (!this.settings.fix_content_duplication)
 			return false;
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera && n.nodeType == 1) {
+		if (tinyMCE.isIE && !tinyMCE.isOpera && n.nodeType == 1) {
 			// Mark elements
 			if (n.mce_serialized == this.serializationId)
 				return true;

@@ -350,6 +350,14 @@ TinyMCE_Engine.prototype = {
 
 		// Start loading first one in chain
 		this.loadNextScript();
+
+		// Force flicker free CSS backgrounds in IE
+		if (this.isIE && !this.isOpera) {
+			try {
+				document.execCommand('BackgroundImageCache', false, true);
+			} catch (e) {
+			}
+		}
 	},
 
 	/**
@@ -943,17 +951,18 @@ TinyMCE_Engine.prototype = {
 
 		if (aw.indexOf('%') == -1) {
 			aw = parseInt(aw);
-			aw = aw < 0 ? 300 : aw;
+			aw = (isNaN(aw) || aw < 0) ? 300 : aw;
 			aw = aw + "px";
 		}
 
 		if (ah.indexOf('%') == -1) {
 			ah = parseInt(ah);
-			ah = ah < 0 ? 240 : ah;
+			ah = (isNaN(ah) || ah < 0) ? 240 : ah;
 			ah = ah + "px";
 		}
 
 		iframe.setAttribute("id", id);
+		iframe.setAttribute("name", id);
 		iframe.setAttribute("class", "mceEditorIframe");
 		iframe.setAttribute("border", "0");
 		iframe.setAttribute("frameBorder", "0");
@@ -1109,15 +1118,8 @@ TinyMCE_Engine.prototype = {
 
 			if (tinyMCE.settings['cleanup_on_startup'])
 				tinyMCE.setInnerHTML(inst.getBody(), tinyMCE._cleanupHTML(inst, doc, this.settings, contentElement));
-			else {
-				// Convert all strong/em to b/i
-				content = tinyMCE.regexpReplace(content, "<strong", "<b", "gi");
-				content = tinyMCE.regexpReplace(content, "<em(/?)>", "<i$1>", "gi");
-				content = tinyMCE.regexpReplace(content, "<em ", "<i ", "gi");
-				content = tinyMCE.regexpReplace(content, "</strong>", "</b>", "gi");
-				content = tinyMCE.regexpReplace(content, "</em>", "</i>", "gi");
+			else
 				tinyMCE.setInnerHTML(inst.getBody(), content);
-			}
 
 			tinyMCE.convertAllRelativeURLs(inst.getBody());
 		} else {
@@ -1238,6 +1240,8 @@ TinyMCE_Engine.prototype = {
 	 * @param {HTMLElement} form_obj Form object to loop through for TinyMCE specific form elements.
 	 */
 	removeTinyMCEFormElements : function(form_obj) {
+		var i, elementId;
+
 		// Check if form is valid
 		if (typeof(form_obj) == "undefined" || form_obj == null)
 			return;
@@ -1255,8 +1259,8 @@ TinyMCE_Engine.prototype = {
 			return;
 
 		// Disable all UI form elements that TinyMCE created
-		for (var i=0; i<form_obj.elements.length; i++) {
-			var elementId = form_obj.elements[i].name ? form_obj.elements[i].name : form_obj.elements[i].id;
+		for (i=0; i<form_obj.elements.length; i++) {
+			elementId = form_obj.elements[i].name ? form_obj.elements[i].name : form_obj.elements[i].id;
 
 			if (elementId.indexOf('mce_editor_') == 0)
 				form_obj.elements[i].disabled = true;
@@ -1530,7 +1534,7 @@ TinyMCE_Engine.prototype = {
 				}
 
 				// Check instance event trigged on
-				var targetBody = tinyMCE.getParentElement(e.target, "body");
+				var targetBody = tinyMCE.getParentElement(e.target, "html");
 				for (var instanceName in tinyMCE.instances) {
 					if (!tinyMCE.isInstance(tinyMCE.instances[instanceName]))
 						continue;
@@ -1540,7 +1544,8 @@ TinyMCE_Engine.prototype = {
 					// Reset design mode if lost (on everything just in case)
 					inst.autoResetDesignMode();
 
-					if (inst.getBody() == targetBody) {
+					// Use HTML element since users might click outside of body element
+					if (inst.getBody().parentNode == targetBody) {
 						inst.select();
 						tinyMCE.selectedElement = e.target;
 						tinyMCE.linkElement = tinyMCE.getParentElement(tinyMCE.selectedElement, "a");

@@ -36,3 +36,11 @@ h1 {
 	cursor: pointer;
 	margin-left: 3px;
 }
+
+.panel_wrapper div.current {
+	height: 160px;
+}
+
+#xhtmlxtrasdel .panel_wrapper div.current, #xhtmlxtrasins .panel_wrapper div.current {
+	height: 220px;
+}

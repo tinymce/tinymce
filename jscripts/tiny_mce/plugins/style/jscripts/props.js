@@ -26,9 +26,12 @@ var defaultBorderWidth = "thin;medium;thick";
 var defaultListType = "disc;circle;square;decimal;lower-roman;upper-roman;lower-alpha;upper-alpha;none";
 
 function init() {
-	var ce = document.getElementById('container');
+	var ce = document.getElementById('container'), h;
 
 	ce.style.cssText = tinyMCEPopup.getWindowArg('style_text');
+
+	h = getBrowserHTML('background_image_browser','background_image','image','advimage');
+	document.getElementById("background_image_browser").innerHTML = h;
 
 	tinyMCEPopup.resizeToInnerSize();
 

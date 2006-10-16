@@ -210,7 +210,7 @@ TinyMCE_Engine.prototype.convertRelativeToAbsoluteURL = function(base_url, relat
 	var baseURL = this.parseURL(base_url), baseURLParts, relURLParts;
 	var relURL = this.parseURL(relative_url);
 
-	if (relative_url == "" || relative_url.charAt(0) == '/' || relative_url.indexOf('://') != -1 || relative_url.indexOf('mailto:') != -1 || relative_url.indexOf('javascript:') != -1)
+	if (relative_url == "" || relative_url.indexOf('://') != -1 || /^(mailto:|javascript:|#|\/)/.test(relative_url))
 		return relative_url;
 
 	// Split parts
@@ -347,12 +347,14 @@ TinyMCE_Engine.prototype.convertURL = function(url, node, on_save) {
  * @param {HTMLElement} body HTML element to convert all URLs in.
  */
 TinyMCE_Engine.prototype.convertAllRelativeURLs = function(body) {
-	// Convert all image URL:s to absolute URL
-	var elms = body.getElementsByTagName("img");
-	for (var i=0; i<elms.length; i++) {
-		var src = tinyMCE.getAttrib(elms[i], 'src');
+	var i, elms, src, href, mhref, msrc;
 
-		var msrc = tinyMCE.getAttrib(elms[i], 'mce_src');
+	// Convert all image URL:s to absolute URL
+	elms = body.getElementsByTagName("img");
+	for (i=0; i<elms.length; i++) {
+		src = tinyMCE.getAttrib(elms[i], 'src');
+
+		msrc = tinyMCE.getAttrib(elms[i], 'mce_src');
 		if (msrc != "")
 			src = msrc;
 
@@ -363,11 +365,11 @@ TinyMCE_Engine.prototype.convertAllRelativeURLs = function(body) {
 	}
 
 	// Convert all link URL:s to absolute URL
-	var elms = body.getElementsByTagName("a");
-	for (var i=0; i<elms.length; i++) {
-		var href = tinyMCE.getAttrib(elms[i], 'href');
+	elms = body.getElementsByTagName("a");
+	for (i=0; i<elms.length; i++) {
+		href = tinyMCE.getAttrib(elms[i], 'href');
 
-		var mhref = tinyMCE.getAttrib(elms[i], 'mce_href');
+		mhref = tinyMCE.getAttrib(elms[i], 'mce_href');
 		if (mhref != "")
 			href = mhref;
 

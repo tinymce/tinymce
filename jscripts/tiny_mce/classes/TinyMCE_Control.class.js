@@ -235,7 +235,8 @@ TinyMCE_Control.prototype = {
 	 * @type DOMDocument
 	 */
 	getDoc : function() {
-		return this.contentDocument ? this.contentDocument : this.contentWindow.document;
+//		return this.contentDocument ? this.contentDocument : this.contentWindow.document; // Removed due to IE 5.5 ?
+		return this.contentWindow.document;
 	},
 
 	/**
@@ -403,7 +404,7 @@ TinyMCE_Control.prototype = {
 	autoResetDesignMode : function() {
 		// Add fix for tab/style.display none/block problems in Gecko
 		if (!tinyMCE.isMSIE && this.isHidden() && tinyMCE.getParam('auto_reset_designmode'))
-			eval('try { this.getDoc().designMode = "On"; } catch(e) {}');
+			eval('try { this.getDoc().designMode = "On"; this.useCSS = false; } catch(e) {}');
 	},
 
 	/**
@@ -633,6 +634,21 @@ TinyMCE_Control.prototype = {
 		switch (command) {
 			case "mceRepaint":
 				this.repaint();
+				return true;
+
+			case "unlink":
+				// Unlink if caret is inside link
+				if (tinyMCE.isGecko && this.getSel().isCollapsed) {
+					focusElm = tinyMCE.getParentElement(focusElm, 'A');
+
+					if (focusElm)
+						this.selection.selectNode(focusElm, false);
+				}
+
+				this.getDoc().execCommand(command, user_interface, value);
+
+				tinyMCE.isGecko && this.getSel().collapseToEnd();
+
 				return true;
 
 			case "InsertUnorderedList":
@@ -1415,12 +1431,19 @@ TinyMCE_Control.prototype = {
 		this.settings['area_width'] += deltaWidth;
 		this.settings['area_height'] += deltaHeight;
 
+		this.settings['width_style'] = "" + this.settings['width'];
+		this.settings['height_style'] = "" + this.settings['height'];
+
 		// Special % handling
 		if (("" + this.settings['width']).indexOf('%') != -1)
 			this.settings['area_width'] = "100%";
+		else
+			this.settings['width_style'] += 'px';
 
 		if (("" + this.settings['height']).indexOf('%') != -1)
 			this.settings['area_height'] = "100%";
+		else
+			this.settings['height_style'] += 'px';
 
 		if (("" + replace_element.style.width).indexOf('%') != -1) {
 			this.settings['width'] = replace_element.style.width;
@@ -1665,7 +1688,7 @@ TinyMCE_Control.prototype = {
 	 * @param {boolean} skip_callback Optional Skip callback, don't call the save_callback function.
 	 */
 	triggerSave : function(skip_cleanup, skip_callback) {
-		var e, nl = new Array(), i, s;
+		var e, nl = [], i, s;
 
 		this.switchSettings();
 		s = tinyMCE.settings;

@@ -597,7 +597,7 @@ var TinyMCE_AdvancedTheme = {
 				toolbarHTML += '<a href="#" accesskey="z" onfocus="tinyMCE.getInstanceById(\'' + editorId + '\').getWin().focus();"></a>';
 
 				// Setup template html
-				template['html'] = '<table class="mceEditor" border="0" cellpadding="0" cellspacing="0" width="{$width}" height="{$height}" style="width:{$width}px;height:{$height}px"><tbody>';
+				template['html'] = '<table class="mceEditor" border="0" cellpadding="0" cellspacing="0" width="{$width}" height="{$height}" style="width:{$width_style};height:{$height_style}"><tbody>';
 
 				if (toolbarLocation == "top") {
 					template['html'] += '<tr><td class="mceToolbarTop" align="' + toolbarAlign + '" height="1" nowrap="nowrap"><span id="' + editorId + '_toolbar" class="mceToolbarContainer">' + toolbarHTML + '</span></td></tr>';
@@ -1244,6 +1244,9 @@ var TinyMCE_AdvancedTheme = {
 				inst.iframeElement.style.width = (iw + dx) + "px";
 			}
 		}
+
+		// Remove pesky table controls
+		inst.useCSS = false;
 	},
 
 	/**

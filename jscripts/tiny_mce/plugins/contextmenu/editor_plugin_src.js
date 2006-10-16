@@ -213,12 +213,12 @@ tinyMCE.addPlugin("contextmenu", TinyMCE_ContextMenuPlugin);
 // Context menu class
 
 function TinyMCE_ContextMenu(settings) {
+	var doc, self = this;
+
 	// Default value function
 	function defParam(key, def_val) {
 		settings[key] = typeof(settings[key]) != "undefined" ? settings[key] : def_val;
 	}
-
-	var self = this;
 
 	this.isMSIE = (navigator.appName == "Microsoft Internet Explorer");
 

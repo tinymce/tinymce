@@ -498,7 +498,7 @@ var TinyMCE_TablePlugin = {
 				// Table has a tbody use that reference
 				// Changed logic by ApTest 2005.07.12 (www.aptest.com)
 				// Now lookk at the focused element and take its parentNode.  That will be a tbody or a table.
-				if (tableElm != trElm.parentNode)
+				if (trElm && tableElm != trElm.parentNode)
 					tableElm = trElm.parentNode;
 
 				if (tableElm && trElm) {

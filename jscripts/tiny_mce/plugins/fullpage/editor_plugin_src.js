@@ -216,7 +216,7 @@ var TinyMCE_FullPagePlugin = {
 			body.text = tinyMCE.getAttrib(nl[0], 'text');
 
 			if ((tmp = tinyMCE.getAttrib(nl[0], 'background')) != '')
-				body.style.backgroundImage = tmp;
+				body.style.backgroundImage = "url('" + tmp + "')";
 
 			if ((tmp = tinyMCE.getAttrib(nl[0], 'bgcolor')) != '')
 				body.style.backgroundColor = tmp;

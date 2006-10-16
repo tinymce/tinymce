@@ -146,6 +146,15 @@ TinyMCE_Engine.prototype.insertAfter = function(n, r){
 TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
 	var i, nl, n;
 
+	// Convert all strong/em to b/i in Gecko
+	if (tinyMCE.isGecko) {
+		h = h.replace(/<strong/gi, '<b');
+		h = h.replace(/<em(\/?)/gi, '<i');
+		h = h.replace(/<em /gi, '<i');
+		h = h.replace(/<\/strong>/gi, '</b>');
+		h = h.replace(/<\/em>/gi, '</i>');
+	}
+
 	if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
 		// Since MSIE handles invalid HTML better that valid XHTML we
 		// need to make some things invalid. <hr /> gets converted to <hr>.
