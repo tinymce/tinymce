@@ -217,10 +217,10 @@ var TinyMCE_MediaPlugin = {
 						}
 
 						if (attribs.width)
-							at = at.replace(/width:[^0-9]?[0-9]+%?/g, "width:'" + attribs.width + "'");
+							at = at.replace(/width:[^0-9]?[0-9]+%?[^0-9]?/g, "width:'" + attribs.width + "'");
 
 						if (attribs.height)
-							at = at.replace(/height:[^0-9]?[0-9]+%?/g, "height:'" + attribs.height + "'");
+							at = at.replace(/height:[^0-9]?[0-9]+%?[^0-9]?/g, "height:'" + attribs.height + "'");
 
 						// Force absolute URL
 						if (!tinyMCE.getParam("relative_urls")) {
