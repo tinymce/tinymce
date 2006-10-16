@@ -997,7 +997,7 @@ TinyMCE_Control.prototype = {
 				else
 					this.getBody().innerHTML = value;
 
-				tinyMCE.setInnerHTML(this.getBody(), tinyMCE._cleanupHTML(this, doc, this.settings, this.getBody(), false, true, false, true));
+				tinyMCE.setInnerHTML(this.getBody(), tinyMCE._cleanupHTML(this, doc, this.settings, this.getBody(), false, false, false, true));
 				tinyMCE.convertAllRelativeURLs(this.getBody());
 
 				// Cleanup any mess left from storyAwayURLs
@@ -1220,6 +1220,7 @@ TinyMCE_Control.prototype = {
 					}
 				}
 
+				tinyMCE.execCommand("mceAddUndoLevel");
 				tinyMCE.triggerNodeChange();
 			break;
 

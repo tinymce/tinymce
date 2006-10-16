@@ -78,34 +78,32 @@ var TinyMCE_MediaPlugin = {
 					}
 				}
 
-				nl = tinyMCE.selectNodes(content, function (n) {return n.className == 'mceItemObject';});
+				nl = tinyMCE.selectElements(content, 'SPAN', function (n) {return tinyMCE.hasCSSClass(n, 'mceItemObject');});
 				for (i=0; i<nl.length; i++) {
-					if (nl[i].className == 'mceItemObject') {
-						ci = tinyMCE.getAttrib(nl[i], "classid").toLowerCase().replace(/\s+/g, '');
+					ci = tinyMCE.getAttrib(nl[i], "classid").toLowerCase().replace(/\s+/g, '');
 
-						switch (ci) {
-							case 'clsid:d27cdb6e-ae6d-11cf-96b8-444553540000':
-								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemFlash', d, nl[i]), nl[i]);
-								break;
+					switch (ci) {
+						case 'clsid:d27cdb6e-ae6d-11cf-96b8-444553540000':
+							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemFlash', d, nl[i]), nl[i]);
+							break;
 
-							case 'clsid:166b1bca-3f9c-11cf-8075-444553540000':
-								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemShockWave', d, nl[i]), nl[i]);
-								break;
+						case 'clsid:166b1bca-3f9c-11cf-8075-444553540000':
+							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemShockWave', d, nl[i]), nl[i]);
+							break;
 
-							case 'clsid:6bf52a52-394a-11d3-b153-00c04f79faa6':
-								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemWindowsMedia', d, nl[i]), nl[i]);
-								break;
+						case 'clsid:6bf52a52-394a-11d3-b153-00c04f79faa6':
+							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemWindowsMedia', d, nl[i]), nl[i]);
+							break;
 
-							case 'clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b':
-								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemQuickTime', d, nl[i]), nl[i]);
-								break;
+						case 'clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b':
+							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemQuickTime', d, nl[i]), nl[i]);
+							break;
 
-							case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
-							case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
-							case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
-								nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemRealMedia', d, nl[i]), nl[i]);
-								break;
-						}
+						case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
+						case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
+						case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
+							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemRealMedia', d, nl[i]), nl[i]);
+							break;
 					}
 				}
 

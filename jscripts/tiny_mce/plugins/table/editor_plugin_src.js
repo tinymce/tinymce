@@ -34,6 +34,7 @@ var TinyMCE_TablePlugin = {
 	getControlHTML : function(control_name) {
 		var controls = new Array(
 			['table', 'table.gif', 'lang_table_desc', 'mceInsertTable', true],
+			['delete_table', 'table_delete.gif', 'lang_table_del', 'mceTableDelete'],
 			['delete_col', 'table_delete_col.gif', 'lang_table_delete_col_desc', 'mceTableDeleteCol'],
 			['delete_row', 'table_delete_row.gif', 'lang_table_delete_row_desc', 'mceTableDeleteRow'],
 			['col_after', 'table_insert_col_after.gif', 'lang_table_col_after_desc', 'mceTableInsertColAfter'],
@@ -122,6 +123,7 @@ var TinyMCE_TablePlugin = {
 
 		// Reset table controls
 		tinyMCE.switchClass(editor_id + '_table', 'mceButtonNormal');
+		tinyMCE.switchClass(editor_id + '_delete_table', 'mceButtonDisabled');
 		tinyMCE.switchClass(editor_id + '_row_props', 'mceButtonDisabled');
 		tinyMCE.switchClass(editor_id + '_cell_props', 'mceButtonDisabled');
 		tinyMCE.switchClass(editor_id + '_row_before', 'mceButtonDisabled');
@@ -136,6 +138,7 @@ var TinyMCE_TablePlugin = {
 		// Within a td element
 		if (tdElm = tinyMCE.getParentElement(node, "td,th")) {
 			tinyMCE.switchClass(editor_id + '_cell_props', 'mceButtonSelected');
+			tinyMCE.switchClass(editor_id + '_delete_table', 'mceButtonNormal');
 			tinyMCE.switchClass(editor_id + '_row_before', 'mceButtonNormal');
 			tinyMCE.switchClass(editor_id + '_row_after', 'mceButtonNormal');
 			tinyMCE.switchClass(editor_id + '_delete_row', 'mceButtonNormal');

@@ -2310,7 +2310,7 @@ TinyMCE_Engine.prototype = {
 
 				if (anchorName != '' && state) {
 					el.title = anchorName;
-					el.className = 'mceItemAnchor';
+					tinyMCE.addCSSClass(el, 'mceItemAnchor');
 				} else if (anchorName != '' && !state)
 					el.className = '';
 
