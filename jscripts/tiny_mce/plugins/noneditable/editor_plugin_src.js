@@ -22,20 +22,22 @@ var TinyMCE_NonEditablePlugin = {
 		// Ugly hack
 		if (tinyMCE.isMSIE5_0)
 			tinyMCE.settings['plugins'] = tinyMCE.settings['plugins'].replace(/noneditable/gi, 'Noneditable');
+	},
 
-		if (tinyMCE.isGecko) {
-			tinyMCE.addEvent(inst.getDoc(), "keyup", TinyMCE_NonEditablePlugin._fixKeyUp);
-	//		tinyMCE.addEvent(inst.getDoc(), "keypress", TinyMCE_NonEditablePlugin._selectAll);
-	//		tinyMCE.addEvent(inst.getDoc(), "mouseup", TinyMCE_NonEditablePlugin._selectAll);
-		}
+	handleEvent : function(e) {
+		return this._moveSelection(e, tinyMCE.selectedInstance);
 	},
 
 	cleanup : function(type, content, inst) {
+		// Pass through Gecko
+		if (tinyMCE.isGecko)
+			return content;
+
 		switch (type) {
 			case "insert_to_editor_dom":
 				var nodes = tinyMCE.getNodeTree(content, new Array(), 1);
-				var editClass = tinyMCE.getParam("noneditable_editable_class", "mceEditable");
-				var nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceNonEditable");
+				var editClass = tinyMCE.getParam("noneditable_editable_class", "mceItemEditable");
+				var nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceItemNonEditable");
 
 				for (var i=0; i<nodes.length; i++) {
 					var elm = nodes[i];
@@ -60,8 +62,8 @@ var TinyMCE_NonEditablePlugin = {
 
 			case "insert_to_editor":
 				if (tinyMCE.isMSIE) {
-					var editClass = tinyMCE.getParam("noneditable_editable_class", "mceEditable");
-					var nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceNonEditable");
+					var editClass = tinyMCE.getParam("noneditable_editable_class", "mceItemEditable");
+					var nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceItemNonEditable");
 
 					content = content.replace(new RegExp("class=\"(.*)(" + editClass + ")([^\"]*)\"", "gi"), 'class="$1$2$3" contenteditable="true"');
 					content = content.replace(new RegExp("class=\"(.*)(" + nonEditClass + ")([^\"]*)\"", "gi"), 'class="$1$2$3" contenteditable="false"');
@@ -83,66 +85,42 @@ var TinyMCE_NonEditablePlugin = {
 		return content;
 	},
 
-	// Private internal plugin methods
+	_moveSelection : function(e, inst) {
+		var s, r, sc, ec, el, c = tinyMCE.getParam('noneditable_editable_class', 'mceItemNonEditable');
 
-	_fixKeyUp : function(e) {
-		var inst = tinyMCE.selectedInstance;
-		var sel = inst.getSel();
-		var rng = inst.getRng();
-		var an = sel.anchorNode;
+		if (!inst)
+			return true;
 
-		// Move cursor outside non editable fields
-		if ((e.keyCode == 38 || e.keyCode == 37 || e.keyCode == 40 || e.keyCode == 39) && (elm = TinyMCE_NonEditablePlugin._isNonEditable(an)) != null) {
-			rng = inst.getDoc().createRange();
-			rng.selectNode(elm);
-			rng.collapse(true);
-			sel.removeAllRanges();
-			sel.addRange(rng);
-			tinyMCE.cancelEvent(e);
+		// Always select whole element
+		if (tinyMCE.isGecko) {
+			s = inst.selection.getSel();
+			r = s.getRangeAt(0);
+			sc = tinyMCE.getParentNode(r.startContainer, function (n) {return tinyMCE.hasCSSClass(n, c);});
+			ec = tinyMCE.getParentNode(r.endContainer, function (n) {return tinyMCE.hasCSSClass(n, c);});
+
+			sc && r.setStartBefore(sc);
+			ec && r.setEndAfter(ec);
+
+			if (sc || ec) {
+				if (e.type == 'keypress' && e.keyCode == 39) {
+					el = sc || ec;
+
+					// Try!!
+				}
+
+				s.removeAllRanges();
+				s.addRange(r);
+
+				return tinyMCE.cancelEvent(e);
+			}
 		}
-	},
-/*
-	_selectAll : function(e) {
-		var inst = tinyMCE.selectedInstance;
-		var sel = inst.getSel();
-		var doc = inst.getDoc();
 
-		if ((elm = TinyMCE_NonEditablePlugin._isNonEditable(sel.focusNode)) != null) {
-			inst.selection.selectNode(elm, false);
-			tinyMCE.cancelEvent(e);
-			return;
-		}
-
-		if ((elm = TinyMCE_NonEditablePlugin._isNonEditable(sel.anchorNode)) != null) {
-			inst.selection.selectNode(elm, false);
-			tinyMCE.cancelEvent(e);
-			return;
-		}
-	},*/
-
-	_isNonEditable : function(elm) {
-		var editClass = tinyMCE.getParam("noneditable_editable_class", "mceEditable");
-		var nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceNonEditable");
-
-		if (!elm)
-			return;
-
-		do {
-			var className = elm.className ? elm.className : "";
-
-			if (className.indexOf(editClass) != -1)
-				return null;
-
-			if (className.indexOf(nonEditClass) != -1)
-				return elm;
-		} while (elm = elm.parentNode);
-
-		return null;
+		return true;
 	},
 
 	_setEditable : function(elm, state) {
-		var editClass = tinyMCE.getParam("noneditable_editable_class", "mceEditable");
-		var nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceNonEditable");
+		var editClass = tinyMCE.getParam("noneditable_editable_class", "mceItemEditable");
+		var nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceItemNonEditable");
 
 		var className = elm.className ? elm.className : "";
 

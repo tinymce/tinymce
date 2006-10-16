@@ -245,7 +245,7 @@ TinyMCE_Engine.prototype = {
 		// Theme url
 		this.settings['theme_href'] = tinyMCE.baseURL + "/themes/" + theme;
 
-		if (!tinyMCE.isMSIE)
+		if (!tinyMCE.isMSIE || tinyMCE.isOpera)
 			this.settings['force_br_newlines'] = false;
 
 		if (tinyMCE.getParam("popups_css", false)) {

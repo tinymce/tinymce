@@ -682,9 +682,10 @@ var TinyMCE_AdvancedTheme = {
 						var curAlign = tinyMCE.getParam("theme_advanced_container_"+containers[i]+"_align", defaultContainerAlign);
 						var curCSS = tinyMCE.getParam("theme_advanced_container_"+containers[i]+"_class", defaultContainerCSS);
 
-						for (var j=0; j<curContainer.length; j++) {
+						curContainer = removeFromArray(curContainer, tinyMCE.getParam("theme_advanced_disable", "", true, ','));
+
+						for (var j=0; j<curContainer.length; j++)
 							curContainerHTML += tinyMCE.getControlHTML(curContainer[j]);
-						}
 
 						if (curContainer.length > 0) {
 							curContainerHTML += "<br />";
