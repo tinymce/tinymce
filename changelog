@@ -1,4 +1,4 @@
-Version 2.0.7 (2006-10-xx)
+Version 2.0.7 (2006-10-17)
 	Added new visualchars plugin. Enables users to see custom chars like &nbsp;.
 	Added new nonbreaking plugin. Enables users to insert &nbsp; characters.
 	Added new devkit plugin. Gives TinyMCE developers more information.
