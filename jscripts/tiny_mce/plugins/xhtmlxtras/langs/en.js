@@ -28,5 +28,6 @@ title_acronym_element : 'Acronym Element',
 title_abbr_element : 'Abbreviation Element',
 title_cite_element : 'Citation Element',
 remove : 'Remove',
-not_set : '--not set--'
+not_set : '--not set--',
+insert_date : 'Insert current date/time'
 });
