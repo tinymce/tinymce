@@ -1,7 +1,10 @@
 Version 2.0.8 (2006-10-xx)
 	Fixed bug where cite and datetime attributes wasn't added to the default valid_elements list for del and ins.
 	Fixed bug where insert date in xhtmlxtras plugin wasn't placed in language pack.
-	Fixed issue with two default rules for abbr in valid_elements.
+	Fixed bug where new fullscreen mode didn't function in IE with XHTML transitional doctype.
+	Fixed bug where new text and hilite text previews generated ghost layers in IE.
+	Fixed issue with duplicate default rules for abbr in valid_elements.
+	Fixed issue where the devkit wasn't the frontmost layer all the time.
 Version 2.0.7 (2006-10-17)
 	Added new visualchars plugin. Enables users to see custom chars like &nbsp;.
 	Added new nonbreaking plugin. Enables users to insert &nbsp; characters.

@@ -301,7 +301,7 @@ TinyMCE_Engine.prototype.accessibleEventHandler = function(e) {
 TinyMCE_Engine.prototype._resetIframeHeight = function() {
 	var ife;
 
-	if (this.isRealIE) {
+	if (tinyMCE.isRealIE) {
 		ife = tinyMCE.selectedInstance.iframeElement;
 
 /*		if (ife._oldWidth) {

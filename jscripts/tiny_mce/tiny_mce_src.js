@@ -290,7 +290,7 @@ TinyMCE_Engine.prototype = {
 			if (typeof(TinyMCECompressed) == "undefined") {
 				tinyMCE.addEvent(window, "DOMContentLoaded", TinyMCE_Engine.prototype.onLoad);
 
-				if (this.isRealIE) {
+				if (tinyMCE.isRealIE) {
 					if (document.body)
 						tinyMCE.addEvent(document.body, "readystatechange", TinyMCE_Engine.prototype.onLoad);
 					else
@@ -799,7 +799,7 @@ TinyMCE_Engine.prototype = {
 			iframe.setAttribute("scrolling", "no");
 
 		// Must have a src element in MSIE HTTPs breaks aswell as absoute URLs
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			iframe.setAttribute("src", this.settings['default_document']);
 
 		iframe.style.width = aw;
@@ -810,12 +810,12 @@ TinyMCE_Engine.prototype = {
 			iframe.style.marginBottom = '-5px';
 
 		// MSIE 5.0 issue
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			replace_element.outerHTML = iframe.outerHTML;
 		else
 			replace_element.parentNode.replaceChild(iframe, replace_element);
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return win.frames[id];
 		else
 			return iframe;
@@ -1091,7 +1091,7 @@ TinyMCE_Engine.prototype = {
 
 				// Fixes odd MSIE bug where drag/droping elements in a iframe with height 100% breaks
 				// This logic forces the width/height to be in pixels while the user is drag/dropping
-				if (this.isRealIE) {
+				if (tinyMCE.isRealIE) {
 					var ife = tinyMCE.selectedInstance.iframeElement;
 
 					/*if (ife.style.width.indexOf('%') != -1) {
@@ -1411,7 +1411,7 @@ TinyMCE_Engine.prototype = {
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = tinyMCE.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
 
-			if (this.isRealIE)
+			if (tinyMCE.isRealIE)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
@@ -1421,7 +1421,7 @@ TinyMCE_Engine.prototype = {
 			h += '<a href="javascript:' + mcmd + '" onclick="' + mcmd + 'return false;" onmousedown="return false;"><img src="{$themeurl}/images/button_menu.gif" title="{$' + lang + '}" class="mceMenuButton" />';
 			h += '</a></span>';
 		} else {
-			if (this.isRealIE)
+			if (tinyMCE.isRealIE)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
@@ -1466,7 +1466,7 @@ TinyMCE_Engine.prototype = {
 			return;
 		}
 
-		if (this.isRealIE && window.event.type == "readystatechange" && document.readyState != "complete")
+		if (tinyMCE.isRealIE && window.event.type == "readystatechange" && document.readyState != "complete")
 			return true;
 
 		if (tinyMCE.isLoaded)
@@ -1816,7 +1816,7 @@ TinyMCE_Engine.prototype = {
 			win.resizeTo(width, height);
 			win.focus();
 		} else {
-			if ((this.isRealIE) && resizable != 'yes' && tinyMCE.settings["dialog_type"] == "modal") {
+			if ((tinyMCE.isRealIE) && resizable != 'yes' && tinyMCE.settings["dialog_type"] == "modal") {
 				height += 10;
 
 				var features = "resizable:" + resizable 
@@ -2493,7 +2493,7 @@ TinyMCE_Control.prototype = {
 	repaint : function() {
 		var s, b, ex;
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return;
 
 		try {
@@ -2564,7 +2564,7 @@ TinyMCE_Control.prototype = {
 	resizeToContent : function() {
 		var d = this.getDoc(), b = d.body, de = d.documentElement;
 
-		this.iframeElement.style.height = (this.isRealIE) ? b.scrollHeight : de.offsetHeight + 'px';
+		this.iframeElement.style.height = (tinyMCE.isRealIE) ? b.scrollHeight : de.offsetHeight + 'px';
 	},
 
 	addShortcut : function(m, k, d, cmd, ui, va) {
@@ -3806,7 +3806,7 @@ TinyMCE_Control.prototype = {
 		s = tinyMCE.settings;
 
 		// Force hidden tabs visible while serializing
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			e = this.iframeElement;
 
 			do {
@@ -4665,7 +4665,7 @@ TinyMCE_Cleanup.prototype = {
 					break;
 
 				// MSIE sometimes produces <//tag>
-				if ((this.isRealIE) && n.nodeName.indexOf('/') != -1)
+				if ((tinyMCE.isRealIE) && n.nodeName.indexOf('/') != -1)
 					break;
 
 				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName)) && !inn) {
@@ -4989,7 +4989,7 @@ TinyMCE_Cleanup.prototype = {
 		if (!this.settings.fix_content_duplication)
 			return false;
 
-		if (this.isRealIE && n.nodeType == 1) {
+		if (tinyMCE.isRealIE && n.nodeType == 1) {
 			// Mark elements
 			if (n.mce_serialized == this.serializationId)
 				return true;
@@ -5091,7 +5091,7 @@ TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
 		h = h.replace(/<\/em>/gi, '</i>');
 	}
 
-	if (this.isRealIE) {
+	if (tinyMCE.isRealIE) {
 		// Since MSIE handles invalid HTML better that valid XHTML we
 		// need to make some things invalid. <hr /> gets converted to <hr>.
 		h = h.replace(/\s\/>/g, '>');
@@ -5960,7 +5960,7 @@ TinyMCE_Engine.prototype.accessibleEventHandler = function(e) {
 TinyMCE_Engine.prototype._resetIframeHeight = function() {
 	var ife;
 
-	if (this.isRealIE) {
+	if (tinyMCE.isRealIE) {
 		ife = tinyMCE.selectedInstance.iframeElement;
 
 /*		if (ife._oldWidth) {
@@ -6156,7 +6156,7 @@ TinyMCE_Selection.prototype = {
 			return true;
 		}
 
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			if (bookmark.rng) {
 				try {
 					bookmark.rng.select();
@@ -6301,7 +6301,7 @@ TinyMCE_Selection.prototype = {
 		if (inst.settings.auto_resize)
 			inst.resizeToContent();
 
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			rng = inst.getDoc().body.createTextRange();
 
 			try {
@@ -6398,7 +6398,7 @@ TinyMCE_Selection.prototype = {
 	getSel : function() {
 		var inst = this.instance;
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return inst.getDoc().selection;
 
 		return inst.contentWindow.getSelection();
@@ -6410,7 +6410,7 @@ TinyMCE_Selection.prototype = {
 		if (s == null)
 			return null;
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return s.createRange();
 
 		if (tinyMCE.isSafari && !s.getRangeAt)
@@ -6422,7 +6422,7 @@ TinyMCE_Selection.prototype = {
 	getFocusElement : function() {
 		var inst = this.instance, doc, rng, sel, elm;
 
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			doc = inst.getDoc();
 			rng = doc.selection.createRange();
 

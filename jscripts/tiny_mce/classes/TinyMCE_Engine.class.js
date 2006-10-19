@@ -312,7 +312,7 @@ TinyMCE_Engine.prototype = {
 			if (typeof(TinyMCECompressed) == "undefined") {
 				tinyMCE.addEvent(window, "DOMContentLoaded", TinyMCE_Engine.prototype.onLoad);
 
-				if (this.isRealIE) {
+				if (tinyMCE.isRealIE) {
 					if (document.body)
 						tinyMCE.addEvent(document.body, "readystatechange", TinyMCE_Engine.prototype.onLoad);
 					else
@@ -980,7 +980,7 @@ TinyMCE_Engine.prototype = {
 			iframe.setAttribute("scrolling", "no");
 
 		// Must have a src element in MSIE HTTPs breaks aswell as absoute URLs
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			iframe.setAttribute("src", this.settings['default_document']);
 
 		iframe.style.width = aw;
@@ -991,12 +991,12 @@ TinyMCE_Engine.prototype = {
 			iframe.style.marginBottom = '-5px';
 
 		// MSIE 5.0 issue
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			replace_element.outerHTML = iframe.outerHTML;
 		else
 			replace_element.parentNode.replaceChild(iframe, replace_element);
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return win.frames[id];
 		else
 			return iframe;
@@ -1306,7 +1306,7 @@ TinyMCE_Engine.prototype = {
 
 				// Fixes odd MSIE bug where drag/droping elements in a iframe with height 100% breaks
 				// This logic forces the width/height to be in pixels while the user is drag/dropping
-				if (this.isRealIE) {
+				if (tinyMCE.isRealIE) {
 					var ife = tinyMCE.selectedInstance.iframeElement;
 
 					/*if (ife.style.width.indexOf('%') != -1) {
@@ -1651,7 +1651,7 @@ TinyMCE_Engine.prototype = {
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = tinyMCE.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
 
-			if (this.isRealIE)
+			if (tinyMCE.isRealIE)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
@@ -1661,7 +1661,7 @@ TinyMCE_Engine.prototype = {
 			h += '<a href="javascript:' + mcmd + '" onclick="' + mcmd + 'return false;" onmousedown="return false;"><img src="{$themeurl}/images/button_menu.gif" title="{$' + lang + '}" class="mceMenuButton" />';
 			h += '</a></span>';
 		} else {
-			if (this.isRealIE)
+			if (tinyMCE.isRealIE)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
@@ -1728,7 +1728,7 @@ TinyMCE_Engine.prototype = {
 			return;
 		}
 
-		if (this.isRealIE && window.event.type == "readystatechange" && document.readyState != "complete")
+		if (tinyMCE.isRealIE && window.event.type == "readystatechange" && document.readyState != "complete")
 			return true;
 
 		if (tinyMCE.isLoaded)
@@ -2176,7 +2176,7 @@ TinyMCE_Engine.prototype = {
 			win.resizeTo(width, height);
 			win.focus();
 		} else {
-			if ((this.isRealIE) && resizable != 'yes' && tinyMCE.settings["dialog_type"] == "modal") {
+			if ((tinyMCE.isRealIE) && resizable != 'yes' && tinyMCE.settings["dialog_type"] == "modal") {
 				height += 10;
 
 				var features = "resizable:" + resizable 

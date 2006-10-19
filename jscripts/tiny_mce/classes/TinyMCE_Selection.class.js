@@ -226,7 +226,7 @@ TinyMCE_Selection.prototype = {
 			return true;
 		}
 
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			if (bookmark.rng) {
 				try {
 					bookmark.rng.select();
@@ -399,7 +399,7 @@ TinyMCE_Selection.prototype = {
 		if (inst.settings.auto_resize)
 			inst.resizeToContent();
 
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			rng = inst.getDoc().body.createTextRange();
 
 			try {
@@ -512,7 +512,7 @@ TinyMCE_Selection.prototype = {
 	getSel : function() {
 		var inst = this.instance;
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return inst.getDoc().selection;
 
 		return inst.contentWindow.getSelection();
@@ -530,7 +530,7 @@ TinyMCE_Selection.prototype = {
 		if (s == null)
 			return null;
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return s.createRange();
 
 		if (tinyMCE.isSafari && !s.getRangeAt)
@@ -548,7 +548,7 @@ TinyMCE_Selection.prototype = {
 	getFocusElement : function() {
 		var inst = this.instance, doc, rng, sel, elm;
 
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			doc = inst.getDoc();
 			rng = doc.selection.createRange();
 

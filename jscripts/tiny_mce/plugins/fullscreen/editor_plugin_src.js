@@ -46,7 +46,7 @@ var TinyMCE_FullScreenPlugin = {
 	},
 
 	_toggleFullscreen : function(inst) {
-		var ds = inst.getData('fullscreen'), editorContainer, tableElm, iframe, vp, cw, cd, re;
+		var ds = inst.getData('fullscreen'), editorContainer, tableElm, iframe, vp, cw, cd, re, w, h;
 
 		cw = inst.getContainerWin();
 		cd = cw.document;
@@ -70,11 +70,20 @@ var TinyMCE_FullScreenPlugin = {
 			tableElm.style.width = vp.width + 'px';
 			tableElm.style.height = vp.height + 'px';
 
-			ds.oldWidth = iframe.style.width;
-			ds.oldHeight = iframe.style.height;
+			ds.oldWidth = iframe.style.offsetWidth;
+			ds.oldHeight = iframe.style.offsetHeight;
 
-			var w = iframe.parentNode.clientWidth;
-			var h = iframe.parentNode.clientHeight;
+			if (tinyMCE.isRealIE) {
+				iframe.style.width = vp.width + 'px';
+				iframe.style.height = vp.height + 'px';
+
+				// Calc new width/height based on overflow
+				w = iframe.parentNode.clientWidth - (tableElm.offsetWidth - vp.width);
+				h = iframe.parentNode.clientHeight - (tableElm.offsetHeight - vp.height);
+			} else {
+				w = iframe.parentNode.clientWidth;
+				h = iframe.parentNode.clientHeight;
+			}
 
 			iframe.style.width = w + "px";
 			iframe.style.height = h + "px";
@@ -90,7 +99,8 @@ var TinyMCE_FullScreenPlugin = {
 		} else {
 			cd.body.style.overflow = ds.oldOverflow ? ds.oldOverflow : '';
 
-			re.style.display = 'block';
+			if (tinyMCE.getParam("theme_advanced_resizing", false))
+				re.style.display = 'block';
 
 			tableElm.style.position = 'static';
 			tableElm.style.width = '';

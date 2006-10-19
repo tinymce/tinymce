@@ -155,7 +155,7 @@ TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
 		h = h.replace(/<\/em>/gi, '</i>');
 	}
 
-	if (this.isRealIE) {
+	if (tinyMCE.isRealIE) {
 		// Since MSIE handles invalid HTML better that valid XHTML we
 		// need to make some things invalid. <hr /> gets converted to <hr>.
 		h = h.replace(/\s\/>/g, '>');

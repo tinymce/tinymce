@@ -175,7 +175,7 @@ TinyMCE_Control.prototype = {
 	repaint : function() {
 		var s, b, ex;
 
-		if (this.isRealIE)
+		if (tinyMCE.isRealIE)
 			return;
 
 		try {
@@ -316,7 +316,7 @@ TinyMCE_Control.prototype = {
 	resizeToContent : function() {
 		var d = this.getDoc(), b = d.body, de = d.documentElement;
 
-		this.iframeElement.style.height = (this.isRealIE) ? b.scrollHeight : de.offsetHeight + 'px';
+		this.iframeElement.style.height = (tinyMCE.isRealIE) ? b.scrollHeight : de.offsetHeight + 'px';
 	},
 
 	/**
@@ -1697,7 +1697,7 @@ TinyMCE_Control.prototype = {
 		s = tinyMCE.settings;
 
 		// Force hidden tabs visible while serializing
-		if (this.isRealIE) {
+		if (tinyMCE.isRealIE) {
 			e = this.iframeElement;
 
 			do {

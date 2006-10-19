@@ -332,7 +332,7 @@ var TinyMCE_AdvancedTheme = {
 				return true;
 
 			case "forecolor":
-				var fcp = new TinyMCE_Layer(editor_id + '_fcPreview'), p, img, elm;
+				var fcp = new TinyMCE_Layer(editor_id + '_fcPreview', false), p, img, elm;
 
 				TinyMCE_AdvancedTheme._hideMenus(editor_id);
 
@@ -377,7 +377,7 @@ var TinyMCE_AdvancedTheme = {
 			return true;
 
 			case "HiliteColor":
-				var bcp = new TinyMCE_Layer(editor_id + '_bcPreview'), p, img;
+				var bcp = new TinyMCE_Layer(editor_id + '_bcPreview', false), p, img;
 
 				TinyMCE_AdvancedTheme._hideMenus(editor_id);
 
