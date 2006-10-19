@@ -175,7 +175,7 @@ TinyMCE_Control.prototype = {
 	repaint : function() {
 		var s, b, ex;
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+		if (this.isRealIE)
 			return;
 
 		try {
@@ -316,7 +316,7 @@ TinyMCE_Control.prototype = {
 	resizeToContent : function() {
 		var d = this.getDoc(), b = d.body, de = d.documentElement;
 
-		this.iframeElement.style.height = (tinyMCE.isMSIE && !tinyMCE.isOpera) ? b.scrollHeight : de.offsetHeight + 'px';
+		this.iframeElement.style.height = (this.isRealIE) ? b.scrollHeight : de.offsetHeight + 'px';
 	},
 
 	/**
@@ -337,7 +337,7 @@ TinyMCE_Control.prototype = {
 	 * @type boolean
 	 */
 	addShortcut : function(m, k, d, cmd, ui, va) {
-		var n = typeof(k) == "number", ie = tinyMCE.isMSIE, c, sc, i, scl = this.shortcuts;
+		var n = typeof(k) == "number", ie = tinyMCE.isIE, c, sc, i, scl = this.shortcuts;
 
 		if (!tinyMCE.getParam('custom_shortcuts'))
 			return false;
@@ -403,7 +403,7 @@ TinyMCE_Control.prototype = {
 	 */
 	autoResetDesignMode : function() {
 		// Add fix for tab/style.display none/block problems in Gecko
-		if (!tinyMCE.isMSIE && this.isHidden() && tinyMCE.getParam('auto_reset_designmode'))
+		if (!tinyMCE.isIE && this.isHidden() && tinyMCE.getParam('auto_reset_designmode'))
 			eval('try { this.getDoc().designMode = "On"; this.useCSS = false; } catch(e) {}');
 	},
 
@@ -418,7 +418,7 @@ TinyMCE_Control.prototype = {
 	isHidden : function() {
 		var s;
 
-		if (tinyMCE.isMSIE)
+		if (tinyMCE.isIE)
 			return false;
 
 		s = this.getSel();
@@ -522,7 +522,7 @@ TinyMCE_Control.prototype = {
 			this.undoBookmark = null;
 
 		// Mozilla issue
-		if (!tinyMCE.isMSIE && !this.useCSS) {
+		if (!tinyMCE.isIE && !this.useCSS) {
 			this._setUseCSS(false);
 			this.useCSS = true;
 		}
@@ -680,7 +680,7 @@ TinyMCE_Control.prototype = {
 					if (tinyMCE.isGecko && new RegExp('<(div|blockquote|code|dt|dd|dl|samp)>', 'gi').test(value))
 						value = value.replace(/[^a-z]/gi, '');
 
-					if (tinyMCE.isMSIE && new RegExp('blockquote|code|samp', 'gi').test(value)) {
+					if (tinyMCE.isIE && new RegExp('blockquote|code|samp', 'gi').test(value)) {
 						var b = this.selection.getBookmark();
 						this.getDoc().execCommand("FormatBlock", false, '<p>');
 						tinyMCE.renameElement(tinyMCE.getParentBlockElement(this.getFocusElement()), value);
@@ -697,7 +697,7 @@ TinyMCE_Control.prototype = {
 				if (!value)
 					value = tinyMCE.getParentElement(this.getFocusElement());
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					value.outerHTML = value.innerHTML;
 				} else {
 					var rng = value.ownerDocument.createRange();
@@ -748,7 +748,7 @@ TinyMCE_Control.prototype = {
 				var invalidParentsRe = tinyMCE.settings['merge_styles_invalid_parents'] != '' ? new RegExp(tinyMCE.settings['merge_styles_invalid_parents'], "gi") : null;
 
 				// Whole element selected check
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					// Control range
 					if (rng.item)
 						parentElm = rng.item(0);
@@ -1039,7 +1039,7 @@ TinyMCE_Control.prototype = {
 
 				var selectedText = "";
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					var rng = doc.selection.createRange();
 					selectedText = rng.text;
 				} else
@@ -1137,7 +1137,7 @@ TinyMCE_Control.prototype = {
 					}
 				}
 
-				if (!tinyMCE.isMSIE) {
+				if (!tinyMCE.isIE) {
 					var isHTML = value.indexOf('<') != -1;
 					var sel = this.getSel();
 					var rng = this.getRng();
@@ -1287,7 +1287,7 @@ TinyMCE_Control.prototype = {
 				this.getDoc().execCommand(command, user_interface, value);
 				tinyMCE.triggerNodeChange();
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					var n = tinyMCE.getParentElement(this.getFocusElement(), "blockquote");
 					do {
 						if (n && n.nodeName == "BLOCKQUOTE") {
@@ -1306,7 +1306,7 @@ TinyMCE_Control.prototype = {
 					return;
 				}
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					try {
 						var rng = doc.selection.createRange();
 						rng.execCommand("RemoveFormat", false, null);
@@ -1524,7 +1524,7 @@ TinyMCE_Control.prototype = {
 		var dynamicIFrame = false;
 		var tElm = targetDoc.getElementById(this.editorId);
 
-		if (!tinyMCE.isMSIE) {
+		if (!tinyMCE.isIE) {
 			// Node case is preserved in XML strict mode
 			if (tElm && (tElm.nodeName == "SPAN" || tElm.nodeName == "span")) {
 				tElm = tinyMCE._createIFrame(tElm, targetDoc);
@@ -1578,7 +1578,7 @@ TinyMCE_Control.prototype = {
 
 		// This timeout is needed in MSIE 5.5 for some odd reason
 		// it seems that the document.frames isn't initialized yet?
-		if (tinyMCE.isMSIE)
+		if (tinyMCE.isIE)
 			window.setTimeout("tinyMCE.addEventHandlers(tinyMCE.instances[\"" + this.editorId + "\"]);", 1);
 
 		tinyMCE.setupContent(this.editorId, true);
@@ -1697,7 +1697,7 @@ TinyMCE_Control.prototype = {
 		s = tinyMCE.settings;
 
 		// Force hidden tabs visible while serializing
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+		if (this.isRealIE) {
 			e = this.iframeElement;
 
 			do {

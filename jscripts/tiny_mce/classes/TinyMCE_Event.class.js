@@ -196,7 +196,7 @@ TinyMCE_Engine.prototype.cancelEvent = function(e) {
 	if (!e)
 		return false;
 
-	if (tinyMCE.isMSIE) {
+	if (tinyMCE.isIE) {
 		e.returnValue = false;
 		e.cancelBubble = true;
 	} else {
@@ -262,8 +262,8 @@ TinyMCE_Engine.prototype.addSelectAccessibility = function(e, s, w) {
  */
 TinyMCE_Engine.prototype.accessibleEventHandler = function(e) {
 	var win = this._win;
-	e = tinyMCE.isMSIE ? win.event : e;
-	var elm = tinyMCE.isMSIE ? e.srcElement : e.target;
+	e = tinyMCE.isIE ? win.event : e;
+	var elm = tinyMCE.isIE ? e.srcElement : e.target;
 
 	// Unpiggyback onchange on blur
 	if (e.type == "blur") {
@@ -301,7 +301,7 @@ TinyMCE_Engine.prototype.accessibleEventHandler = function(e) {
 TinyMCE_Engine.prototype._resetIframeHeight = function() {
 	var ife;
 
-	if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+	if (this.isRealIE) {
 		ife = tinyMCE.selectedInstance.iframeElement;
 
 /*		if (ife._oldWidth) {

@@ -56,7 +56,7 @@ TinyMCE_Popup.prototype = {
 
 		inst = tinyMCE.selectedInstance;
 		this.isWindow = tinyMCE.getWindowArg('mce_inside_iframe', false) == false;
-		this.storeSelection = (tinyMCE.isMSIE && !tinyMCE.isOpera) && !this.isWindow && tinyMCE.getWindowArg('mce_store_selection', true);
+		this.storeSelection = (this.isRealIE) && !this.isWindow && tinyMCE.getWindowArg('mce_store_selection', true);
 
 		if (this.isWindow)
 			window.focus();

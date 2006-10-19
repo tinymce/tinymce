@@ -155,7 +155,7 @@ TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
 		h = h.replace(/<\/em>/gi, '</i>');
 	}
 
-	if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+	if (this.isRealIE) {
 		// Since MSIE handles invalid HTML better that valid XHTML we
 		// need to make some things invalid. <hr /> gets converted to <hr>.
 		h = h.replace(/\s\/>/g, '>');
@@ -193,7 +193,7 @@ TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
  * @type string
  */
 TinyMCE_Engine.prototype.getOuterHTML = function(e) {
-	if (tinyMCE.isMSIE)
+	if (tinyMCE.isIE)
 		return e.outerHTML;
 
 	var d = e.ownerDocument.createElement("body");
@@ -212,7 +212,7 @@ TinyMCE_Engine.prototype.getOuterHTML = function(e) {
 TinyMCE_Engine.prototype.setOuterHTML = function(e, h, d) {
 	var d = typeof(d) == "undefined" ? e.ownerDocument : d, i, nl, t;
 
-	if (tinyMCE.isMSIE && e.nodeType == 1)
+	if (tinyMCE.isIE && e.nodeType == 1)
 		e.outerHTML = h;
 	else {
 		t = d.createElement("body");
@@ -353,7 +353,7 @@ TinyMCE_Engine.prototype.getAttrib = function(elm, name, dv) {
 	if (tinyMCE.isGecko && name == "href" && elm.href != null && elm.href != "")
 		v = elm.href;
 
-	if (name == "http-equiv" && tinyMCE.isMSIE)
+	if (name == "http-equiv" && tinyMCE.isIE)
 		v = elm.httpEquiv;
 
 	if (name == "style" && !tinyMCE.isOpera)

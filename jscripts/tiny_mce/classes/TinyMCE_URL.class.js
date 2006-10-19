@@ -294,7 +294,7 @@ TinyMCE_Engine.prototype.convertURL = function(url, node, on_save) {
 		return url;
 
 	// Fix relative/Mozilla
-	if (!tinyMCE.isMSIE && !on_save && url.indexOf("://") == -1 && url.charAt(0) != '/')
+	if (!tinyMCE.isIE && !on_save && url.indexOf("://") == -1 && url.charAt(0) != '/')
 		return tinyMCE.settings['base_href'] + url;
 
 	// Handle relative URLs

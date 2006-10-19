@@ -50,6 +50,7 @@ function TinyMCE_Engine() {
 	}
 
 	this.isIE = this.isMSIE;
+	this.isRealIE = this.isMSIE && !this.isOpera;
 
 	// TinyMCE editor id instance counter
 	this.idCounter = 0;
@@ -245,7 +246,7 @@ TinyMCE_Engine.prototype = {
 		// Theme url
 		this.settings['theme_href'] = tinyMCE.baseURL + "/themes/" + theme;
 
-		if (!tinyMCE.isMSIE || tinyMCE.isOpera)
+		if (!tinyMCE.isIE || tinyMCE.isOpera)
 			this.settings['force_br_newlines'] = false;
 
 		if (tinyMCE.getParam("popups_css", false)) {
@@ -289,7 +290,7 @@ TinyMCE_Engine.prototype = {
 			if (typeof(TinyMCECompressed) == "undefined") {
 				tinyMCE.addEvent(window, "DOMContentLoaded", TinyMCE_Engine.prototype.onLoad);
 
-				if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+				if (this.isRealIE) {
 					if (document.body)
 						tinyMCE.addEvent(document.body, "readystatechange", TinyMCE_Engine.prototype.onLoad);
 					else
@@ -339,7 +340,7 @@ TinyMCE_Engine.prototype = {
 	},
 
 	_addUnloadEvents : function() {
-		if (tinyMCE.isMSIE) {
+		if (tinyMCE.isIE) {
 			if (tinyMCE.settings['add_unload_trigger']) {
 				tinyMCE.addEvent(window, "unload", TinyMCE_Engine.prototype.unloadHandler);
 				tinyMCE.addEvent(window.document, "beforeunload", TinyMCE_Engine.prototype.unloadHandler);
@@ -501,7 +502,7 @@ TinyMCE_Engine.prototype = {
 	},
 
 	confirmAdd : function(e, settings) {
-		var elm = tinyMCE.isMSIE ? event.srcElement : e.target;
+		var elm = tinyMCE.isIE ? event.srcElement : e.target;
 		var elementId = elm.name ? elm.name : elm.id;
 
 		tinyMCE.settings = settings;
@@ -527,7 +528,7 @@ TinyMCE_Engine.prototype = {
 		
 				tinyMCE._setHTML(doc, inst.formElement.value);
 
-				if (!tinyMCE.isMSIE)
+				if (!tinyMCE.isIE)
 					doc.body.innerHTML = tinyMCE._cleanupHTML(inst, doc, this.settings, doc.body, inst.visualAid);
 			}
 		}
@@ -664,7 +665,7 @@ TinyMCE_Engine.prototype = {
 			tinyMCE.execCommand(command, user_interface, value);
 
 			// Cancel event so it doesn't call onbeforeonunlaod
-			if (tinyMCE.isMSIE && window.event != null)
+			if (tinyMCE.isIE && window.event != null)
 				tinyMCE.cancelEvent(window.event);
 		}
 	},
@@ -731,7 +732,7 @@ TinyMCE_Engine.prototype = {
 
 			case "mceResetDesignMode":
 				// Resets the designmode state of the editors in Gecko
-				if (!tinyMCE.isMSIE) {
+				if (!tinyMCE.isIE) {
 					for (var n in tinyMCE.instances) {
 						if (!tinyMCE.isInstance(tinyMCE.instances[n]))
 							continue;
@@ -798,7 +799,7 @@ TinyMCE_Engine.prototype = {
 			iframe.setAttribute("scrolling", "no");
 
 		// Must have a src element in MSIE HTTPs breaks aswell as absoute URLs
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+		if (this.isRealIE)
 			iframe.setAttribute("src", this.settings['default_document']);
 
 		iframe.style.width = aw;
@@ -809,12 +810,12 @@ TinyMCE_Engine.prototype = {
 			iframe.style.marginBottom = '-5px';
 
 		// MSIE 5.0 issue
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+		if (this.isRealIE)
 			replace_element.outerHTML = iframe.outerHTML;
 		else
 			replace_element.parentNode.replaceChild(iframe, replace_element);
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+		if (this.isRealIE)
 			return win.frames[id];
 		else
 			return iframe;
@@ -837,7 +838,7 @@ TinyMCE_Engine.prototype = {
 		inst.switchSettings();
 
 		// Not loaded correctly hit it again, Mozilla bug #997860
-		if (!tinyMCE.isMSIE && tinyMCE.getParam("setupcontent_reload", false) && doc.title != "blank_page") {
+		if (!tinyMCE.isIE && tinyMCE.getParam("setupcontent_reload", false) && doc.title != "blank_page") {
 			// This part will remove the designMode status
 			// Failes first time in Firefox 1.5b2 on Mac
 			try {doc.location.href = tinyMCE.baseURL + "/blank.htm";} catch (ex) {}
@@ -887,7 +888,7 @@ TinyMCE_Engine.prototype = {
 		doc.editorId = editor_id;
 
 		// Add on document element in Mozilla
-		if (!tinyMCE.isMSIE)
+		if (!tinyMCE.isIE)
 			doc.documentElement.editorId = editor_id;
 
 		inst.setBaseHREF(tinyMCE.settings['base_href']);
@@ -906,7 +907,7 @@ TinyMCE_Engine.prototype = {
 		content = tinyMCE.storeAwayURLs(content);
 		content = tinyMCE._customCleanup(inst, "insert_to_editor", content);
 
-		if (tinyMCE.isMSIE) {
+		if (tinyMCE.isIE) {
 			// Ugly!!!
 			window.setInterval('try{tinyMCE.getCSSClasses(tinyMCE.instances["' + editor_id + '"].getDoc(), "' + editor_id + '");}catch(e){}', 500);
 
@@ -920,7 +921,7 @@ TinyMCE_Engine.prototype = {
 		content = tinyMCE.cleanupHTMLCode(content);
 
 		// Fix for bug #958637
-		if (!tinyMCE.isMSIE) {
+		if (!tinyMCE.isIE) {
 			var contentElement = inst.getDoc().createElement("body");
 			var doc = inst.getDoc();
 
@@ -957,11 +958,11 @@ TinyMCE_Engine.prototype = {
 		tinyMCE.dispatchCallback(inst, 'setupcontent_callback', 'setupContent', editor_id, inst.getBody(), inst.getDoc());
 
 		// Re-add design mode on mozilla
-		if (!tinyMCE.isMSIE)
+		if (!tinyMCE.isIE)
 			tinyMCE.addEventHandlers(inst);
 
 		// Add blur handler
-		if (tinyMCE.isMSIE) {
+		if (tinyMCE.isIE) {
 			tinyMCE.addEvent(inst.getBody(), "blur", TinyMCE_Engine.prototype._eventPatch);
 			tinyMCE.addEvent(inst.getBody(), "beforedeactivate", TinyMCE_Engine.prototype._eventPatch); // Bug #1439953
 
@@ -1090,7 +1091,7 @@ TinyMCE_Engine.prototype = {
 
 				// Fixes odd MSIE bug where drag/droping elements in a iframe with height 100% breaks
 				// This logic forces the width/height to be in pixels while the user is drag/dropping
-				if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+				if (this.isRealIE) {
 					var ife = tinyMCE.selectedInstance.iframeElement;
 
 					/*if (ife.style.width.indexOf('%') != -1) {
@@ -1108,13 +1109,13 @@ TinyMCE_Engine.prototype = {
 				return;
 
 			case "submit":
-				tinyMCE.removeTinyMCEFormElements(tinyMCE.isMSIE ? window.event.srcElement : e.target);
+				tinyMCE.removeTinyMCEFormElements(tinyMCE.isIE ? window.event.srcElement : e.target);
 				tinyMCE.triggerSave();
 				tinyMCE.isNotDirty = true;
 				return;
 
 			case "reset":
-				var formObj = tinyMCE.isMSIE ? window.event.srcElement : e.target;
+				var formObj = tinyMCE.isIE ? window.event.srcElement : e.target;
 
 				for (var i=0; i<document.forms.length; i++) {
 					if (document.forms[i] == formObj)
@@ -1158,7 +1159,7 @@ TinyMCE_Engine.prototype = {
 				}
 
 				// Return key pressed
-				if (tinyMCE.isMSIE && tinyMCE.settings['force_br_newlines'] && e.keyCode == 13) {
+				if (tinyMCE.isIE && tinyMCE.settings['force_br_newlines'] && e.keyCode == 13) {
 					if (e.target.editorId)
 						tinyMCE.instances[e.target.editorId].select();
 
@@ -1234,11 +1235,11 @@ TinyMCE_Engine.prototype = {
 					tinyMCE.handleVisualAid(tinyMCE.selectedInstance.getBody(), true, tinyMCE.settings['visual'], tinyMCE.selectedInstance);
 
 				// Fix empty elements on return/enter, check where enter occured
-				if (tinyMCE.isMSIE && e.type == "keydown" && e.keyCode == 13)
+				if (tinyMCE.isIE && e.type == "keydown" && e.keyCode == 13)
 					tinyMCE.enterKeyElement = tinyMCE.selectedInstance.getFocusElement();
 
 				// Fix empty elements on return/enter
-				if (tinyMCE.isMSIE && e.type == "keyup" && e.keyCode == 13) {
+				if (tinyMCE.isIE && e.type == "keyup" && e.keyCode == 13) {
 					var elm = tinyMCE.enterKeyElement;
 					if (elm) {
 						var re = new RegExp('^HR|IMG|BR$','g'); // Skip these
@@ -1264,7 +1265,7 @@ TinyMCE_Engine.prototype = {
 				}
 
 				// MSIE custom key handling
-				if (tinyMCE.isMSIE && tinyMCE.settings['custom_undo_redo']) {
+				if (tinyMCE.isIE && tinyMCE.settings['custom_undo_redo']) {
 					var keys = new Array(8,46); // Backspace,Delete
 
 					for (var i=0; i<keys.length; i++) {
@@ -1302,7 +1303,7 @@ TinyMCE_Engine.prototype = {
 				if (posKey && e.type == "keyup")
 					tinyMCE.triggerNodeChange(false);
 
-				if (tinyMCE.isMSIE && e.ctrlKey)
+				if (tinyMCE.isIE && e.ctrlKey)
 					window.setTimeout('tinyMCE.triggerNodeChange(false);', 1);
 			break;
 
@@ -1376,7 +1377,7 @@ TinyMCE_Engine.prototype = {
 		cmd += ');';
 
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
-		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isMSIE || tinyMCE.isOpera) && (m = this.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
+		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = this.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			// Tiled button
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
 			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceTiledButton mceButtonNormal" target="_self">';
@@ -1407,10 +1408,10 @@ TinyMCE_Engine.prototype = {
 		cmd += ');';
 
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
-		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isMSIE || tinyMCE.isOpera) && (m = tinyMCE.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
+		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = tinyMCE.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
 
-			if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+			if (this.isRealIE)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
@@ -1420,7 +1421,7 @@ TinyMCE_Engine.prototype = {
 			h += '<a href="javascript:' + mcmd + '" onclick="' + mcmd + 'return false;" onmousedown="return false;"><img src="{$themeurl}/images/button_menu.gif" title="{$' + lang + '}" class="mceMenuButton" />';
 			h += '</a></span>';
 		} else {
-			if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+			if (this.isRealIE)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
@@ -1465,7 +1466,7 @@ TinyMCE_Engine.prototype = {
 			return;
 		}
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera && window.event.type == "readystatechange" && document.readyState != "complete")
+		if (this.isRealIE && window.event.type == "readystatechange" && document.readyState != "complete")
 			return true;
 
 		if (tinyMCE.isLoaded)
@@ -1776,7 +1777,7 @@ TinyMCE_Engine.prototype = {
 			height = 200;
 
 		// Add to height in M$ due to SP2 WHY DON'T YOU GUYS IMPLEMENT innerWidth of windows!!
-		if (tinyMCE.isMSIE)
+		if (tinyMCE.isIE)
 			height += 40;
 		else
 			height += 20;
@@ -1815,7 +1816,7 @@ TinyMCE_Engine.prototype = {
 			win.resizeTo(width, height);
 			win.focus();
 		} else {
-			if ((tinyMCE.isMSIE && !tinyMCE.isOpera) && resizable != 'yes' && tinyMCE.settings["dialog_type"] == "modal") {
+			if ((this.isRealIE) && resizable != 'yes' && tinyMCE.settings["dialog_type"] == "modal") {
 				height += 10;
 
 				var features = "resizable:" + resizable 
@@ -2045,7 +2046,7 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Content duplication bug fix
-		if (tinyMCE.isMSIE && tinyMCE.settings['fix_content_duplication']) {
+		if (tinyMCE.isIE && tinyMCE.settings['fix_content_duplication']) {
 			// Remove P elements in P elements
 			var paras = doc.getElementsByTagName("P");
 			for (var i=0; i<paras.length; i++) {
@@ -2171,7 +2172,7 @@ TinyMCE_Engine.prototype = {
 					var csses = null;
 
 					// Just ignore any errors
-					eval("try {var csses = tinyMCE.isMSIE ? doc.styleSheets(" + x + ").rules : styles[" + x + "].cssRules;} catch(e) {}");
+					eval("try {var csses = tinyMCE.isIE ? doc.styleSheets(" + x + ").rules : styles[" + x + "].cssRules;} catch(e) {}");
 					if (!csses)
 						return new Array();
 
@@ -2492,7 +2493,7 @@ TinyMCE_Control.prototype = {
 	repaint : function() {
 		var s, b, ex;
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+		if (this.isRealIE)
 			return;
 
 		try {
@@ -2563,11 +2564,11 @@ TinyMCE_Control.prototype = {
 	resizeToContent : function() {
 		var d = this.getDoc(), b = d.body, de = d.documentElement;
 
-		this.iframeElement.style.height = (tinyMCE.isMSIE && !tinyMCE.isOpera) ? b.scrollHeight : de.offsetHeight + 'px';
+		this.iframeElement.style.height = (this.isRealIE) ? b.scrollHeight : de.offsetHeight + 'px';
 	},
 
 	addShortcut : function(m, k, d, cmd, ui, va) {
-		var n = typeof(k) == "number", ie = tinyMCE.isMSIE, c, sc, i, scl = this.shortcuts;
+		var n = typeof(k) == "number", ie = tinyMCE.isIE, c, sc, i, scl = this.shortcuts;
 
 		if (!tinyMCE.getParam('custom_shortcuts'))
 			return false;
@@ -2621,14 +2622,14 @@ TinyMCE_Control.prototype = {
 
 	autoResetDesignMode : function() {
 		// Add fix for tab/style.display none/block problems in Gecko
-		if (!tinyMCE.isMSIE && this.isHidden() && tinyMCE.getParam('auto_reset_designmode'))
+		if (!tinyMCE.isIE && this.isHidden() && tinyMCE.getParam('auto_reset_designmode'))
 			eval('try { this.getDoc().designMode = "On"; this.useCSS = false; } catch(e) {}');
 	},
 
 	isHidden : function() {
 		var s;
 
-		if (tinyMCE.isMSIE)
+		if (tinyMCE.isIE)
 			return false;
 
 		s = this.getSel();
@@ -2703,7 +2704,7 @@ TinyMCE_Control.prototype = {
 			this.undoBookmark = null;
 
 		// Mozilla issue
-		if (!tinyMCE.isMSIE && !this.useCSS) {
+		if (!tinyMCE.isIE && !this.useCSS) {
 			this._setUseCSS(false);
 			this.useCSS = true;
 		}
@@ -2861,7 +2862,7 @@ TinyMCE_Control.prototype = {
 					if (tinyMCE.isGecko && new RegExp('<(div|blockquote|code|dt|dd|dl|samp)>', 'gi').test(value))
 						value = value.replace(/[^a-z]/gi, '');
 
-					if (tinyMCE.isMSIE && new RegExp('blockquote|code|samp', 'gi').test(value)) {
+					if (tinyMCE.isIE && new RegExp('blockquote|code|samp', 'gi').test(value)) {
 						var b = this.selection.getBookmark();
 						this.getDoc().execCommand("FormatBlock", false, '<p>');
 						tinyMCE.renameElement(tinyMCE.getParentBlockElement(this.getFocusElement()), value);
@@ -2878,7 +2879,7 @@ TinyMCE_Control.prototype = {
 				if (!value)
 					value = tinyMCE.getParentElement(this.getFocusElement());
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					value.outerHTML = value.innerHTML;
 				} else {
 					var rng = value.ownerDocument.createRange();
@@ -2929,7 +2930,7 @@ TinyMCE_Control.prototype = {
 				var invalidParentsRe = tinyMCE.settings['merge_styles_invalid_parents'] != '' ? new RegExp(tinyMCE.settings['merge_styles_invalid_parents'], "gi") : null;
 
 				// Whole element selected check
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					// Control range
 					if (rng.item)
 						parentElm = rng.item(0);
@@ -3220,7 +3221,7 @@ TinyMCE_Control.prototype = {
 
 				var selectedText = "";
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					var rng = doc.selection.createRange();
 					selectedText = rng.text;
 				} else
@@ -3318,7 +3319,7 @@ TinyMCE_Control.prototype = {
 					}
 				}
 
-				if (!tinyMCE.isMSIE) {
+				if (!tinyMCE.isIE) {
 					var isHTML = value.indexOf('<') != -1;
 					var sel = this.getSel();
 					var rng = this.getRng();
@@ -3468,7 +3469,7 @@ TinyMCE_Control.prototype = {
 				this.getDoc().execCommand(command, user_interface, value);
 				tinyMCE.triggerNodeChange();
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					var n = tinyMCE.getParentElement(this.getFocusElement(), "blockquote");
 					do {
 						if (n && n.nodeName == "BLOCKQUOTE") {
@@ -3487,7 +3488,7 @@ TinyMCE_Control.prototype = {
 					return;
 				}
 
-				if (tinyMCE.isMSIE) {
+				if (tinyMCE.isIE) {
 					try {
 						var rng = doc.selection.createRange();
 						rng.execCommand("RemoveFormat", false, null);
@@ -3683,7 +3684,7 @@ TinyMCE_Control.prototype = {
 		var dynamicIFrame = false;
 		var tElm = targetDoc.getElementById(this.editorId);
 
-		if (!tinyMCE.isMSIE) {
+		if (!tinyMCE.isIE) {
 			// Node case is preserved in XML strict mode
 			if (tElm && (tElm.nodeName == "SPAN" || tElm.nodeName == "span")) {
 				tElm = tinyMCE._createIFrame(tElm, targetDoc);
@@ -3737,7 +3738,7 @@ TinyMCE_Control.prototype = {
 
 		// This timeout is needed in MSIE 5.5 for some odd reason
 		// it seems that the document.frames isn't initialized yet?
-		if (tinyMCE.isMSIE)
+		if (tinyMCE.isIE)
 			window.setTimeout("tinyMCE.addEventHandlers(tinyMCE.instances[\"" + this.editorId + "\"]);", 1);
 
 		tinyMCE.setupContent(this.editorId, true);
@@ -3805,7 +3806,7 @@ TinyMCE_Control.prototype = {
 		s = tinyMCE.settings;
 
 		// Force hidden tabs visible while serializing
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+		if (this.isRealIE) {
 			e = this.iframeElement;
 
 			do {
@@ -4664,7 +4665,7 @@ TinyMCE_Cleanup.prototype = {
 					break;
 
 				// MSIE sometimes produces <//tag>
-				if ((tinyMCE.isIE && !tinyMCE.isOpera) && n.nodeName.indexOf('/') != -1)
+				if ((this.isRealIE) && n.nodeName.indexOf('/') != -1)
 					break;
 
 				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName)) && !inn) {
@@ -4988,7 +4989,7 @@ TinyMCE_Cleanup.prototype = {
 		if (!this.settings.fix_content_duplication)
 			return false;
 
-		if (tinyMCE.isIE && !tinyMCE.isOpera && n.nodeType == 1) {
+		if (this.isRealIE && n.nodeType == 1) {
 			// Mark elements
 			if (n.mce_serialized == this.serializationId)
 				return true;
@@ -5090,7 +5091,7 @@ TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
 		h = h.replace(/<\/em>/gi, '</i>');
 	}
 
-	if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+	if (this.isRealIE) {
 		// Since MSIE handles invalid HTML better that valid XHTML we
 		// need to make some things invalid. <hr /> gets converted to <hr>.
 		h = h.replace(/\s\/>/g, '>');
@@ -5120,7 +5121,7 @@ TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
 };
 
 TinyMCE_Engine.prototype.getOuterHTML = function(e) {
-	if (tinyMCE.isMSIE)
+	if (tinyMCE.isIE)
 		return e.outerHTML;
 
 	var d = e.ownerDocument.createElement("body");
@@ -5131,7 +5132,7 @@ TinyMCE_Engine.prototype.getOuterHTML = function(e) {
 TinyMCE_Engine.prototype.setOuterHTML = function(e, h, d) {
 	var d = typeof(d) == "undefined" ? e.ownerDocument : d, i, nl, t;
 
-	if (tinyMCE.isMSIE && e.nodeType == 1)
+	if (tinyMCE.isIE && e.nodeType == 1)
 		e.outerHTML = h;
 	else {
 		t = d.createElement("body");
@@ -5223,7 +5224,7 @@ TinyMCE_Engine.prototype.getAttrib = function(elm, name, dv) {
 	if (tinyMCE.isGecko && name == "href" && elm.href != null && elm.href != "")
 		v = elm.href;
 
-	if (name == "http-equiv" && tinyMCE.isMSIE)
+	if (name == "http-equiv" && tinyMCE.isIE)
 		v = elm.httpEquiv;
 
 	if (name == "style" && !tinyMCE.isOpera)
@@ -5640,7 +5641,7 @@ TinyMCE_Engine.prototype.convertURL = function(url, node, on_save) {
 		return url;
 
 	// Fix relative/Mozilla
-	if (!tinyMCE.isMSIE && !on_save && url.indexOf("://") == -1 && url.charAt(0) != '/')
+	if (!tinyMCE.isIE && !on_save && url.indexOf("://") == -1 && url.charAt(0) != '/')
 		return tinyMCE.settings['base_href'] + url;
 
 	// Handle relative URLs
@@ -5885,7 +5886,7 @@ TinyMCE_Engine.prototype.cancelEvent = function(e) {
 	if (!e)
 		return false;
 
-	if (tinyMCE.isMSIE) {
+	if (tinyMCE.isIE) {
 		e.returnValue = false;
 		e.cancelBubble = true;
 	} else {
@@ -5924,8 +5925,8 @@ TinyMCE_Engine.prototype.addSelectAccessibility = function(e, s, w) {
 
 TinyMCE_Engine.prototype.accessibleEventHandler = function(e) {
 	var win = this._win;
-	e = tinyMCE.isMSIE ? win.event : e;
-	var elm = tinyMCE.isMSIE ? e.srcElement : e.target;
+	e = tinyMCE.isIE ? win.event : e;
+	var elm = tinyMCE.isIE ? e.srcElement : e.target;
 
 	// Unpiggyback onchange on blur
 	if (e.type == "blur") {
@@ -5959,7 +5960,7 @@ TinyMCE_Engine.prototype.accessibleEventHandler = function(e) {
 TinyMCE_Engine.prototype._resetIframeHeight = function() {
 	var ife;
 
-	if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+	if (this.isRealIE) {
 		ife = tinyMCE.selectedInstance.iframeElement;
 
 /*		if (ife._oldWidth) {
@@ -6010,7 +6011,7 @@ TinyMCE_Selection.prototype = {
 		var inst = this.instance;
 		var d, r, s, t;
 
-		if (tinyMCE.isMSIE) {
+		if (tinyMCE.isIE) {
 			d = inst.getDoc();
 
 			if (d.selection.type == "Text") {
@@ -6043,7 +6044,7 @@ TinyMCE_Selection.prototype = {
 		if (tinyMCE.isSafari || tinyMCE.isOpera || simple)
 			return {rng : rng, scrollX : sx, scrollY : sy};
 
-		if (tinyMCE.isMSIE) {
+		if (tinyMCE.isIE) {
 			if (rng.item) {
 				e = rng.item(0);
 
@@ -6155,7 +6156,7 @@ TinyMCE_Selection.prototype = {
 			return true;
 		}
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+		if (this.isRealIE) {
 			if (bookmark.rng) {
 				try {
 					bookmark.rng.select();
@@ -6300,7 +6301,7 @@ TinyMCE_Selection.prototype = {
 		if (inst.settings.auto_resize)
 			inst.resizeToContent();
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+		if (this.isRealIE) {
 			rng = inst.getDoc().body.createTextRange();
 
 			try {
@@ -6397,7 +6398,7 @@ TinyMCE_Selection.prototype = {
 	getSel : function() {
 		var inst = this.instance;
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+		if (this.isRealIE)
 			return inst.getDoc().selection;
 
 		return inst.contentWindow.getSelection();
@@ -6409,7 +6410,7 @@ TinyMCE_Selection.prototype = {
 		if (s == null)
 			return null;
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
+		if (this.isRealIE)
 			return s.createRange();
 
 		if (tinyMCE.isSafari && !s.getRangeAt)
@@ -6421,7 +6422,7 @@ TinyMCE_Selection.prototype = {
 	getFocusElement : function() {
 		var inst = this.instance, doc, rng, sel, elm;
 
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera) {
+		if (this.isRealIE) {
 			doc = inst.getDoc();
 			rng = doc.selection.createRange();
 

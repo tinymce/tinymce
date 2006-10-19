@@ -967,7 +967,7 @@ TinyMCE_Cleanup.prototype = {
 					break;
 
 				// MSIE sometimes produces <//tag>
-				if ((tinyMCE.isIE && !tinyMCE.isOpera) && n.nodeName.indexOf('/') != -1)
+				if ((this.isRealIE) && n.nodeName.indexOf('/') != -1)
 					break;
 
 				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName)) && !inn) {
@@ -1392,7 +1392,7 @@ TinyMCE_Cleanup.prototype = {
 		if (!this.settings.fix_content_duplication)
 			return false;
 
-		if (tinyMCE.isIE && !tinyMCE.isOpera && n.nodeType == 1) {
+		if (this.isRealIE && n.nodeType == 1) {
 			// Mark elements
 			if (n.mce_serialized == this.serializationId)
 				return true;
