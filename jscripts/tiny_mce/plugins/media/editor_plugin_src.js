@@ -329,7 +329,7 @@ var TinyMCE_MediaPlugin = {
 		}
 
 		for (an in al) {
-			if (al[an] != null && al[an] != '')
+			if (al[an] != null && typeof(al[an]) != "function" && al[an] != '')
 				ti += an.toLowerCase() + ':\'' + al[an] + "',";
 		}
 
@@ -354,7 +354,7 @@ var TinyMCE_MediaPlugin = {
 		h += '>';
 
 		for (n in p) {
-			if (p[n]) {
+			if (p[n] && typeof(p[n]) != "function") {
 				h += '<param name="' + n + '" value="' + p[n] + '" />';
 
 				// Add extra url parameter if it's an absolute URL on WMP
@@ -366,6 +366,9 @@ var TinyMCE_MediaPlugin = {
 		h += '<embed type="' + mt + '"';
 
 		for (n in p) {
+			if (typeof(p[n]) == "function")
+				continue;
+
 			// Skip url parameter for embed tag on WMP
 			if (!(n == 'url' && mt == 'application/x-mplayer2'))
 				h += ' ' + n + '="' + p[n] + '"';
