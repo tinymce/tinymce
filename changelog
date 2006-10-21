@@ -1,4 +1,6 @@
 Version 2.0.8 (2006-10-xx)
+	Fixed bug where media plugin wasn't working if convert_fonts_to_span option was enabled.
+	Fixed bug where media plugin produced errors on older IE versions.
 	Fixed bug where cite and datetime attributes wasn't added to the default valid_elements list for del and ins.
 	Fixed bug where insert date in xhtmlxtras plugin wasn't placed in language pack.
 	Fixed bug where new fullscreen mode didn't function in IE with XHTML transitional doctype.

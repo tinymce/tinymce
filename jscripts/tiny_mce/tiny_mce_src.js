@@ -5327,7 +5327,7 @@ TinyMCE_Engine.prototype.selectElements = function(n, na, f) {
 
 	for (x=0, na = na.split(','); x<na.length; x++)
 		for (i=0, nl = n.getElementsByTagName(na[x]); i<nl.length; i++)
-			f(nl[i]) && a.push(nl[i]);
+			(!f || f(nl[i])) && a.push(nl[i]);
 
 	return a;
 };
