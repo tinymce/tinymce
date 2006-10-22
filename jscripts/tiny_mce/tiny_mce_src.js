@@ -191,6 +191,7 @@ TinyMCE_Engine.prototype = {
 		this._def("strict_loading_mode", document.contentType == 'application/xhtml+xml');
 		this._def("hidden_tab_class", '');
 		this._def("display_tab_class", '');
+		this._def("gecko_spellcheck", false);
 
 		// Force strict loading mode to false on non Gecko browsers
 		if (this.isMSIE && !this.isOpera)
@@ -1000,6 +1001,10 @@ TinyMCE_Engine.prototype = {
 				return false;
 			});
 		}
+
+		// Remove Gecko spellchecking
+		if (tinyMCE.isGecko)
+			inst.getBody().spellcheck = tinyMCE.getParam("gecko_spellcheck");
 
 		// Cleanup any mess left from storyAwayURLs
 		tinyMCE._removeInternal(inst.getBody());
@@ -5905,9 +5910,15 @@ TinyMCE_Engine.prototype.addEvent = function(o, n, h) {
 	// Add cleanup for all non unload events
 	if (n != 'unload') {
 		function clean() {
-			tinyMCE.removeEvent(o, n, h);
-			tinyMCE.removeEvent(window, 'unload', clean);
-			o = n = h = null;
+			var ex;
+
+			try {
+				tinyMCE.removeEvent(o, n, h);
+				tinyMCE.removeEvent(window, 'unload', clean);
+				o = n = h = null;
+			} catch (ex) {
+				// IE may produce access denied exception on unload
+			}
 		}
 
 		// Add memory cleaner

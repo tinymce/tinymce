@@ -218,9 +218,15 @@ TinyMCE_Engine.prototype.addEvent = function(o, n, h) {
 	// Add cleanup for all non unload events
 	if (n != 'unload') {
 		function clean() {
-			tinyMCE.removeEvent(o, n, h);
-			tinyMCE.removeEvent(window, 'unload', clean);
-			o = n = h = null;
+			var ex;
+
+			try {
+				tinyMCE.removeEvent(o, n, h);
+				tinyMCE.removeEvent(window, 'unload', clean);
+				o = n = h = null;
+			} catch (ex) {
+				// IE may produce access denied exception on unload
+			}
 		}
 
 		// Add memory cleaner
