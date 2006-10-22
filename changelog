@@ -15,6 +15,7 @@ Version 2.0.8 (2006-10-xx)
 	Fixed bug where devkit reported errors if TinyMCE was places in a frameset.
 	Fixed bug where auto_focus option didn't work in IE.
 	Fixed bug where FF leaked memory on some event handlers.
+	Fixed bug where Fullscreen plugin didn't fill containing elements if they where absolute.
 	Fixed issue where select elements where disabled if AJAX or custom submit triggers where used.
 	Fixed issue where formatblock command could insert invalid elements.
 	Fixed issue with duplicate default rules for abbr in valid_elements.
