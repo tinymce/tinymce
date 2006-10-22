@@ -12,7 +12,7 @@ var TinyMCE_MediaPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Media',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_media.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

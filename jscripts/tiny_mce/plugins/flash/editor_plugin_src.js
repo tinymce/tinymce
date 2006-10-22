@@ -12,7 +12,7 @@ var TinyMCE_FlashPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Flash',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_flash.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

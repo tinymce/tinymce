@@ -12,7 +12,7 @@ var TinyMCE_AdvancedImagePlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Advanced image',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_advimage.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

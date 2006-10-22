@@ -12,7 +12,7 @@ var TinyMCE_VisualCharsPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Visual characters',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_visualchars.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

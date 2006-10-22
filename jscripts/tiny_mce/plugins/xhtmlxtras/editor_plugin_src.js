@@ -12,7 +12,7 @@ var TinyMCE_XHTMLXtrasPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'XHTML Xtras Plugin',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_xhtmlxtras.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

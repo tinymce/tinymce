@@ -12,7 +12,7 @@ var TinyMCE_PrintPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Print',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_print.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

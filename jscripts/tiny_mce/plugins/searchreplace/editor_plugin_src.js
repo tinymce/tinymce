@@ -11,7 +11,7 @@ var TinyMCE_SearchReplacePlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Search/Replace',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_searchreplace.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

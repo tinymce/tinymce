@@ -11,10 +11,10 @@ tinyMCE.importPluginLanguagePack('nonbreaking');
 var TinyMCE_NonBreakingPlugin = {
 	getInfo : function() {
 		return {
-			longname : 'Visual characters',
-			author : 'Moxiecode Systems',
+			longname : 'Nonbreaking space',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_visualchars.html',
+			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_nonbreaking.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

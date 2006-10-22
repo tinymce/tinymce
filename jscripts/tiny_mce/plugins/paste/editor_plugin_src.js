@@ -12,7 +12,7 @@ var TinyMCE_PastePlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Paste text/word',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_paste.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

@@ -12,7 +12,7 @@ var TinyMCE_StylePlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Style',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_style.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

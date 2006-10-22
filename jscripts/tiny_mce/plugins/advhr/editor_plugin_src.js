@@ -12,7 +12,7 @@ var TinyMCE_AdvancedHRPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Advanced HR',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_advhr.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

@@ -17,7 +17,7 @@ var TinyMCE_ContextMenuPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Context menus',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_contextmenu.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

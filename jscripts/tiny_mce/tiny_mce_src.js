@@ -6,7 +6,7 @@ function TinyMCE_Engine() {
 
 	this.majorVersion = "2";
 	this.minorVersion = "0.8";
-	this.releaseDate = "2006-10-22";
+	this.releaseDate = "2006-10-xx";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
@@ -5902,6 +5902,18 @@ TinyMCE_Engine.prototype.cancelEvent = function(e) {
 };
 
 TinyMCE_Engine.prototype.addEvent = function(o, n, h) {
+	// Add cleanup for all non unload events
+	if (n != 'unload') {
+		function clean() {
+			tinyMCE.removeEvent(o, n, h);
+			tinyMCE.removeEvent(window, 'unload', clean);
+			o = n = h = null;
+		}
+
+		// Add memory cleaner
+		tinyMCE.addEvent(window, 'unload', clean);
+	}
+
 	if (o.attachEvent)
 		o.attachEvent("on" + n, h);
 	else

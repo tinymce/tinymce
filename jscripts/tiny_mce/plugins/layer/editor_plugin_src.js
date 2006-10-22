@@ -12,7 +12,7 @@ var TinyMCE_LayerPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Layer',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_layer.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

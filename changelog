@@ -1,5 +1,6 @@
-Version 2.0.8 (2006-10-22)
+Version 2.0.8 (2006-10-xx)
 	Added class select lists for all xhtmlxtras dialogs, custom values can still be added.
+	Added missing documentation for devkit, xhtmlxtras, visualchars and nonbreaking plugins.
 	Fixed bug where media plugin wasn't working if convert_fonts_to_span option was enabled.
 	Fixed bug where media plugin produced errors on older IE versions.
 	Fixed bug where media plugin was breaking when prototype was used on the same page.
@@ -12,6 +13,7 @@ Version 2.0.8 (2006-10-22)
 	Fixed bug where JS errors where thrown in IE if TinyMCE was placed in a frameset.
 	Fixed bug where devkit reported errors if TinyMCE was places in a frameset.
 	Fixed bug where auto_focus option didn't work in IE.
+	Fixed bug where FF leaked memory on some event handlers.
 	Fixed issue where select elements where disabled if AJAX or custom submit triggers where used.
 	Fixed issue where formatblock command could insert invalid elements.
 	Fixed issue with duplicate default rules for abbr in valid_elements.

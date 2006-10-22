@@ -12,7 +12,7 @@ var TinyMCE_DirectionalityPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Directionality',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_directionality.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

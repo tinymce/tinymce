@@ -12,7 +12,7 @@ var TinyMCE_PreviewPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Preview',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_preview.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

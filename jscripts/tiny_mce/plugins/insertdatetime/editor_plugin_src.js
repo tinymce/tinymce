@@ -12,7 +12,7 @@ var TinyMCE_InsertDateTimePlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Insert date/time',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_insertdatetime.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

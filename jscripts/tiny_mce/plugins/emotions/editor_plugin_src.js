@@ -13,7 +13,7 @@ var TinyMCE_EmotionsPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Emotions',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_emotions.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

@@ -215,6 +215,18 @@ TinyMCE_Engine.prototype.cancelEvent = function(e) {
  * @param {function} h Function handler to execute when event occurs.
  */
 TinyMCE_Engine.prototype.addEvent = function(o, n, h) {
+	// Add cleanup for all non unload events
+	if (n != 'unload') {
+		function clean() {
+			tinyMCE.removeEvent(o, n, h);
+			tinyMCE.removeEvent(window, 'unload', clean);
+			o = n = h = null;
+		}
+
+		// Add memory cleaner
+		tinyMCE.addEvent(window, 'unload', clean);
+	}
+
 	if (o.attachEvent)
 		o.attachEvent("on" + n, h);
 	else

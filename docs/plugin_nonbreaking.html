@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Plugin: nonbreaking</title>
+<link href="css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+	<h1>Plugin: nonbreaking</h1>
+</div>
+
+<div class="content">
+	<p>
+		This plugin a button insert nonbreaking space entities &amp;nbsp; at the current carent location.
+	</p>
+
+	<h3>Settings</h3>
+	<p>
+		This plugin has just one setting &quot;nonbreaking_force_tab&quot; this enables you to force TinyMCE
+		to insert three &amp;nbsp; entities when the user presses the tab key.
+	</p>
+
+	<h3>Installation Instructions</h3>
+	<p>
+	<ul>
+		<li>Add plugin to TinyMCE plugin option list example: plugins : &quot;nonbreaking&quot;.</li>
+		<li>Add the nonbreaking button name to button list, example: theme_advanced_buttons3_add : &quot;nonbreaking&quot;.</li>
+	</ul>
+	</p>
+	<h3>Initialization Example</h3>
+	<p>
+	<div class="example">
+	<pre>
+tinyMCE.init({
+	theme : &quot;advanced&quot;,
+	mode : &quot;textareas&quot;,
+	plugins : &quot;<strong>nonbreaking</strong>&quot;,
+	theme_advanced_buttons3_add : &quot;<strong>nonbreaking</strong>&quot;,
+	nonbreaking_force_tab : true
+});</pre>
+	</div>
+	</p>
+</div>
+
+<div class="footer">
+	<div class="helpindexlink"><a href="index.html">Index</a></div>
+	<div class="copyright">Copyright &copy; 2003-2006 <a href="http://www.moxiecode.com">Moxiecode Systems AB</a></div>
+	<br style="clear: both" />
+</div>
+
+</body>
+</html>

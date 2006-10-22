@@ -393,11 +393,6 @@
       <param name="n" type="DOMNode" summary="Node to remove internal content from." />
       <return type="void" />
     </method>
-    <method name="removeTinyMCEFormElements">
-      <summary>Removes/disables TinyMCE built in form elements such as select boxes for font sizes etc. These are disabled when the user submits a form so they don't get picked up by the backend script that intercepts the contents.</summary>
-      <param name="form_obj" type="HTMLElement" summary="Form object to loop through for TinyMCE specific form elements." />
-      <return type="void" />
-    </method>
     <method name="handleEvent">
       <summary>Event handler function that gets executed each time a event occurs in a TinyMCE editor control instance. Todo: Fix the return statements so they return true or false.</summary>
       <param name="e" type="DOMEvent" summary="DOM event object reference." />
@@ -754,6 +749,11 @@
       <param name="s" type="string" summary="Rule string to parse and add to the cleanup rules array." />
       <return type="void" />
     </method>
+    <method name="isValid">
+      <summary>Returns true/false if the element name if valid or not against the cleanup rules.</summary>
+      <param name="n" type="string" summary="Node name to validate." />
+      <return type="bool" summary="True/false if the name is valid or not." />
+    </method>
     <method name="addChildRemoveRuleStr">
       <summary>format: h1/h2/h3/h4/h5/h6[%inline_trans_no_a],table[thead|tbody|tfoot|tr|td],body[%btrans]=&gt;p</summary>
       <return type="void" />
@@ -1092,6 +1092,11 @@
     <constructor name="TinyMCE_Popup">
       <summary>Constructor for the popup class. This class contains base logic for popup/dialogs and sets up object references to the TinyMCE core.</summary>
     </constructor>
+    <method name="findWin">
+      <summary>Searches for a window with a TinyMCE instance by looping through parent windows and openers.</summary>
+      <param name="w" type="DOMWindow" summary="DOM window to start search by." />
+      <return type="DOMWindow" summary="Window with TinyMCE instance in it or null." />
+    </method>
     <method name="init">
       <summary>Initializes the TinyMCE Popup class. This will setup the TinyMCE core references and other popup/dialog related functions.</summary>
       <return type="void" />

@@ -12,7 +12,7 @@ var TinyMCE_AdvancedLinkPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Advanced link',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_advlink.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

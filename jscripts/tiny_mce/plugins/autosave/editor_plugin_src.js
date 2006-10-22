@@ -12,7 +12,7 @@ var TinyMCE_AutoSavePlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Auto save',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_autosave.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion

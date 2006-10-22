@@ -12,7 +12,7 @@ var TinyMCE_FullScreenPlugin = {
 	getInfo : function() {
 		return {
 			longname : 'Fullscreen',
-			author : 'Moxiecode Systems',
+			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
 			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_fullscreen.html',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
