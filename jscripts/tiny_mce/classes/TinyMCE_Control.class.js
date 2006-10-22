@@ -653,6 +653,14 @@ TinyMCE_Control.prototype = {
 
 				return true;
 
+			case "FormatBlock":
+				if (!this.cleanup.isValid(value))
+					return true;
+
+				this.getDoc().execCommand(command, user_interface, value);
+				tinyMCE.triggerNodeChange();
+				break;
+
 			case "InsertUnorderedList":
 			case "InsertOrderedList":
 				this.getDoc().execCommand(command, user_interface, value);

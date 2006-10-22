@@ -5,8 +5,8 @@ function TinyMCE_Engine() {
 	var ua;
 
 	this.majorVersion = "2";
-	this.minorVersion = "0.7";
-	this.releaseDate = "2006-10-17";
+	this.minorVersion = "0.8";
+	this.releaseDate = "2006-10-22";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
@@ -1033,34 +1033,6 @@ TinyMCE_Engine.prototype = {
 		}
 	},
 
-	removeTinyMCEFormElements : function(form_obj) {
-		var i, elementId;
-
-		// Check if form is valid
-		if (typeof(form_obj) == "undefined" || form_obj == null)
-			return;
-
-		// If not a form, find the form
-		if (form_obj.nodeName != "FORM") {
-			if (form_obj.form)
-				form_obj = form_obj.form;
-			else
-				form_obj = tinyMCE.getParentElement(form_obj, "form");
-		}
-
-		// Still nothing
-		if (form_obj == null)
-			return;
-
-		// Disable all UI form elements that TinyMCE created
-		for (i=0; i<form_obj.elements.length; i++) {
-			elementId = form_obj.elements[i].name ? form_obj.elements[i].name : form_obj.elements[i].id;
-
-			if (elementId.indexOf('mce_editor_') == 0)
-				form_obj.elements[i].disabled = true;
-		}
-	},
-
 	handleEvent : function(e) {
 		var inst = tinyMCE.selectedInstance;
 
@@ -1109,7 +1081,6 @@ TinyMCE_Engine.prototype = {
 				return;
 
 			case "submit":
-				tinyMCE.removeTinyMCEFormElements(tinyMCE.isIE ? window.event.srcElement : e.target);
 				tinyMCE.triggerSave();
 				tinyMCE.isNotDirty = true;
 				return;
@@ -1453,13 +1424,14 @@ TinyMCE_Engine.prototype = {
 	},
 
 	submitPatch : function() {
-		tinyMCE.removeTinyMCEFormElements(this);
 		tinyMCE.triggerSave();
 		tinyMCE.isNotDirty = true;
 		this.mceOldSubmit();
 	},
 
 	onLoad : function() {
+		var r;
+
 		// Wait for everything to be loaded first
 		if (tinyMCE.settings.strict_loading_mode && this.loadingIndex != -1) {
 			window.setTimeout('tinyMCE.onLoad();', 1);
@@ -1473,6 +1445,15 @@ TinyMCE_Engine.prototype = {
 			return true;
 
 		tinyMCE.isLoaded = true;
+
+		// IE produces JS error if TinyMCE is placed in a frame
+		// It seems to have something to do with the selection not beeing
+		// correctly initialized in IE so this hack solves the problem
+		if (tinyMCE.isRealIE && document.body) {
+			r = document.body.createTextRange();
+			r.collapse(true);
+			r.select();
+		}
 
 		tinyMCE.dispatchCallback(null, 'onpageload', 'onPageLoad');
 
@@ -1586,7 +1567,7 @@ TinyMCE_Engine.prototype = {
 					var inst = tinyMCE.getInstanceById(tinyMCE.settings['auto_focus']);
 					inst.selection.selectNode(inst.getBody(), true, true);
 					inst.contentWindow.focus();
-				}, 10);
+				}, 100);
 			}
 
 			tinyMCE.dispatchCallback(null, 'oninit', 'onInit');
@@ -2834,6 +2815,14 @@ TinyMCE_Control.prototype = {
 				tinyMCE.triggerNodeChange();
 
 				return true;
+
+			case "FormatBlock":
+				if (!this.cleanup.isValid(value))
+					return true;
+
+				this.getDoc().execCommand(command, user_interface, value);
+				tinyMCE.triggerNodeChange();
+				break;
 
 			case "InsertUnorderedList":
 			case "InsertOrderedList":
@@ -4401,6 +4390,15 @@ TinyMCE_Cleanup.prototype = {
 		this.vElementsRe = this._arrayToRe(this.vElements, '');
 	},
 
+	isValid : function(n) {
+		this._setupRules(); // Will initialize cleanup rules
+
+		// Clean the name up a bit
+		n = n.replace(/[^a-z0-9]+/gi, '').toUpperCase();
+
+		return !tinyMCE.getParam('cleanup') || this.vElementsRe.test(n);
+	},
+
 	addChildRemoveRuleStr : function(s) {
 		var x, y, p, i, t, tn, ta, cl, r;
 
@@ -4807,6 +4805,12 @@ TinyMCE_Cleanup.prototype = {
 
 	formatHTML : function(h) {
 		var s = this.settings, p = '', i = 0, li = 0, o = '', l;
+
+		// Replace BR in pre elements to \n
+		h = h.replace(/<pre([^>]*)>(.*?)<\/pre>/gi, function (a, b, c) {
+			c = c.replace(/<br\s*\/>/gi, '\n');
+			return '<pre' + b + '>' + c + '</pre>';
+		});
 
 		h = h.replace(/\r/g, ''); // Windows sux, isn't carriage return a thing of the past :)
 		h = '\n' + h;

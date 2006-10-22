@@ -7,10 +7,11 @@
 
 function initCommonAttributes(elm) {
 	var formObj = document.forms[0];
+
 	// Setup form data for common element attributes
 	setFormValue('title', tinyMCE.getAttrib(elm, 'title'));
 	setFormValue('id', tinyMCE.getAttrib(elm, 'id'));
-	setFormValue('class', tinyMCE.getAttrib(elm, 'class'));
+	selectByValue(formObj, 'class', tinyMCE.getAttrib(elm, 'class'), true);
 	setFormValue('style', tinyMCE.getAttrib(elm, 'style'));
 	selectByValue(formObj, 'dir', tinyMCE.getAttrib(elm, 'dir'));
 	setFormValue('lang', tinyMCE.getAttrib(elm, 'lang'));
@@ -26,7 +27,6 @@ function initCommonAttributes(elm) {
 	setFormValue('onkeypress', tinyMCE.getAttrib(elm, 'onkeypress'));
 	setFormValue('onkeydown', tinyMCE.getAttrib(elm, 'onkeydown'));
 	setFormValue('onkeyup', tinyMCE.getAttrib(elm, 'onkeyup'));
-
 }
 
 function setFormValue(name, value) {
@@ -49,10 +49,6 @@ function getDateTime(d, fmt) {
 	fmt = fmt.replace("%S", "" + addZeros(d.getSeconds(), 2));
 	fmt = fmt.replace("%I", "" + ((d.getHours() + 11) % 12 + 1));
 	fmt = fmt.replace("%p", "" + (d.getHours() < 12 ? "AM" : "PM"));
-	fmt = fmt.replace("%B", "" + tinyMCE.getLang("lang_inserttime_months_long")[d.getMonth()]);
-	fmt = fmt.replace("%b", "" + tinyMCE.getLang("lang_inserttime_months_short")[d.getMonth()]);
-	fmt = fmt.replace("%A", "" + tinyMCE.getLang("lang_inserttime_day_long")[d.getDay()]);
-	fmt = fmt.replace("%a", "" + tinyMCE.getLang("lang_inserttime_day_short")[d.getDay()]);
 	fmt = fmt.replace("%%", "%");
 
 	return fmt;
@@ -155,6 +151,9 @@ SXE = {
 SXE.focusElement = SXE.inst.getFocusElement();
 
 SXE.initElementDialog = function(element_name) {
+	addClassesToList('class', 'xhtmlxtras_styles');
+	TinyMCE_EditableSelects.init();
+
 	element_name = element_name.toLowerCase();
 	var elm = tinyMCE.getParentElement(SXE.focusElement, element_name);
 	if (elm != null && elm.nodeName == element_name.toUpperCase()) {

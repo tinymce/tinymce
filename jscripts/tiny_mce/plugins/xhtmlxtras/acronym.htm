@@ -3,6 +3,8 @@
 	<title>{$lang_xhtmlxtras_title_acronym_element}</title>
 	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/mctabs.js"></script>
+	<script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
+	<script language="javascript" type="text/javascript" src="../../utils/editable_selects.js"></script>
 	<script language="javascript" type="text/javascript" src="jscripts/element_common.js"></script>
 	<script language="javascript" type="text/javascript" src="jscripts/acronym.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/popup.css" />
@@ -32,7 +34,11 @@
 					</tr>
 					<tr>
 						<td class="label"><label id="classlabel" for="class">{$lang_xhtmlxtras_attribute_label_class}</label>:</td> 
-						<td><input id="class" name="class" type="text" value="" class="field" /></td> 
+						<td>
+							<select id="class" name="class" class="field mceEditableSelect">
+								<option value="">{$lang_xhtmlxtras_not_set}</option> 
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td class="label"><label id="stylelabel" for="class">{$lang_xhtmlxtras_attribute_label_style}</label>:</td> 

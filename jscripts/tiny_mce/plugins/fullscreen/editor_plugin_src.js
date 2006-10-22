@@ -59,7 +59,8 @@ var TinyMCE_FullScreenPlugin = {
 			ds.oldOverflow = cd.body.style.overflow;
 			cd.body.style.overflow = 'hidden';
 
-			re.style.display = 'none';
+			if (re)
+				re.style.display = 'none';
 
 			vp = tinyMCE.getViewPort(cw);
 
@@ -99,7 +100,7 @@ var TinyMCE_FullScreenPlugin = {
 		} else {
 			cd.body.style.overflow = ds.oldOverflow ? ds.oldOverflow : '';
 
-			if (tinyMCE.getParam("theme_advanced_resizing", false))
+			if (re && tinyMCE.getParam("theme_advanced_resizing", false))
 				re.style.display = 'block';
 
 			tableElm.style.position = 'static';

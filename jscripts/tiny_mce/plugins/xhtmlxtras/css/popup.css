@@ -5,7 +5,7 @@ img {
 	border: 0;
 }
 
-input.field {
+input.field, select.field {
 	width: 200px;
 }
 

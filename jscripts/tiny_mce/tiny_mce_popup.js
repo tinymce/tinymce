@@ -5,17 +5,40 @@ function TinyMCE_Popup() {
 };
 
 TinyMCE_Popup.prototype = {
+	findWin : function(w) {
+		var c;
+
+		// Check parents
+		c = w;
+		while (c && (c = c.parent) != null) {
+			if (typeof(c.tinyMCE) != "undefined")
+				return c;
+		}
+
+		// Check openers
+		c = w;
+		while (c && (c = c.opener) != null) {
+			if (typeof(c.tinyMCE) != "undefined")
+				return c;
+		}
+
+		// Try top
+		if (typeof(top.tinyMCE) != "undefined")
+			return top;
+
+		return null;
+	},
+
 	init : function() {
 		var win = window.opener ? window.opener : window.dialogArguments, c;
 		var inst;
 
-		if (!win) {
-			// Try parent
-			win = parent.parent;
+		if (!win)
+			win = this.findWin(window);
 
-			// Try top
-			if (typeof(win.tinyMCE) == "undefined")
-				win = top;
+		if (!win) {
+			alert("tinyMCE object reference not found from popup.");
+			return;
 		}
 
 		window.opener = win;
@@ -25,11 +48,6 @@ TinyMCE_Popup.prototype = {
 		// Setup parent references
 		tinyMCE = win.tinyMCE;
 		tinyMCELang = win.tinyMCELang;
-
-		if (!tinyMCE) {
-			alert("tinyMCE object reference not found from popup.");
-			return;
-		}
 
 		inst = tinyMCE.selectedInstance;
 		this.isWindow = tinyMCE.getWindowArg('mce_inside_iframe', false) == false;

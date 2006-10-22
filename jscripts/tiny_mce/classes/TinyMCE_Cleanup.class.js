@@ -667,6 +667,21 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	/**
+	 * Returns true/false if the element name if valid or not against the cleanup rules.
+	 *
+	 * @param {string} n Node name to validate.
+	 * @return {bool} True/false if the name is valid or not.
+	 */
+	isValid : function(n) {
+		this._setupRules(); // Will initialize cleanup rules
+
+		// Clean the name up a bit
+		n = n.replace(/[^a-z0-9]+/gi, '').toUpperCase();
+
+		return !tinyMCE.getParam('cleanup') || this.vElementsRe.test(n);
+	},
+
+	/**
 	 *
 	 * format: h1/h2/h3/h4/h5/h6[%inline_trans_no_a],table[thead|tbody|tfoot|tr|td],body[%btrans]=>p
 	 */
@@ -1126,6 +1141,12 @@ TinyMCE_Cleanup.prototype = {
 	 */
 	formatHTML : function(h) {
 		var s = this.settings, p = '', i = 0, li = 0, o = '', l;
+
+		// Replace BR in pre elements to \n
+		h = h.replace(/<pre([^>]*)>(.*?)<\/pre>/gi, function (a, b, c) {
+			c = c.replace(/<br\s*\/>/gi, '\n');
+			return '<pre' + b + '>' + c + '</pre>';
+		});
 
 		h = h.replace(/\r/g, ''); // Windows sux, isn't carriage return a thing of the past :)
 		h = '\n' + h;

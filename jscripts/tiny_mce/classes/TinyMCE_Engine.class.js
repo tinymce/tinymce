@@ -14,8 +14,8 @@ function TinyMCE_Engine() {
 	var ua;
 
 	this.majorVersion = "2";
-	this.minorVersion = "0.7";
-	this.releaseDate = "2006-10-17";
+	this.minorVersion = "0.8";
+	this.releaseDate = "2006-10-22";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
@@ -1234,41 +1234,6 @@ TinyMCE_Engine.prototype = {
 	},
 
 	/**
-	 * Removes/disables TinyMCE built in form elements such as select boxes for font sizes etc.
-	 * These are disabled when the user submits a form so they don't get picked up by the backend script
-	 * that intercepts the contents.
-	 *
-	 * @param {HTMLElement} form_obj Form object to loop through for TinyMCE specific form elements.
-	 */
-	removeTinyMCEFormElements : function(form_obj) {
-		var i, elementId;
-
-		// Check if form is valid
-		if (typeof(form_obj) == "undefined" || form_obj == null)
-			return;
-
-		// If not a form, find the form
-		if (form_obj.nodeName != "FORM") {
-			if (form_obj.form)
-				form_obj = form_obj.form;
-			else
-				form_obj = tinyMCE.getParentElement(form_obj, "form");
-		}
-
-		// Still nothing
-		if (form_obj == null)
-			return;
-
-		// Disable all UI form elements that TinyMCE created
-		for (i=0; i<form_obj.elements.length; i++) {
-			elementId = form_obj.elements[i].name ? form_obj.elements[i].name : form_obj.elements[i].id;
-
-			if (elementId.indexOf('mce_editor_') == 0)
-				form_obj.elements[i].disabled = true;
-		}
-	},
-
-	/**
 	 * Event handler function that gets executed each time a event occurs in a TinyMCE editor control instance.
 	 * Todo: Fix the return statements so they return true or false.
 	 *
@@ -1324,7 +1289,6 @@ TinyMCE_Engine.prototype = {
 				return;
 
 			case "submit":
-				tinyMCE.removeTinyMCEFormElements(tinyMCE.isIE ? window.event.srcElement : e.target);
 				tinyMCE.triggerSave();
 				tinyMCE.isNotDirty = true;
 				return;
@@ -1708,7 +1672,6 @@ TinyMCE_Engine.prototype = {
 	 * call triggerSave to fill the textarea with the correct contents then call the old piggy backed event handler.
 	 */
 	submitPatch : function() {
-		tinyMCE.removeTinyMCEFormElements(this);
 		tinyMCE.triggerSave();
 		tinyMCE.isNotDirty = true;
 		this.mceOldSubmit();
@@ -1722,6 +1685,8 @@ TinyMCE_Engine.prototype = {
 	 * @type boolean
 	 */
 	onLoad : function() {
+		var r;
+
 		// Wait for everything to be loaded first
 		if (tinyMCE.settings.strict_loading_mode && this.loadingIndex != -1) {
 			window.setTimeout('tinyMCE.onLoad();', 1);
@@ -1735,6 +1700,15 @@ TinyMCE_Engine.prototype = {
 			return true;
 
 		tinyMCE.isLoaded = true;
+
+		// IE produces JS error if TinyMCE is placed in a frame
+		// It seems to have something to do with the selection not beeing
+		// correctly initialized in IE so this hack solves the problem
+		if (tinyMCE.isRealIE && document.body) {
+			r = document.body.createTextRange();
+			r.collapse(true);
+			r.select();
+		}
 
 		tinyMCE.dispatchCallback(null, 'onpageload', 'onPageLoad');
 
@@ -1848,7 +1822,7 @@ TinyMCE_Engine.prototype = {
 					var inst = tinyMCE.getInstanceById(tinyMCE.settings['auto_focus']);
 					inst.selection.selectNode(inst.getBody(), true, true);
 					inst.contentWindow.focus();
-				}, 10);
+				}, 100);
 			}
 
 			tinyMCE.dispatchCallback(null, 'oninit', 'onInit');
