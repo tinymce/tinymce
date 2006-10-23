@@ -10,17 +10,17 @@
 	<base target="_self" />
 </head>
 
-<body id="styleprops" onload="tinyMCEPopup.executeOnLoad('init();');" style="display: none">
-<form onsubmit="updateAction();return false;" action="#">
+<body id="styleprops" onLoad="tinyMCEPopup.executeOnLoad('init();');" style="display: none">
+<form onSubmit="updateAction();return false;" action="#">
 <div class="tabs">
 	<ul>
-		<li id="text_tab" class="current"><span><a href="javascript:mcTabs.displayTab('text_tab','text_panel');" onmousedown="return false;">{$lang_style_text_tab}</a></span></li>
-		<li id="background_tab"><span><a href="javascript:mcTabs.displayTab('background_tab','background_panel');" onmousedown="return false;">{$lang_style_background_tab}</a></span></li>
-		<li id="block_tab"><span><a href="javascript:mcTabs.displayTab('block_tab','block_panel');" onmousedown="return false;">{$lang_style_block_tab}</a></span></li>
-		<li id="box_tab"><span><a href="javascript:mcTabs.displayTab('box_tab','box_panel');" onmousedown="return false;">{$lang_style_box_tab}</a></span></li>
-		<li id="border_tab"><span><a href="javascript:mcTabs.displayTab('border_tab','border_panel');" onmousedown="return false;">{$lang_style_border_tab}</a></span></li>
-		<li id="list_tab"><span><a href="javascript:mcTabs.displayTab('list_tab','list_panel');" onmousedown="return false;">{$lang_style_list_tab}</a></span></li>
-		<li id="positioning_tab"><span><a href="javascript:mcTabs.displayTab('positioning_tab','positioning_panel');" onmousedown="return false;">{$lang_style_positioning_tab}</a></span></li>
+		<li id="text_tab" class="current"><span><a href="javascript:mcTabs.displayTab('text_tab','text_panel');" onMouseDown="return false;">{$lang_style_text_tab}</a></span></li>
+		<li id="background_tab"><span><a href="javascript:mcTabs.displayTab('background_tab','background_panel');" onMouseDown="return false;">{$lang_style_background_tab}</a></span></li>
+		<li id="block_tab"><span><a href="javascript:mcTabs.displayTab('block_tab','block_panel');" onMouseDown="return false;">{$lang_style_block_tab}</a></span></li>
+		<li id="box_tab"><span><a href="javascript:mcTabs.displayTab('box_tab','box_panel');" onMouseDown="return false;">{$lang_style_box_tab}</a></span></li>
+		<li id="border_tab"><span><a href="javascript:mcTabs.displayTab('border_tab','border_panel');" onMouseDown="return false;">{$lang_style_border_tab}</a></span></li>
+		<li id="list_tab"><span><a href="javascript:mcTabs.displayTab('list_tab','list_panel');" onMouseDown="return false;">{$lang_style_list_tab}</a></span></li>
+		<li id="positioning_tab"><span><a href="javascript:mcTabs.displayTab('positioning_tab','positioning_panel');" onMouseDown="return false;">{$lang_style_positioning_tab}</a></span></li>
 	</ul>
 </div>
 
@@ -30,7 +30,7 @@
 		<tr>
 			<td><label for="text_font">{$lang_style_text_font}</label></td>
 			<td colspan="3">
-				<select id="text_font" name="text_font" class="mceEditableSelect" onchange="alert(this.options[this.selectedIndex].value);"></select>
+				<select id="text_font" name="text_font" class="mceEditableSelect" onChange="alert(this.options[this.selectedIndex].value);"></select>
 			</td>
 		</tr>
 		<tr>
@@ -39,7 +39,8 @@
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><select id="text_size" name="text_size" class="mceEditableSelect"></select></td>
-						<td>&nbsp;<select id="text_size_measurement" name="text_size_measurement"></select>
+						<td>&nbsp;</td>
+      <td><select id="text_size_measurement" name="text_size_measurement"></select></td>
 					</tr>
 				</table>
 			</td>
@@ -66,7 +67,8 @@
 						<td>
 							<select id="text_lineheight" name="text_lineheight" class="mceEditableSelect"></select>
 						</td>
-						<td>&nbsp;<select id="text_lineheight_measurement" name="text_lineheight_measurement"></select>
+						<td>&nbsp;</td>
+      <td><select id="text_lineheight_measurement" name="text_lineheight_measurement"></select></td>
 					</tr>
 				</table>
 			</td>
@@ -80,14 +82,14 @@
 			<td colspan="2">
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tr>
-						<td><input id="text_color" name="text_color" type="text" value="" size="9" onchange="updateColor('text_color_pick','text_color');" /></td>
+						<td><input id="text_color" name="text_color" type="text" value="" size="9" onChange="updateColor('text_color_pick','text_color');" /></td>
 						<td id="text_color_pickcontainer">&nbsp;</td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 		<tr>
-			<td>{$lang_style_text_decoration}</td>
+			<td valign="top" style="vertical-align: top; padding-top: 3px;">{$lang_style_text_decoration}</td>
 			<td colspan="2">
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -123,7 +125,7 @@
 			<td>
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tr>
-						<td><input id="background_color" name="background_color" type="text" value="" size="9" onchange="updateColor('background_color_pick','background_color');" /></td>
+						<td><input id="background_color" name="background_color" type="text" value="" size="9" onChange="updateColor('background_color_pick','background_color');" /></td>
 						<td id="background_color_pickcontainer">&nbsp;</td>
 					</tr>
 				</table>
@@ -157,7 +159,8 @@
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><select id="background_hpos" name="background_hpos" class="mceEditableSelect"></select></td>
-						<td>&nbsp;<select id="background_hpos_measurement" name="background_hpos_measurement"></select>
+						<td>&nbsp;</td>
+      <td><select id="background_hpos_measurement" name="background_hpos_measurement"></select></td>
 					</tr>
 				</table>
 			</td>
@@ -169,7 +172,8 @@
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><select id="background_vpos" name="background_vpos" class="mceEditableSelect"></select></td>
-						<td>&nbsp;<select id="background_vpos_measurement" name="background_vpos_measurement"></select>
+						<td>&nbsp;</td>
+      <td><select id="background_vpos_measurement" name="background_vpos_measurement"></select></td>
 					</tr>
 				</table>
 			</td>
@@ -185,7 +189,8 @@
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><select id="block_wordspacing" name="block_wordspacing" class="mceEditableSelect"></select></td>
-						<td>&nbsp;<select id="block_wordspacing_measurement" name="block_wordspacing_measurement"></select>
+						<td>&nbsp;</td>
+      <td><select id="block_wordspacing_measurement" name="block_wordspacing_measurement"></select></td>
 					</tr>
 				</table>
 			</td>
@@ -197,7 +202,8 @@
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><select id="block_letterspacing" name="block_letterspacing" class="mceEditableSelect"></select></td>
-						<td>&nbsp;<select id="block_letterspacing_measurement" name="block_letterspacing_measurement"></select>
+						<td>&nbsp;</td>
+      <td><select id="block_letterspacing_measurement" name="block_letterspacing_measurement"></select></td>
 					</tr>
 				</table>
 			</td>
@@ -219,7 +225,8 @@
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><input type="text" id="block_text_indent" name="block_text_indent" /></td>
-						<td>&nbsp;<select id="block_text_indent_measurement" name="block_text_indent_measurement"></select>
+						<td>&nbsp;</td>
+      <td><select id="block_text_indent_measurement" name="block_text_indent_measurement"></select></td>
 					</tr>
 				</table>
 			</td>
@@ -244,8 +251,9 @@
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td><input type="text" id="box_width" name="box_width" class="mceEditableSelect" onchange="synch('box_width','positioning_width');" /></td>
-					<td>&nbsp;<select id="box_width_measurement" name="box_width_measurement"></select>
+					<td><input type="text" id="box_width" name="box_width" class="mceEditableSelect" onChange="synch('box_width','positioning_width');" /></td>
+					<td>&nbsp;</td>
+     <td><select id="box_width_measurement" name="box_width_measurement"></select></td>
 				</tr>
 			</table>
 		</td>
@@ -258,8 +266,9 @@
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td><input type="text" id="box_height" name="box_height" class="mceEditableSelect" onchange="synch('box_height','positioning_height');" /></td>
-					<td>&nbsp;<select id="box_height_measurement" name="box_height_measurement"></select>
+					<td><input type="text" id="box_height" name="box_height" class="mceEditableSelect" onChange="synch('box_height','positioning_height');" /></td>
+					<td>&nbsp;</td>
+     <td><select id="box_height_measurement" name="box_height_measurement"></select></td>
 				</tr>
 			</table>
 		</td>
@@ -274,7 +283,7 @@
 		<table border="0">
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="checkbox" id="box_padding_same" name="box_padding_same" class="checkbox" checked="checked" onclick="toggleSame(this,'box_padding');" /> <label for="box_padding_same">{$lang_style_same}</label></td>
+				<td><input type="checkbox" id="box_padding_same" name="box_padding_same" class="checkbox" checked="checked" onClick="toggleSame(this,'box_padding');" /> <label for="box_padding_same">{$lang_style_same}</label></td>
 			</tr>
 			<tr>
 				<td><label for="box_padding_top">{$lang_style_top}</label></td>
@@ -282,7 +291,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_padding_top" name="box_padding_top" class="mceEditableSelect" /></td>
-							<td>&nbsp;<select id="box_padding_top_measurement" name="box_padding_top_measurement"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_padding_top_measurement" name="box_padding_top_measurement"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -293,7 +303,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_padding_right" name="box_padding_right" class="mceEditableSelect" disabled="disabled" /></td>
-							<td>&nbsp;<select id="box_padding_right_measurement" name="box_padding_right_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_padding_right_measurement" name="box_padding_right_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -304,7 +315,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_padding_bottom" name="box_padding_bottom" class="mceEditableSelect" disabled="disabled" /></td>
-							<td>&nbsp;<select id="box_padding_bottom_measurement" name="box_padding_bottom_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_padding_bottom_measurement" name="box_padding_bottom_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -315,7 +327,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_padding_left" name="box_padding_left" class="mceEditableSelect" disabled="disabled" /></td>
-							<td>&nbsp;<select id="box_padding_left_measurement" name="box_padding_left_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_padding_left_measurement" name="box_padding_left_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -331,7 +344,7 @@
 		<table border="0">
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="checkbox" id="box_margin_same" name="box_margin_same" class="checkbox" checked="checked" onclick="toggleSame(this,'box_margin');" /> <label for="box_margin_same">{$lang_style_same}</label></td>
+				<td><input type="checkbox" id="box_margin_same" name="box_margin_same" class="checkbox" checked="checked" onClick="toggleSame(this,'box_margin');" /> <label for="box_margin_same">{$lang_style_same}</label></td>
 			</tr>
 			<tr>
 				<td><label for="box_margin_top">{$lang_style_top}</label></td>
@@ -339,7 +352,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_margin_top" name="box_margin_top" class="mceEditableSelect" /></td>
-							<td>&nbsp;<select id="box_margin_top_measurement" name="box_margin_top_measurement"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_margin_top_measurement" name="box_margin_top_measurement"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -350,7 +364,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_margin_right" name="box_margin_right" class="mceEditableSelect" disabled="disabled" /></td>
-							<td>&nbsp;<select id="box_margin_right_measurement" name="box_margin_right_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_margin_right_measurement" name="box_margin_right_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -361,7 +376,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_margin_bottom" name="box_margin_bottom" class="mceEditableSelect" disabled="disabled" /></td>
-							<td>&nbsp;<select id="box_margin_bottom_measurement" name="box_margin_bottom_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_margin_bottom_measurement" name="box_margin_bottom_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -372,7 +388,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="box_margin_left" name="box_margin_left" class="mceEditableSelect" disabled="disabled" /></td>
-							<td>&nbsp;<select id="box_margin_left_measurement" name="box_margin_left_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="box_margin_left_measurement" name="box_margin_left_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -398,11 +415,11 @@
 <tr>
 	<td>&nbsp;</td>
 	<td class="delim">&nbsp;</td>
-	<td><input type="checkbox" id="border_style_same" name="border_style_same" class="checkbox" checked="checked" onclick="toggleSame(this,'border_style');" /> <label for="border_style_same">{$lang_style_same}</label></td>
+	<td><input type="checkbox" id="border_style_same" name="border_style_same" class="checkbox" checked="checked" onClick="toggleSame(this,'border_style');" /> <label for="border_style_same">{$lang_style_same}</label></td>
 	<td class="delim">&nbsp;</td>
-	<td><input type="checkbox" id="border_width_same" name="border_width_same" class="checkbox" checked="checked" onclick="toggleSame(this,'border_width');" /> <label for="border_width_same">{$lang_style_same}</label></td>
+	<td><input type="checkbox" id="border_width_same" name="border_width_same" class="checkbox" checked="checked" onClick="toggleSame(this,'border_width');" /> <label for="border_width_same">{$lang_style_same}</label></td>
 	<td class="delim">&nbsp;</td>
-	<td><input type="checkbox" id="border_color_same" name="border_color_same" class="checkbox" checked="checked" onclick="toggleSame(this,'border_color');" /> <label for="border_color_same">{$lang_style_same}</label></td>
+	<td><input type="checkbox" id="border_color_same" name="border_color_same" class="checkbox" checked="checked" onClick="toggleSame(this,'border_color');" /> <label for="border_color_same">{$lang_style_same}</label></td>
 </tr>
 
 <tr>
@@ -414,7 +431,8 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td><select id="border_width_top" name="border_width_top" class="mceEditableSelect"></select></td>
-				<td>&nbsp;<select id="border_width_top_measurement" name="border_width_top_measurement"></select>
+				<td>&nbsp;</td>
+    <td><select id="border_width_top_measurement" name="border_width_top_measurement"></select></td>
 			</tr>
 		</table>
 	</td>
@@ -422,7 +440,7 @@
 	<td>
 		<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td><input id="border_color_top" name="border_color_top" type="text" value="" size="9" onchange="updateColor('border_color_top_pick','border_color_top');" /></td>
+				<td><input id="border_color_top" name="border_color_top" type="text" value="" size="9" onChange="updateColor('border_color_top_pick','border_color_top');" /></td>
 				<td id="border_color_top_pickcontainer">&nbsp;</td>
 			</tr>
 		</table>
@@ -438,7 +456,8 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td><select id="border_width_right" name="border_width_right" class="mceEditableSelect" disabled="disabled"></select></td>
-				<td>&nbsp;<select id="border_width_right_measurement" name="border_width_right_measurement" disabled="disabled"></select>
+				<td>&nbsp;</td>
+    <td><select id="border_width_right_measurement" name="border_width_right_measurement" disabled="disabled"></select></td>
 			</tr>
 		</table>
 	</td>
@@ -446,7 +465,7 @@
 	<td>
 		<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td><input id="border_color_right" name="border_color_right" type="text" value="" size="9" onchange="updateColor('border_color_right_pick','border_color_right');" disabled="disabled" /></td>
+				<td><input id="border_color_right" name="border_color_right" type="text" value="" size="9" onChange="updateColor('border_color_right_pick','border_color_right');" disabled="disabled" /></td>
 				<td id="border_color_right_pickcontainer">&nbsp;</td>
 			</tr>
 		</table>
@@ -462,7 +481,8 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td><select id="border_width_bottom" name="border_width_bottom" class="mceEditableSelect" disabled="disabled"></select></td>
-				<td>&nbsp;<select id="border_width_bottom_measurement" name="border_width_bottom_measurement" disabled="disabled"></select>
+				<td>&nbsp;</td>
+    <td><select id="border_width_bottom_measurement" name="border_width_bottom_measurement" disabled="disabled"></select></td>
 			</tr>
 		</table>
 	</td>
@@ -470,7 +490,7 @@
 	<td>
 		<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td><input id="border_color_bottom" name="border_color_bottom" type="text" value="" size="9" onchange="updateColor('border_color_bottom_pick','border_color_bottom');" disabled="disabled" /></td>
+				<td><input id="border_color_bottom" name="border_color_bottom" type="text" value="" size="9" onChange="updateColor('border_color_bottom_pick','border_color_bottom');" disabled="disabled" /></td>
 				<td id="border_color_bottom_pickcontainer">&nbsp;</td>
 			</tr>
 		</table>
@@ -486,7 +506,8 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td><select id="border_width_left" name="border_width_left" class="mceEditableSelect" disabled="disabled"></select></td>
-				<td>&nbsp;<select id="border_width_left_measurement" name="border_width_left_measurement" disabled="disabled"></select>
+				<td>&nbsp;</td>
+    <td><select id="border_width_left_measurement" name="border_width_left_measurement" disabled="disabled"></select></td>
 			</tr>
 		</table>
 	</td>
@@ -494,7 +515,7 @@
 	<td>
 		<table border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td><input id="border_color_left" name="border_color_left" type="text" value="" size="9" onchange="updateColor('border_color_left_pick','border_color_left');" disabled="disabled" /></td>
+				<td><input id="border_color_left" name="border_color_left" type="text" value="" size="9" onChange="updateColor('border_color_left_pick','border_color_left');" disabled="disabled" /></td>
 				<td id="border_color_left_pickcontainer">&nbsp;</td>
 			</tr>
 		</table>
@@ -536,8 +557,9 @@
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td><input type="text" id="positioning_width" name="positioning_width" onchange="synch('positioning_width','box_width');" /></td>
-					<td>&nbsp;<select id="positioning_width_measurement" name="positioning_width_measurement"></select>
+					<td><input type="text" id="positioning_width" name="positioning_width" onChange="synch('positioning_width','box_width');" /></td>
+					<td>&nbsp;</td>
+     <td><select id="positioning_width_measurement" name="positioning_width_measurement"></select></td>
 				</tr>
 			</table>
 		</td>
@@ -550,8 +572,9 @@
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td><input type="text" id="positioning_height" name="positioning_height" onchange="synch('positioning_height','box_height');" /></td>
-					<td>&nbsp;<select id="positioning_height_measurement" name="positioning_height_measurement"></select>
+					<td><input type="text" id="positioning_height" name="positioning_height" onChange="synch('positioning_height','box_height');" /></td>
+					<td>&nbsp;</td>
+     <td><select id="positioning_height_measurement" name="positioning_height_measurement"></select></td>
 				</tr>
 			</table>
 		</td>
@@ -567,7 +590,7 @@
 		<table border="0">
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="checkbox" id="positioning_placement_same" name="positioning_placement_same" class="checkbox" checked="checked" onclick="toggleSame(this,'positioning_placement');" /> <label for="positioning_placement_same">{$lang_style_same}</label></td>
+				<td><input type="checkbox" id="positioning_placement_same" name="positioning_placement_same" class="checkbox" checked="checked" onClick="toggleSame(this,'positioning_placement');" /> <label for="positioning_placement_same">{$lang_style_same}</label></td>
 			</tr>
 			<tr>
 				<td>{$lang_style_top}</td>
@@ -575,7 +598,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_placement_top" name="positioning_placement_top" /></td>
-							<td>&nbsp;<select id="positioning_placement_top_measurement" name="positioning_placement_top_measurement"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_placement_top_measurement" name="positioning_placement_top_measurement"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -586,7 +610,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_placement_right" name="positioning_placement_right" disabled="disabled" /></td>
-							<td>&nbsp;<select id="positioning_placement_right_measurement" name="positioning_placement_right_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_placement_right_measurement" name="positioning_placement_right_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -597,7 +622,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_placement_bottom" name="positioning_placement_bottom" disabled="disabled" /></td>
-							<td>&nbsp;<select id="positioning_placement_bottom_measurement" name="positioning_placement_bottom_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_placement_bottom_measurement" name="positioning_placement_bottom_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -608,7 +634,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_placement_left" name="positioning_placement_left" disabled="disabled" /></td>
-							<td>&nbsp;<select id="positioning_placement_left_measurement" name="positioning_placement_left_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_placement_left_measurement" name="positioning_placement_left_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -624,7 +651,7 @@
 		<table border="0">
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="checkbox" id="positioning_clip_same" name="positioning_clip_same" class="checkbox" checked="checked" onclick="toggleSame(this,'positioning_clip');" /> <label for="positioning_clip_same">{$lang_style_same}</label></td>
+				<td><input type="checkbox" id="positioning_clip_same" name="positioning_clip_same" class="checkbox" checked="checked" onClick="toggleSame(this,'positioning_clip');" /> <label for="positioning_clip_same">{$lang_style_same}</label></td>
 			</tr>
 			<tr>
 				<td>{$lang_style_top}</td>
@@ -632,7 +659,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_clip_top" name="positioning_clip_top" /></td>
-							<td>&nbsp;<select id="positioning_clip_top_measurement" name="positioning_clip_top_measurement"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_clip_top_measurement" name="positioning_clip_top_measurement"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -643,7 +671,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_clip_right" name="positioning_clip_right" disabled="disabled" /></td>
-							<td>&nbsp;<select id="positioning_clip_right_measurement" name="positioning_clip_right_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_clip_right_measurement" name="positioning_clip_right_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -654,7 +683,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_clip_bottom" name="positioning_clip_bottom" disabled="disabled" /></td>
-							<td>&nbsp;<select id="positioning_clip_bottom_measurement" name="positioning_clip_bottom_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_clip_bottom_measurement" name="positioning_clip_bottom_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -665,7 +695,8 @@
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td><input type="text" id="positioning_clip_left" name="positioning_clip_left" disabled="disabled" /></td>
-							<td>&nbsp;<select id="positioning_clip_left_measurement" name="positioning_clip_left_measurement" disabled="disabled"></select>
+							<td>&nbsp;</td>
+       <td><select id="positioning_clip_left_measurement" name="positioning_clip_left_measurement" disabled="disabled"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -679,14 +710,14 @@
 
 <div class="mceActionPanel">
 	<div style="float: left">
-		<div style="float: left"><input type="button" id="insert" name="insert" value="{$lang_update}" onclick="updateAction();" /></div>
+		<div style="float: left"><input type="button" id="insert" name="insert" value="{$lang_update}" onClick="updateAction();" /></div>
 
-		<div style="float: left">&nbsp;<input type="button" id="apply" name="apply" value="{$lang_style_apply}" onclick="applyAction();" class="updateButton" /></div>
+		<div style="float: left">&nbsp;<input type="button" id="apply" name="apply" value="{$lang_style_apply}" onClick="applyAction();" class="updateButton" /></div>
 		<br style="clear: both" />
 	</div>
 
 	<div style="float: right">
-		<input type="button" id="cancel" name="cancel" value="{$lang_cancel}" onclick="tinyMCEPopup.close();" />
+		<input type="button" id="cancel" name="cancel" value="{$lang_cancel}" onClick="tinyMCEPopup.close();" />
 	</div>
 </div>
 </form>
