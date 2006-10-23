@@ -171,6 +171,12 @@ TinyMCE_Engine.prototype.setEventHandlers = function(inst, s) {
 TinyMCE_Engine.prototype.onMouseMove = function() {
 	var inst;
 
+	// Fix for IE7 bug where it's not restoring hover on anchors correctly
+	if (tinyMCE.lastHover) {
+		tinyMCE.lastHover.className = tinyMCE.lastHover.className;
+		tinyMCE.lastHover = null;
+	}
+
 	if (!tinyMCE.hasMouseMoved) {
 		inst = tinyMCE.selectedInstance;
 
@@ -178,12 +184,6 @@ TinyMCE_Engine.prototype.onMouseMove = function() {
 		if (inst.isFocused) {
 			inst.undoBookmark = inst.selection.getBookmark();
 			tinyMCE.hasMouseMoved = true;
-		}
-
-		// Fix for IE7 bug where it's not restoring hover on anchors correctly
-		if (tinyMCE.lastHover) {
-			tinyMCE.lastHover.className = tinyMCE.lastHover.className;
-			tinyMCE.lastHover = null;
 		}
 	}
 
