@@ -169,11 +169,18 @@ TinyMCE_Engine.prototype.setEventHandlers = function(inst, s) {
  * this will then be used when a undo/redo level is added.
  */
 TinyMCE_Engine.prototype.onMouseMove = function() {
-	var inst;
+	var inst, lh;
 
 	// Fix for IE7 bug where it's not restoring hover on anchors correctly
 	if (tinyMCE.lastHover) {
-		tinyMCE.lastHover.className = tinyMCE.lastHover.className;
+		lh = tinyMCE.lastHover;
+
+		// Call out on menus and refresh class on normal buttons
+		if (lh.className.indexOf('mceMenu') != -1)
+			tinyMCE._menuButtonEvent('out', lh);
+		else
+			lh.className = lh.className;
+
 		tinyMCE.lastHover = null;
 	}
 

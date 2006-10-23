@@ -1387,16 +1387,12 @@ TinyMCE_Engine.prototype = {
 
 		cmd += ');';
 
-		// Patch for IE7 bug with hover out not restoring correctly
-		if (tinyMCE.isRealIE)
-			io = 'onmouseover="tinyMCE.lastHover = this;"';
-
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = tinyMCE.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
 
 			if (tinyMCE.isRealIE)
-				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" ' + io + ' onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
+				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);tinyMCE.lastHover = this;" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
 
@@ -1406,7 +1402,7 @@ TinyMCE_Engine.prototype = {
 			h += '</a></span>';
 		} else {
 			if (tinyMCE.isRealIE)
-				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);" ' + io + ' onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
+				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);tinyMCE.lastHover = this;" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
 
@@ -5885,11 +5881,18 @@ TinyMCE_Engine.prototype.setEventHandlers = function(inst, s) {
 };
 
 TinyMCE_Engine.prototype.onMouseMove = function() {
-	var inst;
+	var inst, lh;
 
 	// Fix for IE7 bug where it's not restoring hover on anchors correctly
 	if (tinyMCE.lastHover) {
-		tinyMCE.lastHover.className = tinyMCE.lastHover.className;
+		lh = tinyMCE.lastHover;
+
+		// Call out on menus and refresh class on normal buttons
+		if (lh.className.indexOf('mceMenu') != -1)
+			tinyMCE._menuButtonEvent('out', lh);
+		else
+			lh.className = lh.className;
+
 		tinyMCE.lastHover = null;
 	}
 
