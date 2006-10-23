@@ -179,6 +179,12 @@ TinyMCE_Engine.prototype.onMouseMove = function() {
 			inst.undoBookmark = inst.selection.getBookmark();
 			tinyMCE.hasMouseMoved = true;
 		}
+
+		// Fix for IE7 bug where it's not restoring hover on anchors correctly
+		if (tinyMCE.lastHover) {
+			tinyMCE.lastHover.className = tinyMCE.lastHover.className;
+			tinyMCE.lastHover = null;
+		}
 	}
 
 //	tinyMCE.cancelEvent(inst.getWin().event);

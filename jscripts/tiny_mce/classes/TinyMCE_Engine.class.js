@@ -15,7 +15,7 @@ function TinyMCE_Engine() {
 
 	this.majorVersion = "2";
 	this.minorVersion = "0.8";
-	this.releaseDate = "2006-10-xx";
+	this.releaseDate = "2006-10-23";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
@@ -1560,7 +1560,7 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	getButtonHTML : function(id, lang, img, cmd, ui, val) {
-		var h = '', m, x;
+		var h = '', m, x, io = '';
 
 		cmd = 'tinyMCE.execInstanceCommand(\'{$editor_id}\',\'' + cmd + '\'';
 
@@ -1572,16 +1572,20 @@ TinyMCE_Engine.prototype = {
 
 		cmd += ');';
 
+		// Patch for IE7 bug with hover out not restoring correctly
+		if (tinyMCE.isRealIE)
+			io = 'onmouseover="tinyMCE.lastHover = this;"';
+
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = this.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			// Tiled button
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
-			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceTiledButton mceButtonNormal" target="_self">';
+			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" ' + io + ' class="mceTiledButton mceButtonNormal" target="_self">';
 			h += '<img src="{$themeurl}/images/spacer.gif" style="background-position: ' + x + 'px 0" title="{$' + lang + '}" />';
 			h += '</a>';
 		} else {
 			// Normal button
-			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceButtonNormal" target="_self">';
+			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" ' + io + ' class="mceButtonNormal" target="_self">';
 			h += '<img src="' + img + '" title="{$' + lang + '}" />';
 			h += '</a>';
 		}

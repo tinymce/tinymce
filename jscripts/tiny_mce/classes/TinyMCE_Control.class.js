@@ -1459,11 +1459,13 @@ TinyMCE_Control.prototype = {
 		if (("" + replace_element.style.width).indexOf('%') != -1) {
 			this.settings['width'] = replace_element.style.width;
 			this.settings['area_width'] = "100%";
+			this.settings['width_style'] = "100%";
 		}
 
 		if (("" + replace_element.style.height).indexOf('%') != -1) {
 			this.settings['height'] = replace_element.style.height;
 			this.settings['area_height'] = "100%";
+			this.settings['height_style'] = "100%";
 		}
 
 		html = tinyMCE.applyTemplate(html);

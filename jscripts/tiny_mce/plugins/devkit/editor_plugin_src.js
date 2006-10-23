@@ -51,8 +51,8 @@ var TinyMCE_DevKitPlugin = {
 		document.body.appendChild(ifr);
 
 		// Workaround for strange IE reload bug
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
-			document.getElementById('devkit').outerHTML = document.getElementById('devkit').outerHTML;
+		//if (tinyMCE.isRealIE)
+		//	document.getElementById('devkit').outerHTML = document.getElementById('devkit').outerHTML;
 
 		tinyMCE.importCSS(document, tinyMCE.baseURL + '/plugins/devkit/css/devkit_ui.css');
 	},

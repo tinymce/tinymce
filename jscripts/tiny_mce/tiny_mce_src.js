@@ -6,7 +6,7 @@ function TinyMCE_Engine() {
 
 	this.majorVersion = "2";
 	this.minorVersion = "0.8";
-	this.releaseDate = "2006-10-xx";
+	this.releaseDate = "2006-10-23";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
@@ -1340,7 +1340,7 @@ TinyMCE_Engine.prototype = {
 	},
 
 	getButtonHTML : function(id, lang, img, cmd, ui, val) {
-		var h = '', m, x;
+		var h = '', m, x, io = '';
 
 		cmd = 'tinyMCE.execInstanceCommand(\'{$editor_id}\',\'' + cmd + '\'';
 
@@ -1352,16 +1352,20 @@ TinyMCE_Engine.prototype = {
 
 		cmd += ');';
 
+		// Patch for IE7 bug with hover out not restoring correctly
+		if (tinyMCE.isRealIE)
+			io = 'onmouseover="tinyMCE.lastHover = this;"';
+
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = this.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			// Tiled button
 			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
-			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceTiledButton mceButtonNormal" target="_self">';
+			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" ' + io + ' class="mceTiledButton mceButtonNormal" target="_self">';
 			h += '<img src="{$themeurl}/images/spacer.gif" style="background-position: ' + x + 'px 0" title="{$' + lang + '}" />';
 			h += '</a>';
 		} else {
 			// Normal button
-			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceButtonNormal" target="_self">';
+			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" ' + io + ' class="mceButtonNormal" target="_self">';
 			h += '<img src="' + img + '" title="{$' + lang + '}" />';
 			h += '</a>';
 		}
@@ -3605,11 +3609,13 @@ TinyMCE_Control.prototype = {
 		if (("" + replace_element.style.width).indexOf('%') != -1) {
 			this.settings['width'] = replace_element.style.width;
 			this.settings['area_width'] = "100%";
+			this.settings['width_style'] = "100%";
 		}
 
 		if (("" + replace_element.style.height).indexOf('%') != -1) {
 			this.settings['height'] = replace_element.style.height;
 			this.settings['area_height'] = "100%";
+			this.settings['height_style'] = "100%";
 		}
 
 		html = tinyMCE.applyTemplate(html);
@@ -5884,6 +5890,12 @@ TinyMCE_Engine.prototype.onMouseMove = function() {
 		if (inst.isFocused) {
 			inst.undoBookmark = inst.selection.getBookmark();
 			tinyMCE.hasMouseMoved = true;
+		}
+
+		// Fix for IE7 bug where it's not restoring hover on anchors correctly
+		if (tinyMCE.lastHover) {
+			tinyMCE.lastHover.className = tinyMCE.lastHover.className;
+			tinyMCE.lastHover = null;
 		}
 	}
 

@@ -113,8 +113,10 @@ var TinyMCE_ContextMenuPlugin = {
 						contextMenu.addSeparator();
 
 						// If flash
-						if (tinyMCE.getAttrib(elm, 'class').indexOf('mceItemFlash') != -1)
+						if (tinyMCE.hasPlugin('flash') && tinyMCE.getAttrib(elm, 'class').indexOf('mceItemFlash') != -1)
 							contextMenu.addItem(tinyMCE.baseURL + "/plugins/flash/images/flash.gif", "$lang_flash_props", "mceFlash");
+						else if (tinyMCE.hasPlugin('media') && /mceItem(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)/.test(tinyMCE.getAttrib(elm, 'class')))
+							contextMenu.addItem(tinyMCE.baseURL + "/plugins/flash/images/flash.gif", "$lang_media_title", "mceMedia");
 						else
 							contextMenu.addItem(tinyMCE.baseURL + "/themes/" + theme + "/images/image.gif", "$lang_image_props_desc", inst.hasPlugin("advimage") ? "mceAdvImage" : "mceImage");
 						break;
