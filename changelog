@@ -19,6 +19,7 @@ Version 2.0.8 (2006-10-23)
 	Fixed bug where Fullscreen plugin didn't fill containing elements if they where absolute.
 	Fixed bug where IE 7 hover out CSS events wasn't triggered correctly due to a IE bug.
 	Fixed bug where contextmenu plugin showed a incorrect flash menu item if the media plugin was enabled.
+	Fixed bug where 100% width of TinyMCE instances didn't work correctly.
 	Fixed issue where the image icon was selected when a user selected a media object.
 	Fixed issue where select elements where disabled if AJAX or custom submit triggers where used.
 	Fixed issue where formatblock command could insert invalid elements.
