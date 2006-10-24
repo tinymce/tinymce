@@ -675,6 +675,10 @@ TinyMCE_Cleanup.prototype = {
 	isValid : function(n) {
 		this._setupRules(); // Will initialize cleanup rules
 
+		// Empty is true since it removes formatting
+		if (!n)
+			return true;
+
 		// Clean the name up a bit
 		n = n.replace(/[^a-z0-9]+/gi, '').toUpperCase();
 

@@ -653,14 +653,6 @@ TinyMCE_Control.prototype = {
 
 				return true;
 
-			case "FormatBlock":
-				if (!this.cleanup.isValid(value))
-					return true;
-
-				this.getDoc().execCommand(command, user_interface, value);
-				tinyMCE.triggerNodeChange();
-				break;
-
 			case "InsertUnorderedList":
 			case "InsertOrderedList":
 				this.getDoc().execCommand(command, user_interface, value);
@@ -679,6 +671,9 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "FormatBlock":
+				if (!this.cleanup.isValid(value))
+					return true;
+
 				if (value == null || value == "") {
 					var elm = tinyMCE.getParentElement(this.getFocusElement(), "p,div,h1,h2,h3,h4,h5,h6,pre,address,blockquote,dt,dl,dd,samp");
 
