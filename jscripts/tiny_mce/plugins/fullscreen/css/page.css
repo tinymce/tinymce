@@ -13,4 +13,9 @@
 	border: 0 !important;
 	overflow: visible;
 	z-index: 1 !important;
+	clear: both;
+}
+
+body.mceFullscreen {
+	overflow: hidden !important;
 }

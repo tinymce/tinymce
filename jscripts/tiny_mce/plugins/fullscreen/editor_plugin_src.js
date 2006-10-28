@@ -80,6 +80,14 @@ var TinyMCE_FullScreenPlugin = {
 		if (!ds.enabled) {
 			ds.parents = [];
 
+			vp = tinyMCE.getViewPort(cw);
+			ds.scrollX = vp.left;
+			ds.scrollY = vp.top;
+
+			// Opera has a bug restoring scrollbars
+			if (!tinyMCE.isOpera)
+				tinyMCE.addCSSClass(cd.body, 'mceFullscreen');
+
 			tinyMCE.getParentNode(tableElm.parentNode, function (n) {
 				if (n.nodeName == 'BODY')
 					return true;
@@ -89,9 +97,6 @@ var TinyMCE_FullScreenPlugin = {
 
 				return false;
 			});
-
-			ds.oldOverflow = cd.body.style.overflow;
-			cd.body.style.overflow = 'hidden';
 
 			if (re)
 				re.style.display = 'none';
@@ -149,10 +154,6 @@ var TinyMCE_FullScreenPlugin = {
 					tinyMCE.removeCSSClass(n, 'mceFullscreenPos');
 			});
 
-			ds.parents = [];
-
-			cd.body.style.overflow = ds.oldOverflow ? ds.oldOverflow : '';
-
 			if (re && tinyMCE.getParam("theme_advanced_resizing", false))
 				re.style.display = 'block';
 
@@ -169,6 +170,9 @@ var TinyMCE_FullScreenPlugin = {
 
 			tinyMCE.switchClass(inst.editorId + '_fullscreen', 'mceButtonNormal');
 			ds.enabled = false;
+
+			tinyMCE.removeCSSClass(cd.body, 'mceFullscreen');
+			cw.scrollTo(ds.scrollX, ds.scrollY);
 		}
 	},
 
