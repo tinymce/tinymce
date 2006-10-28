@@ -836,6 +836,7 @@ TinyMCE_Engine.prototype = {
 			content = content.replace(/&amp;/g, '&');
 		}
 
+		tinyMCE.selectedInstance = inst;
 		inst.switchSettings();
 
 		// Not loaded correctly hit it again, Mozilla bug #997860
@@ -6250,6 +6251,9 @@ TinyMCE_Selection.prototype = {
 		}
 
 		if (tinyMCE.isGecko || tinyMCE.isOpera) {
+			if (!sel)
+				return false;
+
 			if (bookmark.rng) {
 				sel.removeAllRanges();
 				sel.addRange(bookmark.rng);
@@ -6461,7 +6465,10 @@ TinyMCE_Selection.prototype = {
 		if (tinyMCE.isSafari && !s.getRangeAt)
 			return '' + window.getSelection();
 
-		return s.getRangeAt(0);
+		if (s.rangeCount > 0)
+			return s.getRangeAt(0);
+
+		return null;
 	},
 
 	getFocusElement : function() {

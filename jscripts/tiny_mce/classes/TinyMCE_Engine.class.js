@@ -1022,6 +1022,7 @@ TinyMCE_Engine.prototype = {
 			content = content.replace(/&amp;/g, '&');
 		}
 
+		tinyMCE.selectedInstance = inst;
 		inst.switchSettings();
 
 		// Not loaded correctly hit it again, Mozilla bug #997860

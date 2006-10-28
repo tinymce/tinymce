@@ -34,15 +34,36 @@ var TinyMCE_FullScreenPlugin = {
 	},
 
 	execCommand : function(editor_id, element, command, user_interface, value) {
+		var inst;
+
 		// Handle commands
 		switch (command) {
 			case "mceFullScreen":
-				this._toggleFullscreen(tinyMCE.getInstanceById(editor_id));
+				inst = tinyMCE.getInstanceById(editor_id);
+
+				if (tinyMCE.getParam('fullscreen_new_window'))
+					this._toggleFullscreenWin(inst);
+				else
+					this._toggleFullscreen(inst);
+
 				return true;
 		}
 
 		// Pass to next handler in chain
 		return false;
+	},
+
+	_toggleFullscreenWin : function(inst) {
+		if (tinyMCE.getParam('fullscreen_is_enabled')) {
+			// In fullscreen mode
+			window.opener.tinyMCE.execInstanceCommand(tinyMCE.getParam('fullscreen_editor_id'), 'mceSetContent', false, tinyMCE.getContent(inst.editorId));
+			top.close();
+		} else {
+			tinyMCE.setWindowArg('editor_id', inst.editorId);
+
+			var win = window.open(tinyMCE.baseURL + "/plugins/fullscreen/fullscreen.htm", "mceFullScreenPopup", "fullscreen=yes,menubar=no,toolbar=no,scrollbars=no,resizable=yes,left=0,top=0,width=" + screen.availWidth + ",height=" + screen.availHeight);
+			try { win.resizeTo(screen.availWidth, screen.availHeight); } catch (e) {}
+		}
 	},
 
 	_toggleFullscreen : function(inst) {
@@ -183,6 +204,13 @@ var TinyMCE_FullScreenPlugin = {
 			tinyMCE.switchClass(inst.editorId + '_fullscreen', 'mceButtonNormal');
 			ds.enabled = false;
 		}
+	},
+
+	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
+		if (tinyMCE.getParam('fullscreen_is_enabled'))
+			tinyMCE.switchClass(editor_id + '_fullscreen', 'mceButtonSelected');
+
+		return true;
 	}
 };
 
