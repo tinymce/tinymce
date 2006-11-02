@@ -42,7 +42,8 @@ function TinyMCE_Control(settings) {
 		indent : s.apply_source_formatting,
 		invalid_elements : s.invalid_elements,
 		verify_html : s.verify_html,
-		fix_content_duplication : s.fix_content_duplication
+		fix_content_duplication : s.fix_content_duplication,
+		convert_fonts_to_spans : s.convert_fonts_to_spans
 	});
 
 	// Wrap old theme

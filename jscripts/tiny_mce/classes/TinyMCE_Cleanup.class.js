@@ -235,12 +235,12 @@ TinyMCE_Engine.prototype.convertHexToRGB = function(s) {
 TinyMCE_Engine.prototype.convertSpansToFonts = function(doc) {
 	var sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
 
-	var h = doc.body.innerHTML;
+	/*var h = doc.body.innerHTML;
 	h = h.replace(/<span/gi, '<font');
 	h = h.replace(/<\/span/gi, '</font');
-	tinyMCE.setInnerHTML(doc.body, h);
+	tinyMCE.setInnerHTML(doc.body, h);*/
 
-	var s = doc.getElementsByTagName("font");
+	var s = tinyMCE.selectElements(doc, 'span,font');
 	for (var i=0; i<s.length; i++) {
 		var size = tinyMCE.trim(s[i].style.fontSize).toLowerCase();
 		var fSize = 0;
@@ -280,10 +280,10 @@ TinyMCE_Engine.prototype.convertSpansToFonts = function(doc) {
 TinyMCE_Engine.prototype.convertFontsToSpans = function(doc) {
 	var sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
 
-	var h = doc.body.innerHTML;
+/*	var h = doc.body.innerHTML;
 	h = h.replace(/<font/gi, '<span');
 	h = h.replace(/<\/font/gi, '</span');
-	tinyMCE.setInnerHTML(doc.body, h);
+	tinyMCE.setInnerHTML(doc.body, h);*/
 
 	var fsClasses = tinyMCE.getParam('font_size_classes');
 	if (fsClasses != '')
@@ -291,7 +291,7 @@ TinyMCE_Engine.prototype.convertFontsToSpans = function(doc) {
 	else
 		fsClasses = null;
 
-	var s = doc.getElementsByTagName("span");
+	var s = tinyMCE.selectElements(doc, 'span,font');
 	for (var i=0; i<s.length; i++) {
 		var fSize, fFace, fColor;
 
@@ -961,7 +961,7 @@ TinyMCE_Cleanup.prototype = {
 	 * @type string
 	 */
 	serializeNodeAsHTML : function(n, inn) {
-		var en, no, h = '', i, l, t, st, r, cn, va = false, f = false, at, hc, cr;
+		var en, no, h = '', i, l, t, st, r, cn, va = false, f = false, at, hc, cr, nn;
 
 		this._setupRules(); // Will initialize cleanup rules
 
@@ -989,21 +989,34 @@ TinyMCE_Cleanup.prototype = {
 				if ((tinyMCE.isRealIE) && n.nodeName.indexOf('/') != -1)
 					break;
 
-				if (this.vElementsRe.test(n.nodeName) && (!this.iveRe || !this.iveRe.test(n.nodeName)) && !inn) {
+				nn = n.nodeName;
+
+				// Convert fonts to spans
+				if (this.settings.convert_fonts_to_spans) {
+					// On get content FONT -> SPAN
+					if (this.settings.on_save && nn == 'FONT')
+						nn = 'SPAN';
+
+					// On insert content SPAN -> FONT
+					if (!this.settings.on_save && nn == 'SPAN')
+						nn = 'FONT';
+				}
+
+				if (this.vElementsRe.test(nn) && (!this.iveRe || !this.iveRe.test(nn)) && !inn) {
 					va = true;
 
-					r = this.rules[n.nodeName];
+					r = this.rules[nn];
 					if (!r) {
 						at = this.rules;
 						for (no in at) {
-							if (at[no] && at[no].validRe.test(n.nodeName)) {
+							if (at[no] && at[no].validRe.test(nn)) {
 								r = at[no];
 								break;
 							}
 						}
 					}
 
-					en = r.isWild ? n.nodeName.toLowerCase() : r.oTagName;
+					en = r.isWild ? nn.toLowerCase() : r.oTagName;
 					f = r.fill;
 
 					if (r.removeEmpty && !hc)
@@ -1040,13 +1053,13 @@ TinyMCE_Cleanup.prototype = {
 						t = null;
 
 					// Close these
-					if (t != null && this.closeElementsRe.test(n.nodeName))
+					if (t != null && this.closeElementsRe.test(nn))
 						return t + ' />';
 
 					if (t != null)
 						h += t + '>';
 
-					if (this.isIE && this.codeElementsRe.test(n.nodeName))
+					if (this.isIE && this.codeElementsRe.test(nn))
 						h += n.innerHTML;
 				}
 			break;

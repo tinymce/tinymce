@@ -49,8 +49,8 @@ TinyMCE_Selection.prototype = {
 		h = tinyMCE._cleanupHTML(inst, inst.contentDocument, inst.settings, e, e, false, true, false);
 
 		// When editing always use fonts internaly
-		if (tinyMCE.getParam("convert_fonts_to_spans"))
-			tinyMCE.convertSpansToFonts(inst.getDoc());
+		//if (tinyMCE.getParam("convert_fonts_to_spans"))
+		//	tinyMCE.convertSpansToFonts(inst.getDoc());
 
 		return h;
 	},

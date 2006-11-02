@@ -2,6 +2,7 @@ Version 2.0.9 (2006-xx-xx)
 	Added support for fullscreen new window mode since the other method was problematic for some.
 	Fixed so that fullscreen can be used even if placed in absolute positioned divs with borders etc.
 	Fixed bug where it wasn't possible to remove block formatting with format select box.
+	Fixed bug with xhtmlxtras plugin not working when convert_fonts_to_spans option enabled.
 	Fixed issue where TinyMCE wasn't restoring scroll position after fullscreen mode switch.
 	Fixed some HTML issues in style plugin dialog. Contributed by Michael Keck.
 Version 2.0.8 (2006-10-23)
