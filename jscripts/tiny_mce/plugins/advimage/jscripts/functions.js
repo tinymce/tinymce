@@ -481,22 +481,12 @@ function showPreviewImage(src, start) {
 	if (src == "")
 		elm.innerHTML = "";
 	else
-		elm.innerHTML = '<img src="' + src + '" border="0" />'
-
-	getImageData(src);
-}
-
-function getImageData(src) {
-	preloadImg = new Image();
-
-	tinyMCE.addEvent(preloadImg, "load", updateImageData);
-	tinyMCE.addEvent(preloadImg, "error", resetImageData);
-
-	preloadImg.src = src;
+		elm.innerHTML = '<img id="previewImg" src="' + src + '" border="0" onload="updateImageData();" onerror="resetImageData();" />'
 }
 
 function updateImageData() {
 	var formObj = document.forms[0];
+	var preloadImg = document.getElementById('previewImg');
 
 	if (formObj.width.value == "")
 		formObj.width.value = preloadImg.width;
