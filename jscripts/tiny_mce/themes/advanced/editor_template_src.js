@@ -835,7 +835,7 @@ var TinyMCE_AdvancedTheme = {
 					var st = tinyMCE.getAttrib(path[i], "style");
 					if (st != "") {
 						st = tinyMCE.serializeStyle(tinyMCE.parseStyle(st));
-						nodeData += "style: " + st + " ";
+						nodeData += "style: " + tinyMCE.xmlEncode(st) + " ";
 					}
 				}
 
@@ -845,15 +845,15 @@ var TinyMCE_AdvancedTheme = {
 
 					var face = tinyMCE.getAttrib(path[i], "face");
 					if (face != "")
-						nodeData += "font: " + face + " ";
+						nodeData += "font: " + tinyMCE.xmlEncode(face) + " ";
 
 					var size = tinyMCE.getAttrib(path[i], "size");
 					if (size != "")
-						nodeData += "size: " + size + " ";
+						nodeData += "size: " + tinyMCE.xmlEncode(size) + " ";
 
 					var color = tinyMCE.getAttrib(path[i], "color");
 					if (color != "")
-						nodeData += "color: " + color + " ";
+						nodeData += "color: " + tinyMCE.xmlEncode(color) + " ";
 				}
 
 				if (tinyMCE.getAttrib(path[i], 'id') != "") {
@@ -870,7 +870,7 @@ var TinyMCE_AdvancedTheme = {
 					if (src == "")
 						 src = tinyMCE.getAttrib(path[i], "src");
 
-					nodeData += "src: " + src + " ";
+					nodeData += "src: " + tinyMCE.xmlEncode(src) + " ";
 				}
 
 				if (path[i].nodeName == 'A' && tinyMCE.getAttrib(path[i], 'href') != "") {
@@ -879,7 +879,7 @@ var TinyMCE_AdvancedTheme = {
 					if (href == "")
 						 href = tinyMCE.getAttrib(path[i], "href");
 
-					nodeData += "href: " + href + " ";
+					nodeData += "href: " + tinyMCE.xmlEncode(href) + " ";
 				}
 
 				className = tinyMCE.getAttrib(path[i], "class");
@@ -890,7 +890,7 @@ var TinyMCE_AdvancedTheme = {
 
 				if (nodeName == "a" && (anchor = tinyMCE.getAttrib(path[i], "name")) != "") {
 					nodeName = "a";
-					nodeName += "#" + anchor;
+					nodeName += "#" + tinyMCE.xmlEncode(anchor);
 					nodeData = "";
 				}
 

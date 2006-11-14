@@ -47,14 +47,13 @@ function resizeInputs() {
 	var el = document.getElementById('htmlSource');
 
 	if (!tinyMCE.isMSIE) {
-		 wHeight = self.innerHeight-80;
-		 wWidth = self.innerWidth-16;
+		 wHeight = self.innerHeight - 60;
+		 wWidth = self.innerWidth - 16;
 	} else {
-		 wHeight = document.body.clientHeight - 80;
+		 wHeight = document.body.clientHeight - 60;
 		 wWidth = document.body.clientWidth - 16;
 	}
 
 	el.style.height = Math.abs(wHeight) + 'px';
 	el.style.width  = Math.abs(wWidth) + 'px';
 }
-

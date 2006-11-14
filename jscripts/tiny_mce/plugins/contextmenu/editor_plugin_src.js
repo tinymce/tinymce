@@ -99,7 +99,7 @@ var TinyMCE_ContextMenuPlugin = {
 			contextMenu.addItem(tinyMCE.baseURL + "/themes/" + theme + "/images/copy.gif", "$lang_copy_desc", "Copy", "", !sel);
 			contextMenu.addItem(tinyMCE.baseURL + "/themes/" + theme + "/images/paste.gif", "$lang_paste_desc", "Paste", "", false);
 
-			if (sel || (elm ? (elm.nodeName == 'A') || (elm.nodeName == 'IMG') : false)) {
+			if (sel || (elm ? (elm.nodeName == 'A' && tinyMCE.getAttrib(elm, 'name') == '') || (elm.nodeName == 'IMG') : false)) {
 				contextMenu.addSeparator();
 				contextMenu.addItem(tinyMCE.baseURL + "/themes/advanced/images/link.gif", "$lang_link_desc", inst.hasPlugin("advlink") ? "mceAdvLink" : "mceLink");
 				contextMenu.addItem(tinyMCE.baseURL + "/themes/advanced/images/unlink.gif", "$lang_unlink_desc", "unlink", "", (elm ? (elm.nodeName != 'A') && (elm.nodeName != 'IMG') : true));

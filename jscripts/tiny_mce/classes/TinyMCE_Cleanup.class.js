@@ -405,7 +405,7 @@ TinyMCE_Engine.prototype._fixTables = function(d) {
 	for (i=0; i<nl.length; i++) {
 		n = nl[i];
 
-		if ((p = tinyMCE.getParentElement(n, 'p,div,h1,h2,h3,h4,h5,h6')) != null) {
+		if ((p = tinyMCE.getParentElement(n, 'p,h1,h2,h3,h4,h5,h6')) != null) {
 			np = p.cloneNode(false);
 			np.removeAttribute('id');
 
