@@ -672,15 +672,15 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "FormatBlock":
-				if (!this.cleanup.isValid(value))
-					return true;
-
 				if (value == null || value == "") {
 					var elm = tinyMCE.getParentElement(this.getFocusElement(), "p,div,h1,h2,h3,h4,h5,h6,pre,address,blockquote,dt,dl,dd,samp");
 
 					if (elm)
 						this.execCommand("mceRemoveNode", false, elm);
 				} else {
+					if (!this.cleanup.isValid(value))
+						return true;
+
 					if (tinyMCE.isGecko && new RegExp('<(div|blockquote|code|dt|dd|dl|samp)>', 'gi').test(value))
 						value = value.replace(/[^a-z]/gi, '');
 

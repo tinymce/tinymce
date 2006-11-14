@@ -1274,13 +1274,20 @@ TinyMCE_Cleanup.prototype = {
 	 * @private
 	 */
 	_getAttrib : function(e, n, d) {
+		var v, ex;
+
 		if (typeof(d) == "undefined")
 			d = "";
 
 		if (!e || e.nodeType != 1)
 			return d;
 
-		var v = e.getAttribute(n, 0);
+		try {
+			v = e.getAttribute(n, 0);
+		} catch (ex) {
+			// IE 7 may cast exception on invalid attributes
+			v = e.getAttribute(n, 2);
+		}
 
 		if (n == "class" && !v)
 			v = e.className;

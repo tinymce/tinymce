@@ -339,7 +339,12 @@ TinyMCE_Engine.prototype.getAttrib = function(elm, name, dv) {
 	if (!elm || elm.nodeType != 1)
 		return dv;
 
-	v = elm.getAttribute(name);
+	try {
+		v = elm.getAttribute(name, 0);
+	} catch (ex) {
+		// IE 7 may cast exception on invalid attributes
+		v = elm.getAttribute(name, 2);
+	}
 
 	// Try className for class attrib
 	if (name == "class" && !v)

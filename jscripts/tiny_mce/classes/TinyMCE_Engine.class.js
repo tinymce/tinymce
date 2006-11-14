@@ -1211,8 +1211,8 @@ TinyMCE_Engine.prototype = {
 	 */
 	storeAwayURLs : function(s) {
 		// Remove all mce_src, mce_href and replace them with new ones
-	//	s = s.replace(new RegExp('mce_src\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
-	//	s = s.replace(new RegExp('mce_href\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
+		// s = s.replace(new RegExp('mce_src\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
+		// s = s.replace(new RegExp('mce_href\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
 
 		if (!s.match(/(mce_src|mce_href)/gi, s)) {
 			s = s.replace(new RegExp('src\\s*=\\s*\"([^ >\"]*)\"', 'gi'), 'src="$1" mce_src="$1"');
@@ -2107,6 +2107,8 @@ TinyMCE_Engine.prototype = {
 	 */
 	openWindow : function(template, args) {
 		var html, width, height, x, y, resizable, scrollbars, url;
+
+		args = !args ? {} : args;
 
 		args['mce_template_file'] = template['file'];
 		args['mce_width'] = template['width'];

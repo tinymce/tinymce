@@ -782,10 +782,6 @@ var TinyMCE_AdvancedTheme = {
 			return false;
 		};
 
-		function getAttrib(elm, name) {
-			return elm.getAttribute(name) ? elm.getAttribute(name) : "";
-		};
-
 		// No node provided
 		if (node == null)
 			return;
@@ -860,7 +856,7 @@ var TinyMCE_AdvancedTheme = {
 						nodeData += "color: " + color + " ";
 				}
 
-				if (getAttrib(path[i], 'id') != "") {
+				if (tinyMCE.getAttrib(path[i], 'id') != "") {
 					nodeData += "id: " + path[i].getAttribute('id') + " ";
 				}
 
@@ -868,7 +864,7 @@ var TinyMCE_AdvancedTheme = {
 				if (className != "" && className.indexOf('mceItem') == -1)
 					nodeData += "class: " + className + " ";
 
-				if (getAttrib(path[i], 'src') != "") {
+				if (tinyMCE.getAttrib(path[i], 'src') != "") {
 					var src = tinyMCE.getAttrib(path[i], "mce_src");
 
 					if (src == "")
@@ -877,7 +873,7 @@ var TinyMCE_AdvancedTheme = {
 					nodeData += "src: " + src + " ";
 				}
 
-				if (path[i].nodeName == 'A' && getAttrib(path[i], 'href') != "") {
+				if (path[i].nodeName == 'A' && tinyMCE.getAttrib(path[i], 'href') != "") {
 					var href = tinyMCE.getAttrib(path[i], "mce_href");
 
 					if (href == "")
@@ -898,7 +894,7 @@ var TinyMCE_AdvancedTheme = {
 					nodeData = "";
 				}
 
-				if (getAttrib(path[i], 'name').indexOf("mce_") != 0) {
+				if (tinyMCE.getAttrib(path[i], 'name').indexOf("mce_") != 0) {
 					var className = tinyMCE.getVisualAidClass(tinyMCE.getAttrib(path[i], "class"), false);
 					if (className != "" && className.indexOf('mceItem') == -1) {
 						nodeName += "." + className;
@@ -1124,7 +1120,7 @@ var TinyMCE_AdvancedTheme = {
 				break;
 
 				case "IMG":
-				if (getAttrib(node, 'name').indexOf('mce_') != 0 && tinyMCE.getAttrib(node, 'class').indexOf('mceItem') == -1) {
+				if (tinyMCE.getAttrib(node, 'name').indexOf('mce_') != 0 && tinyMCE.getAttrib(node, 'class').indexOf('mceItem') == -1) {
 					tinyMCE.switchClass(editor_id + '_image', 'mceButtonSelected');
 				}
 				break;

@@ -1016,8 +1016,8 @@ TinyMCE_Engine.prototype = {
 
 	storeAwayURLs : function(s) {
 		// Remove all mce_src, mce_href and replace them with new ones
-	//	s = s.replace(new RegExp('mce_src\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
-	//	s = s.replace(new RegExp('mce_href\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
+		// s = s.replace(new RegExp('mce_src\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
+		// s = s.replace(new RegExp('mce_href\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
 
 		if (!s.match(/(mce_src|mce_href)/gi, s)) {
 			s = s.replace(new RegExp('src\\s*=\\s*\"([^ >\"]*)\"', 'gi'), 'src="$1" mce_src="$1"');
@@ -1754,6 +1754,8 @@ TinyMCE_Engine.prototype = {
 
 	openWindow : function(template, args) {
 		var html, width, height, x, y, resizable, scrollbars, url;
+
+		args = !args ? {} : args;
 
 		args['mce_template_file'] = template['file'];
 		args['mce_width'] = template['width'];
@@ -2845,15 +2847,15 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "FormatBlock":
-				if (!this.cleanup.isValid(value))
-					return true;
-
 				if (value == null || value == "") {
 					var elm = tinyMCE.getParentElement(this.getFocusElement(), "p,div,h1,h2,h3,h4,h5,h6,pre,address,blockquote,dt,dl,dd,samp");
 
 					if (elm)
 						this.execCommand("mceRemoveNode", false, elm);
 				} else {
+					if (!this.cleanup.isValid(value))
+						return true;
+
 					if (tinyMCE.isGecko && new RegExp('<(div|blockquote|code|dt|dd|dl|samp)>', 'gi').test(value))
 						value = value.replace(/[^a-z]/gi, '');
 
@@ -4912,13 +4914,20 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	_getAttrib : function(e, n, d) {
+		var v, ex;
+
 		if (typeof(d) == "undefined")
 			d = "";
 
 		if (!e || e.nodeType != 1)
 			return d;
 
-		var v = e.getAttribute(n, 0);
+		try {
+			v = e.getAttribute(n, 0);
+		} catch (ex) {
+			// IE 7 may cast exception on invalid attributes
+			v = e.getAttribute(n, 2);
+		}
 
 		if (n == "class" && !v)
 			v = e.className;
@@ -5239,7 +5248,12 @@ TinyMCE_Engine.prototype.getAttrib = function(elm, name, dv) {
 	if (!elm || elm.nodeType != 1)
 		return dv;
 
-	v = elm.getAttribute(name);
+	try {
+		v = elm.getAttribute(name, 0);
+	} catch (ex) {
+		// IE 7 may cast exception on invalid attributes
+		v = elm.getAttribute(name, 2);
+	}
 
 	// Try className for class attrib
 	if (name == "class" && !v)
