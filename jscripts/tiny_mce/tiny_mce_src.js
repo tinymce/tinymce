@@ -7242,7 +7242,7 @@ TinyMCE_Menu.prototype = tinyMCE.extend(TinyMCE_Layer.prototype, {
 					break;
 
 				default:
-					h += '<tr><td><a href="#" onclick="return tinyMCE.cancelEvent(event);" onmousedown="return tinyMCE.cancelEvent(event);" onmouseup="' + tinyMCE.xmlEncode(m[i].js) + ';return tinyMCE.cancelEvent(event);"><span' + c +'>' + t + '</span></a>';
+					h += '<tr><td><a href="' + tinyMCE.xmlEncode(m[i].js) + '" onmousedown="' + tinyMCE.xmlEncode(m[i].js) + ';return tinyMCE.cancelEvent(event);" onclick="return tinyMCE.cancelEvent(event);" onmouseup="return tinyMCE.cancelEvent(event);"><span' + c +'>' + t + '</span></a>';
 			}
 
 			h += '</td></tr>';
