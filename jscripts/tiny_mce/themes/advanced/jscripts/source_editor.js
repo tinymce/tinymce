@@ -25,7 +25,7 @@ function setWrap(val) {
 
 	s.wrap = val;
 
-	if (tinyMCE.isGecko) {
+	if (tinyMCE.isGecko || tinyMCE.isOpera) {
 		var v = s.value;
 		var n = s.cloneNode(false);
 		n.setAttribute("wrap", val);
