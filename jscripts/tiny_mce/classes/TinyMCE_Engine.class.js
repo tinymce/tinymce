@@ -2851,11 +2851,14 @@ TinyMCE_Engine.prototype = {
 	 * For real entity encoding use the xmlEncode method of the Cleanup class.
 	 *
 	 * @param {string} s String to encode.
+	 * @param {string} skip_apos Optional skip convertion of apos, defaults to false.
 	 * @return XML Encoded string.
 	 * @type string
 	 */
-	xmlEncode : function(s) {
-		return s ? ('' + s).replace(new RegExp('[<>&"\']', 'g'), function (c, b) {
+	xmlEncode : function(s, skip_apos) {
+		var re = new RegExp(!skip_apos ? '[<>&"\']' : '[<>&"]', 'g');
+
+		return s ? ('' + s).replace(re, function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';

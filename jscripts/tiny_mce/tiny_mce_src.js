@@ -2315,8 +2315,10 @@ TinyMCE_Engine.prototype = {
 		return false;
 	},
 
-	xmlEncode : function(s) {
-		return s ? ('' + s).replace(new RegExp('[<>&"\']', 'g'), function (c, b) {
+	xmlEncode : function(s, skip_apos) {
+		var re = new RegExp(!skip_apos ? '[<>&"\']' : '[<>&"]', 'g');
+
+		return s ? ('' + s).replace(re, function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';
@@ -3996,6 +3998,8 @@ TinyMCE_Engine.prototype.serializeStyle = function(ar) {
 			if (tinyMCE.getParam("force_hex_style_colors"))
 				val = tinyMCE.convertRGBToHex(val, true);
 
+			val = val.replace(/\"/g, '\'');
+
 			if (val != "url('')")
 				str += key.toLowerCase() + ": " + val + "; ";
 		}
@@ -4822,7 +4826,7 @@ TinyMCE_Cleanup.prototype = {
 
 		if (av.length != 0) {
 			if (an.indexOf('on') != 0)
-				av = this.xmlEncode(av);
+				av = this.xmlEncode(av, 1);
 
 			return " " + an + "=" + '"' + av + '"';
 		}
@@ -4868,24 +4872,24 @@ TinyMCE_Cleanup.prototype = {
 		return o;
 	},
 
-	xmlEncode : function(s) {
-		var cl = this;
+	xmlEncode : function(s, skip_apos) {
+		var cl = this, re = new RegExp(!skip_apos ? '[\u007F-\uFFFF<>&"\']' : '[\u007F-\uFFFF<>&"]', 'g');
 
 		this._setupEntities(); // Will intialize lookup table
 
 		switch (this.settings.entity_encoding) {
 			case "raw":
-				return tinyMCE.xmlEncode(s);
+				return tinyMCE.xmlEncode(s, skip_apos);
 
 			case "named":
-				return s.replace(new RegExp('[\u007F-\uFFFF<>&"\']', 'g'), function (c, b) {
+				return s.replace(re, function (c, b) {
 					b = cl.entities[c.charCodeAt(0)];
 
 					return b ? '&' + b + ';' : c;
 				});
 
 			case "numeric":
-				return s.replace(new RegExp('[\u007F-\uFFFF<>&"\']', 'g'), function (c, b) {
+				return s.replace(re, function (c, b) {
 					return b ? '&#' + c.charCodeAt(0) + ';' : c;
 				});
 		}
