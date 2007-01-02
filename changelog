@@ -11,6 +11,8 @@ Version 2.0.9 (2006-xx-xx)
 	Fixed bug where IE 7 produced a invalid attribute exception for some URLs.
 	Fixed bug where the fix_table_elements option moved tables out of divs and not just P and H1-6 elements.
 	Fixed bug where drop menu for spellchecker didn't work in IE.
+	Fixed bug with noneditable plugin. The classes where removed sometimes.
+	Fixed bug where media plugin failed if single quotes wasn't entity encoded.
 	Fixed alignment problems of buttons inside the search/replace dialog. Contributed by Dongsu Jang.
 Version 2.0.8 (2006-10-23)
 	Added class select lists for all xhtmlxtras dialogs, custom values can still be added.

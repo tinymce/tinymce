@@ -1,9 +1,9 @@
 /* This is the CSS file for the noneditable elements plugin */
 
-.mceItemEditable {
+.mceEditable {
 	/*border: 1px dotted #0000cc;*/
 }
 
-.mceItemNonEditable {
+.mceNonEditable {
 	/*border: 1px dotted #cc0000;*/
 }

@@ -150,7 +150,7 @@ var TinyMCE_MediaPlugin = {
 					// Parse attributes
 					at = attribs['title'];
 					if (at) {
-						at = at.replace(/&#39;/g, "'");
+						at = at.replace(/&(#39|apos);/g, "'");
 						at = at.replace(/&#quot;/g, '"');
 
 						try {
@@ -380,7 +380,7 @@ var TinyMCE_MediaPlugin = {
 	},
 
 	_parseAttributes : function(attribute_string) {
-		var attributeName = "";
+		var attributeName = "", endChr = '"';
 		var attributeValue = "";
 		var withInName;
 		var withInValue;
@@ -395,9 +395,10 @@ var TinyMCE_MediaPlugin = {
 		for (var i=0; i<attribute_string.length; i++) {
 			var chr = attribute_string.charAt(i);
 
-			if ((chr == '"' || chr == "'") && !withInValue)
+			if ((chr == '"' || chr == "'") && !withInValue) {
 				withInValue = true;
-			else if ((chr == '"' || chr == "'") && withInValue) {
+				endChr = chr;
+			} else if (chr == endChr && withInValue) {
 				withInValue = false;
 
 				var pos = attributeName.lastIndexOf(' ');
