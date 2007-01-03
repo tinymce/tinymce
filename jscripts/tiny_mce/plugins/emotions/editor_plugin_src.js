@@ -42,7 +42,7 @@ var TinyMCE_EmotionsPlugin = {
 				var template = new Array();
 
 				template['file'] = '../../plugins/emotions/emotions.htm'; // Relative to theme
-				template['width'] = 160;
+				template['width'] = 250;
 				template['height'] = 160;
 
 				// Language specific width and height addons
