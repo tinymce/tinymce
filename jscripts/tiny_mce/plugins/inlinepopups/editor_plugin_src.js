@@ -4,7 +4,7 @@
  * Moxiecode DHTML Windows script.
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 // Patch openWindow, closeWindow TinyMCE functions

@@ -4,7 +4,7 @@
  * $Date: 2006/03/03 16:10:53 $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 tinyMCE.importPluginLanguagePack('test');

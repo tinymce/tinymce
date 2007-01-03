@@ -2,7 +2,7 @@
  * $Id$
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  *
  * Some of the contents of this file will be wrapped in a class later on it will also be replaced with the new cleanup logic.
  */

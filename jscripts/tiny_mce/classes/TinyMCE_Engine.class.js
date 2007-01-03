@@ -2,7 +2,7 @@
  * $Id$
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 /**
@@ -14,8 +14,8 @@ function TinyMCE_Engine() {
 	var ua;
 
 	this.majorVersion = "2";
-	this.minorVersion = "0.8";
-	this.releaseDate = "2006-10-23";
+	this.minorVersion = "0.9";
+	this.releaseDate = "2007-01-xx";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
@@ -214,6 +214,7 @@ TinyMCE_Engine.prototype = {
 		this._def("hidden_tab_class", '');
 		this._def("display_tab_class", '');
 		this._def("gecko_spellcheck", false);
+		this._def("hide_selects_on_submit", true);
 
 		// Force strict loading mode to false on non Gecko browsers
 		if (this.isMSIE && !this.isOpera)
@@ -1240,6 +1241,45 @@ TinyMCE_Engine.prototype = {
 	},
 
 	/**
+	 * Removes/disables TinyMCE built in form elements such as select boxes for font sizes etc.
+	 * These are disabled when the user submits a form so they don't get picked up by the backend script
+	 * that intercepts the contents.
+	 *
+	 * @param {HTMLElement} form_obj Form object to loop through for TinyMCE specific form elements.
+	 */
+	removeTinyMCEFormElements : function(form_obj) {
+		var i, elementId;
+
+		// Skip form element removal
+		if (!tinyMCE.getParam('hide_selects_on_submit'))
+			return;
+
+		// Check if form is valid
+		if (typeof(form_obj) == "undefined" || form_obj == null)
+			return;
+
+		// If not a form, find the form
+		if (form_obj.nodeName != "FORM") {
+			if (form_obj.form)
+				form_obj = form_obj.form;
+			else
+				form_obj = tinyMCE.getParentElement(form_obj, "form");
+		}
+
+		// Still nothing
+		if (form_obj == null)
+			return;
+
+		// Disable all UI form elements that TinyMCE created
+		for (i=0; i<form_obj.elements.length; i++) {
+			elementId = form_obj.elements[i].name ? form_obj.elements[i].name : form_obj.elements[i].id;
+
+			if (elementId.indexOf('mce_editor_') == 0)
+				form_obj.elements[i].disabled = true;
+		}
+	},
+
+	/**
 	 * Event handler function that gets executed each time a event occurs in a TinyMCE editor control instance.
 	 * Todo: Fix the return statements so they return true or false.
 	 *
@@ -1295,6 +1335,7 @@ TinyMCE_Engine.prototype = {
 				return;
 
 			case "submit":
+				tinyMCE.removeTinyMCEFormElements(tinyMCE.isMSIE ? window.event.srcElement : e.target);
 				tinyMCE.triggerSave();
 				tinyMCE.isNotDirty = true;
 				return;
@@ -1682,6 +1723,7 @@ TinyMCE_Engine.prototype = {
 	 * call triggerSave to fill the textarea with the correct contents then call the old piggy backed event handler.
 	 */
 	submitPatch : function() {
+		tinyMCE.removeTinyMCEFormElements(this);
 		tinyMCE.triggerSave();
 		tinyMCE.isNotDirty = true;
 		this.mceOldSubmit();

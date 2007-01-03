@@ -1,5 +1,6 @@
-Version 2.0.9 (2006-xx-xx)
+Version 2.0.9 (2007-01-xx)
 	Added support for fullscreen new window mode since the other method was problematic for some.
+	Added new hide_selects_on_submit option. Enables the possibility to enable/disable disabling of TinyMCE select elements.
 	Fixed so that fullscreen can be used even if placed in absolute positioned divs with borders etc.
 	Fixed so that contextmenu on named anchors doesn't display the link/unlink items.
 	Fixed so that wrap in source editor dialog works in Opera.

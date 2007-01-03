@@ -393,6 +393,11 @@
       <param name="n" type="DOMNode" summary="Node to remove internal content from." />
       <return type="void" />
     </method>
+    <method name="removeTinyMCEFormElements">
+      <summary>Removes/disables TinyMCE built in form elements such as select boxes for font sizes etc. These are disabled when the user submits a form so they don't get picked up by the backend script that intercepts the contents.</summary>
+      <param name="form_obj" type="HTMLElement" summary="Form object to loop through for TinyMCE specific form elements." />
+      <return type="void" />
+    </method>
     <method name="handleEvent">
       <summary>Event handler function that gets executed each time a event occurs in a TinyMCE editor control instance. Todo: Fix the return statements so they return true or false.</summary>
       <param name="e" type="DOMEvent" summary="DOM event object reference." />
@@ -639,6 +644,7 @@
     <method name="xmlEncode">
       <summary>Encodes the string to raw XML entities. This will only convert the most common ones. For real entity encoding use the xmlEncode method of the Cleanup class.</summary>
       <param name="s" type="string" summary="String to encode." />
+      <param name="skip_apos" type="string" summary="Optional skip convertion of apos, defaults to false." />
       <return type="string" summary="XML Encoded string." />
     </method>
     <method name="extend">
@@ -782,6 +788,7 @@
     <method name="xmlEncode">
       <summary>XML Encodes the specified string based on configured entity encoding. The entity encoding modes are raw, numeric and named. Where raw is the fastest and named is default.</summary>
       <param name="s" type="string" summary="String to convert to XML." />
+      <param name="skip_apos" type="string" summary="Optional skip convertion of apos, defaults to false." />
       <return type="string" summary="Encoded XML string based on configured entity encoding." />
     </method>
     <method name="split">
