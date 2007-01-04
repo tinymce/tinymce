@@ -226,11 +226,13 @@ function setAttrib(elm, attrib, value) {
 		if (attrib == "width") {
 			attrib = "style.width";
 			value = value + "px";
+			value = value.replace(/%px/g, 'px');
 		}
 
 		if (attrib == "height") {
 			attrib = "style.height";
 			value = value + "px";
+			value = value.replace(/%px/g, 'px');
 		}
 
 		if (attrib == "class")
