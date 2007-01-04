@@ -546,6 +546,39 @@ TinyMCE_Selection.prototype = {
 	},
 
 	/**
+	 * Returns true/false if the current selection is collapsed or not.
+	 *
+	 * @return {bool} true/false if the current selection is collapsed or not.
+	 */
+	isCollapsed : function() {
+		var r = this.getRng();
+
+		if (r.item)
+			return false;
+
+		return r.boundingWidth == 0 || this.getSel().isCollapsed;
+	},
+
+	/**
+	 * Collapses the current selection to start or end.
+	 *
+	 * @param {bool} b true - to start, false - to end.
+	 */
+	collapse : function(b) {
+		var r = this.getRng(), s = this.getSel();
+
+		if (r.select) {
+			r.collapse(b);
+			r.select();
+		} else {
+			if (b)
+				s.collapseToStart();
+			else
+				s.collapseToEnd();
+		}
+	},
+
+	/**
 	 * Returns the currently selected/focused element.
 	 *
 	 * @return Currently selected element.

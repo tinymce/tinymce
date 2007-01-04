@@ -6538,6 +6538,29 @@ TinyMCE_Selection.prototype = {
 		return null;
 	},
 
+	isCollapsed : function() {
+		var r = this.getRng();
+
+		if (r.item)
+			return false;
+
+		return r.boundingWidth == 0 || this.getSel().isCollapsed;
+	},
+
+	collapse : function(b) {
+		var r = this.getRng(), s = this.getSel();
+
+		if (r.select) {
+			r.collapse(b);
+			r.select();
+		} else {
+			if (b)
+				s.collapseToStart();
+			else
+				s.collapseToEnd();
+		}
+	},
+
 	getFocusElement : function() {
 		var inst = this.instance, doc, rng, sel, elm;
 

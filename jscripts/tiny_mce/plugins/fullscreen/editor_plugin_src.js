@@ -141,6 +141,8 @@ var TinyMCE_FullScreenPlugin = {
 
 			tinyMCE.switchClass(inst.editorId + '_fullscreen', 'mceButtonSelected');
 			ds.enabled = true;
+
+			inst.useCSS = false;
 		} else {
 			if (blo)
 				blo.parentNode.removeChild(blo);
@@ -173,6 +175,8 @@ var TinyMCE_FullScreenPlugin = {
 
 			tinyMCE.removeCSSClass(cd.body, 'mceFullscreen');
 			cw.scrollTo(ds.scrollX, ds.scrollY);
+
+			inst.useCSS = false;
 		}
 	},
 

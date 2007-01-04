@@ -713,8 +713,13 @@ var TinyMCE_AdvancedTheme = {
 			template['html'] += '<span id="{$editor_id}_resize_box" class="mceResizeBox"></span>';
 
 		template['html'] = tinyMCE.replaceVar(template['html'], 'style_select_options', styleSelectHTML);
-		template['delta_width'] = 0;
-		template['delta_height'] = deltaHeight;
+
+		// Set to default values
+		if (!template['delta_width'])
+			template['delta_width'] = 0;
+
+		if (!template['delta_height'])
+			template['delta_height'] = deltaHeight;
 
 		return template;
 	},

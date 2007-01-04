@@ -1214,6 +1214,15 @@
       <summary>Returns the browsers selections first range instance.</summary>
       <return type="DOMRange" summary="Browsers selections first range instance." />
     </method>
+    <method name="isCollapsed">
+      <summary>Returns true/false if the current selection is collapsed or not.</summary>
+      <return type="bool" summary="true/false if the current selection is collapsed or not." />
+    </method>
+    <method name="collapse">
+      <summary>Collapses the current selection to start or end.</summary>
+      <param name="b" type="bool" summary="true - to start, false - to end." />
+      <return type="void" />
+    </method>
     <method name="getFocusElement">
       <summary>Returns the currently selected/focused element.</summary>
       <return type="HTMLElement" summary="Currently selected element." />

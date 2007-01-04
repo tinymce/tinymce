@@ -131,6 +131,7 @@ function renderInfo() {
 		h += addRenderInfo('undoRedo.undoLevels.length', inst.undoRedo.undoLevels.length);
 		h += addRenderInfo('undoRedo.undoIndex', inst.undoRedo.undoIndex);
 		h += addRenderInfo('selection.getSelectedHTML()', inst.selection.getSelectedHTML());
+		h += addRenderInfo('selection.isCollapsed()', inst.selection.isCollapsed() || 'false');
 		h += addRenderInfo('selection.getSelectedText()', inst.selection.getSelectedText());
 		h += addRenderInfo('selection.getFocusElement().nodeName', inst.selection.getFocusElement().nodeName);
 		h += addRenderInfo('selection.getFocusElement().outerHTML', tinyMCE.getOuterHTML(inst.selection.getFocusElement()));

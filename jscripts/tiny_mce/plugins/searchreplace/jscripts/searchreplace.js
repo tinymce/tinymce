@@ -13,8 +13,6 @@ function init() {
 	formObj[task + "_panel_casesensitivebox"].checked = tinyMCE.getWindowArg("casesensitive");
 	formObj[task + "_panel_backwardsu"].checked = tinyMCE.getWindowArg("backwards");
 	formObj[task + "_panel_backwardsd"].checked = !tinyMCE.getWindowArg("backwards");
-
-	tinyMCEPopup.execCommand("mceResetSearch", false, {dummy : ""}, false);
 }
 
 function searchNext(replacemode) {
@@ -26,7 +24,7 @@ function searchNext(replacemode) {
 	if (task == "replace") {
 		// Whats the point?
 		if (formObj[task + "_panel_searchstring"].value == "" || formObj[task + "_panel_searchstring"].value == formObj[task + "_panel_replacestring"].value)
-			return;
+			return false;
 	}
 
 	// Do search
@@ -35,10 +33,13 @@ function searchNext(replacemode) {
 		replacestring : formObj["replace_panel_replacestring"].value,
 		replacemode : replacemode,
 		casesensitive : formObj[task + "_panel_casesensitivebox"].checked,
-		backwards : false
+		backwards : formObj[task + "_panel_backwardsu"].checked,
+		win : window
 		}, false);
 
 	window.focus();
+
+	return false;
 }
 
 function cancelAction() {
