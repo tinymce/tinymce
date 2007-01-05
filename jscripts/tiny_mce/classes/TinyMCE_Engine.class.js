@@ -361,6 +361,11 @@ TinyMCE_Engine.prototype = {
 			} catch (e) {
 			}
 		}
+
+		// Setup XML encoding regexps
+		this.xmlEncodeAposRe = new RegExp('[<>&"\']', 'g');
+		this.xmlEncodeRe = new RegExp('[<>&"]', 'g');
+//		this.xmlEncodeEnts = {'&':'&amp;','"':'&quot;',"'":'&#39;','<':'&lt;','>':'&gt;'};
 	},
 
 	/**
@@ -2797,18 +2802,10 @@ TinyMCE_Engine.prototype = {
 	 * @type object
 	 */
 	evalFunc : function(f, idx, a, o) {
-		var s = '(', i;
+		o = !o ? window : o;
+		f = typeof(f) == 'function' ? f : o[f];
 
-		for (i=idx; i<a.length; i++) {
-			s += 'a[' + i + ']';
-
-			if (i < a.length-1)
-				s += ',';
-		}
-
-		s += ');';
-
-		return o ? eval("o." + f + s) : eval("f" + s);
+		return f.apply(o, Array.prototype.slice.call(a, idx));
 	},
 
 	/**
@@ -2868,7 +2865,7 @@ TinyMCE_Engine.prototype = {
 
 		l = tinyMCE.getParam(p, '');
 
-		if (l != '' && (v = tinyMCE.evalFunc(typeof(l) == "function" ? l : eval(l), 3, a)) == s && m > 0)
+		if (l != '' && (v = tinyMCE.evalFunc(l, 3, a)) == s && m > 0)
 			return true;
 
 		if (ins != null) {
@@ -2901,9 +2898,7 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	xmlEncode : function(s, skip_apos) {
-		var re = new RegExp(!skip_apos ? '[<>&"\']' : '[<>&"]', 'g');
-
-		return s ? ('' + s).replace(re, function (c, b) {
+		return s ? ('' + s).replace(!skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe, function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';

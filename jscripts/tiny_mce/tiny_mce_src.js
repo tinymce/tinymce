@@ -339,6 +339,11 @@ TinyMCE_Engine.prototype = {
 			} catch (e) {
 			}
 		}
+
+		// Setup XML encoding regexps
+		this.xmlEncodeAposRe = new RegExp('[<>&"\']', 'g');
+		this.xmlEncodeRe = new RegExp('[<>&"]', 'g');
+//		this.xmlEncodeEnts = {'&':'&amp;','"':'&quot;',"'":'&#39;','<':'&lt;','>':'&gt;'};
 	},
 
 	_addUnloadEvents : function() {
@@ -2297,18 +2302,10 @@ TinyMCE_Engine.prototype = {
 	},
 
 	evalFunc : function(f, idx, a, o) {
-		var s = '(', i;
+		o = !o ? window : o;
+		f = typeof(f) == 'function' ? f : o[f];
 
-		for (i=idx; i<a.length; i++) {
-			s += 'a[' + i + ']';
-
-			if (i < a.length-1)
-				s += ',';
-		}
-
-		s += ');';
-
-		return o ? eval("o." + f + s) : eval("f" + s);
+		return f.apply(o, Array.prototype.slice.call(a, idx));
 	},
 
 	dispatchCallback : function(i, p, n) {
@@ -2330,7 +2327,7 @@ TinyMCE_Engine.prototype = {
 
 		l = tinyMCE.getParam(p, '');
 
-		if (l != '' && (v = tinyMCE.evalFunc(typeof(l) == "function" ? l : eval(l), 3, a)) == s && m > 0)
+		if (l != '' && (v = tinyMCE.evalFunc(l, 3, a)) == s && m > 0)
 			return true;
 
 		if (ins != null) {
@@ -2354,9 +2351,7 @@ TinyMCE_Engine.prototype = {
 	},
 
 	xmlEncode : function(s, skip_apos) {
-		var re = new RegExp(!skip_apos ? '[<>&"\']' : '[<>&"]', 'g');
-
-		return s ? ('' + s).replace(re, function (c, b) {
+		return s ? ('' + s).replace(!skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe, function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';
@@ -2441,7 +2436,6 @@ function TinyMCE_Control(settings) {
 		entities : s.entities,
 		entity_encoding : s.entity_encoding,
 		debug : s.cleanup_debug,
-		url_converter : 'TinyMCE_Cleanup.prototype._urlConverter',
 		indent : s.apply_source_formatting,
 		invalid_elements : s.invalid_elements,
 		verify_html : s.verify_html,
@@ -4421,6 +4415,8 @@ TinyMCE_Cleanup.prototype = {
 
 		this.fillStr = s.entity_encoding == "named" ? "&nbsp;" : "&#160;";
 		this.idCount = 0;
+		this.xmlEncodeRe = new RegExp('[\u007F-\uFFFF<>&"]', 'g');
+		this.xmlEncodeAposRe = new RegExp('[\u007F-\uFFFF<>&"\']', 'g');
 	},
 
 	addRuleStr : function(s) {
@@ -4651,7 +4647,7 @@ TinyMCE_Cleanup.prototype = {
 	_convertToXML : function(n, xn) {
 		var xd, el, i, l, cn, at, no, hc = false;
 
-		if (this._isDuplicate(n))
+		if (tinyMCE.isRealIE && this._isDuplicate(n))
 			return;
 
 		xd = this.xmlDoc;
@@ -4698,7 +4694,7 @@ TinyMCE_Cleanup.prototype = {
 
 		this._setupRules(); // Will initialize cleanup rules
 
-		if (this._isDuplicate(n))
+		if (tinyMCE.isRealIE && this._isDuplicate(n))
 			return '';
 
 		// Skip non valid child elements
@@ -4854,7 +4850,7 @@ TinyMCE_Cleanup.prototype = {
 			av = t;
 
 		if (os && av.length != 0 && this.settings.url_converter.length != 0 && /^(src|href|longdesc)$/.test(an))
-			av = eval(this.settings.url_converter + '(this, n, av)');
+			av = this._urlConverter(this, n, av);
 
 		if (av.length != 0 && r.validAttribValues && r.validAttribValues[an] && !r.validAttribValues[an].test(av))
 			return "";
@@ -4911,7 +4907,7 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	xmlEncode : function(s, skip_apos) {
-		var cl = this, re = new RegExp(!skip_apos ? '[\u007F-\uFFFF<>&"\']' : '[\u007F-\uFFFF<>&"]', 'g');
+		var cl = this, re = !skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe;
 
 		this._setupEntities(); // Will intialize lookup table
 
@@ -4956,7 +4952,7 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	_getAttrib : function(e, n, d) {
-		var v, ex;
+		var v, ex, nn;
 
 		if (typeof(d) == "undefined")
 			d = "";
@@ -4974,23 +4970,29 @@ TinyMCE_Cleanup.prototype = {
 		if (n == "class" && !v)
 			v = e.className;
 
-		if (this.isIE && n == "http-equiv")
-			v = e.httpEquiv;
+		if (this.isIE) {
+			if (n == "http-equiv")
+				v = e.httpEquiv;
 
-		if (this.isIE && e.nodeName == "FORM" && n == "enctype" && v == "application/x-www-form-urlencoded")
-			v = "";
+			nn = e.nodeName;
 
-		if (this.isIE && e.nodeName == "INPUT" && n == "size" && v == "20")
-			v = "";
+			// Skip the default values that IE returns
+			if (nn == "FORM" && n == "enctype" && v == "application/x-www-form-urlencoded")
+				v = "";
 
-		if (this.isIE && e.nodeName == "INPUT" && n == "maxlength" && v == "2147483647")
-			v = "";
+			if (nn == "INPUT" && n == "size" && v == "20")
+				v = "";
 
-		if (n == "style" && !tinyMCE.isOpera)
-			v = e.style.cssText;
+			if (nn == "INPUT" && n == "maxlength" && v == "2147483647")
+				v = "";
+		}
 
-		if (n == 'style')
+		if (n == 'style' && v) {
+			if (!tinyMCE.isOpera)
+				v = e.style.cssText;
+
 			v = tinyMCE.serializeStyle(tinyMCE.parseStyle(v));
+		}
 
 		if (this.settings.on_save && n.indexOf('on') != -1 && this.settings.on_save && v && v != "")
 			v = tinyMCE.cleanupEventStr(v);
@@ -5001,8 +5003,12 @@ TinyMCE_Cleanup.prototype = {
 	_urlConverter : function(c, n, v) {
 		if (!c.settings.on_save)
 			return tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, v);
-		else if (tinyMCE.getParam('convert_urls'))
-			return eval(tinyMCE.settings.urlconverter_callback + "(v, n, true);");
+		else if (tinyMCE.getParam('convert_urls')) {
+			if (!this.urlConverter)
+				this.urlConverter = eval(tinyMCE.settings.urlconverter_callback);
+
+			return this.urlConverter(v, n, true);
+		}
 
 		return v;
 	},
@@ -5946,7 +5952,12 @@ TinyMCE_Engine.prototype.setEventHandlers = function(inst, s) {
 		for (i=0; i<ot.length; i++)
 			f(doc, ot[i], tinyMCE.handleEvent);
 
-		eval('try { doc.designMode = "On"; } catch(e) {}'); // Force designmode
+		// Force designmode
+		try {
+			doc.designMode = "On";
+		} catch (e) {
+			// Ignore
+		}
 	}
 };
 

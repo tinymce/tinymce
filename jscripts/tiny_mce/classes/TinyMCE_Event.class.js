@@ -159,7 +159,12 @@ TinyMCE_Engine.prototype.setEventHandlers = function(inst, s) {
 		for (i=0; i<ot.length; i++)
 			f(doc, ot[i], tinyMCE.handleEvent);
 
-		eval('try { doc.designMode = "On"; } catch(e) {}'); // Force designmode
+		// Force designmode
+		try {
+			doc.designMode = "On";
+		} catch (e) {
+			// Ignore
+		}
 	}
 };
 

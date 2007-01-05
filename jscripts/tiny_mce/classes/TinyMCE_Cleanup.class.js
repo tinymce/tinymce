@@ -640,6 +640,8 @@ TinyMCE_Cleanup.prototype = {
 
 		this.fillStr = s.entity_encoding == "named" ? "&nbsp;" : "&#160;";
 		this.idCount = 0;
+		this.xmlEncodeRe = new RegExp('[\u007F-\uFFFF<>&"]', 'g');
+		this.xmlEncodeAposRe = new RegExp('[\u007F-\uFFFF<>&"\']', 'g');
 	},
 
 	/**
@@ -911,7 +913,7 @@ TinyMCE_Cleanup.prototype = {
 	_convertToXML : function(n, xn) {
 		var xd, el, i, l, cn, at, no, hc = false;
 
-		if (this._isDuplicate(n))
+		if (tinyMCE.isRealIE && this._isDuplicate(n))
 			return;
 
 		xd = this.xmlDoc;
@@ -967,7 +969,7 @@ TinyMCE_Cleanup.prototype = {
 
 		this._setupRules(); // Will initialize cleanup rules
 
-		if (this._isDuplicate(n))
+		if (tinyMCE.isRealIE && this._isDuplicate(n))
 			return '';
 
 		// Skip non valid child elements
@@ -1133,7 +1135,7 @@ TinyMCE_Cleanup.prototype = {
 			av = t;
 
 		if (os && av.length != 0 && this.settings.url_converter.length != 0 && /^(src|href|longdesc)$/.test(an))
-			av = eval(this.settings.url_converter + '(this, n, av)');
+			av = this._urlConverter(this, n, av);
 
 		if (av.length != 0 && r.validAttribValues && r.validAttribValues[an] && !r.validAttribValues[an].test(av))
 			return "";
@@ -1206,7 +1208,7 @@ TinyMCE_Cleanup.prototype = {
 	 * @type string
 	 */
 	xmlEncode : function(s, skip_apos) {
-		var cl = this, re = new RegExp(!skip_apos ? '[\u007F-\uFFFF<>&"\']' : '[\u007F-\uFFFF<>&"]', 'g');
+		var cl = this, re = !skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe;
 
 		this._setupEntities(); // Will intialize lookup table
 
@@ -1277,7 +1279,7 @@ TinyMCE_Cleanup.prototype = {
 	 * @private
 	 */
 	_getAttrib : function(e, n, d) {
-		var v, ex;
+		var v, ex, nn;
 
 		if (typeof(d) == "undefined")
 			d = "";
@@ -1295,23 +1297,29 @@ TinyMCE_Cleanup.prototype = {
 		if (n == "class" && !v)
 			v = e.className;
 
-		if (this.isIE && n == "http-equiv")
-			v = e.httpEquiv;
+		if (this.isIE) {
+			if (n == "http-equiv")
+				v = e.httpEquiv;
 
-		if (this.isIE && e.nodeName == "FORM" && n == "enctype" && v == "application/x-www-form-urlencoded")
-			v = "";
+			nn = e.nodeName;
 
-		if (this.isIE && e.nodeName == "INPUT" && n == "size" && v == "20")
-			v = "";
+			// Skip the default values that IE returns
+			if (nn == "FORM" && n == "enctype" && v == "application/x-www-form-urlencoded")
+				v = "";
 
-		if (this.isIE && e.nodeName == "INPUT" && n == "maxlength" && v == "2147483647")
-			v = "";
+			if (nn == "INPUT" && n == "size" && v == "20")
+				v = "";
 
-		if (n == "style" && !tinyMCE.isOpera)
-			v = e.style.cssText;
+			if (nn == "INPUT" && n == "maxlength" && v == "2147483647")
+				v = "";
+		}
 
-		if (n == 'style')
+		if (n == 'style' && v) {
+			if (!tinyMCE.isOpera)
+				v = e.style.cssText;
+
 			v = tinyMCE.serializeStyle(tinyMCE.parseStyle(v));
+		}
 
 		if (this.settings.on_save && n.indexOf('on') != -1 && this.settings.on_save && v && v != "")
 			v = tinyMCE.cleanupEventStr(v);
@@ -1333,8 +1341,12 @@ TinyMCE_Cleanup.prototype = {
 	_urlConverter : function(c, n, v) {
 		if (!c.settings.on_save)
 			return tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, v);
-		else if (tinyMCE.getParam('convert_urls'))
-			return eval(tinyMCE.settings.urlconverter_callback + "(v, n, true);");
+		else if (tinyMCE.getParam('convert_urls')) {
+			if (!this.urlConverter)
+				this.urlConverter = eval(tinyMCE.settings.urlconverter_callback);
+
+			return this.urlConverter(v, n, true);
+		}
 
 		return v;
 	},

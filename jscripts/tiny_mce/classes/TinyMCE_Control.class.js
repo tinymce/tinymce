@@ -38,7 +38,6 @@ function TinyMCE_Control(settings) {
 		entities : s.entities,
 		entity_encoding : s.entity_encoding,
 		debug : s.cleanup_debug,
-		url_converter : 'TinyMCE_Cleanup.prototype._urlConverter',
 		indent : s.apply_source_formatting,
 		invalid_elements : s.invalid_elements,
 		verify_html : s.verify_html,
