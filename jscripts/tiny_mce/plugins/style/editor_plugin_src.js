@@ -54,6 +54,10 @@ var TinyMCE_StylePlugin = {
 	},
 
 	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
+		if (node.nodeName == 'BODY')
+			tinyMCE.switchClass(editor_id + '_styleprops', 'mceButtonDisabled');
+		else
+			tinyMCE.switchClass(editor_id + '_styleprops', 'mceButtonNormal');
 	},
 
 	// Private plugin specific methods
@@ -61,7 +65,7 @@ var TinyMCE_StylePlugin = {
 	_styleProps : function() {
 		var e = tinyMCE.selectedInstance.selection.getFocusElement();
 
-		if (!e)
+		if (!e || e.nodeName == 'BODY')
 			return;
 
 		tinyMCE.openWindow({

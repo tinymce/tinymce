@@ -20,6 +20,12 @@ var TinyMCE_MediaPlugin = {
 	},
 
 	initInstance : function(inst) {
+		// Warn if user has flash plugin and media plugin at the same time
+		if (inst.hasPlugin('flash') && !tinyMCE.flashWarn) {
+			alert('Flash plugin is deprecated and should not be used together with the media plugin.');
+			tinyMCE.flashWarn = true;
+		}
+
 		if (!tinyMCE.settings['media_skip_plugin_css'])
 			tinyMCE.importCSS(inst.getDoc(), tinyMCE.baseURL + "/plugins/media/css/content.css");
 	},
