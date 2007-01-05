@@ -1693,14 +1693,19 @@ TinyMCE_Engine.prototype = {
 	},
 
 	triggerNodeChange : function(focus, setup_content) {
+		var elm, inst, editorId, undoIndex = -1, undoLevels = -1, doc, anySelection = false;
+
 		if (tinyMCE.selectedInstance) {
-			var inst = tinyMCE.selectedInstance;
-			var editorId = inst.editorId;
-			var elm = (typeof(setup_content) != "undefined" && setup_content) ? tinyMCE.selectedElement : inst.getFocusElement();
-			var undoIndex = -1, doc;
-			var undoLevels = -1;
-			var anySelection = false;
-			var selectedText = inst.selection.getSelectedText();
+			inst = tinyMCE.selectedInstance;
+			elm = (typeof(setup_content) != "undefined" && setup_content) ? tinyMCE.selectedElement : inst.getFocusElement();
+
+/*			if (elm == inst.lastTriggerEl)
+				return;
+
+			inst.lastTriggerEl = elm;*/
+
+			editorId = inst.editorId;
+			selectedText = inst.selection.getSelectedText();
 
 			if (tinyMCE.settings.auto_resize)
 				inst.resizeToContent();
@@ -2631,7 +2636,13 @@ TinyMCE_Control.prototype = {
 	},
 
 	handleShortcut : function(e) {
-		var i, s = this.shortcuts, o;
+		var i, s, o;
+
+		// Normal key press, then ignore it
+		if (!e.altKey && !e.ctrlKey)
+			return false;
+
+		s = this.shortcuts;
 
 		for (i=0; i<s.length; i++) {
 			o = s[i];
@@ -2740,8 +2751,11 @@ TinyMCE_Control.prototype = {
 		//debug("command: " + command + ", user_interface: " + user_interface + ", value: " + value);
 		this.contentDocument = doc; // <-- Strange, unless this is applied Mozilla 1.3 breaks
 
-		if (tinyMCE.execCommandCallback(this, 'execcommand_callback', 'execCommand', this.editorId, this.getBody(), command, user_interface, value))
-			return;
+		// Don't dispatch key commands
+		if (!/mceStartTyping|mceEndTyping/.test(command)) {
+			if (tinyMCE.execCommandCallback(this, 'execcommand_callback', 'execCommand', this.editorId, this.getBody(), command, user_interface, value))
+				return;
+		}
 
 		// Fix align on images
 		if (focusElm && focusElm.nodeName == "IMG") {

@@ -2002,14 +2002,19 @@ TinyMCE_Engine.prototype = {
 	 * @param {boolean} setup_content Optional state if it's called from setup content function or not.
 	 */
 	triggerNodeChange : function(focus, setup_content) {
+		var elm, inst, editorId, undoIndex = -1, undoLevels = -1, doc, anySelection = false;
+
 		if (tinyMCE.selectedInstance) {
-			var inst = tinyMCE.selectedInstance;
-			var editorId = inst.editorId;
-			var elm = (typeof(setup_content) != "undefined" && setup_content) ? tinyMCE.selectedElement : inst.getFocusElement();
-			var undoIndex = -1, doc;
-			var undoLevels = -1;
-			var anySelection = false;
-			var selectedText = inst.selection.getSelectedText();
+			inst = tinyMCE.selectedInstance;
+			elm = (typeof(setup_content) != "undefined" && setup_content) ? tinyMCE.selectedElement : inst.getFocusElement();
+
+/*			if (elm == inst.lastTriggerEl)
+				return;
+
+			inst.lastTriggerEl = elm;*/
+
+			editorId = inst.editorId;
+			selectedText = inst.selection.getSelectedText();
 
 			if (tinyMCE.settings.auto_resize)
 				inst.resizeToContent();

@@ -379,7 +379,13 @@ TinyMCE_Control.prototype = {
 	 * @type boolean
 	 */
 	handleShortcut : function(e) {
-		var i, s = this.shortcuts, o;
+		var i, s, o;
+
+		// Normal key press, then ignore it
+		if (!e.altKey && !e.ctrlKey)
+			return false;
+
+		s = this.shortcuts;
 
 		for (i=0; i<s.length; i++) {
 			o = s[i];
@@ -530,8 +536,11 @@ TinyMCE_Control.prototype = {
 		//debug("command: " + command + ", user_interface: " + user_interface + ", value: " + value);
 		this.contentDocument = doc; // <-- Strange, unless this is applied Mozilla 1.3 breaks
 
-		if (tinyMCE.execCommandCallback(this, 'execcommand_callback', 'execCommand', this.editorId, this.getBody(), command, user_interface, value))
-			return;
+		// Don't dispatch key commands
+		if (!/mceStartTyping|mceEndTyping/.test(command)) {
+			if (tinyMCE.execCommandCallback(this, 'execcommand_callback', 'execCommand', this.editorId, this.getBody(), command, user_interface, value))
+				return;
+		}
 
 		// Fix align on images
 		if (focusElm && focusElm.nodeName == "IMG") {

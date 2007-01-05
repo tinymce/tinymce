@@ -317,7 +317,7 @@ TinyMCE_Selection.prototype = {
 	},
 
 	/**
-	 * Returns the character start and end position of a start end end node. This is Gecko specific logic.
+	 * Returns the character start and end position of a start and end node. This is Gecko specific logic.
 	 *
 	 * @param {Element} r Root element to loop through.
 	 * @param {Node} sn Start node to get char position of.
