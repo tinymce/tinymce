@@ -737,6 +737,12 @@ var TinyMCE_AdvancedTheme = {
 		inst.addShortcut('ctrl', 'k', 'lang_link_desc', 'mceLink');
 	},
 
+	removeInstance : function(inst) {
+		var fcm = new TinyMCE_Layer(inst.editorId + '_fcMenu');
+
+		fcm.remove();
+	},
+
 	_handleMenuEvent : function(e) {
 		var te = tinyMCE.isMSIE ? window.event.srcElement : e.target;
 		tinyMCE._menuButtonEvent(e.type == "mouseover" ? "over" : "out", document.getElementById(te._switchId));

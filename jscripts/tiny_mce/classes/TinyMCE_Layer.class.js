@@ -307,6 +307,19 @@ TinyMCE_Layer.prototype = {
 			return 0;
 
 		return parseInt(s);
+	},
+
+	/**
+	 * Removes the element for the layer from DOM and also the blocker iframe.
+	 */
+	remove : function() {
+		var e = this.getElement(), b = this.getBlocker();
+
+		if (e)
+			e.parentNode.removeChild(e);
+
+		if (b)
+			b.parentNode.removeChild(b);
 	}
 
 	/**#@-*/

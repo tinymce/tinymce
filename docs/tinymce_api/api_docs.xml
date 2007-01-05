@@ -1047,6 +1047,10 @@
       <param name="s" type="string" summary="String to parse value of." />
       <return type="int" summary="Parsed number." />
     </method>
+    <method name="remove">
+      <summary>Removes the element for the layer from DOM and also the blocker iframe.</summary>
+      <return type="void" />
+    </method>
   </class>
   <class name="TinyMCE_Menu" base="TinyMCE_Layer">
     <constructor name="TinyMCE_Menu">

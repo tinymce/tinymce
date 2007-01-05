@@ -265,7 +265,7 @@ TinyMCE_Engine.prototype = {
 		this.posKeyCodes = new Array(13,45,36,35,33,34,37,38,39,40);
 		this.uniqueURL = 'javascript:TINYMCE_UNIQUEURL();'; // Make unique URL non real URL
 		this.uniqueTag = '<div id="mceTMPElement" style="display: none">TMP</div>';
-		this.callbacks = new Array('onInit', 'getInfo', 'getEditorTemplate', 'setupContent', 'onChange', 'onPageLoad', 'handleNodeChange', 'initInstance', 'execCommand', 'getControlHTML', 'handleEvent', 'cleanup');
+		this.callbacks = new Array('onInit', 'getInfo', 'getEditorTemplate', 'setupContent', 'onChange', 'onPageLoad', 'handleNodeChange', 'initInstance', 'execCommand', 'getControlHTML', 'handleEvent', 'cleanup', 'removeInstance');
 
 		// Theme url
 		this.settings['theme_href'] = tinyMCE.baseURL + "/themes/" + theme;
@@ -709,6 +709,9 @@ TinyMCE_Engine.prototype = {
 
 		tinyMCE.undoLevels = n;
 		tinyMCE.undoIndex = n.length;
+
+		// Dispatch remove instance call
+		tinyMCE.dispatchCallback(ti, 'remove_instance_callback', 'removeInstance', ti);
 
 		return ti;
 	},

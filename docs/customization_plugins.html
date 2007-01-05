@@ -78,6 +78,15 @@ var TinyMCE_<span class="marked">SomeName</span>Plugin = {
 	},
 
 	/**
+	 * Gets executed when a TinyMCE editor instance is removed.
+	 *
+	 * @param {TinyMCE_Control} Removed TinyMCE editor control instance. 
+	 */
+	removeInstance : function(inst) {
+		// Cleanup instance resources
+	},
+
+	/**
 	 * Returns the HTML code for a specific control or empty string if this plugin doesn't have that control.
 	 * A control can be a button, select list or any other HTML item to present in the TinyMCE user interface.
 	 * The variable {$editor_id} will be replaced with the current editor instance id and {$pluginurl} will be replaced
