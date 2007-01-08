@@ -747,6 +747,7 @@ TinyMCE_Control.prototype = {
 
 				break;
 
+			case "mceSetStyleInfo":
 			case "SetStyleInfo":
 				var rng = this.getRng();
 				var sel = this.getSel();
@@ -1078,7 +1079,7 @@ TinyMCE_Control.prototype = {
 			break;
 
 			case "mceSetCSSClass":
-				this.execCommand("SetStyleInfo", false, {command : "setattrib", name : "class", value : value});
+				this.execCommand("mceSetStyleInfo", false, {command : "setattrib", name : "class", value : value});
 			break;
 
 			case "mceInsertRawHTML":
@@ -1310,6 +1311,7 @@ TinyMCE_Control.prototype = {
 				}
 				break;
 
+			case "RemoveFormat":
 			case "removeformat":
 				var text = this.selection.getSelectedText();
 
@@ -1326,11 +1328,11 @@ TinyMCE_Control.prototype = {
 						// Do nothing
 					}
 
-					this.execCommand("SetStyleInfo", false, {command : "removeformat"});
+					this.execCommand("mceSetStyleInfo", false, {command : "removeformat"});
 				} else {
 					this.getDoc().execCommand(command, user_interface, value);
 
-					this.execCommand("SetStyleInfo", false, {command : "removeformat"});
+					this.execCommand("mceSetStyleInfo", false, {command : "removeformat"});
 				}
 
 				// Remove class
