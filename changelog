@@ -1,4 +1,4 @@
-Version 2.0.9 (2007-01-xx)
+Version 2.0.9 (2007-01-09)
 	Added support for fullscreen new window mode since the other method was problematic for some.
 	Added new hide_selects_on_submit option. Enables the possibility to enable/disable disabling of TinyMCE select elements.
 	Added new removeInstance callback for plugins and also a new remove_instance_callback option.

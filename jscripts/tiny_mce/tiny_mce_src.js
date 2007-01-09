@@ -6,7 +6,7 @@ function TinyMCE_Engine() {
 
 	this.majorVersion = "2";
 	this.minorVersion = "0.9";
-	this.releaseDate = "2007-01-xx";
+	this.releaseDate = "2007-01-09";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
