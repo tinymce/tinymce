@@ -67,7 +67,7 @@ var TinyMCE_FullScreenPlugin = {
 	},
 
 	_toggleFullscreen : function(inst) {
-		var ds = inst.getData('fullscreen'), editorContainer, tableElm, iframe, vp, cw, cd, re, w, h, si, blo;
+		var ds = inst.getData('fullscreen'), editorContainer, tableElm, iframe, vp, cw, cd, re, w, h, si, blo, delta = 0, cell, row;
 
 		cw = inst.getContainerWin();
 		cd = cw.document;
@@ -78,6 +78,20 @@ var TinyMCE_FullScreenPlugin = {
 		blo = document.getElementById('mce_fullscreen_blocker');
 
 		if (!ds.enabled) {
+			// Handle External Toolbar
+			if (inst.toolbarElement) {
+				delta += inst.toolbarElement.offsetHeight;
+
+				cell = tableElm.tBodies[0].insertRow(0).insertCell(-1);
+				cell.className = 'mceToolbarTop';
+				cell.nowrap = true;
+
+				ds.oldToolbarParent = inst.toolbarElement.parentNode;
+				ds.toolbarHolder = document.createTextNode('...');
+
+				cell.appendChild(ds.oldToolbarParent.replaceChild(ds.toolbarHolder, inst.toolbarElement));
+			}
+
 			ds.parents = [];
 
 			vp = tinyMCE.getViewPort(cw);
@@ -137,13 +151,25 @@ var TinyMCE_FullScreenPlugin = {
 			}
 
 			iframe.style.width = w + "px";
-			iframe.style.height = h + "px";
+			iframe.style.height = (h+delta) + "px";
 
 			tinyMCE.switchClass(inst.editorId + '_fullscreen', 'mceButtonSelected');
 			ds.enabled = true;
 
 			inst.useCSS = false;
 		} else {
+			// Handle External Toolbar
+			if (inst.toolbarElement) {
+				row = inst.toolbarElement.parentNode.parentNode;
+
+				row.parentNode.removeChild(row);
+
+				ds.oldToolbarParent.replaceChild(inst.toolbarElement, ds.toolbarHolder);
+
+				ds.oldToolbarParent = null;
+				ds.toolbarHolder = null;
+			}
+
 			if (blo)
 				blo.parentNode.removeChild(blo);
 
