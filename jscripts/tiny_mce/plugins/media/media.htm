@@ -159,14 +159,14 @@
 							<td>
 								<select id="flash_salign" name="flash_salign" onchange="generatePreview();">
 									<option value="">{$lang_not_set}</option> 
-									<option value="l">left</option>
-									<option value="t">top</option>
-									<option value="r">right</option>
-									<option value="b">bottom</option>
-									<option value="tl">top-left</option>
-									<option value="tr">top_right</option>
-									<option value="bl">bottom-left</option>
-									<option value="br">bottom-right</option>
+									<option value="l">{$lang_media_align_left}</option>
+									<option value="t">{$lang_media_align_top}</option>
+									<option value="r">{$lang_media_align_right}</option>
+									<option value="b">{$lang_media_align_bottom}</option>
+									<option value="tl">{$lang_media_align_top_left}</option>
+									<option value="tr">{$lang_media_align_top_right}</option>
+									<option value="bl">{$lang_media_align_bottom_left}</option>
+									<option value="br">{$lang_media_align_bottom_right}</option>
 								</select>
 							</td>
 						</tr>
@@ -631,7 +631,7 @@
 							<td><label for="shockwave_swstretchstyle">{$lang_media_swstretchstyle}</label></td>
 							<td>
 								<select id="shockwave_swstretchstyle" name="shockwave_swstretchstyle" onchange="generatePreview();">
-									<option value="none">None</option>
+									<option value="none">{$lang_not_set}</option>
 									<option value="meet">Meet</option>
 									<option value="fill">Fill</option>
 									<option value="stage">Stage</option>
@@ -646,20 +646,20 @@
 							<td><label for="shockwave_swstretchhalign">{$lang_media_swstretchhalign}</label></td>
 							<td>
 								<select id="shockwave_swstretchhalign" name="shockwave_swstretchhalign" onchange="generatePreview();">
-									<option value="none">None</option>
-									<option value="left">left</option>
-									<option value="center">center</option>
-									<option value="right">right</option>
+									<option value="none">{$lang_not_set}</option>
+									<option value="left">{$lang_media_align_left}</option>
+									<option value="center">{$lang_media_align_center}</option>
+									<option value="right">{$lang_media_align_right}</option>
 								</select>
 							</td>
 
 							<td><label for="shockwave_swstretchvalign">{$lang_media_swstretchvalign}</label></td>
 							<td>
 								<select id="shockwave_swstretchvalign" name="shockwave_swstretchvalign" onchange="generatePreview();">
-									<option value="none">None</option>
-									<option value="meet">Top</option>
-									<option value="fill">Center</option>
-									<option value="stage">Bottom</option>
+									<option value="none">{$lang_not_set}</option>
+									<option value="meet">Meet</option>
+									<option value="fill">Fill</option>
+									<option value="stage">Stage</option>
 								</select>
 							</td>
 						</tr>

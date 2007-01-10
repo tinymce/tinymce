@@ -85,5 +85,10 @@ qt_stream_warn : 'Streamed rtsp resources should be added to the QT Src field un
 align_top : 'Top',
 align_right : 'Right',
 align_bottom : 'Bottom',
-align_left : 'Left'
+align_left : 'Left',
+align_center : 'Center',
+align_top_left : 'Top left',
+align_top_right : 'Top right',
+align_bottom_left : 'Bottom left',
+align_bottom_right : 'Bottom right'
 });
