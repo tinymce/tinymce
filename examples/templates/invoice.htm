@@ -1,0 +1,26 @@
+<!-- Template contents HTML outside the DIV will not be inserted -->
+
+<div class="mceTmpl">
+	<h1>Invoice # [invoice number] </h1>
+	<p>
+		[Client details]
+	</p>
+
+	<h2>Invoice Items</h2>
+
+	<table class="invoice-items">
+		<thead>
+			<tr><th class="col1">Item</th><th class="col2">Qty</th><th class="col3">Unit Cost</th><th class="col4">Total</th></tr>
+		</thead>
+
+		<tbody>
+			<tr><td>Item Description</td><td>1</td><td>$0.00</td><td>$0.00</td></tr>
+			<tr><td>Item Description</td><td>1</td><td>$0.00</td><td>$0.00</td></tr>
+			<tr><td>Item Description</td><td>1</td><td>$0.00</td><td>$0.00</td></tr>
+		</tbody>
+
+		<tfoot>
+			<tr><td colspan="3">Invoice Total</td><td id="invoice-total"></td></tr>
+		</tfoot>
+	</table>
+</div>

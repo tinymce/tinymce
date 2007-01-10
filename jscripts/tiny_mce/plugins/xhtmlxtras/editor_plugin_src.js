@@ -114,7 +114,7 @@ var TinyMCE_XHTMLXtrasPlugin = {
 					tinyMCE.openWindow({
 						file : '../../plugins/xhtmlxtras/attributes.htm',
 						width : 380,
-						height : 360
+						height : 370
 					}, {editor_id : editor_id});
 				}
 

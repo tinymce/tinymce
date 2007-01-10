@@ -86,6 +86,8 @@ TinyMCE_Engine.prototype.closeWindow = function(win) {
 		mcWindows.selectedWindow.close();
 	else
 		this.orgCloseWindow(win);
+
+	tinyMCE.selectedInstance.getWin().focus(); 
 };
 
 TinyMCE_Engine.prototype.setWindowTitle = function(win_ref, title) {
