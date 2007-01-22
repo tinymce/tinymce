@@ -148,9 +148,10 @@ TinyMCE_Engine.prototype.setInnerHTML = function(e, h) {
 
 	// Convert all strong/em to b/i in Gecko
 	if (tinyMCE.isGecko) {
-		h = h.replace(/<strong/gi, '<b');
-		h = h.replace(/<em(\/?)/gi, '<i');
-		h = h.replace(/<em /gi, '<i');
+		h = h.replace(/<embed([^>]*)>/gi, '<tmpembed$1>');
+		h = h.replace(/<em([^>]*)>/gi, '<i$1>');
+		h = h.replace(/<tmpembed([^>]*)>/gi, '<embed$1>');
+		h = h.replace(/<strong([^>]*)>/gi, '<b$1>');
 		h = h.replace(/<\/strong>/gi, '</b>');
 		h = h.replace(/<\/em>/gi, '</i>');
 	}
