@@ -4,6 +4,7 @@ Version 2.1.0 (2007-xx-xx)
 	Fixed issue where focus wasn't returned to editor after using a inlinepopup. Contributed by Andy Skelton.
 	Fixed issue where fullscreen.htm file used the _dev version of the JavaScript.
 	Fixed bug where embed elements was converted into ibed elements.
+	Fixed bug where contrain proportions in advimage dialog wasn't working.
 Version 2.0.9 (2007-01-09)
 	Added support for fullscreen new window mode since the other method was problematic for some.
 	Added new hide_selects_on_submit option. Enables the possibility to enable/disable disabling of TinyMCE select elements.
