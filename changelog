@@ -1,6 +1,7 @@
 Version 2.1.0 (2007-xx-xx)
 	Added new template plugin, this supports simple snippets and advanced smart templates.
 	Added new attributes dialog for xhtmlxtras plugin. Based on contribution by Ryan Demmer.
+	Added new support for table captions, captions can now be toggled on or off on tables.
 	Fixed issue where focus wasn't returned to editor after using a inlinepopup. Contributed by Andy Skelton.
 	Fixed issue where fullscreen.htm file used the _dev version of the JavaScript.
 	Fixed bug where embed elements was converted into ibed elements.

@@ -74,5 +74,6 @@ colgroup : 'Col Group',
 col_limit : 'You\'ve exceeded the maximum number of columns of {$cols}.',
 row_limit : 'You\'ve exceeded the maximum number of rows of {$rows}.',
 cell_limit : 'You\'ve exceeded the maximum number of cells of {$cells}.',
-missing_scope: 'Are you sure you want to continue without specifying a scope for this table header cell. Without it, it may be difficult for some users with disabilities to understand the content or data displayed of the table.'
+missing_scope: 'Are you sure you want to continue without specifying a scope for this table header cell. Without it, it may be difficult for some users with disabilities to understand the content or data displayed of the table.',
+caption : 'Table caption'
 });

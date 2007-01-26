@@ -3,8 +3,8 @@ var action, orgTableWidth, orgTableHeight;
 function insertTable() {
 	var formObj = document.forms[0];
 	var inst = tinyMCE.selectedInstance;
-	var cols = 2, rows = 2, border = 0, cellpadding = -1, cellspacing = -1, align, width, height, className;
-	var html = '';
+	var cols = 2, rows = 2, border = 0, cellpadding = -1, cellspacing = -1, align, width, height, className, caption;
+	var html = '', capEl;
 	var elm = tinyMCE.tableElm;
 	var cellLimit, rowLimit, colLimit;
 
@@ -33,6 +33,7 @@ function insertTable() {
 	dir = formObj.elements['dir'].value;
 	lang = formObj.elements['lang'].value;
 	background = formObj.elements['backgroundimage'].value;
+	caption = formObj.elements['caption'].checked;
 
 	cellLimit = tinyMCE.getParam('table_cell_limit', false);
 	rowLimit = tinyMCE.getParam('table_row_limit', false);
@@ -64,6 +65,17 @@ function insertTable() {
 		tinyMCE.setAttrib(elm, 'summary', summary);
 		tinyMCE.setAttrib(elm, 'dir', dir);
 		tinyMCE.setAttrib(elm, 'lang', lang);
+
+		capEl = elm.getElementsByTagName('caption')[0];
+
+		if (capEl && !caption)
+			capEl.parentNode.removeChild(capEl);
+
+		if (!capEl && caption) {
+			capEl = elm.ownerDocument.createElement('caption');
+			capEl.innerHTML = '&nbsp;';
+			elm.insertBefore(capEl, elm.firstChild);
+		}
 
 		// Not inline styles
 		if (!tinyMCE.getParam("inline_styles"))
@@ -132,8 +144,10 @@ function insertTable() {
 	html += makeAttrib('summary', summary);
 	html += makeAttrib('dir', dir);
 	html += makeAttrib('lang', lang);
-
 	html += '>';
+
+	if (caption)
+		html += '<caption>&nbsp;</caption>';
 
 	for (var y=0; y<rows; y++) {
 		html += "<tr>";
@@ -223,6 +237,7 @@ function init() {
 		dir = tinyMCE.getAttrib(tinyMCE.tableElm, 'dir');
 		lang = tinyMCE.getAttrib(tinyMCE.tableElm, 'lang');
 		background = getStyle(elm, 'background', 'backgroundImage').replace(new RegExp("url\\('?([^']*)'?\\)", 'gi'), "$1");
+		formObj.caption.checked = tinyMCE.tableElm.getElementsByTagName('caption').length > 0;
 
 		orgTableWidth = width;
 		orgTableHeight = height;
