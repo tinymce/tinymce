@@ -4,10 +4,13 @@ Version 2.1.0 (2007-xx-xx)
 	Added new support for table captions, captions can now be toggled on or off on tables.
 	Added new more colors link for text/background color menus.
 	Added new more advanced color picker based on a contribution by Tristan Poet.
+	Added new functionality to always keep inlinepopups in viewable area contributed by Joshua T. Corbin.
+	Added new maximize button for inlinepopups contributed by Joshua T. Corbin.
 	Fixed issue where focus wasn't returned to editor after using a inlinepopup. Contributed by Andy Skelton.
 	Fixed issue where fullscreen.htm file used the _dev version of the JavaScript.
 	Fixed bug where embed elements was converted into ibed elements.
 	Fixed bug where contrain proportions in advimage dialog wasn't working.
+	Fixes bug where an inlinepopup wouldn't close if mcWindows.selectedWindow was nullified contributed by Joshua T. Corbin.
 Version 2.0.9 (2007-01-09)
 	Added support for fullscreen new window mode since the other method was problematic for some.
 	Added new hide_selects_on_submit option. Enables the possibility to enable/disable disabling of TinyMCE select elements.
