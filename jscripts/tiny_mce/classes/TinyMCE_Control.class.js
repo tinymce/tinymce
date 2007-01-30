@@ -1497,6 +1497,7 @@ TinyMCE_Control.prototype = {
 				hc = '<textarea wrap="off" id="' + form_element_name + '" name="' + form_element_name + '" cols="100" rows="15"></textarea>';
 			} else {
 				hc = '<input type="hidden" id="' + form_element_name + '" name="' + form_element_name + '" />';
+				this.oldTargetDisplay = tinyMCE.getStyle(this.oldTargetElement, 'display', 'inline');
 				this.oldTargetElement.style.display = "none";
 			}
 
@@ -1522,8 +1523,10 @@ TinyMCE_Control.prototype = {
 			// Just hide the textarea element
 			this.oldTargetElement = replace_element;
 
-			if (!tinyMCE.settings['debug'])
+			if (!tinyMCE.settings['debug']) {
+				this.oldTargetDisplay = tinyMCE.getStyle(this.oldTargetElement, 'display', 'inline');
 				this.oldTargetElement.style.display = "none";
+			}
 
 			// Output HTML and set editable
 			if (tinyMCE.isGecko) {

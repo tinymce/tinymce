@@ -641,4 +641,38 @@ TinyMCE_Engine.prototype.getViewPort = function(w) {
 	};
 };
 
+/**
+ * Returns the current runtime/computed style value of a element.
+ *
+ * @param {Element} n HTML element to get style from.
+ * @param {string} na Style name to return.
+ * @param {string} d Optional default value.
+ * @return {string} Current runtime/computed style value of a element.
+ */
+TinyMCE_Engine.prototype.getStyle = function(n, na, d) {
+	if (!n)
+		return false;
+
+	// Gecko
+	if (n.ownerDocument.defaultView) {
+		try {
+			return n.ownerDocument.defaultView.getComputedStyle(n, null).getPropertyValue(na);
+		} catch (n) {
+			// Old safari might fail
+			return null;
+		}
+	}
+
+	// Camelcase it, if needed
+	na = na.replace(/-(\D)/g, function(a, b){
+		return b.toUpperCase();
+	});
+
+	// IE & Opera
+	if (n.currentStyle)
+		return n.currentStyle[na];
+
+	return false;
+};
+
 /**#@-*/
