@@ -49,7 +49,7 @@ span.mceMenuButtonSelected.mceMenuHover img.mceMenuButton {border: 1px solid #0A
 
 /* Menu */
 
-.mceMenu {position: absolute; left: 0; top: 0; display: none; z-index: 100; background-color: white; border: 1px solid gray; font-weight: normal;}
+.mceMenu {position: absolute; left: 0; top: 0; display: none; z-index: 1000; background-color: white; border: 1px solid gray; font-weight: normal;}
 .mceMenu a, .mceMenuTitle, .mceMenuDisabled {display: block; width: 100%; text-decoration: none; background-color: white; font-family: Tahoma, Verdana, Arial, Helvetica; font-size: 11px; line-height: 20px; color: black;}
 .mceMenu a:hover {background-color: #B6BDD2; color: black; text-decoration: none !important;}
 .mceMenu span {padding-left: 10px; padding-right: 10px; display: block; line-height: 20px;}
