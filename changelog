@@ -8,6 +8,7 @@ Version 2.1.0 (2007-xx-xx)
 	Added new maximize button for inlinepopups contributed by Joshua T. Corbin.
 	Fixed issue where focus wasn't returned to editor after using a inlinepopup. Contributed by Andy Skelton.
 	Fixed issue where fullscreen.htm file used the _dev version of the JavaScript.
+	Fixed issue with TinyMCE forcing absolute links for document local anchors. Ex: #a got converted into b.htm#a
 	Fixed bug where text color/background color menus wasn't visible in fullscreen mode.
 	Fixed bug where text color/background color menus wasn't hidden when switching to/from fullscreen mode.
 	Fixed bug where embed elements was converted into ibed elements.

@@ -57,10 +57,6 @@ function insertLink() {
 	var style_class = document.forms[0].styleSelect ? document.forms[0].styleSelect.value : "";
 	var dummy;
 
-	// Make anchors absolute
-	if (href.charAt(0) == '#')
-		href = tinyMCE.settings['document_base_url'] + href;
-
 	if (target == '_self')
 		target = '';
 

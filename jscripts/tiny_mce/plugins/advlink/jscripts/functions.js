@@ -464,10 +464,10 @@ function setAllAttribs(elm) {
 	var target = getSelectValue(formObj, 'targetlist');
 
 	// Make anchors absolute
-	if (href.charAt(0) == '#' && tinyMCE.getParam('convert_urls'))
-		href = tinyMCE.settings['document_base_url'] + href;
+	if (href.charAt(0) != '#')
+		href = convertURL(href, elm);
 
-	setAttrib(elm, 'href', convertURL(href, elm));
+	setAttrib(elm, 'href', href);
 	setAttrib(elm, 'mce_href', href);
 	setAttrib(elm, 'title');
 	setAttrib(elm, 'target', target == '_self' ? '' : target);
