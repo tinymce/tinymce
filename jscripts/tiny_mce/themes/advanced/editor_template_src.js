@@ -746,9 +746,8 @@ var TinyMCE_AdvancedTheme = {
 	},
 
 	removeInstance : function(inst) {
-		var fcm = new TinyMCE_Layer(inst.editorId + '_fcMenu');
-
-		fcm.remove();
+		new TinyMCE_Layer(inst.editorId + '_fcMenu').remove();
+		new TinyMCE_Layer(inst.editorId + '_bcMenu').remove();
 	},
 
 	_handleMenuEvent : function(e) {
