@@ -118,6 +118,8 @@ function renderInfo() {
 		h += addRenderInfo('foreColor', inst.foreColor);
 		h += addRenderInfo('backColor', inst.backColor);
 		h += addRenderInfo('formTargetElementId', inst.formTargetElementId);
+		h += addRenderInfo('formElement', inst.formElement ? inst.formElement.nodeName : null);
+		h += addRenderInfo('oldTargetElement', inst.oldTargetElement ? inst.oldTargetElement.nodeName : null);
 		h += addRenderInfo('linkElement', inst.linkElement ? inst.linkElement.nodeName : null, 'dep');
 		h += addRenderInfo('imgElement', inst.imgElement ? inst.imgElement.nodeName : null, 'dep');
 		h += addRenderInfo('selectedNode', inst.selectedNode ? inst.selectedNode.nodeName : null, 'dep');

@@ -987,10 +987,6 @@ TinyMCE_Engine.prototype = {
 		// Fix for bug #957681
 		//inst.getDoc().designMode = inst.getDoc().designMode;
 
-		// Setup element references
-		var parentElm = inst.targetDoc.getElementById(inst.editorId + '_parent');
-		inst.formElement = tinyMCE.isGecko ? parentElm.previousSibling : parentElm.nextSibling;
-
 		tinyMCE.handleVisualAid(inst.getBody(), true, tinyMCE.settings['visual'], inst);
 		tinyMCE.dispatchCallback(inst, 'setupcontent_callback', 'setupContent', editor_id, inst.getBody(), inst.getDoc());
 
@@ -3818,6 +3814,10 @@ TinyMCE_Control.prototype = {
 		// it seems that the document.frames isn't initialized yet?
 		if (tinyMCE.isIE)
 			window.setTimeout("tinyMCE.addEventHandlers(tinyMCE.instances[\"" + this.editorId + "\"]);", 1);
+
+		// Setup element references
+		var parentElm = this.targetDoc.getElementById(this.editorId + '_parent');
+		this.formElement = tinyMCE.isGecko ? parentElm.previousSibling : parentElm.nextSibling;
 
 		tinyMCE.setupContent(this.editorId, true);
 

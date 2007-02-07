@@ -1173,10 +1173,6 @@ TinyMCE_Engine.prototype = {
 		// Fix for bug #957681
 		//inst.getDoc().designMode = inst.getDoc().designMode;
 
-		// Setup element references
-		var parentElm = inst.targetDoc.getElementById(inst.editorId + '_parent');
-		inst.formElement = tinyMCE.isGecko ? parentElm.previousSibling : parentElm.nextSibling;
-
 		tinyMCE.handleVisualAid(inst.getBody(), true, tinyMCE.settings['visual'], inst);
 		tinyMCE.dispatchCallback(inst, 'setupcontent_callback', 'setupContent', editor_id, inst.getBody(), inst.getDoc());
 

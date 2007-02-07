@@ -1600,6 +1600,10 @@ TinyMCE_Control.prototype = {
 		if (tinyMCE.isIE)
 			window.setTimeout("tinyMCE.addEventHandlers(tinyMCE.instances[\"" + this.editorId + "\"]);", 1);
 
+		// Setup element references
+		var parentElm = this.targetDoc.getElementById(this.editorId + '_parent');
+		this.formElement = tinyMCE.isGecko ? parentElm.previousSibling : parentElm.nextSibling;
+
 		tinyMCE.setupContent(this.editorId, true);
 
 		return true;
