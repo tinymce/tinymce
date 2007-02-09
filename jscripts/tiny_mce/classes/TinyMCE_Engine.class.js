@@ -208,7 +208,7 @@ TinyMCE_Engine.prototype = {
 		this._def("custom_shortcuts", true);
 		this._def("convert_on_click", false);
 		this._def("content_css", '');
-		this._def("fix_list_elements", false);
+		this._def("fix_list_elements", true);
 		this._def("fix_table_elements", false);
 		this._def("strict_loading_mode", document.contentType == 'application/xhtml+xml');
 		this._def("hidden_tab_class", '');
