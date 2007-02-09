@@ -6,6 +6,7 @@ Version 2.1.0 (2007-xx-xx)
 	Added new more advanced color picker based on a contribution by Tristan Poet.
 	Added new functionality to always keep inlinepopups in viewable area contributed by Joshua T. Corbin.
 	Added new maximize button for inlinepopups contributed by Joshua T. Corbin.
+	Added support for Ctrl+v handling for non IE browsers when the paste_auto_cleanup_on_paste option was used with the paste plugin.
 	Fixed issue where focus wasn't returned to editor after using a inlinepopup. Contributed by Andy Skelton.
 	Fixed issue where fullscreen.htm file used the _dev version of the JavaScript.
 	Fixed issue with TinyMCE forcing absolute links for document local anchors. Ex: #a got converted into b.htm#a

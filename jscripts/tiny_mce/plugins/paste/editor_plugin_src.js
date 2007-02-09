@@ -24,6 +24,16 @@ var TinyMCE_PastePlugin = {
 			tinyMCE.addEvent(inst.getBody(), "paste", TinyMCE_PastePlugin._handlePasteEvent);
 	},
 
+	handleEvent : function(e) {
+		// Force paste dialog if non IE browser
+		if (!tinyMCE.isRealIE && tinyMCE.getParam("paste_auto_cleanup_on_paste", false) && e.ctrlKey && e.keyCode == 86 && e.type == "keydown") {
+			window.setTimeout('tinyMCE.selectedInstance.execCommand("mcePasteText",true)', 1);
+			return tinyMCE.cancelEvent(e);
+		}
+
+		return true;
+	},
+
 	getControlHTML : function(cn) { 
 		switch (cn) { 
 			case "pastetext":
