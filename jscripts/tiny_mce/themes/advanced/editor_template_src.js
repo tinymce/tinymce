@@ -607,9 +607,8 @@ var TinyMCE_AdvancedTheme = {
 				// Setup template html
 				template['html'] = '<table class="mceEditor" border="0" cellpadding="0" cellspacing="0" width="{$width}" height="{$height}" style="width:{$width_style};height:{$height_style}"><tbody>';
 
-				if (toolbarLocation == "top") {
-					template['html'] += '<tr><td class="mceToolbarTop" align="' + toolbarAlign + '" height="1" nowrap="nowrap"><span id="' + editorId + '_toolbar" class="mceToolbarContainer">' + toolbarHTML + '</span></td></tr>';
-				}
+				if (toolbarLocation == "top")
+					template['html'] += '<tr><td dir="ltr" class="mceToolbarTop" align="' + toolbarAlign + '" height="1" nowrap="nowrap"><span id="' + editorId + '_toolbar" class="mceToolbarContainer">' + toolbarHTML + '</span></td></tr>';
 
 				if (statusbarLocation == "top") {
 					template['html'] += '<tr><td class="mceStatusbarTop" height="1">' + statusbarHTML + '</td></tr>';
@@ -618,9 +617,8 @@ var TinyMCE_AdvancedTheme = {
 
 				template['html'] += '<tr><td align="center"><span id="{$editor_id}"></span></td></tr>';
 
-				if (toolbarLocation == "bottom") {
-					template['html'] += '<tr><td class="mceToolbarBottom" align="' + toolbarAlign + '" height="1"><span id="' + editorId + '_toolbar" class="mceToolbarContainer">' + toolbarHTML + '</span></td></tr>';
-				}
+				if (toolbarLocation == "bottom")
+					template['html'] += '<tr><td dir="ltr" class="mceToolbarBottom" align="' + toolbarAlign + '" height="1"><span id="' + editorId + '_toolbar" class="mceToolbarContainer">' + toolbarHTML + '</span></td></tr>';
 
 				// External toolbar changes
 				if (toolbarLocation == "external") {

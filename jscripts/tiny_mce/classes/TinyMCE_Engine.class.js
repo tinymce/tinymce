@@ -2801,19 +2801,27 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	getControlHTML : function(c) {
-		var i, l, n, o, v;
+		var i, l, n, o, v, rtl = tinyMCE.getLang('lang_dir') == 'rtl';
 
 		l = tinyMCE.plugins;
 		for (n in l) {
 			o = l[n];
 
-			if (o.getControlHTML && (v = o.getControlHTML(c)) != '')
+			if (o.getControlHTML && (v = o.getControlHTML(c)) != '') {
+				if (rtl)
+					return '<span dir="rtl">' + tinyMCE.replaceVar(v, "pluginurl", o.baseURL) + '</span>';
+
 				return tinyMCE.replaceVar(v, "pluginurl", o.baseURL);
+			}
 		}
 
 		o = tinyMCE.themes[tinyMCE.settings['theme']];
-		if (o.getControlHTML && (v = o.getControlHTML(c)) != '')
+		if (o.getControlHTML && (v = o.getControlHTML(c)) != '') {
+			if (rtl)
+				return '<span dir="rtl">' + v + '</span>';
+
 			return v;
+		}
 
 		return '';
 	},
