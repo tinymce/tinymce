@@ -1467,9 +1467,9 @@ TinyMCE_Engine.prototype = {
 			h += '</a></span>';
 		} else {
 			if (tinyMCE.isRealIE)
-				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);tinyMCE.lastHover = this;" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
+				h += '<span id="{$editor_id}_' + id + '" dir="ltr" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);tinyMCE.lastHover = this;" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
 			else
-				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton">';
+				h += '<span id="{$editor_id}_' + id + '" dir="ltr" class="mceMenuButton">';
 
 			h += '<a href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" class="mceMenuButtonNormal" target="_self">';
 			h += '<img src="' + img + '" title="{$' + lang + '}" /></a>';
