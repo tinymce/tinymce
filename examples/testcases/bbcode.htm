@@ -20,7 +20,9 @@
 		force_br_newlines : true,
 		force_p_newlines : false,
 		entity_encoding : "raw",
-		content_css : "bbcode.css"
+		content_css : "bbcode.css",
+		add_unload_trigger : false,
+		remove_linebreaks : false
 	});
 </script>
 <!-- /tinyMCE -->
@@ -36,11 +38,19 @@
 This testcase is used to test the bbcode plugin.<br />
 <br />
 <textarea id="elm1" name="elm1" rows="15" cols="80">
-	[b]Bold[/b] [i]Italic[/i]
+	[b]Bold[/b]
+
+
+
+	[i]Italic[/i]
 </textarea>
 
 <div id="elm2">
-	[b]Bold[/b] [i]Italic[/i]
+	[b]Bold[/b]
+
+
+
+	[i]Italic[/i]
 </div>
 
 <br />

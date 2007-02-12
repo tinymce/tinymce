@@ -49,3 +49,7 @@ pre {
 	border: 1px solid gray;
 	background-color: #f1f1f1;
 }
+
+p {
+	padding: 0; margin: 0;
+}

@@ -61,6 +61,8 @@ var TinyMCE_BBCodePlugin = {
 		rep(/<br \/>/gi,"\n");
 		rep(/<br\/>/gi,"\n");
 		rep(/<br>/gi,"\n");
+		rep(/<p>/gi,"");
+		rep(/<\/p>/gi,"\n");
 		rep(/&nbsp;/gi," ");
 		rep(/&quot;/gi,"\"");
 		rep(/&lt;/gi,"<");
