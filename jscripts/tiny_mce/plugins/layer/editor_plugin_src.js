@@ -14,7 +14,7 @@ var TinyMCE_LayerPlugin = {
 			longname : 'Layer',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_layer.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/layer',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

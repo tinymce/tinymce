@@ -14,7 +14,7 @@ var TinyMCE_FullScreenPlugin = {
 			longname : 'Fullscreen',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_fullscreen.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/fullscreen',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

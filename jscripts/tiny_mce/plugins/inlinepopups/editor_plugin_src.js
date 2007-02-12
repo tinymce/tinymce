@@ -15,7 +15,7 @@ var TinyMCE_InlinePopupsPlugin = {
 			longname : 'Inline Popups',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_inlinepopups.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/inlinepopups',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	}

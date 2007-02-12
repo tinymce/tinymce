@@ -14,7 +14,7 @@ var TinyMCE_FlashPlugin = {
 			longname : 'Flash',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_flash.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/flash',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

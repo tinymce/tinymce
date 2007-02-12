@@ -11,7 +11,7 @@ var TinyMCE_NonEditablePlugin = {
 			longname : 'Non editable elements',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_noneditable.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/noneditable',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

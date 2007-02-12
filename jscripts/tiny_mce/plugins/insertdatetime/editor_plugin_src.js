@@ -14,7 +14,7 @@ var TinyMCE_InsertDateTimePlugin = {
 			longname : 'Insert date/time',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_insertdatetime.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/insertdatetime',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

@@ -14,7 +14,7 @@ var TinyMCE_IESpellPlugin = {
 			longname : 'IESpell (MSIE Only)',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_iespell.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/iespell',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

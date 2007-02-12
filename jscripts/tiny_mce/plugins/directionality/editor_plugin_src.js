@@ -14,7 +14,7 @@ var TinyMCE_DirectionalityPlugin = {
 			longname : 'Directionality',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_directionality.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/directionality',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

@@ -14,7 +14,7 @@ var TinyMCE_AdvancedImagePlugin = {
 			longname : 'Advanced image',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_advimage.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/advimage',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

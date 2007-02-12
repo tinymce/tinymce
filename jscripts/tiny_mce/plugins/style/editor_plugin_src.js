@@ -14,7 +14,7 @@ var TinyMCE_StylePlugin = {
 			longname : 'Style',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_style.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/style',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

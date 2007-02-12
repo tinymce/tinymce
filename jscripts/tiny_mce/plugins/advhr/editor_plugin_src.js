@@ -14,7 +14,7 @@ var TinyMCE_AdvancedHRPlugin = {
 			longname : 'Advanced HR',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_advhr.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/advhr',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		}
 	},

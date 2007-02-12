@@ -14,7 +14,7 @@ var TinyMCE_TablePlugin = {
 			longname : 'Tables',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_table.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/table',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

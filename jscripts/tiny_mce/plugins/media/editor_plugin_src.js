@@ -14,7 +14,7 @@ var TinyMCE_MediaPlugin = {
 			longname : 'Media',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_media.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/media',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

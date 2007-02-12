@@ -14,7 +14,7 @@ var TinyMCE_SavePlugin = {
 			longname : 'Save',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_save.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/save',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

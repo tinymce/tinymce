@@ -14,7 +14,7 @@ var TinyMCE_TemplatePlugin = {
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://www.moxiecode.com',
 			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/template',
-			version : '1.0'
+			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},
 

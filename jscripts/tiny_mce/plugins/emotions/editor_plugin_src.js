@@ -15,7 +15,7 @@ var TinyMCE_EmotionsPlugin = {
 			longname : 'Emotions',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_emotions.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/emotions',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

@@ -14,7 +14,7 @@ var TinyMCE_XHTMLXtrasPlugin = {
 			longname : 'XHTML Xtras Plugin',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_xhtmlxtras.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/xhtmlxtras',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

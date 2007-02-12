@@ -13,7 +13,7 @@ var TinyMCE_SearchReplacePlugin = {
 			longname : 'Search/Replace',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_searchreplace.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/searchreplace',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

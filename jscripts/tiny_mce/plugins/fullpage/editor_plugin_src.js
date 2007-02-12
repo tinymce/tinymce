@@ -14,7 +14,7 @@ var TinyMCE_FullPagePlugin = {
 			longname : 'Fullpage',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_fullpage.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/fullpage',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

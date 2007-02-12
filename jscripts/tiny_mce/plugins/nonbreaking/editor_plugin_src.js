@@ -14,7 +14,7 @@ var TinyMCE_NonBreakingPlugin = {
 			longname : 'Nonbreaking space',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_nonbreaking.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/nonbreaking',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

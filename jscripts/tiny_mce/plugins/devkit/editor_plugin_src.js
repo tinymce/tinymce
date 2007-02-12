@@ -20,7 +20,7 @@ var TinyMCE_DevKitPlugin = {
 			longname : 'Development Kit',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_devkit.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/devkit',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

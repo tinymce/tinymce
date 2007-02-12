@@ -14,7 +14,7 @@ var TinyMCE_PrintPlugin = {
 			longname : 'Print',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_print.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/print',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

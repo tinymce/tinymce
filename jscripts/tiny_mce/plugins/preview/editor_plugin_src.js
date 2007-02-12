@@ -14,7 +14,7 @@ var TinyMCE_PreviewPlugin = {
 			longname : 'Preview',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_preview.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/preview',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

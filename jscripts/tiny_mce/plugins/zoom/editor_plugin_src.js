@@ -11,7 +11,7 @@ var TinyMCE_ZoomPlugin = {
 			longname : 'Zoom',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_zoom.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/zoom',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},

@@ -14,7 +14,7 @@ var TinyMCE_PastePlugin = {
 			longname : 'Paste text/word',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_paste.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/paste',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},
