@@ -1,4 +1,4 @@
-Version 2.1.0 (2007-xx-xx)
+Version 2.1.0 (2007-02-12)
 	Added new template plugin, this supports simple snippets and advanced smart templates.
 	Added new attributes dialog for xhtmlxtras plugin. Based on contribution by Ryan Demmer.
 	Added new support for table captions, captions can now be toggled on or off on tables.
@@ -12,7 +12,7 @@ Version 2.1.0 (2007-xx-xx)
 	Fixed issue with TinyMCE forcing absolute links for document local anchors. Ex: #a got converted into b.htm#a
 	Fixed issue where drupal initialization issue with Drupal.
 	Fixed issue with rtl languages and the new color picker menus.
-	Fixed bug where url convertion logic wasn't executed correctly.
+	Fixed major bug where url convertion logic wasn't executed correctly.
 	Fixed bug where text color/background color menus wasn't visible in fullscreen mode.
 	Fixed bug where text color/background color menus wasn't hidden when switching to/from fullscreen mode.
 	Fixed bug where embed elements was converted into ibed elements.
