@@ -280,16 +280,7 @@ function insertAction() {
 	}
 
 	if (tinyMCE.getParam("accessibility_warnings")) {
-		if (formObj.alt.value == "") {
-			var answer = confirm(tinyMCE.getLang('lang_advimage_missing_alt', '', true));
-			if (answer == true) {
-				formObj.alt.value = " ";
-			}
-		} else {
-			var answer = true;
-		}
-
-		if (!answer)
+		if (formObj.alt.value == "" && !confirm(tinyMCE.getLang('lang_advimage_missing_alt', '', true)))
 			return;
 	}
 
