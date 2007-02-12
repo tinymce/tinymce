@@ -25,6 +25,7 @@ Version 2.1.0 (2007-02-13)
 	Fixed bug with the noneditable plugin and IE. Only the last element was uneditable.
 	Fixed so the fix_list_elements option is enabled by default to produce more valid XHTML code.
 	Fixed so that all more info links on plugins point to the wiki in the about dialog.
+	Fixed so there is two new button names forecolorpicker and backcolorpicker these can be used to make plain old color picker buttons.
 	Removed the forcing of a space inside alt attributes by the advimage plugin since the default valid_elements rule defaults to "".
 Version 2.0.9 (2007-01-09)
 	Added support for fullscreen new window mode since the other method was problematic for some.

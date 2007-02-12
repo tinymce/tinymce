@@ -43,7 +43,9 @@ var TinyMCE_AdvancedTheme = {
 		['sub', 'sub.gif', 'lang_theme_sub_desc', 'subscript'],
 		['sup', 'sup.gif', 'lang_theme_sup_desc', 'superscript'],
 		['forecolor', 'forecolor.gif', 'lang_theme_forecolor_desc', 'forecolor', true],
+		['forecolorpicker', 'forecolor.gif', 'lang_theme_forecolor_desc', 'forecolorpicker', true],
 		['backcolor', 'backcolor.gif', 'lang_theme_backcolor_desc', 'HiliteColor', true],
+		['backcolorpicker', 'backcolor.gif', 'lang_theme_backcolor_desc', 'backcolorpicker', true],
 		['charmap', 'charmap.gif', 'lang_theme_charmap_desc', 'mceCharMap'],
 		['visualaid', 'visualaid.gif', 'lang_theme_visualaid_desc', 'mceToggleVisualAid'],
 		['anchor', 'anchor.gif', 'lang_theme_anchor_desc', 'mceInsertAnchor'],
@@ -356,6 +358,10 @@ var TinyMCE_AdvancedTheme = {
 
 				return false;
 
+			case "forecolorpicker":
+				this._pickColor(editor_id, 'forecolor');
+				return true;
+
 			case "forecolorMenu":
 				TinyMCE_AdvancedTheme._hideMenus(editor_id);
 
@@ -420,6 +426,10 @@ var TinyMCE_AdvancedTheme = {
 
 				ml.show();
 			return true;
+	
+			case "backcolorpicker":
+				this._pickColor(editor_id, 'HiliteColor');
+				return true;
 
 			case "mceColorPicker":
 				if (user_interface) {
@@ -1404,7 +1414,7 @@ var TinyMCE_AdvancedTheme = {
 		if (cm == 'forecolor' && inst)
 			inputColor = inst.foreColor;
 
-		if (cm == 'backcolor' && inst)
+		if ((cm == 'backcolor' || cm == 'HiliteColor') && inst)
 			inputColor = inst.backColor;
 
 		tinyMCE.execCommand('mceColorPicker', true, {color : inputColor, callback : function(c) {
