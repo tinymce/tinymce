@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<title>Noneditable testcase</title>
+
+<!-- tinyMCE -->
+<script language="javascript" type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		mode : "exact",
+		elements : "elm1",
+		theme : "advanced",
+		plugins : "devkit,noneditable",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_path_location : "bottom"
+	});
+</script>
+<!-- /tinyMCE -->
+
+</head>
+<body>
+
+<a href="index.htm">&lt;&lt; Back</a><br />
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+
+<h3>Noneditable testcase</h3>
+This page is test the noneditable plugin.<br />
+<br />
+
+<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 100%">
+	<p>Some editable content 1.</p>
+	<p class="someClass mceNonEditable">Some noneditable content 1.</p>
+	<p>Some editable content 2.</p>
+	<p class="mceNonEditable someClass">Some noneditable content 2.</p>
+	<p>Some editable content 3.</p>
+	<p class="someClass mceNonEditable someClass">Some noneditable content 3.</p>
+	<p>Some editable content 4.</p>
+</textarea>
+
+<br />
+
+<input type="submit" name="save" value="Submit" />
+<input type="reset" name="reset" value="Reset" />
+
+</form>
+
+</body>
+</html>

@@ -31,30 +31,30 @@ var TinyMCE_NonEditablePlugin = {
 	cleanup : function(type, content, inst) {
 		switch (type) {
 			case "insert_to_editor_dom":
+				var nodes, i, editClass, nonEditClass, editable, elm;
+
 				// Pass through Gecko
 				if (tinyMCE.isGecko)
 					return content;
 
-				var nodes = tinyMCE.getNodeTree(content, new Array(), 1), i, editClass, nonEditClass;
+				nodes = tinyMCE.getNodeTree(content, [], 1);
 
 				editClass = tinyMCE.getParam("noneditable_editable_class", "mceEditable");
 				nonEditClass = tinyMCE.getParam("noneditable_noneditable_class", "mceNonEditable");
 
 				for (i=0; i<nodes.length; i++) {
-					var elm = nodes[i];
+					elm = nodes[i];
 
 					// Convert contenteditable to classes
-					var editable = tinyMCE.getAttrib(elm, "contenteditable");
+					editable = tinyMCE.getAttrib(elm, "contenteditable");
 					if (new RegExp("true|false","gi").test(editable))
 						TinyMCE_NonEditablePlugin._setEditable(elm, editable == "true");
 
-					if (tinyMCE.isMSIE) {
-						var className = elm.className ? elm.className : "";
-
-						if (className.indexOf(editClass) != -1)
+					if (tinyMCE.isIE) {
+						if (tinyMCE.hasCSSClass(elm, editClass))
 							elm.contentEditable = true;
 
-						if (className.indexOf(nonEditClass) != -1)
+						if (tinyMCE.hasCSSClass(elm, nonEditClass))
 							elm.contentEditable = false;
 					}
 				}
@@ -69,9 +69,13 @@ var TinyMCE_NonEditablePlugin = {
 				content = content.replace(/mceItemEditable/g, editClass);
 				content = content.replace(/mceItemNonEditable/g, nonEditClass);
 
-				if (tinyMCE.isIE) {
-					content = content.replace(new RegExp("class=\"(.*)(" + editClass + ")([^\"]*)\"", "gi"), 'class="$1$2$3" contenteditable="true"');
-					content = content.replace(new RegExp("class=\"(.*)(" + nonEditClass + ")([^\"]*)\"", "gi"), 'class="$1$2$3" contenteditable="false"');
+				if (tinyMCE.isIE && (content.indexOf(editClass) != -1 || content.indexOf(nonEditClass) != -1)) {
+					content = content.replace(new RegExp("class=\"(.+)(" + editClass + ")\"", "gi"), 'class="$1$2" contenteditable="true"');
+					content = content.replace(new RegExp("class=\"(.+)(" + nonEditClass + ")\"", "gi"), 'class="$1$2" contenteditable="false"');
+					content = content.replace(new RegExp("class=\"(" + editClass + ")([^\"]*)\"", "gi"), 'class="$1$2" contenteditable="true"');
+					content = content.replace(new RegExp("class=\"(" + nonEditClass + ")([^\"]*)\"", "gi"), 'class="$1$2" contenteditable="false"');
+					content = content.replace(new RegExp("class=\"(.+)(" + editClass + ")([^\"]*)\"", "gi"), 'class="$1$2$3" contenteditable="true"');
+					content = content.replace(new RegExp("class=\"(.+)(" + nonEditClass + ")([^\"]*)\"", "gi"), 'class="$1$2$3" contenteditable="false"');
 				}
 
 				break;
