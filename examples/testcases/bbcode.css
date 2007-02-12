@@ -1,0 +1,51 @@
+body {
+	background-color: #dedfdf;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	scrollbar-3dlight-color: #F0F0EE;
+	scrollbar-arrow-color: #676662;
+	scrollbar-base-color: #F0F0EE;
+	scrollbar-darkshadow-color: #DDDDDD;
+	scrollbar-face-color: #E0E0DD;
+	scrollbar-highlight-color: #F0F0EE;
+	scrollbar-shadow-color: #F0F0EE;
+	scrollbar-track-color: #F5F5F5;
+}
+
+td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+pre {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.mceVisualAid {
+	border: 1px dashed #BBBBBB;
+}
+
+.codeStyle {
+	display: block;
+	font-family: Courier;
+	font-size: 12px;
+	margin: 10px;
+	padding: 10px;
+	margin-left: 20px;
+	padding-top: 30px;
+	border: 1px solid gray;
+	background-color: #f1f1f1;
+	background-image: url('images/code.gif');
+	background-repeat: no-repeat;
+	white-space: pre;
+}
+
+.quoteStyle {
+	display: block;
+	margin: 10px;
+	padding: 10px;
+	margin-left: 20px;
+	border: 1px solid gray;
+	background-color: #f1f1f1;
+}
