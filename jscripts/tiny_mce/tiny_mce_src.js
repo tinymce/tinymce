@@ -4902,7 +4902,7 @@ TinyMCE_Cleanup.prototype = {
 		if (r.forceAttribs && (t = r.forceAttribs[an]))
 			av = t;
 
-		if (os && av.length != 0 && this.settings.url_converter.length != 0 && /^(src|href|longdesc)$/.test(an))
+		if (os && av.length != 0 && /^(src|href|longdesc)$/.test(an))
 			av = this._urlConverter(this, n, av);
 
 		if (av.length != 0 && r.validAttribValues && r.validAttribValues[an] && !r.validAttribValues[an].test(av))

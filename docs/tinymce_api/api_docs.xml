@@ -251,6 +251,13 @@
       <param name="w" type="Window" summary="Window to get viewport of." />
       <return type="Object" summary="Viewport object with fields top, left, width and height." />
     </method>
+    <method name="getStyle">
+      <summary>Returns the current runtime/computed style value of a element.</summary>
+      <param name="n" type="Element" summary="HTML element to get style from." />
+      <param name="na" type="string" summary="Style name to return." />
+      <param name="d" type="string" summary="Optional default value." />
+      <return type="string" summary="Current runtime/computed style value of a element." />
+    </method>
     <constructor name="TinyMCE_Engine">
       <summary>Core engine class for TinyMCE, a instance of this class is available as a global called tinyMCE.</summary>
     </constructor>
