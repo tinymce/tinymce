@@ -135,16 +135,24 @@ TinyMCE_Layer.prototype = {
 	 * Shows the layer.
 	 */
 	show : function() {
-		this.getElement().style.display = 'block';
-		this.updateBlocker();
+		var el = this.getElement();
+
+		if (el) {
+			el.style.display = 'block';
+			this.updateBlocker();
+		}
 	},
 
 	/**
 	 * Hides the layer.
 	 */
 	hide : function() {
-		this.getElement().style.display = 'none';
-		this.updateBlocker();
+		var el = this.getElement();
+
+		if (el) {
+			el.style.display = 'none';
+			this.updateBlocker();
+		}
 	},
 
 	/**

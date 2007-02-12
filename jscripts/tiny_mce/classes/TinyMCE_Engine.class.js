@@ -15,7 +15,7 @@ function TinyMCE_Engine() {
 
 	this.majorVersion = "2";
 	this.minorVersion = "1.0";
-	this.releaseDate = "2007-02-12";
+	this.releaseDate = "2007-02-13";
 
 	this.instances = new Array();
 	this.switchClassCache = new Array();
@@ -929,10 +929,12 @@ TinyMCE_Engine.prototype = {
 						pe.style.display = 'none';
 						te.value = inst.getHTML();
 						te.style.display = inst.oldTargetDisplay;
+						tinyMCE.dispatchCallback(inst, 'hide_instance_callback', 'hideInstance', inst);
 					} else {
 						pe.style.display = 'block';
 						te.style.display = 'none';
 						inst.setHTML(te.value);
+						tinyMCE.dispatchCallback(inst, 'show_instance_callback', 'showInstance', inst);
 					}
 				} else
 					tinyMCE.addMCEControl(tinyMCE._getElementById(value), value);
@@ -2657,11 +2659,11 @@ TinyMCE_Engine.prototype = {
 	 * @type Array
 	 */
 	getCSSClasses : function(editor_id, doc) {
-		var output = new Array();
+		var inst = tinyMCE.getInstanceById(editor_id);
 
 		// Is cached, use that
-		if (typeof(tinyMCE.cssClasses) != "undefined")
-			return tinyMCE.cssClasses;
+		if (inst && inst.cssClasses.length > 0)
+			return inst.cssClasses;
 
 		if (typeof(editor_id) == "undefined" && typeof(doc) == "undefined") {
 			var instance;
@@ -2719,13 +2721,13 @@ TinyMCE_Engine.prototype = {
 									var cssClass = rule.substring(rule.indexOf('.') + 1);
 									var addClass = true;
 
-									for (var p=0; p<output.length && addClass; p++) {
-										if (output[p] == cssClass)
+									for (var p=0; p<inst.cssClasses.length && addClass; p++) {
+										if (inst.cssClasses[p] == cssClass)
 											addClass = false;
 									}
 
 									if (addClass)
-										output[output.length] = cssClass;
+										inst.cssClasses[inst.cssClasses.length] = cssClass;
 								}
 							}
 						}
@@ -2734,11 +2736,7 @@ TinyMCE_Engine.prototype = {
 			}
 		}
 
-		// Cache em
-		if (output.length > 0)
-			tinyMCE.cssClasses = output;
-
-		return output;
+		return inst.cssClasses;
 	},
 
 	/**

@@ -30,6 +30,7 @@ function TinyMCE_Control(settings) {
 	this.hasMouseMoved = false;
 	this.foreColor = this.backColor = "#999999";
 	this.data = {};
+	this.cssClasses = [];
 
 	this.cleanup.init({
 		valid_elements : s.valid_elements,

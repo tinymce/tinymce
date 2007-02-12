@@ -748,6 +748,16 @@ var TinyMCE_AdvancedTheme = {
 		new TinyMCE_Layer(inst.editorId + '_bcMenu').remove();
 	},
 
+	showInstance : function(inst) {
+		new TinyMCE_Layer(inst.editorId + '_fcMenu').show();
+		new TinyMCE_Layer(inst.editorId + '_bcMenu').show();
+	},
+
+	hideInstance : function(inst) {
+		new TinyMCE_Layer(inst.editorId + '_fcMenu').hide();
+		new TinyMCE_Layer(inst.editorId + '_bcMenu').hide();
+	},
+
 	_handleMenuEvent : function(e) {
 		var te = tinyMCE.isMSIE ? window.event.srcElement : e.target;
 		tinyMCE._menuButtonEvent(e.type == "mouseover" ? "over" : "out", document.getElementById(te._switchId));
