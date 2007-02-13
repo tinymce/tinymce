@@ -1397,7 +1397,9 @@ var TinyMCE_AdvancedTheme = {
 		}
 
 		h += '</tr></table>';
-		h += '<a href="#" onclick="TinyMCE_AdvancedTheme._pickColor(\'' + id + '\',\'' + cm + '\');" class="mceMoreColors">' + tinyMCE.getLang('lang_more_colors') + '</a>';
+
+		if (tinyMCE.getParam("theme_advanced_more_colors", true))
+			h += '<a href="#" onclick="TinyMCE_AdvancedTheme._pickColor(\'' + id + '\',\'' + cm + '\');" class="mceMoreColors">' + tinyMCE.getLang('lang_more_colors') + '</a>';
 
 		return h;
 	},
