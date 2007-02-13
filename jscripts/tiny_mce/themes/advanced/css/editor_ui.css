@@ -11,7 +11,7 @@
 .mceToolbarTop, .mceToolbarBottom {background: #F0F0EE; line-height: 1px; font-size: 1px;}
 .mceToolbarTop {border-bottom: 1px solid #cccccc; padding-bottom: 1px;}
 .mceToolbarBottom {border-top: 1px solid #cccccc;}
-.mceToolbarContainer {position: relative; left: 0; top: 0; display: block;}
+.mceToolbarContainer {display: block; position: relative; left: 0; top: 0; width: 100%;}
 .mceStatusbarTop, .mceStatusbarBottom, .mceStatusbar {height: 20px;}
 .mceStatusbarTop .mceStatusbarPathText, .mceStatusbarBottom .mceStatusbarPathText, .mceStatusbar .mceStatusbarPathText {font-family: 'MS Sans Serif', sans-serif, Verdana, Arial; font-size: 9pt; padding: 2px; line-height: 16px; overflow: visible;}
 .mceStatusbarTop {border-bottom: 1px solid #cccccc;}
