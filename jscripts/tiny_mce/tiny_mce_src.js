@@ -5546,7 +5546,7 @@ TinyMCE_Engine.prototype.getStyle = function(n, na, d) {
 		return false;
 
 	// Gecko
-	if (n.ownerDocument.defaultView) {
+	if (tinyMCE.isGecko && n.ownerDocument.defaultView) {
 		try {
 			return n.ownerDocument.defaultView.getComputedStyle(n, null).getPropertyValue(na);
 		} catch (n) {
