@@ -761,6 +761,7 @@ TinyMCE_Engine.prototype = {
 						pe.style.display = 'block';
 						te.style.display = 'none';
 						inst.setHTML(te.value);
+						inst.useCSS = false;
 						tinyMCE.dispatchCallback(inst, 'show_instance_callback', 'showInstance', inst);
 					}
 				} else

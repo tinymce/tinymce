@@ -758,14 +758,8 @@ var TinyMCE_AdvancedTheme = {
 		new TinyMCE_Layer(inst.editorId + '_bcMenu').remove();
 	},
 
-	showInstance : function(inst) {
-		new TinyMCE_Layer(inst.editorId + '_fcMenu').show();
-		new TinyMCE_Layer(inst.editorId + '_bcMenu').show();
-	},
-
 	hideInstance : function(inst) {
-		new TinyMCE_Layer(inst.editorId + '_fcMenu').hide();
-		new TinyMCE_Layer(inst.editorId + '_bcMenu').hide();
+		TinyMCE_AdvancedTheme._hideMenus(inst.editorId);
 	},
 
 	_handleMenuEvent : function(e) {
