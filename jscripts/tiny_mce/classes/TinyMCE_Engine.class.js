@@ -263,7 +263,7 @@ TinyMCE_Engine.prototype = {
 		this.blockElms = 'H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP';
 		this.blockRegExp = new RegExp("^(" + this.blockElms + ")$", "i");
 		this.posKeyCodes = new Array(13,45,36,35,33,34,37,38,39,40);
-		this.uniqueURL = 'javascript:TINYMCE_UNIQUEURL();'; // Make unique URL non real URL
+		this.uniqueURL = 'javascript:void(091039730);'; // Make unique URL non real URL
 		this.uniqueTag = '<div id="mceTMPElement" style="display: none">TMP</div>';
 		this.callbacks = new Array('onInit', 'getInfo', 'getEditorTemplate', 'setupContent', 'onChange', 'onPageLoad', 'handleNodeChange', 'initInstance', 'execCommand', 'getControlHTML', 'handleEvent', 'cleanup', 'removeInstance');
 

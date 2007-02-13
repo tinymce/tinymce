@@ -23,6 +23,7 @@ Version 2.1.0 (2007-02-13)
 	Fixes bug where an inlinepopup wouldn't close if mcWindows.selectedWindow was nullified contributed by Joshua T. Corbin.
 	Fixed bug where style dropdown wasn't unique for each editor instance if diffrent content_css files where used.
 	Fixed bug with the noneditable plugin and IE. Only the last element was uneditable.
+	Fixed bug with link dialog and Firebug sometimes produced a TINYMCE_UNIQUEURL not defined error.
 	Fixed so the fix_list_elements option is enabled by default to produce more valid XHTML code.
 	Fixed so that all more info links on plugins point to the wiki in the about dialog.
 	Fixed so there is two new button names forecolorpicker and backcolorpicker these can be used to make plain old color picker buttons.
