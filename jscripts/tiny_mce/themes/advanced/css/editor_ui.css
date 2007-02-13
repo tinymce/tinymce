@@ -92,6 +92,6 @@ a.mceMoreColors:hover {border: 1px solid #0A246A;}
 *:first-child+html .mceSelectList {margin-top: 2px;}
 *:first-child+html span.mceMenuButton, *:first-child+html span.mceMenuButtonFocus {position: relative; left: 0; top: 0;}
 *:first-child+html span.mceMenuButton img, *:first-child+html span.mceMenuButtonSelected img, *:first-child+html span.mceMenuButtonFocus img {position: relative; top: 1px;}
-*:first-child+html a.mceMoreColors {width: 132px;}
+*:first-child+html a.mceMoreColors {width: 134px;}
 *:first-child+html .mceColors td a {width: 10px; height: 10px;}
 *:first-child+html .mceColorPreview {margin: 0; padding-left: 4px; margin-top: 14px; width: 14px;}
