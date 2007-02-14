@@ -23,7 +23,7 @@ function TinyMCE_Menu() {
 	TinyMCE_Layer.call(this, id, true);
 
 	this.id = id;
-	this.items = new Array();
+	this.items = [];
 	this.needsUpdate = true;
 };
 
@@ -63,7 +63,7 @@ TinyMCE_Menu.prototype = tinyMCE.extend(TinyMCE_Layer.prototype, {
 	 * Clears the menu.
 	 */
 	clear : function() {
-		this.items = new Array();
+		this.items = [];
 	},
 
 	/**

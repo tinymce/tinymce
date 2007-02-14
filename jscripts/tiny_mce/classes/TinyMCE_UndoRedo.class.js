@@ -14,7 +14,7 @@
  */
 function TinyMCE_UndoRedo(inst) {
 	this.instance = inst;
-	this.undoLevels = new Array();
+	this.undoLevels = [];
 	this.undoIndex = 0;
 	this.typingUndoIndex = -1;
 	this.undoRedo = true;
@@ -57,7 +57,7 @@ TinyMCE_UndoRedo.prototype = {
 			tinyMCE.dispatchCallback(inst, 'onchange_callback', 'onChange', inst);
 
 			// Time to compress
-			customUndoLevels = tinyMCE.settings['custom_undo_redo_levels'];
+			customUndoLevels = tinyMCE.settings.custom_undo_redo_levels;
 			if (customUndoLevels != -1 && this.undoLevels.length > customUndoLevels) {
 				for (i=0; i<this.undoLevels.length-1; i++)
 					this.undoLevels[i] = this.undoLevels[i+1];

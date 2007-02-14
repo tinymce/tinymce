@@ -26,14 +26,14 @@ TinyMCE_Engine.prototype._setEventsEnabled = function(node, state) {
 				'onmousedown','onmouseup','onmouseover','onmousemove',
 				'onmouseout','onkeypress','onkeydown','onkeydown','onkeyup'];
 
-	evs = tinyMCE.settings['event_elements'].split(',');
+	evs = tinyMCE.settings.event_elements.split(',');
 	for (y=0; y<evs.length; y++){
 		elms = node.getElementsByTagName(evs[y]);
 		for (i=0; i<elms.length; i++) {
 			event = "";
 
 			for (x=0; x<events.length; x++) {
-				if ((event = tinyMCE.getAttrib(elms[i], events[x])) != '') {
+				if ((event = tinyMCE.getAttrib(elms[i], events[x])) !== '') {
 					event = tinyMCE.cleanupEventStr("" + event);
 
 					if (!state)

@@ -20,21 +20,19 @@
  * @type TinyMCE_URL_Item
  */
 TinyMCE_Engine.prototype.parseURL = function(url_str) {
-	var urlParts = new Array();
+	var urlParts = [], i, pos, lastPos, chr;
 
 	if (url_str) {
-		var pos, lastPos;
-
 		// Parse protocol part
 		pos = url_str.indexOf('://');
 		if (pos != -1) {
-			urlParts['protocol'] = url_str.substring(0, pos);
+			urlParts.protocol = url_str.substring(0, pos);
 			lastPos = pos + 3;
 		}
 
 		// Find port or path start
-		for (var i=lastPos; i<url_str.length; i++) {
-			var chr = url_str.charAt(i);
+		for (i=lastPos; i<url_str.length; i++) {
+			chr = url_str.charAt(i);
 
 			if (chr == ':')
 				break;
@@ -45,14 +43,14 @@ TinyMCE_Engine.prototype.parseURL = function(url_str) {
 		pos = i;
 
 		// Get host
-		urlParts['host'] = url_str.substring(lastPos, pos);
+		urlParts.host = url_str.substring(lastPos, pos);
 
 		// Get port
-		urlParts['port'] = "";
+		urlParts.port = "";
 		lastPos = pos;
 		if (url_str.charAt(pos) == ':') {
 			pos = url_str.indexOf('/', lastPos);
-			urlParts['port'] = url_str.substring(lastPos+1, pos);
+			urlParts.port = url_str.substring(lastPos+1, pos);
 		}
 
 		// Get path
@@ -65,21 +63,21 @@ TinyMCE_Engine.prototype.parseURL = function(url_str) {
 		if (pos == -1)
 			pos = url_str.length;
 
-		urlParts['path'] = url_str.substring(lastPos, pos);
+		urlParts.path = url_str.substring(lastPos, pos);
 
 		// Get query
 		lastPos = pos;
 		if (url_str.charAt(pos) == '?') {
 			pos = url_str.indexOf('#');
 			pos = (pos == -1) ? url_str.length : pos;
-			urlParts['query'] = url_str.substring(lastPos+1, pos);
+			urlParts.query = url_str.substring(lastPos+1, pos);
 		}
 
 		// Get anchor
 		lastPos = pos;
 		if (url_str.charAt(pos) == '#') {
 			pos = url_str.length;
-			urlParts['anchor'] = url_str.substring(lastPos+1, pos);
+			urlParts.anchor = url_str.substring(lastPos+1, pos);
 		}
 	}
 
@@ -96,23 +94,23 @@ TinyMCE_Engine.prototype.parseURL = function(url_str) {
 TinyMCE_Engine.prototype.serializeURL = function(up) {
 	var o = "";
 
-	if (up['protocol'])
-		o += up['protocol'] + "://";
+	if (up.protocol)
+		o += up.protocol + "://";
 
-	if (up['host'])
-		o += up['host'];
+	if (up.host)
+		o += up.host;
 
-	if (up['port'])
-		o += ":" + up['port'];
+	if (up.port)
+		o += ":" + up.port;
 
-	if (up['path'])
-		o += up['path'];
+	if (up.path)
+		o += up.path;
 
-	if (up['query'])
-		o += "?" + up['query'];
+	if (up.query)
+		o += "?" + up.query;
 
-	if (up['anchor'])
-		o += "#" + up['anchor'];
+	if (up.anchor)
+		o += "#" + up.anchor;
 
 	return o;
 };
@@ -126,15 +124,11 @@ TinyMCE_Engine.prototype.serializeURL = function(up) {
  * @type string
  */
 TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, url_to_relative) {
-	var baseURL = this.parseURL(base_url);
-	var targetURL = this.parseURL(url_to_relative);
-	var strTok1;
-	var strTok2;
-	var breakPoint = 0;
-	var outPath = "";
-	var forceSlash = false;
+	var baseURL = this.parseURL(base_url), targetURL = this.parseURL(url_to_relative);
+	var i, strTok1, strTok2, breakPoint = 0, outPath = "", forceSlash = false;
+	var fileName, pos;
 
-	if (targetURL.path == "")
+	if (targetURL.path === '')
 		targetURL.path = "/";
 	else
 		forceSlash = true;
@@ -145,7 +139,7 @@ TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, ur
 	strTok2 = targetURL.path.split('/');
 
 	if (strTok1.length >= strTok2.length) {
-		for (var i=0; i<strTok1.length; i++) {
+		for (i=0; i<strTok1.length; i++) {
 			if (i >= strTok2.length || strTok1[i] != strTok2[i]) {
 				breakPoint = i + 1;
 				break;
@@ -154,7 +148,7 @@ TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, ur
 	}
 
 	if (strTok1.length < strTok2.length) {
-		for (var i=0; i<strTok2.length; i++) {
+		for (i=0; i<strTok2.length; i++) {
 			if (i >= strTok1.length || strTok1[i] != strTok2[i]) {
 				breakPoint = i + 1;
 				break;
@@ -165,10 +159,10 @@ TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, ur
 	if (breakPoint == 1)
 		return targetURL.path;
 
-	for (var i=0; i<(strTok1.length-(breakPoint-1)); i++)
+	for (i=0; i<(strTok1.length-(breakPoint-1)); i++)
 		outPath += "../";
 
-	for (var i=breakPoint-1; i<strTok2.length; i++) {
+	for (i=breakPoint-1; i<strTok2.length; i++) {
 		if (i != (breakPoint-1))
 			outPath += "/" + strTok2[i];
 		else
@@ -178,22 +172,21 @@ TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, ur
 	targetURL.protocol = null;
 	targetURL.host = null;
 	targetURL.port = null;
-	targetURL.path = outPath == "" && forceSlash ? "/" : outPath;
+	targetURL.path = outPath === '' && forceSlash ? "/" : outPath;
 
 	// Remove document prefix from local anchors
-	var fileName = baseURL.path;
-	var pos;
+	fileName = baseURL.path;
 
 	if ((pos = fileName.lastIndexOf('/')) != -1)
 		fileName = fileName.substring(pos + 1);
 
 	// Is local anchor
-	if (fileName == targetURL.path && targetURL.anchor != "")
+	if (fileName == targetURL.path && targetURL.anchor !== '')
 		targetURL.path = "";
 
 	// If empty and not local anchor force filename or slash
-	if (targetURL.path == "" && !targetURL.anchor)
-		targetURL.path = fileName != "" ? fileName : "/";
+	if (targetURL.path === '' && !targetURL.anchor)
+		targetURL.path = fileName !== '' ? fileName : "/";
 
 	return this.serializeURL(targetURL);
 };
@@ -207,20 +200,20 @@ TinyMCE_Engine.prototype.convertAbsoluteURLToRelativeURL = function(base_url, ur
  * @type string
  */
 TinyMCE_Engine.prototype.convertRelativeToAbsoluteURL = function(base_url, relative_url) {
-	var baseURL = this.parseURL(base_url), baseURLParts, relURLParts;
-	var relURL = this.parseURL(relative_url);
+	var baseURL = this.parseURL(base_url), baseURLParts, relURLParts, newRelURLParts, numBack, relURL = this.parseURL(relative_url), i;
+	var len, absPath, start, end;
 
-	if (relative_url == "" || relative_url.indexOf('://') != -1 || /^(mailto:|javascript:|#|\/)/.test(relative_url))
+	if (relative_url === '' || relative_url.indexOf('://') != -1 || /^(mailto:|javascript:|#|\/)/.test(relative_url))
 		return relative_url;
 
 	// Split parts
-	baseURLParts = baseURL['path'].split('/');
-	relURLParts = relURL['path'].split('/');
+	baseURLParts = baseURL.path.split('/');
+	relURLParts = relURL.path.split('/');
 
 	// Remove empty chunks
-	var newBaseURLParts = new Array();
-	for (var i=baseURLParts.length-1; i>=0; i--) {
-		if (baseURLParts[i].length == 0)
+	var newBaseURLParts = [];
+	for (i=baseURLParts.length-1; i>=0; i--) {
+		if (baseURLParts[i].length === 0)
 			continue;
 
 		newBaseURLParts[newBaseURLParts.length] = baseURLParts[i];
@@ -228,10 +221,10 @@ TinyMCE_Engine.prototype.convertRelativeToAbsoluteURL = function(base_url, relat
 	baseURLParts = newBaseURLParts.reverse();
 
 	// Merge relURLParts chunks
-	var newRelURLParts = new Array();
-	var numBack = 0;
-	for (var i=relURLParts.length-1; i>=0; i--) {
-		if (relURLParts[i].length == 0 || relURLParts[i] == ".")
+	newRelURLParts = [];
+	numBack = 0;
+	for (i=relURLParts.length-1; i>=0; i--) {
+		if (relURLParts[i].length === 0 || relURLParts[i] == ".")
 			continue;
 
 		if (relURLParts[i] == '..') {
@@ -250,9 +243,10 @@ TinyMCE_Engine.prototype.convertRelativeToAbsoluteURL = function(base_url, relat
 	relURLParts = newRelURLParts.reverse();
 
 	// Remove end from absolute path
-	var len = baseURLParts.length-numBack;
-	var absPath = (len <= 0 ? "" : "/") + baseURLParts.slice(0, len).join('/') + "/" + relURLParts.join('/');
-	var start = "", end = "";
+	len = baseURLParts.length-numBack;
+	absPath = (len <= 0 ? "" : "/") + baseURLParts.slice(0, len).join('/') + "/" + relURLParts.join('/');
+	start = "";
+	end = "";
 
 	// Build output URL
 	relURL.protocol = baseURL.protocol;
@@ -278,6 +272,7 @@ TinyMCE_Engine.prototype.convertRelativeToAbsoluteURL = function(base_url, relat
  * @type string
  */
 TinyMCE_Engine.prototype.convertURL = function(url, node, on_save) {
+	var start, portPart;
 	var prot = document.location.protocol;
 	var host = document.location.hostname;
 	var port = document.location.port;
@@ -295,45 +290,46 @@ TinyMCE_Engine.prototype.convertURL = function(url, node, on_save) {
 
 	// Fix relative/Mozilla
 	if (!tinyMCE.isIE && !on_save && url.indexOf("://") == -1 && url.charAt(0) != '/')
-		return tinyMCE.settings['base_href'] + url;
+		return tinyMCE.settings.base_href + url;
 
 	// Handle relative URLs
 	if (on_save && tinyMCE.getParam('relative_urls')) {
-		var curl = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], url);
+		var curl = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, url);
 		if (curl.charAt(0) == '/')
-			curl = tinyMCE.settings['document_base_prefix'] + curl;
+			curl = tinyMCE.settings.document_base_prefix + curl;
 
 		var urlParts = tinyMCE.parseURL(curl);
-		var tmpUrlParts = tinyMCE.parseURL(tinyMCE.settings['document_base_url']);
+		var tmpUrlParts = tinyMCE.parseURL(tinyMCE.settings.document_base_url);
 
 		// Force relative
-		if (urlParts['host'] == tmpUrlParts['host'] && (urlParts['port'] == tmpUrlParts['port']))
-			return tinyMCE.convertAbsoluteURLToRelativeURL(tinyMCE.settings['document_base_url'], curl);
+		if (urlParts.host == tmpUrlParts.host && (urlParts.port == tmpUrlParts.port))
+			return tinyMCE.convertAbsoluteURLToRelativeURL(tinyMCE.settings.document_base_url, curl);
 	}
 
 	// Handle absolute URLs
 	if (!tinyMCE.getParam('relative_urls')) {
 		var urlParts = tinyMCE.parseURL(url);
-		var baseUrlParts = tinyMCE.parseURL(tinyMCE.settings['base_href']);
+		var baseUrlParts = tinyMCE.parseURL(tinyMCE.settings.base_href);
 
 		// Force absolute URLs from relative URLs
-		url = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], url);
+		url = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, url);
 
 		// If anchor and path is the same page
-		if (urlParts['anchor'] && urlParts['path'] == baseUrlParts['path'])
-			return "#" + urlParts['anchor'];
+		if (urlParts.anchor && urlParts.path == baseUrlParts.path)
+			return "#" + urlParts.anchor;
 	}
 
 	// Remove current domain
 	if (tinyMCE.getParam('remove_script_host')) {
-		var start = "", portPart = "";
+		start = "";
+		portPart = "";
 
-		if (port != "")
+		if (port !== '')
 			portPart = ":" + port;
 
 		start = prot + "//" + host + portPart + "/";
 
-		if (url.indexOf(start) == 0)
+		if (url.indexOf(start) === 0)
 			url = url.substring(start.length-1);
 	}
 
@@ -355,11 +351,11 @@ TinyMCE_Engine.prototype.convertAllRelativeURLs = function(body) {
 		src = tinyMCE.getAttrib(elms[i], 'src');
 
 		msrc = tinyMCE.getAttrib(elms[i], 'mce_src');
-		if (msrc != "")
+		if (msrc !== '')
 			src = msrc;
 
-		if (src != "") {
-			src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], src);
+		if (src !== '') {
+			src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, src);
 			elms[i].setAttribute("src", src);
 		}
 	}
@@ -370,11 +366,11 @@ TinyMCE_Engine.prototype.convertAllRelativeURLs = function(body) {
 		href = tinyMCE.getAttrib(elms[i], 'href');
 
 		mhref = tinyMCE.getAttrib(elms[i], 'mce_href');
-		if (mhref != "")
+		if (mhref !== '')
 			href = mhref;
 
-		if (href && href != "") {
-			href = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], href);
+		if (href && href !== '') {
+			href = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, href);
 			elms[i].setAttribute("href", href);
 		}
 	}

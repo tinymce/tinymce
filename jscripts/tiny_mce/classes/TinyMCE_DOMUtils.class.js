@@ -72,7 +72,7 @@ TinyMCE_Engine.prototype.createTag = function(d, tn, a, h) {
  * @type HTMLElement
  */
 TinyMCE_Engine.prototype.getElementByAttributeValue = function(n, e, a, v) {
-	return (n = this.getElementsByAttributeValue(n, e, a, v)).length == 0 ? null : n[0];
+	return (n = this.getElementsByAttributeValue(n, e, a, v)).length === 0 ? null : n[0];
 };
 
 /**
@@ -86,7 +86,7 @@ TinyMCE_Engine.prototype.getElementByAttributeValue = function(n, e, a, v) {
  * @type Array
  */
 TinyMCE_Engine.prototype.getElementsByAttributeValue = function(n, e, a, v) {
-	var i, nl = n.getElementsByTagName(e), o = new Array();
+	var i, nl = n.getElementsByTagName(e), o = [];
 
 	for (i=0; i<nl.length; i++) {
 		if (tinyMCE.getAttrib(nl[i], a).indexOf(v) != -1)
@@ -271,7 +271,7 @@ TinyMCE_Engine.prototype._getElementById = function(id, d) {
 TinyMCE_Engine.prototype.getNodeTree = function(n, na, t, nn) {
 	return this.selectNodes(n, function(n) {
 		return (!t || n.nodeType == t) && (!nn || n.nodeName == nn);
-	}, na ? na : new Array());
+	}, na ? na : []);
 };
 
 /**
@@ -289,7 +289,7 @@ TinyMCE_Engine.prototype.getParentElement = function(n, na, f, r) {
 
 	// Compatiblity with old scripts where f param was a attribute string
 	if (f && typeof(f) == 'string')
-		return this.getParentElement(n, na, function(no) {return tinyMCE.getAttrib(no, f) != '';});
+		return this.getParentElement(n, na, function(no) {return tinyMCE.getAttrib(no, f) !== '';});
 
 	return this.getParentNode(n, function(n) {
 		return ((n.nodeType == 1 && !re) || (re && re.test(n.nodeName))) && (!f || f(n));
@@ -352,11 +352,11 @@ TinyMCE_Engine.prototype.getAttrib = function(elm, name, dv) {
 		v = elm.className;
 
 	// Workaround for a issue with Firefox 1.5rc2+
-	if (tinyMCE.isGecko && name == "src" && elm.src != null && elm.src != "")
+	if (tinyMCE.isGecko && name == "src" && elm.src != null && elm.src !== '')
 		v = elm.src;
 
 	// Workaround for a issue with Firefox 1.5rc2+
-	if (tinyMCE.isGecko && name == "href" && elm.href != null && elm.href != "")
+	if (tinyMCE.isGecko && name == "href" && elm.href != null && elm.href !== '')
 		v = elm.href;
 
 	if (name == "http-equiv" && tinyMCE.isIE)
@@ -365,7 +365,7 @@ TinyMCE_Engine.prototype.getAttrib = function(elm, name, dv) {
 	if (name == "style" && !tinyMCE.isOpera)
 		v = elm.style.cssText;
 
-	return (v && v != "") ? v : dv;
+	return (v && v !== '') ? v : dv;
 };
 
 /**
@@ -381,7 +381,7 @@ TinyMCE_Engine.prototype.setAttrib = function(el, name, va, fix) {
 		va = "" + va;
 
 	if (fix) {
-		if (va == null)
+		if (va === null)
 			va = "";
 
 		va = va.replace(/[^0-9%]/g, '');
@@ -393,7 +393,7 @@ TinyMCE_Engine.prototype.setAttrib = function(el, name, va, fix) {
 	if (name == "class")
 		el.className = va;
 
-	if (va != null && va != "" && va != -1)
+	if (va != null && va !== '' && va != -1)
 		el.setAttribute(name, va);
 	else
 		el.removeAttribute(name);
@@ -410,7 +410,7 @@ TinyMCE_Engine.prototype.setStyleAttrib = function(e, n, v) {
 	e.style[n] = v;
 
 	// Style attrib deleted in IE
-	if (tinyMCE.isIE && v == null || v == '') {
+	if (tinyMCE.isIE && v === null || v === '') {
 		v = tinyMCE.serializeStyle(tinyMCE.parseStyle(e.style.cssText));
 		e.style.cssText = v;
 		e.setAttribute("style", v);
@@ -435,7 +435,7 @@ TinyMCE_Engine.prototype.switchClass = function(ei, c) {
 
 	if (e) {
 		// Keep tile mode
-		if (tinyMCE.settings.button_tile_map && e.className && e.className.indexOf('mceTiledButton') == 0)
+		if (tinyMCE.settings.button_tile_map && e.className && e.className.indexOf('mceTiledButton') === 0)
 			c = 'mceTiledButton ' + c;
 
 		e.className = c;
@@ -541,7 +541,7 @@ TinyMCE_Engine.prototype.selectNodes = function(n, f, a) {
 	var i;
 
 	if (!a)
-		a = new Array();
+		a = [];
 
 	if (f(n))
 		a[a.length] = n;
@@ -566,7 +566,7 @@ TinyMCE_Engine.prototype.selectNodes = function(n, f, a) {
  */
 TinyMCE_Engine.prototype.addCSSClass = function(e, c, b) {
 	var o = this.removeCSSClass(e, c);
-	return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
+	return e.className = b ? c + (o !== '' ? (' ' + o) : '') : (o !== '' ? (o + ' ') : '') + c;
 };
 
 /**

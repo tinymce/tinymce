@@ -13,20 +13,20 @@
  * @param {Array} settings Name/Value array of instance specific configuration settings.
  */
 function TinyMCE_Control(settings) {
-	var t, i, to, fu, p, x, fn, fu, pn, s = settings;
+	var t, i, tos, fu, p, x, fn, fu, pn, s = settings;
 
 	this.undoRedoLevel = true;
 	this.isTinyMCE_Control = true;
 
 	// Default settings
 	this.settings = s;
-	this.settings['theme'] = tinyMCE.getParam("theme", "default");
-	this.settings['width'] = tinyMCE.getParam("width", -1);
-	this.settings['height'] = tinyMCE.getParam("height", -1);
+	this.settings.theme = tinyMCE.getParam("theme", "default");
+	this.settings.width = tinyMCE.getParam("width", -1);
+	this.settings.height = tinyMCE.getParam("height", -1);
 	this.selection = new TinyMCE_Selection(this);
 	this.undoRedo = new TinyMCE_UndoRedo(this);
 	this.cleanup = new TinyMCE_Cleanup();
-	this.shortcuts = new Array();
+	this.shortcuts = [];
 	this.hasMouseMoved = false;
 	this.foreColor = this.backColor = "#999999";
 	this.data = {};
@@ -47,21 +47,21 @@ function TinyMCE_Control(settings) {
 	});
 
 	// Wrap old theme
-	t = this.settings['theme'];
+	t = this.settings.theme;
 	if (!tinyMCE.hasTheme(t)) {
 		fn = tinyMCE.callbacks;
-		to = {};
+		tos = {};
 
 		for (i=0; i<fn.length; i++) {
 			if ((fu = window['TinyMCE_' + t + "_" + fn[i]]))
-				to[fn[i]] = fu;
+				tos[fn[i]] = fu;
 		}
 
-		tinyMCE.addTheme(t, to);
+		tinyMCE.addTheme(t, tos);
 	}
 
 	// Wrap old plugins
-	this.plugins = new Array();
+	this.plugins = [];
 	p = tinyMCE.getParam('plugins', '', true, ',');
 	if (p.length > 0) {
 		for (i=0; i<p.length; i++) {
@@ -72,14 +72,14 @@ function TinyMCE_Control(settings) {
 
 			if (!tinyMCE.hasPlugin(pn)) {
 				fn = tinyMCE.callbacks;
-				to = {};
+				tos = {};
 
 				for (x=0; x<fn.length; x++) {
 					if ((fu = window['TinyMCE_' + pn + "_" + fn[x]]))
-						to[fn[x]] = fu;
+						tos[fn[x]] = fu;
 				}
 
-				tinyMCE.addPlugin(pn, to);
+				tinyMCE.addPlugin(pn, tos);
 			}
 
 			this.plugins[this.plugins.length] = pn; 
@@ -197,9 +197,9 @@ TinyMCE_Control.prototype = {
 	 * used to handle multiple configurations.
 	 */
 	switchSettings : function() {
-		if (tinyMCE.configs.length > 1 && tinyMCE.currentConfig != this.settings['index']) {
+		if (tinyMCE.configs.length > 1 && tinyMCE.currentConfig != this.settings.index) {
 			tinyMCE.settings = this.settings;
-			tinyMCE.currentConfig = this.settings['index'];
+			tinyMCE.currentConfig = this.settings.index;
 		}
 	},
 
@@ -346,7 +346,7 @@ TinyMCE_Control.prototype = {
 		m = m.toLowerCase();
 		k = ie && !n ? k.toUpperCase() : k;
 		c = n ? null : k.charCodeAt(0);
-		d = d && d.indexOf('lang_') == 0 ? tinyMCE.getLang(d) : d;
+		d = d && d.indexOf('lang_') === 0 ? tinyMCE.getLang(d) : d;
 
 		sc = {
 			alt : m.indexOf('alt') != -1,
@@ -431,7 +431,7 @@ TinyMCE_Control.prototype = {
 		s = this.getSel();
 
 		// Weird, wheres that cursor selection?
-		return (!s || !s.rangeCount || s.rangeCount == 0);
+		return (!s || !s.rangeCount || s.rangeCount === 0);
 	},
 
 	/**
@@ -452,6 +452,8 @@ TinyMCE_Control.prototype = {
 	 * @private
 	 */
 	_mergeElements : function(scmd, pa, ch, override) {
+		var st, stc, className, n;
+
 		if (scmd == "removeformat") {
 			pa.className = "";
 			pa.style.cssText = "";
@@ -460,22 +462,22 @@ TinyMCE_Control.prototype = {
 			return;
 		}
 
-		var st = tinyMCE.parseStyle(tinyMCE.getAttrib(pa, "style"));
-		var stc = tinyMCE.parseStyle(tinyMCE.getAttrib(ch, "style"));
-		var className = tinyMCE.getAttrib(pa, "class");
+		st = tinyMCE.parseStyle(tinyMCE.getAttrib(pa, "style"));
+		stc = tinyMCE.parseStyle(tinyMCE.getAttrib(ch, "style"));
+		className = tinyMCE.getAttrib(pa, "class");
 
 		// Removed class adding due to bug #1478272
 		className = tinyMCE.getAttrib(ch, "class");
 
 		if (override) {
-			for (var n in st) {
+			for (n in st) {
 				if (typeof(st[n]) == 'function')
 					continue;
 
 				stc[n] = st[n];
 			}
 		} else {
-			for (var n in stc) {
+			for (n in stc) {
 				if (typeof(stc[n]) == 'function')
 					continue;
 
@@ -522,7 +524,7 @@ TinyMCE_Control.prototype = {
 	 * @param {mixed} value Optional command value, this can be anything.
 	 */
 	execCommand : function(command, user_interface, value) {
-		var doc = this.getDoc(), win = this.getWin(), focusElm = this.getFocusElement();
+		var i, x, z, align, img, div, doc = this.getDoc(), win = this.getWin(), focusElm = this.getFocusElement();
 
 		// Is not a undo specific command
 		if (!new RegExp('mceStartTyping|mceEndTyping|mceBeginUndoLevel|mceEndUndoLevel|mceAddUndoLevel', 'gi').test(command))
@@ -545,8 +547,8 @@ TinyMCE_Control.prototype = {
 
 		// Fix align on images
 		if (focusElm && focusElm.nodeName == "IMG") {
-			var align = focusElm.getAttribute('align');
-			var img = command == "JustifyCenter" ? focusElm.cloneNode(false) : focusElm;
+			align = focusElm.getAttribute('align');
+			img = command == "JustifyCenter" ? focusElm.cloneNode(false) : focusElm;
 
 			switch (command) {
 				case "JustifyLeft":
@@ -556,7 +558,7 @@ TinyMCE_Control.prototype = {
 						img.setAttribute('align', 'left');
 
 					// Remove the div
-					var div = focusElm.parentNode;
+					div = focusElm.parentNode;
 					if (div && div.nodeName == "DIV" && div.childNodes.length == 1 && div.parentNode)
 						div.parentNode.replaceChild(img, div);
 
@@ -569,14 +571,14 @@ TinyMCE_Control.prototype = {
 					img.removeAttribute('align');
 
 					// Is centered
-					var div = tinyMCE.getParentElement(focusElm, "div");
+					div = tinyMCE.getParentElement(focusElm, "div");
 					if (div && div.style.textAlign == "center") {
 						// Remove div
 						if (div.nodeName == "DIV" && div.childNodes.length == 1 && div.parentNode)
 							div.parentNode.replaceChild(img, div);
 					} else {
 						// Add div
-						var div = this.getDoc().createElement("div");
+						div = this.getDoc().createElement("div");
 						div.style.textAlign = 'center';
 						div.appendChild(img);
 						focusElm.parentNode.replaceChild(div, focusElm);
@@ -594,7 +596,7 @@ TinyMCE_Control.prototype = {
 						img.setAttribute('align', 'right');
 
 					// Remove the div
-					var div = focusElm.parentNode;
+					div = focusElm.parentNode;
 					if (div && div.nodeName == "DIV" && div.childNodes.length == 1 && div.parentNode)
 						div.parentNode.replaceChild(img, div);
 
@@ -605,7 +607,7 @@ TinyMCE_Control.prototype = {
 			}
 		}
 
-		if (tinyMCE.settings['force_br_newlines']) {
+		if (tinyMCE.settings.force_br_newlines) {
 			var alignValue = "";
 
 			if (doc.selection.type != "Control") {
@@ -627,7 +629,7 @@ TinyMCE_Control.prototype = {
 							break;
 				}
 
-				if (alignValue != "") {
+				if (alignValue !== '') {
 					var rng = doc.selection.createRange();
 
 					if ((divElm = tinyMCE.getParentElement(rng.parentElement(), "div")) != null)
@@ -681,7 +683,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "FormatBlock":
-				if (value == null || value == "") {
+				if (value === null || value === '') {
 					var elm = tinyMCE.getParentElement(this.getFocusElement(), "p,div,h1,h2,h3,h4,h5,h6,pre,address,blockquote,dt,dl,dd,samp");
 
 					if (elm)
@@ -726,7 +728,7 @@ TinyMCE_Control.prototype = {
 
 			case "mceSelectNodeDepth":
 				var parentNode = this.getFocusElement();
-				for (var i=0; parentNode; i++) {
+				for (i=0; parentNode; i++) {
 					if (parentNode.nodeName.toLowerCase() == "body")
 						break;
 
@@ -752,14 +754,14 @@ TinyMCE_Control.prototype = {
 			case "SetStyleInfo":
 				var rng = this.getRng();
 				var sel = this.getSel();
-				var scmd = value['command'];
-				var sname = value['name'];
-				var svalue = value['value'] == null ? '' : value['value'];
-				//var svalue = value['value'] == null ? '' : value['value'];
-				var wrapper = value['wrapper'] ? value['wrapper'] : "span";
+				var scmd = value.command;
+				var sname = value.name;
+				var svalue = value.value === null ? '' : value.value;
+				//var svalue = value['value'] === null ? '' : value['value'];
+				var wrapper = value.wrapper ? value.wrapper : "span";
 				var parentElm = null;
 				var invalidRe = new RegExp("^BODY|HTML$", "g");
-				var invalidParentsRe = tinyMCE.settings['merge_styles_invalid_parents'] != '' ? new RegExp(tinyMCE.settings['merge_styles_invalid_parents'], "gi") : null;
+				var invalidParentsRe = tinyMCE.settings.merge_styles_invalid_parents !== '' ? new RegExp(tinyMCE.settings.merge_styles_invalid_parents, "gi") : null;
 
 				// Whole element selected check
 				if (tinyMCE.isIE) {
@@ -771,8 +773,8 @@ TinyMCE_Control.prototype = {
 						var prng = doc.selection.createRange();
 						prng.moveToElementText(pelm);
 
-						if (rng.htmlText == prng.htmlText || rng.boundingWidth == 0) {
-							if (invalidParentsRe == null || !invalidParentsRe.test(pelm.nodeName))
+						if (rng.htmlText == prng.htmlText || rng.boundingWidth === 0) {
+							if (invalidParentsRe === null || !invalidParentsRe.test(pelm.nodeName))
 								parentElm = pelm;
 						}
 					}
@@ -796,8 +798,8 @@ TinyMCE_Control.prototype = {
 					}
 
 					// Remove style/attribs from all children
-					var ch = tinyMCE.getNodeTree(parentElm, new Array(), 1);
-					for (var z=0; z<ch.length; z++) {
+					var ch = tinyMCE.getNodeTree(parentElm, [], 1);
+					for (z=0; z<ch.length; z++) {
 						if (ch[z] == parentElm)
 							continue;
 
@@ -818,7 +820,7 @@ TinyMCE_Control.prototype = {
 					var elementArray = tinyMCE.getElementsByAttributeValue(this.getBody(), "font", "face", "#mce_temp_font#");
 
 					// Change them all
-					for (var x=0; x<elementArray.length; x++) {
+					for (x=0; x<elementArray.length; x++) {
 						elm = elementArray[x];
 						if (elm) {
 							var spanElm = doc.createElement(wrapper);
@@ -835,7 +837,7 @@ TinyMCE_Control.prototype = {
 							}
 
 							if (elm.hasChildNodes()) {
-								for (var i=0; i<elm.childNodes.length; i++)
+								for (i=0; i<elm.childNodes.length; i++)
 									spanElm.appendChild(elm.childNodes[i].cloneNode(true));
 							}
 
@@ -843,8 +845,8 @@ TinyMCE_Control.prototype = {
 							elm.parentNode.replaceChild(spanElm, elm);
 
 							// Remove style/attribs from all children
-							var ch = tinyMCE.getNodeTree(spanElm, new Array(), 1);
-							for (var z=0; z<ch.length; z++) {
+							var ch = tinyMCE.getNodeTree(spanElm, [], 1);
+							for (z=0; z<ch.length; z++) {
 								if (ch[z] == spanElm)
 									continue;
 
@@ -865,7 +867,7 @@ TinyMCE_Control.prototype = {
 
 				// Cleaup wrappers
 				var nodes = doc.getElementsByTagName(wrapper);
-				for (var i=nodes.length-1; i>=0; i--) {
+				for (i=nodes.length-1; i>=0; i--) {
 					var elm = nodes[i];
 					var isNew = tinyMCE.getAttrib(elm, "mce_new") == "true";
 
@@ -881,16 +883,15 @@ TinyMCE_Control.prototype = {
 					// Is I the only child
 					if (elm.parentNode.childNodes.length == 1 && !invalidRe.test(elm.nodeName) && !invalidRe.test(elm.parentNode.nodeName)) {
 						//tinyMCE.debug("merge2" + isNew + "," + elm.nodeName + "," + elm.parentNode.nodeName);
-						if (invalidParentsRe == null || !invalidParentsRe.test(elm.parentNode.nodeName))
+						if (invalidParentsRe === null || !invalidParentsRe.test(elm.parentNode.nodeName))
 							this._mergeElements(scmd, elm.parentNode, elm, false);
 					}
 				}
 
 				// Remove empty wrappers
 				var nodes = doc.getElementsByTagName(wrapper);
-				for (var i=nodes.length-1; i>=0; i--) {
-					var elm = nodes[i];
-					var isEmpty = true;
+				for (i=nodes.length-1; i>=0; i--) {
+					var elm = nodes[i], isEmpty = true;
 
 					// Check if it has any attribs
 					var tmp = doc.createElement("body");
@@ -900,7 +901,7 @@ TinyMCE_Control.prototype = {
 					tmp.innerHTML = tmp.innerHTML.replace(new RegExp('style=""|class=""', 'gi'), '');
 					//tinyMCE.debug(tmp.innerHTML);
 					if (new RegExp('<span>', 'gi').test(tmp.innerHTML)) {
-						for (var x=0; x<elm.childNodes.length; x++) {
+						for (x=0; x<elm.childNodes.length; x++) {
 							if (elm.parentNode != null)
 								elm.parentNode.insertBefore(elm.childNodes[x].cloneNode(true), elm);
 						}
@@ -918,7 +919,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "FontName":
-				if (value == null) {
+				if (value === null) {
 					var s = this.getSel();
 
 					// Find font and select it
@@ -956,7 +957,7 @@ TinyMCE_Control.prototype = {
 				return;
 
 			case "forecolor":
-				value = value == null ? this.foreColor : value;
+				value = value === null ? this.foreColor : value;
 				value = tinyMCE.trim(value);
 				value = value.charAt(0) != '#' ? (isNaN('0x' + value) ? value : '#' + value) : value;
 
@@ -965,7 +966,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "HiliteColor":
-				value = value == null ? this.backColor : value;
+				value = value === null ? this.backColor : value;
 				value = tinyMCE.trim(value);
 				value = value.charAt(0) != '#' ? (isNaN('0x' + value) ? value : '#' + value) : value;
 				this.backColor = value;
@@ -1069,11 +1070,11 @@ TinyMCE_Control.prototype = {
 
 			case "mceSetAttribute":
 				if (typeof(value) == 'object') {
-					var targetElms = (typeof(value['targets']) == "undefined") ? "p,img,span,div,td,h1,h2,h3,h4,h5,h6,pre,address" : value['targets'];
+					var targetElms = (typeof(value.targets) == "undefined") ? "p,img,span,div,td,h1,h2,h3,h4,h5,h6,pre,address" : value.targets;
 					var targetNode = tinyMCE.getParentElement(this.getFocusElement(), targetElms);
 
 					if (targetNode) {
-						targetNode.setAttribute(value['name'], value['value']);
+						targetNode.setAttribute(value.name, value.value);
 						tinyMCE.triggerNodeChange();
 					}
 				}
@@ -1241,7 +1242,7 @@ TinyMCE_Control.prototype = {
 			break;
 
 			case "mceStartTyping":
-				if (tinyMCE.settings['custom_undo_redo'] && this.undoRedo.typingUndoIndex == -1) {
+				if (tinyMCE.settings.custom_undo_redo && this.undoRedo.typingUndoIndex == -1) {
 					this.undoRedo.typingUndoIndex = this.undoRedo.undoIndex;
 					tinyMCE.typingUndoIndex = tinyMCE.undoIndex;
 					this.execCommand('mceAddUndoLevel');
@@ -1249,7 +1250,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "mceEndTyping":
-				if (tinyMCE.settings['custom_undo_redo'] && this.undoRedo.typingUndoIndex != -1) {
+				if (tinyMCE.settings.custom_undo_redo && this.undoRedo.typingUndoIndex != -1) {
 					this.execCommand('mceAddUndoLevel');
 					this.undoRedo.typingUndoIndex = -1;
 				}
@@ -1267,14 +1268,14 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "mceAddUndoLevel":
-				if (tinyMCE.settings['custom_undo_redo'] && this.undoRedoLevel) {
+				if (tinyMCE.settings.custom_undo_redo && this.undoRedoLevel) {
 					if (this.undoRedo.add())
 						tinyMCE.triggerNodeChange(false);
 				}
 				break;
 
 			case "Undo":
-				if (tinyMCE.settings['custom_undo_redo']) {
+				if (tinyMCE.settings.custom_undo_redo) {
 					tinyMCE.execCommand("mceEndTyping");
 					this.undoRedo.undo();
 					tinyMCE.triggerNodeChange();
@@ -1283,7 +1284,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "Redo":
-				if (tinyMCE.settings['custom_undo_redo']) {
+				if (tinyMCE.settings.custom_undo_redo) {
 					tinyMCE.execCommand("mceEndTyping");
 					this.undoRedo.redo();
 					tinyMCE.triggerNodeChange();
@@ -1337,7 +1338,7 @@ TinyMCE_Control.prototype = {
 				}
 
 				// Remove class
-				if (text.length == 0)
+				if (text.length === 0)
 					this.execCommand("mceSetCSSClass", false, "");
 
 				tinyMCE.triggerNodeChange();
@@ -1392,95 +1393,94 @@ TinyMCE_Control.prototype = {
 	 * @private
 	 */
 	_onAdd : function(replace_element, form_element_name, target_document) {
-		var hc, th, to, editorTemplate;
+		var hc, th, tos, editorTemplate;
 
-		th = this.settings['theme'];
-		to = tinyMCE.themes[th];
+		th = this.settings.theme;
+		tos = tinyMCE.themes[th];
 
 		var targetDoc = target_document ? target_document : document;
 
 		this.targetDoc = targetDoc;
 
-		tinyMCE.themeURL = tinyMCE.baseURL + "/themes/" + this.settings['theme'];
-		this.settings['themeurl'] = tinyMCE.themeURL;
+		tinyMCE.themeURL = tinyMCE.baseURL + "/themes/" + this.settings.theme;
+		this.settings.themeurl = tinyMCE.themeURL;
 
 		if (!replace_element) {
 			alert("Error: Could not find the target element.");
 			return false;
 		}
 
-		if (to.getEditorTemplate)
-			editorTemplate = to.getEditorTemplate(this.settings, this.editorId);
+		if (tos.getEditorTemplate)
+			editorTemplate = tos.getEditorTemplate(this.settings, this.editorId);
 
-		var deltaWidth = editorTemplate['delta_width'] ? editorTemplate['delta_width'] : 0;
-		var deltaHeight = editorTemplate['delta_height'] ? editorTemplate['delta_height'] : 0;
-		var html = '<span id="' + this.editorId + '_parent" class="mceEditorContainer">' + editorTemplate['html'];
+		var deltaWidth = editorTemplate.delta_width ? editorTemplate.delta_width : 0;
+		var deltaHeight = editorTemplate.delta_height ? editorTemplate.delta_height : 0;
+		var html = '<span id="' + this.editorId + '_parent" class="mceEditorContainer">' + editorTemplate.html;
 
 		html = tinyMCE.replaceVar(html, "editor_id", this.editorId);
-		this.settings['default_document'] = tinyMCE.baseURL + "/blank.htm";
+		this.settings.default_document = tinyMCE.baseURL + "/blank.htm";
 
-		this.settings['old_width'] = this.settings['width'];
-		this.settings['old_height'] = this.settings['height'];
+		this.settings.old_width = this.settings.width;
+		this.settings.old_height = this.settings.height;
 
 		// Set default width, height
-		if (this.settings['width'] == -1)
-			this.settings['width'] = replace_element.offsetWidth;
+		if (this.settings.width == -1)
+			this.settings.width = replace_element.offsetWidth;
 
-		if (this.settings['height'] == -1)
-			this.settings['height'] = replace_element.offsetHeight;
+		if (this.settings.height == -1)
+			this.settings.height = replace_element.offsetHeight;
 
 		// Try the style width
-		if (this.settings['width'] == 0)
-			this.settings['width'] = replace_element.style.width;
+		if (this.settings.width === 0)
+			this.settings.width = replace_element.style.width;
 
 		// Try the style height
-		if (this.settings['height'] == 0)
-			this.settings['height'] = replace_element.style.height; 
+		if (this.settings.height === 0)
+			this.settings.height = replace_element.style.height; 
 
 		// If no width/height then default to 320x240, better than nothing
-		if (this.settings['width'] == 0)
-			this.settings['width'] = 320;
+		if (this.settings.width === 0)
+			this.settings.width = 320;
 
-		if (this.settings['height'] == 0)
-			this.settings['height'] = 240;
+		if (this.settings.height === 0)
+			this.settings.height = 240;
 
-		this.settings['area_width'] = parseInt(this.settings['width']);
-		this.settings['area_height'] = parseInt(this.settings['height']);
-		this.settings['area_width'] += deltaWidth;
-		this.settings['area_height'] += deltaHeight;
-
-		this.settings['width_style'] = "" + this.settings['width'];
-		this.settings['height_style'] = "" + this.settings['height'];
+		this.settings.area_width = parseInt(this.settings.width);
+		this.settings.area_height = parseInt(this.settings.height);
+		this.settings.area_width += deltaWidth;
+		this.settings.area_height += deltaHeight;
+		this.settings.width_style = "" + this.settings.width;
+		this.settings.height_style = "" + this.settings.height;
 
 		// Special % handling
-		if (("" + this.settings['width']).indexOf('%') != -1)
-			this.settings['area_width'] = "100%";
+		if (("" + this.settings.width).indexOf('%') != -1)
+			this.settings.area_width = "100%";
 		else
-			this.settings['width_style'] += 'px';
+			this.settings.width_style += 'px';
 
-		if (("" + this.settings['height']).indexOf('%') != -1)
-			this.settings['area_height'] = "100%";
+		if (("" + this.settings.height).indexOf('%') != -1)
+			this.settings.area_height = "100%";
 		else
-			this.settings['height_style'] += 'px';
+			this.settings.height_style += 'px';
 
 		if (("" + replace_element.style.width).indexOf('%') != -1) {
-			this.settings['width'] = replace_element.style.width;
-			this.settings['area_width'] = "100%";
-			this.settings['width_style'] = "100%";
+			this.settings.width = replace_element.style.width;
+			this.settings.area_width = "100%";
+			this.settings.width_style = "100%";
 		}
 
 		if (("" + replace_element.style.height).indexOf('%') != -1) {
-			this.settings['height'] = replace_element.style.height;
-			this.settings['area_height'] = "100%";
-			this.settings['height_style'] = "100%";
+			this.settings.height = replace_element.style.height;
+			this.settings.area_height = "100%";
+			this.settings.height_style = "100%";
 		}
 
 		html = tinyMCE.applyTemplate(html);
 
-		this.settings['width'] = this.settings['old_width'];
-		this.settings['height'] = this.settings['old_height'];
+		this.settings.width = this.settings.old_width;
+		this.settings.height = this.settings.old_height;
 
-		this.visualAid = this.settings['visual'];
+		this.visualAid = this.settings.visual;
 		this.formTargetElementId = form_element_name;
 
 		// Get replace_element contents
@@ -1494,13 +1494,9 @@ TinyMCE_Control.prototype = {
 			this.oldTargetElement = replace_element;
 
 			// Debug mode
-			if (tinyMCE.settings['debug']) {
-				hc = '<textarea wrap="off" id="' + form_element_name + '" name="' + form_element_name + '" cols="100" rows="15"></textarea>';
-			} else {
-				hc = '<input type="hidden" id="' + form_element_name + '" name="' + form_element_name + '" />';
-				this.oldTargetDisplay = tinyMCE.getStyle(this.oldTargetElement, 'display', 'inline');
-				this.oldTargetElement.style.display = "none";
-			}
+			hc = '<input type="hidden" id="' + form_element_name + '" name="' + form_element_name + '" />';
+			this.oldTargetDisplay = tinyMCE.getStyle(this.oldTargetElement, 'display', 'inline');
+			this.oldTargetElement.style.display = "none";
 
 			html += '</span>';
 
@@ -1524,10 +1520,8 @@ TinyMCE_Control.prototype = {
 			// Just hide the textarea element
 			this.oldTargetElement = replace_element;
 
-			if (!tinyMCE.settings['debug']) {
-				this.oldTargetDisplay = tinyMCE.getStyle(this.oldTargetElement, 'display', 'inline');
-				this.oldTargetElement.style.display = "none";
-			}
+			this.oldTargetDisplay = tinyMCE.getStyle(this.oldTargetElement, 'display', 'inline');
+			this.oldTargetElement.style.display = "none";
 
 			// Output HTML and set editable
 			if (tinyMCE.isGecko) {
@@ -1581,7 +1575,7 @@ TinyMCE_Control.prototype = {
 		// Setup base HTML
 		var doc = this.contentDocument;
 		if (dynamicIFrame) {
-			var html = tinyMCE.getParam('doctype') + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + tinyMCE.settings['base_href'] + '" /><title>blank_page</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body class="mceContentBody"></body></html>';
+			var html = tinyMCE.getParam('doctype') + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + tinyMCE.settings.base_href + '" /><title>blank_page</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body class="mceContentBody"></body></html>';
 
 			try {
 				if (!this.isHidden())
@@ -1633,7 +1627,7 @@ TinyMCE_Control.prototype = {
 			b.setAttribute('href', u);
 			h.appendChild(b);
 		} else {
-			if (u == "" || u == null)
+			if (u === '' || u === null)
 				b.parentNode.removeChild(b);
 			else
 				b.setAttribute('href', u);
@@ -1737,7 +1731,7 @@ TinyMCE_Control.prototype = {
 			} while ((e = e.parentNode) != null)
 		}
 
-		tinyMCE.settings['preformatted'] = false;
+		tinyMCE.settings.preformatted = false;
 
 		// Default to false
 		if (typeof(skip_cleanup) == "undefined")
@@ -1750,7 +1744,7 @@ TinyMCE_Control.prototype = {
 		tinyMCE._setHTML(this.getDoc(), this.getBody().innerHTML);
 
 		// Remove visual aids when cleanup is disabled
-		if (this.settings['cleanup'] == false) {
+		if (this.settings.cleanup == false) {
 			tinyMCE.handleVisualAid(this.getBody(), true, false, this);
 			tinyMCE._setEventsEnabled(this.getBody(), true);
 		}
@@ -1759,8 +1753,8 @@ TinyMCE_Control.prototype = {
 		var htm = skip_cleanup ? this.getBody().innerHTML : tinyMCE._cleanupHTML(this, this.getDoc(), this.settings, this.getBody(), tinyMCE.visualAid, true, true);
 		htm = tinyMCE._customCleanup(this, "submit_content", htm);
 
-		if (!skip_callback && tinyMCE.settings['save_callback'] != "")
-			var content = eval(tinyMCE.settings['save_callback'] + "(this.formTargetElementId,htm,this.getBody());");
+		if (!skip_callback && tinyMCE.settings.save_callback !== '')
+			var content = window[tinyMCE.settings.save_callback](this.formTargetElementId,htm,this.getBody());
 
 		// Use callback content if available
 		if ((typeof(content) != "undefined") && content != null)

@@ -60,7 +60,7 @@ TinyMCE_Popup.prototype = {
 	 */
 	init : function() {
 		var win = window.opener ? window.opener : window.dialogArguments, c;
-		var inst;
+		var inst, re, title;
 
 		if (!win)
 			win = this.findWin(window);
@@ -90,18 +90,18 @@ TinyMCE_Popup.prototype = {
 			inst.selectionBookmark = inst.selection.getBookmark(true);
 
 		// Setup dir
-		if (tinyMCELang['lang_dir'])
-			document.dir = tinyMCELang['lang_dir'];
+		if (tinyMCELang.lang_dir)
+			document.dir = tinyMCELang.lang_dir;
 
 		// Setup title
-		var re = new RegExp('{|\\\$|}', 'g');
-		var title = document.title.replace(re, "");
+		re = new RegExp('{|\\\$|}', 'g');
+		title = document.title.replace(re, "");
 		if (typeof tinyMCELang[title] != "undefined") {
 			var divElm = document.createElement("div");
 			divElm.innerHTML = tinyMCELang[title];
 			document.title = divElm.innerHTML;
 
-			if (tinyMCE.setWindowTitle != null)
+			if (typeof(tinyMCE.setWindowTitle) != 'undefined')
 				tinyMCE.setWindowTitle(window, divElm.innerHTML);
 		}
 
@@ -131,7 +131,7 @@ TinyMCE_Popup.prototype = {
 		if (tinyMCE.getWindowArg('mce_replacevariables', true))
 			body.innerHTML = tinyMCE.applyTemplate(body.innerHTML, tinyMCE.windowArgs);
 
-		dir = tinyMCE.selectedInstance.settings['directionality'];
+		dir = tinyMCE.selectedInstance.settings.directionality;
 		if (dir == "rtl" && document.forms && document.forms.length > 0) {
 			elms = document.forms[0].elements;
 			for (i=0; i<elms.length; i++) {
@@ -144,7 +144,7 @@ TinyMCE_Popup.prototype = {
 			body.style.display = 'block';
 
 		// Execute real onload (Opera fix)
-		if (tinyMCEPopup.onLoadEval != "")
+		if (tinyMCEPopup.onLoadEval !== '')
 			eval(tinyMCEPopup.onLoadEval);
 	},
 
@@ -167,6 +167,8 @@ TinyMCE_Popup.prototype = {
 	 * on what Theme/Skin you use.
 	 */
 	resizeToInnerSize : function() {
+		var i, doc, body, oldMargin, wrapper, iframe, nodes, dx, dy;
+
 		// Netscape 7.1 workaround
 		if (this.isWindow && tinyMCE.isNS71) {
 			window.resizeBy(0, 10);
@@ -174,9 +176,8 @@ TinyMCE_Popup.prototype = {
 		}
 
 		if (this.isWindow) {
-			var doc = document;
-			var body = doc.body;
-			var oldMargin, wrapper, iframe, nodes, dx, dy;
+			doc = document;
+			body = doc.body;
 
 			if (body.style.display == 'none')
 				body.style.display = 'block';
@@ -193,7 +194,7 @@ TinyMCE_Popup.prototype = {
 
 			// Wrap body elements
 			nodes = doc.body.childNodes;
-			for (var i=nodes.length-1; i>=0; i--) {
+			for (i=nodes.length-1; i>=0; i--) {
 				if (wrapper.hasChildNodes())
 					wrapper.insertBefore(nodes[i].cloneNode(true), wrapper.firstChild);
 				else
@@ -208,7 +209,7 @@ TinyMCE_Popup.prototype = {
 			// Create iframe
 			iframe = document.createElement("iframe");
 			iframe.id = "mcWinIframe";
-			iframe.src = document.location.href.toLowerCase().indexOf('https') == -1 ? "about:blank" : tinyMCE.settings['default_document'];
+			iframe.src = document.location.href.toLowerCase().indexOf('https') == -1 ? "about:blank" : tinyMCE.settings.default_document;
 			iframe.width = "100%";
 			iframe.height = "100%";
 			iframe.style.margin = '0';
@@ -284,8 +285,10 @@ TinyMCE_Popup.prototype = {
 	 * would otherwice get lost if the user focused another field.
 	 */
 	restoreSelection : function() {
+		var inst;
+
 		if (this.storeSelection) {
-			var inst = tinyMCE.selectedInstance;
+			inst = tinyMCE.selectedInstance;
 
 			inst.getWin().focus();
 
@@ -368,9 +371,11 @@ TinyMCE_Popup.prototype = {
 	 * @param {string} c Class name to import to current page.
 	 */
 	importClass : function(c) {
+		var n;
+
 		window[c] = function() {};
 
-		for (var n in window.opener[c].prototype)
+		for (n in window.opener[c].prototype)
 			window[c].prototype[n] = window.opener[c].prototype[n];
 
 		window[c].constructor = window.opener[c].constructor;

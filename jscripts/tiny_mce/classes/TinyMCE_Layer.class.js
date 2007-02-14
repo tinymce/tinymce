@@ -311,7 +311,7 @@ TinyMCE_Layer.prototype = {
 	 * @type int
 	 */
 	parseInt : function(s) {
-		if (s == null || s == '')
+		if (s === null || s === '')
 			return 0;
 
 		return parseInt(s);

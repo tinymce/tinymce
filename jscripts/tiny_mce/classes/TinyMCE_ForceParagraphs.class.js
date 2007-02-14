@@ -32,11 +32,11 @@ var TinyMCE_ForceParagraphs = {
 		var doc = inst.getDoc(), sel = inst.getSel(), body = inst.getBody(), win = inst.contentWindow, rng = sel.getRangeAt(0);
 		var rootElm = doc.documentElement, blockName = "P", startNode, endNode, startBlock, endBlock;
 		var rngBefore, rngAfter, direct, startNode, startOffset, endNode, endOffset, b = tinyMCE.isOpera ? inst.selection.getBookmark() : null;
-		var paraBefore, paraAfter, startChop, endChop, contents;
+		var paraBefore, paraAfter, startChop, endChop, contents, i;
 
 		function isEmpty(para) {
 			function isEmptyHTML(html) {
-				return html.replace(new RegExp('[ \t\r\n]+', 'g'), '').toLowerCase() == "";
+				return html.replace(new RegExp('[ \t\r\n]+', 'g'), '').toLowerCase() === '';
 			}
 
 			// Check for images
@@ -52,8 +52,8 @@ var TinyMCE_ForceParagraphs = {
 				return false;
 
 			// Check all textnodes
-			var nodes = tinyMCE.getNodeTree(para, new Array(), 3);
-			for (var i=0; i<nodes.length; i++) {
+			var nodes = tinyMCE.getNodeTree(para, [], 3);
+			for (i=0; i<nodes.length; i++) {
 				if (!isEmptyHTML(nodes[i].nodeValue))
 					return false;
 			}
@@ -152,7 +152,7 @@ var TinyMCE_ForceParagraphs = {
 			endChop = endChop.lastChild;
 
 		// If not in a block element
-		if (startBlock == null) {
+		if (startBlock === null) {
 			// Delete selection
 			rng.deleteContents();
 
@@ -241,7 +241,7 @@ var TinyMCE_ForceParagraphs = {
 
 		if (contents.firstChild && contents.firstChild.nodeName == blockName) {
 	/*		var nodes = contents.firstChild.childNodes;
-			for (var i=0; i<nodes.length; i++) {
+			for (i=0; i<nodes.length; i++) {
 				//tinyMCE.debug(nodes[i].nodeName);
 				if (nodes[i].nodeName != "BODY")
 					paraAfter.appendChild(nodes[i]);
@@ -265,7 +265,7 @@ var TinyMCE_ForceParagraphs = {
 		if (!startChop.previousSibling && startChop.parentNode.nodeName.toUpperCase() == blockName) {
 			rng.setStartBefore(startChop.parentNode);
 		} else {
-			if (rngBefore.startContainer.nodeName.toUpperCase() == blockName && rngBefore.startOffset == 0)
+			if (rngBefore.startContainer.nodeName.toUpperCase() == blockName && rngBefore.startOffset === 0)
 				rng.setStartBefore(rngBefore.startContainer);
 			else
 				rng.setStart(rngBefore.startContainer, rngBefore.startOffset);

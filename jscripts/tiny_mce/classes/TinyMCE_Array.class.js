@@ -39,10 +39,10 @@ TinyMCE_Engine.prototype.clearArray = function(a) {
  * @type Array
  */
 TinyMCE_Engine.prototype.explode = function(d, s) {
-	var ar = s.split(d), oar = new Array(), i;
+	var ar = s.split(d), oar = [], i;
 
 	for (i = 0; i<ar.length; i++) {
-		if (ar[i] != "")
+		if (ar[i] !== '')
 			oar[oar.length] = ar[i];
 	}
 
