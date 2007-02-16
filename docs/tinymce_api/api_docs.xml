@@ -506,7 +506,7 @@
     <method name="applyTemplate">
       <summary>Replaces language, args and settings variables in a HTML string.</summary>
       <param name="h" type="string" summary="HTML string to replace language variables in." />
-      <param name="as" type="Array" summary="Optional arguments array to take variables from." />
+      <param name="ag" type="Array" summary="Optional arguments array to take variables from." />
       <return type="string" summary="HTML string with replaced varliables." />
     </method>
     <method name="replaceVar">

@@ -4895,15 +4895,15 @@ TinyMCE_Cleanup.prototype = {
 				return tinyMCE.xmlEncode(s, skip_apos);
 
 			case "named":
-				return s.replace(re, function (c, b) {
-					b = cl.entities[c.charCodeAt(0)];
+				return s.replace(re, function (c) {
+					var b = cl.entities[c.charCodeAt(0)];
 
 					return b ? '&' + b + ';' : c;
 				});
 
 			case "numeric":
-				return s.replace(re, function (c, b) {
-					return b ? '&#' + c.charCodeAt(0) + ';' : c;
+				return s.replace(re, function (c) {
+					return '&#' + c.charCodeAt(0) + ';';
 				});
 		}
 
