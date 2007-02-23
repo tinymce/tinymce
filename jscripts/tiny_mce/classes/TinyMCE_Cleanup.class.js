@@ -513,6 +513,9 @@ TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual,
 
 	// Gecko specific processing
 	if (tinyMCE.isGecko) {
+		// Makes no sence but FF generates it!!
+		h = h.replace(/<br \/>\s*<\/li>/g, '</li>');
+		h = h.replace(/&nbsp;\s*<\/(dd|dt)>/g, '</$1>');
 		h = h.replace(/<o:p _moz-userdefined="" \/>/g, '');
 		h = h.replace(/<td([^>]*)>\s*<br \/>\s*<\/td>/g, '<td$1>' + nb + '</td>');
 	}

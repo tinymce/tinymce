@@ -2,6 +2,7 @@ Version 2.1.1 (2007-xx-xx)
 	Cleaned up the source code by removing some obsolete code.
 	Fixed bug with numeric entity encoding not converting the first character in string.
 	Fixed bug with new color picker not closing correctly some times.
+	Fixed bug where FF was auto generating BR elements at the end of LI elements.
 Version 2.1.0 (2007-02-13)
 	Added new template plugin, this supports simple snippets and advanced smart templates.
 	Added new attributes dialog for xhtmlxtras plugin. Based on contribution by Ryan Demmer.
