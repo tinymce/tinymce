@@ -12,547 +12,549 @@
  * @method
  */
 
-/**
- * Makes some preprocessing cleanup routines on the specified HTML string.
- * This includes forcing some tags to be open so MSIE doesn't fail. Forcing other to close and
- * padding paragraphs with non breaking spaces. This function is used when the editor gets
- * initialized with content.
- *
- * @param {string} s HTML string to cleanup.
- * @return Cleaned HTML string.
- * @type string
- */
-TinyMCE_Engine.prototype.cleanupHTMLCode = function(s) {
-	s = s.replace(new RegExp('<p \\/>', 'gi'), '<p>&nbsp;</p>');
-	s = s.replace(new RegExp('<p>\\s*<\\/p>', 'gi'), '<p>&nbsp;</p>');
+tinyMCE.add(TinyMCE_Engine, {
+	/**
+	 * Makes some preprocessing cleanup routines on the specified HTML string.
+	 * This includes forcing some tags to be open so MSIE doesn't fail. Forcing other to close and
+	 * padding paragraphs with non breaking spaces. This function is used when the editor gets
+	 * initialized with content.
+	 *
+	 * @param {string} s HTML string to cleanup.
+	 * @return Cleaned HTML string.
+	 * @type string
+	 */
+	cleanupHTMLCode : function(s) {
+		s = s.replace(new RegExp('<p \\/>', 'gi'), '<p>&nbsp;</p>');
+		s = s.replace(new RegExp('<p>\\s*<\\/p>', 'gi'), '<p>&nbsp;</p>');
 
-	// Fix close BR elements
-	s = s.replace(new RegExp('<br>\\s*<\\/br>', 'gi'), '<br />');
+		// Fix close BR elements
+		s = s.replace(new RegExp('<br>\\s*<\\/br>', 'gi'), '<br />');
 
-	// Open closed tags like <b/> to <b></b>
-	s = s.replace(new RegExp('<(h[1-6]|p|div|address|pre|form|table|li|ol|ul|td|b|font|em|strong|i|strike|u|span|a|ul|ol|li|blockquote)([a-z]*)([^\\\\|>]*)\\/>', 'gi'), '<$1$2$3></$1$2>');
+		// Open closed tags like <b/> to <b></b>
+		s = s.replace(new RegExp('<(h[1-6]|p|div|address|pre|form|table|li|ol|ul|td|b|font|em|strong|i|strike|u|span|a|ul|ol|li|blockquote)([a-z]*)([^\\\\|>]*)\\/>', 'gi'), '<$1$2$3></$1$2>');
 
-	// Remove trailing space <b > to <b>
-	s = s.replace(new RegExp('\\s+></', 'gi'), '></');
+		// Remove trailing space <b > to <b>
+		s = s.replace(new RegExp('\\s+></', 'gi'), '></');
 
-	// Close tags <img></img> to <img/>
-	s = s.replace(new RegExp('<(img|br|hr)([^>]*)><\\/(img|br|hr)>', 'gi'), '<$1$2 />');
+		// Close tags <img></img> to <img/>
+		s = s.replace(new RegExp('<(img|br|hr)([^>]*)><\\/(img|br|hr)>', 'gi'), '<$1$2 />');
 
-	// Weird MSIE bug, <p><hr /></p> breaks runtime?
-	if (tinyMCE.isIE)
-		s = s.replace(new RegExp('<p><hr \\/><\\/p>', 'gi'), "<hr>");
+		// Weird MSIE bug, <p><hr /></p> breaks runtime?
+		if (tinyMCE.isIE)
+			s = s.replace(new RegExp('<p><hr \\/><\\/p>', 'gi'), "<hr>");
 
-	// Weird tags will make IE error #bug: 1538495
-	if (tinyMCE.isIE)
-		s = s.replace(/<!(\s*)\/>/g, '');
+		// Weird tags will make IE error #bug: 1538495
+		if (tinyMCE.isIE)
+			s = s.replace(/<!(\s*)\/>/g, '');
 
-	// Convert relative anchors to absolute URLs ex: #something to file.htm#something
-	// Removed: Since local document anchors should never be forced absolute example edit.php?id=something
-	//if (tinyMCE.getParam('convert_urls'))
-	//	s = s.replace(new RegExp('(href=\"{0,1})(\\s*#)', 'gi'), '$1' + tinyMCE.settings.document_base_url + "#");
+		// Convert relative anchors to absolute URLs ex: #something to file.htm#something
+		// Removed: Since local document anchors should never be forced absolute example edit.php?id=something
+		//if (tinyMCE.getParam('convert_urls'))
+		//	s = s.replace(new RegExp('(href=\"{0,1})(\\s*#)', 'gi'), '$1' + tinyMCE.settings.document_base_url + "#");
 
-	return s;
-};
+		return s;
+	},
 
-/**
- * Parses the specified HTML style data. This will parse for example
- * "border-left: 1px; background-color: red" into an key/value array.
- *
- * @param {string} str Style data to parse.
- * @return Name/Value array of style items.
- * @type Array
- */
-TinyMCE_Engine.prototype.parseStyle = function(str) {
-	var ar = [], st, i, re, pa;
+	/**
+	 * Parses the specified HTML style data. This will parse for example
+	 * "border-left: 1px; background-color: red" into an key/value array.
+	 *
+	 * @param {string} str Style data to parse.
+	 * @return Name/Value array of style items.
+	 * @type Array
+	 */
+	parseStyle : function(str) {
+		var ar = [], st, i, re, pa;
 
-	if (str === null)
+		if (str === null)
+			return ar;
+
+		st = str.split(';');
+
+		tinyMCE.clearArray(ar);
+
+		for (i=0; i<st.length; i++) {
+			if (st[i] === '')
+				continue;
+
+			re = new RegExp('^\\s*([^:]*):\\s*(.*)\\s*$');
+			pa = st[i].replace(re, '$1||$2').split('||');
+	//tinyMCE.debug(str, pa[0] + "=" + pa[1], st[i].replace(re, '$1||$2'));
+			if (pa.length == 2)
+				ar[pa[0].toLowerCase()] = pa[1];
+		}
+
 		return ar;
+	},
 
-	st = str.split(';');
+	/**
+	 * Compresses larger styles into a smaller. Since MSIE automaticly converts
+	 * border: 1px solid red to border-left: 1px solid red, border-righ: 1px solid red and so forth.'
+	 * This will bundle them together again if the information is the same in each item.
+	 *
+	 * @param {Array} ar Style name/value array with items.
+	 * @param {string} pr Style item prefix to bundle for example border.
+	 * @param {string} sf Style item suffix to bunlde for example -width or -width.
+	 * @param {string} res Result name, for example border-width.
+	 */
+	compressStyle : function(ar, pr, sf, res) {
+		var box = [], i, a;
 
-	tinyMCE.clearArray(ar);
+		box[0] = ar[pr + '-top' + sf];
+		box[1] = ar[pr + '-left' + sf];
+		box[2] = ar[pr + '-right' + sf];
+		box[3] = ar[pr + '-bottom' + sf];
 
-	for (i=0; i<st.length; i++) {
-		if (st[i] === '')
-			continue;
-
-		re = new RegExp('^\\s*([^:]*):\\s*(.*)\\s*$');
-		pa = st[i].replace(re, '$1||$2').split('||');
-//tinyMCE.debug(str, pa[0] + "=" + pa[1], st[i].replace(re, '$1||$2'));
-		if (pa.length == 2)
-			ar[pa[0].toLowerCase()] = pa[1];
-	}
-
-	return ar;
-};
-
-/**
- * Compresses larger styles into a smaller. Since MSIE automaticly converts
- * border: 1px solid red to border-left: 1px solid red, border-righ: 1px solid red and so forth.'
- * This will bundle them together again if the information is the same in each item.
- *
- * @param {Array} ar Style name/value array with items.
- * @param {string} pr Style item prefix to bundle for example border.
- * @param {string} sf Style item suffix to bunlde for example -width or -width.
- * @param {string} res Result name, for example border-width.
- */
-TinyMCE_Engine.prototype.compressStyle = function(ar, pr, sf, res) {
-	var box = [], i, a;
-
-	box[0] = ar[pr + '-top' + sf];
-	box[1] = ar[pr + '-left' + sf];
-	box[2] = ar[pr + '-right' + sf];
-	box[3] = ar[pr + '-bottom' + sf];
-
-	for (i=0; i<box.length; i++) {
-		if (box[i] === null)
-			return;
-
-		for (a=0; a<box.length; a++) {
-			if (box[a] != box[i])
+		for (i=0; i<box.length; i++) {
+			if (box[i] === null)
 				return;
-		}
-	}
 
-	// They are all the same
-	ar[res] = box[0];
-	ar[pr + '-top' + sf] = null;
-	ar[pr + '-left' + sf] = null;
-	ar[pr + '-right' + sf] = null;
-	ar[pr + '-bottom' + sf] = null;
-};
-
-/**
- * Serializes the specified style item name/value array into a HTML string. This function
- * will force HEX colors in Firefox and convert the URL items of a style correctly.
- *
- * @param {Array} ar Name/Value array of items to serialize.
- * @return Serialized HTML string containing the items.
- * @type string
- */
-TinyMCE_Engine.prototype.serializeStyle = function(ar) {
-	var str = "", key, val, m;
-
-	// Compress box
-	tinyMCE.compressStyle(ar, "border", "", "border");
-	tinyMCE.compressStyle(ar, "border", "-width", "border-width");
-	tinyMCE.compressStyle(ar, "border", "-color", "border-color");
-	tinyMCE.compressStyle(ar, "border", "-style", "border-style");
-	tinyMCE.compressStyle(ar, "padding", "", "padding");
-	tinyMCE.compressStyle(ar, "margin", "", "margin");
-
-	for (key in ar) {
-		val = ar[key];
-
-		if (typeof(val) == 'function')
-			continue;
-
-		if (key.indexOf('mso-') === 0)
-			continue;
-
-		if (val != null && val !== '') {
-			val = '' + val; // Force string
-
-			// Fix style URL
-			val = val.replace(new RegExp("url\\(\\'?([^\\']*)\\'?\\)", 'gi'), "url('$1')");
-
-			// Convert URL
-			if (val.indexOf('url(') != -1 && tinyMCE.getParam('convert_urls')) {
-				m = new RegExp("url\\('(.*?)'\\)").exec(val);
-
-				if (m.length > 1)
-					val = "url('" + eval(tinyMCE.getParam('urlconverter_callback') + "(m[1], null, true);") + "')";
-			}
-
-			// Force HEX colors
-			if (tinyMCE.getParam("force_hex_style_colors"))
-				val = tinyMCE.convertRGBToHex(val, true);
-
-			val = val.replace(/\"/g, '\'');
-
-			if (val != "url('')")
-				str += key.toLowerCase() + ": " + val + "; ";
-		}
-	}
-
-	if (new RegExp('; $').test(str))
-		str = str.substring(0, str.length - 2);
-
-	return str;
-};
-
-/**
- * Returns a hexadecimal version of the specified rgb(1,2,3) string.
- *
- * @param {string} s RGB string to parse, if this doesn't isn't a rgb(n,n,n) it will passthrough the string.
- * @param {boolean} k Keep before/after contents. If enabled contents before after the rgb(n,n,n) will be intact.
- * @return Hexadecimal version of the specified rgb(1,2,3) string.
- * @type string
- */
-TinyMCE_Engine.prototype.convertRGBToHex = function(s, k) {
-	var re, rgb;
-
-	if (s.toLowerCase().indexOf('rgb') != -1) {
-		re = new RegExp("(.*?)rgb\\s*?\\(\\s*?([0-9]+).*?,\\s*?([0-9]+).*?,\\s*?([0-9]+).*?\\)(.*?)", "gi");
-		rgb = s.replace(re, "$1,$2,$3,$4,$5").split(',');
-
-		if (rgb.length == 5) {
-			r = parseInt(rgb[1]).toString(16);
-			g = parseInt(rgb[2]).toString(16);
-			b = parseInt(rgb[3]).toString(16);
-
-			r = r.length == 1 ? '0' + r : r;
-			g = g.length == 1 ? '0' + g : g;
-			b = b.length == 1 ? '0' + b : b;
-
-			s = "#" + r + g + b;
-
-			if (k)
-				s = rgb[0] + s + rgb[4];
-		}
-	}
-
-	return s;
-};
-
-/**
- * Returns a rgb(n,n,n) string from a hexadecimal value.
- *
- * @param {string} s Hexadecimal string to parse.
- * @return rgb(n,n,n) string from a hexadecimal value.
- * @type string
- */
-TinyMCE_Engine.prototype.convertHexToRGB = function(s) {
-	if (s.indexOf('#') != -1) {
-		s = s.replace(new RegExp('[^0-9A-F]', 'gi'), '');
-		return "rgb(" + parseInt(s.substring(0, 2), 16) + "," + parseInt(s.substring(2, 4), 16) + "," + parseInt(s.substring(4, 6), 16) + ")";
-	}
-
-	return s;
-};
-
-/**
- * Converts span elements to font elements in the specified document instance.
- * Todo: Move this function into a XHTML plugin or simmilar.
- *
- * @param {DOMDocument} doc Document instance to convert spans in.
- */
-TinyMCE_Engine.prototype.convertSpansToFonts = function(doc) {
-	var s, i, size, fSize, x, fFace, fColor, sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
-
-	/*var h = doc.body.innerHTML;
-	h = h.replace(/<span/gi, '<font');
-	h = h.replace(/<\/span/gi, '</font');
-	tinyMCE.setInnerHTML(doc.body, h);*/
-
-	s = tinyMCE.selectElements(doc, 'span,font');
-	for (i=0; i<s.length; i++) {
-		size = tinyMCE.trim(s[i].style.fontSize).toLowerCase();
-		fSize = 0;
-
-		for (x=0; x<sizes.length; x++) {
-			if (sizes[x] == size) {
-				fSize = x + 1;
-				break;
+			for (a=0; a<box.length; a++) {
+				if (box[a] != box[i])
+					return;
 			}
 		}
 
-		if (fSize > 0) {
-			tinyMCE.setAttrib(s[i], 'size', fSize);
-			s[i].style.fontSize = '';
+		// They are all the same
+		ar[res] = box[0];
+		ar[pr + '-top' + sf] = null;
+		ar[pr + '-left' + sf] = null;
+		ar[pr + '-right' + sf] = null;
+		ar[pr + '-bottom' + sf] = null;
+	},
+
+	/**
+	 * Serializes the specified style item name/value array into a HTML string. This function
+	 * will force HEX colors in Firefox and convert the URL items of a style correctly.
+	 *
+	 * @param {Array} ar Name/Value array of items to serialize.
+	 * @return Serialized HTML string containing the items.
+	 * @type string
+	 */
+	serializeStyle : function(ar) {
+		var str = "", key, val, m;
+
+		// Compress box
+		tinyMCE.compressStyle(ar, "border", "", "border");
+		tinyMCE.compressStyle(ar, "border", "-width", "border-width");
+		tinyMCE.compressStyle(ar, "border", "-color", "border-color");
+		tinyMCE.compressStyle(ar, "border", "-style", "border-style");
+		tinyMCE.compressStyle(ar, "padding", "", "padding");
+		tinyMCE.compressStyle(ar, "margin", "", "margin");
+
+		for (key in ar) {
+			val = ar[key];
+
+			if (typeof(val) == 'function')
+				continue;
+
+			if (key.indexOf('mso-') === 0)
+				continue;
+
+			if (val != null && val !== '') {
+				val = '' + val; // Force string
+
+				// Fix style URL
+				val = val.replace(new RegExp("url\\(\\'?([^\\']*)\\'?\\)", 'gi'), "url('$1')");
+
+				// Convert URL
+				if (val.indexOf('url(') != -1 && tinyMCE.getParam('convert_urls')) {
+					m = new RegExp("url\\('(.*?)'\\)").exec(val);
+
+					if (m.length > 1)
+						val = "url('" + eval(tinyMCE.getParam('urlconverter_callback') + "(m[1], null, true);") + "')";
+				}
+
+				// Force HEX colors
+				if (tinyMCE.getParam("force_hex_style_colors"))
+					val = tinyMCE.convertRGBToHex(val, true);
+
+				val = val.replace(/\"/g, '\'');
+
+				if (val != "url('')")
+					str += key.toLowerCase() + ": " + val + "; ";
+			}
 		}
 
-		fFace = s[i].style.fontFamily;
-		if (fFace != null && fFace !== '') {
-			tinyMCE.setAttrib(s[i], 'face', fFace);
-			s[i].style.fontFamily = '';
+		if (new RegExp('; $').test(str))
+			str = str.substring(0, str.length - 2);
+
+		return str;
+	},
+
+	/**
+	 * Returns a hexadecimal version of the specified rgb(1,2,3) string.
+	 *
+	 * @param {string} s RGB string to parse, if this doesn't isn't a rgb(n,n,n) it will passthrough the string.
+	 * @param {boolean} k Keep before/after contents. If enabled contents before after the rgb(n,n,n) will be intact.
+	 * @return Hexadecimal version of the specified rgb(1,2,3) string.
+	 * @type string
+	 */
+	convertRGBToHex : function(s, k) {
+		var re, rgb;
+
+		if (s.toLowerCase().indexOf('rgb') != -1) {
+			re = new RegExp("(.*?)rgb\\s*?\\(\\s*?([0-9]+).*?,\\s*?([0-9]+).*?,\\s*?([0-9]+).*?\\)(.*?)", "gi");
+			rgb = s.replace(re, "$1,$2,$3,$4,$5").split(',');
+
+			if (rgb.length == 5) {
+				r = parseInt(rgb[1]).toString(16);
+				g = parseInt(rgb[2]).toString(16);
+				b = parseInt(rgb[3]).toString(16);
+
+				r = r.length == 1 ? '0' + r : r;
+				g = g.length == 1 ? '0' + g : g;
+				b = b.length == 1 ? '0' + b : b;
+
+				s = "#" + r + g + b;
+
+				if (k)
+					s = rgb[0] + s + rgb[4];
+			}
 		}
 
-		fColor = s[i].style.color;
-		if (fColor != null && fColor !== '') {
-			tinyMCE.setAttrib(s[i], 'color', tinyMCE.convertRGBToHex(fColor));
-			s[i].style.color = '';
+		return s;
+	},
+
+	/**
+	 * Returns a rgb(n,n,n) string from a hexadecimal value.
+	 *
+	 * @param {string} s Hexadecimal string to parse.
+	 * @return rgb(n,n,n) string from a hexadecimal value.
+	 * @type string
+	 */
+	convertHexToRGB : function(s) {
+		if (s.indexOf('#') != -1) {
+			s = s.replace(new RegExp('[^0-9A-F]', 'gi'), '');
+			return "rgb(" + parseInt(s.substring(0, 2), 16) + "," + parseInt(s.substring(2, 4), 16) + "," + parseInt(s.substring(4, 6), 16) + ")";
 		}
-	}
-};
 
-/**
- * Convers fonts to spans in the specified document.
- * Todo: Move this function into a XHTML plugin or simmilar.
- *
- * @param {DOMDocument} doc Document instance to convert fonts in.
- */
-TinyMCE_Engine.prototype.convertFontsToSpans = function(doc) {
-	var fsClasses, s, i, fSize, fFace, fColor, sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
+		return s;
+	},
 
-/*	var h = doc.body.innerHTML;
-	h = h.replace(/<font/gi, '<span');
-	h = h.replace(/<\/font/gi, '</span');
-	tinyMCE.setInnerHTML(doc.body, h);*/
+	/**
+	 * Converts span elements to font elements in the specified document instance.
+	 * Todo: Move this function into a XHTML plugin or simmilar.
+	 *
+	 * @param {DOMDocument} doc Document instance to convert spans in.
+	 */
+	convertSpansToFonts : function(doc) {
+		var s, i, size, fSize, x, fFace, fColor, sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
 
-	fsClasses = tinyMCE.getParam('font_size_classes');
-	if (fsClasses !== '')
-		fsClasses = fsClasses.replace(/\s+/, '').split(',');
-	else
-		fsClasses = null;
+		/*var h = doc.body.innerHTML;
+		h = h.replace(/<span/gi, '<font');
+		h = h.replace(/<\/span/gi, '</font');
+		tinyMCE.setInnerHTML(doc.body, h);*/
 
-	s = tinyMCE.selectElements(doc, 'span,font');
-	for (i=0; i<s.length; i++) {
-		fSize = tinyMCE.getAttrib(s[i], 'size');
-		fFace = tinyMCE.getAttrib(s[i], 'face');
-		fColor = tinyMCE.getAttrib(s[i], 'color');
+		s = tinyMCE.selectElements(doc, 'span,font');
+		for (i=0; i<s.length; i++) {
+			size = tinyMCE.trim(s[i].style.fontSize).toLowerCase();
+			fSize = 0;
 
-		if (fSize !== '') {
-			fSize = parseInt(fSize);
-
-			if (fSize > 0 && fSize < 8) {
-				if (fsClasses != null)
-					tinyMCE.setAttrib(s[i], 'class', fsClasses[fSize-1]);
-				else
-					s[i].style.fontSize = sizes[fSize-1];
+			for (x=0; x<sizes.length; x++) {
+				if (sizes[x] == size) {
+					fSize = x + 1;
+					break;
+				}
 			}
 
-			s[i].removeAttribute('size');
+			if (fSize > 0) {
+				tinyMCE.setAttrib(s[i], 'size', fSize);
+				s[i].style.fontSize = '';
+			}
+
+			fFace = s[i].style.fontFamily;
+			if (fFace != null && fFace !== '') {
+				tinyMCE.setAttrib(s[i], 'face', fFace);
+				s[i].style.fontFamily = '';
+			}
+
+			fColor = s[i].style.color;
+			if (fColor != null && fColor !== '') {
+				tinyMCE.setAttrib(s[i], 'color', tinyMCE.convertRGBToHex(fColor));
+				s[i].style.color = '';
+			}
 		}
+	},
 
-		if (fFace !== '') {
-			s[i].style.fontFamily = fFace;
-			s[i].removeAttribute('face');
+	/**
+	 * Convers fonts to spans in the specified document.
+	 * Todo: Move this function into a XHTML plugin or simmilar.
+	 *
+	 * @param {DOMDocument} doc Document instance to convert fonts in.
+	 */
+	convertFontsToSpans : function(doc) {
+		var fsClasses, s, i, fSize, fFace, fColor, sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
+
+	/*	var h = doc.body.innerHTML;
+		h = h.replace(/<font/gi, '<span');
+		h = h.replace(/<\/font/gi, '</span');
+		tinyMCE.setInnerHTML(doc.body, h);*/
+
+		fsClasses = tinyMCE.getParam('font_size_classes');
+		if (fsClasses !== '')
+			fsClasses = fsClasses.replace(/\s+/, '').split(',');
+		else
+			fsClasses = null;
+
+		s = tinyMCE.selectElements(doc, 'span,font');
+		for (i=0; i<s.length; i++) {
+			fSize = tinyMCE.getAttrib(s[i], 'size');
+			fFace = tinyMCE.getAttrib(s[i], 'face');
+			fColor = tinyMCE.getAttrib(s[i], 'color');
+
+			if (fSize !== '') {
+				fSize = parseInt(fSize);
+
+				if (fSize > 0 && fSize < 8) {
+					if (fsClasses != null)
+						tinyMCE.setAttrib(s[i], 'class', fsClasses[fSize-1]);
+					else
+						s[i].style.fontSize = sizes[fSize-1];
+				}
+
+				s[i].removeAttribute('size');
+			}
+
+			if (fFace !== '') {
+				s[i].style.fontFamily = fFace;
+				s[i].removeAttribute('face');
+			}
+
+			if (fColor !== '') {
+				s[i].style.color = fColor;
+				s[i].removeAttribute('color');
+			}
 		}
+	},
 
-		if (fColor !== '') {
-			s[i].style.color = fColor;
-			s[i].removeAttribute('color');
+	/**
+	 * Moves the contents of a anchor outside and after the anchor. Only if the anchor doesn't
+	 * have a href.
+	 *
+	 * @param {DOMDocument} doc DOM document instance to fix anchors in.
+	 */
+	cleanupAnchors : function(doc) {
+		var i, cn, x, an = doc.getElementsByTagName("a");
+
+		// Loops backwards due to bug #1467987
+		for (i=an.length-1; i>=0; i--) {
+			if (tinyMCE.getAttrib(an[i], "name") !== '' && tinyMCE.getAttrib(an[i], "href") === '') {
+				cn = an[i].childNodes;
+
+				for (x=cn.length-1; x>=0; x--)
+					tinyMCE.insertAfter(cn[x], an[i]);
+			}
 		}
-	}
-};
+	},
 
-/**
- * Moves the contents of a anchor outside and after the anchor. Only if the anchor doesn't
- * have a href.
- *
- * @param {DOMDocument} doc DOM document instance to fix anchors in.
- */
-TinyMCE_Engine.prototype.cleanupAnchors = function(doc) {
-	var i, cn, x, an = doc.getElementsByTagName("a");
+	/**
+	 * Returns the HTML contents of the specified editor instance id.
+	 *
+	 * @param {string} editor_id Editor instance id to retrive HTML code from.
+	 * @return HTML contents of editor id or null if it wasn't found.
+	 * @type string
+	 */
+	getContent : function(editor_id) {
+		if (typeof(editor_id) != "undefined")
+			 tinyMCE.getInstanceById(editor_id).select();
 
-	// Loops backwards due to bug #1467987
-	for (i=an.length-1; i>=0; i--) {
-		if (tinyMCE.getAttrib(an[i], "name") !== '' && tinyMCE.getAttrib(an[i], "href") === '') {
-			cn = an[i].childNodes;
+		if (tinyMCE.selectedInstance)
+			return tinyMCE.selectedInstance.getHTML();
 
-			for (x=cn.length-1; x>=0; x--)
-				tinyMCE.insertAfter(cn[x], an[i]);
+		return null;
+	},
+
+	/**
+	 * Fixes invalid ul/ol elements so the document is more XHTML valid.
+	 *
+	 * @param {DOMDocument} d HTML DOM document to fix list elements in.
+	 * @private
+	 */
+	_fixListElements : function(d) {
+		var nl, x, a = ['ol', 'ul'], i, n, p, r = new RegExp('^(OL|UL)$'), np;
+
+		for (x=0; x<a.length; x++) {
+			nl = d.getElementsByTagName(a[x]);
+
+			for (i=0; i<nl.length; i++) {
+				n = nl[i];
+				p = n.parentNode;
+
+				if (r.test(p.nodeName)) {
+					np = tinyMCE.prevNode(n, 'LI');
+
+					if (!np) {
+						np = d.createElement('li');
+						np.innerHTML = '&nbsp;';
+						np.appendChild(n);
+						p.insertBefore(np, p.firstChild);
+					} else
+						np.appendChild(n);
+				}
+			}
 		}
-	}
-};
+	},
 
-/**
- * Returns the HTML contents of the specified editor instance id.
- *
- * @param {string} editor_id Editor instance id to retrive HTML code from.
- * @return HTML contents of editor id or null if it wasn't found.
- * @type string
- */
-TinyMCE_Engine.prototype.getContent = function(editor_id) {
-	if (typeof(editor_id) != "undefined")
-		 tinyMCE.getInstanceById(editor_id).select();
+	/**
+	 * Moves table elements out of block elements to produce more valid XHTML.
+	 *
+	 * @param {DOMDocument} d HTML DOM document to fix list elements in.
+	 * @private
+	 */
+	_fixTables : function(d) {
+		var nl, i, n, p, np, x, t;
 
-	if (tinyMCE.selectedInstance)
-		return tinyMCE.selectedInstance.getHTML();
-
-	return null;
-};
-
-/**
- * Fixes invalid ul/ol elements so the document is more XHTML valid.
- *
- * @param {DOMDocument} d HTML DOM document to fix list elements in.
- * @private
- */
-TinyMCE_Engine.prototype._fixListElements = function(d) {
-	var nl, x, a = ['ol', 'ul'], i, n, p, r = new RegExp('^(OL|UL)$'), np;
-
-	for (x=0; x<a.length; x++) {
-		nl = d.getElementsByTagName(a[x]);
-
+		nl = d.getElementsByTagName('table');
 		for (i=0; i<nl.length; i++) {
 			n = nl[i];
-			p = n.parentNode;
 
-			if (r.test(p.nodeName)) {
-				np = tinyMCE.prevNode(n, 'LI');
+			if ((p = tinyMCE.getParentElement(n, 'p,h1,h2,h3,h4,h5,h6')) != null) {
+				np = p.cloneNode(false);
+				np.removeAttribute('id');
 
-				if (!np) {
-					np = d.createElement('li');
-					np.innerHTML = '&nbsp;';
+				t = n;
+
+				while ((n = n.nextSibling))
 					np.appendChild(n);
-					p.insertBefore(np, p.firstChild);
-				} else
-					np.appendChild(n);
+
+				tinyMCE.insertAfter(np, p);
+				tinyMCE.insertAfter(t, p);
 			}
 		}
-	}
-};
+	},
 
-/**
- * Moves table elements out of block elements to produce more valid XHTML.
- *
- * @param {DOMDocument} d HTML DOM document to fix list elements in.
- * @private
- */
-TinyMCE_Engine.prototype._fixTables = function(d) {
-	var nl, i, n, p, np, x, t;
+	/**
+	 * Performces cleanup of the contents of the specified instance.
+	 * Todo: Finish documentation, and remove useless parameters.
+	 *
+	 * @param {TinyMCE_Control} inst Editor instance.
+	 * @param {DOMDocument} doc ...
+	 * @param {Array} config ...
+	 * @param {HTMLElement} elm ...
+	 * @param {boolean} visual ...
+	 * @param {boolean} on_save ...
+	 * @param {boolean} on_submit ...
+	 * @param {boolean} inn inner html.
+	 * @return Cleaned HTML contents of editor instance.
+	 * @type string
+	 * @private
+	 */
+	_cleanupHTML : function(inst, doc, config, elm, visual, on_save, on_submit, inn) {
+		var h, d, t1, t2, t3, t4, t5, c, s, nb;
 
-	nl = d.getElementsByTagName('table');
-	for (i=0; i<nl.length; i++) {
-		n = nl[i];
+		if (!tinyMCE.getParam('cleanup'))
+			return elm.innerHTML;
 
-		if ((p = tinyMCE.getParentElement(n, 'p,h1,h2,h3,h4,h5,h6')) != null) {
-			np = p.cloneNode(false);
-			np.removeAttribute('id');
+		on_save = typeof(on_save) == 'undefined' ? false : on_save;
 
-			t = n;
+		c = inst.cleanup;
+		s = inst.settings;
+		d = c.settings.debug;
 
-			while ((n = n.nextSibling))
-				np.appendChild(n);
+		if (d)
+			t1 = new Date().getTime();
 
-			tinyMCE.insertAfter(np, p);
-			tinyMCE.insertAfter(t, p);
+		if (tinyMCE.getParam("convert_fonts_to_spans"))
+			tinyMCE.convertFontsToSpans(doc);
+
+		if (tinyMCE.getParam("fix_list_elements"))
+			tinyMCE._fixListElements(doc);
+
+		if (tinyMCE.getParam("fix_table_elements"))
+			tinyMCE._fixTables(doc);
+
+		// Call custom cleanup code
+		tinyMCE._customCleanup(inst, on_save ? "get_from_editor_dom" : "insert_to_editor_dom", doc.body);
+
+		if (d)
+			t2 = new Date().getTime();
+
+		c.settings.on_save = on_save;
+
+		c.idCount = 0;
+		c.serializationId++;
+		c.serializedNodes = [];
+		c.sourceIndex = -1;
+
+		if (s.cleanup_serializer == "xml")
+			h = c.serializeNodeAsXML(elm, inn);
+		else
+			h = c.serializeNodeAsHTML(elm, inn);
+
+		if (d)
+			t3 = new Date().getTime();
+
+		// Post processing
+		nb = tinyMCE.getParam('entity_encoding') == 'numeric' ? '&#160;' : '&nbsp;';
+		h = h.replace(/<\/?(body|head|html)[^>]*>/gi, '');
+		h = h.replace(new RegExp(' (rowspan="1"|colspan="1")', 'g'), '');
+		h = h.replace(/<p><hr \/><\/p>/g, '<hr />');
+		h = h.replace(/<p>(&nbsp;|&#160;)<\/p><hr \/><p>(&nbsp;|&#160;)<\/p>/g, '<hr />');
+		h = h.replace(/<td>\s*<br \/>\s*<\/td>/g, '<td>' + nb + '</td>');
+		h = h.replace(/<p>\s*<br \/>\s*<\/p>/g, '<p>' + nb + '</p>');
+		h = h.replace(/<br \/>$/, ''); // Remove last BR for Gecko
+		h = h.replace(/<br \/><\/p>/g, '</p>'); // Remove last BR in P tags for Gecko
+		h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*(&nbsp;|&#160;)\s*<\/p>/g, '<p>' + nb + '</p>');
+		h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*<\/p>/g, '<p>' + nb + '</p>');
+		h = h.replace(/<p>\s*<br \/>\s*&nbsp;\s*<\/p>/g, '<p>' + nb + '</p>');
+		h = h.replace(new RegExp('<a>(.*?)<\\/a>', 'g'), '$1');
+		h = h.replace(/<p([^>]*)>\s*<\/p>/g, '<p$1>' + nb + '</p>');
+
+		// Clean body
+		if (/^\s*(<br \/>|<p>&nbsp;<\/p>|<p>&#160;<\/p>|<p><\/p>)\s*$/.test(h))
+			h = '';
+
+		// If preformatted
+		if (s.preformatted) {
+			h = h.replace(/^<pre>/, '');
+			h = h.replace(/<\/pre>$/, '');
+			h = '<pre>' + h + '</pre>';
 		}
+
+		// Gecko specific processing
+		if (tinyMCE.isGecko) {
+			// Makes no sence but FF generates it!!
+			h = h.replace(/<br \/>\s*<\/li>/g, '</li>');
+			h = h.replace(/&nbsp;\s*<\/(dd|dt)>/g, '</$1>');
+			h = h.replace(/<o:p _moz-userdefined="" \/>/g, '');
+			h = h.replace(/<td([^>]*)>\s*<br \/>\s*<\/td>/g, '<td$1>' + nb + '</td>');
+		}
+
+		if (s.force_br_newlines)
+			h = h.replace(/<p>(&nbsp;|&#160;)<\/p>/g, '<br />');
+
+		// Call custom cleanup code
+		h = tinyMCE._customCleanup(inst, on_save ? "get_from_editor" : "insert_to_editor", h);
+
+		// Remove internal classes
+		if (on_save) {
+			h = h.replace(new RegExp(' ?(mceItem[a-zA-Z0-9]*|' + s.visual_table_class + ')', 'g'), '');
+			h = h.replace(new RegExp(' ?class=""', 'g'), '');
+		}
+
+		if (s.remove_linebreaks && !c.settings.indent)
+			h = h.replace(/\n|\r/g, ' ');
+
+		if (d)
+			t4 = new Date().getTime();
+
+		if (on_save && c.settings.indent)
+			h = c.formatHTML(h);
+
+		// If encoding (not recommended option)
+		if (on_submit && (s.encoding == "xml" || s.encoding == "html"))
+			h = c.xmlEncode(h);
+
+		if (d)
+			t5 = new Date().getTime();
+
+		if (c.settings.debug)
+			tinyMCE.debug("Cleanup in ms: Pre=" + (t2-t1) + ", Serialize: " + (t3-t2) + ", Post: " + (t4-t3) + ", Format: " + (t5-t4) + ", Sum: " + (t5-t1) + ".");
+
+		return h;
 	}
-};
-
-/**
- * Performces cleanup of the contents of the specified instance.
- * Todo: Finish documentation, and remove useless parameters.
- *
- * @param {TinyMCE_Control} inst Editor instance.
- * @param {DOMDocument} doc ...
- * @param {Array} config ...
- * @param {HTMLElement} elm ...
- * @param {boolean} visual ...
- * @param {boolean} on_save ...
- * @param {boolean} on_submit ...
- * @param {boolean} inn inner html.
- * @return Cleaned HTML contents of editor instance.
- * @type string
- * @private
- */
-TinyMCE_Engine.prototype._cleanupHTML = function(inst, doc, config, elm, visual, on_save, on_submit, inn) {
-	var h, d, t1, t2, t3, t4, t5, c, s, nb;
-
-	if (!tinyMCE.getParam('cleanup'))
-		return elm.innerHTML;
-
-	on_save = typeof(on_save) == 'undefined' ? false : on_save;
-
-	c = inst.cleanup;
-	s = inst.settings;
-	d = c.settings.debug;
-
-	if (d)
-		t1 = new Date().getTime();
-
-	if (tinyMCE.getParam("convert_fonts_to_spans"))
-		tinyMCE.convertFontsToSpans(doc);
-
-	if (tinyMCE.getParam("fix_list_elements"))
-		tinyMCE._fixListElements(doc);
-
-	if (tinyMCE.getParam("fix_table_elements"))
-		tinyMCE._fixTables(doc);
-
-	// Call custom cleanup code
-	tinyMCE._customCleanup(inst, on_save ? "get_from_editor_dom" : "insert_to_editor_dom", doc.body);
-
-	if (d)
-		t2 = new Date().getTime();
-
-	c.settings.on_save = on_save;
-
-	c.idCount = 0;
-	c.serializationId++;
-	c.serializedNodes = [];
-	c.sourceIndex = -1;
-
-	if (s.cleanup_serializer == "xml")
-		h = c.serializeNodeAsXML(elm, inn);
-	else
-		h = c.serializeNodeAsHTML(elm, inn);
-
-	if (d)
-		t3 = new Date().getTime();
-
-	// Post processing
-	nb = tinyMCE.getParam('entity_encoding') == 'numeric' ? '&#160;' : '&nbsp;';
-	h = h.replace(/<\/?(body|head|html)[^>]*>/gi, '');
-	h = h.replace(new RegExp(' (rowspan="1"|colspan="1")', 'g'), '');
-	h = h.replace(/<p><hr \/><\/p>/g, '<hr />');
-	h = h.replace(/<p>(&nbsp;|&#160;)<\/p><hr \/><p>(&nbsp;|&#160;)<\/p>/g, '<hr />');
-	h = h.replace(/<td>\s*<br \/>\s*<\/td>/g, '<td>' + nb + '</td>');
-	h = h.replace(/<p>\s*<br \/>\s*<\/p>/g, '<p>' + nb + '</p>');
-	h = h.replace(/<br \/>$/, ''); // Remove last BR for Gecko
-	h = h.replace(/<br \/><\/p>/g, '</p>'); // Remove last BR in P tags for Gecko
-	h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*(&nbsp;|&#160;)\s*<\/p>/g, '<p>' + nb + '</p>');
-	h = h.replace(/<p>\s*(&nbsp;|&#160;)\s*<br \/>\s*<\/p>/g, '<p>' + nb + '</p>');
-	h = h.replace(/<p>\s*<br \/>\s*&nbsp;\s*<\/p>/g, '<p>' + nb + '</p>');
-	h = h.replace(new RegExp('<a>(.*?)<\\/a>', 'g'), '$1');
-	h = h.replace(/<p([^>]*)>\s*<\/p>/g, '<p$1>' + nb + '</p>');
-
-	// Clean body
-	if (/^\s*(<br \/>|<p>&nbsp;<\/p>|<p>&#160;<\/p>|<p><\/p>)\s*$/.test(h))
-		h = '';
-
-	// If preformatted
-	if (s.preformatted) {
-		h = h.replace(/^<pre>/, '');
-		h = h.replace(/<\/pre>$/, '');
-		h = '<pre>' + h + '</pre>';
-	}
-
-	// Gecko specific processing
-	if (tinyMCE.isGecko) {
-		// Makes no sence but FF generates it!!
-		h = h.replace(/<br \/>\s*<\/li>/g, '</li>');
-		h = h.replace(/&nbsp;\s*<\/(dd|dt)>/g, '</$1>');
-		h = h.replace(/<o:p _moz-userdefined="" \/>/g, '');
-		h = h.replace(/<td([^>]*)>\s*<br \/>\s*<\/td>/g, '<td$1>' + nb + '</td>');
-	}
-
-	if (s.force_br_newlines)
-		h = h.replace(/<p>(&nbsp;|&#160;)<\/p>/g, '<br />');
-
-	// Call custom cleanup code
-	h = tinyMCE._customCleanup(inst, on_save ? "get_from_editor" : "insert_to_editor", h);
-
-	// Remove internal classes
-	if (on_save) {
-		h = h.replace(new RegExp(' ?(mceItem[a-zA-Z0-9]*|' + s.visual_table_class + ')', 'g'), '');
-		h = h.replace(new RegExp(' ?class=""', 'g'), '');
-	}
-
-	if (s.remove_linebreaks && !c.settings.indent)
-		h = h.replace(/\n|\r/g, ' ');
-
-	if (d)
-		t4 = new Date().getTime();
-
-	if (on_save && c.settings.indent)
-		h = c.formatHTML(h);
-
-	// If encoding (not recommended option)
-	if (on_submit && (s.encoding == "xml" || s.encoding == "html"))
-		h = c.xmlEncode(h);
-
-	if (d)
-		t5 = new Date().getTime();
-
-	if (c.settings.debug)
-		tinyMCE.debug("Cleanup in ms: Pre=" + (t2-t1) + ", Serialize: " + (t3-t2) + ", Post: " + (t4-t3) + ", Format: " + (t5-t4) + ", Sum: " + (t5-t1) + ".");
-
-	return h;
-};
+});
 
 /**#@-*/
 

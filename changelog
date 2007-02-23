@@ -1,5 +1,7 @@
 Version 2.1.1 (2007-xx-xx)
 	Cleaned up the source code by removing some obsolete code.
+	Removed debug option, no longer needed since the devkit does it better.
+	Removed old IE 5.0 code and reduced the overall code by using smarter prototype add methods.
 	Fixed bug with numeric entity encoding not converting the first character in string.
 	Fixed bug with new color picker not closing correctly some times.
 	Fixed bug where FF was auto generating BR elements at the end of LI elements.

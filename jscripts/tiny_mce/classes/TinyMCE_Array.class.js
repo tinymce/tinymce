@@ -11,42 +11,43 @@
  * @member TinyMCE_Engine
  * @method
  */
+tinyMCE.add(TinyMCE_Engine, {
+	/**
+	 * Returns a cleared array, since some external libraries tend to extend the Array core object
+	 * arrays needs to be cleaned from these extended functions. So this function simply setting any
+	 * named properties to null.
+	 *
+	 * @param {Array} Name/Value array to clear.
+	 * @return Cleared name/value array.
+	 * @type Array
+	 */
+	clearArray : function(a) {
+		var n;
 
-/**
- * Returns a cleared array, since some external libraries tend to extend the Array core object
- * arrays needs to be cleaned from these extended functions. So this function simply setting any
- * named properties to null.
- *
- * @param {Array} Name/Value array to clear.
- * @return Cleared name/value array.
- * @type Array
- */
-TinyMCE_Engine.prototype.clearArray = function(a) {
-	var n;
+		for (n in a)
+			a[n] = null;
 
-	for (n in a)
-		a[n] = null;
+		return a;
+	},
 
-	return a;
-};
+	/**
+	 * Splits a string by the specified delimiter and skips any empty items.
+	 *
+	 * @param {string} d Delimiter to split by.
+	 * @param {string} s String to split.
+	 * @return Array with chunks from string.
+	 * @type Array
+	 */
+	explode : function(d, s) {
+		var ar = s.split(d), oar = [], i;
 
-/**
- * Splits a string by the specified delimiter and skips any empty items.
- *
- * @param {string} d Delimiter to split by.
- * @param {string} s String to split.
- * @return Array with chunks from string.
- * @type Array
- */
-TinyMCE_Engine.prototype.explode = function(d, s) {
-	var ar = s.split(d), oar = [], i;
+		for (i = 0; i<ar.length; i++) {
+			if (ar[i] !== '')
+				oar[oar.length] = ar[i];
+		}
 
-	for (i = 0; i<ar.length; i++) {
-		if (ar[i] !== '')
-			oar[oar.length] = ar[i];
+		return oar;
 	}
-
-	return oar;
-};
+});
 
 /**#@-*/

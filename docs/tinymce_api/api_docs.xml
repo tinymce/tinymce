@@ -654,6 +654,12 @@
       <param name="skip_apos" type="string" summary="Optional skip convertion of apos, defaults to false." />
       <return type="string" summary="XML Encoded string." />
     </method>
+    <method name="add">
+      <summary>Add methods to existing class.</summary>
+      <param name="c" type="Object" summary="Function/Class to add methods to." />
+      <param name="m" type="Object" summary="List of methods to add. Name/Value collection." />
+      <return type="void" />
+    </method>
     <method name="extend">
       <summary>Extends the specified prototype with new methods.</summary>
       <param name="p" type="Object" summary="Prototype to extend with new methods." />

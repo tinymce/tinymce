@@ -2888,6 +2888,19 @@ TinyMCE_Engine.prototype = {
 	},
 
 	/**
+	 * Add methods to existing class.
+	 *
+	 * @param {Object} c Function/Class to add methods to.
+	 * @param {Object} m List of methods to add. Name/Value collection.
+	 */
+	add : function(c, m) {
+		var n;
+
+		for (n in m)
+			c.prototype[n] = m[n];
+	},
+
+	/**
 	 * Extends the specified prototype with new methods.
 	 *
 	 * @param {Object} p Prototype to extend with new methods.
