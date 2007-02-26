@@ -2909,7 +2909,7 @@ TinyMCE_Engine.prototype = {
 	 * @type Object
 	 */
 	extend : function(p, np) {
-		var o = {};
+		var o = {}, n;
 
 		o.parent = p;
 

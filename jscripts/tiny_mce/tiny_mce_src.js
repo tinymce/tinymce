@@ -2348,7 +2348,7 @@ TinyMCE_Engine.prototype = {
 	},
 
 	extend : function(p, np) {
-		var o = {};
+		var o = {}, n;
 
 		o.parent = p;
 
@@ -5090,7 +5090,7 @@ TinyMCE_Cleanup.prototype = {
 
 tinyMCE.add(TinyMCE_Engine, {
 	createTagHTML : function(tn, a, h) {
-		var o = '', f = tinyMCE.xmlEncode;
+		var o = '', f = tinyMCE.xmlEncode, n;
 
 		o = '<' + tn;
 
@@ -5107,7 +5107,7 @@ tinyMCE.add(TinyMCE_Engine, {
 	},
 
 	createTag : function(d, tn, a, h) {
-		var o = d.createElement(tn);
+		var o = d.createElement(tn), n;
 
 		if (a) {
 			for (n in a) {

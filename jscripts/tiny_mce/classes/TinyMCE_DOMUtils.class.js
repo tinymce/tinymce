@@ -20,7 +20,7 @@ tinyMCE.add(TinyMCE_Engine, {
 	 * @param {string} h Optional inner HTML of new tag, raw HTML code.
 	 */
 	createTagHTML : function(tn, a, h) {
-		var o = '', f = tinyMCE.xmlEncode;
+		var o = '', f = tinyMCE.xmlEncode, n;
 
 		o = '<' + tn;
 
@@ -46,7 +46,7 @@ tinyMCE.add(TinyMCE_Engine, {
 	 * @param {string} h Optional inner HTML of new tag, raw HTML code.
 	 */
 	createTag : function(d, tn, a, h) {
-		var o = d.createElement(tn);
+		var o = d.createElement(tn), n;
 
 		if (a) {
 			for (n in a) {
