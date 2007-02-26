@@ -38,13 +38,9 @@ TinyMCE_Layer.prototype = {
 	 * @param {string} p Position of the layer tl = top left, tr = top right, bl = bottom left, br = bottom right.
 	 */
 	moveRelativeTo : function(re, p) {
-		var rep = this.getAbsPosition(re);
-		var w = parseInt(re.offsetWidth);
-		var h = parseInt(re.offsetHeight);
-		var e = this.getElement();
-		var ew = parseInt(e.offsetWidth);
-		var eh = parseInt(e.offsetHeight);
-		var x, y;
+		var rep = this.getAbsPosition(re), e = this.getElement(), x, y;
+		var w = parseInt(re.offsetWidth), h = parseInt(re.offsetHeight);
+		var ew = parseInt(e.offsetWidth), eh = parseInt(e.offsetHeight);
 
 		switch (p) {
 			case "tl":

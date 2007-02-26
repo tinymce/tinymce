@@ -194,11 +194,14 @@ tinyMCE.add(TinyMCE_Engine, {
 	 * @type string
 	 */
 	getOuterHTML : function(e) {
+		var d;
+
 		if (tinyMCE.isIE)
 			return e.outerHTML;
 
-		var d = e.ownerDocument.createElement("body");
+		d = e.ownerDocument.createElement("body");
 		d.appendChild(e.cloneNode(true));
+
 		return d.innerHTML;
 	},
 

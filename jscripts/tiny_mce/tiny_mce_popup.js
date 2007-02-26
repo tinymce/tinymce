@@ -31,7 +31,7 @@ TinyMCE_Popup.prototype = {
 
 	init : function() {
 		var win = window.opener ? window.opener : window.dialogArguments, c;
-		var inst, re, title;
+		var inst, re, title, divElm;
 
 		if (!win)
 			win = this.findWin(window);
@@ -67,8 +67,8 @@ TinyMCE_Popup.prototype = {
 		// Setup title
 		re = new RegExp('{|\\\$|}', 'g');
 		title = document.title.replace(re, "");
-		if (typeof tinyMCELang[title] != "undefined") {
-			var divElm = document.createElement("div");
+		if (typeof(tinyMCELang[title]) != "undefined") {
+			divElm = document.createElement("div");
 			divElm.innerHTML = tinyMCELang[title];
 			document.title = divElm.innerHTML;
 
@@ -192,6 +192,7 @@ TinyMCE_Popup.prototype = {
 	resizeToContent : function() {
 		var isMSIE = (navigator.appName == "Microsoft Internet Explorer");
 		var isOpera = (navigator.userAgent.indexOf("Opera") != -1);
+		var elm, width, height, x, y, dx, dy;
 
 		if (isOpera)
 			return;
@@ -199,11 +200,11 @@ TinyMCE_Popup.prototype = {
 		if (isMSIE) {
 			try { window.resizeTo(10, 10); } catch (e) {}
 
-			var elm = document.body;
-			var width = elm.offsetWidth;
-			var height = elm.offsetHeight;
-			var dx = (elm.scrollWidth - width) + 4;
-			var dy = elm.scrollHeight - height;
+			elm = document.body;
+			width = elm.offsetWidth;
+			height = elm.offsetHeight;
+			dx = (elm.scrollWidth - width) + 4;
+			dy = elm.scrollHeight - height;
 
 			try { window.resizeBy(dx, dy); } catch (e) {}
 		} else {
@@ -212,8 +213,8 @@ TinyMCE_Popup.prototype = {
 				window.resizeBy(window.innerWidth * 2, window.innerHeight * 2);
 				window.sizeToContent();
 				window.scrollTo(0, 0);
-				var x = parseInt(screen.width / 2.0) - (window.outerWidth / 2.0);
-				var y = parseInt(screen.height / 2.0) - (window.outerHeight / 2.0);
+				x = parseInt(screen.width / 2.0) - (window.outerWidth / 2.0);
+				y = parseInt(screen.height / 2.0) - (window.outerHeight / 2.0);
 				window.moveTo(x, y);
 			}
 		}

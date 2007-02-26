@@ -297,9 +297,10 @@ tinyMCE.add(TinyMCE_Engine, {
 	 * @param {DOMEvent} e DOM event object instance.
 	 */
 	accessibleEventHandler : function(e) {
-		var win = this._win;
+		var elm, win = this._win;
+
 		e = tinyMCE.isIE ? win.event : e;
-		var elm = tinyMCE.isIE ? e.srcElement : e.target;
+		elm = tinyMCE.isIE ? e.srcElement : e.target;
 
 		// Unpiggyback onchange on blur
 		if (e.type == "blur") {

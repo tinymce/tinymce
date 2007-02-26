@@ -35,6 +35,8 @@ var TinyMCE_ForceParagraphs = {
 		var paraBefore, paraAfter, startChop, endChop, contents, i;
 
 		function isEmpty(para) {
+			var nodes;
+
 			function isEmptyHTML(html) {
 				return html.replace(new RegExp('[ \t\r\n]+', 'g'), '').toLowerCase() === '';
 			}
@@ -52,7 +54,7 @@ var TinyMCE_ForceParagraphs = {
 				return false;
 
 			// Check all textnodes
-			var nodes = tinyMCE.getNodeTree(para, [], 3);
+			nodes = tinyMCE.getNodeTree(para, [], 3);
 			for (i=0; i<nodes.length; i++) {
 				if (!isEmptyHTML(nodes[i].nodeValue))
 					return false;

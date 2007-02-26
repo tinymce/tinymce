@@ -201,7 +201,7 @@ tinyMCE.add(TinyMCE_Engine, {
 	 */
 	convertRelativeToAbsoluteURL : function(base_url, relative_url) {
 		var baseURL = this.parseURL(base_url), baseURLParts, relURLParts, newRelURLParts, numBack, relURL = this.parseURL(relative_url), i;
-		var len, absPath, start, end;
+		var len, absPath, start, end, newBaseURLParts;
 
 		if (relative_url === '' || relative_url.indexOf('://') != -1 || /^(mailto:|javascript:|#|\/)/.test(relative_url))
 			return relative_url;
@@ -211,7 +211,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		relURLParts = relURL.path.split('/');
 
 		// Remove empty chunks
-		var newBaseURLParts = [];
+		newBaseURLParts = [];
 		for (i=baseURLParts.length-1; i>=0; i--) {
 			if (baseURLParts[i].length === 0)
 				continue;
@@ -272,10 +272,8 @@ tinyMCE.add(TinyMCE_Engine, {
 	 * @type string
 	 */
 	convertURL : function(url, node, on_save) {
-		var start, portPart;
-		var prot = document.location.protocol;
-		var host = document.location.hostname;
-		var port = document.location.port;
+		var dl = document.location, start, portPart, urlParts, baseUrlParts, tmpUrlParts, curl;
+		var prot = dl.protocol, host = dl.hostname, port = dl.port;
 
 		// Pass through file protocol
 		if (prot == "file:")
@@ -294,12 +292,12 @@ tinyMCE.add(TinyMCE_Engine, {
 
 		// Handle relative URLs
 		if (on_save && tinyMCE.getParam('relative_urls')) {
-			var curl = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, url);
+			curl = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, url);
 			if (curl.charAt(0) == '/')
 				curl = tinyMCE.settings.document_base_prefix + curl;
 
-			var urlParts = tinyMCE.parseURL(curl);
-			var tmpUrlParts = tinyMCE.parseURL(tinyMCE.settings.document_base_url);
+			urlParts = tinyMCE.parseURL(curl);
+			tmpUrlParts = tinyMCE.parseURL(tinyMCE.settings.document_base_url);
 
 			// Force relative
 			if (urlParts.host == tmpUrlParts.host && (urlParts.port == tmpUrlParts.port))
@@ -308,8 +306,8 @@ tinyMCE.add(TinyMCE_Engine, {
 
 		// Handle absolute URLs
 		if (!tinyMCE.getParam('relative_urls')) {
-			var urlParts = tinyMCE.parseURL(url);
-			var baseUrlParts = tinyMCE.parseURL(tinyMCE.settings.base_href);
+			urlParts = tinyMCE.parseURL(url);
+			baseUrlParts = tinyMCE.parseURL(tinyMCE.settings.base_href);
 
 			// Force absolute URLs from relative URLs
 			url = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings.base_href, url);

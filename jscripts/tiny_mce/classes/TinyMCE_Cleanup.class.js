@@ -241,11 +241,6 @@ tinyMCE.add(TinyMCE_Engine, {
 	convertSpansToFonts : function(doc) {
 		var s, i, size, fSize, x, fFace, fColor, sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
 
-		/*var h = doc.body.innerHTML;
-		h = h.replace(/<span/gi, '<font');
-		h = h.replace(/<\/span/gi, '</font');
-		tinyMCE.setInnerHTML(doc.body, h);*/
-
 		s = tinyMCE.selectElements(doc, 'span,font');
 		for (i=0; i<s.length; i++) {
 			size = tinyMCE.trim(s[i].style.fontSize).toLowerCase();
@@ -285,11 +280,6 @@ tinyMCE.add(TinyMCE_Engine, {
 	 */
 	convertFontsToSpans : function(doc) {
 		var fsClasses, s, i, fSize, fFace, fColor, sizes = tinyMCE.getParam('font_size_style_values').replace(/\s+/, '').split(',');
-
-	/*	var h = doc.body.innerHTML;
-		h = h.replace(/<font/gi, '<span');
-		h = h.replace(/<\/font/gi, '</span');
-		tinyMCE.setInnerHTML(doc.body, h);*/
 
 		fsClasses = tinyMCE.getParam('font_size_classes');
 		if (fsClasses !== '')

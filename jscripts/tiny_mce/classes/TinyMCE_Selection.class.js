@@ -31,8 +31,7 @@ TinyMCE_Selection.prototype = {
 	 * @type string
 	 */
 	getSelectedHTML : function() {
-		var inst = this.instance;
-		var e, r = this.getRng(), h;
+		var inst = this.instance, e, r = this.getRng(), h;
 
 		if (!r)
 			return null;
@@ -62,8 +61,7 @@ TinyMCE_Selection.prototype = {
 	 * @type string
 	 */
 	getSelectedText : function() {
-		var inst = this.instance;
-		var d, r, s, t;
+		var inst = this.instance, d, r, s, t;
 
 		if (tinyMCE.isIE) {
 			d = inst.getDoc();
@@ -95,11 +93,9 @@ TinyMCE_Selection.prototype = {
 	 * @type TinyMCE_Bookmark
 	 */
 	getBookmark : function(simple) {
-		var inst = this.instance;
-		var rng = this.getRng();
-		var doc = inst.getDoc(), b = inst.getBody();
-		var sp, le, s, e, nl, i, si, ei, w;
+		var inst = this.instance, rng = this.getRng(), doc = inst.getDoc(), b = inst.getBody();
 		var trng, sx, sy, xx = -999999999, vp = inst.getViewPort();
+		var sp, le, s, e, nl, i, si, ei, w;
 
 		sx = vp.left;
 		sy = vp.top;
@@ -212,11 +208,8 @@ TinyMCE_Selection.prototype = {
 	 * @type boolean
 	 */
 	moveToBookmark : function(bookmark) {
-		var inst = this.instance;
-		var rng, nl, i, ex, b = inst.getBody(), sd;
-		var doc = inst.getDoc();
-		var win = inst.getWin();
-		var sel = this.getSel();
+		var inst = this.instance, rng, nl, i, ex, b = inst.getBody(), sd;
+		var doc = inst.getDoc(), win = inst.getWin(), sel = this.getSel();
 
 		if (!bookmark)
 			return false;

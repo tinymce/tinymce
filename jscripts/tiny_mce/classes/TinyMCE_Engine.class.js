@@ -80,7 +80,7 @@ TinyMCE_Engine.prototype = {
 	 * @param {Array} Name/Value array of initialization settings.
 	 */
 	init : function(settings) {
-		var theme, nl, baseHREF = "", i, cssPath;
+		var theme, nl, baseHREF = "", i, cssPath, entities, h, p, src, elements;
 
 		// IE 5.0x is no longer supported since 5.5, 6.0 and 7.0 now exists. We can't support old browsers forever, sorry.
 		if (this.isMSIE5_0)
@@ -94,7 +94,7 @@ TinyMCE_Engine.prototype = {
 
 		// Get script base path
 		if (!tinyMCE.baseURL) {
-			var elements = document.getElementsByTagName('script');
+			elements = document.getElementsByTagName('script');
 
 			// If base element found, add that infront of baseURL
 			nl = document.getElementsByTagName('base');
@@ -105,7 +105,7 @@ TinyMCE_Engine.prototype = {
 
 			for (i=0; i<elements.length; i++) {
 				if (elements[i].src && (elements[i].src.indexOf("tiny_mce.js") != -1 || elements[i].src.indexOf("tiny_mce_dev.js") != -1 || elements[i].src.indexOf("tiny_mce_src.js") != -1 || elements[i].src.indexOf("tiny_mce_gzip") != -1)) {
-					var src = elements[i].src;
+					src = elements[i].src;
 
 					tinyMCE.srcMode = (src.indexOf('_src') != -1 || src.indexOf('_dev') != -1) ? '_src' : '';
 					tinyMCE.gzipMode = src.indexOf('_gzip') != -1;
@@ -237,8 +237,8 @@ TinyMCE_Engine.prototype = {
 
 		// If not super absolute make it so
 		baseHREF = tinyMCE.settings.document_base_url;
-		var h = document.location.href;
-		var p = h.indexOf('://');
+		h = document.location.href;
+		p = h.indexOf('://');
 		if (p > 0 && document.location.protocol != "file:") {
 			p = h.indexOf('/', p + 3);
 			h = h.substring(0, p);
@@ -329,7 +329,7 @@ TinyMCE_Engine.prototype = {
 		// Setup entities
 		if (tinyMCE.getParam('entity_encoding') == 'named') {
 			settings.cleanup_entities = [];
-			var entities = tinyMCE.getParam('entities', '', true, ',');
+			entities = tinyMCE.getParam('entities', '', true, ',');
 			for (i=0; i<entities.length; i+=2)
 				settings.cleanup_entities['c' + entities[i]] = entities[i+1];
 		}
@@ -544,8 +544,7 @@ TinyMCE_Engine.prototype = {
 	 */
 	loadCSS : function(url) {
 		var ar = url.replace(/\s+/, '').split(',');
-		var lflen = 0, csslen = 0;
-		var skip = false;
+		var lflen = 0, csslen = 0, skip = false;
 		var x = 0, i = 0, nl, le;
 
 		for (x = 0,csslen = ar.length; x<csslen; x++) {
@@ -1042,7 +1041,7 @@ TinyMCE_Engine.prototype = {
 	 */
 	setupContent : function(editor_id) {
 		var inst = tinyMCE.instances[editor_id], i, doc = inst.getDoc(), head = doc.getElementsByTagName('head').item(0);
-		var content = inst.startContent;
+		var content = inst.startContent, contentElement, body;
 
 		// HTML values get XML encoded in strict mode
 		if (tinyMCE.settings.strict_loading_mode) {
@@ -1132,7 +1131,7 @@ TinyMCE_Engine.prototype = {
 			if (tinyMCE.settings.force_br_newlines)
 				doc.styleSheets[0].addRule("p", "margin: 0;");
 
-			var body = inst.getBody();
+			body = inst.getBody();
 			body.editorId = editor_id;
 		}
 
@@ -1140,7 +1139,7 @@ TinyMCE_Engine.prototype = {
 
 		// Fix for bug #958637
 		if (!tinyMCE.isIE) {
-			var contentElement = inst.getDoc().createElement("body");
+			contentElement = inst.getDoc().createElement("body");
 			doc = inst.getDoc();
 
 			contentElement.innerHTML = content;
@@ -1760,7 +1759,8 @@ TinyMCE_Engine.prototype = {
 	 * @type boolean
 	 */
 	onLoad : function() {
-		var r, i, c, mode, trigger, element, settings;
+		var r, i, c, mode, trigger, elements, element, settings, elementId, elm;
+		var selector, deselector, elementRefAr, form;
 
 		// Wait for everything to be loaded first
 		if (tinyMCE.settings.strict_loading_mode && this.loadingIndex != -1) {
@@ -1790,14 +1790,14 @@ TinyMCE_Engine.prototype = {
 		for (c=0; c<tinyMCE.configs.length; c++) {
 			tinyMCE.settings = tinyMCE.configs[c];
 
-			var selector = tinyMCE.getParam("editor_selector");
-			var deselector = tinyMCE.getParam("editor_deselector");
-			var elementRefAr = [];
+			selector = tinyMCE.getParam("editor_selector");
+			deselector = tinyMCE.getParam("editor_deselector");
+			elementRefAr = [];
 
 			// Add submit triggers
 			if (document.forms && tinyMCE.settings.add_form_submit_trigger && !tinyMCE.submitTriggers) {
 				for (i=0; i<document.forms.length; i++) {
-					var form = document.forms[i];
+					form = document.forms[i];
 
 					tinyMCE.addEvent(form, "submit", TinyMCE_Engine.prototype.handleEvent);
 					tinyMCE.addEvent(form, "reset", TinyMCE_Engine.prototype.handleEvent);
@@ -1819,7 +1819,7 @@ TinyMCE_Engine.prototype = {
 			mode = tinyMCE.settings.mode;
 			switch (mode) {
 				case "exact":
-					var elements = tinyMCE.getParam('elements', '', true, ',');
+					elements = tinyMCE.getParam('elements', '', true, ',');
 
 					for (i=0; i<elements.length; i++) {
 						element = tinyMCE._getElementById(elements[i]);
@@ -1843,10 +1843,10 @@ TinyMCE_Engine.prototype = {
 
 				case "specific_textareas":
 				case "textareas":
-					var nodeList = document.getElementsByTagName("textarea");
+					elements = document.getElementsByTagName("textarea");
 
-					for (i=0; i<nodeList.length; i++) {
-						var elm = nodeList.item(i);
+					for (i=0; i<elements.length; i++) {
+						elm = elements.item(i);
 						trigger = elm.getAttribute(tinyMCE.settings.textarea_trigger);
 
 						if (selector !== '' && !new RegExp('\\b' + selector + '\\b').test(tinyMCE.getAttrib(elm, "class")))
@@ -1866,7 +1866,7 @@ TinyMCE_Engine.prototype = {
 
 			for (i=0; i<elementRefAr.length; i++) {
 				element = elementRefAr[i];
-				var elementId = element.name ? element.name : element.id;
+				elementId = element.name ? element.name : element.id;
 
 				if (tinyMCE.settings.ask || tinyMCE.settings.convert_on_click) {
 					// Focus breaks in Mozilla
@@ -1924,7 +1924,7 @@ TinyMCE_Engine.prototype = {
 	 * @type object
 	 */
 	getParam : function(name, default_value, strip_whitespace, split_chr) {
-		var i, value = (typeof(this.settings[name]) == "undefined") ? default_value : this.settings[name];
+		var i, outArray, value = (typeof(this.settings[name]) == "undefined") ? default_value : this.settings[name];
 
 		// Fix bool values
 		if (value == "true" || value == "false")
@@ -1935,7 +1935,7 @@ TinyMCE_Engine.prototype = {
 
 		if (typeof(split_chr) != "undefined" && split_chr != null) {
 			value = value.split(split_chr);
-			var outArray = [];
+			outArray = [];
 
 			for (i=0; i<value.length; i++) {
 				if (value[i] && value[i] !== '')
@@ -1994,13 +1994,13 @@ TinyMCE_Engine.prototype = {
 	 * @param {Array} ar Language item array to add to global language array.
 	 */
 	addToLang : function(prefix, ar) {
-		var key;
+		var k;
 
-		for (key in ar) {
-			if (typeof(ar[key]) == 'function')
+		for (k in ar) {
+			if (typeof(ar[k]) == 'function')
 				continue;
 
-			tinyMCELang[(key.indexOf('lang_') == -1 ? 'lang_' : '') + (prefix !== '' ? (prefix + "_") : '') + key] = ar[key];
+			tinyMCELang[(k.indexOf('lang_') == -1 ? 'lang_' : '') + (prefix !== '' ? (prefix + "_") : '') + k] = ar[k];
 		}
 
 		this.loadNextScript();
@@ -2173,7 +2173,7 @@ TinyMCE_Engine.prototype = {
 	 * @param {Array} args Popup arguments that is to be passed to the popup such as custom data.
 	 */
 	openWindow : function(template, args) {
-		var html, width, height, x, y, resizable, scrollbars, url, name, win;
+		var html, width, height, x, y, resizable, scrollbars, url, name, win, modal, features;
 
 		args = !args ? {} : args;
 
@@ -2232,11 +2232,11 @@ TinyMCE_Engine.prototype = {
 			if ((tinyMCE.isRealIE) && resizable != 'yes' && tinyMCE.settings.dialog_type == "modal") {
 				height += 10;
 
-				var features = "resizable:" + resizable + ";scroll:" + scrollbars + ";status:yes;center:yes;help:no;dialogWidth:" + width + "px;dialogHeight:" + height + "px;";
+				features = "resizable:" + resizable + ";scroll:" + scrollbars + ";status:yes;center:yes;help:no;dialogWidth:" + width + "px;dialogHeight:" + height + "px;";
 
 				window.showModalDialog(url, window, features);
 			} else {
-				var modal = (resizable == "yes") ? "no" : "yes";
+				modal = (resizable == "yes") ? "no" : "yes";
 
 				if (tinyMCE.isGecko && tinyMCE.isMac)
 					modal = "no";
@@ -2290,14 +2290,14 @@ TinyMCE_Engine.prototype = {
 	 * @type string
 	 */
 	getVisualAidClass : function(class_name, state) {
-		var i, aidClass = tinyMCE.settings.visual_table_class;
+		var i, classNames, ar, className, aidClass = tinyMCE.settings.visual_table_class;
 
 		if (typeof(state) == "undefined")
 			state = tinyMCE.settings.visual;
 
 		// Split
-		var classNames = [];
-		var ar = class_name.split(' ');
+		classNames = [];
+		ar = class_name.split(' ');
 		for (i=0; i<ar.length; i++) {
 			if (ar[i] == aidClass)
 				ar[i] = "";
@@ -2310,7 +2310,7 @@ TinyMCE_Engine.prototype = {
 			classNames[classNames.length] = aidClass;
 
 		// Glue
-		var className = "";
+		className = "";
 		for (i=0; i<classNames.length; i++) {
 			if (i > 0)
 				className += " ";
@@ -2330,7 +2330,7 @@ TinyMCE_Engine.prototype = {
 	 * @param {TinyMCE_Control} inst TinyMCE editor control instance to add/remove them to/from.
 	 */
 	handleVisualAid : function(el, deep, state, inst, skip_dispatch) {
-		var i, x, y;
+		var i, x, y, tableElement, anchorName, oldW, oldH, bo, cn;
 
 		if (!el)
 			return;
@@ -2338,13 +2338,13 @@ TinyMCE_Engine.prototype = {
 		if (!skip_dispatch)
 			tinyMCE.dispatchCallback(inst, 'handle_visual_aid_callback', 'handleVisualAid', el, deep, state, inst);
 
-		var tableElement = null;
+		tableElement = null;
 
 		switch (el.nodeName) {
 			case "TABLE":
-				var oldW = el.style.width;
-				var oldH = el.style.height;
-				var bo = tinyMCE.getAttrib(el, "border");
+				oldW = el.style.width;
+				oldH = el.style.height;
+				bo = tinyMCE.getAttrib(el, "border");
 
 				bo = bo === '' || bo == "0" ? true : false;
 
@@ -2355,7 +2355,7 @@ TinyMCE_Engine.prototype = {
 
 				for (y=0; y<el.rows.length; y++) {
 					for (x=0; x<el.rows[y].cells.length; x++) {
-						var cn = tinyMCE.getVisualAidClass(tinyMCE.getAttrib(el.rows[y].cells[x], "class"), state && bo);
+						cn = tinyMCE.getVisualAidClass(tinyMCE.getAttrib(el.rows[y].cells[x], "class"), state && bo);
 						tinyMCE.setAttrib(el.rows[y].cells[x], "class", cn);
 					}
 				}
@@ -2363,7 +2363,7 @@ TinyMCE_Engine.prototype = {
 				break;
 
 			case "A":
-				var anchorName = tinyMCE.getAttrib(el, "name");
+				anchorName = tinyMCE.getAttrib(el, "name");
 
 				if (anchorName !== '' && state) {
 					el.title = anchorName;
@@ -2507,6 +2507,7 @@ TinyMCE_Engine.prototype = {
 	 */
 	getEditorId : function(form_element) {
 		var inst = this.getInstanceById(form_element);
+
 		if (!inst)
 			return null;
 
@@ -2549,6 +2550,7 @@ TinyMCE_Engine.prototype = {
 	 */
 	queryInstanceCommandValue : function(editor_id, command) {
 		var inst = tinyMCE.getInstanceById(editor_id);
+
 		if (inst)
 			return inst.queryCommandValue(command);
 
@@ -2565,6 +2567,7 @@ TinyMCE_Engine.prototype = {
 	 */
 	queryInstanceCommandState : function(editor_id, command) {
 		var inst = tinyMCE.getInstanceById(editor_id);
+
 		if (inst)
 			return inst.queryCommandState(command);
 
@@ -2685,13 +2688,16 @@ TinyMCE_Engine.prototype = {
 	 * @deprecated
 	 */
 	regexpReplace : function(in_str, reg_exp, replace_str, opts) {
+		var re;
+
 		if (in_str === null)
 			return in_str;
 
 		if (typeof(opts) == "undefined")
 			opts = 'g';
 
-		var re = new RegExp(reg_exp, opts);
+		re = new RegExp(reg_exp, opts);
+
 		return in_str.replace(re, replace_str);
 	},
 

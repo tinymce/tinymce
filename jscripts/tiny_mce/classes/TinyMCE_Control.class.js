@@ -1393,12 +1393,13 @@ TinyMCE_Control.prototype = {
 	 * @private
 	 */
 	_onAdd : function(replace_element, form_element_name, target_document) {
-		var hc, th, tos, editorTemplate;
+		var hc, th, tos, editorTemplate, targetDoc, deltaWidth, deltaHeight, html, rng, fragment;
+		var dynamicIFrame, tElm, doc, parentElm;
 
 		th = this.settings.theme;
 		tos = tinyMCE.themes[th];
 
-		var targetDoc = target_document ? target_document : document;
+		targetDoc = target_document ? target_document : document;
 
 		this.targetDoc = targetDoc;
 
@@ -1413,9 +1414,9 @@ TinyMCE_Control.prototype = {
 		if (tos.getEditorTemplate)
 			editorTemplate = tos.getEditorTemplate(this.settings, this.editorId);
 
-		var deltaWidth = editorTemplate.delta_width ? editorTemplate.delta_width : 0;
-		var deltaHeight = editorTemplate.delta_height ? editorTemplate.delta_height : 0;
-		var html = '<span id="' + this.editorId + '_parent" class="mceEditorContainer">' + editorTemplate.html;
+		deltaWidth = editorTemplate.delta_width ? editorTemplate.delta_width : 0;
+		deltaHeight = editorTemplate.delta_height ? editorTemplate.delta_height : 0;
+		html = '<span id="' + this.editorId + '_parent" class="mceEditorContainer">' + editorTemplate.html;
 
 		html = tinyMCE.replaceVar(html, "editor_id", this.editorId);
 		this.settings.default_document = tinyMCE.baseURL + "/blank.htm";
@@ -1507,10 +1508,10 @@ TinyMCE_Control.prototype = {
 
 			// Output HTML and set editable
 			if (tinyMCE.isGecko) {
-				var rng = replace_element.ownerDocument.createRange();
+				rng = replace_element.ownerDocument.createRange();
 				rng.setStartBefore(replace_element);
 
-				var fragment = rng.createContextualFragment(html);
+				fragment = rng.createContextualFragment(html);
 				tinyMCE.insertAfter(fragment, replace_element);
 			} else
 				replace_element.insertAdjacentHTML("beforeBegin", html);
@@ -1525,18 +1526,18 @@ TinyMCE_Control.prototype = {
 
 			// Output HTML and set editable
 			if (tinyMCE.isGecko) {
-				var rng = replace_element.ownerDocument.createRange();
+				rng = replace_element.ownerDocument.createRange();
 				rng.setStartBefore(replace_element);
 
-				var fragment = rng.createContextualFragment(html);
+				fragment = rng.createContextualFragment(html);
 				tinyMCE.insertAfter(fragment, replace_element);
 			} else
 				replace_element.insertAdjacentHTML("beforeBegin", html);
 		}
 
 		// Setup iframe
-		var dynamicIFrame = false;
-		var tElm = targetDoc.getElementById(this.editorId);
+		dynamicIFrame = false;
+		tElm = targetDoc.getElementById(this.editorId);
 
 		if (!tinyMCE.isIE) {
 			// Node case is preserved in XML strict mode
@@ -1573,9 +1574,9 @@ TinyMCE_Control.prototype = {
 		}
 
 		// Setup base HTML
-		var doc = this.contentDocument;
+		doc = this.contentDocument;
 		if (dynamicIFrame) {
-			var html = tinyMCE.getParam('doctype') + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + tinyMCE.settings.base_href + '" /><title>blank_page</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body class="mceContentBody"></body></html>';
+			html = tinyMCE.getParam('doctype') + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + tinyMCE.settings.base_href + '" /><title>blank_page</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body class="mceContentBody"></body></html>';
 
 			try {
 				if (!this.isHidden())
@@ -1596,7 +1597,7 @@ TinyMCE_Control.prototype = {
 			window.setTimeout("tinyMCE.addEventHandlers(tinyMCE.instances[\"" + this.editorId + "\"]);", 1);
 
 		// Setup element references
-		var parentElm = this.targetDoc.getElementById(this.editorId + '_parent');
+		parentElm = this.targetDoc.getElementById(this.editorId + '_parent');
 		this.formElement = tinyMCE.isGecko ? parentElm.previousSibling : parentElm.nextSibling;
 
 		tinyMCE.setupContent(this.editorId, true);
@@ -1709,7 +1710,7 @@ TinyMCE_Control.prototype = {
 	 * @param {boolean} skip_callback Optional Skip callback, don't call the save_callback function.
 	 */
 	triggerSave : function(skip_cleanup, skip_callback) {
-		var e, nl = [], i, s;
+		var e, nl = [], i, s, content, htm;
 
 		this.switchSettings();
 		s = tinyMCE.settings;
@@ -1750,11 +1751,11 @@ TinyMCE_Control.prototype = {
 		}
 
 		tinyMCE._customCleanup(this, "submit_content_dom", this.contentWindow.document.body);
-		var htm = skip_cleanup ? this.getBody().innerHTML : tinyMCE._cleanupHTML(this, this.getDoc(), this.settings, this.getBody(), tinyMCE.visualAid, true, true);
+		htm = skip_cleanup ? this.getBody().innerHTML : tinyMCE._cleanupHTML(this, this.getDoc(), this.settings, this.getBody(), tinyMCE.visualAid, true, true);
 		htm = tinyMCE._customCleanup(this, "submit_content", htm);
 
 		if (!skip_callback && tinyMCE.settings.save_callback !== '')
-			var content = window[tinyMCE.settings.save_callback](this.formTargetElementId,htm,this.getBody());
+			content = window[tinyMCE.settings.save_callback](this.formTargetElementId,htm,this.getBody());
 
 		// Use callback content if available
 		if ((typeof(content) != "undefined") && content != null)
