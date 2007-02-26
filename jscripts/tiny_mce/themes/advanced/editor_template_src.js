@@ -1399,7 +1399,7 @@ var TinyMCE_AdvancedTheme = {
 		h += '</tr></table>';
 
 		if (tinyMCE.getParam("theme_advanced_more_colors", true))
-			h += '<a href="#" onclick="TinyMCE_AdvancedTheme._pickColor(\'' + id + '\',\'' + cm + '\');" class="mceMoreColors">' + tinyMCE.getLang('lang_more_colors') + '</a>';
+			h += '<a href="javascript:void(0);" onclick="TinyMCE_AdvancedTheme._pickColor(\'' + id + '\',\'' + cm + '\');" class="mceMoreColors">' + tinyMCE.getLang('lang_more_colors') + '</a>';
 
 		return h;
 	},
