@@ -58,7 +58,7 @@ function TinyMCE_Engine() {
 
 TinyMCE_Engine.prototype = {
 	init : function(settings) {
-		var theme, nl, baseHREF = "", i, cssPath, entities, h, p, src, elements;
+		var theme, nl, baseHREF = "", i, cssPath, entities, h, p, src, elements = [], head;
 
 		// IE 5.0x is no longer supported since 5.5, 6.0 and 7.0 now exists. We can't support old browsers forever, sorry.
 		if (this.isMSIE5_0)
@@ -72,7 +72,17 @@ TinyMCE_Engine.prototype = {
 
 		// Get script base path
 		if (!tinyMCE.baseURL) {
-			elements = document.getElementsByTagName('script');
+			// Search through head
+			head = document.getElementsByTagName('head')[0];
+
+			if (head) {
+				for (i=0, nl = head.getElementsByTagName('script'); i<nl.length; i++)
+					elements.push(nl[i]);
+			}
+
+			// Search through rest of document
+			for (i=0, nl = document.getElementsByTagName('script'); i<nl.length; i++)
+				elements.push(nl[i]);
 
 			// If base element found, add that infront of baseURL
 			nl = document.getElementsByTagName('base');
