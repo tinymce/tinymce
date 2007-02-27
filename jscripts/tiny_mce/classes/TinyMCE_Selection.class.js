@@ -100,10 +100,10 @@ TinyMCE_Selection.prototype = {
 		sx = vp.left;
 		sy = vp.top;
 
-		if (tinyMCE.isSafari || tinyMCE.isOpera || simple)
+		if (simple)
 			return {rng : rng, scrollX : sx, scrollY : sy};
 
-		if (tinyMCE.isIE) {
+		if (tinyMCE.isRealIE) {
 			if (rng.item) {
 				e = rng.item(0);
 
@@ -142,9 +142,7 @@ TinyMCE_Selection.prototype = {
 					scrollY : sy
 				};
 			}
-		}
-
-		if (tinyMCE.isGecko) {
+		} else {
 			s = this.getSel();
 			e = this.getFocusElement();
 
@@ -214,7 +212,7 @@ TinyMCE_Selection.prototype = {
 		if (!bookmark)
 			return false;
 
-		if (tinyMCE.isSafari) {
+		if (tinyMCE.isSafari && bookmark.rng) {
 			sel.setBaseAndExtent(bookmark.rng.startContainer, bookmark.rng.startOffset, bookmark.rng.endContainer, bookmark.rng.endOffset);
 			return true;
 		}
@@ -284,7 +282,9 @@ TinyMCE_Selection.prototype = {
 					rng.setEnd(sd.endNode, sd.endOffset);
 					sel.removeAllRanges();
 					sel.addRange(rng);
-					win.focus();
+
+					if (!tinyMCE.isOpera)
+						win.focus();
 				} catch (ex) {
 					// Ignore
 				}

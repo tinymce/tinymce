@@ -224,6 +224,7 @@ TinyMCE_Engine.prototype = {
 		this._def("display_tab_class", '');
 		this._def("gecko_spellcheck", false);
 		this._def("hide_selects_on_submit", true);
+		this._def("forced_root_block", false);
 
 		// Force strict loading mode to false on non Gecko browsers
 		if (this.isMSIE && !this.isOpera)
@@ -1462,6 +1463,8 @@ TinyMCE_Engine.prototype = {
 
 				if (inst && inst.handleShortcut(e))
 					return false;
+
+				inst._fixRootBlocks();
 
 				if (e.target.editorId)
 					tinyMCE.instances[e.target.editorId].select();

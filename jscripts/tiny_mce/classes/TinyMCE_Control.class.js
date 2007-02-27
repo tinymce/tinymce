@@ -494,6 +494,45 @@ TinyMCE_Control.prototype = {
 	},
 
 	/**
+	 * Generates root level block elements such a P for inline elements and text nodes.
+	 */
+	_fixRootBlocks : function() {
+		var rb, b, ne, be, nx, bm;
+
+		rb = tinyMCE.getParam('forced_root_block');
+		if (!rb)
+			return;
+
+		b = this.getBody();
+		ne = b.firstChild;
+
+		while (ne) {
+			nx = ne.nextSibling;
+
+			// If text node or inline element wrap it in a block element
+			if (ne.nodeType == 3 || !tinyMCE.blockRegExp.test(ne.nodeName)) {
+				if (!bm)
+					bm = this.selection.getBookmark();
+
+				if (!be) {
+					be = this.getDoc().createElement(rb);
+					be.appendChild(ne.cloneNode(true));
+					b.replaceChild(be, ne);
+				} else {
+					be.appendChild(ne.cloneNode(true));
+					b.removeChild(ne);
+				}
+			} else
+				be = null;
+
+			ne = nx;
+		}
+
+		if (bm)
+			this.selection.moveToBookmark(bm);
+	},
+
+	/**
 	 * Sets the useCSS mode in Gecko browsers. This will also remove the build in
 	 * inline table editing controls since they are buggy when it comes to col/rowspans.
 	 *

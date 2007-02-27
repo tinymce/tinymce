@@ -1,4 +1,5 @@
 Version 2.1.1 (2007-xx-xx)
+	Added new forced_root_block option. Forces inline elements or text nodes into block elements.
 	Cleaned up the source code by removing some obsolete code.
 	Removed debug option, no longer needed since the devkit does it better.
 	Removed old IE 5.0 code and reduced the overall code by using smarter prototype add methods.
@@ -6,6 +7,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug with new color picker not closing correctly some times.
 	Fixed bug where FF was auto generating BR elements at the end of LI elements.
 	Fixed bug where more colors link failed if the page had a base element in page.
+	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed problem where TinyMCE failed to initialized if used together with libraries like Scriptaculous.
 Version 2.1.0 (2007-02-13)
 	Added new template plugin, this supports simple snippets and advanced smart templates.

@@ -445,6 +445,8 @@ tinyMCE.add(TinyMCE_Engine, {
 		if (d)
 			t1 = new Date().getTime();
 
+		inst._fixRootBlocks();
+
 		if (tinyMCE.getParam("convert_fonts_to_spans"))
 			tinyMCE.convertFontsToSpans(doc);
 

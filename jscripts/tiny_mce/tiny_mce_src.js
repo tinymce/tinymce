@@ -202,6 +202,7 @@ TinyMCE_Engine.prototype = {
 		this._def("display_tab_class", '');
 		this._def("gecko_spellcheck", false);
 		this._def("hide_selects_on_submit", true);
+		this._def("forced_root_block", false);
 
 		// Force strict loading mode to false on non Gecko browsers
 		if (this.isMSIE && !this.isOpera)
@@ -1247,6 +1248,8 @@ TinyMCE_Engine.prototype = {
 
 				if (inst && inst.handleShortcut(e))
 					return false;
+
+				inst._fixRootBlocks();
 
 				if (e.target.editorId)
 					tinyMCE.instances[e.target.editorId].select();
@@ -2708,6 +2711,42 @@ TinyMCE_Control.prototype = {
 		ch.style.cssText = "";
 		ch.removeAttribute("class");
 		ch.removeAttribute("style");
+	},
+
+	_fixRootBlocks : function() {
+		var rb, b, ne, be, nx, bm;
+
+		rb = tinyMCE.getParam('forced_root_block');
+		if (!rb)
+			return;
+
+		b = this.getBody();
+		ne = b.firstChild;
+
+		while (ne) {
+			nx = ne.nextSibling;
+
+			// If text node or inline element wrap it in a block element
+			if (ne.nodeType == 3 || !tinyMCE.blockRegExp.test(ne.nodeName)) {
+				if (!bm)
+					bm = this.selection.getBookmark();
+
+				if (!be) {
+					be = this.getDoc().createElement(rb);
+					be.appendChild(ne.cloneNode(true));
+					b.replaceChild(be, ne);
+				} else {
+					be.appendChild(ne.cloneNode(true));
+					b.removeChild(ne);
+				}
+			} else
+				be = null;
+
+			ne = nx;
+		}
+
+		if (bm)
+			this.selection.moveToBookmark(bm);
 	},
 
 	_setUseCSS : function(b) {
@@ -4242,6 +4281,8 @@ tinyMCE.add(TinyMCE_Engine, {
 
 		if (d)
 			t1 = new Date().getTime();
+
+		inst._fixRootBlocks();
 
 		if (tinyMCE.getParam("convert_fonts_to_spans"))
 			tinyMCE.convertFontsToSpans(doc);
@@ -6197,10 +6238,10 @@ TinyMCE_Selection.prototype = {
 		sx = vp.left;
 		sy = vp.top;
 
-		if (tinyMCE.isSafari || tinyMCE.isOpera || simple)
+		if (simple)
 			return {rng : rng, scrollX : sx, scrollY : sy};
 
-		if (tinyMCE.isIE) {
+		if (tinyMCE.isRealIE) {
 			if (rng.item) {
 				e = rng.item(0);
 
@@ -6239,9 +6280,7 @@ TinyMCE_Selection.prototype = {
 					scrollY : sy
 				};
 			}
-		}
-
-		if (tinyMCE.isGecko) {
+		} else {
 			s = this.getSel();
 			e = this.getFocusElement();
 
@@ -6304,7 +6343,7 @@ TinyMCE_Selection.prototype = {
 		if (!bookmark)
 			return false;
 
-		if (tinyMCE.isSafari) {
+		if (tinyMCE.isSafari && bookmark.rng) {
 			sel.setBaseAndExtent(bookmark.rng.startContainer, bookmark.rng.startOffset, bookmark.rng.endContainer, bookmark.rng.endOffset);
 			return true;
 		}
@@ -6374,7 +6413,9 @@ TinyMCE_Selection.prototype = {
 					rng.setEnd(sd.endNode, sd.endOffset);
 					sel.removeAllRanges();
 					sel.addRange(rng);
-					win.focus();
+
+					if (!tinyMCE.isOpera)
+						win.focus();
 				} catch (ex) {
 					// Ignore
 				}

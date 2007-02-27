@@ -37,5 +37,4 @@ include('classes/TinyMCE_Event.class.js');
 include('classes/TinyMCE_ForceParagraphs.class.js');
 include('classes/TinyMCE_Layer.class.js');
 include('classes/TinyMCE_Menu.class.js');
-include('classes/TinyMCE_Compatibility.class.js');
 include('classes/TinyMCE_Debug.class.js');
