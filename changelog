@@ -8,6 +8,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug with new color picker not closing correctly some times.
 	Fixed bug where FF was auto generating BR elements at the end of LI elements.
 	Fixed bug where more colors link failed if the page had a base element in page.
+	Fixed bug where link dialog produced error when importing CSS classes.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed problem where TinyMCE failed to initialized if used together with libraries like Scriptaculous.
 Version 2.1.0 (2007-02-13)

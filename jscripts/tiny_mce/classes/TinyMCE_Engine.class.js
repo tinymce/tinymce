@@ -2622,6 +2622,9 @@ TinyMCE_Engine.prototype = {
 		var i, c, x, rule, styles, rules, csses, selectorText, inst = tinyMCE.getInstanceById(editor_id);
 		var cssClass, addClass, p;
 
+		if (!inst)
+			inst = tinyMCE.selectedInstance;
+
 		if (!doc)
 			doc = inst.getDoc();
 
