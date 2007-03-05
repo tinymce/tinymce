@@ -209,7 +209,7 @@ function insertMedia() {
 				break;
 		}
 
-		if (fe.width != f.width.value || fe.height != f.width.height)
+		if (fe.width != f.width.value || fe.height != f.height.height)
 			tinyMCE.selectedInstance.repaint();
 
 		fe.title = serializeParameters();
