@@ -8,12 +8,17 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug with new color picker not closing correctly some times.
 	Fixed bug where FF was auto generating BR elements at the end of LI elements.
 	Fixed bug where more colors link failed if the page had a base element in page.
+<<<<<<< .mine
+	Fixed bug where link dialog produced error when importing CSS classes.
+=======
 	Fixed bug where link dialog produced error when importing CSS classes.
 	Fixed bug where fullpage plugin inserted extra > at the end of doctype.
 	Fixed bug where fullpage plugin didn't remove internal mce_src/mce_href items correctly.
 	Fixed bug where fullpage plugin height was incorrect on Linux.
 	Fixed bug where media plugin did a incorrect comparation of width/height.
+>>>>>>> .r232
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
+	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.
 	Fixed problem where TinyMCE failed to initialized if used together with libraries like Scriptaculous.
 Version 2.1.0 (2007-02-13)
 	Added new template plugin, this supports simple snippets and advanced smart templates.
