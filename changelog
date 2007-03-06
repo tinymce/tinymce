@@ -16,6 +16,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug where media plugin did a incorrect comparation of width/height.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.
+	Fixed so both title and alt attributes of buttons are set. Contributed by BigBrownChunx.
 	Fixed problem where TinyMCE failed to initialized if used together with libraries like Scriptaculous.
 Version 2.1.0 (2007-02-13)
 	Added new template plugin, this supports simple snippets and advanced smart templates.

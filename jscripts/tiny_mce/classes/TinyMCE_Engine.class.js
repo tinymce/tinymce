@@ -1658,12 +1658,12 @@ TinyMCE_Engine.prototype = {
 			// Tiled button
 			x = 0 - (m * 20) === 0 ? '0' : 0 - (m * 20);
 			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" ' + io + ' class="mceTiledButton mceButtonNormal" target="_self">';
-			h += '<img src="{$themeurl}/images/spacer.gif" style="background-position: ' + x + 'px 0" title="{$' + lang + '}" />';
+			h += '<img src="{$themeurl}/images/spacer.gif" style="background-position: ' + x + 'px 0" alt="{$'+lang+'}" title="{$' + lang + '}" />';
 			h += '</a>';
 		} else {
 			// Normal button
 			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" ' + io + ' class="mceButtonNormal" target="_self">';
-			h += '<img src="' + img + '" title="{$' + lang + '}" />';
+			h += '<img src="' + img + '" alt="{$'+lang+'}" title="{$' + lang + '}" />';
 			h += '</a>';
 		}
 
