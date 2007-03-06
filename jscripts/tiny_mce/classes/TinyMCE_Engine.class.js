@@ -39,7 +39,7 @@ function TinyMCE_Engine() {
 	this.isMSIE7 = this.isMSIE && (ua.indexOf('MSIE 7') != -1);
 	this.isGecko = ua.indexOf('Gecko') != -1;
 	this.isSafari = ua.indexOf('Safari') != -1;
-	this.isOpera = ua.indexOf('Opera') != -1;
+	this.isOpera = window['opera'] && opera.buildNumber ? true : false;
 	this.isMac = ua.indexOf('Mac') != -1;
 	this.isNS7 = ua.indexOf('Netscape/7') != -1;
 	this.isNS71 = ua.indexOf('Netscape/7.1') != -1;
