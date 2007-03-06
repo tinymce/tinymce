@@ -140,10 +140,10 @@ var TinyMCE_AdvancedTheme = {
 
 			case "|":
 			case "separator":
-				return '<img src="{$themeurl}/images/separator.gif" width="2" height="20" class="mceSeparatorLine" />';
+				return '<img src="{$themeurl}/images/separator.gif" width="2" height="20" class="mceSeparatorLine" alt="" />';
 
 			case "spacer":
-				return '<img src="{$themeurl}/images/separator.gif" width="2" height="15" border="0" class="mceSeparatorLine" style="vertical-align: middle" />';
+				return '<img src="{$themeurl}/images/separator.gif" width="2" height="15" border="0" class="mceSeparatorLine" style="vertical-align: middle" alt="" />';
 
 			case "rowseparator":
 				return '<br />';
