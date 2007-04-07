@@ -93,10 +93,10 @@ var TinyMCE_ForceParagraphs = {
 		endBlock = inst.getParentBlockElement(endNode);
 
 		// If absolute force paragraph generation within
-		if (startBlock && new RegExp('absolute|relative|static', 'gi').test(startBlock.style.position))
+		if (startBlock && (startBlock.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(startBlock.style.position)))
 			startBlock = null;
 
-		if (endBlock && new RegExp('absolute|relative|static', 'gi').test(endBlock.style.position))
+		if (endBlock && (endBlock.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(endBlock.style.position)))
 			endBlock = null;
 
 		// Use current block name
@@ -104,7 +104,7 @@ var TinyMCE_ForceParagraphs = {
 			blockName = startBlock.nodeName;
 
 			// Use P instead
-			if (blockName == "TD" || blockName == "TABLE" || (blockName == "DIV" && new RegExp('left|right', 'gi').test(startBlock.style.cssFloat)))
+			if (/(TD|TABLE|TH|CAPTION)/.test(blockName) || (blockName == "DIV" && /left|right/gi.test(startBlock.style.cssFloat)))
 				blockName = "P";
 		}
 

@@ -14,6 +14,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug where fullpage plugin didn't remove internal mce_src/mce_href items correctly.
 	Fixed bug where fullpage plugin height was incorrect on Linux.
 	Fixed bug where media plugin did a incorrect comparation of width/height.
+	Fixed bug with pressing return/enter inside a paragraph in a non IE browser.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.
 	Fixed so both title and alt attributes of buttons are set. Contributed by BigBrownChunx.

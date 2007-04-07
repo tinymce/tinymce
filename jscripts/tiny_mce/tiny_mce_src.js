@@ -248,7 +248,7 @@ TinyMCE_Engine.prototype = {
 		theme = this.settings.theme;
 		this.inlineStrict = 'A|BR|SPAN|BDO|MAP|OBJECT|IMG|TT|I|B|BIG|SMALL|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|#text|#comment';
 		this.inlineTransitional = 'A|BR|SPAN|BDO|OBJECT|APPLET|IMG|MAP|IFRAME|TT|I|B|U|S|STRIKE|BIG|SMALL|FONT|BASEFONT|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|INPUT|SELECT|TEXTAREA|LABEL|BUTTON|#text|#comment';
-		this.blockElms = 'H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP';
+		this.blockElms = 'H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP';
 		this.blockRegExp = new RegExp("^(" + this.blockElms + ")$", "i");
 		this.posKeyCodes = [13,45,36,35,33,34,37,38,39,40];
 		this.uniqueURL = 'javascript:void(091039730);'; // Make unique URL non real URL
@@ -6873,10 +6873,10 @@ var TinyMCE_ForceParagraphs = {
 		endBlock = inst.getParentBlockElement(endNode);
 
 		// If absolute force paragraph generation within
-		if (startBlock && new RegExp('absolute|relative|static', 'gi').test(startBlock.style.position))
+		if (startBlock && (startBlock.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(startBlock.style.position)))
 			startBlock = null;
 
-		if (endBlock && new RegExp('absolute|relative|static', 'gi').test(endBlock.style.position))
+		if (endBlock && (endBlock.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(endBlock.style.position)))
 			endBlock = null;
 
 		// Use current block name
@@ -6884,7 +6884,7 @@ var TinyMCE_ForceParagraphs = {
 			blockName = startBlock.nodeName;
 
 			// Use P instead
-			if (blockName == "TD" || blockName == "TABLE" || (blockName == "DIV" && new RegExp('left|right', 'gi').test(startBlock.style.cssFloat)))
+			if (/(TD|TABLE|TH|CAPTION)/.test(blockName) || (blockName == "DIV" && /left|right/gi.test(startBlock.style.cssFloat)))
 				blockName = "P";
 		}
 
