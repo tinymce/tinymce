@@ -20,6 +20,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.
 	Fixed so both title and alt attributes of buttons are set. Contributed by BigBrownChunx.
+	Fixed problem with source editor using mono instead of monospace as a font family.
 	Fixed problem with Opera detection, it now detects Opera even if it spoofs another browser.
 	Fixed problem where TinyMCE failed to initialized if used together with libraries like Scriptaculous.
 Version 2.1.0 (2007-02-13)
