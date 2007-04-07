@@ -15,6 +15,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug where fullpage plugin height was incorrect on Linux.
 	Fixed bug where media plugin did a incorrect comparation of width/height.
 	Fixed bug with pressing return/enter inside a paragraph in a non IE browser.
+	Fixed bug with autoplay option for QT not being enabled by default in the media plugin.
 	Fixed so the width/height fields of the advanced themes image dialogs can take more that 3 characters.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.

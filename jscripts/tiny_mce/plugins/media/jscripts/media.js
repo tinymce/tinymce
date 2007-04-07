@@ -337,7 +337,7 @@ function serializeParameters() {
 
 		case "qt":
 			s += getBool('qt', 'loop', false);
-			s += getBool('qt', 'autoplay', false);
+			s += getBool('qt', 'autoplay', true);
 			s += getBool('qt', 'cache', false);
 			s += getBool('qt', 'controller', true);
 			s += getBool('qt', 'correction', false, 'none', 'full');
