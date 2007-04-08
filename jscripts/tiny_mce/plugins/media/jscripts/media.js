@@ -287,6 +287,14 @@ function getType(v) {
 		return 'flash';
 	}
 
+	// Google video
+	if (v.indexOf('http://video.google.com/videoplay?docid=') == 0) {
+		f.width.value = '425';
+		f.height.value = '326';
+		f.src.value = 'http://video.google.com/googleplayer.swf?docId=' + v.substring('http://video.google.com/videoplay?docid='.length) + '&hl=en';
+		return 'flash';
+	}
+
 	for (i=0; i<fo.length; i++) {
 		c = fo[i].split('=');
 

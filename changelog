@@ -1,7 +1,7 @@
 Version 2.1.1 (2007-xx-xx)
 	Added new forced_root_block option. Forces inline elements or text nodes into block elements.
 	Added new fullpage_hide_in_source_view option to fullpage plugin.
-	Added new youtube support to media plugin. Simply paste a YouTube URL and it will embed it.
+	Added new youtube/googlevideo support to media plugin. Simply paste a YouTube/Google URL and it will embed it.
 	Cleaned up the source code by removing some obsolete code.
 	Removed debug option, no longer needed since the devkit does it better.
 	Removed old IE 5.0 code and reduced the overall code by using smarter prototype add methods.
