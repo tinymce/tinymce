@@ -443,7 +443,7 @@ TinyMCE_Control.prototype = {
 	 */
 	isDirty : function() {
 		// Is content modified and not in a submit procedure
-		return tinyMCE.trim(this.startContent) != tinyMCE.trim(this.getBody().innerHTML) && !tinyMCE.isNotDirty;
+		return tinyMCE.trim(this.startContent) != tinyMCE.trim(this.getBody().innerHTML) && !this.isNotDirty;
 	},
 
 	/**

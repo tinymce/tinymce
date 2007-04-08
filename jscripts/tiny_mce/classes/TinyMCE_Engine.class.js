@@ -1370,9 +1370,7 @@ TinyMCE_Engine.prototype = {
 				return;
 
 			case "submit":
-				tinyMCE.removeTinyMCEFormElements(tinyMCE.isMSIE ? window.event.srcElement : e.target);
-				tinyMCE.triggerSave();
-				tinyMCE.isNotDirty = true;
+				tinyMCE.formSubmit(tinyMCE.isMSIE ? window.event.srcElement : e.target);
 				return;
 
 			case "reset":
@@ -1754,14 +1752,46 @@ TinyMCE_Engine.prototype = {
 	},
 
 	/**
+	 * Gets called when a form is submited with a f.submit call or when a submit button is pressed.
+	 *
+	 * @param {HTMLForm} f Form element that got submitted.
+	 * @param {bool} p Is it a f.submit pathed call.
+	 */
+	formSubmit : function(f, p) {
+		var n, inst, found = false;
+
+		// Is it a form that has a TinyMCE instance
+		for (n in tinyMCE.instances) {
+			inst = tinyMCE.instances[n];
+
+			if (!tinyMCE.isInstance(inst))
+				continue;
+
+			if (inst.formElement) {
+				if (f == inst.formElement.form) {
+					found = true;
+					inst.isNotDirty = true;
+				}
+			}
+		}
+
+		// Is valid
+		if (found) {
+			tinyMCE.removeTinyMCEFormElements(f);
+			tinyMCE.triggerSave();
+		}
+
+		// Is it patched
+		if (f.mceOldSubmit && p)
+			f.mceOldSubmit();
+	},
+
+	/**
 	 * Piggyback onsubmit event handler function, this will remove/hide the TinyMCE specific form elements
 	 * call triggerSave to fill the textarea with the correct contents then call the old piggy backed event handler.
 	 */
 	submitPatch : function() {
-		tinyMCE.removeTinyMCEFormElements(this);
-		tinyMCE.triggerSave();
-		tinyMCE.isNotDirty = true;
-		this.mceOldSubmit();
+		tinyMCE.formSubmit(this, true);
 	},
 
 	/**

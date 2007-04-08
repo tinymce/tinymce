@@ -1155,9 +1155,7 @@ TinyMCE_Engine.prototype = {
 				return;
 
 			case "submit":
-				tinyMCE.removeTinyMCEFormElements(tinyMCE.isMSIE ? window.event.srcElement : e.target);
-				tinyMCE.triggerSave();
-				tinyMCE.isNotDirty = true;
+				tinyMCE.formSubmit(tinyMCE.isMSIE ? window.event.srcElement : e.target);
 				return;
 
 			case "reset":
@@ -1502,11 +1500,37 @@ TinyMCE_Engine.prototype = {
 			this.buttonMap[a[i]] = i;
 	},
 
+	formSubmit : function(f, p) {
+		var n, inst, found = false;
+
+		// Is it a form that has a TinyMCE instance
+		for (n in tinyMCE.instances) {
+			inst = tinyMCE.instances[n];
+
+			if (!tinyMCE.isInstance(inst))
+				continue;
+
+			if (inst.formElement) {
+				if (f == inst.formElement.form) {
+					found = true;
+					inst.isNotDirty = true;
+				}
+			}
+		}
+
+		// Is valid
+		if (found) {
+			tinyMCE.removeTinyMCEFormElements(f);
+			tinyMCE.triggerSave();
+		}
+
+		// Is it patched
+		if (f.mceOldSubmit && p)
+			f.mceOldSubmit();
+	},
+
 	submitPatch : function() {
-		tinyMCE.removeTinyMCEFormElements(this);
-		tinyMCE.triggerSave();
-		tinyMCE.isNotDirty = true;
-		this.mceOldSubmit();
+		tinyMCE.formSubmit(this, true);
 	},
 
 	onLoad : function() {
@@ -2671,7 +2695,7 @@ TinyMCE_Control.prototype = {
 
 	isDirty : function() {
 		// Is content modified and not in a submit procedure
-		return tinyMCE.trim(this.startContent) != tinyMCE.trim(this.getBody().innerHTML) && !tinyMCE.isNotDirty;
+		return tinyMCE.trim(this.startContent) != tinyMCE.trim(this.getBody().innerHTML) && !this.isNotDirty;
 	},
 
 	_mergeElements : function(scmd, pa, ch, override) {
@@ -6721,6 +6745,9 @@ TinyMCE_UndoRedo.prototype = {
 		newHTML = tinyMCE.trim(inst.getBody().innerHTML);
 		if (this.undoLevels[this.undoIndex] && newHTML != this.undoLevels[this.undoIndex].content) {
 			//tinyMCE.debug(newHTML, this.undoLevels[this.undoIndex].content);
+
+			// Is dirty again
+			inst.isNotDirty = false;
 
 			tinyMCE.dispatchCallback(inst, 'onchange_callback', 'onChange', inst);
 

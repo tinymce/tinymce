@@ -42,63 +42,73 @@ var TinyMCE_SavePlugin = {
 		// Handle commands
 		switch (command) {
 			case "mceSave":
-				if (tinyMCE.getParam("fullscreen_is_enabled"))
-					return true;
-
-				var inst = tinyMCE.selectedInstance;
-				var formObj = inst.formElement.form;
-
-				if (tinyMCE.getParam("save_enablewhendirty") && !inst.isDirty())
-					return true;
-
-				if (formObj) {
-					tinyMCE.triggerSave();
-
-					// Use callback instead
-					var os;
-					if ((os = tinyMCE.getParam("save_onsavecallback"))) {
-						if (eval(os + '(inst);')) {
-							inst.startContent = tinyMCE.trim(inst.getBody().innerHTML);
-							/*inst.undoLevels = new Array();
-							inst.undoIndex = 0;
-							inst.typingUndoIndex = -1;
-							inst.undoRedo = true;
-							inst.undoLevels[inst.undoLevels.length] = inst.startContent;*/
-							tinyMCE.triggerNodeChange(false, true);
-						}
-
-						return true;
-					}
-
-					// Disable all UI form elements that TinyMCE created
-					for (var i=0; i<formObj.elements.length; i++) {
-						var elementId = formObj.elements[i].name ? formObj.elements[i].name : formObj.elements[i].id;
-
-						if (elementId.indexOf('mce_editor_') == 0)
-							formObj.elements[i].disabled = true;
-					}
-
-					tinyMCE.isNotDirty = true;
-
-					if (formObj.onsubmit == null || formObj.onsubmit() != false)
-						inst.formElement.form.submit();
-				} else
-					alert("Error: No form element found.");
-
-				return true;
+				return this._save(editor_id, element, command, user_interface, value);
 		}
+
 		// Pass to next handler in chain
 		return false;
 	},
 
+	_save : function() {
+		var inst, formObj, os, i, elementId;
+
+		if (tinyMCE.getParam("fullscreen_is_enabled"))
+			return true;
+
+		inst = tinyMCE.selectedInstance;
+		formObj = inst.formElement.form;
+
+		if (tinyMCE.getParam("save_enablewhendirty") && !inst.isDirty())
+			return true;
+
+		if (formObj) {
+			tinyMCE.triggerSave();
+
+			// Use callback instead
+			if ((os = tinyMCE.getParam("save_onsavecallback"))) {
+				if (eval(os + '(inst);')) {
+					inst.startContent = tinyMCE.trim(inst.getBody().innerHTML);
+					/*inst.undoLevels = new Array();
+					inst.undoIndex = 0;
+					inst.typingUndoIndex = -1;
+					inst.undoRedo = true;
+					inst.undoLevels[inst.undoLevels.length] = inst.startContent;*/
+					tinyMCE.triggerNodeChange(false, true);
+				}
+
+				return true;
+			}
+
+			// Disable all UI form elements that TinyMCE created
+			for (i=0; i<formObj.elements.length; i++) {
+				elementId = formObj.elements[i].name ? formObj.elements[i].name : formObj.elements[i].id;
+
+				if (elementId.indexOf('mce_editor_') == 0)
+					formObj.elements[i].disabled = true;
+			}
+
+			inst.isNotDirty = true;
+
+			if (formObj.onsubmit == null || formObj.onsubmit() != false)
+				inst.formElement.form.submit();
+
+			tinyMCE.triggerNodeChange(false, true);
+		} else
+			alert("Error: No form element found.");
+
+		return true;
+	},
+
 	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
+		var inst;
+
 		if (tinyMCE.getParam("fullscreen_is_enabled")) {
 			tinyMCE.switchClass(editor_id + '_save', 'mceButtonDisabled');
 			return true;
 		}
 
 		if (tinyMCE.getParam("save_enablewhendirty")) {
-			var inst = tinyMCE.getInstanceById(editor_id);
+			inst = tinyMCE.getInstanceById(editor_id);
 
 			if (inst.isDirty()) {
 				tinyMCE.switchClass(editor_id + '_save', 'mceButtonNormal');

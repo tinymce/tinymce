@@ -54,6 +54,9 @@ TinyMCE_UndoRedo.prototype = {
 		if (this.undoLevels[this.undoIndex] && newHTML != this.undoLevels[this.undoIndex].content) {
 			//tinyMCE.debug(newHTML, this.undoLevels[this.undoIndex].content);
 
+			// Is dirty again
+			inst.isNotDirty = false;
+
 			tinyMCE.dispatchCallback(inst, 'onchange_callback', 'onChange', inst);
 
 			// Time to compress
