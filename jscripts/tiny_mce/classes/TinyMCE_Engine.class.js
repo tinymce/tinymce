@@ -30,6 +30,7 @@ function TinyMCE_Engine() {
 	this.undoLevels = [];
 	this.undoIndex = 0;
 	this.typingUndoIndex = -1;
+	this.settings = [];
 
 	// Browser check
 	ua = navigator.userAgent;
