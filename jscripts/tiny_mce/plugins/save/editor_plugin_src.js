@@ -30,6 +30,9 @@ var TinyMCE_SavePlugin = {
 		switch (cn) {
 			case "save":
 				return tinyMCE.getButtonHTML(cn, 'lang_save_desc', '{$pluginurl}/images/save.gif', 'mceSave');
+
+			case "cancel":
+				return tinyMCE.getButtonHTML(cn, 'lang_cancel_desc', '{$pluginurl}/images/cancel.gif', 'mceCancel');
 		}
 
 		return "";
@@ -43,13 +46,16 @@ var TinyMCE_SavePlugin = {
 		switch (command) {
 			case "mceSave":
 				return this._save(editor_id, element, command, user_interface, value);
+
+			case "mceCancel":
+				return this._cancel(editor_id, element, command, user_interface, value);
 		}
 
 		// Pass to next handler in chain
 		return false;
 	},
 
-	_save : function() {
+	_save : function(editor_id, element, command, user_interface, value) {
 		var inst, formObj, os, i, elementId;
 
 		if (tinyMCE.getParam("fullscreen_is_enabled"))
@@ -95,6 +101,27 @@ var TinyMCE_SavePlugin = {
 			tinyMCE.triggerNodeChange(false, true);
 		} else
 			alert("Error: No form element found.");
+
+		return true;
+	},
+
+	_cancel : function(editor_id, element, command, user_interface, value) {
+		var inst = tinyMCE.getInstanceById(editor_id), os, h = tinyMCE.trim(inst.startContent);
+
+		// Use callback instead
+		if ((os = tinyMCE.getParam("save_oncancelcallback"))) {
+			if (eval(os + '(inst);'))
+				return true;
+		}
+
+		inst.setHTML(h);
+
+		inst.undoRedo.undoLevels = [];
+		inst.undoRedo.add({ content : h });
+		inst.undoRedo.undoIndex = 0;
+		inst.undoRedo.typingUndoIndex = -1;
+
+		tinyMCE.triggerNodeChange(false, true);
 
 		return true;
 	},
