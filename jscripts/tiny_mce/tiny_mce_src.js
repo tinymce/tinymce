@@ -5,8 +5,8 @@ function TinyMCE_Engine() {
 	var ua;
 
 	this.majorVersion = "2";
-	this.minorVersion = "1.0";
-	this.releaseDate = "2007-02-13";
+	this.minorVersion = "1.1";
+	this.releaseDate = "2007-04-xx";
 
 	this.instances = [];
 	this.switchClassCache = [];
@@ -1555,7 +1555,7 @@ TinyMCE_Engine.prototype = {
 		// IE produces JS error if TinyMCE is placed in a frame
 		// It seems to have something to do with the selection not beeing
 		// correctly initialized in IE so this hack solves the problem
-		if (tinyMCE.isRealIE && document.body) {
+		if (tinyMCE.isRealIE && document.body && window.location.href != window.top.location.href) {
 			r = document.body.createTextRange();
 			r.collapse(true);
 			r.select();
