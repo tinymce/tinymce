@@ -341,9 +341,7 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Setup XML encoding regexps
-		this.xmlEncodeAposRe = new RegExp('[<>&"\']', 'g');
 		this.xmlEncodeRe = new RegExp('[<>&"]', 'g');
-//		this.xmlEncodeEnts = {'&':'&amp;','"':'&quot;',"'":'&#39;','<':'&lt;','>':'&gt;'};
 	},
 
 	_addUnloadEvents : function() {
@@ -2364,17 +2362,14 @@ TinyMCE_Engine.prototype = {
 		return false;
 	},
 
-	xmlEncode : function(s, skip_apos) {
-		return s ? ('' + s).replace(!skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe, function (c, b) {
+	xmlEncode : function(s) {
+		return s ? ('' + s).replace(this.xmlEncodeRe, function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';
 
 				case '"':
 					return '&quot;';
-
-				case '\'':
-					return '&#39;'; // &apos; is not working in MSIE
 
 				case '<':
 					return '&lt;';
@@ -4484,7 +4479,6 @@ TinyMCE_Cleanup.prototype = {
 		this.fillStr = s.entity_encoding == "named" ? "&nbsp;" : "&#160;";
 		this.idCount = 0;
 		this.xmlEncodeRe = new RegExp('[\u007F-\uFFFF<>&"]', 'g');
-		this.xmlEncodeAposRe = new RegExp('[\u007F-\uFFFF<>&"\']', 'g');
 	},
 
 	addRuleStr : function(s) {
@@ -4973,14 +4967,14 @@ TinyMCE_Cleanup.prototype = {
 		return o;
 	},
 
-	xmlEncode : function(s, skip_apos) {
-		var cl = this, re = !skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe;
+	xmlEncode : function(s) {
+		var cl = this, re = this.xmlEncodeRe;
 
 		this._setupEntities(); // Will intialize lookup table
 
 		switch (this.settings.entity_encoding) {
 			case "raw":
-				return tinyMCE.xmlEncode(s, skip_apos);
+				return tinyMCE.xmlEncode(s);
 
 			case "named":
 				return s.replace(re, function (c) {

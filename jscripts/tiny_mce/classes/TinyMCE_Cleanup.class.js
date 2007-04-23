@@ -638,7 +638,6 @@ TinyMCE_Cleanup.prototype = {
 		this.fillStr = s.entity_encoding == "named" ? "&nbsp;" : "&#160;";
 		this.idCount = 0;
 		this.xmlEncodeRe = new RegExp('[\u007F-\uFFFF<>&"]', 'g');
-		this.xmlEncodeAposRe = new RegExp('[\u007F-\uFFFF<>&"\']', 'g');
 	},
 
 	/**
@@ -1199,18 +1198,17 @@ TinyMCE_Cleanup.prototype = {
 	 * are raw, numeric and named. Where raw is the fastest and named is default.
 	 *
 	 * @param {string} s String to convert to XML.
-	 * @param {string} skip_apos Optional skip convertion of apos, defaults to false.
 	 * @return Encoded XML string based on configured entity encoding.
 	 * @type string
 	 */
-	xmlEncode : function(s, skip_apos) {
-		var cl = this, re = !skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe;
+	xmlEncode : function(s) {
+		var cl = this, re = this.xmlEncodeRe;
 
 		this._setupEntities(); // Will intialize lookup table
 
 		switch (this.settings.entity_encoding) {
 			case "raw":
-				return tinyMCE.xmlEncode(s, skip_apos);
+				return tinyMCE.xmlEncode(s);
 
 			case "named":
 				return s.replace(re, function (c) {

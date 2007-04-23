@@ -363,9 +363,7 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Setup XML encoding regexps
-		this.xmlEncodeAposRe = new RegExp('[<>&"\']', 'g');
 		this.xmlEncodeRe = new RegExp('[<>&"]', 'g');
-//		this.xmlEncodeEnts = {'&':'&amp;','"':'&quot;',"'":'&#39;','<':'&lt;','>':'&gt;'};
 	},
 
 	/**
@@ -2913,21 +2911,17 @@ TinyMCE_Engine.prototype = {
 	 * For real entity encoding use the xmlEncode method of the Cleanup class.
 	 *
 	 * @param {string} s String to encode.
-	 * @param {string} skip_apos Optional skip convertion of apos, defaults to false.
 	 * @return XML Encoded string.
 	 * @type string
 	 */
-	xmlEncode : function(s, skip_apos) {
-		return s ? ('' + s).replace(!skip_apos ? this.xmlEncodeAposRe : this.xmlEncodeRe, function (c, b) {
+	xmlEncode : function(s) {
+		return s ? ('' + s).replace(this.xmlEncodeRe, function (c, b) {
 			switch (c) {
 				case '&':
 					return '&amp;';
 
 				case '"':
 					return '&quot;';
-
-				case '\'':
-					return '&#39;'; // &apos; is not working in MSIE
 
 				case '<':
 					return '&lt;';
