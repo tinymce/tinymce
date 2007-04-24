@@ -7,6 +7,7 @@ Version 2.1.1 (2007-xx-xx)
 	Removed debug option, no longer needed since the devkit does it better.
 	Removed old IE 5.0 code and reduced the overall code by using smarter prototype add methods.
 	Removed encoding of apos/' characters since they only time they need to be escaped is when placed in apos based attribs.
+	Fixed bug where the advanced themes insert image dialog produces a SSL warning if running over HTTPS in IE.
 	Fixed bug where links directly to a anchor with a editor in IE failed due to the frameset fix.
 	Fixed bug with numeric entity encoding not converting the first character in string.
 	Fixed bug with new color picker not closing correctly some times.

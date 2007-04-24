@@ -1419,78 +1419,20 @@ var TinyMCE_AdvancedTheme = {
 	},
 
 	_insertImage : function(src, alt, border, hspace, vspace, width, height, align, title, onmouseover, onmouseout) {
-		tinyMCE.execCommand('mceBeginUndoLevel');
-
-		if (src == "")
-			return;
-
-		if (!tinyMCE.imgElement && tinyMCE.isSafari) {
-			var html = "";
-
-			html += '<img src="' + src + '" alt="' + alt + '"';
-			html += ' border="' + border + '" hspace="' + hspace + '"';
-			html += ' vspace="' + vspace + '" width="' + width + '"';
-			html += ' height="' + height + '" align="' + align + '" title="' + title + '" onmouseover="' + onmouseover + '" onmouseout="' + onmouseout + '" />';
-
-			tinyMCE.execCommand("mceInsertContent", false, html);
-		} else {
-			if (!tinyMCE.imgElement && tinyMCE.selectedInstance) {
-				if (tinyMCE.isSafari)
-					tinyMCE.execCommand("mceInsertContent", false, '<img src="' + tinyMCE.uniqueURL + '" />');
-				else
-					tinyMCE.selectedInstance.contentDocument.execCommand("insertimage", false, tinyMCE.uniqueURL);
-
-				tinyMCE.imgElement = tinyMCE.getElementByAttributeValue(tinyMCE.selectedInstance.contentDocument.body, "img", "src", tinyMCE.uniqueURL);
-			}
-		}
-
-		if (tinyMCE.imgElement) {
-			var needsRepaint = false;
-			var msrc = src;
-
-			src = eval(tinyMCE.settings['urlconverter_callback'] + "(src, tinyMCE.imgElement);");
-
-			if (tinyMCE.getParam('convert_urls'))
-				msrc = src;
-
-			if (onmouseover && onmouseover != "")
-				onmouseover = "this.src='" + eval(tinyMCE.settings['urlconverter_callback'] + "(onmouseover, tinyMCE.imgElement);") + "';";
-
-			if (onmouseout && onmouseout != "")
-				onmouseout = "this.src='" + eval(tinyMCE.settings['urlconverter_callback'] + "(onmouseout, tinyMCE.imgElement);") + "';";
-
-			// Use alt as title if it's undefined
-			if (typeof(title) == "undefined")
-				title = alt;
-
-			if (width != tinyMCE.imgElement.getAttribute("width") || height != tinyMCE.imgElement.getAttribute("height") || align != tinyMCE.imgElement.getAttribute("align"))
-				needsRepaint = true;
-
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'src', src);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'mce_src', msrc);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'alt', alt);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'title', title);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'align', align);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'border', border, true);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'hspace', hspace, true);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'vspace', vspace, true);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'width', width, true);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'height', height, true);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'onmouseover', onmouseover);
-			tinyMCE.setAttrib(tinyMCE.imgElement, 'onmouseout', onmouseout);
-
-			// Fix for bug #989846 - Image resize bug
-			if (width && width != "")
-				tinyMCE.imgElement.style.pixelWidth = width;
-
-			if (height && height != "")
-				tinyMCE.imgElement.style.pixelHeight = height;
-
-			if (needsRepaint)
-				tinyMCE.selectedInstance.repaint();
-		}
-
-		tinyMCE.execCommand('mceEndUndoLevel');
+		tinyMCE.execCommand("mceInsertContent", false, tinyMCE.createTagHTML('img', {
+			src : tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], src), // Force absolute
+			mce_src : src,
+			alt : alt,
+			border : border,
+			hspace : hspace,
+			vspace : vspace,
+			width : width,
+			height : height,
+			align : align,
+			title : title,
+			onmouseover : onmouseover,
+			onmouseout : onmouseout
+		}));
 	},
 
 	_insertLink : function(href, target, title, onclick, style_class) {
