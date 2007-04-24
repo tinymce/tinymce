@@ -2654,6 +2654,9 @@ TinyMCE_Engine.prototype = {
 		if (!inst)
 			inst = tinyMCE.selectedInstance;
 
+		if (!inst)
+			return [];
+
 		if (!doc)
 			doc = inst.getDoc();
 

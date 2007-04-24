@@ -23,6 +23,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug with autoplay option for QT not being enabled by default in the media plugin.
 	Fixed bug where isDirty state of instances was incorrect if a form submit handler didn't submit the form.
 	Fixed bug where isDirty state was incorrect if another form was submitted.
+	Fixed bug with getHTML not returning correct content if run twice on a row in IE.
 	Fixed so the width/height fields of the advanced themes image dialogs can take more that 3 characters.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.

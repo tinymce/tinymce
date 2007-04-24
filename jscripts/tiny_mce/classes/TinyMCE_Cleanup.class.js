@@ -465,7 +465,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		c.settings.on_save = on_save;
 
 		c.idCount = 0;
-		c.serializationId++;
+		c.serializationId = new Date().getTime().toString(32); // Unique ID needed for the content duplication bug
 		c.serializedNodes = [];
 		c.sourceIndex = -1;
 
