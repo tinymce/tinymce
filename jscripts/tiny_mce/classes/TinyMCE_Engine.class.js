@@ -226,6 +226,7 @@ TinyMCE_Engine.prototype = {
 		this._def("gecko_spellcheck", false);
 		this._def("hide_selects_on_submit", true);
 		this._def("forced_root_block", false);
+		this._def("remove_trailing_nbsp", false);
 
 		// Force strict loading mode to false on non Gecko browsers
 		if (this.isMSIE && !this.isOpera)
@@ -1462,7 +1463,9 @@ TinyMCE_Engine.prototype = {
 					return false;
 
 				inst._fixRootBlocks();
-				inst._fixTrailingNbsp();
+
+				if (inst.settings.remove_trailing_nbsp)
+					inst._fixTrailingNbsp();
 
 				if (e.target.editorId)
 					tinyMCE.instances[e.target.editorId].select();

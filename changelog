@@ -3,6 +3,7 @@ Version 2.1.1 (2007-xx-xx)
 	Added new fullpage_hide_in_source_view option to fullpage plugin.
 	Added new youtube/googlevideo support to media plugin. Simply paste a YouTube/Google URL and it will embed it.
 	Added new cancel button/control to the save plugin. This will undo all changes and execute a optional callback.
+	Added new remove_trailing_nbsp option that removes &nsbp; entities when paragraphs are filled with contents.
 	Cleaned up the source code by removing some obsolete code.
 	Removed debug option, no longer needed since the devkit does it better.
 	Removed old IE 5.0 code and reduced the overall code by using smarter prototype add methods.
@@ -24,7 +25,6 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug where isDirty state of instances was incorrect if a form submit handler didn't submit the form.
 	Fixed bug where isDirty state was incorrect if another form was submitted.
 	Fixed bug with getHTML not returning correct content if run twice on a row in IE.
-	Fixed so that trailing &nsbp; entities are removed from block elements ones they are filled with contents.
 	Fixed so the width/height fields of the advanced themes image dialogs can take more that 3 characters.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.

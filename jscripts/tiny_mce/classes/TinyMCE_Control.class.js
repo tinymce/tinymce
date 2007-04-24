@@ -541,10 +541,9 @@ TinyMCE_Control.prototype = {
 		if (e && tinyMCE.blockRegExp.test(e.nodeName) && e.firstChild) {
 			v = e.firstChild.nodeValue;
 
-			if (v && v.length > 1 && /\u00a0$/.test(v)) {
-				bm = s.getBookmark();
-				e.firstChild.nodeValue = v.replace(/\u00a0$/, '');
-				s.moveToBookmark(bm);
+			if (v && v.length > 1 && /(^\u00a0|\u00a0$)/.test(v)) {
+				e.firstChild.nodeValue = v.replace(/(^\u00a0|\u00a0$)/, '');
+				s.selectNode(e.firstChild, true, false, false); // Select and collapse
 			}
 		}
 	},
