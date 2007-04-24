@@ -1462,6 +1462,7 @@ TinyMCE_Engine.prototype = {
 					return false;
 
 				inst._fixRootBlocks();
+				inst._fixTrailingNbsp();
 
 				if (e.target.editorId)
 					tinyMCE.instances[e.target.editorId].select();

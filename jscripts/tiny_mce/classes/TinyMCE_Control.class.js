@@ -533,6 +533,23 @@ TinyMCE_Control.prototype = {
 	},
 
 	/**
+	 * Removes any traling &nbsp; to the current block element.
+	 */
+	_fixTrailingNbsp : function() {
+		var s = this.selection, e = s.getFocusElement(), bm, v;
+
+		if (e && tinyMCE.blockRegExp.test(e.nodeName) && e.firstChild) {
+			v = e.firstChild.nodeValue;
+
+			if (v && v.length > 1 && /\u00a0$/.test(v)) {
+				bm = s.getBookmark();
+				e.firstChild.nodeValue = v.replace(/\u00a0$/, '');
+				s.moveToBookmark(bm);
+			}
+		}
+	},
+
+	/**
 	 * Sets the useCSS mode in Gecko browsers. This will also remove the build in
 	 * inline table editing controls since they are buggy when it comes to col/rowspans.
 	 *

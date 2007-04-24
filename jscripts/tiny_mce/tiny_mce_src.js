@@ -1247,6 +1247,7 @@ TinyMCE_Engine.prototype = {
 					return false;
 
 				inst._fixRootBlocks();
+				inst._fixTrailingNbsp();
 
 				if (e.target.editorId)
 					tinyMCE.instances[e.target.editorId].select();
@@ -2773,6 +2774,20 @@ TinyMCE_Control.prototype = {
 
 		if (bm)
 			this.selection.moveToBookmark(bm);
+	},
+
+	_fixTrailingNbsp : function() {
+		var s = this.selection, e = s.getFocusElement(), bm, v;
+
+		if (e && tinyMCE.blockRegExp.test(e.nodeName) && e.firstChild) {
+			v = e.firstChild.nodeValue;
+
+			if (v && v.length > 1 && /\u00a0$/.test(v)) {
+				bm = s.getBookmark();
+				e.firstChild.nodeValue = v.replace(/\u00a0$/, '');
+				s.moveToBookmark(bm);
+			}
+		}
 	},
 
 	_setUseCSS : function(b) {
