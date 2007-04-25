@@ -2030,7 +2030,7 @@ TinyMCE_Engine.prototype = {
 
 		e.innerHTML = s;
 
-		return e.firstChild.nodeValue;
+		return !e.firstChild ? s : e.firstChild.nodeValue;
 	},
 
 	/**

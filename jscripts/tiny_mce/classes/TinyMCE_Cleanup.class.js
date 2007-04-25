@@ -1305,6 +1305,10 @@ TinyMCE_Cleanup.prototype = {
 
 			if (nn == "INPUT" && n == "maxlength" && v == "2147483647")
 				v = "";
+
+			// Images
+			if (n == "width" || n == "height")
+				v = e.getAttribute(n, 2);
 		}
 
 		if (n == 'style' && v) {

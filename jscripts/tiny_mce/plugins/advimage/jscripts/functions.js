@@ -474,18 +474,18 @@ function showPreviewImage(src, start) {
 	if (src == "")
 		elm.innerHTML = "";
 	else
-		elm.innerHTML = '<img id="previewImg" src="' + src + '" border="0" onload="updateImageData();" onerror="resetImageData();" />'
+		elm.innerHTML = '<img id="previewImg" src="' + src + '" border="0" onload="updateImageData(' + start + ');" onerror="resetImageData();" />'
 }
 
-function updateImageData() {
+function updateImageData(start) {
 	var formObj = document.forms[0];
 
 	preloadImg = document.getElementById('previewImg');
 
-	if (formObj.width.value == "")
+	if (!start && formObj.width.value == "")
 		formObj.width.value = preloadImg.width;
 
-	if (formObj.height.value == "")
+	if (!start && formObj.height.value == "")
 		formObj.height.value = preloadImg.height;
 
 	updateStyle();

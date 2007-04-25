@@ -1728,7 +1728,7 @@ TinyMCE_Engine.prototype = {
 
 		e.innerHTML = s;
 
-		return e.firstChild.nodeValue;
+		return !e.firstChild ? s : e.firstChild.nodeValue;
 	},
 
 	addToLang : function(prefix, ar) {
@@ -3451,10 +3451,7 @@ TinyMCE_Control.prototype = {
 							value = rng.createContextualFragment(value);
 					} else {
 						// Setup text node
-						var el = document.createElement("div");
-						el.innerHTML = value;
-						value = el.firstChild.nodeValue;
-						value = doc.createTextNode(value);
+						value = doc.createTextNode(tinyMCE.entityDecode(value));
 					}
 
 					// Insert plain text in Safari
@@ -5065,6 +5062,10 @@ TinyMCE_Cleanup.prototype = {
 
 			if (nn == "INPUT" && n == "maxlength" && v == "2147483647")
 				v = "";
+
+			// Images
+			if (n == "width" || n == "height")
+				v = e.getAttribute(n, 2);
 		}
 
 		if (n == 'style' && v) {
@@ -5393,15 +5394,25 @@ tinyMCE.add(TinyMCE_Engine, {
 			v = elm.className;
 
 		// Workaround for a issue with Firefox 1.5rc2+
-		if (tinyMCE.isGecko && name == "src" && elm.src != null && elm.src !== '')
-			v = elm.src;
+		if (tinyMCE.isGecko) {
+			if (name == "src" && elm.src != null && elm.src !== '')
+				v = elm.src;
 
-		// Workaround for a issue with Firefox 1.5rc2+
-		if (tinyMCE.isGecko && name == "href" && elm.href != null && elm.href !== '')
-			v = elm.href;
+			// Workaround for a issue with Firefox 1.5rc2+
+			if (name == "href" && elm.href != null && elm.href !== '')
+				v = elm.href;
+		} else if (tinyMCE.isIE) {
+			switch (name) {
+				case "http-equiv":
+					v = elm.httpEquiv;
+					break;
 
-		if (name == "http-equiv" && tinyMCE.isIE)
-			v = elm.httpEquiv;
+				case "width":
+				case "height":
+					v = elm.getAttribute(name, 2);
+					break;
+			}
+		}
 
 		if (name == "style" && !tinyMCE.isOpera)
 			v = elm.style.cssText;

@@ -355,15 +355,25 @@ tinyMCE.add(TinyMCE_Engine, {
 			v = elm.className;
 
 		// Workaround for a issue with Firefox 1.5rc2+
-		if (tinyMCE.isGecko && name == "src" && elm.src != null && elm.src !== '')
-			v = elm.src;
+		if (tinyMCE.isGecko) {
+			if (name == "src" && elm.src != null && elm.src !== '')
+				v = elm.src;
 
-		// Workaround for a issue with Firefox 1.5rc2+
-		if (tinyMCE.isGecko && name == "href" && elm.href != null && elm.href !== '')
-			v = elm.href;
+			// Workaround for a issue with Firefox 1.5rc2+
+			if (name == "href" && elm.href != null && elm.href !== '')
+				v = elm.href;
+		} else if (tinyMCE.isIE) {
+			switch (name) {
+				case "http-equiv":
+					v = elm.httpEquiv;
+					break;
 
-		if (name == "http-equiv" && tinyMCE.isIE)
-			v = elm.httpEquiv;
+				case "width":
+				case "height":
+					v = elm.getAttribute(name, 2);
+					break;
+			}
+		}
 
 		if (name == "style" && !tinyMCE.isOpera)
 			v = elm.style.cssText;

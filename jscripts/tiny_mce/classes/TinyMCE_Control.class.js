@@ -1224,10 +1224,7 @@ TinyMCE_Control.prototype = {
 							value = rng.createContextualFragment(value);
 					} else {
 						// Setup text node
-						var el = document.createElement("div");
-						el.innerHTML = value;
-						value = el.firstChild.nodeValue;
-						value = doc.createTextNode(value);
+						value = doc.createTextNode(tinyMCE.entityDecode(value));
 					}
 
 					// Insert plain text in Safari
