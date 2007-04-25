@@ -98,6 +98,8 @@ var TinyMCE_MediaPlugin = {
 							break;
 
 						case 'clsid:6bf52a52-394a-11d3-b153-00c04f79faa6':
+						case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
+						case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
 							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemWindowsMedia', d, nl[i]), nl[i]);
 							break;
 
@@ -106,8 +108,6 @@ var TinyMCE_MediaPlugin = {
 							break;
 
 						case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
-						case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
-						case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
 							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemRealMedia', d, nl[i]), nl[i]);
 							break;
 					}

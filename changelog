@@ -8,6 +8,8 @@ Version 2.1.1 (2007-xx-xx)
 	Removed debug option, no longer needed since the devkit does it better.
 	Removed old IE 5.0 code and reduced the overall code by using smarter prototype add methods.
 	Removed encoding of apos/' characters since they only time they need to be escaped is when placed in apos based attribs.
+	Fixed bug where the clsids for wmp in media plugin was handled as RealMedia.
+	Fixed bug where template plugin was inserting blank_page in FF.
 	Fixed bug where it was impossible to remove the width/height of images in IE.
 	Fixed bug where replace with empty contents in the replace dialog didn't work in FF.
 	Fixed bug where the advanced themes insert image dialog produces a SSL warning if running over HTTPS in IE.

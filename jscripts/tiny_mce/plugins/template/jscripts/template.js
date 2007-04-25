@@ -59,7 +59,7 @@ var TPU = { //Template Popup Utils
 		this.currentTemplateHTML = this.plugin._replaceValues(this.getFileContents(o.value));
 
 		// Force complete document
-		if (!/<body/gi.test(this.currentTemplateHTML)) {
+/*		if (!/<body/gi.test(this.currentTemplateHTML)) {
 			this.currentTemplateHTML = '<html xmlns="http://www.w3.org/1999/xhtml">' + 
 				'<head>' + 
 					'<title>blank_page</title>' + 
@@ -69,7 +69,7 @@ var TPU = { //Template Popup Utils
 				this.currentTemplateHTML + 
 				'</body>' + 
 				'</html>';
-		}
+		}*/
 
 		// Write HTML to preview iframe
 		d.body.innerHTML = this.currentTemplateHTML;
