@@ -283,7 +283,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		url = tinyMCE.regexpReplace(url, '(http|https):///', '/');
 
 		// Mailto link or anchor (Pass through)
-		if (url.indexOf('mailto:') != -1 || url.indexOf('javascript:') != -1 || tinyMCE.regexpReplace(url,'[ \t\r\n\+]|%20','').charAt(0) == "#")
+		if (url.indexOf('mailto:') != -1 || url.indexOf('javascript:') != -1 || /^[ \t\r\n\+]*[#\?]/.test(url))
 			return url;
 
 		// Fix relative/Mozilla
