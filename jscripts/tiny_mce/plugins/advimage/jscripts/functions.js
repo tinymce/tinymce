@@ -239,8 +239,12 @@ function setAttrib(elm, attrib, value) {
 			attrib = "className";
 
 		eval('elm.' + attrib + "=value;");
-	} else
+	} else {
+		if (attrib == 'class')
+			elm.className = '';
+
 		elm.removeAttribute(attrib);
+	}
 }
 
 function makeAttrib(attrib, value) {
