@@ -4,6 +4,7 @@ Version 2.1.1 (2007-xx-xx)
 	Added new youtube/googlevideo support to media plugin. Simply paste a YouTube/Google URL and it will embed it.
 	Added new cancel button/control to the save plugin. This will undo all changes and execute a optional callback.
 	Added new remove_trailing_nbsp option that removes &nsbp; entities when paragraphs are filled with contents.
+	Added new default_document option this enables you to specify a document to be loaded into TinyMCE by default.
 	Cleaned up the source code by removing some obsolete code.
 	Removed debug option, no longer needed since the devkit does it better.
 	Removed old IE 5.0 code and reduced the overall code by using smarter prototype add methods.

@@ -1471,7 +1471,9 @@ TinyMCE_Control.prototype = {
 		html = '<span id="' + this.editorId + '_parent" class="mceEditorContainer">' + editorTemplate.html;
 
 		html = tinyMCE.replaceVar(html, "editor_id", this.editorId);
-		this.settings.default_document = tinyMCE.baseURL + "/blank.htm";
+
+		if (!this.settings.default_document)
+			this.settings.default_document = tinyMCE.baseURL + "/blank.htm";
 
 		this.settings.old_width = this.settings.width;
 		this.settings.old_height = this.settings.height;
