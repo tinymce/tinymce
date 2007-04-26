@@ -73,6 +73,9 @@ var TinyMCE_ContextMenuPlugin = {
 	},
 
 	_showContextMenu : function(e, inst) {
+		if (e.ctrlKey)
+			return true;
+
 		function getAttrib(elm, name) {
 			return elm.getAttribute(name) ? elm.getAttribute(name) : "";
 		}
