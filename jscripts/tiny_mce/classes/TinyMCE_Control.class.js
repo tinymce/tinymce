@@ -836,7 +836,7 @@ TinyMCE_Control.prototype = {
 					}
 				} else {
 					var felm = this.getFocusElement();
-					if (sel.isCollapsed || (new RegExp('td|tr|tbody|table', 'gi').test(felm.nodeName) && sel.anchorNode == felm.parentNode))
+					if (sel.isCollapsed || (new RegExp('td|tr|tbody|table|img', 'gi').test(felm.nodeName) && sel.anchorNode == felm.parentNode))
 						parentElm = felm;
 				}
 

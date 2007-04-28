@@ -435,7 +435,16 @@ function insertAction() {
 		for (var i=0; i<elementArray.length; i++) {
 			var elm = elementArray[i];
 
+			// Move cursor to end
+			try {
+				tinyMCE.selectedInstance.selection.collapse(false);
+			} catch (ex) {
+				// Ignore
+			}
+
 			// Move cursor behind the new anchor
+			// Don't remember why this was needed so it's now removed
+			/*
 			if (tinyMCE.isGecko) {
 				var sp = inst.getDoc().createTextNode(" ");
 
@@ -454,6 +463,7 @@ function insertAction() {
 				sel.removeAllRanges();
 				sel.addRange(rng);
 			}
+			*/
 
 			setAllAttribs(elm);
 		}
