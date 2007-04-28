@@ -33,6 +33,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug where isDirty state was incorrect if another form was submitted.
 	Fixed bug with getHTML not returning correct content if run twice on a row in IE.
 	Fixed bug where setting class to "not set" in the advimage dialog in IE didn't remove the class attribute.
+	Fixed bug where mceToggleEditor command didn't work with other elements such as DIVs.
 	Fixed so the width/height fields of the advanced themes image dialogs can take more that 3 characters.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.

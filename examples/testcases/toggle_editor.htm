@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Show/Hide divs (tabs) testcase</title>
+<title>Toggle editor testcase</title>
 
 <!-- tinyMCE -->
 <script language="javascript" type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
@@ -52,7 +52,7 @@
 <form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
 
 <h3>Show/Hide editor on div/textarea testcase</h3>
-This page should be used to test the mceAddControl/mceRemoveControl commands.<br />
+This page should be used to test the mceAddControl/mceRemoveControl and mceToggleEditor commands.<br />
 <br />
 Div editor:<br />
 <a href="javascript:toggleEditor('div1');">[show/hide]</a><br />
@@ -76,12 +76,26 @@ Textarea editor:<br />
 	<img width="250" height="48" border="0" onmouseover="this.src='../logo_over.jpg';" onmouseout="this.src='../logo.jpg';" src="../logo.jpg" />
 </textarea>
 <a href="javascript:toggleEditor('elm2');">[show/hide]</a><br />
-<textarea id="elm2" name="elm1" rows="15" cols="80" style="width: 100%">
+<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 100%">
 	Some <strong>element</strong>, this is to be editor 1.
 	<p>Some paragraph. <a title="Some popup link title" href="#" target="http://tinymce.moxiecode.com" onclick="window.open('http://www.sourceforge.net/','popup','left='+(screen.availWidth/2-320)+',top='+(screen.availHeight/2-240)+',width=640,height=480,resizable=yes');return false;">Some popup link</a></p>
 	<img width="250" height="48" border="0" onmouseover="this.src='../logo_over.jpg';" onmouseout="this.src='../logo.jpg';" src="../logo.jpg" />
 </textarea>
+<a href="javascript:void(0);" onclick="tinyMCE.execCommand('mceToggleEditor',false,'elm3');">[show/hide]</a><br />
+<textarea id="elm3" name="elm3" rows="15" cols="80" style="width: 100%">
+	Some <strong>element</strong>, this is to be editor 1.
+	<p>Some paragraph. <a title="Some popup link title" href="#" target="http://tinymce.moxiecode.com" onclick="window.open('http://www.sourceforge.net/','popup','left='+(screen.availWidth/2-320)+',top='+(screen.availHeight/2-240)+',width=640,height=480,resizable=yes');return false;">Some popup link</a></p>
+	<img width="250" height="48" border="0" onmouseover="this.src='../logo_over.jpg';" onmouseout="this.src='../logo.jpg';" src="../logo.jpg" />
+</textarea>
+<a href="javascript:void(0);" onclick="tinyMCE.execCommand('mceToggleEditor',false,'elm4');">[show/hide]</a><br />
+<div id="elm4" name="elm4" rows="15" cols="80" style="width: 100%">
+	Some <strong>element</strong>, this is to be editor 1.
+	<p>Some paragraph. <a title="Some popup link title" href="#" target="http://tinymce.moxiecode.com" onclick="window.open('http://www.sourceforge.net/','popup','left='+(screen.availWidth/2-320)+',top='+(screen.availHeight/2-240)+',width=640,height=480,resizable=yes');return false;">Some popup link</a></p>
+	<img width="250" height="48" border="0" onmouseover="this.src='../logo_over.jpg';" onmouseout="this.src='../logo.jpg';" src="../logo.jpg" />
+</div>
 </form>
+
+
 
 </body>
 </html>

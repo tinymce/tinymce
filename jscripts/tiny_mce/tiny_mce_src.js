@@ -758,13 +758,23 @@ TinyMCE_Engine.prototype = {
 
 					if (!inst.enabled) {
 						pe.style.display = 'none';
-						te.value = inst.getHTML();
+
+						if (te.nodeName == 'TEXTAREA' || te.nodeName == 'INPUT')
+							te.value = inst.getHTML()
+						else
+							te.innerHTML = inst.getHTML();
+
 						te.style.display = inst.oldTargetDisplay;
 						tinyMCE.dispatchCallback(inst, 'hide_instance_callback', 'hideInstance', inst);
 					} else {
 						pe.style.display = 'block';
 						te.style.display = 'none';
-						inst.setHTML(te.value);
+
+						if (te.nodeName == 'TEXTAREA' || te.nodeName == 'INPUT')
+							inst.setHTML(te.value)
+						else
+							inst.setHTML(te.innerHTML)
+
 						inst.useCSS = false;
 						tinyMCE.dispatchCallback(inst, 'show_instance_callback', 'showInstance', inst);
 					}
