@@ -933,7 +933,7 @@ TinyMCE_Engine.prototype = {
 						pe.style.display = 'none';
 
 						if (te.nodeName == 'TEXTAREA' || te.nodeName == 'INPUT')
-							te.value = inst.getHTML()
+							te.value = inst.getHTML();
 						else
 							te.innerHTML = inst.getHTML();
 
@@ -944,9 +944,9 @@ TinyMCE_Engine.prototype = {
 						te.style.display = 'none';
 
 						if (te.nodeName == 'TEXTAREA' || te.nodeName == 'INPUT')
-							inst.setHTML(te.value)
+							inst.setHTML(te.value);
 						else
-							inst.setHTML(te.innerHTML)
+							inst.setHTML(te.innerHTML);
 
 						inst.useCSS = false;
 						tinyMCE.dispatchCallback(inst, 'show_instance_callback', 'showInstance', inst);
@@ -958,13 +958,15 @@ TinyMCE_Engine.prototype = {
 
 			case "mceResetDesignMode":
 				// Resets the designmode state of the editors in Gecko
-				if (!tinyMCE.isIE) {
+				if (tinyMCE.isGecko) {
 					for (n in tinyMCE.instances) {
 						if (!tinyMCE.isInstance(tinyMCE.instances[n]))
 							continue;
 
 						try {
+							tinyMCE.instances[n].getDoc().designMode = "off";
 							tinyMCE.instances[n].getDoc().designMode = "on";
+							tinyMCE.instances[n].useCSS = false;
 						} catch (e) {
 							// Ignore any errors
 						}

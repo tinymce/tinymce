@@ -40,6 +40,8 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.
 	Fixed so both title and alt attributes of buttons are set. Contributed by BigBrownChunx.
 	Fixed so if ctrl key is hold down the default browser context menu will appear.
+	Fixed so the mceResetDesignMode command resets the designmode and useCSS values more correctly.
+	Fixed so custom namespaces on tags can be used in all browsers like <myns:tag>.
 	Fixed problem with source editor using mono instead of monospace as a font family.
 	Fixed problem with Opera detection, it now detects Opera even if it spoofs another browser.
 	Fixed problem where TinyMCE failed to initialized if used together with libraries like Scriptaculous.

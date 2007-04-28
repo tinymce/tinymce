@@ -760,7 +760,7 @@ TinyMCE_Engine.prototype = {
 						pe.style.display = 'none';
 
 						if (te.nodeName == 'TEXTAREA' || te.nodeName == 'INPUT')
-							te.value = inst.getHTML()
+							te.value = inst.getHTML();
 						else
 							te.innerHTML = inst.getHTML();
 
@@ -771,9 +771,9 @@ TinyMCE_Engine.prototype = {
 						te.style.display = 'none';
 
 						if (te.nodeName == 'TEXTAREA' || te.nodeName == 'INPUT')
-							inst.setHTML(te.value)
+							inst.setHTML(te.value);
 						else
-							inst.setHTML(te.innerHTML)
+							inst.setHTML(te.innerHTML);
 
 						inst.useCSS = false;
 						tinyMCE.dispatchCallback(inst, 'show_instance_callback', 'showInstance', inst);
@@ -785,13 +785,15 @@ TinyMCE_Engine.prototype = {
 
 			case "mceResetDesignMode":
 				// Resets the designmode state of the editors in Gecko
-				if (!tinyMCE.isIE) {
+				if (tinyMCE.isGecko) {
 					for (n in tinyMCE.instances) {
 						if (!tinyMCE.isInstance(tinyMCE.instances[n]))
 							continue;
 
 						try {
+							tinyMCE.instances[n].getDoc().designMode = "off";
 							tinyMCE.instances[n].getDoc().designMode = "on";
+							tinyMCE.instances[n].useCSS = false;
 						} catch (e) {
 							// Ignore any errors
 						}
@@ -4804,11 +4806,18 @@ TinyMCE_Cleanup.prototype = {
 				if (st)
 					break;
 
-				// MSIE sometimes produces <//tag>
-				if ((tinyMCE.isRealIE) && n.nodeName.indexOf('/') != -1)
-					break;
-
 				nn = n.nodeName;
+
+				if (tinyMCE.isRealIE) {
+					// MSIE sometimes produces <//tag>
+					if (n.nodeName.indexOf('/') != -1)
+						break;
+
+					// MSIE has it's NS in a separate attrib
+					if (n.scopeName && n.scopeName != 'HTML')
+						nn = n.scopeName.toUpperCase() + ':' + nn.toUpperCase();
+				} else if (tinyMCE.isOpera && nn.indexOf(':') > 0)
+					nn = nn.toUpperCase();
 
 				// Convert fonts to spans
 				if (this.settings.convert_fonts_to_spans) {

@@ -984,11 +984,18 @@ TinyMCE_Cleanup.prototype = {
 				if (st)
 					break;
 
-				// MSIE sometimes produces <//tag>
-				if ((tinyMCE.isRealIE) && n.nodeName.indexOf('/') != -1)
-					break;
-
 				nn = n.nodeName;
+
+				if (tinyMCE.isRealIE) {
+					// MSIE sometimes produces <//tag>
+					if (n.nodeName.indexOf('/') != -1)
+						break;
+
+					// MSIE has it's NS in a separate attrib
+					if (n.scopeName && n.scopeName != 'HTML')
+						nn = n.scopeName.toUpperCase() + ':' + nn.toUpperCase();
+				} else if (tinyMCE.isOpera && nn.indexOf(':') > 0)
+					nn = nn.toUpperCase();
 
 				// Convert fonts to spans
 				if (this.settings.convert_fonts_to_spans) {
