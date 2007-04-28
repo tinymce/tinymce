@@ -1086,7 +1086,8 @@ TinyMCE_Engine.prototype = {
 			return;
 		}
 
-		if (!head) {
+		// Wait for it to load
+		if (!head || !doc.body) {
 			window.setTimeout("tinyMCE.setupContent('" + editor_id + "');", 10);
 			return;
 		}
