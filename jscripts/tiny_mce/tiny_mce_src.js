@@ -2452,6 +2452,7 @@ function TinyMCE_Control(settings) {
 	this.isTinyMCE_Control = true;
 
 	// Default settings
+	this.enabled = true;
 	this.settings = s;
 	this.settings.theme = tinyMCE.getParam("theme", "default");
 	this.settings.width = tinyMCE.getParam("width", -1);
@@ -3931,6 +3932,9 @@ TinyMCE_Control.prototype = {
 
 	triggerSave : function(skip_cleanup, skip_callback) {
 		var e, nl = [], i, s, content, htm;
+
+		if (!this.enabled)
+			return;
 
 		this.switchSettings();
 		s = tinyMCE.settings;

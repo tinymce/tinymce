@@ -35,6 +35,7 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug where setting class to "not set" in the advimage dialog in IE didn't remove the class attribute.
 	Fixed bug where mceToggleEditor command didn't work with other elements such as DIVs.
 	Fixed bug where link dialog didn't close if editing a link and having inlinepopups enabled.
+	Fixed bug where the hidden textarea was updated even if the instance was hidden with mceToggleEditor.
 	Fixed so the width/height fields of the advanced themes image dialogs can take more that 3 characters.
 	Fixed so store/restore selection logic works in Opera and Safari (Nightly).
 	Fixed so the remove column/row icons are more clear in the table plugin. Contributed by Ferenc Veres.
