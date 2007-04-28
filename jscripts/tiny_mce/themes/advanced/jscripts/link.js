@@ -50,6 +50,14 @@ function init() {
 	}
 }
 
+function checkPrefix(n) {
+	if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCE.getLang('lang_is_email')))
+		n.value = 'mailto:' + n.value;
+
+	if (/^\s*www./i.test(n.value) && confirm(tinyMCE.getLang('lang_is_external')))
+		n.value = 'http://' + n.value;
+}
+
 function insertLink() {
 	var href = document.forms[0].href.value;
 	var target = document.forms[0].target.options[document.forms[0].target.selectedIndex].value;

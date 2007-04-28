@@ -4,6 +4,7 @@
 	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/mctabs.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
+	<script language="javascript" type="text/javascript" src="../../utils/validate.js"></script>
 	<script language="javascript" type="text/javascript" src="jscripts/functions.js"></script>
 	<link href="css/advlink.css" rel="stylesheet" type="text/css" />
 	<base target="_self" />
@@ -29,7 +30,7 @@
 						  <td nowrap="nowrap"><label id="hreflabel" for="href">{$lang_insert_link_url}</label></td>
 						  <td><table border="0" cellspacing="0" cellpadding="0">
 								<tr>
-								  <td><input id="href" name="href" type="text" value="" onchange="selectByValue(this.form,'linklisthref',this.value);" /></td>
+								  <td><input id="href" name="href" type="text" value="" onchange="selectByValue(this.form,'linklisthref',this.value);checkPrefix(this);" /></td>
 								  <td id="hrefbrowsercontainer">&nbsp;</td>
 								</tr>
 							  </table></td>

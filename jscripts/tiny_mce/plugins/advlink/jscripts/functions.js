@@ -131,6 +131,14 @@ function init() {
 	window.focus();
 }
 
+function checkPrefix(n) {
+	if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCE.getLang('lang_is_email')))
+		n.value = 'mailto:' + n.value;
+
+	if (/^\s*www./i.test(n.value) && confirm(tinyMCE.getLang('lang_is_external')))
+		n.value = 'http://' + n.value;
+}
+
 function setFormValue(name, value) {
 	document.forms[0].elements[name].value = value;
 }
