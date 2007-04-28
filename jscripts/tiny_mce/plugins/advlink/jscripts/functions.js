@@ -399,15 +399,14 @@ function setAttrib(elm, attrib, value) {
 
 function getAnchorListHTML(id, target) {
 	var inst = tinyMCE.getInstanceById(tinyMCE.getWindowArg('editor_id'));
-	var nodes = inst.getBody().getElementsByTagName("a");
-
+	var nodes = inst.getBody().getElementsByTagName("a"), name, i;
 	var html = "";
 
 	html += '<select id="' + id + '" name="' + id + '" class="mceAnchorList" onfocus="tinyMCE.addSelectAccessibility(event, this, window);" onchange="this.form.' + target + '.value=';
 	html += 'this.options[this.selectedIndex].value;">';
 	html += '<option value="">---</option>';
 
-	for (var i=0; i<nodes.length; i++) {
+	for (i=0; i<nodes.length; i++) {
 		if ((name = tinyMCE.getAttrib(nodes[i], "name")) != "")
 			html += '<option value="#' + name + '">' + name + '</option>';
 	}

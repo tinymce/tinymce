@@ -35,26 +35,21 @@ var TinyMCE_AdvancedLinkPlugin = {
 	execCommand : function(editor_id, element, command, user_interface, value) {
 		switch (command) {
 			case "mceAdvLink":
-				var anySelection = false;
-				var inst = tinyMCE.getInstanceById(editor_id);
-				var focusElm = inst.getFocusElement();
-				var selectedText = inst.selection.getSelectedText();
+				var inst = tinyMCE.getInstanceById(editor_id), anySelection = false;
+				var focusElm = inst.getFocusElement(), selectedText = inst.selection.getSelectedText();
 
 				if (tinyMCE.selectedElement)
 					anySelection = (tinyMCE.selectedElement.nodeName.toLowerCase() == "img") || (selectedText && selectedText.length > 0);
 
 				if (anySelection || (focusElm != null && focusElm.nodeName == "A")) {
-					var template = new Array();
-
-					template['file']   = '../../plugins/advlink/link.htm';
-					template['width']  = 480;
-					template['height'] = 400;
-
-					// Language specific width and height addons
-					template['width']  += tinyMCE.getLang('lang_advlink_delta_width', 0);
-					template['height'] += tinyMCE.getLang('lang_advlink_delta_height', 0);
-
-					tinyMCE.openWindow(template, {editor_id : editor_id, inline : "yes"});
+					tinyMCE.openWindow({
+						file : '../../plugins/advlink/link.htm',
+						width : 480 + tinyMCE.getLang('lang_advlink_delta_width', 0),
+						height : 400 + tinyMCE.getLang('lang_advlink_delta_height', 0)
+					}, {
+						editor_id : editor_id,
+						inline : "yes"
+					});
 				}
 
 				return true;
