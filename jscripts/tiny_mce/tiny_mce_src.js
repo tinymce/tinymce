@@ -4536,7 +4536,8 @@ TinyMCE_Cleanup.prototype = {
 	},
 
 	isValid : function(n) {
-		this._setupRules(); // Will initialize cleanup rules
+		if (!this.rulesDone)
+			this._setupRules(); // Will initialize cleanup rules
 
 		// Empty is true since it removes formatting
 		if (!n)
@@ -4789,7 +4790,8 @@ TinyMCE_Cleanup.prototype = {
 	serializeNodeAsHTML : function(n, inn) {
 		var en, no, h = '', i, l, t, st, r, cn, va = false, f = false, at, hc, cr, nn;
 
-		this._setupRules(); // Will initialize cleanup rules
+		if (!this.rulesDone)
+			this._setupRules(); // Will initialize cleanup rules
 
 		if (tinyMCE.isRealIE && this._isDuplicate(n))
 			return '';
@@ -5013,7 +5015,8 @@ TinyMCE_Cleanup.prototype = {
 	xmlEncode : function(s) {
 		var cl = this, re = this.xmlEncodeRe;
 
-		this._setupEntities(); // Will intialize lookup table
+		if (!this.entitiesDone)
+			this._setupEntities(); // Will intialize lookup table
 
 		switch (this.settings.entity_encoding) {
 			case "raw":
@@ -5149,35 +5152,31 @@ TinyMCE_Cleanup.prototype = {
 		var n, a, i, s = this.settings;
 
 		// Setup entities
-		if (!this.entitiesDone) {
-			if (s.entity_encoding == "named") {
-				n = tinyMCE.clearArray([]);
-				a = this.split(',', s.entities);
-				for (i=0; i<a.length; i+=2)
-					n[a[i]] = a[i+1];
+		if (s.entity_encoding == "named") {
+			n = tinyMCE.clearArray([]);
+			a = this.split(',', s.entities);
+			for (i=0; i<a.length; i+=2)
+				n[a[i]] = a[i+1];
 
-				this.entities = n;
-			}
-
-			this.entitiesDone = true;
+			this.entities = n;
 		}
+
+		this.entitiesDone = true;
 	},
 
 	_setupRules : function() {
 		var s = this.settings;
 
 		// Setup default rule
-		if (!this.rulesDone) {
-			this.addRuleStr(s.valid_elements);
-			this.addRuleStr(s.extended_valid_elements);
-			this.addChildRemoveRuleStr(s.valid_child_elements);
+		this.addRuleStr(s.valid_elements);
+		this.addRuleStr(s.extended_valid_elements);
+		this.addChildRemoveRuleStr(s.valid_child_elements);
 
-			this.rulesDone = true;
-		}
+		this.rulesDone = true;
 	},
 
 	_isDuplicate : function(n) {
-		var i;
+		var i, l, sn;
 
 		if (!this.settings.fix_content_duplication)
 			return false;
@@ -5189,13 +5188,15 @@ TinyMCE_Cleanup.prototype = {
 
 			n.setAttribute('mce_serialized', this.serializationId);
 		} else {
+			sn = this.serializedNodes;
+
 			// Search lookup table for text nodes  and comments
-			for (i=0; i<this.serializedNodes.length; i++) {
-				if (this.serializedNodes[i] == n)
+			for (i=0, l = sn.length; i<l; i++) {
+				if (sn[i] == n)
 					return true;
 			}
 
-			this.serializedNodes[this.serializedNodes.length] = n;
+			sn.push(n);
 		}
 
 		return false;
