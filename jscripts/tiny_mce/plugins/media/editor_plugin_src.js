@@ -360,7 +360,7 @@ var TinyMCE_MediaPlugin = {
 		h += '>';
 
 		for (n in p) {
-			if (p[n] && typeof(p[n]) != "function") {
+			if (typeof(p[n]) != "undefined" && typeof(p[n]) != "function") {
 				h += '<param name="' + n + '" value="' + p[n] + '" />';
 
 				// Add extra url parameter if it's an absolute URL on WMP
