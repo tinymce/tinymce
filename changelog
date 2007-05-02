@@ -22,7 +22,6 @@ Version 2.1.1 (2007-xx-xx)
 	Fixed bug where FF was auto generating BR elements at the end of LI elements.
 	Fixed bug where more colors link failed if the page had a base element in page.
 	Fixed bug where link dialog produced error when importing CSS classes.
-	Fixed bug where link dialog produced error when importing CSS classes.
 	Fixed bug where fullpage plugin inserted extra > at the end of doctype.
 	Fixed bug where fullpage plugin didn't remove internal mce_src/mce_href items correctly.
 	Fixed bug where fullpage plugin height was incorrect on Linux.
