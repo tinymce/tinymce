@@ -3322,6 +3322,8 @@ TinyMCE_Control.prototype = {
 
 				tinyMCE.handleVisualAid(this.getBody(), true, this.visualAid, this);
 				tinyMCE._setEventsEnabled(this.getBody(), false);
+				this._addBogusBR();
+
 				return true;
 
 			case "mceCleanup":
@@ -3336,6 +3338,7 @@ TinyMCE_Control.prototype = {
 
 				tinyMCE.handleVisualAid(this.getBody(), true, this.visualAid, this);
 				tinyMCE._setEventsEnabled(this.getBody(), false);
+				this._addBogusBR();
 				this.repaint();
 				this.selection.moveToBookmark(b);
 				tinyMCE.triggerNodeChange();
@@ -3361,6 +3364,7 @@ TinyMCE_Control.prototype = {
 					tinyMCE.execCommand('mceInsertContent', false, value);
 				}
 
+				this._addBogusBR();
 				tinyMCE.triggerNodeChange();
 			break;
 
@@ -3661,6 +3665,13 @@ TinyMCE_Control.prototype = {
 
 	queryCommandState : function(c) {
 		return this.getDoc().queryCommandState(c);
+	},
+
+	_addBogusBR : function() {
+		var b = this.getBody();
+
+		if (tinyMCE.isGecko && !b.hasChildNodes())
+			b.innerHTML = '<br _moz_editor_bogus_node="TRUE" />';
 	},
 
 	_onAdd : function(replace_element, form_element_name, target_document) {
