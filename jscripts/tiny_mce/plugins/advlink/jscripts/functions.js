@@ -420,6 +420,8 @@ function insertAction() {
 	var inst = tinyMCE.getInstanceById(tinyMCE.getWindowArg('editor_id'));
 	var elm = inst.getFocusElement();
 
+	checkPrefix(document.forms[0].href);
+
 	elm = tinyMCE.getParentElement(elm, "a");
 
 	tinyMCEPopup.execCommand("mceBeginUndoLevel");
