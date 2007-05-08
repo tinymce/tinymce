@@ -38,7 +38,7 @@ function TinyMCE_Engine() {
 	this.isMSIE5 = this.isMSIE && (ua.indexOf('MSIE 5') != -1);
 	this.isMSIE5_0 = this.isMSIE && (ua.indexOf('MSIE 5.0') != -1);
 	this.isMSIE7 = this.isMSIE && (ua.indexOf('MSIE 7') != -1);
-	this.isGecko = ua.indexOf('Gecko') != -1;
+	this.isGecko = ua.indexOf('Gecko') != -1; // Will also be true on Safari
 	this.isSafari = ua.indexOf('Safari') != -1;
 	this.isOpera = window['opera'] && opera.buildNumber ? true : false;
 	this.isMac = ua.indexOf('Mac') != -1;
