@@ -72,7 +72,7 @@ tinyMCE.add(TinyMCE_Engine, {
 	 * @type HTMLElement
 	 */
 	getElementByAttributeValue : function(n, e, a, v) {
-		return (n = this.getElementsByAttributeValue(n, e, a, v)).length === 0 ? null : n[0];
+		return (n = this.getElementsByAttributeValue(n, e, a, v)).length == 0 ? null : n[0];
 	},
 
 	/**
@@ -394,7 +394,7 @@ tinyMCE.add(TinyMCE_Engine, {
 			va = "" + va;
 
 		if (fix) {
-			if (va === null)
+			if (va == null)
 				va = "";
 
 			va = va.replace(/[^0-9%]/g, '');
@@ -423,7 +423,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		e.style[n] = v;
 
 		// Style attrib deleted in IE
-		if (tinyMCE.isIE && v === null || v === '') {
+		if (tinyMCE.isIE && v == null || v == '') {
 			v = tinyMCE.serializeStyle(tinyMCE.parseStyle(e.style.cssText));
 			e.style.cssText = v;
 			e.setAttribute("style", v);
@@ -448,7 +448,7 @@ tinyMCE.add(TinyMCE_Engine, {
 
 		if (e) {
 			// Keep tile mode
-			if (tinyMCE.settings.button_tile_map && e.className && e.className.indexOf('mceTiledButton') === 0)
+			if (tinyMCE.settings.button_tile_map && e.className && e.className.indexOf('mceTiledButton') == 0)
 				c = 'mceTiledButton ' + c;
 
 			e.className = c;

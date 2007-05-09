@@ -310,7 +310,7 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Only do this once
-		if (this.configs.length === 0) {
+		if (this.configs.length == 0) {
 			if (typeof(TinyMCECompressed) == "undefined") {
 				tinyMCE.addEvent(window, "DOMContentLoaded", TinyMCE_Engine.prototype.onLoad);
 
@@ -1303,7 +1303,7 @@ TinyMCE_Engine.prototype = {
 			return;
 
 		// Check if form is valid
-		if (typeof(form_obj) == "undefined" || form_obj === null)
+		if (typeof(form_obj) == "undefined" || form_obj == null)
 			return;
 
 		// If not a form, find the form
@@ -1315,14 +1315,14 @@ TinyMCE_Engine.prototype = {
 		}
 
 		// Still nothing
-		if (form_obj === null)
+		if (form_obj == null)
 			return;
 
 		// Disable all UI form elements that TinyMCE created
 		for (i=0; i<form_obj.elements.length; i++) {
 			elementId = form_obj.elements[i].name ? form_obj.elements[i].name : form_obj.elements[i].id;
 
-			if (elementId.indexOf('mce_editor_') === 0)
+			if (elementId.indexOf('mce_editor_') == 0)
 				form_obj.elements[i].disabled = true;
 		}
 	},
@@ -1670,7 +1670,7 @@ TinyMCE_Engine.prototype = {
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = this.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
 			// Tiled button
-			x = 0 - (m * 20) === 0 ? '0' : 0 - (m * 20);
+			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
 			h += '<a id="{$editor_id}_' + id + '" href="javascript:' + cmd + '" onclick="' + cmd + 'return false;" onmousedown="return false;" ' + io + ' class="mceTiledButton mceButtonNormal" target="_self">';
 			h += '<img src="{$themeurl}/images/spacer.gif" style="background-position: ' + x + 'px 0" alt="{$'+lang+'}" title="{$' + lang + '}" />';
 			h += '</a>';
@@ -1713,7 +1713,7 @@ TinyMCE_Engine.prototype = {
 
 		// Use tilemaps when enabled and found and never in MSIE since it loads the tile each time from cache if cahce is disabled
 		if (tinyMCE.getParam('button_tile_map') && (!tinyMCE.isIE || tinyMCE.isOpera) && (m = tinyMCE.buttonMap[id]) != null && (tinyMCE.getParam("language") == "en" || img.indexOf('$lang') == -1)) {
-			x = 0 - (m * 20) === 0 ? '0' : 0 - (m * 20);
+			x = 0 - (m * 20) == 0 ? '0' : 0 - (m * 20);
 
 			if (tinyMCE.isRealIE)
 				h += '<span id="{$editor_id}_' + id + '" class="mceMenuButton" onmouseover="tinyMCE._menuButtonEvent(\'over\',this);tinyMCE.lastHover = this;" onmouseout="tinyMCE._menuButtonEvent(\'out\',this);">';
@@ -2193,7 +2193,7 @@ TinyMCE_Engine.prototype = {
 	 */
 	applyTemplate : function(h, ag) {
 		return h.replace(new RegExp('\\{\\$([a-z0-9_]+)\\}', 'gi'), function(m, s) {
-			if (s.indexOf('lang_') === 0 && tinyMCELang[s])
+			if (s.indexOf('lang_') == 0 && tinyMCELang[s])
 				return tinyMCELang[s];
 
 			if (ag && ag[s])
@@ -2278,7 +2278,7 @@ TinyMCE_Engine.prototype = {
 			html = tinyMCE.applyTemplate(html, args);
 
 			win = window.open("", "mcePopup" + new Date().getTime(), "top=" + y + ",left=" + x + ",scrollbars=" + scrollbars + ",dialog=yes,minimizable=" + resizable + ",modal=yes,width=" + width + ",height=" + height + ",resizable=" + resizable);
-			if (win === null) {
+			if (win == null) {
 				alert(tinyMCELang.lang_popup_blocked);
 				return;
 			}
@@ -2304,7 +2304,7 @@ TinyMCE_Engine.prototype = {
 					try {tinyMCE.lastWindow.close();} catch (ex) {}
 
 				win = window.open(url, "mcePopup" + new Date().getTime(), "top=" + y + ",left=" + x + ",scrollbars=" + scrollbars + ",dialog=" + modal + ",minimizable=" + resizable + ",modal=" + modal + ",width=" + width + ",height=" + height + ",resizable=" + resizable);
-				if (win === null) {
+				if (win == null) {
 					alert(tinyMCELang.lang_popup_blocked);
 					return;
 				}
@@ -2405,7 +2405,7 @@ TinyMCE_Engine.prototype = {
 				oldH = el.style.height;
 				bo = tinyMCE.getAttrib(el, "border");
 
-				bo = bo === '' || bo == "0" ? true : false;
+				bo = bo == '' || bo == "0" ? true : false;
 
 				tinyMCE.setAttrib(el, "class", tinyMCE.getVisualAidClass(tinyMCE.getAttrib(el, "class"), state && bo));
 
@@ -2709,7 +2709,7 @@ TinyMCE_Engine.prototype = {
 							rule = rules[c];
 
 							// Strip spaces between selectors
-							while (rule.indexOf(' ') === 0)
+							while (rule.indexOf(' ') == 0)
 								rule = rule.substring(1);
 
 							// Invalid rule
@@ -2755,7 +2755,7 @@ TinyMCE_Engine.prototype = {
 	regexpReplace : function(in_str, reg_exp, replace_str, opts) {
 		var re;
 
-		if (in_str === null)
+		if (in_str == null)
 			return in_str;
 
 		if (typeof(opts) == "undefined")

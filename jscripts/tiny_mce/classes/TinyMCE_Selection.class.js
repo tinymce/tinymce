@@ -293,7 +293,7 @@ TinyMCE_Selection.prototype = {
 			/*
 			if (typeof(bookmark.index) != 'undefined') {
 				tinyMCE.selectElements(b, 'IMG', function (n) {
-					if (bookmark.index-- === 0) {
+					if (bookmark.index-- == 0) {
 						// Select image in Gecko here
 					}
 
@@ -523,7 +523,7 @@ TinyMCE_Selection.prototype = {
 	getRng : function() {
 		var s = this.getSel();
 
-		if (s === null)
+		if (s == null)
 			return null;
 
 		if (tinyMCE.isRealIE)
@@ -549,7 +549,7 @@ TinyMCE_Selection.prototype = {
 		if (r.item)
 			return false;
 
-		return r.boundingWidth === 0 || this.getSel().isCollapsed;
+		return r.boundingWidth == 0 || this.getSel().isCollapsed;
 	},
 
 	/**

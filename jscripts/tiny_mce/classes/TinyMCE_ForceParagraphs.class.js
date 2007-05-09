@@ -38,7 +38,7 @@ var TinyMCE_ForceParagraphs = {
 			var nodes;
 
 			function isEmptyHTML(html) {
-				return html.replace(new RegExp('[ \t\r\n]+', 'g'), '').toLowerCase() === '';
+				return html.replace(new RegExp('[ \t\r\n]+', 'g'), '').toLowerCase() == '';
 			}
 
 			// Check for images
@@ -154,7 +154,7 @@ var TinyMCE_ForceParagraphs = {
 			endChop = endChop.lastChild;
 
 		// If not in a block element
-		if (startBlock === null) {
+		if (startBlock == null) {
 			// Delete selection
 			rng.deleteContents();
 
@@ -267,7 +267,7 @@ var TinyMCE_ForceParagraphs = {
 		if (!startChop.previousSibling && startChop.parentNode.nodeName.toUpperCase() == blockName) {
 			rng.setStartBefore(startChop.parentNode);
 		} else {
-			if (rngBefore.startContainer.nodeName.toUpperCase() == blockName && rngBefore.startOffset === 0)
+			if (rngBefore.startContainer.nodeName.toUpperCase() == blockName && rngBefore.startOffset == 0)
 				rng.setStartBefore(rngBefore.startContainer);
 			else
 				rng.setStart(rngBefore.startContainer, rngBefore.startOffset);

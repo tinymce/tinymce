@@ -66,7 +66,7 @@ tinyMCE.add(TinyMCE_Engine, {
 	parseStyle : function(str) {
 		var ar = [], st, i, re, pa;
 
-		if (str === null)
+		if (str == null)
 			return ar;
 
 		st = str.split(';');
@@ -74,7 +74,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		tinyMCE.clearArray(ar);
 
 		for (i=0; i<st.length; i++) {
-			if (st[i] === '')
+			if (st[i] == '')
 				continue;
 
 			re = new RegExp('^\\s*([^:]*):\\s*(.*)\\s*$');
@@ -106,7 +106,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		box[3] = ar[pr + '-bottom' + sf];
 
 		for (i=0; i<box.length; i++) {
-			if (box[i] === null)
+			if (box[i] == null)
 				return;
 
 			for (a=0; a<box.length; a++) {
@@ -148,7 +148,7 @@ tinyMCE.add(TinyMCE_Engine, {
 			if (typeof(val) == 'function')
 				continue;
 
-			if (key.indexOf('mso-') === 0)
+			if (key.indexOf('mso-') == 0)
 				continue;
 
 			if (val != null && val !== '') {
@@ -329,7 +329,7 @@ tinyMCE.add(TinyMCE_Engine, {
 
 		// Loops backwards due to bug #1467987
 		for (i=an.length-1; i>=0; i--) {
-			if (tinyMCE.getAttrib(an[i], "name") !== '' && tinyMCE.getAttrib(an[i], "href") === '') {
+			if (tinyMCE.getAttrib(an[i], "name") !== '' && tinyMCE.getAttrib(an[i], "href") == '') {
 				cn = an[i].childNodes;
 
 				for (x=cn.length-1; x>=0; x--)
@@ -701,7 +701,7 @@ TinyMCE_Cleanup.prototype = {
 
 			// Split tag/children
 			p = this.split(/\[|\]/, s);
-			if (p === null || p.length < 1)
+			if (p == null || p.length < 1)
 				t = s.toUpperCase();
 			else
 				t = p[0].toUpperCase();
@@ -757,18 +757,18 @@ TinyMCE_Cleanup.prototype = {
 	parseRuleStr : function(s) {
 		var ta, p, r, a, i, x, px, t, tn, y, av, or = tinyMCE.clearArray([]), dv;
 
-		if (s === null || s.length === 0)
+		if (s == null || s.length == 0)
 			return or;
 
 		ta = s.split(',');
 		for (x=0; x<ta.length; x++) {
 			s = ta[x];
-			if (s.length === 0)
+			if (s.length == 0)
 				continue;
 
 			// Split tag/attrs
 			p = this.split(/\[|\]/, s);
-			if (p === null || p.length < 1)
+			if (p == null || p.length < 1)
 				t = s.toUpperCase();
 			else
 				t = p[0].toUpperCase();
@@ -824,7 +824,7 @@ TinyMCE_Cleanup.prototype = {
 
 								dv = av[0].substring(1);
 
-								r.defaultAttribs[t.toLowerCase()] = dv === '' ? "mce_empty" : dv;
+								r.defaultAttribs[t.toLowerCase()] = dv == '' ? "mce_empty" : dv;
 							} else if (av[0].charAt(0) == '<') {
 								if (!r.validAttribValues)
 									r.validAttribValues = tinyMCE.clearArray([]);
@@ -1119,16 +1119,16 @@ TinyMCE_Cleanup.prototype = {
 	_serializeAttribute : function(n, r, an) {
 		var av = '', t, os = this.settings.on_save;
 
-		if (os && (an.indexOf('mce_') === 0 || an.indexOf('_moz') === 0))
+		if (os && (an.indexOf('mce_') == 0 || an.indexOf('_moz') == 0))
 			return '';
 
 		if (os && this.mceAttribs[an])
 			av = this._getAttrib(n, this.mceAttribs[an]);
 
-		if (av.length === 0)
+		if (av.length == 0)
 			av = this._getAttrib(n, an);
 
-		if (av.length === 0 && r.defaultAttribs && (t = r.defaultAttribs[an])) {
+		if (av.length == 0 && r.defaultAttribs && (t = r.defaultAttribs[an])) {
 			av = t;
 
 			if (av == "mce_empty")

@@ -347,7 +347,7 @@ TinyMCE_Control.prototype = {
 		m = m.toLowerCase();
 		k = ie && !n ? k.toUpperCase() : k;
 		c = n ? null : k.charCodeAt(0);
-		d = d && d.indexOf('lang_') === 0 ? tinyMCE.getLang(d) : d;
+		d = d && d.indexOf('lang_') == 0 ? tinyMCE.getLang(d) : d;
 
 		sc = {
 			alt : m.indexOf('alt') != -1,
@@ -432,7 +432,7 @@ TinyMCE_Control.prototype = {
 		s = this.getSel();
 
 		// Weird, wheres that cursor selection?
-		return (!s || !s.rangeCount || s.rangeCount === 0);
+		return (!s || !s.rangeCount || s.rangeCount == 0);
 	},
 
 	/**
@@ -739,7 +739,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "FormatBlock":
-				if (value === null || value === '') {
+				if (value == null || value == '') {
 					var elm = tinyMCE.getParentElement(this.getFocusElement(), "p,div,h1,h2,h3,h4,h5,h6,pre,address,blockquote,dt,dl,dd,samp");
 
 					if (elm)
@@ -812,8 +812,8 @@ TinyMCE_Control.prototype = {
 				var sel = this.getSel();
 				var scmd = value.command;
 				var sname = value.name;
-				var svalue = value.value === null ? '' : value.value;
-				//var svalue = value['value'] === null ? '' : value['value'];
+				var svalue = value.value == null ? '' : value.value;
+				//var svalue = value['value'] == null ? '' : value['value'];
 				var wrapper = value.wrapper ? value.wrapper : "span";
 				var parentElm = null;
 				var invalidRe = new RegExp("^BODY|HTML$", "g");
@@ -829,8 +829,8 @@ TinyMCE_Control.prototype = {
 						var prng = doc.selection.createRange();
 						prng.moveToElementText(pelm);
 
-						if (rng.htmlText == prng.htmlText || rng.boundingWidth === 0) {
-							if (invalidParentsRe === null || !invalidParentsRe.test(pelm.nodeName))
+						if (rng.htmlText == prng.htmlText || rng.boundingWidth == 0) {
+							if (invalidParentsRe == null || !invalidParentsRe.test(pelm.nodeName))
 								parentElm = pelm;
 						}
 					}
@@ -939,7 +939,7 @@ TinyMCE_Control.prototype = {
 					// Is I the only child
 					if (elm.parentNode.childNodes.length == 1 && !invalidRe.test(elm.nodeName) && !invalidRe.test(elm.parentNode.nodeName)) {
 						//tinyMCE.debug("merge2" + isNew + "," + elm.nodeName + "," + elm.parentNode.nodeName);
-						if (invalidParentsRe === null || !invalidParentsRe.test(elm.parentNode.nodeName))
+						if (invalidParentsRe == null || !invalidParentsRe.test(elm.parentNode.nodeName))
 							this._mergeElements(scmd, elm.parentNode, elm, false);
 					}
 				}
@@ -975,7 +975,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "FontName":
-				if (value === null) {
+				if (value == null) {
 					var s = this.getSel();
 
 					// Find font and select it
@@ -1013,7 +1013,7 @@ TinyMCE_Control.prototype = {
 				return;
 
 			case "forecolor":
-				value = value === null ? this.foreColor : value;
+				value = value == null ? this.foreColor : value;
 				value = tinyMCE.trim(value);
 				value = value.charAt(0) != '#' ? (isNaN('0x' + value) ? value : '#' + value) : value;
 
@@ -1022,7 +1022,7 @@ TinyMCE_Control.prototype = {
 				break;
 
 			case "HiliteColor":
-				value = value === null ? this.backColor : value;
+				value = value == null ? this.backColor : value;
 				value = tinyMCE.trim(value);
 				value = value.charAt(0) != '#' ? (isNaN('0x' + value) ? value : '#' + value) : value;
 				this.backColor = value;
@@ -1395,7 +1395,7 @@ TinyMCE_Control.prototype = {
 				}
 
 				// Remove class
-				if (text.length === 0)
+				if (text.length == 0)
 					this.execCommand("mceSetCSSClass", false, "");
 
 				tinyMCE.triggerNodeChange();
@@ -1501,18 +1501,18 @@ TinyMCE_Control.prototype = {
 			this.settings.height = replace_element.offsetHeight;
 
 		// Try the style width
-		if (this.settings.width === 0)
+		if (this.settings.width == 0)
 			this.settings.width = replace_element.style.width;
 
 		// Try the style height
-		if (this.settings.height === 0)
+		if (this.settings.height == 0)
 			this.settings.height = replace_element.style.height; 
 
 		// If no width/height then default to 320x240, better than nothing
-		if (this.settings.width === 0)
+		if (this.settings.width == 0)
 			this.settings.width = 320;
 
-		if (this.settings.height === 0)
+		if (this.settings.height == 0)
 			this.settings.height = 240;
 
 		this.settings.area_width = parseInt(this.settings.width);
@@ -1697,7 +1697,7 @@ TinyMCE_Control.prototype = {
 			b.setAttribute('href', u);
 			h.appendChild(b);
 		} else {
-			if (u === '' || u === null)
+			if (u == '' || u == null)
 				b.parentNode.removeChild(b);
 			else
 				b.setAttribute('href', u);

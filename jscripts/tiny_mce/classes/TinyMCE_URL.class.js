@@ -128,7 +128,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		var i, strTok1, strTok2, breakPoint = 0, outPath = "", forceSlash = false;
 		var fileName, pos;
 
-		if (targetURL.path === '')
+		if (targetURL.path == '')
 			targetURL.path = "/";
 		else
 			forceSlash = true;
@@ -172,7 +172,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		targetURL.protocol = null;
 		targetURL.host = null;
 		targetURL.port = null;
-		targetURL.path = outPath === '' && forceSlash ? "/" : outPath;
+		targetURL.path = outPath == '' && forceSlash ? "/" : outPath;
 
 		// Remove document prefix from local anchors
 		fileName = baseURL.path;
@@ -185,7 +185,7 @@ tinyMCE.add(TinyMCE_Engine, {
 			targetURL.path = "";
 
 		// If empty and not local anchor force filename or slash
-		if (targetURL.path === '' && !targetURL.anchor)
+		if (targetURL.path == '' && !targetURL.anchor)
 			targetURL.path = fileName !== '' ? fileName : "/";
 
 		return this.serializeURL(targetURL);
@@ -203,7 +203,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		var baseURL = this.parseURL(base_url), baseURLParts, relURLParts, newRelURLParts, numBack, relURL = this.parseURL(relative_url), i;
 		var len, absPath, start, end, newBaseURLParts;
 
-		if (relative_url === '' || relative_url.indexOf('://') != -1 || /^(mailto:|javascript:|#|\/)/.test(relative_url))
+		if (relative_url == '' || relative_url.indexOf('://') != -1 || /^(mailto:|javascript:|#|\/)/.test(relative_url))
 			return relative_url;
 
 		// Split parts
@@ -213,7 +213,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		// Remove empty chunks
 		newBaseURLParts = [];
 		for (i=baseURLParts.length-1; i>=0; i--) {
-			if (baseURLParts[i].length === 0)
+			if (baseURLParts[i].length == 0)
 				continue;
 
 			newBaseURLParts[newBaseURLParts.length] = baseURLParts[i];
@@ -224,7 +224,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		newRelURLParts = [];
 		numBack = 0;
 		for (i=relURLParts.length-1; i>=0; i--) {
-			if (relURLParts[i].length === 0 || relURLParts[i] == ".")
+			if (relURLParts[i].length == 0 || relURLParts[i] == ".")
 				continue;
 
 			if (relURLParts[i] == '..') {
@@ -327,7 +327,7 @@ tinyMCE.add(TinyMCE_Engine, {
 
 			start = prot + "//" + host + portPart + "/";
 
-			if (url.indexOf(start) === 0)
+			if (url.indexOf(start) == 0)
 				url = url.substring(start.length-1);
 		}
 
