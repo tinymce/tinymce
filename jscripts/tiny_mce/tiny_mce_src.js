@@ -4613,8 +4613,8 @@ TinyMCE_Cleanup.prototype = {
 				}
 
 				r += ')$';
-//tinyMCE.debug(t + "=" + r);
-				if (this.childRules === null)
+
+				if (this.childRules == null)
 					this.childRules = tinyMCE.clearArray([]);
 
 				this.childRules[tn[y]] = new RegExp(r);
