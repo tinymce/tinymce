@@ -1827,7 +1827,7 @@ TinyMCE_Control.prototype = {
 		htm = tinyMCE._customCleanup(this, "submit_content", htm);
 
 		if (!skip_callback && tinyMCE.settings.save_callback !== '')
-			content = window[tinyMCE.settings.save_callback](this.formTargetElementId,htm,this.getBody());
+			content = tinyMCE.resolveDots(tinyMCE.settings.save_callback, window)(this.formTargetElementId,htm,this.getBody());
 
 		// Use callback content if available
 		if ((typeof(content) != "undefined") && content != null)

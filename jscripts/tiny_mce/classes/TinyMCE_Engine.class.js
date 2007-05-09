@@ -2124,8 +2124,8 @@ TinyMCE_Engine.prototype = {
 
 		// Call custom cleanup
 		customCleanup = tinyMCE.settings.cleanup_callback;
-		if (customCleanup != '' && window[customCleanup])
-			content = window[customCleanup](type, content, inst);
+		if (customCleanup != '')
+			content = tinyMCE.resolveDots(tinyMCE.settings.cleanup_callback, window)(type, content, inst);
 
 		// Trigger theme cleanup
 		po = tinyMCE.themes[tinyMCE.settings.theme];
@@ -2924,6 +2924,22 @@ TinyMCE_Engine.prototype = {
 		}
 
 		return false;
+	},
+
+	/**
+	 * Resolves a x.x.x string into a reference for objects in object in objects.
+	 *
+	 * @param {string} s Dot notation string.
+	 * @param {object} o Object tree.
+	 * @return {object} Reference based on dots.
+	 */
+	resolveDots : function(s, o) {
+		var i;
+
+		for (i=0, s=s.split('.'); i<s.length; i++)
+			o = o[s[i]];
+
+		return o;
 	},
 
 	/**

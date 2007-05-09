@@ -1800,8 +1800,8 @@ TinyMCE_Engine.prototype = {
 
 		// Call custom cleanup
 		customCleanup = tinyMCE.settings.cleanup_callback;
-		if (customCleanup != '' && window[customCleanup])
-			content = window[customCleanup](type, content, inst);
+		if (customCleanup != '')
+			content = tinyMCE.resolveDots(tinyMCE.settings.cleanup_callback, window)(type, content, inst);
 
 		// Trigger theme cleanup
 		po = tinyMCE.themes[tinyMCE.settings.theme];
@@ -2380,6 +2380,15 @@ TinyMCE_Engine.prototype = {
 		}
 
 		return false;
+	},
+
+	resolveDots : function(s, o) {
+		var i;
+
+		for (i=0, s=s.split('.'); i<s.length; i++)
+			o = o[s[i]];
+
+		return o;
 	},
 
 	xmlEncode : function(s) {
@@ -3991,7 +4000,7 @@ TinyMCE_Control.prototype = {
 		htm = tinyMCE._customCleanup(this, "submit_content", htm);
 
 		if (!skip_callback && tinyMCE.settings.save_callback !== '')
-			content = window[tinyMCE.settings.save_callback](this.formTargetElementId,htm,this.getBody());
+			content = tinyMCE.resolveDots(tinyMCE.settings.save_callback, window)(this.formTargetElementId,htm,this.getBody());
 
 		// Use callback content if available
 		if ((typeof(content) != "undefined") && content != null)
