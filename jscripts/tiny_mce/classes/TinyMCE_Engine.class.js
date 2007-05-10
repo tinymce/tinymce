@@ -14,8 +14,8 @@ function TinyMCE_Engine() {
 	var ua;
 
 	this.majorVersion = "2";
-	this.minorVersion = "1.1";
-	this.releaseDate = "2007-05-08";
+	this.minorVersion = "1.1.1";
+	this.releaseDate = "2007-05-xx";
 
 	this.instances = [];
 	this.switchClassCache = [];
@@ -2936,8 +2936,11 @@ TinyMCE_Engine.prototype = {
 	resolveDots : function(s, o) {
 		var i;
 
-		for (i=0, s=s.split('.'); i<s.length; i++)
-			o = o[s[i]];
+		if (typeof(s) == 'string') {
+			for (i=0, s=s.split('.'); i<s.length; i++)
+				o = o[s[i]];
+		} else
+			o = s;
 
 		return o;
 	},
