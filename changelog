@@ -1,6 +1,7 @@
-Version 2.1.2 (2007-05-xx)
+Version 2.1.1.1 (2007-05-xx)
 	Fixed bug where dot notaion for some callback options didn't work.
 	Fixed bug where valid_child_elements option didn't work.
+	Fixed bug where form trigger wasn't executed when keyboard was used to submit form.
 Version 2.1.1 (2007-05-08)
 	Added new forced_root_block option. Forces inline elements or text nodes into block elements.
 	Added new fullpage_hide_in_source_view option to fullpage plugin.

@@ -1776,6 +1776,9 @@ TinyMCE_Engine.prototype = {
 	formSubmit : function(f, p) {
 		var n, inst, found = false;
 
+		if (f.form)
+			f = f.form;
+
 		// Is it a form that has a TinyMCE instance
 		for (n in tinyMCE.instances) {
 			inst = tinyMCE.instances[n];
