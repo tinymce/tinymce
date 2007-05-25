@@ -205,6 +205,7 @@ TinyMCE_Engine.prototype = {
 		this._def("hide_selects_on_submit", true);
 		this._def("forced_root_block", false);
 		this._def("remove_trailing_nbsp", false);
+		this._def("save_on_tinymce_forms", false);
 
 		// Force strict loading mode to false on non Gecko browsers
 		if (this.isMSIE && !this.isOpera)
@@ -1523,22 +1524,25 @@ TinyMCE_Engine.prototype = {
 			f = f.form;
 
 		// Is it a form that has a TinyMCE instance
-		for (n in tinyMCE.instances) {
-			inst = tinyMCE.instances[n];
+		if (tinyMCE.getParam('save_on_tinymce_forms')) {
+			for (n in tinyMCE.instances) {
+				inst = tinyMCE.instances[n];
 
-			if (!tinyMCE.isInstance(inst))
-				continue;
+				if (!tinyMCE.isInstance(inst))
+					continue;
 
-			if (inst.formElement) {
-				if (f == inst.formElement.form) {
-					found = true;
-					inst.isNotDirty = true;
+				if (inst.formElement) {
+					if (f == inst.formElement.form) {
+						found = true;
+						inst.isNotDirty = true;
+					}
 				}
 			}
-		}
+		} else
+			found  = true;
 
 		// Is valid
-		if (found) {
+		if (found) {alert('x');
 			tinyMCE.removeTinyMCEFormElements(f);
 			tinyMCE.triggerSave();
 		}
