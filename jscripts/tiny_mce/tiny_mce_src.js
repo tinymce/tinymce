@@ -5,8 +5,8 @@ function TinyMCE_Engine() {
 	var ua;
 
 	this.majorVersion = "2";
-	this.minorVersion = "1.1.1";
-	this.releaseDate = "2007-05-14";
+	this.minorVersion = "1.2";
+	this.releaseDate = "2007-xx-xx";
 
 	this.instances = [];
 	this.switchClassCache = [];
@@ -2867,9 +2867,10 @@ TinyMCE_Control.prototype = {
 
 			switch (command) {
 				case "JustifyLeft":
-					if (align == 'left')
+					if (align == 'left') {
+						img.setAttribute('align', ''); // Needed for IE
 						img.removeAttribute('align');
-					else
+					} else
 						img.setAttribute('align', 'left');
 
 					// Remove the div
@@ -2883,6 +2884,7 @@ TinyMCE_Control.prototype = {
 					return;
 
 				case "JustifyCenter":
+					img.setAttribute('align', ''); // Needed for IE
 					img.removeAttribute('align');
 
 					// Is centered
@@ -2905,9 +2907,10 @@ TinyMCE_Control.prototype = {
 					return;
 
 				case "JustifyRight":
-					if (align == 'right')
+					if (align == 'right') {
+						img.setAttribute('align', ''); // Needed for IE
 						img.removeAttribute('align');
-					else
+					} else
 						img.setAttribute('align', 'right');
 
 					// Remove the div
@@ -2961,6 +2964,22 @@ TinyMCE_Control.prototype = {
 		switch (command) {
 			case "mceRepaint":
 				this.repaint();
+				return true;
+
+			case "JustifyLeft":
+			case "JustifyCenter":
+			case "JustifyFull":
+			case "JustifyRight":
+				var el = tinyMCE.getParentNode(focusElm, function(n) {return tinyMCE.getAttrib(n, 'align');});
+
+				if (el) {
+					el.setAttribute('align', ''); // Needed for IE
+					el.removeAttribute('align');
+				} else
+					this.getDoc().execCommand(command, user_interface, value);
+
+				tinyMCE.triggerNodeChange();
+
 				return true;
 
 			case "unlink":

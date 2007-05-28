@@ -442,6 +442,12 @@
       <param name="m" type="string" summary="Comma separated list of buttons that are available in tiled image." />
       <return type="void" />
     </method>
+    <method name="formSubmit">
+      <summary>Gets called when a form is submited with a f.submit call or when a submit button is pressed.</summary>
+      <param name="f" type="HTMLForm" summary="Form element that got submitted." />
+      <param name="p" type="bool" summary="Is it a f.submit pathed call." />
+      <return type="void" />
+    </method>
     <method name="submitPatch">
       <summary>Piggyback onsubmit event handler function, this will remove/hide the TinyMCE specific form elements call triggerSave to fill the textarea with the correct contents then call the old piggy backed event handler.</summary>
       <return type="void" />
@@ -648,10 +654,15 @@
       <param name="a" type="Array" summary="Array with function arguments." />
       <return type="boolean" summary="true - if the callback was executed, false if it wasn't." />
     </method>
+    <method name="resolveDots">
+      <summary>Resolves a x.x.x string into a reference for objects in object in objects.</summary>
+      <param name="s" type="string" summary="Dot notation string." />
+      <param name="o" type="object" summary="Object tree." />
+      <return type="object" summary="Reference based on dots." />
+    </method>
     <method name="xmlEncode">
       <summary>Encodes the string to raw XML entities. This will only convert the most common ones. For real entity encoding use the xmlEncode method of the Cleanup class.</summary>
       <param name="s" type="string" summary="String to encode." />
-      <param name="skip_apos" type="string" summary="Optional skip convertion of apos, defaults to false." />
       <return type="string" summary="XML Encoded string." />
     </method>
     <method name="add">
@@ -801,7 +812,6 @@
     <method name="xmlEncode">
       <summary>XML Encodes the specified string based on configured entity encoding. The entity encoding modes are raw, numeric and named. Where raw is the fastest and named is default.</summary>
       <param name="s" type="string" summary="String to convert to XML." />
-      <param name="skip_apos" type="string" summary="Optional skip convertion of apos, defaults to false." />
       <return type="string" summary="Encoded XML string based on configured entity encoding." />
     </method>
     <method name="split">
@@ -922,6 +932,14 @@
       <summary>Returns true/false if the editor instance is dirty or not. In other words if it has been modified or not.</summary>
       <return type="boolean" summary="Editor instance dirty state." />
     </method>
+    <method name="_fixRootBlocks">
+      <summary>Generates root level block elements such a P for inline elements and text nodes.</summary>
+      <return type="void" />
+    </method>
+    <method name="_fixTrailingNbsp">
+      <summary>Removes any traling &amp;nbsp; to the current block element.</summary>
+      <return type="void" />
+    </method>
     <method name="execCommand">
       <summary>Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" or they can be build in browser commands such as "Bold". A compleate list of browser commands is available on MSDN or Mozilla.org. This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of these return true it will handle the command as a internal browser command.</summary>
       <param name="command" type="string" summary="Command name to execute, for example mceLink or Bold." />
@@ -938,6 +956,10 @@
       <summary>Returns a command specific state, for example if bold is enabled or not.</summary>
       <param name="c" type="string" summary="Command to query state from." />
       <return type="boolean" summary="Command specific state, for example if bold is enabled or not." />
+    </method>
+    <method name="_addBogusBR">
+      <summary>Adds a bogus BR to make the cursor visible in Gecko.</summary>
+      <return type="void" />
     </method>
     <method name="setBaseHREF">
       <summary>Sets the base href url of the current document instance. This method is used to temporarly remove the base url during copy/paste and drag/drop operations of relative links from external sites into TinyMCE. MSIE has a bug and converts relative links from external sites to absolute links incorrectly.</summary>
