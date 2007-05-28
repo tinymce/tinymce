@@ -511,7 +511,7 @@ TinyMCE_Control.prototype = {
 			nx = ne.nextSibling;
 
 			// If text node or inline element wrap it in a block element
-			if (ne.nodeType == 3 || !tinyMCE.blockRegExp.test(ne.nodeName)) {
+			if ((ne.nodeType == 3 && ne.nodeValue.replace(/\s+/g, '') != '') || (ne.nodeType == 1 && !tinyMCE.blockRegExp.test(ne.nodeName))) {
 				if (!bm)
 					bm = this.selection.getBookmark();
 

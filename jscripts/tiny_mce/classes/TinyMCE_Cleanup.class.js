@@ -109,10 +109,8 @@ tinyMCE.add(TinyMCE_Engine, {
 			if (box[i] == null)
 				return;
 
-			for (a=0; a<box.length; a++) {
-				if (box[a] != box[i])
-					return;
-			}
+			if (i && box[i] != box[i-1])
+				return;
 		}
 
 		// They are all the same

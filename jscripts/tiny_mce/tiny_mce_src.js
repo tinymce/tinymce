@@ -1542,7 +1542,7 @@ TinyMCE_Engine.prototype = {
 			found  = true;
 
 		// Is valid
-		if (found) {alert('x');
+		if (found) {
 			tinyMCE.removeTinyMCEFormElements(f);
 			tinyMCE.triggerSave();
 		}
@@ -2790,7 +2790,7 @@ TinyMCE_Control.prototype = {
 			nx = ne.nextSibling;
 
 			// If text node or inline element wrap it in a block element
-			if (ne.nodeType == 3 || !tinyMCE.blockRegExp.test(ne.nodeName)) {
+			if ((ne.nodeType == 3 && ne.nodeValue.replace(/\s+/g, '') != '') || (ne.nodeType == 1 && !tinyMCE.blockRegExp.test(ne.nodeName))) {
 				if (!bm)
 					bm = this.selection.getBookmark();
 
@@ -4111,10 +4111,8 @@ tinyMCE.add(TinyMCE_Engine, {
 			if (box[i] == null)
 				return;
 
-			for (a=0; a<box.length; a++) {
-				if (box[a] != box[i])
-					return;
-			}
+			if (i && box[i] != box[i-1])
+				return;
 		}
 
 		// They are all the same
