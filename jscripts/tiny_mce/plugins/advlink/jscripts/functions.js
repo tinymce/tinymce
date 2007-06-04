@@ -132,7 +132,7 @@ function init() {
 }
 
 function checkPrefix(n) {
-	if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCE.getLang('lang_is_email')))
+	if (!Validator.isEmpty(n) && Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCE.getLang('lang_is_email')))
 		n.value = 'mailto:' + n.value;
 
 	if (/^\s*www./i.test(n.value) && confirm(tinyMCE.getLang('lang_is_external')))

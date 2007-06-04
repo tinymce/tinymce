@@ -2,6 +2,7 @@ Version 2.1.x (2007-xx-xx)
 	Added new save_on_tinymce_forms option to control when triggerSave is to be called.
 	Fixed bug where empty p tags where created on source code edit when forced_root_block was used.
 	Fixed bug where it was impossible to remove alignment using the align buttons.
+	Fixed bug where a empty URL was reported as a possible email link in advlink dialog.
 Version 2.1.1.1 (2007-05-14)
 	Fixed bug where dot notaion for some callback options didn't work.
 	Fixed bug where valid_child_elements option didn't work.
