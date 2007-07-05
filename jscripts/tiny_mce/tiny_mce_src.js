@@ -2424,8 +2424,10 @@ TinyMCE_Engine.prototype = {
 	add : function(c, m) {
 		var n;
 
-		for (n in m)
-			c.prototype[n] = m[n];
+		for (n in m) {
+			if (m.hasOwnProperty(n))
+				c.prototype[n] = m[n];
+		}
 	},
 
 	extend : function(p, np) {
@@ -2433,11 +2435,15 @@ TinyMCE_Engine.prototype = {
 
 		o.parent = p;
 
-		for (n in p)
-			o[n] = p[n];
+		for (n in p) {
+			if (p.hasOwnProperty(n))
+				o[n] = p[n];
+		}
 
-		for (n in np)
-			o[n] = np[n];
+		for (n in np) {
+			if (np.hasOwnProperty(n))
+				o[n] = np[n];
+		}
 
 		return o;
 	},

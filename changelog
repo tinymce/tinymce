@@ -1,4 +1,5 @@
 Version 2.1.x (2007-xx-xx)
+	Added fix for polluting third partly libraries that insist on messing with internal objects.
 	Added new save_on_tinymce_forms option to control when triggerSave is to be called.
 	Fixed bug where empty p tags where created on source code edit when forced_root_block was used.
 	Fixed bug where it was impossible to remove alignment using the align buttons.
