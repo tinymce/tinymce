@@ -1046,7 +1046,7 @@ TinyMCE_Control.prototype = {
 				value = value.charAt(0) != '#' ? (isNaN('0x' + value) ? value : '#' + value) : value;
 				this.backColor = value;
 
-				if (tinyMCE.isGecko) {
+				if (tinyMCE.isGecko || tinyMCE.isOpera) {
 					this._setUseCSS(true);
 					this.getDoc().execCommand('hilitecolor', false, value);
 					this._setUseCSS(false);
