@@ -463,7 +463,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		c.settings.on_save = on_save;
 
 		c.idCount = 0;
-		c.serializationId = new Date().getTime().toString(32); // Unique ID needed for the content duplication bug
+		c.serializationId++; // Unique ID needed for the content duplication bug
 		c.serializedNodes = [];
 		c.sourceIndex = -1;
 
@@ -614,6 +614,7 @@ TinyMCE_Cleanup.prototype = {
 		this.nlAfterRe = this._arrayToRe(s.newline_after_elements.split(','), 'gi', '<(',  ')([^>]*)>');
 		this.nlBeforeAfterRe = this._arrayToRe(s.newline_before_after_elements.split(','), 'gi', '<(\\/?)(', ')([^>]*)>');
 		this.serializedNodes = [];
+		this.serializationId = 0;
 
 		if (s.invalid_elements !== '')
 			this.iveRe = this._arrayToRe(s.invalid_elements.toUpperCase().split(','), 'g', '^(', ')$');

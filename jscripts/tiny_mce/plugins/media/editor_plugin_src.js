@@ -200,9 +200,8 @@ var TinyMCE_MediaPlugin = {
 								break;
 						}
 
-						// Force absolute URL
-						if (!tinyMCE.getParam("relative_urls"))
-							pl.src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], pl.src);
+						// Convert the URL
+						pl.src = tinyMCE.convertURL(pl.src, null, true);
 
 						embedHTML = TinyMCE_MediaPlugin._getEmbed(ci, cb, mt, pl, attribs);
 					} else {
@@ -236,10 +235,8 @@ var TinyMCE_MediaPlugin = {
 							at = at.replace(/height:[^0-9]?[0-9]+%?[^0-9]?/g, "height:'" + attribs.height + "'");
 
 						// Force absolute URL
-						if (!tinyMCE.getParam("relative_urls")) {
-							pl.src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], pl.src);
-							at = at.replace(new RegExp("src:'[^']*'", "g"), "src:'" + pl.src + "'");
-						}
+						pl.src = tinyMCE.convertURL(pl.src, null, true);
+						at = at.replace(new RegExp("src:'[^']*'", "g"), "src:'" + pl.src + "'");
 
 						embedHTML = '<script type="text/javascript">' + s + '({' + at + '});</script>';
 					}

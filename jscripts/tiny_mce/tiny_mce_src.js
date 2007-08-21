@@ -587,7 +587,7 @@ TinyMCE_Engine.prototype = {
 	},
 
 	removeMCEControl : function(editor_id) {
-		var inst = tinyMCE.getInstanceById(editor_id), h, re, ot, tn;
+		var inst = tinyMCE.getInstanceById(editor_id), h, re, ot, tn, n;
 
 		if (inst) {
 			inst.switchSettings();
@@ -599,6 +599,18 @@ TinyMCE_Engine.prototype = {
 
 			tinyMCE.selectedElement = null;
 			tinyMCE.selectedInstance = null;
+
+			tinyMCE.selectedElement = null;
+			tinyMCE.selectedInstance = null;
+
+			// Try finding an instance
+			for (n in tinyMCE.instances) {
+				if (!tinyMCE.isInstance(tinyMCE.instances[n]))
+					continue;
+
+				tinyMCE.selectedInstance = tinyMCE.instances[n];
+				break;
+			}
 
 			// Remove element
 			re = document.getElementById(editor_id + "_parent");
@@ -4414,7 +4426,7 @@ tinyMCE.add(TinyMCE_Engine, {
 		c.settings.on_save = on_save;
 
 		c.idCount = 0;
-		c.serializationId = new Date().getTime().toString(32); // Unique ID needed for the content duplication bug
+		c.serializationId++; // Unique ID needed for the content duplication bug
 		c.serializedNodes = [];
 		c.sourceIndex = -1;
 
@@ -4546,6 +4558,7 @@ TinyMCE_Cleanup.prototype = {
 		this.nlAfterRe = this._arrayToRe(s.newline_after_elements.split(','), 'gi', '<(',  ')([^>]*)>');
 		this.nlBeforeAfterRe = this._arrayToRe(s.newline_before_after_elements.split(','), 'gi', '<(\\/?)(', ')([^>]*)>');
 		this.serializedNodes = [];
+		this.serializationId = 0;
 
 		if (s.invalid_elements !== '')
 			this.iveRe = this._arrayToRe(s.invalid_elements.toUpperCase().split(','), 'g', '^(', ')$');
@@ -6998,6 +7011,7 @@ var TinyMCE_ForceParagraphs = {
 		endNode = direct ? sel.focusNode : sel.anchorNode;
 		endOffset = direct ? sel.focusOffset : sel.anchorOffset;
 
+		startNode = startNode.nodeName == "HTML" ? doc.body : startNode; // Fix for Opera bug: https://bugs.opera.com/show_bug.cgi?id=273224&comments=yes
 		startNode = startNode.nodeName == "BODY" ? startNode.firstChild : startNode;
 		endNode = endNode.nodeName == "BODY" ? endNode.firstChild : endNode;
 

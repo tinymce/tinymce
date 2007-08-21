@@ -280,10 +280,14 @@ function getType(v) {
 	fo = tinyMCE.getParam("media_types", "flash=swf;shockwave=dcr;qt=mov,qt,mpg,mp3,mp4,mpeg;shockwave=dcr;wmp=avi,wmv,wm,asf,asx,wmx,wvx;rmp=rm,ra,ram").split(';');
 
 	// YouTube
-	if (v.indexOf('http://www.youtube.com/watch?v=') == 0) {
+	if (v.indexOf('http://www.youtube.com/watch?v=') == 0 || v.indexOf('http://youtube.com/watch?v=') == 0) {
 		f.width.value = '425';
 		f.height.value = '350';
-		f.src.value = 'http://www.youtube.com/v/' + v.substring('http://www.youtube.com/watch?v='.length);
+
+		v = v.replace('http://youtube.com/watch?v=', '');
+		v = v.replace('http://www.youtube.com/watch?v=', '');
+
+		f.src.value = 'http://www.youtube.com/v/' + v;
 		return 'flash';
 	}
 

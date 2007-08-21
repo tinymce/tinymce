@@ -85,6 +85,7 @@ var TinyMCE_ForceParagraphs = {
 		endNode = direct ? sel.focusNode : sel.anchorNode;
 		endOffset = direct ? sel.focusOffset : sel.anchorOffset;
 
+		startNode = startNode.nodeName == "HTML" ? doc.body : startNode; // Fix for Opera bug: https://bugs.opera.com/show_bug.cgi?id=273224&comments=yes
 		startNode = startNode.nodeName == "BODY" ? startNode.firstChild : startNode;
 		endNode = endNode.nodeName == "BODY" ? endNode.firstChild : endNode;
 

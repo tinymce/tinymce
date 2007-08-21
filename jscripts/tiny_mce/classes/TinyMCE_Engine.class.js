@@ -731,7 +731,7 @@ TinyMCE_Engine.prototype = {
 	 * @param {string} editor_id Id of editor instance to remove.
 	 */
 	removeMCEControl : function(editor_id) {
-		var inst = tinyMCE.getInstanceById(editor_id), h, re, ot, tn;
+		var inst = tinyMCE.getInstanceById(editor_id), h, re, ot, tn, n;
 
 		if (inst) {
 			inst.switchSettings();
@@ -743,6 +743,18 @@ TinyMCE_Engine.prototype = {
 
 			tinyMCE.selectedElement = null;
 			tinyMCE.selectedInstance = null;
+
+			tinyMCE.selectedElement = null;
+			tinyMCE.selectedInstance = null;
+
+			// Try finding an instance
+			for (n in tinyMCE.instances) {
+				if (!tinyMCE.isInstance(tinyMCE.instances[n]))
+					continue;
+
+				tinyMCE.selectedInstance = tinyMCE.instances[n];
+				break;
+			}
 
 			// Remove element
 			re = document.getElementById(editor_id + "_parent");
