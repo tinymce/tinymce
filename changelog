@@ -1,3 +1,5 @@
+Version 2.1.3 (2007-xx-xx)
+	Fixed bug with copy paste scrolled to top of content in IE when a specific doctype was used.
 Version 2.1.2 (2007-08-21)
 	Added fix for polluting third partly libraries that insist on messing with internal objects.
 	Added new save_on_tinymce_forms option to control when triggerSave is to be called.
