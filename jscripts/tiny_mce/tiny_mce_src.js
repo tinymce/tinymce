@@ -1158,22 +1158,23 @@ TinyMCE_Engine.prototype = {
 			// Workaround for drag drop/copy paste base href bug
 			case "drop":
 			case "beforepaste":
-				if (tinyMCE.selectedInstance)
+/*				if (tinyMCE.selectedInstance)
 					tinyMCE.selectedInstance.setBaseHREF(null);
 
 				// Fixes odd MSIE bug where drag/droping elements in a iframe with height 100% breaks
 				// This logic forces the width/height to be in pixels while the user is drag/dropping
 				// NOTE: This has been disabled for now since it messes up copy/paste that is far more important than image drag
-/*				if (tinyMCE.isRealIE) {
+				if (tinyMCE.isRealIE) {
 					var ife = tinyMCE.selectedInstance.iframeElement;
 
 					if (ife.style.height.indexOf('%') != -1) {
 						ife._oldHeight = ife.style.height;
 						ife.style.height = ife.clientHeight;
 					}
-				}*/
+				}
 
 				window.setTimeout("tinyMCE.selectedInstance.setBaseHREF(tinyMCE.settings.base_href);tinyMCE._resetIframeHeight();", 1);
+				*/
 				return;
 
 			case "submit":
