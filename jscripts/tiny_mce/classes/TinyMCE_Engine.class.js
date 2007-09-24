@@ -1277,8 +1277,8 @@ TinyMCE_Engine.prototype = {
 		// s = s.replace(new RegExp('mce_href\\s*=\\s*\"[^ >\"]*\"', 'gi'), '');
 
 		if (!s.match(/(mce_src|mce_href)/gi, s)) {
-			s = s.replace(new RegExp('src\\s*=\\s*\"([^ >\"]*)\"', 'gi'), 'src="$1" mce_src="$1"');
-			s = s.replace(new RegExp('href\\s*=\\s*\"([^ >\"]*)\"', 'gi'), 'href="$1" mce_href="$1"');
+			s = s.replace(new RegExp('src\\s*=\\s*[\"\']([^ >\"]*)[\"\']', 'gi'), 'src="$1" mce_src="$1"');
+			s = s.replace(new RegExp('href\\s*=\\s*[\"\']([^ >\"]*)[\"\']', 'gi'), 'href="$1" mce_href="$1"');
 		}
 
 		return s;
