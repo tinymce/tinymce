@@ -380,6 +380,9 @@ tinymce.init();
 			s = t.settings = s || {};
 			s.base_uri = s.base_uri || document.location.href;
 
+			if (s.base_uri.indexOf('?') != -1)
+				s.base_uri = s.base_uri.substring(0, s.base_uri.indexOf('?'));
+
 			// Strange app protocol
 			if (/^(mailto|news|javascript|about):/i.test(u)) {
 				t.source = u;
