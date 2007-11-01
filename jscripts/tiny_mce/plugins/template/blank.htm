@@ -3,18 +3,7 @@
 	<title>blank_page</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<script type="text/javascript">
-		var tinyMCE = parent.tinyMCE, css = tinyMCE.getParam("content_css").split(','), i, u;
-
-		// Load content CSS files
-		for (i=0; i<css.length; i++) {
-			u = css[i];
-
-			// Fix relative
-			if (u.charAt(0) != '/' && u.indexOf('://') == -1)
-				u = tinyMCE.documentBasePath + "/" + u;
-
-			document.write('<link href="' + u + '" rel="stylesheet" type="text/css" />');
-		}
+		parent.TemplateDialog.loadCSSFiles(document);
 	</script>
 </head>
 <body id="mceTemplatePreview" class="mceContentBody">

@@ -1,62 +1,50 @@
 /**
- * $Id: editor_plugin_src.js 42 2006-08-08 14:32:24Z spocke $
+ * $Id: editor_plugin_src.js 201 2007-02-12 15:56:56Z spocke $
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('nonbreaking');
+(function() {
+	tinymce.create('tinymce.plugins.Nonbreaking', {
+		Nonbreaking : function(ed, url) {
+			var t = this;
 
-var TinyMCE_NonBreakingPlugin = {
-	getInfo : function() {
-		return {
-			longname : 'Nonbreaking space',
-			author : 'Moxiecode Systems AB',
-			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/nonbreaking',
-			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
-		};
-	},
+			t.editor = ed;
 
-	getControlHTML : function(cn) {
-		switch (cn) {
-			case "nonbreaking":
-				return tinyMCE.getButtonHTML(cn, 'lang_nonbreaking_desc', '{$pluginurl}/images/nonbreaking.gif', 'mceNonBreaking', false);
+			// Register commands
+			ed.addCommand('mceNonBreaking', function() {
+				ed.execCommand('mceInsertContent', false, (ed.plugins.visualchars && ed.plugins.visualchars.state) ? '<span class="mceItemHiddenVisualChar">&middot;</span>' : '&nbsp;');
+			});
+
+			// Register buttons
+			ed.addButton('nonbreaking', 'nonbreaking.nonbreaking_desc', 'mceNonBreaking');
+
+			if (ed.getParam('nonbreaking_force_tab')) {
+				ed.onKeyDown.add(function(e) {
+					if (tinymce.isIE && e.keyCode == 9) {
+						ed.execCommand('mceNonBreaking');
+						ed.execCommand('mceNonBreaking');
+						ed.execCommand('mceNonBreaking');
+						tinymce.dom.Event.cancel(e);
+					}
+				});
+			}
+		},
+
+		getInfo : function() {
+			return {
+				longname : 'Nonbreaking space',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/nonbreaking',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
 		}
 
-		return "";
-	},
+		// Private methods
+	});
 
-
-	execCommand : function(editor_id, element, command, user_interface, value) {
-		var inst = tinyMCE.getInstanceById(editor_id), h;
-
-		switch (command) {
-			case "mceNonBreaking":
-				h = (inst.visualChars && inst.visualChars.state) ? '<span class="mceItemHiddenVisualChar">&middot;</span>' : '&nbsp;';
-				tinyMCE.execInstanceCommand(editor_id, 'mceInsertContent', false, h);
-				return true;
-		}
-
-		return false;
-	},
-
-	handleEvent : function(e) {
-		var inst, h;
-
-		if (!tinyMCE.isOpera && e.type == 'keydown' && e.keyCode == 9 && tinyMCE.getParam('nonbreaking_force_tab', false)) {
-			inst = tinyMCE.selectedInstance;
-
-			h = (inst.visualChars && inst.visualChars.state) ? '<span class="mceItemHiddenVisualChar">&middot;&middot;&middot;</span>' : '&nbsp;&nbsp;&nbsp;';
-			tinyMCE.execInstanceCommand(inst.editorId, 'mceInsertContent', false, h);
-
-			tinyMCE.cancelEvent(e);
-			return false;
-		}
-
-		return true;
-	}
-};
-
-tinyMCE.addPlugin("nonbreaking", TinyMCE_NonBreakingPlugin);
+	// Register plugin
+	tinymce.PluginManager.add('nonbreaking', tinymce.plugins.Nonbreaking);
+})();

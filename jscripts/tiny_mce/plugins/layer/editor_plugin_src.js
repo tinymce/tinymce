@@ -5,244 +5,205 @@
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('layer');
+(function() {
+	tinymce.create('tinymce.plugins.Layer', {
+		Layer : function(ed, url) {
+			var t = this;
 
-var TinyMCE_LayerPlugin = {
-	getInfo : function() {
-		return {
-			longname : 'Layer',
-			author : 'Moxiecode Systems AB',
-			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/layer',
-			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
-		};
-	},
+			t.editor = ed;
 
-	initInstance : function(inst) {
-		if (tinyMCE.isMSIE && !tinyMCE.isOpera)
-			inst.getDoc().execCommand('2D-Position');
-	},
+			// Register commands
+			ed.addCommand('mceInsertLayer', t._insertLayer, t);
 
-	handleEvent : function(e) {
-		var inst = tinyMCE.selectedInstance;
-		var w = inst.getWin(), le = inst._lastStyleElm, e;
+			ed.addCommand('mceMoveForward', function() {
+				t._move(1);
+			});
 
-		if (tinyMCE.isGecko) {
-			e = this._getParentLayer(inst.getFocusElement());
+			ed.addCommand('mceMoveBackward', function() {
+				t._move(-1);
+			});
 
-			if (e) {
-				if (!inst._lastStyleElm) {
-					e.style.overflow = 'auto';
-					inst._lastStyleElm = e;
-				}
-			} else if (le) {
-				le = inst._lastStyleElm;
-				le.style.width = le.scrollWidth + 'px';
-				le.style.height = le.scrollHeight + 'px';
-				le.style.overflow = '';
-				inst._lastStyleElm = null;
-			}
-		}
+			ed.addCommand('mceMakeAbsolute', function() {
+				t._toggleAbsolute();
+			});
 
-		return true;
-	},
+			// Register buttons
+			ed.addButton('moveforward', 'layer.forward_desc', 'mceMoveForward');
+			ed.addButton('movebackward', 'layer.backward_desc', 'mceMoveBackward');
+			ed.addButton('absolute', 'layer.absolute_desc', 'mceMakeAbsolute');
+			ed.addButton('insertlayer', 'layer.insertlayer_desc', 'mceInsertLayer');
 
-	handleVisualAid : function(el, deep, state, inst) {
-		var nl = inst.getDoc().getElementsByTagName("div"), i;
+			ed.onInit.add(function() {
+				if (tinymce.isIE)
+					ed.execCommand('2D-Position');
+			});
 
-		for (i=0; i<nl.length; i++) {
-			if (new RegExp('absolute|relative|static', 'gi').test(nl[i].style.position)) {
-				if (state)
-					tinyMCE.addCSSClass(nl[i], 'mceVisualAid');
-				else
-					tinyMCE.removeCSSClass(nl[i], 'mceVisualAid');					
-			}
-		}
-	},
+			ed.onNodeChange.add(t._nodeChange, t);
+			ed.onVisualAid.add(t._visualAid, t);
+		},
 
-	getControlHTML : function(cn) {
-		switch (cn) {
-			case "moveforward":
-				return tinyMCE.getButtonHTML(cn, 'lang_layer_forward_desc', '{$pluginurl}/images/moveforward.gif', 'mceMoveForward', true);
+		getInfo : function() {
+			return {
+				longname : 'Layer',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/layer',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
+		},
 
-			case "movebackward":
-				return tinyMCE.getButtonHTML(cn, 'lang_layer_backward_desc', '{$pluginurl}/images/movebackward.gif', 'mceMoveBackward', true);
+		// Private methods
 
-			case "absolute":
-				return tinyMCE.getButtonHTML(cn, 'lang_layer_absolute_desc', '{$pluginurl}/images/absolute.gif', 'mceMakeAbsolute', true);
+		_nodeChange : function(cm, n) {
+			var ed = this.editor, le, p;
 
-			case "insertlayer":
-				return tinyMCE.getButtonHTML(cn, 'lang_layer_insertlayer_desc', '{$pluginurl}/images/insertlayer.gif', 'mceInsertLayer', true);
-		}
+			le = this._getParentLayer(n);
+			p = ed.dom.getParent(n, 'DIV,P,IMG');
 
-		return "";
-	},
-
-	execCommand : function(editor_id, element, command, user_interface, value) {
-		// Handle commands
-		switch (command) {
-			case "mceInsertLayer":
-				this._insertLayer();
-				return true;
-
-			case "mceMoveForward":
-				this._move(1);
-				return true;
-
-			case "mceMoveBackward":
-				this._move(-1);
-				return true;
-
-			case "mceMakeAbsolute":
-				this._toggleAbsolute();
-				return true;
-		}
-
-		// Pass to next handler in chain
-		return false;
-	},
-
-	handleNodeChange : function(editor_id, node, undo_index, undo_levels, visual_aid, any_selection) {
-		var inst = tinyMCE.getInstanceById(editor_id);
-		var le = this._getParentLayer(inst.getFocusElement());
-		var p = tinyMCE.getParentElement(inst.getFocusElement(), 'div,p,img');
-
-		tinyMCE.switchClass(editor_id + '_absolute', 'mceButtonDisabled');
-		tinyMCE.switchClass(editor_id + '_moveforward', 'mceButtonDisabled');
-		tinyMCE.switchClass(editor_id + '_movebackward', 'mceButtonDisabled');
-
-		if (p)
-			tinyMCE.switchClass(editor_id + '_absolute', 'mceButtonNormal');
-
-		if (le && le.style.position.toLowerCase() == "absolute") {
-			tinyMCE.switchClass(editor_id + '_absolute', 'mceButtonSelected');
-			tinyMCE.switchClass(editor_id + '_moveforward', 'mceButtonNormal');
-			tinyMCE.switchClass(editor_id + '_movebackward', 'mceButtonNormal');
-		}
-	},
-
-	// Private plugin specific methods
-
-	_move : function(d) {
-		var inst = tinyMCE.selectedInstance, i, z = new Array();
-		var le = this._getParentLayer(inst.getFocusElement()), ci = -1, fi = -1;
-		var nl = tinyMCE.selectNodes(inst.getBody(), function(n) {
-			return n.nodeType == 1 && new RegExp('absolute|relative|static', 'gi').test(n.style.position);
-		});
-
-		// Find z-indexes
-		for (i=0; i<nl.length; i++) {
-			z[i] = nl[i].style.zIndex ? parseInt(nl[i].style.zIndex) : 0;
-
-			if (ci < 0 && nl[i] == le)
-				ci = i;
-		}
-
-		if (d < 0) {
-			// Move back
-
-			// Try find a lower one
-			for (i=0; i<z.length; i++) {
-				if (z[i] < z[ci]) {
-					fi = i;
-					break;
-				}
-			}
-
-			if (fi > -1) {
-				nl[ci].style.zIndex = z[fi];
-				nl[fi].style.zIndex = z[ci];
+			if (!p) {
+				cm.setDisabled('absolute', 1);
+				cm.setDisabled('moveforward', 1);
+				cm.setDisabled('movebackward', 1);
 			} else {
-				if (z[ci] > 0)
-					nl[ci].style.zIndex = z[ci] - 1;
+				cm.setDisabled('absolute', 0);
+				cm.setDisabled('moveforward', !le);
+				cm.setDisabled('movebackward', !le);
+				cm.setActive('absolute', le && le.style.position.toLowerCase() == "absolute");
 			}
-		} else {
-			// Move forward
+		},
 
-			// Try find a higher one
-			for (i=0; i<z.length; i++) {
-				if (z[i] > z[ci]) {
-					fi = i;
-					break;
+		// Private methods
+
+		_visualAid : function(e, s) {
+			var dom = this.editor.dom;
+
+			tinymce.each(dom.select('div,p', e), function(e) {
+				if (/^(absolute|relative|static)$/i.test(e.style.position)) {
+					if (s)
+						dom.addClass(e, 'mceVisualAid');
+					else
+						dom.removeClass(e, 'mceVisualAid');	
 				}
+			});
+		},
+
+		_move : function(d) {
+			var ed = this.editor, i, z = [], le = this._getParentLayer(ed.selection.getNode()), ci = -1, fi = -1, nl;
+
+			nl = [];
+			tinymce.walk(ed.getBody(), 'childNodes', function(n) {
+				if (n.nodeType == 1 && /^(absolute|relative|static)$/i.test(n.style.position))
+					nl.push(n); 
+			});
+
+			// Find z-indexes
+			for (i=0; i<nl.length; i++) {
+				z[i] = nl[i].style.zIndex ? parseInt(nl[i].style.zIndex) : 0;
+
+				if (ci < 0 && nl[i] == le)
+					ci = i;
 			}
 
-			if (fi > -1) {
-				nl[ci].style.zIndex = z[fi];
-				nl[fi].style.zIndex = z[ci];
-			} else
-				nl[ci].style.zIndex = z[ci] + 1;
-		}
+			if (d < 0) {
+				// Move back
 
-		inst.repaint();
-	},
+				// Try find a lower one
+				for (i=0; i<z.length; i++) {
+					if (z[i] < z[ci]) {
+						fi = i;
+						break;
+					}
+				}
 
-	_getParentLayer : function(n) {
-		return tinyMCE.getParentNode(n, function(n) {
-			return n.nodeType == 1 && new RegExp('absolute|relative|static', 'gi').test(n.style.position);
-		});
-	},
-
-	_insertLayer : function() {
-		var inst = tinyMCE.selectedInstance;
-		var e = tinyMCE.getParentElement(inst.getFocusElement());
-		var p = tinyMCE.getAbsPosition(e);
-		var d = inst.getDoc();
-		var ne = d.createElement('div');
-		var h = inst.selection.getSelectedHTML();
-
-		// Move div
-		ne.style.position = 'absolute';
-		ne.style.left = p.absLeft + 'px';
-		ne.style.top = (p.absTop > 20 ? p.absTop : 20) + 'px';
-		ne.style.width = '100px';
-		ne.style.height = '100px';
-		ne.className = 'mceVisualAid';
-
-		if (!h)
-			h = tinyMCE.getLang('lang_layer_content');
-
-		ne.innerHTML = h;
-
-		// Add it
-		d.body.appendChild(ne);
-	},
-
-	_toggleAbsolute : function() {
-		var inst = tinyMCE.selectedInstance;
-		var le = this._getParentLayer(inst.getFocusElement());
-
-		if (le == null)
-			le = tinyMCE.getParentElement(inst.getFocusElement(), 'div,p,img');
-
-		if (le) {
-			if (le.style.position.toLowerCase() == "absolute") {
-				le.style.position = "";
-				le.style.left = "";
-				le.style.top = "";
+				if (fi > -1) {
+					nl[ci].style.zIndex = z[fi];
+					nl[fi].style.zIndex = z[ci];
+				} else {
+					if (z[ci] > 0)
+						nl[ci].style.zIndex = z[ci] - 1;
+				}
 			} else {
-				le.style.position = "absolute";
+				// Move forward
 
-				if (le.style.left == "")
-					le.style.left = 20 + 'px';
+				// Try find a higher one
+				for (i=0; i<z.length; i++) {
+					if (z[i] > z[ci]) {
+						fi = i;
+						break;
+					}
+				}
 
-				if (le.style.top == "")
-					le.style.top = 20 + 'px';
-
-				if (le.style.width == "")
-					le.style.width = le.width ? (le.width + 'px') : '100px';
-
-				if (le.style.height == "")
-					le.style.height = le.height ? (le.height + 'px') : '100px';
-
-				tinyMCE.handleVisualAid(inst.getBody(), true, inst.visualAid, inst);
+				if (fi > -1) {
+					nl[ci].style.zIndex = z[fi];
+					nl[fi].style.zIndex = z[ci];
+				} else
+					nl[ci].style.zIndex = z[ci] + 1;
 			}
 
-			inst.repaint();
-			tinyMCE.triggerNodeChange();
-		}
-	}
-};
+			ed.execCommand('mceRepaint');
+		},
 
-tinyMCE.addPlugin("layer", TinyMCE_LayerPlugin);
+		_getParentLayer : function(n) {
+			return this.editor.dom.getParent(n, function(n) {
+				return n.nodeType == 1 && /^(absolute|relative|static)$/i.test(n.style.position);
+			});
+		},
+
+		_insertLayer : function() {
+			var ed = this.editor, p = ed.dom.getPos(ed.dom.getParent(ed.selection.getNode(), '*'));
+
+			ed.dom.add(ed.getBody(), 'div', {
+				style : {
+					position : 'absolute',
+					left : p.x,
+					top : (p.y > 20 ? p.y : 20),
+					width : 100,
+					height : 100
+				},
+				'class' : 'mceVisualAid'
+			}, ed.selection.getContent() || ed.getLang('layer.content'));
+		},
+
+		_toggleAbsolute : function() {
+			var ed = this.editor, le = this._getParentLayer(ed.selection.getNode());
+
+			if (!le)
+				le = ed.dom.getParent(ed.selection.getNode(), 'DIV,P,IMG');
+
+			if (le) {
+				if (le.style.position.toLowerCase() == "absolute") {
+					ed.dom.setStyles(le, {
+						position : '',
+						left : '',
+						top : '',
+						width : '',
+						height : ''
+					});
+
+					ed.dom.removeClass(le, 'mceVisualAid');
+				} else {
+					if (le.style.left == "")
+						le.style.left = 20 + 'px';
+
+					if (le.style.top == "")
+						le.style.top = 20 + 'px';
+
+					if (le.style.width == "")
+						le.style.width = le.width ? (le.width + 'px') : '100px';
+
+					if (le.style.height == "")
+						le.style.height = le.height ? (le.height + 'px') : '100px';
+
+					le.style.position = "absolute";
+					ed.addVisual(ed.getBody());
+				}
+
+				ed.execCommand('mceRepaint');
+				ed.nodeChanged();
+			}
+		}
+	});
+
+	// Register plugin
+	tinymce.PluginManager.add('layer', tinymce.plugins.Layer);
+})();

@@ -1,0 +1,35 @@
+/* Reset */
+.o2k7Skin table, .o2k7Skin tbody, .o2k7Skin a, .o2k7Skin img, .o2k7Skin tr, .o2k7Skin div, .o2k7Skin td, .o2k7Skin iframe, .o2k7Skin span, .o2k7Skin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000}
+
+/* Containers */
+.o2k7Skin {position:relative}
+.o2k7Skin table.mceLayout {background:#E5EFFD; border:1px solid #ABC6DD;}
+.o2k7Skin iframe {display:block; background:#FFF; border-bottom:1px solid #ABC6DD;}
+.o2k7Skin .mceToolbar {height:26px;}
+
+/* Layout */
+.o2k7Skin .mceToolbar .mceToolbarStart span {display:block; background:url(img/button_bg.png) -22px 0; width:1px; height:22px; }
+.o2k7Skin .mceToolbar .mceToolbarEnd span {display:block; background:url(img/button_bg.png) -22px 0; width:1px; height:22px}
+.o2k7Skin span.icon, .o2k7Skin img.icon {display:block; width:20px; height:20px}
+.o2k7Skin .icon {background:url(../../img/icons.gif) no-repeat 20px 20px}
+
+/* Button */
+.o2k7Skin .mceButton {display:block; background:url(img/button_bg.png); width:22px; height:22px}
+.o2k7Skin a.mceButton span, .o2k7Skin a.mceButton img {margin:1px 0 0 1px}
+.o2k7Skin a.mceButtonEnabled:hover {background-color:#B2BBD0; background-position:0 -22px}
+.o2k7Skin a.mceButtonActive {background-position:0 -44px}
+.o2k7Skin .mceButtonDisabled span {opacity:0.3; filter:alpha(opacity=30)}
+
+/* Separator */
+.o2k7Skin .mceSeparator {display:block; background:url(img/button_bg.png) -22px 0; width:5px; height:22px}
+
+/* Theme */
+.o2k7Skin span.bold {background-position:0 0}
+.o2k7Skin span.italic {background-position:-60px 0}
+.o2k7Skin span.underline {background-position:-140px 0}
+.o2k7Skin span.strikethrough {background-position:-120px 0}
+.o2k7Skin span.undo {background-position:-160px 0}
+.o2k7Skin span.redo {background-position:-100px 0}
+.o2k7Skin span.cleanup {background-position:-40px 0}
+.o2k7Skin span.insertunorderedlist {background-position:-20px 0}
+.o2k7Skin span.insertorderedlist {background-position:-80px 0}

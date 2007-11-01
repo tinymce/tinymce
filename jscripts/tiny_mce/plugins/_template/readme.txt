@@ -1,1 +1,0 @@
-This is a template/tutorial plugin that where created to help you in the development of own plugins for TinyMCE.

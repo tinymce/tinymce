@@ -5,54 +5,47 @@
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('iespell');
+(function() {
+	tinymce.create('tinymce.plugins.IESpell', {
+		IESpell : function(ed, url) {
+			var t = this, sp;
 
-var TinyMCE_IESpellPlugin = {
-	getInfo : function() {
-		return {
-			longname : 'IESpell (MSIE Only)',
-			author : 'Moxiecode Systems AB',
-			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/iespell',
-			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
-		};
-	},
+			if (!tinymce.isIE)
+				return;
 
-	/**
-	 * Returns the HTML contents of the iespell control.
-	 */
-	getControlHTML : function(cn) {
-		// Is it the iespell control and is the brower MSIE.
-		if (cn == "iespell" && (tinyMCE.isMSIE && !tinyMCE.isOpera))
-			return tinyMCE.getButtonHTML(cn, 'lang_iespell_desc', '{$pluginurl}/images/iespell.gif', 'mceIESpell');
+			t.editor = ed;
 
-		return "";
-	},
+			// Register commands
+			ed.addCommand('mceIESpell', function() {
+				try {
+					sp = new ActiveXObject("ieSpell.ieSpellExtension");
+					sp.CheckDocumentNode(ed.getDoc().documentElement);
+				} catch (e) {
+					if (e.number == -2146827859) {
+						ed.windowManager.confirm(ed.getLang("iespell.download"), function(s) {
+							if (s)
+								window.open('http://www.iespell.com/download.php', 'ieSpellDownload', '');
+						});
+					} else
+						ed.windowManager.alert("Error Loading ieSpell: Exception " + e.number);
+				}
+			});
 
-	/**
-	 * Executes the mceIESpell command.
-	 */
-	execCommand : function(editor_id, element, command, user_interface, value) {
-		// Handle ieSpellCommand
-		if (command == "mceIESpell") {
-			try {
-				var ieSpell = new ActiveXObject("ieSpell.ieSpellExtension");
-				ieSpell.CheckDocumentNode(tinyMCE.getInstanceById(editor_id).contentDocument.documentElement);
-			} catch (e) {
-				if (e.number == -2146827859) {
-					if (confirm(tinyMCE.getLang("lang_iespell_download", "", true)))
-						window.open('http://www.iespell.com/download.php', 'ieSpellDownload', '');
-				} else
-					alert("Error Loading ieSpell: Exception " + e.number);
-			}
+			// Register buttons
+			ed.addButton('iespell', 'iespell.iespell_desc', 'mceIESpell');
+		},
 
-			return true;
+		getInfo : function() {
+			return {
+				longname : 'IESpell (IE Only)',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/iespell',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
 		}
+	});
 
-		// Pass to next handler in chain
-		return false;
-	}
-};
-
-tinyMCE.addPlugin("iespell", TinyMCE_IESpellPlugin);
+	// Register plugin
+	tinymce.PluginManager.add('iespell', tinymce.plugins.IESpell);
+})();

@@ -1,0 +1,48 @@
+Version 3.0a1 (2007-xx-xx)
+	Rewrote the core and most of the plugins and themes from scratch.
+	Added new and improved serialization engine, faster and more powerful.
+	Added new internal event system, things like editor.onClick.add(func).
+	Added new inlinepopups plugin, the dialogs are now skinnable and uses clearlooks2 as default.
+	Added new contextmenu plugin, context menus can now have submenus and plugins can add items on the fly.
+	Added new skin support for the simple and advanced themes you can alter the whole UI using CSS.
+	Added new o2k7 skin for the simple and advanced themes.
+	Added new custom list boxes for font size/format/style etc with preview support.
+	Added new UI management, enabled plugins to create controls like splitbuttons or menus easier.
+	Added new JSON parser/serializer and JSON-RPC class to the core API.
+	Added new cookie utility class to the core API.
+	Added new Unit testing class to the core API only available in dev mode.
+	Added new firebug lite integration when loading the dev version of TinyMCE.
+	Added new Safari plugin, fixes lots compatibility of issues with Safari 3.x.
+	Added new URI/URL parsing it now handles the hole RFC and even some exceptions.
+	Added new pagebreak plugin, enables you to insert pagebreak comments like <!-- pagebreak -->
+	Added new on demand loading of plugins and themes. Enables you to load and init TinyMCE at any time.
+	Added new throbber/progress visualization a plugin can show/hide this when it's needed.
+	Added new blockquote button. Enables you to wrap paragraphs in blockquotes.
+	Added new compat2x plugin. Will provide a TinyMCE 2.x API for older plugins.
+	Added new theme_advanced_resizing_min_width, theme_advanced_resizing_min_height options.
+	Added new theme_advanced_resizing_max_height, theme_advanced_resizing_max_height options.
+	Added new use_native_selects option. Enables you to toggle native listboxes on and off.
+	Added new docs_url option enables you to specify where the TinyMCE user documentation is located.
+	Added new frame and rules options for the table dialog.
+	Added new global rule for valid_elements/extended_valid_elements enables you to specify global attributes for all elements.
+	Added new deny attribute rule characher so it's possible to deny global attribute rules on specific elements.
+	Added new unit tests in the dev package of TinyMCE. Runs tests on the core API, commands and settings of the editor.
+	Readded the inline_styles option and enabled it by default so deprecated attributes are no longer used.
+	Removed all button images and replaced them with CSS sprite images. Reduces the number of requests needed.
+	Removed lots of language files and merged them into the base language files. Reduces the number of requests needed.
+	Removed lots of unnecessary files and merged many of them together to reduce requests and improve loading speed.
+	Reduced the over all script size by 33% and the number of files/requests by 75% so it loads a lot faster.
+	Fixed so convert_fonts_to_spans are enabled by default. So no more font tags.
+	Fixed so underline and strikethrough uses spans instread of deprecated U and STRIKE elements.
+	Fixed so indent/outdent adds/removed margin-left instead of blockquotes.
+	Fixed so alignment of paragraphs results in a text-align style value instead of the deprecated align attribute.
+	Fixed so alignment of images uses float or vertical-align style values instead of the deprecated align attribute.
+	Fixed so all classes from @import stylesheets gets imported into the editor.
+	Fixed so the directionality can toggle the dir attribute on and off.
+	Fixed so the fullscreen_settings can be used for all types of fullscreen modes.
+	Fixed so the advanced HR dialog gets displayed when inserting a HR not only on edit.
+	Fixed bug where word wrap didn't work in the source editor on Safari.
+	Fixed so non HTML elements can be used within the editor such as <myns:tag>
+	Fixed various memory leaks in IE and reduced the unload cleanups needed.
+	Fixed so the preformatted option adds an invisible container pre tag inside the editor.
+	Renamed the _template plugin to example and updated it to use the new 3.x API.

@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Editor testcase</title>
+<script type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../../jscripts/tiny_mce/classes/util/UnitTester.js"></script>
+<link rel="stylesheet" href="css/unit.css">
+<script type="text/javascript">
+var editor;
+var unitTester = new tinymce.util.UnitTester('log', {
+	debug : true,
+	log_skipped : true
+});
+
+(function() {
+	unitTester.add('commands', {
+		html4TextStyles : function() {
+			var t = this, c;
+
+			editor.settings.inline_styles = false;
+			editor.settings.convert_fonts_to_spans = false;
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Bold');
+			t.eq(editor.getContent(), "<p><strong>test 123</strong></p>");
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Italic');
+			t.eq(editor.getContent(), "<p><em>test 123</em></p>");
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Underline');
+			t.eq(editor.getContent(), "<p><u>test 123</u></p>");
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Strikethrough');
+			t.eq(editor.getContent(), "<p><strike>test 123</strike></p>");
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('FontName',false,'Arial');
+			t.eq(editor.getContent(), '<p><font face="Arial">test 123</font></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('FontSize',false,'7');
+			t.eq(editor.getContent(), '<p><font size="7">test 123</font></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('ForeColor', false, '#FF0000');
+			t.eq(editor.getContent(), '<p><font color="#ff0000">test 123</font></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('HiliteColor', false, '#FF0000');
+			c = editor.getContent();
+			t.is(c == '<p><span style="background-color: #ff0000;">test 123</span></p>' || c == '<p><font style="background-color: #ff0000;">test 123</font></p>');
+
+			editor.settings.inline_styles = true;
+		},
+
+		xhtmlTextStyles : function() {
+			var t = this, c;
+
+			editor.settings.inline_styles = true;
+			editor.settings.convert_fonts_to_spans = true;
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Bold');
+			t.eq(editor.getContent(), "<p><strong>test 123</strong></p>");
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Italic');
+			t.eq(editor.getContent(), "<p><em>test 123</em></p>");
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Underline');
+			t.eq(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Strikethrough');
+			t.eq(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('FontName',false,'Arial');
+			t.eq(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('FontSize',false,'7');
+			t.eq(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('ForeColor', false, '#FF0000');
+			t.eq(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('HiliteColor', false, '#FF0000');
+			t.eq(editor.getContent(), '<p><span style="background-color: #ff0000;">test 123</span></p>');
+
+			editor.setContent('<p><span style="text-decoration: underline;">test 123</span></p>');
+			t.eq(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
+
+			editor.setContent('<p><span style="text-decoration: line-through;">test 123</span></p>');
+			t.eq(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+
+			editor.setContent('<p><span style="font-family: Arial;">test 123</span></p>');
+			t.eq(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
+
+			editor.setContent('<p><span style="font-size: xx-large;">test 123</span></p>');
+			t.eq(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
+
+			editor.setContent('<p><u>test 123</u></p>');
+			t.eq(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
+
+			editor.setContent('<p><strike>test 123</strike></p>');
+			t.eq(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+
+			editor.setContent('<p><font face="Arial">test 123</font></p>');
+			t.eq(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
+
+			editor.setContent('<p><font size="7">test 123</font></p>');
+			t.eq(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
+
+			editor.setContent('<p><font face="Arial" size="7">test 123</font></p>');
+			c = editor.getContent();
+			t.is(c == '<p><span style="font-family: Arial; font-size: xx-large;">test 123</span></p>' || c == '<p><span style="font-size: xx-large; font-family: Arial;">test 123</span></p>');
+		},
+
+		alignInline : function() {
+			var t = this;
+
+			editor.settings.inline_styles = true;
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('JustifyLeft');
+			t.eq(editor.getContent(), '<p style="text-align: left;">test 123</p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('JustifyCenter');
+			t.eq(editor.getContent(), '<p style="text-align: center;">test 123</p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('JustifyRight');
+			t.eq(editor.getContent(), '<p style="text-align: right;">test 123</p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('JustifyFull');
+			t.eq(editor.getContent(), '<p style="text-align: justify;">test 123</p>');
+
+			editor.setContent('<img src="../media/logo.jpg" />');
+			editor.selection.select(editor.dom.select('img')[0]);
+			editor.execCommand('JustifyLeft');
+			t.eq(editor.getContent(), '<p><img style="float: left;" src="../media/logo.jpg" alt="" /></p>', null, tinymce.isOpera);
+
+			editor.setContent('<img src="../media/logo.jpg" />');
+			editor.selection.select(editor.dom.select('img')[0]);
+			editor.execCommand('JustifyCenter');
+			t.eq(editor.getContent(), '<p style="text-align: center;"><img src="../media/logo.jpg" alt="" /></p>', null, tinymce.isOpera);
+
+			editor.setContent('<img src="../media/logo.jpg" />');
+			editor.selection.select(editor.dom.select('img')[0]);
+			editor.execCommand('JustifyRight');
+			t.eq(editor.getContent(), '<p><img style="float: right;" src="../media/logo.jpg" alt="" /></p>', null, tinymce.isOpera);
+		},
+
+		blockquote : function() {
+			var t = this;
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('mceBlockQuote');
+			t.eq(editor.getContent().replace(/\s+/g, ''), '<blockquote><p>test123</p></blockquote>');
+
+			editor.setContent('<p>test 123</p><p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('mceBlockQuote');
+			t.eq(editor.getContent().replace(/\s+/g, ''), '<blockquote><p>test123</p><p>test123</p></blockquote>');
+		},
+
+		blocks : function() {
+			var t = this;
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'h1');
+			t.eq(editor.getContent(), '<h1>test 123</h1>');
+
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'h2');
+			t.eq(editor.getContent(), '<h2>test 123</h2>');
+
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'h3');
+			t.eq(editor.getContent(), '<h3>test 123</h3>');
+
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'h4');
+			t.eq(editor.getContent(), '<h4>test 123</h4>');
+
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'h5');
+			t.eq(editor.getContent(), '<h5>test 123</h5>');
+
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'h6');
+			t.eq(editor.getContent(), '<h6>test 123</h6>');
+
+			editor.execCommand('SelectAll');
+
+			try {
+				editor.execCommand('FormatBlock', false, 'div');
+			} catch (ex) {
+				//t.log('Failed: ' + ex.message);
+			}
+
+			t.eq(editor.getContent(), '<div>test 123</div>', null, tinymce.isOpera);
+
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'address');
+			t.eq(editor.getContent(), '<address>test 123</address>');
+
+			editor.execCommand('SelectAll');
+			editor.execCommand('FormatBlock', false, 'pre');
+			t.eq(editor.getContent(), '<pre>test 123</pre>');
+		},
+
+		styles : function() {
+			var t = this;
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('mceSetStyleInfo', false, {command : 'setattrib', name : "class", value : 'test1'});
+			t.eq(editor.getContent(), '<p class="test1">test 123</p>');
+		},
+
+		link : function() {
+			var t = this;
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.execCommand('mceInsertLink', false, 'test');
+			t.eq(editor.getContent(), '<p><a href="test">test 123</a></p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('mceInsertLink', false, 'http://www.site.com');
+			t.eq(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('mceInsertLink', false, '"&<>');
+			t.eq(editor.getContent(), '<p><a href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('mceInsertLink', false, {href : '"&<>', 'class' : 'test'});
+			t.eq(editor.getContent(), '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+		},
+
+		unlink : function() {
+			var t = this;
+
+			editor.setContent('<p><a href="test">test</a> <a href="test">123</a></p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('unlink');
+			t.eq(editor.getContent(), '<p>test 123</p>');
+		},
+
+		subscriptSuperscript : function() {
+			var t = this;
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('subscript');
+			t.eq(editor.getContent(), '<p><sub>test 123</sub></p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('superscript');
+			t.eq(editor.getContent(), '<p><sup>test 123</sup></p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('subscript');
+			editor.execCommand('subscript');
+			t.eq(editor.getContent(), '<p>test 123</p>', null, tinymce.isWebKit);
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('superscript');
+			editor.execCommand('superscript');
+			t.eq(editor.getContent(), '<p>test 123</p>', null, tinymce.isWebKit);
+		},
+
+		insertHR : function() {
+			var t = this;
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('InsertHorizontalRule');
+			t.eq(editor.getContent(), '<p><hr /></p>', null, tinymce.isGecko);
+		},
+
+		indentOutdent : function() {
+			var t = this;
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Indent');
+			t.eq(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Indent');
+			editor.execCommand('Indent');
+			t.eq(editor.getContent(), '<p style="padding-left: 60px;">test 123</p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Indent');
+			editor.execCommand('Indent');
+			editor.execCommand('Outdent');
+			t.eq(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
+
+			editor.setContent('<p>test 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('Outdent');
+			t.eq(editor.getContent(), '<p>test 123</p>');
+		},
+
+		removeFormat : function() {
+			var t = this;
+
+			editor.setContent('<p><span>test</span> <strong>123</strong> <a href="123">123</a> 123</p>');
+			editor.execCommand('SelectAll');
+			editor.execCommand('RemoveFormat');
+			t.eq(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>', null, tinymce.isOpera);
+		},
+
+		customCommands : function() {
+			var t = this;
+
+			editor.execCommand('mceSetContent', false, '<p>test 123 abc</p>');
+			t.eq(editor.getContent(), '<p>test 123 abc</p>');
+
+/*			editor.setContent('<p>test <span>1<span>2</span>3</span> abc</p>');
+			editor.selection.select(editor.dom.select('span')[0], 1);
+			editor.execCommand('mceReplaceContent', false, '<p>test <span>aaa1<span>2</span>3bbb</span></p>');
+			t.eq(editor.getContent(), '<div>aaatest 123bbb</div>');
+
+			editor.setContent('test 123');
+			editor.execCommand('SelectAll');
+			editor.selection.collapse(1);
+			editor.execCommand('mceInsertContent', false, 'abc');
+			t.eq(editor.getContent(), '<p>test 123 abc</p>');*/
+		}
+	});
+
+	unitTester.add('urls', {
+		relativeURLs : function() {
+			var t = this;
+
+			editor.settings.relative_urls = true;
+			editor.documentBaseURI = new tinymce.util.URI('http://www.site.com/dirA/dirB/dirC/');
+
+			editor.setContent('<a href="test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="test.html">test</a></p>');
+
+			editor.setContent('<a href="../test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="../test.html">test</a></p>');
+
+			editor.setContent('<a href="test/test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="test/test.html">test</a></p>');
+
+			editor.setContent('<a href="/test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="../../../test.html">test</a></p>');
+
+			editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
+			t.eq(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+		},
+
+		absoluteURLs : function() {
+			var t = this;
+
+			editor.settings.relative_urls = false;
+			editor.settings.remove_script_host = true;
+
+			editor.setContent('<a href="test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>');
+
+			editor.setContent('<a href="../test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="/dirA/dirB/test.html">test</a></p>');
+
+			editor.setContent('<a href="test/test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>');
+
+			editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
+			t.eq(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+
+			editor.settings.relative_urls = false;
+			editor.settings.remove_script_host = false;
+
+			editor.setContent('<a href="test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>');
+
+			editor.setContent('<a href="../test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>');
+
+			editor.setContent('<a href="test/test.html">test</a>');
+			t.eq(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>');
+
+			editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
+			t.eq(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+		}
+	});
+})();
+
+tinyMCE.init({
+	mode : "textareas",
+	theme : "advanced",
+	add_unload_trigger : false,
+	plugins : 'safari',
+	theme_advanced_styles : 'test1=test1;test2=test2',
+	init_instance_callback : function(ed) {
+		editor = ed;
+		window.setTimeout(function() {
+			//unitTester.runAsync('commands');
+			unitTester.run();
+		}, 1000);
+	}
+});
+
+</script>
+</head>
+<body>
+
+<h1>Unit tests for basic editor functions</h1>
+
+<!-- <input type="button" value="Run" onclick="unitTester.runAsync('commands');" /> -->
+
+<br /><br />
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+<textarea id="elm1" name="elm2"></textarea>
+<a href="javascript:alert(tinymce.EditorManager.editors['elm1'].getContent({format : 'raw'}));">[getRawContents]</a>
+<a href="javascript:alert(tinymce.EditorManager.editors['elm1'].getContent());">[getContents]</a>
+</form>
+<br /><br />
+<div id="log">
+	
+</div>
+
+</body>
+</html>

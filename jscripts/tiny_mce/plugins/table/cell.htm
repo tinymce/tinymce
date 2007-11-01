@@ -1,85 +1,85 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>{$lang_table_cell_title}</title>
+	<title>{#table_dlg.cell_title}</title>
 	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/mctabs.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
-	<script language="javascript" type="text/javascript" src="jscripts/cell.js"></script>
+	<script language="javascript" type="text/javascript" src="js/cell.js"></script>
 	<link href="css/cell.css" rel="stylesheet" type="text/css" />
 	<base target="_self" />
 </head>
-<body id="tablecell" onload="tinyMCEPopup.executeOnLoad('init();');" style="display: none">
+<body id="tablecell" style="display: none">
 	<form onsubmit="updateAction();return false;" action="#">
 		<div class="tabs">
 			<ul>
-				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{$lang_table_general_tab}</a></span></li>
-				<li id="advanced_tab"><span><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');" onmousedown="return false;">{$lang_table_advanced_tab}</a></span></li>
+				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#table_dlg.general_tab}</a></span></li>
+				<li id="advanced_tab"><span><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');" onmousedown="return false;">{#table_dlg.advanced_tab}</a></span></li>
 			</ul>
 		</div>
 
 		<div class="panel_wrapper">
 			<div id="general_panel" class="panel current">
 				<fieldset>
-					<legend>{$lang_table_general_props}</legend>
+					<legend>{#table_dlg.general_props}</legend>
 
 					<table border="0" cellpadding="4" cellspacing="0">
 						<tr>
-							<td><label for="align">{$lang_table_align}</label></td>
+							<td><label for="align">{#table_dlg.align}</label></td>
 							<td>
 								<select id="align" name="align">
-									<option value="">{$lang_not_set}</option>
-									<option value="center">{$lang_table_align_middle}</option>
-									<option value="left">{$lang_table_align_left}</option>
-									<option value="right">{$lang_table_align_right}</option>
+									<option value="">{#not_set}</option>
+									<option value="center">{#table_dlg.align_middle}</option>
+									<option value="left">{#table_dlg.align_left}</option>
+									<option value="right">{#table_dlg.align_right}</option>
 								</select>
 							</td>
 		
-							<td><label for="celltype">{$lang_table_cell_type}</label></td>
+							<td><label for="celltype">{#table_dlg.cell_type}</label></td>
 							<td>
 								<select id="celltype" name="celltype">
-									<option value="td">{$lang_table_td}</option>
-									<option value="th">{$lang_table_th}</option>
+									<option value="td">{#table_dlg.td}</option>
+									<option value="th">{#table_dlg.th}</option>
 								</select>
 							</td>
 						</tr>
 
 						<tr>
-							<td><label for="valign">{$lang_table_valign}</label></td>
+							<td><label for="valign">{#table_dlg.valign}</label></td>
 							<td>
 								<select id="valign" name="valign">
-									<option value="">{$lang_not_set}</option>
-									<option value="top">{$lang_table_align_top}</option>
-									<option value="middle">{$lang_table_align_middle}</option>
-									<option value="bottom">{$lang_table_align_bottom}</option>
+									<option value="">{#not_set}</option>
+									<option value="top">{#table_dlg.align_top}</option>
+									<option value="middle">{#table_dlg.align_middle}</option>
+									<option value="bottom">{#table_dlg.align_bottom}</option>
 								</select>
 							</td>
 
-							<td><label for="scope">{$lang_table_scope}</label></td>
+							<td><label for="scope">{#table_dlg.scope}</label></td>
 							<td>
 								<select id="scope" name="scope">
-									<option value="">{$lang_not_set}</option>
-									<option value="col">{$lang_table_col}</option>
-									<option value="row">{$lang_table_row}</option>
-									<option value="rowgroup">{$lang_table_rowgroup}</option>
-									<option value="colgroup">{$lang_table_colgroup}</option>
+									<option value="">{#not_set}</option>
+									<option value="col">{#table_dlg.col}</option>
+									<option value="row">{#table_dlg.row}</option>
+									<option value="rowgroup">{#table_dlg.rowgroup}</option>
+									<option value="colgroup">{#table_dlg.colgroup}</option>
 								</select>
 							</td>
 
 						</tr>
 
 						<tr>
-							<td><label for="width">{$lang_table_width}</label></td>
+							<td><label for="width">{#table_dlg.width}</label></td>
 							<td><input id="width" name="width" type="text" value="" size="4" maxlength="4" onchange="changedSize();" /></td>
 
-							<td><label for="height">{$lang_table_height}</label></td>
+							<td><label for="height">{#table_dlg.height}</label></td>
 							<td><input id="height" name="height" type="text" value="" size="4" maxlength="4" onchange="changedSize();" /></td>
 						</tr>
 
 						<tr id="styleSelectRow">
-							<td><label for="class">{$lang_class_name}</label></td>
+							<td><label for="class">{#class_name}</label></td>
 							<td colspan="3">
 								<select id="class" name="class">
-									<option value="" selected="selected">{$lang_not_set}</option>
+									<option value="" selected="selected">{#not_set}</option>
 								</select>
 							</td>
 						</tr>
@@ -89,39 +89,39 @@
 
 			<div id="advanced_panel" class="panel">
 				<fieldset>
-					<legend>{$lang_table_advanced_props}</legend>
+					<legend>{#table_dlg.advanced_props}</legend>
 
 					<table border="0" cellpadding="0" cellspacing="4">
 						<tr>
-							<td class="column1"><label for="id">{$lang_table_id}</label></td> 
+							<td class="column1"><label for="id">{#table_dlg.id}</label></td> 
 							<td><input id="id" name="id" type="text" value="" style="width: 200px" /></td> 
 						</tr>
 
 						<tr>
-							<td><label for="style">{$lang_table_style}</label></td>
+							<td><label for="style">{#table_dlg.style}</label></td>
 							<td><input type="text" id="style" name="style" value="" style="width: 200px;" onchange="changedStyle();" /></td>
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="dir">{$lang_table_langdir}</label></td> 
+							<td class="column1"><label for="dir">{#table_dlg.langdir}</label></td> 
 							<td>
 								<select id="dir" name="dir" style="width: 200px"> 
-										<option value="">{$lang_not_set}</option> 
-										<option value="ltr">{$lang_table_ltr}</option> 
-										<option value="rtl">{$lang_table_rtl}</option> 
+										<option value="">{#not_set}</option> 
+										<option value="ltr">{#table_dlg.ltr}</option> 
+										<option value="rtl">{#table_dlg.rtl}</option> 
 								</select>
 							</td> 
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="lang">{$lang_table_langcode}</label></td> 
+							<td class="column1"><label for="lang">{#table_dlg.langcode}</label></td> 
 							<td>
 								<input id="lang" name="lang" type="text" value="" style="width: 200px" />
 							</td> 
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="backgroundimage">{$lang_table_bgimage}</label></td> 
+							<td class="column1"><label for="backgroundimage">{#table_dlg.bgimage}</label></td> 
 							<td>
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
@@ -133,7 +133,7 @@
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="bordercolor">{$lang_table_bordercolor}</label></td> 
+							<td class="column1"><label for="bordercolor">{#table_dlg.bordercolor}</label></td> 
 							<td>
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
@@ -145,7 +145,7 @@
 						</tr>
 
 						<tr>
-							<td class="column1"><label for="bgcolor">{$lang_table_bgcolor}</label></td> 
+							<td class="column1"><label for="bgcolor">{#table_dlg.bgcolor}</label></td> 
 							<td>
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
@@ -163,18 +163,18 @@
 		<div class="mceActionPanel">
 			<div>
 				<select id="action" name="action">
-					<option value="cell">{$lang_table_cell_cell}</option>
-					<option value="row">{$lang_table_cell_row}</option>
-					<option value="all">{$lang_table_cell_all}</option>
+					<option value="cell">{#table_dlg.cell_cell}</option>
+					<option value="row">{#table_dlg.cell_row}</option>
+					<option value="all">{#table_dlg.cell_all}</option>
 				</select>
 			</div>
 
 			<div style="float: left">
-				<div><input type="button" id="insert" name="insert" value="{$lang_update}" onclick="updateAction();" /></div>
+				<div><input type="button" id="insert" name="insert" value="{#update}" onclick="updateAction();" /></div>
 			</div>
 
 			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="{$lang_cancel}" onclick="tinyMCEPopup.close();" />
+				<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 			</div>
 		</div>
 	</form>

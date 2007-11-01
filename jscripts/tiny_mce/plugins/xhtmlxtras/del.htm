@@ -1,81 +1,81 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>{$lang_xhtmlxtras_title_del_element}</title>
+	<title>{#xhtmlxtras_dlg.title_del_element}</title>
 	<script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/mctabs.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/editable_selects.js"></script>
-	<script language="javascript" type="text/javascript" src="jscripts/element_common.js"></script>
-	<script language="javascript" type="text/javascript" src="jscripts/del.js"></script>
+	<script language="javascript" type="text/javascript" src="js/element_common.js"></script>
+	<script language="javascript" type="text/javascript" src="js/del.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/popup.css" />
 	<base target="_self" />
 </head>
-<body id="xhtmlxtrasins" onload="tinyMCEPopup.executeOnLoad('init();');" style="display: none">
+<body id="xhtmlxtrasins" style="display: none">
 <form onsubmit="insertDel();return false;" action="#">
 	<div class="tabs">
 		<ul>
-			<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{$lang_xhtmlxtras_general_tab}</a></span></li>
-			<!-- <li id="events_tab"><span><a href="javascript:mcTabs.displayTab('events_tab','events_panel');" onmousedown="return false;">{$lang_xhtmlxtras_events_tab}</a></span></li> -->
+			<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.general_tab}</a></span></li>
+			<!-- <li id="events_tab"><span><a href="javascript:mcTabs.displayTab('events_tab','events_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.events_tab}</a></span></li> -->
 		</ul>
 	</div>
 
 	<div class="panel_wrapper">
 		<div id="general_panel" class="panel current">
 			<fieldset>
-				<legend>{$lang_xhtmlxtras_fieldset_general_tab}</legend>
+				<legend>{#xhtmlxtras_dlg.fieldset_general_tab}</legend>
 				<table border="0" cellpadding="0" cellspacing="4">
 					<tr>
-						<td class="label"><label id="datetimelabel" for="datetime">{$lang_xhtmlxtras_attribute_label_datetime}</label>:</td>
+						<td class="label"><label id="datetimelabel" for="datetime">{#xhtmlxtras_dlg.attribute_label_datetime}</label>:</td>
 						<td>
 							<table border="0" cellspacing="0" cellpadding="0">
 								<tr> 
 									<td><input id="datetime" name="datetime" type="text" value="" maxlength="19" class="field" /></td> 
-									<td><a href="javascript:insertDateTime('datetime');" class="mceButtonNormal"><img src="images/date_time.gif" class="picker" alt="{$lang_xhtmlxtras_insert_date}" title="{$lang_xhtmlxtras_insert_date}" /></a></td>
+									<td><a href="javascript:insertDateTime('datetime');" onmousedown="return false;" class="browse"><span class="datetime" alt="{#xhtmlxtras_dlg.insert_date}" title="{#xhtmlxtras_dlg.insert_date}"></span></a></td>
 								</tr>
 							</table>
 						</td>
 					</tr>
 					<tr>
-						<td class="label"><label id="citelabel" for="cite">{$lang_xhtmlxtras_attribute_label_cite}</label>:</td>
+						<td class="label"><label id="citelabel" for="cite">{#xhtmlxtras_dlg.attribute_label_cite}</label>:</td>
 						<td><input id="cite" name="cite" type="text" value="" class="field" /></td> 
 					</tr>
 				</table>
 			</fieldset>
 			<fieldset>
-				<legend>{$lang_xhtmlxtras_fieldset_attrib_tab}</legend>
+				<legend>{#xhtmlxtras_dlg.fieldset_attrib_tab}</legend>
 				<table border="0" cellpadding="0" cellspacing="4">
 					<tr>
-						<td class="label"><label id="titlelabel" for="title">{$lang_xhtmlxtras_attribute_label_title}</label>:</td> 
+						<td class="label"><label id="titlelabel" for="title">{#xhtmlxtras_dlg.attribute_label_title}</label>:</td> 
 						<td><input id="title" name="title" type="text" value="" class="field" /></td> 
 					</tr>
 					<tr>
-						<td class="label"><label id="idlabel" for="id">{$lang_xhtmlxtras_attribute_label_id}</label>:</td> 
+						<td class="label"><label id="idlabel" for="id">{#xhtmlxtras_dlg.attribute_label_id}</label>:</td> 
 						<td><input id="id" name="id" type="text" value="" class="field" /></td> 
 					</tr>
 					<tr>
-						<td class="label"><label id="classlabel" for="class">{$lang_xhtmlxtras_attribute_label_class}</label>:</td> 
+						<td class="label"><label id="classlabel" for="class">{#xhtmlxtras_dlg.attribute_label_class}</label>:</td> 
 						<td>
 							<select id="class" name="class" class="field mceEditableSelect">
-								<option value="">{$lang_xhtmlxtras_not_set}</option> 
+								<option value="">{#not_set}</option> 
 							</select>
 						</td>
 					</tr>
 					<tr>
-						<td class="label"><label id="stylelabel" for="class">{$lang_xhtmlxtras_attribute_label_style}</label>:</td> 
+						<td class="label"><label id="stylelabel" for="class">{#xhtmlxtras_dlg.attribute_label_style}</label>:</td> 
 						<td><input id="style" name="style" type="text" value="" class="field" /></td> 
 					</tr>
 					<tr>
-						<td class="label"><label id="dirlabel" for="dir">{$lang_xhtmlxtras_attribute_label_langdir}</label>:</td> 
+						<td class="label"><label id="dirlabel" for="dir">{#xhtmlxtras_dlg.attribute_label_langdir}</label>:</td> 
 						<td>
 							<select id="dir" name="dir" class="field"> 
-								<option value="">{$lang_xhtmlxtras_not_set}</option> 
-								<option value="ltr">{$lang_xhtmlxtras_attribute_option_ltr}</option> 
-								<option value="rtl">{$lang_xhtmlxtras_attribute_option_rtl}</option> 
+								<option value="">{#not_set}</option> 
+								<option value="ltr">{#xhtmlxtras_dlg.attribute_option_ltr}</option> 
+								<option value="rtl">{#xhtmlxtras_dlg.attribute_option_rtl}</option> 
 							</select>
 						</td> 
 					</tr>
 					<tr>
-						<td class="label"><label id="langlabel" for="lang">{$lang_xhtmlxtras_attribute_label_langcode}</label>:</td> 
+						<td class="label"><label id="langlabel" for="lang">{#xhtmlxtras_dlg.attribute_label_langcode}</label>:</td> 
 						<td>
 							<input id="lang" name="lang" type="text" value="" class="field" />
 						</td> 
@@ -85,7 +85,7 @@
 		</div>
 		<div id="events_panel" class="panel">
 			<fieldset>
-				<legend>{$lang_xhtmlxtras_fieldset_events_tab}</legend>
+				<legend>{#xhtmlxtras_dlg.fieldset_events_tab}</legend>
 
 				<table border="0" cellpadding="0" cellspacing="4">
 					<tr>
@@ -153,13 +153,13 @@
 	</div>
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" id="insert" name="insert" value="{$lang_update}" onclick="insertDel();" />
+			<input type="button" id="insert" name="insert" value="{#update}" onclick="insertDel();" />
 		</div>
 		<div style="float: left">
-			<input type="button" id="remove" name="remove" value="{$lang_xhtmlxtras_remove}" onclick="removeDel();" style="display: none;" />
+			<input type="button" id="remove" name="remove" class="button" value="{#xhtmlxtras_dlg.remove}" onclick="removeDel();" style="display: none;" />
 		</div>
 		<div style="float: right">
-			<input type="button" id="cancel" name="cancel" value="{$lang_cancel}" onclick="tinyMCEPopup.close();" />
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
 	</div>
 

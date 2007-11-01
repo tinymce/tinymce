@@ -5,43 +5,27 @@
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/* Import theme	specific language pack */
-tinyMCE.importPluginLanguagePack('print');
+(function() {
+	tinymce.create('tinymce.plugins.Print', {
+		Print : function(ed, url) {
+			ed.addCommand('mcePrint', function() {
+				ed.getWin().print();
+			});
 
-var TinyMCE_PrintPlugin = {
-	getInfo : function() {
-		return {
-			longname : 'Print',
-			author : 'Moxiecode Systems AB',
-			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/print',
-			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
-		};
-	},
+			ed.addButton('print', 'print.print_desc', 'mcePrint');
+		},
 
-	getControlHTML : function(cn)	{
-		switch (cn) {
-			case "print":
-				return tinyMCE.getButtonHTML(cn, 'lang_print_desc', '{$pluginurl}/images/print.gif', 'mcePrint');
+		getInfo : function() {
+			return {
+				longname : 'Print',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/print',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
 		}
+	});
 
-		return "";
-	},
-
-	/**
-	 * Executes	the	search/replace commands.
-	 */
-	execCommand : function(editor_id, element, command,	user_interface,	value) {
-		// Handle commands
-		switch (command) {
-			case "mcePrint":
-				tinyMCE.getInstanceById(editor_id).contentWindow.print();
-				return true;
-		}
-
-		// Pass to next handler in chain
-		return false;
-	}
-};
-
-tinyMCE.addPlugin("print", TinyMCE_PrintPlugin);
+	// Register plugin
+	tinymce.PluginManager.add('print', tinymce.plugins.Print);
+})();

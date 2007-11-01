@@ -5,42 +5,47 @@
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/* Import plugin specific language pack */
-tinyMCE.importPluginLanguagePack('autosave');
+(function() {
+	tinymce.create('tinymce.plugins.AutoSavePlugin', {
+		AutoSavePlugin : function(ed, url) {
+			var t = this;
 
-var TinyMCE_AutoSavePlugin = {
-	getInfo : function() {
-		return {
-			longname : 'Auto save',
-			author : 'Moxiecode Systems AB',
-			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/autosave',
-			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
-		};
-	},
+			t.editor = ed;
 
-	// Private plugin internal methods
+			window.onbeforeunload = tinymce.plugins.AutoSavePlugin._beforeUnloadHandler;
+		},
 
-	_beforeUnloadHandler : function() {
-		var n, inst, anyDirty = false, msg = tinyMCE.getLang("lang_autosave_unload_msg");
+		getInfo : function() {
+			return {
+				longname : 'Auto save',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/autosave',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
+		},
 
-		if (tinyMCE.getParam("fullscreen_is_enabled"))
-			return;
+		// Private plugin internal methods
 
-		for (n in tinyMCE.instances) {
-			inst = tinyMCE.instances[n];
+		'static' : {
+			_beforeUnloadHandler : function() {
+				var msg;
 
-			if (!tinyMCE.isInstance(inst))
-				continue;
+				tinymce.each(tinyMCE.editors, function(ed) {
+					if (ed.getParam("fullscreen_is_enabled"))
+						return;
 
-			if (inst.isDirty())
+					if (ed.isDirty()) {
+						msg = ed.getLang("autosave.unload_msg");
+						return false;
+					}
+				});
+
 				return msg;
+			}
 		}
+	});
 
-		return;
-	}
-};
-
-window.onbeforeunload = TinyMCE_AutoSavePlugin._beforeUnloadHandler;
-
-tinyMCE.addPlugin("autosave", TinyMCE_AutoSavePlugin);
+	// Register plugin
+	tinymce.PluginManager.add('autosave', tinymce.plugins.AutoSavePlugin);
+})();

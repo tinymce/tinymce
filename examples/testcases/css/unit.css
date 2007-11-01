@@ -1,0 +1,5 @@
+body { font-family: Verdana, Arial; font-size: 11px; margin: 5; padding: 0; }
+.failure { color: red; }
+.success { color: green; }
+#log { font-family: Verdana, Arial; font-size: 11px; }
+h1 { font-size: 16; }
