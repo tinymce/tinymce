@@ -1,4 +1,4 @@
-Version 3.0a1 (2007-xx-xx)
+Version 3.0a1 (2007-11-01)
 	Rewrote the core and most of the plugins and themes from scratch.
 	Added new and improved serialization engine, faster and more powerful.
 	Added new internal event system, things like editor.onClick.add(func).

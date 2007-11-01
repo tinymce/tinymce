@@ -156,6 +156,10 @@
 			return this.editors[id];
 		},
 
+		getInstanceById : function(id) {
+			return this.get(id);
+		},
+
 		add : function(e) {
 			this.editors[e.id] = e;
 			this.selectedInstance = this.activeEditor = e;
@@ -197,10 +201,15 @@
 
 				case "mceRemoveEditor":
 				case "mceRemoveControl":
-					t.remove(t.get(v));
+					ed.remove();
 					return true;
 
 				case 'mceToggleEditor':
+					if (!ed) {
+						t.execCommand('mceAddControl', 0, v);
+						return true;
+					}
+
 					if (ed.isHidden())
 						ed.show();
 					else

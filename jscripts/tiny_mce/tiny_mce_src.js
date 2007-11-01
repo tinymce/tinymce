@@ -4,7 +4,7 @@
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '0a1',
-	releaseDate : '2007-xx-xx',
+	releaseDate : '2007-11-01',
 
 	init : function() {
 		var t = this, ua = navigator.userAgent, i, nl = document.getElementsByTagName('script'), n;
@@ -27,6 +27,21 @@ var tinymce = {
 					t.suffix = '_src';
 
 				return t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
+			}
+		}
+
+		n = document.getElementsByTagName('head')[0];
+		if (n) {
+			nl = n.getElementsByTagName('script');
+			for (i=0; i<nl.length; i++) {
+				n = nl[i];
+
+				if (n.src && n.src.indexOf('tiny_mce') != -1) {
+					if (/_(src|dev)\.js/g.test(n.src))
+						t.suffix = '_src';
+
+					return t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
+				}
 			}
 		}
 
@@ -5144,6 +5159,10 @@ tinymce.create('tinymce.Theme', {
 			return this.editors[id];
 		},
 
+		getInstanceById : function(id) {
+			return this.get(id);
+		},
+
 		add : function(e) {
 			this.editors[e.id] = e;
 			this.selectedInstance = this.activeEditor = e;
@@ -5185,10 +5204,15 @@ tinymce.create('tinymce.Theme', {
 
 				case "mceRemoveEditor":
 				case "mceRemoveControl":
-					t.remove(t.get(v));
+					ed.remove();
 					return true;
 
 				case 'mceToggleEditor':
+					if (!ed) {
+						t.execCommand('mceAddControl', 0, v);
+						return true;
+					}
+
 					if (ed.isHidden())
 						ed.show();
 					else
@@ -8307,7 +8331,7 @@ var tinyMCE = tinymce.EditorManager;
 
 			this.features = s;
 			this.params = p;
-			t.onOpen.dispatch(s, p);
+			this.onOpen.dispatch(s, p);
 
 			try {
 				if (isIE && mo) {

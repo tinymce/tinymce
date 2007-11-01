@@ -62,7 +62,7 @@
 
 			this.features = s;
 			this.params = p;
-			t.onOpen.dispatch(s, p);
+			this.onOpen.dispatch(s, p);
 
 			try {
 				if (isIE && mo) {
