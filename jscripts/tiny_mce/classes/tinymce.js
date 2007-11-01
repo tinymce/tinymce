@@ -7,8 +7,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0a1',
-	releaseDate : '2007-11-01',
+	minorVersion : '0a2',
+	releaseDate : '2007-11-xx',
 
 	init : function() {
 		var t = this, ua = navigator.userAgent, i, nl = document.getElementsByTagName('script'), n;

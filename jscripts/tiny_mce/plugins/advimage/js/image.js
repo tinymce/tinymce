@@ -203,7 +203,9 @@ var ImageDialog = {
 		var dom = tinyMCEPopup.dom, lst = dom.get(id), v, cl;
 
 		if (v = tinyMCEPopup.getParam('theme_advanced_styles')) {
-			tinymce.each(v.split(','), function(v) {
+			cl = [];
+
+			tinymce.each(v.split(';'), function(v) {
 				var p = v.split('=');
 
 				cl.push({'title' : p[0], 'class' : p[1]});

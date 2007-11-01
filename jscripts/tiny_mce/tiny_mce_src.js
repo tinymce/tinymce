@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0a1',
-	releaseDate : '2007-11-01',
+	minorVersion : '0a2',
+	releaseDate : '2007-11-xx',
 
 	init : function() {
 		var t = this, ua = navigator.userAgent, i, nl = document.getElementsByTagName('script'), n;
@@ -3321,7 +3321,7 @@ tinymce.create('static tinymce.util.XHR', {
 			if (!s.node_filter || s.node_filter(n)) {
 				switch (n.nodeType) {
 					case 1: // Element
-						if (n.hasAttribute('mce_bogus'))
+						if (n.hasAttribute ? n.hasAttribute('mce_bogus') : n.getAttribute('mce_bogus'))
 							return;
 
 						iv = false;
@@ -8352,7 +8352,7 @@ var tinyMCE = tinymce.EditorManager;
 
 		close : function(w) {
 			w.close();
-			t.onClose.dispatch();
+			this.onClose.dispatch();
 		},
 
 		setTitle : function(v) {

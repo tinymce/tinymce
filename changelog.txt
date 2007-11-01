@@ -1,3 +1,7 @@
+Version 3.0a2 (2007-11-xx)
+	Fixed bug when using the theme_advanced_styles option. Error was thrown in some dialogs.
+	Fixed bug where the close buttons produced an error when native windows where used.
+	Fixed bug where IE generaded an error on a hasAttribute call in the serialization engine.
 Version 3.0a1 (2007-11-01)
 	Rewrote the core and most of the plugins and themes from scratch.
 	Added new and improved serialization engine, faster and more powerful.

@@ -80,7 +80,7 @@
 
 		close : function(w) {
 			w.close();
-			t.onClose.dispatch();
+			this.onClose.dispatch();
 		},
 
 		setTitle : function(v) {

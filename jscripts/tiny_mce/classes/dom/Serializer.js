@@ -531,7 +531,7 @@
 			if (!s.node_filter || s.node_filter(n)) {
 				switch (n.nodeType) {
 					case 1: // Element
-						if (n.hasAttribute('mce_bogus'))
+						if (n.hasAttribute ? n.hasAttribute('mce_bogus') : n.getAttribute('mce_bogus'))
 							return;
 
 						iv = false;
