@@ -58,7 +58,9 @@
 .defaultSkin table.mceSplitButtonEnabled:hover a.open, .defaultSkin .mceSplitButtonHover a.open, .defaultSkin .mceSplitButtonSelected a.open {border:1px solid #0A246A;}
 .defaultSkin table.mceSplitButtonEnabled:hover span.open, .defaultSkin .mceSplitButtonHover span.open, .defaultSkin .mceSplitButtonSelected span.open {background-color:#B2BBD0}
 .defaultSkin .mceSplitButtonDisabled span.action, .defaultSkin .mceSplitButtonDisabled span.open {opacity:0.3; filter:alpha(opacity=30)}
-.defaultSkin .mceSplitButtonActive {background-position:0 -44px}
+.defaultSkin .mceSplitButtonActive a.action {border:1px solid #0A246A; border-right:0; background-color:#C2CBE0}
+.defaultSkin .mceSplitButtonActive a.open {border:1px solid #0A246A;}
+.defaultSkin .mceSplitButtonActive span.open {background-color:#C2CBE0}
 .defaultSkin .mceSplitButtonMenu {display:none; position:absolute}
 
 /* ColorSplitButton */

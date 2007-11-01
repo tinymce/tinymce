@@ -49,7 +49,7 @@
 
 					// Load rest if plugins
 					each(pl, function(v) {
-						if (v) {
+						if (v && v.charAt(0) != '-') {
 							// Skip safari plugin for other browsers
 							if (!tinymce.isWebKit && v == 'safari')
 								return;

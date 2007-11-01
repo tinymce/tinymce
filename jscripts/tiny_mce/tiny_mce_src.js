@@ -5055,7 +5055,7 @@ tinymce.create('tinymce.Theme', {
 
 					// Load rest if plugins
 					each(pl, function(v) {
-						if (v) {
+						if (v && v.charAt(0) != '-') {
 							// Skip safari plugin for other browsers
 							if (!tinymce.isWebKit && v == 'safari')
 								return;
@@ -5439,7 +5439,7 @@ var tinyMCE = tinymce.EditorManager;
 				ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(s.plugins.split(','), function(p) {
-					if (p) {
+					if (p && p.charAt(0) != '-') {
 						// Skip safari plugin for other browsers
 						if (!isWebKit && p == 'safari')
 							return;
@@ -5486,7 +5486,7 @@ var tinyMCE = tinymce.EditorManager;
 			t.theme = new o(t, ThemeManager.themeURLs[s.theme]);
 
 			// Create all plugins
-			each(s.plugins.split(','), function(p) {
+			each(s.plugins.replace(/\-/g, '').split(','), function(p) {
 				var c = PluginManager.get(p), u = PluginManager.pluginURLs[p];
 
 				if (c)
