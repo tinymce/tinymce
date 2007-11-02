@@ -1,3 +1,5 @@
+Version 3.0a3 (2007-xx-xx)
+	Fixed various CSS issues in the default skin such as alignment of split buttons and separators.
 Version 3.0a2 (2007-11-02)
 	Fixed critical bug where IE generaded an error on a hasAttribute call in the serialization engine.
 	Fixed critical bug where some dialogs didn't open in the non dev package.
