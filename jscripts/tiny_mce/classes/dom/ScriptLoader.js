@@ -133,7 +133,6 @@
 
 				tinymce.util.XHR.send({
 					url : o.url,
-					content_type : 'text/javascript',
 					error : t.settings.error,
 					success : function(co) {
 						t.eval(co);

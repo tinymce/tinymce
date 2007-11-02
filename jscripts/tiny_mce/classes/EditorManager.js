@@ -282,4 +282,4 @@
 })();
 
 // Short for editor manager
-var tinyMCE = tinymce.EditorManager;
+var tinyMCE = window.tinyMCE = tinymce.EditorManager;

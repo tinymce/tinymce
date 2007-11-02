@@ -22,7 +22,6 @@ tinymce.create('static tinymce.util.XHR', {
 		o.scope = o.scope || this;
 		o.success_scope = o.success_scope || o.scope;
 		o.error_scope = o.error_scope || o.scope;
-		o.content_type = o.content_type || 'text/plain';
 		o.async = o.async === false ? false : true;
 		o.data = o.data || '';
 
@@ -45,7 +44,10 @@ tinymce.create('static tinymce.util.XHR', {
 
 			x.async = o.async;
 			x.open(o.type || (o.data ? 'POST' : 'GET'), o.url, o.async);
-			x.setRequestHeader('Content-Type', o.content_type);
+
+			if (o.content_type)
+				x.setRequestHeader('Content-Type', o.content_type);
+
 			x.send(o.data);
 
 			// Wait for response

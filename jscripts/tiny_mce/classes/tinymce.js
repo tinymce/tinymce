@@ -316,5 +316,7 @@ var tinymce = {
 	}
 };
 
+window.tinymce = tinymce;
+
 // Initialize the API
 tinymce.init();
