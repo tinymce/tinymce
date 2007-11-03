@@ -24,7 +24,7 @@ var tinymce = {
 		t.suffix = '';
 
 		function getBase(n) {
-			if (n.src && /tiny_mce(|_dev|_src|_jquery|_prototype).js$/.test(n.src)) {
+			if (n.src && /tiny_mce(|_dev|_src|_jquery|_prototype).js/.test(n.src)) {
 				if (/_(src|dev)\.js/g.test(n.src))
 					t.suffix = '_src';
 
