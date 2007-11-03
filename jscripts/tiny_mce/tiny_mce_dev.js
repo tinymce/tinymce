@@ -35,7 +35,6 @@
 
 	// Core ns
 	include('tinymce.js');
-	include('util/Dispatcher.js');
 
 	// Load framework adapter
 	if (api) {
@@ -44,6 +43,7 @@
 	}
 
 	// Core API
+	include('util/Dispatcher.js');
 	include('util/URI.js');
 	include('util/Cookie.js');
 	include('util/JSON.js');
