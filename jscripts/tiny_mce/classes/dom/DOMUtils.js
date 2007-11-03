@@ -169,6 +169,8 @@
 				tinymce.walk(n, 'childNodes', f, s);
 		},
 
+		// #if !jquery
+
 		/**
 		 * #id
 		 * p
@@ -279,6 +281,8 @@
 
 			return o;
 		},
+
+		// #endif
 
 		add : function(p, n, a, h) {
 			var t = this, e, k;
@@ -786,6 +790,8 @@
 				e.className = (e.className + '').replace(new RegExp('\\b' + o + '\\b', 'g'), n);
 		},
 
+		// #if !jquery
+
 		/**
 		 * Returns true if the specified element has the specified class.
 		 *
@@ -801,6 +807,8 @@
 
 			return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 		},
+
+		// #endif
 
 		/**
 		 * Returns a unique id. This can be useful when generating elements on the fly.

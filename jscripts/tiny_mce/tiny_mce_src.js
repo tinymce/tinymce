@@ -7,7 +7,7 @@ var tinymce = {
 	releaseDate : '2007-11-02',
 
 	init : function() {
-		var t = this, ua = navigator.userAgent, i, nl = document.getElementsByTagName('script'), n;
+		var t = this, ua = navigator.userAgent, i, nl, n;
 
 		// Browser checks
 		t.isOpera = window.opera && opera.buildNumber;
@@ -19,33 +19,35 @@ var tinymce = {
 		t.isMac = ua.indexOf('Mac') != -1;
 		t.suffix = '';
 
-		for (i=0; i<nl.length; i++) {
-			n = nl[i];
-
-			if (n.src && n.src.indexOf('tiny_mce') != -1) {
+		function getBase(n) {
+			if (n.src && /tiny_mce(|_dev|_src|_jquery|_prototype).js$/.test(n.src)) {
 				if (/_(src|dev)\.js/g.test(n.src))
 					t.suffix = '_src';
 
 				return t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
 			}
+
+			return null;
+		};
+
+		// Check document
+		nl = document.getElementsByTagName('script');
+		for (i=0; i<nl.length; i++) {
+			if (getBase(nl[i]))
+				return;
 		}
 
+		// Check head
 		n = document.getElementsByTagName('head')[0];
 		if (n) {
 			nl = n.getElementsByTagName('script');
 			for (i=0; i<nl.length; i++) {
-				n = nl[i];
-
-				if (n.src && n.src.indexOf('tiny_mce') != -1) {
-					if (/_(src|dev)\.js/g.test(n.src))
-						t.suffix = '_src';
-
-					return t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
-				}
+				if (getBase(nl[i]))
+					return;
 			}
 		}
 
-		return null;
+		return;
 	},
 
 	is : function(o, t) {
@@ -83,6 +85,8 @@ var tinymce = {
 
 		return 1;
 	},
+
+	// #if !jquery
 
 	map : function(a, f) {
 		var o = [];
@@ -131,6 +135,8 @@ var tinymce = {
 		return ('' + s).replace(/^\s*|\s*$/g, '');
 	},
 
+	// #endif
+
 	create : function(s, p) {
 		var t = this, sp, ns, cn, scn, c, de = 0;
 
@@ -141,9 +147,14 @@ var tinymce = {
 		// Create namespace for new class
 		ns = t.createNS(s[3].replace(/\.\w+$/, ''));
 
+		// Class already exists
+		if (ns[cn])
+			return;
+
 		// Make pure static class
 		if (s[2] == 'static') {
 			ns[cn] = p;
+			this._dispatchCreate(s[2], s[3], ns[cn]);
 			return;
 		}
 
@@ -203,6 +214,8 @@ var tinymce = {
 				}
 			});
 		}
+
+		this._dispatchCreate(s[2], s[3], ns[cn].prototype);
 	},
 
 	walk : function(o, n, f, s) {
@@ -309,13 +322,25 @@ var tinymce = {
 		});
 
 		return r;
+	},
+
+	_dispatchCreate : function(ty, c, p) {
+		if (this.onCreate)
+			this.onCreate(ty, c, p);
 	}
 };
 
+// Required for GZip AJAX loading
 window.tinymce = tinymce;
 
 // Initialize the API
 tinymce.init();
+
+/* file:jscripts/tiny_mce/classes/adapter/jquery/adapter.js */
+
+
+/* file:jscripts/tiny_mce/classes/adapter/prototype/adapter.js */
+
 
 /* file:jscripts/tiny_mce/classes/util/Dispatcher.js */
 
@@ -951,6 +976,8 @@ tinymce.create('static tinymce.util.XHR', {
 				tinymce.walk(n, 'childNodes', f, s);
 		},
 
+		// #if !jquery
+
 		select : function(p, s) {
 			var o = [], r = [], i, t = this, pl, ru, pu, x, u, xp;
 
@@ -1052,6 +1079,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return o;
 		},
+
+		// #endif
 
 		add : function(p, n, a, h) {
 			var t = this, e, k;
@@ -1530,6 +1559,8 @@ tinymce.create('static tinymce.util.XHR', {
 				e.className = (e.className + '').replace(new RegExp('\\b' + o + '\\b', 'g'), n);
 		},
 
+		// #if !jquery
+
 		hasClass : function(n, c) {
 			n = this.get(n);
 
@@ -1538,6 +1569,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 		},
+
+		// #endif
 
 		uniqueId : function(p) {
 			return (!p ? 'mce_' : p) + (this.counter++);

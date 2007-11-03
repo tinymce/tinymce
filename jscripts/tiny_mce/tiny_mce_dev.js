@@ -10,63 +10,77 @@
  */
 
 (function() {
-	var i, nl = document.getElementsByTagName('script'), base;
+	var i, nl = document.getElementsByTagName('script'), base, api, src, p;
 
 	for (i=0; i<nl.length; i++) {
-		if (nl[i].src && nl[i].src.indexOf("tiny_mce_dev.js") != -1)
-			base = nl[i].src.substring(0, nl[i].src.lastIndexOf('/'));
+		src = nl[i].src;
+
+		if (src && src.indexOf("tiny_mce_dev.js") != -1) {
+			base = src.substring(0, src.lastIndexOf('/'));
+
+			if ((p = src.indexOf('?api=')) != -1)
+				api = src.substring(p + 5);
+		}
 	}
 
 	nl = null;
 
 	function include(u) {
-		document.write('<script type="text/javascript" src="' + base + '/' + u + '"></script>');
+		document.write('<script type="text/javascript" src="' + base + '/classes/' + u + '"></script>');
 	};
 
-	// Load and setup firebug
+	// Firebug
 //	document.documentElement.setAttribute("debug", "true");
 //	include('classes/firebug/firebug.js');
 
-	// Load API
-	include('classes/tinymce.js');
-	include('classes/util/Dispatcher.js');
-	include('classes/util/URI.js');
-	include('classes/util/Cookie.js');
-	include('classes/util/JSON.js');
-	include('classes/util/XHR.js');
-	include('classes/util/JSONRequest.js');
-	include('classes/dom/DOMUtils.js');
-	include('classes/dom/Event.js');
-	include('classes/dom/Element.js');
-	include('classes/dom/Selection.js');
-	include('classes/dom/XMLWriter.js');
-	include('classes/dom/StringWriter.js');
-	include('classes/dom/Serializer.js');
-	include('classes/dom/ScriptLoader.js');
-	include('classes/ui/Control.js');
-	include('classes/ui/Container.js');
-	include('classes/ui/Separator.js');
-	include('classes/ui/MenuItem.js');
-	include('classes/ui/Menu.js');
-	include('classes/ui/DropMenu.js');
-	include('classes/ui/Button.js');
-	include('classes/ui/ListBox.js');
-	include('classes/ui/NativeListBox.js');
-	include('classes/ui/SplitButton.js');
-	include('classes/ui/ColorSplitButton.js');
-	include('classes/ui/Toolbar.js');
-	include('classes/Theme.js');
-	include('classes/ThemeManager.js');
-	include('classes/PluginManager.js');
-	include('classes/EditorManager.js');
-	include('classes/Editor.js');
-	include('classes/EditorCommands.js');
-	include('classes/UndoManager.js');
-	include('classes/ForceBlocks.js');
-	include('classes/ControlManager.js');
-	include('classes/WindowManager.js');
+	// Core ns
+	include('tinymce.js');
+	include('util/Dispatcher.js');
+
+	// Load framework adapter
+	if (api) {
+		include('adapter/' + api + '/' + api + '.js');
+		include('adapter/' + api + '/adapter.js');
+	}
+
+	// Core API
+	include('util/URI.js');
+	include('util/Cookie.js');
+	include('util/JSON.js');
+	include('util/XHR.js');
+	include('util/JSONRequest.js');
+	include('dom/DOMUtils.js');
+	include('dom/Event.js');
+	include('dom/Element.js');
+	include('dom/Selection.js');
+	include('dom/XMLWriter.js');
+	include('dom/StringWriter.js');
+	include('dom/Serializer.js');
+	include('dom/ScriptLoader.js');
+	include('ui/Control.js');
+	include('ui/Container.js');
+	include('ui/Separator.js');
+	include('ui/MenuItem.js');
+	include('ui/Menu.js');
+	include('ui/DropMenu.js');
+	include('ui/Button.js');
+	include('ui/ListBox.js');
+	include('ui/NativeListBox.js');
+	include('ui/SplitButton.js');
+	include('ui/ColorSplitButton.js');
+	include('ui/Toolbar.js');
+	include('Theme.js');
+	include('ThemeManager.js');
+	include('PluginManager.js');
+	include('EditorManager.js');
+	include('Editor.js');
+	include('EditorCommands.js');
+	include('UndoManager.js');
+	include('ForceBlocks.js');
+	include('ControlManager.js');
+	include('WindowManager.js');
 
 	// Developer API
-	include('classes/xml/Parser.js');
-	include('classes/Developer.js');
+	include('xml/Parser.js');
+	include('Developer.js');
 }());
