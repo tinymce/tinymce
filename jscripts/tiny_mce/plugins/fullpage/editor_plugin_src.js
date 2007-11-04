@@ -51,7 +51,7 @@
 			});
 		},
 
-		_setContent : function(o) {
+		_setContent : function(ed, o) {
 			var t = this, sp, ep, c = o.content;
 
 			// Parse out head, body and footer
@@ -76,7 +76,7 @@
 			}
 		},
 
-		_getContent : function(o) {
+		_getContent : function(ed, o) {
 			var t = this;
 
 			o.content = tinymce.trim(t.head) + '\n' + tinymce.trim(o.content) + '\n' + tinymce.trim(t.foot);

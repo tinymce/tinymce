@@ -16,7 +16,7 @@
 			editClass = ed.getParam("noneditable_editable_class", "mceEditable");
 			nonEditClass = ed.getParam("noneditable_noneditable_class", "mceNonEditable");
 
-			ed.onNodeChange.unshift(function(cm, n) {
+			ed.onNodeChange.unshift(function(ed, cm, n) {
 				var sc, ec;
 
 				// Block if start or end is inside a non editable element
@@ -47,7 +47,7 @@
 			};
 		},
 
-		_block : function(e) {
+		_block : function(ed, e) {
 			return Event.cancel(e);
 		},
 

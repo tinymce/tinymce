@@ -62,7 +62,7 @@
 			if (t.data.length == 2 && t.data[0].initial)
 				t.data[0].bookmark = b;
 
-			t.onAdd.dispatch(level, this);
+			t.onAdd.dispatch(t, level);
 
 			//console.dir(t.data);
 
@@ -93,7 +93,7 @@
 				ed.setContent(level.content, {format : 'raw'});
 				ed.selection.moveToBookmark(level.bookmark);
 
-				t.onUndo.dispatch(level, this);
+				t.onUndo.dispatch(t, level);
 			}
 		},
 
@@ -105,7 +105,7 @@
 				ed.setContent(level.content, {format : 'raw'});
 				ed.selection.moveToBookmark(level.bookmark);
 
-				t.onRedo.dispatch(level, this);
+				t.onRedo.dispatch(t, level);
 			}
 		},
 

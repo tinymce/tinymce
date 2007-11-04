@@ -14,7 +14,19 @@
 		events : [],
 
 		add : function(o, n, f, s) {
-			var cb, t = this, el = t.events;
+			var cb, t = this, el = t.events, r;
+
+			// Handle array
+			if (o && o instanceof Array) {
+				r = [];
+
+				each(o, function(o) {
+					o = DOM.get(o);
+					r.push(t.add(o, n, f, s));
+				});
+
+				return r;
+			}
 
 			o = DOM.get(o);
 
@@ -64,7 +76,19 @@
 		},
 
 		remove : function(o, n, f) {
-			var t = this, a = t.events, s = false;
+			var t = this, a = t.events, s = false, r;
+
+			// Handle array
+			if (o && o instanceof Array) {
+				r = [];
+
+				each(o, function(o) {
+					o = DOM.get(o);
+					r.push(t.remove(o, n, f));
+				});
+
+				return r;
+			}
 
 			o = DOM.get(o);
 

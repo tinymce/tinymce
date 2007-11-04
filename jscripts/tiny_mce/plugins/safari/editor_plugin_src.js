@@ -6,7 +6,7 @@
  */
 
 (function() {
-	var Event = tinymce.dom.Event, filter = tinymce.filter, each = tinymce.each, indexOf = tinymce.indexOf, isOldWebKit = tinymce.isOldWebKit;
+	var Event = tinymce.dom.Event, grep = tinymce.grep, each = tinymce.each, indexOf = tinymce.indexOf, isOldWebKit = tinymce.isOldWebKit;
 
 	tinymce.create('tinymce.plugins.Safari', {
 		Safari : function(ed) {
@@ -22,11 +22,11 @@
 
 			// Safari will crash if the build in createlink command is used
 			ed.addCommand('CreateLink', function(u, v) {
-				ed.execCommand("mceInsertContent", false, '<a href="#mce_temp_url#">' + ed.selection.getContent() + '</a>');
+				ed.execCommand("mceInsertContent", false, '<a href="' + dom.encode(v) + '">' + ed.selection.getContent() + '</a>');
 			});
 
 			// Safari can't select images, but now we can
-			ed.onClick.add(function(e) {
+			ed.onClick.add(function(ed, e) {
 				e = e.target;
 
 				if (e.nodeName == 'IMG') {
@@ -36,7 +36,7 @@
 					t.selElm = null;
 			});
 
-			ed.onBeforeExecCommand.add(function(c, b) {
+			ed.onBeforeExecCommand.add(function(ed, c, b) {
 				var r = t.bookmarkRng;
 
 				// Restore selection
@@ -73,7 +73,7 @@
 
 				// Convert strong,b,em,u,strike to spans
 				each(['strong','b','em','u','strike','sub','sup','a'], function(v) {
-					each(filter(dom.select(v)).reverse(), function(n) {
+					each(grep(dom.select(v)).reverse(), function(n) {
 						var nn = n.nodeName.toLowerCase(), st;
 
 						// Convert anchors into images
@@ -119,10 +119,10 @@
 				});
 			});
 
-			ed.onPreProcess.add(function(o) {
+			ed.onPreProcess.add(function(ed, o) {
 				dom = ed.dom;
 
-				each(filter(o.node.getElementsByTagName('span')).reverse(), function(n) {
+				each(grep(o.node.getElementsByTagName('span')).reverse(), function(n) {
 					var v, bg;
 
 					if (o.get) {
@@ -167,7 +167,7 @@
 				});
 			});
 
-			ed.onPostProcess.add(function(o) {
+			ed.onPostProcess.add(function(ed, o) {
 				// Safari adds BR at end of all block elements
 				o.content = o.content.replace(/<br \/><\/(h[1-6]|div|p|address|pre)>/g, '</$1>');
 

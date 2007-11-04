@@ -54,7 +54,7 @@
 			};
 
 			t.items.push(o);
-			t.onAdd.dispatch(o);
+			t.onAdd.dispatch(t, o);
 		},
 
 		getLength : function() {
@@ -83,11 +83,11 @@
 			Event.add(t.id, 'change', function(e) {
 				var v = e.target.options[e.target.selectedIndex].value;
 
-				t.onChange.dispatch(v);
+				t.onChange.dispatch(t, v);
 				t.execCallback(v);
 			});
 
-			t.onPostRender.dispatch(DOM.get(t.id));
+			t.onPostRender.dispatch(t, DOM.get(t.id));
 		},
 
 		execCallback : function() {

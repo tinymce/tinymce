@@ -18,6 +18,8 @@
 			this.onRender = new tinymce.util.Dispatcher(this);
 			this.classPrefix = '';
 			this.scope = s.scope || this;
+			this.disabled = 0;
+			this.active = 0;
 		},
 
 		setDisabled : function(s) {

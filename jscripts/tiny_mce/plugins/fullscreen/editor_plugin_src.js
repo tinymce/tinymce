@@ -76,7 +76,7 @@
 			// Register buttons
 			ed.addButton('fullscreen', 'fullscreen.desc', 'mceFullScreen');
 
-			ed.onNodeChange.add(function(cm) {
+			ed.onNodeChange.add(function(ed, cm) {
 				cm.setActive('fullscreen', ed.getParam('fullscreen_is_enabled'));
 			});
 		},

@@ -85,7 +85,7 @@
 
 			t.features = f;
 			t.params = p;
-			t.onOpen.dispatch(f, p);
+			t.onOpen.dispatch(t, f, p);
 
 			if (f.type) {
 				opt += ' modal ' + f.type;
@@ -409,7 +409,7 @@
 			}
 
 			if (w = t.windows[id]) {
-				t.onClose.dispatch();
+				t.onClose.dispatch(t);
 				Event.remove(d, 'mousedown', w.mousedownFunc);
 				Event.remove(d, 'click', w.clickFunc);
 

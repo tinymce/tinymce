@@ -28,7 +28,7 @@ function insertDel() {
 		var s = SXE.inst.selection.getContent();
 		if(s.length > 0) {
 			tinyMCEPopup.execCommand('mceInsertContent', false, '<del id="#sxe_temp_del#">' + s + '</del>');
-			var elementArray = tinymce.filter(SXE.inst.dom.select('del'), function(n) {return n.id == '#sxe_temp_del#';});
+			var elementArray = tinymce.grep(SXE.inst.dom.select('del'), function(n) {return n.id == '#sxe_temp_del#';});
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
 				setElementAttribs(elm);

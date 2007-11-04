@@ -54,8 +54,8 @@
 
 		// Private methods
 
-		_nodeChange : function(cm, n) {
-			var ed = this.editor, le, p;
+		_nodeChange : function(ed, cm, n) {
+			var le, p;
 
 			le = this._getParentLayer(n);
 			p = ed.dom.getParent(n, 'DIV,P,IMG');
@@ -74,8 +74,8 @@
 
 		// Private methods
 
-		_visualAid : function(e, s) {
-			var dom = this.editor.dom;
+		_visualAid : function(ed, e, s) {
+			var dom = ed.dom;
 
 			tinymce.each(dom.select('div,p', e), function(e) {
 				if (/^(absolute|relative|static)$/i.test(e.style.position)) {
@@ -91,10 +91,10 @@
 			var ed = this.editor, i, z = [], le = this._getParentLayer(ed.selection.getNode()), ci = -1, fi = -1, nl;
 
 			nl = [];
-			tinymce.walk(ed.getBody(), 'childNodes', function(n) {
+			tinymce.walk(ed.getBody(), function(n) {
 				if (n.nodeType == 1 && /^(absolute|relative|static)$/i.test(n.style.position))
 					nl.push(n); 
-			});
+			}, 'childNodes');
 
 			// Find z-indexes
 			for (i=0; i<nl.length; i++) {

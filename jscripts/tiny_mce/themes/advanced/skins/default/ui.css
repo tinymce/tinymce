@@ -1,5 +1,5 @@
 /* Reset */
-.defaultSkin table, .defaultSkin tbody, .defaultSkin a, .defaultSkin img, .defaultSkin tr, .defaultSkin div, .defaultSkin td, .defaultSkin iframe, .defaultSkin span, .defaultSkin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000; vertical-align:top}
+.defaultSkin table, .defaultSkin tbody, .defaultSkin a, .defaultSkin img, .defaultSkin tr, .defaultSkin div, .defaultSkin td, .defaultSkin iframe, .defaultSkin span, .defaultSkin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000;}
 
 /* Containers */
 .defaultSkin {position:relative}
@@ -18,7 +18,7 @@
 .defaultSkin table.mceLayout tr.first td {border-top:1px solid #CCC}
 .defaultSkin table.mceLayout tr.last td {border-bottom:1px solid #CCC}
 .defaultSkin table.mceToolbar, .defaultSkin tr.first .mceToolbar tr td, .defaultSkin tr.last .mceToolbar tr td {border:0; margin:0; padding:0;}
-.defaultSkin td.mceToolbar {padding-top:1px}
+.defaultSkin td.mceToolbar {padding-top:1px; vertical-align:top}
 .defaultSkin .mceIframeContainer {border-top:1px solid #CCC; border-bottom:1px solid #CCC}
 .defaultSkin .mceStatusbar {position:relative; font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:16px; overflow:visible; padding:2px; color:#000; display:block}
 .defaultSkin .mceStatusbar a.resize {display:block; position:absolute; top:0; right:0; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px}
@@ -96,7 +96,7 @@
 .defaultSkin .mceMenuItemSub a {background:url(img/menu_arrow.gif) no-repeat top right;}
 
 /* Progress,Resize */
-.defaultSkin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.3; filter:alpha(opacity=30); background:#FFF}
+.defaultSkin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.5; filter:alpha(opacity=50); background:#FFF}
 .defaultSkin .mceProgress {position:absolute; left:0; top:0; z-index:1001; background:url(img/progress.gif) no-repeat; width:32px; height:32px; margin:-16px 0 0 -16px}
 .defaultSkin .mcePlaceHolder {border:1px dotted gray}
 

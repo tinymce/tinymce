@@ -43,7 +43,7 @@
 
 		tinyMCE.instances = {};
 		tinyMCE.plugins = {};
-		tinymce.PluginManager.onAdd.add(function(n, p) {
+		tinymce.PluginManager.onAdd.add(function(pm, n, p) {
 			tinyMCE.plugins[n] = p;
 		});
 
@@ -184,7 +184,7 @@
 			},
 
 			getCSSClasses : function() {
-				var cl = EditorManager.activeEditor.getClasses(), o = [];
+				var cl = EditorManager.activeEditor.dom.getClasses(), o = [];
 
 				each(cl, function(c) {
 					o.push(c['class']);
@@ -447,13 +447,13 @@
 					}*/
 
 					if (f.handleNodeChange) {
-						ed.onNodeChange.add(function(cm, n) {
+						ed.onNodeChange.add(function(ed, cm, n) {
 							f.handleNodeChange(ed.id, n, 0, 0, false, !ed.selection.isCollapsed());
 						});
 					}
 
 					if (f.onChange) {
-						ed.onChange.add(function(n) {
+						ed.onChange.add(function(ed, n) {
 							return f.onChange(ed);
 						});
 					}

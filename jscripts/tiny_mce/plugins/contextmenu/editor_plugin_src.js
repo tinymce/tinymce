@@ -15,7 +15,7 @@
 			t.editor = ed;
 			t.onContextMenu = new tinymce.util.Dispatcher(this);
 
-			ed.onContextMenu.add(function(e) {
+			ed.onContextMenu.add(function(ed, e) {
 				t._getMenu(ed).showMenu(e.clientX, e.clientY);
 				Event.cancel(e);
 			});
@@ -67,7 +67,7 @@
 			am.add({title : 'contextmenu.right', icon : 'justifyright', command : 'JustifyRight'});
 			am.add({title : 'contextmenu.full', icon : 'justifyfull', command : 'JustifyFull'});
 
-			t.onContextMenu.dispatch(m, el, col);
+			t.onContextMenu.dispatch(t, m, el, col);
 
 			return m;
 		}

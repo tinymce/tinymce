@@ -84,7 +84,7 @@
 				ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/advanced/skins/" + ed.settings.skin + "/content.css"));
 			});
 
-			ed.onSetProgressState.add(function(b, ti) {
+			ed.onSetProgressState.add(function(ed, b, ti) {
 				var co, id = ed.id, tb;
 
 				if (b) {
@@ -150,7 +150,7 @@
 			var ed = this.editor, c = ed.controlManager.get('styleselect');
 
 			if (c.getLength() == 0) {
-				each(ed.getClasses(), function(o) {
+				each(ed.dom.getClasses(), function(o) {
 					c.add(o['class'], o['class']);
 				});
 			}
@@ -171,7 +171,7 @@
 					c.add(t.editor.translate(p[0]), p[1]);
 			});
 
-			c.onPostRender.add(function(n) {
+			c.onPostRender.add(function(ed, n) {
 				Event.add(n, 'focus', t._importClasses, t);
 				Event.add(n, 'mousedown', t._importClasses, t);
 			});
@@ -642,8 +642,8 @@
 			n = tb = null;
 		},
 
-		_nodeChanged : function(cm, n, co) {
-			var t = this, ed = t.editor, p, de = 0, v, c, s = t.settings;
+		_nodeChanged : function(ed, cm, n, co) {
+			var t = this, p, de = 0, v, c, s = t.settings;
 
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
@@ -709,7 +709,7 @@
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
 					// Ignore non element and hidden elements
-					if (n.nodeType != 1 || DOM.hasClass(n, 'mceItemHidden|mceItemRemoved'))
+					if (n.nodeType != 1 || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
 						return;
 
 					// Fake name
@@ -785,7 +785,7 @@
 
 					na = na.replace(/(html:)/g, '');
 					na = {name : na, node : n, title : ti};
-					t.onResolveName.dispatch(na);
+					t.onResolveName.dispatch(t, na);
 					ti = na.title;
 					na = na.name;
 

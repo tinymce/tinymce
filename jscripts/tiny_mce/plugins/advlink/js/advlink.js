@@ -402,7 +402,7 @@ function insertAction() {
 	if (elm == null) {
 		tinyMCEPopup.execCommand("CreateLink", false, "#mce_temp_url#");
 
-		elementArray = tinymce.filter(inst.dom.select("a"), function(n) {return inst.dom.getAttrib(n, 'href') == '#mce_temp_url#';});
+		elementArray = tinymce.grep(inst.dom.select("a"), function(n) {return inst.dom.getAttrib(n, 'href') == '#mce_temp_url#';});
 		for (i=0; i<elementArray.length; i++) {
 			elm = elementArray[i];
 

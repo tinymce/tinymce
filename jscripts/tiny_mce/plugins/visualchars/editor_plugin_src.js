@@ -18,7 +18,7 @@
 			// Register buttons
 			ed.addButton('visualchars', 'visualchars.desc', 'mceVisualChars');
 
-			ed.onBeforeGetContent.add(function(o) {
+			ed.onBeforeGetContent.add(function(ed, o) {
 				if (t.state) {
 					t.state = true;
 					t._toggleVisualChars();
@@ -46,10 +46,10 @@
 
 			if (t.state) {
 				nl = [];
-				tinymce.walk(b, 'childNodes', function(n) {
+				tinymce.walk(b, function(n) {
 					if (n.nodeType == 3 && n.nodeValue && n.nodeValue.indexOf('\u00a0') != -1)
 						nl.push(n);
-				});
+				}, 'childNodes');
 
 				for (i=0; i<nl.length; i++) {
 					nv = nl[i].nodeValue;
@@ -58,7 +58,7 @@
 					ed.dom.setOuterHTML(nl[i], nv, d);
 				}
 			} else {
-				nl = tinymce.filter(ed.dom.select('span', b), function(n) {
+				nl = tinymce.grep(ed.dom.select('span', b), function(n) {
 					return ed.dom.hasClass(n, 'mceItemHiddenVisualChar');
 				});
 

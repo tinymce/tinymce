@@ -25,10 +25,10 @@
 			var t = this;
 
 			if (d) {
-				walk(t, 'items', function(o) {
+				walk(t, function(o) {
 					if (o.expand)
 						o.expand();
-				}, t);
+				}, 'items', t);
 			}
 
 			t.collapsed = false;
@@ -38,10 +38,10 @@
 			var t = this;
 
 			if (d) {
-				walk(t, 'items', function(o) {
+				walk(t, function(o) {
 					if (o.collapse)
 						o.collapse();
-				}, t);
+				}, 'items', t);
 			}
 
 			t.collapsed = true;
@@ -55,7 +55,7 @@
 			if (!o.settings)
 				o = new tinymce.ui.MenuItem(o.id || DOM.uniqueId(), o);
 
-			this.onAddItem.dispatch(o);
+			this.onAddItem.dispatch(this, o);
 
 			return this.items[o.id] = o;
 		},
@@ -84,12 +84,12 @@
 		removeAll : function() {
 			var t = this;
 
-			walk(t, 'items', function(o) {
+			walk(t, function(o) {
 				if (o.removeAll)
 					o.removeAll();
 
 				o.destroy();
-			}, t);
+			}, 'items', t);
 
 			t.items = {};
 		},

@@ -41,7 +41,7 @@
 		add : function(id, th) {
 			this.plugins.push(th);
 			this.lookup[id] = th;
-			this.onAdd.dispatch(id, th);
+			this.onAdd.dispatch(this, id, th);
 		},
 
 		load : function(p, u, cb, s) {

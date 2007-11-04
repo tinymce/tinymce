@@ -1,4 +1,284 @@
 (function() {
+	unitTester.add('tinymce', {
+		is : function() {
+			var t = this;
+
+			t.is(!tinymce.is(null, 'test'));
+			t.is(!tinymce.is('', 'test'));
+			t.is(tinymce.is('', 'string'));
+			t.is(tinymce.is(3, 'number'));
+			t.is(tinymce.is(3.1, 'number'));
+			t.is(tinymce.is([], 'array'));
+			t.is(tinymce.is({}, 'object'));
+			t.is(tinymce.is(window.abc, 'undefined'));
+			t.is(!tinymce.is(window.abc));
+		},
+
+		each : function() {
+			var t = this, c;
+
+			c = 0;
+			tinymce.each([1, 2, 3], function(v) {
+				c += v;
+			});
+			t.eq(c, 6);
+
+			c = 0;
+			tinymce.each([1, 2, 3], function(v, i) {
+				c += i;
+			});
+			t.eq(c, 3);
+
+			c = 0;
+			tinymce.each({a : 1, b : 2, c : 3}, function(v, i) {
+				c += v;
+			});
+			t.eq(c, 6);
+
+			c = '';
+			tinymce.each({a : 1, b : 2, c : 3}, function(v, k) {
+				c += k;
+			});
+			t.eq(c, 'abc');
+
+			c = 0;
+			tinymce.each(null, function(v) {
+				c += v;
+			});
+			t.eq(c, 0);
+
+			c = 0;
+			tinymce.each(1, function(v) {
+				c += v;
+			});
+			t.eq(c, 0);
+		},
+
+		map : function() {
+			var t = this, c;
+
+			c = tinymce.map([1,2,3], function(v) {
+				return v + 1;
+			});
+			t.eq(c.join(','), '2,3,4');
+		},
+
+		grep : function() {
+			var t = this, c;
+
+			c = tinymce.grep([1,2,3,4], function(v) {
+				return v > 2;
+			});
+			t.eq(c.join(','), '3,4');
+
+			c = [1,2,3,4];
+			c.test = 1
+			c = tinymce.grep(c);
+			t.is(!c.test);
+			t.eq(c.join(','), '1,2,3,4');
+		},
+
+		indexOf : function() {
+			var t = this;
+
+			t.eq(tinymce.indexOf([1,2,3], 2), 1);
+			t.eq(tinymce.indexOf([1,2,3], 7), -1);
+			t.eq(tinymce.indexOf(null, 7), -1);
+		},
+
+		extend : function() {
+			var t = this, o;
+
+			o = tinymce.extend({
+				a : 1,
+				b : 2,
+				c : 3
+			}, {
+				a : 2,
+				d : 4
+			});
+
+			t.eq(o.a, 2);
+			t.eq(o.b, 2);
+			t.eq(o.d, 4);
+		},
+
+		trim : function() {
+			var t = this;
+
+			t.eq(tinymce.trim('a'), 'a');
+			t.eq(tinymce.trim(' \r  a'), 'a');
+			t.eq(tinymce.trim('a  \n  '), 'a');
+			t.eq(tinymce.trim('   a  \t  '), 'a');
+			t.eq(tinymce.trim(null), '');
+		},
+
+		create : function() {
+			var t = this, o;
+
+			tinymce.create('tinymce.Test1', {
+				Test1 : function(c) {
+					this.c = c;
+					this.c++;
+				},
+
+				method1 : function() {
+					this.c++;
+				},
+
+				method2 : function() {
+					this.c++;
+				}
+			});
+
+			tinymce.create('tinymce.Test2:tinymce.Test1', {
+				Test2 : function(c) {
+					this.parent(c);
+					this.c += 2;
+				},
+
+				method1 : function() {
+					this.c+=2;
+				},
+
+				method2 : function() {
+					this.parent();
+					this.c+=2;
+				}
+			});
+
+			tinymce.create('tinymce.Test3:tinymce.Test2', {
+				Test3 : function(c) {
+					this.parent(c);
+					this.c += 4;
+				},
+
+				method1 : function() {
+					this.c+=2;
+				},
+
+				method2 : function() {
+					this.parent();
+					this.c+=3;
+				}
+			});
+
+			tinymce.create('tinymce.Test4:tinymce.Test3', {
+				method2 : function() {
+					this.parent();
+					this.c+=3;
+				},
+
+				'static' : {
+					method3 : function() {
+						return 3;
+					}
+				}
+			});
+
+			tinymce.create('static tinymce.Test5', {
+				method1 : function() {
+					return 3;
+				}
+			});
+
+			o = new tinymce.Test1(3);
+			t.eq(o.c, 4);
+			o.method1();
+			t.eq(o.c, 5);
+
+			o = new tinymce.Test2(3);
+			t.eq(o.c, 6);
+			o.method1();
+			t.eq(o.c, 8);
+			o.method2();
+			t.eq(o.c, 11);
+	
+			o = new tinymce.Test3(3);
+			t.eq(o.c, 10);
+			o.method1();
+			t.eq(o.c, 12);
+			o.method2();
+			t.eq(o.c, 18);
+
+			o = new tinymce.Test4(3);
+			t.eq(o.c, 10);
+			o.method1();
+			t.eq(o.c, 12);
+			o.method2();
+			t.eq(o.c, 21);
+			t.eq(tinymce.Test4.method3(), 3);
+
+			t.eq(tinymce.Test5.method1(), 3);
+		},
+
+		walk : function() {
+			var t = this, c;
+
+			c = 0;
+			tinymce.walk({
+				a : {
+					a1 : 1,
+					a2 : 2,
+					a3 : 3
+				},
+
+				b : {
+					b1 : 4,
+					b2 : {
+						b21 : 5,
+						b22 : 6,
+						b23 : 7
+					},
+					b3 : 8
+				}
+			}, function(v) {
+				if (tinymce.is(v, 'number'))
+					c += v;
+			});
+			t.eq(c, 36);
+
+			c = 0;
+			tinymce.walk({
+				items : [
+					1,
+					{items : [2, {a1 : 3, items : [4, 5], b1 : 6}, 7]},
+					8
+				]
+			}, function(v) {
+				if (tinymce.is(v, 'number'))
+					c += v;
+			}, 'items');
+			t.eq(c, 27);
+
+			c = 0;
+			tinymce.walk(null);
+			t.eq(c, 0);
+		},
+
+		createNS : function() {
+			var t = this;
+
+			tinymce.createNS('a.b.c.d.e');
+			a.b.c.d.e.x = 1;
+			tinymce.createNS('a.b.c.d.e.f');
+			a.b.c.d.e.f = 2;
+			t.eq(a.b.c.d.e.x, 1);
+			t.eq(a.b.c.d.e.f, 2);
+		},
+
+		get : function() {
+			var t = this;
+
+			tinymce.createNS('a.b.c.d.e');
+			a.b.c.d.e.x = 1;
+			t.eq(tinymce.get('a.b.c.d.e.x'), 1);
+			t.is(!tinymce.get('a.b.c.d.e.y'));
+		}
+	});
+})();
+
+(function() {
 	var URI = tinymce.util.URI;
 
 	unitTester.add('url', {
@@ -84,6 +364,12 @@
 				'background: transparent url(&amp;&lt;&gt;&quot;test.gif&amp;&lt;&gt;&quot;);'
 			);
 
+			dom.setHTML('test', '<span id="test2" style="border: 1px solid #00ff00;"></span>');
+			t.eq(dom.getAttrib('test2', 'style'), 'border: 1px solid #00ff00;');
+
+			dom.setHTML('test', '<span id="test2" style="background-image: url(test.gif);"></span>');
+			t.eq(dom.getAttrib('test2', 'style'), 'background-image: url(&<>"test.gif&<>");');
+
 			dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
 			t.eq(dom.getAttrib('test2', 'style'), tinymce.isIE ? 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
@@ -106,6 +392,20 @@
 
 			DOM.addClass('test', 'xyz', true);
 			t.eq(DOM.get('test').className, 'xyz abc 123');
+
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.addClass(DOM.select('span', 'test'), 'abc');
+			t.eq(DOM.get('test2').className, 'abc');
+			t.eq(DOM.get('test3').className, 'abc');
+			t.eq(DOM.get('test4').className, 'abc');
+			DOM.get('test').innerHTML = '';
+
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.addClass(['test2', 'test3', 'test4'], 'abc');
+			t.eq(DOM.get('test2').className, 'abc');
+			t.eq(DOM.get('test3').className, 'abc');
+			t.eq(DOM.get('test4').className, 'abc');
+			DOM.get('test').innerHTML = '';
 		},
 
 		removeClass : function() {
@@ -114,20 +414,13 @@
 			DOM.get('test').className = 'abc 123 xyz';
 			DOM.removeClass('test', '123');
 			t.eq(DOM.get('test').className, 'abc xyz');
-		},
 
-		replaceClass : function() {
-			var t = this;
-
-			DOM.get('test').className = 'abc 123 xyz';
-			DOM.replaceClass('test', '123', 'aaa');
-			t.eq(DOM.get('test').className, 'abc aaa xyz');
-
-			DOM.replaceClass('test', 'abc', 'aaa');
-			t.eq(DOM.get('test').className, 'aaa aaa xyz');
-
-			DOM.replaceClass('test', 'xyz', 'aaa');
-			t.eq(DOM.get('test').className, 'aaa aaa aaa');
+			DOM.get('test').innerHTML = '<span id="test2" class="test1"></span><span id="test3" class="test test1 test"></span><span id="test4" class="test1 test"></span>';
+			DOM.removeClass(DOM.select('span', 'test'), 'test1');
+			t.eq(DOM.get('test2').className, '');
+			t.eq(DOM.get('test3').className, 'test test');
+			t.eq(DOM.get('test4').className, 'test');
+			DOM.get('test').innerHTML = '';
 		},
 
 		hasClass : function() {
@@ -138,6 +431,15 @@
 			t.is(DOM.hasClass('test', '123'));
 			t.is(DOM.hasClass('test', 'xyz'));
 			t.is(!DOM.hasClass('test', 'aaa'));
+
+			DOM.get('test').className = 'abc';
+			t.is(DOM.hasClass('test', 'abc'));
+	
+			DOM.get('test').className = 'aaa abc';
+			t.is(DOM.hasClass('test', 'abc'));
+
+			DOM.get('test').className = 'abc aaa';
+			t.is(DOM.hasClass('test', 'abc'));
 		},
 
 		add : function() {
@@ -158,6 +460,10 @@
 			e = DOM.get('test').getElementsByTagName('span')[0];
 			t.eq(e.nodeName, 'SPAN');
 			DOM.remove(e);
+
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.add(['test2', 'test3', 'test4'], 'span', {'class' : 'abc 123'});
+			t.eq(DOM.select('span', 'test').length, 6);
 		},
 
 		create : function() {
@@ -199,6 +505,19 @@
 			t.eq(DOM.get('test').style.display, 'none');
 			t.is(DOM.isHidden('test'));
 
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.hide(['test2', 'test3', 'test4'], 'test');
+			t.eq(DOM.get('test2').style.display, 'none');
+			t.eq(DOM.get('test3').style.display, 'none');
+			t.eq(DOM.get('test4').style.display, 'none');
+
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.show(['test2', 'test3', 'test4'], 'test');
+			t.eq(DOM.get('test2').style.display, 'block');
+			t.eq(DOM.get('test3').style.display, 'block');
+			t.eq(DOM.get('test4').style.display, 'block');
+
+			// Cleanup
 			DOM.setAttrib('test', 'style', '');
 		},
 
@@ -230,6 +549,12 @@
 			dom.setAttribs('test', {src : '123', href : 'abc'});
 			t.eq(DOM.getAttrib('test', 'src'), '&<>"123&<>"src');
 			t.eq(DOM.getAttrib('test', 'href'), '&<>"abc&<>"href');
+
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.setAttribs(['test2', 'test3', 'test4'], {test1 : "1", test2 : "2"});
+			t.eq(DOM.getAttrib('test2', 'test1'), '1');
+			t.eq(DOM.getAttrib('test3', 'test2'), '2');
+			t.eq(DOM.getAttrib('test4', 'test1'), '1');
 		},
 
 		setGetStyles : function() {
@@ -244,6 +569,12 @@
 			DOM.setStyles('test', {fontSize : '22px', display : 'inline'});
 			t.eq(DOM.getStyle('test', 'fontSize'), '22px', null, tinymce.isWebKit);
 			t.eq(DOM.getStyle('test', 'display'), 'inline', null, tinymce.isWebKit);
+
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.setStyles(['test2', 'test3', 'test4'], {fontSize : "22px"});
+			t.eq(DOM.getStyle('test2', 'fontSize'), '22px');
+			t.eq(DOM.getStyle('test3', 'fontSize'), '22px');
+			t.eq(DOM.getStyle('test4', 'fontSize'), '22px');
 
 			DOM.setAttrib('test', 'style', '');
 		},
@@ -337,6 +668,10 @@
 			DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
 			DOM.remove('test2', 1);
 			t.eq(DOM.get('test').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
+
+			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
+			DOM.remove(['test2', 'test4']);
+			t.eq(DOM.select('span', 'test').length, 1);
 
 			DOM.setHTML('test', '');
 		},
@@ -547,11 +882,11 @@
 
 			ser.setRules('*[*]');
 			DOM.setHTML('test', '<span id="test2"><b>abc</b></span>123<a href="file.html">link</a>');
-			a = ser.onPreProcess.add(function(o) {
+			a = ser.onPreProcess.add(function(se, o) {
 				t.eq(o.test, 'abc');
 				DOM.setAttrib(o.node.getElementsByTagName('span')[0], 'class', 'abc');
 			});
-			b = ser.onPostProcess.add(function(o) {
+			b = ser.onPostProcess.add(function(se, o) {
 				t.eq(o.test, 'abc');
 				o.content = o.content.replace(/<b>/g, '<b class="123">');
 			});

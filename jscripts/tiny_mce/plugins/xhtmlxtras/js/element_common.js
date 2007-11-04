@@ -164,7 +164,7 @@ SXE.insertElement = function(element_name) {
 
 			tinyMCEPopup.execCommand('mceInsertContent', false, h);
 
-			var elementArray = tinymce.filter(SXE.inst.dom.select(element_name), function(n) {return n.id == '#sxe_temp_' + element_name + '#';});
+			var elementArray = tinymce.grep(SXE.inst.dom.select(element_name), function(n) {return n.id == '#sxe_temp_' + element_name + '#';});
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
 

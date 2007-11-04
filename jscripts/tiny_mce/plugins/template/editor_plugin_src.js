@@ -31,7 +31,7 @@
 			// Register buttons
 			ed.addButton('template', 'template.desc', 'mceTemplate');
 
-			ed.onPreProcess.add(function(o) {
+			ed.onPreProcess.add(function(ed, o) {
 				var dom = ed.dom;
 
 				each(dom.select('div', o.node), function(e) {
@@ -69,17 +69,21 @@
 
 			el = dom.create('div', null, h);
 
+			function hasClass(n, c) {
+				return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
+			};
+
 			each(dom.select('*', el), function(n) {
 				// Replace cdate
-				if (dom.hasClass(n, ed.getParam('template_cdate_classes', '').replace(/\s+/g, '|')))
+				if (hasClass(n, ed.getParam('template_cdate_classes', '').replace(/\s+/g, '|')))
 					n.innerHTML = t._getDateTime(new Date(), tinyMCE.getParam("template_cdate_format", ed.getLang("template.cdate_format")));
 
 				// Replace mdate
-				if (dom.hasClass(n, ed.getParam('template_mdate_classes', '').replace(/\s+/g, '|')))
+				if (hasClass(n, ed.getParam('template_mdate_classes', '').replace(/\s+/g, '|')))
 					n.innerHTML = t._getDateTime(new Date(), tinyMCE.getParam("template_mdate_format", ed.getLang("template.mdate_format")));
 
 				// Replace selection
-				if (dom.hasClass(n, ed.getParam('template_selected_content_classes', '').replace(/\s+/g, '|')))
+				if (hasClass(n, ed.getParam('template_selected_content_classes', '').replace(/\s+/g, '|')))
 					n.innerHTML = sel;
 			});
 

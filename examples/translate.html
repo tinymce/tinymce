@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Full featured example</title>
+<style>
+body {font-family:Arial,Verdana; font-size: 12px;}
+</style>
+
+<!-- TinyMCE -->
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript">
+	tinyMCE.init({
+		// General options
+		mode : "textareas",
+		theme : "advanced",
+		plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+
+		// Theme options
+		theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+		theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_path_location : "bottom",
+		theme_advanced_resizing : true,
+
+		// Example content CSS (should be your site CSS)
+		content_css : "css/content.css",
+
+		// Drop lists for link/image/media/template dialogs
+		template_external_list_url : "lists/template_list.js",
+		external_link_list_url : "lists/link_list.js",
+		external_image_list_url : "lists/image_list.js",
+		media_external_list_url : "lists/media_list.js",
+
+		// Replace values for the template plugin
+		template_replace_values : {
+			username : "Some User",
+			staffid : "991234"
+		},
+
+		// Enable translation mode
+		translate_mode : true,
+		language : "en"
+	});
+</script>
+<!-- /TinyMCE -->
+
+</head>
+<body>
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+	<h3>Translation</h3>
+
+	<p>This page enables you to translate TinyMCE by using XML files.</p>
+	<p>Steps to translate:</p>
+	<ol>
+		<li>Download one of the language XML files from the TinyMCE site.</li>
+		<li>Place it in /jscripts/tiny_mce/langs directory, for example /jscripts/tiny_mce/langs/sv.xml.</li>
+		<li>Change the language init option in this file to match the XML file code. For example: sv</li>
+		<li>TinyMCE will now use the XML file instead of the .js versions.</li>
+		<li>Modify the XML file until everything is translated</li>
+		<li>Modify the author information, this is optional.</li>
+		<li>Upload the XML file to the TinyMCE site to share it with others.</li>
+		<li>You can now download the .js versions of the language pack from the TinyMCE site.</li>
+	</ol>
+
+	<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+		&lt;p&gt;
+		&lt;img src="media/logo.jpg" alt=" " hspace="5" vspace="5" width="250" height="48" align="right" /&gt;	TinyMCE is a platform independent web based Javascript HTML &lt;strong&gt;WYSIWYG&lt;/strong&gt; editor control released as Open Source under LGPL by Moxiecode Systems AB. It has the ability to convert HTML TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate into other Content Management Systems.
+		&lt;/p&gt;
+		&lt;p&gt;
+		We recommend &lt;a href="http://www.getfirefox.com" target="_blank"&gt;Firefox&lt;/a&gt; and &lt;a href="http://www.google.com" target="_blank"&gt;Google&lt;/a&gt; &lt;br /&gt;
+		&lt;/p&gt;
+	</textarea>
+</form>
+
+</body>
+</html>

@@ -53,7 +53,7 @@
 
 			m.onHideMenu.add(t.hideMenu, t);
 
-			t.onRenderMenu.dispatch(m);
+			t.onRenderMenu.dispatch(t, m);
 			t.menu = m;
 		},
 

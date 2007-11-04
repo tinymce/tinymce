@@ -56,8 +56,8 @@
 
 		// Private methods
 
-		_nodeChange : function(cm, n) {
-			var dom = this.editor.dom, dir;
+		_nodeChange : function(ed, cm, n) {
+			var dom = ed.dom, dir;
 
 			n = dom.getParent(n, dom.isBlock);
 			if (!n) {

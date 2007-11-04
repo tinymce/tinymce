@@ -31,7 +31,7 @@
 
 	// Firebug
 //	document.documentElement.setAttribute("debug", "true");
-//	include('classes/firebug/firebug.js');
+//	include('firebug/firebug.js');
 
 	// Core ns
 	include('tinymce.js');

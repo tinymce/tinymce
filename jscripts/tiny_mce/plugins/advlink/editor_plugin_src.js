@@ -31,7 +31,7 @@
 			// Register buttons
 			ed.addButton('link', 'advlink.link_desc', 'mceAdvLink');
 			ed.addShortcut('ctrl+k', 'advlink.advlink_desc', 'mceAdvLink');
-			ed.onNodeChange.add(function(cm, n, co) {
+			ed.onNodeChange.add(function(ed, cm, n, co) {
 				cm.setDisabled('link', co && n.nodeName != 'A');
 				cm.setActive('link', co && n.nodeName != 'A');
 			});

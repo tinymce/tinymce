@@ -19,6 +19,10 @@
 			this.add(u, cb, s, 1);
 		},
 
+		markDone : function(u) {
+			this.lookup[u] = {state : 2, url : u};
+		},
+
 		add : function(u, cb, s, pr) {
 			var t = this, lo = t.lookup, o;
 

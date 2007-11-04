@@ -166,7 +166,7 @@
 				while ((n = w.nextNode()) != null)
 					f.call(s || this, n);
 			} else
-				tinymce.walk(n, 'childNodes', f, s);
+				tinymce.walk(n, f, 'childNodes', s);
 		},
 
 		// #if !jquery
@@ -187,7 +187,7 @@
 
 			// Simplest rule "tag"
 			if (/^([a-z0-9]+)$/.test(p))
-				return s.getElementsByTagName(p);
+				return tinymce.grep(s.getElementsByTagName(p));
 
 			// Parse pattern into rules
 			for (i=0, pl=p.split(','); i<pl.length; i++) {
@@ -284,52 +284,55 @@
 
 		// #endif
 
-		add : function(p, n, a, h) {
-			var t = this, e, k;
+		add : function(p, n, a, h, c) {
+			var t = this;
 
-			p = typeof(p) == 'string' ? t.get(p) : p;
-			e = is(n, 'string') ? t.doc.createElement(n) : n;
+			return this.run(p, function(p) {
+				var e, k;
 
-			if (a) {
-				for (k in a) {
-					if (a.hasOwnProperty(k) && !is(a[k], 'object'))
-						t.setAttrib(e, k, '' + a[k]);
+				e = is(n, 'string') ? t.doc.createElement(n) : n;
+
+				if (a) {
+					for (k in a) {
+						if (a.hasOwnProperty(k) && !is(a[k], 'object'))
+							t.setAttrib(e, k, '' + a[k]);
+					}
+
+					if (a.style && !is(a.style, 'string')) {
+						each(a.style, function(v, n) {
+							t.setStyle(e, n, v);
+						});
+					}
 				}
 
-				if (a.style && !is(a.style, 'string')) {
-					each(a.style, function(v, n) {
-						t.setStyle(e, n, v);
-					});
+				if (h) {
+					if (h.nodeType)
+						e.appendChild(h);
+					else
+						e.innerHTML = h;
 				}
-			}
 
-			if (h) {
-				if (h.nodeType)
-					e.appendChild(h);
-				else
-					e.innerHTML = h;
-			}
-
-			return p ? p.appendChild(e) : e;
+				return !c ? p.appendChild(e) : e;
+			});
 		},
 
 		addAll : function(te, ne) {
 			var i, n, t = this;
 
-			te = t.get(te);
+			return this.run(te, function(te) {
+				if (is(ne, 'string'))
+					te.appendChild(t.doc.createTextNode(ne));
+				else if (ne.length) {
+					te = te.appendChild(t.create(ne[0], ne[1]));
 
-			if (is(ne, 'string'))
-				te.appendChild(t.doc.createTextNode(ne));
-			else if (ne.length) {
-				te = te.appendChild(t.create(ne[0], ne[1]));
-
-				for (i=2; i<ne.length; i++)
-					t.addAll(te, ne[i]);
-			}
+					for (i=2; i<ne.length; i++)
+						t.addAll(te, ne[i]);
+				}
+			});
 		},
 
 		create : function(n, a, h) {
-			return this.add(0, n, a, h);
+			return this.add(this.doc.createElement(n), n, a, h, 1);
 		},
 
 		createHTML : function(n, a, h) {
@@ -349,25 +352,22 @@
 		},
 
 		remove : function(n, k) {
-			var p;
+			return this.run(n, function(n) {
+				var p;
 
-			n = this.get(n);
+				p = n.parentNode;
 
-			if (!n)
-				return null;
+				if (!p)
+					return null;
 
-			p = n.parentNode;
+				if (k) {
+					each (n.childNodes, function(c) {
+						p.insertBefore(c.cloneNode(true), n);
+					});
+				}
 
-			if (!p)
-				return null;
-
-			if (k) {
-				each (n.childNodes, function(c) {
-					p.insertBefore(c.cloneNode(true), n);
-				});
-			}
-
-			return p.removeChild(n);
+				return p.removeChild(n);
+			});
 		},
 
 		/**
@@ -378,21 +378,11 @@
 		 * @param {string} na Name of the style value to set.
 		 * @param {string} v Value to set on the style.
 		 */
-		setStyle : function(n, na, v){
-			var s, i;
+		setStyle : function(n, na, v) {
+			return this.run(n, function(e) {
+				var s, i;
 
-			if (!n)
-				return false;
-
-			n = typeof(n) == 'string' ? n.split(',') : [n];
-
-			for (i=0; i<n.length; i++) {
-				s = this.get(n[i]);
-
-				if (!s)
-					continue;
-
-				s = s.style;
+				s = e.style;
 
 				// Camelcase it, if needed
 				na = na.replace(/-(\D)/g, function(a, b){
@@ -423,7 +413,7 @@
 				}
 
 				s[na] = v;
-			}
+			});
 		},
 
 		/**
@@ -479,43 +469,40 @@
 		},
 
 		setAttrib : function(e, n, v) {
-			var t = this, s = t.settings;
+			var t = this;
 
-			e = t.get(e);
+			return this.run(e, function(e) {
+				var s = t.settings;
 
-			if (!e)
-				return 0;
+				switch (n) {
+					case "style":
+						if (s.keep_values)
+							e.setAttribute('mce_style', v, 2);
 
-			switch (n) {
-				case "style":
-					if (s.keep_values)
-						e.setAttribute('mce_style', v, 2);
+						e.style.cssText = v;
+						break;
 
-					e.style.cssText = v;
-					break;
+					case "class":
+						e.className = v;
+						break;
 
-				case "class":
-					e.className = v;
-					break;
+					case "src":
+					case "href":
+						if (s.keep_values) {
+							if (s.url_converter)
+								v = s.url_converter.call(s.url_converter_scope || t, v, n, e);
 
-				case "src":
-				case "href":
-					if (s.keep_values) {
-						if (s.url_converter)
-							v = s.url_converter.call(s.url_converter_scope || t, v, n, e);
+							t.setAttrib(e, 'mce_' + n, v, 2);
+						}
 
-						t.setAttrib(e, 'mce_' + n, v, 2);
-					}
+						break;
+				}
 
-					break;
-			}
-
-			if (v !== null && v.length !== 0)
-				e.setAttribute(n, '' + v, 2);
-			else
-				e.removeAttribute(n, 2);
-
-			return 1;
+				if (v !== null && v.length !== 0)
+					e.setAttribute(n, '' + v, 2);
+				else
+					e.removeAttribute(n, 2);
+			});
 		},
 
 		setAttribs : function(e, o) {
@@ -636,6 +623,7 @@
 				e = t.boxModel ? d.documentElement : d.body;
 				x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
 				x = (x == 'medium' || t.boxModel && !t.isIE6) && 2 || x;
+				n.top += window.self != window.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
 
 				return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
 			}
@@ -753,41 +741,38 @@
 		},
 
 		addClass : function(e, c, b) {
-			var o;
+			return this.run(e, function(e) {
+				var o;
 
-			e = this.get(e);
+				if (!c)
+					return 0;
 
-			if (!e || !c)
-				return 0;
+				if (this.hasClass(e, c))
+					return e.className;
 
-			o = this.removeClass(e, c);
+				o = this.removeClass(e, c);
 
-			return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
+				return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
+			});
 		},
 
 		removeClass : function(e, c) {
-			e = this.get(e);
+			var t = this, re;
 
-			if (!e)
-				return 0;
+			return t.run(e, function(e) {
+				var v;
 
-			c = e.className.replace(new RegExp("(^|\\s+)" + c + "(\\s+|$)", "g"), ' ');
+				if (t.hasClass(e, c)) {
+					if (!re)
+						re = new RegExp("(^|\\s+)" + c + "(\\s+|$)", "g");
 
-			return e.className = c != ' ' ? c : '';
-		},
+					v = e.className.replace(re, ' ');
 
-		/**
-		 * Replaces the specified class with a new one.
-		 *
-		 * @param {Element} e HTML element to replace CSS class in.
-		 * @param {string] o CSS class to remove from HTML element.
-		 * @param {string] n New CSS class to add to HTML element.
-		 */
-		replaceClass : function(e, o, n) {
-			e = this.get(e);
+					return e.className = tinymce.trim(v != ' ' ? v : '');
+				}
 
-			if (e)
-				e.className = (e.className + '').replace(new RegExp('\\b' + o + '\\b', 'g'), n);
+				return e.className;
+			});
 		},
 
 		// #if !jquery
@@ -805,7 +790,7 @@
 			if (!n || !c)
 				return false;
 
-			return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
+			return (' ' + n.className + ' ').indexOf(' ' + c + ' ') !== -1;
 		},
 
 		// #endif
@@ -827,7 +812,7 @@
 		 * @param {string} e ID of DOM element to show.
 		 */
 		show : function(e) {
-			this.setStyle(e, 'display', 'block');
+			return this.setStyle(e, 'display', 'block');
 		},
 
 		/**
@@ -836,7 +821,7 @@
 		 * @param {string} id ID of DOM element to hide.
 		 */
 		hide : function(e) {
-			this.setStyle(e, 'display', 'none');
+			return this.setStyle(e, 'display', 'none');
 		},
 
 		/**
@@ -854,17 +839,18 @@
 		setHTML : function(e, h) {
 			var t = this;
 
-			e = t.get(e);
-			h = t.processHTML(h);
+			return this.run(e, function(e) {
+				h = t.processHTML(h);
 
-			if (isIE) {
-				// Fix for IE bug, first node comments gets stripped
-				e.innerHTML = '<br />' + h;
-				e.removeChild(e.firstChild);
-			} else
-				e.innerHTML = h;
+				if (isIE) {
+					// Fix for IE bug, first node comments gets stripped
+					e.innerHTML = '<br />' + h;
+					e.removeChild(e.firstChild);
+				} else
+					e.innerHTML = h;
 
-			return h;
+				return h;
+			});
 		},
 
 		/**
@@ -945,25 +931,29 @@
 		},
 
 		setOuterHTML : function(e, h, d) {
-			var n, t = this, tp;
+			var t = this;
 
-			e = t.get(e);
-			d = d || e.ownerDocument || t.doc;
+			return this.run(e, function(e) {
+				var n, tp;
 
-			if (isIE && e.nodeType == 1)
-				e.outerHTML = h;
-			else {
-				tp = d.createElement("body");
-				tp.innerHTML = h;
+				e = t.get(e);
+				d = d || e.ownerDocument || t.doc;
 
-				n = tp.firstChild;
-				while (n) {
-					t.insertAfter(n.cloneNode(true), e);
-					n = n.nextSibling;
+				if (isIE && e.nodeType == 1)
+					e.outerHTML = h;
+				else {
+					tp = d.createElement("body");
+					tp.innerHTML = h;
+
+					n = tp.firstChild;
+					while (n) {
+						t.insertAfter(n.cloneNode(true), e);
+						n = n.nextSibling;
+					}
+
+					t.remove(e);
 				}
-
-				t.remove(e);
-			}
+			});
 		},
 
 		decode : function(s) {
@@ -995,20 +985,23 @@
 		},
 
 		insertAfter : function(n, r) {
-			var p, t = this, ns;
+			var t = this;
 
-			n = t.get(n);
 			r = t.get(r);
 
-			p = r.parentNode;
-			ns = r.nextSibling;
+			return this.run(n, function(n) {
+				var p, ns;
 
-			if (ns)
-				p.insertBefore(n, ns);
-			else
-				p.appendChild(n);
+				p = r.parentNode;
+				ns = r.nextSibling;
 
-			return n;
+				if (ns)
+					p.insertBefore(n, ns);
+				else
+					p.appendChild(n);
+
+				return n;
+			});
 		},
 
 		isBlock : function(n) {
@@ -1021,16 +1014,17 @@
 		},
 
 		replace : function(n, o, k) {
-			n = this.get(n);
 			o = this.get(o);
 
-			if (k) {
-				each (o.childNodes, function(c) {
-					n.appendChild(c.cloneNode(true));
-				});
-			}
+			return this.run(n, function(n) {
+				if (k) {
+					each (o.childNodes, function(c) {
+						n.appendChild(c.cloneNode(true));
+					});
+				}
 
-			return o.parentNode.replaceChild(n, o);
+				return o.parentNode.replaceChild(n, o);
+			});
 		},
 
 		toHex : function(s, k) {
@@ -1049,6 +1043,87 @@
 			}
 
 			return s;
+		},
+
+		getClasses : function() {
+			var t = this, cl = [], i, lo = {};
+
+			if (t.classes)
+				return t.classes;
+
+			function addClasses(s) {
+				// IE style imports
+				each(s.imports, function(r) {
+					addClasses(r);
+				});
+
+				each(s.cssRules || s.rules, function(r) {
+					// Real type or fake it on IE
+					switch (r.type || 1) {
+						// Rule
+						case 1:
+							if (r.selectorText) {
+								each(r.selectorText.split(','), function(v) {
+									v = v.replace(/^\s*|\s*$|^\s\./g, "");
+
+									if (/^\.mce/.test(v) || !/^\.[\w\-]+$/.test(v))
+										return;
+
+									v = v.substring(1);
+									if (!lo[v]) {
+										cl.push({'class' : v});
+										lo[v] = 1;
+									}
+								});
+							}
+							break;
+
+						// Import
+						case 3:
+							addClasses(r.styleSheet);
+							break;
+					}
+				});
+			};
+
+			try {
+				each(t.doc.styleSheets, addClasses);
+			} catch (ex) {
+				// Ignore
+			}
+
+			if (cl.length > 0)
+				t.classes = cl;
+
+			return cl;
+		},
+
+		run : function(e, f, s) {
+			var t = this, o;
+
+			if (typeof(e) === 'string')
+				e = t.doc.getElementById(e);
+
+			if (!e)
+				return false;
+
+			s = s || this;
+			if (e.length || e.length === 0) {
+				o = [];
+
+				each(e, function(e, i) {
+					if (e) {
+						if (typeof(e) == 'string')
+							e = t.doc.getElementById(e);
+
+						o.push(f.call(s, e, i));
+					}
+				});
+
+				return o;
+			}
+
+			return f.call(s, e);
 		}
 
 		/*

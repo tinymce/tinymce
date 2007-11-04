@@ -33,12 +33,12 @@
 			ed.onPreInit.add(t.setup, t);
 
 			if (!isIE) {
-				ed.onSetContent.add(function(o) {
+				ed.onSetContent.add(function(ed, o) {
 					o.content = o.content.replace(/<p>[\s\u00a0]+<\/p>/g, '<p><br /></p>');
 				});
 			}
 
-			ed.onPostProcess.add(function(o) {
+			ed.onPostProcess.add(function(ed, o) {
 				o.content = o.content.replace(/<p><\/p>/g, '<p>\u00a0</p>');
 
 				// Use BR instead of &nbsp; padded paragraphs
@@ -63,7 +63,7 @@
 			}
 
 			if (s.force_br_newlines) {
-				ed.onKeyPress.add(function(e) {
+				ed.onKeyPress.add(function(ed, e) {
 					var n, s = ed.selection;
 
 					if (e.keyCode == 13) {
@@ -80,7 +80,7 @@
 			}
 
 			if (!isIE && s.force_p_newlines) {
-				ed.onPreProcess.add(function(o) {
+				ed.onPreProcess.add(function(ed, o) {
 					each(o.node.getElementsByTagName('br'), function(n) {
 						var p = n.parentNode;
 
@@ -90,7 +90,7 @@
 					});
 				});
 
-				ed.onKeyPress.add(function(e) {
+				ed.onKeyPress.add(function(ed, e) {
 					if (e.keyCode == 13 && !e.shiftKey) {
 						if (!t.insertPara(e))
 							Event.cancel(e);
@@ -98,7 +98,7 @@
 				});
 
 				if (isGecko) {
-					ed.onKeyDown.add(function(e) {
+					ed.onKeyDown.add(function(ed, e) {
 						if ((e.keyCode == 8 || e.keyCode == 46) && !e.shiftKey)
 							t.backspaceDelete(e, e.keyCode == 8);
 					});

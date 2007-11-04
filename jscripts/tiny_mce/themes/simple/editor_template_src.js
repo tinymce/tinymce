@@ -22,7 +22,7 @@
 			t.editor = ed;
 
 			ed.onInit.add(function() {
-				ed.onNodeChange.add(function(cm) {
+				ed.onNodeChange.add(function(ed, cm) {
 					tinymce.each(states, function(c) {
 						cm.get(c.toLowerCase()).setActive(ed.queryCommandState(c));
 					});

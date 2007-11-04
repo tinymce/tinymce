@@ -61,7 +61,7 @@
 
 			if (!tinymce.isIE && ed.getParam("paste_auto_cleanup_on_paste", false)) {
 				// Force paste dialog if non IE browser
-				ed.onKeyDown.add(function(e) {
+				ed.onKeyDown.add(function(ed, e) {
 					if (e.ctrlKey && e.keyCode == 86) {
 						window.setTimeout(function() {
 							ed.execCommand("mcePasteText", true);

@@ -62,7 +62,7 @@
 
 			this.features = s;
 			this.params = p;
-			this.onOpen.dispatch(s, p);
+			this.onOpen.dispatch(this, s, p);
 
 			try {
 				if (isIE && mo) {
@@ -80,7 +80,7 @@
 
 		close : function(w) {
 			w.close();
-			this.onClose.dispatch();
+			this.onClose.dispatch(this);
 		},
 
 		setTitle : function(v) {

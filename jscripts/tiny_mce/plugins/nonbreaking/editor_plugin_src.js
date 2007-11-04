@@ -21,7 +21,7 @@
 			ed.addButton('nonbreaking', 'nonbreaking.nonbreaking_desc', 'mceNonBreaking');
 
 			if (ed.getParam('nonbreaking_force_tab')) {
-				ed.onKeyDown.add(function(e) {
+				ed.onKeyDown.add(function(ed, e) {
 					if (tinymce.isIE && e.keyCode == 9) {
 						ed.execCommand('mceNonBreaking');
 						ed.execCommand('mceNonBreaking');

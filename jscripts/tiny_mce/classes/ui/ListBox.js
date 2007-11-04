@@ -54,7 +54,7 @@
 			});
 
 			t.items.push(o);
-			t.onAdd.dispatch(o);
+			t.onAdd.dispatch(t, o);
 		},
 
 		getLength : function() {
@@ -146,7 +146,7 @@
 				m.add(o);
 			});
 
-			t.onRenderMenu.dispatch(m);
+			t.onRenderMenu.dispatch(t, m);
 			t.menu = m;
 		},
 
@@ -168,7 +168,7 @@
 				});
 			}
 
-			t.onPostRender.dispatch(DOM.get(t.id));
+			t.onPostRender.dispatch(t, DOM.get(t.id));
 		},
 
 		execCallback : function() {

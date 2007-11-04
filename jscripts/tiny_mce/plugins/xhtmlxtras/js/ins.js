@@ -27,7 +27,7 @@ function insertIns() {
 		var s = SXE.inst.selection.getContent();
 		if(s.length > 0) {
 			tinyMCEPopup.execCommand('mceInsertContent', false, '<ins id="#sxe_temp_ins#">' + s + '</ins>');
-			var elementArray = tinymce.filter(SXE.inst.dom.select('ins'), function(n) {return n.id == '#sxe_temp_ins#';});
+			var elementArray = tinymce.grep(SXE.inst.dom.select('ins'), function(n) {return n.id == '#sxe_temp_ins#';});
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
 				setElementAttribs(elm);

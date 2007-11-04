@@ -145,7 +145,7 @@
 			};
 
 			if (!e) {
-				ed.getDoc().execCommand('CreateLink', false, 'javascript:mctmp(0);');
+				ed.execCommand('CreateLink', false, 'javascript:mctmp(0);');
 				each(ed.dom.select('a'), function(e) {
 					if (e.href == 'javascript:mctmp(0);')
 						set(e);
@@ -447,7 +447,7 @@
 			else {
 				// Generate wrappers and set styles on them
 				d.execCommand('FontName', false, '__');
-				each(tinymce.filter(isWebKit ? dom.select('span') : dom.select('font')), function(n) {
+				each(isWebKit ? dom.select('span') : dom.select('font'), function(n) {
 					var sp, e;
 
 					if (dom.getAttrib(n, 'face') == '__' || n.style.fontFamily === '__') {
@@ -465,7 +465,7 @@
 			}
 
 			// Remove wrappers inside new ones
-			each(tinymce.filter(dom.select(nn)).reverse(), function(n) {
+			each(dom.select(nn).reverse(), function(n) {
 				var p = n.parentNode;
 
 				dom.setAttrib(n, 'mce_new', '');
@@ -483,7 +483,7 @@
 			});
 
 			// Merge wrappers with parent wrappers
-			each(tinymce.filter(dom.select(nn)).reverse(), function(n) {
+			each(dom.select(nn).reverse(), function(n) {
 				var p = n.parentNode;
 
 				if (!p)
@@ -501,7 +501,7 @@
 			});
 
 			// Remove empty wrappers
-			each(tinymce.filter(dom.select(nn)).reverse(), function(n) {
+			each(dom.select(nn).reverse(), function(n) {
 				if (!dom.getAttrib(n, 'class') && !dom.getAttrib(n, 'style'))
 					return dom.remove(n, 1);
 			});
@@ -529,14 +529,27 @@
 		},
 
 		HiliteColor : function(ui, val) {
-			var t = this, ed = t.editor;
+			var t = this, ed = t.editor, d = ed.getDoc();
+
+			function set(s) {
+				if (!isGecko)
+					return;
+
+				try {
+					// Try new Gecko method
+					d.execCommand("styleWithCSS", 0, s);
+				} catch (ex) {
+					// Use old
+					d.execCommand("useCSS", 0, !s);
+				}
+			};
 
 			if (isGecko || isOpera) {
-				ed.setUseCSS(true);
-				ed.getDoc().execCommand('hilitecolor', false, val);
-				ed.setUseCSS(false);
+				set(true);
+				d.execCommand('hilitecolor', false, val);
+				set(false);
 			} else
-				ed.getDoc().execCommand('BackColor', false, val);
+				d.execCommand('BackColor', false, val);
 		},
 
 		Undo : function() {

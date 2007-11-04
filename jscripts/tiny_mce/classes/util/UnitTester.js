@@ -246,7 +246,7 @@
 			var i = 1, a = arguments;
 
 			return s.replace(/%([ds])/g, function(m, t) {
-				return a[i++];
+				return '' + a[i++];
 			});
 		},
 
@@ -263,7 +263,7 @@
 			this.stats.asserts++;
 
 			if (v1 !== v2)
-				this.fail(this.format(m || '[%d] Assert failed, values are not equal: was "%s", expected "%s"', this.assertCount, v1, v2), sk);
+				this.fail(this.format(m || '[%d] Assert failed, values are not equal: was "%s", expected "%s"', this.assertCount, '' + v1, '' + v2), sk);
 
 			this.assertCount++;
 		},

@@ -42,7 +42,7 @@
 				ed.dom.loadCSS(url + "/css/content.css");
 
 				if (ed.theme.onResolveName) {
-					ed.theme.onResolveName.add(function(o) {
+					ed.theme.onResolveName.add(function(th, o) {
 						if (o.name == 'img') {
 							each(lo, function(v, k) {
 								if (ed.dom.hasClass(o.node, k)) {
@@ -56,7 +56,7 @@
 				}
 
 				if (ed && ed.plugins.contextmenu) {
-					ed.plugins.contextmenu.onContextMenu.add(function(m, e) {
+					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
 						if (e.nodeName == 'IMG' && /mceItem(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)/.test(e.className)) {
 							m.add({title : 'media.edit', icon : 'media', command : 'mceMedia'});
 						}
@@ -64,7 +64,7 @@
 				}
 			});
 
-			ed.onBeforeSetContent.add(function(o) {
+			ed.onBeforeSetContent.add(function(ed, o) {
 				var h = o.content;
 
 				h = h.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, '<img class="mceItem$1" title="$2" src="' + url + '/img/trans.gif" />');
@@ -81,7 +81,7 @@
 				t._divsToImgs(ed.getBody());
 			});
 
-			ed.onPreProcess.add(function(o) {
+			ed.onPreProcess.add(function(ed, o) {
 				var dom = ed.dom;
 
 				if (o.set) {
@@ -159,7 +159,7 @@
 					return n ? n[1] : '';
 				};
 
-				ed.onPostProcess.add(function(o) {
+				ed.onPostProcess.add(function(ed, o) {
 					o.content = o.content.replace(/<img[^>]+>/g, function(im) {
 						var cl = getAttr(im, 'class'), at;
 
@@ -218,7 +218,7 @@
 		_divsToImgs : function(p) {
 			var t = this, dom = t.editor.dom, im, ci;
 
-			each(tinymce.filter(dom.select('div', p)), function(n) {
+			each(dom.select('div', p), function(n) {
 				// Convert object into image
 				if (dom.getAttrib(n, 'class') == 'mceItemObject') {
 					ci = dom.getAttrib(n, "classid").toLowerCase().replace(/\s+/g, '');

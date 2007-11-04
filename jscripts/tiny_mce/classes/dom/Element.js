@@ -34,7 +34,6 @@
 				'getAttrib',
 				'addClass',
 				'removeClass',
-				'replaceClass',
 				'hasClass',
 				'getOuterHTML',
 				'setOuterHTML',

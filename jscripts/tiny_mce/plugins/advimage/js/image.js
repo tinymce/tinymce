@@ -211,7 +211,7 @@ var ImageDialog = {
 				cl.push({'title' : p[0], 'class' : p[1]});
 			});
 		} else
-			cl = tinyMCEPopup.editor.getClasses();
+			cl = tinyMCEPopup.editor.dom.getClasses();
 
 		if (cl.length > 0) {
 			lst.options[lst.options.length] = new Option(tinyMCEPopup.getLang('not_set'), '');

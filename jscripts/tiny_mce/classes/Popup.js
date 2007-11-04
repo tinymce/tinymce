@@ -39,7 +39,7 @@ tinyMCEPopup = {
 
 		t.isWindow = !t.getWindowArg('mce_inline');
 		t.id = t.getWindowArg('mce_window_id');
-		t.editor.windowManager.onOpen.dispatch(window);
+		t.editor.windowManager.onOpen.dispatch(t.editor.windowManager, window);
 	},
 
 	onDOMLoaded : function() {

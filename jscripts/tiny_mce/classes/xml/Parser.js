@@ -43,15 +43,19 @@
 
 			// W3C using XMLHttpRequest
 			if (window.XMLHttpRequest) {
-				doc = new window.XMLHttpRequest();
-				doc.open('GET', u, this.settings.async);
-				doc.async = this.settings.async;
+				try {
+					doc = new window.XMLHttpRequest();
+					doc.open('GET', u, this.settings.async);
+					doc.async = this.settings.async;
 
-				doc.onload = function() {
-					cb.call(s, doc.responseXML);
-				};
+					doc.onload = function() {
+						cb.call(s, doc.responseXML);
+					};
 
-				doc.send('');
+					doc.send('');
+				} catch (ex) {
+					cb.call(s, null, ex);
+				}
 			}
 		},
 

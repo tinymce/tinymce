@@ -60,18 +60,9 @@
 			}, s);
 
 			t.dom = s.dom;
-			t.setRules(s.valid_elements);
-			t.addRules(s.extended_valid_elements);
-			t.addValidChildRules(s.valid_child_elements);
-
-			if (s.invalid_elements)
-				t.invalidElementsRE = new RegExp('^(' + t.wildcardToRE(s.invalid_elements.replace(',', '|').toUpperCase()) + ')$');
-
-			if (s.attrib_value_filter)
-				t.attribValueFilter = s.attribValueFilter;
 
 			if (s.fix_list_elements) {
-				t.onPreProcess.add(function(o) {
+				t.onPreProcess.add(function(se, o) {
 					var nl, x, a = ['ol', 'ul'], i, n, p, r = /^(OL|UL)$/, np;
 
 					function prevNode(e, n) {
@@ -111,7 +102,7 @@
 			}
 
 			if (s.fix_table_elements) {
-				t.onPreProcess.add(function(o) {
+				t.onPreProcess.add(function(se, o) {
 					var ta = [], d = t.dom.doc;
 
 					// Build list of HTML chunks and replace tables with comment placeholders
@@ -147,6 +138,25 @@
 			}
 		},
 
+		_setup : function() {
+			var t = this, s = this.settings;
+
+			if (t.done)
+				return;
+
+			t.done = 1;
+
+			t.setRules(s.valid_elements);
+			t.addRules(s.extended_valid_elements);
+			t.addValidChildRules(s.valid_child_elements);
+
+			if (s.invalid_elements)
+				t.invalidElementsRE = new RegExp('^(' + t.wildcardToRE(s.invalid_elements.replace(',', '|').toUpperCase()) + ')$');
+
+			if (s.attrib_value_filter)
+				t.attribValueFilter = s.attribValueFilter;
+		},
+
 		encode : function(o) {
 			var t = this, s = t.settings, l;
 
@@ -177,6 +187,10 @@
 
 		setEntities : function(s) {
 			var a, i, l = {}, re = '', v;
+
+			// No need to setup more than once
+			if (this.entityLookup)
+				return;
 
 			// Build regex and lookup array
 			a = s.split(',');
@@ -278,6 +292,7 @@
 		setRules : function(s) {
 			var t = this;
 
+			t._setup();
 			t.rules = {};
 			t.wildRules = [];
 			t.validElements = {};
@@ -291,6 +306,8 @@
 
 			if (!s)
 				return;
+
+			t._setup();
 
 			each(s.split(','), function(s) {
 				var p = s.split(/\[|\]/), tn = p[0].split('/'), ra, at, wat, va = [];
@@ -451,6 +468,8 @@
 
 		findRule : function(n) {
 			var t = this, rl = t.rules, i, r;
+
+			t._setup();
 
 			// Exact match
 			r = rl[n];
@@ -684,6 +703,7 @@
 		serialize : function(n, o) {
 			var h, t = this;
 
+			t._setup();
 			o = o || {};
 			o.format = o.format || 'html';
 			t.processObj = o;
@@ -693,7 +713,7 @@
 			// Pre process
 			if (!o.no_events) {
 				o.node = n;
-				t.onPreProcess.dispatch(o);
+				t.onPreProcess.dispatch(t, o);
 			}
 
 			// Serialize HTML DOM into a string
@@ -704,7 +724,7 @@
 			o.content = t.writer.getContent();
 
 			if (!o.no_events)
-				t.onPostProcess.dispatch(o);
+				t.onPostProcess.dispatch(t, o);
 
 			t.encode(o);
 			t.indentContent(o);

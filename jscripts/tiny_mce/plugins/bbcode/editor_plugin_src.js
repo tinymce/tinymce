@@ -10,11 +10,11 @@
 		BBCodePlugin : function(ed, url) {
 			var t = this, dialect = ed.getParam('bbcode_dialect', 'punbb').toLowerCase();
 
-			ed.onBeforeSetContent.add(function(o) {
+			ed.onBeforeSetContent.add(function(ed, o) {
 				o.content = t['_' + dialect + '_bbcode2html'](o.content);
 			});
 
-			ed.onPostProcess.add(function(o) {
+			ed.onPostProcess.add(function(ed, o) {
 				if (o.set)
 					o.content = t['_' + dialect + '_bbcode2html'](o.content);
 

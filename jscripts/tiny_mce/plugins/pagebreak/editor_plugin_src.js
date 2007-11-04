@@ -24,29 +24,29 @@
 				ed.dom.loadCSS(url + "/css/content.css");
 
 				if (ed.theme.onResolveName) {
-					ed.theme.onResolveName.add(function(o) {
+					ed.theme.onResolveName.add(function(th, o) {
 						if (o.node.nodeName == 'IMG' && ed.dom.hasClass(o.node, cls))
 							o.name = 'pagebreak';
 					});
 				}
 			});
 
-			ed.onClick.add(function(e) {
+			ed.onClick.add(function(ed, e) {
 				e = e.target;
 
 				if (e.nodeName === 'IMG' && ed.dom.hasClass(e, cls))
 					ed.selection.select(e);
 			});
 
-			ed.onNodeChange.add(function(cm, n) {
+			ed.onNodeChange.add(function(ed, cm, n) {
 				cm.setActive('pagebreak', n.nodeName === 'IMG' && ed.dom.hasClass(n, cls));
 			});
 
-			ed.onBeforeSetContent.add(function(o) {
+			ed.onBeforeSetContent.add(function(ed, o) {
 				o.content = o.content.replace(pbRE, pb);
 			});
 
-			ed.onPostProcess.add(function(o) {
+			ed.onPostProcess.add(function(ed, o) {
 				if (o.get)
 					o.content = o.content.replace(/<img[^>]+>/g, function(im) {
 						if (im.indexOf('class="mcePageBreak') !== -1)

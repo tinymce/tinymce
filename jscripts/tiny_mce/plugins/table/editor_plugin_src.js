@@ -35,7 +35,7 @@
 
 			ed.onInit.add(function() {
 				if (ed && ed.plugins.contextmenu) {
-					ed.plugins.contextmenu.onContextMenu.add(function(m, e) {
+					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
 						var sm;
 
 						if (ed.dom.getParent(e, 'td') || ed.dom.getParent(e, 'th')) {
@@ -74,7 +74,7 @@
 				}
 			});
 
-			ed.onNodeChange.add(function(cm, n) {
+			ed.onNodeChange.add(function(ed, cm, n) {
 				var p = ed.dom.getParent(n, 'td,th,caption');
 
 				cm.setActive('table', !!p);

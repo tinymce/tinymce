@@ -55,12 +55,15 @@ var tinymce = {
 	},
 
 	is : function(o, t) {
-		o = typeof(o);
+		var n = typeof(o);
 
 		if (!t)
-			return o != 'undefined';
+			return n != 'undefined';
 
-		return o == t;
+		if (t == 'array' && (o instanceof Array))
+			return true;
+
+		return n == t;
 	},
 
 	each : function(o, cb, s) {
@@ -102,7 +105,7 @@ var tinymce = {
 		return o;
 	},
 
-	filter : function(a, f) {
+	grep : function(a, f) {
 		var o = [];
 
 		tinymce.each(a, function(v) {
@@ -136,7 +139,7 @@ var tinymce = {
 	},
 
 	trim : function(s) {
-		return ('' + s).replace(/^\s*|\s*$/g, '');
+		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
 	},
 
 	// #endif
@@ -158,7 +161,10 @@ var tinymce = {
 		// Make pure static class
 		if (s[2] == 'static') {
 			ns[cn] = p;
-			this._dispatchCreate(s[2], s[3], ns[cn]);
+
+			if (this.onCreate)
+				this.onCreate(s[2], s[3], ns[cn]);
+
 			return;
 		}
 
@@ -171,11 +177,6 @@ var tinymce = {
 		// Add constructor and methods
 		ns[cn] = p[cn];
 		t.extend(ns[cn].prototype, p);
-
-		// Add static methods
-		t.each(p['static'], function(f, n) {
-			ns[cn][n] = f;
-		});
 
 		// Extend
 		if (s[5]) {
@@ -219,18 +220,27 @@ var tinymce = {
 			});
 		}
 
-		this._dispatchCreate(s[2], s[3], ns[cn].prototype);
+		// Add static methods
+		t.each(p['static'], function(f, n) {
+			ns[cn][n] = f;
+		});
+
+		if (this.onCreate)
+			this.onCreate(s[2], s[3], ns[cn].prototype);
 	},
 
-	walk : function(o, n, f, s) {
+	walk : function(o, f, n, s) {
 		s = s || this;
 
-		if (o && (o = o[n])) {
+		if (o) {
+			if (n)
+				o = o[n];
+
 			tinymce.each(o, function(o, i) {
 				if (f.call(s, o, i, n) === false)
 					return false;
 
-				tinymce.walk(o, n, f, s);
+				tinymce.walk(o, f, n, s);
 			});
 		}
 	},
@@ -326,11 +336,6 @@ var tinymce = {
 		});
 
 		return r;
-	},
-
-	_dispatchCreate : function(ty, c, p) {
-		if (this.onCreate)
-			this.onCreate(ty, c, p);
 	}
 };
 

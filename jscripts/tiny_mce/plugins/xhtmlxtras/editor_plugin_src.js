@@ -84,7 +84,7 @@
 			ed.addButton('attribs', 'xhtmlxtras.attribs_desc', 'mceAttributes');
 
 			if (tinymce.isIE) {
-				ed.onPostProcess.add(function(o) {
+				ed.onPostProcess.add(function(ed, o) {
 					if (o.set) {
 						o.content = o.content.replace(/<abbr([^>]+)>/gi, '<html:ABBR $1>');
 						o.content = o.content.replace(/<\/abbr>/gi, '</html:ABBR>');
@@ -92,7 +92,7 @@
 				});
 			}
 
-			ed.onNodeChange.add(function(cm, n, co) {
+			ed.onNodeChange.add(function(ed, cm, n, co) {
 				n = ed.dom.getParent(n, 'CITE,ACRONYM,ABBR,DEL,INS');
 
 				cm.setDisabled('cite', co);

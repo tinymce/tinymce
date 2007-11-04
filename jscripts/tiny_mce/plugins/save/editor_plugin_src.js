@@ -36,7 +36,7 @@
 
 		// Private methods
 
-		_nodeChange : function(cm, n) {
+		_nodeChange : function(ed, cm, n) {
 			var ed = this.editor;
 
 			if (ed.getParam('save_enablewhendirty')) {

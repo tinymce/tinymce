@@ -12,11 +12,12 @@
 		piggyBack : function() {
 			var t = this, em = tinymce.EditorManager, lo = false;
 
-return;
-
 			// Makes sure that XML language pack is used instead of JS files
 			t.runBefore(em, 'init', function(s) {
-				var par = new tinymce.xml.Parser({async : false}), lng = s.language || "en", i18n = tinymce.EditorManager.i18n;
+				var par = new tinymce.xml.Parser({async : false}), lng = s.language || "en", i18n = tinymce.EditorManager.i18n, sl = tinymce.ScriptLoader;
+
+				if (!s.translate_mode)
+					return;
 
 				if (lo)
 					return;
@@ -24,52 +25,27 @@ return;
 				lo = true;
 
 				// Common language loaded
-				DOM.files[tinymce.baseURL + '/langs/' + lng + '.js'] = 2;
+				sl.markDone(tinymce.baseURL + '/langs/' + lng + '.js');
 
 				// Theme languages loaded
-				DOM.files[tinymce.baseURL + '/themes/simple/langs/' + lng + '.js'] = 2;
-				DOM.files[tinymce.baseURL + '/themes/advanced/langs/' + lng + '.js'] = 2;
+				sl.markDone(tinymce.baseURL + '/themes/simple/langs/' + lng + '.js');
+				sl.markDone(tinymce.baseURL + '/themes/advanced/langs/' + lng + '.js');
 
 				// All plugin packs loaded
-				each([
-/*					"advhr",
-					"advimage",
-					"advlink",
-					"autosave",
-					"bbcode",
-					"cleanup",
-					"contextmenu",
-					"devkit",
-					"directionality",
-					"emotions",
-					"flash",
-					"fullpage",
-					"fullscreen",
-					"iespell",
-					"inlinepopups",
-					"insertdatetime",
-					"layer",
-					"media",
-					"nonbreaking",
-					"noneditable",
-					"paste",
-					"preview",
-					"print",
-					"save",
-					"searchreplace",
-					"style",
-					"table",
-					"template",
-					"visualchars",
-					"xhtmlxtras",
-					"zoom"*/
-				], function(p) {
-					DOM.files[tinymce.baseURL + '/plugins/' + p + '/langs/' + lng + '.js'] = 2;
+				each(s.plugins.split(','), function(p) {
+					sl.markDone(tinymce.baseURL + '/plugins/' + p + '/langs/' + lng + '.js');
 				});
 
 				// Load XML language pack
-				par.load(tinymce.baseURL + '/langs/' + lng + '.xml', function(doc) {
-					var c = doc.getElementsByTagName('language')[0].getAttribute("code");
+				par.load(tinymce.baseURL + '/langs/' + lng + '.xml', function(doc, ex) {
+					var c;
+
+					if (!doc) {
+						alert(ex.message);
+						return;
+					}
+
+					c = doc.getElementsByTagName('language')[0].getAttribute("code");
 
 					each(doc.getElementsByTagName('group'), function(g) {
 						var gn = g.getAttribute("target"), o = {};

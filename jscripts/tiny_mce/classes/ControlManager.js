@@ -89,7 +89,7 @@
 
 			id = t.prefix + id;
 			c = t.controls[id] = new tinymce.ui.DropMenu(id, s);
-			c.onAddItem.add(function(o) {
+			c.onAddItem.add(function(c, o) {
 				var s = o.settings;
 
 				s.title = ed.getLang(s.title, s.title);
@@ -130,7 +130,7 @@
 
 			// Fix focus problem in Safari
 			if (tinymce.isWebKit) {
-				c.onPostRender.add(function(n) {
+				c.onPostRender.add(function(c, n) {
 					// Store bookmark on mousedown
 					Event.add(n, 'mousedown', function() {
 						ed.bookmark = ed.selection.getBookmark(1);

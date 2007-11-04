@@ -23,11 +23,11 @@
 			// Register buttons
 			ed.addButton('advhr', 'advhr.advhr_desc', 'mceAdvancedHr');
 
-			ed.onNodeChange.add(function(cm, n) {
+			ed.onNodeChange.add(function(ed, cm, n) {
 				cm.setActive('advhr', n.nodeName == 'HR');
 			});
 
-			ed.onClick.add(function(e) {
+			ed.onClick.add(function(ed, e) {
 				e = e.target;
 
 				if (e.nodeName === 'HR')
