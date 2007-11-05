@@ -5731,7 +5731,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (s.save_callback) {
 				t.onSaveContent.add(function(ed, o) {
-					t.execCallback('save_callback', t.id, o.content, t.getBody());
+					o.content = t.execCallback('save_callback', t.id, o.content, t.getBody());
 				});
 			}
 
@@ -6144,7 +6144,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			h = t.setContent(is(e.value) ? e.value : e.innerHTML, o);
 			o.element = e;
-			t.onLoadContent.dispatch(t, o);
+
+			if (!o.no_events)
+				t.onLoadContent.dispatch(t, o);
+
 			o.element = e = null;
 
 			return h;
@@ -6156,13 +6159,19 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			o = o || {};
 			o.save = true;
 
-			if (/TEXTAREA|INPUT/.test(e.nodeName))
-				e.value = h = t.getContent(o);
-			else
-				e.innerHTML = h = t.getContent(o);
-
 			o.element = e;
-			this.onSaveContent.dispatch(t, o);
+			h = t.getContent(o);
+
+			if (!o.no_events)
+				t.onSaveContent.dispatch(t, o);
+
+			h = o.content;
+
+			if (/TEXTAREA|INPUT/.test(e.nodeName))
+				e.value = h;
+			else
+				e.innerHTML = h;
+
 			o.element = e = null;
 
 			return h;
