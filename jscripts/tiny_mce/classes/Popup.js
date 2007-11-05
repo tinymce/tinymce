@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Popup.class.js 227 2007-02-26 21:35:35Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.

@@ -1,5 +1,5 @@
 /**
- * $Id: tiny_mce_dev.js 229 2007-02-27 13:00:23Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -9,7 +9,18 @@
 	// Shorten names
 	var is = tinymce.is, isIE = tinymce.isIE, each = tinymce.each;
 
+	/**
+	 * This class handles text and control selection it's an crossbrowser utility class.
+	 * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
+	 */
 	tinymce.create('tinymce.dom.Selection', {
+		/**
+		 * Constructs a new selection instance.
+		 *
+		 * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
+		 * @param {Window} win Window to bind the selection object to.
+		 * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
+		 */
 		Selection : function(dom, win, serializer) {
 			var t = this;
 
@@ -17,11 +28,18 @@
 			t.win = win;
 			t.serializer = serializer;
 
+			// Prevent leaks
 			tinymce.addUnload(function() {
 				t.win = null;
 			});
 		},
 
+		/**
+		 * Returns the selected contents using the DOM serializer passed in to this class.
+		 *
+		 * @param {Object} s Optional settings class with for example output format text or html.
+		 * @return {String} Selected contents in for example HTML format.
+		 */
 		getContent : function(s) {
 			var t = this, r = t.getRng(), e = t.dom.create("body"), se = t.getSel(), wb, wa;
 
@@ -50,6 +68,14 @@
 			return t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
 		},
 
+		/**
+		 * Sets the current selection to the specified content. If any contents is selected it will be replaced
+		 * with the contents passed in to this function. If there is no selection the contents will be inserted
+		 * where the caret is placed in the editor/page.
+		 *
+		 * @param {String} h HTML contents to set could also be other formats depending on settings.
+		 * @param {Object} s Optional settings object with for example data format.
+		 */
 		setContent : function(h, s) {
 			var t = this, r = t.getRng(), d;
 
@@ -74,6 +100,12 @@
 			}
 		},
 
+		/**
+		 * Returns the start element of a selection range. If the start is in a text
+		 * node the parent element will be returned.
+		 *
+		 * @return {Element} Start element of selection range.
+		 */
 		getStart : function() {
 			var t = this, r = t.getRng(), e;
 
@@ -99,6 +131,12 @@
 			}
 		},
 
+		/**
+		 * Returns the end element of a selection range. If the end is in a text
+		 * node the parent element will be returned.
+		 *
+		 * @return {Element} End element of selection range.
+		 */
 		getEnd : function() {
 			var t = this, r = t.getRng(), e;
 
@@ -124,6 +162,13 @@
 			}
 		},
 
+		/**
+		 * Returns a bookmark location for the current selection. This bookmark object
+		 * can then be used to restore the selection after some content modification to the document.
+		 *
+		 * @param {bool} si Optional state if the bookmark should be simple or not. Default is complex.
+		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
+		 */
 		getBookmark : function(si) {
 			var t = this, r = t.getRng(), tr, sx, sy, vp = t.dom.getViewPort(t.win), e, sp, bp, le, c = -0xFFFFFF, s, ro = t.dom.getRoot();
 
@@ -240,6 +285,12 @@
 			}
 		},
 
+		/**
+		 * Restores the selection to the specified bookmark.
+		 *
+		 * @param {Object} bookmark Bookmark to restore selection from.
+		 * @return {bool} true/false if it was successful or not.
+		 */
 		moveToBookmark : function(b) {
 			var t = this, r = t.getRng(), s = t.getSel(), ro = t.dom.getRoot(), sd;
 
@@ -344,6 +395,13 @@
 			}
 		},
 
+		/**
+		 * Selects the specified element. This will place the start and end of the selection range around the element.
+		 *
+		 * @param {Element} n HMTL DOM element to select.
+		 * @param {} c Bool state if the contents should be selected or not on non IE browser.
+		 * @return {Element} Selected element the same element as the one that got passed in.
+		 */
 		select : function(n, c) {
 			var t = this, r = t.getRng(), s = t.getSel(), b, fn, ln, d = t.win.document;
 
@@ -401,6 +459,11 @@
 			return n;
 		},
 
+		/**
+		 * Returns true/false if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
+		 *
+		 * @return {bool} true/false state if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
+		 */
 		isCollapsed : function() {
 			var t = this, r = t.getRng();
 
@@ -410,6 +473,11 @@
 			return r.boundingWidth == 0 || t.getSel().isCollapsed;
 		},
 
+		/**
+		 * Collapse the selection to start or end of range.
+		 *
+		 * @param {bool} b Optional boolean state if to collapse to end or not. Defaults to start.
+		 */
 		collapse : function(b) {
 			var t = this, r = t.getRng(), n;
 
@@ -424,12 +492,22 @@
 			t.setRng(r);
 		},
 
+		/**
+		 * Returns the browsers internal selection object.
+		 *
+		 * @return {Selection} Internal browser selection object.
+		 */
 		getSel : function() {
 			var t = this, w = this.win;
 
 			return w.getSelection ? w.getSelection() : w.document.selection;
 		},
 
+		/**
+		 * Returns the browsers internal range object.
+		 *
+		 * @return {Range} Internal browser range object.
+		 */
 		getRng : function() {
 			var t = this, s = t.getSel(), r;
 
@@ -447,6 +525,11 @@
 			return r;
 		},
 
+		/**
+		 * Changes the selection to the specified DOM range.
+		 *
+		 * @param {Range} r Range to select.
+		 */
 		setRng : function(r) {
 			var s;
 
@@ -458,12 +541,25 @@
 				r.select();
 		},
 
+		/**
+		 * Sets the current selection to the specified DOM element.
+		 *
+		 * @param {Element} n Element to set as the contents of the selection.
+		 * @return {Element} Returns the element that got passed in.
+		 */
 		setNode : function(n) {
 			var t = this;
 
-			t.setContent(t.dom.create('div', null, n).innerHTML);
+			t.setContent(t.dom.getOuterHTML(n));
+
+			return n;
 		},
 
+		/**
+		 * Returns the currently selected element or the common ancestor element for both start and end of the selection.
+		 *
+		 * @return {Element} Currently selected element or common ancestor element.
+		 */
 		getNode : function() {
 			var t = this, r = t.getRng(), s = t.getSel(), e;
 

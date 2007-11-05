@@ -1,5 +1,5 @@
 /**
- * $Id: tiny_mce_dev.js 229 2007-02-27 13:00:23Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -8,21 +8,41 @@
 (function() {
 	var each = tinymce.each;
 
+	/**
+	 * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when
+	 * various items gets loaded. This class is useful to 
+	 */
 	tinymce.create('tinymce.dom.ScriptLoader', {
+		/**
+		 * Constructs a new script loaded instance. Check the Wiki for more detailed information for this method.
+		 *
+		 * @param {Object} s Optional settings object for the ScriptLoaded.
+		 */
 		ScriptLoader : function(s) {
 			this.settings = s || {};
 			this.que = [];
 			this.lookup = {};
 		},
 
-		prepend : function(u, cb, s) {
-			this.add(u, cb, s, 1);
-		},
-
+		/**
+		 * Marks a specific script to be loaded. This can be useful if a script got loaded outside
+		 * the script loader or to skip it from loading some script.
+		 *
+		 * @param {string} u Absolute URL to the script to mark as loaded.
+		 */
 		markDone : function(u) {
 			this.lookup[u] = {state : 2, url : u};
 		},
 
+		/**
+		 * Adds a specific script to the load que of the script loader.
+		 *
+		 * @param {String} u Absolute URL to script to add.
+		 * @param {function} cb Optional callback function to execute ones this script gets loaded.
+		 * @param {Object} s Optional scope to execute callback in.
+		 * @param {bool} pr Optional state to add to top or bottom of load que. Defaults to bottom.
+		 * @return {object} Load que object contains, state, url and callback.
+		 */
 		add : function(u, cb, s, pr) {
 			var t = this, lo = t.lookup, o;
 
@@ -46,6 +66,13 @@
 			return o;
 		},
 
+		/**
+		 * Loads a specific script directly without adding it to the load que.
+		 *
+		 * @param {String} u Absolute URL to script to add.
+		 * @param {function} cb Optional callback function to execute ones this script gets loaded.
+		 * @param {Object} s Optional scope to execute callback in.
+		 */
 		load : function(u, cb, s) {
 			var o;
 
@@ -61,6 +88,12 @@
 				this.loadScripts([{state : 0, url : u}], cb, s);
 		},
 
+		/**
+		 * Starts the loading of the que.
+		 *
+		 * @param {function} cb Optional callback to execute when all qued items are loaded.
+		 * @param {Object} s Optional scope to execute the callback in.
+		 */
 		loadQue : function(cb, s) {
 			var t = this;
 
@@ -82,6 +115,11 @@
 				t.queCallbacks.push({func : cb, scope : s || t});
 		},
 
+		/**
+		 * Evaluates the specified string inside the global namespace/window scope.
+		 *
+		 * @param {string} Script contents to evaluate.
+		 */
 		eval : function(co) {
 			var w = window;
 
@@ -96,6 +134,14 @@
 				w.execScript(co); // IE
 		},
 
+		/**
+		 * Loads the specified que of files and executes the callback ones they are loaded.
+		 * This method is generally not used outside this class but it might be useful in some scenarios. 
+		 *
+		 * @param {Array} sc Array of que items to load.
+		 * @param {function} cb Optional callback to execute ones all items are loaded.
+		 * @param {Object} s Optional scope to execute callback in.
+		 */
 		loadScripts : function(sc, cb, s) {
 			var t = this, lo = t.lookup;
 
@@ -212,14 +258,3 @@
 	// Global script loader
 	tinymce.ScriptLoader = new tinymce.dom.ScriptLoader();
 })();
-
-/*
-	tinymce.ScriptLoader.add('test1.js');
-	tinymce.ScriptLoader.add('test2.js');
-	tinymce.ScriptLoader.add('test3.js');
-	tinymce.ScriptLoader.loadQue(function() {
-		alert('Loaded!!');
-	});
-
-	tinymce.ScriptLoader = new tinymce.compressor.ScriptLoader();
-*/

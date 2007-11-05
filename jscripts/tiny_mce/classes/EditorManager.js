@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Array.class.js 224 2007-02-23 20:06:27Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -44,7 +44,7 @@
 					pl = s.plugins.split(',');
 
 					// Load compat2x first
-					if (tinymce.indexOf(pl, 'compat2x') != -1)
+					if (tinymce.inArray(pl, 'compat2x') != -1)
 						PluginManager.load('compat2x', 'plugins/compat2x/editor_plugin' + tinymce.suffix + '.js');
 
 					// Load rest if plugins

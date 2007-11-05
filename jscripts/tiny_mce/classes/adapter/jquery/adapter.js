@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Popup.class.js 227 2007-02-26 21:35:35Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -20,8 +20,8 @@
 	tinymce.extend(tinymce, {
 		trim : $.trim,
 		map : $.map,
-		grep : function(a, f) {return $.grep(a, f || function(){return 1;});},
-		indexOf : function(a, v) {return $.inArray(v, a || []);}
+		grep : function(a, f) {return $.grep(a, f || function(){return 1;});}
+		//indexOf : function(a, v) {return $.inArray(v, a || []);}
 	});
 
 	// Patch in functions in various clases

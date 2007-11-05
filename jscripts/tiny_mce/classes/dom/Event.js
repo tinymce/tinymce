@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_DOMUtils.class.js 91 2006-10-02 14:53:22Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -9,10 +9,23 @@
 	// Shorten names
 	var each = tinymce.each, DOM = tinymce.DOM, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, Event;
 
+	/**
+	 * This class handles DOM events in a cross platform fasion it also keeps track of element
+	 * and handler references to be able to clean elements to reduce IE memory leaks.
+	 */
 	tinymce.create('static tinymce.dom.Event', {
 		inits : [],
 		events : [],
 
+		/**
+		 * Adds an event handler to the specified object.
+		 *
+		 * @param {Element/Document/Window/Array/String} o Object or element id string to add event handler to or an array of elements/ids/documents.
+		 * @param {String} n Name of event handler to add for example: click.
+		 * @param {function} f Function to execute when the event occurs.
+		 * @param {Object} s Optional scope to execute the function in.
+		 * @return {function} Function callback handler the same as the one passed in.
+		 */
 		add : function(o, n, f, s) {
 			var cb, t = this, el = t.events, r;
 
@@ -75,6 +88,14 @@
 			return f;
 		},
 
+		/**
+		 * Removes the specified event handler by name and function from a element or collection of elements.
+		 *
+		 * @param {String/Element/Array} o Element ID string or HTML element or an array of elements or ids to remove handler from.
+		 * @param {String} n Event handler name like for example: "click"
+		 * @param {function} f Function to remove.
+		 * @return {bool/Array} Bool state if true if the handler was removed or an array with states if multiple elements where passed in.
+		 */
 		remove : function(o, n, f) {
 			var t = this, a = t.events, s = false, r;
 
@@ -104,6 +125,12 @@
 			return s;
 		},
 
+		/**
+		 * Cancels an event for both bubbeling and the default browser behavior.
+		 *
+		 * @param {Event} e Event object to cancel.
+		 * @return {bool} Always false.
+		 */
 		cancel : function(e) {
 			if (!e)
 				return false;
@@ -112,6 +139,12 @@
 			return this.prevent(e);
 		},
 
+		/**
+		 * Stops propogation/bubbeling of an event.
+		 *
+		 * @param {Event} e Event to cancel bubbeling on.
+		 * @return {bool} Always false.
+		 */
 		stop : function(e) {
 			if (e.stopPropagation)
 				e.stopPropagation();
@@ -121,6 +154,12 @@
 			return false;
 		},
 
+		/**
+		 * Prevent default browser behvaior of an event.
+		 *
+		 * @param {Event} e Event to prevent default browser behvaior of an event.
+		 * @return {bool} Always false.
+		 */
 		prevent : function(e) {
 			if (e.preventDefault)
 				e.preventDefault();

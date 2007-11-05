@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_DOMUtils.class.js 91 2006-10-02 14:53:22Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -8,13 +8,26 @@
 (function() {
 	var extend = tinymce.extend, JSON = tinymce.util.JSON, XHR = tinymce.util.XHR;
 
+	/**
+	 * This class enables you to use JSON-RPC to call backend methods.
+	 */
 	tinymce.create('tinymce.util.JSONRequest', {
+		/**
+		 * Constructs a new JSONRequest instance.
+		 *
+		 * @param {Object} s Optional settings object.
+		 */
 		JSONRequest : function(s) {
 			this.settings = extend({
 			}, s);
 			this.count = 0;
 		},
 
+		/**
+		 * Sends a JSON-RPC call. Consult the Wiki API documentation for more details on what you can pass to this function.
+		 *
+		 * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.
+		 */
 		send : function(o) {
 			var ecb = o.error, scb = o.success;
 
@@ -49,6 +62,12 @@
 		},
 
 		'static' : {
+			/**
+			 * Simple helper function to send a JSON-RPC request without the need to initialize an object.
+			 * Consult the Wiki API documentation for more details on what you can pass to this function.
+			 *
+			 * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.
+			 */
 			sendRPC : function(o) {
 				return new tinymce.util.JSONRequest().send(o);
 			}

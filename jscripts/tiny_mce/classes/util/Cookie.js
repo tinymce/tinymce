@@ -1,5 +1,5 @@
 /**
- * $Id: tiny_mce_dev.js 229 2007-02-27 13:00:23Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -8,7 +8,16 @@
 (function() {
 	var each = tinymce.each;
 
+	/**
+	 * This class contains simple cookie manangement functions.
+	 */
 	tinymce.create('static tinymce.util.Cookie', {
+		/**
+		 * Parses the specified query string into an name/value object.
+		 *
+		 * @param {String} n String to parse into a n Hashtable object.
+		 * @return {Object} Name/Value object with items parsed from querystring.
+		 */
 		getHash : function(n) {
 			var v = this.get(n), h;
 
@@ -23,6 +32,16 @@
 			return h;
 		},
 
+		/**
+		 * Sets a hashtable name/value object to a cookie.
+		 *
+		 * @param {String} n Name of the cookie.
+		 * @param {Object} v Hashtable object to set as cookie.
+		 * @param {Date} d Optional date object for the expiration of the cookie.
+		 * @param {String} p Optional path to restrict the cookie to.
+		 * @param {String} d Optional domain to restrict the cookie to.
+		 * @param {String} s Is the cookie secure or not.
+		 */
 		setHash : function(n, v, e, p, d, s) {
 			var o = '';
 
@@ -33,6 +52,12 @@
 			this.set(n, o, e, p, d, s);
 		},
 
+		/**
+		 * Gets the raw data of a cookie by name.
+		 *
+		 * @param {String} n Name of cookie to retrive.
+		 * @return {String} Cookie data string.
+		 */
 		get : function(n) {
 			var c = document.cookie, e, p = n + "=", b = c.indexOf("; " + p);
 
@@ -52,6 +77,16 @@
 			return unescape(c.substring(b + p.length, e));
 		},
 
+		/**
+		 * Sets a raw cookie string.
+		 *
+		 * @param {String} n Name of the cookie.
+		 * @param {String} v Raw cookie data.
+		 * @param {Date} d Optional date object for the expiration of the cookie.
+		 * @param {String} p Optional path to restrict the cookie to.
+		 * @param {String} d Optional domain to restrict the cookie to.
+		 * @param {String} s Is the cookie secure or not.
+		 */
 		set : function(n, v, e, p, d, s) {
 			document.cookie = n + "=" + escape(v) +
 				((e) ? "; expires=" + e.toGMTString() : "") +
@@ -60,6 +95,12 @@
 				((s) ? "; secure" : "");
 		},
 
+		/**
+		 * Removes/deletes a cookie by name.
+		 *
+		 * @param {String} n Cookie name to remove/delete.
+		 * @param {Strong} p Optional path to remove the cookie from.
+		 */
 		remove : function(n, p) {
 			var d = new Date();
 

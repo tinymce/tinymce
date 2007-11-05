@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_DOMUtils.class.js 91 2006-10-02 14:53:22Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
@@ -9,7 +9,18 @@
 	// Shorten names
 	var each = tinymce.each, DOM = tinymce.DOM;
 
+	/**
+	 * This class is a simple Unit testing class. Provides simple methods for
+	 * test case and asserts execution.
+	 * XML Parser class. This class is only available for the dev version of TinyMCE.
+	 */
 	tinymce.create('tinymce.util.UnitTester', {
+		/**
+		 * Constructs a new UnitTester instance.
+		 *
+		 * @param {String} id Element ID to log execution events to.
+		 * @param {Object} s Optional settings object.
+		 */
 		UnitTester : function(id, s) {
 			this.id = id;
 			this.cases = {};
@@ -19,6 +30,13 @@
 			}, s);
 		},
 
+		/**
+		 * Fakes a mouse event.
+		 *
+		 * @param {Element/String} e DOM element object or element id to send fake event to.
+		 * @param {String} na Event name to fake like "click".
+		 * @param {Object} o Optional object with data to send with the event like cordinates.
+		 */
 		fakeMouseEvent : function(e, na, o) {
 			var ev;
 
@@ -46,6 +64,13 @@
 			e.dispatchEvent(ev);
 		},
 
+		/**
+		 * Fakes a key event.
+		 *
+		 * @param {Element/String} e DOM element object or element id to send fake event to.
+		 * @param {String} na Event name to fake like "keydown".
+		 * @param {Object} o Optional object with data to send with the event like keyCode and charCode.
+		 */
 		fakeKeyEvent : function(e, na, o) {
 			var ev;
 
@@ -79,14 +104,26 @@
 			e.dispatchEvent(ev);
 		},
 
+		/**
+		 * Adds a test with units.
+		 *
+		 * @param {String} n Name of test.
+		 * @param {Object} t Name/Value collection with functions to be executed.
+		 */
 		add : function(n, t) {
 			this.cases[n] = t;
 		},
 
+		/**
+		 * Resets the UnitTester and removes any contents from the log.
+		 */
 		reset : function() {
 			DOM.get(this.id).innerHTML = '';
 		},
 
+		/**
+		 * TODO: FIX ME!
+		 */
 		runAsync : function(n, te) {
 			var t = this, c, st;
 
@@ -171,6 +208,12 @@
 			}
 		},
 
+		/**
+		 * Runs the test(s). Default is execution of all added tests and units.
+		 *
+		 * @param {String} Optional test name to execute.
+		 * @param {String} Optional unit to execute inside the test.
+		 */
 		run : function(n, te) {
 			var t = this, st, o;
 
@@ -242,6 +285,13 @@
 			}
 		},
 
+		/**
+		 * String format function.
+		 *
+		 * @param {String} s String with %d %s things that gets replaced.
+		 * @param {Object} .. Optional arguments to be placed in string.
+		 * @return {String} Formatted string.
+		 */
 		format : function(s) {
 			var i = 1, a = arguments;
 
@@ -250,6 +300,13 @@
 			});
 		},
 
+		/**
+		 * Checks if the specified input param is true.
+		 *
+		 * @param {bool} e Object/item to check if true.
+		 * @param {String} m Optional message to output.
+		 * @param {bool} sk Skip error output if this is true.
+		 */
 		is : function(e, m, sk) {
 			this.stats.asserts++;
 
@@ -258,7 +315,15 @@
 
 			this.assertCount++;
 		},
-
+	
+		/**
+		 * Checks if the specified input param equals another param.
+		 *
+		 * @param {Object} v1 Object/item to check.
+		 * @param {Object} v2 Object/item to check.
+		 * @param {String} m Optional message to output.
+		 * @param {bool} sk Skip error output if this is true.
+		 */
 		eq : function(v1, v2, m, sk) {
 			this.stats.asserts++;
 
@@ -268,6 +333,14 @@
 			this.assertCount++;
 		},
 
+		/**
+		 * Checks if the specified input param unequal to the other param.
+		 *
+		 * @param {Object} v1 Object/item to check.
+		 * @param {Object} v2 Object/item to check.
+		 * @param {String} m Optional message to output.
+		 * @param {bool} sk Skip error output if this is true.
+		 */
 		neq : function(v1, v2, m, sk) {
 			this.stats.asserts++;
 
@@ -277,6 +350,12 @@
 			this.assertCount++;
 		},
 
+		/**
+		 * Adds a failure message to the log.
+		 *
+		 * @param {String} m Message to output.
+		 * @param {bool} sk Skip error output if this is true.
+		 */
 		fail : function(m, sk) {
 			var t = this;
 
@@ -293,6 +372,11 @@
 			t.logFailure(m);
 		},
 
+		/**
+		 * Logs a failure message.
+		 *
+		 * @param {string} .. Things to log.
+		 */
 		logFailure : function() {
 			var t = this;
 
@@ -302,10 +386,20 @@
 				console.debug(arguments);
 		},
 
+		/**
+		 * Logs a message.
+		 *
+		 * @param {string} .. Things to log.
+		 */
 		log : function() {
 			DOM.add(DOM.get(this.id), 'div', null, DOM.encode(Array.prototype.join.call(arguments, ',')).replace(/\r?\n/g, '<br />'));
 		},
 
+		/**
+		 * Logs a success message.
+		 *
+		 * @param {string} .. Things to log.
+		 */
 		logSuccess : function() {
 			DOM.add(DOM.get(this.id), 'div', {'class' : 'success'}, DOM.encode(Array.prototype.join.call(arguments, ',')));
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: tiny_mce_dev.js 229 2007-02-27 13:00:23Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -24,7 +24,20 @@
 		return o;
 	};
 
+	function wildcardToRE(s) {
+		return s.replace(/([?+*])/g, '.$1');
+	};
+
+	/**
+	 * This class is used to serialize DOM trees into a string.
+	 * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
+	 */
 	tinymce.create('tinymce.dom.Serializer', {
+		/**
+		 * Constucts a new DOM serializer class.
+		 *
+		 * @param {Object} s Optional name/Value collection of settings for the serializer.
+		 */
 		Serializer : function(s) {
 			var t = this;
 
@@ -138,25 +151,12 @@
 			}
 		},
 
-		_setup : function() {
-			var t = this, s = this.settings;
-
-			if (t.done)
-				return;
-
-			t.done = 1;
-
-			t.setRules(s.valid_elements);
-			t.addRules(s.extended_valid_elements);
-			t.addValidChildRules(s.valid_child_elements);
-
-			if (s.invalid_elements)
-				t.invalidElementsRE = new RegExp('^(' + t.wildcardToRE(s.invalid_elements.replace(',', '|').toUpperCase()) + ')$');
-
-			if (s.attrib_value_filter)
-				t.attribValueFilter = s.attribValueFilter;
-		},
-
+		/**
+		 * Entity encodes a string based on the settings passed to the serializer. This one can do both numeric
+		 * and named entity encoding.
+		 *
+		 * @param {Object} o Object containing the content field to encode. 
+		 */
 		encode : function(o) {
 			var t = this, s = t.settings, l;
 
@@ -185,6 +185,11 @@
 			}
 		},
 
+		/**
+		 * Sets a list of entities to use for the named entity encoded.
+		 *
+		 * @param {String} s List of entities in the following format: number,name,....
+		 */
 		setEntities : function(s) {
 			var a, i, l = {}, re = '', v;
 
@@ -211,13 +216,23 @@
 			this.entityLookup = l;
 		},
 
+		/**
+		 * Sets the valid child rules. This enables you to specify what elements can be childrens of what parents.
+		 * Consult the Wiki for format description on this input.
+		 *
+		 * @param {String} s String with valid child rules.
+		 */
 		setValidChildRules : function(s) {
 			this.childRules = null;
 			this.addValidChildRules(s);
 		},
 
-		// h1/h2/h3/h4/h5/h6/a[%itrans_na],table[thead|tbody|tfoot|tr|td],strong/b/p/div/em/i/td[%itrans|#text],body[%btrans|#text]
-		// div[a],h1[a]
+		/**
+		 * Adds valid child rules. This enables you to specify what elements can be childrens of what parents.
+		 * Consult the Wiki for format description on this input.
+		 *
+		 * @param {String} s String with valid child rules to add.
+		 */
 		addValidChildRules : function(s) {
 			var t = this, inst, intr, bloc;
 
@@ -289,6 +304,13 @@
 			});*/
 		},
 
+		/**
+		 * Sets the valid elements rules of the serializer this enables you to specify things like what elements should be
+		 * outputted and what attributes specific elements might have.
+		 * Consult the Wiki for more details on this format.
+		 *
+		 * @param {String} s Valid elements rules string.
+		 */
 		setRules : function(s) {
 			var t = this;
 
@@ -300,7 +322,13 @@
 			return t.addRules(s);
 		},
 
-		// a[href|target=_blank],-strong/-b,div[align],br,e*[a*|b*]
+		/**
+		 * Adds valid elements rules to the serializer this enables you to specify things like what elements should be
+		 * outputted and what attributes specific elements might have.
+		 * Consult the Wiki for more details on this format.
+		 *
+		 * @param {String} s Valid elements rules string to add.
+		 */
 		addRules : function(s) {
 			var t = this, dr;
 
@@ -363,7 +391,7 @@
 
 						if (/[*.?]/.test(s[2])) {
 							wat = wat || [];
-							ar.nameRE = new RegExp('^' + t.wildcardToRE(s[2]) + '$');
+							ar.nameRE = new RegExp('^' + wildcardToRE(s[2]) + '$');
 							wat.push(ar);
 						} else {
 							ar.name = s[2];
@@ -413,7 +441,7 @@
 
 					// Add element name or element regex
 					if (/[*.?]/.test(tn[0])) {
-						ru.nameRE = new RegExp('^' + t.wildcardToRE(tn[0]) + '$');
+						ru.nameRE = new RegExp('^' + wildcardToRE(tn[0]) + '$');
 						t.wildRules = t.wildRules || {};
 						t.wildRules.push(ru);
 					} else {
@@ -438,7 +466,7 @@
 							if (s)
 								s += '|';
 
-							s += '(' + t.wildcardToRE(v) + ')';
+							s += '(' + wildcardToRE(v) + ')';
 						});
 						ru.validAttribsRE = new RegExp('^' + s.toLowerCase() + '$');
 						ru.wildAttribs = wat;
@@ -455,17 +483,19 @@
 				if (k != '@')
 				s += k;
 			});
-			t.validElementsRE = new RegExp('^(' + t.wildcardToRE(s.toUpperCase()) + ')$');
+			t.validElementsRE = new RegExp('^(' + wildcardToRE(s.toUpperCase()) + ')$');
 
 			//console.debug(t.validElementsRE.toString());
 			//console.dir(t.rules);
 			//console.dir(t.wildRules);
 		},
 
-		wildcardToRE : function(s) {
-			return s.replace(/([?+*])/g, '.$1');
-		},
-
+		/**
+		 * Finds a rule object by name.
+		 *
+		 * @param {String} n Name to look for in rules collection.
+		 * @return {Object} Rule object found or null if it wasn't found.
+		 */
 		findRule : function(n) {
 			var t = this, rl = t.rules, i, r;
 
@@ -486,6 +516,13 @@
 			return null;
 		},
 
+		/**
+		 * Finds an attribute rule object by name.
+		 *
+		 * @param {Object} ru Rule object to search though.
+		 * @param {String} n Name of the rule to retrive.
+		 * @return {Object} Rule object of the specified attribute.
+		 */
 		findAttribRule : function(ru, n) {
 			var i, wa = ru.wildAttribs;
 
@@ -497,54 +534,93 @@
 			return null;
 		},
 
-		getAttrib : function(n, a, na) {
-			var i, v;
+		/**
+		 * Serializes the specified node into a HTML string.
+		 *
+		 * @param {Element} n Element/Node to serialize.
+		 * @param {Object} o Object to add serialized contents to, this object will also be passed to the event listeners.
+		 * @return {String} Serialized HTML contents.
+		 */
+		serialize : function(n, o) {
+			var h, t = this;
 
-			na = na || a.name;
+			t._setup();
+			o = o || {};
+			o.format = o.format || 'html';
+			t.processObj = o;
+			n = n.cloneNode(true);
+			t.key = '' + (parseInt(t.key) + 1);
 
-			if (a.forcedVal && (v = a.forcedVal)) {
-				if (v === '{$uid}')
-					return this.dom.uniqueId();
-
-				return v;
+			// Pre process
+			if (!o.no_events) {
+				o.node = n;
+				t.onPreProcess.dispatch(t, o);
 			}
 
-			v = this.dom.getAttrib(n, na);
+			// Serialize HTML DOM into a string
+			t.writer.reset();
+			t._serializeNode(n, o.getInner);
 
-			if (this.attribValueFilter)
-				v = this.attribValueFilter(na, v, n);
+			// Post process
+			o.content = t.writer.getContent();
 
-			if (a.validVals) {
-				for (i = a.validVals.length - 1; i >= 0; i--) {
-					if (v == a.validVals[i])
-						break;
-				}
+			if (!o.no_events)
+				t.onPostProcess.dispatch(t, o);
 
-				if (i == -1)
-					return null;
-			}
+			t.encode(o);
+			t.indent(o);
+			t._postProcess(o);
 
-			if (v === '' && typeof(a.defaultVal) != 'undefined') {
-				v = a.defaultVal;
+			o.node = null;
 
-				if (v === '{$uid}')
-					return this.dom.uniqueId();
-
-				return v;
-			} else {
-				// Remove internal mceItemXX classes when content is extracted from editor
-				if (na == 'class' && this.processObj.get)
-					v = v.replace(/\bmceItem\w+\b/g, '');
-			}
-
-			if (v === '')
-				return null;
-
-
-			return v;
+			return tinymce.trim(o.content);
 		},
 
-		serializeNode : function(n, inn) {
+		/**
+		 * Indents the specified content object.
+		 *
+		 * @param {Object} o Content object to indent.
+		 */
+		indent : function(o) {
+			var t = this, s = t.settings, h, sc = [], p;
+
+			// Simple intentation
+			if (s.apply_source_formatting && s.indent_mode == 'simple' && o.format == 'html') {
+				h = o.content;
+
+				// Protect some elements
+				p = t._protect({
+					content : h,
+					patterns : [
+						/<script[^>]*>(.*?)<\/script>/g,
+						/<style[^>]*>(.*?)<\/style>/g,
+						/<pre[^>]*>(.*?)<\/pre>/g
+					]
+				});
+				h = p.content;
+
+				// Since Gecko and Safari keeps whitespace in the DOM we need to
+				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
+				h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
+				h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
+				h = h.replace(/<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
+				h = h.replace(/<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
+				h = h.replace(/\s+<\/(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
+				h = t._unprotect(h, p);
+
+				// Add line breaks before and after block elements
+				h = h.replace(/\s*<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>/g, '\n<$1 $2>');
+				h = h.replace(/\s*<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '\n<$1>');
+				h = h.replace(/<(object)([^>]*)>\s*/g, '<$1$2>\n');
+				h = h.replace(/\s*<\/(tr|tbody|table|body|head|html|object)>/g, '\n</$1>');
+
+				o.content = h;
+			}
+		},
+
+		// Internal functions
+
+		_serializeNode : function(n, inn) {
 			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv;
 
 			if (!s.node_filter || s.node_filter(n)) {
@@ -629,7 +705,7 @@
 						if (ru.attribs) {
 							for (i=0, at = ru.attribs, l = at.length; i<l; i++) {
 								a = at[i];
-								v = t.getAttrib(n, a);
+								v = t._getAttrib(n, a);
 
 								if (v !== null)
 									w.writeAttribute(a.name, v);
@@ -649,7 +725,7 @@
 										continue;
 
 									ar = t.findAttribRule(ru, a);
-									v = t.getAttrib(n, ar, a);
+									v = t._getAttrib(n, ar, a);
 
 									if (v !== null)
 										w.writeAttribute(a, v);
@@ -685,7 +761,7 @@
 				cn = n.firstChild;
 
 				while (cn) {
-					t.serializeNode(cn);
+					t._serializeNode(cn);
 					t.elementName = nn;
 					cn = cn.nextSibling;
 				}
@@ -697,78 +773,6 @@
 					w.writeFullEndElement();
 				else
 					w.writeEndElement();
-			}
-		},
-
-		serialize : function(n, o) {
-			var h, t = this;
-
-			t._setup();
-			o = o || {};
-			o.format = o.format || 'html';
-			t.processObj = o;
-			n = n.cloneNode(true);
-			t.key = '' + (parseInt(t.key) + 1);
-
-			// Pre process
-			if (!o.no_events) {
-				o.node = n;
-				t.onPreProcess.dispatch(t, o);
-			}
-
-			// Serialize HTML DOM into a string
-			t.writer.reset();
-			t.serializeNode(n, o.getInner);
-
-			// Post process
-			o.content = t.writer.getContent();
-
-			if (!o.no_events)
-				t.onPostProcess.dispatch(t, o);
-
-			t.encode(o);
-			t.indentContent(o);
-			t._postProcess(o);
-
-			o.node = null;
-
-			return tinymce.trim(o.content);
-		},
-
-		indentContent : function(o) {
-			var t = this, s = t.settings, h, sc = [], p;
-
-			// Simple intentation
-			if (s.apply_source_formatting && s.indent_mode == 'simple' && o.format == 'html') {
-				h = o.content;
-
-				// Protect some elements
-				p = t._protect({
-					content : h,
-					patterns : [
-						/<script[^>]*>(.*?)<\/script>/g,
-						/<style[^>]*>(.*?)<\/style>/g,
-						/<pre[^>]*>(.*?)<\/pre>/g
-					]
-				});
-				h = p.content;
-
-				// Since Gecko and Safari keeps whitespace in the DOM we need to
-				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
-				h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
-				h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
-				h = h.replace(/<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
-				h = h.replace(/<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
-				h = h.replace(/\s+<\/(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
-				h = t._unprotect(h, p);
-
-				// Add line breaks before and after block elements
-				h = h.replace(/\s*<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>/g, '\n<$1 $2>');
-				h = h.replace(/\s*<(p|h[1-6]|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '\n<$1>');
-				h = h.replace(/<(object)([^>]*)>\s*/g, '<$1$2>\n');
-				h = h.replace(/\s*<\/(tr|tbody|table|body|head|html|object)>/g, '\n</$1>');
-
-				o.content = h;
 			}
 		},
 
@@ -827,6 +831,72 @@
 
 				o.content = h;
 			}
+		},
+
+		_setup : function() {
+			var t = this, s = this.settings;
+
+			if (t.done)
+				return;
+
+			t.done = 1;
+
+			t.setRules(s.valid_elements);
+			t.addRules(s.extended_valid_elements);
+			t.addValidChildRules(s.valid_child_elements);
+
+			if (s.invalid_elements)
+				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(',', '|').toUpperCase()) + ')$');
+
+			if (s.attrib_value_filter)
+				t.attribValueFilter = s.attribValueFilter;
+		},
+
+		_getAttrib : function(n, a, na) {
+			var i, v;
+
+			na = na || a.name;
+
+			if (a.forcedVal && (v = a.forcedVal)) {
+				if (v === '{$uid}')
+					return this.dom.uniqueId();
+
+				return v;
+			}
+
+			v = this.dom.getAttrib(n, na);
+
+			if (this.attribValueFilter)
+				v = this.attribValueFilter(na, v, n);
+
+			if (a.validVals) {
+				for (i = a.validVals.length - 1; i >= 0; i--) {
+					if (v == a.validVals[i])
+						break;
+				}
+
+				if (i == -1)
+					return null;
+			}
+
+			if (v === '' && typeof(a.defaultVal) != 'undefined') {
+				v = a.defaultVal;
+
+				if (v === '{$uid}')
+					return this.dom.uniqueId();
+
+				return v;
+			} else {
+				// Remove internal mceItemXX classes when content is extracted from editor
+				if (na == 'class' && this.processObj.get)
+					v = v.replace(/\bmceItem\w+\b/g, '');
+			}
+
+			if (v === '')
+				return null;
+
+
+			return v;
 		}
 	});
 })();

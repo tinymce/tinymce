@@ -1,5 +1,5 @@
 /**
- * $Id: tiny_mce_dev.js 229 2007-02-27 13:00:23Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -8,7 +8,16 @@
 (function() {
 	var each = tinymce.each;
 
+	/**
+	 * This class handles parsing, modification and serialization of URI/URL strings.
+	 */
 	tinymce.create('tinymce.util.URI', {
+		/**
+		 * Constucts a new URI instance.
+		 *
+		 * @param {String} u URI string to parse.
+		 * @param {Object} s Optional settings object.
+		 */
 		URI : function(u, s) {
 			var t = this, o, a;
 
@@ -41,6 +50,11 @@
 			t.path = t.path || '/';
 		},
 
+		/**
+		 * Sets the internal path part of the URI.
+		 *
+		 * @param {string} p Path string to set.
+		 */
 		setPath : function(p) {
 			var t = this;
 
@@ -59,10 +73,12 @@
 			t.getURI();
 		},
 
-		getBaseURI : function() {
-			return new tinymce.util.URI(this.settings.base_uri);
-		},
-
+		/**
+		 * Converts the specified URI into a relative URI based on the current URI instance location.
+		 *
+		 * @param {String} u URI to convert into a relative path/URI.
+		 * @return {String} Relative URI from the point specified in the current URI instance.
+		 */
 		toRelative : function(u) {
 			var t = this;
 
@@ -74,11 +90,24 @@
 
 			return t.toRelPath(t.path, u.path);
 		},
-
+	
+		/**
+		 * Converts the specified URI into a absolute URI based on the current URI instance location.
+		 *
+		 * @param {String} u URI to convert into a relative path/URI.
+		 * @param {bool} nh No host and protocol prefix.
+		 * @return {String} Absolute URI from the point specified in the current URI instance.
+		 */
 		toAbsolute : function(u, nh) {
 			return new tinymce.util.URI(u, {base_uri : this.getURI()}).getURI(nh);
 		},
 
+		/**
+		 * Converts a absolute path into a relative path.
+		 *
+		 * @param {String} base Base point to convert the path from.
+		 * @param {String} path Absolute path to convert into a relative path.
+		 */
 		toRelPath : function(base, path) {
 			var items, bp = 0, out = '', i;
 
@@ -121,6 +150,12 @@
 			return out;
 		},
 
+		/**
+		 * Converts a relative path into a absolute path.
+		 *
+		 * @param {String} base Base point to convert the path from.
+		 * @param {String} path Relative path to convert into an absolute path.
+		 */
 		toAbsPath : function(base, path) {
 			var i, nb = 0, o = [];
 
@@ -166,6 +201,11 @@
 			return '/' + base.slice(0, i).join('/') + '/' + o.reverse().join('/');
 		},
 
+		/**
+		 * Returns the internal base URI object.
+		 *
+		 * @return {tinymce.util.URI} Internal URI object.
+		 */
 		getBaseURI : function() {
 			var t = this;
 
@@ -175,6 +215,11 @@
 			return t.baseURI;
 		},
 
+		/**
+		 * Returns the full URI of the internal structure.
+		 *
+		 * @param {bool} nh Optional no host and protocol part. Defaults to false.
+		 */
 		getURI : function(nh) {
 			var s, t = this;
 

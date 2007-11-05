@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Array.class.js 224 2007-02-23 20:06:27Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -8,7 +8,7 @@
  */
 
 (function() {
-	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit, indexOf = tinymce.indexOf;
+	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit;
 
 	tinymce.create('tinymce.EditorCommands', {
 		EditorCommands : function(ed) {

@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Array.class.js 224 2007-02-23 20:06:27Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -11,7 +11,7 @@
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, Dispatcher = tinymce.util.Dispatcher;
 	var each = tinymce.each, isGecko = tinymce.isGecko, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit;
 	var is = tinymce.is, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, EditorManager = tinymce.EditorManager;
-	var indexOf = tinymce.indexOf, grep = tinymce.grep;
+	var inArray = tinymce.inArray, grep = tinymce.grep;
 
 	tinymce.create('tinymce.Editor', {
 		Editor : function(id, s) {
@@ -1362,20 +1362,20 @@
 						});
 
 						if (sl) {
-							i = indexOf(sl, dom.getStyle(n, 'fontSize'));
+							i = inArray(sl, dom.getStyle(n, 'fontSize'));
 
 							if (i != -1)
 								dom.setAttrib(f, 'size', '' + (i + 1 || 1));
 						} else if (cl) {
-							i = indexOf(cl, dom.getAttrib(n, 'class'));
+							i = inArray(cl, dom.getAttrib(n, 'class'));
 
 							v = dom.getStyle(n, 'fontSize');
 
 							if (i == -1 && v.indexOf('pt') > 0)
-								i = indexOf(fz, parseInt(v));
+								i = inArray(fz, parseInt(v));
 
 							if (i == -1)
-								i = indexOf(fzn, v);
+								i = inArray(fzn, v);
 
 							if (i != -1)
 								dom.setAttrib(f, 'size', '' + (i + 1 || 1));

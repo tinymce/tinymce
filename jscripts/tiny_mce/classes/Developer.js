@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Popup.class.js 227 2007-02-26 21:35:35Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -8,6 +8,10 @@
 (function() {
 	var EditorManager = tinymce.EditorManager, each = tinymce.each, DOM = tinymce.DOM;
 
+	/**
+	 * This class patches in various development features.
+	 * This class is only available for the dev version of TinyMCE.
+	 */
 	tinymce.create('static tinymce.Developer', {
 		piggyBack : function() {
 			var t = this, em = tinymce.EditorManager, lo = false;

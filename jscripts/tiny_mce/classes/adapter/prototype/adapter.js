@@ -1,5 +1,5 @@
 /**
- * $Id: TinyMCE_Popup.class.js 227 2007-02-26 21:35:35Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -15,7 +15,7 @@
 
 	// Patch in core NS functions
 	tinymce.trim = function(s) {return s.strip();};
-	tinymce.indexOf = function(a, v) {return a.indexOf(v);};
+	tinymce.inArray = function(a, v) {return a.indexOf(v);};
 
 	// Patch in functions in various clases
 	// Add a "#if !jquery" statement around each core API function you add below

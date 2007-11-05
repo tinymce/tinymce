@@ -6,7 +6,7 @@
  */
 
 (function() {
-	var Event = tinymce.dom.Event, grep = tinymce.grep, each = tinymce.each, indexOf = tinymce.indexOf, isOldWebKit = tinymce.isOldWebKit;
+	var Event = tinymce.dom.Event, grep = tinymce.grep, each = tinymce.each, inArray = tinymce.inArray, isOldWebKit = tinymce.isOldWebKit;
 
 	tinymce.create('tinymce.plugins.Safari', {
 		Safari : function(ed) {
@@ -209,7 +209,7 @@
 				if (!s.convert_fonts_to_spans) {
 					if (st.fontSize) {
 						dom.setAttrib(e, 'mce_name', 'font');
-						dom.setAttrib(e, 'size', indexOf(fz, st.fontSize) + 1);
+						dom.setAttrib(e, 'size', inArray(fz, st.fontSize) + 1);
 					}
 
 					if (st.fontFamily) {
@@ -228,7 +228,7 @@
 					}
 				} else {
 					if (st.fontSize)
-						dom.setStyle(e, 'fontSize', fzn[indexOf(fz, st.fontSize)]);
+						dom.setStyle(e, 'fontSize', fzn[inArray(fz, st.fontSize)]);
 				}
 
 				if (st.fontWeight == 'bold')

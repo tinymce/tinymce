@@ -1,19 +1,19 @@
 /**
- * $Id: TinyMCE_DOMUtils.class.js 91 2006-10-02 14:53:22Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
+/**
+ * This class enables you to send XMLHTTPRequests cross browser.
+ */
 tinymce.create('static tinymce.util.XHR', {
 	/**
-	 * XHR.send({
-	 *   url : 'someurl',
-	 *   data : 'some=data',
-	 *   type : 'post',
-	 *   success : function(c) {
-	 *   }
-	 * });
+	 * Sends a XMLHTTPRequest.
+	 * Consult the Wiki for details on what settings this method takes.
+	 *
+	 * @param {Object} o Object will target URL, callbacks and other info needed to make the request.
 	 */
 	send : function(o) {
 		var x, t, w = window, c = 0;
@@ -50,7 +50,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 			x.send(o.data);
 
-			// Wait for response
+			// Wait for response, onReadyStateChange can not be used since it leaks memory in IE
 			t = w.setInterval(function() {
 				if (x.readyState == 4 || c++ > 10000) {
 					w.clearInterval(t);

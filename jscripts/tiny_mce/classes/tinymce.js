@@ -1,15 +1,21 @@
 /**
- * $Id: TinyMCE_Array.class.js 224 2007-02-23 20:06:27Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
+/**
+ * Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
+ */
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '0a2',
 	releaseDate : '2007-11-02',
 
+	/**
+	 * Initializes the TinyMCE global namespace this will setup browser detection and figure out where TinyMCE is running from.
+	 */
 	init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n;
 
@@ -54,6 +60,13 @@ var tinymce = {
 		return;
 	},
 
+	/**
+	 * Checks if a object is of a specific type for example an array.
+	 *
+	 * @param {Object} o Object to check type of.
+	 * @param {string} t Optional type to check for.
+	 * @return {bool} true/false if the object is of the specified type.
+	 */
 	is : function(o, t) {
 		var n = typeof(o);
 
@@ -66,6 +79,15 @@ var tinymce = {
 		return n == t;
 	},
 
+	/**
+	 * Performs an iteration of all items in a collection such as an object or array. This method will execure the
+	 * callback function for each item in the collection, if the callback returns false the iteration will terminate.
+	 * The callback has the following format: cb(value, key_or_index).
+	 *
+	 * @param {Object} o Collection to iterate.
+	 * @param {function} cb Callback function to execute for each item.
+	 * @param {Object} s Optional scope to execute the callback in.
+	 */
 	each : function(o, cb, s) {
 		var n, l;
 
@@ -95,6 +117,14 @@ var tinymce = {
 
 	// #if !jquery
 
+	/**
+	 * Creates a new array by the return value of each iteration function call. This enables you to convert
+	 * one array list into another.
+	 *
+	 * @param {Array} a Array of items to iterate.
+	 * @param {function} f Function to call for each item. It's return value will be the new value.
+	 * @return {Array} Array with new values based on function return values.
+	 */
 	map : function(a, f) {
 		var o = [];
 
@@ -105,6 +135,14 @@ var tinymce = {
 		return o;
 	},
 
+	/**
+	 * Filters out items from the input array by calling the specified function for each item.
+	 * If the function returns false the item will be excluded if it returns true it will be included.
+	 *
+	 * @param {Array} a Array of items to loop though.
+	 * @param {function} f Function to call for each item. Include/exclude depends on it's return value.
+	 * @return {Array} New array with values imported and filtered based in input.
+	 */
 	grep : function(a, f) {
 		var o = [];
 
@@ -116,7 +154,14 @@ var tinymce = {
 		return o;
 	},
 
-	indexOf : function(a, v) {
+	/**
+	 * Returns the index of a value in an array, this method will return -1 if the item wasn't found.
+	 *
+	 * @param {Array} a Array/Object to search for value in.
+	 * @param {Object} v Value to check for inside the array.
+	 * @return {Number/String} Index of item inside the array or the key inside an object. Or -1 if it wasn't found.
+	 */
+	inArray : function(a, v) {
 		var x = -1;
 
 		tinymce.each(a, function(c, i) {
@@ -129,21 +174,47 @@ var tinymce = {
 		return x;
 	},
 
+	/**
+	 * Extends an object with the specified other object(s).
+	 *
+	 * @param {Object} o Object to extend with new items.
+	 * @param {Object} e..n Object(s) to extend the specified object with.
+	 * @return {Object} o New extended object, same reference as the input object.
+	 */
 	extend : function(o, e) {
-		tinymce.each(e, function(v, n) {
-			if (typeof(v) !== 'undefined')
-				o[n] = v;
-		});
+		var i, a = arguments;
+
+		for (i=1; i<a.length; i++) {
+			e = a[i];
+
+			tinymce.each(e, function(v, n) {
+				if (typeof(v) !== 'undefined')
+					o[n] = v;
+			});
+		}
 
 		return o;
 	},
 
+	/**
+	 * Removes whitespace from the beginning and end of a string.
+	 *
+	 * @param {String} s String to remove whitespace from.
+	 * @return {String} New string with removed whitespace.
+	 */
 	trim : function(s) {
 		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
 	},
 
 	// #endif
 
+	/**
+	 * Creates a class, subclass or static singleton.
+	 * More details on this method can be found in the Wiki.
+	 *
+	 * @param {String} s Class name, inheritage and prefix.
+	 * @param {Object} o Collection of methods to add to the class.
+	 */
 	create : function(s, p) {
 		var t = this, sp, ns, cn, scn, c, de = 0;
 
@@ -229,6 +300,14 @@ var tinymce = {
 			this.onCreate(s[2], s[3], ns[cn].prototype);
 	},
 
+	/**
+	 * Executed the specified function for each item in a object tree.
+	 *
+	 * @param {Object} o Object tree to walk though.
+	 * @param {function} f Function to call for each item.
+	 * @param {String} n Optional name of collection inside the objects to walk for example childNodes.
+	 * @param {String} s Optional scope to execute the function in.
+	 */
 	walk : function(o, f, n, s) {
 		s = s || this;
 
@@ -245,6 +324,13 @@ var tinymce = {
 		}
 	},
 
+	/**
+	 * Creates a namespace on a specific object.
+	 *
+	 * @param {String} n Namespace to create for example a.b.c.d.
+	 * @param {Object} o Optional object to add namespace to, defaults to window.
+	 * @return {Object} New namespace object the last item in path.
+	 */
 	createNS : function(n, o) {
 		var i, v;
 
@@ -263,6 +349,13 @@ var tinymce = {
 		return o;
 	},
 
+	/**
+	 * Resolves a string and returns the object from a specific structure.
+	 *
+	 * @param {String} n Path to resolve for example a.b.c.d.
+	 * @param {Object} o Optional object to search though, defaults to window.
+	 * @return {Object} Last object in path or null if it couldn't be resolved.
+	 */
 	get : function(n, o) {
 		var i, l;
 
@@ -279,6 +372,14 @@ var tinymce = {
 		return o;
 	},
 
+	/**
+	 * Adds an unload handler to the document. This handler will be executed when the document gets unloaded.
+	 * This method is useful for dealing with browser memory leaks where it might be vital to remove DOM references etc.
+	 *
+	 * @param {function} f Function to execute before the document gets unloaded.
+	 * @param {Object} s Optional scope to execute the function in.
+	 * @return {function} Returns the specified unload handler function.
+	 */
 	addUnload : function(f, s) {
 		var t = this, w = window, unload;
 
@@ -324,6 +425,12 @@ var tinymce = {
 		return f;
 	},
 
+	/**
+	 * Removes the specified function form the unload handler list.
+	 *
+	 * @param {function} f Function to remove from unload handler list.
+	 * @return {function} Removed function name or null if it wasn't found.
+	 */
 	removeUnload : function(f) {
 		var u = this.unloads, r = null;
 

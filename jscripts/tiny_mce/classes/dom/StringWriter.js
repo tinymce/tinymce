@@ -1,11 +1,14 @@
 /**
- * $Id: tiny_mce_dev.js 229 2007-02-27 13:00:23Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
+	/**
+	 * This class writes nodes into a string.
+	 */
 	tinymce.create('tinymce.dom.StringWriter', {
 		str : null,
 		tags : null,
@@ -13,6 +16,11 @@
 		settings : null,
 		indent : null,
 
+		/**
+		 * Constructs a new StringWriter.
+		 *
+		 * @param {Object} s Optional settings object.
+		 */
 		StringWriter : function(s) {
 			this.settings = tinymce.extend({
 				indent_char : ' ',
@@ -22,6 +30,9 @@
 			this.reset();
 		},
 
+		/**
+		 * Resets the writer so it can be reused the contents of the writer is cleared.
+		 */
 		reset : function() {
 			this.indent = '';
 			this.str = "";
@@ -29,6 +40,11 @@
 			this.count = 0;
 		},
 
+		/**
+		 * Writes the start of an element like for example: <tag.
+		 *
+		 * @param {String} n Name of element to write.
+		 */
 		writeStartElement : function(n) {
 			this.writeAttributesEnd();
 			this.writeRaw('<' + n);
@@ -38,12 +54,21 @@
 			this.elementCount = this.count;
 		},
 
+		/**
+		 * Writes an attrubute like for example: myattr="valie"
+		 *
+		 * @param {String} n Attribute name to write.
+		 * @param {String} v Attribute value to write.
+		 */
 		writeAttribute : function(n, v) {
 			var t = this;
 
 			t.writeRaw(" " + t.encode(n) + '="' + t.encode(v) + '"');
 		},
 
+		/**
+		 * Write the end of a element. This will add a short end for elements with out children like for example a img element.
+		 */
 		writeEndElement : function() {
 			var n;
 
@@ -58,6 +83,9 @@
 			}
 		},
 
+		/**
+		 * Writes the end of a element. This will add a full end to the element even if it didn't have any children.
+		 */
 		writeFullEndElement : function() {
 			if (this.tags.length > 0) {
 				this.writeAttributesEnd();
@@ -68,44 +96,54 @@
 			}
 		},
 
+		/**
+		 * Writes a text node value.
+		 *
+		 * @param {String} v Value to append as a text node.
+		 */
 		writeText : function(v) {
 			this.writeAttributesEnd();
 			this.writeRaw(this.encode(v));
 			this.count++;
 		},
 
+		/**
+		 * Writes a CDATA section.
+		 *
+		 * @param {String} v Value to write in CDATA.
+		 */
 		writeCDATA : function(v) {
 			this.writeAttributesEnd();
 			this.writeRaw('<![CDATA[' + v + ']]>');
 			this.count++;
 		},
 
+		/**
+		 * Writes a comment.
+		 *
+		 * @param {String} v Value of the comment.
+		 */
 		writeComment : function(v) {
 			this.writeAttributesEnd();
 			this.writeRaw('<!-- ' + v + '-->');
 			this.count++;
 		},
 
+		/**
+		 * String writer specific function. Enables you to write raw contents to the string.
+		 *
+		 * @param {String} v String with raw contents to write.
+		 */
 		writeRaw : function(v) {
 			this.str += v;
 		},
 
-		writeAttributesEnd : function(s) {
-			if (!this.inAttr)
-				return;
-
-			this.inAttr = false;
-
-			if (s && this.elementCount == this.count) {
-				this.writeRaw(' />');
-				return false;
-			}
-
-			this.writeRaw('>');
-
-			return true;
-		},
-
+		/**
+		 * String writer specific method. This encodes the raw entities of a string.
+		 *
+		 * @param {String} s String to encode.
+		 * @return {String} String with entity encoding of the raw elements like <>&".
+		 */
 		encode : function(s) {
 			return s.replace(/[<>&"]/g, function(v) {
 				switch (v) {
@@ -126,6 +164,11 @@
 			});
 		},
 
+		/**
+		 * Returns a string representation of the elements/nodes written.
+		 *
+		 * @return {String} String representation of the written elements/nodes.
+		 */
 		getContent : function() {
 			return this.str;
 		}

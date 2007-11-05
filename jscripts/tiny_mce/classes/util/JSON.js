@@ -1,10 +1,13 @@
 /**
- * $Id: TinyMCE_DOMUtils.class.js 91 2006-10-02 14:53:22Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
+/**
+ * JSON parser and serializer class.
+ */
 tinymce.create('static tinymce.util.JSON', {
 	/**
 	 * Serializes the specified object as a JSON string.

@@ -78,12 +78,13 @@
 			t.eq(c.join(','), '1,2,3,4');
 		},
 
-		indexOf : function() {
+		inArray : function() {
 			var t = this;
 
-			t.eq(tinymce.indexOf([1,2,3], 2), 1);
-			t.eq(tinymce.indexOf([1,2,3], 7), -1);
-			t.eq(tinymce.indexOf(null, 7), -1);
+			t.eq(tinymce.inArray([1,2,3], 2), 1);
+			t.eq(tinymce.inArray([1,2,3], 7), -1);
+			t.eq(tinymce.inArray({a : 1, b : 2, c : 3}, 2), 'b');
+			t.eq(tinymce.inArray(null, 7), -1);
 		},
 
 		extend : function() {
@@ -101,6 +102,20 @@
 			t.eq(o.a, 2);
 			t.eq(o.b, 2);
 			t.eq(o.d, 4);
+
+			o = tinymce.extend({
+				a : 1,
+				b : 2,
+				c : 3
+			}, {
+				a : 2,
+				d : 4
+			}, {
+				e : 5
+			});
+
+			t.eq(o.d, 4);
+			t.eq(o.e, 5);
 		},
 
 		trim : function() {
@@ -302,6 +317,7 @@
 			t.eq(new URI('http://www.site.com/dir1/dir2').toRelative('http://www.site.com/dir1/dir3/file.htm'), 'dir3/file.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2').toRelative('http://www.site2.com/dir1/dir3/file.htm'), 'http://www.site2.com/dir1/dir3/file.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm'), '../../file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm?id=1#a'), '../../file.htm?id=1#a');
 			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('mailto:test@test.com'), 'mailto:test@test.com');
 			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('news:test'), 'news:test');
 			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('javascript:void(0);'), 'javascript:void(0);');
@@ -1047,6 +1063,17 @@
 			}, {test : 1});
 			ev.dispatch(1, 2, 3);
 			t.eq(v, 7);
+
+			ev = new Dispatcher();
+			v = '';
+			f = ev.add(function(a, b, c) {
+				v += 'b';
+			}, {test : 1});
+			f = ev.addToTop(function(a, b, c) {
+				v += 'a';
+			}, {test : 1});
+			ev.dispatch();
+			t.eq(v, 'ab');
 		}
 	});
 })();

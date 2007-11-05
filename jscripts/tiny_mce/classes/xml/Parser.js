@@ -1,18 +1,33 @@
 /**
- * $Id: tiny_mce_dev.js 229 2007-02-27 13:00:23Z spocke $
+ * $Id$
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
+	/**
+	 * XML Parser class. This class is only available for the dev version of TinyMCE.
+	 */
 	tinymce.create('tinymce.xml.Parser', {
+		/**
+		 * Constucts a new XML parser instance.
+		 *
+		 * @param {Object} Optional settings object.
+		 */
 		Parser : function(s) {
 			this.settings = tinymce.extend({
 				async : true
 			}, s);
 		},
 
+		/**
+		 * Parses the specified document and executed the callback ones it's parsed.
+		 *
+		 * @param {String} u URL to XML file to parse.
+		 * @param {function} cb Optional callback to execute ones the XML file is loaded.
+		 * @param {Object} s Optional scope for the callback execution.
+		 */
 		load : function(u, cb, s) {
 			var doc, t, w = window;
 
@@ -59,6 +74,12 @@
 			}
 		},
 
+		/**
+		 * Parses the specified XML string.
+		 *
+		 * @param {String} xml XML String to parse.
+		 * @return {Document} XML Document instance.
+		 */
 		loadXML : function(xml) {
 			var doc;
 
