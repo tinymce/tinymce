@@ -6,6 +6,8 @@ Version 3.0a3 (2007-xx-xx)
 	Fixed bug in IE and Safari and the on demand gzip loading feature.
 	Fixed bug with moving inline windows sometimes failed in IE6.
 	Fixed bug where save_callback function wasn't executed at all.
+	Fixed bug where inlinepopups produces scrollbars if windows where moved to the corners of the browser.
+	Fixed bug where view HTML source failed when inserting a embedded media object.
 	Optimized some of the core API to boost performance.
 Version 3.0a2 (2007-11-02)
 	Fixed critical bug where IE generaded an error on a hasAttribute call in the serialization engine.

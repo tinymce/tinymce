@@ -720,12 +720,6 @@ tinymce.create('static tinymce.util.JSON', {
 	},
 
 	parse : function(s) {
-		// Since Safari craches it is now more insecure
-		if (!tinymce.isWebKit) {
-			if (!/^("(\\.|[^"\\\n\r])*?"|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/.test(s))
-				return;
-		}
-
 		try {
 			return eval('(' + s + ')');
 		} catch (ex) {

@@ -64,12 +64,6 @@ tinymce.create('static tinymce.util.JSON', {
 	 * @return {Object} Object from input JSON string or undefined if it failed.
 	 */
 	parse : function(s) {
-		// Since Safari craches it is now more insecure
-		if (!tinymce.isWebKit) {
-			if (!/^("(\\.|[^"\\\n\r])*?"|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/.test(s))
-				return;
-		}
-
 		try {
 			return eval('(' + s + ')');
 		} catch (ex) {

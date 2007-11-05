@@ -271,6 +271,11 @@
 			// Get positons and sizes
 			cp = DOM.getPos(t.editor.getContainer());
 			vp = DOM.getViewPort();
+
+			// Reduce viewport size to avoid scrollbars
+			vp.w -= 2;
+			vp.h -= 2;
+
 			sex = se.screenX;
 			sey = se.screenY;
 			dx = dy = dw = dh = 0;
