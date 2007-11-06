@@ -9,13 +9,36 @@
 	// Shorten names
 	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager;
 
+	/**
+	 * This class is used to create multiple editor instances and contain them in a collection. So it's both a factory and a manager for editor instances.
+	 */
 	tinymce.create('static tinymce.EditorManager', {
 		editors : {},
 		i18n : {},
 		activeEditor : null,
 
+		/**
+		 * Initializes a set of editors. This method will create a bunch of editors based in the input.
+		 *
+		 * @param {Object} s Settings object to be passed to each editor instance.
+		 */
 		init : function(s) {
 			var t = this, pl, sl = tinymce.ScriptLoader;
+
+			function execCallback(se, n, s) {
+				var f = se[n];
+
+				if (!f)
+					return;
+
+				if (tinymce.is(f, 'string')) {
+					s = f.replace(/\.\w+$/, '');
+					s = s ? tinymce.get(s) : 0;
+					f = tinymce.get(f);
+				}
+
+				return f.apply(s || this, Array.prototype.slice.call(arguments, 2));
+			};
 
 			s = extend({
 				theme : "simple",
@@ -60,125 +83,163 @@
 				sl.loadQue();
 			}
 
+			// Legacy call
 			Event.add(document, 'init', function() {
-				t.execCallback(s, 'onpageload');
-				t.initEditors(s);
+				var l, co;
+
+				execCallback(s, 'onpageload');
+
+				// Verify that it's a valid browser
+				if (s.browsers) {
+					l = false;
+
+					each(s.browsers.split(','), function(v) {
+						switch (v) {
+							case 'ie':
+							case 'msie':
+								if (tinymce.isIE)
+									l = true;
+								break;
+
+							case 'gecko':
+								if (tinymce.isGecko)
+									l = true;
+								break;
+
+							case 'safari':
+							case 'webkit':
+								if (tinymce.isWebKit)
+									l = true;
+								break;
+
+							case 'opera':
+								if (tinymce.isOpera)
+									l = true;
+
+								break;
+						}
+					});
+
+					// Not a valid one
+					if (!l)
+						return;
+				}
+
+				switch (s.mode) {
+					case "exact":
+						l = s.elements || '';
+						each(l.split(','), function(v) {
+							new tinymce.Editor(v, s).render();
+						});
+						break;
+
+					case "textareas":
+						each(DOM.select('textarea'), function(v) {
+							if (s.editor_deselector && DOM.hasClass(v, s.editor_deselector))
+								return;
+
+							if (!s.editor_selector || DOM.hasClass(v, s.editor_selector))
+								new tinymce.Editor(v.id = (v.id || v.name), s).render();
+						});
+						break;
+				}
+
+				// Call onInit when all editors are initialized
+				if (s.oninit) {
+					l = co = 0;
+
+					each (t.editors, function(ed) {
+						co++;
+
+						if (!ed.initialized) {
+							// Wait for it
+							ed.onInit.add(function() {
+								l++;
+
+								// All done
+								if (l == co)
+									execCallback(s, 'oninit');
+							});
+						} else
+							l++;
+
+						// All done
+						if (l == co)
+							execCallback(s, 'oninit');					
+					});
+				}
 			});
 		},
 
-		initEditors : function(s) {
-			var l, t = this, co;
-
-			// Verify that it's a valid browser
-			if (s.browsers) {
-				l = false;
-
-				each(s.browsers.split(','), function(v) {
-					switch (v) {
-						case 'ie':
-						case 'msie':
-							if (tinymce.isIE)
-								l = true;
-							break;
-
-						case 'gecko':
-							if (tinymce.isGecko)
-								l = true;
-							break;
-
-						case 'safari':
-						case 'webkit':
-							if (tinymce.isWebKit)
-								l = true;
-							break;
-
-						case 'opera':
-							if (tinymce.isOpera)
-								l = true;
-
-							break;
-					}
-				});
-
-				// Not a valid one
-				if (!l)
-					return;
-			}
-
-			switch (s.mode) {
-				case "exact":
-					l = s.elements || '';
-					each(l.split(','), function(v) {
-						new tinymce.Editor(v, s).render();
-					});
-					break;
-
-				case "textareas":
-					each(DOM.select('textarea'), function(v) {
-						if (s.editor_deselector && DOM.hasClass(v, s.editor_deselector))
-							return;
-
-						if (!s.editor_selector || DOM.hasClass(v, s.editor_selector))
-							new tinymce.Editor(v.id = (v.id || v.name), s).render();
-					});
-					break;
-			}
-
-			// Call onInit when all editors are initialized
-			if (s.oninit) {
-				l = co = 0;
-
-				each (t.editors, function(ed) {
-					co++;
-
-					if (!ed.initialized) {
-						// Wait for it
-						ed.onInit.add(function() {
-							l++;
-
-							// All done
-							if (l == co)
-								t.execCallback(s, 'oninit');
-						});
-					} else
-						l++;
-
-					// All done
-					if (l == co)
-						t.execCallback(s, 'oninit');					
-				});
-			}
-		},
-
+		/**
+		 * Returns a editor instance by id.
+		 *
+		 * @param {String} id Editor instance id to return.
+		 * @return {tinymce.Editor} Editor instance to return.
+		 */
 		get : function(id) {
 			return this.editors[id];
 		},
 
+		/**
+		 * Returns a editor instance by id. This method was added for compatibility with the 2.x branch.
+		 *
+		 * @param {String} id Editor instance id to return.
+		 * @return {tinymce.Editor} Editor instance to return.
+		 */
 		getInstanceById : function(id) {
 			return this.get(id);
 		},
 
+		/**
+		 * Adds an editor instance to the editor colleciton. This will also set it as the active editor.
+		 *
+		 * @param {tinymce.Editor} e Editor instance to add to the collection.
+		 * @return {tinymce.Editor} The same instance that got passed in.
+		 */
 		add : function(e) {
 			this.editors[e.id] = e;
 			this.selectedInstance = this.activeEditor = e;
+
 			return e;
 		},
 
+		/**
+		 * Removes a editor instance from the collection.
+		 *
+		 * @param {tinymce.Editor} e Editor instance to remove.
+		 * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
+		 */
 		remove : function(e) {
 			var t = this;
 
+			// Not in the collection
+			if (!t.editors[e.id])
+				return null;
+
 			delete t.editors[e.id];
 
-			each(t.editors, function(e) {
-				t.selectedInstance = t.activeEditor = e;
-				return false; // Break
-			});
+			// Select another editor since the active one was removed
+			if (t.activeEditor == e) {
+				each(t.editors, function(e) {
+					t.selectedInstance = t.activeEditor = e;
+					return false; // Break
+				});
+			}
 
-			e.destroy();
+			e._destroy();
 
 			return e;
 		},
 
+		/**
+		 * Executes a specific command on the currently active editor.
+		 *
+		 * @param {String} c Command to perform for example Bold.
+		 * @param {bool} u Optional boolean state if a UI should be presented for the command or not.
+		 * @param {String} v Optional value parameter like for example an URL to a link.
+		 * @return {bool} true/false if the command was executed or not.
+		 */
 		execCommand : function(c, u, v) {
 			var t = this, ed = t.get(v);
 
@@ -223,6 +284,15 @@
 			return false;
 		},
 
+		/**
+		 * Executes a command on a specific editor by id. This method was added for compatibility with the 2.x branch.
+		 *
+		 * @param {String} id Editor id to perform the command on.
+		 * @param {String} c Command to perform for example Bold.
+		 * @param {bool} u Optional boolean state if a UI should be presented for the command or not.
+		 * @param {String} v Optional value parameter like for example an URL to a link.
+		 * @return {bool} true/false if the command was executed or not.
+		 */
 		execInstanceCommand : function(id, c, u, v) {
 			var ed = this.get(id);
 
@@ -232,27 +302,21 @@
 			return false;
 		},
 
+		/**
+		 * Calls the save method on all editor instances in the collection. This can be useful when a form is to be submitted.
+		 */
 		triggerSave : function() {
 			each(this.editors, function(e) {
 				e.save();
 			});
 		},
 
-		execCallback : function(se, n, s) {
-			var f = se[n];
-
-			if (!f)
-				return;
-
-			if (tinymce.is(f, 'string')) {
-				s = f.replace(/\.\w+$/, '');
-				s = s ? tinymce.get(s) : 0;
-				f = tinymce.get(f);
-			}
-
-			return f.apply(s || this, Array.prototype.slice.call(arguments, 2));
-		},
-
+		/**
+		 * Adds a language pack, this gets called by the loaded language files like en.js.
+		 *
+		 * @param {String} p Prefix for the language items. For example en.myplugin
+		 * @param {Object} o Name/Value collection with items to add to the language group.
+		 */
 		addI18n : function(p, o) {
 			var lo, i18n = this.i18n;
 
@@ -275,9 +339,10 @@
 		}
 	});
 
+	// Setup some URLs where the editor API is located etc
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
 	tinymce.baseURL = tinymce.EditorManager.baseURI.getURI();
 })();
 
-// Short for editor manager
+// Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call
 var tinyMCE = window.tinyMCE = tinymce.EditorManager;

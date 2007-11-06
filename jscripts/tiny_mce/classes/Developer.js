@@ -9,15 +9,14 @@
 	var EditorManager = tinymce.EditorManager, each = tinymce.each, DOM = tinymce.DOM;
 
 	/**
-	 * This class patches in various development features.
-	 * This class is only available for the dev version of TinyMCE.
+	 * This class patches in various development features. This class is only available for the dev version of TinyMCE.
 	 */
 	tinymce.create('static tinymce.Developer', {
-		piggyBack : function() {
+		_piggyBack : function() {
 			var t = this, em = tinymce.EditorManager, lo = false;
 
 			// Makes sure that XML language pack is used instead of JS files
-			t.runBefore(em, 'init', function(s) {
+			t._runBefore(em, 'init', function(s) {
 				var par = new tinymce.xml.Parser({async : false}), lng = s.language || "en", i18n = tinymce.EditorManager.i18n, sl = tinymce.ScriptLoader;
 
 				if (!s.translate_mode)
@@ -70,7 +69,7 @@
 			});
 		},
 
-		runBefore : function(o, n, f) {
+		_runBefore : function(o, n, f) {
 			var e = o[n];
 
 			o[n] = function() {
@@ -82,6 +81,6 @@
 		}
 	});
 
-	tinymce.Developer.piggyBack();
+	tinymce.Developer._piggyBack();
 })();
 

@@ -8,7 +8,15 @@
 // Some global instances
 var tinymce = null, tinyMCEPopup, tinyMCE;
 
+/**
+ * TinyMCE popup/dialog helper class. This gives you easy access to the
+ * parent editor instance and a bunch of other things. It's higly recommended
+ * that you load this script into your dialogs.
+ */
 tinyMCEPopup = {
+	/**
+	 * Initializes the popup this will be called automatically.
+	 */
 	init : function() {
 		var t = this, w = t.getWin(), ti;
 
@@ -16,6 +24,7 @@ tinyMCEPopup = {
 		tinymce = w.tinymce;
 		tinyMCE = w.tinyMCE;
 		t.editor = tinymce.EditorManager.activeEditor;
+		t.params = t.editor.windowManager.params;
 
 		// Setup local DOM
 		t.dom = t.editor.windowManager.createDOM(document, window);
@@ -33,7 +42,7 @@ tinyMCEPopup = {
 		ti = window.setInterval(function() {
 			if (document.body) {
 				window.clearInterval(ti);
-				t.onDOMLoaded();
+				t._onDOMLoaded();
 			}
 		}, 10);
 
@@ -42,63 +51,65 @@ tinyMCEPopup = {
 		t.editor.windowManager.onOpen.dispatch(t.editor.windowManager, window);
 	},
 
-	onDOMLoaded : function() {
-		var t = this, ti = document.title, bm, h;
-
-		// Translate page
-		h = document.body.innerHTML;
-
-		// Replace a=x with a="x" in IE
-		if (tinymce.isIE)
-			h = h.replace(/ (value|title|alt)=([^\s>]+)/gi, ' $1="$2"');
-
-		document.body.innerHTML = t.editor.translate(h);
-		document.title = ti = t.editor.translate(ti);
-		document.body.style.display = '';
-
-		// Restore selection in IE when focus is placed on a non textarea or input element of the type text
-		if (tinymce.isIE)
-			document.attachEvent('onbeforeactivate', tinyMCEPopup._restoreSelection);
-
-		// Call onInit
-		tinymce.each(t.listeners, function(o) {
-			o.func.call(o.scope, t.editor);
-		});
-
-		t.resizeToInnerSize();
-
-		if (t.isWindow)
-			window.focus();
-		else
-			t.editor.windowManager.setTitle(ti, t.id);
-
-		if (!tinymce.isIE && !t.isWindow) {
-			tinymce.dom.Event._add(document, 'focus', function() {
-				t.editor.windowManager.focus(t.id)
-			});
-		}
-	},
-
+	/**
+	 * Returns the reference to the parent window that opened the dialog.
+	 *
+	 * @return {Window} Reference to the parent window that opened the dialog.
+	 */
 	getWin : function() {
 		return window.dialogArguments || opener || parent || top;
 	},
 
+	/**
+	 * Returns a window argument/parameter by name.
+	 *
+	 * @param {String} n Name of the window argument to retrive.
+	 * @param {String} dv Optional default value to return.
+	 * @return {String} Argument value or default value if it wasn't found.
+	 */
 	getWindowArg : function(n, dv) {
-		return this.editor.windowManager.getParam(n, dv);
+		var v = this.params[n];
+
+		return tinymce.is(v) ? v : dv;
 	},
 
+	/**
+	 * Returns a editor parameter/config option value.
+	 *
+	 * @param {String} n Name of the editor config option to retrive.
+	 * @param {String} dv Optional default value to return.
+	 * @return {String} Parameter value or default value if it wasn't found.
+	 */
 	getParam : function(n, dv) {
 		return this.editor.getParam(n, dv);
 	},
 
+	/**
+	 * Returns a language item by key.
+	 *
+	 * @param {String} n Language item like mydialog.something.
+	 * @param {String} dv Optional default value to return.
+	 * @return {String} Language value for the item like "my string" or the default value if it wasn't found.
+	 */
 	getLang : function(n, dv) {
 		return this.editor.getLang(n, dv);
 	},
 
+	/**
+	 * Executed a command on editor that opened the dialog/popup.
+	 *
+	 * @param {String} cmd Command to execute.
+	 * @param {bool} ui Optional boolean value if the UI for the command should be presented or not.
+	 * @param {Object} val Optional value to pass with the comman like an URL.
+	 */
 	execCommand : function(cmd, ui, val) {
-		this.editor.execCommand(cmd, ui, val);
+		return this.editor.execCommand(cmd, ui, val);
 	},
 
+	/**
+	 * Resizes the dialog to the inner size of the window. This is needed since various browsers
+	 * have different border sizes on windows.
+	 */
 	resizeToInnerSize : function() {
 		var t = this, n, b = document.body, vp = t.dom.getViewPort(window), dw, dh;
 
@@ -111,16 +122,30 @@ tinyMCEPopup = {
 			t.editor.windowManager.resizeBy(dw, dh, t.id);
 	},
 
+	/**
+	 * Will executed the specified string when the page has been loaded. This function
+	 * was added for compatibility with the 2.x branch.
+	 *
+	 * @param {String} s String to evalutate on init.
+	 */
 	executeOnLoad : function(s) {
 		this.onInit.add(function() {
 			eval(s);
 		});
 	},
 
+	/**
+	 * Stores the current editor selection for later restoration. This can be useful since some browsers
+	 * looses it's selection if a control element is selected/focused inside the dialogs.
+	 */
 	storeSelection : function() {
 		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark(1);
 	},
 
+	/**
+	 * Restores any stored selection. This can be useful since some browsers
+	 * looses it's selection if a control element is selected/focused inside the dialogs.
+	 */
 	restoreSelection : function() {
 		var t = tinyMCEPopup;
 
@@ -128,14 +153,10 @@ tinyMCEPopup = {
 			t.editor.selection.moveToBookmark(t.editor.windowManager.bookmark);
 	},
 
-	_restoreSelection : function() {
-		var e = window.event.srcElement;
-
-		// If user focus a non text input or textarea
-		if ((e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') || e.type != 'text')
-			tinyMCEPopup.restoreSelection();
-	},
-
+	/**
+	 * Loads a specific dialog language pack. If you pass in plugin_url as a arugment
+	 * when you open the window it will load the <plugin url>/langs/<code>_dlg.js lang pack file.
+	 */
 	requireLangPack : function() {
 		var u = this.getWindowArg('plugin_url') || this.getWindowArg('theme_url');
 
@@ -174,11 +195,61 @@ tinyMCEPopup = {
 		this.editor.execCallback('file_browser_callback', element_id, document.getElementById(element_id).value, type, window);
 	},
 
+	/**
+	 * Closes the current window.
+	 */
 	close : function() {
 		var t = this;
 
 		t.dom = t.dom.doc = null; // Cleanup
 		t.editor.windowManager.close(window, t.id);
+	},
+
+	// Internal functions	
+
+	_restoreSelection : function() {
+		var e = window.event.srcElement;
+
+		// If user focus a non text input or textarea
+		if ((e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') || e.type != 'text')
+			tinyMCEPopup.restoreSelection();
+	},
+
+	_onDOMLoaded : function() {
+		var t = this, ti = document.title, bm, h;
+
+		// Translate page
+		h = document.body.innerHTML;
+
+		// Replace a=x with a="x" in IE
+		if (tinymce.isIE)
+			h = h.replace(/ (value|title|alt)=([^\s>]+)/gi, ' $1="$2"');
+
+		document.body.innerHTML = t.editor.translate(h);
+		document.title = ti = t.editor.translate(ti);
+		document.body.style.display = '';
+
+		// Restore selection in IE when focus is placed on a non textarea or input element of the type text
+		if (tinymce.isIE)
+			document.attachEvent('onbeforeactivate', tinyMCEPopup._restoreSelection);
+
+		// Call onInit
+		tinymce.each(t.listeners, function(o) {
+			o.func.call(o.scope, t.editor);
+		});
+
+		t.resizeToInnerSize();
+
+		if (t.isWindow)
+			window.focus();
+		else
+			t.editor.windowManager.setTitle(ti, t.id);
+
+		if (!tinymce.isIE && !t.isWindow) {
+			tinymce.dom.Event._add(document, 'focus', function() {
+				t.editor.windowManager.focus(t.id)
+			});
+		}
 	}
 };
 

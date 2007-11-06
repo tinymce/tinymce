@@ -9,6 +9,12 @@
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
 
 	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.Button', {
+		/**
+		 * Constructs a new split button control instance.
+		 *
+		 * @param {String} id Control id for the split button.
+		 * @param {Object} s Optional name/value settings object.
+		 */
 		SplitButton : function(id, s) {
 			this.parent(id, s);
 			this.classPrefix = 'mceSplitButton';
@@ -16,6 +22,9 @@
 			s.menu_container = s.menu_container || document.body;
 		},
 
+		/**
+		 * Shows the menu.
+		 */
 		showMenu : function() {
 			var t = this, p1, p2, e = DOM.get(this.id), m;
 
@@ -41,6 +50,9 @@
 			DOM.addClass(t.id, 'mceSplitButtonSelected');
 		},
 
+		/**
+		 * Renders the menu to the DOM.
+		 */
 		renderMenu : function() {
 			var t = this, m;
 
@@ -55,6 +67,12 @@
 			t.menu = m;
 		},
 
+		/**
+		 * Hides the menu. The optional event parameter is used to check where the event occured so it
+		 * doesn't close them menu if it was a event inside the menu.
+		 *
+		 * @param {Event} e Optional event object.
+		 */
 		hideMenu : function(e) {
 			var t = this;
 
@@ -66,6 +84,12 @@
 			}
 		},
 
+		/**
+		 * Renders the split button as a HTML string. This method is much faster than using the DOM and when
+		 * creating a whole toolbar with buttons it does make a lot of difference.
+		 *
+		 * @return {String} HTML for the split button control element.
+		 */
 		renderHTML : function() {
 			var h, t = this, s = t.settings, h1;
 
@@ -86,6 +110,10 @@
 			return DOM.createHTML('table', {id : t.id, 'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'], cellpadding : '0', cellspacing : '0', onmousedown : 'return false;', title : s.title}, h);
 		},
 
+		/**
+		 * Post render handler. This function will be called after the UI has been
+		 * rendered so that events can be added.
+		 */
 		postRender : function() {
 			var t = this, s = t.settings;
 
@@ -113,11 +141,15 @@
 			}
 		},
 
+		/**
+		 * Executes the specified callback function for the split button. In this case when the user clicks the button or selects a item.
+		 */
 		execCallback : function(v, a) {
-			var s = this.settings;
+			var t = this, s = t.settings;
 
-			this.hideMenu();
-			return s.func.call(s.scope || this, v || this.value, a);
+			t.hideMenu();
+
+			return s.func.call(s.scope || t, v || t.value, a);
 		}
 	});
 })();

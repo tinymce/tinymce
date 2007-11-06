@@ -70,8 +70,7 @@
 	include('ui/ColorSplitButton.js');
 	include('ui/Toolbar.js');
 	include('Theme.js');
-	include('ThemeManager.js');
-	include('PluginManager.js');
+	include('AddOnManager.js');
 	include('EditorManager.js');
 	include('Editor.js');
 	include('EditorCommands.js');

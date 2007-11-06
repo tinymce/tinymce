@@ -16,6 +16,9 @@
 	each = tinymce.each;
 	extend = tinymce.extend;
 
+	/**
+	 * This is a internal class and no method in this class should be called directly form the out side.
+	 */
 	tinymce.create('tinymce.ForceBlocks', {
 		ForceBlocks : function(ed) {
 			var t = this, s;

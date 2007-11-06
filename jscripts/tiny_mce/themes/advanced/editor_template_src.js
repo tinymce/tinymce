@@ -132,7 +132,7 @@
 			}
 
 			if ((cd = this.controls[n]))
-				return cf.createButton(n, "advanced." + cd[0], {command : cd[1], ui : cd[2], value : cd[3]});
+				return cf.createButton(n, {title : "advanced." + cd[0], cmd : cd[1], ui : cd[2], value : cd[3]});
 		},
 
 		execCommand : function(cmd, ui, val) {
@@ -157,11 +157,14 @@
 		},
 
 		_createStyleSelect : function(n) {
-			var t = this, ed = t.editor, cf = ed.controlManager, c = cf.createListBox('styleselect', 'advanced.style_select', function(v) {
-				if (c.selectedValue === v)
-					ed.execCommand('mceSetStyleInfo', 0, {command : 'removeformat'});
-				else
-					ed.execCommand('mceSetCSSClass', 0, v);
+			var t = this, ed = t.editor, cf = ed.controlManager, c = cf.createListBox('styleselect', {
+				title : 'advanced.style_select',
+				func : function(v) {
+					if (c.selectedValue === v)
+						ed.execCommand('mceSetStyleInfo', 0, {command : 'removeformat'});
+					else
+						ed.execCommand('mceSetCSSClass', 0, v);
+				}
 			});
 
 			each((t.settings.theme_advanced_styles || '').split(';'), function(v) {
@@ -182,7 +185,7 @@
 		_createFontSelect : function() {
 			var c, t = this;
 
-			c = t.editor.controlManager.createListBox('fontselect', 'advanced.fontdefault', 'FontName');
+			c = t.editor.controlManager.createListBox('fontselect', {title : 'advanced.fontdefault', cmd : 'FontName'});
 
 			each(t.settings.theme_advanced_fonts.split(';'), function(v) {
 				var p = v.split('='), st;
@@ -207,7 +210,7 @@
 				"7 (36 pt)"
 			], fz = [8, 10, 12, 14, 18, 24, 36];
 
-			c = t.editor.controlManager.createListBox('fontsizeselect', 'advanced.font_size', 'FontSize');
+			c = t.editor.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', cmd : 'FontSize'});
 
 			each(t.settings.theme_advanced_font_sizes.split(','), function(v) {
 				c.add(lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'pt', 'class' : 'fontSize' + v});
@@ -235,7 +238,7 @@
 				samp : 'advanced.samp'
 			}, t = this;
 
-			c = t.editor.controlManager.createListBox('formatselect', 'advanced.block', 'FormatBlock');
+			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
 
 			each(t.settings.theme_advanced_blockformats.split(','), function(v) {
 				c.add(t.editor.translate(fmts[v]), v, {element : v, 'class' : v.indexOf('h') == 0 ? '' : 'preview'});
@@ -261,7 +264,11 @@
 			if (v = s.theme_advanced_text_colors)
 				o.colors = v;
 
-			c = t.editor.controlManager.createColorSplitButton('forecolor', 'advanced.forecolor_desc', 'ForeColor', this, o);
+			o.title = 'advanced.forecolor_desc';
+			o.cmd = 'ForeColor';
+			o.scope = this;
+
+			c = t.editor.controlManager.createColorSplitButton('forecolor', o);
 
 			return c;
 		},
@@ -283,7 +290,11 @@
 			if (v = s.theme_advanced_background_colors)
 				o.colors = v;
 
-			c = t.editor.controlManager.createColorSplitButton('backcolor', 'advanced.backcolor_desc', 'HiliteColor', this, o);
+			o.title = 'advanced.backcolor_desc';
+			o.cmd = 'HiliteColor';
+			o.scope = this;
+
+			c = t.editor.controlManager.createColorSplitButton('backcolor', o);
 
 			return c;
 		},
@@ -910,7 +921,7 @@
 
 			ed.windowManager.confirm('advanced.newdocument', function(s) {
 				if (s)
-					ed.execCommand('mceSetContent', false, '<br />');
+					ed.execCommand('mceSetContent', false, '');
 			});
 		}
 	});

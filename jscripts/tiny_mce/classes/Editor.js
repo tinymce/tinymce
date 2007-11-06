@@ -11,7 +11,16 @@
 	var is = tinymce.is, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, EditorManager = tinymce.EditorManager;
 	var inArray = tinymce.inArray, grep = tinymce.grep;
 
+	/**
+	 * This class contains the core logic for a TinyMCE editor.
+	 */
 	tinymce.create('tinymce.Editor', {
+		/**
+		 * Constructs a editor instance by id.
+		 *
+		 * @param {String} id Unique id for the editor.
+		 * @param {Object} s Optional settings string for the editor.
+		 */
 		Editor : function(id, s) {
 			var t = this;
 
@@ -21,7 +30,7 @@
 			t.queryValueCommands = {};
 			t.plugins = {};
 
-			// Add events
+			// Add events to the editor
 			each([
 				'onPreInit',
 				'onBeforeRenderUI',
@@ -111,6 +120,9 @@
 			t.baseURI = EditorManager.baseURI;
 		},
 
+		/**
+		 * Renderes the editor/adds it to the page.
+		 */
 		render : function() {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
@@ -141,7 +153,7 @@
 					t.save({format : 'raw', no_events : true});
 			});
 
-			tinymce.addUnload(t.destroy, t);
+			tinymce.addUnload(t._destroy, t);
 
 			if (s.submit_patch) {
 				t.onBeforeRenderUI.add(function() {
@@ -208,6 +220,11 @@
 				loadScripts();
 		},
 
+		/**
+		 * Initializes the editor this will be called automatically when
+		 * all plugins/themes and language packs are loaded by the rendered method.
+		 * This method will setup the iframe and create the theme and plugin instances.
+		 */
 		init : function() {
 			var n, t = this, s = t.settings, w, h, e = DOM.get(s.id), o;
 
@@ -215,11 +232,11 @@
 
 			// Create theme
 			o = ThemeManager.get(s.theme);
-			t.theme = new o(t, ThemeManager.themeURLs[s.theme]);
+			t.theme = new o(t, ThemeManager.urls[s.theme]);
 
 			// Create all plugins
 			each(s.plugins.replace(/\-/g, '').split(','), function(p) {
-				var c = PluginManager.get(p), u = PluginManager.pluginURLs[p];
+				var c = PluginManager.get(p), u = PluginManager.urls[p];
 
 				if (c)
 					t.plugins[p] = new c(t, u);
@@ -320,6 +337,11 @@
 			}
 		},
 
+		/**
+		 * This method get called by the init method ones the iframe is loaded.
+		 * It will fill the iframe with contents, setups DOM and selection objects for the iframe.
+		 * This method should not be called directly.
+		 */
 		setupIframe : function() {
 			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
 
@@ -542,6 +564,12 @@
 			e = null;
 		},
 
+		/**
+		 * Focuses/activates the editor. This will set this editor as the activeEditor in the EditorManager
+		 * it will also place DOM focus inside the editor.
+		 *
+		 * @param {bool} sf Skip DOM focus. Just set is as the active editor.
+		 */
 		focus : function(sf) {
 			var oed, t = this;
 
@@ -559,6 +587,13 @@
 			EditorManager.activeEditor = t;
 		},
 
+		/**
+		 * Executes a legacy callback. This method is useful to call old 2.x option callbacks.
+		 * There new event model is a better way to add callback so this method might be removed in the future.
+		 *
+		 * @param {String} n Name of the callback to execute.
+		 * @return {Object} Return value passed from callback function.
+		 */
 		execCallback : function(n) {
 			var t = this, f = t.settings[n], s;
 
@@ -582,6 +617,13 @@
 			return f.apply(s || t, Array.prototype.slice.call(arguments, 1));
 		},
 
+		/**
+		 * Translates the specified string by replacing variables with language pack items it will also check if there is
+		 * a key mathcin the input.
+		 *
+		 * @param {String} s String to translate by the language pack data.
+		 * @return {String} Translated string.
+		 */
 		translate : function(s) {
 			var c = this.settings.language, i18n = EditorManager.i18n;
 
@@ -590,14 +632,33 @@
 			});
 		},
 
+		/**
+		 * Returns a language pack item by name/key.
+		 *
+		 * @param {String} n Name/key to get from the language pack.
+		 * @param {String} dv Optional default value to retrive.
+		 */
 		getLang : function(n, dv) {
 			return EditorManager.i18n[this.settings.language + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
 		},
 
+		/**
+		 * Returns a configuration parameter by name.
+		 *
+		 * @param {String} n Configruation parameter to retrive.
+		 * @param {String} dv Optional default value to return.
+		 * @return {String} Configuration parameter value or default value.
+		 */
 		getParam : function(n, dv) {
 			return this.settings[n] || dv;
 		},
 
+		/**
+		 * Distpaches out a onNodeChange event to all observers. This method should be called when you
+		 * need to update the UI states or element path etc.
+		 *
+		 * @param {Object} o Optional object to pass along for the node changed event.
+		 */
 		nodeChanged : function(o) {
 			var t = this, s = t.selection;
 
@@ -609,97 +670,59 @@
 			);
 		},
 
+		/**
+		 * Adds a button that later gets created by the ControlManager. This is a shorter and easier method
+		 * of adding buttons without the need to deal with the ControlManager directly. But it's also less
+		 * powerfull if you need more control use the ControlManagers factory methods instead.
+		 *
+		 * @param {String} n Button name to add.
+		 * @param {Sting} ti Title for the button.
+		 * @param {String} cm Command to execute or function to execute on click.
+		 * @param {Object} s Optional scope to execute the function in.
+		 */
+		addButton : function(n, ti, cm, s) {
+			var t = this;
+
+			s = s || {};
+			s.title = ti;
+			s.cmd = cm;
+			t.buttons = t.buttons || {};
+			t.buttons[n] = s;
+		},
+
+		/**
+		 * Adds a custom command to the editor, you can also override existing commands with this method.
+		 * The command that you add can be executed with execCommand.
+		 *
+		 * @param {String} n Command name to add/override.
+		 * @param {function} f Function to execute when the command occurs.
+		 * @param {Object} s Optional scope to execute the function in.
+		 */
 		addCommand : function(n, f, s) {
 			this.execCommands[n] = {func : f, scope : s || this};
 		},
 
+		/**
+		 * Adds a custom query state command to the editor, you can also override existing commands with this method.
+		 * The command that you add can be executed with queryCommandState.
+		 *
+		 * @param {String} n Command name to add/override.
+		 * @param {function} f Function to execute when the command state retrival occurs.
+		 * @param {Object} s Optional scope to execute the function in.
+		 */
 		addCommandQueryState : function(n, f, s) {
 			this.queryStateCommands[n] = {func : f, scope : s || this};
 		},
 
-		execCommand : function(cmd, ui, val) {
-			var t = this, s = 0, o;
-
-			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel)$/.test(cmd))
-				t.focus();
-
-			t.onBeforeExecCommand.dispatch(t, cmd, ui, val);
-
-			// Comamnd callback
-			if (t.execCallback('execcommand_callback', null, t.id, t.selection.getNode(), cmd, ui, val)) {
-				t.onExecCommand.dispatch(t, cmd, ui, val);
-				return true;
-			}
-
-			// Registred commands
-			if (o = t.execCommands[cmd]) {
-				s = o.func.call(o.scope, ui, val);
-				t.onExecCommand.dispatch(t, cmd, ui, val);
-				return s;
-			}
-
-			// Plugin commands
-			each(t.plugins, function(p) {
-				if (p.execCommand && p.execCommand(cmd, ui, val)) {
-					t.onExecCommand.dispatch(t, cmd, ui, val);
-					s = 1;
-					return false;
-				}
-			});
-
-			if (s)
-				return true;
-
-			// Theme commands
-			if (t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
-				t.onExecCommand.dispatch(t, cmd, ui, val);
-				return true;
-			}
-
-			// Editor commands
-			if (t.editorCommands.execCommand(cmd, ui, val)) {
-				t.onExecCommand.dispatch(t, cmd, ui, val);
-				return true;
-			}
-
-			// Browser commands
-			t.getDoc().execCommand(cmd, ui, val);
-			t.onExecCommand.dispatch(t, cmd, ui, val);
-		},
-
-		queryCommandState : function(c) {
-			var t = this, o;
-
-			// Registred commands
-			if (o = t.queryStateCommands[c])
-				return o.func.call(o.scope);
-
-			// Registred commands
-			o = t.editorCommands.queryCommandState(c);
-			if (o !== -1)
-				return o;
-
-			// Browser commands
-			return this.getDoc().queryCommandState(c);
-		},
-
-		queryCommandValue : function(c) {
-			var t = this, o;
-
-			// Registred commands
-			if (o = t.queryValueCommands[c])
-				return o.func.call(o.scope);
-
-			// Registred commands
-			o = t.editorCommands.queryCommandValue(c);
-			if (is(o))
-				return o;
-
-			// Browser commands
-			return this.getDoc().queryCommandValue(c);
-		},
-
-		// addShortcut('ctrl+v', function(x) {});
+		/**
+		 * Adds a keyboard shortcut for some command or function.
+		 *
+		 * @param {String} pa Shortcut pattern. Like for example: ctrl+alt+o.
+		 * @param {String} desc Text description for the command.
+		 * @param {String/Function} cmd_func Command name string or function to execute when the key is pressed.
+		 * @param {Object} sc Optional scope to execute the function in.
+		 * @return {bool} true/false state if the shortcut was added or not.
+		 */
 		addShortcut : function(pa, desc, cmd_func, sc) {
 			var t = this, c;
 
@@ -754,6 +777,114 @@
 			return true;
 		},
 
+		/**
+		 * Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" or
+		 * they can be build in browser commands such as "Bold". A compleate list of browser commands is available on MSDN or Mozilla.org.
+		 * This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of these
+		 * return true it will handle the command as a internal browser command.
+		 *
+		 * @param {String} cmd Command name to execute, for example mceLink or Bold.
+		 * @param {bool} ui True/false state if a UI (dialog) should be presented or not.
+		 * @param {mixed} val Optional command value, this can be anything.
+		 * @return {bool} True/false if the command was executed or not.
+		 */
+		execCommand : function(cmd, ui, val) {
+			var t = this, s = 0, o;
+
+			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel)$/.test(cmd))
+				t.focus();
+
+			t.onBeforeExecCommand.dispatch(t, cmd, ui, val);
+
+			// Comamnd callback
+			if (t.execCallback('execcommand_callback', null, t.id, t.selection.getNode(), cmd, ui, val)) {
+				t.onExecCommand.dispatch(t, cmd, ui, val);
+				return true;
+			}
+
+			// Registred commands
+			if (o = t.execCommands[cmd]) {
+				s = o.func.call(o.scope, ui, val);
+				t.onExecCommand.dispatch(t, cmd, ui, val);
+				return s;
+			}
+
+			// Plugin commands
+			each(t.plugins, function(p) {
+				if (p.execCommand && p.execCommand(cmd, ui, val)) {
+					t.onExecCommand.dispatch(t, cmd, ui, val);
+					s = 1;
+					return false;
+				}
+			});
+
+			if (s)
+				return true;
+
+			// Theme commands
+			if (t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
+				t.onExecCommand.dispatch(t, cmd, ui, val);
+				return true;
+			}
+
+			// Editor commands
+			if (t.editorCommands.execCommand(cmd, ui, val)) {
+				t.onExecCommand.dispatch(t, cmd, ui, val);
+				return true;
+			}
+
+			// Browser commands
+			t.getDoc().execCommand(cmd, ui, val);
+			t.onExecCommand.dispatch(t, cmd, ui, val);
+		},
+
+		/**
+		 * Returns a command specific state, for example if bold is enabled or not.
+		 *
+		 * @param {string} c Command to query state from.
+		 * @return {bool} Command specific state, for example if bold is enabled or not.
+		 */
+		queryCommandState : function(c) {
+			var t = this, o;
+
+			// Registred commands
+			if (o = t.queryStateCommands[c])
+				return o.func.call(o.scope);
+
+			// Registred commands
+			o = t.editorCommands.queryCommandState(c);
+			if (o !== -1)
+				return o;
+
+			// Browser commands
+			return this.getDoc().queryCommandState(c);
+		},
+
+		/**
+		 * Returns a command specific value, for example the current font size.
+		 *
+		 * @param {string} c Command to query value from.
+		 * @return {Object} Command specific value, for example the current font size.
+		 */
+		queryCommandValue : function(c) {
+			var t = this, o;
+
+			// Registred commands
+			if (o = t.queryValueCommands[c])
+				return o.func.call(o.scope);
+
+			// Registred commands
+			o = t.editorCommands.queryCommandValue(c);
+			if (is(o))
+				return o;
+
+			// Browser commands
+			return this.getDoc().queryCommandValue(c);
+		},
+
+		/**
+		 * Shows the editor and hides any textarea/div that the editor is supposed to replace.
+		 */
 		show : function() {
 			var t = this;
 
@@ -762,6 +893,9 @@
 			t.load();
 		},
 
+		/**
+		 * Hides the editor and shows any textarea/div that the editor is supposed to replace.
+		 */
 		hide : function() {
 			var t = this, s = t.settings;
 
@@ -774,14 +908,33 @@
 			t.save();
 		},
 
+		/**
+		 * Returns true/false if the editor is hidden or not.
+		 *
+		 * @return {bool} True/false if the editor is hidden or not.
+		 */
 		isHidden : function() {
 			return !DOM.isHidden(this.id);
 		},
 
+		/**
+		 * Sets the progress state, this will display a throbber/progess for the editor.
+		 * This is ideal for asycronous operations like an AJAX save call.
+		 *
+		 * @param {bool} b Boolean state if the progress should be shown or hidden.
+		 * @param {Number} ti Optional time to wait before the progress gets shown.
+		 * @param {Object} o Optional object to pass to the progress observers.
+		 * @return {bool} Same as the input state.
+		 */
 		setProgressState : function(b, ti, o) {
 			this.onSetProgressState.dispatch(this, b, ti, o);
+
+			return b;
 		},
 
+		/**
+		 * Removes the editor from the dom and EditorManager collection.
+		 */
 		remove : function() {
 			var t = this;
 
@@ -794,22 +947,9 @@
 			EditorManager.remove(t);
 		},
 
-		destroy : function() {
-			var t = this;
-
-			if (t.formElement) {
-				t.formElement.submit = t.formElement._submit;
-				t.formElement._submit = null;
-			}
-
-			t.contentAreaContainer = t.formElement = t.container = t.contentDocument = t.contentWindow = null;
-
-			if (t.selection)
-				t.selection = t.selection.win = t.selection.dom = t.selection.dom.doc = null;
-
-			t.destroyed = 1;
-		},
-
+		/**
+		 * Resizes the editor to the current contents width and height.
+		 */
 		resizeToContent : function() {
 			var t = this;
 
@@ -860,12 +1000,6 @@
 		setContent : function(h, o) {
 			var t = this;
 
-			// Padd empty content in Gecko
-			// Commands will otherwise fail on the content
-			// It will also be impossible to place the caret in the editor unless there is a BR element present
-			if (tinymce.isGecko && (h.length === 0 || /^\s+$/.test(h)))
-				h = '<br />';
-
 			o = o || {};
 			o.format = o.format || 'html';
 			o.set = true;
@@ -873,6 +1007,13 @@
 
 			if (!o.no_events)
 				t.onBeforeSetContent.dispatch(t, o);
+
+			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
+			// It will also be impossible to place the caret in the editor unless there is a BR element present
+			if (!tinymce.isIE && (h.length === 0 || /^\s+$/.test(h))) {
+				o.content = t.dom.setHTML(t.getBody(), '<br mce_bogus="1" />');
+				o.format = 'raw';
+			}
 
 			o.content = t.dom.setHTML(t.getBody(), o.content);
 
@@ -910,6 +1051,23 @@
 			return o.content;
 		},
 
+		/**
+		 * Returns true/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
+		 *
+		 * @return {bool} True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
+		 */
+		isDirty : function() {
+			var t = this;
+
+			return tinymce.trim(t.startContent) != tinymce.trim(t.getContent({format : 'raw', no_events : 1})) && !t.isNotDirty;
+		},
+
+		/**
+		 * Returns the editors container element. The container element wrappes in
+		 * all the elements added to the page for the editor. Such as UI, iframe etc.
+		 *
+		 * @return {Element} HTML DOM element for the editor container.
+		 */
 		getContainer : function() {
 			var t = this;
 
@@ -919,10 +1077,21 @@
 			return t.container;
 		},
 
+		/**
+		 * Returns the editors content area container element. The this element is the one who
+		 * holds the iframe or the editable element.
+		 *
+		 * @return {Element} HTML DOM element for the editor area container.
+		 */
 		getContentAreaContainer : function() {
 			return this.contentAreaContainer;
 		},
 
+		/**
+		 * Returns the iframes window object.
+		 *
+		 * @return {Window} Iframe DOM window object.
+		 */
 		getWin : function() {
 			var t = this;
 
@@ -932,6 +1101,11 @@
 			return t.contentWindow;
 		},
 
+		/**
+		 * Returns the iframes document object.
+		 *
+		 * @return {Document} Iframe DOM document object.
+		 */
 		getDoc : function() {
 			var t = this;
 
@@ -941,17 +1115,22 @@
 			return t.contentDocument;
 		},
 
+		/**
+		 * Returns the iframes body element.
+		 *
+		 * @return {Element} Iframe body element.
+		 */
 		getBody : function() {
 			return this.getDoc().body;
 		},
 
 		/**
-		 * URL converter callback this gets executed each time a user adds an img, a or
+		 * URL converter function this gets executed each time a user adds an img, a or
 		 * any other element that has a URL in it. This will be called both by the DOM and HTML
 		 * manipulation functions.
 		 *
 		 * @param {string} u URL to convert.
-		 * @param {string} n Attrubute name src, href etc.
+		 * @param {string} n Attribute name src, href etc.
 		 * @param {string/HTMLElement} Tag name or HTML DOM element depending on HTML or DOM insert.
 		 * @return {string} Converted URL string.
 		 */
@@ -976,12 +1155,11 @@
 			return u;
 		},
 
-		isDirty : function() {
-			var t = this;
-
-			return tinymce.trim(t.startContent) != tinymce.trim(t.getContent({format : 'raw', no_events : 1})) && !t.isNotDirty;
-		},
-
+		/**
+		 * Adds visual aid for tables, anchors etc so they can be more easily edited inside the editor.
+		 *
+		 * @param {Element} e Optional root element to loop though to find tables etc that needs the visual aid.
+		 */
 		addVisual : function(e) {
 			var t = this, s = t.settings;
 
@@ -1023,14 +1201,7 @@
 			t.onVisualAid.dispatch(t, e, t.hasVisual);
 		},
 
-		addButton : function(n, ti, cm, s) {
-			var t = this;
-
-			t.buttons = t.buttons || {};
-			t.buttons[n] = {title : ti, cmd : cm, settings : s || {}};
-		},
-
-		// Private/internal functions
+		// Internal functions
 
 		_addEvents : function() {
 			// 'focus', 'blur', 'dblclick', 'beforedeactivate', submit, reset
@@ -1305,6 +1476,22 @@
 					}
 				});
 			}
+		},
+
+		_destroy : function() {
+			var t = this;
+
+			if (t.formElement) {
+				t.formElement.submit = t.formElement._submit;
+				t.formElement._submit = null;
+			}
+
+			t.contentAreaContainer = t.formElement = t.container = t.contentDocument = t.contentWindow = null;
+
+			if (t.selection)
+				t.selection = t.selection.win = t.selection.dom = t.selection.dom.doc = null;
+
+			t.destroyed = 1;
 		},
 
 		_convertInlineElements : function() {

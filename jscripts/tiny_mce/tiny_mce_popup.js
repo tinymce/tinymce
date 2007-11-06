@@ -9,6 +9,7 @@ tinyMCEPopup = {
 		tinymce = w.tinymce;
 		tinyMCE = w.tinyMCE;
 		t.editor = tinymce.EditorManager.activeEditor;
+		t.params = t.editor.windowManager.params;
 
 		// Setup local DOM
 		t.dom = t.editor.windowManager.createDOM(document, window);
@@ -26,7 +27,7 @@ tinyMCEPopup = {
 		ti = window.setInterval(function() {
 			if (document.body) {
 				window.clearInterval(ti);
-				t.onDOMLoaded();
+				t._onDOMLoaded();
 			}
 		}, 10);
 
@@ -35,7 +36,98 @@ tinyMCEPopup = {
 		t.editor.windowManager.onOpen.dispatch(t.editor.windowManager, window);
 	},
 
-	onDOMLoaded : function() {
+	getWin : function() {
+		return window.dialogArguments || opener || parent || top;
+	},
+
+	getWindowArg : function(n, dv) {
+		var v = this.params[n];
+
+		return tinymce.is(v) ? v : dv;
+	},
+
+	getParam : function(n, dv) {
+		return this.editor.getParam(n, dv);
+	},
+
+	getLang : function(n, dv) {
+		return this.editor.getLang(n, dv);
+	},
+
+	execCommand : function(cmd, ui, val) {
+		return this.editor.execCommand(cmd, ui, val);
+	},
+
+	resizeToInnerSize : function() {
+		var t = this, n, b = document.body, vp = t.dom.getViewPort(window), dw, dh;
+
+		dw = t.getWindowArg('mce_width') - vp.w;
+		dh = t.getWindowArg('mce_height') - vp.h;
+
+		if (t.isWindow)
+			window.resizeBy(dw, dh);
+		else
+			t.editor.windowManager.resizeBy(dw, dh, t.id);
+	},
+
+	executeOnLoad : function(s) {
+		this.onInit.add(function() {
+			eval(s);
+		});
+	},
+
+	storeSelection : function() {
+		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark(1);
+	},
+
+	restoreSelection : function() {
+		var t = tinyMCEPopup;
+
+		if (!t.isWindow)
+			t.editor.selection.moveToBookmark(t.editor.windowManager.bookmark);
+	},
+
+	requireLangPack : function() {
+		var u = this.getWindowArg('plugin_url') || this.getWindowArg('theme_url');
+
+		if (u)
+			document.write('<script type="text/javascript" src="' + u + '/langs/' + this.editor.settings.language + '_dlg.js' + '"></script>');
+	},
+
+	pickColor : function(e, element_id) {
+		this.editor.execCommand('mceColorPicker', true, {
+			color : document.getElementById(element_id).value,
+			func : function(c) {
+				document.getElementById(element_id).value = c;
+
+				if (tinymce.is(document.getElementById(element_id).onchange, 'function'))
+					document.getElementById(element_id).onchange();
+			}
+		});
+	},
+
+	openBrowser : function(element_id, type, option) {
+		this.editor.execCallback('file_browser_callback', element_id, document.getElementById(element_id).value, type, window);
+	},
+
+	close : function() {
+		var t = this;
+
+		t.dom = t.dom.doc = null; // Cleanup
+		t.editor.windowManager.close(window, t.id);
+	},
+
+	// Internal functions	
+
+	_restoreSelection : function() {
+		var e = window.event.srcElement;
+
+		// If user focus a non text input or textarea
+		if ((e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') || e.type != 'text')
+			tinyMCEPopup.restoreSelection();
+	},
+
+	_onDOMLoaded : function() {
 		var t = this, ti = document.title, bm, h;
 
 		// Translate page
@@ -70,93 +162,6 @@ tinyMCEPopup = {
 				t.editor.windowManager.focus(t.id)
 			});
 		}
-	},
-
-	getWin : function() {
-		return window.dialogArguments || opener || parent || top;
-	},
-
-	getWindowArg : function(n, dv) {
-		return this.editor.windowManager.getParam(n, dv);
-	},
-
-	getParam : function(n, dv) {
-		return this.editor.getParam(n, dv);
-	},
-
-	getLang : function(n, dv) {
-		return this.editor.getLang(n, dv);
-	},
-
-	execCommand : function(cmd, ui, val) {
-		this.editor.execCommand(cmd, ui, val);
-	},
-
-	resizeToInnerSize : function() {
-		var t = this, n, b = document.body, vp = t.dom.getViewPort(window), dw, dh;
-
-		dw = t.getWindowArg('mce_width') - vp.w;
-		dh = t.getWindowArg('mce_height') - vp.h;
-
-		if (t.isWindow)
-			window.resizeBy(dw, dh);
-		else
-			t.editor.windowManager.resizeBy(dw, dh, t.id);
-	},
-
-	executeOnLoad : function(s) {
-		this.onInit.add(function() {
-			eval(s);
-		});
-	},
-
-	storeSelection : function() {
-		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark(1);
-	},
-
-	restoreSelection : function() {
-		var t = tinyMCEPopup;
-
-		if (!t.isWindow)
-			t.editor.selection.moveToBookmark(t.editor.windowManager.bookmark);
-	},
-
-	_restoreSelection : function() {
-		var e = window.event.srcElement;
-
-		// If user focus a non text input or textarea
-		if ((e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') || e.type != 'text')
-			tinyMCEPopup.restoreSelection();
-	},
-
-	requireLangPack : function() {
-		var u = this.getWindowArg('plugin_url') || this.getWindowArg('theme_url');
-
-		if (u)
-			document.write('<script type="text/javascript" src="' + u + '/langs/' + this.editor.settings.language + '_dlg.js' + '"></script>');
-	},
-
-	pickColor : function(e, element_id) {
-		this.editor.execCommand('mceColorPicker', true, {
-			color : document.getElementById(element_id).value,
-			func : function(c) {
-				document.getElementById(element_id).value = c;
-
-				if (tinymce.is(document.getElementById(element_id).onchange, 'function'))
-					document.getElementById(element_id).onchange();
-			}
-		});
-	},
-
-	openBrowser : function(element_id, type, option) {
-		this.editor.execCallback('file_browser_callback', element_id, document.getElementById(element_id).value, type, window);
-	},
-
-	close : function() {
-		var t = this;
-
-		t.dom = t.dom.doc = null; // Cleanup
-		t.editor.windowManager.close(window, t.id);
 	}
 };
 

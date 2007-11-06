@@ -6,9 +6,20 @@
  */
 
 (function() {
+	// Shorten class names
 	var DOM = tinymce.DOM, is = tinymce.is;
 
+	/**
+	 * This class is the base class for all controls like buttons, toolbars, containers. This class should not
+	 * be instantiated directly other controls should inherit from this one.
+	 */
 	tinymce.create('tinymce.ui.Control', {
+		/**
+		 * Constructs a new control instance.
+		 *
+		 * @param {String} id Control id.
+		 * @param {Object} s Optional name/value settings object.
+		 */
 		Control : function(id, s) {
 			this.id = id;
 			this.settings = s = s || {};
@@ -20,6 +31,12 @@
 			this.active = 0;
 		},
 
+		/**
+		 * Sets the disabled state for the control. This will add CSS classes to the
+		 * element that contains the control. So that it can be disabled visually.
+		 *
+		 * @param {bool} s Boolean state if the control should be disabled or not.
+		 */
 		setDisabled : function(s) {
 			if (s != this.disabled) {
 				this.setState('Disabled', s);
@@ -28,10 +45,22 @@
 			}
 		},
 
+		/**
+		 * Returns true/false if the control is disabled or not. This is a method since you can then
+		 * choose to check some class or some internal bool state in subclasses.
+		 *
+		 * @return {bool} true/false if the control is disabled or not.
+		 */
 		isDisabled : function() {
 			return this.disabled;
 		},
 
+		/**
+		 * Sets the activated state for the control. This will add CSS classes to the
+		 * element that contains the control. So that it can be activated visually.
+		 *
+		 * @param {bool} s Boolean state if the control should be activated or not.
+		 */
 		setActive : function(s) {
 			if (s != this.active) {
 				this.setState('Active', s);
@@ -39,10 +68,22 @@
 			}
 		},
 
+		/**
+		 * Returns true/false if the control is disabled or not. This is a method since you can then
+		 * choose to check some class or some internal bool state in subclasses.
+		 *
+		 * @return {bool} true/false if the control is disabled or not.
+		 */
 		isActive : function() {
 			return this.active;
 		},
 
+		/**
+		 * Sets the specified class state for the control.
+		 *
+		 * @param {String} c Class name to add/remove depending on state.
+		 * @param {bool} s True/false state if the class should be removed or added.
+		 */
 		setState : function(c, s) {
 			var n = DOM.get(this.id);
 
@@ -54,17 +95,37 @@
 				DOM.removeClass(n, c);
 		},
 
+		/**
+		 * Returns true/false if the control has been rendered or not.
+		 *
+		 * @return {bool} State if the control has been rendered or not.
+		 */
 		isRendered : function() {
 			return this.rendered;
 		},
 
+		/**
+		 * Renders the control as a HTML string. This method is much faster than using the DOM and when
+		 * creating a whole toolbar with buttons it does make a lot of difference.
+		 *
+		 * @return {String} HTML for the button control element.
+		 */
 		renderHTML : function() {
 		},
 
+		/**
+		 * Renders the control to the specified container element.
+		 *
+		 * @param {Element} n HTML DOM element to add control to.
+		 */
 		renderTo : function(n) {
 			n.innerHTML = this.renderHTML();
 		},
 
+		/**
+		 * Post render event. This will be executed after the control has been rendered and can be used to
+		 * set states, add events to the control etc. It's recommended for subclasses of the control to call this method by using this.parent().
+		 */
 		postRender : function() {
 			var t = this, b;
 
@@ -82,6 +143,10 @@
 			}
 		},
 
+		/**
+		 * Destroys the control. This means it will be removed from the DOM and any
+		 * events tied to it will also be removed.
+		 */
 		destroy : function() {
 			DOM.remove(this.id);
 		}

@@ -287,7 +287,12 @@
 				img = img.replace(/\{\$themeurl\}/g, tinyMCE.themeURL);
 				lang = lang.replace(/^lang_/g, '');
 
-				return ed.controlManager.createButton(cn, lang, {command : c, ui : u, value : v}, this, {
+				return ed.controlManager.createButton(cn, {
+					title : lang,
+					command : c,
+					ui : u,
+					value : v,
+					scope : this,
 					'class' : 'compat',
 					image : img
 				});

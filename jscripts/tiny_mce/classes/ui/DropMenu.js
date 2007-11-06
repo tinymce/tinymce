@@ -8,7 +8,17 @@
 (function() {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, Event = tinymce.dom.Event, Element = tinymce.dom.Element;
 
+	/**
+	 * This class is used to create drop menus, a drop menu can be a
+	 * context menu, or a menu for a list box or a menu bar.
+	 */
 	tinymce.create('tinymce.ui.DropMenu:tinymce.ui.Menu', {
+		/**
+		 * Constructs a new drop menu control instance.
+		 *
+		 * @param {String} id Button control id for the button.
+		 * @param {Object} s Optional name/value settings object.
+		 */
 		DropMenu : function(id, s) {
 			s = s || {};
 			s.container = s.container || document.body;
@@ -21,20 +31,29 @@
 			this.classPrefix = 'mceMenu';
 		},
 
+		/**
+		 * Created a new sub menu for the drop menu control.
+		 *
+		 * @param {Object} s Optional name/value settings object.
+		 * @return {tinymce.ui.DropMenu} New drop menu instance.
+		 */
 		createMenu : function(s) {
-			var cs = this.settings, m;
+			var t = this, cs = t.settings, m;
 
 			s.container = s.container || cs.container;
-			s.parent = this;
+			s.parent = t;
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
 			m = new tinymce.ui.DropMenu(s.id || DOM.uniqueId(), s);
 
-			m.onAddItem.add(this.onAddItem.dispatch, this.onAddItem);
+			m.onAddItem.add(t.onAddItem.dispatch, t.onAddItem);
 
 			return m;
 		},
 
+		/**
+		 * Repaints the menu after new items have been added dynamically.
+		 */
 		update : function() {
 			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id);
 
@@ -54,6 +73,13 @@
 			}
 		},
 
+		/**
+		 * Displays the menu at the specified cordinate.
+		 *
+		 * @param {Number} x Horizontal position of the menu.
+		 * @param {Number} t Vertical position of the menu.
+		 * @param {Numner} px Optional parent X position used when menus are cascading.
+		 */
 		showMenu : function(x, y, px) {
 			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot, dm, tb;
 
@@ -148,6 +174,9 @@
 			}
 		},
 
+		/**
+		 * Hides the displayed menu.
+		 */
 		hideMenu : function() {
 			var t = this, co = DOM.get('menu_' + t.id), e;
 
@@ -168,6 +197,12 @@
 			t.onHideMenu.dispatch(t);
 		},
 
+		/**
+		 * Adds a new menu, menu item or sub classes of them to the drop menu.
+		 *
+		 * @param {tinymce.ui.Control} o Menu or menu item to add to the drop menu.
+		 * @return {tinymce.ui.Control} Same as the input control, the menu or menu item.
+		 */
 		add : function(o) {
 			var t = this, co;
 
@@ -179,11 +214,31 @@
 			return o;
 		},
 
+		/**
+		 * Collapses the menu, this will hide the menu and all menu items.
+		 *
+		 * @param {bool} d Optional deep state. If this is set to true all children will be collapsed as well.
+		 */
 		collapse : function(d) {
 			this.parent(d);
 			this.hideMenu();
 		},
 
+		/**
+		 * Removes a specific sub menu or menu item from the drop menu.
+		 *
+		 * @param {tinymce.ui.Control} o Menu item or menu to remove from drop menu.
+		 * @return {tinymce.ui.Control} Control instance or null if it wasn't found.
+		 */
+		remove : function(o) {
+			DOM.remove(o.id);
+
+			return this.parent(o);
+		},
+
+		/**
+		 * Destroys the menu. This will remove the menu from the DOM and any events added to it etc.
+		 */
 		destroy : function() {
 			var t = this, co = DOM.get('menu_' + t.id);
 
@@ -196,11 +251,34 @@
 			DOM.remove(co);
 		},
 
-		remove : function(o) {
-			DOM.remove(o.id);
+		/**
+		 * Renders the specified menu node to the dom.
+		 *
+		 * @return {Element} Container element for the drop menu.
+		 */
+		renderNode : function() {
+			var t = this, s = t.settings, n, tb, co;
 
-			return this.parent(o);
+			co = DOM.create('div', {id : 'menu_' + t.id, 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
+			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
+
+			if (s.menu_line)
+				DOM.add(co, 'span', {'class' : 'mceMenuLine'});
+
+//			n = DOM.add(co, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenuContainer'});
+			n = DOM.add(co, 'table', {id : 'menu_' + t.id + '_tbl', border : 0, cellPadding : 0, cellSpacing : 0});
+			tb = DOM.add(n, 'tbody');
+
+			each(t.items, function(o) {
+				t._add(tb, o);
+			});
+
+			t.rendered = true;
+
+			return co;
 		},
+
+		// Internal functions
 
 		_add : function(tb, o) {
 			var n, s = o.settings, a, ro, it;
@@ -240,28 +318,6 @@
 				DOM.removeClass(n, 'last');
 
 			DOM.addClass(ro, 'last');
-		},
-
-		renderNode : function() {
-			var t = this, s = t.settings, n, tb, co;
-
-			co = DOM.create('div', {id : 'menu_' + t.id, 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
-			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
-
-			if (s.menu_line)
-				DOM.add(co, 'span', {'class' : 'mceMenuLine'});
-
-//			n = DOM.add(co, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenuContainer'});
-			n = DOM.add(co, 'table', {id : 'menu_' + t.id + '_tbl', border : 0, cellPadding : 0, cellSpacing : 0});
-			tb = DOM.add(n, 'tbody');
-
-			each(t.items, function(o) {
-				t._add(tb, o);
-			});
-
-			t.rendered = true;
-
-			return co;
 		}
 	});
 })();

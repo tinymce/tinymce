@@ -8,12 +8,28 @@
 (function() {
 	var DOM = tinymce.DOM;
 
+	/**
+	 * This class is used to create a UI button. A button is basically a link
+	 * that is styled to look like a button or icon.
+	 */
 	tinymce.create('tinymce.ui.Button:tinymce.ui.Control', {
+		/**
+		 * Constructs a new button control instance.
+		 *
+		 * @param {String} id Control id for the button.
+		 * @param {Object} s Optional name/value settings object.
+		 */
 		Button : function(id, s) {
 			this.parent(id, s);
 			this.classPrefix = 'mceButton';
 		},
 
+		/**
+		 * Renders the button as a HTML string. This method is much faster than using the DOM and when
+		 * creating a whole toolbar with buttons it does make a lot of difference.
+		 *
+		 * @return {String} HTML for the button control element.
+		 */
 		renderHTML : function() {
 			var s = this.settings;
 
@@ -23,6 +39,10 @@
 			return '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '"><span class="icon ' + s['class'] + '"></span></a>';
 		},
 
+		/**
+		 * Post render handler. This function will be called after the UI has been
+		 * rendered so that events can be added.
+		 */
 		postRender : function() {
 			var t = this, s = t.settings;
 
@@ -32,6 +52,9 @@
 			});
 		},
 
+		/**
+		 * Executes the specified callback function for the button. In this case when the user clicks the button.
+		 */
 		execCallback : function() {
 			var s = this.settings;
 

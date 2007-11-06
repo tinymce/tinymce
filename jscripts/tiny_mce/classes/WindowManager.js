@@ -8,18 +8,33 @@
 (function() {
 	var Dispatcher = tinymce.util.Dispatcher, each = tinymce.each, isIE = tinymce.isIE, isOpera = tinymce.isOpera;
 
+	/**
+	 * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
+	 */
 	tinymce.create('tinymce.WindowManager', {
+		/**
+		 * Constructs a new window manager instance.
+		 *
+		 * @param {tinymce.Editor} ed Editor instance that the windows are bound to.
+		 */
 		WindowManager : function(ed) {
 			var t = this;
+
 			t.editor = ed;
-			t.onOpen = new tinymce.util.Dispatcher(t);
-			t.onClose = new tinymce.util.Dispatcher(t);
+			t.onOpen = new Dispatcher(t);
+			t.onClose = new Dispatcher(t);
 			t.params = {};
 			t.features = {};
 		},
 
+		/**
+		 * Opens a new window.
+		 *
+		 * @param {Object} s Optional name/value settings collection contains things like width/height/url etc.
+		 * @param {Object} p Optional parameters/arguments collection can be used by the dialogs to retrive custom parameters.
+		 */
 		open : function(s, p) {
-			var f = '', x, y, mo = this.editor.settings.dialog_type == 'modal', w, sw, sh, vp = tinymce.DOM.getViewPort();
+			var t = this, f = '', x, y, mo = t.editor.settings.dialog_type == 'modal', w, sw, sh, vp = tinymce.DOM.getViewPort();
 
 			// Default some options
 			s = s || {};
@@ -60,9 +75,9 @@
 				}
 			});
 
-			this.features = s;
-			this.params = p;
-			this.onOpen.dispatch(this, s, p);
+			t.features = s;
+			t.params = p;
+			t.onOpen.dispatch(t, s, p);
 
 			try {
 				if (isIE && mo) {
@@ -75,41 +90,58 @@
 			}
 
 			if (!w)
-				alert(this.editor.getLang('popup_blocked'));
+				alert(t.editor.getLang('popup_blocked'));
 		},
 
+		/**
+		 * Closes the specified window. This will also dispatch out a onClose event.
+		 *
+		 * @param {Window} w Native window object to close.
+		 */
 		close : function(w) {
 			w.close();
 			this.onClose.dispatch(this);
 		},
 
-		setTitle : function(v) {
-		},
-
-		getParam : function(n, dv) {
-			var v = this.params[n];
-
-			return tinymce.is(v) ? v : dv;
-		},
-
-		getFeature : function(n, dv) {
-			return this.features[n] || dv;
-		},
-
+		/**
+		 * Creates a DOM instance for the opened document. This method was needed since IE can't create instances
+		 * of classes from a parent window some reference problem.
+		 *
+		 * @param {Document} doc DOM Document to bind DOM utils to.
+		 * @param {Object} s Optional name/value collection with settings for the new DOMUtils instance.
+		 */
 		createDOM : function(doc, s) {
 			return new tinymce.dom.DOMUtils(doc, s);
 		},
 
+		/**
+		 * Creates a confirm dialog. Please don't use the blocking behavior of this
+		 * native version use the callback method instead then it can be extended.
+		 *
+		 * @param {String} t Title for the new confirm dialog.
+		 * @param {function} cb Callback function to be executed after the user has selected ok or cancel.
+		 * @param {Object} s Optional scope to execute the callback in.
+		 */
 		confirm : function(t, cb, s) {
 			cb.call(s || this, confirm(this._decode(this.editor.getLang(t, t))));
 		},
 
+		/**
+		 * Creates a alert dialog. Please don't use the blocking behavior of this
+		 * native version use the callback method instead then it can be extended.
+		 *
+		 * @param {String} t Title for the new alert dialog.
+		 * @param {function} cb Callback function to be executed after the user has selected ok.
+		 * @param {Object} s Optional scope to execute the callback in.
+		 */
 		alert : function(t, cb, s) {
 			alert(this._decode(t));
 
 			if (cb)
 				cb.call(s || this);
 		},
+
+		// Internal functions
 
 		_decode : function(s) {
 			return tinymce.DOM.decode(s).replace(/\\n/g, '\n');

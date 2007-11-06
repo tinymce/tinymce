@@ -8,6 +8,9 @@
 (function() {
 	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit;
 
+	/**
+	 * This is a internal class and no method in this class should be called directly form the out side.
+	 */
 	tinymce.create('tinymce.EditorCommands', {
 		EditorCommands : function(ed) {
 			this.editor = ed;

@@ -8,7 +8,17 @@
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, is = tinymce.is, each = tinymce.each;
 
+	/**
+	 * This class is used to create UI color split button. A color split button will present show a small color picker
+	 * when you press the open menu.
+	 */
 	tinymce.create('tinymce.ui.ColorSplitButton:tinymce.ui.SplitButton', {
+		/**
+		 * Constructs a new color split button control instance.
+		 *
+		 * @param {String} id Control id for the color split button.
+		 * @param {Object} s Optional name/value settings object.
+		 */
 		ColorSplitButton : function(id, s) {
 			var t = this;
 
@@ -23,6 +33,10 @@
 			t.value = s.default_color;
 		},
 
+		/**
+		 * Shows the color menu. The color menu is a layer places under the button
+		 * and displays a table of colors for the user to pick from.
+		 */
 		showMenu : function() {
 			var t = this, r, p;
 
@@ -46,6 +60,12 @@
 			Event.add(document, 'mousedown', t.hideMenu, t);
 		},
 
+		/**
+		 * Hides the color menu. The optional event parameter is used to check where the event occured so it
+		 * doesn't close them menu if it was a event inside the menu.
+		 *
+		 * @param {Event} e Optional event object.
+		 */
 		hideMenu : function(e) {
 			var t = this;
 
@@ -56,6 +76,9 @@
 			}
 		},
 
+		/**
+		 * Renders the menu to the DOM.
+		 */
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr;
 
@@ -104,6 +127,11 @@
 			return m;
 		},
 
+		/**
+		 * Sets the current color for the control and hides the menu if it should be visible.
+		 *
+		 * @param {String} c Color code value in hex for example: #FF00FF
+		 */
 		setColor : function(c) {
 			var t = this, p, co = this.settings.menu_container, po, cp, id = t.id + '_preview';
 
