@@ -96,7 +96,7 @@
 		/**
 		 * Returns the rectangle for a specific element.
 		 *
-		 * @param {Element/string} e Element object or element ID to get rectange from.
+		 * @param {Element/String} e Element object or element ID to get rectange from.
 		 * @return {object} Rectange for specified element object with x, y, w, h fields.
 		 */
 		getRect : function(e) {
@@ -169,7 +169,7 @@
 		/**
 		 * Returns the specified element by ID or the input element if it isn't a string.
 		 *
-		 * @param {string/Element} n Element id to look for or element to just pass though.
+		 * @param {String/Element} n Element id to look for or element to just pass though.
 		 * @return {Element} Element matching the specified id or null if it wasn't found.
 		 */
 		get : function(e) {
@@ -295,8 +295,8 @@
 		/**
 		 * Adds the specified element to another element or elements.
 		 *
-		 * @param {string/Element/Array} Element id string, DOM node element or array of id's or elements to add to.
-		 * @param {string/Element} n Name of new element to add or existing element to add.
+		 * @param {String/Element/Array} Element id string, DOM node element or array of id's or elements to add to.
+		 * @param {String/Element} n Name of new element to add or existing element to add.
 		 * @param {Object} a Optional object collection with arguments to add to the new element(s).
 		 * @param {String} h Optional inner HTML contents to add for each element.
 		 * @param {bool} c Optional internal state to indicate if it should create or add.
@@ -337,7 +337,7 @@
 		/**
 		 * Adds a structure of elements to the specified target element(s). Check the Wiki for more details on this method.
 		 *
-		 * @param {string/Element/Array} te Target element id, element object or array of elements to add to.
+		 * @param {String/Element/Array} te Target element id, element object or array of elements to add to.
 		 * @param {Object} ne Object structure to add.
 		 */
 		addAll : function(te, ne) {
@@ -466,7 +466,7 @@
 		/**
 		 * Returns the current style or runtime/computed value of a element.
 		 *
-		 * @param {string/Element} n HTML element or element id string to get style from.
+		 * @param {String/Element} n HTML element or element id string to get style from.
 		 * @param {String} na Style name to return.
 		 * @param {String} c Computed style.
 		 * @return {String} Current style or computed style value of a element.
@@ -889,7 +889,7 @@
 		 * Returns true if the specified element has the specified class.
 		 *
 		 * @param {String/Element} n HTML element or element id string to check CSS class on.
-		 * @param {string] c CSS class to check for.
+		 * @param {String] c CSS class to check for.
 		 * @return {bool} true/false if the specified element has the specified class.
 		 */
 		hasClass : function(n, c) {
