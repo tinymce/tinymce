@@ -1,6 +1,7 @@
 Version 3.0a3 (2007-xx-xx)
 	Added new experimental jQuery and Prototype framework adapters to the development package.
 	Added new translation.html file for the development package. Helps with the internationalization of TinyMCE.
+	Added new setup callback option, use this callback to add events to TinyMCE. This method is recommended over the old callbacks.
 	Fixed various CSS issues in the default skin such as alignment of split buttons and separators.
 	Fixed issues with mod_security. It didn't like that a content type of text/javascript was forced in a XHR.
 	Fixed bug in IE and Safari and the on demand gzip loading feature.

@@ -8,10 +8,16 @@
 (function() {
 	var each = tinymce.each;
 
-	/**
-	 * This class contains simple cookie manangement functions.
+	/**#@+
+	 * @class This class contains simple cookie manangement functions.
+	 * @member tinymce.util.Cookie
+	 * @static
 	 */
 	tinymce.create('static tinymce.util.Cookie', {
+		/**#@+
+		 * @method
+		 */
+
 		/**
 		 * Parses the specified query string into an name/value object.
 		 *
@@ -108,5 +114,7 @@
 
 			this.set(n, '', d, p, d);
 		}
+
+		/**#@-*/
 	});
 })();

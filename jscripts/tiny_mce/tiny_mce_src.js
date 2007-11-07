@@ -339,7 +339,8 @@ var tinymce = {
 
 		return r;
 	}
-};
+
+	};
 
 // Required for GZip AJAX loading
 window.tinymce = tinymce;
@@ -399,7 +400,8 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 		return s;
 	}
-});
+
+	});
 
 /* file:jscripts/tiny_mce/classes/util/URI.js */
 
@@ -604,7 +606,8 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 			return t.source;
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/util/Cookie.js */
@@ -671,7 +674,8 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 			this.set(n, '', d, p, d);
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/util/JSON.js */
@@ -726,7 +730,8 @@ tinymce.create('static tinymce.util.JSON', {
 			// Ignore
 		}
 	}
-});
+
+	});
 
 /* file:jscripts/tiny_mce/classes/util/XHR.js */
 
@@ -780,7 +785,8 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 			}, 10);
 		}
-	}
+
+		}
 });
 
 /* file:jscripts/tiny_mce/classes/util/JSONRequest.js */
@@ -833,7 +839,8 @@ tinymce.create('static tinymce.util.XHR', {
 				return new tinymce.util.JSONRequest().send(o);
 			}
 		}
-	});
+
+		});
 }());
 /* file:jscripts/tiny_mce/classes/dom/DOMUtils.js */
 
@@ -1879,7 +1886,8 @@ tinymce.create('static tinymce.util.XHR', {
 			return s;
 		}
 		*/
-	});
+
+		});
 
 	// Setup page DOM
 	tinymce.DOM = new tinymce.dom.DOMUtils(document);
@@ -2084,7 +2092,8 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 			}
 		}
-	});
+
+		});
 
 	// Shorten name
 	Event = tinymce.dom.Event;
@@ -2227,7 +2236,8 @@ tinymce.create('static tinymce.util.XHR', {
 				dom.setStyle(b, 'zIndex', parseInt(t.getStyle('zIndex', 1) || 0) - 1);
 			}
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/dom/Selection.js */
@@ -2721,7 +2731,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return r.item ? r.item(0) : r.parentElement();
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/dom/XMLWriter.js */
@@ -2810,7 +2821,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return h;
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/dom/Serializer.js */
@@ -3637,7 +3649,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return v;
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/dom/ScriptLoader.js */
@@ -3840,7 +3853,8 @@ tinymce.create('static tinymce.util.XHR', {
 					this._funcs[ix].call(this);
 			}
 		}
-	});
+
+		});
 
 	// Global script loader
 	tinymce.ScriptLoader = new tinymce.dom.ScriptLoader();
@@ -3929,7 +3943,8 @@ tinymce.create('static tinymce.util.XHR', {
 		destroy : function() {
 			DOM.remove(this.id);
 		}
-	});
+
+		});
 })();
 /* file:jscripts/tiny_mce/classes/ui/Container.js */
 
@@ -3950,7 +3965,8 @@ tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
 	get : function(n) {
 		return this.lookup[n];
 	}
-});
+
+	});
 
 
 /* file:jscripts/tiny_mce/classes/ui/Separator.js */
@@ -3959,7 +3975,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 	renderHTML : function() {
 		return tinymce.DOM.createHTML('span', {'class' : 'mceSeparator'});
 	}
-});
+
+	});
 
 /* file:jscripts/tiny_mce/classes/ui/MenuItem.js */
 
@@ -3997,7 +4014,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (s.func)
 				return s.func.apply(s.scope, arguments);
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/ui/Menu.js */
@@ -4096,7 +4114,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			return m;
 		}
-	});
+
+		});
 })();
 /* file:jscripts/tiny_mce/classes/ui/DropMenu.js */
 
@@ -4360,7 +4379,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			DOM.addClass(ro, 'last');
 		}
-	});
+
+		});
 })();
 /* file:jscripts/tiny_mce/classes/ui/Button.js */
 
@@ -4396,7 +4416,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			return s.func.apply(s.scope, arguments);
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/ui/ListBox.js */
@@ -4571,7 +4592,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (s.func)
 				return s.func.apply(s.scope, arguments);
 		}
-	});
+
+		});
 })();
 /* file:jscripts/tiny_mce/classes/ui/NativeListBox.js */
 
@@ -4664,7 +4686,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (s.func)
 				return s.func.apply(s.scope, arguments);
 		}
-	});
+
+		});
 })();
 /* file:jscripts/tiny_mce/classes/ui/SplitButton.js */
 
@@ -4783,7 +4806,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			return s.func.call(s.scope || t, v || t.value, a);
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/ui/ColorSplitButton.js */
@@ -4901,7 +4925,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			t.hideMenu();
 			t.execCallback(c, 'select');
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/ui/Toolbar.js */
@@ -4929,14 +4954,16 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 		return dom.createHTML('table', {'class' : 'mceToolbar', cellpadding : '0', cellspacing : '0', align : this.settings.align}, '<tbody><tr>' + h + '</tr></tbody>');
 	}
-});
+
+	});
 
 /* file:jscripts/tiny_mce/classes/Theme.js */
 
 tinymce.create('tinymce.Theme', {
 	Theme : function(e, u) {
 	}
-});
+
+	});
 
 /* file:jscripts/tiny_mce/classes/AddOnManager.js */
 
@@ -4984,7 +5011,8 @@ tinymce.create('tinymce.Theme', {
 			this.urls[n] = u.substring(0, u.lastIndexOf('/'));
 			tinymce.ScriptLoader.add(u, cb, s);
 		}
-	});
+
+		});
 
 	// Create plugin and theme managers
 	tinymce.PluginManager = new tinymce.AddOnManager();
@@ -5266,7 +5294,8 @@ tinymce.create('tinymce.Theme', {
 				});
 			}
 		}
-	});
+
+		});
 
 	// Setup some URLs where the editor API is located etc
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
@@ -5382,6 +5411,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Setup URIs
 			t.documentBaseURI = new tinymce.util.URI(s.document_base_url);
 			t.baseURI = EditorManager.baseURI;
+
+			// Call setup
+			t.execCallback('setup', t);
 		},
 
 		render : function() {
@@ -6684,7 +6716,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				}
 			});
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/EditorCommands.js */
@@ -7559,7 +7592,8 @@ tinymce.create('tinymce.UndoManager', {
 	hasRedo : function() {
 		return this.index < this.data.length - 1;
 	}
-});
+
+	});
 /* file:jscripts/tiny_mce/classes/ForceBlocks.js */
 
 (function() {
@@ -8253,7 +8287,8 @@ tinymce.create('tinymce.UndoManager', {
 
 			return c;
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/WindowManager.js */
@@ -8357,5 +8392,6 @@ tinymce.create('tinymce.UndoManager', {
 		_decode : function(s) {
 			return tinymce.DOM.decode(s).replace(/\\n/g, '\n');
 		}
-	});
+
+		});
 }());

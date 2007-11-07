@@ -11,13 +11,16 @@
 	var is = tinymce.is, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, EditorManager = tinymce.EditorManager;
 	var inArray = tinymce.inArray, grep = tinymce.grep;
 
-	/**
-	 * This class contains the core logic for a TinyMCE editor.
+	/**#@+
+	 * @class This class contains the core logic for a TinyMCE editor.
+	 * @member tinymce.Editor
 	 */
 	tinymce.create('tinymce.Editor', {
 		/**
 		 * Constructs a editor instance by id.
 		 *
+		 * @constructor
+		 * @member tinymce.Editor
 		 * @param {String} id Unique id for the editor.
 		 * @param {Object} s Optional settings string for the editor.
 		 */
@@ -118,7 +121,14 @@
 			// Setup URIs
 			t.documentBaseURI = new tinymce.util.URI(s.document_base_url);
 			t.baseURI = EditorManager.baseURI;
+
+			// Call setup
+			t.execCallback('setup', t);
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Renderes the editor/adds it to the page.
@@ -956,6 +966,14 @@
 			DOM.setStyle(t.id + "_ifr", 'height', t.getBody().scrollHeight);
 		},
 
+		/**
+		 * Loads contents from the textarea or div element that got converted into an editor instance.
+		 * This method will move the contents from that textarea or div into the editor by using setContent
+		 * so all events etc that method has will get dispatched as well.
+		 *
+		 * @param {Object} o Optional content object, this gets passed around through the whole load process.
+		 * @return {String} HTML string that got set into the editor.
+		 */
 		load : function(o) {
 			var t = this, e = DOM.get(t.id), h;
 
@@ -973,6 +991,14 @@
 			return h;
 		},
 
+		/**
+		 * Saves the contents from a editor out to the textarea or div element that got converted into an editor instance.
+		 * This method will move the HTML contents from the editor into that textarea or div by getContent
+		 * so all events etc that method has will get dispatched as well.
+		 *
+		 * @param {Object} o Optional content object, this gets passed around through the whole save process.
+		 * @return {String} HTML string that got set into the textarea/div.
+		 */
 		save : function(o) {
 			var t = this, e = DOM.get(t.id), h;
 
@@ -997,6 +1023,14 @@
 			return h;
 		},
 
+		/**
+		 * Sets the specified content to the editor instance, this will cleanup the content before it gets set using
+		 * the different cleanup rules options.
+		 *
+		 * @param {String} h Content to set to editor, normally HTML contents but can be other formats as well.
+		 * @param {Object} o Optional content object, this gets passed around through the whole set process.
+		 * @return {String} HTML string that got set into the editor.
+		 */
 		setContent : function(h, o) {
 			var t = this;
 
@@ -1028,6 +1062,13 @@
 			return o.content;
 		},
 
+		/**
+		 * Gets the content from the editor instance, this will cleanup the content before it gets returned using
+		 * the different cleanup rules options.
+		 *
+		 * @param {Object} o Optional content object, this gets passed around through the whole get process.
+		 * @return {String} Cleaned content string, normally HTML contents.
+		 */
 		getContent : function(o) {
 			var t = this, h;
 
@@ -1603,5 +1644,7 @@
 				}
 			});
 		}
+
+		/**#@-*/
 	});
 })();

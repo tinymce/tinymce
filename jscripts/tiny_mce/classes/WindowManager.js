@@ -8,13 +8,15 @@
 (function() {
 	var Dispatcher = tinymce.util.Dispatcher, each = tinymce.each, isIE = tinymce.isIE, isOpera = tinymce.isOpera;
 
-	/**
-	 * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
+	/**#@+
+	 * @class This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
+	 * @member tinymce.WindowManager
 	 */
 	tinymce.create('tinymce.WindowManager', {
 		/**
 		 * Constructs a new window manager instance.
 		 *
+		 * @constructor
 		 * @param {tinymce.Editor} ed Editor instance that the windows are bound to.
 		 */
 		WindowManager : function(ed) {
@@ -26,6 +28,10 @@
 			t.params = {};
 			t.features = {};
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Opens a new window.
@@ -146,5 +152,7 @@
 		_decode : function(s) {
 			return tinymce.DOM.decode(s).replace(/\\n/g, '\n');
 		}
+
+		/**#@-*/
 	});
 }());

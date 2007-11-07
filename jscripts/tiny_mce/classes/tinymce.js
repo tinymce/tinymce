@@ -5,13 +5,19 @@
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/**
- * Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
+/**#@+
+ * @class Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
+ * @static
+ * @member tinymce
  */
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '0a2',
 	releaseDate : '2007-11-02',
+
+	/**#@+
+	 * @method
+	 */
 
 	/**
 	 * Initializes the TinyMCE global namespace this will setup browser detection and figure out where TinyMCE is running from.
@@ -444,6 +450,8 @@ var tinymce = {
 
 		return r;
 	}
+
+	/**#@-*/
 };
 
 // Required for GZip AJAX loading

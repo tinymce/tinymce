@@ -8,14 +8,16 @@
 (function() {
 	var each = tinymce.each;
 
-	/**
-	 * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when
+	/**#@+
+	 * @class This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when
 	 * various items gets loaded. This class is useful to 
+	 * @member tinymce.dom.ScriptLoader
 	 */
 	tinymce.create('tinymce.dom.ScriptLoader', {
 		/**
 		 * Constructs a new script loaded instance. Check the Wiki for more detailed information for this method.
 		 *
+		 * @constructor
 		 * @param {Object} s Optional settings object for the ScriptLoaded.
 		 */
 		ScriptLoader : function(s) {
@@ -23,6 +25,10 @@
 			this.que = [];
 			this.lookup = {};
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Marks a specific script to be loaded. This can be useful if a script got loaded outside
@@ -253,6 +259,8 @@
 					this._funcs[ix].call(this);
 			}
 		}
+
+		/**#@-*/
 	});
 
 	// Global script loader

@@ -8,9 +8,11 @@
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, is = tinymce.is, each = tinymce.each;
 
-	/**
-	 * This class is used to create UI color split button. A color split button will present show a small color picker
+	/**#@+
+	 * @class This class is used to create UI color split button. A color split button will present show a small color picker
 	 * when you press the open menu.
+	 * @member tinymce.ui.ColorSplitButton
+	 * @base tinymce.ui.SplitButton
 	 */
 	tinymce.create('tinymce.ui.ColorSplitButton:tinymce.ui.SplitButton', {
 		/**
@@ -32,6 +34,10 @@
 
 			t.value = s.default_color;
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Shows the color menu. The color menu is a layer places under the button
@@ -146,5 +152,7 @@
 			t.hideMenu();
 			t.execCallback(c, 'select');
 		}
+
+		/**#@-*/
 	});
 })();

@@ -162,7 +162,8 @@ tinyMCEPopup = {
 				t.editor.windowManager.focus(t.id)
 			});
 		}
-	}
+
+		}
 };
 
 tinyMCEPopup.init();

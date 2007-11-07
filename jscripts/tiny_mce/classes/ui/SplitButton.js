@@ -8,6 +8,11 @@
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
 
+	/**#@+
+	 * @class This class is used to create a split button. A button with a menu attached to it.
+	 * @member tinymce.ui.SplitButton
+	 * @base tinymce.ui.Button
+	 */
 	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.Button', {
 		/**
 		 * Constructs a new split button control instance.
@@ -21,6 +26,10 @@
 			this.onRenderMenu = new tinymce.util.Dispatcher(this);
 			s.menu_container = s.menu_container || document.body;
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Shows the menu.
@@ -151,5 +160,7 @@
 
 			return s.func.call(s.scope || t, v || t.value, a);
 		}
+
+		/**#@-*/
 	});
 })();

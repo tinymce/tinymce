@@ -9,13 +9,19 @@
 	// Shorten names
 	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager;
 
-	/**
-	 * This class is used to create multiple editor instances and contain them in a collection. So it's both a factory and a manager for editor instances.
+	/**#@+
+	 * @class This class is used to create multiple editor instances and contain them in a collection. So it's both a factory and a manager for editor instances.
+	 * @static
+	 * @member tinymce.EditorManager
 	 */
 	tinymce.create('static tinymce.EditorManager', {
 		editors : {},
 		i18n : {},
 		activeEditor : null,
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Initializes a set of editors. This method will create a bunch of editors based in the input.
@@ -337,6 +343,8 @@
 				});
 			}
 		}
+
+		/**#@-*/
 	});
 
 	// Setup some URLs where the editor API is located etc

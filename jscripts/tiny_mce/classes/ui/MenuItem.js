@@ -8,9 +8,11 @@
 (function() {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, walk = tinymce.walk;
 
-	/**
-	 * This class is base class for all menu item types like DropMenus items etc. This class should not
+	/**#@+
+	 * @class This class is base class for all menu item types like DropMenus items etc. This class should not
 	 * be instantiated directly other menu items should inherit from this one.
+	 * @member tinymce.ui.MenuItem
+	 * @base tinymce.ui.Control
 	 */
 	tinymce.create('tinymce.ui.MenuItem:tinymce.ui.Control', {
 		/**
@@ -23,6 +25,10 @@
 			this.parent(id, s);
 			this.classPrefix = 'mceMenuItem';
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Sets the selected state for the control. This will add CSS classes to the
@@ -67,5 +73,7 @@
 			if (s.func)
 				return s.func.apply(s.scope, arguments);
 		}
+
+		/**#@-*/
 	});
 })();

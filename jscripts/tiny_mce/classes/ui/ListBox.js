@@ -8,9 +8,11 @@
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher;
 
-	/**
-	 * This class is used to create list boxes/select list. This one will generate
+	/**#@+
+	 * @class This class is used to create list boxes/select list. This one will generate
 	 * a non native control. This one has the benefits of having visual items added.
+	 * @member tinymce.ui.ListBox
+	 * @base tinymce.ui.Control
 	 */
 	tinymce.create('tinymce.ui.ListBox:tinymce.ui.Control', {
 		/**
@@ -30,6 +32,10 @@
 			t.onRenderMenu = new tinymce.util.Dispatcher(this);
 			t.classPrefix = 'mceListBox';
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Selects a item/option by value. This will both add a visual selection to the
@@ -225,5 +231,7 @@
 			if (s.func)
 				return s.func.apply(s.scope, arguments);
 		}
+
+		/**#@-*/
 	});
 })();

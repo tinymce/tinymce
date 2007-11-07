@@ -9,9 +9,10 @@
 	// Shorten class names
 	var DOM = tinymce.DOM, is = tinymce.is;
 
-	/**
-	 * This class is the base class for all controls like buttons, toolbars, containers. This class should not
+	/**#@+
+	 * @class This class is the base class for all controls like buttons, toolbars, containers. This class should not
 	 * be instantiated directly other controls should inherit from this one.
+	 * @member tinymce.ui.Control
 	 */
 	tinymce.create('tinymce.ui.Control', {
 		/**
@@ -30,6 +31,10 @@
 			this.disabled = 0;
 			this.active = 0;
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Sets the disabled state for the control. This will add CSS classes to the
@@ -150,5 +155,7 @@
 		destroy : function() {
 			DOM.remove(this.id);
 		}
+
+		/**#@-*/
 	});
 })();

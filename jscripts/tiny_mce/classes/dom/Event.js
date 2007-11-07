@@ -9,13 +9,19 @@
 	// Shorten names
 	var each = tinymce.each, DOM = tinymce.DOM, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, Event;
 
-	/**
-	 * This class handles DOM events in a cross platform fasion it also keeps track of element
+	/**#@+
+	 * @class This class handles DOM events in a cross platform fasion it also keeps track of element
 	 * and handler references to be able to clean elements to reduce IE memory leaks.
+	 * @static
+	 * @member tinymce.dom.Event
 	 */
 	tinymce.create('static tinymce.dom.Event', {
 		inits : [],
 		events : [],
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Adds an event handler to the specified object.
@@ -241,6 +247,8 @@
 				}
 			}
 		}
+
+		/**#@-*/
 	});
 
 	// Shorten name

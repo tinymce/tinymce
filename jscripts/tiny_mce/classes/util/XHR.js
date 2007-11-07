@@ -5,10 +5,16 @@
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
-/**
- * This class enables you to send XMLHTTPRequests cross browser.
+/**#@+
+ * @class This class enables you to send XMLHTTPRequests cross browser.
+ * @member tinymce.util.XHR
+ * @static
  */
 tinymce.create('static tinymce.util.XHR', {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Sends a XMLHTTPRequest.
 	 * Consult the Wiki for details on what settings this method takes.
@@ -64,5 +70,7 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 			}, 10);
 		}
+
+		/**#@-*/
 	}
 });

@@ -9,15 +9,17 @@
 	// Shorten names
 	var each = tinymce.each, DOM = tinymce.DOM;
 
-	/**
-	 * This class is a simple Unit testing class. Provides simple methods for
+	/**#@+
+	 * @class This class is a simple Unit testing class. Provides simple methods for
 	 * test case and asserts execution.
 	 * XML Parser class. This class is only available for the dev version of TinyMCE.
+	 * @member tinymce.util.UnitTester
 	 */
 	tinymce.create('tinymce.util.UnitTester', {
 		/**
 		 * Constructs a new UnitTester instance.
 		 *
+		 * @constructor
 		 * @param {String} id Element ID to log execution events to.
 		 * @param {Object} s Optional settings object.
 		 */
@@ -29,6 +31,10 @@
 				log_skipped : false
 			}, s);
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Fakes a mouse event.
@@ -403,5 +409,7 @@
 		logSuccess : function() {
 			DOM.add(DOM.get(this.id), 'div', {'class' : 'success'}, DOM.encode(Array.prototype.join.call(arguments, ',')));
 		}
+
+		/**#@-*/
 	});
 })();

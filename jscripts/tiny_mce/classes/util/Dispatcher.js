@@ -5,9 +5,10 @@
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
-/**
- * This class is used to dispatch event to observers/listeners.
+/**#@+
+ * @class This class is used to dispatch event to observers/listeners.
  * All internal events inside TinyMCE uses this class.
+ * @member tinymce.util.Dispatcher
  */
 tinymce.create('tinymce.util.Dispatcher', {
 	scope : null,
@@ -16,12 +17,17 @@ tinymce.create('tinymce.util.Dispatcher', {
 	/**
 	 * Constructs a new event dispatcher object.
 	 *
+	 * @constructor
 	 * @param {Object} s Optional default execution scope for all observer functions.
 	 */
 	Dispatcher : function(s) {
 		this.scope = s || this;
 		this.listeners = [];
 	},
+
+	/**#@+
+	 * @method
+	 */
 
 	/**
 	 * Add an observer function to be executed when a dispatch call is done.
@@ -84,4 +90,6 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 		return s;
 	}
+
+	/**#@-*/
 });

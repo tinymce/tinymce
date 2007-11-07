@@ -28,14 +28,16 @@
 		return s.replace(/([?+*])/g, '.$1');
 	};
 
-	/**
-	 * This class is used to serialize DOM trees into a string.
+	/**#@+
+	 * @class This class is used to serialize DOM trees into a string.
 	 * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
+	 * @member tinymce.dom.Serializer
 	 */
 	tinymce.create('tinymce.dom.Serializer', {
 		/**
 		 * Constucts a new DOM serializer class.
 		 *
+		 * @constructor
 		 * @param {Object} s Optional name/Value collection of settings for the serializer.
 		 */
 		Serializer : function(s) {
@@ -150,6 +152,10 @@
 				});
 			}
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Entity encodes a string based on the settings passed to the serializer. This one can do both numeric
@@ -898,5 +904,7 @@
 
 			return v;
 		}
+
+		/**#@-*/
 	});
 })();

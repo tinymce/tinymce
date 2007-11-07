@@ -5,9 +5,11 @@
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/**
- * This class is the base class for all container controls like toolbars. This class should not
+/**#@+
+ * @class This class is the base class for all container controls like toolbars. This class should not
  * be instantiated directly other container controls should inherit from this one.
+ * @member tinymce.ui.Container
+ * @base tinymce.ui.Control
  */
 tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
 	/**
@@ -21,6 +23,10 @@ tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
 		this.controls = [];
 		this.lookup = {};
 	},
+
+	/**#@+
+	 * @method
+	 */
 
 	/**
 	 * Adds a control to the collection of controls for the container.
@@ -44,5 +50,7 @@ tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
 	get : function(n) {
 		return this.lookup[n];
 	}
+
+	/**#@-*/
 });
 

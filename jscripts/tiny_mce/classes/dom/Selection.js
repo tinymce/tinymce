@@ -9,14 +9,16 @@
 	// Shorten names
 	var is = tinymce.is, isIE = tinymce.isIE, each = tinymce.each;
 
-	/**
-	 * This class handles text and control selection it's an crossbrowser utility class.
+	/**#@+
+	 * @class This class handles text and control selection it's an crossbrowser utility class.
 	 * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
+	 * @member tinymce.dom.Selection
 	 */
 	tinymce.create('tinymce.dom.Selection', {
 		/**
 		 * Constructs a new selection instance.
 		 *
+		 * @constructor
 		 * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.
 		 * @param {Window} win Window to bind the selection object to.
 		 * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
@@ -33,6 +35,10 @@
 				t.win = null;
 			});
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Returns the selected contents using the DOM serializer passed in to this class.
@@ -587,5 +593,7 @@
 
 			return r.item ? r.item(0) : r.parentElement();
 		}
+
+		/**#@-*/
 	});
 })();

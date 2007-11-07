@@ -5,8 +5,9 @@
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
-/**
- * This class handles the undo/redo history levels for the editor. Since the build in undo/redo has major drawbacks a custom one was needed.
+/**#@+
+ * @class This class handles the undo/redo history levels for the editor. Since the build in undo/redo has major drawbacks a custom one was needed.
+ * @member tinymce.UndoManager
  */
 tinymce.create('tinymce.UndoManager', {
 	index : 0,
@@ -16,6 +17,7 @@ tinymce.create('tinymce.UndoManager', {
 	/**
 	 * Constructs a new UndoManager instance.
 	 *
+	 * @constructor
 	 * @param {tinymce.Editor} ed Editor instance to undo/redo in.
 	 */
 	UndoManager : function(ed) {
@@ -27,6 +29,10 @@ tinymce.create('tinymce.UndoManager', {
 		t.onUndo = new Dispatcher(this);
 		t.onRedo = new Dispatcher(this);
 	},
+
+	/**#@+
+	 * @method
+	 */
 
 	/**
 	 * Adds a new undo level/snapshot to the undo list.
@@ -163,4 +169,6 @@ tinymce.create('tinymce.UndoManager', {
 	hasRedo : function() {
 		return this.index < this.data.length - 1;
 	}
+
+	/**#@-*/
 });

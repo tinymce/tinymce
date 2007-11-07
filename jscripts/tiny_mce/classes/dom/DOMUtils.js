@@ -10,8 +10,9 @@
 	var each = tinymce.each, is = tinymce.is;
 	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
 
-	/**
-	 * Utility class for various DOM manipulation and retrival functions.
+	/**#@+
+	 * @class Utility class for various DOM manipulation and retrival functions.
+	 * @member tinymce.dom.DOMUtils
 	 */
 	tinymce.create('tinymce.dom.DOMUtils', {
 		doc : null,
@@ -23,6 +24,7 @@
 		/**
 		 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
 		 *
+		 * @constructor
 		 * @param {Document} d Document reference to bind the utility class to.
 		 * @param {settings} s Optional settings collection.
 		 */
@@ -53,6 +55,10 @@
 				t.doc = t.root = null;
 			});
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Returns the root node of the document this is normally the body but might be a DIV. Parents like getParent will not
@@ -1332,6 +1338,8 @@
 			return s;
 		}
 		*/
+
+		/**#@-*/
 	});
 
 	// Setup page DOM

@@ -6,9 +6,10 @@
  */
 
 (function() {
-	/**
-	 * This class writes nodes into a XML document structure. This structure can then be
+	/**#@+
+	 * @class This class writes nodes into a XML document structure. This structure can then be
 	 * serialized down to a HTML string later on.
+	 * @member tinymce.dom.XMLWriter
 	 */
 	tinymce.create('tinymce.dom.XMLWriter', {
 		node : null,
@@ -16,6 +17,7 @@
 		/**
 		 * Constructs a new XMLWriter.
 		 *
+		 * @constructor
 		 * @param {Object} s Optional settings object.
 		 */
 		XMLWriter : function(s) {
@@ -34,6 +36,10 @@
 			this.doc = getXML();
 			this.reset();
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Resets the writer so it can be reused the contents of the writer is cleared.
@@ -138,5 +144,7 @@
 
 			return h;
 		}
+
+		/**#@-*/
 	});
 })();

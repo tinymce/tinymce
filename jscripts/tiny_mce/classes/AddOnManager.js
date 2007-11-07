@@ -8,14 +8,19 @@
 (function() {
 	var Dispatcher = tinymce.util.Dispatcher, each = tinymce.each;
 
-	/**
-	 * This class handles the loading of themes/plugins or other add-ons and their language packs.
+	/**#@+
+	 * @class This class handles the loading of themes/plugins or other add-ons and their language packs.
+	 * @member tinymce.AddOnManager
 	 */
 	tinymce.create('tinymce.AddOnManager', {
 		items : [],
 		urls : {},
 		lookup : {},
 		onAdd : new Dispatcher(this),
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Returns the specified add on by the short name.
@@ -78,6 +83,8 @@
 			this.urls[n] = u.substring(0, u.lastIndexOf('/'));
 			tinymce.ScriptLoader.add(u, cb, s);
 		}
+
+		/**#@-*/
 	});
 
 	// Create plugin and theme managers

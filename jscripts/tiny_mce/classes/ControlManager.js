@@ -9,14 +9,16 @@
 	// Shorten names
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, extend = tinymce.extend;
 
-	/**
-	 * This class is responsible for managing UI control instances. It's both a factory and a collection for the controls.
+	/**#@+
+	 * @class This class is responsible for managing UI control instances. It's both a factory and a collection for the controls.
+	 * @member tinymce.ControlManager
 	 */
 	tinymce.create('tinymce.ControlManager', {
 		/**
 		 * Constructs a new control manager instance.
 		 * Consult the Wiki for more details on this class.
 		 *
+		 * @constructor
 		 * @param {tinymce.Editor} ed TinyMCE editor instance to add the control to.
 		 * @param {Object} s Optional settings object for the control manager.
 		 */
@@ -36,6 +38,10 @@
 				});
 			});
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Returns a control by id or undefined it it wasn't found.
@@ -355,5 +361,7 @@
 
 			return c;
 		}
+
+		/**#@-*/
 	});
 })();

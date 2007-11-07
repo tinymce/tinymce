@@ -8,9 +8,11 @@
 (function() {
 	var DOM = tinymce.DOM;
 
-	/**
-	 * This class is used to create a UI button. A button is basically a link
+	/**#@+
+	 * @class This class is used to create a UI button. A button is basically a link
 	 * that is styled to look like a button or icon.
+	 * @member tinymce.ui.Button
+	 * @base tinymce.ui.Control
 	 */
 	tinymce.create('tinymce.ui.Button:tinymce.ui.Control', {
 		/**
@@ -23,6 +25,10 @@
 			this.parent(id, s);
 			this.classPrefix = 'mceButton';
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Renders the button as a HTML string. This method is much faster than using the DOM and when
@@ -60,5 +66,7 @@
 
 			return s.func.apply(s.scope, arguments);
 		}
+
+		/**#@-*/
 	});
 })();

@@ -8,9 +8,11 @@
 (function() {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, Event = tinymce.dom.Event, Element = tinymce.dom.Element;
 
-	/**
-	 * This class is used to create drop menus, a drop menu can be a
+	/**#@+
+	 * @class This class is used to create drop menus, a drop menu can be a
 	 * context menu, or a menu for a list box or a menu bar.
+	 * @member tinymce.ui.DropMenu
+	 * @base tinymce.ui.Menu
 	 */
 	tinymce.create('tinymce.ui.DropMenu:tinymce.ui.Menu', {
 		/**
@@ -30,6 +32,10 @@
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Created a new sub menu for the drop menu control.
@@ -319,5 +325,7 @@
 
 			DOM.addClass(ro, 'last');
 		}
+
+		/**#@-*/
 	});
 })();

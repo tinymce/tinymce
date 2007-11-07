@@ -8,13 +8,15 @@
 (function() {
 	var each = tinymce.each;
 
-	/**
-	 * This class handles parsing, modification and serialization of URI/URL strings.
+	/**#@+
+	 * @class This class handles parsing, modification and serialization of URI/URL strings.
+	 * @member tinymce.util.URI
 	 */
 	tinymce.create('tinymce.util.URI', {
 		/**
 		 * Constucts a new URI instance.
 		 *
+		 * @constructor
 		 * @param {String} u URI string to parse.
 		 * @param {Object} s Optional settings object.
 		 */
@@ -49,6 +51,10 @@
 
 			t.path = t.path || '/';
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Sets the internal path part of the URI.
@@ -255,5 +261,7 @@
 
 			return t.source;
 		}
+
+		/**#@-*/
 	});
 })();

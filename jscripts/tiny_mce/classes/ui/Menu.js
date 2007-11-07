@@ -8,9 +8,11 @@
 (function() {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, walk = tinymce.walk;
 
-	/**
-	 * This class is base class for all menu types like DropMenus etc. This class should not
+	/**#@+
+	 * @class This class is base class for all menu types like DropMenus etc. This class should not
 	 * be instantiated directly other menu controls should inherit from this one.
+	 * @member tinymce.ui.Menu
+	 * @base tinymce.ui.MenuItem
 	 */
 	tinymce.create('tinymce.ui.Menu:tinymce.ui.MenuItem', {
 		/**
@@ -28,6 +30,10 @@
 			t.menuCount = 0;
 			t.onAddItem = new tinymce.util.Dispatcher(this);
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Expands the menu, this will show them menu and all menu items.
@@ -161,5 +167,7 @@
 
 			return m;
 		}
+
+		/**#@-*/
 	});
 })();

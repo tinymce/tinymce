@@ -8,13 +8,15 @@
 (function() {
 	var extend = tinymce.extend, JSON = tinymce.util.JSON, XHR = tinymce.util.XHR;
 
-	/**
-	 * This class enables you to use JSON-RPC to call backend methods.
+	/**#@+
+	 * @class This class enables you to use JSON-RPC to call backend methods.
+	 * @member tinymce.util.JSONRequest
 	 */
 	tinymce.create('tinymce.util.JSONRequest', {
 		/**
 		 * Constructs a new JSONRequest instance.
 		 *
+		 * @constructor
 		 * @param {Object} s Optional settings object.
 		 */
 		JSONRequest : function(s) {
@@ -22,6 +24,10 @@
 			}, s);
 			this.count = 0;
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Sends a JSON-RPC call. Consult the Wiki API documentation for more details on what you can pass to this function.
@@ -72,5 +78,7 @@
 				return new tinymce.util.JSONRequest().send(o);
 			}
 		}
+
+		/**#@-*/
 	});
 }());

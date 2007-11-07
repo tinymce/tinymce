@@ -8,15 +8,17 @@
 (function() {
 	var each = tinymce.each;
 
-	/**
-	 * Element class, this enables element blocking in IE. Element blocking is a method to block out select blockes that
+	/**#@+
+	 * @class Element class, this enables element blocking in IE. Element blocking is a method to block out select blockes that
 	 * gets visible though DIVs on IE 6 it uses a iframe for this blocking. This class also shortens the length of some DOM API calls
 	 * since it's bound to an element.
+	 * @member tinymce.dom.Element
 	 */
 	tinymce.create('tinymce.dom.Element', {
 		/**
 		 * Constructs a new Element instance. Consult the Wiki for more details on this class.
 		 *
+		 * @constructor
 		 * @param {String} Element ID to bind/execute methods on.
 		 * @param {Object} Optional settings name/value collection.
 		 */
@@ -75,6 +77,10 @@
 				};
 			});
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Adds a event handler to the element.
@@ -194,5 +200,7 @@
 				dom.setStyle(b, 'zIndex', parseInt(t.getStyle('zIndex', 1) || 0) - 1);
 			}
 		}
+
+		/**#@-*/
 	});
 })();

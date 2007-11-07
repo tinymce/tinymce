@@ -6,8 +6,9 @@
  */
 
 (function() {
-	/**
-	 * This class writes nodes into a string.
+	/**#@+
+	 * @class This class writes nodes into a string.
+	 * @member tinymce.dom.StringWriter
 	 */
 	tinymce.create('tinymce.dom.StringWriter', {
 		str : null,
@@ -19,6 +20,7 @@
 		/**
 		 * Constructs a new StringWriter.
 		 *
+		 * @constructor
 		 * @param {Object} s Optional settings object.
 		 */
 		StringWriter : function(s) {
@@ -29,6 +31,10 @@
 
 			this.reset();
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Resets the writer so it can be reused the contents of the writer is cleared.
@@ -172,5 +178,7 @@
 		getContent : function() {
 			return this.str;
 		}
+
+		/**#@-*/
 	});
 })();

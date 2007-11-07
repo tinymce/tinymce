@@ -5,10 +5,16 @@
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
-/**
- * JSON parser and serializer class.
+/**#@+
+ * @class JSON parser and serializer class.
+ * @member tinymce.util.JSON
+ * @static
  */
 tinymce.create('static tinymce.util.JSON', {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Serializes the specified object as a JSON string.
 	 *
@@ -70,4 +76,6 @@ tinymce.create('static tinymce.util.JSON', {
 			// Ignore
 		}
 	}
+
+	/**#@-*/
 });

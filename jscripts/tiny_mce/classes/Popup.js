@@ -8,12 +8,19 @@
 // Some global instances
 var tinymce = null, tinyMCEPopup, tinyMCE;
 
-/**
- * TinyMCE popup/dialog helper class. This gives you easy access to the
+/**#@+
+ * @class TinyMCE popup/dialog helper class. This gives you easy access to the
  * parent editor instance and a bunch of other things. It's higly recommended
  * that you load this script into your dialogs.
+ *
+ * @static
+ * @member tinyMCEPopup
  */
 tinyMCEPopup = {
+	/**#@+
+	 * @method
+	 */
+
 	/**
 	 * Initializes the popup this will be called automatically.
 	 */
@@ -250,6 +257,8 @@ tinyMCEPopup = {
 				t.editor.windowManager.focus(t.id)
 			});
 		}
+
+		/**#@-*/
 	}
 };
 

@@ -8,9 +8,11 @@
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher;
 
-	/**
-	 * This class is used to create list boxes/select list. This one will generate
+	/**#@+
+	 * @class This class is used to create list boxes/select list. This one will generate
 	 * a native control the way that the browser produces them by default.
+	 * @member tinymce.ui.NativeListBox
+	 * @base tinymce.ui.ListBox
 	 */
 	tinymce.create('tinymce.ui.NativeListBox:tinymce.ui.ListBox', {
 		/**
@@ -23,6 +25,10 @@
 			this.parent(id, s);
 			this.classPrefix = 'mceNativeListBox';
 		},
+
+		/**#@+
+		 * @method
+		 */
 
 		/**
 		 * Sets the disabled state for the control. This will add CSS classes to the
@@ -145,5 +151,7 @@
 			if (s.func)
 				return s.func.apply(s.scope, arguments);
 		}
+
+		/**#@-*/
 	});
 })();
