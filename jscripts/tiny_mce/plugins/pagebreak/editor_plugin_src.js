@@ -18,7 +18,7 @@
 			});
 
 			// Register buttons
-			ed.addButton('pagebreak', 'pagebreak.desc', cls);
+			ed.addButton('pagebreak', {title : 'pagebreak.desc', cmd : cls});
 
 			ed.onInit.add(function() {
 				ed.dom.loadCSS(url + "/css/content.css");

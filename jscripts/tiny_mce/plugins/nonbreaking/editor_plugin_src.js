@@ -18,7 +18,7 @@
 			});
 
 			// Register buttons
-			ed.addButton('nonbreaking', 'nonbreaking.nonbreaking_desc', 'mceNonBreaking');
+			ed.addButton('nonbreaking', {title : 'nonbreaking.nonbreaking_desc', cmd : 'mceNonBreaking'});
 
 			if (ed.getParam('nonbreaking_force_tab')) {
 				ed.onKeyDown.add(function(ed, e) {

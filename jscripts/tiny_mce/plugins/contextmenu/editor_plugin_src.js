@@ -47,25 +47,25 @@
 
 			t._menu = m;
 
-			m.add({title : 'advanced.cut_desc', icon : 'cut', command : 'Cut'}).setDisabled(col);
-			m.add({title : 'advanced.copy_desc', icon : 'copy', command : 'Copy'}).setDisabled(col);
-			m.add({title : 'advanced.paste_desc', icon : 'paste', command : 'Paste'});
+			m.add({title : 'advanced.cut_desc', icon : 'cut', cmd : 'Cut'}).setDisabled(col);
+			m.add({title : 'advanced.copy_desc', icon : 'copy', cmd : 'Copy'}).setDisabled(col);
+			m.add({title : 'advanced.paste_desc', icon : 'paste', cmd : 'Paste'});
 
 			if ((el.nodeName == 'A' && !ed.dom.getAttrib(el, 'name')) || !col) {
 				m.addSeparator();
-				m.add({title : 'advanced.link_desc', icon : 'link', command : ed.plugins.advlink ? 'mceAdvLink' : 'mceLink', ui : true});
-				m.add({title : 'advanced.unlink_desc', icon : 'unlink', command : 'UnLink'});
+				m.add({title : 'advanced.link_desc', icon : 'link', cmd : ed.plugins.advlink ? 'mceAdvLink' : 'mceLink', ui : true});
+				m.add({title : 'advanced.unlink_desc', icon : 'unlink', cmd : 'UnLink'});
 			}
 
 			m.addSeparator();
-			m.add({title : 'advanced.image_desc', icon : 'image', command : ed.plugins.advimage ? 'mceAdvImage' : 'mceImage', ui : true});
+			m.add({title : 'advanced.image_desc', icon : 'image', cmd : ed.plugins.advimage ? 'mceAdvImage' : 'mceImage', ui : true});
 
 			m.addSeparator();
 			am = m.addMenu({title : 'contextmenu.align'});
-			am.add({title : 'contextmenu.left', icon : 'justifyleft', command : 'JustifyLeft'});
-			am.add({title : 'contextmenu.center', icon : 'justifycenter', command : 'JustifyCenter'});
-			am.add({title : 'contextmenu.right', icon : 'justifyright', command : 'JustifyRight'});
-			am.add({title : 'contextmenu.full', icon : 'justifyfull', command : 'JustifyFull'});
+			am.add({title : 'contextmenu.left', icon : 'justifyleft', cmd : 'JustifyLeft'});
+			am.add({title : 'contextmenu.center', icon : 'justifycenter', cmd : 'JustifyCenter'});
+			am.add({title : 'contextmenu.right', icon : 'justifyright', cmd : 'JustifyRight'});
+			am.add({title : 'contextmenu.full', icon : 'justifyfull', cmd : 'JustifyFull'});
 
 			t.onContextMenu.dispatch(t, m, el, col);
 

@@ -136,20 +136,10 @@
 				var v = e.target.options[e.target.selectedIndex].value;
 
 				t.onChange.dispatch(t, v);
-				t.execCallback(v);
+				t.onselect(v);
 			});
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
-		},
-
-		/**
-		 * Executes the specified callback function for the list box. In this case when the user selects a item from the list.
-		 */
-		execCallback : function() {
-			var s = this.settings;
-
-			if (s.func)
-				return s.func.apply(s.scope, arguments);
 		}
 
 		/**#@-*/

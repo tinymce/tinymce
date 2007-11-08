@@ -4006,13 +4006,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			// Set pending state
 			if (is(t.selected))
 				t.setSelected(t.selected);
-		},
-
-		execCallback : function() {
-			var s = this.settings;
-
-			if (s.func)
-				return s.func.apply(s.scope, arguments);
 		}
 
 		});
@@ -4224,7 +4217,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					if (m.isDisabled())
 						return;
 
-					m.execCallback();
+					if (m.settings.onclick)
+						m.settings.onclick(e);
+
 					dm = t;
 
 					while (dm) {
@@ -4407,14 +4402,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			tinymce.dom.Event.add(t.id, 'click', function(e) {
 				if (!t.isDisabled())
-					return s.func.call(s.scope, e);
+					return s.onclick.call(s.scope, e);
 			});
-		},
-
-		execCallback : function() {
-			var s = this.settings;
-
-			return s.func.apply(s.scope, arguments);
 		}
 
 		});
@@ -4553,8 +4542,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			each(t.items, function(o) {
 				o.id = DOM.uniqueId();
-				o.func = function() {
-					t.execCallback(o.value);
+				o.onclick = function() {
+					t.settings.onselect(o.value);
 					t.select(o.value); // Must be runned after
 				};
 
@@ -4585,13 +4574,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
 		},
-
-		execCallback : function() {
-			var s = this.settings;
-
-			if (s.func)
-				return s.func.apply(s.scope, arguments);
-		}
 
 		});
 })();
@@ -4674,17 +4656,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				var v = e.target.options[e.target.selectedIndex].value;
 
 				t.onChange.dispatch(t, v);
-				t.execCallback(v);
+				t.onselect(v);
 			});
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
-		},
-
-		execCallback : function() {
-			var s = this.settings;
-
-			if (s.func)
-				return s.func.apply(s.scope, arguments);
 		}
 
 		});
@@ -4775,15 +4750,14 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		postRender : function() {
 			var t = this, s = t.settings;
 
-			if (s.func) {
+			if (s.onclick) {
 				Event.add(t.id + '_action', 'click', function() {
 					if (!t.isDisabled())
-						t.execCallback();
+						s.onclick(t.value);
 				});
 			}
 
-			if (s.func)
-				Event.add(t.id + '_open', 'click', t.showMenu, t);
+			Event.add(t.id + '_open', 'click', t.showMenu, t);
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
@@ -4797,14 +4771,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 						DOM.removeClass(t.id, 'mceSplitButtonHover');
 				});
 			}
-		},
-
-		execCallback : function(v, a) {
-			var t = this, s = t.settings;
-
-			t.hideMenu();
-
-			return s.func.call(s.scope || t, v || t.value, a);
 		}
 
 		});
@@ -4912,7 +4878,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		setColor : function(c) {
-			var t = this, p, co = this.settings.menu_container, po, cp, id = t.id + '_preview';
+			var t = this, p, s = this.settings, co = s.menu_container, po, cp, id = t.id + '_preview';
 
 			if (!(p = DOM.get(id))) {
 				DOM.setStyle(this.id + '_action', 'position', 'relative');
@@ -4923,7 +4889,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			t.value = c;
 			t.hideMenu();
-			t.execCallback(c, 'select');
+			s.onselect(c);
 		}
 
 		});
@@ -5330,8 +5296,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				'onPostRender',
 				'onInit',
 				'onRemove',
-				'onShow',
-				'onHide',
 				'onActivate',
 				'onDeactivate',
 				'onClick',
@@ -5693,7 +5657,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			else
 				t.getBody().contentEditable = true;
 
-			t.controlManager.onPostRender.dispatch(t.controlManager);
+			t.controlManager.onPostRender.dispatch(t, t.controlManager);
 			t.onPostRender.dispatch(t);
 
 			if (s.directionality)
@@ -5855,9 +5819,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
-					oed.onDeactivate.dispatch(t);
+					oed.onDeactivate.dispatch(oed, t);
 
-				t.onActivate.dispatch(oed);
+				t.onActivate.dispatch(t, oed);
 				EditorManager.activeEditor = t;
 			}
 
@@ -5910,16 +5874,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t,
 				o ? o.controlManager || t.controlManager : t.controlManager,
 				s.getNode() || this.getBody(),
-				s.isCollapsed()
+				s.isCollapsed(),
+				o
 			);
 		},
 
-		addButton : function(n, ti, cm, s) {
+		addButton : function(n, s) {
 			var t = this;
 
-			s = s || {};
-			s.title = ti;
-			s.cmd = cm;
 			t.buttons = t.buttons || {};
 			t.buttons[n] = s;
 		},
@@ -8122,8 +8084,11 @@ tinymce.create('tinymce.UndoManager', {
 
 				s.title = ed.getLang(s.title, s.title);
 
-				if (s.command)
-					s.func = t._wrap(s);
+				if (!s.onclick) {
+					s.onclick = function(v) {
+						ed.execCommand(s.cmd, s.ui || false, v || s.value);
+					};
+				}
 			});
 
 			return t.add(c);
@@ -8138,10 +8103,15 @@ tinymce.create('tinymce.UndoManager', {
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onselect) {
+				s.onselect = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func, 1),
 				scope : s.scope,
 				menu_container : ed.id + "_parent",
 				control_manager : t
@@ -8187,10 +8157,15 @@ tinymce.create('tinymce.UndoManager', {
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onclick) {
+				s.onclick = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func),
 				scope : s.scope
 			}, s);
 
@@ -8208,10 +8183,21 @@ tinymce.create('tinymce.UndoManager', {
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onclick) {
+				s.onclick = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
+			if (!s.onselect) {
+				s.onselect = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func, 1),
 				scope : s.scope,
 				menu_container : ed.id + "_parent",
 				control_manager : t
@@ -8233,10 +8219,21 @@ tinymce.create('tinymce.UndoManager', {
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onclick) {
+				s.onclick = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
+			if (!s.onselect) {
+				s.onselect = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func, 1),
 				scope : s.scope,
 				menu_container : ed.id + "_parent"
 			}, s);
@@ -8259,33 +8256,6 @@ tinymce.create('tinymce.UndoManager', {
 
 		createSeparator : function() {
 			return new tinymce.ui.Separator();
-		},
-
-		// Internal functions
-
-		_wrap : function(c, v) {
-			var o, ed = this.editor;
-
-			// Wrap command
-			if (tinymce.is(c, 'string'))
-				c = {command : c};
-
-			if (tinymce.is(c, 'object')) {
-				o = c;
-
-				if (v) {
-					c = function(v) {
-						ed.execCommand(o.command, o.ui, v);
-					};
-				} else {
-					c = function(e) {
-						ed.execCommand(o.command, o.ui, o.value);
-						return Event.cancel(e);
-					};
-				}
-			}
-
-			return c;
 		}
 
 		});

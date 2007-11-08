@@ -32,7 +32,7 @@
 			});
 
 			// Register buttons
-			ed.addButton('iespell', 'iespell.iespell_desc', 'mceIESpell');
+			ed.addButton('iespell', {title : 'iespell.iespell_desc', cmd : 'mceIESpell'});
 		},
 
 		getInfo : function() {

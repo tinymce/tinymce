@@ -139,7 +139,7 @@
 		 * @param {String} c Color code value in hex for example: #FF00FF
 		 */
 		setColor : function(c) {
-			var t = this, p, co = this.settings.menu_container, po, cp, id = t.id + '_preview';
+			var t = this, p, s = this.settings, co = s.menu_container, po, cp, id = t.id + '_preview';
 
 			if (!(p = DOM.get(id))) {
 				DOM.setStyle(this.id + '_action', 'position', 'relative');
@@ -150,7 +150,7 @@
 
 			t.value = c;
 			t.hideMenu();
-			t.execCallback(c, 'select');
+			s.onselect(c);
 		}
 
 		/**#@-*/

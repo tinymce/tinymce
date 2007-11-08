@@ -48,11 +48,9 @@
 			});
 
 			// Register buttons
-			ed.addButton('pastetext', 'paste.paste_text_desc', {command : 'mcePasteText', ui : true});
-
-			ed.addButton('pasteword', 'paste.paste_word_desc', {command : 'mcePasteWord', ui : true});
-
-			ed.addButton('selectall', 'paste.selectall_desc', 'mceSelectAll');
+			ed.addButton('pastetext', {title : 'paste.paste_text_desc', cmd : 'mcePasteText', ui : true});
+			ed.addButton('pasteword', {title : 'paste.paste_word_desc', cmd : 'mcePasteWord', ui : true});
+			ed.addButton('selectall', {title : 'paste.selectall_desc', cmd : 'mceSelectAll'});
 
 			ed.onInit.add(function() {
 				if (tinymce.isIE && ed.getParam("paste_auto_cleanup_on_paste", false))

@@ -40,8 +40,6 @@
 				'onPostRender',
 				'onInit',
 				'onRemove',
-				'onShow',
-				'onHide',
 				'onActivate',
 				'onDeactivate',
 				'onClick',
@@ -420,7 +418,7 @@
 			else
 				t.getBody().contentEditable = true;
 
-			t.controlManager.onPostRender.dispatch(t.controlManager);
+			t.controlManager.onPostRender.dispatch(t, t.controlManager);
 			t.onPostRender.dispatch(t);
 
 			if (s.directionality)
@@ -588,9 +586,9 @@
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
-					oed.onDeactivate.dispatch(t);
+					oed.onDeactivate.dispatch(oed, t);
 
-				t.onActivate.dispatch(oed);
+				t.onActivate.dispatch(t, oed);
 				EditorManager.activeEditor = t;
 			}
 
@@ -676,7 +674,8 @@
 				t,
 				o ? o.controlManager || t.controlManager : t.controlManager,
 				s.getNode() || this.getBody(),
-				s.isCollapsed()
+				s.isCollapsed(),
+				o
 			);
 		},
 
@@ -686,16 +685,11 @@
 		 * powerfull if you need more control use the ControlManagers factory methods instead.
 		 *
 		 * @param {String} n Button name to add.
-		 * @param {Sting} ti Title for the button.
-		 * @param {String} cm Command to execute or function to execute on click.
-		 * @param {Object} s Optional scope to execute the function in.
+		 * @param {Object} s Settings object with title, cmd etc.
 		 */
-		addButton : function(n, ti, cm, s) {
+		addButton : function(n, s) {
 			var t = this;
 
-			s = s || {};
-			s.title = ti;
-			s.cmd = cm;
 			t.buttons = t.buttons || {};
 			t.buttons[n] = s;
 		},

@@ -31,8 +31,8 @@
 			});
 
 			// Register buttons
-			ed.addButton('search', 'searchreplace.search_desc', 'mceSearch');
-			ed.addButton('replace', 'searchreplace.replace_desc', 'mceReplace');
+			ed.addButton('search', {title : 'searchreplace.search_desc', cmd : 'mceSearch'});
+			ed.addButton('replace', {title : 'searchreplace.replace_desc', cmd : 'mceReplace'});
 
 			ed.addShortcut('ctrl+f', 'searchreplace.search_desc', 'mceSearch');
 		},

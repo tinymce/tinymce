@@ -62,16 +62,6 @@
 			// Set pending state
 			if (is(t.selected))
 				t.setSelected(t.selected);
-		},
-
-		/**
-		 * Executes the specified callback function for the menu item. In this case when the user clicks the menu item.
-		 */
-		execCallback : function() {
-			var s = this.settings;
-
-			if (s.func)
-				return s.func.apply(s.scope, arguments);
 		}
 
 		/**#@-*/

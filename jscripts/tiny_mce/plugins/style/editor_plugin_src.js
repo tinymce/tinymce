@@ -28,7 +28,7 @@
 			});
 
 			// Register buttons
-			ed.addButton('styleprops', 'style.desc', 'mceStyleProps');
+			ed.addButton('styleprops', {title : 'style.desc', cmd : 'mceStyleProps'});
 		},
 
 		getInfo : function() {

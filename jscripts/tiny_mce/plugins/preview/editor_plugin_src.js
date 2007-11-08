@@ -13,7 +13,7 @@
 			t.editor = ed;
 
 			ed.addCommand('mcePreview', t._preview, t);
-			ed.addButton('preview', 'preview.preview_desc', 'mcePreview');
+			ed.addButton('preview', {title : 'preview.preview_desc', cmd : 'mcePreview'});
 		},
 
 		getInfo : function() {

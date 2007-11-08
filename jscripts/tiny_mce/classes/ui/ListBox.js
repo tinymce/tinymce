@@ -185,8 +185,8 @@
 
 			each(t.items, function(o) {
 				o.id = DOM.uniqueId();
-				o.func = function() {
-					t.execCallback(o.value);
+				o.onclick = function() {
+					t.settings.onselect(o.value);
 					t.select(o.value); // Must be runned after
 				};
 
@@ -221,16 +221,6 @@
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
 		},
-
-		/**
-		 * Executes the specified callback function for the list box. In this case when the user selects a item from the list.
-		 */
-		execCallback : function() {
-			var s = this.settings;
-
-			if (s.func)
-				return s.func.apply(s.scope, arguments);
-		}
 
 		/**#@-*/
 	});

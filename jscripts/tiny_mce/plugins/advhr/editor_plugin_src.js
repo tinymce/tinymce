@@ -21,7 +21,10 @@
 			});
 
 			// Register buttons
-			ed.addButton('advhr', 'advhr.advhr_desc', 'mceAdvancedHr');
+			ed.addButton('advhr', {
+				title : 'advhr.advhr_desc',
+				cmd : 'mceAdvancedHr'
+			});
 
 			ed.onNodeChange.add(function(ed, cm, n) {
 				cm.setActive('advhr', n.nodeName == 'HR');

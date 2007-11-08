@@ -30,7 +30,7 @@
 				['split_cells', 'table.split_cells_desc', 'mceTableSplitCells', true],
 				['merge_cells', 'table.merge_cells_desc', 'mceTableMergeCells', true]
 			], function(c) {
-				ed.addButton(c[0], c[1], {command : c[2], ui : c[3]});
+				ed.addButton(c[0], {title : c[1], cmd : c[2], ui : c[3]});
 			});
 
 			ed.onInit.add(function() {
@@ -40,36 +40,36 @@
 
 						if (ed.dom.getParent(e, 'td') || ed.dom.getParent(e, 'th')) {
 							m.removeAll();
-							m.add({title : 'table.desc', icon : 'table', command : 'mceInsertTable', ui : true, value : {action : 'insert'}});
-							m.add({title : 'table.props_desc', icon : 'table_props', command : 'mceInsertTable', ui : true});
-							m.add({title : 'table.del', icon : 'delete_table', command : 'mceTableDelete', ui : true});
+							m.add({title : 'table.desc', icon : 'table', cmd : 'mceInsertTable', ui : true, value : {action : 'insert'}});
+							m.add({title : 'table.props_desc', icon : 'table_props', cmd : 'mceInsertTable', ui : true});
+							m.add({title : 'table.del', icon : 'delete_table', cmd : 'mceTableDelete', ui : true});
 							m.addSeparator();
 
 							// Cell menu
 							sm = m.addMenu({title : 'table.cell'});
-							sm.add({title : 'table.cell_desc', icon : 'cell_props', command : 'mceTableCellProps', ui : true});
-							sm.add({title : 'table.split_cells_desc', icon : 'split_cells', command : 'mceTableSplitCells', ui : true});
-							sm.add({title : 'table.merge_cells_desc', icon : 'merge_cells', command : 'mceTableMergeCells', ui : true});
+							sm.add({title : 'table.cell_desc', icon : 'cell_props', cmd : 'mceTableCellProps', ui : true});
+							sm.add({title : 'table.split_cells_desc', icon : 'split_cells', cmd : 'mceTableSplitCells', ui : true});
+							sm.add({title : 'table.merge_cells_desc', icon : 'merge_cells', cmd : 'mceTableMergeCells', ui : true});
 
 							// Row menu
 							sm = m.addMenu({title : 'table.row'});
-							sm.add({title : 'table.row_desc', icon : 'row_props', command : 'mceTableRowProps', ui : true});
-							sm.add({title : 'table.row_before_desc', icon : 'row_before', command : 'mceTableInsertRowBefore'});
-							sm.add({title : 'table.row_after_desc', icon : 'row_after', command : 'mceTableInsertRowAfter'});
-							sm.add({title : 'table.delete_row_desc', icon : 'delete_row', command : 'mceTableDeleteRow'});
+							sm.add({title : 'table.row_desc', icon : 'row_props', cmd : 'mceTableRowProps', ui : true});
+							sm.add({title : 'table.row_before_desc', icon : 'row_before', cmd : 'mceTableInsertRowBefore'});
+							sm.add({title : 'table.row_after_desc', icon : 'row_after', cmd : 'mceTableInsertRowAfter'});
+							sm.add({title : 'table.delete_row_desc', icon : 'delete_row', cmd : 'mceTableDeleteRow'});
 							sm.addSeparator();
-							sm.add({title : 'table.cut_row_desc', icon : 'cut', command : 'mceTableCutRow'});
-							sm.add({title : 'table.copy_row_desc', icon : 'copy', command : 'mceTableCopyRow'});
-							sm.add({title : 'table.paste_row_before_desc', icon : 'paste', command : 'mceTablePasteRowBefore'});
-							sm.add({title : 'table.paste_row_after_desc', icon : 'paste', command : 'mceTablePasteRowAfter'});
+							sm.add({title : 'table.cut_row_desc', icon : 'cut', cmd : 'mceTableCutRow'});
+							sm.add({title : 'table.copy_row_desc', icon : 'copy', cmd : 'mceTableCopyRow'});
+							sm.add({title : 'table.paste_row_before_desc', icon : 'paste', cmd : 'mceTablePasteRowBefore'});
+							sm.add({title : 'table.paste_row_after_desc', icon : 'paste', cmd : 'mceTablePasteRowAfter'});
 
 							// Column menu
 							sm = m.addMenu({title : 'table.col'});
-							sm.add({title : 'table.col_before_desc', icon : 'col_before', command : 'mceTableInsertColBefore'});
-							sm.add({title : 'table.col_after_desc', icon : 'col_after', command : 'mceTableInsertColAfter'});
-							sm.add({title : 'table.delete_col_desc', icon : 'delete_col', command : 'mceTableDeleteCol'});
+							sm.add({title : 'table.col_before_desc', icon : 'col_before', cmd : 'mceTableInsertColBefore'});
+							sm.add({title : 'table.col_after_desc', icon : 'col_after', cmd : 'mceTableInsertColAfter'});
+							sm.add({title : 'table.delete_col_desc', icon : 'delete_col', cmd : 'mceTableDeleteCol'});
 						} else
-							m.add({title : 'table.desc', icon : 'table', command : 'mceInsertTable', ui : true});
+							m.add({title : 'table.desc', icon : 'table', cmd : 'mceInsertTable', ui : true});
 					});
 				}
 			});

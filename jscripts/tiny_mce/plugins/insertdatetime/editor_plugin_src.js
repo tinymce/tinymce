@@ -24,8 +24,8 @@
 				ed.execCommand('mceInsertContent', false, str);
 			});
 
-			ed.addButton('insertdate', 'insertdatetime.insertdate_desc', 'mceInsertDate');
-			ed.addButton('inserttime', 'insertdatetime.inserttime_desc', 'mceInsertTime');
+			ed.addButton('insertdate', {title : 'insertdatetime.insertdate_desc', cmd : 'mceInsertDate'});
+			ed.addButton('inserttime', {title : 'insertdatetime.inserttime_desc', cmd : 'mceInsertTime'});
 		},
 
 		getInfo : function() {

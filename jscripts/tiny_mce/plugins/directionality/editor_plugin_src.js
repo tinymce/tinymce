@@ -38,8 +38,8 @@
 				ed.nodeChanged();
 			});
 
-			ed.addButton('ltr', 'directionality.ltr_desc', 'mceDirectionLTR');
-			ed.addButton('rtl', 'directionality.rtl_desc', 'mceDirectionRTL');
+			ed.addButton('ltr', {title : 'directionality.ltr_desc', cmd : 'mceDirectionLTR'});
+			ed.addButton('rtl', {title : 'directionality.rtl_desc', cmd : 'mceDirectionRTL'});
 
 			ed.onNodeChange.add(t._nodeChange, t);
 		},

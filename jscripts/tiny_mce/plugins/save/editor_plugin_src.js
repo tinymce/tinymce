@@ -17,8 +17,8 @@
 			ed.addCommand('mceCancel', t._cancel, t);
 
 			// Register buttons
-			ed.addButton('save', 'save.save_desc', 'mceSave');
-			ed.addButton('cancel', 'save.cancel_desc', 'mceCancel');
+			ed.addButton('save', {title : 'save.save_desc', cmd : 'mceSave'});
+			ed.addButton('cancel', {title : 'save.cancel_desc', cmd : 'mceCancel'});
 
 			ed.onNodeChange.add(t._nodeChange, t);
 			ed.addShortcut('ctrl+s', ed.getLang('save.save_desc'), 'mceSave');

@@ -27,7 +27,10 @@
 			});
 
 			// Register buttons
-			ed.addButton('image', 'advimage.image_desc', 'mceAdvImage');
+			ed.addButton('image', {
+				title : 'advimage.image_desc',
+				cmd : 'mceAdvImage'
+			});
 		},
 
 		getInfo : function() {

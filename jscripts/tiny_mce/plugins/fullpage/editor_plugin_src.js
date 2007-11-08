@@ -26,7 +26,7 @@
 			});
 
 			// Register buttons
-			ed.addButton('fullpage', 'fullpage.desc', 'mceFullPageProperties');
+			ed.addButton('fullpage', {title : 'fullpage.desc', cmd : 'mceFullPageProperties'});
 
 			ed.onBeforeSetContent.add(t._setContent, t);
 			ed.onGetContent.add(t._getContent, t);

@@ -28,10 +28,10 @@
 			});
 
 			// Register buttons
-			ed.addButton('moveforward', 'layer.forward_desc', 'mceMoveForward');
-			ed.addButton('movebackward', 'layer.backward_desc', 'mceMoveBackward');
-			ed.addButton('absolute', 'layer.absolute_desc', 'mceMakeAbsolute');
-			ed.addButton('insertlayer', 'layer.insertlayer_desc', 'mceInsertLayer');
+			ed.addButton('moveforward', {title : 'layer.forward_desc', cmd : 'mceMoveForward'});
+			ed.addButton('movebackward', {title : 'layer.backward_desc', cmd : 'mceMoveBackward'});
+			ed.addButton('absolute', {title : 'layer.absolute_desc', cmd : 'mceMakeAbsolute'});
+			ed.addButton('insertlayer', {title : 'layer.insertlayer_desc', cmd : 'mceInsertLayer'});
 
 			ed.onInit.add(function() {
 				if (tinymce.isIE)

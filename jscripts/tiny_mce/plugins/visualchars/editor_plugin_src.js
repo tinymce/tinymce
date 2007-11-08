@@ -16,7 +16,7 @@
 			ed.addCommand('mceVisualChars', t._toggleVisualChars, t);
 
 			// Register buttons
-			ed.addButton('visualchars', 'visualchars.desc', 'mceVisualChars');
+			ed.addButton('visualchars', {title : 'visualchars.desc', cmd : 'mceVisualChars'});
 
 			ed.onBeforeGetContent.add(function(ed, o) {
 				if (t.state) {

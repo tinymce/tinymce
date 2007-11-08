@@ -28,7 +28,7 @@
 			});
 
 			// Register buttons
-			ed.addButton('media', 'media.desc', 'mceMedia');
+			ed.addButton('media', {title : 'media.desc', cmd : 'mceMedia'});
 
 			ed.onInit.add(function() {
 				var lo = {
@@ -58,7 +58,7 @@
 				if (ed && ed.plugins.contextmenu) {
 					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
 						if (e.nodeName == 'IMG' && /mceItem(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)/.test(e.className)) {
-							m.add({title : 'media.edit', icon : 'media', command : 'mceMedia'});
+							m.add({title : 'media.edit', icon : 'media', cmd : 'mceMedia'});
 						}
 					});
 				}

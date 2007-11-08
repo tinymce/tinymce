@@ -155,8 +155,11 @@
 
 				s.title = ed.getLang(s.title, s.title);
 
-				if (s.command)
-					s.func = t._wrap(s);
+				if (!s.onclick) {
+					s.onclick = function(v) {
+						ed.execCommand(s.cmd, s.ui || false, v || s.value);
+					};
+				}
 			});
 
 			return t.add(c);
@@ -179,10 +182,15 @@
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onselect) {
+				s.onselect = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func, 1),
 				scope : s.scope,
 				menu_container : ed.id + "_parent",
 				control_manager : t
@@ -235,10 +243,15 @@
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onclick) {
+				s.onclick = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func),
 				scope : s.scope
 			}, s);
 
@@ -263,10 +276,21 @@
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onclick) {
+				s.onclick = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
+			if (!s.onselect) {
+				s.onselect = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func, 1),
 				scope : s.scope,
 				menu_container : ed.id + "_parent",
 				control_manager : t
@@ -295,10 +319,21 @@
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
+			if (!s.onclick) {
+				s.onclick = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
+			if (!s.onselect) {
+				s.onselect = function(v) {
+					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				};
+			}
+
 			s = extend({
 				title : s.title,
 				'class' : id,
-				func : t._wrap(s.cmd || s.func, 1),
 				scope : s.scope,
 				menu_container : ed.id + "_parent"
 			}, s);
@@ -333,33 +368,6 @@
 		 */
 		createSeparator : function() {
 			return new tinymce.ui.Separator();
-		},
-
-		// Internal functions
-
-		_wrap : function(c, v) {
-			var o, ed = this.editor;
-
-			// Wrap command
-			if (tinymce.is(c, 'string'))
-				c = {command : c};
-
-			if (tinymce.is(c, 'object')) {
-				o = c;
-
-				if (v) {
-					c = function(v) {
-						ed.execCommand(o.command, o.ui, v);
-					};
-				} else {
-					c = function(e) {
-						ed.execCommand(o.command, o.ui, o.value);
-						return Event.cancel(e);
-					};
-				}
-			}
-
-			return c;
 		}
 
 		/**#@-*/

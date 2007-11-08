@@ -142,7 +142,9 @@
 					if (m.isDisabled())
 						return;
 
-					m.execCallback();
+					if (m.settings.onclick)
+						m.settings.onclick(e);
+
 					dm = t;
 
 					while (dm) {

@@ -76,12 +76,12 @@
 			});
 
 			// Register buttons
-			ed.addButton('cite', 'xhtmlxtras.cite_desc', 'mceCite');
-			ed.addButton('acronym', 'xhtmlxtras.acronym_desc', 'mceAcronym');
-			ed.addButton('abbr', 'xhtmlxtras.abbr_desc', 'mceAbbr');
-			ed.addButton('del', 'xhtmlxtras.del_desc', 'mceDel');
-			ed.addButton('ins', 'xhtmlxtras.ins_desc', 'mceIns');
-			ed.addButton('attribs', 'xhtmlxtras.attribs_desc', 'mceAttributes');
+			ed.addButton('cite', {title : 'xhtmlxtras.cite_desc', cmd : 'mceCite'});
+			ed.addButton('acronym', {title : 'xhtmlxtras.acronym_desc', cmd : 'mceAcronym'});
+			ed.addButton('abbr', {title : 'xhtmlxtras.abbr_desc', cmd : 'mceAbbr'});
+			ed.addButton('del', {title : 'xhtmlxtras.del_desc', cmd : 'mceDel'});
+			ed.addButton('ins', {title : 'xhtmlxtras.ins_desc', cmd : 'mceIns'});
+			ed.addButton('attribs', {title : 'xhtmlxtras.attribs_desc', cmd : 'mceAttributes'});
 
 			if (tinymce.isIE) {
 				ed.onPostProcess.add(function(ed, o) {

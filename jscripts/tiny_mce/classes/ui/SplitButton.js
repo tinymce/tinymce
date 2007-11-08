@@ -126,15 +126,14 @@
 		postRender : function() {
 			var t = this, s = t.settings;
 
-			if (s.func) {
+			if (s.onclick) {
 				Event.add(t.id + '_action', 'click', function() {
 					if (!t.isDisabled())
-						t.execCallback();
+						s.onclick(t.value);
 				});
 			}
 
-			if (s.func)
-				Event.add(t.id + '_open', 'click', t.showMenu, t);
+			Event.add(t.id + '_open', 'click', t.showMenu, t);
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
@@ -148,17 +147,6 @@
 						DOM.removeClass(t.id, 'mceSplitButtonHover');
 				});
 			}
-		},
-
-		/**
-		 * Executes the specified callback function for the split button. In this case when the user clicks the button or selects a item.
-		 */
-		execCallback : function(v, a) {
-			var t = this, s = t.settings;
-
-			t.hideMenu();
-
-			return s.func.call(s.scope || t, v || t.value, a);
 		}
 
 		/**#@-*/

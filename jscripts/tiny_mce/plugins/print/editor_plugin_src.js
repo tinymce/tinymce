@@ -12,7 +12,7 @@
 				ed.getWin().print();
 			});
 
-			ed.addButton('print', 'print.print_desc', 'mcePrint');
+			ed.addButton('print', {title : 'print.print_desc', cmd : 'mcePrint'});
 		},
 
 		getInfo : function() {

@@ -159,7 +159,7 @@
 		_createStyleSelect : function(n) {
 			var t = this, ed = t.editor, cf = ed.controlManager, c = cf.createListBox('styleselect', {
 				title : 'advanced.style_select',
-				func : function(v) {
+				onselect : function(v) {
 					if (c.selectedValue === v)
 						ed.execCommand('mceSetStyleInfo', 0, {command : 'removeformat'});
 					else

@@ -29,7 +29,7 @@
 			ed.addCommand('mceInsertTemplate', t._insertTemplate, t);
 
 			// Register buttons
-			ed.addButton('template', 'template.desc', 'mceTemplate');
+			ed.addButton('template', {title : 'template.desc', cmd : 'mceTemplate'});
 
 			ed.onPreProcess.add(function(ed, o) {
 				var dom = ed.dom;

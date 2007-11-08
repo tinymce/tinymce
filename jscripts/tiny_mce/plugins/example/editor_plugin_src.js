@@ -31,7 +31,9 @@ tinymce.PluginManager.requireLangPack('example');
 			});
 
 			// Register example button
-			ed.addButton('example', 'example.desc', 'mceExample', {
+			ed.addButton('example', {
+				title : 'example.desc',
+				cmd : 'mceExample',
 				image : url + '/img/example.gif'
 			});
 

@@ -54,17 +54,8 @@
 
 			tinymce.dom.Event.add(t.id, 'click', function(e) {
 				if (!t.isDisabled())
-					return s.func.call(s.scope, e);
+					return s.onclick.call(s.scope, e);
 			});
-		},
-
-		/**
-		 * Executes the specified callback function for the button. In this case when the user clicks the button.
-		 */
-		execCallback : function() {
-			var s = this.settings;
-
-			return s.func.apply(s.scope, arguments);
 		}
 
 		/**#@-*/
