@@ -855,6 +855,7 @@ tinymce.create('static tinymce.util.XHR', {
 		files : null,
 		listeners : {},
 		pixelStyles : /^(top|left|bottom|right|width|height|borderWidth)$/,
+		//idPattern : new RegExp().compile('^#[\\w]+$'),
 
 		DOMUtils : function(d, s) {
 			var t = this;
@@ -1103,21 +1104,6 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 
 				return !c ? p.appendChild(e) : e;
-			});
-		},
-
-		addAll : function(te, ne) {
-			var i, n, t = this;
-
-			return this.run(te, function(te) {
-				if (is(ne, 'string'))
-					te.appendChild(t.doc.createTextNode(ne));
-				else if (ne.length) {
-					te = te.appendChild(t.create(ne[0], ne[1]));
-
-					for (i=2; i<ne.length; i++)
-						t.addAll(te, ne[i]);
-				}
 			});
 		},
 

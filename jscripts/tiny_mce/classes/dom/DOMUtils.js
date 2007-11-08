@@ -20,6 +20,7 @@
 		files : null,
 		listeners : {},
 		pixelStyles : /^(top|left|bottom|right|width|height|borderWidth)$/,
+		//idPattern : new RegExp().compile('^#[\\w]+$'),
 
 		/**
 		 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
@@ -331,27 +332,6 @@
 				}
 
 				return !c ? p.appendChild(e) : e;
-			});
-		},
-
-		/**
-		 * Adds a structure of elements to the specified target element(s). Check the Wiki for more details on this method.
-		 *
-		 * @param {String/Element/Array} te Target element id, element object or array of elements to add to.
-		 * @param {Object} ne Object structure to add.
-		 */
-		addAll : function(te, ne) {
-			var i, n, t = this;
-
-			return this.run(te, function(te) {
-				if (is(ne, 'string'))
-					te.appendChild(t.doc.createTextNode(ne));
-				else if (ne.length) {
-					te = te.appendChild(t.create(ne[0], ne[1]));
-
-					for (i=2; i<ne.length; i++)
-						t.addAll(te, ne[i]);
-				}
 			});
 		},
 
@@ -1273,8 +1253,7 @@
 		},
 
 		/**
-		 * Executes the specified function on the element by id
-		 * or dom element node or array of elements/id.
+		 * Executes the specified function on the element by id or dom element node or array of elements/id.
 		 *
 		 * @param {String/Element/Array} Element ID or DOM element object or array with ids or elements.
 		 * @param {function} f Function to execute for each item.

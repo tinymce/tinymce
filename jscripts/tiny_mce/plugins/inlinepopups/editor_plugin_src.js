@@ -108,7 +108,7 @@
 				opt += ' movable';
 
 			// Create DOM objects
-			DOM.addAll(ed.getContainer(), 
+			t._addAll(ed.getContainer(), 
 				['div', {id : id, 'class' : ed.settings.inlinepopups_skin || 'clearlooks2', style : 'width:100px;height:100px'}, 
 					['div', {id : id + '_wrapper', 'class' : 'wrapper' + opt},
 						['div', {id : id + '_top', 'class' : 'top'}, 
@@ -263,6 +263,27 @@
 			DOM.removeClass(t.lastId, 'focus');
 			DOM.addClass(id, 'focus');
 			t.lastId = id;
+		},
+
+		/**
+		 * Adds a structure of elements to the specified target element(s). Check the Wiki for more details on this method.
+		 *
+		 * @param {String/Element/Array} te Target element id, element object or array of elements to add to.
+		 * @param {Object} ne Object structure to add.
+		 */
+		_addAll : function(te, ne) {
+			var i, n, t = this, dom = this.editor.dom;
+
+			return dom.run(te, function(te) {
+				if (is(ne, 'string'))
+					te.appendChild(dom.doc.createTextNode(ne));
+				else if (ne.length) {
+					te = te.appendChild(dom.create(ne[0], ne[1]));
+
+					for (i=2; i<ne.length; i++)
+						t._addAll(te, ne[i]);
+				}
+			});
 		},
 
 		_startDrag : function(id, se, ac) {
