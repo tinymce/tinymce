@@ -37,12 +37,14 @@
 		 * @return {String} HTML for the button control element.
 		 */
 		renderHTML : function() {
-			var s = this.settings;
+			var s = this.settings, h = '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '">';
 
 			if (s.image)
-				return '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '"><img class="icon" src="' + s.image + '" /></a>';
+				h += '<img class="icon" src="' + s.image + '" /></a>';
+			else
+				h += '<span class="icon ' + s['class'] + '"></span></a>';
 
-			return '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '"><span class="icon ' + s['class'] + '"></span></a>';
+			return h;
 		},
 
 		/**

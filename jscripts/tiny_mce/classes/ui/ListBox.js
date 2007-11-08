@@ -44,24 +44,28 @@
 		 * @param {String} v Value to look for inside the list box.
 		 */
 		select : function(v) {
-			var t = this;
+			var t = this, e;
 
 			if (v != t.selectedValue) {
+				e = DOM.get(t.id + '_text');
 				t.selectedValue = v;
 
 				if (!v) {
-					DOM.setHTML(t.id + '_text', DOM.encode(t.settings.title));
-					DOM.addClass(t.id + '_text', 'title');
+					DOM.setHTML(e, DOM.encode(t.settings.title));
+					DOM.addClass(e, 'title');
+					e = 0;
 					return;
 				}
 
-				DOM.removeClass(t.id + '_text', 'title');
+				DOM.removeClass(e, 'title');
 
 				each(t.items, function(o) {
 					if (o.value === v)
-						DOM.setHTML(t.id + '_text', DOM.encode(o.title));
+						DOM.setHTML(e, DOM.encode(o.title));
 				});
 			}
+
+			e = 0;
 		},
 
 		/**

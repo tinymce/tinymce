@@ -4375,12 +4375,14 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		renderHTML : function() {
-			var s = this.settings;
+			var s = this.settings, h = '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '">';
 
 			if (s.image)
-				return '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '"><img class="icon" src="' + s.image + '" /></a>';
+				h += '<img class="icon" src="' + s.image + '" /></a>';
+			else
+				h += '<span class="icon ' + s['class'] + '"></span></a>';
 
-			return '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '"><span class="icon ' + s['class'] + '"></span></a>';
+			return h;
 		},
 
 		postRender : function() {
@@ -4414,24 +4416,28 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		select : function(v) {
-			var t = this;
+			var t = this, e;
 
 			if (v != t.selectedValue) {
+				e = DOM.get(t.id + '_text');
 				t.selectedValue = v;
 
 				if (!v) {
-					DOM.setHTML(t.id + '_text', DOM.encode(t.settings.title));
-					DOM.addClass(t.id + '_text', 'title');
+					DOM.setHTML(e, DOM.encode(t.settings.title));
+					DOM.addClass(e, 'title');
+					e = 0;
 					return;
 				}
 
-				DOM.removeClass(t.id + '_text', 'title');
+				DOM.removeClass(e, 'title');
 
 				each(t.items, function(o) {
 					if (o.value === v)
-						DOM.setHTML(t.id + '_text', DOM.encode(o.title));
+						DOM.setHTML(e, DOM.encode(o.title));
 				});
 			}
+
+			e = 0;
 		},
 
 		add : function(n, v, o) {
@@ -4664,7 +4670,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		showMenu : function() {
-			var t = this, p1, p2, e = DOM.get(this.id), m;
+			var t = this, p1, p2, e = DOM.get(t.id), m;
 
 			if (t.isDisabled())
 				return;
@@ -4674,7 +4680,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				t.isMenuRendered = true;
 			}
 
-			p1 = DOM.getPos(this.settings.menu_container);
+			p1 = DOM.getPos(t.settings.menu_container);
 			p2 = DOM.getPos(e);
 
 			m = t.menu;
@@ -4783,7 +4789,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		showMenu : function() {
-			var t = this, r, p;
+			var t = this, r, p, e;
 
 			if (t.isDisabled())
 				return;
@@ -4793,14 +4799,16 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				t.isMenuRendered = true;
 			}
 
+			e = DOM.get(t.id);
 			DOM.show(t.id + '_menu');
-			DOM.addClass(t.id, 'mceSplitButtonSelected');
-			p = DOM.getPos(this.settings.menu_container);
-			p2 = DOM.getPos(this.id);
+			DOM.addClass(e, 'mceSplitButtonSelected');
+			p = DOM.getPos(t.settings.menu_container);
+			p2 = DOM.getPos(e);
 			DOM.setStyles(t.id + '_menu', {
 				left : p2.x - p.x,
-				top : (p2.y + DOM.get(this.id).clientHeight) - p.y
+				top : (p2.y + e.clientHeight) - p.y
 			});
+			e = 0;
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
 		},
@@ -4818,7 +4826,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr;
 
-			m = DOM.add(this.settings.menu_container, 'div', {id : this.id + '_menu', 'class' : 'mceSplitButtonMenu'});
+			m = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : 'mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 
 			n = DOM.add(m, 'table', {'class' : 'mceColorSplitMenu'});
@@ -4867,8 +4875,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var t = this, p, s = this.settings, co = s.menu_container, po, cp, id = t.id + '_preview';
 
 			if (!(p = DOM.get(id))) {
-				DOM.setStyle(this.id + '_action', 'position', 'relative');
-				p = DOM.add(this.id + '_action', 'div', {id : id, 'class' : 'mceColorPreview'});
+				DOM.setStyle(t.id + '_action', 'position', 'relative');
+				p = DOM.add(t.id + '_action', 'div', {id : id, 'class' : 'mceColorPreview'});
 			}
 
 			p.style.backgroundColor = c;

@@ -44,7 +44,7 @@
 		 * and displays a table of colors for the user to pick from.
 		 */
 		showMenu : function() {
-			var t = this, r, p;
+			var t = this, r, p, e;
 
 			if (t.isDisabled())
 				return;
@@ -54,14 +54,16 @@
 				t.isMenuRendered = true;
 			}
 
+			e = DOM.get(t.id);
 			DOM.show(t.id + '_menu');
-			DOM.addClass(t.id, 'mceSplitButtonSelected');
-			p = DOM.getPos(this.settings.menu_container);
-			p2 = DOM.getPos(this.id);
+			DOM.addClass(e, 'mceSplitButtonSelected');
+			p = DOM.getPos(t.settings.menu_container);
+			p2 = DOM.getPos(e);
 			DOM.setStyles(t.id + '_menu', {
 				left : p2.x - p.x,
-				top : (p2.y + DOM.get(this.id).clientHeight) - p.y
+				top : (p2.y + e.clientHeight) - p.y
 			});
+			e = 0;
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
 		},
@@ -88,7 +90,7 @@
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr;
 
-			m = DOM.add(this.settings.menu_container, 'div', {id : this.id + '_menu', 'class' : 'mceSplitButtonMenu'});
+			m = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : 'mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 
 			n = DOM.add(m, 'table', {'class' : 'mceColorSplitMenu'});
@@ -142,8 +144,8 @@
 			var t = this, p, s = this.settings, co = s.menu_container, po, cp, id = t.id + '_preview';
 
 			if (!(p = DOM.get(id))) {
-				DOM.setStyle(this.id + '_action', 'position', 'relative');
-				p = DOM.add(this.id + '_action', 'div', {id : id, 'class' : 'mceColorPreview'});
+				DOM.setStyle(t.id + '_action', 'position', 'relative');
+				p = DOM.add(t.id + '_action', 'div', {id : id, 'class' : 'mceColorPreview'});
 			}
 
 			p.style.backgroundColor = c;

@@ -35,7 +35,7 @@
 		 * Shows the menu.
 		 */
 		showMenu : function() {
-			var t = this, p1, p2, e = DOM.get(this.id), m;
+			var t = this, p1, p2, e = DOM.get(t.id), m;
 
 			if (t.isDisabled())
 				return;
@@ -45,7 +45,7 @@
 				t.isMenuRendered = true;
 			}
 
-			p1 = DOM.getPos(this.settings.menu_container);
+			p1 = DOM.getPos(t.settings.menu_container);
 			p2 = DOM.getPos(e);
 
 			m = t.menu;
