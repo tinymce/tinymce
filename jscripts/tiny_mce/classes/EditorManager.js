@@ -347,9 +347,13 @@
 		/**#@-*/
 	});
 
-	// Setup some URLs where the editor API is located etc
+	// Setup some URLs where the editor API is located and where the document is
+	tinymce.documentBaseURL = document.location.href.replace(/[\/\\][\w.]+$/, '');
+	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
+		tinymce.documentBaseURL += '/';
+
+	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
-	tinymce.baseURL = tinymce.EditorManager.baseURI.getURI();
 })();
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call

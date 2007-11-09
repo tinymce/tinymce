@@ -42,13 +42,15 @@ tinymce.create('static tinymce.util.XHR', {
 			return x;
 		};
 
-		x = w.XMLHttpRequest ? new XMLHttpRequest() : get('Msxml2.XMLHTTP') || get('Microsoft.XMLHTTP');
+		x = w.XMLHttpRequest ? new XMLHttpRequest() : get('Microsoft.XMLHTTP') || get('Msxml2.XMLHTTP');
 
 		if (x) {
 			if (x.overrideMimeType)
 				x.overrideMimeType(o.content_type);
 
-			x.async = o.async;
+			if (!tinymce.isIE)
+				x.async = o.async;
+
 			x.open(o.type || (o.data ? 'POST' : 'GET'), o.url, o.async);
 
 			if (o.content_type)

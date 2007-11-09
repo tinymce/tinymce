@@ -632,14 +632,16 @@
 		mceRepaint : function() {
 			var s, b, e = this.editor;
 
-			try {
-				s = e.selection;
-				b = s.getBookmark(true);
-				e.getDoc().execCommand('selectall', false, null);
-				s.collapse(true);
-				s.moveToBookmark(b);
-			} catch (ex) {
-				// Ignore
+			if (tinymce.isGecko) {
+				try {
+					s = e.selection;
+					b = s.getBookmark(true);
+					e.getDoc().execCommand('selectall', false, null);
+					s.collapse(true);
+					s.moveToBookmark(b);
+				} catch (ex) {
+					// Ignore
+				}
 			}
 		},
 

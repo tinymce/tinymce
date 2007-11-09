@@ -21,27 +21,24 @@
 		 * @param {Object} s Optional settings object.
 		 */
 		URI : function(u, s) {
-			var t = this, o, a;
+			var t = this, o, a, b;
 
 			// Default settings
 			s = t.settings = s || {};
-			s.base_uri = s.base_uri || document.location.href;
 
-			if (s.base_uri.indexOf('?') != -1)
-				s.base_uri = s.base_uri.substring(0, s.base_uri.indexOf('?'));
-
-			// Strange app protocol
-			if (/^(mailto|news|javascript|about):/i.test(u)) {
+			// Strange app protocol or local anchor
+			if (/^(mailto|news|javascript|about):/i.test(u) || /^\s*#/.test(u)) {
 				t.source = u;
 				return;
 			}
 
-			// Relative URL not //host/dir/file or http://host/dir/file
-			if (u.indexOf('://') == -1 && u.indexOf('//') !== 0) {
-				o = new tinymce.util.URI(s.base_uri, {base_uri : s.base_uri});
-				o.setPath(u);
-				return o;
-			}
+			// Absolute path with no host, fake host and protocol
+			if (u.indexOf('/') === 0 && u.indexOf('//') !== 0)
+				u = (s.base_uri ? s.base_uri.protocol || 'http' : 'http') + '://mce_host' + u;
+
+			// Relative path
+			if (u.indexOf('://') === -1 && u.indexOf('//') !== 0)
+				u = (s.base_uri.protocol || 'http') + '://mce_host' + t.toAbsPath(s.base_uri.path, u);
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
 			u = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(u);
@@ -49,7 +46,23 @@
 				t[v] = u[i];
 			});
 
-			t.path = t.path || '/';
+			if (b = s.base_uri) {
+				if (!t.protocol)
+					t.protocol = b.protocol;
+
+				if (!t.userInfo)
+					t.userInfo = b.userInfo;
+
+				if (!t.host || t.host == 'mce_host')
+					t.host = b.host;
+
+				if (!t.port)
+					t.port = b.port;
+
+				t.source = '';
+			}
+
+			//t.path = t.path || '/';
 		},
 
 		/**#@+
@@ -63,9 +76,6 @@
 		 */
 		setPath : function(p) {
 			var t = this;
-
-			if (p.indexOf('../') != -1 || p.indexOf('/') !== 0)
-				p = t.toAbsPath(t.getBaseURI().directory, p);
 
 			p = /^(.*?)\/?(\w+)?$/.exec(p);
 
@@ -86,15 +96,25 @@
 		 * @return {String} Relative URI from the point specified in the current URI instance.
 		 */
 		toRelative : function(u) {
-			var t = this;
+			var t = this, o;
 
-			u = new tinymce.util.URI(u, {base_uri : t.getURI()});
+			u = new tinymce.util.URI(u, {base_uri : t});
 
 			// Not on same domain/port or protocol
-			if (t.host != u.host || t.port != u.port || t.protocol != u.protocol)
+			if ((u.host != 'mce_host' && t.host != u.host && u.host) || t.port != u.port || t.protocol != u.protocol)
 				return u.getURI();
 
-			return t.toRelPath(t.path, u.path);
+			o = t.toRelPath(t.path, u.path);
+
+			// Add query
+			if (u.query)
+				o += '?' + u.query;
+
+			// Add anchor
+			if (u.anchor)
+				o += '#' + u.anchor;
+
+			return o;
 		},
 	
 		/**
@@ -105,7 +125,9 @@
 		 * @return {String} Absolute URI from the point specified in the current URI instance.
 		 */
 		toAbsolute : function(u, nh) {
-			return new tinymce.util.URI(u, {base_uri : this.getURI()}).getURI(nh);
+			var u = new tinymce.util.URI(u, {base_uri : this});
+
+			return u.getURI(this.host == u.host ? nh : 0);
 		},
 
 		/**
@@ -208,20 +230,6 @@
 		},
 
 		/**
-		 * Returns the internal base URI object.
-		 *
-		 * @return {tinymce.util.URI} Internal URI object.
-		 */
-		getBaseURI : function() {
-			var t = this;
-
-			if (!t.baseURI)
-				t.baseURI = new tinymce.util.URI(t.settings.base_uri);
-
-			return t.baseURI;
-		},
-
-		/**
 		 * Returns the full URI of the internal structure.
 		 *
 		 * @param {bool} nh Optional no host and protocol part. Defaults to false.
@@ -233,7 +241,7 @@
 			if (!t.source || nh) {
 				s = '';
 
-				if (!nh || (t.host != t.getBaseURI().host)) {
+				if (!nh) {
 					if (t.protocol)
 						s += t.protocol + '://';
 

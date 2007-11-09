@@ -401,6 +401,7 @@ var unitTester = new tinymce.util.UnitTester('log', {
 
 			editor.settings.relative_urls = false;
 			editor.settings.remove_script_host = true;
+			editor.documentBaseURI = new tinymce.util.URI('http://www.site.com/dirA/dirB/dirC/');
 
 			editor.setContent('<a href="test.html">test</a>');
 			t.eq(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>');

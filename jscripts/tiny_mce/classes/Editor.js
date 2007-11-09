@@ -74,10 +74,6 @@
 				t[e] = new Dispatcher(t);
 			});
 
-			t.documentBasePath = document.location.pathname.replace(/[\/\\][\w.]+$/, '');
-			if (!/[\/\\]$/.test(t.documentBasePath))
-				t.documentBasePath += '/';
-
 			// Default editor config
 			t.settings = s = extend({
 				id : id,
@@ -89,7 +85,7 @@
 				delta_height : 0,
 				popup_css : '',
 				plugins : '',
-				document_base_url : t.documentBasePath,
+				document_base_url : tinymce.documentBaseURL,
 				add_form_submit_trigger : 1,
 				submit_patch : 1,
 				add_unload_trigger : 1,
@@ -117,7 +113,7 @@
 			}, s);
 
 			// Setup URIs
-			t.documentBaseURI = new tinymce.util.URI(s.document_base_url);
+			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL);
 			t.baseURI = EditorManager.baseURI;
 
 			// Call setup
@@ -1482,10 +1478,18 @@
 
 			// Add custom undo/redo handlers
 			if (s.custom_undo_redo) {
-				t.onMouseDown.add(function(ed, e) {
+				function addUndo() {
 					t.undoManager.typing = 0;
 					t.undoManager.add();
-				});
+				};
+
+				// Add undo level on editor blur
+				if (tinymce.isIE)
+					Event.add(t.getDoc(), 'deactivate', addUndo);
+				else
+					Event.add(t.getDoc(), 'blur', addUndo);
+
+				t.onMouseDown.add(addUndo);
 
 				t.onKeyUp.add(function(ed, e) {
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey) {

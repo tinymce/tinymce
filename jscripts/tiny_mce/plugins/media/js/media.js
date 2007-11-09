@@ -51,14 +51,14 @@ function init() {
 	document.getElementById('qtsrcfilebrowsercontainer').innerHTML = getBrowserHTML('qtsrcfilebrowser','qt_qtsrc','media','media');
 	document.getElementById('bgcolor_pickcontainer').innerHTML = getColorPickerHTML('bgcolor_pick','bgcolor');
 
-	var html = getMediaListHTML('filebrowser','src','media','media');
+	var html = getMediaListHTML('medialist','src','media','media');
 	if (html == "")
 		document.getElementById("linklistrow").style.display = 'none';
 	else
 		document.getElementById("linklistcontainer").innerHTML = html;
 
 	// Resize some elements
-	if (isVisible('filebrowsercontainer'))
+	if (isVisible('filebrowser'))
 		document.getElementById('src').style.width = '230px';
 
 	// Setup form

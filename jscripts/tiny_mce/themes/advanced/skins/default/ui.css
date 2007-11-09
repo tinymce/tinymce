@@ -1,5 +1,6 @@
 /* Reset */
 .defaultSkin table, .defaultSkin tbody, .defaultSkin a, .defaultSkin img, .defaultSkin tr, .defaultSkin div, .defaultSkin td, .defaultSkin iframe, .defaultSkin span, .defaultSkin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000;}
+.defaultSkin a:hover {text-decoration:none; font-weight:normal; cursor:default; color:#000}
 
 /* Containers */
 .defaultSkin {position:relative}
@@ -75,7 +76,7 @@
 
 /* Menu */
 .defaultSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #D4D0C8}
-.defaultSkin .noIcons span.icon {display:none;}
+.defaultSkin .noIcons span.icon {width:0;}
 .defaultSkin .noIcons a .text {padding-left:10px}
 .defaultSkin .mceMenu table {background:#FFF}
 .defaultSkin .mceMenu a, .defaultSkin .mceMenu span, .defaultSkin .mceMenu {display:block}

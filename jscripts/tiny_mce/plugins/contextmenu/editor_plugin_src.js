@@ -42,7 +42,8 @@
 				offset_x : p1.x - p2.x,
 				offset_y : p1.y - p2.y,
 				vp_offset_x : p2.x,
-				vp_offset_y : p2.y
+				vp_offset_y : p2.y,
+				constrain : 1
 			});
 
 			t._menu = m;

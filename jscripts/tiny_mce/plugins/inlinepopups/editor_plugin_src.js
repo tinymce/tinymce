@@ -65,7 +65,7 @@
 			id = DOM.uniqueId();
 			vp = DOM.getViewPort();
 			f.width = parseInt(f.width || 320);
-			f.height = parseInt(f.height || 240) + (tinymce.isIE ? 10 : 0);
+			f.height = parseInt(f.height || 240) + (tinymce.isIE ? 8 : 0);
 			f.min_width = parseInt(f.min_width || 150);
 			f.min_height = parseInt(f.min_height || 100);
 			f.max_width = parseInt(f.max_width || 2000);
@@ -150,7 +150,7 @@
 
 			DOM.setStyles(id, {top : -10000, left : -10000});
 
-			// Fix gecko rendering bug
+			// Fix gecko rendering bug, where the editors iframe messed with window contents
 			if (tinymce.isGecko)
 				DOM.setStyle(id, 'overflow', 'auto');
 
@@ -246,6 +246,12 @@
 
 			t.focus(id);
 
+			// Fix IE6 rendering issue
+			if (tinymce.isIE6) {
+				w.element.hide();
+				w.element.show();
+			}
+
 //			if (DOM.get(id + '_ok'))
 //				DOM.get(id + '_ok').focus();
 
@@ -265,25 +271,21 @@
 			t.lastId = id;
 		},
 
-		/**
-		 * Adds a structure of elements to the specified target element(s). Check the Wiki for more details on this method.
-		 *
-		 * @param {String/Element/Array} te Target element id, element object or array of elements to add to.
-		 * @param {Object} ne Object structure to add.
-		 */
 		_addAll : function(te, ne) {
-			var i, n, t = this, dom = this.editor.dom;
+			var i, n, t = this, dom = tinymce.DOM;
 
-			return dom.run(te, function(te) {
-				if (is(ne, 'string'))
-					te.appendChild(dom.doc.createTextNode(ne));
-				else if (ne.length) {
-					te = te.appendChild(dom.create(ne[0], ne[1]));
-
-					for (i=2; i<ne.length; i++)
-						t._addAll(te, ne[i]);
+			if (is(ne, 'string'))
+				te.appendChild(dom.doc.createTextNode(ne));
+			else if (ne.length) {
+				try {
+				te = te.appendChild(dom.create(ne[0], ne[1]));
+				} catch (ex) {
+					console.debug(ne[0], ne[1]);
 				}
-			});
+
+				for (i=2; i<ne.length; i++)
+					t._addAll(te, ne[i]);
+			}
 		},
 
 		_startDrag : function(id, se, ac) {

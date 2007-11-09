@@ -10,7 +10,7 @@
  */
 
 (function() {
-	var i, nl = document.getElementsByTagName('script'), base, api, src, p;
+	var i, nl = document.getElementsByTagName('script'), base, src, p, li, query = '';
 
 	for (i=0; i<nl.length; i++) {
 		src = nl[i].src;
@@ -18,9 +18,17 @@
 		if (src && src.indexOf("tiny_mce_dev.js") != -1) {
 			base = src.substring(0, src.lastIndexOf('/'));
 
-			if ((p = src.indexOf('?api=')) != -1)
-				api = src.substring(p + 5);
+			if ((p = src.indexOf('?')) != -1)
+				query = src.substring(p + 1);
 		}
+	}
+
+	// Parse query string
+	li = query.split('&');
+	query = {};
+	for (i=0; i<li.length; i++) {
+		it = li[i].split('=');
+		query[unescape(it[0])] = unescape(it[1]);
 	}
 
 	nl = null;
@@ -30,16 +38,18 @@
 	};
 
 	// Firebug
-//	document.documentElement.setAttribute("debug", "true");
-//	include('firebug/firebug.js');
+	if (query.debug) {
+		document.documentElement.setAttribute("debug", "true");
+		include('firebug/firebug.js');
+	}
 
 	// Core ns
 	include('tinymce.js');
 
 	// Load framework adapter
-	if (api) {
-		include('adapter/' + api + '/' + api + '.js');
-		include('adapter/' + api + '/adapter.js');
+	if (query.api) {
+		include('adapter/' + query.api + '/' + query.api + '.js');
+		include('adapter/' + query.api + '/adapter.js');
 	}
 
 	// Core API

@@ -48,6 +48,7 @@
 
 			s.container = s.container || cs.container;
 			s.parent = t;
+			s.constrain = s.constrain || cs.constrain;
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
 			m = new tinymce.ui.DropMenu(s.id || DOM.uniqueId(), s);
@@ -115,17 +116,19 @@
 			vp.h -= 20;
 
 			// Move inside viewport if not submenu
-			ot = 2;
-			w = co.clientWidth - ot;
-			h = co.clientHeight - ot;
-			mx = vp.x + vp.w;
-			my = vp.y + vp.h;
+			if (s.constrain) {
+				ot = 2;
+				w = co.clientWidth - ot;
+				h = co.clientHeight - ot;
+				mx = vp.x + vp.w;
+				my = vp.y + vp.h;
 
-			if ((x + s.vp_offset_x + w) > mx)
-				x = px ? px - w : Math.max(0, (mx - s.vp_offset_x) - w);
+				if ((x + s.vp_offset_x + w) > mx)
+					x = px ? px - w : Math.max(0, (mx - s.vp_offset_x) - w);
 
-			if ((y + s.vp_offset_y + h) > my)
-				y = Math.max(0, (my - s.vp_offset_y) - h);
+				if ((y + s.vp_offset_y + h) > my)
+					y = Math.max(0, (my - s.vp_offset_y) - h);
+			}
 
 			DOM.setStyles(co, {left : x , top : y});
 			t.element.update();
@@ -136,7 +139,7 @@
 
 				e = e.target;
 
-				if (e && (e = DOM.getParent(e, 'TD'))) {
+				if (e && (e = DOM.getParent(e, 'TR'))) {
 					m = t.items[e.id];
 
 					if (m.isDisabled())
@@ -161,7 +164,7 @@
 					var m, r, mi, p;
 
 					e = e.target;
-					if (e && (e = DOM.getParent(e, 'TD'))) {
+					if (e && (e = DOM.getParent(e, 'TR'))) {
 						m = t.items[e.id];
 
 						if (t.lastMenu)
@@ -292,8 +295,8 @@
 			var n, s = o.settings, a, ro, it;
 
 			if (s.separator) {
-				ro = DOM.add(tb, 'tr', {'class' : 'mceMenuItemSeparator'});
-				DOM.add(ro, 'td', {id : o.id, 'class' : 'mceMenuItemSeparator'});
+				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItemSeparator'});
+				DOM.add(ro, 'td', {'class' : 'mceMenuItemSeparator'});
 
 				if (n = ro.previousSibling)
 					DOM.addClass(n, 'last');
@@ -301,8 +304,8 @@
 				return;
 			}
 
-			n = ro = DOM.add(tb, 'tr');
-			n = it = DOM.add(n, 'td', {id : o.id, 'class' : 'mceMenuItem mceMenuItemEnabled'});
+			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItem mceMenuItemEnabled'});
+			n = it = DOM.add(n, 'td');
 			n = a = DOM.add(n, 'a', {href : 'javascript:;', onmousedown : 'return false;'});
 
 			DOM.addClass(it, s['class']);
@@ -320,7 +323,7 @@
 				DOM.addClass(ro, 'first');
 
 			if (o.collapse)
-				DOM.addClass(it, 'mceMenuItemSub');
+				DOM.addClass(ro, 'mceMenuItemSub');
 
 			if (n = ro.previousSibling)
 				DOM.removeClass(n, 'last');

@@ -307,32 +307,43 @@
 		relativeURLs : function() {
 			var t = this;
 
-			t.eq(new URI('dir', {base_uri : 'http://www.site.com/dir1/dir2'}).getURI(), 'http://www.site.com/dir1/dir2/dir');
-			t.eq(new URI('dir/dir3', {base_uri : 'http://www.site.com/dir1/dir2'}).getURI(), 'http://www.site.com/dir1/dir2/dir/dir3');
-			t.eq(new URI('../dir', {base_uri : 'http://www.site.com/dir1/dir2'}).getURI(), 'http://www.site.com/dir1/dir');
-			t.eq(new URI('../../../dir', {base_uri : 'http://www.site.com/dir1/dir2'}).getURI(), 'http://www.site.com/dir');
-			t.eq(new URI('../dir/../dir2', {base_uri : 'http://www.site.com/dir1/dir2'}).getURI(), 'http://www.site.com/dir1/dir2');
 			t.eq(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html'), '../dir3/file.html');
 			t.eq(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'), '../../dir3/dir4/file.html');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toRelative('http://www.site.com/dir1/dir3/file.htm'), 'dir3/file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toRelative('http://www.site2.com/dir1/dir3/file.htm'), 'http://www.site2.com/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/').toRelative('http://www.site.com/dir1/dir3/file.htm'), 'dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site2.com/dir1/dir3/file.htm'), 'http://www.site2.com/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site.com:8080/dir1/dir3/file.htm'), 'http://www.site.com:8080/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('https://www.site.com/dir1/dir3/file.htm'), 'https://www.site.com/dir1/dir3/file.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm'), '../../file.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm?id=1#a'), '../../file.htm?id=1#a');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('mailto:test@test.com'), 'mailto:test@test.com');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('news:test'), 'news:test');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('javascript:void(0);'), 'javascript:void(0);');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('about:blank'), 'about:blank');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('#test'), 'http://www.site.com/dir1/dir2/#test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('mailto:test@test.com'), 'mailto:test@test.com');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('news:test'), 'news:test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('javascript:void(0);'), 'javascript:void(0);');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('about:blank'), 'about:blank');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('#test'), '#test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('test.htm'), 'test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site.com/dir1/dir2/test.htm'), 'test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('dir2/test.htm'), 'dir2/test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../dir2/test.htm'), 'test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../../../../../../test.htm'), '../../test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('//www.site.com/test.htm'), '../../test.htm');
 		},
 
 		absoluteURLs : function() {
 			var t = this;
 
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('../dir3'), 'http://www.site.com/dir1/dir3');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('../../../../dir3'), 'http://www.site.com/dir3');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('../abc/def/../../abc/../dir3/file.htm'), 'http://www.site.com/dir1/dir3/file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2').toAbsolute('http://www.site.com/dir2/dir3'), 'http://www.site.com/dir2/dir3');
-			t.eq(new URI('http://www.site2.com/dir1/dir2').toAbsolute('http://www.site2.com/dir2/dir3'), 'http://www.site2.com/dir2/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3'), 'http://www.site.com/dir1/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1), '/dir1/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../../../../dir3'), 'http://www.site.com/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../abc/def/../../abc/../dir3/file.htm'), 'http://www.site.com/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('http://www.site.com/dir2/dir3'), 'http://www.site.com/dir2/dir3');
+			t.eq(new URI('http://www.site2.com/dir1/dir2/').toAbsolute('http://www.site2.com/dir2/dir3'), 'http://www.site2.com/dir2/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('mailto:test@test.com'), 'mailto:test@test.com');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('news:test'), 'news:test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('javascript:void(0);'), 'javascript:void(0);');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('about:blank'), 'about:blank');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('#test'), '#test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('test.htm'), 'http://www.site.com/dir1/dir2/test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').getURI(), 'http://www.site.com/dir1/dir2/');
 		},
 
 		strangeURLs : function() {

@@ -1156,11 +1156,11 @@
 		 */
 		replace : function(n, o, k) {
 			if (is(o, 'array'))
-				o = o.cloneNode(true);
+				n = n.cloneNode(true);
 
 			return this.run(o, function(o) {
 				if (k) {
-					each (o.childNodes, function(c) {
+					each(o.childNodes, function(c) {
 						n.appendChild(c.cloneNode(true));
 					});
 				}
@@ -1270,7 +1270,7 @@
 				return false;
 
 			s = s || this;
-			if (e.length || e.length === 0) {
+			if (!e.nodeType && (e.length || e.length === 0)) {
 				o = [];
 
 				each(e, function(e, i) {

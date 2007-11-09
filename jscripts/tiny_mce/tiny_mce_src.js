@@ -410,27 +410,24 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 	tinymce.create('tinymce.util.URI', {
 		URI : function(u, s) {
-			var t = this, o, a;
+			var t = this, o, a, b;
 
 			// Default settings
 			s = t.settings = s || {};
-			s.base_uri = s.base_uri || document.location.href;
 
-			if (s.base_uri.indexOf('?') != -1)
-				s.base_uri = s.base_uri.substring(0, s.base_uri.indexOf('?'));
-
-			// Strange app protocol
-			if (/^(mailto|news|javascript|about):/i.test(u)) {
+			// Strange app protocol or local anchor
+			if (/^(mailto|news|javascript|about):/i.test(u) || /^\s*#/.test(u)) {
 				t.source = u;
 				return;
 			}
 
-			// Relative URL not //host/dir/file or http://host/dir/file
-			if (u.indexOf('://') == -1 && u.indexOf('//') !== 0) {
-				o = new tinymce.util.URI(s.base_uri, {base_uri : s.base_uri});
-				o.setPath(u);
-				return o;
-			}
+			// Absolute path with no host, fake host and protocol
+			if (u.indexOf('/') === 0 && u.indexOf('//') !== 0)
+				u = (s.base_uri ? s.base_uri.protocol || 'http' : 'http') + '://mce_host' + u;
+
+			// Relative path
+			if (u.indexOf('://') === -1 && u.indexOf('//') !== 0)
+				u = (s.base_uri.protocol || 'http') + '://mce_host' + t.toAbsPath(s.base_uri.path, u);
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
 			u = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(u);
@@ -438,14 +435,27 @@ tinymce.create('tinymce.util.Dispatcher', {
 				t[v] = u[i];
 			});
 
-			t.path = t.path || '/';
+			if (b = s.base_uri) {
+				if (!t.protocol)
+					t.protocol = b.protocol;
+
+				if (!t.userInfo)
+					t.userInfo = b.userInfo;
+
+				if (!t.host || t.host == 'mce_host')
+					t.host = b.host;
+
+				if (!t.port)
+					t.port = b.port;
+
+				t.source = '';
+			}
+
+			//t.path = t.path || '/';
 		},
 
 		setPath : function(p) {
 			var t = this;
-
-			if (p.indexOf('../') != -1 || p.indexOf('/') !== 0)
-				p = t.toAbsPath(t.getBaseURI().directory, p);
 
 			p = /^(.*?)\/?(\w+)?$/.exec(p);
 
@@ -460,19 +470,31 @@ tinymce.create('tinymce.util.Dispatcher', {
 		},
 
 		toRelative : function(u) {
-			var t = this;
+			var t = this, o;
 
-			u = new tinymce.util.URI(u, {base_uri : t.getURI()});
+			u = new tinymce.util.URI(u, {base_uri : t});
 
 			// Not on same domain/port or protocol
-			if (t.host != u.host || t.port != u.port || t.protocol != u.protocol)
+			if ((u.host != 'mce_host' && t.host != u.host && u.host) || t.port != u.port || t.protocol != u.protocol)
 				return u.getURI();
 
-			return t.toRelPath(t.path, u.path);
+			o = t.toRelPath(t.path, u.path);
+
+			// Add query
+			if (u.query)
+				o += '?' + u.query;
+
+			// Add anchor
+			if (u.anchor)
+				o += '#' + u.anchor;
+
+			return o;
 		},
 	
 		toAbsolute : function(u, nh) {
-			return new tinymce.util.URI(u, {base_uri : this.getURI()}).getURI(nh);
+			var u = new tinymce.util.URI(u, {base_uri : this});
+
+			return u.getURI(this.host == u.host ? nh : 0);
 		},
 
 		toRelPath : function(base, path) {
@@ -562,15 +584,6 @@ tinymce.create('tinymce.util.Dispatcher', {
 			return '/' + base.slice(0, i).join('/') + '/' + o.reverse().join('/');
 		},
 
-		getBaseURI : function() {
-			var t = this;
-
-			if (!t.baseURI)
-				t.baseURI = new tinymce.util.URI(t.settings.base_uri);
-
-			return t.baseURI;
-		},
-
 		getURI : function(nh) {
 			var s, t = this;
 
@@ -578,7 +591,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 			if (!t.source || nh) {
 				s = '';
 
-				if (!nh || (t.host != t.getBaseURI().host)) {
+				if (!nh) {
 					if (t.protocol)
 						s += t.protocol + '://';
 
@@ -757,13 +770,15 @@ tinymce.create('static tinymce.util.XHR', {
 			return x;
 		};
 
-		x = w.XMLHttpRequest ? new XMLHttpRequest() : get('Msxml2.XMLHTTP') || get('Microsoft.XMLHTTP');
+		x = w.XMLHttpRequest ? new XMLHttpRequest() : get('Microsoft.XMLHTTP') || get('Msxml2.XMLHTTP');
 
 		if (x) {
 			if (x.overrideMimeType)
 				x.overrideMimeType(o.content_type);
 
-			x.async = o.async;
+			if (!tinymce.isIE)
+				x.async = o.async;
+
 			x.open(o.type || (o.data ? 'POST' : 'GET'), o.url, o.async);
 
 			if (o.content_type)
@@ -1731,11 +1746,11 @@ tinymce.create('static tinymce.util.XHR', {
 
 		replace : function(n, o, k) {
 			if (is(o, 'array'))
-				o = o.cloneNode(true);
+				n = n.cloneNode(true);
 
 			return this.run(o, function(o) {
 				if (k) {
-					each (o.childNodes, function(c) {
+					each(o.childNodes, function(c) {
 						n.appendChild(c.cloneNode(true));
 					});
 				}
@@ -1825,7 +1840,7 @@ tinymce.create('static tinymce.util.XHR', {
 				return false;
 
 			s = s || this;
-			if (e.length || e.length === 0) {
+			if (!e.nodeType && (e.length || e.length === 0)) {
 				o = [];
 
 				each(e, function(e, i) {
@@ -4119,6 +4134,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			s.container = s.container || cs.container;
 			s.parent = t;
+			s.constrain = s.constrain || cs.constrain;
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
 			m = new tinymce.ui.DropMenu(s.id || DOM.uniqueId(), s);
@@ -4176,17 +4192,19 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			vp.h -= 20;
 
 			// Move inside viewport if not submenu
-			ot = 2;
-			w = co.clientWidth - ot;
-			h = co.clientHeight - ot;
-			mx = vp.x + vp.w;
-			my = vp.y + vp.h;
+			if (s.constrain) {
+				ot = 2;
+				w = co.clientWidth - ot;
+				h = co.clientHeight - ot;
+				mx = vp.x + vp.w;
+				my = vp.y + vp.h;
 
-			if ((x + s.vp_offset_x + w) > mx)
-				x = px ? px - w : Math.max(0, (mx - s.vp_offset_x) - w);
+				if ((x + s.vp_offset_x + w) > mx)
+					x = px ? px - w : Math.max(0, (mx - s.vp_offset_x) - w);
 
-			if ((y + s.vp_offset_y + h) > my)
-				y = Math.max(0, (my - s.vp_offset_y) - h);
+				if ((y + s.vp_offset_y + h) > my)
+					y = Math.max(0, (my - s.vp_offset_y) - h);
+			}
 
 			DOM.setStyles(co, {left : x , top : y});
 			t.element.update();
@@ -4197,7 +4215,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 				e = e.target;
 
-				if (e && (e = DOM.getParent(e, 'TD'))) {
+				if (e && (e = DOM.getParent(e, 'TR'))) {
 					m = t.items[e.id];
 
 					if (m.isDisabled())
@@ -4222,7 +4240,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					var m, r, mi, p;
 
 					e = e.target;
-					if (e && (e = DOM.getParent(e, 'TD'))) {
+					if (e && (e = DOM.getParent(e, 'TR'))) {
 						m = t.items[e.id];
 
 						if (t.lastMenu)
@@ -4325,8 +4343,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var n, s = o.settings, a, ro, it;
 
 			if (s.separator) {
-				ro = DOM.add(tb, 'tr', {'class' : 'mceMenuItemSeparator'});
-				DOM.add(ro, 'td', {id : o.id, 'class' : 'mceMenuItemSeparator'});
+				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItemSeparator'});
+				DOM.add(ro, 'td', {'class' : 'mceMenuItemSeparator'});
 
 				if (n = ro.previousSibling)
 					DOM.addClass(n, 'last');
@@ -4334,8 +4352,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				return;
 			}
 
-			n = ro = DOM.add(tb, 'tr');
-			n = it = DOM.add(n, 'td', {id : o.id, 'class' : 'mceMenuItem mceMenuItemEnabled'});
+			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItem mceMenuItemEnabled'});
+			n = it = DOM.add(n, 'td');
 			n = a = DOM.add(n, 'a', {href : 'javascript:;', onmousedown : 'return false;'});
 
 			DOM.addClass(it, s['class']);
@@ -4353,7 +4371,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				DOM.addClass(ro, 'first');
 
 			if (o.collapse)
-				DOM.addClass(it, 'mceMenuItemSub');
+				DOM.addClass(ro, 'mceMenuItemSub');
 
 			if (n = ro.previousSibling)
 				DOM.removeClass(n, 'last');
@@ -4565,7 +4583,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
-		},
+		}
 
 		});
 })();
@@ -5257,9 +5275,13 @@ tinymce.create('tinymce.Theme', {
 
 		});
 
-	// Setup some URLs where the editor API is located etc
+	// Setup some URLs where the editor API is located and where the document is
+	tinymce.documentBaseURL = document.location.href.replace(/[\/\\][\w.]+$/, '');
+	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
+		tinymce.documentBaseURL += '/';
+
+	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
-	tinymce.baseURL = tinymce.EditorManager.baseURI.getURI();
 })();
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call
@@ -5324,10 +5346,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t[e] = new Dispatcher(t);
 			});
 
-			t.documentBasePath = document.location.pathname.replace(/[\/\\][\w.]+$/, '');
-			if (!/[\/\\]$/.test(t.documentBasePath))
-				t.documentBasePath += '/';
-
 			// Default editor config
 			t.settings = s = extend({
 				id : id,
@@ -5339,7 +5357,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				delta_height : 0,
 				popup_css : '',
 				plugins : '',
-				document_base_url : t.documentBasePath,
+				document_base_url : tinymce.documentBaseURL,
 				add_form_submit_trigger : 1,
 				submit_patch : 1,
 				add_unload_trigger : 1,
@@ -5367,7 +5385,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}, s);
 
 			// Setup URIs
-			t.documentBaseURI = new tinymce.util.URI(s.document_base_url);
+			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL);
 			t.baseURI = EditorManager.baseURI;
 
 			// Call setup
@@ -6516,10 +6534,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Add custom undo/redo handlers
 			if (s.custom_undo_redo) {
-				t.onMouseDown.add(function(ed, e) {
+				function addUndo() {
 					t.undoManager.typing = 0;
 					t.undoManager.add();
-				});
+				};
+
+				// Add undo level on editor blur
+				if (tinymce.isIE)
+					Event.add(t.getDoc(), 'deactivate', addUndo);
+				else
+					Event.add(t.getDoc(), 'blur', addUndo);
+
+				t.onMouseDown.add(addUndo);
 
 				t.onKeyUp.add(function(ed, e) {
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey) {
@@ -7302,14 +7328,16 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		mceRepaint : function() {
 			var s, b, e = this.editor;
 
-			try {
-				s = e.selection;
-				b = s.getBookmark(true);
-				e.getDoc().execCommand('selectall', false, null);
-				s.collapse(true);
-				s.moveToBookmark(b);
-			} catch (ex) {
-				// Ignore
+			if (tinymce.isGecko) {
+				try {
+					s = e.selection;
+					b = s.getBookmark(true);
+					e.getDoc().execCommand('selectall', false, null);
+					s.collapse(true);
+					s.moveToBookmark(b);
+				} catch (ex) {
+					// Ignore
+				}
 			}
 		},
 

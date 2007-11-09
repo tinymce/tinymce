@@ -14,8 +14,7 @@
 		return alert("Load prototype first!");
 
 	// Patch in core NS functions
-	tinymce.trim = function(s) {return s.strip();};
-	tinymce.inArray = function(a, v) {return a.indexOf(v);};
+	tinymce.trim = function(s) {return s ? s.strip() : '';};
 
 	// Patch in functions in various clases
 	// Add a "#if !jquery" statement around each core API function you add below

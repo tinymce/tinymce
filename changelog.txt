@@ -2,14 +2,25 @@ Version 3.0a3 (2007-xx-xx)
 	Added new experimental jQuery and Prototype framework adapters to the development package.
 	Added new translation.html file for the development package. Helps with the internationalization of TinyMCE.
 	Added new setup callback option, use this callback to add events to TinyMCE. This method is recommended over the old callbacks.
+	Added new API documetation to all classes, functions, events, properties to the Wiki with examples etc.
 	Fixed various CSS issues in the default skin such as alignment of split buttons and separators.
 	Fixed issues with mod_security. It didn't like that a content type of text/javascript was forced in a XHR.
+	Fixed all events so that they now pass the sender object as it's first argument.
+	Fixed some DOM methods so they now can take an array as input.
+	Fixed so addButton and the methods of the ControlManager uses less arguments and it now uses a settings object instead.
+	Fixed various issues with the tinymce.util.URI class.
 	Fixed bug in IE and Safari and the on demand gzip loading feature.
 	Fixed bug with moving inline windows sometimes failed in IE6.
 	Fixed bug where save_callback function wasn't executed at all.
 	Fixed bug where inlinepopups produces scrollbars if windows where moved to the corners of the browser.
 	Fixed bug where view HTML source failed when inserting a embedded media object.
+	Fixed bug where the listbox menus didn't display correctly on IE6.
+	Fixed bug where undo level wasn't added when editor was blurred.
+	Fixed bug where spellchecker wasn't disabled when fullscreen mode was enabled.
+	Fixed bug where Firefox could crash some times when the user switched to fullscreen mode.
+	Fixed bug where tinymce.ui.DropMenu didn't remove all item data when an item was removed from the menu.
 	Optimized some of the core API to boost performance.
+	Removed some functions from the core API that wasn't needed.
 Version 3.0a2 (2007-11-02)
 	Fixed critical bug where IE generaded an error on a hasAttribute call in the serialization engine.
 	Fixed critical bug where some dialogs didn't open in the non dev package.

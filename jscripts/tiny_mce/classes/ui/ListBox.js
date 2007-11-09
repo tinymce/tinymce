@@ -224,7 +224,7 @@
 			}
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
-		},
+		}
 
 		/**#@-*/
 	});
