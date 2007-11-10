@@ -20,7 +20,10 @@
 		files : null,
 		listeners : {},
 		pixelStyles : /^(top|left|bottom|right|width|height|borderWidth)$/,
-		//idPattern : new RegExp().compile('^#[\\w]+$'),
+		cache : {},
+		idPattern : /^#[\w]+$/,
+		elmPattern : /^[\w_]+$/,
+		elmClassPattern : /^([\w_]+)\.([\w_]+)$/,
 
 		/**
 		 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
@@ -189,104 +192,109 @@
 		 * @param {Object} s Optional root element/scope element to search in.
 		 * @return {Array} Array with all matched elements.
 		 */
-		select : function(p, s) {
-			var o = [], r = [], i, t = this, pl, ru, pu, x, u, xp;
+		// div a.class span#id.class1.class2:first
+		select : function(pa, s) {
+			var t = this, cs, c, pl, o = [], x;
 
-			s = !s ? t.doc : t.get(s);
+			s = t.get(s) || t.doc;
 
-			// Simplest rule "tag"
-			if (/^([a-z0-9]+)$/.test(p))
-				return tinymce.grep(s.getElementsByTagName(p));
-
-			// Parse pattern into rules
-			for (i=0, pl=p.split(','); i<pl.length; i++) {
-				ru = [];
-				xp = '.';
-
-				for (x=0, pu=pl[i].split(' '); x<pu.length; x++) {
-					u = pu[x];
-
-					if (u != '') {
-						u = u.match(/^([\w\\]+)?(?:#([\w\\]+))?(?:\.([\w\\\.]+))?(?:\[\@([\w\\]+)([\^\$\*!]?=)([\w\\]+)\])?(?:\:([\w\\]+))?/i);
-
-						// Build xpath if supported
-						if (document.evaluate) {
-							xp += u[1] ? '//' + u[1] : '//*';
-
-							// Id
-							if (u[2])
-								xp += "[@id='" + u[2] + "']";
-
-							// Class
-							if (u[3]) {
-								each(u[3].split('.'), function(i, n) {
-									xp += "[@class = '" + n + "' or contains(concat(' ', @class, ' '), ' " + n + " ')]";
-								});
-							}
-
-							// Attr
-							if (u[4]) {
-								// Comparators
-								if (u[5]) {
-									if (u[5] == '^=')
-										xp += "[starts-with(@" + u[4] + ",'" + u[6] + "')]";
-									else if (u[5] == '$=')
-										xp += "[contains(concat(@" + u[4] + ",'\0'),'" + u[6] + "\0')]";
-									else if (u[5] == '*=')
-										xp += "[contains(@" + u[4] + ",'" + u[6] + "')]";
-									else if (u[5] == '!=')
-										xp += "[@" + u[4] + "!='" + u[6] + "']";
-								} else
-									xp += "[@" + u[4] + "='" + u[6] + "']";
-							}
-
-							//console.debug(u);
-						} else
-							ru.push({ tag : u[1], id : u[2], cls : u[3] ? new RegExp('\\b' + u[3].replace(/\./g, '|') + '\\b') : null, attr : u[4], val : u[5] });
-					}
-				}
-
-				//console.debug(xp);
-
-				if (xp.length > 1)
-					ru.xpath = xp;
-
-				r.push(ru);
-			}
-
-			// Used by IE since it doesn't support XPath
-			function find(e, rl, p) {
-				var nl, i, n, ru = rl[p];
-
-				for (i=0, nl = e.getElementsByTagName(!ru.tag ? '*' : ru.tag); i<nl.length; i++) {
-					n = nl[i];
-
-					if (ru.id && n.id != ru.id)
-						continue;
-
-					if (ru.cls && !ru.cls.test(n.className))
-						continue;
-
-					if (ru.attr && t.getAttrib(n, ru.attr) != ru.val)
-						continue;
-
-					if (p < rl.length - 1)
-						find(n, rl, p + 1);
-					else
-						o.push(n);
+			function collect(n) {
+				if (!n.mce_save) {
+					n.mce_save = 1;
+					o.push(n);
 				}
 			};
 
-			// Find elements based on rules
-			for (i=0; i<r.length; i++) {
-				if (r[i].xpath) {
-					ru = this.doc.evaluate(r[i].xpath, s, null, 4, null);
+			function collectIE(n) {
+				if (!n.getAttribute('mce_save')) {
+					n.setAttribute('mce_save', '1');
+					o.push(n);
+				}
+			};
 
-					while (u = ru.iterateNext())
-						o.push(u);
-				} else
-					find(s, r[i], 0);
-			}
+			function find(n, f, r) {
+				var i, l, nl = r.getElementsByTagName(n);//;r.childNodes;
+
+				for (i = 0, l = nl.length; i < l; i++) {
+					//if (n === '*' || nl[i].nodeName === n)
+						f(nl[i]);
+				}
+			};
+
+			each(pa.split(','), function(v, i) {
+				v = tinymce.trim(v);
+
+				// Simple element pattern, most common in TinyMCE
+				if (t.elmPattern.test(v)) {
+					each(s.getElementsByTagName(v), function(n) {
+						collect(n);
+					});
+
+					return;
+				}
+
+				// Simple element pattern with class, fairly common in TinyMCE
+				if (t.elmClassPattern.test(v)) {
+					x = t.elmClassPattern.exec(v);
+
+					each(s.getElementsByTagName(x[1]), function(n) {
+						if (t.hasClass(n, x[2]))
+							collect(n);
+					});
+
+					return;
+				}
+
+				if (!(cs = t.cache[pa])) {
+					cs = 'x=(function(cf, s) {';
+
+					pl = v.split(' ');
+					each(pl, function(v) {
+						var p = /^([\w\\*]+)?(?:#([\w\\]+))?(?:\.([\w\\\.]+))?(?:\[\@([\w\\]+)([\^\$\*!]?=)([\w\\]+)\])?(?:\:([\w\\]+))?/i.exec(v);
+
+						// Find elements
+						p[1] = p[1] || '*';
+						cs += 'find("' + p[1] + '", function(n) {';
+
+						// Check id
+						if (p[2])
+							cs += 'if (n.id !== "' + p[2] + '") return;';
+
+						// Check classes
+						if (p[3]) {
+							cs += 'var c = " " + n.className + " ";';
+							cs += 'if (';
+							c = '';
+							each(p[3].split('.'), function(v) {
+								if (v)
+									c += (c ? '||' : '') + 'c.indexOf(" ' + v + ' ") === -1';
+							});
+							cs += c + ') return;';
+						}
+					});
+
+					cs += 'cf(n);';
+
+					for (i = pl.length - 1; i >= 0; i--)
+						cs += '}, ' + (i ? 'n' : 's') + ');';
+
+					cs += '})';
+
+					// Build function
+					t.cache[pa] = cs = eval(cs);
+				}
+
+				// Run selector function
+				cs(isIE ? collectIE : collect, s);
+			});
+
+			// Cleanup
+			each(o, function(n) {
+				if (isIE)
+					n.removeAttribute('mce_save');
+				else
+					delete n.mce_save;
+			});
 
 			return o;
 		},
