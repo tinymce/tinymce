@@ -27,7 +27,7 @@
 
 /* Bottom */
 .clearlooks2 .bottom, .clearlooks2 .bottom div {height:6px}
-.clearlooks2 .bottom {left:0; bottom:-1px; width:100%}
+.clearlooks2 .bottom {left:0; bottom:0; width:100%}
 .clearlooks2 .bottom div {top:0}
 .clearlooks2 .bottom .left {left:0; width:5px; background:url(img/corners.gif) -34px -6px}
 .clearlooks2 .bottom .center {left:5px; width:100%; background:url(img/horizontal.gif) 0 -46px}
@@ -68,7 +68,7 @@
 .clearlooks2 a.resize-n {top:0; left:0; width:100%; cursor:n-resize}
 .clearlooks2 a.resize-nw {top:0; left:0; cursor:nw-resize}
 .clearlooks2 a.resize-ne {top:0; right:0; cursor:ne-resize}
-.clearlooks2 a.resize-w {top:0; left:0; height:100%; cursor:w-resize; backgr2ound:red;}
+.clearlooks2 a.resize-w {top:0; left:0; height:100%; cursor:w-resize;}
 .clearlooks2 a.resize-e {top:0; right:0; height:100%; cursor:e-resize}
 .clearlooks2 a.resize-s {bottom:0; left:0; width:100%; cursor:s-resize}
 .clearlooks2 a.resize-sw {bottom:0; left:0; cursor:sw-resize}

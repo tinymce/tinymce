@@ -10,6 +10,7 @@ scrollbar-highlight-color:#F0F0EE;
 scrollbar-shadow-color:#F0F0EE;
 scrollbar-track-color:#F5F5F5;
 background:#F0F0EE;
+padding:0;
 margin:8px;
 }
 
@@ -108,6 +109,7 @@ h3 {font-size:14px;}
 
 /* IE */
 * html .panel_wrapper {width:100%;}
+* html body {margin-right:0; margin-bottom:0;}
 
 /* Mozilla */
 html>body #insert, html>body #cancel, html>body .button {padding-bottom:4px;}

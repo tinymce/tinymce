@@ -24,7 +24,8 @@ Version 3.0a3 (2007-xx-xx)
 	Fixed bug where it wasn't possible to change the table width of an existing table.
 	Fixed bug where xhtmlxtras like abbr didn't work correctly on IE.
 	Fixed bug where IE6 had some graphics rendering issues with the inlinepopups.
-	Fixed so multiple blockquoted can be removed with a easier method than before.
+	Fixed bug where inlinepopup windows where moved incorrectly when they were boundary checked for min width.
+	Fixed so multiple blockquotes can be removed with a easier method than before.
 	Optimized some of the core API to boost performance.
 	Removed some functions from the core API that wasn't needed.
 Version 3.0a2 (2007-11-02)

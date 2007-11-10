@@ -392,9 +392,21 @@
 						break;
 				}
 
-				// Boundery check
-				dw = Math.max(dw, w.features.min_width - sz.w);
-				dh = Math.max(dh, w.features.min_height - sz.h);
+				// Boundary check
+				if (dw < (v = w.features.min_width - sz.w)) {
+					if (dx !== 0)
+						dx += dw - v;
+
+					dw = v;
+				}
+	
+				if (dh < (v = w.features.min_height - sz.h)) {
+					if (dy !== 0)
+						dy += dh - v;
+
+					dh = v;
+				}
+
 				dw = Math.min(dw, w.features.max_width - sz.w);
 				dh = Math.min(dh, w.features.max_height - sz.h);
 				dx = Math.max(dx, vp.x - (sx + vp.x));
@@ -515,6 +527,8 @@
 					height : s ? e.clientHeight : '',
 					cursor : DOM.getStyle(e, 'cursor', 1)
 				});
+
+				DOM.setStyle(id + "_bottom", 'bottom', '-1px');
 
 				e = 0;
 			});

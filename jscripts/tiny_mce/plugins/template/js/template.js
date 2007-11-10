@@ -30,10 +30,10 @@ var TemplateDialog = {
 		var w, h, e;
 
 		if (!self.innerWidth) {
-			w = document.body.clientWidth - 40;
+			w = document.body.clientWidth - 50;
 			h = document.body.clientHeight - 160;
 		} else {
-			w = self.innerWidth - 40;
+			w = self.innerWidth - 50;
 			h = self.innerHeight - 160;
 		}
 
