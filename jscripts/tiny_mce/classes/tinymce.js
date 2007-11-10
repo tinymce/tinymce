@@ -165,19 +165,19 @@ var tinymce = {
 	 *
 	 * @param {Array} a Array/Object to search for value in.
 	 * @param {Object} v Value to check for inside the array.
-	 * @return {Number/String} Index of item inside the array or the key inside an object. Or -1 if it wasn't found.
+	 * @return {Number/String} Index of item inside the array inside an object. Or -1 if it wasn't found.
 	 */
 	inArray : function(a, v) {
-		var x = -1;
+		var i, l;
 
-		tinymce.each(a, function(c, i) {
-			if (c === v) {
-				x = i;
-				return false;
+		if (a) {
+			for (i = 0, l = a.length; i < l; i++) {
+				if (a[i] === v)
+					return i;
 			}
-		});
+		}
 
-		return x;
+		return -1;
 	},
 
 	/**

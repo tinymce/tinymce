@@ -113,16 +113,16 @@ var tinymce = {
 	},
 
 	inArray : function(a, v) {
-		var x = -1;
+		var i, l;
 
-		tinymce.each(a, function(c, i) {
-			if (c === v) {
-				x = i;
-				return false;
+		if (a) {
+			for (i = 0, l = a.length; i < l; i++) {
+				if (a[i] === v)
+					return i;
 			}
-		});
+		}
 
-		return x;
+		return -1;
 	},
 
 	extend : function(o, e) {

@@ -20,8 +20,8 @@
 	tinymce.extend(tinymce, {
 		trim : $.trim,
 		map : $.map,
-		grep : function(a, f) {return $.grep(a, f || function(){return 1;});}
-		//indexOf : function(a, v) {return $.inArray(v, a || []);}
+		grep : function(a, f) {return $.grep(a, f || function(){return 1;});},
+		inArray : function(a, v) {return $.inArray(v, a || []);}
 	});
 
 	// Patch in functions in various clases

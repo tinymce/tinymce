@@ -83,7 +83,7 @@
 
 			t.eq(tinymce.inArray([1,2,3], 2), 1);
 			t.eq(tinymce.inArray([1,2,3], 7), -1);
-			t.eq(tinymce.inArray({a : 1, b : 2, c : 3}, 2), 'b');
+			t.eq(tinymce.inArray({a : 1, b : 2, c : 3}, 2), -1);
 			t.eq(tinymce.inArray(null, 7), -1);
 		},
 
