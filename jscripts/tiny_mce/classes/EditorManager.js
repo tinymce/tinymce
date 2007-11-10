@@ -39,8 +39,8 @@
 
 				if (tinymce.is(f, 'string')) {
 					s = f.replace(/\.\w+$/, '');
-					s = s ? tinymce.get(s) : 0;
-					f = tinymce.get(f);
+					s = s ? tinymce.resolve(s) : 0;
+					f = tinymce.resolve(f);
 				}
 
 				return f.apply(s || this, Array.prototype.slice.call(arguments, 2));
@@ -205,7 +205,7 @@
 		 */
 		add : function(e) {
 			this.editors[e.id] = e;
-			this.selectedInstance = this.activeEditor = e;
+			this._setActive(e);
 
 			return e;
 		},
@@ -228,7 +228,7 @@
 			// Select another editor since the active one was removed
 			if (t.activeEditor == e) {
 				each(t.editors, function(e) {
-					t.selectedInstance = t.activeEditor = e;
+					t._setActive(e);
 					return false; // Break
 				});
 			}
@@ -342,6 +342,12 @@
 					i18n[p + '.' + k] = o;
 				});
 			}
+		},
+
+		// Private methods
+
+		_setActive : function(e) {
+			this.selectedInstance = this.activeEditor = e;
 		}
 
 		/**#@-*/

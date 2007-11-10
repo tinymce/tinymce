@@ -213,12 +213,10 @@
 			};
 
 			function find(n, f, r) {
-				var i, l, nl = r.getElementsByTagName(n);//;r.childNodes;
+				var i, l, nl = r.getElementsByTagName(n);
 
-				for (i = 0, l = nl.length; i < l; i++) {
-					//if (n === '*' || nl[i].nodeName === n)
-						f(nl[i]);
-				}
+				for (i = 0, l = nl.length; i < l; i++)
+					f(nl[i]);
 			};
 
 			each(pa.split(','), function(v, i) {

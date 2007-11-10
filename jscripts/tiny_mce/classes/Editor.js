@@ -585,10 +585,9 @@
 					oed.onDeactivate.dispatch(oed, t);
 
 				t.onActivate.dispatch(t, oed);
-				EditorManager.activeEditor = t;
 			}
 
-			EditorManager.activeEditor = t;
+			EditorManager._setActive(t);
 		},
 
 		/**
@@ -612,8 +611,8 @@
 
 			if (is(f, 'string')) {
 				s = f.replace(/\.\w+$/, '');
-				s = s ? tinymce.get(s) : 0;
-				f = tinymce.get(f);
+				s = s ? tinymce.resolve(s) : 0;
+				f = tinymce.resolve(f);
 				t.callbackLookup = t.callbackLookup || {};
 				t.callbackLookup[n] = {func : f, scope : s};
 			}

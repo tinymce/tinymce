@@ -22,7 +22,7 @@ var tinymce = {
 	/**
 	 * Initializes the TinyMCE global namespace this will setup browser detection and figure out where TinyMCE is running from.
 	 */
-	init : function() {
+	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n;
 
 		// Browser checks
@@ -257,7 +257,7 @@ var tinymce = {
 
 		// Extend
 		if (s[5]) {
-			sp = t.get(s[5]).prototype;
+			sp = t.resolve(s[5]).prototype;
 			scn = s[5].match(/\.(\w+)$/i)[1]; // Class name
 
 			// Extend constructor
@@ -362,7 +362,7 @@ var tinymce = {
 	 * @param {Object} o Optional object to search though, defaults to window.
 	 * @return {Object} Last object in path or null if it couldn't be resolved.
 	 */
-	get : function(n, o) {
+	resolve : function(n, o) {
 		var i, l;
 
 		o = o || window;
@@ -458,4 +458,4 @@ var tinymce = {
 window.tinymce = tinymce;
 
 // Initialize the API
-tinymce.init();
+tinymce._init();

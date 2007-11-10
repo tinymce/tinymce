@@ -287,8 +287,8 @@
 
 			tinymce.createNS('a.b.c.d.e');
 			a.b.c.d.e.x = 1;
-			t.eq(tinymce.get('a.b.c.d.e.x'), 1);
-			t.is(!tinymce.get('a.b.c.d.e.y'));
+			t.eq(tinymce.resolve('a.b.c.d.e.x'), 1);
+			t.is(!tinymce.resolve('a.b.c.d.e.y'));
 		}
 	});
 })();

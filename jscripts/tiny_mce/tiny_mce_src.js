@@ -6,7 +6,7 @@ var tinymce = {
 	minorVersion : '0a2',
 	releaseDate : '2007-11-02',
 
-	init : function() {
+	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n;
 
 		// Browser checks
@@ -182,7 +182,7 @@ var tinymce = {
 
 		// Extend
 		if (s[5]) {
-			sp = t.get(s[5]).prototype;
+			sp = t.resolve(s[5]).prototype;
 			scn = s[5].match(/\.(\w+)$/i)[1]; // Class name
 
 			// Extend constructor
@@ -265,7 +265,7 @@ var tinymce = {
 		return o;
 	},
 
-	get : function(n, o) {
+	resolve : function(n, o) {
 		var i, l;
 
 		o = o || window;
@@ -346,7 +346,7 @@ var tinymce = {
 window.tinymce = tinymce;
 
 // Initialize the API
-tinymce.init();
+tinymce._init();
 
 /* file:jscripts/tiny_mce/classes/adapter/jquery/adapter.js */
 
@@ -1010,12 +1010,10 @@ tinymce.create('static tinymce.util.XHR', {
 			};
 
 			function find(n, f, r) {
-				var i, l, nl = r.getElementsByTagName(n);//;r.childNodes;
+				var i, l, nl = r.getElementsByTagName(n);
 
-				for (i = 0, l = nl.length; i < l; i++) {
-					//if (n === '*' || nl[i].nodeName === n)
-						f(nl[i]);
-				}
+				for (i = 0, l = nl.length; i < l; i++)
+					f(nl[i]);
 			};
 
 			each(pa.split(','), function(v, i) {
@@ -5026,8 +5024,8 @@ tinymce.create('tinymce.Theme', {
 
 				if (tinymce.is(f, 'string')) {
 					s = f.replace(/\.\w+$/, '');
-					s = s ? tinymce.get(s) : 0;
-					f = tinymce.get(f);
+					s = s ? tinymce.resolve(s) : 0;
+					f = tinymce.resolve(f);
 				}
 
 				return f.apply(s || this, Array.prototype.slice.call(arguments, 2));
@@ -5174,7 +5172,7 @@ tinymce.create('tinymce.Theme', {
 
 		add : function(e) {
 			this.editors[e.id] = e;
-			this.selectedInstance = this.activeEditor = e;
+			this._setActive(e);
 
 			return e;
 		},
@@ -5191,7 +5189,7 @@ tinymce.create('tinymce.Theme', {
 			// Select another editor since the active one was removed
 			if (t.activeEditor == e) {
 				each(t.editors, function(e) {
-					t.selectedInstance = t.activeEditor = e;
+					t._setActive(e);
 					return false; // Break
 				});
 			}
@@ -5279,6 +5277,12 @@ tinymce.create('tinymce.Theme', {
 					i18n[p + '.' + k] = o;
 				});
 			}
+		},
+
+		// Private methods
+
+		_setActive : function(e) {
+			this.selectedInstance = this.activeEditor = e;
 		}
 
 		});
@@ -5842,10 +5846,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					oed.onDeactivate.dispatch(oed, t);
 
 				t.onActivate.dispatch(t, oed);
-				EditorManager.activeEditor = t;
 			}
 
-			EditorManager.activeEditor = t;
+			EditorManager._setActive(t);
 		},
 
 		execCallback : function(n) {
@@ -5862,8 +5865,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (is(f, 'string')) {
 				s = f.replace(/\.\w+$/, '');
-				s = s ? tinymce.get(s) : 0;
-				f = tinymce.get(f);
+				s = s ? tinymce.resolve(s) : 0;
+				f = tinymce.resolve(f);
 				t.callbackLookup = t.callbackLookup || {};
 				t.callbackLookup[n] = {func : f, scope : s};
 			}
