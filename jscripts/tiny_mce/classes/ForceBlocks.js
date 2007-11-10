@@ -84,7 +84,7 @@
 
 			if (!isIE && s.force_p_newlines) {
 				ed.onPreProcess.add(function(ed, o) {
-					each(o.node.getElementsByTagName('br'), function(n) {
+					each(ed.dom.select('br', o.node), function(n) {
 						var p = n.parentNode;
 
 						// Replace <p><br /></p> with <p>&nbsp;</p>

@@ -19,6 +19,12 @@ Version 3.0a3 (2007-xx-xx)
 	Fixed bug where spellchecker wasn't disabled when fullscreen mode was enabled.
 	Fixed bug where Firefox could crash some times when the user switched to fullscreen mode.
 	Fixed bug where tinymce.ui.DropMenu didn't remove all item data when an item was removed from the menu.
+	Fixed bug where anchor list in advlink dialog wasn't populated correctly in Safari.
+	Fixed bug where it wasn't possible to edit tables in IE when inlinepopups was enabled.
+	Fixed bug where it wasn't possible to change the table width of an existing table.
+	Fixed bug where xhtmlxtras like abbr didn't work correctly on IE.
+	Fixed bug where IE6 had some graphics rendering issues with the inlinepopups.
+	Fixed so multiple blockquoted can be removed with a easier method than before.
 	Optimized some of the core API to boost performance.
 	Removed some functions from the core API that wasn't needed.
 Version 3.0a2 (2007-11-02)

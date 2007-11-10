@@ -97,7 +97,7 @@
 		},
 
 		execCommand : function(cmd, ui, val) {
-			var ed = this.editor;
+			var ed = this.editor, b;
 
 			// Is table command
 			switch (cmd) {
@@ -172,7 +172,9 @@
 
 			function makeTD() {
 				var newTD = doc.createElement("td");
-				newTD.innerHTML = '<br mce_bogus="1"/>';
+
+				if (!tinymce.isIE)
+					newTD.innerHTML = '<br mce_bogus="1"/>';
 			}
 
 			function getColRowSpan(td) {
@@ -316,7 +318,9 @@
 				var trNext = nextElm(tr_elm, "TR");
 				for (var i=1; i<rowspan && trNext; i++) {
 					var newTD = doc.createElement("td");
-					newTD.innerHTML = '<br mce_bogus="1"/>';
+
+					if (!tinymce.isIE)
+						newTD.innerHTML = '<br mce_bogus="1"/>';
 
 					if (tinymce.isIE)
 						trNext.insertBefore(newTD, trNext.cells(td_elm.cellIndex));
@@ -349,7 +353,9 @@
 
 					if (newTD == null) {
 						newTD = doc.createElement("td");
-						newTD.innerHTML = '<br mce_bogus="1"/>';
+
+						if (!tinymce.isIE)
+							newTD.innerHTML = '<br mce_bogus="1"/>';
 					}
 
 					// Reset col/row span
@@ -514,7 +520,9 @@
 										if (sd['rowspan'] == 1) {
 											var newTD = doc.createElement("td");
 
-											newTD.innerHTML = '<br mce_bogus="1"/>';
+											if (!tinymce.isIE)
+												newTD.innerHTML = '<br mce_bogus="1"/>';
+
 											newTD.colSpan = tdElm.colSpan;
 
 											newTR.appendChild(newTD);
@@ -545,7 +553,9 @@
 										if (sd['rowspan'] == 1) {
 											var newTD = doc.createElement("td");
 
-											newTD.innerHTML = '<br mce_bogus="1"/>';
+											if (!tinymce.isIE)
+												newTD.innerHTML = '<br mce_bogus="1"/>';
+
 											newTD.colSpan = tdElm.colSpan;
 
 											newTR.appendChild(newTD);
@@ -643,7 +653,9 @@
 										if (sd['colspan'] == 1) {
 											var newTD = doc.createElement(tdElm.nodeName);
 
-											newTD.innerHTML = '<br mce_bogus="1"/>';
+											if (!tinymce.isIE)
+												newTD.innerHTML = '<br mce_bogus="1"/>';
+
 											newTD.rowSpan = tdElm.rowSpan;
 
 											tdElm.parentNode.insertBefore(newTD, tdElm);
@@ -670,7 +682,9 @@
 										if (sd['colspan'] == 1) {
 											var newTD = doc.createElement(tdElm.nodeName);
 
-											newTD.innerHTML = '<br mce_bogus="1"/>';
+											if (!tinymce.isIE)
+												newTD.innerHTML = '<br mce_bogus="1"/>';
+
 											newTD.rowSpan = tdElm.rowSpan;
 
 											var nextTD = nextElm(tdElm, "TD,TH");
@@ -742,7 +756,8 @@
 								for (var i=1; i<colspan; i++) {
 									var newTD = doc.createElement("td");
 
-									newTD.innerHTML = '<br mce_bogus="1"/>';
+									if (!tinymce.isIE)
+										newTD.innerHTML = '<br mce_bogus="1"/>';
 
 									trElm.insertBefore(newTD, nextElm(tdElm, "TD,TH"));
 

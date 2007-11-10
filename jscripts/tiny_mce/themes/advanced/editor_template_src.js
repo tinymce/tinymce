@@ -726,10 +726,13 @@
 					// Fake name
 					if (v = DOM.getAttrib(n, 'mce_name'))
 						na = v;
-
+	
 					// Handle prefix
 					if (tinymce.isIE && n.scopeName !== 'HTML')
 						na = n.scopeName + ':' + na;
+
+					// Remove internal prefix
+					na = na.replace(/mce\:/g, '');
 
 					// Handle node name
 					switch (na) {

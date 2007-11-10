@@ -872,8 +872,8 @@ tinymce.create('static tinymce.util.XHR', {
 		pixelStyles : /^(top|left|bottom|right|width|height|borderWidth)$/,
 		cache : {},
 		idPattern : /^#[\w]+$/,
-		elmPattern : /^[\w_]+$/,
-		elmClassPattern : /^([\w_]+)\.([\w_]+)$/,
+		elmPattern : /^[\w_*]+$/,
+		elmClassPattern : /^([\w_]*)\.([\w_]+)$/,
 
 		DOMUtils : function(d, s) {
 			var t = this;
@@ -989,11 +989,36 @@ tinymce.create('static tinymce.util.XHR', {
 
 		// #if !jquery
 
-		// div a.class span#id.class1.class2:first
 		select : function(pa, s) {
-			var t = this, cs, c, pl, o = [], x;
+			var t = this, cs, c, pl, o = [], x, i, l, n;
 
 			s = t.get(s) || t.doc;
+
+			// Simple element pattern. For example: "p" or "*"
+			if (t.elmPattern.test(pa)) {
+				x = s.getElementsByTagName(pa);
+
+				for (i = 0, l = x.length; i<l; i++)
+					o.push(x[i]);
+
+				return o;
+			}
+
+			// Simple class pattern. For example: "p.class" or ".class"
+			if (t.elmClassPattern.test(pa)) {
+				pl = t.elmClassPattern.exec(pa);
+				x = s.getElementsByTagName(pl[1] || '*');
+				c = ' ' + pl[2] + ' ';
+
+				for (i = 0, l = x.length; i<l; i++) {
+					n = x[i];
+
+					if (n.className && (' ' + n.className + ' ').indexOf(c) !== -1)
+						o.push(n);
+				}
+
+				return o;
+			}
 
 			function collect(n) {
 				if (!n.mce_save) {
@@ -1042,8 +1067,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 				if (!(cs = t.cache[pa])) {
 					cs = 'x=(function(cf, s) {';
-
 					pl = v.split(' ');
+
 					each(pl, function(v) {
 						var p = /^([\w\\*]+)?(?:#([\w\\]+))?(?:\.([\w\\\.]+))?(?:\[\@([\w\\]+)([\^\$\*!]?=)([\w\\]+)\])?(?:\:([\w\\]+))?/i.exec(v);
 
@@ -1075,7 +1100,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 					cs += '})';
 
-					// Build function
+					// Compile CSS pattern function
 					t.cache[pa] = cs = eval(cs);
 				}
 
@@ -2912,7 +2937,7 @@ tinymce.create('static tinymce.util.XHR', {
 					};
 
 					for (x=0; x<a.length; x++) {
-						nl = o.node.getElementsByTagName(a[x]);
+						nl = t.dom.select(a[x], o.node);
 
 						for (i=0; i<nl.length; i++) {
 							n = nl[i];
@@ -2939,7 +2964,7 @@ tinymce.create('static tinymce.util.XHR', {
 					var ta = [], d = t.dom.doc;
 
 					// Build list of HTML chunks and replace tables with comment placeholders
-					each(o.node.getElementsByTagName('table'), function(e) {
+					each(t.dom.select('table', o.node), function(e) {
 						var pa = t.dom.getParent(e, 'H1,H2,H3,H4,H5,H6,P'), p = [], i, h;
 
 						if (pa) {
@@ -3266,7 +3291,7 @@ tinymce.create('static tinymce.util.XHR', {
 				if (k != '@')
 				s += k;
 			});
-			t.validElementsRE = new RegExp('^(' + wildcardToRE(s.toUpperCase()) + ')$');
+			t.validElementsRE = new RegExp('^(' + wildcardToRE(s.toLowerCase()) + ')$');
 
 			//console.debug(t.validElementsRE.toString());
 			//console.dir(t.rules);
@@ -3390,13 +3415,23 @@ tinymce.create('static tinymce.util.XHR', {
 						iv = false;
 						hc = n.hasChildNodes();
 
+						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
+	
+						// Add correct prefix on IE
+						if (isIE) {
+							if (n.scopeName !== 'HTML')
+								nn = n.scopeName + ':' + nn;
+						}
+
+						// Remove mce prefix on IE needed for the abbr element
+						if (nn.indexOf('mce:') === 0)
+							nn = nn.substring(4);
+
 						// Check if valid
-						if (!t.validElementsRE.test(n.nodeName) || (t.invalidElementsRE && t.invalidElementsRE.test(n.nodeName)) || inn) {
+						if (!t.validElementsRE.test(nn) || (t.invalidElementsRE && t.invalidElementsRE.test(nn)) || inn) {
 							iv = true;
 							break;
 						}
-
-						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
 
 						if (isIE) {
 							// Fix IE content duplication (DOM can have multiple copies of the same node)
@@ -3410,15 +3445,7 @@ tinymce.create('static tinymce.util.XHR', {
 							// IE sometimes adds a / infront of the node name
 							if (nn.charAt(0) == '/')
 								nn = nn.substring(1);
-
-							// Add correct prefix
-							if (n.scopeName !== 'HTML')
-								nn = n.scopeName + ':' + nn;
 						}
-
-						// Remove mce prefix on IE needed for the abbr element
-						if (nn.indexOf('mce:') === 0)
-							nn = nn.substring(4);
 
 						// Check if valid child
 						if (t.childRules) {
@@ -3604,7 +3631,7 @@ tinymce.create('static tinymce.util.XHR', {
 			t.addValidChildRules(s.valid_child_elements);
 
 			if (s.invalid_elements)
-				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(',', '|').toUpperCase()) + ')$');
+				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(',', '|').toLowerCase()) + ')$');
 
 			if (s.attrib_value_filter)
 				t.attribValueFilter = s.attribValueFilter;
@@ -3623,6 +3650,16 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 
 			v = this.dom.getAttrib(n, na);
+
+			switch (na) {
+				case 'rowspan':
+				case 'colspan':
+					// Whats the point? Remove usless attribute value
+					if (v == '1')
+						v = '';
+
+					break;
+			}
 
 			if (this.attribValueFilter)
 				v = this.attribValueFilter(na, v, n);
@@ -5393,7 +5430,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				apply_source_formatting : 1,
 				directionality : 'ltr',
 				forced_root_block : 'p',
-				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol,-ul,-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],-th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]'
+				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol,-ul,-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]'
 			}, s);
 
 			// Setup URIs
@@ -6266,7 +6303,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (!is(t.hasVisual))
 				t.hasVisual = s.visual;
 
-			each(tinymce.grep(e.getElementsByTagName('table')).concat(e.getElementsByTagName('a')), function(e) {
+			each(t.dom.select('table,a', e), function(e) {
 				var v;
 
 				switch (e.nodeName) {
@@ -6608,32 +6645,36 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					return;
 
 				if (o.get) {
-					each(o.node.getElementsByTagName('table'), function(n) {
-						if (v = dom.getAttrib(n, 'height')) {
-							dom.setStyle(n, 'height', v);
-							dom.setAttrib(n, 'height', '');
+					each(t.dom.select('table,u,strike', o.node), function(n) {
+						switch (n.nodeName) {
+							case 'TABLE':
+								if (v = dom.getAttrib(n, 'height')) {
+									dom.setStyle(n, 'height', v);
+									dom.setAttrib(n, 'height', '');
+								}
+								break;
+
+							case 'U':
+								dom.replace(dom.create('span', {style : 'text-decoration: underline;'}), n, 1);
+								break;
+
+							case 'STRIKE':
+								dom.replace(dom.create('span', {style : 'text-decoration: line-through;'}), n, 1);
+								break;
 						}
 					});
-
-					each(grep(o.node.getElementsByTagName('u')), function(n) {
-						dom.replace(dom.create('span', {style : 'text-decoration: underline;'}), n, 1);
-					});
-
-					each(grep(o.node.getElementsByTagName('strike')), function(n) {
-						dom.replace(dom.create('span', {style : 'text-decoration: line-through;'}), n, 1);
-					});
 				} else if (o.set) {
-					each(o.node.getElementsByTagName('table'), function(n) {
-						if (v = dom.getStyle(n, 'height'))
-							dom.setAttrib(n, 'height', v.replace(/[^0-9%]+/g, ''));
-					});
-
-					each(grep(o.node.getElementsByTagName('span')), function(n) {
-						if (n.style.textDecoration == 'underline')
-							dom.replace(dom.create('u'), n, 1);
-
-						if (n.style.textDecoration == 'strikethrough')
-							dom.replace(dom.create('strike'), n, 1);
+					each(t.dom.select('table,span', o.node), function(n) {
+						if (n.nodeName == 'TABLE') {
+							if (v = dom.getStyle(n, 'height'))
+								dom.setAttrib(n, 'height', v.replace(/[^0-9%]+/g, ''));
+						} else {
+							// Convert spans to elements
+							if (n.style.textDecoration == 'underline')
+								dom.replace(dom.create('u'), n, 1);
+							else if (n.style.textDecoration == 'strikethrough')
+								dom.replace(dom.create('strike'), n, 1);
+						}
 					});
 				}
 			});
@@ -6658,7 +6699,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 				if (o.set) {
 					// Convert spans to fonts
-					each(grep(o.node.getElementsByTagName('span')), function(n) {
+					each(t.dom.select('span', o.node), function(n) {
 						var f = dom.create('font', {
 							color : dom.toHex(dom.getStyle(n, 'color')),
 							face : dom.getStyle(n, 'fontFamily')
@@ -6688,7 +6729,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							dom.replace(f, n, 1);
 					});
 				} else if (o.get) {
-					each(grep(o.node.getElementsByTagName('font')), function(n) {
+					each(t.dom.select('font', o.node), function(n) {
 						var sp = dom.create('span', {
 							style : {
 								fontFamily : dom.getAttrib(n, 'face'),
@@ -7395,8 +7436,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return dom.getParent(e, function(n) {return n.nodeName === 'BLOCKQUOTE';});
 			};
 
-			// Remove blockquote
-			if (s.isCollapsed() && dom.remove(findBQ(s.getStart()), 1)) {
+			// Remove blockquote(s)
+			if (findBQ(s.getStart())) {
+				each(t._getSelectedBlocks(findBQ(s.getStart()), findBQ(s.getEnd())), function(e) {
+					// Found BQ lets remove it
+					if (e.nodeName == 'BLOCKQUOTE')
+						dom.remove(e, 1);
+				});
+
 				t.editor.selection.moveToBookmark(b);
 				return;
 			}
@@ -7667,7 +7714,7 @@ tinymce.create('tinymce.UndoManager', {
 
 			if (!isIE && s.force_p_newlines) {
 				ed.onPreProcess.add(function(ed, o) {
-					each(o.node.getElementsByTagName('br'), function(n) {
+					each(ed.dom.select('br', o.node), function(n) {
 						var p = n.parentNode;
 
 						// Replace <p><br /></p> with <p>&nbsp;</p>

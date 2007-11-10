@@ -688,8 +688,14 @@
 				return dom.getParent(e, function(n) {return n.nodeName === 'BLOCKQUOTE';});
 			};
 
-			// Remove blockquote
-			if (s.isCollapsed() && dom.remove(findBQ(s.getStart()), 1)) {
+			// Remove blockquote(s)
+			if (findBQ(s.getStart())) {
+				each(t._getSelectedBlocks(findBQ(s.getStart()), findBQ(s.getEnd())), function(e) {
+					// Found BQ lets remove it
+					if (e.nodeName == 'BLOCKQUOTE')
+						dom.remove(e, 1);
+				});
+
 				t.editor.selection.moveToBookmark(b);
 				return;
 			}

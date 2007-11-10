@@ -371,7 +371,7 @@ function setAttrib(elm, attrib, value) {
 
 function getAnchorListHTML(id, target) {
 	var inst = tinyMCEPopup.editor;
-	var nodes = inst.getBody().getElementsByTagName("a"), name, i;
+	var nodes = inst.dom.select('a.mceItemAnchor,img.mceItemAnchor'), name, i;
 	var html = "";
 
 	html += '<select id="' + id + '" name="' + id + '" class="mceAnchorList" o2nfocus="tinyMCE.addSelectAccessibility(event, this, window);" onchange="this.form.' + target + '.value=';

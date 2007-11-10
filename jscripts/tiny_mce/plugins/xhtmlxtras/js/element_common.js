@@ -158,7 +158,7 @@ SXE.insertElement = function(element_name) {
 			tagName = element_name;
 
 			if (tinymce.isIE && element_name.indexOf('mce:') == 0)
-				element_name = element_name.substring(5).toLowerCase();
+				element_name = element_name.substring(4).toLowerCase();
 
 			h = '<' + tagName + ' id="#sxe_temp_' + element_name + '#">' + s + '</' + tagName + '>';
 

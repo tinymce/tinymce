@@ -22,8 +22,8 @@
 		pixelStyles : /^(top|left|bottom|right|width|height|borderWidth)$/,
 		cache : {},
 		idPattern : /^#[\w]+$/,
-		elmPattern : /^[\w_]+$/,
-		elmClassPattern : /^([\w_]+)\.([\w_]+)$/,
+		elmPattern : /^[\w_*]+$/,
+		elmClassPattern : /^([\w_]*)\.([\w_]+)$/,
 
 		/**
 		 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
@@ -187,16 +187,43 @@
 
 		/**
 		 * Selects specific elements by a CSS level 1 pattern. For example "div#a1 p.test".
+		 * This function is optimized for the most common patterns needed in TinyMCE but it also performes good enough
+		 * on more complex patterns.
 		 *
 		 * @param {String} p CSS level 1 pattern to select/find elements by.
 		 * @param {Object} s Optional root element/scope element to search in.
 		 * @return {Array} Array with all matched elements.
 		 */
-		// div a.class span#id.class1.class2:first
 		select : function(pa, s) {
-			var t = this, cs, c, pl, o = [], x;
+			var t = this, cs, c, pl, o = [], x, i, l, n;
 
 			s = t.get(s) || t.doc;
+
+			// Simple element pattern. For example: "p" or "*"
+			if (t.elmPattern.test(pa)) {
+				x = s.getElementsByTagName(pa);
+
+				for (i = 0, l = x.length; i<l; i++)
+					o.push(x[i]);
+
+				return o;
+			}
+
+			// Simple class pattern. For example: "p.class" or ".class"
+			if (t.elmClassPattern.test(pa)) {
+				pl = t.elmClassPattern.exec(pa);
+				x = s.getElementsByTagName(pl[1] || '*');
+				c = ' ' + pl[2] + ' ';
+
+				for (i = 0, l = x.length; i<l; i++) {
+					n = x[i];
+
+					if (n.className && (' ' + n.className + ' ').indexOf(c) !== -1)
+						o.push(n);
+				}
+
+				return o;
+			}
 
 			function collect(n) {
 				if (!n.mce_save) {
@@ -245,8 +272,8 @@
 
 				if (!(cs = t.cache[pa])) {
 					cs = 'x=(function(cf, s) {';
-
 					pl = v.split(' ');
+
 					each(pl, function(v) {
 						var p = /^([\w\\*]+)?(?:#([\w\\]+))?(?:\.([\w\\\.]+))?(?:\[\@([\w\\]+)([\^\$\*!]?=)([\w\\]+)\])?(?:\:([\w\\]+))?/i.exec(v);
 
@@ -278,7 +305,7 @@
 
 					cs += '})';
 
-					// Build function
+					// Compile CSS pattern function
 					t.cache[pa] = cs = eval(cs);
 				}
 

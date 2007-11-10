@@ -94,7 +94,7 @@
 					};
 
 					for (x=0; x<a.length; x++) {
-						nl = o.node.getElementsByTagName(a[x]);
+						nl = t.dom.select(a[x], o.node);
 
 						for (i=0; i<nl.length; i++) {
 							n = nl[i];
@@ -121,7 +121,7 @@
 					var ta = [], d = t.dom.doc;
 
 					// Build list of HTML chunks and replace tables with comment placeholders
-					each(o.node.getElementsByTagName('table'), function(e) {
+					each(t.dom.select('table', o.node), function(e) {
 						var pa = t.dom.getParent(e, 'H1,H2,H3,H4,H5,H6,P'), p = [], i, h;
 
 						if (pa) {
@@ -489,7 +489,7 @@
 				if (k != '@')
 				s += k;
 			});
-			t.validElementsRE = new RegExp('^(' + wildcardToRE(s.toUpperCase()) + ')$');
+			t.validElementsRE = new RegExp('^(' + wildcardToRE(s.toLowerCase()) + ')$');
 
 			//console.debug(t.validElementsRE.toString());
 			//console.dir(t.rules);
@@ -638,13 +638,23 @@
 						iv = false;
 						hc = n.hasChildNodes();
 
+						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
+	
+						// Add correct prefix on IE
+						if (isIE) {
+							if (n.scopeName !== 'HTML')
+								nn = n.scopeName + ':' + nn;
+						}
+
+						// Remove mce prefix on IE needed for the abbr element
+						if (nn.indexOf('mce:') === 0)
+							nn = nn.substring(4);
+
 						// Check if valid
-						if (!t.validElementsRE.test(n.nodeName) || (t.invalidElementsRE && t.invalidElementsRE.test(n.nodeName)) || inn) {
+						if (!t.validElementsRE.test(nn) || (t.invalidElementsRE && t.invalidElementsRE.test(nn)) || inn) {
 							iv = true;
 							break;
 						}
-
-						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
 
 						if (isIE) {
 							// Fix IE content duplication (DOM can have multiple copies of the same node)
@@ -658,15 +668,7 @@
 							// IE sometimes adds a / infront of the node name
 							if (nn.charAt(0) == '/')
 								nn = nn.substring(1);
-
-							// Add correct prefix
-							if (n.scopeName !== 'HTML')
-								nn = n.scopeName + ':' + nn;
 						}
-
-						// Remove mce prefix on IE needed for the abbr element
-						if (nn.indexOf('mce:') === 0)
-							nn = nn.substring(4);
 
 						// Check if valid child
 						if (t.childRules) {
@@ -852,7 +854,7 @@
 			t.addValidChildRules(s.valid_child_elements);
 
 			if (s.invalid_elements)
-				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(',', '|').toUpperCase()) + ')$');
+				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(',', '|').toLowerCase()) + ')$');
 
 			if (s.attrib_value_filter)
 				t.attribValueFilter = s.attribValueFilter;
@@ -871,6 +873,16 @@
 			}
 
 			v = this.dom.getAttrib(n, na);
+
+			switch (na) {
+				case 'rowspan':
+				case 'colspan':
+					// Whats the point? Remove usless attribute value
+					if (v == '1')
+						v = '';
+
+					break;
+			}
 
 			if (this.attribValueFilter)
 				v = this.attribValueFilter(na, v, n);

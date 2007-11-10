@@ -45,7 +45,7 @@
 			ed.addCommand('mceDel', function() {
 				ed.windowManager.open({
 					file : url + '/del.htm',
-					width : 350,
+					width : 340,
 					height : 310,
 					inline : 1
 				}, {
@@ -56,7 +56,7 @@
 			ed.addCommand('mceIns', function() {
 				ed.windowManager.open({
 					file : url + '/ins.htm',
-					width : 350,
+					width : 340,
 					height : 310,
 					inline : 1
 				}, {
@@ -84,12 +84,15 @@
 			ed.addButton('attribs', {title : 'xhtmlxtras.attribs_desc', cmd : 'mceAttributes'});
 
 			if (tinymce.isIE) {
-				ed.onPostProcess.add(function(ed, o) {
+				function fix(ed, o) {
 					if (o.set) {
-						o.content = o.content.replace(/<abbr([^>]+)>/gi, '<html:ABBR $1>');
-						o.content = o.content.replace(/<\/abbr>/gi, '</html:ABBR>');
+						o.content = o.content.replace(/<abbr([^>]+)>/gi, '<mce:abbr $1>');
+						o.content = o.content.replace(/<\/abbr>/gi, '</mce:abbr>');
 					}
-				});
+				};
+
+				ed.onBeforeSetContent.add(fix);
+				ed.onPostProcess.add(fix);
 			}
 
 			ed.onNodeChange.add(function(ed, cm, n, co) {

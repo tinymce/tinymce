@@ -136,14 +136,14 @@
 						['a', {'class' : 'max', href : 'javascript:;', onmousedown : 'return false;'}],
 						['a', {'class' : 'med', href : 'javascript:;', onmousedown : 'return false;'}],
 						['a', {'class' : 'close', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {'class' : 'resize resize-n', href : 'javascript:;'}],
-						['a', {'class' : 'resize resize-s', href : 'javascript:;'}],
-						['a', {'class' : 'resize resize-w', href : 'javascript:;'}],
-						['a', {'class' : 'resize resize-e', href : 'javascript:;'}],
-						['a', {'class' : 'resize resize-nw', href : 'javascript:;'}],
-						['a', {'class' : 'resize resize-ne', href : 'javascript:;'}],
-						['a', {'class' : 'resize resize-sw', href : 'javascript:;'}],
-						['a', {'class' : 'resize resize-se', href : 'javascript:;'}]
+						['a', {id : id + '_resize_n', 'class' : 'resize resize-n', href : 'javascript:;'}],
+						['a', {id : id + '_resize_s', 'class' : 'resize resize-s', href : 'javascript:;'}],
+						['a', {id : id + '_resize_w', 'class' : 'resize resize-w', href : 'javascript:;'}],
+						['a', {id : id + '_resize_e', 'class' : 'resize resize-e', href : 'javascript:;'}],
+						['a', {id : id + '_resize_nw', 'class' : 'resize resize-nw', href : 'javascript:;'}],
+						['a', {id : id + '_resize_ne', 'class' : 'resize resize-ne', href : 'javascript:;'}],
+						['a', {id : id + '_resize_sw', 'class' : 'resize resize-sw', href : 'javascript:;'}],
+						['a', {id : id + '_resize_se', 'class' : 'resize resize-se', href : 'javascript:;'}]
 					]
 				]
 			);
@@ -245,12 +245,7 @@
 			});
 
 			t.focus(id);
-
-			// Fix IE6 rendering issue
-			if (tinymce.isIE6) {
-				w.element.hide();
-				w.element.show();
-			}
+			t._fixIELayout(id, 1);
 
 //			if (DOM.get(id + '_ok'))
 //				DOM.get(id + '_ok').focus();
@@ -315,6 +310,7 @@
 				we.resizeBy(dw, dh);
 				sz = we.getSize();
 				DOM.setStyles(id + '_ifr', {width : sz.w - w.deltaWidth, height : sz.h - w.deltaHeight});
+				t._fixIELayout(id, 1);
 
 				return Event.cancel(e);
 			});
@@ -325,6 +321,8 @@
 			function startMove() {
 				if (eb)
 					return;
+
+				t._fixIELayout(id, 0);
 
 				// Setup event blocker
 				DOM.add(d.body, 'div', {
@@ -498,6 +496,34 @@
 				width : 400,
 				height : 130
 			});
+		},
+
+		// Internal functions
+
+		_fixIELayout : function(id, s) {
+			var w;
+
+			if (!tinymce.isIE6)
+				return;
+
+			// Fixes the bug where hover flickers and does odd things in IE6
+			each(['n','s','w','e','nw','ne','sw','se'], function(v) {
+				var e = DOM.get(id + '_resize_' + v);
+
+				DOM.setStyles(e, {
+					width : s ? e.clientWidth : '',
+					height : s ? e.clientHeight : '',
+					cursor : DOM.getStyle(e, 'cursor', 1)
+				});
+
+				e = 0;
+			});
+
+			// Fixes graphics glitch
+			if (w = this.windows[id]) {
+				w.element.hide();
+				w.element.show();
+			}
 		}
 	});
 

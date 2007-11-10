@@ -5,7 +5,7 @@
 .clearlooks2 {position:absolute}
 .clearlooks2 .wrapper {position:static}
 .mceEventBlocker {position:absolute; left:0; top:0; background:url(img/horizontal.gif) no-repeat 0 -75px; width:100%; height:100%}
-.clearlooks2 .placeholder {border:1px solid #000; background:#888; top:0; left:0; -moz-opacity:0.5; opacity:0.5; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50)}
+.clearlooks2 .placeholder {border:1px solid #000; background:#888; top:0; left:0; opacity:0.5; filter:alpha(opacity=50)}
 
 /* Top */
 .clearlooks2 .top, .clearlooks2 .top div {top:0; width:100%; height:23px}
@@ -27,7 +27,7 @@
 
 /* Bottom */
 .clearlooks2 .bottom, .clearlooks2 .bottom div {height:6px}
-.clearlooks2 .bottom {left:0; bottom:0; width:100%}
+.clearlooks2 .bottom {left:0; bottom:-1px; width:100%}
 .clearlooks2 .bottom div {top:0}
 .clearlooks2 .bottom .left {left:0; width:5px; background:url(img/corners.gif) -34px -6px}
 .clearlooks2 .bottom .center {left:5px; width:100%; background:url(img/horizontal.gif) 0 -46px}
@@ -40,7 +40,7 @@
 .clearlooks2 .statusbar .bottom span {display:block; left:7px; font-family:Arial, Verdana; font-size:11px; line-height:23px}
 
 /* Actions */
-.clearlooks2 a {width:29px; height:16px; top:3px}
+.clearlooks2 a {width:29px; height:16px; top:3px;}
 .clearlooks2 .close {right:6px; background:url(img/buttons.gif) -87px 0}
 .clearlooks2 .min {display:none; right:68px; background:url(img/buttons.gif) 0 0}
 .clearlooks2 .med {display:none; right:37px; background:url(img/buttons.gif) -29px 0}
@@ -68,7 +68,7 @@
 .clearlooks2 a.resize-n {top:0; left:0; width:100%; cursor:n-resize}
 .clearlooks2 a.resize-nw {top:0; left:0; cursor:nw-resize}
 .clearlooks2 a.resize-ne {top:0; right:0; cursor:ne-resize}
-.clearlooks2 a.resize-w {top:0; left:0; height:100%; cursor:w-resize}
+.clearlooks2 a.resize-w {top:0; left:0; height:100%; cursor:w-resize; backgr2ound:red;}
 .clearlooks2 a.resize-e {top:0; right:0; height:100%; cursor:e-resize}
 .clearlooks2 a.resize-s {bottom:0; left:0; width:100%; cursor:s-resize}
 .clearlooks2 a.resize-sw {bottom:0; left:0; cursor:sw-resize}

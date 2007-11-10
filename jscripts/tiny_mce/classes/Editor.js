@@ -109,7 +109,7 @@
 				apply_source_formatting : 1,
 				directionality : 'ltr',
 				forced_root_block : 'p',
-				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol,-ul,-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],-th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]'
+				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol,-ul,-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]'
 			}, s);
 
 			// Setup URIs
@@ -1198,7 +1198,7 @@
 			if (!is(t.hasVisual))
 				t.hasVisual = s.visual;
 
-			each(tinymce.grep(e.getElementsByTagName('table')).concat(e.getElementsByTagName('a')), function(e) {
+			each(t.dom.select('table,a', e), function(e) {
 				var v;
 
 				switch (e.nodeName) {
@@ -1540,32 +1540,36 @@
 					return;
 
 				if (o.get) {
-					each(o.node.getElementsByTagName('table'), function(n) {
-						if (v = dom.getAttrib(n, 'height')) {
-							dom.setStyle(n, 'height', v);
-							dom.setAttrib(n, 'height', '');
+					each(t.dom.select('table,u,strike', o.node), function(n) {
+						switch (n.nodeName) {
+							case 'TABLE':
+								if (v = dom.getAttrib(n, 'height')) {
+									dom.setStyle(n, 'height', v);
+									dom.setAttrib(n, 'height', '');
+								}
+								break;
+
+							case 'U':
+								dom.replace(dom.create('span', {style : 'text-decoration: underline;'}), n, 1);
+								break;
+
+							case 'STRIKE':
+								dom.replace(dom.create('span', {style : 'text-decoration: line-through;'}), n, 1);
+								break;
 						}
 					});
-
-					each(grep(o.node.getElementsByTagName('u')), function(n) {
-						dom.replace(dom.create('span', {style : 'text-decoration: underline;'}), n, 1);
-					});
-
-					each(grep(o.node.getElementsByTagName('strike')), function(n) {
-						dom.replace(dom.create('span', {style : 'text-decoration: line-through;'}), n, 1);
-					});
 				} else if (o.set) {
-					each(o.node.getElementsByTagName('table'), function(n) {
-						if (v = dom.getStyle(n, 'height'))
-							dom.setAttrib(n, 'height', v.replace(/[^0-9%]+/g, ''));
-					});
-
-					each(grep(o.node.getElementsByTagName('span')), function(n) {
-						if (n.style.textDecoration == 'underline')
-							dom.replace(dom.create('u'), n, 1);
-
-						if (n.style.textDecoration == 'strikethrough')
-							dom.replace(dom.create('strike'), n, 1);
+					each(t.dom.select('table,span', o.node), function(n) {
+						if (n.nodeName == 'TABLE') {
+							if (v = dom.getStyle(n, 'height'))
+								dom.setAttrib(n, 'height', v.replace(/[^0-9%]+/g, ''));
+						} else {
+							// Convert spans to elements
+							if (n.style.textDecoration == 'underline')
+								dom.replace(dom.create('u'), n, 1);
+							else if (n.style.textDecoration == 'strikethrough')
+								dom.replace(dom.create('strike'), n, 1);
+						}
 					});
 				}
 			});
@@ -1590,7 +1594,7 @@
 
 				if (o.set) {
 					// Convert spans to fonts
-					each(grep(o.node.getElementsByTagName('span')), function(n) {
+					each(t.dom.select('span', o.node), function(n) {
 						var f = dom.create('font', {
 							color : dom.toHex(dom.getStyle(n, 'color')),
 							face : dom.getStyle(n, 'fontFamily')
@@ -1620,7 +1624,7 @@
 							dom.replace(f, n, 1);
 					});
 				} else if (o.get) {
-					each(grep(o.node.getElementsByTagName('font')), function(n) {
+					each(t.dom.select('font', o.node), function(n) {
 						var sp = dom.create('span', {
 							style : {
 								fontFamily : dom.getAttrib(n, 'face'),

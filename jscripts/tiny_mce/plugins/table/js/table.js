@@ -6,8 +6,7 @@ function insertTable() {
 	var formObj = document.forms[0];
 	var inst = tinyMCEPopup.editor, dom = inst.dom;
 	var cols = 2, rows = 2, border = 0, cellpadding = -1, cellspacing = -1, align, width, height, className, caption, frame, rules;
-	var html = '', capEl;
-	var elm = dom.getParent(inst.selection.getNode(), 'table');
+	var html = '', capEl, elm;
 	var cellLimit, rowLimit, colLimit;
 
 	if (!AutoValidator.validate(formObj)) {
@@ -16,6 +15,7 @@ function insertTable() {
 	}
 
 	tinyMCEPopup.restoreSelection();
+	elm = dom.getParent(inst.selection.getNode(), 'table');
 
 	// Get form data
 	cols = formObj.elements['cols'].value;
@@ -72,20 +72,21 @@ function insertTable() {
 		dom.setAttrib(elm, 'dir', dir);
 		dom.setAttrib(elm, 'lang', lang);
 
-		capEl = elm.getElementsByTagName('caption')[0];
+		capEl = inst.dom.select('caption', elm)[0];
 
 		if (capEl && !caption)
 			capEl.parentNode.removeChild(capEl);
 
 		if (!capEl && caption) {
 			capEl = elm.ownerDocument.createElement('caption');
-			capEl.innerHTML = '<br mce_bogus="1"/>';
+
+			if (!tinymce.isIE)
+				capEl.innerHTML = '<br mce_bogus="1"/>';
+
 			elm.insertBefore(capEl, elm.firstChild);
 		}
 
-		// Not inline styles
-		if (!tinyMCEPopup.getParam("inline_styles"))
-			dom.setAttrib(elm, 'width', width, true);
+		dom.setAttrib(elm, 'width', width, true);
 
 		// Remove these since they are not valid XHTML
 		dom.setAttrib(elm, 'borderColor', '');
@@ -150,14 +151,22 @@ function insertTable() {
 	html += makeAttrib('lang', lang);
 	html += '>';
 
-	if (caption)
-		html += '<caption><br mce_bogus="1"/></caption>';
+	if (caption) {
+		if (!tinymce.isIE)
+			html += '<caption><br mce_bogus="1"/></caption>';
+		else
+			html += '<caption></caption>';
+	}
 
 	for (var y=0; y<rows; y++) {
 		html += "<tr>";
 
-		for (var x=0; x<cols; x++)
-			html += '<td><br mce_bogus="1"/></td>';
+		for (var x=0; x<cols; x++) {
+			if (!tinymce.isIE)
+				html += '<td><br mce_bogus="1"/></td>';
+			else
+				html += '<td></td>';
+		}
 
 		html += "</tr>";
 	}
