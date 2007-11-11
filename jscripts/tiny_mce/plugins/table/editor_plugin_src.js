@@ -9,7 +9,7 @@
 	var each = tinymce.each;
 
 	tinymce.create('tinymce.plugins.TablePlugin', {
-		TablePlugin : function(ed, url) {
+		init : function(ed, url) {
 			var t = this;
 
 			t.editor = ed;

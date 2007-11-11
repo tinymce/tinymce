@@ -4207,7 +4207,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		showMenu : function(x, y, px) {
-			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot, dm, tb;
+			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot = 2, dm, tb;
 
 			t.collapse(1);
 
@@ -4229,14 +4229,13 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			DOM.show(co);
 			t.update();
 
-			x += s.offset_x;
-			y += s.offset_y;
+			x += s.offset_x || 0;
+			y += s.offset_y || 0;
 			vp.w -= 20;
 			vp.h -= 20;
 
 			// Move inside viewport if not submenu
 			if (s.constrain) {
-				ot = 2;
 				w = co.clientWidth - ot;
 				h = co.clientHeight - ot;
 				mx = vp.x + vp.w;
@@ -4978,14 +4977,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 	});
 
-/* file:jscripts/tiny_mce/classes/Theme.js */
-
-tinymce.create('tinymce.Theme', {
-	Theme : function(e, u) {
-	}
-
-	});
-
 /* file:jscripts/tiny_mce/classes/AddOnManager.js */
 
 (function() {
@@ -5545,14 +5536,23 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Create theme
 			o = ThemeManager.get(s.theme);
-			t.theme = new o(t, ThemeManager.urls[s.theme]);
+			t.theme = new o();
+
+			if (t.theme.init)
+				t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
 
 			// Create all plugins
 			each(s.plugins.replace(/\-/g, '').split(','), function(p) {
-				var c = PluginManager.get(p), u = PluginManager.urls[p];
+				var c = PluginManager.get(p), u = PluginManager.urls[p] || tinymce.documentBaseURL.replace(/\/$/, ''), po;
 
-				if (c)
-					t.plugins[p] = new c(t, u);
+				if (c) {
+					po = new c(t, u);
+
+					t.plugins[p] = po;
+
+					if (po.init)
+						po.init(t, u);
+				}
 			});
 
 			// Setup control factory

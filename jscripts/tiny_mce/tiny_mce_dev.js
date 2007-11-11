@@ -79,7 +79,6 @@
 	include('ui/SplitButton.js');
 	include('ui/ColorSplitButton.js');
 	include('ui/Toolbar.js');
-	include('Theme.js');
 	include('AddOnManager.js');
 	include('EditorManager.js');
 	include('Editor.js');

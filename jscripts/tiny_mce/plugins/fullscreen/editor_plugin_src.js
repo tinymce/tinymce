@@ -9,7 +9,7 @@
 	var DOM = tinymce.DOM;
 
 	tinymce.create('tinymce.plugins.FullScreenPlugin', {
-		FullScreenPlugin : function(ed, url) {
+		init : function(ed, url) {
 			var t = this, s = {}, vp;
 
 			t.editor = ed;

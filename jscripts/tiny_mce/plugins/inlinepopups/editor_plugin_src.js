@@ -9,7 +9,7 @@
 	var DOM = tinymce.DOM, Element = tinymce.dom.Element, Event = tinymce.dom.Event, each = tinymce.each, is = tinymce.is;
 
 	tinymce.create('tinymce.plugins.InlinePopups', {
-		InlinePopups : function(ed, url) {
+		init : function(ed, url) {
 			// Replace window manager
 			ed.onBeforeRenderUI.add(function() {
 				ed.windowManager = new tinymce.InlineWindowManager(ed);

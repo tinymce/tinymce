@@ -9,7 +9,7 @@
 	var Event = tinymce.dom.Event;
 
 	tinymce.create('tinymce.plugins.NonEditablePlugin', {
-		NonEditablePlugin : function(ed, url) {
+		init : function(ed, url) {
 			var t = this, editClass, nonEditClass;
 
 			t.editor = ed;

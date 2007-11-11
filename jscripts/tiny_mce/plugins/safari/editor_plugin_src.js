@@ -9,7 +9,7 @@
 	var Event = tinymce.dom.Event, grep = tinymce.grep, each = tinymce.each, inArray = tinymce.inArray, isOldWebKit = tinymce.isOldWebKit;
 
 	tinymce.create('tinymce.plugins.Safari', {
-		Safari : function(ed) {
+		init : function(ed) {
 			var t = this, dom;
 
 			// Ignore on non webkit

@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.StylePlugin', {
-		StylePlugin : function(ed, url) {
+		init : function(ed, url) {
 			// Register commands
 			ed.addCommand('mceStyleProps', function() {
 				ed.windowManager.open({

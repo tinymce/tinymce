@@ -9,7 +9,7 @@
 	var Event = tinymce.dom.Event, each = tinymce.each, DOM = tinymce.DOM;
 
 	tinymce.create('tinymce.plugins.ContextMenu', {
-		ContextMenu : function(ed) {
+		init : function(ed) {
 			var t = this;
 
 			t.editor = ed;

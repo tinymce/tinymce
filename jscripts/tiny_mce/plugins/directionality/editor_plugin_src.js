@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.Directionality', {
-		Directionality : function(ed, url) {
+		init : function(ed, url) {
 			var t = this;
 
 			t.editor = ed;

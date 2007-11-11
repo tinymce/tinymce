@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.AdvancedHRPlugin', {
-		AdvancedHRPlugin : function(ed, url) {
+		init : function(ed, url) {
 			// Register commands
 			ed.addCommand('mceAdvancedHr', function() {
 				ed.windowManager.open({

@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.AdvancedLinkPlugin', {
-		AdvancedLinkPlugin : function(ed, url) {
+		init : function(ed, url) {
 			this.editor = ed;
 
 			// Register commands

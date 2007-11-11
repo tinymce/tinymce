@@ -84,11 +84,11 @@
 		 * Displays the menu at the specified cordinate.
 		 *
 		 * @param {Number} x Horizontal position of the menu.
-		 * @param {Number} t Vertical position of the menu.
+		 * @param {Number} y Vertical position of the menu.
 		 * @param {Numner} px Optional parent X position used when menus are cascading.
 		 */
 		showMenu : function(x, y, px) {
-			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot, dm, tb;
+			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot = 2, dm, tb;
 
 			t.collapse(1);
 
@@ -110,14 +110,13 @@
 			DOM.show(co);
 			t.update();
 
-			x += s.offset_x;
-			y += s.offset_y;
+			x += s.offset_x || 0;
+			y += s.offset_y || 0;
 			vp.w -= 20;
 			vp.h -= 20;
 
 			// Move inside viewport if not submenu
 			if (s.constrain) {
-				ot = 2;
 				w = co.clientWidth - ot;
 				h = co.clientHeight - ot;
 				mx = vp.x + vp.w;

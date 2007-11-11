@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.BBCodePlugin', {
-		BBCodePlugin : function(ed, url) {
+		init : function(ed, url) {
 			var t = this, dialect = ed.getParam('bbcode_dialect', 'punbb').toLowerCase();
 
 			ed.onBeforeSetContent.add(function(ed, o) {

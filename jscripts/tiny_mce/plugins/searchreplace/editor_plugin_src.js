@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.SearchReplacePlugin', {
-		SearchReplacePlugin : function(ed, url) {
+		init : function(ed, url) {
 			function open(m) {
 				ed.windowManager.open({
 					file : url + '/searchreplace.htm',

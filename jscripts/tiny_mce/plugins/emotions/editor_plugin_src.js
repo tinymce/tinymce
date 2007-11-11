@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.EmotionsPlugin', {
-		EmotionsPlugin : function(ed, url) {
+		init : function(ed, url) {
 			// Register commands
 			ed.addCommand('mceEmotion', function() {
 				ed.windowManager.open({

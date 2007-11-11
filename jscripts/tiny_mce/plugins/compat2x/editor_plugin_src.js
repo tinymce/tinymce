@@ -9,9 +9,6 @@
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, is = tinymce.is;
 
 	tinymce.create('tinymce.plugins.Compat2x', {
-		Compat2x : function(ed) {
-		},
-
 		getInfo : function() {
 			return {
 				longname : 'Compat2x',

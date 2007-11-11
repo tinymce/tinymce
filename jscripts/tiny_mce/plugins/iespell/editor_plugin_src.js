@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.IESpell', {
-		IESpell : function(ed, url) {
+		init : function(ed, url) {
 			var t = this, sp;
 
 			if (!tinymce.isIE)

@@ -3,6 +3,7 @@ Version 3.0a3 (2007-xx-xx)
 	Added new translation.html file for the development package. Helps with the internationalization of TinyMCE.
 	Added new setup callback option, use this callback to add events to TinyMCE. This method is recommended over the old callbacks.
 	Added new API documetation to all classes, functions, events, properties to the Wiki with examples etc.
+	Added new init method to all plugins and themes, since it's shorter to write and it mimics interface capable languages better.
 	Fixed various CSS issues in the default skin such as alignment of split buttons and separators.
 	Fixed issues with mod_security. It didn't like that a content type of text/javascript was forced in a XHR.
 	Fixed all events so that they now pass the sender object as it's first argument.
@@ -25,6 +26,7 @@ Version 3.0a3 (2007-xx-xx)
 	Fixed bug where xhtmlxtras like abbr didn't work correctly on IE.
 	Fixed bug where IE6 had some graphics rendering issues with the inlinepopups.
 	Fixed bug where inlinepopup windows where moved incorrectly when they were boundary checked for min width.
+	Fixed issues with tinymce.ui.DropMenu class, it required some optional settings to be specified.
 	Fixed so multiple blockquotes can be removed with a easier method than before.
 	Optimized some of the core API to boost performance.
 	Removed some functions from the core API that wasn't needed.

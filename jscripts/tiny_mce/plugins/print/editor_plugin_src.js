@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.Print', {
-		Print : function(ed, url) {
+		init : function(ed, url) {
 			ed.addCommand('mcePrint', function() {
 				ed.getWin().print();
 			});

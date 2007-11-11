@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.PageBreakPlugin', {
-		PageBreakPlugin : function(ed, url) {
+		init : function(ed, url) {
 			var pb = '<img src="' + url + '/img/trans.gif" class="mcePageBreak mceItemNoResize" />', cls = 'mcePageBreak', sep = ed.getParam('pagebreak_separator', '<!-- pagebreak -->'), pbRE;
 
 			pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {return '\\' + a;}), 'g');

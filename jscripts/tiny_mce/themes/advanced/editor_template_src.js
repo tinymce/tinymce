@@ -11,7 +11,7 @@
 	// Tell it to load theme specific language pack(s)
 	tinymce.ThemeManager.requireLangPack('advanced');
 
-	tinymce.create('tinymce.themes.AdvancedTheme:tinymce.Theme', {
+	tinymce.create('tinymce.themes.AdvancedTheme', {
 		// Control name lookup, format: title, command
 		controls : {
 			bold : ['bold_desc', 'Bold'],
@@ -54,10 +54,8 @@
 
 		stateControls : ['bold', 'italic', 'underline', 'strikethrough', 'bullist', 'numlist', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'sub', 'sup', 'blockquote'],
 
-		AdvancedTheme : function(ed, url) {
+		init : function(ed, url) {
 			var t = this, s;
-
-			t.parent(ed);
 
 			t.editor = ed;
 			t.url = url;

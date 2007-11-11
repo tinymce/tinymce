@@ -9,7 +9,7 @@
 	var Event = tinymce.dom.Event;
 
 	tinymce.create('tinymce.plugins.PastePlugin', {
-		PastePlugin : function(ed, url) {
+		init : function(ed, url) {
 			var t = this;
 
 			t.editor = ed; 

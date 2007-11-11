@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.XHTMLXtrasPlugin', {
-		XHTMLXtrasPlugin : function(ed, url) {
+		init : function(ed, url) {
 			// Register commands
 			ed.addCommand('mceCite', function() {
 				ed.windowManager.open({

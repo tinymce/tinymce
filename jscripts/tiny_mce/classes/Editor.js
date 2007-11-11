@@ -236,14 +236,23 @@
 
 			// Create theme
 			o = ThemeManager.get(s.theme);
-			t.theme = new o(t, ThemeManager.urls[s.theme]);
+			t.theme = new o();
+
+			if (t.theme.init)
+				t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
 
 			// Create all plugins
 			each(s.plugins.replace(/\-/g, '').split(','), function(p) {
-				var c = PluginManager.get(p), u = PluginManager.urls[p];
+				var c = PluginManager.get(p), u = PluginManager.urls[p] || tinymce.documentBaseURL.replace(/\/$/, ''), po;
 
-				if (c)
-					t.plugins[p] = new c(t, u);
+				if (c) {
+					po = new c(t, u);
+
+					t.plugins[p] = po;
+
+					if (po.init)
+						po.init(t, u);
+				}
 			});
 
 			// Setup control factory

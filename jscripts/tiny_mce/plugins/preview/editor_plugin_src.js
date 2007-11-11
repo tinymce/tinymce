@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.Preview', {
-		Preview : function(ed, url) {
+		init : function(ed, url) {
 			var t = this;
 
 			t.editor = ed;

@@ -7,7 +7,7 @@
 
 (function() {
 	tinymce.create('tinymce.plugins.AdvancedImagePlugin', {
-		AdvancedImagePlugin : function(ed, url) {
+		init : function(ed, url) {
 			// Register commands
 			ed.addCommand('mceAdvImage', function() {
 				var e = ed.selection.getNode();

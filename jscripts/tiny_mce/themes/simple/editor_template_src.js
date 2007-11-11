@@ -14,11 +14,10 @@
 	// Tell it to load theme specific language pack(s)
 	tinymce.ThemeManager.requireLangPack('simple');
 
-	tinymce.create('tinymce.themes.SimpleTheme:tinymce.Theme', {
-		SimpleTheme : function(ed, url) {
+	tinymce.create('tinymce.themes.SimpleTheme', {
+		init : function(ed, url) {
 			var t = this, states = ['Bold', 'Italic', 'Underline', 'Strikethrough', 'InsertUnorderedList', 'InsertOrderedList'], s = ed.settings;
 
-			t.parent(ed);
 			t.editor = ed;
 
 			ed.onInit.add(function() {
