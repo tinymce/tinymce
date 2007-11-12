@@ -457,7 +457,7 @@
 					case 'opacity':
 						// IE specific opacity
 						if (isIE) {
-							s.filter = "alpha(opacity=" + (v * 100) + ")";
+							s.filter = v === '' ? '' : "alpha(opacity=" + (v * 100) + ")";
 
 							if (!n.currentStyle || !n.currentStyle.hasLayout)
 								s.display = 'inline-block';

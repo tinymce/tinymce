@@ -392,10 +392,18 @@
 				DOM.add(n, 'a', {id : ed.id + '_external_close', href : 'javascript:;', 'class' : 'mceExternalClose'});
 				n = DOM.add(n, 'table', {id : ed.id + '_tblext', cellSpacing : 0, cellPadding : 0});
 				etb = DOM.add(n, 'tbody');
-				p.insertBefore(c, p.firstChild);
+
+				if (p.firstChild.className == 'mceOldBoxModel')
+					p.firstChild.appendChild(c);
+				else
+					p.insertBefore(c, p.firstChild);
+
 				t._addToolbars(etb, o);
 
 				ed.onMouseUp.add(function() {
+					var e = DOM.get(ed.id + '_external');
+					DOM.show(e);
+
 					DOM.hide(lastExtID);
 
 					var f = Event.add(ed.id + '_external_close', 'click', function() {
@@ -403,9 +411,17 @@
 						Event.remove(ed.id + '_external_close', 'click', f);
 					});
 
-					DOM.show(ed.id + '_external');
-					DOM.setStyle(ed.id + '_external', 'top', 0 - DOM.getRect(ed.id + '_tblext').h - 1);
+					DOM.show(e);
+					DOM.setStyle(e, 'top', 0 - DOM.getRect(ed.id + '_tblext').h - 1);
+
+					// Fixes IE rendering bug
+					DOM.hide(e);
+					DOM.show(e);
+					e.style.filter = '';
+
 					lastExtID = ed.id + '_external';
+
+					e = null;
 				});
 			}
 
@@ -865,7 +881,7 @@
 
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/color_picker.htm',
-				width : 380 + Number(ed.getLang('advanced.colorpicker_delta_width', 0)),
+				width : 375 + Number(ed.getLang('advanced.colorpicker_delta_width', 0)),
 				height : 250 + Number(ed.getLang('advanced.colorpicker_delta_height', 0)),
 				close_previous : false,
 				inline : true

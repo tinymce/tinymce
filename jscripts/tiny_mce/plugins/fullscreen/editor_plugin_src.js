@@ -42,6 +42,10 @@
 				} else {
 					DOM.setStyle(document.body, 'overflow', 'hidden');
 					vp = DOM.getViewPort();
+
+					if (tinymce.isIE)
+						vp.h -= 1;
+
 					n = DOM.add(document.body, 'div', {id : 'mce_fullscreen_container', style : 'position:absolute;top:0;left:0;width:' + vp.w + 'px;height:' + vp.h + 'px;z-index:4000;'});
 					DOM.add(n, 'div', {id : 'mce_fullscreen'});
 					s.fullscreen_overflow = DOM.getStyle(document.body, 'overflow', 1) || 'auto';
@@ -60,6 +64,9 @@
 					tinymce.each(ed.getParam('fullscreen_settings'), function(v, k) {
 						s[k] = v;
 					});
+
+					if (s.theme_advanced_toolbar_location === 'external')
+						s.theme_advanced_toolbar_location = 'top';
 
 					t.fullscreenEditor = new tinymce.Editor('mce_fullscreen', s);
 					t.fullscreenEditor.onInit.add(function() {

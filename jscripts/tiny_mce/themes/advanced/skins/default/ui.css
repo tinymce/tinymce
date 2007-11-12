@@ -11,7 +11,8 @@
 .defaultSkin .right {text-align:right}
 
 /* External */
-.defaultSkin .mceExternalToolbar {position:absolute; border:1px solid #CCC; border-bottom:0; display:none}
+.defaultSkin .mceExternalToolbar {position:absolute; border:1px solid #CCC; border-bottom:0; display:none;}
+.defaultSkin .mceExternalToolbar td.mceToolbar {padding-right:13px;}
 .defaultSkin .mceExternalClose {position:absolute; top:3px; right:3px; width:7px; height:7px; background:url(../../img/icons.gif) -820px 0}
 
 /* Layout */

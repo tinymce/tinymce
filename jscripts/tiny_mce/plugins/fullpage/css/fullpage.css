@@ -174,3 +174,5 @@
 textarea {
 	height: 55px;
 }
+
+.panel_wrapper div.current {height:420px;}

@@ -11,7 +11,7 @@ scrollbar-shadow-color:#F0F0EE;
 scrollbar-track-color:#F5F5F5;
 background:#F0F0EE;
 padding:0;
-margin:8px;
+margin:8px 8px 0 8px;
 }
 
 td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
@@ -47,11 +47,13 @@ padding-bottom:2px;
 
 /* Browse */
 a.browse span {display:block; width:20px; height:18px; background:url(../../img/icons.gif) -860px 0; border:1px solid #FFF; margin-left:1px;}
+.mceOldBoxModel a.browse span {width:22px; height:20px;}
 a.browse:hover span {border:1px solid #0A246A; background-color:#B2BBD0;}
 a.browse span.disabled {border:1px solid white; -moz-opacity:0.3; opacity:0.3; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=30);}
 a.browse:hover span.disabled {border:1px solid white; background-color:transparent;}
-a.pickcolor span {display:block; width:20px; height:16px; background:url(../../img/icons.gif) -840px 0; margin-left:2px; border:1px solid #FFF;}
-a.pickcolor:hover span {background-color:#B2BBD0; border:1px solid #0A246A;}
+a.pickcolor span {display:block; width:20px; height:16px; background:url(../../img/icons.gif) -840px 0; margin-left:2px;}
+.mceOldBoxModel a.pickcolor span {width:21px; height:17px;}
+a.pickcolor:hover span {background-color:#B2BBD0;}
 a.pickcolor:hover span.disabled {}
 
 /* Charmap */
@@ -65,7 +67,7 @@ a.charmap {color:#000; text-decoration:none}
 .mceActionPanel {margin-top:5px;}
 
 /* Tabs classes */
-.tabs {float:left; width:100%; line-height:normal; background:url(../default/img/tabs.gif) repeat-x 0 -72px;}
+.tabs {width:100%; height:18px; line-height:normal; background:url(../default/img/tabs.gif) repeat-x 0 -72px;}
 .tabs ul {margin:0; padding:0; list-style:none;}
 .tabs li {float:left; background:url(../default/img/tabs.gif) no-repeat 0 0; margin:0 2px 0 0; padding:0 0 0 10px; line-height:18px;}
 .tabs li.current {background:url(../default/img/tabs.gif) no-repeat 0 -18px; margin-right:2px;}
@@ -95,7 +97,7 @@ h3 {font-size:14px;}
 #image .panel_wrapper, #image div.current {height:190px;}
 #plugintable thead {font-weight:bold; background:#DDD;}
 #plugintable, #about #plugintable td {border:1px solid #919B9C;}
-#plugintable {width:99%; margin-top:10px;}
+#plugintable {width:96%; margin-top:10px;}
 #pluginscontainer {height:290px; overflow:auto;}
 #colorpicker #preview {float:right; width:50px; height:14px;line-height:1px; border:1px solid black; margin-left:5px;}
 #colorpicker #colors {float:left; border:1px solid gray; cursor:crosshair;}
@@ -106,10 +108,3 @@ h3 {font-size:14px;}
 #colorpicker #namedcolors {width:150px;}
 #colorpicker #namedcolors a {display:block; float:left; width:10px; height:10px; margin:1px 1px 0 0; overflow:hidden;}
 #colorpicker #colornamecontainer {margin-top:5px;}
-
-/* IE */
-* html .panel_wrapper {width:100%;}
-* html body {margin-right:0; margin-bottom:0;}
-
-/* Mozilla */
-html>body #insert, html>body #cancel, html>body .button {padding-bottom:4px;}

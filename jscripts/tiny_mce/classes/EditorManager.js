@@ -145,7 +145,7 @@
 								return;
 
 							if (!s.editor_selector || DOM.hasClass(v, s.editor_selector))
-								new tinymce.Editor(v.id = (v.id || v.name), s).render();
+								new tinymce.Editor(v.id = (v.id || v.name || (v.id = DOM.uniqueId())), s).render();
 						});
 						break;
 				}
@@ -354,7 +354,7 @@
 	});
 
 	// Setup some URLs where the editor API is located and where the document is
-	tinymce.documentBaseURL = document.location.href.replace(/[\/\\][\w.]+$/, '');
+	tinymce.documentBaseURL = document.location.href.replace(/\?.*$/, '').replace(/[\/\\][\w.]+$/, '');
 	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
 		tinymce.documentBaseURL += '/';
 

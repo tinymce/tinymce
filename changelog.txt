@@ -26,6 +26,8 @@ Version 3.0a3 (2007-xx-xx)
 	Fixed bug where xhtmlxtras like abbr didn't work correctly on IE.
 	Fixed bug where IE6 had some graphics rendering issues with the inlinepopups.
 	Fixed bug where inlinepopup windows where moved incorrectly when they were boundary checked for min width.
+	Fixed bug where textareas without id or name couldn't be converted into editor instances.
+	Fixed bug where TinyMCE was stealing element focus on IE.
 	Fixed issues with tinymce.ui.DropMenu class, it required some optional settings to be specified.
 	Fixed so multiple blockquotes can be removed with a easier method than before.
 	Optimized some of the core API to boost performance.

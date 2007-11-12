@@ -513,7 +513,7 @@
 		// Internal functions
 
 		_fixIELayout : function(id, s) {
-			var w;
+			var w, img;
 
 			if (!tinymce.isIE6)
 				return;
@@ -535,8 +535,23 @@
 
 			// Fixes graphics glitch
 			if (w = this.windows[id]) {
-				w.element.hide();
-				w.element.show();
+				/*w.element.hide();
+				w.element.show();*/
+
+				// Forced a repaint of the window
+				//DOM.get(id).style.filter = '';
+
+				// IE has a bug where images used in CSS won't get loaded
+				// sometimes when the cache in the browser is disabled
+				// This fix tries to solve it by loading the images using the image object
+				each(DOM.select('div,a', id), function(e, i) {
+					if (e.currentStyle.backgroundImage != 'none') {
+						img = new Image();
+						img.src = e.currentStyle.backgroundImage.replace(/url\(\"(.+)\"\)/, '$1');
+					}
+				});
+
+				DOM.get(id).style.filter = '';
 			}
 		}
 	});

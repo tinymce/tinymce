@@ -305,10 +305,10 @@
 			t.orgDisplay = e.style.display;
 
 			if (('' + w).indexOf('%') == -1)
-				w = Math.max(parseInt(w), 100);
+				w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
 
 			if (('' + h).indexOf('%') == -1)
-				h = Math.max(parseInt(h), 100);
+				h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
 
 			// Render UI
 			o = t.theme.renderUI({
@@ -321,8 +321,8 @@
 
 			// Resize editor
 			DOM.setStyles(o.sizeContainer || o.editorContainer, {
-				width : ('' + w).indexOf('%') == -1 ? w + (o.deltaWidth || 0) : w,
-				height : ('' + h).indexOf('%') == -1 ? h + (o.deltaHeight || 0) : h
+				width : w,
+				height : h
 			});
 
 			// Create iframe
@@ -332,7 +332,7 @@
 				frameBorder : '0',
 				style : {
 					width : '100%',
-					height : (o.iframeHeight || h) + (o.deltaHeight || 0)
+					height : (o.iframeHeight || h)
 				}
 			});
 
@@ -359,8 +359,7 @@
 			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
 
 			// Design mode needs to be added here Ctrl+A will fail otherwise
-			if (isGecko)
-				t.getDoc().designMode = 'On';
+			t.getDoc().designMode = 'On';
 
 			// Setup body
 			d.open();
@@ -416,12 +415,6 @@
 				t.getBody().spellcheck = 0;
 
 			t._addEvents();
-
-			// IE fired load event twice if designMode is set
-			if (!isIE)
-				t.getDoc().designMode = 'On';
-			else
-				t.getBody().contentEditable = true;
 
 			t.controlManager.onPostRender.dispatch(t, t.controlManager);
 			t.onPostRender.dispatch(t);
@@ -551,6 +544,7 @@
 					t.addVisual(t.getBody());
 				}, 1);
 			});
+			
 			t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 			t.startContent = t.getContent({format : 'raw'});
 			t.undoManager.add({initial : true});
@@ -672,12 +666,12 @@
 		 * @param {Object} o Optional object to pass along for the node changed event.
 		 */
 		nodeChanged : function(o) {
-			var t = this, s = t.selection;
+			var t = this, s = t.selection, n = s.getNode() || this.getBody();
 
 			this.onNodeChange.dispatch(
 				t,
 				o ? o.controlManager || t.controlManager : t.controlManager,
-				s.getNode() || this.getBody(),
+				isIE && n.ownerDocument != t.getDoc() ? this.getBody() : n, // Fix for IE initial state
 				s.isCollapsed(),
 				o
 			);
