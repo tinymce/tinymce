@@ -79,9 +79,9 @@
 			p.mce_window_id = id;
 
 			// Transpose
-			po = DOM.getPos(ed.getContainer());
-			f.left -= po.x;
-			f.top -= po.y;
+//			po = DOM.getPos(ed.getContainer());
+//			f.left -= po.x;
+//			f.top -= po.y;
 
 			t.features = f;
 			t.params = p;
@@ -108,7 +108,7 @@
 				opt += ' movable';
 
 			// Create DOM objects
-			t._addAll(ed.getContainer(), 
+			t._addAll(document.body, 
 				['div', {id : id, 'class' : ed.settings.inlinepopups_skin || 'clearlooks2', style : 'width:100px;height:100px'}, 
 					['div', {id : id + '_wrapper', 'class' : 'wrapper' + opt},
 						['div', {id : id + '_top', 'class' : 'top'}, 
@@ -287,7 +287,8 @@
 			var t = this, mu, mm, d = document, eb, w = t.windows[id], we = w.element, sp = we.getXY(), p, sz, ph, cp, vp, sx, sy, sex, sey, dx, dy, dw, dh;
 
 			// Get positons and sizes
-			cp = DOM.getPos(t.editor.getContainer());
+//			cp = DOM.getPos(t.editor.getContainer());
+			cp = {x : 0, y : 0};
 			vp = DOM.getViewPort();
 
 			// Reduce viewport size to avoid scrollbars

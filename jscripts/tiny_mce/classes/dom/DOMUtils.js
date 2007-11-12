@@ -89,11 +89,12 @@
 			d = w.document;
 			b = this.boxModel ? d.documentElement : d.body;
 
+			// Returns viewport size excluding scrollbars
 			return {
 				x : w.pageXOffset || b.scrollLeft,
 				y : w.pageYOffset || b.scrollTop,
-				w : w.innerWidth || b.clientWidth,
-				h : w.innerHeight || b.clientHeight
+				w : (tinymce.isGecko ? d.documentElement.clientWidth : 0) || w.innerWidth || b.clientWidth,
+				h : (tinymce.isGecko ? d.documentElement.clientHeight : 0) || w.innerHeight || b.clientHeight
 			};
 		},
 
