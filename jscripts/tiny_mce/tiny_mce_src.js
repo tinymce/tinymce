@@ -4232,8 +4232,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			x += s.offset_x || 0;
 			y += s.offset_y || 0;
-			vp.w -= 20;
-			vp.h -= 20;
+			vp.w -= 4;
+			vp.h -= 4;
 
 			// Move inside viewport if not submenu
 			if (s.constrain) {

@@ -29,7 +29,8 @@ Version 3.0a3 (2007-xx-xx)
 	Fixed bug where textareas without id or name couldn't be converted into editor instances.
 	Fixed bug where TinyMCE was stealing element focus on IE.
 	Fixed bug where the getParam method didn't handle false values correctly.
-	Fixed bug where inlinepopups where clipped by other TinyMCE instances or relative layers in IE.
+	Fixed bug where inlinepopups where clipped by other TinyMCE instances or relative elements in IE.
+	Fixed bug where the contextmenu was clipped by other TinyMCE instances or relative elements in IE.
 	Fixed issues with tinymce.ui.DropMenu class, it required some optional settings to be specified.
 	Fixed so multiple blockquotes can be removed with a easier method than before.
 	Optimized some of the core API to boost performance.

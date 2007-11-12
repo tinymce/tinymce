@@ -38,11 +38,15 @@
 			p1 = DOM.getPos(ed.getContentAreaContainer());
 			p2 = DOM.getPos(ed.getContainer());
 
+			if (!DOM.get('mce_abs_container'))
+				DOM.add(document.body, 'div', {id : 'mce_abs_container', 'class' : ed.getParam('skin') + 'Skin', style : 'position:absolute;left:0;top:0;'})
+
 			m = ed.controlManager.createDropMenu('contextmenu', {
-				offset_x : p1.x - p2.x,
-				offset_y : p1.y - p2.y,
-				vp_offset_x : p2.x,
-				vp_offset_y : p2.y,
+				offset_x : p1.x,
+				offset_y : p1.y,
+/*				vp_offset_x : p2.x,
+				vp_offset_y : p2.y,*/
+				container : 'mce_abs_container',
 				constrain : 1
 			});
 
