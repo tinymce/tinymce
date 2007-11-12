@@ -656,7 +656,7 @@
 		 * @return {String} Configuration parameter value or default value.
 		 */
 		getParam : function(n, dv) {
-			return this.settings[n] || dv;
+			return is(this.settings[n]) ? this.settings[n] : dv;
 		},
 
 		/**

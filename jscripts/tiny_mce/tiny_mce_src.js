@@ -5918,7 +5918,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		getParam : function(n, dv) {
-			return this.settings[n] || dv;
+			return is(this.settings[n]) ? this.settings[n] : dv;
 		},
 
 		nodeChanged : function(o) {
