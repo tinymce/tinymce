@@ -10,6 +10,7 @@
 
 /* External */
 .o2k7Skin .mceExternalToolbar {position:absolute; border:1px solid #ABC6DD; border-bottom:0; display:none}
+.o2k7Skin .mceExternalToolbar td.mceToolbar {padding-right:13px;}
 .o2k7Skin .mceExternalClose {position:absolute; top:3px; right:3px; width:7px; height:7px; background:url(../../img/icons.gif) -820px 0}
 
 /* Layout */
