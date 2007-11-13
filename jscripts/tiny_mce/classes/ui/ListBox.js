@@ -44,25 +44,30 @@
 		 * @param {String} v Value to look for inside the list box.
 		 */
 		select : function(v) {
-			var t = this, e;
+			var t = this, e, fv;
 
+			// Do we need to do something?
 			if (v != t.selectedValue) {
 				e = DOM.get(t.id + '_text');
 				t.selectedValue = v;
 
-				if (!v) {
+				// Find item
+				each(t.items, function(o) {
+					if (o.value == v) {
+						DOM.setHTML(e, DOM.encode(o.title));
+						fv = 1;
+						return false;
+					}
+				});
+
+				// If no item was found then present title
+				if (!fv) {
 					DOM.setHTML(e, DOM.encode(t.settings.title));
 					DOM.addClass(e, 'title');
 					e = 0;
 					return;
-				}
-
-				DOM.removeClass(e, 'title');
-
-				each(t.items, function(o) {
-					if (o.value === v)
-						DOM.setHTML(e, DOM.encode(o.title));
-				});
+				} else
+					DOM.removeClass(e, 'title');
 			}
 
 			e = 0;
@@ -132,8 +137,8 @@
 			p2 = DOM.getPos(e);
 
 			m = t.menu;
-			m.settings.offset_x = p2.x - p1.x;
-			m.settings.offset_y = p2.y - p1.y;
+			m.settings.offset_x = p2.x;
+			m.settings.offset_y = p2.y;
 
 			// Select in menu
 			if (t.oldID)

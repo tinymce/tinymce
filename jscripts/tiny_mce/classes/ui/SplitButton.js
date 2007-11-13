@@ -49,8 +49,8 @@
 			p2 = DOM.getPos(e);
 
 			m = t.menu;
-			m.settings.offset_x = p2.x - p1.x;
-			m.settings.offset_y = p2.y - p1.y;
+			m.settings.offset_x = p2.x;
+			m.settings.offset_y = p2.y;
 			m.settings.vp_offset_x = p2.x;
 			m.settings.vp_offset_y = p2.y;
 			m.showMenu(0, e.clientHeight);

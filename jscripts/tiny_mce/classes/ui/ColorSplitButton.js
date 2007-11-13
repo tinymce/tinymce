@@ -57,11 +57,10 @@
 			e = DOM.get(t.id);
 			DOM.show(t.id + '_menu');
 			DOM.addClass(e, 'mceSplitButtonSelected');
-			p = DOM.getPos(t.settings.menu_container);
 			p2 = DOM.getPos(e);
 			DOM.setStyles(t.id + '_menu', {
-				left : p2.x - p.x,
-				top : (p2.y + e.clientHeight) - p.y
+				left : p2.x,
+				top : p2.y + e.clientHeight
 			});
 			e = 0;
 
@@ -88,9 +87,10 @@
 		 * Renders the menu to the DOM.
 		 */
 		renderMenu : function() {
-			var t = this, m, i = 0, s = t.settings, n, tb, tr;
+			var t = this, m, i = 0, s = t.settings, n, tb, tr, w;
 
-			m = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : 'mceSplitButtonMenu'});
+			w = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:0;'});
+			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 
 			n = DOM.add(m, 'table', {'class' : 'mceColorSplitMenu'});
@@ -132,7 +132,7 @@
 
 			DOM.addClass(m, 'mceColorSplitMenu');
 
-			return m;
+			return w;
 		},
 
 		/**

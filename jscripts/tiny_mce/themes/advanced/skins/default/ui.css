@@ -1,5 +1,6 @@
 /* Reset */
-.defaultSkin table, .defaultSkin tbody, .defaultSkin a, .defaultSkin img, .defaultSkin tr, .defaultSkin div, .defaultSkin td, .defaultSkin iframe, .defaultSkin span, .defaultSkin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000;}
+.defaultSkin table, .defaultSkin tbody, .defaultSkin a, .defaultSkin img, .defaultSkin tr, .defaultSkin div, .defaultSkin td, .defaultSkin iframe, .defaultSkin span, .defaultSkin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000; vertical-align:baseline}
+.defaultSkin table td {vertical-align:middle}
 .defaultSkin a:hover {text-decoration:none; font-weight:normal; cursor:default; color:#000}
 
 /* Containers */
@@ -63,7 +64,6 @@
 .defaultSkin .mceSplitButtonDisabled span.action, .defaultSkin .mceSplitButtonDisabled span.open {opacity:0.3; filter:alpha(opacity=30)}
 .defaultSkin .mceSplitButtonActive a.action {border:1px solid #0A246A; background-color:#C2CBE0}
 .defaultSkin .mceSplitButtonActive a.open {border-left:0;}
-.defaultSkin .mceSplitButtonMenu {display:none; position:absolute}
 
 /* ColorSplitButton */
 .defaultSkin div.mceColorSplitMenu table {background:#FFF; border:1px solid gray}

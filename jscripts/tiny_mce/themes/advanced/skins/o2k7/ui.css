@@ -1,5 +1,6 @@
 /* Reset */
-.o2k7Skin table, .o2k7Skin tbody, .o2k7Skin a, .o2k7Skin img, .o2k7Skin tr, .o2k7Skin div, .o2k7Skin td, .o2k7Skin iframe, .o2k7Skin span, .o2k7Skin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000}
+.o2k7Skin table, .o2k7Skin tbody, .o2k7Skin a, .o2k7Skin img, .o2k7Skin tr, .o2k7Skin div, .o2k7Skin td, .o2k7Skin iframe, .o2k7Skin span, .o2k7Skin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000; vertical-align:baseline}
+.o2k7Skin table td {vertical-align:middle}
 .o2k7Skin a:hover {text-decoration:none; font-weight:normal; cursor:default; color:#000}
 
 /* Containers */
@@ -63,7 +64,6 @@
 .o2k7Skin table.mceSplitButtonEnabled:hover span.open, .o2k7Skin .mceSplitButtonHover span.open, .o2k7Skin .mceSplitButtonSelected span.open {background-position:-44px -44px}
 .o2k7Skin .mceSplitButtonDisabled span.action {opacity:0.3; filter:alpha(opacity=30)}
 .o2k7Skin .mceSplitButtonActive {background-position:0 -44px}
-.o2k7Skin .mceSplitButtonMenu {display:none; position:absolute}
 
 /* ColorSplitButton */
 .o2k7Skin div.mceColorSplitMenu table {background:#FFF; border:1px solid gray}

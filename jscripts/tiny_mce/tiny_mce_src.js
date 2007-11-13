@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0a2',
-	releaseDate : '2007-11-02',
+	minorVersion : '0a3',
+	releaseDate : '2007-11-13',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n;
@@ -4179,6 +4179,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			s.container = s.container || cs.container;
 			s.parent = t;
 			s.constrain = s.constrain || cs.constrain;
+			s['class'] = s['class'] || cs['class'];
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
 			m = new tinymce.ui.DropMenu(s.id || DOM.uniqueId(), s);
@@ -4189,7 +4190,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		update : function() {
-			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id);
+			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id + '_co');
 
 			if (!DOM.boxModel)
 				t.element.setStyles({width : tb.clientWidth + 2, height : tb.clientHeight + 2});
@@ -4280,7 +4281,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			if (t.hasMenus()) {
 				t.mouseOverFunc = Event.add(co, 'mouseover', function(e) {
-					var m, r, mi, p;
+					var m, r, mi;
 
 					e = e.target;
 					if (e && (e = DOM.getParent(e, 'TR'))) {
@@ -4293,9 +4294,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 							return;
 
 						if (e && DOM.hasClass(e, 'mceMenuItemSub')) {
-							p = DOM.getPos(s.container);
+							//p = DOM.getPos(s.container);
 							r = DOM.getRect(e);
-							m.showMenu((r.x + r.w - ot) - p.x, r.y - ot - p.y, r.x);
+							m.showMenu((r.x + r.w - ot), r.y - ot, r.x);
 							t.lastMenu = m;
 							DOM.addClass(DOM.get(m.id).firstChild, 'mceMenuItemActive');
 						}
@@ -4359,9 +4360,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		renderNode : function() {
-			var t = this, s = t.settings, n, tb, co;
+			var t = this, s = t.settings, n, tb, co, w;
 
-			co = DOM.create('div', {id : 'menu_' + t.id, 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
+			w = DOM.create('div', {id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;'});
+			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
 			if (s.menu_line)
@@ -4377,7 +4379,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			t.rendered = true;
 
-			return co;
+			return w;
 		},
 
 		// Internal functions
@@ -4477,25 +4479,30 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		select : function(v) {
-			var t = this, e;
+			var t = this, e, fv;
 
+			// Do we need to do something?
 			if (v != t.selectedValue) {
 				e = DOM.get(t.id + '_text');
 				t.selectedValue = v;
 
-				if (!v) {
+				// Find item
+				each(t.items, function(o) {
+					if (o.value == v) {
+						DOM.setHTML(e, DOM.encode(o.title));
+						fv = 1;
+						return false;
+					}
+				});
+
+				// If no item was found then present title
+				if (!fv) {
 					DOM.setHTML(e, DOM.encode(t.settings.title));
 					DOM.addClass(e, 'title');
 					e = 0;
 					return;
-				}
-
-				DOM.removeClass(e, 'title');
-
-				each(t.items, function(o) {
-					if (o.value === v)
-						DOM.setHTML(e, DOM.encode(o.title));
-				});
+				} else
+					DOM.removeClass(e, 'title');
 			}
 
 			e = 0;
@@ -4544,8 +4551,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			p2 = DOM.getPos(e);
 
 			m = t.menu;
-			m.settings.offset_x = p2.x - p1.x;
-			m.settings.offset_y = p2.y - p1.y;
+			m.settings.offset_x = p2.x;
+			m.settings.offset_y = p2.y;
 
 			// Select in menu
 			if (t.oldID)
@@ -4745,8 +4752,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			p2 = DOM.getPos(e);
 
 			m = t.menu;
-			m.settings.offset_x = p2.x - p1.x;
-			m.settings.offset_y = p2.y - p1.y;
+			m.settings.offset_x = p2.x;
+			m.settings.offset_y = p2.y;
 			m.settings.vp_offset_x = p2.x;
 			m.settings.vp_offset_y = p2.y;
 			m.showMenu(0, e.clientHeight);
@@ -4863,11 +4870,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			e = DOM.get(t.id);
 			DOM.show(t.id + '_menu');
 			DOM.addClass(e, 'mceSplitButtonSelected');
-			p = DOM.getPos(t.settings.menu_container);
 			p2 = DOM.getPos(e);
 			DOM.setStyles(t.id + '_menu', {
-				left : p2.x - p.x,
-				top : (p2.y + e.clientHeight) - p.y
+				left : p2.x,
+				top : p2.y + e.clientHeight
 			});
 			e = 0;
 
@@ -4885,9 +4891,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		renderMenu : function() {
-			var t = this, m, i = 0, s = t.settings, n, tb, tr;
+			var t = this, m, i = 0, s = t.settings, n, tb, tr, w;
 
-			m = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : 'mceSplitButtonMenu'});
+			w = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:0;'});
+			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 
 			n = DOM.add(m, 'table', {'class' : 'mceColorSplitMenu'});
@@ -4929,7 +4936,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			DOM.addClass(m, 'mceColorSplitMenu');
 
-			return m;
+			return w;
 		},
 
 		setColor : function(c) {
@@ -8149,8 +8156,10 @@ tinymce.create('tinymce.UndoManager', {
 			var t = this, ed = t.editor, c;
 
 			s = extend({
-				container : ed.getContainer()
+				'class' : 'mceDropDown'
 			}, s);
+
+			s['class'] = s['class'] + ' ' + ed.getParam('skin') + 'Skin';
 
 			id = t.prefix + id;
 			c = t.controls[id] = new tinymce.ui.DropMenu(id, s);
@@ -8164,6 +8173,10 @@ tinymce.create('tinymce.UndoManager', {
 						ed.execCommand(s.cmd, s.ui || false, v || s.value);
 					};
 				}
+			});
+
+			ed.onRemove.add(function() {
+				c.destroy();
 			});
 
 			return t.add(c);
@@ -8188,7 +8201,6 @@ tinymce.create('tinymce.UndoManager', {
 				title : s.title,
 				'class' : id,
 				scope : s.scope,
-				menu_container : ed.id + "_parent",
 				control_manager : t
 			}, s);
 
@@ -8274,7 +8286,6 @@ tinymce.create('tinymce.UndoManager', {
 				title : s.title,
 				'class' : id,
 				scope : s.scope,
-				menu_container : ed.id + "_parent",
 				control_manager : t
 			}, s);
 
@@ -8309,8 +8320,8 @@ tinymce.create('tinymce.UndoManager', {
 			s = extend({
 				title : s.title,
 				'class' : id,
-				scope : s.scope,
-				menu_container : ed.id + "_parent"
+				'menu_class' : ed.getParam('skin') + 'Skin',
+				scope : s.scope
 			}, s);
 
 			id = t.prefix + id;

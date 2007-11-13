@@ -49,6 +49,7 @@
 			s.container = s.container || cs.container;
 			s.parent = t;
 			s.constrain = s.constrain || cs.constrain;
+			s['class'] = s['class'] || cs['class'];
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
 			m = new tinymce.ui.DropMenu(s.id || DOM.uniqueId(), s);
@@ -62,7 +63,7 @@
 		 * Repaints the menu after new items have been added dynamically.
 		 */
 		update : function() {
-			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id);
+			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id + '_co');
 
 			if (!DOM.boxModel)
 				t.element.setStyles({width : tb.clientWidth + 2, height : tb.clientHeight + 2});
@@ -160,7 +161,7 @@
 
 			if (t.hasMenus()) {
 				t.mouseOverFunc = Event.add(co, 'mouseover', function(e) {
-					var m, r, mi, p;
+					var m, r, mi;
 
 					e = e.target;
 					if (e && (e = DOM.getParent(e, 'TR'))) {
@@ -173,9 +174,9 @@
 							return;
 
 						if (e && DOM.hasClass(e, 'mceMenuItemSub')) {
-							p = DOM.getPos(s.container);
+							//p = DOM.getPos(s.container);
 							r = DOM.getRect(e);
-							m.showMenu((r.x + r.w - ot) - p.x, r.y - ot - p.y, r.x);
+							m.showMenu((r.x + r.w - ot), r.y - ot, r.x);
 							t.lastMenu = m;
 							DOM.addClass(DOM.get(m.id).firstChild, 'mceMenuItemActive');
 						}
@@ -267,9 +268,10 @@
 		 * @return {Element} Container element for the drop menu.
 		 */
 		renderNode : function() {
-			var t = this, s = t.settings, n, tb, co;
+			var t = this, s = t.settings, n, tb, co, w;
 
-			co = DOM.create('div', {id : 'menu_' + t.id, 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
+			w = DOM.create('div', {id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;'});
+			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
 			if (s.menu_line)
@@ -285,7 +287,7 @@
 
 			t.rendered = true;
 
-			return co;
+			return w;
 		},
 
 		// Internal functions

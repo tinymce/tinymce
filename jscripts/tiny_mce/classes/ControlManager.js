@@ -145,8 +145,10 @@
 			var t = this, ed = t.editor, c;
 
 			s = extend({
-				container : ed.getContainer()
+				'class' : 'mceDropDown'
 			}, s);
+
+			s['class'] = s['class'] + ' ' + ed.getParam('skin') + 'Skin';
 
 			id = t.prefix + id;
 			c = t.controls[id] = new tinymce.ui.DropMenu(id, s);
@@ -160,6 +162,10 @@
 						ed.execCommand(s.cmd, s.ui || false, v || s.value);
 					};
 				}
+			});
+
+			ed.onRemove.add(function() {
+				c.destroy();
 			});
 
 			return t.add(c);
@@ -192,7 +198,6 @@
 				title : s.title,
 				'class' : id,
 				scope : s.scope,
-				menu_container : ed.id + "_parent",
 				control_manager : t
 			}, s);
 
@@ -292,7 +297,6 @@
 				title : s.title,
 				'class' : id,
 				scope : s.scope,
-				menu_container : ed.id + "_parent",
 				control_manager : t
 			}, s);
 
@@ -334,8 +338,8 @@
 			s = extend({
 				title : s.title,
 				'class' : id,
-				scope : s.scope,
-				menu_container : ed.id + "_parent"
+				'menu_class' : ed.getParam('skin') + 'Skin',
+				scope : s.scope
 			}, s);
 
 			id = t.prefix + id;
