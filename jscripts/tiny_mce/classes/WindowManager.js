@@ -110,14 +110,23 @@
 		},
 
 		/**
-		 * Creates a DOM instance for the opened document. This method was needed since IE can't create instances
-		 * of classes from a parent window some reference problem.
+		 * Creates a instance of a class. This method was needed since IE can't create instances
+		 * of classes from a parent window due to some reference problem. Any arguments passed after the class name
+		 * will be passed as arguments to the constructor.
 		 *
-		 * @param {Document} doc DOM Document to bind DOM utils to.
-		 * @param {Object} s Optional name/value collection with settings for the new DOMUtils instance.
+		 * @param {String} cl Class name to create an instance of.
+		 * @return {Object} Instance of the specified class.
 		 */
-		createDOM : function(doc, s) {
-			return new tinymce.dom.DOMUtils(doc, s);
+		createInstance : function(cl) {
+			var a = arguments, i, f = tinymce.resolve(cl), s = '';
+
+			// Is there a better way to dynamically create
+			// a class with a dynamic number of arguments
+			each (Array.prototype.slice.call(a, 1), function(v, i) {
+				s += (!s ? '' : ',') + 'a[' + (i + 1) + ']';
+			});
+
+			return eval('(new f(' + s + '))');
 		},
 
 		/**

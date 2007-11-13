@@ -8428,8 +8428,16 @@ tinymce.create('tinymce.UndoManager', {
 			this.onClose.dispatch(this);
 		},
 
-		createDOM : function(doc, s) {
-			return new tinymce.dom.DOMUtils(doc, s);
+		createInstance : function(cl) {
+			var a = arguments, i, f = tinymce.resolve(cl), s = '';
+
+			// Is there a better way to dynamically create
+			// a class with a dynamic number of arguments
+			each (Array.prototype.slice.call(a, 1), function(v, i) {
+				s += (!s ? '' : ',') + 'a[' + (i + 1) + ']';
+			});
+
+			return eval('(new f(' + s + '))');
 		},
 
 		confirm : function(t, cb, s) {

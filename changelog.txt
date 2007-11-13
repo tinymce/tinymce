@@ -1,3 +1,5 @@
+Version 3.0b1 (2007-11-xx)
+	Removed the createDOM method from the window manager and replace it with a createInstance method.
 Version 3.0a3 (2007-11-13)
 	Added new experimental jQuery and Prototype framework adapters to the development package.
 	Added new translation.html file for the development package. Helps with the internationalization of TinyMCE.

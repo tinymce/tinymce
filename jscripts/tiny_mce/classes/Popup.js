@@ -34,7 +34,7 @@ tinyMCEPopup = {
 		t.params = t.editor.windowManager.params;
 
 		// Setup local DOM
-		t.dom = t.editor.windowManager.createDOM(document, window);
+		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document);
 		t.dom.loadCSS(t.editor.settings.popup_css);
 
 		// Setup on init listeners
