@@ -15,7 +15,7 @@
 .o2k7Skin .mceExternalClose {position:absolute; top:3px; right:3px; width:7px; height:7px; background:url(../../img/icons.gif) -820px 0}
 
 /* Layout */
-.o2k7Skin table.mceLayout {border-left:1px solid #ABC6DD; border-right:1px solid #ABC6DD}
+.o2k7Skin table.mceLayout {border:0; border-left:1px solid #ABC6DD; border-right:1px solid #ABC6DD}
 .o2k7Skin table.mceLayout tr.first td {border-top:1px solid #ABC6DD}
 .o2k7Skin table.mceLayout tr.last td {border-bottom:1px solid #ABC6DD}
 .o2k7Skin table.mceToolbar, .o2k7Skin tr.first .mceToolbar tr td, .o2k7Skin tr.last .mceToolbar tr td {border:0; margin:0; padding:0}

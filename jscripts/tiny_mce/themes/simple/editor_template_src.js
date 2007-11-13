@@ -45,7 +45,7 @@
 			n = ic = DOM.add(DOM.add(n, 'td'), 'div', {'class' : 'mceIframeContainer'});
 
 			// Create toolbar container
-			n = DOM.add(DOM.add(tb, 'tr'), 'td', {'class' : 'mceToolbar', align : 'center'});
+			n = DOM.add(DOM.add(tb, 'tr', {'class' : 'last'}), 'td', {'class' : 'mceToolbar last', align : 'center'});
 
 			// Create toolbar
 			tb = t.toolbar = cf.createToolbar("tools1");
