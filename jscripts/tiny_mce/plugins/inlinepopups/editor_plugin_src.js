@@ -536,8 +536,9 @@
 
 			// Fixes graphics glitch
 			if (w = this.windows[id]) {
-				/*w.element.hide();
-				w.element.show();*/
+				// Fixes rendering bug after resize
+				w.element.hide();
+				w.element.show();
 
 				// Forced a repaint of the window
 				//DOM.get(id).style.filter = '';
