@@ -255,7 +255,7 @@
 					t.failedTest = 0;
 					t.assertCount = 0;
 
-					t.log('Running test: ' + n + '.' + k);
+					t.log('Running test: ' + n + ', ' + k);
 
 					if (!t.settings.debug) {
 						try {

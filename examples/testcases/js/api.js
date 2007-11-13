@@ -294,72 +294,9 @@
 })();
 
 (function() {
-	var URI = tinymce.util.URI;
-
-	unitTester.add('url', {
-		parseFullURLs : function() {
-			var t = this;
-
-			t.eq(new URI('http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
-			t.neq(new URI('http://a2bc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
-		},
-
-		relativeURLs : function() {
-			var t = this;
-
-			t.eq(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html'), '../dir3/file.html');
-			t.eq(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'), '../../dir3/dir4/file.html');
-			t.eq(new URI('http://www.site.com/dir1/').toRelative('http://www.site.com/dir1/dir3/file.htm'), 'dir3/file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site2.com/dir1/dir3/file.htm'), 'http://www.site2.com/dir1/dir3/file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site.com:8080/dir1/dir3/file.htm'), 'http://www.site.com:8080/dir1/dir3/file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('https://www.site.com/dir1/dir3/file.htm'), 'https://www.site.com/dir1/dir3/file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm'), '../../file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm?id=1#a'), '../../file.htm?id=1#a');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('mailto:test@test.com'), 'mailto:test@test.com');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('news:test'), 'news:test');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('javascript:void(0);'), 'javascript:void(0);');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('about:blank'), 'about:blank');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('#test'), '#test');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('test.htm'), 'test.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site.com/dir1/dir2/test.htm'), 'test.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('dir2/test.htm'), 'dir2/test.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../dir2/test.htm'), 'test.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../../../../../../test.htm'), '../../test.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('//www.site.com/test.htm'), '../../test.htm');
-		},
-
-		absoluteURLs : function() {
-			var t = this;
-
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3'), 'http://www.site.com/dir1/dir3');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1), '/dir1/dir3');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../../../../dir3'), 'http://www.site.com/dir3');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../abc/def/../../abc/../dir3/file.htm'), 'http://www.site.com/dir1/dir3/file.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('http://www.site.com/dir2/dir3'), 'http://www.site.com/dir2/dir3');
-			t.eq(new URI('http://www.site2.com/dir1/dir2/').toAbsolute('http://www.site2.com/dir2/dir3'), 'http://www.site2.com/dir2/dir3');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('mailto:test@test.com'), 'mailto:test@test.com');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('news:test'), 'news:test');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('javascript:void(0);'), 'javascript:void(0);');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('about:blank'), 'about:blank');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('#test'), '#test');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('test.htm'), 'http://www.site.com/dir1/dir2/test.htm');
-			t.eq(new URI('http://www.site.com/dir1/dir2/').getURI(), 'http://www.site.com/dir1/dir2/');
-		},
-
-		strangeURLs : function() {
-			var t = this;
-
-			t.eq(new URI('//www.site.com').getURI(), '//www.site.com');
-			t.eq(new URI('mailto:test@test.com').getURI(), 'mailto:test@test.com');
-			t.eq(new URI('news:somegroup').getURI(), 'news:somegroup');
-		}
-	});
-})();
-
-(function() {
 	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
 
-	unitTester.add('dom', {
+	unitTester.add('tinymce.dom.DOMUtils', {
 		setup : function() {
 			DOM.add(document.body, 'div', {id : 'test'});
 		},
@@ -546,6 +483,20 @@
 
 			// Cleanup
 			DOM.setAttrib('test', 'style', '');
+		},
+
+		select : function() {
+			var t = this;
+
+			DOM.setHTML('test', '<div>test 1</div><div>test 2 <div>test 3</div></div><div>test 4</div>')
+			t.eq(DOM.select('div', 'test').length, 4);
+			t.is(DOM.select('div', 'test').reverse);
+
+			DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>')
+			t.eq(DOM.select('div.test2', 'test').length, 2);
+
+			DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>')
+			t.eq(DOM.select('div div', 'test').length, 1);
 		},
 
 		encode : function() {
@@ -799,7 +750,7 @@
 (function() {
 	var Event = tinymce.dom.Event, DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
 
-	unitTester.add('event', {
+	unitTester.add('tinymce.dom.Event', {
 		setup : function() {
 			DOM.add(document.body, 'div', {id : 'test'});
 		},
@@ -854,7 +805,7 @@
 (function() {
 	var Serializer = tinymce.dom.Serializer, DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
 
-	unitTester.add('serializer', {
+	unitTester.add('tinymce.DOM.Serializer', {
 		setup : function() {
 			DOM.add(document.body, 'div', {id : 'test'});
 			DOM.counter = 0;
@@ -1039,7 +990,7 @@
 (function() {
 	var Dispatcher = tinymce.util.Dispatcher;
 
-	unitTester.add('dispatcher', {
+	unitTester.add('tinymce.util.Dispatcher', {
 		dispatcher : function() {
 			var t = this, ev, v, f;
 
@@ -1092,7 +1043,7 @@
 (function() {
 	var Cookie = tinymce.util.Cookie;
 
-	unitTester.add('cookie', {
+	unitTester.add('tinymce.util.Cookie', {
 		cookie : function() {
 			var t = this, f = document.location.protocol == 'file:';
 
@@ -1112,9 +1063,90 @@
 })();
 
 (function() {
+	var JSON = tinymce.util.JSON;
+
+	unitTester.add('tinymce.util.JSON', {
+		serialize : function() {
+			var t = this;
+
+			t.eq(JSON.serialize({arr1 : [1, 2, 3, [1, 2, 3]], bool1 : true, float1: 3.14, int1 : 123, null1 : null, obj1 : {key1 : "val1", key2 : "val2"}, str1 : 'abc\u00C5123'}), '{"arr1":[1,2,3,[1,2,3]],"bool1":true,"float1":3.14,"int1":123,"null1":null,"obj1":{"key1":"val1","key2":"val2"},"str1":"abc\\u00c5123"}');
+		},
+
+		parse : function() {
+			var t = this;
+
+			t.eq(JSON.parse('{"arr1":[1,2,3,[1,2,3]],"bool1":true,"float1":3.14,"int1":123,"null1":null,"obj1":{"key1":"val1","key2":"val2"},"str1":"abc\\u00c5123"}').str1, 'abc\u00c5123');
+		}
+	});
+})();
+
+(function() {
+	var URI = tinymce.util.URI;
+
+	unitTester.add('tinymce.util.URI', {
+		parseFullURLs : function() {
+			var t = this;
+
+			t.eq(new URI('http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
+			t.neq(new URI('http://a2bc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
+		},
+
+		relativeURLs : function() {
+			var t = this;
+
+			t.eq(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html'), '../dir3/file.html');
+			t.eq(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'), '../../dir3/dir4/file.html');
+			t.eq(new URI('http://www.site.com/dir1/').toRelative('http://www.site.com/dir1/dir3/file.htm'), 'dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site2.com/dir1/dir3/file.htm'), 'http://www.site2.com/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site.com:8080/dir1/dir3/file.htm'), 'http://www.site.com:8080/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('https://www.site.com/dir1/dir3/file.htm'), 'https://www.site.com/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm'), '../../file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('/file.htm?id=1#a'), '../../file.htm?id=1#a');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('mailto:test@test.com'), 'mailto:test@test.com');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('news:test'), 'news:test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('javascript:void(0);'), 'javascript:void(0);');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('about:blank'), 'about:blank');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('#test'), '#test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('test.htm'), 'test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('http://www.site.com/dir1/dir2/test.htm'), 'test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('dir2/test.htm'), 'dir2/test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../dir2/test.htm'), 'test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../../../../../../test.htm'), '../../test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('//www.site.com/test.htm'), '../../test.htm');
+		},
+
+		absoluteURLs : function() {
+			var t = this;
+
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3'), 'http://www.site.com/dir1/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1), '/dir1/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../../../../dir3'), 'http://www.site.com/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../abc/def/../../abc/../dir3/file.htm'), 'http://www.site.com/dir1/dir3/file.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('http://www.site.com/dir2/dir3'), 'http://www.site.com/dir2/dir3');
+			t.eq(new URI('http://www.site2.com/dir1/dir2/').toAbsolute('http://www.site2.com/dir2/dir3'), 'http://www.site2.com/dir2/dir3');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('mailto:test@test.com'), 'mailto:test@test.com');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('news:test'), 'news:test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('javascript:void(0);'), 'javascript:void(0);');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('about:blank'), 'about:blank');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('#test'), '#test');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('test.htm'), 'http://www.site.com/dir1/dir2/test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').getURI(), 'http://www.site.com/dir1/dir2/');
+		},
+
+		strangeURLs : function() {
+			var t = this;
+
+			t.eq(new URI('//www.site.com').getURI(), '//www.site.com');
+			t.eq(new URI('mailto:test@test.com').getURI(), 'mailto:test@test.com');
+			t.eq(new URI('news:somegroup').getURI(), 'news:somegroup');
+		}
+	});
+})();
+
+(function() {
 	var Parser = tinymce.xml.Parser;
 
-	unitTester.add('parser', {
+	unitTester.add('tinymce.util.Parser', {
 		parser : function() {
 			var t = this, f = document.location.protocol == 'file:', p, d;
 
@@ -1134,3 +1166,4 @@
 		}
 	});
 })();
+

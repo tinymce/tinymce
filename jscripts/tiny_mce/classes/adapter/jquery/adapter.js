@@ -36,7 +36,7 @@
 			},
 
 			select : function(p, c) {
-				return $(p, this.get(c) || this.doc);
+				return tinymce.grep($(p, this.get(c) || this.doc));
 			},
 		},
 	};
