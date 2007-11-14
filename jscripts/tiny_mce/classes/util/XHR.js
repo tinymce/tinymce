@@ -48,9 +48,6 @@ tinymce.create('static tinymce.util.XHR', {
 			if (x.overrideMimeType)
 				x.overrideMimeType(o.content_type);
 
-			if (!tinymce.isIE)
-				x.async = o.async;
-
 			x.open(o.type || (o.data ? 'POST' : 'GET'), o.url, o.async);
 
 			if (o.content_type)
