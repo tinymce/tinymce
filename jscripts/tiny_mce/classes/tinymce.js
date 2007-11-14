@@ -85,6 +85,8 @@ var tinymce = {
 		return n == t;
 	},
 
+	// #if !jquery
+
 	/**
 	 * Performs an iteration of all items in a collection such as an object or array. This method will execure the
 	 * callback function for each item in the collection, if the callback returns false the iteration will terminate.
@@ -120,8 +122,6 @@ var tinymce = {
 
 		return 1;
 	},
-
-	// #if !jquery
 
 	/**
 	 * Creates a new array by the return value of each iteration function call. This enables you to convert

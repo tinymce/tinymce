@@ -62,6 +62,8 @@ var tinymce = {
 		return n == t;
 	},
 
+	// #if !jquery
+
 	each : function(o, cb, s) {
 		var n, l;
 
@@ -88,8 +90,6 @@ var tinymce = {
 
 		return 1;
 	},
-
-	// #if !jquery
 
 	map : function(a, f) {
 		var o = [];
@@ -1174,6 +1174,8 @@ tinymce.create('static tinymce.util.XHR', {
 			return o + ' />';
 		},
 
+		// #if !jquery
+
 		remove : function(n, k) {
 			return this.run(n, function(n) {
 				var p;
@@ -1319,6 +1321,8 @@ tinymce.create('static tinymce.util.XHR', {
 				t.setAttrib(e, n, v);
 			});
 		},
+
+		// #endif
 
 		getAttrib : function(e, n, dv) {
 			var v, t = this;
@@ -1557,6 +1561,8 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
+		// #if !jquery
+
 		removeClass : function(e, c) {
 			var t = this, re;
 
@@ -1576,8 +1582,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-		// #if !jquery
-
 		hasClass : function(n, c) {
 			n = this.get(n);
 
@@ -1585,12 +1589,6 @@ tinymce.create('static tinymce.util.XHR', {
 				return false;
 
 			return (' ' + n.className + ' ').indexOf(' ' + c + ' ') !== -1;
-		},
-
-		// #endif
-
-		uniqueId : function(p) {
-			return (!p ? 'mce_' : p) + (this.counter++);
 		},
 
 		show : function(e) {
@@ -1605,6 +1603,12 @@ tinymce.create('static tinymce.util.XHR', {
 			e = this.get(e);
 
 			return e.style.display == 'none' || this.getStyle(e, 'display') == 'none';
+		},
+
+		// #endif
+
+		uniqueId : function(p) {
+			return (!p ? 'mce_' : p) + (this.counter++);
 		},
 
 		setHTML : function(e, h) {
@@ -1747,6 +1751,8 @@ tinymce.create('static tinymce.util.XHR', {
 			}) : s;
 		},
 
+		// #if !jquery
+
 		insertAfter : function(n, r) {
 			var t = this;
 
@@ -1767,6 +1773,8 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
+		// #endif
+
 		isBlock : function(n) {
 			if (n.nodeType && n.nodeType !== 1)
 				return false;
@@ -1775,6 +1783,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return /^(H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
+
+		// #if !jquery
 
 		replace : function(n, o, k) {
 			if (is(o, 'array'))
@@ -1790,6 +1800,8 @@ tinymce.create('static tinymce.util.XHR', {
 				return o.parentNode.replaceChild(n, o);
 			});
 		},
+
+		// #endif
 
 		toHex : function(s) {
 			var c = /^\s*rgb\s*?\(\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?\)\s*$/i.exec(s);
@@ -1936,6 +1948,8 @@ tinymce.create('static tinymce.util.XHR', {
 		inits : [],
 		events : [],
 
+		// #if !jquery
+
 		add : function(o, n, f, s) {
 			var cb, t = this, el = t.events, r;
 
@@ -2026,6 +2040,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return s;
 		},
+
+		// #endif
 
 		cancel : function(e) {
 			if (!e)

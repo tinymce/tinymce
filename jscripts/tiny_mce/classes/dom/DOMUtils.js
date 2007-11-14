@@ -405,6 +405,8 @@
 			return o + ' />';
 		},
 
+		// #if !jquery
+
 		/**
 		 * Removes/deletes the specified element(s) from the DOM.
 		 *
@@ -592,6 +594,8 @@
 				t.setAttrib(e, n, v);
 			});
 		},
+
+		// #endif
 
 		/**
 		 * Returns the specified attribute by name.
@@ -871,6 +875,8 @@
 			});
 		},
 
+		// #if !jquery
+
 		/**
 		 * Removes a class from the specified element or elements.
 		 *
@@ -897,8 +903,6 @@
 			});
 		},
 
-		// #if !jquery
-
 		/**
 		 * Returns true if the specified element has the specified class.
 		 *
@@ -913,19 +917,6 @@
 				return false;
 
 			return (' ' + n.className + ' ').indexOf(' ' + c + ' ') !== -1;
-		},
-
-		// #endif
-
-		/**
-		 * Returns a unique id. This can be useful when generating elements on the fly.
-		 * This method will not check if the element allready exists.
-		 *
-		 * @param {String} p Optional prefix to add infront of all ids defaults to "mce_".
-		 * @return {String} Unique id.
-		 */
-		uniqueId : function(p) {
-			return (!p ? 'mce_' : p) + (this.counter++);
 		},
 
 		/**
@@ -956,6 +947,19 @@
 			e = this.get(e);
 
 			return e.style.display == 'none' || this.getStyle(e, 'display') == 'none';
+		},
+
+		// #endif
+
+		/**
+		 * Returns a unique id. This can be useful when generating elements on the fly.
+		 * This method will not check if the element allready exists.
+		 *
+		 * @param {String} p Optional prefix to add infront of all ids defaults to "mce_".
+		 * @return {String} Unique id.
+		 */
+		uniqueId : function(p) {
+			return (!p ? 'mce_' : p) + (this.counter++);
 		},
 
 		/**
@@ -1138,6 +1142,8 @@
 			}) : s;
 		},
 
+		// #if !jquery
+
 		/**
 		 * Inserts a element after the reference element.
 		 *
@@ -1165,6 +1171,8 @@
 			});
 		},
 
+		// #endif
+
 		/**
 		 * Returns true/false if the specified element is a block element or not.
 		 *
@@ -1179,6 +1187,8 @@
 
 			return /^(H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
+
+		// #if !jquery
 
 		/**
 		 * Replaces the specified element or elements with the specified element, the new element will
@@ -1202,6 +1212,8 @@
 				return o.parentNode.replaceChild(n, o);
 			});
 		},
+
+		// #endif
 
 		/**
 		 * Parses the specified RGB color value and returns a hex version of that color.
