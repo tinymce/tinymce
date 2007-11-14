@@ -67,7 +67,10 @@
 			ed.onBeforeSetContent.add(function(ed, o) {
 				var h = o.content;
 
-				h = h.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, '<img class="mceItem$1" title="$2" src="' + url + '/img/trans.gif" />');
+				h = h.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, function(a, b, c) {
+					return '<img class="mceItem' + b + '" title="' + ed.dom.encode(c) + '" src="' + url + '/img/trans.gif" />'
+				});
+
 				h = h.replace(/<object([^>]*)>/gi, '<div class="mceItemObject" $1>');
 				h = h.replace(/<embed([^>]*)>/gi, '<div class="mceItemEmbed" $1>');
 				h = h.replace(/<\/(object|embed)([^>]*)>/gi, '</div>');
@@ -156,12 +159,12 @@
 				function getAttr(s, n) {
 					n = new RegExp(n + '=\"([^\"]+)\"', 'g').exec(s);
 
-					return n ? n[1] : '';
+					return n ? ed.dom.decode(n[1]) : '';
 				};
 
 				ed.onPostProcess.add(function(ed, o) {
 					o.content = o.content.replace(/<img[^>]+>/g, function(im) {
-						var cl = getAttr(im, 'class'), at;
+						var cl = getAttr(im, 'class');
 
 						if (/^(mceTempFlash|mceTempShockWave|mceTempWindowsMedia|mceTempQuickTime|mceTempRealMedia)$/.test(cl)) {
 							at = t._parse(getAttr(im, 'title'));
@@ -206,7 +209,7 @@
 				p.src = ed.convertURL(p.src, 'src', n);
 
 			each (p, function(v, k) {
-				if (v)
+				if (v && !/^(width|height|codebase|classid)$/.test(k))
 					dom.add(ob, 'div', {mce_name : 'param', name : k, value : v});
 			});
 
@@ -245,6 +248,9 @@
 						case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
 							dom.replace(t._createImg('mceItemRealMedia', n), n);
 							break;
+
+						default:
+							dom.replace(t._createImg('mceItemFlash', n), n);
 					}
 				}
 			});

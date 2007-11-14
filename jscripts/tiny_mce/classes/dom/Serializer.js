@@ -639,7 +639,7 @@
 						hc = n.hasChildNodes();
 
 						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
-	
+
 						// Add correct prefix on IE
 						if (isIE) {
 							if (n.scopeName !== 'HTML')

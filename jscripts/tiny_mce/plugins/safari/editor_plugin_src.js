@@ -25,6 +25,38 @@
 				ed.execCommand("mceInsertContent", false, '<a href="' + dom.encode(v) + '">' + ed.selection.getContent() + '</a>');
 			});
 
+			// Safari returns incorrect values
+			ed.addQueryValueHandler('FontSize', function(u, v) {
+				var e, v;
+
+				// Check for the real font size at the start of selection
+				if ((e = ed.dom.getParent(ed.selection.getStart(), 'span')) && (v = e.style.fontSize))
+					return tinymce.inArray(t.namedFontSizes, v) + 1;
+
+				// Check for the real font size at the end of selection
+				if ((e = ed.dom.getParent(ed.selection.getEnd(), 'span')) && (v = e.style.fontSize))
+					return tinymce.inArray(t.namedFontSizes, v) + 1;
+
+				// Return default value it's better than nothing right!
+				return ed.getDoc().queryCommandValue('FontSize');
+			});
+
+			// Safari returns incorrect values
+			ed.addQueryValueHandler('FontName', function(u, v) {
+				var e, v;
+
+				// Check for the real font name at the start of selection
+				if ((e = ed.dom.getParent(ed.selection.getStart(), 'span')) && (v = e.style.fontFamily))
+					return v.replace(/, /g, ',');
+
+				// Check for the real font name at the end of selection
+				if ((e = ed.dom.getParent(ed.selection.getEnd(), 'span')) && (v = e.style.fontFamily))
+					return v.replace(/, /g, ',');
+
+				// Return default value it's better than nothing right!
+				return ed.getDoc().queryCommandValue('FontName');
+			});
+
 			// Safari can't select images, but now we can
 			ed.onClick.add(function(ed, e) {
 				e = e.target;

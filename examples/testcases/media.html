@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Editor testcase</title>
+<script type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../../jscripts/tiny_mce/classes/util/UnitTester.js"></script>
+<link rel="stylesheet" href="css/unit.css">
+<script type="text/javascript">
+var editor;
+
+var unitTester = new tinymce.util.UnitTester('log', {
+	debug : true,
+	log_skipped : true
+});
+
+(function() {
+	unitTester.add('object', {
+		flash : function() {
+			var t = this;
+
+			editor.setContent('<object width="425" height="355"><param name="movie" value="someurl"></param><param name="wmode" value="transparent"></param><embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355"></embed></object>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="wmode" value="transparent" /><param name="src" value="someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="someurl" wmode="transparent"></embed></object></p>');
+
+			editor.setContent('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="wmode" value="transparent" /><param name="src" value="someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="someurl" wmode="transparent"></embed></object>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="wmode" value="transparent" /><param name="src" value="someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="someurl" wmode="transparent"></embed></object></p>');
+		},
+
+		quicktime : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b" width="320" height="240" codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"><param name="src" value="test" /><embed type="video/quicktime" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b" width="320" height="240" codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"><param name="src" value="test" /><embed type="video/quicktime" width="320" height="240" src="test"></embed></object></p>');
+		}
+	});
+
+	unitTester.add('script', {
+		flash : function() {
+			var t = this;
+
+			editor.setContent('<object width="425" height="355"><param name="movie" value="someurl"></param><param name="wmode" value="transparent"></param><embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355"></embed></object>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeFlash({"wmode":"transparent","src":"someurl","width":"425","height":"355"});</' + 'script></p>');
+
+			editor.setContent('<p><script type="text/javascript">writeFlash({"wmode":"transparent","src":"someurl","width":"425","height":"355"});</' + 'script></p>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeFlash({"wmode":"transparent","src":"someurl","width":"425","height":"355"});</' + 'script></p>');
+		},
+
+		quicktime : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b" width="320" height="240" codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"><param name="src" value="test" /><embed type="video/quicktime" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeQuickTime({"src":"test","width":"320","height":"240"});</' + 'script></p>');
+
+			editor.setContent('<p><script type="text/javascript">writeQuickTime({"src":"test","width":"320","height":"240"});</'+'script></p>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeQuickTime({"src":"test","width":"320","height":"240"});</'+'script></p>');
+		}
+	});
+})();
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	add_unload_trigger : false,
+	apply_source_formatting : false,
+	plugins : 'safari,media',
+	init_instance_callback : function(ed) {
+		editor = ed;
+		unitTester.run('object');
+	}
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm2",
+	theme : "advanced",
+	add_unload_trigger : false,
+	apply_source_formatting : false,
+	plugins : 'safari,media',
+	media_use_script : true,
+	init_instance_callback : function(ed) {
+		editor = ed;
+		unitTester.run('script');
+	}
+});
+
+</script>
+</head>
+<body>
+
+<h1>Unit tests for the media plugin</h1>
+
+<!-- <input type="button" value="Run" onclick="unitTester.runAsync('commands');" /> -->
+
+<br /><br />
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+
+<textarea id="elm1" name="elm1"></textarea>
+<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+
+<textarea id="elm2" name="elm2"></textarea>
+<a href="javascript:alert(tinymce.EditorManager.get('elm2').getContent({format : 'raw'}));">[getRawContents]</a>
+<a href="javascript:alert(tinymce.EditorManager.get('elm2').getContent());">[getContents]</a>
+
+</form>
+<br /><br />
+<div id="log">
+	
+</div>
+
+</body>
+</html>

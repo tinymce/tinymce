@@ -3417,7 +3417,7 @@ tinymce.create('static tinymce.util.XHR', {
 						hc = n.hasChildNodes();
 
 						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
-	
+
 						// Add correct prefix on IE
 						if (isIE) {
 							if (n.scopeName !== 'HTML')
@@ -5952,8 +5952,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			this.execCommands[n] = {func : f, scope : s || this};
 		},
 
-		addCommandQueryState : function(n, f, s) {
+		addQueryStateHandler : function(n, f, s) {
 			this.queryStateCommands[n] = {func : f, scope : s || this};
+		},
+
+		addQueryValueHandler : function(n, f, s) {
+			this.queryValueCommands[n] = {func : f, scope : s || this};
 		},
 
 		addShortcut : function(pa, desc, cmd_func, sc) {
@@ -6700,7 +6704,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					return;
 
 				if (o.set) {
-					// Convert spans to fonts
+					// Convert spans to fonts on non WebKit browsers
+					if (tinymce.isWebKit)
+						return;
+
 					each(t.dom.select('span', o.node), function(n) {
 						var f = dom.create('font', {
 							color : dom.toHex(dom.getStyle(n, 'color')),

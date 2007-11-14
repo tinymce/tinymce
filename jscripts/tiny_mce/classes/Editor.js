@@ -706,14 +706,26 @@
 
 		/**
 		 * Adds a custom query state command to the editor, you can also override existing commands with this method.
-		 * The command that you add can be executed with queryCommandState.
+		 * The command that you add can be executed with queryCommandState function.
 		 *
 		 * @param {String} n Command name to add/override.
 		 * @param {function} f Function to execute when the command state retrival occurs.
 		 * @param {Object} s Optional scope to execute the function in.
 		 */
-		addCommandQueryState : function(n, f, s) {
+		addQueryStateHandler : function(n, f, s) {
 			this.queryStateCommands[n] = {func : f, scope : s || this};
+		},
+
+		/**
+		 * Adds a custom query value command to the editor, you can also override existing commands with this method.
+		 * The command that you add can be executed with queryCommandValue function.
+		 *
+		 * @param {String} n Command name to add/override.
+		 * @param {function} f Function to execute when the command value retrival occurs.
+		 * @param {Object} s Optional scope to execute the function in.
+		 */
+		addQueryValueHandler : function(n, f, s) {
+			this.queryValueCommands[n] = {func : f, scope : s || this};
 		},
 
 		/**
@@ -1596,7 +1608,10 @@
 					return;
 
 				if (o.set) {
-					// Convert spans to fonts
+					// Convert spans to fonts on non WebKit browsers
+					if (tinymce.isWebKit)
+						return;
+
 					each(t.dom.select('span', o.node), function(n) {
 						var f = dom.create('font', {
 							color : dom.toHex(dom.getStyle(n, 'color')),

@@ -303,10 +303,10 @@ function getType(v) {
 	fo = ed.getParam("media_types", "flash=swf;flv=flv;shockwave=dcr;qt=mov,qt,mpg,mp3,mp4,mpeg;shockwave=dcr;wmp=avi,wmv,wm,asf,asx,wmx,wvx;rmp=rm,ra,ram").split(';');
 
 	// YouTube
-	if (v.indexOf('http://www.youtube.com/watch?v=') == 0) {
+	if (v.match(/v=(.+)(.*)/)) {
 		f.width.value = '425';
 		f.height.value = '350';
-		f.src.value = 'http://www.youtube.com/v/' + v.substring('http://www.youtube.com/watch?v='.length);
+		f.src.value = 'http://www.youtube.com/v/' + v.match(/v=(.*)(.*)/)[0].split('=')[1];
 		return 'flash';
 	}
 

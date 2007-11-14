@@ -441,6 +441,7 @@ tinyMCE.init({
 	theme_advanced_styles : 'test1=test1;test2=test2',
 	init_instance_callback : function(ed) {
 		editor = ed;
+		// Don't stress the ticking bomb called Safari!!
 		window.setTimeout(function() {
 			//unitTester.runAsync('commands');
 			unitTester.run();
