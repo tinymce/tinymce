@@ -75,15 +75,15 @@
 
 			each(dom.select('*', el), function(n) {
 				// Replace cdate
-				if (hasClass(n, ed.getParam('template_cdate_classes', '').replace(/\s+/g, '|')))
+				if (hasClass(n, ed.getParam('template_cdate_classes', 'cdate').replace(/\s+/g, '|')))
 					n.innerHTML = t._getDateTime(new Date(), tinyMCE.getParam("template_cdate_format", ed.getLang("template.cdate_format")));
 
 				// Replace mdate
-				if (hasClass(n, ed.getParam('template_mdate_classes', '').replace(/\s+/g, '|')))
+				if (hasClass(n, ed.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|')))
 					n.innerHTML = t._getDateTime(new Date(), tinyMCE.getParam("template_mdate_format", ed.getLang("template.mdate_format")));
 
 				// Replace selection
-				if (hasClass(n, ed.getParam('template_selected_content_classes', '').replace(/\s+/g, '|')))
+				if (hasClass(n, ed.getParam('template_selected_content_classes', 'selcontent').replace(/\s+/g, '|')))
 					n.innerHTML = sel;
 			});
 
