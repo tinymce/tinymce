@@ -109,7 +109,8 @@
 				apply_source_formatting : 1,
 				directionality : 'ltr',
 				forced_root_block : 'p',
-				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol,-ul,-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]'
+				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol,-ul,-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]',
+				hidden_input : 1
 			}, s);
 
 			// Setup URIs
@@ -129,6 +130,10 @@
 		 */
 		render : function() {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
+
+			// Add hidden input for non form elements
+			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input)
+				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			t.windowManager = new tinymce.WindowManager(t);
 
@@ -1004,7 +1009,7 @@
 		 * @return {String} HTML string that got set into the textarea/div.
 		 */
 		save : function(o) {
-			var t = this, e = DOM.get(t.id), h;
+			var t = this, e = DOM.get(t.id), h, f;
 
 			o = o || {};
 			o.save = true;
@@ -1017,10 +1022,14 @@
 
 			h = o.content;
 
-			if (/TEXTAREA|INPUT/.test(e.nodeName))
-				e.value = h;
-			else
+			if (!/TEXTAREA|INPUT/i.test(e.nodeName)) {
 				e.innerHTML = h;
+
+				// Update hidden form element
+				if ((f = DOM.getParent(t.id, 'form')) && (e = f.elements[t.id]))
+					e.value = h;
+			} else
+				e.value = h;
 
 			o.element = e = null;
 
@@ -1316,7 +1325,7 @@
 
 					case 'submit':
 					case 'reset':
-						Event.add(DOM.get(t.id).form, k, eventHandler);
+						Event.add(DOM.get(t.id).form || DOM.getParent(t.id, 'form'), k, eventHandler);
 						break;
 
 					default:

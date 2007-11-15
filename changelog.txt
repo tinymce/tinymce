@@ -2,6 +2,8 @@ Version 3.0b1 (2007-11-xx)
 	Added new addQueryValueHandler method to the tinymce.Editor class.
 	Renamed the addCommandQueryState method in the tinymce.Editor class to addQueryStateHandler.
 	Removed the createDOM method from the window manager and replace it with a createInstance method.
+	Fixed bug where the submit trigger wasn't executed when divs where converted into editor instances.
+	Fixed bug where div elements that got converted into editors didn't get a hidden input element generated for them.
 	Fixed bug where the the media_use_script option for the media plugin wasn't working correctly.
 	Fixed bug where the font size and font family listboxes wasn't updated correctly on Safari.
 	Fixed bug where the font sizes behaved incorrectly after a cleanup on Safari.

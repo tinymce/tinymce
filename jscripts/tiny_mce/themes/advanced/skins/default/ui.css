@@ -1,7 +1,7 @@
 /* Reset */
 .defaultSkin table, .defaultSkin tbody, .defaultSkin a, .defaultSkin img, .defaultSkin tr, .defaultSkin div, .defaultSkin td, .defaultSkin iframe, .defaultSkin span, .defaultSkin * {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000; vertical-align:baseline}
+.defaultSkin a:hover, .defaultSkin a:link, .defaultSkin a:visited, .defaultSkin a:active {text-decoration:none; font-weight:normal; cursor:default; color:#000}
 .defaultSkin table td {vertical-align:middle}
-.defaultSkin a:hover {text-decoration:none; font-weight:normal; cursor:default; color:#000}
 
 /* Containers */
 .defaultSkin {position:relative}
