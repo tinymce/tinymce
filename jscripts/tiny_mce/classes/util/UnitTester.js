@@ -94,9 +94,18 @@
 				return;
 			}
 
-			if (window.KeyEvent) {
-				ev = document.createEvent('KeyEvents');
-				ev.initKeyEvent(na, true, true, window, false, false, false, false, o.keyCode, o.charCode);
+			if (document.createEvent) {
+				try {
+					// Fails in Safari
+					ev = document.createEvent('KeyEvents');
+					ev.initKeyEvent(na, true, true, window, false, false, false, false, o.keyCode, o.charCode);
+				} catch (ex) {
+					ev = document.createEvent('Events');
+					ev.initEvent(na, true, true);
+
+					ev.keyCode = o.keyCode;
+					ev.charCode = o.charCode;
+				}
 			} else {
 				ev = document.createEvent('UIEvents');
 

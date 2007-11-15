@@ -6514,7 +6514,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							el = DOM.get(v);
 
 						if (el) {
-							window.setTimeout(function() {el.focus();}, 10);
+							window.setTimeout(function() {window.focus();el.focus();}, 10);
 							return Event.cancel(e);
 						}
 					}
