@@ -6496,13 +6496,25 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				};
 
 				function tabHandler(ed, e) {
-					if (e.keyCode === 9) {
-						e = DOM.get(ed.getParam('tab_to'));
+					var v, f, el;
 
-						if (e) {
-							//window.focus();
-							//console.debug('x');
-							window.setTimeout(function() {e.focus();}, 10);
+					if (e.keyCode === 9) {
+						v = ed.getParam('tab_focus');
+
+						if (v == ':next') {
+							f = DOM.getParent(ed.id, 'form');
+
+							if (f) {
+								each(f.elements, function(e, i) {
+									if (e.id == ed.id)
+										el = f.elements[i + 1];
+								});
+							}
+						} else
+							el = DOM.get(v);
+
+						if (el) {
+							window.setTimeout(function() {el.focus();}, 10);
 							return Event.cancel(e);
 						}
 					}
