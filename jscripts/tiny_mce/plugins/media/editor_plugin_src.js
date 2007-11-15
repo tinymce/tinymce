@@ -15,6 +15,10 @@
 			t.editor = ed;
 			t.url = url;
 
+			function isMediaElm(n) {
+				return /^(mceItemFlash|mceItemShockWave|mceItemWindowsMedia|mceItemQuickTime|mceItemRealMedia)$/.test(n.className);
+			};
+
 			// Register commands
 			ed.addCommand('mceMedia', function() {
 				ed.windowManager.open({
@@ -29,6 +33,10 @@
 
 			// Register buttons
 			ed.addButton('media', {title : 'media.desc', cmd : 'mceMedia'});
+
+			ed.onNodeChange.add(function(ed, cm, n) {
+				cm.setActive('media', n.nodeName == 'IMG' && isMediaElm(n));
+			});
 
 			ed.onInit.add(function() {
 				var lo = {
@@ -93,7 +101,7 @@
 					each(dom.select('IMG', o.node), function(n) {
 						var p;
 
-						if (/^(mceItemFlash|mceItemShockWave|mceItemWindowsMedia|mceItemQuickTime|mceItemRealMedia)$/.test(n.className)) {
+						if (isMediaElm(n)) {
 							p = t._parse(n.title);
 							dom.setAttrib(n, 'width', dom.getAttrib(n, 'width', p.width || 100));
 							dom.setAttrib(n, 'height', dom.getAttrib(n, 'height', p.height || 100));
@@ -106,7 +114,7 @@
 						var ci, cb, mt;
 
 						if (ed.getParam('media_use_script')) {
-							if (/^(mceItemFlash|mceItemShockWave|mceItemWindowsMedia|mceItemQuickTime|mceItemRealMedia)$/.test(n.className))
+							if (isMediaElm(n.className))
 								n.className = n.className.replace(/mceItem/g, 'mceTemp');
 
 							return;

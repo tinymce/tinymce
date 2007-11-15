@@ -13,6 +13,8 @@ Version 3.0b1 (2007-11-xx)
 	Fixed bug where the font size and font family listboxes wasn't updated correctly on Safari.
 	Fixed bug where the height of the fieldset in default image dialog for the advanced theme was to small.
 	Fixed bug where the font sizes behaved incorrectly after a cleanup on Safari.
+	Fixed bug where formatblock didn't work correctly in Safari on some elements.
+	Fixed so the media icon gets active when a media element is selected.
 Version 3.0a3 (2007-11-13)
 	Added new experimental jQuery and Prototype framework adapters to the development package.
 	Added new translation.html file for the development package. Helps with the internationalization of TinyMCE.

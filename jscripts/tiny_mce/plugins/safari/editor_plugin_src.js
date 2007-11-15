@@ -21,8 +21,18 @@
 			t.namedFontSizes = ['xx-small', 'x-small','small','medium','large','x-large', 'xx-large'];
 
 			// Safari will crash if the build in createlink command is used
-			ed.addCommand('CreateLink', function(u, v) {
+/*			ed.addCommand('CreateLink', function(u, v) {
 				ed.execCommand("mceInsertContent", false, '<a href="' + dom.encode(v) + '">' + ed.selection.getContent() + '</a>');
+			});*/
+
+			// Workaround for FormatBlock bug, http://bugs.webkit.org/show_bug.cgi?id=16004
+			ed.addCommand('FormatBlock', function(u, v) {
+				var dom = ed.dom, e = dom.getParent(ed.selection.getNode(), dom.isBlock);
+
+				if (e)
+					dom.replace(dom.create(v), e, 1);
+				else
+					ed.getDoc().execCommand("FormatBlock", false, v);
 			});
 
 			// Safari returns incorrect values
