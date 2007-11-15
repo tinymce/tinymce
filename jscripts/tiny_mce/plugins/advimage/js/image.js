@@ -35,8 +35,12 @@ var ImageDialog = {
 			nl.usemap.value = dom.getAttrib(n, 'usemap');
 			nl.longdesc.value = dom.getAttrib(n, 'longdesc');
 			nl.insert.value = ed.getLang('update');
-			nl.onmouseoversrc.value = dom.getAttrib(n, 'onmouseover').replace(/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/, '$1');
-			nl.onmouseoutsrc.value = dom.getAttrib(n, 'onmouseout').replace(/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/, '$1');
+
+			if (/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/.test(dom.getAttrib(n, 'onmouseover')))
+				nl.onmouseoversrc.value = dom.getAttrib(n, 'onmouseover').replace(/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/, '$1');
+
+			if (/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/.test(dom.getAttrib(n, 'onmouseout')))
+				nl.onmouseoutsrc.value = dom.getAttrib(n, 'onmouseout').replace(/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/, '$1');
 		}
 
 		// Setup browse button
@@ -87,7 +91,7 @@ var ImageDialog = {
 	},
 
 	insertAndClose : function() {
-		var ed = tinyMCEPopup.editor, f = document.forms[0], nl = f.elements, v, args = {};
+		var ed = tinyMCEPopup.editor, f = document.forms[0], nl = f.elements, v, args = {}, el;
 
 		// Fixes crash in Safari
 		if (tinymce.isWebKit)
@@ -114,12 +118,25 @@ var ImageDialog = {
 			dir : nl.dir.value,
 			lang : nl.lang.value,
 			usemap : nl.usemap.value,
-			longdesc : nl.longdesc.value,
-			onmouseover : nl.onmouseoversrc.value ? "this.src='" + nl.onmouseoversrc.value + "';" : '',
-			onmouseout : nl.onmouseoversrc.value ? "this.src='" + nl.onmouseoutsrc.value + "';" : ''
+			longdesc : nl.longdesc.value
 		});
 
-		ed.execCommand('mceInsertContent', false, ed.dom.createHTML('img', args));
+		if (nl.onmouseoversrc.value)
+			args.onmouseover = "this.src='" + nl.onmouseoversrc.value + "';";
+
+		if (nl.onmouseoutsrc.value)
+			args.onmouseout = "this.src='" + nl.onmouseoutsrc.value + "';";
+
+		el = ed.selection.getNode();
+
+		if (el && el.nodeName == 'IMG') {
+			ed.dom.setAttribs(el, args);
+		} else {
+			ed.execCommand('mceInsertContent', false, '<img id="__mce_tmp" src="javascript:;" />');
+			ed.dom.setAttribs('__mce_tmp', args);
+			ed.dom.setAttrib('__mce_tmp', 'id', '');
+		}
+
 		tinyMCEPopup.close();
 	},
 

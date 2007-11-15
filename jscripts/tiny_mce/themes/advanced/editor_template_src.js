@@ -521,10 +521,10 @@
 
 			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar', align : s.theme_advanced_toolbar_align});
 
-			if (!ed.getParam("accessibility_focus"))
-				h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("toolbar_focus")}, '<!-- IE -->'));
-			else
-				h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("toolbar_focus"), onfoucs : 'tinyMCE.getInstanceById(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
+			if (!ed.getParam('accessibility_focus'))
+				h.push(DOM.createHTML('a', {href : '#', onfocus : 'tinyMCE.get(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
+
+			h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("toolbar_focus")}, '<!-- IE -->'));
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
@@ -913,7 +913,7 @@
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/image.htm',
 				width : 355 + Number(ed.getLang('advanced.image_delta_width', 0)),
-				height : 265 + Number(ed.getLang('advanced.image_delta_height', 0)) + (tinymce.isIE ? 25 : 0),
+				height : 270 + Number(ed.getLang('advanced.image_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url

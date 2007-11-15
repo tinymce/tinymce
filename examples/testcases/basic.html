@@ -373,6 +373,22 @@ var unitTester = new tinymce.util.UnitTester('log', {
 		}
 	});
 
+
+	unitTester.add('internals', {
+		forcedBlocks : function() {
+			var t = this;
+
+			editor.setContent('test <strong>test2</strong> <em>test3</em>');
+			t.eq(editor.getContent(), '<p>test <strong>test2</strong> <em>test3</em></p>');
+
+			editor.setContent('<p>test</p>test <strong>test2</strong> <em>test3</em>');
+			t.eq(editor.getContent(), '<p>test</p><p>test <strong>test2</strong> <em>test3</em></p>');
+
+			editor.setContent('<p>test 1</p>test <strong>test2</strong> <em>test3</em><p>test 2</p>test');
+			t.eq(editor.getContent(), '<p>test 1</p><p>test <strong>test2</strong> <em>test3</em></p><p>test 2</p><p>test</p>');
+		}
+	});
+
 	unitTester.add('urls', {
 		relativeURLs : function() {
 			var t = this;
@@ -439,6 +455,7 @@ tinyMCE.init({
 	add_unload_trigger : false,
 	plugins : 'safari',
 	theme_advanced_styles : 'test1=test1;test2=test2',
+	apply_source_formatting : 0,
 	init_instance_callback : function(ed) {
 		editor = ed;
 		// Don't stress the ticking bomb called Safari!!

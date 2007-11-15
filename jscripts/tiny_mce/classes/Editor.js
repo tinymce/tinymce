@@ -95,7 +95,7 @@
 				table_inline_editing : 0,
 				object_resizing : 1,
 				cleanup : 1,
-				accessibility_focus : 1,
+				accessibility_focus : 0,
 				custom_shortcuts : 1,
 				custom_undo_redo_keyboard_shortcuts : 1,
 				custom_undo_redo_restore_selection : 1,
@@ -131,8 +131,8 @@
 		render : function() {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
-			// Add hidden input for non form elements
-			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input)
+			// Add hidden input for non input elements inside form elements
+			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			t.windowManager = new tinymce.WindowManager(t);
@@ -1375,6 +1375,34 @@
 			t.onReset.add(function() {
 				t.setContent(t.startContent, {format : 'raw'});
 			});
+
+			if (t.getParam('tab_focus')) {
+				function tabCancel(ed, e) {
+					if (e.keyCode === 9)
+						return Event.cancel(e);
+				};
+
+				function tabHandler(ed, e) {
+					if (e.keyCode === 9) {
+						e = DOM.get(ed.getParam('tab_to'));
+
+						if (e) {
+							//window.focus();
+							//console.debug('x');
+							window.setTimeout(function() {e.focus();}, 10);
+							return Event.cancel(e);
+						}
+					}
+				};
+
+				t.onKeyUp.add(tabCancel);
+
+				if (isGecko) {
+					t.onKeyPress.add(tabHandler);
+					t.onKeyDown.add(tabCancel);
+				} else
+					t.onKeyDown.add(tabHandler);
+			}
 
 			// Add shortcuts
 			if (s.custom_shortcuts) {

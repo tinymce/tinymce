@@ -129,17 +129,17 @@
 
 		forceRoots : function() {
 			var t = this, ed = t.editor, b = ed.getBody(), d = ed.getDoc(), se = ed.selection, s = se.getSel(), r = se.getRng(), si = -2, ei, so, eo, tr, c = -0xFFFFFF;
-			var ne = b.firstChild, nx, bl, bp, sp, le, nl = b.childNodes, i;
+			var nx, bl, bp, sp, le, nl = b.childNodes, i;
 
 			// Wrap non blocks into blocks
 			for (i = nl.length - 1; i >= 0; i--) {
 				nx = nl[i];
 
 				// Is text or non block element
-				if (ne.nodeType == 3 || !t.dom.isBlock(ne)) {
+				if (nx.nodeType == 3 || !t.dom.isBlock(nx)) {
 					if (!bl) {
 						// Create new block but ignore whitespace
-						if (ne.nodeType != 3 || /[^\s]/g.test(ne.nodeValue)) {
+						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {
 							// Store selection
 							if (si == -2 && r) {
 								if (!isIE) {
@@ -167,11 +167,15 @@
 							}
 
 							bl = ed.dom.create(t.settings.forced_root_block);
-							bl.appendChild(ne.cloneNode(1));
-							b.replaceChild(bl, ne);
+							bl.appendChild(nx.cloneNode(1));
+							b.replaceChild(bl, nx);
 						}
-					} else
-						bl.appendChild(ne);
+					} else {
+						if (bl.hasChildNodes())
+							bl.insertBefore(nx, bl.firstChild);
+						else
+							bl.appendChild(nx);
+					}
 				} else
 					bl = null; // Time to create new block
 			}

@@ -1282,8 +1282,12 @@ tinymce.create('static tinymce.util.XHR', {
 
 				switch (n) {
 					case "style":
-						if (s.keep_values)
-							e.setAttribute('mce_style', v, 2);
+						if (s.keep_values) {
+							if (v)
+								e.setAttribute('mce_style', v, 2);
+							else
+								e.removeAttribute('mce_style', 2);
+						}
 
 						e.style.cssText = v;
 						break;
@@ -1304,7 +1308,7 @@ tinymce.create('static tinymce.util.XHR', {
 						break;
 				}
 
-				if (v !== null && v.length !== 0)
+				if (is(v) && v !== null && v.length !== 0)
 					e.setAttribute(n, '' + v, 2);
 				else
 					e.removeAttribute(n, 2);
@@ -1542,7 +1546,7 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-		addClass : function(e, c, b) {
+		addClass : function(e, c) {
 			return this.run(e, function(e) {
 				var o;
 
@@ -1554,7 +1558,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 				o = this.removeClass(e, c);
 
-				return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
+				return e.className = (o != '' ? (o + ' ') : '') + c;
 			});
 		},
 
@@ -5428,7 +5432,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				table_inline_editing : 0,
 				object_resizing : 1,
 				cleanup : 1,
-				accessibility_focus : 1,
+				accessibility_focus : 0,
 				custom_shortcuts : 1,
 				custom_undo_redo_keyboard_shortcuts : 1,
 				custom_undo_redo_restore_selection : 1,
@@ -5457,8 +5461,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		render : function() {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
-			// Add hidden input for non form elements
-			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input)
+			// Add hidden input for non input elements inside form elements
+			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			t.windowManager = new tinymce.WindowManager(t);
@@ -6484,6 +6488,34 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.onReset.add(function() {
 				t.setContent(t.startContent, {format : 'raw'});
 			});
+
+			if (t.getParam('tab_focus')) {
+				function tabCancel(ed, e) {
+					if (e.keyCode === 9)
+						return Event.cancel(e);
+				};
+
+				function tabHandler(ed, e) {
+					if (e.keyCode === 9) {
+						e = DOM.get(ed.getParam('tab_to'));
+
+						if (e) {
+							//window.focus();
+							//console.debug('x');
+							window.setTimeout(function() {e.focus();}, 10);
+							return Event.cancel(e);
+						}
+					}
+				};
+
+				t.onKeyUp.add(tabCancel);
+
+				if (isGecko) {
+					t.onKeyPress.add(tabHandler);
+					t.onKeyDown.add(tabCancel);
+				} else
+					t.onKeyDown.add(tabHandler);
+			}
 
 			// Add shortcuts
 			if (s.custom_shortcuts) {
@@ -7790,17 +7822,17 @@ tinymce.create('tinymce.UndoManager', {
 
 		forceRoots : function() {
 			var t = this, ed = t.editor, b = ed.getBody(), d = ed.getDoc(), se = ed.selection, s = se.getSel(), r = se.getRng(), si = -2, ei, so, eo, tr, c = -0xFFFFFF;
-			var ne = b.firstChild, nx, bl, bp, sp, le, nl = b.childNodes, i;
+			var nx, bl, bp, sp, le, nl = b.childNodes, i;
 
 			// Wrap non blocks into blocks
 			for (i = nl.length - 1; i >= 0; i--) {
 				nx = nl[i];
 
 				// Is text or non block element
-				if (ne.nodeType == 3 || !t.dom.isBlock(ne)) {
+				if (nx.nodeType == 3 || !t.dom.isBlock(nx)) {
 					if (!bl) {
 						// Create new block but ignore whitespace
-						if (ne.nodeType != 3 || /[^\s]/g.test(ne.nodeValue)) {
+						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {
 							// Store selection
 							if (si == -2 && r) {
 								if (!isIE) {
@@ -7828,11 +7860,15 @@ tinymce.create('tinymce.UndoManager', {
 							}
 
 							bl = ed.dom.create(t.settings.forced_root_block);
-							bl.appendChild(ne.cloneNode(1));
-							b.replaceChild(bl, ne);
+							bl.appendChild(nx.cloneNode(1));
+							b.replaceChild(bl, nx);
 						}
-					} else
-						bl.appendChild(ne);
+					} else {
+						if (bl.hasChildNodes())
+							bl.insertBefore(nx, bl.firstChild);
+						else
+							bl.appendChild(nx);
+					}
 				} else
 					bl = null; // Time to create new block
 			}

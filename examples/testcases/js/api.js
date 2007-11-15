@@ -354,9 +354,6 @@
 			DOM.addClass('test', '123');
 			t.eq(DOM.get('test').className, 'abc 123');
 
-			DOM.addClass('test', 'xyz', true);
-			t.eq(DOM.get('test').className, 'xyz abc 123');
-
 			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
 			DOM.addClass(DOM.select('span', 'test'), 'abc');
 			t.eq(DOM.get('test2').className, 'abc');

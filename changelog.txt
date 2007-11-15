@@ -1,11 +1,17 @@
 Version 3.0b1 (2007-11-xx)
+	Added new tab_focus option, that enables you to specify a element id for TinyMCE to focus on when the user pressed the tab key.
 	Added new addQueryValueHandler method to the tinymce.Editor class.
+	Added support form [url=url]title[/url] to the bbcode plugin.
 	Renamed the addCommandQueryState method in the tinymce.Editor class to addQueryStateHandler.
 	Removed the createDOM method from the window manager and replace it with a createInstance method.
+	Removed the add to beginning of class attribute parameter of the DOMUtils.addClass method.
+	Fixed bug with the forced_root_block option, didn't work correctly with multiple inline elements.
+	Fixed bug where image dialogs replaced the current image element with a new one even when it was updated.
 	Fixed bug where the submit trigger wasn't executed when divs where converted into editor instances.
 	Fixed bug where div elements that got converted into editors didn't get a hidden input element generated for them.
 	Fixed bug where the the media_use_script option for the media plugin wasn't working correctly.
 	Fixed bug where the font size and font family listboxes wasn't updated correctly on Safari.
+	Fixed bug where the height of the fieldset in default image dialog for the advanced theme was to small.
 	Fixed bug where the font sizes behaved incorrectly after a cleanup on Safari.
 Version 3.0a3 (2007-11-13)
 	Added new experimental jQuery and Prototype framework adapters to the development package.

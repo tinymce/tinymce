@@ -552,8 +552,12 @@
 
 				switch (n) {
 					case "style":
-						if (s.keep_values)
-							e.setAttribute('mce_style', v, 2);
+						if (s.keep_values) {
+							if (v)
+								e.setAttribute('mce_style', v, 2);
+							else
+								e.removeAttribute('mce_style', 2);
+						}
 
 						e.style.cssText = v;
 						break;
@@ -574,7 +578,7 @@
 						break;
 				}
 
-				if (v !== null && v.length !== 0)
+				if (is(v) && v !== null && v.length !== 0)
 					e.setAttribute(n, '' + v, 2);
 				else
 					e.removeAttribute(n, 2);
@@ -856,10 +860,9 @@
 		 *
 		 * @param {String/Element/Array} Element ID string or DOM element or array with elements or IDs.
 		 * @param {String} c Class name to add to each element.
-		 * @param {bool} b Optional state that tells if the class should be added to the beginning or end of class list.
 		 * @return {String/Array} String with new class value or array with new class values for all elements.
 		 */
-		addClass : function(e, c, b) {
+		addClass : function(e, c) {
 			return this.run(e, function(e) {
 				var o;
 
@@ -871,7 +874,7 @@
 
 				o = this.removeClass(e, c);
 
-				return e.className = b ? c + (o != '' ? (' ' + o) : '') : (o != '' ? (o + ' ') : '') + c;
+				return e.className = (o != '' ? (o + ' ') : '') + c;
 			});
 		},
 

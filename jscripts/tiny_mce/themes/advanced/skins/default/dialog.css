@@ -94,7 +94,7 @@ h3 {font-size:14px;}
 
 /* Dialog specific */
 #link .panel_wrapper, #link div.current {height:125px;}
-#image .panel_wrapper, #image div.current {height:190px;}
+#image .panel_wrapper, #image div.current {height:200px;}
 #plugintable thead {font-weight:bold; background:#DDD;}
 #plugintable, #about #plugintable td {border:1px solid #919B9C;}
 #plugintable {width:96%; margin-top:10px;}

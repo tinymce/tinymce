@@ -52,7 +52,7 @@ var ImageDialog = {
 	},
 
 	update : function() {
-		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, args = {};
+		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, args = {}, el;
 
 		if (!ed.settings.inline_styles) {
 			args = tinymce.extend(args, {
@@ -72,7 +72,16 @@ var ImageDialog = {
 		});
 
 		tinyMCEPopup.restoreSelection();
-		ed.selection.setNode(ed.dom.create('img', args));
+		el = ed.selection.getNode();
+
+		if (el && el.nodeName == 'IMG') {
+			ed.dom.setAttribs(el, args);
+		} else {
+			ed.execCommand('mceInsertContent', false, '<img id="__mce_tmp" src="javascript:;" />');
+			ed.dom.setAttribs('__mce_tmp', args);
+			ed.dom.setAttrib('__mce_tmp', 'id', '');
+		}
+
 		tinyMCEPopup.close();
 	},
 
