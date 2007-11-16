@@ -34,7 +34,7 @@ var TemplateDialog = {
 			h = document.body.clientHeight - 160;
 		} else {
 			w = self.innerWidth - 50;
-			h = self.innerHeight - 160;
+			h = self.innerHeight - 170;
 		}
 
 		e = document.getElementById('templatesrc');
