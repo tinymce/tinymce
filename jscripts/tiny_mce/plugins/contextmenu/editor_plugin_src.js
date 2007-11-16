@@ -35,6 +35,11 @@
 		_getMenu : function(ed) {
 			var t = this, m = t._menu, se = ed.selection, col = se.isCollapsed(), el = se.getNode() || ed.getBody(), am;
 
+			if (m) {
+				m.removeAll();
+				m.destroy();
+			}
+
 			p1 = DOM.getPos(ed.getContentAreaContainer());
 			p2 = DOM.getPos(ed.getContainer());
 
