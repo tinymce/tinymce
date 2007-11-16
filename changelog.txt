@@ -19,6 +19,7 @@ Version 3.0b1 (2007-11-xx)
 	Fixed bug where there was white artifacts in some dialogs due to missing background color.
 	Fixed bug where port was added to all external URLs if the editor was loaded from a custom port.
 	Fixed bug where the context menus got duplicated on Safari 3.0.4 on Mac OS X.
+	Fixed bug where dialogs like paste from word was huge on Firefox.
 	Fixed so the media icon gets active when a media element is selected.
 Version 3.0a3 (2007-11-13)
 	Added new experimental jQuery and Prototype framework adapters to the development package.

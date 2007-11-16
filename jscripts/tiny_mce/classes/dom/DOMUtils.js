@@ -93,8 +93,8 @@
 			return {
 				x : w.pageXOffset || b.scrollLeft,
 				y : w.pageYOffset || b.scrollTop,
-				w : (tinymce.isGecko ? d.documentElement.clientWidth : 0) || w.innerWidth || b.clientWidth,
-				h : (tinymce.isGecko ? d.documentElement.clientHeight : 0) || w.innerHeight || b.clientHeight
+				w : w.innerWidth || b.clientWidth,
+				h : w.innerHeight || b.clientHeight
 			};
 		},
 

@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0a3',
-	releaseDate : '2007-11-13',
+	minorVersion : '0b1',
+	releaseDate : '2007-11-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n;
@@ -917,8 +917,8 @@ tinymce.create('static tinymce.util.XHR', {
 			return {
 				x : w.pageXOffset || b.scrollLeft,
 				y : w.pageYOffset || b.scrollTop,
-				w : (tinymce.isGecko ? d.documentElement.clientWidth : 0) || w.innerWidth || b.clientWidth,
-				h : (tinymce.isGecko ? d.documentElement.clientHeight : 0) || w.innerHeight || b.clientHeight
+				w : w.innerWidth || b.clientWidth,
+				h : w.innerHeight || b.clientHeight
 			};
 		},
 
