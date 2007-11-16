@@ -67,7 +67,7 @@
 				return ed.getDoc().queryCommandValue('FontName');
 			});
 
-			// Safari can't select images, but now we can
+			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
 			ed.onClick.add(function(ed, e) {
 				e = e.target;
 

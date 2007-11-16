@@ -442,11 +442,11 @@ tinymce.create('tinymce.util.Dispatcher', {
 				if (!t.userInfo)
 					t.userInfo = b.userInfo;
 
+				if (!t.port && t.host == 'mce_host')
+					t.port = b.port;
+
 				if (!t.host || t.host == 'mce_host')
 					t.host = b.host;
-
-				if (!t.port)
-					t.port = b.port;
 
 				t.source = '';
 			}

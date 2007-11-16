@@ -853,7 +853,7 @@
 
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/charmap.htm',
-				width : 550 + Number(ed.getLang('advanced.charmap_delta_width', 0)) + (tinymce.isOpera ? 40 : 0),
+				width : 550 + Number(ed.getLang('advanced.charmap_delta_width', 0)),
 				height : 250 + Number(ed.getLang('advanced.charmap_delta_height', 0)),
 				inline : true
 			}, {

@@ -114,7 +114,7 @@
 						var ci, cb, mt;
 
 						if (ed.getParam('media_use_script')) {
-							if (isMediaElm(n.className))
+							if (isMediaElm(n))
 								n.className = n.className.replace(/mceItem/g, 'mceTemp');
 
 							return;
