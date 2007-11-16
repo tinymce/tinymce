@@ -1,4 +1,4 @@
-﻿tinyMCE.addI18n('en.style_dlg',{
+tinyMCE.addI18n('en.style_dlg',{
 title:"Edit CSS Style",
 apply:"Apply",
 text_tab:"Text",

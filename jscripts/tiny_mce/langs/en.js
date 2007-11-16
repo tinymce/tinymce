@@ -1,4 +1,4 @@
-﻿tinyMCE.addI18n({en:{
+tinyMCE.addI18n({en:{
 common:{
 edit_confirm:"Do you want to use the WYSIWYG mode for this textarea?",
 apply:"Apply",
@@ -121,12 +121,12 @@ cell:"Cell"
 autosave:{
 unload_msg:"The changes you made will be lost if you navigate away from this page."
 },
+fullscreen:{
+desc:"Toggle fullscreen mode"
+},
 media:{
 desc:"Insert / edit embedded media",
 edit:"Edit embedded media"
-},
-fullscreen:{
-desc:"Toggle fullscreen mode"
 },
 fullpage:{
 desc:"Document properties"

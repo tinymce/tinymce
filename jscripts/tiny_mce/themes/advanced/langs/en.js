@@ -1,4 +1,4 @@
-﻿tinyMCE.addI18n('en.advanced',{
+tinyMCE.addI18n('en.advanced',{
 style_select:"Styles",
 font_size:"Font size",
 fontdefault:"Font family",

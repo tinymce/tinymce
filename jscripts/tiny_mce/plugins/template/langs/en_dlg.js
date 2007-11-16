@@ -1,4 +1,4 @@
-﻿tinyMCE.addI18n('en.template_dlg',{
+tinyMCE.addI18n('en.template_dlg',{
 title:"Templates",
 label:"Template",
 desc_label:"Description",

@@ -1,4 +1,4 @@
-﻿tinyMCE.addI18n('en.table_dlg',{
+tinyMCE.addI18n('en.table_dlg',{
 general_tab:"General",
 advanced_tab:"Advanced",
 general_props:"General properties",

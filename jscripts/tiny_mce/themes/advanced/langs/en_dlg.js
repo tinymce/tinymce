@@ -1,4 +1,4 @@
-﻿tinyMCE.addI18n('en.advanced_dlg',{
+tinyMCE.addI18n('en.advanced_dlg',{
 about_title:"About TinyMCE",
 about_general:"About",
 about_help:"Help",

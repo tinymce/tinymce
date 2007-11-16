@@ -1,4 +1,4 @@
-﻿tinyMCE.addI18n('en.media_dlg',{
+tinyMCE.addI18n('en.media_dlg',{
 title:"Insert / edit embedded media",
 general:"General",
 advanced:"Advanced",
