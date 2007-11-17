@@ -12,8 +12,8 @@
 			ed.addCommand('mceStyleProps', function() {
 				ed.windowManager.open({
 					file : url + '/props.htm',
-					width : 480 + ed.getLang('styleprops.delta_width', 0),
-					height : 320 + ed.getLang('styleprops.delta_height', 0),
+					width : 480 + ed.getLang('style.delta_width', 0),
+					height : 320 + ed.getLang('style.delta_height', 0),
 					inline : 1
 				}, {
 					plugin_url : url
