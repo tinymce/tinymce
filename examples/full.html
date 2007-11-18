@@ -63,13 +63,13 @@
 
 	<div>
 		<!-- Some integration calls -->
-		<a href="javascript:void(0);" onmousedown="tinymce.EditorManager.editors['elm1'].show();">[Show]</a>
-		<a href="javascript:void(0);" onmousedown="tinymce.EditorManager.editors['elm1'].hide();">[Hide]</a>
-		<a href="javascript:void(0);" onmousedown="tinymce.EditorManager.editors['elm1'].execCommand('Bold');">[Bold]</a>
-		<a href="javascript:void(0);" onmousedown="alert(tinymce.EditorManager.editors['elm1'].getContent());">[Get contents]</a>
-		<a href="javascript:void(0);" onmousedown="alert(tinymce.EditorManager.editors['elm1'].selection.getContent());">[Get selected HTML]</a>
-		<a href="javascript:void(0);" onmousedown="alert(tinymce.EditorManager.editors['elm1'].selection.getContent({format : 'text'}));">[Get selected text]</a>
-		<a href="javascript:void(0);" onmousedown="alert(tinymce.EditorManager.editors['elm1'].selection.getNode().nodeName);">[Get selected element]</a>
+		<a href="javascript:void(0);" onmousedown="tinyMCE.get('elm1').show();">[Show]</a>
+		<a href="javascript:void(0);" onmousedown="tinyMCE.get('elm1').hide();">[Hide]</a>
+		<a href="javascript:void(0);" onmousedown="tinyMCE.get('elm1').execCommand('Bold');">[Bold]</a>
+		<a href="javascript:void(0);" onmousedown="alert(tinyMCE.get('elm1').getContent());">[Get contents]</a>
+		<a href="javascript:void(0);" onmousedown="alert(tinyMCE.get('elm1').selection.getContent());">[Get selected HTML]</a>
+		<a href="javascript:void(0);" onmousedown="alert(tinyMCE.get('elm1').selection.getContent({format : 'text'}));">[Get selected text]</a>
+		<a href="javascript:void(0);" onmousedown="alert(tinyMCE.get('elm1').selection.getNode().nodeName);">[Get selected element]</a>
 		<a href="javascript:void(0);" onmousedown="tinyMCE.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');">[Insert HTML]</a>
 		<a href="javascript:void(0);" onmousedown="tinyMCE.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');">[Replace selection]</a>
 	</div>
