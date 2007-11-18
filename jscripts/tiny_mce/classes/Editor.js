@@ -641,6 +641,9 @@
 		translate : function(s) {
 			var c = this.settings.language, i18n = EditorManager.i18n;
 
+			if (!s)
+				return '';
+
 			return i18n[c + '.' + s] || s.replace(/{\#([^}]+)\}/g, function(a, b) {
 				return i18n[c + '.' + b] || '{#' + b + '}';
 			});
