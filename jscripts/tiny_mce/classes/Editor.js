@@ -171,15 +171,18 @@
 					if (!n)
 						return;
 
-					n._submit = n.submit;
+					// Already patched
+					if (n._mceOldSubmit)
+						return;
+
+					n._mceOldSubmit = n.submit;
 					t.formElement = n;
 
-					// This will not work in WebKit
 					n.submit = function() {
-						if (t.initialized)
-							t.save();
+						// Save all instances
+						EditorManager.triggerSave();
 
-						return this._submit(this);
+						return this._mceOldSubmit(this);
 					};
 
 					n = null;
