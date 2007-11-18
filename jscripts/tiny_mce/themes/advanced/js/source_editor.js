@@ -50,7 +50,7 @@ function resizeInputs() {
 	var el = document.getElementById('htmlSource');
 
 	if (!tinymce.isIE) {
-		 wHeight = self.innerHeight - 60;
+		 wHeight = self.innerHeight - 65;
 		 wWidth = self.innerWidth - 16;
 	} else {
 		 wHeight = document.body.clientHeight - 70;
