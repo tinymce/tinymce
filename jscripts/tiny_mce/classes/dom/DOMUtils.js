@@ -405,8 +405,6 @@
 			return o + ' />';
 		},
 
-		// #if !jquery
-
 		/**
 		 * Removes/deletes the specified element(s) from the DOM.
 		 *
@@ -432,6 +430,8 @@
 				return p.removeChild(n);
 			});
 		},
+
+		// #if !jquery
 
 		/**
 		 * Sets the CSS style value on a HTML element. The name can be a camelcase string
@@ -855,6 +855,8 @@
 			});
 		},
 
+		// #if !jquery
+
 		/**
 		 * Adds a class to the specified element or elements.
 		 *
@@ -877,8 +879,6 @@
 				return e.className = (o != '' ? (o + ' ') : '') + c;
 			});
 		},
-
-		// #if !jquery
 
 		/**
 		 * Removes a class from the specified element or elements.

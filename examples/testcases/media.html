@@ -30,6 +30,27 @@ var unitTester = new tinymce.util.UnitTester('log', {
 
 			editor.setContent('<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b" width="320" height="240" codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"><param name="src" value="test" /><embed type="video/quicktime" width="320" height="240" src="test"></embed></object>');
 			t.eq(editor.getContent(), '<p><object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b" width="320" height="240" codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"><param name="src" value="test" /><embed type="video/quicktime" width="320" height="240" src="test"></embed></object></p>');
+		},
+
+		windowsMedia : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="320" height="240" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="src" value="test" /><embed type="application/x-mplayer2" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="320" height="240" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="src" value="test" /><embed type="application/x-mplayer2" width="320" height="240" src="test"></embed></object></p>');
+		},
+
+		realMedia : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="test" /><embed type="audio/x-pn-realaudio-plugin" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="test" /><embed type="audio/x-pn-realaudio-plugin" width="320" height="240" src="test"></embed></object></p>');
+		},
+
+		shockWave : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:166b1bca-3f9c-11cf-8075-444553540000" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=8,5,1,0"><param name="src" value="test" /><embed type="application/x-director" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:166b1bca-3f9c-11cf-8075-444553540000" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=8,5,1,0"><param name="src" value="test" /><embed type="application/x-director" width="320" height="240" src="test"></embed></object></p>');
 		}
 	});
 
@@ -52,6 +73,36 @@ var unitTester = new tinymce.util.UnitTester('log', {
 
 			editor.setContent('<p><script type="text/javascript">writeQuickTime({"src":"test","width":"320","height":"240"});</'+'script></p>');
 			t.eq(editor.getContent(), '<p><script type="text/javascript">writeQuickTime({"src":"test","width":"320","height":"240"});</'+'script></p>');
+		},
+
+		windowsMedia : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="320" height="240" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="src" value="test" /><embed type="application/x-mplayer2" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeWindowsMedia({"src":"test","width":"320","height":"240"});</' + 'script></p>');
+
+			editor.setContent('<p><script type="text/javascript">writeWindowsMedia({"src":"test","width":"320","height":"240"});</'+'script></p>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeWindowsMedia({"src":"test","width":"320","height":"240"});</'+'script></p>');
+		},
+
+		realMedia : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="test" /><embed type="audio/x-pn-realaudio-plugin" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeRealMedia({"src":"test","width":"320","height":"240"});</' + 'script></p>');
+
+			editor.setContent('<p><script type="text/javascript">writeRealMedia({"src":"test","width":"320","height":"240"});</'+'script></p>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeRealMedia({"src":"test","width":"320","height":"240"});</'+'script></p>');
+		},
+
+		shockWave : function() {
+			var t = this;
+
+			editor.setContent('<object classid="clsid:166b1bca-3f9c-11cf-8075-444553540000" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=8,5,1,0"><param name="src" value="test" /><embed type="application/x-director" width="320" height="240" src="test"></embed></object>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeShockWave({"src":"test","width":"320","height":"240"});</' + 'script></p>');
+
+			editor.setContent('<p><script type="text/javascript">writeShockWave({"src":"test","width":"320","height":"240"});</'+'script></p>');
+			t.eq(editor.getContent(), '<p><script type="text/javascript">writeShockWave({"src":"test","width":"320","height":"240"});</'+'script></p>');
 		}
 	});
 })();

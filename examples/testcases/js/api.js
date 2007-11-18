@@ -351,6 +351,10 @@
 			DOM.addClass('test', 'abc');
 			t.eq(DOM.get('test').className, 'abc');
 
+			DOM.get('test').className = '';
+			t.eq(DOM.addClass('test', 'abc'), 'abc');
+			t.eq(DOM.addClass(null, 'abc'), false);
+
 			DOM.addClass('test', '123');
 			t.eq(DOM.get('test').className, 'abc 123');
 

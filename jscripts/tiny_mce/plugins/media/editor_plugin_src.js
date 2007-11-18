@@ -134,7 +134,7 @@
 								break;
 
 							case 'mceItemWindowsMedia':
-								ci = tinyMCE.getParam('media_wmp6_compatible') ? '05589FA1-C356-11CE-BF01-00AA0055595A' : '6BF52A52-394A-11D3-B153-00C04F79FAA6';
+								ci = ed.getParam('media_wmp6_compatible') ? '05589fa1-c356-11ce-bf01-00aa0055595a' : '6bf52a52-394a-11d3-b153-00c04f79faa6';
 								cb = 'http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701';
 								mt = 'application/x-mplayer2';
 								break;

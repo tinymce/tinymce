@@ -1171,8 +1171,6 @@ tinymce.create('static tinymce.util.XHR', {
 			return o + ' />';
 		},
 
-		// #if !jquery
-
 		remove : function(n, k) {
 			return this.run(n, function(n) {
 				var p;
@@ -1191,6 +1189,8 @@ tinymce.create('static tinymce.util.XHR', {
 				return p.removeChild(n);
 			});
 		},
+
+		// #if !jquery
 
 		setStyle : function(n, na, v) {
 			return this.run(n, function(e) {
@@ -1546,6 +1546,8 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
+		// #if !jquery
+
 		addClass : function(e, c) {
 			return this.run(e, function(e) {
 				var o;
@@ -1561,8 +1563,6 @@ tinymce.create('static tinymce.util.XHR', {
 				return e.className = (o != '' ? (o + ' ') : '') + c;
 			});
 		},
-
-		// #if !jquery
 
 		removeClass : function(e, c) {
 			var t = this, re;
@@ -5688,7 +5688,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Setup body
 			d.open();
-			d.write(s.doctype + '<html><head><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce"></body></html>');
+			d.write(s.doctype + '<html><head><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
 
 			// Setup objects

@@ -39,6 +39,13 @@
 	// Add a "#if !jquery" statement around each core API function you add below
 	var patches = {
 		'tinymce.dom.DOMUtils' : {
+			addClass: function(e, c) {
+				if (is(e, 'array') && is(e[0], 'string'))
+					e = e.join(',#');
+				return (e && $(is(e, 'string') ? '#' + e : e)
+					.addClass(c)
+					.attr('class')) || false;
+			},
 			hasClass : function(n, c) {
 				return $(is(n, 'string') ? '#' + n : n).hasClass(c);
 			},
@@ -78,15 +85,6 @@
 					n.children().appendTo(o);
 				}
 				n.replaceWith(o);
-			},
-			remove: function(n, k) {
-				if (is(n, 'array') && is(n[0], 'string'))
-					n = n.join(',#');
-				n = $(is(n, 'string') ? '#' + n : n);
-				if (k) {
-					n.children().insertBefore(n);
-				}
-				return n.remove();
 			},
 			setStyle: function(n, na, v) {
 				if (is(n, 'array') && is(n[0], 'string'))

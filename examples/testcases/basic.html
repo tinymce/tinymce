@@ -137,6 +137,9 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			editor.setContent('<p><font face="Arial" size="7">test 123</font></p>');
 			c = editor.getContent();
 			t.is(c == '<p><span style="font-family: Arial; font-size: xx-large;">test 123</span></p>' || c == '<p><span style="font-size: xx-large; font-family: Arial;">test 123</span></p>');
+
+			editor.setContent('<span>test 123</span><span style="">test 123</span><span style="font-size: 13px">test 123</span>');
+			t.eq(editor.getContent(), '<p><span>test 123</span><span>test 123</span><span style="font-size: 13px">test 123</span></p>');
 		},
 
 		alignInline : function() {
