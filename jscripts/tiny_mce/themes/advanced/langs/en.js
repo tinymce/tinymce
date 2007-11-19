@@ -58,15 +58,5 @@ clipboard_msg:"Copy/Cut/Paste is not available in Mozilla and Firefox.\r\nDo you
 path:"Path",
 newdocument:"Are you sure you want clear all contents?",
 toolbar_focus:"Jump to tool buttons - Alt+Q, Jump to editor - Alt-Z, Jump to element path - Alt-X",
-more_colors:"More colors",
-advanced_image_delta_width:"",
-advanced_image_delta_height:"",
-advanced_link_delta_width:"",
-advanced_link_delta_height:"",
-advanced_colorpicker_delta_width:"",
-advanced_colorpicker_delta_height:"",
-advanced_charmap_delta_width:"",
-advanced_charmap_delta_height:"",
-advanced_anchor_delta_width:"",
-advanced_anchor_delta_height:""
+more_colors:"More colors"
 });

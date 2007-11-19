@@ -366,11 +366,12 @@ function hasEqualValues(a) {
 }
 
 function applyAction() {
-	var ce = document.getElementById('container');
+	var ce = document.getElementById('container'), ed = tinyMCEPopup.editor;
 
 	generateCSS();
 
-	tinyMCEPopup.execCommand('mceSetElementStyle', false, ce.style.cssText);
+	tinyMCEPopup.restoreSelection();
+	ed.dom.setAttrib(ed.selection.getNode(), 'style', tinyMCEPopup.editor.dom.serializeStyle(tinyMCEPopup.editor.dom.parseStyle(ce.style.cssText)));
 }
 
 function updateAction() {

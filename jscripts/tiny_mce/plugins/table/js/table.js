@@ -57,6 +57,7 @@ function insertTable() {
 
 	// Update table
 	if (action == "update") {
+		tinyMCEPopup.restoreSelection();
 		inst.execCommand('mceBeginUndoLevel');
 
 		dom.setAttrib(elm, 'cellPadding', cellpadding, true);
