@@ -205,7 +205,7 @@
 				});
 
 				// Init when que is loaded
-				sl.loadQue(function() {
+				sl.loadQueue(function() {
 					if (s.ask) {
 						function ask() {
 							t.windowManager.confirm(t.getLang('edit_confirm'), function(s) {
@@ -227,7 +227,7 @@
 			// Load compat2x first
 			if (s.plugins.indexOf('compat2x') != -1) {
 				PluginManager.load('compat2x', 'plugins/compat2x/editor_plugin' + tinymce.suffix + '.js');
-				sl.loadQue(loadScripts);
+				sl.loadQueue(loadScripts);
 			} else
 				loadScripts();
 		},

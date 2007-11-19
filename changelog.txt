@@ -3,6 +3,7 @@ Version 3.0b1 (2007-11-xx)
 	Added new addQueryValueHandler method to the tinymce.Editor class.
 	Added support form [url=url]title[/url] to the bbcode plugin.
 	Renamed the addCommandQueryState method in the tinymce.Editor class to addQueryStateHandler.
+	Renamed loadQue to loadQueue, to correct spelling.
 	Removed the createDOM method from the window manager and replace it with a createInstance method.
 	Removed the add to beginning of class attribute parameter of the DOMUtils.addClass method.
 	Fixed bug with the forced_root_block option, didn't work correctly with multiple inline elements.

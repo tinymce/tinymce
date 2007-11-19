@@ -86,7 +86,7 @@
 					});
 				}
 
-				sl.loadQue();
+				sl.loadQueue();
 			}
 
 			// Legacy call

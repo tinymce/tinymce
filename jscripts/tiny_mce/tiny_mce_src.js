@@ -3723,7 +3723,7 @@ tinymce.create('static tinymce.util.XHR', {
 	tinymce.create('tinymce.dom.ScriptLoader', {
 		ScriptLoader : function(s) {
 			this.settings = s || {};
-			this.que = [];
+			this.queue = [];
 			this.lookup = {};
 		},
 
@@ -3745,9 +3745,9 @@ tinymce.create('static tinymce.util.XHR', {
 			o = {state : 0, url : u, func : cb, scope : s || this};
 
 			if (pr)
-				t.que.unshift(o);
+				t.queue.unshift(o);
 			else
-				t.que.push(o);
+				t.queue.push(o);
 
 			lo[u] = o;
 
@@ -3769,25 +3769,25 @@ tinymce.create('static tinymce.util.XHR', {
 				this.loadScripts([{state : 0, url : u}], cb, s);
 		},
 
-		loadQue : function(cb, s) {
+		loadQueue : function(cb, s) {
 			var t = this;
 
-			if (!t.queLoading) {
-				t.queLoading = 1;
-				t.queCallbacks = [];
+			if (!t.queueLoading) {
+				t.queueLoading = 1;
+				t.queueCallbacks = [];
 
-				t.loadScripts(t.que, function() {
-					t.queLoading = 0;
+				t.loadScripts(t.queue, function() {
+					t.queueLoading = 0;
 
 					if (cb)
 						cb.call(s || t);
 
-					each(t.queCallbacks, function(o) {
+					each(t.queueCallbacks, function(o) {
 						o.func.call(o.scope);
 					});
 				});
 			} else if (cb)
-				t.queCallbacks.push({func : cb, scope : s || t});
+				t.queueCallbacks.push({func : cb, scope : s || t});
 		},
 
 		eval : function(co) {
@@ -3857,10 +3857,10 @@ tinymce.create('static tinymce.util.XHR', {
 			each(sc, function(o) {
 				var u = o.url;
 
-				// Add to que if needed
+				// Add to queue if needed
 				if (!lo[u]) {
 					lo[u] = o;
-					t.que.push(o);
+					t.queue.push(o);
 				} else
 					o = lo[u];
 
@@ -5124,7 +5124,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 					});
 				}
 
-				sl.loadQue();
+				sl.loadQueue();
 			}
 
 			// Legacy call
@@ -5535,7 +5535,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 
 				// Init when que is loaded
-				sl.loadQue(function() {
+				sl.loadQueue(function() {
 					if (s.ask) {
 						function ask() {
 							t.windowManager.confirm(t.getLang('edit_confirm'), function(s) {
@@ -5557,7 +5557,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Load compat2x first
 			if (s.plugins.indexOf('compat2x') != -1) {
 				PluginManager.load('compat2x', 'plugins/compat2x/editor_plugin' + tinymce.suffix + '.js');
-				sl.loadQue(loadScripts);
+				sl.loadQueue(loadScripts);
 			} else
 				loadScripts();
 		},
