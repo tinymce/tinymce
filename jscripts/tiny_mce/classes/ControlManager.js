@@ -339,7 +339,8 @@
 				title : s.title,
 				'class' : id,
 				'menu_class' : ed.getParam('skin') + 'Skin',
-				scope : s.scope
+				scope : s.scope,
+				more_colors_title : ed.getLang('more_colors')
 			}, s);
 
 			id = t.prefix + id;

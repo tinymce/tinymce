@@ -12,7 +12,8 @@ not_set:"-- Not set --",
 clipboard_msg:"Copy/Cut/Paste is not available in Mozilla and Firefox.\nDo you want more information about this issue?",
 clipboard_no_support:"Currently not supported by your browser, use keyboard shortcuts instead.",
 popup_blocked:"Sorry, but we have noticed that your popup-blocker has disabled a window that provides application functionality. You will need to disable popup blocking on this site in order to fully utilize this tool.",
-invalid_data:"Error: Invalid values entered, these are marked in red."
+invalid_data:"Error: Invalid values entered, these are marked in red.",
+more_colors:"More colors"
 },
 contextmenu:{
 align:"Alignment",
