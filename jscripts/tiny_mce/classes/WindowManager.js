@@ -122,9 +122,8 @@
 
 			// Is there a better way to dynamically create
 			// a class with a dynamic number of arguments
-			each (Array.prototype.slice.call(a, 1), function(v, i) {
-				s += (!s ? '' : ',') + 'a[' + (i + 1) + ']';
-			});
+			for (i=1; i<a.length; i++)
+				s += (i > 1 ? ',' : '') + 'a[' + i + ']';
 
 			return eval('(new f(' + s + '))');
 		},

@@ -41,7 +41,7 @@
 			t.counter = 0;
 			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat"; 
 
-			this.settings = tinymce.extend({
+			this.settings = s = tinymce.extend({
 				keep_values : false,
 				hex_colors : 1
 			}, s);

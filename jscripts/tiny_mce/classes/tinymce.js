@@ -410,7 +410,7 @@ var tinymce = {
 					w.removeEventListener('unload', unload, false);
 
 				// Destroy references
-				tinymce = o = li = w = unload = null;
+				o = li = w = unload = null;
 
 				// Run garbarge collector on IE
 				if (window.CollectGarbage)

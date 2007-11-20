@@ -305,7 +305,7 @@ var tinymce = {
 					w.removeEventListener('unload', unload, false);
 
 				// Destroy references
-				tinymce = o = li = w = unload = null;
+				o = li = w = unload = null;
 
 				// Run garbarge collector on IE
 				if (window.CollectGarbage)
@@ -881,7 +881,7 @@ tinymce.create('static tinymce.util.XHR', {
 			t.counter = 0;
 			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat"; 
 
-			this.settings = tinymce.extend({
+			this.settings = s = tinymce.extend({
 				keep_values : false,
 				hex_colors : 1
 			}, s);
@@ -8517,9 +8517,8 @@ tinymce.create('tinymce.UndoManager', {
 
 			// Is there a better way to dynamically create
 			// a class with a dynamic number of arguments
-			each (Array.prototype.slice.call(a, 1), function(v, i) {
-				s += (!s ? '' : ',') + 'a[' + (i + 1) + ']';
-			});
+			for (i=1; i<a.length; i++)
+				s += (i > 1 ? ',' : '') + 'a[' + i + ']';
 
 			return eval('(new f(' + s + '))');
 		},

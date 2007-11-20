@@ -416,8 +416,15 @@
 				dy = Math.min(dy, (vp.h + vp.y) - (sy + sz.h + vp.y));
 
 				// Move if needed
-				if (dx + dy !== 0)
+				if (dx + dy !== 0) {
+					if (sx + dx < 0)
+						dx = 0;
+	
+					if (sy + dy < 0)
+						dy = 0;
+
 					ph.moveTo(sx + dx, sy + dy);
+				}
 
 				// Resize if needed
 				if (dw + dh !== 0)
