@@ -61,7 +61,7 @@
 			DOM.setStyles(t.id + '_menu', {
 				left : p2.x,
 				top : p2.y + e.clientHeight,
-				zIndex : 4000
+				zIndex : 150
 			});
 			e = 0;
 
