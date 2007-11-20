@@ -60,7 +60,8 @@
 			p2 = DOM.getPos(e);
 			DOM.setStyles(t.id + '_menu', {
 				left : p2.x,
-				top : p2.y + e.clientHeight
+				top : p2.y + e.clientHeight,
+				zIndex : 4000
 			});
 			e = 0;
 

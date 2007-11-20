@@ -54,6 +54,7 @@
 			m.settings.vp_offset_x = p2.x;
 			m.settings.vp_offset_y = p2.y;
 			m.showMenu(0, e.clientHeight);
+			DOM.setStyle(e, 'zIndex', 4000);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
 			DOM.addClass(t.id, 'mceSplitButtonSelected');

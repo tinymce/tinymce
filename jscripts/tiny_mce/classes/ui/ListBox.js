@@ -152,6 +152,7 @@
 			});
 
 			m.showMenu(0, e.clientHeight);
+			DOM.setStyle(e, 'zIndex', 4000);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
 			DOM.addClass(t.id, 'mceListBoxSelected');

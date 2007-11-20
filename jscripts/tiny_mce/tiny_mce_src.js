@@ -4583,6 +4583,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			});
 
 			m.showMenu(0, e.clientHeight);
+			DOM.setStyle(e, 'zIndex', 4000);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
 			DOM.addClass(t.id, 'mceListBoxSelected');
@@ -4774,6 +4775,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			m.settings.vp_offset_x = p2.x;
 			m.settings.vp_offset_y = p2.y;
 			m.showMenu(0, e.clientHeight);
+			DOM.setStyle(e, 'zIndex', 4000);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
 			DOM.addClass(t.id, 'mceSplitButtonSelected');
@@ -4890,7 +4892,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			p2 = DOM.getPos(e);
 			DOM.setStyles(t.id + '_menu', {
 				left : p2.x,
-				top : p2.y + e.clientHeight
+				top : p2.y + e.clientHeight,
+				zIndex : 4000
 			});
 			e = 0;
 
