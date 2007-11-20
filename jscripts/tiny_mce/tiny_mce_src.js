@@ -1823,7 +1823,7 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		getClasses : function() {
-			var t = this, cl = [], i, lo = {};
+			var t = this, cl = [], i, lo = {}, f = t.settings.class_filter;
 
 			if (t.classes)
 				return t.classes;
@@ -1842,6 +1842,9 @@ tinymce.create('static tinymce.util.XHR', {
 							if (r.selectorText) {
 								each(r.selectorText.split(','), function(v) {
 									v = v.replace(/^\s*|\s*$|^\s\./g, "");
+
+									if (f && !(v = f(v)))
+										return;
 
 									if (/^\.mce/.test(v) || !/^\.[\w\-]+$/.test(v))
 										return;
@@ -5700,7 +5703,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				keep_values : true,
 				url_converter : t.convertURL,
 				url_converter_scope : t,
-				hex_colors : s.force_hex_style_colors
+				hex_colors : s.force_hex_style_colors,
+				class_filter : s.class_filter
 			});
 
 			t.serializer = new tinymce.dom.Serializer({

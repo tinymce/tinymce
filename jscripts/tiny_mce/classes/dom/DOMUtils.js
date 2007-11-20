@@ -1249,7 +1249,7 @@
 		 * @return {Array} Array with class objects each object has a class field might be other fields in the future.
 		 */
 		getClasses : function() {
-			var t = this, cl = [], i, lo = {};
+			var t = this, cl = [], i, lo = {}, f = t.settings.class_filter;
 
 			if (t.classes)
 				return t.classes;
@@ -1268,6 +1268,9 @@
 							if (r.selectorText) {
 								each(r.selectorText.split(','), function(v) {
 									v = v.replace(/^\s*|\s*$|^\s\./g, "");
+
+									if (f && !(v = f(v)))
+										return;
 
 									if (/^\.mce/.test(v) || !/^\.[\w\-]+$/.test(v))
 										return;

@@ -1,6 +1,7 @@
 Version 3.0b1 (2007-11-xx)
 	Added new tab_focus option, that enables you to specify a element id or that the next element to be focused on tab key down.
 	Added new addQueryValueHandler method to the tinymce.Editor class.
+	Added new class_filter option, this enables you to specify a function that can filter out CSS classes for the styles list box.
 	Added support form [url=url]title[/url] to the bbcode plugin.
 	Renamed the addCommandQueryState method in the tinymce.Editor class to addQueryStateHandler.
 	Renamed loadQue to loadQueue, to correct spelling.
