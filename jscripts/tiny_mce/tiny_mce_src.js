@@ -5455,7 +5455,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}, s);
 
 			// Setup URIs
-			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL);
+			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL, {
+				base_uri : tinyMCE.baseURI
+			});
 			t.baseURI = EditorManager.baseURI;
 
 			// Call setup
@@ -6460,6 +6462,29 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			Event.add(isGecko ? t.getDoc() : t.getWin(), 'focus', function(e) {
 				t.focus(true);
 			});
+
+			// Fixes bug where a specified document_base_uri could result in broken images
+			// This will also fix drag drop of images in Gecko
+			if (tinymce.isGecko) {
+				// Convert all images to absolute URLs
+/*				t.onSetContent.add(function(ed, o) {
+					each(ed.dom.select('img'), function(e) {
+						var v;
+
+						if (v = e.getAttribute('mce_src'))
+							e.src = t.documentBaseURI.toAbsolute(v);
+					})
+				});*/
+
+				Event.add(t.getDoc(), 'DOMNodeInserted', function(e) {
+					var v;
+
+					e = e.target;
+
+					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('mce_src')))
+						e.src = t.documentBaseURI.toAbsolute(v);
+				});
+			}
 
 			// Set various midas options in Gecko
 			if (isGecko) {

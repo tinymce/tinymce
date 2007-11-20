@@ -1114,6 +1114,7 @@
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../dir2/test.htm'), 'test.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../../../../../../test.htm'), '../../test.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('//www.site.com/test.htm'), '../../test.htm');
+			t.eq(new URI('http://www.site.com/').toRelative('dir2/test.htm'), 'dir2/test.htm');
 		},
 
 		absoluteURLs : function() {
