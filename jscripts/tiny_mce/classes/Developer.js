@@ -48,6 +48,11 @@
 						return;
 					}
 
+					if (doc.documentElement.nodeName == 'parsererror') {
+						alert('Parse error!!');
+						return;
+					}
+
 					c = doc.getElementsByTagName('language')[0].getAttribute("code");
 
 					each(doc.getElementsByTagName('group'), function(g) {
