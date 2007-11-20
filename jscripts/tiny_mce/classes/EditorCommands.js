@@ -579,10 +579,11 @@
 			val = ed.settings.forced_root_block ? (val || '<p>') : val;
 			t.mceRemoveNode();
 
+			if (val.indexOf('<') == -1)
+				val = '<' + val + '>';
+
 			if (tinymce.isGecko)
 				val = val.replace(/<(div|blockquote|code|dt|dd|dl|samp)>/gi, '$1');
-			else if (val.indexOf('<') == -1)
-				val = '<' + val + '>';
 
 			ed.getDoc().execCommand('FormatBlock', false, val);
 		},

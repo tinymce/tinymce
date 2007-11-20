@@ -31,7 +31,8 @@ Version 3.0b1 (2007-11-xx)
 	Fixed bug where Opera produced strange border in the word paste dialog.
 	Fixed bug where viewport constraints could move a inlinepopup to a negative x, y position if the viewport was to small.
 	Fixed bug where template plugin was producing an error due to a deprecated API call.
-	Fixed big where drag drop of images failed in Gecko if a document_base_url was specified.
+	Fixed bug where drag drop of images failed in Gecko if a document_base_url was specified.
+	Fixed bug where Firefox 3 failed to apply block formats like H1-H6 it still breaks on DIVs this has been reported to bugzilla.
 	Fixed so the body of the editor area has the mceContentBody class just like the 2.x branch. 
 	Fixed so the media icon gets active when a media element is selected.
 Version 3.0a3 (2007-11-13)
