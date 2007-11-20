@@ -46,7 +46,7 @@
 					if (tinymce.isIE)
 						vp.h -= 1;
 
-					n = DOM.add(document.body, 'div', {id : 'mce_fullscreen_container', style : 'position:absolute;top:0;left:0;width:' + vp.w + 'px;height:' + vp.h + 'px;z-index:4000;'});
+					n = DOM.add(document.body, 'div', {id : 'mce_fullscreen_container', style : 'position:absolute;top:0;left:0;width:' + vp.w + 'px;height:' + vp.h + 'px;z-index:800;'});
 					DOM.add(n, 'div', {id : 'mce_fullscreen'});
 					s.fullscreen_overflow = DOM.getStyle(document.body, 'overflow', 1) || 'auto';
 
