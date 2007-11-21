@@ -321,7 +321,7 @@
 				DOM.add(d.body, 'div', {
 					id : 'mceEventBlocker',
 					'class' : 'mceEventBlocker ' + (t.editor.settings.inlinepopups_skin || 'clearlooks2'),
-					style : {left : vp.x, top : vp.y, width : vp.w, height : vp.h, zIndex : 20001}
+					style : {left : vp.x, top : vp.y, width : vp.w - 20, height : vp.h - 20, zIndex : 20001}
 				});
 				eb = new Element('mceEventBlocker');
 				eb.update();
