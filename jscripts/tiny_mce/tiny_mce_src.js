@@ -2124,7 +2124,7 @@ tinymce.create('static tinymce.util.XHR', {
 			if (window.tinyMCE_GZ && tinyMCE_GZ.loaded)
 				return;
 
-			if (isIE) {
+			if (isIE && document.location.protocol != 'https:') {
 				// Fake DOMContentLoaded on IE
 				document.write('<script id=__ie_onload defer src=\'javascript:""\';><\/script>');
 				DOM.get("__ie_onload").onreadystatechange = function() {
@@ -4297,6 +4297,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 						dm = dm.settings.parent;
 					}
+
+					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				}
 			});
 
@@ -4420,7 +4422,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItem mceMenuItemEnabled'});
 			n = it = DOM.add(n, 'td');
-			n = a = DOM.add(n, 'a', {href : 'javascript:;', onmousedown : 'return false;'});
+			n = a = DOM.add(n, 'a', {href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
 
 			DOM.addClass(it, s['class']);
 //			n = DOM.add(n, 'span', {'class' : 'item'});
@@ -4459,7 +4461,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		renderHTML : function() {
-			var s = this.settings, h = '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" title="' + DOM.encode(s.title) + '">';
+			var s = this.settings, h = '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" onclick="return false;" title="' + DOM.encode(s.title) + '">';
 
 			if (s.image)
 				h += '<img class="icon" src="' + s.image + '" /></a>';
@@ -4550,8 +4552,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var h = '', t = this, s = t.settings;
 
 			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'text', onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open', onmousedown : 'return false;'}, '<span></span>') + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'text', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
 
 			return h;
@@ -4818,10 +4820,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			else
 				h1 = DOM.createHTML('span', {'class' : 'action ' + s['class']});
 
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'action ' + s['class'], onmousedown : 'return false;', title : s.title}, h1) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'action ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 	
 			h1 = DOM.createHTML('span', {'class' : 'open ' + s['class']});
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open ' + s['class'], onmousedown : 'return false;', title : s.title}, h1) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 
 			h += '</tr></tbody>';
 
@@ -4949,10 +4951,11 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (s.more_colors_func) {
 				n = DOM.add(tb, 'tr');
 				n = DOM.add(n, 'td', {colSpan : s.grid_width, 'class' : 'morecolors'});
-				n = DOM.add(n, 'a', {href : 'javascript:;', 'class' : 'morecolors'}, s.more_colors_title);
+				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'morecolors'}, s.more_colors_title);
 
-				Event.add(n, 'mousedown', function() {
+				Event.add(n, 'click', function(e) {
 					s.more_colors_func.call(s.more_colors_scope || this);
+					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				});
 			}
 
@@ -5346,7 +5349,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		});
 
 	// Setup some URLs where the editor API is located and where the document is
-	tinymce.documentBaseURL = document.location.href.replace(/\?.*$/, '').replace(/[\/\\][\w.]+$/, '');
+	tinymce.documentBaseURL = document.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][\w.]+$/, '');
 	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
 		tinymce.documentBaseURL += '/';
 
@@ -5694,12 +5697,17 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
 
 			// Design mode needs to be added here Ctrl+A will fail otherwise
-			t.getDoc().designMode = 'On';
+			if (!isIE)
+				d.designMode = 'On';
 
 			// Setup body
 			d.open();
 			d.write(s.doctype + '<html><head><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
+
+			// IE fired load event twice if designMode is set
+			if (isIE)
+				t.getBody().contentEditable = true;
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {

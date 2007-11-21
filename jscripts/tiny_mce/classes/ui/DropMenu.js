@@ -156,6 +156,8 @@
 
 						dm = dm.settings.parent;
 					}
+
+					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				}
 			});
 
@@ -307,7 +309,7 @@
 
 			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItem mceMenuItemEnabled'});
 			n = it = DOM.add(n, 'td');
-			n = a = DOM.add(n, 'a', {href : 'javascript:;', onmousedown : 'return false;'});
+			n = a = DOM.add(n, 'a', {href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
 
 			DOM.addClass(it, s['class']);
 //			n = DOM.add(n, 'span', {'class' : 'item'});

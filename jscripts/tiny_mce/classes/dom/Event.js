@@ -229,7 +229,7 @@
 			if (window.tinyMCE_GZ && tinyMCE_GZ.loaded)
 				return;
 
-			if (isIE) {
+			if (isIE && document.location.protocol != 'https:') {
 				// Fake DOMContentLoaded on IE
 				document.write('<script id=__ie_onload defer src=\'javascript:""\';><\/script>');
 				DOM.get("__ie_onload").onreadystatechange = function() {

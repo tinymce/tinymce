@@ -369,12 +369,17 @@
 			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
 
 			// Design mode needs to be added here Ctrl+A will fail otherwise
-			t.getDoc().designMode = 'On';
+			if (!isIE)
+				d.designMode = 'On';
 
 			// Setup body
 			d.open();
 			d.write(s.doctype + '<html><head><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
+
+			// IE fired load event twice if designMode is set
+			if (isIE)
+				t.getBody().contentEditable = true;
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {

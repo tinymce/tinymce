@@ -166,7 +166,7 @@
 			DOM.setStyles(id, {top : f.top, left : f.left, width : f.width + dw, height : f.height + dh});
 
 			if (!f.type) {
-				DOM.add(id + '_content', 'iframe', {id : id + '_ifr', src : 'about:blank', frameBorder : 0, style : 'width:10px;height:10px'});
+				DOM.add(id + '_content', 'iframe', {id : id + '_ifr', src : 'javascript:""', frameBorder : 0, style : 'width:10px;height:10px'});
 				DOM.setStyles(id + '_ifr', {width : f.width, height : f.height});
 				DOM.setAttrib(id + '_ifr', 'src', f.url || f.file);
 			} else {
@@ -192,7 +192,12 @@
 						w.oldSize = w.element.getSize();
 
 						vp = DOM.getViewPort();
-						w.element.moveTo(vp.x - po.x, vp.y - po.y);
+
+						// Reduce viewport size to avoid scrollbars
+						vp.w -= 2;
+						vp.h -= 2;
+
+						w.element.moveTo(vp.x, vp.y);
 						w.element.resizeTo(vp.w, vp.h);
 						DOM.setStyles(id + '_ifr', {width : vp.w - w.deltaWidth, height : vp.h - w.deltaHeight});
 						DOM.addClass(id + '_wrapper', 'maximized');
@@ -218,11 +223,13 @@
 				if (n.nodeName == 'A') {
 					switch (n.className) {
 						case 'close':
-							return t.close(null, id);
+							t.close(null, id);
+							return Event.cancel(e);
 
 						case 'button ok':
 						case 'button cancel':
-							return f.button_func(n.className == 'button ok');
+							f.button_func(n.className == 'button ok');
+							return Event.cancel(e);
 					}
 				}
 			});
@@ -459,7 +466,7 @@
 				Event.remove(d, 'mousedown', w.mousedownFunc);
 				Event.remove(d, 'click', w.clickFunc);
 
-				DOM.setAttrib(id + '_ifr', 'src', 'about:blank'); // Prevent leak
+				DOM.setAttrib(id + '_ifr', 'src', 'javascript:""'); // Prevent leak
 				w.element.remove();
 				delete t.windows[id];
 

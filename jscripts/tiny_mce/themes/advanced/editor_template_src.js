@@ -336,6 +336,15 @@
 
 			DOM.insertAfter(p, n);
 
+			Event.add(ed.id + '_path_row', 'click', function(e) {
+				e = e.target;
+
+				if (e.nodeName == 'A') {
+					t._sel(e.href.replace(/^[^#]*#/, ''));
+
+					return Event.cancel(e);
+				}
+			});
 /*
 			if (DOM.get(ed.id + '_path_row')) {
 				Event.add(ed.id + '_tbl', 'mouseover', function(e) {
@@ -557,7 +566,7 @@
 			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, ed.translate('advanced.path') + ': ');
 
 			if (s.theme_advanced_resizing && !tinymce.isOldWebKit) {
-				DOM.add(td, 'a', {id : ed.id + '_resize', href : '#', 'class' : 'resize'});
+				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'resize'});
 
 				if (s.theme_advanced_resizing_use_cookie) {
 					ed.onPostRender.add(function() {
@@ -817,8 +826,8 @@
 					ti = na.title;
 					na = na.name;
 
-					u = "javascript:tinymce.EditorManager.get('" + ed.id + "').theme._sel('" + (de++) + "');";
-					pi = DOM.create('a', {'href' : u, onmousedown : 'return false;', title : ti}, na);
+					//u = "javascript:tinymce.EditorManager.get('" + ed.id + "').theme._sel('" + (de++) + "');";
+					pi = DOM.create('a', {'href' : "#" + (de++) + "", onmousedown : "return false;", title : ti}, na);
 
 					if (p.hasChildNodes()) {
 						p.insertBefore(document.createTextNode(' \u00bb '), p.firstChild);

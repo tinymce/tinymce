@@ -109,10 +109,10 @@
 			else
 				h1 = DOM.createHTML('span', {'class' : 'action ' + s['class']});
 
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'action ' + s['class'], onmousedown : 'return false;', title : s.title}, h1) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'action ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 	
 			h1 = DOM.createHTML('span', {'class' : 'open ' + s['class']});
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open ' + s['class'], onmousedown : 'return false;', title : s.title}, h1) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 
 			h += '</tr></tbody>';
 

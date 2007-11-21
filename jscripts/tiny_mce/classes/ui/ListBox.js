@@ -112,8 +112,8 @@
 			var h = '', t = this, s = t.settings;
 
 			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'text', onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open', onmousedown : 'return false;'}, '<span></span>') + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'text', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
 
 			return h;

@@ -33,6 +33,9 @@ Version 3.0b1 (2007-11-xx)
 	Fixed bug where template plugin was producing an error due to a deprecated API call.
 	Fixed bug where drag drop of images failed in Gecko if a document_base_url was specified.
 	Fixed bug where Firefox 3 failed to apply block formats like H1-H6 it still breaks on DIVs this has been reported to bugzilla.
+	Fixed bug where IE was producing a warning dialog about non secure items when running TinyMCE over HTTPS.
+	Fixed bug where the onbeforeunload event was triggered when menus or dialogs where opened.
+	Fixed bug where the fullscreen mode of the HTML view source box threw an error.
 	Fixed so the body of the editor area has the mceContentBody class just like the 2.x branch. 
 	Fixed so the media icon gets active when a media element is selected.
 Version 3.0a3 (2007-11-13)

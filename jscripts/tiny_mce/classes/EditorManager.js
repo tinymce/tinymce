@@ -354,7 +354,7 @@
 	});
 
 	// Setup some URLs where the editor API is located and where the document is
-	tinymce.documentBaseURL = document.location.href.replace(/\?.*$/, '').replace(/[\/\\][\w.]+$/, '');
+	tinymce.documentBaseURL = document.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][\w.]+$/, '');
 	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
 		tinymce.documentBaseURL += '/';
 
