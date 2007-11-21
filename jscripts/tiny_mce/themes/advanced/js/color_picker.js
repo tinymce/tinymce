@@ -78,6 +78,8 @@ function init() {
 function insertAction() {
 	var color = document.getElementById("color").value, f = tinyMCEPopup.getWindowArg('func');
 
+	tinyMCEPopup.restoreSelection();
+
 	if (f)
 		f(color);
 

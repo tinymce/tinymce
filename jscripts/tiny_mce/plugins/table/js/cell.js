@@ -56,14 +56,14 @@ function init() {
 }
 
 function updateAction() {
-	ed.execCommand('mceBeginUndoLevel');
-	tinyMCEPopup.restoreSelection();
-
+	var el = ed.selection.getNode();
 	var inst = ed;
-	var tdElm = ed.dom.getParent(ed.selection.getNode(), "td,th");
-	var trElm = ed.dom.getParent(ed.selection.getNode(), "tr");
-	var tableElm = ed.dom.getParent(ed.selection.getNode(), "table");
+	var tdElm = ed.dom.getParent(el, "td,th");
+	var trElm = ed.dom.getParent(el, "tr");
+	var tableElm = ed.dom.getParent(el, "table");
 	var formObj = document.forms[0];
+
+	ed.execCommand('mceBeginUndoLevel');
 
 	switch (getSelectValue(formObj, 'action')) {
 		case "cell":

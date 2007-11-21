@@ -55,6 +55,7 @@ tinyMCEPopup = {
 	},
 
 	execCommand : function(cmd, ui, val) {
+		this.restoreSelection();
 		return this.editor.execCommand(cmd, ui, val);
 	},
 
@@ -77,13 +78,13 @@ tinyMCEPopup = {
 	},
 
 	storeSelection : function() {
-		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark(1);
+		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark('simple');
 	},
 
 	restoreSelection : function() {
 		var t = tinyMCEPopup;
 
-		if (!t.isWindow)
+		if (!t.isWindow && tinymce.isIE)
 			t.editor.selection.moveToBookmark(t.editor.windowManager.bookmark);
 	},
 
@@ -95,7 +96,7 @@ tinyMCEPopup = {
 	},
 
 	pickColor : function(e, element_id) {
-		this.editor.execCommand('mceColorPicker', true, {
+		this.execCommand('mceColorPicker', true, {
 			color : document.getElementById(element_id).value,
 			func : function(c) {
 				document.getElementById(element_id).value = c;
@@ -107,6 +108,7 @@ tinyMCEPopup = {
 	},
 
 	openBrowser : function(element_id, type, option) {
+		tinyMCEPopup.restoreSelection();
 		this.editor.execCallback('file_browser_callback', element_id, document.getElementById(element_id).value, type, window);
 	},
 
@@ -122,10 +124,17 @@ tinyMCEPopup = {
 	_restoreSelection : function() {
 		var e = window.event.srcElement;
 
+		if (e.nodeName == 'INPUT' && (e.type == 'submit' || e.type == 'button'))
+			tinyMCEPopup.restoreSelection();
+	},
+
+/*	_restoreSelection : function() {
+		var e = window.event.srcElement;
+
 		// If user focus a non text input or textarea
 		if ((e.nodeName != 'INPUT' && e.nodeName != 'TEXTAREA') || e.type != 'text')
 			tinyMCEPopup.restoreSelection();
-	},
+	},*/
 
 	_onDOMLoaded : function() {
 		var t = this, ti = document.title, bm, h;
@@ -143,7 +152,9 @@ tinyMCEPopup = {
 
 		// Restore selection in IE when focus is placed on a non textarea or input element of the type text
 		if (tinymce.isIE)
-			document.attachEvent('onbeforeactivate', tinyMCEPopup._restoreSelection);
+			document.attachEvent('onmouseup', tinyMCEPopup._restoreSelection);
+
+		t.restoreSelection();
 
 		// Call onInit
 		tinymce.each(t.listeners, function(o) {

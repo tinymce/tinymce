@@ -51,10 +51,7 @@ function insertAction() {
 	var elm = inst.selection.getNode();
 
 	tinyMCEPopup.execCommand("mceBeginUndoLevel");	
-	tinyMCEPopup.restoreSelection();
-
 	setAllAttribs(elm);
-
 	tinyMCEPopup.execCommand("mceEndUndoLevel");
 	tinyMCEPopup.close();
 }

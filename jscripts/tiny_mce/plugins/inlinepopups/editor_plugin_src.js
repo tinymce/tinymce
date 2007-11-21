@@ -34,22 +34,6 @@
 
 			t.parent(ed);
 			t.zIndex = 1000;
-
-			if (tinymce.isIE) {
-				ed.onPreInit.add(function() {
-					Event.add(ed.getDoc(), 'beforedeactivate', function(e) {
-						t.bookmark = ed.selection.getBookmark();
-					});
-				});
-
-				ed.onBeforeExecCommand.add(function() {
-					ed.selection.moveToBookmark(t.bookmark);
-				});
-
-				ed.onExecCommand.add(function() {
-					t.bookmark = ed.selection.getBookmark(1);
-				});
-			}
 		},
 
 		open : function(f, p) {
@@ -62,6 +46,7 @@
 			if (!f.inline)
 				return t.parent(f, p);
 
+			t.bookmark = ed.selection.getBookmark('simple');
 			id = DOM.uniqueId();
 			vp = DOM.getViewPort();
 			f.width = parseInt(f.width || 320);

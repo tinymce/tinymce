@@ -377,7 +377,7 @@
 			d.write(s.doctype + '<html><head><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
 
-			// IE fired load event twice if designMode is set
+			// IE needs to use contentEditable or it will display non secure items for HTTPS
 			if (isIE)
 				t.getBody().contentEditable = true;
 

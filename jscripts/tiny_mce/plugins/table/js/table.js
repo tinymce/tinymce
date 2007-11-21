@@ -14,7 +14,6 @@ function insertTable() {
 		return false;
 	}
 
-	tinyMCEPopup.restoreSelection();
 	elm = dom.getParent(inst.selection.getNode(), 'table');
 
 	// Get form data
@@ -57,7 +56,6 @@ function insertTable() {
 
 	// Update table
 	if (action == "update") {
-		tinyMCEPopup.restoreSelection();
 		inst.execCommand('mceBeginUndoLevel');
 
 		dom.setAttrib(elm, 'cellPadding', cellpadding, true);

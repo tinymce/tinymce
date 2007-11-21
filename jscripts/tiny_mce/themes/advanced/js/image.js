@@ -71,7 +71,6 @@ var ImageDialog = {
 			height : f.height.value
 		});
 
-		tinyMCEPopup.restoreSelection();
 		el = ed.selection.getNode();
 
 		if (el && el.nodeName == 'IMG') {

@@ -36,6 +36,8 @@ Version 3.0b1 (2007-11-xx)
 	Fixed bug where IE was producing a warning dialog about non secure items when running TinyMCE over HTTPS.
 	Fixed bug where the onbeforeunload event was triggered when menus or dialogs where opened.
 	Fixed bug where the fullscreen mode of the HTML view source box threw an error.
+	Fixed bug where the mceFocus command didn't work correctly.
+	Fixed bug where the selection could get lost in IE using inlinepopups.
 	Fixed so the body of the editor area has the mceContentBody class just like the 2.x branch. 
 	Fixed so the media icon gets active when a media element is selected.
 Version 3.0a3 (2007-11-13)

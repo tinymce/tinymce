@@ -252,7 +252,7 @@
 			// Manager commands
 			switch (c) {
 				case "mceFocus":
-					ed.getWin.focus();
+					ed.focus();
 					return true;
 
 				case "mceAddEditor":

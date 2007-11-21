@@ -47,15 +47,13 @@ function init() {
 
 function updateAction() {
 	var inst = tinyMCEPopup.editor;
-
-	inst.execCommand('mceBeginUndoLevel');
-	tinyMCEPopup.restoreSelection();
-
 	var dom = inst.dom;
 	var trElm = dom.getParent(inst.selection.getNode(), "tr");
 	var tableElm = dom.getParent(inst.selection.getNode(), "table");
 	var formObj = document.forms[0];
 	var action = getSelectValue(formObj, 'action');
+
+	inst.execCommand('mceBeginUndoLevel');
 
 	switch (action) {
 		case "row":
