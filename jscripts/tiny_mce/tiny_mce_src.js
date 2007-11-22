@@ -18,6 +18,15 @@ var tinymce = {
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
 //		t.isGecko3 = t.isGecko && /(Firefox|Minefield)\/[3-9]/.test(ua);
 		t.isMac = ua.indexOf('Mac') != -1;
+
+		// TinyMCE .NET webcontrol might be setting the values for TinyMCE
+		if (window.tinyMCEPreInit) {
+			t.suffix = tinyMCEPreInit.suffix;
+			t.baseURL = tinyMCEPreInit.base;
+			return;
+		}
+
+		// Get suffix and base
 		t.suffix = '';
 
 		function getBase(n) {
@@ -5109,7 +5118,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
 				// Load theme
-				if (s.theme)
+				if (s.theme && s.theme.charAt(0) != '-')
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				// Load plugins
@@ -5477,12 +5486,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			t.windowManager = new tinymce.WindowManager(t);
 
-			// Setup popup CSS path(s)
-			s.popup_css = t.baseURI.toAbsolute(s.popup_css || "themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
-
-			if (s.popup_css_add)
-				s.popup_css += ',' + s.popup_css_add;
-
 			if (s.encoding == 'xml') {
 				t.onGetContent.add(function(ed, o) {
 					if (o.get)
@@ -5532,7 +5535,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Load scripts
 			function loadScripts() {
 				sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
-				ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
+
+				if (s.theme.charAt(0) != '-')
+					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(s.plugins.split(','), function(p) {
 					if (p && p.charAt(0) != '-') {
@@ -5578,6 +5583,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			EditorManager.add(t);
 
 			// Create theme
+			s.theme = s.theme.replace(/-/, '');
 			o = ThemeManager.get(s.theme);
 			t.theme = new o();
 
@@ -5597,6 +5603,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						po.init(t, u);
 				}
 			});
+
+			// Setup popup CSS path(s)
+			s.popup_css = t.baseURI.toAbsolute(s.popup_css || "themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
+
+			if (s.popup_css_add)
+				s.popup_css += ',' + s.popup_css_add;
 
 			// Setup control factory
 			t.controlManager = new tinymce.ControlManager(t);

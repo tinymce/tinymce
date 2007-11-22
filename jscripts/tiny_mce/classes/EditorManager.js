@@ -63,7 +63,7 @@
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
 				// Load theme
-				if (s.theme)
+				if (s.theme && s.theme.charAt(0) != '-')
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				// Load plugins

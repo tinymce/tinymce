@@ -139,12 +139,6 @@
 
 			t.windowManager = new tinymce.WindowManager(t);
 
-			// Setup popup CSS path(s)
-			s.popup_css = t.baseURI.toAbsolute(s.popup_css || "themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
-
-			if (s.popup_css_add)
-				s.popup_css += ',' + s.popup_css_add;
-
 			if (s.encoding == 'xml') {
 				t.onGetContent.add(function(ed, o) {
 					if (o.get)
@@ -194,7 +188,9 @@
 			// Load scripts
 			function loadScripts() {
 				sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
-				ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
+
+				if (s.theme.charAt(0) != '-')
+					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(s.plugins.split(','), function(p) {
 					if (p && p.charAt(0) != '-') {
@@ -245,6 +241,7 @@
 			EditorManager.add(t);
 
 			// Create theme
+			s.theme = s.theme.replace(/-/, '');
 			o = ThemeManager.get(s.theme);
 			t.theme = new o();
 
@@ -264,6 +261,12 @@
 						po.init(t, u);
 				}
 			});
+
+			// Setup popup CSS path(s)
+			s.popup_css = t.baseURI.toAbsolute(s.popup_css || "themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
+
+			if (s.popup_css_add)
+				s.popup_css += ',' + s.popup_css_add;
 
 			// Setup control factory
 			t.controlManager = new tinymce.ControlManager(t);

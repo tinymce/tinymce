@@ -34,6 +34,15 @@ var tinymce = {
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
 //		t.isGecko3 = t.isGecko && /(Firefox|Minefield)\/[3-9]/.test(ua);
 		t.isMac = ua.indexOf('Mac') != -1;
+
+		// TinyMCE .NET webcontrol might be setting the values for TinyMCE
+		if (window.tinyMCEPreInit) {
+			t.suffix = tinyMCEPreInit.suffix;
+			t.baseURL = tinyMCEPreInit.base;
+			return;
+		}
+
+		// Get suffix and base
 		t.suffix = '';
 
 		function getBase(n) {

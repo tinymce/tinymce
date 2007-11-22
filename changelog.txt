@@ -1,3 +1,6 @@
+Version 3.0b2 (2007-11-xx)
+	Fixed support for loading themes from external URLs.
+	Moved spellchecker JS files into the development package.
 Version 3.0b1 (2007-11-21)
 	Added new tab_focus option, that enables you to specify a element id or that the next element to be focused on tab key down.
 	Added new addQueryValueHandler method to the tinymce.Editor class.
