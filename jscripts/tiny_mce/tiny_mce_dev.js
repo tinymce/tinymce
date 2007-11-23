@@ -10,7 +10,7 @@
  */
 
 (function() {
-	var i, nl = document.getElementsByTagName('script'), base, src, p, li, query = '';
+	var i, nl = document.getElementsByTagName('script'), base, src, p, li, query = '', it;
 
 	for (i=0; i<nl.length; i++) {
 		src = nl[i].src;
