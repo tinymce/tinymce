@@ -52,10 +52,11 @@
 			ed.addButton('pasteword', {title : 'paste.paste_word_desc', cmd : 'mcePasteWord', ui : true});
 			ed.addButton('selectall', {title : 'paste.selectall_desc', cmd : 'mceSelectAll'});
 
-			ed.onInit.add(function() {
-				if (tinymce.isIE && ed.getParam("paste_auto_cleanup_on_paste", false))
-					Event.addEvent(ed.getBody(), "paste", this._handlePasteEvent, this);
-			});
+			if (ed.getParam("paste_auto_cleanup_on_paste", false)) {
+				ed.onPaste.add(function(ed, e) {
+					return t._handlePasteEvent(e)
+				});
+			}
 
 			if (!tinymce.isIE && ed.getParam("paste_auto_cleanup_on_paste", false)) {
 				// Force paste dialog if non IE browser
@@ -84,23 +85,16 @@
 		// Private methods
 
 		_handlePasteEvent : function(e) {
-			switch (e.type) {
-				case "paste":
-					var html = this._clipboardHTML();
-					var r, inst = this.editor;
+			var html = this._clipboardHTML(), ed = this.editor, sel = ed.selection, r;
 
-					// Removes italic, strong etc, the if was needed due to bug #1437114
-					if (inst && (r = inst.getRng()) && r.text.length > 0)
-						this.editor.execCommand('delete');
+			// Removes italic, strong etc, the if was needed due to bug #1437114
+			if (ed && (r = sel.getRng()) && r.text.length > 0)
+				ed.execCommand('delete');
 
-					if (html && html.length > 0)
-						this.editor.execCommand('mcePasteWord', false, html);
+			if (html && html.length > 0)
+				ed.execCommand('mcePasteWord', false, html);
 
-					Event.cancelEvent(e);
-					return false;
-			}
-
-			return true;
+			return Event.cancel(e);
 		},
 
 		_insertText : function(content, bLinebreaks) { 

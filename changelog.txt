@@ -1,5 +1,7 @@
 Version 3.0b2 (2007-11-xx)
 	Fixed support for loading themes from external URLs.
+	Fixed bug with paste plugin using the old event API.
+	Fixed bug where the spellchecker was removing the word when it was ignored.
 	Moved spellchecker JS files into the development package.
 Version 3.0b1 (2007-11-21)
 	Added new tab_focus option, that enables you to specify a element id or that the next element to be focused on tab key down.

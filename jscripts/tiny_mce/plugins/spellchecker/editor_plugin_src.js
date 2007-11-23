@@ -258,7 +258,7 @@
 					m.add({
 						title : 'spellchecker.ignore_word',
 						onclick : function() {
-							dom.remove(e.target);
+							dom.remove(e.target, 1);
 							t._checkDone();
 						}
 					});
