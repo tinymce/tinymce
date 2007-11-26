@@ -5775,9 +5775,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return t.onPostProcess.dispatch(t, o, se);
 			});
 
-			if (s.content_css)
-				t.dom.loadCSS(t.documentBaseURI.toAbsolute(s.content_css));
-
 			t.onPreInit.dispatch(t);
 
 			if (!s.gecko_spellcheck)
@@ -5925,6 +5922,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.execCallback('init_instance_callback', t);
 			t.focus(true);
 			t.nodeChanged({initial : 1});
+
+			// Load specified content CSS last
+			if (s.content_css) {
+				tinymce.each(s.content_css.split(','), function(u) {
+					t.dom.loadCSS(t.documentBaseURI.toAbsolute(u));
+				});
+			}
 
 			// Handle auto focus
 			if (s.auto_focus) {

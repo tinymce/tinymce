@@ -50,7 +50,11 @@
 				html = "";
 				c = ed.getContent();
 				pos = c.indexOf('<body');
-				css = ed.getParam("content_css").split(',');
+				css = ed.getParam("content_css", '').split(',');
+
+				tinymce.map(css, function(u) {
+					return ed.documentBaseURI.toAbsolute(u);
+				});
 
 				if (pos != -1) {
 					pos = c.indexOf('>', pos);
