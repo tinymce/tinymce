@@ -1094,10 +1094,10 @@
 					tp = d.createElement("body");
 					tp.innerHTML = h;
 
-					n = tp.firstChild;
+					n = tp.lastChild;
 					while (n) {
 						t.insertAfter(n.cloneNode(true), e);
-						n = n.nextSibling;
+						n = n.previousSibling;
 					}
 
 					t.remove(e);

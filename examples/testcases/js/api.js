@@ -689,6 +689,10 @@
 			DOM.setOuterHTML('test2', '<div id="test2">123</div>');
 			t.eq(tinymce.trim(DOM.getOuterHTML('test2') || '').toLowerCase(), tinymce.isIE ? '<div id=test2>123</div>' : '<div id="test2">123</div>', null, tinymce.isOldWebKit);
 
+			DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
+			DOM.setOuterHTML('test2', '<div id="test2">123</div><div id="test3">abc</div>');
+			t.eq(tinymce.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><'), tinymce.isIE ? '<div id=test2>123</div><div id=test3>abc</div>' : '<div id="test2">123</div><div id="test3">abc</div>');
+
 			DOM.setHTML('test', '');
 		},
 
