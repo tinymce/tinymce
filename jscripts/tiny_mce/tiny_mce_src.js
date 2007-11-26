@@ -5700,7 +5700,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				frameBorder : '0',
 				style : {
 					width : '100%',
-					height : (o.iframeHeight || h)
+					height : (o.iframeHeight || h) + ((h + '').indexOf('%') == -1 ? (o.deltaHeight || 0) : '')
 				}
 			});
 
