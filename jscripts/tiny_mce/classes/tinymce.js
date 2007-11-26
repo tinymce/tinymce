@@ -23,7 +23,7 @@ var tinymce = {
 	 * Initializes the TinyMCE global namespace this will setup browser detection and figure out where TinyMCE is running from.
 	 */
 	_init : function() {
-		var t = this, ua = navigator.userAgent, i, nl, n;
+		var t = this, ua = navigator.userAgent, i, nl, n, base;
 
 		// Browser checks
 		t.isOpera = window.opera && opera.buildNumber;
@@ -45,12 +45,25 @@ var tinymce = {
 		// Get suffix and base
 		t.suffix = '';
 
+		// If base element found, add that infront of baseURL
+		nl = document.getElementsByTagName('base');
+		for (i=0; i<nl.length; i++) {
+			if (nl[i].href)
+				base = nl[i].href;
+		}
+
 		function getBase(n) {
 			if (n.src && /tiny_mce(|_dev|_src|_gzip|_jquery|_prototype).js/.test(n.src)) {
 				if (/_(src|dev)\.js/g.test(n.src))
 					t.suffix = '_src';
 
-				return t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
+				t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
+
+				// If path to script is relative and a base href was found add that one infront
+				if (base && t.baseURL.indexOf('://') == -1)
+					t.baseURL = base + t.baseURL;
+
+				return t.baseURL;
 			}
 
 			return null;
