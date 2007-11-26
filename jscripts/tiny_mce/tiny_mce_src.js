@@ -5495,7 +5495,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Add hidden input for non input elements inside form elements
 			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
-				DOM.insertAfter(DOM.create('input', {type : 'hidden', id : id, name : id}), id);
+				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			t.windowManager = new tinymce.WindowManager(t);
 
@@ -6252,8 +6252,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				e.innerHTML = h;
 
 				// Update hidden form element
-				if ((f = DOM.getParent(t.id, 'form')) && (e = f.elements[t.id]))
-					e.value = h;
+				if (f = DOM.getParent(t.id, 'form')) {
+					each(f.elements, function(e) {
+						if (e.name == t.id) {
+							e.value = h;
+							return false;
+						}
+					});
+				}
 			} else
 				e.value = h;
 

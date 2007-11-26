@@ -11,6 +11,8 @@ Version 3.0b2 (2007-11-xx)
 	Fixed bug where redo function didn't work in IE.
 	Fixed bug where content_css didn't work as previous 2.x branch.
 	Fixed bug where preview dialog was throwing errors if the content_css wasn't defined.
+	Fixed bug where the theme_advanced_path option didn't work like the 2.x branch.
+	Fixed bug where the theme_advanced_statusbar_location was called theme_advanced_status_location.
 	Moved spellchecker JS files into the development package.
 Version 3.0b1 (2007-11-21)
 	Added new tab_focus option, that enables you to specify a element id or that the next element to be focused on tab key down.

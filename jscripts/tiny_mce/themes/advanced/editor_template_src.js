@@ -389,7 +389,7 @@
 		},
 
 		_simpleLayout : function(s, tb, o, p) {
-			var t = this, ed = t.editor, lo = s.theme_advanced_toolbar_location, sl = s.theme_advanced_path_location || s.theme_advanced_status_location, n, ic, etb, c;
+			var t = this, ed = t.editor, lo = s.theme_advanced_toolbar_location, sl = s.theme_advanced_statusbar_location, n, ic, etb, c;
 
 			// Create toolbar container at top
 			if (lo == 'top')
@@ -434,7 +434,7 @@
 				});
 			}
 
-			if (sl == 'top' && s.theme_advanced_path)
+			if (sl == 'top')
 				t._addStatusBar(tb, o);
 
 			// Create iframe container
@@ -445,7 +445,7 @@
 			if (lo == 'bottom')
 				t._addToolbars(tb, o);
 
-			if (sl == 'bottom' && s.theme_advanced_path)
+			if (sl == 'bottom')
 				t._addStatusBar(tb, o);
 
 			return ic;
@@ -563,7 +563,7 @@
 
 			n = DOM.add(tb, 'tr');
 			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'});
-			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, ed.translate('advanced.path') + ': ');
+			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&nbsp;');
 
 			if (s.theme_advanced_resizing && !tinymce.isOldWebKit) {
 				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'resize'});
@@ -735,7 +735,7 @@
 			if (c = cm.get('fontsizeselect'))
 				c.select(ed.queryCommandValue('FontSize'));
 
-			if (s.theme_advanced_path_location) {
+			if (s.theme_advanced_path) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
 				p.innerHTML = '';
 
