@@ -5906,9 +5906,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			t.onSetContent.add(function() {
 				// Safari needs some time, it will crash the browser when a link is created otherwise
-				window.setTimeout(function() {
+				// I think this crash issue is resolved in the latest 3.0.4
+				//window.setTimeout(function() {
 					t.addVisual(t.getBody());
-				}, 1);
+				//}, 1);
 			});
 			
 			t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
