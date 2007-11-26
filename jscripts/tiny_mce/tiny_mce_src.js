@@ -6730,9 +6730,15 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				};
 
 				// Add undo level on editor blur
-				if (tinymce.isIE)
-					Event.add(t.getDoc(), 'deactivate', addUndo);
-				else
+				if (tinymce.isIE) {
+					Event.add(t.getWin(), 'blur', function(e) {
+						var n = t.selection.getNode();
+
+						// Add undo level is selection was lost to another document
+						if (n.ownerDocument && n.ownerDocument != t.getDoc())
+							addUndo();
+					});
+				} else
 					Event.add(t.getDoc(), 'blur', addUndo);
 
 				t.onMouseDown.add(addUndo);

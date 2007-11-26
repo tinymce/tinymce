@@ -8,6 +8,7 @@ Version 3.0b2 (2007-11-xx)
 	Fixed bug where the spellchecker was removing the word when it was ignored.
 	Fixed bug where fullscreen wasn't working properly.
 	Fixed bug where the base href element and attribute was ignored.
+	Fixed bug where redo function didn't work in IE.
 	Moved spellchecker JS files into the development package.
 Version 3.0b1 (2007-11-21)
 	Added new tab_focus option, that enables you to specify a element id or that the next element to be focused on tab key down.
