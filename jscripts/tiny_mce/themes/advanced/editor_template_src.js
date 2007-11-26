@@ -679,6 +679,9 @@
 		_nodeChanged : function(ed, cm, n, co) {
 			var t = this, p, de = 0, v, c, s = t.settings;
 
+			if (!s.theme_advanced_path || !s.theme_advanced_statusbar_location)
+				return;
+
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
 			});
