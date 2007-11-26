@@ -137,6 +137,9 @@
 			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
+			if (s.strict_loading_mode)
+				sl.settings.strict_mode = s.strict_loading_mode;
+
 			t.windowManager = new tinymce.WindowManager(t);
 
 			if (s.encoding == 'xml') {

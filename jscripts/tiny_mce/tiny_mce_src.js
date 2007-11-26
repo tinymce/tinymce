@@ -5121,11 +5121,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			t.settings = s;
 
-			if (s.strict_loading_mode)
-				sl.settings.strict_mode = s.strict_loading_mode;
-
 			// If page not loaded and strict mode isn't enabled then load them
-			if (!Event.domLoaded && !sl.settings.strict_mode) {
+			if (!Event.domLoaded && !s.strict_loading_mode) {
 				// Load language
 				if (s.language)
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
@@ -5496,6 +5493,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Add hidden input for non input elements inside form elements
 			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
+
+			if (s.strict_loading_mode)
+				sl.settings.strict_mode = s.strict_loading_mode;
 
 			t.windowManager = new tinymce.WindowManager(t);
 
