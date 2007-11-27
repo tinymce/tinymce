@@ -40,6 +40,7 @@
 						// Ignore
 					}
 				} else {
+					s.fullscreen_overflow = DOM.getStyle(document.body, 'overflow', 1) || 'auto';
 					DOM.setStyle(document.body, 'overflow', 'hidden');
 					vp = DOM.getViewPort();
 
@@ -48,7 +49,6 @@
 
 					n = DOM.add(document.body, 'div', {id : 'mce_fullscreen_container', style : 'position:absolute;top:0;left:0;width:' + vp.w + 'px;height:' + vp.h + 'px;z-index:150;'});
 					DOM.add(n, 'div', {id : 'mce_fullscreen'});
-					s.fullscreen_overflow = DOM.getStyle(document.body, 'overflow', 1) || 'auto';
 
 					tinymce.each(ed.settings, function(v, n) {
 						s[n] = v;

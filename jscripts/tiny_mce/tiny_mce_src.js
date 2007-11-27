@@ -4755,15 +4755,36 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		postRender : function() {
-			var t = this;
+			var t = this, ch;
 
 			t.rendered = true;
 
-			Event.add(t.id, 'change', function(e) {
+			function onChange(e) {
 				var v = e.target.options[e.target.selectedIndex].value;
 
 				t.onChange.dispatch(t, v);
-				t.onselect(v);
+
+				if (t.settings.onselect)
+					t.settings.onselect(v);
+			};
+
+			Event.add(t.id, 'change', onChange);
+
+			// Accessibility keyhandler
+			Event.add(t.id, 'keydown', function(e) {
+				var bf;
+
+				Event.remove(t.id, 'change', ch);
+
+				bf = Event.add(t.id, 'blur', function() {
+					Event.add(t.id, 'change', onChange);
+					Event.remove(t.id, 'blur', bf);
+				});
+
+				if (e.keyCode == 13 || e.keyCode == 32) {
+					onChange(e);
+					return Event.cancel(e);
+				}
 			});
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
@@ -5461,7 +5482,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				table_inline_editing : 0,
 				object_resizing : 1,
 				cleanup : 1,
-				accessibility_focus : 0,
+				accessibility_focus : 1,
 				custom_shortcuts : 1,
 				custom_undo_redo_keyboard_shortcuts : 1,
 				custom_undo_redo_restore_selection : 1,

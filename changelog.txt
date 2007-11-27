@@ -1,5 +1,7 @@
 Version 3.0b2 (2007-11-xx)
 	Added type and compact attributes to the default valid_elements list for the ul and ol elements.
+	Added missing accessibility support to native list boxes in both the toolbar and dialogs.
+	Added missing access key for the element path for accessibility reasons.
 	Fixed support for loading themes from external URLs.
 	Fixed bug where setOuterHTML didn't work correctly when multiple elements where passed to it.
 	Fixed bug with visualchars plugin was moving elements around in the DOM.
@@ -16,6 +18,9 @@ Version 3.0b2 (2007-11-xx)
 	Fixed bug where the strict_loading_mode option didn't work if you created editors dynamically without using the EditorManager.
 	Fixed bug where some language values wasn't translated such as insert and update in dialogs.
 	Fixed bug where some image attributes wasn't stored correctly when inserting an image.
+	Fixed bug where fullscreen mode didn't restore scrollbars when disabled.
+	Fixed bug where there was no visual representation for tab focus in toolbars on IE.
+	Fixed typo of openBrower it's now openBrowser in form_utils.js.
 	Fixed various HTML problems like missing TD elements and duplicated doctypes.
 	Fixed default values for theme_advanced_resize_horizontal, theme_advanced_resizing_use_cookie to be 2.x compatible.
 	Moved spellchecker JS files into the development package.

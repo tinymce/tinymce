@@ -4,7 +4,6 @@
 .defaultSkin table td {vertical-align:middle}
 
 /* Containers */
-.defaultSkin {position:relative}
 .defaultSkin table {background:#F0F0EE}
 .defaultSkin iframe {display:block; background:#FFF}
 .defaultSkin .mceToolbar {height:26px}

@@ -269,7 +269,25 @@ tinyMCEPopup = {
 			});
 		}
 
+		// Patch for accessibility
+		tinymce.each(t.dom.select('select'), function(e) {
+			e.onkeydown = tinyMCEPopup._accessHandler;
+		});
+
 		/**#@-*/
+	},
+
+	_accessHandler : function(e) {
+		var e = e || window.event;
+
+		if (e.keyCode == 13 || e.keyCode == 32) {
+			e = e.target || e.srcElement;
+
+			if (e.onchange)
+				e.onchange();
+
+			return tinymce.dom.Event.cancel(e);
+		}
 	}
 };
 

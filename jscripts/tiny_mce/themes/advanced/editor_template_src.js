@@ -90,9 +90,10 @@
 				if (b) {
 					t.progressTimer = setTimeout(function() {
 						co = ed.getContainer();
+						co = co.insertBefore(DOM.create('DIV', {style : 'position:relative'}), co.firstChild);
 						tb = DOM.get(ed.id + '_tbl');
 
-						DOM.add(co, 'div', {id : id + '_blocker', 'class' : 'mceBlocker', style : {width : tb.clientWidth, height : tb.clientHeight}});
+						DOM.add(co, 'div', {id : id + '_blocker', 'class' : 'mceBlocker', style : {width : tb.clientWidth + 2, height : tb.clientHeight + 2}});
 						DOM.add(co, 'div', {id : id + '_progress', 'class' : 'mceProgress', style : {left : tb.clientWidth / 2, top : tb.clientHeight / 2}});
 					}, ti || 0);
 				} else {
@@ -532,7 +533,7 @@
 
 			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar', align : s.theme_advanced_toolbar_align});
 
-			if (!ed.getParam('accessibility_focus'))
+			if (!ed.getParam('accessibility_focus') || ed.getParam('tab_focus'))
 				h.push(DOM.createHTML('a', {href : '#', onfocus : 'tinyMCE.get(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
 
 			h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("toolbar_focus")}, '<!-- IE -->'));
@@ -566,6 +567,7 @@
 			n = DOM.add(tb, 'tr');
 			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'});
 			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&nbsp;');
+			DOM.add(n, 'a', {href : '#', accesskey : 'x'});
 
 			if (s.theme_advanced_resizing && !tinymce.isOldWebKit) {
 				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'resize'});
@@ -681,9 +683,6 @@
 		_nodeChanged : function(ed, cm, n, co) {
 			var t = this, p, de = 0, v, c, s = t.settings;
 
-			if (!s.theme_advanced_path || !s.theme_advanced_statusbar_location)
-				return;
-
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
 			});
@@ -740,7 +739,7 @@
 			if (c = cm.get('fontsizeselect'))
 				c.select(ed.queryCommandValue('FontSize'));
 
-			if (s.theme_advanced_path) {
+			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
 				p.innerHTML = '';
 

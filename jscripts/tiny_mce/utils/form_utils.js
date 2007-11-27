@@ -47,13 +47,13 @@ function getBrowserHTML(id, target_form_element, type, prefix) {
 		return "";
 
 	html = "";
-	html += '<a id="' + id + '_link" href="javascript:openBrower(\'' + id + '\',\'' + target_form_element + '\', \'' + type + '\',\'' + option + '\');" onmousedown="return false;" class="browse">';
+	html += '<a id="' + id + '_link" href="javascript:openBrowser(\'' + id + '\',\'' + target_form_element + '\', \'' + type + '\',\'' + option + '\');" onmousedown="return false;" class="browse">';
 	html += '<span id="' + id + '" title="' + tinyMCEPopup.getLang('browse') + '"></span></a>';
 
 	return html;
 }
 
-function openBrower(img_id, target_form_element, type, option) {
+function openBrowser(img_id, target_form_element, type, option) {
 	var img = document.getElementById(img_id);
 
 	if (img.className != "mceButtonDisabled")

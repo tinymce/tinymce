@@ -95,7 +95,7 @@
 				table_inline_editing : 0,
 				object_resizing : 1,
 				cleanup : 1,
-				accessibility_focus : 0,
+				accessibility_focus : 1,
 				custom_shortcuts : 1,
 				custom_undo_redo_keyboard_shortcuts : 1,
 				custom_undo_redo_restore_selection : 1,

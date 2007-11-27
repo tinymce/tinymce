@@ -128,15 +128,36 @@
 		 * rendered so that events can be added.
 		 */
 		postRender : function() {
-			var t = this;
+			var t = this, ch;
 
 			t.rendered = true;
 
-			Event.add(t.id, 'change', function(e) {
+			function onChange(e) {
 				var v = e.target.options[e.target.selectedIndex].value;
 
 				t.onChange.dispatch(t, v);
-				t.onselect(v);
+
+				if (t.settings.onselect)
+					t.settings.onselect(v);
+			};
+
+			Event.add(t.id, 'change', onChange);
+
+			// Accessibility keyhandler
+			Event.add(t.id, 'keydown', function(e) {
+				var bf;
+
+				Event.remove(t.id, 'change', ch);
+
+				bf = Event.add(t.id, 'blur', function() {
+					Event.add(t.id, 'change', onChange);
+					Event.remove(t.id, 'blur', bf);
+				});
+
+				if (e.keyCode == 13 || e.keyCode == 32) {
+					onChange(e);
+					return Event.cancel(e);
+				}
 			});
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
