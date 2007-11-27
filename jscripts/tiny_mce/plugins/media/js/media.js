@@ -44,7 +44,7 @@ function init() {
 				break;
 		}
 
-		document.forms[0].insert.value = ed.getLang('lang_update', 'Insert', true); 
+		document.forms[0].insert.value = ed.getLang('update', 'Insert', true); 
 	}
 
 	document.getElementById('filebrowsercontainer').innerHTML = getBrowserHTML('filebrowser','src','media','media');
@@ -181,7 +181,7 @@ function insertMedia() {
 	var fe, f = document.forms[0], h;
 
 	if (!AutoValidator.validate(f)) {
-		alert(ed.getLang('lang_invalid_data'));
+		alert(ed.getLang('invalid_data'));
 		return false;
 	}
 
@@ -341,7 +341,7 @@ function switchType(v) {
 
 	// Update qtsrc also
 	if (t == 'qt' && f.src.value.toLowerCase().indexOf('rtsp://') != -1) {
-		alert(ed.getLang("lang_media_qt_stream_warn"));
+		alert(ed.getLang("media_qt_stream_warn"));
 
 		if (f.qt_qtsrc.value == '')
 			f.qt_qtsrc.value = f.src.value;

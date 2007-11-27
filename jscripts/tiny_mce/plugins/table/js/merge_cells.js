@@ -14,7 +14,7 @@ function mergeCells() {
 	var formObj = document.forms[0];
 
 	if (!AutoValidator.validate(formObj)) {
-		alert(tinyMCEPopup.getLang('lang_invalid_data'));
+		alert(tinyMCEPopup.getLang('invalid_data'));
 		return false;
 	}
 

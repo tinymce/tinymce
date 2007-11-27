@@ -145,7 +145,7 @@ SXE.initElementDialog = function(element_name) {
 		SXE.updateElement = elm;
 	}
 
-	document.forms[0].insert.value = tinyMCEPopup.getLang('lang_' + SXE.currentAction, 'Insert', true); 
+	document.forms[0].insert.value = tinyMCEPopup.getLang(SXE.currentAction, 'Insert', true); 
 }
 
 SXE.insertElement = function(element_name) {

@@ -51,7 +51,7 @@ function init() {
 	if (elm != null && elm.nodeName == "A")
 		action = "update";
 
-	formObj.insert.value = tinyMCEPopup.getLang('lang_' + action, 'Insert', true); 
+	formObj.insert.value = tinyMCEPopup.getLang(action, 'Insert', true); 
 
 	setPopupControlsDisabled(true);
 
@@ -114,10 +114,10 @@ function init() {
 }
 
 function checkPrefix(n) {
-	if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('lang_is_email')))
+	if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('advlink_dlg.is_email')))
 		n.value = 'mailto:' + n.value;
 
-	if (/^\s*www./i.test(n.value) && confirm(tinyMCEPopup.getLang('lang_is_external')))
+	if (/^\s*www./i.test(n.value) && confirm(tinyMCEPopup.getLang('advlink_dlg.is_external')))
 		n.value = 'http://' + n.value;
 }
 

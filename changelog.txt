@@ -14,6 +14,10 @@ Version 3.0b2 (2007-11-xx)
 	Fixed bug where the theme_advanced_path option didn't work like the 2.x branch.
 	Fixed bug where the theme_advanced_statusbar_location was called theme_advanced_status_location.
 	Fixed bug where the strict_loading_mode option didn't work if you created editors dynamically without using the EditorManager.
+	Fixed bug where some language values wasn't translated such as insert and update in dialogs.
+	Fixed bug where some image attributes wasn't stored correctly when inserting an image.
+	Fixed various HTML problems like missing TD elements and duplicated doctypes.
+	Fixed default values for theme_advanced_resize_horizontal, theme_advanced_resizing_use_cookie to be 2.x compatible.
 	Moved spellchecker JS files into the development package.
 Version 3.0b1 (2007-11-21)
 	Added new tab_focus option, that enables you to specify a element id or that the next element to be focused on tab key down.

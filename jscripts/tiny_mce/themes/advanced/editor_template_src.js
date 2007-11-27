@@ -73,7 +73,9 @@
 				theme_advanced_fonts : "Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats",
 				theme_advanced_font_sizes : "1,2,3,4,5,6,7",
 				theme_advanced_more_colors : 1,
-				theme_advanced_row_height : 23
+				theme_advanced_row_height : 23,
+				theme_advanced_resize_horizontal : 1,
+				theme_advanced_resizing_use_cookie : 1
 			}, ed.settings);
 
 			// Init editor

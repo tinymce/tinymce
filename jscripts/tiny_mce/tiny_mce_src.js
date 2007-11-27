@@ -1341,8 +1341,10 @@ tinymce.create('static tinymce.util.XHR', {
 		setAttribs : function(e, o) {
 			var t = this;
 
-			each(o, function(v, n) {
-				t.setAttrib(e, n, v);
+			return this.run(e, function(e) {
+				each(o, function(v, n) {
+					t.setAttrib(e, n, v);
+				});
 			});
 		},
 

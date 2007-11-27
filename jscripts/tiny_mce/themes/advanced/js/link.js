@@ -44,10 +44,10 @@ var LinkDialog = {
 	},
 
 	checkPrefix : function(n) {
-		if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.editor.getLang('advanced_dlg.link_is_email')))
+		if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('advanced_dlg.link_is_email')))
 			n.value = 'mailto:' + n.value;
 
-		if (/^\s*www./i.test(n.value) && confirm(tinyMCEPopup.editor.getLang('advanced_dlg.link_is_external')))
+		if (/^\s*www./i.test(n.value) && confirm(tinyMCEPopup.getLang('advanced_dlg.link_is_external')))
 			n.value = 'http://' + n.value;
 	},
 

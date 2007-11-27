@@ -10,7 +10,7 @@ function insertTable() {
 	var cellLimit, rowLimit, colLimit;
 
 	if (!AutoValidator.validate(formObj)) {
-		alert(inst.getLang('lang_invalid_data'));
+		alert(inst.getLang('invalid_data'));
 		return false;
 	}
 
@@ -44,13 +44,13 @@ function insertTable() {
 
 	// Validate table size
 	if (colLimit && cols > colLimit) {
-		alert(inst.getLang('lang_table_col_limit', '', true, {cols : colLimit}));
+		alert(inst.getLang('table_col_limit', '', true, {cols : colLimit}));
 		return false;
 	} else if (rowLimit && rows > rowLimit) {
-		alert(inst.getLang('lang_table_row_limit', '', true, {rows : rowLimit}));
+		alert(inst.getLang('table_row_limit', '', true, {rows : rowLimit}));
 		return false;
 	} else if (cellLimit && cols * rows > cellLimit) {
-		alert(inst.getLang('lang_table_cell_limit', '', true, {cells : cellLimit}));
+		alert(inst.getLang('table_cell_limit', '', true, {cells : cellLimit}));
 		return false;
 	}
 

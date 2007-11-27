@@ -264,11 +264,7 @@
 			if (is(ne, 'string'))
 				te.appendChild(dom.doc.createTextNode(ne));
 			else if (ne.length) {
-				try {
 				te = te.appendChild(dom.create(ne[0], ne[1]));
-				} catch (ex) {
-					console.debug(ne[0], ne[1]);
-				}
 
 				for (i=2; i<ne.length; i++)
 					t._addAll(te, ne[i]);
