@@ -1,4 +1,4 @@
-Version 3.0b2 (2007-12-xx)
+Version 3.0b3 (2007-12-xx)
 	Fixed bug where font sizes where reduced by font size actions on previous spans in Safari.
 Version 3.0b2 (2007-11-29)
 	Added type and compact attributes to the default valid_elements list for the ul and ol elements.
