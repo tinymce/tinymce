@@ -21,6 +21,7 @@ Version 3.0b2 (2007-11-xx)
 	Fixed bug where fullscreen mode didn't restore scrollbars when disabled.
 	Fixed bug where there was no visual representation for tab focus in toolbars on IE.
 	Fixed bug where HR elements wasn't treated as block elements so forced_root_block would fail on these.
+	Fixed bug where autosave presented warning message even when the form was submitted normally.
 	Fixed typo of openBrower it's now openBrowser in form_utils.js.
 	Fixed various HTML problems like missing TD elements and duplicated doctypes.
 	Fixed default values for theme_advanced_resize_horizontal, theme_advanced_resizing_use_cookie to be 2.x compatible.

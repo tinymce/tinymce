@@ -151,8 +151,10 @@
 
 			if (s.add_form_submit_trigger) {
 				t.onSubmit.add(function() {
-					if (t.initialized)
+					if (t.initialized) {
 						t.save();
+						t.isNotDirty = 1;
+					}
 				});
 			}
 
@@ -165,7 +167,7 @@
 
 			if (s.submit_patch) {
 				t.onBeforeRenderUI.add(function() {
-					var t = this, n = DOM.get(t.id).form;
+					var n = DOM.get(t.id).form;
 
 					if (!n)
 						return;
@@ -180,6 +182,7 @@
 					n.submit = function() {
 						// Save all instances
 						EditorManager.triggerSave();
+						t.isNotDirty = 1;
 
 						return this._mceOldSubmit(this);
 					};

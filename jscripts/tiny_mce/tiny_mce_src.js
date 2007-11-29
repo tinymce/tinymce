@@ -5531,8 +5531,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (s.add_form_submit_trigger) {
 				t.onSubmit.add(function() {
-					if (t.initialized)
+					if (t.initialized) {
 						t.save();
+						t.isNotDirty = 1;
+					}
 				});
 			}
 
@@ -5545,7 +5547,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (s.submit_patch) {
 				t.onBeforeRenderUI.add(function() {
-					var t = this, n = DOM.get(t.id).form;
+					var n = DOM.get(t.id).form;
 
 					if (!n)
 						return;
@@ -5560,6 +5562,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					n.submit = function() {
 						// Save all instances
 						EditorManager.triggerSave();
+						t.isNotDirty = 1;
 
 						return this._mceOldSubmit(this);
 					};
