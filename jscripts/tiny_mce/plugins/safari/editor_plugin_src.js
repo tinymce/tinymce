@@ -244,6 +244,9 @@
 		_fixAppleSpan : function(e) {
 			var ed = this.editor, dom = ed.dom, fz = this.webKitFontSizes, fzn = this.namedFontSizes, s = ed.settings, st, p;
 
+			if (dom.getAttrib(e, 'mce_fixed'))
+				return;
+
 			// Handle Apple style spans
 			if (e.nodeName == 'SPAN' && e.className == 'Apple-style-span') {
 				st = e.style;
@@ -290,6 +293,8 @@
 
 				if (st.verticalAlign == 'sub')
 					dom.setAttrib(e, 'mce_name', 'sub');
+
+				dom.setAttrib(e, 'mce_fixed', '1');
 			}
 		},
 
