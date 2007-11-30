@@ -617,14 +617,29 @@
 		setupContentEditable : function() {
 			var t = this, e = DOM.get(t.id), s = t.settings;
 
+			t.contentDocument = document;
+			t.contentWindow = window;
+			t.bodyElement = e;
+
+			// Workaround for bug: https://bugzilla.mozilla.org/show_bug.cgi?id=388655
+			if (isGecko) {
+				cb = Event.add(t.getDoc(), 'DOMNodeInserted', function(e) {
+					var v;
+
+					e = e.target;
+
+					if (e.nodeType === 1 && e.nodeName === 'BR')
+						DOM.remove(e);
+				});
+			}
+
 			e.contentEditable = true;
 			DOM.addClass(e, 'mceContentEditable');
 			if (!s.gecko_spellcheck)
 				e.spellcheck = 0;
 
-			t.contentDocument = document;
-			t.contentWindow = window;
-			t.bodyElement = e;
+			if (isGecko)
+				Event.remove(t.getDoc(), 'DOMNodeInserted', cb);
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
