@@ -964,6 +964,9 @@ tinymce.create('static tinymce.util.XHR', {
 
 			n = this.get(n);
 
+			if (this.settings.strict_root)
+				r = r || this.getRoot();
+
 			// Wrap node name as func
 			if (is(f, 'string')) {
 				na = f.toUpperCase();
@@ -2472,7 +2475,7 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 
 				// Text selection
-				tr = ro.createTextRange();
+				tr = t.dom.doc.body.createTextRange();
 				tr.moveToElementText(ro);
 				tr.collapse(true);
 				bp = Math.abs(tr.move('character', c));
@@ -5713,6 +5716,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				deltaHeight : s.delta_height
 			});
 
+			
 			// Resize editor
 			DOM.setStyles(o.sizeContainer || o.editorContainer, {
 				width : w,
@@ -5971,6 +5975,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			e = null;
 		},
 
+		
 		focus : function(sf) {
 			var oed, t = this;
 
@@ -6120,7 +6125,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel)$/.test(cmd))
 				t.focus();
 
-			t.onBeforeExecCommand.dispatch(t, cmd, ui, val);
+			o = {};
+			t.onBeforeExecCommand.dispatch(t, cmd, ui, val, o);
+			if (o.terminate)
+				return false;
 
 			// Comamnd callback
 			if (t.execCallback('execcommand_callback', null, t.id, t.selection.getNode(), cmd, ui, val)) {
@@ -6387,7 +6395,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		getBody : function() {
-			return this.getDoc().body;
+			return this.bodyElement || this.getDoc().body;
 		},
 
 		convertURL : function(u, n, e) {
@@ -6526,11 +6534,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						break;
 
 					default:
-						Event.add(t.getDoc(), k, eventHandler);
+						Event.add(s.content_editable ? t.getBody() : t.getDoc(), k, eventHandler);
 				}
 			});
 
-			Event.add(isGecko ? t.getDoc() : t.getWin(), 'focus', function(e) {
+			Event.add(s.content_editable ? t.getBody() : (isGecko ? t.getDoc() : t.getWin()), 'focus', function(e) {
 				t.focus(true);
 			});
 
@@ -7967,7 +7975,7 @@ tinymce.create('tinymce.UndoManager', {
 									si = t.find(b, 0, r.startContainer);
 									ei = t.find(b, 0, r.endContainer);
 								} else {
-									tr = b.createTextRange();
+									tr = d.body.createTextRange();
 									tr.moveToElementText(b);
 									tr.collapse(1);
 									bp = tr.move('character', c) * -1;

@@ -134,6 +134,9 @@
 
 			n = this.get(n);
 
+			if (this.settings.strict_root)
+				r = r || this.getRoot();
+
 			// Wrap node name as func
 			if (is(f, 'string')) {
 				na = f.toUpperCase();

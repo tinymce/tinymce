@@ -338,6 +338,14 @@
 				deltaHeight : s.delta_height
 			});
 
+			// #if contentEditable
+
+			// Content editable mode ends here
+			if (s.content_editable)
+				return t.setupContentEditable();
+
+			// #endif
+
 			// Resize editor
 			DOM.setStyles(o.sizeContainer || o.editorContainer, {
 				width : w,
@@ -601,6 +609,108 @@
 			e = null;
 		},
 
+		// #if contentEditable
+
+		/**
+		 * Sets up the contentEditable mode.
+		 */
+		setupContentEditable : function() {
+			var t = this, e = DOM.get(t.id), s = t.settings;
+
+			e.contentEditable = true;
+			DOM.addClass(e, 'mceContentEditable');
+			if (!s.gecko_spellcheck)
+				e.spellcheck = 0;
+
+			t.contentDocument = document;
+			t.contentWindow = window;
+			t.bodyElement = e;
+
+			// Setup objects
+			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
+				keep_values : true,
+				url_converter : t.convertURL,
+				url_converter_scope : t,
+				hex_colors : s.force_hex_style_colors,
+				class_filter : s.class_filter,
+				root_element : t.id,
+				strict_root : 1
+			});
+
+			t.serializer = new tinymce.dom.Serializer({
+				entity_encoding : s.entity_encoding,
+				entities : s.entities,
+				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
+				extended_valid_elements : s.extended_valid_elements,
+				valid_child_elements : s.valid_child_elements,
+				invalid_elements : s.invalid_elements,
+				fix_table_elements : s.fix_table_elements,
+				fix_list_elements : s.fix_list_elements,
+				fix_content_duplication : s.fix_content_duplication,
+				convert_fonts_to_spans : s.convert_fonts_to_spans,
+				font_size_classes  : s.font_size_classes,
+				font_size_style_values : s.font_size_style_values,
+				apply_source_formatting : s.apply_source_formatting,
+				dom : t.dom
+			});
+
+			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
+			t.forceBlocks = new tinymce.ForceBlocks(t, {
+				forced_root_block : s.forced_root_block
+			});
+			t.editorCommands = new tinymce.EditorCommands(t);
+
+			// Pass through
+			t.serializer.onPreProcess.add(function(se, o) {
+				return t.onPreProcess.dispatch(t, o, se);
+			});
+
+			t.serializer.onPostProcess.add(function(se, o) {
+				return t.onPostProcess.dispatch(t, o, se);
+			});
+
+			t.onPreInit.dispatch(t);
+			t._addEvents();
+
+			t.controlManager.onPostRender.dispatch(t, t.controlManager);
+			t.onPostRender.dispatch(t);
+
+			if (s.convert_fonts_to_spans)
+				t._convertFonts();
+
+			if (s.inline_styles)
+				t._convertInlineElements();
+
+			t.onSetContent.add(function() {
+				t.addVisual(t.getBody());
+			});
+
+			t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
+			t.startContent = t.getContent({format : 'raw'});
+			t.undoManager.add({initial : true});
+			t.initialized = true;
+
+			t.onInit.dispatch(t);
+			t.focus(true);
+			t.nodeChanged({initial : 1});
+
+			if (isIE) {
+				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, o) {
+					var st;
+
+					if (!DOM.getParent(ed.selection.getStart(), function(n) {return n == ed.getBody();}))
+						o.terminate = 1;
+
+					if (!DOM.getParent(ed.selection.getEnd(), function(n) {return n == ed.getBody();}))
+						o.terminate = 1;
+				});
+			}
+
+			e = null; // Cleanup
+		},
+
+		// #endif
+
 		/**
 		 * Focuses/activates the editor. This will set this editor as the activeEditor in the EditorManager
 		 * it will also place DOM focus inside the editor.
@@ -841,7 +951,10 @@
 			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel)$/.test(cmd))
 				t.focus();
 
-			t.onBeforeExecCommand.dispatch(t, cmd, ui, val);
+			o = {};
+			t.onBeforeExecCommand.dispatch(t, cmd, ui, val, o);
+			if (o.terminate)
+				return false;
 
 			// Comamnd callback
 			if (t.execCallback('execcommand_callback', null, t.id, t.selection.getNode(), cmd, ui, val)) {
@@ -1209,7 +1322,7 @@
 		 * @return {Element} Iframe body element.
 		 */
 		getBody : function() {
-			return this.getDoc().body;
+			return this.bodyElement || this.getDoc().body;
 		},
 
 		/**
@@ -1363,11 +1476,11 @@
 						break;
 
 					default:
-						Event.add(t.getDoc(), k, eventHandler);
+						Event.add(s.content_editable ? t.getBody() : t.getDoc(), k, eventHandler);
 				}
 			});
 
-			Event.add(isGecko ? t.getDoc() : t.getWin(), 'focus', function(e) {
+			Event.add(s.content_editable ? t.getBody() : (isGecko ? t.getDoc() : t.getWin()), 'focus', function(e) {
 				t.focus(true);
 			});
 

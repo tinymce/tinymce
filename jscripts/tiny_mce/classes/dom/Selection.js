@@ -207,7 +207,7 @@
 				}
 
 				// Text selection
-				tr = ro.createTextRange();
+				tr = t.dom.doc.body.createTextRange();
 				tr.moveToElementText(ro);
 				tr.collapse(true);
 				bp = Math.abs(tr.move('character', c));

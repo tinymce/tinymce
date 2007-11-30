@@ -148,7 +148,7 @@
 									si = t.find(b, 0, r.startContainer);
 									ei = t.find(b, 0, r.endContainer);
 								} else {
-									tr = b.createTextRange();
+									tr = d.body.createTextRange();
 									tr.moveToElementText(b);
 									tr.collapse(1);
 									bp = tr.move('character', c) * -1;
