@@ -7179,7 +7179,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		mceJustify : function(c, v) {
-			var ed = this.editor, n = ed.selection.getNode(), nn = n.nodeName, bl, nb, dom = ed.dom, rm;
+			var ed = this.editor, se = ed.selection, n = se.getNode(), nn = n.nodeName, bl, nb, dom = ed.dom, rm;
 
 			if (ed.settings.inline_styles && this.queryStateJustify(c, v))
 				rm = 1;
@@ -7220,7 +7220,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return;
 			}
 
-			if (!rm)
+			// Handle the alignment outselfs, less quirks in all browsers
+			if (ed.settings.inline_styles && ed.settings.forced_root_block) {
+				if (rm)
+					v = '';
+
+				each(this._getSelectedBlocks(dom.getParent(se.getStart(), dom.isBlock), dom.getParent(se.getEnd(), dom.isBlock)), function(e) {
+					dom.setAttrib(e, 'align', '');
+					dom.setStyle(e, 'textAlign', v == 'full' ? 'justify' : v);
+				});
+
+				return;
+			} else if (!rm)
 				ed.getDoc().execCommand(c, false, null);
 
 			if (ed.settings.inline_styles) {
@@ -7344,7 +7355,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		InsertHorizontalRule : function() {
-			if (tinymce.isGecko)
+			// Fix for Gecko <hr size="1" /> issue and IE bug rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
+			if (isGecko || isIE)
 				this.editor.selection.setContent('<hr />');
 			else
 				this.editor.getDoc().execCommand('InsertHorizontalRule', false, '');
@@ -7460,7 +7472,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (n && n.nodeName == 'IMG')
 				return dom.getStyle(n, 'float') == v;
 
-			n = dom.getParent(ed.selection.getNode(), function(n) {
+			n = dom.getParent(ed.selection.getStart(), function(n) {
 				return n.nodeType == 1 && n.style.textAlign;
 			});
 
