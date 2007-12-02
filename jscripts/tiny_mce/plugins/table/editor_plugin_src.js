@@ -170,6 +170,25 @@
 				return false;
 			}
 
+			function select(dx, dy) {
+				var td;
+
+				grid = getTableGrid(tableElm);
+				dx = dx || 0;
+				dy = dy || 0;
+				dx = Math.max(cpos.cellindex + dx, 0);
+				dy = Math.max(cpos.rowindex + dy, 0);
+
+				// Recalculate grid and select
+				inst.execCommand('mceRepaint');
+				td = getCell(grid, dy, dx);
+
+				if (td) {
+					inst.selection.select(td.firstChild || td);
+					inst.selection.collapse(1);
+				}
+			};
+
 			function makeTD() {
 				var newTD = doc.createElement("td");
 
@@ -534,6 +553,7 @@
 								}
 
 								trElm.parentNode.insertBefore(newTR, trElm);
+								select(0, 1);
 							break;
 
 							case "mceTableInsertRowAfter":
@@ -573,6 +593,8 @@
 									else
 										tableElm.appendChild(newTR);
 								}
+
+								select(0, 1);
 							break;
 
 							case "mceTableDeleteRow":
@@ -584,8 +606,7 @@
 
 								// Only one row, remove whole table
 								if (grid.length == 1) {
-									tableElm = inst.dom.getParent(tableElm, "table"); // Look for table instead of tbody
-									tableElm.parentNode.removeChild(tableElm);
+									inst.dom.remove(inst.dom.getParent(tableElm, "table"));
 									return true;
 								}
 
@@ -629,13 +650,7 @@
 
 								deleteMarked(tableElm);
 
-								cpos.rowindex--;
-								if (cpos.rowindex < 0)
-									cpos.rowindex = 0;
-
-								// Recalculate grid and select
-								grid = getTableGrid(tableElm);
-								inst.selection.select(getCell(grid, cpos.rowindex, 0), tinymce.isGecko, true); // Only collape on gecko
+								select(0, -1);
 							break;
 
 							case "mceTableInsertColBefore":
@@ -665,6 +680,8 @@
 										lastTDElm = tdElm;
 									}
 								}
+
+								select();
 							break;
 
 							case "mceTableInsertColAfter":
@@ -698,6 +715,8 @@
 										lastTDElm = tdElm;
 									}
 								}
+
+								select(1);
 							break;
 
 							case "mceTableDeleteCol":
@@ -710,8 +729,7 @@
 
 								// Only one col, remove whole table
 								if (grid.length > 1 && grid[0].length <= 1) {
-									tableElm = inst.dom.getParent(tableElm, "table"); // Look for table instead of tbody
-									tableElm.parentNode.removeChild(tableElm);
+									inst.dom.remove(inst.dom.getParent(tableElm, "table"));
 									return true;
 								}
 
@@ -731,13 +749,7 @@
 									}
 								}
 
-								cpos.cellindex--;
-								if (cpos.cellindex < 0)
-									cpos.cellindex = 0;
-
-								// Recalculate grid and select
-								grid = getTableGrid(tableElm);
-								inst.selection.select(getCell(grid, cpos.rowindex, 0), tinymce.isGecko, true); // Only collape on gecko
+								select(-1);
 							break;
 
 						case "mceTableSplitCells":
@@ -1005,7 +1017,6 @@
 						tableElm = inst.dom.getParent(inst.selection.getNode(), "table");
 						inst.addVisual(tableElm);
 						inst.nodeChanged();
-						inst.execCommand('mceRepaint');
 					}
 
 				return true;

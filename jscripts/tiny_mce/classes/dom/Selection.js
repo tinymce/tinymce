@@ -473,7 +473,7 @@
 		isCollapsed : function() {
 			var t = this, r = t.getRng();
 
-			if (r.item)
+			if (!r || r.item)
 				return false;
 
 			return r.boundingWidth == 0 || t.getSel().isCollapsed;
