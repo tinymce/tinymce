@@ -421,6 +421,7 @@
 				font_size_classes  : s.font_size_classes,
 				font_size_style_values : s.font_size_style_values,
 				apply_source_formatting : s.apply_source_formatting,
+				remove_linebreaks : s.remove_linebreaks,
 				dom : t.dom
 			});
 

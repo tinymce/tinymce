@@ -2963,7 +2963,8 @@ tinymce.create('static tinymce.util.XHR', {
 				apply_source_formatting : 0,
 				indent_mode : 'simple',
 				indent_char : '\t',
-				indent_levels : 1
+				indent_levels : 1,
+				remove_linebreaks : 1
 			}, s);
 
 			t.dom = s.dom;
@@ -3414,12 +3415,10 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		indent : function(o) {
-			var t = this, s = t.settings, h, sc = [], p;
+			var t = this, s = t.settings, h = o.content, sc = [], p;
 
-			// Simple intentation
-			if (s.apply_source_formatting && s.indent_mode == 'simple' && o.format == 'html') {
-				h = o.content;
-
+			// Remove whitespace to normalize browsers
+			if (s.remove_linebreaks && o.format == 'html') {
 				// Protect some elements
 				p = t._protect({
 					content : h,
@@ -3439,15 +3438,18 @@ tinymce.create('static tinymce.util.XHR', {
 				h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
 				h = h.replace(/\s+<\/(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
 				h = t._unprotect(h, p);
+			}
 
+			// Simple intentation
+			if (s.apply_source_formatting && s.indent_mode == 'simple' && o.format == 'html') {
 				// Add line breaks before and after block elements
 				h = h.replace(/\s*<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>/g, '\n<$1 $2>');
 				h = h.replace(/\s*<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '\n<$1>');
 				h = h.replace(/<(object)([^>]*)>\s*/g, '<$1$2>\n');
 				h = h.replace(/\s*<\/(tr|tbody|table|body|head|html|object)>/g, '\n</$1>');
-
-				o.content = h;
 			}
+
+			o.content = h;
 		},
 
 		// Internal functions
@@ -5787,6 +5789,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				font_size_classes  : s.font_size_classes,
 				font_size_style_values : s.font_size_style_values,
 				apply_source_formatting : s.apply_source_formatting,
+				remove_linebreaks : s.remove_linebreaks,
 				dom : t.dom
 			});
 

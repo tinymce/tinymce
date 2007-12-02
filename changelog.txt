@@ -3,6 +3,7 @@ Version 3.0b3 (2007-12-xx)
 	Fixed bug where HR elements got places at the wrong location in IE.
 	Fixed bug where align/justify didn't work correctly on multiple paragraphs.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.
+	Reintroduced the remove_linebreaks option, this is enabled by default.
 Version 3.0b2 (2007-11-29)
 	Added type and compact attributes to the default valid_elements list for the ul and ol elements.
 	Added missing accessibility support to native list boxes in both the toolbar and dialogs.
