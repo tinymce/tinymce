@@ -12,14 +12,19 @@
 (function() {
 	var i, nl = document.getElementsByTagName('script'), base, src, p, li, query = '', it;
 
-	for (i=0; i<nl.length; i++) {
-		src = nl[i].src;
+	if (window.tinyMCEPreInit) {
+		base = tinyMCEPreInit.base;
+		query = tinyMCEPreInit.query || '';
+	} else {
+		for (i=0; i<nl.length; i++) {
+			src = nl[i].src;
 
-		if (src && src.indexOf("tiny_mce_dev.js") != -1) {
-			base = src.substring(0, src.lastIndexOf('/'));
+			if (src && src.indexOf("tiny_mce_dev.js") != -1) {
+				base = src.substring(0, src.lastIndexOf('/'));
 
-			if ((p = src.indexOf('?')) != -1)
-				query = src.substring(p + 1);
+				if ((p = src.indexOf('?')) != -1)
+					query = src.substring(p + 1);
+			}
 		}
 	}
 
