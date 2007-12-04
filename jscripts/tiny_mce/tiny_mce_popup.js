@@ -23,14 +23,6 @@ tinyMCEPopup = {
 			}
 		};
 
-		// Wait for body
-		ti = window.setInterval(function() {
-			if (document.body) {
-				window.clearInterval(ti);
-				t._onDOMLoaded();
-			}
-		}, 10);
-
 		t.isWindow = !t.getWindowArg('mce_inline');
 		t.id = t.getWindowArg('mce_window_id');
 		t.editor.windowManager.onOpen.dispatch(t.editor.windowManager, window);
@@ -192,7 +184,36 @@ tinyMCEPopup = {
 
 			return tinymce.dom.Event.cancel(e);
 		}
+	},
+
+	_wait : function() {
+		var t = this, ti;
+
+		if (tinymce.isIE && document.location.protocol != 'https:') {
+			// Fake DOMContentLoaded on IE
+			document.write('<script id=__ie_onload defer src=\'javascript:""\';><\/script>');
+			document.getElementById("__ie_onload").onreadystatechange = function() {
+				if (this.readyState == "complete") {
+					t._onDOMLoaded();
+					document.getElementById("__ie_onload").onreadystatechange = null; // Prevent leak
+				}
+			};
+		} else {
+			if (tinymce.isIE || tinymce.isWebKit) {
+				ti = setInterval(function() {
+					if (/loaded|complete/.test(document.readyState)) {
+						clearInterval(ti);
+						t._onDOMLoaded();
+					}
+				}, 10);
+			} else {
+				window.addEventListener('DOMContentLoaded', function() {
+					t._onDOMLoaded();
+				}, false);
+			}
+		}
 	}
 };
 
 tinyMCEPopup.init();
+tinyMCEPopup._wait(); // Wait for DOM Content Loaded
