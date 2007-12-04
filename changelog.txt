@@ -1,4 +1,5 @@
 Version 3.0b3 (2007-12-xx)
+	Added new getElement method to Editor class, returns the element that was replaced with the editor instance.
 	Fixed bug where font sizes where reduced by font size actions on previous spans in Safari.
 	Fixed bug where HR elements got places at the wrong location in IE.
 	Fixed bug where align/justify didn't work correctly on multiple paragraphs.

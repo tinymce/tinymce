@@ -134,7 +134,7 @@
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
 			// Add hidden input for non input elements inside form elements
-			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
+			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			if (s.strict_loading_mode)
@@ -167,7 +167,7 @@
 
 			if (s.submit_patch) {
 				t.onBeforeRenderUI.add(function() {
-					var n = DOM.get(t.id).form;
+					var n = t.getElement().form;
 
 					if (!n)
 						return;
@@ -242,7 +242,7 @@
 		 * This method will setup the iframe and create the theme and plugin instances.
 		 */
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = DOM.get(s.id), o, ti;
+			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti;
 
 			EditorManager.add(t);
 
@@ -653,10 +653,10 @@
 		 * Sets up the contentEditable mode.
 		 */
 		setupContentEditable : function() {
-			var t = this, e = DOM.get(t.id), s = t.settings;
+			var t = this, s = t.settings, e = t.getElement();
 
-			t.contentDocument = document;
-			t.contentWindow = window;
+			t.contentDocument = s.content_document || document;
+			t.contentWindow = s.content_window || window;
 			t.bodyElement = e;
 
 			// Workaround for bug: https://bugzilla.mozilla.org/show_bug.cgi?id=388655
@@ -1151,6 +1151,7 @@
 		remove : function() {
 			var t = this;
 
+			t.removed = 1; // Cancels post remove event execution
 			t.hide();
 			DOM.remove(t.getContainer());
 
@@ -1178,7 +1179,7 @@
 		 * @return {String} HTML string that got set into the editor.
 		 */
 		load : function(o) {
-			var t = this, e = DOM.get(t.id), h;
+			var t = this, e = t.getElement(), h;
 
 			o = o || {};
 			o.load = true;
@@ -1203,7 +1204,7 @@
 		 * @return {String} HTML string that got set into the textarea/div.
 		 */
 		save : function(o) {
-			var t = this, e = DOM.get(t.id), h, f;
+			var t = this, e = t.getElement(), h, f;
 
 			o = o || {};
 			o.save = true;
@@ -1339,6 +1340,15 @@
 		 */
 		getContentAreaContainer : function() {
 			return this.contentAreaContainer;
+		},
+
+		/**
+		 * Returns the target element/textarea that got replaced with a TinyMCE editor instance.
+		 *
+		 * @return {Element} HTML DOM element for the replaced element.
+		 */
+		getElement : function() {
+			return DOM.get(this.settings.content_element || this.id);
 		},
 
 		/**
@@ -1525,7 +1535,7 @@
 
 					case 'submit':
 					case 'reset':
-						Event.add(DOM.get(t.id).form || DOM.getParent(t.id, 'form'), k, eventHandler);
+						Event.add(t.getElement().form || DOM.getParent(t.id, 'form'), k, eventHandler);
 						break;
 
 					default:
@@ -1775,11 +1785,15 @@
 						var n = t.selection.getNode();
 
 						// Add undo level is selection was lost to another document
-						if (n.ownerDocument && n.ownerDocument != t.getDoc())
+						if (!t.removed && n.ownerDocument && n.ownerDocument != t.getDoc())
 							addUndo();
 					});
-				} else
-					Event.add(t.getDoc(), 'blur', addUndo);
+				} else {
+					Event.add(t.getDoc(), 'blur', function() {
+						if (!t.removed)
+							addUndo();
+					});
+				}
 
 				t.onMouseDown.add(addUndo);
 

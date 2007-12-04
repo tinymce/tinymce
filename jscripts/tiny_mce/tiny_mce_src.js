@@ -5519,7 +5519,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
 			// Add hidden input for non input elements inside form elements
-			if (!/TEXTAREA|INPUT/i.test(DOM.get(id).nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
+			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			if (s.strict_loading_mode)
@@ -5552,7 +5552,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (s.submit_patch) {
 				t.onBeforeRenderUI.add(function() {
-					var n = DOM.get(t.id).form;
+					var n = t.getElement().form;
 
 					if (!n)
 						return;
@@ -5622,7 +5622,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = DOM.get(s.id), o, ti;
+			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti;
 
 			EditorManager.add(t);
 
@@ -6277,6 +6277,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		remove : function() {
 			var t = this;
 
+			t.removed = 1; // Cancels post remove event execution
 			t.hide();
 			DOM.remove(t.getContainer());
 
@@ -6293,7 +6294,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		load : function(o) {
-			var t = this, e = DOM.get(t.id), h;
+			var t = this, e = t.getElement(), h;
 
 			o = o || {};
 			o.load = true;
@@ -6310,7 +6311,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		save : function(o) {
-			var t = this, e = DOM.get(t.id), h, f;
+			var t = this, e = t.getElement(), h, f;
 
 			o = o || {};
 			o.save = true;
@@ -6414,6 +6415,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 		getContentAreaContainer : function() {
 			return this.contentAreaContainer;
+		},
+
+		getElement : function() {
+			return DOM.get(this.settings.content_element || this.id);
 		},
 
 		getWin : function() {
@@ -6570,7 +6575,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 					case 'submit':
 					case 'reset':
-						Event.add(DOM.get(t.id).form || DOM.getParent(t.id, 'form'), k, eventHandler);
+						Event.add(t.getElement().form || DOM.getParent(t.id, 'form'), k, eventHandler);
 						break;
 
 					default:
@@ -6820,11 +6825,15 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						var n = t.selection.getNode();
 
 						// Add undo level is selection was lost to another document
-						if (n.ownerDocument && n.ownerDocument != t.getDoc())
+						if (!t.removed && n.ownerDocument && n.ownerDocument != t.getDoc())
 							addUndo();
 					});
-				} else
-					Event.add(t.getDoc(), 'blur', addUndo);
+				} else {
+					Event.add(t.getDoc(), 'blur', function() {
+						if (!t.removed)
+							addUndo();
+					});
+				}
 
 				t.onMouseDown.add(addUndo);
 
