@@ -49,10 +49,10 @@
 				e = DOM.get(this.id);
 
 				// Add accessibility title for unavailable actions
-				if (e) {
+				if (e && this.settings.unavailable_prefix) {
 					if (s) {
 						this.prevTitle = e.title;
-						e.title = (s.unavailable_prefix || "Unavailable") + ": " + e.title;
+						e.title = this.settings.unavailable_prefix + ": " + e.title;
 					} else
 						e.title = this.prevTitle;
 				}
