@@ -8,6 +8,8 @@ Version 3.0b3 (2007-12-xx)
 	Fixed bug where selection/caret position was lost on some table actions.
 	Fixed bug where editor instances couldn't be added to hidden div elements.
 	Fixed bug where list elements in Safari would get an odd ID attribute.
+	Fixed bug where IE would return <html/> when the editor was completely empty.
+	Fixed issue where FF produced an empty paragraph when the editor was completely empty.
 	Fixed issue with size of image dialog in the advanced theme.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.
 	Reintroduced the remove_linebreaks option, this is enabled by default.
