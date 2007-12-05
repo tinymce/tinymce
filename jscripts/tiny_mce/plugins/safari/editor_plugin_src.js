@@ -35,6 +35,22 @@
 					ed.getDoc().execCommand("FormatBlock", false, v);
 			});
 
+			// Workaround for List ID bug, http://bugs.webkit.org/show_bug.cgi?id=16004
+			function addList(c) {
+				var cb = Event.add(ed.getDoc(), 'DOMNodeInserted', function(e) {
+					e = e.target;
+
+					if (e.nodeName == 'OL' || e.nodeName == 'UL')
+						e.id = '';
+				});
+
+				ed.getDoc().execCommand(c, false, false);
+				Event.remove(ed.getDoc(), 'DOMNodeInserted', cb);
+			};
+
+			ed.addCommand('InsertUnorderedList', function() {addList('InsertUnorderedList');});
+			ed.addCommand('InsertOrderedList', function() {addList('InsertOrderedList');});
+
 			// Safari returns incorrect values
 			ed.addQueryValueHandler('FontSize', function(u, v) {
 				var e, v;

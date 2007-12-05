@@ -6019,8 +6019,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		focus : function(sf) {
 			var oed, t = this;
 
-			if (!sf)
+			if (!sf) {
 				t.getWin().focus();
+
+							}
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)

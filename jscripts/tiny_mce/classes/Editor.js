@@ -660,7 +660,7 @@
 			t.bodyElement = e;
 
 			// Workaround for bug: https://bugzilla.mozilla.org/show_bug.cgi?id=388655
-			if (isGecko) {
+/*			if (isGecko) {
 				cb = Event.add(t.getDoc(), 'DOMNodeInserted', function(e) {
 					var v;
 
@@ -669,15 +669,15 @@
 					if (e.nodeType === 1 && e.nodeName === 'BR')
 						DOM.remove(e);
 				});
-			}
+			}*/
 
 			e.contentEditable = true;
 			DOM.addClass(e, 'mceContentEditable');
 			if (!s.gecko_spellcheck)
 				e.spellcheck = 0;
 
-			if (isGecko)
-				Event.remove(t.getDoc(), 'DOMNodeInserted', cb);
+//			if (isGecko)
+//				Event.remove(t.getDoc(), 'DOMNodeInserted', cb);
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
@@ -780,8 +780,17 @@
 		focus : function(sf) {
 			var oed, t = this;
 
-			if (!sf)
+			if (!sf) {
 				t.getWin().focus();
+
+				// #if contentEditable
+
+				// IE/Opera needs element focus restored
+				if (t.settings.content_editable)
+					t.getElement().focus();
+
+				// #endif
+			}
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
