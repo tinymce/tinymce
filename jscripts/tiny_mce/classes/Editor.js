@@ -747,6 +747,13 @@
 			t.focus(true);
 			t.nodeChanged({initial : 1});
 
+			// Load specified content CSS last
+			if (s.content_css) {
+				each(s.content_css.split(','), function(u) {
+					t.dom.loadCSS(t.documentBaseURI.toAbsolute(u));
+				});
+			}
+
 			if (isIE) {
 				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, o) {
 					var st;
