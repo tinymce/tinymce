@@ -136,6 +136,8 @@
 .defaultSkin span.blockquote {background-position:-220px 0}
 .defaultSkin .forecolor span.action {background-position:-720px 0}
 .defaultSkin .backcolor span.action {background-position:-760px 0}
+.defaultSkin .forecolorpicker {background-position:-720px 0}
+.defaultSkin .backcolorpicker {background-position:-760px 0}
 
 /* Plugins */
 .defaultSkin span.advhr {background-position:-0px -20px}

@@ -171,7 +171,9 @@ tinyMCEPopup = {
 			e.onkeydown = tinyMCEPopup._accessHandler;
 		});
 
-		},
+		// Move focus to window
+		window.focus();
+	},
 
 	_accessHandler : function(e) {
 		var e = e || window.event;

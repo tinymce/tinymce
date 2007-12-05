@@ -3974,7 +3974,20 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		setDisabled : function(s) {
+			var e;
+
 			if (s != this.disabled) {
+				e = DOM.get(this.id);
+
+				// Add accessibility title for unavailable actions
+				if (e) {
+					if (s) {
+						this.prevTitle = e.title;
+						e.title = (s.unavailable_prefix || "Unavailable") + ": " + e.title;
+					} else
+						e.title = this.prevTitle;
+				}
+
 				this.setState('Disabled', s);
 				this.setState('Enabled', !s);
 				this.disabled = s;
@@ -8523,6 +8536,7 @@ tinymce.create('tinymce.UndoManager', {
 			s = extend({
 				title : s.title,
 				'class' : id,
+				unavailable_prefix : ed.getLang('unavailable'),
 				scope : s.scope
 			}, s);
 

@@ -1,5 +1,6 @@
 Version 3.0b3 (2007-12-xx)
 	Added new getElement method to Editor class, returns the element that was replaced with the editor instance.
+	Added new unavailable prefix for disabled controls for accessibility reasons.
 	Fixed bug where the DOM wasn't properly initialized before the onInit event was executed in popups.
 	Fixed bug where font sizes where reduced by font size actions on previous spans in Safari.
 	Fixed bug where HR elements got places at the wrong location in IE.
@@ -9,6 +10,8 @@ Version 3.0b3 (2007-12-xx)
 	Fixed bug where editor instances couldn't be added to hidden div elements.
 	Fixed bug where list elements in Safari would get an odd ID attribute.
 	Fixed bug where IE would return <html/> when the editor was completely empty.
+	Fixed bug where accessibility title attribute for access keys wasn't setup properly.
+	Fixed bug where forecolorpicker and backcolorpicker control names wasn't working.
 	Fixed issue where FF produced an empty paragraph when the editor was completely empty.
 	Fixed issue with size of image dialog in the advanced theme.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.

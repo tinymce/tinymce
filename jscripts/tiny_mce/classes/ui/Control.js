@@ -43,7 +43,20 @@
 		 * @param {bool} s Boolean state if the control should be disabled or not.
 		 */
 		setDisabled : function(s) {
+			var e;
+
 			if (s != this.disabled) {
+				e = DOM.get(this.id);
+
+				// Add accessibility title for unavailable actions
+				if (e) {
+					if (s) {
+						this.prevTitle = e.title;
+						e.title = (s.unavailable_prefix || "Unavailable") + ": " + e.title;
+					} else
+						e.title = this.prevTitle;
+				}
+
 				this.setState('Disabled', s);
 				this.setState('Enabled', !s);
 				this.disabled = s;

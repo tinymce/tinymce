@@ -42,9 +42,9 @@
 			sub : ['sub_desc', 'subscript'],
 			sup : ['sup_desc', 'superscript'],
 			forecolor : ['forecolor_desc', 'ForeColor'],
-			forecolorpicker : ['forecolor_desc', 'forecolorpicker'],
+			forecolorpicker : ['forecolor_desc', 'mceForeColor'],
 			backcolor : ['backcolor_desc', 'HiliteColor'],
-			backcolorpicker : ['backcolor_desc', 'backcolorpicker'],
+			backcolorpicker : ['backcolor_desc', 'mceBackColor'],
 			charmap : ['charmap_desc', 'mceCharMap'],
 			visualaid : ['visualaid_desc', 'mceToggleVisualAid'],
 			anchor : ['anchor_desc', 'mceInsertAnchor'],
@@ -539,7 +539,7 @@
 			if (!ed.getParam('accessibility_focus') || ed.getParam('tab_focus'))
 				h.push(DOM.createHTML('a', {href : '#', onfocus : 'tinyMCE.get(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
 
-			h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("toolbar_focus")}, '<!-- IE -->'));
+			h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("advanced.toolbar_focus")}, '<!-- IE -->'));
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
@@ -559,7 +559,7 @@
 				o.deltaHeight -= s.theme_advanced_row_height;
 			}
 
-			h.push(DOM.createHTML('a', {href : '#', accesskey : 'z', title : ed.getLang("toolbar_focus"), onfocus : 'tinyMCE.getInstanceById(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
+			h.push(DOM.createHTML('a', {href : '#', accesskey : 'z', title : ed.getLang("advanced.toolbar_focus"), onfocus : 'tinyMCE.getInstanceById(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
 
 			n.innerHTML = h.join('');
 		},
@@ -955,6 +955,26 @@
 			ed.windowManager.confirm('advanced.newdocument', function(s) {
 				if (s)
 					ed.execCommand('mceSetContent', false, '');
+			});
+		},
+
+		_mceForeColor : function() {
+			var t = this;
+
+			this._mceColorPicker(0, {
+				func : function(co) {
+					t.editor.execCommand('ForeColor', false, co);
+				}
+			});
+		},
+
+		_mceBackColor : function() {
+			var t = this;
+
+			this._mceColorPicker(0, {
+				func : function(co) {
+					t.editor.execCommand('HiliteColor', false, co);
+				}
 			});
 		}
 	});

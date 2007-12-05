@@ -257,6 +257,7 @@
 			s = extend({
 				title : s.title,
 				'class' : id,
+				unavailable_prefix : ed.getLang('unavailable'),
 				scope : s.scope
 			}, s);
 
