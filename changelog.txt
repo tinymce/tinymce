@@ -7,6 +7,7 @@ Version 3.0b3 (2007-12-xx)
 	Fixed bug with missing translation for cell scope settings.
 	Fixed bug where selection/caret position was lost on some table actions.
 	Fixed bug where editor instances couldn't be added to hidden div elements.
+	Fixed issue with size of image dialog in the advanced theme.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.
 	Reintroduced the remove_linebreaks option, this is enabled by default.
 Version 3.0b2 (2007-11-29)

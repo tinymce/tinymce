@@ -929,7 +929,7 @@
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/image.htm',
 				width : 355 + Number(ed.getLang('advanced.image_delta_width', 0)),
-				height : 270 + Number(ed.getLang('advanced.image_delta_height', 0)),
+				height : 275 + Number(ed.getLang('advanced.image_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url
