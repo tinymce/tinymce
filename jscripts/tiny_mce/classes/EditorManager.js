@@ -137,11 +137,15 @@
 						break;
 
 					case "textareas":
+						function hasClass(n, c) {
+							return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
+						};
+
 						each(DOM.select('textarea'), function(v) {
-							if (s.editor_deselector && DOM.hasClass(v, s.editor_deselector))
+							if (s.editor_deselector && hasClass(v, s.editor_deselector))
 								return;
 
-							if (!s.editor_selector || DOM.hasClass(v, s.editor_selector))
+							if (!s.editor_selector || hasClass(v, s.editor_selector))
 								new tinymce.Editor(v.id = (v.id || v.name || (v.id = DOM.uniqueId())), s).render();
 						});
 						break;
