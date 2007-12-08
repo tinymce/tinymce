@@ -318,7 +318,7 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			editor.setContent('<p>test 123</p>');
 			editor.execCommand('SelectAll');
 			editor.execCommand('InsertHorizontalRule');
-			t.eq(editor.getContent(), '<hr />');
+			t.eq(editor.getContent(), tinymce.isGecko || tinymce.isIE ? '<hr />' : '<p><hr /></p>');
 		},
 
 		indentOutdent : function() {
