@@ -2342,7 +2342,7 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		getContent : function(s) {
-			var t = this, r = t.getRng(), e = t.dom.create("body"), se = t.getSel(), wb, wa;
+			var t = this, r = t.getRng(), e = t.dom.create("body"), se = t.getSel(), wb, wa, n;
 
 			s = s || {};
 			wb = wa = '';
@@ -2352,9 +2352,12 @@ tinymce.create('static tinymce.util.XHR', {
 			if (s.format == 'text')
 				return t.isCollapsed() ? '' : (r.text || (se.toString ? se.toString() : ''));
 
-			if (r.cloneContents)
-				e.appendChild(r.cloneContents());
-			else if (is(r.item) || is(r.htmlText))
+			if (r.cloneContents) {
+				n = r.cloneContents();
+
+				if (n)
+					e.appendChild(n);
+			} else if (is(r.item) || is(r.htmlText))
 				e.innerHTML = r.item ? r.item(0).outerHTML : r.htmlText;
 			else
 				e.innerHTML = r.toString();
