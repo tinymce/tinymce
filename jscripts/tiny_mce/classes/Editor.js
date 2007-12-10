@@ -111,7 +111,9 @@
 				forced_root_block : 'p',
 				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]',
 				hidden_input : 1,
-				padd_empty_editor : 1
+				padd_empty_editor : 1,
+				render_ui : 1,
+				init_theme : 1
 			}, s);
 
 			// Setup URIs
@@ -252,7 +254,7 @@
 			o = ThemeManager.get(s.theme);
 			t.theme = new o();
 
-			if (t.theme.init)
+			if (t.theme.init && s.init_theme)
 				t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
 
 			// Create all plugins
@@ -320,24 +322,26 @@
 			t.onBeforeRenderUI.dispatch(t, t.controlManager);
 
 			// Measure box
-			w = s.width || e.style.width || e.clientWidth;
-			h = s.height || e.style.height || e.clientHeight;
-			t.orgDisplay = e.style.display;
+			if (s.render_ui) {
+				w = s.width || e.style.width || e.clientWidth;
+				h = s.height || e.style.height || e.clientHeight;
+				t.orgDisplay = e.style.display;
 
-			if (('' + w).indexOf('%') == -1)
-				w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
+				if (('' + w).indexOf('%') == -1)
+					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
 
-			if (('' + h).indexOf('%') == -1)
-				h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
+				if (('' + h).indexOf('%') == -1)
+					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
 
-			// Render UI
-			o = t.theme.renderUI({
-				targetNode : e,
-				width : w,
-				height : h,
-				deltaWidth : s.delta_width,
-				deltaHeight : s.delta_height
-			});
+				// Render UI
+				o = t.theme.renderUI({
+					targetNode : e,
+					width : w,
+					height : h,
+					deltaWidth : s.delta_width,
+					deltaHeight : s.delta_height
+				});
+			}
 
 			// #if contentEditable
 

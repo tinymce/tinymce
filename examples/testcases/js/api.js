@@ -704,6 +704,11 @@
 			}});
 
 			t.eq(
+				dom.processHTML('<span style="background-image:url(\'http://www.somesite.com\');">test</span>'),
+				'<span style="background-image:url(\'http://www.somesite.com\');" mce_style="background-image:url(\'http://www.somesite.com\');">test</span>'
+			);
+
+			t.eq(
 				dom.processHTML('test1 <strong>test2</strong> <strong id="test1">test3</strong> <em>test2</em> <em id="test2">test3</em>'),
 				tinymce.isGecko ? 'test1 <b>test2</b> <b id="test1">test3</b> <i>test2</i> <i id="test2">test3</i>' : 'test1 <strong>test2</strong> <strong id="test1">test3</strong> <em>test2</em> <em id="test2">test3</em>'
 			);

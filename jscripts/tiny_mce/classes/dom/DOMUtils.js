@@ -781,11 +781,13 @@
 			};
 
 			each(st.split(';'), function(v) {
-				var sv;
+				var sv, ur = [];
 
 				if (v) {
+					v = v.replace(/url\([^\)]+\)/g, function(v) {ur.push(v);return 'url(' + ur.length + ')';});
 					v = v.split(':');
 					sv = tinymce.trim(v[1]);
+					sv = sv.replace(/url\(([^\)]+)\)/g, function(a, b) {return ur[parseInt(b) - 1];});
 
 					sv = sv.replace(/rgb\([^\)]+\)/g, function(v) {
 						return t.toHex(v);
@@ -1046,7 +1048,9 @@
 						return ' ' + b + '="' + c + '" mce_' + b + '="' + u + '"';
 					};
 
-					a = a.replace(/ (src|href|style)=[\"\']([^\"\']+)[\"\']/gi, handle); // W3C
+					a = a.replace(/ (src|href|style)=[\"]([^\"]+)[\"]/gi, handle); // W3C
+					a = a.replace(/ (src|href|style)=[\']([^\']+)[\']/gi, handle); // W3C
+
 					return a.replace(/ (src|href|style)=([^\s\"\'>]+)/gi, handle); // IE
 				});
 			}

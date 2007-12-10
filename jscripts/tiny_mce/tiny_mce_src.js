@@ -1506,11 +1506,13 @@ tinymce.create('static tinymce.util.XHR', {
 			};
 
 			each(st.split(';'), function(v) {
-				var sv;
+				var sv, ur = [];
 
 				if (v) {
+					v = v.replace(/url\([^\)]+\)/g, function(v) {ur.push(v);return 'url(' + ur.length + ')';});
 					v = v.split(':');
 					sv = tinymce.trim(v[1]);
+					sv = sv.replace(/url\(([^\)]+)\)/g, function(a, b) {return ur[parseInt(b) - 1];});
 
 					sv = sv.replace(/rgb\([^\)]+\)/g, function(v) {
 						return t.toHex(v);
@@ -1701,7 +1703,9 @@ tinymce.create('static tinymce.util.XHR', {
 						return ' ' + b + '="' + c + '" mce_' + b + '="' + u + '"';
 					};
 
-					a = a.replace(/ (src|href|style)=[\"\']([^\"\']+)[\"\']/gi, handle); // W3C
+					a = a.replace(/ (src|href|style)=[\"]([^\"]+)[\"]/gi, handle); // W3C
+					a = a.replace(/ (src|href|style)=[\']([^\']+)[\']/gi, handle); // W3C
+
 					return a.replace(/ (src|href|style)=([^\s\"\'>]+)/gi, handle); // IE
 				});
 			}
@@ -5523,7 +5527,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				forced_root_block : 'p',
 				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*]',
 				hidden_input : 1,
-				padd_empty_editor : 1
+				padd_empty_editor : 1,
+				render_ui : 1,
+				init_theme : 1
 			}, s);
 
 			// Setup URIs
@@ -5652,7 +5658,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			o = ThemeManager.get(s.theme);
 			t.theme = new o();
 
-			if (t.theme.init)
+			if (t.theme.init && s.init_theme)
 				t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
 
 			// Create all plugins
@@ -5720,24 +5726,26 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.onBeforeRenderUI.dispatch(t, t.controlManager);
 
 			// Measure box
-			w = s.width || e.style.width || e.clientWidth;
-			h = s.height || e.style.height || e.clientHeight;
-			t.orgDisplay = e.style.display;
+			if (s.render_ui) {
+				w = s.width || e.style.width || e.clientWidth;
+				h = s.height || e.style.height || e.clientHeight;
+				t.orgDisplay = e.style.display;
 
-			if (('' + w).indexOf('%') == -1)
-				w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
+				if (('' + w).indexOf('%') == -1)
+					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
 
-			if (('' + h).indexOf('%') == -1)
-				h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
+				if (('' + h).indexOf('%') == -1)
+					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
 
-			// Render UI
-			o = t.theme.renderUI({
-				targetNode : e,
-				width : w,
-				height : h,
-				deltaWidth : s.delta_width,
-				deltaHeight : s.delta_height
-			});
+				// Render UI
+				o = t.theme.renderUI({
+					targetNode : e,
+					width : w,
+					height : h,
+					deltaWidth : s.delta_width,
+					deltaHeight : s.delta_height
+				});
+			}
 
 			
 			// Resize editor
@@ -8421,7 +8429,7 @@ tinymce.create('tinymce.UndoManager', {
 		createControl : function(n) {
 			var c, t = this, ed = t.editor;
 
-			each(t.editor.plugins, function(p) {
+			each(ed.plugins, function(p) {
 				if (p.createControl) {
 					c = p.createControl(n, t);
 

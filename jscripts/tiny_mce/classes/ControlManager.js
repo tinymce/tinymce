@@ -113,7 +113,7 @@
 		createControl : function(n) {
 			var c, t = this, ed = t.editor;
 
-			each(t.editor.plugins, function(p) {
+			each(ed.plugins, function(p) {
 				if (p.createControl) {
 					c = p.createControl(n, t);
 

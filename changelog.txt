@@ -14,6 +14,7 @@ Version 3.0b3 (2007-12-xx)
 	Fixed bug where accessibility title attribute for access keys wasn't setup properly.
 	Fixed bug where forecolorpicker and backcolorpicker control names wasn't working.
 	Fixed bug where inserting template content didn't work in Safari due to selection exception.
+	Fixed bug where absolute URLs to remote hosts couldn't be used for background images.
 	Fixed issue where FF produced an empty paragraph when the editor was completely empty.
 	Fixed issue with size of image dialog in the advanced theme.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.
