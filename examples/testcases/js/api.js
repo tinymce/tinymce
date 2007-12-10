@@ -337,8 +337,8 @@
 			dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
 			t.eq(dom.getAttrib('test2', 'style'), tinymce.isIE ? 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
-			dom.get('test').innerHTML = '<span id="test2" style="background-image: url(test.gif);"></span>';
-			t.eq(dom.getAttrib('test2', 'style'), 'background-image: url(&amp;&lt;&gt;&quot;test.gif&amp;&lt;&gt;&quot;);');
+			dom.get('test').innerHTML = '<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>';
+			t.eq(dom.getAttrib('test2', 'style'), 'background-image: url(&amp;&lt;&gt;&quot;http://www.site.com/test.gif&amp;&lt;&gt;&quot;);');
 
 			// Cleanup
 			dom.get('test').innerHTML = '';

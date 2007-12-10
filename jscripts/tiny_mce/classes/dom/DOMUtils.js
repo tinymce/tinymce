@@ -780,6 +780,28 @@
 				delete o[p + '-left' + s];
 			};
 
+			function compress2(ta, a, b, c) {
+				var t;
+
+				t = o[a];
+				if (!t)
+					return;
+
+				t = o[b];
+				if (!t)
+					return;
+
+				t = o[c];
+				if (!t)
+					return;
+
+				// Compress
+				o[ta] = o[a] + ' ' + o[b] + ' ' + o[c];
+				delete o[a];
+				delete o[b];
+				delete o[c];
+			};
+
 			each(st.split(';'), function(v) {
 				var sv, ur = [];
 
@@ -794,7 +816,7 @@
 					});
 
 					if (s.url_converter) {
-						sv = sv.replace(/url\([\'\"]?([^\)\'\"]+)\)/g, function(x, c) {
+						sv = sv.replace(/url\([\'\"]?([^\)\'\"]+)[\'\"]?\)/g, function(x, c) {
 							return 'url(' + t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), 'style', null)) + ')';
 						});
 					}
@@ -809,6 +831,7 @@
 			compress("border", "-style", "border-style");
 			compress("padding", "", "padding");
 			compress("margin", "", "margin");
+			compress2('border', 'border-width', 'border-style', 'border-color');
 
 			return o;
 		},

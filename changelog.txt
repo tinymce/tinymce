@@ -19,6 +19,7 @@ Version 3.0b3 (2007-12-xx)
 	Fixed issue where FF produced an empty paragraph when the editor was completely empty.
 	Fixed issue with size of image dialog in the advanced theme.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.
+	Fixed so the style compression feature is a bit smarter to resolve issues with Opera.
 	Reintroduced the remove_linebreaks option, this is enabled by default.
 Version 3.0b2 (2007-11-29)
 	Added type and compact attributes to the default valid_elements list for the ul and ol elements.
