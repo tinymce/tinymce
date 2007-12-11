@@ -649,7 +649,7 @@
 				try {
 					s = e.selection;
 					b = s.getBookmark(true);
-					e.getDoc().execCommand('selectall', false, null);
+					s.getSel().selectAllChildren(e.getBody());
 					s.collapse(true);
 					s.moveToBookmark(b);
 				} catch (ex) {
