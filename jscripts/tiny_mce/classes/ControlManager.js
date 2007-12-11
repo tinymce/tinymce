@@ -249,8 +249,8 @@
 			s.scope = s.scope || ed;
 
 			if (!s.onclick) {
-				s.onclick = function(v) {
-					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+				s.onclick = function() {
+					ed.execCommand(s.cmd, s.ui || false, s.value);
 				};
 			}
 

@@ -44,7 +44,7 @@
 			});
 
 			// Workaround for List ID bug, http://bugs.webkit.org/show_bug.cgi?id=16004
-			function addList(c) {
+/*			function addList(c) {
 				var cb = Event.add(ed.getDoc(), 'DOMNodeInserted', function(e) {
 					e = e.target;
 
@@ -57,7 +57,7 @@
 			};
 
 			ed.addCommand('InsertUnorderedList', function() {addList('InsertUnorderedList');});
-			ed.addCommand('InsertOrderedList', function() {addList('InsertOrderedList');});
+			ed.addCommand('InsertOrderedList', function() {addList('InsertOrderedList');});*/
 
 			// Safari returns incorrect values
 			ed.addQueryValueHandler('FontSize', function(u, v) {

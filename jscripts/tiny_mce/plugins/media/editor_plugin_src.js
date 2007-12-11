@@ -82,7 +82,7 @@
 				h = h.replace(/<object([^>]*)>/gi, '<div class="mceItemObject" $1>');
 				h = h.replace(/<embed([^>]*)>/gi, '<div class="mceItemEmbed" $1>');
 				h = h.replace(/<\/(object|embed)([^>]*)>/gi, '</div>');
-				h = h.replace(/<param([^>]*)>/gi, '<div $1 class="mceItemParam"></div>');
+				h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<div ' + b.replace(/value=/g, '_value=') + ' class="mceItemParam"></div>'});
 				h = h.replace(/\/ class=\"mceItemParam\"><\/div>/gi, 'class="mceItemParam"></div>');
 
 				o.content = h;
@@ -163,6 +163,10 @@
 				}
 			});
 
+			ed.onPostProcess.add(function(ed, o) {
+				o.content = o.content.replace(/_value=/g, 'value=');
+			});
+
 			if (ed.getParam('media_use_script')) {
 				function getAttr(s, n) {
 					n = new RegExp(n + '=\"([^\"]+)\"', 'g').exec(s);
@@ -218,7 +222,7 @@
 
 			each (p, function(v, k) {
 				if (v && !/^(width|height|codebase|classid)$/.test(k))
-					dom.add(ob, 'div', {mce_name : 'param', name : k, value : v});
+					dom.add(ob, 'div', {mce_name : 'param', name : k, '_value' : v});
 			});
 
 			dom.add(ob, 'div', tinymce.extend({mce_name : 'embed', type : o.type}, p));
@@ -286,7 +290,7 @@
 			// Add optional parameters
 			each(dom.select('div', n), function(n) {
 				if (dom.hasClass(n, 'mceItemParam'))
-					pa[dom.getAttrib(n, 'name')] = dom.getAttrib(n, 'value');
+					pa[dom.getAttrib(n, 'name')] = dom.getAttrib(n, '_value');
 			});
 
 			// Use src not movie
