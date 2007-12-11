@@ -76,7 +76,9 @@
 				var h = o.content;
 
 				h = h.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, function(a, b, c) {
-					return '<img class="mceItem' + b + '" title="' + ed.dom.encode(c) + '" src="' + url + '/img/trans.gif" />'
+					var o = eval("({" + c + "})");
+
+					return '<img class="mceItem' + b + '" title="' + ed.dom.encode(c) + '" src="' + url + '/img/trans.gif" width="' + o.width + '" height="' + o.height + '" />'
 				});
 
 				h = h.replace(/<object([^>]*)>/gi, '<div class="mceItemObject" $1>');
