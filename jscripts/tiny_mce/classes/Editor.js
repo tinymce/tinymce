@@ -671,25 +671,10 @@
 			t.contentWindow = s.content_window || window;
 			t.bodyElement = e;
 
-			// Workaround for bug: https://bugzilla.mozilla.org/show_bug.cgi?id=388655
-/*			if (isGecko) {
-				cb = Event.add(t.getDoc(), 'DOMNodeInserted', function(e) {
-					var v;
-
-					e = e.target;
-
-					if (e.nodeType === 1 && e.nodeName === 'BR')
-						DOM.remove(e);
-				});
-			}*/
-
 			e.contentEditable = true;
 			DOM.addClass(e, 'mceContentEditable');
 			if (!s.gecko_spellcheck)
 				e.spellcheck = 0;
-
-//			if (isGecko)
-//				Event.remove(t.getDoc(), 'DOMNodeInserted', cb);
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
@@ -1029,7 +1014,7 @@
 		execCommand : function(cmd, ui, val) {
 			var t = this, s = 0, o;
 
-			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel)$/.test(cmd))
+			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(cmd))
 				t.focus();
 
 			o = {};

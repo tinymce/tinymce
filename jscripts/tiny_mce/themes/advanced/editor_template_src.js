@@ -337,7 +337,10 @@
 				DOM.addClass(n.childNodes[n.childNodes.length - 1], 'last');
 			});
 
-			DOM.insertAfter(p, n);
+			if (DOM.get(s.theme_advanced_toolbar_container))
+				DOM.get(s.theme_advanced_toolbar_container).appendChild(p);
+			else
+				DOM.insertAfter(p, n);
 
 			Event.add(ed.id + '_path_row', 'click', function(e) {
 				e = e.target;
@@ -444,8 +447,10 @@
 				t._addStatusBar(tb, o);
 
 			// Create iframe container
-			n = DOM.add(tb, 'tr');
-			n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
+			if (!s.theme_advanced_toolbar_container) {
+				n = DOM.add(tb, 'tr');
+				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
+			}
 
 			// Create toolbar container at bottom
 			if (lo == 'bottom')
