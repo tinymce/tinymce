@@ -335,7 +335,7 @@
 				rb.setStartBefore(sc);
 
 			rb.setEnd(sn, so);
-			bef.appendChild(rb.cloneContents());
+			bef.appendChild(rb.cloneContents() || d.createTextNode('')); // Empty text node needed for Safari
 
 			// Place secnd chop part within new block element
 			try {
@@ -345,7 +345,7 @@
 			}
 
 			ra.setStart(en, eo);
-			aft.appendChild(ra.cloneContents());
+			aft.appendChild(ra.cloneContents() || d.createTextNode('')); // Empty text node needed for Safari
 
 			// Create range around everything
 			r = d.createRange();
