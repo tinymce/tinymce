@@ -3448,7 +3448,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this, s = t.settings, h = o.content, sc = [], p;
 
 			// Remove whitespace to normalize browsers
-			if (s.remove_linebreaks && o.format == 'html') {
+			if (o.format == 'html') {
 				// Protect some elements
 				p = t._protect({
 					content : h,
@@ -3458,25 +3458,29 @@ tinymce.create('static tinymce.util.XHR', {
 						/<pre[^>]*>(.*?)<\/pre>/g
 					]
 				});
+
 				h = p.content;
 
 				// Since Gecko and Safari keeps whitespace in the DOM we need to
 				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
-				h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
-				h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
-				h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
-				h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
-				h = h.replace(/\s+<\/(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
-				h = t._unprotect(h, p);
-			}
+				if (s.remove_linebreaks) {
+					h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
+					h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
+					h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
+					h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
+					h = h.replace(/\s+<\/(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
+				}
 
-			// Simple intentation
-			if (s.apply_source_formatting && s.indent_mode == 'simple' && o.format == 'html') {
-				// Add line breaks before and after block elements
-				h = h.replace(/\s*<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>/g, '\n<$1 $2>');
-				h = h.replace(/\s*<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '\n<$1>');
-				h = h.replace(/<(object)([^>]*)>\s*/g, '<$1$2>\n');
-				h = h.replace(/\s*<\/(tr|tbody|table|body|head|html|object)>/g, '\n</$1>');
+				// Simple indentation
+				if (s.apply_source_formatting && s.indent_mode == 'simple') {
+					// Add line breaks before and after block elements
+					h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
+					h = h.replace(/<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
+					h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>/g, '</$1>\n');
+					h = h.replace(/\n\n/g, '\n');
+				}
+
+				h = t._unprotect(h, p);
 			}
 
 			o.content = h;
@@ -7703,7 +7707,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				try {
 					s = e.selection;
 					b = s.getBookmark(true);
-					e.getDoc().execCommand('selectall', false, null);
+					s.getSel().selectAllChildren(e.getBody());
 					s.collapse(true);
 					s.moveToBookmark(b);
 				} catch (ex) {
