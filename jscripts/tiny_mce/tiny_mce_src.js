@@ -4626,7 +4626,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		getLength : function() {
-			return Math.max(this.items.length - 1, 0);
+			return this.items.length;
 		},
 
 		renderHTML : function() {
@@ -4707,8 +4707,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			each(t.items, function(o) {
 				o.id = DOM.uniqueId();
 				o.onclick = function() {
-					t.settings.onselect(o.value);
-					t.select(o.value); // Must be runned after
+					if (t.settings.onselect(o.value) !== false)
+						t.select(o.value); // Must be runned after
 				};
 
 				m.add(o);
@@ -5620,16 +5620,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					if (n._mceOldSubmit)
 						return;
 
-					n._mceOldSubmit = n.submit;
-					t.formElement = n;
+					// Check page uses id="submit" or name="submit" for it's submit button
+					if (!n.submit.nodeType) {
+						t.formElement = n;
+						n._mceOldSubmit = n.submit;
+						n.submit = function() {
+							// Save all instances
+							EditorManager.triggerSave();
+							t.isNotDirty = 1;
 
-					n.submit = function() {
-						// Save all instances
-						EditorManager.triggerSave();
-						t.isNotDirty = 1;
-
-						return this._mceOldSubmit(this);
-					};
+							return this._mceOldSubmit(this);
+						};
+					}
 
 					n = null;
 				});
@@ -5857,7 +5859,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Setup body
 			d.open();
-			d.write(s.doctype + '<html><head><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
+			d.write(s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
 
 			// IE needs to use contentEditable or it will display non secure items for HTTPS
@@ -6937,8 +6939,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var t = this;
 
 			if (t.formElement) {
-				t.formElement.submit = t.formElement._submit;
-				t.formElement._submit = null;
+				t.formElement.submit = t.formElement._mceOldSubmit;
+				t.formElement._mceOldSubmit = null;
 			}
 
 			t.contentAreaContainer = t.formElement = t.container = t.contentDocument = t.contentWindow = null;
@@ -7670,10 +7672,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		mceRemoveNode : function(ui, val) {
-			var ed = this.editor, s = ed.selection, b;
+			var ed = this.editor, s = ed.selection, b, n = val || s.getNode();
+
+			// Make sure that the body node isn't removed
+			if (n == ed.getBody())
+				return;
 
 			b = s.getBookmark();
-			ed.dom.remove(val || s.getNode(), 1);
+			ed.dom.remove(n, 1);
 			s.moveToBookmark(b);
 			ed.nodeChanged();
 		},

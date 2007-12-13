@@ -22,6 +22,10 @@ Version 3.0b3 (2007-12-xx)
 	Fixed bug where media plugin didn't parse script tags correctly patch contributed by Mathieu Campagna.
 	Fixed bug where the drop menus of list boxes like blockformat could produce scrolling of the page.
 	Fixed bug where the drop menus where placed at an incorrect location if TinyMCE was placed in a scrollable div.
+	Fixed bug where submit buttons couldn't be named submit, it's not recommended to name submit buttons submit anyway.
+	Fixed bug where the stylelistbox produced an exception if there was only one class in the list box.
+	Fixed bug where the stylelistbox wasn't updated correctly when the current class was removed.
+	Fixed bug where the formatblock command sometimes removed the body element.
 	Fixed issue where FF produced an empty paragraph when the editor was completely empty.
 	Fixed issue with size of image dialog in the advanced theme.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.

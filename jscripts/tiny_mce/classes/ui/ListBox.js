@@ -99,7 +99,7 @@
 		 * @param {Number} Number of items inside the list box.
 		 */
 		getLength : function() {
-			return Math.max(this.items.length - 1, 0);
+			return this.items.length;
 		},
 
 		/**
@@ -195,8 +195,8 @@
 			each(t.items, function(o) {
 				o.id = DOM.uniqueId();
 				o.onclick = function() {
-					t.settings.onselect(o.value);
-					t.select(o.value); // Must be runned after
+					if (t.settings.onselect(o.value) !== false)
+						t.select(o.value); // Must be runned after
 				};
 
 				m.add(o);

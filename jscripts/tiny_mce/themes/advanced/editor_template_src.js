@@ -161,9 +161,11 @@
 			var t = this, ed = t.editor, cf = ed.controlManager, c = cf.createListBox('styleselect', {
 				title : 'advanced.style_select',
 				onselect : function(v) {
-					if (c.selectedValue === v)
+					if (c.selectedValue === v) {
 						ed.execCommand('mceSetStyleInfo', 0, {command : 'removeformat'});
-					else
+						c.select();
+						return false;
+					} else
 						ed.execCommand('mceSetCSSClass', 0, v);
 				}
 			});

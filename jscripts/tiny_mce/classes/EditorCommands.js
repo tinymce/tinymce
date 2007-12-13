@@ -607,10 +607,14 @@
 		},
 
 		mceRemoveNode : function(ui, val) {
-			var ed = this.editor, s = ed.selection, b;
+			var ed = this.editor, s = ed.selection, b, n = val || s.getNode();
+
+			// Make sure that the body node isn't removed
+			if (n == ed.getBody())
+				return;
 
 			b = s.getBookmark();
-			ed.dom.remove(val || s.getNode(), 1);
+			ed.dom.remove(n, 1);
 			s.moveToBookmark(b);
 			ed.nodeChanged();
 		},

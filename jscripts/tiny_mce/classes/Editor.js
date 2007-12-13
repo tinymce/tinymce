@@ -179,16 +179,18 @@
 					if (n._mceOldSubmit)
 						return;
 
-					n._mceOldSubmit = n.submit;
-					t.formElement = n;
+					// Check page uses id="submit" or name="submit" for it's submit button
+					if (!n.submit.nodeType) {
+						t.formElement = n;
+						n._mceOldSubmit = n.submit;
+						n.submit = function() {
+							// Save all instances
+							EditorManager.triggerSave();
+							t.isNotDirty = 1;
 
-					n.submit = function() {
-						// Save all instances
-						EditorManager.triggerSave();
-						t.isNotDirty = 1;
-
-						return this._mceOldSubmit(this);
-					};
+							return this._mceOldSubmit(this);
+						};
+					}
 
 					n = null;
 				});
@@ -433,7 +435,7 @@
 
 			// Setup body
 			d.open();
-			d.write(s.doctype + '<html><head><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
+			d.write(s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
 
 			// IE needs to use contentEditable or it will display non secure items for HTTPS
@@ -1840,8 +1842,8 @@
 			var t = this;
 
 			if (t.formElement) {
-				t.formElement.submit = t.formElement._submit;
-				t.formElement._submit = null;
+				t.formElement.submit = t.formElement._mceOldSubmit;
+				t.formElement._mceOldSubmit = null;
 			}
 
 			t.contentAreaContainer = t.formElement = t.container = t.contentDocument = t.contentWindow = null;
