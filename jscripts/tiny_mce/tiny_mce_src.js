@@ -1465,6 +1465,8 @@ tinymce.create('static tinymce.util.XHR', {
 			while (n) {
 				x += n.offsetLeft || 0;
 				y += n.offsetTop || 0;
+				x -= n.scrollLeft || 0;
+				y -= n.scrollTop || 0;
 				n = n.offsetParent;
 			}
 
@@ -4287,18 +4289,21 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		update : function() {
-			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id + '_co');
+			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id + '_co'), tw, th;
+
+			tw = Math.min(tb.clientWidth, s.max_width);
+			th = Math.min(tb.clientHeight, s.max_height);
 
 			if (!DOM.boxModel)
-				t.element.setStyles({width : tb.clientWidth + 2, height : tb.clientHeight + 2});
+				t.element.setStyles({width : tw + 2, height : th + 2});
 			else
-				t.element.setStyles({width : tb.clientWidth, height : tb.clientHeight});
+				t.element.setStyles({width : tw, height : th});
 
 			if (s.max_width)
-				DOM.setStyle(co, 'width', Math.min(tb.clientWidth, s.max_width));
+				DOM.setStyle(co, 'width', tw);
 
 			if (s.max_height) {
-				DOM.setStyle(co, 'height', Math.min(tb.clientHeight, s.max_height));
+				DOM.setStyle(co, 'height', th);
 
 				if (tb.clientHeight < s.max_height)
 					DOM.setStyle(co, 'overflow', 'hidden');

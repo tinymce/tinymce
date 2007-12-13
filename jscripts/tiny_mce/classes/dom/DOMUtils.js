@@ -732,6 +732,8 @@
 			while (n) {
 				x += n.offsetLeft || 0;
 				y += n.offsetTop || 0;
+				x -= n.scrollLeft || 0;
+				y -= n.scrollTop || 0;
 				n = n.offsetParent;
 			}
 
