@@ -2,7 +2,6 @@ tinyMCE.addI18n({en:{
 common:{
 edit_confirm:"Do you want to use the WYSIWYG mode for this textarea?",
 apply:"Apply",
-unavailable : 'Unavailable',
 insert:"Insert",
 update:"Update",
 cancel:"Cancel",
