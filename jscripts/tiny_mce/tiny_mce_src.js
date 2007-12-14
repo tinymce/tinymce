@@ -4291,8 +4291,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		update : function() {
 			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id + '_co'), tw, th;
 
-			tw = Math.min(tb.clientWidth, s.max_width);
-			th = Math.min(tb.clientHeight, s.max_height);
+			tw = s.max_width ? Math.min(tb.clientWidth, s.max_width) : tb.clientWidth;
+			th = s.max_height ? Math.min(tb.clientHeight, s.max_height) : tb.clientHeight;
 
 			if (!DOM.boxModel)
 				t.element.setStyles({width : tw + 2, height : th + 2});
