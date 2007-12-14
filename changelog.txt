@@ -26,6 +26,7 @@ Version 3.0b3 (2007-12-14)
 	Fixed bug where the stylelistbox produced an exception if there was only one class in the list box.
 	Fixed bug where the stylelistbox wasn't updated correctly when the current class was removed.
 	Fixed bug where the formatblock command sometimes removed the body element.
+	Fixed bug where fullscreen switching in IE sometimes produced an exception when the spellchecker plugin was enabled.
 	Fixed issue where FF produced an empty paragraph when the editor was completely empty.
 	Fixed issue with size of image dialog in the advanced theme.
 	Fixed issues with the bbcode plugin it now also handles spans and the [font] rule.

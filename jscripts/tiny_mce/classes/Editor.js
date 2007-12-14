@@ -1797,11 +1797,16 @@
 				// Add undo level on editor blur
 				if (tinymce.isIE) {
 					Event.add(t.getWin(), 'blur', function(e) {
-						var n = t.selection.getNode();
+						var n;
 
-						// Add undo level is selection was lost to another document
-						if (!t.removed && n.ownerDocument && n.ownerDocument != t.getDoc())
-							addUndo();
+						// Check added for fullscreen bug
+						if (t.selection) {
+							n = t.selection.getNode();
+
+							// Add undo level is selection was lost to another document
+							if (!t.removed && n.ownerDocument && n.ownerDocument != t.getDoc())
+								addUndo();
+						}
 					});
 				} else {
 					Event.add(t.getDoc(), 'blur', function() {
