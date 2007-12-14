@@ -16,8 +16,8 @@
 			ed.addCommand('mceFullPageProperties', function() {
 				ed.windowManager.open({
 					file : url + '/fullpage.htm',
-					width : 430 + ed.getLang('fullpage.delta_width', 0),
-					height : 495 + ed.getLang('fullpage.delta_height', 0),
+					width : 430 + parseInt(ed.getLang('fullpage.delta_width', 0)),
+					height : 495 + parseInt(ed.getLang('fullpage.delta_height', 0)),
 					inline : 1
 				}, {
 					plugin_url : url,

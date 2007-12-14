@@ -5088,15 +5088,15 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	renderHTML : function() {
-		var h = '', c = 'mceToolbarEnd', co, dom = tinymce.DOM;
+		var t = this, h = '', c = 'mceToolbarEnd', co, dom = tinymce.DOM, s = t.settings;
 
 		h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
 
-		tinymce.each(this.controls, function(c) {
+		tinymce.each(t.controls, function(c) {
 			h += '<td>' + c.renderHTML() + '</td>';
 		});
 
-		co = this.controls[this.controls.length - 1].constructor;
+		co = t.controls[t.controls.length - 1].constructor;
 
 		if (co === tinymce.ui.Button)
 			c += ' mceToolbarEndButton';
@@ -5107,7 +5107,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 		h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
 
-		return dom.createHTML('table', {'class' : 'mceToolbar', cellpadding : '0', cellspacing : '0', align : this.settings.align}, '<tbody><tr>' + h + '</tr></tbody>');
+		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || ''}, '<tbody><tr>' + h + '</tr></tbody>');
 	}
 
 	});
@@ -8675,12 +8675,15 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		createToolbar : function(id, s) {
-			var c = new tinymce.ui.Toolbar(id, s);
+			var c, t = this;
 
-			if (this.get(id))
+			id = t.prefix + id;
+			c = new tinymce.ui.Toolbar(id, s);
+
+			if (t.get(id))
 				return null;
 
-			return this.add(c);
+			return t.add(c);
 		},
 
 		createSeparator : function() {

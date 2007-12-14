@@ -23,8 +23,8 @@
 			ed.addCommand('mceMedia', function() {
 				ed.windowManager.open({
 					file : url + '/media.htm',
-					width : 430 + ed.getLang('media.delta_width', 0),
-					height : 470 + ed.getLang('media.delta_height', 0),
+					width : 430 + parseInt(ed.getLang('media.delta_width', 0)),
+					height : 470 + parseInt(ed.getLang('media.delta_height', 0)),
 					inline : 1
 				}, {
 					plugin_url : url

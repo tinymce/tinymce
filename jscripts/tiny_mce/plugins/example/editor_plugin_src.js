@@ -23,8 +23,8 @@
 			ed.addCommand('mceExample', function() {
 				ed.windowManager.open({
 					file : url + '/dialog.htm',
-					width : 320 + ed.getLang('example.delta_width', 0),
-					height : 120 + ed.getLang('example.delta_height', 0),
+					width : 320 + parseInt(ed.getLang('example.delta_width', 0)),
+					height : 120 + parseInt(ed.getLang('example.delta_height', 0)),
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL

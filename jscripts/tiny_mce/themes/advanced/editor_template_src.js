@@ -550,7 +550,7 @@
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
-				tb = cf.createToolbar("toolbar" + i);
+				tb = cf.createToolbar("toolbar" + i, {'class' : 'mceToolbarRow' + i});
 
 				if (s['theme_advanced_buttons' + i + '_add'])
 					v += ',' + s['theme_advanced_buttons' + i + '_add'];
@@ -863,8 +863,8 @@
 
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/anchor.htm',
-				width : 320 + Number(ed.getLang('advanced.anchor_delta_width', 0)),
-				height : 90 + Number(ed.getLang('advanced.anchor_delta_height', 0)),
+				width : 320 + parseInt(ed.getLang('advanced.anchor_delta_width', 0)),
+				height : 90 + parseInt(ed.getLang('advanced.anchor_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url
@@ -876,8 +876,8 @@
 
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/charmap.htm',
-				width : 550 + Number(ed.getLang('advanced.charmap_delta_width', 0)),
-				height : 250 + Number(ed.getLang('advanced.charmap_delta_height', 0)),
+				width : 550 + parseInt(ed.getLang('advanced.charmap_delta_width', 0)),
+				height : 250 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url
@@ -904,8 +904,8 @@
 
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/color_picker.htm',
-				width : 375 + Number(ed.getLang('advanced.colorpicker_delta_width', 0)),
-				height : 250 + Number(ed.getLang('advanced.colorpicker_delta_height', 0)),
+				width : 375 + parseInt(ed.getLang('advanced.colorpicker_delta_width', 0)),
+				height : 250 + parseInt(ed.getLang('advanced.colorpicker_delta_height', 0)),
 				close_previous : false,
 				inline : true
 			}, {
@@ -935,8 +935,8 @@
 
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/image.htm',
-				width : 355 + Number(ed.getLang('advanced.image_delta_width', 0)),
-				height : 275 + Number(ed.getLang('advanced.image_delta_height', 0)),
+				width : 355 + parseInt(ed.getLang('advanced.image_delta_width', 0)),
+				height : 275 + parseInt(ed.getLang('advanced.image_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url
@@ -948,8 +948,8 @@
 
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/link.htm',
-				width : 310 + Number(ed.getLang('advanced.link_delta_width', 0)),
-				height : 200 + Number(ed.getLang('advanced.link_delta_height', 0)),
+				width : 310 + parseInt(ed.getLang('advanced.link_delta_width', 0)),
+				height : 200 + parseInt(ed.getLang('advanced.link_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url

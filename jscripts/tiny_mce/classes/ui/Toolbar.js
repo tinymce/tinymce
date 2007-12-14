@@ -22,15 +22,15 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	 * @return {String} HTML for the toolbar control.
 	 */
 	renderHTML : function() {
-		var h = '', c = 'mceToolbarEnd', co, dom = tinymce.DOM;
+		var t = this, h = '', c = 'mceToolbarEnd', co, dom = tinymce.DOM, s = t.settings;
 
 		h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
 
-		tinymce.each(this.controls, function(c) {
+		tinymce.each(t.controls, function(c) {
 			h += '<td>' + c.renderHTML() + '</td>';
 		});
 
-		co = this.controls[this.controls.length - 1].constructor;
+		co = t.controls[t.controls.length - 1].constructor;
 
 		if (co === tinymce.ui.Button)
 			c += ' mceToolbarEndButton';
@@ -41,7 +41,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 		h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
 
-		return dom.createHTML('table', {'class' : 'mceToolbar', cellpadding : '0', cellspacing : '0', align : this.settings.align}, '<tbody><tr>' + h + '</tr></tbody>');
+		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || ''}, '<tbody><tr>' + h + '</tr></tbody>');
 	}
 
 	/**#@-*/

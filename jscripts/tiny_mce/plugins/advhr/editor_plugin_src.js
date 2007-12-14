@@ -12,8 +12,8 @@
 			ed.addCommand('mceAdvancedHr', function() {
 				ed.windowManager.open({
 					file : url + '/rule.htm',
-					width : 250 + ed.getLang('advhr.delta_width', 0),
-					height : 160 + ed.getLang('advhr.delta_height', 0),
+					width : 250 + parseInt(ed.getLang('advhr.delta_width', 0)),
+					height : 160 + parseInt(ed.getLang('advhr.delta_height', 0)),
 					inline : 1
 				}, {
 					plugin_url : url

@@ -1,3 +1,7 @@
+Version 3.0rc1 (2007-12-xx)
+	Added new classes for toolbar rows in advanced theme mceToolbarRow1..n enabled you to change appearance of individual rows.
+	Fixed so that the toolbars have unique IDs, enables you to alter the toolbars using the ControlManager and the DOM.
+	Fixed bug where delta values for dialog sizes in language packs didn't work correctly due to missing string to number casting.
 Version 3.0b3 (2007-12-14)
 	Added new getElement method to Editor class, returns the element that was replaced with the editor instance.
 	Added new unavailable prefix for disabled controls for accessibility reasons.

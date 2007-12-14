@@ -400,8 +400,8 @@
 					if (user_interface) {
 						inst.windowManager.open({
 							url : url + '/row.htm',
-							width : 400 + inst.getLang('table.rowprops_delta_width', 0),
-							height : 295 + inst.getLang('table.rowprops_delta_height', 0),
+							width : 400 + parseInt(inst.getLang('table.rowprops_delta_width', 0)),
+							height : 295 + parseInt(inst.getLang('table.rowprops_delta_height', 0)),
 							inline : 1
 						}, {
 							plugin_url : url
@@ -417,8 +417,8 @@
 					if (user_interface) {
 						inst.windowManager.open({
 							url : url + '/cell.htm',
-							width : 400 + inst.getLang('table.cellprops_delta_width', 0),
-							height : 295 + inst.getLang('table.cellprops_delta_height', 0),
+							width : 400 + parseInt(inst.getLang('table.cellprops_delta_width', 0)),
+							height : 295 + parseInt(inst.getLang('table.cellprops_delta_height', 0)),
 							inline : 1
 						}, {
 							plugin_url : url
@@ -431,8 +431,8 @@
 					if (user_interface) {
 						inst.windowManager.open({
 							url : url + '/table.htm',
-							width : 400 + inst.getLang('table.table_delta_width', 0),
-							height : 320 + inst.getLang('table.table_delta_height', 0),
+							width : 400 + parseInt(inst.getLang('table.table_delta_width', 0)),
+							height : 320 + parseInt(inst.getLang('table.table_delta_height', 0)),
 							inline : 1
 						}, {
 							plugin_url : url,
@@ -796,8 +796,8 @@
 
 									inst.windowManager.open({
 										url : url + '/merge_cells.htm',
-										width : 240 + inst.getLang('table.merge_cells_delta_width', 0),
-										height : 110 + inst.getLang('table.merge_cells_delta_height', 0),
+										width : 240 + parseInt(inst.getLang('table.merge_cells_delta_width', 0)),
+										height : 110 + parseInt(inst.getLang('table.merge_cells_delta_height', 0)),
 										inline : 1
 									}, {
 										action : "update",

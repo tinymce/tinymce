@@ -359,12 +359,15 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createToolbar : function(id, s) {
-			var c = new tinymce.ui.Toolbar(id, s);
+			var c, t = this;
 
-			if (this.get(id))
+			id = t.prefix + id;
+			c = new tinymce.ui.Toolbar(id, s);
+
+			if (t.get(id))
 				return null;
 
-			return this.add(c);
+			return t.add(c);
 		},
 
 		/**
