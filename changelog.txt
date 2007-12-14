@@ -1,4 +1,4 @@
-Version 3.0b3 (2007-12-xx)
+Version 3.0b3 (2007-12-14)
 	Added new getElement method to Editor class, returns the element that was replaced with the editor instance.
 	Added new unavailable prefix for disabled controls for accessibility reasons.
 	Fixed bug where regexp patterns couldn't be used for the editor_selector/editor_deselector options.
