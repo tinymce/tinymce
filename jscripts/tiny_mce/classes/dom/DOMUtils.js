@@ -672,7 +672,7 @@
 			}
 
 			// Remove Apple and WebKit stuff
-			if (isWebKit && n == "class" && v)
+			if (isWebKit && n === "class" && v)
 				v = v.replace(/(apple|webkit)\-[a-z\-]+/gi, '');
 
 			// Handle IE issues

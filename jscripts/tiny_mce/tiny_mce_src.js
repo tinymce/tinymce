@@ -1411,7 +1411,7 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 
 			// Remove Apple and WebKit stuff
-			if (isWebKit && n == "class" && v)
+			if (isWebKit && n === "class" && v)
 				v = v.replace(/(apple|webkit)\-[a-z\-]+/gi, '');
 
 			// Handle IE issues
@@ -3088,34 +3088,6 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 		},
 
-		encode : function(o) {
-			var t = this, s = t.settings, l;
-
-			if (s.entity_encoding.indexOf('named') != -1) {
-				t.setEntities(s.entities);
-				l = t.entityLookup;
-
-				if (o.format == 'html') {
-					o.content = o.content.replace(t.entitiesRE, function(a) {
-						var v;
-
-						if (v = l[a])
-							a = '&' + v + ';';
-
-						return a;
-					});
-				}
-			}
-
-			if (s.entity_encoding.indexOf('numeric') != -1) {
-				if (o.format == 'html') {
-					o.content = o.content.replace(/[\u007E-\uFFFF]/g, function(a) {
-						return '&#' + a.charCodeAt(0) + ';';
-					});
-				}
-			}
-		},
-
 		setEntities : function(s) {
 			var a, i, l = {}, re = '', v;
 
@@ -3447,19 +3419,17 @@ tinymce.create('static tinymce.util.XHR', {
 			if (!o.no_events)
 				t.onPostProcess.dispatch(t, o);
 
-			t.encode(o);
-			t.indent(o);
 			t._postProcess(o);
-
 			o.node = null;
 
 			return tinymce.trim(o.content);
 		},
 
-		indent : function(o) {
-			var t = this, s = t.settings, h = o.content, sc = [], p;
+		// Internal functions
 
-			// Remove whitespace to normalize browsers
+		_postProcess : function(o) {
+			var t = this, s = t.settings, h = o.content, sc = [], p, l;
+
 			if (o.format == 'html') {
 				// Protect some elements
 				p = t._protect({
@@ -3473,23 +3443,55 @@ tinymce.create('static tinymce.util.XHR', {
 
 				h = p.content;
 
-				// Since Gecko and Safari keeps whitespace in the DOM we need to
-				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
-				if (s.remove_linebreaks) {
-					h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
-					h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
-					h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
-					h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
-					h = h.replace(/\s+<\/(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
+				// Entity encode
+				if (s.entity_encoding !== 'raw') {
+					if (s.entity_encoding.indexOf('named') != -1) {
+						t.setEntities(s.entities);
+						l = t.entityLookup;
+
+						h = h.replace(t.entitiesRE, function(a) {
+							var v;
+
+							if (v = l[a])
+								a = '&' + v + ';';
+
+							return a;
+						});
+					}
+
+					if (s.entity_encoding.indexOf('numeric') != -1) {
+						h = h.replace(/[\u007E-\uFFFF]/g, function(a) {
+							return '&#' + a.charCodeAt(0) + ';';
+						});
+					}
 				}
 
-				// Simple indentation
-				if (s.apply_source_formatting && s.indent_mode == 'simple') {
-					// Add line breaks before and after block elements
-					h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
-					h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
-					h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
-					h = h.replace(/\n\n/g, '\n');
+				// Use BR instead of &nbsp; padded P elements inside editor and use <p>&nbsp;</p> outside editor
+				if (o.set)
+					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p><br /></p>');
+				else
+					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p>$1</p>');
+
+				// Since Gecko and Safari keeps whitespace in the DOM we need to
+				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
+				// This process is only done when getting contents out from the editor.
+				if (!o.set) {
+					if (s.remove_linebreaks) {
+						h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
+						h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
+						h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
+						h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
+						h = h.replace(/\s+<\/(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
+					}
+
+					// Simple indentation
+					if (s.apply_source_formatting && s.indent_mode == 'simple') {
+						// Add line breaks before and after block elements
+						h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
+						h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
+						h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
+						h = h.replace(/\n\n/g, '\n');
+					}
 				}
 
 				h = t._unprotect(h, p);
@@ -3497,8 +3499,6 @@ tinymce.create('static tinymce.util.XHR', {
 
 			o.content = h;
 		},
-
-		// Internal functions
 
 		_serializeNode : function(n, inn) {
 			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv;
@@ -3697,22 +3697,6 @@ tinymce.create('static tinymce.util.XHR', {
 			o.items = [];
 
 			return h;
-		},
-
-		_postProcess : function(o) {
-			var s = this.settings, h;
-
-			if (o.format == 'html') {
-				h = o.content;
-
-				// Use BR instead of &nbsp; padded P elements inside editor and use <p>&nbsp;</p> outside editor
-				if (o.set)
-					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p><br /></p>');
-				else
-					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p>$1</p>');
-
-				o.content = h;
-			}
 		},
 
 		_setup : function() {
@@ -5567,7 +5551,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				apply_source_formatting : 1,
 				directionality : 'ltr',
 				forced_root_block : 'p',
-				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value|_value],embed[type|width|height|src|*]',
+				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value|_value],embed[type|width|height|src|*],script[type]',
 				hidden_input : 1,
 				padd_empty_editor : 1,
 				render_ui : 1,

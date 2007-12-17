@@ -159,40 +159,6 @@
 		 */
 
 		/**
-		 * Entity encodes a string based on the settings passed to the serializer. This one can do both numeric
-		 * and named entity encoding.
-		 *
-		 * @param {Object} o Object containing the content field to encode. 
-		 */
-		encode : function(o) {
-			var t = this, s = t.settings, l;
-
-			if (s.entity_encoding.indexOf('named') != -1) {
-				t.setEntities(s.entities);
-				l = t.entityLookup;
-
-				if (o.format == 'html') {
-					o.content = o.content.replace(t.entitiesRE, function(a) {
-						var v;
-
-						if (v = l[a])
-							a = '&' + v + ';';
-
-						return a;
-					});
-				}
-			}
-
-			if (s.entity_encoding.indexOf('numeric') != -1) {
-				if (o.format == 'html') {
-					o.content = o.content.replace(/[\u007E-\uFFFF]/g, function(a) {
-						return '&#' + a.charCodeAt(0) + ';';
-					});
-				}
-			}
-		},
-
-		/**
 		 * Sets a list of entities to use for the named entity encoded.
 		 *
 		 * @param {String} s List of entities in the following format: number,name,....
@@ -574,24 +540,22 @@
 			if (!o.no_events)
 				t.onPostProcess.dispatch(t, o);
 
-			t.encode(o);
-			t.indent(o);
 			t._postProcess(o);
-
 			o.node = null;
 
 			return tinymce.trim(o.content);
 		},
+
+		// Internal functions
 
 		/**
 		 * Indents the specified content object.
 		 *
 		 * @param {Object} o Content object to indent.
 		 */
-		indent : function(o) {
-			var t = this, s = t.settings, h = o.content, sc = [], p;
+		_postProcess : function(o) {
+			var t = this, s = t.settings, h = o.content, sc = [], p, l;
 
-			// Remove whitespace to normalize browsers
 			if (o.format == 'html') {
 				// Protect some elements
 				p = t._protect({
@@ -605,23 +569,55 @@
 
 				h = p.content;
 
-				// Since Gecko and Safari keeps whitespace in the DOM we need to
-				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
-				if (s.remove_linebreaks) {
-					h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
-					h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
-					h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
-					h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
-					h = h.replace(/\s+<\/(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
+				// Entity encode
+				if (s.entity_encoding !== 'raw') {
+					if (s.entity_encoding.indexOf('named') != -1) {
+						t.setEntities(s.entities);
+						l = t.entityLookup;
+
+						h = h.replace(t.entitiesRE, function(a) {
+							var v;
+
+							if (v = l[a])
+								a = '&' + v + ';';
+
+							return a;
+						});
+					}
+
+					if (s.entity_encoding.indexOf('numeric') != -1) {
+						h = h.replace(/[\u007E-\uFFFF]/g, function(a) {
+							return '&#' + a.charCodeAt(0) + ';';
+						});
+					}
 				}
 
-				// Simple indentation
-				if (s.apply_source_formatting && s.indent_mode == 'simple') {
-					// Add line breaks before and after block elements
-					h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
-					h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
-					h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
-					h = h.replace(/\n\n/g, '\n');
+				// Use BR instead of &nbsp; padded P elements inside editor and use <p>&nbsp;</p> outside editor
+				if (o.set)
+					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p><br /></p>');
+				else
+					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p>$1</p>');
+
+				// Since Gecko and Safari keeps whitespace in the DOM we need to
+				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
+				// This process is only done when getting contents out from the editor.
+				if (!o.set) {
+					if (s.remove_linebreaks) {
+						h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
+						h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
+						h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
+						h = h.replace(/<(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
+						h = h.replace(/\s+<\/(p|h[1-6]|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
+					}
+
+					// Simple indentation
+					if (s.apply_source_formatting && s.indent_mode == 'simple') {
+						// Add line breaks before and after block elements
+						h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
+						h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
+						h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
+						h = h.replace(/\n\n/g, '\n');
+					}
 				}
 
 				h = t._unprotect(h, p);
@@ -629,8 +625,6 @@
 
 			o.content = h;
 		},
-
-		// Internal functions
 
 		_serializeNode : function(n, inn) {
 			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv;
@@ -829,22 +823,6 @@
 			o.items = [];
 
 			return h;
-		},
-
-		_postProcess : function(o) {
-			var s = this.settings, h;
-
-			if (o.format == 'html') {
-				h = o.content;
-
-				// Use BR instead of &nbsp; padded P elements inside editor and use <p>&nbsp;</p> outside editor
-				if (o.set)
-					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p><br /></p>');
-				else
-					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p>$1</p>');
-
-				o.content = h;
-			}
 		},
 
 		_setup : function() {

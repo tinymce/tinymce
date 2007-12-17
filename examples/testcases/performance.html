@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Performance testcase</title>
+<script type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../../jscripts/tiny_mce/classes/util/UnitTester.js"></script>
+<link rel="stylesheet" href="css/unit.css">
+<script type="text/javascript">
+function getTime() {
+	return new Date().getTime();
+}
+
+function log(s) {
+	document.getElementById('log').innerHTML += s + '<br />';
+}
+
+function runCleanupTests(id) {
+	var ti, h, i, ed = tinyMCE.get(id);
+
+	ti = getTime();
+
+	for (i=0; i<10; i++)
+		ed.getContent();
+
+	log('Completed in: ' + (getTime() - ti));
+}
+
+function runStyleParser() {
+	var ti, i, o;
+
+	ti = getTime();
+
+	for (i=0; i<1000; i++) {
+		o = tinymce.DOM.parseStyle('border:1px solid red; background-image:url(some/dir/file.gif); font-size: 15px; color:rgb(1,2,3)');
+		tinymce.DOM.serializeStyle(o);
+	}
+
+	log('Completed in: ' + (getTime() - ti));
+}
+
+function runURI() {
+	var ti, i, u;
+
+	ti = getTime();
+
+	for (i=0; i<1000; i++) {
+		new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html');
+		new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'); 
+		new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3');
+		new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1);
+	}
+
+	log('Completed in: ' + (getTime() - ti));
+}
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	add_unload_trigger : false
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm2",
+	theme : "advanced",
+	add_unload_trigger : false,
+	plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template"
+});
+
+</script>
+</head>
+<body>
+
+<h1>Performance tests</h1>
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+<h3>Basic text area</h3>
+<textarea id="elm1" name="elm1">
+&lt;h2&gt; Compatibility Chart &lt;/h2&gt;&lt;p&gt;TinyMCE uses advanced JavaScript and tries to be as smart as possible when it comes to different browsers, the main focus is on Microsoft Internet Explorer and Mozilla/Firefox. The table was reset to only show the browsers we ourselves can test on. It works with many older versions of Mozilla and Firefox. If a browser is not listed on this page, that doesn't mean TinyMCE won't work.  To determine compatibility with an unlisted browser, try out the examples on our website.&lt;/p&gt;&lt;p&gt;Since MacOS X 10.4 is more or less Linux (well, BSD) we are not testing much on Linux any more, use the Sourceforge bug report system to submit bugs on the very latest browsers only.&lt;/p&gt;&lt;p&gt;As of 2.0.8 of TinyMCE we decided to not support MSIE 5.0 any more, there are major flaws in MSIE 5.0 and it is not practical to support this any more. This also marks the release of MSIE 7.0 and Firefox 2.0.&lt;/p&gt;&lt;table style="text-align: center; border: 1px solid #CCC; border-collapse: collapse; margin: 0.3em; padding: 0.3em; empty-cells: show;"&gt;&lt;tr style="font-weight: bold; margin-bottom: 0.3em;"&gt;&lt;th style="background: #CCC&nbsp;!important;"&gt; &nbsp; &lt;/th&gt;&lt;th&gt; Windows XP &lt;/th&gt;&lt;th&gt; &nbsp; Mac OS X &nbsp; &lt;/th&gt;&lt;th&gt; GNU/Linux&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 7&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 6&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 5.5 SP2&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 5.0&lt;/th&gt;&lt;td style="color: #C22;"&gt; No &lt;/td&gt;&lt;td style="color: #C22;"&gt; No &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; SeaMonkey 1.0.5&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Firefox 1.5.x&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Firefox 2.0&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Firefox 3.0b1&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Camino&lt;/th&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Safari 2.x&lt;/th&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[1]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Safari 3.x&lt;/th&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #7A6424;"&gt;[3]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #7A6424;"&gt;[3]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Opera 9&lt;/th&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[2]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[2]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[2]&lt;/sup&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Maxthon2&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Konqueror&lt;/th&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #C22;"&gt; No&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ol&gt;    &lt;li&gt;Latest nightly build of &lt;a href="http://webkit.org/" class="external text" title="http://webkit.org/" rel="nofollow"&gt;WebKit&lt;/a&gt; works &ldquo;OK&rdquo;. You can disable TinyMCE for this browser by using the &lt;a href="/index.php/TinyMCE:Configuration/browsers" title="TinyMCE:Configuration/browsers"&gt;browsers&lt;/a&gt; setting.&lt;/li&gt;    &lt;li&gt;Partially working.&lt;/li&gt;    &lt;li&gt;Partially working on the latest official version 3.0.4 and with the 3.x branch of TinyMCE.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+</textarea>
+<div>
+<a href="javascript:runCleanupTests('elm1');">[Test cleanup/serializer]</a>
+</div>
+<h3>All plugins enabled</h3>
+<textarea id="elm2" name="elm2">
+&lt;h2&gt; Compatibility Chart &lt;/h2&gt;&lt;p&gt;TinyMCE uses advanced JavaScript and tries to be as smart as possible when it comes to different browsers, the main focus is on Microsoft Internet Explorer and Mozilla/Firefox. The table was reset to only show the browsers we ourselves can test on. It works with many older versions of Mozilla and Firefox. If a browser is not listed on this page, that doesn't mean TinyMCE won't work.  To determine compatibility with an unlisted browser, try out the examples on our website.&lt;/p&gt;&lt;p&gt;Since MacOS X 10.4 is more or less Linux (well, BSD) we are not testing much on Linux any more, use the Sourceforge bug report system to submit bugs on the very latest browsers only.&lt;/p&gt;&lt;p&gt;As of 2.0.8 of TinyMCE we decided to not support MSIE 5.0 any more, there are major flaws in MSIE 5.0 and it is not practical to support this any more. This also marks the release of MSIE 7.0 and Firefox 2.0.&lt;/p&gt;&lt;table style="text-align: center; border: 1px solid #CCC; border-collapse: collapse; margin: 0.3em; padding: 0.3em; empty-cells: show;"&gt;&lt;tr style="font-weight: bold; margin-bottom: 0.3em;"&gt;&lt;th style="background: #CCC&nbsp;!important;"&gt; &nbsp; &lt;/th&gt;&lt;th&gt; Windows XP &lt;/th&gt;&lt;th&gt; &nbsp; Mac OS X &nbsp; &lt;/th&gt;&lt;th&gt; GNU/Linux&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 7&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 6&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 5.5 SP2&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; IE 5.0&lt;/th&gt;&lt;td style="color: #C22;"&gt; No &lt;/td&gt;&lt;td style="color: #C22;"&gt; No &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; SeaMonkey 1.0.5&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Firefox 1.5.x&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Firefox 2.0&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Firefox 3.0b1&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Camino&lt;/th&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Safari 2.x&lt;/th&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[1]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Safari 3.x&lt;/th&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #7A6424;"&gt;[3]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #7A6424;"&gt;[3]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Opera 9&lt;/th&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[2]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[2]&lt;/sup&gt; &lt;/td&gt;&lt;td style="color: #7A6424;"&gt; OK&lt;sup style="color: #222;"&gt;[2]&lt;/sup&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Maxthon2&lt;/th&gt;&lt;td style="color: #166423;"&gt; OK &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt; Konqueror&lt;/th&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #BBB;"&gt; N/A &lt;/td&gt;&lt;td style="color: #C22;"&gt; No&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ol&gt;    &lt;li&gt;Latest nightly build of &lt;a href="http://webkit.org/" class="external text" title="http://webkit.org/" rel="nofollow"&gt;WebKit&lt;/a&gt; works &ldquo;OK&rdquo;. You can disable TinyMCE for this browser by using the &lt;a href="/index.php/TinyMCE:Configuration/browsers" title="TinyMCE:Configuration/browsers"&gt;browsers&lt;/a&gt; setting.&lt;/li&gt;    &lt;li&gt;Partially working.&lt;/li&gt;    &lt;li&gt;Partially working on the latest official version 3.0.4 and with the 3.x branch of TinyMCE.&lt;/li&gt;&lt;/ol&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
+</textarea>
+<div>
+<a href="javascript:runCleanupTests('elm2');">[Test cleanup/serializer]</a>
+</div>
+<h3>Various API methods</h3>
+<div>
+<a href="javascript:runStyleParser();">[Style parser/serializer]</a>
+<a href="javascript:runURI();">[URI object]</a>
+</div>
+</form>
+
+<div id="log">
+<div/>
+
+</body>
+</html>
