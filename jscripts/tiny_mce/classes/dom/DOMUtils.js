@@ -105,16 +105,26 @@
 		 * @return {object} Rectange for specified element object with x, y, w, h fields.
 		 */
 		getRect : function(e) {
-			var p, t = this;
+			var p, t = this, w, h;
 
 			e = t.get(e);
 			p = t.getPos(e);
+			w = t.getStyle(e, 'width');
+			h = t.getStyle(e, 'height');
+
+			// Non pixel value, then force offset/clientWidth
+			if (w.indexOf('px') === -1)
+				w = 0;
+
+			// Non pixel value, then force offset/clientWidth
+			if (h.indexOf('px') === -1)
+				h = 0;
 
 			return {
 				x : p.x,
 				y : p.y,
-				w : parseInt(t.getStyle(e, 'width')) || e.offsetWidth || e.clientWidth,
-				h : parseInt(t.getStyle(e, 'height')) || e.offsetHeight || e.clientHeight
+				w : parseInt(w) || e.offsetWidth || e.clientWidth,
+				h : parseInt(h) || e.offsetHeight || e.clientHeight
 			};
 		},
 

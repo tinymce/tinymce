@@ -946,16 +946,26 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		getRect : function(e) {
-			var p, t = this;
+			var p, t = this, w, h;
 
 			e = t.get(e);
 			p = t.getPos(e);
+			w = t.getStyle(e, 'width');
+			h = t.getStyle(e, 'height');
+
+			// Non pixel value, then force offset/clientWidth
+			if (w.indexOf('px') === -1)
+				w = 0;
+
+			// Non pixel value, then force offset/clientWidth
+			if (h.indexOf('px') === -1)
+				h = 0;
 
 			return {
 				x : p.x,
 				y : p.y,
-				w : parseInt(t.getStyle(e, 'width')) || e.offsetWidth || e.clientWidth,
-				h : parseInt(t.getStyle(e, 'height')) || e.offsetHeight || e.clientHeight
+				w : parseInt(w) || e.offsetWidth || e.clientWidth,
+				h : parseInt(h) || e.offsetHeight || e.clientHeight
 			};
 		},
 
@@ -3477,8 +3487,8 @@ tinymce.create('static tinymce.util.XHR', {
 				if (s.apply_source_formatting && s.indent_mode == 'simple') {
 					// Add line breaks before and after block elements
 					h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
-					h = h.replace(/<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
-					h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>/g, '</$1>\n');
+					h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
+					h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
 					h = h.replace(/\n\n/g, '\n');
 				}
 

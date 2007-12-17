@@ -3,6 +3,9 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed so that the toolbars have unique IDs, enables you to alter the toolbars using the ControlManager and the DOM.
 	Fixed bug where delta values for dialog sizes in language packs didn't work correctly due to missing string to number casting.
 	Fixed bug where paragraph generation logic didn't handle hr or table elements correctly if they where the only element.
+	Fixed bug where some elements got extra linebreaks added after or before it in HTML output.
+	Fixed bug where it was hard to modify existing style data on table rows and table cells.
+	Fixed bug where the dom.getRect method didn't handle non pixel values correctly.
 Version 3.0b3 (2007-12-14)
 	Added new getElement method to Editor class, returns the element that was replaced with the editor instance.
 	Added new unavailable prefix for disabled controls for accessibility reasons.

@@ -133,6 +133,7 @@ function updateCell(td, skip_id) {
 	var curCellType = td.nodeName.toLowerCase();
 	var celltype = getSelectValue(formObj, 'celltype');
 	var doc = inst.getDoc();
+	var dom = ed.dom;
 
 	if (!skip_id)
 		td.setAttribute('id', formObj.id.value);
@@ -184,6 +185,8 @@ function updateCell(td, skip_id) {
 		td.parentNode.replaceChild(newCell, td);
 		td = newCell;
 	}
+
+	dom.setAttrib(td, 'style', dom.serializeStyle(dom.parseStyle(td.style.cssText)));
 
 	return td;
 }

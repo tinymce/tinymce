@@ -151,6 +151,8 @@ function updateRow(tr_elm, skip_id, skip_parent) {
 		// set tr_elm to the new node
 		tr_elm = newRow;
 	}
+
+	dom.setAttrib(tr_elm, 'style', dom.serializeStyle(dom.parseStyle(tr_elm.style.cssText)));
 }
 
 function changedBackgroundImage() {

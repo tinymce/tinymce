@@ -603,6 +603,12 @@
 			t.eq(r.h, 240);
 
 			DOM.setAttrib('test', 'style', '');
+
+			DOM.get('test').innerHTML = '<div style="width:320px;height:240px"><div id="test2" style="width:50%;height:240px"></div></div>';
+			r = DOM.getRect('test2');
+			t.eq(r.w, 160);
+
+			DOM.get('test').innerHTML = '';
 		},
 
 		loadCSS : function() {

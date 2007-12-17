@@ -619,8 +619,8 @@
 				if (s.apply_source_formatting && s.indent_mode == 'simple') {
 					// Add line breaks before and after block elements
 					h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
-					h = h.replace(/<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
-					h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>/g, '</$1>\n');
+					h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
+					h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
 					h = h.replace(/\n\n/g, '\n');
 				}
 
