@@ -11,6 +11,7 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed bug where the postprocessor searched for nsbp instead of nbsp entities.
 	Fixed bug where it was impossible to edit links that had child elements within them.
 	Fixed bug where it was possible to click on the parent item of a submenu.
+	Fixed bug where mouseover/mouseout images couldn't be removed in advimage dialog.
 	Fixed so a elements gets removed when the href field is left empty, the href attribute is required in a link after all.
 	Removed the indent and encode methods from the tinymce.dom.Serializer class due to performance enhancement and reduction of the API size.
 Version 3.0b3 (2007-12-14)

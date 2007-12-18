@@ -2938,7 +2938,7 @@ tinymce.create('static tinymce.util.XHR', {
 			h = h.replace(/<\?[^?]+\?>|<html>|<\/html>|<html\/>/g, '');
 			h = h.replace(/ ?\/>/g, ' />');
 
-			// Since Opera doesn't escape > into &gt; we need to do it our self
+			// Since Opera doesn't escape > into &gt; we need to do it our self to normalize the output for all browsers
 			if (tinymce.isOpera)
 				h = h.replace(/\|>/g, '&gt;');
 

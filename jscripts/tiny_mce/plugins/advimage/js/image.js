@@ -121,11 +121,15 @@ var ImageDialog = {
 			longdesc : nl.longdesc.value
 		});
 
-		if (nl.onmouseoversrc.value)
-			args.onmouseover = "this.src='" + nl.onmouseoversrc.value + "';";
+		args.onmouseover = args.onmouseout = '';
 
-		if (nl.onmouseoutsrc.value)
-			args.onmouseout = "this.src='" + nl.onmouseoutsrc.value + "';";
+		if (f.onmousemovecheck.checked) {
+			if (nl.onmouseoversrc.value)
+				args.onmouseover = "this.src='" + nl.onmouseoversrc.value + "';";
+
+			if (nl.onmouseoutsrc.value)
+				args.onmouseout = "this.src='" + nl.onmouseoutsrc.value + "';";
+		}
 
 		el = ed.selection.getNode();
 
