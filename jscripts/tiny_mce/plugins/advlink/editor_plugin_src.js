@@ -15,7 +15,7 @@
 				var se = ed.selection;
 
 				// No selection and not in link
-				if (se.isCollapsed() && se.getNode().nodeName != 'A')
+				if (se.isCollapsed() && !ed.dom.getParent(se.getNode(), 'A'))
 					return;
 
 				ed.windowManager.open({

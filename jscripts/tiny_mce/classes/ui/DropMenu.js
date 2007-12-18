@@ -142,7 +142,7 @@
 
 				e = e.target;
 
-				if (e && (e = DOM.getParent(e, 'TR'))) {
+				if (e && (e = DOM.getParent(e, 'TR')) && !DOM.hasClass(e, 'mceMenuItemSub')) {
 					m = t.items[e.id];
 
 					if (m.isDisabled())

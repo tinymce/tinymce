@@ -4355,7 +4355,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 				e = e.target;
 
-				if (e && (e = DOM.getParent(e, 'TR'))) {
+				if (e && (e = DOM.getParent(e, 'TR')) && !DOM.hasClass(e, 'mceMenuItemSub')) {
 					m = t.items[e.id];
 
 					if (m.isDisabled())
@@ -6042,7 +6042,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Remove empty contents
 			if (s.padd_empty_editor) {
 				t.onPostProcess.add(function(ed, o) {
-					o.content = o.content.replace(/^<p>(&nsbp;|#160;|\s)<\/p>$/, '');
+					o.content = o.content.replace(/^<p>(&nbsp;|#160;|\s)<\/p>$/, '');
 				});
 			}
 

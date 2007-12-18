@@ -114,7 +114,7 @@ function init() {
 }
 
 function checkPrefix(n) {
-	if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('advlink_dlg.is_email')))
+	if (n.value && Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('advlink_dlg.is_email')))
 		n.value = 'mailto:' + n.value;
 
 	if (/^\s*www./i.test(n.value) && confirm(tinyMCEPopup.getLang('advlink_dlg.is_external')))
@@ -396,6 +396,18 @@ function insertAction() {
 	checkPrefix(document.forms[0].href);
 
 	elm = inst.dom.getParent(elm, "A");
+
+	// Remove element if there is no href
+	if (!document.forms[0].href.value) {
+		tinyMCEPopup.execCommand("mceBeginUndoLevel");
+		i = inst.selection.getBookmark();
+		inst.dom.remove(elm, 1);
+		inst.selection.moveToBookmark(i);
+		tinyMCEPopup.execCommand("mceEndUndoLevel");
+		tinyMCEPopup.close();
+		return;
+	}
+
 	tinyMCEPopup.execCommand("mceBeginUndoLevel");
 
 	// Create new anchor elements

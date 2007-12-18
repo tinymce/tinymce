@@ -31,7 +31,21 @@ var LinkDialog = {
 	},
 
 	update : function() {
-		var f = document.forms[0], ed = tinyMCEPopup.editor, e;
+		var f = document.forms[0], ed = tinyMCEPopup.editor, e, b;
+
+		// Remove element if there is no href
+		if (!f.href.value) {
+			e = ed.dom.getParent(ed.selection.getNode(), 'A');
+			if (e) {
+				tinyMCEPopup.execCommand("mceBeginUndoLevel");
+				b = ed.selection.getBookmark();
+				ed.dom.remove(e, 1);
+				ed.selection.moveToBookmark(b);
+				tinyMCEPopup.execCommand("mceEndUndoLevel");
+				tinyMCEPopup.close();
+				return;
+			}
+		}
 
 		ed.execCommand('mceInsertLink', false, {
 			href : f.href.value,
@@ -44,7 +58,7 @@ var LinkDialog = {
 	},
 
 	checkPrefix : function(n) {
-		if (Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('advanced_dlg.link_is_email')))
+		if (n.value && Validator.isEmail(n) && !/^\s*mailto:/i.test(n.value) && confirm(tinyMCEPopup.getLang('advanced_dlg.link_is_email')))
 			n.value = 'mailto:' + n.value;
 
 		if (/^\s*www./i.test(n.value) && confirm(tinyMCEPopup.getLang('advanced_dlg.link_is_external')))
