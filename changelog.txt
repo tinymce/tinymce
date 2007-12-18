@@ -7,6 +7,7 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed bug where some elements got extra linebreaks added after or before it in HTML output.
 	Fixed bug where it was hard to modify existing style data on table rows and table cells.
 	Fixed bug where the dom.getRect method didn't handle non pixel values correctly.
+	Fixed bug where strikethrough and underline couldn't be toggled on existing span elements.
 	Removed the indent and encode methods from the tinymce.dom.Serializer class due to performance enhancement and reduction of the API size.
 Version 3.0b3 (2007-12-14)
 	Added new getElement method to Editor class, returns the element that was replaced with the editor instance.

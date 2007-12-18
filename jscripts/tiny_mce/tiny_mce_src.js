@@ -6953,7 +6953,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		_convertInlineElements : function() {
 			var t = this, s = t.settings, dom = t.dom;
 
-			t.onPreProcess.add(function(ed, o) {
+			function convert(ed, o) {
 				if (!s.inline_styles)
 					return;
 
@@ -6985,12 +6985,20 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							// Convert spans to elements
 							if (n.style.textDecoration == 'underline')
 								dom.replace(dom.create('u'), n, 1);
-							else if (n.style.textDecoration == 'strikethrough')
+							else if (n.style.textDecoration == 'line-through')
 								dom.replace(dom.create('strike'), n, 1);
 						}
 					});
 				}
-			});
+			};
+
+			t.onPreProcess.add(convert);
+
+			if (!s.cleanup_on_startup) {
+				t.onInit.add(function() {
+					convert(t, {node : t.getBody(), set : 1});
+				});
+			}
 		},
 
 		_convertFonts : function() {
