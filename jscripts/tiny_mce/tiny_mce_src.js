@@ -970,11 +970,11 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		getParent : function(n, f, r) {
-			var na;
+			var na, se = this.settings;
 
 			n = this.get(n);
 
-			if (this.settings.strict_root)
+			if (se.strict_root)
 				r = r || this.getRoot();
 
 			// Wrap node name as func
@@ -991,7 +991,7 @@ tinymce.create('static tinymce.util.XHR', {
 					}
 
 					each(na.split(','), function(v) {
-						if (n.nodeType == 1 && n.nodeName == v) {
+						if (n.nodeType == 1 && ((se.strict && n.nodeName.toUpperCase() == v) || n.nodeName == v)) {
 							s = true;
 							return false; // Break loop
 						}
@@ -1028,9 +1028,19 @@ tinymce.create('static tinymce.util.XHR', {
 
 			s = t.get(s) || t.doc;
 
+			if (t.settings.strict) {
+				function get(s, n) {
+					return s.getElementsByTagName(n.toLowerCase());
+				};
+			} else {
+				function get(s, n) {
+					return s.getElementsByTagName(n);
+				};
+			}
+
 			// Simple element pattern. For example: "p" or "*"
 			if (t.elmPattern.test(pa)) {
-				x = s.getElementsByTagName(pa);
+				x = get(s, pa);
 
 				for (i = 0, l = x.length; i<l; i++)
 					o.push(x[i]);
@@ -1041,7 +1051,7 @@ tinymce.create('static tinymce.util.XHR', {
 			// Simple class pattern. For example: "p.class" or ".class"
 			if (t.elmClassPattern.test(pa)) {
 				pl = t.elmClassPattern.exec(pa);
-				x = s.getElementsByTagName(pl[1] || '*');
+				x = get(s, pl[1] || '*');
 				c = ' ' + pl[2] + ' ';
 
 				for (i = 0, l = x.length; i<l; i++) {
@@ -1069,7 +1079,7 @@ tinymce.create('static tinymce.util.XHR', {
 			};
 
 			function find(n, f, r) {
-				var i, l, nl = r.getElementsByTagName(n);
+				var i, l, nl = get(r, n);
 
 				for (i = 0, l = nl.length; i < l; i++)
 					f(nl[i]);
@@ -1080,7 +1090,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 				// Simple element pattern, most common in TinyMCE
 				if (t.elmPattern.test(v)) {
-					each(s.getElementsByTagName(v), function(n) {
+					each(get(s, v), function(n) {
 						collect(n);
 					});
 
@@ -1091,7 +1101,7 @@ tinymce.create('static tinymce.util.XHR', {
 				if (t.elmClassPattern.test(v)) {
 					x = t.elmClassPattern.exec(v);
 
-					each(s.getElementsByTagName(x[1]), function(n) {
+					each(get(s, x[1]), function(n) {
 						if (t.hasClass(n, x[2]))
 							collect(n);
 					});
@@ -2935,7 +2945,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var h;
 
 			h = this.doc.xml || new XMLSerializer().serializeToString(this.doc);
-			h = h.replace(/<\?[^?]+\?>|<html>|<\/html>|<html\/>/g, '');
+			h = h.replace(/<\?[^?]+\?>|<html>|<\/html>|<html\/>|<!DOCTYPE[^>]+>/g, '');
 			h = h.replace(/ ?\/>/g, ' />');
 
 			// Since Opera doesn't escape > into &gt; we need to do it our self to normalize the output for all browsers
@@ -5046,7 +5056,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			if (s.more_colors_func) {
 				n = DOM.add(tb, 'tr');
-				n = DOM.add(n, 'td', {colSpan : s.grid_width, 'class' : 'morecolors'});
+				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'morecolors'});
 				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'morecolors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
@@ -5190,7 +5200,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			s = extend({
 				theme : "simple",
-				language : "en"
+				language : "en",
+				strict_loading_mode : document.contentType == 'application/xhtml+xml'
 			}, s);
 
 			t.settings = s;
@@ -5575,8 +5586,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
-			if (s.strict_loading_mode)
+			if (s.strict_loading_mode) {
 				sl.settings.strict_mode = s.strict_loading_mode;
+				tinymce.DOM.settings.strict = 1;
+			}
 
 			t.windowManager = new tinymce.WindowManager(t);
 

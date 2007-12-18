@@ -48,7 +48,8 @@
 
 			s = extend({
 				theme : "simple",
-				language : "en"
+				language : "en",
+				strict_loading_mode : document.contentType == 'application/xhtml+xml'
 			}, s);
 
 			t.settings = s;

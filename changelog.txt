@@ -1,5 +1,6 @@
 Version 3.0rc1 (2007-12-xx)
 	Added new classes for toolbar rows in advanced theme mceToolbarRow1..n enabled you to change appearance of individual rows.
+	Added auto detection for the strict_loading_mode option when running in application/xhtml+xml mode on Gecko.
 	Optimized the HTML serializer by bundling some post process methods together.
 	Fixed so that the toolbars have unique IDs, enables you to alter the toolbars using the ControlManager and the DOM.
 	Fixed bug where delta values for dialog sizes in language packs didn't work correctly due to missing string to number casting.
@@ -12,6 +13,11 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed bug where it was impossible to edit links that had child elements within them.
 	Fixed bug where it was possible to click on the parent item of a submenu.
 	Fixed bug where mouseover/mouseout images couldn't be removed in advimage dialog.
+	Fixed bug where drop menus didn't work when running in application/xhtml+xml mode.
+	Fixed bug where Opera added doctype to output in application/xhtml+xml mode.
+	Fixed bug where some DOM methods didn't work correctly in the application/xhtml+xml mode.
+	Fixed bug where the inlinepopups didn't work correctly in the application/xhtml+xml mode.
+	Fixed bug where the ColorSplitButton didn't display correctly in the application/xhtml+xml mode.
 	Fixed so a elements gets removed when the href field is left empty, the href attribute is required in a link after all.
 	Removed the indent and encode methods from the tinymce.dom.Serializer class due to performance enhancement and reduction of the API size.
 Version 3.0b3 (2007-12-14)

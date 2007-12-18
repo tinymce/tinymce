@@ -140,8 +140,10 @@
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
-			if (s.strict_loading_mode)
+			if (s.strict_loading_mode) {
 				sl.settings.strict_mode = s.strict_loading_mode;
+				tinymce.DOM.settings.strict = 1;
+			}
 
 			t.windowManager = new tinymce.WindowManager(t);
 

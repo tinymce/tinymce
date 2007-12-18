@@ -140,11 +140,11 @@
 		 * @return {Node} DOM Node or null if it wasn't found.
 		 */
 		getParent : function(n, f, r) {
-			var na;
+			var na, se = this.settings;
 
 			n = this.get(n);
 
-			if (this.settings.strict_root)
+			if (se.strict_root)
 				r = r || this.getRoot();
 
 			// Wrap node name as func
@@ -161,7 +161,7 @@
 					}
 
 					each(na.split(','), function(v) {
-						if (n.nodeType == 1 && n.nodeName == v) {
+						if (n.nodeType == 1 && ((se.strict && n.nodeName.toUpperCase() == v) || n.nodeName == v)) {
 							s = true;
 							return false; // Break loop
 						}
@@ -213,9 +213,19 @@
 
 			s = t.get(s) || t.doc;
 
+			if (t.settings.strict) {
+				function get(s, n) {
+					return s.getElementsByTagName(n.toLowerCase());
+				};
+			} else {
+				function get(s, n) {
+					return s.getElementsByTagName(n);
+				};
+			}
+
 			// Simple element pattern. For example: "p" or "*"
 			if (t.elmPattern.test(pa)) {
-				x = s.getElementsByTagName(pa);
+				x = get(s, pa);
 
 				for (i = 0, l = x.length; i<l; i++)
 					o.push(x[i]);
@@ -226,7 +236,7 @@
 			// Simple class pattern. For example: "p.class" or ".class"
 			if (t.elmClassPattern.test(pa)) {
 				pl = t.elmClassPattern.exec(pa);
-				x = s.getElementsByTagName(pl[1] || '*');
+				x = get(s, pl[1] || '*');
 				c = ' ' + pl[2] + ' ';
 
 				for (i = 0, l = x.length; i<l; i++) {
@@ -254,7 +264,7 @@
 			};
 
 			function find(n, f, r) {
-				var i, l, nl = r.getElementsByTagName(n);
+				var i, l, nl = get(r, n);
 
 				for (i = 0, l = nl.length; i < l; i++)
 					f(nl[i]);
@@ -265,7 +275,7 @@
 
 				// Simple element pattern, most common in TinyMCE
 				if (t.elmPattern.test(v)) {
-					each(s.getElementsByTagName(v), function(n) {
+					each(get(s, v), function(n) {
 						collect(n);
 					});
 
@@ -276,7 +286,7 @@
 				if (t.elmClassPattern.test(v)) {
 					x = t.elmClassPattern.exec(v);
 
-					each(s.getElementsByTagName(x[1]), function(n) {
+					each(get(s, x[1]), function(n) {
 						if (t.hasClass(n, x[2]))
 							collect(n);
 					});

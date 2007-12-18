@@ -151,7 +151,7 @@
 			DOM.setStyles(id, {top : f.top, left : f.left, width : f.width + dw, height : f.height + dh});
 
 			if (!f.type) {
-				DOM.add(id + '_content', 'iframe', {id : id + '_ifr', src : 'javascript:""', frameBorder : 0, style : 'width:10px;height:10px'});
+				DOM.add(id + '_content', 'iframe', {id : id + '_ifr', src : 'javascript:""', frameBorder : 0, style : 'border:0;width:10px;height:10px'});
 				DOM.setStyles(id + '_ifr', {width : f.width, height : f.height});
 				DOM.setAttrib(id + '_ifr', 'src', f.url || f.file);
 			} else {
@@ -171,7 +171,7 @@
 				w = t.windows[id];
 				t.focus(id);
 
-				if (n.nodeName == 'A') {
+				if (n.nodeName == 'A' || n.nodeName == 'a') {
 					if (n.className == 'max') {
 						w.oldPos = w.element.getXY();
 						w.oldSize = w.element.getSize();
@@ -205,7 +205,7 @@
 
 				t.focus(id);
 
-				if (n.nodeName == 'A') {
+				if (n.nodeName == 'A' || n.nodeName == 'a') {
 					switch (n.className) {
 						case 'close':
 							t.close(null, id);

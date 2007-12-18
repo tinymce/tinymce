@@ -123,7 +123,7 @@
 
 			if (s.more_colors_func) {
 				n = DOM.add(tb, 'tr');
-				n = DOM.add(n, 'td', {colSpan : s.grid_width, 'class' : 'morecolors'});
+				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'morecolors'});
 				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'morecolors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
