@@ -16,7 +16,8 @@
 					height : 320 + parseInt(ed.getLang('style.delta_height', 0)),
 					inline : 1
 				}, {
-					plugin_url : url
+					plugin_url : url,
+					style_text : ed.selection.getNode().style.cssText
 				});
 			});
 

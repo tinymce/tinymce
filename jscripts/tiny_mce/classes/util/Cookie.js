@@ -65,7 +65,13 @@
 		 * @return {String} Cookie data string.
 		 */
 		get : function(n) {
-			var c = document.cookie, e, p = n + "=", b = c.indexOf("; " + p);
+			var c = document.cookie, e, p = n + "=", b;
+
+			// Strict mode
+			if (!c)
+				return;
+
+			b = c.indexOf("; " + p);
 
 			if (b == -1) {
 				b = c.indexOf(p);

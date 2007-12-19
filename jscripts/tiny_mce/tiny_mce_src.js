@@ -677,7 +677,13 @@ tinymce.create('tinymce.util.Dispatcher', {
 		},
 
 		get : function(n) {
-			var c = document.cookie, e, p = n + "=", b = c.indexOf("; " + p);
+			var c = document.cookie, e, p = n + "=", b;
+
+			// Strict mode
+			if (!c)
+				return;
+
+			b = c.indexOf("; " + p);
 
 			if (b == -1) {
 				b = c.indexOf(p);
@@ -6937,7 +6943,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					});
 				} else {
 					Event.add(t.getDoc(), 'blur', function() {
-						if (!t.removed)
+						if (t.selection && !t.removed)
 							addUndo();
 					});
 				}

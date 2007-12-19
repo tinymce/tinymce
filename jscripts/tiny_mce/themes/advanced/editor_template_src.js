@@ -491,7 +491,7 @@
 
 						to = cf.createToolbar("toolbar" + i);
 						t._addControls(v, to);
-						n.innerHTML = to.renderHTML();
+						DOM.setHTML(n, to.renderHTML());
 						o.deltaHeight -= s.theme_advanced_row_height;
 				}
 			});
@@ -567,8 +567,7 @@
 			}
 
 			h.push(DOM.createHTML('a', {href : '#', accesskey : 'z', title : ed.getLang("advanced.toolbar_focus"), onfocus : 'tinyMCE.getInstanceById(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
-
-			n.innerHTML = h.join('');
+			DOM.setHTML(n, h.join(''));
 		},
 
 		_addStatusBar : function(tb, o) {
@@ -751,7 +750,7 @@
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
-				p.innerHTML = '';
+				DOM.setHTML(p, '');
 
 				ed.dom.getParent(n, function(n) {
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';

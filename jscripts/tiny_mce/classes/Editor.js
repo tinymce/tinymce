@@ -1813,7 +1813,7 @@
 					});
 				} else {
 					Event.add(t.getDoc(), 'blur', function() {
-						if (!t.removed)
+						if (t.selection && !t.removed)
 							addUndo();
 					});
 				}
