@@ -42,6 +42,9 @@
 			}
 
 			ed.onPostProcess.add(function(ed, o) {
+				if (isOpera)
+					o.content = o.content.replace(/(\u00a0|&#160;|&nbsp;)<\/p>/g, '</p>');
+
 				o.content = o.content.replace(/<p><\/p>/g, '<p>\u00a0</p>');
 
 				// Use BR instead of &nbsp; padded paragraphs
@@ -234,8 +237,9 @@
 			};
 
 			// If root blocks are forced then use Operas default behavior since it's really good
-			if (se.forced_root_block && isOpera)
-				return true;
+// Removed due to bug: #1853816
+//			if (se.forced_root_block && isOpera)
+//				return true;
 
 			// Setup before range
 			rb = d.createRange();
@@ -378,7 +382,7 @@
 				bef.innerHTML = '<br />';
 
 			if (isEmpty(aft))
-				aft.innerHTML = isOpera ? ' <br />' : '<br />'; // Extra space for Opera
+				aft.innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
 
 			// Opera needs this one backwards
 			if (isOpera) {
