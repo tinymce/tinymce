@@ -465,7 +465,9 @@
 		 * @param {String} v Value to set on the style.
 		 */
 		setStyle : function(n, na, v) {
-			return this.run(n, function(e) {
+			var t = this;
+
+			return t.run(n, function(e) {
 				var s, i;
 
 				s = e.style;
@@ -476,7 +478,7 @@
 				});
 
 				// Default px suffix on these
-				if (this.pixelStyles.test(na) && (tinymce.is(v, 'number') || /^[\-0-9\.]+$/.test(v)))
+				if (t.pixelStyles.test(na) && (tinymce.is(v, 'number') || /^[\-0-9\.]+$/.test(v)))
 					v += 'px';
 
 				switch (na) {
@@ -499,6 +501,10 @@
 				}
 
 				s[na] = v;
+
+				// Update style info
+				if (t.settings.update_styles)
+					t.setAttrib(e, 'style', s.cssText);
 			});
 		},
 
@@ -553,11 +559,19 @@
 		 * @param {Object} o Name/Value collection of style items to add to the element(s).
 		 */
 		setStyles : function(e, o) {
-			var t = this;
+			var t = this, s = t.settings, ol;
+
+			ol = s.update_styles;
+			s.update_styles = 0;
 
 			each(o, function(v, n) {
 				t.setStyle(e, n, v);
 			});
+
+			// Update style info
+			s.update_styles = ol;
+			if (s.update_styles)
+				t.setAttrib(e, s.cssText);
 		},
 
 		/**
@@ -569,6 +583,10 @@
 		 */
 		setAttrib : function(e, n, v) {
 			var t = this;
+
+			// Strict XML mode
+			if (t.settings.strict)
+				n = n.toLowerCase();
 
 			return this.run(e, function(e) {
 				var s = t.settings;
@@ -1060,6 +1078,11 @@
 
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
+				// Wrap scripts in comments for serialization purposes
+				h = h.replace(/<script([^>]+)>(\s*<!--)?/g, '<mce:script$1><!--');
+				h = h.replace(/(\/\/\s*-->)?<\/script>/g, '// --></mce:script>');
+				h = h.replace(/<mce:script([^>]+)><!--\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+
 				// Process all tags with src, href or style
 				h = h.replace(/<([\w:]+) [^>]*(src|href|style)[^>]*>/gi, function(a, n) {
 					function handle(m, b, c) {

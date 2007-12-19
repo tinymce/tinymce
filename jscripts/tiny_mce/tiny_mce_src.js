@@ -1239,7 +1239,9 @@ tinymce.create('static tinymce.util.XHR', {
 		// #if !jquery
 
 		setStyle : function(n, na, v) {
-			return this.run(n, function(e) {
+			var t = this;
+
+			return t.run(n, function(e) {
 				var s, i;
 
 				s = e.style;
@@ -1250,7 +1252,7 @@ tinymce.create('static tinymce.util.XHR', {
 				});
 
 				// Default px suffix on these
-				if (this.pixelStyles.test(na) && (tinymce.is(v, 'number') || /^[\-0-9\.]+$/.test(v)))
+				if (t.pixelStyles.test(na) && (tinymce.is(v, 'number') || /^[\-0-9\.]+$/.test(v)))
 					v += 'px';
 
 				switch (na) {
@@ -1273,6 +1275,10 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 
 				s[na] = v;
+
+				// Update style info
+				if (t.settings.update_styles)
+					t.setAttrib(e, 'style', s.cssText);
 			});
 		},
 
@@ -1313,15 +1319,27 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		setStyles : function(e, o) {
-			var t = this;
+			var t = this, s = t.settings, ol;
+
+			ol = s.update_styles;
+			s.update_styles = 0;
 
 			each(o, function(v, n) {
 				t.setStyle(e, n, v);
 			});
+
+			// Update style info
+			s.update_styles = ol;
+			if (s.update_styles)
+				t.setAttrib(e, s.cssText);
 		},
 
 		setAttrib : function(e, n, v) {
 			var t = this;
+
+			// Strict XML mode
+			if (t.settings.strict)
+				n = n.toLowerCase();
 
 			return this.run(e, function(e) {
 				var s = t.settings;
@@ -1715,6 +1733,11 @@ tinymce.create('static tinymce.util.XHR', {
 
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
+				// Wrap scripts in comments for serialization purposes
+				h = h.replace(/<script([^>]+)>(\s*<!--)?/g, '<mce:script$1><!--');
+				h = h.replace(/(\/\/\s*-->)?<\/script>/g, '// --></mce:script>');
+				h = h.replace(/<mce:script([^>]+)><!--\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+
 				// Process all tags with src, href or style
 				h = h.replace(/<([\w:]+) [^>]*(src|href|style)[^>]*>/gi, function(a, n) {
 					function handle(m, b, c) {
@@ -3445,9 +3468,9 @@ tinymce.create('static tinymce.util.XHR', {
 				p = t._protect({
 					content : h,
 					patterns : [
-						/<script[^>]*>(.*?)<\/script>/g,
-						/<style[^>]*>(.*?)<\/style>/g,
-						/<pre[^>]*>(.*?)<\/pre>/g
+						/(<script[^>]*>)(.*?)(<\/script>)/g,
+						/(<style[^>]*>)(.*?)(<\/style>)/g,
+						/(<pre[^>]*>)(.*?)(<\/pre>)/g
 					]
 				});
 
@@ -3521,7 +3544,6 @@ tinymce.create('static tinymce.util.XHR', {
 
 						iv = false;
 						hc = n.hasChildNodes();
-
 						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
 
 						// Add correct prefix on IE
@@ -3690,9 +3712,9 @@ tinymce.create('static tinymce.util.XHR', {
 			};
 
 			each(o.patterns, function(p) {
-				o.content = dec(enc(o.content).replace(p, function(a) {
-					o.items.push(dec(a));
-					return '<!--mce:' + (o.items.length - 1) + '-->';
+				o.content = dec(enc(o.content).replace(p, function(x, a, b, c) {
+					o.items.push(dec(b));
+					return a + '<!--mce:' + (o.items.length - 1) + '-->' + c;
 				}));
 			});
 
@@ -5457,7 +5479,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		});
 
 	// Setup some URLs where the editor API is located and where the document is
-	tinymce.documentBaseURL = document.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][\w.]+$/, '');
+	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][\w.]+$/, '');
 	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
 		tinymce.documentBaseURL += '/';
 
@@ -5879,7 +5901,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				url_converter : t.convertURL,
 				url_converter_scope : t,
 				hex_colors : s.force_hex_style_colors,
-				class_filter : s.class_filter
+				class_filter : s.class_filter,
+				update_styles : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer({

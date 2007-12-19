@@ -561,9 +561,9 @@
 				p = t._protect({
 					content : h,
 					patterns : [
-						/<script[^>]*>(.*?)<\/script>/g,
-						/<style[^>]*>(.*?)<\/style>/g,
-						/<pre[^>]*>(.*?)<\/pre>/g
+						/(<script[^>]*>)(.*?)(<\/script>)/g,
+						/(<style[^>]*>)(.*?)(<\/style>)/g,
+						/(<pre[^>]*>)(.*?)(<\/pre>)/g
 					]
 				});
 
@@ -637,7 +637,6 @@
 
 						iv = false;
 						hc = n.hasChildNodes();
-
 						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
 
 						// Add correct prefix on IE
@@ -806,9 +805,9 @@
 			};
 
 			each(o.patterns, function(p) {
-				o.content = dec(enc(o.content).replace(p, function(a) {
-					o.items.push(dec(a));
-					return '<!--mce:' + (o.items.length - 1) + '-->';
+				o.content = dec(enc(o.content).replace(p, function(x, a, b, c) {
+					o.items.push(dec(b));
+					return a + '<!--mce:' + (o.items.length - 1) + '-->' + c;
 				}));
 			});
 

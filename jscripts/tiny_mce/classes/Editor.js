@@ -450,7 +450,8 @@
 				url_converter : t.convertURL,
 				url_converter_scope : t,
 				hex_colors : s.force_hex_style_colors,
-				class_filter : s.class_filter
+				class_filter : s.class_filter,
+				update_styles : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer({
