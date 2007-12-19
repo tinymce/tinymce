@@ -10,7 +10,7 @@ var defaultFonts = "" +
 	"Geneva, Arial, Helvetica, sans-serif=Geneva, Arial, Helvetica, sans-serif";
 
 var defaultSizes = "9;10;12;14;16;18;24;xx-small;x-small;small;medium;large;x-large;xx-large;smaller;larger";
-var defaultMeasurement = "+pixels=px;points=pt;in;cm;mm;picas;ems;exs;%";
+var defaultMeasurement = "+pixels=px;points=pt;em;in;cm;mm;picas;ems;exs;%";
 var defaultSpacingMeasurement = "pixels=px;points=pt;in;cm;mm;picas;+ems;exs;%";
 var defaultIndentMeasurement = "pixels=px;+points=pt;in;cm;mm;picas;ems;exs;%";
 var defaultWeight = "normal;bold;bolder;lighter;100;200;300;400;500;600;700;800;900";
@@ -386,7 +386,7 @@ function generateCSS() {
 
 	// Build text styles
 	ce.style.fontFamily = f.text_font.value;
-	ce.style.fontSize = f.text_size.value + (isNum(f.text_size.value) ? f.text_size_measurement.value : "");
+	ce.style.fontSize = f.text_size.value + (isNum(f.text_size.value) ? (f.text_size_measurement.value || 'px') : "");
 	ce.style.fontStyle = f.text_style.value;
 	ce.style.lineHeight = f.text_lineheight.value + (isNum(f.text_lineheight.value) ? f.text_lineheight_measurement.value : "");
 	ce.style.textTransform = f.text_case.value;
