@@ -1083,7 +1083,7 @@
 					h = h.replace(/<script>/g, '<script type="text/javascript">');
 					h = h.replace(/<script(|[^>]+)>(\s*<!--|\/\/\s*<\[CDATA\[)?[\r\n]*/g, '<mce:script$1><!--\n');
 					h = h.replace(/\s*(\/\/\s*-->|\/\/\s*]]>)?<\/script>/g, '\n// --></mce:script>');
-					h = h.replace(/<mce:script(|[^>]+)><!--\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+					h = h.replace(/<mce:script(|[^>]+)><!--\n\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
 				}
 
 				// Process all tags with src, href or style
