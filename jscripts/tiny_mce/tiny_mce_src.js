@@ -1740,9 +1740,12 @@ tinymce.create('static tinymce.util.XHR', {
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
 				// Wrap scripts in comments for serialization purposes
-				h = h.replace(/<script(|[^>]+)>(\s*<!--)?/g, '<mce:script$1><!--');
-				h = h.replace(/(\/\/\s*-->)?<\/script>/g, '// --></mce:script>');
-				h = h.replace(/<mce:script(|[^>]+)><!--\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+				if (h.indexOf('<script') !== -1) {
+					h = h.replace(/<script>/g, '<script type="text/javascript">');
+					h = h.replace(/<script(|[^>]+)>(\s*<!--|\/\/\s*<\[CDATA\[)?[\t ]*/g, '<mce:script$1><!-- ');
+					h = h.replace(/[\t ]*(\/\/\s*-->|\/\/\s*]]>)?<\/script>/g, '// --></mce:script>');
+					h = h.replace(/<mce:script(|[^>]+)><!--\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+				}
 
 				// Process all tags with src, href or style
 				h = h.replace(/<([\w:]+) [^>]*(src|href|style)[^>]*>/gi, function(a, n) {

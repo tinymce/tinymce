@@ -930,6 +930,22 @@
 			DOM.setHTML('test', 'test1<prefix:test>Test</prefix:test>test2');
 			t.eq(ser.serialize(DOM.get('test')), '<div id="test">test1<prefix:test>Test</prefix:test>test2</div>');
 
+			ser.setRules('script[type|language]');
+			DOM.setHTML('test', '<script>var a = b < c1;</script>');
+			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c1;// --></script>');
+
+			DOM.setHTML('test', '<script type="text/javascript">var a = b < c2;</script>');
+			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c2;// --></script>');
+
+			DOM.setHTML('test', '<script type="text/javascript">\n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n</script>');
+			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!-- \n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n// --></script>');
+
+			DOM.setHTML('test', '<script type="text/javascript"><!-- var a = b < c3; // --></script>');
+			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c3;// --></script>');
+
+			DOM.setHTML('test', '<script type="text/javascript">// <[CDATA[var a = b < c4; // ]]></script>');
+			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c4;// --></script>');
+
 /*			ser = new tinymce.dom.Serializer();
 			var ifr = DOM.add(document.body, 'iframe', {id : 'iframe', src : 'javascript:""', display : 'none'});
 			var doc = DOM.get('iframe').contentWindow.document;
