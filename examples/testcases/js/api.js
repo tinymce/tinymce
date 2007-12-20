@@ -932,19 +932,19 @@
 
 			ser.setRules('script[type|language]');
 			DOM.setHTML('test', '<script>var a = b < c1;</script>');
-			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c1;// --></script>');
+			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c1;\n// --></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">var a = b < c2;</script>');
-			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c2;// --></script>');
+			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c2;\n// --></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">\n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n</script>');
-			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!-- \n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n// --></script>');
+			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n// --></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript"><!-- var a = b < c3; // --></script>');
-			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c3;// --></script>');
+			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\n var a = b < c3;\n// --></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">// <[CDATA[var a = b < c4; // ]]></script>');
-			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript"><!-- var a = b < c4;// --></script>');
+			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c4;\n// --></script>');
 
 /*			ser = new tinymce.dom.Serializer();
 			var ifr = DOM.add(document.body, 'iframe', {id : 'iframe', src : 'javascript:""', display : 'none'});

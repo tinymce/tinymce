@@ -1081,8 +1081,8 @@
 				// Wrap scripts in comments for serialization purposes
 				if (h.indexOf('<script') !== -1) {
 					h = h.replace(/<script>/g, '<script type="text/javascript">');
-					h = h.replace(/<script(|[^>]+)>(\s*<!--|\/\/\s*<\[CDATA\[)?[\t ]*/g, '<mce:script$1><!-- ');
-					h = h.replace(/[\t ]*(\/\/\s*-->|\/\/\s*]]>)?<\/script>/g, '// --></mce:script>');
+					h = h.replace(/<script(|[^>]+)>(\s*<!--|\/\/\s*<\[CDATA\[)?[\r\n]*/g, '<mce:script$1><!--\n');
+					h = h.replace(/\s*(\/\/\s*-->|\/\/\s*]]>)?<\/script>/g, '\n// --></mce:script>');
 					h = h.replace(/<mce:script(|[^>]+)><!--\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
 				}
 
