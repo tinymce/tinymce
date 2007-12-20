@@ -19,6 +19,7 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed bug where the inlinepopups didn't work correctly in the application/xhtml+xml mode.
 	Fixed bug where the ColorSplitButton didn't display correctly in the application/xhtml+xml mode.
 	Fixed bug where the UI layout was incorrect on Gecko browsers when running in application/xhtml+xml mode.
+	Fixed bug where the word paste plugin produced exception while running in application/xhtml+xml mode.
 	Fixed bug where indentation of script/style/pre elements where incorrect.
 	Fixed bug where script element contents was removed in IE.
 	Fixed bug where script element contents got entity encoded.

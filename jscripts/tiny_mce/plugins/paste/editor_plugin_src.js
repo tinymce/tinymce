@@ -154,6 +154,8 @@
 		},
 
 		_insertWordContent : function(content) { 
+			var t = this, ed = t.editor;
+
 			if (content && content.length > 0) {
 				// Cleanup Word content
 				var bull = String.fromCharCode(8226);
@@ -220,8 +222,7 @@
 
 				// Convert all middlot lists to UL lists
 				if (this.editor.getParam("paste_convert_middot_lists", true)) {
-					var div = document.createElement("div");
-					div.innerHTML = content;
+					var div = ed.dom.create("div", null, content);
 
 					// Convert all middot paragraphs to li elements
 					var className = this.editor.getParam("paste_unindented_list_class", "unIndentedList");
