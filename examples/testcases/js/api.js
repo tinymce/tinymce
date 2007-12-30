@@ -1148,6 +1148,8 @@
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../dir2/test.htm'), 'test.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../../../../../../test.htm'), '../../test.htm');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('//www.site.com/test.htm'), '../../test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('@@tinymce'), '@@tinymce'); // Zope 3 URL
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../@@tinymce'), '../@@tinymce'); // Zope 3 URL
 			t.eq(new URI('http://www.site.com/').toRelative('dir2/test.htm'), 'dir2/test.htm');
 		},
 
@@ -1166,6 +1168,7 @@
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('about:blank'), 'about:blank');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('#test'), '#test');
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('test.htm'), 'http://www.site.com/dir1/dir2/test.htm');
+			t.eq(new URI('http://www.site.com/dir1/dir2/').toAbsolute('../@@tinymce'), 'http://www.site.com/dir1/@@tinymce'); // Zope 3 URL
 			t.eq(new URI('http://www.site.com/dir1/dir2/').getURI(), 'http://www.site.com/dir1/dir2/');
 		},
 

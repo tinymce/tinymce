@@ -453,9 +453,16 @@ tinymce.create('tinymce.util.Dispatcher', {
 				u = (s.base_uri.protocol || 'http') + '://mce_host' + t.toAbsPath(s.base_uri.path, u);
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
+			u = u.replace(/@@/g, '(mce_at)'); // Zope 3 workaround, they use @@something
 			u = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(u);
 			each(["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"], function(v, i) {
-				t[v] = u[i];
+				var s = u[i];
+
+				// Zope 3 workaround, they use @@something
+				if (s)
+					s = s.replace(/\(mce_at\)/g, '@@');
+
+				t[v] = s;
 			});
 
 			if (b = s.base_uri) {
@@ -1744,7 +1751,7 @@ tinymce.create('static tinymce.util.XHR', {
 					h = h.replace(/<script>/g, '<script type="text/javascript">');
 					h = h.replace(/<script(|[^>]+)>(\s*<!--|\/\/\s*<\[CDATA\[)?[\r\n]*/g, '<mce:script$1><!--\n');
 					h = h.replace(/\s*(\/\/\s*-->|\/\/\s*]]>)?<\/script>/g, '\n// --></mce:script>');
-					h = h.replace(/<mce:script(|[^>]+)><!--\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+					h = h.replace(/<mce:script(|[^>]+)><!--\n\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
 				}
 
 				// Process all tags with src, href or style
@@ -5488,7 +5495,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		});
 
 	// Setup some URLs where the editor API is located and where the document is
-	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][\w.]+$/, '');
+	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
 	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
 		tinymce.documentBaseURL += '/';
 
@@ -5817,6 +5824,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					deltaWidth : s.delta_width,
 					deltaHeight : s.delta_height
 				});
+
+				t.editorContainer = o.editorContainer;
 			}
 
 			
@@ -6519,7 +6528,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var t = this;
 
 			if (!t.container)
-				t.container = DOM.get(t.id + "_parent");
+				t.container = DOM.get(t.editorContainer || t.id + '_parent');
 
 			return t.container;
 		},

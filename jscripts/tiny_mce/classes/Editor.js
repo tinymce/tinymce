@@ -345,6 +345,8 @@
 					deltaWidth : s.delta_width,
 					deltaHeight : s.delta_height
 				});
+
+				t.editorContainer = o.editorContainer;
 			}
 
 			// #if contentEditable
@@ -1345,7 +1347,7 @@
 			var t = this;
 
 			if (!t.container)
-				t.container = DOM.get(t.id + "_parent");
+				t.container = DOM.get(t.editorContainer || t.id + '_parent');
 
 			return t.container;
 		},
