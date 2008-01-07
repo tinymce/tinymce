@@ -1289,9 +1289,9 @@ tinymce.create('static tinymce.util.XHR', {
 
 				s[na] = v;
 
-				// Update style info
+				// Force update of the style data
 				if (t.settings.update_styles)
-					t.setAttrib(e, 'style', s.cssText);
+					t.setAttrib(e, 'mce_style');
 			});
 		},
 
@@ -1417,7 +1417,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 			// Try the mce variant for these
 			if (/^(src|href|style)$/.test(n)) {
-				v = t.getAttrib(e, "mce_" + n);
+				v = e.getAttribute("mce_" + n);
 
 				if (v)
 					return v;
@@ -2812,12 +2812,12 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		isCollapsed : function() {
-			var t = this, r = t.getRng();
+			var t = this, r = t.getRng(), s = t.getSel();
 
 			if (!r || r.item)
 				return false;
 
-			return r.boundingWidth == 0 || t.getSel().isCollapsed;
+			return !s || r.boundingWidth == 0 || s.isCollapsed;
 		},
 
 		collapse : function(b) {
@@ -2843,16 +2843,18 @@ tinymce.create('static tinymce.util.XHR', {
 		getRng : function() {
 			var t = this, s = t.getSel(), r;
 
-			if (!s)
-				return null;
-
 			try {
-				r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
+				if (s)
+					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
-				// So lets create just an empty range for now to keep it happy
-				r = this.win.document.body.createTextRange();
 			}
+
+			// No range found then create an empty one
+			// This can occur when the editor is placed in a hidden container element on Gecko
+			// Or on IE when there was an exception
+			if (!r)
+				r = isIE ? t.win.document.body.createTextRange() : t.win.document.createRange();
 
 			return r;
 		},
@@ -2862,8 +2864,11 @@ tinymce.create('static tinymce.util.XHR', {
 
 			if (!isIE) {
 				s = this.getSel();
-				s.removeAllRanges();
-				s.addRange(r);
+
+				if (s) {
+					s.removeAllRanges();
+					s.addRange(r);
+				}
 			} else
 				r.select();
 		},
@@ -5835,7 +5840,35 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				height : h
 			});
 
-			function createIfr() {
+			h = (o.iframeHeight || h) + ((h + '').indexOf('%') == -1 ? (o.deltaHeight || 0) : '');
+			if (h < 100)
+				h = 100;
+
+			// Create iframe
+			n = DOM.add(o.iframeContainer, 'iframe', {
+				id : s.id + "_ifr",
+				src : 'javascript:""', // Workaround for HTTPS warning in IE6/7
+				frameBorder : '0',
+				style : {
+					width : '100%',
+					height : h
+				}
+			});
+
+			t.contentAreaContainer = o.iframeContainer;
+			DOM.get(o.editorContainer).style.display = t.orgDisplay;
+			DOM.get(s.id).style.display = 'none';
+
+			// Safari 2.x requires us to wait for the load event and load a real HTML doc
+			if (tinymce.isOldWebKit) {
+				Event.add(n, 'load', t.setupIframe, t);
+				n.src = tinymce.baseURL + '/plugins/safari/blank.htm';
+			} else {
+				t.setupIframe();
+				e = n = o = null; // Cleanup
+			}
+
+/*			function createIfr() {
 				h = (o.iframeHeight || h) + ((h + '').indexOf('%') == -1 ? (o.deltaHeight || 0) : '');
 				if (h < 100)
 					h = 100;
@@ -5864,11 +5897,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					e = n = o = null; // Cleanup
 				}
 			};
-
+*/
 			// Waits for the editor to become visible, then it will run the init
 			// This method is somewhat ugly but this is the best way to deal with it without
 			// forcing the user to add some logic to their application.
-			if (isGecko) {
+/*			if (isGecko) {
 				function check() {
 					var hi;
 
@@ -5895,19 +5928,26 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			createIfr();
+*/
 		},
 
 		setupIframe : function() {
 			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
 
-			// Design mode needs to be added here Ctrl+A will fail otherwise
-			if (!isIE)
-				d.designMode = 'On';
-
 			// Setup body
 			d.open();
 			d.write(s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
+
+			// Design mode needs to be added here Ctrl+A will fail otherwise
+			if (!isIE) {
+				try {
+					d.designMode = 'On';
+				} catch (ex) {
+					// Will fail on Gecko if the editor is placed in an hidden container element
+					// The design mode will be set ones the editor is focused
+				}
+			}
 
 			// IE needs to use contentEditable or it will display non secure items for HTTPS
 			if (isIE)
@@ -6335,6 +6375,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		queryCommandState : function(c) {
 			var t = this, o;
 
+			// Is hidden then return undefined
+			if (t._isHidden())
+				return;
+
 			// Registred commands
 			if (o = t.queryStateCommands[c])
 				return o.func.call(o.scope);
@@ -6350,6 +6394,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 		queryCommandValue : function(c) {
 			var t = this, o;
+
+			// Is hidden then return undefined
+			if (t._isHidden())
+				return;
 
 			// Registred commands
 			if (o = t.queryValueCommands[c])
@@ -6736,12 +6784,21 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					var t = this, d = t.getDoc(), s = t.settings;
 
 					if (isGecko) {
+						if (t._isHidden()) {
+							try {
+								d.designMode = 'On';
+							} catch (ex) {
+								// Fails if it's hidden
+							}
+						}
+
 						try {
 							// Try new Gecko method
 							d.execCommand("styleWithCSS", 0, false);
 						} catch (ex) {
-							// Use old
-							d.execCommand("useCSS", 0, true);
+							// Use old method
+							if (!t._isHidden())
+								d.execCommand("useCSS", 0, true);
 						}
 
 						if (!s.table_inline_editing)
@@ -6929,6 +6986,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 								return Event.cancel(e);
 							}
 					}
+				});
+			}
+
+			if (tinymce.isOpera) {
+				t.onClick.add(function(ed, e) {
+					Event.prevent(e);
 				});
 			}
 
@@ -7127,6 +7190,17 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					});
 				}
 			});
+		},
+
+		_isHidden : function() {
+			var s;
+
+			if (!isGecko)
+				return 0;
+
+			// Weird, wheres that cursor selection?
+			s = this.selection.getSel();
+			return (!s || !s.rangeCount || s.rangeCount == 0);
 		}
 
 		});
@@ -7779,7 +7853,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				try {
 					s = e.selection;
 					b = s.getBookmark(true);
-					s.getSel().selectAllChildren(e.getBody());
+
+					if (s.getSel())
+						s.getSel().selectAllChildren(e.getBody());
+
 					s.collapse(true);
 					s.moveToBookmark(b);
 				} catch (ex) {
@@ -8094,18 +8171,21 @@ tinymce.create('tinymce.UndoManager', {
 			}
 
 			if (s.force_br_newlines) {
-				ed.onKeyPress.add(function(ed, e) {
-					var n, s = ed.selection;
+				// Force IE to produce BRs on enter
+				if (isIE) {
+					ed.onKeyPress.add(function(ed, e) {
+						var n, s = ed.selection;
 
-					if (e.keyCode == 13) {
-						s.setContent('<br id="__" /> ', {format : 'raw'});
-						n = ed.dom.get('__');
-						n.removeAttribute('id');
-						s.select(n);
-						s.collapse();
-						return Event.cancel(e);
-					}
-				});
+						if (e.keyCode == 13) {
+							s.setContent('<br id="__" /> ', {format : 'raw'});
+							n = ed.dom.get('__');
+							n.removeAttribute('id');
+							s.select(n);
+							s.collapse();
+							return Event.cancel(e);
+						}
+					});
+				}
 
 				return;
 			}

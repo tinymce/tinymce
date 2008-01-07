@@ -653,7 +653,10 @@
 				try {
 					s = e.selection;
 					b = s.getBookmark(true);
-					s.getSel().selectAllChildren(e.getBody());
+
+					if (s.getSel())
+						s.getSel().selectAllChildren(e.getBody());
+
 					s.collapse(true);
 					s.moveToBookmark(b);
 				} catch (ex) {

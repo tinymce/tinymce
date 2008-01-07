@@ -30,6 +30,7 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed bug where Opera was producing br elements after elements like h3.
 	Fixed bug where TinyMCE couldn't be loaded on a page using - characters in it's URL.
 	Fixed bug where the editor container element was forced to have a specific name.
+	Fixed bug with force_br_newlines option on Firefox, even though it should never be used (Read FAQ).
 	Fixed issue with URLs with multiple at characters for example an Zope URI.
 	Fixed so a elements gets removed when the href field is left empty, the href attribute is required in a link after all.
 	Removed the indent and encode methods from the tinymce.dom.Serializer class due to performance enhancement and reduction of the API size.

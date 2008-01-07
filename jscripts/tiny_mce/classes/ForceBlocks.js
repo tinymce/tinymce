@@ -69,18 +69,21 @@
 			}
 
 			if (s.force_br_newlines) {
-				ed.onKeyPress.add(function(ed, e) {
-					var n, s = ed.selection;
+				// Force IE to produce BRs on enter
+				if (isIE) {
+					ed.onKeyPress.add(function(ed, e) {
+						var n, s = ed.selection;
 
-					if (e.keyCode == 13) {
-						s.setContent('<br id="__" /> ', {format : 'raw'});
-						n = ed.dom.get('__');
-						n.removeAttribute('id');
-						s.select(n);
-						s.collapse();
-						return Event.cancel(e);
-					}
-				});
+						if (e.keyCode == 13) {
+							s.setContent('<br id="__" /> ', {format : 'raw'});
+							n = ed.dom.get('__');
+							n.removeAttribute('id');
+							s.select(n);
+							s.collapse();
+							return Event.cancel(e);
+						}
+					});
+				}
 
 				return;
 			}

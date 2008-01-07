@@ -474,12 +474,12 @@
 		 * @return {bool} true/false state if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
 		 */
 		isCollapsed : function() {
-			var t = this, r = t.getRng();
+			var t = this, r = t.getRng(), s = t.getSel();
 
 			if (!r || r.item)
 				return false;
 
-			return r.boundingWidth == 0 || t.getSel().isCollapsed;
+			return !s || r.boundingWidth == 0 || s.isCollapsed;
 		},
 
 		/**
@@ -520,16 +520,18 @@
 		getRng : function() {
 			var t = this, s = t.getSel(), r;
 
-			if (!s)
-				return null;
-
 			try {
-				r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
+				if (s)
+					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
-				// So lets create just an empty range for now to keep it happy
-				r = this.win.document.body.createTextRange();
 			}
+
+			// No range found then create an empty one
+			// This can occur when the editor is placed in a hidden container element on Gecko
+			// Or on IE when there was an exception
+			if (!r)
+				r = isIE ? t.win.document.body.createTextRange() : t.win.document.createRange();
 
 			return r;
 		},
@@ -544,8 +546,11 @@
 
 			if (!isIE) {
 				s = this.getSel();
-				s.removeAllRanges();
-				s.addRange(r);
+
+				if (s) {
+					s.removeAllRanges();
+					s.addRange(r);
+				}
 			} else
 				r.select();
 		},

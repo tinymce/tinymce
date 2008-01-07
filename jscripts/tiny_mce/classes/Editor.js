@@ -363,7 +363,35 @@
 				height : h
 			});
 
-			function createIfr() {
+			h = (o.iframeHeight || h) + ((h + '').indexOf('%') == -1 ? (o.deltaHeight || 0) : '');
+			if (h < 100)
+				h = 100;
+
+			// Create iframe
+			n = DOM.add(o.iframeContainer, 'iframe', {
+				id : s.id + "_ifr",
+				src : 'javascript:""', // Workaround for HTTPS warning in IE6/7
+				frameBorder : '0',
+				style : {
+					width : '100%',
+					height : h
+				}
+			});
+
+			t.contentAreaContainer = o.iframeContainer;
+			DOM.get(o.editorContainer).style.display = t.orgDisplay;
+			DOM.get(s.id).style.display = 'none';
+
+			// Safari 2.x requires us to wait for the load event and load a real HTML doc
+			if (tinymce.isOldWebKit) {
+				Event.add(n, 'load', t.setupIframe, t);
+				n.src = tinymce.baseURL + '/plugins/safari/blank.htm';
+			} else {
+				t.setupIframe();
+				e = n = o = null; // Cleanup
+			}
+
+/*			function createIfr() {
 				h = (o.iframeHeight || h) + ((h + '').indexOf('%') == -1 ? (o.deltaHeight || 0) : '');
 				if (h < 100)
 					h = 100;
@@ -392,11 +420,11 @@
 					e = n = o = null; // Cleanup
 				}
 			};
-
+*/
 			// Waits for the editor to become visible, then it will run the init
 			// This method is somewhat ugly but this is the best way to deal with it without
 			// forcing the user to add some logic to their application.
-			if (isGecko) {
+/*			if (isGecko) {
 				function check() {
 					var hi;
 
@@ -423,6 +451,7 @@
 			}
 
 			createIfr();
+*/
 		},
 
 		/**
@@ -433,14 +462,20 @@
 		setupIframe : function() {
 			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
 
-			// Design mode needs to be added here Ctrl+A will fail otherwise
-			if (!isIE)
-				d.designMode = 'On';
-
 			// Setup body
 			d.open();
 			d.write(s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
 			d.close();
+
+			// Design mode needs to be added here Ctrl+A will fail otherwise
+			if (!isIE) {
+				try {
+					d.designMode = 'On';
+				} catch (ex) {
+					// Will fail on Gecko if the editor is placed in an hidden container element
+					// The design mode will be set ones the editor is focused
+				}
+			}
 
 			// IE needs to use contentEditable or it will display non secure items for HTTPS
 			if (isIE)
@@ -1080,6 +1115,10 @@
 		queryCommandState : function(c) {
 			var t = this, o;
 
+			// Is hidden then return undefined
+			if (t._isHidden())
+				return;
+
 			// Registred commands
 			if (o = t.queryStateCommands[c])
 				return o.func.call(o.scope);
@@ -1101,6 +1140,10 @@
 		 */
 		queryCommandValue : function(c) {
 			var t = this, o;
+
+			// Is hidden then return undefined
+			if (t._isHidden())
+				return;
 
 			// Registred commands
 			if (o = t.queryValueCommands[c])
@@ -1596,12 +1639,21 @@
 					var t = this, d = t.getDoc(), s = t.settings;
 
 					if (isGecko) {
+						if (t._isHidden()) {
+							try {
+								d.designMode = 'On';
+							} catch (ex) {
+								// Fails if it's hidden
+							}
+						}
+
 						try {
 							// Try new Gecko method
 							d.execCommand("styleWithCSS", 0, false);
 						} catch (ex) {
-							// Use old
-							d.execCommand("useCSS", 0, true);
+							// Use old method
+							if (!t._isHidden())
+								d.execCommand("useCSS", 0, true);
 						}
 
 						if (!s.table_inline_editing)
@@ -1789,6 +1841,12 @@
 								return Event.cancel(e);
 							}
 					}
+				});
+			}
+
+			if (tinymce.isOpera) {
+				t.onClick.add(function(ed, e) {
+					Event.prevent(e);
 				});
 			}
 
@@ -1987,6 +2045,17 @@
 					});
 				}
 			});
+		},
+
+		_isHidden : function() {
+			var s;
+
+			if (!isGecko)
+				return 0;
+
+			// Weird, wheres that cursor selection?
+			s = this.selection.getSel();
+			return (!s || !s.rangeCount || s.rangeCount == 0);
 		}
 
 		/**#@-*/

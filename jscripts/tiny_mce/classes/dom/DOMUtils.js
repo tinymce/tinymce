@@ -502,9 +502,9 @@
 
 				s[na] = v;
 
-				// Update style info
+				// Force update of the style data
 				if (t.settings.update_styles)
-					t.setAttrib(e, 'style', s.cssText);
+					t.setAttrib(e, 'mce_style');
 			});
 		},
 
@@ -665,7 +665,7 @@
 
 			// Try the mce variant for these
 			if (/^(src|href|style)$/.test(n)) {
-				v = t.getAttrib(e, "mce_" + n);
+				v = e.getAttribute("mce_" + n);
 
 				if (v)
 					return v;

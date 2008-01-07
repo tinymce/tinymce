@@ -358,13 +358,13 @@ function setAttrib(elm, attrib, value) {
 		if (attrib == "style")
 			attrib = "style.cssText";
 
-		if (attrib.substring(0, 2) == 'on')
-			value = 'return true;' + value;
+//		if (attrib.substring(0, 2) == 'on')
+//			value = 'return true;' + value;
 
 		if (attrib == "class")
 			attrib = "className";
 
-		eval('elm.' + attrib + "=value;");
+		elm[attrib] = value;
 	} else
 		elm.removeAttribute(attrib);
 }
