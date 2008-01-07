@@ -78,6 +78,9 @@
 				theme_advanced_resizing_use_cookie : 1
 			}, ed.settings);
 
+			if (s.theme_advanced_statusbar_location == 'none')
+				s.theme_advanced_statusbar_location = 0;
+
 			// Init editor
 			ed.onInit.add(function() {
 				ed.onNodeChange.add(t._nodeChanged, t);

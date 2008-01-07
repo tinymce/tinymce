@@ -54,6 +54,13 @@ var ImageDialog = {
 	update : function() {
 		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, args = {}, el;
 
+		if (f.src.value === '') {
+			ed.dom.remove(ed.selection.getNode());
+			ed.execCommand('mceRepaint');
+			tinyMCEPopup.close();
+			return;
+		}
+
 		if (!ed.settings.inline_styles) {
 			args = tinymce.extend(args, {
 				vspace : nl.vspace.value,

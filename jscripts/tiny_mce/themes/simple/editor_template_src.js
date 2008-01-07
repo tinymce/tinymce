@@ -36,7 +36,7 @@
 		renderUI : function(o) {
 			var t = this, n = o.targetNode, ic, tb, ed = t.editor, cf = ed.controlManager, sc;
 
-			n = DOM.insertAfter(DOM.create('div', {id : ed.id + '_container', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin'}), n);
+			n = DOM.insertAfter(DOM.create('div', {id : ed.id + '_container', 'class' : 'mceEditor ' + ed.settings.skin + 'SimpleSkin'}), n);
 			n = sc = DOM.add(n, 'table', {cellPadding : 0, cellSpacing : 0, 'class' : 'mceLayout'});
 			n = tb = DOM.add(n, 'tbody');
 

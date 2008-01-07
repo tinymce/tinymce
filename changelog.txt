@@ -20,6 +20,7 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed bug where the ColorSplitButton didn't display correctly in the application/xhtml+xml mode.
 	Fixed bug where the UI layout was incorrect on Gecko browsers when running in application/xhtml+xml mode.
 	Fixed bug where the word paste plugin produced exception while running in application/xhtml+xml mode.
+	Fixed bug where there wasn't any hidden input element generated for divs while running in application/xhtml+xml mode.
 	Fixed bug where indentation of script/style/pre elements where incorrect.
 	Fixed bug where script element contents was removed in IE.
 	Fixed bug where script element contents got entity encoded.
@@ -31,8 +32,12 @@ Version 3.0rc1 (2007-12-xx)
 	Fixed bug where TinyMCE couldn't be loaded on a page using - characters in it's URL.
 	Fixed bug where the editor container element was forced to have a specific name.
 	Fixed bug with force_br_newlines option on Firefox, even though it should never be used (Read FAQ).
+	Fixed bug where onclick event had an return true; prefix added when creating an popup.
+	Fixed bug where the theme_advanced_statusbar_location option couldn't handle the value "none".
 	Fixed issue with URLs with multiple at characters for example an Zope URI.
+	Fixed so simple and advanced themes doesn't collide.
 	Fixed so a elements gets removed when the href field is left empty, the href attribute is required in a link after all.
+	Fixed so img elements gets removed when the src field is left empty, the src attribute is required for all images after all.
 	Removed the indent and encode methods from the tinymce.dom.Serializer class due to performance enhancement and reduction of the API size.
 Version 3.0b3 (2007-12-14)
 	Added new getElement method to Editor class, returns the element that was replaced with the editor instance.

@@ -136,14 +136,14 @@
 		render : function() {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
-			// Add hidden input for non input elements inside form elements
-			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
-				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
-
 			if (s.strict_loading_mode) {
 				sl.settings.strict_mode = s.strict_loading_mode;
 				tinymce.DOM.settings.strict = 1;
 			}
+
+			// Add hidden input for non input elements inside form elements
+			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
+				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			t.windowManager = new tinymce.WindowManager(t);
 

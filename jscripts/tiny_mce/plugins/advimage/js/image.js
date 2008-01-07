@@ -74,10 +74,17 @@ var ImageDialog = {
 	},
 
 	insert : function(file, title) {
-		var t = this;
+		var ed = tinyMCEPopup.editor, t = this, f = document.forms[0];
+
+		if (f.src.value === '') {
+			ed.dom.remove(ed.selection.getNode());
+			ed.execCommand('mceRepaint');
+			tinyMCEPopup.close();
+			return;
+		}
 
 		if (tinyMCEPopup.getParam("accessibility_warnings", 1)) {
-			if (!document.forms[0].alt.value) {
+			if (!f.alt.value) {
 				tinyMCEPopup.editor.windowManager.confirm(tinyMCEPopup.getLang('advimage_dlg.missing_alt'), function(s) {
 					if (s)
 						t.insertAndClose();
