@@ -2,7 +2,7 @@
  * $Id$
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 /**#@+

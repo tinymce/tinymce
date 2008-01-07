@@ -2,7 +2,7 @@
  * $Id$
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  *
  * This file should only be used while developing TinyMCE 
  * tiny_mce.js or tiny_mce_src.js should be used in a production environment.
