@@ -641,7 +641,7 @@
 
 						// Add correct prefix on IE
 						if (isIE) {
-							if (n.scopeName !== 'HTML')
+							if (n.scopeName !== 'html')
 								nn = n.scopeName + ':' + nn;
 						}
 

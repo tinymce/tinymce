@@ -86,8 +86,8 @@
 			if (tinymce.isIE) {
 				function fix(ed, o) {
 					if (o.set) {
-						o.content = o.content.replace(/<abbr([^>]+)>/gi, '<mce:abbr $1>');
-						o.content = o.content.replace(/<\/abbr>/gi, '</mce:abbr>');
+						o.content = o.content.replace(/<abbr([^>]+)>/gi, '<html:abbr $1>');
+						o.content = o.content.replace(/<\/abbr>/gi, '</html:abbr>');
 					}
 				};
 

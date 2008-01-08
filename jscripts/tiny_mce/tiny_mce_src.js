@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0rc1',
-	releaseDate : '2008-01-08',
+	minorVersion : '0rc2',
+	releaseDate : '2008-01-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -3569,7 +3569,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 						// Add correct prefix on IE
 						if (isIE) {
-							if (n.scopeName !== 'HTML')
+							if (n.scopeName !== 'html')
 								nn = n.scopeName + ':' + nn;
 						}
 
