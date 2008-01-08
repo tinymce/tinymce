@@ -1,4 +1,4 @@
-Version 3.0rc1 (2007-12-xx)
+Version 3.0rc1 (2008-01-08)
 	Added new classes for toolbar rows in advanced theme mceToolbarRow1..n enabled you to change appearance of individual rows.
 	Added auto detection for the strict_loading_mode option when running in application/xhtml+xml mode on Gecko.
 	Optimized the HTML serializer by bundling some post process methods together.
