@@ -2072,6 +2072,9 @@
 
 				// Handle end element
 				if (b === '/') {
+					if (!d.length)
+						return '';
+
 					if (c !== d[d.length - 1].tag) {
 						for (i=d.length - 1; i>=0; i--) {
 							if (d[i].tag === c) {
@@ -2105,7 +2108,7 @@
 			});
 
 			// End all open tags
-			for (i=0; i<d.length; i++)
+			for (i=d.length - 1; i>=0; i--)
 				s += '</' + d[i].tag + '>';
 
 			return s;
