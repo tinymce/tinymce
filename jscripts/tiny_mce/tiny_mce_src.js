@@ -6147,7 +6147,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 			}
 
-			// A small timeout was needed since firefox will remove
+			// A small timeout was needed since firefox will remove. Bug: #1838304
 			setTimeout(function () {
 				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 				t.startContent = t.getContent({format : 'raw'});
