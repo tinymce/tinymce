@@ -1718,7 +1718,7 @@ tinymce.create('static tinymce.util.XHR', {
 			return (!p ? 'mce_' : p) + (this.counter++);
 		},
 
-		setHTML : function(e, h, x) {
+		setHTML : function(e, h) {
 			var t = this;
 
 			return this.run(e, function(e) {
@@ -1727,13 +1727,7 @@ tinymce.create('static tinymce.util.XHR', {
 				h = t.processHTML(h);
 
 				if (isIE) {
-					// Fix for IE bug, first node comments gets stripped
-					if (x) {
-						r = t.doc.body.createTextRange();
-						r.pasteHTML('<br />' + h);
-					} else
-						e.innerHTML = '<br />' + h;
-
+					e.innerHTML = '<br />' + h;
 					e.removeChild(e.firstChild);
 				} else
 					e.innerHTML = h;
@@ -6153,35 +6147,37 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 			}
 
-			t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
-			t.startContent = t.getContent({format : 'raw'});
-			t.undoManager.add({initial : true});
+			// A small timeout was needed since firefox will remove
+			setTimeout(function () {
+				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
+				t.startContent = t.getContent({format : 'raw'});
+				t.undoManager.add({initial : true});
+				t.initialized = true;
 
-			t.initialized = true;
+				t.onInit.dispatch(t);
+				t.execCallback('setupcontent_callback', t.id, t.getBody(), t.getDoc());
+				t.execCallback('init_instance_callback', t);
+				t.focus(true);
+				t.nodeChanged({initial : 1});
 
-			t.onInit.dispatch(t);
-			t.execCallback('setupcontent_callback', t.id, t.getBody(), t.getDoc());
-			t.execCallback('init_instance_callback', t);
-			t.focus(true);
-			t.nodeChanged({initial : 1});
+				// Load specified content CSS last
+				if (s.content_css) {
+					tinymce.each(s.content_css.split(','), function(u) {
+						t.dom.loadCSS(t.documentBaseURI.toAbsolute(u));
+					});
+				}
 
-			// Load specified content CSS last
-			if (s.content_css) {
-				tinymce.each(s.content_css.split(','), function(u) {
-					t.dom.loadCSS(t.documentBaseURI.toAbsolute(u));
-				});
-			}
+				// Handle auto focus
+				if (s.auto_focus) {
+					setTimeout(function () {
+						var ed = EditorManager.get(s.auto_focus);
 
-			// Handle auto focus
-			if (s.auto_focus) {
-				setTimeout(function () {
-					var ed = EditorManager.get(s.auto_focus);
-
-					ed.selection.select(ed.getBody(), 1);
-					ed.selection.collapse(1);
-					ed.getWin().focus();
-				}, 100);
-			}
+						ed.selection.select(ed.getBody(), 1);
+						ed.selection.collapse(1);
+						ed.getWin().focus();
+					}, 100);
+				}
+			}, 1);
 
 			e = null;
 		},

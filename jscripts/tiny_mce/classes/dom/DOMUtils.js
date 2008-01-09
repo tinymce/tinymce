@@ -1042,7 +1042,7 @@
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set HTML inside.
 		 * @param {String} h HTML content to set as inner HTML of the element.
 		 */
-		setHTML : function(e, h, x) {
+		setHTML : function(e, h) {
 			var t = this;
 
 			return this.run(e, function(e) {
@@ -1051,13 +1051,7 @@
 				h = t.processHTML(h);
 
 				if (isIE) {
-					// Fix for IE bug, first node comments gets stripped
-					if (x) {
-						r = t.doc.body.createTextRange();
-						r.pasteHTML('<br />' + h);
-					} else
-						e.innerHTML = '<br />' + h;
-
+					e.innerHTML = '<br />' + h;
 					e.removeChild(e.firstChild);
 				} else
 					e.innerHTML = h;
