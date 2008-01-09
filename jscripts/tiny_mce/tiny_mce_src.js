@@ -8365,8 +8365,10 @@ tinymce.create('tinymce.UndoManager', {
 					else
 						r.setEnd(bl, 0);
 
-					s.removeAllRanges();
-					s.addRange(r);
+					if (s) {
+						s.removeAllRanges();
+						s.addRange(r);
+					}
 				} else {
 					try {
 						r = s.createRange();
