@@ -1718,15 +1718,22 @@ tinymce.create('static tinymce.util.XHR', {
 			return (!p ? 'mce_' : p) + (this.counter++);
 		},
 
-		setHTML : function(e, h) {
+		setHTML : function(e, h, x) {
 			var t = this;
 
 			return this.run(e, function(e) {
+				var r;
+
 				h = t.processHTML(h);
 
 				if (isIE) {
 					// Fix for IE bug, first node comments gets stripped
-					e.innerHTML = '<br />' + h;
+					if (x) {
+						r = t.doc.body.createTextRange();
+						r.pasteHTML('<br />' + h);
+					} else
+						e.innerHTML = '<br />' + h;
+
 					e.removeChild(e.firstChild);
 				} else
 					e.innerHTML = h;
@@ -3569,7 +3576,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 						// Add correct prefix on IE
 						if (isIE) {
-							if (n.scopeName !== 'html')
+							if (n.scopeName !== 'HTML' && n.scopeName !== 'html')
 								nn = n.scopeName + ':' + nn;
 						}
 
@@ -6043,6 +6050,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 			}
 
+			if (s.fix_nesting && isIE) {
+				t.onBeforeSetContent.add(function(ed, o) {
+					o.content = t._fixNesting(o.content);
+				});
+			}
+
 			if (s.preformatted) {
 				t.onPostProcess.add(function(ed, o) {
 					o.content = o.content.replace(/^\s*<pre.*?>/, '');
@@ -6526,7 +6539,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (h.length === 0 || /^\s+$/.test(h))) {
-				o.content = t.dom.setHTML(t.getBody(), '<br mce_bogus="1" />');
+				o.content = t.dom.setHTML(t.getBody(), '<br mce_bogus="1" />', 1);
 				o.format = 'raw';
 			}
 
@@ -7201,6 +7214,53 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Weird, wheres that cursor selection?
 			s = this.selection.getSel();
 			return (!s || !s.rangeCount || s.rangeCount == 0);
+		},
+
+		_fixNesting : function(s) {
+			var d = [], i;
+
+			s = s.replace(/<(\/)?([^\s>]+)[^>]*?>/g, function(a, b, c) {
+				var e;
+
+				// Handle end element
+				if (b === '/') {
+					if (c !== d[d.length - 1].tag) {
+						for (i=d.length - 1; i>=0; i--) {
+							if (d[i].tag === c) {
+								d[i].close = 1;
+								break;
+							}
+						}
+
+						return '';
+					} else {
+						d.pop();
+
+						if (d.length && d[d.length - 1].close) {
+							a = a + '</' + d[d.length - 1].tag + '>';
+							d.pop();
+						}
+					}
+				} else {
+					// Ignore these
+					if (/^(br|hr|input|meta|img|link|param)$/i.test(c))
+						return a;
+
+					// Ignore closed ones
+					if (/\/>$/.test(a))
+						return a;
+
+					d.push({tag : c}); // Push start element
+				}
+
+				return a;
+			});
+
+			// End all open tags
+			for (i=0; i<d.length; i++)
+				s += '</' + d[i].tag + '>';
+
+			return s;
 		}
 
 		});

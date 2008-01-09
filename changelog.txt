@@ -1,4 +1,5 @@
 Version 3.0rc2 (2008-01-xx)
+	Added new fix_nesting option to fix bug #1867292, this is disabled by default.
 	Fixed bug where the CSS for abbr elements wasn't applied correctly in IE.
 Version 3.0rc1 (2008-01-08)
 	Added new classes for toolbar rows in advanced theme mceToolbarRow1..n enabled you to change appearance of individual rows.
