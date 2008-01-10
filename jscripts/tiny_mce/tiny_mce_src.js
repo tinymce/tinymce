@@ -1745,6 +1745,9 @@ tinymce.create('static tinymce.util.XHR', {
 				h = h.replace(/<(\/?)em>|<em( [^>]+)>/gi, '<$1i$2>');
 			}
 
+			// Fix some issues
+			h = h.replace(/<(a)([^>]*)\/>/gi, '<$1$2></$1>'); // Force open
+
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
 				// Wrap scripts in comments for serialization purposes
