@@ -8297,9 +8297,13 @@ tinymce.create('tinymce.UndoManager', {
 			return -1;
 		},
 
-		forceRoots : function() {
+		forceRoots : function(ed, e) {
 			var t = this, ed = t.editor, b = ed.getBody(), d = ed.getDoc(), se = ed.selection, s = se.getSel(), r = se.getRng(), si = -2, ei, so, eo, tr, c = -0xFFFFFF;
 			var nx, bl, bp, sp, le, nl = b.childNodes, i;
+
+			// Fix for bug #1863847
+			if (e && e.keyCode == 13)
+				return true;
 
 			// Wrap non blocks into blocks
 			for (i = nl.length - 1; i >= 0; i--) {

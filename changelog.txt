@@ -4,6 +4,7 @@ Version 3.0rc2 (2008-01-xx)
 	Fixed bug where the CSS for abbr elements wasn't applied correctly in IE.
 	Fixed bug where mceAddControl on element inside a hidden container produced errors.
 	Fixed bug where closed anchors like <a /> produced strange results.
+	Fixed bug where caret would jump to the top of the editor if enter was pressed a the end of a list.
 Version 3.0rc1 (2008-01-08)
 	Added new classes for toolbar rows in advanced theme mceToolbarRow1..n enabled you to change appearance of individual rows.
 	Added auto detection for the strict_loading_mode option when running in application/xhtml+xml mode on Gecko.
