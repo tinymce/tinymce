@@ -81,6 +81,7 @@
 	include('ui/Button.js');
 	include('ui/ListBox.js');
 	include('ui/NativeListBox.js');
+	include('ui/MenuButton.js');
 	include('ui/SplitButton.js');
 	include('ui/ColorSplitButton.js');
 	include('ui/Toolbar.js');

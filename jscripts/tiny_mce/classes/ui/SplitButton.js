@@ -13,7 +13,7 @@
 	 * @member tinymce.ui.SplitButton
 	 * @base tinymce.ui.Button
 	 */
-	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.Button', {
+	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.MenuButton', {
 		/**
 		 * Constructs a new split button control instance.
 		 *
@@ -23,75 +23,11 @@
 		SplitButton : function(id, s) {
 			this.parent(id, s);
 			this.classPrefix = 'mceSplitButton';
-			this.onRenderMenu = new tinymce.util.Dispatcher(this);
-			s.menu_container = s.menu_container || document.body;
 		},
 
 		/**#@+
 		 * @method
 		 */
-
-		/**
-		 * Shows the menu.
-		 */
-		showMenu : function() {
-			var t = this, p1, p2, e = DOM.get(t.id), m;
-
-			if (t.isDisabled())
-				return;
-
-			if (!t.isMenuRendered) {
-				t.renderMenu();
-				t.isMenuRendered = true;
-			}
-
-			p1 = DOM.getPos(t.settings.menu_container);
-			p2 = DOM.getPos(e);
-
-			m = t.menu;
-			m.settings.offset_x = p2.x;
-			m.settings.offset_y = p2.y;
-			m.settings.vp_offset_x = p2.x;
-			m.settings.vp_offset_y = p2.y;
-			m.showMenu(0, e.clientHeight);
-
-			Event.add(document, 'mousedown', t.hideMenu, t);
-			DOM.addClass(t.id, 'mceSplitButtonSelected');
-		},
-
-		/**
-		 * Renders the menu to the DOM.
-		 */
-		renderMenu : function() {
-			var t = this, m;
-
-			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
-				menu_line : 1,
-				'class' : 'mceSplitButtonMenu'
-			});
-
-			m.onHideMenu.add(t.hideMenu, t);
-
-			t.onRenderMenu.dispatch(t, m);
-			t.menu = m;
-		},
-
-		/**
-		 * Hides the menu. The optional event parameter is used to check where the event occured so it
-		 * doesn't close them menu if it was a event inside the menu.
-		 *
-		 * @param {Event} e Optional event object.
-		 */
-		hideMenu : function(e) {
-			var t = this;
-
-			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
-				DOM.removeClass(t.id, 'mceSplitButtonSelected');
-				Event.remove(document, 'mousedown', t.hideMenu, t);
-				if (t.menu)
-					t.menu.hideMenu();
-			}
-		},
 
 		/**
 		 * Renders the split button as a HTML string. This method is much faster than using the DOM and when

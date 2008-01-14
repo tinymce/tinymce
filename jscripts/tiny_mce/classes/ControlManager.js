@@ -240,7 +240,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createButton : function(id, s) {
-			var t = this, ed = t.editor, o;
+			var t = this, ed = t.editor, o, c;
 
 			if (t.get(id))
 				return null;
@@ -248,7 +248,7 @@
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
-			if (!s.onclick) {
+			if (!s.onclick && !s.menu_button) {
 				s.onclick = function() {
 					ed.execCommand(s.cmd, s.ui || false, s.value);
 				};
@@ -258,12 +258,33 @@
 				title : s.title,
 				'class' : id,
 				unavailable_prefix : ed.getLang('unavailable', ''),
-				scope : s.scope
+				scope : s.scope,
+				control_manager : t
 			}, s);
 
 			id = t.prefix + id;
 
-			return t.add(new tinymce.ui.Button(id, s));
+			if (s.menu_button) {
+				c = new tinymce.ui.MenuButton(id, s);
+				ed.onMouseDown.add(c.hideMenu, c);
+			} else
+				c = new tinymce.ui.Button(id, s);
+
+			return t.add(c);
+		},
+
+		/**
+		 * Creates a menu button control instance by id.
+		 *
+		 * @param {String} id Unique id for the new menu button instance. For example "menu1".
+		 * @param {Object} s Optional settings object for the control.
+		 * @return {tinymce.ui.Control} Control instance that got created and added.
+		 */
+		createMenuButton : function(id, s) {
+			s = s || {};
+			s.menu_button = 1;
+
+			return this.createButton(id, s);
 		},
 
 		/**

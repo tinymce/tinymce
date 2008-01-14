@@ -32,8 +32,8 @@
 /* Button */
 .defaultSkin .mceButton {display:block; border:1px solid #F0F0EE; width:20px; height:20px; margin-right:1px;}
 .defaultSkin a.mceButtonEnabled:hover {border:1px solid #0A246A; background-color:#B2BBD0}
-.defaultSkin a.mceButtonActive {border:1px solid #0A246A; background-color:#C2CBE0}
-.defaultSkin .mceButtonDisabled span {opacity:0.3; filter:alpha(opacity=30)}
+.defaultSkin a.mceButtonActive, .defaultSkin a.mceButtonSelected {border:1px solid #0A246A; background-color:#C2CBE0}
+.defaultSkin .mceButtonDisabled .icon {opacity:0.3; filter:alpha(opacity=30)}
 
 /* Separator */
 .defaultSkin .mceSeparator {display:block; background:url(../../img/icons.gif) -180px 0; width:2px; height:20px; margin:2px 2px 0 4px}
@@ -51,8 +51,8 @@
 .defaultSkin select.mceNativeListBox {font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:7pt; background:#F0F0EE; border:1px solid gray; margin-right:2px;}
 
 /* SplitButton */
-.defaultSkin .mceSplitButton {width:32px}
-.defaultSkin .mceSplitButton, .defaultSkin .mceSplitButton a, .defaultSkin .mceSplitButton span {display:block; height:20px}
+.defaultSkin .mceSplitButton {width:32px; height:20px}
+.defaultSkin .mceSplitButton a, .defaultSkin .mceSplitButton span {height:20px; display:block}
 .defaultSkin .mceSplitButton a.action {width:20px; border:1px solid #F0F0EE; border-right:0;}
 .defaultSkin .mceSplitButton span.action {width:20px; background:url(../../img/icons.gif) 20px 20px;}
 .defaultSkin .mceSplitButton a.open {width:9px; border:1px solid #F0F0EE;}
@@ -60,7 +60,7 @@
 .defaultSkin table.mceSplitButtonEnabled:hover a.action, .defaultSkin .mceSplitButtonHover a.action, .defaultSkin .mceSplitButtonSelected a.action {border:1px solid #0A246A; border-right:0; background-color:#B2BBD0}
 .defaultSkin table.mceSplitButtonEnabled:hover a.open, .defaultSkin .mceSplitButtonHover a.open, .defaultSkin .mceSplitButtonSelected a.open {border:1px solid #0A246A;}
 .defaultSkin table.mceSplitButtonEnabled:hover span.open, .defaultSkin .mceSplitButtonHover span.open, .defaultSkin .mceSplitButtonSelected span.open {background-color:#B2BBD0}
-.defaultSkin .mceSplitButtonDisabled span.action, .defaultSkin .mceSplitButtonDisabled span.open {opacity:0.3; filter:alpha(opacity=30)}
+.defaultSkin .mceSplitButtonDisabled .action, .defaultSkin .mceSplitButtonDisabled span.open {opacity:0.3; filter:alpha(opacity=30)}
 .defaultSkin .mceSplitButtonActive a.action {border:1px solid #0A246A; background-color:#C2CBE0}
 .defaultSkin .mceSplitButtonActive a.open {border-left:0;}
 

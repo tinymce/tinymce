@@ -4900,15 +4900,14 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		});
 })();
-/* file:jscripts/tiny_mce/classes/ui/SplitButton.js */
+/* file:jscripts/tiny_mce/classes/ui/MenuButton.js */
 
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
 
-	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.Button', {
-		SplitButton : function(id, s) {
+	tinymce.create('tinymce.ui.MenuButton:tinymce.ui.Button', {
+		MenuButton : function(id, s) {
 			this.parent(id, s);
-			this.classPrefix = 'mceSplitButton';
 			this.onRenderMenu = new tinymce.util.Dispatcher(this);
 			s.menu_container = s.menu_container || document.body;
 		},
@@ -4935,7 +4934,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			m.showMenu(0, e.clientHeight);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
-			DOM.addClass(t.id, 'mceSplitButtonSelected');
+			t.setState('Selected', 1);
 		},
 
 		renderMenu : function() {
@@ -4943,7 +4942,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
-				'class' : 'mceSplitButtonMenu'
+				'class' : this.classPrefix + 'Menu'
 			});
 
 			m.onHideMenu.add(t.hideMenu, t);
@@ -4956,11 +4955,38 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var t = this;
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
-				DOM.removeClass(t.id, 'mceSplitButtonSelected');
+				t.setState('Selected', 0);
 				Event.remove(document, 'mousedown', t.hideMenu, t);
 				if (t.menu)
 					t.menu.hideMenu();
 			}
+		},
+
+		postRender : function() {
+			var t = this, s = t.settings;
+
+			Event.add(t.id, 'click', function() {
+				if (!t.isDisabled()) {
+					if (s.onclick)
+						s.onclick(t.value);
+
+					t.showMenu();
+				}
+			});
+		}
+
+		});
+})();
+
+/* file:jscripts/tiny_mce/classes/ui/SplitButton.js */
+
+(function() {
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
+
+	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.MenuButton', {
+		SplitButton : function(id, s) {
+			this.parent(id, s);
+			this.classPrefix = 'mceSplitButton';
 		},
 
 		renderHTML : function() {
@@ -8820,7 +8846,7 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		createButton : function(id, s) {
-			var t = this, ed = t.editor, o;
+			var t = this, ed = t.editor, o, c;
 
 			if (t.get(id))
 				return null;
@@ -8828,7 +8854,7 @@ tinymce.create('tinymce.UndoManager', {
 			s.title = ed.translate(s.title);
 			s.scope = s.scope || ed;
 
-			if (!s.onclick) {
+			if (!s.onclick && !s.menu_button) {
 				s.onclick = function() {
 					ed.execCommand(s.cmd, s.ui || false, s.value);
 				};
@@ -8838,12 +8864,26 @@ tinymce.create('tinymce.UndoManager', {
 				title : s.title,
 				'class' : id,
 				unavailable_prefix : ed.getLang('unavailable', ''),
-				scope : s.scope
+				scope : s.scope,
+				control_manager : t
 			}, s);
 
 			id = t.prefix + id;
 
-			return t.add(new tinymce.ui.Button(id, s));
+			if (s.menu_button) {
+				c = new tinymce.ui.MenuButton(id, s);
+				ed.onMouseDown.add(c.hideMenu, c);
+			} else
+				c = new tinymce.ui.Button(id, s);
+
+			return t.add(c);
+		},
+
+		createMenuButton : function(id, s) {
+			s = s || {};
+			s.menu_button = 1;
+
+			return this.createButton(id, s);
 		},
 
 		createSplitButton : function(id, s) {

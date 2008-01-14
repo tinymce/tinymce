@@ -1,6 +1,7 @@
 Version 3.0rc2 (2008-01-xx)
 	Added new fix_nesting option to fix bug #1867292, this is disabled by default.
 	Added new indentation option enables you to specify how much each indent/outdent call will add/remove.
+	Added new menu button control class. This control is very similar to the splitbutton but without any onclick action.
 	Fixed bug where iframes inside the editor got removed in Firefox on initial load.
 	Fixed bug where the CSS for abbr elements wasn't applied correctly in IE.
 	Fixed bug where mceAddControl on element inside a hidden container produced errors.
@@ -15,6 +16,11 @@ Version 3.0rc2 (2008-01-xx)
 	Fixed bug where an exception about undefined undo levels could be throwed sometimes.
 	Fixed bug where the plugin_preview_pageurl option didn't work.
 	Fixed bug where adding/removing an editor instance very fast could produce problems.
+	Fixed bug where the link button was highlighted when an anchor element was selected.
+	Fixed bug where the selected contents where removed if a new anchor element was added.
+	Fixed bug where splitbuttons where rendered one pixel down in the default theme.
+	Fixed bug where some buttons where placed at incorrect positions in the o2k7 theme.
+	Fixed so the drop menu colors matches the rest of o2k7 theme.
 	Fixed so the preview example.html file is updated to the new 3.x API.
 	Fixed so editor contents gets stored before it the onSubmit event is fired.
 Version 3.0rc1 (2008-01-08)

@@ -32,11 +32,11 @@
 
 /* Button */
 .o2k7Skin .mceButton {display:block; background:url(img/button_bg.png); width:22px; height:22px}
-.o2k7Skin a.mceButton span, .o2k7Skin a.mceButton img {margin:1px 0 0 1px}
+.o2k7Skin a.mceButton span, .o2k7Skin a.mceButton img {margin-left:1px}
 .o2k7Skin .mceOldBoxModel a.mceButton span, .o2k7Skin .mceOldBoxModel a.mceButton img {margin:0 0 0 1px}
 .o2k7Skin a.mceButtonEnabled:hover {background-color:#B2BBD0; background-position:0 -22px}
-.o2k7Skin a.mceButtonActive {background-position:0 -44px}
-.o2k7Skin .mceButtonDisabled span {opacity:0.3; filter:alpha(opacity=30)}
+.o2k7Skin a.mceButtonActive, .o2k7Skin a.mceButtonSelected {background-position:0 -44px}
+.o2k7Skin .mceButtonDisabled .icon {opacity:0.3; filter:alpha(opacity=30)}
 
 /* Separator */
 .o2k7Skin .mceSeparator {display:block; background:url(img/button_bg.png) -22px 0; width:5px; height:22px}
@@ -61,7 +61,7 @@
 .o2k7Skin .mceSplitButton span.open {width:10px; background:url(img/button_bg.png) -44px 0}
 .o2k7Skin table.mceSplitButtonEnabled:hover a.action, .o2k7Skin .mceSplitButtonHover a.action, .o2k7Skin .mceSplitButtonSelected {background:url(img/button_bg.png) 0 -22px}
 .o2k7Skin table.mceSplitButtonEnabled:hover span.open, .o2k7Skin .mceSplitButtonHover span.open, .o2k7Skin .mceSplitButtonSelected span.open {background-position:-44px -44px}
-.o2k7Skin .mceSplitButtonDisabled span.action {opacity:0.3; filter:alpha(opacity=30)}
+.o2k7Skin .mceSplitButtonDisabled .action {opacity:0.3; filter:alpha(opacity=30)}
 .o2k7Skin .mceSplitButtonActive {background-position:0 -44px}
 
 /* ColorSplitButton */
@@ -75,7 +75,7 @@
 .o2k7Skin .mceColorPreview {position:absolute; top:15px; left:2px; width:16px; height:4px; overflow:hidden}
 
 /* Menu */
-.o2k7Skin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #D4D0C8}
+.o2k7Skin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #ABC6DD}
 .o2k7Skin .noIcons span.icon {width:0;}
 .o2k7Skin .noIcons a .text {padding-left:10px}
 .o2k7Skin .mceMenu table {background:#FFF}
@@ -88,7 +88,7 @@
 .o2k7Skin .mceMenu .icon {position:absolute; top:0; left:0; width:22px;}
 .o2k7Skin .mceMenu .mceMenuItemEnabled a:hover, .o2k7Skin .mceMenu .mceMenuItemActive {background-color:#dbecf3}
 .o2k7Skin td.mceMenuItemSeparator {background:#DDD; height:1px}
-.o2k7Skin .mceMenuItemTitle a {border:0; background:#EEE; border-bottom:1px solid #DDD}
+.o2k7Skin .mceMenuItemTitle a {border:0; background:#E5EFFD; border-bottom:1px solid #ABC6DD}
 .o2k7Skin .mceMenuItemTitle span.text {color:#000; font-weight:bold; padding-left:4px}
 .o2k7Skin .mceMenuItemDisabled .text {color:#888}
 .o2k7Skin .mceMenuItemSelected .icon {background:url(../default/img/menu_check.gif)}

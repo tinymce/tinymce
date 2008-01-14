@@ -16,6 +16,9 @@ var AnchorDialog = {
 
 	update : function() {
 		var ed = this.editor;
+		
+		tinyMCEPopup.restoreSelection();
+		ed.selection.collapse(1);
 
 		// Webkit acts weird if empty inline element is inserted so we need to use a image instead
 		if (tinymce.isWebKit)
