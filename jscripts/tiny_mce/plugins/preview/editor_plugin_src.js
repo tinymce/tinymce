@@ -38,12 +38,9 @@
 					width : w,
 					height : h
 				}, {
-					editor_id : editor_id,
 					resizable : "yes",
 					scrollbars : "yes",
-					inline : 1,
-					content : ed.getContent(),
-					content_css : ed.getParam("content_css")
+					inline : 1
 				});
 			} else {
 				win = window.open("", "mcePreview", "menubar=no,toolbar=no,scrollbars=yes,resizable=yes,left=20,top=20,width=" + w + ",height="  + h);
