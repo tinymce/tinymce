@@ -113,7 +113,8 @@
 				hidden_input : 1,
 				padd_empty_editor : 1,
 				render_ui : 1,
-				init_theme : 1
+				init_theme : 1,
+				indentation : '30px'
 			}, s);
 
 			// Setup URIs
@@ -159,7 +160,7 @@
 			}
 
 			if (s.add_form_submit_trigger) {
-				t.onSubmit.add(function() {
+				t.onSubmit.addToTop(function() {
 					if (t.initialized) {
 						t.save();
 						t.isNotDirty = 1;

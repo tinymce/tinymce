@@ -53,7 +53,7 @@
 			if (ed.getParam("fullscreen_is_enabled"))
 				return true;
 
-			formObj = tinymce.DOM.get(ed.id).form;
+			formObj = tinymce.DOM.get(ed.id).form || tinymce.DOM.getParent(ed.id, 'form');
 
 			if (ed.getParam("save_enablewhendirty") && !ed.isDirty())
 				return true;
@@ -74,7 +74,7 @@
 				ed.isNotDirty = true;
 
 				if (formObj.onsubmit == null || formObj.onsubmit() != false)
-					tinymce.DOM.get(ed.id).form.submit();
+					formObj.submit();
 
 				ed.nodeChanged();
 			} else

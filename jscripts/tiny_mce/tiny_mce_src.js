@@ -5613,7 +5613,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				hidden_input : 1,
 				padd_empty_editor : 1,
 				render_ui : 1,
-				init_theme : 1
+				init_theme : 1,
+				indentation : '30px'
 			}, s);
 
 			// Setup URIs
@@ -5652,7 +5653,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			if (s.add_form_submit_trigger) {
-				t.onSubmit.add(function() {
+				t.onSubmit.addToTop(function() {
 					if (t.initialized) {
 						t.save();
 						t.isNotDirty = 1;
@@ -7342,11 +7343,16 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		Indent : function() {
-			var ed = this.editor, d = ed.dom, s = ed.selection, e;
+			var ed = this.editor, d = ed.dom, s = ed.selection, e, iv, iu;
+
+			// Setup indent level
+			iv = ed.settings.indentation;
+			iu = /[a-z%]+$/i.exec(iv);
+			iv = parseInt(iv);
 
 			if (ed.settings.inline_styles && (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList())) {
 				each(this._getSelectedBlocks(), function(e) {
-					d.setStyle(e, 'paddingLeft', (parseInt(e.style.paddingLeft || 0) + 30) + 'px');
+					d.setStyle(e, 'paddingLeft', (parseInt(e.style.paddingLeft || 0) + iv) + iu);
 				});
 
 				return;
@@ -7364,12 +7370,17 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		Outdent : function() {
-			var ed = this.editor, d = ed.dom, s = ed.selection, e, v;
+			var ed = this.editor, d = ed.dom, s = ed.selection, e, v, iv, iu;
+
+			// Setup indent level
+			iv = ed.settings.indentation;
+			iu = /[a-z%]+$/i.exec(iv);
+			iv = parseInt(iv);
 
 			if (ed.settings.inline_styles && (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList())) {
 				each(this._getSelectedBlocks(), function(e) {
-					v = Math.max(0, parseInt(e.style.paddingLeft || 0) - 30);
-					d.setStyle(e, 'paddingLeft', v ? v + 'px' : '');
+					v = Math.max(0, parseInt(e.style.paddingLeft || 0) - iv);
+					d.setStyle(e, 'paddingLeft', v ? v + iu : '');
 				});
 
 				return;
