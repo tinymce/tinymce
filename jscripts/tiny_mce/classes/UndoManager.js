@@ -41,14 +41,15 @@ tinymce.create('tinymce.UndoManager', {
 	 * @return {Object} Undo level that got added or null it a level wasn't needed.
 	 */
 	add : function(l) {
-		var t = this, i, ed = t.editor, b, s = ed.settings;
+		var t = this, i, ed = t.editor, b, s = ed.settings, la;
 
 		l = l || {};
 		l.content = l.content || ed.getContent({format : 'raw', no_events : 1});
 
 		// Add undo level if needed
 		l.content = l.content.replace(/^\s*|\s*$/g, '');
-		if (!l.initial && l.content == t.data[t.index > 0 ? t.index - 1 : 0].content)
+		la = t.data[t.index > 0 ? t.index - 1 : 0];
+		if (!l.initial && la && l.content == la.content)
 			return null;
 
 		// Time to compress
