@@ -6714,6 +6714,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			function eventHandler(e, o) {
 				var ty = e.type;
 
+				// Don't fire events when it's removed
+				if (t.removed)
+					return;
+
 				// Generic event handler
 				if (t.onEvent.dispatch(t, e, o) !== false) {
 					// Specific event handler

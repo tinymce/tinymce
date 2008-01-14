@@ -11,6 +11,7 @@ Version 3.0rc2 (2008-01-xx)
 	Fixed bug where parent window was hidden when the color picker was used in a non inlinepopups setup.
 	Fixed bug where onchange event wasn't fired correctly on IE when color picker was used in dialogs.
 	Fixed bug where save plugin could not save contents if the converted element wasn't an textarea.
+	Fixed bug where events might be fired even after an editor instance was removed such as blur events.
 	Fixed so editor contents gets stored before it the onSubmit event is fired.
 Version 3.0rc1 (2008-01-08)
 	Added new classes for toolbar rows in advanced theme mceToolbarRow1..n enabled you to change appearance of individual rows.
