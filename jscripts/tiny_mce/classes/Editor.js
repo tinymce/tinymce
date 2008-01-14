@@ -236,7 +236,8 @@
 						return;
 					}
 
-					t.init();
+					if (!t.removed)
+						t.init();
 				});
 			};
 
@@ -1285,6 +1286,9 @@
 		save : function(o) {
 			var t = this, e = t.getElement(), h, f;
 
+			if (!t.initialized)
+				return;
+
 			o = o || {};
 			o.save = true;
 
@@ -1436,10 +1440,14 @@
 		 * @return {Window} Iframe DOM window object.
 		 */
 		getWin : function() {
-			var t = this;
+			var t = this, e;
 
-			if (!t.contentWindow)
-				t.contentWindow = DOM.get(t.id + "_ifr").contentWindow;
+			if (!t.contentWindow) {
+				e = DOM.get(t.id + "_ifr");
+
+				if (e)
+					t.contentWindow = e.contentWindow;
+			}
 
 			return t.contentWindow;
 		},
@@ -1450,10 +1458,14 @@
 		 * @return {Document} Iframe DOM document object.
 		 */
 		getDoc : function() {
-			var t = this;
+			var t = this, w;
 
-			if (!t.contentDocument)
-				t.contentDocument = this.getWin().document;
+			if (!t.contentDocument) {
+				w = this.getWin();
+
+				if (w)
+					t.contentDocument = w.document;
+			}
 
 			return t.contentDocument;
 		},

@@ -1287,7 +1287,7 @@ tinymce.create('static tinymce.util.XHR', {
 						break;
 				}
 
-				s[na] = v;
+				s[na] = v || '';
 
 				// Force update of the style data
 				if (t.settings.update_styles)
@@ -5729,7 +5729,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						return;
 					}
 
-					t.init();
+					if (!t.removed)
+						t.init();
 				});
 			};
 
@@ -6501,6 +6502,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		save : function(o) {
 			var t = this, e = t.getElement(), h, f;
 
+			if (!t.initialized)
+				return;
+
 			o = o || {};
 			o.save = true;
 
@@ -6610,19 +6614,27 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		getWin : function() {
-			var t = this;
+			var t = this, e;
 
-			if (!t.contentWindow)
-				t.contentWindow = DOM.get(t.id + "_ifr").contentWindow;
+			if (!t.contentWindow) {
+				e = DOM.get(t.id + "_ifr");
+
+				if (e)
+					t.contentWindow = e.contentWindow;
+			}
 
 			return t.contentWindow;
 		},
 
 		getDoc : function() {
-			var t = this;
+			var t = this, w;
 
-			if (!t.contentDocument)
-				t.contentDocument = this.getWin().document;
+			if (!t.contentDocument) {
+				w = this.getWin();
+
+				if (w)
+					t.contentDocument = w.document;
+			}
 
 			return t.contentDocument;
 		},

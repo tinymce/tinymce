@@ -500,7 +500,7 @@
 						break;
 				}
 
-				s[na] = v;
+				s[na] = v || '';
 
 				// Force update of the style data
 				if (t.settings.update_styles)
