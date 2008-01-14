@@ -100,10 +100,11 @@ tinyMCEPopup = {
 	 * @param {String} cmd Command to execute.
 	 * @param {bool} ui Optional boolean value if the UI for the command should be presented or not.
 	 * @param {Object} val Optional value to pass with the comman like an URL.
+	 * @param {Object} a Optional arguments object.
 	 */
-	execCommand : function(cmd, ui, val) {
+	execCommand : function(cmd, ui, val, a) {
 		this.restoreSelection();
-		return this.editor.execCommand(cmd, ui, val);
+		return this.editor.execCommand(cmd, ui, val, a || {skip_focus : 1});
 	},
 
 	/**
@@ -177,8 +178,11 @@ tinyMCEPopup = {
 			func : function(c) {
 				document.getElementById(element_id).value = c;
 
-				if (tinymce.is(document.getElementById(element_id).onchange, 'function'))
+				try {
 					document.getElementById(element_id).onchange();
+				} catch (ex) {
+					// Try fire event, ignore errors
+				}
 			}
 		});
 	},

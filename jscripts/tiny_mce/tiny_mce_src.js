@@ -5629,6 +5629,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		render : function() {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
+			// Element not found, then skip initialization
+			if (!t.getElement())
+				return;
+
 			if (s.strict_loading_mode) {
 				sl.settings.strict_mode = s.strict_loading_mode;
 				tinymce.DOM.settings.strict = 1;
@@ -6152,6 +6156,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// A small timeout was needed since firefox will remove. Bug: #1838304
 			setTimeout(function () {
+				if (t.removed)
+					return;
+
 				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 				t.startContent = t.getContent({format : 'raw'});
 				t.undoManager.add({initial : true});
@@ -6331,10 +6338,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			return true;
 		},
 
-		execCommand : function(cmd, ui, val) {
+		execCommand : function(cmd, ui, val, a) {
 			var t = this, s = 0, o;
 
-			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(cmd))
+			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint|SelectAll)$/.test(cmd) && (!a || !a.skip_focus))
 				t.focus();
 
 			o = {};
@@ -6433,11 +6440,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		hide : function() {
-			var t = this, s = t.settings;
+			var t = this, s = t.settings, d = t.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
-			if (isIE)
-				t.execCommand('SelectAll');
+			if (isIE && d)
+				d.execCommand('SelectAll');
 
 			DOM.hide(t.getContainer());
 			DOM.setStyle(s.id, 'display', t.orgDisplay);
