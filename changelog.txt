@@ -1,6 +1,7 @@
 Version 3.0rc2 (2008-01-xx)
 	Added new fix_nesting option to fix bug #1867292, this is disabled by default.
 	Added new indentation option enables you to specify how much each indent/outdent call will add/remove.
+	Added easier support for enabling/disabling icon columns on drop menues.
 	Added new menu button control class. This control is very similar to the splitbutton but without any onclick action.
 	Fixed bug where iframes inside the editor got removed in Firefox on initial load.
 	Fixed bug where the CSS for abbr elements wasn't applied correctly in IE.
@@ -21,6 +22,7 @@ Version 3.0rc2 (2008-01-xx)
 	Fixed bug where splitbuttons where rendered one pixel down in the default theme.
 	Fixed bug where some buttons where placed at incorrect positions in the o2k7 theme.
 	Fixed bug that made it impossible to visually disable a custom button that used an image instead of CSS sprites.
+	Fixed so theme_advanced_path_location can be used in init options for compatibility reasons.
 	Fixed so the drop menu colors matches the rest of o2k7 theme.
 	Fixed so the preview example.html file is updated to the new 3.x API.
 	Fixed so editor contents gets stored before it the onSubmit event is fired.

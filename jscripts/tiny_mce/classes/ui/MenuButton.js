@@ -67,7 +67,8 @@
 
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
-				'class' : this.classPrefix + 'Menu'
+				'class' : this.classPrefix + 'Menu',
+				icons : t.settings.icons
 			});
 
 			m.onHideMenu.add(t.hideMenu, t);

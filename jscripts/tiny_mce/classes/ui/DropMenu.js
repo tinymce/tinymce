@@ -28,6 +28,10 @@
 			s.offset_y = s.offset_y || 0;
 			s.vp_offset_x = s.vp_offset_x || 0;
 			s.vp_offset_y = s.vp_offset_y || 0;
+
+			if (is(s.icons) && !s.icons)
+				s['class'] += ' noIcons';
+
 			this.parent(id, s);
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';

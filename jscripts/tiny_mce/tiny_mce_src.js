@@ -4318,6 +4318,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			s.offset_y = s.offset_y || 0;
 			s.vp_offset_x = s.vp_offset_x || 0;
 			s.vp_offset_y = s.vp_offset_y || 0;
+
+			if (is(s.icons) && !s.icons)
+				s['class'] += ' noIcons';
+
 			this.parent(id, s);
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
@@ -4942,7 +4946,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
-				'class' : this.classPrefix + 'Menu'
+				'class' : this.classPrefix + 'Menu',
+				icons : t.settings.icons
 			});
 
 			m.onHideMenu.add(t.hideMenu, t);

@@ -78,6 +78,9 @@
 				theme_advanced_resizing_use_cookie : 1
 			}, ed.settings);
 
+			if (s.theme_advanced_path_location)
+				s.theme_advanced_statusbar_location = s.theme_advanced_path_location;
+
 			if (s.theme_advanced_statusbar_location == 'none')
 				s.theme_advanced_statusbar_location = 0;
 
