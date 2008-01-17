@@ -137,7 +137,7 @@
 		 * @param {Element} n HTML DOM element to add control to.
 		 */
 		renderTo : function(n) {
-			n.innerHTML = this.renderHTML();
+			DOM.setHTML(n, this.renderHTML());
 		},
 
 		/**

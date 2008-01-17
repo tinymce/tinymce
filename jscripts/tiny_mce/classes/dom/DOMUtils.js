@@ -385,7 +385,7 @@
 					if (h.nodeType)
 						e.appendChild(h);
 					else
-						e.innerHTML = h;
+						t.setHTML(e, h);
 				}
 
 				return !c ? p.appendChild(e) : e;
@@ -1046,13 +1046,25 @@
 			var t = this;
 
 			return this.run(e, function(e) {
-				var r;
+				var x;
 
 				h = t.processHTML(h);
 
 				if (isIE) {
-					e.innerHTML = '<br />' + h;
-					e.removeChild(e.firstChild);
+					try {
+						e.innerHTML = '<br />' + h;
+						e.removeChild(e.firstChild);
+					} catch (ex) {
+						// IE sometimes produces an unknown runtime error on innerHTML
+						// This seems to fix this issue, don't know why.
+						x = t.create('div');
+						x.innerHTML = '<br />' + h;
+
+						each (x.childNodes, function(n, i) {
+							if (i > 1)
+								e.appendChild(n);
+						});
+					}
 				} else
 					e.innerHTML = h;
 
@@ -1070,6 +1082,9 @@
 		 */
 		processHTML : function(h) {
 			var t = this, s = t.settings;
+
+			if (!s.process_html)
+				return h;
 
 			// Convert strong and em to b and i in FF since it can't handle them
 			if (tinymce.isGecko) {

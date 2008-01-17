@@ -1203,7 +1203,7 @@ tinymce.create('static tinymce.util.XHR', {
 					if (h.nodeType)
 						e.appendChild(h);
 					else
-						e.innerHTML = h;
+						t.setHTML(e, h);
 				}
 
 				return !c ? p.appendChild(e) : e;
@@ -1722,13 +1722,25 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this;
 
 			return this.run(e, function(e) {
-				var r;
+				var x;
 
 				h = t.processHTML(h);
 
 				if (isIE) {
-					e.innerHTML = '<br />' + h;
-					e.removeChild(e.firstChild);
+					try {
+						e.innerHTML = '<br />' + h;
+						e.removeChild(e.firstChild);
+					} catch (ex) {
+						// IE sometimes produces an unknown runtime error on innerHTML
+						// This seems to fix this issue, don't know why.
+						x = t.create('div');
+						x.innerHTML = '<br />' + h;
+
+						each (x.childNodes, function(n, i) {
+							if (i > 1)
+								e.appendChild(n);
+						});
+					}
 				} else
 					e.innerHTML = h;
 
@@ -1738,6 +1750,9 @@ tinymce.create('static tinymce.util.XHR', {
 
 		processHTML : function(h) {
 			var t = this, s = t.settings;
+
+			if (!s.process_html)
+				return h;
 
 			// Convert strong and em to b and i in FF since it can't handle them
 			if (tinymce.isGecko) {
@@ -4120,7 +4135,7 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		renderTo : function(n) {
-			n.innerHTML = this.renderHTML();
+			DOM.setHTML(n, this.renderHTML());
 		},
 
 		postRender : function() {
@@ -6006,7 +6021,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				url_converter_scope : t,
 				hex_colors : s.force_hex_style_colors,
 				class_filter : s.class_filter,
-				update_styles : 1
+				update_styles : 1,
+				process_html : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer({

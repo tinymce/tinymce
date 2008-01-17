@@ -24,6 +24,7 @@ Version 3.0rc2 (2008-01-xx)
 	Fixed bug that made it impossible to visually disable a custom button that used an image instead of CSS sprites.
 	Fixed bug where it wasn't possible to press delete/backspace if the editor was added+removed and re-added due to a FF bug.
 	Fixed bug where an entities option with only 38,amp,60,lt,62,gt would fail in IE.
+	Fixed bug where innerHTML sometimes generated unknown runtime error on IE.
 	Fixed so theme_advanced_path_location can be used in init options for compatibility reasons.
 	Fixed so the drop menu colors matches the rest of o2k7 theme.
 	Fixed so the preview example.html file is updated to the new 3.x API.
