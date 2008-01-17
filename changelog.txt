@@ -3,6 +3,7 @@ Version 3.0rc2 (2008-01-xx)
 	Added new indentation option enables you to specify how much each indent/outdent call will add/remove.
 	Added easier support for enabling/disabling icon columns on drop menues.
 	Added new menu button control class. This control is very similar to the splitbutton but without any onclick action.
+	Added support for previous tab focus (shift+tab). The tab_focus setting now takes two items next and previous element.
 	Fixed bug where iframes inside the editor got removed in Firefox on initial load.
 	Fixed bug where the CSS for abbr elements wasn't applied correctly in IE.
 	Fixed bug where mceAddControl on element inside a hidden container produced errors.

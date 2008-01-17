@@ -1736,20 +1736,45 @@
 				function tabHandler(ed, e) {
 					var v, f, el;
 
+					function find(d) {
+						f = DOM.getParent(ed.id, 'form'), el = f.elements;
+
+						if (f) {
+							each(f.elements, function(e, i) {
+								if (e.id == ed.id) {
+									i = i + d;
+
+									if (i < 0 || i > el.length)
+										return;
+
+									el = el[i];
+								}
+							});
+						}
+
+						return el;
+					};
+
 					if (e.keyCode === 9) {
-						v = ed.getParam('tab_focus');
+						v = ed.getParam('tab_focus').split(',');
 
-						if (v == ':next') {
-							f = DOM.getParent(ed.id, 'form');
+						if (v.length == 1) {
+							v[1] = v[0];
+							v[0] = ':prev';
+						}
 
-							if (f) {
-								each(f.elements, function(e, i) {
-									if (e.id == ed.id)
-										el = f.elements[i + 1];
-								});
-							}
-						} else
-							el = DOM.get(v);
+						// Find element to focus
+						if (e.shiftKey) {
+							if (v[0] == ':prev')
+								el = find(-1);
+							else
+								el = DOM.get(v[0]);
+						} else {
+							if (v[1] == ':next')
+								el = find(1);
+							else
+								el = DOM.get(v[1]);
+						}
 
 						if (el) {
 							window.setTimeout(function() {window.focus();el.focus();}, 10);

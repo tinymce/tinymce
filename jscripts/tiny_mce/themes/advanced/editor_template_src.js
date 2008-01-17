@@ -381,6 +381,10 @@
 				});
 			}
 */
+
+			if (!ed.getParam('accessibility_focus') || ed.getParam('tab_focus'))
+				Event.add(DOM.add(p, 'a', {href : '#'}, '<!-- IE -->'), 'focus', function() {tinyMCE.get(ed.id).focus();});
+
 			if (s.theme_advanced_toolbar_location == 'external')
 				o.deltaHeight = 0;
 
