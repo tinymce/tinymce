@@ -164,10 +164,10 @@
 		 * @param {String} s List of entities in the following format: number,name,....
 		 */
 		setEntities : function(s) {
-			var a, i, l = {}, re = '', v;
+			var t = this, a, i, l = {}, re = '', v;
 
 			// No need to setup more than once
-			if (this.entityLookup)
+			if (t.entityLookup)
 				return;
 
 			// Build regex and lookup array
@@ -185,8 +185,13 @@
 				re += '\\u' + '0000'.substring(v.length) + v;
 			}
 
-			this.entitiesRE = new RegExp('[' + re + ']', 'g');
-			this.entityLookup = l;
+			if (!re) {
+				t.settings.entity_encoding = 'raw';
+				return;
+			}
+
+			t.entitiesRE = new RegExp('[' + re + ']', 'g');
+			t.entityLookup = l;
 		},
 
 		/**

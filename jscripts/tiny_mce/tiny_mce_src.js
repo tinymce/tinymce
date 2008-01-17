@@ -3147,10 +3147,10 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		setEntities : function(s) {
-			var a, i, l = {}, re = '', v;
+			var t = this, a, i, l = {}, re = '', v;
 
 			// No need to setup more than once
-			if (this.entityLookup)
+			if (t.entityLookup)
 				return;
 
 			// Build regex and lookup array
@@ -3168,8 +3168,13 @@ tinymce.create('static tinymce.util.XHR', {
 				re += '\\u' + '0000'.substring(v.length) + v;
 			}
 
-			this.entitiesRE = new RegExp('[' + re + ']', 'g');
-			this.entityLookup = l;
+			if (!re) {
+				t.settings.entity_encoding = 'raw';
+				return;
+			}
+
+			t.entitiesRE = new RegExp('[' + re + ']', 'g');
+			t.entityLookup = l;
 		},
 
 		setValidChildRules : function(s) {
@@ -6187,6 +6192,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 			}
 
+			if (isGecko) {
+				try {
+					// Design mode must be set here once again to fix a bug where
+					// Ctrl+A/Delete/Backspace didn't work if the editor was added using mceAddControl then removed then added again
+					d.designMode = 'Off';
+					d.designMode = 'On';
+				} catch (ex) {
+					// Will fail on Gecko if the editor is placed in an hidden container element
+					// The design mode will be set ones the editor is focused
+				}
+			}
+
 			// A small timeout was needed since firefox will remove. Bug: #1838304
 			setTimeout(function () {
 				if (t.removed)
@@ -6221,7 +6238,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					}, 100);
 				}
 			}, 1);
-
+	
 			e = null;
 		},
 

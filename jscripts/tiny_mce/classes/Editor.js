@@ -680,6 +680,18 @@
 				});
 			}
 
+			if (isGecko) {
+				try {
+					// Design mode must be set here once again to fix a bug where
+					// Ctrl+A/Delete/Backspace didn't work if the editor was added using mceAddControl then removed then added again
+					d.designMode = 'Off';
+					d.designMode = 'On';
+				} catch (ex) {
+					// Will fail on Gecko if the editor is placed in an hidden container element
+					// The design mode will be set ones the editor is focused
+				}
+			}
+
 			// A small timeout was needed since firefox will remove. Bug: #1838304
 			setTimeout(function () {
 				if (t.removed)
@@ -714,7 +726,7 @@
 					}, 100);
 				}
 			}, 1);
-
+	
 			e = null;
 		},
 
