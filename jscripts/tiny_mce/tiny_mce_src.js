@@ -1728,6 +1728,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 				if (isIE) {
 					try {
+						// IE will remove comments from the beginning
+						// unless you padd the contents with something
 						e.innerHTML = '<br />' + h;
 						e.removeChild(e.firstChild);
 					} catch (ex) {
@@ -1737,6 +1739,7 @@ tinymce.create('static tinymce.util.XHR', {
 						x.innerHTML = '<br />' + h;
 
 						each (x.childNodes, function(n, i) {
+							// Skip the BR
 							if (i > 1)
 								e.appendChild(n);
 						});

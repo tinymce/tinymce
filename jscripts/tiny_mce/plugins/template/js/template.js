@@ -46,6 +46,11 @@ var TemplateDialog = {
 	},
 
 	loadCSSFiles : function(d) {
+		var ed = tinyMCEPopup.editor;
+
+		tinymce.each(ed.getParam("content_css", '').split(','), function(u) {
+			d.write('<link href="' + ed.documentBaseURI.toAbsolute(u) + '" rel="stylesheet" type="text/css" />');
+		});
 	},
 
 	selectTemplate : function(u) {

@@ -16,7 +16,7 @@
 
 			// Register commands
 			ed.addCommand('mceFullScreen', function() {
-				var win;
+				var win, de = document.documentElement;
 
 				if (ed.getParam('fullscreen_is_enabled')) {
 					if (ed.getParam('fullscreen_new_window'))
@@ -26,9 +26,12 @@
 							tinyMCE.get(ed.getParam('fullscreen_editor_id')).setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
 							tinyMCE.remove(ed);
 							DOM.remove('mce_fullscreen_container');
+							de.style.overflow = ed.getParam('fullscreen_html_overflow');
 							DOM.setStyle(document.body, 'overflow', ed.getParam('fullscreen_overflow'));
+							window.scrollTo(ed.getParam('fullscreen_scrollx'), ed.getParam('fullscreen_scrolly'));
 						}, 10);
 					}
+
 					return;
 				}
 
@@ -41,8 +44,26 @@
 					}
 				} else {
 					s.fullscreen_overflow = DOM.getStyle(document.body, 'overflow', 1) || 'auto';
-					DOM.setStyle(document.body, 'overflow', 'hidden');
+					s.fullscreen_html_overflow = DOM.getStyle(de, 'overflow', 1);
 					vp = DOM.getViewPort();
+					s.fullscreen_scrollx = vp.x;
+					s.fullscreen_scrolly = vp.y;
+
+					// Fixes an Opera bug where the scrollbars doesn't reappear
+					if (tinymce.isOpera && s.fullscreen_overflow == 'visible')
+						s.fullscreen_overflow = 'auto';
+
+					// Fixes an IE bug where horizontal scrollbars would appear
+					if (tinymce.isIE && s.fullscreen_overflow == 'scroll')
+						s.fullscreen_overflow = 'auto';
+
+					if (s.fullscreen_overflow == '0px')
+						s.fullscreen_overflow = '';
+
+					DOM.setStyle(document.body, 'overflow', 'hidden');
+					de.style.overflow = 'hidden'; //Fix for IE6/7
+					vp = DOM.getViewPort();
+					window.scrollTo(0, 0);
 
 					if (tinymce.isIE)
 						vp.h -= 1;
