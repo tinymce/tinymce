@@ -919,7 +919,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			this.settings = s = tinymce.extend({
 				keep_values : false,
-				hex_colors : 1
+				hex_colors : 1,
+				process_html : 1
 			}, s);
 
 			// Fix IE6SP2 flicker and check it failed for pre SP2
@@ -2077,7 +2078,7 @@ tinymce.create('static tinymce.util.XHR', {
 		});
 
 	// Setup page DOM
-	tinymce.DOM = new tinymce.dom.DOMUtils(document);
+	tinymce.DOM = new tinymce.dom.DOMUtils(document, {process_html : 0});
 })();
 
 /* file:jscripts/tiny_mce/classes/dom/Event.js */
@@ -6024,8 +6025,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				url_converter_scope : t,
 				hex_colors : s.force_hex_style_colors,
 				class_filter : s.class_filter,
-				update_styles : 1,
-				process_html : 1
+				update_styles : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer({

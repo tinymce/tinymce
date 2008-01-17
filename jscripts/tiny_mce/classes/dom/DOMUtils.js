@@ -43,7 +43,8 @@
 
 			this.settings = s = tinymce.extend({
 				keep_values : false,
-				hex_colors : 1
+				hex_colors : 1,
+				process_html : 1
 			}, s);
 
 			// Fix IE6SP2 flicker and check it failed for pre SP2
@@ -1476,5 +1477,5 @@
 	});
 
 	// Setup page DOM
-	tinymce.DOM = new tinymce.dom.DOMUtils(document);
+	tinymce.DOM = new tinymce.dom.DOMUtils(document, {process_html : 0});
 })();

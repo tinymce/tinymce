@@ -494,8 +494,7 @@
 				url_converter_scope : t,
 				hex_colors : s.force_hex_style_colors,
 				class_filter : s.class_filter,
-				update_styles : 1,
-				process_html : 1
+				update_styles : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer({
@@ -755,8 +754,7 @@
 				hex_colors : s.force_hex_style_colors,
 				class_filter : s.class_filter,
 				root_element : t.id,
-				strict_root : 1,
-				process_html : 1
+				strict_root : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer({
