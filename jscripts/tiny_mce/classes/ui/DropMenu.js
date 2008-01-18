@@ -197,7 +197,7 @@
 		/**
 		 * Hides the displayed menu.
 		 */
-		hideMenu : function() {
+		hideMenu : function(c) {
 			var t = this, co = DOM.get('menu_' + t.id), e;
 
 			if (!t.isMenuVisible)
@@ -207,6 +207,9 @@
 			Event.remove(co, 'click', t.mouseClickFunc);
 			DOM.hide(co);
 			t.isMenuVisible = 0;
+
+			if (!c)
+				t.collapse(1);
 
 			if (t.element)
 				t.element.hide();
@@ -241,7 +244,7 @@
 		 */
 		collapse : function(d) {
 			this.parent(d);
-			this.hideMenu();
+			this.hideMenu(1);
 		},
 
 		/**

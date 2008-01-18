@@ -4488,7 +4488,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 		},
 
-		hideMenu : function() {
+		hideMenu : function(c) {
 			var t = this, co = DOM.get('menu_' + t.id), e;
 
 			if (!t.isMenuVisible)
@@ -4498,6 +4498,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			Event.remove(co, 'click', t.mouseClickFunc);
 			DOM.hide(co);
 			t.isMenuVisible = 0;
+
+			if (!c)
+				t.collapse(1);
 
 			if (t.element)
 				t.element.hide();
@@ -4521,7 +4524,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		collapse : function(d) {
 			this.parent(d);
-			this.hideMenu();
+			this.hideMenu(1);
 		},
 
 		remove : function(o) {
