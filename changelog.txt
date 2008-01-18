@@ -1,4 +1,4 @@
-Version 3.0rc2 (2008-01-xx)
+Version 3.0rc2 (2008-01-18)
 	Added new fix_nesting option to fix bug #1867292, this is disabled by default.
 	Added new indentation option enables you to specify how much each indent/outdent call will add/remove.
 	Added easier support for enabling/disabling icon columns on drop menues.
