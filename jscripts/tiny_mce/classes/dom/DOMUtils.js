@@ -753,7 +753,7 @@
 		 * @return {object} Absolute position of the specified element object with x, y fields.
 		 */
 		getPos : function(n) {
-			var t = this, x = 0, y = 0, e, d = t.doc;
+			var t = this, x = 0, y = 0, e, d = t.doc, r;
 
 			n = t.get(n);
 
@@ -768,12 +768,23 @@
 				return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
 			}
 
-			while (n) {
-				x += n.offsetLeft || 0;
-				y += n.offsetTop || 0;
-				x -= n.scrollLeft || 0;
-				y -= n.scrollTop || 0;
-				n = n.offsetParent;
+			r = n;
+			while (r) {
+				x += r.offsetLeft || 0;
+				y += r.offsetTop || 0;
+
+				r = r.offsetParent;
+			}
+
+			r = n;
+			while (r) {
+				x -= r.scrollLeft || 0;
+				y -= r.scrollTop || 0;
+
+				r = r.parentNode;
+
+				if (r == d.body)
+					break;
 			}
 
 			return {x : x, y : y};

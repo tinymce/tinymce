@@ -29,7 +29,8 @@ Version 3.0rc2 (2008-01-18)
 	Fixed bug where content_css files wasn't loaded in the template preview iframe.
 	Fixed bug where scroll position was incorrect when toggling fullscreen mode.
 	Fixed bug where restoration of overflow didn't work correctly when disabling fullscreen mode in Opera.
-	Fixed bug where hideMenu didn't hide sub menus correctly.
+	Fixed bug where drop menus where places at incorrect locations if the editor was placed in a scrollable container element.
+	Fixed bug where hideMenu didn't hide sub menus correctly. It will now hide all menus recursively.
 	Fixed so theme_advanced_path_location can be used in init options for compatibility reasons.
 	Fixed so the drop menu colors matches the rest of o2k7 theme.
 	Fixed so the preview example.html file is updated to the new 3.x API.
