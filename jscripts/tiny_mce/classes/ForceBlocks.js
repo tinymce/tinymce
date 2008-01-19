@@ -35,22 +35,23 @@
 
 			ed.onPreInit.add(t.setup, t);
 
-			if (!isIE) {
-				ed.onSetContent.add(function(ed, o) {
-					o.content = o.content.replace(/<p>[\s\u00a0]+<\/p>/g, '<p><br /></p>');
-				});
-			}
-
-			ed.onPostProcess.add(function(ed, o) {
+			function padd(ed, o) {
 				if (isOpera)
-					o.content = o.content.replace(/(\u00a0|&#160;|&nbsp;)<\/p>/g, '</p>');
+					o.content = o.content.replace(/(\u00a0|&#160;|&nbsp;)<\/p>/gi, '</p>');
 
-				o.content = o.content.replace(/<p><\/p>/g, '<p>\u00a0</p>');
+				o.content = o.content.replace(/<p([^>]+)><\/p>|<p([^>]+)\/>|<p([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>/gi, '<p$1$2$3>\u00a0</p>');
 
-				// Use BR instead of &nbsp; padded paragraphs
-				o.content = o.content.replace(/<p>\s*<br \/>\s*<\/p>/g, '<p>\u00a0</p>');
-				o.content = o.content.replace(/\s*<br \/>\s*<\/p>/g, '</p>');
-			});
+				if (!isIE && o.set) {
+					// Use &nbsp; instead of BR in padded paragraphs
+					o.content = o.content.replace(/<p([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>/gi, '<p$1><br /></p>');
+				} else {
+					o.content = o.content.replace(/<p([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>/gi, '<p$1>\u00a0</p>');
+					o.content = o.content.replace(/\s*<br \/>\s*<\/p>/gi, '</p>');
+				}
+			};
+
+			ed.onBeforeSetContent.add(padd);
+			ed.onPostProcess.add(padd);
 
 			if (s.forced_root_block) {
 				ed.onInit.add(t.forceRoots, t);
