@@ -481,9 +481,9 @@
 			da = s.theme_advanced_containers_default_align || 'center';
 
 			each((s.theme_advanced_containers || '').split(','), function(c, i) {
-				var v = s['theme_advanced_container_' + c].toLowerCase();
+				var v = s['theme_advanced_container_' + c] || '';
 
-				switch (v) {
+				switch (c.toLowerCase()) {
 					case 'mceeditor':
 						n = DOM.add(tb, 'tr');
 						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
@@ -568,7 +568,7 @@
 				if (s['theme_advanced_buttons' + i + '_add_before'])
 					v = s['theme_advanced_buttons' + i + '_add_before'] + ',' + v;
 
-				t._addControls(v, tb, di);
+				t._addControls(v, tb);
 
 				//n.appendChild(n = tb.render());
 				h.push(tb.renderHTML());
