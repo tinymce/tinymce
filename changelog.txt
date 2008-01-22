@@ -6,6 +6,7 @@ Version 3.0rc3 (2008-01-xx)
 	Fixed bug where the table dialogs class select wasn't updated correctly.
 	Fixed bug where elements would get extra whitespace around on insert when body was present in valid_elements.
 	Fixed bug where coords attribute of the area element wasn't handled properly in IE.
+	Fixed bug where Safari didn't produce BR elements on shift+return.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.
 Version 3.0rc2 (2008-01-18)

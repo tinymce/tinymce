@@ -5958,68 +5958,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t.setupIframe();
 				e = n = o = null; // Cleanup
 			}
-
-/*			function createIfr() {
-				h = (o.iframeHeight || h) + ((h + '').indexOf('%') == -1 ? (o.deltaHeight || 0) : '');
-				if (h < 100)
-					h = 100;
-
-				// Create iframe
-				n = DOM.add(o.iframeContainer, 'iframe', {
-					id : s.id + "_ifr",
-					src : 'javascript:""', // Workaround for HTTPS warning in IE6/7
-					frameBorder : '0',
-					style : {
-						width : '100%',
-						height : h
-					}
-				});
-
-				t.contentAreaContainer = o.iframeContainer;
-				DOM.get(o.editorContainer).style.display = t.orgDisplay;
-				DOM.get(s.id).style.display = 'none';
-
-				// Safari 2.x requires us to wait for the load event and load a real HTML doc
-				if (tinymce.isOldWebKit) {
-					Event.add(n, 'load', t.setupIframe, t);
-					n.src = tinymce.baseURL + '/plugins/safari/blank.htm';
-				} else {
-					t.setupIframe();
-					e = n = o = null; // Cleanup
-				}
-			};
-*/
-			// Waits for the editor to become visible, then it will run the init
-			// This method is somewhat ugly but this is the best way to deal with it without
-			// forcing the user to add some logic to their application.
-/*			if (isGecko) {
-				function check() {
-					var hi;
-
-					DOM.getParent(t.id, function(e) {
-						if (DOM.getStyle(e, 'display', true) == 'none') {
-							hi = 1;
-							return true;
-						}
-					});
-
-					return hi;
-				};
-
-				if (check()) {
-					ti = window.setInterval(function() {
-						if (!check()) {
-							createIfr();
-							window.clearInterval(ti);
-						}
-					}, 300);
-
-					return;
-				}
-			}
-
-			createIfr();
-*/
 		},
 
 		setupIframe : function() {

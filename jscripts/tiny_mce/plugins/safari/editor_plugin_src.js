@@ -43,21 +43,13 @@
 				ed.getDoc().execCommand("Delete", false, ' ');
 			});
 
-			// Workaround for List ID bug, http://bugs.webkit.org/show_bug.cgi?id=16004
-/*			function addList(c) {
-				var cb = Event.add(ed.getDoc(), 'DOMNodeInserted', function(e) {
-					e = e.target;
-
-					if (e.nodeName == 'OL' || e.nodeName == 'UL')
-						e.id = '';
-				});
-
-				ed.getDoc().execCommand(c, false, false);
-				Event.remove(ed.getDoc(), 'DOMNodeInserted', cb);
-			};
-
-			ed.addCommand('InsertUnorderedList', function() {addList('InsertUnorderedList');});
-			ed.addCommand('InsertOrderedList', function() {addList('InsertOrderedList');});*/
+			// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
+			ed.onKeyPress.add(function(ed, e) {
+				if (e.keyCode == 13 && e.shiftKey) {
+					t._insertBR(ed);
+					Event.cancel(e);
+				}
+			});
 
 			// Safari returns incorrect values
 			ed.addQueryValueHandler('FontSize', function(u, v) {
@@ -392,6 +384,27 @@
 					});
 				}
 			};
+		},
+
+		_insertBR : function(ed) {
+			var dom = ed.dom, s = ed.selection, r = s.getRng(), br;
+
+			// Insert BR element
+			r.insertNode(br = dom.create('br'));
+
+			// Place caret after BR
+			r.setStartAfter(br);
+			r.setEndAfter(br);
+			s.setRng(r);
+
+			// Could not place caret after BR then insert an nbsp entity and move the caret
+			if (s.getSel().focusNode == br.previousSibling) {
+				s.select(dom.insertAfter(dom.doc.createTextNode('\u00a0'), br));
+				s.collapse(1);
+			}
+
+			// Scroll to new position
+			s.getRng().startContainer.scrollIntoView(0);
 		}
 	});
 
