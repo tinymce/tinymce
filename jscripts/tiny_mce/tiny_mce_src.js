@@ -1417,7 +1417,7 @@ tinymce.create('static tinymce.util.XHR', {
 				dv = "";
 
 			// Try the mce variant for these
-			if (/^(src|href|style)$/.test(n)) {
+			if (/^(src|href|style|coords)$/.test(n)) {
 				v = e.getAttribute("mce_" + n);
 
 				if (v)
@@ -1486,6 +1486,10 @@ tinymce.create('static tinymce.util.XHR', {
 						if (v === 32768)
 							v = '';
 
+						break;
+
+					case 'shape':
+						v = v.toLowerCase();
 						break;
 
 					default:
@@ -1782,7 +1786,7 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 
 			// Fix some issues
-			h = h.replace(/<(a)([^>]*)\/>/gi, '<$1$2></$1>'); // Force open
+			h = h.replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>'); // Force open
 
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
@@ -1795,7 +1799,7 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 
 				// Process all tags with src, href or style
-				h = h.replace(/<([\w:]+) [^>]*(src|href|style)[^>]*>/gi, function(a, n) {
+				h = h.replace(/<([\w:]+) [^>]*(src|href|style|coords)[^>]*>/gi, function(a, n) {
 					function handle(m, b, c) {
 						var u = c;
 
@@ -1819,7 +1823,7 @@ tinymce.create('static tinymce.util.XHR', {
 									return 'url(' + t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n)) + ')';
 								});
 							}
-						} else {
+						} else if (b != 'coords') {
 							if (s.url_converter)
 								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));
 						}
@@ -1827,10 +1831,10 @@ tinymce.create('static tinymce.util.XHR', {
 						return ' ' + b + '="' + c + '" mce_' + b + '="' + u + '"';
 					};
 
-					a = a.replace(/ (src|href|style)=[\"]([^\"]+)[\"]/gi, handle); // W3C
-					a = a.replace(/ (src|href|style)=[\']([^\']+)[\']/gi, handle); // W3C
+					a = a.replace(/ (src|href|style|coords)=[\"]([^\"]+)[\"]/gi, handle); // W3C
+					a = a.replace(/ (src|href|style|coords)=[\']([^\']+)[\']/gi, handle); // W3C
 
-					return a.replace(/ (src|href|style)=([^\s\"\'>]+)/gi, handle); // IE
+					return a.replace(/ (src|href|style|coords)=([^\s\"\'>]+)/gi, handle); // IE
 				});
 			}
 
@@ -3588,8 +3592,8 @@ tinymce.create('static tinymce.util.XHR', {
 					// Simple indentation
 					if (s.apply_source_formatting && s.indent_mode == 'simple') {
 						// Add line breaks before and after block elements
-						h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
-						h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li)(|[^>]+)>/g, '\n<$1$2>');
+						h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html|map)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
+						h = h.replace(/\s*<(p|h[1-6]|div|title|style|pre|script|td|li|area)(|[^>]+)>/g, '\n<$1$2>');
 						h = h.replace(/<\/(p|h[1-6]|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
 						h = h.replace(/\n\n/g, '\n');
 					}
@@ -5686,7 +5690,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				apply_source_formatting : 1,
 				directionality : 'ltr',
 				forced_root_block : 'p',
-				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value|_value],embed[type|width|height|src|*],script[type]',
+				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value|_value],embed[type|width|height|src|*],script[type],map[name],area[shape|coords|href|alt|target]',
 				hidden_input : 1,
 				padd_empty_editor : 1,
 				render_ui : 1,

@@ -665,7 +665,7 @@
 				dv = "";
 
 			// Try the mce variant for these
-			if (/^(src|href|style)$/.test(n)) {
+			if (/^(src|href|style|coords)$/.test(n)) {
 				v = e.getAttribute("mce_" + n);
 
 				if (v)
@@ -734,6 +734,10 @@
 						if (v === 32768)
 							v = '';
 
+						break;
+
+					case 'shape':
+						v = v.toLowerCase();
 						break;
 
 					default:
@@ -1114,7 +1118,7 @@
 			}
 
 			// Fix some issues
-			h = h.replace(/<(a)([^>]*)\/>/gi, '<$1$2></$1>'); // Force open
+			h = h.replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>'); // Force open
 
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
@@ -1127,7 +1131,7 @@
 				}
 
 				// Process all tags with src, href or style
-				h = h.replace(/<([\w:]+) [^>]*(src|href|style)[^>]*>/gi, function(a, n) {
+				h = h.replace(/<([\w:]+) [^>]*(src|href|style|coords)[^>]*>/gi, function(a, n) {
 					function handle(m, b, c) {
 						var u = c;
 
@@ -1151,7 +1155,7 @@
 									return 'url(' + t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n)) + ')';
 								});
 							}
-						} else {
+						} else if (b != 'coords') {
 							if (s.url_converter)
 								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));
 						}
@@ -1159,10 +1163,10 @@
 						return ' ' + b + '="' + c + '" mce_' + b + '="' + u + '"';
 					};
 
-					a = a.replace(/ (src|href|style)=[\"]([^\"]+)[\"]/gi, handle); // W3C
-					a = a.replace(/ (src|href|style)=[\']([^\']+)[\']/gi, handle); // W3C
+					a = a.replace(/ (src|href|style|coords)=[\"]([^\"]+)[\"]/gi, handle); // W3C
+					a = a.replace(/ (src|href|style|coords)=[\']([^\']+)[\']/gi, handle); // W3C
 
-					return a.replace(/ (src|href|style)=([^\s\"\'>]+)/gi, handle); // IE
+					return a.replace(/ (src|href|style|coords)=([^\s\"\'>]+)/gi, handle); // IE
 				});
 			}
 

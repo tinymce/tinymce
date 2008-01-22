@@ -1,9 +1,11 @@
 Version 3.0rc3 (2008-01-xx)
+	Added map and area elements to the default valid_elements list and also some indentation rules.
 	Fixed bug where empty paragraphs wasn't padded when loading contents.
 	Fixed bug where the RowLayout manager didn't work at all.
 	Fixed bug where style attribute data would get messed up in advimage dialog.
 	Fixed bug where the table dialogs class select wasn't updated correctly.
 	Fixed bug where elements would get extra whitespace around on insert when body was present in valid_elements.
+	Fixed bug where coords attribute of the area element wasn't handled properly in IE.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.
 Version 3.0rc2 (2008-01-18)

@@ -748,6 +748,16 @@
 				dom.processHTML('<span style="background: url(test.gif);"></span>'),
 				'<span style="background: url(test.gif);" mce_style="background: url(&amp;&lt;&gt;&quot;test.gif&amp;&lt;&gt;&quot;);"></span>'
 			);
+
+			t.eq(
+				dom.processHTML('<a href="test.html"/>'),
+				'<a href="test.html" mce_href="&amp;&lt;&gt;&quot;test.html&amp;&lt;&gt;&quot;"></a>'
+			);
+
+			t.eq(
+				dom.processHTML('<a/>'),
+				'<a></a>'
+			);
 		},
 
 		encodeDecode : function() {
@@ -948,6 +958,10 @@
 
 			DOM.setHTML('test', '<script type="text/javascript" src="test.js"></script>');
 			t.eq(ser.serialize(DOM.get('test')), '<script type="text/javascript" src="test.js"></script>');
+
+			ser.setRules('map[id|name],area[shape|coords|href|target|alt]');
+			DOM.setHTML('test', '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun" /></map>');
+			t.eq(ser.serialize(DOM.get('test')), '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun"></area></map>');
 
 /*			ser = new tinymce.dom.Serializer();
 			var ifr = DOM.add(document.body, 'iframe', {id : 'iframe', src : 'javascript:""', display : 'none'});
