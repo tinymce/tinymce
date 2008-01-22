@@ -23,7 +23,7 @@
 .defaultSkin td.mceToolbar {padding-top:1px; vertical-align:top}
 .defaultSkin .mceIframeContainer {border-top:1px solid #CCC; border-bottom:1px solid #CCC}
 .defaultSkin .mceStatusbar {position:relative; font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:16px; overflow:visible; padding:2px; color:#000; display:block}
-.defaultSkin .mceStatusbar a.resize {display:block; position:absolute; top:0; right:0; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px}
+.defaultSkin .mceStatusbar a.resize {display:block; position:absolute; top:0; right:0; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize}
 .defaultSkin .mceStatusbar a:hover {text-decoration:underline}
 .defaultSkin table.mceToolbar {margin-left:3px}
 .defaultSkin span.icon, .defaultSkin img.icon {display:block; width:20px; height:20px}

@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0rc2',
-	releaseDate : '2008-01-18',
+	minorVersion : '0rc3',
+	releaseDate : '2008-xx-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
