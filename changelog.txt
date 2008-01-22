@@ -1,6 +1,10 @@
 Version 3.0rc3 (2008-01-xx)
 	Fixed bug where empty paragraphs wasn't padded when loading contents.
 	Fixed bug where the RowLayout manager didn't work at all.
+	Fixed bug where style attribute data would get messed up in advimage dialog.
+	Fixed bug where the table dialogs class select wasn't updated correctly.
+	Fixed bug where elements would get extra whitespace around on insert when body was present in valid_elements.
+	Fixed so pointless style information for borders gets removed in IE.
 Version 3.0rc2 (2008-01-18)
 	Added new fix_nesting option to fix bug #1867292, this is disabled by default.
 	Added new indentation option enables you to specify how much each indent/outdent call will add/remove.

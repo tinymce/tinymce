@@ -41,6 +41,21 @@ var ImageDialog = {
 
 			if (/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/.test(dom.getAttrib(n, 'onmouseout')))
 				nl.onmouseoutsrc.value = dom.getAttrib(n, 'onmouseout').replace(/^\s*this.src\s*=\s*\'([^\']+)\';?\s*$/, '$1');
+
+			if (ed.settings.inline_styles) {
+				// Move attribs to styles
+				if (dom.getAttrib(n, 'align'))
+					this.updateStyle('align');
+
+				if (dom.getAttrib(n, 'hspace'))
+					this.updateStyle('hspace');
+
+				if (dom.getAttrib(n, 'border'))
+					this.updateStyle('border');
+
+				if (dom.getAttrib(n, 'vspace'))
+					this.updateStyle('vspace');
+			}
 		}
 
 		// Setup browse button
@@ -69,7 +84,6 @@ var ImageDialog = {
 			this.setSwapImage(false);
 
 		this.changeAppearance();
-		this.updateStyle();
 		this.showPreviewImage(nl.src.value, 1);
 	},
 
@@ -105,12 +119,20 @@ var ImageDialog = {
 			ed.getWin().focus();
 
 		if (!ed.settings.inline_styles) {
-			args = tinymce.extend(args, {
+			args = {
 				vspace : nl.vspace.value,
 				hspace : nl.hspace.value,
 				border : nl.border.value,
 				align : getSelectValue(f, 'align')
-			});
+			};
+		} else {
+			// Remove deprecated values
+			args = {
+				vspace : '',
+				hspace : '',
+				border : '',
+				align : ''
+			};
 		}
 
 		tinymce.extend(args, {
@@ -168,6 +190,7 @@ var ImageDialog = {
 				case 'hspace':
 					v = dom.getStyle(e, 'margin-left')
 					v2 = dom.getStyle(e, 'margin-right');
+
 					if (v && v == v2)
 						return parseInt(v.replace(/[^0-9]/g, ''));
 
@@ -302,7 +325,6 @@ var ImageDialog = {
 		var f = document.forms[0], tp, t = this;
 
 		if (!f.constrain.checked || !t.preloadImg) {
-			t.updateStyle();
 			return;
 		}
 
@@ -311,14 +333,12 @@ var ImageDialog = {
 
 		tp = (parseInt(f.width.value) / parseInt(t.preloadImg.width)) * t.preloadImg.height;
 		f.height.value = tp.toFixed(0);
-		t.updateStyle();
 	},
 
 	changeWidth : function() {
 		var f = document.forms[0], tp, t = this;
 
 		if (!f.constrain.checked || !t.preloadImg) {
-			t.updateStyle();
 			return;
 		}
 
@@ -327,65 +347,65 @@ var ImageDialog = {
 
 		tp = (parseInt(f.height.value) / parseInt(t.preloadImg.height)) * t.preloadImg.width;
 		f.width.value = tp.toFixed(0);
-		t.updateStyle();
 	},
 
-	updateStyle : function() {
-		var dom = tinyMCEPopup.dom, st, v, f = document.forms[0];
+	updateStyle : function(ty) {
+		var dom = tinyMCEPopup.dom, st, v, f = document.forms[0], img = dom.create('img', {style : dom.get('style').value});
 
 		if (tinyMCEPopup.editor.settings.inline_styles) {
-			st = tinyMCEPopup.dom.parseStyle(dom.get('style').value);
-
 			// Handle align
-			v = getSelectValue(f, 'align');
-			if (v) {
-				if (v == 'left' || v == 'right') {
-					st['float'] = v;
-					delete st['vertical-align'];
-				} else {
-					st['vertical-align'] = v;
-					delete st['float'];
+			if (ty == 'align') {
+				dom.setStyle(img, 'float', '');
+				dom.setStyle(img, 'vertical-align', '');
+
+				v = getSelectValue(f, 'align');
+				if (v) {
+					if (v == 'left' || v == 'right')
+						dom.setStyle(img, 'float', v);
+					else
+						img.style.verticalAlign = v;
 				}
-			} else {
-				delete st['float'];
-				delete st['vertical-align'];
 			}
 
 			// Handle border
-			v = f.border.value;
-			if (v || v == '0') {
-				if (v == '0')
-					st['border'] = '0';
-				else
-					st['border'] = v + 'px solid black';
-			} else
-				delete st['border'];
+			if (ty == 'border') {
+				dom.setStyle(img, 'border', '');
+
+				v = f.border.value;
+				if (v || v == '0') {
+					if (v == '0')
+						img.style.border = '';
+					else
+						img.style.border = v + 'px solid black';
+				}
+			}
 
 			// Handle hspace
-			v = f.hspace.value;
-			if (v) {
-				delete st['margin'];
-				st['margin-left'] = v + 'px';
-				st['margin-right'] = v + 'px';
-			} else {
-				delete st['margin-left'];
-				delete st['margin-right'];
+			if (ty == 'hspace') {
+				dom.setStyle(img, 'marginLeft', '');
+				dom.setStyle(img, 'marginRight', '');
+
+				v = f.hspace.value;
+				if (v) {
+					img.style.marginLeft = v + 'px';
+					img.style.marginRight = v + 'px';
+				}
 			}
 
 			// Handle vspace
-			v = f.vspace.value;
-			if (v) {
-				delete st['margin'];
-				st['margin-top'] = v + 'px';
-				st['margin-bottom'] = v + 'px';
-			} else {
-				delete st['margin-top'];
-				delete st['margin-bottom'];
+			if (ty == 'vspace') {
+				dom.setStyle(img, 'marginTop', '');
+				dom.setStyle(img, 'marginBottom', '');
+
+				v = f.vspace.value;
+				if (v) {
+					img.style.marginTop = v + 'px';
+					img.style.marginBottom = v + 'px';
+				}
 			}
 
 			// Merge
-			st = tinyMCEPopup.dom.parseStyle(dom.serializeStyle(st));
-			dom.get('style').value = dom.serializeStyle(st);
+			dom.get('style').value = dom.serializeStyle(dom.parseStyle(img.style.cssText));
 		}
 	},
 

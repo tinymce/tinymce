@@ -244,7 +244,7 @@ function init() {
 		align = dom.getAttrib(elm, 'align', align);
 		frame = dom.getAttrib(elm, 'frame');
 		rules = dom.getAttrib(elm, 'rules');
-		className = dom.getAttrib(elm, 'class');
+		className = tinymce.trim(dom.getAttrib(elm, 'class').replace(/mceItem.+/g, ''));
 		id = dom.getAttrib(elm, 'id');
 		summary = dom.getAttrib(elm, 'summary');
 		style = dom.serializeStyle(st);

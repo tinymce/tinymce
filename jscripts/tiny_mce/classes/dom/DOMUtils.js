@@ -885,6 +885,12 @@
 			compress("margin", "", "margin");
 			compress2('border', 'border-width', 'border-style', 'border-color');
 
+			if (isIE) {
+				// Remove pointless border
+				if (o.border == 'medium none')
+					o.border = '';
+			}
+
 			return o;
 		},
 

@@ -1623,6 +1623,12 @@ tinymce.create('static tinymce.util.XHR', {
 			compress("margin", "", "margin");
 			compress2('border', 'border-width', 'border-style', 'border-color');
 
+			if (isIE) {
+				// Remove pointless border
+				if (o.border == 'medium none')
+					o.border = '';
+			}
+
 			return o;
 		},
 
@@ -2490,6 +2496,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 			if (/\s+$/.test(e.innerHTML))
 				wa = ' ';
+
+			s.getInner = true;
 
 			return t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
 		},
@@ -6635,7 +6643,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				o.format = 'raw';
 			}
 
-			o.content = t.dom.setHTML(t.getBody(), o.content);
+			o.content = t.dom.setHTML(t.getBody(), tinymce.trim(o.content));
 
 			if (o.format != 'raw' && t.settings.cleanup) {
 				o.getInner = true;

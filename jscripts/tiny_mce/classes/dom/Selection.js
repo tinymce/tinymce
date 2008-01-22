@@ -74,6 +74,8 @@
 			if (/\s+$/.test(e.innerHTML))
 				wa = ' ';
 
+			s.getInner = true;
+
 			return t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
 		},
 

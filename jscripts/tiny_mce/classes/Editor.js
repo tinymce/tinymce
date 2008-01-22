@@ -1358,7 +1358,7 @@
 				o.format = 'raw';
 			}
 
-			o.content = t.dom.setHTML(t.getBody(), o.content);
+			o.content = t.dom.setHTML(t.getBody(), tinymce.trim(o.content));
 
 			if (o.format != 'raw' && t.settings.cleanup) {
 				o.getInner = true;
