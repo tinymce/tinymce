@@ -6397,7 +6397,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return false;
 
 			// Comamnd callback
-			if (t.execCallback('execcommand_callback', null, t.id, t.selection.getNode(), cmd, ui, val)) {
+			if (t.execCallback('execcommand_callback', t.id, t.selection.getNode(), cmd, ui, val)) {
 				t.onExecCommand.dispatch(t, cmd, ui, val);
 				return true;
 			}

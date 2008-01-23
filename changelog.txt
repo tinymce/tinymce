@@ -12,6 +12,7 @@ Version 3.0rc3 (2008-01-xx)
 	Fixed bug where cleanup_callback could break the contents of the editor. But use the new event system instead of this option.
 	Fixed bug where the tab_focus option didn't work between editor instanced. You can now tab between editors.
 	Fixed bug where the load function of the ScriptLoader class didn't load single files without the load que as it was supposed to.
+	Fixed bug where the execcommand_callback parameter order was incorrect. Recommendation use the new addCommand method.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.
 Version 3.0rc2 (2008-01-18)
