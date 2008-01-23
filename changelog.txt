@@ -10,6 +10,7 @@ Version 3.0rc3 (2008-01-xx)
 	Fixed bug where force blocks would cast odd invalid attribute exception in IE.
 	Fixed bug where media plugin would produce extra whitespace before and after objects.
 	Fixed bug where cleanup_callback could break the contents of the editor. But use the new event system instead of this option.
+	Fixed bug where the tab_focus option didn't work between editor instanced. You can now tab between editors.
 	Fixed bug where the load function of the ScriptLoader class didn't load single files without the load que as it was supposed to.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.

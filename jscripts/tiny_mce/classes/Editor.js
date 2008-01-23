@@ -1710,7 +1710,11 @@
 						}
 
 						if (el) {
-							window.setTimeout(function() {window.focus();el.focus();}, 10);
+							if (ed = EditorManager.get(el.id || el.name))
+								ed.focus();
+							else
+								window.setTimeout(function() {window.focus();el.focus();}, 10);
+
 							return Event.cancel(e);
 						}
 					}
