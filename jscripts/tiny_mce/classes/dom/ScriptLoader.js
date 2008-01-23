@@ -80,18 +80,35 @@
 		 * @param {Object} s Optional scope to execute callback in.
 		 */
 		load : function(u, cb, s) {
-			var o;
+			var t = this, o;
+
+			function loadScript(u) {
+				if (tinymce.dom.Event.domLoaded || t.settings.strict_mode) {
+					tinymce.util.XHR.send({
+						url : u,
+						error : t.settings.error,
+						async : false,
+						success : function(co) {
+							t.eval(co);
+						}
+					});
+				} else
+					document.write('<script type="text/javascript" src="' + u + '"></script>');
+			};
 
 			if (!tinymce.is(u, 'string')) {
-				o = [];
-
 				each(u, function(u) {
-					o.push({state : 0, url : u});
+					loadScript(u);
 				});
 
-				this.loadScripts(o, cb, s);
-			} else
-				this.loadScripts([{state : 0, url : u}], cb, s);
+				if (cb)
+					cb.call(s || t);
+			} else {
+				loadScript(u);
+
+				if (cb)
+					cb.call(s || t);
+			}
 		},
 
 		/**

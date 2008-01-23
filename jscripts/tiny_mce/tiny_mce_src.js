@@ -3922,18 +3922,35 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		load : function(u, cb, s) {
-			var o;
+			var t = this, o;
+
+			function loadScript(u) {
+				if (tinymce.dom.Event.domLoaded || t.settings.strict_mode) {
+					tinymce.util.XHR.send({
+						url : u,
+						error : t.settings.error,
+						async : false,
+						success : function(co) {
+							t.eval(co);
+						}
+					});
+				} else
+					document.write('<script type="text/javascript" src="' + u + '"></script>');
+			};
 
 			if (!tinymce.is(u, 'string')) {
-				o = [];
-
 				each(u, function(u) {
-					o.push({state : 0, url : u});
+					loadScript(u);
 				});
 
-				this.loadScripts(o, cb, s);
-			} else
-				this.loadScripts([{state : 0, url : u}], cb, s);
+				if (cb)
+					cb.call(s || t);
+			} else {
+				loadScript(u);
+
+				if (cb)
+					cb.call(s || t);
+			}
 		},
 
 		loadQueue : function(cb, s) {
@@ -6122,11 +6139,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t._convertInlineElements();
 
 			if (s.cleanup_callback) {
-				t.onSetContent.add(function(ed, o) {
-					if (o.initial) {
-						t.setContent(t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o), {format : 'raw', no_events : true});
-						t.execCallback('cleanup_callback', 'insert_to_editor_dom', t.getDoc(), o);
-					}
+				t.onBeforeSetContent.add(function(ed, o) {
+					o.content = t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o);
 				});
 
 				t.onPreProcess.add(function(ed, o) {
@@ -8294,13 +8308,13 @@ tinymce.create('tinymce.UndoManager', {
 				if (isOpera)
 					o.content = o.content.replace(/(\u00a0|&#160;|&nbsp;)<\/p>/gi, '</p>');
 
-				o.content = o.content.replace(/<p([^>]+)><\/p>|<p([^>]+)\/>|<p([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>/gi, '<p$1$2$3>\u00a0</p>');
+				o.content = o.content.replace(/<p( )([^>]+)><\/p>|<p( )([^>]+)\/>|<p( )([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>/gi, '<p$1$2$3$4$5$6>\u00a0</p>');
 
 				if (!isIE && o.set) {
 					// Use &nbsp; instead of BR in padded paragraphs
-					o.content = o.content.replace(/<p([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>/gi, '<p$1><br /></p>');
+					o.content = o.content.replace(/<p( )([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>/gi, '<p$1$2><br /></p>');
 				} else {
-					o.content = o.content.replace(/<p([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>/gi, '<p$1>\u00a0</p>');
+					o.content = o.content.replace(/<p( )([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>/gi, '<p$1$2>\u00a0</p>');
 					o.content = o.content.replace(/\s*<br \/>\s*<\/p>/gi, '</p>');
 				}
 			};
@@ -8434,7 +8448,7 @@ tinymce.create('tinymce.UndoManager', {
 
 							bl = ed.dom.create(t.settings.forced_root_block);
 							bl.appendChild(nx.cloneNode(1));
-							b.replaceChild(bl, nx);
+							nx.parentNode.replaceChild(bl, nx);
 						}
 					} else {
 						if (bl.hasChildNodes())

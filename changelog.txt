@@ -7,6 +7,10 @@ Version 3.0rc3 (2008-01-xx)
 	Fixed bug where elements would get extra whitespace around on insert when body was present in valid_elements.
 	Fixed bug where coords attribute of the area element wasn't handled properly in IE.
 	Fixed bug where Safari didn't produce BR elements on shift+return.
+	Fixed bug where force blocks would cast odd invalid attribute exception in IE.
+	Fixed bug where media plugin would produce extra whitespace before and after objects.
+	Fixed bug where cleanup_callback could break the contents of the editor. But use the new event system instead of this option.
+	Fixed bug where the load function of the ScriptLoader class didn't load single files without the load que as it was supposed to.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.
 Version 3.0rc2 (2008-01-18)

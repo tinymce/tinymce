@@ -39,13 +39,13 @@
 				if (isOpera)
 					o.content = o.content.replace(/(\u00a0|&#160;|&nbsp;)<\/p>/gi, '</p>');
 
-				o.content = o.content.replace(/<p([^>]+)><\/p>|<p([^>]+)\/>|<p([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>/gi, '<p$1$2$3>\u00a0</p>');
+				o.content = o.content.replace(/<p( )([^>]+)><\/p>|<p( )([^>]+)\/>|<p( )([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>/gi, '<p$1$2$3$4$5$6>\u00a0</p>');
 
 				if (!isIE && o.set) {
 					// Use &nbsp; instead of BR in padded paragraphs
-					o.content = o.content.replace(/<p([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>/gi, '<p$1><br /></p>');
+					o.content = o.content.replace(/<p( )([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>/gi, '<p$1$2><br /></p>');
 				} else {
-					o.content = o.content.replace(/<p([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>/gi, '<p$1>\u00a0</p>');
+					o.content = o.content.replace(/<p( )([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>/gi, '<p$1$2>\u00a0</p>');
 					o.content = o.content.replace(/\s*<br \/>\s*<\/p>/gi, '</p>');
 				}
 			};
@@ -179,7 +179,7 @@
 
 							bl = ed.dom.create(t.settings.forced_root_block);
 							bl.appendChild(nx.cloneNode(1));
-							b.replaceChild(bl, nx);
+							nx.parentNode.replaceChild(bl, nx);
 						}
 					} else {
 						if (bl.hasChildNodes())

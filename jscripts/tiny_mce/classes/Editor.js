@@ -565,11 +565,8 @@
 				t._convertInlineElements();
 
 			if (s.cleanup_callback) {
-				t.onSetContent.add(function(ed, o) {
-					if (o.initial) {
-						t.setContent(t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o), {format : 'raw', no_events : true});
-						t.execCallback('cleanup_callback', 'insert_to_editor_dom', t.getDoc(), o);
-					}
+				t.onBeforeSetContent.add(function(ed, o) {
+					o.content = t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o);
 				});
 
 				t.onPreProcess.add(function(ed, o) {
