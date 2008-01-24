@@ -2766,7 +2766,11 @@ tinymce.create('static tinymce.util.XHR', {
 					}
 				}
 
-				r.select();
+				try {
+					r.select();
+				} catch (ex) {
+					// Needed for some odd IE bug #1843306
+				}
 
 				return true;
 			}
@@ -2915,8 +2919,13 @@ tinymce.create('static tinymce.util.XHR', {
 					s.removeAllRanges();
 					s.addRange(r);
 				}
-			} else
-				r.select();
+			} else {
+				try {
+					r.select();
+				} catch (ex) {
+					// Needed for some odd IE bug #1843306
+				}
+			}
 		},
 
 		setNode : function(n) {

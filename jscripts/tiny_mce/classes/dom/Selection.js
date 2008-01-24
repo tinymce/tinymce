@@ -372,7 +372,11 @@
 					}
 				}
 
-				r.select();
+				try {
+					r.select();
+				} catch (ex) {
+					// Needed for some odd IE bug #1843306
+				}
 
 				return true;
 			}
@@ -553,8 +557,13 @@
 					s.removeAllRanges();
 					s.addRange(r);
 				}
-			} else
-				r.select();
+			} else {
+				try {
+					r.select();
+				} catch (ex) {
+					// Needed for some odd IE bug #1843306
+				}
+			}
 		},
 
 		/**
