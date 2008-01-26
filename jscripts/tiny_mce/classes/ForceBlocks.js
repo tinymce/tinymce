@@ -413,7 +413,11 @@
 			r.collapse(1);
 			s.removeAllRanges();
 			s.addRange(r);
-			aft.scrollIntoView(0);
+
+			if (tinymce.isWebKit)
+				ed.getWin().scrollTo(0, ed.dom.getPos(aft).y); // Safari bug fix, scrollIntoView is broken
+			else
+				aft.scrollIntoView(0);
 
 			return false;
 		},

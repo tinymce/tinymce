@@ -14,6 +14,7 @@ Version 3.0rc3 (2008-01-xx)
 	Fixed bug where the load function of the ScriptLoader class didn't load single files without the load que as it was supposed to.
 	Fixed bug where the execcommand_callback parameter order was incorrect. Recommendation use the new addCommand method.
 	Fixed bug where range.select calls sometimes failed on some IE versions.
+	Fixed bug where Safari was scrolling to top of document when enter/returned was pressed.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.
 Version 3.0rc2 (2008-01-18)
