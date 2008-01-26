@@ -414,8 +414,9 @@
 			s.removeAllRanges();
 			s.addRange(r);
 
+			// Safari bug fix, http://bugs.webkit.org/show_bug.cgi?id=16117
 			if (tinymce.isWebKit)
-				ed.getWin().scrollTo(0, ed.dom.getPos(aft).y); // Safari bug fix, scrollIntoView is broken
+				ed.getWin().scrollTo(0, ed.dom.getPos(aft).y);
 			else
 				aft.scrollIntoView(0);
 

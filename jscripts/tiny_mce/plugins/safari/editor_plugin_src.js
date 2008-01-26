@@ -403,8 +403,8 @@
 				s.collapse(1);
 			}
 
-			// Scroll to new position
-			ed.getWin().scrollTo(0, dom.getPos(s.getRng().startContainer).y); // scrollIntoView is broken in Safari
+			// Scroll to new position, scrollIntoView can't be used due to bug: http://bugs.webkit.org/show_bug.cgi?id=16117
+			ed.getWin().scrollTo(0, dom.getPos(s.getRng().startContainer).y);
 		}
 	});
 
