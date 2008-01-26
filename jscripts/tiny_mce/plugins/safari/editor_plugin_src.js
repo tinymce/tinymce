@@ -404,7 +404,7 @@
 			}
 
 			// Scroll to new position
-			s.getRng().startContainer.scrollIntoView(0);
+			ed.getWin().scrollTo(0, dom.getPos(s.getRng().startContainer).y); // scrollIntoView is broken in Safari
 		}
 	});
 
