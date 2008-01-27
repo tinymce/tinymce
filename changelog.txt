@@ -15,6 +15,7 @@ Version 3.0rc3 (2008-01-xx)
 	Fixed bug where the execcommand_callback parameter order was incorrect. Recommendation use the new addCommand method.
 	Fixed bug where range.select calls sometimes failed on some IE versions.
 	Fixed bug where Safari was scrolling to top of document when enter/returned was pressed.
+	Fixed so the isNotDirty state is set to false if a new undo level is added.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.
 Version 3.0rc2 (2008-01-18)

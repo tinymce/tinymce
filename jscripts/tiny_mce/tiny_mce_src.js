@@ -8220,6 +8220,7 @@ tinymce.create('tinymce.UndoManager', {
 			t.data[0].bookmark = b;
 
 		t.onAdd.dispatch(t, l);
+		ed.isNotDirty = 0;
 
 		//console.dir(t.data);
 
