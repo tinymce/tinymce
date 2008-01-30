@@ -97,6 +97,16 @@
 			if (r.insertNode) {
 				d = t.win.document;
 
+				// Gecko has a bug where if you insert &nbsp; using InsertHTML it will insert a space instead
+				// So we simply check if the input is HTML or text and then insert text using the insertNode method
+				if (tinymce.isGecko && h.indexOf('<') == -1) {
+					r.deleteContents();
+					r.insertNode(t.getRng().createContextualFragment(h + '<span id="__caret">_</span>'));
+					t.select(t.dom.get('__caret'));
+					t.getRng().deleteContents();
+					return;
+				}
+
 				// Use insert HTML if it exists (places cursor after content)
 				if (d.queryCommandEnabled('InsertHTML'))
 					return d.execCommand('InsertHTML', false, h);

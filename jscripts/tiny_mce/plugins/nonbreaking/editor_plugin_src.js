@@ -14,7 +14,7 @@
 
 			// Register commands
 			ed.addCommand('mceNonBreaking', function() {
-				ed.execCommand('mceInsertContent', false, (ed.plugins.visualchars && ed.plugins.visualchars.state) ? '<span class="mceItemHiddenVisualChar">&middot;</span>' : '&nbsp;');
+				ed.execCommand('mceInsertContent', false, (ed.plugins.visualchars && ed.plugins.visualchars.state) ? '<span class="mceItemHidden mceVisualNbsp">&middot;</span>' : '&nbsp;');
 			});
 
 			// Register buttons

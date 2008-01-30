@@ -53,13 +53,13 @@
 
 				for (i=0; i<nl.length; i++) {
 					nv = nl[i].nodeValue;
-					nv = nv.replace(/(\u00a0+)/g, '<span class="mceItemHiddenVisualChar">$1</span>');
+					nv = nv.replace(/(\u00a0+)/g, '<span class="mceItemHidden mceVisualNbsp">$1</span>');
 					nv = nv.replace(/\u00a0/g, '\u00b7');
 					ed.dom.setOuterHTML(nl[i], nv, d);
 				}
 			} else {
 				nl = tinymce.grep(ed.dom.select('span', b), function(n) {
-					return ed.dom.hasClass(n, 'mceItemHiddenVisualChar');
+					return ed.dom.hasClass(n, 'mceVisualNbsp');
 				});
 
 				for (i=0; i<nl.length; i++)

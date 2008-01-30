@@ -16,6 +16,9 @@ Version 3.0rc3 (2008-01-xx)
 	Fixed bug where range.select calls sometimes failed on some IE versions.
 	Fixed bug where Safari was scrolling to top of document when enter/returned was pressed.
 	Fixed bug where fullscreen_new_window option didn't work correctly.
+	Fixed bug where the nonbreaking plugin inserted an space instead of an non breaking space the first time.
+	Fixed bug where the visualization of non breaking spaces where visual in element path.
+	Fixed so the focus is restored to the editor after inserting an custom character.
 	Fixed so the isNotDirty state is set to false if a new undo level is added.
 	Fixed so pointless style information for borders gets removed in IE.
 	Fixed so the resize button has a se-resize cursor css value.
