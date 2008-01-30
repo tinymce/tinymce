@@ -276,7 +276,7 @@
 
 				ed.selection.select(e.target);
 				p1 = dom.getPos(e.target);
-				m.showMenu(p1.x, p1.y + e.target.offsetHeight);
+				m.showMenu(p1.x, p1.y + e.target.offsetHeight - vp.y);
 
 				return tinymce.dom.Event.cancel(e);
 			} else
