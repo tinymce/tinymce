@@ -1,4 +1,4 @@
-Version 3.0rc3 (2008-01-xx)
+Version 3.0 (2008-01-30)
 	Added map and area elements to the default valid_elements list and also some indentation rules.
 	Fixed bug where empty paragraphs wasn't padded when loading contents.
 	Fixed bug where the RowLayout manager didn't work at all.
