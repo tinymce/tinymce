@@ -1,4 +1,5 @@
 Version 3.0.1 (2008-02-xx)
+	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.
 	Fixed bug where some object param element wasn't stored correctly using the media plugin.
 	Fixed so the JSONRequest uses application/json content type to make Ruby on rails happy.
 Version 3.0 (2008-01-30)
