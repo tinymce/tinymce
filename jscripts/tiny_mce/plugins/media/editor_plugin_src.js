@@ -223,7 +223,7 @@
 				p.src = ed.convertURL(p.src, 'src', n);
 
 			each (p, function(v, k) {
-				if (v && !/^(width|height|codebase|classid)$/.test(k))
+				if (!/^(width|height|codebase|classid)$/.test(k))
 					dom.add(ob, 'span', {mce_name : 'param', name : k, '_value' : v});
 			});
 

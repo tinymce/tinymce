@@ -1,3 +1,6 @@
+Version 3.0.1 (2008-02-xx)
+	Fixed bug where some object param element wasn't stored correctly using the media plugin.
+	Fixed so the JSONRequest uses application/json content type to make Ruby on rails happy.
 Version 3.0 (2008-01-30)
 	Added map and area elements to the default valid_elements list and also some indentation rules.
 	Fixed bug where empty paragraphs wasn't padded when loading contents.

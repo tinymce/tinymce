@@ -64,6 +64,9 @@
 				params : o.params
 			});
 
+			// JSON content type for Ruby on rails. Bug: #1883287
+			o.content_type = 'application/json';
+
 			XHR.send(o);
 		},
 
