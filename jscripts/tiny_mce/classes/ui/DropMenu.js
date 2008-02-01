@@ -114,7 +114,10 @@
 			} else
 				co = DOM.get('menu_' + t.id);
 
-			DOM.setStyles(co, {left : -0xFFFF , top : -0xFFFF});
+			// Move layer out of sight unless it's Opera since it scrolls to top of page due to an bug
+			if (!tinymce.isOpera)
+				DOM.setStyles(co, {left : -0xFFFF , top : -0xFFFF});
+
 			DOM.show(co);
 			t.update();
 
