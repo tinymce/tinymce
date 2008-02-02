@@ -681,6 +681,12 @@
 						break;
 
 					default:
+						// Fix for IE crash Bug: #1884376 probably due to invalid DOM structure
+						if (isIE && n === 'name' && e.nodeName === 'A') {
+							v = e.name;
+							break;
+						}
+
 						v = e.attributes[n];
 						v = v && is(v.nodeValue) ? v.nodeValue : v;
 				}
