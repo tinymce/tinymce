@@ -29,7 +29,7 @@
 		 * @param {Object} s Settings object to be passed to each editor instance.
 		 */
 		init : function(s) {
-			var t = this, pl, sl = tinymce.ScriptLoader;
+			var t = this, pl, sl = tinymce.ScriptLoader, c;
 
 			function execCallback(se, n, s) {
 				var f = se[n];
@@ -133,7 +133,21 @@
 					case "exact":
 						l = s.elements || '';
 						each(l.split(','), function(v) {
-							new tinymce.Editor(v, s).render();
+							if (DOM.get(v))
+								new tinymce.Editor(v, s).render();
+							else {
+								c = 0;
+
+								each(document.forms, function(f) {
+									each(f.elements, function(e) {
+										if (e.name === v) {
+											v = 'mce_editor_' + c;
+											DOM.setAttrib(e, 'id', v);
+											new tinymce.Editor(v, s).render();
+										}
+									});
+								});
+							}
 						});
 						break;
 

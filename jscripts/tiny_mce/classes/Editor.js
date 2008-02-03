@@ -1984,6 +1984,10 @@
 		_convertFonts : function() {
 			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i;
 
+			// No need
+			if (!s.inline_styles)
+				return;
+
 			// Font pt values and font size names
 			fz = [8, 10, 12, 14, 18, 24, 36];
 			fzn = ['xx-small', 'x-small','small','medium','large','x-large', 'xx-large'];
@@ -1994,45 +1998,51 @@
 			if (cl = s.font_size_classes)
 				cl = cl.split(',');
 
-			t.onPreProcess.add(function(ed, o) {
-				if (!s.inline_styles)
+			function convertToFonts(no) {
+				// Convert spans to fonts on non WebKit browsers
+				if (tinymce.isWebKit)
 					return;
 
-				if (o.set) {
-					// Convert spans to fonts on non WebKit browsers
-					if (tinymce.isWebKit)
-						return;
-
-					each(t.dom.select('span', o.node), function(n) {
-						var f = dom.create('font', {
-							color : dom.toHex(dom.getStyle(n, 'color')),
-							face : dom.getStyle(n, 'fontFamily')
-						});
-
-						if (sl) {
-							i = inArray(sl, dom.getStyle(n, 'fontSize'));
-
-							if (i != -1)
-								dom.setAttrib(f, 'size', '' + (i + 1 || 1));
-						} else if (cl) {
-							i = inArray(cl, dom.getAttrib(n, 'class'));
-
-							v = dom.getStyle(n, 'fontSize');
-
-							if (i == -1 && v.indexOf('pt') > 0)
-								i = inArray(fz, parseInt(v));
-
-							if (i == -1)
-								i = inArray(fzn, v);
-
-							if (i != -1)
-								dom.setAttrib(f, 'size', '' + (i + 1 || 1));
-						}
-
-						if (f.color || f.face || f.size)
-							dom.replace(f, n, 1);
+				each(t.dom.select('span', no), function(n) {
+					var f = dom.create('font', {
+						color : dom.toHex(dom.getStyle(n, 'color')),
+						face : dom.getStyle(n, 'fontFamily')
 					});
-				} else if (o.get) {
+
+					if (sl) {
+						i = inArray(sl, dom.getStyle(n, 'fontSize'));
+
+						if (i != -1)
+							dom.setAttrib(f, 'size', '' + (i + 1 || 1));
+					} else if (cl) {
+						i = inArray(cl, dom.getAttrib(n, 'class'));
+
+						v = dom.getStyle(n, 'fontSize');
+
+						if (i == -1 && v.indexOf('pt') > 0)
+							i = inArray(fz, parseInt(v));
+
+						if (i == -1)
+							i = inArray(fzn, v);
+
+						if (i != -1)
+							dom.setAttrib(f, 'size', '' + (i + 1 || 1));
+					}
+
+					if (f.color || f.face || f.size)
+						dom.replace(f, n, 1);
+				});
+			};
+
+			// Run on setup
+			t.onSetContent.add(function(ed, o) {
+				if (o.initial)
+					convertToFonts(ed.getBody());
+			});
+
+			// Run on cleanup
+			t.onPreProcess.add(function(ed, o) {
+				if (o.get) {
 					each(t.dom.select('font', o.node), function(n) {
 						var sp = dom.create('span', {
 							style : {
@@ -2051,7 +2061,8 @@
 
 						dom.replace(sp, n, 1);
 					});
-				}
+				} else if (o.set)
+					convertToFonts(o.node);
 			});
 		},
 
