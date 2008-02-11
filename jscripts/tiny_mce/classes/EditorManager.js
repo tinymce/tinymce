@@ -152,6 +152,7 @@
 						break;
 
 					case "textareas":
+					case "specific_textareas":
 						function hasClass(n, c) {
 							return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 						};
