@@ -61,7 +61,7 @@
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
 				// Load theme
-				if (s.theme && s.theme.charAt(0) != '-')
+				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				// Load plugins
@@ -74,7 +74,7 @@
 
 					// Load rest if plugins
 					each(pl, function(v) {
-						if (v && v.charAt(0) != '-') {
+						if (v && v.charAt(0) != '-' && !PluginManager.urls[v]) {
 							// Skip safari plugin for other browsers
 							if (!tinymce.isWebKit && v == 'safari')
 								return;

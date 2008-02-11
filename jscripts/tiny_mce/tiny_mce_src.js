@@ -5388,7 +5388,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
 				// Load theme
-				if (s.theme && s.theme.charAt(0) != '-')
+				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				// Load plugins
@@ -5401,7 +5401,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 					// Load rest if plugins
 					each(pl, function(v) {
-						if (v && v.charAt(0) != '-') {
+						if (v && v.charAt(0) != '-' && !PluginManager.urls[v]) {
 							// Skip safari plugin for other browsers
 							if (!tinymce.isWebKit && v == 'safari')
 								return;
@@ -5842,11 +5842,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			function loadScripts() {
 				sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
-				if (s.theme.charAt(0) != '-')
+				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(s.plugins.split(','), function(p) {
-					if (p && p.charAt(0) != '-') {
+					if (p && p.charAt(0) != '-' && !PluginManager.urls[p]) {
 						// Skip safari plugin for other browsers
 						if (!isWebKit && p == 'safari')
 							return;
@@ -8067,7 +8067,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		mceInsertRawHTML : function(ui, val) {
 			var ed = this.editor;
 
-			ed.execCommand('mceInsertContent', false, 'tiny_mce_marker');
+			ed.selection.setContent('tiny_mce_marker');
 			ed.setContent(ed.getContent().replace(/tiny_mce_marker/g, val));
 		},
 

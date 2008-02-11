@@ -5,6 +5,8 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where IE6 was crashing if a format block was used on a container with anchor elements.
 	Fixed bug where spans with font sizes wasn't handled correctly when editor was loading contents.
 	Fixed bug where mode exact couldn't convert editors with name only. Id is no longer required but recommended.
+	Fixed bug where the mceInsertRawHTML command produced an extra undo level.
+	Fixed so load prefixes "-" for plugins and themes isn't required if the plugin/theme was loaded by the ThemeManager/PluginManager.
 	Fixed so the JSONRequest uses application/json content type to make Ruby on rails happy.
 Version 3.0 (2008-01-30)
 	Added map and area elements to the default valid_elements list and also some indentation rules.

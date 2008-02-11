@@ -652,7 +652,7 @@
 		mceInsertRawHTML : function(ui, val) {
 			var ed = this.editor;
 
-			ed.execCommand('mceInsertContent', false, 'tiny_mce_marker');
+			ed.selection.setContent('tiny_mce_marker');
 			ed.setContent(ed.getContent().replace(/tiny_mce_marker/g, val));
 		},
 
