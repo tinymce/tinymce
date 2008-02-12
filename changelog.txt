@@ -1,5 +1,6 @@
 Version 3.0.1 (2008-02-xx)
 	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.
+	Added src attribute for script elements to the default valid_elements option value.
 	Fixed bug where some object param element wasn't stored correctly using the media plugin.
 	Fixed bug where Opera was scrolling to top of page is drop menus on list boxes where displayed.
 	Fixed bug where IE6 was crashing if a format block was used on a container with anchor elements.
@@ -10,9 +11,12 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where the values of input elements in the HTML page of dialogs pages where changed in IE.
 	Fixed bug where fullscreen and fullpage plugins didn't work well together.
 	Fixed bug where embed elements wasn't handled properly in the media plugin.
+	Fixed bug where style information on span elements gets munged when fonts are converted to spans.
+	Fixed bug where some entities in element attributes where encoded incorrectly in the latest WebKit build.
 	Fixed so header and footer elements are forced to lower case when the fullpage plugin is used.
 	Fixed so load prefixes "-" for plugins and themes isn't required if the plugin/theme was loaded by the ThemeManager/PluginManager.
 	Fixed so the JSONRequest uses application/json content type to make Ruby on rails happy.
+	Fixed so the CSS rule is more exact for the body in the default content.css files. Body is now defined as "body.mceContentBody" instead of just "body".
 Version 3.0 (2008-01-30)
 	Added map and area elements to the default valid_elements list and also some indentation rules.
 	Fixed bug where empty paragraphs wasn't padded when loading contents.

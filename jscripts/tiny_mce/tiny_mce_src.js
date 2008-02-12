@@ -3005,6 +3005,10 @@ tinymce.create('static tinymce.util.XHR', {
 			};
 
 			this.doc = getXML();
+			
+			// Since Opera and WebKit doesn't escape > into &gt; we need to do it our self to normalize the output for all browsers
+			this.valid = tinymce.isOpera || tinymce.isWebKit;
+
 			this.reset();
 		},
 
@@ -3024,9 +3028,8 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		writeAttribute : function(n, v) {
-			// Since Opera doesn't escape > into &gt; we need to do it our self
-			if (tinymce.isOpera)
-				v = v.replace(/>/g, '|>');
+			if (this.valid)
+				v = v.replace(/>/g, '%MCGT%');
 
 			this.node.setAttribute(n, v);
 		},
@@ -3043,9 +3046,8 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		writeText : function(v) {
-			// Since Opera doesn't escape > into &gt; we need to do it our self
-			if (tinymce.isOpera)
-				v = v.replace(/>/g, '|>');
+			if (this.valid)
+				v = v.replace(/>/g, '%MCGT%');
 
 			this.node.appendChild(this.doc.createTextNode(v));
 		},
@@ -3065,9 +3067,8 @@ tinymce.create('static tinymce.util.XHR', {
 			h = h.replace(/<\?[^?]+\?>|<html>|<\/html>|<html\/>|<!DOCTYPE[^>]+>/g, '');
 			h = h.replace(/ ?\/>/g, ' />');
 
-			// Since Opera doesn't escape > into &gt; we need to do it our self to normalize the output for all browsers
-			if (tinymce.isOpera)
-				h = h.replace(/\|>/g, '&gt;');
+			if (this.valid)
+				h = h.replace(/\%MCGT%/g, '&gt;');
 
 			return h;
 		}
@@ -5752,7 +5753,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				apply_source_formatting : 1,
 				directionality : 'ltr',
 				forced_root_block : 'p',
-				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value|_value],embed[type|width|height|src|*],script[type],map[name],area[shape|coords|href|alt|target]',
+				valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value|_value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target]',
 				hidden_input : 1,
 				padd_empty_editor : 1,
 				render_ui : 1,
@@ -7274,7 +7275,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		_convertFonts : function() {
-			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i;
+			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i, st;
 
 			// No need
 			if (!s.inline_styles)
@@ -7292,23 +7293,25 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			function convertToFonts(no) {
 				// Convert spans to fonts on non WebKit browsers
-				if (tinymce.isWebKit)
+				if (tinymce.isWebKit || !s.inline_styles)
 					return;
 
 				each(t.dom.select('span', no), function(n) {
 					var f = dom.create('font', {
 						color : dom.toHex(dom.getStyle(n, 'color')),
-						face : dom.getStyle(n, 'fontFamily')
+						face : dom.getStyle(n, 'fontFamily'),
+						style : dom.getAttrib(n, 'style')
 					});
 
 					if (sl) {
 						i = inArray(sl, dom.getStyle(n, 'fontSize'));
 
-						if (i != -1)
+						if (i != -1) {
 							dom.setAttrib(f, 'size', '' + (i + 1 || 1));
+							f.style.fontSize = '';
+						}
 					} else if (cl) {
 						i = inArray(cl, dom.getAttrib(n, 'class'));
-
 						v = dom.getStyle(n, 'fontSize');
 
 						if (i == -1 && v.indexOf('pt') > 0)
@@ -7317,12 +7320,17 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						if (i == -1)
 							i = inArray(fzn, v);
 
-						if (i != -1)
+						if (i != -1) {
 							dom.setAttrib(f, 'size', '' + (i + 1 || 1));
+							f.style.fontSize = '';
+						}
 					}
 
-					if (f.color || f.face || f.size)
+					if (f.color || f.face || f.size) {
+						f.style.fontFamily = '';
+						dom.setAttrib(f, 'mce_style', '');
 						dom.replace(f, n, 1);
+					}
 				});
 			};
 
@@ -7334,14 +7342,20 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Run on cleanup
 			t.onPreProcess.add(function(ed, o) {
+				// Keep unit tests happy
+				if (!s.inline_styles)
+					return;
+
 				if (o.get) {
 					each(t.dom.select('font', o.node), function(n) {
 						var sp = dom.create('span', {
-							style : {
-								fontFamily : dom.getAttrib(n, 'face'),
-								color : dom.getAttrib(n, 'color'),
-								backgroundColor : n.style.backgroundColor
-							}
+							style : dom.getAttrib(n, 'style')
+						});
+
+						dom.setStyles(sp, {
+							fontFamily : dom.getAttrib(n, 'face'),
+							color : dom.getAttrib(n, 'color'),
+							backgroundColor : n.style.backgroundColor
 						});
 
 						if (n.size) {
@@ -7351,6 +7365,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 								dom.setAttrib(sp, 'class', cl[parseInt(n.size) - 1]);
 						}
 
+						dom.setAttrib(sp, 'mce_style', '');
 						dom.replace(sp, n, 1);
 					});
 				} else if (o.set)

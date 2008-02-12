@@ -34,6 +34,10 @@
 			};
 
 			this.doc = getXML();
+			
+			// Since Opera and WebKit doesn't escape > into &gt; we need to do it our self to normalize the output for all browsers
+			this.valid = tinymce.isOpera || tinymce.isWebKit;
+
 			this.reset();
 		},
 
@@ -71,9 +75,8 @@
 		 * @param {String} v Attribute value to write.
 		 */
 		writeAttribute : function(n, v) {
-			// Since Opera doesn't escape > into &gt; we need to do it our self
-			if (tinymce.isOpera)
-				v = v.replace(/>/g, '|>');
+			if (this.valid)
+				v = v.replace(/>/g, '%MCGT%');
 
 			this.node.setAttribute(n, v);
 		},
@@ -101,9 +104,8 @@
 		 * @param {String} v Value to append as a text node.
 		 */
 		writeText : function(v) {
-			// Since Opera doesn't escape > into &gt; we need to do it our self
-			if (tinymce.isOpera)
-				v = v.replace(/>/g, '|>');
+			if (this.valid)
+				v = v.replace(/>/g, '%MCGT%');
 
 			this.node.appendChild(this.doc.createTextNode(v));
 		},
@@ -138,9 +140,8 @@
 			h = h.replace(/<\?[^?]+\?>|<html>|<\/html>|<html\/>|<!DOCTYPE[^>]+>/g, '');
 			h = h.replace(/ ?\/>/g, ' />');
 
-			// Since Opera doesn't escape > into &gt; we need to do it our self to normalize the output for all browsers
-			if (tinymce.isOpera)
-				h = h.replace(/\|>/g, '&gt;');
+			if (this.valid)
+				h = h.replace(/\%MCGT%/g, '&gt;');
 
 			return h;
 		}
