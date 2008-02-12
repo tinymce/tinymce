@@ -235,7 +235,7 @@ tinyMCEPopup = {
 
 		// Replace a=x with a="x" in IE
 		if (tinymce.isIE)
-			h = h.replace(/ (value|title|alt)=([^\s>]+)/gi, ' $1="$2"');
+			h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
 
 		document.body.innerHTML = t.editor.translate(h);
 		document.title = ti = t.editor.translate(ti);
