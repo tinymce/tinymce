@@ -1382,7 +1382,7 @@
 		 * @return {Array} Array with class objects each object has a class field might be other fields in the future.
 		 */
 		getClasses : function() {
-			var t = this, cl = [], i, lo = {}, f = t.settings.class_filter;
+			var t = this, cl = [], i, lo = {}, f = t.settings.class_filter, ov;
 
 			if (t.classes)
 				return t.classes;
@@ -1402,13 +1402,18 @@
 								each(r.selectorText.split(','), function(v) {
 									v = v.replace(/^\s*|\s*$|^\s\./g, "");
 
-									if (f && !(v = f(v)))
+									// Is internal or it doesn't contain a class
+									if (/\.mce/.test(v) || !/\.[\w\-]+$/.test(v))
 										return;
 
-									if (/^\.mce/.test(v) || !/^\.[\w\-]+$/.test(v))
+									// Remove everything but class name
+									ov = v;
+									v = v.replace(/.*\.([a-z0-9_\-]+).*/i, '$1');
+
+									// Filter classes
+									if (f && !(v = f(v, ov)))
 										return;
 
-									v = v.substring(1);
 									if (!lo[v]) {
 										cl.push({'class' : v});
 										lo[v] = 1;

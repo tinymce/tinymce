@@ -35,7 +35,7 @@
 
 			ed.onInit.add(function() {
 				if (tinymce.isIE)
-					ed.execCommand('2D-Position');
+					ed.getDoc().execCommand('2D-Position', false, true);
 			});
 
 			ed.onNodeChange.add(t._nodeChange, t);
