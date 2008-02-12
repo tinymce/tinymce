@@ -32,6 +32,9 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			editor.setContent('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="wmode" value="transparent" /><param name="src" value="someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="someurl" wmode="transparent"></embed></object>');
 			t.eq(editor.getContent(), '<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="wmode" value="transparent" /><param name="src" value="/tinymce/tinymce/trunk/examples/testcases/someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="/tinymce/tinymce/trunk/examples/testcases/someurl" wmode="transparent"></embed></object></p>');
 
+			editor.setContent('<embed type="application/x-shockwave-flash" width="425" height="355" src="someurl" flashvars="m=7286090&v=2&type=video"></embed>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="flashvars" value="m=7286090&amp;v=2&amp;type=video" /><param name="src" value="/tinymce/tinymce/trunk/examples/testcases/someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="/tinymce/tinymce/trunk/examples/testcases/someurl" flashvars="m=7286090&amp;v=2&amp;type=video"></embed></object></p>');
+
 			editor.settings.relative_urls = 1;
 		},
 

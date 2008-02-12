@@ -49,7 +49,7 @@
 		}
 
 		function moveContent() {
-			window.opener.tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent({format : 'raw'}));
+			window.opener.tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent());
 		}
 
 		function closeFullscreen() {
@@ -80,9 +80,9 @@
 
 <script type="text/javascript">
 		var e = document.getElementById('fullscreenarea');
-		e.value = window.opener.tinyMCE.activeEditor.getContent({format : 'raw'});
-		settings['width'] = window.innerWidth || document.body.clientWidth;
-		settings['height'] = (window.innerHeight || document.body.clientHeight) - 18;
+		e.value = window.opener.tinyMCE.activeEditor.getContent();
+		settings.width = window.innerWidth || document.body.clientWidth;
+		settings.height = (window.innerHeight || document.body.clientHeight) - 18;
 		tinyMCE.init(settings);
 </script>
 

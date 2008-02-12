@@ -91,7 +91,7 @@
 
 					t.fullscreenEditor = new tinymce.Editor('mce_fullscreen', s);
 					t.fullscreenEditor.onInit.add(function() {
-						t.fullscreenEditor.setContent(ed.getContent({format : 'raw', no_events : 1}), {format : 'raw', no_events : 1});
+						t.fullscreenEditor.setContent(ed.getContent());
 					});
 
 					t.fullscreenEditor.render();

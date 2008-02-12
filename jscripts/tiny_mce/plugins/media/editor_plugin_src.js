@@ -266,7 +266,37 @@
 						default:
 							dom.replace(t._createImg('mceItemFlash', n), n);
 					}
+					
+					return;
 				}
+
+				// Convert embed into image
+				if (dom.getAttrib(n, 'class') == 'mceItemEmbed') {
+					switch (dom.getAttrib(n, 'type')) {
+						case 'application/x-shockwave-flash':
+							dom.replace(t._createImg('mceItemFlash', n), n);
+							break;
+
+						case 'application/x-director':
+							dom.replace(t._createImg('mceItemShockWave', n), n);
+							break;
+
+						case 'application/x-mplayer2':
+							dom.replace(t._createImg('mceItemWindowsMedia', n), n);
+							break;
+
+						case 'video/quicktime':
+							dom.replace(t._createImg('mceItemQuickTime', n), n);
+							break;
+
+						case 'audio/x-pn-realaudio-plugin':
+							dom.replace(t._createImg('mceItemRealMedia', n), n);
+							break;
+
+						default:
+							dom.replace(t._createImg('mceItemFlash', n), n);
+					}
+				}			
 			});
 		},
 
@@ -282,11 +312,11 @@
 			});
 
 			// Setup base parameters
-			each(['id', 'name', 'width', 'height', 'bgcolor', 'align'], function(n) {
-				var v = dom.getAttrib(n, 'align');
+			each(['id', 'name', 'width', 'height', 'bgcolor', 'align', 'flashvars', 'src', 'wmode'], function(na) {
+				var v = dom.getAttrib(n, na);
 
 				if (v)
-					pa[v] = v;
+					pa[na] = v;
 			});
 
 			// Add optional parameters

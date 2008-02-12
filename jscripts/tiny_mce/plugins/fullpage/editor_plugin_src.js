@@ -55,9 +55,8 @@
 			var t = this, sp, ep, c = o.content;
 
 			// Parse out head, body and footer
+			c = c.replace(/<(\/?)BODY/gi, '<$1body');
 			sp = c.indexOf('<body');
-			if (sp == -1)
-				sp = c.indexOf('<BODY');
 
 			if (sp != -1) {
 				sp = c.indexOf('>', sp);
@@ -69,6 +68,15 @@
 
 				o.content = c.substring(sp + 1, ep);
 				t.foot = c.substring(ep);
+
+				function low(s) {
+					return s.replace(/<\/?[A-Z]+/g, function(a) {
+						return a.toLowerCase();
+					})
+				};
+
+				t.head = low(t.head);
+				t.foot = low(t.foot);
 			} else {
 				t.head = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 				t.head += '\n<html>\n<head>\n<title>Untitled document</title>\n</head>\n<body>\n';
