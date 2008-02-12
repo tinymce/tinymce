@@ -13,10 +13,15 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where embed elements wasn't handled properly in the media plugin.
 	Fixed bug where style information on span elements gets munged when fonts are converted to spans.
 	Fixed bug where some entities in element attributes where encoded incorrectly in the latest WebKit build.
+	Fixed bug where initialization would fail in IE if there where two input elements with the name submit in the form.
+	Fixed bug where fullscreen mode didn't work correctly in IE when the fullscreen_new_window option was used.
+	Fixed bug where Opera 9.2x was placing the drop menus at incorrect locations if the editor was placed in a table.
+	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so header and footer elements are forced to lower case when the fullpage plugin is used.
 	Fixed so load prefixes "-" for plugins and themes isn't required if the plugin/theme was loaded by the ThemeManager/PluginManager.
 	Fixed so the JSONRequest uses application/json content type to make Ruby on rails happy.
 	Fixed so the CSS rule is more exact for the body in the default content.css files. Body is now defined as "body.mceContentBody" instead of just "body".
+	Fixed so the tiny_mce_dev.js uses XHR instead of document.write to load scripts to resolve an issue with Opera 9.50.
 Version 3.0 (2008-01-30)
 	Added map and area elements to the default valid_elements list and also some indentation rules.
 	Fixed bug where empty paragraphs wasn't padded when loading contents.

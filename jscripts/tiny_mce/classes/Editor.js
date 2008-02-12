@@ -187,7 +187,7 @@
 						return;
 
 					// Check page uses id="submit" or name="submit" for it's submit button
-					if (!n.submit.nodeType) {
+					if (!n.submit.nodeType && !n.submit.length) {
 						t.formElement = n;
 						n._mceOldSubmit = n.submit;
 						n.submit = function() {

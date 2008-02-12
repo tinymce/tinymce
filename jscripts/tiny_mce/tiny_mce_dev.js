@@ -39,7 +39,29 @@
 	nl = null;
 
 	function include(u) {
-		document.write('<script type="text/javascript" src="' + base + '/classes/' + u + '"></script>');
+		//document.write('<script type="text/javascript" src="' + base + '/classes/' + u + '"></script>');
+		var w = window, x = w.XMLHttpRequest, da;
+
+		u = base + '/classes/' + u;
+
+		if (x && w.opera) {
+			x = new XMLHttpRequest();
+			x.open('GET', u, false);
+			x.async = false;
+			x.send('');
+			da = x.responseText;
+
+			// Evaluate script
+			if (!w.execScript) {
+				try {
+					eval.call(w, da);
+				} catch (ex) {
+					eval(da, w); // Firefox 3.0a8
+				}
+			} else
+				w.execScript(da); // IE
+		} else
+			document.write('<script type="text/javascript" src="' + u + '"></script>');
 	};
 
 	// Firebug

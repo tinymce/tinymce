@@ -1536,8 +1536,11 @@ tinymce.create('static tinymce.util.XHR', {
 
 			r = n;
 			while (r) {
-				x -= r.scrollLeft || 0;
-				y -= r.scrollTop || 0;
+				// Opera 9.25 bug fix, fixed in 9.50
+				if (!tinymce.isOpera || r.nodeName != 'TR') {
+					x -= r.scrollLeft || 0;
+					y -= r.scrollTop || 0;
+				}
 
 				r = r.parentNode;
 
@@ -5824,7 +5827,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						return;
 
 					// Check page uses id="submit" or name="submit" for it's submit button
-					if (!n.submit.nodeType) {
+					if (!n.submit.nodeType && !n.submit.length) {
 						t.formElement = n;
 						n._mceOldSubmit = n.submit;
 						n.submit = function() {

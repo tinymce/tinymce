@@ -788,8 +788,11 @@
 
 			r = n;
 			while (r) {
-				x -= r.scrollLeft || 0;
-				y -= r.scrollTop || 0;
+				// Opera 9.25 bug fix, fixed in 9.50
+				if (!tinymce.isOpera || r.nodeName != 'TR') {
+					x -= r.scrollLeft || 0;
+					y -= r.scrollTop || 0;
+				}
 
 				r = r.parentNode;
 
