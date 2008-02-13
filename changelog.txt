@@ -18,6 +18,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where fullscreen mode didn't work correctly in IE when the fullscreen_new_window option was used.
 	Fixed bug where Opera 9.2x was placing the drop menus at incorrect locations if the editor was placed in a table.
 	Fixed bug where layer plugin was stealing focus in IE on initialization.
+	Fixed bug where body attributes wasn't set properly in the fullpage plugin, fix contributed by Hiroaki Kawai.
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.
 	Fixed so header and footer elements are forced to lower case when the fullpage plugin is used.

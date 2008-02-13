@@ -369,6 +369,7 @@ function updateAction() {
 	h = h.replace(/type=\"\-mce\-/gi, 'type="');
 
 	tinyMCEPopup.editor.plugins.fullpage.head = h;
+	tinyMCEPopup.editor.plugins.fullpage._setBodyAttribs(tinyMCEPopup.editor, {});
 	tinyMCEPopup.close();
 }
 
