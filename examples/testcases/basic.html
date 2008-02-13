@@ -392,6 +392,13 @@ var unitTester = new tinymce.util.UnitTester('log', {
 
 			editor.setContent('<p>test 1</p>test <strong>test2</strong> <em>test3</em><p>test 2</p>test');
 			t.eq(editor.getContent(), '<p>test 1</p><p>test <strong>test2</strong> <em>test3</em></p><p>test 2</p><p>test</p>');
+		},
+
+		explorerBugs : function() {
+			var t = this;
+
+			editor.setContent('<p><span><ul><li>Item 1</li></ul></span></p>');
+			t.eq(editor.getContent(), '<p><span><ul><li>Item 1</li></ul></span></p>');
 		}
 	});
 

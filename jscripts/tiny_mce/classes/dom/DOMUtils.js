@@ -1077,27 +1077,94 @@
 			var t = this;
 
 			return this.run(e, function(e) {
-				var x;
+				var x, i, nl, n, p, x;
 
 				h = t.processHTML(h);
 
 				if (isIE) {
-					try {
-						// IE will remove comments from the beginning
-						// unless you padd the contents with something
-						e.innerHTML = '<br />' + h;
-						e.removeChild(e.firstChild);
-					} catch (ex) {
-						// IE sometimes produces an unknown runtime error on innerHTML
-						// This seems to fix this issue, don't know why.
-						x = t.create('div');
-						x.innerHTML = '<br />' + h;
+					function set() {
+						try {
+							// IE will remove comments from the beginning
+							// unless you padd the contents with something
+							e.innerHTML = '<br />' + h;
+							e.removeChild(e.firstChild);
+						} catch (ex) {
+							// IE sometimes produces an unknown runtime error on innerHTML
+							// This seems to fix this issue, don't know why.
+							x = t.create('div');
+							x.innerHTML = '<br />' + h;
 
-						each (x.childNodes, function(n, i) {
-							// Skip the BR
-							if (i > 1)
-								e.appendChild(n);
-						});
+							each (x.childNodes, function(n, i) {
+								// Skip the BR
+								if (i > 1)
+									e.appendChild(n);
+							});
+						}
+					};
+
+					// IE has a serious bug when it comes to paragraphs it can produce an invalid
+					// DOM tree if contents like this <p><ul><li>Item 1</li></ul></p> is inserted
+					// It seems to be that IE doesn't like a root block element placed inside another root block element
+					if (t.settings.fix_ie_paragraphs)
+						h = h.replace(/<p><\/p>|<p([^>]+)><\/p>|<p[^\/+]\/>/gi, '<p$1 mce_keep="true">&nbsp;</p>');
+
+					set();
+
+					if (t.settings.fix_ie_paragraphs) {
+						// Check for odd paragraphs this is a sign of a broken DOM
+						nl = e.getElementsByTagName("p");
+						for (i = nl.length - 1, x = 0; i >= 0; i--) {
+							n = nl[i];
+
+							if (!n.hasChildNodes()) {
+								if (!n.mce_keep) {
+									x = 1; // Is broken
+									break;
+								}
+
+								n.removeAttribute('mce_keep');
+							}
+						}
+					}
+
+					// Time to fix the madness IE left us
+					if (x) {
+						// So if we replace the p elements with divs and mark them and then replace them back to paragraphs
+						// after we use innerHTML we can fix the DOM tree
+						h = h.replace(/<p([^>]+)>|<p>/g, '<div$1 mce_tmp="1">');
+						h = h.replace(/<\/p>/g, '</div>');
+
+						// Set the new HTML with DIVs
+						set();
+
+						// Replace all DIV elements with he mce_tmp attibute back to paragraphs
+						// This is needed since IE has a annoying bug see above for details
+						// This is a slow process but it has to be done. :(
+						if (t.settings.fix_ie_paragraphs) {
+							nl = e.getElementsByTagName("DIV");
+							for (i = nl.length - 1; i >= 0; i--) {
+								n = nl[i];
+
+								// Is it a temp div
+								if (n.mce_tmp) {
+									// Create new paragraph
+									p = t.doc.createElement('p');
+
+									// Copy all attributes
+									n.cloneNode(false).outerHTML.replace(/([a-z0-9\-_]+)=/gi, function(a, b) {
+										if (b !== 'mce_tmp')
+											p.setAttribute(b, n.getAttribute(b));
+									});
+
+									// Append all children to new paragraph
+									for (x = 0; x<n.childNodes.length; x++)
+										p.appendChild(n.childNodes[x].cloneNode(true));
+
+									// Replace div with new paragraph
+									n.swapNode(p);
+								}
+							}
+						}
 					}
 				} else
 					e.innerHTML = h;
