@@ -23,6 +23,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where body attributes wasn't set properly in the fullpage plugin, fix contributed by Hiroaki Kawai.
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.
+	Fixed so the editor UI and inlinedialogs works correctly with the YUI CSS reset package.
 	Fixed so header and footer elements are forced to lower case when the fullpage plugin is used.
 	Fixed so load prefixes "-" for plugins and themes isn't required if the plugin/theme was loaded by the ThemeManager/PluginManager.
 	Fixed so the JSONRequest uses application/json content type to make Ruby on rails happy.
