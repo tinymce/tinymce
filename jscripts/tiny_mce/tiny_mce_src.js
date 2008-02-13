@@ -8636,7 +8636,9 @@ tinymce.create('tinymce.UndoManager', {
 			}
 
 			// Never use body as start or end node
+			sn = sn.nodeName == "HTML" ? d.body : sn; // Fix for Opera bug: https://bugs.opera.com/show_bug.cgi?id=273224&comments=yes
 			sn = sn.nodeName == "BODY" ? sn.firstChild : sn;
+			en = en.nodeName == "HTML" ? d.body : en; // Fix for Opera bug: https://bugs.opera.com/show_bug.cgi?id=273224&comments=yes
 			en = en.nodeName == "BODY" ? en.firstChild : en;
 
 			// Get start and end blocks

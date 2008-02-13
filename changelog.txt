@@ -17,6 +17,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where initialization would fail in IE if there where two input elements with the name submit in the form.
 	Fixed bug where fullscreen mode didn't work correctly in IE when the fullscreen_new_window option was used.
 	Fixed bug where Opera 9.2x was placing the drop menus at incorrect locations if the editor was placed in a table.
+	Fixed bug where Opera was producing odd results if enter/return was pressed while having forced_root_blocks disabled.
 	Fixed bug where layer plugin was stealing focus in IE on initialization.
 	Fixed bug where body attributes wasn't set properly in the fullpage plugin, fix contributed by Hiroaki Kawai.
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.

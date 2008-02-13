@@ -223,7 +223,7 @@ if (!("console" in window) || !("firebug" in console)) {
         var baseURL = getFirebugURL();
 
         consoleFrame = document.createElement("iframe");
-        consoleFrame.setAttribute("src", baseURL+"/firebug.html");
+        consoleFrame.setAttribute("src", tinymce.baseURL+"/classes/firebug/firebug.html");
         consoleFrame.setAttribute("frameBorder", "0");
         consoleFrame.style.visibility = (frameVisible ? "visible" : "hidden");    
         consoleFrame.style.zIndex = "2147483647";
