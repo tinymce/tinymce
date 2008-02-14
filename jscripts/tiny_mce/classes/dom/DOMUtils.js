@@ -493,15 +493,16 @@
 						}
 
 						// Fix for older browsers
-						s['-moz-opacity'] = s['-khtml-opacity'] = v;
+						s[na] = s['-moz-opacity'] = s['-khtml-opacity'] = v || '';
 						break;
 
 					case 'float':
 						isIE ? s.styleFloat = v : s.cssFloat = v;
 						break;
+					
+					default:
+						s[na] = v || '';
 				}
-
-				s[na] = v || '';
 
 				// Force update of the style data
 				if (t.settings.update_styles)

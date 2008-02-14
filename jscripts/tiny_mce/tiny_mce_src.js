@@ -1282,15 +1282,16 @@ tinymce.create('static tinymce.util.XHR', {
 						}
 
 						// Fix for older browsers
-						s['-moz-opacity'] = s['-khtml-opacity'] = v;
+						s[na] = s['-moz-opacity'] = s['-khtml-opacity'] = v || '';
 						break;
 
 					case 'float':
 						isIE ? s.styleFloat = v : s.cssFloat = v;
 						break;
+					
+					default:
+						s[na] = v || '';
 				}
-
-				s[na] = v || '';
 
 				// Force update of the style data
 				if (t.settings.update_styles)
@@ -3256,37 +3257,42 @@ tinymce.create('static tinymce.util.XHR', {
 
 			if (s.fix_table_elements) {
 				t.onPreProcess.add(function(se, o) {
-					var ta = [], d = t.dom.doc;
-
-					// Build list of HTML chunks and replace tables with comment placeholders
 					each(t.dom.select('table', o.node), function(e) {
-						var pa = t.dom.getParent(e, 'H1,H2,H3,H4,H5,H6,P'), p = [], i, h;
+						var pa = t.dom.getParent(e, 'H1,H2,H3,H4,H5,H6,P'), pa2, n, tm, pl = [], i, ns;
 
 						if (pa) {
-							t.dom.getParent(e, function(n) {
-								if (n != e)
-									p.push(n.nodeName);
-							});
+							pa2 = pa.cloneNode(false);
 
-							h = '';
+							pl.push(e);
+							for (n = e; n = n.parentNode;) {
+								pl.push(n);
 
-							for (i = 0; i < p.length; i++)
-								h += '</' + p[i]+ '>';
+								if (n == pa)
+									break;
+							}
 
-							h += t.dom.getOuterHTML(e);
+							tm = pa2;
+							for (i = pl.length - 1; i >= 0; i--) {
+								if (i == pl.length - 1) {
+									while (ns = pl[i - 1].nextSibling)
+										tm.appendChild(ns.parentNode.removeChild(ns));
+								} else {
+									n = pl[i].cloneNode(false);
 
-							for (i = p.length - 1; i >= 0; i--)
-								h += '<' + p[i]+ '>';
+									if (i != 0) {
+										while (ns = pl[i - 1].nextSibling)
+											n.appendChild(ns.parentNode.removeChild(ns));
+									}
 
-							ta.push(h);
-							e.parentNode.replaceChild(d.createComment('mcetable:' + (ta.length - 1)), e);
+									tm = tm.appendChild(n);
+								}
+							}
+
+							e = t.dom.insertAfter(e.parentNode.removeChild(e), pa);
+							t.dom.insertAfter(e, pa);
+							t.dom.insertAfter(pa2, e);
 						}
 					});
-
-					// Replace table placeholders with end parents + table + start parents HTML code
-					t.dom.setHTML(o.node, o.node.innerHTML.replace(/<!--mcetable:([0-9]+)-->/g, function(a, b) {
-						return ta[parseInt(b)];
-					}));
 				});
 			}
 		},
@@ -7300,7 +7306,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		_convertInlineElements : function() {
-			var t = this, s = t.settings, dom = t.dom;
+			var t = this, s = t.settings, dom = t.dom, v;
 
 			function convert(ed, o) {
 				if (!s.inline_styles)
@@ -7765,12 +7771,19 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					return;
 
 				if (rm) {
+					if (v == 'center')
+						dom.setStyle(n.parentNode, 'textAlign', '');
+
 					dom.setStyle(n, 'float', '');
 					this.mceRepaint();
 					return;
 				}
 
 				if (v == 'center') {
+					// Do not change table elements
+					if (/^(TD|TH)$/.test(bl.nodeName))
+						bl = 0;
+
 					if (!bl || bl.childNodes.length > 1) {
 						nb = dom.create('p');
 						nb.appendChild(n.cloneNode(false));
@@ -7787,8 +7800,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 					dom.setStyle(bl, 'textAlign', v);
 					dom.setStyle(n, 'float', '');
-				} else
+				} else {
 					dom.setStyle(n, 'float', v);
+					dom.setStyle(n.parentNode, 'textAlign', '');
+				}
 
 				this.mceRepaint();
 				return;
@@ -8043,8 +8058,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		queryStateJustify : function(c, v) {
 			var ed = this.editor, n = ed.selection.getNode(), dom = ed.dom;
 
-			if (n && n.nodeName == 'IMG')
-				return dom.getStyle(n, 'float') == v;
+			if (n && n.nodeName == 'IMG') {
+				if (dom.getStyle(n, 'float') == v)
+					return 1;
+
+				return n.parentNode.style.textAlign == v;
+			}
 
 			n = dom.getParent(ed.selection.getStart(), function(n) {
 				return n.nodeType == 1 && n.style.textAlign;
@@ -8985,7 +9004,7 @@ tinymce.create('tinymce.UndoManager', {
 
 				if (!s.onclick) {
 					s.onclick = function(v) {
-						ed.execCommand(s.cmd, s.ui || false, v || s.value);
+						ed.execCommand(s.cmd, s.ui || false, s.value);
 					};
 				}
 			});

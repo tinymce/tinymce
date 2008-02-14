@@ -159,7 +159,7 @@
 
 				if (!s.onclick) {
 					s.onclick = function(v) {
-						ed.execCommand(s.cmd, s.ui || false, v || s.value);
+						ed.execCommand(s.cmd, s.ui || false, s.value);
 					};
 				}
 			});

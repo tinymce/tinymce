@@ -1933,7 +1933,7 @@
 		},
 
 		_convertInlineElements : function() {
-			var t = this, s = t.settings, dom = t.dom;
+			var t = this, s = t.settings, dom = t.dom, v;
 
 			function convert(ed, o) {
 				if (!s.inline_styles)

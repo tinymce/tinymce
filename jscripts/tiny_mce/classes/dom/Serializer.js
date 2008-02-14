@@ -119,37 +119,42 @@
 
 			if (s.fix_table_elements) {
 				t.onPreProcess.add(function(se, o) {
-					var ta = [], d = t.dom.doc;
-
-					// Build list of HTML chunks and replace tables with comment placeholders
 					each(t.dom.select('table', o.node), function(e) {
-						var pa = t.dom.getParent(e, 'H1,H2,H3,H4,H5,H6,P'), p = [], i, h;
+						var pa = t.dom.getParent(e, 'H1,H2,H3,H4,H5,H6,P'), pa2, n, tm, pl = [], i, ns;
 
 						if (pa) {
-							t.dom.getParent(e, function(n) {
-								if (n != e)
-									p.push(n.nodeName);
-							});
+							pa2 = pa.cloneNode(false);
 
-							h = '';
+							pl.push(e);
+							for (n = e; n = n.parentNode;) {
+								pl.push(n);
 
-							for (i = 0; i < p.length; i++)
-								h += '</' + p[i]+ '>';
+								if (n == pa)
+									break;
+							}
 
-							h += t.dom.getOuterHTML(e);
+							tm = pa2;
+							for (i = pl.length - 1; i >= 0; i--) {
+								if (i == pl.length - 1) {
+									while (ns = pl[i - 1].nextSibling)
+										tm.appendChild(ns.parentNode.removeChild(ns));
+								} else {
+									n = pl[i].cloneNode(false);
 
-							for (i = p.length - 1; i >= 0; i--)
-								h += '<' + p[i]+ '>';
+									if (i != 0) {
+										while (ns = pl[i - 1].nextSibling)
+											n.appendChild(ns.parentNode.removeChild(ns));
+									}
 
-							ta.push(h);
-							e.parentNode.replaceChild(d.createComment('mcetable:' + (ta.length - 1)), e);
+									tm = tm.appendChild(n);
+								}
+							}
+
+							e = t.dom.insertAfter(e.parentNode.removeChild(e), pa);
+							t.dom.insertAfter(e, pa);
+							t.dom.insertAfter(pa2, e);
 						}
 					});
-
-					// Replace table placeholders with end parents + table + start parents HTML code
-					t.dom.setHTML(o.node, o.node.innerHTML.replace(/<!--mcetable:([0-9]+)-->/g, function(a, b) {
-						return ta[parseInt(b)];
-					}));
 				});
 			}
 		},

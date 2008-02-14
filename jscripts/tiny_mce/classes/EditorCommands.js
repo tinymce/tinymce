@@ -257,12 +257,19 @@
 					return;
 
 				if (rm) {
+					if (v == 'center')
+						dom.setStyle(n.parentNode, 'textAlign', '');
+
 					dom.setStyle(n, 'float', '');
 					this.mceRepaint();
 					return;
 				}
 
 				if (v == 'center') {
+					// Do not change table elements
+					if (/^(TD|TH)$/.test(bl.nodeName))
+						bl = 0;
+
 					if (!bl || bl.childNodes.length > 1) {
 						nb = dom.create('p');
 						nb.appendChild(n.cloneNode(false));
@@ -279,8 +286,10 @@
 
 					dom.setStyle(bl, 'textAlign', v);
 					dom.setStyle(n, 'float', '');
-				} else
+				} else {
 					dom.setStyle(n, 'float', v);
+					dom.setStyle(n.parentNode, 'textAlign', '');
+				}
 
 				this.mceRepaint();
 				return;
@@ -535,8 +544,12 @@
 		queryStateJustify : function(c, v) {
 			var ed = this.editor, n = ed.selection.getNode(), dom = ed.dom;
 
-			if (n && n.nodeName == 'IMG')
-				return dom.getStyle(n, 'float') == v;
+			if (n && n.nodeName == 'IMG') {
+				if (dom.getStyle(n, 'float') == v)
+					return 1;
+
+				return n.parentNode.style.textAlign == v;
+			}
 
 			n = dom.getParent(ed.selection.getStart(), function(n) {
 				return n.nodeType == 1 && n.style.textAlign;
