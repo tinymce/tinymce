@@ -108,11 +108,15 @@
 				}
 
 				// Use insert HTML if it exists (places cursor after content)
-				if (d.queryCommandEnabled('InsertHTML'))
-					return d.execCommand('InsertHTML', false, h);
-
-				r.deleteContents();
-				r.insertNode(t.getRng().createContextualFragment(h));
+				try {
+					// This might fail with an exception see bug #1893736
+					if (d.queryCommandEnabled('InsertHTML'))
+						return d.execCommand('InsertHTML', false, h);
+				} catch (ex) {
+					// Use old school method
+					r.deleteContents();
+					r.insertNode(t.getRng().createContextualFragment(h));
+				}
 			} else {
 				if (r.item)
 					r.item(0).outerHTML = h;

@@ -22,6 +22,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where layer plugin was stealing focus in IE on initialization.
 	Fixed bug where body attributes wasn't set properly in the fullpage plugin, fix contributed by Hiroaki Kawai.
 	Fixed bug where insert image and insert link dialogs where producing an extra level in the undo history.
+	Fixed bug where Gecko would produce an error if empty elements like <div></div> where inserted using mceInsertContent.
 	Fixed bug where center alignment of images produced odd results inside table cells.
 	Fixed bug where center alignment of images couldn't be toggled correctly.
 	Fixed bug where alignment of images inside tables would produce double float style items in IE if the fix_table_elements option was enabled.
