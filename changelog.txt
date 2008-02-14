@@ -27,6 +27,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where alignment of images inside tables would produce double float style items in IE if the fix_table_elements option was enabled.
 	Fixed bug where a variable called 'v' was polluting the global namespace. Objects tinymce and tinyMCE are the only ones allowed to be global.
 	Fixed bug where insert table from context menu couldn't insert new tables inside existing tables.
+	Fixed bug where Safari wouldn't produce br elements on enter when the force_br_newlines option was enabled.
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.
 	Fixed so the editor UI and inlinedialogs works correctly with the YUI CSS reset package.
