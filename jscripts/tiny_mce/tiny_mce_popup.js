@@ -47,8 +47,11 @@ tinyMCEPopup = {
 	},
 
 	execCommand : function(cmd, ui, val, a) {
+		a = a || {};
+		a.skip_focus = 1;
+
 		this.restoreSelection();
-		return this.editor.execCommand(cmd, ui, val, a || {skip_focus : 1});
+		return this.editor.execCommand(cmd, ui, val, a);
 	},
 
 	resizeToInnerSize : function() {

@@ -412,7 +412,7 @@ function insertAction() {
 
 	// Create new anchor elements
 	if (elm == null) {
-		tinyMCEPopup.execCommand("CreateLink", false, "#mce_temp_url#");
+		tinyMCEPopup.execCommand("CreateLink", false, "#mce_temp_url#", {skip_undo : 1});
 
 		elementArray = tinymce.grep(inst.dom.select("a"), function(n) {return inst.dom.getAttrib(n, 'href') == '#mce_temp_url#';});
 		for (i=0; i<elementArray.length; i++) {
