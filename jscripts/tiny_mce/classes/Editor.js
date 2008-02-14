@@ -305,8 +305,8 @@
 			});
 
 			if (s.custom_undo_redo) {
-				t.onExecCommand.add(function(ed, cmd) {
-					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint')
+				t.onExecCommand.add(function(ed, cmd, ui, val, a) {
+					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
 						t.undoManager.add();
 				});
 			}
@@ -1032,21 +1032,21 @@
 
 			// Comamnd callback
 			if (t.execCallback('execcommand_callback', t.id, t.selection.getNode(), cmd, ui, val)) {
-				t.onExecCommand.dispatch(t, cmd, ui, val);
+				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return true;
 			}
 
 			// Registred commands
 			if (o = t.execCommands[cmd]) {
 				s = o.func.call(o.scope, ui, val);
-				t.onExecCommand.dispatch(t, cmd, ui, val);
+				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return s;
 			}
 
 			// Plugin commands
 			each(t.plugins, function(p) {
 				if (p.execCommand && p.execCommand(cmd, ui, val)) {
-					t.onExecCommand.dispatch(t, cmd, ui, val);
+					t.onExecCommand.dispatch(t, cmd, ui, val, a);
 					s = 1;
 					return false;
 				}
@@ -1057,19 +1057,19 @@
 
 			// Theme commands
 			if (t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
-				t.onExecCommand.dispatch(t, cmd, ui, val);
+				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return true;
 			}
 
 			// Editor commands
 			if (t.editorCommands.execCommand(cmd, ui, val)) {
-				t.onExecCommand.dispatch(t, cmd, ui, val);
+				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return true;
 			}
 
 			// Browser commands
 			t.getDoc().execCommand(cmd, ui, val);
-			t.onExecCommand.dispatch(t, cmd, ui, val);
+			t.onExecCommand.dispatch(t, cmd, ui, val, a);
 		},
 
 		/**
@@ -2093,6 +2093,7 @@
 			return (!s || !s.rangeCount || s.rangeCount == 0);
 		},
 
+		// Fix for bug #1867292
 		_fixNesting : function(s) {
 			var d = [], i;
 

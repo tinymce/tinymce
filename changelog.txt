@@ -21,6 +21,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where Opera was producing odd results if enter/return was pressed while having forced_root_blocks disabled.
 	Fixed bug where layer plugin was stealing focus in IE on initialization.
 	Fixed bug where body attributes wasn't set properly in the fullpage plugin, fix contributed by Hiroaki Kawai.
+	Fixed bug where insert image dialogs where producing an temporary image in the undo history.
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.
 	Fixed so the editor UI and inlinedialogs works correctly with the YUI CSS reset package.
