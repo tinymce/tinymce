@@ -3,6 +3,7 @@ Version 3.0.1 (2008-02-xx)
 	Added src attribute for script elements to the default valid_elements option value.
 	Added extra parameter to the class_filter callback it can now also filter out classes based on the whole CSS rule.
 	Added support for domain relaxing, TinyMCE can now be loaded from an remote domain as long as they are on the same root domain.
+	Added support for custom elements the new custom_elements option enables you to add non HTML elements to the editor.
 	Fixed bug where some object param element wasn't stored correctly using the media plugin.
 	Fixed bug where Opera was scrolling to top of page is drop menus on list boxes where displayed.
 	Fixed bug where IE6 was crashing if a format block was used on a container with anchor elements.

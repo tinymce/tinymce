@@ -6347,6 +6347,23 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (s.auto_resize)
 				t.onNodeChange.add(t.resizeToContent, t);
 
+			if (s.custom_elements) {
+				t.onBeforeSetContent.add(function(ed, o) {
+					each(s.custom_elements.split(','), function(v) {
+						var n;
+
+						if (v.indexOf('~') === 0) {
+							v = v.substring(1);
+							n = 'span';
+						} else
+							n = 'div';
+
+						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' mce_name="$1"$2>');
+						o.content = o.content.replace(new RegExp('</(' + v + ')>', 'g'), '</' + n + '>');
+					});
+				});
+			}
+
 			if (s.handle_node_change_callback) {
 				t.onNodeChange.add(function(ed, cm, n) {
 					t.execCallback('handle_node_change_callback', t.id, n, -1, -1, true, t.selection.isCollapsed());
