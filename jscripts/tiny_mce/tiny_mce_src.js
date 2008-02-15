@@ -6348,7 +6348,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t.onNodeChange.add(t.resizeToContent, t);
 
 			if (s.custom_elements) {
-				t.onBeforeSetContent.add(function(ed, o) {
+				function handleCustom(ed, o) {
 					each(s.custom_elements.split(','), function(v) {
 						var n;
 
@@ -6361,6 +6361,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' mce_name="$1"$2>');
 						o.content = o.content.replace(new RegExp('</(' + v + ')>', 'g'), '</' + n + '>');
 					});
+				};
+
+				t.onBeforeSetContent.add(handleCustom);
+				t.onPostProcess.add(function(ed, o) {
+					if (o.set)
+						handleCustom(ed, o)
 				});
 			}
 
