@@ -2,6 +2,7 @@ Version 3.0.1 (2008-02-xx)
 	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.
 	Added src attribute for script elements to the default valid_elements option value.
 	Added extra parameter to the class_filter callback it can now also filter out classes based on the whole CSS rule.
+	Added support for domain relaxing, TinyMCE can now be loaded from an remote domain as long as they are on the same root domain.
 	Fixed bug where some object param element wasn't stored correctly using the media plugin.
 	Fixed bug where Opera was scrolling to top of page is drop menus on list boxes where displayed.
 	Fixed bug where IE6 was crashing if a format block was used on a container with anchor elements.
@@ -29,6 +30,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where a variable called 'v' was polluting the global namespace. Objects tinymce and tinyMCE are the only ones allowed to be global.
 	Fixed bug where insert table from context menu couldn't insert new tables inside existing tables.
 	Fixed bug where Safari wouldn't produce br elements on enter when the force_br_newlines option was enabled.
+	Fixed bug where switching cell type in table cell dialog would produce odd attributes in IE.
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.
 	Fixed so the editor UI and inlinedialogs works correctly with the YUI CSS reset package.

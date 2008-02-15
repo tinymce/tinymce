@@ -40,7 +40,7 @@
 		 * @param {Object} p Optional parameters/arguments collection can be used by the dialogs to retrive custom parameters.
 		 */
 		open : function(s, p) {
-			var t = this, f = '', x, y, mo = t.editor.settings.dialog_type == 'modal', w, sw, sh, vp = tinymce.DOM.getViewPort();
+			var t = this, f = '', x, y, mo = t.editor.settings.dialog_type == 'modal', w, sw, sh, vp = tinymce.DOM.getViewPort(), u;
 
 			// Default some options
 			s = s || {};
@@ -85,12 +85,16 @@
 			t.params = p;
 			t.onOpen.dispatch(t, s, p);
 
+			u = s.url || s.file;
+			if (tinymce.relaxedDomain)
+				u += (u.indexOf('?') == -1 ? '?' : '&') + 'mce_rdomain=' + tinymce.relaxedDomain;
+
 			try {
 				if (isIE && mo) {
 					w = 1;
 					window.showModalDialog(s.url || s.file, window, f);
 				} else
-					w = window.open(s.url || s.file, s.name, f);
+					w = window.open(u, s.name, f);
 			} catch (ex) {
 				// Ignore
 			}

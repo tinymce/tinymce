@@ -45,7 +45,7 @@
 
 			// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
 			ed.onKeyPress.add(function(ed, e) {
-				if (e.keyCode == 13 && (e.shiftKey || ed.settings.force_br_newlines)) {
+				if (e.keyCode == 13 && (e.shiftKey || ed.settings.force_br_newlines && ed.selection.getNode().nodeName != 'LI')) {
 					t._insertBR(ed);
 					Event.cancel(e);
 				}

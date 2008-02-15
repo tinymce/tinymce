@@ -46,7 +46,7 @@
 			t.key = 0;
 			t.onPreProcess = new Dispatcher(t);
 			t.onPostProcess = new Dispatcher(t);
-			t.writer = new tinymce.dom.XMLWriter();
+			t.writer = tinymce.relaxedDomain && tinymce.isGecko ? new tinymce.dom.StringWriter() : new tinymce.dom.XMLWriter();
 
 			// Default settings
 			t.settings = s = extend({

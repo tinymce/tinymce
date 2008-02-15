@@ -255,7 +255,7 @@
 		 * This method will setup the iframe and create the theme and plugin instances.
 		 */
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti;
+			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u;
 
 			EditorManager.add(t);
 
@@ -373,10 +373,27 @@
 			if (h < 100)
 				h = 100;
 
+			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" />';
+			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+
+			if (tinymce.relaxedDomain)
+				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
+
+			t.iframeHTML += '</head><body id="tinymce" class="mceContentBody"></body></html>';
+
+			// Domain relaxing enabled, then set document domain
+			if (tinymce.relaxedDomain) {
+				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
+				if (isIE)
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + s.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
+				else if (tinymce.isOpera)
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
+			}
+
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
 				id : s.id + "_ifr",
-				src : 'javascript:""', // Workaround for HTTPS warning in IE6/7
+				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder : '0',
 				style : {
 					width : '100%',
@@ -393,7 +410,9 @@
 				Event.add(n, 'load', t.setupIframe, t);
 				n.src = tinymce.baseURL + '/plugins/safari/blank.htm';
 			} else {
-				t.setupIframe();
+				if (!isIE || !tinymce.relaxedDomain)
+					t.setupIframe();
+
 				e = n = o = null; // Cleanup
 			}
 		},
@@ -404,12 +423,14 @@
 		 * This method should not be called directly.
 		 */
 		setupIframe : function() {
-			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
+			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc(), h;
 
-			// Setup body
-			d.open();
-			d.write(s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
-			d.close();
+			// Setup iframe body
+			if (!isIE || !tinymce.relaxedDomain) {
+				d.open();
+				d.write(t.iframeHTML);
+				d.close();
+			}
 
 			// Design mode needs to be added here Ctrl+A will fail otherwise
 			if (!isIE) {
@@ -1410,7 +1431,7 @@
 			var t = this, w;
 
 			if (!t.contentDocument) {
-				w = this.getWin();
+				w = t.getWin();
 
 				if (w)
 					t.contentDocument = w.document;

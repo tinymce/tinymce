@@ -37,7 +37,7 @@
 		},
 
 		open : function(f, p) {
-			var t = this, id, opt = '', ed = t.editor, dw = 0, dh = 0, vp, po, mdf, clf, we, w;
+			var t = this, id, opt = '', ed = t.editor, dw = 0, dh = 0, vp, po, mdf, clf, we, w, u;
 
 			f = f || {};
 			p = p || {};
@@ -150,10 +150,14 @@
 			// Resize window
 			DOM.setStyles(id, {top : f.top, left : f.left, width : f.width + dw, height : f.height + dh});
 
+			u = f.url || f.file;
+			if (tinymce.relaxedDomain)
+				u += (u.indexOf('?') == -1 ? '?' : '&') + 'mce_rdomain=' + tinymce.relaxedDomain;
+
 			if (!f.type) {
 				DOM.add(id + '_content', 'iframe', {id : id + '_ifr', src : 'javascript:""', frameBorder : 0, style : 'border:0;width:10px;height:10px'});
 				DOM.setStyles(id + '_ifr', {width : f.width, height : f.height});
-				DOM.setAttrib(id + '_ifr', 'src', f.url || f.file);
+				DOM.setAttrib(id + '_ifr', 'src', u);
 			} else {
 				DOM.add(id + '_wrapper', 'a', {id : id + '_ok', 'class' : 'button ok', href : 'javascript:;', onmousedown : 'return false;'}, 'Ok');
 

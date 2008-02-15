@@ -3,9 +3,20 @@ var tinymce = null, tinyMCEPopup, tinyMCE;
 
 tinyMCEPopup = {
 	init : function() {
-		var t = this, w = t.getWin(), ti;
+		var t = this, w, ti, li, q, i, it;
 
-		// Find API
+		li = ('' + document.location.search).replace(/^\?/, '').split('&');
+		q = {};
+		for (i=0; i<li.length; i++) {
+			it = li[i].split('=');
+			q[unescape(it[0])] = unescape(it[1]);
+		}
+
+		if (q.mce_rdomain)
+			document.domain = q.mce_rdomain;
+
+		// Find window & API
+		w = t.getWin();
 		tinymce = w.tinymce;
 		tinyMCE = w.tinyMCE;
 		t.editor = tinymce.EditorManager.activeEditor;
@@ -114,7 +125,16 @@ tinyMCEPopup = {
 		var t = this;
 
 		t.dom = t.dom.doc = null; // Cleanup
-		t.editor.windowManager.close(window, t.id);
+
+		// To avoid domain relaxing issue in Opera
+		function close() {
+			t.editor.windowManager.close(window, t.id);
+		};
+
+		if (tinymce.isOpera)
+			t.getWin().setTimeout(close, 0);
+		else
+			close();
 	},
 
 	// Internal functions	

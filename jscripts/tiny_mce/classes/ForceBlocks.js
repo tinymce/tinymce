@@ -75,7 +75,7 @@
 					ed.onKeyPress.add(function(ed, e) {
 						var n, s = ed.selection;
 
-						if (e.keyCode == 13) {
+						if (e.keyCode == 13 && s.getNode().nodeName != 'LI') {
 							s.setContent('<br id="__" /> ', {format : 'raw'});
 							n = ed.dom.get('__');
 							n.removeAttribute('id');

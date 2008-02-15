@@ -52,7 +52,7 @@
 		 * @param {String} n Name of element to write.
 		 */
 		writeStartElement : function(n) {
-			this.writeAttributesEnd();
+			this._writeAttributesEnd();
 			this.writeRaw('<' + n);
 			this.tags.push(n);
 			this.inAttr = true;
@@ -81,7 +81,7 @@
 			if (this.tags.length > 0) {
 				n = this.tags.pop();
 
-				if (this.writeAttributesEnd(1))
+				if (this._writeAttributesEnd(1))
 					this.writeRaw('</' + n + '>');
 
 				if (this.settings.indentation > 0)
@@ -94,7 +94,7 @@
 		 */
 		writeFullEndElement : function() {
 			if (this.tags.length > 0) {
-				this.writeAttributesEnd();
+				this._writeAttributesEnd();
 				this.writeRaw('</' + this.tags.pop() + '>');
 
 				if (this.settings.indentation > 0)
@@ -108,7 +108,7 @@
 		 * @param {String} v Value to append as a text node.
 		 */
 		writeText : function(v) {
-			this.writeAttributesEnd();
+			this._writeAttributesEnd();
 			this.writeRaw(this.encode(v));
 			this.count++;
 		},
@@ -119,7 +119,7 @@
 		 * @param {String} v Value to write in CDATA.
 		 */
 		writeCDATA : function(v) {
-			this.writeAttributesEnd();
+			this._writeAttributesEnd();
 			this.writeRaw('<![CDATA[' + v + ']]>');
 			this.count++;
 		},
@@ -130,7 +130,7 @@
 		 * @param {String} v Value of the comment.
 		 */
 		writeComment : function(v) {
-			this.writeAttributesEnd();
+			this._writeAttributesEnd();
 			this.writeRaw('<!-- ' + v + '-->');
 			this.count++;
 		},
@@ -177,6 +177,22 @@
 		 */
 		getContent : function() {
 			return this.str;
+		},
+
+		_writeAttributesEnd : function(s) {
+			if (!this.inAttr)
+				return;
+
+			this.inAttr = false;
+
+			if (s && this.elementCount == this.count) {
+				this.writeRaw(' />');
+				return false;
+			}
+
+			this.writeRaw('>');
+
+			return true;
 		}
 
 		/**#@-*/

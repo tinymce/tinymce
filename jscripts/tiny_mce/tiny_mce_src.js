@@ -3156,6 +3156,136 @@ tinymce.create('static tinymce.util.XHR', {
 		});
 })();
 
+/* file:jscripts/tiny_mce/classes/dom/StringWriter.js */
+
+(function() {
+	tinymce.create('tinymce.dom.StringWriter', {
+		str : null,
+		tags : null,
+		count : 0,
+		settings : null,
+		indent : null,
+
+		StringWriter : function(s) {
+			this.settings = tinymce.extend({
+				indent_char : ' ',
+				indentation : 1
+			}, s);
+
+			this.reset();
+		},
+
+		reset : function() {
+			this.indent = '';
+			this.str = "";
+			this.tags = [];
+			this.count = 0;
+		},
+
+		writeStartElement : function(n) {
+			this._writeAttributesEnd();
+			this.writeRaw('<' + n);
+			this.tags.push(n);
+			this.inAttr = true;
+			this.count++;
+			this.elementCount = this.count;
+		},
+
+		writeAttribute : function(n, v) {
+			var t = this;
+
+			t.writeRaw(" " + t.encode(n) + '="' + t.encode(v) + '"');
+		},
+
+		writeEndElement : function() {
+			var n;
+
+			if (this.tags.length > 0) {
+				n = this.tags.pop();
+
+				if (this._writeAttributesEnd(1))
+					this.writeRaw('</' + n + '>');
+
+				if (this.settings.indentation > 0)
+					this.writeRaw('\n');
+			}
+		},
+
+		writeFullEndElement : function() {
+			if (this.tags.length > 0) {
+				this._writeAttributesEnd();
+				this.writeRaw('</' + this.tags.pop() + '>');
+
+				if (this.settings.indentation > 0)
+					this.writeRaw('\n');
+			}
+		},
+
+		writeText : function(v) {
+			this._writeAttributesEnd();
+			this.writeRaw(this.encode(v));
+			this.count++;
+		},
+
+		writeCDATA : function(v) {
+			this._writeAttributesEnd();
+			this.writeRaw('<![CDATA[' + v + ']]>');
+			this.count++;
+		},
+
+		writeComment : function(v) {
+			this._writeAttributesEnd();
+			this.writeRaw('<!-- ' + v + '-->');
+			this.count++;
+		},
+
+		writeRaw : function(v) {
+			this.str += v;
+		},
+
+		encode : function(s) {
+			return s.replace(/[<>&"]/g, function(v) {
+				switch (v) {
+					case '<':
+						return '&lt;';
+
+					case '>':
+						return '&gt;';
+
+					case '&':
+						return '&amp;';
+
+					case '"':
+						return '&quot;';
+				}
+
+				return v;
+			});
+		},
+
+		getContent : function() {
+			return this.str;
+		},
+
+		_writeAttributesEnd : function(s) {
+			if (!this.inAttr)
+				return;
+
+			this.inAttr = false;
+
+			if (s && this.elementCount == this.count) {
+				this.writeRaw(' />');
+				return false;
+			}
+
+			this.writeRaw('>');
+
+			return true;
+		}
+
+		});
+})();
+
 /* file:jscripts/tiny_mce/classes/dom/Serializer.js */
 
 (function() {
@@ -3188,7 +3318,7 @@ tinymce.create('static tinymce.util.XHR', {
 			t.key = 0;
 			t.onPreProcess = new Dispatcher(t);
 			t.onPostProcess = new Dispatcher(t);
-			t.writer = new tinymce.dom.XMLWriter();
+			t.writer = tinymce.relaxedDomain && tinymce.isGecko ? new tinymce.dom.StringWriter() : new tinymce.dom.XMLWriter();
 
 			// Default settings
 			t.settings = s = extend({
@@ -5739,6 +5869,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
+
+	if (tinymce.EditorManager.baseURI.host != document.domain)
+		document.domain = tinymce.relaxedDomain = document.domain.replace(/.*\.(.+\..+)$/, '$1');
 })();
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call
@@ -5972,7 +6105,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti;
+			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u;
 
 			EditorManager.add(t);
 
@@ -6083,10 +6216,27 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (h < 100)
 				h = 100;
 
+			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" />';
+			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+
+			if (tinymce.relaxedDomain)
+				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
+
+			t.iframeHTML += '</head><body id="tinymce" class="mceContentBody"></body></html>';
+
+			// Domain relaxing enabled, then set document domain
+			if (tinymce.relaxedDomain) {
+				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
+				if (isIE)
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + s.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
+				else if (tinymce.isOpera)
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
+			}
+
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
 				id : s.id + "_ifr",
-				src : 'javascript:""', // Workaround for HTTPS warning in IE6/7
+				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder : '0',
 				style : {
 					width : '100%',
@@ -6103,18 +6253,22 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				Event.add(n, 'load', t.setupIframe, t);
 				n.src = tinymce.baseURL + '/plugins/safari/blank.htm';
 			} else {
-				t.setupIframe();
+				if (!isIE || !tinymce.relaxedDomain)
+					t.setupIframe();
+
 				e = n = o = null; // Cleanup
 			}
 		},
 
 		setupIframe : function() {
-			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc();
+			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc(), h;
 
-			// Setup body
-			d.open();
-			d.write(s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body id="tinymce" class="mceContentBody"></body></html>');
-			d.close();
+			// Setup iframe body
+			if (!isIE || !tinymce.relaxedDomain) {
+				d.open();
+				d.write(t.iframeHTML);
+				d.close();
+			}
 
 			// Design mode needs to be added here Ctrl+A will fail otherwise
 			if (!isIE) {
@@ -6807,7 +6961,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var t = this, w;
 
 			if (!t.contentDocument) {
-				w = this.getWin();
+				w = t.getWin();
 
 				if (w)
 					t.contentDocument = w.document;
@@ -8520,7 +8674,7 @@ tinymce.create('tinymce.UndoManager', {
 					ed.onKeyPress.add(function(ed, e) {
 						var n, s = ed.selection;
 
-						if (e.keyCode == 13) {
+						if (e.keyCode == 13 && s.getNode().nodeName != 'LI') {
 							s.setContent('<br id="__" /> ', {format : 'raw'});
 							n = ed.dom.get('__');
 							n.removeAttribute('id');
@@ -9221,7 +9375,7 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		open : function(s, p) {
-			var t = this, f = '', x, y, mo = t.editor.settings.dialog_type == 'modal', w, sw, sh, vp = tinymce.DOM.getViewPort();
+			var t = this, f = '', x, y, mo = t.editor.settings.dialog_type == 'modal', w, sw, sh, vp = tinymce.DOM.getViewPort(), u;
 
 			// Default some options
 			s = s || {};
@@ -9266,12 +9420,16 @@ tinymce.create('tinymce.UndoManager', {
 			t.params = p;
 			t.onOpen.dispatch(t, s, p);
 
+			u = s.url || s.file;
+			if (tinymce.relaxedDomain)
+				u += (u.indexOf('?') == -1 ? '?' : '&') + 'mce_rdomain=' + tinymce.relaxedDomain;
+
 			try {
 				if (isIE && mo) {
 					w = 1;
 					window.showModalDialog(s.url || s.file, window, f);
 				} else
-					w = window.open(s.url || s.file, s.name, f);
+					w = window.open(u, s.name, f);
 			} catch (ex) {
 				// Ignore
 			}
