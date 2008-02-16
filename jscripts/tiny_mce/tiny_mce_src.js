@@ -6023,10 +6023,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 			}
 
-			Event.add(document, 'unload', function() {
-				if (t.initialized && !t.destroyed && s.add_unload_trigger)
-					t.save({format : 'raw', no_events : true});
-			});
+			if (s.add_unload_trigger) {
+				Event.add(document, 'beforeunload', function() {
+					if (t.initialized && !t.destroyed)
+						t.save({format : 'raw', no_events : true});
+				});
+			}
 
 			tinymce.addUnload(t._destroy, t);
 

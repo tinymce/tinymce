@@ -32,6 +32,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where insert table from context menu couldn't insert new tables inside existing tables.
 	Fixed bug where Safari wouldn't produce br elements on enter when the force_br_newlines option was enabled.
 	Fixed bug where switching cell type in table cell dialog would produce odd attributes in IE.
+	Fixed compatibility issue with Mootools, it is destroying document.getElementById on unload in IE. (Mantra: Do not touch the internal objects).
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.
 	Fixed so the editor UI and inlinedialogs works correctly with the YUI CSS reset package.
