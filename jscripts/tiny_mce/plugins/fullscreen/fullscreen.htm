@@ -45,6 +45,12 @@
 		settings['theme_advanced_resizing'] = false;
 		settings['strict_loading_mode'] = true;
 
+		settings.save_onsavecallback = function() {
+			window.opener.tinyMCE.activeEditor.setContent(tinyMCE.get('fullscreenarea').getContent({format : 'raw'}), {format : 'raw'});
+			window.opener.tinyMCE.activeEditor.execCommand('mceSave');
+			window.close();
+		};
+
 		function unloadHandler(e) {
 			moveContent();
 		}

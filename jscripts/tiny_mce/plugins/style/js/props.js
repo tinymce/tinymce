@@ -138,7 +138,7 @@ function setupFormData() {
 	selectByValue(f, 'text_lineheight_measurement', getMeasurement(ce.style.lineHeight));
 	selectByValue(f, 'text_case', ce.style.textTransform, true, true);
 	selectByValue(f, 'text_variant', ce.style.fontVariant, true, true);
-	f.text_color.value = ce.style.color;
+	f.text_color.value = tinyMCEPopup.editor.dom.toHex(ce.style.color);
 	updateColor('text_color_pick', 'text_color');
 	f.text_underline.checked = inStr(ce.style.textDecoration, 'underline');
 	f.text_overline.checked = inStr(ce.style.textDecoration, 'overline');
@@ -147,7 +147,7 @@ function setupFormData() {
 
 	// Setup background fields
 
-	f.background_color.value = ce.style.backgroundColor;
+	f.background_color.value = tinyMCEPopup.editor.dom.toHex(ce.style.backgroundColor);
 	updateColor('background_color_pick', 'background_color');
 	f.background_image.value = ce.style.backgroundImage.replace(new RegExp("url\\('?([^']*)'?\\)", 'gi'), "$1");
 	selectByValue(f, 'background_repeat', ce.style.backgroundRepeat, true, true);
@@ -198,6 +198,11 @@ function setupFormData() {
 	updateColor('border_color_right_pick', 'border_color_right');
 	updateColor('border_color_bottom_pick', 'border_color_bottom');
 	updateColor('border_color_left_pick', 'border_color_left');
+
+	f.elements.border_color_top.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_top.value);
+	f.elements.border_color_right.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_right.value);
+	f.elements.border_color_bottom.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_bottom.value);
+	f.elements.border_color_left.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_left.value);
 
 	// Setup list fields
 

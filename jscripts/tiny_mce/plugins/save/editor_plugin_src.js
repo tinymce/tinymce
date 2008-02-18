@@ -50,27 +50,24 @@
 		_save : function() {
 			var ed = this.editor, formObj, os, i, elementId;
 
-			if (ed.getParam("fullscreen_is_enabled"))
-				return true;
-
 			formObj = tinymce.DOM.get(ed.id).form || tinymce.DOM.getParent(ed.id, 'form');
 
 			if (ed.getParam("save_enablewhendirty") && !ed.isDirty())
 				return true;
 
-			if (formObj) {
-				tinyMCE.triggerSave();
+			tinyMCE.triggerSave();
 
-				// Use callback instead
-				if (os = ed.getParam("save_onsavecallback")) {
-					if (ed.execCallback('save_onsavecallback', ed)) {
-						ed.startContent = tinymce.trim(ed.getContent({format : 'raw'}));
-						ed.nodeChanged();
-					}
-
-					return;
+			// Use callback instead
+			if (os = ed.getParam("save_onsavecallback")) {
+				if (ed.execCallback('save_onsavecallback', ed)) {
+					ed.startContent = tinymce.trim(ed.getContent({format : 'raw'}));
+					ed.nodeChanged();
 				}
 
+				return;
+			}
+
+			if (formObj) {
 				ed.isNotDirty = true;
 
 				if (formObj.onsubmit == null || formObj.onsubmit() != false)

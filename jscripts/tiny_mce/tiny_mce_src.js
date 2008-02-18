@@ -7225,25 +7225,34 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				};
 
 				function tabHandler(ed, e) {
-					var v, f, el;
+					var x, i, f, el, v;
 
 					function find(d) {
-						f = DOM.getParent(ed.id, 'form'), el = f.elements;
+						f = DOM.getParent(ed.id, 'form');
+						el = f.elements;
 
 						if (f) {
-							each(f.elements, function(e, i) {
+							each(el, function(e, i) {
 								if (e.id == ed.id) {
-									i = i + d;
-
-									if (i < 0 || i > el.length)
-										return;
-
-									el = el[i];
+									x = i;
+									return false;
 								}
 							});
+
+							if (d > 0) {
+								for (i = x + 1; i < el.length; i++) {
+									if (el[i].type != 'hidden')
+										return el[i];
+								}
+							} else {
+								for (i = x - 1; i >= 0; i--) {
+									if (el[i].type != 'hidden')
+										return el[i];
+								}
+							}
 						}
 
-						return el;
+						return null;
 					};
 
 					if (e.keyCode === 9) {

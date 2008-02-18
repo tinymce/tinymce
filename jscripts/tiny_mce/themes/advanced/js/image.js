@@ -55,8 +55,11 @@ var ImageDialog = {
 		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, args = {}, el;
 
 		if (f.src.value === '') {
-			ed.dom.remove(ed.selection.getNode());
-			ed.execCommand('mceRepaint');
+			if (ed.selection.getNode().nodeName == 'IMG') {
+				ed.dom.remove(ed.selection.getNode());
+				ed.execCommand('mceRepaint');
+			}
+
 			tinyMCEPopup.close();
 			return;
 		}

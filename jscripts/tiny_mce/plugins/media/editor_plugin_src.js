@@ -84,7 +84,7 @@
 				h = h.replace(/<object([^>]*)>/gi, '<span class="mceItemObject" $1>');
 				h = h.replace(/<embed([^>]*)>/gi, '<span class="mceItemEmbed" $1>');
 				h = h.replace(/<\/(object|embed)([^>]*)>/gi, '</span>');
-				h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<span ' + b.replace(/value=/g, '_value=') + ' class="mceItemParam"></span>'});
+				h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<span ' + b.replace(/value=/gi, '_value=') + ' class="mceItemParam"></span>'});
 				h = h.replace(/\/ class=\"mceItemParam\"><\/span>/gi, 'class="mceItemParam"></span>');
 
 				o.content = h;
