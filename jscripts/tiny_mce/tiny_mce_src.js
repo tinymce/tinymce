@@ -5677,7 +5677,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 						l = s.elements || '';
 						each(l.split(','), function(v) {
 							if (DOM.get(v))
-								new tinymce.Editor(v, s).render();
+								new tinymce.Editor(v, s).render(1);
 							else {
 								c = 0;
 
@@ -5686,7 +5686,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 										if (e.name === v) {
 											v = 'mce_editor_' + c;
 											DOM.setAttrib(e, 'id', v);
-											new tinymce.Editor(v, s).render();
+											new tinymce.Editor(v, s).render(1);
 										}
 									});
 								});
@@ -5705,7 +5705,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 								return;
 
 							if (!s.editor_selector || hasClass(v, s.editor_selector))
-								new tinymce.Editor(v.id = (v.id || v.name || (v.id = DOM.uniqueId())), s).render();
+								new tinymce.Editor(v.id = (v.id || v.name || (v.id = DOM.uniqueId())), s).render(1);
 						});
 						break;
 				}
@@ -5989,8 +5989,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.execCallback('setup', t);
 		},
 
-		render : function() {
+		render : function(nst) {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
+
+			// Force strict loading mode if render us called by user and not internally
+			if (!nst)
+				s.strict_loading_mode = 1;
 
 			// Element not found, then skip initialization
 			if (!t.getElement())

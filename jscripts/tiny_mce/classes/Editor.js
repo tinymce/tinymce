@@ -134,8 +134,12 @@
 		/**
 		 * Renderes the editor/adds it to the page.
 		 */
-		render : function() {
+		render : function(nst) {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
+
+			// Force strict loading mode if render us called by user and not internally
+			if (!nst)
+				s.strict_loading_mode = 1;
 
 			// Element not found, then skip initialization
 			if (!t.getElement())

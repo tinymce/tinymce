@@ -134,7 +134,7 @@
 						l = s.elements || '';
 						each(l.split(','), function(v) {
 							if (DOM.get(v))
-								new tinymce.Editor(v, s).render();
+								new tinymce.Editor(v, s).render(1);
 							else {
 								c = 0;
 
@@ -143,7 +143,7 @@
 										if (e.name === v) {
 											v = 'mce_editor_' + c;
 											DOM.setAttrib(e, 'id', v);
-											new tinymce.Editor(v, s).render();
+											new tinymce.Editor(v, s).render(1);
 										}
 									});
 								});
@@ -162,7 +162,7 @@
 								return;
 
 							if (!s.editor_selector || hasClass(v, s.editor_selector))
-								new tinymce.Editor(v.id = (v.id || v.name || (v.id = DOM.uniqueId())), s).render();
+								new tinymce.Editor(v.id = (v.id || v.name || (v.id = DOM.uniqueId())), s).render(1);
 						});
 						break;
 				}
