@@ -74,6 +74,12 @@
 				}
 			});
 
+			// Add undo level when new rows are created using the tab key
+			ed.onKeyDown.add(function(ed, e) {
+				if (e.keyCode == 9 && ed.dom.getParent(ed.selection.getNode(), 'TABLE'))
+					ed.undoManager.add();
+			});
+
 			ed.onNodeChange.add(function(ed, cm, n) {
 				var p = ed.dom.getParent(n, 'td,th,caption');
 

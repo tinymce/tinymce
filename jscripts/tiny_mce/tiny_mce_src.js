@@ -6066,7 +6066,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Load scripts
 			function loadScripts() {
-				sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
+				if (s.language)
+					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
 				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');

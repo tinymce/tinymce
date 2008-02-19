@@ -175,7 +175,7 @@ tinyMCEPopup = {
 	requireLangPack : function() {
 		var u = this.getWindowArg('plugin_url') || this.getWindowArg('theme_url');
 
-		if (u)
+		if (u && this.editor.settings.language)
 			document.write('<script type="text/javascript" src="' + u + '/langs/' + this.editor.settings.language + '_dlg.js' + '"></script>');
 	},
 
