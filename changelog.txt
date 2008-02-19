@@ -40,6 +40,7 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where the editor was forced to be placed in a form element if the save_onsavecallback option was used.
 	Fixed bug where upper case param attributes wasn't parsed correctly in the media plugin.
 	Fixed bug where render method of tinymce.Editor class would produce an exception if the strict_loading_mode option was omitted.
+	Fixed bug where nodeChanged event could be fired while the editor was loading and there for produce an exception in FF.
 	Fixed compatibility issue with Mootools, it is destroying document.getElementById on unload in IE. (Mantra: You don't own the internal objects).
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.

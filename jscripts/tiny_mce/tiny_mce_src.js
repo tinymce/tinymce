@@ -6616,15 +6616,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		nodeChanged : function(o) {
-			var t = this, s = t.selection, n = s.getNode() || this.getBody();
+			var t = this, s = t.selection, n = s.getNode() || t.getBody();
 
-			this.onNodeChange.dispatch(
-				t,
-				o ? o.controlManager || t.controlManager : t.controlManager,
-				isIE && n.ownerDocument != t.getDoc() ? this.getBody() : n, // Fix for IE initial state
-				s.isCollapsed(),
-				o
-			);
+			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
+			if (t.initialized) {
+				t.onNodeChange.dispatch(
+					t,
+					o ? o.controlManager || t.controlManager : t.controlManager,
+					isIE && n.ownerDocument != t.getDoc() ? t.getBody() : n, // Fix for IE initial state
+					s.isCollapsed(),
+					o
+				);
+			}
 		},
 
 		addButton : function(n, s) {
