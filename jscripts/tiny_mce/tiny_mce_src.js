@@ -8326,7 +8326,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var t = this, ed = t.editor;
 
 			val = ed.settings.forced_root_block ? (val || '<p>') : val;
-			t.mceRemoveNode();
+
+			if (/^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(ed.selection.getNode().nodeName))
+				t.mceRemoveNode();
 
 			if (val.indexOf('<') == -1)
 				val = '<' + val + '>';
