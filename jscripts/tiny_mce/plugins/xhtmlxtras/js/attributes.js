@@ -81,7 +81,7 @@ function setAttrib(elm, attrib, value) {
 		if (attrib == "class")
 			attrib = "className";
 
-		eval('elm.' + attrib + "=value;");
+		elm[attrib]=value;
 	} else
 		elm.removeAttribute(attrib);
 }

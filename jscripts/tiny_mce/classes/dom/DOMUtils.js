@@ -214,6 +214,10 @@
 
 			s = t.get(s) || t.doc;
 
+			// Look for native support and use that if it's found
+			if (s.querySelectorAll)
+				return tinymce.grep(s.querySelectorAll(pa));
+
 			if (t.settings.strict) {
 				function get(s, n) {
 					return s.getElementsByTagName(n.toLowerCase());

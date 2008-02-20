@@ -121,15 +121,10 @@
 		 * @param {String} cl Class name to create an instance of.
 		 * @return {Object} Instance of the specified class.
 		 */
-		createInstance : function(cl) {
-			var a = arguments, i, f = tinymce.resolve(cl), s = '';
+		createInstance : function(cl, a, b, c, d, e) {
+			var f = tinymce.resolve(cl);
 
-			// Is there a better way to dynamically create
-			// a class with a dynamic number of arguments
-			for (i=1; i<a.length; i++)
-				s += (i > 1 ? ',' : '') + 'a[' + i + ']';
-
-			return eval('(new f(' + s + '))');
+			return new f(a, b, c, d, e);
 		},
 
 		/**

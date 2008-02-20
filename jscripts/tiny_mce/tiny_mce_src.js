@@ -1044,6 +1044,10 @@ tinymce.create('static tinymce.util.XHR', {
 
 			s = t.get(s) || t.doc;
 
+			// Look for native support and use that if it's found
+			if (s.querySelectorAll)
+				return tinymce.grep(s.querySelectorAll(pa));
+
 			if (t.settings.strict) {
 				function get(s, n) {
 					return s.getElementsByTagName(n.toLowerCase());
@@ -9540,15 +9544,10 @@ tinymce.create('tinymce.UndoManager', {
 			this.onClose.dispatch(this);
 		},
 
-		createInstance : function(cl) {
-			var a = arguments, i, f = tinymce.resolve(cl), s = '';
+		createInstance : function(cl, a, b, c, d, e) {
+			var f = tinymce.resolve(cl);
 
-			// Is there a better way to dynamically create
-			// a class with a dynamic number of arguments
-			for (i=1; i<a.length; i++)
-				s += (i > 1 ? ',' : '') + 'a[' + i + ']';
-
-			return eval('(new f(' + s + '))');
+			return new f(a, b, c, d, e);
 		},
 
 		confirm : function(t, cb, s) {

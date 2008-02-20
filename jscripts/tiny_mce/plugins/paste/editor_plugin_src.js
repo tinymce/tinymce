@@ -160,12 +160,11 @@
 				// Cleanup Word content
 				var bull = String.fromCharCode(8226);
 				var middot = String.fromCharCode(183);
-				var cb;
 
-				if ((cb = this.editor.getParam("paste_insert_word_content_callback", "")) != "")
-					content = eval(cb + "('before', content)");
+				if (ed.getParam('paste_insert_word_content_callback'))
+					content = ed.execCallback('paste_insert_word_content_callback', 'before', content);
 
-				var rl = this.editor.getParam("paste_replace_list", '\u2122,<sup>TM</sup>,\u2026,...,\u201c|\u201d,",\u2019,\',\u2013|\u2014|\u2015|\u2212,-').split(',');
+				var rl = ed.getParam("paste_replace_list", '\u2122,<sup>TM</sup>,\u2026,...,\u201c|\u201d,",\u2019,\',\u2013|\u2014|\u2015|\u2212,-').split(',');
 				for (var i=0; i<rl.length; i+=2)
 					content = content.replace(new RegExp(rl[i], 'gi'), rl[i+1]);
 
@@ -245,8 +244,8 @@
 
 				content = content.replace(/--list--/gi, ""); // Remove --list--
 
-				if ((cb = this.editor.getParam("paste_insert_word_content_callback", "")) != "")
-					content = eval(cb + "('after', content)");
+				if (ed.getParam('paste_insert_word_content_callback'))
+					content = ed.execCallback('paste_insert_word_content_callback', 'after', content);
 
 				// Insert cleaned content
 				this.editor.execCommand("mceInsertContent", false, content);
