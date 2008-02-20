@@ -32,7 +32,9 @@ function setBrowserDisabled(id, state) {
 			lnk.removeAttribute("href");
 			tinyMCEPopup.dom.addClass(img, 'disabled');
 		} else {
-			lnk.setAttribute("href", lnk.getAttribute("realhref"));
+			if (lnk.getAttribute("realhref"))
+				lnk.setAttribute("href", lnk.getAttribute("realhref"));
+
 			tinyMCEPopup.dom.removeClass(img, 'disabled');
 		}
 	}

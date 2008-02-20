@@ -21,32 +21,40 @@
 	 */
 	tinymce.create('tinymce.ForceBlocks', {
 		ForceBlocks : function(ed) {
-			var t = this, s;
+			var t = this, s, elm;
 
 			t.editor = ed;
 			t.dom = ed.dom;
 
 			// Default settings
 			t.settings = s = extend({
-				element : 'P',
 				forced_root_block : 'p',
 				force_p_newlines : true
 			}, ed.settings);
 
+			elm = (s.forced_root_block || 'p').toLowerCase();
+			s.element = elm.toUpperCase();
+
 			ed.onPreInit.add(t.setup, t);
+
+			t.reOpera = new RegExp('(\u00a0|&#160;|&nbsp;)<\/' + elm + '>', 'gi');
+			t.rePadd = new RegExp('<p( )([^>]+)><\/p>|<p( )([^>]+)\/>|<p( )([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>'.replace(/p/g, elm), 'gi');
+			t.reNbsp2BR = new RegExp('<p( )([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>'.replace(/p/g, elm), 'gi');
+			t.reBR2Nbsp = new RegExp('<p( )([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>'.replace(/p/g, elm), 'gi');
+			t.reTrailBr = new RegExp('\s*<br \/>\s*<\/p>'.replace(/p/g, elm), 'gi');
 
 			function padd(ed, o) {
 				if (isOpera)
-					o.content = o.content.replace(/(\u00a0|&#160;|&nbsp;)<\/p>/gi, '</p>');
+					o.content = o.content.replace(t.reOpera, '</' + elm + '>');
 
-				o.content = o.content.replace(/<p( )([^>]+)><\/p>|<p( )([^>]+)\/>|<p( )([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>/gi, '<p$1$2$3$4$5$6>\u00a0</p>');
+				o.content = o.content.replace(t.rePadd, '<' + elm + '$1$2$3$4$5$6>\u00a0</' + elm + '>');
 
 				if (!isIE && o.set) {
 					// Use &nbsp; instead of BR in padded paragraphs
-					o.content = o.content.replace(/<p( )([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>/gi, '<p$1$2><br /></p>');
+					o.content = o.content.replace(t.reNbsp2BR, '<' + elm + '$1$2><br /></' + elm + '>');
 				} else {
-					o.content = o.content.replace(/<p( )([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>/gi, '<p$1$2>\u00a0</p>');
-					o.content = o.content.replace(/\s*<br \/>\s*<\/p>/gi, '</p>');
+					o.content = o.content.replace(t.reBR2Nbsp, '<' + elm + '$1$2>\u00a0</' + elm + '>');
+					o.content = o.content.replace(t.reTrailBr, '</' + elm + '>');
 				}
 			};
 
@@ -90,15 +98,16 @@
 			}
 
 			if (!isIE && s.force_p_newlines) {
-				ed.onPreProcess.add(function(ed, o) {
+/*				ed.onPreProcess.add(function(ed, o) {
 					each(ed.dom.select('br', o.node), function(n) {
 						var p = n.parentNode;
 
 						// Replace <p><br /></p> with <p>&nbsp;</p>
-						if (p && p.nodeName == 'p' && (p.childNodes.length == 1 || p.lastChild == n))
+						if (p && p.nodeName == 'p' && (p.childNodes.length == 1 || p.lastChild == n)) {
 							p.replaceChild(ed.getDoc().createTextNode('\u00a0'), n);
+						}
 					});
-				});
+				});*/
 
 				ed.onKeyPress.add(function(ed, e) {
 					if (e.keyCode == 13 && !e.shiftKey) {
@@ -113,6 +122,48 @@
 							t.backspaceDelete(e, e.keyCode == 8);
 					});
 				}
+			}
+
+			function ren(rn, na) {
+				var ne = ed.dom.create(na);
+
+				each(rn.attributes, function(a) {
+					if (a.specified && a.nodeValue)
+						ne.setAttribute(a.nodeName.toLowerCase(), a.nodeValue);
+				});
+
+				each(rn.childNodes, function(n) {
+					ne.appendChild(n.cloneNode(true));
+				});
+
+				rn.parentNode.replaceChild(ne, rn);
+
+				return ne;
+			};
+
+			// Replaces IE:s auto generated paragraphs with the specified element name
+			if (isIE && s.element != 'P') {
+				ed.onKeyPress.add(function(ed, e) {
+					t.lastElm = ed.selection.getNode().nodeName;
+				});
+
+				ed.onKeyUp.add(function(ed, e) {
+					var bl, sel = ed.selection, n = sel.getNode(), b = ed.getBody();
+
+					if (b.childNodes.length === 1 && n.nodeName == 'P') {
+						n = ren(n, s.element);
+						sel.select(n);
+						sel.collapse();
+						ed.nodeChanged();
+					} else if (e.keyCode == 13 && !e.shiftKey && t.lastElm != 'P') {
+						bl = ed.dom.getParent(n, 'P');
+
+						if (bl) {
+							ren(bl, s.element);
+							ed.nodeChanged();
+						}
+					}
+				});
 			}
 		},
 

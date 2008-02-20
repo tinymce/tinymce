@@ -138,8 +138,10 @@
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
 			// Force strict loading mode if render us called by user and not internally
-			if (!nst)
+			if (!nst) {
 				s.strict_loading_mode = 1;
+				tinyMCE.settings = s;
+			}
 
 			// Element not found, then skip initialization
 			if (!t.getElement())

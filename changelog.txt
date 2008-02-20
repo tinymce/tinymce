@@ -43,6 +43,10 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where nodeChanged event could be fired while the editor was loading and there for produce an exception in FF.
 	Fixed bug where no undo levels where added if the user created new table rows using the tab key on Gecko.
 	Fixed bug where tables would be broken if you selected a different block format for contents withing an table cell.
+	Fixed bug where the render method of the tinymce.Editor class didn't setup the tinymce.EditorManager.settings object correctly.
+	Fixed bug where the advanced image dialog would go to the first tab if the alternative image was changed using the file browser link.
+	Fixed bug where the forced_root_block option would produce BR elements inside empty blocks if the block wasn't a paragraph.
+	Fixed bug where the forced_root_block doesn't work correctly on IE if the specified element was something else than paragraphs.
 	Fixed compatibility issue with Mootools, it is destroying document.getElementById on unload in IE. (Mantra: You don't own the internal objects).
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.
