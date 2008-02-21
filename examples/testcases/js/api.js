@@ -489,7 +489,7 @@
 		select : function() {
 			var t = this;
 
-			DOM.setHTML('test', '<div>test 1</div><div>test 2 <div>test 3</div></div><div>test 4</div>')
+			DOM.setHTML('test', '<div>test 1</div><div>test 2 <div>test 3</div></div><div>test 4</div>');
 			t.eq(DOM.select('div', 'test').length, 4);
 			t.is(DOM.select('div', 'test').reverse);
 
@@ -497,7 +497,8 @@
 			t.eq(DOM.select('div.test2', 'test').length, 2);
 
 			DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>')
-			t.eq(DOM.select('div div', 'test').length, 1);
+			t.eq(DOM.select('div div', 'test').length, 1, null, tinymce.isWebKit); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
+			//alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
 		},
 
 		encode : function() {
