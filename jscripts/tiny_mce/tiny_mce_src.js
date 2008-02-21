@@ -1045,8 +1045,25 @@ tinymce.create('static tinymce.util.XHR', {
 			s = t.get(s) || t.doc;
 
 			// Look for native support and use that if it's found
-			if (s.querySelectorAll)
-				return tinymce.grep(s.querySelectorAll(pa));
+			if (s.querySelectorAll) {
+				// Element scope then use temp id
+				// We need to do this to be compatible with other implementations
+				// See bug report: http://bugs.webkit.org/show_bug.cgi?id=17461
+				if (s != t.doc) {
+					i = s.id;
+					s.id = '_mc_tmp';
+					pa = '#_mc_tmp ' + pa;
+				}
+
+				// Select elements
+				l = tinymce.grep(s.querySelectorAll(pa));
+
+				// Restore old id
+				if (i)
+					s.id = i;
+
+				return l;
+			}
 
 			if (t.settings.strict) {
 				function get(s, n) {
