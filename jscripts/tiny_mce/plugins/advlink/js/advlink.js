@@ -344,6 +344,7 @@ function buildOnClick() {
 function setAttrib(elm, attrib, value) {
 	var formObj = document.forms[0];
 	var valueElm = formObj.elements[attrib.toLowerCase()];
+	var dom = tinyMCEPopup.editor.dom;
 
 	if (typeof(value) == "undefined" || value == null) {
 		value = "";
@@ -352,21 +353,11 @@ function setAttrib(elm, attrib, value) {
 			value = valueElm.value;
 	}
 
-	if (value != "") {
-		elm.setAttribute(attrib.toLowerCase(), value);
+	// Clean up the style
+	if (attrib == 'style')
+		value = dom.serializeStyle(dom.parseStyle(value));
 
-		if (attrib == "style")
-			attrib = "style.cssText";
-
-//		if (attrib.substring(0, 2) == 'on')
-//			value = 'return true;' + value;
-
-		if (attrib == "class")
-			attrib = "className";
-
-		elm[attrib] = value;
-	} else
-		elm.removeAttribute(attrib);
+	dom.setAttrib(elm, attrib, value);
 }
 
 function getAnchorListHTML(id, target) {
