@@ -4,7 +4,7 @@
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '0.1',
-	releaseDate : '2008-02-xx',
+	releaseDate : '2008-02-21',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -4651,6 +4651,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				s['class'] += ' noIcons';
 
 			this.parent(id, s);
+			this.onShowMenu = new tinymce.util.Dispatcher(this);
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
 		},
@@ -4753,9 +4754,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					if (m.isDisabled())
 						return;
 
-					if (m.settings.onclick)
-						m.settings.onclick(e);
-
 					dm = t;
 
 					while (dm) {
@@ -4764,6 +4762,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 						dm = dm.settings.parent;
 					}
+
+					if (m.settings.onclick)
+						m.settings.onclick(e);
 
 					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				}
@@ -4793,6 +4794,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					}
 				});
 			}
+
+			t.onShowMenu.dispatch(t);
 		},
 
 		hideMenu : function(c) {
@@ -9263,7 +9266,7 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		createDropMenu : function(id, s) {
-			var t = this, ed = t.editor, c;
+			var t = this, ed = t.editor, c, bm;
 
 			s = extend({
 				'class' : 'mceDropDown'
@@ -9288,6 +9291,23 @@ tinymce.create('tinymce.UndoManager', {
 			ed.onRemove.add(function() {
 				c.destroy();
 			});
+
+			// Fix for bug #1897785, #1898007
+			if (tinymce.isIE) {
+				c.onShowMenu.add(function() {
+					var s = ed.selection, n = s.getNode();
+
+					if (n.nodeName == 'IMG')
+						bm = s.getBookmark();
+					else
+						bm = 0;
+				});
+
+				c.onHideMenu.add(function() {
+					if (bm)
+						ed.selection.moveToBookmark(bm);
+				});
+			}
 
 			return t.add(c);
 		},

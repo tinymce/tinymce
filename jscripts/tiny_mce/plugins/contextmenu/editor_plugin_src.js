@@ -33,7 +33,7 @@
 		},
 
 		_getMenu : function(ed) {
-			var t = this, m = t._menu, se = ed.selection, col = se.isCollapsed(), el = se.getNode() || ed.getBody(), am;
+			var t = this, m = t._menu, se = ed.selection, col = se.isCollapsed(), el = se.getNode() || ed.getBody(), am, p1, p2;
 
 			if (m) {
 				m.removeAll();

@@ -142,7 +142,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createDropMenu : function(id, s) {
-			var t = this, ed = t.editor, c;
+			var t = this, ed = t.editor, c, bm;
 
 			s = extend({
 				'class' : 'mceDropDown'
@@ -167,6 +167,23 @@
 			ed.onRemove.add(function() {
 				c.destroy();
 			});
+
+			// Fix for bug #1897785, #1898007
+			if (tinymce.isIE) {
+				c.onShowMenu.add(function() {
+					var s = ed.selection, n = s.getNode();
+
+					if (n.nodeName == 'IMG')
+						bm = s.getBookmark();
+					else
+						bm = 0;
+				});
+
+				c.onHideMenu.add(function() {
+					if (bm)
+						ed.selection.moveToBookmark(bm);
+				});
+			}
 
 			return t.add(c);
 		},

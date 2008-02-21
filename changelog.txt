@@ -1,4 +1,4 @@
-Version 3.0.1 (2008-02-xx)
+Version 3.0.1 (2008-02-21)
 	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.
 	Added src attribute for script elements to the default valid_elements option value.
 	Added extra parameter to the class_filter callback it can now also filter out classes based on the whole CSS rule.
@@ -48,6 +48,8 @@ Version 3.0.1 (2008-02-xx)
 	Fixed bug where the advanced image dialog would go to the first tab if the alternative image was changed using the file browser link.
 	Fixed bug where the forced_root_block option would produce BR elements inside empty blocks if the block wasn't a paragraph.
 	Fixed bug where the forced_root_block doesn't work correctly on IE if the specified element was something else than paragraphs.
+	Fixed bug where selection of images would get lost if user selected something from the context menu in IE.
+	Fixed bug where the context menu plugin would pollute the global namespace with two variables p1 and p2.
 	Fixed compatibility issue with Mootools, it is destroying document.getElementById on unload in IE. (Mantra: You don't own the internal objects).
 	Fixed bugs where dialogs/tabs and other UI elements where rendered incorrectly in Firefox 3.
 	Fixed so the auto CSS class importer is compatible with 2.x.

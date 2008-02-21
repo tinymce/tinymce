@@ -33,6 +33,7 @@
 				s['class'] += ' noIcons';
 
 			this.parent(id, s);
+			this.onShowMenu = new tinymce.util.Dispatcher(this);
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
 		},
@@ -155,9 +156,6 @@
 					if (m.isDisabled())
 						return;
 
-					if (m.settings.onclick)
-						m.settings.onclick(e);
-
 					dm = t;
 
 					while (dm) {
@@ -166,6 +164,9 @@
 
 						dm = dm.settings.parent;
 					}
+
+					if (m.settings.onclick)
+						m.settings.onclick(e);
 
 					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				}
@@ -195,6 +196,8 @@
 					}
 				});
 			}
+
+			t.onShowMenu.dispatch(t);
 		},
 
 		/**
