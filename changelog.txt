@@ -1,3 +1,6 @@
+Version 3.0.2 (2008-xx-xx)
+	Fixed bug where the template plugin might produce errors if the template_mdate_classes wasn't configured.
+	Fixed bug where the media plugin didn't convert the URLs for movies once they where inserted.
 Version 3.0.1 (2008-02-21)
 	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.
 	Added src attribute for script elements to the default valid_elements option value.

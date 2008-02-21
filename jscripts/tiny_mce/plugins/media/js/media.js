@@ -493,6 +493,9 @@ function getStr(p, n, d) {
 	var e = document.forms[0].elements[(p != null ? p + "_" : "") + n];
 	var v = e.type == "text" ? e.value : e.options[e.selectedIndex].value;
 
+	if (n == 'src')
+		v = tinyMCEPopup.editor.convertURL(v, 'src', null);
+
 	return ((n == d || v == '') ? '' : n + ":'" + jsEncode(v) + "',");
 }
 
