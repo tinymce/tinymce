@@ -495,8 +495,7 @@
 
 					default:
 						n = DOM.add(DOM.add(tb, 'tr'), 'td', {
-							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc),
-							align : s['theme_advanced_container_' + c + '_align'] || da
+							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + s['theme_advanced_container_' + c + '_align'] || da
 						});
 
 						to = cf.createToolbar("toolbar" + i);
@@ -551,7 +550,7 @@
 		_addToolbars : function(c, o) {
 			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [];
 
-			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar', align : s.theme_advanced_toolbar_align});
+			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + s.theme_advanced_toolbar_align});
 
 			if (!ed.getParam('accessibility_focus') || ed.getParam('tab_focus'))
 				h.push(DOM.createHTML('a', {href : '#', onfocus : 'tinyMCE.get(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
