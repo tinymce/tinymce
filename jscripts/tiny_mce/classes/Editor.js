@@ -388,7 +388,7 @@
 			if (tinymce.relaxedDomain)
 				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
 
-			t.iframeHTML += '</head><body id="tinymce" class="mceContentBody"></body></html>';
+			t.iframeHTML += '</head><body id="' + (s.body_id || 'tinymce') + '" class="mceContentBody' + (s.body_class ? ' ' + s.body_class : '') + '"></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain) {

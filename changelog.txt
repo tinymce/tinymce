@@ -1,4 +1,7 @@
 Version 3.0.2 (2008-xx-xx)
+	Added new body_id option that enables you to specify the id of the body inside the editor iframe.
+	Added new body_class option that enables you to set the class for the body of the editor iframe.
+	Added new CSS class to the default content.css files mceForceColors that forces white background and black text can be used with the body_class option.
 	Fixed bug where the template plugin might produce errors if the template_mdate_classes wasn't configured.
 	Fixed bug where the media plugin didn't convert the URLs for movies once they where inserted.
 	Fixed bug where the style field for the advlink dialog didn't work correctly if you edited an existing link.
