@@ -176,11 +176,8 @@
 				}
 			});
 
-			each((t.settings.theme_advanced_styles || '').split(';'), function(v) {
-				var p = v.split('=');
-
-				if (v)
-					c.add(t.editor.translate(p[0]), p[1]);
+			each(ed.getParam('theme_advanced_styles', '', 'hash'), function(v, k) {
+				c.add(t.editor.translate(k), v);
 			});
 
 			c.onPostRender.add(function(ed, n) {
@@ -192,17 +189,12 @@
 		},
 
 		_createFontSelect : function() {
-			var c, t = this;
+			var c, t = this, ed = t.editor;
 
-			c = t.editor.controlManager.createListBox('fontselect', {title : 'advanced.fontdefault', cmd : 'FontName'});
+			c = ed.controlManager.createListBox('fontselect', {title : 'advanced.fontdefault', cmd : 'FontName'});
 
-			each(t.settings.theme_advanced_fonts.split(';'), function(v) {
-				var p = v.split('='), st;
-
-				if (p[1].indexOf('dings') == -1)
-					st = 'font-family:' + p[1];
-
-				c.add(t.editor.translate(p[0]), p[1], {style : st});
+			each(ed.getParam('theme_advanced_fonts', t.settings.theme_advanced_fonts, 'hash'), function(v, k) {
+				c.add(ed.translate(k), v, {style : v.indexOf('dings') == -1 ? 'font-family:' + v : ''});
 			});
 
 			return c;

@@ -6138,7 +6138,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u;
+			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc;
 
 			EditorManager.add(t);
 
@@ -6255,7 +6255,19 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (tinymce.relaxedDomain)
 				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
 
-			t.iframeHTML += '</head><body id="' + (s.body_id || 'tinymce') + '" class="mceContentBody' + (s.body_class ? ' ' + s.body_class : '') + '"></body></html>';
+			bi = s.body_id || 'tinymce';
+			if (bi.indexOf('=') != -1) {
+				bi = t.getParam('body_id', '', 'hash');
+				bi = bi[t.id] || bi;
+			}
+
+			bc = s.body_class || '';
+			if (bc.indexOf('=') != -1) {
+				bc = t.getParam('body_class', '', 'hash');
+				bc = bc[t.id] || '';
+			}
+
+			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain) {
@@ -6638,8 +6650,28 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			return EditorManager.i18n[this.settings.language + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
 		},
 
-		getParam : function(n, dv) {
-			return is(this.settings[n]) ? this.settings[n] : dv;
+		getParam : function(n, dv, ty) {
+			var tr = tinymce.trim, v = is(this.settings[n]) ? this.settings[n] : dv, o;
+
+			if (ty === 'hash') {
+				o = {};
+
+				if (is(v, 'string')) {
+					each(v.split(/[;,]/), function(v) {
+						v = v.split('=');
+
+						if (v.length > 1)
+							o[tr(v[0])] = tr(v[1]);
+						else
+							o[tr(v[0])] = tr(v);
+					});
+				} else
+					o = v;
+
+				return o;
+			}
+
+			return v;
 		},
 
 		nodeChanged : function(o) {

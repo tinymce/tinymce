@@ -28,7 +28,8 @@
 .defaultSkin table.mceToolbar {margin-left:3px}
 .defaultSkin span.icon, .defaultSkin img.icon {display:block; width:20px; height:20px}
 .defaultSkin .icon {background:url(../../img/icons.gif) no-repeat 20px 20px}
-.defaultSkin td.center table {margin:0 auto;}
+.defaultSkin td.center {text-align:center;}
+.defaultSkin td.center table {margin:0 auto; text-align:left;}
 .defaultSkin td.right table {margin:0 0 0 auto;}
 
 /* Button */

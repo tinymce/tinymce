@@ -1,10 +1,12 @@
 Version 3.0.2 (2008-xx-xx)
-	Added new body_id option that enables you to specify the id of the body inside the editor iframe.
-	Added new body_class option that enables you to set the class for the body of the editor iframe.
+	Added new body_id option that enables you to specify the id of the body inside the editor iframe based on ideas by David Bildström (ChronoZ).
+	Added new body_class option that enables you to set the class for the body of the editor iframe based on ideas by David Bildström (ChronoZ).
 	Added new CSS class to the default content.css files mceForceColors that forces white background and black text can be used with the body_class option.
+	Added new type parameter to the Editor.getParam function to reduce redundant logic for parsing hash tables.
 	Fixed bug where the template plugin might produce errors if the template_mdate_classes wasn't configured.
 	Fixed bug where the media plugin didn't convert the URLs for movies once they where inserted.
 	Fixed bug where the style field for the advlink dialog didn't work correctly if you edited an existing link.
+	Fixed bug where alignment of toolbars would fail in editor was uses in a quirks mode on IE, fix contributed by Peter Wood.
 Version 3.0.1 (2008-02-21)
 	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.
 	Added src attribute for script elements to the default valid_elements option value.

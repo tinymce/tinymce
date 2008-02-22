@@ -74,15 +74,13 @@
 
 			// Find selected language
 			t.languages = {};
-			each(ed.getParam('spellchecker_languages', '+English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr,German=de,Italian=it,Polish=pl,Portuguese=pt,Spanish=es,Swedish=sv').split(','), function(v) {
-				v = v.split('=');
-
-				if (v[0].indexOf('+') === 0) {
-					v[0] = v[0].substring(1);
-					t.selectedLang = v[1];
+			each(ed.getParam('spellchecker_languages', '+English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr,German=de,Italian=it,Polish=pl,Portuguese=pt,Spanish=es,Swedish=sv', 'hash'), function(v, k) {
+				if (k.indexOf('+') === 0) {
+					k = k.substring(1);
+					t.selectedLang = v;
 				}
 
-				t.languages[v[0]] = v[1];
+				t.languages[k] = v;
 			});
 		},
 
@@ -314,6 +312,7 @@
 			var t = this, url = t.editor.getParam("spellchecker_rpc_url", "{backend}");
 
 			if (url == '{backend}') {
+				t.editor.setProgressState(0);
 				alert('Please specify: spellchecker_rpc_url');
 				return;
 			}
