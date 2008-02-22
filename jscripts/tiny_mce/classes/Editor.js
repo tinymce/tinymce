@@ -1190,7 +1190,11 @@
 				return o;
 
 			// Browser commands
-			return this.getDoc().queryCommandState(c);
+			try {
+				return this.getDoc().queryCommandState(c);
+			} catch (ex) {
+				// Fails sometimes see bug: 1896577
+			}
 		},
 
 		/**
@@ -1216,7 +1220,11 @@
 				return o;
 
 			// Browser commands
-			return this.getDoc().queryCommandValue(c);
+			try {
+				return this.getDoc().queryCommandValue(c);
+			} catch (ex) {
+				// Fails sometimes see bug: 1896577
+			}
 		},
 
 		/**
