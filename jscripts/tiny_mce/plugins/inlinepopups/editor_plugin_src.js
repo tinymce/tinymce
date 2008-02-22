@@ -73,62 +73,62 @@
 			t.onOpen.dispatch(t, f, p);
 
 			if (f.type) {
-				opt += ' modal ' + f.type;
+				opt += ' mceModal ' + f.type;
 				f.resizable = false;
 			}
 
 			if (f.statusbar)
-				opt += ' statusbar';
+				opt += ' mceStatusbar';
 
 			if (f.resizable)
-				opt += ' resizable';
+				opt += ' mceResizable';
 
 			if (f.minimizable)
-				opt += ' minimizable';
+				opt += ' mceMinimizable';
 
 			if (f.maximizable)
-				opt += ' maximizable';
+				opt += ' mceMaximizable';
 
 			if (f.movable)
-				opt += ' movable';
+				opt += ' mceMovable';
 
 			// Create DOM objects
 			t._addAll(document.body, 
 				['div', {id : id, 'class' : ed.settings.inlinepopups_skin || 'clearlooks2', style : 'width:100px;height:100px'}, 
-					['div', {id : id + '_wrapper', 'class' : 'wrapper' + opt},
-						['div', {id : id + '_top', 'class' : 'top'}, 
-							['div', {'class' : 'left'}],
-							['div', {'class' : 'center'}],
-							['div', {'class' : 'right'}],
+					['div', {id : id + '_wrapper', 'class' : 'mceWrapper' + opt},
+						['div', {id : id + '_top', 'class' : 'mceTop'}, 
+							['div', {'class' : 'mceLeft'}],
+							['div', {'class' : 'mceCenter'}],
+							['div', {'class' : 'mceRight'}],
 							['span', {id : id + '_title'}, f.title || '']
 						],
 
-						['div', {id : id + '_middle', 'class' : 'middle'}, 
-							['div', {id : id + '_left', 'class' : 'left'}],
+						['div', {id : id + '_middle', 'class' : 'mceMiddle'}, 
+							['div', {id : id + '_left', 'class' : 'mceLeft'}],
 							['span', {id : id + '_content'}],
-							['div', {id : id + '_right', 'class' : 'right'}]
+							['div', {id : id + '_right', 'class' : 'mceRight'}]
 						],
 
-						['div', {id : id + '_bottom', 'class' : 'bottom'},
-							['div', {'class' : 'left'}],
-							['div', {'class' : 'center'}],
-							['div', {'class' : 'right'}],
+						['div', {id : id + '_bottom', 'class' : 'mceBottom'},
+							['div', {'class' : 'mceLeft'}],
+							['div', {'class' : 'mceCenter'}],
+							['div', {'class' : 'mceRight'}],
 							['span', {id : id + '_status'}, 'Content']
 						],
 
-						['a', {'class' : 'move', href : 'javascript:;'}],
-						['a', {'class' : 'min', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {'class' : 'max', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {'class' : 'med', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {'class' : 'close', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {id : id + '_resize_n', 'class' : 'resize resize-n', href : 'javascript:;'}],
-						['a', {id : id + '_resize_s', 'class' : 'resize resize-s', href : 'javascript:;'}],
-						['a', {id : id + '_resize_w', 'class' : 'resize resize-w', href : 'javascript:;'}],
-						['a', {id : id + '_resize_e', 'class' : 'resize resize-e', href : 'javascript:;'}],
-						['a', {id : id + '_resize_nw', 'class' : 'resize resize-nw', href : 'javascript:;'}],
-						['a', {id : id + '_resize_ne', 'class' : 'resize resize-ne', href : 'javascript:;'}],
-						['a', {id : id + '_resize_sw', 'class' : 'resize resize-sw', href : 'javascript:;'}],
-						['a', {id : id + '_resize_se', 'class' : 'resize resize-se', href : 'javascript:;'}]
+						['a', {'class' : 'mceMove', href : 'javascript:;'}],
+						['a', {'class' : 'mceMin', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {'class' : 'mceMax', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {'class' : 'mceMed', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {'class' : 'mceClose', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {id : id + '_resize_n', 'class' : 'mceResize mceResizeN', href : 'javascript:;'}],
+						['a', {id : id + '_resize_s', 'class' : 'mceResize mceResizeS', href : 'javascript:;'}],
+						['a', {id : id + '_resize_w', 'class' : 'mceResize mceResizeW', href : 'javascript:;'}],
+						['a', {id : id + '_resize_e', 'class' : 'mceResize mceResizeE', href : 'javascript:;'}],
+						['a', {id : id + '_resize_nw', 'class' : 'mceResize mceResizeNW', href : 'javascript:;'}],
+						['a', {id : id + '_resize_ne', 'class' : 'mceResize mceResizeNE', href : 'javascript:;'}],
+						['a', {id : id + '_resize_sw', 'class' : 'mceResize mceResizeSW', href : 'javascript:;'}],
+						['a', {id : id + '_resize_se', 'class' : 'mceResize mceResizeSE', href : 'javascript:;'}]
 					]
 				]
 			);
@@ -159,12 +159,12 @@
 				DOM.setStyles(id + '_ifr', {width : f.width, height : f.height});
 				DOM.setAttrib(id + '_ifr', 'src', u);
 			} else {
-				DOM.add(id + '_wrapper', 'a', {id : id + '_ok', 'class' : 'button ok', href : 'javascript:;', onmousedown : 'return false;'}, 'Ok');
+				DOM.add(id + '_wrapper', 'a', {id : id + '_ok', 'class' : 'mceButton mceOk', href : 'javascript:;', onmousedown : 'return false;'}, 'Ok');
 
 				if (f.type == 'confirm')
-					DOM.add(id + '_wrapper', 'a', {'class' : 'button cancel', href : 'javascript:;', onmousedown : 'return false;'}, 'Cancel');
+					DOM.add(id + '_wrapper', 'a', {'class' : 'mceButton mceCancel', href : 'javascript:;', onmousedown : 'return false;'}, 'Cancel');
 
-				DOM.add(id + '_middle', 'div', {'class' : 'icon'});
+				DOM.add(id + '_middle', 'div', {'class' : 'mceIcon'});
 				DOM.setHTML(id + '_content', f.content.replace('\n', '<br />'));
 			}
 
@@ -176,7 +176,7 @@
 				t.focus(id);
 
 				if (n.nodeName == 'A' || n.nodeName == 'a') {
-					if (n.className == 'max') {
+					if (n.className == 'mceMax') {
 						w.oldPos = w.element.getXY();
 						w.oldSize = w.element.getSize();
 
@@ -189,18 +189,18 @@
 						w.element.moveTo(vp.x, vp.y);
 						w.element.resizeTo(vp.w, vp.h);
 						DOM.setStyles(id + '_ifr', {width : vp.w - w.deltaWidth, height : vp.h - w.deltaHeight});
-						DOM.addClass(id + '_wrapper', 'maximized');
-					} else if (n.className == 'med') {
+						DOM.addClass(id + '_wrapper', 'mceMaximized');
+					} else if (n.className == 'mceMed') {
 						// Reset to old size
 						w.element.moveTo(w.oldPos.x, w.oldPos.y);
 						w.element.resizeTo(w.oldSize.w, w.oldSize.h);
 						w.iframeElement.resizeTo(w.oldSize.w - w.deltaWidth, w.oldSize.h - w.deltaHeight);
 
-						DOM.removeClass(id + '_wrapper', 'maximized');
-					} else if (n.className == 'move')
+						DOM.removeClass(id + '_wrapper', 'mceMaximized');
+					} else if (n.className == 'mceMove')
 						return t._startDrag(id, e, n.className);
-					else if (DOM.hasClass(n, 'resize'))
-						return t._startDrag(id, e, n.className.substring(7));
+					else if (DOM.hasClass(n, 'mceResize'))
+						return t._startDrag(id, e, n.className.substring(13));
 				}
 			});
 
@@ -211,13 +211,13 @@
 
 				if (n.nodeName == 'A' || n.nodeName == 'a') {
 					switch (n.className) {
-						case 'close':
+						case 'mceClose':
 							t.close(null, id);
 							return Event.cancel(e);
 
-						case 'button ok':
-						case 'button cancel':
-							f.button_func(n.className == 'button ok');
+						case 'mceButton mceOk':
+						case 'mceButton mceCancel':
+							f.button_func(n.className == 'mceButton mceOk');
 							return Event.cancel(e);
 					}
 				}
@@ -257,8 +257,8 @@
 			w.element.update();
 
 			id = id + '_wrapper';
-			DOM.removeClass(t.lastId, 'focus');
-			DOM.addClass(id, 'focus');
+			DOM.removeClass(t.lastId, 'mceFocus');
+			DOM.addClass(id, 'mceFocus');
 			t.lastId = id;
 		},
 
@@ -308,7 +308,7 @@
 				return Event.cancel(e);
 			});
 
-			if (ac != 'move')
+			if (ac != 'Move')
 				startMove();
 
 			function startMove() {
@@ -331,7 +331,7 @@
 				sz = we.getSize();
 				sx = cp.x + p.x - vp.x;
 				sy = cp.y + p.y - vp.y;
-				DOM.add(eb.get(), 'div', {id : 'mcePlaceHolder', 'class' : 'placeholder', style : {left : sx, top : sy, width : sz.w, height : sz.h}});
+				DOM.add(eb.get(), 'div', {id : 'mcePlaceHolder', 'class' : 'mcePlaceHolder', style : {left : sx, top : sy, width : sz.w, height : sz.h}});
 				ph = new Element('mcePlaceHolder');
 			};
 
@@ -345,41 +345,41 @@
 				y = e.screenY - sey;
 
 				switch (ac) {
-					case 'resize-w':
+					case 'ResizeW':
 						dx = x;
 						dw = 0 - x;
 						break;
 
-					case 'resize-e':
+					case 'ResizeE':
 						dw = x;
 						break;
 
-					case 'resize-n':
-					case 'resize-nw':
-					case 'resize-ne':
-						if (ac == "resize-nw") {
+					case 'ResizeN':
+					case 'ResizeNW':
+					case 'ResizeNE':
+						if (ac == "ResizeNW") {
 							dx = x;
 							dw = 0 - x;
-						} else if (ac == "resize-ne")
+						} else if (ac == "ResizeNE")
 							dw = x;
 
 						dy = y;
 						dh = 0 - y;
 						break;
 
-					case 'resize-s':
-					case 'resize-sw':
-					case 'resize-se':
-						if (ac == "resize-sw") {
+					case 'ResizeS':
+					case 'ResizeSW':
+					case 'ResizeSE':
+						if (ac == "ResizeSW") {
 							dx = x;
 							dw = 0 - x;
-						} else if (ac == "resize-se")
+						} else if (ac == "ResizeSE")
 							dw = x;
 
 						dh = y;
 						break;
 
-					case 'move':
+					case 'mceMove':
 						dx = x;
 						dy = y;
 						break;
