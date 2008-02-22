@@ -6016,6 +6016,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		render : function(nst) {
 			var t = this, s = t.settings, id = t.id, sl = tinymce.ScriptLoader;
 
+			// Page is not loaded yet, wait for it
+			if (!Event.domLoaded) {
+				Event.add(document, 'init', t.render, t);
+				return;
+			}
+
 			// Force strict loading mode if render us called by user and not internally
 			if (!nst) {
 				s.strict_loading_mode = 1;
@@ -6280,7 +6286,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
-				id : s.id + "_ifr",
+				id : t.id + "_ifr",
 				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder : '0',
 				style : {
