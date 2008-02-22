@@ -4652,7 +4652,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			s.vp_offset_y = s.vp_offset_y || 0;
 
 			if (is(s.icons) && !s.icons)
-				s['class'] += ' noIcons';
+				s['class'] += ' mceNoIcons';
 
 			this.parent(id, s);
 			this.onShowMenu = new tinymce.util.Dispatcher(this);
@@ -4892,7 +4892,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				DOM.add(ro, 'td', {'class' : 'mceMenuItemSeparator'});
 
 				if (n = ro.previousSibling)
-					DOM.addClass(n, 'last');
+					DOM.addClass(n, 'mceLast');
 
 				return;
 			}
@@ -4903,25 +4903,25 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			DOM.addClass(it, s['class']);
 //			n = DOM.add(n, 'span', {'class' : 'item'});
-			DOM.add(n, 'span', {'class' : 'icon' + (s.icon ? ' ' + s.icon : '')});
-			n = DOM.add(n, s.element || 'span', {'class' : 'text', title : o.settings.title}, o.settings.title);
+			DOM.add(n, 'span', {'class' : 'mceIcon' + (s.icon ? ' mce_' + s.icon : '')});
+			n = DOM.add(n, s.element || 'span', {'class' : 'mceText', title : o.settings.title}, o.settings.title);
 
 			if (o.settings.style)
 				DOM.setAttrib(n, 'style', o.settings.style);
 
 			if (tb.childNodes.length == 1)
-				DOM.addClass(ro, 'first');
+				DOM.addClass(ro, 'mceFirst');
 
 			if ((n = ro.previousSibling) && DOM.hasClass(n, 'mceMenuItemSeparator'))
-				DOM.addClass(ro, 'first');
+				DOM.addClass(ro, 'mceFirst');
 
 			if (o.collapse)
 				DOM.addClass(ro, 'mceMenuItemSub');
 
 			if (n = ro.previousSibling)
-				DOM.removeClass(n, 'last');
+				DOM.removeClass(n, 'mceLast');
 
-			DOM.addClass(ro, 'last');
+			DOM.addClass(ro, 'mceLast');
 		}
 
 		});
@@ -4941,9 +4941,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var s = this.settings, h = '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" onclick="return false;" title="' + DOM.encode(s.title) + '">';
 
 			if (s.image)
-				h += '<img class="icon" src="' + s.image + '" /></a>';
+				h += '<img class="mceIcon" src="' + s.image + '" /></a>';
 			else
-				h += '<span class="icon ' + s['class'] + '"></span></a>';
+				h += '<span class="mceIcon ' + s['class'] + '"></span></a>';
 
 			return h;
 		},
@@ -4998,11 +4998,11 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				// If no item was found then present title
 				if (!fv) {
 					DOM.setHTML(e, DOM.encode(t.settings.title));
-					DOM.addClass(e, 'title');
+					DOM.addClass(e, 'mceTitle');
 					e = 0;
 					return;
 				} else
-					DOM.removeClass(e, 'title');
+					DOM.removeClass(e, 'mceTitle');
 			}
 
 			e = 0;
@@ -5029,8 +5029,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var h = '', t = this, s = t.settings;
 
 			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'text', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
 
 			return h;
@@ -5088,7 +5088,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
-				'class' : 'mceListBoxMenu noIcons',
+				'class' : 'mceListBoxMenu mceNoIcons',
 				max_width : 150,
 				max_height : 150
 			});
@@ -5341,14 +5341,14 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			h = '<tbody><tr>';
 
 			if (s.image)
-				h1 = DOM.createHTML('img ', {src : s.image, 'class' : 'action ' + s['class']});
+				h1 = DOM.createHTML('img ', {src : s.image, 'class' : 'mceAction ' + s['class']});
 			else
-				h1 = DOM.createHTML('span', {'class' : 'action ' + s['class']});
+				h1 = DOM.createHTML('span', {'class' : 'mceAction ' + s['class']});
 
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'action ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'mceAction ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 	
-			h1 = DOM.createHTML('span', {'class' : 'open ' + s['class']});
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
+			h1 = DOM.createHTML('span', {'class' : 'mceOpen ' + s['class']});
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'mceOpen ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 
 			h += '</tr></tbody>';
 
@@ -5475,8 +5475,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			if (s.more_colors_func) {
 				n = DOM.add(tb, 'tr');
-				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'morecolors'});
-				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'morecolors'}, s.more_colors_title);
+				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'mceMoreColors'});
+				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
 					s.more_colors_func.call(s.more_colors_scope || this);
@@ -9379,7 +9379,7 @@ tinymce.create('tinymce.UndoManager', {
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				scope : s.scope,
 				control_manager : t
 			}, s);
@@ -9432,7 +9432,7 @@ tinymce.create('tinymce.UndoManager', {
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				unavailable_prefix : ed.getLang('unavailable', ''),
 				scope : s.scope,
 				control_manager : t
@@ -9479,7 +9479,7 @@ tinymce.create('tinymce.UndoManager', {
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				scope : s.scope,
 				control_manager : t
 			}, s);
@@ -9514,7 +9514,7 @@ tinymce.create('tinymce.UndoManager', {
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				'menu_class' : ed.getParam('skin') + 'Skin',
 				scope : s.scope,
 				more_colors_title : ed.getLang('more_colors')

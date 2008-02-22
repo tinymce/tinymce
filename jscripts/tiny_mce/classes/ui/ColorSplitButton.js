@@ -123,8 +123,8 @@
 
 			if (s.more_colors_func) {
 				n = DOM.add(tb, 'tr');
-				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'morecolors'});
-				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'morecolors'}, s.more_colors_title);
+				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'mceMoreColors'});
+				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
 					s.more_colors_func.call(s.more_colors_scope || this);

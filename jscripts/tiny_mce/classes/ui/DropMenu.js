@@ -30,7 +30,7 @@
 			s.vp_offset_y = s.vp_offset_y || 0;
 
 			if (is(s.icons) && !s.icons)
-				s['class'] += ' noIcons';
+				s['class'] += ' mceNoIcons';
 
 			this.parent(id, s);
 			this.onShowMenu = new tinymce.util.Dispatcher(this);
@@ -318,7 +318,7 @@
 				DOM.add(ro, 'td', {'class' : 'mceMenuItemSeparator'});
 
 				if (n = ro.previousSibling)
-					DOM.addClass(n, 'last');
+					DOM.addClass(n, 'mceLast');
 
 				return;
 			}
@@ -329,25 +329,25 @@
 
 			DOM.addClass(it, s['class']);
 //			n = DOM.add(n, 'span', {'class' : 'item'});
-			DOM.add(n, 'span', {'class' : 'icon' + (s.icon ? ' ' + s.icon : '')});
-			n = DOM.add(n, s.element || 'span', {'class' : 'text', title : o.settings.title}, o.settings.title);
+			DOM.add(n, 'span', {'class' : 'mceIcon' + (s.icon ? ' mce_' + s.icon : '')});
+			n = DOM.add(n, s.element || 'span', {'class' : 'mceText', title : o.settings.title}, o.settings.title);
 
 			if (o.settings.style)
 				DOM.setAttrib(n, 'style', o.settings.style);
 
 			if (tb.childNodes.length == 1)
-				DOM.addClass(ro, 'first');
+				DOM.addClass(ro, 'mceFirst');
 
 			if ((n = ro.previousSibling) && DOM.hasClass(n, 'mceMenuItemSeparator'))
-				DOM.addClass(ro, 'first');
+				DOM.addClass(ro, 'mceFirst');
 
 			if (o.collapse)
 				DOM.addClass(ro, 'mceMenuItemSub');
 
 			if (n = ro.previousSibling)
-				DOM.removeClass(n, 'last');
+				DOM.removeClass(n, 'mceLast');
 
-			DOM.addClass(ro, 'last');
+			DOM.addClass(ro, 'mceLast');
 		}
 
 		/**#@-*/

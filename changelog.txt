@@ -12,6 +12,7 @@ Version 3.0.2 (2008-xx-xx)
 	Fixed bug where initialization of editors using mceAddControl command or new tinymce.Editor calls would fail during page load.
 	Fixed bug where the check for domain relaxing could fail if the document.domain property was changed by another script.
 	Fixed so the dialog language packs only gets loaded the first time you open a dialog.
+	Fixed so all classes in the whole UI is prefixed with "mce" to avoid collisions, use the skin converter to update your existing skins.
 	Fixed so all classes in the inlinepopups logic is prefixed with "mce" to avoid collisions, use the skin converter to update your existing skins.
 Version 3.0.1 (2008-02-21)
 	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.

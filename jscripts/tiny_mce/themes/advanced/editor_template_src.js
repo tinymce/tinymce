@@ -215,7 +215,7 @@
 			c = t.editor.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', cmd : 'FontSize'});
 
 			each(t.settings.theme_advanced_font_sizes.split(','), function(v) {
-				c.add(lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'pt', 'class' : 'fontSize' + v});
+				c.add(lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'pt', 'class' : 'mceFontSize' + v});
 			});
 
 			return c;
@@ -243,7 +243,7 @@
 			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
 
 			each(t.settings.theme_advanced_blockformats.split(','), function(v) {
-				c.add(t.editor.translate(fmts[v]), v, {element : v, 'class' : v.indexOf('h') == 0 ? '' : 'preview'});
+				c.add(t.editor.translate(fmts[v]), v, {element : v, 'class' : v.indexOf('h') == 0 ? '' : 'mcePreview'});
 			});
 
 			return c;
@@ -329,13 +329,13 @@
 
 			// Add classes to first and last TRs
 			nl = sc.rows;
-			DOM.addClass(nl[0], 'first');
-			DOM.addClass(nl[nl.length - 1], 'last');
+			DOM.addClass(nl[0], 'mceFirst');
+			DOM.addClass(nl[nl.length - 1], 'mceLast');
 
 			// Add classes to first and last TDs
 			each(DOM.select('tr', tb), function(n) {
-				DOM.addClass(n.firstChild, 'first');
-				DOM.addClass(n.childNodes[n.childNodes.length - 1], 'last');
+				DOM.addClass(n.firstChild, 'mceFirst');
+				DOM.addClass(n.childNodes[n.childNodes.length - 1], 'mceLast');
 			});
 
 			if (DOM.get(s.theme_advanced_toolbar_container))
@@ -468,7 +468,7 @@
 		},
 
 		_rowLayout : function(s, tb, o) {
-			var t = this, ed = t.editor, dc, da, cf = ed.controlManager, n, ic, to;
+			var t = this, ed = t.editor, dc, da, cf = ed.controlManager, n, ic, to, a;
 
 			dc = s.theme_advanced_containers_default_class || '';
 			da = s.theme_advanced_containers_default_align || 'center';
@@ -487,8 +487,11 @@
 						break;
 
 					default:
+						a = s['theme_advanced_container_' + c + '_align'].toLowerCase();
+						a = 'mce' + a.substring(0, 1).toUpperCase() + a.substring(1);
+
 						n = DOM.add(DOM.add(tb, 'tr'), 'td', {
-							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + s['theme_advanced_container_' + c + '_align'] || da
+							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + a || da
 						});
 
 						to = cf.createToolbar("toolbar" + i);
@@ -541,9 +544,12 @@
 		},
 
 		_addToolbars : function(c, o) {
-			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [];
+			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [], a;
 
-			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + s.theme_advanced_toolbar_align});
+			a = s.theme_advanced_toolbar_align.toLowerCase();
+			a = 'mce' + a.substring(0, 1).toUpperCase() + a.substring(1);
+
+			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a});
 
 			if (!ed.getParam('accessibility_focus') || ed.getParam('tab_focus'))
 				h.push(DOM.createHTML('a', {href : '#', onfocus : 'tinyMCE.get(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
@@ -581,7 +587,7 @@
 			DOM.add(n, 'a', {href : '#', accesskey : 'x'});
 
 			if (s.theme_advanced_resizing && !tinymce.isOldWebKit) {
-				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'resize'});
+				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize'});
 
 				if (s.theme_advanced_resizing_use_cookie) {
 					ed.onPostRender.add(function() {

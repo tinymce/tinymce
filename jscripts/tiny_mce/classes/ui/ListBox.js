@@ -63,11 +63,11 @@
 				// If no item was found then present title
 				if (!fv) {
 					DOM.setHTML(e, DOM.encode(t.settings.title));
-					DOM.addClass(e, 'title');
+					DOM.addClass(e, 'mceTitle');
 					e = 0;
 					return;
 				} else
-					DOM.removeClass(e, 'title');
+					DOM.removeClass(e, 'mceTitle');
 			}
 
 			e = 0;
@@ -112,8 +112,8 @@
 			var h = '', t = this, s = t.settings;
 
 			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'text', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'open', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
 
 			return h;
@@ -180,7 +180,7 @@
 
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
-				'class' : 'mceListBoxMenu noIcons',
+				'class' : 'mceListBoxMenu mceNoIcons',
 				max_width : 150,
 				max_height : 150
 			});

@@ -40,9 +40,9 @@
 			var s = this.settings, h = '<a id="' + this.id + '" href="javascript:;" class="mceButton mceButtonEnabled ' + s['class'] + '" onmousedown="return false;" onclick="return false;" title="' + DOM.encode(s.title) + '">';
 
 			if (s.image)
-				h += '<img class="icon" src="' + s.image + '" /></a>';
+				h += '<img class="mceIcon" src="' + s.image + '" /></a>';
 			else
-				h += '<span class="icon ' + s['class'] + '"></span></a>';
+				h += '<span class="mceIcon ' + s['class'] + '"></span></a>';
 
 			return h;
 		},

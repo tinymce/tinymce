@@ -213,7 +213,7 @@
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				scope : s.scope,
 				control_manager : t
 			}, s);
@@ -273,7 +273,7 @@
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				unavailable_prefix : ed.getLang('unavailable', ''),
 				scope : s.scope,
 				control_manager : t
@@ -334,7 +334,7 @@
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				scope : s.scope,
 				control_manager : t
 			}, s);
@@ -376,7 +376,7 @@
 
 			s = extend({
 				title : s.title,
-				'class' : id,
+				'class' : 'mce_' + id,
 				'menu_class' : ed.getParam('skin') + 'Skin',
 				scope : s.scope,
 				more_colors_title : ed.getLang('more_colors')
