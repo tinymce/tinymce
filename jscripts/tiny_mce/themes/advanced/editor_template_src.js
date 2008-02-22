@@ -177,7 +177,8 @@
 			});
 
 			each(ed.getParam('theme_advanced_styles', '', 'hash'), function(v, k) {
-				c.add(t.editor.translate(k), v);
+				if (v)
+					c.add(t.editor.translate(k), v);
 			});
 
 			c.onPostRender.add(function(ed, n) {
