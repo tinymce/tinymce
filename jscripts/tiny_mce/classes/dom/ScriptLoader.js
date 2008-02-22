@@ -31,6 +31,15 @@
 		 */
 
 		/**
+		 * Returns true/false if a script has been loaded or not.
+		 *
+		 * @param {String} u URL to check for.
+		 */
+		isDone : function(u) {
+			return this.lookup[u] ? this.lookup[u].state == 2 : 0;
+		},
+
+		/**
 		 * Marks a specific script to be loaded. This can be useful if a script got loaded outside
 		 * the script loader or to skip it from loading some script.
 		 *

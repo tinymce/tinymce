@@ -4158,6 +4158,10 @@ tinymce.create('static tinymce.util.XHR', {
 			this.lookup = {};
 		},
 
+		isDone : function(u) {
+			return this.lookup[u] ? this.lookup[u].state == 2 : 0;
+		},
+
 		markDone : function(u) {
 			this.lookup[u] = {state : 2, url : u};
 		},

@@ -175,8 +175,14 @@ tinyMCEPopup = {
 	requireLangPack : function() {
 		var u = this.getWindowArg('plugin_url') || this.getWindowArg('theme_url');
 
-		if (u && this.editor.settings.language)
-			document.write('<script type="text/javascript" src="' + u + '/langs/' + this.editor.settings.language + '_dlg.js' + '"></script>');
+		if (u && this.editor.settings.language) {
+			u += '/langs/' + this.editor.settings.language + '_dlg.js';
+
+			if (!tinymce.ScriptLoader.isDone(u)) {
+				document.write('<script type="text/javascript" src="' + u + '"></script>');
+				tinymce.ScriptLoader.markDone(u);
+			}
+		}
 	},
 
 	/**
