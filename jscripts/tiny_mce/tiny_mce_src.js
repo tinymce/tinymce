@@ -1797,8 +1797,9 @@ tinymce.create('static tinymce.util.XHR', {
 							e.innerHTML = '<br />' + h;
 							e.removeChild(e.firstChild);
 						} catch (ex) {
-							// IE sometimes produces an unknown runtime error on innerHTML
-							// This seems to fix this issue, don't know why.
+							// IE sometimes produces an unknown runtime error on innerHTML if it's an block element within a block element for example a div inside a p
+							// This seems to fix this problem
+
 							e.innerHTML = ''; // First remove everything
 							x = t.create('div');
 							x.innerHTML = '<br />' + h;
