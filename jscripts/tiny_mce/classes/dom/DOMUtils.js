@@ -192,8 +192,16 @@
 		 * @return {Element} Element matching the specified id or null if it wasn't found.
 		 */
 		get : function(e) {
-			if (typeof(e) == 'string')
-				return this.doc.getElementById(e);
+			var n;
+
+			if (typeof(e) == 'string') {
+				n = e;
+				e = this.doc.getElementById(e);
+
+				// IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick
+				if (e && e.id !== n)
+					return this.doc.getElementsByName(n)[1];
+			}
 
 			return e;
 		},
@@ -1113,11 +1121,12 @@
 						} catch (ex) {
 							// IE sometimes produces an unknown runtime error on innerHTML
 							// This seems to fix this issue, don't know why.
+							e.innerHTML = ''; // First remove everything
 							x = t.create('div');
 							x.innerHTML = '<br />' + h;
 
 							each (x.childNodes, function(n, i) {
-								// Skip the BR
+								// Skip the BR to keep comments
 								if (i > 1)
 									e.appendChild(n);
 							});

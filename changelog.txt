@@ -11,6 +11,8 @@ Version 3.0.2 (2008-xx-xx)
 	Fixed bug where initialization of multiple editors at the same time using the mceAddControl method would produce errors.
 	Fixed bug where initialization of editors using mceAddControl command or new tinymce.Editor calls would fail during page load.
 	Fixed bug where the check for domain relaxing could fail if the document.domain property was changed by another script.
+	Fixed bug where textareas couldn't be named description or any other name that matches the meta elements in IE and Opera.
+	Fixed bug where the element path would fail sometimes in IE due to "unknown runtime error" on innerHTML.
 	Fixed so the dialog language packs only gets loaded the first time you open a dialog.
 	Fixed so all classes in the whole UI is prefixed with "mce" to avoid collisions, use the skin converter to update your existing skins.
 	Fixed so all classes in the inlinepopups logic is prefixed with "mce" to avoid collisions, use the skin converter to update your existing skins.
