@@ -1800,13 +1800,18 @@ tinymce.create('static tinymce.util.XHR', {
 							// IE sometimes produces an unknown runtime error on innerHTML if it's an block element within a block element for example a div inside a p
 							// This seems to fix this problem
 
-							e.innerHTML = ''; // First remove everything
+							// Remove all child nodes
+							while (e.firstChild)
+								e.firstChild.removeNode();
+
+							// Create new div with HTML contents and a BR infront to keep comments
 							x = t.create('div');
 							x.innerHTML = '<br />' + h;
 
+							// Add all children from div to target
 							each (x.childNodes, function(n, i) {
-								// Skip the BR to keep comments
-								if (i > 1)
+								// Skip br element
+								if (i)
 									e.appendChild(n);
 							});
 						}
