@@ -110,6 +110,9 @@
 			});
 
 			DOM.loadCSS(ed.baseURI.toAbsolute(s.editor_css || "themes/advanced/skins/" + ed.settings.skin + "/ui.css"));
+
+			if (s.skin_variant)
+				DOM.loadCSS(ed.baseURI.toAbsolute(s.editor_css || "themes/advanced/skins/" + ed.settings.skin + "/ui_" + s.skin_variant + ".css"));
 		},
 
 		createControl : function(n, cf) {
@@ -304,7 +307,7 @@
 		renderUI : function(o) {
 			var n, ic, tb, t = this, ed = t.editor, s = t.settings, sc, p, nl;
 
-			n = p = DOM.create('span', {id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin'});
+			n = p = DOM.create('span', {id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin' + (s.skin_variant ? ' ' + ed.settings.skin + 'Skin' + t._ufirst(s.skin_variant) : '')});
 
 			if (!DOM.boxModel)
 				n = DOM.add(n, 'div', {'class' : 'mceOldBoxModel'});
@@ -513,7 +516,7 @@
 
 					default:
 						a = s['theme_advanced_container_' + c + '_align'].toLowerCase();
-						a = 'mce' + a.substring(0, 1).toUpperCase() + a.substring(1);
+						a = 'mce' + t._ufirst(a);
 
 						n = DOM.add(DOM.add(tb, 'tr'), 'td', {
 							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + a || da
@@ -572,7 +575,7 @@
 			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [], a;
 
 			a = s.theme_advanced_toolbar_align.toLowerCase();
-			a = 'mce' + a.substring(0, 1).toUpperCase() + a.substring(1);
+			a = 'mce' + t._ufirst(a);
 
 			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a});
 
@@ -1015,6 +1018,10 @@
 					t.editor.execCommand('HiliteColor', false, co);
 				}
 			});
+		},
+
+		_ufirst : function(s) {
+			return s.substring(0, 1).toUpperCase() + s.substring(1);
 		}
 	});
 

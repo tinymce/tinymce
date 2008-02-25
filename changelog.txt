@@ -5,6 +5,8 @@ Version 3.0.2 (2008-xx-xx)
 	Added new type parameter to the Editor.getParam function to reduce redundant logic for parsing hash tables.
 	Added new isDone method to the ScriptLoaded class, this enables you to check if a script has been loaded or not.
 	Added new resizeTo and resizeBy methods for the advanced theme. Can be called using tinyMCE.activeEditor.theme.resizeTo(w, h);
+	Added new skin_variant option this can be used to extend existing skins with slight modifications like color.
+	Added new variant of the o2k7 skin called "silver" based on a contribution made by Stefan Moonen.
 	Fixed bug where the template plugin might produce errors if the template_mdate_classes wasn't configured.
 	Fixed bug where the media plugin didn't convert the URLs for movies once they where inserted.
 	Fixed bug where the style field for the advlink dialog didn't work correctly if you edited an existing link.

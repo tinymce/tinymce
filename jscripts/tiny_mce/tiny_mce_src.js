@@ -9334,13 +9334,15 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		createDropMenu : function(id, s) {
-			var t = this, ed = t.editor, c, bm;
+			var t = this, ed = t.editor, c, bm, v;
 
 			s = extend({
 				'class' : 'mceDropDown'
 			}, s);
 
 			s['class'] = s['class'] + ' ' + ed.getParam('skin') + 'Skin';
+			if (v = ed.getParam('skin_variant'))
+				s['class'] += ' ' + ed.getParam('skin') + 'Skin' + v.substring(0, 1).toUpperCase() + v.substring(1);
 
 			id = t.prefix + id;
 			c = t.controls[id] = new tinymce.ui.DropMenu(id, s);
