@@ -8,8 +8,8 @@
 .defaultSimpleSkin .mceToolbar {height:24px;}
 
 /* Layout */
-.defaultSimpleSkin span.icon, .defaultSimpleSkin img.icon {display:block; width:20px; height:20px}
-.defaultSimpleSkin .icon {background:url(../../img/icons.gif) no-repeat 20px 20px}
+.defaultSimpleSkin span.mceIcon, .defaultSimpleSkin img.mceIcon {display:block; width:20px; height:20px}
+.defaultSimpleSkin .mceIcon {background:url(../../img/icons.gif) no-repeat 20px 20px}
 
 /* Button */
 .defaultSimpleSkin .mceButton {display:block; border:1px solid #F0F0EE; width:20px; height:20px}
@@ -21,12 +21,12 @@
 .defaultSimpleSkin .mceSeparator {display:block; background:url(../../img/icons.gif) -180px 0; width:2px; height:20px; margin:0 2px 0 4px}
 
 /* Theme */
-.defaultSimpleSkin span.bold {background-position:0 0}
-.defaultSimpleSkin span.italic {background-position:-60px 0}
-.defaultSimpleSkin span.underline {background-position:-140px 0}
-.defaultSimpleSkin span.strikethrough {background-position:-120px 0}
-.defaultSimpleSkin span.undo {background-position:-160px 0}
-.defaultSimpleSkin span.redo {background-position:-100px 0}
-.defaultSimpleSkin span.cleanup {background-position:-40px 0}
-.defaultSimpleSkin span.insertunorderedlist {background-position:-20px 0}
-.defaultSimpleSkin span.insertorderedlist {background-position:-80px 0}
+.defaultSimpleSkin span.mce_bold {background-position:0 0}
+.defaultSimpleSkin span.mce_italic {background-position:-60px 0}
+.defaultSimpleSkin span.mce_underline {background-position:-140px 0}
+.defaultSimpleSkin span.mce_strikethrough {background-position:-120px 0}
+.defaultSimpleSkin span.mce_undo {background-position:-160px 0}
+.defaultSimpleSkin span.mce_redo {background-position:-100px 0}
+.defaultSimpleSkin span.mce_cleanup {background-position:-40px 0}
+.defaultSimpleSkin span.mce_insertunorderedlist {background-position:-20px 0}
+.defaultSimpleSkin span.mce_insertorderedlist {background-position:-80px 0}
