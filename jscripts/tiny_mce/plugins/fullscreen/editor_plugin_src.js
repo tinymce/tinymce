@@ -23,6 +23,7 @@
 						closeFullscreen(); // Call to close in new window
 					else {
 						window.setTimeout(function() {
+							tinymce.dom.Event.remove(window, 'resize', t.resizeFunc);
 							tinyMCE.get(ed.getParam('fullscreen_editor_id')).setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
 							tinyMCE.remove(ed);
 							DOM.remove('mce_fullscreen_container');
@@ -104,6 +105,12 @@
 					t.fullscreenElement = new tinymce.dom.Element('mce_fullscreen_container');
 					t.fullscreenElement.update();
 					//document.body.overflow = 'hidden';
+
+					t.resizeFunc = tinymce.dom.Event.add(window, 'resize', function() {
+						var vp = tinymce.DOM.getViewPort();
+
+						t.fullscreenEditor.theme.resizeTo(vp.w, vp.h);
+					});
 				}
 			});
 
