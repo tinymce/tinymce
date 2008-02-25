@@ -394,12 +394,37 @@
 
 		getInfo : function() {
 			return {
-				longname : 'Simple theme',
+				longname : 'Advanced theme',
 				author : 'Moxiecode Systems AB',
 				authorurl : 'http://tinymce.moxiecode.com',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			}
 		},
+
+		resizeBy : function(dw, dh) {
+			var e = DOM.get(this.editor.id + '_tbl');
+
+			this.resizeTo(e.clientWidth + dw, e.clientHeight + dh);
+		},
+
+		resizeTo : function(w, h) {
+			var ed = this.editor, s = ed.settings, e = DOM.get(ed.id + '_tbl'), ifr = DOM.get(ed.id + '_ifr'), dh;
+
+			// Boundery fix box
+			w = Math.max(s.theme_advanced_resizing_min_width || 100, w);
+			h = Math.max(s.theme_advanced_resizing_min_height || 100, h);
+			w = Math.min(s.theme_advanced_resizing_max_width || 0xFFFF, w);
+			h = Math.min(s.theme_advanced_resizing_max_height || 0xFFFF, h);
+
+			// Calc difference between iframe and container
+			dh = e.clientHeight - ifr.clientHeight;
+
+			// Resize iframe and container
+			DOM.setStyle(ifr, 'height', h - dh);
+			DOM.setStyles(e, {width : w, height : h});
+		},
+
+		// Internal functions
 
 		_simpleLayout : function(s, tb, o, p) {
 			var t = this, ed = t.editor, lo = s.theme_advanced_toolbar_location, sl = s.theme_advanced_statusbar_location, n, ic, etb, c;

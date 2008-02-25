@@ -36,7 +36,7 @@
 				}
 
 				if (ed.getParam('fullscreen_new_window')) {
-					win = window.open(url + "/fullscreen.htm", "mceFullScreenPopup", "fullscreen=yes,menubar=no,toolbar=no,scrollbars=no,resizable=no,left=0,top=0,width=" + screen.availWidth + ",height=" + screen.availHeight);
+					win = window.open(url + "/fullscreen.htm", "mceFullScreenPopup", "fullscreen=yes,menubar=no,toolbar=no,scrollbars=no,resizable=yes,left=0,top=0,width=" + screen.availWidth + ",height=" + screen.availHeight);
 					try {
 						win.resizeTo(screen.availWidth, screen.availHeight);
 					} catch (e) {

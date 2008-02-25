@@ -6037,7 +6037,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Page is not loaded yet, wait for it
 			if (!Event.domLoaded) {
-				Event.add(document, 'init', t.render, t);
+				Event.add(document, 'init', function() {
+					t.render();
+				});
 				return;
 			}
 
@@ -6298,7 +6300,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (tinymce.relaxedDomain) {
 				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
 				if (isIE)
-					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + s.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
 				else if (tinymce.isOpera)
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
 			}
@@ -6316,7 +6318,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			t.contentAreaContainer = o.iframeContainer;
 			DOM.get(o.editorContainer).style.display = t.orgDisplay;
-			DOM.get(s.id).style.display = 'none';
+			DOM.get(t.id).style.display = 'none';
 
 			// Safari 2.x requires us to wait for the load event and load a real HTML doc
 			if (tinymce.isOldWebKit) {
@@ -6331,7 +6333,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		setupIframe : function() {
-			var t = this, s = t.settings, e = DOM.get(s.id), d = t.getDoc(), h;
+			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h;
 
 			// Setup iframe body
 			if (!isIE || !tinymce.relaxedDomain) {
@@ -6897,15 +6899,16 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		hide : function() {
-			var t = this, s = t.settings, d = t.getDoc();
+			var t = this, d = t.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
 			if (isIE && d)
 				d.execCommand('SelectAll');
 
-			DOM.hide(t.getContainer());
-			DOM.setStyle(s.id, 'display', t.orgDisplay);
+			// We must save before we hide so Safari doesn't crash
 			t.save();
+			DOM.hide(t.getContainer());
+			DOM.setStyle(t.id, 'display', t.orgDisplay);
 		},
 
 		isHidden : function() {
