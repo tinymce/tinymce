@@ -354,10 +354,10 @@
 				h = s.height || e.style.height || e.clientHeight;
 				t.orgDisplay = e.style.display;
 
-				if (('' + w).indexOf('%') == -1)
+				if (!/%|px|auto/gi.test('' + w))
 					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
 
-				if (('' + h).indexOf('%') == -1)
+				if (!/%|px|auto/gi.test('' + h))
 					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
 
 				// Render UI
