@@ -6165,7 +6165,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc;
+			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re;
 
 			EditorManager.add(t);
 
@@ -6246,11 +6246,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				w = s.width || e.style.width || e.clientWidth;
 				h = s.height || e.style.height || e.clientHeight;
 				t.orgDisplay = e.style.display;
+				re = new RegExp('%|px|auto', 'gi');
 
-				if (!/%|px|auto/gi.test('' + w))
+				if (!re.test('' + w))
 					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
 
-				if (!/%|px|auto/gi.test('' + h))
+				if (!re.test('' + h))
 					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
 
 				// Render UI
