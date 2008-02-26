@@ -1,3 +1,5 @@
+Version 3.0.2.1 (2008-02-26)
+	Fixed alert/confirm dialogs so they display correctly.
 Version 3.0.2 (2008-02-26)
 	Added new body_id option that enables you to specify the id of the body inside the editor iframe based on ideas by David Bildström (ChronoZ).
 	Added new body_class option that enables you to set the class for the body of the editor iframe based on ideas by David Bildström (ChronoZ).

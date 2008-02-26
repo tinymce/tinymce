@@ -73,7 +73,11 @@
 			t.onOpen.dispatch(t, f, p);
 
 			if (f.type) {
-				opt += ' mceModal ' + f.type;
+				opt += ' mceModal';
+
+				if (f.type)
+					opt += ' mce' + f.type.substring(0, 1).toUpperCase() + f.type.substring(1);
+
 				f.resizable = false;
 			}
 

@@ -3,7 +3,7 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.2',
+	minorVersion : '0.2.1',
 	releaseDate : '2008-02-26',
 
 	_init : function() {
