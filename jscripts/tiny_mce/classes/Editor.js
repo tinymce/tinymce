@@ -336,8 +336,9 @@
 
 			// Remove ghost selections on images and tables in Gecko
 			if (isGecko) {
-				function repaint() {
-					t.execCommand('mceRepaint');
+				function repaint(a, o) {
+					if (!o || !o.initial)
+						t.execCommand('mceRepaint');
 				};
 
 				t.onUndo.add(repaint);

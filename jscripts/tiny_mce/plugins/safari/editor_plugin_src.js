@@ -25,6 +25,19 @@
 				ed.execCommand("mceInsertContent", false, '<a href="' + dom.encode(v) + '">' + ed.selection.getContent() + '</a>');
 			});*/
 
+			ed.onKeyUp.add(function(ed, e) {
+				var h;
+
+				// If backspace or delete key
+				if (e.keyCode == 46 || e.keyCode == 8) {
+					h = ed.getBody().innerHTML;
+
+					// If there is no text content or images or hr elements then remove everything
+					if (!/<(img|hr)/.test(h) && tinymce.trim(h.replace(/<[^>]+>/g, '')).length == 0)
+						ed.setContent('', {format : 'raw'});
+				}
+			});
+
 			// Workaround for FormatBlock bug, http://bugs.webkit.org/show_bug.cgi?id=16004
 			ed.addCommand('FormatBlock', function(u, v) {
 				var dom = ed.dom, e = dom.getParent(ed.selection.getNode(), dom.isBlock);

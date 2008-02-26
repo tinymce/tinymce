@@ -350,7 +350,7 @@
 				e = e.target;
 
 				if (e.nodeName == 'A') {
-					t._sel(e.href.replace(/^[^#]*#/, ''));
+					t._sel(e.className.replace(/^.*mcePath_([0-9]+).*$/, '$1'));
 
 					return Event.cancel(e);
 				}
@@ -876,7 +876,7 @@
 					na = na.name;
 
 					//u = "javascript:tinymce.EditorManager.get('" + ed.id + "').theme._sel('" + (de++) + "');";
-					pi = DOM.create('a', {'href' : "#" + (de++) + "", onmousedown : "return false;", title : ti}, na);
+					pi = DOM.create('a', {'href' : "javascript:;", onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
 
 					if (p.hasChildNodes()) {
 						p.insertBefore(document.createTextNode(' \u00bb '), p.firstChild);

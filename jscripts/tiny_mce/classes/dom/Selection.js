@@ -276,7 +276,7 @@
 						return d;
 					}
 
-					p += n.nodeValue ? n.nodeValue.length : 0;
+					p += n.nodeValue ? tinymce.trim(n.nodeValue).length : 0;
 				}
 
 				return null;
@@ -293,7 +293,8 @@
 					start : e.start + s.anchorOffset,
 					end : e.end + s.focusOffset,
 					scrollX : sx,
-					scrollY : sy
+					scrollY : sy,
+					beg : s.anchorOffset == 0
 				};
 			} else {
 				e = getPos(ro, r.startContainer, r.endContainer);
@@ -305,7 +306,8 @@
 					start : e.start + r.startOffset,
 					end : e.end + r.endOffset,
 					scrollX : sx,
-					scrollY : sy
+					scrollY : sy,
+					beg : r.startOffset == 0
 				};
 			}
 		},
@@ -320,20 +322,25 @@
 			var t = this, r = t.getRng(), s = t.getSel(), ro = t.dom.getRoot(), sd;
 
 			function getPos(r, sp, ep) {
-				var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
+				var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {}, o, v;
 
 				while ((n = w.nextNode()) != null) {
-					p += n.nodeValue ? n.nodeValue.length : 0;
+					p += n.nodeValue ? tinymce.trim(n.nodeValue).length : 0;
 
 					if (p >= sp && !d.startNode) {
+						o = sp - (p - n.nodeValue.length);
+
+						// Fix for odd quirk in FF
+						if (b.beg && o >= n.nodeValue.length)
+							continue;
+
 						d.startNode = n;
-						d.startOffset = sp - (p - n.nodeValue.length);
+						d.startOffset = o;
 					}
 
 					if (p >= ep) {
 						d.endNode = n;
 						d.endOffset = ep - (p - n.nodeValue.length);
-
 						return d;
 					}
 				}
@@ -407,6 +414,7 @@
 				if (is(b.start) && is(b.end)) {
 					try {
 						sd = getPos(ro, b.start, b.end);
+
 						if (sd) {
 							r = t.dom.doc.createRange();
 							r.setStart(sd.startNode, sd.startOffset);

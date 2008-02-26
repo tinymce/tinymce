@@ -63,7 +63,7 @@ tinymce.create('tinymce.UndoManager', {
 			}
 		}
 
-		if (s.custom_undo_redo_restore_selection)
+		if (s.custom_undo_redo_restore_selection && !l.initial)
 			l.bookmark = b = l.bookmark || ed.selection.getBookmark();
 
 		if (t.index < t.data.length && t.data[t.index].initial)

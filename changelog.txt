@@ -20,11 +20,18 @@ Version 3.0.2 (2008-xx-xx)
 	Fixed bug where the editor wasn't scaled propertly in fullscreen mode using the old fullscreen_new_window option.
 	Fixed bug where render method didn't load language packs in IE and Opera if you rendered an editor during page load.
 	Fixed bug where resizing the browser window in fullscreen didn't resize the editor.
+	Fixed bug where the blockquote command didn't move the caret inside the new empty blockquote if you used it on an empty document.
 	Fixed bug where auto in a style width/height for the textarea would produce an editor with the size value of 100. Fix contributed by Shane Tomlinson.
+	Fixed bug where restoration of selection at the beginning of an element could fail in Gecko.
+	Fixed bug where caret restoration after a cleanup could place the it at an incorrect location.
+	Fixed bug where delete key inside td elements would delete the cell in Gecko.
+	Fixed so the blockquote button toggles individual lines. This behavior is a bit more like the old indentation behavior in the 2.x branch.
 	Fixed so the dialog language packs only gets loaded the first time you open a dialog.
 	Fixed so all classes in the whole UI is prefixed with "mce" to avoid collisions, use the skin converter to update your existing skins.
 	Fixed so all classes in the inlinepopups logic is prefixed with "mce" to avoid collisions, use the skin converter to update your existing skins.
 	Fixed so that the window in fullscreen mode can be resized when fullscreen_new_window option is enabled.
+	Fixed so blockquote elements are formatted in the source output with an linefeed before and after it.
+	Optimized the editor initialization by reducing the number of calls to getBookmark/moveToBookmark.
 Version 3.0.1 (2008-02-21)
 	Added spellchecker plugin into the main package, but without any backend can be specified with the spellchecker_rpc_url option.
 	Added src attribute for script elements to the default valid_elements option value.
