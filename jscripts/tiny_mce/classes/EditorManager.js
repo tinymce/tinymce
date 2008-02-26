@@ -378,8 +378,8 @@
 	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
-	if (tinymce.EditorManager.baseURI.host != window.location.host)
-		document.domain = tinymce.relaxedDomain = window.location.host.replace(/.*\.(.+\..+)$/, '$1');
+	if (tinymce.EditorManager.baseURI.host != window.location.hostname)
+		document.domain = tinymce.relaxedDomain = window.location.hostname.replace(/.*\.(.+\..+)$/, '$1');
 })();
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call

@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.2.1',
-	releaseDate : '2008-02-26',
+	minorVersion : '0.3',
+	releaseDate : '2008-03-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -5921,8 +5921,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
-	if (tinymce.EditorManager.baseURI.host != window.location.host)
-		document.domain = tinymce.relaxedDomain = window.location.host.replace(/.*\.(.+\..+)$/, '$1');
+	if (tinymce.EditorManager.baseURI.host != window.location.hostname)
+		document.domain = tinymce.relaxedDomain = window.location.hostname.replace(/.*\.(.+\..+)$/, '$1');
 })();
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call

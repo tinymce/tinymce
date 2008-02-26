@@ -1,3 +1,5 @@
+Version 3.0.3 (2008-03-xx)
+	Fixed bug where an error about document.domain would be thrown if TinyMCE was loaded using a different port.
 Version 3.0.2.1 (2008-02-26)
 	Fixed alert/confirm dialogs so they display correctly.
 Version 3.0.2 (2008-02-26)
