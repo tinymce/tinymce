@@ -7121,8 +7121,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (s.urlconverter_callback)
 				return t.execCallback('urlconverter_callback', u, e, true, n);
 
-			// Don't convert link href since thats the CSS files that gets loaded into the editor
-			if (!s.convert_urls || (e && e.nodeName == 'LINK'))
+			// Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
+			if (!s.convert_urls || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
 				return u;
 
 			// Convert to relative
