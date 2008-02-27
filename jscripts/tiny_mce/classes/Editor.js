@@ -1295,6 +1295,9 @@
 			t.execCallback('remove_instance_callback', t);
 			t.onRemove.dispatch(t);
 
+			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
+			t.onExecCommand.listeners = [];
+
 			EditorManager.remove(t);
 		},
 
