@@ -114,6 +114,7 @@
 				padd_empty_editor : 1,
 				render_ui : 1,
 				init_theme : 1,
+				force_p_newlines : 1,
 				indentation : '30px'
 			}, s);
 

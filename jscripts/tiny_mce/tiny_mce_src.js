@@ -6030,6 +6030,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				padd_empty_editor : 1,
 				render_ui : 1,
 				init_theme : 1,
+				force_p_newlines : 1,
 				indentation : '30px'
 			}, s);
 
@@ -8901,17 +8902,10 @@ tinymce.create('tinymce.UndoManager', {
 
 	tinymce.create('tinymce.ForceBlocks', {
 		ForceBlocks : function(ed) {
-			var t = this, s, elm;
+			var t = this, s = ed.settings, elm;
 
 			t.editor = ed;
 			t.dom = ed.dom;
-
-			// Default settings
-			t.settings = s = extend({
-				forced_root_block : 'p',
-				force_p_newlines : true
-			}, ed.settings);
-
 			elm = (s.forced_root_block || 'p').toLowerCase();
 			s.element = elm.toUpperCase();
 
@@ -8949,7 +8943,7 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		setup : function() {
-			var t = this, ed = t.editor, s = t.settings;
+			var t = this, ed = t.editor, s = ed.settings;
 
 			// Force root blocks when typing and when getting output
 			if (s.forced_root_block) {
@@ -9108,7 +9102,7 @@ tinymce.create('tinymce.UndoManager', {
 								}
 							}
 
-							bl = ed.dom.create(t.settings.forced_root_block);
+							bl = ed.dom.create(ed.settings.forced_root_block);
 							bl.appendChild(nx.cloneNode(1));
 							nx.parentNode.replaceChild(bl, nx);
 						}
@@ -9125,7 +9119,7 @@ tinymce.create('tinymce.UndoManager', {
 			// Restore selection
 			if (si != -2) {
 				if (!isIE) {
-					bl = d.getElementsByTagName(t.settings.element)[0];
+					bl = d.getElementsByTagName(ed.settings.element)[0];
 					r = d.createRange();
 
 					// Select last location or generated block
@@ -9166,7 +9160,7 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		insertPara : function(e) {
-			var t = this, ed = t.editor, d = ed.getDoc(), se = t.settings, s = ed.selection.getSel(), r = s.getRangeAt(0), b = d.body;
+			var t = this, ed = t.editor, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = s.getRangeAt(0), b = d.body;
 			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n;
 
 			function isEmpty(n) {

@@ -4,6 +4,7 @@ Version 3.0.3 (2008-03-xx)
 	Fixed bug where the caret could be placed at an incorrect location when backspace was used in Gecko.
 	Fixed bug where local file:// URLs where converted into absolute domain URLs.
 	Fixed bug where an error was produced if a editor was removed inside an editor command.
+	Fixed bug where force_p_newlines didn't effect the paste plugin correctly.
 Version 3.0.2.1 (2008-02-26)
 	Fixed alert/confirm dialogs so they display correctly.
 Version 3.0.2 (2008-02-26)
