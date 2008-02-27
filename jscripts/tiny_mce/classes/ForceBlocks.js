@@ -484,9 +484,9 @@
 			if (sc && ed.dom.isBlock(sc) && bs) {
 				if (sc.childNodes.length == 1 && sc.firstChild.nodeName == 'BR') {
 					n = sc.previousSibling;
-					if (n) { 
+					if (n) {
 						ed.dom.remove(sc);
-						se.select(n, 1);
+						se.select(n.firstChild);
 						se.collapse(0);
 						return Event.cancel(e);
 					}

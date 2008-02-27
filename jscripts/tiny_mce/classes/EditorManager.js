@@ -132,23 +132,26 @@
 				switch (s.mode) {
 					case "exact":
 						l = s.elements || '';
-						each(l.split(','), function(v) {
-							if (DOM.get(v))
-								new tinymce.Editor(v, s).render(1);
-							else {
-								c = 0;
 
-								each(document.forms, function(f) {
-									each(f.elements, function(e) {
-										if (e.name === v) {
-											v = 'mce_editor_' + c;
-											DOM.setAttrib(e, 'id', v);
-											new tinymce.Editor(v, s).render(1);
-										}
+						if(l.length > 0) {
+							each(l.split(','), function(v) {
+								if (DOM.get(v))
+									new tinymce.Editor(v, s).render(1);
+								else {
+									c = 0;
+
+									each(document.forms, function(f) {
+										each(f.elements, function(e) {
+											if (e.name === v) {
+												v = 'mce_editor_' + c;
+												DOM.setAttrib(e, 'id', v);
+												new tinymce.Editor(v, s).render(1);
+											}
+										});
 									});
-								});
-							}
-						});
+								}
+							});
+						}
 						break;
 
 					case "textareas":

@@ -5726,23 +5726,26 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				switch (s.mode) {
 					case "exact":
 						l = s.elements || '';
-						each(l.split(','), function(v) {
-							if (DOM.get(v))
-								new tinymce.Editor(v, s).render(1);
-							else {
-								c = 0;
 
-								each(document.forms, function(f) {
-									each(f.elements, function(e) {
-										if (e.name === v) {
-											v = 'mce_editor_' + c;
-											DOM.setAttrib(e, 'id', v);
-											new tinymce.Editor(v, s).render(1);
-										}
+						if(l.length > 0) {
+							each(l.split(','), function(v) {
+								if (DOM.get(v))
+									new tinymce.Editor(v, s).render(1);
+								else {
+									c = 0;
+
+									each(document.forms, function(f) {
+										each(f.elements, function(e) {
+											if (e.name === v) {
+												v = 'mce_editor_' + c;
+												DOM.setAttrib(e, 'id', v);
+												new tinymce.Editor(v, s).render(1);
+											}
+										});
 									});
-								});
-							}
-						});
+								}
+							});
+						}
 						break;
 
 					case "textareas":
@@ -9358,9 +9361,9 @@ tinymce.create('tinymce.UndoManager', {
 			if (sc && ed.dom.isBlock(sc) && bs) {
 				if (sc.childNodes.length == 1 && sc.firstChild.nodeName == 'BR') {
 					n = sc.previousSibling;
-					if (n) { 
+					if (n) {
 						ed.dom.remove(sc);
-						se.select(n, 1);
+						se.select(n.firstChild);
 						se.collapse(0);
 						return Event.cancel(e);
 					}
