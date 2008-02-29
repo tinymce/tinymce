@@ -82,7 +82,7 @@
 
 					if (e.keyCode == 46) {
 						n = ed.dom.getParent(ed.selection.getNode(), 'TD,TH');
-						if (n && !n.hasChildNodes() || (n.childNodes.length == 1 && n.firstChild.nodeName == 'BR'))
+						if (n && (!n.hasChildNodes() || (n.childNodes.length == 1 && n.firstChild.nodeName == 'BR')))
 							tinymce.dom.Event.cancel(e);
 					}
 				});
