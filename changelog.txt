@@ -14,6 +14,8 @@ Version 3.0.3 (2008-03-xx)
 	Fixed bug where elements like menus where placed at incorrect positions in Opera 9.26.
 	Fixed bug where IE was loosing focus of the editor when you clicked some dropmenu and if it was placed in a frame or iframe.
 	Fixed bug where focus of images could be lost in IE if you focused the accessibility confirm dialog in the advimage plugin.
+	Fixed bug where nestled font elements would produce odd output like missing font elements.
+	Fixed bug where text colors and styles got removed if invalid_elements included the font element.
 Version 3.0.2.1 (2008-02-26)
 	Fixed alert/confirm dialogs so they display correctly.
 Version 3.0.2 (2008-02-26)

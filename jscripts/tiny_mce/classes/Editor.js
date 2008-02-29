@@ -2105,7 +2105,7 @@
 		},
 
 		_convertFonts : function() {
-			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i, st;
+			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i, st, x, nl, sp, f;
 
 			// No need
 			if (!s.inline_styles)
@@ -2126,8 +2126,11 @@
 				if (tinymce.isWebKit || !s.inline_styles)
 					return;
 
-				each(t.dom.select('span', no), function(n) {
-					var f = dom.create('font', {
+				nl = t.dom.select('span', no);
+				for (x = nl.length - 1; x >= 0; x--) {
+					n = nl[x];
+
+					f = dom.create('font', {
 						color : dom.toHex(dom.getStyle(n, 'color')),
 						face : dom.getStyle(n, 'fontFamily'),
 						style : dom.getAttrib(n, 'style')
@@ -2161,13 +2164,12 @@
 						dom.setAttrib(f, 'mce_style', '');
 						dom.replace(f, n, 1);
 					}
-				});
+				}
 			};
 
 			// Run on setup
 			t.onSetContent.add(function(ed, o) {
-				if (o.initial)
-					convertToFonts(ed.getBody());
+				convertToFonts(ed.getBody());
 			});
 
 			// Run on cleanup
@@ -2177,8 +2179,11 @@
 					return;
 
 				if (o.get) {
-					each(t.dom.select('font', o.node), function(n) {
-						var sp = dom.create('span', {
+					nl = t.dom.select('font', o.node);
+					for (x = nl.length - 1; x >= 0; x--) {
+						n = nl[x];
+
+						sp = dom.create('span', {
 							style : dom.getAttrib(n, 'style')
 						});
 
@@ -2197,9 +2202,8 @@
 
 						dom.setAttrib(sp, 'mce_style', '');
 						dom.replace(sp, n, 1);
-					});
-				} else if (o.set)
-					convertToFonts(o.node);
+					}
+				}
 			});
 		},
 
