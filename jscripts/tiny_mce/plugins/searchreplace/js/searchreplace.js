@@ -90,6 +90,10 @@ var SearchReplaceDialog = {
 		se.collapse(b);
 		r = se.getRng();
 
+		// Whats the point
+		if (!s)
+			return;
+
 		if (tinymce.isIE) {
 			if (r.findText(s, b ? -1 : 1, fl)) {
 				r.scrollIntoView();

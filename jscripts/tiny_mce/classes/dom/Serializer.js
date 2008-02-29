@@ -46,7 +46,18 @@
 			t.key = 0;
 			t.onPreProcess = new Dispatcher(t);
 			t.onPostProcess = new Dispatcher(t);
-			t.writer = tinymce.relaxedDomain && tinymce.isGecko ? new tinymce.dom.StringWriter() : new tinymce.dom.XMLWriter();
+
+			if (tinymce.relaxedDomain && tinymce.isGecko) {
+				// Gecko has a bug where we can't create a new XML document if domain relaxing is used
+				t.writer = new tinymce.dom.StringWriter();
+			} else {
+				try {
+					t.writer = new tinymce.dom.XMLWriter();
+				} catch (ex) {
+					// IE might throw exception if ActiveX is disabled so we then switch to the slightly slower StringWriter
+					t.writer = new tinymce.dom.StringWriter();
+				}
+			}
 
 			// Default settings
 			t.settings = s = extend({
@@ -900,7 +911,7 @@
 			} else {
 				// Remove internal mceItemXX classes when content is extracted from editor
 				if (na == 'class' && this.processObj.get)
-					v = v.replace(/\bmceItem\w+\b/g, '');
+					v = v.replace(/\s?mceItem\w+\s?/g, '');
 			}
 
 			if (v === '')

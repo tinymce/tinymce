@@ -7,6 +7,11 @@ Version 3.0.3 (2008-03-xx)
 	Fixed bug where force_p_newlines didn't effect the paste plugin correctly.
 	Fixed bug where the paste plugin was producing an exception on IE if you pasted contents with middots.
 	Fixed bug where delete key could produce exceptions in Gecko sometimes due to the fix for the table cell bug.
+	Fixed bug where the layer plugin would produce an visual add class called mceVisualAid this one is now renamed to mceItemVisualAid to mark it internal.
+	Fixed bug where TinyMCE wouldn't initialize properly if ActiveX controls was disabled in IE.
+	Fixed bug where tables and other elements that had visual aids on them would produce an extra space after any custom class names.
+	Fixed bug where search with an empty string would produce some odd "invalid pointer" error in IE.
+	Fixed bug where elements like menus where placed at incorrect positions in Opera 9.26.
 Version 3.0.2.1 (2008-02-26)
 	Fixed alert/confirm dialogs so they display correctly.
 Version 3.0.2 (2008-02-26)
