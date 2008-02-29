@@ -7682,7 +7682,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		_convertFonts : function() {
-			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i, st, x, nl, sp, f;
+			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i, st, x, nl, sp, f, n;
 
 			// No need
 			if (!s.inline_styles)
