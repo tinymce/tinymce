@@ -12,6 +12,7 @@ Version 3.0.3 (2008-03-xx)
 	Fixed bug where tables and other elements that had visual aids on them would produce an extra space after any custom class names.
 	Fixed bug where search with an empty string would produce some odd "invalid pointer" error in IE.
 	Fixed bug where elements like menus where placed at incorrect positions in Opera 9.26.
+	Fixed bug where IE was loosing focus of the editor when you clicked some dropmenu and if it was placed in a frame or iframe.
 Version 3.0.2.1 (2008-02-26)
 	Fixed alert/confirm dialogs so they display correctly.
 Version 3.0.2 (2008-02-26)

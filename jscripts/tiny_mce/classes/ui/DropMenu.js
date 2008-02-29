@@ -36,6 +36,9 @@
 			this.onShowMenu = new tinymce.util.Dispatcher(this);
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
+
+			// Fix for odd IE bug: #1903622
+			this.fixIE = tinymce.isIE && window.top != window;
 		},
 
 		/**#@+
@@ -145,7 +148,7 @@
 			t.element.update();
 
 			t.isMenuVisible = 1;
-			t.mouseClickFunc = Event.add(co, 'click', function(e) {
+			t.mouseClickFunc = Event.add(co, t.fixIE ? 'mousedown' : 'click', function(e) {
 				var m;
 
 				e = e.target;
@@ -210,7 +213,7 @@
 				return;
 
 			Event.remove(co, 'mouseover', t.mouseOverFunc);
-			Event.remove(co, 'click', t.mouseClickFunc);
+			Event.remove(co, t.fixIE ? 'mousedown' : 'click', t.mouseClickFunc);
 			DOM.hide(co);
 			t.isMenuVisible = 0;
 
