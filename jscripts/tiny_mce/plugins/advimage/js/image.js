@@ -117,6 +117,8 @@ var ImageDialog = {
 	insertAndClose : function() {
 		var ed = tinyMCEPopup.editor, f = document.forms[0], nl = f.elements, v, args = {}, el;
 
+		tinyMCEPopup.restoreSelection();
+
 		// Fixes crash in Safari
 		if (tinymce.isWebKit)
 			ed.getWin().focus();
