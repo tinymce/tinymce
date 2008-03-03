@@ -2054,7 +2054,7 @@
 		},
 
 		_convertInlineElements : function() {
-			var t = this, s = t.settings, dom = t.dom, v;
+			var t = this, s = t.settings, dom = t.dom, v, e, na, st, sp;
 
 			function convert(ed, o) {
 				if (!s.inline_styles)
@@ -2071,11 +2071,11 @@
 								break;
 
 							case 'U':
-								dom.replace(dom.create('span', {style : 'text-decoration: underline;'}), n, 1);
-								break;
-
 							case 'STRIKE':
-								dom.replace(dom.create('span', {style : 'text-decoration: line-through;'}), n, 1);
+								sp = dom.create('span', {style : dom.getAttrib(n, 'style')});
+								sp.style.textDecoration = n.nodeName == 'U' ? 'underline' : 'line-through';
+								dom.setAttrib(sp, 'mce_style', '');
+								dom.replace(sp, n, 1);
 								break;
 						}
 					});
@@ -2087,9 +2087,22 @@
 						} else {
 							// Convert spans to elements
 							if (n.style.textDecoration == 'underline')
-								dom.replace(dom.create('u'), n, 1);
+								na = 'u';
 							else if (n.style.textDecoration == 'line-through')
-								dom.replace(dom.create('strike'), n, 1);
+								na = 'strike';
+							else
+								na = '';
+
+							if (na) {
+								n.style.textDecoration = '';
+								dom.setAttrib(n, 'mce_style', '');
+
+								e = dom.create(na, {
+									style : dom.getAttrib(n, 'style')
+								});
+
+								dom.replace(e, n, 1);
+							}
 						}
 					});
 				}
