@@ -17,6 +17,7 @@ Version 3.0.3 (2008-03-xx)
 	Fixed bug where nestled font elements would produce odd output like missing font elements.
 	Fixed bug where text colors and styles got removed if invalid_elements included the font element.
 	Fixed bug where text-decoration set to underline or line-through would remove other styles from span elements.
+	Fixed bug where editor contents like \n\n would be incorrectly handled and processed as real line feeds.
 	Fixed bug where incorrectly encoded urls with ampersands in them would be decoded incorrectly.
 	Optimized the DOMUtils decode method to be a lot faster if the string doesn't have any entities to decode.
 Version 3.0.2.1 (2008-02-26)

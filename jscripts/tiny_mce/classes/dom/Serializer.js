@@ -808,18 +808,22 @@
 			o.items = o.items || [];
 
 			function enc(s) {
-				return s.replace(/[\r\n]/g, function(c) {
+				return s.replace(/[\r\n\\]/g, function(c) {
 					if (c === '\n')
 						return '\\n';
+					else if (c === '\\')
+						return '\\\\';
 
 					return '\\r';
 				});
 			};
 
 			function dec(s) {
-				return s.replace(/\\[rn]/g, function(c) {
+				return s.replace(/\\[\\rn]/g, function(c) {
 					if (c === '\\n')
 						return '\n';
+					else if (c === '\\\\')
+						return '\\';
 
 					return '\r';
 				});
