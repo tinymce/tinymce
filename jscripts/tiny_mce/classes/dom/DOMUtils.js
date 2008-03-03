@@ -1349,11 +1349,18 @@
 		 * @return {String} Entity decoded string.
 		 */
 		decode : function(s) {
-			var e = document.createElement("div");
+			var e;
 
-			e.innerHTML = s;
+			// Look for entities to decode
+			if (/&[^;]+;/.test(s)) {
+				// Decode the entities using a div element not super efficient but less code
+				e = this.doc.createElement("div");
+				e.innerHTML = s;
 
-			return !e.firstChild ? s : e.firstChild.nodeValue;
+				return !e.firstChild ? s : e.firstChild.nodeValue;
+			}
+
+			return s;
 		},
 
 		/**
