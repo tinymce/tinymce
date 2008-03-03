@@ -9516,7 +9516,8 @@ tinymce.create('tinymce.UndoManager', {
 			var t = this, ed = t.editor, c, bm, v;
 
 			s = extend({
-				'class' : 'mceDropDown'
+				'class' : 'mceDropDown',
+				constrain : ed.settings.constrain_menus
 			}, s);
 
 			s['class'] = s['class'] + ' ' + ed.getParam('skin') + 'Skin';

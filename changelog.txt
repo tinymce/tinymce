@@ -1,3 +1,5 @@
+Version 3.0.4 (2008-xx-xx)
+	Added new option constrain_menus, this enables you to force view port constraints on all menus. Contributed by Shane Tomlinson.
 Version 3.0.3 (2008-03-03)
 	Fixed bug where an error about document.domain would be thrown if TinyMCE was loaded using a different port.
 	Fixed bug where mode exact would convert textareas without id or name if the elements option was omitted.
