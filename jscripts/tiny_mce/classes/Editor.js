@@ -860,17 +860,8 @@
 		focus : function(sf) {
 			var oed, t = this;
 
-			if (!sf) {
+			if (!sf)
 				t.getWin().focus();
-
-				// #if contentEditable
-
-				// IE/Opera needs element focus restored
-				if (t.settings.content_editable)
-					t.getElement().focus();
-
-				// #endif
-			}
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
@@ -1734,7 +1725,8 @@
 					if (isGecko) {
 						if (t._isHidden()) {
 							try {
-								d.designMode = 'On';
+								if (!s.content_editable)
+									d.designMode = 'On';
 							} catch (ex) {
 								// Fails if it's hidden
 							}

@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.3',
-	releaseDate : '2008-03-03',
+	minorVersion : '0.4',
+	releaseDate : '2008-xx-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -6663,10 +6663,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		focus : function(sf) {
 			var oed, t = this;
 
-			if (!sf) {
+			if (!sf)
 				t.getWin().focus();
-
-							}
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
@@ -7322,7 +7320,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					if (isGecko) {
 						if (t._isHidden()) {
 							try {
-								d.designMode = 'On';
+								if (!s.content_editable)
+									d.designMode = 'On';
 							} catch (ex) {
 								// Fails if it's hidden
 							}
