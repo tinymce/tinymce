@@ -635,7 +635,7 @@
 						break;
 
 					case "class":
-						e.className = v;
+						e.className = v || ''; // Fix IE null bug
 						break;
 
 					case "src":

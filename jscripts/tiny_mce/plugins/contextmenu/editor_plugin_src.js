@@ -16,8 +16,10 @@
 			t.onContextMenu = new tinymce.util.Dispatcher(this);
 
 			ed.onContextMenu.add(function(ed, e) {
-				t._getMenu(ed).showMenu(e.clientX, e.clientY);
-				Event.cancel(e);
+				if (!e.ctrlKey) {
+					t._getMenu(ed).showMenu(e.clientX, e.clientY);
+					Event.cancel(e);
+				}
 			});
 
 			function hide() {
