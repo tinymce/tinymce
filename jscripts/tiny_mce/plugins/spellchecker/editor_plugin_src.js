@@ -298,14 +298,16 @@
 		_done : function() {
 			var t = this, la = t.active;
 
-			t.active = 0;
-			t._removeWords();
+			if (t.active) {
+				t.active = 0;
+				t._removeWords();
 
-			if (t._menu)
-				t._menu.hideMenu();
+				if (t._menu)
+					t._menu.hideMenu();
 
-			if (la)
-				t.editor.nodeChanged();
+				if (la)
+					t.editor.nodeChanged();
+			}
 		},
 
 		_sendRPC : function(m, p, cb) {
