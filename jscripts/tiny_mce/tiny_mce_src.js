@@ -5594,7 +5594,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			// Add toolbar start after list box and before the next button
 			// This is to fix the o2k7 editor skins
 			if (nx && co.ListBox) {
-				console.dir(nx);
 				if (nx.Button || nx.SplitButton)
 					h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
 			}
