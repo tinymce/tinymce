@@ -24,20 +24,31 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	renderHTML : function() {
 		var t = this, h = '', c, co, dom = tinymce.DOM, s = t.settings, i, pr, nx, cl;
 
-		h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
-
 		cl = t.controls;
 		for (i=0; i<cl.length; i++) {
 			// Get current control, prev control, next control and if the control is a list box or not
 			co = cl[i];
-			pr = cl[i -1];
+			pr = cl[i - 1];
 			nx = cl[i + 1];
-			c = co.constructor === tinymce.ui.ListBox;
+
+			// Add toolbar start
+			if (i === 0) {
+				c = 'mceToolbarStart';
+
+				if (co.Button)
+					c += ' mceToolbarStartButton';
+				else if (co.SplitButton)
+					c += ' mceToolbarStartSplitButton';
+				else if (co.ListBox)
+					c += ' mceToolbarStartListBox';
+
+				h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
+			}
 
 			// Add toolbar end before list box and after the previous button
 			// This is to fix the o2k7 editor skins
-			if (c) {
-				if (pr && pr.constructor === tinymce.ui.Button)
+			if (pr && co.ListBox) {
+				if (pr.Button || pr.SplitButton)
 					h += dom.createHTML('td', {'class' : 'mceToolbarEnd'}, dom.createHTML('span', null, '<!-- IE -->'));
 			}
 
@@ -46,20 +57,20 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			// Add toolbar start after list box and before the next button
 			// This is to fix the o2k7 editor skins
-			if (c) {
-				if (nx && nx.constructor === tinymce.ui.Button)
+			if (nx && co.ListBox) {
+				console.dir(nx);
+				if (nx.Button || nx.SplitButton)
 					h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
 			}
 		}
 
-		co = t.controls[t.controls.length - 1].constructor;
-
 		c = 'mceToolbarEnd';
-		if (co === tinymce.ui.Button)
+
+		if (co.Button)
 			c += ' mceToolbarEndButton';
-		else if (co === tinymce.ui.SplitButton)
+		else if (co.SplitButton)
 			c += ' mceToolbarEndSplitButton';
-		else if (co === tinymce.ui.ListBox)
+		else if (co.ListBox)
 			c += ' mceToolbarEndListBox';
 
 		h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));

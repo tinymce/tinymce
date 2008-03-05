@@ -300,8 +300,7 @@ var tinymce = {
 
 			// Add super methods
 			t.each(sp, function(f, n) {
-				if (n != scn)
-					ns[cn].prototype[n] = sp[n];
+				ns[cn].prototype[n] = sp[n];
 			});
 
 			// Add overridden methods
