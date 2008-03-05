@@ -4,6 +4,7 @@ Version 3.0.4 (2008-xx-xx)
 	Fixed bug where links would get a null class added if no styles was used in IE.
 	Fixed bug where spellchecker was auto focusing the editor in IE.
 	Fixed so the custom context menu can be disabled by holding down ctrl key while clicking.
+	Fixed so the layout for the o2k7 skin looks better if you don't have separators before and after list boxes.
 Version 3.0.3 (2008-03-03)
 	Fixed bug where an error about document.domain would be thrown if TinyMCE was loaded using a different port.
 	Fixed bug where mode exact would convert textareas without id or name if the elements option was omitted.

@@ -5559,16 +5559,39 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	renderHTML : function() {
-		var t = this, h = '', c = 'mceToolbarEnd', co, dom = tinymce.DOM, s = t.settings;
+		var t = this, h = '', c, co, dom = tinymce.DOM, s = t.settings, i, pr, nx, cl;
 
 		h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
 
-		tinymce.each(t.controls, function(c) {
-			h += '<td>' + c.renderHTML() + '</td>';
-		});
+		cl = t.controls;
+		for (i=0; i<cl.length; i++) {
+			// Get current control, prev control, next control and if the control is a list box or not
+			co = cl[i];
+			pr = cl[i -1];
+			nx = cl[i + 1];
+			c = co.constructor === tinymce.ui.ListBox;
+
+			// Add toolbar end before list box and after the previous button
+			// This is to fix the o2k7 editor skins
+			if (c) {
+				if (pr && pr.constructor === tinymce.ui.Button)
+					h += dom.createHTML('td', {'class' : 'mceToolbarEnd'}, dom.createHTML('span', null, '<!-- IE -->'));
+			}
+
+			// Render control HTML
+			h += '<td>' + co.renderHTML() + '</td>';
+
+			// Add toolbar start after list box and before the next button
+			// This is to fix the o2k7 editor skins
+			if (c) {
+				if (nx && nx.constructor === tinymce.ui.Button)
+					h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
+			}
+		}
 
 		co = t.controls[t.controls.length - 1].constructor;
 
+		c = 'mceToolbarEnd';
 		if (co === tinymce.ui.Button)
 			c += ' mceToolbarEndButton';
 		else if (co === tinymce.ui.SplitButton)
