@@ -9,6 +9,8 @@ Version 3.0.4 (2008-xx-xx)
 	Fixed so the custom context menu can be disabled by holding down ctrl key while clicking.
 	Fixed so the layout for the o2k7 skin looks better if you don't have separators before and after list boxes.
 	Fixed so the sub classes get a copy of the super class constructor function to ease up type checking.
+	Fixed so font sizes for the format block previews are normalized according to http://www.w3.org/TR/CSS21/sample.html (it can be overridden).
+	Fixed so font sizes for h1-h6 in the default content.css is normalized according to http://www.w3.org/TR/CSS21/sample.html (it can be overridden).
 Version 3.0.3 (2008-03-03)
 	Fixed bug where an error about document.domain would be thrown if TinyMCE was loaded using a different port.
 	Fixed bug where mode exact would convert textareas without id or name if the elements option was omitted.

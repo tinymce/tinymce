@@ -246,7 +246,7 @@
 			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
 
 			each(t.settings.theme_advanced_blockformats.split(','), function(v) {
-				c.add(t.editor.translate(fmts[v]), v, {element : v, 'class' : v.indexOf('h') == 0 ? '' : 'mcePreview'});
+				c.add(t.editor.translate(fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
 			});
 
 			return c;
