@@ -378,8 +378,10 @@
 			// #if contentEditable
 
 			// Content editable mode ends here
-			if (s.content_editable)
+			if (s.content_editable) {
+				e = n = o = null; // Fix IE leak
 				return t.setupContentEditable();
+			}
 
 			// #endif
 
@@ -754,6 +756,9 @@
 			t.contentWindow = s.content_window || window;
 			t.bodyElement = e;
 
+			// Prevent leak in IE
+			s.content_document = s.content_window = null;
+
 			e.contentEditable = true;
 			if (!s.gecko_spellcheck)
 				e.spellcheck = 0;
@@ -860,8 +865,17 @@
 		focus : function(sf) {
 			var oed, t = this;
 
-			if (!sf)
+			if (!sf) {
 				t.getWin().focus();
+
+				// #if contentEditable
+
+				// Content editable mode ends here
+				if (tinymce.isIE && t.settings.content_editable)
+					t.getElement().focus();
+
+				// #endif
+			}
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
@@ -2037,7 +2051,7 @@
 				t.formElement._mceOldSubmit = null;
 			}
 
-			t.contentAreaContainer = t.formElement = t.container = t.contentDocument = t.contentWindow = null;
+			t.contentAreaContainer = t.formElement = t.container = t.settings.content_element = t.bodyElement = t.contentDocument = t.contentWindow = null;
 
 			if (t.selection)
 				t.selection = t.selection.win = t.selection.dom = t.selection.dom.doc = null;

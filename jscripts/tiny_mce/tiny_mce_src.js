@@ -6695,8 +6695,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		focus : function(sf) {
 			var oed, t = this;
 
-			if (!sf)
+			if (!sf) {
 				t.getWin().focus();
+
+							}
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
@@ -7664,7 +7666,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t.formElement._mceOldSubmit = null;
 			}
 
-			t.contentAreaContainer = t.formElement = t.container = t.contentDocument = t.contentWindow = null;
+			t.contentAreaContainer = t.formElement = t.container = t.settings.content_element = t.bodyElement = t.contentDocument = t.contentWindow = null;
 
 			if (t.selection)
 				t.selection = t.selection.win = t.selection.dom = t.selection.dom.doc = null;
