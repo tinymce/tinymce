@@ -4,6 +4,8 @@ Version 3.0.4 (2008-xx-xx)
 	Fixed bug where links would get a null class added if no styles was used in IE.
 	Fixed bug where spellchecker was auto focusing the editor in IE.
 	Fixed bug where document.domain would produce invalid argument if the editor was loaded in IE6 over a network UNC path.
+	Fixed bug where table height attribute was used, this is deprecated in XHTML so it now adds it as an style.
+	Fixed so non pixel values can be used in width/height properties for tables.
 	Fixed so the custom context menu can be disabled by holding down ctrl key while clicking.
 	Fixed so the layout for the o2k7 skin looks better if you don't have separators before and after list boxes.
 	Fixed so the sub classes get a copy of the super class constructor function to ease up type checking.

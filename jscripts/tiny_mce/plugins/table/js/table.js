@@ -85,13 +85,21 @@ function insertTable() {
 			elm.insertBefore(capEl, elm.firstChild);
 		}
 
-		dom.setAttrib(elm, 'width', width, true);
+		if (width && /(pt|em|cm)$/.test(width)) {
+			dom.setStyle(elm, 'width', width);
+			dom.setAttrib(elm, 'width', '');
+		} else
+			dom.setAttrib(elm, 'width', width, true);
 
 		// Remove these since they are not valid XHTML
 		dom.setAttrib(elm, 'borderColor', '');
 		dom.setAttrib(elm, 'bgColor', '');
 		dom.setAttrib(elm, 'background', '');
-		dom.setAttrib(elm, 'height', '');
+
+		if (height) {
+			dom.setStyle(elm, 'height', width);
+			dom.setAttrib(elm, 'height', '');
+		}
 
 		if (background != '')
 			elm.style.backgroundImage = "url('" + background + "')";
@@ -136,7 +144,22 @@ function insertTable() {
 	html += makeAttrib('border', border);
 	html += makeAttrib('cellpadding', cellpadding);
 	html += makeAttrib('cellspacing', cellspacing);
-	html += makeAttrib('width', width);
+
+	if (width && /(pt|em|cm)$/.test(width)) {
+		if (style)
+			style += '; ';
+
+		style += 'width: ' + width;
+	} else
+		html += makeAttrib('width', width);
+
+	if (height) {
+		if (style)
+			style += '; ';
+
+		style += 'height: ' + height;
+	}
+
 	//html += makeAttrib('height', height);
 	//html += makeAttrib('bordercolor', bordercolor);
 	//html += makeAttrib('bgcolor', bgcolor);
