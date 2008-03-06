@@ -5981,7 +5981,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
-	if (tinymce.EditorManager.baseURI.host != window.location.hostname)
+	if (tinymce.EditorManager.baseURI.host != window.location.hostname && window.location.hostname)
 		document.domain = tinymce.relaxedDomain = window.location.hostname.replace(/.*\.(.+\..+)$/, '$1');
 })();
 
