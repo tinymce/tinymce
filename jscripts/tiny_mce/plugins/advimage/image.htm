@@ -30,7 +30,7 @@
 								<td class="column1"><label id="srclabel" for="src">{#advimage_dlg.src}</label></td>
 								<td colspan="2"><table border="0" cellspacing="0" cellpadding="0">
 									<tr> 
-									  <td><input name="src" type="text" id="src" value="" onchange="ImageDialog.showPreviewImage(this.value);" /></td> 
+									  <td><input name="src" type="text" id="src" value="" class="mceFocus" onchange="ImageDialog.showPreviewImage(this.value);" /></td> 
 									  <td id="srcbrowsercontainer">&nbsp;</td>
 									</tr>
 								  </table></td>
@@ -225,7 +225,7 @@
 
 		<div class="mceActionPanel">
 			<div style="float: left">
-				<input type="button" id="insert" name="insert" value="{#insert}" onclick="ImageDialog.insert();" />
+				<input type="submit" id="insert" name="insert" value="{#insert}" />
 			</div>
 
 			<div style="float: right">

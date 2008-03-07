@@ -968,6 +968,10 @@
 		_mceImage : function(ui, val) {
 			var ed = this.editor;
 
+			// Internal image object like a flash placeholder
+			if (ed.dom.getAttrib(ed.selection.getNode(), 'class').indexOf('mceItem') != -1)
+				return;
+
 			ed.windowManager.open({
 				url : tinymce.baseURL + '/themes/advanced/image.htm',
 				width : 355 + parseInt(ed.getLang('advanced.image_delta_width', 0)),

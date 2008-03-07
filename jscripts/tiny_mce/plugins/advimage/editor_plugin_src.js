@@ -10,10 +10,8 @@
 		init : function(ed, url) {
 			// Register commands
 			ed.addCommand('mceAdvImage', function() {
-				var e = ed.selection.getNode();
-
 				// Internal image object like a flash placeholder
-				if (ed.dom.getAttrib(e, 'class').indexOf('mceItem') != -1)
+				if (ed.dom.getAttrib(ed.selection.getNode(), 'class').indexOf('mceItem') != -1)
 					return;
 
 				ed.windowManager.open({

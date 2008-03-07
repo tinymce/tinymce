@@ -27,7 +27,7 @@
 						<tr>
 							<td><label for="align">{#table_dlg.align}</label></td>
 							<td>
-								<select id="align" name="align">
+								<select id="align" name="align" class="mceFocus">
 									<option value="">{#not_set}</option>
 									<option value="center">{#table_dlg.align_middle}</option>
 									<option value="left">{#table_dlg.align_left}</option>
@@ -171,7 +171,7 @@
 			</div>
 
 			<div style="float: left">
-				<div><input type="button" id="insert" name="insert" value="{#update}" onclick="updateAction();" /></div>
+				<div><input type="submit" id="insert" name="insert" value="{#update}" /></div>
 			</div>
 
 			<div style="float: right">

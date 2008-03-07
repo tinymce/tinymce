@@ -10,7 +10,7 @@
 	<base target="_self" />
 </head>
 <body style="display:none;">
-<form onsubmit="return false;" action="#">
+<form onsubmit="SearchReplaceDialog.searchNext('none');return false;" action="#">
 	<div class="tabs">
 		<ul>
 			<li id="search_tab"><span><a href="javascript:SearchReplaceDialog.switchMode('search');" onmousedown="return false;">{#searchreplace.search_desc}</a></span></li>
@@ -91,7 +91,7 @@
 
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" id="insert" name="insert" value="{#searchreplace_dlg.findnext}" onclick="SearchReplaceDialog.searchNext('none');" />
+			<input type="submit" id="insert" name="insert" value="{#searchreplace_dlg.findnext}" />
 			<input type="button" class="button" id="replaceBtn" name="replaceBtn" value="{#searchreplace_dlg.replace}" onclick="SearchReplaceDialog.searchNext('current');" />
 			<input type="button" class="button" id="replaceAllBtn" name="replaceAllBtn" value="{#searchreplace_dlg.replaceall}" onclick="SearchReplaceDialog.searchNext('all');" />
 		</div>

@@ -27,7 +27,7 @@
 						<tr>
 							<td><label for="rowtype">{#table_dlg.rowtype}</label></td>
 							<td class="col2">
-								<select id="rowtype" name="rowtype">
+								<select id="rowtype" name="rowtype" class="mceFocus">
 									<option value="thead">{#table_dlg.thead}</option>
 									<option value="tbody">{#table_dlg.tbody}</option>
 									<option value="tfoot">{#table_dlg.tfoot}</option>
@@ -148,7 +148,7 @@
 			</div>
 
 			<div style="float: left">
-				<div><input type="button" id="insert" name="insert" value="{#update}" onclick="updateAction();" /></div>
+				<div><input type="submit" id="insert" name="insert" value="{#update}" /></div>
 			</div>
 
 			<div style="float: right">

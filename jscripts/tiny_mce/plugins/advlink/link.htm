@@ -31,7 +31,7 @@
 						  <td nowrap="nowrap"><label id="hreflabel" for="href">{#advlink_dlg.url}</label></td>
 						  <td><table border="0" cellspacing="0" cellpadding="0">
 								<tr>
-								  <td><input id="href" name="href" type="text" value="" onchange="selectByValue(this.form,'linklisthref',this.value);" /></td>
+								  <td><input id="href" name="href" type="text" class="mceFocus" value="" onchange="selectByValue(this.form,'linklisthref',this.value);" /></td>
 								  <td id="hrefbrowsercontainer">&nbsp;</td>
 								</tr>
 							  </table></td>
@@ -327,7 +327,7 @@
 
 		<div class="mceActionPanel">
 			<div style="float: left">
-				<input type="button" id="insert" name="insert" value="{#insert}" onclick="insertAction();" />
+				<input type="submit" id="insert" name="insert" value="{#insert}" />
 			</div>
 
 			<div style="float: right">

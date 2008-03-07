@@ -1,4 +1,4 @@
-Version 3.0.4 (2008-xx-xx)
+Version 3.0.4 (2008-03-07)
 	Added new option constrain_menus, this enables you to force view port constraints on all menus. Contributed by Shane Tomlinson.
 	Fixed bug where table background wasn't visible inside the editor due to a default CSS rule overriding the style attribute.
 	Fixed bug where links would get a null class added if no styles was used in IE.
@@ -6,6 +6,12 @@ Version 3.0.4 (2008-xx-xx)
 	Fixed bug where document.domain would produce invalid argument if the editor was loaded in IE6 over a network UNC path.
 	Fixed bug where table height attribute was used, this is deprecated in XHTML so it now adds it as an style.
 	Fixed bug where textareas with style values would produce error in IE.
+	Fixed so the first element in each dialog is focused by default to enhance keyboard usage.
+	Fixed so you can add a mceFocus class to elements to make it auto focused.
+	Fixed so you can close dialogs using the esc key.
+	Fixed so you can press return/enter to submit the action of each dialog.
+	Fixed so tabbing inside an inline popups wont focus the resize anchor elements.
+	Fixed so you can press ok in inline alert messages using the return/enter key.
 	Fixed so textareas can be set to non px or % sizes for example em, cm, pt etc.
 	Fixed so non pixel values can be used in width/height properties for tables.
 	Fixed so the custom context menu can be disabled by holding down ctrl key while clicking.

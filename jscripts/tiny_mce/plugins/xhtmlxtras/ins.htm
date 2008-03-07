@@ -30,7 +30,7 @@
 						<td>
 							<table border="0" cellspacing="0" cellpadding="0">
 								<tr> 
-									<td><input id="datetime" name="datetime" type="text" value="" maxlength="19" class="field" /></td> 
+									<td><input id="datetime" name="datetime" type="text" value="" maxlength="19" class="field mceFocus" /></td> 
 									<td><a href="javascript:insertDateTime('datetime');" onmousedown="return false;" class="browse"><span class="datetime" alt="{#xhtmlxtras_dlg.insert_date}" title="{#xhtmlxtras_dlg.insert_date}"></span></a></td>
 								</tr>
 							</table>
@@ -154,7 +154,7 @@
 	</div>
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" id="insert" name="insert" value="{#update}" onclick="insertIns();" />
+			<input type="submit" id="insert" name="insert" value="{#update}" />
 		</div>
 		<div style="float: left">
 			<input type="button" id="remove" name="remove" class="button" value="{#xhtmlxtras_dlg.remove}" onclick="removeIns();" style="display: none;" />

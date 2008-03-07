@@ -23,7 +23,7 @@
             <td nowrap="nowrap"><label for="src">{#advanced_dlg.image_src}</label></td>
             <td><table border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td><input id="src" name="src" type="text" value="" style="width: 200px" onchange="ImageDialog.getImageData();" /></td>
+                  <td><input id="src" name="src" type="text" class="mceFocus" value="" style="width: 200px" onchange="ImageDialog.getImageData();" /></td>
                   <td id="srcbrowsercontainer">&nbsp;</td>
                 </tr>
               </table></td>
@@ -74,7 +74,7 @@
 
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" id="insert" name="insert" value="{#insert}" onclick="ImageDialog.update();" />
+			<input type="submit" id="insert" name="insert" value="{#insert}" />
 		</div>
 
 		<div style="float: right">

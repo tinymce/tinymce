@@ -120,19 +120,19 @@
 							['span', {id : id + '_status'}, 'Content']
 						],
 
-						['a', {'class' : 'mceMove', href : 'javascript:;'}],
-						['a', {'class' : 'mceMin', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {'class' : 'mceMax', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {'class' : 'mceMed', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {'class' : 'mceClose', href : 'javascript:;', onmousedown : 'return false;'}],
-						['a', {id : id + '_resize_n', 'class' : 'mceResize mceResizeN', href : 'javascript:;'}],
-						['a', {id : id + '_resize_s', 'class' : 'mceResize mceResizeS', href : 'javascript:;'}],
-						['a', {id : id + '_resize_w', 'class' : 'mceResize mceResizeW', href : 'javascript:;'}],
-						['a', {id : id + '_resize_e', 'class' : 'mceResize mceResizeE', href : 'javascript:;'}],
-						['a', {id : id + '_resize_nw', 'class' : 'mceResize mceResizeNW', href : 'javascript:;'}],
-						['a', {id : id + '_resize_ne', 'class' : 'mceResize mceResizeNE', href : 'javascript:;'}],
-						['a', {id : id + '_resize_sw', 'class' : 'mceResize mceResizeSW', href : 'javascript:;'}],
-						['a', {id : id + '_resize_se', 'class' : 'mceResize mceResizeSE', href : 'javascript:;'}]
+						['a', {'class' : 'mceMove', tabindex : '-1', href : 'javascript:;'}],
+						['a', {'class' : 'mceMin', tabindex : '-1', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {'class' : 'mceMax', tabindex : '-1', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {'class' : 'mceMed', tabindex : '-1', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {'class' : 'mceClose', tabindex : '-1', href : 'javascript:;', onmousedown : 'return false;'}],
+						['a', {id : id + '_resize_n', 'class' : 'mceResize mceResizeN', tabindex : '-1', href : 'javascript:;'}],
+						['a', {id : id + '_resize_s', 'class' : 'mceResize mceResizeS', tabindex : '-1', href : 'javascript:;'}],
+						['a', {id : id + '_resize_w', 'class' : 'mceResize mceResizeW', tabindex : '-1', href : 'javascript:;'}],
+						['a', {id : id + '_resize_e', 'class' : 'mceResize mceResizeE', tabindex : '-1', href : 'javascript:;'}],
+						['a', {id : id + '_resize_nw', 'class' : 'mceResize mceResizeNW', tabindex : '-1', href : 'javascript:;'}],
+						['a', {id : id + '_resize_ne', 'class' : 'mceResize mceResizeNE', tabindex : '-1', href : 'javascript:;'}],
+						['a', {id : id + '_resize_sw', 'class' : 'mceResize mceResizeSW', tabindex : '-1', href : 'javascript:;'}],
+						['a', {id : id + '_resize_se', 'class' : 'mceResize mceResizeSE', tabindex : '-1', href : 'javascript:;'}]
 					]
 				]
 			);
@@ -247,8 +247,9 @@
 			t.focus(id);
 			t._fixIELayout(id, 1);
 
-//			if (DOM.get(id + '_ok'))
-//				DOM.get(id + '_ok').focus();
+			// Focus ok button
+			if (DOM.get(id + '_ok'))
+				DOM.get(id + '_ok').focus();
 
 			return w;
 		},

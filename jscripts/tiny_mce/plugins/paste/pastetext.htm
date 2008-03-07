@@ -7,7 +7,7 @@
 	<base target="_self" />
 </head>
 <body onresize="resizeInputs();" style="display:none; overflow:hidden;">
-<form name="source" onsubmit="saveContent();">
+<form name="source" onsubmit="saveContent();return false;" action="#">
 	<div style="float: left" class="title">{#paste.paste_text_desc}</div>
 
 	<div style="float: right">
@@ -18,11 +18,11 @@
 
 	<div>{#paste_dlg.text_title}</div>
 
-	<textarea name="htmlSource" id="htmlSource" rows="15" cols="100" style="width: 100%; height: 100%; font-family: 'Courier New',Courier,mono; font-size: 12px;" dir="ltr" wrap="soft"></textarea>
+	<textarea name="htmlSource" id="htmlSource" rows="15" cols="100" style="width: 100%; height: 100%; font-family: 'Courier New',Courier,mono; font-size: 12px;" dir="ltr" wrap="soft" class="mceFocus"></textarea>
 
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" name="insert" value="{#insert}" onclick="saveContent();" id="insert" />
+			<input type="submit" name="insert" value="{#insert}" id="insert" />
 		</div>
 
 		<div style="float: right">

@@ -12,7 +12,7 @@
 </head>
 
 <body id="styleprops" style="display: none">
-<form onSubmit="updateAction();return false;" action="#">
+<form onsubmit="updateAction();return false;" action="#">
 <div class="tabs">
 	<ul>
 		<li id="text_tab" class="current"><span><a href="javascript:mcTabs.displayTab('text_tab','text_panel');" onMouseDown="return false;">{#style_dlg.text_tab}</a></span></li>
@@ -31,7 +31,7 @@
 		<tr>
 			<td><label for="text_font">{#style_dlg.text_font}</label></td>
 			<td colspan="3">
-				<select id="text_font" name="text_font" class="mceEditableSelect" onChange="alert(this.options[this.selectedIndex].value);"></select>
+				<select id="text_font" name="text_font" class="mceEditableSelect mceFocus"></select>
 			</td>
 		</tr>
 		<tr>
@@ -711,7 +711,7 @@
 
 <div class="mceActionPanel">
 	<div style="float: left">
-		<div style="float: left"><input type="button" id="insert" name="insert" value="{#update}" onClick="updateAction();" /></div>
+		<div style="float: left"><input type="submit" id="insert" name="insert" value="{#update}" /></div>
 
 		<div style="float: left">&nbsp;<input type="button" class="button" id="apply" name="apply" value="{#style_dlg.apply}" onClick="applyAction();" /></div>
 		<br style="clear: both" />

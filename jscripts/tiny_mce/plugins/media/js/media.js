@@ -180,6 +180,8 @@ function init() {
 function insertMedia() {
 	var fe, f = document.forms[0], h;
 
+	tinyMCEPopup.restoreSelection();
+
 	if (!AutoValidator.validate(f)) {
 		alert(ed.getLang('invalid_data'));
 		return false;

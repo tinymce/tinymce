@@ -11,7 +11,7 @@
 		<div id="frmbody">
 			<div class="title">{#template_dlg.desc}</div>
 			<div class="frmRow"><label for="tpath" title="{#template_dlg.select}">{#template_dlg.label}:</label>
-			<select id="tpath" name="tpath" onchange="TemplateDialog.selectTemplate(this.options[this.selectedIndex].value);">
+			<select id="tpath" name="tpath" onchange="TemplateDialog.selectTemplate(this.options[this.selectedIndex].value);" class="mceFocus">
 				<option value="">{#template_dlg.select}...</option>
 			</select>
 			<span id="warning"></span></div>
@@ -25,7 +25,7 @@
 		
 		<div class="mceActionPanel">
 			<div style="float: left">
-				<input type="button" id="insert" name="insert" value="{#insert}" onclick="TemplateDialog.insert();" />
+				<input type="submit" id="insert" name="insert" value="{#insert}" />
 			</div>
 
 			<div style="float: right">

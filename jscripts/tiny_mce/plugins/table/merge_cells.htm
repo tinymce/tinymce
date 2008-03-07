@@ -9,13 +9,13 @@
 	<base target="_self" />
 </head>
 <body style="margin: 8px" style="display: none">
-<form onsubmit="insertTable();return false;" action="#">
+<form onsubmit="mergeCells();return false;" action="#">
 	<fieldset>
 		<legend>{#table_dlg.merge_cells_title}</legend>
 		  <table border="0" cellpadding="0" cellspacing="3" width="100%">
 			  <tr>
 				<td>{#table_dlg.cols}:</td>
-				<td align="right"><input type="text" name="numcols" value="" class="number min1" style="width: 30px" /></td>
+				<td align="right"><input type="text" name="numcols" value="" class="number min1 mceFocus" style="width: 30px" /></td>
 			  </tr>
 			  <tr>
 				<td>{#table_dlg.rows}:</td>
@@ -26,7 +26,7 @@
 
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" id="insert" name="insert" value="{#update}" onclick="mergeCells();" />
+			<input type="submit" id="insert" name="insert" value="{#update}" />
 		</div>
 
 		<div style="float: right">

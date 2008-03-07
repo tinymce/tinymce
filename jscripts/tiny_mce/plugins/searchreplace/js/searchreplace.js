@@ -7,6 +7,9 @@ var SearchReplaceDialog = {
 		this.switchMode(m);
 
 		f[m + '_panel_searchstring'].value = tinyMCEPopup.getWindowArg("search_string");
+
+		// Focus input field
+		f[m + '_panel_searchstring'].focus();
 	},
 
 	switchMode : function(m) {

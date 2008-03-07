@@ -26,7 +26,7 @@
 					  <table border="0" cellpadding="4" cellspacing="0" width="100%">
 							  <tr>
 								<td><label id="colslabel" for="cols">{#table_dlg.cols}</label></td>
-								<td><input id="cols" name="cols" type="text" value="" size="3" maxlength="3" class="required number min1" /></td>
+								<td><input id="cols" name="cols" type="text" value="" size="3" maxlength="3" class="required number min1 mceFocus" /></td>
 								<td><label id="rowslabel" for="rows">{#table_dlg.rows}</label></td>
 								<td><input id="rows" name="rows" type="text" value="" size="3" maxlength="3" class="required number min1" /></td>
 							  </tr>
@@ -180,7 +180,7 @@
 
 		<div class="mceActionPanel">
 			<div style="float: left">
-				<input type="button" id="insert" name="insert" value="{#insert}" onclick="insertTable();" />
+				<input type="submit" id="insert" name="insert" value="{#insert}" />
 			</div>
 
 			<div style="float: right">

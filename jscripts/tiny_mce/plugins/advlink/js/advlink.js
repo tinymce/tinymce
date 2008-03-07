@@ -109,8 +109,6 @@ function init() {
 		selectByValue(formObj, 'targetlist', inst.dom.getAttrib(elm, 'target'), true);
 	} else
 		addClassesToList('classlist', 'advlink_styles');
-
-	window.focus();
 }
 
 function checkPrefix(n) {
