@@ -355,12 +355,12 @@
 				w = s.width || e.style.width || e.clientWidth;
 				h = s.height || e.style.height || e.clientHeight;
 				t.orgDisplay = e.style.display;
-				re = new RegExp('%|px|auto', 'gi');
+				re = /^[0-9\.]+(|px)$/i;
 
-				if (!re.test('' + w))
+				if (re.test('' + w))
 					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
 
-				if (!re.test('' + h))
+				if (re.test('' + h))
 					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
 
 				// Render UI
