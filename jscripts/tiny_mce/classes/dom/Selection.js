@@ -195,8 +195,7 @@
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
 		 */
 		getBookmark : function(si) {
-			var t = this, r = t.getRng(), tr, sx, sy, vp = t.dom.getViewPort(t.win), e, sp, bp, le, c = -0xFFFFFF, s, ro = t.dom.getRoot();
-
+			var t = this, r = t.getRng(), tr, sx, sy, vp = t.dom.getViewPort(t.win), e, sp, bp, le, c = -0xFFFFFF, s, ro = t.dom.getRoot(), wb = 0, wa = 0, nv;
 			sx = vp.x;
 			sy = vp.y;
 
@@ -265,7 +264,7 @@
 			// Text selection
 
 			function getPos(r, sn, en) {
-				var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
+				var w = t.dom.doc.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {};
 
 				while ((n = w.nextNode()) != null) {
 					if (n == sn)
@@ -276,7 +275,7 @@
 						return d;
 					}
 
-					p += n.nodeValue ? tinymce.trim(n.nodeValue).length : 0;
+					p += tinymce.trim(n.nodeValue || '').length;
 				}
 
 				return null;
@@ -289,25 +288,32 @@
 				if (!e)
 					return {scrollX : sx, scrollY : sy};
 
+				// Count whitespace before
+				(s.anchorNode.nodeValue || '').replace(/^\s+/, function(a) {wb = a.length;});
+
 				return {
-					start : e.start + s.anchorOffset,
-					end : e.end + s.focusOffset,
+					start : Math.max(e.start + s.anchorOffset - wb, 0),
+					end : Math.max(e.end + s.focusOffset - wb, 0),
 					scrollX : sx,
 					scrollY : sy,
-					beg : s.anchorOffset == 0
+					beg : s.anchorOffset - wb == 0
 				};
 			} else {
 				e = getPos(ro, r.startContainer, r.endContainer);
+
+				// Count whitespace before start and end container
+				(r.startContainer.nodeValue || '').replace(/^\s+/, function(a) {wb = a.length;});
+				(r.endContainer.nodeValue || '').replace(/^\s+/, function(a) {wa = a.length;});
 
 				if (!e)
 					return {scrollX : sx, scrollY : sy};
 
 				return {
-					start : e.start + r.startOffset,
-					end : e.end + r.endOffset,
+					start : Math.max(e.start + r.startOffset - wb, 0),
+					end : Math.max(e.end + r.endOffset - wa, 0),
 					scrollX : sx,
 					scrollY : sy,
-					beg : r.startOffset == 0
+					beg : r.startOffset - wb == 0
 				};
 			}
 		},
@@ -319,28 +325,35 @@
 		 * @return {bool} true/false if it was successful or not.
 		 */
 		moveToBookmark : function(b) {
-			var t = this, r = t.getRng(), s = t.getSel(), ro = t.dom.getRoot(), sd;
+			var t = this, r = t.getRng(), s = t.getSel(), ro = t.dom.getRoot(), sd, nvl, nv;
 
 			function getPos(r, sp, ep) {
-				var w = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {}, o, v;
+				var w = t.dom.doc.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false), n, p = 0, d = {}, o, v, wa, wb;
 
 				while ((n = w.nextNode()) != null) {
-					p += n.nodeValue ? tinymce.trim(n.nodeValue).length : 0;
+					wa = wb = 0;
+
+					nv = n.nodeValue || '';
+					nv.replace(/^\s+[^\s]/, function(a) {wb = a.length - 1;});
+					nv.replace(/[^\s]\s+$/, function(a) {wa = a.length - 1;});
+
+					nvl = tinymce.trim(nv).length;
+					p += nvl;
 
 					if (p >= sp && !d.startNode) {
-						o = sp - (p - n.nodeValue.length);
+						o = sp - (p - nvl);
 
 						// Fix for odd quirk in FF
-						if (b.beg && o >= n.nodeValue.length)
+						if (b.beg && o >= nvl)
 							continue;
 
 						d.startNode = n;
-						d.startOffset = o;
+						d.startOffset = o + wb;
 					}
 
 					if (p >= ep) {
 						d.endNode = n;
-						d.endOffset = ep - (p - n.nodeValue.length);
+						d.endOffset = ep - (p - nvl) + wb;
 						return d;
 					}
 				}
