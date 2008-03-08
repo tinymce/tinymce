@@ -389,6 +389,11 @@
 			c = new tinymce.ui.ColorSplitButton(id, s);
 			ed.onMouseDown.add(c.hideMenu, c);
 
+			// Remove the menu element when the editor is removed
+			ed.onRemove.add(function() {
+				c.destroy();
+			});
+
 			return t.add(c);
 		},
 

@@ -2155,6 +2155,13 @@
 						style : dom.getAttrib(n, 'style')
 					});
 
+					// Clear color and font family
+					st = f.style;
+					if (st.color || st.fontFamily) {
+						st.color = st.fontFamily = '';
+						dom.setAttrib(f, 'mce_style', ''); // Remove cached style data
+					}
+
 					if (sl) {
 						i = inArray(sl, dom.getStyle(n, 'fontSize'));
 

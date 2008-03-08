@@ -155,6 +155,15 @@
 			t.value = c;
 			t.hideMenu();
 			s.onselect(c);
+		},
+
+		/**
+		 * Destroys the control. This means it will be removed from the DOM and any
+		 * events tied to it will also be removed.
+		 */
+		destroy : function() {
+			this.parent();
+			DOM.remove(this.id + '_menu');
 		}
 
 		/**#@-*/

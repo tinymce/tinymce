@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.4.1',
-	releaseDate : '2008-03-08',
+	minorVersion : '0.5',
+	releaseDate : '2008-03-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -5549,6 +5549,11 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			t.value = c;
 			t.hideMenu();
 			s.onselect(c);
+		},
+
+		destroy : function() {
+			this.parent();
+			DOM.remove(this.id + '_menu');
 		}
 
 		});
@@ -7770,6 +7775,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						style : dom.getAttrib(n, 'style')
 					});
 
+					// Clear color and font family
+					st = f.style;
+					if (st.color || st.fontFamily) {
+						st.color = st.fontFamily = '';
+						dom.setAttrib(f, 'mce_style', ''); // Remove cached style data
+					}
+
 					if (sl) {
 						i = inArray(sl, dom.getStyle(n, 'fontSize'));
 
@@ -9756,6 +9768,11 @@ tinymce.create('tinymce.UndoManager', {
 			id = t.prefix + id;
 			c = new tinymce.ui.ColorSplitButton(id, s);
 			ed.onMouseDown.add(c.hideMenu, c);
+
+			// Remove the menu element when the editor is removed
+			ed.onRemove.add(function() {
+				c.destroy();
+			});
 
 			return t.add(c);
 		},
