@@ -1,3 +1,5 @@
+Version 3.0.4.1 (2008-03-08)
+	Fixed critical bug where it was impossible to edit images when inlinepopups where used due to lost selection in IE.
 Version 3.0.4 (2008-03-07)
 	Added new option constrain_menus, this enables you to force view port constraints on all menus. Contributed by Shane Tomlinson.
 	Fixed bug where table background wasn't visible inside the editor due to a default CSS rule overriding the style attribute.

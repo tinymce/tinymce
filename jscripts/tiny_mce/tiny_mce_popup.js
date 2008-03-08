@@ -196,6 +196,12 @@ tinyMCEPopup = {
 			e.onkeydown = tinyMCEPopup._accessHandler;
 		});
 
+		// Call onInit
+		// Init must be called before focus so the selection won't get lost by the focus call
+		tinymce.each(t.listeners, function(o) {
+			o.func.call(o.scope, t.editor);
+		});
+
 		// Move focus to window
 		window.focus();
 
@@ -210,11 +216,6 @@ tinyMCEPopup = {
 		});
 
 		document.onkeydown = tinyMCEPopup._closeWinKeyHandler;
-
-		// Call onInit
-		tinymce.each(t.listeners, function(o) {
-			o.func.call(o.scope, t.editor);
-		});
 	},
 
 	_accessHandler : function(e) {
