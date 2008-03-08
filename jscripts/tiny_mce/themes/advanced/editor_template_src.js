@@ -331,7 +331,7 @@
 			n = o.targetNode;
 
 			// Add classes to first and last TRs
-			nl = sc.rows;
+			nl = sc.getElementsByTagName('tr');
 			DOM.addClass(nl[0], 'mceFirst');
 			DOM.addClass(nl[nl.length - 1], 'mceLast');
 
