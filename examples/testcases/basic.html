@@ -61,6 +61,9 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			c = editor.getContent();
 			t.is(c == '<p><span style="background-color: #ff0000;">test 123</span></p>' || c == '<p><font style="background-color: #ff0000;">test 123</font></p>');
 
+			editor.setContent('<font style="background-color: red" color="#ff0000">test</font><font face="Arial">test</font>');
+			t.eq(editor.getContent(), '<p><font style="background-color: red" color="#ff0000">test</font><font face="Arial">test</font></p>');
+
 			editor.settings.inline_styles = true;
 		},
 
@@ -138,8 +141,8 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			c = editor.getContent();
 			t.is(c == '<p><span style="font-family: Arial; font-size: xx-large;">test 123</span></p>' || c == '<p><span style="font-size: xx-large; font-family: Arial;">test 123</span></p>');
 
-			editor.setContent('<span>test 123</span><span style="">test 123</span><span style="font-size: 13px">test 123</span>');
-			t.eq(editor.getContent(), '<p><span>test 123</span><span>test 123</span><span style="font-size: 13px">test 123</span></p>');
+			editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
+			t.eq(editor.getContent(), tinymce.isGecko || tinymce.isOpera ? '<p><span style="background-color: #ff0000; color: #ff0000;">test</span><span style="font-family: Arial;">test</span></p>' : '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: Arial;">test</span></p>');
 		},
 
 		alignInline : function() {
@@ -375,7 +378,6 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			t.eq(editor.getContent(), '<p>test 123 abc</p>');*/
 		}
 	});
-
 
 	unitTester.add('internals', {
 		forcedBlocks : function() {
