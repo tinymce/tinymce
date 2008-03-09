@@ -30,6 +30,7 @@
 							de.style.overflow = ed.getParam('fullscreen_html_overflow');
 							DOM.setStyle(document.body, 'overflow', ed.getParam('fullscreen_overflow'));
 							window.scrollTo(ed.getParam('fullscreen_scrollx'), ed.getParam('fullscreen_scrolly'));
+							tinyMCE.settings = tinyMCE.oldSettings; // Restore old settings
 						}, 10);
 					}
 
@@ -44,6 +45,7 @@
 						// Ignore
 					}
 				} else {
+					tinyMCE.oldSettings = tinyMCE.settings; // Store old settings
 					s.fullscreen_overflow = DOM.getStyle(document.body, 'overflow', 1) || 'auto';
 					s.fullscreen_html_overflow = DOM.getStyle(de, 'overflow', 1);
 					vp = DOM.getViewPort();

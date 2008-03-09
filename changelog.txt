@@ -5,6 +5,7 @@ Version 3.0.5 (2008-03-xx)
 	Fixed bug where table editing would produce double height values.
 	Fixed bug where width style value wouldn't be removed if you switched width unit from cm/em to pixels or percent.
 	Fixed bug where the search/replace input box wasn't auto focused like the other dialogs.
+	Fixed bug where the old mceAddControl command would use the fullscreen settings next time it created an instance.
 	Fixed various bugs and quirks with the store/restore selection logic.
 	Fixed so the editor starts in IE 8 standards mode but still that browser is very very buggy.
 	Fixed so dialog_type set to modal will block the background and other inline windows and only give access to the front most window.
