@@ -247,7 +247,7 @@
 			}
 
 			function getTableGrid(table) {
-				var grid = new Array(), rows = table.rows, x, y, td, sd, xstart, x2, y2;
+				var grid = [], rows = table.rows, x, y, td, sd, xstart, x2, y2;
 
 				for (y=0; y<rows.length; y++) {
 					for (x=0; x<rows[y].cells.length; x++) {
@@ -260,7 +260,7 @@
 						// Fill box
 						for (y2=y; y2<y+sd['rowspan']; y2++) {
 							if (!grid[y2])
-								grid[y2] = new Array();
+								grid[y2] = [];
 
 							for (x2=xstart; x2<xstart+sd['colspan']; x2++)
 								grid[y2][x2] = td;
@@ -841,7 +841,7 @@
 									// Get rows and cells
 									var tRows = tableElm.rows;
 									for (var y=cpos.rowindex; y<grid.length; y++) {
-										var rowCells = new Array();
+										var rowCells = [];
 
 										for (var x=cpos.cellindex; x<grid[y].length; x++) {
 											var td = getCell(grid, y, x);
@@ -893,7 +893,7 @@
 								// Get rows and cells
 								var tRows = tableElm.rows;
 								for (var y=0; y<tRows.length; y++) {
-									var rowCells = new Array();
+									var rowCells = [];
 
 									for (var x=0; x<tRows[y].cells.length; x++) {
 										var td = tRows[y].cells[x];
@@ -910,7 +910,7 @@
 								}
 
 								// Find selected cells in grid and box
-								var curRow = new Array();
+								var curRow = [];
 								var lastTR = null;
 								for (var y=0; y<grid.length; y++) {
 									for (var x=0; x<grid[y].length; x++) {

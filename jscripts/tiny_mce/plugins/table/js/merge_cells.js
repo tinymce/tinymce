@@ -1,25 +1,24 @@
 tinyMCEPopup.requireLangPack();
 
 function init() {
+	var f = document.forms[0], v;
+
 	tinyMCEPopup.resizeToInnerSize();
 
-	var formObj = document.forms[0];
-
-	formObj.numcols.value = tinyMCEPopup.getWindowArg('numcols', 1);
-	formObj.numrows.value = tinyMCEPopup.getWindowArg('numrows', 1);
+	f.numcols.value = tinyMCEPopup.getWindowArg('numcols', 1);
+	f.numrows.value = tinyMCEPopup.getWindowArg('numcols', 1);
 }
 
 function mergeCells() {
-	var args = new Array();
-	var formObj = document.forms[0];
+	var args = [], f = document.forms[0];
 
-	if (!AutoValidator.validate(formObj)) {
+	if (!AutoValidator.validate(f)) {
 		alert(tinyMCEPopup.getLang('invalid_data'));
 		return false;
 	}
 
-	args["numcols"] = formObj.numcols.value;
-	args["numrows"] = formObj.numrows.value;
+	args["numcols"] = f.numcols.value;
+	args["numrows"] = f.numrows.value;
 
 	tinyMCEPopup.execCommand("mceTableMergeCells", false, args);
 	tinyMCEPopup.close();
