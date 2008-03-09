@@ -857,6 +857,12 @@
 
 										if (rowCells.length > 0)
 											rows[rows.length] = rowCells;
+
+										var td = getCell(grid, cpos.rowindex, cpos.cellindex);
+										each(ed.dom.select('br', td), function(e, i) {
+											if (i > 0 && ed.dom.getAttrib('mce_bogus'))
+												ed.dom.remove(e);
+										});
 									}
 
 									//return true;
@@ -1030,6 +1036,12 @@
 									}
 								}
 							}
+
+							// Remove all but one bogus br
+							each(ed.dom.select('br', tdElm), function(e, i) {
+								if (i > 0 && ed.dom.getAttrib(e, 'mce_bogus'))
+									ed.dom.remove(e);
+							});
 
 							break;
 						}
