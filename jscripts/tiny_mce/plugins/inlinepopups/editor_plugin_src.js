@@ -34,6 +34,7 @@
 
 			t.parent(ed);
 			t.zIndex = 1000;
+			t.count = 0;
 		},
 
 		open : function(f, p) {
@@ -62,6 +63,7 @@
 			p.mce_height = f.height;
 			p.mce_inline = true;
 			p.mce_window_id = id;
+			p.mce_auto_focus = f.auto_focus;
 
 			// Transpose
 //			po = DOM.getPos(ed.getContainer());
@@ -244,12 +246,24 @@
 				t.focus(id);
 			});
 
+			// Setup blocker
+			if (t.count == 0 && t.editor.getParam('dialog_type') == 'modal') {
+				DOM.add(DOM.doc.body, 'div', {
+					id : 'mceModalBlocker',
+					'class' : (t.editor.settings.inlinepopups_skin || 'clearlooks2') + '_modalBlocker',
+					style : {left : vp.x, top : vp.y, width : vp.w, height : vp.h, zIndex : t.zIndex - 1}
+				});
+			} else
+				DOM.setStyle('mceModalBlocker', 'z-index', t.zIndex - 1);
+
 			t.focus(id);
 			t._fixIELayout(id, 1);
 
 			// Focus ok button
 			if (DOM.get(id + '_ok'))
 				DOM.get(id + '_ok').focus();
+
+			t.count++;
 
 			return w;
 		},
@@ -288,7 +302,7 @@
 			cp = {x : 0, y : 0};
 			vp = DOM.getViewPort();
 
-			// Reduce viewport size to avoid scrollbars
+			// Reduce viewport size to avoid scrollbars while dragging
 			vp.w -= 2;
 			vp.h -= 2;
 
@@ -326,7 +340,7 @@
 				DOM.add(d.body, 'div', {
 					id : 'mceEventBlocker',
 					'class' : 'mceEventBlocker ' + (t.editor.settings.inlinepopups_skin || 'clearlooks2'),
-					style : {left : vp.x, top : vp.y, width : vp.w - 20, height : vp.h - 20, zIndex : 20001}
+					style : {left : vp.x, top : vp.y, width : vp.w + 2, height : vp.h + 2, zIndex : 20001}
 				});
 				eb = new Element('mceEventBlocker');
 				eb.update();
@@ -444,6 +458,11 @@
 
 		close : function(win, id) {
 			var t = this, w, d = document, ix = 0, fw;
+
+			t.count--;
+
+			if (t.count == 0)
+				DOM.remove('mceModalBlocker');
 
 			// Probably not inline
 			if (!id && win) {

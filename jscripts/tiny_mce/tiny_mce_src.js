@@ -9850,6 +9850,7 @@ tinymce.create('tinymce.UndoManager', {
 			p.inline = false;
 			p.mce_width = s.width;
 			p.mce_height = s.height;
+			p.mce_auto_focus = s.auto_focus;
 
 			if (mo) {
 				if (isIE) {

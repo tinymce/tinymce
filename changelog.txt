@@ -4,8 +4,10 @@ Version 3.0.5 (2008-03-xx)
 	Fixed bug where class of elements would get lost when TinyMCE was fixing incorrect HTML markup.
 	Fixed bug where table editing would produce double height values.
 	Fixed bug where width style value wouldn't be removed if you switched width unit from cm/em to pixels or percent.
+	Fixed bug where the search/replace input box wasn't auto focused like the other dialogs.
 	Fixed various bugs and quirks with the store/restore selection logic.
 	Fixed so the editor starts in IE 8 standards mode but still that browser is very very buggy.
+	Fixed so dialog_type set to modal will block the background and other inline windows and only give access to the front most window.
 Version 3.0.4.1 (2008-03-08)
 	Fixed critical bug where it was impossible to edit images when inlinepopups where used due to lost selection in IE.
 Version 3.0.4 (2008-03-07)
