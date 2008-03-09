@@ -1189,8 +1189,16 @@
 
 									// Copy all attributes
 									n.cloneNode(false).outerHTML.replace(/([a-z0-9\-_]+)=/gi, function(a, b) {
-										if (b !== 'mce_tmp')
-											p.setAttribute(b, n.getAttribute(b));
+										var v;
+
+										if (b !== 'mce_tmp') {
+											v = n.getAttribute(b);
+
+											if (!v && b === 'class')
+												v = n.className;
+
+											p.setAttribute(b, v);
+										}
 									});
 
 									// Append all children to new paragraph

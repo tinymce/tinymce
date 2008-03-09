@@ -401,6 +401,9 @@ var unitTester = new tinymce.util.UnitTester('log', {
 
 			editor.setContent('<p><span><ul><li>Item 1</li></ul></span></p>');
 			t.eq(editor.getContent(), '<p><span><ul><li>Item 1</li></ul></span></p>');
+
+			editor.setContent('<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>');
+			t.eq(editor.getContent(), '<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>');
 		}
 	});
 
@@ -475,7 +478,7 @@ tinyMCE.init({
 		editor = ed;
 
 		window.setTimeout(function() {
-			//unitTester.runAsync('commands');
+			//unitTester.run('internals', 'explorerBugs');
 			unitTester.run();
 		}, 1000);
 	}

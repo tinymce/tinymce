@@ -88,8 +88,10 @@ function insertTable() {
 		if (width && /(pt|em|cm)$/.test(width)) {
 			dom.setStyle(elm, 'width', width);
 			dom.setAttrib(elm, 'width', '');
-		} else
+		} else {
 			dom.setAttrib(elm, 'width', width, true);
+			dom.setStyle(elm, 'width', '');
+		}
 
 		// Remove these since they are not valid XHTML
 		dom.setAttrib(elm, 'borderColor', '');
@@ -97,7 +99,7 @@ function insertTable() {
 		dom.setAttrib(elm, 'background', '');
 
 		if (height) {
-			dom.setStyle(elm, 'height', width);
+			dom.setStyle(elm, 'height', height);
 			dom.setAttrib(elm, 'height', '');
 		}
 
@@ -153,12 +155,12 @@ function insertTable() {
 	} else
 		html += makeAttrib('width', width);
 
-	if (height) {
+/*	if (height) {
 		if (style)
 			style += '; ';
 
 		style += 'height: ' + height;
-	}
+	}*/
 
 	//html += makeAttrib('height', height);
 	//html += makeAttrib('bordercolor', bordercolor);
