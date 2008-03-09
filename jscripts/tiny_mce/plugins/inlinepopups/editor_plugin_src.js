@@ -253,6 +253,8 @@
 					'class' : (t.editor.settings.inlinepopups_skin || 'clearlooks2') + '_modalBlocker',
 					style : {left : vp.x, top : vp.y, width : vp.w, height : vp.h, zIndex : t.zIndex - 1}
 				});
+
+				DOM.show('mceModalBlocker'); // Reduces flicker in IE
 			} else
 				DOM.setStyle('mceModalBlocker', 'z-index', t.zIndex - 1);
 
