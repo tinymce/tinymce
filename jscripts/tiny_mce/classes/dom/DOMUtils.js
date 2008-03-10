@@ -977,11 +977,7 @@
 					return;
 
 				t.files[u] = true;
-
-				if (!d.createStyleSheet)
-					t.add(t.select('head')[0], 'link', {rel : 'stylesheet', href : u});
-				else
-					d.createStyleSheet(u);
+				t.add(t.select('head')[0], 'link', {rel : 'stylesheet', href : u});
 			});
 		},
 
