@@ -812,17 +812,16 @@
 			while (r) {
 				x += r.offsetLeft || 0;
 				y += r.offsetTop || 0;
-
 				r = r.offsetParent;
 			}
 
 			r = n;
 			while (r) {
-				// Opera 9.25 bug fix, fixed in 9.50 seems to be fixed in Opera 9.26 too
-			/*	if (!tinymce.isOpera || r.nodeName != 'TR') {
+				// Opera 9.25 bug fix, fixed in 9.50
+				if (!/^table-row|inline.*/i.test(t.getStyle(r, "display", 1))) {
 					x -= r.scrollLeft || 0;
 					y -= r.scrollTop || 0;
-				}*/
+				}
 
 				r = r.parentNode;
 

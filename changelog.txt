@@ -1,4 +1,5 @@
 Version 3.0.5 (2008-03-xx)
+	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.
 	Fixed bug where the menu for the ColorSplitButton wasn't removed when the editor was removed.
 	Fixed bug where font colors couldn't be edited correctly since the style of the element didn't get updated correctly.
 	Fixed bug where class of elements would get lost when TinyMCE was fixing incorrect HTML markup.
@@ -7,6 +8,7 @@ Version 3.0.5 (2008-03-xx)
 	Fixed bug where the search/replace input box wasn't auto focused like the other dialogs.
 	Fixed bug where the old mceAddControl command would use the fullscreen settings next time it created an instance.
 	Fixed bug where multiple lines where added to the target cell if you merged multiple empty cells.
+	Fixed bug where drop down menus would be incorrectly positioned inside scrollable divs.
 	Fixed various bugs and quirks with the store/restore selection logic.
 	Fixed so the editor starts in IE 8 standards mode but still that browser is very very buggy.
 	Fixed so dialog_type set to modal will block the background and other inline windows and only give access to the front most window.
