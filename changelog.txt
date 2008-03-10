@@ -10,6 +10,8 @@ Version 3.0.5 (2008-03-xx)
 	Fixed bug where multiple lines where added to the target cell if you merged multiple empty cells.
 	Fixed bug where drop down menus would be incorrectly positioned inside scrollable divs.
 	Fixed bug where the separators of the silver skin variant didn't display correctly in IE 6.
+	Fixed bug where popups_css and popups_css_add options didn't work since they where named popup_css and popup_css_add in the code.
+	Fixed so the popup_css and popup_css_add URLs are relative to where the current document is located.
 	Fixed various bugs and quirks with the store/restore selection logic.
 	Fixed so the editor starts in IE 8 standards mode but still that browser is very very buggy.
 	Fixed so dialog_type set to modal will block the background and other inline windows and only give access to the front most window.

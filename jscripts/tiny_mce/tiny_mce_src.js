@@ -6081,7 +6081,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				skin : 'default',
 				delta_width : 0,
 				delta_height : 0,
-				popup_css : '',
+				popups_css : '',
 				plugins : '',
 				document_base_url : tinymce.documentBaseURL,
 				add_form_submit_trigger : 1,
@@ -6286,10 +6286,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			});
 
 			// Setup popup CSS path(s)
-			s.popup_css = t.baseURI.toAbsolute(s.popup_css || "themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
+			if (s.popups_css)
+				s.popups_css = t.documentBaseURI.toAbsolute(s.popups_css);
+			else
+				s.popups_css = t.baseURI.toAbsolute("themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
 
-			if (s.popup_css_add)
-				s.popup_css += ',' + s.popup_css_add;
+			if (s.popups_css_add)
+				s.popups_css += ',' + t.documentBaseURI.toAbsolute(s.popups_css_add);
 
 			// Setup control factory
 			t.controlManager = new tinymce.ControlManager(t);
@@ -6372,7 +6375,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (h < 100)
 				h = 100;
 
-			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" />';
+			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '"></base>';
 			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 			if (tinymce.relaxedDomain)
