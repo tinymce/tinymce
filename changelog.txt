@@ -12,6 +12,7 @@ Version 3.0.5 (2008-03-xx)
 	Fixed bug where the separators of the silver skin variant didn't display correctly in IE 6.
 	Fixed bug where popups_css and popups_css_add options didn't work since they where named popup_css and popup_css_add in the code.
 	Fixed bug where createStyleSheet seems to load scripts at opposite order in some IE versions.
+	Fixed bug where directionality could produce odd results for the UI and the dialogs.
 	Fixed so the popup_css and popup_css_add URLs are relative to where the current document is located.
 	Fixed various bugs and quirks with the store/restore selection logic.
 	Fixed so the editor starts in IE 8 standards mode but still that browser is very very buggy.
