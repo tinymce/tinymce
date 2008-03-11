@@ -873,6 +873,10 @@
 			DOM.setHTML('test', '<div mce_name="mytag" class="test">test</div>');
 			t.eq(ser.serialize(DOM.get('test')), '<div id="test"><mytag class="test">test</mytag></div>', null, tinymce.isOldWebKit);
 
+			ser.setRules('*[*]');
+			DOM.setHTML('test', '<div test:attr="test">test</div>');
+			t.eq(ser.serialize(DOM.get('test'), {getInner : 1}), '<div test:attr="test">test</div>');
+
 			ser.setRules('#p');
 			DOM.setHTML('test', '<p>test</p><p></p>');
 			t.eq(ser.serialize(DOM.get('test')), '<p>test</p><p>&nbsp;</p>', null, tinymce.isOldWebKit);

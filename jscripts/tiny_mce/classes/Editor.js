@@ -764,7 +764,7 @@
 
 			e.contentEditable = true;
 			if (!s.gecko_spellcheck)
-				e.spellcheck = 0;
+				t.getDoc().body.spellcheck = 0;
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
