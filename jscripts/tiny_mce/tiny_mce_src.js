@@ -4925,7 +4925,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		renderNode : function() {
 			var t = this, s = t.settings, n, tb, co, w;
 
-			w = DOM.create('div', {id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:150'});
+			w = DOM.create('div', {id : 'menu_' + t.id, dir : 'ltr', 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:150'});
 			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
@@ -5091,7 +5091,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		renderHTML : function() {
 			var h = '', t = this, s = t.settings;
 
-			h = '<table id="' + t.id + '" dir="ltr" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
+			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
@@ -5415,7 +5415,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			h += '</tr></tbody>';
 
-			return DOM.createHTML('table', {id : t.id, dir : 'ltr', 'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'], cellpadding : '0', cellspacing : '0', onmousedown : 'return false;', title : s.title}, h);
+			return DOM.createHTML('table', {id : t.id, 'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'], cellpadding : '0', cellspacing : '0', onmousedown : 'return false;', title : s.title}, h);
 		},
 
 		postRender : function() {
@@ -5505,7 +5505,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr, w;
 
-			w = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
+			w = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', dir : 'ltr', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
 			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 

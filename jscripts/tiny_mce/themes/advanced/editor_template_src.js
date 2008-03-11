@@ -312,7 +312,7 @@
 			if (!DOM.boxModel)
 				n = DOM.add(n, 'div', {'class' : 'mceOldBoxModel'});
 
-			n = sc = DOM.add(n, 'table', {id : ed.id + '_tbl', 'class' : 'mceLayout', cellSpacing : 0, cellPadding : 0});
+			n = sc = DOM.add(n, 'table', {id : ed.id + '_tbl', dir : 'ltr', 'class' : 'mceLayout', cellSpacing : 0, cellPadding : 0});
 			n = tb = DOM.add(n, 'tbody');
 
 			switch ((s.theme_advanced_layout_manager || '').toLowerCase()) {
