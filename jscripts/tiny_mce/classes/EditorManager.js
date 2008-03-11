@@ -7,7 +7,7 @@
 
 (function() {
 	// Shorten names
-	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager;
+	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, explode = tinymce.explode;
 
 	/**#@+
 	 * @class This class is used to create multiple editor instances and contain them in a collection. So it's both a factory and a manager for editor instances.
@@ -66,7 +66,7 @@
 
 				// Load plugins
 				if (s.plugins) {
-					pl = s.plugins.split(',');
+					pl = explode(s.plugins);
 
 					// Load compat2x first
 					if (tinymce.inArray(pl, 'compat2x') != -1)
@@ -97,7 +97,7 @@
 				if (s.browsers) {
 					l = false;
 
-					each(s.browsers.split(','), function(v) {
+					each(explode(s.browsers), function(v) {
 						switch (v) {
 							case 'ie':
 							case 'msie':
@@ -134,7 +134,7 @@
 						l = s.elements || '';
 
 						if(l.length > 0) {
-							each(l.split(','), function(v) {
+							each(explode(l), function(v) {
 								if (DOM.get(v))
 									new tinymce.Editor(v, s).render(1);
 								else {

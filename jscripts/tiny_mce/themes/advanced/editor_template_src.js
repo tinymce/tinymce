@@ -6,7 +6,7 @@
  */
 
 (function() {
-	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, each = tinymce.each, Cookie = tinymce.util.Cookie, lastExtID;
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, each = tinymce.each, Cookie = tinymce.util.Cookie, lastExtID, explode = tinymce.explode;
 
 	// Tell it to load theme specific language pack(s)
 	tinymce.ThemeManager.requireLangPack('advanced');
@@ -55,8 +55,8 @@
 		stateControls : ['bold', 'italic', 'underline', 'strikethrough', 'bullist', 'numlist', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'sub', 'sup', 'blockquote'],
 
 		init : function(ed, url) {
-			var t = this, s;
-
+			var t = this, s, v;
+	
 			t.editor = ed;
 			t.url = url;
 			t.onResolveName = new tinymce.util.Dispatcher(this);
@@ -78,7 +78,7 @@
 				theme_advanced_resizing_use_cookie : 1
 			}, ed.settings);
 
-			if (s.theme_advanced_path_location)
+			if ((v = s.theme_advanced_path_location) && v != 'none')
 				s.theme_advanced_statusbar_location = s.theme_advanced_path_location;
 
 			if (s.theme_advanced_statusbar_location == 'none')
@@ -217,7 +217,7 @@
 
 			c = t.editor.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', cmd : 'FontSize'});
 
-			each(t.settings.theme_advanced_font_sizes.split(','), function(v) {
+			each(explode(t.settings.theme_advanced_font_sizes), function(v) {
 				c.add(lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'pt', 'class' : 'mceFontSize' + v});
 			});
 
@@ -245,7 +245,7 @@
 
 			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
 
-			each(t.settings.theme_advanced_blockformats.split(','), function(v) {
+			each(explode(t.settings.theme_advanced_blockformats), function(v) {
 				c.add(t.editor.translate(fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
 			});
 
@@ -501,7 +501,7 @@
 			dc = s.theme_advanced_containers_default_class || '';
 			da = s.theme_advanced_containers_default_align || 'center';
 
-			each((s.theme_advanced_containers || '').split(','), function(c, i) {
+			each(explode(s.theme_advanced_containers || ''), function(c, i) {
 				var v = s['theme_advanced_container_' + c] || '';
 
 				switch (c.toLowerCase()) {
@@ -538,7 +538,7 @@
 			if (s.theme_advanced_disable && !t._disabled) {
 				di = {};
 
-				each(s.theme_advanced_disable.split(','), function(v) {
+				each(explode(s.theme_advanced_disable), function(v) {
 					di[v] = 1;
 				});
 
@@ -546,7 +546,7 @@
 			} else
 				di = t._disabled;
 
-			each(v.split(','), function(n) {
+			each(explode(v), function(n) {
 				var c;
 
 				if (di && di[n])

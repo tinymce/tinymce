@@ -470,6 +470,16 @@ var tinymce = {
 		});
 
 		return r;
+	},
+
+	/**
+	 * Splits a string but removes the whitespace before and after each value.
+	 *
+	 * @param {string} s String to split.
+	 * @param {string} d Delimiter to split by.
+	 */
+	explode : function(s, d) {
+		return tinymce.map(s.split(d || ','), tinymce.trim);
 	}
 
 	/**#@-*/
