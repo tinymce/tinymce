@@ -1,6 +1,8 @@
 Version 3.0.5 (2008-03-xx)
 	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.
 	Added new explode method to the tinymce core class. This does a split but removed whitespace it also defaults to a , delimiter.
+	Added new detection logic for IE 8 standards mode into the DOMUtils class strMode can now be checked to see if that mode is on/off.
+	Added new noscale option value for the scale select box for Flash in the media plugin.
 	Fixed bug where the menu for the ColorSplitButton wasn't removed when the editor was removed.
 	Fixed bug where font colors couldn't be edited correctly since the style of the element didn't get updated correctly.
 	Fixed bug where class of elements would get lost when TinyMCE was fixing incorrect HTML markup.
@@ -16,6 +18,7 @@ Version 3.0.5 (2008-03-xx)
 	Fixed bug where directionality could produce odd results for the UI and the dialogs.
 	Fixed bug where the DOM serializer wouldn't serialize custom namespaced attributes in IE 6 using the *[*] valid elements rule.
 	Fixed bug where table caption would be inserted after the thead element if you swapped a tr to be inside the thead.
+	Fixed bug where the youtube detection logic for the media plugin was to generic.
 	Fixed so the deprecated and undocumented theme_advanced_path_location set to none won't hide the whole statusbar.
 	Fixed so most input lists can have whitespace in them they are now split using the new tinymce.explode method.
 	Fixed so the popup_css and popup_css_add URLs are relative to where the current document is located.

@@ -921,6 +921,7 @@ tinymce.create('static tinymce.util.XHR', {
 			t.cssFlicker = false;
 			t.counter = 0;
 			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat"; 
+			t.stdMode = d.documentMode === 8;
 
 			this.settings = s = tinymce.extend({
 				keep_values : false,
@@ -5614,7 +5615,12 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			}
 
 			// Render control HTML
-			h += '<td>' + co.renderHTML() + '</td>';
+
+			// IE 8 quick fix, needed to propertly generate a hit area for anchors
+			if (dom.stdMode)
+				h += '<td style="position: relative">' + co.renderHTML() + '</td>';
+			else
+				h += '<td>' + co.renderHTML() + '</td>';
 
 			// Add toolbar start after list box and before the next button
 			// This is to fix the o2k7 editor skins
