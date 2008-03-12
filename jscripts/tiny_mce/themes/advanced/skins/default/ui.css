@@ -22,8 +22,9 @@
 .defaultSkin table.mceToolbar, .defaultSkin tr.mceFirst .mceToolbar tr td, .defaultSkin tr.mceLast .mceToolbar tr td {border:0; margin:0; padding:0;}
 .defaultSkin td.mceToolbar {padding-top:1px; vertical-align:top}
 .defaultSkin .mceIframeContainer {border-top:1px solid #CCC; border-bottom:1px solid #CCC}
-.defaultSkin .mceStatusbar {position:relative; font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:16px; overflow:visible; padding:2px; color:#000; display:block}
-.defaultSkin .mceStatusbar a.mceResize {display:block; position:absolute; top:0; right:0; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize}
+.defaultSkin .mceStatusbar {font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:16px; overflow:visible; color:#000; display:block; height:20px}
+.defaultSkin .mceStatusbar div {float:left; margin:2px}
+.defaultSkin .mceStatusbar a.mceResize {display:block; float:right; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize}
 .defaultSkin .mceStatusbar a:hover {text-decoration:underline}
 .defaultSkin table.mceToolbar {margin-left:3px}
 .defaultSkin span.mceIcon, .defaultSkin img.mceIcon {display:block; width:20px; height:20px}

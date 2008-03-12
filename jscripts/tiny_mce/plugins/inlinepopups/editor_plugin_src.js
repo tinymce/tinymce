@@ -251,7 +251,7 @@
 				DOM.add(DOM.doc.body, 'div', {
 					id : 'mceModalBlocker',
 					'class' : (t.editor.settings.inlinepopups_skin || 'clearlooks2') + '_modalBlocker',
-					style : {left : vp.x, top : vp.y, width : vp.w, height : vp.h, zIndex : t.zIndex - 1}
+					style : {left : vp.x, top : vp.y, zIndex : t.zIndex - 1}
 				});
 
 				DOM.show('mceModalBlocker'); // Reduces flicker in IE
@@ -342,7 +342,7 @@
 				DOM.add(d.body, 'div', {
 					id : 'mceEventBlocker',
 					'class' : 'mceEventBlocker ' + (t.editor.settings.inlinepopups_skin || 'clearlooks2'),
-					style : {left : vp.x, top : vp.y, width : vp.w + 2, height : vp.h + 2, zIndex : 20001}
+					style : {left : vp.x, top : vp.y, zIndex : 20001}
 				});
 				eb = new Element('mceEventBlocker');
 				eb.update();
