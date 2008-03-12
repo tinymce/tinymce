@@ -331,7 +331,7 @@
 			n = o.targetNode;
 
 			// Add classes to first and last TRs
-			nl = sc.getElementsByTagName('tr');
+			nl = DOM.stdMode ? sc.getElementsByTagName('tr') : sc.rows; // Quick fix for IE 8
 			DOM.addClass(nl[0], 'mceFirst');
 			DOM.addClass(nl[nl.length - 1], 'mceLast');
 
