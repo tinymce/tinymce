@@ -1,4 +1,4 @@
-Version 3.0.5 (2008-03-xx)
+Version 3.0.5 (2008-03-12)
 	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.
 	Added new explode method to the tinymce core class. This does a split but removed whitespace it also defaults to a , delimiter.
 	Added new detection logic for IE 8 standards mode into the DOMUtils class strMode can now be checked to see if that mode is on/off.
