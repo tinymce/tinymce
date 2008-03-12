@@ -13,7 +13,6 @@ Version 3.0.5 (2008-03-xx)
 	Fixed bug where multiple lines where added to the target cell if you merged multiple empty cells.
 	Fixed bug where drop down menus would be incorrectly positioned inside scrollable divs.
 	Fixed bug where the separators of the silver skin variant didn't display correctly in IE 6.
-	Fixed bug where popups_css and popups_css_add options didn't work since they where named popup_css and popup_css_add in the code.
 	Fixed bug where createStyleSheet seems to load scripts at opposite order in some IE versions.
 	Fixed bug where directionality could produce odd results for the UI and the dialogs.
 	Fixed bug where the DOM serializer wouldn't serialize custom namespaced attributes in IE 6 using the *[*] valid elements rule.

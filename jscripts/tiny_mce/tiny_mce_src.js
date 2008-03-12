@@ -6087,7 +6087,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				skin : 'default',
 				delta_width : 0,
 				delta_height : 0,
-				popups_css : '',
+				popup_css : '',
 				plugins : '',
 				document_base_url : tinymce.documentBaseURL,
 				add_form_submit_trigger : 1,
@@ -6292,13 +6292,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			});
 
 			// Setup popup CSS path(s)
-			if (s.popups_css)
-				s.popups_css = t.documentBaseURI.toAbsolute(s.popups_css);
+			if (s.popup_css)
+				s.popup_css = t.documentBaseURI.toAbsolute(s.popup_css);
 			else
-				s.popups_css = t.baseURI.toAbsolute("themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
+				s.popup_css = t.baseURI.toAbsolute("themes/" + s.theme + "/skins/" + s.skin + "/dialog.css");
 
-			if (s.popups_css_add)
-				s.popups_css += ',' + t.documentBaseURI.toAbsolute(s.popups_css_add);
+			if (s.popup_css_add)
+				s.popup_css += ',' + t.documentBaseURI.toAbsolute(s.popup_css_add);
 
 			// Setup control factory
 			t.controlManager = new tinymce.ControlManager(t);
