@@ -43,7 +43,7 @@
 			if (s.image)
 				h1 = DOM.createHTML('img ', {src : s.image, 'class' : 'mceAction ' + s['class']});
 			else
-				h1 = DOM.createHTML('span', {'class' : 'mceAction ' + s['class']});
+				h1 = DOM.createHTML('span', {'class' : 'mceAction ' + s['class']}, '');
 
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'mceAction ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 	

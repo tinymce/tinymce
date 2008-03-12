@@ -44,7 +44,7 @@
 		 * and displays a table of colors for the user to pick from.
 		 */
 		showMenu : function() {
-			var t = this, r, p, e;
+			var t = this, r, p, e, p2;
 
 			if (t.isDisabled())
 				return;
@@ -143,18 +143,20 @@
 		 * @param {String} c Color code value in hex for example: #FF00FF
 		 */
 		setColor : function(c) {
-			var t = this, p, s = this.settings, co = s.menu_container, po, cp, id = t.id + '_preview';
+			var t = this;
 
-			if (!(p = DOM.get(id))) {
-				DOM.setStyle(t.id + '_action', 'position', 'relative');
-				p = DOM.add(t.id + '_action', 'div', {id : id, 'class' : 'mceColorPreview'});
-			}
-
-			p.style.backgroundColor = c;
+			DOM.setStyle(t.id + '_preview', 'backgroundColor', c);
 
 			t.value = c;
 			t.hideMenu();
-			s.onselect(c);
+			t.settings.onselect(c);
+		},
+
+		postRender : function() {
+			var id = this.id;
+
+			this.parent();
+			DOM.add(id + '_action', 'div', {id : id + '_preview', 'class' : 'mceColorPreview'});
 		},
 
 		/**

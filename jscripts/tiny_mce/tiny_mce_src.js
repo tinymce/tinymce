@@ -5411,7 +5411,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (s.image)
 				h1 = DOM.createHTML('img ', {src : s.image, 'class' : 'mceAction ' + s['class']});
 			else
-				h1 = DOM.createHTML('span', {'class' : 'mceAction ' + s['class']});
+				h1 = DOM.createHTML('span', {'class' : 'mceAction ' + s['class']}, '');
 
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_action', href : 'javascript:;', 'class' : 'mceAction ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 	
@@ -5473,7 +5473,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		showMenu : function() {
-			var t = this, r, p, e;
+			var t = this, r, p, e, p2;
 
 			if (t.isDisabled())
 				return;
@@ -5558,18 +5558,20 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		setColor : function(c) {
-			var t = this, p, s = this.settings, co = s.menu_container, po, cp, id = t.id + '_preview';
+			var t = this;
 
-			if (!(p = DOM.get(id))) {
-				DOM.setStyle(t.id + '_action', 'position', 'relative');
-				p = DOM.add(t.id + '_action', 'div', {id : id, 'class' : 'mceColorPreview'});
-			}
-
-			p.style.backgroundColor = c;
+			DOM.setStyle(t.id + '_preview', 'backgroundColor', c);
 
 			t.value = c;
 			t.hideMenu();
-			s.onselect(c);
+			t.settings.onselect(c);
+		},
+
+		postRender : function() {
+			var id = this.id;
+
+			this.parent();
+			DOM.add(id + '_action', 'div', {id : id + '_preview', 'class' : 'mceColorPreview'});
 		},
 
 		destroy : function() {
