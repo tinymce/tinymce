@@ -78,6 +78,13 @@
 			t.eq(c.join(','), '1,2,3,4');
 		},
 
+		explode : function() {
+			var t = this, c;
+
+			t.eq(tinymce.explode(' a, b, c ').join(','), 'a,b,c');
+			t.eq(tinymce.explode(' a;  b; c ', ';').join(','), 'a,b,c');
+		},
+
 		inArray : function() {
 			var t = this;
 

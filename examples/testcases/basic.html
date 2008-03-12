@@ -403,7 +403,7 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			t.eq(editor.getContent(), '<p><span><ul><li>Item 1</li></ul></span></p>');
 
 			editor.setContent('<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>');
-			t.eq(editor.getContent(), '<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>');
+			t.eq(editor.getContent(), tinymce.isIE ? '<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>' : (tinymce.isOpera ? '<p class="test">test1</p><p>&nbsp;</p><div>test2</div><p class="test">test3</p>' : '<p class="test">test1</p><p>&nbsp;</p><div>test2</div><p>&nbsp;</p><p class="test">test3</p>'));
 		}
 	});
 
