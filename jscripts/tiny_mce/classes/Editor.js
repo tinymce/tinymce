@@ -69,7 +69,8 @@
 				'onUndo',
 				'onRedo',
 				'onVisualAid',
-				'onSetProgressState'
+				'onSetProgressState',
+				'onBeforeDestroy'
 			], function(e) {
 				t[e] = new Dispatcher(t);
 			});
@@ -2062,6 +2063,8 @@
 
 		_destroy : function() {
 			var t = this;
+
+			t.onBeforeDestroy.dispatch(t);
 
 			if (t.formElement) {
 				t.formElement.submit = t.formElement._mceOldSubmit;

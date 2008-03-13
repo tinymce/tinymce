@@ -133,6 +133,24 @@
 			return s;
 		},
 
+		/**
+		 * Clears all events of a specific object.
+		 *
+		 * @param {Object} o DOM element or object to remove all events from.
+		 */
+		clear : function(o) {
+			var t = this, a = t.events, i, e;
+
+			for (i = a.length - 1; i >= 0; i--) {
+				e = a[i];
+
+				if (e.obj == o) {
+					a.splice(i, 1);
+					t._remove(o, e.name, e.cfunc);
+				}
+			}
+		},
+
 		// #endif
 
 		/**

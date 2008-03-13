@@ -470,17 +470,33 @@
 		},
 
 		backspaceDelete : function(e, bs) {
-			var t = this, ed = t.editor, b = ed.getBody(), n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n;
+			var t = this, ed = t.editor, b = ed.getBody(), n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn;
 
 			// The caret sometimes gets stuck in Gecko if you delete empty paragraphs
 			// This workaround removes the element by hand and moves the caret to the previous element
 			if (sc && ed.dom.isBlock(sc) && bs) {
-				if (sc.childNodes.length == 1 && sc.firstChild.nodeName == 'BR') {
-					n = sc.previousSibling;
+				if (sc.childNodes.length == 0 || (sc.childNodes.length == 1 && sc.firstChild.nodeName == 'BR')) {
+					// Find previous block element
+					n = sc;
+					while ((n = n.previousSibling) && !ed.dom.isBlock(n)) ;
+
 					if (n) {
-						ed.dom.remove(sc);
-						se.select(n.firstChild);
-						se.collapse(0);
+						if (sc != b.firstChild) {
+							// Find last text node
+							w = ed.dom.doc.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false);
+							while (tn = w.nextNode())
+								n = tn;
+
+							// Place caret at the end of last text node
+							r = ed.getDoc().createRange();
+							r.setStart(n, n.nodeValue ? n.nodeValue.length : 0);
+							r.setEnd(n, n.nodeValue ? n.nodeValue.length : 0);
+							se.setRng(r);
+
+							// Remove the target container
+							ed.dom.remove(sc);
+						}
+
 						return Event.cancel(e);
 					}
 				}
@@ -491,9 +507,12 @@
 				e = e.target;
 
 				// A new BR was created in a block element, remove it
-				if (e && e.parentNode && e.nodeName == 'BR' && t.getParentBlock(e)) {
-					ed.dom.remove(e);
+				if (e && e.parentNode && e.nodeName == 'BR' && (n = t.getParentBlock(e))) {
 					Event.remove(b, 'DOMNodeInserted', handler);
+
+					// Only remove BR elements that got inserted in the middle of the text
+					if (e.previousSibling || e.nextSibling)
+						ed.dom.remove(e);
 				}
 			};
 
