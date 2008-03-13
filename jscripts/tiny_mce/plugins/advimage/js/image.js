@@ -16,6 +16,7 @@ var ImageDialog = {
 		this.fillFileList('src_list', 'tinyMCEImageList');
 		this.fillFileList('over_list', 'tinyMCEImageList');
 		this.fillFileList('out_list', 'tinyMCEImageList');
+		TinyMCE_EditableSelects.init();
 
 		if (n.nodeName == 'IMG') {
 			nl.src.value = dom.getAttrib(n, 'src');
@@ -27,7 +28,7 @@ var ImageDialog = {
 			nl.hspace.value = this.getAttrib(n, 'hspace');
 			nl.border.value = this.getAttrib(n, 'border');
 			selectByValue(f, 'align', this.getAttrib(n, 'align'));
-			selectByValue(f, 'class_list', dom.getAttrib(n, 'class'));
+			selectByValue(f, 'class_list', dom.getAttrib(n, 'class'), true, true);
 			nl.style.value = dom.getAttrib(n, 'style');
 			nl.id.value = dom.getAttrib(n, 'id');
 			nl.dir.value = dom.getAttrib(n, 'dir');

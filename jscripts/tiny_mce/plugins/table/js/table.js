@@ -286,12 +286,13 @@ function init() {
 	}
 
 	addClassesToList('class', "table_styles");
+	TinyMCE_EditableSelects.init();
 
 	// Update form
 	selectByValue(formObj, 'align', align);
 	selectByValue(formObj, 'frame', frame);
 	selectByValue(formObj, 'rules', rules);
-	selectByValue(formObj, 'class', className);
+	selectByValue(formObj, 'class', className, true, true);
 	formObj.cols.value = cols;
 	formObj.rows.value = rows;
 	formObj.border.value = border;

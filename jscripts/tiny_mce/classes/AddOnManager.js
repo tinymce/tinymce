@@ -77,10 +77,15 @@
 		 * @param {Object} s Optional scope to execute the callback in.
 		 */
 		load : function(n, u, cb, s) {
+			var t = this;
+
+			if (t.get(n))
+				return;
+
 			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
 				u = tinymce.baseURL + '/' +  u;
 
-			this.urls[n] = u.substring(0, u.lastIndexOf('/'));
+			t.urls[n] = u.substring(0, u.lastIndexOf('/'));
 			tinymce.ScriptLoader.add(u, cb, s);
 		}
 

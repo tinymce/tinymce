@@ -26,6 +26,8 @@ function init() {
 
 	// Setup form
 	addClassesToList('class', 'table_row_styles');
+	TinyMCE_EditableSelects.init();
+
 	formObj.bgcolor.value = bgcolor;
 	formObj.backgroundimage.value = backgroundimage;
 	formObj.height.value = height;
@@ -34,7 +36,7 @@ function init() {
 	formObj.style.value = dom.serializeStyle(st);
 	selectByValue(formObj, 'align', align);
 	selectByValue(formObj, 'valign', valign);
-	selectByValue(formObj, 'class', className);
+	selectByValue(formObj, 'class', className, true, true);
 	selectByValue(formObj, 'rowtype', rowtype);
 	selectByValue(formObj, 'dir', dir);
 

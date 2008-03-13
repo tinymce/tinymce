@@ -91,6 +91,14 @@
 		load : function(u, cb, s) {
 			var t = this, o;
 
+			if (o = t.lookup[u]) {
+				// Is loaded fire callback
+				if (cb && o.state == 2)
+					cb.call(s || t);
+
+				return o;
+			}
+
 			function loadScript(u) {
 				if (tinymce.dom.Event.domLoaded || t.settings.strict_mode) {
 					tinymce.util.XHR.send({

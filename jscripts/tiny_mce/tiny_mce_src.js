@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.5',
-	releaseDate : '2008-03-12',
+	minorVersion : '0.6',
+	releaseDate : '2008-03-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -4270,6 +4270,14 @@ tinymce.create('static tinymce.util.XHR', {
 		load : function(u, cb, s) {
 			var t = this, o;
 
+			if (o = t.lookup[u]) {
+				// Is loaded fire callback
+				if (cb && o.state == 2)
+					cb.call(s || t);
+
+				return o;
+			}
+
 			function loadScript(u) {
 				if (tinymce.dom.Event.domLoaded || t.settings.strict_mode) {
 					tinymce.util.XHR.send({
@@ -5701,10 +5709,15 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		load : function(n, u, cb, s) {
+			var t = this;
+
+			if (t.get(n))
+				return;
+
 			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
 				u = tinymce.baseURL + '/' +  u;
 
-			this.urls[n] = u.substring(0, u.lastIndexOf('/'));
+			t.urls[n] = u.substring(0, u.lastIndexOf('/'));
 			tinymce.ScriptLoader.add(u, cb, s);
 		}
 
