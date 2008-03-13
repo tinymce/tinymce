@@ -9030,11 +9030,11 @@ tinymce.create('tinymce.UndoManager', {
 
 			ed.onPreInit.add(t.setup, t);
 
-			t.reOpera = new RegExp('(\u00a0|&#160;|&nbsp;)<\/' + elm + '>', 'gi');
-			t.rePadd = new RegExp('<p( )([^>]+)><\/p>|<p( )([^>]+)\/>|<p( )([^>]+)>\s+<\/p>|<p><\/p>|<p\/>|<p>\s+<\/p>'.replace(/p/g, elm), 'gi');
-			t.reNbsp2BR = new RegExp('<p( )([^>]+)>[\s\u00a0]+<\/p>|<p>[\s\u00a0]+<\/p>'.replace(/p/g, elm), 'gi');
-			t.reBR2Nbsp = new RegExp('<p( )([^>]+)>\s*<br \/>\s*<\/p>|<p>\s*<br \/>\s*<\/p>'.replace(/p/g, elm), 'gi');
-			t.reTrailBr = new RegExp('\s*<br \/>\s*<\/p>'.replace(/p/g, elm), 'gi');
+			t.reOpera = new RegExp('(\\u00a0|&#160;|&nbsp;)<\/' + elm + '>', 'gi');
+			t.rePadd = new RegExp('<p( )([^>]+)><\\\/p>|<p( )([^>]+)\\\/>|<p( )([^>]+)>\\s+<\\\/p>|<p><\\\/p>|<p\\\/>|<p>\\s+<\\\/p>'.replace(/p/g, elm), 'gi');
+			t.reNbsp2BR = new RegExp('<p( )([^>]+)>[\\s\\u00a0]+<\\\/p>|<p>[\\s\\u00a0]+<\\\/p>'.replace(/p/g, elm), 'gi');
+			t.reBR2Nbsp = new RegExp('<p( )([^>]+)>\\s*<br \\\/>\\s*<\\\/p>|<p>\\s*<br \\\/>\\s*<\\\/p>'.replace(/p/g, elm), 'gi');
+			t.reTrailBr = new RegExp('\\s*<br \\/>\\s*<\\\/p>'.replace(/p/g, elm), 'gi');
 
 			function padd(ed, o) {
 				if (isOpera)
