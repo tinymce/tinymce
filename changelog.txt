@@ -1,4 +1,6 @@
 Version 3.0.6 (2008-03-xx)
+	Added elements to the default value of valid_elements option. It now contains all XHTML strict elements and a few transitional.
+	Fixed bug where attribute rules for the DOM Serializer couldn't contain - or _ characters in their names.
 	Fixed bug where inlinepopups event blocker and modal dialog blocker elements produced vertical scrollbars.
 	Fixed bug where there was a rendering issue with quirks mode in Safari moving the resize handle to an incorrect position.
 	Fixed bug with forecolor/backcolor controls on IE. Sometimes elements positioned relative will generate display errors.

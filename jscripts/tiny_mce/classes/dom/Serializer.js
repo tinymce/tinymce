@@ -347,7 +347,7 @@
 
 						// Parse attribute rule
 						s = s.replace(/::/g, '~');
-						s = /^([!\-])?([\w*.?~]+|)([=:<])?(.+)?$/.exec(s);
+						s = /^([!\-])?([\w*.?~_\-]+|)([=:<])?(.+)?$/.exec(s);
 						s[2] = s[2].replace(/~/g, ':');
 
 						// Add required attributes
