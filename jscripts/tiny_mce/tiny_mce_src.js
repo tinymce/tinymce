@@ -3796,7 +3796,7 @@ tinymce.create('static tinymce.util.XHR', {
 					s += '|';
 
 				if (k != '@')
-				s += k;
+					s += k;
 			});
 			t.validElementsRE = new RegExp('^(' + wildcardToRE(s.toLowerCase()) + ')$');
 

@@ -475,7 +475,7 @@
 					s += '|';
 
 				if (k != '@')
-				s += k;
+					s += k;
 			});
 			t.validElementsRE = new RegExp('^(' + wildcardToRE(s.toLowerCase()) + ')$');
 
