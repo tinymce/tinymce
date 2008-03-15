@@ -5711,7 +5711,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		load : function(n, u, cb, s) {
 			var t = this;
 
-			if (t.get(n))
+			if (t.urls[n])
 				return;
 
 			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
