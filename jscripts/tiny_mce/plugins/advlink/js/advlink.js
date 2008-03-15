@@ -14,8 +14,9 @@ function preinit() {
 }
 
 function changeClass() {
-	var formObj = document.forms[0];
-	formObj.classes.value = getSelectValue(formObj, 'classlist');
+	var f = document.forms[0];
+
+	f.classes.value = getSelectValue(f, 'classlist');
 }
 
 function init() {
@@ -256,7 +257,7 @@ function parseOptions(opts) {
 	opts = opts.replace(/[^0-9a-z=,]/g, "");
 
 	var optionChunks = opts.split(',');
-	var options = new Array();
+	var options = [];
 
 	for (var i=0; i<optionChunks.length; i++) {
 		var parts = optionChunks[i].split('=');
