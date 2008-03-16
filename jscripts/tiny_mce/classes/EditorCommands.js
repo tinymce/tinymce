@@ -500,8 +500,6 @@
 			each(dom.select(nn).reverse(), function(n) {
 				var p = n.parentNode;
 
-				dom.setAttrib(n, 'mce_new', '');
-
 				// Check if it's an old span in a new wrapper
 				if (!dom.getAttrib(n, 'mce_new')) {
 					// Find new wrapper
@@ -518,7 +516,7 @@
 			each(dom.select(nn).reverse(), function(n) {
 				var p = n.parentNode;
 
-				if (!p)
+				if (!p || !dom.getAttrib(n, 'mce_new'))
 					return;
 
 				// Has parent of the same type and only child
@@ -534,8 +532,12 @@
 
 			// Remove empty wrappers
 			each(dom.select(nn).reverse(), function(n) {
-				if (!dom.getAttrib(n, 'class') && !dom.getAttrib(n, 'style'))
-					return dom.remove(n, 1);
+				if (dom.getAttrib(n, 'mce_new')) {
+					if (!dom.getAttrib(n, 'class') && !dom.getAttrib(n, 'style'))
+						return dom.remove(n, 1);
+
+					dom.setAttrib(n, 'mce_new', ''); // Remove mce_new marker
+				}
 			});
 
 			s.moveToBookmark(b);

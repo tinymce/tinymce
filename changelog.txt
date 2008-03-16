@@ -9,6 +9,8 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where the load method of the tinymce.dom.ScriptLoader didn't check if the file was already loaded.
 	Fixed bug where the load method for the PluginManager and ThemeManager didn't check if a plugin/theme by a specific name was all ready loaded.
 	Fixed bug where the theme_advanced_link_targets option didn't work correctly with the advanced themes link dialog. Patch contributed by Arnold B.
+	Fixed bug where the style command would merge classes into empty span elements.
+	Fixed bug where the style command would remove empty span elements outside the current selection.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 Version 3.0.5 (2008-03-12)
