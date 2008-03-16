@@ -12,6 +12,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where the style command would merge classes into empty span elements.
 	Fixed bug where the style command would remove empty span elements outside the current selection.
 	Fixed bug where the fix for the Safari backspace bug removed all editor contents if it was filled with empty paragraphs.
+	Fixed bug where alert and confirm boxes opened by the inlinepopups plugin would produce an exception if domain relaxing was used.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 Version 3.0.5 (2008-03-12)
