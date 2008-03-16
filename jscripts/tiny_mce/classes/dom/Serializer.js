@@ -614,15 +614,18 @@
 				}
 
 				// Use BR instead of &nbsp; padded P elements inside editor and use <p>&nbsp;</p> outside editor
-				if (o.set)
+/*				if (o.set)
 					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p><br /></p>');
 				else
-					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p>$1</p>');
+					h = h.replace(/<p>\s+(&nbsp;|&#160;|\u00a0|<br \/>)\s+<\/p>/g, '<p>$1</p>');*/
 
 				// Since Gecko and Safari keeps whitespace in the DOM we need to
 				// remove it inorder to match other browsers. But I think Gecko and Safari is right.
 				// This process is only done when getting contents out from the editor.
 				if (!o.set) {
+					// We need to replace paragraph whitespace with an nbsp before indentation to keep the \u00a0 char
+					h = h.replace(/<p>\s+<\/p>|<p([^>]+)>\s+<\/p>/g, s.entity_encoding == 'numeric' ? '<p$1>&#160;</p>' : '<p$1>&nbsp;</p>');
+
 					if (s.remove_linebreaks) {
 						h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
 						h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
@@ -642,6 +645,10 @@
 				}
 
 				h = t._unprotect(h, p);
+
+				// Restore the \u00a0 character if raw mode is enabled
+				if (s.entity_encoding == 'raw')
+					h = h.replace(/<p>&nbsp;<\/p>|<p([^>]+)>&nbsp;<\/p>/g, '<p$1>\u00a0</p>');
 			}
 
 			o.content = h;
