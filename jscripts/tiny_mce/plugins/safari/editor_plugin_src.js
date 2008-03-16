@@ -26,14 +26,15 @@
 			});*/
 
 			ed.onKeyUp.add(function(ed, e) {
-				var h;
+				var h, b;
 
 				// If backspace or delete key
 				if (e.keyCode == 46 || e.keyCode == 8) {
-					h = ed.getBody().innerHTML;
+					b = ed.getBody();
+					h = b.innerHTML;
 
 					// If there is no text content or images or hr elements then remove everything
-					if (!/<(img|hr)/.test(h) && tinymce.trim(h.replace(/<[^>]+>/g, '')).length == 0)
+					if (b.childNodes.length == 1 && !/<(img|hr)/.test(h) && tinymce.trim(h.replace(/<[^>]+>/g, '')).length == 0)
 						ed.setContent('', {format : 'raw'});
 				}
 			});

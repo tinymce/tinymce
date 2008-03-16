@@ -11,6 +11,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where the theme_advanced_link_targets option didn't work correctly with the advanced themes link dialog. Patch contributed by Arnold B.
 	Fixed bug where the style command would merge classes into empty span elements.
 	Fixed bug where the style command would remove empty span elements outside the current selection.
+	Fixed bug where the fix for the Safari backspace bug removed all editor contents if it was filled with empty paragraphs.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 Version 3.0.5 (2008-03-12)
