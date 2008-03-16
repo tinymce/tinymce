@@ -9081,7 +9081,7 @@ tinymce.create('tinymce.UndoManager', {
 
 				o.content = o.content.replace(t.rePadd, '<' + elm + '$1$2$3$4$5$6>\u00a0</' + elm + '>');
 
-				if (!isIE && o.set) {
+				if (!isIE && !isOpera && o.set) {
 					// Use &nbsp; instead of BR in padded paragraphs
 					o.content = o.content.replace(t.reNbsp2BR1, '<' + elm + '$1$2><br /></' + elm + '>');
 					o.content = o.content.replace(t.reNbsp2BR2, '<' + elm + '$1$2><br /></' + elm + '>');
