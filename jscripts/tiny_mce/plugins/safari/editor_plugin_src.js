@@ -25,6 +25,26 @@
 				ed.execCommand("mceInsertContent", false, '<a href="' + dom.encode(v) + '">' + ed.selection.getContent() + '</a>');
 			});*/
 
+			ed.onPaste.add(function(ed, e) {
+				function removeStyles(e) {
+					e = e.target;
+
+					if (e.nodeType == 1) {
+						e.style.cssText = '';
+
+						each(ed.dom.select('*', e), function(e) {
+							e.style.cssText = '';
+						});
+					}
+				};
+
+				Event.add(ed.getDoc(), 'DOMNodeInserted', removeStyles);
+
+				window.setTimeout(function() {
+					Event.remove(ed.getDoc(), 'DOMNodeInserted', removeStyles);
+				}, 0);
+			});
+
 			ed.onKeyUp.add(function(ed, e) {
 				var h, b;
 
