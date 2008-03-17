@@ -15,6 +15,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where alert and confirm boxes opened by the inlinepopups plugin would produce an exception if domain relaxing was used.
 	Fixed bug where Safari was adding style attributes to all elements when you paste them into the editor.
 	Fixed bug where the spellchecker menus was visually incorrect since the space for the non existing icon was still there.
+	Fixed bug where remove_linebreaks option didn't remove line breaks inside the text contents of a element.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
