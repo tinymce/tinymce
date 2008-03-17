@@ -21,7 +21,8 @@
 			ed.addButton('pagebreak', {title : 'pagebreak.desc', cmd : cls});
 
 			ed.onInit.add(function() {
-				ed.dom.loadCSS(url + "/css/content.css");
+				if (ed.settings.content_css !== false)
+					ed.dom.loadCSS(url + "/css/content.css");
 
 				if (ed.theme.onResolveName) {
 					ed.theme.onResolveName.add(function(th, o) {

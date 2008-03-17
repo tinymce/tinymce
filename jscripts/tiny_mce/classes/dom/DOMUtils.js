@@ -968,7 +968,7 @@
 		 * @param {String} u URL to CSS file to load.
 		 */
 		loadCSS : function(u) {
-			var t = this, d = this.doc;
+			var t = this, d = t.doc;
 
 			if (!u)
 				u = '';

@@ -128,7 +128,7 @@
 					t.selElm = null;
 			});
 
-			ed.onBeforeExecCommand.add(function(ed, c, b) {
+/*			ed.onBeforeExecCommand.add(function(ed, c, b) {
 				var r = t.bookmarkRng;
 
 				// Restore selection
@@ -137,12 +137,12 @@
 					t.bookmarkRng = null;
 					//console.debug('restore', r.startContainer, r.startOffset, r.endContainer, r.endOffset);
 				}
-			});
+			});*/
 
 			ed.onInit.add(function() {
 				t._fixWebKitSpans();
 
-				ed.windowManager.onOpen.add(function() {
+/*				ed.windowManager.onOpen.add(function() {
 					var r = ed.selection.getRng();
 
 					// Store selection if valid
@@ -154,7 +154,7 @@
 
 				ed.windowManager.onClose.add(function() {
 					t.bookmarkRng = null;
-				});
+				});*/
 
 				if (isOldWebKit)
 					t._patchSafari2x(ed);

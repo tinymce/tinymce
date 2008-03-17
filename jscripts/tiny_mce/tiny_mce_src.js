@@ -1700,7 +1700,7 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		loadCSS : function(u) {
-			var t = this, d = this.doc;
+			var t = this, d = t.doc;
 
 			if (!u)
 				u = '';

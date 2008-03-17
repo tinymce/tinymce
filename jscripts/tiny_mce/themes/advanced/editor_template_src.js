@@ -87,7 +87,9 @@
 			// Init editor
 			ed.onInit.add(function() {
 				ed.onNodeChange.add(t._nodeChanged, t);
-				ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/advanced/skins/" + ed.settings.skin + "/content.css"));
+
+				if (ed.settings.content_css !== false)
+					ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/advanced/skins/" + ed.settings.skin + "/content.css"));
 			});
 
 			ed.onSetProgressState.add(function(ed, b, ti) {
