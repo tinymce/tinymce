@@ -1071,8 +1071,7 @@ tinymce.create('static tinymce.util.XHR', {
 				l = tinymce.grep(s.querySelectorAll(pa));
 
 				// Restore old id
-				if (i)
-					s.id = i;
+				s.id = i;
 
 				return l;
 			}
@@ -3923,7 +3922,7 @@ tinymce.create('static tinymce.util.XHR', {
 					h = h.replace(/<p>\s+<\/p>|<p([^>]+)>\s+<\/p>/g, s.entity_encoding == 'numeric' ? '<p$1>&#160;</p>' : '<p$1>&nbsp;</p>');
 
 					if (s.remove_linebreaks) {
-						h = h.replace(/[\r\n]+/g, '');
+						h = h.replace(/\r?\n|\r/g, ' ');
 						h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
 						h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
 						h = h.replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start

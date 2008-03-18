@@ -238,8 +238,7 @@
 				l = tinymce.grep(s.querySelectorAll(pa));
 
 				// Restore old id
-				if (i)
-					s.id = i;
+				s.id = i;
 
 				return l;
 			}
