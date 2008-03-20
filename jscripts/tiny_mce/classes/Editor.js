@@ -2232,7 +2232,7 @@
 
 						sp = dom.create('span', {
 							style : dom.getAttrib(n, 'style'),
-							'class' : dom.getAttrib(n, 'class'),
+							'class' : dom.getAttrib(n, 'class')
 						});
 
 						dom.setStyles(sp, {

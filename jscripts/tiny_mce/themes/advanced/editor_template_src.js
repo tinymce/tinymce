@@ -710,10 +710,10 @@
 							ifr = DOM.get(ed.id + '_ifr');
 
 							if (s.theme_advanced_resize_horizontal)
-								c.style.width = (r.w + r.dx) + 'px';
+								c.style.width = Math.max(10, r.w + r.dx) + 'px';
 
 							c.style.height = (r.h + r.dy) + 'px';
-							ifr.style.height = (ifr.clientHeight + r.dy) + 'px';
+							ifr.style.height = Math.max(10, ifr.clientHeight + r.dy) + 'px';
 
 							if (s.theme_advanced_resizing_use_cookie) {
 								Cookie.setHash("TinyMCE_" + ed.id + "_size", {

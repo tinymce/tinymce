@@ -20,6 +20,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where getParam method in the Editor class was returning incorrect objects and would mess up the font drop down. Patch contributed by speednet.
 	Fixed bug where the table dialog would produce an exception in IE when you edited tables since it tried to place focus in a disabled field.
 	Fixed bug where class attribute on some span elements was removed on cleanup.
+	Fixed bug where resizing the editor in IE could produce an exception if the editor width/height got to be a negative value.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
