@@ -495,7 +495,10 @@
 		},
 
 		setTitle : function(ti, id) {
-			DOM.get(id + '_title').innerHTML = DOM.encode(ti);
+			var e;
+
+			if (e = DOM.get(id + '_title'))
+				e.innerHTML = DOM.encode(ti);
 		},
 
 		alert : function(txt, cb, s) {

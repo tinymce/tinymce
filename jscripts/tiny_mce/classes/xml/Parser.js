@@ -113,7 +113,7 @@
 				el = el.firstChild;
 
 				do {
-					if (el.nodeType == 3)
+					if (el.nodeType == 3 || el.nodeType == 4)
 						o += el.nodeValue;
 				} while(el = el.nextSibling);
 			}

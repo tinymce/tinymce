@@ -465,6 +465,27 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			t.eq(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
 		}
 	});
+
+	unitTester.add('editor_methods', {
+		getParam : function() {
+			var t = this;
+
+			editor.settings.test = 'a,b,c';
+			t.eq(editor.getParam('test', '', 'hash')['c'], 'c');
+
+			editor.settings.test = 'a';
+			t.eq(editor.getParam('test', '', 'hash')['a'], 'a');
+
+			editor.settings.test = 'a=b';
+			t.eq(editor.getParam('test', '', 'hash')['a'], 'b');
+
+			editor.settings.test = 'a=b;c=d,e';
+			t.eq(editor.getParam('test', '', 'hash')['c'], 'd,e');
+	
+			editor.settings.test = 'a=b,c=d';
+			t.eq(editor.getParam('test', '', 'hash')['c'], 'd');
+		}
+	});
 })();
 
 tinyMCE.init({
