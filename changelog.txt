@@ -21,9 +21,12 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where the table dialog would produce an exception in IE when you edited tables since it tried to place focus in a disabled field.
 	Fixed bug where class attribute on some span elements was removed on cleanup.
 	Fixed bug where resizing the editor in IE could produce an exception if the editor width/height got to be a negative value.
+	Fixed bug where wmv files wouldn't play since the src param was used instead of the url param.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
+	Fixed so the paste_use_dialog option works again it's enabled by default but can be disabled on IE. Patch contributed by Speednet.
+	Fixed so that the fullscreen editor is focused when switching fullscreen editing on.
 	Fixed typo in media plugin Shockware is now replaced with Shockwave.
 Version 3.0.5 (2008-03-12)
 	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.

@@ -220,8 +220,15 @@
 				height : o.height
 			});
 
-			if (p.src)
+			if (p.src) {
 				p.src = ed.convertURL(p.src, 'src', n);
+
+				// Use url instead of src for media player
+				if (o.type == 'application/x-mplayer2') {
+					p.url = p.src;
+					delete p.src;
+				}
+			}
 
 			each (p, function(v, k) {
 				if (!/^(width|height|codebase|classid)$/.test(k))
