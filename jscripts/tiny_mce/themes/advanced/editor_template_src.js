@@ -632,10 +632,10 @@
 							return;
 
 						if (s.theme_advanced_resize_horizontal)
-							c.style.width = o.cw + 'px';
+							c.style.width = Math.max(10, o.cw) + 'px';
 
-						c.style.height = o.ch + 'px';
-						DOM.get(ed.id + '_ifr').style.height = (parseInt(o.ch) + t.deltaHeight) + 'px';
+						c.style.height = Math.max(10, o.ch) + 'px';
+						DOM.get(ed.id + '_ifr').style.height = Math.max(10, parseInt(o.ch) + t.deltaHeight) + 'px';
 					});
 				}
 
