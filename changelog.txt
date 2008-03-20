@@ -27,6 +27,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
 	Fixed so the paste_use_dialog option works again it's enabled by default but can be disabled on IE. Patch contributed by Speednet.
 	Fixed so that the fullscreen editor is focused when switching fullscreen editing on.
+	Fixed so it's possible to edit images and links inside tables using the context menu.
 	Fixed typo in media plugin Shockware is now replaced with Shockwave.
 Version 3.0.5 (2008-03-12)
 	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.
