@@ -181,15 +181,17 @@
 				}
 			});
 
-			each(ed.getParam('theme_advanced_styles', '', 'hash'), function(v, k) {
-				if (v)
-					c.add(t.editor.translate(k), v);
-			});
+			if (c) {
+				each(ed.getParam('theme_advanced_styles', '', 'hash'), function(v, k) {
+					if (v)
+						c.add(t.editor.translate(k), v);
+				});
 
-			c.onPostRender.add(function(ed, n) {
-				Event.add(n, 'focus', t._importClasses, t);
-				Event.add(n, 'mousedown', t._importClasses, t);
-			});
+				c.onPostRender.add(function(ed, n) {
+					Event.add(n, 'focus', t._importClasses, t);
+					Event.add(n, 'mousedown', t._importClasses, t);
+				});
+			}
 
 			return c;
 		},
@@ -198,10 +200,11 @@
 			var c, t = this, ed = t.editor;
 
 			c = ed.controlManager.createListBox('fontselect', {title : 'advanced.fontdefault', cmd : 'FontName'});
-
-			each(ed.getParam('theme_advanced_fonts', t.settings.theme_advanced_fonts, 'hash'), function(v, k) {
-				c.add(ed.translate(k), v, {style : v.indexOf('dings') == -1 ? 'font-family:' + v : ''});
-			});
+			if (c) {
+				each(ed.getParam('theme_advanced_fonts', t.settings.theme_advanced_fonts, 'hash'), function(v, k) {
+					c.add(ed.translate(k), v, {style : v.indexOf('dings') == -1 ? 'font-family:' + v : ''});
+				});
+			}
 
 			return c;
 		},
@@ -218,10 +221,11 @@
 			], fz = [8, 10, 12, 14, 18, 24, 36];
 
 			c = t.editor.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', cmd : 'FontSize'});
-
-			each(explode(t.settings.theme_advanced_font_sizes), function(v) {
-				c.add(lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'pt', 'class' : 'mceFontSize' + v});
-			});
+			if (c) {
+				each(explode(t.settings.theme_advanced_font_sizes), function(v) {
+					c.add(lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'pt', 'class' : 'mceFontSize' + v});
+				});
+			}
 
 			return c;
 		},
@@ -246,10 +250,11 @@
 			}, t = this;
 
 			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
-
-			each(explode(t.settings.theme_advanced_blockformats), function(v) {
-				c.add(t.editor.translate(fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
-			});
+			if (c) {
+				each(explode(t.settings.theme_advanced_blockformats), function(v) {
+					c.add(t.editor.translate(fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
+				});
+			}
 
 			return c;
 		},

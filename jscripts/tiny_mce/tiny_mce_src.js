@@ -6825,7 +6825,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				o = {};
 
 				if (is(v, 'string')) {
-					each(v.split(/[;,]/), function(v) {
+					each(v.indexOf('=') > 0 ? v.split(/[;,](?![^=;,]*(?:[;,]|$))/) : v.split(','), function(v) {
 						v = v.split('=');
 
 						if (v.length > 1)
@@ -7840,7 +7840,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					f = dom.create('font', {
 						color : dom.toHex(dom.getStyle(n, 'color')),
 						face : dom.getStyle(n, 'fontFamily'),
-						style : dom.getAttrib(n, 'style')
+						style : dom.getAttrib(n, 'style'),
+						'class' : dom.getAttrib(n, 'class')
 					});
 
 					// Clear color and font family
@@ -7898,7 +7899,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						n = nl[x];
 
 						sp = dom.create('span', {
-							style : dom.getAttrib(n, 'style')
+							style : dom.getAttrib(n, 'style'),
+							'class' : dom.getAttrib(n, 'class'),
 						});
 
 						dom.setStyles(sp, {

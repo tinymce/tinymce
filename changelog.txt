@@ -17,6 +17,9 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where the spellchecker menus was visually incorrect since the space for the non existing icon was still there.
 	Fixed bug where remove_linebreaks option didn't remove line breaks inside the text contents of a element.
 	Fixed bug where Safari 3.1 was introducing _mc_tmp into paragraphs due to the new querySelectorAll and a TinyMCE specific workaround.
+	Fixed bug where getParam method in the Editor class was returning incorrect objects and would mess up the font drop down. Patch contributed by speednet.
+	Fixed bug where the table dialog would produce an exception in IE when you edited tables since it tried to place focus in a disabled field.
+	Fixed bug where class attribute on some span elements was removed on cleanup.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
