@@ -7,7 +7,7 @@
 
 (function() {
 	// Shorten names
-	var extend = tinymce.extend, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher, isIE = tinymce.isIE;
+	var extend = tinymce.extend, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher, isIE = tinymce.isIE, isGecko = tinymce.isGecko;
 
 	// Returns only attribites that have values not all attributes in IE
 	function getIEAtts(n) {
@@ -696,6 +696,10 @@
 							// IE sometimes adds a / infront of the node name
 							if (nn.charAt(0) == '/')
 								nn = nn.substring(1);
+						} else if (isGecko) {
+							// Ignore br elements
+							if (n.nodeName === 'BR' && n.hasAttribute('_moz_dirty'))
+								return;
 						}
 
 						// Check if valid child

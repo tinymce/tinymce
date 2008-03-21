@@ -22,6 +22,8 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where class attribute on some span elements was removed on cleanup.
 	Fixed bug where resizing the editor in IE could produce an exception if the editor width/height got to be a negative value.
 	Fixed bug where wmv files wouldn't play since the src param was used instead of the url param.
+	Fixed bug where br elements would be added here and there in Gecko. Geckos internal _moz_dirty br elements where serialized as well.
+	Fixed bug where editing named anchors would produce two anchors instead of one updated one.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
