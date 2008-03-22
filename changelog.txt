@@ -1,5 +1,6 @@
 Version 3.0.6 (2008-03-xx)
 	Added elements to the default value of valid_elements option. It now contains all XHTML strict elements and a few transitional.
+	Added more accessibility fixes, it's now possible to navigate and close list boxes and split button menus with the keyboard.
 	Fixed bug where attribute rules for the DOM Serializer couldn't contain - or _ characters in their names.
 	Fixed bug where inlinepopups event blocker and modal dialog blocker elements produced vertical scrollbars.
 	Fixed bug where there was a rendering issue with quirks mode in Safari moving the resize handle to an incorrect position.
@@ -24,12 +25,14 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where wmv files wouldn't play since the src param was used instead of the url param.
 	Fixed bug where br elements would be added here and there in Gecko. Geckos internal _moz_dirty br elements where serialized as well.
 	Fixed bug where editing named anchors would produce two anchors instead of one updated one.
+	Fixed bug where it was impossible to totally empty the editor contents on Safari due to an mistreatment of nbsp as whitespace. Patch contributed by Andrew Ozz.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
 	Fixed so the paste_use_dialog option works again it's enabled by default but can be disabled on IE. Patch contributed by Speednet.
 	Fixed so that the fullscreen editor is focused when switching fullscreen editing on.
 	Fixed so it's possible to edit images and links inside tables using the context menu.
+	Fixed so table dialogs and the advanced image dialog doesn't loose selection in IE if the dialogs where navigated/submitted with the keyboard.
 	Fixed typo in media plugin Shockware is now replaced with Shockwave.
 Version 3.0.5 (2008-03-12)
 	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.

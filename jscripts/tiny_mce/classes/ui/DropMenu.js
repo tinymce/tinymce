@@ -201,6 +201,7 @@
 			}
 
 			t.onShowMenu.dispatch(t);
+			Event.add(co, 'keydown', t._keyHandler, t);
 		},
 
 		/**
@@ -214,6 +215,7 @@
 
 			Event.remove(co, 'mouseover', t.mouseOverFunc);
 			Event.remove(co, t.fixIE ? 'mousedown' : 'click', t.mouseClickFunc);
+			Event.remove(co, 'keydown', t._keyHandler);
 			DOM.hide(co);
 			t.isMenuVisible = 0;
 
@@ -312,6 +314,12 @@
 		},
 
 		// Internal functions
+
+		_keyHandler : function(e) {
+			// Accessibility feature
+			if (e.keyCode == 27)
+				this.hideMenu();
+		},
 
 		_add : function(tb, o) {
 			var n, s = o.settings, a, ro, it;

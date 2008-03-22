@@ -214,6 +214,16 @@
 			var t = this;
 
 			Event.add(t.id, 'click', t.showMenu, t);
+			Event.add(t.id, 'keydown', function(e) {
+				var k = e.keyCode;
+
+				// Enter or space
+				if (k == 13 || k == 32) {
+					t.showMenu();
+					DOM.select('a', 'menu_' + t.menu.id)[0].focus();
+					Event.cancel(e);
+				}
+			});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {

@@ -47,7 +47,10 @@
 			if (!f.inline)
 				return t.parent(f, p);
 
-			t.bookmark = ed.selection.getBookmark('simple');
+			// Only store selection if the type is a normal window
+			if (!f.type)
+				t.bookmark = ed.selection.getBookmark('simple');
+
 			id = DOM.uniqueId();
 			vp = DOM.getViewPort();
 			f.width = parseInt(f.width || 320);

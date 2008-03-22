@@ -48,12 +48,12 @@ function init() {
 }
 
 function updateAction() {
-	var inst = tinyMCEPopup.editor;
-	var dom = inst.dom;
-	var trElm = dom.getParent(inst.selection.getNode(), "tr");
-	var tableElm = dom.getParent(inst.selection.getNode(), "table");
-	var formObj = document.forms[0];
+	var inst = tinyMCEPopup.editor, dom = inst.dom, trElm, tableElm, formObj = document.forms[0];
 	var action = getSelectValue(formObj, 'action');
+
+	tinyMCEPopup.restoreSelection();
+	trElm = dom.getParent(inst.selection.getNode(), "tr");
+	tableElm = dom.getParent(inst.selection.getNode(), "table");
 
 	inst.execCommand('mceBeginUndoLevel');
 

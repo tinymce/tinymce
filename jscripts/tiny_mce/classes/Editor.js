@@ -694,7 +694,7 @@
 			// Remove empty contents
 			if (s.padd_empty_editor) {
 				t.onPostProcess.add(function(ed, o) {
-					o.content = o.content.replace(/^<p>(&nbsp;|#160;|\s)<\/p>$/, '');
+					o.content = o.content.replace(/^<p>(&nbsp;|#160;|\s|\u00a0)<\/p>$/, '');
 				});
 			}
 

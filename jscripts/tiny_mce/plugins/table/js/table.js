@@ -9,6 +9,8 @@ function insertTable() {
 	var html = '', capEl, elm;
 	var cellLimit, rowLimit, colLimit;
 
+	tinyMCEPopup.restoreSelection();
+
 	if (!AutoValidator.validate(formObj)) {
 		alert(inst.getLang('invalid_data'));
 		return false;

@@ -12,6 +12,8 @@ function init() {
 function mergeCells() {
 	var args = [], f = document.forms[0];
 
+	tinyMCEPopup.restoreSelection();
+
 	if (!AutoValidator.validate(f)) {
 		alert(tinyMCEPopup.getLang('invalid_data'));
 		return false;

@@ -4900,6 +4900,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 
 			t.onShowMenu.dispatch(t);
+			Event.add(co, 'keydown', t._keyHandler, t);
 		},
 
 		hideMenu : function(c) {
@@ -4910,6 +4911,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			Event.remove(co, 'mouseover', t.mouseOverFunc);
 			Event.remove(co, t.fixIE ? 'mousedown' : 'click', t.mouseClickFunc);
+			Event.remove(co, 'keydown', t._keyHandler);
 			DOM.hide(co);
 			t.isMenuVisible = 0;
 
@@ -4983,6 +4985,12 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		// Internal functions
+
+		_keyHandler : function(e) {
+			// Accessibility feature
+			if (e.keyCode == 27)
+				this.hideMenu();
+		},
 
 		_add : function(tb, o) {
 			var n, s = o.settings, a, ro, it;
@@ -5218,6 +5226,16 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var t = this;
 
 			Event.add(t.id, 'click', t.showMenu, t);
+			Event.add(t.id, 'keydown', function(e) {
+				var k = e.keyCode;
+
+				// Enter or space
+				if (k == 13 || k == 32) {
+					t.showMenu();
+					DOM.select('a', 'menu_' + t.menu.id)[0].focus();
+					Event.cancel(e);
+				}
+			});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
@@ -5527,6 +5545,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			e = 0;
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
+			Event.add(t.id + '_menu', 'keydown', t._keyHandler, t);
 		},
 
 		hideMenu : function(e) {
@@ -5535,6 +5554,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceSplitButtonMenu');})) {
 				DOM.removeClass(t.id, 'mceSplitButtonSelected');
 				Event.remove(document, 'mousedown', t.hideMenu, t);
+				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
 				DOM.hide(t.id + '_menu');
 			}
 		},
@@ -5568,7 +5588,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					}
 				});
 
-				Event.add(n, 'mousedown', function() {
+				Event.add(n, 'click', function() {
 					t.setColor('#' + c);
 				});
 			});
@@ -5600,18 +5620,36 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		postRender : function() {
-			var id = this.id;
+			var t = this, id = t.id;
 
-			this.parent();
+			t.parent();
 			DOM.add(id + '_action', 'div', {id : id + '_preview', 'class' : 'mceColorPreview'});
+
+			Event.add(t.id, 'keydown', function(e) {
+				var k = e.keyCode;
+
+				// Enter or space
+				if (k == 13 || k == 32) {
+					t.showMenu();
+					DOM.select('a', t.id + '_menu')[0].focus();
+					Event.cancel(e);
+				}
+			});
 		},
 
 		destroy : function() {
 			this.parent();
 			DOM.remove(this.id + '_menu');
-		}
+		},
 
-		});
+		// Internal methods
+
+		_keyHandler : function(e) {
+			// Accessibility feature
+			if (e.keyCode == 27)
+				this.hideMenu();
+		}
+	});
 })();
 
 /* file:jscripts/tiny_mce/classes/ui/Toolbar.js */
@@ -6711,7 +6749,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Remove empty contents
 			if (s.padd_empty_editor) {
 				t.onPostProcess.add(function(ed, o) {
-					o.content = o.content.replace(/^<p>(&nbsp;|#160;|\s)<\/p>$/, '');
+					o.content = o.content.replace(/^<p>(&nbsp;|#160;|\s|\u00a0)<\/p>$/, '');
 				});
 			}
 
