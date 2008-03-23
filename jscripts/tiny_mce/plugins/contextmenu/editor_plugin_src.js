@@ -34,6 +34,16 @@
 			Event.add(document, 'click', hide);
 		},
 
+		getInfo : function() {
+			return {
+				longname : 'Contextmenu',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/contextmenu',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
+		},
+
 		_getMenu : function(ed) {
 			var t = this, m = t._menu, se = ed.selection, col = se.isCollapsed(), el = se.getNode() || ed.getBody(), am, p1, p2;
 

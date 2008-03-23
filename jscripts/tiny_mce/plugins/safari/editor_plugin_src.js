@@ -268,6 +268,18 @@
 			});
 		},
 
+		getInfo : function() {
+			return {
+				longname : 'Safari compatibility',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/safari',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
+			};
+		},
+
+		// Internal methods
+
 		_fixWebKitSpans : function() {
 			var t = this, ed = t.editor;
 
