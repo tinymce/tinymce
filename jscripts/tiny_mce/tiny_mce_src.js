@@ -4900,7 +4900,11 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 
 			t.onShowMenu.dispatch(t);
-			Event.add(co, 'keydown', t._keyHandler, t);
+
+			if (s.keyboard_focus) {
+				Event.add(co, 'keydown', t._keyHandler, t);
+				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
+			}
 		},
 
 		hideMenu : function(c) {
@@ -5138,7 +5142,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
 
 			return h;
@@ -5161,6 +5165,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			m = t.menu;
 			m.settings.offset_x = p2.x;
 			m.settings.offset_y = p2.y;
+			m.settings.keyboard_focus = t._focused;
 
 			// Select in menu
 			if (t.oldID)
@@ -5226,16 +5231,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var t = this;
 
 			Event.add(t.id, 'click', t.showMenu, t);
-			Event.add(t.id, 'keydown', function(e) {
-				var k = e.keyCode;
-
-				// Enter or space
-				if (k == 13 || k == 32) {
-					t.showMenu();
-					DOM.select('a', 'menu_' + t.menu.id)[0].focus();
-					Event.cancel(e);
-				}
-			});
+			Event.add(t.id + '_text', 'focus', function() {t._focused = 1;});
+			Event.add(t.id + '_text', 'blur', function() {t._focused = 0;});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
@@ -5394,6 +5391,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			m.settings.offset_y = p2.y;
 			m.settings.vp_offset_x = p2.x;
 			m.settings.vp_offset_y = p2.y;
+			m.settings.keyboard_focus = t._focused;
 			m.showMenu(0, e.clientHeight);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
@@ -5484,6 +5482,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 
 			Event.add(t.id + '_open', 'click', t.showMenu, t);
+			Event.add(t.id + '_open', 'focus', function() {t._focused = 1;});
+			Event.add(t.id + '_open', 'blur', function() {t._focused = 0;});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
@@ -5545,7 +5545,15 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			e = 0;
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
-			Event.add(t.id + '_menu', 'keydown', t._keyHandler, t);
+
+			if (t._focused) {
+				t._keyHandler = Event.add(t.id + '_menu', 'keydown', function(e) {
+					if (e.keyCode == 27)
+						t.hideMenu();
+				});
+
+				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
+			}
 		},
 
 		hideMenu : function(e) {
@@ -5624,32 +5632,14 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			t.parent();
 			DOM.add(id + '_action', 'div', {id : id + '_preview', 'class' : 'mceColorPreview'});
-
-			Event.add(t.id, 'keydown', function(e) {
-				var k = e.keyCode;
-
-				// Enter or space
-				if (k == 13 || k == 32) {
-					t.showMenu();
-					DOM.select('a', t.id + '_menu')[0].focus();
-					Event.cancel(e);
-				}
-			});
 		},
 
 		destroy : function() {
 			this.parent();
 			DOM.remove(this.id + '_menu');
-		},
-
-		// Internal methods
-
-		_keyHandler : function(e) {
-			// Accessibility feature
-			if (e.keyCode == 27)
-				this.hideMenu();
 		}
-	});
+
+		});
 })();
 
 /* file:jscripts/tiny_mce/classes/ui/Toolbar.js */

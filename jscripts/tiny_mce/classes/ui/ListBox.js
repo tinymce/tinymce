@@ -113,7 +113,7 @@
 
 			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
+			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
 
 			return h;
@@ -139,6 +139,7 @@
 			m = t.menu;
 			m.settings.offset_x = p2.x;
 			m.settings.offset_y = p2.y;
+			m.settings.keyboard_focus = t._focused;
 
 			// Select in menu
 			if (t.oldID)
@@ -214,16 +215,8 @@
 			var t = this;
 
 			Event.add(t.id, 'click', t.showMenu, t);
-			Event.add(t.id, 'keydown', function(e) {
-				var k = e.keyCode;
-
-				// Enter or space
-				if (k == 13 || k == 32) {
-					t.showMenu();
-					DOM.select('a', 'menu_' + t.menu.id)[0].focus();
-					Event.cancel(e);
-				}
-			});
+			Event.add(t.id + '_text', 'focus', function() {t._focused = 1;});
+			Event.add(t.id + '_text', 'blur', function() {t._focused = 0;});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {

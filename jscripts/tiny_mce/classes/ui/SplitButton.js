@@ -70,6 +70,8 @@
 			}
 
 			Event.add(t.id + '_open', 'click', t.showMenu, t);
+			Event.add(t.id + '_open', 'focus', function() {t._focused = 1;});
+			Event.add(t.id + '_open', 'blur', function() {t._focused = 0;});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {

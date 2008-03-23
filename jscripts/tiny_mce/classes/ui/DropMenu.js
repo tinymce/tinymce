@@ -201,7 +201,11 @@
 			}
 
 			t.onShowMenu.dispatch(t);
-			Event.add(co, 'keydown', t._keyHandler, t);
+
+			if (s.keyboard_focus) {
+				Event.add(co, 'keydown', t._keyHandler, t);
+				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
+			}
 		},
 
 		/**

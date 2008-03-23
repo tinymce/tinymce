@@ -53,6 +53,7 @@
 			m.settings.offset_y = p2.y;
 			m.settings.vp_offset_x = p2.x;
 			m.settings.vp_offset_y = p2.y;
+			m.settings.keyboard_focus = t._focused;
 			m.showMenu(0, e.clientHeight);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
