@@ -417,11 +417,17 @@ tinymce.create('tinymce.util.Dispatcher', {
 	},
 
 	dispatch : function() {
-		var s, a = arguments;
+		var s, a = arguments, i, li = this.listeners, c;
 
-		tinymce.each(this.listeners, function(c) {
-			return s = c.cb.apply(c.scope, a);
-		});
+		// Needs to be a real loop since the listener count might change while looping
+		// And this is also more efficient
+		for (i = 0; i<li.length; i++) {
+			c = li[i];
+			s = c.cb.apply(c.scope, a);
+
+			if (s === false)
+				break;
+		}
 
 		return s;
 	}

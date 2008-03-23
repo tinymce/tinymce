@@ -25,6 +25,8 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where wmv files wouldn't play since the src param was used instead of the url param.
 	Fixed bug where br elements would be added here and there in Gecko. Geckos internal _moz_dirty br elements where serialized as well.
 	Fixed bug where editing named anchors would produce two anchors instead of one updated one.
+	Fixed bug where arrow and function keys didn't work when an noneditable element was focused within the editor.
+	Fixed bug where the dispatcher could produce an exception if the listener list was altered inside an event callback.
 	Fixed bug where it was impossible to totally empty the editor contents on Safari due to an mistreatment of nbsp as whitespace. Patch contributed by Andrew Ozz.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
