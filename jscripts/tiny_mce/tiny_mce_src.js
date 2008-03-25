@@ -3999,7 +3999,7 @@ tinymce.create('static tinymce.util.XHR', {
 								nn = nn.substring(1);
 						} else if (isGecko) {
 							// Ignore br elements
-							if (n.nodeName === 'BR' && n.hasAttribute('_moz_dirty'))
+							if (n.nodeName === 'BR' && n.getAttribute('type') == '_moz')
 								return;
 						}
 
