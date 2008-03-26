@@ -193,7 +193,7 @@
 				nx = nl[i];
 
 				// Is text or non block element
-				if (nx.nodeType == 3 || !t.dom.isBlock(nx)) {
+				if (nx.nodeType == 3 || (!t.dom.isBlock(nx) && nx.nodeType != 8)) {
 					if (!bl) {
 						// Create new block but ignore whitespace
 						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {

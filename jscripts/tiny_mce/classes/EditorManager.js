@@ -164,8 +164,15 @@
 							if (s.editor_deselector && hasClass(v, s.editor_deselector))
 								return;
 
-							if (!s.editor_selector || hasClass(v, s.editor_selector))
-								new tinymce.Editor(v.id = (v.id || v.name || (v.id = DOM.uniqueId())), s).render(1);
+							if (!s.editor_selector || hasClass(v, s.editor_selector)) {
+								v.id = v.id || v.name;
+
+								// Generate unique name if missing or already exists
+								if (!v.id || t.get(v.id))
+									v.id = DOM.uniqueId();
+
+								new tinymce.Editor(v.id, s).render(1);
+							}
 						});
 						break;
 				}
@@ -253,7 +260,7 @@
 				});
 			}
 
-			e._destroy();
+			e.destroy();
 
 			return e;
 		},

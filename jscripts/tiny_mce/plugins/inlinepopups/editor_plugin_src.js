@@ -33,7 +33,7 @@
 			var t = this;
 
 			t.parent(ed);
-			t.zIndex = 1000;
+			t.zIndex = ed.getParam('inlinepopups_zindex', 300000);
 			t.count = 0;
 		},
 

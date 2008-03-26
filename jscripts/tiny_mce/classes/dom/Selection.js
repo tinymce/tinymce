@@ -31,9 +31,7 @@
 			t.serializer = serializer;
 
 			// Prevent leaks
-			tinymce.addUnload(function() {
-				t.win = null;
-			});
+			tinymce.addUnload(t.destroy, t);
 		},
 
 		/**#@+
@@ -646,6 +644,16 @@
 			}
 
 			return r.item ? r.item(0) : r.parentElement();
+		},
+
+		destroy : function(s) {
+			var t = this;
+
+			t.doc = null;
+
+			// Manual destroy then remove unload handler
+			if (!s)
+				tinymce.removeUnload(t.destroy);
 		}
 
 		/**#@-*/

@@ -191,7 +191,7 @@
 				});
 			}
 
-			tinymce.addUnload(t._destroy, t);
+			tinymce.addUnload(t.destroy, t);
 
 			if (s.submit_patch) {
 				t.onBeforeRenderUI.add(function() {
@@ -776,7 +776,8 @@
 				class_filter : s.class_filter,
 				root_element : t.id,
 				strict_root : 1,
-				fix_ie_paragraphs : 1
+				fix_ie_paragraphs : 1,
+				update_styles : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer({
@@ -845,8 +846,6 @@
 
 			if (isIE) {
 				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, o) {
-					var st;
-
 					if (!DOM.getParent(ed.selection.getStart(), function(n) {return n == ed.getBody();}))
 						o.terminate = 1;
 
@@ -1626,6 +1625,31 @@
 			t.onVisualAid.dispatch(t, e, t.hasVisual);
 		},
 
+		destroy : function(s) {
+			var t = this;
+
+			t.onBeforeDestroy.dispatch(t);
+
+			if (!s) {
+				// Manual destroy
+				tinymce.removeUnload(t.destroy);
+				t.selection.destroy();
+				t.dom.destroy();
+			}
+
+			if (t.formElement) {
+				t.formElement.submit = t.formElement._mceOldSubmit;
+				t.formElement._mceOldSubmit = null;
+			}
+
+			t.contentAreaContainer = t.formElement = t.container = t.settings.content_element = t.bodyElement = t.contentDocument = t.contentWindow = null;
+
+			if (t.selection)
+				t.selection = t.selection.win = t.selection.dom = t.selection.dom.doc = null;
+
+			t.destroyed = 1;
+		},
+
 		// Internal functions
 
 		_addEvents : function() {
@@ -2061,24 +2085,6 @@
 			}
 		},
 
-		_destroy : function() {
-			var t = this;
-
-			t.onBeforeDestroy.dispatch(t);
-
-			if (t.formElement) {
-				t.formElement.submit = t.formElement._mceOldSubmit;
-				t.formElement._mceOldSubmit = null;
-			}
-
-			t.contentAreaContainer = t.formElement = t.container = t.settings.content_element = t.bodyElement = t.contentDocument = t.contentWindow = null;
-
-			if (t.selection)
-				t.selection = t.selection.win = t.selection.dom = t.selection.dom.doc = null;
-
-			t.destroyed = 1;
-		},
-
 		_convertInlineElements : function() {
 			var t = this, s = t.settings, dom = t.dom, v, e, na, st, sp;
 
@@ -2144,7 +2150,7 @@
 		},
 
 		_convertFonts : function() {
-			var t = this, s = t.settings, dom = t.dom, sl, cl, fz, fzn, v, i, st, x, nl, sp, f, n;
+			var t = this, s = t.settings, dom = t.dom, fz, fzn, sl, cl;
 
 			// No need
 			if (!s.inline_styles)
@@ -2161,6 +2167,8 @@
 				cl = explode(cl);
 
 			function convertToFonts(no) {
+				var n, f, nl, x, i, v, st;
+
 				// Convert spans to fonts on non WebKit browsers
 				if (tinymce.isWebKit || !s.inline_styles)
 					return;
@@ -2211,6 +2219,8 @@
 						dom.setAttrib(f, 'mce_style', '');
 						dom.replace(f, n, 1);
 					}
+
+					f = n = null;
 				}
 			};
 
@@ -2221,6 +2231,8 @@
 
 			// Run on cleanup
 			t.onPreProcess.add(function(ed, o) {
+				var n, sp, nl, x;
+
 				// Keep unit tests happy
 				if (!s.inline_styles)
 					return;

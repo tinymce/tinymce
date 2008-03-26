@@ -2,6 +2,7 @@ Version 3.0.6 (2008-03-xx)
 	Added elements to the default value of valid_elements option. It now contains all XHTML strict elements and a few transitional.
 	Added more accessibility fixes, it's now possible to navigate and close list boxes and split button menus with the keyboard.
 	Added missing getInfo method to the contextmenu and safari plugin, this caused problems for the Drupal module.
+	Added new inlinepopups_zindex option to the inlinepopups plugin so that you can configure the default start z-index.
 	Fixed bug where attribute rules for the DOM Serializer couldn't contain - or _ characters in their names.
 	Fixed bug where inlinepopups event blocker and modal dialog blocker elements produced vertical scrollbars.
 	Fixed bug where there was a rendering issue with quirks mode in Safari moving the resize handle to an incorrect position.
@@ -29,6 +30,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where arrow and function keys didn't work when an noneditable element was focused within the editor.
 	Fixed bug where the dispatcher could produce an exception if the listener list was altered inside an event callback.
 	Fixed bug where it was impossible to totally empty the editor contents on Safari due to an mistreatment of nbsp as whitespace. Patch contributed by Andrew Ozz.
+	Fixed bug where TinyMCE would not convert textareas with the same name attribute value. It will now generate an unique id for those textareas.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
@@ -36,7 +38,11 @@ Version 3.0.6 (2008-03-xx)
 	Fixed so that the fullscreen editor is focused when switching fullscreen editing on.
 	Fixed so it's possible to edit images and links inside tables using the context menu.
 	Fixed so table dialogs and the advanced image dialog doesn't loose selection in IE if the dialogs where navigated/submitted with the keyboard.
+	Fixed so the theme_advanced_blockformats options can have named items for example title 1=h1;title 2=h2.
+	Fixed so the inlinepopups default start zIndex is 300000.
 	Fixed typo in media plugin Shockware is now replaced with Shockwave.
+	Fixed psuedo memory leak in IE with the replaceChild method inside the DOMUtils.replace method.
+	Fixed so memory is released in IE when an editor instance is removed from page.
 Version 3.0.5 (2008-03-12)
 	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.
 	Added new explode method to the tinymce core class. This does a split but removed whitespace it also defaults to a , delimiter.

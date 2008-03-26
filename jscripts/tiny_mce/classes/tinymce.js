@@ -421,7 +421,7 @@ var tinymce = {
 					o = li[n];
 
 					if (o && o.func)
-						o.func.call(o.scope);
+						o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
 				}
 
 				// Detach unload function

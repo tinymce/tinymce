@@ -219,6 +219,22 @@
 			return -1;
 		},
 
+		_queryState : function(c) {
+			try {
+				return this.editor.getDoc().queryCommandState(c);
+			} catch (ex) {
+				// Ignore exception
+			}
+		},
+
+		_queryVal : function(c) {
+			try {
+				return this.editor.getDoc().queryCommandValue(c);
+			} catch (ex) {
+				// Ignore exception
+			}
+		},
+
 		queryValueFontSize : function() {
 			var ed = this.editor, v = 0, p;
 
@@ -229,7 +245,7 @@
 				return v;
 			}
 
-			return ed.getDoc().queryCommandValue('FontSize');
+			return this._queryVal('FontSize');
 		},
 
 		queryValueFontName : function() {
@@ -239,7 +255,7 @@
 				v = p.face;
 
 			if (!v)
-				v = ed.getDoc().queryCommandValue('FontName');
+				v = this._queryVal('FontName');
 
 			return v;
 		},
@@ -563,7 +579,7 @@
 			if (ed.settings.inline_styles)
 				return (n && n.style.textAlign == v);
 
-			return ed.getDoc().queryCommandState(c);
+			return this._queryState(c);
 		},
 
 		HiliteColor : function(ui, val) {
@@ -698,7 +714,7 @@
 			if (n && n.nodeName == 'A')
 				return false;
 
-			return ed.getDoc().queryCommandState('Underline');
+			return this._queryState('Underline');
 		},
 
 		queryStateOutdent : function() {

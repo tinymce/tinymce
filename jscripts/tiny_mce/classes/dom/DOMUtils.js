@@ -57,9 +57,7 @@
 				}
 			}
 
-			tinymce.addUnload(function() {
-				t.doc = t.root = null;
-			});
+			tinymce.addUnload(t.destroy, t);
 		},
 
 		/**#@+
@@ -1459,6 +1457,13 @@
 					});
 				}
 
+				// Fix IE psuedo leak
+				if (isIE) {
+					o.parentNode.insertBefore(n, o);
+					o.outerHTML = '';
+					return n;
+				}
+
 				return o.parentNode.replaceChild(n, o);
 			});
 		},
@@ -1590,6 +1595,16 @@
 			}
 
 			return f.call(s, e);
+		},
+
+		destroy : function(s) {
+			var t = this;
+
+			t.doc = t.root = null;
+
+			// Manual destroy then remove unload handler
+			if (!s)
+				tinymce.removeUnload(t.destroy);
 		}
 
 		/*
