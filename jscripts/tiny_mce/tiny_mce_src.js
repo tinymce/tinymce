@@ -4997,7 +4997,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		renderNode : function() {
 			var t = this, s = t.settings, n, tb, co, w;
 
-			w = DOM.create('div', {id : 'menu_' + t.id, dir : 'ltr', 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:150'});
+			w = DOM.create('div', {id : 'menu_' + t.id, dir : 'ltr', 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
 			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
@@ -5569,7 +5569,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			DOM.setStyles(t.id + '_menu', {
 				left : p2.x,
 				top : p2.y + e.clientHeight,
-				zIndex : 150
+				zIndex : 200000
 			});
 			e = 0;
 
