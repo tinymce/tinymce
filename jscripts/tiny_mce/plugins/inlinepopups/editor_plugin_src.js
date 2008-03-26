@@ -33,7 +33,7 @@
 			var t = this;
 
 			t.parent(ed);
-			t.zIndex = ed.getParam('inlinepopups_zindex', 300000);
+			t.zIndex = 300000;
 			t.count = 0;
 		},
 
@@ -345,7 +345,7 @@
 				DOM.add(d.body, 'div', {
 					id : 'mceEventBlocker',
 					'class' : 'mceEventBlocker ' + (t.editor.settings.inlinepopups_skin || 'clearlooks2'),
-					style : {left : vp.x, top : vp.y, zIndex : 20001}
+					style : {left : vp.x, top : vp.y, zIndex : t.zIndex + 1}
 				});
 				eb = new Element('mceEventBlocker');
 				eb.update();
