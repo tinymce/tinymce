@@ -40,6 +40,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed so it's possible to edit images and links inside tables using the context menu.
 	Fixed so table dialogs and the advanced image dialog doesn't loose selection in IE if the dialogs where navigated/submitted with the keyboard.
 	Fixed so the theme_advanced_blockformats options can have named items for example title 1=h1;title 2=h2.
+	Fixed so it's possible to add a custom editor_css for the simple theme.
 	Fixed so the inlinepopups default start zIndex is 300000.
 	Fixed typo in media plugin Shockware is now replaced with Shockwave.
 	Fixed psuedo memory leak in IE with the replaceChild method inside the DOMUtils.replace method.

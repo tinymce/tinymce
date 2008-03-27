@@ -30,7 +30,7 @@
 				ed.dom.loadCSS(url + "/skins/" + s.skin + "/content.css");
 			});
 
-			DOM.loadCSS(url + "/skins/" + s.skin + "/ui.css");
+			DOM.loadCSS((s.editor_css ? ed.baseURI.toAbsolute(s.editor_css) : '') || url + "/skins/" + s.skin + "/ui.css");
 		},
 
 		renderUI : function(o) {
