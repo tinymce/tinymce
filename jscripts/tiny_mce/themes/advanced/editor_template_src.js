@@ -251,7 +251,7 @@
 
 			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
 			if (c) {
-				each(t.editor.getParam('theme_advanced_blockformats', t.settings.theme_advanced_fonts, 'hash'), function(v, k) {
+				each(t.editor.getParam('theme_advanced_blockformats', t.settings.theme_advanced_blockformats, 'hash'), function(v, k) {
 					c.add(t.editor.translate(k != v ? k : fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
 				});
 			}
