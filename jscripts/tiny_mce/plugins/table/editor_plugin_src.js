@@ -86,20 +86,6 @@
 				}
 			});
 
-			// Block delete on gecko inside TD:s. Gecko is removing table elements and then produces incorrect tables
-			// The backspace key also removed TD:s but this one can not be blocked
-			if (tinymce.isGecko) {
-				ed.onKeyPress.add(function(ed, e) {
-					var n;
-
-					if (e.keyCode == 46) {
-						n = ed.dom.getParent(ed.selection.getNode(), 'TD,TH');
-						if (n && (!n.hasChildNodes() || (n.childNodes.length == 1 && n.firstChild.nodeName == 'BR')))
-							tinymce.dom.Event.cancel(e);
-					}
-				});
-			}
-
 			// Add undo level when new rows are created using the tab key
 			ed.onKeyDown.add(function(ed, e) {
 				if (e.keyCode == 9 && ed.dom.getParent(ed.selection.getNode(), 'TABLE'))
