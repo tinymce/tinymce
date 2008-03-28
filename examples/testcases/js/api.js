@@ -662,6 +662,9 @@
 			DOM.remove('test2', 1);
 			t.eq(DOM.get('test').innerHTML.toLowerCase(), '<span>test</span><span>test2</span>');
 
+			DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
+			t.eq(DOM.remove('test2').nodeName, 'SPAN');
+
 			DOM.get('test').innerHTML = '<span id="test2"></span><span id="test3"></span><span id="test4"></span>';
 			DOM.remove(['test2', 'test4']);
 			t.eq(DOM.select('span', 'test').length, 1);

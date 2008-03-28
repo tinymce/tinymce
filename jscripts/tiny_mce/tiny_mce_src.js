@@ -1271,7 +1271,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 		remove : function(n, k) {
 			return this.run(n, function(n) {
-				var p;
+				var p, g;
 
 				p = n.parentNode;
 
@@ -1282,6 +1282,22 @@ tinymce.create('static tinymce.util.XHR', {
 					each (n.childNodes, function(c) {
 						p.insertBefore(c.cloneNode(true), n);
 					});
+				}
+
+				// Fix IE psuedo leak
+				if (isIE) {
+					p = n;
+
+					// Create or get garbage bin
+					g = this.garbage;
+					if (!g)
+						this.garbage = g = this.doc.createElement("div");
+
+					// Attach node to garbage bin and empty the bin
+					g.appendChild(n);
+					g.outerHTML = '';
+
+					return p;
 				}
 
 				return p.removeChild(n);
@@ -2213,7 +2229,7 @@ tinymce.create('static tinymce.util.XHR', {
 		destroy : function(s) {
 			var t = this;
 
-			t.doc = t.root = null;
+			t.garbage = t.doc = t.root = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)
