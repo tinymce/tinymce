@@ -11,6 +11,11 @@
  * @base tinymce.ui.Control
  */
 tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
+	Separator : function(id, s) {
+		this.parent(id, s);
+		this.classPrefix = 'mceSeparator';
+	},
+
 	/**#@+
 	 * @method
 	 */
@@ -22,7 +27,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 	 * @return {String} HTML for the separator control element.
 	 */
 	renderHTML : function() {
-		return tinymce.DOM.createHTML('span', {'class' : 'mceSeparator'});
+		return tinymce.DOM.createHTML('span', {'class' : this.classPrefix});
 	}
 
 	/**#@-*/

@@ -100,7 +100,7 @@
 		 * @param {Numner} px Optional parent X position used when menus are cascading.
 		 */
 		showMenu : function(x, y, px) {
-			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot = 2, dm, tb;
+			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot = 2, dm, tb, cp = t.classPrefix;
 
 			t.collapse(1);
 
@@ -153,7 +153,7 @@
 
 				e = e.target;
 
-				if (e && (e = DOM.getParent(e, 'TR')) && !DOM.hasClass(e, 'mceMenuItemSub')) {
+				if (e && (e = DOM.getParent(e, 'TR')) && !DOM.hasClass(e, cp + 'ItemSub')) {
 					m = t.items[e.id];
 
 					if (m.isDisabled())
@@ -189,12 +189,12 @@
 						if (m.isDisabled())
 							return;
 
-						if (e && DOM.hasClass(e, 'mceMenuItemSub')) {
+						if (e && DOM.hasClass(e, cp + 'ItemSub')) {
 							//p = DOM.getPos(s.container);
 							r = DOM.getRect(e);
 							m.showMenu((r.x + r.w - ot), r.y - ot, r.x);
 							t.lastMenu = m;
-							DOM.addClass(DOM.get(m.id).firstChild, 'mceMenuItemActive');
+							DOM.addClass(DOM.get(m.id).firstChild, cp + 'ItemActive');
 						}
 					}
 				});
@@ -230,7 +230,7 @@
 				t.element.hide();
 
 			if (e = DOM.get(t.id))
-				DOM.removeClass(e.firstChild, 'mceMenuItemActive');
+				DOM.removeClass(e.firstChild, t.classPrefix + 'ItemActive');
 
 			t.onHideMenu.dispatch(t);
 		},
@@ -298,11 +298,11 @@
 			var t = this, s = t.settings, n, tb, co, w;
 
 			w = DOM.create('div', {id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
-			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
+			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
 			if (s.menu_line)
-				DOM.add(co, 'span', {'class' : 'mceMenuLine'});
+				DOM.add(co, 'span', {'class' : t.classPrefix + 'Line'});
 
 //			n = DOM.add(co, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenuContainer'});
 			n = DOM.add(co, 'table', {id : 'menu_' + t.id + '_tbl', border : 0, cellPadding : 0, cellSpacing : 0});
@@ -326,11 +326,11 @@
 		},
 
 		_add : function(tb, o) {
-			var n, s = o.settings, a, ro, it;
+			var n, s = o.settings, a, ro, it, cp = this.classPrefix;
 
 			if (s.separator) {
-				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItemSeparator'});
-				DOM.add(ro, 'td', {'class' : 'mceMenuItemSeparator'});
+				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'ItemSeparator'});
+				DOM.add(ro, 'td', {'class' : cp + 'ItemSeparator'});
 
 				if (n = ro.previousSibling)
 					DOM.addClass(n, 'mceLast');
@@ -338,7 +338,7 @@
 				return;
 			}
 
-			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : 'mceMenuItem mceMenuItemEnabled'});
+			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
 			n = it = DOM.add(n, 'td');
 			n = a = DOM.add(n, 'a', {href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
 
@@ -353,11 +353,11 @@
 			if (tb.childNodes.length == 1)
 				DOM.addClass(ro, 'mceFirst');
 
-			if ((n = ro.previousSibling) && DOM.hasClass(n, 'mceMenuItemSeparator'))
+			if ((n = ro.previousSibling) && DOM.hasClass(n, cp + 'ItemSeparator'))
 				DOM.addClass(ro, 'mceFirst');
 
 			if (o.collapse)
-				DOM.addClass(ro, 'mceMenuItemSub');
+				DOM.addClass(ro, cp + 'ItemSub');
 
 			if (n = ro.previousSibling)
 				DOM.removeClass(n, 'mceLast');

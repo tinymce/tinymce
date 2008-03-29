@@ -109,9 +109,9 @@
 		 * @return {String} HTML for the list box control element.
 		 */
 		renderHTML : function() {
-			var h = '', t = this, s = t.settings;
+			var h = '', t = this, s = t.settings, cp = t.classPrefix;
 
-			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="mceListBox mceListBoxEnabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
+			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
@@ -155,7 +155,7 @@
 			m.showMenu(0, e.clientHeight);
 
 			Event.add(document, 'mousedown', t.hideMenu, t);
-			DOM.addClass(t.id, 'mceListBoxSelected');
+			DOM.addClass(t.id, t.classPrefix + 'Selected');
 		},
 
 		/**
@@ -165,7 +165,7 @@
 			var t = this;
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
-				DOM.removeClass(t.id, 'mceListBoxSelected');
+				DOM.removeClass(t.id, t.classPrefix + 'Selected');
 				Event.remove(document, 'mousedown', t.hideMenu, t);
 
 				if (t.menu)
@@ -181,7 +181,7 @@
 
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
-				'class' : 'mceListBoxMenu mceNoIcons',
+				'class' : t.classPrefix + 'Menu mceNoIcons',
 				max_width : 150,
 				max_height : 150
 			});
@@ -212,7 +212,7 @@
 		 * set states, add events to the control etc. It's recommended for subclasses of the control to call this method by using this.parent().
 		 */
 		postRender : function() {
-			var t = this;
+			var t = this, cp = t.classPrefix;
 
 			Event.add(t.id, 'click', t.showMenu, t);
 			Event.add(t.id + '_text', 'focus', function() {t._focused = 1;});
@@ -221,13 +221,13 @@
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
 				Event.add(t.id, 'mouseover', function() {
-					if (!DOM.hasClass(t.id, 'mceListBoxDisabled'))
-						DOM.addClass(t.id, 'mceListBoxHover');
+					if (!DOM.hasClass(t.id, cp + 'Disabled'))
+						DOM.addClass(t.id, cp + 'Hover');
 				});
 
 				Event.add(t.id, 'mouseout', function() {
-					if (!DOM.hasClass(t.id, 'mceListBoxDisabled'))
-						DOM.removeClass(t.id, 'mceListBoxHover');
+					if (!DOM.hasClass(t.id, cp + 'Disabled'))
+						DOM.removeClass(t.id, cp + 'Hover');
 				});
 			}
 

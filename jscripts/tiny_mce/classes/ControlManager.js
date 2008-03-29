@@ -31,6 +31,7 @@
 			t.onAdd = new tinymce.util.Dispatcher(t);
 			t.onPostRender = new tinymce.util.Dispatcher(t);
 			t.prefix = s.prefix || ed.id + '_';
+			t._cls = {};
 
 			t.onPostRender.add(function() {
 				each(t.controls, function(c) {
@@ -142,7 +143,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createDropMenu : function(id, s) {
-			var t = this, ed = t.editor, c, bm, v;
+			var t = this, ed = t.editor, c, bm, v, cls;
 
 			s = extend({
 				'class' : 'mceDropDown',
@@ -154,7 +155,8 @@
 				s['class'] += ' ' + ed.getParam('skin') + 'Skin' + v.substring(0, 1).toUpperCase() + v.substring(1);
 
 			id = t.prefix + id;
-			c = t.controls[id] = new tinymce.ui.DropMenu(id, s);
+			cls = t._cls.dropmenu || tinymce.ui.DropMenu;
+			c = t.controls[id] = new cls(id, s);
 			c.onAddItem.add(function(c, o) {
 				var s = o.settings;
 
@@ -200,7 +202,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createListBox : function(id, s) {
-			var t = this, ed = t.editor, cmd, c;
+			var t = this, ed = t.editor, cmd, c, cls;
 
 			if (t.get(id))
 				return null;
@@ -225,8 +227,10 @@
 
 			if (ed.settings.use_native_selects)
 				c = new tinymce.ui.NativeListBox(id, s);
-			else
-				c = new tinymce.ui.ListBox(id, s);
+			else {
+				cls = t._cls.listbox || tinymce.ui.ListBox;
+				c = new cls(id, s);
+			}
 
 			t.controls[id] = c;
 
@@ -260,7 +264,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createButton : function(id, s) {
-			var t = this, ed = t.editor, o, c;
+			var t = this, ed = t.editor, o, c, cls;
 
 			if (t.get(id))
 				return null;
@@ -285,10 +289,13 @@
 			id = t.prefix + id;
 
 			if (s.menu_button) {
-				c = new tinymce.ui.MenuButton(id, s);
+				cls = t._cls.menubutton || tinymce.ui.MenuButton;
+				c = new cls(id, s);
 				ed.onMouseDown.add(c.hideMenu, c);
-			} else
-				c = new tinymce.ui.Button(id, s);
+			} else {
+				cls = t._cls.button || tinymce.ui.Button;
+				c = new cls(id, s);
+			}
 
 			return t.add(c);
 		},
@@ -315,7 +322,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createSplitButton : function(id, s) {
-			var t = this, ed = t.editor, cmd, c;
+			var t = this, ed = t.editor, cmd, c, cls;
 
 			if (t.get(id))
 				return null;
@@ -343,7 +350,8 @@
 			}, s);
 
 			id = t.prefix + id;
-			c = t.add(new tinymce.ui.SplitButton(id, s));
+			cls = new t._cls.splitbutton || tinymce.ui.SplitButton;
+			c = t.add(cls(id, s));
 			ed.onMouseDown.add(c.hideMenu, c);
 
 			return c;
@@ -386,7 +394,8 @@
 			}, s);
 
 			id = t.prefix + id;
-			c = new tinymce.ui.ColorSplitButton(id, s);
+			cls = t._cls.colorsplitbutton || tinymce.ui.ColorSplitButton;
+			c = new cls(id, s);
 			ed.onMouseDown.add(c.hideMenu, c);
 
 			// Remove the menu element when the editor is removed
@@ -405,10 +414,11 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createToolbar : function(id, s) {
-			var c, t = this;
+			var c, t = this, cls;
 
 			id = t.prefix + id;
-			c = new tinymce.ui.Toolbar(id, s);
+			cls = t._cls.toolbar || tinymce.ui.Toolbar;
+			c = new cls(id, s);
 
 			if (t.get(id))
 				return null;
@@ -422,7 +432,20 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createSeparator : function() {
-			return new tinymce.ui.Separator();
+			var cls = this._cls.separator || tinymce.ui.Separator;
+
+			return new cls();
+		},
+
+		/**
+		 * Overrides a specific control type with a custom class.
+		 *
+		 * @param {string} n Name of the control to override for example button or dropmenu.
+		 * @param {function} c Class reference to use instead of the default one.
+		 * @return {function} Same as the class reference.
+		 */
+		setControlType : function(n, c) {
+			return this._cls[n.toLowerCase()] = c;
 		},
 
 		destroy : function() {

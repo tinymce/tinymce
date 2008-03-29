@@ -3,6 +3,7 @@ Version 3.0.6 (2008-03-xx)
 	Added more accessibility fixes, it's now possible to navigate and close list boxes and split button menus with the keyboard.
 	Added missing getInfo method to the contextmenu and safari plugin, this caused problems for the Drupal module.
 	Added new inlinepopups_zindex option to the inlinepopups plugin so that you can configure the default start z-index.
+	Added new setControlType method to the tinymce.ControlManager class. This method enables you to override the default classes.
 	Fixed bug where attribute rules for the DOM Serializer couldn't contain - or _ characters in their names.
 	Fixed bug where inlinepopups event blocker and modal dialog blocker elements produced vertical scrollbars.
 	Fixed bug where there was a rendering issue with quirks mode in Safari moving the resize handle to an incorrect position.
