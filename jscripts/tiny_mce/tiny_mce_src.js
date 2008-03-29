@@ -9813,7 +9813,7 @@ tinymce.create('tinymce.UndoManager', {
 			return t.add(c);
 		},
 
-		createDropMenu : function(id, s) {
+		createDropMenu : function(id, s, cc) {
 			var t = this, ed = t.editor, c, bm, v, cls;
 
 			s = extend({
@@ -9826,7 +9826,7 @@ tinymce.create('tinymce.UndoManager', {
 				s['class'] += ' ' + ed.getParam('skin') + 'Skin' + v.substring(0, 1).toUpperCase() + v.substring(1);
 
 			id = t.prefix + id;
-			cls = t._cls.dropmenu || tinymce.ui.DropMenu;
+			cls = cc || t._cls.dropmenu || tinymce.ui.DropMenu;
 			c = t.controls[id] = new cls(id, s);
 			c.onAddItem.add(function(c, o) {
 				var s = o.settings;
@@ -9864,7 +9864,7 @@ tinymce.create('tinymce.UndoManager', {
 			return t.add(c);
 		},
 
-		createListBox : function(id, s) {
+		createListBox : function(id, s, cc) {
 			var t = this, ed = t.editor, cmd, c, cls;
 
 			if (t.get(id))
@@ -9891,7 +9891,7 @@ tinymce.create('tinymce.UndoManager', {
 			if (ed.settings.use_native_selects)
 				c = new tinymce.ui.NativeListBox(id, s);
 			else {
-				cls = t._cls.listbox || tinymce.ui.ListBox;
+				cls = cc || t._cls.listbox || tinymce.ui.ListBox;
 				c = new cls(id, s);
 			}
 
@@ -9919,7 +9919,7 @@ tinymce.create('tinymce.UndoManager', {
 			return t.add(c);
 		},
 
-		createButton : function(id, s) {
+		createButton : function(id, s, cc) {
 			var t = this, ed = t.editor, o, c, cls;
 
 			if (t.get(id))
@@ -9945,7 +9945,7 @@ tinymce.create('tinymce.UndoManager', {
 			id = t.prefix + id;
 
 			if (s.menu_button) {
-				cls = t._cls.menubutton || tinymce.ui.MenuButton;
+				cls = cc || t._cls.menubutton || tinymce.ui.MenuButton;
 				c = new cls(id, s);
 				ed.onMouseDown.add(c.hideMenu, c);
 			} else {
@@ -9963,7 +9963,7 @@ tinymce.create('tinymce.UndoManager', {
 			return this.createButton(id, s);
 		},
 
-		createSplitButton : function(id, s) {
+		createSplitButton : function(id, s, cc) {
 			var t = this, ed = t.editor, cmd, c, cls;
 
 			if (t.get(id))
@@ -9992,14 +9992,14 @@ tinymce.create('tinymce.UndoManager', {
 			}, s);
 
 			id = t.prefix + id;
-			cls = new t._cls.splitbutton || tinymce.ui.SplitButton;
-			c = t.add(cls(id, s));
+			cls = cc || t._cls.splitbutton || tinymce.ui.SplitButton;
+			c = t.add(new cls(id, s));
 			ed.onMouseDown.add(c.hideMenu, c);
 
 			return c;
 		},
 
-		createColorSplitButton : function(id, s) {
+		createColorSplitButton : function(id, s, cc) {
 			var t = this, ed = t.editor, cmd, c;
 
 			if (t.get(id))
@@ -10029,7 +10029,7 @@ tinymce.create('tinymce.UndoManager', {
 			}, s);
 
 			id = t.prefix + id;
-			cls = t._cls.colorsplitbutton || tinymce.ui.ColorSplitButton;
+			cls = cc || t._cls.colorsplitbutton || tinymce.ui.ColorSplitButton;
 			c = new cls(id, s);
 			ed.onMouseDown.add(c.hideMenu, c);
 
@@ -10041,11 +10041,11 @@ tinymce.create('tinymce.UndoManager', {
 			return t.add(c);
 		},
 
-		createToolbar : function(id, s) {
+		createToolbar : function(id, s, cc) {
 			var c, t = this, cls;
 
 			id = t.prefix + id;
-			cls = t._cls.toolbar || tinymce.ui.Toolbar;
+			cls = cc || t._cls.toolbar || tinymce.ui.Toolbar;
 			c = new cls(id, s);
 
 			if (t.get(id))
@@ -10054,8 +10054,8 @@ tinymce.create('tinymce.UndoManager', {
 			return t.add(c);
 		},
 
-		createSeparator : function() {
-			var cls = this._cls.separator || tinymce.ui.Separator;
+		createSeparator : function(cc) {
+			var cls = cc || this._cls.separator || tinymce.ui.Separator;
 
 			return new cls();
 		},
