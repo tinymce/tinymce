@@ -423,6 +423,14 @@
 		 */
 		createSeparator : function() {
 			return new tinymce.ui.Separator();
+		},
+
+		destroy : function() {
+			each(this.controls, function(c) {
+				c.destroy();
+			});
+
+			this.controls = null;
 		}
 
 		/**#@-*/

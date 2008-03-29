@@ -479,6 +479,8 @@
 				t.onClose.dispatch(t);
 				Event.remove(d, 'mousedown', w.mousedownFunc);
 				Event.remove(d, 'click', w.clickFunc);
+				Event.clear(id);
+				Event.clear(id + '_ifr');
 
 				DOM.setAttrib(id + '_ifr', 'src', 'javascript:""'); // Prevent leak
 				w.element.remove();

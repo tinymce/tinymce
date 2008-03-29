@@ -232,6 +232,12 @@
 			}
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
+		},
+
+		destroy : function() {
+			this.parent();
+
+			Event.clear(this.id + '_text');
 		}
 
 		/**#@-*/

@@ -162,11 +162,19 @@
 		},
 
 		/**
-		 * Destroys the control. This means it will be removed from the DOM and any
+		 * Removes the control. This means it will be removed from the DOM and any
 		 * events tied to it will also be removed.
 		 */
-		destroy : function() {
+		remove : function() {
 			DOM.remove(this.id);
+			this.destroy();
+		},
+
+		/**
+		 * Destroys the control will free any memory by removing event listeners etc.
+		 */
+		destroy : function() {
+			tinymce.dom.Event.clear(this.id);
 		}
 
 		/**#@-*/

@@ -434,6 +434,13 @@
 			DOM.setStyles(e, {width : w, height : h});
 		},
 
+		destroy : function() {
+			var id = this.editor.id;
+
+			Event.clear(id + '_resize');
+			Event.clear(id + '_path_row');
+		},
+
 		// Internal functions
 
 		_simpleLayout : function(s, tb, o, p) {

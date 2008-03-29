@@ -2378,12 +2378,16 @@ tinymce.create('static tinymce.util.XHR', {
 		clear : function(o) {
 			var t = this, a = t.events, i, e;
 
-			for (i = a.length - 1; i >= 0; i--) {
-				e = a[i];
+			if (o) {
+				o = DOM.get(o);
 
-				if (e.obj == o) {
-					a.splice(i, 1);
-					t._remove(o, e.name, e.cfunc);
+				for (i = a.length - 1; i >= 0; i--) {
+					e = a[i];
+
+					if (e.obj == o) {
+						a.splice(i, 1);
+						t._remove(o, e.name, e.cfunc);
+					}
 				}
 			}
 		},
@@ -4609,8 +4613,13 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 		},
 
-		destroy : function() {
+		remove : function() {
 			DOM.remove(this.id);
+			this.destroy();
+		},
+
+		destroy : function() {
+			tinymce.dom.Event.clear(this.id);
 		}
 
 		});
@@ -5293,6 +5302,12 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
+		},
+
+		destroy : function() {
+			this.parent();
+
+			Event.clear(this.id + '_text');
 		}
 
 		});
@@ -5542,6 +5557,11 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 						DOM.removeClass(t.id, 'mceSplitButtonHover');
 				});
 			}
+		},
+
+		destroy : function() {
+			Event.clear(this.id + '_action');
+			Event.clear(this.id + '_open');
 		}
 
 		});
@@ -5638,18 +5658,15 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					href : 'javascript:;',
 					style : {
 						backgroundColor : '#' + c
-					}
-				});
-
-				Event.add(n, 'click', function() {
-					t.setColor('#' + c);
+					},
+					mce_color : '#' + c
 				});
 			});
 
 			if (s.more_colors_func) {
 				n = DOM.add(tb, 'tr');
 				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'mceMoreColors'});
-				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
+				n = DOM.add(n, 'a', {id : t.id + '_more', href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
 					s.more_colors_func.call(s.more_colors_scope || this);
@@ -5658,6 +5675,15 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 
 			DOM.addClass(m, 'mceColorSplitMenu');
+
+			Event.add(t.id + '_menu', 'click', function(e) {
+				var c;
+
+				e = e.target;
+
+				if (e.nodeName == 'A' && (c = e.getAttribute('mce_color')))
+					t.setColor(c);
+			});
 
 			return w;
 		},
@@ -5681,6 +5707,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		destroy : function() {
 			this.parent();
+
+			Event.clear(this.id + '_menu');
+			Event.clear(this.id + '_more');
 			DOM.remove(this.id + '_menu');
 		}
 
@@ -7147,11 +7176,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		remove : function() {
-			var t = this;
+			var t = this, e = t.getContainer();
 
 			t.removed = 1; // Cancels post remove event execution
 			t.hide();
-			DOM.remove(t.getContainer());
 
 			t.execCallback('remove_instance_callback', t);
 			t.onRemove.dispatch(t);
@@ -7160,6 +7188,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.onExecCommand.listeners = [];
 
 			EditorManager.remove(t);
+			DOM.remove(e);
 		},
 
 		resizeToContent : function() {
@@ -7398,7 +7427,15 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (!s) {
 				// Manual destroy
+				Event.clear(t.formElement);
+				Event.clear(t.getBody());
+				Event.clear(t.getDoc());
+
+				if (t.theme.destroy)
+					t.theme.destroy();
+
 				tinymce.removeUnload(t.destroy);
+				t.controlManager.destroy();
 				t.selection.destroy();
 				t.dom.destroy();
 			}
@@ -10004,6 +10041,14 @@ tinymce.create('tinymce.UndoManager', {
 
 		createSeparator : function() {
 			return new tinymce.ui.Separator();
+		},
+
+		destroy : function() {
+			each(this.controls, function(c) {
+				c.destroy();
+			});
+
+			this.controls = null;
 		}
 
 		});

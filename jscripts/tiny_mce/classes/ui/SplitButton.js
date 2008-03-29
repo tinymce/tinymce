@@ -85,6 +85,11 @@
 						DOM.removeClass(t.id, 'mceSplitButtonHover');
 				});
 			}
+		},
+
+		destroy : function() {
+			Event.clear(this.id + '_action');
+			Event.clear(this.id + '_open');
 		}
 
 		/**#@-*/

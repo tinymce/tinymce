@@ -1295,11 +1295,10 @@
 		 * Removes the editor from the dom and EditorManager collection.
 		 */
 		remove : function() {
-			var t = this;
+			var t = this, e = t.getContainer();
 
 			t.removed = 1; // Cancels post remove event execution
 			t.hide();
-			DOM.remove(t.getContainer());
 
 			t.execCallback('remove_instance_callback', t);
 			t.onRemove.dispatch(t);
@@ -1308,6 +1307,7 @@
 			t.onExecCommand.listeners = [];
 
 			EditorManager.remove(t);
+			DOM.remove(e);
 		},
 
 		/**
@@ -1632,7 +1632,15 @@
 
 			if (!s) {
 				// Manual destroy
+				Event.clear(t.formElement);
+				Event.clear(t.getBody());
+				Event.clear(t.getDoc());
+
+				if (t.theme.destroy)
+					t.theme.destroy();
+
 				tinymce.removeUnload(t.destroy);
+				t.controlManager.destroy();
 				t.selection.destroy();
 				t.dom.destroy();
 			}

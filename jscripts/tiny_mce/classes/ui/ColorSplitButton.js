@@ -123,18 +123,15 @@
 					href : 'javascript:;',
 					style : {
 						backgroundColor : '#' + c
-					}
-				});
-
-				Event.add(n, 'click', function() {
-					t.setColor('#' + c);
+					},
+					mce_color : '#' + c
 				});
 			});
 
 			if (s.more_colors_func) {
 				n = DOM.add(tb, 'tr');
 				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'mceMoreColors'});
-				n = DOM.add(n, 'a', {href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
+				n = DOM.add(n, 'a', {id : t.id + '_more', href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
 					s.more_colors_func.call(s.more_colors_scope || this);
@@ -143,6 +140,15 @@
 			}
 
 			DOM.addClass(m, 'mceColorSplitMenu');
+
+			Event.add(t.id + '_menu', 'click', function(e) {
+				var c;
+
+				e = e.target;
+
+				if (e.nodeName == 'A' && (c = e.getAttribute('mce_color')))
+					t.setColor(c);
+			});
 
 			return w;
 		},
@@ -175,6 +181,9 @@
 		 */
 		destroy : function() {
 			this.parent();
+
+			Event.clear(this.id + '_menu');
+			Event.clear(this.id + '_more');
 			DOM.remove(this.id + '_menu');
 		}
 
