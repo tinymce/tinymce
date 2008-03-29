@@ -5013,7 +5013,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		renderNode : function() {
 			var t = this, s = t.settings, n, tb, co, w;
 
-			w = DOM.create('div', {id : 'menu_' + t.id, dir : 'ltr', 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
+			w = DOM.create('div', {id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
 			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenu' + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
@@ -5615,7 +5615,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr, w;
 
-			w = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', dir : 'ltr', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
+			w = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
 			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 
@@ -9435,7 +9435,7 @@ tinymce.create('tinymce.UndoManager', {
 
 		insertPara : function(e) {
 			var t = this, ed = t.editor, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = s.getRangeAt(0), b = d.body;
-			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n;
+			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, vp = ed.dom.getViewPort(ed.getWin()), y, ch;
 
 			function isEmpty(n) {
 				n = n.innerHTML;
@@ -9581,6 +9581,9 @@ tinymce.create('tinymce.UndoManager', {
 			// Delete and replace it with new block elements
 			r.deleteContents();
 
+			if (isOpera)
+				ed.getWin().scrollTo(0, vp.y);
+
 			// Never wrap blocks in blocks
 			if (bef.firstChild && bef.firstChild.nodeName == bn)
 				bef.innerHTML = bef.firstChild.innerHTML;
@@ -9615,11 +9618,15 @@ tinymce.create('tinymce.UndoManager', {
 			s.removeAllRanges();
 			s.addRange(r);
 
-			// Safari bug fix, http://bugs.webkit.org/show_bug.cgi?id=16117
-			if (tinymce.isWebKit)
-				ed.getWin().scrollTo(0, ed.dom.getPos(aft).y);
-			else
-				aft.scrollIntoView(0);
+			// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
+			y = ed.dom.getPos(aft).y;
+			ch = aft.clientHeight;
+
+			// Is element within viewport
+			if (y < vp.y || y + ch > vp.y + vp.h) {
+				ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + ch);
+				//console.debug('SCROLL!', 'vp.y: ' + vp.y, 'y' + y, 'vp.h' + vp.h, 'clientHeight' + aft.clientHeight, 'yyy: ' + (y < vp.y ? y : y - vp.h + aft.clientHeight));
+			}
 
 			return false;
 		},

@@ -282,7 +282,7 @@
 
 		insertPara : function(e) {
 			var t = this, ed = t.editor, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = s.getRangeAt(0), b = d.body;
-			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n;
+			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, vp = ed.dom.getViewPort(ed.getWin()), y, ch;
 
 			function isEmpty(n) {
 				n = n.innerHTML;
@@ -428,6 +428,9 @@
 			// Delete and replace it with new block elements
 			r.deleteContents();
 
+			if (isOpera)
+				ed.getWin().scrollTo(0, vp.y);
+
 			// Never wrap blocks in blocks
 			if (bef.firstChild && bef.firstChild.nodeName == bn)
 				bef.innerHTML = bef.firstChild.innerHTML;
@@ -462,11 +465,15 @@
 			s.removeAllRanges();
 			s.addRange(r);
 
-			// Safari bug fix, http://bugs.webkit.org/show_bug.cgi?id=16117
-			if (tinymce.isWebKit)
-				ed.getWin().scrollTo(0, ed.dom.getPos(aft).y);
-			else
-				aft.scrollIntoView(0);
+			// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
+			y = ed.dom.getPos(aft).y;
+			ch = aft.clientHeight;
+
+			// Is element within viewport
+			if (y < vp.y || y + ch > vp.y + vp.h) {
+				ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + ch);
+				//console.debug('SCROLL!', 'vp.y: ' + vp.y, 'y' + y, 'vp.h' + vp.h, 'clientHeight' + aft.clientHeight, 'yyy: ' + (y < vp.y ? y : y - vp.h + aft.clientHeight));
+			}
 
 			return false;
 		},

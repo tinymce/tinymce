@@ -32,6 +32,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where it was impossible to totally empty the editor contents on Safari due to an mistreatment of nbsp as whitespace. Patch contributed by Andrew Ozz.
 	Fixed bug where TinyMCE would not convert textareas with the same name attribute value. It will now generate an unique id for those textareas.
 	Fixed bug where backspace/delete key was deleting td elements inside tables while running on Gecko.
+	Fixed bug where Firefox 3.0b4 and Opera 9.26 where scrolling to the top of document when pressing return/enter.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.
@@ -41,6 +42,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed so table dialogs and the advanced image dialog doesn't loose selection in IE if the dialogs where navigated/submitted with the keyboard.
 	Fixed so the theme_advanced_blockformats options can have named items for example title 1=h1;title 2=h2.
 	Fixed so it's possible to add a custom editor_css for the simple theme.
+	Fixed quirks with directionality rtl, patch contributed by Andrew Ozz.
 	Fixed so the inlinepopups default start zIndex is 300000.
 	Fixed typo in media plugin Shockware is now replaced with Shockwave.
 	Fixed psuedo memory leak in IE with the replaceChild method inside the DOMUtils.replace method.
