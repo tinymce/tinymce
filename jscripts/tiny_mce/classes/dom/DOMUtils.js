@@ -480,16 +480,8 @@
 
 				// Fix IE psuedo leak
 				if (isIE) {
-					p = n;
-
-					// Create or get garbage bin
-					g = this.garbage;
-					if (!g)
-						this.garbage = g = this.doc.createElement("div");
-
-					// Attach node to garbage bin and empty the bin
-					g.appendChild(n);
-					g.outerHTML = '';
+					p = n.cloneNode(true);
+					n.outerHTML = '';
 
 					return p;
 				}
