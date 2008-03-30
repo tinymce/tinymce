@@ -235,7 +235,7 @@ function parseLink(link) {
 		regExp += "\\);?";
 
 		// Build variable array
-		var variables = new Array();
+		var variables = [];
 		variables["_function"] = fnName;
 		var variableValues = link.replace(new RegExp(regExp, "gi"), replaceStr).split('<delim>');
 		for (var i=0; i<variableNames.length; i++)
@@ -249,7 +249,7 @@ function parseLink(link) {
 
 function parseOptions(opts) {
 	if (opts == null || opts == "")
-		return new Array();
+		return [];
 
 	// Cleanup the options
 	opts = opts.toLowerCase();

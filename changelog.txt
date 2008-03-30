@@ -50,6 +50,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed psuedo memory leak in IE with the replaceChild method inside the DOMUtils.replace method.
 	Fixed so memory is released when an editor instance is removed from page.
 	Optimized the color split button menus so that they use less event handlers.
+	Removed the util/mclayer.js file since it's no longer used by any of the TinyMCE dialogs and is considered deprecated.
 Version 3.0.5 (2008-03-12)
 	Added new black skin variant to the o2k7 skin contributed by Stefan Moonen.
 	Added new explode method to the tinymce core class. This does a split but removed whitespace it also defaults to a , delimiter.

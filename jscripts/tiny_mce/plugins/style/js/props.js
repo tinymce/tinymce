@@ -223,12 +223,12 @@ function setupFormData() {
 	f.positioning_height.value = getNum(ce.style.height);
 	selectByValue(f, 'positioning_height_measurement', getMeasurement(ce.style.height));
 
-	setupBox(f, ce, 'positioning_placement', '', '', new Array('top', 'right', 'bottom', 'left'));
+	setupBox(f, ce, 'positioning_placement', '', '', ['top', 'right', 'bottom', 'left']);
 
 	s = ce.style.clip.replace(new RegExp("rect\\('?([^']*)'?\\)", 'gi'), "$1");
 	s = s.replace(/,/g, ' ');
 
-	if (!hasEqualValues(new Array(getVal(s, 0), getVal(s, 1), getVal(s, 2), getVal(s, 3)))) {
+	if (!hasEqualValues([getVal(s, 0), getVal(s, 1), getVal(s, 2), getVal(s, 3)])) {
 		f.positioning_clip_top.value = getNum(getVal(s, 0));
 		selectByValue(f, 'positioning_clip_top_measurement', getMeasurement(getVal(s, 0)));
 		f.positioning_clip_right.value = getNum(getVal(s, 1));
@@ -279,7 +279,7 @@ function setValue(f, n, v) {
 
 function setupBox(f, ce, fp, pr, sf, b) {
 	if (typeof(b) == "undefined")
-		b = new Array('Top', 'Right', 'Bottom', 'Left');
+		b = ['Top', 'Right', 'Bottom', 'Left'];
 
 	if (isSame(ce, pr, sf, b)) {
 		f.elements[fp + "_same"].checked = true;
@@ -328,10 +328,10 @@ function setupBox(f, ce, fp, pr, sf, b) {
 }
 
 function isSame(e, pr, sf, b) {
-	var a = new Array(), i, x;
+	var a = [], i, x;
 
 	if (typeof(b) == "undefined")
-		b = new Array('Top', 'Right', 'Bottom', 'Left');
+		b = ['Top', 'Right', 'Bottom', 'Left'];
 
 	if (typeof(sf) == "undefined" || sf == null)
 		sf = "";
