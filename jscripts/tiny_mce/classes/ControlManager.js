@@ -371,7 +371,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createColorSplitButton : function(id, s, cc) {
-			var t = this, ed = t.editor, cmd, c;
+			var t = this, ed = t.editor, cmd, c, cls;
 
 			if (t.get(id))
 				return null;

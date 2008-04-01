@@ -439,6 +439,7 @@
 
 			Event.clear(id + '_resize');
 			Event.clear(id + '_path_row');
+			Event.clear(id + '_external_close');
 		},
 
 		// Internal functions

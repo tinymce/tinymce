@@ -649,7 +649,7 @@
 		destroy : function(s) {
 			var t = this;
 
-			t.doc = null;
+			t.win = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)

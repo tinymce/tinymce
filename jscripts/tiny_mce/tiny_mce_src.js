@@ -1041,7 +1041,7 @@ tinymce.create('static tinymce.util.XHR', {
 		get : function(e) {
 			var n;
 
-			if (typeof(e) == 'string') {
+			if (this.doc && typeof(e) == 'string') {
 				n = e;
 				e = this.doc.getElementById(e);
 
@@ -1285,12 +1285,12 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 
 				// Fix IE psuedo leak
-				if (isIE) {
+		/*		if (isIE) {
 					p = n.cloneNode(true);
 					n.outerHTML = '';
 
 					return p;
-				}
+				}*/
 
 				return p.removeChild(n);
 			});
@@ -2221,7 +2221,7 @@ tinymce.create('static tinymce.util.XHR', {
 		destroy : function(s) {
 			var t = this;
 
-			t.garbage = t.doc = t.root = null;
+			t.doc = t.root = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)
@@ -2376,9 +2376,10 @@ tinymce.create('static tinymce.util.XHR', {
 				for (i = a.length - 1; i >= 0; i--) {
 					e = a[i];
 
-					if (e.obj == o) {
+					if (e.obj === o) {
+						t._remove(e.obj, e.name, e.cfunc);
+						e.obj = e.cfunc = null;
 						a.splice(i, 1);
-						t._remove(o, e.name, e.cfunc);
 					}
 				}
 			}
@@ -3179,7 +3180,7 @@ tinymce.create('static tinymce.util.XHR', {
 		destroy : function(s) {
 			var t = this;
 
-			t.doc = null;
+			t.win = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)
@@ -5557,6 +5558,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		destroy : function() {
+			this.parent();
+
 			Event.clear(this.id + '_action');
 			Event.clear(this.id + '_open');
 		}
@@ -5847,6 +5850,31 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		editors : {},
 		i18n : {},
 		activeEditor : null,
+
+		preInit : function() {
+			var t = this, lo = window.location;
+
+			// Setup some URLs where the editor API is located and where the document is
+			tinymce.documentBaseURL = lo.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
+			if (!/[\/\\]$/.test(tinymce.documentBaseURL))
+				tinymce.documentBaseURL += '/';
+
+			tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
+			tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
+
+			// Setup document domain
+			if (tinymce.EditorManager.baseURI.host != lo.hostname && lo.hostname)
+				document.domain = tinymce.relaxedDomain = lo.hostname.replace(/.*\.(.+\..+)$/, '$1');
+
+			// Add before unload listener
+			// This was required since IE was leaking memory if you added and removed beforeunload listeners
+			// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
+			t.onBeforeUnload = new tinymce.util.Dispatcher(t);
+
+			Event.add(document, 'beforeunload', function(e) {
+				t.onBeforeUnload.dispatch(t, e);
+			});
+		},
 
 		init : function(s) {
 			var t = this, pl, sl = tinymce.ScriptLoader, c;
@@ -6149,16 +6177,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 		});
 
-	// Setup some URLs where the editor API is located and where the document is
-	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
-	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
-		tinymce.documentBaseURL += '/';
-
-	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
-	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
-
-	if (tinymce.EditorManager.baseURI.host != window.location.hostname && window.location.hostname)
-		document.domain = tinymce.relaxedDomain = window.location.hostname.replace(/.*\.(.+\..+)$/, '$1');
+	tinymce.EditorManager.preInit();
 })();
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call
@@ -6327,7 +6346,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			if (s.add_unload_trigger) {
-				Event.add(document, 'beforeunload', function() {
+				t._beforeUnload = tinyMCE.onBeforeUnload.add(function() {
 					if (t.initialized && !t.destroyed)
 						t.save({format : 'raw', no_events : true});
 				});
@@ -7172,22 +7191,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			return b;
 		},
 
-		remove : function() {
-			var t = this, e = t.getContainer();
-
-			t.removed = 1; // Cancels post remove event execution
-			t.hide();
-
-			t.execCallback('remove_instance_callback', t);
-			t.onRemove.dispatch(t);
-
-			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
-			t.onExecCommand.listeners = [];
-
-			EditorManager.remove(t);
-			DOM.remove(e);
-		},
-
 		resizeToContent : function() {
 			var t = this;
 
@@ -7417,24 +7420,45 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.onVisualAid.dispatch(t, e, t.hasVisual);
 		},
 
+		remove : function() {
+			var t = this, e = t.getContainer();
+
+			t.removed = 1; // Cancels post remove event execution
+			t.hide();
+
+			t.execCallback('remove_instance_callback', t);
+			t.onRemove.dispatch(t);
+
+			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
+			t.onExecCommand.listeners = [];
+
+			EditorManager.remove(t);
+			DOM.remove(e);
+		},
+
 		destroy : function(s) {
 			var t = this;
 
 			t.onBeforeDestroy.dispatch(t);
 
 			if (!s) {
-				// Manual destroy
-				Event.clear(t.formElement);
-				Event.clear(t.getBody());
-				Event.clear(t.getDoc());
+				tinymce.removeUnload(t.destroy);
+				tinyMCE.onBeforeUnload.remove(t._beforeUnload);
 
+				// Manual destroy
 				if (t.theme.destroy)
 					t.theme.destroy();
 
-				tinymce.removeUnload(t.destroy);
+				// Destroy controls, selection and dom
 				t.controlManager.destroy();
 				t.selection.destroy();
 				t.dom.destroy();
+
+				// Remove all events
+				Event.clear(t.getWin());
+				Event.clear(t.getDoc());
+				Event.clear(t.getBody());
+				Event.clear(t.formElement);
 			}
 
 			if (t.formElement) {
@@ -9992,7 +10016,7 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		createColorSplitButton : function(id, s, cc) {
-			var t = this, ed = t.editor, cmd, c;
+			var t = this, ed = t.editor, cmd, c, cls;
 
 			if (t.get(id))
 				return null;

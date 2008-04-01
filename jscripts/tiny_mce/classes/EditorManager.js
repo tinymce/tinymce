@@ -24,6 +24,35 @@
 		 */
 
 		/**
+		 * Preinitializes the EditorManager class. This method will be called automatically when the page loads and it
+		 * will setup some important paths and URIs and attach some document events.
+		 */
+		preInit : function() {
+			var t = this, lo = window.location;
+
+			// Setup some URLs where the editor API is located and where the document is
+			tinymce.documentBaseURL = lo.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
+			if (!/[\/\\]$/.test(tinymce.documentBaseURL))
+				tinymce.documentBaseURL += '/';
+
+			tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
+			tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
+
+			// Setup document domain
+			if (tinymce.EditorManager.baseURI.host != lo.hostname && lo.hostname)
+				document.domain = tinymce.relaxedDomain = lo.hostname.replace(/.*\.(.+\..+)$/, '$1');
+
+			// Add before unload listener
+			// This was required since IE was leaking memory if you added and removed beforeunload listeners
+			// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
+			t.onBeforeUnload = new tinymce.util.Dispatcher(t);
+
+			Event.add(document, 'beforeunload', function(e) {
+				t.onBeforeUnload.dispatch(t, e);
+			});
+		},
+
+		/**
 		 * Initializes a set of editors. This method will create a bunch of editors based in the input.
 		 *
 		 * @param {Object} s Settings object to be passed to each editor instance.
@@ -380,16 +409,7 @@
 		/**#@-*/
 	});
 
-	// Setup some URLs where the editor API is located and where the document is
-	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
-	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
-		tinymce.documentBaseURL += '/';
-
-	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
-	tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
-
-	if (tinymce.EditorManager.baseURI.host != window.location.hostname && window.location.hostname)
-		document.domain = tinymce.relaxedDomain = window.location.hostname.replace(/.*\.(.+\..+)$/, '$1');
+	tinymce.EditorManager.preInit();
 })();
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call

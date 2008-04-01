@@ -193,7 +193,7 @@
 		get : function(e) {
 			var n;
 
-			if (typeof(e) == 'string') {
+			if (this.doc && typeof(e) == 'string') {
 				n = e;
 				e = this.doc.getElementById(e);
 
@@ -479,12 +479,12 @@
 				}
 
 				// Fix IE psuedo leak
-				if (isIE) {
+		/*		if (isIE) {
 					p = n.cloneNode(true);
 					n.outerHTML = '';
 
 					return p;
-				}
+				}*/
 
 				return p.removeChild(n);
 			});
@@ -1608,7 +1608,7 @@
 		destroy : function(s) {
 			var t = this;
 
-			t.garbage = t.doc = t.root = null;
+			t.doc = t.root = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)

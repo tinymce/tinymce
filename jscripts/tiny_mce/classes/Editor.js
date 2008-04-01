@@ -185,7 +185,7 @@
 			}
 
 			if (s.add_unload_trigger) {
-				Event.add(document, 'beforeunload', function() {
+				t._beforeUnload = tinyMCE.onBeforeUnload.add(function() {
 					if (t.initialized && !t.destroyed)
 						t.save({format : 'raw', no_events : true});
 				});
@@ -1292,25 +1292,6 @@
 		},
 
 		/**
-		 * Removes the editor from the dom and EditorManager collection.
-		 */
-		remove : function() {
-			var t = this, e = t.getContainer();
-
-			t.removed = 1; // Cancels post remove event execution
-			t.hide();
-
-			t.execCallback('remove_instance_callback', t);
-			t.onRemove.dispatch(t);
-
-			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
-			t.onExecCommand.listeners = [];
-
-			EditorManager.remove(t);
-			DOM.remove(e);
-		},
-
-		/**
 		 * Resizes the editor to the current contents width and height.
 		 */
 		resizeToContent : function() {
@@ -1625,24 +1606,55 @@
 			t.onVisualAid.dispatch(t, e, t.hasVisual);
 		},
 
+		/**
+		 * Removes the editor from the dom and EditorManager collection.
+		 */
+		remove : function() {
+			var t = this, e = t.getContainer();
+
+			t.removed = 1; // Cancels post remove event execution
+			t.hide();
+
+			t.execCallback('remove_instance_callback', t);
+			t.onRemove.dispatch(t);
+
+			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
+			t.onExecCommand.listeners = [];
+
+			EditorManager.remove(t);
+			DOM.remove(e);
+		},
+
+		/**
+		 * Destroys the editor instance by removing all events, element references or other resources
+		 * that could leak memory. This method will be called automatically when the page is unloaded
+		 * but you can also call it directly if you know what you are doing.
+		 *
+		 * @param {bool} s Optional state if the destroy is an automatic destroy or user called one.
+		 */
 		destroy : function(s) {
 			var t = this;
 
 			t.onBeforeDestroy.dispatch(t);
 
 			if (!s) {
-				// Manual destroy
-				Event.clear(t.formElement);
-				Event.clear(t.getBody());
-				Event.clear(t.getDoc());
+				tinymce.removeUnload(t.destroy);
+				tinyMCE.onBeforeUnload.remove(t._beforeUnload);
 
+				// Manual destroy
 				if (t.theme.destroy)
 					t.theme.destroy();
 
-				tinymce.removeUnload(t.destroy);
+				// Destroy controls, selection and dom
 				t.controlManager.destroy();
 				t.selection.destroy();
 				t.dom.destroy();
+
+				// Remove all events
+				Event.clear(t.getWin());
+				Event.clear(t.getDoc());
+				Event.clear(t.getBody());
+				Event.clear(t.formElement);
 			}
 
 			if (t.formElement) {

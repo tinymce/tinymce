@@ -147,9 +147,10 @@
 				for (i = a.length - 1; i >= 0; i--) {
 					e = a[i];
 
-					if (e.obj == o) {
+					if (e.obj === o) {
+						t._remove(e.obj, e.name, e.cfunc);
+						e.obj = e.cfunc = null;
 						a.splice(i, 1);
-						t._remove(o, e.name, e.cfunc);
 					}
 				}
 			}
