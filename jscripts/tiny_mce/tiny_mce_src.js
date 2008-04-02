@@ -10187,11 +10187,13 @@ tinymce.create('tinymce.UndoManager', {
 			cb.call(s || this, confirm(this._decode(this.editor.getLang(t, t))));
 		},
 
-		alert : function(t, cb, s) {
-			alert(this._decode(t));
+		alert : function(tx, cb, s) {
+			var t = this;
+	
+			alert(t._decode(t.editor.getLang(tx, tx)));
 
 			if (cb)
-				cb.call(s || this);
+				cb.call(s || t);
 		},
 
 		// Internal functions

@@ -148,11 +148,13 @@
 		 * @param {function} cb Callback function to be executed after the user has selected ok.
 		 * @param {Object} s Optional scope to execute the callback in.
 		 */
-		alert : function(t, cb, s) {
-			alert(this._decode(t));
+		alert : function(tx, cb, s) {
+			var t = this;
+	
+			alert(t._decode(t.editor.getLang(tx, tx)));
 
 			if (cb)
-				cb.call(s || this);
+				cb.call(s || t);
 		},
 
 		// Internal functions
