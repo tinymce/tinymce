@@ -35,6 +35,7 @@ Version 3.0.6 (2008-03-xx)
 	Fixed bug where TinyMCE would not convert textareas with the same name attribute value. It will now generate an unique id for those textareas.
 	Fixed bug where backspace/delete key was deleting td elements inside tables while running on Gecko.
 	Fixed bug where Firefox 3.0b4 and Opera 9.26 where scrolling to the top of document when pressing return/enter.
+	Fixed bug where the template plugin wasn't just inserting the mceTmpl tagged element.
 	Fixed bugs with the backspace behavior in Gecko. The caret was placed on incorrect locations in the DOM sometimes.
 	Fixed so advimage dialog and table dialogs has support for editable select boxes for the class value.
 	Fixed so the media, pagebreak and spellchecker doesn't load it's default content.css file if the content_css option is set to false.

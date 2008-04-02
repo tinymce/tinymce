@@ -69,6 +69,13 @@
 
 			el = dom.create('div', null, h);
 
+			// Find template element within div
+			n = dom.select('.mceTmpl', el);
+			if (n) {
+				el = dom.create('div', null);
+				el.appendChild(n[0].cloneNode(true));
+			}
+
 			function hasClass(n, c) {
 				return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 			};
