@@ -1465,8 +1465,8 @@
 					});
 				}
 
-				// Fix IE psuedo leak
-				if (isIE) {
+				// Fix IE psuedo leak for elements since replacing elements if fairly common
+				if (isIE && o.nodeType === 1) {
 					o.parentNode.insertBefore(n, o);
 					o.outerHTML = '';
 					return n;
@@ -1603,6 +1603,38 @@
 			}
 
 			return f.call(s, e);
+		},
+
+		/**
+		 * Returns an NodeList with attributes for the element.
+		 *
+		 * @param {HTMLElement/string} n Element node or string id to get attributes from.
+		 * @return {NodeList} NodeList with attributes.
+		 */
+		getAttribs : function(n) {
+			var o;
+
+			n = this.get(n);
+
+			if (!n)
+				return [];
+
+			if (isIE) {
+				o = [];
+
+				// Object will throw exception in IE
+				if (n.nodeName == 'OBJECT')
+					return n.attributes;
+
+				// It's crazy that this is faster in IE but it's because it returns all attributes all the time
+				n.cloneNode(false).outerHTML.replace(/([a-z0-9\:\-_]+)=/gi, function(a, b) {
+					o.push({specified : 1, nodeName : b});
+				});
+
+				return o;
+			}
+
+			return n.attributes;
 		},
 
 		destroy : function(s) {

@@ -220,19 +220,17 @@
 				height : o.height
 			});
 
-			if (p.src) {
+			if (p.src)
 				p.src = ed.convertURL(p.src, 'src', n);
 
-				// Use url instead of src for media player
-				if (o.type == 'application/x-mplayer2') {
-					p.url = p.src;
-					delete p.src;
-				}
-			}
-
 			each (p, function(v, k) {
-				if (!/^(width|height|codebase|classid)$/.test(k))
+				if (!/^(width|height|codebase|classid)$/.test(k)) {
+					// Use url instead of src in IE for Windows media
+					if (o.type == 'application/x-mplayer2' && k == 'src')
+						k = 'url';
+
 					dom.add(ob, 'span', {mce_name : 'param', name : k, '_value' : v});
+				}
 			});
 
 			dom.add(ob, 'span', tinymce.extend({mce_name : 'embed', type : o.type}, p));

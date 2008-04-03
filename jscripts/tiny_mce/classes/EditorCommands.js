@@ -548,7 +548,7 @@
 
 			// Remove empty wrappers
 			each(dom.select(nn).reverse(), function(n) {
-				if (dom.getAttrib(n, 'mce_new')) {
+				if (dom.getAttrib(n, 'mce_new') || (dom.getAttribs(n).length <= 1 && n.className === '')) {
 					if (!dom.getAttrib(n, 'class') && !dom.getAttrib(n, 'style'))
 						return dom.remove(n, 1);
 

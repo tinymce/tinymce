@@ -4,7 +4,7 @@
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '0.6',
-	releaseDate : '2008-03-xx',
+	releaseDate : '2008-04-03',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -2098,8 +2098,8 @@ tinymce.create('static tinymce.util.XHR', {
 					});
 				}
 
-				// Fix IE psuedo leak
-				if (isIE) {
+				// Fix IE psuedo leak for elements since replacing elements if fairly common
+				if (isIE && o.nodeType === 1) {
 					o.parentNode.insertBefore(n, o);
 					o.outerHTML = '';
 					return n;
@@ -2216,6 +2216,32 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 
 			return f.call(s, e);
+		},
+
+		getAttribs : function(n) {
+			var o;
+
+			n = this.get(n);
+
+			if (!n)
+				return [];
+
+			if (isIE) {
+				o = [];
+
+				// Object will throw exception in IE
+				if (n.nodeName == 'OBJECT')
+					return n.attributes;
+
+				// It's crazy that this is faster in IE but it's because it returns all attributes all the time
+				n.cloneNode(false).outerHTML.replace(/([a-z0-9\:\-_]+)=/gi, function(a, b) {
+					o.push({specified : 1, nodeName : b});
+				});
+
+				return o;
+			}
+
+			return n.attributes;
 		},
 
 		destroy : function(s) {
@@ -4769,8 +4795,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			walk(t, function(o) {
 				if (o.removeAll)
 					o.removeAll();
-
-				o.destroy();
+				else
+					o.remove();
 			}, 'items', t);
 
 			t.items = {};
@@ -5001,6 +5027,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		remove : function(o) {
 			DOM.remove(o.id);
+			this.destroy();
 
 			return this.parent(o);
 		},
@@ -8685,7 +8712,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Remove empty wrappers
 			each(dom.select(nn).reverse(), function(n) {
-				if (dom.getAttrib(n, 'mce_new')) {
+				if (dom.getAttrib(n, 'mce_new') || (dom.getAttribs(n).length <= 1 && n.className === '')) {
 					if (!dom.getAttrib(n, 'class') && !dom.getAttrib(n, 'style'))
 						return dom.remove(n, 1);
 
@@ -9238,7 +9265,7 @@ tinymce.create('tinymce.UndoManager', {
 			t.dom = ed.dom;
 			elm = (s.forced_root_block || 'p').toLowerCase();
 			s.element = elm.toUpperCase();
-
+return;
 			ed.onPreInit.add(t.setup, t);
 
 			t.reOpera = new RegExp('(\\u00a0|&#160;|&nbsp;)<\/' + elm + '>', 'gi');

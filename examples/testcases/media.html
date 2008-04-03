@@ -49,7 +49,7 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			var t = this;
 
 			editor.setContent('<object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="320" height="240" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="src" value="test" /><embed type="application/x-mplayer2" width="320" height="240" src="test"></embed></object>');
-			t.eq(editor.getContent(), '<p><object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="320" height="240" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="src" value="test" /><embed type="application/x-mplayer2" width="320" height="240" src="test"></embed></object></p>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="320" height="240" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="url" value="test" /><embed type="application/x-mplayer2" width="320" height="240" src="test"></embed></object></p>');
 		},
 
 		realMedia : function() {

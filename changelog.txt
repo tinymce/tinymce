@@ -1,4 +1,4 @@
-Version 3.0.6 (2008-03-xx)
+Version 3.0.6 (2008-04-03)
 	Added elements to the default value of valid_elements option. It now contains all XHTML strict elements and a few transitional.
 	Added more accessibility fixes, it's now possible to navigate and close list boxes and split button menus with the keyboard.
 	Added missing getInfo method to the contextmenu and safari plugin, this caused problems for the Drupal module.

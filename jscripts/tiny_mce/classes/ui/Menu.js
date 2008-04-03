@@ -147,8 +147,8 @@
 			walk(t, function(o) {
 				if (o.removeAll)
 					o.removeAll();
-
-				o.destroy();
+				else
+					o.remove();
 			}, 'items', t);
 
 			t.items = {};

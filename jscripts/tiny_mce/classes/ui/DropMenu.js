@@ -270,6 +270,7 @@
 		 */
 		remove : function(o) {
 			DOM.remove(o.id);
+			this.destroy();
 
 			return this.parent(o);
 		},

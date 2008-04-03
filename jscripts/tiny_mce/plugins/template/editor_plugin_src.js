@@ -71,7 +71,7 @@
 
 			// Find template element within div
 			n = dom.select('.mceTmpl', el);
-			if (n) {
+			if (n && n.length > 0) {
 				el = dom.create('div', null);
 				el.appendChild(n[0].cloneNode(true));
 			}

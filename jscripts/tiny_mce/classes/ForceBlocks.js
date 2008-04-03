@@ -27,7 +27,7 @@
 			t.dom = ed.dom;
 			elm = (s.forced_root_block || 'p').toLowerCase();
 			s.element = elm.toUpperCase();
-
+return;
 			ed.onPreInit.add(t.setup, t);
 
 			t.reOpera = new RegExp('(\\u00a0|&#160;|&nbsp;)<\/' + elm + '>', 'gi');
