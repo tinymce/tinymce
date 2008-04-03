@@ -47,7 +47,8 @@
 			// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
 			t.onBeforeUnload = new tinymce.util.Dispatcher(t);
 
-			Event.add(document, 'beforeunload', function(e) {
+			// Must be on window or IE will leak if the editor is placed in frame or iframe
+			Event.add(window, 'beforeunload', function(e) {
 				t.onBeforeUnload.dispatch(t, e);
 			});
 		},
@@ -303,7 +304,7 @@
 		 * @return {bool} true/false if the command was executed or not.
 		 */
 		execCommand : function(c, u, v) {
-			var t = this, ed = t.get(v);
+			var t = this, ed = t.get(v), w;
 
 			// Manager commands
 			switch (c) {
@@ -317,7 +318,31 @@
 					return true;
 
 				case "mceAddFrameControl":
-					// TODO: Implement this
+					w = v.window;
+
+					// Add tinyMCE global instance and tinymce namespace to specified window
+					w.tinyMCE = tinyMCE;
+					w.tinymce = tinymce;
+
+					tinymce.DOM.doc = w.document;
+					tinymce.DOM.win = w;
+
+					ed = new tinymce.Editor(v.element_id, v);
+					ed.render();
+
+					// Fix IE memory leaks
+					if (tinymce.isIE) {
+						function clr() {
+							ed.destroy();
+							w.detachEvent('onunload', clr);
+							w = w.tinyMCE = w.tinymce = null; // IE leak
+						};
+
+						w.attachEvent('onunload', clr);
+					}
+
+					v.page_window = null;
+
 					return true;
 
 				case "mceRemoveEditor":

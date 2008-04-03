@@ -154,7 +154,7 @@
 
 			m.showMenu(0, e.clientHeight);
 
-			Event.add(document, 'mousedown', t.hideMenu, t);
+			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			DOM.addClass(t.id, t.classPrefix + 'Selected');
 		},
 
@@ -166,7 +166,7 @@
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				DOM.removeClass(t.id, t.classPrefix + 'Selected');
-				Event.remove(document, 'mousedown', t.hideMenu, t);
+				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 
 				if (t.menu)
 					t.menu.hideMenu();

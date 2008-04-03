@@ -1,3 +1,7 @@
+Version 3.0.6.1 (2008-04-03)
+	Added support for the missing mceAddFrameControl command. The input for this command has changed so consult the Wiki.
+	Fixed bug where sub menus for the drop menus would leave an empty element behind.
+	Fixed memory leak in IE if the editor was placed in a frame or iframe.
 Version 3.0.6 (2008-04-03)
 	Added elements to the default value of valid_elements option. It now contains all XHTML strict elements and a few transitional.
 	Added more accessibility fixes, it's now possible to navigate and close list boxes and split button menus with the keyboard.

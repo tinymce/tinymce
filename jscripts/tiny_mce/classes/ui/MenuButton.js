@@ -24,7 +24,7 @@
 		MenuButton : function(id, s) {
 			this.parent(id, s);
 			this.onRenderMenu = new tinymce.util.Dispatcher(this);
-			s.menu_container = s.menu_container || document.body;
+			s.menu_container = s.menu_container || DOM.doc.body;
 		},
 
 		/**#@+
@@ -56,7 +56,7 @@
 			m.settings.keyboard_focus = t._focused;
 			m.showMenu(0, e.clientHeight);
 
-			Event.add(document, 'mousedown', t.hideMenu, t);
+			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			t.setState('Selected', 1);
 		},
 
@@ -89,7 +89,7 @@
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				t.setState('Selected', 0);
-				Event.remove(document, 'mousedown', t.hideMenu, t);
+				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				if (t.menu)
 					t.menu.hideMenu();
 			}

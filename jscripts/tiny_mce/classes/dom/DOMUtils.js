@@ -36,6 +36,7 @@
 			var t = this;
 
 			t.doc = d;
+			t.win = window;
 			t.files = {};
 			t.cssFlicker = false;
 			t.counter = 0;
@@ -85,7 +86,7 @@
 		getViewPort : function(w) {
 			var d, b;
 
-			w = !w ? window : w;
+			w = !w ? this.win : w;
 			d = w.document;
 			b = this.boxModel ? d.documentElement : d.body;
 
@@ -809,7 +810,7 @@
 				e = t.boxModel ? d.documentElement : d.body;
 				x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
 				x = (x == 'medium' || t.boxModel && !t.isIE6) && 2 || x;
-				n.top += window.self != window.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
+				n.top += t.win.self != t.win.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
 
 				return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
 			}
@@ -1580,7 +1581,7 @@
 		run : function(e, f, s) {
 			var t = this, o;
 
-			if (typeof(e) === 'string')
+			if (t.doc && typeof(e) === 'string')
 				e = t.doc.getElementById(e);
 
 			if (!e)
@@ -1640,7 +1641,7 @@
 		destroy : function(s) {
 			var t = this;
 
-			t.doc = t.root = null;
+			t.win = t.doc = t.root = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)

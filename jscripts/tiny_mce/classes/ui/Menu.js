@@ -149,6 +149,8 @@
 					o.removeAll();
 				else
 					o.remove();
+
+				o.destroy();
 			}, 'items', t);
 
 			t.items = {};

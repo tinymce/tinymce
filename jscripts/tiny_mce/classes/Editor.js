@@ -69,8 +69,7 @@
 				'onUndo',
 				'onRedo',
 				'onVisualAid',
-				'onSetProgressState',
-				'onBeforeDestroy'
+				'onSetProgressState'
 			], function(e) {
 				t[e] = new Dispatcher(t);
 			});
@@ -1635,7 +1634,9 @@
 		destroy : function(s) {
 			var t = this;
 
-			t.onBeforeDestroy.dispatch(t);
+			// One time is enough
+			if (t.destroyed)
+				return;
 
 			if (!s) {
 				tinymce.removeUnload(t.destroy);
@@ -1730,8 +1731,8 @@
 
 							// Get HTML data
 							/*if (tinymce.isIE) {
-								el = DOM.add(document.body, 'div', {style : 'visibility:hidden;overflow:hidden;position:absolute;width:1px;height:1px'});
-								r = document.body.createTextRange();
+								el = DOM.add(DOM.doc.body, 'div', {style : 'visibility:hidden;overflow:hidden;position:absolute;width:1px;height:1px'});
+								r = DOM.doc.body.createTextRange();
 								r.moveToElementText(el);
 								r.execCommand('Paste');
 								h = el.innerHTML;

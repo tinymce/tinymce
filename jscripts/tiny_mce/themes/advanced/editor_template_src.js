@@ -680,7 +680,7 @@
 						};
 
 						// Start listening
-						mf = Event.add(document, 'mousemove', function(e) {
+						mf = Event.add(DOM.doc, 'mousemove', function(e) {
 							var w, h;
 
 							// Calc delta values
@@ -702,12 +702,12 @@
 							return Event.cancel(e);
 						});
 
-						me = Event.add(document, 'mouseup', function(e) {
+						me = Event.add(DOM.doc, 'mouseup', function(e) {
 							var ifr;
 
 							// Stop listening
-							Event.remove(document, 'mousemove', mf);
-							Event.remove(document, 'mouseup', me);
+							Event.remove(DOM.doc, 'mousemove', mf);
+							Event.remove(DOM.doc, 'mouseup', me);
 
 							c.style.display = '';
 							DOM.remove(p);
@@ -894,7 +894,7 @@
 					pi = DOM.create('a', {'href' : "javascript:;", onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
 
 					if (p.hasChildNodes()) {
-						p.insertBefore(document.createTextNode(' \u00bb '), p.firstChild);
+						p.insertBefore(DOM.doc.createTextNode(' \u00bb '), p.firstChild);
 						p.insertBefore(pi, p.firstChild);
 					} else
 						p.appendChild(pi);

@@ -923,6 +923,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this;
 
 			t.doc = d;
+			t.win = window;
 			t.files = {};
 			t.cssFlicker = false;
 			t.counter = 0;
@@ -956,7 +957,7 @@ tinymce.create('static tinymce.util.XHR', {
 		getViewPort : function(w) {
 			var d, b;
 
-			w = !w ? window : w;
+			w = !w ? this.win : w;
 			d = w.document;
 			b = this.boxModel ? d.documentElement : d.body;
 
@@ -1566,7 +1567,7 @@ tinymce.create('static tinymce.util.XHR', {
 				e = t.boxModel ? d.documentElement : d.body;
 				x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
 				x = (x == 'medium' || t.boxModel && !t.isIE6) && 2 || x;
-				n.top += window.self != window.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
+				n.top += t.win.self != t.win.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
 
 				return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
 			}
@@ -2193,7 +2194,7 @@ tinymce.create('static tinymce.util.XHR', {
 		run : function(e, f, s) {
 			var t = this, o;
 
-			if (typeof(e) === 'string')
+			if (t.doc && typeof(e) === 'string')
 				e = t.doc.getElementById(e);
 
 			if (!e)
@@ -2247,7 +2248,7 @@ tinymce.create('static tinymce.util.XHR', {
 		destroy : function(s) {
 			var t = this;
 
-			t.doc = t.root = null;
+			t.win = t.doc = t.root = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)
@@ -4797,6 +4798,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					o.removeAll();
 				else
 					o.remove();
+
+				o.destroy();
 			}, 'items', t);
 
 			t.items = {};
@@ -4820,7 +4823,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 	tinymce.create('tinymce.ui.DropMenu:tinymce.ui.Menu', {
 		DropMenu : function(id, s) {
 			s = s || {};
-			s.container = s.container || document.body;
+			s.container = s.container || DOM.doc.body;
 			s.offset_x = s.offset_x || 0;
 			s.offset_y = s.offset_y || 0;
 			s.vp_offset_x = s.vp_offset_x || 0;
@@ -4835,7 +4838,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			this.classPrefix = 'mceMenu';
 
 			// Fix for odd IE bug: #1903622
-			this.fixIE = tinymce.isIE && window.top != window;
+			this.fixIE = tinymce.isIE && DOM.win.top != DOM.win;
 		},
 
 		createMenu : function(s) {
@@ -5259,7 +5262,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			m.showMenu(0, e.clientHeight);
 
-			Event.add(document, 'mousedown', t.hideMenu, t);
+			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			DOM.addClass(t.id, t.classPrefix + 'Selected');
 		},
 
@@ -5268,7 +5271,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				DOM.removeClass(t.id, t.classPrefix + 'Selected');
-				Event.remove(document, 'mousedown', t.hideMenu, t);
+				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 
 				if (t.menu)
 					t.menu.hideMenu();
@@ -5454,7 +5457,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		MenuButton : function(id, s) {
 			this.parent(id, s);
 			this.onRenderMenu = new tinymce.util.Dispatcher(this);
-			s.menu_container = s.menu_container || document.body;
+			s.menu_container = s.menu_container || DOM.doc.body;
 		},
 
 		showMenu : function() {
@@ -5479,7 +5482,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			m.settings.keyboard_focus = t._focused;
 			m.showMenu(0, e.clientHeight);
 
-			Event.add(document, 'mousedown', t.hideMenu, t);
+			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			t.setState('Selected', 1);
 		},
 
@@ -5503,7 +5506,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				t.setState('Selected', 0);
-				Event.remove(document, 'mousedown', t.hideMenu, t);
+				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				if (t.menu)
 					t.menu.hideMenu();
 			}
@@ -5636,7 +5639,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			});
 			e = 0;
 
-			Event.add(document, 'mousedown', t.hideMenu, t);
+			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 
 			if (t._focused) {
 				t._keyHandler = Event.add(t.id + '_menu', 'keydown', function(e) {
@@ -5653,7 +5656,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceSplitButtonMenu');})) {
 				DOM.removeClass(t.id, 'mceSplitButtonSelected');
-				Event.remove(document, 'mousedown', t.hideMenu, t);
+				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
 				DOM.hide(t.id + '_menu');
 			}
@@ -5898,7 +5901,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
 			t.onBeforeUnload = new tinymce.util.Dispatcher(t);
 
-			Event.add(document, 'beforeunload', function(e) {
+			// Must be on window or IE will leak if the editor is placed in frame or iframe
+			Event.add(window, 'beforeunload', function(e) {
 				t.onBeforeUnload.dispatch(t, e);
 			});
 		},
@@ -6117,7 +6121,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		execCommand : function(c, u, v) {
-			var t = this, ed = t.get(v);
+			var t = this, ed = t.get(v), w;
 
 			// Manager commands
 			switch (c) {
@@ -6131,7 +6135,31 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 					return true;
 
 				case "mceAddFrameControl":
-					// TODO: Implement this
+					w = v.window;
+
+					// Add tinyMCE global instance and tinymce namespace to specified window
+					w.tinyMCE = tinyMCE;
+					w.tinymce = tinymce;
+
+					tinymce.DOM.doc = w.document;
+					tinymce.DOM.win = w;
+
+					ed = new tinymce.Editor(v.element_id, v);
+					ed.render();
+
+					// Fix IE memory leaks
+					if (tinymce.isIE) {
+						function clr() {
+							ed.destroy();
+							w.detachEvent('onunload', clr);
+							w = w.tinyMCE = w.tinymce = null; // IE leak
+						};
+
+						w.attachEvent('onunload', clr);
+					}
+
+					v.page_window = null;
+
 					return true;
 
 				case "mceRemoveEditor":
@@ -6264,8 +6292,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				'onUndo',
 				'onRedo',
 				'onVisualAid',
-				'onSetProgressState',
-				'onBeforeDestroy'
+				'onSetProgressState'
 			], function(e) {
 				t[e] = new Dispatcher(t);
 			});
@@ -7466,7 +7493,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		destroy : function(s) {
 			var t = this;
 
-			t.onBeforeDestroy.dispatch(t);
+			// One time is enough
+			if (t.destroyed)
+				return;
 
 			if (!s) {
 				tinymce.removeUnload(t.destroy);
@@ -7561,8 +7590,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 							// Get HTML data
 							/*if (tinymce.isIE) {
-								el = DOM.add(document.body, 'div', {style : 'visibility:hidden;overflow:hidden;position:absolute;width:1px;height:1px'});
-								r = document.body.createTextRange();
+								el = DOM.add(DOM.doc.body, 'div', {style : 'visibility:hidden;overflow:hidden;position:absolute;width:1px;height:1px'});
+								r = DOM.doc.body.createTextRange();
 								r.moveToElementText(el);
 								r.execCommand('Paste');
 								h = el.innerHTML;

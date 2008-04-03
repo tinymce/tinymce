@@ -23,7 +23,7 @@
 		 */
 		DropMenu : function(id, s) {
 			s = s || {};
-			s.container = s.container || document.body;
+			s.container = s.container || DOM.doc.body;
 			s.offset_x = s.offset_x || 0;
 			s.offset_y = s.offset_y || 0;
 			s.vp_offset_x = s.vp_offset_x || 0;
@@ -38,7 +38,7 @@
 			this.classPrefix = 'mceMenu';
 
 			// Fix for odd IE bug: #1903622
-			this.fixIE = tinymce.isIE && window.top != window;
+			this.fixIE = tinymce.isIE && DOM.win.top != DOM.win;
 		},
 
 		/**#@+

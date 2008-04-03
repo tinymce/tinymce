@@ -65,7 +65,7 @@
 			});
 			e = 0;
 
-			Event.add(document, 'mousedown', t.hideMenu, t);
+			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 
 			if (t._focused) {
 				t._keyHandler = Event.add(t.id + '_menu', 'keydown', function(e) {
@@ -88,7 +88,7 @@
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceSplitButtonMenu');})) {
 				DOM.removeClass(t.id, 'mceSplitButtonSelected');
-				Event.remove(document, 'mousedown', t.hideMenu, t);
+				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
 				DOM.hide(t.id + '_menu');
 			}

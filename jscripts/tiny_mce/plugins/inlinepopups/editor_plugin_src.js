@@ -102,7 +102,7 @@
 				opt += ' mceMovable';
 
 			// Create DOM objects
-			t._addAll(document.body, 
+			t._addAll(DOM.doc.body, 
 				['div', {id : id, 'class' : ed.settings.inlinepopups_skin || 'clearlooks2', style : 'width:100px;height:100px'}, 
 					['div', {id : id + '_wrapper', 'class' : 'mceWrapper' + opt},
 						['div', {id : id + '_top', 'class' : 'mceTop'}, 
@@ -300,7 +300,7 @@
 		},
 
 		_startDrag : function(id, se, ac) {
-			var t = this, mu, mm, d = document, eb, w = t.windows[id], we = w.element, sp = we.getXY(), p, sz, ph, cp, vp, sx, sy, sex, sey, dx, dy, dw, dh;
+			var t = this, mu, mm, d = DOM.doc, eb, w = t.windows[id], we = w.element, sp = we.getXY(), p, sz, ph, cp, vp, sx, sy, sex, sey, dx, dy, dw, dh;
 
 			// Get positons and sizes
 //			cp = DOM.getPos(t.editor.getContainer());
@@ -462,7 +462,7 @@
 		},
 
 		close : function(win, id) {
-			var t = this, w, d = document, ix = 0, fw;
+			var t = this, w, d = DOM.doc, ix = 0, fw;
 
 			t.count--;
 
