@@ -112,6 +112,14 @@
 				cm.setDisabled('split_cells', !p || (parseInt(ed.dom.getAttrib(p, 'colspan', '1')) < 2 && parseInt(ed.dom.getAttrib(p, 'rowspan', '1')) < 2));
 				cm.setDisabled('merge_cells', !p);
 			});
+
+			// Padd empty table cells
+			if (!tinymce.isIE) {
+				ed.onBeforeSetContent.add(function(ed, o) {
+					if (o.initial)
+						o.content = o.content.replace(/<(td|th)([^>]+|)>\s*<\/(td|th)>/g, tinymce.isOpera ? '<$1$2>&nbsp;</$1>' : '<$1$2><br mce_bogus="1" /></$1>');
+				});
+			}
 		},
 
 		execCommand : function(cmd, ui, val) {

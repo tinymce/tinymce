@@ -1999,6 +1999,11 @@
 					var re = t.resizeInfo, cb;
 
 					e = e.target;
+					e.removeAttribute('mce_style'); // Remove this one since it might change
+
+					// Don't do this action for non image elements
+					if (e.nodeName !== 'IMG')
+						return;
 
 					if (re)
 						Event.remove(re.node, re.ev, re.cb);

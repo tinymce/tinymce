@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.6.1',
-	releaseDate : '2008-04-04',
+	minorVersion : '0.7',
+	releaseDate : '2008-04-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -7845,6 +7845,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					var re = t.resizeInfo, cb;
 
 					e = e.target;
+					e.removeAttribute('mce_style'); // Remove this one since it might change
+
+					// Don't do this action for non image elements
+					if (e.nodeName !== 'IMG')
+						return;
 
 					if (re)
 						Event.remove(re.node, re.ev, re.cb);
