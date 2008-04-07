@@ -88,7 +88,7 @@
 			if (!Event.domLoaded && !s.strict_loading_mode) {
 				// Load language
 				if (s.language)
-					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
+					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js'));
 
 				// Load theme
 				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])

@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.6.2',
-	releaseDate : '2008-04-07',
+	minorVersion : '0.7',
+	releaseDate : '2008-04-xx',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -363,6 +363,10 @@ var tinymce = {
 
 	explode : function(s, d) {
 		return tinymce.map(s.split(d || ','), tinymce.trim);
+	},
+
+	_addVer : function(u) {
+		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
 	}
 
 	};
@@ -1722,7 +1726,7 @@ tinymce.create('static tinymce.util.XHR', {
 					return;
 
 				t.files[u] = true;
-				t.add(t.select('head')[0], 'link', {rel : 'stylesheet', href : u});
+				t.add(t.select('head')[0], 'link', {rel : 'stylesheet', href : tinymce._addVer(u)});
 			});
 		},
 
@@ -5837,7 +5841,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			var u, s;
 
 			if (tinymce.EditorManager.settings) {
-				u = this.urls[n] + '/langs/' + tinymce.EditorManager.settings.language + '.js';
+				u = tinymce._addVer(this.urls[n] + '/langs/' + tinymce.EditorManager.settings.language + '.js');
 				s = tinymce.EditorManager.settings;
 
 				if (s) {
@@ -5862,6 +5866,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			if (t.urls[n])
 				return;
+
+			u = tinymce._addVer(u);
 
 			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
 				u = tinymce.baseURL + '/' +  u;
@@ -5943,7 +5949,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			if (!Event.domLoaded && !s.strict_loading_mode) {
 				// Load language
 				if (s.language)
-					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
+					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js'));
 
 				// Load theme
 				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
@@ -6445,7 +6451,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Load scripts
 			function loadScripts() {
 				if (s.language)
-					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
+					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js'));
 
 				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
@@ -8026,8 +8032,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.onPreProcess.add(convert);
 
 			if (!s.cleanup_on_startup) {
-				t.onInit.add(function() {
-					convert(t, {node : t.getBody(), set : 1});
+				t.onSetContent.add(function(ed, o) {
+					if (o.initial)
+						convert(t, {node : t.getBody(), set : 1});
 				});
 			}
 		},

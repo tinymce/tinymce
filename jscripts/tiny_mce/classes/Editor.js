@@ -223,7 +223,7 @@
 			// Load scripts
 			function loadScripts() {
 				if (s.language)
-					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
+					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js'));
 
 				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
@@ -2177,8 +2177,9 @@
 			t.onPreProcess.add(convert);
 
 			if (!s.cleanup_on_startup) {
-				t.onInit.add(function() {
-					convert(t, {node : t.getBody(), set : 1});
+				t.onSetContent.add(function(ed, o) {
+					if (o.initial)
+						convert(t, {node : t.getBody(), set : 1});
 				});
 			}
 		},

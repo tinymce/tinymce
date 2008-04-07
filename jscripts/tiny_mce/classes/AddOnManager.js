@@ -41,7 +41,7 @@
 			var u, s;
 
 			if (tinymce.EditorManager.settings) {
-				u = this.urls[n] + '/langs/' + tinymce.EditorManager.settings.language + '.js';
+				u = tinymce._addVer(this.urls[n] + '/langs/' + tinymce.EditorManager.settings.language + '.js');
 				s = tinymce.EditorManager.settings;
 
 				if (s) {
@@ -81,6 +81,8 @@
 
 			if (t.urls[n])
 				return;
+
+			u = tinymce._addVer(u);
 
 			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
 				u = tinymce.baseURL + '/' +  u;
