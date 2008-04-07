@@ -1,6 +1,7 @@
-Version 3.0.7 (2008-04-xx)
+Version 3.0.6.2 (2008-04-07)
 	Fixed bug where empty tables couldn't be edited correctly on non IE browsers if they where loaded into the editor.
 	Fixed bug where it was impossible to resize layers correctly in IE since it thought it was an image.
+	Fixed bug where an editor instance was stealing focus in IE resulting in a scroll to the editor on page reloads.
 Version 3.0.6.1 (2008-04-04)
 	Added support for the missing mceAddFrameControl command. The input for this command has changed so consult the Wiki.
 	Fixed bug where sub menus for the drop menus would leave an empty element behind.

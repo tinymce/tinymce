@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.7',
-	releaseDate : '2008-04-xx',
+	minorVersion : '0.6.2',
+	releaseDate : '2008-04-07',
 
 	_init : function() {
 		var t = this, ua = navigator.userAgent, i, nl, n, base;
@@ -2462,12 +2462,18 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		_remove : function(o, n, f) {
-			if (o.detachEvent)
-				o.detachEvent('on' + n, f);
-			else if (o.removeEventListener)
-				o.removeEventListener(n, f, false);
-			else
-				o['on' + n] = null;
+			if (o) {
+				try {
+					if (o.detachEvent)
+						o.detachEvent('on' + n, f);
+					else if (o.removeEventListener)
+						o.removeEventListener(n, f, false);
+					else
+						o['on' + n] = null;
+				} catch (ex) {
+					// Might fail with permission denined on IE so we just ignore that
+				}
+			}
 		},
 
 		_pageInit : function() {
@@ -6657,7 +6663,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		setupIframe : function() {
-			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h;
+			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
 			// Setup iframe body
 			if (!isIE || !tinymce.relaxedDomain) {
@@ -6677,8 +6683,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			// IE needs to use contentEditable or it will display non secure items for HTTPS
-			if (isIE)
-				t.getBody().contentEditable = true;
+			if (isIE) {
+				// It will not steal focus if we hide it while setting contentEditable
+				b = t.getBody();
+				DOM.hide(b);
+				b.contentEditable = true;
+				DOM.show(b);
+			}
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {

@@ -460,7 +460,7 @@
 		 * This method should not be called directly.
 		 */
 		setupIframe : function() {
-			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h;
+			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
 			// Setup iframe body
 			if (!isIE || !tinymce.relaxedDomain) {
@@ -480,8 +480,13 @@
 			}
 
 			// IE needs to use contentEditable or it will display non secure items for HTTPS
-			if (isIE)
-				t.getBody().contentEditable = true;
+			if (isIE) {
+				// It will not steal focus if we hide it while setting contentEditable
+				b = t.getBody();
+				DOM.hide(b);
+				b.contentEditable = true;
+				DOM.show(b);
+			}
 
 			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
@@ -762,7 +767,10 @@
 			// Prevent leak in IE
 			s.content_document = s.content_window = null;
 
+			DOM.hide(e);
 			e.contentEditable = true;
+			DOM.show(e);
+
 			if (!s.gecko_spellcheck)
 				t.getDoc().body.spellcheck = 0;
 

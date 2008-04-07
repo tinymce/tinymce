@@ -224,12 +224,18 @@
 		},
 
 		_remove : function(o, n, f) {
-			if (o.detachEvent)
-				o.detachEvent('on' + n, f);
-			else if (o.removeEventListener)
-				o.removeEventListener(n, f, false);
-			else
-				o['on' + n] = null;
+			if (o) {
+				try {
+					if (o.detachEvent)
+						o.detachEvent('on' + n, f);
+					else if (o.removeEventListener)
+						o.removeEventListener(n, f, false);
+					else
+						o['on' + n] = null;
+				} catch (ex) {
+					// Might fail with permission denined on IE so we just ignore that
+				}
+			}
 		},
 
 		_pageInit : function() {
