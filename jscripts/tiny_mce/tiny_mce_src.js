@@ -366,7 +366,11 @@ var tinymce = {
 	},
 
 	_addVer : function(u) {
-		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+		// Add version query when it's loaded not using the gzip compressor
+		if (!window.tinyMCE_GZ)
+			u += (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+
+		return u;
 	}
 
 	};
