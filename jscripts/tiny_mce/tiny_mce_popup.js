@@ -219,7 +219,7 @@ tinyMCEPopup = {
 			});
 		}
 
-		document.onkeydown = tinyMCEPopup._closeWinKeyHandler;
+		document.onkeyup = tinyMCEPopup._closeWinKeyHandler;
 	},
 
 	_accessHandler : function(e) {
