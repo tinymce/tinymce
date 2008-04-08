@@ -392,8 +392,12 @@ var tinymce = {
 		return tinymce.map(s.split(d || ','), tinymce.trim);
 	},
 
-	_addVer : function(u) {
-		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+	_addVer : function(u, s) {
+		// Only add version if we are using the non gzipped version
+		if (!s || !window.tinyMCE_GZ)
+			u += (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+
+		return u;
 	}
 
 	};
@@ -5868,7 +5872,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			var u, s;
 
 			if (tinymce.EditorManager.settings) {
-				u = tinymce._addVer(this.urls[n] + '/langs/' + tinymce.EditorManager.settings.language + '.js');
+				u = tinymce._addVer(this.urls[n] + '/langs/' + tinymce.EditorManager.settings.language + '.js', 1);
 				s = tinymce.EditorManager.settings;
 
 				if (s) {
@@ -5894,7 +5898,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			if (t.urls[n])
 				return;
 
-			u = tinymce._addVer(u);
+			u = tinymce._addVer(u, 1);
 
 			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
 				u = tinymce.baseURL + '/' +  u;
@@ -5976,7 +5980,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			if (!Event.domLoaded && !s.strict_loading_mode) {
 				// Load language
 				if (s.language)
-					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js'));
+					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js', 1));
 
 				// Load theme
 				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
@@ -6478,7 +6482,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Load scripts
 			function loadScripts() {
 				if (s.language)
-					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js'));
+					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js', 1));
 
 				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');

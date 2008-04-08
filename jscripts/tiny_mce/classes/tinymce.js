@@ -509,8 +509,12 @@ var tinymce = {
 		return tinymce.map(s.split(d || ','), tinymce.trim);
 	},
 
-	_addVer : function(u) {
-		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+	_addVer : function(u, s) {
+		// Only add version if we are using the non gzipped version
+		if (!s || !window.tinyMCE_GZ)
+			u += (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+
+		return u;
 	}
 
 	/**#@-*/

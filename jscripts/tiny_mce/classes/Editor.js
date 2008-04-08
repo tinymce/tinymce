@@ -223,7 +223,7 @@
 			// Load scripts
 			function loadScripts() {
 				if (s.language)
-					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js'));
+					sl.add(tinymce._addVer(tinymce.baseURL + '/langs/' + s.language + '.js', 1));
 
 				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
