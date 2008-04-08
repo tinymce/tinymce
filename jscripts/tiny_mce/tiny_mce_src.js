@@ -303,40 +303,67 @@ var tinymce = {
 	},
 
 	addUnload : function(f, s) {
-		var t = this, w = window, unload;
+		var t = this, w = window;
 
 		f = {func : f, scope : s || this};
 
 		if (!t.unloads) {
-			unload = function() {
+			function unload() {
 				var li = t.unloads, o, n;
 
-				// Call unload handlers
-				for (n in li) {
-					o = li[n];
+				if (li) {
+					// Call unload handlers
+					for (n in li) {
+						o = li[n];
 
-					if (o && o.func)
-						o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
+						if (o && o.func)
+							o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
+					}
+
+					// Detach unload function
+					if (w.detachEvent) {
+						w.detachEvent('onbeforeunload', fakeUnload);
+						w.detachEvent('onunload', unload);
+					} else if (w.removeEventListener)
+						w.removeEventListener('unload', unload, false);
+
+					// Destroy references
+					t.unloads = o = li = w = unload = null;
+
+					// Run garbarge collector on IE
+					if (window.CollectGarbage)
+						window.CollectGarbage();
 				}
+			};
 
-				// Detach unload function
-				if (w.detachEvent)
-					w.detachEvent('onunload', unload);
-				else if (w.removeEventListener)
-					w.removeEventListener('unload', unload, false);
+			function fakeUnload() {
+				// Is there things still loading, then do some magic
+				if (document.readyState == 'interactive') {
+					function stop() {
+						// Prevent memory leak
+						document.detachEvent('onstop', stop);
 
-				// Destroy references
-				o = li = w = unload = null;
+						// Call unload handler
+						unload();
+					};
 
-				// Run garbarge collector on IE
-				if (window.CollectGarbage)
-					window.CollectGarbage();
+					// Fire unload when the currently loading page is stopped
+					document.attachEvent('onstop', stop);
+
+					// Remove onstop listener after a while to prevent the unload function
+					// to execute if the user presses cancel in an onbeforeunload
+					// confirm dialog and then presses the browser stop button
+					window.setTimeout(function() {
+						document.detachEvent('onstop', stop);
+					}, 0);
+				}
 			};
 
 			// Attach unload handler
-			if (w.attachEvent)
+			if (w.attachEvent) {
 				w.attachEvent('onunload', unload);
-			else if (w.addEventListener)
+				w.attachEvent('onbeforeunload', fakeUnload);
+			} else if (w.addEventListener)
 				w.addEventListener('unload', unload, false);
 
 			// Setup initial unload handler array
@@ -366,11 +393,7 @@ var tinymce = {
 	},
 
 	_addVer : function(u) {
-		// Add version query when it's loaded not using the gzip compressor
-		if (!window.tinyMCE_GZ)
-			u += (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
-
-		return u;
+		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
 	}
 
 	};
@@ -7532,8 +7555,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t.dom.destroy();
 
 				// Remove all events
-				Event.clear(t.getWin());
-				Event.clear(t.getDoc());
+
+				// Don't clear the window or document if content editable
+				// is enabled since other instances might still be present
+				if (!t.settings.content_editable) {
+					Event.clear(t.getWin());
+					Event.clear(t.getDoc());
+				}
+
 				Event.clear(t.getBody());
 				Event.clear(t.formElement);
 			}
@@ -10241,10 +10270,12 @@ tinymce.create('tinymce.UndoManager', {
 			if (tinymce.relaxedDomain)
 				u += (u.indexOf('?') == -1 ? '?' : '&') + 'mce_rdomain=' + tinymce.relaxedDomain;
 
+			u = tinymce._addVer(u);
+
 			try {
 				if (isIE && mo) {
 					w = 1;
-					window.showModalDialog(s.url || s.file, window, f);
+					window.showModalDialog(u, window, f);
 				} else
 					w = window.open(u, s.name, f);
 			} catch (ex) {

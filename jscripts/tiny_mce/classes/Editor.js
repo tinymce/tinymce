@@ -1660,8 +1660,14 @@
 				t.dom.destroy();
 
 				// Remove all events
-				Event.clear(t.getWin());
-				Event.clear(t.getDoc());
+
+				// Don't clear the window or document if content editable
+				// is enabled since other instances might still be present
+				if (!t.settings.content_editable) {
+					Event.clear(t.getWin());
+					Event.clear(t.getDoc());
+				}
+
 				Event.clear(t.getBody());
 				Event.clear(t.formElement);
 			}

@@ -90,10 +90,12 @@
 			if (tinymce.relaxedDomain)
 				u += (u.indexOf('?') == -1 ? '?' : '&') + 'mce_rdomain=' + tinymce.relaxedDomain;
 
+			u = tinymce._addVer(u);
+
 			try {
 				if (isIE && mo) {
 					w = 1;
-					window.showModalDialog(s.url || s.file, window, f);
+					window.showModalDialog(u, window, f);
 				} else
 					w = window.open(u, s.name, f);
 			} catch (ex) {
