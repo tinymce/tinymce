@@ -105,7 +105,7 @@
 			ed.onNodeChange.add(function(ed, cm, n) {
 				var p = ed.dom.getParent(n, 'td,th,caption');
 
-				cm.setActive('table', !!p);
+				cm.setActive('table', n.nodeName === 'TABLE' || !!p);
 				if (p && p.nodeName === 'CAPTION')
 					p = null;
 
