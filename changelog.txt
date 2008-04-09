@@ -4,6 +4,7 @@ Version 3.0.7 (2008-04-xx)
 	Fixed memory leak in IE where if a page was unloaded before all images on the page was loaded it would leak.
 	Fixed bug in IE where underline and strikethrough could produce an exception error message.
 	Fixed bug where inserting paragraphs in totally empty table cells would produce odd effects.
+	Fixed bug where layer style data wasn't updated correctly due to some performance enhancements with the DOM serializer.
 	Fixed so you can select tables by clicking on it's borders in non IE browsers to normalize the behavior.
 Version 3.0.6.2 (2008-04-07)
 	Fixed bug where empty tables couldn't be edited correctly on non IE browsers if they where loaded into the editor.

@@ -1443,7 +1443,8 @@ tinymce.create('static tinymce.util.XHR', {
 
 				switch (n) {
 					case "style":
-						if (s.keep_values) {
+						// No mce_style for elements with these since they might get resized by the user
+						if (s.keep_values && !/(top|left|bottom|right|width|height)/i.test(v)) {
 							if (v)
 								e.setAttribute('mce_style', v, 2);
 							else
@@ -1980,6 +1981,10 @@ tinymce.create('static tinymce.util.XHR', {
 							// Why did I need this one?
 							//if (isIE)
 							//	u = t.serializeStyle(t.parseStyle(u));
+
+							// No mce_style for elements with these since they might get resized by the user
+							if (/(top|left|bottom|right|width|height)/i.test(c))
+								return m;
 
 							if (s.hex_colors) {
 								u = u.replace(/rgb\([^\)]+\)/g, function(v) {
@@ -7900,7 +7905,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					var re = t.resizeInfo, cb;
 
 					e = e.target;
-					e.removeAttribute('mce_style'); // Remove this one since it might change
 
 					// Don't do this action for non image elements
 					if (e.nodeName !== 'IMG')

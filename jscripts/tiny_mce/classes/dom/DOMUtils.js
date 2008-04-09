@@ -631,7 +631,8 @@
 
 				switch (n) {
 					case "style":
-						if (s.keep_values) {
+						// No mce_style for elements with these since they might get resized by the user
+						if (s.keep_values && !/(top|left|bottom|right|width|height)/i.test(v)) {
 							if (v)
 								e.setAttribute('mce_style', v, 2);
 							else
@@ -1266,6 +1267,10 @@
 							// Why did I need this one?
 							//if (isIE)
 							//	u = t.serializeStyle(t.parseStyle(u));
+
+							// No mce_style for elements with these since they might get resized by the user
+							if (/(top|left|bottom|right|width|height)/i.test(c))
+								return m;
 
 							if (s.hex_colors) {
 								u = u.replace(/rgb\([^\)]+\)/g, function(v) {
