@@ -695,7 +695,7 @@
 
 			e = t.get(e);
 
-			if (!e)
+			if (!e || e.nodeType !== 1)
 				return false;
 
 			if (!is(dv))
@@ -1467,11 +1467,12 @@
 				}
 
 				// Fix IE psuedo leak for elements since replacing elements if fairly common
-				if (isIE && o.nodeType === 1) {
+				// Will break parentNode for some unknown reason
+	/*			if (isIE && o.nodeType === 1) {
 					o.parentNode.insertBefore(n, o);
 					o.outerHTML = '';
 					return n;
-				}
+				}*/
 
 				return o.parentNode.replaceChild(n, o);
 			});

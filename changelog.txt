@@ -2,6 +2,7 @@ Version 3.0.7 (2008-04-xx)
 	Added new version suffix to all internal GET requests to make sure that the users cache gets cleared correctly.
 	Fixed issue with isDirty returning true event if it wasn't dirty on IE due to changes in tables during initialization.
 	Fixed memory leak in IE where if a page was unloaded before all images on the page was loaded it would leak.
+	Fixed bug in IE where underline and strikethrough could produce an exception error message.
 	Fixed bug where inserting paragraphs in totally empty table cells would produce odd effects.
 	Fixed so you can select tables by clicking on it's borders in non IE browsers to normalize the behavior.
 Version 3.0.6.2 (2008-04-07)
