@@ -6,6 +6,7 @@ Version 3.0.7 (2008-04-xx)
 	Fixed bug where inserting paragraphs in totally empty table cells would produce odd effects.
 	Fixed bug where layer style data wasn't updated correctly due to some performance enhancements with the DOM serializer.
 	Fixed so you can select tables by clicking on it's borders in non IE browsers to normalize the behavior.
+	Fixed so the menus can be toggled by clicking once more on the icon in listboxes, menubuttons and splitbuttons based on code contributed by Josh Peek.
 Version 3.0.6.2 (2008-04-07)
 	Fixed bug where empty tables couldn't be edited correctly on non IE browsers if they where loaded into the editor.
 	Fixed bug where it was impossible to resize layers correctly in IE since it thought it was an image.

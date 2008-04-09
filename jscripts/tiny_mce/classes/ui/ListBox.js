@@ -128,6 +128,9 @@
 			if (t.isDisabled() || t.items.length == 0)
 				return;
 
+			if (t.menu && t.menu.isMenuVisible)
+				return t.hideMenu();
+
 			if (!t.isMenuRendered) {
 				t.renderMenu();
 				t.isMenuRendered = true;
@@ -163,6 +166,10 @@
 		 */
 		hideMenu : function(e) {
 			var t = this;
+
+			// Prevent double toogles by canceling the mouse click event to the button
+			if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
+				return;
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				DOM.removeClass(t.id, t.classPrefix + 'Selected');

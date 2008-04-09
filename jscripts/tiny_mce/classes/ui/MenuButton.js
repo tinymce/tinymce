@@ -45,6 +45,9 @@
 				t.isMenuRendered = true;
 			}
 
+			if (t.isMenuVisible)
+				return t.hideMenu();
+
 			p1 = DOM.getPos(t.settings.menu_container);
 			p2 = DOM.getPos(e);
 
@@ -58,6 +61,8 @@
 
 			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			t.setState('Selected', 1);
+
+			t.isMenuVisible = 1;
 		},
 
 		/**
@@ -87,12 +92,18 @@
 		hideMenu : function(e) {
 			var t = this;
 
+			// Prevent double toogles by canceling the mouse click event to the button
+			if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id || e.id === t.id + '_open';}))
+				return;
+
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				t.setState('Selected', 0);
 				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				if (t.menu)
 					t.menu.hideMenu();
 			}
+
+			t.isMenuVisible = 0;
 		},
 
 		/**

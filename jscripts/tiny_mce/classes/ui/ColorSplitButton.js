@@ -54,6 +54,9 @@
 				t.isMenuRendered = true;
 			}
 
+			if (t.isMenuVisible)
+				return t.hideMenu();
+
 			e = DOM.get(t.id);
 			DOM.show(t.id + '_menu');
 			DOM.addClass(e, 'mceSplitButtonSelected');
@@ -75,6 +78,8 @@
 
 				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
 			}
+
+			t.isMenuVisible = 1;
 		},
 
 		/**
@@ -86,12 +91,18 @@
 		hideMenu : function(e) {
 			var t = this;
 
+			// Prevent double toogles by canceling the mouse click event to the button
+			if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id + '_open';}))
+				return;
+
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceSplitButtonMenu');})) {
 				DOM.removeClass(t.id, 'mceSplitButtonSelected');
 				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
 				DOM.hide(t.id + '_menu');
 			}
+
+			t.isMenuVisible = 0;
 		},
 
 		/**

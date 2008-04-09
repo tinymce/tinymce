@@ -5283,6 +5283,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (t.isDisabled() || t.items.length == 0)
 				return;
 
+			if (t.menu && t.menu.isMenuVisible)
+				return t.hideMenu();
+
 			if (!t.isMenuRendered) {
 				t.renderMenu();
 				t.isMenuRendered = true;
@@ -5315,6 +5318,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		hideMenu : function(e) {
 			var t = this;
+
+			// Prevent double toogles by canceling the mouse click event to the button
+			if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
+				return;
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				DOM.removeClass(t.id, t.classPrefix + 'Selected');
@@ -5518,6 +5525,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				t.isMenuRendered = true;
 			}
 
+			if (t.isMenuVisible)
+				return t.hideMenu();
+
 			p1 = DOM.getPos(t.settings.menu_container);
 			p2 = DOM.getPos(e);
 
@@ -5531,6 +5541,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			t.setState('Selected', 1);
+
+			t.isMenuVisible = 1;
 		},
 
 		renderMenu : function() {
@@ -5551,12 +5563,18 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		hideMenu : function(e) {
 			var t = this;
 
+			// Prevent double toogles by canceling the mouse click event to the button
+			if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id || e.id === t.id + '_open';}))
+				return;
+
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
 				t.setState('Selected', 0);
 				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				if (t.menu)
 					t.menu.hideMenu();
 			}
+
+			t.isMenuVisible = 0;
 		},
 
 		postRender : function() {
@@ -5675,6 +5693,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				t.isMenuRendered = true;
 			}
 
+			if (t.isMenuVisible)
+				return t.hideMenu();
+
 			e = DOM.get(t.id);
 			DOM.show(t.id + '_menu');
 			DOM.addClass(e, 'mceSplitButtonSelected');
@@ -5696,10 +5717,16 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
 			}
+
+			t.isMenuVisible = 1;
 		},
 
 		hideMenu : function(e) {
 			var t = this;
+
+			// Prevent double toogles by canceling the mouse click event to the button
+			if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id + '_open';}))
+				return;
 
 			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceSplitButtonMenu');})) {
 				DOM.removeClass(t.id, 'mceSplitButtonSelected');
@@ -5707,6 +5734,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
 				DOM.hide(t.id + '_menu');
 			}
+
+			t.isMenuVisible = 0;
 		},
 
 		renderMenu : function() {
