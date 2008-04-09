@@ -198,7 +198,7 @@
 								v.id = v.id || v.name;
 
 								// Generate unique name if missing or already exists
-								if (!v.id || t.get(v.id))
+								if (!v.id || t.get(v.id) || DOM.get(v.id))
 									v.id = DOM.uniqueId();
 
 								new tinymce.Editor(v.id, s).render(1);

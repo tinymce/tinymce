@@ -5,6 +5,7 @@ Version 3.0.7 (2008-04-xx)
 	Fixed bug in IE where underline and strikethrough could produce an exception error message.
 	Fixed bug where inserting paragraphs in totally empty table cells would produce odd effects.
 	Fixed bug where layer style data wasn't updated correctly due to some performance enhancements with the DOM serializer.
+	Fixed bug where it would convert the wrong element if there was two elements with the same name and id on the page.
 	Fixed so you can select tables by clicking on it's borders in non IE browsers to normalize the behavior.
 	Fixed so the menus can be toggled by clicking once more on the icon in listboxes, menubuttons and splitbuttons based on code contributed by Josh Peek.
 Version 3.0.6.2 (2008-04-07)
