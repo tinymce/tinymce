@@ -144,7 +144,7 @@
 		},
 
 		mceInsertLink : function(u, v) {
-			var ed = this.editor, s = ed.selection, e = ed.dom.getParent(s.getNode(), 'A'), el;
+			var ed = this.editor, s = ed.selection, e = ed.dom.getParent(s.getNode(), 'A');
 
 			if (tinymce.is(v, 'string'))
 				v = {href : v};
@@ -158,14 +158,9 @@
 			if (!e) {
 				ed.execCommand('CreateLink', false, 'javascript:mctmp(0);');
 				each(ed.dom.select('a'), function(e) {
-					if (e.href == 'javascript:mctmp(0);') {
-						el = e;
+					if (e.href == 'javascript:mctmp(0);')
 						set(e);
-					}
 				});
-
-				s.select(el);
-				s.collapse(0);
 			} else {
 				if (v.href)
 					set(e);

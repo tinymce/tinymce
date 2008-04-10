@@ -410,10 +410,13 @@ function insertAction() {
 	} else
 		setAllAttribs(elm);
 
-	inst.focus();
-	inst.selection.select(elm);
-	inst.selection.collapse(0);
-	tinyMCEPopup.storeSelection();
+	// Don't move caret if selection was image
+	if (elm.childNodes.length != 1 || elm.firstChild.nodeName != 'IMG') {
+		inst.focus();
+		inst.selection.select(elm);
+		inst.selection.collapse(0);
+		tinyMCEPopup.storeSelection();
+	}
 
 	tinyMCEPopup.execCommand("mceEndUndoLevel");
 	tinyMCEPopup.close();
