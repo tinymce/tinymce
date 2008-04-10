@@ -59,7 +59,7 @@
 		 * @param {Object} s Settings object to be passed to each editor instance.
 		 */
 		init : function(s) {
-			var t = this, pl, sl = tinymce.ScriptLoader, c;
+			var t = this, pl, sl = tinymce.ScriptLoader, c, e;
 
 			function execCallback(se, n, s) {
 				var f = se[n];
@@ -196,9 +196,10 @@
 
 							if (!s.editor_selector || hasClass(v, s.editor_selector)) {
 								v.id = v.id || v.name;
+								e = DOM.get(v.id);
 
 								// Generate unique name if missing or already exists
-								if (!v.id || t.get(v.id) || DOM.get(v.id))
+								if (!v.id || t.get(v.id) || (v.id && e && e.nodeName.toLowerCase() != 'textarea'))
 									v.id = DOM.uniqueId();
 
 								new tinymce.Editor(v.id, s).render(1);

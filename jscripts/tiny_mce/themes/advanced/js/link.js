@@ -49,6 +49,8 @@ var LinkDialog = {
 			}
 		}
 
+		ed.focus();
+
 		ed.execCommand('mceInsertLink', false, {
 			href : f.href.value,
 			title : f.linktitle.value,
