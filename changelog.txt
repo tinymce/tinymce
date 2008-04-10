@@ -10,9 +10,12 @@ Version 3.0.7 (2008-04-xx)
 	Fixed bug where Gecko would add an extra undo level some times due to the blur event.
 	Fixed bug where the underline icon would get active if the caret was inside a link element.
 	Fixed bug where merging th cells not working correctly. Patch contributed by André R.
+	Fixed bug where forecolorpicker and backcolorpicker buttons where rendered incorrectly when the o2k7 skin was used.
 	Fixed so caret is placed after links ones they are created, to improve usability of the editor.
 	Fixed so you can select tables by clicking on it's borders in non IE browsers to normalize the behavior.
 	Fixed so the menus can be toggled by clicking once more on the icon in listboxes, menubuttons and splitbuttons based on code contributed by Josh Peek.
+	Fixed so buttons can be labeled, currently only works with the default skin, so it's kind of experimental. Patch contributed by Daniel Insley.
+	Fixed so forecolorpicker and backcolorpicker remembers the last selected color. Patch contributed by Shane Tomlinson.
 Version 3.0.6.2 (2008-04-07)
 	Fixed bug where empty tables couldn't be edited correctly on non IE browsers if they where loaded into the editor.
 	Fixed bug where it was impossible to resize layers correctly in IE since it thought it was an image.

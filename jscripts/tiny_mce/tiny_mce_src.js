@@ -5175,12 +5175,15 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		renderHTML : function() {
-			var cp = this.classPrefix, s = this.settings, h = '<a id="' + this.id + '" href="javascript:;" class="' + cp + ' ' + cp + 'Enabled ' + s['class'] + '" onmousedown="return false;" onclick="return false;" title="' + DOM.encode(s.title) + '">';
+			var cp = this.classPrefix, s = this.settings, h, l;
+
+			l = DOM.encode(s.label || '');
+			h = '<a id="' + this.id + '" href="javascript:;" class="' + cp + ' ' + cp + 'Enabled ' + s['class'] + (l ? ' ' + cp + 'Labeled' : '') +'" onmousedown="return false;" onclick="return false;" title="' + DOM.encode(s.title) + '">';
 
 			if (s.image)
-				h += '<img class="mceIcon" src="' + s.image + '" /></a>';
+				h += '<img class="mceIcon" src="' + s.image + '" />' + l + '</a>';
 			else
-				h += '<span class="mceIcon ' + s['class'] + '"></span></a>';
+				h += '<span class="mceIcon ' + s['class'] + '"></span>' + (l ? '<span class="' + cp + 'Label">' + l + '</span>' : '') + '</a>';
 
 			return h;
 		},
@@ -10111,6 +10114,7 @@ tinymce.create('tinymce.UndoManager', {
 				return null;
 
 			s.title = ed.translate(s.title);
+			s.label = ed.translate(s.label);
 			s.scope = s.scope || ed;
 
 			if (!s.onclick && !s.menu_button) {

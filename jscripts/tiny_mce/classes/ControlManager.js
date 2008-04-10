@@ -273,6 +273,7 @@
 				return null;
 
 			s.title = ed.translate(s.title);
+			s.label = ed.translate(s.label);
 			s.scope = s.scope || ed;
 
 			if (!s.onclick && !s.menu_button) {

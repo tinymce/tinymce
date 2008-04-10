@@ -1023,7 +1023,9 @@
 			var t = this;
 
 			this._mceColorPicker(0, {
+				color: t.fgColor,
 				func : function(co) {
+					t.fgColor = co;
 					t.editor.execCommand('ForeColor', false, co);
 				}
 			});
@@ -1033,7 +1035,9 @@
 			var t = this;
 
 			this._mceColorPicker(0, {
+				color: t.bgColor,
 				func : function(co) {
+					t.bgColor = co;
 					t.editor.execCommand('HiliteColor', false, co);
 				}
 			});

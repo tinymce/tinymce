@@ -34,10 +34,14 @@
 .defaultSkin td.mceRight table {margin:0 0 0 auto;}
 
 /* Button */
-.defaultSkin .mceButton {display:block; border:1px solid #F0F0EE; width:20px; height:20px; margin-right:1px;}
+.defaultSkin .mceButton {display:block; border:1px solid #F0F0EE; width:20px; height:20px; margin-right:1px}
 .defaultSkin a.mceButtonEnabled:hover {border:1px solid #0A246A; background-color:#B2BBD0}
 .defaultSkin a.mceButtonActive, .defaultSkin a.mceButtonSelected {border:1px solid #0A246A; background-color:#C2CBE0}
 .defaultSkin .mceButtonDisabled .mceIcon {opacity:0.3; filter:alpha(opacity=30)}
+.defaultSkin .mceButtonLabeled {width:auto}
+.defaultSkin .mceButtonLabeled span.mceIcon {float:left}
+.defaultSkin span.mceButtonLabel {display:block; font-size:10px; padding:4px 6px 0 22px; font-family:Tahoma,Verdana,Arial,Helvetica}
+.defaultSkin .mceButtonDisabled .mceButtonLabel {color:#888}
 
 /* Separator */
 .defaultSkin .mceSeparator {display:block; background:url(../../img/icons.gif) -180px 0; width:2px; height:20px; margin:2px 2px 0 4px}
@@ -154,8 +158,8 @@
 .defaultSkin span.mce_blockquote {background-position:-220px 0}
 .defaultSkin .mce_forecolor span.mceAction {background-position:-720px 0}
 .defaultSkin .mce_backcolor span.mceAction {background-position:-760px 0}
-.defaultSkin .mce_forecolorpicker {background-position:-720px 0}
-.defaultSkin .mce_backcolorpicker {background-position:-760px 0}
+.defaultSkin span.mce_forecolorpicker {background-position:-720px 0}
+.defaultSkin span.mce_backcolorpicker {background-position:-760px 0}
 
 /* Plugins */
 .defaultSkin span.mce_advhr {background-position:-0px -20px}
