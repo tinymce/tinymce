@@ -904,7 +904,7 @@
 									if (!tdElm)
 										break;
 
-									if (tdElm.nodeName == "TD")
+									if (tdElm.nodeName == "TD" || tdElm.nodeName == "TH")
 										cells[cells.length] = tdElm;
 								}
 

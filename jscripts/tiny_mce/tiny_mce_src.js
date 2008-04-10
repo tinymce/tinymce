@@ -6116,11 +6116,13 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 								return;
 
 							if (!s.editor_selector || hasClass(v, s.editor_selector)) {
-								v.id = v.id || v.name;
-								e = DOM.get(v.id);
+								// Can we use the name
+								e = DOM.get(v.name);
+								if (!e)
+									v.id = v.name;
 
 								// Generate unique name if missing or already exists
-								if (!v.id || t.get(v.id) || (v.id && e && e.nodeName.toLowerCase() != 'textarea'))
+								if (!v.id || t.get(v.id))
 									v.id = DOM.uniqueId();
 
 								new tinymce.Editor(v.id, s).render(1);
