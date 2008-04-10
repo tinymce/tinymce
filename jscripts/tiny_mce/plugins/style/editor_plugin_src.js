@@ -28,6 +28,10 @@
 				}
 			});
 
+			ed.onNodeChange.add(function(ed, cm, n) {
+				cm.setDisabled('styleprops', n.nodeName === 'BODY');
+			});
+
 			// Register buttons
 			ed.addButton('styleprops', {title : 'style.desc', cmd : 'mceStyleProps'});
 		},

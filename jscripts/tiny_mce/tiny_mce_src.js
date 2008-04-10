@@ -9280,6 +9280,11 @@ tinymce.create('tinymce.UndoManager', {
 		if (t.index < t.data.length && t.data[t.index].initial)
 			t.index++;
 
+		// Only initial marked undo levels should be allowed as first item
+		// This to workaround a bug with Firefox and the blur event
+		if (t.data.length === 0 && !l.initial)
+			return null;
+
 		// Add level
 		t.data.length = t.index + 1;
 		t.data[t.index++] = l;
