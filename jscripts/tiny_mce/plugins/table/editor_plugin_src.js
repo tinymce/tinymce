@@ -94,12 +94,14 @@
 
 			// Select whole table is a table border is clicked
 			if (!tinymce.isIE) {
-				ed.onClick.add(function(ed, e) {
-					e = e.target;
+				if (ed.getParam('table_selection', true)) {
+					ed.onClick.add(function(ed, e) {
+						e = e.target;
 
-					if (e.nodeName === 'TABLE')
-						ed.selection.select(e);
-				});
+						if (e.nodeName === 'TABLE')
+							ed.selection.select(e);
+					});
+				}
 			}
 
 			ed.onNodeChange.add(function(ed, cm, n) {
