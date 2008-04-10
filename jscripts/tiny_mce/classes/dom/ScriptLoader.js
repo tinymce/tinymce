@@ -102,7 +102,7 @@
 			function loadScript(u) {
 				if (tinymce.dom.Event.domLoaded || t.settings.strict_mode) {
 					tinymce.util.XHR.send({
-						url : u,
+						url : tinymce._addVer(u),
 						error : t.settings.error,
 						async : false,
 						success : function(co) {
@@ -110,7 +110,7 @@
 						}
 					});
 				} else
-					document.write('<script type="text/javascript" src="' + u + '"></script>');
+					document.write('<script type="text/javascript" src="' + tinymce._addVer(u) + '"></script>');
 			};
 
 			if (!tinymce.is(u, 'string')) {
@@ -266,7 +266,7 @@
 						ol += 'tinymce.dom.ScriptLoader._onLoad(this,\'' + u + '\',' + ix + ');"';
 					}
 
-					document.write('<script type="text/javascript" src="' + u + '"' + ol + '></script>');
+					document.write('<script type="text/javascript" src="' + tinymce._addVer(u) + '"' + ol + '></script>');
 
 					if (!o.func)
 						done(o);

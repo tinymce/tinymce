@@ -510,11 +510,7 @@ var tinymce = {
 	},
 
 	_addVer : function(u, s) {
-		// Only add version if we are using the non gzipped version
-		if (!s || !window.tinyMCE_GZ)
-			u += (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
-
-		return u;
+		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
 	}
 
 	/**#@-*/
