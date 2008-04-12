@@ -6121,7 +6121,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 							if (!s.editor_selector || hasClass(v, s.editor_selector)) {
 								// Can we use the name
 								e = DOM.get(v.name);
-								if (!e)
+								if (!v.id && !e)
 									v.id = v.name;
 
 								// Generate unique name if missing or already exists
@@ -6209,7 +6209,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 				case "mceAddEditor":
 				case "mceAddControl":
-					new tinymce.Editor(v, t.settings).render();
+					if (!t.get(v))
+						new tinymce.Editor(v, t.settings).render();
+
 					return true;
 
 				case "mceAddFrameControl":
