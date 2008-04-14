@@ -11,6 +11,8 @@ Version 3.0.7 (2008-04-xx)
 	Fixed bug where the underline icon would get active if the caret was inside a link element.
 	Fixed bug where merging th cells not working correctly. Patch contributed by André R.
 	Fixed bug where forecolorpicker and backcolorpicker buttons where rendered incorrectly when the o2k7 skin was used.
+	Fixed bug where comment couldn't contain -- since it's invalid markup. It will now at least not break on those invalid comments.
+	Fixed bug where apos wasn't handled correctly in IE. It will now convert apos to &#39; on IE since that browser doesn't support that entity.
 	Fixed so caret is placed after links ones they are created, to improve usability of the editor.
 	Fixed so you can select tables by clicking on it's borders in non IE browsers to normalize the behavior.
 	Fixed so the menus can be toggled by clicking once more on the icon in listboxes, menubuttons and splitbuttons based on code contributed by Josh Peek.

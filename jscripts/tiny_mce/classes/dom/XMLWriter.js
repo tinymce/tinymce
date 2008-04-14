@@ -125,7 +125,7 @@
 		 * @param {String} v Value of the comment.
 		 */
 		writeComment : function(v) {
-			this.node.appendChild(this.doc.createComment(v));
+			this.node.appendChild(this.doc.createComment(v.replace(/\-\-/g, ' ')));
 		},
 
 		/**

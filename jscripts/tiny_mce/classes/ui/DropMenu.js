@@ -161,12 +161,16 @@
 
 					dm = t;
 
-					while (dm) {
-						if (dm.hideMenu)
-							dm.hideMenu();
+					// Wait a while to fix IE bug where it looses the selection if the user clicks on a menu
+					// item when the editor is placed within an frame or iframe
+					DOM.win.setTimeout(function() {
+						while (dm) {
+							if (dm.hideMenu)
+								dm.hideMenu();
 
-						dm = dm.settings.parent;
-					}
+							dm = dm.settings.parent;
+						}
+					}, 0);
 
 					if (m.settings.onclick)
 						m.settings.onclick(e);

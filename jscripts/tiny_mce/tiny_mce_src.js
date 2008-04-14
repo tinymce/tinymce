@@ -1535,7 +1535,7 @@ tinymce.create('static tinymce.util.XHR', {
 					if (v) {
 						v = t.serializeStyle(t.parseStyle(v));
 
-						if (t.settings.keep_values)
+						if (t.settings.keep_values && !/(top|left|bottom|right|width|height)/i.test(v))
 							e.setAttribute('mce_style', v);
 					}
 
@@ -1953,7 +1953,8 @@ tinymce.create('static tinymce.util.XHR', {
 			if (tinymce.isGecko) {
 				h = h.replace(/<(\/?)strong>|<strong( [^>]+)>/gi, '<$1b$2>');
 				h = h.replace(/<(\/?)em>|<em( [^>]+)>/gi, '<$1i$2>');
-			}
+			} else if (isIE)
+				h = h.replace(/&apos;/g, '&#39;'); // IE can't handle apos
 
 			// Fix some issues
 			h = h.replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>'); // Force open
@@ -3336,7 +3337,7 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		writeComment : function(v) {
-			this.node.appendChild(this.doc.createComment(v));
+			this.node.appendChild(this.doc.createComment(v.replace(/\-\-/g, ' ')));
 		},
 
 		getContent : function() {
@@ -4988,12 +4989,16 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 					dm = t;
 
-					while (dm) {
-						if (dm.hideMenu)
-							dm.hideMenu();
+					// Wait a while to fix IE bug where it looses the selection if the user clicks on a menu
+					// item when the editor is placed within an frame or iframe
+					DOM.win.setTimeout(function() {
+						while (dm) {
+							if (dm.hideMenu)
+								dm.hideMenu();
 
-						dm = dm.settings.parent;
-					}
+							dm = dm.settings.parent;
+						}
+					}, 0);
 
 					if (m.settings.onclick)
 						m.settings.onclick(e);
