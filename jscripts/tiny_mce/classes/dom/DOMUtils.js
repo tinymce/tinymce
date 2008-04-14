@@ -194,7 +194,7 @@
 		get : function(e) {
 			var n;
 
-			if (this.doc && typeof(e) == 'string') {
+			if (e && this.doc && typeof(e) == 'string') {
 				n = e;
 				e = this.doc.getElementById(e);
 

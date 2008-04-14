@@ -1,3 +1,5 @@
+Version 3.0.7.1 (2008-04-xx)
+	Fixed bug where IE would produce an error if textareas without names where converted.
 Version 3.0.7 (2008-04-14)
 	Added new version suffix to all internal GET requests to make sure that the users cache gets cleared correctly.
 	Fixed issue with isDirty returning true event if it wasn't dirty on IE due to changes in tables during initialization.
