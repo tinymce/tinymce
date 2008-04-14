@@ -575,43 +575,24 @@
 		 * @param {Object} o Content object to indent.
 		 */
 		_postProcess : function(o) {
-			var t = this, s = t.settings, h = o.content, sc = [], p, l;
+			var t = this, s = t.settings, h = o.content, sc = [], p;
 
 			if (o.format == 'html') {
 				// Protect some elements
 				p = t._protect({
 					content : h,
 					patterns : [
-						/(<script[^>]*>)(.*?)(<\/script>)/g,
-						/(<style[^>]*>)(.*?)(<\/style>)/g,
-						/(<pre[^>]*>)(.*?)(<\/pre>)/g
+						{pattern : /(<script[^>]*>)(.*?)(<\/script>)/g},
+						{pattern : /(<style[^>]*>)(.*?)(<\/style>)/g},
+						{pattern : /(<pre[^>]*>)(.*?)(<\/pre>)/g, encode : 1}
 					]
 				});
 
 				h = p.content;
 
 				// Entity encode
-				if (s.entity_encoding !== 'raw') {
-					if (s.entity_encoding.indexOf('named') != -1) {
-						t.setEntities(s.entities);
-						l = t.entityLookup;
-
-						h = h.replace(t.entitiesRE, function(a) {
-							var v;
-
-							if (v = l[a])
-								a = '&' + v + ';';
-
-							return a;
-						});
-					}
-
-					if (s.entity_encoding.indexOf('numeric') != -1) {
-						h = h.replace(/[\u007E-\uFFFF]/g, function(a) {
-							return '&#' + a.charCodeAt(0) + ';';
-						});
-					}
-				}
+				if (s.entity_encoding !== 'raw')
+					h = t._encode(h);
 
 				// Use BR instead of &nbsp; padded P elements inside editor and use <p>&nbsp;</p> outside editor
 /*				if (o.set)
@@ -817,6 +798,8 @@
 		},
 
 		_protect : function(o) {
+			var t = this;
+
 			o.items = o.items || [];
 
 			function enc(s) {
@@ -842,8 +825,13 @@
 			};
 
 			each(o.patterns, function(p) {
-				o.content = dec(enc(o.content).replace(p, function(x, a, b, c) {
-					o.items.push(dec(b));
+				o.content = dec(enc(o.content).replace(p.pattern, function(x, a, b, c) {
+					b = dec(b);
+
+					if (p.encode)
+						b = t._encode(b);
+
+					o.items.push(b);
 					return a + '<!--mce:' + (o.items.length - 1) + '-->' + c;
 				}));
 			});
@@ -857,6 +845,35 @@
 			});
 
 			o.items = [];
+
+			return h;
+		},
+
+		_encode : function(h) {
+			var t = this, s = t.settings, l;
+
+			// Entity encode
+			if (s.entity_encoding !== 'raw') {
+				if (s.entity_encoding.indexOf('named') != -1) {
+					t.setEntities(s.entities);
+					l = t.entityLookup;
+
+					h = h.replace(t.entitiesRE, function(a) {
+						var v;
+
+						if (v = l[a])
+							a = '&' + v + ';';
+
+						return a;
+					});
+				}
+
+				if (s.entity_encoding.indexOf('numeric') != -1) {
+					h = h.replace(/[\u007E-\uFFFF]/g, function(a) {
+						return '&#' + a.charCodeAt(0) + ';';
+					});
+				}
+			}
 
 			return h;
 		},
