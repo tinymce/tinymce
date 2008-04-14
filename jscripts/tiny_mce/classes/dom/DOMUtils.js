@@ -632,7 +632,7 @@
 				switch (n) {
 					case "style":
 						// No mce_style for elements with these since they might get resized by the user
-						if (s.keep_values && !/(top|left|bottom|right|width|height)/i.test(v)) {
+						if (s.keep_values && /^(| )(top|left|bottom|right|width|height)/i.test(v)) {
 							if (v)
 								e.setAttribute('mce_style', v, 2);
 							else
@@ -737,7 +737,7 @@
 					if (v) {
 						v = t.serializeStyle(t.parseStyle(v));
 
-						if (t.settings.keep_values && !/(top|left|bottom|right|width|height)/i.test(v))
+						if (t.settings.keep_values && /^(| )(top|left|bottom|right|width|height)/i.test(v))
 							e.setAttribute('mce_style', v);
 					}
 
@@ -1270,7 +1270,7 @@
 							//	u = t.serializeStyle(t.parseStyle(u));
 
 							// No mce_style for elements with these since they might get resized by the user
-							if (/(top|left|bottom|right|width|height)/i.test(c))
+							if (/^(| )(top|left|bottom|right|width|height)/i.test(c))
 								return m;
 
 							if (s.hex_colors) {
