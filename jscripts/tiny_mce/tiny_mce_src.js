@@ -7225,7 +7225,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		execCommand : function(cmd, ui, val, a) {
-			var t = this, s = 0, o;
+			var t = this, s = 0, o, st;
 
 			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint|SelectAll)$/.test(cmd) && (!a || !a.skip_focus))
 				t.focus();
@@ -7243,9 +7243,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Registred commands
 			if (o = t.execCommands[cmd]) {
-				s = o.func.call(o.scope, ui, val);
-				t.onExecCommand.dispatch(t, cmd, ui, val, a);
-				return s;
+				st = o.func.call(o.scope, ui, val);
+
+				// Fall through on true
+				if (st !== true) {
+					t.onExecCommand.dispatch(t, cmd, ui, val, a);
+					return st;
+				}
 			}
 
 			// Plugin commands
@@ -7278,15 +7282,20 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		queryCommandState : function(c) {
-			var t = this, o;
+			var t = this, o, s;
 
 			// Is hidden then return undefined
 			if (t._isHidden())
 				return;
 
 			// Registred commands
-			if (o = t.queryStateCommands[c])
-				return o.func.call(o.scope);
+			if (o = t.queryStateCommands[c]) {
+				s = o.func.call(o.scope);
+
+				// Fall though on true
+				if (s !== true)
+					return s;
+			}
 
 			// Registred commands
 			o = t.editorCommands.queryCommandState(c);
@@ -7302,15 +7311,20 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		queryCommandValue : function(c) {
-			var t = this, o;
+			var t = this, o, s;
 
 			// Is hidden then return undefined
 			if (t._isHidden())
 				return;
 
 			// Registred commands
-			if (o = t.queryValueCommands[c])
-				return o.func.call(o.scope);
+			if (o = t.queryValueCommands[c]) {
+				s = o.func.call(o.scope);
+
+				// Fall though on true
+				if (s !== true)
+					return s;
+			}
 
 			// Registred commands
 			o = t.editorCommands.queryCommandValue(c);

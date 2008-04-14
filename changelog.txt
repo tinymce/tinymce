@@ -19,7 +19,8 @@ Version 3.0.7 (2008-04-xx)
 	Fixed so the menus can be toggled by clicking once more on the icon in listboxes, menubuttons and splitbuttons based on code contributed by Josh Peek.
 	Fixed so buttons can be labeled, currently only works with the default skin, so it's kind of experimental. Patch contributed by Daniel Insley.
 	Fixed so forecolorpicker and backcolorpicker remembers the last selected color. Patch contributed by Shane Tomlinson.
-	Fixed so that you can only execute the mceAddEditor command once for the same instance name. 
+	Fixed so that you can only execute the mceAddEditor command once for the same instance name.
+	Fixed so command functions added with addCommand can pass though the call to default handles if it returns true.
 Version 3.0.6.2 (2008-04-07)
 	Fixed bug where empty tables couldn't be edited correctly on non IE browsers if they where loaded into the editor.
 	Fixed bug where it was impossible to resize layers correctly in IE since it thought it was an image.

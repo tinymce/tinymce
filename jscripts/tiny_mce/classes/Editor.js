@@ -1135,7 +1135,7 @@
 		 * @return {bool} True/false if the command was executed or not.
 		 */
 		execCommand : function(cmd, ui, val, a) {
-			var t = this, s = 0, o;
+			var t = this, s = 0, o, st;
 
 			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint|SelectAll)$/.test(cmd) && (!a || !a.skip_focus))
 				t.focus();
@@ -1153,9 +1153,13 @@
 
 			// Registred commands
 			if (o = t.execCommands[cmd]) {
-				s = o.func.call(o.scope, ui, val);
-				t.onExecCommand.dispatch(t, cmd, ui, val, a);
-				return s;
+				st = o.func.call(o.scope, ui, val);
+
+				// Fall through on true
+				if (st !== true) {
+					t.onExecCommand.dispatch(t, cmd, ui, val, a);
+					return st;
+				}
 			}
 
 			// Plugin commands
@@ -1194,15 +1198,20 @@
 		 * @return {bool} Command specific state, for example if bold is enabled or not.
 		 */
 		queryCommandState : function(c) {
-			var t = this, o;
+			var t = this, o, s;
 
 			// Is hidden then return undefined
 			if (t._isHidden())
 				return;
 
 			// Registred commands
-			if (o = t.queryStateCommands[c])
-				return o.func.call(o.scope);
+			if (o = t.queryStateCommands[c]) {
+				s = o.func.call(o.scope);
+
+				// Fall though on true
+				if (s !== true)
+					return s;
+			}
 
 			// Registred commands
 			o = t.editorCommands.queryCommandState(c);
@@ -1224,15 +1233,20 @@
 		 * @return {Object} Command specific value, for example the current font size.
 		 */
 		queryCommandValue : function(c) {
-			var t = this, o;
+			var t = this, o, s;
 
 			// Is hidden then return undefined
 			if (t._isHidden())
 				return;
 
 			// Registred commands
-			if (o = t.queryValueCommands[c])
-				return o.func.call(o.scope);
+			if (o = t.queryValueCommands[c]) {
+				s = o.func.call(o.scope);
+
+				// Fall though on true
+				if (s !== true)
+					return s;
+			}
 
 			// Registred commands
 			o = t.editorCommands.queryCommandValue(c);
