@@ -1,4 +1,4 @@
-Version 3.0.7 (2008-04-xx)
+Version 3.0.7 (2008-04-14)
 	Added new version suffix to all internal GET requests to make sure that the users cache gets cleared correctly.
 	Fixed issue with isDirty returning true event if it wasn't dirty on IE due to changes in tables during initialization.
 	Fixed memory leak in IE where if a page was unloaded before all images on the page was loaded it would leak.
