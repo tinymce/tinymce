@@ -61,7 +61,7 @@ iespell_desc:"Run spell checking",
 download:"ieSpell not detected. Do you want to install it now?"
 },
 advhr:{
-advhr_desc:"Horizontale rule"
+advhr_desc:"Horizontal rule"
 },
 emotions:{
 emotions_desc:"Emotions"
