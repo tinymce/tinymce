@@ -559,6 +559,9 @@
 			translate : function(s) {
 				var c = this.settings.language, o;
 
+				if (!s)
+					return s;
+
 				o = tinymce.EditorManager.i18n[c + '.' + s] || s.replace(/{\#([^}]+)\}/g, function(a, b) {
 					return tinymce.EditorManager.i18n[c + '.' + b] || '{#' + b + '}';
 				});
