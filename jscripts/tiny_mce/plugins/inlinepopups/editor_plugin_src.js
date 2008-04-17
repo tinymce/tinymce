@@ -466,7 +466,9 @@
 		},
 
 		close : function(win, id) {
-			var t = this, w, d = DOM.doc, ix = 0, fw;
+			var t = this, w, d = DOM.doc, ix = 0, fw, id;
+
+			id = t._findId(id || win);
 
 			t.count--;
 
@@ -503,10 +505,12 @@
 			}
 		},
 
-		setTitle : function(ti, id) {
+		setTitle : function(w, ti) {
 			var e;
 
-			if (e = DOM.get(id + '_title'))
+			w = this._findId(w);
+
+			if (e = DOM.get(w + '_title'))
 				e.innerHTML = DOM.encode(ti);
 		},
 
@@ -549,6 +553,24 @@
 		},
 
 		// Internal functions
+
+		_findId : function(w) {
+			var t = this;
+
+			if (typeof(w) == 'string')
+				return w;
+
+			each(t.windows, function(wo) {
+				var ifr = DOM.get(wo.id + '_ifr');
+
+				if (ifr && w == ifr.contentWindow) {
+					w = wo.id;
+					return false;
+				}
+			});
+
+			return w;
+		},
 
 		_fixIELayout : function(id, s) {
 			var w, img;
