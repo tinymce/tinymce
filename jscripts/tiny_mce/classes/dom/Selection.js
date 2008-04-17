@@ -140,7 +140,7 @@
 				r.collapse(1);
 				e = r.parentElement();
 
-				if (e.nodeName == 'BODY')
+				if (e && e.nodeName == 'BODY')
 					return e.firstChild;
 
 				return e;
@@ -171,7 +171,7 @@
 				r.collapse(0);
 				e = r.parentElement();
 
-				if (e.nodeName == 'BODY')
+				if (e && e.nodeName == 'BODY')
 					return e.lastChild;
 
 				return e;
