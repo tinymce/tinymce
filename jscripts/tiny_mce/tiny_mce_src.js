@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.7',
-	releaseDate : '2008-04-14',
+	minorVersion : '0.7.1',
+	releaseDate : '2008-04-xx',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base;
@@ -396,8 +396,13 @@ var tinymce = {
 		return tinymce.map(s.split(d || ','), tinymce.trim);
 	},
 
-	_addVer : function(u, s) {
-		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+	_addVer : function(u) {
+		var v = (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+
+		if (u.indexOf('#') == -1)
+			return u + v;
+
+		return u.replace('#', v+'#');
 	}
 
 	};
@@ -2808,7 +2813,7 @@ tinymce.create('static tinymce.util.XHR', {
 				r.collapse(1);
 				e = r.parentElement();
 
-				if (e.nodeName == 'BODY')
+				if (e && e.nodeName == 'BODY')
 					return e.firstChild;
 
 				return e;
@@ -2833,7 +2838,7 @@ tinymce.create('static tinymce.util.XHR', {
 				r.collapse(0);
 				e = r.parentElement();
 
-				if (e.nodeName == 'BODY')
+				if (e && e.nodeName == 'BODY')
 					return e.lastChild;
 
 				return e;

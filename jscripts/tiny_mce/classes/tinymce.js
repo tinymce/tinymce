@@ -12,8 +12,8 @@
  */
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.7',
-	releaseDate : '2008-04-14',
+	minorVersion : '0.7.1',
+	releaseDate : '2008-04-xx',
 
 	/**#@+
 	 * @method
@@ -513,8 +513,13 @@ var tinymce = {
 		return tinymce.map(s.split(d || ','), tinymce.trim);
 	},
 
-	_addVer : function(u, s) {
-		return u + (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+	_addVer : function(u) {
+		var v = (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+
+		if (u.indexOf('#') == -1)
+			return u + v;
+
+		return u.replace('#', v+'#');
 	}
 
 	/**#@-*/
