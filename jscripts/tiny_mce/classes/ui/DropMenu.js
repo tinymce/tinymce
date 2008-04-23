@@ -38,7 +38,7 @@
 			this.classPrefix = 'mceMenu';
 
 			// Fix for odd IE bug: #1903622
-			this.fixIE = tinymce.isIE && DOM.win.top != DOM.win;
+			this.fixIE = tinymce.isIE && (DOM.win.top != DOM.win || !s.keyboard_focus);
 		},
 
 		/**#@+

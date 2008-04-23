@@ -1449,8 +1449,8 @@ tinymce.create('static tinymce.util.XHR', {
 				switch (n) {
 					case "style":
 						// No mce_style for elements with these since they might get resized by the user
-						if (s.keep_values && /^(| )(top|left|bottom|right|width|height)/i.test(v)) {
-							if (v)
+						if (s.keep_values) {
+							if (v && !/^(| )(top|left|bottom|right|width|height)/i.test(v))
 								e.setAttribute('mce_style', v, 2);
 							else
 								e.removeAttribute('mce_style', 2);
@@ -1540,7 +1540,7 @@ tinymce.create('static tinymce.util.XHR', {
 					if (v) {
 						v = t.serializeStyle(t.parseStyle(v));
 
-						if (t.settings.keep_values && /^(| )(top|left|bottom|right|width|height)/i.test(v))
+						if (t.settings.keep_values && !/^(| )(top|left|bottom|right|width|height)/i.test(v))
 							e.setAttribute('mce_style', v);
 					}
 
@@ -4908,7 +4908,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			this.classPrefix = 'mceMenu';
 
 			// Fix for odd IE bug: #1903622
-			this.fixIE = tinymce.isIE && DOM.win.top != DOM.win;
+			this.fixIE = tinymce.isIE && (DOM.win.top != DOM.win || !s.keyboard_focus);
 		},
 
 		createMenu : function(s) {

@@ -4,6 +4,8 @@ Version 3.0.7.1 (2008-04-xx)
 	Fixed bug where IE would produce an warning message if object elements where produced in the media plugins preview running on https.
 	Fixed bug where new addVer function didn't handle hash items correctly. Patch contributed by Mirek Burkon.
 	Fixed bug where font_size_style_values option wasn't applied correctly to fonts inside the editor.
+	Fixed bug where image selection could be lost if a image was edited using context menu on IE.
+	Fixed bug where style values wasn't updated properly due to an invalid regexp.
 	Fixed so theme_advanced_font_sizes can be named for example Font 1=1, Font 2=2 etc.
 	Fixed so editor_selector/editor_deselector can be regexps. By default only strings are allowed not part regexps like before.
 Version 3.0.7 (2008-04-14)
