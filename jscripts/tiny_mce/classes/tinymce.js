@@ -510,7 +510,7 @@ var tinymce = {
 	 * @param {string} d Delimiter to split by.
 	 */
 	explode : function(s, d) {
-		return tinymce.map(s.split(d || ','), tinymce.trim);
+		return s ? tinymce.map(s.split(d || ','), tinymce.trim) : s;
 	},
 
 	_addVer : function(u) {

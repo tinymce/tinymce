@@ -2250,7 +2250,7 @@
 
 						if (i != -1) {
 							dom.setAttrib(f, 'size', '' + (i + 1 || 1));
-							f.style.fontSize = '';
+							//f.style.fontSize = '';
 						}
 					} else if (cl) {
 						i = inArray(cl, dom.getAttrib(n, 'class'));

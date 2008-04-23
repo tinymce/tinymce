@@ -191,6 +191,24 @@
 				ed.getDoc().execCommand('FontName', false, v);
 		},
 
+		FontSize : function(u, v) {
+			var ed = this.editor, s = ed.settings, fz = tinymce.explode(s.font_size_style_values), fzc = tinymce.explode(s.font_size_classes);
+
+			ed.getDoc().execCommand('FontSize', false, v);
+
+			// Add style values
+			if (s.inline_styles) {
+				each(ed.dom.select('font'), function(e) {
+					if (e.size === v) {
+						if (fzc && fzc.length > 0)
+							ed.dom.setAttrib(e, 'class', fzc[parseInt(v) - 1]);
+						else
+							ed.dom.setStyle(e, 'fontSize', fz[parseInt(v) - 1]);
+					}
+				});
+			}
+		},
+
 		queryCommandValue : function(c) {
 			var f = this['queryValue' + c];
 

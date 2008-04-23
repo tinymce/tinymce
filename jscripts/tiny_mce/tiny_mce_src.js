@@ -393,7 +393,7 @@ var tinymce = {
 	},
 
 	explode : function(s, d) {
-		return tinymce.map(s.split(d || ','), tinymce.trim);
+		return s ? tinymce.map(s.split(d || ','), tinymce.trim) : s;
 	},
 
 	_addVer : function(u) {
@@ -8204,7 +8204,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 						if (i != -1) {
 							dom.setAttrib(f, 'size', '' + (i + 1 || 1));
-							f.style.fontSize = '';
+							//f.style.fontSize = '';
 						}
 					} else if (cl) {
 						i = inArray(cl, dom.getAttrib(n, 'class'));
@@ -8523,6 +8523,24 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t.RemoveFormat();
 			} else
 				ed.getDoc().execCommand('FontName', false, v);
+		},
+
+		FontSize : function(u, v) {
+			var ed = this.editor, s = ed.settings, fz = tinymce.explode(s.font_size_style_values), fzc = tinymce.explode(s.font_size_classes);
+
+			ed.getDoc().execCommand('FontSize', false, v);
+
+			// Add style values
+			if (s.inline_styles) {
+				each(ed.dom.select('font'), function(e) {
+					if (e.size === v) {
+						if (fzc && fzc.length > 0)
+							ed.dom.setAttrib(e, 'class', fzc[parseInt(v) - 1]);
+						else
+							ed.dom.setStyle(e, 'fontSize', fz[parseInt(v) - 1]);
+					}
+				});
+			}
 		},
 
 		queryCommandValue : function(c) {
