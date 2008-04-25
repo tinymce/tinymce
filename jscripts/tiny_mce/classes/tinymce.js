@@ -23,7 +23,7 @@ var tinymce = {
 	 * Initializes the TinyMCE global namespace this will setup browser detection and figure out where TinyMCE is running from.
 	 */
 	_init : function() {
-		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base;
+		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p;
 
 		// Browser checks
 		t.isOpera = w.opera && opera.buildNumber;
@@ -38,6 +38,7 @@ var tinymce = {
 		if (w.tinyMCEPreInit) {
 			t.suffix = tinyMCEPreInit.suffix;
 			t.baseURL = tinyMCEPreInit.base;
+			t.query = tinyMCEPreInit.query;
 			return;
 		}
 
@@ -55,6 +56,9 @@ var tinymce = {
 			if (n.src && /tiny_mce(|_dev|_src|_gzip|_jquery|_prototype).js/.test(n.src)) {
 				if (/_(src|dev)\.js/g.test(n.src))
 					t.suffix = '_src';
+
+				if ((p = n.src.indexOf('?')) != -1)
+					t.query = n.src.substring(p + 1);
 
 				t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
 
@@ -514,12 +518,17 @@ var tinymce = {
 	},
 
 	_addVer : function(u) {
-		var v = (u.indexOf('?') == -1 ? '?' : '&') + 'v=' + (tinymce.majorVersion + tinymce.minorVersion).replace(/[^0-9]/g, '');
+		var v;
+
+		if (!this.query)
+			return u;
+
+		v = (u.indexOf('?') == -1 ? '?' : '&') + this.query;
 
 		if (u.indexOf('#') == -1)
 			return u + v;
 
-		return u.replace('#', v+'#');
+		return u.replace('#', v + '#');
 	}
 
 	/**#@-*/
