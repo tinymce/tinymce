@@ -1459,7 +1459,7 @@ tinymce.create('static tinymce.util.XHR', {
 					case "style":
 						// No mce_style for elements with these since they might get resized by the user
 						if (s.keep_values) {
-							if (v && !/^(| )(top|left|bottom|right|width|height)/i.test(v))
+							if (v && !t._isRes(v))
 								e.setAttribute('mce_style', v, 2);
 							else
 								e.removeAttribute('mce_style', 2);
@@ -1549,7 +1549,7 @@ tinymce.create('static tinymce.util.XHR', {
 					if (v) {
 						v = t.serializeStyle(t.parseStyle(v));
 
-						if (t.settings.keep_values && !/^(| )(top|left|bottom|right|width|height)/i.test(v))
+						if (t.settings.keep_values && !t._isRes(v))
 							e.setAttribute('mce_style', v);
 					}
 
@@ -1998,7 +1998,7 @@ tinymce.create('static tinymce.util.XHR', {
 							//	u = t.serializeStyle(t.parseStyle(u));
 
 							// No mce_style for elements with these since they might get resized by the user
-							if (/^(| )(top|left|bottom|right|width|height)/i.test(c))
+							if (t._isRes(c))
 								return m;
 
 							if (s.hex_colors) {
@@ -2309,6 +2309,12 @@ tinymce.create('static tinymce.util.XHR', {
 			// Manual destroy then remove unload handler
 			if (!s)
 				tinymce.removeUnload(t.destroy);
+		},
+
+		_isRes : function(c) {
+			// Is live resizble element
+
+			return /^(top|left|bottom|right|width|height)/i.test(c) || /^[;\s](top|left|bottom|right|width|height)/i.test(c);
 		}
 
 		/*
