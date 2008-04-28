@@ -9,6 +9,7 @@ Version 3.0.7.1 (2008-04-xx)
 	Fixed bug where IE 6 where displaying warning message about insecure items when inserting an image while using https. Patch contributed by Norifumi Sunaoka.
 	Fixed bug where IE was producing an auto save message if you selected a color from the color split button.
 	Fixed bug where backspace sometimes would move the caret to the end of the previous block in Gecko.
+	Fixed bug where the rowlayout manager didn't work as described in the documentation.
 	Fixed so blockquote gets converted into [quote] in when the bbcode plugin is enabled.
 	Fixed so theme_advanced_font_sizes can be named for example Font 1=1, Font 2=2 etc.
 	Fixed so editor_selector/editor_deselector can be regexps. By default only strings are allowed not part regexps like before.
