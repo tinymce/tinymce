@@ -5828,6 +5828,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 				if (e.nodeName == 'A' && (c = e.getAttribute('mce_color')))
 					t.setColor(c);
+
+				return Event.cancel(e); // Prevent IE auto save warning
 			});
 
 			return w;
@@ -9915,9 +9917,13 @@ tinymce.create('tinymce.UndoManager', {
 			aft.normalize();
 			bef.normalize();
 
+			function first(n) {
+				return d.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false).nextNode() || n;
+			};
+
 			// Move cursor and scroll into view
 			r = d.createRange();
-			r.selectNodeContents(aft);
+			r.selectNodeContents(isGecko ? first(aft) : aft);
 			r.collapse(1);
 			s.removeAllRanges();
 			s.addRange(r);

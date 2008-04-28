@@ -69,6 +69,8 @@
 			rep(/<\/u>/gi,"[/u]");
 			rep(/<span style=\"text-decoration: ?underline;\">(.*?)<\/span>/gi,"[u]$1[/u]");
 			rep(/<u>/gi,"[u]");
+			rep(/<blockquote[^>]*>/gi,"[quote]");
+			rep(/<\/blockquote>/gi,"[/quote]");
 			rep(/<br \/>/gi,"\n");
 			rep(/<br\/>/gi,"\n");
 			rep(/<br>/gi,"\n");
