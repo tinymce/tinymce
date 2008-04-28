@@ -88,8 +88,14 @@
 
 			// Add undo level when new rows are created using the tab key
 			ed.onKeyDown.add(function(ed, e) {
-				if (e.keyCode == 9 && ed.dom.getParent(ed.selection.getNode(), 'TABLE'))
+				if (e.keyCode == 9 && ed.dom.getParent(ed.selection.getNode(), 'TABLE')) {
+					if (!tinymce.isGecko && !tinymce.isOpera) {
+						tinyMCE.execInstanceCommand(ed.editorId, "mceTableMoveToNextRow", true);
+						return tinymce.dom.Event.cancel(e);
+					}
+
 					ed.undoManager.add();
+				}
 			});
 
 			// Select whole table is a table border is clicked
@@ -139,6 +145,7 @@
 
 			// Is table command
 			switch (cmd) {
+				case "mceTableMoveToNextRow":
 				case "mceInsertTable":
 				case "mceTableRowProps":
 				case "mceTableCellProps":
@@ -262,6 +269,19 @@
 					return grid[row][col];
 
 				return null;
+			}
+
+			function getNextCell(table, cell) {
+				var cells = [], x = 0, i, j, cell, nextCell;
+
+				for (i = 0; i < table.rows.length; i++)
+					for (j = 0; j < table.rows[i].cells.length; j++, x++)
+						cells[x] = table.rows[i].cells[j];
+
+				for (i = 0; i < cells.length; i++)
+					if (cells[i] == cell)
+						if (nextCell = cells[i+1])
+							return nextCell;
 			}
 
 			function getTableGrid(table) {
@@ -431,6 +451,19 @@
 
 			// Handle commands
 			switch (command) {
+				case "mceTableMoveToNextRow":
+					var nextCell = getNextCell(tableElm, tdElm);
+
+					if (!nextCell) {
+						inst.execCommand("mceTableInsertRowAfter", tdElm);
+						nextCell = getNextCell(tableElm, tdElm);
+					}
+
+					inst.selection.select(nextCell);
+					inst.selection.collapse(true);
+
+					return true;
+
 				case "mceTableRowProps":
 					if (trElm == null)
 						return true;
