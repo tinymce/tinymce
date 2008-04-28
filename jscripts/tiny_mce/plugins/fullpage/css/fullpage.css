@@ -53,6 +53,10 @@
 	height: 20px;
 }
 
+#doctypes {
+	width: 200px;
+}
+
 .addbutton:hover, .removebutton:hover, .moveupbutton:hover, .movedownbutton:hover {
 	border: 1px solid #0A246A;
 	background-color: #B6BDD2;

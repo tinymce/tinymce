@@ -78,7 +78,7 @@
 		},
 
 		_setContent : function(ed, o) {
-			var t = this, sp, ep, c = o.content;
+			var t = this, sp, ep, c = o.content, v;
 
 			// Parse out head, body and footer
 			c = c.replace(/<(\/?)BODY/gi, '<$1body');
@@ -104,8 +104,17 @@
 				t.head = low(t.head);
 				t.foot = low(t.foot);
 			} else {
-				t.head = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
-				t.head += '\n<html>\n<head>\n<title>Untitled document</title>\n</head>\n<body>\n';
+				t.head = '';
+				if (ed.getParam('fullpage_default_xml_pi'))
+					t.head += '<?xml version="1.0" encoding="' + ed.getParam('fullpage_default_encoding', 'ISO-8859-1') + '" ?>\n';
+
+				t.head += ed.getParam('fullpage_default_doctype', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
+				t.head += '\n<html>\n<head>\n<title>Untitled document</title>\n';
+
+				if (v = ed.getParam('fullpage_default_encoding'))
+					t.head += '<meta http-equiv="Content-Type" content="' + v + '" />\n';
+
+				t.head += '</head>\n<body>\n';
 				t.foot = '\n</body>\n</html>';
 			}
 		},
