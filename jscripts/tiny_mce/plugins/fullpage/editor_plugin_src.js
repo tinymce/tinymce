@@ -78,7 +78,7 @@
 		},
 
 		_setContent : function(ed, o) {
-			var t = this, sp, ep, c = o.content, v;
+			var t = this, sp, ep, c = o.content, v, st = '';
 
 			// Parse out head, body and footer
 			c = c.replace(/<(\/?)BODY/gi, '<$1body');
@@ -109,12 +109,21 @@
 					t.head += '<?xml version="1.0" encoding="' + ed.getParam('fullpage_default_encoding', 'ISO-8859-1') + '" ?>\n';
 
 				t.head += ed.getParam('fullpage_default_doctype', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
-				t.head += '\n<html>\n<head>\n<title>Untitled document</title>\n';
+				t.head += '\n<html>\n<head>\n<title>' + ed.getParam('fullpage_default_title', 'Untitled document') + '</title>\n';
 
 				if (v = ed.getParam('fullpage_default_encoding'))
 					t.head += '<meta http-equiv="Content-Type" content="' + v + '" />\n';
 
-				t.head += '</head>\n<body>\n';
+				if (v = ed.getParam('fullpage_default_font_family'))
+					st += 'font-family: ' + v + ';';
+
+				if (v = ed.getParam('fullpage_default_font_size'))
+					st += 'font-size: ' + v + ';';
+
+				if (v = ed.getParam('fullpage_default_text_color'))
+					st += 'color: ' + v + ';';
+
+				t.head += '</head>\n<body' + (st ? ' style="' + st + '"' : '') + '>\n';
 				t.foot = '\n</body>\n</html>';
 			}
 		},

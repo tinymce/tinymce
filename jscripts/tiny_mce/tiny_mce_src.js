@@ -3,7 +3,7 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.7.1',
+	minorVersion : '0.8',
 	releaseDate : '2008-04-xx',
 
 	_init : function() {
@@ -2731,6 +2731,10 @@ tinymce.create('static tinymce.util.XHR', {
 /* file:jscripts/tiny_mce/classes/dom/Selection.js */
 
 (function() {
+	function trimNl(s) {
+		return s.replace(/[\n\r]+/g, '');
+	};
+
 	// Shorten names
 	var is = tinymce.is, isIE = tinymce.isIE, each = tinymce.each;
 
@@ -2948,7 +2952,7 @@ tinymce.create('static tinymce.util.XHR', {
 						return d;
 					}
 
-					p += tinymce.trim(n.nodeValue || '').length;
+					p += (n.nodeValue || '').length;
 				}
 
 				return null;
@@ -2962,7 +2966,7 @@ tinymce.create('static tinymce.util.XHR', {
 					return {scrollX : sx, scrollY : sy};
 
 				// Count whitespace before
-				(s.anchorNode.nodeValue || '').replace(/^\s+/, function(a) {wb = a.length;});
+				trimNl(s.anchorNode.nodeValue || '').replace(/^\s+/, function(a) {wb = a.length;});
 
 				return {
 					start : Math.max(e.start + s.anchorOffset - wb, 0),
@@ -2975,8 +2979,8 @@ tinymce.create('static tinymce.util.XHR', {
 				e = getPos(ro, r.startContainer, r.endContainer);
 
 				// Count whitespace before start and end container
-				(r.startContainer.nodeValue || '').replace(/^\s+/, function(a) {wb = a.length;});
-				(r.endContainer.nodeValue || '').replace(/^\s+/, function(a) {wa = a.length;});
+				//(r.startContainer.nodeValue || '').replace(/^\s+/, function(a) {wb = a.length;});
+				//(r.endContainer.nodeValue || '').replace(/^\s+/, function(a) {wa = a.length;});
 
 				if (!e)
 					return {scrollX : sx, scrollY : sy};
@@ -3001,10 +3005,10 @@ tinymce.create('static tinymce.util.XHR', {
 					wa = wb = 0;
 
 					nv = n.nodeValue || '';
-					nv.replace(/^\s+[^\s]/, function(a) {wb = a.length - 1;});
-					nv.replace(/[^\s]\s+$/, function(a) {wa = a.length - 1;});
+					//nv.replace(/^\s+[^\s]/, function(a) {wb = a.length - 1;});
+					//nv.replace(/[^\s]\s+$/, function(a) {wa = a.length - 1;});
 
-					nvl = tinymce.trim(nv).length;
+					nvl = trimNl(nv).length;
 					p += nvl;
 
 					if (p >= sp && !d.startNode) {

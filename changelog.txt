@@ -1,4 +1,4 @@
-Version 3.0.7.1 (2008-04-xx)
+Version 3.0.8 (2008-04-xx)
 	Fixed bug where IE would produce an error if textareas without names where converted.
 	Fixed bug where editor wasn't forced empty when there was only a single br or empty paragraph left.
 	Fixed bug where IE would produce an warning message if object elements where produced in the media plugins preview running on https.
@@ -11,6 +11,7 @@ Version 3.0.7.1 (2008-04-xx)
 	Fixed bug where backspace sometimes would move the caret to the end of the previous block in Gecko.
 	Fixed bug where the rowlayout manager didn't work as described in the documentation.
 	Fixed bug where the default options for the fullpage plugin wasn't applied correctly.
+	Fixed bug where selection would jump one character if you applied a styles to a words in non IE browsers.
 	Fixed so the advhr plugin produces XHTML valid output instead of non standard attributes.
 	Fixed so blockquote gets converted into [quote] in when the bbcode plugin is enabled.
 	Fixed so theme_advanced_font_sizes can be named for example Font 1=1, Font 2=2 etc.
