@@ -48,7 +48,7 @@ tinymce.create('tinymce.UndoManager', {
 
 		// Add undo level if needed
 		l.content = l.content.replace(/^\s*|\s*$/g, '');
-		la = t.data[t.index > 0 ? t.index - 1 : 0];
+		la = t.data[t.index > 0 && (t.index == 0 || t.index == t.data.length) ? t.index - 1 : t.index];
 		if (!l.initial && la && l.content == la.content)
 			return null;
 
@@ -66,7 +66,7 @@ tinymce.create('tinymce.UndoManager', {
 		if (s.custom_undo_redo_restore_selection && !l.initial)
 			l.bookmark = b = l.bookmark || ed.selection.getBookmark();
 
-		if (t.index < t.data.length && t.data[t.index].initial)
+		if (t.index < t.data.length)
 			t.index++;
 
 		// Only initial marked undo levels should be allowed as first item
