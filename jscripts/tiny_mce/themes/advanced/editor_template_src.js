@@ -797,7 +797,7 @@
 				c.select(ed.queryCommandValue('FontName'));
 
 			if (c = cm.get('fontsizeselect'))
-				c.select(ed.queryCommandValue('FontSize'));
+				c.select('' + ed.queryCommandValue('FontSize'));
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});

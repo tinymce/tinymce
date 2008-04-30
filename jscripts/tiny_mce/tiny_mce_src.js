@@ -4,7 +4,7 @@
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '0.8',
-	releaseDate : '2008-04-xx',
+	releaseDate : '2008-04-30',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p;
@@ -4926,8 +4926,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
 
-			// Fix for odd IE bug: #1903622
-			this.fixIE = tinymce.isIE && (DOM.win.top != DOM.win || !s.keyboard_focus);
+			// Fix for odd IE bug: #1903622 (Frames selection)
+			this.fixIE = tinymce.isIE && (DOM.win.top != DOM.win);
 		},
 
 		createMenu : function(s) {
@@ -5041,8 +5041,11 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 						}
 					}, 0);
 
-					if (m.settings.onclick)
-						m.settings.onclick(e);
+					// Yield on IE to prevent loosing image focus when context menu is used
+					window.setTimeout(function() {
+						if (m.settings.onclick)
+							m.settings.onclick(e);
+					}, 0);
 
 					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				}
@@ -6699,8 +6702,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Measure box
 			if (s.render_ui) {
-				w = s.width || e.style.width || e.clientWidth;
-				h = s.height || e.style.height || e.clientHeight;
+				w = s.width || e.style.width || e.offsetWidth;
+				h = s.height || e.style.height || e.offsetHeight;
 				t.orgDisplay = e.style.display;
 				re = /^[0-9\.]+(|px)$/i;
 

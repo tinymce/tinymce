@@ -356,8 +356,8 @@
 
 			// Measure box
 			if (s.render_ui) {
-				w = s.width || e.style.width || e.clientWidth;
-				h = s.height || e.style.height || e.clientHeight;
+				w = s.width || e.style.width || e.offsetWidth;
+				h = s.height || e.style.height || e.offsetHeight;
 				t.orgDisplay = e.style.display;
 				re = /^[0-9\.]+(|px)$/i;
 

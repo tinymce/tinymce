@@ -37,8 +37,8 @@
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
 
-			// Fix for odd IE bug: #1903622
-			this.fixIE = tinymce.isIE && (DOM.win.top != DOM.win || !s.keyboard_focus);
+			// Fix for odd IE bug: #1903622 (Frames selection)
+			this.fixIE = tinymce.isIE && (DOM.win.top != DOM.win);
 		},
 
 		/**#@+
@@ -172,8 +172,11 @@
 						}
 					}, 0);
 
-					if (m.settings.onclick)
-						m.settings.onclick(e);
+					// Yield on IE to prevent loosing image focus when context menu is used
+					window.setTimeout(function() {
+						if (m.settings.onclick)
+							m.settings.onclick(e);
+					}, 0);
 
 					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				}
