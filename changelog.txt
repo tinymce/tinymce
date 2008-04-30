@@ -14,6 +14,7 @@ Version 3.0.8 (2008-04-30)
 	Fixed bug where selection would jump one character if you applied a styles to a words in non IE browsers.
 	Fixed bug where undo levels wasn't added correctly if you went back in undo history and added a new event.
 	Fixed bug where font size dropdown didn't mark the selected size in IE.
+	Fixed bug where the size of the editor was determined using clientWidth instead of offsetWidth.
 	Fixed so the onchange event doesn't fire on the initial undo level, it will also fire when the editor is blurred.
 	Fixed so the advhr plugin produces XHTML valid output instead of non standard attributes.
 	Fixed so blockquote gets converted into [quote] in when the bbcode plugin is enabled.
