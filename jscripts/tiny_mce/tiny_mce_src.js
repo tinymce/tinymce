@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.8',
-	releaseDate : '2008-04-30',
+	minorVersion : '0.9',
+	releaseDate : '2008-05-xx',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p;
@@ -876,19 +876,24 @@ tinymce.create('static tinymce.util.XHR', {
 
 			x.send(o.data);
 
-			// Wait for response, onReadyStateChange can not be used since it leaks memory in IE
-			t = w.setInterval(function() {
-				if (x.readyState == 4 || c++ > 10000) {
-					w.clearInterval(t);
-
+			function ready() {
+				if (!o.async || x.readyState == 4 || c++ > 10000) {
 					if (o.success && c < 10000 && x.status == 200)
 						o.success.call(o.success_scope, '' + x.responseText, x, o);
 					else if (o.error)
 						o.error.call(o.error_scope, c > 10000 ? 'TIMED_OUT' : 'GENERAL', x, o);
 
 					x = null;
-				}
-			}, 10);
+				} else
+					w.setTimeout(ready, 10);
+			};
+
+			// Syncronous request
+			if (!o.async)
+				return ready();
+
+			// Wait for response, onReadyStateChange can not be used since it leaks memory in IE
+			t = w.setTimeout(ready, 10);
 		}
 
 		}
