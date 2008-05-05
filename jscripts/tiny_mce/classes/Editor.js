@@ -1146,7 +1146,7 @@
 			if (o.terminate)
 				return false;
 
-			// Comamnd callback
+			// Command callback
 			if (t.execCallback('execcommand_callback', t.id, t.selection.getNode(), cmd, ui, val)) {
 				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return true;

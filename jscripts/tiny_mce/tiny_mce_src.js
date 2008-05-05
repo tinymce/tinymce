@@ -4930,9 +4930,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			this.onShowMenu = new tinymce.util.Dispatcher(this);
 			this.onHideMenu = new tinymce.util.Dispatcher(this);
 			this.classPrefix = 'mceMenu';
-
-			// Fix for odd IE bug: #1903622 (Frames selection)
-			this.fixIE = tinymce.isIE && (DOM.win.top != DOM.win);
 		},
 
 		createMenu : function(s) {
@@ -5022,7 +5019,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			t.element.update();
 
 			t.isMenuVisible = 1;
-			t.mouseClickFunc = Event.add(co, t.fixIE ? 'mousedown' : 'click', function(e) {
+			t.mouseClickFunc = Event.add(co, 'click', function(e) {
 				var m;
 
 				e = e.target;
@@ -5035,22 +5032,15 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 					dm = t;
 
-					// Wait a while to fix IE bug where it looses the selection if the user clicks on a menu
-					// item when the editor is placed within an frame or iframe
-					DOM.win.setTimeout(function() {
-						while (dm) {
-							if (dm.hideMenu)
-								dm.hideMenu();
+					while (dm) {
+						if (dm.hideMenu)
+							dm.hideMenu();
 
-							dm = dm.settings.parent;
-						}
-					}, 0);
+						dm = dm.settings.parent;
+					}
 
-					// Yield on IE to prevent loosing image focus when context menu is used
-					window.setTimeout(function() {
-						if (m.settings.onclick)
-							m.settings.onclick(e);
-					}, 0);
+					if (m.settings.onclick)
+						m.settings.onclick(e);
 
 					return Event.cancel(e); // Cancel to fix onbeforeunload problem
 				}
@@ -5096,7 +5086,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				return;
 
 			Event.remove(co, 'mouseover', t.mouseOverFunc);
-			Event.remove(co, t.fixIE ? 'mousedown' : 'click', t.mouseClickFunc);
+			Event.remove(co, 'click', t.mouseClickFunc);
 			Event.remove(co, 'keydown', t._keyHandler);
 			DOM.hide(co);
 			t.isMenuVisible = 0;
@@ -7270,7 +7260,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (o.terminate)
 				return false;
 
-			// Comamnd callback
+			// Command callback
 			if (t.execCallback('execcommand_callback', t.id, t.selection.getNode(), cmd, ui, val)) {
 				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return true;
@@ -10136,10 +10126,7 @@ tinymce.create('tinymce.UndoManager', {
 				c.onShowMenu.add(function() {
 					var s = ed.selection, n = s.getNode();
 
-					if (n.nodeName == 'IMG')
-						bm = s.getBookmark();
-					else
-						bm = 0;
+					bm = s.getBookmark(1);
 				});
 
 				c.onHideMenu.add(function() {

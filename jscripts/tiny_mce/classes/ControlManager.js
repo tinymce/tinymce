@@ -179,10 +179,7 @@
 				c.onShowMenu.add(function() {
 					var s = ed.selection, n = s.getNode();
 
-					if (n.nodeName == 'IMG')
-						bm = s.getBookmark();
-					else
-						bm = 0;
+					bm = s.getBookmark(1);
 				});
 
 				c.onHideMenu.add(function() {
