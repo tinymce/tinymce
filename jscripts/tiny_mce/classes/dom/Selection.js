@@ -277,7 +277,7 @@
 						return d;
 					}
 
-					p += (n.nodeValue || '').length;
+					p += trimNl(n.nodeValue || '').length;
 				}
 
 				return null;

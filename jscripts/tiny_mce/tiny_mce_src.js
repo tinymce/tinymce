@@ -2957,7 +2957,7 @@ tinymce.create('static tinymce.util.XHR', {
 						return d;
 					}
 
-					p += (n.nodeValue || '').length;
+					p += trimNl(n.nodeValue || '').length;
 				}
 
 				return null;
