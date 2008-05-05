@@ -29,7 +29,7 @@
 		 * @param {Object} s Optional scope for the callback execution.
 		 */
 		load : function(u, cb, s) {
-			var doc, t, w = window;
+			var doc, t, w = window, c = 0;
 
 			s = s || this;
 
@@ -40,12 +40,14 @@
 
 				// Wait for response
 				if (doc.async) {
-					t = w.setInterval(function() {
-						if (doc.readyState == 4 || c++ > 10000) {
-							w.clearInterval(t);
-							cb.call(s, doc);
-						}
-					}, 10);
+					function check() {
+						if (doc.readyState == 4 || c++ > 10000)
+							return cb.call(s, doc);
+
+						w.setTimeout(check, 10);
+					};
+
+					t = w.setTimeout(check, 10);
 				}
 
 				doc.load(u);
