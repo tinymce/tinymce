@@ -891,7 +891,7 @@
 			t.addValidChildRules(s.valid_child_elements);
 
 			if (s.invalid_elements)
-				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(',', '|').toLowerCase()) + ')$');
+				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(/,/g, '|').toLowerCase()) + ')$');
 
 			if (s.attrib_value_filter)
 				t.attribValueFilter = s.attribValueFilter;
