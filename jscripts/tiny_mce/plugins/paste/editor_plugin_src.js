@@ -155,7 +155,7 @@
 					}
 				} 
 			
-				this.editor.execCommand("mceInsertRawHTML", false, content); 
+				this.editor.execCommand("mceInsertRawHTML", false, this.editor.dom.encode(content)); 
 			}
 		},
 
