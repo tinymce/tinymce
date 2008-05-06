@@ -65,8 +65,7 @@
 					s.dialogWidth = s.width + 'px';
 					s.dialogHeight = s.height + 'px';
 					s.scroll = s.scrollbars || false;
-				} else
-					s.modal = s.alwaysRaised = s.dialog = s.centerscreen = s.dependent = true;
+				}
 			}
 
 			// Build features string

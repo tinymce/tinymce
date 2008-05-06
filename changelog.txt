@@ -5,6 +5,8 @@ Version 3.0.9 (2008-05-xx)
 	Fixed bug where the store/restore of a selection didn't work correctly in non IE browsers.
 	Fixed bug where only the first element would be invalid for the invalid_elements option.
 	Fixed bug where paste as plain text didn't encode the characters correctly when they where inserted.
+	Fixed bug where HTML source window couldn't be maximized on Gecko when the maximizable feature was enabled.
+	Fixed bug where color selection using the color picker could produce exception in IE.
 Version 3.0.8 (2008-04-30)
 	Fixed bug where IE would produce an error if textareas without names where converted.
 	Fixed bug where editor wasn't forced empty when there was only a single br or empty paragraph left.

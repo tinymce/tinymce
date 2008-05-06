@@ -5726,6 +5726,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				default_color : '#888888'
 			}, t.settings);
 
+			t.onShowMenu = new tinymce.util.Dispatcher(t);
+			t.onHideMenu = new tinymce.util.Dispatcher(t);
+
 			t.value = s.default_color;
 		},
 
@@ -5765,6 +5768,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
 			}
 
+			t.onShowMenu.dispatch(t);
+
 			t.isMenuVisible = 1;
 		},
 
@@ -5781,6 +5786,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
 				DOM.hide(t.id + '_menu');
 			}
+
+			t.onHideMenu.dispatch(t);
 
 			t.isMenuVisible = 0;
 		},
@@ -10275,7 +10282,7 @@ tinymce.create('tinymce.UndoManager', {
 		},
 
 		createColorSplitButton : function(id, s, cc) {
-			var t = this, ed = t.editor, cmd, c, cls;
+			var t = this, ed = t.editor, cmd, c, cls, bm;
 
 			if (t.get(id))
 				return null;
@@ -10312,6 +10319,20 @@ tinymce.create('tinymce.UndoManager', {
 			ed.onRemove.add(function() {
 				c.destroy();
 			});
+
+			// Fix for bug #1897785, #1898007
+			if (tinymce.isIE) {
+				c.onShowMenu.add(function() {
+					var s = ed.selection, n = s.getNode();
+
+					bm = s.getBookmark(1);
+				});
+
+				c.onHideMenu.add(function() {
+					if (bm)
+						ed.selection.moveToBookmark(bm);
+				});
+			}
 
 			return t.add(c);
 		},
@@ -10392,8 +10413,7 @@ tinymce.create('tinymce.UndoManager', {
 					s.dialogWidth = s.width + 'px';
 					s.dialogHeight = s.height + 'px';
 					s.scroll = s.scrollbars || false;
-				} else
-					s.modal = s.alwaysRaised = s.dialog = s.centerscreen = s.dependent = true;
+				}
 			}
 
 			// Build features string

@@ -369,7 +369,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createColorSplitButton : function(id, s, cc) {
-			var t = this, ed = t.editor, cmd, c, cls;
+			var t = this, ed = t.editor, cmd, c, cls, bm;
 
 			if (t.get(id))
 				return null;
@@ -406,6 +406,20 @@
 			ed.onRemove.add(function() {
 				c.destroy();
 			});
+
+			// Fix for bug #1897785, #1898007
+			if (tinymce.isIE) {
+				c.onShowMenu.add(function() {
+					var s = ed.selection, n = s.getNode();
+
+					bm = s.getBookmark(1);
+				});
+
+				c.onHideMenu.add(function() {
+					if (bm)
+						ed.selection.moveToBookmark(bm);
+				});
+			}
 
 			return t.add(c);
 		},

@@ -32,6 +32,9 @@
 				default_color : '#888888'
 			}, t.settings);
 
+			t.onShowMenu = new tinymce.util.Dispatcher(t);
+			t.onHideMenu = new tinymce.util.Dispatcher(t);
+
 			t.value = s.default_color;
 		},
 
@@ -79,6 +82,8 @@
 				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
 			}
 
+			t.onShowMenu.dispatch(t);
+
 			t.isMenuVisible = 1;
 		},
 
@@ -101,6 +106,8 @@
 				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
 				DOM.hide(t.id + '_menu');
 			}
+
+			t.onHideMenu.dispatch(t);
 
 			t.isMenuVisible = 0;
 		},
