@@ -177,9 +177,7 @@
 			// Fix for bug #1897785, #1898007
 			if (tinymce.isIE) {
 				c.onShowMenu.add(function() {
-					var s = ed.selection, n = s.getNode();
-
-					bm = s.getBookmark(1);
+					bm = ed.selection.getBookmark(1);
 				});
 
 				c.onHideMenu.add(function() {
@@ -410,9 +408,7 @@
 			// Fix for bug #1897785, #1898007
 			if (tinymce.isIE) {
 				c.onShowMenu.add(function() {
-					var s = ed.selection, n = s.getNode();
-
-					bm = s.getBookmark(1);
+					bm = ed.selection.getBookmark(1);
 				});
 
 				c.onHideMenu.add(function() {

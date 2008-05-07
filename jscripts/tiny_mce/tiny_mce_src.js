@@ -2785,19 +2785,17 @@ tinymce.create('static tinymce.util.XHR', {
 
 			s.getInner = true;
 
-			return t.isCollapsed() ? '' : s.format == 'raw' ? e.innerHTML : wb + t.serializer.serialize(e, s) + wa;
+			return t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
 		},
 
 		setContent : function(h, s) {
-			var t = this, r = t.getRng(), d;
+			var t = this, r = t.getRng(), d = t.win.document;
 
 			s = s || {format : 'html'};
 			s.set = true;
 			h = t.dom.processHTML(h);
 
 			if (r.insertNode) {
-				d = t.win.document;
-
 				// Gecko has a bug where if you insert &nbsp; using InsertHTML it will insert a space instead
 				// So we simply check if the input is HTML or text and then insert text using the insertNode method
 				if (tinymce.isGecko && h.indexOf('<') == -1) {
@@ -2819,10 +2817,13 @@ tinymce.create('static tinymce.util.XHR', {
 					r.insertNode(t.getRng().createContextualFragment(h));
 				}
 			} else {
-				if (r.item)
-					r.item(0).outerHTML = h;
-				else
-					r.pasteHTML(h);
+				if (r.item) {
+					// Delete content and get caret text selection
+					d.execCommand('Delete', false, null);
+					r = t.getRng();
+				}
+
+				r.pasteHTML(h);
 			}
 		},
 
@@ -7089,10 +7090,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 		
 		focus : function(sf) {
-			var oed, t = this;
+			var oed, t = this, ce = t.settings.content_editable;
 
 			if (!sf) {
-				t.getWin().focus();
+				if (!ce)
+					t.getWin().focus();
 
 							}
 
@@ -10149,9 +10151,7 @@ tinymce.create('tinymce.UndoManager', {
 			// Fix for bug #1897785, #1898007
 			if (tinymce.isIE) {
 				c.onShowMenu.add(function() {
-					var s = ed.selection, n = s.getNode();
-
-					bm = s.getBookmark(1);
+					bm = ed.selection.getBookmark(1);
 				});
 
 				c.onHideMenu.add(function() {
@@ -10341,9 +10341,7 @@ tinymce.create('tinymce.UndoManager', {
 			// Fix for bug #1897785, #1898007
 			if (tinymce.isIE) {
 				c.onShowMenu.add(function() {
-					var s = ed.selection, n = s.getNode();
-
-					bm = s.getBookmark(1);
+					bm = ed.selection.getBookmark(1);
 				});
 
 				c.onHideMenu.add(function() {

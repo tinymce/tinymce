@@ -90,15 +90,13 @@
 		 * @param {Object} s Optional settings object with for example data format.
 		 */
 		setContent : function(h, s) {
-			var t = this, r = t.getRng(), d;
+			var t = this, r = t.getRng(), d = t.win.document;
 
 			s = s || {format : 'html'};
 			s.set = true;
 			h = t.dom.processHTML(h);
 
 			if (r.insertNode) {
-				d = t.win.document;
-
 				// Gecko has a bug where if you insert &nbsp; using InsertHTML it will insert a space instead
 				// So we simply check if the input is HTML or text and then insert text using the insertNode method
 				if (tinymce.isGecko && h.indexOf('<') == -1) {
@@ -120,10 +118,13 @@
 					r.insertNode(t.getRng().createContextualFragment(h));
 				}
 			} else {
-				if (r.item)
-					r.item(0).outerHTML = h;
-				else
-					r.pasteHTML(h);
+				if (r.item) {
+					// Delete content and get caret text selection
+					d.execCommand('Delete', false, null);
+					r = t.getRng();
+				}
+
+				r.pasteHTML(h);
 			}
 		},
 

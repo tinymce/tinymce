@@ -874,15 +874,16 @@
 		 * @param {bool} sf Skip DOM focus. Just set is as the active editor.
 		 */
 		focus : function(sf) {
-			var oed, t = this;
+			var oed, t = this, ce = t.settings.content_editable;
 
 			if (!sf) {
-				t.getWin().focus();
+				if (!ce)
+					t.getWin().focus();
 
 				// #if contentEditable
 
 				// Content editable mode ends here
-				if (tinymce.isIE && t.settings.content_editable)
+				if (tinymce.isIE && ce)
 					t.getElement().focus();
 
 				// #endif
