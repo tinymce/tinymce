@@ -2785,7 +2785,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 			s.getInner = true;
 
-			return t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
+			return t.isCollapsed() ? '' : s.format == 'raw' ? e.innerHTML : wb + t.serializer.serialize(e, s) + wa;
 		},
 
 		setContent : function(h, s) {
@@ -8553,14 +8553,30 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		FontSize : function(u, v) {
-			var ed = this.editor, s = ed.settings, fz = tinymce.explode(s.font_size_style_values), fzc = tinymce.explode(s.font_size_classes);
+			var ed = this.editor, s = ed.settings, fz = tinymce.explode(s.font_size_style_values), fzc = tinymce.explode(s.font_size_classes), h, bm;
 
+			// Remove style sizes
+			each(ed.dom.select('font'), function(e) {
+				e.style.fontSize = '';
+			});
+
+			// Let the browser add new size it will remove unneded ones in some browsers
 			ed.getDoc().execCommand('FontSize', false, v);
 
 			// Add style values
 			if (s.inline_styles) {
 				each(ed.dom.select('font'), function(e) {
-					if (e.size === v) {
+					// Try remove redundant font elements
+					if (!e.size || e.parentNode.nodeName == 'FONT' && e.size == e.parentNode.size) {
+						if (!bm)
+							bm = ed.selection.getBookmark();
+
+						ed.dom.remove(e, 1);
+						return;
+					}
+
+					// Setup font size based on font size value
+					if (v = e.size) {
 						if (fzc && fzc.length > 0)
 							ed.dom.setAttrib(e, 'class', fzc[parseInt(v) - 1]);
 						else
@@ -8568,6 +8584,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					}
 				});
 			}
+
+			ed.selection.moveToBookmark(bm);
 		},
 
 		queryCommandValue : function(c) {
