@@ -2560,8 +2560,10 @@ tinymce.create('static tinymce.util.XHR', {
 			var t;
 
 			// No need since the document is already loaded
-			if (window.tinyMCE_GZ && tinyMCE_GZ.loaded)
+			if (window.tinyMCE_GZ && tinyMCE_GZ.loaded) {
+				Event.domLoaded = 1;
 				return;
+			}
 
 			if (isIE && document.location.protocol != 'https:') {
 				// Fake DOMContentLoaded on IE
