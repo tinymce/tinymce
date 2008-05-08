@@ -10,6 +10,7 @@ Version 3.0.9 (2008-05-xx)
 	Fixed bug where font size changes could produce produce extra redundant elements.
 	Fixed bug where IE could produce unknown runtime error if you replaced a image with another image from a separate frame.
 	Fixed bug where the domLoaded state for the Event class wasn't set correctly if the editor was loaded dynamically using the gzip compressor.
+	Fixed bug where handling of the base element for a page would produce incorrect urls. Based on a patch contributed by John LeSueur.
 Version 3.0.8 (2008-04-30)
 	Fixed bug where IE would produce an error if textareas without names where converted.
 	Fixed bug where editor wasn't forced empty when there was only a single br or empty paragraph left.

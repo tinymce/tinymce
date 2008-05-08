@@ -7,7 +7,7 @@ var tinymce = {
 	releaseDate : '2008-05-xx',
 
 	_init : function() {
-		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p;
+		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
 
 		// Browser checks
 		t.isOpera = w.opera && opera.buildNumber;
@@ -32,8 +32,13 @@ var tinymce = {
 		// If base element found, add that infront of baseURL
 		nl = d.getElementsByTagName('base');
 		for (i=0; i<nl.length; i++) {
-			if (nl[i].href)
-				base = nl[i].href;
+			if (v = nl[i].href) {
+				// Host only value like http://site.com or http://site.com:8008
+				if (/^https?:\/\/[^\/]+$/.test(v))
+					v += '/';
+
+				base = v ? v.match(/.*\//)[0] : ''; // Get only directory
+			}
 		}
 
 		function getBase(n) {
