@@ -6530,7 +6530,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (s.encoding == 'xml') {
 				t.onGetContent.add(function(ed, o) {
-					if (o.get)
+					if (o.save)
 						o.content = DOM.encode(o.content);
 				});
 			}
@@ -7443,6 +7443,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			o = o || {};
 			o.save = true;
 
+			// Add undo level will trigger onchange event
+			if (!o.no_events) {
+				t.undoManager.typing = 0;
+				t.undoManager.add();
+			}
+
 			o.element = e;
 			h = o.content = t.getContent(o);
 
@@ -7519,8 +7525,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				h = t.getBody().innerHTML;
 
 			h = h.replace(/^\s*|\s*$/g, '');
-			o = {content : h};
-			t.onGetContent.dispatch(t, o);
+			o.content = h;
+
+			if (!o.no_events)
+				t.onGetContent.dispatch(t, o);
 
 			return o.content;
 		},
