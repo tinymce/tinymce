@@ -46,13 +46,13 @@ function insertTable() {
 
 	// Validate table size
 	if (colLimit && cols > colLimit) {
-		alert(inst.getLang('table_col_limit', '', true, {cols : colLimit}));
+		inst.windowManager.alert(inst.getLang('table_dlg.col_limit').replace(/\{\$cols\}/g, colLimit));
 		return false;
 	} else if (rowLimit && rows > rowLimit) {
-		alert(inst.getLang('table_row_limit', '', true, {rows : rowLimit}));
+		inst.windowManager.alert(inst.getLang('table_dlg.row_limit').replace(/\{\$rows\}/g, rowLimit));
 		return false;
 	} else if (cellLimit && cols * rows > cellLimit) {
-		alert(inst.getLang('table_cell_limit', '', true, {cells : cellLimit}));
+		inst.windowManager.alert(inst.getLang('table_dlg.cell_limit').replace(/\{\$cells\}/g, cellLimit));
 		return false;
 	}
 
