@@ -200,10 +200,13 @@
 							// Store selection
 							if (si == -2 && r) {
 								if (!isIE) {
-									so = r.startOffset;
-									eo = r.endOffset;
-									si = t.find(b, 0, r.startContainer);
-									ei = t.find(b, 0, r.endContainer);
+									// If element is inside body, might not be the case in contentEdiable mode
+									if (ed.dom.getParent(r.startContainer, function(e) {return e === b;})) {
+										so = r.startOffset;
+										eo = r.endOffset;
+										si = t.find(b, 0, r.startContainer);
+										ei = t.find(b, 0, r.endContainer);
+									}
 								} else {
 									tr = d.body.createTextRange();
 									tr.moveToElementText(b);
@@ -240,7 +243,7 @@
 			// Restore selection
 			if (si != -2) {
 				if (!isIE) {
-					bl = d.getElementsByTagName(ed.settings.element)[0];
+					bl = b.getElementsByTagName(ed.settings.element)[0];
 					r = d.createRange();
 
 					// Select last location or generated block

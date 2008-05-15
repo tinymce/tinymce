@@ -2260,7 +2260,7 @@ tinymce.create('static tinymce.util.XHR', {
 		run : function(e, f, s) {
 			var t = this, o;
 
-			if (t.doc && typeof(e) === 'string')
+			if (e && t.doc && typeof(e) === 'string')
 				e = t.doc.getElementById(e);
 
 			if (!e)
@@ -7491,7 +7491,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (h.length === 0 || /^\s+$/.test(h))) {
-				o.content = t.dom.setHTML(t.getBody(), '<br mce_bogus="1" />', 1);
+				o.content = t.dom.setHTML(t.getBody(), '<br mce_bogus="1" />');
 				o.format = 'raw';
 			}
 
@@ -7748,14 +7748,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					case 'contextmenu':
 						if (tinymce.isOpera) {
 							// Fake contextmenu on Opera
-							Event.add(t.getDoc(), 'mousedown', function(e) {
+							Event.add(t.getBody(), 'mousedown', function(e) {
 								if (e.ctrlKey) {
 									e.fakeType = 'contextmenu';
 									eventHandler(e);
 								}
 							});
 						} else
-							Event.add(t.getDoc(), k, eventHandler);
+							Event.add(t.getBody(), k, eventHandler);
 						break;
 
 					case 'paste':
@@ -7841,7 +7841,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						} catch (ex) {
 							// Use old method
 							if (!t._isHidden())
-								d.execCommand("useCSS", 0, true);
+								try {d.execCommand("useCSS", 0, true);} catch (ex) {}
 						}
 
 						if (!s.table_inline_editing)
@@ -9693,10 +9693,13 @@ tinymce.create('tinymce.UndoManager', {
 							// Store selection
 							if (si == -2 && r) {
 								if (!isIE) {
-									so = r.startOffset;
-									eo = r.endOffset;
-									si = t.find(b, 0, r.startContainer);
-									ei = t.find(b, 0, r.endContainer);
+									// If element is inside body, might not be the case in contentEdiable mode
+									if (ed.dom.getParent(r.startContainer, function(e) {return e === b;})) {
+										so = r.startOffset;
+										eo = r.endOffset;
+										si = t.find(b, 0, r.startContainer);
+										ei = t.find(b, 0, r.endContainer);
+									}
 								} else {
 									tr = d.body.createTextRange();
 									tr.moveToElementText(b);
@@ -9733,7 +9736,7 @@ tinymce.create('tinymce.UndoManager', {
 			// Restore selection
 			if (si != -2) {
 				if (!isIE) {
-					bl = d.getElementsByTagName(ed.settings.element)[0];
+					bl = b.getElementsByTagName(ed.settings.element)[0];
 					r = d.createRange();
 
 					// Select last location or generated block
