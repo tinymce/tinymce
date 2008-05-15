@@ -6,7 +6,7 @@ function init() {
 	tinyMCEPopup.resizeToInnerSize();
 
 	f.numcols.value = tinyMCEPopup.getWindowArg('numcols', 1);
-	f.numrows.value = tinyMCEPopup.getWindowArg('numcols', 1);
+	f.numrows.value = tinyMCEPopup.getWindowArg('numrows', 1);
 }
 
 function mergeCells() {
