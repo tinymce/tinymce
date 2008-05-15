@@ -1588,7 +1588,7 @@
 		run : function(e, f, s) {
 			var t = this, o;
 
-			if (e && t.doc && typeof(e) === 'string')
+			if (t.doc && typeof(e) === 'string')
 				e = t.doc.getElementById(e);
 
 			if (!e)
