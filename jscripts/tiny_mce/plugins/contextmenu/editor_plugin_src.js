@@ -18,7 +18,7 @@
 			ed.onContextMenu.add(function(ed, e) {
 				if (!e.ctrlKey) {
 					t._getMenu(ed).showMenu(e.clientX, e.clientY);
-					Event.add(document, 'click', hide);
+					Event.add(ed.getDoc(), 'click', hide);
 					Event.cancel(e);
 				}
 			});
@@ -27,7 +27,7 @@
 				if (t._menu) {
 					t._menu.removeAll();
 					t._menu.destroy();
-					Event.remove(document, 'click', hide);
+					Event.remove(ed.getDoc(), 'click', hide);
 				}
 			};
 
@@ -57,10 +57,8 @@
 			p2 = DOM.getPos(ed.getContainer());
 
 			m = ed.controlManager.createDropMenu('contextmenu', {
-				offset_x : p1.x,
-				offset_y : p1.y,
-/*				vp_offset_x : p2.x,
-				vp_offset_y : p2.y,*/
+				offset_x : p1.x + ed.getParam('contextmenu_offset_x', 0),
+				offset_y : p1.y + ed.getParam('contextmenu_offset_y', 0),
 				constrain : 1
 			});
 

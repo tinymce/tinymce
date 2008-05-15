@@ -1075,7 +1075,7 @@ tinymce.create('static tinymce.util.XHR', {
 					}
 
 					each(na.split(','), function(v) {
-						if (n.nodeType == 1 && ((se.strict && n.nodeName.toUpperCase() == v) || n.nodeName == v)) {
+						if (n.nodeType == 1 && ((se.strict && n.nodeName.toUpperCase() == v) || n.nodeName.toUpperCase() == v)) {
 							s = true;
 							return false; // Break loop
 						}
