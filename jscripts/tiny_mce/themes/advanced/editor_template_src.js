@@ -158,7 +158,7 @@
 			return false;
 		},
 
-		_importClasses : function() {
+		_importClasses : function(e) {
 			var ed = this.editor, c = ed.controlManager.get('styleselect');
 
 			if (c.getLength() == 0) {
@@ -188,8 +188,8 @@
 				});
 
 				c.onPostRender.add(function(ed, n) {
-					Event.add(n, 'focus', t._importClasses, t);
-					Event.add(n, 'mousedown', t._importClasses, t);
+					Event.add(n.id + '_text', 'focus', t._importClasses, t);
+					Event.add(n.id + '_text', 'mousedown', t._importClasses, t);
 				});
 			}
 

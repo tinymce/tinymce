@@ -1,6 +1,8 @@
 Version 3.0.9 (2008-05-xx)
 	Added new contextmenu_offset_x/contextmenu_offset_y options for the contextmenu plugin.
 	Added cite attribute to the default rule for the blockquote element.
+	Added support for using arrow keys for selection of items in listboxes.
+	Added support for using arrow keys for selection of items in dropmenus.
 	Fixed bug where XHR synchronous mode didn't execute the callback handlers synchronously.
 	Fixed bug where setting border to 0 didn't add border: 0 to the style attribute when using the advimage dialog.
 	Fixed bug where the selection of images and table cells didn't work correctly when the editor is placed in a frame and running on IE.

@@ -202,6 +202,7 @@
 			if (s.keyboard_focus) {
 				Event.add(co, 'keydown', t._keyHandler, t);
 				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
+				t._focusIdx = 0;
 			}
 		},
 
@@ -318,9 +319,32 @@
 		// Internal functions
 
 		_keyHandler : function(e) {
-			// Accessibility feature
-			if (e.keyCode == 27)
-				this.hideMenu();
+			var t = this, kc = e.keyCode;
+
+			function focus(d) {
+				var i = t._focusIdx + d, e = DOM.select('a', 'menu_' + t.id)[i];
+
+				if (e) {
+					t._focusIdx = i;
+					e.focus();
+				}
+			};
+
+			switch (kc) {
+				case 38:
+					focus(-1); // Select first link
+					return;
+
+				case 40:
+					focus(1);
+					return;
+
+				case 13:
+					return;
+
+				case 27:
+					return this.hideMenu();
+			}
 		},
 
 		_add : function(tb, o) {

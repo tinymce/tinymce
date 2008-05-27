@@ -5084,6 +5084,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			if (s.keyboard_focus) {
 				Event.add(co, 'keydown', t._keyHandler, t);
 				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
+				t._focusIdx = 0;
 			}
 		},
 
@@ -5172,9 +5173,32 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		// Internal functions
 
 		_keyHandler : function(e) {
-			// Accessibility feature
-			if (e.keyCode == 27)
-				this.hideMenu();
+			var t = this, kc = e.keyCode;
+
+			function focus(d) {
+				var i = t._focusIdx + d, e = DOM.select('a', 'menu_' + t.id)[i];
+
+				if (e) {
+					t._focusIdx = i;
+					e.focus();
+				}
+			};
+
+			switch (kc) {
+				case 38:
+					focus(-1); // Select first link
+					return;
+
+				case 40:
+					focus(1);
+					return;
+
+				case 13:
+					return;
+
+				case 27:
+					return this.hideMenu();
+			}
 		},
 
 		_add : function(tb, o) {
@@ -5352,7 +5376,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			m = t.menu;
 			m.settings.offset_x = p2.x;
 			m.settings.offset_y = p2.y;
-			m.settings.keyboard_focus = t._focused;
+			m.settings.keyboard_focus = 1;
 
 			// Select in menu
 			if (t.oldID)
@@ -5369,6 +5393,8 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			DOM.addClass(t.id, t.classPrefix + 'Selected');
+
+			//DOM.get(t.id + '_text').focus();
 		},
 
 		hideMenu : function(e) {
@@ -5422,8 +5448,40 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var t = this, cp = t.classPrefix;
 
 			Event.add(t.id, 'click', t.showMenu, t);
-			Event.add(t.id + '_text', 'focus', function() {t._focused = 1;});
-			Event.add(t.id + '_text', 'blur', function() {t._focused = 0;});
+			Event.add(t.id + '_text', 'focus', function(e) {
+				if (!t._focused) {
+					t.keyDownHandler = Event.add(t.id + '_text', 'keydown', function(e) {
+						var idx = -1, v, kc = e.keyCode;
+
+						// Find current index
+						each(t.items, function(v, i) {
+							if (t.selectedValue == v.value)
+								idx = i;
+						});
+
+						// Move up/down
+						if (kc == 38)
+							v = t.items[idx - 1];
+						else if (kc == 40)
+							v = t.items[idx + 1];
+						else if (kc == 13) {
+							// Fake select on enter
+							v = t.selectedValue;
+							t.selectedValue = null; // Needs to be null to fake change
+							t.settings.onselect(v);
+							return Event.cancel(e);
+						}
+
+						if (v) {
+							t.hideMenu();
+							t.select(v.value);
+						}
+					});
+				}
+
+				t._focused = 1;
+			});
+			Event.add(t.id + '_text', 'blur', function() {Event.remove(t.id + '_text', 'keydown', t.keyDownHandler); t._focused = 0;});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
