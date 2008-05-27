@@ -5376,7 +5376,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			m = t.menu;
 			m.settings.offset_x = p2.x;
 			m.settings.offset_y = p2.y;
-			m.settings.keyboard_focus = 1;
+			m.settings.keyboard_focus = !tinymce.isOpera; // Opera is buggy when it comes to auto focus
 
 			// Select in menu
 			if (t.oldID)
@@ -9099,12 +9099,28 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		FormatBlock : function(ui, val) {
-			var t = this, ed = t.editor;
+			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bl, nb, b;
+
+			bl = dom.getParent(s.getNode(), function(n) {
+				return /^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(n.nodeName);
+			});
+
+			if (bl) {
+				// Rename block element
+				nb = ed.dom.create(val);
+
+				each(dom.getAttribs(bl), function(v) {
+					dom.setAttrib(nb, v.nodeName, dom.getAttrib(bl, v.nodeName));
+				});
+
+				b = s.getBookmark();
+				dom.replace(nb, bl, 1);
+				s.moveToBookmark(b);
+				ed.nodeChanged();
+				return;
+			}
 
 			val = ed.settings.forced_root_block ? (val || '<p>') : val;
-
-			if (/^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(ed.selection.getNode().nodeName))
-				t.mceRemoveNode();
 
 			if (val.indexOf('<') == -1)
 				val = '<' + val + '>';

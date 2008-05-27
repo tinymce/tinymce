@@ -142,7 +142,7 @@
 			m = t.menu;
 			m.settings.offset_x = p2.x;
 			m.settings.offset_y = p2.y;
-			m.settings.keyboard_focus = 1;
+			m.settings.keyboard_focus = !tinymce.isOpera; // Opera is buggy when it comes to auto focus
 
 			// Select in menu
 			if (t.oldID)

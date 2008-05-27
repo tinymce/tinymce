@@ -676,7 +676,7 @@
 								var cpos = getCellPos(grid, tdElm);
 
 								// Only one row, remove whole table
-								if (grid.length == 1) {
+								if (grid.length == 1 && tableElm.nodeName == 'TBODY') {
 									inst.dom.remove(inst.dom.getParent(tableElm, "table"));
 									return true;
 								}
@@ -799,7 +799,7 @@
 								var lastTDElm = null;
 
 								// Only one col, remove whole table
-								if (grid.length > 1 && grid[0].length <= 1) {
+								if ((grid.length > 1 && grid[0].length <= 1) && tableElm.nodeName == 'TBODY') {
 									inst.dom.remove(inst.dom.getParent(tableElm, "table"));
 									return true;
 								}
