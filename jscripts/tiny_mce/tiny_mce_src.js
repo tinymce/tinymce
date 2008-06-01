@@ -9100,23 +9100,30 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		FormatBlock : function(ui, val) {
 			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bl, nb, b;
 
-			bl = dom.getParent(s.getNode(), function(n) {
-				return /^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(n.nodeName);
-			});
+			// IE has an issue where it removes the parent div if you change format on the paragrah in <div><p>Content</p></div>
+			if (tinymce.isIE) {
+				function isBlock(n) {
+					return /^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(n.nodeName);
+				};
 
-			if (bl) {
-				// Rename block element
-				nb = ed.dom.create(val);
-
-				each(dom.getAttribs(bl), function(v) {
-					dom.setAttrib(nb, v.nodeName, dom.getAttrib(bl, v.nodeName));
+				bl = dom.getParent(s.getNode(), function(n) {
+					return isBlock(n);
 				});
 
-				b = s.getBookmark();
-				dom.replace(nb, bl, 1);
-				s.moveToBookmark(b);
-				ed.nodeChanged();
-				return;
+				if (bl && isBlock(bl.parentNode)) {
+					// Rename block element
+					nb = ed.dom.create(val);
+
+					each(dom.getAttribs(bl), function(v) {
+						dom.setAttrib(nb, v.nodeName, dom.getAttrib(bl, v.nodeName));
+					});
+
+					b = s.getBookmark();
+					dom.replace(nb, bl, 1);
+					s.moveToBookmark(b);
+					ed.nodeChanged();
+					return;
+				}
 			}
 
 			val = ed.settings.forced_root_block ? (val || '<p>') : val;
