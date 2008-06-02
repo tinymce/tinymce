@@ -4,7 +4,7 @@
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '0.9',
-	releaseDate : '2008-05-xx',
+	releaseDate : '2008-05-02',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -2323,7 +2323,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 		_isRes : function(c) {
 			// Is live resizble element
-			return /^(top|left|bottom|right|width|height)/i.test(c) || /[;\s]*(top|left|bottom|right|width|height)/i.test(c);
+			return /^(top|left|bottom|right|width|height)/i.test(c) || /;\s*(top|left|bottom|right|width|height)/i.test(c);
 		}
 
 		/*
@@ -9103,17 +9103,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		FormatBlock : function(ui, val) {
 			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bl, nb, b;
 
+			function isBlock(n) {
+				return /^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(n.nodeName);
+			};
+
+			bl = dom.getParent(s.getNode(), function(n) {
+				return isBlock(n);
+			});
+
 			// IE has an issue where it removes the parent div if you change format on the paragrah in <div><p>Content</p></div>
-			if (tinymce.isIE) {
-				function isBlock(n) {
-					return /^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(n.nodeName);
-				};
-
-				bl = dom.getParent(s.getNode(), function(n) {
-					return isBlock(n);
-				});
-
-				if (bl && isBlock(bl.parentNode)) {
+			// FF and Opera doesn't change parent DIV elements if you switch format
+			if (bl) {
+				if ((isIE && isBlock(bl.parentNode)) || bl.nodeName == 'DIV') {
 					// Rename block element
 					nb = ed.dom.create(val);
 

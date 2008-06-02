@@ -665,17 +665,18 @@
 		FormatBlock : function(ui, val) {
 			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bl, nb, b;
 
+			function isBlock(n) {
+				return /^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(n.nodeName);
+			};
+
+			bl = dom.getParent(s.getNode(), function(n) {
+				return isBlock(n);
+			});
+
 			// IE has an issue where it removes the parent div if you change format on the paragrah in <div><p>Content</p></div>
-			if (tinymce.isIE) {
-				function isBlock(n) {
-					return /^(P|DIV|H[1-6]|ADDRESS|BLOCKQUOTE|PRE)$/.test(n.nodeName);
-				};
-
-				bl = dom.getParent(s.getNode(), function(n) {
-					return isBlock(n);
-				});
-
-				if (bl && isBlock(bl.parentNode)) {
+			// FF and Opera doesn't change parent DIV elements if you switch format
+			if (bl) {
+				if ((isIE && isBlock(bl.parentNode)) || bl.nodeName == 'DIV') {
 					// Rename block element
 					nb = ed.dom.create(val);
 

@@ -1657,7 +1657,7 @@
 
 		_isRes : function(c) {
 			// Is live resizble element
-			return /^(top|left|bottom|right|width|height)/i.test(c) || /[;\s]*(top|left|bottom|right|width|height)/i.test(c);
+			return /^(top|left|bottom|right|width|height)/i.test(c) || /;\s*(top|left|bottom|right|width|height)/i.test(c);
 		}
 
 		/*
