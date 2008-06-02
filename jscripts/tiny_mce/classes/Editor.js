@@ -183,7 +183,7 @@
 				});
 			}
 
-			if (s.add_unload_trigger) {
+			if (s.add_unload_trigger && !s.ask) {
 				t._beforeUnload = tinyMCE.onBeforeUnload.add(function() {
 					if (t.initialized && !t.destroyed && !t.isHidden())
 						t.save({format : 'raw', no_events : true});
@@ -242,12 +242,15 @@
 				sl.loadQueue(function() {
 					if (s.ask) {
 						function ask() {
-							t.windowManager.confirm(t.getLang('edit_confirm'), function(s) {
-								if (s)
-									t.init();
-								else
-									Event.remove(t.id, 'focus', ask);
-							});
+							// Yield for awhile to avoid focus bug on FF 3 when cancel is pressed
+							window.setTimeout(function() {
+								Event.remove(t.id, 'focus', ask);
+
+								t.windowManager.confirm(t.getLang('edit_confirm'), function(s) {
+									if (s)
+										t.init();
+								});
+							}, 0);
 						};
 
 						Event.add(t.id, 'focus', ask);
