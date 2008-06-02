@@ -28,6 +28,7 @@ Version 3.0.9 (2008-05-xx)
 	Fixed bug where dragging layers didn't work as expected since it would snap back to it's original location if you saved.
 	Fixed bug where the description of the template plugin dialog wasn't updated correctly.
 	Fixed bug where the values for frame and rules in the table dialogs where swapped.
+	Fixed bug where the elements like ins, del, cite, acronym and abbr didn't have the default editing style as the old 2.x branch.
 	Fixed so the onGetContent event gets the full pass through object just like the other events.
 	Fixed so attributes for block elements remains the same when you change format of a element.
 Version 3.0.8 (2008-04-30)
