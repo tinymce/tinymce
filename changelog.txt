@@ -1,3 +1,5 @@
+Version 3.0.9.1 (2008-06-03)
+	Fixed bug where the paste as text didn't work correctly it encoded produced paragraphs and br elements.
 Version 3.0.9 (2008-06-02)
 	Added new contextmenu_offset_x/contextmenu_offset_y options for the contextmenu plugin.
 	Added cite attribute to the default rule for the blockquote element.

@@ -103,7 +103,9 @@
 			return Event.cancel(e);
 		},
 
-		_insertText : function(content, bLinebreaks) { 
+		_insertText : function(content, bLinebreaks) {
+			content = this.editor.dom.encode(content);
+
 			if (content && content.length > 0) {
 				if (bLinebreaks) { 
 					// Special paragraph treatment 
@@ -154,8 +156,8 @@
 						content = content.replace(/\n/g, '<br />');
 					}
 				} 
-			
-				this.editor.execCommand("mceInsertRawHTML", false, this.editor.dom.encode(content)); 
+
+				this.editor.execCommand("mceInsertRawHTML", false, content); 
 			}
 		},
 
