@@ -1247,12 +1247,19 @@
 
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
-				// Wrap scripts in comments for serialization purposes
-				if (h.indexOf('<script') !== -1) {
+				// Wrap scripts and styles in comments for serialization purposes
+				if (/<script|style/.test(h)) {
+					// Preserve script elements
 					h = h.replace(/<script>/g, '<script type="text/javascript">');
 					h = h.replace(/<script(|[^>]+)>(\s*<!--|\/\/\s*<\[CDATA\[)?[\r\n]*/g, '<mce:script$1><!--\n');
 					h = h.replace(/\s*(\/\/\s*-->|\/\/\s*]]>)?<\/script>/g, '\n// --></mce:script>');
 					h = h.replace(/<mce:script(|[^>]+)><!--\n\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+
+					// Preserve style elements
+					h = h.replace(/<style([^>]+|)>([.\s\S]*?)<\/style>/g, function(v, a, b) {
+						b = b.replace(/<!--[\r\n]*|[\r\n]*-->/g, '');
+						return '<mce:style' + a + '><!--\n' + b + '\n--></mce:style><style' + a + ' mce_bogus="1">' + b + '</style>';
+					});
 				}
 
 				// Process all tags with src, href or style
@@ -1448,7 +1455,7 @@
 
 			n = n.nodeName || n;
 
-			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
+			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
 
 		// #if !jquery

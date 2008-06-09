@@ -18,6 +18,9 @@ var unitTester = new tinymce.util.UnitTester('log', {
 		flash : function() {
 			var t = this;
 
+			editor.setContent('<object width="425" height="355"><param name="movie" value="someurl"></param><param name="wmode" value="transparent"></param><embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355" /></object>');
+			t.eq(editor.getContent(), '<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="wmode" value="transparent" /><param name="src" value="someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="someurl" wmode="transparent"></embed></object></p>');
+
 			editor.setContent('<object width="425" height="355"><param name="movie" value="someurl"></param><param name="wmode" value="transparent"></param><embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355"></embed></object>');
 			t.eq(editor.getContent(), '<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="wmode" value="transparent" /><param name="src" value="someurl" /><embed type="application/x-shockwave-flash" width="425" height="355" src="someurl" wmode="transparent"></embed></object></p>');
 

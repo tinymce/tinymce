@@ -955,6 +955,10 @@
 			DOM.setHTML('test', 'test1<prefix:test>Test</prefix:test>test2');
 			t.eq(ser.serialize(DOM.get('test')), '<div id="test">test1<prefix:test>Test</prefix:test>test2</div>');
 
+			ser.setRules('style');
+			DOM.setHTML('test', '<style> body { background:#fff }</style>');
+			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<style><!--\n body { background:#fff }\n--></style>');
+
 			ser.setRules('script[type|language|src]');
 			DOM.setHTML('test', '<script>var a = b < c1;</script>');
 			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c1;\n// --></script>');
