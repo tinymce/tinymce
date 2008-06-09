@@ -3,6 +3,8 @@ Version 3.0.9.1 (2008-06-09)
 	Fixed bug where embed element in XHTML style didn't work correctly in the media plugin.
 	Fixed bug where style elements was forced empty in IE. The will now be wrapped in a comment just like script elements.
 	Fixed bug where some script elements wrapped in CDATA could fail to be serialized correctly.
+	Fixed bug where FF 3 produced -moz- internal styles in some style attributes.
+	Fixed bug where query strings and external URLs didn't work correctly in style attributes.
 	Removed redundant form element name matching from regexp in the DOMUtils class.
 Version 3.0.9 (2008-06-02)
 	Added new contextmenu_offset_x/contextmenu_offset_y options for the contextmenu plugin.

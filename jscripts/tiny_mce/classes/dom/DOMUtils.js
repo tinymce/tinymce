@@ -904,10 +904,13 @@
 				delete o[c];
 			};
 
+			st = st.replace(/&([^;]+);/g, '&$1¤SEMI¤'); // Protect entities
+
 			each(st.split(';'), function(v) {
 				var sv, ur = [];
 
 				if (v) {
+					v = v.replace(/¤SEMI¤/g, ';'); // Restore entities
 					v = v.replace(/url\([^\)]+\)/g, function(v) {ur.push(v);return 'url(' + ur.length + ')';});
 					v = v.split(':');
 					sv = tinymce.trim(v[1]);
@@ -919,7 +922,7 @@
 
 					if (s.url_converter) {
 						sv = sv.replace(/url\([\'\"]?([^\)\'\"]+)[\'\"]?\)/g, function(x, c) {
-							return 'url(' + t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), 'style', null)) + ')';
+							return 'url(' + s.url_converter.call(s.url_converter_scope || t, t.decode(c), 'style', null) + ')';
 						});
 					}
 
@@ -955,6 +958,9 @@
 
 			each(o, function(v, k) {
 				if (k && v) {
+					if (tinymce.isGecko && k.indexOf('-moz-') === 0)
+						return;
+
 					switch (k) {
 						case 'color':
 						case 'background-color':
