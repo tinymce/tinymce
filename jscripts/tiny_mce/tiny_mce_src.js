@@ -1987,15 +1987,35 @@ tinymce.create('static tinymce.util.XHR', {
 			if (s.keep_values) {
 				// Wrap scripts and styles in comments for serialization purposes
 				if (/<script|style/.test(h)) {
+					function trim(s) {
+						// Remove prefix and suffix code for element
+						s = s.replace(/^[\r\n]*|[\r\n]*$/g, '');
+						s = s.replace(/^\s*(\/\/\s*<!--|\/\/\s*<\[CDATA\[|<!--|<\[CDATA\[)[\r\n]*/g, '');
+						s = s.replace(/\s*(\/\/\s*\]\]>|\/\/\s*-->|\]\]>|-->)\s*$/g, '');
+
+						return s;
+					};
+
 					// Preserve script elements
-					h = h.replace(/<script>/g, '<script type="text/javascript">');
-					h = h.replace(/<script(|[^>]+)>(\s*<!--|\/\/\s*<\[CDATA\[)?[\r\n]*/g, '<mce:script$1><!--\n');
-					h = h.replace(/\s*(\/\/\s*-->|\/\/\s*]]>)?<\/script>/g, '\n// --></mce:script>');
-					h = h.replace(/<mce:script(|[^>]+)><!--\n\/\/ --><\/mce:script>/g, '<mce:script$1></mce:script>');
+					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/g, function(v, a, b) {
+						// Remove prefix and suffix code for script element
+						b = trim(b);
+
+						// Force type attribute
+						if (!a)
+							a = ' type="text/javascript"';
+
+						// Wrap contents in a comment
+						if (b)
+							b = '<!--\n' + b + '\n// -->';
+
+						// Output fake element
+						return '<mce:script' + a + '>' + b + '</mce:script>';
+					});
 
 					// Preserve style elements
-					h = h.replace(/<style([^>]+|)>([.\s\S]*?)<\/style>/g, function(v, a, b) {
-						b = b.replace(/<!--[\r\n]*|[\r\n]*-->/g, '');
+					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/g, function(v, a, b) {
+						b = trim(b);
 						return '<mce:style' + a + '><!--\n' + b + '\n--></mce:style><style' + a + ' mce_bogus="1">' + b + '</style>';
 					});
 				}
