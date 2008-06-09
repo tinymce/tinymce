@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '0.9',
-	releaseDate : '2008-06-02',
+	minorVersion : '1.0',
+	releaseDate : '2008-06-xx',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -1492,6 +1492,10 @@ tinymce.create('static tinymce.util.XHR', {
 						}
 
 						break;
+					
+					case "shape":
+						e.setAttribute('mce_style', v);
+						break;
 				}
 
 				if (is(v) && v !== null && v.length !== 0)
@@ -1525,7 +1529,7 @@ tinymce.create('static tinymce.util.XHR', {
 				dv = "";
 
 			// Try the mce variant for these
-			if (/^(src|href|style|coords)$/.test(n)) {
+			if (/^(src|href|style|coords|shape)$/.test(n)) {
 				v = e.getAttribute("mce_" + n);
 
 				if (v)
@@ -2027,7 +2031,7 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 
 				// Process all tags with src, href or style
-				h = h.replace(/<([\w:]+) [^>]*(src|href|style|coords)[^>]*>/gi, function(a, n) {
+				h = h.replace(/<([\w:]+) [^>]*(src|href|style|shape|coords)[^>]*>/gi, function(a, n) {
 					function handle(m, b, c) {
 						var u = c;
 
@@ -2055,7 +2059,7 @@ tinymce.create('static tinymce.util.XHR', {
 									return 'url(' + t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n)) + ')';
 								});
 							}
-						} else if (b != 'coords') {
+						} else if (b != 'coords' && b != 'shape') {
 							if (s.url_converter)
 								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));
 						}
@@ -2063,10 +2067,10 @@ tinymce.create('static tinymce.util.XHR', {
 						return ' ' + b + '="' + c + '" mce_' + b + '="' + u + '"';
 					};
 
-					a = a.replace(/ (src|href|style|coords)=[\"]([^\"]+)[\"]/gi, handle); // W3C
-					a = a.replace(/ (src|href|style|coords)=[\']([^\']+)[\']/gi, handle); // W3C
+					a = a.replace(/ (src|href|style|coords|shape)=[\"]([^\"]+)[\"]/gi, handle); // W3C
+					a = a.replace(/ (src|href|style|coords|shape)=[\']([^\']+)[\']/gi, handle); // W3C
 
-					return a.replace(/ (src|href|style|coords)=([^\s\"\'>]+)/gi, handle); // IE
+					return a.replace(/ (src|href|style|coords|shape)=([^\s\"\'>]+)/gi, handle); // IE
 				});
 			}
 
@@ -6839,7 +6843,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (h < 100)
 				h = 100;
 
-			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '"></base>';
+			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml"><base href="' + t.documentBaseURI.getURI() + '" />';
 			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 			if (tinymce.relaxedDomain)
@@ -7193,7 +7197,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var oed, t = this, ce = t.settings.content_editable;
 
 			if (!sf) {
-				if (!ce)
+				// Is not content editable or the selection is outside the area in IE
+				// the IE statement is needed to avoid bluring if element selections inside layers since
+				// the layer is like it's own document in IE
+				if (!ce && (isIE && t.selection.getNode().ownerDocument != t.getDoc()))
 					t.getWin().focus();
 
 							}
