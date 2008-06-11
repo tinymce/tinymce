@@ -908,13 +908,13 @@
 				delete o[c];
 			};
 
-			st = st.replace(/&([^;]+);/g, '&$1¤SEMI¤'); // Protect entities
+			st = st.replace(/&(#?[a-z0-9]+);/g, '&$1_MCE_SEMI_'); // Protect entities
 
 			each(st.split(';'), function(v) {
 				var sv, ur = [];
 
 				if (v) {
-					v = v.replace(/¤SEMI¤/g, ';'); // Restore entities
+					v = v.replace(/_MCE_SEMI_/g, ';'); // Restore entities
 					v = v.replace(/url\([^\)]+\)/g, function(v) {ur.push(v);return 'url(' + ur.length + ')';});
 					v = v.split(':');
 					sv = tinymce.trim(v[1]);

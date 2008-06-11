@@ -206,7 +206,7 @@
 			if (s.inline_styles) {
 				each(ed.dom.select('font'), function(e) {
 					// Try remove redundant font elements
-					if (!e.size || e.parentNode.nodeName == 'FONT' && e.size == e.parentNode.size) {
+					if (e.parentNode.nodeName == 'FONT' && e.size == e.parentNode.size) {
 						if (!bm)
 							bm = ed.selection.getBookmark();
 

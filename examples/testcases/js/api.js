@@ -335,6 +335,11 @@
 				'background: transparent url(Xtest.gifY);'
 			);
 
+			t.eq(
+				dom.serializeStyle(dom.parseStyle('background: transparent url(http://www.site.com/test.gif?a=1&b=2);')),
+				'background: transparent url(Xhttp://www.site.com/test.gif?a=1&b=2Y);'
+			);
+
 			dom.setHTML('test', '<span id="test2" style="border: 1px solid #00ff00;"></span>');
 			t.eq(dom.getAttrib('test2', 'style'), 'border: 1px solid #00ff00;');
 

@@ -8,6 +8,7 @@ Version 3.1.0 (2008-06-xx)
 	Fixed bug where shape attribute of area elements got serialized as rect regardless of it's initial value in IE 6.
 	Fixed bug where selection of elements inside layers would fail in IE since focus was moved to the document body.
 	Fixed bug where pressing enter/return in an editable select box would produce an __mce_add_custom__ class value.
+	Fixed bug where changing font size of text placed inside a colored text chunk would remove the parent node.
 	Fixed issue where the wrong parent editor instance might be updated if you use fullscreen mode in an incorrect way.
 	Fixed issue where Safari was producing a warning about the base element not being closed correctly.
 	Removed redundant form element name matching from regexp in the DOMUtils class.
