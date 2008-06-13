@@ -19,6 +19,11 @@
 				return /^(mceItemFlash|mceItemShockWave|mceItemWindowsMedia|mceItemQuickTime|mceItemRealMedia)$/.test(n.className);
 			};
 
+			ed.onPreInit.add(function() {
+				// Force in _value parameter this extra parameter is required for older Opera versions
+				ed.serializer.addRules('param[name|value|_value]');
+			});
+
 			// Register commands
 			ed.addCommand('mceMedia', function() {
 				ed.windowManager.open({
