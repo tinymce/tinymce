@@ -5463,8 +5463,12 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			m.add({
 				title : t.settings.title,
-				'class' : 'mceMenuItemTitle'
-			}).setDisabled(1);
+				'class' : 'mceMenuItemTitle',
+				onclick : function() {
+					if (t.settings.onselect('') !== false)
+						t.select(''); // Must be runned after
+				}
+			});
 
 			each(t.items, function(o) {
 				o.id = DOM.uniqueId();
@@ -7200,7 +7204,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				// Is not content editable or the selection is outside the area in IE
 				// the IE statement is needed to avoid bluring if element selections inside layers since
 				// the layer is like it's own document in IE
-				if (!ce && (isIE && t.selection.getNode().ownerDocument != t.getDoc()))
+				if (!ce && (!isIE || t.selection.getNode().ownerDocument != t.getDoc()))
 					t.getWin().focus();
 
 							}

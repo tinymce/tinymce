@@ -883,7 +883,7 @@
 				// Is not content editable or the selection is outside the area in IE
 				// the IE statement is needed to avoid bluring if element selections inside layers since
 				// the layer is like it's own document in IE
-				if (!ce && (isIE && t.selection.getNode().ownerDocument != t.getDoc()))
+				if (!ce && (!isIE || t.selection.getNode().ownerDocument != t.getDoc()))
 					t.getWin().focus();
 
 				// #if contentEditable

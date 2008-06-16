@@ -199,8 +199,12 @@
 
 			m.add({
 				title : t.settings.title,
-				'class' : 'mceMenuItemTitle'
-			}).setDisabled(1);
+				'class' : 'mceMenuItemTitle',
+				onclick : function() {
+					if (t.settings.onselect('') !== false)
+						t.select(''); // Must be runned after
+				}
+			});
 
 			each(t.items, function(o) {
 				o.id = DOM.uniqueId();
