@@ -10,6 +10,7 @@ Version 3.1.0 (2008-06-xx)
 	Fixed bug where pressing enter/return in an editable select box would produce an __mce_add_custom__ class value.
 	Fixed bug where changing font size of text placed inside a colored text chunk would remove the parent node.
 	Fixed bug where Opera 9.5 final produced a strange line break behavior due to a workaround for previous Opera versions.
+	Fixed bug where text/background color would produce a strange focus problem when you tried to click on the body in IE.
 	Fixed issue where selecting the title of an listbox equals the old 2.x behavior of changing the value to an empty string.
 	Fixed issue where it was common for the media plugin to break if the _value attribute wasn't added for the param element.
 	Fixed issue where the wrong parent editor instance might be updated if you use fullscreen mode in an incorrect way.

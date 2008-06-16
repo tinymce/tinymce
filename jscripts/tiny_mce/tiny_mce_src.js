@@ -10491,8 +10491,10 @@ tinymce.create('tinymce.UndoManager', {
 				});
 
 				c.onHideMenu.add(function() {
-					if (bm)
+					if (bm) {
 						ed.selection.moveToBookmark(bm);
+						bm = 0;
+					}
 				});
 			}
 
