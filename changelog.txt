@@ -1,4 +1,4 @@
-Version 3.1.0 (2008-06-xx)
+Version 3.1.0 (2008-06-17)
 	Fixed bug where the paste as text didn't work correctly it encoded produced paragraphs and br elements.
 	Fixed bug where embed element in XHTML style didn't work correctly in the media plugin.
 	Fixed bug where style elements was forced empty in IE. The will now be wrapped in a comment just like script elements.
