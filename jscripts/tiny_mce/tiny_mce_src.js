@@ -10086,8 +10086,8 @@ tinymce.create('tinymce.UndoManager', {
 			if (isEmpty(aft))
 				aft.innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
 
-			// Opera needs this one backwards
-			if (isOpera && parseFloat(opera.version()) >= 9.5) {
+			// Opera needs this one backwards for older versions
+			if (isOpera && opera.buildNumber() < 10063) {
 				r.insertNode(bef);
 				r.insertNode(aft);
 			} else {
