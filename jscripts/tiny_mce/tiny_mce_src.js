@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '1.0',
-	releaseDate : '2008-06-17',
+	minorVersion : '1.1',
+	releaseDate : '2008-06-xx',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -1600,8 +1600,15 @@ tinymce.create('static tinymce.util.XHR', {
 						break;
 
 					case 'tabindex':
-						// IE returns 32768 as default value
+						// IE returns default value
 						if (v === 32768)
+							v = '';
+
+						break;
+
+					case 'maxlength':
+						// IE returns  default value
+						if (v === 2147483647)
 							v = '';
 
 						break;

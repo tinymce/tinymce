@@ -778,8 +778,15 @@
 						break;
 
 					case 'tabindex':
-						// IE returns 32768 as default value
+						// IE returns default value
 						if (v === 32768)
+							v = '';
+
+						break;
+
+					case 'maxlength':
+						// IE returns  default value
+						if (v === 2147483647)
 							v = '';
 
 						break;
