@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '1.1',
-	releaseDate : '2008-06-xx',
+	minorVersion : '1.0.1',
+	releaseDate : '2008-06-18',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -10094,7 +10094,7 @@ tinymce.create('tinymce.UndoManager', {
 				aft.innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
 
 			// Opera needs this one backwards for older versions
-			if (isOpera && opera.buildNumber() < 10063) {
+			if (isOpera && parseFloat(opera.version()) < 9.5) {
 				r.insertNode(bef);
 				r.insertNode(aft);
 			} else {

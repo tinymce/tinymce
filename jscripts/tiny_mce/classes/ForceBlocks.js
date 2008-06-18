@@ -466,7 +466,7 @@
 				aft.innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
 
 			// Opera needs this one backwards for older versions
-			if (isOpera && opera.buildNumber() < 10063) {
+			if (isOpera && parseFloat(opera.version()) < 9.5) {
 				r.insertNode(bef);
 				r.insertNode(aft);
 			} else {
