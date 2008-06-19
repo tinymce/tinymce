@@ -1,6 +1,7 @@
 Version 3.1.0.1 (2008-06-18)
 	Fixed bug where the Opera line break fix didn't work correctly on Mac OS X and Unix.
 	Fixed bug where IE was producing the default value the maxlength attribute of input elements.
+	Fixed bug where the embed element wasn't properly parsed in the media plugin it now supports 3 formats.
 Version 3.1.0 (2008-06-17)
 	Fixed bug where the paste as text didn't work correctly it encoded produced paragraphs and br elements.
 	Fixed bug where embed element in XHTML style didn't work correctly in the media plugin.
