@@ -777,17 +777,17 @@
 
 						break;
 
+					case 'maxlength':
 					case 'tabindex':
 						// IE returns default value
-						if (v === 32768)
+						if (v === 32768 || v === 2147483647)
 							v = '';
 
 						break;
 
-					case 'maxlength':
-						// IE returns  default value
-						if (v === 2147483647)
-							v = '';
+					case 'noshade':
+						if (v === 65535)
+							return 'noshade';
 
 						break;
 
