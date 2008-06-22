@@ -428,7 +428,6 @@ function setAllAttribs(elm) {
 	var target = getSelectValue(formObj, 'targetlist');
 
 	setAttrib(elm, 'href', href);
-	setAttrib(elm, 'mce_href', href);
 	setAttrib(elm, 'title');
 	setAttrib(elm, 'target', target == '_self' ? '' : target);
 	setAttrib(elm, 'id');
