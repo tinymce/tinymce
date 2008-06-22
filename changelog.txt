@@ -5,6 +5,7 @@ Version 3.1.1 (2008-xx-xx)
 	Fixed bug where editing an existing link element didn't force it relative.
 	Fixed bug where image link creation fails on Safari if the image is aligned.
 	Fixed bug where it was possible to scroll the fullscreen mode in Opera 9.50.
+	Fixed bug where removal of center image alignment would fail. Patch contributed by Andrew Ozz.
 Version 3.1.0.1 (2008-06-18)
 	Fixed bug where the Opera line break fix didn't work correctly on Mac OS X and Unix.
 	Fixed bug where IE was producing the default value the maxlength attribute of input elements.

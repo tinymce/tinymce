@@ -310,7 +310,7 @@
 
 				if (rm) {
 					if (v == 'center')
-						dom.setStyle(n.parentNode, 'textAlign', '');
+						dom.setStyle(bl || n.parentNode, 'textAlign', '');
 
 					dom.setStyle(n, 'float', '');
 					this.mceRepaint();
@@ -319,7 +319,7 @@
 
 				if (v == 'center') {
 					// Do not change table elements
-					if (/^(TD|TH)$/.test(bl.nodeName))
+					if (bl && /^(TD|TH)$/.test(bl.nodeName))
 						bl = 0;
 
 					if (!bl || bl.childNodes.length > 1) {
@@ -340,7 +340,7 @@
 					dom.setStyle(n, 'float', '');
 				} else {
 					dom.setStyle(n, 'float', v);
-					dom.setStyle(n.parentNode, 'textAlign', '');
+					dom.setStyle(bl || n.parentNode, 'textAlign', '');
 				}
 
 				this.mceRepaint();
