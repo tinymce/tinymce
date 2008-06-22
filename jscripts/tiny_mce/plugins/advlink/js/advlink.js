@@ -463,7 +463,7 @@ function setAllAttribs(elm) {
 function getSelectValue(form_obj, field_name) {
 	var elm = form_obj.elements[field_name];
 
-	if (elm == null || elm.options == null)
+	if (!elm || elm.options == null || elm.selectedIndex == -1)
 		return "";
 
 	return elm.options[elm.selectedIndex].value;

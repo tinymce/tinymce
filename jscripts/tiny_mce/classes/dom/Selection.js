@@ -635,8 +635,12 @@
 
 				// Handle selection a image or other control like element such as anchors
 				if (!r.collapsed) {
-					if (r.startContainer == r.endContainer || (tinymce.isWebKit && r.startContainer == r.endContainer.parentNode)) {
-						if (r.startOffset - r.endOffset < 2 || tinymce.isWebKit) {
+					// If the anchor node is a element instead of a text node then return this element
+					if (tinymce.isWebKit && s.anchorNode && s.anchorNode.nodeType == 1) 
+						return s.anchorNode.childNodes[s.anchorOffset]; 
+
+					if (r.startContainer == r.endContainer) {
+						if (r.startOffset - r.endOffset < 2) {
 							if (r.startContainer.hasChildNodes())
 								e = r.startContainer.childNodes[r.startOffset];
 						}
