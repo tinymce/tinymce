@@ -7,6 +7,7 @@ Version 3.1.1 (2008-xx-xx)
 	Fixed bug where it was possible to scroll the fullscreen mode in Opera 9.50.
 	Fixed bug where removal of center image alignment would fail. Patch contributed by Andrew Ozz.
 	Fixed bug where inlinedialogs didn't work properly if the doctype was incorrect in IE.
+	Fixed bug where cross domain loading didn't work correctly in Opera 9.50.
 Version 3.1.0.1 (2008-06-18)
 	Fixed bug where the Opera line break fix didn't work correctly on Mac OS X and Unix.
 	Fixed bug where IE was producing the default value the maxlength attribute of input elements.

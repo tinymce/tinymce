@@ -425,7 +425,7 @@
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain) {
 				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
-				if (isIE)
+				if (isIE || (tinymce.isOpera && parseFloat(opera.version()) >= 9.5))
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
 				else if (tinymce.isOpera)
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
