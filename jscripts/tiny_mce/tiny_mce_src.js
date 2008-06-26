@@ -9019,7 +9019,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				re = new RegExp(re, 'i');
 
 			// Set style info on selected element
-			if (e = t.getSelectedElement())
+			if ((e = t.getSelectedElement()) && !ed.settings.force_span_wrappers)
 				set(e, 1);
 			else {
 				// Generate wrappers and set styles on them
@@ -9062,6 +9062,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				var p = n.parentNode;
 
 				if (!p || !dom.getAttrib(n, 'mce_new'))
+					return;
+
+				if (ed.settings.force_span_wrappers && p.nodeName != 'SPAN')
 					return;
 
 				// Has parent of the same type and only child
