@@ -86,7 +86,9 @@ var SearchReplaceDialog = {
 				return;
 
 			case 'current':
-				replace();
+				if (!ed.selection.isCollapsed())
+					replace();
+
 				break;
 		}
 

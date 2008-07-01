@@ -8,6 +8,10 @@ Version 3.1.1 (2008-xx-xx)
 	Fixed bug where removal of center image alignment would fail. Patch contributed by Andrew Ozz.
 	Fixed bug where inlinedialogs didn't work properly if the doctype was incorrect in IE.
 	Fixed bug where cross domain loading didn't work correctly in Opera 9.50.
+	Fixed bug where breaking huge text blocks with return/enter key would scroll to end of block.
+	Fixed bug where replace button kept inserting the replacement text even if there is no more matches.
+	Fixed bug with fullpage plugin where value wasn't set correctly. Patch contributed by Pascal Chantelois.
+	Fixed bug where the dom utils setAttrib method call could produce an exception if the input was null/false.
 Version 3.1.0.1 (2008-06-18)
 	Fixed bug where the Opera line break fix didn't work correctly on Mac OS X and Unix.
 	Fixed bug where IE was producing the default value the maxlength attribute of input elements.

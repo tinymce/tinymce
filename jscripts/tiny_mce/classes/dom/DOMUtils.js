@@ -622,6 +622,10 @@
 		setAttrib : function(e, n, v) {
 			var t = this;
 
+			// Whats the point
+			if (!e || !n)
+				return;
+
 			// Strict XML mode
 			if (t.settings.strict)
 				n = n.toLowerCase();

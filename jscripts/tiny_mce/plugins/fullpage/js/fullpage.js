@@ -143,7 +143,7 @@ function init() {
 
 		switch (eq.toLowerCase()) {
 			case "content-type":
-				tmp = getReItem(/charset\s*=\s*(.*)\s*/gi, value, 1);
+				tmp = getReItem(/charset\s*=\s*(.*)\s*/gi, va, 1);
 
 				// Override XML encoding
 				if (tmp != "")
