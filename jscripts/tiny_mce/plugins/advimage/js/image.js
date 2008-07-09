@@ -103,7 +103,7 @@ var ImageDialog = {
 
 		if (tinyMCEPopup.getParam("accessibility_warnings", 1)) {
 			if (!f.alt.value) {
-				tinyMCEPopup.editor.windowManager.confirm(tinyMCEPopup.getLang('advimage_dlg.missing_alt'), function(s) {
+				tinyMCEPopup.confirm(tinyMCEPopup.getLang('advimage_dlg.missing_alt'), function(s) {
 					if (s)
 						t.insertAndClose();
 				});

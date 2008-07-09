@@ -1030,10 +1030,24 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		getRect : function(e) {
-			var p, t = this, w, h;
+			var p, t = this, sr;
 
 			e = t.get(e);
 			p = t.getPos(e);
+			sr = t.getSize(e);
+
+			return {
+				x : p.x,
+				y : p.y,
+				w : sr.w,
+				h : sr.h
+			};
+		},
+
+		getSize : function(e) {
+			var t = this, w, h;
+
+			e = t.get(e);
 			w = t.getStyle(e, 'width');
 			h = t.getStyle(e, 'height');
 
@@ -1046,8 +1060,6 @@ tinymce.create('static tinymce.util.XHR', {
 				h = 0;
 
 			return {
-				x : p.x,
-				y : p.y,
 				w : parseInt(w) || e.offsetWidth || e.clientWidth,
 				h : parseInt(h) || e.offsetHeight || e.clientHeight
 			};
@@ -10176,11 +10188,20 @@ tinymce.create('tinymce.UndoManager', {
 
 			// Gecko generates BR elements here and there, we don't like those so lets remove them
 			function handler(e) {
+				var pr;
+
 				e = e.target;
 
 				// A new BR was created in a block element, remove it
 				if (e && e.parentNode && e.nodeName == 'BR' && (n = t.getParentBlock(e))) {
+					pr = e.previousSibling;
+
 					Event.remove(b, 'DOMNodeInserted', handler);
+
+					// Is there whitespace at the end of the node before then we might need the pesky BR
+					// to place the caret at a correct location see bug: #2013943
+					if (pr && pr.nodeType == 3 && /\s+$/.test(pr.nodeValue))
+						return;
 
 					// Only remove BR elements that got inserted in the middle of the text
 					if (e.previousSibling || e.nextSibling)
@@ -10646,14 +10667,17 @@ tinymce.create('tinymce.UndoManager', {
 			return new f(a, b, c, d, e);
 		},
 
-		confirm : function(t, cb, s) {
-			cb.call(s || this, confirm(this._decode(this.editor.getLang(t, t))));
+		confirm : function(t, cb, s, w) {
+			w = w || window;
+
+			cb.call(s || this, w.confirm(this._decode(this.editor.getLang(t, t))));
 		},
 
-		alert : function(tx, cb, s) {
+		alert : function(tx, cb, s, w) {
 			var t = this;
-	
-			alert(t._decode(t.editor.getLang(tx, tx)));
+
+			w = w || window;
+			w.alert(t._decode(t.editor.getLang(tx, tx)));
 
 			if (cb)
 				cb.call(s || t);

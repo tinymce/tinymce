@@ -624,6 +624,20 @@
 			DOM.get('test').innerHTML = '';
 		},
 
+		getSize : function() {
+			var t = this, r;
+
+			DOM.get('test').innerHTML = '<div style="width:320px;height:240px"><div id="test2" style="width:50%;height:240px"></div></div>';
+			r = DOM.getSize('test2');
+			t.eq(r.w, 160);
+
+			DOM.get('test').innerHTML = '<div style="width:320px;height:240px"><div id="test2" style="width:100px;height:240px"></div></div>';
+			r = DOM.getSize('test2');
+			t.eq(r.w, 100);
+
+			DOM.get('test').innerHTML = '';
+		},
+
 		loadCSS : function() {
 			var t = this, c = 0;
 

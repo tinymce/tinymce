@@ -374,7 +374,6 @@ function updateAction() {
 }
 
 function changedStyleField(field) {
-	//alert(field.id);
 }
 
 function setMeta(he, k, v) {

@@ -79,9 +79,9 @@ var SearchReplaceDialog = {
 				}
 
 				if (fo)
-					wm.alert(ed.getLang('searchreplace_dlg.allreplaced'));
+					tinyMCEPopup.alert(ed.getLang('searchreplace_dlg.allreplaced'));
 				else
-					wm.alert(ed.getLang('searchreplace_dlg.notfound'));
+					tinyMCEPopup.alert(ed.getLang('searchreplace_dlg.notfound'));
 
 				return;
 
@@ -104,12 +104,12 @@ var SearchReplaceDialog = {
 				r.scrollIntoView();
 				r.select();
 			} else
-				wm.alert(ed.getLang('searchreplace_dlg.notfound'));
+				tinyMCEPopup.alert(ed.getLang('searchreplace_dlg.notfound'));
 
 			tinyMCEPopup.storeSelection();
 		} else {
 			if (!w.find(s, ca, b, false, false, false, false))
-				wm.alert(ed.getLang('searchreplace_dlg.notfound'));
+				tinyMCEPopup.alert(ed.getLang('searchreplace_dlg.notfound'));
 			else
 				fix();
 		}

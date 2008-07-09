@@ -221,6 +221,30 @@ tinyMCEPopup = {
 	},
 
 	/**
+	 * Creates a confirm dialog. Please don't use the blocking behavior of this
+	 * native version use the callback method instead then it can be extended.
+	 *
+	 * @param {String} t Title for the new confirm dialog.
+	 * @param {function} cb Callback function to be executed after the user has selected ok or cancel.
+	 * @param {Object} s Optional scope to execute the callback in.
+	 */
+	confirm : function(t, cb, s) {
+		this.editor.windowManager.confirm(t, cb, s, window);
+	},
+
+	/**
+	 * Creates a alert dialog. Please don't use the blocking behavior of this
+	 * native version use the callback method instead then it can be extended.
+	 *
+	 * @param {String} t Title for the new alert dialog.
+	 * @param {function} cb Callback function to be executed after the user has selected ok.
+	 * @param {Object} s Optional scope to execute the callback in.
+	 */
+	alert : function(tx, cb, s) {
+		this.editor.windowManager.alert(tx, cb, s, window);
+	},
+
+	/**
 	 * Closes the current window.
 	 */
 	close : function() {

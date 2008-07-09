@@ -127,6 +127,14 @@ tinyMCEPopup = {
 		this.editor.execCallback('file_browser_callback', element_id, document.getElementById(element_id).value, type, window);
 	},
 
+	confirm : function(t, cb, s) {
+		this.editor.windowManager.confirm(t, cb, s, window);
+	},
+
+	alert : function(tx, cb, s) {
+		this.editor.windowManager.alert(tx, cb, s, window);
+	},
+
 	close : function() {
 		var t = this;
 

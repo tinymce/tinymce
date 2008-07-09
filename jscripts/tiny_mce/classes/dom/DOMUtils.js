@@ -106,10 +106,30 @@
 		 * @return {object} Rectange for specified element object with x, y, w, h fields.
 		 */
 		getRect : function(e) {
-			var p, t = this, w, h;
+			var p, t = this, sr;
 
 			e = t.get(e);
 			p = t.getPos(e);
+			sr = t.getSize(e);
+
+			return {
+				x : p.x,
+				y : p.y,
+				w : sr.w,
+				h : sr.h
+			};
+		},
+
+		/**
+		 * Returns the size dimensions of the specified element.
+		 *
+		 * @param {Element/String} e Element object or element ID to get rectange from.
+		 * @return {object} Rectange for specified element object with w, h fields.
+		 */
+		getSize : function(e) {
+			var t = this, w, h;
+
+			e = t.get(e);
 			w = t.getStyle(e, 'width');
 			h = t.getStyle(e, 'height');
 
@@ -122,8 +142,6 @@
 				h = 0;
 
 			return {
-				x : p.x,
-				y : p.y,
 				w : parseInt(w) || e.offsetWidth || e.clientWidth,
 				h : parseInt(h) || e.offsetHeight || e.clientHeight
 			};

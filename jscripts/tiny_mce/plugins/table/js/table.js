@@ -12,7 +12,7 @@ function insertTable() {
 	tinyMCEPopup.restoreSelection();
 
 	if (!AutoValidator.validate(formObj)) {
-		alert(inst.getLang('invalid_data'));
+		tinyMCEPopup.alert(inst.getLang('invalid_data'));
 		return false;
 	}
 
@@ -46,13 +46,13 @@ function insertTable() {
 
 	// Validate table size
 	if (colLimit && cols > colLimit) {
-		inst.windowManager.alert(inst.getLang('table_dlg.col_limit').replace(/\{\$cols\}/g, colLimit));
+		tinyMCEPopup.alert(inst.getLang('table_dlg.col_limit').replace(/\{\$cols\}/g, colLimit));
 		return false;
 	} else if (rowLimit && rows > rowLimit) {
-		inst.windowManager.alert(inst.getLang('table_dlg.row_limit').replace(/\{\$rows\}/g, rowLimit));
+		tinyMCEPopup.alert(inst.getLang('table_dlg.row_limit').replace(/\{\$rows\}/g, rowLimit));
 		return false;
 	} else if (cellLimit && cols * rows > cellLimit) {
-		inst.windowManager.alert(inst.getLang('table_dlg.cell_limit').replace(/\{\$cells\}/g, cellLimit));
+		tinyMCEPopup.alert(inst.getLang('table_dlg.cell_limit').replace(/\{\$cells\}/g, cellLimit));
 		return false;
 	}
 
