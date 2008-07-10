@@ -943,7 +943,7 @@
 		 * @return {String} Translated string.
 		 */
 		translate : function(s) {
-			var c = this.settings.language, i18n = EditorManager.i18n;
+			var c = this.settings.language || 'en', i18n = EditorManager.i18n;
 
 			if (!s)
 				return '';
@@ -960,7 +960,7 @@
 		 * @param {String} dv Optional default value to retrive.
 		 */
 		getLang : function(n, dv) {
-			return EditorManager.i18n[this.settings.language + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
+			return EditorManager.i18n[(this.settings.language || 'en') + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
 		},
 
 		/**
