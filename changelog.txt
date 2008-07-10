@@ -17,6 +17,7 @@ Version 3.1.1 (2008-xx-xx)
 	Fixed bug where pressing backspace would sometimes remove one extra character in Gecko browsers.
 	Fixed bug where the native confirm/alert boxes would move focus to parent document if fired in dialogs.
 	Fixed bug where Opera 9.50 was telling you that the selection is collapsed even when it isn't.
+	Fixed bug where mceInsertContent would break up existing elements in Opera and Gecko.
 Version 3.1.0.1 (2008-06-18)
 	Fixed bug where the Opera line break fix didn't work correctly on Mac OS X and Unix.
 	Fixed bug where IE was producing the default value the maxlength attribute of input elements.

@@ -2855,33 +2855,31 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		setContent : function(h, s) {
-			var t = this, r = t.getRng(), d = t.win.document;
+			var t = this, r = t.getRng(), c, d = t.win.document;
 
 			s = s || {format : 'html'};
 			s.set = true;
 			h = t.dom.processHTML(h);
 
 			if (r.insertNode) {
-				// Gecko has a bug where if you insert &nbsp; using InsertHTML it will insert a space instead
-				// So we simply check if the input is HTML or text and then insert text using the insertNode method
-				if (tinymce.isGecko && h.indexOf('<') == -1) {
-					r.deleteContents();
-					r.insertNode(t.getRng().createContextualFragment(h + '<span id="__caret">_</span>'));
-					t.select(t.dom.get('__caret'));
-					t.getRng().deleteContents();
-					return;
-				}
+				// Make caret marker since insertNode places the caret in the beginning of text after insert
+				h += '<span id="__caret">_</span>';
 
-				// Use insert HTML if it exists (places cursor after content)
-				try {
-					// This might fail with an exception see bug #1893736
-					if (d.queryCommandEnabled('InsertHTML'))
-						return d.execCommand('InsertHTML', false, h);
-				} catch (ex) {
-					// Use old school method
-					r.deleteContents();
-					r.insertNode(t.getRng().createContextualFragment(h));
-				}
+				// Delete and insert new node
+				r.deleteContents();
+				r.insertNode(t.getRng().createContextualFragment(h));
+
+				// Move to caret marker
+				c = t.dom.get('__caret');
+
+				// Make sure we wrap it compleatly, Opera fails with a simple select call
+				r = d.createRange();
+				r.setStartBefore(c);
+				r.setEndAfter(c);
+				t.setRng(r);
+
+				// Delete the marker, and hopefully the caret gets placed in the right location
+				d.execCommand('Delete', false, null);
 			} else {
 				if (r.item) {
 					// Delete content and get caret text selection
