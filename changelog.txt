@@ -1,7 +1,9 @@
 Version 3.1.1 (2008-xx-xx)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.
+	Added new plugin_preview_inline option to preview plugin to enable/disable native/inline dialogs.
 	Added missing tabindex and accesskey to input elements in the default valid_elements setup.
+	Fixed so the preview dialog in the preview plugin uses inline dialogs/popups.
 	Fixed bug where the embed element wasn't properly parsed in the media plugin it now supports 3 formats.
 	Fixed bug where the noshade attribute was serialized incorrectly on IE.
 	Fixed bug where editing an existing link element didn't force it relative.
