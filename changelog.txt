@@ -20,7 +20,11 @@ Version 3.1.1 (2008-xx-xx)
 	Fixed bug where the native confirm/alert boxes would move focus to parent document if fired in dialogs.
 	Fixed bug where Opera 9.50 was telling you that the selection is collapsed even when it isn't.
 	Fixed bug where mceInsertContent would break up existing elements in Opera and Gecko.
+	Fixed bug where TinyMCE fails to detect some keyboard combos on Mac, contributed by MattyRob.
+	Fixed bug where replace all didn't move the caret to beginning of text before searching.
+	Fixed bug where the oninit callback wasn't executed correctly when the strict_loading_mode option was used, thanks goes to Nicholas Oxhoej.
 	Fixed so setting language to empty string will skip language loading if translations are made by some backend.
+	Fixed so dialog_type is automatically modal if you use the inlinepopups plugin use dialog_type : "window" to re-enable the old behavior.
 Version 3.1.0.1 (2008-06-18)
 	Fixed bug where the Opera line break fix didn't work correctly on Mac OS X and Unix.
 	Fixed bug where IE was producing the default value the maxlength attribute of input elements.

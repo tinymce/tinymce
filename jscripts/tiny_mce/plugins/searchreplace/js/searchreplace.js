@@ -62,6 +62,10 @@ var SearchReplaceDialog = {
 
 		switch (a) {
 			case 'all':
+				// Move caret to beginning of text
+				ed.execCommand('SelectAll');
+				ed.selection.collapse(true);
+
 				if (tinymce.isIE) {
 					while (r.findText(s, b ? -1 : 1, fl)) {
 						r.scrollIntoView();

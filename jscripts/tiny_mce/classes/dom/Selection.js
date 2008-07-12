@@ -115,6 +115,9 @@
 
 				// Delete the marker, and hopefully the caret gets placed in the right location
 				d.execCommand('Delete', false, null);
+
+				// In case it's still there
+				t.dom.remove('__caret');
 			} else {
 				if (r.item) {
 					// Delete content and get caret text selection

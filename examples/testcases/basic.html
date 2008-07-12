@@ -316,12 +316,22 @@ var unitTester = new tinymce.util.UnitTester('log', {
 		},
 
 		insertHR : function() {
-			var t = this;
+			var t = this, v;
 
 			editor.setContent('<p>test 123</p>');
 			editor.execCommand('SelectAll');
 			editor.execCommand('InsertHorizontalRule');
-			t.eq(editor.getContent(), tinymce.isGecko || tinymce.isIE ? '<hr />' : '<p><hr /></p>');
+
+			// There is some browser differences that we can live with
+			v = '<hr /><p>&nbsp;</p>';
+
+			if (tinymce.isIE)
+				v = '<hr />';
+
+			if (tinymce.isWebKit)
+				v = '<p><hr /></p>';
+
+			t.eq(editor.getContent(), v);
 		},
 
 		indentOutdent : function() {
@@ -400,10 +410,10 @@ var unitTester = new tinymce.util.UnitTester('log', {
 			var t = this;
 
 			editor.setContent('<p><span><ul><li>Item 1</li></ul></span></p>');
-			t.eq(editor.getContent(), '<p><span><ul><li>Item 1</li></ul></span></p>');
+			t.eq(editor.getContent(), '<p><span><ul><li>Item 1</li></ul></span></p>', null, tinymce.isOpera);
 
 			editor.setContent('<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>');
-			t.eq(editor.getContent(), tinymce.isIE ? '<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>' : (tinymce.isOpera ? '<p class="test">test1</p><p>&nbsp;</p><div>test2</div><p class="test">test3</p>' : '<p class="test">test1</p><p>&nbsp;</p><div>test2</div><p>&nbsp;</p><p class="test">test3</p>'));
+			t.eq(editor.getContent(), tinymce.isIE ? '<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>' : '<p class="test">test1</p><p>&nbsp;</p><div>test2</div><p>&nbsp;</p><p class="test">test3</p>');
 		}
 	});
 

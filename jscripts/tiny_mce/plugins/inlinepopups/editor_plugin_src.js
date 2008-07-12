@@ -254,7 +254,7 @@
 			});
 
 			// Setup blocker
-			if (t.count == 0 && t.editor.getParam('dialog_type') == 'modal') {
+			if (t.count == 0 && t.editor.getParam('dialog_type', 'modal') == 'modal') {
 				DOM.add(DOM.doc.body, 'div', {
 					id : 'mceModalBlocker',
 					'class' : (t.editor.settings.inlinepopups_skin || 'clearlooks2') + '_modalBlocker',
