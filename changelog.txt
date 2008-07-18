@@ -23,6 +23,7 @@ Version 3.1.1 (2008-xx-xx)
 	Fixed bug where TinyMCE fails to detect some keyboard combos on Mac, contributed by MattyRob.
 	Fixed bug where replace all didn't move the caret to beginning of text before searching.
 	Fixed bug where the oninit callback wasn't executed correctly when the strict_loading_mode option was used, thanks goes to Nicholas Oxhoej.
+	Fixed bug where a access denied exception was thrown if some other script specified document.domain before loading TinyMCE.
 	Fixed so setting language to empty string will skip language loading if translations are made by some backend.
 	Fixed so dialog_type is automatically modal if you use the inlinepopups plugin use dialog_type : "window" to re-enable the old behavior.
 Version 3.1.0.1 (2008-06-18)
