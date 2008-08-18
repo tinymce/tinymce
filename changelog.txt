@@ -1,3 +1,5 @@
+Version 3.1.2 (2008-08-xx)
+	Added possibility to skip the loading of popups css by setting the feature popup_css to the value false.
 Version 3.1.1 (2008-08-18)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.
