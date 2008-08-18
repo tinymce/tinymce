@@ -1014,6 +1014,20 @@
 			DOM.setHTML('test', '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun" /></map>');
 			t.eq(ser.serialize(DOM.get('test')), '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun"></area></map>');
 
+			DOM.setHTML('test', '123<![CDATA[<test>]]>abc');
+			t.eq(ser.serialize(DOM.get('test')), '123<![CDATA[<test>]]>abc');
+
+			DOM.setHTML('test', '123<![CDATA[<te\n\nst>]]>abc');
+			t.eq(ser.serialize(DOM.get('test')), tinymce.isIE ? '123<![CDATA[<te\r\n\r\nst>]]>abc' : '123<![CDATA[<te\n\nst>]]>abc');
+
+			ser.setRules('ul,li,br');
+			DOM.setHTML('test', '<ul><li>test<br /></li><li>test<br /></li><li>test<br /></li></ul>');
+			t.eq(ser.serialize(DOM.get('test')), '<ul><li>test</li><li>test</li><li>test</li></ul>');
+
+			ser.setRules('input[type|value|name|id|maxlength|size|tabindex]');
+			DOM.setHTML('test', '<input type="checkbox" value="test" /><input type="button" />');
+			t.eq(ser.serialize(DOM.get('test')), '<input type="checkbox" value="test" /><input type="button" />');
+
 /*			ser = new tinymce.dom.Serializer();
 			var ifr = DOM.add(document.body, 'iframe', {id : 'iframe', src : 'javascript:""', display : 'none'});
 			var doc = DOM.get('iframe').contentWindow.document;

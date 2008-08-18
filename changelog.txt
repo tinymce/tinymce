@@ -1,9 +1,13 @@
-Version 3.1.1 (2008-xx-xx)
+Version 3.1.1 (2008-08-18)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.
 	Added new plugin_preview_inline option to preview plugin to enable/disable native/inline dialogs.
+	Added new readonly option. If this is set the editor will only display the contents for the user.
 	Added missing tabindex and accesskey to input elements in the default valid_elements setup.
+	Updated firebug lite to 1.2, to enable it use the tiny_mce_dev.js?debug=1 on the development package.
 	Fixed so the preview dialog in the preview plugin uses inline dialogs/popups.
+	Fixed so CDATA sections remains intact through the serialization process of the DOM tree.
+	Fixed various issues with the getAttrib command. It will now return more correct values.
 	Fixed bug where the embed element wasn't properly parsed in the media plugin it now supports 3 formats.
 	Fixed bug where the noshade attribute was serialized incorrectly on IE.
 	Fixed bug where editing an existing link element didn't force it relative.

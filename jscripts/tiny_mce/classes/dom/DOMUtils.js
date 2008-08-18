@@ -24,6 +24,17 @@
 		idPattern : /^#[\w]+$/,
 		elmPattern : /^[\w_*]+$/,
 		elmClassPattern : /^([\w_]*)\.([\w_]+)$/,
+		props : {
+			"for" : "htmlFor",
+			"class" : "className",
+			className : "className",
+			checked : "checked",
+			disabled : "disabled",
+			maxlength : "maxLength",
+			readonly : "readOnly",
+			selected : "selected",
+			value : "value"
+		},
 
 		/**
 		 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
@@ -726,7 +737,7 @@
 				return false;
 
 			if (!is(dv))
-				dv = "";
+				dv = '';
 
 			// Try the mce variant for these
 			if (/^(src|href|style|coords|shape)$/.test(n)) {
@@ -736,38 +747,21 @@
 					return v;
 			}
 
-			v = e.getAttribute(n, 2);
+			if (isIE && t.props[n]) {
+				v = e[t.props[n]];
+				v = v && v.nodeValue ? v.nodeValue : v;
+			} else
+				v = e.getAttribute(n, 2);
 
-			if (!v) {
-				switch (n) {
-					case 'class':
-						v = e.className;
-						break;
+			if (n === 'style') {
+				v = v || e.style.cssText;
 
-					default:
-						// Fix for IE crash Bug: #1884376 probably due to invalid DOM structure
-						if (isIE && n === 'name' && e.nodeName === 'A') {
-							v = e.name;
-							break;
-						}
+				if (v) {
+					v = t.serializeStyle(t.parseStyle(v));
 
-						v = e.attributes[n];
-						v = v && is(v.nodeValue) ? v.nodeValue : v;
+					if (t.settings.keep_values && !t._isRes(v))
+						e.setAttribute('mce_style', v);
 				}
-			}
-
-			switch (n) {
-				case 'style':
-					v = v || e.style.cssText;
-
-					if (v) {
-						v = t.serializeStyle(t.parseStyle(v));
-
-						if (t.settings.keep_values && !t._isRes(v))
-							e.setAttribute('mce_style', v);
-					}
-
-					break;
 			}
 
 			// Remove Apple and WebKit stuff
@@ -787,7 +781,15 @@
 
 					case 'size':
 						// IE returns +0 as default value for size
-						if (v === '+0')
+						if (v === '+0' || v === 20)
+							v = '';
+
+						break;
+
+					case 'width':
+					case 'height':
+					case 'vspace':
+						if (v === 0)
 							v = '';
 
 						break;
@@ -824,7 +826,7 @@
 				}
 			}
 
-			return (v && v != '') ? '' + v : dv;
+			return (v !== undefined && v !== null && v !== '') ? '' + v : dv;
 		},
 
 		/**
@@ -1286,6 +1288,8 @@
 
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
+				h = h.replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->');
+
 				// Wrap scripts and styles in comments for serialization purposes
 				if (/<script|style/.test(h)) {
 					function trim(s) {

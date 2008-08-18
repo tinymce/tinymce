@@ -65,9 +65,10 @@
 	};
 
 	// Firebug
-	if (query.debug) {
+	if (query.debug && (!window.console || !console.log)) {
 		document.documentElement.setAttribute("debug", "true");
-		include('firebug/firebug.js');
+		include('firebug/pi.js');
+		include('firebug/firebug-lite.js');
 	}
 
 	// Core ns
