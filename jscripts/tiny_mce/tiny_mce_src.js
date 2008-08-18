@@ -1566,7 +1566,9 @@ tinymce.create('static tinymce.util.XHR', {
 			if (isIE && t.props[n]) {
 				v = e[t.props[n]];
 				v = v && v.nodeValue ? v.nodeValue : v;
-			} else
+			}
+
+			if (!v)
 				v = e.getAttribute(n, 2);
 
 			if (n === 'style') {
@@ -1625,11 +1627,12 @@ tinymce.create('static tinymce.util.XHR', {
 
 						break;
 
+					case 'compact':
 					case 'noshade':
 						if (v === 65535)
-							return 'noshade';
+							return n;
 
-						break;
+						return dv;
 
 					case 'shape':
 						v = v.toLowerCase();
