@@ -25,7 +25,10 @@ tinyMCEPopup = {
 
 		// Setup local DOM
 		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document);
-		t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
+
+		// Enables you to skip loading the default css
+		if (t.features.popup_css !== false)
+			t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
 
 		// Setup on init listeners
 		t.listeners = [];
