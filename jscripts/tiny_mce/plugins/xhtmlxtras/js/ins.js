@@ -51,18 +51,8 @@ function insertInlineElement(en) {
 
 	ed.getDoc().execCommand('FontName', false, 'mceinline');
 	tinymce.each(dom.select(tinymce.isWebKit ? 'span' : 'font'), function(n) {
-		var e;
-
-		if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline') {
-			// Create new inline element and clone attributes
-			e = dom.create(en);
-
-			tinymce.each(dom.getAttribs(n), function(v) {
-				dom.setAttrib(e, v.nodeName, dom.getAttrib(e, v.nodeName));
-			});
-
-			dom.replace(e, n, 1);
-		}
+		if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline')
+			dom.replace(dom.create(en), n, 1);
 	});
 }
 
