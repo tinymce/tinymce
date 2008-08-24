@@ -221,10 +221,10 @@ function insertInlineElement(en) {
 	var ed = tinyMCEPopup.editor, dom = ed.dom;
 
 	ed.getDoc().execCommand('FontName', false, 'mceinline');
-	tinymce.each(dom.select('font'), function(n) {
+	tinymce.each(dom.select(tinymce.isWebKit ? 'span' : 'font'), function(n) {
 		var e;
 
-		if (n.face == 'mceinline') {
+		if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline') {
 			// Create new inline element and clone attributes
 			e = dom.create(en);
 
