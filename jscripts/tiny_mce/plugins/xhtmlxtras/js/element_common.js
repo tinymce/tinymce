@@ -160,11 +160,8 @@ SXE.insertElement = function(element_name) {
 			if (tinymce.isIE && element_name.indexOf('html:') == 0)
 				element_name = element_name.substring(5).toLowerCase();
 
-			h = '<' + tagName + ' id="#sxe_temp_' + element_name + '#">' + s + '</' + tagName + '>';
-
-			tinyMCEPopup.execCommand('mceInsertContent', false, h);
-
-			var elementArray = tinymce.grep(SXE.inst.dom.select(element_name), function(n) {return n.id == '#sxe_temp_' + element_name + '#';});
+			insertInlineElement(element_name);
+			var elementArray = tinymce.grep(SXE.inst.dom.select(element_name));
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
 
@@ -218,4 +215,24 @@ SXE.removeClass = function(elm,cl) {
 SXE.addClass = function(elm,cl) {
 	if(!SXE.containsClass(elm,cl)) elm.className ? elm.className += " " + cl : elm.className = cl;
 	return true;
+}
+
+function insertInlineElement(en) {
+	var ed = tinyMCEPopup.editor, dom = ed.dom;
+
+	ed.getDoc().execCommand('FontName', false, 'mceinline');
+	tinymce.each(dom.select('font'), function(n) {
+		var e;
+
+		if (n.face == 'mceinline') {
+			// Create new inline element and clone attributes
+			e = dom.create(en);
+
+			tinymce.each(dom.getAttribs(n), function(v) {
+				dom.setAttrib(e, v.nodeName, dom.getAttrib(e, v.nodeName));
+			});
+
+			dom.replace(e, n, 1);
+		}
+	});
 }

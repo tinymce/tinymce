@@ -1,5 +1,20 @@
 Version 3.1.2 (2008-08-xx)
 	Added possibility to skip the loading of popups css by setting the feature popup_css to the value false.
+	Added new onBeforeSetContent/onBeforeGetContent/onSetContent/onGetContent events to the Selection class.
+	Added missing allowfullscreen and quality options for flash elements, this will now get correctly stored.
+	Fixed bug where table cell dialog didn't close properly unless the accessibility_warnings option was set to false.
+	Fixed bug where the modal dialog blocker element for inlinepopups wasn't placed at a correct location if the page had scroll.
+	Fixed bug where non inline dialogs didn't close correctly if the inlinepopups plugin was used.
+	Fixed bug where non inline dialogs could make the modal dialog blocker to work incorrectly.
+	Fixed bug where style select wasn't populated correctly if you pressed the arrow. Patch by Hari Karam Singh.
+	Fixed bug where toggling the fullscreen mode didn't restore scrollbars on IE when the editor was inside a frame. Patch by Jacob Barrett.
+	Fixed bug where inserting flash contents using the template plugin didn't work correctly.
+	Fixed bug where inserting flash contents using the selection.setContent or mceInsertContent command didn't work correctly.
+	Fixed bug where IE would produce an exception if a comment started with -.
+	Fixed bug where the blockquote button would wrap lists incorrectly on non IE browsers.
+	Fixed bug where Opera would display BR elements in the element path.
+	Fixed bug where xhtmlxtras didn't insert elements correctly on IE.
+	Fixed bug where the buttons wasn't activated correctly in the xhtmlxtras plugin.
 Version 3.1.1 (2008-08-18)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.

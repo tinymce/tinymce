@@ -8,6 +8,10 @@
 (function() {
 	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit;
 
+	function isBlock(n) {
+		return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n.nodeName);
+	};
+
 	/**
 	 * This is a internal class and no method in this class should be called directly form the out side.
 	 */
@@ -815,8 +819,8 @@
 			};
 
 			// Get start/end block
-			sb = dom.getParent(s.getStart(), dom.isBlock);
-			eb = dom.getParent(s.getEnd(), dom.isBlock);
+			sb = dom.getParent(s.getStart(), isBlock);
+			eb = dom.getParent(s.getEnd(), isBlock);
 
 			// Remove blockquote(s)
 			if (bq = getBQ(sb)) {
@@ -861,7 +865,7 @@
 						s.collapse(0);
 
 						// IE misses the empty block some times element so we must move back the caret
-						if (dom.getParent(s.getStart(), dom.isBlock) != sb) {
+						if (dom.getParent(s.getStart(), isBlock) != sb) {
 							r = s.getRng();
 							r.move('character', -1);
 							r.select();
@@ -992,8 +996,8 @@
 		_getSelectedBlocks : function(st, en) {
 			var ed = this.editor, dom = ed.dom, s = ed.selection, sb, eb, n, bl = [];
 
-			sb = dom.getParent(st || s.getStart(), dom.isBlock);
-			eb = dom.getParent(en || s.getEnd(), dom.isBlock);
+			sb = dom.getParent(st || s.getStart(), isBlock);
+			eb = dom.getParent(en || s.getEnd(), isBlock);
 
 			if (sb)
 				bl.push(sb);
@@ -1002,7 +1006,7 @@
 				n = sb;
 
 				while ((n = n.nextSibling) && n != eb) {
-					if (dom.isBlock(n))
+					if (isBlock(n))
 						bl.push(n);
 				}
 			}

@@ -125,6 +125,10 @@
 		 * @param {String} v Value of the comment.
 		 */
 		writeComment : function(v) {
+			// Fix for bug #2035694
+			if (tinymce.isIE)
+				v = v.replace(/^\-|\-$/g, ' ');
+
 			this.node.appendChild(this.doc.createComment(v.replace(/\-\-/g, ' ')));
 		},
 

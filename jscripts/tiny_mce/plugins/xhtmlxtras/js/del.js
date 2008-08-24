@@ -27,7 +27,7 @@ function insertDel() {
 	if (elm == null) {
 		var s = SXE.inst.selection.getContent();
 		if(s.length > 0) {
-			tinyMCEPopup.execCommand('mceInsertContent', false, '<del id="#sxe_temp_del#">' + s + '</del>');
+			insertInlineElement('del');
 			var elementArray = tinymce.grep(SXE.inst.dom.select('del'), function(n) {return n.id == '#sxe_temp_del#';});
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
@@ -40,6 +40,26 @@ function insertDel() {
 	tinyMCEPopup.editor.nodeChanged();
 	tinyMCEPopup.execCommand('mceEndUndoLevel');
 	tinyMCEPopup.close();
+}
+
+function insertInlineElement(en) {
+	var ed = tinyMCEPopup.editor, dom = ed.dom;
+
+	ed.getDoc().execCommand('FontName', false, 'mceinline');
+	tinymce.each(dom.select('font'), function(n) {
+		var e;
+
+		if (n.face == 'mceinline') {
+			// Create new inline element and clone attributes
+			e = dom.create(en);
+
+			tinymce.each(dom.getAttribs(n), function(v) {
+				dom.setAttrib(e, v.nodeName, dom.getAttrib(e, v.nodeName));
+			});
+
+			dom.replace(e, n, 1);
+		}
+	});
 }
 
 function removeDel() {

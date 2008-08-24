@@ -2824,6 +2824,16 @@ tinymce.create('static tinymce.util.XHR', {
 			t.win = win;
 			t.serializer = serializer;
 
+			// Add events
+			each([
+				'onBeforeSetContent',
+				'onBeforeGetContent',
+				'onSetContent',
+				'onGetContent'
+			], function(e) {
+				t[e] = new tinymce.util.Dispatcher(t);
+			});
+
 			// Prevent leaks
 			tinymce.addUnload(t.destroy, t);
 		},
@@ -2835,6 +2845,7 @@ tinymce.create('static tinymce.util.XHR', {
 			wb = wa = '';
 			s.get = true;
 			s.format = s.format || 'html';
+			t.onBeforeGetContent.dispatch(t, s);
 
 			if (s.format == 'text')
 				return t.isCollapsed() ? '' : (r.text || (se.toString ? se.toString() : ''));
@@ -2858,7 +2869,10 @@ tinymce.create('static tinymce.util.XHR', {
 
 			s.getInner = true;
 
-			return t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
+			s.content = t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
+			t.onGetContent.dispatch(t, s);
+
+			return s.content;
 		},
 
 		setContent : function(h, s) {
@@ -2866,7 +2880,11 @@ tinymce.create('static tinymce.util.XHR', {
 
 			s = s || {format : 'html'};
 			s.set = true;
-			h = t.dom.processHTML(h);
+			h = s.content = t.dom.processHTML(h);
+
+			// Dispatch before set content event
+			t.onBeforeSetContent.dispatch(t, s);
+			h = s.content;
 
 			if (r.insertNode) {
 				// Make caret marker since insertNode places the caret in the beginning of text after insert
@@ -2899,6 +2917,9 @@ tinymce.create('static tinymce.util.XHR', {
 
 				r.pasteHTML(h);
 			}
+
+			// Dispatch set content event
+			t.onSetContent.dispatch(t, s);
 		},
 
 		getStart : function() {
@@ -3445,6 +3466,10 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		writeComment : function(v) {
+			// Fix for bug #2035694
+			if (tinymce.isIE)
+				v = v.replace(/^\-|\-$/g, ' ');
+
 			this.node.appendChild(this.doc.createComment(v.replace(/\-\-/g, ' ')));
 		},
 
@@ -8555,6 +8580,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 (function() {
 	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit;
 
+	function isBlock(n) {
+		return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n.nodeName);
+	};
+
 	tinymce.create('tinymce.EditorCommands', {
 		EditorCommands : function(ed) {
 			this.editor = ed;
@@ -9359,8 +9388,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			};
 
 			// Get start/end block
-			sb = dom.getParent(s.getStart(), dom.isBlock);
-			eb = dom.getParent(s.getEnd(), dom.isBlock);
+			sb = dom.getParent(s.getStart(), isBlock);
+			eb = dom.getParent(s.getEnd(), isBlock);
 
 			// Remove blockquote(s)
 			if (bq = getBQ(sb)) {
@@ -9405,7 +9434,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						s.collapse(0);
 
 						// IE misses the empty block some times element so we must move back the caret
-						if (dom.getParent(s.getStart(), dom.isBlock) != sb) {
+						if (dom.getParent(s.getStart(), isBlock) != sb) {
 							r = s.getRng();
 							r.move('character', -1);
 							r.select();
@@ -9536,8 +9565,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		_getSelectedBlocks : function(st, en) {
 			var ed = this.editor, dom = ed.dom, s = ed.selection, sb, eb, n, bl = [];
 
-			sb = dom.getParent(st || s.getStart(), dom.isBlock);
-			eb = dom.getParent(en || s.getEnd(), dom.isBlock);
+			sb = dom.getParent(st || s.getStart(), isBlock);
+			eb = dom.getParent(en || s.getEnd(), isBlock);
 
 			if (sb)
 				bl.push(sb);
@@ -9546,7 +9575,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				n = sb;
 
 				while ((n = n.nextSibling) && n != eb) {
-					if (dom.isBlock(n))
+					if (isBlock(n))
 						bl.push(n);
 				}
 			}

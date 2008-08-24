@@ -191,6 +191,8 @@
 				c.onPostRender.add(function(ed, n) {
 					Event.add(n.id + '_text', 'focus', t._importClasses, t);
 					Event.add(n.id + '_text', 'mousedown', t._importClasses, t);
+					Event.add(n.id + '_open', 'focus', t._importClasses, t);
+					Event.add(n.id + '_open', 'mousedown', t._importClasses, t);
 				});
 			}
 
@@ -817,13 +819,13 @@
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
 					// Ignore non element and hidden elements
-					if (n.nodeType != 1 || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
+					if (n.nodeType != 1 || n.nodeName === 'BR' || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
 						return;
 
 					// Fake name
 					if (v = DOM.getAttrib(n, 'mce_name'))
 						na = v;
-	
+
 					// Handle prefix
 					if (tinymce.isIE && n.scopeName !== 'HTML')
 						na = n.scopeName + ':' + na;

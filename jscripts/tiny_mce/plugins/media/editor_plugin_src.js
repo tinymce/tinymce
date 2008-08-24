@@ -52,6 +52,12 @@
 					mceItemRealMedia : 'realmedia'
 				};
 
+				ed.selection.onSetContent.add(function() {
+					t._spansToImgs(ed.getBody());
+				});
+
+				ed.selection.onBeforeSetContent.add(t._objectsToSpans, t);
+
 				if (ed.settings.content_css !== false)
 					ed.dom.loadCSS(url + "/css/content.css");
 
@@ -78,25 +84,7 @@
 				}
 			});
 
-			ed.onBeforeSetContent.add(function(ed, o) {
-				var h = o.content;
-
-				h = h.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, function(a, b, c) {
-					var o = t._parse(c);
-
-					return '<img class="mceItem' + b + '" title="' + ed.dom.encode(c) + '" src="' + url + '/img/trans.gif" width="' + o.width + '" height="' + o.height + '" />'
-				});
-
-				h = h.replace(/<object([^>]*)>/gi, '<span class="mceItemObject" $1>');
-				h = h.replace(/<embed([^>]*)\/?>/gi, '<span class="mceItemEmbed" $1></span>');
-				h = h.replace(/<embed([^>]*)>/gi, '<span class="mceItemEmbed" $1>');
-				h = h.replace(/<\/(object)([^>]*)>/gi, '</span>');
-				h = h.replace(/<\/embed>/gi, '');
-				h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<span ' + b.replace(/value=/gi, '_value=') + ' class="mceItemParam"></span>'});
-				h = h.replace(/\/ class=\"mceItemParam\"><\/span>/gi, 'class="mceItemParam"></span>');
-
-				o.content = h;
-			});
+			ed.onBeforeSetContent.add(t._objectsToSpans, t);
 
 			ed.onSetContent.add(function() {
 				t._spansToImgs(ed.getBody());
@@ -212,6 +200,25 @@
 		},
 
 		// Private methods
+		_objectsToSpans : function(ed, o) {
+			var t = this, h = o.content;
+
+			h = h.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, function(a, b, c) {
+				var o = t._parse(c);
+
+				return '<img class="mceItem' + b + '" title="' + ed.dom.encode(c) + '" src="' + t.url + '/img/trans.gif" width="' + o.width + '" height="' + o.height + '" />'
+			});
+
+			h = h.replace(/<object([^>]*)>/gi, '<span class="mceItemObject" $1>');
+			h = h.replace(/<embed([^>]*)\/?>/gi, '<span class="mceItemEmbed" $1></span>');
+			h = h.replace(/<embed([^>]*)>/gi, '<span class="mceItemEmbed" $1>');
+			h = h.replace(/<\/(object)([^>]*)>/gi, '</span>');
+			h = h.replace(/<\/embed>/gi, '');
+			h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<span ' + b.replace(/value=/gi, '_value=') + ' class="mceItemParam"></span>'});
+			h = h.replace(/\/ class=\"mceItemParam\"><\/span>/gi, 'class="mceItemParam"></span>');
+
+			o.content = h;
+		},
 
 		_buildObj : function(o, n) {
 			var ob, ed = this.editor, dom = ed.dom, p = this._parse(n.title);
@@ -231,12 +238,13 @@
 				p.src = ed.convertURL(p.src, 'src', n);
 
 			each (p, function(v, k) {
-				if (!/^(width|height|codebase|classid)$/.test(k)) {
+				if (!/^(width|height|codebase|classid|_cx|_cy)$/.test(k)) {
 					// Use url instead of src in IE for Windows media
 					if (o.type == 'application/x-mplayer2' && k == 'src')
 						k = 'url';
 
-					dom.add(ob, 'span', {mce_name : 'param', name : k, '_value' : v});
+					if (v)
+						dom.add(ob, 'span', {mce_name : 'param', name : k, '_value' : v});
 				}
 			});
 
@@ -325,7 +333,7 @@
 			});
 
 			// Setup base parameters
-			each(['id', 'name', 'width', 'height', 'bgcolor', 'align', 'flashvars', 'src', 'wmode'], function(na) {
+			each(['id', 'name', 'width', 'height', 'bgcolor', 'align', 'flashvars', 'src', 'wmode', 'allowfullscreen', 'quality'], function(na) {
 				var v = dom.getAttrib(n, na);
 
 				if (v)

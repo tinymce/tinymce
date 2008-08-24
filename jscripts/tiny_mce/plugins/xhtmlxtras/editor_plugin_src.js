@@ -104,16 +104,18 @@
 				cm.setDisabled('del', co);
 				cm.setDisabled('ins', co);
 				cm.setDisabled('attribs', n && n.nodeName == 'BODY');
+				cm.setActive('cite', 0);
+				cm.setActive('acronym', 0);
+				cm.setActive('abbr', 0);
+				cm.setActive('del', 0);
+				cm.setActive('ins', 0);
 
+				// Activate all
 				if (n) {
-					cm.setDisabled(n.nodeName.toLowerCase(), 0);
-					cm.setActive(n.nodeName.toLowerCase(), 1);
-				} else {
-					cm.setActive('cite', 0);
-					cm.setActive('acronym', 0);
-					cm.setActive('abbr', 0);
-					cm.setActive('del', 0);
-					cm.setActive('ins', 0);
+					do {
+						cm.setDisabled(n.nodeName.toLowerCase(), 0);
+						cm.setActive(n.nodeName.toLowerCase(), 1);
+					} while (n = n.parentNode);
 				}
 			});
 		},

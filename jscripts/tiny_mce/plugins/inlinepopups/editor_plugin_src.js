@@ -35,6 +35,7 @@
 			t.parent(ed);
 			t.zIndex = 300000;
 			t.count = 0;
+			t.windows = {};
 		},
 
 		open : function(f, p) {
@@ -237,7 +238,6 @@
 			});
 
 			// Add window
-			t.windows = t.windows || {};
 			w = t.windows[id] = {
 				id : id,
 				mousedown_func : mdf,
@@ -258,7 +258,7 @@
 				DOM.add(DOM.doc.body, 'div', {
 					id : 'mceModalBlocker',
 					'class' : (t.editor.settings.inlinepopups_skin || 'clearlooks2') + '_modalBlocker',
-					style : {left : vp.x, top : vp.y, zIndex : t.zIndex - 1}
+					style : {zIndex : t.zIndex - 1}
 				});
 
 				DOM.show('mceModalBlocker'); // Reduces flicker in IE
@@ -281,16 +281,18 @@
 		},
 
 		focus : function(id) {
-			var t = this, w = t.windows[id];
+			var t = this, w;
 
-			w.zIndex = this.zIndex++;
-			w.element.setStyle('zIndex', w.zIndex);
-			w.element.update();
+			if (w = t.windows[id]) {
+				w.zIndex = this.zIndex++;
+				w.element.setStyle('zIndex', w.zIndex);
+				w.element.update();
 
-			id = id + '_wrapper';
-			DOM.removeClass(t.lastId, 'mceFocus');
-			DOM.addClass(id, 'mceFocus');
-			t.lastId = id;
+				id = id + '_wrapper';
+				DOM.removeClass(t.lastId, 'mceFocus');
+				DOM.addClass(id, 'mceFocus');
+				t.lastId = id;
+			}
 		},
 
 		_addAll : function(te, ne) {
@@ -477,16 +479,16 @@
 
 			id = t._findId(id || win);
 
+			// Probably not inline
+			if (!t.windows[id]) {
+				t.parent(win);
+				return;
+			}
+
 			t.count--;
 
 			if (t.count == 0)
 				DOM.remove('mceModalBlocker');
-
-			// Probably not inline
-			if (!id && win) {
-				t.parent(win);
-				return;
-			}
 
 			if (w = t.windows[id]) {
 				t.onClose.dispatch(t);

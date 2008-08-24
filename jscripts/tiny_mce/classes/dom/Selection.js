@@ -34,6 +34,16 @@
 			t.win = win;
 			t.serializer = serializer;
 
+			// Add events
+			each([
+				'onBeforeSetContent',
+				'onBeforeGetContent',
+				'onSetContent',
+				'onGetContent'
+			], function(e) {
+				t[e] = new tinymce.util.Dispatcher(t);
+			});
+
 			// Prevent leaks
 			tinymce.addUnload(t.destroy, t);
 		},
@@ -55,6 +65,7 @@
 			wb = wa = '';
 			s.get = true;
 			s.format = s.format || 'html';
+			t.onBeforeGetContent.dispatch(t, s);
 
 			if (s.format == 'text')
 				return t.isCollapsed() ? '' : (r.text || (se.toString ? se.toString() : ''));
@@ -78,7 +89,10 @@
 
 			s.getInner = true;
 
-			return t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
+			s.content = t.isCollapsed() ? '' : wb + t.serializer.serialize(e, s) + wa;
+			t.onGetContent.dispatch(t, s);
+
+			return s.content;
 		},
 
 		/**
@@ -94,7 +108,11 @@
 
 			s = s || {format : 'html'};
 			s.set = true;
-			h = t.dom.processHTML(h);
+			h = s.content = t.dom.processHTML(h);
+
+			// Dispatch before set content event
+			t.onBeforeSetContent.dispatch(t, s);
+			h = s.content;
 
 			if (r.insertNode) {
 				// Make caret marker since insertNode places the caret in the beginning of text after insert
@@ -127,6 +145,9 @@
 
 				r.pasteHTML(h);
 			}
+
+			// Dispatch set content event
+			t.onSetContent.dispatch(t, s);
 		},
 
 		/**

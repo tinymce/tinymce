@@ -26,7 +26,7 @@ function insertIns() {
 	if (elm == null) {
 		var s = SXE.inst.selection.getContent();
 		if(s.length > 0) {
-			tinyMCEPopup.execCommand('mceInsertContent', false, '<ins id="#sxe_temp_ins#">' + s + '</ins>');
+			insertInlineElement('INS');
 			var elementArray = tinymce.grep(SXE.inst.dom.select('ins'), function(n) {return n.id == '#sxe_temp_ins#';});
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
@@ -44,6 +44,26 @@ function insertIns() {
 function removeIns() {
 	SXE.removeElement('ins');
 	tinyMCEPopup.close();
+}
+
+function insertInlineElement(en) {
+	var ed = tinyMCEPopup.editor, dom = ed.dom;
+
+	ed.getDoc().execCommand('FontName', false, 'mceinline');
+	tinymce.each(dom.select('font'), function(n) {
+		var e;
+
+		if (n.face == 'mceinline') {
+			// Create new inline element and clone attributes
+			e = dom.create(en);
+
+			tinymce.each(dom.getAttribs(n), function(v) {
+				dom.setAttrib(e, v.nodeName, dom.getAttrib(e, v.nodeName));
+			});
+
+			dom.replace(e, n, 1);
+		}
+	});
 }
 
 tinyMCEPopup.onInit.add(init);
