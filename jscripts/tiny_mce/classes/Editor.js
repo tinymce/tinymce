@@ -115,7 +115,8 @@
 				render_ui : 1,
 				init_theme : 1,
 				force_p_newlines : 1,
-				indentation : '30px'
+				indentation : '30px',
+				keep_styles : 1
 			}, s);
 
 			// Setup URIs

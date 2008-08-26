@@ -1,6 +1,7 @@
 Version 3.1.2 (2008-08-xx)
-	Added possibility to skip the loading of popups css by setting the feature popup_css to the value false.
+	Added new keep_style setting that maintains the text style on return/enter on non IE browsers, enabled by default.
 	Added new onBeforeSetContent/onBeforeGetContent/onSetContent/onGetContent events to the Selection class.
+	Added possibility to skip the loading of popups css by setting the feature popup_css to the value false.
 	Added missing allowfullscreen and quality options for flash elements, this will now get correctly stored.
 	Fixed bug where table cell dialog didn't close properly unless the accessibility_warnings option was set to false.
 	Fixed bug where the modal dialog blocker element for inlinepopups wasn't placed at a correct location if the page had scroll.
