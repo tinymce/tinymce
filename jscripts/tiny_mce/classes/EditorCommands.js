@@ -192,43 +192,18 @@
 
 				t.RemoveFormat();
 			} else
-				ed.getDoc().execCommand('FontName', false, v);
+				t._applyInlineStyle('span', {style : {fontFamily : v}});
+
+			//ed.getDoc().execCommand('FontName', false, v);
 		},
 
 		FontSize : function(u, v) {
-			var ed = this.editor, s = ed.settings, fz = tinymce.explode(s.font_size_style_values), fzc = tinymce.explode(s.font_size_classes), h, bm;
+			var ed = this.editor;
 
-			// Remove style sizes
-			each(ed.dom.select('font'), function(e) {
-				e.style.fontSize = '';
-			});
-
-			// Let the browser add new size it will remove unneded ones in some browsers
-			ed.getDoc().execCommand('FontSize', false, v);
-
-			// Add style values
-			if (s.inline_styles) {
-				each(ed.dom.select('font'), function(e) {
-					// Try remove redundant font elements
-					if (e.parentNode.nodeName == 'FONT' && e.size == e.parentNode.size) {
-						if (!bm)
-							bm = ed.selection.getBookmark();
-
-						ed.dom.remove(e, 1);
-						return;
-					}
-
-					// Setup font size based on font size value
-					if (v = e.size) {
-						if (fzc && fzc.length > 0)
-							ed.dom.setAttrib(e, 'class', fzc[parseInt(v) - 1]);
-						else
-							ed.dom.setStyle(e, 'fontSize', fz[parseInt(v) - 1]);
-					}
-				});
-			}
-
-			ed.selection.moveToBookmark(bm);
+			if (v >= 1 && v <= 7)
+				ed.getDoc().execCommand('FontSize', false, v);
+			else
+				this._applyInlineStyle('span', {style : {fontSize : v}});
 		},
 
 		queryCommandValue : function(c) {
@@ -278,14 +253,17 @@
 		queryValueFontSize : function() {
 			var ed = this.editor, v = 0, p;
 
-			if (isOpera || isWebKit) {
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'SPAN'))
+				v = p.style.fontSize;
+
+			if (!v && (isOpera || isWebKit)) {
 				if (p = ed.dom.getParent(ed.selection.getNode(), 'FONT'))
 					v = p.size;
 
 				return v;
 			}
 
-			return this._queryVal('FontSize');
+			return v || this._queryVal('FontSize');
 		},
 
 		queryValueFontName : function() {
@@ -293,6 +271,9 @@
 
 			if (p = ed.dom.getParent(ed.selection.getNode(), 'FONT'))
 				v = p.face;
+
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'SPAN'))
+				v = p.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
 
 			if (!v)
 				v = this._queryVal('FontName');
@@ -625,8 +606,23 @@
 			return this._queryState(c);
 		},
 
+		ForeColor : function(ui, v) {
+			var ed = this.editor;
+
+			if (ed.settings.inline_styles) {
+				this._applyInlineStyle('span', {style : {color : v}});
+				return;
+			} else
+				ed.getDoc().execCommand('ForeColor', false, v);
+		},
+
 		HiliteColor : function(ui, val) {
 			var t = this, ed = t.editor, d = ed.getDoc();
+
+			if (ed.settings.inline_styles) {
+				this._applyInlineStyle('span', {style : {backgroundColor : val}});
+				return;
+			}
 
 			function set(s) {
 				if (!isGecko)
@@ -937,6 +933,111 @@
 			} else
 				s.moveToBookmark(bm);
 		},
+
+		_applyInlineStyle : function(na, at) {
+			var t = this, ed = t.editor, dom = ed.dom, bm, lo = {}, kh;
+
+			na = na.toUpperCase();
+
+			function replaceFonts() {
+				var bm;
+
+				each(dom.select(tinymce.isWebKit ? 'span' : 'font'), function(n) {
+					if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline') {
+						if (!bm)
+							bm = ed.selection.getBookmark();
+
+						at._mce_new = '1';
+						dom.replace(dom.create(na, at), n, 1);
+					}
+				});
+
+				// Remove redundant elements
+				each(dom.select(na), function(n) {
+					if (n.getAttribute('_mce_new')) {
+						// Remove specified style information from child elements
+						each(dom.select(na, n), function(n) {
+							each(at, function(v, k) {
+								if (k === 'style') {
+									each(v, function(v, k) {
+										dom.setStyle(n, k, '');
+									});
+								} else if (k === 'class' && dom.getAttrib(n, k) == v)
+									dom.removeClass(n, v);
+							});
+
+							return false;
+						});
+
+						// Remove the child elements style info if a parent already has it
+						dom.getParent(n.parentNode, function(pn) {
+							if (at.style) {
+								each(at.style, function(v, k) {
+									var sv;
+
+									if (pn.nodeType == 1 && !lo[k] && (sv = dom.getStyle(pn, k))) {
+										if (sv === v)
+											dom.setStyle(n, k, '');
+
+										lo[k] = 1;
+									}
+								});
+							}
+
+							return false;
+						});
+
+						n.removeAttribute('_mce_new');
+					}
+				});
+
+				// Remove empty span elements
+				each(dom.select(na), function(n) {
+					var c = 0;
+
+					// Check if there is any attributes
+					each(dom.getAttribs(n), function(an) {
+						if (an.nodeName.substring(0, 1) != '_' && dom.getAttrib(n, an.nodeName) != '')
+							c++;
+					});
+
+					// No attributes then remove the element and keep the children
+					if (c == 0)
+						dom.remove(n, 1);
+				});
+
+				ed.selection.moveToBookmark(bm);
+
+				return !!bm;
+			};
+
+			// Create inline elements
+			ed.focus();
+			ed.getDoc().execCommand('FontName', false, 'mceinline');
+			replaceFonts();
+
+			if (kh = t._applyInlineStyle.keyhandler) {
+				ed.onKeyUp.remove(kh);
+				ed.onKeyDown.remove(kh);
+			}
+
+			if (ed.selection.isCollapsed()) {
+				t._applyInlineStyle.keyhandler = kh = function(e) {
+					if (replaceFonts()) {
+						ed.onKeyDown.remove(t._applyInlineStyle.keyhandler);
+						ed.onKeyPress.remove(t._applyInlineStyle.keyhandler);
+					}
+
+					if (e.type == 'keyup')
+						ed.onKeyUp.remove(t._applyInlineStyle.keyhandler);
+				};
+
+				ed.onKeyDown.add(kh);
+				ed.onKeyPress.add(kh);
+				ed.onKeyUp.add(kh);
+			}
+		},
+
 /*
 		_mceBlockQuote : function() {
 			var t = this, s = t.editor.selection, b = s.getBookmark(), bq, dom = t.editor.dom;

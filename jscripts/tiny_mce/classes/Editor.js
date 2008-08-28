@@ -2243,7 +2243,7 @@
 
 			if (cl = s.font_size_classes)
 				cl = explode(cl);
-
+/*
 			function convertToFonts(no) {
 				var n, f, nl, x, i, v, st;
 
@@ -2306,7 +2306,7 @@
 			t.onSetContent.add(function(ed, o) {
 				convertToFonts(ed.getBody());
 			});
-
+*/
 			// Run on cleanup
 			t.onPreProcess.add(function(ed, o) {
 				var n, sp, nl, x;

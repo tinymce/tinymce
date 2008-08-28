@@ -93,7 +93,7 @@
 			});
 
 			// Safari returns incorrect values
-			ed.addQueryValueHandler('FontSize', function(u, v) {
+			ed.addQueryValueHandler('Fo2ntSize', function(u, v) {
 				var e, v;
 
 				// Check for the real font size at the start of selection
@@ -109,16 +109,16 @@
 			});
 
 			// Safari returns incorrect values
-			ed.addQueryValueHandler('FontName', function(u, v) {
+			ed.addQueryValueHandler('Fo2ntName', function(u, v) {
 				var e, v;
 
 				// Check for the real font name at the start of selection
 				if ((e = ed.dom.getParent(ed.selection.getStart(), 'span')) && (v = e.style.fontFamily))
-					return v.replace(/, /g, ',');
+					return v.replace(/\'/g, '').replace(/, /g, ',');
 
 				// Check for the real font name at the end of selection
 				if ((e = ed.dom.getParent(ed.selection.getEnd(), 'span')) && (v = e.style.fontFamily))
-					return v.replace(/, /g, ',');
+					return v.replace(/\'/g, '').replace(/, /g, ',');
 
 				// Return default value it's better than nothing right!
 				return ed.getDoc().queryCommandValue('FontName');

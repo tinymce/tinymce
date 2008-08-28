@@ -44,33 +44,45 @@
 		 * @param {String} v Value to look for inside the list box.
 		 */
 		select : function(v) {
-			var t = this, e, fv;
+			var t = this, fv;
 
 			// Do we need to do something?
 			if (v != t.selectedValue) {
-				e = DOM.get(t.id + '_text');
-				t.selectedValue = v;
-
 				// Find item
-				each(t.items, function(o) {
+				each(t.items, function(o, i) {
 					if (o.value == v) {
-						DOM.setHTML(e, DOM.encode(o.title));
 						fv = 1;
+						t.selectByIndex(i);
 						return false;
 					}
 				});
 
-				// If no item was found then present title
-				if (!fv) {
+				if (!fv)
+					t.selectByIndex(-1);
+			}
+		},
+
+		selectByIndex : function(idx) {
+			var t = this, e, o;
+
+			if (idx != t.selectedIndex) {
+				e = DOM.get(t.id + '_text');
+
+				if (idx >= 0) {
+					o = t.items[idx];
+					t.selectedValue = o.value;
+					t.selectedIndex = idx;
+					DOM.setHTML(e, DOM.encode(o.title));
+					DOM.removeClass(e, 'mceTitle');
+				} else {
 					DOM.setHTML(e, DOM.encode(t.settings.title));
 					DOM.addClass(e, 'mceTitle');
-					e = 0;
-					return;
-				} else
-					DOM.removeClass(e, 'mceTitle');
-			}
+					t.selectedValue = t.selectedIndex = null;
+				}
 
-			e = 0;
+				e = 0;
+			} else
+				t.selectedValue = t.selectedIndex = null;
 		},
 
 		/**

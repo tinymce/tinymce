@@ -425,19 +425,7 @@
 				var e, k;
 
 				e = is(n, 'string') ? t.doc.createElement(n) : n;
-
-				if (a) {
-					for (k in a) {
-						if (a.hasOwnProperty(k) && !is(a[k], 'object'))
-							t.setAttrib(e, k, '' + a[k]);
-					}
-
-					if (a.style && !is(a.style, 'string')) {
-						each(a.style, function(v, n) {
-							t.setStyle(e, n, v);
-						});
-					}
-				}
+				t.setAttribs(e, a);
 
 				if (h) {
 					if (h.nodeType)
@@ -664,6 +652,14 @@
 
 				switch (n) {
 					case "style":
+						if (!is(v, 'string')) {
+							each(v, function(v, n) {
+								t.setStyle(e, n, v);
+							});
+
+							return;
+						}
+
 						// No mce_style for elements with these since they might get resized by the user
 						if (s.keep_values) {
 							if (v && !t._isRes(v))

@@ -79,6 +79,19 @@
 				readonly : ed.settings.readonly
 			}, ed.settings);
 
+			// Setup theme_advanced_font_sizes
+			s.theme_advanced_font_sizes = {
+				"1 (8 pt)" : {fontSize : "8pt"},
+				"2 (10 pt)" : {fontSize : "10pt"},
+				"3 (12 pt)" : {fontSize : "12pt"},
+				"4 (14 pt)" : {fontSize : "14pt"},
+				"5 (18 pt)" : {fontSize : "18pt"},
+				"6 (24 pt)" : {fontSize : "24pt"},
+				"7 (36 pt)" : {fontSize : "36pt"},
+				"8 (100%)" : {fontSize : "100%"},
+				"xx-large" : {fontSize : "xx-large"}
+			};
+
 			if ((v = s.theme_advanced_path_location) && v != 'none')
 				s.theme_advanced_statusbar_location = s.theme_advanced_path_location;
 
@@ -213,20 +226,15 @@
 		},
 
 		_createFontSizeSelect : function() {
-			var t = this, ed = t.editor, c, lo = [
-				"1 (8 pt)",
-				"2 (10 pt)",
-				"3 (12 pt)",
-				"4 (14 pt)",
-				"5 (18 pt)",
-				"6 (24 pt)",
-				"7 (36 pt)"
-			], fz = [8, 10, 12, 14, 18, 24, 36];
+			var t = this, ed = t.editor, c, i = 0;
 
-			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', cmd : 'FontSize'});
+			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
+				ed.execCommand('FontSize', false, v.fontSize);
+			}});
+
 			if (c) {
-				each(ed.getParam('theme_advanced_font_sizes', t.settings.theme_advanced_font_sizes, 'hash'), function(v, k) {
-					c.add(k != v ? k : lo[parseInt(v) - 1], v, {'style' : 'font-size:' + fz[v - 1] + 'pt', 'class' : 'mceFontSize' + v});
+				each(t.settings.theme_advanced_font_sizes, function(v, k) {
+					c.add(k, v, {'style' : 'font-size:' + v.fontSize, 'class' : 'mceFontSize' + (i++)});
 				});
 			}
 
@@ -750,7 +758,7 @@
 		},
 
 		_nodeChanged : function(ed, cm, n, co) {
-			var t = this, p, de = 0, v, c, s = t.settings;
+			var t = this, p, de = 0, v, c, s = t.settings, cl;
 
 			if (s.readonly)
 				return;
@@ -808,8 +816,38 @@
 			if (c = cm.get('fontselect'))
 				c.select(ed.queryCommandValue('FontName'));
 
-			if (c = cm.get('fontsizeselect'))
-				c.select('' + ed.queryCommandValue('FontSize'));
+			if (c = cm.get('fontsizeselect')) {
+				cl = p = 0;
+				v = ed.queryCommandValue('FontSize');
+				if (v) {
+					each(c.items, function(o, i) {
+						o = o.value;
+
+						if (o['class']) {
+							if (!cl) {
+								// Look for class name
+								DOM.getParent(n, 'SPAN', function(n) {
+									if (n.nodeName === 'SPAN' && n.className)
+										cl = n.className;
+
+									return !!cl;
+								});
+							}
+
+							if (cl === o['class']) {
+								c.selectByIndex(i);
+								p = 1;
+							}
+						} else if (o.fontSize === v) {
+							c.selectByIndex(i);
+							p = 1;
+						}
+					});
+				}
+
+				if (!p)
+					c.selectByIndex(-1);
+			}
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});

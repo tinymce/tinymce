@@ -16,6 +16,7 @@ Version 3.1.2 (2008-08-xx)
 	Fixed bug where Opera would display BR elements in the element path.
 	Fixed bug where xhtmlxtras didn't insert elements correctly on IE.
 	Fixed bug where the buttons wasn't activated correctly in the xhtmlxtras plugin.
+	Fixed bug where adding an object as the style attribute for the dom setAttribs method wouldn't work.
 Version 3.1.1 (2008-08-18)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.
