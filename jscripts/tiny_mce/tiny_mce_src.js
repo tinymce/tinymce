@@ -5426,9 +5426,9 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 			if (idx != t.selectedIndex) {
 				e = DOM.get(t.id + '_text');
+				o = t.items[idx];
 
-				if (idx >= 0) {
-					o = t.items[idx];
+				if (o) {
 					t.selectedValue = o.value;
 					t.selectedIndex = idx;
 					DOM.setHTML(e, DOM.encode(o.title));
@@ -5660,6 +5660,10 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			});
 		},
 
+		selectByIndex : function(idx) {
+			DOM.get(this.id).selectedIndex = idx + 1;
+		},
+
 		add : function(n, v, a) {
 			var o, t = this;
 
@@ -5703,12 +5707,14 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			t.rendered = true;
 
 			function onChange(e) {
-				var v = e.target.options[e.target.selectedIndex].value;
+				var v = t.items[e.target.selectedIndex - 1];
 
-				t.onChange.dispatch(t, v);
+				if (v = v.value) {
+					t.onChange.dispatch(t, v);
 
-				if (t.settings.onselect)
-					t.settings.onselect(v);
+					if (t.settings.onselect)
+						t.settings.onselect(v);
+				}
 			};
 
 			Event.add(t.id, 'change', onChange);
@@ -8769,10 +8775,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					s.select(s.getNode());
 
 				t.RemoveFormat();
-			} else
-				t._applyInlineStyle('span', {style : {fontFamily : v}});
-
-			//ed.getDoc().execCommand('FontName', false, v);
+			} else {
+				if (ed.settings.convert_fonts_to_spans)
+					t._applyInlineStyle('span', {style : {fontFamily : v}});
+				else
+					ed.getDoc().execCommand('FontName', false, v);
+			}
 		},
 
 		FontSize : function(u, v) {
@@ -9187,7 +9195,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		ForeColor : function(ui, v) {
 			var ed = this.editor;
 
-			if (ed.settings.inline_styles) {
+			if (ed.settings.convert_fonts_to_spans) {
 				this._applyInlineStyle('span', {style : {color : v}});
 				return;
 			} else
@@ -9197,7 +9205,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		HiliteColor : function(ui, val) {
 			var t = this, ed = t.editor, d = ed.getDoc();
 
-			if (ed.settings.inline_styles) {
+			if (ed.settings.convert_fonts_to_spans) {
 				this._applyInlineStyle('span', {style : {backgroundColor : val}});
 				return;
 			}

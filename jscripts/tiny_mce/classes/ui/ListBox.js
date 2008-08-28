@@ -62,14 +62,20 @@
 			}
 		},
 
+		/**
+		 * Selects a item/option by index. This will both add a visual selection to the
+		 * item and change the title of the control to the title of the option.
+		 *
+		 * @param {String} idx Index to select, pass -1 to select menu/title of select box.
+		 */
 		selectByIndex : function(idx) {
 			var t = this, e, o;
 
 			if (idx != t.selectedIndex) {
 				e = DOM.get(t.id + '_text');
+				o = t.items[idx];
 
-				if (idx >= 0) {
-					o = t.items[idx];
+				if (o) {
 					t.selectedValue = o.value;
 					t.selectedIndex = idx;
 					DOM.setHTML(e, DOM.encode(o.title));

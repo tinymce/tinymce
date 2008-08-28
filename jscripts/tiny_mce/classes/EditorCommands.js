@@ -191,10 +191,12 @@
 					s.select(s.getNode());
 
 				t.RemoveFormat();
-			} else
-				t._applyInlineStyle('span', {style : {fontFamily : v}});
-
-			//ed.getDoc().execCommand('FontName', false, v);
+			} else {
+				if (ed.settings.convert_fonts_to_spans)
+					t._applyInlineStyle('span', {style : {fontFamily : v}});
+				else
+					ed.getDoc().execCommand('FontName', false, v);
+			}
 		},
 
 		FontSize : function(u, v) {
@@ -609,7 +611,7 @@
 		ForeColor : function(ui, v) {
 			var ed = this.editor;
 
-			if (ed.settings.inline_styles) {
+			if (ed.settings.convert_fonts_to_spans) {
 				this._applyInlineStyle('span', {style : {color : v}});
 				return;
 			} else
@@ -619,7 +621,7 @@
 		HiliteColor : function(ui, val) {
 			var t = this, ed = t.editor, d = ed.getDoc();
 
-			if (ed.settings.inline_styles) {
+			if (ed.settings.convert_fonts_to_spans) {
 				this._applyInlineStyle('span', {style : {backgroundColor : val}});
 				return;
 			}

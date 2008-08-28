@@ -71,6 +71,16 @@
 		},
 
 		/**
+		 * Selects a item/option by index. This will both add a visual selection to the
+		 * item and change the title of the control to the title of the option.
+		 *
+		 * @param {String} idx Index to select, pass -1 to select menu/title of select box.
+		 */
+		selectByIndex : function(idx) {
+			DOM.get(this.id).selectedIndex = idx + 1;
+		},
+
+		/**
 		 * Adds a option item to the list box.
 		 *
 		 * @param {String} n Title for the new option.
@@ -133,12 +143,14 @@
 			t.rendered = true;
 
 			function onChange(e) {
-				var v = e.target.options[e.target.selectedIndex].value;
+				var v = t.items[e.target.selectedIndex - 1];
 
-				t.onChange.dispatch(t, v);
+				if (v = v.value) {
+					t.onChange.dispatch(t, v);
 
-				if (t.settings.onselect)
-					t.settings.onselect(v);
+					if (t.settings.onselect)
+						t.settings.onselect(v);
+				}
 			};
 
 			Event.add(t.id, 'change', onChange);

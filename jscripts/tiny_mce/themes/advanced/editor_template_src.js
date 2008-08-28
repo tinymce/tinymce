@@ -12,6 +12,8 @@
 	tinymce.ThemeManager.requireLangPack('advanced');
 
 	tinymce.create('tinymce.themes.AdvancedTheme', {
+		sizes : [8, 10, 12, 14, 18, 24, 36],
+
 		// Control name lookup, format: title, command
 		controls : {
 			bold : ['bold_desc', 'Bold'],
@@ -55,7 +57,7 @@
 		stateControls : ['bold', 'italic', 'underline', 'strikethrough', 'bullist', 'numlist', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'sub', 'sup', 'blockquote'],
 
 		init : function(ed, url) {
-			var t = this, s, v;
+			var t = this, s, v, o;
 	
 			t.editor = ed;
 			t.url = url;
@@ -71,26 +73,42 @@
 				theme_advanced_blockformats : "p,address,pre,h1,h2,h3,h4,h5,h6",
 				theme_advanced_toolbar_align : "center",
 				theme_advanced_fonts : "Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats",
-				theme_advanced_font_sizes : "1,2,3,4,5,6,7",
 				theme_advanced_more_colors : 1,
 				theme_advanced_row_height : 23,
 				theme_advanced_resize_horizontal : 1,
 				theme_advanced_resizing_use_cookie : 1,
+				theme_advanced_font_sizes : "1,2,3,4,5,6,7",
 				readonly : ed.settings.readonly
 			}, ed.settings);
 
-			// Setup theme_advanced_font_sizes
-			s.theme_advanced_font_sizes = {
-				"1 (8 pt)" : {fontSize : "8pt"},
-				"2 (10 pt)" : {fontSize : "10pt"},
-				"3 (12 pt)" : {fontSize : "12pt"},
-				"4 (14 pt)" : {fontSize : "14pt"},
-				"5 (18 pt)" : {fontSize : "18pt"},
-				"6 (24 pt)" : {fontSize : "24pt"},
-				"7 (36 pt)" : {fontSize : "36pt"},
-				"8 (100%)" : {fontSize : "100%"},
-				"xx-large" : {fontSize : "xx-large"}
-			};
+			// Setup default font_size_style_values
+			if (!s.font_size_style_values)
+				s.font_size_style_values = "8pt,10pt,12pt,14pt,18pt,24pt,36pt";
+
+			if (tinymce.is(s.theme_advanced_font_sizes, 'string')) {
+				s.font_size_style_values = tinymce.explode(s.font_size_style_values);
+				s.font_size_classes = tinymce.explode(s.font_size_classes || '');
+
+				// Parse string value
+				o = {};
+				ed.settings.theme_advanced_font_sizes = s.theme_advanced_font_sizes;
+				each(ed.getParam('theme_advanced_font_sizes', '', 'hash'), function(v, k) {
+					var cl;
+
+					if (k == v && v >= 1 && v <= 7) {
+						k = v + ' (' + t.sizes[v - 1] + 'pt)';
+
+						if (ed.settings.convert_fonts_to_spans) {
+							cl = s.font_size_classes[v - 1];
+							v = s.font_size_style_values[v - 1] || (t.sizes[v - 1] + 'pt');
+						}
+					}
+
+					o[k] = cl ? {'class' : cl} : {fontSize : v};
+				});
+
+				s.theme_advanced_font_sizes = o;
+			}
 
 			if ((v = s.theme_advanced_path_location) && v != 'none')
 				s.theme_advanced_statusbar_location = s.theme_advanced_path_location;
@@ -229,12 +247,20 @@
 			var t = this, ed = t.editor, c, i = 0;
 
 			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
-				ed.execCommand('FontSize', false, v.fontSize);
+				if (v.fontSize)
+					ed.execCommand('FontSize', false, v.fontSize);
+				else
+					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']});
 			}});
 
 			if (c) {
 				each(t.settings.theme_advanced_font_sizes, function(v, k) {
-					c.add(k, v, {'style' : 'font-size:' + v.fontSize, 'class' : 'mceFontSize' + (i++)});
+					var fz = v.fontSize;
+
+					if (fz >= 1 && fz <= 7)
+						fz = t.sizes[parseInt(fz) - 1] + 'pt';
+
+					c.add(k, v, {'style' : 'font-size:' + fz, 'class' : 'mceFontSize' + (i++) + (' ' + (v['class'] || ''))});
 				});
 			}
 
@@ -758,7 +784,7 @@
 		},
 
 		_nodeChanged : function(ed, cm, n, co) {
-			var t = this, p, de = 0, v, c, s = t.settings, cl;
+			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn;
 
 			if (s.readonly)
 				return;
@@ -813,40 +839,52 @@
 					c.select(p.nodeName.toLowerCase());
 			}
 
-			if (c = cm.get('fontselect'))
-				c.select(ed.queryCommandValue('FontName'));
+			if (ed.settings.convert_fonts_to_spans) {
+				ed.dom.getParent(n, function(n) {
+					if (n.nodeName === 'SPAN') {
+						if (!cl && n.className)
+							cl = n.className;
 
-			if (c = cm.get('fontsizeselect')) {
-				cl = p = 0;
-				v = ed.queryCommandValue('FontSize');
-				if (v) {
+						if (!fz && n.style.fontSize)
+							fz = n.style.fontSize;
+
+						if (!fn && n.style.fontFamily)
+							fn = n.style.fontFamily;
+					}
+
+					return false;
+				});
+
+				if (c = cm.get('fontselect'))
+					c.select(fn);
+
+				if (c = cm.get('fontsizeselect')) {
+					p = 0;
 					each(c.items, function(o, i) {
 						o = o.value;
 
-						if (o['class']) {
-							if (!cl) {
-								// Look for class name
-								DOM.getParent(n, 'SPAN', function(n) {
-									if (n.nodeName === 'SPAN' && n.className)
-										cl = n.className;
-
-									return !!cl;
-								});
-							}
-
-							if (cl === o['class']) {
-								c.selectByIndex(i);
-								p = 1;
-							}
-						} else if (o.fontSize === v) {
+						if (o.fontSize && o.fontSize === fz) {
 							c.selectByIndex(i);
 							p = 1;
+							return false;
+						}
+
+						if (o['class'] && o['class'] === cl) {
+							c.selectByIndex(i);
+							p = 1;
+							return false;
 						}
 					});
-				}
 
-				if (!p)
-					c.selectByIndex(-1);
+					if (!p)
+						c.selectByIndex(-1);
+				}
+			} else {
+				if (c = cm.get('fontselect'))
+					c.select(ed.queryCommandValue('FontName'));
+
+				if (c = cm.get('fontsizeselect'))
+					c.selectByIndex(ed.queryCommandValue('FontSize'));
 			}
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
