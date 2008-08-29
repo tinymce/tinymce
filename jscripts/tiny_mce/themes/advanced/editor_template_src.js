@@ -104,6 +104,9 @@
 						}
 					}
 
+					if (/\s*\./.test(v))
+						cl = v.replace(/\./g, '');
+
 					o[k] = cl ? {'class' : cl} : {fontSize : v};
 				});
 
@@ -244,13 +247,19 @@
 		},
 
 		_createFontSizeSelect : function() {
-			var t = this, ed = t.editor, c, i = 0;
+			var t = this, ed = t.editor, c, i = 0, cl = [];
 
 			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
 				if (v.fontSize)
 					ed.execCommand('FontSize', false, v.fontSize);
-				else
-					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']});
+				else {
+					each(t.settings.theme_advanced_font_sizes, function(v, k) {
+						if (v['class'])
+							cl.push(v['class']);
+					});
+
+					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']}, {check_classes : cl});
+				}
 			}});
 
 			if (c) {

@@ -9520,10 +9520,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				s.moveToBookmark(bm);
 		},
 
-		_applyInlineStyle : function(na, at) {
+		_applyInlineStyle : function(na, at, op) {
 			var t = this, ed = t.editor, dom = ed.dom, bm, lo = {}, kh;
 
 			na = na.toUpperCase();
+
+			if (op && op.check_classes && at['class'])
+				op.check_classes.push(at['class']);
 
 			function replaceFonts() {
 				var bm;
@@ -9543,31 +9546,44 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					if (n.getAttribute('_mce_new')) {
 						// Remove specified style information from child elements
 						each(dom.select(na, n), function(n) {
-							each(at, function(v, k) {
-								if (k === 'style') {
-									each(v, function(v, k) {
-										dom.setStyle(n, k, '');
-									});
-								} else if (k === 'class' && dom.getAttrib(n, k) == v)
-									dom.removeClass(n, v);
+							each(at.style, function(v, k) {
+								dom.setStyle(n, k, '');
 							});
+
+							// Remove spans with the same class or marked classes
+							if (at['class'] && n.className && op) {
+								each(op.check_classes, function(c) {
+									if (dom.hasClass(n, c))
+										dom.removeClass(n, c);
+								});
+							}
 
 							return false;
 						});
 
 						// Remove the child elements style info if a parent already has it
 						dom.getParent(n.parentNode, function(pn) {
-							if (at.style) {
-								each(at.style, function(v, k) {
-									var sv;
+							if (pn.nodeType == 1) {
+								if (at.style) {
+									each(at.style, function(v, k) {
+										var sv;
 
-									if (pn.nodeType == 1 && !lo[k] && (sv = dom.getStyle(pn, k))) {
-										if (sv === v)
-											dom.setStyle(n, k, '');
+										if (!lo[k] && (sv = dom.getStyle(pn, k))) {
+											if (sv === v)
+												dom.setStyle(n, k, '');
 
-										lo[k] = 1;
-									}
-								});
+											lo[k] = 1;
+										}
+									});
+								}
+
+								// Remove spans with the same class or marked classes
+								if (at['class'] && pn.className && op) {
+									each(op.check_classes, function(c) {
+										if (dom.hasClass(pn, c))
+											dom.removeClass(n, c);
+									});
+								}
 							}
 
 							return false;
