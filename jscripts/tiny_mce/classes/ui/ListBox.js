@@ -41,16 +41,24 @@
 		 * Selects a item/option by value. This will both add a visual selection to the
 		 * item and change the title of the control to the title of the option.
 		 *
-		 * @param {String} v Value to look for inside the list box.
+		 * @param {String/function} va Value to look for inside the list box or a function selector.
 		 */
-		select : function(v) {
-			var t = this, fv;
+		select : function(va) {
+			var t = this, fv, f;
+
+			// Is string make function selector
+			if (va && !va.call) {
+				f = function(v) {
+					return v == va;
+				};
+			} else
+				f = va;
 
 			// Do we need to do something?
-			if (v != t.selectedValue) {
+			if (va != t.selectedValue) {
 				// Find item
 				each(t.items, function(o, i) {
-					if (o.value == v) {
+					if (f(o.value)) {
 						fv = 1;
 						t.selectByIndex(i);
 						return false;

@@ -54,17 +54,23 @@
 		 * Selects a item/option by value. This will both add a visual selection to the
 		 * item and change the title of the control to the title of the option.
 		 *
-		 * @param {String} v Value to look for inside the list box.
+		  * @param {String/function} va Value to look for inside the list box or a function selector.
 		 */
-		select : function(v) {
-			var e = DOM.get(this.id), ol = e.options;
+		select : function(va) {
+			var e = DOM.get(this.id), ol = e.options, f;
 
-			v = '' + (v || '');
+			// Is string make function selector
+			if (tinymce.is(va, 'string') || tinymce.is(va, 'number')) {
+				f = function(v) {
+					return v == va;
+				};
+			} else
+				f = va;
 
 			e.selectedIndex = 0;
-			each(ol, function(o, i) {
-				if (o.value == v) {
-					e.selectedIndex = i;
+			each(this.items, function(o, i) {
+				if (f(o.value)) {
+					e.selectedIndex = i + 1;
 					return false;
 				}
 			});

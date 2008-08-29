@@ -858,42 +858,37 @@
 							fz = n.style.fontSize;
 
 						if (!fn && n.style.fontFamily)
-							fn = n.style.fontFamily;
+							fn = n.style.fontFamily.replace(/[\"\']+/g, '').replace(/^([^,]+).*/, '$1').toLowerCase();
 					}
 
 					return false;
 				});
 
-				if (c = cm.get('fontselect'))
-					c.select(fn);
+				if (c = cm.get('fontselect')) {
+					c.select(function(v) {
+						return v.replace(/^([^,]+).*/, '$1').toLowerCase() == fn;
+					});
+				}
 
 				if (c = cm.get('fontsizeselect')) {
-					p = 0;
-					each(c.items, function(o, i) {
-						o = o.value;
+					c.select(function(v) {
+						if (v.fontSize && v.fontSize === fz)
+							return true;
 
-						if (o.fontSize && o.fontSize === fz) {
-							c.selectByIndex(i);
-							p = 1;
-							return false;
-						}
-
-						if (o['class'] && o['class'] === cl) {
-							c.selectByIndex(i);
-							p = 1;
-							return false;
-						}
+						if (v['class'] && v['class'] === cl)
+							return true;
 					});
-
-					if (!p)
-						c.selectByIndex(-1);
 				}
 			} else {
 				if (c = cm.get('fontselect'))
 					c.select(ed.queryCommandValue('FontName'));
 
-				if (c = cm.get('fontsizeselect'))
-					c.selectByIndex(ed.queryCommandValue('FontSize'));
+				if (c = cm.get('fontsizeselect')) {
+					v = ed.queryCommandValue('FontSize');
+					c.select(function(iv) {
+						return iv == v;
+					});
+				}
 			}
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {

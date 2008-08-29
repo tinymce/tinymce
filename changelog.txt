@@ -1,9 +1,10 @@
 Version 3.1.2 (2008-08-xx)
 	Added new text style support, it will now use span elements internally instead of font elements.
-	Added improved support for the theme_advanced_font_sizes option, check the Wiki for details.
+	Added new improved support for the theme_advanced_font_sizes option, check the Wiki for details.
 	Added new keep_style setting that maintains the text style on return/enter on non IE browsers, enabled by default.
 	Added new onBeforeSetContent/onBeforeGetContent/onSetContent/onGetContent events to the Selection class.
 	Added new selectByIndex method to ListBox class. This enables you to select list items by an index instead of a value.
+	Added new possibility to the select method of the ListBox class. This can now have a selector function as it's value argument.
 	Added possibility to skip the loading of popups css by setting the feature popup_css to the value false.
 	Added missing allowfullscreen and quality options for flash elements, this will now get correctly stored.
 	Fixed bug where table cell dialog didn't close properly unless the accessibility_warnings option was set to false.

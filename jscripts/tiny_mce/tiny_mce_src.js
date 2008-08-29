@@ -5402,14 +5402,22 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			t.classPrefix = 'mceListBox';
 		},
 
-		select : function(v) {
-			var t = this, fv;
+		select : function(va) {
+			var t = this, fv, f;
+
+			// Is string make function selector
+			if (va && !va.call) {
+				f = function(v) {
+					return v == va;
+				};
+			} else
+				f = va;
 
 			// Do we need to do something?
-			if (v != t.selectedValue) {
+			if (va != t.selectedValue) {
 				// Find item
 				each(t.items, function(o, i) {
-					if (o.value == v) {
+					if (f(o.value)) {
 						fv = 1;
 						t.selectByIndex(i);
 						return false;
@@ -5646,15 +5654,21 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			return DOM.get(this.id).disabled;
 		},
 
-		select : function(v) {
-			var e = DOM.get(this.id), ol = e.options;
+		select : function(va) {
+			var e = DOM.get(this.id), ol = e.options, f;
 
-			v = '' + (v || '');
+			// Is string make function selector
+			if (tinymce.is(va, 'string') || tinymce.is(va, 'number')) {
+				f = function(v) {
+					return v == va;
+				};
+			} else
+				f = va;
 
 			e.selectedIndex = 0;
-			each(ol, function(o, i) {
-				if (o.value == v) {
-					e.selectedIndex = i;
+			each(this.items, function(o, i) {
+				if (f(o.value)) {
+					e.selectedIndex = i + 1;
 					return false;
 				}
 			});
