@@ -8798,7 +8798,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		FontSize : function(u, v) {
-			var ed = this.editor;
+			var ed = this.editor, s = ed.settings, fc, fs;
+
+			// Use style options instead
+			if (s.convert_fonts_to_spans && v >= 1 && v <= 7) {
+				fs = tinymce.explode(s.font_size_style_values);
+				fc = tinymce.explode(s.font_size_classes);
+
+				if (fc)
+					v = fc[v - 1] || v;
+				else
+					v = fs[v - 1] || v;
+			}
 
 			if (v >= 1 && v <= 7)
 				ed.getDoc().execCommand('FontSize', false, v);
