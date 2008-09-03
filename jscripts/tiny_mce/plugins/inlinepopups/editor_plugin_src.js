@@ -354,7 +354,7 @@
 				DOM.add(d.body, 'div', {
 					id : 'mceEventBlocker',
 					'class' : 'mceEventBlocker ' + (t.editor.settings.inlinepopups_skin || 'clearlooks2'),
-					style : {left : vp.x, top : vp.y, zIndex : t.zIndex + 1}
+					style : {zIndex : t.zIndex + 1}
 				});
 
 				if (tinymce.isIE6 || (tinymce.isIE && !DOM.boxModel))
