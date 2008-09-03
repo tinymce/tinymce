@@ -728,7 +728,7 @@
 								if (!trElm || !tdElm)
 									return true;
 
-								var grid = getTableGrid(tableElm);
+								var grid = getTableGrid(inst.dom.getParent(tableElm, "table"));
 								var cpos = getCellPos(grid, tdElm);
 								var lastTDElm = null;
 
@@ -759,7 +759,7 @@
 								if (!trElm || !tdElm)
 									return true;
 
-								var grid = getTableGrid(tableElm);
+								var grid = getTableGrid(inst.dom.getParent(tableElm, "table"));
 								var cpos = getCellPos(grid, tdElm);
 								var lastTDElm = null;
 

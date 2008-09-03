@@ -22,6 +22,7 @@ Version 3.1.2 (2008-08-xx)
 	Fixed bug where the buttons wasn't activated correctly in the xhtmlxtras plugin.
 	Fixed bug where adding an object as the style attribute for the dom setAttribs method wouldn't work.
 	Fixed bug where the background color would bleed out to parent container element in Gecko.
+	Fixed bug where the insert column actions for tables would fail if you did it in a thead or tfoot. Patch contributed by T Andersen (tan73).
 Version 3.1.1 (2008-08-18)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.
