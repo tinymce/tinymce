@@ -107,6 +107,10 @@
 			content = this.editor.dom.encode(content);
 
 			if (content && content.length > 0) {
+				// Delete any highlighted text before pasting
+				if (!this.editor.selection.isCollapsed())
+					this.editor.execCommand("Delete"); 
+
 				if (bLinebreaks) { 
 					// Special paragraph treatment 
 					if (this.editor.getParam("paste_create_paragraphs", true)) {
@@ -172,7 +176,7 @@
 				if (ed.getParam('paste_insert_word_content_callback'))
 					content = ed.execCallback('paste_insert_word_content_callback', 'before', content);
 
-				var rl = ed.getParam("paste_replace_list", '\u2122,<sup>TM</sup>,\u2026,...,\u201c|\u201d,",\u2019,\',\u2013|\u2014|\u2015|\u2212,-').split(',');
+				var rl = ed.getParam("paste_replace_list", '\u2122,<sup>TM</sup>,\u2026,...,\x93|\x94|\u201c|\u201d,",\x60|\x91|\x92|\u2018|\u2019,\',\u2013|\u2014|\u2015|\u2212,-').split(',');
 				for (var i=0; i<rl.length; i+=2)
 					content = content.replace(new RegExp(rl[i], 'gi'), rl[i+1]);
 
@@ -185,7 +189,7 @@
 				content = content.replace(new RegExp('<SPAN style="mso-list: Ignore">', 'gi'), "<span>" + bull); // Covert to bull list
 				content = content.replace(/<o:p><\/o:p>/gi, "");
 				content = content.replace(new RegExp('<br style="page-break-before: always;.*>', 'gi'), '-- page break --'); // Replace pagebreaks
-				content = content.replace(new RegExp('<(!--)([^>]*)(--)>', 'g'), "");  // Word comments
+				content = content.replace(new RegExp('<(!--)(\s\S*?)(--)>', 'g'), "");  // Word comments
 
 				if (this.editor.getParam("paste_remove_spans", true))
 					content = content.replace(/<\/?span[^>]*>/gi, "");

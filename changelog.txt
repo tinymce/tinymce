@@ -24,6 +24,9 @@ Version 3.1.2 (2008-08-xx)
 	Fixed bug where the background color would bleed out to parent container element in Gecko.
 	Fixed bug where the insert column actions for tables would fail if you did it in a thead or tfoot. Patch contributed by T Andersen (tan73).
 	Fixed bug where event blocker element wasn't positioned correctly for the inlinepopups plugin.
+	Fixed bug where pasting from Office 2007 would produce an odd comment in the contents.
+	Fixed bug where the paste as plain text could remove an extra character. Patch contributed by Speednet.
+	Fixed bug where some characters where missing for the paste_replace_list option. Patch contributed by Speednet.
 Version 3.1.1 (2008-08-18)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.
