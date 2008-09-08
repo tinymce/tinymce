@@ -189,7 +189,8 @@
 				content = content.replace(new RegExp('<SPAN style="mso-list: Ignore">', 'gi'), "<span>" + bull); // Covert to bull list
 				content = content.replace(/<o:p><\/o:p>/gi, "");
 				content = content.replace(new RegExp('<br style="page-break-before: always;.*>', 'gi'), '-- page break --'); // Replace pagebreaks
-				content = content.replace(new RegExp('<(!--)(\s\S*?)(--)>', 'g'), "");  // Word comments
+				content = content.replace(/<!--([\s\S]*?)-->|<style>[\s\S]*?<\/style>/g, "");  // Word comments
+				content = content.replace(/<(meta|link)[^>]+>/g, ""); // Header elements
 
 				if (this.editor.getParam("paste_remove_spans", true))
 					content = content.replace(/<\/?span[^>]*>/gi, "");
