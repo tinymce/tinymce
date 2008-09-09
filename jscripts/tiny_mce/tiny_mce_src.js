@@ -8100,7 +8100,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.onKeyUp.add(function(ed, e) {
 				var c = e.keyCode;
 
-				if ((c >= 33 && c <= 36) || (c >= 37 && c <= 40) || c == 13 || c == 45 || c == 46 || c == 8 || (tinymce.isMac && c >= 91 && c <= 93) || e.ctrlKey)
+				if ((c >= 33 && c <= 36) || (c >= 37 && c <= 40) || c == 13 || c == 45 || c == 46 || c == 8 || (tinymce.isMac && (c == 91 || c == 93)) || e.ctrlKey)
 					t.nodeChanged();
 			});
 
