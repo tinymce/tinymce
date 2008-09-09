@@ -37,6 +37,8 @@ Version 3.2 (2008-08-xx)
 	Fixed bug where elements wouldn't be padded if the element contained bogus br elements. For example TD elements.
 	Fixed bug where parsing of <body > in fullpage plugin would produce an error.
 	Fixed bug where relative urls with just ./ would become an empty string.
+	Fixed bug where outdent button would be disabled if inline_styles where set to false.
+	Fixed bug where replace with an empty search string would produce an error on IE.
 	Fixed so translation of popup contents only occurs if it's needed.
 	Optimized the URI object in regards or converting absolute URIs to relative URIs.
 Version 3.1.1 (2008-08-18)

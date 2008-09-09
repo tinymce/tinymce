@@ -802,10 +802,9 @@
 
 				if ((n = ed.dom.getParent(ed.selection.getEnd(), ed.dom.isBlock)) && parseInt(n.style.paddingLeft) > 0)
 					return true;
-			} else
-				return !!ed.dom.getParent(ed.selection.getNode(), 'BLOCKQUOTE');
+			}
 
-			return this.queryStateInsertUnorderedList() || this.queryStateInsertOrderedList();
+			return this.queryStateInsertUnorderedList() || this.queryStateInsertOrderedList() || (!ed.settings.inline_styles && !!ed.dom.getParent(ed.selection.getNode(), 'BLOCKQUOTE'));
 		},
 
 		queryStateInsertUnorderedList : function() {

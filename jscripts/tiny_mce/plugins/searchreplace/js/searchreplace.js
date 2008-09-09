@@ -42,6 +42,9 @@ var SearchReplaceDialog = {
 		ca = f[m + '_panel_casesensitivebox'].checked;
 		rs = f['replace_panel_replacestring'].value;
 
+		if (s == '')
+			return;
+
 		function fix() {
 			// Correct Firefox graphics glitches
 			r = se.getRng().cloneRange();
