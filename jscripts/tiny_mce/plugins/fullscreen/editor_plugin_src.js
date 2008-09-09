@@ -61,7 +61,7 @@
 						s.fullscreen_overflow = 'auto';
 
 					// Fixes an IE bug where the scrollbars doesn't reappear
-					if (tinymce.isIE && s.fullscreen_html_overflow == 'visible')
+					if (tinymce.isIE && (s.fullscreen_html_overflow == 'visible' || s.fullscreen_html_overflow == 'scroll'))
 						s.fullscreen_html_overflow = 'auto'; 
 
 					if (s.fullscreen_overflow == '0px')
