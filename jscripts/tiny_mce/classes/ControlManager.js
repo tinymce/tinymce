@@ -307,11 +307,11 @@
 		 * @param {Object} cc Optional control class to use instead of the default one.
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
-		createMenuButton : function(id, s) {
+		createMenuButton : function(id, s, cc) {
 			s = s || {};
 			s.menu_button = 1;
 
-			return this.createButton(id, s);
+			return this.createButton(id, s, cc);
 		},
 
 		/**

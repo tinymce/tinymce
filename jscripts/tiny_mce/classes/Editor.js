@@ -523,6 +523,7 @@
 				font_size_style_values : s.font_size_style_values,
 				apply_source_formatting : s.apply_source_formatting,
 				remove_linebreaks : s.remove_linebreaks,
+				element_format : s.element_format,
 				dom : t.dom
 			});
 

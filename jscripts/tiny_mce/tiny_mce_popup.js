@@ -172,18 +172,25 @@ tinyMCEPopup = {
 	},*/
 
 	_onDOMLoaded : function() {
-		var t = this, ti = document.title, bm, h;
+		var t = this, ti = document.title, bm, h, nv;
 
 		// Translate page
-		h = document.body.innerHTML;
+		if (t.features.translate_i18n !== false) {
+			h = document.body.innerHTML;
 
-		// Replace a=x with a="x" in IE
-		if (tinymce.isIE)
-			h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
+			// Replace a=x with a="x" in IE
+			if (tinymce.isIE)
+				h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
 
-		document.dir = t.editor.getParam('directionality','');
-		document.body.innerHTML = t.editor.translate(h);
-		document.title = ti = t.editor.translate(ti);
+			document.dir = t.editor.getParam('directionality','');
+
+			if ((nv = t.editor.translate(h)) && nv != h)
+				document.body.innerHTML = nv;
+
+			if ((nv = t.editor.translate(ti)) && nv != ti)
+				document.title = ti = nv;
+		}
+
 		document.body.style.display = '';
 
 		// Restore selection in IE when focus is placed on a non textarea or input element of the type text

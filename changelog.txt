@@ -1,11 +1,13 @@
-Version 3.1.2 (2008-08-xx)
+Version 3.2 (2008-08-xx)
 	Added new text style support, it will now use span elements internally instead of font elements.
 	Added new improved support for the theme_advanced_font_sizes option, check the Wiki for details.
 	Added new keep_style setting that maintains the text style on return/enter on non IE browsers, enabled by default.
 	Added new onBeforeSetContent/onBeforeGetContent/onSetContent/onGetContent events to the Selection class.
 	Added new selectByIndex method to ListBox class. This enables you to select list items by an index instead of a value.
 	Added new possibility to the select method of the ListBox class. This can now have a selector function as it's value argument.
-	Added possibility to skip the loading of popups css by setting the feature popup_css to the value false.
+	Added new possibility to skip the loading of popups css by setting the feature popup_css to the value false.
+	Added new possibility to skip translation of popups by setting the translate_i18n feature to false.
+	Added new element_format option enables you to produce HTML element endings instead of XHTML. But we are still in the XHTML is better camp.
 	Added missing allowfullscreen and quality options for flash elements, this will now get correctly stored.
 	Fixed bug where table cell dialog didn't close properly unless the accessibility_warnings option was set to false.
 	Fixed bug where the modal dialog blocker element for inlinepopups wasn't placed at a correct location if the page had scroll.
@@ -27,6 +29,16 @@ Version 3.1.2 (2008-08-xx)
 	Fixed bug where pasting from Office 2007 would produce an odd comment in the contents.
 	Fixed bug where the paste as plain text could remove an extra character. Patch contributed by Speednet.
 	Fixed bug where some characters where missing for the paste_replace_list option. Patch contributed by Speednet.
+	Fixed bug where removing non existing editor instances by the mceRemoveControl command would produce an error.
+	Fixed bug where meta elements with the name description would produce errors in IE.
+	Fixed bug where color and background colors wouldn't be updated properly.
+	Fixed bug where the createMenuButton of tinymce.ControlManager didn't implement the last class argument.
+	Fixed bug where the editor_css option was relative from the TinyMCE installation directory not the current page.
+	Fixed bug where elements wouldn't be padded if the element contained bogus br elements. For example TD elements.
+	Fixed bug where parsing of <body > in fullpage plugin would produce an error.
+	Fixed bug where relative urls with just ./ would become an empty string.
+	Fixed so translation of popup contents only occurs if it's needed.
+	Optimized the URI object in regards or converting absolute URIs to relative URIs.
 Version 3.1.1 (2008-08-18)
 	Added new getSize method to DOMUtils it will return the dimensions only of an element.
 	Added new alert/confirm methods to the tinyMCEPopup class to prevent focus problems and also to shorten method calls.

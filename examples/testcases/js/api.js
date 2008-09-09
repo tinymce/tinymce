@@ -1230,6 +1230,7 @@
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('@@tinymce'), '@@tinymce'); // Zope 3 URL
 			t.eq(new URI('http://www.site.com/dir1/dir2/').toRelative('../@@tinymce'), '../@@tinymce'); // Zope 3 URL
 			t.eq(new URI('http://www.site.com/').toRelative('dir2/test.htm'), 'dir2/test.htm');
+			t.eq(new URI('http://www.site.com/').toRelative('./'), './');
 		},
 
 		absoluteURLs : function() {

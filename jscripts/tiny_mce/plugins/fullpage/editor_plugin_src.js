@@ -51,21 +51,23 @@
 			if (attr && attr[1]) {
 				bdattr = attr[1].match(/\s*(\w+\s*=\s*".*?"|\w+\s*=\s*'.*?'|\w+\s*=\s*\w+|\w+)\s*/g);
 
-				for(i = 0, len = bdattr.length; i < len; i++) {
-					kv = bdattr[i].split('=');
-					k = kv[0].replace(/\s/,'');
-					v = kv[1];
+				if (bdattr) {
+					for(i = 0, len = bdattr.length; i < len; i++) {
+						kv = bdattr[i].split('=');
+						k = kv[0].replace(/\s/,'');
+						v = kv[1];
 
-					if (v) {
-						v = v.replace(/^\s+/,'').replace(/\s+$/,'');
-						t = v.match(/^["'](.*)["']$/);
+						if (v) {
+							v = v.replace(/^\s+/,'').replace(/\s+$/,'');
+							t = v.match(/^["'](.*)["']$/);
 
-						if (t)
-							v = t[1];
-					} else
-						v = k;
+							if (t)
+								v = t[1];
+						} else
+							v = k;
 
-					ed.dom.setAttrib(ed.getBody(), 'style', v);
+						ed.dom.setAttrib(ed.getBody(), 'style', v);
+					}
 				}
 			}
 		},

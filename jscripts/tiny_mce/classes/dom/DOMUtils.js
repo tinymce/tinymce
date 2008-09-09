@@ -1658,7 +1658,7 @@
 			var t = this, o;
 
 			if (t.doc && typeof(e) === 'string')
-				e = t.doc.getElementById(e);
+				e = t.get(e);
 
 			if (!e)
 				return false;

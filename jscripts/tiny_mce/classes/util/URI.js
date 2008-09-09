@@ -105,6 +105,9 @@
 		toRelative : function(u) {
 			var t = this, o;
 
+			if (u === "./")
+				return u;
+
 			u = new tinymce.util.URI(u, {base_uri : t});
 
 			// Not on same domain/port or protocol
@@ -144,7 +147,7 @@
 		 * @param {String} path Absolute path to convert into a relative path.
 		 */
 		toRelPath : function(base, path) {
-			var items, bp = 0, out = '', i;
+			var items, bp = 0, out = '', i, l;
 
 			// Split the paths
 			base = base.substring(0, base.lastIndexOf('/'));
@@ -152,7 +155,7 @@
 			items = path.split('/');
 
 			if (base.length >= items.length) {
-				for (i = 0; i < base.length; i++) {
+				for (i = 0, l = base.length; i < l; i++) {
 					if (i >= items.length || base[i] != items[i]) {
 						bp = i + 1;
 						break;
@@ -161,7 +164,7 @@
 			}
 
 			if (base.length < items.length) {
-				for (i = 0; i < items.length; i++) {
+				for (i = 0, l = items.length; i < l; i++) {
 					if (i >= base.length || base[i] != items[i]) {
 						bp = i + 1;
 						break;
@@ -172,10 +175,10 @@
 			if (bp == 1)
 				return path;
 
-			for (i = 0; i < base.length - (bp - 1); i++)
+			for (i = 0, l = base.length - (bp - 1); i < l; i++)
 				out += "../";
 
-			for (i = bp - 1; i < items.length; i++) {
+			for (i = bp - 1, l = items.length; i < l; i++) {
 				if (i != bp - 1)
 					out += "/" + items[i];
 				else

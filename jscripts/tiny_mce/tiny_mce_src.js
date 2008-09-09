@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '1.2',
-	releaseDate : '2008-08-xx',
+	minorVersion : '2',
+	releaseDate : '2008-09-xx',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -564,6 +564,9 @@ tinymce.create('tinymce.util.Dispatcher', {
 		toRelative : function(u) {
 			var t = this, o;
 
+			if (u === "./")
+				return u;
+
 			u = new tinymce.util.URI(u, {base_uri : t});
 
 			// Not on same domain/port or protocol
@@ -590,7 +593,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 		},
 
 		toRelPath : function(base, path) {
-			var items, bp = 0, out = '', i;
+			var items, bp = 0, out = '', i, l;
 
 			// Split the paths
 			base = base.substring(0, base.lastIndexOf('/'));
@@ -598,7 +601,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 			items = path.split('/');
 
 			if (base.length >= items.length) {
-				for (i = 0; i < base.length; i++) {
+				for (i = 0, l = base.length; i < l; i++) {
 					if (i >= items.length || base[i] != items[i]) {
 						bp = i + 1;
 						break;
@@ -607,7 +610,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 			}
 
 			if (base.length < items.length) {
-				for (i = 0; i < items.length; i++) {
+				for (i = 0, l = items.length; i < l; i++) {
 					if (i >= base.length || base[i] != items[i]) {
 						bp = i + 1;
 						break;
@@ -618,10 +621,10 @@ tinymce.create('tinymce.util.Dispatcher', {
 			if (bp == 1)
 				return path;
 
-			for (i = 0; i < base.length - (bp - 1); i++)
+			for (i = 0, l = base.length - (bp - 1); i < l; i++)
 				out += "../";
 
-			for (i = bp - 1; i < items.length; i++) {
+			for (i = bp - 1, l = items.length; i < l; i++) {
 				if (i != bp - 1)
 					out += "/" + items[i];
 				else
@@ -803,7 +806,7 @@ tinymce.create('static tinymce.util.JSON', {
 		if (t == 'string') {
 			v = '\bb\tt\nn\ff\rr\""\'\'\\\\';
 
-			return '"' + o.replace(/([\u0080-\uFFFF\x00-\x1f\"\'])/g, function(a, b) {
+			return '"' + o.replace(/([\u0080-\uFFFF\x00-\x1f\"])/g, function(a, b) {
 				i = v.indexOf(b);
 
 				if (i + 1)
@@ -2324,7 +2327,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this, o;
 
 			if (t.doc && typeof(e) === 'string')
-				e = t.doc.getElementById(e);
+				e = t.get(e);
 
 			if (!e)
 				return false;
@@ -3685,7 +3688,8 @@ tinymce.create('static tinymce.util.XHR', {
 				indent_char : '\t',
 				indent_levels : 1,
 				remove_linebreaks : 1,
-				remove_redundant_brs : 1
+				remove_redundant_brs : 1,
+				element_format : 'xhtml'
 			}, s);
 
 			t.dom = s.dom;
@@ -3694,6 +3698,13 @@ tinymce.create('static tinymce.util.XHR', {
 				t.onPostProcess.add(function(se, o) {
 					// Remove BR elements at end of list elements since they get rendered in IE
 					o.content = o.content.replace(/<br \/>(\s*<\/li>)/g, '$1');
+				});
+			}
+
+			// Remove XHTML element endings i.e. produce crap :) XHTML is better
+			if (s.element_format == 'html') {
+				t.onPostProcess.add(function(se, o) {
+					o.content = o.content.replace(/<([^>]+) \/>/g, '<$1>');
 				});
 			}
 
@@ -4308,8 +4319,14 @@ tinymce.create('static tinymce.util.XHR', {
 						}
 
 						// Padd empty nodes with a &nbsp;
-						if (!hc && ru.padd)
-							w.writeText('\u00a0');
+						if (ru.padd) {
+							// If it has only one bogus child, padd it anyway workaround for <td><br /></td> bug
+							if (hc && (cn = n.firstChild) && cn.nodeType === 1 && n.childNodes.length === 1) {
+								if (cn.hasAttribute ? cn.hasAttribute('mce_bogus') : cn.getAttribute('mce_bogus'))
+									w.writeText('\u00a0');
+							} else if (!hc)
+								w.writeText('\u00a0'); // No children then padd it
+						}
 
 						break;
 
@@ -6515,7 +6532,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 				case "mceRemoveEditor":
 				case "mceRemoveControl":
-					ed.remove();
+					if (ed)
+						ed.remove();
+
 					return true;
 
 				case 'mceToggleEditor':
@@ -7071,6 +7090,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				font_size_style_values : s.font_size_style_values,
 				apply_source_formatting : s.apply_source_formatting,
 				remove_linebreaks : s.remove_linebreaks,
+				element_format : s.element_format,
 				dom : t.dom
 			});
 
@@ -10695,11 +10715,11 @@ tinymce.create('tinymce.UndoManager', {
 			return t.add(c);
 		},
 
-		createMenuButton : function(id, s) {
+		createMenuButton : function(id, s, cc) {
 			s = s || {};
 			s.menu_button = 1;
 
-			return this.createButton(id, s);
+			return this.createButton(id, s, cc);
 		},
 
 		createSplitButton : function(id, s, cc) {

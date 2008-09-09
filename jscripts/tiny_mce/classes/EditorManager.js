@@ -363,7 +363,9 @@
 
 				case "mceRemoveEditor":
 				case "mceRemoveControl":
-					ed.remove();
+					if (ed)
+						ed.remove();
+
 					return true;
 
 				case 'mceToggleEditor':

@@ -84,7 +84,8 @@
 				indent_char : '\t',
 				indent_levels : 1,
 				remove_linebreaks : 1,
-				remove_redundant_brs : 1
+				remove_redundant_brs : 1,
+				element_format : 'xhtml'
 			}, s);
 
 			t.dom = s.dom;
@@ -93,6 +94,13 @@
 				t.onPostProcess.add(function(se, o) {
 					// Remove BR elements at end of list elements since they get rendered in IE
 					o.content = o.content.replace(/<br \/>(\s*<\/li>)/g, '$1');
+				});
+			}
+
+			// Remove XHTML element endings i.e. produce crap :) XHTML is better
+			if (s.element_format == 'html') {
+				t.onPostProcess.add(function(se, o) {
+					o.content = o.content.replace(/<([^>]+) \/>/g, '<$1>');
 				});
 			}
 
@@ -767,8 +775,14 @@
 						}
 
 						// Padd empty nodes with a &nbsp;
-						if (!hc && ru.padd)
-							w.writeText('\u00a0');
+						if (ru.padd) {
+							// If it has only one bogus child, padd it anyway workaround for <td><br /></td> bug
+							if (hc && (cn = n.firstChild) && cn.nodeType === 1 && n.childNodes.length === 1) {
+								if (cn.hasAttribute ? cn.hasAttribute('mce_bogus') : cn.getAttribute('mce_bogus'))
+									w.writeText('\u00a0');
+							} else if (!hc)
+								w.writeText('\u00a0'); // No children then padd it
+						}
 
 						break;
 
