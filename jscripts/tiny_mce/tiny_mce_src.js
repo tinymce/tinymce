@@ -5431,7 +5431,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				f = va;
 
 			// Do we need to do something?
-			if (va != t.selectedValue) {
+			if (va != undefined && va != t.selectedValue) {
 				// Find item
 				each(t.items, function(o, i) {
 					if (f(o.value)) {
@@ -5682,13 +5682,15 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			} else
 				f = va;
 
-			e.selectedIndex = 0;
-			each(this.items, function(o, i) {
-				if (f(o.value)) {
-					e.selectedIndex = i + 1;
-					return false;
-				}
-			});
+			if (va != undefined) {
+				e.selectedIndex = 0;
+				each(this.items, function(o, i) {
+					if (f(o.value)) {
+						e.selectedIndex = i + 1;
+						return false;
+					}
+				});
+			}
 		},
 
 		selectByIndex : function(idx) {
@@ -10075,11 +10077,11 @@ tinymce.create('tinymce.UndoManager', {
 
 		forceRoots : function(ed, e) {
 			var t = this, ed = t.editor, b = ed.getBody(), d = ed.getDoc(), se = ed.selection, s = se.getSel(), r = se.getRng(), si = -2, ei, so, eo, tr, c = -0xFFFFFF;
-			var nx, bl, bp, sp, le, nl = b.childNodes, i;
+			var nx, bl, bp, sp, le, nl = b.childNodes, i, n;
 
 			// Fix for bug #1863847
-			if (e && e.keyCode == 13)
-				return true;
+			//if (e && e.keyCode == 13)
+			//	return true;
 
 			// Wrap non blocks into blocks
 			for (i = nl.length - 1; i >= 0; i--) {
@@ -10093,12 +10095,17 @@ tinymce.create('tinymce.UndoManager', {
 							// Store selection
 							if (si == -2 && r) {
 								if (!isIE) {
-									// If element is inside body, might not be the case in contentEdiable mode
-									if (ed.dom.getParent(r.startContainer, function(e) {return e === b;})) {
-										so = r.startOffset;
-										eo = r.endOffset;
-										si = t.find(b, 0, r.startContainer);
-										ei = t.find(b, 0, r.endContainer);
+									// If selection is element then mark it
+									if (r.startContainer.nodeType == 1 && (n = r.startContainer.childNodes[r.startOffset]) && n.nodeType == 1) {
+										n.setAttribute("id", "__mce");
+									} else {
+										// If element is inside body, might not be the case in contentEdiable mode
+										if (ed.dom.getParent(r.startContainer, function(e) {return e === b;})) {
+											so = r.startOffset;
+											eo = r.endOffset;
+											si = t.find(b, 0, r.startContainer);
+											ei = t.find(b, 0, r.endContainer);
+										}
 									}
 								} else {
 									tr = d.body.createTextRange();
@@ -10167,6 +10174,13 @@ tinymce.create('tinymce.UndoManager', {
 						// Ignore
 					}
 				}
+			} else if (!isIE && (n = ed.dom.get('__mce'))) {
+				// Move caret before selected element
+				n.removeAttribute('id');
+				r = d.createRange();
+				r.setStartBefore(n);
+				r.setEndBefore(n);
+				se.setRng(r);
 			}
 		},
 

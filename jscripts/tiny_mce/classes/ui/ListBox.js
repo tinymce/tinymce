@@ -55,7 +55,7 @@
 				f = va;
 
 			// Do we need to do something?
-			if (va != t.selectedValue) {
+			if (va != undefined && va != t.selectedValue) {
 				// Find item
 				each(t.items, function(o, i) {
 					if (f(o.value)) {

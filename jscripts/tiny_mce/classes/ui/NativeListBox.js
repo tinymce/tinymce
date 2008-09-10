@@ -67,13 +67,15 @@
 			} else
 				f = va;
 
-			e.selectedIndex = 0;
-			each(this.items, function(o, i) {
-				if (f(o.value)) {
-					e.selectedIndex = i + 1;
-					return false;
-				}
-			});
+			if (va != undefined) {
+				e.selectedIndex = 0;
+				each(this.items, function(o, i) {
+					if (f(o.value)) {
+						e.selectedIndex = i + 1;
+						return false;
+					}
+				});
+			}
 		},
 
 		/**
