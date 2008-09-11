@@ -5422,16 +5422,20 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		select : function(va) {
 			var t = this, fv, f;
 
-			// Is string make function selector
-			if (va && !va.call) {
+			if (va == undefined)
+				return;
+
+			// Is string or number make function selector
+			if (va && va.call)
+				f = va;
+			else {
 				f = function(v) {
 					return v == va;
 				};
-			} else
-				f = va;
+			}
 
 			// Do we need to do something?
-			if (va != undefined && va != t.selectedValue) {
+			if (va != t.selectedValue) {
 				// Find item
 				each(t.items, function(o, i) {
 					if (f(o.value)) {
@@ -5672,29 +5676,39 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		select : function(va) {
-			var e = DOM.get(this.id), ol = e.options, f;
+			var t = this, fv, f;
 
-			// Is string make function selector
-			if (tinymce.is(va, 'string') || tinymce.is(va, 'number')) {
+			if (va == undefined)
+				return;
+
+			// Is string or number make function selector
+			if (va && va.call)
+				f = va;
+			else {
 				f = function(v) {
 					return v == va;
 				};
-			} else
-				f = va;
+			}
 
-			if (va != undefined) {
-				e.selectedIndex = 0;
-				each(this.items, function(o, i) {
+			// Do we need to do something?
+			if (va != t.selectedValue) {
+				// Find item
+				each(t.items, function(o, i) {
 					if (f(o.value)) {
-						e.selectedIndex = i + 1;
+						fv = 1;
+						t.selectByIndex(i);
 						return false;
 					}
 				});
+
+				if (!fv)
+					t.selectByIndex(-1);
 			}
 		},
 
 		selectByIndex : function(idx) {
 			DOM.get(this.id).selectedIndex = idx + 1;
+			this.selectedValue = this.items[idx] ? this.items[idx].value : null;
 		},
 
 		add : function(n, v, a) {

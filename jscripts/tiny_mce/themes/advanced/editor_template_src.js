@@ -223,10 +223,13 @@
 				});
 
 				c.onPostRender.add(function(ed, n) {
-					Event.add(n.id + '_text', 'focus', t._importClasses, t);
-					Event.add(n.id + '_text', 'mousedown', t._importClasses, t);
-					Event.add(n.id + '_open', 'focus', t._importClasses, t);
-					Event.add(n.id + '_open', 'mousedown', t._importClasses, t);
+					if (!c.NativeListBox) {
+						Event.add(n.id + '_text', 'focus', t._importClasses, t);
+						Event.add(n.id + '_text', 'mousedown', t._importClasses, t);
+						Event.add(n.id + '_open', 'focus', t._importClasses, t);
+						Event.add(n.id + '_open', 'mousedown', t._importClasses, t);
+					} else
+						Event.add(n.id, 'focus', t._importClasses, t);
 				});
 			}
 
@@ -886,7 +889,7 @@
 				if (c = cm.get('fontsizeselect')) {
 					v = ed.queryCommandValue('FontSize');
 					c.select(function(iv) {
-						return iv == v;
+						return iv.fontSize == v;
 					});
 				}
 			}

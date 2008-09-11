@@ -46,16 +46,20 @@
 		select : function(va) {
 			var t = this, fv, f;
 
-			// Is string make function selector
-			if (va && !va.call) {
+			if (va == undefined)
+				return;
+
+			// Is string or number make function selector
+			if (va && va.call)
+				f = va;
+			else {
 				f = function(v) {
 					return v == va;
 				};
-			} else
-				f = va;
+			}
 
 			// Do we need to do something?
-			if (va != undefined && va != t.selectedValue) {
+			if (va != t.selectedValue) {
 				// Find item
 				each(t.items, function(o, i) {
 					if (f(o.value)) {
