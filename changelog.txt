@@ -1,4 +1,4 @@
-Version 3.2 (2008-08-xx)
+Version 3.2 (2008-09-11)
 	Added new text style support, it will now use span elements internally instead of font elements.
 	Added new improved support for the theme_advanced_font_sizes option, check the Wiki for details.
 	Added new keep_style setting that maintains the text style on return/enter on non IE browsers, enabled by default.
