@@ -42,6 +42,7 @@ Version 3.2 (2008-08-xx)
 	Fixed bug where restoring the overflow state of the body in fullscreen plugin running on IE would produce vertical scrollbars.
 	Fixed bug where pressing return/enter in list items would sometimes move the caret the to top of the content area in FF.
 	Fixed bug where the style listbox wouldn't be updated correctly if you used the use_native_selects option.
+	Fixed bug where WebKit browsers would produce a div element when ending list elements using return.
 	Fixed so translation of popup contents only occurs if it's needed.
 	Optimized the URI object in regards or converting absolute URIs to relative URIs.
 Version 3.1.1 (2008-08-18)

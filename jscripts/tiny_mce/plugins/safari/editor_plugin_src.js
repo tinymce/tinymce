@@ -8,6 +8,29 @@
 (function() {
 	var Event = tinymce.dom.Event, grep = tinymce.grep, each = tinymce.each, inArray = tinymce.inArray, isOldWebKit = tinymce.isOldWebKit;
 
+	function isEmpty(d, e, f) {
+		var w, n;
+
+		w = d.createTreeWalker(e, NodeFilter.SHOW_ALL, null, false);
+		while (n = w.nextNode()) {
+			// Filter func
+			if (f) {
+				if (!f(n))
+					return false;
+			}
+
+			// Non whitespace text node
+			if (n.nodeType == 3 && n.nodeValue && /[^\s\u00a0]+/.test(n.nodeValue))
+				return false;
+
+			// Is non text element byt still content
+			if (n.nodeType == 1 && /^(HR|IMG|TABLE)$/.test(n.nodeName))
+				return false;
+		}
+
+		return true;
+	};
+
 	tinymce.create('tinymce.plugins.Safari', {
 		init : function(ed) {
 			var t = this, dom;
@@ -84,16 +107,71 @@
 				ed.getDoc().execCommand("Delete", false, ' ');
 			});
 
-			// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
 			ed.onKeyPress.add(function(ed, e) {
-				if (e.keyCode == 13 && (e.shiftKey || ed.settings.force_br_newlines && ed.selection.getNode().nodeName != 'LI')) {
-					t._insertBR(ed);
-					Event.cancel(e);
+				var se, li, lic, r1, r2, n, sel, doc, be, af, pa;
+
+				if (e.keyCode == 13) {
+					sel = ed.selection;
+					se = sel.getNode();
+
+					// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
+					if (e.shiftKey || ed.settings.force_br_newlines && se.nodeName != 'LI') {
+						t._insertBR(ed);
+						Event.cancel(e);
+					}
+
+					// Workaround for DIV elements produced by Safari
+					if (li = dom.getParent(se, 'LI')) {
+						lic = dom.getParent(li, 'OL,UL');
+						doc = ed.getDoc();
+
+						pa = dom.create('p');
+						dom.add(pa, 'br', {mce_bogus : "1"});
+
+						if (isEmpty(doc, li)) {
+							// If list in list then use browser default behavior
+							if (n = dom.getParent(lic.parentNode, 'LI,OL,UL'))
+								return;
+
+							n = dom.getParent(lic, 'p,h1,h2,h3,h4,h5,h6,div') || lic;
+
+							// Create range from the start of block element to the list item
+							r1 = doc.createRange();
+							r1.setStartBefore(n);
+							r1.setEndBefore(li);
+
+							// Create range after the list to the end of block element
+							r2 = doc.createRange();
+							r2.setStartAfter(li);
+							r2.setEndAfter(n);
+
+							be = r1.cloneContents();
+							af = r2.cloneContents();
+
+							if (!isEmpty(doc, af))
+								dom.insertAfter(af, n);
+
+							dom.insertAfter(pa, n);
+
+							if (!isEmpty(doc, be))
+								dom.insertAfter(be, n);
+
+							dom.remove(n);
+
+							n = pa.firstChild;
+							r1 = doc.createRange();
+							r1.setStartBefore(n);
+							r1.setEndBefore(n);
+							sel.setRng(r1);
+
+							return Event.cancel(e);
+						}
+					}
 				}
 			});
 
 			// Safari returns incorrect values
-			ed.addQueryValueHandler('Fo2ntSize', function(u, v) {
+/*			ed.addQueryValueHandler('Fo2ntSize', function(u, v) {
 				var e, v;
 
 				// Check for the real font size at the start of selection
@@ -122,7 +200,7 @@
 
 				// Return default value it's better than nothing right!
 				return ed.getDoc().queryCommandValue('FontName');
-			});
+			});*/
 
 			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
 			ed.onClick.add(function(ed, e) {
