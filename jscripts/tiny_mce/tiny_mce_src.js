@@ -1143,7 +1143,7 @@ tinymce.create('static tinymce.util.XHR', {
 		// #if !jquery
 
 		select : function(pa, s) {
-			var t = this, cs, c, pl, o = [], x, i, l, n;
+			var t = this, cs, c, pl, o = [], x, i, l, n, xp;
 
 			s = t.get(s) || t.doc;
 
@@ -1165,6 +1165,44 @@ tinymce.create('static tinymce.util.XHR', {
 				s.id = i;
 
 				return l;
+			}
+
+			if (!t.selectorRe)
+				t.selectorRe = /^([\w\\*]+)?(?:#([\w\\]+))?(?:\.([\w\\\.]+))?(?:\[\@([\w\\]+)([\^\$\*!]?=)([\w\\]+)\])?(?:\:([\w\\]+))?/i;;
+
+			// Air doesn't support eval due to security sandboxing and querySelectorAll isn't supported yet
+			if (tinymce.isAir) {
+				each(tinymce.explode(pa), function(v) {
+					if (!(xp = t.cache[v])) {
+						xp = '';
+
+						each(v.split(' '), function(v) {
+							v = t.selectorRe.exec(v);
+
+							xp += v[1] ? '//' + v[1] : '//*';
+
+							// Id
+							if (v[2])
+								xp += "[@id='" + v[2] + "']";
+
+							// Class
+							if (v[3]) {
+								each(v[3].split('.'), function(n) {
+									xp += "[@class = '" + n + "' or contains(concat(' ', @class, ' '), ' " + n + " ')]";
+								});
+							}
+						});
+
+						t.cache[v] = xp;
+					}
+
+					xp = t.doc.evaluate(xp, s, null, 4, null);
+
+					while (n = xp.iterateNext())
+						o.push(n);
+				});
+
+				return o;
 			}
 
 			if (t.settings.strict) {
@@ -1253,7 +1291,7 @@ tinymce.create('static tinymce.util.XHR', {
 					pl = v.split(' ');
 
 					each(pl, function(v) {
-						var p = /^([\w\\*]+)?(?:#([\w\\]+))?(?:\.([\w\\\.]+))?(?:\[\@([\w\\]+)([\^\$\*!]?=)([\w\\]+)\])?(?:\:([\w\\]+))?/i.exec(v);
+						var p = t.selectorRe.exec(v);
 
 						// Find elements
 						p[1] = p[1] || '*';
