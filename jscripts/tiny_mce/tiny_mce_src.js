@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '2',
-	releaseDate : '2008-09-11',
+	minorVersion : '2.1',
+	releaseDate : '2008-09-xx',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -17,6 +17,7 @@ var tinymce = {
 		t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
 		t.isMac = ua.indexOf('Mac') != -1;
+		t.isAir = /adobeair/i.test(ua);
 
 		// TinyMCE .NET webcontrol might be setting the values for TinyMCE
 		if (w.tinyMCEPreInit) {
@@ -511,7 +512,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 				u = (s.base_uri ? s.base_uri.protocol || 'http' : 'http') + '://mce_host' + u;
 
 			// Relative path
-			if (u.indexOf('://') === -1 && u.indexOf('//') !== 0)
+			if (u.indexOf(':/') === -1 && u.indexOf('//') !== 0)
 				u = (s.base_uri.protocol || 'http') + '://mce_host' + t.toAbsPath(s.base_uri.path, u);
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)

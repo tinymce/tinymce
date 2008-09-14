@@ -12,8 +12,8 @@
  */
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '2',
-	releaseDate : '2008-09-11',
+	minorVersion : '2.1',
+	releaseDate : '2008-09-xx',
 
 	/**#@+
 	 * @method
@@ -33,6 +33,7 @@ var tinymce = {
 		t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
 		t.isMac = ua.indexOf('Mac') != -1;
+		t.isAir = /adobeair/i.test(ua);
 
 		// TinyMCE .NET webcontrol might be setting the values for TinyMCE
 		if (w.tinyMCEPreInit) {
