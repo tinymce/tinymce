@@ -1,5 +1,7 @@
 Version 3.2.1 (2008-xx-xx)
-	
+	Fixed bug where adding fonts to the same selection would produce redundant spans.
+	Fixed bug where the editor wouldn't initialize properly running in Adobe Air.
+	Fixed bug where the DOMUtils select method wouldn't work correctly in Adobe Air.
 Version 3.2 (2008-09-11)
 	Added new text style support, it will now use span elements internally instead of font elements.
 	Added new improved support for the theme_advanced_font_sizes option, check the Wiki for details.

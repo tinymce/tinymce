@@ -970,22 +970,28 @@
 				// Remove redundant elements
 				each(dom.select(na), function(n) {
 					if (n.getAttribute('_mce_new')) {
-						// Remove specified style information from child elements
-						each(dom.select(na, n), function(n) {
-							each(at.style, function(v, k) {
-								dom.setStyle(n, k, '');
-							});
-
-							// Remove spans with the same class or marked classes
-							if (at['class'] && n.className && op) {
-								each(op.check_classes, function(c) {
-									if (dom.hasClass(n, c))
-										dom.removeClass(n, c);
+						function removeStyle(n) {
+							if (n.nodeType == 1) {
+								each(at.style, function(v, k) {
+									dom.setStyle(n, k, '');
 								});
-							}
 
-							return false;
-						});
+								// Remove spans with the same class or marked classes
+								if (at['class'] && n.className && op) {
+									each(op.check_classes, function(c) {
+										if (dom.hasClass(n, c))
+											dom.removeClass(n, c);
+									});
+								}
+							}
+						};
+
+						// Remove specified style information from child elements
+						each(dom.select(na, n), removeStyle);
+
+						// Remove the specified style information on parent if current node is only child (IE)
+						if (n.parentNode && n.parentNode.nodeType == 1 && n.parentNode.childNodes.length == 1)
+							removeStyle(n.parentNode);
 
 						// Remove the child elements style info if a parent already has it
 						dom.getParent(n.parentNode, function(pn) {
@@ -1020,13 +1026,15 @@
 				});
 
 				// Remove empty span elements
-				each(dom.select(na), function(n) {
+				each(dom.select(na).reverse(), function(n) {
 					var c = 0;
 
 					// Check if there is any attributes
 					each(dom.getAttribs(n), function(an) {
-						if (an.nodeName.substring(0, 1) != '_' && dom.getAttrib(n, an.nodeName) != '')
+						if (an.nodeName.substring(0, 1) != '_' && dom.getAttrib(n, an.nodeName) != '') {
+							//console.log(dom.getOuterHTML(n), dom.getAttrib(n, an.nodeName));
 							c++;
+						}
 					});
 
 					// No attributes then remove the element and keep the children

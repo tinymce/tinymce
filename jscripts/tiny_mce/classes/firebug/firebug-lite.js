@@ -994,6 +994,7 @@ var firebug = {
 };
 
 window.console = firebug.d.console;
+console.debug = console.log;
 pi.util.AddEvent(window,"resize",firebug.d.refreshSize);
 pi.util.AddEvent(document,"mousemove",firebug.listen.mouse);
 pi.util.AddEvent(document,"keydown",firebug.listen.keyboard);
