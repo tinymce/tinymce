@@ -9729,17 +9729,22 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				ed.onKeyUp.remove(kh);
 				ed.onKeyPress.remove(kh);
 				ed.onKeyDown.remove(kh);
+				ed.onSetContent.remove(t._applyInlineStyle.chandler);
 			}
 
 			if (ed.selection.isCollapsed()) {
 				// Start collecting styles
 				t._pendingStyles = tinymce.extend(t._pendingStyles || {}, at.style);
 
+				t._applyInlineStyle.chandler = ed.onSetContent.add(function() {
+					delete t._pendingStyles;
+				});
+
 				t._applyInlineStyle.keyhandler = kh = function(e) {
 					// Use pending styles
 					if (t._pendingStyles) {
 						at.style = t._pendingStyles;
-						t._pendingStyles = 0;
+						delete t._pendingStyles;
 					}
 
 					if (replaceFonts()) {
