@@ -5462,7 +5462,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var t = this, fv, f;
 
 			if (va == undefined)
-				return;
+				return t.selectByIndex(-1);
 
 			// Is string or number make function selector
 			if (va && va.call)
@@ -5718,7 +5718,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			var t = this, fv, f;
 
 			if (va == undefined)
-				return;
+				return t.selectByIndex(-1);
 
 			// Is string or number make function selector
 			if (va && va.call)
@@ -9727,11 +9727,21 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			if (kh = t._applyInlineStyle.keyhandler) {
 				ed.onKeyUp.remove(kh);
+				ed.onKeyPress.remove(kh);
 				ed.onKeyDown.remove(kh);
 			}
 
 			if (ed.selection.isCollapsed()) {
+				// Start collecting styles
+				t._pendingStyles = tinymce.extend(t._pendingStyles || {}, at.style);
+
 				t._applyInlineStyle.keyhandler = kh = function(e) {
+					// Use pending styles
+					if (t._pendingStyles) {
+						at.style = t._pendingStyles;
+						t._pendingStyles = 0;
+					}
+
 					if (replaceFonts()) {
 						ed.onKeyDown.remove(t._applyInlineStyle.keyhandler);
 						ed.onKeyPress.remove(t._applyInlineStyle.keyhandler);
@@ -9744,7 +9754,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				ed.onKeyDown.add(kh);
 				ed.onKeyPress.add(kh);
 				ed.onKeyUp.add(kh);
-			}
+			} else
+				t._pendingStyles = 0;
 		},
 
 /*

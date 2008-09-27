@@ -60,7 +60,7 @@
 			var t = this, fv, f;
 
 			if (va == undefined)
-				return;
+				return t.selectByIndex(-1);
 
 			// Is string or number make function selector
 			if (va && va.call)

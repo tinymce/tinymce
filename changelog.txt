@@ -1,3 +1,7 @@
+Version 3.2.0.2 (2008-09-xx)
+	Fixed bug where the SelectBox and NativeSelectBox wasn't updated correctly if undefined was passed to them.
+	Fixed bug where the style dropdown wasn't correctly changed back to it's original state when element had no class.
+	Fixed bug where multiple pending font styles wasn't handled correctly.
 Version 3.2.0.1 (2008-09-17)
 	Fixed bug where font sizes and faces wouldn't be changed correctly when there was a parent with a different style.
 	Fixed bug where adding fonts to the same selection would produce redundant spans.
