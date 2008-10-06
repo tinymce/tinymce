@@ -18,7 +18,7 @@
 .o2k7SimpleSkin a.mceButton span, .o2k7SimpleSkin a.mceButton img {margin:1px 0 0 1px}
 .o2k7SimpleSkin a.mceButtonEnabled:hover {background-color:#B2BBD0; background-position:0 -22px}
 .o2k7SimpleSkin a.mceButtonActive {background-position:0 -44px}
-.o2k7SimpleSkin .mceButtonDisabled span {opacity:0.3; filter:alpha(opacity=30)}
+.o2k7SimpleSkin .mceButtonDisabled span {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
 
 /* Separator */
 .o2k7SimpleSkin .mceSeparator {display:block; background:url(img/button_bg.png) -22px 0; width:5px; height:22px}

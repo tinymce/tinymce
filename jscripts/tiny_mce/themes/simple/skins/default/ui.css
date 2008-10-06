@@ -15,7 +15,7 @@
 .defaultSimpleSkin .mceButton {display:block; border:1px solid #F0F0EE; width:20px; height:20px}
 .defaultSimpleSkin a.mceButtonEnabled:hover {border:1px solid #0A246A; background-color:#B2BBD0}
 .defaultSimpleSkin a.mceButtonActive {border:1px solid #0A246A; background-color:#C2CBE0}
-.defaultSimpleSkin .mceButtonDisabled span {opacity:0.3; filter:alpha(opacity=30)}
+.defaultSimpleSkin .mceButtonDisabled span {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
 
 /* Separator */
 .defaultSimpleSkin .mceSeparator {display:block; background:url(../../img/icons.gif) -180px 0; width:2px; height:20px; margin:0 2px 0 4px}
