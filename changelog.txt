@@ -1,6 +1,7 @@
 Version 3.2.0.3 (2008-xx-xx)
 	Added support for custom icon image for drop menus. Use icon_src to set a custom image directly.
 	Fixed css for IE 8 such as opacity and other rendering quirks.
+	Fixed bug where the editor wasn't treated as empty if the remaining paragraph had attributes.
 Version 3.2.0.2 (2008-10-02)
 	Fixed bug where the SelectBox and NativeSelectBox wasn't updated correctly if undefined was passed to them.
 	Fixed bug where the style dropdown wasn't correctly changed back to it's original state when element had no class.
