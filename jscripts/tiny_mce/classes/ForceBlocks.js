@@ -182,7 +182,7 @@
 
 		forceRoots : function(ed, e) {
 			var t = this, ed = t.editor, b = ed.getBody(), d = ed.getDoc(), se = ed.selection, s = se.getSel(), r = se.getRng(), si = -2, ei, so, eo, tr, c = -0xFFFFFF;
-			var nx, bl, bp, sp, le, nl = b.childNodes, i, n;
+			var nx, bl, bp, sp, le, nl = b.childNodes, i, n, eid;
 
 			// Fix for bug #1863847
 			//if (e && e.keyCode == 13)
@@ -202,6 +202,8 @@
 								if (!isIE) {
 									// If selection is element then mark it
 									if (r.startContainer.nodeType == 1 && (n = r.startContainer.childNodes[r.startOffset]) && n.nodeType == 1) {
+										// Save the id of the selected element
+										eid = n.getAttribute("id");
 										n.setAttribute("id", "__mce");
 									} else {
 										// If element is inside body, might not be the case in contentEdiable mode
@@ -280,8 +282,13 @@
 					}
 				}
 			} else if (!isIE && (n = ed.dom.get('__mce'))) {
+				// Restore the id of the selected element
+				if (eid)
+					n.setAttribute('id', eid);
+				else
+					n.removeAttribute('id');
+
 				// Move caret before selected element
-				n.removeAttribute('id');
 				r = d.createRange();
 				r.setStartBefore(n);
 				r.setEndBefore(n);
