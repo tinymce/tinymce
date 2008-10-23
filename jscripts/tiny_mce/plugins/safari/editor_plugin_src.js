@@ -170,37 +170,21 @@
 				}
 			});
 
-			// Safari returns incorrect values
-/*			ed.addQueryValueHandler('Fo2ntSize', function(u, v) {
-				var e, v;
+			// Safari doesn't place lists outside block elements
+			ed.onExecCommand.add(function(ed, cmd) {
+				var sel, dom, bl, bm;
 
-				// Check for the real font size at the start of selection
-				if ((e = ed.dom.getParent(ed.selection.getStart(), 'span')) && (v = e.style.fontSize))
-					return tinymce.inArray(t.namedFontSizes, v) + 1;
+				if (cmd == 'InsertUnorderedList' || cmd == 'InsertOrderedList') {
+					sel = ed.selection;
+					dom = ed.dom;
 
-				// Check for the real font size at the end of selection
-				if ((e = ed.dom.getParent(ed.selection.getEnd(), 'span')) && (v = e.style.fontSize))
-					return tinymce.inArray(t.namedFontSizes, v) + 1;
-
-				// Return default value it's better than nothing right!
-				return ed.getDoc().queryCommandValue('FontSize');
+					if (bl = dom.getParent(sel.getNode(), function(n) {return /^(H[1-6]|P|ADDRESS|PRE)$/.test(n.nodeName);})) {
+						bm = sel.getBookmark();
+						dom.remove(bl, 1);
+						sel.moveToBookmark(bm);
+					}
+				}
 			});
-
-			// Safari returns incorrect values
-			ed.addQueryValueHandler('Fo2ntName', function(u, v) {
-				var e, v;
-
-				// Check for the real font name at the start of selection
-				if ((e = ed.dom.getParent(ed.selection.getStart(), 'span')) && (v = e.style.fontFamily))
-					return v.replace(/\'/g, '').replace(/, /g, ',');
-
-				// Check for the real font name at the end of selection
-				if ((e = ed.dom.getParent(ed.selection.getEnd(), 'span')) && (v = e.style.fontFamily))
-					return v.replace(/\'/g, '').replace(/, /g, ',');
-
-				// Return default value it's better than nothing right!
-				return ed.getDoc().queryCommandValue('FontName');
-			});*/
 
 			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
 			ed.onClick.add(function(ed, e) {
@@ -213,33 +197,8 @@
 					t.selElm = null;
 			});
 
-/*			ed.onBeforeExecCommand.add(function(ed, c, b) {
-				var r = t.bookmarkRng;
-
-				// Restore selection
-				if (r) {
-					ed.selection.setRng(r);
-					t.bookmarkRng = null;
-					//console.debug('restore', r.startContainer, r.startOffset, r.endContainer, r.endOffset);
-				}
-			});*/
-
 			ed.onInit.add(function() {
 				t._fixWebKitSpans();
-
-/*				ed.windowManager.onOpen.add(function() {
-					var r = ed.selection.getRng();
-
-					// Store selection if valid
-					if (r.startContainer != ed.getDoc()) {
-						t.bookmarkRng = r.cloneRange();
-						//console.debug('store', r.startContainer, r.startOffset, r.endContainer, r.endOffset);
-					}
-				});
-
-				ed.windowManager.onClose.add(function() {
-					t.bookmarkRng = null;
-				});*/
 
 				if (isOldWebKit)
 					t._patchSafari2x(ed);
