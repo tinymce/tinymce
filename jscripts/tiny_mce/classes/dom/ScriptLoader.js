@@ -221,12 +221,12 @@
 
 				o.state = 1; // Is loading
 
-				tinymce.dom.ScriptLoader.loadScript(o.url, function() {
+				/*tinymce.dom.ScriptLoader.loadScript(o.url, function() {
 					done(o);
 					allDone();
-				});
+				});*/
 
-				/*
+				
 				tinymce.util.XHR.send({
 					url : o.url,
 					error : t.settings.error,
@@ -236,7 +236,7 @@
 						allDone();
 					}
 				});
-				*/
+				
 			};
 
 			each(sc, function(o) {
@@ -330,7 +330,8 @@
 
 				Event.add(e, 'load', done);
 
-				document.body.appendChild(e);
+				// Check for head or body
+				(document.getElementsByTagName('head')[0] || document.body).appendChild(e);
 				e = null;
 			}
 		}
