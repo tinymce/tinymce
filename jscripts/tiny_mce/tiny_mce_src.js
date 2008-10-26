@@ -4723,12 +4723,12 @@ tinymce.create('static tinymce.util.XHR', {
 
 				o.state = 1; // Is loading
 
-				/*tinymce.dom.ScriptLoader.loadScript(o.url, function() {
+				tinymce.dom.ScriptLoader.loadScript(o.url, function() {
 					done(o);
 					allDone();
-				});*/
+				});
 
-				
+				/*
 				tinymce.util.XHR.send({
 					url : o.url,
 					error : t.settings.error,
@@ -4738,7 +4738,7 @@ tinymce.create('static tinymce.util.XHR', {
 						allDone();
 					}
 				});
-				
+				*/
 			};
 
 			each(sc, function(o) {

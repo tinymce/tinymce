@@ -221,12 +221,12 @@
 
 				o.state = 1; // Is loading
 
-				/*tinymce.dom.ScriptLoader.loadScript(o.url, function() {
+				tinymce.dom.ScriptLoader.loadScript(o.url, function() {
 					done(o);
 					allDone();
-				});*/
+				});
 
-				
+				/*
 				tinymce.util.XHR.send({
 					url : o.url,
 					error : t.settings.error,
@@ -236,7 +236,7 @@
 						allDone();
 					}
 				});
-				
+				*/
 			};
 
 			each(sc, function(o) {
