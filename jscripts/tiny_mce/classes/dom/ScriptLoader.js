@@ -312,7 +312,11 @@
 				function done() {
 					Event.clear(id);
 					tinymce.DOM.remove(id);
-					cb.call(document, u);
+
+					if (cb) {
+						cb.call(document, u);
+						cb = 0;
+					}
 				};
 
 				e = tinymce.DOM.create('script', {id : id, type : 'text/javascript', src : u});
