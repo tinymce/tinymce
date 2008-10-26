@@ -65,7 +65,7 @@
 	};
 
 	// Firebug
-	if (query.debug && (!window.console || !console.log)) {
+	if (query.debug && (!window.console || !console.debug)) {
 		document.documentElement.setAttribute("debug", "true");
 		include('firebug/pi.js');
 		include('firebug/firebug-lite.js');
