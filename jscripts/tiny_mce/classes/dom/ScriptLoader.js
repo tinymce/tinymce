@@ -6,7 +6,7 @@
  */
 
 (function() {
-	var each = tinymce.each;
+	var each = tinymce.each, Event = tinymce.dom.Event;
 
 	/**#@+
 	 * @class This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when
@@ -100,7 +100,7 @@
 			}
 
 			function loadScript(u) {
-				if (tinymce.dom.Event.domLoaded || t.settings.strict_mode) {
+				if (Event.domLoaded || t.settings.strict_mode) {
 					tinymce.util.XHR.send({
 						url : tinymce._addVer(u),
 						error : t.settings.error,
@@ -221,6 +221,12 @@
 
 				o.state = 1; // Is loading
 
+				tinymce.dom.ScriptLoader.loadScript(o.url, function() {
+					done(o);
+					allDone();
+				});
+
+				/*
 				tinymce.util.XHR.send({
 					url : o.url,
 					error : t.settings.error,
@@ -230,6 +236,7 @@
 						allDone();
 					}
 				});
+				*/
 			};
 
 			each(sc, function(o) {
@@ -246,7 +253,7 @@
 				if (o.state > 0)
 					return;
 
-				if (!tinymce.dom.Event.domLoaded && !t.settings.strict_mode) {
+				if (!Event.domLoaded && !t.settings.strict_mode) {
 					var ix, ol = '';
 
 					// Add onload events
@@ -291,6 +298,36 @@
 			_onLoad : function(e, u, ix) {
 				if (!tinymce.isIE || e.readyState == 'complete')
 					this._funcs[ix].call(this);
+			},
+
+			/**
+			 * Loads the specified script without adding it to any load queue.
+			 *
+			 * @param {string} u URL to dynamically load.
+			 * @param {function} cb Callback function to executed on load.
+			 */
+			loadScript : function(u, cb) {
+				var id = tinymce.DOM.uniqueId(), e;
+
+				function done() {
+					Event.clear(id);
+					tinymce.DOM.remove(id);
+					cb.call(document, u);
+				};
+
+				e = tinymce.DOM.create('script', {id : id, type : 'text/javascript', src : u});
+
+				if (tinymce.isIE) {
+					Event.add(e, 'readystatechange', function(e) {
+						if (e.target && e.target.readyState == 'complete')
+							done();
+					});
+				}
+
+				Event.add(e, 'load', done);
+
+				document.body.appendChild(e);
+				e = null;
 			}
 		}
 
