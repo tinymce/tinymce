@@ -1,6 +1,7 @@
 Version 3.2.0.3 (2008-xx-xx)
 	Added support for custom icon image for drop menus. Use icon_src to set a custom image directly.
 	Fixed so the editors script files gets dynamically loaded without using XHR or eval.
+	Fixed bug where loading the editor on demand didn't work if it was loaded cross domain.
 	Fixed bug where the editor wasn't treated as empty if the remaining paragraph had attributes.
 	Fixed bug where id's of elements was removed ones they got wrapped in paragraphs. Patch contributed by ChronoZ.
 	Fixed bug where WebKit browsers where placing list elements inside paragraph elements.
