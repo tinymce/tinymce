@@ -102,7 +102,7 @@
 			// Workaround for InsertHTML bug, http://bugs.webkit.org/show_bug.cgi?id=16382
 			ed.addCommand('mceInsertContent', function(u, v) {
 				ed.getDoc().execCommand("InsertText", false, 'mce_marker');
-				ed.getBody().innerHTML = ed.getBody().innerHTML.replace(/mce_marker/g, v + '<span id="_mce_tmp">XX</span>');
+				ed.getBody().innerHTML = ed.getBody().innerHTML.replace(/mce_marker/g, ed.dom.processHTML(v) + '<span id="_mce_tmp">XX</span>');
 				ed.selection.select(ed.dom.get('_mce_tmp'));
 				ed.getDoc().execCommand("Delete", false, ' ');
 			});
