@@ -1,0 +1,181 @@
+body {
+	font: 11px "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+	color: #41464D;
+	margin: 0;
+	padding: 0;
+	background: #F3F1F1;
+}
+
+/*main rules*/
+
+a:link, a:visited {
+	color: #528CE0;
+}
+
+a:hover, a:active {
+	color: #C65F5E;
+}
+
+p {
+	font-size: 13px;
+	margin: 0;
+	padding: 3px 0;
+}
+
+iframe {
+	height: 1px;
+	width: 1px;
+	visibility: hidden;
+}
+
+span.clr {
+	display: block;
+	clear: both;
+}
+
+/*header*/
+
+h1 {
+	font-family: Georgia;
+	margin: 0;
+	padding: 0;
+	background: url(logo.png) no-repeat top left;
+	height: 69px;
+	width: 280px;
+}
+
+h1 span {
+	display: none;
+}
+
+h2 {
+	margin: 0;
+	padding: 10px 0;
+	font-size: 15px;
+}
+
+#container {
+	padding: 30px;
+}
+
+/*controls*/
+
+#controls a:link, #controls a:visited {
+	display: block;
+	float: right;
+	background: #D0C8C8;
+	padding: 7px 10px;
+	font-size: 13px;
+	font-weight: bold;
+	margin-left: 10px;
+	text-align: center;
+	text-decoration: none;
+	border: 3px solid #fff;
+	color: #41464D;
+	text-shadow: 2px 2px 1px #B9ACAC;
+}
+
+#controls a:hover, #controls a:active {
+	text-shadow: none;
+	background: #F3F1F1;
+	color: #528CE0;
+}
+
+/*table*/
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	min-width: 800px;
+	margin: 0;
+	padding: 0;
+}
+
+#legend td {
+	padding: 15px;
+}
+
+td, th {
+	background: #C8CBD0;
+	padding: 5px 8px;
+	margin: 0;
+	width: 150px;
+	font-weight: bold;
+	border: 3px solid #fff;
+}
+
+th {
+	font-weight: bold;
+	background: #D0C8C8;
+	color: #8A7575;
+}
+
+th.framework {
+	font-size: 15px;
+	text-shadow: 2px 2px 1px #B9ACAC;
+}
+
+td.test, td.empty, th {
+	text-align: right;
+}
+
+td.normal {
+	color: #636A75;
+}
+
+td.good {
+	color: #657528;
+	background: #CFE773;
+}
+
+td.bad {
+	color: #B33F3F;
+	background: #EE9A9A;
+}
+
+span.exception {
+	color: #DBEAF0;
+	text-decoration: underline;
+	cursor: help;
+}
+
+th.selector {
+	background: #D2E0E6;
+	color: #528CE0;
+	text-align: left;
+}
+
+th.score-title, th.selectors-title {
+	text-align: left;
+	font-size: 12px;
+	width: 180px;
+}
+
+td.score {
+	color: #8A7575;
+	background: #D0C8C8;
+	text-align: center;
+	font-size: 12px;
+}
+
+td.mismatch {
+	background: #E8C896;
+	color: #AD7520;
+}
+
+td.exception {
+	color: #F3F1F1;
+	background: #41464D;
+}
+
+/*page footer*/
+
+div#footer {
+	padding: 20px 0;
+}
+
+div#footer p {
+	font-size: 11px;
+	color: #B9ACAC;
+}
+
