@@ -1140,6 +1140,7 @@ tinymce.create('static tinymce.util.XHR', {
 			return e;
 		},
 
+		
 		// #if !jquery
 
 		select : function(pa, s) {

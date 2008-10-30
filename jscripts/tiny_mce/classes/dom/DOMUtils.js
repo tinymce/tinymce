@@ -235,6 +235,34 @@
 			return e;
 		},
 
+		// #if sizzle
+
+		/**
+		 * Selects specific elements by a CSS level 1 pattern. For example "div#a1 p.test".
+		 * This function is optimized for the most common patterns needed in TinyMCE but it also performes good enough
+		 * on more complex patterns.
+		 *
+		 * @param {String} p CSS level 1 pattern to select/find elements by.
+		 * @param {Object} s Optional root element/scope element to search in.
+		 * @return {Array} Array with all matched elements.
+		 */
+		sizzleSelect : function(pa, s) {
+			var t = this, siz;
+
+			// Look for Sizzle, this function will only use Sizzle later on
+			if (siz = window.Sizzle) {
+				// Setup new function
+				t.select = function(pa, s) {
+					siz.doc = t.doc;
+					return siz(pa, t.get(s) || t.doc, []);
+				};
+
+				return t.select(pa, s);
+			}
+		},
+
+		// #endif
+
 		// #if !jquery
 
 		/**

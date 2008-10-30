@@ -87,6 +87,7 @@
 	include('util/JSON.js');
 	include('util/XHR.js');
 	include('util/JSONRequest.js');
+	include('dom/Sizzle.js');
 	include('dom/DOMUtils.js');
 	include('dom/Event.js');
 	include('dom/Element.js');
