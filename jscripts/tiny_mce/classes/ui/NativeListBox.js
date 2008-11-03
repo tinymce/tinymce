@@ -163,7 +163,7 @@
 			function onChange(e) {
 				var v = t.items[e.target.selectedIndex - 1];
 
-				if (v = v.value) {
+				if (v && (v = v.value)) {
 					t.onChange.dispatch(t, v);
 
 					if (t.settings.onselect)

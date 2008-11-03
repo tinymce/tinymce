@@ -33,7 +33,10 @@
 			maxlength : "maxLength",
 			readonly : "readOnly",
 			selected : "selected",
-			value : "value"
+			value : "value",
+			id : "id",
+			name : "name",
+			type : "type"
 		},
 
 		/**
@@ -853,6 +856,9 @@
 					case 'width':
 					case 'height':
 					case 'vspace':
+					case 'checked':
+					case 'disabled':
+					case 'readonly':
 						if (v === 0)
 							v = '';
 
@@ -868,13 +874,14 @@
 					case 'maxlength':
 					case 'tabindex':
 						// IE returns default value
-						if (v === 32768 || v === 2147483647)
+						if (v === 32768 || v === 2147483647 || v === '32768')
 							v = '';
 
 						break;
 
 					case 'compact':
 					case 'noshade':
+					case 'nowrap':
 						if (v === 65535)
 							return n;
 
@@ -1189,7 +1196,7 @@
 		isHidden : function(e) {
 			e = this.get(e);
 
-			return e.style.display == 'none' || this.getStyle(e, 'display') == 'none';
+			return !e || e.style.display == 'none' || this.getStyle(e, 'display') == 'none';
 		},
 
 		// #endif
@@ -1345,23 +1352,24 @@
 			if (tinymce.isGecko) {
 				h = h.replace(/<(\/?)strong>|<strong( [^>]+)>/gi, '<$1b$2>');
 				h = h.replace(/<(\/?)em>|<em( [^>]+)>/gi, '<$1i$2>');
-			} else if (isIE)
+			} else if (isIE) {
 				h = h.replace(/&apos;/g, '&#39;'); // IE can't handle apos
+				h = h.replace(/\s+(disabled|checked|readonly|selected)\s*=\s*[\"\']?(false|0)[\"\']?/gi, ''); // IE doesn't handle default values correct
+			}
 
 			// Fix some issues
 			h = h.replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>'); // Force open
 
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
-				h = h.replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->');
-
 				// Wrap scripts and styles in comments for serialization purposes
 				if (/<script|style/.test(h)) {
 					function trim(s) {
 						// Remove prefix and suffix code for element
+						s = s.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n');
 						s = s.replace(/^[\r\n]*|[\r\n]*$/g, '');
-						s = s.replace(/^\s*(\/\/\s*<!--|\/\/\s*<\[CDATA\[|<!--|<\[CDATA\[)[\r\n]*/g, '');
-						s = s.replace(/\s*(\/\/\s*\]\]>|\/\/\s*-->|\]\]>|-->)\s*$/g, '');
+						s = s.replace(/^\s*(\/\/\s*<!--|\/\/\s*<!\[CDATA\[|<!--|<!\[CDATA\[)[\r\n]*/g, '');
+						s = s.replace(/\s*(\/\/\s*\]\]>|\/\/\s*-->|\]\]>|-->|\]\]-->)\s*$/g, '');
 
 						return s;
 					};
@@ -1389,6 +1397,8 @@
 						return '<mce:style' + a + '><!--\n' + b + '\n--></mce:style><style' + a + ' mce_bogus="1">' + b + '</style>';
 					});
 				}
+
+				h = h.replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->');
 
 				// Process all tags with src, href or style
 				h = h.replace(/<([\w:]+) [^>]*(src|href|style|shape|coords)[^>]*>/gi, function(a, n) {

@@ -882,6 +882,10 @@
 			DOM.setHTML('test', '<br /><hr /><input type="text" name="test" value="val" class="no" /><span id="test2" class="no"><b class="no">abc</b><em class="no">123</em></span>123<a href="file.html">link</a><a name="anchor"></a><a>no</a><img src="file.gif" />');
 			t.eq(ser.serialize(DOM.get('test')), '<div id="test"><br /><hr /><input type="text" name="test" value="val" /><span id="test2"><strong>abc</strong><em>123</em></span>123<a href="file.html">link</a><a name="anchor"></a>no<img src="file.gif" border="0" title="mce_0" /></div>');
 
+			ser.setRules('input[type|name|value|checked|disabled|readonly],select,option[selected]');
+			DOM.setHTML('test', '<input type="radio" checked="1" disabled="1" value="1"><input type="radio" checked="0" disabled="0" value="1"><input type="checkbox" checked="false" disabled="false" value="1"><input type="radio" checked="checked" disabled="disabled" value="1"><input type="text" readonly="true"><select><option selected="1">test1</option><option selected="0">test2</option><option selected="false">test3</option></select>');
+			t.eq(ser.serialize(DOM.get('test')), '<input type="radio" value="1" checked="checked" disabled="disabled" /><input type="radio" value="1" /><input type="checkbox" value="1" /><input type="radio" value="1" checked="checked" disabled="disabled" /><input type="text" readonly="readonly" /><select><option selected="selected">test1</option><option>test2</option><option>test3</option></select>');
+
 			ser.setRules('a[href|target<_blank?_top|title:forced value]');
 			DOM.setHTML('test', '<a href="file.htm" target="_blank" title="title">link</a><a href="#" target="test">test2</a>');
 			t.eq(ser.serialize(DOM.get('test')), '<a href="file.htm" target="_blank" title="forced value">link</a><a href="#" title="forced value">test2</a>');
@@ -979,7 +983,7 @@
 			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<style><!--\n body { background:#fff }\n--></style>');
 
 			ser.setRules('style');
-			DOM.setHTML('test', '<style>\r\n<[CDATA[\r\n   body { background:#fff }]]></style>');
+			DOM.setHTML('test', '<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
 			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<style><!--\n   body { background:#fff }\n--></style>');
 
 			ser.setRules('script[type|language|src]');
@@ -998,13 +1002,13 @@
 			DOM.setHTML('test', '<script type="text/javascript">\n\n<!-- var a = b < c3;\n\n--></script>');
 			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\n var a = b < c3;\n// --></script>');
 
-			DOM.setHTML('test', '<script type="text/javascript">// <[CDATA[var a = b < c4; // ]]></script>');
+			DOM.setHTML('test', '<script type="text/javascript">// <![CDATA[var a = b < c4; // ]]></script>');
 			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c4;\n// --></script>');
 
-			DOM.setHTML('test', '<script type="text/javascript"><[CDATA[var a = b < c4; ]]></script>');
+			DOM.setHTML('test', '<script type="text/javascript"><![CDATA[var a = b < c4; ]]></script>');
 			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c4;\n// --></script>');
 
-			DOM.setHTML('test', '<script type="text/javascript">\n\n<[CDATA[\n\nvar a = b < c4;\n\n]]>\n\n</script>');
+			DOM.setHTML('test', '<script type="text/javascript">\n\n<![CDATA[\n\nvar a = b < c4;\n\n]]>\n\n</script>');
 			t.eq(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c4;\n// --></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript" src="test.js"></script>');

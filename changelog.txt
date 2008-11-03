@@ -1,11 +1,24 @@
-Version 3.2.0.3 (2008-xx-xx)
+Version 3.2.1 (2008-xx-xx)
 	Added support for custom icon image for drop menus. Use icon_src to set a custom image directly.
+	Added new media_strict option to media plugin. Enables you to control if the flash embed is strict or not. Enabled by default.
 	Fixed so the editors script files gets dynamically loaded without using XHR or eval.
+	Fixed so the media plugin outputs valid XHTML object elements for Flash movies. Can be disabled with the media_strict option.
 	Fixed bug where loading the editor on demand didn't work if it was loaded cross domain.
 	Fixed bug where the editor wasn't treated as empty if the remaining paragraph had attributes.
 	Fixed bug where id's of elements was removed ones they got wrapped in paragraphs. Patch contributed by ChronoZ.
 	Fixed bug where WebKit browsers where placing list elements inside paragraph elements.
 	Fixed bug where inserting images or links would produce absolute urls on WebKit browsers.
+	Fixed bug where values for checked, readonly, disabled and selected attributes was incorrect on IE.
+	Fixed bug where positive values for checked, readonly, disabled and selected attributes wasn't forced to valid values.
+	Fixed bug where selecting the first option in a native select box would produce an undefined error.
+	Fixed bug where tabindex 32768 could be outputted on IE if element attributes where cloned.
+	Fixed bug where the media dialogs preview window would display incorrect contents due to duplicate clsid prefixes.
+	Fixed bug where non pixel or percent heights for textarea elements would produce errors on IE.
+	Fixed bug where cdata sections in script elements wasn't handled correctly.
+	Fixed bug where nowrap of table cells would produce a 65535 value output.
+	Fixed bug where media plugin would produce an error if you selected the first item in the items list.
+	Fixed bug where media plugin would modify links with the item _value in them.
+	Fixed so table width/height is better forced if inline_styles is enabled. Patch contributed by daKmoR.
 	Fixed css for IE 8 such as opacity and other rendering quirks.
 Version 3.2.0.2 (2008-10-02)
 	Fixed bug where the SelectBox and NativeSelectBox wasn't updated correctly if undefined was passed to them.

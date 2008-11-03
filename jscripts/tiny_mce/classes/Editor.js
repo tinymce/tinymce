@@ -401,7 +401,7 @@
 				height : h
 			});
 
-			h = (o.iframeHeight || h) + ((h + '').indexOf('%') == -1 ? (o.deltaHeight || 0) : '');
+			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
 			if (h < 100)
 				h = 100;
 
@@ -1349,18 +1349,20 @@
 		load : function(o) {
 			var t = this, e = t.getElement(), h;
 
-			o = o || {};
-			o.load = true;
+			if (e) {
+				o = o || {};
+				o.load = true;
 
-			h = t.setContent(is(e.value) ? e.value : e.innerHTML, o);
-			o.element = e;
+				h = t.setContent(is(e.value) ? e.value : e.innerHTML, o);
+				o.element = e;
 
-			if (!o.no_events)
-				t.onLoadContent.dispatch(t, o);
+				if (!o.no_events)
+					t.onLoadContent.dispatch(t, o);
 
-			o.element = e = null;
+				o.element = e = null;
 
-			return h;
+				return h;
+			}
 		},
 
 		/**
@@ -1374,7 +1376,7 @@
 		save : function(o) {
 			var t = this, e = t.getElement(), h, f;
 
-			if (!t.initialized)
+			if (!e || !t.initialized)
 				return;
 
 			o = o || {};
