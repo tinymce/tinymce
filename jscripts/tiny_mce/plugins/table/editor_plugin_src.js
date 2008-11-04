@@ -33,6 +33,27 @@
 				ed.addButton(c[0], {title : c[1], cmd : c[2], ui : c[3]});
 			});
 
+			if (ed.getParam('inline_styles')) {
+				// Force move of attribs to styles in strict mode
+				ed.onPreProcess.add(function(ed, o) {
+					var dom = ed.dom;
+
+					each(dom.select('table', o.node), function(n) {
+						var v;
+
+						if (v = dom.getAttrib(n, 'width')) {
+							dom.setStyle(n, 'width', v);
+							dom.setAttrib(n, 'width');
+						}
+
+						if (v = dom.getAttrib(n, 'height')) {
+							dom.setStyle(n, 'height', v);
+							dom.setAttrib(n, 'height');
+						}
+					});
+				});
+			}
+
 			ed.onInit.add(function() {
 				if (ed && ed.plugins.contextmenu) {
 					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
