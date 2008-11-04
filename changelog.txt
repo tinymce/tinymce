@@ -1,4 +1,4 @@
-Version 3.2.1 (2008-xx-xx)
+Version 3.2.1 (2008-11-04)
 	Added support for custom icon image for drop menus. Use icon_src to set a custom image directly.
 	Added new media_strict option to media plugin. Enables you to control if the flash embed is strict or not. Enabled by default.
 	Fixed so the editors script files gets dynamically loaded without using XHR or eval.
