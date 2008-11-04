@@ -3,7 +3,7 @@ Version 3.2.1 (2008-11-04)
 	Added new media_strict option to media plugin. Enables you to control if the flash embed is strict or not. Enabled by default.
 	Fixed so the editors script files gets dynamically loaded without using XHR or eval.
 	Fixed so the media plugin outputs valid XHTML object elements for Flash movies. Can be disabled with the media_strict option.
-	Fixed bug where loading the editor on demand didn't work if it was loaded cross domain.
+	Fixed so dynamic loading doesn't require eval calls on non IE browsers for better Air support.
 	Fixed bug where the editor wasn't treated as empty if the remaining paragraph had attributes.
 	Fixed bug where id's of elements was removed ones they got wrapped in paragraphs. Patch contributed by ChronoZ.
 	Fixed bug where WebKit browsers where placing list elements inside paragraph elements.

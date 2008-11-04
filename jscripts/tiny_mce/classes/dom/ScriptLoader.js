@@ -319,20 +319,27 @@
 					}
 				};
 
-				e = tinymce.DOM.create('script', {id : id, type : 'text/javascript', src : u});
-
 				if (tinymce.isIE) {
-					Event.add(e, 'readystatechange', function(e) {
-						if (e.target && (e.target.readyState == 'complete' || e.target.readyState == 'loaded'))
+/*					Event.add(e, 'readystatechange', function(e) {
+						if (e.target && e.target.readyState == 'complete')
 							done();
+					});*/
+
+					tinymce.util.XHR.send({
+						url : tinymce._addVer(u),
+						async : false,
+						success : function(co) {
+							window.execScript(co);
+							done();
+						}
 					});
+				} else {
+					e = tinymce.DOM.create('script', {id : id, type : 'text/javascript', src : tinymce._addVer(u)});
+					Event.add(e, 'load', done);
+
+					// Check for head or body
+					(document.getElementsByTagName('head')[0] || document.body).appendChild(e);
 				}
-
-				Event.add(e, 'load', done);
-
-				// Check for head or body
-				(document.getElementsByTagName('head')[0] || document.body).appendChild(e);
-				e = null;
 			}
 		}
 
