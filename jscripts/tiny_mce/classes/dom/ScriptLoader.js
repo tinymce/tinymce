@@ -323,7 +323,7 @@
 
 				if (tinymce.isIE) {
 					Event.add(e, 'readystatechange', function(e) {
-						if (e.target && e.target.readyState == 'complete')
+						if (e.target && (e.target.readyState == 'complete' || e.target.readyState == 'loaded'))
 							done();
 					});
 				}
