@@ -9704,7 +9704,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			function replaceFonts() {
 				var bm;
 
-				each(dom.select(tinymce.isWebKit ? 'span' : 'font'), function(n) {
+				each(dom.select(tinymce.isWebKit && !tinymce.isAir ? 'span' : 'font'), function(n) {
 					if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline') {
 						if (!bm)
 							bm = ed.selection.getBookmark();
