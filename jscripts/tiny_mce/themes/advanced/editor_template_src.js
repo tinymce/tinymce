@@ -325,6 +325,9 @@
 			if (v = s.theme_advanced_text_colors)
 				o.colors = v;
 
+			if (s.theme_advanced_default_foreground_color)
+				o.default_color = s.theme_advanced_default_foreground_color;
+
 			o.title = 'advanced.forecolor_desc';
 			o.cmd = 'ForeColor';
 			o.scope = this;
@@ -350,6 +353,9 @@
 
 			if (v = s.theme_advanced_background_colors)
 				o.colors = v;
+
+			if (s.theme_advanced_default_background_color)
+				o.default_color = s.theme_advanced_default_background_color;
 
 			o.title = 'advanced.backcolor_desc';
 			o.cmd = 'HiliteColor';

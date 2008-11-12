@@ -193,6 +193,7 @@
 
 			t.parent();
 			DOM.add(id + '_action', 'div', {id : id + '_preview', 'class' : 'mceColorPreview'});
+			DOM.setStyle(t.id + '_preview', 'backgroundColor', t.value);
 		},
 
 		/**

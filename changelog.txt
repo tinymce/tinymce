@@ -1,6 +1,8 @@
 Version 3.2.1.1 (2008-xx-xx)
+	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).
 	Fixed font style formatting compatibility issue with Adobe Air.
 	Fixed so legacy font elements get converted into spans even if cleanup_on_startup isn't enabled.
+	Fixed bug where pre elements could be incorrectly modified by an IE bug workaround. Patch contributed by hu vime.
 Version 3.2.1 (2008-11-04)
 	Added support for custom icon image for drop menus. Use icon_src to set a custom image directly.
 	Added new media_strict option to media plugin. Enables you to control if the flash embed is strict or not. Enabled by default.
