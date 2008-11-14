@@ -265,7 +265,7 @@
 			} else
 				DOM.setStyle('mceModalBlocker', 'z-index', t.zIndex - 1);
 
-			if (tinymce.isIE6 || (tinymce.isIE && !DOM.boxModel))
+			if (tinymce.isIE6 || /Firefox\/2\./.test(navigator.userAgent) || (tinymce.isIE && !DOM.boxModel))
 				DOM.setStyles('mceModalBlocker', {position : 'absolute', width : vp.w - 2, height : vp.h - 2});
 
 			t.focus(id);
