@@ -165,11 +165,14 @@ SXE.insertElement = function(element_name) {
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
 
-				elm.id = '';
-				elm.setAttribute('id', '');
-				elm.removeAttribute('id');
+				if (SXE.inst.dom.getAttrib(elm, '_mce_new')) {
+					elm.id = '';
+					elm.setAttribute('id', '');
+					elm.removeAttribute('id');
+					elm.removeAttribute('_mce_new');
 
-				setAllCommonAttribs(elm);
+					setAllCommonAttribs(elm);
+				}
 			}
 		}
 	} else {
@@ -223,6 +226,6 @@ function insertInlineElement(en) {
 	ed.getDoc().execCommand('FontName', false, 'mceinline');
 	tinymce.each(dom.select(tinymce.isWebKit ? 'span' : 'font'), function(n) {
 		if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline')
-			dom.replace(dom.create(en), n, 1);
+			dom.replace(dom.create(en, {_mce_new : 1}), n, 1);
 	});
 }
