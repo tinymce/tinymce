@@ -241,6 +241,10 @@
 		_pageInit : function() {
 			var e = Event;
 
+			// Safari on Mac fires this twice
+			if (e.domLoaded)
+				return;
+
 			e._remove(window, 'DOMContentLoaded', e._pageInit);
 			e.domLoaded = true;
 

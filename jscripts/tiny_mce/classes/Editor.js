@@ -2007,7 +2007,9 @@
 						return v;
 
 					each(t.shortcuts, function(o) {
-						if (o.ctrl != e.ctrlKey && (!tinymce.isMac || o.ctrl == e.metaKey))
+						if (tinymce.isMac && o.ctrl != e.metaKey)
+							return;
+						else if (!tinymce.isMac && o.ctrl != e.ctrlKey)
 							return;
 
 						if (o.alt != e.altKey)

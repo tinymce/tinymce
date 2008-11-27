@@ -2200,15 +2200,23 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		decode : function(s) {
-			var e;
+			var e, n, v;
 
 			// Look for entities to decode
 			if (/&[^;]+;/.test(s)) {
 				// Decode the entities using a div element not super efficient but less code
 				e = this.doc.createElement("div");
 				e.innerHTML = s;
+				n = e.firstChild;
+				v = '';
 
-				return !e.firstChild ? s : e.firstChild.nodeValue;
+				if (n) {
+					do {
+						v += n.nodeValue;
+					} while (n.nextSibling);
+				}
+
+				return v || s;
 			}
 
 			return s;
@@ -2665,6 +2673,10 @@ tinymce.create('static tinymce.util.XHR', {
 
 		_pageInit : function() {
 			var e = Event;
+
+			// Safari on Mac fires this twice
+			if (e.domLoaded)
+				return;
 
 			e._remove(window, 'DOMContentLoaded', e._pageInit);
 			e.domLoaded = true;
@@ -8346,7 +8358,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						return v;
 
 					each(t.shortcuts, function(o) {
-						if (o.ctrl != e.ctrlKey && (!tinymce.isMac || o.ctrl == e.metaKey))
+						if (tinymce.isMac && o.ctrl != e.metaKey)
+							return;
+						else if (!tinymce.isMac && o.ctrl != e.ctrlKey)
 							return;
 
 						if (o.alt != e.altKey)
