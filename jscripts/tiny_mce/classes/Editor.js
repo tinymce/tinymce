@@ -865,6 +865,11 @@
 			}
 
 			if (isIE) {
+				// Store away selection
+				Event.add(t.getElement(), 'beforedeactivate', function() {
+					t.lastSelectionBookmark = t.selection.getBookmark(1);
+				});
+
 				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, o) {
 					if (!DOM.getParent(ed.selection.getStart(), function(n) {return n == ed.getBody();}))
 						o.terminate = 1;
