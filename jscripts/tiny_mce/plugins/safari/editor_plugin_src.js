@@ -76,16 +76,26 @@
 			});
 
 			ed.onKeyUp.add(function(ed, e) {
-				var h, b;
+				var h, b, r, n, s;
 
 				// If backspace or delete key
 				if (e.keyCode == 46 || e.keyCode == 8) {
 					b = ed.getBody();
 					h = b.innerHTML;
+					s = ed.selection;
 
 					// If there is no text content or images or hr elements then remove everything
-					if (b.childNodes.length == 1 && !/<(img|hr)/.test(h) && tinymce.trim(h.replace(/<[^>]+>/g, '')).length == 0)
-						ed.setContent('', {format : 'raw'});
+					if (b.childNodes.length == 1 && !/<(img|hr)/.test(h) && tinymce.trim(h.replace(/<[^>]+>/g, '')).length == 0) {
+						// Inject paragrah and bogus br
+						ed.setContent('<p><br mce_bogus="1" /></p>', {format : 'raw'});
+
+						// Move caret before bogus br
+						n = b.firstChild;
+						r = s.getRng();
+						r.setStart(n, 0);
+						r.setEnd(n, 0);
+						s.setRng(r);
+					}
 				}
 			});
 
