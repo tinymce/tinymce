@@ -1,4 +1,4 @@
-Version 3.2.1.1 (2008-xx-xx)
+Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).
 	Fixed font style formatting compatibility issue with Adobe Air.
 	Fixed so legacy font elements get converted into spans even if cleanup_on_startup isn't enabled.
