@@ -993,9 +993,11 @@ var firebug = {
 	}
 };
 
-window.console = firebug.d.console;
-console.debug = console.log;
-pi.util.AddEvent(window,"resize",firebug.d.refreshSize);
-pi.util.AddEvent(document,"mousemove",firebug.listen.mouse);
-pi.util.AddEvent(document,"keydown",firebug.listen.keyboard);
-pi.util.DOMContentLoaded.push(firebug.init);
+if (!window.console || navigator.userAgent.indexOf('WebKit') != -1) {
+	window.console = firebug.d.console;
+	console.debug = console.log;
+	pi.util.AddEvent(window,"resize",firebug.d.refreshSize);
+	pi.util.AddEvent(document,"mousemove",firebug.listen.mouse);
+	pi.util.AddEvent(document,"keydown",firebug.listen.keyboard);
+	pi.util.DOMContentLoaded.push(firebug.init);
+}
