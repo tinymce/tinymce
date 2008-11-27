@@ -898,8 +898,12 @@
 				// #if contentEditable
 
 				// Content editable mode ends here
-				if (tinymce.isIE && ce)
-					t.getElement().focus();
+				if (ce) {
+					if (tinymce.isWebKit)
+						t.getWin().focus();
+					else
+						t.getElement().focus();
+				}
 
 				// #endif
 			}
