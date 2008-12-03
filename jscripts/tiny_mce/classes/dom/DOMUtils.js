@@ -10,14 +10,18 @@
 	var each = tinymce.each, is = tinymce.is;
 	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE, Sizzle;
 
-	// Grab reference to Sizzle
-	Sizzle = window.Sizzle;
+	// #if sizzle
 
-	try {
-		delete window.Sizzle;
-	} catch (ex) {
-		// Delete will fail on IE
+	// Grab reference to Sizzle
+	if (Sizzle = window.Sizzle) {
+		try {
+			delete window.Sizzle;
+		} catch (ex) {
+			// Delete will fail on IE
+		}
 	}
+
+	// #endif
 
 	/**#@+
 	 * @class Utility class for various DOM manipulation and retrival functions.

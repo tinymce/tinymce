@@ -971,15 +971,7 @@ tinymce.create('static tinymce.util.XHR', {
 	var each = tinymce.each, is = tinymce.is;
 	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE, Sizzle;
 
-	// Grab reference to Sizzle
-	Sizzle = window.Sizzle;
-
-	try {
-		delete window.Sizzle;
-	} catch (ex) {
-		// Delete will fail on IE
-	}
-
+	
 	tinymce.create('tinymce.dom.DOMUtils', {
 		doc : null,
 		root : null,
