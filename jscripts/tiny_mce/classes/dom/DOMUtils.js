@@ -277,7 +277,7 @@
 		 * @param {Object} s Optional root element/scope element to search in.
 		 * @return {Array} Array with all matched elements.
 		 */
-		select : function(pa, s) {return this.sizzleSelect(pa, s);
+		select : function(pa, s) {
 			var t = this, cs, c, pl, o = [], x, i, l, n, xp;
 
 			s = t.get(s) || t.doc;

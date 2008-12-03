@@ -1155,7 +1155,7 @@ tinymce.create('static tinymce.util.XHR', {
 		
 		// #if !jquery
 
-		select : function(pa, s) {return this.sizzleSelect(pa, s);
+		select : function(pa, s) {
 			var t = this, cs, c, pl, o = [], x, i, l, n, xp;
 
 			s = t.get(s) || t.doc;
