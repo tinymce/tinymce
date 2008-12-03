@@ -969,7 +969,16 @@ tinymce.create('static tinymce.util.XHR', {
 (function() {
 	// Shorten names
 	var each = tinymce.each, is = tinymce.is;
-	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
+	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE, Sizzle;
+
+	// Grab reference to Sizzle
+	Sizzle = window.Sizzle;
+
+	try {
+		delete window.Sizzle;
+	} catch (ex) {
+		// Delete will fail on IE
+	}
 
 	tinymce.create('tinymce.dom.DOMUtils', {
 		doc : null,
@@ -1146,7 +1155,7 @@ tinymce.create('static tinymce.util.XHR', {
 		
 		// #if !jquery
 
-		select : function(pa, s) {
+		select : function(pa, s) {return this.sizzleSelect(pa, s);
 			var t = this, cs, c, pl, o = [], x, i, l, n, xp;
 
 			s = t.get(s) || t.doc;

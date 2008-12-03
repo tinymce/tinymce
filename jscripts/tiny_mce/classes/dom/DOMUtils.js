@@ -8,7 +8,16 @@
 (function() {
 	// Shorten names
 	var each = tinymce.each, is = tinymce.is;
-	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
+	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE, Sizzle;
+
+	// Grab reference to Sizzle
+	Sizzle = window.Sizzle;
+
+	try {
+		delete window.Sizzle;
+	} catch (ex) {
+		// Delete will fail on IE
+	}
 
 	/**#@+
 	 * @class Utility class for various DOM manipulation and retrival functions.
@@ -250,18 +259,9 @@
 		 * @return {Array} Array with all matched elements.
 		 */
 		sizzleSelect : function(pa, s) {
-			var t = this, siz;
+			var t = this;
 
-			// Look for Sizzle, this function will only use Sizzle later on
-			if (siz = window.Sizzle) {
-				// Setup new function
-				t.select = function(pa, s) {
-					siz.doc = t.doc;
-					return siz(pa, t.get(s) || t.doc, []);
-				};
-
-				return t.select(pa, s);
-			}
+			return Sizzle(pa, t.get(s) || t.doc, []);
 		},
 
 		// #endif
@@ -277,7 +277,7 @@
 		 * @param {Object} s Optional root element/scope element to search in.
 		 * @return {Array} Array with all matched elements.
 		 */
-		select : function(pa, s) {
+		select : function(pa, s) {return this.sizzleSelect(pa, s);
 			var t = this, cs, c, pl, o = [], x, i, l, n, xp;
 
 			s = t.get(s) || t.doc;
