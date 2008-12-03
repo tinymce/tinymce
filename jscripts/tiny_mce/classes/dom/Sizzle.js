@@ -625,7 +625,7 @@ if ( document.querySelectorAll ) (function(){
 	window.Sizzle = Sizzle = function(query, context, extra){
 		context = context || document;
 
-		if ( context.querySelectorAll ) {
+		if ( context.nodeType === 9 ) {
 			try {
 				return makeArray( context.querySelectorAll(query) );
 			} catch(e){}
