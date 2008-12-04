@@ -8,20 +8,7 @@
 (function() {
 	// Shorten names
 	var each = tinymce.each, is = tinymce.is;
-	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE, Sizzle;
-
-	// #if sizzle
-
-	// Grab reference to Sizzle
-	if (Sizzle = window.Sizzle) {
-		try {
-			delete window.Sizzle;
-		} catch (ex) {
-			// Delete will fail on IE
-		}
-	}
-
-	// #endif
+	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
 
 	/**#@+
 	 * @class Utility class for various DOM manipulation and retrival functions.
@@ -265,7 +252,7 @@
 		sizzleSelect : function(pa, s) {
 			var t = this;
 
-			return Sizzle(pa, t.get(s) || t.doc, []);
+			return tinymce.dom.Sizzle(pa, t.get(s) || t.doc, []);
 		},
 
 		// #endif
@@ -284,7 +271,7 @@
 		select : function(pa, s) {
 			var t = this, cs, c, pl, o = [], x, i, l, n, xp;
 
-			s = t.get(s) || t.doc;
+			s = t.get(s) || t.get(t.settings.root_element) || t.doc;
 
 			// Look for native support and use that if it's found
 			if (s.querySelectorAll) {

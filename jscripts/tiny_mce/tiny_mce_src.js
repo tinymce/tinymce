@@ -969,9 +969,8 @@ tinymce.create('static tinymce.util.XHR', {
 (function() {
 	// Shorten names
 	var each = tinymce.each, is = tinymce.is;
-	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE, Sizzle;
+	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
 
-	
 	tinymce.create('tinymce.dom.DOMUtils', {
 		doc : null,
 		root : null,
@@ -1150,7 +1149,7 @@ tinymce.create('static tinymce.util.XHR', {
 		select : function(pa, s) {
 			var t = this, cs, c, pl, o = [], x, i, l, n, xp;
 
-			s = t.get(s) || t.doc;
+			s = t.get(s) || t.get(t.settings.root_element) || t.doc;
 
 			// Look for native support and use that if it's found
 			if (s.querySelectorAll) {

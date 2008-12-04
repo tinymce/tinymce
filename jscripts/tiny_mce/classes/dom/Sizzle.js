@@ -3,7 +3,7 @@
  *  Copyright 2008, John Resig (http://ejohn.org/)
  *  released under the MIT License
  */
-(function(){
+(function(ns){
 
 var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^[\]]+\]|[^[\]]+)+\]|\\.|[^ >+~,(\[]+)+|[>+~])(\s*,\s*)?/g;
 
@@ -622,7 +622,7 @@ if ( document.all && !window.opera ) {
 if ( document.querySelectorAll ) (function(){
 	var oldSizzle = Sizzle;
 	
-	window.Sizzle = Sizzle = function(query, context, extra){
+	ns.Sizzle = Sizzle = function(query, context, extra){
 		context = context || document;
 
 		if ( context.nodeType === 9 ) {
@@ -718,6 +718,6 @@ if ( document.compareDocumentPosition ) {
 
 // EXPOSE
 
-window.Sizzle = Sizzle;
+ns.Sizzle = Sizzle;
 
-})();
+})(tinymce.dom);
