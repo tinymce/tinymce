@@ -715,6 +715,26 @@
 				});
 			}
 
+			// Fix gecko link bug, when a link is placed at the end of block elements there is
+			// no way to move the caret behind the link. This fix adds a bogus br element after the link
+			if (isGecko) {
+				function fixLinks(ed, o) {
+					each(ed.dom.select('a'), function(n) {
+						var pn = n.parentNode;
+
+						if (ed.dom.isBlock(pn) && pn.lastChild === n)
+							ed.dom.add(pn, 'br', {'mce_bogus' : 1});
+					});
+				};
+
+				t.onExecCommand.add(function(ed, cmd) {
+					if (cmd === 'CreateLink')
+						fixLinks(ed);
+				});
+
+				t.onSetContent.add(t.selection.onSetContent.add(fixLinks));
+			}
+
 			if (isGecko && !s.readonly) {
 				try {
 					// Design mode must be set here once again to fix a bug where
