@@ -3,8 +3,8 @@
 
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '2.1.1',
-	releaseDate : '2008-11-27',
+	minorVersion : '2.1.2',
+	releaseDate : '200x-xx-xx',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -10039,7 +10039,7 @@ tinymce.create('tinymce.UndoManager', {
 			t.reOpera = new RegExp('(\\u00a0|&#160;|&nbsp;)<\/' + elm + '>', 'gi');
 			t.rePadd = new RegExp('<p( )([^>]+)><\\\/p>|<p( )([^>]+)\\\/>|<p( )([^>]+)>\\s+<\\\/p>|<p><\\\/p>|<p\\\/>|<p>\\s+<\\\/p>'.replace(/p/g, elm), 'gi');
 			t.reNbsp2BR1 = new RegExp('<p( )([^>]+)>[\\s\\u00a0]+<\\\/p>|<p>[\\s\\u00a0]+<\\\/p>'.replace(/p/g, elm), 'gi');
-			t.reNbsp2BR2 = new RegExp('<p( )([^>]+)>(&nbsp;|&#160;)<\\\/p>|<p>(&nbsp;|&#160;)<\\\/p>'.replace(/p/g, elm), 'gi');
+			t.reNbsp2BR2 = new RegExp('<%p()([^>]+)>(&nbsp;|&#160;)<\\\/%p>|<%p>(&nbsp;|&#160;)<\\\/%p>'.replace(/%p/g, elm), 'gi');
 			t.reBR2Nbsp = new RegExp('<p( )([^>]+)>\\s*<br \\\/>\\s*<\\\/p>|<p>\\s*<br \\\/>\\s*<\\\/p>'.replace(/p/g, elm), 'gi');
 			t.reTrailBr = new RegExp('\\s*<br \\/>\\s*<\\\/p>'.replace(/p/g, elm), 'gi');
 

@@ -687,7 +687,7 @@
 
 			n = DOM.add(tb, 'tr');
 			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'});
-			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&nbsp;');
+			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&#160;');
 			DOM.add(n, 'a', {href : '#', accesskey : 'x'});
 
 			if (s.theme_advanced_resizing && !tinymce.isOldWebKit) {

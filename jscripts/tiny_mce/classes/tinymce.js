@@ -12,8 +12,8 @@
  */
 var tinymce = {
 	majorVersion : '3',
-	minorVersion : '2.1.1',
-	releaseDate : '2008-11-27',
+	minorVersion : '2.1.2',
+	releaseDate : '200x-xx-xx',
 
 	/**#@+
 	 * @method
