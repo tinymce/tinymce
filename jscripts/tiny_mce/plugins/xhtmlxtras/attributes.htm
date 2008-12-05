@@ -8,7 +8,6 @@
 	<script type="text/javascript" src="../../utils/form_utils.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/attributes.js?v={tinymce_version}"></script>
 	<link rel="stylesheet" type="text/css" href="css/attributes.css?v={tinymce_version}" />
-	<base target="_self" />
 </head>
 <body style="display: none">
 <form onsubmit="insertAction();return false;" action="#">
@@ -36,12 +35,12 @@
 						<td><label id="classlabel" for="classlist">{#class_name}</label></td>
 						<td>
 							<select id="classlist" name="classlist" class="mceEditableSelect">
-								<option value="" selected>{#not_set}</option>
+								<option value="" selected="selected">{#not_set}</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
-						<td class="label"><label id="stylelabel" for="class">{#xhtmlxtras_dlg.attribute_label_style}</label>:</td> 
+						<td class="label"><label id="stylelabel" for="style">{#xhtmlxtras_dlg.attribute_label_style}</label>:</td> 
 						<td><input id="style" name="style" type="text" value="" /></td> 
 					</tr>
 					<tr>

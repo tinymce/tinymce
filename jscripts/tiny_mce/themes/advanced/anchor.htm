@@ -4,7 +4,6 @@
 	<title>{#advanced_dlg.anchor_title}</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/anchor.js?v={tinymce_version}"></script>
-	<base target="_self" />
 </head>
 <body style="display: none">
 <form onsubmit="AnchorDialog.update();return false;" action="#">
@@ -13,7 +12,7 @@
 			<td colspan="2" class="title">{#advanced_dlg.anchor_title}</td>
 		</tr>
 		<tr>
-			<td nowrap="nowrap">{#advanced_dlg.anchor_name}:</td>
+			<td class="nowrap">{#advanced_dlg.anchor_name}:</td>
 			<td><input name="anchorName" type="text" class="mceFocus" id="anchorName" value="" style="width: 200px" /></td>
 		</tr>
 	</table>

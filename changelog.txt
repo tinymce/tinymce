@@ -2,6 +2,7 @@ Version 3.2.1.2 (200x-xx-xx)
 	Fixed bug where nbsp wasn't replaced correctly in ForceBlocks.js. Patch contributed by thorn.
 	Fixed bug where an dom exception would be thrown in Gecko when the theme_advanced_path path was set to false under xml application mode.
 	Fixed bug where it was impossible to get out of a link at the end of a block element in Gecko.
+	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).
 	Fixed font style formatting compatibility issue with Adobe Air.

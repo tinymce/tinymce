@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="../../utils/editable_selects.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/table.js?v={tinymce_version}"></script>
 	<link href="css/table.css?v={tinymce_version}" rel="stylesheet" type="text/css" />
-	<base target="_self" />
 </head>
 <body id="table" style="display: none">
 	<form onsubmit="insertTable();return false;" action="#">
@@ -58,7 +57,7 @@
 								<td><label id="classlabel" for="class">{#class_name}</label></td>
 								<td colspan="3">
 								 <select id="class" name="class" class="mceEditableSelect">
-									<option value="" selected>{#not_set}</option>
+									<option value="" selected="selected">{#not_set}</option>
 								 </select></td>
 							  </tr>
 							  <tr>

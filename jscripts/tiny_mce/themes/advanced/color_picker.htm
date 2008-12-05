@@ -5,7 +5,6 @@
 	<script type="text/javascript" src="../../tiny_mce_popup.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="../../utils/mctabs.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/color_picker.js?v={tinymce_version}"></script>
-	<base target="_self" />
 </head>
 <body id="colorpicker" style="display: none">
 <form onsubmit="insertAction();return false" action="#">
@@ -22,7 +21,7 @@
 			<fieldset>
 				<legend>{#advanced_dlg.colorpicker_picker_title}</legend>
 				<div id="picker">
-					<img id="colors" src="img/colorpicker.jpg" onclick="computeColor(event)" onmousedown="isMouseDown = true;return false;" onmouseup="isMouseDown = false;" onmousemove="if (isMouseDown && isMouseOver) computeColor(event); return false;" onmouseover="isMouseOver=true;" onmouseout="isMouseOver=false;" />
+					<img id="colors" src="img/colorpicker.jpg" onclick="computeColor(event)" onmousedown="isMouseDown = true;return false;" onmouseup="isMouseDown = false;" onmousemove="if (isMouseDown && isMouseOver) computeColor(event); return false;" onmouseover="isMouseOver=true;" onmouseout="isMouseOver=false;" alt=" " />
 
 					<div id="light">
 						<!-- Will be filled with divs -->

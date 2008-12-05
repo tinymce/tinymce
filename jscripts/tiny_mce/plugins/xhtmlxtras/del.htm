@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="js/element_common.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/del.js?v={tinymce_version}"></script>
 	<link rel="stylesheet" type="text/css" href="css/popup.css?v={tinymce_version}" />
-	<base target="_self" />
 </head>
 <body id="xhtmlxtrasins" style="display: none">
 <form onsubmit="insertDel();return false;" action="#">
@@ -31,7 +30,7 @@
 							<table border="0" cellspacing="0" cellpadding="0">
 								<tr> 
 									<td><input id="datetime" name="datetime" type="text" value="" maxlength="19" class="field mceFocus" /></td> 
-									<td><a href="javascript:insertDateTime('datetime');" onmousedown="return false;" class="browse"><span class="datetime" alt="{#xhtmlxtras_dlg.insert_date}" title="{#xhtmlxtras_dlg.insert_date}"></span></a></td>
+									<td><a href="javascript:insertDateTime('datetime');" onmousedown="return false;" class="browse"><span class="datetime" title="{#xhtmlxtras_dlg.insert_date}"></span></a></td>
 								</tr>
 							</table>
 						</td>

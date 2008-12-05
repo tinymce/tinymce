@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="../../utils/form_utils.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="../../utils/editable_selects.js?v={tinymce_version}"></script>
 	<link href="css/media.css?v={tinymce_version}" rel="stylesheet" type="text/css" />
-	<base target="_self" />
 </head>
 <body style="display: none">
     <form onsubmit="insertMedia();return false;" action="#">
@@ -52,7 +51,7 @@
 							</tr>
 							<tr id="linklistrow">
 								<td><label for="linklist">{#media_dlg.list}</label></td>
-								<td id="linklistcontainer">&nbsp;</td>
+								<td id="linklistcontainer"><select id="linklist"><option value=""></option></select></td>
 							</tr>
 							<tr>
 								<td><label for="width">{#media_dlg.size}</label></td>
@@ -260,8 +259,7 @@
 							<td><label for="flv_defaultvolume">{#media_dlg.flv_defaultvolume}</label></td>
 							<td><input type="text" id="flv_defaultvolume" name="flv_defaultvolume" onchange="generatePreview();" /></td>
 
-							<td><label for="flv_starttime">{#media_dlg.flv_starttime}</label></td>
-							<td><input type="text" id="flv_starttime" name="flv_starttime" onchange="generatePreview();" /></td>
+
 						</tr>
 
 						<tr>

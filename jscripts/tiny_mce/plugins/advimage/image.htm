@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="../../utils/editable_selects.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/image.js?v={tinymce_version}"></script>
 	<link href="css/advimage.css?v={tinymce_version}" rel="stylesheet" type="text/css" />
-	<base target="_self" />
 </head>
 <body id="advimage" style="display: none">
     <form onsubmit="ImageDialog.insert();return false;" action="#"> 
@@ -38,7 +37,7 @@
 							</tr>
 							<tr>
 								<td><label for="src_list">{#advimage_dlg.image_list}</label></td>
-								<td><select id="src_list" name="src_list" onchange="document.getElementById('src').value=this.options[this.selectedIndex].value;document.getElementById('alt').value=this.options[this.selectedIndex].text;document.getElementById('title').value=this.options[this.selectedIndex].text;ImageDialog.showPreviewImage(this.options[this.selectedIndex].value);"></select></td>
+								<td><select id="src_list" name="src_list" onchange="document.getElementById('src').value=this.options[this.selectedIndex].value;document.getElementById('alt').value=this.options[this.selectedIndex].text;document.getElementById('title').value=this.options[this.selectedIndex].text;ImageDialog.showPreviewImage(this.options[this.selectedIndex].value);"><option value=""></option></select></td>
 							</tr>
 							<tr> 
 								<td class="column1"><label id="altlabel" for="alt">{#advimage_dlg.alt}</label></td> 
@@ -89,7 +88,7 @@
 
 						<tr>
 							<td class="column1"><label id="widthlabel" for="width">{#advimage_dlg.dimensions}</label></td>
-							<td nowrap="nowrap">
+							<td class="nowrap">
 								<input name="width" type="text" id="width" value="" size="5" maxlength="5" class="size" onchange="ImageDialog.changeHeight();" /> x 
 								<input name="height" type="text" id="height" value="" size="5" maxlength="5" class="size" onchange="ImageDialog.changeWidth();" /> px
 							</td>
@@ -123,7 +122,7 @@
 
 						<tr>
 							<td><label for="class_list">{#class_name}</label></td>
-							<td colspan="2"><select id="class_list" name="class_list" class="mceEditableSelect"></select></td>
+							<td colspan="2"><select id="class_list" name="class_list" class="mceEditableSelect"><option value=""></option></select></td>
 						</tr>
 
 						<tr>
@@ -158,7 +157,7 @@
 							</tr>
 							<tr>
 								<td><label for="over_list">{#advimage_dlg.image_list}</label></td>
-								<td><select id="over_list" name="over_list" onchange="document.getElementById('onmouseoversrc').value=this.options[this.selectedIndex].value;"></select></td>
+								<td><select id="over_list" name="over_list" onchange="document.getElementById('onmouseoversrc').value=this.options[this.selectedIndex].value;"><option value=""></option></select></td>
 							</tr>
 							<tr> 
 								<td class="column1"><label id="onmouseoutsrclabel" for="onmouseoutsrc">{#advimage_dlg.mouseout}</label></td> 
@@ -171,7 +170,7 @@
 							</tr>
 							<tr>
 								<td><label for="out_list">{#advimage_dlg.image_list}</label></td>
-								<td><select id="out_list" name="out_list" onchange="document.getElementById('onmouseoutsrc').value=this.options[this.selectedIndex].value;"></select></td>
+								<td><select id="out_list" name="out_list" onchange="document.getElementById('onmouseoutsrc').value=this.options[this.selectedIndex].value;"><option value=""></option></select></td>
 							</tr>
 					</table>
 				</fieldset>

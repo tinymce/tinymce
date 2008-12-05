@@ -8,7 +8,6 @@
 	<script type="text/javascript" src="../../utils/validate.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/advlink.js?v={tinymce_version}"></script>
 	<link href="css/advlink.css?v={tinymce_version}" rel="stylesheet" type="text/css" />
-	<base target="_self" />
 </head>
 <body id="advlink" style="display: none">
     <form onsubmit="insertAction();return false;" action="#">
@@ -28,7 +27,7 @@
 
 					<table border="0" cellpadding="4" cellspacing="0">
 						<tr>
-						  <td nowrap="nowrap"><label id="hreflabel" for="href">{#advlink_dlg.url}</label></td>
+						  <td class="nowrap"><label id="hreflabel" for="href">{#advlink_dlg.url}</label></td>
 						  <td><table border="0" cellspacing="0" cellpadding="0">
 								<tr>
 								  <td><input id="href" name="href" type="text" class="mceFocus" value="" onchange="selectByValue(this.form,'linklisthref',this.value);" /></td>
@@ -38,25 +37,25 @@
 						</tr>
 						<tr id="linklisthrefrow">
 							<td class="column1"><label for="linklisthref">{#advlink_dlg.list}</label></td>
-							<td colspan="2" id="linklisthrefcontainer">&nbsp;</td>
+							<td colspan="2" id="linklisthrefcontainer"><select id="linklisthref"><option value=""></option></select></td>
 						</tr>
 						<tr>
 							<td class="column1"><label for="anchorlist">{#advlink_dlg.anchor_names}</label></td>
-							<td colspan="2" id="anchorlistcontainer">&nbsp;</td>
+							<td colspan="2" id="anchorlistcontainer"><select id="anchorlist"><option value=""></option></select></td>
 						</tr>
 						<tr>
 							<td><label id="targetlistlabel" for="targetlist">{#advlink_dlg.target}</label></td>
-							<td id="targetlistcontainer">&nbsp;</td>
+							<td id="targetlistcontainer"><select id="targetlist"><option value=""></option></select></td>
 						</tr>
 						<tr>
-							<td nowrap="nowrap"><label id="titlelabel" for="title">{#advlink_dlg.titlefield}</label></td>
+							<td class="nowrap"><label id="titlelabel" for="title">{#advlink_dlg.titlefield}</label></td>
 							<td><input id="title" name="title" type="text" value="" /></td>
 						</tr>
 						<tr>
 							<td><label id="classlabel" for="classlist">{#class_name}</label></td>
 							<td>
 								 <select id="classlist" name="classlist" onchange="changeClass();">
-									<option value="" selected>{#not_set}</option>
+									<option value="" selected="selected">{#not_set}</option>
 								 </select>
 							</td>
 						</tr>
@@ -73,7 +72,7 @@
 
 					<table border="0" cellpadding="0" cellspacing="4">
 						<tr>
-							<td nowrap="nowrap"><label for="popupurl">{#advlink_dlg.popup_url}</label>&nbsp;</td>
+							<td class="nowrap"><label for="popupurl">{#advlink_dlg.popup_url}</label>&nbsp;</td>
 							<td>
 								<table border="0" cellspacing="0" cellpadding="0">
 									<tr>
@@ -84,19 +83,19 @@
 							</td>
 						</tr>
 						<tr>
-							<td nowrap="nowrap"><label for="popupname">{#advlink_dlg.popup_name}</label>&nbsp;</td>
+							<td class="nowrap"><label for="popupname">{#advlink_dlg.popup_name}</label>&nbsp;</td>
 							<td><input type="text" name="popupname" id="popupname" value="" onchange="buildOnClick();" /></td>
 						</tr>
 						<tr>
-							<td nowrap="nowrap"><label>{#advlink_dlg.popup_size}</label>&nbsp;</td>
-							<td nowrap="nowrap">
+							<td class="nowrap"><label>{#advlink_dlg.popup_size}</label>&nbsp;</td>
+							<td class="nowrap">
 								<input type="text" id="popupwidth" name="popupwidth" value="" onchange="buildOnClick();" /> x
 								<input type="text" id="popupheight" name="popupheight" value="" onchange="buildOnClick();" /> px
 							</td>
 						</tr>
 						<tr>
-							<td nowrap="nowrap" id="labelleft"><label>{#advlink_dlg.popup_position}</label>&nbsp;</td>
-							<td nowrap="nowrap">
+							<td class="nowrap" id="labelleft"><label>{#advlink_dlg.popup_position}</label>&nbsp;</td>
+							<td class="nowrap">
 								<input type="text" id="popupleft" name="popupleft" value="" onchange="buildOnClick();" /> /                                
 								<input type="text" id="popuptop" name="popuptop" value="" onchange="buildOnClick();" /> (c /c = center)
 							</td>
@@ -109,27 +108,27 @@
 						<table border="0" cellpadding="0" cellspacing="4">
 							<tr>
 								<td><input type="checkbox" id="popuplocation" name="popuplocation" class="checkbox" onchange="buildOnClick();" /></td>
-								<td nowrap="nowrap"><label id="popuplocationlabel" for="popuplocation">{#advlink_dlg.popup_location}</label></td>
+								<td class="nowrap"><label id="popuplocationlabel" for="popuplocation">{#advlink_dlg.popup_location}</label></td>
 								<td><input type="checkbox" id="popupscrollbars" name="popupscrollbars" class="checkbox" onchange="buildOnClick();" /></td>
-								<td nowrap="nowrap"><label id="popupscrollbarslabel" for="popupscrollbars">{#advlink_dlg.popup_scrollbars}</label></td>
+								<td class="nowrap"><label id="popupscrollbarslabel" for="popupscrollbars">{#advlink_dlg.popup_scrollbars}</label></td>
 							</tr>
 							<tr>
 								<td><input type="checkbox" id="popupmenubar" name="popupmenubar" class="checkbox" onchange="buildOnClick();" /></td>
-								<td nowrap="nowrap"><label id="popupmenubarlabel" for="popupmenubar">{#advlink_dlg.popup_menubar}</label></td>
+								<td class="nowrap"><label id="popupmenubarlabel" for="popupmenubar">{#advlink_dlg.popup_menubar}</label></td>
 								<td><input type="checkbox" id="popupresizable" name="popupresizable" class="checkbox" onchange="buildOnClick();" /></td>
-								<td nowrap="nowrap"><label id="popupresizablelabel" for="popupresizable">{#advlink_dlg.popup_resizable}</label></td>
+								<td class="nowrap"><label id="popupresizablelabel" for="popupresizable">{#advlink_dlg.popup_resizable}</label></td>
 							</tr>
 							<tr>
 								<td><input type="checkbox" id="popuptoolbar" name="popuptoolbar" class="checkbox" onchange="buildOnClick();" /></td>
-								<td nowrap="nowrap"><label id="popuptoolbarlabel" for="popuptoolbar">{#advlink_dlg.popup_toolbar}</label></td>
+								<td class="nowrap"><label id="popuptoolbarlabel" for="popuptoolbar">{#advlink_dlg.popup_toolbar}</label></td>
 								<td><input type="checkbox" id="popupdependent" name="popupdependent" class="checkbox" onchange="buildOnClick();" /></td>
-								<td nowrap="nowrap"><label id="popupdependentlabel" for="popupdependent">{#advlink_dlg.popup_dependent}</label></td>
+								<td class="nowrap"><label id="popupdependentlabel" for="popupdependent">{#advlink_dlg.popup_dependent}</label></td>
 							</tr>
 							<tr>
 								<td><input type="checkbox" id="popupstatus" name="popupstatus" class="checkbox" onchange="buildOnClick();" /></td>
-								<td nowrap="nowrap"><label id="popupstatuslabel" for="popupstatus">{#advlink_dlg.popup_statusbar}</label></td>
+								<td class="nowrap"><label id="popupstatuslabel" for="popupstatus">{#advlink_dlg.popup_statusbar}</label></td>
 								<td><input type="checkbox" id="popupreturn" name="popupreturn" class="checkbox" onchange="buildOnClick();" checked="checked" /></td>
-								<td nowrap="nowrap"><label id="popupreturnlabel" for="popupreturn">{#advlink_dlg.popup_return}</label></td>
+								<td class="nowrap"><label id="popupreturnlabel" for="popupreturn">{#advlink_dlg.popup_return}</label></td>
 							</tr>
 						</table>
 					</fieldset>

@@ -306,8 +306,12 @@ tinyMCEPopup = {
 		document.body.style.display = '';
 
 		// Restore selection in IE when focus is placed on a non textarea or input element of the type text
-		if (tinymce.isIE)
+		if (tinymce.isIE) {
 			document.attachEvent('onmouseup', tinyMCEPopup._restoreSelection);
+
+			// Add base target element for it since it would fail with modal dialogs
+			t.dom.add(t.dom.select('head')[0], 'base', {target : '_self'});
+		}
 
 		t.restoreSelection();
 		t.resizeToInnerSize();
