@@ -383,19 +383,19 @@
 				return true;
 
 			// If caption or absolute layers then always generate new blocks within
-			if (sb && (sb.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(sb.style.position))) {
+			if (sb && (sb.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(dom.getStyle(sb, 'position', 1)))) {
 				bn = se.element;
 				sb = null;
 			}
 
 			// If caption or absolute layers then always generate new blocks within
-			if (eb && (eb.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(eb.style.position))) {
+			if (eb && (eb.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(dom.getStyle(sb, 'position', 1)))) {
 				bn = se.element;
 				eb = null;
 			}
 
 			// Use P instead
-			if (/(TD|TABLE|TH|CAPTION)/.test(bn) || (sb && bn == "DIV" && /left|right/gi.test(sb.style.cssFloat))) {
+			if (/(TD|TABLE|TH|CAPTION)/.test(bn) || (sb && bn == "DIV" && /left|right/gi.test(dom.getStyle(sb, 'float', 1)))) {
 				bn = se.element;
 				sb = eb = null;
 			}
