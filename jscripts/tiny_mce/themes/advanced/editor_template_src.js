@@ -104,7 +104,7 @@
 						}
 					}
 
-					if (/\s*\./.test(v))
+					if (/^\s*\./.test(v))
 						cl = v.replace(/\./g, '');
 
 					o[k] = cl ? {'class' : cl} : {fontSize : v};
