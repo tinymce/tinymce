@@ -2772,22 +2772,15 @@ tinymce.create('static tinymce.util.XHR', {
 				'get'
 			], function(k) {
 				t[k] = function() {
-					var a = arguments, o;
+					var a = [id], i;
 
-					// Opera fails
-					if (tinymce.isOpera) {
-						a = [id];
+					for (i = 0; i < arguments.length; i++)
+						a.push(arguments[i]);
 
-						each(arguments, function(v) {
-							a.push(v);
-						});
-					} else
-						Array.prototype.unshift.call(a, el || id);
-
-					o = dom[k].apply(dom, a);
+					a = dom[k].apply(dom, a);
 					t.update(k);
 
-					return o;
+					return a;
 				};
 			});
 		},
