@@ -224,7 +224,7 @@ function insertInlineElement(en) {
 	var ed = tinyMCEPopup.editor, dom = ed.dom;
 
 	ed.getDoc().execCommand('FontName', false, 'mceinline');
-	tinymce.each(dom.select(tinymce.isWebKit ? 'span' : 'font'), function(n) {
+	tinymce.each(dom.select('span,font'), function(n) {
 		if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline')
 			dom.replace(dom.create(en, {_mce_new : 1}), n, 1);
 	});
