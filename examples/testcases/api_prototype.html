@@ -2,18 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Unit tests for the TinyMCE core API</title>
+<link rel="stylesheet" href="css/unit.css" type="text/css" />
+<script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js?api=prototype"></script>
-<script type="text/javascript" src="../../jscripts/tiny_mce/classes/util/UnitTester.js"></script>
-<link rel="stylesheet" href="css/unit.css">
-<script type="text/javascript">
-var unitTester = new tinymce.util.UnitTester('log', {debug : true, log_skipped : true});
-</script>
+<script type="text/javascript" src="js/testrunner.js"></script>
 <script type="text/javascript" src="js/api.js"></script>
 </head>
-<body onload="unitTester.run();">
-	<h1>Unit tests for the TinyMCE core API (prototype)</h1>
-
-	<div id="log">
-	</div>
+<body>
+	<h1>Unit tests for the TinyMCE core API - prototype adapter</h1>
+	<h2 id="banner"></h2>
+	<h2 id="userAgent"></h2>
+	<ol id="tests"></ol>
+	<div id="main"></div>
 </body>
 </html>

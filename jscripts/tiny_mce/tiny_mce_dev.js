@@ -75,10 +75,8 @@
 	include('tinymce.js');
 
 	// Load framework adapter
-	if (query.api) {
-		include('adapter/' + query.api + '/' + query.api + '.js');
+	if (query.api)
 		include('adapter/' + query.api + '/adapter.js');
-	}
 
 	// Core API
 	include('util/Dispatcher.js');
