@@ -161,9 +161,8 @@
 
 			if (!e) {
 				ed.execCommand('CreateLink', false, 'javascript:mctmp(0);');
-				each(ed.dom.select('a'), function(e) {
-					if (e.href == 'javascript:mctmp(0);')
-						set(e);
+				each(ed.dom.select('a[href=javascript:mctmp(0);]'), function(e) {
+					set(e);
 				});
 			} else {
 				if (v.href)
@@ -529,7 +528,7 @@
 			else {
 				// Generate wrappers and set styles on them
 				d.execCommand('FontName', false, '__');
-				each(isWebKit ? dom.select('span') : dom.select('font'), function(n) {
+				each(dom.select('span,font'), function(n) {
 					var sp, e;
 
 					if (dom.getAttrib(n, 'face') == '__' || n.style.fontFamily === '__') {
@@ -968,61 +967,59 @@
 				});
 
 				// Remove redundant elements
-				each(dom.select(na), function(n) {
-					if (n.getAttribute('_mce_new')) {
-						function removeStyle(n) {
-							if (n.nodeType == 1) {
-								each(at.style, function(v, k) {
-									dom.setStyle(n, k, '');
+				each(dom.select(na + '[_mce_new]'), function(n) {
+					function removeStyle(n) {
+						if (n.nodeType == 1) {
+							each(at.style, function(v, k) {
+								dom.setStyle(n, k, '');
+							});
+
+							// Remove spans with the same class or marked classes
+							if (at['class'] && n.className && op) {
+								each(op.check_classes, function(c) {
+									if (dom.hasClass(n, c))
+										dom.removeClass(n, c);
 								});
-
-								// Remove spans with the same class or marked classes
-								if (at['class'] && n.className && op) {
-									each(op.check_classes, function(c) {
-										if (dom.hasClass(n, c))
-											dom.removeClass(n, c);
-									});
-								}
 							}
-						};
+						}
+					};
 
-						// Remove specified style information from child elements
-						each(dom.select(na, n), removeStyle);
+					// Remove specified style information from child elements
+					each(dom.select(na, n), removeStyle);
 
-						// Remove the specified style information on parent if current node is only child (IE)
-						if (n.parentNode && n.parentNode.nodeType == 1 && n.parentNode.childNodes.length == 1)
-							removeStyle(n.parentNode);
+					// Remove the specified style information on parent if current node is only child (IE)
+					if (n.parentNode && n.parentNode.nodeType == 1 && n.parentNode.childNodes.length == 1)
+						removeStyle(n.parentNode);
 
-						// Remove the child elements style info if a parent already has it
-						dom.getParent(n.parentNode, function(pn) {
-							if (pn.nodeType == 1) {
-								if (at.style) {
-									each(at.style, function(v, k) {
-										var sv;
+					// Remove the child elements style info if a parent already has it
+					dom.getParent(n.parentNode, function(pn) {
+						if (pn.nodeType == 1) {
+							if (at.style) {
+								each(at.style, function(v, k) {
+									var sv;
 
-										if (!lo[k] && (sv = dom.getStyle(pn, k))) {
-											if (sv === v)
-												dom.setStyle(n, k, '');
+									if (!lo[k] && (sv = dom.getStyle(pn, k))) {
+										if (sv === v)
+											dom.setStyle(n, k, '');
 
-											lo[k] = 1;
-										}
-									});
-								}
-
-								// Remove spans with the same class or marked classes
-								if (at['class'] && pn.className && op) {
-									each(op.check_classes, function(c) {
-										if (dom.hasClass(pn, c))
-											dom.removeClass(n, c);
-									});
-								}
+										lo[k] = 1;
+									}
+								});
 							}
 
-							return false;
-						});
+							// Remove spans with the same class or marked classes
+							if (at['class'] && pn.className && op) {
+								each(op.check_classes, function(c) {
+									if (dom.hasClass(pn, c))
+										dom.removeClass(n, c);
+								});
+							}
+						}
 
-						n.removeAttribute('_mce_new');
-					}
+						return false;
+					});
+
+					n.removeAttribute('_mce_new');
 				});
 
 				// Remove empty span elements
