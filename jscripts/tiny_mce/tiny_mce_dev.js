@@ -65,9 +65,9 @@
 	};
 
 	// Firebug
-	if (query.debug && (!window.console || !console.debug)) {
+	if (query.debug && (!window.console || !console.debug || /WebKit/.test(navigator.userAgent))) {
+		window.console = null; // Force firebug on WebKit
 		document.documentElement.setAttribute("debug", "true");
-		include('firebug/pi.js');
 		include('firebug/firebug-lite.js');
 	}
 
