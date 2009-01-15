@@ -89,6 +89,7 @@
 	include('dom/Sizzle.js');
 	include('dom/Event.js');
 	include('dom/Element.js');
+	include('dom/Range.js');
 	include('dom/Selection.js');
 	include('dom/XMLWriter.js');
 	include('dom/StringWriter.js');

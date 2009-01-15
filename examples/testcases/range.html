@@ -1,0 +1,522 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Unit tests for the TinyMCE core API</title>
+<link rel="stylesheet" href="css/unit.css" type="text/css" />
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="js/testrunner.js"></script>
+</head>
+<body>
+	<h1>Unit tests for DOM Range IE implementation</h1>
+	<h2 id="banner"></h2>
+	<h2 id="userAgent"></h2>
+	<ol id="tests"></ol>
+	<div id="main"></div>
+	<div id="sample">
+		<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p>
+		<p id="second">bar</p>
+		<p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p>
+		<table id="table" width="300">
+			<tr>
+				<td>1</td>
+				<td id="two">abc</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+		</table>
+		<p id="last">textabc<span>span</span></p>
+	</div>
+
+<script type="text/javascript">
+$(window).load(function() {
+	function createRng() {
+		return document.createRange ? document.createRange() : new tinymce.dom.Range(document);
+	};
+
+	function getHTML(co) {
+		var div = document.createElement('div'), h;
+
+		if (!co)
+			return 'null';
+
+		div.appendChild(co.cloneNode(true));
+		h = div.innerHTML.toLowerCase();
+
+		h = h.replace(/[\r\n\t]/g, ''); // Remove line feeds and tabs
+		h = h.replace(/ (\w+)=([^\"][^\s>]*)/gi, ' $1="$2"'); // Restore attribs on IE
+
+		return h;
+	};
+
+	function setup() {
+		if (this.orgHTML)
+			document.getElementById('sample').innerHTML = this.orgHTML;
+
+		// Remove whitespace nodes to normalize IE and other browsers
+		function clean(n) {
+			var i;
+
+			if (n.nodeType == 3 && /^[\s]+$/.test(n.nodeValue))
+				return n.parentNode.removeChild(n);
+
+			for (i = n.childNodes.length - 1; i >= 0; i--)
+				clean(n.childNodes[i]);
+		};
+
+		clean(document.getElementById('sample'));
+
+		this.orgHTML = document.getElementById('sample').innerHTML;
+	};
+
+	test("Initial state", function() {
+		var r = createRng();
+
+		setup();
+		expect(5);
+
+		equals(document, r.startContainer);
+		equals(0, r.startOffset);
+		equals(document, r.endContainer);
+		equals(0, r.endOffset);
+		equals(document, r.commonAncestorContainer);
+	});
+
+	test("setStartSetEnd", function() {
+		var r = createRng();
+
+		setup();
+		expect(12);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('strong').firstChild, 3);
+
+		equals('first', r.startContainer.nodeValue);
+		equals(3, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals('strong', r.endContainer.nodeValue);
+		equals(3, r.endContainer.nodeType);
+		equals(3, r.endOffset);
+		equals('P', r.commonAncestorContainer.nodeName);
+
+		r.setStart(document.getElementById('first'), 0);
+		r.setEnd(document.getElementById('strong'), 0);
+
+		equals('P', r.startContainer.nodeName);
+		equals(0, r.startOffset);
+		equals('STRONG', r.endContainer.nodeName);
+		equals(0, r.endOffset);
+		equals('P', r.commonAncestorContainer.nodeName);
+	});
+
+	test("setStartBeforeSetEndAfter", function() {
+		var r = createRng();
+
+		setup();
+		expect(5);
+
+		r.setStartBefore(document.getElementById('first'));
+		r.setEndAfter(document.getElementById('strong'));
+
+		equals('DIV', r.startContainer.nodeName);
+		equals(0, r.startOffset);
+		equals('P', r.endContainer.nodeName);
+		equals(5, r.endOffset);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+	});
+
+	test("test_setStartAfterSetEndBefore", function() {
+		var r = createRng();
+
+		setup();
+		expect(5);
+
+		r.setStartAfter(document.getElementById('strong'));
+		r.setEndBefore(document.getElementById('em'));
+
+		equals('P', r.startContainer.nodeName);
+		equals(5, r.startOffset);
+		equals('P', r.endContainer.nodeName);
+		equals(6, r.endOffset);
+		equals('P', r.commonAncestorContainer.nodeName);
+	});
+
+	test("test_collapse", function() {
+		var r = createRng();
+
+		setup();
+		expect(10);
+
+		r.setStart(document.getElementById('strong').firstChild, 0);
+		r.setEnd(document.getElementById('strong').firstChild, 6);
+
+		r.collapse(true);
+
+		equals(3, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(0, r.endOffset);
+		equals(3, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('strong').firstChild, 0);
+		r.setEnd(document.getElementById('strong').firstChild, 6);
+
+		r.collapse(false);
+
+		equals(3, r.startContainer.nodeType);
+		equals(6, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(6, r.endOffset);
+		equals(3, r.commonAncestorContainer.nodeType);
+	});
+
+	test("test_selectNode", function() {
+		var r = createRng();
+
+		setup();
+		expect(4);
+
+		r.selectNode(document.getElementById('strong').firstChild);
+
+		equals(1, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(1, r.endOffset);
+	});
+
+	test("test_selectNodeContents", function() {
+		var r = createRng();
+
+		setup();
+		expect(8);
+
+		r.selectNodeContents(document.getElementById('strong').firstChild);
+
+		equals(3, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(6, r.endOffset);
+
+		r.selectNodeContents(document.getElementById('first'));
+
+		equals(1, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(8, r.endOffset);
+	});
+
+	test("test_insertNode", function() {
+		var r = createRng();
+
+		setup();
+		expect(4);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('first').firstChild, 2);
+		r.insertNode(document.createTextNode('ABC'));
+
+		equals('f', document.getElementById('first').childNodes[0].nodeValue);
+		equals('ABC', document.getElementById('first').childNodes[1].nodeValue);
+		equals('irst', document.getElementById('first').childNodes[2].nodeValue);
+
+		r.selectNode(document.getElementById('strong'));
+		r.insertNode(document.createElement('span'));
+
+		equals('SPAN', document.getElementById('strong').previousSibling.nodeName);
+	});
+
+	test("test_cloneRange", function() {
+		var r = createRng();
+
+		setup();
+		expect(6);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('strong').firstChild, 2);
+
+		var r2 = r.cloneRange();
+
+		equals(3, r2.startContainer.nodeType);
+		equals(1, r2.startOffset);
+		equals(3, r2.endContainer.nodeType);
+		equals(2, r2.endOffset);
+		equals(false, r2.collapsed);
+		equals('P', r2.commonAncestorContainer.nodeName);
+	});
+
+	test("test_cloneContents", function() {
+		var r = createRng();
+
+		setup();
+		expect(77);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('two').firstChild, 2);
+
+		equals('<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">ab</td></tr></tbody></table>', getHTML(r.cloneContents()));
+		equals(3, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(2, r.endOffset);
+		equals(false, r.collapsed);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+
+		r.setStart(document.getElementById('two').firstChild, 1);
+		r.setEnd(document.getElementById('last').firstChild, 2);
+
+		equals('<table id="table" width="300"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>', getHTML(r.cloneContents()));
+		equals(3, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(2, r.endOffset);
+		equals(false, r.collapsed);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('first').lastChild, 4);
+
+		equals('irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> str', getHTML(r.cloneContents()));
+		equals(3, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(4, r.endOffset);
+		equals(false, r.collapsed);
+		equals('P', r.commonAncestorContainer.nodeName);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('first').firstChild, 4);
+
+		equals('irs', getHTML(r.cloneContents()));
+		equals(3, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(4, r.endOffset);
+		equals(false, r.collapsed);
+		equals(3, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('first'), 0);
+		r.setEnd(document.getElementById('last'), 0);
+
+		equals('<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>', getHTML(r.cloneContents()));
+		equals(1, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(0, r.endOffset);
+		equals(false, r.collapsed);
+		equals(1, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('first'), 1);
+		r.setEnd(document.getElementById('last'), 1);
+
+		equals('<p id="first"><!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc</p>', getHTML(r.cloneContents()));
+		equals(1, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(1, r.endOffset);
+		equals(false, r.collapsed);
+		equals(1, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('sample'), 0);
+		r.setEnd(document.getElementById('sample'), document.getElementById('sample').childNodes.length - 1);
+
+		equals('<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>', getHTML(r.cloneContents()));
+		equals(1, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(document.getElementById('sample').childNodes.length - 1, r.endOffset);
+		equals(false, r.collapsed);
+		equals(1, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('first'), 0);
+		r.setEnd(document.getElementById('last').firstChild, 1);
+
+		equals('<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">t</p>', getHTML(r.cloneContents()));
+		equals(1, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(1, r.endOffset);
+		equals(false, r.collapsed);
+		equals(1, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('last'), 0);
+
+		equals('<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>', getHTML(r.cloneContents()));
+		equals(3, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(0, r.endOffset);
+		equals(false, r.collapsed);
+		equals(1, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('sample'), 0);
+		r.setEnd(document.getElementById('traverse'), 2);
+
+		equals('<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em></p>', getHTML(r.cloneContents()));
+		equals(1, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(2, r.endOffset);
+		equals(false, r.collapsed);
+		equals(1, r.commonAncestorContainer.nodeType);
+
+		r.setStart(document.getElementById('sample'), 0);
+		r.setEnd(document.getElementById('traverse'), 1);
+
+		equals('<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b></p>', getHTML(r.cloneContents()));
+		equals(1, r.startContainer.nodeType);
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(1, r.endOffset);
+		equals(false, r.collapsed);
+		equals(1, r.commonAncestorContainer.nodeType);
+	});
+
+	test("test_extractContents1", function() {
+		var r = createRng();
+
+		setup();
+		expect(10);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('first').firstChild, 4);
+
+		equals('irs', getHTML(r.extractContents()));
+		equals(3, r.startContainer.nodeType);
+		equals(1, r.startOffset);
+		equals(3, r.endContainer.nodeType);
+		equals(1, r.endOffset);
+		equals(true, r.collapsed);
+		equals(true, r.startContainer == r.endContainer);
+		equals(true, r.startOffset == r.endOffset);
+		equals(3, r.commonAncestorContainer.nodeType);
+		equals('<p id="first">ft<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p>', getHTML(document.getElementById('first')));
+	});
+
+	test("test_extractContents2", function() {
+		var r = createRng();
+
+		setup();
+		expect(9);
+
+		r.setStart(document.getElementById('two').firstChild, 1);
+		r.setEnd(document.getElementById('last').firstChild, 2);
+
+		equals('<table id="table" width="300"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>', getHTML(r.extractContents()));
+		equals(1, r.startContainer.nodeType);
+		equals('<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>', getHTML(r.startContainer));
+		equals(4, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(4, r.endOffset);
+		equals('<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>', getHTML(r.endContainer));
+		equals(true, r.collapsed);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+	});
+
+	test("test_extractContents3", function() {
+		var r = createRng();
+
+		setup();
+		expect(9);
+
+		r.setStart(document.getElementById('sample'), 0);
+		r.setEnd(document.getElementById('traverse'), 2);
+
+		equals('<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em></p>', getHTML(r.extractContents()));
+		equals('<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(r.startContainer));
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(0, r.endOffset);
+		equals('<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(r.endContainer));
+		equals('<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(document.getElementById('sample')));
+		equals(true, r.collapsed);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+	});
+
+	test("test_deleteContents1", function() {
+		var r = createRng();
+
+		setup();
+		expect(8);
+
+		r.setStart(document.getElementById('two').firstChild, 1);
+		r.setEnd(document.getElementById('last').firstChild, 2);
+		r.deleteContents();
+
+		equals('<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>', getHTML(r.startContainer));
+		equals(4, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(4, r.endOffset);
+		equals('<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>', getHTML(r.endContainer));
+		equals('<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>', getHTML(document.getElementById('sample')));
+		equals(true, r.collapsed);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+	});
+
+	test("test_deleteContents2", function() {
+		var r = createRng();
+
+		setup();
+		expect(8);
+
+		r.setStart(document.getElementById('first').firstChild, 1);
+		r.setEnd(document.getElementById('first').lastChild, 4);
+		r.deleteContents();
+
+		equals('<p id="first">fong.</p>', getHTML(r.startContainer));
+		equals(1, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(1, r.endOffset);
+		equals('<p id="first">fong.</p>', getHTML(r.endContainer));
+		equals('<div id="sample"><p id="first">fong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(document.getElementById('sample')));
+		equals(true, r.collapsed);
+		equals('P', r.commonAncestorContainer.nodeName);
+	});
+
+	test("test_deleteContents3", function() {
+		var r = createRng();
+
+		setup();
+		expect(8);
+
+		r.setStart(document.getElementById('sample'), 0);
+		r.setEnd(document.getElementById('sample'), 2);
+		r.deleteContents();
+
+		equals('<div id="sample"><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(r.startContainer));
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(0, r.endOffset);
+		equals('<div id="sample"><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(r.endContainer));
+		equals('<div id="sample"><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(document.getElementById('sample')));
+		equals(true, r.collapsed);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+	});
+
+	test("test_deleteContents4", function() {
+		var r = createRng();
+
+		setup();
+		expect(8);
+
+		r.setStart(document.getElementById('sample'), 0);
+		r.setEnd(document.getElementById('traverse'), 2);
+		r.deleteContents();
+
+		equals('<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(r.startContainer));
+		equals(0, r.startOffset);
+		equals(1, r.endContainer.nodeType);
+		equals(0, r.endOffset);
+		equals('<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(r.endContainer));
+		equals('<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>', getHTML(document.getElementById('sample')));
+		equals(true, r.collapsed);
+		equals('DIV', r.commonAncestorContainer.nodeName);
+	});
+
+	run();
+});
+</script>
+</body>
+</html>

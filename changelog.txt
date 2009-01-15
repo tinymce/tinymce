@@ -1,5 +1,6 @@
 Version 3.2.1.2 (200x-xx-xx)
 	Added new CSS selector engine. Sizzle the same one that jQuery and other libraries are using.
+	Replaced the TinyMCE custom unit testing framework with Qunit and rewrote all tests to match the new logic.
 	Fixed bug where nbsp wasn't replaced correctly in ForceBlocks.js. Patch contributed by thorn.
 	Fixed bug where an dom exception would be thrown in Gecko when the theme_advanced_path path was set to false under xml application mode.
 	Fixed bug where it was impossible to get out of a link at the end of a block element in Gecko.
