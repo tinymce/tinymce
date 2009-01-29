@@ -252,7 +252,7 @@
 		select : function(pa, s) {
 			var t = this;
 
-			return tinymce.dom.Sizzle(pa, t.get(s) || t.doc, []);
+			return tinymce.dom.Sizzle(pa, t.get(s) || t.get(t.settings.root_element) || t.doc, []);
 		},
 
 		// #endif
@@ -331,6 +331,8 @@
 		 * @return {Element/Array} HTML DOM element that got removed or array of elements depending on input.
 		 */
 		remove : function(n, k) {
+			var t = this;
+
 			return this.run(n, function(n) {
 				var p, g;
 
@@ -340,18 +342,21 @@
 					return null;
 
 				if (k) {
-					each (n.childNodes, function(c) {
+					each(n.childNodes, function(c) {
 						p.insertBefore(c.cloneNode(true), n);
 					});
 				}
 
 				// Fix IE psuedo leak
-		/*		if (isIE) {
+				if (isIE) {
 					p = n.cloneNode(true);
-					n.outerHTML = '';
+					k = 'IELeakGarbageBin';
+					g = t.get(k) || t.add(t.doc.body, 'div', {id : k, style : 'display:none'});
+					g.appendChild(n);
+					g.innerHTML = '';
 
 					return p;
-				}*/
+				}
 
 				return p.removeChild(n);
 			});
@@ -1395,10 +1400,12 @@
 		 * @param {bool} k Optional keep children state, if set to true child nodes from the old object will be added to new ones.
 		 */
 		replace : function(n, o, k) {
+			var t = this;
+
 			if (is(o, 'array'))
 				n = n.cloneNode(true);
 
-			return this.run(o, function(o) {
+			return t.run(o, function(o) {
 				if (k) {
 					each(o.childNodes, function(c) {
 						n.appendChild(c.cloneNode(true));
@@ -1407,11 +1414,11 @@
 
 				// Fix IE psuedo leak for elements since replacing elements if fairly common
 				// Will break parentNode for some unknown reason
-	/*			if (isIE && o.nodeType === 1) {
+				if (isIE && o.nodeType === 1) {
 					o.parentNode.insertBefore(n, o);
-					o.outerHTML = '';
+					t.remove(o);
 					return n;
-				}*/
+				}
 
 				return o.parentNode.replaceChild(n, o);
 			});

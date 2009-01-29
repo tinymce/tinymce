@@ -166,7 +166,8 @@
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
-			t.windowManager = new tinymce.WindowManager(t);
+			if (tinymce.WindowManager)
+				t.windowManager = new tinymce.WindowManager(t);
 
 			if (s.encoding == 'xml') {
 				t.onGetContent.add(function(ed, o) {
@@ -226,7 +227,7 @@
 				if (s.language)
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
-				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
+				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(explode(s.plugins), function(p) {
@@ -282,12 +283,14 @@
 			EditorManager.add(t);
 
 			// Create theme
-			s.theme = s.theme.replace(/-/, '');
-			o = ThemeManager.get(s.theme);
-			t.theme = new o();
+			if (s.theme) {
+				s.theme = s.theme.replace(/-/, '');
+				o = ThemeManager.get(s.theme);
+				t.theme = new o();
 
-			if (t.theme.init && s.init_theme)
-				t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+				if (t.theme.init && s.init_theme)
+					t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+			}
 
 			// Create all plugins
 			each(explode(s.plugins.replace(/\-/g, '')), function(p) {
@@ -1221,7 +1224,7 @@
 				return true;
 
 			// Theme commands
-			if (t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
+			if (t.theme && t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
 				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return true;
 			}
@@ -1721,7 +1724,7 @@
 				tinyMCE.onBeforeUnload.remove(t._beforeUnload);
 
 				// Manual destroy
-				if (t.theme.destroy)
+				if (t.theme && t.theme.destroy)
 					t.theme.destroy();
 
 				// Destroy controls, selection and dom

@@ -1148,7 +1148,7 @@ tinymce.create('static tinymce.util.XHR', {
 		select : function(pa, s) {
 			var t = this;
 
-			return tinymce.dom.Sizzle(pa, t.get(s) || t.doc, []);
+			return tinymce.dom.Sizzle(pa, t.get(s) || t.get(t.settings.root_element) || t.doc, []);
 		},
 
 		// #endif
@@ -1194,6 +1194,8 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		remove : function(n, k) {
+			var t = this;
+
 			return this.run(n, function(n) {
 				var p, g;
 
@@ -1203,18 +1205,21 @@ tinymce.create('static tinymce.util.XHR', {
 					return null;
 
 				if (k) {
-					each (n.childNodes, function(c) {
+					each(n.childNodes, function(c) {
 						p.insertBefore(c.cloneNode(true), n);
 					});
 				}
 
 				// Fix IE psuedo leak
-		/*		if (isIE) {
+				if (isIE) {
 					p = n.cloneNode(true);
-					n.outerHTML = '';
+					k = 'IELeakGarbageBin';
+					g = t.get(k) || t.add(t.doc.body, 'div', {id : k, style : 'display:none'});
+					g.appendChild(n);
+					g.innerHTML = '';
 
 					return p;
-				}*/
+				}
 
 				return p.removeChild(n);
 			});
@@ -2085,10 +2090,12 @@ tinymce.create('static tinymce.util.XHR', {
 		// #if !jquery
 
 		replace : function(n, o, k) {
+			var t = this;
+
 			if (is(o, 'array'))
 				n = n.cloneNode(true);
 
-			return this.run(o, function(o) {
+			return t.run(o, function(o) {
 				if (k) {
 					each(o.childNodes, function(c) {
 						n.appendChild(c.cloneNode(true));
@@ -2097,11 +2104,11 @@ tinymce.create('static tinymce.util.XHR', {
 
 				// Fix IE psuedo leak for elements since replacing elements if fairly common
 				// Will break parentNode for some unknown reason
-	/*			if (isIE && o.nodeType === 1) {
+				if (isIE && o.nodeType === 1) {
 					o.parentNode.insertBefore(n, o);
-					o.outerHTML = '';
+					t.remove(o);
 					return n;
-				}*/
+				}
 
 				return o.parentNode.replaceChild(n, o);
 			});
@@ -2301,6 +2308,7 @@ tinymce.create('static tinymce.util.XHR', {
  *  Released under the MIT, BSD, and GPL Licenses.
  *  More information: http://sizzlejs.com/
  */
+
 // #if !jquery
 (function(){
 
@@ -3139,6 +3147,7 @@ tinymce.dom.Sizzle = Sizzle;
 
 })();
 // #endif
+
 /* file:jscripts/tiny_mce/classes/dom/Event.js */
 
 (function() {
@@ -7536,7 +7545,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
-			t.windowManager = new tinymce.WindowManager(t);
+			if (tinymce.WindowManager)
+				t.windowManager = new tinymce.WindowManager(t);
 
 			if (s.encoding == 'xml') {
 				t.onGetContent.add(function(ed, o) {
@@ -7596,7 +7606,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				if (s.language)
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
-				if (s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
+				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(explode(s.plugins), function(p) {
@@ -7647,12 +7657,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			EditorManager.add(t);
 
 			// Create theme
-			s.theme = s.theme.replace(/-/, '');
-			o = ThemeManager.get(s.theme);
-			t.theme = new o();
+			if (s.theme) {
+				s.theme = s.theme.replace(/-/, '');
+				o = ThemeManager.get(s.theme);
+				t.theme = new o();
 
-			if (t.theme.init && s.init_theme)
-				t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+				if (t.theme.init && s.init_theme)
+					t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+			}
 
 			// Create all plugins
 			each(explode(s.plugins.replace(/\-/g, '')), function(p) {
@@ -8350,7 +8362,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return true;
 
 			// Theme commands
-			if (t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
+			if (t.theme && t.theme.execCommand && t.theme.execCommand(cmd, ui, val)) {
 				t.onExecCommand.dispatch(t, cmd, ui, val, a);
 				return true;
 			}
@@ -8722,7 +8734,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				tinyMCE.onBeforeUnload.remove(t._beforeUnload);
 
 				// Manual destroy
-				if (t.theme.destroy)
+				if (t.theme && t.theme.destroy)
 					t.theme.destroy();
 
 				// Destroy controls, selection and dom
