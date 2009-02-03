@@ -7,7 +7,7 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  *
- * $Id$
+ * $Id: testrunner.js 6071 2009-01-09 08:42:39Z joern.zaefferer $
  */
 
 (function($) {

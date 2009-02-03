@@ -8,6 +8,7 @@ Version 3.2.1.2 (200x-xx-xx)
 	Fixed bug where the latest WebKit nightly would fail when opening dialogs due to changes to the arguments object.
 	Fixed bug where paragraphs wasn't added to elements positioned absolute using classes.
 	Fixed bug where font size values with dot's like 1.4em would produce a class instead of the style value.
+	Fixed bug where IE 8 would return an incorrect position for elements.
 	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).

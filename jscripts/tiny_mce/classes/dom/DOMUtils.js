@@ -348,7 +348,7 @@
 				}
 
 				// Fix IE psuedo leak
-				if (isIE) {
+				if (t.fixPsuedoLeaks) {
 					p = n.cloneNode(true);
 					k = 'IELeakGarbageBin';
 					g = t.get(k) || t.add(t.doc.body, 'div', {id : k, style : 'display:none'});
@@ -698,7 +698,7 @@
 			n = t.get(n);
 
 			// Use getBoundingClientRect on IE, Opera has it but it's not perfect
-			if (n && isIE) {
+			if (n && isIE && !t.stdMode) {
 				n = n.getBoundingClientRect();
 				e = t.boxModel ? d.documentElement : d.body;
 				x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
@@ -1414,7 +1414,7 @@
 
 				// Fix IE psuedo leak for elements since replacing elements if fairly common
 				// Will break parentNode for some unknown reason
-				if (isIE && o.nodeType === 1) {
+				if (t.fixPsuedoLeaks && o.nodeType === 1) {
 					o.parentNode.insertBefore(n, o);
 					t.remove(o);
 					return n;
