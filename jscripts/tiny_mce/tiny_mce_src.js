@@ -636,9 +636,10 @@ tinymce.create('tinymce.util.Dispatcher', {
 		},
 
 		toAbsPath : function(base, path) {
-			var i, nb = 0, o = [];
+			var i, nb = 0, o = [], tr;
 
 			// Split paths
+			tr = /\/$/.test(path) ? '/' : '';
 			base = base.split('/');
 			path = path.split('/');
 
@@ -675,9 +676,9 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 			// If /a/b/c or /
 			if (i <= 0)
-				return '/' + o.reverse().join('/');
+				return '/' + o.reverse().join('/') + tr;
 
-			return '/' + base.slice(0, i).join('/') + '/' + o.reverse().join('/');
+			return '/' + base.slice(0, i).join('/') + '/' + o.reverse().join('/') + tr;
 		},
 
 		getURI : function(nh) {
