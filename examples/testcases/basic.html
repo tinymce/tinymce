@@ -38,12 +38,12 @@ test('commands - html4TextStyles', function() {
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
-	editor.execCommand('FontName',false,'Arial');
+	editor.execCommand('FontName', false, 'Arial');
 	equals(editor.getContent(), '<p><font face="Arial">test 123</font></p>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
-	editor.execCommand('FontSize',false,'7');
+	editor.execCommand('FontSize', false, '7');
 	equals(editor.getContent(), '<p><font size="7">test 123</font></p>');
 
 	editor.setContent('test 123');
