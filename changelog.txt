@@ -9,6 +9,7 @@ Version 3.2.1.2 (200x-xx-xx)
 	Fixed bug where paragraphs wasn't added to elements positioned absolute using classes.
 	Fixed bug where font size values with dot's like 1.4em would produce a class instead of the style value.
 	Fixed bug where IE 8 would return an incorrect position for elements.
+	Fixed bug where IE 8 would render colorpicker/filepicker icons incorrectly.
 	Fixed bug where trailing slashes for directories in URLs would be removed.
 	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)

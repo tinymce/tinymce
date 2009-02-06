@@ -48,6 +48,7 @@ padding-bottom:2px;
 #cancel {background:url(img/buttons.png) 0 0;}
 
 /* Browse */
+a.pickcolor, a.browse {text-decoration:none}
 a.browse span {display:block; width:20px; height:18px; background:url(../../img/icons.gif) -860px 0; border:1px solid #FFF; margin-left:1px;}
 .mceOldBoxModel a.browse span {width:22px; height:20px;}
 a.browse:hover span {border:1px solid #0A246A; background-color:#B2BBD0;}
