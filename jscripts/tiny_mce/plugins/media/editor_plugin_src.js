@@ -233,6 +233,7 @@
 
 			if (stc) {
 				ob = dom.create('span', {
+					id : p.id,
 					mce_name : 'object',
 					type : 'application/x-shockwave-flash',
 					data : p.src,
@@ -241,6 +242,7 @@
 				});
 			} else {
 				ob = dom.create('span', {
+					id : p.id,
 					mce_name : 'object',
 					classid : "clsid:" + o.classid,
 					codebase : o.codebase,
@@ -250,7 +252,7 @@
 			}
 
 			each (p, function(v, k) {
-				if (!/^(width|height|codebase|classid|_cx|_cy)$/.test(k)) {
+				if (!/^(width|height|codebase|classid|id|_cx|_cy)$/.test(k)) {
 					// Use url instead of src in IE for Windows media
 					if (o.type == 'application/x-mplayer2' && k == 'src' && !p.url)
 						k = 'url';

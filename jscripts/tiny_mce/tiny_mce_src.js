@@ -1454,7 +1454,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 					case 'size':
 						// IE returns +0 as default value for size
-						if (v === '+0' || v === 20)
+						if (v === '+0' || v === 20 || v === 0)
 							v = '';
 
 						break;
@@ -1485,6 +1485,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 						break;
 
+					case 'multiple':
 					case 'compact':
 					case 'noshade':
 					case 'nowrap':
@@ -11421,8 +11422,10 @@ tinymce.create('tinymce.UndoManager', {
 				});
 
 				c.onHideMenu.add(function() {
-					if (bm)
+					if (bm) {
 						ed.selection.moveToBookmark(bm);
+						bm = 0;
+					}
 				});
 			}
 
@@ -11576,6 +11579,9 @@ tinymce.create('tinymce.UndoManager', {
 
 			if (!s.onclick) {
 				s.onclick = function(v) {
+					if (tinymce.isIE)
+						bm = ed.selection.getBookmark(1);
+	
 					ed.execCommand(s.cmd, s.ui || false, v || s.value);
 				};
 			}
@@ -11606,10 +11612,6 @@ tinymce.create('tinymce.UndoManager', {
 
 			// Fix for bug #1897785, #1898007
 			if (tinymce.isIE) {
-				c.onShowMenu.add(function() {
-					bm = ed.selection.getBookmark(1);
-				});
-
 				c.onHideMenu.add(function() {
 					if (bm) {
 						ed.selection.moveToBookmark(bm);

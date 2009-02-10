@@ -218,7 +218,7 @@ function insertMedia() {
 				break;
 		}
 
-		if (fe.width != f.width.value || fe.height != f.height.height)
+		if (fe.width != f.width.value || fe.height != f.height.value)
 			ed.execCommand('mceRepaint');
 
 		fe.title = serializeParameters();

@@ -633,7 +633,7 @@
 
 					case 'size':
 						// IE returns +0 as default value for size
-						if (v === '+0' || v === 20)
+						if (v === '+0' || v === 20 || v === 0)
 							v = '';
 
 						break;
@@ -664,6 +664,7 @@
 
 						break;
 
+					case 'multiple':
 					case 'compact':
 					case 'noshade':
 					case 'nowrap':

@@ -266,7 +266,7 @@
 				DOM.setStyle('mceModalBlocker', 'z-index', t.zIndex - 1);
 
 			if (tinymce.isIE6 || /Firefox\/2\./.test(navigator.userAgent) || (tinymce.isIE && !DOM.boxModel))
-				DOM.setStyles('mceModalBlocker', {position : 'absolute', width : vp.w - 2, height : vp.h - 2});
+				DOM.setStyles('mceModalBlocker', {position : 'absolute', left : vp.x, top : vp.y, width : vp.w - 2, height : vp.h - 2});
 
 			t.focus(id);
 			t._fixIELayout(id, 1);
@@ -358,7 +358,7 @@
 				});
 
 				if (tinymce.isIE6 || (tinymce.isIE && !DOM.boxModel))
-					DOM.setStyles('mceEventBlocker', {position : 'absolute', width : vp.w - 2, height : vp.h - 2});
+					DOM.setStyles('mceEventBlocker', {position : 'absolute', left : vp.x, top : vp.y, width : vp.w - 2, height : vp.h - 2});
 
 				eb = new Element('mceEventBlocker');
 				eb.update();
