@@ -11,6 +11,7 @@ Version 3.2.1.2 (200x-xx-xx)
 	Fixed bug where IE 8 would return an incorrect position for elements.
 	Fixed bug where IE 8 would render colorpicker/filepicker icons incorrectly.
 	Fixed bug where trailing slashes for directories in URLs would be removed.
+	Fixed bug where autostart and other boolean values in the media dialog wouldn't be stored/parsed correctly.
 	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).

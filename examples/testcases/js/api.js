@@ -1172,7 +1172,7 @@ $(window).load(function() {
 			equals(ser.serialize(DOM.get('test')), '123<![CDATA[<test>]]>abc');
 
 			DOM.setHTML('test', '123<![CDATA[<te\n\nst>]]>abc');
-			equals(ser.serialize(DOM.get('test')), tinymce.isIE ? '123<![CDATA[<te\r\n\r\nst>]]>abc' : '123<![CDATA[<te\n\nst>]]>abc');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '123<![CDATA[<te\n\nst>]]>abc');
 
 			ser.setRules('ul,li,br');
 			DOM.setHTML('test', '<ul><li>test<br /></li><li>test<br /></li><li>test<br /></li></ul>');
