@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TinyMCE" default="build" basedir=".">
+	<property description="Classes directory" name="classes_dir" value="jscripts/tiny_mce/classes" />
+	<property description="Build directory" name="build_dir" value="jscripts/tiny_mce" />
+	<property description="Export directory" name="export_dir" value="export" />
+	<property description="Package directory" name="package_dir" value="export" />
+
+	<!-- Allow any user specific values to override the defaults -->
+	<property file="${user.home}/build.properties" />
+
+	<!-- Setup classpath for js-build-tools ant tasks -->
+	<path id="tasks.classpath">
+		<pathelement location="."/>
+
+		<fileset dir="tools">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- Register new js-build-tools ant tasks -->
+	<taskdef name="preprocess" classname="com.moxiecode.ant.tasks.PreProcessTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" /> 
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+
+	<!-- Generate JS documentation -->
+	<target name="yuidoc" depends="" description="Generates HTML documentation out of java source">
+	</target>
+
+	<!-- Cleanup the build -->
+	<target name="clean" depends="" description="Cleans up the project from temporary files">
+		<delete dir="${export_dir}" quiet="true" />
+	</target>
+
+	<!-- Concat and minify classes and scripts -->
+	<target name="build" depends="" description="Builds the project">
+		<concat destfile="${build_dir}/tiny_mce_tmp.js">
+			<fileset dir="${classes_dir}" includes="tinymce.js" />
+			<fileset dir="${classes_dir}" includes="adapter/jquery/adapter.js" />
+			<fileset dir="${classes_dir}" includes="adapter/prototype/adapter.js" />
+			<fileset dir="${classes_dir}" includes="util/Dispatcher.js" />
+			<fileset dir="${classes_dir}" includes="util/URI.js" />
+			<fileset dir="${classes_dir}" includes="util/Cookie.js" />
+			<fileset dir="${classes_dir}" includes="util/JSON.js" />
+			<fileset dir="${classes_dir}" includes="util/XHR.js" />
+			<fileset dir="${classes_dir}" includes="util/JSONRequest.js" />
+			<fileset dir="${classes_dir}" includes="dom/DOMUtils.js" />
+			<fileset dir="${classes_dir}" includes="dom/Range.js" />
+			<fileset dir="${classes_dir}" includes="dom/Sizzle.js" />
+			<fileset dir="${classes_dir}" includes="dom/Event.js" />
+			<fileset dir="${classes_dir}" includes="dom/Element.js" />
+			<fileset dir="${classes_dir}" includes="dom/Selection.js" />
+			<fileset dir="${classes_dir}" includes="dom/XMLWriter.js" />
+			<fileset dir="${classes_dir}" includes="dom/StringWriter.js" />
+			<fileset dir="${classes_dir}" includes="dom/Serializer.js" />
+			<fileset dir="${classes_dir}" includes="dom/ScriptLoader.js" />
+			<fileset dir="${classes_dir}" includes="ui/Control.js" />
+			<fileset dir="${classes_dir}" includes="ui/Container.js" />
+			<fileset dir="${classes_dir}" includes="ui/Separator.js" />
+			<fileset dir="${classes_dir}" includes="ui/MenuItem.js" />
+			<fileset dir="${classes_dir}" includes="ui/Menu.js" />
+			<fileset dir="${classes_dir}" includes="ui/DropMenu.js" />
+			<fileset dir="${classes_dir}" includes="ui/Button.js" />
+			<fileset dir="${classes_dir}" includes="ui/ListBox.js" />
+			<fileset dir="${classes_dir}" includes="ui/NativeListBox.js" />
+			<fileset dir="${classes_dir}" includes="ui/MenuButton.js" />
+			<fileset dir="${classes_dir}" includes="ui/SplitButton.js" />
+			<fileset dir="${classes_dir}" includes="ui/ColorSplitButton.js" />
+			<fileset dir="${classes_dir}" includes="ui/Toolbar.js" />
+			<fileset dir="${classes_dir}" includes="AddOnManager.js" />
+			<fileset dir="${classes_dir}" includes="EditorManager.js" />
+			<fileset dir="${classes_dir}" includes="Editor.js" />
+			<fileset dir="${classes_dir}" includes="EditorCommands.js" />
+			<fileset dir="${classes_dir}" includes="UndoManager.js" />
+			<fileset dir="${classes_dir}" includes="ForceBlocks.js" />
+			<fileset dir="${classes_dir}" includes="ControlManager.js" />
+			<fileset dir="${classes_dir}" includes="WindowManager.js" />
+		</concat>
+
+		<!-- Remove all jsdoc style comments -->
+		<replaceregexp match="/\*\*(.*?)\*\/\s*" replace="" flags="gs" byline="false" file="${build_dir}/tiny_mce_tmp.js" />
+
+		<!-- Preprocess core -->
+		<preprocess infile="${build_dir}/tiny_mce_tmp.js" outfile="${build_dir}/tiny_mce_src.js" />
+		<preprocess infile="${build_dir}/tiny_mce_tmp.js" outfile="${build_dir}/tiny_mce_prototype_src.js" defines="prototype,prototype_adapter" />
+		<preprocess infile="${build_dir}/tiny_mce_tmp.js" outfile="${build_dir}/tiny_mce_jquery_src.js" defines="jquery,jquery_adapter" />
+
+		<!-- Compress core -->
+		<yuicompress infile="${build_dir}/tiny_mce_src.js" outfile="${build_dir}/tiny_mce.js" />
+		<yuicompress infile="${build_dir}/tiny_mce_prototype_src.js" outfile="${build_dir}/tiny_mce_prototype.js" />
+		<yuicompress infile="${build_dir}/tiny_mce_jquery_src.js" outfile="${build_dir}/tiny_mce_jquery.js" />
+
+		<!-- Compress core -->
+		<yuicompress infile="${build_dir}/classes/Popup.js" outfile="${build_dir}/tiny_mce_popup.js" />
+
+		<!-- Compress themes -->
+		<yuicompress infile="${build_dir}/themes/simple/editor_template_src.js" outfile="${build_dir}/themes/simple/editor_template.js" />
+		<yuicompress infile="${build_dir}/themes/advanced/editor_template_src.js" outfile="${build_dir}/themes/advanced/editor_template.js" />
+
+		<!-- Compress plugins -->
+		<yuicompress infile="${build_dir}/plugins/advhr/editor_plugin_src.js" outfile="${build_dir}/plugins/advhr/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/advimage/editor_plugin_src.js" outfile="${build_dir}/plugins/advimage/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/advlink/editor_plugin_src.js" outfile="${build_dir}/plugins/advlink/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/emotions/editor_plugin_src.js" outfile="${build_dir}/plugins/emotions/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/example/editor_plugin_src.js" outfile="${build_dir}/plugins/example/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/iespell/editor_plugin_src.js" outfile="${build_dir}/plugins/iespell/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/insertdatetime/editor_plugin_src.js" outfile="${build_dir}/plugins/insertdatetime/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/preview/editor_plugin_src.js" outfile="${build_dir}/plugins/preview/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/print/editor_plugin_src.js" outfile="${build_dir}/plugins/print/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/save/editor_plugin_src.js" outfile="${build_dir}/plugins/save/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/searchreplace/editor_plugin_src.js" outfile="${build_dir}/plugins/searchreplace/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/table/editor_plugin_src.js" outfile="${build_dir}/plugins/table/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/contextmenu/editor_plugin_src.js" outfile="${build_dir}/plugins/contextmenu/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/paste/editor_plugin_src.js" outfile="${build_dir}/plugins/paste/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/fullscreen/editor_plugin_src.js" outfile="${build_dir}/plugins/fullscreen/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/directionality/editor_plugin_src.js" outfile="${build_dir}/plugins/directionality/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/inlinepopups/editor_plugin_src.js" outfile="${build_dir}/plugins/inlinepopups/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/autosave/editor_plugin_src.js" outfile="${build_dir}/plugins/autosave/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/noneditable/editor_plugin_src.js" outfile="${build_dir}/plugins/noneditable/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/fullpage/editor_plugin_src.js" outfile="${build_dir}/plugins/fullpage/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/layer/editor_plugin_src.js" outfile="${build_dir}/plugins/layer/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/style/editor_plugin_src.js" outfile="${build_dir}/plugins/style/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/media/editor_plugin_src.js" outfile="${build_dir}/plugins/media/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/visualchars/editor_plugin_src.js" outfile="${build_dir}/plugins/visualchars/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/nonbreaking/editor_plugin_src.js" outfile="${build_dir}/plugins/nonbreaking/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/xhtmlxtras/editor_plugin_src.js" outfile="${build_dir}/plugins/xhtmlxtras/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/template/editor_plugin_src.js" outfile="${build_dir}/plugins/template/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/bbcode/editor_plugin_src.js" outfile="${build_dir}/plugins/bbcode/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/safari/editor_plugin_src.js" outfile="${build_dir}/plugins/safari/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/compat2x/editor_plugin_src.js" outfile="${build_dir}/plugins/compat2x/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/pagebreak/editor_plugin_src.js" outfile="${build_dir}/plugins/pagebreak/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
+
+		<!-- Cleanup -->
+		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
+	</target>
+
+	<target name="export" depends="" description="Exports the SVN trunks for each TinyMCE component">
+		<delete dir="${export_dir}" quiet="true" />
+
+		<svn javahl="${javahl}">
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce/trunk" destPath="${export_dir}/tinymce" />
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/spellchecker_php/trunk" destPath="${export_dir}/tinymce_spellchecker_php" />
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_cfm/trunk" destPath="${export_dir}/tinymce_compressor_cfm" />
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_jsp/trunk" destPath="${export_dir}/tinymce_compressor_jsp" />
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_net/trunk" destPath="${export_dir}/tinymce_compressor_net" />
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_php/trunk" destPath="${export_dir}/tinymce_compressor_php" />
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_package_dotnet/trunk" destPath="${export_dir}/tinymce_package_dotnet" />
+		</svn>
+	</target>
+
+	<target name="package" depends="" description="Compresses the exported SVN trunks">
+		<!-- Parse minor version, major version and release date from changelog -->
+		<loadfile property="changelog" srcFile="${export_dir}/tinymce/changelog.txt" />
+		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
+		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
+		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
+		<propertyregex property="version.minor" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
+		<propertyregex property="file_version" input="${version}" regexp="\." replace="_" />
+
+		<echo message="${version}" />
+		<echo message="${version.major}" />
+		<echo message="${version.minor}" />
+		<echo message="${release_date}" />
+		<echo message="${file_version}" />
+
+		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce.js" match="@@tinymce_major_version@@" replace="${version.major}" byline="true" />
+		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce.js" match="@@tinymce_minor_version@@" replace="${version.minor}" byline="true" />
+		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce.js" match="@@tinymce_release_date@@" replace="${release_date}" byline="true" />
+		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce_src.js" match="@@tinymce_major_version@@" replace="${version.major}" byline="true" />
+		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce_src.js" match="@@tinymce_minor_version@@" replace="${version.minor}" byline="true" />
+		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce_src.js" match="@@tinymce_release_date@@" replace="${release_date}" byline="true" />
+
+		<delete file="${package_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
+		<zip destfile="${package_dir}/tinymce_${file_version}_dev.zip">
+			<zipfileset dir="${export_dir}/tinymce" prefix="tinymce" />
+		</zip>
+
+		<delete file="${package_dir}/tinymce_${file_version}.zip" quiet="true" />
+		<zip destfile="${package_dir}/tinymce_${file_version}.zip" excludes="**/classes">
+			<zipfileset dir="${export_dir}/tinymce" prefix="tinymce" />
+		</zip>
+	</target>
+
+	<target name="release" depends="export,package" description="Builds release packages">
+		
+	</target>
+</project>
