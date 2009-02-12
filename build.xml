@@ -135,17 +135,11 @@
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
 
-	<target name="export" depends="" description="Exports the SVN trunks for each TinyMCE component">
+	<target name="export" depends="" description="Exports the SVN trunk for TinyMCE">
 		<delete dir="${export_dir}" quiet="true" />
 
 		<svn javahl="${javahl}">
 			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce/trunk" destPath="${export_dir}/tinymce" />
-			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/spellchecker_php/trunk" destPath="${export_dir}/tinymce_spellchecker_php" />
-			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_cfm/trunk" destPath="${export_dir}/tinymce_compressor_cfm" />
-			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_jsp/trunk" destPath="${export_dir}/tinymce_compressor_jsp" />
-			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_net/trunk" destPath="${export_dir}/tinymce_compressor_net" />
-			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_compressor_php/trunk" destPath="${export_dir}/tinymce_compressor_php" />
-			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce_package_dotnet/trunk" destPath="${export_dir}/tinymce_package_dotnet" />
 		</svn>
 	</target>
 
@@ -158,27 +152,108 @@
 		<propertyregex property="version.minor" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
 		<propertyregex property="file_version" input="${version}" regexp="\." replace="_" />
 
-		<echo message="${version}" />
-		<echo message="${version.major}" />
-		<echo message="${version.minor}" />
-		<echo message="${release_date}" />
-		<echo message="${file_version}" />
+		<!-- Replace major version -->
+		<replaceregexp byline="true">
+			<regexp pattern="@@tinymce_major_version@@" />
+			<substitution expression="${version.major}" />
 
-		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce.js" match="@@tinymce_major_version@@" replace="${version.major}" byline="true" />
-		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce.js" match="@@tinymce_minor_version@@" replace="${version.minor}" byline="true" />
-		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce.js" match="@@tinymce_release_date@@" replace="${release_date}" byline="true" />
-		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce_src.js" match="@@tinymce_major_version@@" replace="${version.major}" byline="true" />
-		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce_src.js" match="@@tinymce_minor_version@@" replace="${version.minor}" byline="true" />
-		<replaceregexp file="${export_dir}/tinymce/jscripts/tiny_mce/tiny_mce_src.js" match="@@tinymce_release_date@@" replace="${release_date}" byline="true" />
+			<fileset dir="${export_dir}">
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_src.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			</fileset>
+		</replaceregexp>
 
+		<!-- Replace minor version -->
+		<replaceregexp byline="true">
+			<regexp pattern="@@tinymce_minor_version@@" />
+			<substitution expression="${version.minor}" />
+
+			<fileset dir="${export_dir}">
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_src.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Replace release date -->
+		<replaceregexp byline="true">
+			<regexp pattern="@@tinymce_release_date@@" />
+			<substitution expression="${release_date}" />
+
+			<fileset dir="${export_dir}">
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_src.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Add version suffix to all file requests -->
+		<replaceregexp match="\?v=\{tinymce_version\}" replace="?v=${file_version}" flags="g" byline="true">
+			<fileset dir="${export_dir}">
+				<include name="**/*.htm*" />
+				<include name="**/*.css" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Compress development package -->
 		<delete file="${package_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
 		<zip destfile="${package_dir}/tinymce_${file_version}_dev.zip">
 			<zipfileset dir="${export_dir}/tinymce" prefix="tinymce" />
 		</zip>
 
+		<!-- Remove version suffixes, so that it won't break Lotus Notes -->
+		<replaceregexp match="\?v=${file_version}" replace="" flags="g" byline="true">
+			<fileset dir="${export_dir}">
+				<include name="**/*.htm*" />
+				<include name="**/*.css" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Compress production package -->
 		<delete file="${package_dir}/tinymce_${file_version}.zip" quiet="true" />
 		<zip destfile="${package_dir}/tinymce_${file_version}.zip" excludes="**/classes">
-			<zipfileset dir="${export_dir}/tinymce" prefix="tinymce" />
+			<fileset dir="${export_dir}/tinymce">
+				<include name="jscripts/**" />
+				<include name="examples/**" />
+				<include name="changelog.txt" />
+				<exclude name="jscripts/tiny_mce/classes/**" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_dev.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			</fileset>
+		</zip>
+
+		<!-- Compress production package for jquery -->
+		<delete file="${package_dir}/tinymce_${file_version}_jquery.zip" quiet="true" />
+		<zip destfile="${package_dir}/tinymce_${file_version}_jquery.zip" excludes="**/classes">
+			<fileset dir="${export_dir}/tinymce">
+				<include name="jscripts/**" />
+				<include name="examples/**" />
+				<include name="changelog.txt" />
+				<exclude name="jscripts/tiny_mce/classes/**" />
+				<exclude name="jscripts/tiny_mce/tiny_mce.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_src.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_dev.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<exclude name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			</fileset>
+
+			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery.js" fullpath="jscripts/tiny_mce/tiny_mce.js"/>
+			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery_src.js" fullpath="jscripts/tiny_mce/tiny_mce_src.js"/>
 		</zip>
 	</target>
 
