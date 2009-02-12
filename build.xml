@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="TinyMCE" default="build" basedir=".">
+	<!-- Path properties -->
 	<property description="Classes directory" name="classes_dir" value="jscripts/tiny_mce/classes" />
 	<property description="Build directory" name="build_dir" value="jscripts/tiny_mce" />
 	<property description="Export directory" name="export_dir" value="export" />
 	<property description="Package directory" name="package_dir" value="export" />
 
 	<!-- Allow any user specific values to override the defaults -->
-	<property file="${user.home}/build.properties" />
+	<property file="${user.home}/tinymce_build.properties" />
 
 	<!-- Setup classpath for js-build-tools ant tasks -->
 	<path id="tasks.classpath">
 		<pathelement location="."/>
 
-		<fileset dir="tools">
+		<fileset dir="tools/ant">
 			<include name="**/*.jar"/>
 		</fileset>
 	</path>
@@ -25,6 +26,7 @@
 
 	<!-- Generate JS documentation -->
 	<target name="yuidoc" depends="" description="Generates HTML documentation out of java source">
+		
 	</target>
 
 	<!-- Cleanup the build -->
@@ -34,6 +36,7 @@
 
 	<!-- Concat and minify classes and scripts -->
 	<target name="build" depends="" description="Builds the project">
+		<!-- Combine all class files into one single script file -->
 		<concat destfile="${build_dir}/tiny_mce_tmp.js">
 			<fileset dir="${classes_dir}" includes="tinymce.js" />
 			<fileset dir="${classes_dir}" includes="adapter/jquery/adapter.js" />
@@ -135,7 +138,7 @@
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
 
-	<target name="export" depends="" description="Exports the SVN trunk for TinyMCE">
+	<target name="export" depends="" description="Exports the SVN trunk">
 		<delete dir="${export_dir}" quiet="true" />
 
 		<svn javahl="${javahl}">
