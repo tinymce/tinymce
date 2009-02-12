@@ -5,7 +5,7 @@
  *  More information: http://sizzlejs.com/
  */
 
-// #if !jquery
+// #ifndef jquery
 (function(){
 
 var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^[\]]*\]|[^[\]]+)+\]|\\.|[^ >+~,(\[]+)+|[>+~])(\s*,\s*)?/g,

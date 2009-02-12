@@ -23,7 +23,7 @@
 		 * @method
 		 */
 
-		// #if !jquery
+		// #ifndef jquery
 
 		/**
 		 * Adds an event handler to the specified object.

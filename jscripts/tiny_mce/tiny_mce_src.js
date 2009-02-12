@@ -1,10 +1,7 @@
-
-/* file:jscripts/tiny_mce/classes/tinymce.js */
-
 var tinymce = {
-	majorVersion : '3',
-	minorVersion : '2.1.2',
-	releaseDate : '200x-xx-xx',
+	majorVersion : '@@tinymce_major_version@@',
+	minorVersion : '@@tinymce_minor_version@@',
+	releaseDate : '@@tinymce_release_date@@',
 
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -94,7 +91,6 @@ var tinymce = {
 		return n == t;
 	},
 
-	// #if !jquery
 
 	each : function(o, cb, s) {
 		var n, l;
@@ -176,7 +172,6 @@ var tinymce = {
 		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
 	},
 
-	// #endif
 
 	create : function(s, p) {
 		var t = this, sp, ns, cn, scn, c, de = 0;
@@ -427,15 +422,6 @@ window.tinymce = tinymce;
 
 // Initialize the API
 tinymce._init();
-
-/* file:jscripts/tiny_mce/classes/adapter/jquery/adapter.js */
-
-
-/* file:jscripts/tiny_mce/classes/adapter/prototype/adapter.js */
-
-
-/* file:jscripts/tiny_mce/classes/util/Dispatcher.js */
-
 tinymce.create('tinymce.util.Dispatcher', {
 	scope : null,
 	listeners : null,
@@ -488,9 +474,6 @@ tinymce.create('tinymce.util.Dispatcher', {
 	}
 
 	});
-
-/* file:jscripts/tiny_mce/classes/util/URI.js */
-
 (function() {
 	var each = tinymce.each;
 
@@ -719,9 +702,6 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/util/Cookie.js */
-
 (function() {
 	var each = tinymce.each;
 
@@ -793,9 +773,6 @@ tinymce.create('tinymce.util.Dispatcher', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/util/JSON.js */
-
 tinymce.create('static tinymce.util.JSON', {
 	serialize : function(o) {
 		var i, v, s = tinymce.util.JSON.serialize, t;
@@ -848,9 +825,6 @@ tinymce.create('static tinymce.util.JSON', {
 	}
 
 	});
-
-/* file:jscripts/tiny_mce/classes/util/XHR.js */
-
 tinymce.create('static tinymce.util.XHR', {
 	send : function(o) {
 		var x, t, w = window, c = 0;
@@ -908,9 +882,6 @@ tinymce.create('static tinymce.util.XHR', {
 
 		}
 });
-
-/* file:jscripts/tiny_mce/classes/util/JSONRequest.js */
-
 (function() {
 	var extend = tinymce.extend, JSON = tinymce.util.JSON, XHR = tinymce.util.XHR;
 
@@ -964,10 +935,7 @@ tinymce.create('static tinymce.util.XHR', {
 		}
 
 		});
-}());
-/* file:jscripts/tiny_mce/classes/dom/DOMUtils.js */
-
-(function() {
+}());(function() {
 	// Shorten names
 	var each = tinymce.each, is = tinymce.is;
 	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
@@ -1144,7 +1112,6 @@ tinymce.create('static tinymce.util.XHR', {
 			return e;
 		},
 
-		// #if !jquery
 
 		select : function(pa, s) {
 			var t = this;
@@ -1152,7 +1119,6 @@ tinymce.create('static tinymce.util.XHR', {
 			return tinymce.dom.Sizzle(pa, t.get(s) || t.get(t.settings.root_element) || t.doc, []);
 		},
 
-		// #endif
 
 		add : function(p, n, a, h, c) {
 			var t = this;
@@ -1226,7 +1192,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-		// #if !jquery
 
 		setStyle : function(n, na, v) {
 			var t = this;
@@ -1397,7 +1362,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-		// #endif
 
 		getAttrib : function(e, n, dv) {
 			var v, t = this;
@@ -1684,7 +1648,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-		// #if !jquery
 
 		addClass : function(e, c) {
 			return this.run(e, function(e) {
@@ -1744,7 +1707,6 @@ tinymce.create('static tinymce.util.XHR', {
 			return !e || e.style.display == 'none' || this.getStyle(e, 'display') == 'none';
 		},
 
-		// #endif
 
 		uniqueId : function(p) {
 			return (!p ? 'mce_' : p) + (this.counter++);
@@ -2056,7 +2018,6 @@ tinymce.create('static tinymce.util.XHR', {
 			}) : s;
 		},
 
-		// #if !jquery
 
 		insertAfter : function(n, r) {
 			var t = this;
@@ -2078,7 +2039,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-		// #endif
 
 		isBlock : function(n) {
 			if (n.nodeType && n.nodeType !== 1)
@@ -2089,7 +2049,6 @@ tinymce.create('static tinymce.util.XHR', {
 			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
 
-		// #if !jquery
 
 		replace : function(n, o, k) {
 			var t = this;
@@ -2116,7 +2075,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-		// #endif
 
 		toHex : function(s) {
 			var c = /^\s*rgb\s*?\(\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?\)\s*$/i.exec(s);
@@ -2301,9 +2259,602 @@ tinymce.create('static tinymce.util.XHR', {
 	// Setup page DOM
 	tinymce.DOM = new tinymce.dom.DOMUtils(document, {process_html : 0});
 })();
+(function(ns) {
+	// Extend utility function
+	function extend(t, o) {
+		var n;
 
-/* file:jscripts/tiny_mce/classes/dom/Sizzle.js */
+		for (n in o)
+			t[n] = o[n];
 
+		return t;
+	};
+
+	// Range constructor
+	function Range(d) {
+		extend(this, {
+			doc : d,
+
+			// Inital states
+			startContainer : d,
+			startOffset : 0,
+			endContainer : d,
+			endOffset : 0,
+			collapsed : true,
+			commonAncestorContainer : d,
+
+			// Range constants
+			START_TO_START : 0,
+			START_TO_END : 1,
+			END_TO_END : 2,
+			END_TO_START : 3,
+
+			// Traverse constants
+			EXTRACT : 0,
+			CLONE : 1,
+			DELETE : 2
+		});
+	};
+
+	// Add range methods
+	extend(Range.prototype, {
+		setStart : function(n, o) {
+			this._setEndPoint(true, n, o);
+		},
+
+		setEnd : function(n, o) {
+			this._setEndPoint(false, n, o);
+		},
+
+		setStartBefore : function(n) {
+			this.setStart(n.parentNode, this._nodeIndex(n));
+		},
+
+		setStartAfter : function(n) {
+			this.setStart(n.parentNode, this._nodeIndex(n) + 1);
+		},
+
+		setEndBefore : function(n) {
+			this.setEnd(n.parentNode, this._nodeIndex(n));
+		},
+
+		setEndAfter : function(n) {
+			this.setEnd(n.parentNode, this._nodeIndex(n) + 1);
+		},
+
+		collapse : function(ts) {
+			var t = this;
+
+			if (ts) {
+				t.endContainer = t.startContainer;
+				t.endOffset = t.startOffset;
+			} else {
+				t.startContainer = t.endContainer;
+				t.startOffset = t.endOffset;
+			}
+		},
+
+		selectNode : function(n) {
+			this.setStartBefore(n);
+			this.setEndAfter(n);
+		},
+
+		selectNodeContents : function(n) {
+			this.setStart(n, 0);
+			this.setEnd(n, n.nodeType === 1 ? n.childNodes.length : n.nodeValue.length);
+		},
+
+		compareBoundaryPoints : function(h, r) {
+			var t = this, sc = t.startContainer, so = t.startOffset, ec = t.endContainer, eo = t.endOffset;
+
+			// Check START_TO_START
+			if (h === 0)
+				return t._compareBoundaryPoints(sc, so, sc, so);
+
+			// Check START_TO_END
+			if (h === 1)
+				return t._compareBoundaryPoints(sc, so, ec, eo);
+
+			// Check END_TO_END
+			if (h === 2)
+				return t._compareBoundaryPoints(ec, eo, ec, eo);
+
+			// Check END_TO_START
+			if (h === 3)
+				return t._compareBoundaryPoints(ec, eo, sc, so);
+		},
+
+		deleteContents : function() {
+			this._traverse(this.DELETE);
+		},
+
+		extractContents : function() {
+			return this._traverse(this.EXTRACT);
+		},
+
+		cloneContents : function() {
+			return this._traverse(this.CLONE);
+		},
+
+		insertNode : function(n) {
+			var t = this, nn, o;
+
+			// Node is TEXT_NODE or CDATA
+			if (n.nodeType === 3 || n.nodeType === 4) {
+				nn = t.startContainer.splitText(t.startOffset);
+				t.startContainer.parentNode.insertBefore(n, nn);
+			} else {
+				// Insert element node
+				if (t.startContainer.childNodes.length > 0)
+					o = t.startContainer.childNodes[t.startOffset];
+
+				t.startContainer.insertBefore(n, o);
+			}
+		},
+
+		surroundContents : function(n) {
+			var t = this, f = t.extractContents();
+
+			t.insertNode(n);
+			n.appendChild(f);
+			t.selectNode(n);
+		},
+
+		cloneRange : function() {
+			var t = this;
+
+			return extend(new Range(t.doc), {
+				startContainer : t.startContainer,
+				startOffset : t.startOffset,
+				endContainer : t.endContainer,
+				endOffset : t.endOffset,
+				collapsed : t.collapsed,
+				commonAncestorContainer : t.commonAncestorContainer
+			});
+		},
+
+		toString : function() {
+			// Not implemented
+		},
+
+		detach : function() {
+			// Not implemented
+		},
+
+		// Internal methods
+
+		_isCollapsed : function() {
+			return (this.startContainer == this.endContainer && this.startOffset == this.endOffset);
+		},
+
+		_compareBoundaryPoints : function (containerA, offsetA, containerB, offsetB) {
+			var c, offsetC, n, cmnRoot, childA, childB;
+
+			// In the first case the boundary-points have the same container. A is before B 
+			// if its offset is less than the offset of B, A is equal to B if its offset is 
+			// equal to the offset of B, and A is after B if its offset is greater than the 
+			// offset of B.
+			if (containerA == containerB) {
+				if (offsetA == offsetB) {
+					return 0; // equal
+				} else if (offsetA < offsetB) {
+					return -1; // before
+				} else {
+					return 1; // after
+				}
+			}
+
+			// In the second case a child node C of the container of A is an ancestor 
+			// container of B. In this case, A is before B if the offset of A is less than or 
+			// equal to the index of the child node C and A is after B otherwise.
+			c = containerB;
+			while (c && c.parentNode != containerA) {
+				c = c.parentNode;
+			}
+			if (c) {
+				offsetC = 0;
+				n = containerA.firstChild;
+
+				while (n != c && offsetC < offsetA) {
+					offsetC++;
+					n = n.nextSibling;
+				}
+
+				if (offsetA <= offsetC) {
+					return -1; // before
+				} else {
+					return 1; // after
+				}
+			}
+
+			// In the third case a child node C of the container of B is an ancestor container 
+			// of A. In this case, A is before B if the index of the child node C is less than 
+			// the offset of B and A is after B otherwise.
+			c = containerA;
+			while (c && c.parentNode != containerB) {
+				c = c.parentNode;
+			}
+
+			if (c) {
+				offsetC = 0;
+				n = containerB.firstChild;
+
+				while (n != c && offsetC < offsetB) {
+					offsetC++;
+					n = n.nextSibling;
+				}
+
+				if (offsetC < offsetB) {
+					return -1; // before
+				} else {
+					return 1; // after
+				}
+			}
+
+			// In the fourth case, none of three other cases hold: the containers of A and B 
+			// are siblings or descendants of sibling nodes. In this case, A is before B if 
+			// the container of A is before the container of B in a pre-order traversal of the
+			// Ranges' context tree and A is after B otherwise.
+			cmnRoot = this._commonAncestorContainer(containerA, containerB);
+			childA = containerA;
+
+			while (childA && childA.parentNode != cmnRoot) {
+				childA = childA.parentNode;  
+			}
+
+			if (!childA) {
+				childA = cmnRoot;
+			}
+
+			childB = containerB;
+			while (childB && childB.parentNode != cmnRoot) {
+				childB = childB.parentNode;
+			}
+
+			if (!childB) {
+				childB = cmnRoot;
+			}
+
+			if (childA == childB) {
+				return 0; // equal
+			}
+
+			n = cmnRoot.firstChild;
+			while (n) {
+				if (n == childA) {
+					return -1; // before
+				}
+
+				if (n == childB) {
+					return 1; // after
+				}
+
+				n = n.nextSibling;
+			}
+		},
+
+		_commonAncestorContainer : function(a, b) {
+			var ps = a, pe;
+
+			while (ps) {
+				pe = b;
+
+				while (pe && ps != pe)
+					pe = pe.parentNode;
+
+				if (ps == pe)
+					break;
+
+				ps = ps.parentNode;
+			}
+
+			if (!ps && a.ownerDocument)
+				return a.ownerDocument.documentElement;
+
+			return ps;
+		},
+
+		_nodeIndex : function(n) {
+			var i = 0;
+
+			while (n.previousSibling) {
+				i++;
+				n = n.previousSibling;
+			}
+
+			return i;
+		},
+
+		_setEndPoint : function(st, n, o) {
+			var t = this, ec, sc;
+
+			if (st) {
+				t.startContainer = n;
+				t.startOffset = o;
+			} else {
+				t.endContainer = n;
+				t.endOffset = o;
+			}
+
+			// If one boundary-point of a Range is set to have a root container 
+			// other than the current one for the Range, the Range is collapsed to 
+			// the new position. This enforces the restriction that both boundary-
+			// points of a Range must have the same root container.
+			ec = t.endContainer;
+			while (ec.parentNode)
+				ec = ec.parentNode;
+
+			sc = t.startContainer;
+			while (sc.parentNode)
+				sc = sc.parentNode;
+
+			if (sc != ec) {
+				t.collapse(st);
+			} else {
+				// The start position of a Range is guaranteed to never be after the 
+				// end position. To enforce this restriction, if the start is set to 
+				// be at a position after the end, the Range is collapsed to that 
+				// position.
+				if (t._compareBoundaryPoints(t.startContainer, t.startOffset, t.endContainer, t.endOffset) > 0)
+					t.collapse(st);
+			}
+
+			t.collapsed = t._isCollapsed();
+			t.commonAncestorContainer = t._commonAncestorContainer(t.startContainer, t.endContainer);
+		},
+
+		_traverse : function(a) {
+			var t = this, f, sc = t.startContainer, so = t.startOffset, ec = t.endContainer, eo = t.endOffset, ca = t.commonAncestorContainer, v, n, nx, pr, i, ro, ps, pe, lc, rc, nl, p, ms;
+
+			if (t.collaped)
+				return;
+
+			if (a == t.EXTRACT || a == t.CLONE)
+				f = t.doc.createDocumentFragment();
+
+			// Case 1 action within same container
+			if (sc === ec) {
+				v = sc.nodeType;
+
+				// Is TEXT_NODE, COMMENT_NODE or CDATA_SECTION_NODE
+				if (v === 3 || v === 8 || v === 4) {
+					if (a === t.EXTRACT || a === t.CLONE) {
+						n = sc.cloneNode(false);
+						n.deleteData(eo, sc.data.length - eo);
+						n.deleteData(0, so);
+						f.appendChild(n);
+					}
+
+					if (a === t.EXTRACT || a === t.DELETE)
+						sc.deleteData(so, eo - so);
+				}
+
+				// Is ELEMENT
+				if (v === 1) {
+					for (i = 0, n = sc.firstChild; i < so; i++)
+						n = n.nextSibling;
+
+					while (n && i < eo) {
+						nx = n.nextSibling;
+
+						if (a === t.EXTRACT)
+							f.appendChild(n);
+						else if (a === t.CLONE)
+							f.appendChild(n.cloneNode(true));
+						else
+							sc.removeChild(n);
+
+						n = nx;
+						i++;
+					}
+				}
+			} else {
+				if (sc.nodeType == 1) {
+					sc = sc.childNodes[so];
+					so = 0;
+				}
+
+				if (ec.nodeType == 1) {
+					ec = ec.childNodes[eo];
+					eo = 0;
+				}
+
+				// Find partial start node
+				if (sc != ca) {
+					ps = sc;
+
+					while (ps.parentNode != ca)
+						ps = ps.parentNode;
+				}
+
+				// Find partial end node
+				if (ec != ca) {
+					pe = ec;
+
+					while (pe.parentNode != ca)
+						pe = pe.parentNode;
+				}
+
+				// Store away middle start since nextSibling might get set to null if the ps is deleted
+				ms = ps.nextSibling;
+
+				function getParents(n, r) {
+					var nl = [];
+
+					for (; n && n != r; n = n.parentNode)
+						nl.push(n);
+
+					return nl;
+				};
+
+				function process(tn, rn, cl, di) {
+					if (di)
+						tn = tn.insertBefore(rn.cloneNode(cl), tn.firstChild);
+					else
+						tn = tn.appendChild(rn.cloneNode(cl));
+
+					return tn;
+				};
+
+				function processStartCont(sc, lc) {
+					var n, v = sc.nodeType, i;
+
+					// Is TEXT_NODE, COMMENT_NODE or CDATA_SECTION_NODE
+					if (v === 3 || v === 8 || v === 4) {
+						n = sc.cloneNode(true);
+						n.deleteData(0, so);
+						lc = lc.appendChild(n);
+					} else
+						lc = lc.appendChild(sc.cloneNode(true));
+
+					return lc;
+				};
+
+				function processEndCont(ec, rc) {
+					var n, v = ec.nodeType;
+
+					// Is TEXT_NODE, COMMENT_NODE or CDATA_SECTION_NODE
+					if (v === 3 || v === 8 || v === 4) {
+						n = ec.cloneNode(true);
+						n.deleteData(eo, ec.data.length - eo);
+						rc = rc.appendChild(n);
+					} else
+						rc = rc.appendChild(ec.cloneNode(false));
+
+					return rc;
+				};
+
+				// Left
+				if (ps) {
+					nl = getParents(sc, ca);
+
+					if (a != t.DELETE) {
+						for (lc = f, i = nl.length - 1; i >= 0; i--) {
+							n = nl[i];
+
+							if (i == 0)
+								lc = processStartCont(n, lc);
+							else
+								lc = process(lc, n, false);
+
+							if (n != ps) {
+								for (nx = n.nextSibling; nx; nx = nx.nextSibling)
+									process(lc.parentNode, nx, true);
+							}
+						}
+					}
+
+					// Delete parts of the start container
+					if (a == t.DELETE || a == t.EXTRACT) {
+						if (sc.nodeType == 3)
+							sc.deleteData(so, sc.data.length - so);
+						else
+							sc.parentNode.removeChild(sc);
+
+						for (i = nl.length - 1; i >= 0; i--) {
+							n = nl[i];
+
+							if (n != ps) {
+								p = nl[i].parentNode;
+								for (nx = p.lastChild; nx && nx != n; nx = p.lastChild)
+									p.removeChild(nx);
+							}
+						}
+					}
+				}
+
+				// Middle
+				if (a != t.DELETE) {
+					for (nx = ms; nx && nx != pe; nx = nx.nextSibling)
+						process(f, nx, true);
+				}
+
+				if (a == t.DELETE || a == t.EXTRACT) {
+					for (pr = pe.previousSibling; pr && pr != ps; ) {
+						n = pr;
+						pr = pr.previousSibling;
+						n.parentNode.removeChild(n);
+					}
+				}
+
+				// Right
+				if (pe) {
+					nl = getParents(ec, ca);
+
+					if (a != t.DELETE) {
+						for (rc = f, i = nl.length - 1; i >= 0; i--) {
+							n = nl[i];
+
+							if (i == 0)
+								rc = processEndCont(n, rc);
+							else
+								rc = process(rc, n, false);
+
+							if (n != pe) {
+								for (pr = n.previousSibling; pr; pr = pr.previousSibling)
+									process(rc.parentNode, pr, true, true);
+							}
+						}
+					}
+
+					// Remove empty parents if the end container is a element
+					if (t.endContainer.nodeType == 1) {
+						for (n = rc; n && n != pe; ) {
+							if (!n.hasChildNodes()) {
+								v = n;
+								n = n.parentNode;
+								v.parentNode.removeChild(v);
+							} else
+								n = n.parentNode;
+						}
+					}
+
+					// Delete parts of the end container
+					if (a == t.DELETE || a == t.EXTRACT) {
+						if (ec.nodeType == 3)
+							ec.deleteData(0, eo);
+						else
+							ec.parentNode.removeChild(ec);
+
+						for (i = nl.length - 1; i >= 0; i--) {
+							n = nl[i];
+
+							if (n != pe) {
+								for (pr = n.previousSibling; pr; ) {
+									v = pr;
+									pr = pr.previousSibling;
+									v.parentNode.removeChild(v);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Move range
+			if (a === t.EXTRACT || a === t.DELETE) {
+				if (!ps && !pe || sc.nodeType == 1)
+					t.collapse(true);
+				else if (ps) {
+					t.startContainer = ca;
+					t.endContainer = ca;
+					t.startOffset = t.endOffset = t._nodeIndex(ps) + 1;
+				} else if (pe) {
+					t.startContainer = ca;
+					t.endContainer = ca;
+					t.startOffset = t.endOffset = t._nodeIndex(pe);
+				}
+
+				t.commonAncestorContainer = t._commonAncestorContainer(t.startContainer, t.endContainer);
+				t.collapsed = t._isCollapsed();
+			}
+
+			return f;
+		}
+	});
+
+	ns.Range = Range;
+})(tinymce.dom);
 /*!
  * Sizzle CSS Selector Engine - v0.9.1
  *  Copyright 2009, The Dojo Foundation
@@ -2311,7 +2862,6 @@ tinymce.create('static tinymce.util.XHR', {
  *  More information: http://sizzlejs.com/
  */
 
-// #if !jquery
 (function(){
 
 var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^[\]]*\]|[^[\]]+)+\]|\\.|[^ >+~,(\[]+)+|[>+~])(\s*,\s*)?/g,
@@ -3148,10 +3698,6 @@ var isXML = function(elem){
 tinymce.dom.Sizzle = Sizzle;
 
 })();
-// #endif
-
-/* file:jscripts/tiny_mce/classes/dom/Event.js */
-
 (function() {
 	// Shorten names
 	var each = tinymce.each, DOM = tinymce.DOM, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, Event;
@@ -3160,7 +3706,6 @@ tinymce.dom.Sizzle = Sizzle;
 		inits : [],
 		events : [],
 
-		// #if !jquery
 
 		add : function(o, n, f, s) {
 			var cb, t = this, el = t.events, r;
@@ -3271,7 +3816,6 @@ tinymce.dom.Sizzle = Sizzle;
 			}
 		},
 
-		// #endif
 
 		cancel : function(e) {
 			if (!e)
@@ -3393,9 +3937,6 @@ tinymce.dom.Sizzle = Sizzle;
 	Event._wait();
 	tinymce.addUnload(Event._unload);
 })();
-
-/* file:jscripts/tiny_mce/classes/dom/Element.js */
-
 (function() {
 	var each = tinymce.each;
 
@@ -3523,9 +4064,6 @@ tinymce.dom.Sizzle = Sizzle;
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/dom/Selection.js */
-
 (function() {
 	function trimNl(s) {
 		return s.replace(/[\n\r]+/g, '');
@@ -4111,9 +4649,6 @@ tinymce.dom.Sizzle = Sizzle;
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/dom/XMLWriter.js */
-
 (function() {
 	tinymce.create('tinymce.dom.XMLWriter', {
 		node : null,
@@ -4206,9 +4741,6 @@ tinymce.dom.Sizzle = Sizzle;
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/dom/StringWriter.js */
-
 (function() {
 	tinymce.create('tinymce.dom.StringWriter', {
 		str : null,
@@ -4336,9 +4868,6 @@ tinymce.dom.Sizzle = Sizzle;
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/dom/Serializer.js */
-
 (function() {
 	// Shorten names
 	var extend = tinymce.extend, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher, isIE = tinymce.isIE, isGecko = tinymce.isGecko;
@@ -5256,9 +5785,6 @@ tinymce.dom.Sizzle = Sizzle;
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/dom/ScriptLoader.js */
-
 (function() {
 	var each = tinymce.each, Event = tinymce.dom.Event;
 
@@ -5535,9 +6061,6 @@ tinymce.dom.Sizzle = Sizzle;
 	// Global script loader
 	tinymce.ScriptLoader = new tinymce.dom.ScriptLoader();
 })();
-
-/* file:jscripts/tiny_mce/classes/ui/Control.js */
-
 (function() {
 	// Shorten class names
 	var DOM = tinymce.DOM, is = tinymce.is;
@@ -5639,10 +6162,7 @@ tinymce.dom.Sizzle = Sizzle;
 		}
 
 		});
-})();
-/* file:jscripts/tiny_mce/classes/ui/Container.js */
-
-tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
+})();tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
 	Container : function(id, s) {
 		this.parent(id, s);
 		this.controls = [];
@@ -5662,9 +6182,6 @@ tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
 
 	});
 
-
-/* file:jscripts/tiny_mce/classes/ui/Separator.js */
-
 tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 	Separator : function(id, s) {
 		this.parent(id, s);
@@ -5676,9 +6193,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 	}
 
 	});
-
-/* file:jscripts/tiny_mce/classes/ui/MenuItem.js */
-
 (function() {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, walk = tinymce.walk;
 
@@ -5709,9 +6223,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/ui/Menu.js */
-
 (function() {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, walk = tinymce.walk;
 
@@ -5810,10 +6321,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		}
 
 		});
-})();
-/* file:jscripts/tiny_mce/classes/ui/DropMenu.js */
-
-(function() {
+})();(function() {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, Event = tinymce.dom.Event, Element = tinymce.dom.Element;
 
 	tinymce.create('tinymce.ui.DropMenu:tinymce.ui.Menu', {
@@ -6141,10 +6649,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		}
 
 		});
-})();
-/* file:jscripts/tiny_mce/classes/ui/Button.js */
-
-(function() {
+})();(function() {
 	var DOM = tinymce.DOM;
 
 	tinymce.create('tinymce.ui.Button:tinymce.ui.Control', {
@@ -6178,9 +6683,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/ui/ListBox.js */
-
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher;
 
@@ -6433,10 +6935,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		}
 
 		});
-})();
-/* file:jscripts/tiny_mce/classes/ui/NativeListBox.js */
-
-(function() {
+})();(function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher;
 
 	tinymce.create('tinymce.ui.NativeListBox:tinymce.ui.ListBox', {
@@ -6565,10 +7064,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		}
 
 		});
-})();
-/* file:jscripts/tiny_mce/classes/ui/MenuButton.js */
-
-(function() {
+})();(function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
 
 	tinymce.create('tinymce.ui.MenuButton:tinymce.ui.Button', {
@@ -6656,9 +7152,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/ui/SplitButton.js */
-
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
 
@@ -6725,9 +7218,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/ui/ColorSplitButton.js */
-
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, is = tinymce.is, each = tinymce.each;
 
@@ -6895,9 +7385,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/ui/Toolbar.js */
-
 tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	renderHTML : function() {
 		var t = this, h = '', c, co, dom = tinymce.DOM, s = t.settings, i, pr, nx, cl;
@@ -6961,9 +7448,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	}
 
 	});
-
-/* file:jscripts/tiny_mce/classes/AddOnManager.js */
-
 (function() {
 	var Dispatcher = tinymce.util.Dispatcher, each = tinymce.each;
 
@@ -7016,10 +7500,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	// Create plugin and theme managers
 	tinymce.PluginManager = new tinymce.AddOnManager();
 	tinymce.ThemeManager = new tinymce.AddOnManager();
-}());
-/* file:jscripts/tiny_mce/classes/EditorManager.js */
-
-(function() {
+}());(function() {
 	// Shorten names
 	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, explode = tinymce.explode;
 
@@ -7402,9 +7883,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call
 var tinyMCE = window.tinyMCE = tinymce.EditorManager;
-
-/* file:jscripts/tiny_mce/classes/Editor.js */
-
 (function() {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, Dispatcher = tinymce.util.Dispatcher;
 	var each = tinymce.each, isGecko = tinymce.isGecko, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit;
@@ -7764,7 +8242,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t.editorContainer = o.editorContainer;
 			}
 
-			
+
 			// Resize editor
 			DOM.setStyles(o.sizeContainer || o.editorContainer, {
 				width : w,
@@ -8150,7 +8628,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			e = null;
 		},
 
-		
+
 		focus : function(sf) {
 			var oed, t = this, ce = t.settings.content_editable;
 
@@ -8161,7 +8639,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				if (!ce && (!isIE || t.selection.getNode().ownerDocument != t.getDoc()))
 					t.getWin().focus();
 
-							}
+			}
 
 			if (EditorManager.activeEditor != t) {
 				if ((oed = EditorManager.activeEditor) != null)
@@ -8856,7 +9334,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t.focus(true);
 			});
 
-			
+
 			// Fixes bug where a specified document_base_uri could result in broken images
 			// This will also fix drag drop of images in Gecko
 			if (tinymce.isGecko) {
@@ -9392,9 +9870,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/EditorCommands.js */
-
 (function() {
 	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit;
 
@@ -10556,9 +11031,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 	});
 })();
 
-
-/* file:jscripts/tiny_mce/classes/UndoManager.js */
-
 tinymce.create('tinymce.UndoManager', {
 	index : 0,
 	data : null,
@@ -10688,10 +11160,7 @@ tinymce.create('tinymce.UndoManager', {
 		return this.index < this.data.length - 1;
 	}
 
-	});
-/* file:jscripts/tiny_mce/classes/ForceBlocks.js */
-
-(function() {
+	});(function() {
 	// Shorten names
 	var Event, isIE, isGecko, isOpera, each, extend;
 
@@ -11301,9 +11770,6 @@ tinymce.create('tinymce.UndoManager', {
 		}
 	});
 })();
-
-/* file:jscripts/tiny_mce/classes/ControlManager.js */
-
 (function() {
 	// Shorten names
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, extend = tinymce.extend;
@@ -11656,9 +12122,6 @@ tinymce.create('tinymce.UndoManager', {
 
 		});
 })();
-
-/* file:jscripts/tiny_mce/classes/WindowManager.js */
-
 (function() {
 	var Dispatcher = tinymce.util.Dispatcher, each = tinymce.each, isIE = tinymce.isIE, isOpera = tinymce.isOpera;
 

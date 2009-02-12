@@ -388,7 +388,7 @@
 				t.editorContainer = o.editorContainer;
 			}
 
-			// #if contentEditable
+			// #ifdef contentEditable
 
 			// Content editable mode ends here
 			if (s.content_editable) {
@@ -788,7 +788,7 @@
 			e = null;
 		},
 
-		// #if contentEditable
+		// #ifdef contentEditable
 
 		/**
 		 * Sets up the contentEditable mode.
@@ -923,7 +923,7 @@
 				if (!ce && (!isIE || t.selection.getNode().ownerDocument != t.getDoc()))
 					t.getWin().focus();
 
-				// #if contentEditable
+				// #ifdef contentEditable
 
 				// Content editable mode ends here
 				if (ce) {
@@ -1844,7 +1844,7 @@
 				t.focus(true);
 			});
 
-			// #if contentEditable
+			// #ifdef contentEditable
 
 			if (s.content_editable && tinymce.isOpera) {
 				// Opera doesn't support focus event for contentEditable elements so we need to fake it

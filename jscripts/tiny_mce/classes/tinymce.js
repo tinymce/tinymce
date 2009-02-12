@@ -11,9 +11,9 @@
  * @member tinymce
  */
 var tinymce = {
-	majorVersion : '3',
-	minorVersion : '2.1.2',
-	releaseDate : '200x-xx-xx',
+	majorVersion : '@@tinymce_major_version@@',
+	minorVersion : '@@tinymce_minor_version@@',
+	releaseDate : '@@tinymce_release_date@@',
 
 	/**#@+
 	 * @method
@@ -117,7 +117,7 @@ var tinymce = {
 		return n == t;
 	},
 
-	// #if !jquery
+	// #ifndef jquery
 
 	/**
 	 * Performs an iteration of all items in a collection such as an object or array. This method will execure the

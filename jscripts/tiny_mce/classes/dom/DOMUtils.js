@@ -238,7 +238,7 @@
 			return e;
 		},
 
-		// #if !jquery
+		// #ifndef jquery
 
 		/**
 		 * Selects specific elements by a CSS level 1 pattern. For example "div#a1 p.test".
@@ -362,7 +362,7 @@
 			});
 		},
 
-		// #if !jquery
+		// #ifndef jquery
 
 		/**
 		 * Sets the CSS style value on a HTML element. The name can be a camelcase string
@@ -888,7 +888,7 @@
 			});
 		},
 
-		// #if !jquery
+		// #ifndef jquery
 
 		/**
 		 * Adds a class to the specified element or elements.
@@ -1344,7 +1344,7 @@
 			}) : s;
 		},
 
-		// #if !jquery
+		// #ifndef jquery
 
 		/**
 		 * Inserts a element after the reference element.
@@ -1390,7 +1390,7 @@
 			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
 
-		// #if !jquery
+		// #ifndef jquery
 
 		/**
 		 * Replaces the specified element or elements with the specified element, the new element will

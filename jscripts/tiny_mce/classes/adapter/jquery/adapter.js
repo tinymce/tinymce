@@ -7,7 +7,7 @@
  * This file contains all adapter logic needed to use jQuery as the base API for TinyMCE.
  */
 
-// #if jquery_adapter
+// #ifdef jquery_adapter
 
 (function($) {
 	var is = tinymce.is;
@@ -40,7 +40,7 @@
 	});
 
 	// Patch in functions in various clases
-	// Add a "#if !jquery" statement around each core API function you add below
+	// Add a "#ifndefjquery" statement around each core API function you add below
 	var patches = {
 		'tinymce.dom.DOMUtils' : {
 			addClass : function(e, c) {
