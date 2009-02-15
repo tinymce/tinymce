@@ -142,11 +142,17 @@
 		<delete dir="${export_dir}" quiet="true" />
 
 		<svn javahl="${javahl}">
-			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce/trunk" destPath="${export_dir}/tinymce" />
+			<export srcUrl="https://tinymce.svn.sourceforge.net/svnroot/tinymce/tinymce/trunk" destPath="${export_dir}/tinymce_trunk" />
 		</svn>
 	</target>
 
 	<target name="package" depends="" description="Compresses the exported SVN trunks">
+		<!-- Copy expored trunk and start processing it -->
+		<delete dir="${export_dir}/tinymce" quiet="true" />
+		<copy todir="${export_dir}/tinymce">
+			<fileset dir="${export_dir}/tinymce_trunk" />
+		</copy>
+
 		<!-- Parse minor version, major version and release date from changelog -->
 		<loadfile property="changelog" srcFile="${export_dir}/tinymce/changelog.txt" />
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
@@ -160,13 +166,13 @@
 			<regexp pattern="@@tinymce_major_version@@" />
 			<substitution expression="${version.major}" />
 
-			<fileset dir="${export_dir}">
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_src.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			<fileset dir="${export_dir}/tinymce">
+				<include name="jscripts/tiny_mce/tiny_mce.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_src.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
 		</replaceregexp>
 
@@ -175,13 +181,13 @@
 			<regexp pattern="@@tinymce_minor_version@@" />
 			<substitution expression="${version.minor}" />
 
-			<fileset dir="${export_dir}">
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_src.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			<fileset dir="${export_dir}/tinymce">
+				<include name="jscripts/tiny_mce/tiny_mce.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_src.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
 		</replaceregexp>
 
@@ -190,37 +196,44 @@
 			<regexp pattern="@@tinymce_release_date@@" />
 			<substitution expression="${release_date}" />
 
-			<fileset dir="${export_dir}">
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_src.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
-				<include name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			<fileset dir="${export_dir}/tinymce">
+				<include name="jscripts/tiny_mce/tiny_mce.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_src.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_jquery.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_jquery_src.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_prototype.js" />
+				<include name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
 		</replaceregexp>
 
-		<!-- Add version suffix to all file requests -->
-		<replaceregexp match="\?v=\{tinymce_version\}" replace="?v=${file_version}" flags="g" byline="true">
-			<fileset dir="${export_dir}">
-				<include name="**/*.htm*" />
-				<include name="**/*.css" />
-			</fileset>
-		</replaceregexp>
+		<!-- Add or remove version queries -->
+		<if>
+			<equals arg1="${version_queries}" arg2="true" />
+			<then>
+				<!-- Add version suffix to all file requests -->
+				<replaceregexp match="\?v=\{tinymce_version\}" replace="?v=${file_version}" flags="g" byline="true">
+					<fileset dir="${export_dir}/tinymce">
+						<include name="**/*.htm*" />
+						<include name="**/*.css" />
+					</fileset>
+				</replaceregexp>
+			</then>
+			<else>
+				<!-- Remove version suffixes, so that it won't break Lotus Notes -->
+				<replaceregexp match="\?v=\{tinymce_version\}" replace="" flags="g" byline="true">
+					<fileset dir="${export_dir}/tinymce">
+						<include name="**/*.htm*" />
+						<include name="**/*.css" />
+					</fileset>
+				</replaceregexp>
+			</else>
+		</if>
 
 		<!-- Compress development package -->
 		<delete file="${package_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
 		<zip destfile="${package_dir}/tinymce_${file_version}_dev.zip">
 			<zipfileset dir="${export_dir}/tinymce" prefix="tinymce" />
 		</zip>
-
-		<!-- Remove version suffixes, so that it won't break Lotus Notes -->
-		<replaceregexp match="\?v=${file_version}" replace="" flags="g" byline="true">
-			<fileset dir="${export_dir}">
-				<include name="**/*.htm*" />
-				<include name="**/*.css" />
-			</fileset>
-		</replaceregexp>
 
 		<!-- Compress production package -->
 		<delete file="${package_dir}/tinymce_${file_version}.zip" quiet="true" />
@@ -260,7 +273,9 @@
 		</zip>
 	</target>
 
-	<target name="release" depends="export,package" description="Builds release packages">
-		
+	<target name="release" depends="export,package" description="Builds release packages"></target>
+
+	<target name="addsuffixes" description="Adds version suffixes to all requests">
+		<property name="version_queries" value="true" />
 	</target>
 </project>
