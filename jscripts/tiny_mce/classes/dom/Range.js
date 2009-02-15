@@ -177,6 +177,7 @@
 			});
 		},
 
+/*
 		toString : function() {
 			// Not implemented
 		},
@@ -184,7 +185,7 @@
 		detach : function() {
 			// Not implemented
 		},
-
+*/
 		// Internal methods
 
 		_isCollapsed : function() {

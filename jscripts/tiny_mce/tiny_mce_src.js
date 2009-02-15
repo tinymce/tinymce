@@ -2413,6 +2413,7 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
+/*
 		toString : function() {
 			// Not implemented
 		},
@@ -2420,7 +2421,7 @@ tinymce.create('static tinymce.util.XHR', {
 		detach : function() {
 			// Not implemented
 		},
-
+*/
 		// Internal methods
 
 		_isCollapsed : function() {
