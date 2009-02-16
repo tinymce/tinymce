@@ -1247,7 +1247,7 @@
 			if (!e)
 				return null;
 
-			if (isIE)
+			if (e.outerHTML !== undefined)
 				return e.outerHTML;
 
 			d = (e.ownerDocument || this.doc).createElement("body");
@@ -1594,6 +1594,18 @@
 			// Manual destroy then remove unload handler
 			if (!s)
 				tinymce.removeUnload(t.destroy);
+		},
+
+		/**
+		 * Created a new DOM Range object. This will use the native DOM Range API if it's
+		 * available if it's not it will fallback to the custom TinyMCE implementation.
+		 *
+		 * @return {DOMRange} DOM Range object.
+		 */
+		createRng : function() {
+			var d = this.doc;
+
+			return d.createRange ? d.createRange() : new tinymce.dom.Range(d);
 		},
 
 		_isRes : function(c) {

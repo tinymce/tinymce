@@ -4,7 +4,7 @@
 <title>Unit tests for the TinyMCE core API</title>
 <link rel="stylesheet" href="css/unit.css" type="text/css" />
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="../../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
 <script type="text/javascript" src="js/testrunner.js"></script>
 </head>
 <body>
@@ -33,7 +33,7 @@
 <script type="text/javascript">
 $(window).load(function() {
 	function createRng() {
-		return document.createRange ? document.createRange() : new tinymce.dom.Range(document);
+		return document.createRange2 ? document.createRange() : new tinymce.dom.Range(document);
 	};
 
 	function getHTML(co) {
@@ -299,7 +299,7 @@ $(window).load(function() {
 		r.setStart(document.getElementById('first'), 0);
 		r.setEnd(document.getElementById('last'), 0);
 
-		equals(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>')
+		equals(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
 		equals(r.startContainer.nodeType, 1)
 		equals(r.startOffset, 0)
 		equals(r.endContainer.nodeType, 1)
@@ -343,7 +343,7 @@ $(window).load(function() {
 		r.setStart(document.getElementById('first').firstChild, 1);
 		r.setEnd(document.getElementById('last'), 0);
 
-		equals(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>')
+		equals(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
 		equals(r.startContainer.nodeType, 3)
 		equals(r.startOffset, 1)
 		equals(r.endContainer.nodeType, 1)

@@ -21,6 +21,7 @@ Version 3.2.1.2 (200x-xx-xx)
 	Fixed bug where the blocker shim could be placed at an incorrect location on IE 6.
 	Fixed bug where the multiple and size attributes of select elements would produce incorrect values while running in IE.
 	Fixed bug where IE would loose the caret position is you selected a color from the color drop down.
+	Fixed bug where the contents extracted from the value of textareas wasn't properly entity encoded before inserted into the editable area.
 	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).

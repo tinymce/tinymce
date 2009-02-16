@@ -1385,7 +1385,8 @@
 				o = o || {};
 				o.load = true;
 
-				h = t.setContent(is(e.value) ? e.value : e.innerHTML, o);
+				// Double encode existing entities in the value
+				h = t.setContent(is(e.value) ? e.value.replace(/&([^;]+;)/g, '&amp;$1') : e.innerHTML, o);
 				o.element = e;
 
 				if (!o.no_events)
