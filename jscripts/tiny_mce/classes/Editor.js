@@ -118,7 +118,7 @@
 				indentation : '30px',
 				keep_styles : 1,
 				fix_table_elements : 1,
-				removeformat_selector : 'span,b,strong,em,i,font'
+				removeformat_selector : 'span,b,strong,em,i,font,u,strike'
 			}, s);
 
 			// Setup URIs

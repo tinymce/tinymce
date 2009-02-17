@@ -1188,7 +1188,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this;
 
 			return this.run(n, function(n) {
-				var p, g;
+				var p, g, i;
 
 				p = n.parentNode;
 
@@ -1196,9 +1196,12 @@ tinymce.create('static tinymce.util.XHR', {
 					return null;
 
 				if (k) {
-					each(n.childNodes, function(c) {
-						p.insertBefore(c.cloneNode(true), n);
-					});
+					for (i = n.childNodes.length - 1; i >= 0; i--)
+						t.insertAfter(n.childNodes[i], n);
+
+					//each(n.childNodes, function(c) {
+					//	p.insertBefore(c.cloneNode(true), n);
+					//});
 				}
 
 				// Fix IE psuedo leak
@@ -8121,7 +8124,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				indentation : '30px',
 				keep_styles : 1,
 				fix_table_elements : 1,
-				removeformat_selector : 'span,b,strong,em,i,font'
+				removeformat_selector : 'span,b,strong,em,i,font,u,strike'
 			}, s);
 
 			// Setup URIs
@@ -10411,13 +10414,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		RemoveFormat : function() {
-			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bm, n;
+			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bm, n, selp;
 
+			selp = ed.getParam('removeformat_selector');
 			t._applyInlineStyle('span', {'class' : 'mceNoStyle'});
 
 			bm = s.getBookmark();
 
-			// Loop while there is spans to convert
+			// Process all span wrappers
 			while ((nl = dom.select('span.mceNoStyle:first')) && nl.length) {
 				n = nl[0];
 
@@ -10427,8 +10431,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				}), n);
 
 				// Remove any styles within the wrapper
-				each(dom.select(ed.getParam('removeformat_selector'), n).reverse(), function(n) {
-					//console.log(n);
+				each(dom.select(selp, n).reverse(), function(n) {
 					dom.remove(n, 1);
 				});
 

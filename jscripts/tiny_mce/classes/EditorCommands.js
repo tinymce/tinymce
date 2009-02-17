@@ -487,13 +487,14 @@
 		},
 
 		RemoveFormat : function() {
-			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bm, n;
+			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bm, n, selp;
 
+			selp = ed.getParam('removeformat_selector');
 			t._applyInlineStyle('span', {'class' : 'mceNoStyle'});
 
 			bm = s.getBookmark();
 
-			// Loop while there is spans to convert
+			// Process all span wrappers
 			while ((nl = dom.select('span.mceNoStyle:first')) && nl.length) {
 				n = nl[0];
 
@@ -503,8 +504,7 @@
 				}), n);
 
 				// Remove any styles within the wrapper
-				each(dom.select(ed.getParam('removeformat_selector'), n).reverse(), function(n) {
-					//console.log(n);
+				each(dom.select(selp, n).reverse(), function(n) {
 					dom.remove(n, 1);
 				});
 

@@ -346,7 +346,7 @@
 			var t = this;
 
 			return this.run(n, function(n) {
-				var p, g;
+				var p, g, i;
 
 				p = n.parentNode;
 
@@ -354,9 +354,12 @@
 					return null;
 
 				if (k) {
-					each(n.childNodes, function(c) {
-						p.insertBefore(c.cloneNode(true), n);
-					});
+					for (i = n.childNodes.length - 1; i >= 0; i--)
+						t.insertAfter(n.childNodes[i], n);
+
+					//each(n.childNodes, function(c) {
+					//	p.insertBefore(c.cloneNode(true), n);
+					//});
 				}
 
 				// Fix IE psuedo leak
