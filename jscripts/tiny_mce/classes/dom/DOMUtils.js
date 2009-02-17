@@ -163,7 +163,7 @@
 		 * @param {String} patt CSS pattern to match the element agains.
 		 */
 		is : function(n, patt) {
-			return tinymce.dom.Sizzle.matches(patt, n.length ? n : [n]).length > 0;
+			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
 		},
 
 		/**

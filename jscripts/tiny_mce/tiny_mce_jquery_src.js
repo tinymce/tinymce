@@ -1185,7 +1185,7 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		is : function(n, patt) {
-			return tinymce.dom.Sizzle.matches(patt, n.length ? n : [n]).length > 0;
+			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
 		},
 
 		getParent : function(n, f, r) {
@@ -5768,8 +5768,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				}
 
 				e = 0;
-			} else
-				t.selectedValue = t.selectedIndex = null;
+			}
 		},
 
 		add : function(n, v, o) {
@@ -9767,12 +9766,30 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		_applyInlineStyle : function(na, at, op) {
-			var t = this, ed = t.editor, dom = ed.dom, bm, lo = {}, kh;
+			var t = this, ed = t.editor, dom = ed.dom, bm, lo = {}, kh, found;
 
 			na = na.toUpperCase();
 
 			if (op && op.check_classes && at['class'])
 				op.check_classes.push(at['class']);
+
+			function removeEmpty() {
+				each(dom.select(na).reverse(), function(n) {
+					var c = 0;
+
+					// Check if there is any attributes
+					each(dom.getAttribs(n), function(an) {
+						if (an.nodeName.substring(0, 1) != '_' && dom.getAttrib(n, an.nodeName) != '') {
+							//console.log(dom.getOuterHTML(n), dom.getAttrib(n, an.nodeName));
+							c++;
+						}
+					});
+
+					// No attributes then remove the element and keep the children
+					if (c == 0)
+						dom.remove(n, 1);
+				});
+			};
 
 			function replaceFonts() {
 				var bm;
@@ -9843,23 +9860,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					n.removeAttribute('_mce_new');
 				});
 
-				// Remove empty span elements
-				each(dom.select(na).reverse(), function(n) {
-					var c = 0;
-
-					// Check if there is any attributes
-					each(dom.getAttribs(n), function(an) {
-						if (an.nodeName.substring(0, 1) != '_' && dom.getAttrib(n, an.nodeName) != '') {
-							//console.log(dom.getOuterHTML(n), dom.getAttrib(n, an.nodeName));
-							c++;
-						}
-					});
-
-					// No attributes then remove the element and keep the children
-					if (c == 0)
-						dom.remove(n, 1);
-				});
-
+				removeEmpty();
 				ed.selection.moveToBookmark(bm);
 
 				return !!bm;
@@ -9878,6 +9879,40 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			if (ed.selection.isCollapsed()) {
+				// IE will format the current word so this code can't be executed on that browser
+				if (!isIE) {
+					each(dom.getParents(ed.selection.getNode(), 'span'), function(n) {
+						each(at.style, function(v, k) {
+							var kv;
+
+							if (kv = dom.getStyle(n, k)) {
+								if (kv == v) {
+									dom.setStyle(n, k, '');
+									found = 1;
+								}
+
+								return false;
+							}
+						});
+					});
+
+					if (found) {
+						bm = ed.selection.getBookmark();
+
+						removeEmpty();
+
+						ed.selection.moveToBookmark(bm);
+
+						// Node change needs to be detached since the onselect event
+						// for the select box will run the onclick handler after onselect call. Todo: Add a nicer fix!
+						window.setTimeout(function() {
+							ed.nodeChanged();
+						}, 1);
+
+						return;
+					}
+				}
+
 				// Start collecting styles
 				t._pendingStyles = tinymce.extend(t._pendingStyles || {}, at.style);
 

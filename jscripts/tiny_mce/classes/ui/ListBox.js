@@ -99,8 +99,7 @@
 				}
 
 				e = 0;
-			} else
-				t.selectedValue = t.selectedIndex = null;
+			}
 		},
 
 		/**
