@@ -717,7 +717,7 @@ $(window).load(function() {
 		});
 
 		test('tinymce.dom.DOMUtils - getParent', function() {
-			expect(5);
+			expect(6);
 
 			DOM.add(document.body, 'div', {id : 'test'});
 
@@ -728,8 +728,35 @@ $(window).load(function() {
 			equals(DOM.getParent('test2', function(n) {return n.nodeName == 'BODY';}, document.body), null);
 			equals(DOM.getParent('test2', function(n) {return false;}), null);
 			equals(DOM.getParent('test2', 'SPAN').nodeName, 'SPAN');
+			equals(DOM.getParent('test2', 'body', DOM.get('test')), null);
 
 			DOM.get('test').innerHTML = '';
+
+			DOM.remove('test');
+		});
+
+		test('tinymce.dom.DOMUtils - getParents', function() {
+			expect(4);
+
+			DOM.add(document.body, 'div', {id : 'test'});
+			DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
+
+			equals(DOM.getParents('test2', function(n) {return n.nodeName == 'SPAN';}).length, 2);
+			equals(DOM.getParents('test2', 'span').length, 2);
+			equals(DOM.getParents('test2', 'span.test').length, 1);
+			equals(DOM.getParents('test2', 'body', DOM.get('test')).length, 0);
+
+			DOM.remove('test');
+		});
+
+		test('tinymce.dom.DOMUtils - is', function() {
+			expect(2);
+
+			DOM.add(document.body, 'div', {id : 'test'});
+			DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
+
+			ok(DOM.is(DOM.select('span', 'test'), 'span'));
+			ok(DOM.is(DOM.select('#test2', 'test'), '#test2'));
 
 			DOM.remove('test');
 		});

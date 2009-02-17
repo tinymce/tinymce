@@ -440,7 +440,7 @@
 			}
 */
 
-			if (!ed.getParam('accessibility_focus') || ed.getParam('tab_focus'))
+			if (!ed.getParam('accessibility_focus'))
 				Event.add(DOM.add(p, 'a', {href : '#'}, '<!-- IE -->'), 'focus', function() {tinyMCE.get(ed.id).focus();});
 
 			if (s.theme_advanced_toolbar_location == 'external')
@@ -655,7 +655,7 @@
 
 			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a});
 
-			if (!ed.getParam('accessibility_focus') || ed.getParam('tab_focus'))
+			if (!ed.getParam('accessibility_focus'))
 				h.push(DOM.createHTML('a', {href : '#', onfocus : 'tinyMCE.get(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
 
 			h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("advanced.toolbar_focus")}, '<!-- IE -->'));

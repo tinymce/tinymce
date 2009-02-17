@@ -379,7 +379,7 @@
 			bn = sb ? sb.nodeName : se.element; // Get block name to create
 
 			// Return inside list use default browser behavior
-			if (t.dom.getParent(sb, function(n) { return /OL|UL|PRE/.test(n.nodeName); }))
+			if (t.dom.getParent(sb, 'OL,UL,PRE'))
 				return true;
 
 			// If caption or absolute layers then always generate new blocks within

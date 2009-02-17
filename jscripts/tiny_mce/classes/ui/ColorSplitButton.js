@@ -100,7 +100,7 @@
 			if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id + '_open';}))
 				return;
 
-			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceSplitButtonMenu');})) {
+			if (!e || !DOM.getParent(e.target, '.mceSplitButtonMenu')) {
 				DOM.removeClass(t.id, 'mceSplitButtonSelected');
 				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);

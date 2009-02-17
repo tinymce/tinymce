@@ -1,6 +1,10 @@
-Version 3.2.1.2 (200x-xx-xx)
+Version 3.2.2 (200x-xx-xx)
 	Added new CSS selector engine. Sizzle the same one that jQuery and other libraries are using.
+	Added new is and getParents methods to the DOMUtils class. These use the new Sizzle engine to select elements.
+	Added new removeformat_selector option, enables you to specify a CSS selector pattern of elements to remove when using removeformat.
+	Fixed so the getParent method can take CSS expressions when selecting it's parents.
 	Added new ant based build process, includes a new javabased preprocessor and a yuicompressor ant task.
+	Moved the tab_focus logic into a plugin called tabfocus, so the old tab_focus option has been removed from the core.
 	Replaced the TinyMCE custom unit testing framework with Qunit and rewrote all tests to match the new logic.
 	Moved the examples/testcases to a root directory called tests since it now includes slickspeed.
 	Fixed bug where nbsp wasn't replaced correctly in ForceBlocks.js. Patch contributed by thorn.
@@ -22,6 +26,9 @@ Version 3.2.1.2 (200x-xx-xx)
 	Fixed bug where the multiple and size attributes of select elements would produce incorrect values while running in IE.
 	Fixed bug where IE would loose the caret position is you selected a color from the color drop down.
 	Fixed bug where the contents extracted from the value of textareas wasn't properly entity encoded before inserted into the editable area.
+	Fixed bug where remove format wouldn't work on IE since it couldn't remove span elements that had style information.
+	Fixed bug where Opera was removing links when removing formatting from selected contents.
+	Fixed so tables doesn't get inserted into paragraphs by default since it's not W3C valid. Can be disabled by using the fix_table_elements option.
 	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).

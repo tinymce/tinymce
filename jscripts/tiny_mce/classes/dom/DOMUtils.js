@@ -18,12 +18,7 @@
 		doc : null,
 		root : null,
 		files : null,
-		listeners : {},
 		pixelStyles : /^(top|left|bottom|right|width|height|borderWidth)$/,
-		cache : {},
-		idPattern : /^#[\w]+$/,
-		elmPattern : /^[\w_*]+$/,
-		elmClassPattern : /^([\w_]*)\.([\w_]+)$/,
 		props : {
 			"for" : "htmlFor",
 			"class" : "className",
@@ -162,59 +157,76 @@
 		},
 
 		/**
+		 * Returns true/false if the specified element matches the specified css pattern.
+		 *
+		 * @param {Node/NodeList} n DOM node to match or an array of nodes to match.
+		 * @param {String} patt CSS pattern to match the element agains.
+		 */
+		is : function(n, patt) {
+			return tinymce.dom.Sizzle.matches(patt, n.length ? n : [n]).length > 0;
+		},
+
+		/**
 		 * Returns a node by the specified selector function. This function will
 		 * loop through all parent nodes and call the specified function for each node.
 		 * If the function then returns true indicating that it has found what it was looking for, the loop execution will then end
 		 * and the node it found will be returned.
 		 *
 		 * @param {Node/String} n DOM node to search parents on or ID string.
-		 * @param {function} f Selection function to execute on each node.
+		 * @param {function} f Selection function to execute on each node or CSS pattern.
 		 * @param {Node} r Optional root element, never go below this point.
 		 * @return {Node} DOM Node or null if it wasn't found.
 		 */
 		getParent : function(n, f, r) {
-			var na, se = this.settings;
+			return this.getParents(n, f, r, false);
+		},
 
-			n = this.get(n);
+		/**
+		 * Returns a node list of all parents matching the specified selector function or pattern.
+		 * If the function then returns true indicating that it has found what it was looking for and that node will be collected.
+		 *
+		 * @param {Node/String} n DOM node to search parents on or ID string.
+		 * @param {function} f Selection function to execute on each node or CSS pattern.
+		 * @param {Node} r Optional root element, never go below this point.
+		 * @return {Array} Array of nodes or null if it wasn't found.
+		 */
+		getParents : function(n, f, r, c) {
+			var t = this, na, se = t.settings, o = [];
+
+			n = t.get(n);
+			c = c === undefined;
 
 			if (se.strict_root)
-				r = r || this.getRoot();
+				r = r || t.getRoot();
 
 			// Wrap node name as func
 			if (is(f, 'string')) {
-				na = f.toUpperCase();
+				na = f;
 
-				f = function(n) {
-					var s = false;
-
-					// Any element
-					if (n.nodeType == 1 && na === '*') {
-						s = true;
-						return false;
-					}
-
-					each(na.split(','), function(v) {
-						if (n.nodeType == 1 && ((se.strict && n.nodeName.toUpperCase() == v) || n.nodeName.toUpperCase() == v)) {
-							s = true;
-							return false; // Break loop
-						}
-					});
-
-					return s;
-				};
+				if (f === '*') {
+					f = function(n) {return n.nodeType == 1;};
+				} else {
+					f = function(n) {
+						return t.is(n, na);
+					};
+				}
 			}
 
 			while (n) {
 				if (n == r)
-					return null;
+					break;
 
-				if (f(n))
-					return n;
+				if (f(n)) {
+					if (c)
+						o.push(n);
+					else
+						return n;
+				}
 
 				n = n.parentNode;
 			}
 
-			return null;
+			return c ? o : null;
 		},
 
 		/**
@@ -241,7 +253,7 @@
 		// #ifndef jquery
 
 		/**
-		 * Selects specific elements by a CSS level 1 pattern. For example "div#a1 p.test".
+		 * Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".
 		 * This function is optimized for the most common patterns needed in TinyMCE but it also performes good enough
 		 * on more complex patterns.
 		 *
@@ -1586,6 +1598,9 @@
 			return n.attributes;
 		},
 
+		/**
+		 * Destroys all internal references to the DOM to solve IE leak issues.
+		 */
 		destroy : function(s) {
 			var t = this;
 
@@ -1606,6 +1621,41 @@
 			var d = this.doc;
 
 			return d.createRange ? d.createRange() : new tinymce.dom.Range(d);
+		},
+
+		/**
+		 * Splits an element into two new elements and places the specified split
+		 * element or element between the new ones. For example splitting the paragraph at the bold element in
+		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>. 
+		 *
+		 * @param {Element} pe Parent element to split.
+		 * @param {Element} e Element to split at.
+		 * @param {Element} re Optional replacement element to replace the split element by.
+		 * @return {Element} Returns the split element or the replacement element if that is specified.
+		 */
+		split : function(pe, e, re) {
+			var t = this, r = t.createRng(), bef, aft;
+
+			if (pe && e) {
+				// Get before chunk
+				r.setStartBefore(pe);
+				r.setEndBefore(e);
+				bef = r.cloneContents();
+
+				// Get after chunk
+				r.setStartAfter(e);
+				r.setEndAfter(pe);
+				aft = r.cloneContents();
+
+				// Insert chunks and remove parent
+				re = re || e.cloneNode(true);
+				t.insertAfter(aft, pe);
+				t.insertAfter(re, pe);
+				t.insertAfter(bef, pe);
+				t.remove(pe);
+
+				return re;
+			}
 		},
 
 		_isRes : function(c) {

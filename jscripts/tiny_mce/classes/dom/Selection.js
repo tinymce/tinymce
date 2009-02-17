@@ -177,7 +177,7 @@
 				if (e.nodeName == 'BODY')
 					return e.firstChild;
 
-				return t.dom.getParent(e, function(n) {return n.nodeType == 1;});
+				return t.dom.getParent(e, '*');
 			}
 		},
 
@@ -208,7 +208,7 @@
 				if (e.nodeName == 'BODY')
 					return e.lastChild;
 
-				return t.dom.getParent(e, function(n) {return n.nodeType == 1;});
+				return t.dom.getParent(e, '*');
 			}
 		},
 
@@ -669,9 +669,7 @@
 					}
 				}
 
-				return t.dom.getParent(e, function(n) {
-					return n.nodeType == 1;
-				});
+				return t.dom.getParent(e, '*');
 			}
 
 			return r.item ? r.item(0) : r.parentElement();

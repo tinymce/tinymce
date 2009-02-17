@@ -116,7 +116,9 @@
 				init_theme : 1,
 				force_p_newlines : 1,
 				indentation : '30px',
-				keep_styles : 1
+				keep_styles : 1,
+				fix_table_elements : 1,
+				removeformat_selector : 'span,b,strong,em,i,font'
 			}, s);
 
 			// Setup URIs
@@ -1932,84 +1934,6 @@
 			t.onReset.add(function() {
 				t.setContent(t.startContent, {format : 'raw'});
 			});
-
-			if (t.getParam('tab_focus')) {
-				function tabCancel(ed, e) {
-					if (e.keyCode === 9)
-						return Event.cancel(e);
-				};
-
-				function tabHandler(ed, e) {
-					var x, i, f, el, v;
-
-					function find(d) {
-						f = DOM.getParent(ed.id, 'form');
-						el = f.elements;
-
-						if (f) {
-							each(el, function(e, i) {
-								if (e.id == ed.id) {
-									x = i;
-									return false;
-								}
-							});
-
-							if (d > 0) {
-								for (i = x + 1; i < el.length; i++) {
-									if (el[i].type != 'hidden')
-										return el[i];
-								}
-							} else {
-								for (i = x - 1; i >= 0; i--) {
-									if (el[i].type != 'hidden')
-										return el[i];
-								}
-							}
-						}
-
-						return null;
-					};
-
-					if (e.keyCode === 9) {
-						v = explode(ed.getParam('tab_focus'));
-
-						if (v.length == 1) {
-							v[1] = v[0];
-							v[0] = ':prev';
-						}
-
-						// Find element to focus
-						if (e.shiftKey) {
-							if (v[0] == ':prev')
-								el = find(-1);
-							else
-								el = DOM.get(v[0]);
-						} else {
-							if (v[1] == ':next')
-								el = find(1);
-							else
-								el = DOM.get(v[1]);
-						}
-
-						if (el) {
-							if (ed = EditorManager.get(el.id || el.name))
-								ed.focus();
-							else
-								window.setTimeout(function() {window.focus();el.focus();}, 10);
-
-							return Event.cancel(e);
-						}
-					}
-				};
-
-				t.onKeyUp.add(tabCancel);
-
-				if (isGecko) {
-					t.onKeyPress.add(tabHandler);
-					t.onKeyDown.add(tabCancel);
-				} else
-					t.onKeyDown.add(tabHandler);
-			}
 
 			// Add shortcuts
 			if (s.custom_shortcuts) {

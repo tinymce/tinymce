@@ -25,7 +25,7 @@
 
 (function(ns) {
 	// Traverse constants
-	var EXTRACT = 0, CLONE = 1,	DELETE = 2;
+	var EXTRACT = 0, CLONE = 1, DELETE = 2;
 
 	// Extend utility function
 	function extend(t, o) {

@@ -420,7 +420,7 @@
 				}
 			} else {
 				function getParent(n) {
-					return dom.getParent(n, function(n) {return n.nodeType == 1;});
+					return dom.getParent(n, '*');
 				};
 
 				sc = r.startContainer;
@@ -487,15 +487,32 @@
 		},
 
 		RemoveFormat : function() {
-			var t = this, ed = t.editor, s = ed.selection, b;
+			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bm, n;
 
-			// Safari breaks tables
-			if (isWebKit)
-				s.setContent(s.getContent({format : 'raw'}).replace(/(<(span|b|i|strong|em|strike) [^>]+>|<(span|b|i|strong|em|strike)>|<\/(span|b|i|strong|em|strike)>|)/g, ''), {format : 'raw'});
-			else
-				ed.getDoc().execCommand('RemoveFormat', false, null);
+			t._applyInlineStyle('span', {'class' : 'mceNoStyle'});
 
-			t.mceSetStyleInfo(0, {command : 'removeformat'});
+			bm = s.getBookmark();
+
+			// Loop while there is spans to convert
+			while ((nl = dom.select('span.mceNoStyle:first')) && nl.length) {
+				n = nl[0];
+
+				// Split the inline element
+				n = dom.split(dom.getParent(n, function(n) {
+					return !n.parentNode || dom.isBlock(n.parentNode);
+				}), n);
+
+				// Remove any styles within the wrapper
+				each(dom.select(ed.getParam('removeformat_selector'), n).reverse(), function(n) {
+					//console.log(n);
+					dom.remove(n, 1);
+				});
+
+				// Remove the wrapper span
+				dom.remove(n, 1);
+			}
+
+			s.moveToBookmark(bm);
 			ed.addVisual();
 		},
 
@@ -552,9 +569,7 @@
 				// Check if it's an old span in a new wrapper
 				if (!dom.getAttrib(n, 'mce_new')) {
 					// Find new wrapper
-					p = dom.getParent(n, function(n) {
-						return n.nodeType == 1 && dom.getAttrib(n, 'mce_new');
-					});
+					p = dom.getParent(n, '*[mce_new]');
 
 					if (p)
 						dom.remove(n, 1);

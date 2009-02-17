@@ -205,6 +205,18 @@ function insertTable() {
 	inst.execCommand('mceBeginUndoLevel');
 	inst.execCommand('mceInsertContent', false, html);
 	inst.addVisual();
+
+	// Move table
+	if (inst.settings.fix_table_elements) {
+		var bm = inst.selection.getBookmark();
+
+		tinymce.each(inst.dom.select('p table'), function(n) {
+			inst.dom.split(inst.dom.getParent(n, 'p'), n);
+		});
+
+		inst.selection.moveToBookmark(bm);
+	}
+
 	inst.execCommand('mceEndUndoLevel');
 
 	tinyMCEPopup.close();

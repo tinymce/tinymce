@@ -59,7 +59,7 @@
 				extended_valid_elements : 0,
 				valid_child_elements : 0,
 				invalid_elements : 0,
-				fix_table_elements : 0,
+				fix_table_elements : 1,
 				fix_list_elements : true,
 				fix_content_duplication : true,
 				convert_fonts_to_spans : false,
@@ -132,41 +132,8 @@
 
 			if (s.fix_table_elements) {
 				t.onPreProcess.add(function(se, o) {
-					each(t.dom.select('table', o.node), function(e) {
-						var pa = t.dom.getParent(e, 'H1,H2,H3,H4,H5,H6,P'), pa2, n, tm, pl = [], i, ns;
-
-						if (pa) {
-							pa2 = pa.cloneNode(false);
-
-							pl.push(e);
-							for (n = e; n = n.parentNode;) {
-								pl.push(n);
-
-								if (n == pa)
-									break;
-							}
-
-							tm = pa2;
-							for (i = pl.length - 1; i >= 0; i--) {
-								if (i == pl.length - 1) {
-									while (ns = pl[i - 1].nextSibling)
-										tm.appendChild(ns.parentNode.removeChild(ns));
-								} else {
-									n = pl[i].cloneNode(false);
-
-									if (i != 0) {
-										while (ns = pl[i - 1].nextSibling)
-											n.appendChild(ns.parentNode.removeChild(ns));
-									}
-
-									tm = tm.appendChild(n);
-								}
-							}
-
-							e = t.dom.insertAfter(e.parentNode.removeChild(e), pa);
-							t.dom.insertAfter(e, pa);
-							t.dom.insertAfter(pa2, e);
-						}
+					each(t.dom.select('p table', o.node), function(n) {
+						t.dom.split(t.dom.getParent(n, 'p'), n);
 					});
 				});
 			}

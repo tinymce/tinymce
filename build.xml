@@ -133,6 +133,7 @@
 		<yuicompress infile="${build_dir}/plugins/compat2x/editor_plugin_src.js" outfile="${build_dir}/plugins/compat2x/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/pagebreak/editor_plugin_src.js" outfile="${build_dir}/plugins/pagebreak/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/tabfocus/editor_plugin_src.js" outfile="${build_dir}/plugins/tabfocus/editor_plugin.js" />
 
 		<!-- Cleanup -->
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>

@@ -203,7 +203,7 @@
 			if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
 				return;
 
-			if (!e || !DOM.getParent(e.target, function(n) {return DOM.hasClass(n, 'mceMenu');})) {
+			if (!e || !DOM.getParent(e.target, '.mceMenu')) {
 				DOM.removeClass(t.id, t.classPrefix + 'Selected');
 				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 
