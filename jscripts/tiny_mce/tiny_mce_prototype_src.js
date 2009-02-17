@@ -5038,21 +5038,6 @@ tinymce.dom.Sizzle = Sizzle;
 	// Shorten names
 	var extend = tinymce.extend, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher, isIE = tinymce.isIE, isGecko = tinymce.isGecko;
 
-	// Returns only attribites that have values not all attributes in IE
-	function getIEAtts(n) {
-		var o = [];
-
-		// Object will throw exception in IE
-		if (n.nodeName == 'OBJECT')
-			return n.attributes;
-
-		n.cloneNode(false).outerHTML.replace(/([a-z0-9\:\-_]+)=/gi, function(a, b) {
-			o.push({specified : 1, nodeName : b});
-		});
-
-		return o;
-	};
-
 	function wildcardToRE(s) {
 		return s.replace(/([?+*])/g, '.$1');
 	};
@@ -5714,7 +5699,7 @@ tinymce.dom.Sizzle = Sizzle;
 
 						// Add wild attributes
 						if (ru.validAttribsRE) {
-							at = isIE ? getIEAtts(n) : n.attributes;
+							at = t.dom.getAttribs(n);
 							for (i=at.length-1; i>-1; i--) {
 								no = at[i];
 
