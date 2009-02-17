@@ -1083,15 +1083,20 @@
 							if (kv = dom.getStyle(n, k)) {
 								if (kv == v) {
 									dom.setStyle(n, k, '');
-									found = 1;
+									found = 2;
+									return false;
 								}
 
+								found = 1;
 								return false;
 							}
 						});
+
+						if (found)
+							return false;
 					});
 
-					if (found) {
+					if (found == 2) {
 						bm = ed.selection.getBookmark();
 
 						removeEmpty();
