@@ -82,9 +82,11 @@
 	};
 
 	// Range constructor
-	function Range(d) {
+	function Range(dom) {
+		var d = dom.doc;
+
 		extend(this, {
-			doc : d,
+			dom : dom,
 
 			// Inital states
 			startContainer : d,
@@ -211,7 +213,7 @@
 		cloneRange : function() {
 			var t = this;
 
-			return extend(new Range(t.doc), {
+			return extend(new Range(t.dom), {
 				startContainer : t.startContainer,
 				startOffset : t.startOffset,
 				endContainer : t.endContainer,
@@ -304,7 +306,7 @@
 			// are siblings or descendants of sibling nodes. In this case, A is before B if 
 			// the container of A is before the container of B in a pre-order traversal of the
 			// Ranges' context tree and A is after B otherwise.
-			cmnRoot = this._commonAncestorContainer(containerA, containerB);
+			cmnRoot = this.dom.findCommonAncestor(containerA, containerB);
 			childA = containerA;
 
 			while (childA && childA.parentNode != cmnRoot) {
@@ -342,27 +344,6 @@
 			}
 		},
 
-		_commonAncestorContainer : function(a, b) {
-			var ps = a, pe;
-
-			while (ps) {
-				pe = b;
-
-				while (pe && ps != pe)
-					pe = pe.parentNode;
-
-				if (ps == pe)
-					break;
-
-				ps = ps.parentNode;
-			}
-
-			if (!ps && a.ownerDocument)
-				return a.ownerDocument.documentElement;
-
-			return ps;
-		},
-
 		_setEndPoint : function(st, n, o) {
 			var t = this, ec, sc;
 
@@ -398,7 +379,7 @@
 			}
 
 			t.collapsed = t._isCollapsed();
-			t.commonAncestorContainer = t._commonAncestorContainer(t.startContainer, t.endContainer);
+			t.commonAncestorContainer = t.dom.findCommonAncestor(t.startContainer, t.endContainer);
 		},
 
 		// This code is heavily "inspired" by the Apache Xerces implementation. I hope they don't mind. :)
@@ -450,7 +431,7 @@
 			var t = this, frag, s, sub, n, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			// If selection is empty, just return the fragment
 			if (t.startOffset == t.endOffset)
@@ -473,7 +454,7 @@
 				if (how == DELETE)
 					return null;
 
-				frag.appendChild(t.doc.createTextNode(sub));
+				frag.appendChild(t.dom.doc.createTextNode(sub));
 				return frag;
 			}
 
@@ -503,7 +484,7 @@
 			var t = this, frag, n, endIdx, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			n = t._traverseRightBoundary(endAncestor, how);
 
@@ -550,7 +531,7 @@
 			var t = this, frag, startIdx, n, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			n = t._traverseLeftBoundary(startAncestor, how);
 			if (frag)
@@ -584,7 +565,7 @@
 			var t = this, n, frag, commonParent, startOffset, endOffset, cnt, sibling, nextSibling;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			n = t._traverseLeftBoundary(startAncestor, how);
 			if (frag)

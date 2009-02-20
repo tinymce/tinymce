@@ -2060,9 +2060,9 @@ if(!window.console||firebug.env.override){
       window.console[command] = firebug.lib.util.Curry(firebug.d.console.run,window,command);
   };
   
-  window.onerror = function(_message,_file,_line){
+  /*window.onerror = function(_message,_file,_line){
     firebug.d.console.run('error',firebug.lib.util.String.format('{0} ({1},{2})',_message,firebug.getFileName(_file),_line));
-  };
+  };*/
 }
 
 firebug.lib.util.Init.push(firebug.init);

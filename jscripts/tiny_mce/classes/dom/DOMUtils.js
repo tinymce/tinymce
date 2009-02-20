@@ -216,7 +216,7 @@
 				if (n == r)
 					break;
 
-				if (f(n)) {
+				if (!f || f(n)) {
 					if (c)
 						o.push(n);
 					else
@@ -1402,7 +1402,7 @@
 
 			n = n.nodeName || n;
 
-			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
+			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TR|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
 
 		// #ifndef jquery
@@ -1441,6 +1441,34 @@
 		},
 
 		// #endif
+
+		/**
+		 * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
+		 *
+		 * @param {Element} a Element to find common ancestor of.
+		 * @param {Element} b Element to find common ancestor of.
+		 * @return {Element} Common ancestor element of the two input elements.
+		 */
+		findCommonAncestor : function(a, b) {
+			var ps = a, pe;
+
+			while (ps) {
+				pe = b;
+
+				while (pe && ps != pe)
+					pe = pe.parentNode;
+
+				if (ps == pe)
+					break;
+
+				ps = ps.parentNode;
+			}
+
+			if (!ps && a.ownerDocument)
+				return a.ownerDocument.documentElement;
+
+			return ps;
+		},
 
 		/**
 		 * Parses the specified RGB color value and returns a hex version of that color.
@@ -1623,7 +1651,7 @@
 		createRng : function() {
 			var d = this.doc;
 
-			return d.createRange ? d.createRange() : new tinymce.dom.Range(d);
+			return d.createRange ? d.createRange() : new tinymce.dom.Range(this);
 		},
 
 		/**

@@ -28,6 +28,7 @@ Version 3.2.2 (200x-xx-xx)
 	Fixed bug where the contents extracted from the value of textareas wasn't properly entity encoded before inserted into the editable area.
 	Fixed bug where remove format wouldn't work on IE since it couldn't remove span elements that had style information.
 	Fixed bug where Opera was removing links when removing formatting from selected contents.
+	Fixed bug where paragraphs could be produced inside non positional elements styled with the CSS position value of static.
 	Fixed so tables doesn't get inserted into paragraphs by default since it's not W3C valid. Can be disabled by using the fix_table_elements option.
 	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)

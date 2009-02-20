@@ -1108,7 +1108,7 @@ tinymce.create('static tinymce.util.XHR', {
 				if (n == r)
 					break;
 
-				if (f(n)) {
+				if (!f || f(n)) {
 					if (c)
 						o.push(n);
 					else
@@ -2073,7 +2073,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 			n = n.nodeName || n;
 
-			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
+			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TR|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
 
 
@@ -2102,6 +2102,27 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
+
+		findCommonAncestor : function(a, b) {
+			var ps = a, pe;
+
+			while (ps) {
+				pe = b;
+
+				while (pe && ps != pe)
+					pe = pe.parentNode;
+
+				if (ps == pe)
+					break;
+
+				ps = ps.parentNode;
+			}
+
+			if (!ps && a.ownerDocument)
+				return a.ownerDocument.documentElement;
+
+			return ps;
+		},
 
 		toHex : function(s) {
 			var c = /^\s*rgb\s*?\(\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?\)\s*$/i.exec(s);
@@ -2249,7 +2270,7 @@ tinymce.create('static tinymce.util.XHR', {
 		createRng : function() {
 			var d = this.doc;
 
-			return d.createRange ? d.createRange() : new tinymce.dom.Range(d);
+			return d.createRange ? d.createRange() : new tinymce.dom.Range(this);
 		},
 
 		split : function(pe, e, re) {
@@ -2376,9 +2397,11 @@ tinymce.create('static tinymce.util.XHR', {
 	};
 
 	// Range constructor
-	function Range(d) {
+	function Range(dom) {
+		var d = dom.doc;
+
 		extend(this, {
-			doc : d,
+			dom : dom,
 
 			// Inital states
 			startContainer : d,
@@ -2505,7 +2528,7 @@ tinymce.create('static tinymce.util.XHR', {
 		cloneRange : function() {
 			var t = this;
 
-			return extend(new Range(t.doc), {
+			return extend(new Range(t.dom), {
 				startContainer : t.startContainer,
 				startOffset : t.startOffset,
 				endContainer : t.endContainer,
@@ -2598,7 +2621,7 @@ tinymce.create('static tinymce.util.XHR', {
 			// are siblings or descendants of sibling nodes. In this case, A is before B if 
 			// the container of A is before the container of B in a pre-order traversal of the
 			// Ranges' context tree and A is after B otherwise.
-			cmnRoot = this._commonAncestorContainer(containerA, containerB);
+			cmnRoot = this.dom.findCommonAncestor(containerA, containerB);
 			childA = containerA;
 
 			while (childA && childA.parentNode != cmnRoot) {
@@ -2636,27 +2659,6 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 		},
 
-		_commonAncestorContainer : function(a, b) {
-			var ps = a, pe;
-
-			while (ps) {
-				pe = b;
-
-				while (pe && ps != pe)
-					pe = pe.parentNode;
-
-				if (ps == pe)
-					break;
-
-				ps = ps.parentNode;
-			}
-
-			if (!ps && a.ownerDocument)
-				return a.ownerDocument.documentElement;
-
-			return ps;
-		},
-
 		_setEndPoint : function(st, n, o) {
 			var t = this, ec, sc;
 
@@ -2692,7 +2694,7 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 
 			t.collapsed = t._isCollapsed();
-			t.commonAncestorContainer = t._commonAncestorContainer(t.startContainer, t.endContainer);
+			t.commonAncestorContainer = t.dom.findCommonAncestor(t.startContainer, t.endContainer);
 		},
 
 		// This code is heavily "inspired" by the Apache Xerces implementation. I hope they don't mind. :)
@@ -2744,7 +2746,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this, frag, s, sub, n, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			// If selection is empty, just return the fragment
 			if (t.startOffset == t.endOffset)
@@ -2767,7 +2769,7 @@ tinymce.create('static tinymce.util.XHR', {
 				if (how == DELETE)
 					return null;
 
-				frag.appendChild(t.doc.createTextNode(sub));
+				frag.appendChild(t.dom.doc.createTextNode(sub));
 				return frag;
 			}
 
@@ -2797,7 +2799,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this, frag, n, endIdx, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			n = t._traverseRightBoundary(endAncestor, how);
 
@@ -2844,7 +2846,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this, frag, startIdx, n, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			n = t._traverseLeftBoundary(startAncestor, how);
 			if (frag)
@@ -2878,7 +2880,7 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this, n, frag, commonParent, startOffset, endOffset, cnt, sibling, nextSibling;
 
 			if (how != DELETE)
-				frag = t.doc.createDocumentFragment();
+				frag = t.dom.doc.createDocumentFragment();
 
 			n = t._traverseLeftBoundary(startAncestor, how);
 			if (frag)
@@ -10413,33 +10415,160 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				this.editor.getDoc().execCommand('InsertHorizontalRule', false, '');
 		},
 
+/*
 		RemoveFormat : function() {
-			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bm, n, selp;
+			var ed = this.editor, dom = ed.dom, s = ed.selection, r = tinymce.range || s.getRng(), sc, ec, so, eo, n, cont, start, end, ancestor;
 
-			selp = ed.getParam('removeformat_selector');
-			t._applyInlineStyle('span', {'class' : 'mceNoStyle'});
+			function findEndPoint(n, c) {
+				do {
+					if (n.parentNode == c)
+						return n;
 
-			bm = s.getBookmark();
+					n = n.parentNode;
+				} while(n);
+			};
 
-			// Process all span wrappers
-			while ((nl = dom.select('span.mceNoStyle:first')) && nl.length) {
-				n = nl[0];
+			function getSplitElement(n) {
+				var sp;
 
-				// Split the inline element
-				n = dom.split(dom.getParent(n, function(n) {
+				sp = dom.getParent(n, function(n) {
 					return !n.parentNode || dom.isBlock(n.parentNode);
-				}), n);
+				}, ed.getBody())
 
-				// Remove any styles within the wrapper
-				each(dom.select(selp, n).reverse(), function(n) {
+				return sp || n;
+			};
+
+			function process(n) {
+				var o = [];
+
+				function walk(n) {
+					var i, nl;
+
+					if (dom.is(n, ed.getParam('removeformat_selector')))
+						o.push(n);
+
+					if (nl = n.childNodes) {
+						for (i = nl.length - 1; i >= 0; i--)
+							process(nl[i]);
+					}
+				};
+
+				walk(n);
+
+				each(o, function(n) {
 					dom.remove(n, 1);
 				});
+			};
 
-				// Remove the wrapper span
-				dom.remove(n, 1);
+			// Use shorter form
+			sc = r.startContainer;
+			ec = r.endContainer;
+			so = r.startOffset;
+			eo = r.endOffset;
+			cont = r.commonAncestorContainer;
+			bm = s.getBookmark();
+
+			// Scenario 1: Same text node container
+			if (cont.nodeType == 3) { // TEXT_NODE
+				n = sc.splitText(so);
+				n.splitText(eo - so);
+				dom.split(getSplitElement(sc), n);
+				return;
 			}
 
+			// Scenario 2: Selected singe element
+			if (so == eo - 1 && sc.nodeType == 1) { // ELEMENT
+				// Table cell selection breaks in FF, the DOM Range returned from the browser is incorrect
+				if (sc.nodeName != 'TR') {
+					n = sc.childNodes[so];
+					process(dom.split(getSplitElement(n), n));
+				}
+
+				return;
+			}
+
+			// Split start node and wrap it in a span
+			if (sc.nodeType == 1) // ELEMENT
+				n = sc.childNodes[so];
+			else
+				n = sc.splitText(so);
+
+			// Wrap start text node or element in a span since it might get cloned by the dom.split calls
+			dom.replace(dom.create('span', {id : 'start'}, n.cloneNode(true)), n);
+
+			// Split end node and wrap it in a span
+			if (ec.nodeType == 1) // ELEMENT
+				n = ec.childNodes[eo - 1];
+			else {
+				ec.splitText(eo);
+				n = ec;
+			}
+
+			// Wrap end text node or element in a span since it might get cloned by the dom.split calls
+			dom.replace(dom.create('span', {id : 'end'}, n.cloneNode(true)), n);
+
+			// Split start (left side)
+			n = dom.get('start');
+			start = dom.split(getSplitElement(n), n);
+
+			// Split end (right side)
+			n = dom.get('end');
+			end = dom.split(getSplitElement(n), n);
+
+			// Find common ancestor and end points
+			ancestor = dom.findCommonAncestor(start, end);
+			start = findEndPoint(start, ancestor);
+			end = findEndPoint(end, ancestor);
+
+			// Process middle from start to end point
+			for (n = start; n && (n = n.nextSibling) && n != end; )
+				process(n);
+
+			// Process left leaf
+			dom.getParent(dom.get('start'), function(n) {
+				var nl, i;
+
+				if (n.parentNode) {
+					nl = n.parentNode.childNodes;
+					for (i = nl.length - 1; i >= 0 && nl[i] != n; i--)
+						process(nl[i]);
+
+					return false;
+				}
+
+				return true;
+			}, start);
+
+			// Process right leaf
+			dom.getParent(dom.get('end'), function(n) {
+				var pr = n;
+
+				while (pr = pr.previousSibling)
+					process(pr);
+			}, end);
+
+			// Process start/end since they might contain elements
+			process(dom.get('start'));
+			process(dom.get('end'));
+
+			// Remove containers
+			dom.remove('start', 1);
+			dom.remove('end', 1);
+
 			s.moveToBookmark(bm);
+		},
+*/
+
+		RemoveFormat : function() {
+			var t = this, ed = t.editor, s = ed.selection, b;
+
+			// Safari breaks tables
+			if (isWebKit)
+				s.setContent(s.getContent({format : 'raw'}).replace(/(<(span|b|i|strong|em|strike) [^>]+>|<(span|b|i|strong|em|strike)>|<\/(span|b|i|strong|em|strike)>|)/g, ''), {format : 'raw'});
+			else
+				ed.getDoc().execCommand('RemoveFormat', false, null);
+
+			t.mceSetStyleInfo(0, {command : 'removeformat'});
 			ed.addVisual();
 		},
 
@@ -11656,13 +11785,13 @@ tinymce.create('tinymce.UndoManager', {
 				return true;
 
 			// If caption or absolute layers then always generate new blocks within
-			if (sb && (sb.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(dom.getStyle(sb, 'position', 1)))) {
+			if (sb && (sb.nodeName == 'CAPTION' || /absolute|relative|fixed/gi.test(dom.getStyle(sb, 'position', 1)))) {
 				bn = se.element;
 				sb = null;
 			}
 
 			// If caption or absolute layers then always generate new blocks within
-			if (eb && (eb.nodeName == 'CAPTION' || /absolute|relative|static/gi.test(dom.getStyle(sb, 'position', 1)))) {
+			if (eb && (eb.nodeName == 'CAPTION' || /absolute|relative|fixed/gi.test(dom.getStyle(sb, 'position', 1)))) {
 				bn = se.element;
 				eb = null;
 			}

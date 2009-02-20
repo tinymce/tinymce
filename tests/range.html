@@ -33,7 +33,7 @@
 <script type="text/javascript">
 $(window).load(function() {
 	function createRng() {
-		return document.createRange2 ? document.createRange() : new tinymce.dom.Range(document);
+		return document.createRange2 ? document.createRange() : new tinymce.dom.Range(tinymce.DOM);
 	};
 
 	function getHTML(co) {

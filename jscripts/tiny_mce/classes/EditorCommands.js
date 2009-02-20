@@ -486,33 +486,160 @@
 				this.editor.getDoc().execCommand('InsertHorizontalRule', false, '');
 		},
 
+/*
 		RemoveFormat : function() {
-			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, bm, n, selp;
+			var ed = this.editor, dom = ed.dom, s = ed.selection, r = tinymce.range || s.getRng(), sc, ec, so, eo, n, cont, start, end, ancestor;
 
-			selp = ed.getParam('removeformat_selector');
-			t._applyInlineStyle('span', {'class' : 'mceNoStyle'});
+			function findEndPoint(n, c) {
+				do {
+					if (n.parentNode == c)
+						return n;
 
-			bm = s.getBookmark();
+					n = n.parentNode;
+				} while(n);
+			};
 
-			// Process all span wrappers
-			while ((nl = dom.select('span.mceNoStyle:first')) && nl.length) {
-				n = nl[0];
+			function getSplitElement(n) {
+				var sp;
 
-				// Split the inline element
-				n = dom.split(dom.getParent(n, function(n) {
+				sp = dom.getParent(n, function(n) {
 					return !n.parentNode || dom.isBlock(n.parentNode);
-				}), n);
+				}, ed.getBody())
 
-				// Remove any styles within the wrapper
-				each(dom.select(selp, n).reverse(), function(n) {
+				return sp || n;
+			};
+
+			function process(n) {
+				var o = [];
+
+				function walk(n) {
+					var i, nl;
+
+					if (dom.is(n, ed.getParam('removeformat_selector')))
+						o.push(n);
+
+					if (nl = n.childNodes) {
+						for (i = nl.length - 1; i >= 0; i--)
+							process(nl[i]);
+					}
+				};
+
+				walk(n);
+
+				each(o, function(n) {
 					dom.remove(n, 1);
 				});
+			};
 
-				// Remove the wrapper span
-				dom.remove(n, 1);
+			// Use shorter form
+			sc = r.startContainer;
+			ec = r.endContainer;
+			so = r.startOffset;
+			eo = r.endOffset;
+			cont = r.commonAncestorContainer;
+			bm = s.getBookmark();
+
+			// Scenario 1: Same text node container
+			if (cont.nodeType == 3) { // TEXT_NODE
+				n = sc.splitText(so);
+				n.splitText(eo - so);
+				dom.split(getSplitElement(sc), n);
+				return;
 			}
 
+			// Scenario 2: Selected singe element
+			if (so == eo - 1 && sc.nodeType == 1) { // ELEMENT
+				// Table cell selection breaks in FF, the DOM Range returned from the browser is incorrect
+				if (sc.nodeName != 'TR') {
+					n = sc.childNodes[so];
+					process(dom.split(getSplitElement(n), n));
+				}
+
+				return;
+			}
+
+			// Split start node and wrap it in a span
+			if (sc.nodeType == 1) // ELEMENT
+				n = sc.childNodes[so];
+			else
+				n = sc.splitText(so);
+
+			// Wrap start text node or element in a span since it might get cloned by the dom.split calls
+			dom.replace(dom.create('span', {id : 'start'}, n.cloneNode(true)), n);
+
+			// Split end node and wrap it in a span
+			if (ec.nodeType == 1) // ELEMENT
+				n = ec.childNodes[eo - 1];
+			else {
+				ec.splitText(eo);
+				n = ec;
+			}
+
+			// Wrap end text node or element in a span since it might get cloned by the dom.split calls
+			dom.replace(dom.create('span', {id : 'end'}, n.cloneNode(true)), n);
+
+			// Split start (left side)
+			n = dom.get('start');
+			start = dom.split(getSplitElement(n), n);
+
+			// Split end (right side)
+			n = dom.get('end');
+			end = dom.split(getSplitElement(n), n);
+
+			// Find common ancestor and end points
+			ancestor = dom.findCommonAncestor(start, end);
+			start = findEndPoint(start, ancestor);
+			end = findEndPoint(end, ancestor);
+
+			// Process middle from start to end point
+			for (n = start; n && (n = n.nextSibling) && n != end; )
+				process(n);
+
+			// Process left leaf
+			dom.getParent(dom.get('start'), function(n) {
+				var nl, i;
+
+				if (n.parentNode) {
+					nl = n.parentNode.childNodes;
+					for (i = nl.length - 1; i >= 0 && nl[i] != n; i--)
+						process(nl[i]);
+
+					return false;
+				}
+
+				return true;
+			}, start);
+
+			// Process right leaf
+			dom.getParent(dom.get('end'), function(n) {
+				var pr = n;
+
+				while (pr = pr.previousSibling)
+					process(pr);
+			}, end);
+
+			// Process start/end since they might contain elements
+			process(dom.get('start'));
+			process(dom.get('end'));
+
+			// Remove containers
+			dom.remove('start', 1);
+			dom.remove('end', 1);
+
 			s.moveToBookmark(bm);
+		},
+*/
+
+		RemoveFormat : function() {
+			var t = this, ed = t.editor, s = ed.selection, b;
+
+			// Safari breaks tables
+			if (isWebKit)
+				s.setContent(s.getContent({format : 'raw'}).replace(/(<(span|b|i|strong|em|strike) [^>]+>|<(span|b|i|strong|em|strike)>|<\/(span|b|i|strong|em|strike)>|)/g, ''), {format : 'raw'});
+			else
+				ed.getDoc().execCommand('RemoveFormat', false, null);
+
+			t.mceSetStyleInfo(0, {command : 'removeformat'});
 			ed.addVisual();
 		},
 
