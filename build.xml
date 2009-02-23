@@ -49,6 +49,7 @@
 			<fileset dir="${classes_dir}" includes="util/JSONRequest.js" />
 			<fileset dir="${classes_dir}" includes="dom/DOMUtils.js" />
 			<fileset dir="${classes_dir}" includes="dom/Range.js" />
+			<fileset dir="${classes_dir}" includes="dom/TridentSelection.js" />
 			<fileset dir="${classes_dir}" includes="dom/Sizzle.js" />
 			<fileset dir="${classes_dir}" includes="dom/Event.js" />
 			<fileset dir="${classes_dir}" includes="dom/Element.js" />
@@ -134,6 +135,37 @@
 		<yuicompress infile="${build_dir}/plugins/pagebreak/editor_plugin_src.js" outfile="${build_dir}/plugins/pagebreak/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/tabfocus/editor_plugin_src.js" outfile="${build_dir}/plugins/tabfocus/editor_plugin.js" />
+
+		<!-- Process dialogs -->
+		<!--
+		<jswrap infile="plugins/advhr/rule.htm" outfile="plugins/advhr/rule.htm.js" />
+		<jswrap infile="plugins/advimage/image.htm" outfile="plugins/advimage/image.htm.js" />
+		<jswrap infile="plugins/advlink/link.htm" outfile="plugins/advlink/link.htm.js" />
+		<jswrap infile="plugins/emotions/emotions.htm" outfile="plugins/emotions/emotions.htm.js" />
+		<jswrap infile="plugins/example/dialog.htm" outfile="plugins/example/dialog.htm.js" />
+		<jswrap infile="plugins/fullpage/fullpage.htm" outfile="plugins/fullpage/fullpage.htm.js" />
+		<jswrap infile="plugins/media/media.htm" outfile="plugins/media/media.htm.js" />
+		<jswrap infile="plugins/searchreplace/searchreplace.htm" outfile="plugins/searchreplace/searchreplace.htm.js" />
+		<jswrap infile="plugins/style/props.htm" outfile="plugins/style/props.htm.js" />
+		<jswrap infile="plugins/table/cell.htm" outfile="plugins/table/cell.htm.js" />
+		<jswrap infile="plugins/table/merge_cells.htm" outfile="plugins/table/merge_cells.htm.js" />
+		<jswrap infile="plugins/table/row.htm" outfile="plugins/table/row.htm.js" />
+		<jswrap infile="plugins/table/table.htm" outfile="plugins/table/table.htm.js" />
+		<jswrap infile="plugins/template/template.htm" outfile="plugins/template/template.htm.js" />
+		<jswrap infile="plugins/xhtmlxtras/abbr.htm" outfile="plugins/xhtmlxtras/abbr.htm.js" />
+		<jswrap infile="plugins/xhtmlxtras/acronym.htm" outfile="plugins/xhtmlxtras/acronym.htm.js" />
+		<jswrap infile="plugins/xhtmlxtras/attributes.htm" outfile="plugins/xhtmlxtras/attributes.htm.js" />
+		<jswrap infile="plugins/xhtmlxtras/cite.htm" outfile="plugins/xhtmlxtras/cite.htm.js" />
+		<jswrap infile="plugins/xhtmlxtras/del.htm" outfile="plugins/xhtmlxtras/del.htm.js" />
+		<jswrap infile="plugins/xhtmlxtras/ins.htm" outfile="plugins/xhtmlxtras/ins.htm.js" />
+		<jswrap infile="themes/advanced/about.htm" outfile="themes/advanced/about.htm.js" />
+		<jswrap infile="themes/advanced/anchor.htm" outfile="themes/advanced/anchor.htm.js" />
+		<jswrap infile="themes/advanced/charmap.htm" outfile="themes/advanced/charmap.htm.js" />
+		<jswrap infile="themes/advanced/color_picker.htm" outfile="themes/advanced/color_picker.htm.js" />
+		<jswrap infile="themes/advanced/image.htm" outfile="themes/advanced/image.htm.js" />
+		<jswrap infile="themes/advanced/link.htm" outfile="themes/advanced/link.htm.js" />
+		<jswrap infile="themes/advanced/source_editor.htm" outfile="themes/advanced/source_editor.htm.js" />
+		-->
 
 		<!-- Cleanup -->
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>

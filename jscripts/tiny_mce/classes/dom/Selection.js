@@ -603,6 +603,25 @@
 		},
 
 		/**
+		 * Returns a W3C compatible DOM Range object of the current selection even on browsers who doesn't support it.
+		 *
+		 * @return {DOMRange} Range object of the current selection.
+		 */
+		getW3CRange : function() {
+			var t = this;
+
+			// Missing W3C DOM Range selection support
+			if (!t.win.getSelection) {
+				if (!t.tridentSel)
+					t.tridentSel = new tinymce.dom.TridentSelection(t);
+
+				return t.tridentSel.getRangeAt(0);
+			}
+
+			return t.getRng(); // W3C compatible browsers
+		},
+
+		/**
 		 * Changes the selection to the specified DOM range.
 		 *
 		 * @param {Range} r Range to select.

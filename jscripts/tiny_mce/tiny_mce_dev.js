@@ -86,10 +86,11 @@
 	include('util/XHR.js');
 	include('util/JSONRequest.js');
 	include('dom/DOMUtils.js');
+	include('dom/Range.js');
+	include('dom/TridentSelection.js');
 	include('dom/Sizzle.js');
 	include('dom/Event.js');
 	include('dom/Element.js');
-	include('dom/Range.js');
 	include('dom/Selection.js');
 	include('dom/XMLWriter.js');
 	include('dom/StringWriter.js');
