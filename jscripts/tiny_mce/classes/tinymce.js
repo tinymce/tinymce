@@ -28,7 +28,6 @@ var tinymce = {
 		// Browser checks
 		t.isOpera = w.opera && opera.buildNumber;
 		t.isWebKit = /WebKit/.test(ua);
-		t.isOldWebKit = t.isWebKit && !w.getSelection().getRangeAt;
 		t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName);
 		t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);

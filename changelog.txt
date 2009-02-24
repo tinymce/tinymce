@@ -34,6 +34,8 @@ Version 3.2.2 (200x-xx-xx)
 	Fixed so tables doesn't get inserted into paragraphs by default since it's not W3C valid. Can be disabled by using the fix_table_elements option.
 	Fixed so the source view dialog sets a source_view state to the event object. Enables plugins to intercept the source view mode.
 	Fixed various validation issues with the html dialogs and pages.
+	Removed ask mode option since there is way better ways of doing this now. Use the add/remove control methods instead.
+	Removed logic for compatibility with Safari 2.x, this browser is no longer supported since no one is using it.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).
 	Fixed font style formatting compatibility issue with Adobe Air.

@@ -187,7 +187,7 @@
 				});
 			}
 
-			if (s.add_unload_trigger && !s.ask) {
+			if (s.add_unload_trigger) {
 				t._beforeUnload = tinyMCE.onBeforeUnload.add(function() {
 					if (t.initialized && !t.destroyed && !t.isHidden())
 						t.save({format : 'raw', no_events : true});
@@ -244,23 +244,6 @@
 
 				// Init when que is loaded
 				sl.loadQueue(function() {
-					if (s.ask) {
-						function ask() {
-							// Yield for awhile to avoid focus bug on FF 3 when cancel is pressed
-							window.setTimeout(function() {
-								Event.remove(t.id, 'focus', ask);
-
-								t.windowManager.confirm(t.getLang('edit_confirm'), function(s) {
-									if (s)
-										t.init();
-								});
-							}, 0);
-						};
-
-						Event.add(t.id, 'focus', ask);
-						return;
-					}
-
 					if (!t.removed)
 						t.init();
 				});
@@ -454,16 +437,10 @@
 			DOM.get(o.editorContainer).style.display = t.orgDisplay;
 			DOM.get(t.id).style.display = 'none';
 
-			// Safari 2.x requires us to wait for the load event and load a real HTML doc
-			if (tinymce.isOldWebKit) {
-				Event.add(n, 'load', t.setupIframe, t);
-				n.src = tinymce.baseURL + '/plugins/safari/blank.htm';
-			} else {
-				if (!isIE || !tinymce.relaxedDomain)
-					t.setupIframe();
+			if (!isIE || !tinymce.relaxedDomain)
+				t.setupIframe();
 
-				e = n = o = null; // Cleanup
-			}
+			e = n = o = null; // Cleanup
 		},
 
 		/**

@@ -9,7 +9,6 @@ var tinymce = {
 		// Browser checks
 		t.isOpera = w.opera && opera.buildNumber;
 		t.isWebKit = /WebKit/.test(ua);
-		t.isOldWebKit = t.isWebKit && !w.getSelection().getRangeAt;
 		t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName);
 		t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
@@ -8390,7 +8389,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 			}
 
-			if (s.add_unload_trigger && !s.ask) {
+			if (s.add_unload_trigger) {
 				t._beforeUnload = tinyMCE.onBeforeUnload.add(function() {
 					if (t.initialized && !t.destroyed && !t.isHidden())
 						t.save({format : 'raw', no_events : true});
@@ -8447,23 +8446,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 				// Init when que is loaded
 				sl.loadQueue(function() {
-					if (s.ask) {
-						function ask() {
-							// Yield for awhile to avoid focus bug on FF 3 when cancel is pressed
-							window.setTimeout(function() {
-								Event.remove(t.id, 'focus', ask);
-
-								t.windowManager.confirm(t.getLang('edit_confirm'), function(s) {
-									if (s)
-										t.init();
-								});
-							}, 0);
-						};
-
-						Event.add(t.id, 'focus', ask);
-						return;
-					}
-
 					if (!t.removed)
 						t.init();
 				});
@@ -8643,16 +8625,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			DOM.get(o.editorContainer).style.display = t.orgDisplay;
 			DOM.get(t.id).style.display = 'none';
 
-			// Safari 2.x requires us to wait for the load event and load a real HTML doc
-			if (tinymce.isOldWebKit) {
-				Event.add(n, 'load', t.setupIframe, t);
-				n.src = tinymce.baseURL + '/plugins/safari/blank.htm';
-			} else {
-				if (!isIE || !tinymce.relaxedDomain)
-					t.setupIframe();
+			if (!isIE || !tinymce.relaxedDomain)
+				t.setupIframe();
 
-				e = n = o = null; // Cleanup
-			}
+			e = n = o = null; // Cleanup
 		},
 
 		setupIframe : function() {
