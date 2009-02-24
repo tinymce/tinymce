@@ -82,6 +82,9 @@
 		_setContent : function(ed, o) {
 			var t = this, sp, ep, c = o.content, v, st = '';
 
+			if (o.source_view && ed.getParam('fullpage_hide_in_source_view'))
+				return;
+
 			// Parse out head, body and footer
 			c = c.replace(/<(\/?)BODY/gi, '<$1body');
 			sp = c.indexOf('<body');
@@ -133,7 +136,8 @@
 		_getContent : function(ed, o) {
 			var t = this;
 
-			o.content = tinymce.trim(t.head) + '\n' + tinymce.trim(o.content) + '\n' + tinymce.trim(t.foot);
+			if (!o.source_view || !ed.getParam('fullpage_hide_in_source_view'))
+				o.content = tinymce.trim(t.head) + '\n' + tinymce.trim(o.content) + '\n' + tinymce.trim(t.foot);
 		}
 	});
 

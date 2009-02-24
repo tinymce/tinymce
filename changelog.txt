@@ -29,7 +29,10 @@ Version 3.2.2 (200x-xx-xx)
 	Fixed bug where remove format wouldn't work on IE since it couldn't remove span elements that had style information.
 	Fixed bug where Opera was removing links when removing formatting from selected contents.
 	Fixed bug where paragraphs could be produced inside non positional elements styled with the CSS position value of static.
+	Fixed bug where removeformat wouldn't work if you selected part of a span in IE.
+	Fixed so the non documented fullpage_hide_in_source_view option for the fullpage plugin works again in the 3.x branch.
 	Fixed so tables doesn't get inserted into paragraphs by default since it's not W3C valid. Can be disabled by using the fix_table_elements option.
+	Fixed so the source view dialog sets a source_view state to the event object. Enables plugins to intercept the source view mode.
 	Fixed various validation issues with the html dialogs and pages.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).
