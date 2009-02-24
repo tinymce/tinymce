@@ -1665,27 +1665,31 @@
 		 * @return {Element} Returns the split element or the replacement element if that is specified.
 		 */
 		split : function(pe, e, re) {
-			var t = this, r = t.createRng(), bef, aft;
+			var t = this, r = t.createRng(), bef, aft, pa;
 
 			if (pe && e) {
 				// Get before chunk
 				r.setStartBefore(pe);
 				r.setEndBefore(e);
-				bef = r.cloneContents();
+				bef = r.extractContents();
 
 				// Get after chunk
 				r.setStartAfter(e);
 				r.setEndAfter(pe);
-				aft = r.cloneContents();
+				aft = r.extractContents();
 
 				// Insert chunks and remove parent
-				re = re || e.cloneNode(true);
-				t.insertAfter(aft, pe);
-				t.insertAfter(re, pe);
-				t.insertAfter(bef, pe);
-				t.remove(pe);
+				pa = pe.parentNode;
+				pa.insertBefore(bef, pe);
 
-				return re;
+				if (re)
+					pa.replaceChild(re, e);
+				else
+					pa.insertBefore(e, pe);
+
+				pa.insertBefore(aft, pe);
+	
+				return re || e;
 			}
 		},
 

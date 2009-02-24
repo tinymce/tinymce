@@ -486,9 +486,8 @@
 				this.editor.getDoc().execCommand('InsertHorizontalRule', false, '');
 		},
 
-/*
 		RemoveFormat : function() {
-			var ed = this.editor, dom = ed.dom, s = ed.selection, r = tinymce.range || s.getRng(), sc, ec, so, eo, n, cont, start, end, ancestor;
+			var ed = this.editor, dom = ed.dom, s = ed.selection, r = s.getW3CRange(), sc, ec, so, eo, n, cont, start, end, ancestor, remove = [];
 
 			function findEndPoint(n, c) {
 				do {
@@ -499,7 +498,7 @@
 				} while(n);
 			};
 
-			function getSplitElement(n) {
+			function findFormatRoot(n) {
 				var sp;
 
 				sp = dom.getParent(n, function(n) {
@@ -510,25 +509,19 @@
 			};
 
 			function process(n) {
-				var o = [];
-
 				function walk(n) {
 					var i, nl;
 
 					if (dom.is(n, ed.getParam('removeformat_selector')))
-						o.push(n);
+						remove.push(n);
 
 					if (nl = n.childNodes) {
 						for (i = nl.length - 1; i >= 0; i--)
-							process(nl[i]);
+							walk(nl[i]);
 					}
 				};
 
 				walk(n);
-
-				each(o, function(n) {
-					dom.remove(n, 1);
-				});
 			};
 
 			// Use shorter form
@@ -543,7 +536,10 @@
 			if (cont.nodeType == 3) { // TEXT_NODE
 				n = sc.splitText(so);
 				n.splitText(eo - so);
-				dom.split(getSplitElement(sc), n);
+				dom.split(findFormatRoot(sc), n);
+
+				s.moveToBookmark(bm);
+
 				return;
 			}
 
@@ -552,8 +548,10 @@
 				// Table cell selection breaks in FF, the DOM Range returned from the browser is incorrect
 				if (sc.nodeName != 'TR') {
 					n = sc.childNodes[so];
-					process(dom.split(getSplitElement(n), n));
+					process(dom.split(findFormatRoot(n), n));
 				}
+
+				s.moveToBookmark(bm);
 
 				return;
 			}
@@ -580,11 +578,11 @@
 
 			// Split start (left side)
 			n = dom.get('start');
-			start = dom.split(getSplitElement(n), n);
+			start = dom.split(findFormatRoot(n), n);
 
 			// Split end (right side)
 			n = dom.get('end');
-			end = dom.split(getSplitElement(n), n);
+			end = dom.split(findFormatRoot(n), n);
 
 			// Find common ancestor and end points
 			ancestor = dom.findCommonAncestor(start, end);
@@ -600,9 +598,8 @@
 				var nl, i;
 
 				if (n.parentNode) {
-					nl = n.parentNode.childNodes;
-					for (i = nl.length - 1; i >= 0 && nl[i] != n; i--)
-						process(nl[i]);
+					for (n = n.nextSibling; n; n = n.nextSibling)
+						process(n);
 
 					return false;
 				}
@@ -622,14 +619,19 @@
 			process(dom.get('start'));
 			process(dom.get('end'));
 
+			// Remove all collected nodes
+			each(remove, function(n) {
+				dom.remove(n, 1);
+			});
+
 			// Remove containers
 			dom.remove('start', 1);
 			dom.remove('end', 1);
 
 			s.moveToBookmark(bm);
 		},
-*/
 
+/*
 		RemoveFormat : function() {
 			var t = this, ed = t.editor, s = ed.selection, b;
 
@@ -642,7 +644,7 @@
 			t.mceSetStyleInfo(0, {command : 'removeformat'});
 			ed.addVisual();
 		},
-
+*/
 		mceSetStyleInfo : function(u, v) {
 			var t = this, ed = t.editor, d = ed.getDoc(), dom = ed.dom, e, b, s = ed.selection, nn = v.wrapper || 'span', b = s.getBookmark(), re;
 
