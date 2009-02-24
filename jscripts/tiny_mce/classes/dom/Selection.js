@@ -44,6 +44,10 @@
 				t[e] = new tinymce.util.Dispatcher(t);
 			});
 
+			// No W3C Range support
+			if (!t.win.getSelection)
+				t.tridentSel = new tinymce.dom.TridentSelection(t);
+
 			// Prevent leaks
 			tinymce.addUnload(t.destroy, t);
 		},
@@ -610,13 +614,9 @@
 		getW3CRange : function() {
 			var t = this;
 
-			// Missing W3C DOM Range selection support
-			if (!t.win.getSelection) {
-				if (!t.tridentSel)
-					t.tridentSel = new tinymce.dom.TridentSelection(t);
-
+			// Found tridentSel object then we need to use that one
+			if (t.tridentSel)
 				return t.tridentSel.getRangeAt(0);
-			}
 
 			return t.getRng(); // W3C compatible browsers
 		},
@@ -627,16 +627,23 @@
 		 * @param {Range} r Range to select.
 		 */
 		setRng : function(r) {
-			var s;
+			var s, t = this;
 
-			if (!isIE) {
-				s = this.getSel();
+			if (!t.tridentSel) {
+				s = t.getSel();
 
 				if (s) {
 					s.removeAllRanges();
 					s.addRange(r);
 				}
 			} else {
+				// Is W3C Range
+				if (r.cloneRange) {
+					t.tridentSel.addRange(r);
+					return;
+				}
+
+				// Is IE specific range
 				try {
 					r.select();
 				} catch (ex) {

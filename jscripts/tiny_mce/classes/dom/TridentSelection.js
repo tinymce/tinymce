@@ -7,8 +7,10 @@
 
 (function() {
 	function Selection(selection) {
+		var t = this;
+
 		function getRange() {
-			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), bm, startPos = {}, endPos = {};
+			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos = {}, endPos = {};
 
 			// Handle control selection
 			if (ieRange.item) {
@@ -93,9 +95,6 @@
 			findEndPoint(ieRange, true, startPos);
 			findEndPoint(ieRange, false, endPos);
 
-			// Store away current selection since it will be destroyed by the normalizing
-			bm = selection.getBookmark();
-
 			// Find start and end positions
 			findIndexAndOffset(startPos);
 			findIndexAndOffset(endPos);
@@ -104,14 +103,74 @@
 			startPos.parent.normalize();
 			endPos.parent.normalize();
 
-			// Restore selection since the normalization changed it
-			selection.moveToBookmark(bm);
-
 			// Set start and end points of the domRange
 			domRange.setStart(startPos.parent.childNodes[startPos.index], startPos.offset);
 			domRange.setEnd(endPos.parent.childNodes[endPos.index], endPos.offset);
 
+			// Restore selection to new range
+			t.addRange(domRange);
+
 			return domRange;
+		};
+
+		this.addRange = function(rng) {
+			var ieRng, startPos, endPos, body = selection.dom.doc.body;
+
+			// Element selection, then make a control range
+			if (rng.startContainer.nodeType == 1) {
+				ieRng = body.createControlRange();
+				ieRng.addElement(rng.startContainer.childNodes[rng.startOffset]);
+				return;
+			}
+
+			function findPos(start) {
+				var container, offset, rng2, pos;
+
+				// Get container and offset
+				container = start ? rng.startContainer : rng.endContainer;
+				offset = start ? rng.startOffset : rng.endOffset;
+
+				// Insert marker character
+				container.nodeValue = container.nodeValue.substring(0, offset) + '\uFEFF' + container.nodeValue.substring(offset);
+
+				// Create range for whole parent element
+				rng2 = body.createTextRange();
+				rng2.moveToElementText(container.parentNode);
+				pos = rng2.text.indexOf('\uFEFF');
+				container.nodeValue = container.nodeValue.replace(/\uFEFF/, '');
+
+				if (start)
+					startPos = pos;
+				else
+					endPos = pos;
+			};
+
+			function setPos(start) {
+				var rng2, container = start ? rng.startContainer : rng.endContainer;
+
+				rng2 = body.createTextRange();
+				rng2.moveToElementText(container.parentNode);
+				rng2.collapse(true);
+				rng2.move('character', start ? startPos : endPos);
+
+				if (start)
+					ieRng.setEndPoint('StartToStart', rng2);
+				else
+					ieRng.setEndPoint('EndToStart', rng2);
+			};
+
+			// Create IE specific range
+			ieRng = body.createTextRange();
+
+			// Find start/end pos
+			findPos(true);
+			findPos(false);
+
+			// Set start/end pos
+			setPos(true);
+			setPos(false);
+
+			ieRng.select();
 		};
 
 		this.getRangeAt = function() {
