@@ -83,6 +83,7 @@
 	include('util/URI.js');
 	include('util/Cookie.js');
 	include('util/JSON.js');
+	include('util/JSONP.js');
 	include('util/XHR.js');
 	include('util/JSONRequest.js');
 	include('dom/DOMUtils.js');

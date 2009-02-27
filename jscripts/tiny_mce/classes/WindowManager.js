@@ -86,9 +86,6 @@
 			t.onOpen.dispatch(t, s, p);
 
 			u = s.url || s.file;
-			if (tinymce.relaxedDomain)
-				u += (u.indexOf('?') == -1 ? '?' : '&') + 'mce_rdomain=' + tinymce.relaxedDomain;
-
 			u = tinymce._addVer(u);
 
 			try {

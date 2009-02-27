@@ -94,8 +94,17 @@
 		<yuicompress infile="${build_dir}/tiny_mce_prototype_src.js" outfile="${build_dir}/tiny_mce_prototype.js" />
 		<yuicompress infile="${build_dir}/tiny_mce_jquery_src.js" outfile="${build_dir}/tiny_mce_jquery.js" />
 
-		<!-- Compress core -->
+		<!-- Compress popup  -->
 		<yuicompress infile="${build_dir}/classes/Popup.js" outfile="${build_dir}/tiny_mce_popup.js" />
+		<concat destfile="${build_dir}/tiny_mce_popup.js.tmp">
+			<header filtering="no" trimleading="yes">
+				// Uncomment and change this document.domain value if you are loading the script cross subdomains
+				// document.domain = 'moxiecode.com';
+
+			</header>
+			<fileset file="${build_dir}/tiny_mce_popup.js" />
+		</concat>
+		<move file="${build_dir}/tiny_mce_popup.js.tmp" tofile="${build_dir}/tiny_mce_popup.js" overwrite="true" />
 
 		<!-- Compress themes -->
 		<yuicompress infile="${build_dir}/themes/simple/editor_template_src.js" outfile="${build_dir}/themes/simple/editor_template.js" />

@@ -36,6 +36,7 @@ Version 3.2.2 (200x-xx-xx)
 	Fixed various validation issues with the html dialogs and pages.
 	Removed ask mode option since there is way better ways of doing this now. Use the add/remove control methods instead.
 	Removed logic for compatibility with Safari 2.x, this browser is no longer supported since no one is using it.
+	Removed the auto domain relaxing feature. If loading scripts cross sub domains it's better to specify the document.domain by hand.
 Version 3.2.1.1 (2008-11-27)
 	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).
 	Fixed font style formatting compatibility issue with Adobe Air.

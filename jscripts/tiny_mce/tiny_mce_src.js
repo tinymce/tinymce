@@ -2255,6 +2255,7 @@ tinymce.create('static tinymce.util.XHR', {
 				bef = r.extractContents();
 
 				// Get after chunk
+				r = t.createRng();
 				r.setStartAfter(e);
 				r.setEndAfter(pe);
 				aft = r.extractContents();
@@ -5249,16 +5250,11 @@ tinymce.dom.Sizzle = Sizzle;
 			t.onPreProcess = new Dispatcher(t);
 			t.onPostProcess = new Dispatcher(t);
 
-			if (tinymce.relaxedDomain && tinymce.isGecko) {
-				// Gecko has a bug where we can't create a new XML document if domain relaxing is used
+			try {
+				t.writer = new tinymce.dom.XMLWriter();
+			} catch (ex) {
+				// IE might throw exception if ActiveX is disabled so we then switch to the slightly slower StringWriter
 				t.writer = new tinymce.dom.StringWriter();
-			} else {
-				try {
-					t.writer = new tinymce.dom.XMLWriter();
-				} catch (ex) {
-					// IE might throw exception if ActiveX is disabled so we then switch to the slightly slower StringWriter
-					t.writer = new tinymce.dom.StringWriter();
-				}
 			}
 
 			// Default settings
@@ -7836,13 +7832,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 			tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
-			// User already specified a document.domain value
+			// User specified a document.domain value
 			if (document.domain && lo.hostname != document.domain)
 				tinymce.relaxedDomain = document.domain;
-
-			// Setup document domain if tinymce is loaded from other domain
-			if (!tinymce.relaxedDomain && tinymce.EditorManager.baseURI.host != lo.hostname && lo.hostname)
-				document.domain = tinymce.relaxedDomain = lo.hostname.replace(/.*\.(.+\..+)$/, '$1');
 
 			// Add before unload listener
 			// This was required since IE was leaking memory if you added and removed beforeunload listeners
@@ -10268,8 +10260,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (!v) {
 				if (s.isCollapsed())
 					s.select(s.getNode());
-
-				t.RemoveFormat();
 			} else {
 				if (ed.settings.convert_fonts_to_spans)
 					t._applyInlineStyle('span', {style : {fontFamily : v}});
@@ -10585,7 +10575,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					return !n.parentNode || dom.isBlock(n.parentNode);
 				}, ed.getBody())
 
-				return sp || n;
+				return sp;
 			};
 
 			function process(n) {
@@ -10614,11 +10604,15 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Scenario 1: Same text node container
 			if (cont.nodeType == 3) { // TEXT_NODE
-				n = sc.splitText(so);
-				n.splitText(eo - so);
-				dom.split(findFormatRoot(sc), n);
+				cont = findFormatRoot(sc);
 
-				s.moveToBookmark(bm);
+				if (cont.nodeType == 1) { // ELEMENT
+					n = sc.splitText(so);
+					n.splitText(eo - so);
+					dom.split(cont, n);
+
+					s.moveToBookmark(bm);
+				}
 
 				return;
 			}
@@ -12586,9 +12580,6 @@ tinymce.create('tinymce.UndoManager', {
 			t.onOpen.dispatch(t, s, p);
 
 			u = s.url || s.file;
-			if (tinymce.relaxedDomain)
-				u += (u.indexOf('?') == -1 ? '?' : '&') + 'mce_rdomain=' + tinymce.relaxedDomain;
-
 			u = tinymce._addVer(u);
 
 			try {

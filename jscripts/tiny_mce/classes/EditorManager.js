@@ -38,13 +38,9 @@
 			tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 			tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
-			// User already specified a document.domain value
+			// User specified a document.domain value
 			if (document.domain && lo.hostname != document.domain)
 				tinymce.relaxedDomain = document.domain;
-
-			// Setup document domain if tinymce is loaded from other domain
-			if (!tinymce.relaxedDomain && tinymce.EditorManager.baseURI.host != lo.hostname && lo.hostname)
-				document.domain = tinymce.relaxedDomain = lo.hostname.replace(/.*\.(.+\..+)$/, '$1');
 
 			// Add before unload listener
 			// This was required since IE was leaking memory if you added and removed beforeunload listeners

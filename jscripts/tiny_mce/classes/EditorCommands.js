@@ -188,8 +188,6 @@
 			if (!v) {
 				if (s.isCollapsed())
 					s.select(s.getNode());
-
-				t.RemoveFormat();
 			} else {
 				if (ed.settings.convert_fonts_to_spans)
 					t._applyInlineStyle('span', {style : {fontFamily : v}});
@@ -505,7 +503,7 @@
 					return !n.parentNode || dom.isBlock(n.parentNode);
 				}, ed.getBody())
 
-				return sp || n;
+				return sp;
 			};
 
 			function process(n) {
@@ -534,11 +532,15 @@
 
 			// Scenario 1: Same text node container
 			if (cont.nodeType == 3) { // TEXT_NODE
-				n = sc.splitText(so);
-				n.splitText(eo - so);
-				dom.split(findFormatRoot(sc), n);
+				cont = findFormatRoot(sc);
 
-				s.moveToBookmark(bm);
+				if (cont.nodeType == 1) { // ELEMENT
+					n = sc.splitText(so);
+					n.splitText(eo - so);
+					dom.split(cont, n);
+
+					s.moveToBookmark(bm);
+				}
 
 				return;
 			}

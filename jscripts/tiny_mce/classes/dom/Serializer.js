@@ -32,16 +32,11 @@
 			t.onPreProcess = new Dispatcher(t);
 			t.onPostProcess = new Dispatcher(t);
 
-			if (tinymce.relaxedDomain && tinymce.isGecko) {
-				// Gecko has a bug where we can't create a new XML document if domain relaxing is used
+			try {
+				t.writer = new tinymce.dom.XMLWriter();
+			} catch (ex) {
+				// IE might throw exception if ActiveX is disabled so we then switch to the slightly slower StringWriter
 				t.writer = new tinymce.dom.StringWriter();
-			} else {
-				try {
-					t.writer = new tinymce.dom.XMLWriter();
-				} catch (ex) {
-					// IE might throw exception if ActiveX is disabled so we then switch to the slightly slower StringWriter
-					t.writer = new tinymce.dom.StringWriter();
-				}
 			}
 
 			// Default settings

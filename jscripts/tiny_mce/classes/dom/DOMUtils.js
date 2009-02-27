@@ -1674,6 +1674,7 @@
 				bef = r.extractContents();
 
 				// Get after chunk
+				r = t.createRng();
 				r.setStartAfter(e);
 				r.setEndAfter(pe);
 				aft = r.extractContents();
