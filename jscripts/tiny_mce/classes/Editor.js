@@ -1365,7 +1365,7 @@
 				o.load = true;
 
 				// Double encode existing entities in the value
-				h = t.setContent(is(e.value) ? e.value.replace(/&([^;]+;)/g, '&amp;$1') : e.innerHTML, o);
+				h = t.setContent(is(e.value) ? e.value : e.innerHTML, o);
 				o.element = e;
 
 				if (!o.no_events)

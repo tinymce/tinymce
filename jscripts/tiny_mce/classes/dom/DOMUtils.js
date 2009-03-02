@@ -1667,6 +1667,14 @@
 		split : function(pe, e, re) {
 			var t = this, r = t.createRng(), bef, aft, pa;
 
+			function isEmpty(n) {
+				n = t.getOuterHTML(n);
+				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
+				n = n.replace(/<[^>]+>/g, ''); // Remove all tags
+
+				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
+			};
+
 			if (pe && e) {
 				// Get before chunk
 				r.setStartBefore(pe);
@@ -1681,14 +1689,17 @@
 
 				// Insert chunks and remove parent
 				pa = pe.parentNode;
-				pa.insertBefore(bef, pe);
+
+				if (!isEmpty(bef))
+					pa.insertBefore(bef, pe);
 
 				if (re)
 					pa.replaceChild(re, e);
 				else
 					pa.insertBefore(e, pe);
 
-				pa.insertBefore(aft, pe);
+				if (!isEmpty(aft))
+					pa.insertBefore(aft, pe);
 	
 				return re || e;
 			}
