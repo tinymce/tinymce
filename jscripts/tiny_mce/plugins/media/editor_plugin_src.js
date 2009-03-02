@@ -237,6 +237,7 @@
 					mce_name : 'object',
 					type : 'application/x-shockwave-flash',
 					data : p.src,
+					style : dom.getAttrib(n, 'style'),
 					width : o.width,
 					height : o.height
 				});
@@ -245,6 +246,7 @@
 					id : p.id,
 					mce_name : 'object',
 					classid : "clsid:" + o.classid,
+					style : dom.getAttrib(n, 'style'),
 					codebase : o.codebase,
 					width : o.width,
 					height : o.height
@@ -263,7 +265,7 @@
 			});
 
 			if (!stc)
-				dom.add(ob, 'span', tinymce.extend({mce_name : 'embed', type : o.type}, p));
+				dom.add(ob, 'span', tinymce.extend({mce_name : 'embed', type : o.type, style : dom.getAttrib(n, 'style')}, p));
 
 			return ob;
 		},
@@ -346,6 +348,7 @@
 				src : this.url + '/img/trans.gif',
 				width : dom.getAttrib(n, 'width') || 100,
 				height : dom.getAttrib(n, 'height') || 100,
+				style : dom.getAttrib(n, 'style'),
 				'class' : cl
 			});
 

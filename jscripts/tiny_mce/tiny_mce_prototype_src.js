@@ -10598,8 +10598,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			function findFormatRoot(n) {
 				var sp;
 
-				sp = dom.getParent(n, function(n) {
-					return !n.parentNode || dom.isBlock(n.parentNode);
+				dom.getParent(n, function(n) {
+					if (dom.is(n, ed.getParam('removeformat_selector')))
+						sp = n;
+
+					return dom.isBlock(n);
 				}, ed.getBody())
 
 				return sp;

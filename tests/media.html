@@ -9,7 +9,7 @@
 var editor;
 
 test("Flash object elements - strict output", function() {
-	expect(11);
+	expect(12);
 
 	editor.settings.media_strict = 1;
 	editor.settings.relative_urls = 1;
@@ -48,10 +48,13 @@ test("Flash object elements - strict output", function() {
 
 	editor.setContent('<object width="320" height="240"><embed src="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash" width="320" height="240"></embed></object>');
 	equals(editor.getContent(), '<p><object width="320" height="240" data="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash"><param name="src" value="/tinymce/tinymce/trunk/tests/someurl" /></object></p>');
+
+	editor.setContent('<object width="320" height="240" style="width: 320px; height: 240px;"><embed src="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash" width="320" height="240"></embed></object>');
+	equals(editor.getContent(), '<p><object style="width: 320px; height: 240px;" width="320" height="240" data="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash"><param name="src" value="/tinymce/tinymce/trunk/tests/someurl" /></object></p>');
 });
 
 test("Flash object elements - compatible output", function() {
-	expect(11);
+	expect(12);
 
 	editor.settings.media_strict = 0;
 	editor.settings.relative_urls = 1;
@@ -90,6 +93,9 @@ test("Flash object elements - compatible output", function() {
 
 	editor.setContent('<object width="320" height="240"><embed src="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash" width="320" height="240"></embed></object>');
 	equals(editor.getContent(), '<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/tinymce/tinymce/trunk/tests/someurl" /><embed type="application/x-shockwave-flash" width="320" height="240" src="/tinymce/tinymce/trunk/tests/someurl"></embed></object></p>');
+
+	editor.setContent('<object width="320" height="240" style="width: 320px; height: 240px;"><embed src="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash" width="320" height="240"></embed></object>');
+	equals(editor.getContent(), '<p><object style="width: 320px; height: 240px;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="320" height="240" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/tinymce/tinymce/trunk/tests/someurl" /><embed style="width: 320px; height: 240px;" type="application/x-shockwave-flash" width="320" height="240" src="/tinymce/tinymce/trunk/tests/someurl"></embed></object></p>');
 });
 
 test("Quicktime object elements - compatible output", function() {
