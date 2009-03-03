@@ -2248,6 +2248,15 @@ tinymce.create('static tinymce.util.XHR', {
 		split : function(pe, e, re) {
 			var t = this, r = t.createRng(), bef, aft, pa;
 
+			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents, this makes sence
+			// but we don't want that in our code since it serves no purpose
+			function trimEdge(n, na) {
+				n = n[na];
+
+				if (n && n[na] && na.nodeType == 1 && isEmpty(n[na]))
+					t.remove(n[na]);
+			};
+
 			function isEmpty(n) {
 				n = t.getOuterHTML(n);
 				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
@@ -2271,6 +2280,9 @@ tinymce.create('static tinymce.util.XHR', {
 				// Insert chunks and remove parent
 				pa = pe.parentNode;
 
+				// Remove right side edge of the before contents
+				trimEdge(bef, 'lastChild');
+
 				if (!isEmpty(bef))
 					pa.insertBefore(bef, pe);
 
@@ -2279,9 +2291,15 @@ tinymce.create('static tinymce.util.XHR', {
 				else
 					pa.insertBefore(e, pe);
 
+				// Remove left site edge of the after contents
+
+				trimEdge(aft, 'firstChild');
+
 				if (!isEmpty(aft))
 					pa.insertBefore(aft, pe);
-	
+
+				t.remove(pe);
+
 				return re || e;
 			}
 		},
@@ -10567,8 +10585,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				this.editor.getDoc().execCommand('InsertHorizontalRule', false, '');
 		},
 
-		RemoveFormat : function() {
-			var ed = this.editor, dom = ed.dom, s = ed.selection, r = s.getW3CRange(), sc, ec, so, eo, n, cont, start, end, ancestor, remove = [];
+		processRange : function(start, end, callback) {
+			var dom = this.editor.dom, ancestor, n, startPoint, endPoint, sib;
 
 			function findEndPoint(n, c) {
 				do {
@@ -10578,6 +10596,49 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					n = n.parentNode;
 				} while(n);
 			};
+
+			function process(n) {
+				function walk(n) {
+					var i, nl;
+
+					callback(n);
+
+					if (nl = n.childNodes) {
+						for (i = nl.length - 1; i >= 0; i--)
+							walk(nl[i]);
+					}
+				};
+
+				walk(n);
+			};
+
+			// Find common ancestor and end points
+			ancestor = dom.findCommonAncestor(start, end);
+			startPoint = findEndPoint(start, ancestor) || start;
+			endPoint = findEndPoint(end, ancestor) || end;
+
+			// Process left leaf
+			for (n = start; n && n != startPoint; n = n.parentNode) {
+				for (sib = n.nextSibling; sib; sib = sib.nextSibling)
+					process(sib);
+			}
+
+			// Process middle from start to end point
+			if (startPoint != endPoint) {
+				for (n = startPoint.nextSibling; n && n != endPoint; n = n.nextSibling)
+					process(n);
+			} else
+				process(startPoint);
+
+			// Process right leaf
+			for (n = end; n && n != endPoint; n = n.parentNode) {
+				for (sib = n.previousSibling; sib; sib = sib.previousSibling)
+					process(sib);
+			}
+		},
+
+		RemoveFormat : function() {
+			var ed = this.editor, dom = ed.dom, s = ed.selection, r = s.getW3CRange(), nodes = [], bm, start, end, sc, so, ec, eo, n;
 
 			function findFormatRoot(n) {
 				var sp;
@@ -10592,147 +10653,119 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return sp;
 			};
 
-			function process(n) {
-				function walk(n) {
-					var i, nl;
-
-					if (dom.is(n, ed.getParam('removeformat_selector')))
-						remove.push(n);
-
-					if (nl = n.childNodes) {
-						for (i = nl.length - 1; i >= 0; i--)
-							walk(nl[i]);
-					}
-				};
-
-				walk(n);
+			function collect(n) {
+				if (dom.is(n, ed.getParam('removeformat_selector')))
+					nodes.push(n);
 			};
 
-			// Use shorter form
+			function walk(n) {
+				var i, nl;
+
+				collect(n);
+
+				if (nl = n.childNodes) {
+					for (i = nl.length - 1; i >= 0; i--)
+						walk(nl[i]);
+				}
+			};
+
+			bm = s.getBookmark();
 			sc = r.startContainer;
 			ec = r.endContainer;
 			so = r.startOffset;
 			eo = r.endOffset;
-			cont = r.commonAncestorContainer;
-			bm = s.getBookmark();
+			sc = sc.nodeType == 1 ? sc.childNodes[so] : sc;
+			ec = ec.nodeType == 1 ? ec.childNodes[eo - 1] : ec;
 
-			// Scenario 1: Same text node container
-			if (cont.nodeType == 3) { // TEXT_NODE
-				cont = findFormatRoot(sc);
+			// Same container
+			if (sc == ec) { // TEXT_NODE
+				start = findFormatRoot(sc);
 
-				if (cont.nodeType == 1) { // ELEMENT
-					n = sc.splitText(so);
-					n.splitText(eo - so);
-					dom.split(cont, n);
+				// Handle single text node
+				if (sc.nodeType == 3) {
+					if (start.nodeType == 1) { // ELEMENT
+						n = sc.splitText(so);
+						n.splitText(eo - so);
+						dom.split(start, n);
 
-					s.moveToBookmark(bm);
+						s.moveToBookmark(bm);
+					}
+
+					return;
 				}
 
-				return;
-			}
+				// Handle single element
+				walk(dom.split(start, sc) || sc);
+			} else {
+				// Find start/end format root
+				start = findFormatRoot(sc);
+				end = findFormatRoot(ec);
 
-			// Scenario 2: Selected singe element
-			if (so == eo - 1 && sc.nodeType == 1) { // ELEMENT
-				// Table cell selection breaks in FF, the DOM Range returned from the browser is incorrect
-				if (sc.nodeName != 'TR') {
-					n = sc.childNodes[so];
-					process(dom.split(findFormatRoot(n), n));
+				// Split start text node
+				if (start) {
+					if (sc.nodeType == 3) { // TEXT
+						// Since IE doesn't support white space nodes in the DOM we need to
+						// add this invisible character so that the splitText function can split the contents
+						if (so == sc.nodeValue.length)
+							sc.nodeValue += '\uFEFF'; // Yet another pesky IE fix
+
+						sc = sc.splitText(so);
+					}
 				}
 
-				s.moveToBookmark(bm);
-
-				return;
-			}
-
-			// Split start node and wrap it in a span
-			if (sc.nodeType == 1) // ELEMENT
-				n = sc.childNodes[so];
-			else
-				n = sc.splitText(so);
-
-			// Wrap start text node or element in a span since it might get cloned by the dom.split calls
-			dom.replace(dom.create('span', {id : 'start'}, n.cloneNode(true)), n);
-
-			// Split end node and wrap it in a span
-			if (ec.nodeType == 1) // ELEMENT
-				n = ec.childNodes[eo - 1];
-			else {
-				ec.splitText(eo);
-				n = ec;
-			}
-
-			// Wrap end text node or element in a span since it might get cloned by the dom.split calls
-			dom.replace(dom.create('span', {id : 'end'}, n.cloneNode(true)), n);
-
-			// Split start (left side)
-			n = dom.get('start');
-			start = dom.split(findFormatRoot(n), n);
-
-			// Split end (right side)
-			n = dom.get('end');
-			end = dom.split(findFormatRoot(n), n);
-
-			// Find common ancestor and end points
-			ancestor = dom.findCommonAncestor(start, end);
-			start = findEndPoint(start, ancestor);
-			end = findEndPoint(end, ancestor);
-
-			// Process middle from start to end point
-			for (n = start; n && (n = n.nextSibling) && n != end; )
-				process(n);
-
-			// Process left leaf
-			dom.getParent(dom.get('start'), function(n) {
-				var nl, i;
-
-				if (n.parentNode) {
-					for (n = n.nextSibling; n; n = n.nextSibling)
-						process(n);
-
-					return false;
+				// Split end text node
+				if (end) {
+					if (ec.nodeType == 3) // TEXT
+						ec.splitText(eo);
 				}
 
-				return true;
-			}, start);
+				// If the start and end format root is the same then we need to wrap
+				// the end node in a span since the split calls might change the reference
+				// Example: <p><b><em>x[yz<span>---</span>12]3</em></b></p>
+				if (start && start == end)
+					dom.replace(dom.create('span', {id : '__end'}, ec.cloneNode(true)), ec);
 
-			// Process right leaf
-			dom.getParent(dom.get('end'), function(n) {
-				var pr = n;
+				// Split all start containers down to the format root
+				if (start)
+					start = dom.split(start, sc);
+				else
+					start = sc;
 
-				while (pr = pr.previousSibling)
-					process(pr);
-			}, end);
+				// If there is a span wrapper use that one instead
+				if (n = dom.get('__end')) {
+					ec = n;
+					end = findFormatRoot(ec);
+				}
 
-			// Process start/end since they might contain elements
-			process(dom.get('start'));
-			process(dom.get('end'));
+				// Split all end containers down to the format root
+				if (end)
+					end = dom.split(end, ec);
+				else
+					end = ec;
+
+				// Collect nodes in between
+				this.processRange(start, end, collect);
+
+				// Remove invisible character for IE workaround if we find it
+				if (sc.nodeValue == '\uFEFF')
+					sc.nodeValue = '';
+
+				// Process start/end container elements
+				walk(ec);
+				walk(sc);
+			}
 
 			// Remove all collected nodes
-			each(remove, function(n) {
+			each(nodes, function(n) {
 				dom.remove(n, 1);
 			});
 
-			// Remove containers
-			dom.remove('start', 1);
-			dom.remove('end', 1);
+			// Remove leftover wrapper
+			dom.remove('__end', 1);
 
 			s.moveToBookmark(bm);
 		},
 
-/*
-		RemoveFormat : function() {
-			var t = this, ed = t.editor, s = ed.selection, b;
-
-			// Safari breaks tables
-			if (isWebKit)
-				s.setContent(s.getContent({format : 'raw'}).replace(/(<(span|b|i|strong|em|strike) [^>]+>|<(span|b|i|strong|em|strike)>|<\/(span|b|i|strong|em|strike)>|)/g, ''), {format : 'raw'});
-			else
-				ed.getDoc().execCommand('RemoveFormat', false, null);
-
-			t.mceSetStyleInfo(0, {command : 'removeformat'});
-			ed.addVisual();
-		},
-*/
 		mceSetStyleInfo : function(u, v) {
 			var t = this, ed = t.editor, d = ed.getDoc(), dom = ed.dom, e, b, s = ed.selection, nn = v.wrapper || 'span', b = s.getBookmark(), re;
 

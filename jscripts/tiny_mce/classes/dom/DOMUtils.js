@@ -1667,6 +1667,15 @@
 		split : function(pe, e, re) {
 			var t = this, r = t.createRng(), bef, aft, pa;
 
+			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents, this makes sence
+			// but we don't want that in our code since it serves no purpose
+			function trimEdge(n, na) {
+				n = n[na];
+
+				if (n && n[na] && na.nodeType == 1 && isEmpty(n[na]))
+					t.remove(n[na]);
+			};
+
 			function isEmpty(n) {
 				n = t.getOuterHTML(n);
 				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
@@ -1690,6 +1699,9 @@
 				// Insert chunks and remove parent
 				pa = pe.parentNode;
 
+				// Remove right side edge of the before contents
+				trimEdge(bef, 'lastChild');
+
 				if (!isEmpty(bef))
 					pa.insertBefore(bef, pe);
 
@@ -1698,9 +1710,15 @@
 				else
 					pa.insertBefore(e, pe);
 
+				// Remove left site edge of the after contents
+
+				trimEdge(aft, 'firstChild');
+
 				if (!isEmpty(aft))
 					pa.insertBefore(aft, pe);
-	
+
+				t.remove(pe);
+
 				return re || e;
 			}
 		},

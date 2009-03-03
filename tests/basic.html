@@ -370,12 +370,22 @@ test('commands - indentOutdent', function() {
 test('commands - removeFormat', function() {
 	var t = this;
 
-	expect(1);
+	expect(3);
 
 	editor.setContent('<p><span>test</span> <strong>123</strong> <a href="123">123</a> 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('RemoveFormat');
 	equals(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>');
+
+	editor.setContent('<p><span><span>test</span> <strong>123</strong> <a href="123">123</a> 123</span></p>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('RemoveFormat');
+	equals(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>');
+
+	editor.setContent('<p><span>test<span id="x">test <strong>123</strong></span><a href="123">123</a> 123</span></p>');
+	editor.selection.select(editor.dom.get('x'));
+	editor.execCommand('RemoveFormat');
+	equals(editor.getContent(), '<p><span>test</span>test 123<span><a href=\"123\">123</a> 123</span></p>');
 });
 
 test('commands - customCommands', function() {
