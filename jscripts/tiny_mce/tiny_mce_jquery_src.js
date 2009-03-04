@@ -3938,7 +3938,7 @@ tinymce.create('static tinymce.util.XHR', {
 			return r.item ? r.item(0) : r.parentElement();
 		},
 
-		getSelectedBlocks : function(ed, st, en) {
+		getSelectedBlocks : function(st, en) {
 			var t = this, dom = t.dom, sb, eb, n, bl = [];
 
 			sb = dom.getParent(st || t.getStart(), dom.isBlock);
@@ -11246,7 +11246,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				dom.insertAfter(bq2, bq);
 
 			// Move all selected blocks after the current bq
-			nl = s.getSelectedBlocks(ed, sb, eb);
+			nl = s.getSelectedBlocks(sb, eb);
 			for (i = nl.length - 1; i >= 0; i--) {
 				dom.insertAfter(nl[i], bq);
 			}
@@ -11299,7 +11299,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			bm = s.getBookmark();
 
 		// Move selected block elements into a bq
-		tinymce.each(s.getSelectedBlocks(ed, getBQ(s.getStart()), getBQ(s.getEnd())), function(e) {
+		tinymce.each(s.getSelectedBlocks(getBQ(s.getStart()), getBQ(s.getEnd())), function(e) {
 			// Found existing BQ add to this one
 			if (e.nodeName == 'BLOCKQUOTE' && !bq) {
 				bq = e;

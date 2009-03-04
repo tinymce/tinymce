@@ -700,7 +700,7 @@
 			return r.item ? r.item(0) : r.parentElement();
 		},
 
-		getSelectedBlocks : function(ed, st, en) {
+		getSelectedBlocks : function(st, en) {
 			var t = this, dom = t.dom, sb, eb, n, bl = [];
 
 			sb = dom.getParent(st || t.getStart(), dom.isBlock);
