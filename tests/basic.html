@@ -331,6 +331,9 @@ test('commands - insertHR', function() {
 	// There is some browser differences that we can live with
 	v = '<hr />';
 
+	if (tinymce.isOpera)
+		v = '<hr /><p>&nbsp;</p>';
+
 	if (tinymce.isWebKit)
 		v = '<p><hr /></p>';
 

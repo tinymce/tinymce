@@ -84,6 +84,7 @@
 			<fileset dir="${classes_dir}" includes="commands/BlockQuote.js" />
 			<fileset dir="${classes_dir}" includes="commands/CutCopyPaste.js" />
 			<fileset dir="${classes_dir}" includes="commands/InsertHorizontalRule.js" />
+			<fileset dir="${classes_dir}" includes="commands/UndoRedo.js" />
 		</concat>
 
 		<!-- Remove all jsdoc style comments -->

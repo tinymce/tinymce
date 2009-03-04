@@ -10197,11 +10197,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					t.mceJustify(cmd, cmd.substring(7).toLowerCase());
 					return true;
 
-				case 'mceEndUndoLevel':
-				case 'mceAddUndoLevel':
-					ed.undoManager.add();
-					return true;
-
 				default:
 					f = this[cmd];
 
@@ -10769,26 +10764,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				set(false);
 			} else
 				d.execCommand('BackColor', false, val);
-		},
-
-		Undo : function() {
-			var ed = this.editor;
-
-			if (ed.settings.custom_undo_redo) {
-				ed.undoManager.undo();
-				ed.nodeChanged();
-			} else
-				ed.getDoc().execCommand('Undo', false, null);
-		},
-
-		Redo : function() {
-			var ed = this.editor;
-
-			if (ed.settings.custom_undo_redo) {
-				ed.undoManager.redo();
-				ed.nodeChanged();
-			} else
-				ed.getDoc().execCommand('Redo', false, null);
 		},
 
 		FormatBlock : function(ui, val) {
@@ -12348,8 +12323,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			execCommand : function(scope, cmd, ui, value, args) {
 				if (cmd = execCommands[cmd.toLowerCase()]) {
-					cmd.func.call(scope || cmd.scope, ui, value, args);
-					return true;
+					if (cmd.func.call(scope || cmd.scope, ui, value, args) !== false)
+						return true;
 				}
 			},
 
@@ -12513,6 +12488,38 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 })(tinymce);
 (function(tinymce) {
 	tinymce.GlobalCommands.add('InsertHorizontalRule', function() {
+		if (tinymce.isOpera)
+			return this.getDoc().execCommand('InsertHorizontalRule', false, '');
+
 		this.selection.setContent('<hr />');
 	});
 })(tinymce);
+(function() {
+	var cmds = tinymce.GlobalCommands;
+
+	cmds.add(['mceEndUndoLevel', 'mceAddUndoLevel'], function() {
+		this.undoManager.add();
+	});
+
+	cmds.add('Undo', function() {
+		var ed = this;
+
+		if (ed.settings.custom_undo_redo) {
+			ed.undoManager.undo();
+			ed.nodeChanged();
+		}
+
+		return false; // Run browser command
+	});
+
+	cmds.add('Redo', function() {
+		var ed = this;
+
+		if (ed.settings.custom_undo_redo) {
+			ed.undoManager.redo();
+			ed.nodeChanged();
+		}
+
+		return false; // Run browser command
+	});
+})();

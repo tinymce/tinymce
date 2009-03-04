@@ -33,8 +33,8 @@
 
 			execCommand : function(scope, cmd, ui, value, args) {
 				if (cmd = execCommands[cmd.toLowerCase()]) {
-					cmd.func.call(scope || cmd.scope, ui, value, args);
-					return true;
+					if (cmd.func.call(scope || cmd.scope, ui, value, args) !== false)
+						return true;
 				}
 			},
 

@@ -38,11 +38,6 @@
 					t.mceJustify(cmd, cmd.substring(7).toLowerCase());
 					return true;
 
-				case 'mceEndUndoLevel':
-				case 'mceAddUndoLevel':
-					ed.undoManager.add();
-					return true;
-
 				default:
 					f = this[cmd];
 
@@ -610,26 +605,6 @@
 				set(false);
 			} else
 				d.execCommand('BackColor', false, val);
-		},
-
-		Undo : function() {
-			var ed = this.editor;
-
-			if (ed.settings.custom_undo_redo) {
-				ed.undoManager.undo();
-				ed.nodeChanged();
-			} else
-				ed.getDoc().execCommand('Undo', false, null);
-		},
-
-		Redo : function() {
-			var ed = this.editor;
-
-			if (ed.settings.custom_undo_redo) {
-				ed.undoManager.redo();
-				ed.nodeChanged();
-			} else
-				ed.getDoc().execCommand('Redo', false, null);
 		},
 
 		FormatBlock : function(ui, val) {
