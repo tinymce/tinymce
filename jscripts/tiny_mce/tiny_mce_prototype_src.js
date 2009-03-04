@@ -4970,11 +4970,15 @@ tinymce.dom.Sizzle = Sizzle;
 			return w.getSelection ? w.getSelection() : w.document.selection;
 		},
 
-		getRng : function() {
-			var t = this, s = t.getSel(), r;
+		getRng : function(w3c) {
+			var t = this, s, r;
+
+			// Found tridentSel object then we need to use that one
+			if (w3c && t.tridentSel)
+				return t.tridentSel.getRangeAt(0);
 
 			try {
-				if (s)
+				if (s = t.getSel())
 					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
@@ -4987,16 +4991,6 @@ tinymce.dom.Sizzle = Sizzle;
 				r = isIE ? t.win.document.body.createTextRange() : t.win.document.createRange();
 
 			return r;
-		},
-
-		getW3CRange : function() {
-			var t = this;
-
-			// Found tridentSel object then we need to use that one
-			if (t.tridentSel)
-				return t.tridentSel.getRangeAt(0);
-
-			return t.getRng(); // W3C compatible browsers
 		},
 
 		setRng : function(r) {

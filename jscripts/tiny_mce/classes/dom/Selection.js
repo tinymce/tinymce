@@ -594,13 +594,18 @@
 		/**
 		 * Returns the browsers internal range object.
 		 *
+		 * @param {bool} w3c Forces a compatible W3C range on IE.
 		 * @return {Range} Internal browser range object.
 		 */
-		getRng : function() {
-			var t = this, s = t.getSel(), r;
+		getRng : function(w3c) {
+			var t = this, s, r;
+
+			// Found tridentSel object then we need to use that one
+			if (w3c && t.tridentSel)
+				return t.tridentSel.getRangeAt(0);
 
 			try {
-				if (s)
+				if (s = t.getSel())
 					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
@@ -613,21 +618,6 @@
 				r = isIE ? t.win.document.body.createTextRange() : t.win.document.createRange();
 
 			return r;
-		},
-
-		/**
-		 * Returns a W3C compatible DOM Range object of the current selection even on browsers who doesn't support it.
-		 *
-		 * @return {DOMRange} Range object of the current selection.
-		 */
-		getW3CRange : function() {
-			var t = this;
-
-			// Found tridentSel object then we need to use that one
-			if (t.tridentSel)
-				return t.tridentSel.getRangeAt(0);
-
-			return t.getRng(); // W3C compatible browsers
 		},
 
 		/**
