@@ -265,7 +265,7 @@
 		},
 
 		/**
-		 * Adds an editor instance to the editor colleciton. This will also set it as the active editor.
+		 * Adds an editor instance to the editor collection. This will also set it as the active editor.
 		 *
 		 * @param {tinymce.Editor} e Editor instance to add to the collection.
 		 * @return {tinymce.Editor} The same instance that got passed in.
