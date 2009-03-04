@@ -7,6 +7,9 @@
 
 (function(tinymce) {
 	tinymce.GlobalCommands.add('InsertHorizontalRule', function() {
+		if (tinymce.isOpera)
+			return this.getDoc().execCommand('InsertHorizontalRule', false, '');
+
 		this.selection.setContent('<hr />');
 	});
 })(tinymce);

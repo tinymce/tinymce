@@ -88,7 +88,7 @@
 
 			// Handle single text node
 			if (sc.nodeType == 3) {
-				if (start.nodeType == 1) { // ELEMENT
+				if (start && start.nodeType == 1) { // ELEMENT
 					n = sc.splitText(so);
 					n.splitText(eo - so);
 					dom.split(start, n);
