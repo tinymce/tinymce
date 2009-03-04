@@ -497,18 +497,8 @@
 			};
 
 			function process(n) {
-				function walk(n) {
-					var i, nl;
-
-					callback(n);
-
-					if (nl = n.childNodes) {
-						for (i = nl.length - 1; i >= 0; i--)
-							walk(nl[i]);
-					}
-				};
-
-				walk(n);
+				callback(n);
+				tinymce.walk(n, callback, 'childNodes');
 			};
 
 			// Find common ancestor and end points
@@ -558,14 +548,8 @@
 			};
 
 			function walk(n) {
-				var i, nl;
-
 				collect(n);
-
-				if (nl = n.childNodes) {
-					for (i = nl.length - 1; i >= 0; i--)
-						walk(nl[i]);
-				}
+				tinymce.walk(n, collect, 'childNodes');
 			};
 
 			bm = s.getBookmark();

@@ -45,7 +45,7 @@ tinymce.create('static tinymce.util.JSON', {
 		}
 
 		if (t == 'object') {
-			if (o instanceof Array) {
+			if (o.hasOwnProperty && o instanceof Array) {
 					for (i=0, v = '['; i<o.length; i++)
 						v += (i > 0 ? ',' : '') + s(o[i]);
 

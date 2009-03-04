@@ -30,6 +30,9 @@ Version 3.2.2 (200x-xx-xx)
 	Fixed bug where paragraphs could be produced inside non positional elements styled with the CSS position value of static.
 	Fixed bug where removeformat wouldn't work if you selected part of a span in IE.
 	Fixed bug where media plugin didn't retain the style attribute on embed/object elements.
+	Fixed bug where auto focus on empty editor instances could produce strange results if you inserted an image into it.
+	Fixed bug where &nbsp; characters would be removed in FF when inserted with the mceInsertContent or selection.setContent methods.
+	Fixed memory leak when TinyMCE was used with prototype. Patch contributed by James Ots.
 	Fixed so the non documented fullpage_hide_in_source_view option for the fullpage plugin works again in the 3.x branch.
 	Fixed so tables doesn't get inserted into paragraphs by default since it's not W3C valid. Can be disabled by using the fix_table_elements option.
 	Fixed so the source view dialog sets a source_view state to the event object. Enables plugins to intercept the source view mode.

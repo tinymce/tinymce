@@ -110,7 +110,7 @@ var tinymce = {
 		if (!t)
 			return n != 'undefined';
 
-		if (t == 'array' && (o instanceof Array))
+		if (t == 'array' && (o.hasOwnProperty && o instanceof Array))
 			return true;
 
 		return n == t;

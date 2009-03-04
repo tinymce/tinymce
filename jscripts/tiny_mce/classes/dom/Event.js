@@ -38,7 +38,7 @@
 			var cb, t = this, el = t.events, r;
 
 			// Handle array
-			if (o && o instanceof Array) {
+			if (o && o.hasOwnProperty && o instanceof Array) {
 				r = [];
 
 				each(o, function(o) {
@@ -108,7 +108,7 @@
 			var t = this, a = t.events, s = false, r;
 
 			// Handle array
-			if (o && o instanceof Array) {
+			if (o && o.hasOwnProperty && o instanceof Array) {
 				r = [];
 
 				each(o, function(o) {

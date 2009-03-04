@@ -1669,10 +1669,16 @@
 
 			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents, this makes sence
 			// but we don't want that in our code since it serves no purpose
+			// For example if this is chopped:
+			//   <p>text 1<span><b>CHOP</b></span>text 2</p>
+			// would produce:
+			//   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
+			// this function will then trim of empty edges and produce:
+			//   <p>text 1</p><b>CHOP</b><p>text 2</p>
 			function trimEdge(n, na) {
 				n = n[na];
 
-				if (n && n[na] && na.nodeType == 1 && isEmpty(n[na]))
+				if (n && n[na] && n[na].nodeType == 1 && isEmpty(n[na]))
 					t.remove(n[na]);
 			};
 
@@ -1711,7 +1717,6 @@
 					pa.insertBefore(e, pe);
 
 				// Remove left site edge of the after contents
-
 				trimEdge(aft, 'firstChild');
 
 				if (!isEmpty(aft))

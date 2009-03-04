@@ -84,7 +84,7 @@ var tinymce = {
 		if (!t)
 			return n != 'undefined';
 
-		if (t == 'array' && (o instanceof Array))
+		if (t == 'array' && (o.hasOwnProperty && o instanceof Array))
 			return true;
 
 		return n == t;
@@ -934,7 +934,7 @@ tinymce.create('static tinymce.util.JSON', {
 		}
 
 		if (t == 'object') {
-			if (o instanceof Array) {
+			if (o.hasOwnProperty && o instanceof Array) {
 					for (i=0, v = '['; i<o.length; i++)
 						v += (i > 0 ? ',' : '') + s(o[i]);
 
@@ -2104,10 +2104,16 @@ tinymce.create('static tinymce.util.XHR', {
 
 			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents, this makes sence
 			// but we don't want that in our code since it serves no purpose
+			// For example if this is chopped:
+			//   <p>text 1<span><b>CHOP</b></span>text 2</p>
+			// would produce:
+			//   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
+			// this function will then trim of empty edges and produce:
+			//   <p>text 1</p><b>CHOP</b><p>text 2</p>
 			function trimEdge(n, na) {
 				n = n[na];
 
-				if (n && n[na] && na.nodeType == 1 && isEmpty(n[na]))
+				if (n && n[na] && n[na].nodeType == 1 && isEmpty(n[na]))
 					t.remove(n[na]);
 			};
 
@@ -2146,7 +2152,6 @@ tinymce.create('static tinymce.util.XHR', {
 					pa.insertBefore(e, pe);
 
 				// Remove left site edge of the after contents
-
 				trimEdge(aft, 'firstChild');
 
 				if (!isEmpty(aft))
@@ -3448,9 +3453,11 @@ tinymce.create('static tinymce.util.XHR', {
 				t.setRng(r);
 
 				// Delete the marker, and hopefully the caret gets placed in the right location
-				d.execCommand('Delete', false, null);
+				// Removed this since it seems to remove &nbsp; in FF and simply deleting it
+				// doesn't seem to affect the caret position in any browser
+				//d.execCommand('Delete', false, null);
 
-				// In case it's still there
+				// Remove the caret position
 				t.dom.remove('__caret');
 			} else {
 				if (r.item) {
@@ -3799,14 +3806,21 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 			} else {
 				if (c) {
-					fn = first(n);
-					ln = last(n);
+					fn = first(n) || t.dom.select('br:first', n)[0];
+					ln = last(n) || t.dom.select('br:last', n)[0];
 
 					if (fn && ln) {
-						//console.debug(fn, ln);
 						r = d.createRange();
-						r.setStart(fn, 0);
-						r.setEnd(ln, ln.nodeValue.length);
+
+						if (fn.nodeName == 'BR')
+							r.setStartBefore(fn);
+						else
+							r.setStart(fn, 0);
+
+						if (ln.nodeName == 'BR')
+							r.setEndBefore(ln);
+						else
+							r.setEnd(ln, ln.nodeValue.length);
 					} else
 						r.selectNode(n);
 				} else
@@ -9506,18 +9520,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			};
 
 			function process(n) {
-				function walk(n) {
-					var i, nl;
-
-					callback(n);
-
-					if (nl = n.childNodes) {
-						for (i = nl.length - 1; i >= 0; i--)
-							walk(nl[i]);
-					}
-				};
-
-				walk(n);
+				callback(n);
+				tinymce.walk(n, callback, 'childNodes');
 			};
 
 			// Find common ancestor and end points
@@ -9567,14 +9571,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			};
 
 			function walk(n) {
-				var i, nl;
-
 				collect(n);
-
-				if (nl = n.childNodes) {
-					for (i = nl.length - 1; i >= 0; i--)
-						walk(nl[i]);
-				}
+				tinymce.walk(n, collect, 'childNodes');
 			};
 
 			bm = s.getBookmark();

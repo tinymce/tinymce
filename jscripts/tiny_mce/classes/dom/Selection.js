@@ -136,9 +136,11 @@
 				t.setRng(r);
 
 				// Delete the marker, and hopefully the caret gets placed in the right location
-				d.execCommand('Delete', false, null);
+				// Removed this since it seems to remove &nbsp; in FF and simply deleting it
+				// doesn't seem to affect the caret position in any browser
+				//d.execCommand('Delete', false, null);
 
-				// In case it's still there
+				// Remove the caret position
 				t.dom.remove('__caret');
 			} else {
 				if (r.item) {
@@ -519,14 +521,21 @@
 				}
 			} else {
 				if (c) {
-					fn = first(n);
-					ln = last(n);
+					fn = first(n) || t.dom.select('br:first', n)[0];
+					ln = last(n) || t.dom.select('br:last', n)[0];
 
 					if (fn && ln) {
-						//console.debug(fn, ln);
 						r = d.createRange();
-						r.setStart(fn, 0);
-						r.setEnd(ln, ln.nodeValue.length);
+
+						if (fn.nodeName == 'BR')
+							r.setStartBefore(fn);
+						else
+							r.setStart(fn, 0);
+
+						if (ln.nodeName == 'BR')
+							r.setEndBefore(ln);
+						else
+							r.setEnd(ln, ln.nodeValue.length);
 					} else
 						r.selectNode(n);
 				} else
