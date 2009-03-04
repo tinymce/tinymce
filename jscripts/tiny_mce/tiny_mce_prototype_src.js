@@ -10171,14 +10171,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				case 'Paste':
 					try {
 						ed.getDoc().execCommand(cmd, ui, val);
+
+						// On WebKit the command will just be ignored if it's not enabled
+						if (!ed.getDoc().queryCommandSupported(cmd))
+							throw 'Error';
 					} catch (ex) {
-						if (isGecko) {
-							ed.windowManager.confirm(ed.getLang('clipboard_msg'), function(s) {
-								if (s)
-									window.open('http://www.mozilla.org/editor/midasdemo/securityprefs.html', 'mceExternal');
-							});
-						} else
-							ed.windowManager.alert(ed.getLang('clipboard_no_support'));
+						ed.windowManager.alert(ed.getLang('clipboard_no_support'));
 					}
 
 					return true;
