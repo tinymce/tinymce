@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, Dispatcher = tinymce.util.Dispatcher;
 	var each = tinymce.each, isGecko = tinymce.isGecko, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit;
 	var is = tinymce.is, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, EditorManager = tinymce.EditorManager;
@@ -1205,6 +1205,12 @@
 				return true;
 			}
 
+			// Execute global commands
+			if (tinymce.GlobalCommands.execCommand(t, cmd, ui, val)) {
+				t.onExecCommand.dispatch(t, cmd, ui, val, a);
+				return true;
+			}
+
 			// Editor commands
 			if (t.editorCommands.execCommand(cmd, ui, val)) {
 				t.onExecCommand.dispatch(t, cmd, ui, val, a);
@@ -2292,4 +2298,4 @@
 
 		/**#@-*/
 	});
-})();
+})(tinymce);

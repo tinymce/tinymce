@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	// Shorten names
 	var Event, isIE, isGecko, isOpera, each, extend;
 
@@ -617,4 +617,4 @@
 			}, 1);
 		}
 	});
-})();
+})(tinymce);

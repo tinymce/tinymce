@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, each = tinymce.each, Cookie = tinymce.util.Cookie, lastExtID, explode = tinymce.explode;
 
 	// Tell it to load theme specific language pack(s)
@@ -1150,4 +1150,4 @@
 	});
 
 	tinymce.ThemeManager.add('advanced', tinymce.themes.AdvancedTheme);
-}());
+}(tinymce));

@@ -25,17 +25,7 @@
 
 (function(ns) {
 	// Traverse constants
-	var EXTRACT = 0, CLONE = 1, DELETE = 2;
-
-	// Extend utility function
-	function extend(t, o) {
-		var n;
-
-		for (n in o)
-			t[n] = o[n];
-
-		return t;
-	};
+	var EXTRACT = 0, CLONE = 1, DELETE = 2, extend = tinymce.extend;
 
 	function indexOf(child, parent) {
 		var i, node;

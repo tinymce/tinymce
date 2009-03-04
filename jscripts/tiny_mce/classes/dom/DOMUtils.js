@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	// Shorten names
 	var each = tinymce.each, is = tinymce.is;
 	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
@@ -1768,4 +1768,4 @@
 
 	// Setup page DOM
 	tinymce.DOM = new tinymce.dom.DOMUtils(document, {process_html : 0});
-})();
+})(tinymce);

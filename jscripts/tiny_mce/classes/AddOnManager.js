@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	var Dispatcher = tinymce.util.Dispatcher, each = tinymce.each;
 
 	/**#@+
@@ -92,4 +92,4 @@
 	// Create plugin and theme managers
 	tinymce.PluginManager = new tinymce.AddOnManager();
 	tinymce.ThemeManager = new tinymce.AddOnManager();
-}());
+}(tinymce));

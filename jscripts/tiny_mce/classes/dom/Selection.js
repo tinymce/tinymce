@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	function trimNl(s) {
 		return s.replace(/[\n\r]+/g, '');
 	};
@@ -710,6 +710,30 @@
 			return r.item ? r.item(0) : r.parentElement();
 		},
 
+		getSelectedBlocks : function(ed, st, en) {
+			var t = this, dom = t.dom, sb, eb, n, bl = [];
+
+			sb = dom.getParent(st || t.getStart(), dom.isBlock);
+			eb = dom.getParent(en || t.getEnd(), dom.isBlock);
+
+			if (sb)
+				bl.push(sb);
+
+			if (sb && eb && sb != eb) {
+				n = sb;
+
+				while ((n = n.nextSibling) && n != eb) {
+					if (isBlock(n))
+						bl.push(n);
+				}
+			}
+
+			if (eb && sb != eb)
+				bl.push(eb);
+
+			return bl;
+		},
+
 		destroy : function(s) {
 			var t = this;
 
@@ -722,4 +746,4 @@
 
 		/**#@-*/
 	});
-})();
+})(tinymce);

@@ -329,10 +329,7 @@ test('commands - insertHR', function() {
 	editor.execCommand('InsertHorizontalRule');
 
 	// There is some browser differences that we can live with
-	v = '<hr /><p>&nbsp;</p>';
-
-	if (tinymce.isIE)
-		v = '<hr />';
+	v = '<hr />';
 
 	if (tinymce.isWebKit)
 		v = '<p><hr /></p>';

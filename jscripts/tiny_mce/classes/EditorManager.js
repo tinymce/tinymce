@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	// Shorten names
 	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, explode = tinymce.explode;
 
@@ -449,7 +449,7 @@
 	});
 
 	tinymce.EditorManager.preInit();
-})();
+})(tinymce);
 
 // Short for editor manager window.tinyMCE is needed when TinyMCE gets loaded though a XHR call
 var tinyMCE = window.tinyMCE = tinymce.EditorManager;

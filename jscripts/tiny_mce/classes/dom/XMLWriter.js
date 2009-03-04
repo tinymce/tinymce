@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	/**#@+
 	 * @class This class writes nodes into a XML document structure. This structure can then be
 	 * serialized down to a HTML string later on.
@@ -152,4 +152,4 @@
 
 		/**#@-*/
 	});
-})();
+})(tinymce);

@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	var each = tinymce.each;
 
 	/**#@+
@@ -196,4 +196,4 @@
 
 		/**#@-*/
 	});
-})();
+})(tinymce);

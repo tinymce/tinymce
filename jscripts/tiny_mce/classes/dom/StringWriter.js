@@ -5,7 +5,7 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	/**#@+
 	 * @class This class writes nodes into a string.
 	 * @member tinymce.dom.StringWriter
@@ -197,4 +197,4 @@
 
 		/**#@-*/
 	});
-})();
+})(tinymce);

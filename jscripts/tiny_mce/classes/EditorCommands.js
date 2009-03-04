@@ -5,12 +5,8 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-(function() {
+(function(tinymce) {
 	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit;
-
-	function isBlock(n) {
-		return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n.nodeName);
-	};
 
 	/**
 	 * This is a internal class and no method in this class should be called directly form the out side.
@@ -24,21 +20,6 @@
 			var t = this, ed = t.editor, f;
 
 			switch (cmd) {
-				case 'Cut':
-				case 'Copy':
-				case 'Paste':
-					try {
-						ed.getDoc().execCommand(cmd, ui, val);
-
-						// On WebKit the command will just be ignored if it's not enabled
-						if (!ed.getDoc().queryCommandSupported(cmd))
-							throw 'Error';
-					} catch (ex) {
-						ed.windowManager.alert(ed.getLang('clipboard_no_support'));
-					}
-
-					return true;
-
 				// Ignore these
 				case 'mceResetDesignMode':
 				case 'mceBeginUndoLevel':
@@ -83,7 +64,7 @@
 			iv = parseInt(iv);
 
 			if (ed.settings.inline_styles && (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList())) {
-				each(this._getSelectedBlocks(), function(e) {
+				each(s.getSelectedBlocks(), function(e) {
 					d.setStyle(e, 'paddingLeft', (parseInt(e.style.paddingLeft || 0) + iv) + iu);
 				});
 
@@ -110,7 +91,7 @@
 			iv = parseInt(iv);
 
 			if (ed.settings.inline_styles && (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList())) {
-				each(this._getSelectedBlocks(), function(e) {
+				each(s.getSelectedBlocks(), function(e) {
 					v = Math.max(0, parseInt(e.style.paddingLeft || 0) - iv);
 					d.setStyle(e, 'paddingLeft', v ? v + iu : '');
 				});
@@ -121,13 +102,14 @@
 			ed.getDoc().execCommand('Outdent', false, null);
 		},
 
+/*
 		mceSetAttribute : function(u, v) {
 			var ed = this.editor, d = ed.dom, e;
 
 			if (e = d.getParent(ed.selection.getNode(), d.isBlock))
 				d.setAttrib(e, v.name, v.value);
 		},
-
+*/
 		mceSetContent : function(u, v) {
 			this.editor.setContent(v);
 		},
@@ -345,7 +327,7 @@
 				if (rm)
 					v = '';
 
-				each(this._getSelectedBlocks(dom.getParent(se.getStart(), dom.isBlock), dom.getParent(se.getEnd(), dom.isBlock)), function(e) {
+				each(se.getSelectedBlocks(dom.getParent(se.getStart(), dom.isBlock), dom.getParent(se.getEnd(), dom.isBlock)), function(e) {
 					dom.setAttrib(e, 'align', '');
 					dom.setStyle(e, 'textAlign', v == 'full' ? 'justify' : v);
 				});
@@ -472,179 +454,6 @@
 			}
 
 			return null;
-		},
-
-		InsertHorizontalRule : function() {
-			// Fix for Gecko <hr size="1" /> issue and IE bug rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
-			if (isGecko || isIE)
-				this.editor.selection.setContent('<hr />');
-			else
-				this.editor.getDoc().execCommand('InsertHorizontalRule', false, '');
-		},
-
-		processRange : function(start, end, callback) {
-			var dom = this.editor.dom, ancestor, n, startPoint, endPoint, sib;
-
-			function findEndPoint(n, c) {
-				do {
-					if (n.parentNode == c)
-						return n;
-
-					n = n.parentNode;
-				} while(n);
-			};
-
-			function process(n) {
-				callback(n);
-				tinymce.walk(n, callback, 'childNodes');
-			};
-
-			// Find common ancestor and end points
-			ancestor = dom.findCommonAncestor(start, end);
-			startPoint = findEndPoint(start, ancestor) || start;
-			endPoint = findEndPoint(end, ancestor) || end;
-
-			// Process left leaf
-			for (n = start; n && n != startPoint; n = n.parentNode) {
-				for (sib = n.nextSibling; sib; sib = sib.nextSibling)
-					process(sib);
-			}
-
-			// Process middle from start to end point
-			if (startPoint != endPoint) {
-				for (n = startPoint.nextSibling; n && n != endPoint; n = n.nextSibling)
-					process(n);
-			} else
-				process(startPoint);
-
-			// Process right leaf
-			for (n = end; n && n != endPoint; n = n.parentNode) {
-				for (sib = n.previousSibling; sib; sib = sib.previousSibling)
-					process(sib);
-			}
-		},
-
-		RemoveFormat : function() {
-			var ed = this.editor, dom = ed.dom, s = ed.selection, r = s.getW3CRange(), nodes = [], bm, start, end, sc, so, ec, eo, n;
-
-			function findFormatRoot(n) {
-				var sp;
-
-				dom.getParent(n, function(n) {
-					if (dom.is(n, ed.getParam('removeformat_selector')))
-						sp = n;
-
-					return dom.isBlock(n);
-				}, ed.getBody())
-
-				return sp;
-			};
-
-			function collect(n) {
-				if (dom.is(n, ed.getParam('removeformat_selector')))
-					nodes.push(n);
-			};
-
-			function walk(n) {
-				collect(n);
-				tinymce.walk(n, collect, 'childNodes');
-			};
-
-			bm = s.getBookmark();
-			sc = r.startContainer;
-			ec = r.endContainer;
-			so = r.startOffset;
-			eo = r.endOffset;
-			sc = sc.nodeType == 1 ? sc.childNodes[so] : sc;
-			ec = ec.nodeType == 1 ? ec.childNodes[eo - 1] : ec;
-
-			// Same container
-			if (sc == ec) { // TEXT_NODE
-				start = findFormatRoot(sc);
-
-				// Handle single text node
-				if (sc.nodeType == 3) {
-					if (start.nodeType == 1) { // ELEMENT
-						n = sc.splitText(so);
-						n.splitText(eo - so);
-						dom.split(start, n);
-
-						s.moveToBookmark(bm);
-					}
-
-					return;
-				}
-
-				// Handle single element
-				walk(dom.split(start, sc) || sc);
-			} else {
-				// Find start/end format root
-				start = findFormatRoot(sc);
-				end = findFormatRoot(ec);
-
-				// Split start text node
-				if (start) {
-					if (sc.nodeType == 3) { // TEXT
-						// Since IE doesn't support white space nodes in the DOM we need to
-						// add this invisible character so that the splitText function can split the contents
-						if (so == sc.nodeValue.length)
-							sc.nodeValue += '\uFEFF'; // Yet another pesky IE fix
-
-						sc = sc.splitText(so);
-					}
-				}
-
-				// Split end text node
-				if (end) {
-					if (ec.nodeType == 3) // TEXT
-						ec.splitText(eo);
-				}
-
-				// If the start and end format root is the same then we need to wrap
-				// the end node in a span since the split calls might change the reference
-				// Example: <p><b><em>x[yz<span>---</span>12]3</em></b></p>
-				if (start && start == end)
-					dom.replace(dom.create('span', {id : '__end'}, ec.cloneNode(true)), ec);
-
-				// Split all start containers down to the format root
-				if (start)
-					start = dom.split(start, sc);
-				else
-					start = sc;
-
-				// If there is a span wrapper use that one instead
-				if (n = dom.get('__end')) {
-					ec = n;
-					end = findFormatRoot(ec);
-				}
-
-				// Split all end containers down to the format root
-				if (end)
-					end = dom.split(end, ec);
-				else
-					end = ec;
-
-				// Collect nodes in between
-				this.processRange(start, end, collect);
-
-				// Remove invisible character for IE workaround if we find it
-				if (sc.nodeValue == '\uFEFF')
-					sc.nodeValue = '';
-
-				// Process start/end container elements
-				walk(ec);
-				walk(sc);
-			}
-
-			// Remove all collected nodes
-			each(nodes, function(n) {
-				dom.remove(n, 1);
-			});
-
-			// Remove leftover wrapper
-			dom.remove('__end', 1);
-
-			s.moveToBookmark(bm);
 		},
 
 		mceSetStyleInfo : function(u, v) {
@@ -964,133 +773,6 @@
 			return !!this.editor.dom.getParent(this.editor.selection.getStart(), function(n) {return n.nodeName === 'BLOCKQUOTE';});
 		},
 
-		mceBlockQuote : function() {
-			var t = this, ed = t.editor, s = ed.selection, dom = ed.dom, sb, eb, n, bm, bq, r, bq2, i, nl;
-
-			function getBQ(e) {
-				return dom.getParent(e, function(n) {return n.nodeName === 'BLOCKQUOTE';});
-			};
-
-			// Get start/end block
-			sb = dom.getParent(s.getStart(), isBlock);
-			eb = dom.getParent(s.getEnd(), isBlock);
-
-			// Remove blockquote(s)
-			if (bq = getBQ(sb)) {
-				if (sb != eb || sb.childNodes.length > 1 || (sb.childNodes.length == 1 && sb.firstChild.nodeName != 'BR'))
-					bm = s.getBookmark();
-
-				// Move all elements after the end block into new bq
-				if (getBQ(eb)) {
-					bq2 = bq.cloneNode(false);
-
-					while (n = eb.nextSibling)
-						bq2.appendChild(n.parentNode.removeChild(n));
-				}
-
-				// Add new bq after
-				if (bq2)
-					dom.insertAfter(bq2, bq);
-
-				// Move all selected blocks after the current bq
-				nl = t._getSelectedBlocks(sb, eb);
-				for (i = nl.length - 1; i >= 0; i--) {
-					dom.insertAfter(nl[i], bq);
-				}
-
-				// Empty bq, then remove it
-				if (/^\s*$/.test(bq.innerHTML))
-					dom.remove(bq, 1); // Keep children so boomark restoration works correctly
-
-				// Empty bq, then remote it
-				if (bq2 && /^\s*$/.test(bq2.innerHTML))
-					dom.remove(bq2, 1); // Keep children so boomark restoration works correctly
-
-				if (!bm) {
-					// Move caret inside empty block element
-					if (!isIE) {
-						r = ed.getDoc().createRange();
-						r.setStart(sb, 0);
-						r.setEnd(sb, 0);
-						s.setRng(r);
-					} else {
-						s.select(sb);
-						s.collapse(0);
-
-						// IE misses the empty block some times element so we must move back the caret
-						if (dom.getParent(s.getStart(), isBlock) != sb) {
-							r = s.getRng();
-							r.move('character', -1);
-							r.select();
-						}
-					}
-				} else
-					t.editor.selection.moveToBookmark(bm);
-
-				return;
-			}
-
-			// Since IE can start with a totally empty document we need to add the first bq and paragraph
-			if (isIE && !sb && !eb) {
-				t.editor.getDoc().execCommand('Indent');
-				n = getBQ(s.getNode());
-				n.style.margin = n.dir = ''; // IE adds margin and dir to bq
-				return;
-			}
-
-			if (!sb || !eb)
-				return;
-
-			// If empty paragraph node then do not use bookmark
-			if (sb != eb || sb.childNodes.length > 1 || (sb.childNodes.length == 1 && sb.firstChild.nodeName != 'BR'))
-				bm = s.getBookmark();
-
-			// Move selected block elements into a bq
-			each(t._getSelectedBlocks(getBQ(s.getStart()), getBQ(s.getEnd())), function(e) {
-				// Found existing BQ add to this one
-				if (e.nodeName == 'BLOCKQUOTE' && !bq) {
-					bq = e;
-					return;
-				}
-
-				// No BQ found, create one
-				if (!bq) {
-					bq = dom.create('blockquote');
-					e.parentNode.insertBefore(bq, e);
-				}
-
-				// Add children from existing BQ
-				if (e.nodeName == 'BLOCKQUOTE' && bq) {
-					n = e.firstChild;
-
-					while (n) {
-						bq.appendChild(n.cloneNode(true));
-						n = n.nextSibling;
-					}
-
-					dom.remove(e);
-					return;
-				}
-
-				// Add non BQ element to BQ
-				bq.appendChild(dom.remove(e));
-			});
-
-			if (!bm) {
-				// Move caret inside empty block element
-				if (!isIE) {
-					r = ed.getDoc().createRange();
-					r.setStart(sb, 0);
-					r.setEnd(sb, 0);
-					s.setRng(r);
-				} else {
-					s.select(sb);
-					s.collapse(1);
-				}
-			} else
-				s.moveToBookmark(bm);
-		},
-
 		_applyInlineStyle : function(na, at, op) {
 			var t = this, ed = t.editor, dom = ed.dom, bm, lo = {}, kh, found;
 
@@ -1272,87 +954,6 @@
 				ed.onKeyUp.add(kh);
 			} else
 				t._pendingStyles = 0;
-		},
-
-/*
-		_mceBlockQuote : function() {
-			var t = this, s = t.editor.selection, b = s.getBookmark(), bq, dom = t.editor.dom;
-
-			function findBQ(e) {
-				return dom.getParent(e, function(n) {return n.nodeName === 'BLOCKQUOTE';});
-			};
-
-			// Remove blockquote(s)
-			if (findBQ(s.getStart())) {
-				each(t._getSelectedBlocks(findBQ(s.getStart()), findBQ(s.getEnd())), function(e) {
-					// Found BQ lets remove it
-					if (e.nodeName == 'BLOCKQUOTE')
-						dom.remove(e, 1);
-				});
-
-				t.editor.selection.moveToBookmark(b);
-				return;
-			}
-
-			each(t._getSelectedBlocks(findBQ(s.getStart()), findBQ(s.getEnd())), function(e) {
-				var n;
-
-				// Found existing BQ add to this one
-				if (e.nodeName == 'BLOCKQUOTE' && !bq) {
-					bq = e;
-					return;
-				}
-
-				// No BQ found, create one
-				if (!bq) {
-					bq = dom.create('blockquote');
-					e.parentNode.insertBefore(bq, e);
-				}
-
-				// Add children from existing BQ
-				if (e.nodeName == 'BLOCKQUOTE' && bq) {
-					n = e.firstChild;
-
-					while (n) {
-						bq.appendChild(n.cloneNode(true));
-						n = n.nextSibling;
-					}
-
-					dom.remove(e);
-
-					return;
-				}
-
-				// Add non BQ element to BQ
-				bq.appendChild(dom.remove(e));
-			});
-
-			t.editor.selection.moveToBookmark(b);
-		},
-*/
-		_getSelectedBlocks : function(st, en) {
-			var ed = this.editor, dom = ed.dom, s = ed.selection, sb, eb, n, bl = [];
-
-			sb = dom.getParent(st || s.getStart(), isBlock);
-			eb = dom.getParent(en || s.getEnd(), isBlock);
-
-			if (sb)
-				bl.push(sb);
-
-			if (sb && eb && sb != eb) {
-				n = sb;
-
-				while ((n = n.nextSibling) && n != eb) {
-					if (isBlock(n))
-						bl.push(n);
-				}
-			}
-
-			if (eb && sb != eb)
-				bl.push(eb);
-
-			return bl;
 		}
 	});
-})();
-
+})(tinymce);
