@@ -53,6 +53,7 @@ var LinkDialog = {
 
 		// Create new anchor elements
 		if (e == null) {
+			ed.getDoc().execCommand("unlink", false, null);
 			tinyMCEPopup.execCommand("CreateLink", false, "#mce_temp_url#", {skip_undo : 1});
 
 			tinymce.each(ed.dom.select("a"), function(n) {

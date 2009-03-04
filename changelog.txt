@@ -33,6 +33,7 @@ Version 3.2.2 (200x-xx-xx)
 	Fixed bug where auto focus on empty editor instances could produce strange results if you inserted an image into it.
 	Fixed bug where &nbsp; characters would be removed in FF when inserted with the mceInsertContent or selection.setContent methods.
 	Fixed bug where warning message of missing paste support wasn't displayed on WebKit browsers.
+	Fixed bug where anchor links could include other links. The selected range is now unlinked before adding news links to it.
 	Fixed memory leak when TinyMCE was used with prototype. Patch contributed by James Ots.
 	Fixed so the non documented fullpage_hide_in_source_view option for the fullpage plugin works again in the 3.x branch.
 	Fixed so tables doesn't get inserted into paragraphs by default since it's not W3C valid. Can be disabled by using the fix_table_elements option.
