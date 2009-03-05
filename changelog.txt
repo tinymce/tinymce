@@ -1,4 +1,4 @@
-Version 3.2.2 (200x-xx-xx)
+Version 3.2.2 (2009-03-05)
 	Added new CSS selector engine. Sizzle the same one that jQuery and other libraries are using.
 	Added new is and getParents methods to the DOMUtils class. These use the new Sizzle engine to select elements.
 	Added new removeformat_selector option, enables you to specify a CSS selector pattern of elements to remove when using removeformat.
