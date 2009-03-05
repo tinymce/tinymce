@@ -12380,7 +12380,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 	tinymce.GlobalCommands.add('RemoveFormat', function() {
 		var ed = this, dom = ed.dom, s = ed.selection, r = s.getRng(1), nodes = [], bm, start, end, sc, so, ec, eo, n;
-alert('remove');
+
 		function findFormatRoot(n) {
 			var sp;
 
