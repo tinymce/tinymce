@@ -80,7 +80,7 @@
 			<fileset dir="${classes_dir}" includes="ControlManager.js" />
 			<fileset dir="${classes_dir}" includes="WindowManager.js" />
 			<fileset dir="${classes_dir}" includes="CommandManager.js" />
-			<fileset dir="${classes_dir}" includes="commands/FormatBlock.js" />
+			<fileset dir="${classes_dir}" includes="commands/RemoveFormat.js" />
 			<fileset dir="${classes_dir}" includes="commands/BlockQuote.js" />
 			<fileset dir="${classes_dir}" includes="commands/CutCopyPaste.js" />
 			<fileset dir="${classes_dir}" includes="commands/InsertHorizontalRule.js" />
