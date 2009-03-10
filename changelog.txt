@@ -1,3 +1,8 @@
+Version 3.2.2.1 (2009-xx-xx)
+	Added support for tel: URL prefixes. Even though this doesn't match any official RFC.
+	Fixed so the select method of the Selection class selects the first best suitable contents.
+	Fixed bug where the regexps for www. prefixes for link and advlink dialogs would match wwwX.
+	Fixed bug where the preview dialog would fail to open if the content_css wasn't defined. Patch contributed by David Bildström (ChronoZ).
 Version 3.2.2 (2009-03-05)
 	Added new CSS selector engine. Sizzle the same one that jQuery and other libraries are using.
 	Added new is and getParents methods to the DOMUtils class. These use the new Sizzle engine to select elements.

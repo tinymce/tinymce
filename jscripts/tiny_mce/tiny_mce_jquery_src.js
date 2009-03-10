@@ -621,7 +621,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 			s = t.settings = s || {};
 
 			// Strange app protocol or local anchor
-			if (/^(mailto|news|javascript|about):/i.test(u) || /^\s*#/.test(u)) {
+			if (/^(mailto|tel|news|javascript|about):/i.test(u) || /^\s*#/.test(u)) {
 				t.source = u;
 				return;
 			}
@@ -3761,19 +3761,24 @@ tinymce.create('static tinymce.util.XHR', {
 		select : function(n, c) {
 			var t = this, r = t.getRng(), s = t.getSel(), b, fn, ln, d = t.win.document;
 
-			function first(n) {
-				return n ? d.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false).nextNode() : null;
-			};
+			function find(n, start) {
+				var walker, o;
 
-			function last(n) {
-				var c, o, w;
+				if (n) {
+					walker = d.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false);
 
-				if (!n)
-					return null;
+					// Find first/last non empty text node
+					while (n = walker.nextNode()) {
+						o = n;
 
-				w = d.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false);
-				while (c = w.nextNode())
-					o = c;
+						if (tinymce.trim(n.nodeValue).length != 0) {
+							if (start)
+								return n;
+							else
+								o = n;
+						}
+					}
+				}
 
 				return o;
 			};
@@ -3796,8 +3801,8 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 			} else {
 				if (c) {
-					fn = first(n) || t.dom.select('br:first', n)[0];
-					ln = last(n) || t.dom.select('br:last', n)[0];
+					fn = find(n, 1) || t.dom.select('br:first', n)[0];
+					ln = find(n, 0) || t.dom.select('br:last', n)[0];
 
 					if (fn && ln) {
 						r = d.createRange();

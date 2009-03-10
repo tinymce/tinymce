@@ -780,7 +780,7 @@
 			s.content_document = s.content_window = null;
 
 			DOM.hide(e);
-			e.contentEditable = true;
+			e.contentEditable = t.getParam('content_editable_state', true);
 			DOM.show(e);
 
 			if (!s.gecko_spellcheck)
