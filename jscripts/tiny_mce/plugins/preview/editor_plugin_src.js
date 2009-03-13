@@ -24,7 +24,7 @@
 					height : parseInt(ed.getParam("plugin_preview_height", "600")),
 					resizable : "yes",
 					scrollbars : "yes",
-					popup_css : css ? css.join(',') : ed.baseURI.toAbsolute("themes/advanced/skins/" + ed.settings.skin + "/content.css"),
+					popup_css : css ? css.join(',') : ed.baseURI.toAbsolute("themes/" + ed.settings.theme + "/skins/" + ed.settings.skin + "/content.css"),
 					inline : ed.getParam("plugin_preview_inline", 1)
 				}, {
 					base : ed.documentBaseURI.getURI()
