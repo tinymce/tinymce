@@ -5179,7 +5179,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 				n = sb;
 
 				while ((n = n.nextSibling) && n != eb) {
-					if (isBlock(n))
+					if (dom.isBlock(n))
 						bl.push(n);
 				}
 			}

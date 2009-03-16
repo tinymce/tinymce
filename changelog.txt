@@ -4,6 +4,7 @@ Version 3.2.2.1 (2009-xx-xx)
 	Fixed bug where the regexps for www. prefixes for link and advlink dialogs would match wwwX.
 	Fixed bug where the preview dialog would fail to open if the content_css wasn't defined. Patch contributed by David Bildström (ChronoZ).
 	Fixed bug where editors wasn't converted in application/xhtml+xml mode due to an issue with Sizzle.
+	Fixed bug where alignment would fail if multiple lines where selected.
 	Updated Sizzle engine to the latest version, this version fixes a few bugs that was reported.
 Version 3.2.2 (2009-03-05)
 	Added new CSS selector engine. Sizzle the same one that jQuery and other libraries are using.
