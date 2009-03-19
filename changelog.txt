@@ -1,3 +1,5 @@
+Version 3.2.2.2 (2009-03-xx)
+	Fixed so the DOMUtils getPos method can be used cross documents if needed.
 Version 3.2.2.1 (2009-03-19)
 	Added support for tel: URL prefixes. Even though this doesn't match any official RFC.
 	Fixed so the select method of the Selection class selects the first best suitable contents.

@@ -741,7 +741,8 @@
 
 				r = r.parentNode;
 
-				if (r == d.body)
+				// No node type or document type
+				if (!r.nodeType || r.nodeType == 9)
 					break;
 			}
 
