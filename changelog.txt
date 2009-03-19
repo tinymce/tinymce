@@ -1,4 +1,4 @@
-Version 3.2.2.1 (2009-xx-xx)
+Version 3.2.2.1 (2009-03-19)
 	Added support for tel: URL prefixes. Even though this doesn't match any official RFC.
 	Fixed so the select method of the Selection class selects the first best suitable contents.
 	Fixed bug where the regexps for www. prefixes for link and advlink dialogs would match wwwX.
