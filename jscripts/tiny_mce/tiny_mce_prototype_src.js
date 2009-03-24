@@ -12804,6 +12804,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		if (ed.settings.custom_undo_redo) {
 			ed.undoManager.undo();
 			ed.nodeChanged();
+			return true;
 		}
 
 		return false; // Run browser command
@@ -12815,6 +12816,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		if (ed.settings.custom_undo_redo) {
 			ed.undoManager.redo();
 			ed.nodeChanged();
+			return true;
 		}
 
 		return false; // Run browser command
