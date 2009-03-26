@@ -742,7 +742,7 @@
 				r = r.parentNode;
 
 				// No node type or document type
-				if (!r.nodeType || r.nodeType == 9)
+				if (!r.nodeType || r.nodeType == 9 || r.nodeName.toLowerCase() == 'body')
 					break;
 			}
 

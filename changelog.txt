@@ -1,3 +1,5 @@
+Version 3.2.2.3 (2009-03-26)
+	Fixed regression bug with the getPos method, it would return invalid if the view port was to small.
 Version 3.2.2.2 (2009-03-25)
 	Fixed so the DOMUtils getPos method can be used cross documents if needed.
 	Fixed bug where undo/redo wasn't working correctly in Gecko browsers.
