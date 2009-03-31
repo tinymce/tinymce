@@ -73,8 +73,14 @@
 
 			if (s.remove_redundant_brs) {
 				t.onPostProcess.add(function(se, o) {
-					// Remove BR elements at end of block elements since they get rendered in IE
-					o.content = o.content.replace(/\s*<br \/>\s*<\/(p|h[1-6]|div|li)>/gi, '</$1>');
+					// Remove single BR at end of block elements since they get rendered
+					o.content = o.content.replace(/(<br \/>\s*)+<\/(p|h[1-6]|div|li)>/gi, function(a, b, c) {
+						// Check if it's a single element
+						if (/^<br \/>\s*<\//.test(a))
+							return '</' + c + '>';
+
+						return a;
+					});
 				});
 			}
 
