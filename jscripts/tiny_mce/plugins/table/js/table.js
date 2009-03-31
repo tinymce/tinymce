@@ -156,6 +156,10 @@ function insertTable() {
 		if (style)
 			style += '; ';
 
+		// Force px
+		if (/[0-9\.]+/.test(width))
+			width += 'px';
+
 		style += 'width: ' + width;
 	} else
 		html += makeAttrib('width', width);

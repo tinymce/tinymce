@@ -10,9 +10,9 @@ var defaultFonts = "" +
 	"Geneva, Arial, Helvetica, sans-serif=Geneva, Arial, Helvetica, sans-serif";
 
 var defaultSizes = "9;10;12;14;16;18;24;xx-small;x-small;small;medium;large;x-large;xx-large;smaller;larger";
-var defaultMeasurement = "+pixels=px;points=pt;em;in;cm;mm;picas;ems;exs;%";
-var defaultSpacingMeasurement = "pixels=px;points=pt;in;cm;mm;picas;+ems;exs;%";
-var defaultIndentMeasurement = "pixels=px;+points=pt;in;cm;mm;picas;ems;exs;%";
+var defaultMeasurement = "+pixels=px;points=pt;inches=in;centimetres=cm;millimetres=mm;picas=pc;ems=em;exs=ex;%";
+var defaultSpacingMeasurement = "pixels=px;points=pt;inches=in;centimetres=cm;millimetres=mm;picas=pc;+ems=em;exs=ex;%";
+var defaultIndentMeasurement = "pixels=px;+points=pt;inches=in;centimetres=cm;millimetres=mm;picas=pc;ems=em;exs=ex;%";
 var defaultWeight = "normal;bold;bolder;lighter;100;200;300;400;500;600;700;800;900";
 var defaultTextStyle = "normal;italic;oblique";
 var defaultVariant = "normal;small-caps";

@@ -2,6 +2,8 @@ Version 3.2.x (2009-xx-xx)
 	Added a optional root element argument to getPos so you can tell it where to stop the calculation.
 	Fixed bug where WebKit browsers would fail when selecting all contents in the area using Ctrl+A.
 	Fixed bug where IE would produce paragraphs with empty inline style elements.
+	Fixed bug where WebKit browsers would fail when inserting tables with a non pixel width.
+	Fixed issues with size suffix values in the style plugin dialog.
 	Fixed issue where hasDuplicate variable would leak out to the global space due to a bug in the Sizzle engine.
 	Updated Sizzle engine to the latest version, this version fixes a few bugs that was reported.
 Version 3.2.2.3 (2009-03-26)
