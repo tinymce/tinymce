@@ -11491,10 +11491,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// IE specific fixes
 			if (isIE) {
-				// Remove empty inline elements within paragraphs
+				// Remove empty inline elements within block elements
 				// For example: <p><strong><em></em></strong></p>
 				ed.onPreProcess.add(function(ed, o) {
-					each(ed.dom.select('p', o.node), function(p) {
+					each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
 						if (isEmpty(p))
 							p.innerHTML = '';
 					});
