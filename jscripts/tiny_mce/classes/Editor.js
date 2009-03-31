@@ -905,8 +905,12 @@
 				if (ce) {
 					if (tinymce.isWebKit)
 						t.getWin().focus();
-					else
-						t.getElement().focus();
+					else {
+						if (tinymce.isIE)
+							t.getElement().setActive();
+						else
+							t.getElement().focus();
+					}
 				}
 
 				// #endif

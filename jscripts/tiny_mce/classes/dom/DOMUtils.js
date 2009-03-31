@@ -706,12 +706,14 @@
 		 * Returns the absolute x, y position of a node. The position will be returned in a object with x, y fields.
 		 *
 		 * @param {Element/String} n HTML element or element id to get x, y position from.
+		 * @param {Element} ro Optional root element to stop calculations at.
 		 * @return {object} Absolute position of the specified element object with x, y fields.
 		 */
-		getPos : function(n) {
+		getPos : function(n, ro) {
 			var t = this, x = 0, y = 0, e, d = t.doc, r;
 
 			n = t.get(n);
+			ro = ro || d.body;
 
 			// Use getBoundingClientRect on IE, Opera has it but it's not perfect
 			if (n && isIE && !t.stdMode) {
@@ -742,7 +744,7 @@
 				r = r.parentNode;
 
 				// No node type or document type
-				if (!r.nodeType || r.nodeType == 9 || r.nodeName.toLowerCase() == 'body')
+				if (r == ro)
 					break;
 			}
 

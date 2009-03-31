@@ -1498,10 +1498,11 @@ tinymce.create('static tinymce.util.XHR', {
 			return (v !== undefined && v !== null && v !== '') ? '' + v : dv;
 		},
 
-		getPos : function(n) {
+		getPos : function(n, ro) {
 			var t = this, x = 0, y = 0, e, d = t.doc, r;
 
 			n = t.get(n);
+			ro = ro || d.body;
 
 			// Use getBoundingClientRect on IE, Opera has it but it's not perfect
 			if (n && isIE && !t.stdMode) {
@@ -1532,7 +1533,7 @@ tinymce.create('static tinymce.util.XHR', {
 				r = r.parentNode;
 
 				// No node type or document type
-				if (!r.nodeType || r.nodeType == 9 || r.nodeName.toLowerCase() == 'body')
+				if (r == ro)
 					break;
 			}
 
@@ -3266,9 +3267,7 @@ tinymce.create('static tinymce.util.XHR', {
 var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^[\]]*\]|['"][^'"]*['"]|[^[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?/g,
 	done = 0,
 	toString = Object.prototype.toString,
-	arraySplice = Array.prototype.splice,
-	arrayPush = Array.prototype.push,
-	arraySort = Array.prototype.sort;
+	hasDuplicate = false;
 
 var Sizzle = function(selector, context, results, seed) {
 	results = results || [];
@@ -3364,17 +3363,17 @@ var Sizzle = function(selector, context, results, seed) {
 
 	if ( toString.call(checkSet) === "[object Array]" ) {
 		if ( !prune ) {
-			arrayPush.apply( results, checkSet );
+			results.push.apply( results, checkSet );
 		} else if ( context && context.nodeType === 1 ) {
 			for ( var i = 0; checkSet[i] != null; i++ ) {
 				if ( checkSet[i] && (checkSet[i] === true || checkSet[i].nodeType === 1 && contains(context, checkSet[i])) ) {
-					arrayPush.call( results, set[i] );
+					results.push( set[i] );
 				}
 			}
 		} else {
 			for ( var i = 0; checkSet[i] != null; i++ ) {
 				if ( checkSet[i] && checkSet[i].nodeType === 1 ) {
-					arrayPush.call( results, set[i] );
+					results.push( set[i] );
 				}
 			}
 		}
@@ -3393,12 +3392,12 @@ var Sizzle = function(selector, context, results, seed) {
 Sizzle.uniqueSort = function(results){
 	if ( sortOrder ) {
 		hasDuplicate = false;
-		arraySort.call(results, sortOrder);
+		results.sort(sortOrder);
 
 		if ( hasDuplicate ) {
 			for ( var i = 1; i < results.length; i++ ) {
 				if ( results[i] === results[i-1] ) {
-					arraySplice.call(results, i--, 1);
+					results.splice(i--, 1);
 				}
 			}
 		}
@@ -3923,7 +3922,7 @@ var makeArray = function(array, results) {
 	array = Array.prototype.slice.call( array );
 
 	if ( results ) {
-		arrayPush.apply( results, array );
+		results.push.apply( results, array );
 		return results;
 	}
 	
@@ -3995,9 +3994,9 @@ if ( document.documentElement.compareDocumentPosition ) {
 // querying by getElementById (and provide a workaround)
 (function(){
 	// We're going to inject a fake input element with a specified name
-	var form = document.createElement("form"),
+	var form = document.createElement("div"),
 		id = "script" + (new Date).getTime();
-	form.innerHTML = "<input name='" + id + "'/>";
+	form.innerHTML = "<a name='" + id + "'/>";
 
 	// Inject it into the root element, check its status, and remove it quickly
 	var root = document.documentElement;
@@ -4228,6 +4227,7 @@ var posProcess = function(selector, context){
 window.tinymce.dom.Sizzle = Sizzle;
 
 })();
+
 (function(tinymce) {
 	// Shorten names
 	var each = tinymce.each, DOM = tinymce.DOM, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, Event;

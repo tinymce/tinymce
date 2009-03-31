@@ -11,9 +11,7 @@
 var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^[\]]*\]|['"][^'"]*['"]|[^[\]'"]+)+\]|\\.|[^ >+~,(\[\\]+)+|[>+~])(\s*,\s*)?/g,
 	done = 0,
 	toString = Object.prototype.toString,
-	arraySplice = Array.prototype.splice,
-	arrayPush = Array.prototype.push,
-	arraySort = Array.prototype.sort;
+	hasDuplicate = false;
 
 var Sizzle = function(selector, context, results, seed) {
 	results = results || [];
@@ -109,17 +107,17 @@ var Sizzle = function(selector, context, results, seed) {
 
 	if ( toString.call(checkSet) === "[object Array]" ) {
 		if ( !prune ) {
-			arrayPush.apply( results, checkSet );
+			results.push.apply( results, checkSet );
 		} else if ( context && context.nodeType === 1 ) {
 			for ( var i = 0; checkSet[i] != null; i++ ) {
 				if ( checkSet[i] && (checkSet[i] === true || checkSet[i].nodeType === 1 && contains(context, checkSet[i])) ) {
-					arrayPush.call( results, set[i] );
+					results.push( set[i] );
 				}
 			}
 		} else {
 			for ( var i = 0; checkSet[i] != null; i++ ) {
 				if ( checkSet[i] && checkSet[i].nodeType === 1 ) {
-					arrayPush.call( results, set[i] );
+					results.push( set[i] );
 				}
 			}
 		}
@@ -138,12 +136,12 @@ var Sizzle = function(selector, context, results, seed) {
 Sizzle.uniqueSort = function(results){
 	if ( sortOrder ) {
 		hasDuplicate = false;
-		arraySort.call(results, sortOrder);
+		results.sort(sortOrder);
 
 		if ( hasDuplicate ) {
 			for ( var i = 1; i < results.length; i++ ) {
 				if ( results[i] === results[i-1] ) {
-					arraySplice.call(results, i--, 1);
+					results.splice(i--, 1);
 				}
 			}
 		}
@@ -668,7 +666,7 @@ var makeArray = function(array, results) {
 	array = Array.prototype.slice.call( array );
 
 	if ( results ) {
-		arrayPush.apply( results, array );
+		results.push.apply( results, array );
 		return results;
 	}
 	
@@ -740,9 +738,9 @@ if ( document.documentElement.compareDocumentPosition ) {
 // querying by getElementById (and provide a workaround)
 (function(){
 	// We're going to inject a fake input element with a specified name
-	var form = document.createElement("form"),
+	var form = document.createElement("div"),
 		id = "script" + (new Date).getTime();
-	form.innerHTML = "<input name='" + id + "'/>";
+	form.innerHTML = "<a name='" + id + "'/>";
 
 	// Inject it into the root element, check its status, and remove it quickly
 	var root = document.documentElement;
@@ -973,4 +971,5 @@ var posProcess = function(selector, context){
 window.tinymce.dom.Sizzle = Sizzle;
 
 })();
+
 // #endif

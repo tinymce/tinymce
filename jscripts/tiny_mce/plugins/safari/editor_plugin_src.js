@@ -116,6 +116,14 @@
 				ed.selection.select(ed.dom.get('_mce_tmp'));
 				ed.getDoc().execCommand("Delete", false, ' ');
 			});
+	
+			ed.onKeyDown.add(function(ed, e) {
+				// Ctrl+A select all will fail on WebKit since if you paste the contents you selected it will produce a odd div wrapper
+				if ((e.ctrlKey || e.metaKey) && e.keyCode == 65) {
+					ed.selection.select(ed.getBody(), 1);
+					return Event.cancel(e);
+				}
+			});
 
 			ed.onKeyPress.add(function(ed, e) {
 				var se, li, lic, r1, r2, n, sel, doc, be, af, pa;

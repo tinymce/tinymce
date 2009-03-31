@@ -1431,10 +1431,11 @@ tinymce.create('static tinymce.util.XHR', {
 			return (v !== undefined && v !== null && v !== '') ? '' + v : dv;
 		},
 
-		getPos : function(n) {
+		getPos : function(n, ro) {
 			var t = this, x = 0, y = 0, e, d = t.doc, r;
 
 			n = t.get(n);
+			ro = ro || d.body;
 
 			// Use getBoundingClientRect on IE, Opera has it but it's not perfect
 			if (n && isIE && !t.stdMode) {
@@ -1465,7 +1466,7 @@ tinymce.create('static tinymce.util.XHR', {
 				r = r.parentNode;
 
 				// No node type or document type
-				if (!r.nodeType || r.nodeType == 9 || r.nodeName.toLowerCase() == 'body')
+				if (r == ro)
 					break;
 			}
 
