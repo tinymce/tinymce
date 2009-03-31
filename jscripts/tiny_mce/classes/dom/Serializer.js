@@ -73,8 +73,8 @@
 
 			if (s.remove_redundant_brs) {
 				t.onPostProcess.add(function(se, o) {
-					// Remove BR elements at end of list elements since they get rendered in IE
-					o.content = o.content.replace(/<br \/>(\s*<\/li>)/g, '$1');
+					// Remove BR elements at end of block elements since they get rendered in IE
+					o.content = o.content.replace(/\s*<br \/>\s*<\/(p|h[1-6]|div|li)>/gi, '</$1>');
 				});
 			}
 
