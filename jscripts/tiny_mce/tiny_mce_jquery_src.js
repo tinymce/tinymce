@@ -10108,6 +10108,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 	each = tinymce.each;
 	extend = tinymce.extend;
 
+	function isEmpty(n) {
+		n = n.innerHTML;
+		n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
+		n = n.replace(/<[^>]+>/g, ''); // Remove all tags
+
+		return n.replace(/[ \t\r\n]+/g, '') == '';
+	};
+
 	tinymce.create('tinymce.ForceBlocks', {
 		ForceBlocks : function(ed) {
 			var t = this, s = ed.settings, elm;
@@ -10225,29 +10233,41 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return ne;
 			};
 
-			// Replaces IE:s auto generated paragraphs with the specified element name
-			if (isIE && s.element != 'P') {
-				ed.onKeyPress.add(function(ed, e) {
-					t.lastElm = ed.selection.getNode().nodeName;
+			// IE specific fixes
+			if (isIE) {
+				// Remove empty inline elements within paragraphs
+				// For example: <p><strong><em></em></strong></p>
+				ed.onPreProcess.add(function(ed, o) {
+					each(ed.dom.select('p', o.node), function(p) {
+						if (isEmpty(p))
+							p.innerHTML = '';
+					});
 				});
 
-				ed.onKeyUp.add(function(ed, e) {
-					var bl, sel = ed.selection, n = sel.getNode(), b = ed.getBody();
+				// Replaces IE:s auto generated paragraphs with the specified element name
+				if (s.element != 'P') {
+					ed.onKeyPress.add(function(ed, e) {
+						t.lastElm = ed.selection.getNode().nodeName;
+					});
 
-					if (b.childNodes.length === 1 && n.nodeName == 'P') {
-						n = ren(n, s.element);
-						sel.select(n);
-						sel.collapse();
-						ed.nodeChanged();
-					} else if (e.keyCode == 13 && !e.shiftKey && t.lastElm != 'P') {
-						bl = ed.dom.getParent(n, 'P');
+					ed.onKeyUp.add(function(ed, e) {
+						var bl, sel = ed.selection, n = sel.getNode(), b = ed.getBody();
 
-						if (bl) {
-							ren(bl, s.element);
+						if (b.childNodes.length === 1 && n.nodeName == 'P') {
+							n = ren(n, s.element);
+							sel.select(n);
+							sel.collapse();
 							ed.nodeChanged();
+						} else if (e.keyCode == 13 && !e.shiftKey && t.lastElm != 'P') {
+							bl = ed.dom.getParent(n, 'P');
+
+							if (bl) {
+								ren(bl, s.element);
+								ed.nodeChanged();
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		},
 
@@ -10394,14 +10414,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		insertPara : function(e) {
 			var t = this, ed = t.editor, dom = ed.dom, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = s.getRangeAt(0), b = d.body;
 			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, vp = dom.getViewPort(ed.getWin()), y, ch, car;
-
-			function isEmpty(n) {
-				n = n.innerHTML;
-				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
-				n = n.replace(/<[^>]+>/g, ''); // Remove all tags
-
-				return n.replace(/[ \t\r\n]+/g, '') == '';
-			};
 
 			// If root blocks are forced then use Operas default behavior since it's really good
 // Removed due to bug: #1853816
