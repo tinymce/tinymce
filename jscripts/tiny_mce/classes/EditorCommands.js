@@ -123,7 +123,7 @@
 		},
 
 		mceInsertLink : function(u, v) {
-			var ed = this.editor, s = ed.selection, e = ed.dom.getParent(s.getNode(), 'A');
+			var ed = this.editor, s = ed.selection, e = ed.dom.getParent(s.getNode(), 'a');
 
 			if (tinymce.is(v, 'string'))
 				v = {href : v};
@@ -238,11 +238,11 @@
 		queryValueFontSize : function() {
 			var ed = this.editor, v = 0, p;
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'SPAN'))
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'span'))
 				v = p.style.fontSize;
 
 			if (!v && (isOpera || isWebKit)) {
-				if (p = ed.dom.getParent(ed.selection.getNode(), 'FONT'))
+				if (p = ed.dom.getParent(ed.selection.getNode(), 'font'))
 					v = p.size;
 
 				return v;
@@ -254,10 +254,10 @@
 		queryValueFontName : function() {
 			var ed = this.editor, v = 0, p;
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'FONT'))
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'font'))
 				v = p.face;
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'SPAN'))
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'span'))
 				v = p.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
 
 			if (!v)

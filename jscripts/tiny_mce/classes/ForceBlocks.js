@@ -167,7 +167,7 @@
 							sel.collapse();
 							ed.nodeChanged();
 						} else if (e.keyCode == 13 && !e.shiftKey && t.lastElm != 'P') {
-							bl = ed.dom.getParent(n, 'P');
+							bl = ed.dom.getParent(n, 'p');
 
 							if (bl) {
 								ren(bl, s.element);
@@ -388,7 +388,7 @@
 			bn = sb ? sb.nodeName : se.element; // Get block name to create
 
 			// Return inside list use default browser behavior
-			if (t.dom.getParent(sb, 'OL,UL,PRE'))
+			if (t.dom.getParent(sb, 'ol,ul,pre'))
 				return true;
 
 			// If caption or absolute layers then always generate new blocks within

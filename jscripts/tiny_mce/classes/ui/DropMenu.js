@@ -150,7 +150,7 @@
 
 				e = e.target;
 
-				if (e && (e = DOM.getParent(e, 'TR')) && !DOM.hasClass(e, cp + 'ItemSub')) {
+				if (e && (e = DOM.getParent(e, 'tr')) && !DOM.hasClass(e, cp + 'ItemSub')) {
 					m = t.items[e.id];
 
 					if (m.isDisabled())
@@ -177,7 +177,7 @@
 					var m, r, mi;
 
 					e = e.target;
-					if (e && (e = DOM.getParent(e, 'TR'))) {
+					if (e && (e = DOM.getParent(e, 'tr'))) {
 						m = t.items[e.id];
 
 						if (t.lastMenu)

@@ -1214,7 +1214,7 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 
 			while (n) {
-				if (n == r)
+				if (n == r || !n.nodeType || n.nodeType === 9)
 					break;
 
 				if (!f || f(n)) {
@@ -1453,21 +1453,6 @@ tinymce.create('static tinymce.util.XHR', {
 				x += r.offsetLeft || 0;
 				y += r.offsetTop || 0;
 				r = r.offsetParent;
-			}
-
-			r = n;
-			while (r) {
-				// Opera 9.25 bug fix, fixed in 9.50
-				if (!/^table-row|inline.*/i.test(t.getStyle(r, "display", 1))) {
-					x -= r.scrollLeft || 0;
-					y -= r.scrollTop || 0;
-				}
-
-				r = r.parentNode;
-
-				// No node type or document type
-				if (r == ro)
-					break;
 			}
 
 			return {x : x, y : y};
@@ -5712,7 +5697,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 				e = e.target;
 
-				if (e && (e = DOM.getParent(e, 'TR')) && !DOM.hasClass(e, cp + 'ItemSub')) {
+				if (e && (e = DOM.getParent(e, 'tr')) && !DOM.hasClass(e, cp + 'ItemSub')) {
 					m = t.items[e.id];
 
 					if (m.isDisabled())
@@ -5739,7 +5724,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					var m, r, mi;
 
 					e = e.target;
-					if (e && (e = DOM.getParent(e, 'TR'))) {
+					if (e && (e = DOM.getParent(e, 'tr'))) {
 						m = t.items[e.id];
 
 						if (t.lastMenu)
@@ -9163,7 +9148,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		mceInsertLink : function(u, v) {
-			var ed = this.editor, s = ed.selection, e = ed.dom.getParent(s.getNode(), 'A');
+			var ed = this.editor, s = ed.selection, e = ed.dom.getParent(s.getNode(), 'a');
 
 			if (tinymce.is(v, 'string'))
 				v = {href : v};
@@ -9278,11 +9263,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		queryValueFontSize : function() {
 			var ed = this.editor, v = 0, p;
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'SPAN'))
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'span'))
 				v = p.style.fontSize;
 
 			if (!v && (isOpera || isWebKit)) {
-				if (p = ed.dom.getParent(ed.selection.getNode(), 'FONT'))
+				if (p = ed.dom.getParent(ed.selection.getNode(), 'font'))
 					v = p.size;
 
 				return v;
@@ -9294,10 +9279,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		queryValueFontName : function() {
 			var ed = this.editor, v = 0, p;
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'FONT'))
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'font'))
 				v = p.face;
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'SPAN'))
+			if (p = ed.dom.getParent(ed.selection.getNode(), 'span'))
 				v = p.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
 
 			if (!v)
@@ -10262,7 +10247,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							sel.collapse();
 							ed.nodeChanged();
 						} else if (e.keyCode == 13 && !e.shiftKey && t.lastElm != 'P') {
-							bl = ed.dom.getParent(n, 'P');
+							bl = ed.dom.getParent(n, 'p');
 
 							if (bl) {
 								ren(bl, s.element);
@@ -10483,7 +10468,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			bn = sb ? sb.nodeName : se.element; // Get block name to create
 
 			// Return inside list use default browser behavior
-			if (t.dom.getParent(sb, 'OL,UL,PRE'))
+			if (t.dom.getParent(sb, 'ol,ul,pre'))
 				return true;
 
 			// If caption or absolute layers then always generate new blocks within
