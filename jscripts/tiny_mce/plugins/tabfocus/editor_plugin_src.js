@@ -87,7 +87,7 @@
 				ed.onKeyDown.add(tabHandler);
 
 			ed.onInit.add(function() {
-				each(DOM.select('a:first,a:last', tinyMCE.activeEditor.getContainer()), function(n) {
+				each(DOM.select('a:first,a:last', ed.getContainer()), function(n) {
 					Event.add(n, 'focus', function() {ed.focus();});
 				});
 			});
