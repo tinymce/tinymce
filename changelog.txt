@@ -5,6 +5,7 @@ Version 3.2.x (2009-xx-xx)
 	Fixed bug where WebKit browsers would fail when inserting tables with a non pixel width.
 	Fixed bug where block elements could get a redundant br element at the end of the element.
 	Fixed bug where the tabfocus plugin only worked with a single editor instance on page.
+	Fixed bug where IE 8 was loosing caret position if the selection was collapsed and a menu was clicked.
 	Fixed bug with application/xhtml+xml mode where menus wasn't working properly.
 	Fixed issues with size suffix values in the style plugin dialog.
 	Fixed issue where hasDuplicate variable would leak out to the global space due to a bug in the Sizzle engine.

@@ -12077,6 +12077,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Fix for bug #1897785, #1898007
 			if (tinymce.isIE) {
 				c.onShowMenu.add(function() {
+					// IE 8 needs focus in order to store away a range with the current collapsed caret location
+					ed.focus();
+
 					bm = ed.selection.getBookmark(1);
 				});
 
