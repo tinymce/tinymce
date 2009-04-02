@@ -65,11 +65,8 @@
 	};
 
 	// Firebug
-	if (query.debug && (!window.console || !console.debug || /WebKit/.test(navigator.userAgent))) {
-		window.console = null; // Force firebug on WebKit
-		document.documentElement.setAttribute("debug", "true");
+	if (query.debug)
 		include('firebug/firebug-lite.js');
-	}
 
 	// Core ns
 	include('tinymce.js');

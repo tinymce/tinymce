@@ -1719,7 +1719,15 @@
 		_isRes : function(c) {
 			// Is live resizble element
 			return /^(top|left|bottom|right|width|height)/i.test(c) || /;\s*(top|left|bottom|right|width|height)/i.test(c);
+		},
+
+		// #ifdef debug
+
+		dumpRng : function(r) {
+			return 'startContainer: ' + r.startContainer.nodeName + ', startOffset: ' + r.startOffset + ', endContainer: ' + r.endContainer.nodeName + ', endOffset: ' + r.endOffset;
 		}
+
+		// #endif
 
 		/*
 		walk : function(n, f, s) {
