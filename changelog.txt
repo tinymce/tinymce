@@ -1,5 +1,6 @@
 Version 3.2.x (2009-xx-xx)
 	Added a optional root element argument to getPos so you can tell it where to stop the calculation.
+	Added new DOM ready logic to remove the usage of document.write. We now use basically the same method as jQuery.
 	Fixed bug where WebKit browsers would fail when selecting all contents in the area using Ctrl+A.
 	Fixed bug where IE would produce paragraphs with empty inline style elements.
 	Fixed bug where WebKit browsers would fail when inserting tables with a non pixel width.

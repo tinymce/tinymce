@@ -241,7 +241,7 @@
 		_pageInit : function() {
 			var e = Event;
 
-			// Safari on Mac fires this twice
+			// Keep it from running more than once
 			if (e.domLoaded)
 				return;
 
@@ -256,35 +256,42 @@
 		},
 
 		_wait : function() {
-			var t;
-
 			// No need since the document is already loaded
 			if (window.tinyMCE_GZ && tinyMCE_GZ.loaded) {
 				Event.domLoaded = 1;
 				return;
 			}
 
-			if (isIE && document.location.protocol != 'https:') {
-				// Fake DOMContentLoaded on IE
-				document.write('<script id=__ie_onload defer src=\'javascript:""\';><\/script>');
-				DOM.get("__ie_onload").onreadystatechange = function() {
-					if (this.readyState == "complete") {
+			// Use IE method
+			if (document.attachEvent) {
+				document.attachEvent("onreadystatechange", function() {
+					if (document.readyState === "complete") {
+						document.detachEvent("onreadystatechange", arguments.callee);
 						Event._pageInit();
-						DOM.get("__ie_onload").onreadystatechange = null; // Prevent leak
 					}
-				};
-			} else {
+				});
+
+				if (document.documentElement.doScroll && window == window.top) {
+					(function() {
+						if (Event.domLoaded)
+							return;
+
+						try {
+							// If IE is used, use the trick by Diego Perini
+							// http://javascript.nwbox.com/IEContentLoaded/
+							document.documentElement.doScroll("left");
+						} catch (ex) {
+							setTimeout(arguments.callee, 0);
+							return;
+						}
+
+						Event._pageInit();
+					})();
+				}
+			} else if (document.addEventListener)
 				Event._add(window, 'DOMContentLoaded', Event._pageInit, Event);
 
-				if (isIE || isWebKit) {
-					t = setInterval(function() {
-						if (/loaded|complete/.test(document.readyState)) {
-							clearInterval(t);
-							Event._pageInit();
-						}
-					}, 10);
-				}
-			}
+			Event._add(window, 'load', Event._pageInit, Event);
 		}
 
 		/**#@-*/

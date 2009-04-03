@@ -274,7 +274,12 @@ tinyMCEPopup = {
 	},*/
 
 	_onDOMLoaded : function() {
-		var t = this, ti = document.title, bm, h, nv;
+		var t = tinyMCEPopup, ti = document.title, bm, h, nv;
+
+		if (t.domLoaded)
+			return;
+
+		t.domLoaded = 1;
 
 		// Translate page
 		if (t.features.translate_i18n !== false) {
@@ -368,30 +373,37 @@ tinyMCEPopup = {
 	},
 
 	_wait : function() {
-		var t = this, ti;
-
-		if (tinymce.isIE && document.location.protocol != 'https:') {
-			// Fake DOMContentLoaded on IE
-			document.write('<script id=__ie_onload defer src=\'javascript:""\';><\/script>');
-			document.getElementById("__ie_onload").onreadystatechange = function() {
-				if (this.readyState == "complete") {
-					t._onDOMLoaded();
-					document.getElementById("__ie_onload").onreadystatechange = null; // Prevent leak
+		// Use IE method
+		if (document.attachEvent) {
+			document.attachEvent("onreadystatechange", function() {
+				if (document.readyState === "complete") {
+					document.detachEvent("onreadystatechange", arguments.callee);
+					tinyMCEPopup._onDOMLoaded();
 				}
-			};
-		} else {
-			if (tinymce.isIE || tinymce.isWebKit) {
-				ti = setInterval(function() {
-					if (/loaded|complete/.test(document.readyState)) {
-						clearInterval(ti);
-						t._onDOMLoaded();
+			});
+
+			if (document.documentElement.doScroll && window == window.top) {
+				(function() {
+					if (tinyMCEPopup.domLoaded)
+						return;
+
+					try {
+						// If IE is used, use the trick by Diego Perini
+						// http://javascript.nwbox.com/IEContentLoaded/
+						document.documentElement.doScroll("left");
+					} catch (ex) {
+						setTimeout(arguments.callee, 0);
+						return;
 					}
-				}, 10);
-			} else {
-				window.addEventListener('DOMContentLoaded', function() {
-					t._onDOMLoaded();
-				}, false);
+
+					tinyMCEPopup._onDOMLoaded();
+				})();
 			}
+
+			document.attachEvent('onload', tinyMCEPopup._onDOMLoaded);
+		} else if (document.addEventListener) {
+			window.addEventListener('DOMContentLoaded', tinyMCEPopup._onDOMLoaded, false);
+			window.addEventListener('load', tinyMCEPopup._onDOMLoaded, false);
 		}
 	}
 };
