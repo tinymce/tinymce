@@ -1795,25 +1795,7 @@
 
 					case 'paste':
 						Event.add(t.getBody(), k, function(e) {
-							var tx, h, el, r;
-
-							// Get plain text data
-							if (e.clipboardData)
-								tx = e.clipboardData.getData('text/plain');
-							else if (tinymce.isIE)
-								tx = t.getWin().clipboardData.getData('Text');
-
-							// Get HTML data
-							/*if (tinymce.isIE) {
-								el = DOM.add(DOM.doc.body, 'div', {style : 'visibility:hidden;overflow:hidden;position:absolute;width:1px;height:1px'});
-								r = DOM.doc.body.createTextRange();
-								r.moveToElementText(el);
-								r.execCommand('Paste');
-								h = el.innerHTML;
-								DOM.remove(el);
-							}*/
-
-							eventHandler(e, {text : tx, html : h});
+							eventHandler(e);
 						});
 						break;
 
