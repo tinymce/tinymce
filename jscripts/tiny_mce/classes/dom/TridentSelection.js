@@ -7,7 +7,7 @@
 
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '\uFEFF';
+		var t = this, invisibleChar = '|';
 
 		function getRange() {
 			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos, endPos, element, sc, ec, collapsed;
@@ -29,7 +29,7 @@
 				// Insert marker character
 				rng.collapse(start);
 				parent = rng.parentElement();
-				rng.text = invisibleChar;
+				rng.pasteHTML(invisibleChar); // Needs to be a pasteHTML instead of .text = since IE has a bug with nodeValue
 
 				// Find marker character
 				nl = parent.childNodes;
@@ -103,6 +103,17 @@
 				domRange.setEnd(endPos.parent, endPos.index);
 			} else
 				domRange.setEnd(endPos.parent.childNodes[endPos.index], endPos.offset);
+
+			// If not collapsed then make sure offsets are valid
+			if (!collapsed) {
+				sc = domRange.startContainer;
+				if (sc.nodeType == 1)
+					domRange.setStart(sc, Math.min(domRange.startOffset, sc.childNodes.length));
+
+				ec = domRange.endContainer;
+				if (ec.nodeType == 1)
+					domRange.setEnd(ec, Math.min(domRange.endOffset, ec.childNodes.length));
+			}
 
 			// Restore selection to new range
 			t.addRange(domRange);

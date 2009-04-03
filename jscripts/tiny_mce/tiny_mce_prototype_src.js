@@ -3062,7 +3062,7 @@ tinymce.create('static tinymce.util.XHR', {
 })(tinymce.dom);
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '\uFEFF';
+		var t = this, invisibleChar = '|';
 
 		function getRange() {
 			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos, endPos, element, sc, ec, collapsed;
@@ -3084,7 +3084,7 @@ tinymce.create('static tinymce.util.XHR', {
 				// Insert marker character
 				rng.collapse(start);
 				parent = rng.parentElement();
-				rng.text = invisibleChar;
+				rng.pasteHTML(invisibleChar); // Needs to be a pasteHTML instead of .text = since IE has a bug with nodeValue
 
 				// Find marker character
 				nl = parent.childNodes;
@@ -3158,6 +3158,17 @@ tinymce.create('static tinymce.util.XHR', {
 				domRange.setEnd(endPos.parent, endPos.index);
 			} else
 				domRange.setEnd(endPos.parent.childNodes[endPos.index], endPos.offset);
+
+			// If not collapsed then make sure offsets are valid
+			if (!collapsed) {
+				sc = domRange.startContainer;
+				if (sc.nodeType == 1)
+					domRange.setStart(sc, Math.min(domRange.startOffset, sc.childNodes.length));
+
+				ec = domRange.endContainer;
+				if (ec.nodeType == 1)
+					domRange.setEnd(ec, Math.min(domRange.endOffset, ec.childNodes.length));
+			}
 
 			// Restore selection to new range
 			t.addRange(domRange);
@@ -12596,8 +12607,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		ec = r.endContainer;
 		so = r.startOffset;
 		eo = r.endOffset;
-		sc = sc.nodeType == 1 ? sc.childNodes[so] : sc;
-		ec = ec.nodeType == 1 ? ec.childNodes[eo - 1] : ec;
+		sc = sc.nodeType == 1 ? sc.childNodes[Math.min(so, sc.childNodes.length - 1)] : sc;
+		ec = ec.nodeType == 1 ? ec.childNodes[Math.min(so == eo ? eo : eo - 1, ec.childNodes.length - 1)] : ec;
 
 		// Same container
 		if (sc == ec) { // TEXT_NODE
