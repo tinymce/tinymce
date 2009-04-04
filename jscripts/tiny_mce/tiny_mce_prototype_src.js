@@ -3062,7 +3062,7 @@ tinymce.create('static tinymce.util.XHR', {
 })(tinymce.dom);
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '|';
+		var t = this, invisibleChar = '|', range, eventAdded;
 
 		function getRange() {
 			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos, endPos, element, sc, ec, collapsed;
@@ -3290,8 +3290,27 @@ tinymce.create('static tinymce.util.XHR', {
 		};
 
 		this.getRangeAt = function() {
-			// todo: Implement range caching here later
-			return getRange();
+			// Setup cached range
+			if (!range) {
+				range = getRange();
+
+				// Add event listener to clear the cache if the section changes
+				if (!eventAdded) {
+					tinymce.dom.Event.add(selection.dom.doc, 'selectionchange', function() {
+						range = null;
+					});
+
+					eventAdded = 1;
+				}
+			}
+
+			// Return cached range
+			return range;
+		};
+
+		this.destroy = function() {
+			// Destroy cached range to avoid memory leaks on IE
+			range = null;
 		};
 	};
 
@@ -5272,6 +5291,9 @@ window.tinymce.dom.Sizzle = Sizzle;
 			var t = this;
 
 			t.win = null;
+
+			if (t.tridentSel)
+				t.tridentSel.destroy();
 
 			// Manual destroy then remove unload handler
 			if (!s)

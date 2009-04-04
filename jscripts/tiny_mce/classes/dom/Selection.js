@@ -734,6 +734,9 @@
 
 			t.win = null;
 
+			if (t.tridentSel)
+				t.tridentSel.destroy();
+
 			// Manual destroy then remove unload handler
 			if (!s)
 				tinymce.removeUnload(t.destroy);
