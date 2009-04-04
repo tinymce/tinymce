@@ -9,6 +9,20 @@
 	function Selection(selection) {
 		var t = this, invisibleChar = '|', range, lastIERng;
 
+		function compareRanges(rng1, rng2) {
+			if (rng1 && rng2) {
+				// Both are control ranges and the selected element matches
+				if (rng1.item && rng2.item && rng1.item(0) === rng2.item(0))
+					return 1;
+
+				// Both are text ranges and the range matches
+				if (rng1.isEqual && rng2.isEqual && rng2.isEqual(rng1))
+					return 1;
+			}
+
+			return 0;
+		};
+
 		function getRange() {
 			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos, endPos, element, sc, ec, collapsed;
 
@@ -235,15 +249,12 @@
 		};
 
 		this.getRangeAt = function() {
-			var ieRng = selection.getRng();
-
-			// Setup new range if the cache is empty, or the current selection is a control range or if the selection has changed
-			if (!range || !lastIERng || ieRng.item || !lastIERng.isEqual(ieRng)) {
+			// Setup new range if the cache is empty
+			if (!range || !compareRanges(lastIERng, selection.getRng())) {
 				range = getRange();
 
 				// Store away text range for next call
-				ieRng = selection.getRng();
-				lastIERng = !ieRng.item ? ieRng : null;
+				lastIERng = selection.getRng();
 			}
 
 			// Return cached range
