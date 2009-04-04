@@ -7,7 +7,7 @@
 
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '|', range, eventAdded;
+		var t = this, invisibleChar = '|', range, lastIERng;
 
 		function getRange() {
 			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos, endPos, element, sc, ec, collapsed;
@@ -235,18 +235,15 @@
 		};
 
 		this.getRangeAt = function() {
-			// Setup cached range
-			if (!range) {
+			var ieRng = selection.getRng();
+
+			// Setup new range if the cache is empty, or the current selection is a control range or if the selection has changed
+			if (!range || !lastIERng || ieRng.item || !lastIERng.isEqual(ieRng)) {
 				range = getRange();
 
-				// Add event listener to clear the cache if the section changes
-				if (!eventAdded) {
-					tinymce.dom.Event.add(selection.dom.doc, 'selectionchange', function() {
-						range = null;
-					});
-
-					eventAdded = 1;
-				}
+				// Store away text range for next call
+				ieRng = selection.getRng();
+				lastIERng = !ieRng.item ? ieRng : null;
 			}
 
 			// Return cached range
@@ -254,8 +251,8 @@
 		};
 
 		this.destroy = function() {
-			// Destroy cached range to avoid memory leaks on IE
-			range = null;
+			// Destroy cached range and last IE range to avoid memory leaks
+			lastIERng = range = null;
 		};
 	};
 
