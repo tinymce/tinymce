@@ -247,12 +247,12 @@ function setupFormData() {
 }
 
 function getMeasurement(s) {
-	return s.replace(/^([0-9]+)(.*)$/, "$2");
+	return s.replace(/^([0-9.]+)(.*)$/, "$2");
 }
 
 function getNum(s) {
-	if (new RegExp('^[0-9]+[a-z%]+$', 'gi').test(s))
-		return s.replace(/[^0-9]/g, '');
+	if (new RegExp('^(?:[0-9.]+)(?:[a-z%]+)$', 'gi').test(s))
+		return s.replace(/[^0-9.]/g, '');
 
 	return s;
 }
@@ -478,7 +478,7 @@ function generateCSS() {
 		ce.style.borderBottomWidth = f.border_width_bottom.value + (isNum(f.border_width_bottom.value) ? f.border_width_bottom_measurement.value : "");
 		ce.style.borderLeftWidth = f.border_width_left.value + (isNum(f.border_width_left.value) ? f.border_width_left_measurement.value : "");
 	} else
-		ce.style.borderWidth = f.border_width_top.value;
+		ce.style.borderWidth = f.border_width_top.value + (isNum(f.border_width_top.value) ? f.border_width_top_measurement.value : "");
 
 	if (!f.border_color_same.checked) {
 		ce.style.borderTopColor = f.border_color_top.value;
