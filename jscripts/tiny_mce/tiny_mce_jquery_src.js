@@ -1449,10 +1449,17 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 
 			r = n;
-			while (r) {
+			while (r && r != ro) {
 				x += r.offsetLeft || 0;
 				y += r.offsetTop || 0;
 				r = r.offsetParent;
+			}
+
+			r = n;
+			while (r && r != ro && r.nodeType) {
+				x -= r.scrollLeft || 0;
+				y -= r.scrollTop || 0;
+				r = r.parentNode;
 			}
 
 			return {x : x, y : y};
