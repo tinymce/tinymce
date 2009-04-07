@@ -1504,29 +1504,31 @@ tinymce.create('static tinymce.util.XHR', {
 			n = t.get(n);
 			ro = ro || d.body;
 
-			// Use getBoundingClientRect on IE, Opera has it but it's not perfect
-			if (n && isIE && !t.stdMode) {
-				n = n.getBoundingClientRect();
-				e = t.boxModel ? d.documentElement : d.body;
-				x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
-				x = (x == 'medium' || t.boxModel && !t.isIE6) && 2 || x;
-				n.top += t.win.self != t.win.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
+			if (n) {
+				// Use getBoundingClientRect on IE, Opera has it but it's not perfect
+				if (isIE && !t.stdMode) {
+					n = n.getBoundingClientRect();
+					e = t.boxModel ? d.documentElement : d.body;
+					x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
+					x = (x == 'medium' || t.boxModel && !t.isIE6) && 2 || x;
+					n.top += t.win.self != t.win.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
 
-				return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
-			}
+					return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
+				}
 
-			r = n;
-			while (r && r != ro && r.nodeType) {
-				x += r.offsetLeft || 0;
-				y += r.offsetTop || 0;
-				r = r.offsetParent;
-			}
+				r = n;
+				while (r && r != ro && r.nodeType) {
+					x += r.offsetLeft || 0;
+					y += r.offsetTop || 0;
+					r = r.offsetParent;
+				}
 
-			r = n;
-			while (r && r != ro && r.nodeType) {
-				x -= r.scrollLeft || 0;
-				y -= r.scrollTop || 0;
-				r = r.parentNode;
+				r = n.parentNode;
+				while (r && r != ro && r.nodeType) {
+					x -= r.scrollLeft || 0;
+					y -= r.scrollTop || 0;
+					r = r.parentNode;
+				}
 			}
 
 			return {x : x, y : y};
