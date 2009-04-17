@@ -225,6 +225,7 @@
 				// Get caret positions
 				startPos = getCharPos(sc, so);
 				endPos = getCharPos(ec, eo);
+				ieRng = body.createTextRange();
 
 				// Move start of range to start character position or start element
 				if (startPos == -1) {

@@ -148,6 +148,76 @@ test("Mixed selection start at element end at text", function() {
 	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<IMG src="about:blank" mce_src="about:blank">tex');
 });
 
+test("Caret position before image", function() {
+	expect(4);
+
+	editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStartBefore(editor.dom.select('img')[0]);
+	rng.setEndBefore(editor.dom.select('img')[0]);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.startOffset, 0);
+	equals(rng.endOffset, 0);
+});
+
+test("Caret position between images", function() {
+	expect(4);
+
+	editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStartAfter(editor.dom.select('img')[0]);
+	rng.setEndAfter(editor.dom.select('img')[0]);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.startOffset, 1);
+	equals(rng.endOffset, 1);
+});
+
+test("Caret position after image", function() {
+	expect(4);
+
+	editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStartAfter(editor.dom.select('img')[1]);
+	rng.setEndAfter(editor.dom.select('img')[1]);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.startOffset, 2);
+	equals(rng.endOffset, 2);
+});
+
+test("Selection of empty text element", function() {
+	expect(6);
+
+	editor.setContent('<div></div>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, 'BODY');
+	equals(rng.endContainer.nodeName, 'BODY');
+	equals(rng.startOffset, 0);
+	equals(rng.endOffset, 1);
+	equals(rng.startContainer.childNodes[0].innerHTML, '');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<DIV>&nbsp;</DIV>');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
