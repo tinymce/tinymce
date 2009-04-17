@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Unit tests for the TinyMCE core API</title>
+<link rel="stylesheet" href="css/unit.css" type="text/css" />
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="js/testrunner.js"></script>
+</head>
+<body>
+	<h1>Unit tests for DOM Selection IE implementation</h1>
+	<h2 id="banner"></h2>
+	<h2 id="userAgent"></h2>
+	<ol id="tests"></ol>
+	<div id="main"></div>
+	<div id="sample">
+		<textarea id="elm1" name="elm1"></textarea>
+		<div>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+		</div>
+	</div>
+
+<script type="text/javascript">
+var editor, rng;
+
+test("Selection of element containing text", function() {
+	expect(5);
+
+	editor.setContent('<p>123</p>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, '#text');
+	equals(rng.endContainer.nodeName, '#text');
+	equals(rng.startOffset, 0);
+	equals(rng.endOffset, 3);
+	equals(editor.dom.getOuterHTML(rng.cloneContents()), '123');
+});
+
+test("Single image selection", function() {
+	expect(6);
+
+	editor.setContent('<img src="about:blank" />', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStartBefore(editor.dom.select('img')[0]);
+	rng.setEndAfter(editor.dom.select('img')[0]);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.startOffset, 0);
+	equals(rng.endOffset, 1);
+	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<IMG src="about:blank" mce_src="about:blank">');
+	ok(editor.selection.getRng().item, 'Not a control selection');
+});
+
+test("Multiple image selection", function() {
+	expect(6);
+
+	editor.setContent('<img src="about:blank" /><img src="about:blank" />', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStartBefore(editor.dom.select('img')[0]);
+	rng.setEndAfter(editor.dom.select('img')[1]);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.startOffset, 0);
+	equals(rng.endOffset, 2);
+	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<IMG src="about:blank" mce_src="about:blank"><IMG src="about:blank" mce_src="about:blank">');
+	ok(editor.selection.getRng().parentElement, 'Not a text selection');
+});
+
+test("Text node selection", function() {
+	expect(5);
+
+	editor.setContent('<p>1234</p>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild.firstChild, 1);
+	rng.setEnd(editor.getBody().firstChild.firstChild, 3);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, '#text');
+	equals(rng.endContainer.nodeName, '#text');
+	equals(rng.startOffset, 1);
+	equals(rng.endOffset, 3);
+	equals(editor.dom.getOuterHTML(rng.cloneContents()), '23');
+});
+
+test("Text node selection between two elements", function() {
+	expect(10);
+
+	editor.setContent('<p>1234</p><p>abcd</p>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild.firstChild, 1);
+	rng.setEnd(editor.getBody().childNodes[1].firstChild, 3);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, '#text');
+	equals(rng.endContainer.nodeName, '#text');
+	equals(rng.startOffset, 1);
+	equals(rng.endOffset, 3);
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, ''), '<P>234</P><P>abc</P>');
+
+	editor.setContent('<p>1</p><p>1234</p><p>abcd</p><p>2</p>', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStartBefore(editor.dom.select('p')[1]);
+	rng.setEndAfter(editor.dom.select('p')[2]);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, '#text');
+	equals(rng.endContainer.nodeName, '#text');
+	equals(rng.startOffset, 0);
+	equals(rng.endOffset, 4);
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, ''), '<P>1234</P><P>abcd</P>');
+});
+
+test("Mixed selection start at element end at text", function() {
+	expect(5);
+
+	editor.setContent('<img src="about:blank" />text', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStartBefore(editor.dom.select('img')[0]);
+	rng.setEnd(editor.getBody().firstChild.lastChild, 3);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.endContainer.nodeName, '#text');
+	equals(rng.startOffset, 0);
+	equals(rng.endOffset, 3);
+	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<IMG src="about:blank" mce_src="about:blank">tex');
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	add_unload_trigger : false,
+	plugins : 'safari',
+	init_instance_callback : function(ed) {
+		editor = ed;
+		run();
+	}
+});
+</script>
+
+</body>
+</html>
