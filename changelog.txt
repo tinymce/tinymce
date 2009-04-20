@@ -9,6 +9,7 @@ Version 3.2.3 (2009-04-20)
 	Fixed bug where the tabfocus plugin only worked with a single editor instance on page.
 	Fixed bug where IE 8 was loosing caret position if the selection was collapsed and a menu was clicked.
 	Fixed bug with application/xhtml+xml mode where menus wasn't working properly.
+	Fixed bug where the onstop workaround fix for IE would produce errors in an ASP update panel.
 	Fixed various number issues in the style plugins properties dialog. Contributed by datpaulchen.
 	Fixed issues with size suffix values in the style plugin dialog.
 	Fixed issue where hasDuplicate variable would leak out to the global space due to a bug in the Sizzle engine.

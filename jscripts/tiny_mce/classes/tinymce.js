@@ -442,7 +442,7 @@ var tinymce = {
 						w.removeEventListener('unload', unload, false);
 
 					// Destroy references
-					t.unloads = o = li = w = unload = null;
+					t.unloads = o = li = w = unload = 0;
 
 					// Run garbarge collector on IE
 					if (window.CollectGarbage)
@@ -460,19 +460,22 @@ var tinymce = {
 						d.detachEvent('onstop', stop);
 
 						// Call unload handler
-						unload();
+						if (unload)
+							unload();
 
-						d = null;
+						d = 0;
 					};
 
 					// Fire unload when the currently loading page is stopped
-					d.attachEvent('onstop', stop);
+					if (d)
+						d.attachEvent('onstop', stop);
 
 					// Remove onstop listener after a while to prevent the unload function
 					// to execute if the user presses cancel in an onbeforeunload
 					// confirm dialog and then presses the browser stop button
 					window.setTimeout(function() {
-						d.detachEvent('onstop', stop);
+						if (d)
+							d.detachEvent('onstop', stop);
 					}, 0);
 				}
 			};
