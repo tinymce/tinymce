@@ -12592,7 +12592,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					sp = n;
 
 				return dom.isBlock(n);
-			}, ed.getBody())
+			}, ed.getBody());
 
 			return sp;
 		};
