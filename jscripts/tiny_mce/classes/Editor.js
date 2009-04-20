@@ -694,9 +694,9 @@
 				});
 			}
 
-			// Fix gecko link bug, when a link is placed at the end of block elements there is
-			// no way to move the caret behind the link. This fix adds a bogus br element after the link
 			if (isGecko) {
+				// Fix gecko link bug, when a link is placed at the end of block elements there is
+				// no way to move the caret behind the link. This fix adds a bogus br element after the link
 				function fixLinks(ed, o) {
 					each(ed.dom.select('a'), function(n) {
 						var pn = n.parentNode;
@@ -712,17 +712,17 @@
 				});
 
 				t.onSetContent.add(t.selection.onSetContent.add(fixLinks));
-			}
 
-			if (isGecko && !s.readonly) {
-				try {
-					// Design mode must be set here once again to fix a bug where
-					// Ctrl+A/Delete/Backspace didn't work if the editor was added using mceAddControl then removed then added again
-					d.designMode = 'Off';
-					d.designMode = 'On';
-				} catch (ex) {
-					// Will fail on Gecko if the editor is placed in an hidden container element
-					// The design mode will be set ones the editor is focused
+				if (!s.readonly) {
+					try {
+						// Design mode must be set here once again to fix a bug where
+						// Ctrl+A/Delete/Backspace didn't work if the editor was added using mceAddControl then removed then added again
+						d.designMode = 'Off';
+						d.designMode = 'On';
+					} catch (ex) {
+						// Will fail on Gecko if the editor is placed in an hidden container element
+						// The design mode will be set ones the editor is focused
+					}
 				}
 			}
 
@@ -2028,6 +2028,16 @@
 							}
 					}
 				});
+
+				if (t.dom.boxModel) {
+					t.getBody().style.height = '100%';
+
+					Event.add(t.getWin(), 'resize', function(e) {
+						var docElm = t.getDoc().documentElement;
+
+						docElm.style.height = (docElm.offsetHeight - 10) + 'px';
+					});
+				}
 			}
 
 			if (tinymce.isOpera) {
