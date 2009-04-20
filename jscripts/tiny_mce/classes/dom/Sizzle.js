@@ -721,20 +721,20 @@ if ( document.documentElement.compareDocumentPosition ) {
 	};
 } else if ( document.createRange ) {
 	sortOrder = function( a, b ) {
-		try {
+		//try {
 			var aRange = a.ownerDocument.createRange(), bRange = b.ownerDocument.createRange();
-			aRange.selectNode(a);
-			aRange.collapse(true);
-			bRange.selectNode(b);
-			bRange.collapse(true);
+                aRange.selectNode(a);
+                aRange.collapse(true);
+                bRange.selectNode(b);
+                bRange.collapse(true); 
 			var ret = aRange.compareBoundaryPoints(Range.START_TO_END, bRange);
 			if ( ret === 0 ) {
 				hasDuplicate = true;
 			}
 			return ret;
-		} catch (ex) {
-			return 0;
-		}
+		//} catch (ex) {
+			//return 0;
+		//}
 	};
 }
 
