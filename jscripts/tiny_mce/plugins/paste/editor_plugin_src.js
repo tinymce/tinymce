@@ -24,12 +24,14 @@
 			t.onPostProcess.add(t._postProcess);
 
 			// Register optional preprocess handler
-			if (cb = ed.getParam('paste_preprocess'))
-				t.onPreProcess.add(cb);
+			t.onPreProcess.add(function(pl, o) {
+				ed.execCallback('paste_preprocess', pl, o);
+			});
 
 			// Register optional postprocess
-			if (cb = ed.getParam('paste_postprocess'))
-				t.onPostProcess.add(cb);
+			t.onPostProcess.add(function(pl, o) {
+				ed.execCallback('paste_postprocess', pl, o);
+			});
 
 			// This function executes the process handlers and inserts the contents
 			function process(h) {
