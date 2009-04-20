@@ -130,7 +130,7 @@
 		<yuicompress infile="${build_dir}/plugins/searchreplace/editor_plugin_src.js" outfile="${build_dir}/plugins/searchreplace/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/table/editor_plugin_src.js" outfile="${build_dir}/plugins/table/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/contextmenu/editor_plugin_src.js" outfile="${build_dir}/plugins/contextmenu/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/paste2/editor_plugin_src.js" outfile="${build_dir}/plugins/paste2/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/paste/editor_plugin_src.js" outfile="${build_dir}/plugins/paste/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/fullscreen/editor_plugin_src.js" outfile="${build_dir}/plugins/fullscreen/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/directionality/editor_plugin_src.js" outfile="${build_dir}/plugins/directionality/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/inlinepopups/editor_plugin_src.js" outfile="${build_dir}/plugins/inlinepopups/editor_plugin.js" />
