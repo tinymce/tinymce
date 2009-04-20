@@ -8701,7 +8701,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							EditorManager.triggerSave();
 							t.isNotDirty = 1;
 
-							return this._mceOldSubmit(this);
+							return t.formElement._mceOldSubmit(t.formElement);
 						};
 					}
 
