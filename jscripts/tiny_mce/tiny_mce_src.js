@@ -10097,7 +10097,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					}
 				});
 
-				if (t.dom.boxModel) {
+				/*if (t.dom.boxModel) {
 					t.getBody().style.height = '100%';
 
 					Event.add(t.getWin(), 'resize', function(e) {
@@ -10105,7 +10105,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 						docElm.style.height = (docElm.offsetHeight - 10) + 'px';
 					});
-				}
+				}*/
 			}
 
 			if (tinymce.isOpera) {
