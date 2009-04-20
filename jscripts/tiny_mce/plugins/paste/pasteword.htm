@@ -4,10 +4,9 @@
 	<title>{#paste.paste_word_desc}</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/pasteword.js?v={tinymce_version}"></script>
-	<link href="css/pasteword.css?v={tinymce_version}" rel="stylesheet" type="text/css" />
 </head>
-<body onresize="resizeInputs();" style="display:none; overflow:hidden;">
-	<form name="source" onsubmit="saveContent();" action="#">
+<body onresize="PasteWordDialog.resize();" style="display:none; overflow:hidden;">
+	<form name="source" onsubmit="return PasteWordDialog.insert();" action="#">
 		<div class="title">{#paste.paste_word_desc}</div>
 
 		<div>{#paste_dlg.word_title}</div>
@@ -16,7 +15,7 @@
 
 		<div class="mceActionPanel">
 			<div style="float: left">
-				<input type="button" id="insert" name="insert" value="{#insert}" onclick="saveContent();" />
+				<input type="submit" id="insert" name="insert" value="{#insert}" />
 			</div>
 
 			<div style="float: right">
