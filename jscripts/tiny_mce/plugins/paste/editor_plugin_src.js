@@ -164,7 +164,7 @@
 		_preProcess : function(pl, o) {
 			var h = o.content, process;
 
-			console.log('Before preprocess:' + o.content);
+			//console.log('Before preprocess:' + o.content);
 
 			function process(items) {
 				each(items, function(v) {
