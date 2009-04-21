@@ -10201,6 +10201,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 	function isEmpty(n) {
 		n = n.innerHTML;
+		n = n.replace(/<\w+ .*?mce_\w+\"?=.*?>/gi, '-'); // Keep tags with mce_ attribs
 		n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
 		n = n.replace(/<[^>]+>/g, ''); // Remove all tags
 
