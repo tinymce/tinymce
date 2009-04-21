@@ -164,7 +164,7 @@
 		_preProcess : function(pl, o) {
 			var h = o.content, process;
 
-			//console.log('Before preprocess:' + o.content);
+			console.log('Before preprocess:' + o.content);
 
 			function process(items) {
 				each(items, function(v) {
@@ -252,7 +252,7 @@
 
 				// Check if node value matches the list pattern: o&nbsp;&nbsp;
 				if (type) {
-					margin = parseInt(p.style.marginLeft || 0);
+					margin = parseFloat(p.style.marginLeft || 0);
 
 					if (margin > lastMargin)
 						levels.push(margin);
