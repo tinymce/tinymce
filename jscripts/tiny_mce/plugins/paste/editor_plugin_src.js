@@ -141,7 +141,7 @@
 					});
 				} else {
 					// Grab contents on paste event on Gecko and WebKit
-					ed.onPaste.add(function(ed, e) {
+					ed.onPaste.addToTop(function(ed, e) {
 						return grabContent(e);
 					});
 				}
@@ -183,7 +183,7 @@
 			]);
 
 			// Detect Word content and process it more agressive
-			if (/(class=Mso|style=\"[^\"]*\bmso\-|w:WordDocument)/.test(h)) {
+			if (/(class=\"?Mso|style=\"[^\"]*\bmso\-|w:WordDocument)/.test(h)) {
 				o.wordContent = true; // Mark the pasted contents as word specific content
 				//console.log('Word contents detected.');
 
@@ -192,8 +192,8 @@
 					/<\/?(img|font|meta|link|style|span|div|v:\w+)[^>]*>/gi,			// Remove some tags including VML content
 					/<\\?\?xml[^>]*>/gi,												// XML namespace declarations
 					/<\/?o:[^>]*>/gi,													// MS namespaced elements <o:tag>
-					/ (id|name|class|style|language|type|on\w+|v:\w+)=\"([^\"]*)\"/gi,	// on.., class, style and language attributes with quotes
-					/ (id|name|class|style|language|type|on\w+|v:\w+)=(\w+)/gi,			// on.., class, style and language attributes without quotes (IE)
+					/ (id|name|class|language|type|on\w+|v:\w+)=\"([^\"]*)\"/gi,	// on.., class, style and language attributes with quotes
+					/ (id|name|class|language|type|on\w+|v:\w+)=(\w+)/gi,			// on.., class, style and language attributes without quotes (IE)
 					[/<(\/?)s>/gi, '<$1strike>'],										// Convert <s> into <strike> for line-though
 					/<script[^>]+>[\s\S]*?<\/script>/gi,								// All scripts elements for msoShowComment for example
 					[/&nbsp;/g, '\u00a0']												// Replace nsbp entites to char since it's easier to handle
@@ -209,7 +209,7 @@
 		 * Various post process items.
 		 */
 		_postProcess : function(pl, o) {
-			var t = this, dom = pl.editor.dom;
+			var t = this, dom = t.editor.dom;
 
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
@@ -218,7 +218,13 @@
 						dom.remove(a, 1);
 				});
 
-				t._convertLists(pl, o);
+				if (t.editor.getParam('paste_convert_middot_lists', true))
+					t._convertLists(pl, o);
+
+				// Remove all styles
+				each(dom.select('*', o.node), function(el) {
+					dom.setAttrib(el, 'style', '');
+				});
 			}
 		},
 
@@ -226,40 +232,58 @@
 		 * Converts the most common bullet and number formats in Office into a real semantic UL/LI list.
 		 */
 		_convertLists : function(pl, o) {
-			var dom = pl.editor.dom, listElm;
+			var dom = pl.editor.dom, listElm, li, lastMargin = -1, margin, levels = [], lastType;
 
 			// Convert middot lists into real scemantic lists
 			each(dom.select('p', o.node), function(p) {
-				var sib, val = '', li, type, html;
+				var sib, val = '', type, html, idx, parents;
 
 				// Get text node value at beginning of paragraph
 				for (sib = p.firstChild; sib && sib.nodeType == 3; sib = sib.nextSibling)
 					val += sib.nodeValue;
 
-				// Detect bullet lists
+				// Detect unordered lists look for bullets
 				if (/^[\u2022\u00b7\u00a7\u00d8o]\s*\u00a0\u00a0*/.test(val))
 					type = 'ul';
 
-				// Detect number lists
-				if (/^[0-9]+\.\s*\u00a0\u00a0*/.test(val))
+				// Detect ordered lists 1., a. or ixv.
+				if (/^[\s\S]*\w+\.[\s\S]*\u00a0{2,}/.test(val))
 					type = 'ol';
 
 				// Check if node value matches the list pattern: o&nbsp;&nbsp;
 				if (type) {
-					if (!listElm) {
+					margin = parseInt(p.style.marginLeft || 0);
+
+					if (margin > lastMargin)
+						levels.push(margin);
+
+					if (!listElm || type != lastType) {
 						listElm = dom.create(type);
 						dom.insertAfter(listElm, p);
+					} else {
+						// Nested list element
+						if (margin > lastMargin) {
+							listElm = li.appendChild(dom.create(type));
+						} else if (margin < lastMargin) {
+							// Find parent level based on margin value
+							idx = tinymce.inArray(levels, margin);
+							parents = dom.getParents(listElm.parentNode, type);
+							listElm = parents[parents.length - 1 - idx] || listElm;
+						}
 					}
 
 					if (type == 'ul')
 						html = p.innerHTML.replace(/^[\u2022\u00b7\u00a7\u00d8o]\s*(&nbsp;|\u00a0)+\s*/, '');
 					else
-						html = p.innerHTML.replace(/^[0-9]+\.\s*(&nbsp;|\u00a0)+\s*/, '');
+						html = p.innerHTML.replace(/^[\s\S]*\w+\.(&nbsp;|\u00a0)+\s*/, '');
 
-					li = dom.add(listElm, 'li', 0, html);
+					li = listElm.appendChild(dom.create('li', 0, html));
 					dom.remove(p);
+
+					lastMargin = margin;
+					lastType = type;
 				} else
-					listElm = 0; // End list element
+					listElm = lastMargin = 0; // End list element
 			});
 		},
 

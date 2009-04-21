@@ -55,6 +55,8 @@
 					ed.getDoc().execCommand("CreateLink", false, v);
 			});
 
+/*
+			// WebKit generates spans out of thin air this patch used to remove them but it will also remove styles we want so it's disabled for now
 			ed.onPaste.add(function(ed, e) {
 				function removeStyles(e) {
 					e = e.target;
@@ -74,7 +76,7 @@
 					Event.remove(ed.getDoc(), 'DOMNodeInserted', removeStyles);
 				}, 0);
 			});
-
+*/
 			ed.onKeyUp.add(function(ed, e) {
 				var h, b, r, n, s;
 
