@@ -116,8 +116,15 @@
 					window.setTimeout(function() {
 						var n = dom.get('_mcePaste'), h;
 
+						// Webkit clones the _mcePaste div for some odd reason so this will ensure that we get the real new div not the old empty one
+						n.id = '_mceRemoved';
+						dom.remove(n);
+						n = dom.get('_mcePaste') || n;
+
 						// Grab the HTML contents
-						h = n.innerHTML;
+						// We need to look for a apple style wrapper on webkit it also adds a div wrapper if you copy/paste the body of the editor
+						// It's amazing how strange the contentEditable mode works in WebKit
+						h = (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
 
 						// Remove hidden div and restore selection
 						dom.remove(n);
@@ -224,6 +231,14 @@
 				// Remove all styles
 				each(dom.select('*', o.node), function(el) {
 					dom.setAttrib(el, 'style', '');
+				});
+			}
+
+			if (tinymce.isWebKit) {
+				// We need to compress the styles on WebKit since if you paste <img border="0" /> it will become <img border="0" style="... lots of junk ..." />
+				// Removing the mce_style that contains the real value will force the Serializer engine to compress the styles
+				each(dom.select('*', o.node), function(el) {
+					el.removeAttribute('mce_style');
 				});
 			}
 		},
@@ -348,6 +363,9 @@
 		 */
 		_insert : function(h, skip_undo) {
 			var ed = this.editor;
+
+			// First delete the contents seems to work better on WebKit
+			ed.execCommand('Delete');
 
 			// It's better to use the insertHTML method on Gecko since it will combine paragraphs correctly before inserting the contents
 			ed.execCommand(tinymce.isGecko ? 'insertHTML' : 'mceInsertContent', false, h, {skip_undo : skip_undo});
