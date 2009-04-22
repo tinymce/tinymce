@@ -7,7 +7,7 @@
 
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '|', range, lastIERng;
+		var t = this, invisibleChar = '\uFEFF', range, lastIERng;
 
 		function compareRanges(rng1, rng2) {
 			if (rng1 && rng2) {
