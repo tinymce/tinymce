@@ -2,16 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Performance testcase</title>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/classes/util/UnitTester.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
 <link rel="stylesheet" href="css/unit.css">
+<style>
+a {display: block}
+</style>
 <script type="text/javascript">
 function getTime() {
 	return new Date().getTime();
-}
-
-function log(s) {
-	document.getElementById('log').innerHTML += s + '<br />';
 }
 
 function runCleanupTests(id) {
@@ -22,7 +20,7 @@ function runCleanupTests(id) {
 	for (i=0; i<10; i++)
 		ed.getContent();
 
-	log('Completed in: ' + (getTime() - ti));
+	console.log('editor.getContent: ' + (getTime() - ti));
 }
 
 function runStyleParser() {
@@ -35,7 +33,7 @@ function runStyleParser() {
 		tinymce.DOM.serializeStyle(o);
 	}
 
-	log('Completed in: ' + (getTime() - ti));
+	console.log('DOMUtils.parseStyle/DOMUtils.serializeStyle ' + (getTime() - ti));
 }
 
 function runURI() {
@@ -50,29 +48,82 @@ function runURI() {
 		new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1);
 	}
 
-	log('Completed in: ' + (getTime() - ti));
+	console.log('tinymce.util.URI: ' + (getTime() - ti));
 }
 
-tinyMCE.init({
-	mode : "exact",
-	elements : "elm1",
-	theme : "advanced",
-	add_unload_trigger : false
-});
+function trim() {
+	var ti, i, u, data1 = '', data2 = '';
 
-tinyMCE.init({
-	mode : "exact",
-	elements : "elm2",
-	theme : "advanced",
-	add_unload_trigger : false,
-	plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template"
-});
+	for (i=0; i<100; i++) {
+		data1 += '   abcabcabcabcabcabcabcabcabcabc      ';
+		data2 += 'abcabcabcabcabcabcabcabcabcabc';
+	}
 
+	ti = getTime();
+
+	for (i=0; i<1000; i++) {
+		tinymce.trim(data1);
+		tinymce.trim(data2);
+	}
+
+	console.log('tinymce.trim: ' + (getTime() - ti));
+}
+
+function runCleanupTestsNoPlugins() {
+	tinyMCE.init({
+		mode : "exact",
+		elements : "elm1",
+		theme : "advanced",
+		add_unload_trigger : false,
+		setup : function(ed) {
+			ed.onInit.add(function() {
+				var ti, h, i;
+
+				ti = getTime();
+
+				for (i=0; i<10; i++)
+					ed.getContent();
+
+				console.log('editor.getContent: ' + (getTime() - ti));
+			});
+		}
+	});
+}
+
+function runCleanupTestsAllPlugins() {
+	tinyMCE.init({
+		mode : "exact",
+		elements : "elm2",
+		theme : "advanced",
+		add_unload_trigger : false,
+		plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+		setup : function(ed) {
+			ed.onInit.add(function() {
+				var ti, h, i;
+
+				ti = getTime();
+
+				for (i=0; i<10; i++)
+					ed.getContent();
+
+				console.log('editor.getContent: ' + (getTime() - ti));
+			});
+		}
+	});
+}
 </script>
 </head>
 <body>
 
 <h1>Performance tests</h1>
+
+<div>
+<a href="javascript:runCleanupTestsNoPlugins();">[cleanup/serializer no plugins]</a>
+<a href="javascript:runCleanupTestsAllPlugins();">[cleanup/serializer all plugins]</a>
+<a href="javascript:runStyleParser();">[tinymce.dom.DOMUtils.parseStyle/tinymce.dom.DOMUtils.serializeStyle]</a>
+<a href="javascript:runURI();">[tinymce.utils.URI]</a>
+<a href="javascript:trim();">[tinymce.trim]</a>
+</div>
 
 <form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
 <h3>Basic text area</h3>
@@ -84,7 +135,6 @@ tinyMCE.init({
 &lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
 </textarea>
 <div>
-<a href="javascript:runCleanupTests('elm1');">[Test cleanup/serializer]</a>
 </div>
 <h3>All plugins enabled</h3>
 <textarea id="elm2" name="elm2">
@@ -95,17 +145,8 @@ tinyMCE.init({
 &lt;p&gt;&lt;a href="test.htm"&gt;&lt;/a&gt;&lt;a href="test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="../../test/test/test.htm"&gt;test&lt;/a&gt;&lt;a href="http://www.site.com/test/test/test.htm"&gt;test&lt;/a&gt;&lt;/p&gt;
 </textarea>
 <div>
-<a href="javascript:runCleanupTests('elm2');">[Test cleanup/serializer]</a>
-</div>
-<h3>Various API methods</h3>
-<div>
-<a href="javascript:runStyleParser();">[Style parser/serializer]</a>
-<a href="javascript:runURI();">[URI object]</a>
 </div>
 </form>
-
-<div id="log">
-<div/>
 
 </body>
 </html>
