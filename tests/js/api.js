@@ -1193,7 +1193,7 @@ $(window).load(function() {
 
 			ser.setRules('map[id|name],area[shape|coords|href|target|alt]');
 			DOM.setHTML('test', '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun" /></map>');
-			equals(ser.serialize(DOM.get('test')), '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun"></area></map>');
+			equals(ser.serialize(DOM.get('test')), '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun" /></map>');
 
 			DOM.setHTML('test', '123<![CDATA[<test>]]>abc');
 			equals(ser.serialize(DOM.get('test')), '123<![CDATA[<test>]]>abc');
