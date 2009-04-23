@@ -1,4 +1,4 @@
-Version 3.2.3 (2009-04-20)
+Version 3.2.3 (2009-04-23)
 	Added new paste plugin logic. This new version will autodetect Word contents and clean it up.
 	Added a optional root element argument to getPos so you can tell it where to stop the calculation.
 	Added new DOM ready logic to remove the usage of document.write. We now use basically the same method as jQuery.
