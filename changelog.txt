@@ -1,6 +1,8 @@
 Version 3.2.3.1 (2009-04-xx)
 	Fixed bug where paragraphs containing form elements such as input or textarea would be removed.
 	Fixed bug where some IE versions would produce a wrapper function for events attributes.
+	Fixed bug where table cell contents could be removed if you pressed return/enter at the end of the cell contents.
+	Fixed bug where the paste plugin would remove a extra character if the selection range was collapsed.
 Version 3.2.3 (2009-04-23)
 	Added new paste plugin logic. This new version will autodetect Word contents and clean it up.
 	Added a optional root element argument to getPos so you can tell it where to stop the calculation.

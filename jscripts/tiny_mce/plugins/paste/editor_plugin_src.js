@@ -365,7 +365,8 @@
 			var ed = this.editor;
 
 			// First delete the contents seems to work better on WebKit
-			ed.execCommand('Delete');
+			if (!ed.selection.isCollapsed())
+				ed.execCommand('Delete');
 
 			// It's better to use the insertHTML method on Gecko since it will combine paragraphs correctly before inserting the contents
 			ed.execCommand(tinymce.isGecko ? 'insertHTML' : 'mceInsertContent', false, h, {skip_undo : skip_undo});
