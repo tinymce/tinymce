@@ -157,7 +157,7 @@ function insertTable() {
 			style += '; ';
 
 		// Force px
-		if (/[0-9\.]+/.test(width))
+		if (/^[0-9\.]+$/.test(width))
 			width += 'px';
 
 		style += 'width: ' + width;
