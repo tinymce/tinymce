@@ -1,4 +1,4 @@
-Version 3.2.3.1 (2009-04-xx)
+Version 3.2.3.1 (2009-05-05)
 	Fixed bug where paragraphs containing form elements such as input or textarea would be removed.
 	Fixed bug where some IE versions would produce a wrapper function for events attributes.
 	Fixed bug where table cell contents could be removed if you pressed return/enter at the end of the cell contents.
