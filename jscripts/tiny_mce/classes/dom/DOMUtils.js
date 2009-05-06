@@ -1683,7 +1683,24 @@
 				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
 			};
 
+			// WebKit has a bug where the setStartBefore/setStartAfter/setEndBefore/setEndAfter methods produces an exception on DOM detached nodes
+			// So we then need to use the setStart/setEnd method with and that needs to have the node index.
+			function nodeIndex(n) {
+				var i = 0;
+
+				while (n.previousSibling) {
+					i++;
+					n = n.previousSibling;
+				}
+
+				return i;
+			};
+
 			if (pe && e) {
+/*
+				// WebKit might fix the bug: https://bugs.webkit.org/show_bug.cgi?id=25571
+				// So then this code can be reintroduced
+
 				// Get before chunk
 				r.setStartBefore(pe);
 				r.setEndBefore(e);
@@ -1693,6 +1710,18 @@
 				r = t.createRng();
 				r.setStartAfter(e);
 				r.setEndAfter(pe);
+				aft = r.extractContents();
+*/
+
+				// Get before chunk
+				r.setStart(pe.parentNode, nodeIndex(pe));
+				r.setEnd(e.parentNode, nodeIndex(e));
+				bef = r.extractContents();
+
+				// Get after chunk
+				r = t.createRng();
+				r.setStart(e.parentNode, nodeIndex(e) + 1);
+				r.setEnd(pe.parentNode, nodeIndex(pe) + 1);
 				aft = r.extractContents();
 
 				// Insert chunks and remove parent

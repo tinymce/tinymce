@@ -985,6 +985,21 @@ $(window).load(function() {
 			equals(DOM.decode('&aring;&auml;&ouml;&amp;&lt;&gt;&quot;'), 'едц&<>"');
 		});
 
+		test('tinymce.dom.DOMUtils - split', function() {
+			var point, parent;
+			//expect(2);
+
+			DOM.add(document.body, 'div', {id : 'test'}, '<p><b>text1<span>inner</span>text2</b></p>');
+
+			parent = DOM.select('p', DOM.get('test'))[0];
+			point = DOM.select('span', DOM.get('test'))[0];
+
+			DOM.split(parent, point);
+			equals(DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''), '<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>');
+
+			DOM.remove('test');
+		});
+
 		DOM.remove('test');
 	})();
 

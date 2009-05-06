@@ -2266,7 +2266,24 @@ tinymce.create('static tinymce.util.XHR', {
 				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
 			};
 
+			// WebKit has a bug where the setStartBefore/setStartAfter/setEndBefore/setEndAfter methods produces an exception on DOM detached nodes
+			// So we then need to use the setStart/setEnd method with and that needs to have the node index.
+			function nodeIndex(n) {
+				var i = 0;
+
+				while (n.previousSibling) {
+					i++;
+					n = n.previousSibling;
+				}
+
+				return i;
+			};
+
 			if (pe && e) {
+/*
+				// WebKit might fix the bug: https://bugs.webkit.org/show_bug.cgi?id=25571
+				// So then this code can be reintroduced
+
 				// Get before chunk
 				r.setStartBefore(pe);
 				r.setEndBefore(e);
@@ -2276,6 +2293,18 @@ tinymce.create('static tinymce.util.XHR', {
 				r = t.createRng();
 				r.setStartAfter(e);
 				r.setEndAfter(pe);
+				aft = r.extractContents();
+*/
+
+				// Get before chunk
+				r.setStart(pe.parentNode, nodeIndex(pe));
+				r.setEnd(e.parentNode, nodeIndex(e));
+				bef = r.extractContents();
+
+				// Get after chunk
+				r = t.createRng();
+				r.setStart(e.parentNode, nodeIndex(e) + 1);
+				r.setEnd(pe.parentNode, nodeIndex(pe) + 1);
 				aft = r.extractContents();
 
 				// Insert chunks and remove parent
@@ -8858,6 +8887,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
 			}
 
+			// On IE we need to use this method since IE 8 has a loading forever bug it
+			// will display 1 item remaining forever even if the editor is loaded
+			// Using this method to setup the editor that message will probably appear inside the iframe and there for it will be invisible ugly but it works
+			if (tinymce.isIE && !tinymce.relaxedDomain)
+				u = 'javascript:(function(){document.open();var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
+
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
 				id : t.id + "_ifr",
@@ -8882,8 +8917,16 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		setupIframe : function() {
 			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
-			// Setup iframe body
-			if (!isIE || !tinymce.relaxedDomain) {
+			// Wait for the body I know this method is ugly but required on IE 8 since
+			// it's impossible to directly write contents to an iframe without getting a loading forever bug
+			if (!d.body) {
+				window.setTimeout(function(){t.setupIframe();}, 0);
+				return;
+			}
+
+			// Setup iframe body we can use the direct method on non
+			// IE browsers since it doesn't have the IE 8 loading forever bug
+			if (!isIE) {
 				d.open();
 				d.write(t.iframeHTML);
 				d.close();

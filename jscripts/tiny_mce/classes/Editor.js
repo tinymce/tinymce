@@ -422,6 +422,12 @@
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
 			}
 
+			// On IE we need to use this method since IE 8 has a loading forever bug it
+			// will display 1 item remaining forever even if the editor is loaded
+			// Using this method to setup the editor that message will probably appear inside the iframe and there for it will be invisible ugly but it works
+			if (tinymce.isIE && !tinymce.relaxedDomain)
+				u = 'javascript:(function(){document.open();var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
+
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
 				id : t.id + "_ifr",
@@ -451,8 +457,16 @@
 		setupIframe : function() {
 			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
-			// Setup iframe body
-			if (!isIE || !tinymce.relaxedDomain) {
+			// Wait for the body I know this method is ugly but required on IE 8 since
+			// it's impossible to directly write contents to an iframe without getting a loading forever bug
+			if (!d.body) {
+				window.setTimeout(function(){t.setupIframe();}, 0);
+				return;
+			}
+
+			// Setup iframe body we can use the direct method on non
+			// IE browsers since it doesn't have the IE 8 loading forever bug
+			if (!isIE) {
 				d.open();
 				d.write(t.iframeHTML);
 				d.close();
