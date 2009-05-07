@@ -1,6 +1,7 @@
 Version 3.2.3.2 (2009-05-xx)
 	Fixed bug on IE 8 where it would sometimes produce a "1 item remaining" status message that would never finish.
 	Fixed bug on Safari 4 beta that would produce DOM Range exceptions on the DOMUtils split method since the browser has a bug.
+	Fixed bug where the paste plugin could accidentally think that some word sentences was supposed to be list elements.
 Version 3.2.3.1 (2009-05-05)
 	Fixed bug where paragraphs containing form elements such as input or textarea would be removed.
 	Fixed bug where some IE versions would produce a wrapper function for events attributes.

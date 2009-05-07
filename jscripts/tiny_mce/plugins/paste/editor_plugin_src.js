@@ -262,7 +262,7 @@
 					type = 'ul';
 
 				// Detect ordered lists 1., a. or ixv.
-				if (/^[\s\S]*\w+\.[\s\S]*\u00a0{2,}/.test(val))
+				if (/^\s*\w+\.\s*\u00a0{2,}/.test(val))
 					type = 'ol';
 
 				// Check if node value matches the list pattern: o&nbsp;&nbsp;
