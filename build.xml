@@ -319,6 +319,19 @@
 			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery.js" fullpath="jscripts/tiny_mce/tiny_mce.js"/>
 			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery_src.js" fullpath="jscripts/tiny_mce/tiny_mce_src.js"/>
 		</zip>
+
+		<!-- Remove copyright headers for commerical version -->
+		<replaceregexp match="^/\*(.*?)\*\/\s*" replace="" flags="gs" byline="false">
+			<fileset dir="${export_dir}/tinymce">
+				<include name="**/*.js" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Compress development package (commercial) -->
+		<delete file="${package_dir}/tinymce_${file_version}_dev_commercial.zip" quiet="true" />
+		<zip destfile="${package_dir}/tinymce_${file_version}_dev_commercial.zip" excludes="**/license.txt">
+			<zipfileset dir="${export_dir}/tinymce" prefix="tinymce" />
+		</zip>
 	</target>
 
 	<target name="release" depends="export,package" description="Builds release packages"></target>
