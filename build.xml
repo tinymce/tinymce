@@ -330,7 +330,10 @@
 		<!-- Compress development package (commercial) -->
 		<delete file="${package_dir}/tinymce_${file_version}_dev_commercial.zip" quiet="true" />
 		<zip destfile="${package_dir}/tinymce_${file_version}_dev_commercial.zip" excludes="**/license.txt">
-			<zipfileset dir="${export_dir}/tinymce" prefix="tinymce" />
+			<fileset dir="${export_dir}/tinymce">
+				<exclude name="**/license.txt" />
+				<exclude name="**/advanced/about.htm" />
+			</fileset>
 		</zip>
 	</target>
 
