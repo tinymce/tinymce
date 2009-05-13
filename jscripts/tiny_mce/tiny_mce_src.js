@@ -8876,7 +8876,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				bc = bc[t.id] || '';
 			}
 
-			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
+			// On IE we need to use this method since IE 8 has a loading forever bug it
+			// will display 1 item remaining forever even if the editor is loaded
+			// Using this method to setup the editor that message will probably appear inside the iframe and there for it will be invisible ugly but it works
+			if (tinymce.isIE && !tinymce.relaxedDomain) {
+				u = 'javascript:(function(){document.open();var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();})()';
+				t.iframeHTML += '</head><body onload="parent.tinyMCE.get(\'' + t.id + '\');" id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
+			} else
+				t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain) {
@@ -8884,14 +8891,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				if (isIE || (tinymce.isOpera && parseFloat(opera.version()) >= 9.5))
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
 				else if (tinymce.isOpera)
-					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.close();ed.setupIframe();})()';					
 			}
-
-			// On IE we need to use this method since IE 8 has a loading forever bug it
-			// will display 1 item remaining forever even if the editor is loaded
-			// Using this method to setup the editor that message will probably appear inside the iframe and there for it will be invisible ugly but it works
-			if (tinymce.isIE && !tinymce.relaxedDomain)
-				u = 'javascript:(function(){document.open();var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
 
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
