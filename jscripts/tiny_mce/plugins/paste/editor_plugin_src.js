@@ -49,7 +49,7 @@
 				// Serialize content
 				o.content = ed.serializer.serialize(o.node, {getInner : 1});
 
-				// Insert cleaned content. We need to handle insertion of contents containing block elements separatly
+				//  Insert cleaned content. We need to handle insertion of contents containing block elements separately
 				if (/<(p|h[1-6]|ul|ol)/.test(o.content))
 					t._insertBlockContent(ed, dom, o.content);
 				else
@@ -169,7 +169,7 @@
 		},
 
 		_preProcess : function(pl, o) {
-			var h = o.content, process;
+			var ed = this.editor, h = o.content, process, stripClass;
 
 			//console.log('Before preprocess:' + o.content);
 
@@ -189,25 +189,49 @@
 				/(&nbsp;|<br[^>]*>)+\s*$/g									// nbsp entities at the end of contents
 			]);
 
-			// Detect Word content and process it more agressive
+			// Detect Word content and process it more aggressive
 			if (/(class=\"?Mso|style=\"[^\"]*\bmso\-|w:WordDocument)/.test(h)) {
 				o.wordContent = true; // Mark the pasted contents as word specific content
 				//console.log('Word contents detected.');
 
 				process([
 					/<!--[\s\S]+?-->/gi,												// Word comments
-					/<\/?(img|font|meta|link|style|span|div|v:\w+)[^>]*>/gi,			// Remove some tags including VML content
+					/<\/?(img|font|meta|link|style|div|v:\w+)[^>]*>/gi,					// Remove some tags including VML content
 					/<\\?\?xml[^>]*>/gi,												// XML namespace declarations
 					/<\/?o:[^>]*>/gi,													// MS namespaced elements <o:tag>
-					/ (id|name|class|language|type|on\w+|v:\w+)=\"([^\"]*)\"/gi,	// on.., class, style and language attributes with quotes
-					/ (id|name|class|language|type|on\w+|v:\w+)=(\w+)/gi,			// on.., class, style and language attributes without quotes (IE)
+					/ (id|name|language|type|on\w+|v:\w+)=\"([^\"]*)\"/gi,				// on.., class, style and language attributes with quotes
+					/ (id|name|language|type|on\w+|v:\w+)=(\w+)/gi,						// on.., class, style and language attributes without quotes (IE)
 					[/<(\/?)s>/gi, '<$1strike>'],										// Convert <s> into <strike> for line-though
 					/<script[^>]+>[\s\S]*?<\/script>/gi,								// All scripts elements for msoShowComment for example
 					[/&nbsp;/g, '\u00a0']												// Replace nsbp entites to char since it's easier to handle
 				]);
 			}
 
-			//console.log('After preprocess:' + h);
+			// Allow for class names to be retained if desired; either all, or just the ones from Word
+			// Note that the paste_strip_class_attributes: 'none, verify_css_classes: true is also a good variation.
+			stripClass = ed.getParam('paste_strip_class_attributes', 'all');
+			if (stripClass != 'none') {
+				if (stripClass == 'all') {
+					process([
+						/ class=\"([^\"]*)\"/gi,	// class attributes with quotes
+						/ class=(\w+)/gi			// class attributes without quotes (IE)
+					]);
+				} else { // Only strip the 'mso*' classes
+					process([
+						/ class=\"(mso[^\"]*)\"/gi,	// class attributes with quotes
+						/ class=(mso\w+)/gi			// class attributes without quotes (IE)
+					]);
+				}
+			}
+
+			// Remove spans option
+			if (ed.getParam('paste_remove_spans') || !ed.getParam('paste_retain_style_properties')) {
+				process([
+					/<\/?(span)[^>]*>/gi
+				]);
+			}
+
+			// console.log('After preprocess:' + h);
 
 			o.content = h;
 		},
@@ -216,7 +240,7 @@
 		 * Various post process items.
 		 */
 		_postProcess : function(pl, o) {
-			var t = this, dom = t.editor.dom;
+			var t = this, ed = t.editor, dom = ed.dom, styleProps;
 
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
@@ -228,18 +252,60 @@
 				if (t.editor.getParam('paste_convert_middot_lists', true))
 					t._convertLists(pl, o);
 
-				// Remove all styles
-				each(dom.select('*', o.node), function(el) {
-					dom.setAttrib(el, 'style', '');
-				});
+				// Process styles
+				styleProps = ed.getParam('paste_retain_style_properties'); // retained properties
+
+				if (styleProps) {
+					// If string property then split it
+					if (tinymce.is(styleProps, 'string'))
+						styleProps = tinymce.explode(styleProps);
+
+					// Retains some style properties
+					each(dom.select('*', o.node), function(el) {
+						var newStyle = {}, npc = 0, i, sp, sv;
+
+						// Store a subset of the existing styles
+						if (styleProps) {
+							for (i = 0; i < styleProps.length; i++) {
+								sp = styleProps[i];
+								sv = dom.getStyle(el, sp);
+
+								if (sv) {
+									newStyle[sp] = sv;
+									npc++;
+								}
+							}
+						}
+
+						// Remove all of the existing styles
+						dom.setAttrib(el, 'style', '');
+
+						if (styleProps && npc > 0)
+							dom.setStyles(el, newStyle); // Add back the stored subset of styles
+						else // Remove empty span tags that do not have class attributes
+							if (el.nodeName == 'SPAN' && !el.className)
+								dom.remove(el, true);
+					});
+				}
+
+				if (t.editor.getParam('paste_convert_middot_lists', true))
+					t._convertLists(pl, o);
 			}
 
-			if (tinymce.isWebKit) {
-				// We need to compress the styles on WebKit since if you paste <img border="0" /> it will become <img border="0" style="... lots of junk ..." />
-				// Removing the mce_style that contains the real value will force the Serializer engine to compress the styles
-				each(dom.select('*', o.node), function(el) {
+			// Remove all style information or only specifically on WebKit to avoid the style bug on that browser
+			if (ed.getParam("paste_remove_styles") || (ed.getParam("paste_remove_styles_if_webkit") && tinymce.isWebKit)) {
+				each(dom.select('*[style]', o.node), function(el) {
+					el.removeAttribute('style');
 					el.removeAttribute('mce_style');
 				});
+			} else {
+				if (tinymce.isWebKit) {
+					// We need to compress the styles on WebKit since if you paste <img border="0" /> it will become <img border="0" style="... lots of junk ..." />
+					// Removing the mce_style that contains the real value will force the Serializer engine to compress the styles
+					each(dom.select('*', o.node), function(el) {
+						el.removeAttribute('mce_style');
+					});
+				}
 			}
 		},
 
@@ -249,7 +315,7 @@
 		_convertLists : function(pl, o) {
 			var dom = pl.editor.dom, listElm, li, lastMargin = -1, margin, levels = [], lastType;
 
-			// Convert middot lists into real scemantic lists
+			// Convert middot lists into real semantic lists
 			each(dom.select('p', o.node), function(p) {
 				var sib, val = '', type, html, idx, parents;
 
@@ -257,8 +323,10 @@
 				for (sib = p.firstChild; sib && sib.nodeType == 3; sib = sib.nextSibling)
 					val += sib.nodeValue;
 
+				val = p.innerHTML.replace(/<\/?\w+[^>]*>/gi, '').replace(/&nbsp;/g, '\u00a0');
+
 				// Detect unordered lists look for bullets
-				if (/^[\u2022\u00b7\u00a7\u00d8o]\s*\u00a0\u00a0*/.test(val))
+				if (/^[\u2022\u00b7\u00a7\u00d8o]\s*\u00a0*/.test(val))
 					type = 'ul';
 
 				// Detect ordered lists 1., a. or ixv.
@@ -287,11 +355,19 @@
 						}
 					}
 
-					if (type == 'ul')
-						html = p.innerHTML.replace(/^[\u2022\u00b7\u00a7\u00d8o]\s*(&nbsp;|\u00a0)+\s*/, '');
-					else
-						html = p.innerHTML.replace(/^[\s\S]*\w+\.(&nbsp;|\u00a0)+\s*/, '');
+					// Remove middot or number spans
+					each(dom.select('span', p), function(span) {
+						var html = span.innerHTML.replace(/<\/?\w+[^>]*>/gi, '');
 
+						// Remove span with the middot or the number
+						if (type == 'ul' && /^[\u2022\u00b7\u00a7\u00d8o]/.test(html))
+							dom.remove(span);
+						else if (/^[\s\S]*\w+\.(&nbsp;|\u00a0)*\s*/.test(html))
+							dom.remove(span);
+					});
+
+					// Create li and add paragraph data into the new li
+					html = p.innerHTML;
 					li = listElm.appendChild(dom.create('li', 0, html));
 					dom.remove(p);
 

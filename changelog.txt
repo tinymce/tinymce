@@ -1,4 +1,6 @@
 Version 3.2.3.2 (2009-05-xx)
+	Added new paste_remove_styles/paste_remove_styles_if_webkit option to paste plugin concept contributed by Hadrien Gardeur.
+	Added new functionality to paste plugin contributed by Scott Eade aka monkeybrain.
 	Fixed bug on IE 8 where it would sometimes produce a "1 item remaining" status message that would never finish.
 	Fixed bug on Safari 4 beta that would produce DOM Range exceptions on the DOMUtils split method since the browser has a bug.
 	Fixed bug where the paste plugin could accidentally think that some word sentences was supposed to be list elements.
