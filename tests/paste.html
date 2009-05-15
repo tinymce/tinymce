@@ -96,6 +96,25 @@ test("Paste Word table", function() {
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<table border="1" cellspacing="0" cellpadding="0"><tbody><tr><td width="307" valign="top"><p>Cell 1</p></td><td width="307" valign="top"><p>Cell 2</p></td></tr><tr><td width="307" valign="top"><p>Cell 3</p></td><td width="307" valign="top"><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
 });
 
+/*
+test("Paste Word retain styles", function() {
+	var rng = editor.dom.createRng();
+
+	editor.setContent('<p>1234</p>');
+	rng.setStart(editor.getBody().firstChild.firstChild, 0);
+	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
+	editor.selection.setRng(rng);
+
+	editor.settings.paste_retain_style_properties = 'color,background,font-family';
+
+	editor.execCommand('mceInsertClipboardContent', false, '<p class="MsoNormal"><b style=""><i style=""><s><u><span style="background: red none repeat scroll 0% 0%; font-family: &quot;Arial Black&quot;,&quot;sans-serif&quot;; color: rgb(192, 0, 0); -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;">test</span></u></s></i></b><b style=""><i style=""><s><u><span style="font-family: &quot;Arial Black&quot;,&quot;sans-serif&quot;; color: rgb(192, 0, 0);"><o:p></o:p></span></u></s></i></b></p>');
+
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p><strong><em><span style=\"text-decoration: line-through;\"><span style=\"text-decoration: underline;\"><span style=\"background: red none repeat scroll 0% 0%; color: #c00000; font-family: &quot;Arial Black&quot;,&quot;sans-serif&quot;;\">test</span></span></span></em></strong><strong><em><span style=\"text-decoration: line-through;\"></span></em></strong></p>');
+
+	editor.settings.paste_retain_style_properties = '';
+});
+*/
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

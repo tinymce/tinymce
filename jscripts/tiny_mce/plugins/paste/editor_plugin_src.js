@@ -205,6 +205,13 @@
 					/<script[^>]+>[\s\S]*?<\/script>/gi,								// All scripts elements for msoShowComment for example
 					[/&nbsp;/g, '\u00a0']												// Replace nsbp entites to char since it's easier to handle
 				]);
+
+				// Remove all spans if no styles is to be retained
+				if (!ed.getParam('paste_retain_style_properties')) {
+					process([
+						/<\/?(span)[^>]*>/gi
+					]);
+				}
 			}
 
 			// Allow for class names to be retained if desired; either all, or just the ones from Word
@@ -225,13 +232,13 @@
 			}
 
 			// Remove spans option
-			if (ed.getParam('paste_remove_spans') || !ed.getParam('paste_retain_style_properties')) {
+			if (ed.getParam('paste_remove_spans')) {
 				process([
 					/<\/?(span)[^>]*>/gi
 				]);
 			}
 
-			// console.log('After preprocess:' + h);
+			//console.log('After preprocess:' + h);
 
 			o.content = h;
 		},
@@ -255,38 +262,36 @@
 				// Process styles
 				styleProps = ed.getParam('paste_retain_style_properties'); // retained properties
 
-				if (styleProps) {
-					// If string property then split it
-					if (tinymce.is(styleProps, 'string'))
-						styleProps = tinymce.explode(styleProps);
+				// If string property then split it
+				if (tinymce.is(styleProps, 'string'))
+					styleProps = tinymce.explode(styleProps);
 
-					// Retains some style properties
-					each(dom.select('*', o.node), function(el) {
-						var newStyle = {}, npc = 0, i, sp, sv;
+				// Retains some style properties
+				each(dom.select('*', o.node), function(el) {
+					var newStyle = {}, npc = 0, i, sp, sv;
 
-						// Store a subset of the existing styles
-						if (styleProps) {
-							for (i = 0; i < styleProps.length; i++) {
-								sp = styleProps[i];
-								sv = dom.getStyle(el, sp);
+					// Store a subset of the existing styles
+					if (styleProps) {
+						for (i = 0; i < styleProps.length; i++) {
+							sp = styleProps[i];
+							sv = dom.getStyle(el, sp);
 
-								if (sv) {
-									newStyle[sp] = sv;
-									npc++;
-								}
+							if (sv) {
+								newStyle[sp] = sv;
+								npc++;
 							}
 						}
+					}
 
-						// Remove all of the existing styles
-						dom.setAttrib(el, 'style', '');
+					// Remove all of the existing styles
+					dom.setAttrib(el, 'style', '');
 
-						if (styleProps && npc > 0)
-							dom.setStyles(el, newStyle); // Add back the stored subset of styles
-						else // Remove empty span tags that do not have class attributes
-							if (el.nodeName == 'SPAN' && !el.className)
-								dom.remove(el, true);
-					});
-				}
+					if (styleProps && npc > 0)
+						dom.setStyles(el, newStyle); // Add back the stored subset of styles
+					else // Remove empty span tags that do not have class attributes
+						if (el.nodeName == 'SPAN' && !el.className)
+							dom.remove(el, true);
+				});
 
 				if (t.editor.getParam('paste_convert_middot_lists', true))
 					t._convertLists(pl, o);
@@ -355,7 +360,7 @@
 						}
 					}
 
-					// Remove middot or number spans
+					// Remove middot or number spans if they exists
 					each(dom.select('span', p), function(span) {
 						var html = span.innerHTML.replace(/<\/?\w+[^>]*>/gi, '');
 
@@ -366,8 +371,15 @@
 							dom.remove(span);
 					});
 
-					// Create li and add paragraph data into the new li
 					html = p.innerHTML;
+
+					// Remove middot/list items
+					if (type == 'ul')
+						html = p.innerHTML.replace(/^[\u2022\u00b7\u00a7\u00d8o]\s*(&nbsp;|\u00a0)+\s*/, '');
+					else
+						html = p.innerHTML.replace(/^\s*\w+\.(&nbsp;|\u00a0)+\s*/, '');
+
+					// Create li and add paragraph data into the new li
 					li = listElm.appendChild(dom.create('li', 0, html));
 					dom.remove(p);
 
