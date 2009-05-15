@@ -16,9 +16,12 @@
 	each = tinymce.each;
 	extend = tinymce.extend;
 
-	function isEmpty(n) {
+	function isEmpty(n, k) {
 		n = n.innerHTML;
-		n = n.replace(/<\w+ .*?mce_\w+\"?=.*?>/gi, '-'); // Keep tags with mce_ attribs
+
+		if (k)
+			n = n.replace(/<\w+ .*?mce_\w+\"?=.*?>/gi, '-'); // Keep tags with mce_ attribs
+
 		n = n.replace(/<(img|hr|table|input|select|textarea)[ \>]/gi, '-'); // Keep these convert them to - chars
 		n = n.replace(/<[^>]+>/g, ''); // Remove all tags
 
@@ -148,7 +151,7 @@
 				// For example: <p><strong><em></em></strong></p>
 				ed.onPreProcess.add(function(ed, o) {
 					each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
-						if (isEmpty(p))
+						if (isEmpty(p, 1))
 							p.innerHTML = '';
 					});
 				});
