@@ -154,6 +154,18 @@
 				}
 			}
 
+			// Block all drag/drop events
+			if (ed.getParam('paste_block_drop')) {
+				ed.onInit.add(function() {
+					ed.dom.bind(ed.getBody(), ['dragend', 'dragover', 'draggesture', 'dragdrop', 'drop', 'drag'], function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+
+						return false;
+					});
+				});
+			}
+
 			// Add legacy support
 			t._legacySupport();
 		},

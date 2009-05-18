@@ -29,13 +29,23 @@
 		 * Adds an event handler to the specified object.
 		 *
 		 * @param {Element/Document/Window/Array/String} o Object or element id string to add event handler to or an array of elements/ids/documents.
-		 * @param {String} n Name of event handler to add for example: click.
+		 * @param {String/Array} n Name of event handler to add for example: click.
 		 * @param {function} f Function to execute when the event occurs.
 		 * @param {Object} s Optional scope to execute the function in.
 		 * @return {function} Function callback handler the same as the one passed in.
 		 */
 		add : function(o, n, f, s) {
 			var cb, t = this, el = t.events, r;
+
+			if (n instanceof Array) {
+				r = [];
+
+				each(n, function(n) {
+					r.push(t.add(o, n, f, s));
+				});
+
+				return r;
+			}
 
 			// Handle array
 			if (o && o.hasOwnProperty && o instanceof Array) {
@@ -62,9 +72,23 @@
 
 				e = e || window.event;
 
-				// Patch in target in IE it's W3C valid
-				if (e && !e.target && isIE)
-					e.target = e.srcElement;
+				// Patch in target, preventDefault and stopPropagation in IE it's W3C valid
+				if (e && isIE) {
+					if (!e.target)
+						e.target = e.srcElement;
+
+					if (!e.preventDefault) {
+						e.preventDefault = function() {
+							e.returnValue = false;
+						};
+					}
+
+					if (!e.stopPropagation) {
+						e.stopPropagation = function() {
+							e.cancelBubble = true;
+						};
+					}
+				}
 
 				if (!s)
 					return f(e);

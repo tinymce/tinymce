@@ -4369,6 +4369,16 @@ window.tinymce.dom.Sizzle = Sizzle;
 		add : function(o, n, f, s) {
 			var cb, t = this, el = t.events, r;
 
+			if (n instanceof Array) {
+				r = [];
+
+				each(n, function(n) {
+					r.push(t.add(o, n, f, s));
+				});
+
+				return r;
+			}
+
 			// Handle array
 			if (o && o.hasOwnProperty && o instanceof Array) {
 				r = [];
@@ -4394,9 +4404,23 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 				e = e || window.event;
 
-				// Patch in target in IE it's W3C valid
-				if (e && !e.target && isIE)
-					e.target = e.srcElement;
+				// Patch in target, preventDefault and stopPropagation in IE it's W3C valid
+				if (e && isIE) {
+					if (!e.target)
+						e.target = e.srcElement;
+
+					if (!e.preventDefault) {
+						e.preventDefault = function() {
+							e.returnValue = false;
+						};
+					}
+
+					if (!e.stopPropagation) {
+						e.stopPropagation = function() {
+							e.cancelBubble = true;
+						};
+					}
+				}
 
 				if (!s)
 					return f(e);

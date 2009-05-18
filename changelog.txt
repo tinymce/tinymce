@@ -1,6 +1,7 @@
 Version 3.2.3.2 (2009-05-xx)
 	Added new paste_remove_styles/paste_remove_styles_if_webkit option to paste plugin concept contributed by Hadrien Gardeur.
 	Added new functionality to paste plugin contributed by Scott Eade aka monkeybrain.
+	Added new paste_block_drop option to the paste plugin this is disabled by default and will block any drag/drop event.
 	Added new bind/unbind methods to DOMUtils these works like Event.add/Event.remove but is easier to access.
 	Fixed bug on IE 8 where it would sometimes produce a "1 item remaining" status message that would never finish.
 	Fixed bug on Safari 4 beta that would produce DOM Range exceptions on the DOMUtils split method since the browser has a bug.
