@@ -51,7 +51,7 @@
 			<fileset dir="${classes_dir}" includes="dom/Range.js" />
 			<fileset dir="${classes_dir}" includes="dom/TridentSelection.js" />
 			<fileset dir="${classes_dir}" includes="dom/Sizzle.js" />
-			<fileset dir="${classes_dir}" includes="dom/Event.js" />
+			<fileset dir="${classes_dir}" includes="dom/EventUtils.js" />
 			<fileset dir="${classes_dir}" includes="dom/Element.js" />
 			<fileset dir="${classes_dir}" includes="dom/Selection.js" />
 			<fileset dir="${classes_dir}" includes="dom/XMLWriter.js" />

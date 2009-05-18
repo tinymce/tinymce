@@ -52,7 +52,7 @@
 			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat"; 
 			t.stdMode = d.documentMode === 8;
 
-			this.settings = s = tinymce.extend({
+			t.settings = s = tinymce.extend({
 				keep_values : false,
 				hex_colors : 1,
 				process_html : 1
@@ -1628,7 +1628,10 @@
 		destroy : function(s) {
 			var t = this;
 
-			t.win = t.doc = t.root = null;
+			if (t.events)
+				t.events.destroy();
+
+			t.win = t.doc = t.root = t.events = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)
@@ -1748,6 +1751,41 @@
 
 				return re || e;
 			}
+		},
+
+		/**
+		 * Adds an event handler to the specified object.
+		 *
+		 * @param {Element/Document/Window/Array/String} o Object or element id string to add event handler to or an array of elements/ids/documents.
+		 * @param {String} n Name of event handler to add for example: click.
+		 * @param {function} f Function to execute when the event occurs.
+		 * @param {Object} s Optional scope to execute the function in.
+		 * @return {function} Function callback handler the same as the one passed in.
+		 */
+		bind : function(target, name, func, scope) {
+			var t = this;
+
+			if (!t.events)
+				t.events = new tinymce.dom.EventUtils();
+
+			return t.events.add(target, name, func, scope || this);
+		},
+
+		/**
+		 * Removes the specified event handler by name and function from a element or collection of elements.
+		 *
+		 * @param {String/Element/Array} o Element ID string or HTML element or an array of elements or ids to remove handler from.
+		 * @param {String} n Event handler name like for example: "click"
+		 * @param {function} f Function to remove.
+		 * @return {bool/Array} Bool state if true if the handler was removed or an array with states if multiple elements where passed in.
+		 */
+		unbind : function(target, name, func) {
+			var t = this;
+
+			if (!t.events)
+				t.events = new tinymce.dom.EventUtils();
+
+			return t.events.remove(target, name, func);
 		},
 
 		// #ifdef debug

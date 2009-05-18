@@ -87,7 +87,7 @@
 	include('dom/Range.js');
 	include('dom/TridentSelection.js');
 	include('dom/Sizzle.js');
-	include('dom/Event.js');
+	include('dom/EventUtils.js');
 	include('dom/Element.js');
 	include('dom/Selection.js');
 	include('dom/XMLWriter.js');
