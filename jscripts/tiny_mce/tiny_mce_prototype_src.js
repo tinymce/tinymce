@@ -11677,19 +11677,19 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return ne;
 			};
 
+			// Remove empty inline elements within block elements
+			// For example: <p><strong><em></em></strong></p> becomes <p>&nbsp;</p>
+			ed.onPreProcess.add(function(ed, o) {
+				each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
+					// Fix for not breaking media types
+					// This fix is somewhat ugly so we should figure out a better way of doing this in the future
+					if (isEmpty(p) && !/_mce_value/.test(p.innerHTML))
+						p.innerHTML = '';
+				});
+			});
+
 			// IE specific fixes
 			if (isIE) {
-				// Remove empty inline elements within block elements
-				// For example: <p><strong><em></em></strong></p> becomes <p>&nbsp;</p>
-				ed.onPreProcess.add(function(ed, o) {
-					each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
-						// Fix for not breaking media types
-						// This fix is somewhat ugly so we should figure out a better way of doing this in the future
-						if (isEmpty(p) && !/_mce_value/.test(p.innerHTML))
-							p.innerHTML = '';
-					});
-				});
-
 				// Replaces IE:s auto generated paragraphs with the specified element name
 				if (s.element != 'P') {
 					ed.onKeyPress.add(function(ed, e) {
