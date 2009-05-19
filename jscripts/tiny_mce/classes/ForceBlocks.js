@@ -16,11 +16,8 @@
 	each = tinymce.each;
 	extend = tinymce.extend;
 
-	function isEmpty(n, k) {
+	function isEmpty(n) {
 		n = n.innerHTML;
-
-		if (k)
-			n = n.replace(/<\w+ .*?mce_\w+\"?=.*?>/gi, '-'); // Keep tags with mce_ attribs
 
 		n = n.replace(/<(img|hr|table|input|select|textarea)[ \>]/gi, '-'); // Keep these convert them to - chars
 		n = n.replace(/<[^>]+>/g, ''); // Remove all tags
@@ -148,10 +145,12 @@
 			// IE specific fixes
 			if (isIE) {
 				// Remove empty inline elements within block elements
-				// For example: <p><strong><em></em></strong></p>
+				// For example: <p><strong><em></em></strong></p> becomes <p>&nbsp;</p>
 				ed.onPreProcess.add(function(ed, o) {
 					each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
-						if (isEmpty(p, 1))
+						// Fix for not breaking media types
+						// This fix is somewhat ugly so we should figure out a better way of doing this in the future
+						if (isEmpty(p) && !/_mce_value/.test(p.innerHTML))
 							p.innerHTML = '';
 					});
 				});
