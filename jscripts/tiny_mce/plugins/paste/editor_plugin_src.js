@@ -483,8 +483,8 @@
 				ed.addCommand(cmd, function() {
 					ed.windowManager.open({
 						file : t.url + (cmd == 'mcePasteText' ? '/pastetext.htm' : '/pasteword.htm'),
-						width : 450,
-						height : 400,
+						width : parseInt(ed.getParam("paste_dialog_width", "450")),
+						height : parseInt(ed.getParam("paste_dialog_height", "400")),
 						inline : 1
 					});
 				});
