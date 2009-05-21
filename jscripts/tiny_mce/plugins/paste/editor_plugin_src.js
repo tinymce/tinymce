@@ -206,6 +206,14 @@
 				o.wordContent = true; // Mark the pasted contents as word specific content
 				//console.log('Word contents detected.');
 
+				if (ed.getParam('paste_convert_middot_lists', true)) {
+					process([
+						[/<!--\[if !supportLists\]-->/gi, '$&__MCE_ITEM__'],			// Convert supportLists to a list item marker
+						[/(<span[^>]+:\s*symbol[^>]+>)/gi, '$1__MCE_ITEM__'],				// Convert symbol spans to list items
+						[/(<span[^>]+mso-list:[^>]+>)/gi, '$1__MCE_ITEM__']				// Convert mso-list to item marker
+					]);
+				}
+
 				process([
 					/<!--[\s\S]+?-->/gi,												// Word comments
 					/<\/?(img|font|meta|link|style|div|v:\w+)[^>]*>/gi,					// Remove some tags including VML content
@@ -304,9 +312,6 @@
 						if (el.nodeName == 'SPAN' && !el.className)
 							dom.remove(el, true);
 				});
-
-				if (t.editor.getParam('paste_convert_middot_lists', true))
-					t._convertLists(pl, o);
 			}
 
 			// Remove all style information or only specifically on WebKit to avoid the style bug on that browser
@@ -330,7 +335,7 @@
 		 * Converts the most common bullet and number formats in Office into a real semantic UL/LI list.
 		 */
 		_convertLists : function(pl, o) {
-			var dom = pl.editor.dom, listElm, li, lastMargin = -1, margin, levels = [], lastType;
+			var dom = pl.editor.dom, listElm, li, lastMargin = -1, margin, levels = [], lastType, html;
 
 			// Convert middot lists into real semantic lists
 			each(dom.select('p', o.node), function(p) {
@@ -343,11 +348,11 @@
 				val = p.innerHTML.replace(/<\/?\w+[^>]*>/gi, '').replace(/&nbsp;/g, '\u00a0');
 
 				// Detect unordered lists look for bullets
-				if (/^[\u2022\u00b7\u00a7\u00d8o]\s*\u00a0*/.test(val))
+				if (/^(__MCE_ITEM__)+[\u2022\u00b7\u00a7\u00d8o]\s*\u00a0*/.test(val))
 					type = 'ul';
 
 				// Detect ordered lists 1., a. or ixv.
-				if (/^\s*\w+\.\s*\u00a0{2,}/.test(val))
+				if (/^__MCE_ITEM__\s*\w+\.\s*\u00a0{2,}/.test(val))
 					type = 'ol';
 
 				// Check if node value matches the list pattern: o&nbsp;&nbsp;
@@ -387,9 +392,9 @@
 
 					// Remove middot/list items
 					if (type == 'ul')
-						html = p.innerHTML.replace(/^[\u2022\u00b7\u00a7\u00d8o]\s*(&nbsp;|\u00a0)+\s*/, '');
+						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o]\s*(&nbsp;|\u00a0)+\s*/, '');
 					else
-						html = p.innerHTML.replace(/^\s*\w+\.(&nbsp;|\u00a0)+\s*/, '');
+						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^\s*\w+\.(&nbsp;|\u00a0)+\s*/, '');
 
 					// Create li and add paragraph data into the new li
 					li = listElm.appendChild(dom.create('li', 0, html));
@@ -400,6 +405,11 @@
 				} else
 					listElm = lastMargin = 0; // End list element
 			});
+
+			// Remove any left over makers
+			html = o.node.innerHTML;
+			if (html.indexOf('__MCE_ITEM__') != -1)
+				o.node.innerHTML = html.replace(/__MCE_ITEM__/g, '');
 		},
 
 		/**
@@ -466,7 +476,7 @@
 
 			// First delete the contents seems to work better on WebKit
 			if (!ed.selection.isCollapsed())
-				ed.execCommand('Delete');
+				ed.getDoc().execCommand('Delete', false, null);
 
 			// It's better to use the insertHTML method on Gecko since it will combine paragraphs correctly before inserting the contents
 			ed.execCommand(tinymce.isGecko ? 'insertHTML' : 'mceInsertContent', false, h, {skip_undo : skip_undo});

@@ -7,6 +7,7 @@ Version 3.2.4 (2009-05-xx)
 	Fixed bug on IE 8 where it would sometimes produce a "1 item remaining" status message that would never finish.
 	Fixed bug on Safari 4 beta that would produce DOM Range exceptions on the DOMUtils split method since the browser has a bug.
 	Fixed bug where the paste plugin could accidentally think that some word sentences was supposed to be list elements.
+	Fixed bug where paste plugin would produce one extra empty undo level on some browsers.
 	Fixed bug where spans wasn't produced correctly on new line when the keep_styles option was enabled.
 	Fixed bug where the caret would be placed at the beginning of contents in IE 8 if you selected colors from the color pickers.
 	Fixed so the Event class is a normal class instead of a static one. The tinymce.dom.Event is now a global instance of that class.
