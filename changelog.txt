@@ -1,4 +1,4 @@
-Version 3.2.4 (2009-05-xx)
+Version 3.2.4 (2009-05-21)
 	Added new paste_remove_styles/paste_remove_styles_if_webkit option to paste plugin concept contributed by Hadrien Gardeur.
 	Added new functionality to paste plugin contributed by Scott Eade aka monkeybrain.
 	Added new paste_block_drop option to the paste plugin this is disabled by default and will block any drag/drop event.
