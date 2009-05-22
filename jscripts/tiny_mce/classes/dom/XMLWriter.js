@@ -116,7 +116,7 @@
 		 * @param {String} v Value to write in CDATA.
 		 */
 		writeCDATA : function(v) {
-			this.node.appendChild(this.doc.createCDATA(v));
+			this.node.appendChild(this.doc.createCDATASection(v));
 		},
 
 		/**

@@ -1884,27 +1884,34 @@ tinymce.create('static tinymce.util.XHR', {
 						return s;
 					};
 
-					// Preserve script elements
-					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/g, function(v, a, b) {
-						// Remove prefix and suffix code for script element
-						b = trim(b);
-
+					// Wrap the script contents in CDATA and keep them from executing
+					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/g, function(v, attribs, text) {
 						// Force type attribute
-						if (!a)
-							a = ' type="text/javascript"';
+						if (!attribs)
+							attribs = ' type="text/javascript"';
 
-						// Wrap contents in a comment
-						if (b)
-							b = '<!--\n' + b + '\n// -->';
+						// Prefix script type/language attribute values with mce- to prevent it from executing
+						attribs = attribs.replace(/(type|language)=\"?/, '$&mce-');
+						attribs = attribs.replace(/src=\"([^\"]+)\"?/, function(a, url) {
+							if (s.url_converter)
+								url = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(url), 'src', 'script'));
 
-						// Output fake element
-						return '<mce:script' + a + '>' + b + '</mce:script>';
+							return 'mce_src="' + url + '"';
+						});
+
+						// Wrap text contents
+						if (text)
+							text = '<!--\n' + trim(text) + '\n// -->';
+
+						return '<script' + attribs + '>' + text + '</script>';
 					});
 
-					// Preserve style elements
-					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/g, function(v, a, b) {
-						b = trim(b);
-						return '<mce:style' + a + '><!--\n' + b + '\n--></mce:style><style' + a + ' mce_bogus="1">' + b + '</style>';
+					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/g, function(v, attribs, text) {
+						// Wrap text contents
+						if (text)
+							text = '<!--\n' + trim(text) + '\n-->';
+
+						return '<mce:style' + attribs + '>' + text + '</mce:style><style ' + attribs + ' mce_bogus="1">' + text + '</style>';
 					});
 				}
 
@@ -5473,7 +5480,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 
 		writeCDATA : function(v) {
-			this.node.appendChild(this.doc.createCDATA(v));
+			this.node.appendChild(this.doc.createCDATASection(v));
 		},
 
 		writeComment : function(v) {
@@ -5510,7 +5517,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		StringWriter : function(s) {
 			this.settings = tinymce.extend({
 				indent_char : ' ',
-				indentation : 1
+				indentation : 0
 			}, s);
 
 			this.reset();
@@ -6061,24 +6068,36 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 
 		serialize : function(n, o) {
-			var h, t = this;
+			var h, t = this, clone, clonedScripts, realScripts;
 
 			t._setup();
 			o = o || {};
 			o.format = o.format || 'html';
 			t.processObj = o;
-			n = n.cloneNode(true);
+			clone = n.cloneNode(true);
 			t.key = '' + (parseInt(t.key) + 1);
+
+			// Restore script contents on IE since it's lost when you clone the node
+			if (isIE) {
+				clonedScripts = t.dom.select('script', clone);
+				if (clonedScripts.length > 0) {
+					realScripts = t.dom.select('script', n);
+
+					each(clonedScripts, function(script, i) {
+						script.text = realScripts[i].text;
+					});
+				}
+			}
 
 			// Pre process
 			if (!o.no_events) {
-				o.node = n;
+				o.node = clone;
 				t.onPreProcess.dispatch(t, o);
 			}
 
 			// Serialize HTML DOM into a string
 			t.writer.reset();
-			t._serializeNode(n, o.getInner);
+			t._serializeNode(clone, o.getInner);
 
 			// Post process
 			o.content = t.writer.getContent();
@@ -6152,6 +6171,9 @@ window.tinymce.dom.Sizzle = Sizzle;
 				// Restore CDATA sections
 				h = h.replace(/<!--\[CDATA\[([\s\S]+)\]\]-->/g, '<![CDATA[$1]]>');
 
+				// Restore scripts
+				h = h.replace(/(type|language)=\"mce-/g, '$1="');
+
 				// Restore the \u00a0 character if raw mode is enabled
 				if (s.entity_encoding == 'raw')
 					h = h.replace(/<p>&nbsp;<\/p>|<p([^>]+)>&nbsp;<\/p>/g, '<p$1>\u00a0</p>');
@@ -6161,7 +6183,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 
 		_serializeNode : function(n, inn) {
-			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv;
+			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv, closed;
 
 			if (!s.node_filter || s.node_filter(n)) {
 				switch (n.nodeType) {
@@ -6221,6 +6243,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 						ru = t.findRule(nn);
 						nn = ru.name || nn;
+						closed = s.closed.test(nn);
 
 						// Skip empty nodes or empty node name in IE
 						if ((!hc && ru.noEmpty) || (isIE && !nn)) {
@@ -6278,6 +6301,14 @@ window.tinymce.dom.Sizzle = Sizzle;
 							}
 						}
 
+						// Write text from script
+						if (nn === 'script' && n.text) {
+							w.writeText('// '); // Padd it with a comment so it will parse on older browsers
+							w.writeCDATA(n.text.replace(/<!--|-->|<\[CDATA\[|\]\]>/g, '')); // Remove comments and cdata stuctures
+							hc = false;
+							break;
+						}
+
 						// Padd empty nodes with a &nbsp;
 						if (ru.padd) {
 							// If it has only one bogus child, padd it anyway workaround for <td><br /></td> bug
@@ -6308,7 +6339,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			} else if (n.nodeType == 1)
 				hc = n.hasChildNodes();
 
-			if (hc) {
+			if (hc && !closed) {
 				cn = n.firstChild;
 
 				while (cn) {
@@ -6320,7 +6351,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 			// Write element end
 			if (!iv) {
-				if (hc || !s.closed.test(nn))
+				if (!closed)
 					w.writeFullEndElement();
 				else
 					w.writeEndElement();
@@ -11676,14 +11707,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return ne;
 			};
 
-			// Remove empty inline elements within block elements
-			// For example: <p><strong><em></em></strong></p> becomes <p>&nbsp;</p>
+			// Padd empty inline elements within block elements
+			// For example: <p><strong><em></em></strong></p> becomes <p><strong><em>&nbsp;</em></strong></p>
 			ed.onPreProcess.add(function(ed, o) {
 				each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
-					// Fix for not breaking media types
-					// This fix is somewhat ugly so we should figure out a better way of doing this in the future
-					if (isEmpty(p) && !/_mce_value/.test(p.innerHTML))
-						p.innerHTML = '';
+					if (isEmpty(p)) {
+						each(ed.dom.select('span,em,strong,b,i', o.node), function(n) {
+							if (!n.hasChildNodes()) {
+								n.appendChild(ed.getDoc().createTextNode('\u00a0'));
+								return false; // Break the loop one padding is enough
+							}
+						});
+					}
 				});
 			});
 

@@ -142,14 +142,18 @@
 				return ne;
 			};
 
-			// Remove empty inline elements within block elements
-			// For example: <p><strong><em></em></strong></p> becomes <p>&nbsp;</p>
+			// Padd empty inline elements within block elements
+			// For example: <p><strong><em></em></strong></p> becomes <p><strong><em>&nbsp;</em></strong></p>
 			ed.onPreProcess.add(function(ed, o) {
 				each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
-					// Fix for not breaking media types
-					// This fix is somewhat ugly so we should figure out a better way of doing this in the future
-					if (isEmpty(p) && !/_mce_value/.test(p.innerHTML))
-						p.innerHTML = '';
+					if (isEmpty(p)) {
+						each(ed.dom.select('span,em,strong,b,i', o.node), function(n) {
+							if (!n.hasChildNodes()) {
+								n.appendChild(ed.getDoc().createTextNode('\u00a0'));
+								return false; // Break the loop one padding is enough
+							}
+						});
+					}
 				});
 			});
 

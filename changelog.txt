@@ -1,3 +1,9 @@
+Version 3.2.4.1 (2009-05-xx)
+	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
+	Fixed bug where script elements would be removed if they where placed inside a paragraph element.
+	Fixed various bugs and issues with script and style elements inside the editor.
+	Fixed so all script contents gets wrapped in CDATA sections so that they can be parsed using a XML parser.
+	Fixed so it's impossible for elements marked as closed to have child nodes rendered in output.
 Version 3.2.4 (2009-05-21)
 	Added new paste_remove_styles/paste_remove_styles_if_webkit option to paste plugin concept contributed by Hadrien Gardeur.
 	Added new functionality to paste plugin contributed by Scott Eade aka monkeybrain.

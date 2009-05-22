@@ -1180,28 +1180,28 @@ $(window).load(function() {
 
 			ser.setRules('script[type|language|src]');
 			DOM.setHTML('test', '<script>var a = b < c1;</script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c1;\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\nvar a = b < c1;\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">var a = b < c2;</script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c2;\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\nvar a = b < c2;\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">\n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n</script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n\tvar a = b < c22;\n\t if (a < b)\n\t\talert(1);\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript"><!-- var a = b < c3; // --></script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\n var a = b < c3;\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n var a = b < c3;\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">\n\n<!-- var a = b < c3;\n\n--></script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\n var a = b < c3;\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n var a = b < c3;\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">// <![CDATA[var a = b < c4; // ]]></script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c4;\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\nvar a = b < c4;\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript"><![CDATA[var a = b < c4; ]]></script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c4;\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\nvar a = b < c4;\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript">\n\n<![CDATA[\n\nvar a = b < c4;\n\n]]>\n\n</script>');
-			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript"><!--\nvar a = b < c4;\n// --></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\nvar a = b < c4;\n// ]]></script>');
 
 			DOM.setHTML('test', '<script type="text/javascript" src="test.js"></script>');
 			equals(ser.serialize(DOM.get('test')), '<script type="text/javascript" src="test.js"></script>');

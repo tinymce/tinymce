@@ -506,24 +506,36 @@
 		 * @return {String} Serialized HTML contents.
 		 */
 		serialize : function(n, o) {
-			var h, t = this;
+			var h, t = this, clone, clonedScripts, realScripts;
 
 			t._setup();
 			o = o || {};
 			o.format = o.format || 'html';
 			t.processObj = o;
-			n = n.cloneNode(true);
+			clone = n.cloneNode(true);
 			t.key = '' + (parseInt(t.key) + 1);
+
+			// Restore script contents on IE since it's lost when you clone the node
+			if (isIE) {
+				clonedScripts = t.dom.select('script', clone);
+				if (clonedScripts.length > 0) {
+					realScripts = t.dom.select('script', n);
+
+					each(clonedScripts, function(script, i) {
+						script.text = realScripts[i].text;
+					});
+				}
+			}
 
 			// Pre process
 			if (!o.no_events) {
-				o.node = n;
+				o.node = clone;
 				t.onPreProcess.dispatch(t, o);
 			}
 
 			// Serialize HTML DOM into a string
 			t.writer.reset();
-			t._serializeNode(n, o.getInner);
+			t._serializeNode(clone, o.getInner);
 
 			// Post process
 			o.content = t.writer.getContent();
@@ -602,6 +614,9 @@
 				// Restore CDATA sections
 				h = h.replace(/<!--\[CDATA\[([\s\S]+)\]\]-->/g, '<![CDATA[$1]]>');
 
+				// Restore scripts
+				h = h.replace(/(type|language)=\"mce-/g, '$1="');
+
 				// Restore the \u00a0 character if raw mode is enabled
 				if (s.entity_encoding == 'raw')
 					h = h.replace(/<p>&nbsp;<\/p>|<p([^>]+)>&nbsp;<\/p>/g, '<p$1>\u00a0</p>');
@@ -611,7 +626,7 @@
 		},
 
 		_serializeNode : function(n, inn) {
-			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv;
+			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv, closed;
 
 			if (!s.node_filter || s.node_filter(n)) {
 				switch (n.nodeType) {
@@ -671,6 +686,7 @@
 
 						ru = t.findRule(nn);
 						nn = ru.name || nn;
+						closed = s.closed.test(nn);
 
 						// Skip empty nodes or empty node name in IE
 						if ((!hc && ru.noEmpty) || (isIE && !nn)) {
@@ -728,6 +744,14 @@
 							}
 						}
 
+						// Write text from script
+						if (nn === 'script' && n.text) {
+							w.writeText('// '); // Padd it with a comment so it will parse on older browsers
+							w.writeCDATA(n.text.replace(/<!--|-->|<\[CDATA\[|\]\]>/g, '')); // Remove comments and cdata stuctures
+							hc = false;
+							break;
+						}
+
 						// Padd empty nodes with a &nbsp;
 						if (ru.padd) {
 							// If it has only one bogus child, padd it anyway workaround for <td><br /></td> bug
@@ -758,7 +782,7 @@
 			} else if (n.nodeType == 1)
 				hc = n.hasChildNodes();
 
-			if (hc) {
+			if (hc && !closed) {
 				cn = n.firstChild;
 
 				while (cn) {
@@ -770,7 +794,7 @@
 
 			// Write element end
 			if (!iv) {
-				if (hc || !s.closed.test(nn))
+				if (!closed)
 					w.writeFullEndElement();
 				else
 					w.writeEndElement();
