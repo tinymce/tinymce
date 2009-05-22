@@ -506,36 +506,24 @@
 		 * @return {String} Serialized HTML contents.
 		 */
 		serialize : function(n, o) {
-			var h, t = this, clone, clonedScripts, realScripts;
+			var h, t = this;
 
 			t._setup();
 			o = o || {};
 			o.format = o.format || 'html';
 			t.processObj = o;
-			clone = n.cloneNode(true);
+			n = n.cloneNode(true);
 			t.key = '' + (parseInt(t.key) + 1);
-
-			// Restore script contents on IE since it's lost when you clone the node
-			if (isIE) {
-				clonedScripts = t.dom.select('script', clone);
-				if (clonedScripts.length > 0) {
-					realScripts = t.dom.select('script', n);
-
-					each(clonedScripts, function(script, i) {
-						script.text = realScripts[i].text;
-					});
-				}
-			}
 
 			// Pre process
 			if (!o.no_events) {
-				o.node = clone;
+				o.node = n;
 				t.onPreProcess.dispatch(t, o);
 			}
 
 			// Serialize HTML DOM into a string
 			t.writer.reset();
-			t._serializeNode(clone, o.getInner);
+			t._serializeNode(n, o.getInner);
 
 			// Post process
 			o.content = t.writer.getContent();
@@ -745,9 +733,9 @@
 						}
 
 						// Write text from script
-						if (nn === 'script' && n.text) {
+						if (nn === 'script' && tinymce.trim(n.innerHTML)) {
 							w.writeText('// '); // Padd it with a comment so it will parse on older browsers
-							w.writeCDATA(n.text.replace(/<!--|-->|<\[CDATA\[|\]\]>/g, '')); // Remove comments and cdata stuctures
+							w.writeCDATA(n.innerHTML.replace(/<!--|-->|<\[CDATA\[|\]\]>/g, '')); // Remove comments and cdata stuctures
 							hc = false;
 							break;
 						}

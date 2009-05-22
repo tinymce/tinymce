@@ -1188,10 +1188,10 @@
 						});
 
 						// Wrap text contents
-						if (text)
+						if (tinymce.trim(text))
 							text = '<!--\n' + trim(text) + '\n// -->';
 
-						return '<script' + attribs + '>' + text + '</script>';
+						return '<mce:script' + attribs + '>' + text + '</mce:script>';
 					});
 
 					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/g, function(v, attribs, text) {
