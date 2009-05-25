@@ -4358,8 +4358,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 	var each = tinymce.each, DOM = tinymce.DOM, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, Event;
 
 	tinymce.create('tinymce.dom.EventUtils', {
-		inits : [],
-		events : [],
+		EventUtils : function() {
+			this.inits = [];
+			this.events = [];
+		},
 
 
 		add : function(o, n, f, s) {

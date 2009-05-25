@@ -3239,8 +3239,10 @@ tinymce.create('static tinymce.util.XHR', {
 	var each = tinymce.each, DOM = tinymce.DOM, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, Event;
 
 	tinymce.create('tinymce.dom.EventUtils', {
-		inits : [],
-		events : [],
+		EventUtils : function() {
+			this.inits = [];
+			this.events = [];
+		},
 
 
 		cancel : function(e) {

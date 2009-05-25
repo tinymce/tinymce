@@ -16,8 +16,13 @@
 	 * @member tinymce.dom.Event
 	 */
 	tinymce.create('tinymce.dom.EventUtils', {
-		inits : [],
-		events : [],
+		/**
+		 * Constructs a new EventUtils instance.
+		 */
+		EventUtils : function() {
+			this.inits = [];
+			this.events = [];
+		},
 
 		/**#@+
 		 * @method
