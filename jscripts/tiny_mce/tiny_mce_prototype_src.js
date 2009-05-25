@@ -1659,17 +1659,33 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		loadCSS : function(u) {
-			var t = this, d = t.doc;
+			var t = this, d = t.doc, head;
 
 			if (!u)
 				u = '';
 
+			head = t.select('head')[0];
+
 			each(u.split(','), function(u) {
+				var link;
+
 				if (t.files[u])
 					return;
 
 				t.files[u] = true;
-				t.add(t.select('head')[0], 'link', {rel : 'stylesheet', href : tinymce._addVer(u)});
+				link = t.create('link', {rel : 'stylesheet', href : tinymce._addVer(u)});
+
+				// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
+				// This fix seems to resolve that issue by realcing the document ones a stylesheet finishes loading
+				// It's ugly but it seems to work fine.
+				if (isIE && d.documentMode) {
+					link.onload = function() {
+						d.recalc();
+						link.onload = null;
+					};
+				}
+
+				head.appendChild(link);
 			});
 		},
 
@@ -8980,14 +8996,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				bc = bc[t.id] || '';
 			}
 
-			// On IE we need to use this method since IE 8 has a loading forever bug it
-			// will display 1 item remaining forever even if the editor is loaded
-			// Using this method to setup the editor that message will probably appear inside the iframe and there for it will be invisible ugly but it works
-			if (tinymce.isIE && !tinymce.relaxedDomain) {
-				u = 'javascript:(function(){document.open();var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();})()';
-				t.iframeHTML += '</head><body onload="parent.tinyMCE.get(\'' + t.id + '\');" id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
-			} else
-				t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
+			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain) {
@@ -8995,7 +9004,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				if (isIE || (tinymce.isOpera && parseFloat(opera.version()) >= 9.5))
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
 				else if (tinymce.isOpera)
-					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.close();ed.setupIframe();})()';					
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
 			}
 
 			// Create iframe
@@ -9022,16 +9031,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		setupIframe : function() {
 			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
-			// Wait for the body I know this method is ugly but required on IE 8 since
-			// it's impossible to directly write contents to an iframe without getting a loading forever bug
-			if (!d.body) {
-				window.setTimeout(function(){t.setupIframe();}, 0);
-				return;
-			}
-
-			// Setup iframe body we can use the direct method on non
-			// IE browsers since it doesn't have the IE 8 loading forever bug
-			if (!isIE) {
+			// Setup iframe body
+			if (!isIE || !tinymce.relaxedDomain) {
 				d.open();
 				d.write(t.iframeHTML);
 				d.close();

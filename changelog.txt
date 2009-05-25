@@ -1,6 +1,7 @@
 Version 3.2.4.1 (2009-05-xx)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
 	Fixed bug where script elements would be removed if they where placed inside a paragraph element.
+	Fixed bug where IE 8 would produce 1 item remaining when loading CSS files dynamically with an empty cache.
 	Fixed various bugs and issues with script and style elements inside the editor.
 	Fixed so all script contents gets wrapped in CDATA sections so that they can be parsed using a XML parser.
 	Fixed so it's impossible for elements marked as closed to have child nodes rendered in output.
