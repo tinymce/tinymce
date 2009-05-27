@@ -151,6 +151,9 @@
 		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/tabfocus/editor_plugin_src.js" outfile="${build_dir}/plugins/tabfocus/editor_plugin.js" />
 
+		<!-- Compress jQuery plugin -->
+		<yuicompress infile="${classes_dir}/adapter/jquery/jquery.tinymce.js" outfile="${build_dir}/jquery.tinymce.js" />
+
 		<!-- Process dialogs -->
 		<!--
 		<jswrap infile="plugins/advhr/rule.htm" outfile="plugins/advhr/rule.htm.js" />
@@ -291,6 +294,7 @@
 				<include name="examples/**" />
 				<include name="changelog.txt" />
 				<exclude name="jscripts/tiny_mce/classes/**" />
+				<exclude name="jscripts/tiny_mce/jquery.tinymce.js" />
 				<exclude name="jscripts/tiny_mce/tiny_mce_dev.js" />
 				<exclude name="jscripts/tiny_mce/tiny_mce_jquery.js" />
 				<exclude name="jscripts/tiny_mce/tiny_mce_jquery_src.js" />
@@ -306,6 +310,7 @@
 				<include name="jscripts/**" />
 				<include name="examples/**" />
 				<include name="changelog.txt" />
+				<exclude name="examples/full.html" />
 				<exclude name="jscripts/tiny_mce/classes/**" />
 				<exclude name="jscripts/tiny_mce/tiny_mce.js" />
 				<exclude name="jscripts/tiny_mce/tiny_mce_src.js" />
@@ -316,6 +321,7 @@
 				<exclude name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
 
+			<zipfileset dir="${export_dir}/tinymce/" includes="examples/full_jquery.html" fullpath="examples/full.html"/>
 			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery.js" fullpath="jscripts/tiny_mce/tiny_mce.js"/>
 			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery_src.js" fullpath="jscripts/tiny_mce/tiny_mce_src.js"/>
 		</zip>
