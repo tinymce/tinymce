@@ -1194,7 +1194,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-
 		setStyle : function(n, na, v) {
 			var t = this;
 
@@ -1363,7 +1362,6 @@ tinymce.create('static tinymce.util.XHR', {
 				});
 			});
 		},
-
 
 		getAttrib : function(e, n, dv) {
 			var v, t = this;
@@ -1662,7 +1660,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-
 		addClass : function(e, c) {
 			return this.run(e, function(e) {
 				var o;
@@ -1720,7 +1717,6 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return !e || e.style.display == 'none' || this.getStyle(e, 'display') == 'none';
 		},
-
 
 		uniqueId : function(p) {
 			return (!p ? 'mce_' : p) + (this.counter++);
@@ -2035,7 +2031,6 @@ tinymce.create('static tinymce.util.XHR', {
 			}) : s;
 		},
 
-
 		insertAfter : function(n, r) {
 			var t = this;
 
@@ -2056,7 +2051,6 @@ tinymce.create('static tinymce.util.XHR', {
 			});
 		},
 
-
 		isBlock : function(n) {
 			if (n.nodeType && n.nodeType !== 1)
 				return false;
@@ -2065,7 +2059,6 @@ tinymce.create('static tinymce.util.XHR', {
 
 			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TR|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
-
 
 		replace : function(n, o, k) {
 			var t = this;
@@ -2091,7 +2084,6 @@ tinymce.create('static tinymce.util.XHR', {
 				return o.parentNode.replaceChild(n, o);
 			});
 		},
-
 
 		findCommonAncestor : function(a, b) {
 			var ps = a, pe;
@@ -4363,7 +4355,6 @@ window.tinymce.dom.Sizzle = Sizzle;
 			this.events = [];
 		},
 
-
 		add : function(o, n, f, s) {
 			var cb, t = this, el = t.events, r;
 
@@ -4500,7 +4491,6 @@ window.tinymce.dom.Sizzle = Sizzle;
 				}
 			}
 		},
-
 
 		cancel : function(e) {
 			if (!e)

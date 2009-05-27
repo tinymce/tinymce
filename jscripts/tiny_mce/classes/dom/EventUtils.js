@@ -28,8 +28,6 @@
 		 * @method
 		 */
 
-		// #ifndef jquery
-
 		/**
 		 * Adds an event handler to the specified object.
 		 *
@@ -188,8 +186,6 @@
 				}
 			}
 		},
-
-		// #endif
 
 		/**
 		 * Cancels an event for both bubbeling and the default browser behavior.

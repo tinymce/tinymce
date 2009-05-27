@@ -9,7 +9,7 @@
 
 // #ifdef jquery_adapter
 
-(function($) {
+(function($, tinymce) {
 	var is = tinymce.is;
 
 	if (!window.jQuery)
@@ -43,6 +43,7 @@
 	// Add a "#ifndefjquery" statement around each core API function you add below
 	var patches = {
 		'tinymce.dom.DOMUtils' : {
+			/*
 			addClass : function(e, c) {
 				if (is(e, 'array') && is(e[0], 'string'))
 					e = e.join(',#');
@@ -69,11 +70,15 @@
 
 				return r.length == 1 ? r[0] : r;
 			},
+			*/
 
-			select : function(p, c) {
-				return tinymce.grep($(p));
+			select : function(pattern, scope) {
+				var t = this;
+
+				return jQuery.find(pattern, t.get(scope) || t.get(t.settings.root_element) || t.doc, []);
 			},
 
+			/*
 			show : function(e) {
 				if (is(e, 'array') && is(e[0], 'string'))
 					e = e.join(',#');
@@ -173,8 +178,10 @@
 					t.setAttrib(e,n,v);
 				});
 			}
-		},
+			*/
+		}
 
+/*
 		'tinymce.dom.Event' : {
 			add : function (o, n, f, s) {
 				var lo, cb;
@@ -218,12 +225,13 @@
 				return true;
 			}
 		}
+*/
 	};
 
 	// Patch functions after a class is created
 	tinymce.onCreate = function(ty, c, p) {
 		tinymce.extend(p, patches[c]);
 	};
-})(jQuery);
+})(jQuery, tinymce);
 
 // #endif

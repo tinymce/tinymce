@@ -377,8 +377,6 @@
 			});
 		},
 
-		// #ifndef jquery
-
 		/**
 		 * Sets the CSS style value on a HTML element. The name can be a camelcase string
 		 * or the CSS style name like background-color.
@@ -582,8 +580,6 @@
 				});
 			});
 		},
-
-		// #endif
 
 		/**
 		 * Returns the specified attribute by name.
@@ -916,8 +912,6 @@
 			});
 		},
 
-		// #ifndef jquery
-
 		/**
 		 * Adds a class to the specified element or elements.
 		 *
@@ -1012,8 +1006,6 @@
 
 			return !e || e.style.display == 'none' || this.getStyle(e, 'display') == 'none';
 		},
-
-		// #endif
 
 		/**
 		 * Returns a unique id. This can be useful when generating elements on the fly.
@@ -1375,8 +1367,6 @@
 			}) : s;
 		},
 
-		// #ifndef jquery
-
 		/**
 		 * Inserts a element after the reference element.
 		 *
@@ -1404,8 +1394,6 @@
 			});
 		},
 
-		// #endif
-
 		/**
 		 * Returns true/false if the specified element is a block element or not.
 		 *
@@ -1420,8 +1408,6 @@
 
 			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TR|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
 		},
-
-		// #ifndef jquery
 
 		/**
 		 * Replaces the specified element or elements with the specified element, the new element will
@@ -1455,8 +1441,6 @@
 				return o.parentNode.replaceChild(n, o);
 			});
 		},
-
-		// #endif
 
 		/**
 		 * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
