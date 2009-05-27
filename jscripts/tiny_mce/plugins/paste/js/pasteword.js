@@ -32,7 +32,7 @@ var PasteWordDialog = {
 	insert : function() {
 		var h = document.getElementById('iframe').contentWindow.document.body.innerHTML;
 
-		tinyMCEPopup.editor.execCommand('mceInsertClipboardContent', false, h);
+		tinyMCEPopup.editor.execCommand('mceInsertClipboardContent', false, {content : h, wordContent : true});
 		tinyMCEPopup.close();
 	},
 

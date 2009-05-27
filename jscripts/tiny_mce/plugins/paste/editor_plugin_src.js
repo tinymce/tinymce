@@ -34,8 +34,8 @@
 			});
 
 			// This function executes the process handlers and inserts the contents
-			function process(h) {
-				var dom = ed.dom, o = {content : h};
+			function process(o) {
+				var dom = ed.dom;
 
 				// Execute pre process handlers
 				t.onPreProcess.dispatch(t, o);
@@ -57,8 +57,8 @@
 			};
 
 			// Add command for external usage
-			ed.addCommand('mceInsertClipboardContent', function(u, v) {
-				process(v);
+			ed.addCommand('mceInsertClipboardContent', function(u, o) {
+				process(o);
 			});
 
 			// This function grabs the contents from the clipboard by adding a
@@ -99,7 +99,7 @@
 					dom.remove(n);
 
 					// Process contents
-					process(n.innerHTML);
+					process({content : n.innerHTML});
 
 					return tinymce.dom.Event.cancel(e);
 				} else {
@@ -133,7 +133,7 @@
 						if (or)
 							sel.setRng(or);
 
-						process(h);
+						process({content : h});
 					}, 0);
 				}
 			};
@@ -202,7 +202,7 @@
 			]);
 
 			// Detect Word content and process it more aggressive
-			if (/(class=\"?Mso|style=\"[^\"]*\bmso\-|w:WordDocument)/.test(h)) {
+			if (/(class=\"?Mso|style=\"[^\"]*\bmso\-|w:WordDocument)/.test(h) || o.wordContent) {
 				o.wordContent = true; // Mark the pasted contents as word specific content
 				//console.log('Word contents detected.');
 

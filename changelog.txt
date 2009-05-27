@@ -1,3 +1,5 @@
+Version 3.2.x (2009-05-xx)
+	Fixed so the paste from word dialog forces the contents to be processed as word contents even if it's not.
 Version 3.2.4.1 (2009-05-25)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
 	Fixed bug where script elements would be removed if they where placed inside a paragraph element.
