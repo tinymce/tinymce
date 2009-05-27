@@ -506,13 +506,20 @@
 		 * @return {String} Serialized HTML contents.
 		 */
 		serialize : function(n, o) {
-			var h, t = this;
+			var h, t = this, frag;
 
 			t._setup();
 			o = o || {};
 			o.format = o.format || 'html';
 			t.processObj = o;
 			n = n.cloneNode(true);
+
+			// Nodes needs to be attached to something in WebKit due to a bug https://bugs.webkit.org/show_bug.cgi?id=25571
+			if (tinymce.isWebKit) {
+				frag = n.ownerDocument.createDocumentFragment();
+				frag.appendChild(n);
+			}
+
 			t.key = '' + (parseInt(t.key) + 1);
 
 			// Pre process

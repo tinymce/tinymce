@@ -1,8 +1,10 @@
 Version 3.2.x (2009-05-xx)
 	Added new jQuery plugin for the jQuery specific package. This enables you to more easily load and use TinyMCE.
+	Added new autoresize plugin contributed by Peter Dekkers. This plugin will auto resize the editor to the size of the contents.
 	Fixed so all packages have the same directory structure. Previous releases had a different structure for the production package.
 	Fixed so the paste from word dialog forces the contents to be processed as word contents even if it's not.
 	Fixed so the jQuery build adapter build works. It's currently only excluding Sizzle.
+	Fixed the WebKit specific bug where DOM Ranges would fail if the node wasn't attached to something in a different way.
 Version 3.2.4.1 (2009-05-25)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
 	Fixed bug where script elements would be removed if they where placed inside a paragraph element.
