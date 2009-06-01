@@ -148,7 +148,7 @@ tinyMCEPopup = {
 	 * looses it's selection if a control element is selected/focused inside the dialogs.
 	 */
 	storeSelection : function() {
-		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark('simple');
+		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark(1);
 	},
 
 	/**

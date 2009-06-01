@@ -241,7 +241,7 @@
 				c.onPostRender.add(function(c, n) {
 					// Store bookmark on mousedown
 					Event.add(n, 'mousedown', function() {
-						ed.bookmark = ed.selection.getBookmark('simple');
+						ed.bookmark = ed.selection.getBookmark(1);
 					});
 
 					// Restore on focus, since it might be lost

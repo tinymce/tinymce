@@ -50,7 +50,7 @@
 
 			// Only store selection if the type is a normal window
 			if (!f.type)
-				t.bookmark = ed.selection.getBookmark('simple');
+				t.bookmark = ed.selection.getBookmark(1);
 
 			id = DOM.uniqueId();
 			vp = DOM.getViewPort();
