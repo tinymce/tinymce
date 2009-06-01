@@ -134,6 +134,11 @@
 			if (s.fix_table_elements) {
 				t.onPreProcess.add(function(se, o) {
 					each(t.dom.select('p table', o.node), function(n) {
+						// IE has a odd bug where tables inside paragraphs sometimes gets wrapped in a BODY and documentFragement element
+						// This hack seems to resolve that issue. This will normally not happed since your contents should be valid in the first place
+						if (isIE)
+							n.outerHTML = n.outerHTML;
+
 						t.dom.split(t.dom.getParent(n, 'p'), n);
 					});
 				});

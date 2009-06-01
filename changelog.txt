@@ -5,6 +5,7 @@ Version 3.2.x (2009-05-xx)
 	Fixed so the paste from word dialog forces the contents to be processed as word contents even if it's not.
 	Fixed so the jQuery build adapter build works. It's currently only excluding Sizzle.
 	Fixed bug where the getBookmark method would need a "simple" string input when the documented way is a boolean.
+	Fixed bug where invalid contents could break the fix_table_elements logic.
 	Fixed the WebKit specific bug where DOM Ranges would fail if the node wasn't attached to something in a different way.
 Version 3.2.4.1 (2009-05-25)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
