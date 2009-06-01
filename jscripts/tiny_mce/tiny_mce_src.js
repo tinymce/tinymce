@@ -4903,7 +4903,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			sy = vp.y;
 
 			// Simple bookmark fast but not as persistent
-			if (si == 'simple')
+			if (si)
 				return {rng : r, scrollX : sx, scrollY : sy};
 
 			// Handle IE
