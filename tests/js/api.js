@@ -1057,7 +1057,7 @@ $(window).load(function() {
 		test('tinymce.DOM.Serializer - serialize', function() {
 			var ser = new tinymce.dom.Serializer({dom : DOM}), h, a, b;
 
-			expect(42);
+			expect(45);
 
 			DOM.add(document.body, 'div', {id : 'test'});
 			DOM.counter = 0;
@@ -1205,6 +1205,16 @@ $(window).load(function() {
 
 			DOM.setHTML('test', '<script type="text/javascript" src="test.js"></script>');
 			equals(ser.serialize(DOM.get('test')), '<script type="text/javascript" src="test.js"></script>');
+
+			ser.setRules('noscript[test]');
+			DOM.setHTML('test', '<noscript test="test"><br></noscript>');
+			equals(ser.serialize(DOM.get('test')), '<noscript test="test"><br></noscript>');
+
+			DOM.setHTML('test', '<noscript><br></noscript>');
+			equals(ser.serialize(DOM.get('test')), '<noscript><br></noscript>');
+
+			DOM.setHTML('test', '<noscript><!-- text --><br></noscript>');
+			equals(ser.serialize(DOM.get('test')), '<noscript><!-- text --><br></noscript>');
 
 			ser.setRules('map[id|name],area[shape|coords|href|target|alt]');
 			DOM.setHTML('test', '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="Sun" /></map>');

@@ -4,6 +4,7 @@ Version 3.2.x (2009-05-xx)
 	Fixed so all packages have the same directory structure. Previous releases had a different structure for the production package.
 	Fixed so the paste from word dialog forces the contents to be processed as word contents even if it's not.
 	Fixed so the jQuery build adapter build works. It's currently only excluding Sizzle.
+	Fixed so noscript element contents is retained during the editing process.
 	Fixed bug where the getBookmark method would need a "simple" string input when the documented way is a boolean.
 	Fixed bug where invalid contents could break the fix_table_elements logic.
 	Fixed the WebKit specific bug where DOM Ranges would fail if the node wasn't attached to something in a different way.
