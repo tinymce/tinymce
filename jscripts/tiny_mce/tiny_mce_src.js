@@ -1049,10 +1049,6 @@ tinymce.create('static tinymce.util.XHR', {
 			};
 		},
 
-		is : function(n, patt) {
-			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
-		},
-
 		getParent : function(n, f, r) {
 			return this.getParents(n, f, r, false);
 		},
@@ -1116,6 +1112,10 @@ tinymce.create('static tinymce.util.XHR', {
 			var t = this;
 
 			return tinymce.dom.Sizzle(pa, t.get(s) || t.get(t.settings.root_element) || t.doc, []);
+		},
+
+		is : function(n, patt) {
+			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
 		},
 
 

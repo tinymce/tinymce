@@ -75,7 +75,11 @@
 			select : function(pattern, scope) {
 				var t = this;
 
-				return jQuery.find(pattern, t.get(scope) || t.get(t.settings.root_element) || t.doc, []);
+				return $.find(pattern, t.get(scope) || t.get(t.settings.root_element) || t.doc, []);
+			},
+
+			is : function(n, patt) {
+				return $(this.get(n)).is(patt);
 			},
 
 			/*

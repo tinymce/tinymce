@@ -410,7 +410,11 @@ tinymce._init();
 			select : function(pattern, scope) {
 				var t = this;
 
-				return jQuery.find(pattern, t.get(scope) || t.get(t.settings.root_element) || t.doc, []);
+				return $.find(pattern, t.get(scope) || t.get(t.settings.root_element) || t.doc, []);
+			},
+
+			is : function(n, patt) {
+				return $(this.get(n)).is(patt);
 			},
 
 			/*
@@ -1192,10 +1196,6 @@ tinymce.create('static tinymce.util.XHR', {
 				w : parseInt(w) || e.offsetWidth || e.clientWidth,
 				h : parseInt(h) || e.offsetHeight || e.clientHeight
 			};
-		},
-
-		is : function(n, patt) {
-			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
 		},
 
 		getParent : function(n, f, r) {

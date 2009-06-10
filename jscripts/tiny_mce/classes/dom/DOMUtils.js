@@ -157,16 +157,6 @@
 		},
 
 		/**
-		 * Returns true/false if the specified element matches the specified css pattern.
-		 *
-		 * @param {Node/NodeList} n DOM node to match or an array of nodes to match.
-		 * @param {String} patt CSS pattern to match the element agains.
-		 */
-		is : function(n, patt) {
-			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
-		},
-
-		/**
 		 * Returns a node by the specified selector function. This function will
 		 * loop through all parent nodes and call the specified function for each node.
 		 * If the function then returns true indicating that it has found what it was looking for, the loop execution will then end
@@ -265,6 +255,16 @@
 			var t = this;
 
 			return tinymce.dom.Sizzle(pa, t.get(s) || t.get(t.settings.root_element) || t.doc, []);
+		},
+
+		/**
+		 * Returns true/false if the specified element matches the specified css pattern.
+		 *
+		 * @param {Node/NodeList} n DOM node to match or an array of nodes to match.
+		 * @param {String} patt CSS pattern to match the element agains.
+		 */
+		is : function(n, patt) {
+			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
 		},
 
 		// #endif
