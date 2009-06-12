@@ -80,7 +80,7 @@
 
 			is : function(n, patt) {
 				return $(this.get(n)).is(patt);
-			},
+			}
 
 			/*
 			show : function(e) {

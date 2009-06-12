@@ -8,6 +8,7 @@ Version 3.2.x (2009-05-xx)
 	Fixed bug where the getBookmark method would need a "simple" string input when the documented way is a boolean.
 	Fixed bug where invalid contents could break the fix_table_elements logic.
 	Fixed bug where Sizzle specific attributes would be serialized if the valid_elements was set to *[*].
+	Fixed bug where IE would produce an error if you specified a relative content_css and opened the paste dialog.
 	Fixed the WebKit specific bug where DOM Ranges would fail if the node wasn't attached to something in a different way.
 Version 3.2.4.1 (2009-05-25)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
