@@ -10,6 +10,8 @@ Version 3.2.x (2009-05-xx)
 	Fixed bug where Sizzle specific attributes would be serialized if the valid_elements was set to *[*].
 	Fixed bug where IE would produce an error if you specified a relative content_css and opened the paste dialog.
 	Fixed bug where pasting images on IE would produce broken images if they came from an external site.
+	Fixed bug where memory was leaked if you add/remove controls dynamically. Some event handlers wasn't removed properly.
+	Fixed bug where domain relaxing wasn't treated correctly if you added it after the TinyMCE script element.
 	Fixed the WebKit specific bug where DOM Ranges would fail if the node wasn't attached to something in a different way.
 Version 3.2.4.1 (2009-05-25)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
