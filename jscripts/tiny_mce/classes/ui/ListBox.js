@@ -312,6 +312,7 @@
 			this.parent();
 
 			Event.clear(this.id + '_text');
+			Event.clear(this.id + '_open');
 		}
 
 		/**#@-*/
