@@ -383,6 +383,10 @@
 
 			// #endif
 
+			// User specified a document.domain value
+			if (document.domain && location.hostname != document.domain)
+				tinymce.relaxedDomain = document.domain;
+
 			// Resize editor
 			DOM.setStyles(o.sizeContainer || o.editorContainer, {
 				width : w,

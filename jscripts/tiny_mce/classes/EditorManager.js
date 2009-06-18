@@ -38,10 +38,6 @@
 			tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
 			tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
-			// User specified a document.domain value
-			if (document.domain && lo.hostname != document.domain)
-				tinymce.relaxedDomain = document.domain;
-
 			// Add before unload listener
 			// This was required since IE was leaking memory if you added and removed beforeunload listeners
 			// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
