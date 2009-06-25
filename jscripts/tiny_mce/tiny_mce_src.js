@@ -4375,17 +4375,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 					if (!e.target)
 						e.target = e.srcElement;
 
-					if (!e.preventDefault) {
-						e.preventDefault = function() {
-							e.returnValue = false;
-						};
-					}
-
-					if (!e.stopPropagation) {
-						e.stopPropagation = function() {
-							e.cancelBubble = true;
-						};
-					}
+					// Patch in preventDefault, stopPropagation methods for W3C compatibility
+					tinymce.extend(e, t._stoppers);
 				}
 
 				if (!s)
@@ -4592,6 +4583,16 @@ window.tinymce.dom.Sizzle = Sizzle;
 			t._add(win, 'load', function() {
 				t._pageInit(win);
 			});
+		},
+
+		_stoppers : {
+			preventDefault :  function() {
+				this.returnValue = false;
+			},
+
+			stopPropagation : function() {
+				this.cancelBubble = true;
+			}
 		}
 
 		});
