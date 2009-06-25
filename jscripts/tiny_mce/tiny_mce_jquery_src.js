@@ -632,6 +632,9 @@ tinymce.create('tinymce.util.Dispatcher', {
 		URI : function(u, s) {
 			var t = this, o, a, b;
 
+			// Trim whitespace
+			u = tinymce.trim(u);
+
 			// Default settings
 			s = t.settings = s || {};
 
@@ -645,8 +648,8 @@ tinymce.create('tinymce.util.Dispatcher', {
 			if (u.indexOf('/') === 0 && u.indexOf('//') !== 0)
 				u = (s.base_uri ? s.base_uri.protocol || 'http' : 'http') + '://mce_host' + u;
 
-			// Relative path
-			if (u.indexOf(':/') === -1 && u.indexOf('//') !== 0)
+			// Relative path http:// or protocol relative //path
+			if (!/^\w*:?\/\//.test(u))
 				u = (s.base_uri.protocol || 'http') + '://mce_host' + t.toAbsPath(s.base_uri.path, u);
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)

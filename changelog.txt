@@ -14,6 +14,8 @@ Version 3.2.x (2009-05-xx)
 	Fixed bug where domain relaxing wasn't treated correctly if you added it after the TinyMCE script element.
 	Fixed bug where the activeEditor wasn't set to null if the last editor instance was removed.
 	Fixed bug where IE was leaking memory on the onbeforeunload event due to some recently introduced logic. Patch contributed by Options.
+	Fixed bug where inserting tables in Safari 4 didn't work due to a new WebKit bug where some element names are reserved.
+	Fixed bug where URLs having a :// value in the query string would make it absolute regardless of URL settings.
 	Fixed the WebKit specific bug where DOM Ranges would fail if the node wasn't attached to something in a different way.
 Version 3.2.4.1 (2009-05-25)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
