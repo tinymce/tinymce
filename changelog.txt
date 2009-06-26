@@ -17,6 +17,7 @@ Version 3.2.x (2009-05-xx)
 	Fixed bug where inserting tables in Safari 4 didn't work due to a new WebKit bug where some element names are reserved.
 	Fixed bug where URLs having a :// value in the query string would make it absolute regardless of URL settings.
 	Fixed the WebKit specific bug where DOM Ranges would fail if the node wasn't attached to something in a different way.
+	Removed the auto_resize option and the resizeToContent method from the tinymce.Editor class. Use the new autoresize plugin instead.
 Version 3.2.4.1 (2009-05-25)
 	Fixed bug where Gecko browsers would produce an extra space after for example strong when loaded from sub domains.
 	Fixed bug where script elements would be removed if they where placed inside a paragraph element.

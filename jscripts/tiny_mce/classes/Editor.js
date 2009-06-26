@@ -553,9 +553,6 @@
 			if (s.nowrap)
 				t.getBody().style.whiteSpace = "nowrap";
 
-			if (s.auto_resize)
-				t.onNodeChange.add(t.resizeToContent, t);
-
 			if (s.custom_elements) {
 				function handleCustom(ed, o) {
 					each(explode(s.custom_elements), function(v) {
@@ -1355,15 +1352,6 @@
 			this.onSetProgressState.dispatch(this, b, ti, o);
 
 			return b;
-		},
-
-		/**
-		 * Resizes the editor to the current contents width and height.
-		 */
-		resizeToContent : function() {
-			var t = this;
-
-			DOM.setStyle(t.id + "_ifr", 'height', t.getBody().scrollHeight);
 		},
 
 		/**
