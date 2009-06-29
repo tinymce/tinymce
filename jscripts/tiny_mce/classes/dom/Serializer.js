@@ -520,7 +520,7 @@
 
 			// Nodes needs to be attached to something in WebKit due to a bug https://bugs.webkit.org/show_bug.cgi?id=25571
 			if (tinymce.isWebKit) {
-				doc = n.ownerDocument.implementation.createDocument(null, null, null);
+				doc = n.ownerDocument.createDocumentFragment();
 				n = n.cloneNode(true);
 				doc.appendChild(n);
 			}
