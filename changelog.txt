@@ -1,4 +1,4 @@
-Version 3.2.x (2009-05-xx)
+Version 3.2.5 (2009-06-29)
 	Added new jQuery plugin for the jQuery specific package. This enables you to more easily load and use TinyMCE.
 	Added new autoresize plugin contributed by Peter Dekkers. This plugin will auto resize the editor to the size of the contents.
 	Fixed so all packages have the same directory structure. Previous releases had a different structure for the production package.
