@@ -18,7 +18,6 @@
 	// Patch in core NS functions
 	tinymce.extend = $.extend;
 	tinymce.extend(tinymce, {
-		trim : $.trim,
 		map : $.map,
 		grep : function(a, f) {return $.grep(a, f || function(){return 1;});},
 		inArray : function(a, v) {return $.inArray(v, a || []);},

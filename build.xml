@@ -314,10 +314,8 @@
 				<include name="tinymce/changelog.txt" />
 				<exclude name="tinymce/examples/**" />
 				<exclude name="tinymce/jscripts/tiny_mce/classes/**" />
-				<!--
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce.js" /> 
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_src.js" />
-				-->
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_dev.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
@@ -326,11 +324,8 @@
 			</fileset>
 
 			<zipfileset dir="${export_dir}" includes="tinymce/examples/full_jquery.html" fullpath="tinymce/examples/index.html"/>
-			
-			<!--
-			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery.js" fullpath="jscripts/tiny_mce/tiny_mce.js"/>
-			<zipfileset dir="${export_dir}/tinymce" includes="jscripts/tiny_mce/tiny_mce_jquery_src.js" fullpath="jscripts/tiny_mce/tiny_mce_src.js"/>
-			-->
+			<zipfileset dir="${export_dir}" includes="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" fullpath="tinymce/jscripts/tiny_mce/tiny_mce.js"/>
+			<zipfileset dir="${export_dir}" includes="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" fullpath="tinymce/jscripts/tiny_mce/tiny_mce_src.js"/>
 		</zip>
 
 		<!-- Remove copyright headers for commerical version -->

@@ -63,7 +63,7 @@
 		};
 
 		// Load TinyMCE on demand
-		if (!lazyLoading && (url = settings.script_url)) {
+		if (!window['tinymce'] && !lazyLoading && (url = settings.script_url)) {
 			lazyLoading = 1;
 
 			if (/_(src|dev)\.js/g.test(url))

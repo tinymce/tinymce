@@ -91,6 +91,10 @@ var tinymce = {
 	},
 
 
+	trim : function(s) {
+		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
+	},
+
 	create : function(s, p) {
 		var t = this, sp, ns, cn, scn, c, de = 0;
 
@@ -353,7 +357,6 @@ tinymce._init();
 	// Patch in core NS functions
 	tinymce.extend = $.extend;
 	tinymce.extend(tinymce, {
-		trim : $.trim,
 		map : $.map,
 		grep : function(a, f) {return $.grep(a, f || function(){return 1;});},
 		inArray : function(a, v) {return $.inArray(v, a || []);},

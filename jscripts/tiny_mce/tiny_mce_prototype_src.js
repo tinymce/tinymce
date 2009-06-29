@@ -167,10 +167,10 @@ var tinymce = {
 		return o;
 	},
 
+
 	trim : function(s) {
 		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
 	},
-
 
 	create : function(s, p) {
 		var t = this, sp, ns, cn, scn, c, de = 0;

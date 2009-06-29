@@ -233,6 +233,8 @@ var tinymce = {
 		return o;
 	},
 
+	// #endif
+
 	/**
 	 * Removes whitespace from the beginning and end of a string.
 	 *
@@ -242,8 +244,6 @@ var tinymce = {
 	trim : function(s) {
 		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
 	},
-
-	// #endif
 
 	/**
 	 * Creates a class, subclass or static singleton.
