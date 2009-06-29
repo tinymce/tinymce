@@ -6062,7 +6062,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 
 		serialize : function(n, o) {
-			var h, t = this, frag;
+			var h, t = this, doc;
 
 			t._setup();
 			o = o || {};
@@ -6072,8 +6072,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 			// Nodes needs to be attached to something in WebKit due to a bug https://bugs.webkit.org/show_bug.cgi?id=25571
 			if (tinymce.isWebKit) {
-				frag = n.ownerDocument.createDocumentFragment();
-				frag.appendChild(n);
+				doc = n.ownerDocument.implementation.createDocument(null, null, null);
+				doc.appendChild(n);
 			}
 
 			t.key = '' + (parseInt(t.key) + 1);
