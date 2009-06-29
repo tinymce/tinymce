@@ -6041,11 +6041,11 @@ window.tinymce.dom.Sizzle = Sizzle;
 			o = o || {};
 			o.format = o.format || 'html';
 			t.processObj = o;
-			n = n.cloneNode(true);
 
 			// Nodes needs to be attached to something in WebKit due to a bug https://bugs.webkit.org/show_bug.cgi?id=25571
 			if (tinymce.isWebKit) {
 				doc = n.ownerDocument.implementation.createDocument(null, null, null);
+				n = n.cloneNode(true);
 				doc.appendChild(n);
 			}
 
