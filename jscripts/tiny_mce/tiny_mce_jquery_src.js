@@ -10899,11 +10899,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			//	return true;
 
 			// Wrap non blocks into blocks
-			for (i = nl.length - 1; i >= 0; i--) {
-				nx = nl[i];
-
+			nx = b.lastChild;
+			while (nx != null) {
 				// Is text or non block element
-				if (nx.nodeType == 3 || (!t.dom.isBlock(nx) && nx.nodeType != 8)) {
+				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8)) {
 					if (!bl) {
 						// Create new block but ignore whitespace
 						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {
@@ -10946,6 +10945,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							bl = ed.dom.create(ed.settings.forced_root_block);
 							bl.appendChild(nx.cloneNode(1));
 							nx.parentNode.replaceChild(bl, nx);
+							nx = bl;
 						}
 					} else {
 						if (bl.hasChildNodes())
@@ -10955,6 +10955,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					}
 				} else
 					bl = null; // Time to create new block
+
+				nx = nx.previousSibling;
 			}
 
 			// Restore selection

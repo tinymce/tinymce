@@ -1,3 +1,5 @@
+Version 3.2.5.1 (2009-xx-xx)
+	Optimized the forceRootBlocks logic so that it performs better on larger documents. Patch contributed by Martin Waller.
 Version 3.2.5 (2009-06-29)
 	Added new jQuery plugin for the jQuery specific package. This enables you to more easily load and use TinyMCE.
 	Added new autoresize plugin contributed by Peter Dekkers. This plugin will auto resize the editor to the size of the contents.
