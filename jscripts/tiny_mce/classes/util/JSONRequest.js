@@ -8,15 +8,17 @@
 (function() {
 	var extend = tinymce.extend, JSON = tinymce.util.JSON, XHR = tinymce.util.XHR;
 
-	/**#@+
-	 * @class This class enables you to use JSON-RPC to call backend methods.
-	 * @member tinymce.util.JSONRequest
+	/**
+	 * This class enables you to use JSON-RPC to call backend methods.
+	 *
+	 * @class tinymce.util.JSONRequest
 	 */
 	tinymce.create('tinymce.util.JSONRequest', {
 		/**
 		 * Constructs a new JSONRequest instance.
 		 *
 		 * @constructor
+		 * @method JSONRequest
 		 * @param {Object} s Optional settings object.
 		 */
 		JSONRequest : function(s) {
@@ -25,13 +27,10 @@
 			this.count = 0;
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Sends a JSON-RPC call. Consult the Wiki API documentation for more details on what you can pass to this function.
 		 *
+		 * @method send
 		 * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.
 		 */
 		send : function(o) {
@@ -75,13 +74,13 @@
 			 * Simple helper function to send a JSON-RPC request without the need to initialize an object.
 			 * Consult the Wiki API documentation for more details on what you can pass to this function.
 			 *
+			 * @method sendRPC
+			 * @static
 			 * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.
 			 */
 			sendRPC : function(o) {
 				return new tinymce.util.JSONRequest().send(o);
 			}
 		}
-
-		/**#@-*/
 	});
 }());

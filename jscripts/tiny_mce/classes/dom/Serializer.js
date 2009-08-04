@@ -13,16 +13,17 @@
 		return s.replace(/([?+*])/g, '.$1');
 	};
 
-	/**#@+
-	 * @class This class is used to serialize DOM trees into a string.
+	/**
+	 * This class is used to serialize DOM trees into a string.
 	 * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
-	 * @member tinymce.dom.Serializer
+	 * @class tinymce.dom.Serializer
 	 */
 	tinymce.create('tinymce.dom.Serializer', {
 		/**
 		 * Constucts a new DOM serializer class.
 		 *
 		 * @constructor
+		 * @method Serializer
 		 * @param {Object} s Optional name/Value collection of settings for the serializer.
 		 */
 		Serializer : function(s) {
@@ -145,13 +146,10 @@
 			}
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Sets a list of entities to use for the named entity encoded.
 		 *
+		 * @method setEntities
 		 * @param {String} s List of entities in the following format: number,name,....
 		 */
 		setEntities : function(s) {
@@ -189,6 +187,7 @@
 		 * Sets the valid child rules. This enables you to specify what elements can be childrens of what parents.
 		 * Consult the Wiki for format description on this input.
 		 *
+		 * @method setValidChildRules
 		 * @param {String} s String with valid child rules.
 		 */
 		setValidChildRules : function(s) {
@@ -200,6 +199,7 @@
 		 * Adds valid child rules. This enables you to specify what elements can be childrens of what parents.
 		 * Consult the Wiki for format description on this input.
 		 *
+		 * @method addValidChildRules
 		 * @param {String} s String with valid child rules to add.
 		 */
 		addValidChildRules : function(s) {
@@ -278,6 +278,7 @@
 		 * outputted and what attributes specific elements might have.
 		 * Consult the Wiki for more details on this format.
 		 *
+		 * @method setRules
 		 * @param {String} s Valid elements rules string.
 		 */
 		setRules : function(s) {
@@ -296,6 +297,7 @@
 		 * outputted and what attributes specific elements might have.
 		 * Consult the Wiki for more details on this format.
 		 *
+		 * @method addRules
 		 * @param {String} s Valid elements rules string to add.
 		 */
 		addRules : function(s) {
@@ -462,6 +464,7 @@
 		/**
 		 * Finds a rule object by name.
 		 *
+		 * @method findRule
 		 * @param {String} n Name to look for in rules collection.
 		 * @return {Object} Rule object found or null if it wasn't found.
 		 */
@@ -488,6 +491,7 @@
 		/**
 		 * Finds an attribute rule object by name.
 		 *
+		 * @method findAttribRule
 		 * @param {Object} ru Rule object to search though.
 		 * @param {String} n Name of the rule to retrive.
 		 * @return {Object} Rule object of the specified attribute.
@@ -506,6 +510,7 @@
 		/**
 		 * Serializes the specified node into a HTML string.
 		 *
+		 * @method serialize
 		 * @param {Element} n Element/Node to serialize.
 		 * @param {Object} o Object to add serialized contents to, this object will also be passed to the event listeners.
 		 * @return {String} Serialized HTML contents.
@@ -973,7 +978,5 @@
 
 			return v;
 		}
-
-		/**#@-*/
 	});
 })(tinymce);

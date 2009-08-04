@@ -5,20 +5,18 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-/**#@+
- * @class This class is used to create toolbars a toolbar is a container for other controls like buttons etc.
- * @member tinymce.ui.Toolbar
- * @base tinymce.ui.Container
+/**
+ * This class is used to create toolbars a toolbar is a container for other controls like buttons etc.
+ *
+ * @class tinymce.ui.Toolbar
+ * @extends tinymce.ui.Container
  */
 tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
-	/**#@+
-	 * @method
-	 */
-
 	/**
 	 * Renders the toolbar as a HTML string. This method is much faster than using the DOM and when
 	 * creating a whole toolbar with buttons it does make a lot of difference.
 	 *
+	 * @method renderHTML
 	 * @return {String} HTML for the toolbar control.
 	 */
 	renderHTML : function() {
@@ -81,6 +79,4 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || ''}, '<tbody><tr>' + h + '</tr></tbody>');
 	}
-
-	/**#@-*/
 });

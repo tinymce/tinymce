@@ -8,16 +8,19 @@
 (function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, is = tinymce.is, each = tinymce.each;
 
-	/**#@+
-	 * @class This class is used to create UI color split button. A color split button will present show a small color picker
+	/**
+	 * This class is used to create UI color split button. A color split button will present show a small color picker
 	 * when you press the open menu.
-	 * @member tinymce.ui.ColorSplitButton
-	 * @base tinymce.ui.SplitButton
+	 *
+	 * @class tinymce.ui.ColorSplitButton
+	 * @extends tinymce.ui.SplitButton
 	 */
 	tinymce.create('tinymce.ui.ColorSplitButton:tinymce.ui.SplitButton', {
 		/**
 		 * Constructs a new color split button control instance.
 		 *
+		 * @constructor
+		 * @method ColorSplitButton
 		 * @param {String} id Control id for the color split button.
 		 * @param {Object} s Optional name/value settings object.
 		 */
@@ -26,25 +29,46 @@
 
 			t.parent(id, s);
 
+			/**
+			 * Settings object.
+			 *
+			 * @property settings
+			 * @type Object
+			 */
 			t.settings = s = tinymce.extend({
 				colors : '000000,993300,333300,003300,003366,000080,333399,333333,800000,FF6600,808000,008000,008080,0000FF,666699,808080,FF0000,FF9900,99CC00,339966,33CCCC,3366FF,800080,999999,FF00FF,FFCC00,FFFF00,00FF00,00FFFF,00CCFF,993366,C0C0C0,FF99CC,FFCC99,FFFF99,CCFFCC,CCFFFF,99CCFF,CC99FF,FFFFFF',
 				grid_width : 8,
 				default_color : '#888888'
 			}, t.settings);
 
+			/**
+			 * Fires when the menu is shown.
+			 *
+			 * @event onShowMenu
+			 */
 			t.onShowMenu = new tinymce.util.Dispatcher(t);
+
+			/**
+			 * Fires when the menu is hidden.
+			 *
+			 * @event onHideMenu
+			 */
 			t.onHideMenu = new tinymce.util.Dispatcher(t);
 
+			/**
+			 * Current color value.
+			 *
+			 * @property value
+			 * @type String
+			 */
 			t.value = s.default_color;
 		},
-
-		/**#@+
-		 * @method
-		 */
 
 		/**
 		 * Shows the color menu. The color menu is a layer places under the button
 		 * and displays a table of colors for the user to pick from.
+		 *
+		 * @method showMenu
 		 */
 		showMenu : function() {
 			var t = this, r, p, e, p2;
@@ -90,6 +114,7 @@
 		 * Hides the color menu. The optional event parameter is used to check where the event occured so it
 		 * doesn't close them menu if it was a event inside the menu.
 		 *
+		 * @method hideMenu
 		 * @param {Event} e Optional event object.
 		 */
 		hideMenu : function(e) {
@@ -113,6 +138,8 @@
 
 		/**
 		 * Renders the menu to the DOM.
+		 *
+		 * @method renderMenu
 		 */
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr, w;
@@ -175,6 +202,7 @@
 		/**
 		 * Sets the current color for the control and hides the menu if it should be visible.
 		 *
+		 * @method setColor
 		 * @param {String} c Color code value in hex for example: #FF00FF
 		 */
 		setColor : function(c) {
@@ -187,6 +215,12 @@
 			t.settings.onselect(c);
 		},
 
+		/**
+		 * Post render event. This will be executed after the control has been rendered and can be used to
+		 * set states, add events to the control etc. It's recommended for subclasses of the control to call this method by using this.parent().
+		 *
+		 * @method postRender
+		 */
 		postRender : function() {
 			var t = this, id = t.id;
 
@@ -198,6 +232,8 @@
 		/**
 		 * Destroys the control. This means it will be removed from the DOM and any
 		 * events tied to it will also be removed.
+		 *
+		 * @method destroy
 		 */
 		destroy : function() {
 			this.parent();
@@ -206,7 +242,5 @@
 			Event.clear(this.id + '_more');
 			DOM.remove(this.id + '_menu');
 		}
-
-		/**#@-*/
 	});
 })(tinymce);

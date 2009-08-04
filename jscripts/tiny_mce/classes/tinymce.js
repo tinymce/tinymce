@@ -5,19 +5,25 @@
  * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
-/**#@+
- * @class Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
+/**
+ * Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
+ *
  * @static
- * @member tinymce
+ * @class tinymce
+ * @example
+ * // Using each method
+ * tinymce.each([1, 2, 3], function(v, i) {
+ *   console.log(i + '=' + v);
+ * });
+ *
+ * // Checking for a specific browser
+ * if (tinymce.isIE)
+ *   console.log("IE");
  */
 var tinymce = {
 	majorVersion : '@@tinymce_major_version@@',
 	minorVersion : '@@tinymce_minor_version@@',
 	releaseDate : '@@tinymce_release_date@@',
-
-	/**#@+
-	 * @method
-	 */
 
 	/**
 	 * Initializes the TinyMCE global namespace this will setup browser detection and figure out where TinyMCE is running from.
@@ -25,13 +31,67 @@ var tinymce = {
 	_init : function() {
 		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
 
-		// Browser checks
+		/**
+		 * Constant that is true if the browser is Opera.
+		 *
+		 * @property isOpera
+		 * @type boolean
+		 * @final
+		 */
 		t.isOpera = w.opera && opera.buildNumber;
+
+		/**
+		 * Constant that is true if the browser is WebKit (Safari/Chrome).
+		 *
+		 * @property isWebKit
+		 * @type boolean
+		 * @final
+		 */
 		t.isWebKit = /WebKit/.test(ua);
+
+		/**
+		 * Constant that is true if the browser is IE.
+		 *
+		 * @property isIE
+		 * @type boolean
+		 * @final
+		 */
 		t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName);
+
+		/**
+		 * Constant that is true if the browser is IE 6 or older.
+		 *
+		 * @property isIE6
+		 * @type boolean
+		 * @final
+		 */
 		t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
+
+		/**
+		 * Constant that is true if the browser is Gecko.
+		 *
+		 * @property isGecko
+		 * @type boolean
+		 * @final
+		 */
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
+
+		/**
+		 * Constant that is true if the os is Mac OS.
+		 *
+		 * @property isMac
+		 * @type boolean
+		 * @final
+		 */
 		t.isMac = ua.indexOf('Mac') != -1;
+
+		/**
+		 * Constant that is true if the runtime is Adobe Air.
+		 *
+		 * @property isAir
+		 * @type boolean
+		 * @final
+		 */
 		t.isAir = /adobeair/i.test(ua);
 
 		// TinyMCE .NET webcontrol might be setting the values for TinyMCE
@@ -100,9 +160,10 @@ var tinymce = {
 	/**
 	 * Checks if a object is of a specific type for example an array.
 	 *
+	 * @method is
 	 * @param {Object} o Object to check type of.
 	 * @param {string} t Optional type to check for.
-	 * @return {bool} true/false if the object is of the specified type.
+	 * @return {boolean} true/false if the object is of the specified type.
 	 */
 	is : function(o, t) {
 		var n = typeof(o);
@@ -123,9 +184,14 @@ var tinymce = {
 	 * callback function for each item in the collection, if the callback returns false the iteration will terminate.
 	 * The callback has the following format: cb(value, key_or_index).
 	 *
+	 * @method each
 	 * @param {Object} o Collection to iterate.
 	 * @param {function} cb Callback function to execute for each item.
 	 * @param {Object} s Optional scope to execute the callback in.
+	 * @example
+	 * tinymce.each([1, 2, 3], function(v, i) {
+	 *   console.log(i + '=' + v);
+	 * });
 	 */
 	each : function(o, cb, s) {
 		var n, l;
@@ -158,6 +224,7 @@ var tinymce = {
 	 * Creates a new array by the return value of each iteration function call. This enables you to convert
 	 * one array list into another.
 	 *
+	 * @method map
 	 * @param {Array} a Array of items to iterate.
 	 * @param {function} f Function to call for each item. It's return value will be the new value.
 	 * @return {Array} Array with new values based on function return values.
@@ -176,6 +243,7 @@ var tinymce = {
 	 * Filters out items from the input array by calling the specified function for each item.
 	 * If the function returns false the item will be excluded if it returns true it will be included.
 	 *
+	 * @method grep
 	 * @param {Array} a Array of items to loop though.
 	 * @param {function} f Function to call for each item. Include/exclude depends on it's return value.
 	 * @return {Array} New array with values imported and filtered based in input.
@@ -194,6 +262,7 @@ var tinymce = {
 	/**
 	 * Returns the index of a value in an array, this method will return -1 if the item wasn't found.
 	 *
+	 * @method inArray
 	 * @param {Array} a Array/Object to search for value in.
 	 * @param {Object} v Value to check for inside the array.
 	 * @return {Number/String} Index of item inside the array inside an object. Or -1 if it wasn't found.
@@ -214,6 +283,7 @@ var tinymce = {
 	/**
 	 * Extends an object with the specified other object(s).
 	 *
+	 * @method extend
 	 * @param {Object} o Object to extend with new items.
 	 * @param {Object} e..n Object(s) to extend the specified object with.
 	 * @return {Object} o New extended object, same reference as the input object.
@@ -238,6 +308,7 @@ var tinymce = {
 	/**
 	 * Removes whitespace from the beginning and end of a string.
 	 *
+	 * @method trim
 	 * @param {String} s String to remove whitespace from.
 	 * @return {String} New string with removed whitespace.
 	 */
@@ -249,6 +320,7 @@ var tinymce = {
 	 * Creates a class, subclass or static singleton.
 	 * More details on this method can be found in the Wiki.
 	 *
+	 * @method create
 	 * @param {String} s Class name, inheritage and prefix.
 	 * @param {Object} o Collection of methods to add to the class.
 	 */
@@ -339,6 +411,7 @@ var tinymce = {
 	/**
 	 * Executed the specified function for each item in a object tree.
 	 *
+	 * @method walk
 	 * @param {Object} o Object tree to walk though.
 	 * @param {function} f Function to call for each item.
 	 * @param {String} n Optional name of collection inside the objects to walk for example childNodes.
@@ -363,6 +436,7 @@ var tinymce = {
 	/**
 	 * Creates a namespace on a specific object.
 	 *
+	 * @method createNS
 	 * @param {String} n Namespace to create for example a.b.c.d.
 	 * @param {Object} o Optional object to add namespace to, defaults to window.
 	 * @return {Object} New namespace object the last item in path.
@@ -388,6 +462,7 @@ var tinymce = {
 	/**
 	 * Resolves a string and returns the object from a specific structure.
 	 *
+	 * @method resolve
 	 * @param {String} n Path to resolve for example a.b.c.d.
 	 * @param {Object} o Optional object to search though, defaults to window.
 	 * @return {Object} Last object in path or null if it couldn't be resolved.
@@ -398,7 +473,7 @@ var tinymce = {
 		o = o || window;
 
 		n = n.split('.');
-		for (i=0, l = n.length; i<l; i++) {
+		for (i = 0, l = n.length; i < l; i++) {
 			o = o[n[i]];
 
 			if (!o)
@@ -412,6 +487,7 @@ var tinymce = {
 	 * Adds an unload handler to the document. This handler will be executed when the document gets unloaded.
 	 * This method is useful for dealing with browser memory leaks where it might be vital to remove DOM references etc.
 	 *
+	 * @method addUnload
 	 * @param {function} f Function to execute before the document gets unloaded.
 	 * @param {Object} s Optional scope to execute the function in.
 	 * @return {function} Returns the specified unload handler function.
@@ -498,6 +574,7 @@ var tinymce = {
 	/**
 	 * Removes the specified function form the unload handler list.
 	 *
+	 * @method removeUnload
 	 * @param {function} f Function to remove from unload handler list.
 	 * @return {function} Removed function name or null if it wasn't found.
 	 */
@@ -518,6 +595,7 @@ var tinymce = {
 	/**
 	 * Splits a string but removes the whitespace before and after each value.
 	 *
+	 * @method explode
 	 * @param {string} s String to split.
 	 * @param {string} d Delimiter to split by.
 	 */

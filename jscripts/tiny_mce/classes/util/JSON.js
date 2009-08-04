@@ -5,19 +5,17 @@
  * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
  */
 
-/**#@+
- * @class JSON parser and serializer class.
- * @member tinymce.util.JSON
+/**
+ * JSON parser and serializer class.
+ *
+ * @class tinymce.util.JSON
  * @static
  */
 tinymce.create('static tinymce.util.JSON', {
-	/**#@+
-	 * @method
-	 */
-
 	/**
 	 * Serializes the specified object as a JSON string.
 	 *
+	 * @method serialize
 	 * @param {Object} o Object to serialize as a JSON string.
 	 * @return {string} JSON string serialized from input.
 	 */
@@ -66,6 +64,7 @@ tinymce.create('static tinymce.util.JSON', {
 	/**
 	 * Unserializes/parses the specified JSON string into a object.
 	 *
+	 * @method parse
 	 * @param {string} s JSON String to parse into a JavaScript object.
 	 * @return {Object} Object from input JSON string or undefined if it failed.
 	 */

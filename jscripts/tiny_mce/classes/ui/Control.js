@@ -9,15 +9,18 @@
 	// Shorten class names
 	var DOM = tinymce.DOM, is = tinymce.is;
 
-	/**#@+
-	 * @class This class is the base class for all controls like buttons, toolbars, containers. This class should not
+	/**
+	 * This class is the base class for all controls like buttons, toolbars, containers. This class should not
 	 * be instantiated directly other controls should inherit from this one.
-	 * @member tinymce.ui.Control
+	 *
+	 * @class tinymce.ui.Control
 	 */
 	tinymce.create('tinymce.ui.Control', {
 		/**
 		 * Constructs a new control instance.
 		 *
+		 * @constructor
+		 * @method Control
 		 * @param {String} id Control id.
 		 * @param {Object} s Optional name/value settings object.
 		 */
@@ -32,15 +35,12 @@
 			this.active = 0;
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Sets the disabled state for the control. This will add CSS classes to the
 		 * element that contains the control. So that it can be disabled visually.
 		 *
-		 * @param {bool} s Boolean state if the control should be disabled or not.
+		 * @method setDisabled
+		 * @param {boolean} s Boolean state if the control should be disabled or not.
 		 */
 		setDisabled : function(s) {
 			var e;
@@ -67,7 +67,8 @@
 		 * Returns true/false if the control is disabled or not. This is a method since you can then
 		 * choose to check some class or some internal bool state in subclasses.
 		 *
-		 * @return {bool} true/false if the control is disabled or not.
+		 * @method isDisabled
+		 * @return {boolean} true/false if the control is disabled or not.
 		 */
 		isDisabled : function() {
 			return this.disabled;
@@ -77,7 +78,8 @@
 		 * Sets the activated state for the control. This will add CSS classes to the
 		 * element that contains the control. So that it can be activated visually.
 		 *
-		 * @param {bool} s Boolean state if the control should be activated or not.
+		 * @method setActive
+		 * @param {boolean} s Boolean state if the control should be activated or not.
 		 */
 		setActive : function(s) {
 			if (s != this.active) {
@@ -90,7 +92,8 @@
 		 * Returns true/false if the control is disabled or not. This is a method since you can then
 		 * choose to check some class or some internal bool state in subclasses.
 		 *
-		 * @return {bool} true/false if the control is disabled or not.
+		 * @method isActive
+		 * @return {boolean} true/false if the control is disabled or not.
 		 */
 		isActive : function() {
 			return this.active;
@@ -99,8 +102,9 @@
 		/**
 		 * Sets the specified class state for the control.
 		 *
+		 * @method setState
 		 * @param {String} c Class name to add/remove depending on state.
-		 * @param {bool} s True/false state if the class should be removed or added.
+		 * @param {boolean} s True/false state if the class should be removed or added.
 		 */
 		setState : function(c, s) {
 			var n = DOM.get(this.id);
@@ -116,7 +120,8 @@
 		/**
 		 * Returns true/false if the control has been rendered or not.
 		 *
-		 * @return {bool} State if the control has been rendered or not.
+		 * @method isRendered
+		 * @return {boolean} State if the control has been rendered or not.
 		 */
 		isRendered : function() {
 			return this.rendered;
@@ -126,6 +131,7 @@
 		 * Renders the control as a HTML string. This method is much faster than using the DOM and when
 		 * creating a whole toolbar with buttons it does make a lot of difference.
 		 *
+		 * @method renderHTML
 		 * @return {String} HTML for the button control element.
 		 */
 		renderHTML : function() {
@@ -134,6 +140,7 @@
 		/**
 		 * Renders the control to the specified container element.
 		 *
+		 * @method renderTo
 		 * @param {Element} n HTML DOM element to add control to.
 		 */
 		renderTo : function(n) {
@@ -143,6 +150,8 @@
 		/**
 		 * Post render event. This will be executed after the control has been rendered and can be used to
 		 * set states, add events to the control etc. It's recommended for subclasses of the control to call this method by using this.parent().
+		 *
+		 * @method postRender
 		 */
 		postRender : function() {
 			var t = this, b;
@@ -164,6 +173,8 @@
 		/**
 		 * Removes the control. This means it will be removed from the DOM and any
 		 * events tied to it will also be removed.
+		 *
+		 * @method remove
 		 */
 		remove : function() {
 			DOM.remove(this.id);
@@ -172,11 +183,11 @@
 
 		/**
 		 * Destroys the control will free any memory by removing event listeners etc.
+		 *
+		 * @method destroy
 		 */
 		destroy : function() {
 			tinymce.dom.Event.clear(this.id);
 		}
-
-		/**#@-*/
 	});
 })(tinymce);

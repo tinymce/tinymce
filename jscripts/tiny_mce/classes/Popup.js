@@ -8,21 +8,19 @@
 // Some global instances
 var tinymce = null, tinyMCEPopup, tinyMCE;
 
-/**#@+
- * @class TinyMCE popup/dialog helper class. This gives you easy access to the
+/**
+ * TinyMCE popup/dialog helper class. This gives you easy access to the
  * parent editor instance and a bunch of other things. It's higly recommended
  * that you load this script into your dialogs.
  *
  * @static
- * @member tinyMCEPopup
+ * @class tinyMCEPopup
  */
 tinyMCEPopup = {
-	/**#@+
-	 * @method
-	 */
-
 	/**
 	 * Initializes the popup this will be called automatically.
+	 *
+	 * @method init
 	 */
 	init : function() {
 		var t = this, w, ti;
@@ -58,6 +56,7 @@ tinyMCEPopup = {
 	/**
 	 * Returns the reference to the parent window that opened the dialog.
 	 *
+	 * @method getWin
 	 * @return {Window} Reference to the parent window that opened the dialog.
 	 */
 	getWin : function() {
@@ -67,6 +66,7 @@ tinyMCEPopup = {
 	/**
 	 * Returns a window argument/parameter by name.
 	 *
+	 * @method getWindowArg
 	 * @param {String} n Name of the window argument to retrive.
 	 * @param {String} dv Optional default value to return.
 	 * @return {String} Argument value or default value if it wasn't found.
@@ -80,6 +80,7 @@ tinyMCEPopup = {
 	/**
 	 * Returns a editor parameter/config option value.
 	 *
+	 * @method getParam
 	 * @param {String} n Name of the editor config option to retrive.
 	 * @param {String} dv Optional default value to return.
 	 * @return {String} Parameter value or default value if it wasn't found.
@@ -91,6 +92,7 @@ tinyMCEPopup = {
 	/**
 	 * Returns a language item by key.
 	 *
+	 * @method getLang
 	 * @param {String} n Language item like mydialog.something.
 	 * @param {String} dv Optional default value to return.
 	 * @return {String} Language value for the item like "my string" or the default value if it wasn't found.
@@ -102,8 +104,9 @@ tinyMCEPopup = {
 	/**
 	 * Executed a command on editor that opened the dialog/popup.
 	 *
+	 * @method execCommand
 	 * @param {String} cmd Command to execute.
-	 * @param {bool} ui Optional boolean value if the UI for the command should be presented or not.
+	 * @param {boolean} ui Optional boolean value if the UI for the command should be presented or not.
 	 * @param {Object} val Optional value to pass with the comman like an URL.
 	 * @param {Object} a Optional arguments object.
 	 */
@@ -118,6 +121,8 @@ tinyMCEPopup = {
 	/**
 	 * Resizes the dialog to the inner size of the window. This is needed since various browsers
 	 * have different border sizes on windows.
+	 *
+	 * @method resizeToInnerSize
 	 */
 	resizeToInnerSize : function() {
 		var t = this, n, b = document.body, vp = t.dom.getViewPort(window), dw, dh;
@@ -135,6 +140,7 @@ tinyMCEPopup = {
 	 * Will executed the specified string when the page has been loaded. This function
 	 * was added for compatibility with the 2.x branch.
 	 *
+	 * @method executeOnLoad
 	 * @param {String} s String to evalutate on init.
 	 */
 	executeOnLoad : function(s) {
@@ -146,6 +152,8 @@ tinyMCEPopup = {
 	/**
 	 * Stores the current editor selection for later restoration. This can be useful since some browsers
 	 * looses it's selection if a control element is selected/focused inside the dialogs.
+	 *
+	 * @method storeSelection
 	 */
 	storeSelection : function() {
 		this.editor.windowManager.bookmark = tinyMCEPopup.editor.selection.getBookmark(1);
@@ -154,6 +162,8 @@ tinyMCEPopup = {
 	/**
 	 * Restores any stored selection. This can be useful since some browsers
 	 * looses it's selection if a control element is selected/focused inside the dialogs.
+	 *
+	 * @method restoreSelection
 	 */
 	restoreSelection : function() {
 		var t = tinyMCEPopup;
@@ -165,6 +175,8 @@ tinyMCEPopup = {
 	/**
 	 * Loads a specific dialog language pack. If you pass in plugin_url as a arugment
 	 * when you open the window it will load the <plugin url>/langs/<code>_dlg.js lang pack file.
+	 *
+	 * @method requireLangPack
 	 */
 	requireLangPack : function() {
 		var t = this, u = t.getWindowArg('plugin_url') || t.getWindowArg('theme_url');
@@ -183,6 +195,7 @@ tinyMCEPopup = {
 	 * Executes a color picker on the specified element id. When the user
 	 * then selects a color it will be set as the value of the specified element.
 	 *
+	 * @method pickColor
 	 * @param {DOMEvent} e DOM event object.
 	 * @param {string} element_id Element id to be filled with the color value from the picker.
 	 */
@@ -205,6 +218,7 @@ tinyMCEPopup = {
 	 * Opens a filebrowser/imagebrowser this will set the output value from
 	 * the browser as a value on the specified element.
 	 *
+	 * @method openBrowser
 	 * @param {string} element_id Id of the element to set value in.
 	 * @param {string} type Type of browser to open image/file/flash.
 	 * @param {string} option Option name to get the file_broswer_callback function name from.
@@ -218,6 +232,7 @@ tinyMCEPopup = {
 	 * Creates a confirm dialog. Please don't use the blocking behavior of this
 	 * native version use the callback method instead then it can be extended.
 	 *
+	 * @method confirm
 	 * @param {String} t Title for the new confirm dialog.
 	 * @param {function} cb Callback function to be executed after the user has selected ok or cancel.
 	 * @param {Object} s Optional scope to execute the callback in.
@@ -230,6 +245,7 @@ tinyMCEPopup = {
 	 * Creates a alert dialog. Please don't use the blocking behavior of this
 	 * native version use the callback method instead then it can be extended.
 	 *
+	 * @method alert
 	 * @param {String} t Title for the new alert dialog.
 	 * @param {function} cb Callback function to be executed after the user has selected ok.
 	 * @param {Object} s Optional scope to execute the callback in.
@@ -240,6 +256,8 @@ tinyMCEPopup = {
 
 	/**
 	 * Closes the current window.
+	 *
+	 * @method close
 	 */
 	close : function() {
 		var t = this;

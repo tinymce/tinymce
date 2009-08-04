@@ -10,9 +10,9 @@
 	var each = tinymce.each, is = tinymce.is;
 	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
 
-	/**#@+
-	 * @class Utility class for various DOM manipulation and retrival functions.
-	 * @member tinymce.dom.DOMUtils
+	/**
+	 * Utility class for various DOM manipulation and retrival functions.
+	 * @class tinymce.dom.DOMUtils
 	 */
 	tinymce.create('tinymce.dom.DOMUtils', {
 		doc : null,
@@ -38,6 +38,7 @@
 		 * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
 		 *
 		 * @constructor
+		 * @method DOMUtils
 		 * @param {Document} d Document reference to bind the utility class to.
 		 * @param {settings} s Optional settings collection.
 		 */
@@ -70,14 +71,11 @@
 			tinymce.addUnload(t.destroy, t);
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Returns the root node of the document this is normally the body but might be a DIV. Parents like getParent will not
 		 * go above the point of this root node.
 		 *
+		 * @method getRoot
 		 * @return {Element} Root element for the utility class.
 		 */
 		getRoot : function() {
@@ -89,6 +87,7 @@
 		/**
 		 * Returns the viewport of the window.
 		 *
+		 * @method getViewPort
 		 * @param {Window} w Optional window to get viewport of.
 		 * @return {Object} Viewport object with fields x, y, w and h.
 		 */
@@ -111,6 +110,7 @@
 		/**
 		 * Returns the rectangle for a specific element.
 		 *
+		 * @method getRect
 		 * @param {Element/String} e Element object or element ID to get rectange from.
 		 * @return {object} Rectange for specified element object with x, y, w, h fields.
 		 */
@@ -132,6 +132,7 @@
 		/**
 		 * Returns the size dimensions of the specified element.
 		 *
+		 * @method getSize
 		 * @param {Element/String} e Element object or element ID to get rectange from.
 		 * @return {object} Rectange for specified element object with w, h fields.
 		 */
@@ -162,6 +163,7 @@
 		 * If the function then returns true indicating that it has found what it was looking for, the loop execution will then end
 		 * and the node it found will be returned.
 		 *
+		 * @method getParent
 		 * @param {Node/String} n DOM node to search parents on or ID string.
 		 * @param {function} f Selection function to execute on each node or CSS pattern.
 		 * @param {Node} r Optional root element, never go below this point.
@@ -175,6 +177,7 @@
 		 * Returns a node list of all parents matching the specified selector function or pattern.
 		 * If the function then returns true indicating that it has found what it was looking for and that node will be collected.
 		 *
+		 * @method getParents
 		 * @param {Node/String} n DOM node to search parents on or ID string.
 		 * @param {function} f Selection function to execute on each node or CSS pattern.
 		 * @param {Node} r Optional root element, never go below this point.
@@ -222,6 +225,7 @@
 		/**
 		 * Returns the specified element by ID or the input element if it isn't a string.
 		 *
+		 * @method get
 		 * @param {String/Element} n Element id to look for or element to just pass though.
 		 * @return {Element} Element matching the specified id or null if it wasn't found.
 		 */
@@ -247,6 +251,7 @@
 		 * This function is optimized for the most common patterns needed in TinyMCE but it also performes good enough
 		 * on more complex patterns.
 		 *
+		 * @method select
 		 * @param {String} p CSS level 1 pattern to select/find elements by.
 		 * @param {Object} s Optional root element/scope element to search in.
 		 * @return {Array} Array with all matched elements.
@@ -260,6 +265,7 @@
 		/**
 		 * Returns true/false if the specified element matches the specified css pattern.
 		 *
+		 * @method is
 		 * @param {Node/NodeList} n DOM node to match or an array of nodes to match.
 		 * @param {String} patt CSS pattern to match the element agains.
 		 */
@@ -272,11 +278,12 @@
 		/**
 		 * Adds the specified element to another element or elements.
 		 *
+		 * @method add
 		 * @param {String/Element/Array} Element id string, DOM node element or array of id's or elements to add to.
 		 * @param {String/Element} n Name of new element to add or existing element to add.
 		 * @param {Object} a Optional object collection with arguments to add to the new element(s).
 		 * @param {String} h Optional inner HTML contents to add for each element.
-		 * @param {bool} c Optional internal state to indicate if it should create or add.
+		 * @param {boolean} c Optional internal state to indicate if it should create or add.
 		 * @return {Element/Array} Element that got created or array with elements if multiple elements where passed.
 		 */
 		add : function(p, n, a, h, c) {
@@ -302,6 +309,7 @@
 		/**
 		 * Creates a new element.
 		 *
+		 * @method create
 		 * @param {String} n Name of new element.
 		 * @param {Object} a Optional object name/value collection with element attributes.
 		 * @param {String} h Optional HTML string to set as inner HTML of the element.
@@ -314,6 +322,7 @@
 		/**
 		 * Create HTML string for element. The elemtn will be closed unless an empty inner HTML string is passed.
 		 *
+		 * @method createHTML
 		 * @param {String} n Name of new element.
 		 * @param {Object} a Optional object name/value collection with element attributes.
 		 * @param {String} h Optional HTML string to set as inner HTML of the element.
@@ -338,8 +347,9 @@
 		/**
 		 * Removes/deletes the specified element(s) from the DOM.
 		 *
+		 * @method remove
 		 * @param {String/Element/Array} n ID of element or DOM element object or array containing multiple elements/ids.
-		 * @param {bool} k Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.
+		 * @param {boolean} k Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.
 		 * @return {Element/Array} HTML DOM element that got removed or array of elements depending on input.
 		 */
 		remove : function(n, k) {
@@ -381,6 +391,7 @@
 		 * Sets the CSS style value on a HTML element. The name can be a camelcase string
 		 * or the CSS style name like background-color.
 		 *
+		 * @method setStyle
 		 * @param {String/Element/Array} n HTML element/Element ID or Array of elements/ids to set CSS style value on.
 		 * @param {String} na Name of the style value to set.
 		 * @param {String} v Value to set on the style.
@@ -433,6 +444,7 @@
 		/**
 		 * Returns the current style or runtime/computed value of a element.
 		 *
+		 * @method getStyle
 		 * @param {String/Element} n HTML element or element id string to get style from.
 		 * @param {String} na Style name to return.
 		 * @param {String} c Computed style.
@@ -477,6 +489,7 @@
 		/**
 		 * Sets multiple styles on the specified element(s).
 		 *
+		 * @method setStyles
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set styles on.
 		 * @param {Object} o Name/Value collection of style items to add to the element(s).
 		 */
@@ -499,6 +512,7 @@
 		/**
 		 * Sets the specified attributes value of a element or elements.
 		 *
+		 * @method setAttrib
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set attribute on.
 		 * @param {String} n Name of attribute to set.
 		 * @param {String} v Value to set on the attribute of this value is falsy like null 0 or '' it will remove the attribute instead.
@@ -568,6 +582,7 @@
 		/**
 		 * Sets the specified attributes of a element or elements.
 		 *
+		 * @method setAttribs
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set attributes on.
 		 * @param {Object} o Name/Value collection of attribute items to add to the element(s).
 		 */
@@ -584,6 +599,7 @@
 		/**
 		 * Returns the specified attribute by name.
 		 *
+		 * @method getAttrib
 		 * @param {String/Element} e Element string id or DOM element to get attribute from.
 		 * @param {String} n Name of attribute to get.
 		 * @param {String} dv Optional default value to return if the attribute didn't exist.
@@ -701,6 +717,7 @@
 		/**
 		 * Returns the absolute x, y position of a node. The position will be returned in a object with x, y fields.
 		 *
+		 * @method getPos
 		 * @param {Element/String} n HTML element or element id to get x, y position from.
 		 * @param {Element} ro Optional root element to stop calculations at.
 		 * @return {object} Absolute position of the specified element object with x, y fields.
@@ -746,6 +763,7 @@
 		 * merge and remove any redundant items that browsers might have added. It will also convert non hex
 		 * colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.
 		 *
+		 * @method parseStyle
 		 * @param {String} st Style value to parse for example: border:1px solid red;.
 		 * @return {Object} Object representation of that style like {border : '1px solid red'}
 		 */
@@ -851,6 +869,7 @@
 		/**
 		 * Serializes the specified style object into a string.
 		 *
+		 * @method serializeStyle
 		 * @param {Object} o Object to serialize as string for example: {border : '1px solid red'}
 		 * @return {String} String representation of the style object for example: border: 1px solid red.
 		 */
@@ -879,6 +898,7 @@
 		/**
 		 * Imports/loads the specified CSS file into the document bound to the class.
 		 *
+		 * @method loadCSS
 		 * @param {String} u URL to CSS file to load.
 		 */
 		loadCSS : function(u) {
@@ -915,6 +935,7 @@
 		/**
 		 * Adds a class to the specified element or elements.
 		 *
+		 * @method addClass
 		 * @param {String/Element/Array} Element ID string or DOM element or array with elements or IDs.
 		 * @param {String} c Class name to add to each element.
 		 * @return {String/Array} String with new class value or array with new class values for all elements.
@@ -938,6 +959,7 @@
 		/**
 		 * Removes a class from the specified element or elements.
 		 *
+		 * @method removeClass
 		 * @param {String/Element/Array} Element ID string or DOM element or array with elements or IDs.
 		 * @param {String} c Class name to remove to each element.
 		 * @return {String/Array} String with new class value or array with new class values for all elements.
@@ -964,9 +986,10 @@
 		/**
 		 * Returns true if the specified element has the specified class.
 		 *
+		 * @method hasClass
 		 * @param {String/Element} n HTML element or element id string to check CSS class on.
 		 * @param {String] c CSS class to check for.
-		 * @return {bool} true/false if the specified element has the specified class.
+		 * @return {boolean} true/false if the specified element has the specified class.
 		 */
 		hasClass : function(n, c) {
 			n = this.get(n);
@@ -980,6 +1003,7 @@
 		/**
 		 * Shows the specified element(s) by ID by setting the "display" style.
 		 *
+		 * @method show
 		 * @param {String/Element/Array} e ID of DOM element or DOM element or array with elements or IDs to show.
 		 */
 		show : function(e) {
@@ -989,6 +1013,7 @@
 		/**
 		 * Hides the specified element(s) by ID by setting the "display" style.
 		 *
+		 * @method hide
 		 * @param {String/Element/Array} e ID of DOM element or DOM element or array with elements or IDs to hide.
 		 */
 		hide : function(e) {
@@ -998,8 +1023,9 @@
 		/**
 		 * Returns true/false if the element is hidden or not by checking the "display" style.
 		 *
+		 * @method isHidden
 		 * @param {String/Element} e Id or element to check display state on.
-		 * @return {bool} true/false if the element is hidden or not.
+		 * @return {boolean} true/false if the element is hidden or not.
 		 */
 		isHidden : function(e) {
 			e = this.get(e);
@@ -1011,6 +1037,7 @@
 		 * Returns a unique id. This can be useful when generating elements on the fly.
 		 * This method will not check if the element allready exists.
 		 *
+		 * @method uniqueId
 		 * @param {String} p Optional prefix to add infront of all ids defaults to "mce_".
 		 * @return {String} Unique id.
 		 */
@@ -1022,6 +1049,7 @@
 		 * Sets the specified HTML content inside the element or elements. The HTML will first be processed this means
 		 * URLs will get converted, hex color values fixed etc. Check processHTML for details.
 		 *
+		 * @method setHTML
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set HTML inside.
 		 * @param {String} h HTML content to set as inner HTML of the element.
 		 */
@@ -1145,6 +1173,7 @@
 		 * properly in a RTE environment. It also converts any URLs in links and images and places
 		 * a converted value into a separate attribute with the mce prefix like mce_src or mce_href.
 		 *
+		 * @method processHTML
 		 * @param {String} h HTML to process.
 		 * @return {String} Processed HTML code.
 		 */
@@ -1265,6 +1294,7 @@
 		/**
 		 * Returns the outer HTML of an element.
 		 *
+		 * @method getOuterHTML
 		 * @param {String/Element} e Element ID or element object to get outer HTML from.
 		 * @return {String} Outer HTML string.
 		 */
@@ -1288,6 +1318,7 @@
 		/**
 		 * Sets the specified outer HTML on a element or elements.
 		 *
+		 * @method setOuterHTML
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set outer HTML on.
 		 * @param {Object} h HTML code to set as outer value for the element.
 		 * @param {Document} d Optional document scope to use in this process defaults to the document of the DOM class.
@@ -1321,6 +1352,7 @@
 		/**
 		 * Entity decode a string, resolves any HTML entities like &aring;.
 		 *
+		 * @method decode
 		 * @param {String} s String to decode entities on.
 		 * @return {String} Entity decoded string.
 		 */
@@ -1350,6 +1382,7 @@
 		/**
 		 * Entity encodes a string, encodes the most common entities <>"& into entities.
 		 *
+		 * @method encode
 		 * @param {String} s String to encode with entities.
 		 * @return {String} Entity encoded string.
 		 */
@@ -1376,6 +1409,7 @@
 		/**
 		 * Inserts a element after the reference element.
 		 *
+		 * @method insertAfter
 		 * @param {Element} Element to insert after the reference.
 		 * @param {Element/String/Array} r Reference element, element id or array of elements to insert after.
 		 * @return {Element/Array} Element that got added or an array with elements. 
@@ -1403,8 +1437,9 @@
 		/**
 		 * Returns true/false if the specified element is a block element or not.
 		 *
+		 * @method isBlock
 		 * @param {Node} n Element/Node to check.
-		 * @return {bool} True/False state if the node is a block element or not.
+		 * @return {boolean} True/False state if the node is a block element or not.
 		 */
 		isBlock : function(n) {
 			if (n.nodeType && n.nodeType !== 1)
@@ -1419,9 +1454,10 @@
 		 * Replaces the specified element or elements with the specified element, the new element will
 		 * be cloned if multiple inputs elements are passed.
 		 *
+		 * @method replace
 		 * @param {Element} n New element to replace old ones with.
 		 * @param {Element/String/Array} o Element DOM node, element id or array of elements or ids to replace.
-		 * @param {bool} k Optional keep children state, if set to true child nodes from the old object will be added to new ones.
+		 * @param {boolean} k Optional keep children state, if set to true child nodes from the old object will be added to new ones.
 		 */
 		replace : function(n, o, k) {
 			var t = this;
@@ -1451,6 +1487,7 @@
 		/**
 		 * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
 		 *
+		 * @method findCommonAncestor
 		 * @param {Element} a Element to find common ancestor of.
 		 * @param {Element} b Element to find common ancestor of.
 		 * @return {Element} Common ancestor element of the two input elements.
@@ -1479,6 +1516,7 @@
 		/**
 		 * Parses the specified RGB color value and returns a hex version of that color.
 		 *
+		 * @method toHex
 		 * @param {String} s RGB string value like rgb(1,2,3)
 		 * @return {String} Hex version of that RGB value like #FF00FF.
 		 */
@@ -1504,6 +1542,7 @@
 		 * Returns a array of all single CSS classes in the document. A single CSS class is a simple
 		 * rule like ".class" complex ones like "div td.class" will not be added to output.
 		 *
+		 * @method getClasses
 		 * @return {Array} Array with class objects each object has a class field might be other fields in the future.
 		 */
 		getClasses : function() {
@@ -1570,6 +1609,7 @@
 		/**
 		 * Executes the specified function on the element by id or dom element node or array of elements/id.
 		 *
+		 * @method run
 		 * @param {String/Element/Array} Element ID or DOM element object or array with ids or elements.
 		 * @param {function} f Function to execute for each item.
 		 * @param {Object} s Optional scope to execute the function in.
@@ -1606,6 +1646,7 @@
 		/**
 		 * Returns an NodeList with attributes for the element.
 		 *
+		 * @method getAttribs
 		 * @param {HTMLElement/string} n Element node or string id to get attributes from.
 		 * @return {NodeList} NodeList with attributes.
 		 */
@@ -1637,6 +1678,8 @@
 
 		/**
 		 * Destroys all internal references to the DOM to solve IE leak issues.
+		 *
+		 * @method destroy
 		 */
 		destroy : function(s) {
 			var t = this;
@@ -1655,6 +1698,7 @@
 		 * Created a new DOM Range object. This will use the native DOM Range API if it's
 		 * available if it's not it will fallback to the custom TinyMCE implementation.
 		 *
+		 * @method createRng
 		 * @return {DOMRange} DOM Range object.
 		 */
 		createRng : function() {
@@ -1668,6 +1712,7 @@
 		 * element or element between the new ones. For example splitting the paragraph at the bold element in
 		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>. 
 		 *
+		 * @method split
 		 * @param {Element} pe Parent element to split.
 		 * @param {Element} e Element to split at.
 		 * @param {Element} re Optional replacement element to replace the split element by.
@@ -1740,6 +1785,7 @@
 		/**
 		 * Adds an event handler to the specified object.
 		 *
+		 * @method bind
 		 * @param {Element/Document/Window/Array/String} o Object or element id string to add event handler to or an array of elements/ids/documents.
 		 * @param {String} n Name of event handler to add for example: click.
 		 * @param {function} f Function to execute when the event occurs.
@@ -1758,6 +1804,7 @@
 		/**
 		 * Removes the specified event handler by name and function from a element or collection of elements.
 		 *
+		 * @method unbind
 		 * @param {String/Element/Array} o Element ID string or HTML element or an array of elements or ids to remove handler from.
 		 * @param {String} n Event handler name like for example: "click"
 		 * @param {function} f Function to remove.
@@ -1814,10 +1861,14 @@
 			return s;
 		}
 		*/
-
-		/**#@-*/
 	});
 
-	// Setup page DOM
+	/**
+	 * Instance of DOMUtils for the current document.
+	 *
+	 * @property DOM
+	 * @member tinymce
+	 * @type tinymce.dom.DOMUtils
+	 */
 	tinymce.DOM = new tinymce.dom.DOMUtils(document, {process_html : 0});
 })(tinymce);

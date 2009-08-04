@@ -8,16 +8,17 @@
 (function(tinymce) {
 	var each = tinymce.each, Event = tinymce.dom.Event;
 
-	/**#@+
-	 * @class This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when
+	/**
+	 * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when
 	 * various items gets loaded. This class is useful to 
-	 * @member tinymce.dom.ScriptLoader
+	 * @class tinymce.dom.ScriptLoader
 	 */
 	tinymce.create('tinymce.dom.ScriptLoader', {
 		/**
 		 * Constructs a new script loaded instance. Check the Wiki for more detailed information for this method.
 		 *
 		 * @constructor
+		 * @method ScriptLoader
 		 * @param {Object} s Optional settings object for the ScriptLoaded.
 		 */
 		ScriptLoader : function(s) {
@@ -26,13 +27,10 @@
 			this.lookup = {};
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Returns true/false if a script has been loaded or not.
 		 *
+		 * @method isDone
 		 * @param {String} u URL to check for.
 		 */
 		isDone : function(u) {
@@ -43,6 +41,7 @@
 		 * Marks a specific script to be loaded. This can be useful if a script got loaded outside
 		 * the script loader or to skip it from loading some script.
 		 *
+		 * @method markDone
 		 * @param {string} u Absolute URL to the script to mark as loaded.
 		 */
 		markDone : function(u) {
@@ -52,10 +51,11 @@
 		/**
 		 * Adds a specific script to the load queue of the script loader.
 		 *
+		 * @method add
 		 * @param {String} u Absolute URL to script to add.
 		 * @param {function} cb Optional callback function to execute ones this script gets loaded.
 		 * @param {Object} s Optional scope to execute callback in.
-		 * @param {bool} pr Optional state to add to top or bottom of load queue. Defaults to bottom.
+		 * @param {boolean} pr Optional state to add to top or bottom of load queue. Defaults to bottom.
 		 * @return {object} Load queue object contains, state, url and callback.
 		 */
 		add : function(u, cb, s, pr) {
@@ -84,6 +84,7 @@
 		/**
 		 * Loads a specific script directly without adding it to the load queue.
 		 *
+		 * @method load
 		 * @param {String} u Absolute URL to script to add.
 		 * @param {function} cb Optional callback function to execute ones this script gets loaded.
 		 * @param {Object} s Optional scope to execute callback in.
@@ -131,6 +132,7 @@
 		/**
 		 * Starts the loading of the queue.
 		 *
+		 * @method loadQueue
 		 * @param {function} cb Optional callback to execute when all queued items are loaded.
 		 * @param {Object} s Optional scope to execute the callback in.
 		 */
@@ -158,6 +160,7 @@
 		/**
 		 * Evaluates the specified string inside the global namespace/window scope.
 		 *
+		 * @method eval
 		 * @param {string} Script contents to evaluate.
 		 */
 		eval : function(co) {
@@ -178,6 +181,7 @@
 		 * Loads the specified queue of files and executes the callback ones they are loaded.
 		 * This method is generally not used outside this class but it might be useful in some scenarios. 
 		 *
+		 * @method loadScripts
 		 * @param {Array} sc Array of queue items to load.
 		 * @param {function} cb Optional callback to execute ones all items are loaded.
 		 * @param {Object} s Optional scope to execute callback in.
@@ -303,6 +307,8 @@
 			/**
 			 * Loads the specified script without adding it to any load queue.
 			 *
+			 * @static
+			 * @method loadScript
 			 * @param {string} u URL to dynamically load.
 			 * @param {function} cb Callback function to executed on load.
 			 */
@@ -342,8 +348,6 @@
 				}
 			}
 		}
-
-		/**#@-*/
 	});
 
 	// Global script loader

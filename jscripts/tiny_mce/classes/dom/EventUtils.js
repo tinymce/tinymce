@@ -9,28 +9,28 @@
 	// Shorten names
 	var each = tinymce.each, DOM = tinymce.DOM, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, Event;
 
-	/**#@+
-	 * @class This class handles DOM events in a cross platform fasion it also keeps track of element
+	/**
+	 * This class handles DOM events in a cross platform fasion it also keeps track of element
 	 * and handler references to be able to clean elements to reduce IE memory leaks.
-	 * @static
-	 * @member tinymce.dom.Event
+	 *
+	 * @class tinymce.dom.EventUtils
 	 */
 	tinymce.create('tinymce.dom.EventUtils', {
 		/**
 		 * Constructs a new EventUtils instance.
+		 *
+		 * @constructor
+		 * @method EventUtils
 		 */
 		EventUtils : function() {
 			this.inits = [];
 			this.events = [];
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Adds an event handler to the specified object.
 		 *
+		 * @method add
 		 * @param {Element/Document/Window/Array/String} o Object or element id string to add event handler to or an array of elements/ids/documents.
 		 * @param {String/Array} n Name of event handler to add for example: click.
 		 * @param {function} f Function to execute when the event occurs.
@@ -121,6 +121,7 @@
 		/**
 		 * Removes the specified event handler by name and function from a element or collection of elements.
 		 *
+		 * @method remove
 		 * @param {String/Element/Array} o Element ID string or HTML element or an array of elements or ids to remove handler from.
 		 * @param {String} n Event handler name like for example: "click"
 		 * @param {function} f Function to remove.
@@ -158,6 +159,7 @@
 		/**
 		 * Clears all events of a specific object.
 		 *
+		 * @method clear
 		 * @param {Object} o DOM element or object to remove all events from.
 		 */
 		clear : function(o) {
@@ -181,8 +183,9 @@
 		/**
 		 * Cancels an event for both bubbeling and the default browser behavior.
 		 *
+		 * @method cancel
 		 * @param {Event} e Event object to cancel.
-		 * @return {bool} Always false.
+		 * @return {boolean} Always false.
 		 */
 		cancel : function(e) {
 			if (!e)
@@ -196,8 +199,9 @@
 		/**
 		 * Stops propogation/bubbeling of an event.
 		 *
+		 * @method stop
 		 * @param {Event} e Event to cancel bubbeling on.
-		 * @return {bool} Always false.
+		 * @return {boolean} Always false.
 		 */
 		stop : function(e) {
 			if (e.stopPropagation)
@@ -211,8 +215,9 @@
 		/**
 		 * Prevent default browser behvaior of an event.
 		 *
+		 * @method prevent
 		 * @param {Event} e Event to prevent default browser behvaior of an event.
-		 * @return {bool} Always false.
+		 * @return {boolean} Always false.
 		 */
 		prevent : function(e) {
 			if (e.preventDefault)
@@ -225,6 +230,8 @@
 
 		/**
 		 * Destroys the instance.
+		 *
+		 * @method destroy
 		 */
 		destroy : function() {
 			var t = this;
@@ -333,11 +340,15 @@
 				this.cancelBubble = true;
 			}
 		}
-
-		/**#@-*/
 	});
 
-	// Shorten name and setup global instance
+	/**
+	 * Instance of EventUtils for the current document.
+	 *
+	 * @property Event
+	 * @member tinymce.dom
+	 * @type tinymce.dom.EventUtils
+	 */
 	Event = tinymce.dom.Event = new tinymce.dom.EventUtils();
 
 	// Dispatch DOM content loaded event for IE and Safari

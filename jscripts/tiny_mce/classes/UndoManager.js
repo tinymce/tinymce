@@ -6,9 +6,9 @@
  */
 
 (function(tinymce) {
-	/**#@+
-	 * @class This class handles the undo/redo history levels for the editor. Since the build in undo/redo has major drawbacks a custom one was needed.
-	 * @member tinymce.UndoManager
+	/**
+	 * This class handles the undo/redo history levels for the editor. Since the build in undo/redo has major drawbacks a custom one was needed.
+	 * @class tinymce.UndoManager
 	 */
 	tinymce.create('tinymce.UndoManager', {
 		index : 0,
@@ -19,6 +19,7 @@
 		 * Constructs a new UndoManager instance.
 		 *
 		 * @constructor
+		 * @method UndoManager
 		 * @param {tinymce.Editor} ed Editor instance to undo/redo in.
 		 */
 		UndoManager : function(ed) {
@@ -31,13 +32,10 @@
 			t.onRedo = new Dispatcher(this);
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Adds a new undo level/snapshot to the undo list.
 		 *
+		 * @method add
 		 * @param {Object} l Optional undo level object to add.
 		 * @return {Object} Undo level that got added or null it a level wasn't needed.
 		 */
@@ -97,6 +95,7 @@
 		/**
 		 * Undoes the last action.
 		 *
+		 * @method undo
 		 * @return {Object} Undo level or null if no undo was performed.
 		 */
 		undo : function() {
@@ -132,6 +131,7 @@
 		/**
 		 * Redoes the last action.
 		 *
+		 * @method redo
 		 * @return {Object} Redo level or null if no redo was performed.
 		 */
 		redo : function() {
@@ -150,6 +150,8 @@
 
 		/**
 		 * Removes all undo levels.
+		 *
+		 * @method clear
 		 */
 		clear : function() {
 			var t = this;
@@ -163,7 +165,8 @@
 		/**
 		 * Returns true/false if the undo manager has any undo levels.
 		 *
-		 * @return {bool} true/false if the undo manager has any undo levels.
+		 * @method hasUndo
+		 * @return {boolean} true/false if the undo manager has any undo levels.
 		 */
 		hasUndo : function() {
 			return this.index != 0 || this.typing;
@@ -172,12 +175,11 @@
 		/**
 		 * Returns true/false if the undo manager has any redo levels.
 		 *
-		 * @return {bool} true/false if the undo manager has any redo levels.
+		 * @method hasRedo
+		 * @return {boolean} true/false if the undo manager has any redo levels.
 		 */
 		hasRedo : function() {
 			return this.index < this.data.length - 1;
 		}
-
-		/**#@-*/
 	});
 })(tinymce);

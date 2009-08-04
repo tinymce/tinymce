@@ -8,16 +8,19 @@
 (function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher;
 
-	/**#@+
-	 * @class This class is used to create list boxes/select list. This one will generate
+	/**
+	 * This class is used to create list boxes/select list. This one will generate
 	 * a native control the way that the browser produces them by default.
-	 * @member tinymce.ui.NativeListBox
-	 * @base tinymce.ui.ListBox
+	 *
+	 * @class tinymce.ui.NativeListBox
+	 * @extends tinymce.ui.ListBox
 	 */
 	tinymce.create('tinymce.ui.NativeListBox:tinymce.ui.ListBox', {
 		/**
 		 * Constructs a new button control instance.
 		 *
+		 * @constructor
+		 * @method NativeListBox
 		 * @param {String} id Button control id for the button.
 		 * @param {Object} s Optional name/value settings object.
 		 */
@@ -26,15 +29,12 @@
 			this.classPrefix = 'mceNativeListBox';
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Sets the disabled state for the control. This will add CSS classes to the
 		 * element that contains the control. So that it can be disabled visually.
 		 *
-		 * @param {bool} s Boolean state if the control should be disabled or not.
+		 * @method setDisabled
+		 * @param {boolean} s Boolean state if the control should be disabled or not.
 		 */
 		setDisabled : function(s) {
 			DOM.get(this.id).disabled = s;
@@ -44,7 +44,8 @@
 		 * Returns true/false if the control is disabled or not. This is a method since you can then
 		 * choose to check some class or some internal bool state in subclasses.
 		 *
-		 * @return {bool} true/false if the control is disabled or not.
+		 * @method isDisabled
+		 * @return {boolean} true/false if the control is disabled or not.
 		 */
 		isDisabled : function() {
 			return DOM.get(this.id).disabled;
@@ -54,7 +55,8 @@
 		 * Selects a item/option by value. This will both add a visual selection to the
 		 * item and change the title of the control to the title of the option.
 		 *
-		  * @param {String/function} va Value to look for inside the list box or a function selector.
+		 * @method select
+		 * @param {String/function} va Value to look for inside the list box or a function selector.
 		 */
 		select : function(va) {
 			var t = this, fv, f;
@@ -91,6 +93,7 @@
 		 * Selects a item/option by index. This will both add a visual selection to the
 		 * item and change the title of the control to the title of the option.
 		 *
+		 * @method selectByIndex
 		 * @param {String} idx Index to select, pass -1 to select menu/title of select box.
 		 */
 		selectByIndex : function(idx) {
@@ -101,6 +104,7 @@
 		/**
 		 * Adds a option item to the list box.
 		 *
+		 * @method add
 		 * @param {String} n Title for the new option.
 		 * @param {String} v Value for the new option.
 		 * @param {Object} o Optional object with settings like for example class.
@@ -126,6 +130,8 @@
 
 		/**
 		 * Executes the specified callback function for the menu item. In this case when the user clicks the menu item.
+		 *
+		 * @method getLength
 		 */
 		getLength : function() {
 			return DOM.get(this.id).options.length - 1;
@@ -135,6 +141,7 @@
 		 * Renders the list box as a HTML string. This method is much faster than using the DOM and when
 		 * creating a whole toolbar with buttons it does make a lot of difference.
 		 *
+		 * @method renderHTML
 		 * @return {String} HTML for the list box control element.
 		 */
 		renderHTML : function() {
@@ -154,6 +161,8 @@
 		/**
 		 * Post render handler. This function will be called after the UI has been
 		 * rendered so that events can be added.
+		 *
+		 * @method postRender
 		 */
 		postRender : function() {
 			var t = this, ch;
@@ -192,7 +201,5 @@
 
 			t.onPostRender.dispatch(t, DOM.get(t.id));
 		}
-
-		/**#@-*/
 	});
 })(tinymce);

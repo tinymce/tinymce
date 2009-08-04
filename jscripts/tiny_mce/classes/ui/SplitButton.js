@@ -8,15 +8,18 @@
 (function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
 
-	/**#@+
-	 * @class This class is used to create a split button. A button with a menu attached to it.
-	 * @member tinymce.ui.SplitButton
-	 * @base tinymce.ui.Button
+	/**
+	 * This class is used to create a split button. A button with a menu attached to it.
+	 *
+	 * @class tinymce.ui.SplitButton
+	 * @extends tinymce.ui.Button
 	 */
 	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.MenuButton', {
 		/**
 		 * Constructs a new split button control instance.
 		 *
+		 * @constructor
+		 * @method SplitButton
 		 * @param {String} id Control id for the split button.
 		 * @param {Object} s Optional name/value settings object.
 		 */
@@ -25,14 +28,11 @@
 			this.classPrefix = 'mceSplitButton';
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Renders the split button as a HTML string. This method is much faster than using the DOM and when
 		 * creating a whole toolbar with buttons it does make a lot of difference.
 		 *
+		 * @method renderHTML
 		 * @return {String} HTML for the split button control element.
 		 */
 		renderHTML : function() {
@@ -58,6 +58,8 @@
 		/**
 		 * Post render handler. This function will be called after the UI has been
 		 * rendered so that events can be added.
+		 *
+		 * @method postRender
 		 */
 		postRender : function() {
 			var t = this, s = t.settings;
@@ -93,7 +95,5 @@
 			Event.clear(this.id + '_action');
 			Event.clear(this.id + '_open');
 		}
-
-		/**#@-*/
 	});
 })(tinymce);

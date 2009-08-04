@@ -8,17 +8,19 @@
 (function(tinymce) {
 	var each = tinymce.each;
 
-	/**#@+
-	 * @class Element class, this enables element blocking in IE. Element blocking is a method to block out select blockes that
+	/**
+	 * Element class, this enables element blocking in IE. Element blocking is a method to block out select blockes that
 	 * gets visible though DIVs on IE 6 it uses a iframe for this blocking. This class also shortens the length of some DOM API calls
 	 * since it's bound to an element.
-	 * @member tinymce.dom.Element
+	 *
+	 * @class tinymce.dom.Element
 	 */
 	tinymce.create('tinymce.dom.Element', {
 		/**
 		 * Constructs a new Element instance. Consult the Wiki for more details on this class.
 		 *
 		 * @constructor
+		 * @method Element
 		 * @param {String} Element ID to bind/execute methods on.
 		 * @param {Object} Optional settings name/value collection.
 		 */
@@ -71,13 +73,10 @@
 			});
 		},
 
-		/**#@+
-		 * @method
-		 */
-
 		/**
 		 * Adds a event handler to the element.
 		 *
+		 * @method on
 		 * @param {String} n Event name like for example "click".
 		 * @param {function} f Function to execute on the specified event.
 		 * @param {Object} s Optional scope to execute function on.
@@ -90,6 +89,7 @@
 		/**
 		 * Returns the absolute X, Y cordinate of the element.
 		 *
+		 * @method getXY
 		 * @return {Object} Objext with x, y cordinate fields.
 		 */
 		getXY : function() {
@@ -102,6 +102,7 @@
 		/**
 		 * Returns the size of the element by a object with w and h fields.
 		 *
+		 * @method getSize
 		 * @return {Object} Object with element size with a w and h field.
 		 */
 		getSize : function() {
@@ -116,6 +117,7 @@
 		/**
 		 * Moves the element to a specific absolute position.
 		 *
+		 * @method moveTo
 		 * @param {Number} x X cordinate of element position.
 		 * @param {Number} y Y cordinate of element position.
 		 */
@@ -126,6 +128,7 @@
 		/**
 		 * Moves the element relative to the current position.
 		 *
+		 * @method moveBy
 		 * @param {Number} x Relative X cordinate of element position.
 		 * @param {Number} y Relative Y cordinate of element position.
 		 */
@@ -138,6 +141,7 @@
 		/**
 		 * Resizes the element to a specific size.
 		 *
+		 * @method resizeTo
 		 * @param {Number} w New width of element.
 		 * @param {Numner} h New height of element.
 		 */
@@ -148,6 +152,7 @@
 		/**
 		 * Resizes the element relative to the current sizeto a specific size.
 		 *
+		 * @method resizeBy
 		 * @param {Number} w Relative width of element.
 		 * @param {Numner} h Relative height of element.
 		 */
@@ -160,6 +165,7 @@
 		/**
 		 * Updates the element blocker in IE6 based on the style information of the element.
 		 *
+		 * @method update
 		 * @param {String} k Optional function key. Used internally.
 		 */
 		update : function(k) {
@@ -193,7 +199,5 @@
 				dom.setStyle(b, 'zIndex', parseInt(t.getStyle('zIndex', 1) || 0) - 1);
 			}
 		}
-
-		/**#@-*/
 	});
 })(tinymce);
