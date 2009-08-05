@@ -1,6 +1,8 @@
 Version 3.2.5.1 (2009-xx-xx)
 	Fixed bug where IE could sometimes render a unknown runtime error on invalid input HTML.
 	Fixed bug where some incorrectly placed tables wouldn't be moved outside the paragraphs on IE.
+	Fixed bug where uppercase script element wouldn't be handled correctly and converted to valid lowercase.
+	Fixed so script blocks isn't wrapped in paragraphs as other inline elements.
 	Changed inline documentation to use moxiedoc style comments.
 Version 3.2.5 (2009-06-29)
 	Added new jQuery plugin for the jQuery specific package. This enables you to more easily load and use TinyMCE.

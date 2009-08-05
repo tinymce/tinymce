@@ -4,7 +4,7 @@
 <title>Full featured example</title>
 
 <!-- TinyMCE -->
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 		// General options
@@ -21,7 +21,7 @@
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "bottom",
 		theme_advanced_resizing : true,
-
+extended_valid_el2ements : 'script[type]',
 		// Example content CSS (should be your site CSS)
 		content_css : "css/content.css",
 
@@ -64,18 +64,8 @@
 
 		<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 		<div>
-			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
-<strong>
-  <div>
-    <table>
-      <tbody>
-        <tr>
-          <td>x</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</strong>
+			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">&lt;ScRIPT tYpe="text/javascript"&gt;alert("x");&lt;/SCRIPT&gt;
+dasda
 			</textarea>
 		</div>
 

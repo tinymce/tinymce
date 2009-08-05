@@ -1889,7 +1889,7 @@ tinymce.create('static tinymce.util.XHR', {
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
 				// Wrap scripts and styles in comments for serialization purposes
-				if (/<script|noscript|style/.test(h)) {
+				if (/<script|noscript|style/i.test(h)) {
 					function trim(s) {
 						// Remove prefix and suffix code for element
 						s = s.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n');
@@ -1901,14 +1901,13 @@ tinymce.create('static tinymce.util.XHR', {
 					};
 
 					// Wrap the script contents in CDATA and keep them from executing
-					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/g, function(v, attribs, text) {
+					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/gi, function(v, attribs, text) {
 						// Force type attribute
 						if (!attribs)
 							attribs = ' type="text/javascript"';
 
-						// Prefix script type/language attribute values with mce- to prevent it from executing
-						attribs = attribs.replace(/(type|language)=\"?/, '$&mce-');
-						attribs = attribs.replace(/src=\"([^\"]+)\"?/, function(a, url) {
+						// Convert the src attribute of the scripts
+						attribs = attribs.replace(/src=\"([^\"]+)\"?/i, function(a, url) {
 							if (s.url_converter)
 								url = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(url), 'src', 'script'));
 
@@ -6169,9 +6168,6 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 				// Restore CDATA sections
 				h = h.replace(/<!--\[CDATA\[([\s\S]+)\]\]-->/g, '<![CDATA[$1]]>');
-
-				// Restore scripts
-				h = h.replace(/(type|language)=\"mce-/g, '$1="');
 
 				// Restore the \u00a0 character if raw mode is enabled
 				if (s.entity_encoding == 'raw')
@@ -11771,7 +11767,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				nx = nl[i];
 
 				// Is text or non block element
-				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8)) {
+				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8 && !/^(SCRIPT|MCE:SCRIPT)$/i.test(nx.nodeName))) {
 					if (!bl) {
 						// Create new block but ignore whitespace
 						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {

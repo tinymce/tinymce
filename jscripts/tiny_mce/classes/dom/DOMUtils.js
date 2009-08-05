@@ -1198,7 +1198,7 @@
 			// Store away src and href in mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
 				// Wrap scripts and styles in comments for serialization purposes
-				if (/<script|noscript|style/.test(h)) {
+				if (/<script|noscript|style/i.test(h)) {
 					function trim(s) {
 						// Remove prefix and suffix code for element
 						s = s.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n');
@@ -1210,14 +1210,13 @@
 					};
 
 					// Wrap the script contents in CDATA and keep them from executing
-					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/g, function(v, attribs, text) {
+					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/gi, function(v, attribs, text) {
 						// Force type attribute
 						if (!attribs)
 							attribs = ' type="text/javascript"';
 
-						// Prefix script type/language attribute values with mce- to prevent it from executing
-						attribs = attribs.replace(/(type|language)=\"?/, '$&mce-');
-						attribs = attribs.replace(/src=\"([^\"]+)\"?/, function(a, url) {
+						// Convert the src attribute of the scripts
+						attribs = attribs.replace(/src=\"([^\"]+)\"?/i, function(a, url) {
 							if (s.url_converter)
 								url = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(url), 'src', 'script'));
 
