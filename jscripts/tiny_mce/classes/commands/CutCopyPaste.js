@@ -17,7 +17,13 @@
 				if (!doc.queryCommandSupported(cmd))
 					throw 'Error';
 			} catch (ex) {
-				ed.windowManager.alert(ed.getLang('clipboard_no_support'));
+				if (tinymce.isGecko) {
+					ed.windowManager.confirm(ed.getLang('clipboard_msg'), function(s) {
+						if (s)
+							open('http://www.mozilla.org/editor/midasdemo/securityprefs.html', '_blank');
+					});
+				} else
+					ed.windowManager.alert(ed.getLang('clipboard_no_support'));
 			}
 		});
 	});
