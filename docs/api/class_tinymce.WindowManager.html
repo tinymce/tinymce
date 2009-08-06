@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<title>Class: tinymce.WindowManager</title>
+<meta name="generator" content="MoxieDoc" />
+
+<link rel="stylesheet" type="text/css" href="css/reset.css" />
+<link rel="stylesheet" type="text/css" href="css/grids.css" />
+<link rel="stylesheet" type="text/css" href="css/general.css" />
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("jquery", "1.3");
+</script>
+<script type="text/javascript" src="js/jquery.treeview.min.js"></script>
+<script type="text/javascript" src="js/general.js"></script>
+</head>
+<body>
+<div class="classDetailsContent">
+<h1>tinymce.WindowManager</h1>
+<table class="classDetails">
+<tr>
+<td class="first">Namespace</td>
+<td class="last">tinymce</td>
+</tr>
+<tr>
+<td class="first">Class</td>
+<td class="last">WindowManager</td>
+</tr>
+</table>
+<div class="classDescription">This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.</div>
+<div class="summaryLists">
+<h2>Public Methods</h2>
+<table class="Methods summary">
+<thead>
+<tr>
+<th>Method</th>
+<th>Defined By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.WindowManager.html#WindowManager">WindowManager</a>(ed:<a href="class_tinymce.Editor.html">Editor</a>)</div>
+<div class="summary">Constructs a new window manager instance.</div>
+</td>
+<td class="last">WindowManager</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.WindowManager.html#alert">alert</a>(t:String, cb:function, s:Object):void</div>
+<div class="summary">Creates a alert dialog.</div>
+</td>
+<td class="last">WindowManager</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.WindowManager.html#close">close</a>(w:Window):void</div>
+<div class="summary">Closes the specified window.</div>
+</td>
+<td class="last">WindowManager</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.WindowManager.html#confirm">confirm</a>(t:String, cb:function, s:Object):void</div>
+<div class="summary">Creates a confirm dialog.</div>
+</td>
+<td class="last">WindowManager</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.WindowManager.html#createInstance">createInstance</a>(cl:String):Object</div>
+<div class="summary">Creates a instance of a class.</div>
+</td>
+<td class="last">WindowManager</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.WindowManager.html#open">open</a>(s:Object, p:Object):void</div>
+<div class="summary">Opens a new window.</div>
+</td>
+<td class="last">WindowManager</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="detailsList">
+<div class="details">
+<h2>Method details</h2>
+<div class="memberDetails" id="WindowManager">
+<h3>WindowManager<span class="memberType">constructor</span>
+</h3>
+<code class="syntax">public 
+						function WindowManager(ed:<a href="class_tinymce.Editor.html">Editor</a>)</code>
+<div class="memberDescription">Constructs a new window manager instance.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">ed:<a href="class_tinymce.Editor.html">Editor</a>
+</td>
+<td class="last">Editor instance that the windows are bound to.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="alert">
+<h3>alert<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function alert(t:String, cb:function, s:Object):void</code>
+<div class="memberDescription">Creates a alert dialog. Please don't use the blocking behavior of this
+native version use the callback method instead then it can be extended.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">t:String</td>
+<td class="last">Title for the new alert dialog.</td>
+</tr>
+<tr>
+<td class="first">cb:function</td>
+<td class="last">Callback function to be executed after the user has selected ok.</td>
+</tr>
+<tr>
+<td class="first">s:Object</td>
+<td class="last">Optional scope to execute the callback in.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="close">
+<h3>close<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function close(w:Window):void</code>
+<div class="memberDescription">Closes the specified window. This will also dispatch out a onClose event.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">w:Window</td>
+<td class="last">Native window object to close.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="confirm">
+<h3>confirm<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function confirm(t:String, cb:function, s:Object):void</code>
+<div class="memberDescription">Creates a confirm dialog. Please don't use the blocking behavior of this
+native version use the callback method instead then it can be extended.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">t:String</td>
+<td class="last">Title for the new confirm dialog.</td>
+</tr>
+<tr>
+<td class="first">cb:function</td>
+<td class="last">Callback function to be executed after the user has selected ok or cancel.</td>
+</tr>
+<tr>
+<td class="first">s:Object</td>
+<td class="last">Optional scope to execute the callback in.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="createInstance">
+<h3>createInstance<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function createInstance(cl:String):Object</code>
+<div class="memberDescription">Creates a instance of a class. This method was needed since IE can't create instances
+of classes from a parent window due to some reference problem. Any arguments passed after the class name
+will be passed as arguments to the constructor.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">cl:String</td>
+<td class="last">Class name to create an instance of.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Object - Instance of the specified class.</div>
+</div>
+<div class="memberDetails last" id="open">
+<h3>open<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function open(s:Object, p:Object):void</code>
+<div class="memberDescription">Opens a new window.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">s:Object</td>
+<td class="last">Optional name/value settings collection contains things like width/height/url etc.</td>
+</tr>
+<tr>
+<td class="first">p:Object</td>
+<td class="last">Optional parameters/arguments collection can be used by the dialogs to retrive custom parameters.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

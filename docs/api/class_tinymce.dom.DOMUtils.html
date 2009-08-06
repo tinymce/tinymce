@@ -1,0 +1,1454 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<title>Class: tinymce.dom.DOMUtils</title>
+<meta name="generator" content="MoxieDoc" />
+
+<link rel="stylesheet" type="text/css" href="css/reset.css" />
+<link rel="stylesheet" type="text/css" href="css/grids.css" />
+<link rel="stylesheet" type="text/css" href="css/general.css" />
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("jquery", "1.3");
+</script>
+<script type="text/javascript" src="js/jquery.treeview.min.js"></script>
+<script type="text/javascript" src="js/general.js"></script>
+</head>
+<body>
+<div class="classDetailsContent">
+<h1>tinymce.dom.DOMUtils</h1>
+<table class="classDetails">
+<tr>
+<td class="first">Namespace</td>
+<td class="last">tinymce.dom</td>
+</tr>
+<tr>
+<td class="first">Class</td>
+<td class="last">DOMUtils</td>
+</tr>
+</table>
+<div class="classDescription">Utility class for various DOM manipulation and retrival functions.</div>
+<div class="summaryLists">
+<h2>Public Methods</h2>
+<table class="Methods summary">
+<thead>
+<tr>
+<th>Method</th>
+<th>Defined By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#DOMUtils">DOMUtils</a>(d:Document, s:settings)</div>
+<div class="summary">Constructs a new DOMUtils instance.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#add">add</a>(Element:String/Element/Array, n:String/Element, a:Object, h:String, c:boolean):Element/Array</div>
+<div class="summary">Adds the specified element to another element or elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#addClass">addClass</a>(Element:String/Element/Array, c:String):String/Array</div>
+<div class="summary">Adds a class to the specified element or elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#bind">bind</a>(o:Element/Document/Window/Array/String, n:String, f:function, s:Object):function</div>
+<div class="summary">Adds an event handler to the specified object.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#create">create</a>(n:String, a:Object, h:String):Element</div>
+<div class="summary">Creates a new element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#createHTML">createHTML</a>(n:String, a:Object, h:String):String</div>
+<div class="summary">Create HTML string for element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#createRng">createRng</a>():DOMRange</div>
+<div class="summary">Created a new DOM Range object.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#decode">decode</a>(s:String):String</div>
+<div class="summary">Entity decode a string, resolves any HTML entities like &amp;aring;.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#destroy">destroy</a>():void</div>
+<div class="summary">Destroys all internal references to the DOM to solve IE leak issues.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#encode">encode</a>(s:String):String</div>
+<div class="summary">Entity encodes a string, encodes the most common entities &lt;&gt;"&amp; into entities.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#findCommonAncestor">findCommonAncestor</a>(a:Element, b:Element):Element</div>
+<div class="summary">Find the common ancestor of two elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#get">get</a>(n:String/Element):Element</div>
+<div class="summary">Returns the specified element by ID or the input element if it isn't a string.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getAttrib">getAttrib</a>(e:String/Element, n:String, dv:String):String</div>
+<div class="summary">Returns the specified attribute by name.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getAttribs">getAttribs</a>(n:HTMLElement/string):NodeList</div>
+<div class="summary">Returns an NodeList with attributes for the element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getClasses">getClasses</a>():Array</div>
+<div class="summary">Returns a array of all single CSS classes in the document.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getOuterHTML">getOuterHTML</a>(e:String/Element):String</div>
+<div class="summary">Returns the outer HTML of an element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getParent">getParent</a>(n:Node/String, f:function, r:Node):Node</div>
+<div class="summary">Returns a node by the specified selector function.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getParents">getParents</a>(n:Node/String, f:function, r:Node):Array</div>
+<div class="summary">Returns a node list of all parents matching the specified selector function or pattern.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getPos">getPos</a>(n:Element/String, ro:Element):object</div>
+<div class="summary">Returns the absolute x, y position of a node.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getRect">getRect</a>(e:Element/String):object</div>
+<div class="summary">Returns the rectangle for a specific element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getRoot">getRoot</a>():Element</div>
+<div class="summary">Returns the root node of the document this is normally the body but might be a DIV.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getSize">getSize</a>(e:Element/String):object</div>
+<div class="summary">Returns the size dimensions of the specified element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getStyle">getStyle</a>(n:String/Element, na:String, c:String):String</div>
+<div class="summary">Returns the current style or runtime/computed value of a element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#getViewPort">getViewPort</a>(w:Window):Object</div>
+<div class="summary">Returns the viewport of the window.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#hasClass">hasClass</a>(n:String/Element, :Object):boolean</div>
+<div class="summary">Returns true if the specified element has the specified class.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#hide">hide</a>(e:String/Element/Array):void</div>
+<div class="summary">Hides the specified element(s) by ID by setting the "display" style.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#insertAfter">insertAfter</a>(Element:Element, r:Element/String/Array):Element/Array</div>
+<div class="summary">Inserts a element after the reference element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#is">is</a>(n:Node/NodeList, patt:String):void</div>
+<div class="summary">Returns true/false if the specified element matches the specified css pattern.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#isBlock">isBlock</a>(n:Node):boolean</div>
+<div class="summary">Returns true/false if the specified element is a block element or not.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#isHidden">isHidden</a>(e:String/Element):boolean</div>
+<div class="summary">Returns true/false if the element is hidden or not by checking the "display" style.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#loadCSS">loadCSS</a>(u:String):void</div>
+<div class="summary">Imports/loads the specified CSS file into the document bound to the class.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#parseStyle">parseStyle</a>(st:String):Object</div>
+<div class="summary">Parses the specified style value into an object collection.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#processHTML">processHTML</a>(h:String):String</div>
+<div class="summary">Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
+properly in a RTE environment.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#remove">remove</a>(n:String/Element/Array, k:boolean):Element/Array</div>
+<div class="summary">Removes/deletes the specified element(s) from the DOM.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#removeClass">removeClass</a>(Element:String/Element/Array, c:String):String/Array</div>
+<div class="summary">Removes a class from the specified element or elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#replace">replace</a>(n:Element, o:Element/String/Array, k:boolean):void</div>
+<div class="summary">Replaces the specified element or elements with the specified element, the new element will
+be cloned if multiple inputs...</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#run">run</a>(Element:String/Element/Array, f:function, s:Object):Object/Array</div>
+<div class="summary">Executes the specified function on the element by id or dom element node or array of elements/id.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#select">select</a>(p:String, s:Object):Array</div>
+<div class="summary">Selects specific elements by a CSS level 3 pattern.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#serializeStyle">serializeStyle</a>(o:Object):String</div>
+<div class="summary">Serializes the specified style object into a string.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#setAttrib">setAttrib</a>(e:Element/String/Array, n:String, v:String):void</div>
+<div class="summary">Sets the specified attributes value of a element or elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#setAttribs">setAttribs</a>(e:Element/String/Array, o:Object):void</div>
+<div class="summary">Sets the specified attributes of a element or elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#setHTML">setHTML</a>(e:Element/String/Array, h:String):void</div>
+<div class="summary">Sets the specified HTML content inside the element or elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#setOuterHTML">setOuterHTML</a>(e:Element/String/Array, h:Object, d:Document):void</div>
+<div class="summary">Sets the specified outer HTML on a element or elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#setStyle">setStyle</a>(n:String/Element/Array, na:String, v:String):void</div>
+<div class="summary">Sets the CSS style value on a HTML element.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#setStyles">setStyles</a>(e:Element/String/Array, o:Object):void</div>
+<div class="summary">Sets multiple styles on the specified element(s).</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#show">show</a>(e:String/Element/Array):void</div>
+<div class="summary">Shows the specified element(s) by ID by setting the "display" style.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#split">split</a>(pe:Element, e:Element, re:Element):Element</div>
+<div class="summary">Splits an element into two new elements and places the specified split
+element or element between the new ones.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#toHex">toHex</a>(s:String):String</div>
+<div class="summary">Parses the specified RGB color value and returns a hex version of that color.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#unbind">unbind</a>(o:String/Element/Array, n:String, f:function):bool/Array</div>
+<div class="summary">Removes the specified event handler by name and function from a element or collection of elements.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#uniqueId">uniqueId</a>(p:String):String</div>
+<div class="summary">Returns a unique id.</div>
+</td>
+<td class="last">DOMUtils</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="detailsList">
+<div class="details">
+<h2>Method details</h2>
+<div class="memberDetails" id="DOMUtils">
+<h3>DOMUtils<span class="memberType">constructor</span>
+</h3>
+<code class="syntax">public 
+						function DOMUtils(d:Document, s:settings)</code>
+<div class="memberDescription">Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">d:Document</td>
+<td class="last">Document reference to bind the utility class to.</td>
+</tr>
+<tr>
+<td class="first">s:settings</td>
+<td class="last">Optional settings collection.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="add">
+<h3>add<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function add(Element:String/Element/Array, n:String/Element, a:Object, h:String, c:boolean):Element/Array</code>
+<div class="memberDescription">Adds the specified element to another element or elements.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">Element:String/Element/Array</td>
+<td class="last">id string, DOM node element or array of id's or elements to add to.</td>
+</tr>
+<tr>
+<td class="first">n:String/Element</td>
+<td class="last">Name of new element to add or existing element to add.</td>
+</tr>
+<tr>
+<td class="first">a:Object</td>
+<td class="last">Optional object collection with arguments to add to the new element(s).</td>
+</tr>
+<tr>
+<td class="first">h:String</td>
+<td class="last">Optional inner HTML contents to add for each element.</td>
+</tr>
+<tr>
+<td class="first">c:boolean</td>
+<td class="last">Optional internal state to indicate if it should create or add.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Element/Array - Element that got created or array with elements if multiple elements where passed.</div>
+</div>
+<div class="memberDetails" id="addClass">
+<h3>addClass<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function addClass(Element:String/Element/Array, c:String):String/Array</code>
+<div class="memberDescription">Adds a class to the specified element or elements.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">Element:String/Element/Array</td>
+<td class="last">ID string or DOM element or array with elements or IDs.</td>
+</tr>
+<tr>
+<td class="first">c:String</td>
+<td class="last">Class name to add to each element.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String/Array - String with new class value or array with new class values for all elements.</div>
+</div>
+<div class="memberDetails" id="bind">
+<h3>bind<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function bind(o:Element/Document/Window/Array/String, n:String, f:function, s:Object):function</code>
+<div class="memberDescription">Adds an event handler to the specified object.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">o:Element/Document/Window/Array/String</td>
+<td class="last">Object or element id string to add event handler to or an array of elements/ids/documents.</td>
+</tr>
+<tr>
+<td class="first">n:String</td>
+<td class="last">Name of event handler to add for example: click.</td>
+</tr>
+<tr>
+<td class="first">f:function</td>
+<td class="last">Function to execute when the event occurs.</td>
+</tr>
+<tr>
+<td class="first">s:Object</td>
+<td class="last">Optional scope to execute the function in.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">function - Function callback handler the same as the one passed in.</div>
+</div>
+<div class="memberDetails" id="create">
+<h3>create<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function create(n:String, a:Object, h:String):Element</code>
+<div class="memberDescription">Creates a new element.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:String</td>
+<td class="last">Name of new element.</td>
+</tr>
+<tr>
+<td class="first">a:Object</td>
+<td class="last">Optional object name/value collection with element attributes.</td>
+</tr>
+<tr>
+<td class="first">h:String</td>
+<td class="last">Optional HTML string to set as inner HTML of the element.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Element - HTML DOM node element that got created.</div>
+</div>
+<div class="memberDetails" id="createHTML">
+<h3>createHTML<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function createHTML(n:String, a:Object, h:String):String</code>
+<div class="memberDescription">Create HTML string for element. The elemtn will be closed unless an empty inner HTML string is passed.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:String</td>
+<td class="last">Name of new element.</td>
+</tr>
+<tr>
+<td class="first">a:Object</td>
+<td class="last">Optional object name/value collection with element attributes.</td>
+</tr>
+<tr>
+<td class="first">h:String</td>
+<td class="last">Optional HTML string to set as inner HTML of the element.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - String with new HTML element like for example: &lt;a href="#"&gt;test&lt;/a&gt;.</div>
+</div>
+<div class="memberDetails" id="createRng">
+<h3>createRng<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function createRng():DOMRange</code>
+<div class="memberDescription">Created a new DOM Range object. This will use the native DOM Range API if it's
+available if it's not it will fallback to the custom TinyMCE implementation.
+</div>
+<h4>Returns</h4>
+<div class="returns">DOMRange - DOM Range object.</div>
+</div>
+<div class="memberDetails" id="decode">
+<h3>decode<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function decode(s:String):String</code>
+<div class="memberDescription">Entity decode a string, resolves any HTML entities like &aring;.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">s:String</td>
+<td class="last">String to decode entities on.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Entity decoded string.</div>
+</div>
+<div class="memberDetails" id="destroy">
+<h3>destroy<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function destroy():void</code>
+<div class="memberDescription">Destroys all internal references to the DOM to solve IE leak issues.
+</div>
+</div>
+<div class="memberDetails" id="encode">
+<h3>encode<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function encode(s:String):String</code>
+<div class="memberDescription">Entity encodes a string, encodes the most common entities <>"& into entities.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">s:String</td>
+<td class="last">String to encode with entities.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Entity encoded string.</div>
+</div>
+<div class="memberDetails" id="findCommonAncestor">
+<h3>findCommonAncestor<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function findCommonAncestor(a:Element, b:Element):Element</code>
+<div class="memberDescription">Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">a:Element</td>
+<td class="last">Element to find common ancestor of.</td>
+</tr>
+<tr>
+<td class="first">b:Element</td>
+<td class="last">Element to find common ancestor of.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Element - Common ancestor element of the two input elements.</div>
+</div>
+<div class="memberDetails" id="get">
+<h3>get<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function get(n:String/Element):Element</code>
+<div class="memberDescription">Returns the specified element by ID or the input element if it isn't a string.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:String/Element</td>
+<td class="last">Element id to look for or element to just pass though.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Element - Element matching the specified id or null if it wasn't found.</div>
+</div>
+<div class="memberDetails" id="getAttrib">
+<h3>getAttrib<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getAttrib(e:String/Element, n:String, dv:String):String</code>
+<div class="memberDescription">Returns the specified attribute by name.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:String/Element</td>
+<td class="last">Element string id or DOM element to get attribute from.</td>
+</tr>
+<tr>
+<td class="first">n:String</td>
+<td class="last">Name of attribute to get.</td>
+</tr>
+<tr>
+<td class="first">dv:String</td>
+<td class="last">Optional default value to return if the attribute didn't exist.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Attribute value string, default value or null if the attribute wasn't found.</div>
+</div>
+<div class="memberDetails" id="getAttribs">
+<h3>getAttribs<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getAttribs(n:HTMLElement/string):NodeList</code>
+<div class="memberDescription">Returns an NodeList with attributes for the element.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:HTMLElement/string</td>
+<td class="last">Element node or string id to get attributes from.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">NodeList - NodeList with attributes.</div>
+</div>
+<div class="memberDetails" id="getClasses">
+<h3>getClasses<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getClasses():Array</code>
+<div class="memberDescription">Returns a array of all single CSS classes in the document. A single CSS class is a simple
+rule like ".class" complex ones like "div td.class" will not be added to output.
+</div>
+<h4>Returns</h4>
+<div class="returns">Array - Array with class objects each object has a class field might be other fields in the future.</div>
+</div>
+<div class="memberDetails" id="getOuterHTML">
+<h3>getOuterHTML<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getOuterHTML(e:String/Element):String</code>
+<div class="memberDescription">Returns the outer HTML of an element.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:String/Element</td>
+<td class="last">Element ID or element object to get outer HTML from.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Outer HTML string.</div>
+</div>
+<div class="memberDetails" id="getParent">
+<h3>getParent<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getParent(n:Node/String, f:function, r:Node):Node</code>
+<div class="memberDescription">Returns a node by the specified selector function. This function will
+loop through all parent nodes and call the specified function for each node.
+If the function then returns true indicating that it has found what it was looking for, the loop execution will then end
+and the node it found will be returned.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:Node/String</td>
+<td class="last">DOM node to search parents on or ID string.</td>
+</tr>
+<tr>
+<td class="first">f:function</td>
+<td class="last">Selection function to execute on each node or CSS pattern.</td>
+</tr>
+<tr>
+<td class="first">r:Node</td>
+<td class="last">Optional root element, never go below this point.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Node - DOM Node or null if it wasn't found.</div>
+</div>
+<div class="memberDetails" id="getParents">
+<h3>getParents<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getParents(n:Node/String, f:function, r:Node):Array</code>
+<div class="memberDescription">Returns a node list of all parents matching the specified selector function or pattern.
+If the function then returns true indicating that it has found what it was looking for and that node will be collected.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:Node/String</td>
+<td class="last">DOM node to search parents on or ID string.</td>
+</tr>
+<tr>
+<td class="first">f:function</td>
+<td class="last">Selection function to execute on each node or CSS pattern.</td>
+</tr>
+<tr>
+<td class="first">r:Node</td>
+<td class="last">Optional root element, never go below this point.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Array - Array of nodes or null if it wasn't found.</div>
+</div>
+<div class="memberDetails" id="getPos">
+<h3>getPos<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getPos(n:Element/String, ro:Element):object</code>
+<div class="memberDescription">Returns the absolute x, y position of a node. The position will be returned in a object with x, y fields.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:Element/String</td>
+<td class="last">HTML element or element id to get x, y position from.</td>
+</tr>
+<tr>
+<td class="first">ro:Element</td>
+<td class="last">Optional root element to stop calculations at.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">object - Absolute position of the specified element object with x, y fields.</div>
+</div>
+<div class="memberDetails" id="getRect">
+<h3>getRect<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getRect(e:Element/String):object</code>
+<div class="memberDescription">Returns the rectangle for a specific element.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:Element/String</td>
+<td class="last">Element object or element ID to get rectange from.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">object - Rectange for specified element object with x, y, w, h fields.</div>
+</div>
+<div class="memberDetails" id="getRoot">
+<h3>getRoot<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getRoot():Element</code>
+<div class="memberDescription">Returns the root node of the document this is normally the body but might be a DIV. Parents like getParent will not
+go above the point of this root node.
+</div>
+<h4>Returns</h4>
+<div class="returns">Element - Root element for the utility class.</div>
+</div>
+<div class="memberDetails" id="getSize">
+<h3>getSize<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getSize(e:Element/String):object</code>
+<div class="memberDescription">Returns the size dimensions of the specified element.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:Element/String</td>
+<td class="last">Element object or element ID to get rectange from.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">object - Rectange for specified element object with w, h fields.</div>
+</div>
+<div class="memberDetails" id="getStyle">
+<h3>getStyle<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getStyle(n:String/Element, na:String, c:String):String</code>
+<div class="memberDescription">Returns the current style or runtime/computed value of a element.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:String/Element</td>
+<td class="last">HTML element or element id string to get style from.</td>
+</tr>
+<tr>
+<td class="first">na:String</td>
+<td class="last">Style name to return.</td>
+</tr>
+<tr>
+<td class="first">c:String</td>
+<td class="last">Computed style.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Current style or computed style value of a element.</div>
+</div>
+<div class="memberDetails" id="getViewPort">
+<h3>getViewPort<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function getViewPort(w:Window):Object</code>
+<div class="memberDescription">Returns the viewport of the window.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">w:Window</td>
+<td class="last">Optional window to get viewport of.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Object - Viewport object with fields x, y, w and h.</div>
+</div>
+<div class="memberDetails" id="hasClass">
+<h3>hasClass<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function hasClass(n:String/Element, :Object):boolean</code>
+<div class="memberDescription">Returns true if the specified element has the specified class.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:String/Element</td>
+<td class="last">HTML element or element id string to check CSS class on.</td>
+</tr>
+<tr>
+<td class="first">:Object</td>
+<td class="last">{String] c CSS class to check for.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">boolean - true/false if the specified element has the specified class.</div>
+</div>
+<div class="memberDetails" id="hide">
+<h3>hide<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function hide(e:String/Element/Array):void</code>
+<div class="memberDescription">Hides the specified element(s) by ID by setting the "display" style.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:String/Element/Array</td>
+<td class="last">ID of DOM element or DOM element or array with elements or IDs to hide.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="insertAfter">
+<h3>insertAfter<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function insertAfter(Element:Element, r:Element/String/Array):Element/Array</code>
+<div class="memberDescription">Inserts a element after the reference element.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">Element:Element</td>
+<td class="last">to insert after the reference.</td>
+</tr>
+<tr>
+<td class="first">r:Element/String/Array</td>
+<td class="last">Reference element, element id or array of elements to insert after.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Element/Array - Element that got added or an array with elements.</div>
+</div>
+<div class="memberDetails" id="is">
+<h3>is<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function is(n:Node/NodeList, patt:String):void</code>
+<div class="memberDescription">Returns true/false if the specified element matches the specified css pattern.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:Node/NodeList</td>
+<td class="last">DOM node to match or an array of nodes to match.</td>
+</tr>
+<tr>
+<td class="first">patt:String</td>
+<td class="last">CSS pattern to match the element agains.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="isBlock">
+<h3>isBlock<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function isBlock(n:Node):boolean</code>
+<div class="memberDescription">Returns true/false if the specified element is a block element or not.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:Node</td>
+<td class="last">Element/Node to check.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">boolean - True/False state if the node is a block element or not.</div>
+</div>
+<div class="memberDetails" id="isHidden">
+<h3>isHidden<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function isHidden(e:String/Element):boolean</code>
+<div class="memberDescription">Returns true/false if the element is hidden or not by checking the "display" style.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:String/Element</td>
+<td class="last">Id or element to check display state on.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">boolean - true/false if the element is hidden or not.</div>
+</div>
+<div class="memberDetails" id="loadCSS">
+<h3>loadCSS<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function loadCSS(u:String):void</code>
+<div class="memberDescription">Imports/loads the specified CSS file into the document bound to the class.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">u:String</td>
+<td class="last">URL to CSS file to load.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="parseStyle">
+<h3>parseStyle<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function parseStyle(st:String):Object</code>
+<div class="memberDescription">Parses the specified style value into an object collection. This parser will also
+merge and remove any redundant items that browsers might have added. It will also convert non hex
+colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">st:String</td>
+<td class="last">Style value to parse for example: border:1px solid red;.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Object - Object representation of that style like {border : '1px solid red'}</div>
+</div>
+<div class="memberDetails" id="processHTML">
+<h3>processHTML<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function processHTML(h:String):String</code>
+<div class="memberDescription">Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
+properly in a RTE environment. It also converts any URLs in links and images and places
+a converted value into a separate attribute with the mce prefix like mce_src or mce_href.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">h:String</td>
+<td class="last">HTML to process.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Processed HTML code.</div>
+</div>
+<div class="memberDetails" id="remove">
+<h3>remove<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function remove(n:String/Element/Array, k:boolean):Element/Array</code>
+<div class="memberDescription">Removes/deletes the specified element(s) from the DOM.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:String/Element/Array</td>
+<td class="last">ID of element or DOM element object or array containing multiple elements/ids.</td>
+</tr>
+<tr>
+<td class="first">k:boolean</td>
+<td class="last">Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Element/Array - HTML DOM element that got removed or array of elements depending on input.</div>
+</div>
+<div class="memberDetails" id="removeClass">
+<h3>removeClass<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function removeClass(Element:String/Element/Array, c:String):String/Array</code>
+<div class="memberDescription">Removes a class from the specified element or elements.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">Element:String/Element/Array</td>
+<td class="last">ID string or DOM element or array with elements or IDs.</td>
+</tr>
+<tr>
+<td class="first">c:String</td>
+<td class="last">Class name to remove to each element.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String/Array - String with new class value or array with new class values for all elements.</div>
+</div>
+<div class="memberDetails" id="replace">
+<h3>replace<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function replace(n:Element, o:Element/String/Array, k:boolean):void</code>
+<div class="memberDescription">Replaces the specified element or elements with the specified element, the new element will
+be cloned if multiple inputs elements are passed.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:Element</td>
+<td class="last">New element to replace old ones with.</td>
+</tr>
+<tr>
+<td class="first">o:Element/String/Array</td>
+<td class="last">Element DOM node, element id or array of elements or ids to replace.</td>
+</tr>
+<tr>
+<td class="first">k:boolean</td>
+<td class="last">Optional keep children state, if set to true child nodes from the old object will be added to new ones.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="run">
+<h3>run<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function run(Element:String/Element/Array, f:function, s:Object):Object/Array</code>
+<div class="memberDescription">Executes the specified function on the element by id or dom element node or array of elements/id.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">Element:String/Element/Array</td>
+<td class="last">ID or DOM element object or array with ids or elements.</td>
+</tr>
+<tr>
+<td class="first">f:function</td>
+<td class="last">Function to execute for each item.</td>
+</tr>
+<tr>
+<td class="first">s:Object</td>
+<td class="last">Optional scope to execute the function in.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Object/Array - Single object or array with objects depending on multiple input or not.</div>
+</div>
+<div class="memberDetails" id="select">
+<h3>select<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function select(p:String, s:Object):Array</code>
+<div class="memberDescription">Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".
+This function is optimized for the most common patterns needed in TinyMCE but it also performes good enough
+on more complex patterns.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">p:String</td>
+<td class="last">CSS level 1 pattern to select/find elements by.</td>
+</tr>
+<tr>
+<td class="first">s:Object</td>
+<td class="last">Optional root element/scope element to search in.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Array - Array with all matched elements.</div>
+</div>
+<div class="memberDetails" id="serializeStyle">
+<h3>serializeStyle<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function serializeStyle(o:Object):String</code>
+<div class="memberDescription">Serializes the specified style object into a string.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">o:Object</td>
+<td class="last">Object to serialize as string for example: {border : '1px solid red'}</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - String representation of the style object for example: border: 1px solid red.</div>
+</div>
+<div class="memberDetails" id="setAttrib">
+<h3>setAttrib<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function setAttrib(e:Element/String/Array, n:String, v:String):void</code>
+<div class="memberDescription">Sets the specified attributes value of a element or elements.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:Element/String/Array</td>
+<td class="last">DOM element, element id string or array of elements/ids to set attribute on.</td>
+</tr>
+<tr>
+<td class="first">n:String</td>
+<td class="last">Name of attribute to set.</td>
+</tr>
+<tr>
+<td class="first">v:String</td>
+<td class="last">Value to set on the attribute of this value is falsy like null 0 or '' it will remove the attribute instead.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="setAttribs">
+<h3>setAttribs<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function setAttribs(e:Element/String/Array, o:Object):void</code>
+<div class="memberDescription">Sets the specified attributes of a element or elements.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:Element/String/Array</td>
+<td class="last">DOM element, element id string or array of elements/ids to set attributes on.</td>
+</tr>
+<tr>
+<td class="first">o:Object</td>
+<td class="last">Name/Value collection of attribute items to add to the element(s).</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="setHTML">
+<h3>setHTML<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function setHTML(e:Element/String/Array, h:String):void</code>
+<div class="memberDescription">Sets the specified HTML content inside the element or elements. The HTML will first be processed this means
+URLs will get converted, hex color values fixed etc. Check processHTML for details.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:Element/String/Array</td>
+<td class="last">DOM element, element id string or array of elements/ids to set HTML inside.</td>
+</tr>
+<tr>
+<td class="first">h:String</td>
+<td class="last">HTML content to set as inner HTML of the element.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="setOuterHTML">
+<h3>setOuterHTML<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function setOuterHTML(e:Element/String/Array, h:Object, d:Document):void</code>
+<div class="memberDescription">Sets the specified outer HTML on a element or elements.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:Element/String/Array</td>
+<td class="last">DOM element, element id string or array of elements/ids to set outer HTML on.</td>
+</tr>
+<tr>
+<td class="first">h:Object</td>
+<td class="last">HTML code to set as outer value for the element.</td>
+</tr>
+<tr>
+<td class="first">d:Document</td>
+<td class="last">Optional document scope to use in this process defaults to the document of the DOM class.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="setStyle">
+<h3>setStyle<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function setStyle(n:String/Element/Array, na:String, v:String):void</code>
+<div class="memberDescription">Sets the CSS style value on a HTML element. The name can be a camelcase string
+or the CSS style name like background-color.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">n:String/Element/Array</td>
+<td class="last">HTML element/Element ID or Array of elements/ids to set CSS style value on.</td>
+</tr>
+<tr>
+<td class="first">na:String</td>
+<td class="last">Name of the style value to set.</td>
+</tr>
+<tr>
+<td class="first">v:String</td>
+<td class="last">Value to set on the style.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="setStyles">
+<h3>setStyles<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function setStyles(e:Element/String/Array, o:Object):void</code>
+<div class="memberDescription">Sets multiple styles on the specified element(s).
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:Element/String/Array</td>
+<td class="last">DOM element, element id string or array of elements/ids to set styles on.</td>
+</tr>
+<tr>
+<td class="first">o:Object</td>
+<td class="last">Name/Value collection of style items to add to the element(s).</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="show">
+<h3>show<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function show(e:String/Element/Array):void</code>
+<div class="memberDescription">Shows the specified element(s) by ID by setting the "display" style.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">e:String/Element/Array</td>
+<td class="last">ID of DOM element or DOM element or array with elements or IDs to show.</td>
+</tr>
+</table>
+</div>
+<div class="memberDetails" id="split">
+<h3>split<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function split(pe:Element, e:Element, re:Element):Element</code>
+<div class="memberDescription">Splits an element into two new elements and places the specified split
+element or element between the new ones. For example splitting the paragraph at the bold element in
+this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">pe:Element</td>
+<td class="last">Parent element to split.</td>
+</tr>
+<tr>
+<td class="first">e:Element</td>
+<td class="last">Element to split at.</td>
+</tr>
+<tr>
+<td class="first">re:Element</td>
+<td class="last">Optional replacement element to replace the split element by.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">Element - Returns the split element or the replacement element if that is specified.</div>
+</div>
+<div class="memberDetails" id="toHex">
+<h3>toHex<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function toHex(s:String):String</code>
+<div class="memberDescription">Parses the specified RGB color value and returns a hex version of that color.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">s:String</td>
+<td class="last">RGB string value like rgb(1,2,3)</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Hex version of that RGB value like #FF00FF.</div>
+</div>
+<div class="memberDetails" id="unbind">
+<h3>unbind<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function unbind(o:String/Element/Array, n:String, f:function):bool/Array</code>
+<div class="memberDescription">Removes the specified event handler by name and function from a element or collection of elements.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">o:String/Element/Array</td>
+<td class="last">Element ID string or HTML element or an array of elements or ids to remove handler from.</td>
+</tr>
+<tr>
+<td class="first">n:String</td>
+<td class="last">Event handler name like for example: "click"</td>
+</tr>
+<tr>
+<td class="first">f:function</td>
+<td class="last">Function to remove.</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">bool/Array - Bool state if true if the handler was removed or an array with states if multiple elements where passed in.</div>
+</div>
+<div class="memberDetails last" id="uniqueId">
+<h3>uniqueId<span class="memberType">method</span>
+</h3>
+<code class="syntax">public 
+						function uniqueId(p:String):String</code>
+<div class="memberDescription">Returns a unique id. This can be useful when generating elements on the fly.
+This method will not check if the element allready exists.
+</div>
+<h4>Parameters</h4>
+<table class="params">
+<tr>
+<td class="first">p:String</td>
+<td class="last">Optional prefix to add infront of all ids defaults to "mce_".</td>
+</tr>
+</table>
+<h4>Returns</h4>
+<div class="returns">String - Unique id.</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
