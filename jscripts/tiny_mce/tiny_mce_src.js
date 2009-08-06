@@ -8285,10 +8285,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				if (s.plugins) {
 					pl = explode(s.plugins);
 
-					// Load compat2x first
-					if (tinymce.inArray(pl, 'compat2x') != -1)
-						PluginManager.load('compat2x', 'plugins/compat2x/editor_plugin' + tinymce.suffix + '.js');
-
 					// Load rest if plugins
 					each(pl, function(v) {
 						if (v && v.charAt(0) != '-' && !PluginManager.urls[v]) {
@@ -8611,40 +8607,71 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				'onPreInit',
 
 				'onBeforeRenderUI',
+
 				'onPostRender',
 
 				'onInit',
 
 				'onRemove',
+
 				'onActivate',
+
 				'onDeactivate',
+
 				'onClick',
+
 				'onEvent',
+
 				'onMouseUp',
+
 				'onMouseDown',
+
 				'onDblClick',
+
 				'onKeyDown',
+
 				'onKeyUp',
+
 				'onKeyPress',
+
 				'onContextMenu',
+
 				'onSubmit',
+
 				'onReset',
+
 				'onPaste',
+
 				'onPreProcess',
+
 				'onPostProcess',
+
 				'onBeforeSetContent',
+
 				'onBeforeGetContent',
+
 				'onSetContent',
+
 				'onGetContent',
+
 				'onLoadContent',
+
 				'onSaveContent',
+
 				'onNodeChange',
+
 				'onChange',
+
 				'onBeforeExecCommand',
+
 				'onExecCommand',
+
 				'onUndo',
+
 				'onRedo',
+
 				'onVisualAid',
+
 				'onSetProgressState'
 			], function(e) {
 				t[e] = new Dispatcher(t);
@@ -8818,12 +8845,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 			};
 
-			// Load compat2x first
-			if (s.plugins.indexOf('compat2x') != -1) {
-				PluginManager.load('compat2x', 'plugins/compat2x/editor_plugin' + tinymce.suffix + '.js');
-				sl.loadQueue(loadScripts);
-			} else
-				loadScripts();
+			loadScripts();
 		},
 
 		init : function() {
@@ -9052,24 +9074,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				fix_ie_paragraphs : 1
 			});
 
-			t.serializer = new tinymce.dom.Serializer({
-				entity_encoding : s.entity_encoding,
-				entities : s.entities,
+			t.serializer = new tinymce.dom.Serializer(extend(s, {
 				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
-				extended_valid_elements : s.extended_valid_elements,
-				valid_child_elements : s.valid_child_elements,
-				invalid_elements : s.invalid_elements,
-				fix_table_elements : s.fix_table_elements,
-				fix_list_elements : s.fix_list_elements,
-				fix_content_duplication : s.fix_content_duplication,
-				convert_fonts_to_spans : s.convert_fonts_to_spans,
-				font_size_classes  : s.font_size_classes,
-				font_size_style_values : s.font_size_style_values,
-				apply_source_formatting : s.apply_source_formatting,
-				remove_linebreaks : s.remove_linebreaks,
-				element_format : s.element_format,
 				dom : t.dom
-			});
+			}));
 
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
 			t.forceBlocks = new tinymce.ForceBlocks(t, {

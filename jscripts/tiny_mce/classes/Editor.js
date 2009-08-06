@@ -66,6 +66,13 @@
 				 * @param {tinymce.Editor} sender Editor instance.
 				 */
 				'onBeforeRenderUI',
+
+				/**
+				 * Fires after the rendering has completed.
+				 *
+				 * @event onPostRender
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onPostRender',
 
 				/**
@@ -77,36 +84,269 @@
 				 */
 				'onInit',
 
+				/**
+				 * Fires when the editor instance is removed from page.
+				 *
+				 * @event onRemove
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onRemove',
+
+				/**
+				 * Fires when the editor is activated.
+				 *
+				 * @event onActivate
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onActivate',
+
+				/**
+				 * Fires when the editor is deactivated.
+				 *
+				 * @event onDeactivate
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onDeactivate',
+
+				/**
+				 * Fires when something in the body of the editor is clicked.
+				 *
+				 * @event onClick
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onClick',
+
+				/**
+				 * Fires when a registered event is intercepted.
+				 *
+				 * @event onEvent
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onEvent',
+
+				/**
+				 * Fires when a mouseup event is intercepted inside the editor.
+				 *
+				 * @event onMouseUp
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onMouseUp',
+
+				/**
+				 * Fires when a mousedown event is intercepted inside the editor.
+				 *
+				 * @event onMouseDown
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onMouseDown',
+
+				/**
+				 * Fires when a dblclick event is intercepted inside the editor.
+				 *
+				 * @event onDblClick
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onDblClick',
+
+				/**
+				 * Fires when a keydown event is intercepted inside the editor.
+				 *
+				 * @event onKeyDown
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onKeyDown',
+
+				/**
+				 * Fires when a keydown event is intercepted inside the editor.
+				 *
+				 * @event onKeyUp
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onKeyUp',
+
+				/**
+				 * Fires when a keypress event is intercepted inside the editor.
+				 *
+				 * @event onKeyPress
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onKeyPress',
+
+				/**
+				 * Fires when a contextmenu event is intercepted inside the editor.
+				 *
+				 * @event onContextMenu
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onContextMenu',
+
+				/**
+				 * Fires when a form submit event is intercepted.
+				 *
+				 * @event onSubmit
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onSubmit',
+
+				/**
+				 * Fires when a form reset event is intercepted.
+				 *
+				 * @event onReset
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onReset',
+
+				/**
+				 * Fires when a paste event is intercepted inside the editor.
+				 *
+				 * @event onPaste
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onPaste',
+
+				/**
+				 * Fires when the Serializer does a preProcess on the contents.
+				 *
+				 * @event onPreProcess
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Object} obj PreProcess object.
+				 */
 				'onPreProcess',
+
+				/**
+				 * Fires when the Serializer does a postProcess on the contents.
+				 *
+				 * @event onPostProcess
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Object} obj PreProcess object.
+				 */
 				'onPostProcess',
+
+				/**
+				 * Fires before new contents is added to the editor. Using for example setContent.
+				 *
+				 * @event onBeforeSetContent
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onBeforeSetContent',
+
+				/**
+				 * Fires before contents is extracted from the editor using for example getContent.
+				 *
+				 * @event onBeforeGetContent
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onBeforeGetContent',
+
+				/**
+				 * Fires after the contents has been added to the editor using for example onSetContent.
+				 *
+				 * @event onSetContent
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onSetContent',
+
+				/**
+				 * Fires after the contents has been extracted from the editor using for example getContent.
+				 *
+				 * @event onGetContent
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onGetContent',
+
+				/**
+				 * Fires when the editor gets loaded with contents for example when the load method is executed.
+				 *
+				 * @event onLoadContent
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onLoadContent',
+
+				/**
+				 * Fires when the editor contents gets saved for example when the save method is executed.
+				 *
+				 * @event onSaveContent
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onSaveContent',
+
+				/**
+				 * Fires when the user changes node location using the mouse or keyboard.
+				 *
+				 * @event onNodeChange
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onNodeChange',
+
+				/**
+				 * Fires when a new undo level is added to the editor.
+				 *
+				 * @event onChange
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onChange',
+
+				/**
+				 * Fires before a command gets executed for example "Bold".
+				 *
+				 * @event onBeforeExecCommand
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onBeforeExecCommand',
+
+				/**
+				 * Fires after a command is executed for example "Bold".
+				 *
+				 * @event onExecCommand
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onExecCommand',
+
+				/**
+				 * Fires when the contents is undo:ed.
+				 *
+				 * @event onUndo
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onUndo',
+
+				/**
+				 * Fires when the contents is redo:ed.
+				 *
+				 * @event onRedo
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @param {Event} evt W3C DOM Event instance.
+				 */
 				'onRedo',
+
+				/**
+				 * Fires when visual aids is enabled/disabled.
+				 *
+				 * @event onVisualAid
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onVisualAid',
+
+				/**
+				 * Fires when the progress throbber is shown above the editor.
+				 *
+				 * @event onSetProgressState
+				 * @param {tinymce.Editor} sender Editor instance.
+				 */
 				'onSetProgressState'
 			], function(e) {
 				t[e] = new Dispatcher(t);
@@ -297,12 +537,7 @@
 				});
 			};
 
-			// Load compat2x first
-			if (s.plugins.indexOf('compat2x') != -1) {
-				PluginManager.load('compat2x', 'plugins/compat2x/editor_plugin' + tinymce.suffix + '.js');
-				sl.loadQueue(loadScripts);
-			} else
-				loadScripts();
+			loadScripts();
 		},
 
 		/**
@@ -554,24 +789,10 @@
 				fix_ie_paragraphs : 1
 			});
 
-			t.serializer = new tinymce.dom.Serializer({
-				entity_encoding : s.entity_encoding,
-				entities : s.entities,
+			t.serializer = new tinymce.dom.Serializer(extend(s, {
 				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
-				extended_valid_elements : s.extended_valid_elements,
-				valid_child_elements : s.valid_child_elements,
-				invalid_elements : s.invalid_elements,
-				fix_table_elements : s.fix_table_elements,
-				fix_list_elements : s.fix_list_elements,
-				fix_content_duplication : s.fix_content_duplication,
-				convert_fonts_to_spans : s.convert_fonts_to_spans,
-				font_size_classes  : s.font_size_classes,
-				font_size_style_values : s.font_size_style_values,
-				apply_source_formatting : s.apply_source_formatting,
-				remove_linebreaks : s.remove_linebreaks,
-				element_format : s.element_format,
 				dom : t.dom
-			});
+			}));
 
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
 			t.forceBlocks = new tinymce.ForceBlocks(t, {

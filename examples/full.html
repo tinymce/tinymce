@@ -4,13 +4,13 @@
 <title>Full featured example</title>
 
 <!-- TinyMCE -->
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 		// General options
 		mode : "textareas",
 		theme : "advanced",
-		plugins : "atomic,safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+		plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
 
 		// Theme options
 		theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
@@ -21,7 +21,7 @@
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "bottom",
 		theme_advanced_resizing : true,
-extended_valid_el2ements : 'script[type]',
+
 		// Example content CSS (should be your site CSS)
 		content_css : "css/content.css",
 
@@ -37,21 +37,11 @@ extended_valid_el2ements : 'script[type]',
 			staffid : "991234"
 		}
 	});
-
-	function test() {
-		var n = document.createElement("SAMP");
-
-		var t = new Date().getTime();
-		for (var i = 0; i < 10000; i++) {
-			tinymce.DOM.isBlock(n);
-		}
-		alert(new Date().getTime() - t);
-	}
 </script>
 <!-- /TinyMCE -->
 
 </head>
-<body onl2oad="test()">
+<body>
 
 <form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
 	<div>
@@ -64,13 +54,18 @@ extended_valid_el2ements : 'script[type]',
 
 		<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 		<div>
-			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">&lt;ScRIPT tYpe="text/javascript"&gt;alert("x");&lt;/SCRIPT&gt;
-dasda
+			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+				&lt;p&gt;
+					This is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.
+				&lt;/p&gt;
+				&lt;p&gt;
+				Nam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.
+				&lt;/p&gt;
 			</textarea>
 		</div>
 
 		<!-- Some integration calls -->
-		<a href="javascript:;" onmousedown="test();">[Show]</a>
+		<a href="javascript:;" onmousedown="tinyMCE.get('elm1').show();">[Show]</a>
 		<a href="javascript:;" onmousedown="tinyMCE.get('elm1').hide();">[Hide]</a>
 		<a href="javascript:;" onmousedown="tinyMCE.get('elm1').execCommand('Bold');">[Bold]</a>
 		<a href="javascript:;" onmousedown="alert(tinyMCE.get('elm1').getContent());">[Get contents]</a>

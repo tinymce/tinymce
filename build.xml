@@ -21,12 +21,21 @@
 	<!-- Register new js-build-tools ant tasks -->
 	<taskdef name="preprocess" classname="com.moxiecode.ant.tasks.PreProcessTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
 	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+	<taskdef name="moxiedoc" classname="com.moxiecode.ant.tasks.MoxieDocTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
 	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" /> 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
 
 	<!-- Generate JS documentation -->
-	<target name="yuidoc" depends="" description="Generates HTML documentation out of java source">
-		
+	<target name="moxiedoc" depends="" description="Generates HTML documentation out of js source">
+		<delete quiet="true">
+			<fileset dir="docs\api" includes="**/*"/>
+		</delete>
+
+		<moxiedoc outdir="docs\api" templatedir="tools\templates">
+			<fileset dir="jscripts\tiny_mce\classes">
+				<include name="**/*.js" /> 
+			</fileset>
+		</moxiedoc>
 	</target>
 
 	<!-- Cleanup the build -->
@@ -146,7 +155,6 @@
 		<yuicompress infile="${build_dir}/plugins/template/editor_plugin_src.js" outfile="${build_dir}/plugins/template/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/bbcode/editor_plugin_src.js" outfile="${build_dir}/plugins/bbcode/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/safari/editor_plugin_src.js" outfile="${build_dir}/plugins/safari/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/compat2x/editor_plugin_src.js" outfile="${build_dir}/plugins/compat2x/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/pagebreak/editor_plugin_src.js" outfile="${build_dir}/plugins/pagebreak/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/tabfocus/editor_plugin_src.js" outfile="${build_dir}/plugins/tabfocus/editor_plugin.js" />

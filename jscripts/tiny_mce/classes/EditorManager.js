@@ -108,10 +108,6 @@
 				if (s.plugins) {
 					pl = explode(s.plugins);
 
-					// Load compat2x first
-					if (tinymce.inArray(pl, 'compat2x') != -1)
-						PluginManager.load('compat2x', 'plugins/compat2x/editor_plugin' + tinymce.suffix + '.js');
-
 					// Load rest if plugins
 					each(pl, function(v) {
 						if (v && v.charAt(0) != '-' && !PluginManager.urls[v]) {
@@ -407,6 +403,7 @@
 		/**
 		 * Executes a command on a specific editor by id. This method was added for compatibility with the 2.x branch.
 		 *
+		 * @deprecated Use the execCommand method of a editor instance instead.
 		 * @method execInstanceCommand
 		 * @param {String} id Editor id to perform the command on.
 		 * @param {String} c Command to perform for example Bold.
