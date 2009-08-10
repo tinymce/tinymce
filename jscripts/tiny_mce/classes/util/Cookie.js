@@ -42,7 +42,7 @@
 		 * @method setHash
 		 * @param {String} n Name of the cookie.
 		 * @param {Object} v Hashtable object to set as cookie.
-		 * @param {Date} d Optional date object for the expiration of the cookie.
+		 * @param {Date} e Optional date object for the expiration of the cookie.
 		 * @param {String} p Optional path to restrict the cookie to.
 		 * @param {String} d Optional domain to restrict the cookie to.
 		 * @param {String} s Is the cookie secure or not.
@@ -95,7 +95,7 @@
 		 * @method set
 		 * @param {String} n Name of the cookie.
 		 * @param {String} v Raw cookie data.
-		 * @param {Date} d Optional date object for the expiration of the cookie.
+		 * @param {Date} e Optional date object for the expiration of the cookie.
 		 * @param {String} p Optional path to restrict the cookie to.
 		 * @param {String} d Optional domain to restrict the cookie to.
 		 * @param {String} s Is the cookie secure or not.

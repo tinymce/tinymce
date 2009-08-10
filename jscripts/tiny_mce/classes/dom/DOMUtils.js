@@ -988,7 +988,7 @@
 		 *
 		 * @method hasClass
 		 * @param {String/Element} n HTML element or element id string to check CSS class on.
-		 * @param {String] c CSS class to check for.
+		 * @param {String} c CSS class to check for.
 		 * @return {boolean} true/false if the specified element has the specified class.
 		 */
 		hasClass : function(n, c) {

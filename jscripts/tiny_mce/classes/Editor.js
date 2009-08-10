@@ -412,7 +412,7 @@
 			/**
 			 * URI object to current document that holds the TinyMCE editor instance.
 			 *
-			 * @property documentBaseURI
+			 * @property baseURI
 			 * @type tinymce.util.URI
 			 */
 			t.baseURI = EditorManager.baseURI;
@@ -778,7 +778,12 @@
 				DOM.show(b);
 			}
 
-			// Setup objects
+			/**
+			 * DOM instance for the editor.
+			 *
+			 * @property dom
+			 * @type tinymce.dom.DOMUtils
+			 */
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
 				keep_values : true,
 				url_converter : t.convertURL,
@@ -789,12 +794,25 @@
 				fix_ie_paragraphs : 1
 			});
 
+			/**
+			 * DOM serializer for the editor.
+			 *
+			 * @property serializer
+			 * @type tinymce.dom.Serializer
+			 */
 			t.serializer = new tinymce.dom.Serializer(extend(s, {
 				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
 				dom : t.dom
 			}));
 
+			/**
+			 * Selection instance for the editor.
+			 *
+			 * @property selection
+			 * @type tinymce.dom.Selection
+			 */
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
+
 			t.forceBlocks = new tinymce.ForceBlocks(t, {
 				forced_root_block : s.forced_root_block
 			});
