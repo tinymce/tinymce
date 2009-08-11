@@ -8231,7 +8231,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				DOM.show(b);
 			}
 
-			// Setup objects
 			t.dom = new tinymce.DOM.DOMUtils(t.getDoc(), {
 				keep_values : true,
 				url_converter : t.convertURL,
@@ -8248,6 +8247,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}));
 
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
+
 			t.forceBlocks = new tinymce.ForceBlocks(t, {
 				forced_root_block : s.forced_root_block
 			});

@@ -24,14 +24,14 @@ function insertTable() {
 	border = formObj.elements['border'].value != "" ? formObj.elements['border'].value  : 0;
 	cellpadding = formObj.elements['cellpadding'].value != "" ? formObj.elements['cellpadding'].value : "";
 	cellspacing = formObj.elements['cellspacing'].value != "" ? formObj.elements['cellspacing'].value : "";
-	align = formObj.elements['align'].options[formObj.elements['align'].selectedIndex].value;
-	frame = formObj.elements['tframe'].options[formObj.elements['tframe'].selectedIndex].value;
-	rules = formObj.elements['rules'].options[formObj.elements['rules'].selectedIndex].value;
+	align = getSelectValue(formObj, "align");
+	frame = getSelectValue(formObj, "tframe");
+	rules = getSelectValue(formObj, "rules");
 	width = formObj.elements['width'].value;
 	height = formObj.elements['height'].value;
 	bordercolor = formObj.elements['bordercolor'].value;
 	bgcolor = formObj.elements['bgcolor'].value;
-	className = formObj.elements['class'].options[formObj.elements['class'].selectedIndex].value;
+	className = getSelectValue(formObj, "class");
 	id = formObj.elements['id'].value;
 	summary = formObj.elements['summary'].value;
 	style = formObj.elements['style'].value;
