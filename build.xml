@@ -159,6 +159,7 @@
 		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/tabfocus/editor_plugin_src.js" outfile="${build_dir}/plugins/tabfocus/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/autoresize/editor_plugin_src.js" outfile="${build_dir}/plugins/autoresize/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/wordcount/editor_plugin_src.js" outfile="${build_dir}/plugins/wordcount/editor_plugin.js" />
 
 		<!-- Compress jQuery plugin -->
 		<yuicompress infile="${classes_dir}/adapter/jquery/jquery.tinymce.js" outfile="${build_dir}/jquery.tinymce.js" />

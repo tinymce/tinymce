@@ -1,4 +1,5 @@
-Version 3.2.5.1 (2009-xx-xx)
+Version 3.2.6 (2009-xx-xx)
+	Added new wordcount plugin, this will display the number of typed words as you write. Contributed by Andrew Ozz.
 	Fixed bug where IE could sometimes render a unknown runtime error on invalid input HTML.
 	Fixed bug where some incorrectly placed tables wouldn't be moved outside the paragraphs on IE.
 	Fixed bug where uppercase script element wouldn't be handled correctly and converted to valid lowercase.
