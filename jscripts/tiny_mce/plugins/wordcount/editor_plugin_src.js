@@ -59,7 +59,7 @@
 		_count : function(ed) {
 			var t = this, tc = 0;
 
-			// Keep multiple calls for happing at the same time
+			// Keep multiple calls from happening at the same time
 			if (t.block)
 				return;
 
@@ -85,7 +85,7 @@
 				longname : 'Word Count plugin',
 				author : 'Moxiecode Systems AB',
 				authorurl : 'http://tinymce.moxiecode.com',
-				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/visualchars',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/wordcount',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
         }
