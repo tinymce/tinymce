@@ -32,6 +32,24 @@
 </div>
 <div class="version">
 <span>Author(s):</span>Moxiecode</div>
+<h4>Example</h4>
+<pre class="brush: js;">// Add a class to all paragraphs in the editor.
+tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
+
+// Gets the current editors selection as text
+tinyMCE.activeEditor.selection.getContent({format : 'text'});
+
+// Creates a new editor instance
+var ed = new tinymce.Editor('textareaid', {
+    some_setting : 1
+});
+
+// Select each item the user clicks on
+ed.onClick.add(function(ed, e) {
+    ed.selection.select(e.target);
+});
+
+ed.render();</pre>
 <div class="summaryLists">
 <h2>Public Properties</h2>
 <table class="Properties summary">
@@ -45,6 +63,24 @@
 <tr>
 <td class="first">
 <div>
+<a class="memberName" href="class_tinymce.Editor.html#baseURI">baseURI</a> : <a href="class_tinymce.util.URI.html">URI</a>
+</div>
+<div class="summary">URI object to current document that holds the TinyMCE editor instance.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#controlManager">controlManager</a> : <a href="class_tinymce.ControlManager.html">ControlManager</a>
+</div>
+<div class="summary">Control manager instance for the editor.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr>
+<td class="first">
+<div>
 <a class="memberName" href="class_tinymce.Editor.html#documentBaseURI">documentBaseURI</a> : <a href="class_tinymce.util.URI.html">URI</a>
 </div>
 <div class="summary">URI object to document configured for the TinyMCE instance.</div>
@@ -54,9 +90,25 @@
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.Editor.html#documentBaseURI">documentBaseURI</a> : <a href="class_tinymce.util.URI.html">URI</a>
+<a class="memberName" href="class_tinymce.Editor.html#dom">dom</a> : <a href="class_tinymce.dom.DOMUtils.html">DOMUtils</a>
 </div>
-<div class="summary">URI object to current document that holds the TinyMCE editor instance.</div>
+<div class="summary">DOM instance for the editor.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#id">id</a> : String</div>
+<div class="summary">Editor instance id, normally the same as the div/textarea that was replaced.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#isNotDirty">isNotDirty</a> : boolean</div>
+<div class="summary">State to force the editor to return false on a isDirty call.</div>
 </td>
 <td class="last">Editor</td>
 </tr>
@@ -65,6 +117,59 @@
 <div>
 <a class="memberName" href="class_tinymce.Editor.html#plugins">plugins</a> : Object</div>
 <div class="summary">Name/Value object containting plugin instances.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#selection">selection</a> : <a href="class_tinymce.dom.Selection.html">Selection</a>
+</div>
+<div class="summary">Selection instance for the editor.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#serializer">serializer</a> : <a href="class_tinymce.dom.Serializer.html">Serializer</a>
+</div>
+<div class="summary">DOM serializer for the editor.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#settings">settings</a> : Object</div>
+<div class="summary">Name/value collection with editor settings.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#theme">theme</a> : <a href="class_tinymce.Theme.html">Theme</a>
+</div>
+<div class="summary">Reference to the theme instance that was used to generate the UI.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr class="even">
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#undoManager">undoManager</a> : <a href="class_tinymce.UndoManager.html">UndoManager</a>
+</div>
+<div class="summary">Undo manager instance, responsible for handling undo levels.</div>
+</td>
+<td class="last">Editor</td>
+</tr>
+<tr>
+<td class="first">
+<div>
+<a class="memberName" href="class_tinymce.Editor.html#windowManager">windowManager</a> : <a href="class_tinymce.WindowManager.html">WindowManager</a>
+</div>
+<div class="summary">Window manager reference, use this to open new windows and dialogs.</div>
 </td>
 <td class="last">Editor</td>
 </tr>
@@ -686,6 +791,22 @@ a key mat...</div>
 <div class="detailsList">
 <div class="details">
 <h2>Property details</h2>
+<div class="memberDetails" id="baseURI">
+<h3>baseURI<span class="memberType">property</span>
+</h3>
+<code class="syntax">public baseURI : <a href="class_tinymce.util.URI.html">URI</a>
+</code>
+<div class="memberDescription">URI object to current document that holds the TinyMCE editor instance.
+</div>
+</div>
+<div class="memberDetails" id="controlManager">
+<h3>controlManager<span class="memberType">property</span>
+</h3>
+<code class="syntax">public controlManager : <a href="class_tinymce.ControlManager.html">ControlManager</a>
+</code>
+<div class="memberDescription">Control manager instance for the editor. Will enables you to create new UI elements and change their states etc.
+</div>
+</div>
 <div class="memberDetails" id="documentBaseURI">
 <h3>documentBaseURI<span class="memberType">property</span>
 </h3>
@@ -694,19 +815,80 @@ a key mat...</div>
 <div class="memberDescription">URI object to document configured for the TinyMCE instance.
 </div>
 </div>
-<div class="memberDetails" id="documentBaseURI">
-<h3>documentBaseURI<span class="memberType">property</span>
+<div class="memberDetails" id="dom">
+<h3>dom<span class="memberType">property</span>
 </h3>
-<code class="syntax">public documentBaseURI : <a href="class_tinymce.util.URI.html">URI</a>
+<code class="syntax">public dom : <a href="class_tinymce.dom.DOMUtils.html">DOMUtils</a>
 </code>
-<div class="memberDescription">URI object to current document that holds the TinyMCE editor instance.
+<div class="memberDescription">DOM instance for the editor.
 </div>
 </div>
-<div class="memberDetails last" id="plugins">
+<div class="memberDetails" id="id">
+<h3>id<span class="memberType">property</span>
+</h3>
+<code class="syntax">public id : String</code>
+<div class="memberDescription">Editor instance id, normally the same as the div/textarea that was replaced.
+</div>
+</div>
+<div class="memberDetails" id="isNotDirty">
+<h3>isNotDirty<span class="memberType">property</span>
+</h3>
+<code class="syntax">public isNotDirty : boolean</code>
+<div class="memberDescription">State to force the editor to return false on a isDirty call.
+</div>
+</div>
+<div class="memberDetails" id="plugins">
 <h3>plugins<span class="memberType">property</span>
 </h3>
 <code class="syntax">public plugins : Object</code>
 <div class="memberDescription">Name/Value object containting plugin instances.
+</div>
+</div>
+<div class="memberDetails" id="selection">
+<h3>selection<span class="memberType">property</span>
+</h3>
+<code class="syntax">public selection : <a href="class_tinymce.dom.Selection.html">Selection</a>
+</code>
+<div class="memberDescription">Selection instance for the editor.
+</div>
+</div>
+<div class="memberDetails" id="serializer">
+<h3>serializer<span class="memberType">property</span>
+</h3>
+<code class="syntax">public serializer : <a href="class_tinymce.dom.Serializer.html">Serializer</a>
+</code>
+<div class="memberDescription">DOM serializer for the editor.
+</div>
+</div>
+<div class="memberDetails" id="settings">
+<h3>settings<span class="memberType">property</span>
+</h3>
+<code class="syntax">public settings : Object</code>
+<div class="memberDescription">Name/value collection with editor settings.
+</div>
+</div>
+<div class="memberDetails" id="theme">
+<h3>theme<span class="memberType">property</span>
+</h3>
+<code class="syntax">public theme : <a href="class_tinymce.Theme.html">Theme</a>
+</code>
+<div class="memberDescription">Reference to the theme instance that was used to generate the UI.
+</div>
+</div>
+<div class="memberDetails" id="undoManager">
+<h3>undoManager<span class="memberType">property</span>
+</h3>
+<code class="syntax">public undoManager : <a href="class_tinymce.UndoManager.html">UndoManager</a>
+</code>
+<div class="memberDescription">Undo manager instance, responsible for handling undo levels.
+</div>
+</div>
+<div class="memberDetails last" id="windowManager">
+<h3>windowManager<span class="memberType">property</span>
+</h3>
+<code class="syntax">public windowManager : <a href="class_tinymce.WindowManager.html">WindowManager</a>
+</code>
+<div class="memberDescription">Window manager reference, use this to open new windows and dialogs.
 </div>
 </div>
 </div>
@@ -732,11 +914,6 @@ a key mat...</div>
 <td class="last">Optional settings string for the editor.</td>
 </tr>
 </table>
-<h4>Example</h4>
-<pre class="brush: js;">var ed = new Editor('myid', {
-    plugins : "someplugin"
-});
-ed.render();</pre>
 </div>
 <div class="memberDetails" id="addButton">
 <h3>addButton<span class="memberType">method</span>

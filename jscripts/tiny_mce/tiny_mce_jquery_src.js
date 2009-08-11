@@ -54,7 +54,9 @@ var tinymce = {
 				t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
 
 				// If path to script is relative and a base href was found add that one infront
-				if (base && t.baseURL.indexOf('://') == -1)
+				// the src property will always be an absolute one on non IE browsers and IE 8
+				// so this logic will basically only be executed on older IE versions
+				if (base && t.baseURL.indexOf('://') == -1 && t.baseURL.indexOf('/') !== 0)
 					t.baseURL = base + t.baseURL;
 
 				return t.baseURL;
@@ -7764,9 +7766,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var t = this;
 
 			t.id = t.editorId = id;
+
 			t.execCommands = {};
 			t.queryStateCommands = {};
 			t.queryValueCommands = {};
+
+			t.isNotDirty = false;
 
 			t.plugins = {};
 
@@ -7845,7 +7850,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				t[e] = new Dispatcher(t);
 			});
 
-			// Default editor config
 			t.settings = s = extend({
 				id : id,
 				language : 'en',
@@ -8021,7 +8025,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			EditorManager.add(t);
 
-			// Create theme
 			if (s.theme) {
 				s.theme = s.theme.replace(/-/, '');
 				o = ThemeManager.get(s.theme);
@@ -8056,8 +8059,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (s.popup_css_add)
 				s.popup_css += ',' + t.documentBaseURI.toAbsolute(s.popup_css_add);
 
-			// Setup control factory
 			t.controlManager = new tinymce.ControlManager(t);
+
 			t.undoManager = new tinymce.UndoManager(t);
 
 			// Pass through

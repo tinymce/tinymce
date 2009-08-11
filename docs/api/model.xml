@@ -288,6 +288,25 @@ depends on the use_native_selects settings state.
 <class author="Moxiecode" fullname="tinymce.Editor" name="Editor" summary="This class contains the core logic for a TinyMCE editor.">
 <description>This class contains the core logic for a TinyMCE editor.
 </description>
+<example>
+<example>// Add a class to all paragraphs in the editor.
+tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
+
+// Gets the current editors selection as text
+tinyMCE.activeEditor.selection.getContent({format : 'text'});
+
+// Creates a new editor instance
+var ed = new tinymce.Editor('textareaid', {
+    some_setting : 1
+});
+
+// Select each item the user clicks on
+ed.onClick.add(function(ed, e) {
+    ed.selection.select(e.target);
+});
+
+ed.render();</example>
+</example>
 <members>
 <method author="Moxiecode" constructor="true" name="Editor" summary="Constructs a editor instance by id.">
 <description>Constructs a editor instance by id.
@@ -298,13 +317,15 @@ depends on the use_native_selects settings state.
 <param name="s" type="Object">
 <description>Optional settings string for the editor.</description>
 </param>
-<example>
-<example>var ed = new Editor('myid', {
-    plugins : "someplugin"
-});
-ed.render();</example>
-</example>
 </method>
+<property name="id" summary="Editor instance id, normally the same as the div/textarea that was replaced." type="String">
+<description>Editor instance id, normally the same as the div/textarea that was replaced.
+</description>
+</property>
+<property name="isNotDirty" summary="State to force the editor to return false on a isDirty call." type="boolean">
+<description>State to force the editor to return false on a isDirty call.
+</description>
+</property>
 <property name="plugins" summary="Name/Value object containting plugin instances." type="Object">
 <description>Name/Value object containting plugin instances.
 </description>
@@ -607,11 +628,15 @@ ed.render();</example>
 <description>Editor instance.</description>
 </param>
 </event>
+<property name="settings" summary="Name/value collection with editor settings." type="Object">
+<description>Name/value collection with editor settings.
+</description>
+</property>
 <property name="documentBaseURI" summary="URI object to document configured for the TinyMCE instance." type="tinymce.util.URI">
 <description>URI object to document configured for the TinyMCE instance.
 </description>
 </property>
-<property name="documentBaseURI" summary="URI object to current document that holds the TinyMCE editor instance." type="tinymce.util.URI">
+<property name="baseURI" summary="URI object to current document that holds the TinyMCE editor instance." type="tinymce.util.URI">
 <description>URI object to current document that holds the TinyMCE editor instance.
 </description>
 </property>
@@ -619,18 +644,46 @@ ed.render();</example>
 <description>Renderes the editor/adds it to the page.
 </description>
 </method>
+<property name="windowManager" summary="Window manager reference, use this to open new windows and dialogs." type="tinymce.WindowManager">
+<description>Window manager reference, use this to open new windows and dialogs.
+</description>
+</property>
 <method name="init" summary="Initializes the editor this will be called automatically when&#10;all plugins/themes and language packs are loaded by the re...">
 <description>Initializes the editor this will be called automatically when
 all plugins/themes and language packs are loaded by the rendered method.
 This method will setup the iframe and create the theme and plugin instances.
 </description>
 </method>
+<property name="theme" summary="Reference to the theme instance that was used to generate the UI." type="tinymce.Theme">
+<description>Reference to the theme instance that was used to generate the UI.
+</description>
+</property>
+<property name="controlManager" summary="Control manager instance for the editor." type="tinymce.ControlManager">
+<description>Control manager instance for the editor. Will enables you to create new UI elements and change their states etc.
+</description>
+</property>
+<property name="undoManager" summary="Undo manager instance, responsible for handling undo levels." type="tinymce.UndoManager">
+<description>Undo manager instance, responsible for handling undo levels.
+</description>
+</property>
 <method name="setupIframe" summary="This method get called by the init method ones the iframe is loaded.">
 <description>This method get called by the init method ones the iframe is loaded.
 It will fill the iframe with contents, setups DOM and selection objects for the iframe.
 This method should not be called directly.
 </description>
 </method>
+<property name="dom" summary="DOM instance for the editor." type="tinymce.dom.DOMUtils">
+<description>DOM instance for the editor.
+</description>
+</property>
+<property name="serializer" summary="DOM serializer for the editor." type="tinymce.dom.Serializer">
+<description>DOM serializer for the editor.
+</description>
+</property>
+<property name="selection" summary="Selection instance for the editor." type="tinymce.dom.Selection">
+<description>Selection instance for the editor.
+</description>
+</property>
 <method name="setupContentEditable" summary="Sets up the contentEditable mode.">
 <description>Sets up the contentEditable mode.
 </description>
@@ -1626,8 +1679,8 @@ colors to hex values. Urls inside the styles will also be converted to absolute/
 <type fullname="Element"/>
 <description>HTML element or element id string to check CSS class on.</description>
 </param>
-<param name="">
-<description>{String] c CSS class to check for.</description>
+<param name="c" type="String">
+<description>CSS class to check for.</description>
 </param>
 <return type="boolean">
 <description>true/false if the specified element has the specified class.</description>
@@ -3579,7 +3632,7 @@ creating a whole toolbar with buttons it does make a lot of difference.
 <param name="v" type="Object">
 <description>Hashtable object to set as cookie.</description>
 </param>
-<param name="d" type="Date">
+<param name="e" type="Date">
 <description>Optional date object for the expiration of the cookie.</description>
 </param>
 <param name="p" type="String">
@@ -3611,7 +3664,7 @@ creating a whole toolbar with buttons it does make a lot of difference.
 <param name="v" type="String">
 <description>Raw cookie data.</description>
 </param>
-<param name="d" type="Date">
+<param name="e" type="Date">
 <description>Optional date object for the expiration of the cookie.</description>
 </param>
 <param name="p" type="String">

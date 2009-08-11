@@ -16,6 +16,24 @@
 	 *
 	 * @class tinymce.Editor
 	 * @author Moxiecode
+	 * @example
+	 * // Add a class to all paragraphs in the editor.
+	 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
+	 * 
+	 * // Gets the current editors selection as text
+	 * tinyMCE.activeEditor.selection.getContent({format : 'text'});
+	 * 
+	 * // Creates a new editor instance
+	 * var ed = new tinymce.Editor('textareaid', {
+	 *     some_setting : 1
+	 * });
+	 * 
+	 * // Select each item the user clicks on
+	 * ed.onClick.add(function(ed, e) {
+	 *     ed.selection.select(e.target);
+	 * });
+	 * 
+	 * ed.render();
 	 */
 	tinymce.create('tinymce.Editor', {
 		/**
@@ -26,19 +44,29 @@
 		 * @param {String} id Unique id for the editor.
 		 * @param {Object} s Optional settings string for the editor.
 		 * @author Moxiecode
-		 * @example
-		 * var ed = new Editor('myid', {
-		 *     plugins : "someplugin"
-		 * });
-		 * ed.render();
 		 */
 		Editor : function(id, s) {
 			var t = this;
 
+			/**
+			 * Editor instance id, normally the same as the div/textarea that was replaced. 
+			 *
+			 * @property id
+			 * @type String
+			 */
 			t.id = t.editorId = id;
+
 			t.execCommands = {};
 			t.queryStateCommands = {};
 			t.queryValueCommands = {};
+
+			/**
+			 * State to force the editor to return false on a isDirty call. 
+			 *
+			 * @property isNotDirty
+			 * @type boolean
+			 */
+			t.isNotDirty = false;
 
 			/**
 			 * Name/Value object containting plugin instances.
@@ -352,7 +380,12 @@
 				t[e] = new Dispatcher(t);
 			});
 
-			// Default editor config
+			/**
+			 * Name/value collection with editor settings.
+			 *
+			 * @property settings
+			 * @type Object
+			 */
 			t.settings = s = extend({
 				id : id,
 				language : 'en',
@@ -456,6 +489,12 @@
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
+			/**
+			 * Window manager reference, use this to open new windows and dialogs.
+			 *
+			 * @property windowManager
+			 * @type tinymce.WindowManager
+			 */
 			if (tinymce.WindowManager)
 				t.windowManager = new tinymce.WindowManager(t);
 
@@ -552,7 +591,12 @@
 
 			EditorManager.add(t);
 
-			// Create theme
+			/**
+			 * Reference to the theme instance that was used to generate the UI. 
+			 *
+			 * @property theme
+			 * @type tinymce.Theme
+			 */
 			if (s.theme) {
 				s.theme = s.theme.replace(/-/, '');
 				o = ThemeManager.get(s.theme);
@@ -587,8 +631,20 @@
 			if (s.popup_css_add)
 				s.popup_css += ',' + t.documentBaseURI.toAbsolute(s.popup_css_add);
 
-			// Setup control factory
+			/**
+			 * Control manager instance for the editor. Will enables you to create new UI elements and change their states etc.
+			 *
+			 * @property controlManager
+			 * @type tinymce.ControlManager
+			 */
 			t.controlManager = new tinymce.ControlManager(t);
+
+			/**
+			 * Undo manager instance, responsible for handling undo levels. 
+			 *
+			 * @property undoManager
+			 * @type tinymce.UndoManager
+			 */
 			t.undoManager = new tinymce.UndoManager(t);
 
 			// Pass through
