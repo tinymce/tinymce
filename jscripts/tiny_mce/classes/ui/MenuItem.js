@@ -34,7 +34,7 @@
 		 * element that contains the control. So that it can be selected visually.
 		 *
 		 * @method setSelected
-		 * @param {boolean} s Boolean state if the control should be selected or not.
+		 * @param {Boolean} s Boolean state if the control should be selected or not.
 		 */
 		setSelected : function(s) {
 			this.setState('Selected', s);
@@ -45,7 +45,7 @@
 		 * Returns true/false if the control is selected or not.
 		 *
 		 * @method isSelected
-		 * @return {boolean} true/false if the control is selected or not.
+		 * @return {Boolean} true/false if the control is selected or not.
 		 */
 		isSelected : function() {
 			return this.selected;

@@ -57,7 +57,7 @@
 		 *
 		 * @method setActive
 		 * @param {String} id Control id to set state on.
-		 * @param {boolean} s Active state true/false.
+		 * @param {Boolean} s Active state true/false.
 		 * @return {tinymce.ui.Control} Control instance that got activated or null if it wasn't found.
 		 */
 		setActive : function(id, s) {
@@ -74,7 +74,7 @@
 		 *
 		 * @method setDisabled
 		 * @param {String} id Control id to set state on.
-		 * @param {boolean} s Active state true/false.
+		 * @param {Boolean} s Active state true/false.
 		 * @return {tinymce.ui.Control} Control instance that got disabled or null if it wasn't found.
 		 */
 		setDisabled : function(id, s) {

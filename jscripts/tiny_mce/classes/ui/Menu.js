@@ -38,7 +38,7 @@
 		 * Expands the menu, this will show them menu and all menu items.
 		 *
 		 * @method expand
-		 * @param {boolean} d Optional deep state. If this is set to true all children will be expanded as well.
+		 * @param {Boolean} d Optional deep state. If this is set to true all children will be expanded as well.
 		 */
 		expand : function(d) {
 			var t = this;
@@ -57,7 +57,7 @@
 		 * Collapses the menu, this will hide the menu and all menu items.
 		 *
 		 * @method collapse
-		 * @param {boolean} d Optional deep state. If this is set to true all children will be collapsed as well.
+		 * @param {Boolean} d Optional deep state. If this is set to true all children will be collapsed as well.
 		 */
 		collapse : function(d) {
 			var t = this;
@@ -76,7 +76,7 @@
 		 * Returns true/false if the menu has been collapsed or not.
 		 *
 		 * @method isCollapsed
-		 * @return {boolean} True/false state if the menu has been collapsed or not.
+		 * @return {Boolean} True/false state if the menu has been collapsed or not.
 		 */
 		isCollapsed : function() {
 			return this.collapsed;
@@ -128,7 +128,7 @@
 		 * Returns true/false if the menu has sub menus or not.
 		 *
 		 * @method hasMenus
-		 * @return {boolean} True/false state if the menu has sub menues or not.
+		 * @return {Boolean} True/false state if the menu has sub menues or not.
 		 */
 		hasMenus : function() {
 			return this.menuCount !== 0;

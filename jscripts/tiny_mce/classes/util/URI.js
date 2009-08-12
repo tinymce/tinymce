@@ -134,7 +134,7 @@
 		 *
 		 * @method toAbsolute
 		 * @param {String} u URI to convert into a relative path/URI.
-		 * @param {boolean} nh No host and protocol prefix.
+		 * @param {Boolean} nh No host and protocol prefix.
 		 * @return {String} Absolute URI from the point specified in the current URI instance.
 		 */
 		toAbsolute : function(u, nh) {
@@ -249,7 +249,7 @@
 		 * Returns the full URI of the internal structure.
 		 *
 		 * @method getURI
-		 * @param {boolean} nh Optional no host and protocol part. Defaults to false.
+		 * @param {Boolean} nh Optional no host and protocol part. Defaults to false.
 		 */
 		getURI : function(nh) {
 			var s, t = this;

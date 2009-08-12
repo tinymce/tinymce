@@ -185,7 +185,7 @@
 		 *
 		 * @method cancel
 		 * @param {Event} e Event object to cancel.
-		 * @return {boolean} Always false.
+		 * @return {Boolean} Always false.
 		 */
 		cancel : function(e) {
 			if (!e)
@@ -201,7 +201,7 @@
 		 *
 		 * @method stop
 		 * @param {Event} e Event to cancel bubbeling on.
-		 * @return {boolean} Always false.
+		 * @return {Boolean} Always false.
 		 */
 		stop : function(e) {
 			if (e.stopPropagation)
@@ -217,7 +217,7 @@
 		 *
 		 * @method prevent
 		 * @param {Event} e Event to prevent default browser behvaior of an event.
-		 * @return {boolean} Always false.
+		 * @return {Boolean} Always false.
 		 */
 		prevent : function(e) {
 			if (e.preventDefault)

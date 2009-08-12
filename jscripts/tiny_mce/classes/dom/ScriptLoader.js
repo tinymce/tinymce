@@ -55,7 +55,7 @@
 		 * @param {String} u Absolute URL to script to add.
 		 * @param {function} cb Optional callback function to execute ones this script gets loaded.
 		 * @param {Object} s Optional scope to execute callback in.
-		 * @param {boolean} pr Optional state to add to top or bottom of load queue. Defaults to bottom.
+		 * @param {Boolean} pr Optional state to add to top or bottom of load queue. Defaults to bottom.
 		 * @return {object} Load queue object contains, state, url and callback.
 		 */
 		add : function(u, cb, s, pr) {

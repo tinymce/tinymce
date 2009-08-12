@@ -64,7 +64,7 @@
 			 * State to force the editor to return false on a isDirty call. 
 			 *
 			 * @property isNotDirty
-			 * @type boolean
+			 * @type Boolean
 			 */
 			t.isNotDirty = false;
 
@@ -1244,7 +1244,7 @@
 		 * it will also place DOM focus inside the editor.
 		 *
 		 * @method focus
-		 * @param {boolean} sf Skip DOM focus. Just set is as the active editor.
+		 * @param {Boolean} sf Skip DOM focus. Just set is as the active editor.
 		 */
 		focus : function(sf) {
 			var oed, t = this, ce = t.settings.content_editable;
@@ -1462,7 +1462,7 @@
 		 * @param {String} desc Text description for the command.
 		 * @param {String/Function} cmd_func Command name string or function to execute when the key is pressed.
 		 * @param {Object} sc Optional scope to execute the function in.
-		 * @return {boolean} true/false state if the shortcut was added or not.
+		 * @return {Boolean} true/false state if the shortcut was added or not.
 		 */
 		addShortcut : function(pa, desc, cmd_func, sc) {
 			var t = this, c;
@@ -1526,10 +1526,10 @@
 		 *
 		 * @method execCommand
 		 * @param {String} cmd Command name to execute, for example mceLink or Bold.
-		 * @param {boolean} ui True/false state if a UI (dialog) should be presented or not.
+		 * @param {Boolean} ui True/false state if a UI (dialog) should be presented or not.
 		 * @param {mixed} val Optional command value, this can be anything.
 		 * @param {Object} a Optional arguments object.
-		 * @return {boolean} True/false if the command was executed or not.
+		 * @return {Boolean} True/false if the command was executed or not.
 		 */
 		execCommand : function(cmd, ui, val, a) {
 			var t = this, s = 0, o, st;
@@ -1599,7 +1599,7 @@
 		 *
 		 * @method queryCommandState
 		 * @param {string} c Command to query state from.
-		 * @return {boolean} Command specific state, for example if bold is enabled or not.
+		 * @return {Boolean} Command specific state, for example if bold is enabled or not.
 		 */
 		queryCommandState : function(c) {
 			var t = this, o, s;
@@ -1701,7 +1701,7 @@
 		 * Returns true/false if the editor is hidden or not.
 		 *
 		 * @method isHidden
-		 * @return {boolean} True/false if the editor is hidden or not.
+		 * @return {Boolean} True/false if the editor is hidden or not.
 		 */
 		isHidden : function() {
 			return !DOM.isHidden(this.id);
@@ -1712,10 +1712,10 @@
 		 * This is ideal for asycronous operations like an AJAX save call.
 		 *
 		 * @method setProgressState
-		 * @param {boolean} b Boolean state if the progress should be shown or hidden.
+		 * @param {Boolean} b Boolean state if the progress should be shown or hidden.
 		 * @param {Number} ti Optional time to wait before the progress gets shown.
 		 * @param {Object} o Optional object to pass to the progress observers.
-		 * @return {boolean} Same as the input state.
+		 * @return {Boolean} Same as the input state.
 		 */
 		setProgressState : function(b, ti, o) {
 			this.onSetProgressState.dispatch(this, b, ti, o);
@@ -1881,7 +1881,7 @@
 		 * Returns true/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
 		 *
 		 * @method isDirty
-		 * @return {boolean} True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
+		 * @return {Boolean} True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
 		 */
 		isDirty : function() {
 			var t = this;
@@ -2080,7 +2080,7 @@
 		 * but you can also call it directly if you know what you are doing.
 		 *
 		 * @method destroy
-		 * @param {boolean} s Optional state if the destroy is an automatic destroy or user called one.
+		 * @param {Boolean} s Optional state if the destroy is an automatic destroy or user called one.
 		 */
 		destroy : function(s) {
 			var t = this;

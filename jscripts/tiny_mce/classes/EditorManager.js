@@ -324,9 +324,9 @@
 		 *
 		 * @method execCommand
 		 * @param {String} c Command to perform for example Bold.
-		 * @param {boolean} u Optional boolean state if a UI should be presented for the command or not.
+		 * @param {Boolean} u Optional boolean state if a UI should be presented for the command or not.
 		 * @param {String} v Optional value parameter like for example an URL to a link.
-		 * @return {boolean} true/false if the command was executed or not.
+		 * @return {Boolean} true/false if the command was executed or not.
 		 */
 		execCommand : function(c, u, v) {
 			var t = this, ed = t.get(v), w;
@@ -407,9 +407,9 @@
 		 * @method execInstanceCommand
 		 * @param {String} id Editor id to perform the command on.
 		 * @param {String} c Command to perform for example Bold.
-		 * @param {boolean} u Optional boolean state if a UI should be presented for the command or not.
+		 * @param {Boolean} u Optional boolean state if a UI should be presented for the command or not.
 		 * @param {String} v Optional value parameter like for example an URL to a link.
-		 * @return {boolean} true/false if the command was executed or not.
+		 * @return {Boolean} true/false if the command was executed or not.
 		 */
 		execInstanceCommand : function(id, c, u, v) {
 			var ed = this.get(id);

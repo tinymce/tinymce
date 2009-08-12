@@ -283,7 +283,7 @@
 		 * @param {String/Element} n Name of new element to add or existing element to add.
 		 * @param {Object} a Optional object collection with arguments to add to the new element(s).
 		 * @param {String} h Optional inner HTML contents to add for each element.
-		 * @param {boolean} c Optional internal state to indicate if it should create or add.
+		 * @param {Boolean} c Optional internal state to indicate if it should create or add.
 		 * @return {Element/Array} Element that got created or array with elements if multiple elements where passed.
 		 */
 		add : function(p, n, a, h, c) {
@@ -349,7 +349,7 @@
 		 *
 		 * @method remove
 		 * @param {String/Element/Array} n ID of element or DOM element object or array containing multiple elements/ids.
-		 * @param {boolean} k Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.
+		 * @param {Boolean} k Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.
 		 * @return {Element/Array} HTML DOM element that got removed or array of elements depending on input.
 		 */
 		remove : function(n, k) {
@@ -989,7 +989,7 @@
 		 * @method hasClass
 		 * @param {String/Element} n HTML element or element id string to check CSS class on.
 		 * @param {String} c CSS class to check for.
-		 * @return {boolean} true/false if the specified element has the specified class.
+		 * @return {Boolean} true/false if the specified element has the specified class.
 		 */
 		hasClass : function(n, c) {
 			n = this.get(n);
@@ -1025,7 +1025,7 @@
 		 *
 		 * @method isHidden
 		 * @param {String/Element} e Id or element to check display state on.
-		 * @return {boolean} true/false if the element is hidden or not.
+		 * @return {Boolean} true/false if the element is hidden or not.
 		 */
 		isHidden : function(e) {
 			e = this.get(e);
@@ -1454,7 +1454,7 @@
 		 *
 		 * @method isBlock
 		 * @param {Node} n Element/Node to check.
-		 * @return {boolean} True/False state if the node is a block element or not.
+		 * @return {Boolean} True/False state if the node is a block element or not.
 		 */
 		isBlock : function(n) {
 			if (n.nodeType && n.nodeType !== 1)
@@ -1472,7 +1472,7 @@
 		 * @method replace
 		 * @param {Element} n New element to replace old ones with.
 		 * @param {Element/String/Array} o Element DOM node, element id or array of elements or ids to replace.
-		 * @param {boolean} k Optional keep children state, if set to true child nodes from the old object will be added to new ones.
+		 * @param {Boolean} k Optional keep children state, if set to true child nodes from the old object will be added to new ones.
 		 */
 		replace : function(n, o, k) {
 			var t = this;

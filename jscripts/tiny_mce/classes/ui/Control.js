@@ -40,7 +40,7 @@
 		 * element that contains the control. So that it can be disabled visually.
 		 *
 		 * @method setDisabled
-		 * @param {boolean} s Boolean state if the control should be disabled or not.
+		 * @param {Boolean} s Boolean state if the control should be disabled or not.
 		 */
 		setDisabled : function(s) {
 			var e;
@@ -68,7 +68,7 @@
 		 * choose to check some class or some internal bool state in subclasses.
 		 *
 		 * @method isDisabled
-		 * @return {boolean} true/false if the control is disabled or not.
+		 * @return {Boolean} true/false if the control is disabled or not.
 		 */
 		isDisabled : function() {
 			return this.disabled;
@@ -79,7 +79,7 @@
 		 * element that contains the control. So that it can be activated visually.
 		 *
 		 * @method setActive
-		 * @param {boolean} s Boolean state if the control should be activated or not.
+		 * @param {Boolean} s Boolean state if the control should be activated or not.
 		 */
 		setActive : function(s) {
 			if (s != this.active) {
@@ -93,7 +93,7 @@
 		 * choose to check some class or some internal bool state in subclasses.
 		 *
 		 * @method isActive
-		 * @return {boolean} true/false if the control is disabled or not.
+		 * @return {Boolean} true/false if the control is disabled or not.
 		 */
 		isActive : function() {
 			return this.active;
@@ -104,7 +104,7 @@
 		 *
 		 * @method setState
 		 * @param {String} c Class name to add/remove depending on state.
-		 * @param {boolean} s True/false state if the class should be removed or added.
+		 * @param {Boolean} s True/false state if the class should be removed or added.
 		 */
 		setState : function(c, s) {
 			var n = DOM.get(this.id);
@@ -121,7 +121,7 @@
 		 * Returns true/false if the control has been rendered or not.
 		 *
 		 * @method isRendered
-		 * @return {boolean} State if the control has been rendered or not.
+		 * @return {Boolean} State if the control has been rendered or not.
 		 */
 		isRendered : function() {
 			return this.rendered;

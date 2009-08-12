@@ -224,7 +224,7 @@
 		 * can then be used to restore the selection after some content modification to the document.
 		 *
 		 * @method getBookmark
-		 * @param {boolean} si Optional state if the bookmark should be simple or not. Default is complex.
+		 * @param {Boolean} si Optional state if the bookmark should be simple or not. Default is complex.
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
 		 */
 		getBookmark : function(si) {
@@ -356,7 +356,7 @@
 		 *
 		 * @method moveToBookmark
 		 * @param {Object} bookmark Bookmark to restore selection from.
-		 * @return {boolean} true/false if it was successful or not.
+		 * @return {Boolean} true/false if it was successful or not.
 		 */
 		moveToBookmark : function(b) {
 			var t = this, r = t.getRng(), s = t.getSel(), ro = t.dom.getRoot(), sd, nvl, nv;
@@ -484,7 +484,7 @@
 		 *
 		 * @method select
 		 * @param {Element} n HMTL DOM element to select.
-		 * @param {boolean} c Bool state if the contents should be selected or not on non IE browser.
+		 * @param {Boolean} c Bool state if the contents should be selected or not on non IE browser.
 		 * @return {Element} Selected element the same element as the one that got passed in.
 		 */
 		select : function(n, c) {
@@ -560,7 +560,7 @@
 		 * Returns true/false if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
 		 *
 		 * @method isCollapsed
-		 * @return {boolean} true/false state if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
+		 * @return {Boolean} true/false state if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
 		 */
 		isCollapsed : function() {
 			var t = this, r = t.getRng(), s = t.getSel();
@@ -575,7 +575,7 @@
 		 * Collapse the selection to start or end of range.
 		 *
 		 * @method collapse
-		 * @param {boolean} b Optional boolean state if to collapse to end or not. Defaults to start.
+		 * @param {Boolean} b Optional boolean state if to collapse to end or not. Defaults to start.
 		 */
 		collapse : function(b) {
 			var t = this, r = t.getRng(), n;
@@ -607,7 +607,7 @@
 		 * Returns the browsers internal range object.
 		 *
 		 * @method getRng
-		 * @param {boolean} w3c Forces a compatible W3C range on IE.
+		 * @param {Boolean} w3c Forces a compatible W3C range on IE.
 		 * @return {Range} Internal browser range object.
 		 */
 		getRng : function(w3c) {

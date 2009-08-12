@@ -260,7 +260,7 @@
 		 * Collapses the menu, this will hide the menu and all menu items.
 		 *
 		 * @method collapse
-		 * @param {boolean} d Optional deep state. If this is set to true all children will be collapsed as well.
+		 * @param {Boolean} d Optional deep state. If this is set to true all children will be collapsed as well.
 		 */
 		collapse : function(d) {
 			this.parent(d);

@@ -35,7 +35,7 @@ var tinymce = {
 		 * Constant that is true if the browser is Opera.
 		 *
 		 * @property isOpera
-		 * @type boolean
+		 * @type Boolean
 		 * @final
 		 */
 		t.isOpera = w.opera && opera.buildNumber;
@@ -44,7 +44,7 @@ var tinymce = {
 		 * Constant that is true if the browser is WebKit (Safari/Chrome).
 		 *
 		 * @property isWebKit
-		 * @type boolean
+		 * @type Boolean
 		 * @final
 		 */
 		t.isWebKit = /WebKit/.test(ua);
@@ -53,7 +53,7 @@ var tinymce = {
 		 * Constant that is true if the browser is IE.
 		 *
 		 * @property isIE
-		 * @type boolean
+		 * @type Boolean
 		 * @final
 		 */
 		t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName);
@@ -62,7 +62,7 @@ var tinymce = {
 		 * Constant that is true if the browser is IE 6 or older.
 		 *
 		 * @property isIE6
-		 * @type boolean
+		 * @type Boolean
 		 * @final
 		 */
 		t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
@@ -71,7 +71,7 @@ var tinymce = {
 		 * Constant that is true if the browser is Gecko.
 		 *
 		 * @property isGecko
-		 * @type boolean
+		 * @type Boolean
 		 * @final
 		 */
 		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
@@ -80,7 +80,7 @@ var tinymce = {
 		 * Constant that is true if the os is Mac OS.
 		 *
 		 * @property isMac
-		 * @type boolean
+		 * @type Boolean
 		 * @final
 		 */
 		t.isMac = ua.indexOf('Mac') != -1;
@@ -89,7 +89,7 @@ var tinymce = {
 		 * Constant that is true if the runtime is Adobe Air.
 		 *
 		 * @property isAir
-		 * @type boolean
+		 * @type Boolean
 		 * @final
 		 */
 		t.isAir = /adobeair/i.test(ua);
@@ -165,7 +165,7 @@ var tinymce = {
 	 * @method is
 	 * @param {Object} o Object to check type of.
 	 * @param {string} t Optional type to check for.
-	 * @return {boolean} true/false if the object is of the specified type.
+	 * @return {Boolean} true/false if the object is of the specified type.
 	 */
 	is : function(o, t) {
 		var n = typeof(o);

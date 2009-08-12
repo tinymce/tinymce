@@ -34,7 +34,7 @@
 		 * element that contains the control. So that it can be disabled visually.
 		 *
 		 * @method setDisabled
-		 * @param {boolean} s Boolean state if the control should be disabled or not.
+		 * @param {Boolean} s Boolean state if the control should be disabled or not.
 		 */
 		setDisabled : function(s) {
 			DOM.get(this.id).disabled = s;
@@ -45,7 +45,7 @@
 		 * choose to check some class or some internal bool state in subclasses.
 		 *
 		 * @method isDisabled
-		 * @return {boolean} true/false if the control is disabled or not.
+		 * @return {Boolean} true/false if the control is disabled or not.
 		 */
 		isDisabled : function() {
 			return DOM.get(this.id).disabled;

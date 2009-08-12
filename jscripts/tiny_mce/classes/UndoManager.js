@@ -166,7 +166,7 @@
 		 * Returns true/false if the undo manager has any undo levels.
 		 *
 		 * @method hasUndo
-		 * @return {boolean} true/false if the undo manager has any undo levels.
+		 * @return {Boolean} true/false if the undo manager has any undo levels.
 		 */
 		hasUndo : function() {
 			return this.index != 0 || this.typing;
@@ -176,7 +176,7 @@
 		 * Returns true/false if the undo manager has any redo levels.
 		 *
 		 * @method hasRedo
-		 * @return {boolean} true/false if the undo manager has any redo levels.
+		 * @return {Boolean} true/false if the undo manager has any redo levels.
 		 */
 		hasRedo : function() {
 			return this.index < this.data.length - 1;
