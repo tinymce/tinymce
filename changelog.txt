@@ -6,6 +6,8 @@ Version 3.2.6 (2009-xx-xx)
 	Fixed bug where some WebKit versions on Mac OS X would produce issues with hidden select fields.
 	Fixed bug where the media plugin would fail on WebKit since the node wasn't properly imported to the right document.
 	Fixed bug where absolute URLs for the TinyMCE script using a base href element would cause loading problems in IE 6/7.
+	Fixed bug where pasting using the paste plugin wasn't possible on IE with to restrictive security settings.
+	Fixed bug where pasting of whitespace was impossible using the new custom paste method.
 	Fixed so all editor options gets passed to the Serializer class. Patch contributed by Jasper Mattsson.
 	Fixed so script blocks isn't wrapped in paragraphs as other inline elements.
 	Changed inline documentation to use moxiedoc style comments.

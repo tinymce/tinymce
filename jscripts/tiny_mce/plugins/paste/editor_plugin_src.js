@@ -98,9 +98,15 @@
 					// Remove container
 					dom.remove(n);
 
+					// Check if the contents was changed, if it wasn't then clipboard extraction failed probably due
+					// to IE security settings so we pass the junk though better than nothing right
+					if (n.innerHTML === '&nbsp;')
+						return;
+
 					// Process contents
 					process({content : n.innerHTML});
 
+					// Block the real paste event
 					return tinymce.dom.Event.cancel(e);
 				} else {
 					or = ed.selection.getRng();
@@ -195,16 +201,16 @@
 				});
 			};
 
-			// Process away some basic content
-			process([
-				/^\s*(&nbsp;)+/g,											// nbsp entities at the start of contents
-				/(&nbsp;|<br[^>]*>)+\s*$/g									// nbsp entities at the end of contents
-			]);
-
 			// Detect Word content and process it more aggressive
 			if (/(class=\"?Mso|style=\"[^\"]*\bmso\-|w:WordDocument)/.test(h) || o.wordContent) {
 				o.wordContent = true; // Mark the pasted contents as word specific content
 				//console.log('Word contents detected.');
+
+				// Process away some basic content
+				process([
+					/^\s*(&nbsp;)+/g,											// nbsp entities at the start of contents
+					/(&nbsp;|<br[^>]*>)+\s*$/g									// nbsp entities at the end of contents
+				]);
 
 				if (ed.getParam('paste_convert_middot_lists', true)) {
 					process([
