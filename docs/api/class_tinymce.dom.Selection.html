@@ -51,7 +51,7 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.Selection.html#collapse">collapse</a>(b:boolean):void</div>
+<a class="memberName" href="class_tinymce.dom.Selection.html#collapse">collapse</a>(b:Boolean):void</div>
 <div class="summary">Collapse the selection to start or end of range.</div>
 </td>
 <td class="last">Selection</td>
@@ -59,7 +59,7 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <tr>
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.Selection.html#getBookmark">getBookmark</a>(si:boolean):Object</div>
+<a class="memberName" href="class_tinymce.dom.Selection.html#getBookmark">getBookmark</a>(si:Boolean):Object</div>
 <div class="summary">Returns a bookmark location for the current selection.</div>
 </td>
 <td class="last">Selection</td>
@@ -91,7 +91,7 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <tr>
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.Selection.html#getRng">getRng</a>(w3c:boolean):Range</div>
+<a class="memberName" href="class_tinymce.dom.Selection.html#getRng">getRng</a>(w3c:Boolean):Range</div>
 <div class="summary">Returns the browsers internal range object.</div>
 </td>
 <td class="last">Selection</td>
@@ -115,7 +115,7 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.Selection.html#isCollapsed">isCollapsed</a>():boolean</div>
+<a class="memberName" href="class_tinymce.dom.Selection.html#isCollapsed">isCollapsed</a>():Boolean</div>
 <div class="summary">Returns true/false if the selection range is collapsed or not.</div>
 </td>
 <td class="last">Selection</td>
@@ -123,7 +123,7 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <tr>
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.Selection.html#moveToBookmark">moveToBookmark</a>(bookmark:Object):boolean</div>
+<a class="memberName" href="class_tinymce.dom.Selection.html#moveToBookmark">moveToBookmark</a>(bookmark:Object):Boolean</div>
 <div class="summary">Restores the selection to the specified bookmark.</div>
 </td>
 <td class="last">Selection</td>
@@ -131,7 +131,7 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.Selection.html#select">select</a>(n:Element, c:boolean):Element</div>
+<a class="memberName" href="class_tinymce.dom.Selection.html#select">select</a>(n:Element, c:Boolean):Element</div>
 <div class="summary">Selects the specified element.</div>
 </td>
 <td class="last">Selection</td>
@@ -195,13 +195,13 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <h3>collapse<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function collapse(b:boolean):void</code>
+						function collapse(b:Boolean):void</code>
 <div class="memberDescription">Collapse the selection to start or end of range.
 </div>
 <h4>Parameters</h4>
 <table class="params">
 <tr>
-<td class="first">b:boolean</td>
+<td class="first">b:Boolean</td>
 <td class="last">Optional boolean state if to collapse to end or not. Defaults to start.</td>
 </tr>
 </table>
@@ -210,14 +210,14 @@ Consult the TinyMCE Wiki API for more details and examples on how to use this cl
 <h3>getBookmark<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function getBookmark(si:boolean):Object</code>
+						function getBookmark(si:Boolean):Object</code>
 <div class="memberDescription">Returns a bookmark location for the current selection. This bookmark object
 can then be used to restore the selection after some content modification to the document.
 </div>
 <h4>Parameters</h4>
 <table class="params">
 <tr>
-<td class="first">si:boolean</td>
+<td class="first">si:Boolean</td>
 <td class="last">Optional state if the bookmark should be simple or not. Default is complex.</td>
 </tr>
 </table>
@@ -266,13 +266,13 @@ node the parent element will be returned.
 <h3>getRng<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function getRng(w3c:boolean):Range</code>
+						function getRng(w3c:Boolean):Range</code>
 <div class="memberDescription">Returns the browsers internal range object.
 </div>
 <h4>Parameters</h4>
 <table class="params">
 <tr>
-<td class="first">w3c:boolean</td>
+<td class="first">w3c:Boolean</td>
 <td class="last">Forces a compatible W3C range on IE.</td>
 </tr>
 </table>
@@ -304,17 +304,17 @@ node the parent element will be returned.
 <h3>isCollapsed<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function isCollapsed():boolean</code>
+						function isCollapsed():Boolean</code>
 <div class="memberDescription">Returns true/false if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
 </div>
 <h4>Returns</h4>
-<div class="returns">boolean - true/false state if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.</div>
+<div class="returns">Boolean - true/false state if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.</div>
 </div>
 <div class="memberDetails" id="moveToBookmark">
 <h3>moveToBookmark<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function moveToBookmark(bookmark:Object):boolean</code>
+						function moveToBookmark(bookmark:Object):Boolean</code>
 <div class="memberDescription">Restores the selection to the specified bookmark.
 </div>
 <h4>Parameters</h4>
@@ -325,13 +325,13 @@ node the parent element will be returned.
 </tr>
 </table>
 <h4>Returns</h4>
-<div class="returns">boolean - true/false if it was successful or not.</div>
+<div class="returns">Boolean - true/false if it was successful or not.</div>
 </div>
 <div class="memberDetails" id="select">
 <h3>select<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function select(n:Element, c:boolean):Element</code>
+						function select(n:Element, c:Boolean):Element</code>
 <div class="memberDescription">Selects the specified element. This will place the start and end of the selection range around the element.
 </div>
 <h4>Parameters</h4>
@@ -341,7 +341,7 @@ node the parent element will be returned.
 <td class="last">HMTL DOM element to select.</td>
 </tr>
 <tr>
-<td class="first">c:boolean</td>
+<td class="first">c:Boolean</td>
 <td class="last">Bool state if the contents should be selected or not on non IE browser.</td>
 </tr>
 </table>

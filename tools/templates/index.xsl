@@ -9,6 +9,7 @@
 	/>
 
 	<xsl:param name="target" />
+	<xsl:param name="title" />
 	<xsl:preserve-space elements="*" />
 
 	<xsl:template name="namespace">
@@ -61,7 +62,7 @@
 	<xsl:template match="/">
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
-			<title>TinyMCE API</title>
+			<title><xsl:value-of select="$title" /></title>
 			<xsl:text disable-output-escaping="yes"><![CDATA[
 <meta name="generator" content="MoxieDoc" />
 
@@ -84,7 +85,7 @@
 		</head>
 		<body>
 			<div id="doc3" class="yui-t1" style="height:500px">
-				<div id="hd"><h1>TinyMCE API</h1></div>
+				<div id="hd"><h1><xsl:value-of select="$title" /></h1></div>
 
 				<div id="bd">
 					<div id="yui-main">

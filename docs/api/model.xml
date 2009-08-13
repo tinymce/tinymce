@@ -101,7 +101,7 @@ Consult the Wiki for more details on this class.
 <param name="id" type="String">
 <description>Control id to set state on.</description>
 </param>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>Active state true/false.</description>
 </param>
 <return type="tinymce.ui.Control">
@@ -114,7 +114,7 @@ Consult the Wiki for more details on this class.
 <param name="id" type="String">
 <description>Control id to set state on.</description>
 </param>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>Active state true/false.</description>
 </param>
 <return type="tinymce.ui.Control">
@@ -322,7 +322,7 @@ ed.render();</example>
 <description>Editor instance id, normally the same as the div/textarea that was replaced.
 </description>
 </property>
-<property name="isNotDirty" summary="State to force the editor to return false on a isDirty call." type="boolean">
+<property name="isNotDirty" summary="State to force the editor to return false on a isDirty call." type="Boolean">
 <description>State to force the editor to return false on a isDirty call.
 </description>
 </property>
@@ -648,7 +648,7 @@ ed.render();</example>
 <description>Window manager reference, use this to open new windows and dialogs.
 </description>
 </property>
-<method name="init" summary="Initializes the editor this will be called automatically when&#10;all plugins/themes and language packs are loaded by the re...">
+<method name="init" summary="Initializes the editor this will be called automatically when all plugins/themes and language packs are loaded by the re...">
 <description>Initializes the editor this will be called automatically when
 all plugins/themes and language packs are loaded by the rendered method.
 This method will setup the iframe and create the theme and plugin instances.
@@ -692,7 +692,7 @@ This method should not be called directly.
 <description>Focuses/activates the editor. This will set this editor as the activeEditor in the EditorManager
 it will also place DOM focus inside the editor.
 </description>
-<param name="sf" type="boolean">
+<param name="sf" type="Boolean">
 <description>Skip DOM focus. Just set is as the active editor.</description>
 </param>
 </method>
@@ -707,7 +707,7 @@ There new event model is a better way to add callback so this method might be re
 <description>Return value passed from callback function.</description>
 </return>
 </method>
-<method name="translate" summary="Translates the specified string by replacing variables with language pack items it will also check if there is&#10;a key mat...">
+<method name="translate" summary="Translates the specified string by replacing variables with language pack items it will also check if there is a key mat...">
 <description>Translates the specified string by replacing variables with language pack items it will also check if there is
 a key mathcin the input.
 </description>
@@ -823,7 +823,7 @@ The command that you add can be executed with queryCommandValue function.
 <param name="sc" type="Object">
 <description>Optional scope to execute the function in.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false state if the shortcut was added or not.</description>
 </return>
 </method>
@@ -836,7 +836,7 @@ return true it will handle the command as a internal browser command.
 <param name="cmd" type="String">
 <description>Command name to execute, for example mceLink or Bold.</description>
 </param>
-<param name="ui" type="boolean">
+<param name="ui" type="Boolean">
 <description>True/false state if a UI (dialog) should be presented or not.</description>
 </param>
 <param name="val" type="mixed">
@@ -845,7 +845,7 @@ return true it will handle the command as a internal browser command.
 <param name="a" type="Object">
 <description>Optional arguments object.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>True/false if the command was executed or not.</description>
 </return>
 </method>
@@ -855,7 +855,7 @@ return true it will handle the command as a internal browser command.
 <param name="c" type="string">
 <description>Command to query state from.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>Command specific state, for example if bold is enabled or not.</description>
 </return>
 </method>
@@ -880,7 +880,7 @@ return true it will handle the command as a internal browser command.
 <method name="isHidden" summary="Returns true/false if the editor is hidden or not.">
 <description>Returns true/false if the editor is hidden or not.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>True/false if the editor is hidden or not.</description>
 </return>
 </method>
@@ -888,7 +888,7 @@ return true it will handle the command as a internal browser command.
 <description>Sets the progress state, this will display a throbber/progess for the editor.
 This is ideal for asycronous operations like an AJAX save call.
 </description>
-<param name="b" type="boolean">
+<param name="b" type="Boolean">
 <description>Boolean state if the progress should be shown or hidden.</description>
 </param>
 <param name="ti" type="Number">
@@ -897,7 +897,7 @@ This is ideal for asycronous operations like an AJAX save call.
 <param name="o" type="Object">
 <description>Optional object to pass to the progress observers.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>Same as the input state.</description>
 </return>
 </method>
@@ -925,7 +925,7 @@ so all events etc that method has will get dispatched as well.
 <description>HTML string that got set into the textarea/div.</description>
 </return>
 </method>
-<method name="setContent" summary="Sets the specified content to the editor instance, this will cleanup the content before it gets set using&#10;the different ...">
+<method name="setContent" summary="Sets the specified content to the editor instance, this will cleanup the content before it gets set using the different ...">
 <description>Sets the specified content to the editor instance, this will cleanup the content before it gets set using
 the different cleanup rules options.
 </description>
@@ -939,7 +939,7 @@ the different cleanup rules options.
 <description>HTML string that got set into the editor.</description>
 </return>
 </method>
-<method name="getContent" summary="Gets the content from the editor instance, this will cleanup the content before it gets returned using&#10;the different cle...">
+<method name="getContent" summary="Gets the content from the editor instance, this will cleanup the content before it gets returned using the different cle...">
 <description>Gets the content from the editor instance, this will cleanup the content before it gets returned using
 the different cleanup rules options.
 </description>
@@ -953,7 +953,7 @@ the different cleanup rules options.
 <method name="isDirty" summary="Returns true/false if the editor is dirty or not.">
 <description>Returns true/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.</description>
 </return>
 </method>
@@ -1001,7 +1001,7 @@ holds the iframe or the editable element.
 <description>Iframe body element.</description>
 </return>
 </method>
-<method name="convertURL" summary="URL converter function this gets executed each time a user adds an img, a or&#10;any other element that has a URL in it.">
+<method name="convertURL" summary="URL converter function this gets executed each time a user adds an img, a or any other element that has a URL in it.">
 <description>URL converter function this gets executed each time a user adds an img, a or
 any other element that has a URL in it. This will be called both by the DOM and HTML
 manipulation functions.
@@ -1032,12 +1032,12 @@ manipulation functions.
 <description>Removes the editor from the dom and EditorManager collection.
 </description>
 </method>
-<method name="destroy" summary="Destroys the editor instance by removing all events, element references or other resources&#10;that could leak memory.">
+<method name="destroy" summary="Destroys the editor instance by removing all events, element references or other resources that could leak memory.">
 <description>Destroys the editor instance by removing all events, element references or other resources
 that could leak memory. This method will be called automatically when the page is unloaded
 but you can also call it directly if you know what you are doing.
 </description>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>Optional state if the destroy is an automatic destroy or user called one.</description>
 </param>
 </method>
@@ -1114,13 +1114,13 @@ will setup some important paths and URIs and attach some document events.
 <param name="c" type="String">
 <description>Command to perform for example Bold.</description>
 </param>
-<param name="u" type="boolean">
+<param name="u" type="Boolean">
 <description>Optional boolean state if a UI should be presented for the command or not.</description>
 </param>
 <param name="v" type="String">
 <description>Optional value parameter like for example an URL to a link.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the command was executed or not.</description>
 </return>
 </method>
@@ -1133,13 +1133,13 @@ will setup some important paths and URIs and attach some document events.
 <param name="c" type="String">
 <description>Command to perform for example Bold.</description>
 </param>
-<param name="u" type="boolean">
+<param name="u" type="Boolean">
 <description>Optional boolean state if a UI should be presented for the command or not.</description>
 </param>
 <param name="v" type="String">
 <description>Optional value parameter like for example an URL to a link.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the command was executed or not.</description>
 </return>
 </method>
@@ -1200,14 +1200,14 @@ will setup some important paths and URIs and attach some document events.
 <method name="hasUndo" summary="Returns true/false if the undo manager has any undo levels.">
 <description>Returns true/false if the undo manager has any undo levels.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the undo manager has any undo levels.</description>
 </return>
 </method>
 <method name="hasRedo" summary="Returns true/false if the undo manager has any redo levels.">
 <description>Returns true/false if the undo manager has any redo levels.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the undo manager has any redo levels.</description>
 </return>
 </method>
@@ -1437,7 +1437,7 @@ on more complex patterns.
 <param name="h" type="String">
 <description>Optional inner HTML contents to add for each element.</description>
 </param>
-<param name="c" type="boolean">
+<param name="c" type="Boolean">
 <description>Optional internal state to indicate if it should create or add.</description>
 </param>
 <return>
@@ -1487,7 +1487,7 @@ on more complex patterns.
 <type fullname="Array"/>
 <description>ID of element or DOM element object or array containing multiple elements/ids.</description>
 </param>
-<param name="k" type="boolean">
+<param name="k" type="Boolean">
 <description>Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.</description>
 </param>
 <return>
@@ -1682,7 +1682,7 @@ colors to hex values. Urls inside the styles will also be converted to absolute/
 <param name="c" type="String">
 <description>CSS class to check for.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the specified element has the specified class.</description>
 </return>
 </method>
@@ -1714,7 +1714,7 @@ colors to hex values. Urls inside the styles will also be converted to absolute/
 <type fullname="Element"/>
 <description>Id or element to check display state on.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the element is hidden or not.</description>
 </return>
 </method>
@@ -1743,7 +1743,7 @@ URLs will get converted, hex color values fixed etc. Check processHTML for detai
 <description>HTML content to set as inner HTML of the element.</description>
 </param>
 </method>
-<method name="processHTML" summary="Processes the HTML by replacing strong, em, del in gecko since it doesn't support them&#10;properly in a RTE environment.">
+<method name="processHTML" summary="Processes the HTML by replacing strong, em, del in gecko since it doesn't support them properly in a RTE environment.">
 <description>Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
 properly in a RTE environment. It also converts any URLs in links and images and places
 a converted value into a separate attribute with the mce prefix like mce_src or mce_href.
@@ -1827,11 +1827,11 @@ a converted value into a separate attribute with the mce prefix like mce_src or 
 <param name="n" type="Node">
 <description>Element/Node to check.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>True/False state if the node is a block element or not.</description>
 </return>
 </method>
-<method name="replace" summary="Replaces the specified element or elements with the specified element, the new element will&#10;be cloned if multiple inputs...">
+<method name="replace" summary="Replaces the specified element or elements with the specified element, the new element will be cloned if multiple inputs...">
 <description>Replaces the specified element or elements with the specified element, the new element will
 be cloned if multiple inputs elements are passed.
 </description>
@@ -1844,7 +1844,7 @@ be cloned if multiple inputs elements are passed.
 <type fullname="Array"/>
 <description>Element DOM node, element id or array of elements or ids to replace.</description>
 </param>
-<param name="k" type="boolean">
+<param name="k" type="Boolean">
 <description>Optional keep children state, if set to true child nodes from the old object will be added to new ones.</description>
 </param>
 </method>
@@ -1924,7 +1924,7 @@ available if it's not it will fallback to the custom TinyMCE implementation.
 <description>DOM Range object.</description>
 </return>
 </method>
-<method name="split" summary="Splits an element into two new elements and places the specified split&#10;element or element between the new ones.">
+<method name="split" summary="Splits an element into two new elements and places the specified split element or element between the new ones.">
 <description>Splits an element into two new elements and places the specified split
 element or element between the new ones. For example splitting the paragraph at the bold element in
 this example &lt;p&gt;abc&lt;b&gt;abc&lt;/b&gt;123&lt;/p&gt; would produce &lt;p&gt;abc&lt;/p&gt;&lt;b&gt;abc&lt;/b&gt;&lt;p&gt;123&lt;/p&gt;.
@@ -2084,7 +2084,7 @@ since it's bound to an element.
 </method>
 </members>
 </class>
-<class fullname="tinymce.dom.EventUtils" name="EventUtils" summary="This class handles DOM events in a cross platform fasion it also keeps track of element&#10;and handler references to be abl...">
+<class fullname="tinymce.dom.EventUtils" name="EventUtils" summary="This class handles DOM events in a cross platform fasion it also keeps track of element and handler references to be abl...">
 <description>This class handles DOM events in a cross platform fasion it also keeps track of element
 and handler references to be able to clean elements to reduce IE memory leaks.
 </description>
@@ -2153,7 +2153,7 @@ and handler references to be able to clean elements to reduce IE memory leaks.
 <param name="e" type="Event">
 <description>Event object to cancel.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>Always false.</description>
 </return>
 </method>
@@ -2163,7 +2163,7 @@ and handler references to be able to clean elements to reduce IE memory leaks.
 <param name="e" type="Event">
 <description>Event to cancel bubbeling on.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>Always false.</description>
 </return>
 </method>
@@ -2173,7 +2173,7 @@ and handler references to be able to clean elements to reduce IE memory leaks.
 <param name="e" type="Event">
 <description>Event to prevent default browser behvaior of an event.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>Always false.</description>
 </return>
 </method>
@@ -2183,7 +2183,7 @@ and handler references to be able to clean elements to reduce IE memory leaks.
 </method>
 </members>
 </class>
-<class fullname="tinymce.dom.ScriptLoader" name="ScriptLoader" summary="This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when&#10;various items get...">
+<class fullname="tinymce.dom.ScriptLoader" name="ScriptLoader" summary="This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when various items get...">
 <description>This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when
 various items gets loaded. This class is useful to</description>
 <members>
@@ -2221,7 +2221,7 @@ the script loader or to skip it from loading some script.
 <param name="s" type="Object">
 <description>Optional scope to execute callback in.</description>
 </param>
-<param name="pr" type="boolean">
+<param name="pr" type="Boolean">
 <description>Optional state to add to top or bottom of load queue. Defaults to bottom.</description>
 </param>
 <return type="object">
@@ -2343,7 +2343,7 @@ node the parent element will be returned.
 <description>Returns a bookmark location for the current selection. This bookmark object
 can then be used to restore the selection after some content modification to the document.
 </description>
-<param name="si" type="boolean">
+<param name="si" type="Boolean">
 <description>Optional state if the bookmark should be simple or not. Default is complex.</description>
 </param>
 <return type="Object">
@@ -2356,7 +2356,7 @@ can then be used to restore the selection after some content modification to the
 <param name="bookmark" type="Object">
 <description>Bookmark to restore selection from.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if it was successful or not.</description>
 </return>
 </method>
@@ -2366,7 +2366,7 @@ can then be used to restore the selection after some content modification to the
 <param name="n" type="Element">
 <description>HMTL DOM element to select.</description>
 </param>
-<param name="c" type="boolean">
+<param name="c" type="Boolean">
 <description>Bool state if the contents should be selected or not on non IE browser.</description>
 </param>
 <return type="Element">
@@ -2376,14 +2376,14 @@ can then be used to restore the selection after some content modification to the
 <method name="isCollapsed" summary="Returns true/false if the selection range is collapsed or not.">
 <description>Returns true/false if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false state if the selection range is collapsed or not. Collapsed means if it's a caret or a larger selection.</description>
 </return>
 </method>
 <method name="collapse" summary="Collapse the selection to start or end of range.">
 <description>Collapse the selection to start or end of range.
 </description>
-<param name="b" type="boolean">
+<param name="b" type="Boolean">
 <description>Optional boolean state if to collapse to end or not. Defaults to start.</description>
 </param>
 </method>
@@ -2397,7 +2397,7 @@ can then be used to restore the selection after some content modification to the
 <method name="getRng" summary="Returns the browsers internal range object.">
 <description>Returns the browsers internal range object.
 </description>
-<param name="w3c" type="boolean">
+<param name="w3c" type="Boolean">
 <description>Forces a compatible W3C range on IE.</description>
 </param>
 <return type="Range">
@@ -2464,7 +2464,7 @@ Consult the Wiki for format description on this input.
 <description>String with valid child rules to add.</description>
 </param>
 </method>
-<method name="setRules" summary="Sets the valid elements rules of the serializer this enables you to specify things like what elements should be&#10;outputte...">
+<method name="setRules" summary="Sets the valid elements rules of the serializer this enables you to specify things like what elements should be outputte...">
 <description>Sets the valid elements rules of the serializer this enables you to specify things like what elements should be
 outputted and what attributes specific elements might have.
 Consult the Wiki for more details on this format.
@@ -2473,7 +2473,7 @@ Consult the Wiki for more details on this format.
 <description>Valid elements rules string.</description>
 </param>
 </method>
-<method name="addRules" summary="Adds valid elements rules to the serializer this enables you to specify things like what elements should be&#10;outputted an...">
+<method name="addRules" summary="Adds valid elements rules to the serializer this enables you to specify things like what elements should be outputted an...">
 <description>Adds valid elements rules to the serializer this enables you to specify things like what elements should be
 outputted and what attributes specific elements might have.
 Consult the Wiki for more details on this format.
@@ -2541,7 +2541,7 @@ Consult the Wiki for more details on this format.
 <description>Name of element to write.</description>
 </param>
 </method>
-<method name="writeAttribute" summary="Writes an attrubute like for example: myattr=&quot;valie&quot;&#10;">
+<method name="writeAttribute" summary="Writes an attrubute like for example: myattr=&quot;valie&quot;">
 <description>Writes an attrubute like for example: myattr="valie"
 </description>
 <param name="n" type="String">
@@ -2628,7 +2628,7 @@ serialized down to a HTML string later on.</description>
 <description>Name of element to write.</description>
 </param>
 </method>
-<method name="writeAttribute" summary="Writes an attrubute like for example: myattr=&quot;valie&quot;&#10;">
+<method name="writeAttribute" summary="Writes an attrubute like for example: myattr=&quot;valie&quot;">
 <description>Writes an attrubute like for example: myattr="valie"
 </description>
 <param name="n" type="String">
@@ -2881,7 +2881,7 @@ be instantiated directly other controls should inherit from this one.
 <description>Sets the disabled state for the control. This will add CSS classes to the
 element that contains the control. So that it can be disabled visually.
 </description>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>Boolean state if the control should be disabled or not.</description>
 </param>
 </method>
@@ -2889,7 +2889,7 @@ element that contains the control. So that it can be disabled visually.
 <description>Returns true/false if the control is disabled or not. This is a method since you can then
 choose to check some class or some internal bool state in subclasses.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the control is disabled or not.</description>
 </return>
 </method>
@@ -2897,7 +2897,7 @@ choose to check some class or some internal bool state in subclasses.
 <description>Sets the activated state for the control. This will add CSS classes to the
 element that contains the control. So that it can be activated visually.
 </description>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>Boolean state if the control should be activated or not.</description>
 </param>
 </method>
@@ -2905,7 +2905,7 @@ element that contains the control. So that it can be activated visually.
 <description>Returns true/false if the control is disabled or not. This is a method since you can then
 choose to check some class or some internal bool state in subclasses.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the control is disabled or not.</description>
 </return>
 </method>
@@ -2915,14 +2915,14 @@ choose to check some class or some internal bool state in subclasses.
 <param name="c" type="String">
 <description>Class name to add/remove depending on state.</description>
 </param>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>True/false state if the class should be removed or added.</description>
 </param>
 </method>
 <method name="isRendered" summary="Returns true/false if the control has been rendered or not.">
 <description>Returns true/false if the control has been rendered or not.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>State if the control has been rendered or not.</description>
 </return>
 </method>
@@ -2957,7 +2957,7 @@ events tied to it will also be removed.
 </method>
 </members>
 </class>
-<class extends="tinymce.ui.Menu" fullname="tinymce.ui.DropMenu" name="DropMenu" summary="This class is used to create drop menus, a drop menu can be a&#10;context menu, or a menu for a list box or a menu bar.">
+<class extends="tinymce.ui.Menu" fullname="tinymce.ui.DropMenu" name="DropMenu" summary="This class is used to create drop menus, a drop menu can be a context menu, or a menu for a list box or a menu bar.">
 <description>This class is used to create drop menus, a drop menu can be a
 context menu, or a menu for a list box or a menu bar.
 </description>
@@ -3016,7 +3016,7 @@ context menu, or a menu for a list box or a menu bar.
 <method name="collapse" summary="Collapses the menu, this will hide the menu and all menu items.">
 <description>Collapses the menu, this will hide the menu and all menu items.
 </description>
-<param name="d" type="boolean">
+<param name="d" type="Boolean">
 <description>Optional deep state. If this is set to true all children will be collapsed as well.</description>
 </param>
 </method>
@@ -3198,21 +3198,21 @@ be instantiated directly other menu controls should inherit from this one.
 <method name="expand" summary="Expands the menu, this will show them menu and all menu items.">
 <description>Expands the menu, this will show them menu and all menu items.
 </description>
-<param name="d" type="boolean">
+<param name="d" type="Boolean">
 <description>Optional deep state. If this is set to true all children will be expanded as well.</description>
 </param>
 </method>
 <method name="collapse" summary="Collapses the menu, this will hide the menu and all menu items.">
 <description>Collapses the menu, this will hide the menu and all menu items.
 </description>
-<param name="d" type="boolean">
+<param name="d" type="Boolean">
 <description>Optional deep state. If this is set to true all children will be collapsed as well.</description>
 </param>
 </method>
 <method name="isCollapsed" summary="Returns true/false if the menu has been collapsed or not.">
 <description>Returns true/false if the menu has been collapsed or not.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>True/false state if the menu has been collapsed or not.</description>
 </return>
 </method>
@@ -3246,7 +3246,7 @@ be instantiated directly other menu controls should inherit from this one.
 <method name="hasMenus" summary="Returns true/false if the menu has sub menus or not.">
 <description>Returns true/false if the menu has sub menus or not.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>True/false state if the menu has sub menues or not.</description>
 </return>
 </method>
@@ -3366,14 +3366,14 @@ be instantiated directly other menu items should inherit from this one.
 <description>Sets the selected state for the control. This will add CSS classes to the
 element that contains the control. So that it can be selected visually.
 </description>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>Boolean state if the control should be selected or not.</description>
 </param>
 </method>
 <method name="isSelected" summary="Returns true/false if the control is selected or not.">
 <description>Returns true/false if the control is selected or not.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the control is selected or not.</description>
 </return>
 </method>
@@ -3416,7 +3416,7 @@ a native control the way that the browser produces them by default.
 <description>Sets the disabled state for the control. This will add CSS classes to the
 element that contains the control. So that it can be disabled visually.
 </description>
-<param name="s" type="boolean">
+<param name="s" type="Boolean">
 <description>Boolean state if the control should be disabled or not.</description>
 </param>
 </method>
@@ -3424,7 +3424,7 @@ element that contains the control. So that it can be disabled visually.
 <description>Returns true/false if the control is disabled or not. This is a method since you can then
 choose to check some class or some internal bool state in subclasses.
 </description>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the control is disabled or not.</description>
 </return>
 </method>
@@ -3839,7 +3839,7 @@ Consult the Wiki API documentation for more details on what you can pass to this
 <param name="u" type="String">
 <description>URI to convert into a relative path/URI.</description>
 </param>
-<param name="nh" type="boolean">
+<param name="nh" type="Boolean">
 <description>No host and protocol prefix.</description>
 </param>
 <return type="String">
@@ -3869,7 +3869,7 @@ Consult the Wiki API documentation for more details on what you can pass to this
 <method name="getURI" summary="Returns the full URI of the internal structure.">
 <description>Returns the full URI of the internal structure.
 </description>
-<param name="nh" type="boolean">
+<param name="nh" type="Boolean">
 <description>Optional no host and protocol part. Defaults to false.</description>
 </param>
 </method>
@@ -3958,7 +3958,7 @@ that you load this script into your dialogs.
 <param name="cmd" type="String">
 <description>Command to execute.</description>
 </param>
-<param name="ui" type="boolean">
+<param name="ui" type="Boolean">
 <description>Optional boolean value if the UI for the command should be presented or not.</description>
 </param>
 <param name="val" type="Object">
@@ -4007,7 +4007,7 @@ then selects a color it will be set as the value of the specified element.
 <description>Element id to be filled with the color value from the picker.</description>
 </param>
 </method>
-<method name="openBrowser" static="true" summary="Opens a filebrowser/imagebrowser this will set the output value from&#10;the browser as a value on the specified element.">
+<method name="openBrowser" static="true" summary="Opens a filebrowser/imagebrowser this will set the output value from the browser as a value on the specified element.">
 <description>Opens a filebrowser/imagebrowser this will set the output value from
 the browser as a value on the specified element.
 </description>
@@ -4069,31 +4069,31 @@ if (tinymce.isIE)
   console.log("IE");</example>
 </example>
 <members>
-<property final="true" name="isOpera" static="true" summary="Constant that is true if the browser is Opera." type="boolean">
+<property final="true" name="isOpera" static="true" summary="Constant that is true if the browser is Opera." type="Boolean">
 <description>Constant that is true if the browser is Opera.
 </description>
 </property>
-<property final="true" name="isWebKit" static="true" summary="Constant that is true if the browser is WebKit (Safari/Chrome)." type="boolean">
+<property final="true" name="isWebKit" static="true" summary="Constant that is true if the browser is WebKit (Safari/Chrome)." type="Boolean">
 <description>Constant that is true if the browser is WebKit (Safari/Chrome).
 </description>
 </property>
-<property final="true" name="isIE" static="true" summary="Constant that is true if the browser is IE." type="boolean">
+<property final="true" name="isIE" static="true" summary="Constant that is true if the browser is IE." type="Boolean">
 <description>Constant that is true if the browser is IE.
 </description>
 </property>
-<property final="true" name="isIE6" static="true" summary="Constant that is true if the browser is IE 6 or older." type="boolean">
+<property final="true" name="isIE6" static="true" summary="Constant that is true if the browser is IE 6 or older." type="Boolean">
 <description>Constant that is true if the browser is IE 6 or older.
 </description>
 </property>
-<property final="true" name="isGecko" static="true" summary="Constant that is true if the browser is Gecko." type="boolean">
+<property final="true" name="isGecko" static="true" summary="Constant that is true if the browser is Gecko." type="Boolean">
 <description>Constant that is true if the browser is Gecko.
 </description>
 </property>
-<property final="true" name="isMac" static="true" summary="Constant that is true if the os is Mac OS." type="boolean">
+<property final="true" name="isMac" static="true" summary="Constant that is true if the os is Mac OS." type="Boolean">
 <description>Constant that is true if the os is Mac OS.
 </description>
 </property>
-<property final="true" name="isAir" static="true" summary="Constant that is true if the runtime is Adobe Air." type="boolean">
+<property final="true" name="isAir" static="true" summary="Constant that is true if the runtime is Adobe Air." type="Boolean">
 <description>Constant that is true if the runtime is Adobe Air.
 </description>
 </property>
@@ -4106,7 +4106,7 @@ if (tinymce.isIE)
 <param name="t" type="string">
 <description>Optional type to check for.</description>
 </param>
-<return type="boolean">
+<return type="Boolean">
 <description>true/false if the object is of the specified type.</description>
 </return>
 </method>

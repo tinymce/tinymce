@@ -14,7 +14,14 @@
 	}
 
 	function loadURL(url) {
-		var parts = /^([^#]+)(#.+)?$/.exec(url), hash = parts[2];
+		var parts, hash;
+
+		// Trim away everything but the file name
+		url = /([^\/]+)$/.exec(url)[0];
+
+		// Parse out parts
+		parts = /^([^#]+)(#.+)?$/.exec(url);
+		hash = parts[2];
 
 		// In page link, no need to load anything
 		if (parts[1] == currentPage) {
@@ -36,18 +43,27 @@
 			li.find("> ul").show();
 		});
 
-		$.get(parts[1], "", function(data) {
-			data = /<body[^>]*>([\s\S]+)<\/body>/.exec(data);
+		$('#detailsView').find("div.page").hide();
 
-			if (data) {
-				$('#detailsView').html(data[1])[0].scrollTop = 0;
+		// Check if the page has been loaded before
+		if ($("#detailsView div[url='" + currentPage + "']").show().length == 0) {
+			$('#detailsView').addClass("loading");
 
-				SyntaxHighlighter.config.clipboardSwf = 'js/clipboard.swf';
-				SyntaxHighlighter.highlight({gutter : false});
+			// Load page and cache it in a div
+			$.get(currentPage, "", function(data) {
+				data = /<body[^>]*>([\s\S]+)<\/body>/.exec(data);
 
-				scrollToHash(hash);
-			}
-		});
+				if (data) {
+					$('#detailsView').removeClass("loading").append('<div url="' + currentPage + '" class="page">' + data[1] + '</div>')[0].scrollTop = 0;
+
+					SyntaxHighlighter.config.clipboardSwf = 'js/clipboard.swf';
+					SyntaxHighlighter.highlight({gutter : false});
+
+					scrollToHash(hash);
+				}
+			});
+		} else
+			scrollToHash(hash);
 	}
 
 	$().ready(function(){

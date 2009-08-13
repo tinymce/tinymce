@@ -50,7 +50,7 @@
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.DOMUtils.html#add">add</a>(Element:String/Element/Array, n:String/Element, a:Object, h:String, c:boolean):Element/Array</div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#add">add</a>(Element:String/Element/Array, n:String/Element, a:Object, h:String, c:Boolean):Element/Array</div>
 <div class="summary">Adds the specified element to another element or elements.</div>
 </td>
 <td class="last">DOMUtils</td>
@@ -234,7 +234,7 @@
 <tr>
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.DOMUtils.html#hasClass">hasClass</a>(n:String/Element, c:String):boolean</div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#hasClass">hasClass</a>(n:String/Element, c:String):Boolean</div>
 <div class="summary">Returns true if the specified element has the specified class.</div>
 </td>
 <td class="last">DOMUtils</td>
@@ -266,7 +266,7 @@
 <tr>
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.DOMUtils.html#isBlock">isBlock</a>(n:Node):boolean</div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#isBlock">isBlock</a>(n:Node):Boolean</div>
 <div class="summary">Returns true/false if the specified element is a block element or not.</div>
 </td>
 <td class="last">DOMUtils</td>
@@ -274,7 +274,7 @@
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.DOMUtils.html#isHidden">isHidden</a>(e:String/Element):boolean</div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#isHidden">isHidden</a>(e:String/Element):Boolean</div>
 <div class="summary">Returns true/false if the element is hidden or not by checking the "display" style.</div>
 </td>
 <td class="last">DOMUtils</td>
@@ -299,15 +299,14 @@
 <td class="first">
 <div>
 <a class="memberName" href="class_tinymce.dom.DOMUtils.html#processHTML">processHTML</a>(h:String):String</div>
-<div class="summary">Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
-properly in a RTE environment.</div>
+<div class="summary">Processes the HTML by replacing strong, em, del in gecko since it doesn't support them properly in a RTE environment.</div>
 </td>
 <td class="last">DOMUtils</td>
 </tr>
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.DOMUtils.html#remove">remove</a>(n:String/Element/Array, k:boolean):Element/Array</div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#remove">remove</a>(n:String/Element/Array, k:Boolean):Element/Array</div>
 <div class="summary">Removes/deletes the specified element(s) from the DOM.</div>
 </td>
 <td class="last">DOMUtils</td>
@@ -323,9 +322,8 @@ properly in a RTE environment.</div>
 <tr class="even">
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.DOMUtils.html#replace">replace</a>(n:Element, o:Element/String/Array, k:boolean):void</div>
-<div class="summary">Replaces the specified element or elements with the specified element, the new element will
-be cloned if multiple inputs...</div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#replace">replace</a>(n:Element, o:Element/String/Array, k:Boolean):void</div>
+<div class="summary">Replaces the specified element or elements with the specified element, the new element will be cloned if multiple inputs...</div>
 </td>
 <td class="last">DOMUtils</td>
 </tr>
@@ -413,8 +411,7 @@ be cloned if multiple inputs...</div>
 <td class="first">
 <div>
 <a class="memberName" href="class_tinymce.dom.DOMUtils.html#split">split</a>(pe:Element, e:Element, re:Element):Element</div>
-<div class="summary">Splits an element into two new elements and places the specified split
-element or element between the new ones.</div>
+<div class="summary">Splits an element into two new elements and places the specified split element or element between the new ones.</div>
 </td>
 <td class="last">DOMUtils</td>
 </tr>
@@ -471,7 +468,7 @@ element or element between the new ones.</div>
 <h3>add<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function add(Element:String/Element/Array, n:String/Element, a:Object, h:String, c:boolean):Element/Array</code>
+						function add(Element:String/Element/Array, n:String/Element, a:Object, h:String, c:Boolean):Element/Array</code>
 <div class="memberDescription">Adds the specified element to another element or elements.
 </div>
 <h4>Parameters</h4>
@@ -493,7 +490,7 @@ element or element between the new ones.</div>
 <td class="last">Optional inner HTML contents to add for each element.</td>
 </tr>
 <tr>
-<td class="first">c:boolean</td>
+<td class="first">c:Boolean</td>
 <td class="last">Optional internal state to indicate if it should create or add.</td>
 </tr>
 </table>
@@ -927,7 +924,7 @@ go above the point of this root node.
 <h3>hasClass<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function hasClass(n:String/Element, c:String):boolean</code>
+						function hasClass(n:String/Element, c:String):Boolean</code>
 <div class="memberDescription">Returns true if the specified element has the specified class.
 </div>
 <h4>Parameters</h4>
@@ -942,7 +939,7 @@ go above the point of this root node.
 </tr>
 </table>
 <h4>Returns</h4>
-<div class="returns">boolean - true/false if the specified element has the specified class.</div>
+<div class="returns">Boolean - true/false if the specified element has the specified class.</div>
 </div>
 <div class="memberDetails" id="hide">
 <h3>hide<span class="memberType">method</span>
@@ -1003,7 +1000,7 @@ go above the point of this root node.
 <h3>isBlock<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function isBlock(n:Node):boolean</code>
+						function isBlock(n:Node):Boolean</code>
 <div class="memberDescription">Returns true/false if the specified element is a block element or not.
 </div>
 <h4>Parameters</h4>
@@ -1014,13 +1011,13 @@ go above the point of this root node.
 </tr>
 </table>
 <h4>Returns</h4>
-<div class="returns">boolean - True/False state if the node is a block element or not.</div>
+<div class="returns">Boolean - True/False state if the node is a block element or not.</div>
 </div>
 <div class="memberDetails" id="isHidden">
 <h3>isHidden<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function isHidden(e:String/Element):boolean</code>
+						function isHidden(e:String/Element):Boolean</code>
 <div class="memberDescription">Returns true/false if the element is hidden or not by checking the "display" style.
 </div>
 <h4>Parameters</h4>
@@ -1031,7 +1028,7 @@ go above the point of this root node.
 </tr>
 </table>
 <h4>Returns</h4>
-<div class="returns">boolean - true/false if the element is hidden or not.</div>
+<div class="returns">Boolean - true/false if the element is hidden or not.</div>
 </div>
 <div class="memberDetails" id="loadCSS">
 <h3>loadCSS<span class="memberType">method</span>
@@ -1090,7 +1087,7 @@ a converted value into a separate attribute with the mce prefix like mce_src or 
 <h3>remove<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function remove(n:String/Element/Array, k:boolean):Element/Array</code>
+						function remove(n:String/Element/Array, k:Boolean):Element/Array</code>
 <div class="memberDescription">Removes/deletes the specified element(s) from the DOM.
 </div>
 <h4>Parameters</h4>
@@ -1100,7 +1097,7 @@ a converted value into a separate attribute with the mce prefix like mce_src or 
 <td class="last">ID of element or DOM element object or array containing multiple elements/ids.</td>
 </tr>
 <tr>
-<td class="first">k:boolean</td>
+<td class="first">k:Boolean</td>
 <td class="last">Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.</td>
 </tr>
 </table>
@@ -1132,7 +1129,7 @@ a converted value into a separate attribute with the mce prefix like mce_src or 
 <h3>replace<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function replace(n:Element, o:Element/String/Array, k:boolean):void</code>
+						function replace(n:Element, o:Element/String/Array, k:Boolean):void</code>
 <div class="memberDescription">Replaces the specified element or elements with the specified element, the new element will
 be cloned if multiple inputs elements are passed.
 </div>
@@ -1147,7 +1144,7 @@ be cloned if multiple inputs elements are passed.
 <td class="last">Element DOM node, element id or array of elements or ids to replace.</td>
 </tr>
 <tr>
-<td class="first">k:boolean</td>
+<td class="first">k:Boolean</td>
 <td class="last">Optional keep children state, if set to true child nodes from the old object will be added to new ones.</td>
 </tr>
 </table>

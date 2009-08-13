@@ -31,7 +31,7 @@
 			<fileset dir="docs\api" includes="**/*"/>
 		</delete>
 
-		<moxiedoc outdir="docs\api" templatedir="tools\templates">
+		<moxiedoc outdir="docs\api" templatedir="tools\templates" msintellisense="docs\api\tinymce.vsdoc.js" eventclass="tinymce.util.Dispatcher" title="TinyMCE API">
 			<fileset dir="jscripts\tiny_mce\classes">
 				<include name="**/*.js" /> 
 			</fileset>
