@@ -36,11 +36,13 @@
 			li.find("> ul").show();
 		});
 
+		$('#detailsView').html("").addClass("loading");
+
 		$.get(parts[1], "", function(data) {
 			data = /<body[^>]*>([\s\S]+)<\/body>/.exec(data);
 
 			if (data) {
-				$('#detailsView').html(data[1])[0].scrollTop = 0;
+				$('#detailsView').removeClass("loading").html(data[1])[0].scrollTop = 0;
 
 				SyntaxHighlighter.config.clipboardSwf = 'js/clipboard.swf';
 				SyntaxHighlighter.highlight({gutter : false});

@@ -229,3 +229,7 @@ code.syntax {
 .version span, .author span {
 	font-weight: bold;
 }
+
+#yui-main #detailsView.loading {
+	background: #FFF url('../img/loader.gif') no-repeat center center; 
+}
