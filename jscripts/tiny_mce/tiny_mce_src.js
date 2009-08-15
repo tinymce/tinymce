@@ -1899,7 +1899,7 @@ tinymce.create('static tinymce.util.XHR', {
 					});
 
 					// Wrap style elements
-					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/g, function(v, attribs, text) {
+					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/gi, function(v, attribs, text) {
 						// Wrap text contents
 						if (text)
 							text = '<!--\n' + trim(text) + '\n-->';
@@ -11753,7 +11753,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				nx = nl[i];
 
 				// Is text or non block element
-				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8 && !/^(SCRIPT|MCE:SCRIPT)$/i.test(nx.nodeName))) {
+				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8 && !/^(script|mce:script|style|mce:style)$/i.test(nx.nodeName))) {
 					if (!bl) {
 						// Create new block but ignore whitespace
 						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {

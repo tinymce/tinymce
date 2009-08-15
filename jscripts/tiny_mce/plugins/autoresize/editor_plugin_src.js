@@ -25,6 +25,9 @@
 		init : function(ed, url) {
 			var t = this;
 
+			if (ed.getParam('fullscreen_is_enabled'))
+				return;
+
 			/**
 			 * This method gets executed each time the editor needs to resize.
 			 */

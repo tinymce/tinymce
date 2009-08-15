@@ -123,7 +123,7 @@ function init() {
 	// Parse xml and doctype
 	xmlVer = getReItem(/<\?\s*?xml.*?version\s*?=\s*?"(.*?)".*?\?>/gi, h, 1);
 	xmlEnc = getReItem(/<\?\s*?xml.*?encoding\s*?=\s*?"(.*?)".*?\?>/gi, h, 1);
-	docType = getReItem(/<\!DOCTYPE.*?>/gi, h, 0);
+	docType = getReItem(/<\!DOCTYPE.*?>/gi, h.replace(/\n/g, ''), 0).replace(/ +/g, ' ');
 	f.langcode.value = getReItem(/lang="(.*?)"/gi, h, 1);
 
 	// Parse title

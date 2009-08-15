@@ -2,14 +2,16 @@ Version 3.2.6 (2009-xx-xx)
 	Added new wordcount plugin, this will display the number of typed words as you write. Contributed by Andrew Ozz.
 	Fixed bug where IE could sometimes render a unknown runtime error on invalid input HTML.
 	Fixed bug where some incorrectly placed tables wouldn't be moved outside the paragraphs on IE.
-	Fixed bug where uppercase script element wouldn't be handled correctly and converted to valid lowercase.
+	Fixed bug where uppercase script/style element wouldn't be handled correctly and converted to valid lowercase.
 	Fixed bug where some WebKit versions on Mac OS X would produce issues with hidden select fields.
 	Fixed bug where the media plugin would fail on WebKit since the node wasn't properly imported to the right document.
 	Fixed bug where absolute URLs for the TinyMCE script using a base href element would cause loading problems in IE 6/7.
 	Fixed bug where pasting using the paste plugin wasn't possible on IE with to restrictive security settings.
 	Fixed bug where pasting of whitespace was impossible using the new custom paste method.
+	Fixed bug where doctypes with multiple lines would not be parsed correctly by the fullpage plugin. Patch contributed by Colin.
+	Fixed bug where the autoresize plugin would break the fullscreen functionality.
 	Fixed so all editor options gets passed to the Serializer class. Patch contributed by Jasper Mattsson.
-	Fixed so script blocks isn't wrapped in paragraphs as other inline elements.
+	Fixed so script/style blocks isn't wrapped in paragraphs as other inline elements.
 	Fixed so the XHR requests sends the X-Requested-With HTTP header.
 	Changed inline documentation to use moxiedoc style comments.
 	Removed the compat2x plugin people should have upgraded to the 3.x API by now. 3.0 was released more then a year ago.
