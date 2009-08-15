@@ -10,6 +10,7 @@ Version 3.2.6 (2009-xx-xx)
 	Fixed bug where pasting of whitespace was impossible using the new custom paste method.
 	Fixed bug where doctypes with multiple lines would not be parsed correctly by the fullpage plugin. Patch contributed by Colin.
 	Fixed bug where the autoresize plugin would break the fullscreen functionality.
+	Fixed bug where tables would be chopped up running on IE using invalid contents and pasting paragraphs into a cell.
 	Fixed so all editor options gets passed to the Serializer class. Patch contributed by Jasper Mattsson.
 	Fixed so script/style blocks isn't wrapped in paragraphs as other inline elements.
 	Fixed so the XHR requests sends the X-Requested-With HTTP header.

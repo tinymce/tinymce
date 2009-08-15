@@ -442,9 +442,10 @@
 			// Insert a marker for the caret position
 			this._insert('<span id="_marker">&nbsp;</span>', 1);
 			marker = dom.get('_marker');
-			parentBlock = dom.getParent(marker, 'p,h1,h2,h3,h4,h5,h6,ul,ol');
+			parentBlock = dom.getParent(marker, 'p,h1,h2,h3,h4,h5,h6,ul,ol,th,td');
 
-			if (parentBlock) {
+			// If it's a parent block but not a table cell
+			if (parentBlock && !/TD|TH/.test(parentBlock.nodeName)) {
 				// Split parent block
 				marker = dom.split(parentBlock, marker);
 
