@@ -120,20 +120,13 @@
 
 					// Wait a while and grab the pasted contents
 					window.setTimeout(function() {
-						var n = dom.get('_mcePaste'), h;
+						var h = '';
 
-						// Webkit clones the _mcePaste div for some odd reason so this will ensure that we get the real new div not the old empty one
-						n.id = '_mceRemoved';
-						dom.remove(n);
-						n = dom.get('_mcePaste') || n;
-
-						// Grab the HTML contents
-						// We need to look for a apple style wrapper on webkit it also adds a div wrapper if you copy/paste the body of the editor
-						// It's amazing how strange the contentEditable mode works in WebKit
-						h = (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
-
-						// Remove hidden div and restore selection
-						dom.remove(n);
+						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
+						each(dom.select('div[id=_mcePaste]'), function(n) {
+							h += (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
+							dom.remove(n);
+						});
 
 						// Restore the old selection
 						if (or)

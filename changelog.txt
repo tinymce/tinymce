@@ -8,6 +8,7 @@ Version 3.2.6 (2009-xx-xx)
 	Fixed bug where absolute URLs for the TinyMCE script using a base href element would cause loading problems in IE 6/7.
 	Fixed bug where pasting using the paste plugin wasn't possible on IE with to restrictive security settings.
 	Fixed bug where pasting of whitespace was impossible using the new custom paste method.
+	Fixed bug where pasting on some WebKit browsers would not work if you pasted specific contents due to a WebKit bug.
 	Fixed bug where doctypes with multiple lines would not be parsed correctly by the fullpage plugin. Patch contributed by Colin.
 	Fixed bug where the autoresize plugin would break the fullscreen functionality.
 	Fixed bug where tables would be chopped up running on IE using invalid contents and pasting paragraphs into a cell.
