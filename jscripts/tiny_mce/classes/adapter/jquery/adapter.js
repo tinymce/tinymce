@@ -20,7 +20,9 @@
 	tinymce.extend(tinymce, {
 		map : $.map,
 		grep : function(a, f) {return $.grep(a, f || function(){return 1;});},
-		inArray : function(a, v) {return $.inArray(v, a || []);},
+		inArray : function(a, v) {return $.inArray(v, a || []);}
+
+		/* Didn't iterate stylesheets
 		each : function(o, cb, s) {
 			if (!o)
 				return 0;
@@ -35,7 +37,7 @@
 			});
 
 			return r;
-		}
+		}*/
 	});
 
 	// Patch in functions in various clases

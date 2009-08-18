@@ -97,7 +97,6 @@ var tinymce = {
 		return n == t;
 	},
 
-
 	each : function(o, cb, s) {
 		var n, l;
 
@@ -124,6 +123,7 @@ var tinymce = {
 
 		return 1;
 	},
+
 
 	map : function(a, f) {
 		var o = [];

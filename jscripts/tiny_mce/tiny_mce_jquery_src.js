@@ -97,6 +97,33 @@ var tinymce = {
 		return n == t;
 	},
 
+	each : function(o, cb, s) {
+		var n, l;
+
+		if (!o)
+			return 0;
+
+		s = s || o;
+
+		if (typeof(o.length) != 'undefined') {
+			// Indexed arrays, needed for Safari
+			for (n=0, l = o.length; n<l; n++) {
+				if (cb.call(s, o[n], n, o) === false)
+					return 0;
+			}
+		} else {
+			// Hashtables
+			for (n in o) {
+				if (o.hasOwnProperty(n)) {
+					if (cb.call(s, o[n], n, o) === false)
+						return 0;
+				}
+			}
+		}
+
+		return 1;
+	},
+
 
 	trim : function(s) {
 		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
@@ -366,7 +393,9 @@ tinymce._init();
 	tinymce.extend(tinymce, {
 		map : $.map,
 		grep : function(a, f) {return $.grep(a, f || function(){return 1;});},
-		inArray : function(a, v) {return $.inArray(v, a || []);},
+		inArray : function(a, v) {return $.inArray(v, a || []);}
+
+		/* Didn't iterate stylesheets
 		each : function(o, cb, s) {
 			if (!o)
 				return 0;
@@ -381,7 +410,7 @@ tinymce._init();
 			});
 
 			return r;
-		}
+		}*/
 	});
 
 	// Patch in functions in various clases
