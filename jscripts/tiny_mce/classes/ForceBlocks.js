@@ -577,7 +577,42 @@
 		},
 
 		backspaceDelete : function(e, bs) {
-			var t = this, ed = t.editor, b = ed.getBody(), n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn;
+			var t = this, ed = t.editor, b = ed.getBody(), dom = ed.dom, n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn, par, rng, nextBlock;
+
+			// Delete key will not merge paragraphs on Gecko so we need to do this manually
+			// Hitting the delete key at the following caret position doesn't merge the elements <p>A|</p><p>B</p>
+			// This logic will merge them into this: <p>A|B</p>
+			if (e.keyCode == 46) {
+				if (r.collapsed) {
+					par = dom.getParent(sc, 'p,h1,h2,h3,h4,h5,h6,div');
+
+					if (par) {
+						rng = dom.createRng();
+
+						rng.setStart(sc, r.startOffset);
+						rng.setEndAfter(par);
+
+						// Get number of characters to the right of the cursor if it's zero then we are at the end and need to merge the next block element
+						if (dom.getOuterHTML(rng.cloneContents()).replace(/<[^>]+>/g, '').length == 0) {
+							nextBlock = dom.getNext(par, 'p,h1,h2,h3,h4,h5,h6,div');
+
+							// Copy all children from next sibling block and remove it
+							if (nextBlock) {
+								each(nextBlock.childNodes, function(node) {
+									par.appendChild(node.cloneNode(true));
+								});
+
+								dom.remove(nextBlock);
+							}
+
+							// Block the default even since the Gecko team might eventually fix this
+							// We will remove this logic once they do we can't feature detect this one
+							e.preventDefault();
+							return;
+						}
+					}
+				}
+			}
 
 			// The caret sometimes gets stuck in Gecko if you delete empty paragraphs
 			// This workaround removes the element by hand and moves the caret to the previous element

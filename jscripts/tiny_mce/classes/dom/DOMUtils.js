@@ -244,6 +244,28 @@
 			return e;
 		},
 
+		/**
+		 * Returns the next node that matches selector or function
+		 *
+		 * @param {Node} node Node to find siblings from.
+		 * @param {String/function} selector Selector CSS expression or function.
+		 * @return {Node} Next node item matching the selector or null if it wasn't found.
+		 */
+		getNext : function(node, selector) {
+			return this._findSib(node, selector, 'nextSibling');
+		},
+
+		/**
+		 * Returns the previous node that matches selector or function
+		 *
+		 * @param {Node} node Node to find siblings from.
+		 * @param {String/function} selector Selector CSS expression or function.
+		 * @return {Node} Previous node item matching the selector or null if it wasn't found.
+		 */
+		getPrev : function(node, selector) {
+			return this._findSib(node, selector, 'previousSibling');
+		},
+
 		// #ifndef jquery
 
 		/**
@@ -1841,6 +1863,27 @@
 		},
 
 		// #endif
+
+		_findSib : function(node, selector, name) {
+			var t = this, f = selector;
+
+			if (node) {
+				// If expression make a function of it using is
+				if (is(f, 'string')) {
+					f = function(node) {
+						return t.is(node, selector);
+					};
+				}
+
+				// Loop all siblings
+				for (node = node[name]; node; node = node[name]) {
+					if (f(node))
+						return node;
+				}
+			}
+
+			return null;
+		},
 
 		_isRes : function(c) {
 			// Is live resizble element

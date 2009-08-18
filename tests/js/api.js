@@ -827,6 +827,40 @@ $(window).load(function() {
 			DOM.remove('test');
 		});
 
+		test('tinymce.dom.DOMUtils - getNext', function() {
+			var r;
+
+			expect(5);
+
+			DOM.add(document.body, 'div', {id : 'test'});
+
+			DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
+			equals(DOM.getNext(DOM.get('test').firstChild, '*').nodeName, 'SPAN');
+			equals(DOM.getNext(DOM.get('test').firstChild, 'em').nodeName, 'EM');
+			equals(DOM.getNext(DOM.get('test').firstChild, 'div'), null);
+			equals(DOM.getNext(null, 'div'), null);
+			equals(DOM.getNext(DOM.get('test').firstChild, function(n) {return n.nodeName == 'EM'}).nodeName, 'EM');
+
+			DOM.remove('test');
+		});
+
+		test('tinymce.dom.DOMUtils - getPrev', function() {
+			var r;
+
+			expect(5);
+
+			DOM.add(document.body, 'div', {id : 'test'});
+
+			DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
+			equals(DOM.getPrev(DOM.get('test').lastChild, '*').nodeName, 'SPAN');
+			equals(DOM.getPrev(DOM.get('test').lastChild, 'strong').nodeName, 'STRONG');
+			equals(DOM.getPrev(DOM.get('test').lastChild, 'div'), null);
+			equals(DOM.getPrev(null, 'div'), null);
+			equals(DOM.getPrev(DOM.get('test').lastChild, function(n) {return n.nodeName == 'STRONG'}).nodeName, 'STRONG');
+
+			DOM.remove('test');
+		});
+
 		test('tinymce.dom.DOMUtils - loadCSS', function() {
 			var c = 0;
 
