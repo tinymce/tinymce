@@ -678,7 +678,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 			s = t.settings = s || {};
 
 			// Strange app protocol or local anchor
-			if (/^(mailto|tel|news|javascript|about):/i.test(u) || /^\s*#/.test(u)) {
+			if (/^(mailto|tel|news|javascript|about|data):/i.test(u) || /^\s*#/.test(u)) {
 				t.source = u;
 				return;
 			}
