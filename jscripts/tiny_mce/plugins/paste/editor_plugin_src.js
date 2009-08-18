@@ -123,7 +123,7 @@
 						var h = '';
 
 						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
-						each(dom.select('div[id=_mcePaste]'), function(n) {
+						each(dom.select('div[id=_mcePaste]').reverse(), function(n) {
 							h += (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
 							dom.remove(n);
 						});
