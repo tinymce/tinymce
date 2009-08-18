@@ -12146,7 +12146,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		},
 
 		backspaceDelete : function(e, bs) {
-			var t = this, ed = t.editor, b = ed.getBody(), dom = ed.dom, n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn, par, rng, nextBlock;
+			var t = this, ed = t.editor, b = ed.getBody(), dom = ed.dom, n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn;
+
+			/*
+			var par, rng, nextBlock;
 
 			// Delete key will not merge paragraphs on Gecko so we need to do this manually
 			// Hitting the delete key at the following caret position doesn't merge the elements <p>A|</p><p>B</p>
@@ -12182,6 +12185,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					}
 				}
 			}
+			*/
 
 			// The caret sometimes gets stuck in Gecko if you delete empty paragraphs
 			// This workaround removes the element by hand and moves the caret to the previous element
