@@ -1,4 +1,4 @@
-Version 3.2.6 (2009-xx-xx)
+Version 3.2.6 (2009-08-19)
 	Added new wordcount plugin, this will display the number of typed words as you write. Contributed by Andrew Ozz.
 	Added new getNext and getPrev methods to DOM utils. These will return the first matching sibling.
 	Fixed bug where it was impossible to place the caret after a table on Gecko. It will now add a paragraph after tables.

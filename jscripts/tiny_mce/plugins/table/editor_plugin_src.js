@@ -57,7 +57,7 @@
 			ed.onInit.add(function() {
 				// Fixes an issue on Gecko where it's impossible to place the caret behind a table
 				// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled
-				if (tinymce.isGecko && ed.getParam('forced_root_block')) {
+				if (!tinymce.isIE && ed.getParam('forced_root_block')) {
 					function fixTableCaretPos() {
 						var last = ed.getBody().lastChild;
 
