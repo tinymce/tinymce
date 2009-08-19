@@ -10785,6 +10785,17 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 	each = tinymce.each;
 	extend = tinymce.extend;
 
+	// Checks if the selection/caret is at the end of the specified block element
+	function isAtEnd(rng, par) {
+		var rng2 = par.ownerDocument.createRange();
+
+		rng2.setStart(rng.endContainer, rng.endOffset);
+		rng2.setEndAfter(par);
+
+		// Get number of characters to the right of the cursor if it's zero then we are at the end and need to merge the next block element
+		return rng2.cloneContents().textContent.length == 0;
+	};
+
 	function isEmpty(n) {
 		n = n.innerHTML;
 
@@ -11198,7 +11209,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			aft.removeAttribute('id');
 
 			// Is header and cursor is at the end, then force paragraph under
-			if (/^(H[1-6])$/.test(bn) && sn.nodeValue && so == sn.nodeValue.length)
+			if (/^(H[1-6])$/.test(bn) && isAtEnd(r, sb))
 				aft = ed.dom.create(se.element);
 
 			// Find start chop node

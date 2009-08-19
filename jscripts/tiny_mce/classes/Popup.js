@@ -60,7 +60,8 @@ tinyMCEPopup = {
 	 * @return {Window} Reference to the parent window that opened the dialog.
 	 */
 	getWin : function() {
-		return window.dialogArguments || opener || parent || top;
+		// Added frameElement check to fix bug: #2817583
+		return (!window.frameElement && window.dialogArguments) || opener || parent || top;
 	},
 
 	/**

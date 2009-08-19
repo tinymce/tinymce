@@ -1,6 +1,8 @@
 Version 3.2.6 (2009-xx-xx)
 	Added new wordcount plugin, this will display the number of typed words as you write. Contributed by Andrew Ozz.
 	Added new getNext and getPrev methods to DOM utils. These will return the first matching sibling.
+	Fixed bug where it was impossible to place the caret after a table on Gecko. It will now add a paragraph after tables.
+	Fixed bug where inline dialogs would fail if used in a window opened using a showModalDialog. Patch contributed by Derek Britt.
 	Fixed bug where IE could sometimes render a unknown runtime error on invalid input HTML.
 	Fixed bug where some incorrectly placed tables wouldn't be moved outside the paragraphs on IE.
 	Fixed bug where uppercase script/style element wouldn't be handled correctly and converted to valid lowercase.
@@ -14,6 +16,7 @@ Version 3.2.6 (2009-xx-xx)
 	Fixed bug where the autoresize plugin would break the fullscreen functionality.
 	Fixed bug where tables would be chopped up running on IE using invalid contents and pasting paragraphs into a cell.
 	Fixed bug where the each method of jQuery build didn't iterate styleSheets. We now use the TinyMCE API one instead.
+	Fixed bug where auto switching to paragraphs after headers some times failed in Gecko.	
 	Fixed so all editor options gets passed to the Serializer class. Patch contributed by Jasper Mattsson.
 	Fixed so script/style blocks isn't wrapped in paragraphs as other inline elements.
 	Fixed so the XHR requests sends the X-Requested-With HTTP header.
