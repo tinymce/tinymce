@@ -8,6 +8,24 @@
 (function() {
 	var each = tinymce.each;
 
+	// Checks if the selection/caret is at the start of the specified block element
+	function isAtStart(rng, par) {
+		var doc = par.ownerDocument, rng2 = doc.createRange(), elm, html;
+
+		rng2.setStartBefore(par);
+		rng2.setEnd(rng.endContainer, rng.endOffset);
+
+		elm = doc.createElement('body');
+		elm.appendChild(rng2.cloneContents());
+
+		// Keep some elements and remove all other
+		html = elm.innerHTML.replace(/<br|img[^>]*>/gi, '-');
+		html = html.replace(/<[^>]+>/g, '');
+
+		// IF the length is zero characters then there is nothing there
+		return html.length == 0;
+	};
+
 	tinymce.create('tinymce.plugins.TablePlugin', {
 		init : function(ed, url) {
 			var t = this;
@@ -64,6 +82,34 @@
 						if (last && last.nodeName == 'TABLE')
 							ed.dom.add(ed.getBody(), 'p', null, '<br mce_bogus="1" />');
 					};
+
+					// Fixes an bug where it's impossible to place the caret before a table in Gecko
+					// this fix solves it by detecting when the caret is at the beginning of such a table
+					// and then manually moves the caret infront of the table
+					if (tinymce.isGecko) {
+						ed.onKeyDown.add(function(ed, e) {
+							var rng, table, dom = ed.dom;
+
+							// On gecko it's not possible to place the caret before a table
+							if (e.keyCode == 37 || e.keyCode == 38) {
+								rng = ed.selection.getRng();
+								table = dom.getParent(rng.startContainer, 'table');
+
+								if (table && ed.getBody().firstChild == table) {
+									if (isAtStart(rng, table)) {
+										rng = dom.createRng();
+
+										rng.setStartBefore(table);
+										rng.setEndBefore(table);
+
+										ed.selection.setRng(rng);
+
+										e.preventDefault();
+									}
+								}
+							}
+						});
+					}
 
 					ed.onKeyUp.add(fixTableCaretPos);
 					ed.onSetContent.add(fixTableCaretPos);

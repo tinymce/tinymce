@@ -1,3 +1,5 @@
+Version 3.2.x (2009-xx-xx)
+	Fixed bug where it was impossible in Gecko to place the caret before a table if it was the first one.
 Version 3.2.6 (2009-08-19)
 	Added new wordcount plugin, this will display the number of typed words as you write. Contributed by Andrew Ozz.
 	Added new getNext and getPrev methods to DOM utils. These will return the first matching sibling.
