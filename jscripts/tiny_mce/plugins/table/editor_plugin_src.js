@@ -10,7 +10,7 @@
 
 	// Checks if the selection/caret is at the start of the specified block element
 	function isAtStart(rng, par) {
-		var doc = par.ownerDocument, rng2 = doc.createRange(), elm, html;
+		var doc = par.ownerDocument, rng2 = doc.createRange(), elm;
 
 		rng2.setStartBefore(par);
 		rng2.setEnd(rng.endContainer, rng.endOffset);
@@ -18,12 +18,8 @@
 		elm = doc.createElement('body');
 		elm.appendChild(rng2.cloneContents());
 
-		// Keep some elements and remove all other
-		html = elm.innerHTML.replace(/<br|img[^>]*>/gi, '-');
-		html = html.replace(/<[^>]+>/g, '');
-
-		// IF the length is zero characters then there is nothing there
-		return html.length == 0;
+		// Check for text characters of other elements that should be treated as content
+		return elm.innerHTML.replace(/<(br|img|object|embed|input|textarea)[^>]*>/gi, '-').replace(/<[^>]+>/g, '').length == 0;
 	};
 
 	tinymce.create('tinymce.plugins.TablePlugin', {
