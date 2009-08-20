@@ -139,11 +139,11 @@
 
 						if (parent.nodeName != 'TABLE') {
 							// IE has a odd bug where tables inside paragraphs sometimes gets wrapped in a BODY and documentFragement element
-							// This hack seems to resolve that issue. This will normally not happed since your contents should be valid in the first place
-							if (isIE)
-								t.dom.setOuterHTML(n, n.outerHTML);
-
-							t.dom.split(parent, n);
+							try {
+								t.dom.split(parent, n);
+							} catch (ex) {
+								// So we just ignore it!! :(
+							}
 						}
 					});
 				});
