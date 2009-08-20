@@ -140,7 +140,7 @@
 		toAbsolute : function(u, nh) {
 			var u = new tinymce.util.URI(u, {base_uri : this});
 
-			return u.getURI(this.host == u.host ? nh : 0);
+			return u.getURI(this.host == u.host && this.protocol == u.protocol ? nh : 0);
 		},
 
 		/**
