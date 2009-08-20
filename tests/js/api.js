@@ -1387,7 +1387,7 @@ $(window).load(function() {
 		});
 
 		test('tinymce.util.URI - relativeURLs', function() {
-			expect(24);
+			expect(26);
 
 			equals(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html'), '../dir3/file.html');
 			equals(new URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'), '../../dir3/dir4/file.html');
@@ -1413,6 +1413,8 @@ $(window).load(function() {
 			equals(new URI('http://www.site.com/dir1/dir2/').toRelative('../@@tinymce'), '../@@tinymce'); // Zope 3 URL
 			equals(new URI('http://www.site.com/').toRelative('dir2/test.htm'), 'dir2/test.htm');
 			equals(new URI('http://www.site.com/').toRelative('./'), './');
+			equals(new URI('http://www.site.com/test/').toRelative('../'), '../');
+			equals(new URI('http://www.site.com/test/test/').toRelative('../'), '../');
 		});
 
 		test('tinymce.util.URI - absoluteURLs', function() {
