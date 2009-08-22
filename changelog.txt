@@ -1,6 +1,7 @@
 Version 3.2.x (2009-xx-xx)
 	Fixed bug where it was impossible in Gecko to place the caret before a table if it was the first one.
 	Fixed bug where linking to urls like ../../ would produce an extra traling slash ../..//.
+	Fixed bug where the template cdate functionality was using an old 2.x API call. Patch contributed by vectorjohn.
 	Fixed bug where urls to the same site but different protocol would be converted when relative_urls where set to false. Patch contributed by Ted Rust.
 Version 3.2.6 (2009-08-19)
 	Added new wordcount plugin, this will display the number of typed words as you write. Contributed by Andrew Ozz.
