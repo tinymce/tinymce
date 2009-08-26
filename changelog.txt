@@ -1,4 +1,6 @@
-Version 3.2.x (2009-xx-xx)
+Version 3.2.6.1 (2009-xx-xx)
+	Fixed bug where uppercase paragraphs could still produce an invalid DOM tree on IE.
+	Fixed bug where split command didn't work on WebKit since the node serializer needs a real document to work with.
 	Fixed bug where it was impossible in Gecko to place the caret before a table if it was the first one.
 	Fixed bug where linking to urls like ../../ would produce an extra traling slash ../..//.
 	Fixed bug where the template cdate functionality was using an old 2.x API call. Patch contributed by vectorjohn.

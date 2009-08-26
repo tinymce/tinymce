@@ -137,14 +137,8 @@
 					each(t.dom.select('p table', o.node).reverse(), function(n) {
 						var parent = t.dom.getParent(n.parentNode, 'table,p');
 
-						if (parent.nodeName != 'TABLE') {
-							// IE has a odd bug where tables inside paragraphs sometimes gets wrapped in a BODY and documentFragement element
-							try {
-								t.dom.split(parent, n);
-							} catch (ex) {
-								// So we just ignore it!! :(
-							}
-						}
+						if (parent.nodeName != 'TABLE')
+							t.dom.split(parent, n);
 					});
 				});
 			}
@@ -520,20 +514,59 @@
 		 * @return {String} Serialized HTML contents.
 		 */
 		serialize : function(n, o) {
-			var h, t = this, doc;
+			var h, t = this, doc, oldDoc, impl;
 
 			t._setup();
 			o = o || {};
 			o.format = o.format || 'html';
-			n = n.cloneNode(true);
-			t.processObj = o;
 
-			// Nodes needs to be attached to something in WebKit due to a bug https://bugs.webkit.org/show_bug.cgi?id=25571
-			if (tinymce.isWebKit) {
-				doc = n.ownerDocument.implementation.createHTMLDocument("");
-				doc.body.appendChild(doc.importNode(n));
+			// Create new HTML document
+			doc = n.ownerDocument;
+			impl = doc.implementation;
+
+			// Creates an empty HTML document
+			if (impl.createHTMLDocument) {
+				// Works on WebKit and Opera
+				doc = impl.createHTMLDocument("");
+			} else if (impl.createDocument) {
+				// Works on Gecko
+				doc = impl.createDocument(null, null, impl.createDocumentType("html", "-//W3C//DTD HTML 4.01//EN", null));
+				doc.appendChild(doc.createElement("html")).appendChild(doc.createElement("body"));
+			} else {
+				// Works on IE
+				doc = doc.cloneNode(false);
+				doc.appendChild(doc.createElement("html")).appendChild(doc.createElement("body"));
 			}
 
+			// Add the element or it's children if it's a body element to the new document
+			each(n.nodeName == 'BODY' ? n.childNodes : [n], function(node) {
+				// Import the node if the browser supports that
+				if (doc.importNode)
+					node = doc.importNode(node, true);
+				else
+					node = n.cloneNode(true);
+
+				doc.body.appendChild(node);
+			});
+
+			// WebKit has a stange bug where namespaced elements looses their namespace
+			// So elements like myns:mytag becomes mytag
+			if (tinymce.isWebKit)
+				doc.body.innerHTML = doc.body.innerHTML;
+
+			// Grab first child or body element for serialization
+			if (n.nodeName != 'BODY')
+				n = doc.body.firstChild;
+			else
+				n = doc.body;
+
+			// Change the document on the dom object so that select/getElementsByTagName calls
+			// etc will be done on the new document this will later be restored
+			oldDoc = t.dom.doc;
+			t.dom.doc = doc;
+			o.dom = t.dom; // It would be preferred if ppl use this instead of editor.dom
+
+			t.processObj = o;
 			t.key = '' + (parseInt(t.key) + 1);
 
 			// Pre process
@@ -548,6 +581,8 @@
 
 			// Post process
 			o.content = t.writer.getContent();
+
+			t.dom.doc = oldDoc;
 
 			if (!o.no_events)
 				t.onPostProcess.dispatch(t, o);
