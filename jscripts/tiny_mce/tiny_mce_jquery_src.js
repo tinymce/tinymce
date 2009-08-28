@@ -5311,7 +5311,7 @@ tinymce.create('static tinymce.util.XHR', {
 				if (doc.importNode)
 					node = doc.importNode(node, true);
 				else
-					node = n.cloneNode(true);
+					node = node.cloneNode(true);
 
 				doc.body.appendChild(node);
 			});
