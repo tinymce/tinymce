@@ -402,6 +402,8 @@
 
 			// Handle explorer
 			if (isIE) {
+				t.tridentSel.destroy();
+
 				// Handle simple
 				if (r = b.rng) {
 					try {

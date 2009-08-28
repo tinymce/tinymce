@@ -215,6 +215,7 @@
 				if (sc == ec && sc.nodeType == 3) {
 					startPos = getCharPos(sc, so);
 
+					ieRng = body.createTextRange();
 					ieRng.move('character', startPos);
 					ieRng.moveEnd('character', eo - so);
 					ieRng.select();
