@@ -514,6 +514,65 @@
 		 * @return {String} Serialized HTML contents.
 		 */
 		serialize : function(n, o) {
+			var h, t = this, doc, oldDoc;
+
+			t._setup();
+			o = o || {};
+			o.format = o.format || 'html';
+			n = n.cloneNode(true);
+			t.processObj = o;
+
+			// Nodes needs to be attached to something in WebKit due to a bug https://bugs.webkit.org/show_bug.cgi?id=25571
+			// This fix will make DOM ranges and Sizzle happy!
+			if (tinymce.isWebKit) {
+				// Create an empty HTML document
+				doc = n.ownerDocument.implementation.createHTMLDocument("");
+
+				// Add the element or it's children if it's a body element to the new document
+				each(n.nodeName == 'BODY' ? n.childNodes : [n], function(node) {
+					doc.body.appendChild(doc.importNode(node, true));
+				});
+
+				// Grab first child or body element for serialization
+				if (n.nodeName != 'BODY')
+					n = doc.body.firstChild;
+				else
+					n = doc.body;
+
+				// set the new document in DOMUtils so createElement etc works
+				oldDoc = t.dom.doc;
+				t.dom.doc = doc;
+			}
+
+			t.key = '' + (parseInt(t.key) + 1);
+
+			// Pre process
+			if (!o.no_events) {
+				o.node = n;
+				t.onPreProcess.dispatch(t, o);
+			}
+
+			// Serialize HTML DOM into a string
+			t.writer.reset();
+			t._serializeNode(n, o.getInner);
+
+			// Post process
+			o.content = t.writer.getContent();
+
+			// Restore the old document if it was changed
+			if (oldDoc)
+				t.dom.doc = oldDoc;
+
+			if (!o.no_events)
+				t.onPostProcess.dispatch(t, o);
+
+			t._postProcess(o);
+			o.node = null;
+
+			return tinymce.trim(o.content);
+		},
+
+		serialize : function(n, o) {
 			var h, t = this, doc, oldDoc, impl;
 
 			t._setup();
