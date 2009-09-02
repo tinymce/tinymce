@@ -6105,6 +6105,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 				// Works on Gecko
 				doc = impl.createDocument(null, null, impl.createDocumentType("html", "-//W3C//DTD HTML 4.01//EN", null));
 				doc.appendChild(doc.createElement("html")).appendChild(doc.createElement("body"));
+
+				// Older geckos forgets to add the doc.body property so lets inject it for compatibility
+				if (!doc.body)
+					doc.body = doc.getElementsByTagName("body")[0];
 			} else {
 				// Works on IE
 				doc = doc.cloneNode(false);
