@@ -5,14 +5,14 @@
 <script type="text/javascript">
 	google.load("jquery", "1.3");
 </script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
 <script type="text/javascript" src="js/testrunner.js"></script>
 <link rel="stylesheet" href="css/unit.css" type="text/css" />
 <script>
 var editor;
 
 test("Flash object elements - strict output", function() {
-	expect(12);
+	expect(13);
 
 	editor.settings.media_strict = 1;
 	editor.settings.relative_urls = 1;
@@ -54,6 +54,9 @@ test("Flash object elements - strict output", function() {
 
 	editor.setContent('<object width="320" height="240" style="width: 320px; height: 240px;"><embed src="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash" width="320" height="240"></embed></object>');
 	equals(editor.getContent(), '<p><object style="width: 320px; height: 240px;" width="320" height="240" data="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash"><param name="src" value="/tinymce/tinymce/trunk/tests/someurl" /></object></p>');
+
+	editor.setContent('<object data="/tinymce/tinymce/trunk/tests/someurl" width="320" height="240" type="application/x-shockwave-flash"></object>');
+	equals(editor.getContent(), '<p><object width="320" height="240" data="/tinymce/tinymce/trunk/tests/someurl" type="application/x-shockwave-flash"><param name="src" value="/tinymce/tinymce/trunk/tests/someurl" /></object></p>');
 });
 
 test("Flash object elements - compatible output", function() {
