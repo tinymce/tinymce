@@ -520,6 +520,13 @@ test('editor_methods - getParam', function() {
 	equals(editor.getParam('test', '', 'hash')['c'], 'd');
 });
 
+test('WebKit Serialization range bug', function() {
+	expect(1);
+
+	editor.getBody().innerHTML = '<p>123<table><tbody><tr><td>X</td></tr></tbody></table>456</p>';
+	equals(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>');
+});
+
 tinyMCE.init({
 	mode : "textareas",
 	theme : "advanced",
