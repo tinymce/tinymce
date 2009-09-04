@@ -71,7 +71,7 @@
 					return;
 
 				// Create container to paste into
-				n = dom.add(body, 'div', {id : '_mcePaste'}, '&nbsp;');
+				n = dom.add(body, 'div', {id : '_mcePaste'}, '\uFEFF');
 
 				// If contentEditable mode we need to find out the position of the closest element
 				if (body != ed.getDoc().body)
@@ -100,8 +100,11 @@
 
 					// Check if the contents was changed, if it wasn't then clipboard extraction failed probably due
 					// to IE security settings so we pass the junk though better than nothing right
-					if (n.innerHTML === '&nbsp;')
+					if (n.innerHTML === '\uFEFF') {
+						ed.execCommand('mcePasteWord');
+						e.preventDefault();
 						return;
+					}
 
 					// Process contents
 					process({content : n.innerHTML});
@@ -120,11 +123,15 @@
 
 					// Wait a while and grab the pasted contents
 					window.setTimeout(function() {
-						var h = '';
+						var h = '', nl = dom.select('div[id=_mcePaste]');
 
 						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
-						each(dom.select('div[id=_mcePaste]').reverse(), function(n) {
+						each(nl, function(n) {
 							h += (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
+						});
+
+						// Remove the nodes
+						each(nl, function(n) {
 							dom.remove(n);
 						});
 

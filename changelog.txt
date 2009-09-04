@@ -6,6 +6,8 @@ Version 3.2.6.1 (2009-xx-xx)
 	Fixed bug where the template cdate functionality was using an old 2.x API call. Patch contributed by vectorjohn.
 	Fixed bug where urls to the same site but different protocol would be converted when relative_urls where set to false. Patch contributed by Ted Rust.
 	Fixed bug where the paste plugin would remove mceItem prefixed classes.
+	Fixed bug where the paste plugin would sometimes add items in a reverse order on WebKit.
+	Fixed so the paste from word dialog is presented if you paste content on an IE with to restrictive security settings.
 	Fixed so the paste_strip_class_attributes option is set to none by default in the paste plugin.
 	Removed default border=0 on tables for the default value of valid_elements.
 Version 3.2.6 (2009-08-19)
