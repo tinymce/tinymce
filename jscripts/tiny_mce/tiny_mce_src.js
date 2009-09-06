@@ -13107,7 +13107,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				doc.execCommand(cmd, false, null);
 
 				// On WebKit the command will just be ignored if it's not enabled
-				if (!doc.queryCommandSupported(cmd))
+				if (!doc.queryCommandEnabled(cmd))
 					throw 'Error';
 			} catch (ex) {
 				if (tinymce.isGecko) {
