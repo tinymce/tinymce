@@ -1203,7 +1203,7 @@
 				t.addVisual(t.getBody());
 			});
 
-			t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
+			//t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 			t.startContent = t.getContent({format : 'raw'});
 			t.undoManager.add({initial : true});
 			t.initialized = true;

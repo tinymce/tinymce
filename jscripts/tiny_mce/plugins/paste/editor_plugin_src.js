@@ -242,33 +242,31 @@
 
 			// Allow for class names to be retained if desired; either all, or just the ones from Word
 			// Note that the paste_strip_class_attributes: 'none, verify_css_classes: true is also a good variation.
-			stripClass = ed.getParam('paste_strip_class_attributes', 'none');
+			stripClass = ed.getParam('paste_strip_class_attributes');
 			if (stripClass != 'none') {
 				// Cleans everything but mceItem... classes
 				function cleanClasses(str, cls) {
 					var i, out = '';
 
+					// Remove all classes
+					if (stripClass == 'all')
+						return '';
+
 					cls = tinymce.explode(cls, ' ');
 
 					for (i = cls.length - 1; i >= 0; i--) {
-						if (cls[i].indexOf('mceItem') != -1)
+						// Remove Mso classes
+						if (!/^(Mso)/i.test(cls[i]))
 							out += (!out ? '' : ' ') + cls[i];
 					}
 
 					return ' class="' + out + '"';
 				};
 
-				if (stripClass == 'all') {
-					process([
-						[/ class=\"([^\"]*)\"/gi, cleanClasses],	// class attributes with quotes
-						[/ class=(\w+)/gi, cleanClasses]			// class attributes without quotes (IE)
-					]);
-				} else { // Only strip the 'mso*' classes
-					process([
-						[/ class=\"(mso[^\"]*)\"/gi, cleanClasses],	// class attributes with quotes
-						[/ class=(mso\w+)/gi, cleanClasses]			// class attributes without quotes (IE)
-					]);
-				}
+				process([
+					[/ class=\"([^\"]*)\"/gi, cleanClasses],	// class attributes with quotes
+					[/ class=(\w+)/gi, cleanClasses]			// class attributes without quotes (IE)
+				]);
 			}
 
 			// Remove spans option
