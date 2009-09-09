@@ -4963,12 +4963,16 @@ tinymce.create('static tinymce.util.XHR', {
 
 			if (s.fix_table_elements) {
 				t.onPreProcess.add(function(se, o) {
-					each(t.dom.select('p table', o.node).reverse(), function(n) {
-						var parent = t.dom.getParent(n.parentNode, 'table,p');
+					// Since Opera will crash if you attach the node to a dynamic document we need to brrowser sniff a specific build
+					// so Opera users with an older version will have to live with less compaible output not much we can do here
+					if (!tinymce.isOpera || opera.buildNumber() >= 1767) {
+						each(t.dom.select('p table', o.node).reverse(), function(n) {
+							var parent = t.dom.getParent(n.parentNode, 'table,p');
 
-						if (parent.nodeName != 'TABLE')
-							t.dom.split(parent, n);
-					});
+							if (parent.nodeName != 'TABLE')
+								t.dom.split(parent, n);
+						});
+					}
 				});
 			}
 		},
@@ -5284,7 +5288,7 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		serialize : function(n, o) {
-			var h, t = this, doc, oldDoc;
+			var h, t = this, doc, oldDoc, impl;
 
 			t._setup();
 			o = o || {};
@@ -5292,11 +5296,14 @@ tinymce.create('static tinymce.util.XHR', {
 			n = n.cloneNode(true);
 			t.processObj = o;
 
-			// Nodes needs to be attached to something in WebKit due to a bug https://bugs.webkit.org/show_bug.cgi?id=25571
-			// This fix will make DOM ranges and Sizzle happy!
-			if (tinymce.isWebKit) {
+			// Nodes needs to be attached to something in WebKit/Opera
+			// Older builds of Opera crashes if you attach the node to an document created dynamically
+			// and since we can't feature detect a crash we need to sniff the acutal build number
+			// This fix will make DOM ranges and make Sizzle happy!
+			impl = n.ownerDocument.implementation;
+			if (impl.createHTMLDocument && (tinymce.isOpera && opera.buildNumber() >= 1767)) {
 				// Create an empty HTML document
-				doc = n.ownerDocument.implementation.createHTMLDocument("");
+				doc = impl.createHTMLDocument("");
 
 				// Add the element or it's children if it's a body element to the new document
 				each(n.nodeName == 'BODY' ? n.childNodes : [n], function(node) {
