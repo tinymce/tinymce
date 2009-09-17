@@ -1104,7 +1104,7 @@ $(window).load(function() {
 		test('tinymce.DOM.Serializer - serialize', function() {
 			var ser = new tinymce.dom.Serializer({dom : DOM}), h, a, b;
 
-			expect(45);
+			expect(46);
 
 			DOM.add(document.body, 'div', {id : 'test'});
 			DOM.counter = 0;
@@ -1140,6 +1140,10 @@ $(window).load(function() {
 			ser.setRules('*[*]');
 			DOM.setHTML('test', '<span style="border: 1px solid red">test</span>');
 			equals(ser.serialize(DOM.get('test')), '<div id="test"><span style="border: 1px solid red">test</span></div>', null, tinymce.isOldWebKit);
+	
+			ser.setRules('*[*]');
+			DOM.setHTML('test', '<span title="test abc">test</span>');
+			equals(ser.serialize(DOM.get('test')), '<div id="test"><span title="test abc">test</span></div>');
 
 			ser.setRules('*[*]');
 			DOM.setHTML('test', '<div mce_name="mytag" class="test">test</div>');
