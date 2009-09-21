@@ -4,7 +4,7 @@
 <title>Full featured example</title>
 
 <!-- TinyMCE -->
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js?debug=1"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 		// General options
@@ -31,6 +31,7 @@ add_unload_trigger : 0,
 		external_image_list_url : "lists/image_list.js",
 		media_external_list_url : "lists/media_list.js",
 read2only : true,
+valid_elements : '*[*]',
 		// Replace values for the template plugin
 		template_replace_values : {
 			username : "Some User",

@@ -654,6 +654,18 @@
 			if (!v)
 				v = e.getAttribute(n, 2);
 
+			// Check boolean attribs
+			if (/^(checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)$/.test(n)) {
+				if (e[t.props[n]] === true && v === '')
+					return n;
+
+				return v ? n : '';
+			}
+
+			// Inner input elements will override attributes on form elements
+			if (e.nodeName === "FORM" && e.getAttributeNode(n))
+				return e.getAttributeNode(n).nodeValue;
+
 			if (n === 'style') {
 				v = v || e.style.cssText;
 
@@ -1200,7 +1212,7 @@
 		 * @return {String} Processed HTML code.
 		 */
 		processHTML : function(h) {
-			var t = this, s = t.settings;
+			var t = this, s = t.settings, codeBlocks = [];
 
 			if (!s.process_html)
 				return h;
@@ -1246,8 +1258,10 @@
 						});
 
 						// Wrap text contents
-						if (tinymce.trim(text))
-							text = '<!--\n' + trim(text) + '\n// -->';
+						if (tinymce.trim(text)) {
+							codeBlocks.push(trim(text));
+							text = '<!--\nMCE_SCRIPT:' + (codeBlocks.length - 1) + '\n// -->';
+						}
 
 						return '<mce:script' + attribs + '>' + text + '</mce:script>';
 					});
@@ -1255,8 +1269,10 @@
 					// Wrap style elements
 					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/gi, function(v, attribs, text) {
 						// Wrap text contents
-						if (text)
-							text = '<!--\n' + trim(text) + '\n-->';
+						if (text) {
+							codeBlocks.push(trim(text));
+							text = '<!--\nMCE_SCRIPT:' + (codeBlocks.length - 1) + '\n-->';
+						}
 
 						return '<mce:style' + attribs + '>' + text + '</mce:style><style ' + attribs + ' mce_bogus="1">' + text + '</style>';
 					});
@@ -1268,6 +1284,24 @@
 				}
 
 				h = h.replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->');
+
+				// Remove false bool attributes and force attributes into xhtml style attr="attr"
+				h = h.replace(/<([\w:]+) [^>]*(checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)[^>]*>/gi, function(val) {
+					function handle(val, name, value) {
+						// Remove false/0 attribs
+						if (value === 'false' || value === '0')
+							return '';
+
+						return ' ' + name + '="' + name + '"';
+					};
+
+					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)=[\"]([^\"]+)[\"]/gi, handle); // W3C
+					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)=[\']([^\']+)[\']/gi, handle); // W3C
+					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)=([^\s\"\'>]+)/gi, handle); // IE
+					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)([\s>])/gi, ' $1="$1"$2'); // Force attr="attr"
+
+					return val;
+				});
 
 				// Process all tags with src, href or style
 				h = h.replace(/<([\w:]+) [^>]*(src|href|style|shape|coords)[^>]*>/gi, function(a, n) {
@@ -1297,6 +1331,11 @@
 					a = a.replace(/ (src|href|style|coords|shape)=[\']([^\']+)[\']/gi, handle); // W3C
 
 					return a.replace(/ (src|href|style|coords|shape)=([^\s\"\'>]+)/gi, handle); // IE
+				});
+
+				// Restore script blocks
+				h = h.replace(/MCE_SCRIPT:([0-9]+)/g, function(val, idx) {
+					return codeBlocks[idx];
 				});
 			}
 

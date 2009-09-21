@@ -1104,7 +1104,7 @@ $(window).load(function() {
 		test('tinymce.DOM.Serializer - serialize', function() {
 			var ser = new tinymce.dom.Serializer({dom : DOM}), h, a, b;
 
-			expect(46);
+			expect(78);
 
 			DOM.add(document.body, 'div', {id : 'test'});
 			DOM.counter = 0;
@@ -1121,13 +1121,113 @@ $(window).load(function() {
 			DOM.setHTML('test', '<br /><hr /><input type="text" name="test" value="val" class="no" /><span id="test2" class="no"><b class="no">abc</b><em class="no">123</em></span>123<a href="file.html">link</a><a name="anchor"></a><a>no</a><img src="file.gif" />');
 			equals(ser.serialize(DOM.get('test')), '<div id="test"><br /><hr /><input type="text" name="test" value="val" /><span id="test2"><strong>abc</strong><em>123</em></span>123<a href="file.html">link</a><a name="anchor"></a>no<img src="file.gif" border="0" title="mce_0" /></div>');
 
-			ser.setRules('input[type|name|value|checked|disabled|readonly],select,option[selected]');
-			DOM.setHTML('test', '<input type="radio" checked="1" disabled="1" value="1"><input type="radio" checked="0" disabled="0" value="1"><input type="checkbox" checked="false" disabled="false" value="1"><input type="radio" checked="checked" disabled="disabled" value="1"><input type="text" readonly="true"><select><option selected="1">test1</option><option selected="0">test2</option><option selected="false">test3</option></select>');
-			equals(ser.serialize(DOM.get('test')), '<input type="radio" value="1" checked="checked" disabled="disabled" /><input type="radio" value="1" /><input type="checkbox" value="1" /><input type="radio" value="1" checked="checked" disabled="disabled" /><input type="text" readonly="readonly" /><select><option selected="selected">test1</option><option>test2</option><option>test3</option></select>');
+			ser.setRules('input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],option[value|selected],table,tr,td[nowrap],ul[compact]');
+
+			DOM.setHTML('test', '<input type="checkbox" value="1">');
+			equals(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" />');
+
+			DOM.setHTML('test', '<input type="checkbox" value="1" checked disabled readonly>');
+			equals(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" />');
+
+			DOM.setHTML('test', '<input type="checkbox" value="1" checked="1" disabled="1" readonly="1">');
+			equals(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" />');
+
+			DOM.setHTML('test', '<input type="checkbox" value="1" checked="true" disabled="true" readonly="true">');
+			equals(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" />');
+
+			DOM.setHTML('test', '<input type="checkbox" value="1" checked="false" disabled="false" readonly="false">');
+			equals(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" />');
+
+			DOM.setHTML('test', '<input type="checkbox" value="1" checked="0" disabled="0" readonly="0">');
+			equals(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" />');
+
+
+			DOM.setHTML('test', '<select><option value="1">test1</option><option value="2" selected>test2</option></select>');
+			equals(ser.serialize(DOM.get('test')), '<select><option value="1">test1</option><option value="2" selected="selected">test2</option></select>');
+
+			DOM.setHTML('test', '<select><option value="1">test1</option><option selected="1" value="2">test2</option></select>');
+			equals(ser.serialize(DOM.get('test')), '<select><option value="1">test1</option><option value="2" selected="selected">test2</option></select>');
+
+			DOM.setHTML('test', '<select><option value="1">test1</option><option value="2" selected="true">test2</option></select>');
+			equals(ser.serialize(DOM.get('test')), '<select><option value="1">test1</option><option value="2" selected="selected">test2</option></select>');
+
+			DOM.setHTML('test', '<select><option value="1" selected="1">test1</option><option value="2" selected="0">test2</option></select>');
+			equals(ser.serialize(DOM.get('test')), '<select><option value="1" selected="selected">test1</option><option value="2">test2</option></select>');
+
+			DOM.setHTML('test', '<select><option value="1" selected="1">test1</option><option value="2" selected="false">test2</option></select>');
+			equals(ser.serialize(DOM.get('test')), '<select><option value="1" selected="selected">test1</option><option value="2">test2</option></select>');
+
+
+			DOM.setHTML('test', '<select multiple></select>');
+			equals(ser.serialize(DOM.get('test')), '<select multiple="multiple"></select>');
+
+			DOM.setHTML('test', '<select multiple="multiple"></select>');
+			equals(ser.serialize(DOM.get('test')), '<select multiple="multiple"></select>');
+
+			DOM.setHTML('test', '<select multiple="1"></select>');
+			equals(ser.serialize(DOM.get('test')), '<select multiple="multiple"></select>');
+
+			DOM.setHTML('test', '<select multiple="0"></select>');
+			equals(ser.serialize(DOM.get('test')), '<select></select>');
+
+			DOM.setHTML('test', '<select multiple="false"></select>');
+			equals(ser.serialize(DOM.get('test')), '<select></select>');
+
+			DOM.setHTML('test', '<select></select>');
+			equals(ser.serialize(DOM.get('test')), '<select></select>');
+
+
+			DOM.setHTML('test', '<ul compact></ul>');
+			equals(ser.serialize(DOM.get('test')), '<ul compact="compact"></ul>');
+
+			DOM.setHTML('test', '<ul compact="compact"></ul>');
+			equals(ser.serialize(DOM.get('test')), '<ul compact="compact"></ul>');
+
+			DOM.setHTML('test', '<ul compact="1"></ul>');
+			equals(ser.serialize(DOM.get('test')), '<ul compact="compact"></ul>');
+
+			DOM.setHTML('test', '<ul compact="0"></ul>');
+			equals(ser.serialize(DOM.get('test')), '<ul></ul>');
+
+			DOM.setHTML('test', '<ul compact="false"></ul>');
+			equals(ser.serialize(DOM.get('test')), '<ul></ul>');
+
+			DOM.setHTML('test', '<ul></ul>');
+			equals(ser.serialize(DOM.get('test')), '<ul></ul>');
+
+
+
+			DOM.setHTML('test', '<table><tr><td></td></tr></table>');
+			equals(ser.serialize(DOM.get('test')), '<table><tr><td></td></tr></table>');
+
+			DOM.setHTML('test', '<table><tr><td nowrap></td></tr></table>');
+			equals(ser.serialize(DOM.get('test')), '<table><tr><td nowrap="nowrap"></td></tr></table>');
+
+			DOM.setHTML('test', '<table><tr><td nowrap="nowrap"></td></tr></table>');
+			equals(ser.serialize(DOM.get('test')), '<table><tr><td nowrap="nowrap"></td></tr></table>');
+
+			DOM.setHTML('test', '<table><tr><td nowrap="1"></td></tr></table>');
+			equals(ser.serialize(DOM.get('test')), '<table><tr><td nowrap="nowrap"></td></tr></table>');
+
+			DOM.setHTML('test', '<table><tr><td nowrap="false"></td></tr></table>');
+			equals(ser.serialize(DOM.get('test')), '<table><tr><td></td></tr></table>');
+
+			DOM.setHTML('test', '<table><tr><td nowrap="0"></td></tr></table>');
+			equals(ser.serialize(DOM.get('test')), '<table><tr><td></td></tr></table>');
+
+			DOM.setHTML('test', '<input type="text" />');
+			equals(ser.serialize(DOM.get('test')), '<input type="text" />');
+
+			DOM.setHTML('test', '<input type="text" value="text" length="128" maxlength="129" />');
+			equals(ser.serialize(DOM.get('test')), '<input type="text" value="text" length="128" maxlength="129" />');
 
 			ser.setRules('a[href|target<_blank?_top|title:forced value]');
 			DOM.setHTML('test', '<a href="file.htm" target="_blank" title="title">link</a><a href="#" target="test">test2</a>');
 			equals(ser.serialize(DOM.get('test')), '<a href="file.htm" target="_blank" title="forced value">link</a><a href="#" title="forced value">test2</a>');
+
+			ser.setRules('form[method],input[type|name|value]');
+			DOM.setHTML('test', '<form method="post"><input type="hidden" name="method" value="get" /></form>');
+			equals(ser.serialize(DOM.get('test')), '<form method="post"><input type="hidden" name="method" value="get" /></form>');
 
 			ser.setRules('*[*]');
 			DOM.setHTML('test', '<label for="test">label</label>');
@@ -1230,6 +1330,10 @@ $(window).load(function() {
 			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<style><!--\n   body { background:#fff }\n--></style>');
 
 			ser.setRules('script[type|language|src]');
+
+			DOM.setHTML('test', '<script>// <img src="test"><a href="#"></a></script>');
+			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></script>');
+
 			DOM.setHTML('test', '<script>var a = b < c1;</script>');
 			equals(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\nvar a = b < c1;\n// ]]></script>');
 
