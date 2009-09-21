@@ -689,6 +689,35 @@ $(window).load(function() {
 			DOM.remove('test');
 		});
 
+		test('tinymce.dom.DOMUtils - getAttribs', function() {
+			var dom;
+
+			function check(obj, val) {
+				var count = 0;
+
+				val = val.split(',');
+
+				$.each(obj, function(i, o) {
+					if ($.inArray(o.nodeName.toLowerCase(), val) != -1 && o.specified)
+						count++;
+				});
+
+				return count == obj.length;
+			};
+
+			expect(2);
+
+			DOM.add(document.body, 'div', {id : 'test'});
+
+			DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
+			ok(check(DOM.getAttribs('test2'), 'id,class'));
+	
+			DOM.get('test').innerHTML = '<input id="test2" type="checkbox" name="test" value="1" disabled readonly checked></span>';
+			ok(check(DOM.getAttribs('test2'), 'id,type,name,value,disabled,readonly,checked'), 'Expected attributed: type,name,disabled,readonly,checked');
+
+			DOM.remove('test');
+		});
+
 		test('tinymce.dom.DOMUtils - setGetStyles', function() {
 			expect(7);
 

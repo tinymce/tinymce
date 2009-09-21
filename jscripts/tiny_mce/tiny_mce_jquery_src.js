@@ -2475,9 +2475,13 @@ tinymce.create('static tinymce.util.XHR', {
 				if (n.nodeName == 'OBJECT')
 					return n.attributes;
 
+				// IE doesn't keep the selected attribute if you clone option elements
+				if (n.nodeName === 'OPTION' && this.getAttrib(n, 'selected'))
+					o.push({specified : 1, nodeName : 'selected'});
+
 				// It's crazy that this is faster in IE but it's because it returns all attributes all the time
-				n.cloneNode(false).outerHTML.replace(/([a-z0-9\:\-_]+)=/gi, function(a, b) {
-					o.push({specified : 1, nodeName : b});
+				n.cloneNode(false).outerHTML.replace(/<\/?[\w:]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=\w+|>/gi, '').replace(/[\w:]+/gi, function(a) {
+					o.push({specified : 1, nodeName : a});
 				});
 
 				return o;

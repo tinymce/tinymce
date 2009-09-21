@@ -15,6 +15,7 @@ Version 3.2.7 (2009-09-21)
 	Fixed bug where input elements could override attributes on form elements.
 	Fixed bug where script or style elements could get modified by the DOMUtils processHTML method.
 	Fixed bug where the selected attribute could get lost when force root blocks logic got executed on IE. Patch contributed by Attila Mezei-Horvati.
+	Fixed bug where getAttribs method didn't handle boolean attributes correctly on IE.
 	Fixed so the paste from word dialog is presented if you paste content on an IE with to restrictive security settings.
 	Fixed so the paste_strip_class_attributes option is set to none by default in the paste plugin.
 	Removed default border=0 on tables for the default value of valid_elements.
