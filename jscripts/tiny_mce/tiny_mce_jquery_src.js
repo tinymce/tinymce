@@ -5349,7 +5349,7 @@ tinymce.create('static tinymce.util.XHR', {
 				each(n.getElementsByTagName('option'), function(n) {
 					var v = t.dom.getAttrib(n, 'selected');
 
-					selected.push(v !== '0' && v !== 'false' ? v : null);
+					selected.push(v ? v : null);
 				});
 			}
 
@@ -5358,7 +5358,7 @@ tinymce.create('static tinymce.util.XHR', {
 			// IE looses the selected attribute on option elements so we need to restore it
 			if (isIE) {
 				each(n.getElementsByTagName('option'), function(n, i) {
-					selected.push(t.dom.setAttrib(n, 'selected', selected[i]));
+					t.dom.setAttrib(n, 'selected', selected[i]);
 				});
 			}
 
@@ -11124,9 +11124,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 								}
 							}
 
+							// Uses replaceChild instead of cloneNode since it removes selected attribute from option elements on IE
+							// See: http://support.microsoft.com/kb/829907
 							bl = ed.dom.create(ed.settings.forced_root_block);
-							bl.appendChild(nx.cloneNode(1));
 							nx.parentNode.replaceChild(bl, nx);
+							bl.appendChild(nx);
 						}
 					} else {
 						if (bl.hasChildNodes())

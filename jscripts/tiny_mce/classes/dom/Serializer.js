@@ -536,7 +536,7 @@
 				each(n.getElementsByTagName('option'), function(n) {
 					var v = t.dom.getAttrib(n, 'selected');
 
-					selected.push(v !== '0' && v !== 'false' ? v : null);
+					selected.push(v ? v : null);
 				});
 			}
 
@@ -545,7 +545,7 @@
 			// IE looses the selected attribute on option elements so we need to restore it
 			if (isIE) {
 				each(n.getElementsByTagName('option'), function(n, i) {
-					selected.push(t.dom.setAttrib(n, 'selected', selected[i]));
+					t.dom.setAttrib(n, 'selected', selected[i]);
 				});
 			}
 
