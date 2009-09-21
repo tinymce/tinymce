@@ -140,8 +140,13 @@
 						each(t.dom.select('p table', o.node).reverse(), function(n) {
 							var parent = t.dom.getParent(n.parentNode, 'table,p');
 
-							if (parent.nodeName != 'TABLE')
-								t.dom.split(parent, n);
+							if (parent.nodeName != 'TABLE') {
+								try {
+									t.dom.split(parent, n);
+								} catch (ex) {
+									// IE can sometimes fire an unknown runtime error so we just ignore it
+								}
+							}
 						});
 					}
 				});

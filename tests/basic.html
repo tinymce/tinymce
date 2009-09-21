@@ -61,7 +61,7 @@ test('commands - html4TextStyles', function() {
 	ok(c == '<p><span style="background-color: #ff0000;">test 123</span></p>' || c == '<p><font style="background-color: #ff0000;">test 123</font></p>');
 
 	editor.setContent('<font style="background-color: red" color="#ff0000">test</font><font face="Arial">test</font>');
-	equals(editor.getContent(), '<p><font style="background-color: red" color="#ff0000">test</font><font face="Arial">test</font></p>');
+	equals(editor.getContent(), '<p><font style="background-color: red;" color="#ff0000">test</font><font face="Arial">test</font></p>');
 
 	editor.settings.inline_styles = true;
 });

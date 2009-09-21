@@ -1283,20 +1283,8 @@
 							if (t._isRes(c))
 								return m;
 
-							if (s.hex_colors) {
-								u = u.replace(/rgb\([^\)]+\)/g, function(v) {
-									return t.toHex(v);
-								});
-							}
-
-							if (s.url_converter) {
-								u = u.replace(/url\([\'\"]?([^\)\'\"]+)\)/g, function(x, c) {
-									return 'url(' + t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n)) + ')';
-								});
-							}
-
 							// Parse and serialize the style to convert for example uppercase styles like "BORDER: 1px"
-							u = t.serializeStyle(t.parseStyle(u));
+							u = t.encode(t.serializeStyle(t.parseStyle(u)));
 						} else if (b != 'coords' && b != 'shape') {
 							if (s.url_converter)
 								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));

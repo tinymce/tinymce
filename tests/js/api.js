@@ -976,7 +976,7 @@ $(window).load(function() {
 
 			equals(
 				dom.processHTML('<span style="background-image:url(\'http://www.somesite.com\');">test</span>'),
-				'<span style="background-image:url(\'http://www.somesite.com\');" mce_style="background-image:url(\'http://www.somesite.com\');">test</span>'
+				'<span style="background-image:url(\'http://www.somesite.com\');" mce_style="background-image: url(&amp;&lt;&gt;&quot;http://www.somesite.com&amp;&lt;&gt;&quot;);">test</span>'
 			);
 
 			equals(
@@ -1139,7 +1139,7 @@ $(window).load(function() {
 
 			ser.setRules('*[*]');
 			DOM.setHTML('test', '<span style="border: 1px solid red">test</span>');
-			equals(ser.serialize(DOM.get('test')), '<div id="test"><span style="border: 1px solid red">test</span></div>', null, tinymce.isOldWebKit);
+			equals(ser.serialize(DOM.get('test')), '<div id="test"><span style="border: 1px solid red;">test</span></div>', null, tinymce.isOldWebKit);
 	
 			ser.setRules('*[*]');
 			DOM.setHTML('test', '<span title="test abc">test</span>');
