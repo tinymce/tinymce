@@ -5750,6 +5750,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 			t.dom = s.dom;
 
+			// Use raw entities if no entities are defined
+			if (s.entity_encoding == 'named' && !s.entities)
+				s.entity_encoding = 'raw';
+
 			if (s.remove_redundant_brs) {
 				t.onPostProcess.add(function(se, o) {
 					// Remove single BR at end of block elements since they get rendered
@@ -5832,7 +5836,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 
 		setEntities : function(s) {
-			var t = this, a, i, l = {}, re = '', v;
+			var t = this, a, i, l = {}, v;
 
 			// No need to setup more than once
 			if (t.entityLookup)
@@ -5850,15 +5854,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 				l[String.fromCharCode(a[i])] = a[i + 1];
 
 				v = parseInt(a[i]).toString(16);
-				re += '\\u' + '0000'.substring(v.length) + v;
 			}
 
-			if (!re) {
-				t.settings.entity_encoding = 'raw';
-				return;
-			}
-
-			t.entitiesRE = new RegExp('[' + re + ']', 'g');
 			t.entityLookup = l;
 		},
 
@@ -6533,7 +6530,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 					t.setEntities(s.entities);
 					l = t.entityLookup;
 
-					h = h.replace(t.entitiesRE, function(a) {
+					h = h.replace(/[\u007E-\uFFFF]/g, function(a) {
 						var v;
 
 						if (v = l[a])
