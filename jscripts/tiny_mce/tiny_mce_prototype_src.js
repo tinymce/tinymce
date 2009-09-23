@@ -3426,13 +3426,13 @@ tinymce.create('static tinymce.util.XHR', {
 				ieRng2.moveToElementText(marker);
 				marker.parentNode.removeChild(marker);
 				ieRng2.move('character', eo);
+				ieRng.setEndPoint('EndToStart', ieRng2);
 			} else {
 				ieRng2.moveToElementText(ec);
+				ieRng.setEndPoint('EndToEnd', ieRng2);
 				ieRng2.collapse();
 			}
 
-			// Set the endPoint to end position
-			ieRng.setEndPoint('EndToStart', ieRng2);
 			ieRng.select();
 		};
 
