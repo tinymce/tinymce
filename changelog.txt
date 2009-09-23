@@ -1,5 +1,6 @@
 Version 3.2.7.1 (2009-09-xx)
-	Fixed performance problem with named entities on Gecko. Regexp replace was executing very slowly probably due to a Gecko bug.
+	Optimized performance with named entities on Gecko. Regexp replace was executing very slowly probably due to a Gecko bug.
+	Optimized performance of the IE specific selection/range implementation.
 Version 3.2.7 (2009-09-22)
 	Fixed bug where uppercase paragraphs could still produce an invalid DOM tree on IE.
 	Fixed bug where split command didn't work on WebKit since the node serializer needs a real document to work with.

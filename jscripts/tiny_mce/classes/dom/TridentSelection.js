@@ -136,7 +136,7 @@
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, body = selection.dom.doc.body, startPos, endPos, sc, so, ec, eo;
+			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker;
 
 			// Setup some shorter versions
 			sc = rng.startContainer;
@@ -180,74 +180,48 @@
 				return;
 			}
 
-			function getCharPos(container, offset) {
-				var nodeVal, rng, pos;
+			// Create range and marker
+			ieRng = body.createTextRange();
+			marker = doc.createElement('span');
+			marker.innerHTML = ' ';
 
-				if (container.nodeType != 3)
-					return -1;
+			// Set start of range to startContainer/startOffset
+			if (sc.nodeType == 3) {
+				// Insert marker before startContainer
+				sc.parentNode.insertBefore(marker, sc);
 
-				nodeVal = container.nodeValue;
-				rng = body.createTextRange();
+				// Select marker the caret to offset position
+				ieRng.moveToElementText(marker);
+				marker.parentNode.removeChild(marker);
+				ieRng.move('character', so);
+			} else
+				ieRng.moveToElementText(sc);
 
-				// Insert marker at offset position
-				container.nodeValue = nodeVal.substring(0, offset) + invisibleChar + nodeVal.substring(offset);
-
-				// Find char pos of marker and remove it
-				rng.moveToElementText(container.parentNode);
-				rng.findText(invisibleChar);
-				pos = Math.abs(rng.moveStart('character', -0xFFFFF));
-				container.nodeValue = nodeVal;
-
-				return pos;
-			};
-
-			// Collapsed range
-			if (rng.collapsed) {
-				pos = getCharPos(sc, so);
-
-				ieRng = body.createTextRange();
-				ieRng.move('character', pos);
+			// If same text container then we can do a more simple move
+			if (sc == ec && sc.nodeType == 3) {
+				ieRng.moveEnd('character', eo - so);
 				ieRng.select();
-
-				return;
-			} else {
-				// If same text container
-				if (sc == ec && sc.nodeType == 3) {
-					startPos = getCharPos(sc, so);
-
-					ieRng = body.createTextRange();
-					ieRng.move('character', startPos);
-					ieRng.moveEnd('character', eo - so);
-					ieRng.select();
-
-					return;
-				}
-
-				// Get caret positions
-				startPos = getCharPos(sc, so);
-				endPos = getCharPos(ec, eo);
-				ieRng = body.createTextRange();
-
-				// Move start of range to start character position or start element
-				if (startPos == -1) {
-					ieRng.moveToElementText(sc);
-					startPos = 0;
-				} else
-					ieRng.move('character', startPos);
-
-				// Move end of range to end character position or end element
-				tmpRng = body.createTextRange();
-
-				if (endPos == -1)
-					tmpRng.moveToElementText(ec);
-				else
-					tmpRng.move('character', endPos);
-
-				ieRng.setEndPoint('EndToEnd', tmpRng);
-				ieRng.select();
-
 				return;
 			}
+
+			// Set end of range to endContainer/endOffset
+			ieRng2 = body.createTextRange();
+			if (ec.nodeType == 3) {
+				// Insert marker before endContainer
+				ec.parentNode.insertBefore(marker, ec);
+
+				// Move selection to end marker and move caret to end offset
+				ieRng2.moveToElementText(marker);
+				marker.parentNode.removeChild(marker);
+				ieRng2.move('character', eo);
+			} else {
+				ieRng2.moveToElementText(ec);
+				ieRng2.collapse();
+			}
+
+			// Set the endPoint to end position
+			ieRng.setEndPoint('EndToStart', ieRng2);
+			ieRng.select();
 		};
 
 		this.getRangeAt = function() {
