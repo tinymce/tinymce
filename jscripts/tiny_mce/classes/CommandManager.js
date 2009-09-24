@@ -1,8 +1,11 @@
 /**
- * $Id: ControlManager.js 999 2009-02-10 17:42:58Z spocke $
+ * TinyMCE - ContentManager class.
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 (function(tinymce) {

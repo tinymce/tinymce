@@ -1,11 +1,11 @@
 /**
- * $Id$
+ * editor_template_src.js
  *
- * This file is meant to showcase how to create a simple theme. The advanced
- * theme is more suitable for production use.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 (function() {

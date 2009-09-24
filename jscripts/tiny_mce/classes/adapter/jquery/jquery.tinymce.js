@@ -1,8 +1,11 @@
 /**
- * $Id: jquery.uri.js 453 2008-10-14 12:24:41Z spocke $
+ * jquery.tinymce.js
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 (function($) {

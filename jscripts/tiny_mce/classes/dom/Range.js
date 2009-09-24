@@ -1,26 +1,11 @@
 /**
- * $Id$
+ * Range.js
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
  *
- * setEnd                   IMPLEMENTED
- * setStartBefore           IMPLEMENTED
- * setStartAfter            IMPLEMENTED
- * setEndBefore             IMPLEMENTED
- * setEndAfter              IMPLEMENTED
- * collapse                 IMPLEMENTED
- * selectNode               IMPLEMENTED
- * selectNodeContents       IMPLEMENTED
- * compareBoundaryPoints    IMPLEMENTED
- * deleteContents           IMPLEMENTED
- * extractContents          IMPLEMENTED
- * cloneContents            IMPLEMENTED
- * insertNode               IMPLEMENTED
- * surroundContents         IMPLEMENTED
- * cloneRange               IMPLEMENTED
- * toString                 NOT IMPLEMENTED
- * detach                   NOT IMPLEMENTED
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 (function(ns) {

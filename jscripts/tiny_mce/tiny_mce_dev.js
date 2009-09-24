@@ -1,8 +1,11 @@
 /**
- * $Id$
+ * tiny_mce_dev.js
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  *
  * This file should only be used while developing TinyMCE 
  * tiny_mce.js or tiny_mce_src.js should be used in a production environment.

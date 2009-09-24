@@ -1,10 +1,11 @@
 /**
- * $Id$
+ * adapter.js
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
  *
- * This file contains all adapter logic needed to use jQuery as the base API for TinyMCE.
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 // #ifdef jquery_adapter
