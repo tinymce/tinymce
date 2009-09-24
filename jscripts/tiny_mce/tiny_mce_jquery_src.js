@@ -3364,6 +3364,8 @@ tinymce.create('static tinymce.util.XHR', {
 	function Selection(selection) {
 		var t = this, invisibleChar = '\uFEFF', range, lastIERng;
 
+		// Compares two IE specific ranges to see if they are different
+		// this method is useful when invalidating the cached selection range
 		function compareRanges(rng1, rng2) {
 			if (rng1 && rng2) {
 				// Both are control ranges and the selected element matches
@@ -3378,56 +3380,20 @@ tinymce.create('static tinymce.util.XHR', {
 			return 0;
 		};
 
+		// Returns a W3C DOM compatible range object by using the IE Range API
 		function getRange() {
-			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), startPos, endPos, element, sc, ec, collapsed;
+			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), ieRange2, element, collapsed, isMerged;
 
-			function findIndex(element) {
-				var nl = element.parentNode.childNodes, i;
+			// Returns the index of a node within it's parent
+			function nodeIndex(n) {
+				var i = 0;
 
-				for (i = nl.length - 1; i >= 0; i--) {
-					if (nl[i] == element)
-						return i;
+				while (n.previousSibling) {
+					i++;
+					n = n.previousSibling;
 				}
 
-				return -1;
-			};
-
-			function findEndPoint(start) {
-				var rng = ieRange.duplicate(), parent, i, nl, n, offset = 0, index = 0, pos, tmpRng;
-
-				// Insert marker character
-				rng.collapse(start);
-				parent = rng.parentElement();
-				rng.pasteHTML(invisibleChar); // Needs to be a pasteHTML instead of .text = since IE has a bug with nodeValue
-
-				// Find marker character
-				nl = parent.childNodes;
-				for (i = 0; i < nl.length; i++) {
-					n = nl[i];
-
-					// Calculate node index excluding text node fragmentation
-					if (i > 0 && (n.nodeType !== 3 || nl[i - 1].nodeType !== 3))
-						index++;
-
-					// If text node then calculate offset
-					if (n.nodeType === 3) {
-						// Look for marker
-						pos = n.nodeValue.indexOf(invisibleChar);
-						if (pos !== -1) {
-							offset += pos;
-							break;
-						}
-
-						offset += n.nodeValue.length;
-					} else
-						offset = 0;
-				}
-
-				// Remove marker character
-				rng.moveStart('character', -1);
-				rng.text = '';
-
-				return {index : index, offset : offset, parent : parent};
+				return i;
 			};
 
 			// If selection is outside the current document just return an empty range
@@ -3437,55 +3403,90 @@ tinymce.create('static tinymce.util.XHR', {
 
 			// Handle control selection or text selection of a image
 			if (ieRange.item || !element.hasChildNodes()) {
-				domRange.setStart(element.parentNode, findIndex(element));
+				domRange.setStart(element.parentNode, nodeIndex(element));
 				domRange.setEnd(domRange.startContainer, domRange.startOffset + 1);
 
 				return domRange;
 			}
 
-			// Check collapsed state
+			// Duplicare IE selection range and check if the range is collapsed
+			ieRange2 = ieRange.duplicate();
 			collapsed = selection.isCollapsed();
 
-			// Find start and end pos index and offset
-			startPos = findEndPoint(true);
-			endPos = findEndPoint(false);
+			// Insert start marker
+			ieRange.collapse();
+			ieRange.pasteHTML('<span id="_mce_start">\uFEFF</span>');
 
-			// Normalize the elements to avoid fragmented dom
-			startPos.parent.normalize();
-			endPos.parent.normalize();
-
-			// Set start container and offset
-			sc = startPos.parent.childNodes[Math.min(startPos.index, startPos.parent.childNodes.length - 1)];
-
-			if (sc.nodeType != 3)
-				domRange.setStart(startPos.parent, startPos.index);
-			else
-				domRange.setStart(startPos.parent.childNodes[startPos.index], startPos.offset);
-
-			// Set end container and offset
-			ec = endPos.parent.childNodes[Math.min(endPos.index, endPos.parent.childNodes.length - 1)];
-
-			if (ec.nodeType != 3) {
-				if (!collapsed)
-					endPos.index++;
-
-				domRange.setEnd(endPos.parent, endPos.index);
-			} else
-				domRange.setEnd(endPos.parent.childNodes[endPos.index], endPos.offset);
-
-			// If not collapsed then make sure offsets are valid
+			// Insert end marker
 			if (!collapsed) {
-				sc = domRange.startContainer;
-				if (sc.nodeType == 1)
-					domRange.setStart(sc, Math.min(domRange.startOffset, sc.childNodes.length));
-
-				ec = domRange.endContainer;
-				if (ec.nodeType == 1)
-					domRange.setEnd(ec, Math.min(domRange.endOffset, ec.childNodes.length));
+				ieRange2.collapse(false);
+				ieRange2.pasteHTML('<span id="_mce_end">\uFEFF</span>');
 			}
 
-			// Restore selection to new range
-			t.addRange(domRange);
+			// Sets the end point of the range by looking for the marker
+			// This method also merges the text nodes it splits so that
+			// the DOM doesn't get fragmented.
+			function setEndPoint(start) {
+				var container, offset, marker, sibling;
+
+				// Look for endpoint marker
+				marker = dom.get('_mce_' + (start ? 'start' : 'end'));
+				sibling = marker.previousSibling;
+
+				// Is marker after a text node
+				if (sibling && sibling.nodeType == 3) {
+					// Get container node and calc offset
+					container = sibling;
+					offset = container.nodeValue.length;
+					dom.remove(marker);
+
+					// Merge text nodes to reduce DOM fragmentation
+					sibling = container.nextSibling;
+					if (sibling && sibling.nodeType == 3) {
+						isMerged = true;
+						container.appendData(sibling.nodeValue);
+						dom.remove(sibling);
+					}
+				} else {
+					sibling = marker.nextSibling;
+
+					// Is marker before a text node
+					if (sibling && sibling.nodeType == 3) {
+						container = sibling;
+						offset = 0;
+					} else {
+						// Is marker before an element
+						if (sibling)
+							offset = nodeIndex(sibling) - 1;
+						else
+							offset = nodeIndex(marker);
+
+						container = marker.parentNode;
+					}
+
+					dom.remove(marker);
+				}
+
+				// Set start of range
+				if (start)
+					domRange.setStart(container, offset);
+
+				// Set end of range or automatically if it's collapsed to increase performance
+				if (!start || collapsed)
+					domRange.setEnd(container, offset);
+			};
+
+			// Set start of range
+			setEndPoint(true);
+
+			// Set end of range if needed
+			if (!collapsed)
+				setEndPoint(false);
+
+			// Restore selection if the range contents was merged
+			// since the selection was then moved since the text nodes got changed
+			if (isMerged)
+				t.addRange(domRange);
 
 			return domRange;
 		};
@@ -3500,9 +3501,23 @@ tinymce.create('static tinymce.util.XHR', {
 			eo = rng.endOffset;
 			ieRng = body.createTextRange();
 
-			// Find element
-			sc = sc.nodeType == 1 ? sc.childNodes[Math.min(so, sc.childNodes.length - 1)] : sc;
-			ec = ec.nodeType == 1 ? ec.childNodes[Math.min(so == eo ? eo : eo - 1, ec.childNodes.length - 1)] : ec;
+			// If child index resolve it
+			if (sc.nodeType == 1) {
+				sc = sc.childNodes[Math.min(so, sc.childNodes.length - 1)];
+
+				// Child was text node then move offset to start of it
+				if (sc.nodeType == 3)
+					so = 0;
+			}
+
+			// If child index resolve it
+			if (ec.nodeType == 1) {
+				ec = ec.childNodes[Math.min(so == eo ? eo : eo - 1, ec.childNodes.length - 1)];
+
+				// Child was text node then move offset to end of text node
+				if (ec.nodeType == 3)
+					eo = ec.nodeValue.length;
+			}
 
 			// Single element selection
 			if (sc == ec && sc.nodeType == 1) {

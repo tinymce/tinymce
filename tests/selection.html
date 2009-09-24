@@ -60,8 +60,8 @@ test("Single image selection", function() {
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.startOffset, 0);
 	equals(rng.endOffset, 1);
-	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<IMG src="about:blank" mce_src="about:blank">');
-	ok(editor.selection.getRng().item, 'Not a control selection');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" mce_src="about:blank">');
+	ok(editor.selection.getRng().item, 'Is control selection');
 });
 
 test("Multiple image selection", function() {
@@ -79,8 +79,8 @@ test("Multiple image selection", function() {
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.startOffset, 0);
 	equals(rng.endOffset, 2);
-	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<IMG src="about:blank" mce_src="about:blank"><IMG src="about:blank" mce_src="about:blank">');
-	ok(editor.selection.getRng().parentElement, 'Not a text selection');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" mce_src="about:blank"><img src="about:blank" mce_src="about:blank">');
+	ok(editor.selection.getRng().parentElement, 'Is text selection');
 });
 
 test("Text node selection", function() {
@@ -116,7 +116,7 @@ test("Text node selection between two elements", function() {
 	equals(rng.endContainer.nodeName, '#text');
 	equals(rng.startOffset, 1);
 	equals(rng.endOffset, 3);
-	equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, ''), '<P>234</P><P>abc</P>');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>234</p><p>abc</p>');
 
 	editor.setContent('<p>1</p><p>1234</p><p>abcd</p><p>2</p>', {format : 'raw'});
 
@@ -126,11 +126,12 @@ test("Text node selection between two elements", function() {
 	editor.selection.setRng(rng);
 
 	rng = editor.selection.getRng(1);
-	equals(rng.startContainer.nodeName, '#text');
-	equals(rng.endContainer.nodeName, '#text');
-	equals(rng.startOffset, 0);
-	equals(rng.endOffset, 4);
-	equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, ''), '<P>1234</P><P>abcd</P>');
+	equals(rng.startContainer.nodeName, '#text', "startContainer type check");
+	equals(rng.startOffset, 0, "startOffset doesn't match");
+
+	equals(rng.endContainer.nodeName, 'BODY', "endContainer type check");
+	equals(rng.endOffset, 3, "endOffset doesn't match");
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>1234</p><p>abcd</p>');
 });
 
 test("Mixed selection start at element end at text", function() {
@@ -148,7 +149,28 @@ test("Mixed selection start at element end at text", function() {
 	equals(rng.endContainer.nodeName, '#text');
 	equals(rng.startOffset, 0);
 	equals(rng.endOffset, 3);
-	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<IMG src="about:blank" mce_src="about:blank">tex');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" mce_src="about:blank">tex');
+});
+
+test("Mixed selection start at text end at element", function() {
+	expect(5);
+
+	editor.setContent('text<img src="about:blank" />', {format : 'raw'});
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild.firstChild, 1);
+	rng.setEndAfter(editor.getBody().firstChild.lastChild);
+	editor.selection.setRng(rng);
+
+	rng = editor.selection.getRng(1);
+
+	equals(rng.startContainer.nodeName, '#text');
+	equals(rng.startOffset, 1);
+
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 2);
+
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), 'ext<img src="about:blank" mce_src="about:blank">');
 });
 
 test("Caret position before image", function() {
@@ -218,7 +240,7 @@ test("Selection of empty text element", function() {
 	equals(rng.startOffset, 0);
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.childNodes[0].innerHTML, '');
-	equals(editor.dom.getOuterHTML(rng.cloneContents()), '<DIV>&nbsp;</DIV>');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div>&nbsp;</div>');
 });
 
 tinyMCE.init({
