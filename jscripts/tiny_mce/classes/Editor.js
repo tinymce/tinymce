@@ -914,7 +914,7 @@
 						} else
 							n = 'div';
 
-						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' mce_name="$1"$2>');
+						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' _mce_name="$1"$2>');
 						o.content = o.content.replace(new RegExp('</(' + v + ')>', 'g'), '</' + n + '>');
 					});
 				};
@@ -1059,7 +1059,7 @@
 						var pn = n.parentNode;
 
 						if (ed.dom.isBlock(pn) && pn.lastChild === n)
-							ed.dom.add(pn, 'br', {'mce_bogus' : 1});
+							ed.dom.add(pn, 'br', {'_mce_bogus' : 1});
 					});
 				};
 
@@ -1830,7 +1830,7 @@
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (h.length === 0 || /^\s+$/.test(h))) {
-				o.content = t.dom.setHTML(t.getBody(), '<br mce_bogus="1" />');
+				o.content = t.dom.setHTML(t.getBody(), '<br _mce_bogus="1" />');
 				o.format = 'raw';
 			}
 
@@ -2221,7 +2221,7 @@
 					each(ed.dom.select('img'), function(e) {
 						var v;
 
-						if (v = e.getAttribute('mce_src'))
+						if (v = e.getAttribute('_mce_src'))
 							e.src = t.documentBaseURI.toAbsolute(v);
 					})
 				});*/
@@ -2231,7 +2231,7 @@
 
 					e = e.target;
 
-					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('mce_src')))
+					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('_mce_src')))
 						e.src = t.documentBaseURI.toAbsolute(v);
 				});
 			}
@@ -2509,8 +2509,8 @@
 							case 'STRIKE':
 								//sp = dom.create('span', {style : dom.getAttrib(n, 'style')});
 								n.style.textDecoration = n.nodeName == 'U' ? 'underline' : 'line-through';
-								dom.setAttrib(n, 'mce_style', '');
-								dom.setAttrib(n, 'mce_name', 'span');
+								dom.setAttrib(n, '_mce_style', '');
+								dom.setAttrib(n, '_mce_name', 'span');
 								break;
 						}
 					});
@@ -2530,7 +2530,7 @@
 
 							if (na) {
 								n.style.textDecoration = '';
-								dom.setAttrib(n, 'mce_style', '');
+								dom.setAttrib(n, '_mce_style', '');
 
 								e = dom.create(na, {
 									style : dom.getAttrib(n, 'style')
@@ -2599,7 +2599,7 @@
 							dom.setAttrib(sp, 'class', cl[parseInt(n.size) - 1]);
 					}
 
-					dom.setAttrib(sp, 'mce_style', '');
+					dom.setAttrib(sp, '_mce_style', '');
 					dom.replace(sp, n, 1);
 				}
 			};

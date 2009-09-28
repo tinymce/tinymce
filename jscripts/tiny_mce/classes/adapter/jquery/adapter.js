@@ -145,7 +145,7 @@
 					case "style":
 						e.each(function(i, v){
 							if (s.keep_values)
-								$(v).attr('mce_style', v);
+								$(v).attr('_mce_style', v);
 
 							v.style.cssText = v;
 						});
@@ -164,7 +164,7 @@
 								if (s.url_converter)
 									v = s.url_converter.call(s.url_converter_scope || t, v, n, v);
 
-								t.setAttrib(v, 'mce_' + n, v);
+								t.setAttrib(v, '_mce_' + n, v);
 							}
 						});
 

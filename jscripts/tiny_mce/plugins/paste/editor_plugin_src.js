@@ -537,14 +537,14 @@
 			if (getParam(ed, "paste_remove_styles") || (getParam(ed, "paste_remove_styles_if_webkit") && tinymce.isWebKit)) {
 				each(dom.select('*[style]', o.node), function (el) {
 					el.removeAttribute('style');
-					el.removeAttribute('mce_style');
+					el.removeAttribute('_mce_style');
 				});
 			} else {
 				if (tinymce.isWebKit) {
 					// We need to compress the styles on WebKit since if you paste <img border="0" /> it will become <img border="0" style="... lots of junk ..." />
 					// Removing the mce_style that contains the real value will force the Serializer engine to compress the styles
 					each(dom.select('*', o.node), function (el) {
-						el.removeAttribute('mce_style');
+						el.removeAttribute('_mce_style');
 					});
 				}
 			}

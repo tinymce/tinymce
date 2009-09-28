@@ -82,7 +82,7 @@ function insertTable() {
 			capEl = elm.ownerDocument.createElement('caption');
 
 			if (!tinymce.isIE)
-				capEl.innerHTML = '<br mce_bogus="1"/>';
+				capEl.innerHTML = '<br _mce_bogus="1"/>';
 
 			elm.insertBefore(capEl, elm.firstChild);
 		}
@@ -186,7 +186,7 @@ function insertTable() {
 
 	if (caption) {
 		if (!tinymce.isIE)
-			html += '<caption><br mce_bogus="1"/></caption>';
+			html += '<caption><br _mce_bogus="1"/></caption>';
 		else
 			html += '<caption></caption>';
 	}
@@ -196,7 +196,7 @@ function insertTable() {
 
 		for (var x=0; x<cols; x++) {
 			if (!tinymce.isIE)
-				html += '<td><br mce_bogus="1"/></td>';
+				html += '<td><br _mce_bogus="1"/></td>';
 			else
 				html += '<td></td>';
 		}

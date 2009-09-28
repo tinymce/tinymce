@@ -26,7 +26,7 @@ var AnchorDialog = {
 
 		// Webkit acts weird if empty inline element is inserted so we need to use a image instead
 		if (tinymce.isWebKit)
-			ed.execCommand('mceInsertContent', 0, ed.dom.createHTML('img', {mce_name : 'a', name : document.forms[0].anchorName.value, 'class' : 'mceItemAnchor'}));
+			ed.execCommand('mceInsertContent', 0, ed.dom.createHTML('img', {_mce_name : 'a', name : document.forms[0].anchorName.value, 'class' : 'mceItemAnchor'}));
 		else
 			ed.execCommand('mceInsertContent', 0, ed.dom.createHTML('a', {name : document.forms[0].anchorName.value, 'class' : 'mceItemAnchor'}, ''));
 

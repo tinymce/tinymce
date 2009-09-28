@@ -665,7 +665,7 @@ $(window).load(function() {
 
 			DOM.setAttrib('test', 'src', 'url');
 			equals(DOM.getAttrib('test', 'src'), 'url');
-			equals(DOM.getAttrib('test', 'mce_src'), 'url');
+			equals(DOM.getAttrib('test', '_mce_src'), 'url');
 			equals(DOM.getAttrib('test', 'abc'), '');
 
 			DOM.setAttribs('test', {'class' : '123', title : 'abc'});
@@ -1005,7 +1005,7 @@ $(window).load(function() {
 
 			equals(
 				dom.processHTML('<span style="background-image:url(\'http://www.somesite.com\');">test</span>'),
-				'<span style="background-image:url(\'http://www.somesite.com\');" mce_style="background-image: url(&amp;&lt;&gt;&quot;http://www.somesite.com&amp;&lt;&gt;&quot;);">test</span>'
+				'<span style="background-image:url(\'http://www.somesite.com\');" _mce_style="background-image: url(&amp;&lt;&gt;&quot;http://www.somesite.com&amp;&lt;&gt;&quot;);">test</span>'
 			);
 
 			equals(
@@ -1015,37 +1015,37 @@ $(window).load(function() {
 
 			equals(
 				dom.processHTML('some content <img src="some.gif" /> some more content <a href="somelink.htm">link</a>'),
-				'some content <img src="some.gif" mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
+				'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
 			);
 
 			equals(
 				dom.processHTML('some content <img src=some.gif /> some more content <a href=somelink.htm>link</a>'),
-				'some content <img src="some.gif" mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
+				'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
 			);
 
 			equals(
 				dom.processHTML("some content <img src='some.gif' /> some more content <a href='somelink.htm'>link</a>"),
-				'some content <img src="some.gif" mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
+				'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
 			);
 
 			equals(
-				dom.processHTML('some content <img src="some.gif" mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'),
-				'some content <img src="some.gif" mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
+				dom.processHTML('some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'),
+				'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
 			);
 
 			equals(
 				dom.processHTML('<span style="border-left-color: rgb(0, 255, 255); border-top-color: rgb(0, 255, 255);"></span>'),
-				'<span style="border-left-color: rgb(0, 255, 255); border-top-color: rgb(0, 255, 255);" mce_style="border-left-color: #00ffff; border-top-color: #00ffff;"></span>'
+				'<span style="border-left-color: rgb(0, 255, 255); border-top-color: rgb(0, 255, 255);" _mce_style="border-left-color: #00ffff; border-top-color: #00ffff;"></span>'
 			);
 
 			equals(
 				dom.processHTML('<span style="background: url(test.gif);"></span>'),
-				'<span style="background: url(test.gif);" mce_style="background: url(&amp;&lt;&gt;&quot;test.gif&amp;&lt;&gt;&quot;);"></span>'
+				'<span style="background: url(test.gif);" _mce_style="background: url(&amp;&lt;&gt;&quot;test.gif&amp;&lt;&gt;&quot;);"></span>'
 			);
 
 			equals(
 				dom.processHTML('<a href="test.html"/>'),
-				'<a href="test.html" mce_href="&amp;&lt;&gt;&quot;test.html&amp;&lt;&gt;&quot;"></a>'
+				'<a href="test.html" _mce_href="&amp;&lt;&gt;&quot;test.html&amp;&lt;&gt;&quot;"></a>'
 			);
 
 			equals(
@@ -1275,7 +1275,7 @@ $(window).load(function() {
 			equals(ser.serialize(DOM.get('test')), '<div id="test"><span title="test abc">test</span></div>');
 
 			ser.setRules('*[*]');
-			DOM.setHTML('test', '<div mce_name="mytag" class="test">test</div>');
+			DOM.setHTML('test', '<div _mce_name="mytag" class="test">test</div>');
 			equals(ser.serialize(DOM.get('test')), '<div id="test"><mytag class="test">test</mytag></div>', null, tinymce.isOldWebKit);
 
 			ser.setRules('*[*]');

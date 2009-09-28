@@ -79,7 +79,7 @@
 						var last = ed.getBody().lastChild;
 
 						if (last && last.nodeName == 'TABLE')
-							ed.dom.add(ed.getBody(), 'p', null, '<br mce_bogus="1" />');
+							ed.dom.add(ed.getBody(), 'p', null, '<br _mce_bogus="1" />');
 					};
 
 					// Fixes an bug where it's impossible to place the caret before a table in Gecko
@@ -225,7 +225,7 @@
 			if (!tinymce.isIE) {
 				ed.onBeforeSetContent.add(function(ed, o) {
 					if (o.initial)
-						o.content = o.content.replace(/<(td|th)([^>]+|)>\s*<\/(td|th)>/g, tinymce.isOpera ? '<$1$2>&nbsp;</$1>' : '<$1$2><br mce_bogus="1" /></$1>');
+						o.content = o.content.replace(/<(td|th)([^>]+|)>\s*<\/(td|th)>/g, tinymce.isOpera ? '<$1$2>&nbsp;</$1>' : '<$1$2><br _mce_bogus="1" /></$1>');
 				});
 			}
 		},
@@ -328,7 +328,7 @@
 				var newTD = doc.createElement("td");
 
 				if (!tinymce.isIE)
-					newTD.innerHTML = '<br mce_bogus="1"/>';
+					newTD.innerHTML = '<br _mce_bogus="1"/>';
 			}
 
 			function getColRowSpan(td) {
@@ -487,7 +487,7 @@
 					var newTD = doc.createElement("td");
 
 					if (!tinymce.isIE)
-						newTD.innerHTML = '<br mce_bogus="1"/>';
+						newTD.innerHTML = '<br _mce_bogus="1"/>';
 
 					if (tinymce.isIE)
 						trNext.insertBefore(newTD, trNext.cells(td_elm.cellIndex));
@@ -522,7 +522,7 @@
 						newTD = doc.createElement("td");
 
 						if (!tinymce.isIE)
-							newTD.innerHTML = '<br mce_bogus="1"/>';
+							newTD.innerHTML = '<br _mce_bogus="1"/>';
 					}
 
 					// Reset col/row span
@@ -701,7 +701,7 @@
 											var newTD = doc.createElement("td");
 
 											if (!tinymce.isIE)
-												newTD.innerHTML = '<br mce_bogus="1"/>';
+												newTD.innerHTML = '<br _mce_bogus="1"/>';
 
 											newTD.colSpan = tdElm.colSpan;
 
@@ -735,7 +735,7 @@
 											var newTD = doc.createElement("td");
 
 											if (!tinymce.isIE)
-												newTD.innerHTML = '<br mce_bogus="1"/>';
+												newTD.innerHTML = '<br _mce_bogus="1"/>';
 
 											newTD.colSpan = tdElm.colSpan;
 
@@ -830,7 +830,7 @@
 											var newTD = doc.createElement(tdElm.nodeName);
 
 											if (!tinymce.isIE)
-												newTD.innerHTML = '<br mce_bogus="1"/>';
+												newTD.innerHTML = '<br _mce_bogus="1"/>';
 
 											newTD.rowSpan = tdElm.rowSpan;
 
@@ -861,7 +861,7 @@
 											var newTD = doc.createElement(tdElm.nodeName);
 
 											if (!tinymce.isIE)
-												newTD.innerHTML = '<br mce_bogus="1"/>';
+												newTD.innerHTML = '<br _mce_bogus="1"/>';
 
 											newTD.rowSpan = tdElm.rowSpan;
 
@@ -930,7 +930,7 @@
 									var newTD = doc.createElement("td");
 
 									if (!tinymce.isIE)
-										newTD.innerHTML = '<br mce_bogus="1"/>';
+										newTD.innerHTML = '<br _mce_bogus="1"/>';
 
 									trElm.insertBefore(newTD, nextElm(tdElm, "TD,TH"));
 
@@ -1001,7 +1001,7 @@
 
 										var td = getCell(grid, cpos.rowindex, cpos.cellindex);
 										each(ed.dom.select('br', td), function(e, i) {
-											if (i > 0 && ed.dom.getAttrib('mce_bogus'))
+											if (i > 0 && ed.dom.getAttrib('_mce_bogus'))
 												ed.dom.remove(e);
 										});
 									}
@@ -1148,7 +1148,7 @@
 									var html = rows[y][x].innerHTML;
 									var chk = html.replace(/[ \t\r\n]/g, "");
 
-									if (chk != "<br/>" && chk != "<br>" && chk != '<br mce_bogus="1"/>' && (x+y > 0))
+									if (chk != "<br/>" && chk != "<br>" && chk != '<br _mce_bogus="1"/>' && (x+y > 0))
 										tdElm.innerHTML += html;
 
 									// Not current cell
@@ -1180,7 +1180,7 @@
 
 							// Remove all but one bogus br
 							each(ed.dom.select('br', tdElm), function(e, i) {
-								if (i > 0 && ed.dom.getAttrib(e, 'mce_bogus'))
+								if (i > 0 && ed.dom.getAttrib(e, '_mce_bogus'))
 									ed.dom.remove(e);
 							});
 

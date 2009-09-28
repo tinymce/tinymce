@@ -1288,7 +1288,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 				// Force update of the style data
 				if (t.settings.update_styles)
-					t.setAttrib(e, 'mce_style');
+					t.setAttrib(e, '_mce_style');
 			});
 		},
 
@@ -1371,9 +1371,9 @@ tinymce.create('static tinymce.util.XHR', {
 						// No mce_style for elements with these since they might get resized by the user
 						if (s.keep_values) {
 							if (v && !t._isRes(v))
-								e.setAttribute('mce_style', v, 2);
+								e.setAttribute('_mce_style', v, 2);
 							else
-								e.removeAttribute('mce_style', 2);
+								e.removeAttribute('_mce_style', 2);
 						}
 
 						e.style.cssText = v;
@@ -1389,13 +1389,13 @@ tinymce.create('static tinymce.util.XHR', {
 							if (s.url_converter)
 								v = s.url_converter.call(s.url_converter_scope || t, v, n, e);
 
-							t.setAttrib(e, 'mce_' + n, v, 2);
+							t.setAttrib(e, '_mce_' + n, v, 2);
 						}
 
 						break;
 					
 					case "shape":
-						e.setAttribute('mce_style', v);
+						e.setAttribute('_mce_style', v);
 						break;
 				}
 
@@ -1429,7 +1429,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 			// Try the mce variant for these
 			if (/^(src|href|style|coords|shape)$/.test(n)) {
-				v = e.getAttribute("mce_" + n);
+				v = e.getAttribute("_mce_" + n);
 
 				if (v)
 					return v;
@@ -1462,7 +1462,7 @@ tinymce.create('static tinymce.util.XHR', {
 					v = t.serializeStyle(t.parseStyle(v));
 
 					if (t.settings.keep_values && !t._isRes(v))
-						e.setAttribute('mce_style', v);
+						e.setAttribute('_mce_style', v);
 				}
 			}
 
@@ -1827,7 +1827,7 @@ tinymce.create('static tinymce.util.XHR', {
 					// DOM tree if contents like this <p><ul><li>Item 1</li></ul></p> is inserted
 					// It seems to be that IE doesn't like a root block element placed inside another root block element
 					if (t.settings.fix_ie_paragraphs)
-						h = h.replace(/<p><\/p>|<p([^>]+)><\/p>|<p[^\/+]\/>/gi, '<p$1 mce_keep="true">&nbsp;</p>');
+						h = h.replace(/<p><\/p>|<p([^>]+)><\/p>|<p[^\/+]\/>/gi, '<p$1 _mce_keep="true">&nbsp;</p>');
 
 					set();
 
@@ -1838,12 +1838,12 @@ tinymce.create('static tinymce.util.XHR', {
 							n = nl[i];
 
 							if (!n.hasChildNodes()) {
-								if (!n.mce_keep) {
+								if (!n._mce_keep) {
 									x = 1; // Is broken
 									break;
 								}
 
-								n.removeAttribute('mce_keep');
+								n.removeAttribute('_mce_keep');
 							}
 						}
 					}
@@ -1852,13 +1852,13 @@ tinymce.create('static tinymce.util.XHR', {
 					if (x) {
 						// So if we replace the p elements with divs and mark them and then replace them back to paragraphs
 						// after we use innerHTML we can fix the DOM tree
-						h = h.replace(/<p ([^>]+)>|<p>/ig, '<div $1 mce_tmp="1">');
+						h = h.replace(/<p ([^>]+)>|<p>/ig, '<div $1 _mce_tmp="1">');
 						h = h.replace(/<\/p>/g, '</div>');
 
 						// Set the new HTML with DIVs
 						set();
 
-						// Replace all DIV elements with he mce_tmp attibute back to paragraphs
+						// Replace all DIV elements with the _mce_tmp attibute back to paragraphs
 						// This is needed since IE has a annoying bug see above for details
 						// This is a slow process but it has to be done. :(
 						if (t.settings.fix_ie_paragraphs) {
@@ -1867,7 +1867,7 @@ tinymce.create('static tinymce.util.XHR', {
 								n = nl[i];
 
 								// Is it a temp div
-								if (n.mce_tmp) {
+								if (n._mce_tmp) {
 									// Create new paragraph
 									p = t.doc.createElement('p');
 
@@ -1875,7 +1875,7 @@ tinymce.create('static tinymce.util.XHR', {
 									n.cloneNode(false).outerHTML.replace(/([a-z0-9\-_]+)=/gi, function(a, b) {
 										var v;
 
-										if (b !== 'mce_tmp') {
+										if (b !== '_mce_tmp') {
 											v = n.getAttribute(b);
 
 											if (!v && b === 'class')
@@ -1920,7 +1920,7 @@ tinymce.create('static tinymce.util.XHR', {
 			// Fix some issues
 			h = h.replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>'); // Force open
 
-			// Store away src and href in mce_src and mce_href since browsers mess them up
+			// Store away src and href in _mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
 				// Wrap scripts and styles in comments for serialization purposes
 				if (/<script|noscript|style/i.test(h)) {
@@ -1945,7 +1945,7 @@ tinymce.create('static tinymce.util.XHR', {
 							if (s.url_converter)
 								url = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(url), 'src', 'script'));
 
-							return 'mce_src="' + url + '"';
+							return '_mce_src="' + url + '"';
 						});
 
 						// Wrap text contents
@@ -1965,7 +1965,7 @@ tinymce.create('static tinymce.util.XHR', {
 							text = '<!--\nMCE_SCRIPT:' + (codeBlocks.length - 1) + '\n-->';
 						}
 
-						return '<mce:style' + attribs + '>' + text + '</mce:style><style ' + attribs + ' mce_bogus="1">' + text + '</style>';
+						return '<mce:style' + attribs + '>' + text + '</mce:style><style ' + attribs + ' _mce_bogus="1">' + text + '</style>';
 					});
 
 					// Wrap noscript elements
@@ -1999,12 +1999,12 @@ tinymce.create('static tinymce.util.XHR', {
 					function handle(m, b, c) {
 						var u = c;
 
-						// Tag already got a mce_ version
-						if (a.indexOf('mce_' + b) != -1)
+						// Tag already got a _mce_ version
+						if (a.indexOf('_mce_' + b) != -1)
 							return m;
 
 						if (b == 'style') {
-							// No mce_style for elements with these since they might get resized by the user
+							// No _mce_style for elements with these since they might get resized by the user
 							if (t._isRes(c))
 								return m;
 
@@ -2015,7 +2015,7 @@ tinymce.create('static tinymce.util.XHR', {
 								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));
 						}
 
-						return ' ' + b + '="' + c + '" mce_' + b + '="' + u + '"';
+						return ' ' + b + '="' + c + '" _mce_' + b + '="' + u + '"';
 					};
 
 					a = a.replace(/ (src|href|style|coords|shape)=[\"]([^\"]+)[\"]/gi, handle); // W3C
@@ -5741,7 +5741,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 				valid_nodes : 0,
 				node_filter : 0,
 				attr_filter : 0,
-				invalid_attrs : /^(mce_|_moz_|sizset|sizcache)/,
+				invalid_attrs : /^(_mce_|_moz_|sizset|sizcache)/,
 				closed : /^(br|hr|input|meta|img|link|param|area)$/,
 				entity_encoding : 'named',
 				entities : '160,nbsp,161,iexcl,162,cent,163,pound,164,curren,165,yen,166,brvbar,167,sect,168,uml,169,copy,170,ordf,171,laquo,172,not,173,shy,174,reg,175,macr,176,deg,177,plusmn,178,sup2,179,sup3,180,acute,181,micro,182,para,183,middot,184,cedil,185,sup1,186,ordm,187,raquo,188,frac14,189,frac12,190,frac34,191,iquest,192,Agrave,193,Aacute,194,Acirc,195,Atilde,196,Auml,197,Aring,198,AElig,199,Ccedil,200,Egrave,201,Eacute,202,Ecirc,203,Euml,204,Igrave,205,Iacute,206,Icirc,207,Iuml,208,ETH,209,Ntilde,210,Ograve,211,Oacute,212,Ocirc,213,Otilde,214,Ouml,215,times,216,Oslash,217,Ugrave,218,Uacute,219,Ucirc,220,Uuml,221,Yacute,222,THORN,223,szlig,224,agrave,225,aacute,226,acirc,227,atilde,228,auml,229,aring,230,aelig,231,ccedil,232,egrave,233,eacute,234,ecirc,235,euml,236,igrave,237,iacute,238,icirc,239,iuml,240,eth,241,ntilde,242,ograve,243,oacute,244,ocirc,245,otilde,246,ouml,247,divide,248,oslash,249,ugrave,250,uacute,251,ucirc,252,uuml,253,yacute,254,thorn,255,yuml,402,fnof,913,Alpha,914,Beta,915,Gamma,916,Delta,917,Epsilon,918,Zeta,919,Eta,920,Theta,921,Iota,922,Kappa,923,Lambda,924,Mu,925,Nu,926,Xi,927,Omicron,928,Pi,929,Rho,931,Sigma,932,Tau,933,Upsilon,934,Phi,935,Chi,936,Psi,937,Omega,945,alpha,946,beta,947,gamma,948,delta,949,epsilon,950,zeta,951,eta,952,theta,953,iota,954,kappa,955,lambda,956,mu,957,nu,958,xi,959,omicron,960,pi,961,rho,962,sigmaf,963,sigma,964,tau,965,upsilon,966,phi,967,chi,968,psi,969,omega,977,thetasym,978,upsih,982,piv,8226,bull,8230,hellip,8242,prime,8243,Prime,8254,oline,8260,frasl,8472,weierp,8465,image,8476,real,8482,trade,8501,alefsym,8592,larr,8593,uarr,8594,rarr,8595,darr,8596,harr,8629,crarr,8656,lArr,8657,uArr,8658,rArr,8659,dArr,8660,hArr,8704,forall,8706,part,8707,exist,8709,empty,8711,nabla,8712,isin,8713,notin,8715,ni,8719,prod,8721,sum,8722,minus,8727,lowast,8730,radic,8733,prop,8734,infin,8736,ang,8743,and,8744,or,8745,cap,8746,cup,8747,int,8756,there4,8764,sim,8773,cong,8776,asymp,8800,ne,8801,equiv,8804,le,8805,ge,8834,sub,8835,sup,8836,nsub,8838,sube,8839,supe,8853,oplus,8855,otimes,8869,perp,8901,sdot,8968,lceil,8969,rceil,8970,lfloor,8971,rfloor,9001,lang,9002,rang,9674,loz,9824,spades,9827,clubs,9829,hearts,9830,diams,338,OElig,339,oelig,352,Scaron,353,scaron,376,Yuml,710,circ,732,tilde,8194,ensp,8195,emsp,8201,thinsp,8204,zwnj,8205,zwj,8206,lrm,8207,rlm,8211,ndash,8212,mdash,8216,lsquo,8217,rsquo,8218,sbquo,8220,ldquo,8221,rdquo,8222,bdquo,8224,dagger,8225,Dagger,8240,permil,8249,lsaquo,8250,rsaquo,8364,euro',
@@ -6315,12 +6315,12 @@ window.tinymce.dom.Sizzle = Sizzle;
 			if (!s.node_filter || s.node_filter(n)) {
 				switch (n.nodeType) {
 					case 1: // Element
-						if (n.hasAttribute ? n.hasAttribute('mce_bogus') : n.getAttribute('mce_bogus'))
+						if (n.hasAttribute ? n.hasAttribute('_mce_bogus') : n.getAttribute('_mce_bogus'))
 							return;
 
 						iv = false;
 						hc = n.hasChildNodes();
-						nn = n.getAttribute('mce_name') || n.nodeName.toLowerCase();
+						nn = n.getAttribute('_mce_name') || n.nodeName.toLowerCase();
 
 						// Add correct prefix on IE
 						if (isIE) {
@@ -6341,10 +6341,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 						if (isIE) {
 							// Fix IE content duplication (DOM can have multiple copies of the same node)
 							if (s.fix_content_duplication) {
-								if (n.mce_serialized == t.key)
+								if (n._mce_serialized == t.key)
 									return;
 
-								n.mce_serialized = t.key;
+								n._mce_serialized = t.key;
 							}
 
 							// IE sometimes adds a / infront of the node name
@@ -6440,7 +6440,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 						if (ru.padd) {
 							// If it has only one bogus child, padd it anyway workaround for <td><br /></td> bug
 							if (hc && (cn = n.firstChild) && cn.nodeType === 1 && n.childNodes.length === 1) {
-								if (cn.hasAttribute ? cn.hasAttribute('mce_bogus') : cn.getAttribute('mce_bogus'))
+								if (cn.hasAttribute ? cn.hasAttribute('_mce_bogus') : cn.getAttribute('_mce_bogus'))
 									w.writeText('\u00a0');
 							} else if (!hc)
 								w.writeText('\u00a0'); // No children then padd it
@@ -8182,7 +8182,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 					style : {
 						backgroundColor : '#' + c
 					},
-					mce_color : '#' + c
+					_mce_color : '#' + c
 				});
 			});
 
@@ -8204,7 +8204,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 				e = e.target;
 
-				if (e.nodeName == 'A' && (c = e.getAttribute('mce_color')))
+				if (e.nodeName == 'A' && (c = e.getAttribute('_mce_color')))
 					t.setColor(c);
 
 				return Event.cancel(e); // Prevent IE auto save warning
@@ -9267,7 +9267,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						} else
 							n = 'div';
 
-						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' mce_name="$1"$2>');
+						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' _mce_name="$1"$2>');
 						o.content = o.content.replace(new RegExp('</(' + v + ')>', 'g'), '</' + n + '>');
 					});
 				};
@@ -9412,7 +9412,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						var pn = n.parentNode;
 
 						if (ed.dom.isBlock(pn) && pn.lastChild === n)
-							ed.dom.add(pn, 'br', {'mce_bogus' : 1});
+							ed.dom.add(pn, 'br', {'_mce_bogus' : 1});
 					});
 				};
 
@@ -9876,7 +9876,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (h.length === 0 || /^\s+$/.test(h))) {
-				o.content = t.dom.setHTML(t.getBody(), '<br mce_bogus="1" />');
+				o.content = t.dom.setHTML(t.getBody(), '<br _mce_bogus="1" />');
 				o.format = 'raw';
 			}
 
@@ -10172,7 +10172,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					each(ed.dom.select('img'), function(e) {
 						var v;
 
-						if (v = e.getAttribute('mce_src'))
+						if (v = e.getAttribute('_mce_src'))
 							e.src = t.documentBaseURI.toAbsolute(v);
 					})
 				});*/
@@ -10182,7 +10182,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 					e = e.target;
 
-					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('mce_src')))
+					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('_mce_src')))
 						e.src = t.documentBaseURI.toAbsolute(v);
 				});
 			}
@@ -10460,8 +10460,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							case 'STRIKE':
 								//sp = dom.create('span', {style : dom.getAttrib(n, 'style')});
 								n.style.textDecoration = n.nodeName == 'U' ? 'underline' : 'line-through';
-								dom.setAttrib(n, 'mce_style', '');
-								dom.setAttrib(n, 'mce_name', 'span');
+								dom.setAttrib(n, '_mce_style', '');
+								dom.setAttrib(n, '_mce_name', 'span');
 								break;
 						}
 					});
@@ -10481,7 +10481,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 							if (na) {
 								n.style.textDecoration = '';
-								dom.setAttrib(n, 'mce_style', '');
+								dom.setAttrib(n, '_mce_style', '');
 
 								e = dom.create(na, {
 									style : dom.getAttrib(n, 'style')
@@ -10550,7 +10550,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							dom.setAttrib(sp, 'class', cl[parseInt(n.size) - 1]);
 					}
 
-					dom.setAttrib(sp, 'mce_style', '');
+					dom.setAttrib(sp, '_mce_style', '');
 					dom.replace(sp, n, 1);
 				}
 			};
@@ -11106,7 +11106,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					var sp, e;
 
 					if (dom.getAttrib(n, 'face') == '__' || n.style.fontFamily === '__') {
-						sp = dom.create(nn, {mce_new : '1'});
+						sp = dom.create(nn, {_mce_new : '1'});
 
 						set(sp);
 
@@ -11124,9 +11124,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				var p = n.parentNode;
 
 				// Check if it's an old span in a new wrapper
-				if (!dom.getAttrib(n, 'mce_new')) {
+				if (!dom.getAttrib(n, '_mce_new')) {
 					// Find new wrapper
-					p = dom.getParent(n, '*[mce_new]');
+					p = dom.getParent(n, '*[_mce_new]');
 
 					if (p)
 						dom.remove(n, 1);
@@ -11137,7 +11137,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			each(dom.select(nn).reverse(), function(n) {
 				var p = n.parentNode;
 
-				if (!p || !dom.getAttrib(n, 'mce_new'))
+				if (!p || !dom.getAttrib(n, '_mce_new'))
 					return;
 
 				if (ed.settings.force_span_wrappers && p.nodeName != 'SPAN')
@@ -11156,11 +11156,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Remove empty wrappers
 			each(dom.select(nn).reverse(), function(n) {
-				if (dom.getAttrib(n, 'mce_new') || (dom.getAttribs(n).length <= 1 && n.className === '')) {
+				if (dom.getAttrib(n, '_mce_new') || (dom.getAttribs(n).length <= 1 && n.className === '')) {
 					if (!dom.getAttrib(n, 'class') && !dom.getAttrib(n, 'style'))
 						return dom.remove(n, 1);
 
-					dom.setAttrib(n, 'mce_new', ''); // Remove mce_new marker
+					dom.setAttrib(n, '_mce_new', ''); // Remove mce_new marker
 				}
 			});
 

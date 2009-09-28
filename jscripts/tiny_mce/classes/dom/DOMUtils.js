@@ -462,7 +462,7 @@
 
 				// Force update of the style data
 				if (t.settings.update_styles)
-					t.setAttrib(e, 'mce_style');
+					t.setAttrib(e, '_mce_style');
 			});
 		},
 
@@ -569,9 +569,9 @@
 						// No mce_style for elements with these since they might get resized by the user
 						if (s.keep_values) {
 							if (v && !t._isRes(v))
-								e.setAttribute('mce_style', v, 2);
+								e.setAttribute('_mce_style', v, 2);
 							else
-								e.removeAttribute('mce_style', 2);
+								e.removeAttribute('_mce_style', 2);
 						}
 
 						e.style.cssText = v;
@@ -587,13 +587,13 @@
 							if (s.url_converter)
 								v = s.url_converter.call(s.url_converter_scope || t, v, n, e);
 
-							t.setAttrib(e, 'mce_' + n, v, 2);
+							t.setAttrib(e, '_mce_' + n, v, 2);
 						}
 
 						break;
 					
 					case "shape":
-						e.setAttribute('mce_style', v);
+						e.setAttribute('_mce_style', v);
 						break;
 				}
 
@@ -643,7 +643,7 @@
 
 			// Try the mce variant for these
 			if (/^(src|href|style|coords|shape)$/.test(n)) {
-				v = e.getAttribute("mce_" + n);
+				v = e.getAttribute("_mce_" + n);
 
 				if (v)
 					return v;
@@ -676,7 +676,7 @@
 					v = t.serializeStyle(t.parseStyle(v));
 
 					if (t.settings.keep_values && !t._isRes(v))
-						e.setAttribute('mce_style', v);
+						e.setAttribute('_mce_style', v);
 				}
 			}
 
@@ -1130,7 +1130,7 @@
 					// DOM tree if contents like this <p><ul><li>Item 1</li></ul></p> is inserted
 					// It seems to be that IE doesn't like a root block element placed inside another root block element
 					if (t.settings.fix_ie_paragraphs)
-						h = h.replace(/<p><\/p>|<p([^>]+)><\/p>|<p[^\/+]\/>/gi, '<p$1 mce_keep="true">&nbsp;</p>');
+						h = h.replace(/<p><\/p>|<p([^>]+)><\/p>|<p[^\/+]\/>/gi, '<p$1 _mce_keep="true">&nbsp;</p>');
 
 					set();
 
@@ -1141,12 +1141,12 @@
 							n = nl[i];
 
 							if (!n.hasChildNodes()) {
-								if (!n.mce_keep) {
+								if (!n._mce_keep) {
 									x = 1; // Is broken
 									break;
 								}
 
-								n.removeAttribute('mce_keep');
+								n.removeAttribute('_mce_keep');
 							}
 						}
 					}
@@ -1155,13 +1155,13 @@
 					if (x) {
 						// So if we replace the p elements with divs and mark them and then replace them back to paragraphs
 						// after we use innerHTML we can fix the DOM tree
-						h = h.replace(/<p ([^>]+)>|<p>/ig, '<div $1 mce_tmp="1">');
+						h = h.replace(/<p ([^>]+)>|<p>/ig, '<div $1 _mce_tmp="1">');
 						h = h.replace(/<\/p>/g, '</div>');
 
 						// Set the new HTML with DIVs
 						set();
 
-						// Replace all DIV elements with he mce_tmp attibute back to paragraphs
+						// Replace all DIV elements with the _mce_tmp attibute back to paragraphs
 						// This is needed since IE has a annoying bug see above for details
 						// This is a slow process but it has to be done. :(
 						if (t.settings.fix_ie_paragraphs) {
@@ -1170,7 +1170,7 @@
 								n = nl[i];
 
 								// Is it a temp div
-								if (n.mce_tmp) {
+								if (n._mce_tmp) {
 									// Create new paragraph
 									p = t.doc.createElement('p');
 
@@ -1178,7 +1178,7 @@
 									n.cloneNode(false).outerHTML.replace(/([a-z0-9\-_]+)=/gi, function(a, b) {
 										var v;
 
-										if (b !== 'mce_tmp') {
+										if (b !== '_mce_tmp') {
 											v = n.getAttribute(b);
 
 											if (!v && b === 'class')
@@ -1208,7 +1208,7 @@
 		/**
 		 * Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
 		 * properly in a RTE environment. It also converts any URLs in links and images and places
-		 * a converted value into a separate attribute with the mce prefix like mce_src or mce_href.
+		 * a converted value into a separate attribute with the mce prefix like _mce_src or _mce_href.
 		 *
 		 * @method processHTML
 		 * @param {String} h HTML to process.
@@ -1232,7 +1232,7 @@
 			// Fix some issues
 			h = h.replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>'); // Force open
 
-			// Store away src and href in mce_src and mce_href since browsers mess them up
+			// Store away src and href in _mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
 				// Wrap scripts and styles in comments for serialization purposes
 				if (/<script|noscript|style/i.test(h)) {
@@ -1257,7 +1257,7 @@
 							if (s.url_converter)
 								url = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(url), 'src', 'script'));
 
-							return 'mce_src="' + url + '"';
+							return '_mce_src="' + url + '"';
 						});
 
 						// Wrap text contents
@@ -1277,7 +1277,7 @@
 							text = '<!--\nMCE_SCRIPT:' + (codeBlocks.length - 1) + '\n-->';
 						}
 
-						return '<mce:style' + attribs + '>' + text + '</mce:style><style ' + attribs + ' mce_bogus="1">' + text + '</style>';
+						return '<mce:style' + attribs + '>' + text + '</mce:style><style ' + attribs + ' _mce_bogus="1">' + text + '</style>';
 					});
 
 					// Wrap noscript elements
@@ -1311,12 +1311,12 @@
 					function handle(m, b, c) {
 						var u = c;
 
-						// Tag already got a mce_ version
-						if (a.indexOf('mce_' + b) != -1)
+						// Tag already got a _mce_ version
+						if (a.indexOf('_mce_' + b) != -1)
 							return m;
 
 						if (b == 'style') {
-							// No mce_style for elements with these since they might get resized by the user
+							// No _mce_style for elements with these since they might get resized by the user
 							if (t._isRes(c))
 								return m;
 
@@ -1327,7 +1327,7 @@
 								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));
 						}
 
-						return ' ' + b + '="' + c + '" mce_' + b + '="' + u + '"';
+						return ' ' + b + '="' + c + '" _mce_' + b + '="' + u + '"';
 					};
 
 					a = a.replace(/ (src|href|style|coords|shape)=[\"]([^\"]+)[\"]/gi, handle); // W3C

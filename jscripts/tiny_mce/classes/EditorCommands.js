@@ -487,7 +487,7 @@
 					var sp, e;
 
 					if (dom.getAttrib(n, 'face') == '__' || n.style.fontFamily === '__') {
-						sp = dom.create(nn, {mce_new : '1'});
+						sp = dom.create(nn, {_mce_new : '1'});
 
 						set(sp);
 
@@ -505,9 +505,9 @@
 				var p = n.parentNode;
 
 				// Check if it's an old span in a new wrapper
-				if (!dom.getAttrib(n, 'mce_new')) {
+				if (!dom.getAttrib(n, '_mce_new')) {
 					// Find new wrapper
-					p = dom.getParent(n, '*[mce_new]');
+					p = dom.getParent(n, '*[_mce_new]');
 
 					if (p)
 						dom.remove(n, 1);
@@ -518,7 +518,7 @@
 			each(dom.select(nn).reverse(), function(n) {
 				var p = n.parentNode;
 
-				if (!p || !dom.getAttrib(n, 'mce_new'))
+				if (!p || !dom.getAttrib(n, '_mce_new'))
 					return;
 
 				if (ed.settings.force_span_wrappers && p.nodeName != 'SPAN')
@@ -537,11 +537,11 @@
 
 			// Remove empty wrappers
 			each(dom.select(nn).reverse(), function(n) {
-				if (dom.getAttrib(n, 'mce_new') || (dom.getAttribs(n).length <= 1 && n.className === '')) {
+				if (dom.getAttrib(n, '_mce_new') || (dom.getAttribs(n).length <= 1 && n.className === '')) {
 					if (!dom.getAttrib(n, 'class') && !dom.getAttrib(n, 'style'))
 						return dom.remove(n, 1);
 
-					dom.setAttrib(n, 'mce_new', ''); // Remove mce_new marker
+					dom.setAttrib(n, '_mce_new', ''); // Remove mce_new marker
 				}
 			});
 

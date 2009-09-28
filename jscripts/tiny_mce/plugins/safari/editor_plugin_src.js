@@ -92,7 +92,7 @@
 					// If there is no text content or images or hr elements then remove everything
 					if (b.childNodes.length == 1 && !/<(img|hr)/.test(h) && tinymce.trim(h.replace(/<[^>]+>/g, '')).length == 0) {
 						// Inject paragrah and bogus br
-						ed.setContent('<p><br mce_bogus="1" /></p>', {format : 'raw'});
+						ed.setContent('<p><br _mce_bogus="1" /></p>', {format : 'raw'});
 
 						// Move caret before bogus br
 						n = b.firstChild;
@@ -149,7 +149,7 @@
 						doc = ed.getDoc();
 
 						pa = dom.create('p');
-						dom.add(pa, 'br', {mce_bogus : "1"});
+						dom.add(pa, 'br', {_mce_bogus : "1"});
 
 						if (isEmpty(doc, li)) {
 							// If list in list then use browser default behavior
@@ -235,7 +235,7 @@
 						// Convert anchors into images
 						if (nn == 'a') {
 							if (n.name)
-								dom.replace(dom.create('img', {mce_name : 'a', name : n.name, 'class' : 'mceItemAnchor'}), n);
+								dom.replace(dom.create('img', {_mce_name : 'a', name : n.name, 'class' : 'mceItemAnchor'}), n);
 
 							return;
 						}
@@ -270,7 +270,7 @@
 								break;
 						}
 
-						dom.replace(dom.create('span', {mce_name : nn, style : st, 'class' : 'Apple-style-span'}), n, 1);
+						dom.replace(dom.create('span', {_mce_name : nn, style : st, 'class' : 'Apple-style-span'}), n, 1);
 					});
 				});
 			});
@@ -285,7 +285,7 @@
 						if (dom.hasClass(n, 'Apple-style-span')) {
 							bg = n.style.backgroundColor;
 
-							switch (dom.getAttrib(n, 'mce_name')) {
+							switch (dom.getAttrib(n, '_mce_name')) {
 								case 'font':
 									if (!ed.settings.convert_fonts_to_spans)
 										dom.setAttrib(n, 'style', '');
@@ -303,7 +303,7 @@
 									if (!ed.settings.inline_styles)
 										dom.setAttrib(n, 'style', '');
 									else
-										dom.setAttrib(n, 'mce_name', '');
+										dom.setAttrib(n, '_mce_name', '');
 
 									break;
 
@@ -359,7 +359,7 @@
 		_fixAppleSpan : function(e) {
 			var ed = this.editor, dom = ed.dom, fz = this.webKitFontSizes, fzn = this.namedFontSizes, s = ed.settings, st, p;
 
-			if (dom.getAttrib(e, 'mce_fixed'))
+			if (dom.getAttrib(e, '_mce_fixed'))
 				return;
 
 			// Handle Apple style spans
@@ -368,22 +368,22 @@
 
 				if (!s.convert_fonts_to_spans) {
 					if (st.fontSize) {
-						dom.setAttrib(e, 'mce_name', 'font');
+						dom.setAttrib(e, '_mce_name', 'font');
 						dom.setAttrib(e, 'size', inArray(fz, st.fontSize) + 1);
 					}
 
 					if (st.fontFamily) {
-						dom.setAttrib(e, 'mce_name', 'font');
+						dom.setAttrib(e, '_mce_name', 'font');
 						dom.setAttrib(e, 'face', st.fontFamily);
 					}
 
 					if (st.color) {
-						dom.setAttrib(e, 'mce_name', 'font');
+						dom.setAttrib(e, '_mce_name', 'font');
 						dom.setAttrib(e, 'color', dom.toHex(st.color));
 					}
 
 					if (st.backgroundColor) {
-						dom.setAttrib(e, 'mce_name', 'font');
+						dom.setAttrib(e, '_mce_name', 'font');
 						dom.setStyle(e, 'background-color', st.backgroundColor);
 					}
 				} else {
@@ -392,24 +392,24 @@
 				}
 
 				if (st.fontWeight == 'bold')
-					dom.setAttrib(e, 'mce_name', 'strong');
+					dom.setAttrib(e, '_mce_name', 'strong');
 
 				if (st.fontStyle == 'italic')
-					dom.setAttrib(e, 'mce_name', 'em');
+					dom.setAttrib(e, '_mce_name', 'em');
 
 				if (st.textDecoration == 'underline')
-					dom.setAttrib(e, 'mce_name', 'u');
+					dom.setAttrib(e, '_mce_name', 'u');
 
 				if (st.textDecoration == 'line-through')
-					dom.setAttrib(e, 'mce_name', 'strike');
+					dom.setAttrib(e, '_mce_name', 'strike');
 
 				if (st.verticalAlign == 'super')
-					dom.setAttrib(e, 'mce_name', 'sup');
+					dom.setAttrib(e, '_mce_name', 'sup');
 
 				if (st.verticalAlign == 'sub')
-					dom.setAttrib(e, 'mce_name', 'sub');
+					dom.setAttrib(e, '_mce_name', 'sub');
 
-				dom.setAttrib(e, 'mce_fixed', '1');
+				dom.setAttrib(e, '_mce_fixed', '1');
 			}
 		},
 
