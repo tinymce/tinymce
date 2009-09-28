@@ -232,8 +232,8 @@
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
 		 */
 		getBookmark : function(simple) {
-			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = 'X';
-// \uFEFF
+			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF';
+
 			// Handle simple range
 			if (simple)
 				return {rng : t.getRng(true)};
@@ -323,7 +323,7 @@
 						} else {
 							if (prev && prev.nodeType == 1) {
 								if (start)
-									rng.setStartAfter(prev);
+									rng.setStartBefore(prev);
 								else
 									rng.setEndAfter(prev);
 							}
