@@ -652,9 +652,11 @@
 		},
 
 		mceCleanup : function() {
-			var ed = this.editor, s = ed.selection, b = s.getBookmark();
-			ed.setContent(ed.getContent());
-			s.moveToBookmark(b);
+			var ed = this.editor, sel = ed.selection, bookmark = sel.getBookmark();
+
+			ed.setContent(ed.getContent({cleanup : true}));
+
+			sel.moveToBookmark(bookmark);
 		},
 
 		mceRemoveNode : function(ui, val) {

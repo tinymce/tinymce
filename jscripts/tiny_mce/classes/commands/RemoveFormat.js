@@ -52,7 +52,7 @@
 	};
 
 	tinymce.GlobalCommands.add('RemoveFormat', function() {
-		var ed = this, dom = ed.dom, s = ed.selection, r = s.getRng(1), nodes = [], bm, start, end, sc, so, ec, eo, n;
+		var ed = this, dom = ed.dom, s = ed.selection, r, nodes = [], bm, start, end, sc, so, ec, eo, n;
 
 		function findFormatRoot(n) {
 			var sp;
@@ -78,6 +78,7 @@
 		};
 
 		bm = s.getBookmark();
+		r = s.getRng(1);
 		sc = r.startContainer;
 		ec = r.endContainer;
 		so = r.startOffset;

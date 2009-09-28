@@ -584,6 +584,7 @@
 
 			// Serialize HTML DOM into a string
 			t.writer.reset();
+			t._info = o;
 			t._serializeNode(n, o.getInner);
 
 			// Post process
@@ -681,8 +682,8 @@
 			o.content = h;
 		},
 
-		_serializeNode : function(n, inn) {
-			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv, closed;
+		_serializeNode : function(n, inner) {
+			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv, closed, keep, type;
 
 			if (!s.node_filter || s.node_filter(n)) {
 				switch (n.nodeType) {
@@ -690,7 +691,12 @@
 						if (n.hasAttribute ? n.hasAttribute('_mce_bogus') : n.getAttribute('_mce_bogus'))
 							return;
 
-						iv = false;
+						// Get internal type
+						type = n.getAttribute('_mce_type');
+						if (type && t._info.cleanup)
+							keep = 1;
+
+						iv = keep = false;
 						hc = n.hasChildNodes();
 						nn = n.getAttribute('_mce_name') || n.nodeName.toLowerCase();
 
@@ -705,9 +711,11 @@
 							nn = nn.substring(4);
 
 						// Check if valid
-						if (!t.validElementsRE || !t.validElementsRE.test(nn) || (t.invalidElementsRE && t.invalidElementsRE.test(nn)) || inn) {
-							iv = true;
-							break;
+						if (!keep) {
+							if (!t.validElementsRE || !t.validElementsRE.test(nn) || (t.invalidElementsRE && t.invalidElementsRE.test(nn)) || inner) {
+								iv = true;
+								break;
+							}
 						}
 
 						if (isIE) {
@@ -799,6 +807,10 @@
 								}
 							}
 						}
+
+						// Keep type attribute
+						if (type)
+							w.writeAttribute('_mce_type', type);
 
 						// Write text from script
 						if (nn === 'script' && tinymce.trim(n.innerHTML)) {
