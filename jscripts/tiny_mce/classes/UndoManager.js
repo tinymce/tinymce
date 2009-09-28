@@ -66,7 +66,7 @@
 			}
 
 			if (s.custom_undo_redo_restore_selection && !l.initial) {
-				l.bookmark = b = l.bookmark || ed.selection.getBookmark();
+				//l.bookmark = b = l.bookmark || ed.selection.getBookmark();
 				l.content = ed.getContent({format : 'raw', no_events : 1});
 			}
 

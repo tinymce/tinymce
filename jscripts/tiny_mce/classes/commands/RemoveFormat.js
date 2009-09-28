@@ -68,8 +68,10 @@
 		};
 
 		function collect(n) {
-			if (dom.is(n, ed.getParam('removeformat_selector')))
-				nodes.push(n);
+			if (dom.is(n, ed.getParam('removeformat_selector'))) {
+				if (!n.getAttribute('_mce_type'))
+					nodes.push(n);
+			}
 		};
 
 		function walk(n) {

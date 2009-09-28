@@ -2079,7 +2079,7 @@ tinymce.create('static tinymce.util.XHR', {
 				if (n) {
 					do {
 						v += n.nodeValue;
-					} while (n.nextSibling);
+					} while (n = n.nextSibling);
 				}
 
 				return v || s;
@@ -4966,15 +4966,15 @@ window.tinymce.dom.Sizzle = Sizzle;
 			} else {
 				e = r.startContainer;
 
-				if (e.nodeName == 'BODY')
-					return e.firstChild;
+				if (e.nodeType == 1)
+					e = e.childNodes[r.startOffset];
 
 				return t.dom.getParent(e, '*');
 			}
 		},
 
 		getEnd : function() {
-			var t = this, r = t.getRng(), e;
+			var t = this, r = t.getRng(), e, eo;
 
 			if (isIE) {
 				if (r.item)
@@ -4990,17 +4990,18 @@ window.tinymce.dom.Sizzle = Sizzle;
 				return e;
 			} else {
 				e = r.endContainer;
+				eo = r.endOffset;
 
-				if (e.nodeName == 'BODY')
-					return e.lastChild;
+				if (e.nodeType == 1)
+					e = e.childNodes[eo > 0 ? eo - 1 : eo];
 
 				return t.dom.getParent(e, '*');
 			}
 		},
 
 		getBookmark : function(simple) {
-			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index;
-
+			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = 'X';
+// \uFEFF
 			// Handle simple range
 			if (simple)
 				return {rng : t.getRng(true)};
@@ -5017,12 +5018,12 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 					// Insert start marker
 					rng.collapse();
-					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start">\uFEFF</span>');
+					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start">' + chr + '</span>');
 
 					// Insert end marker
 					if (!collapsed) {
 						rng2.collapse(false);
-						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end">\uFEFF</span>');
+						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end">' + chr + '</span>');
 					}
 				} else {
 					// Control selection
@@ -5044,14 +5045,14 @@ window.tinymce.dom.Sizzle = Sizzle;
 				// Insert end marker
 				if (!collapsed) {
 					rng2.collapse(false);
-					rng2.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_end', style : 'display:none'}, '\uFEFF'));
+					rng2.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_end', style : 'display:none'}, chr));
 				}
 
 				rng.collapse(true);
-				rng.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_start', style : 'display:none'}, '\uFEFF'));
-
-				t.moveToBookmark({id : id, keep : 1});
+				rng.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_start', style : 'display:none'}, chr));
 			}
+
+			t.moveToBookmark({id : id, keep : 1});
 
 			return {id : id};
 		},
@@ -5080,6 +5081,13 @@ window.tinymce.dom.Sizzle = Sizzle;
 								rng.setStart(prev, len);
 							else
 								rng.setEnd(prev, len);
+						} else {
+							if (prev && prev.nodeType == 1) {
+								if (start)
+									rng.setStartAfter(prev);
+								else
+									rng.setEndAfter(prev);
+							}
 						}
 					}
 				};
@@ -6159,14 +6167,19 @@ window.tinymce.dom.Sizzle = Sizzle;
 						if (n.hasAttribute ? n.hasAttribute('_mce_bogus') : n.getAttribute('_mce_bogus'))
 							return;
 
-						// Get internal type
-						type = n.getAttribute('_mce_type');
-						if (type && t._info.cleanup)
-							keep = 1;
-
 						iv = keep = false;
 						hc = n.hasChildNodes();
 						nn = n.getAttribute('_mce_name') || n.nodeName.toLowerCase();
+
+						// Get internal type
+						type = n.getAttribute('_mce_type');
+						if (type) {
+							if (!t._info.cleanup) {
+								iv = true;
+								return;
+							} else
+								keep = 1;
+						}
 
 						// Add correct prefix on IE
 						if (isIE) {
@@ -6277,7 +6290,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 						}
 
 						// Keep type attribute
-						if (type)
+						if (type && keep)
 							w.writeAttribute('_mce_type', type);
 
 						// Write text from script
@@ -11447,7 +11460,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			if (s.custom_undo_redo_restore_selection && !l.initial) {
-				l.bookmark = b = l.bookmark || ed.selection.getBookmark();
+				//l.bookmark = b = l.bookmark || ed.selection.getBookmark();
 				l.content = ed.getContent({format : 'raw', no_events : 1});
 			}
 
@@ -11758,6 +11771,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Wrap non blocks into blocks
 			for (i = nl.length - 1; i >= 0; i--) {
 				nx = nl[i];
+
+				// Ignore internal elements
+				if (nx.nodeType === 1 && nx.getAttribute('_mce_type')) {
+					bl = null;
+					continue;
+				}
 
 				// Is text or non block element
 				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8 && !/^(script|mce:script|style|mce:style)$/i.test(nx.nodeName))) {
@@ -12802,8 +12821,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function collect(n) {
-			if (dom.is(n, ed.getParam('removeformat_selector')))
-				nodes.push(n);
+			if (dom.is(n, ed.getParam('removeformat_selector'))) {
+				if (!n.getAttribute('_mce_type'))
+					nodes.push(n);
+			}
 		};
 
 		function walk(n) {

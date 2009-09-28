@@ -183,8 +183,8 @@
 			} else {
 				e = r.startContainer;
 
-				if (e.nodeName == 'BODY')
-					return e.firstChild;
+				if (e.nodeType == 1)
+					e = e.childNodes[r.startOffset];
 
 				return t.dom.getParent(e, '*');
 			}
@@ -198,7 +198,7 @@
 		 * @return {Element} End element of selection range.
 		 */
 		getEnd : function() {
-			var t = this, r = t.getRng(), e;
+			var t = this, r = t.getRng(), e, eo;
 
 			if (isIE) {
 				if (r.item)
@@ -214,9 +214,10 @@
 				return e;
 			} else {
 				e = r.endContainer;
+				eo = r.endOffset;
 
-				if (e.nodeName == 'BODY')
-					return e.lastChild;
+				if (e.nodeType == 1)
+					e = e.childNodes[eo > 0 ? eo - 1 : eo];
 
 				return t.dom.getParent(e, '*');
 			}
@@ -231,8 +232,8 @@
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
 		 */
 		getBookmark : function(simple) {
-			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index;
-
+			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = 'X';
+// \uFEFF
 			// Handle simple range
 			if (simple)
 				return {rng : t.getRng(true)};
@@ -249,12 +250,12 @@
 
 					// Insert start marker
 					rng.collapse();
-					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start">\uFEFF</span>');
+					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start">' + chr + '</span>');
 
 					// Insert end marker
 					if (!collapsed) {
 						rng2.collapse(false);
-						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end">\uFEFF</span>');
+						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end">' + chr + '</span>');
 					}
 				} else {
 					// Control selection
@@ -276,14 +277,14 @@
 				// Insert end marker
 				if (!collapsed) {
 					rng2.collapse(false);
-					rng2.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_end', style : 'display:none'}, '\uFEFF'));
+					rng2.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_end', style : 'display:none'}, chr));
 				}
 
 				rng.collapse(true);
-				rng.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_start', style : 'display:none'}, '\uFEFF'));
-
-				t.moveToBookmark({id : id, keep : 1});
+				rng.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_start', style : 'display:none'}, chr));
 			}
+
+			t.moveToBookmark({id : id, keep : 1});
 
 			return {id : id};
 		},
@@ -319,6 +320,13 @@
 								rng.setStart(prev, len);
 							else
 								rng.setEnd(prev, len);
+						} else {
+							if (prev && prev.nodeType == 1) {
+								if (start)
+									rng.setStartAfter(prev);
+								else
+									rng.setEndAfter(prev);
+							}
 						}
 					}
 				};

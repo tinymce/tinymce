@@ -1440,7 +1440,7 @@
 				if (n) {
 					do {
 						v += n.nodeValue;
-					} while (n.nextSibling);
+					} while (n = n.nextSibling);
 				}
 
 				return v || s;

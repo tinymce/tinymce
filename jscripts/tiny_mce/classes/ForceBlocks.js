@@ -230,6 +230,12 @@
 			for (i = nl.length - 1; i >= 0; i--) {
 				nx = nl[i];
 
+				// Ignore internal elements
+				if (nx.nodeType === 1 && nx.getAttribute('_mce_type')) {
+					bl = null;
+					continue;
+				}
+
 				// Is text or non block element
 				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8 && !/^(script|mce:script|style|mce:style)$/i.test(nx.nodeName))) {
 					if (!bl) {

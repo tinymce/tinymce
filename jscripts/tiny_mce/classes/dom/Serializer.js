@@ -691,14 +691,19 @@
 						if (n.hasAttribute ? n.hasAttribute('_mce_bogus') : n.getAttribute('_mce_bogus'))
 							return;
 
-						// Get internal type
-						type = n.getAttribute('_mce_type');
-						if (type && t._info.cleanup)
-							keep = 1;
-
 						iv = keep = false;
 						hc = n.hasChildNodes();
 						nn = n.getAttribute('_mce_name') || n.nodeName.toLowerCase();
+
+						// Get internal type
+						type = n.getAttribute('_mce_type');
+						if (type) {
+							if (!t._info.cleanup) {
+								iv = true;
+								return;
+							} else
+								keep = 1;
+						}
 
 						// Add correct prefix on IE
 						if (isIE) {
@@ -809,7 +814,7 @@
 						}
 
 						// Keep type attribute
-						if (type)
+						if (type && keep)
 							w.writeAttribute('_mce_type', type);
 
 						// Write text from script
