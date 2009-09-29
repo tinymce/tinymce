@@ -33,7 +33,7 @@
 				[/[\x60\x91\x92\u2018\u2019]/g, "'"]
 			]
 		};
-		
+
 	function getParam(ed, name) {
 		return ed.getParam(name, defs[name]);
 	}
@@ -62,7 +62,7 @@
 			t.onPostProcess.add(function (pl, o) {
 				ed.execCallback('paste_postprocess', pl, o);
 			});
-			
+
 			// Initialize plain text flag
 			ed.pasteAsPlainText = false;
 
@@ -86,7 +86,7 @@
 				// Plain text option active?
 				if ((!forceRich) && (ed.pasteAsPlainText)) {
 					t._insertPlainText(ed, dom, o.content);
-					
+
 					if (!getParam(ed, "paste_text_sticky")) {
 						ed.pasteAsPlainText = false;
 						ed.controlManager.setActive("pastetext", false);
@@ -105,14 +105,14 @@
 			ed.addCommand('mceInsertClipboardContent', function (u, o) {
 				process(o, true);
 			});
-			
+
 			if (!getParam(ed, "paste_text_use_dialog")) {
 				ed.addCommand('mcePasteText', function (u, v) {
 					var cookie = tinymce.util.Cookie;
-					
+
 					ed.pasteAsPlainText = !ed.pasteAsPlainText;
 					ed.controlManager.setActive('pastetext', ed.pasteAsPlainText);
-					
+
 					if ((ed.pasteAsPlainText) && (!cookie.get("tinymcePasteText"))) {
 
 						if (getParam(ed, "paste_text_sticky")) {
@@ -121,7 +121,7 @@
 						else {
 							ed.windowManager.alert("Paste is now in plain text mode. Click again to toggle back to regular paste mode.");
 						}
-						
+
 						if (!getParam(ed, "paste_text_notifyalways")) {
 							cookie.set("tinymcePasteText", "1", new Date(new Date().getFullYear() + 1, 12, 31))
 						}
@@ -135,7 +135,7 @@
 			// This function grabs the contents from the clipboard by adding a
 			// hidden div and placing the caret inside it and after the browser paste
 			// is done it grabs that contents and processes that
-			function grabContent (e) {
+			function grabContent(e) {
 				var n, or, rng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY;
 
 				if (dom.get('_mcePaste'))
@@ -183,6 +183,14 @@
 					// Block the real paste event
 					return tinymce.dom.Event.cancel(e);
 				} else {
+					function block(e) {
+						e.preventDefault();
+					};
+
+					// Block mousedown and click to prevent selection change
+					dom.bind(ed.getDoc(), 'mousedown', block);
+					dom.bind(ed.getDoc(), 'keydown', block);
+
 					or = ed.selection.getRng();
 
 					// Move caret into hidden div
@@ -195,22 +203,26 @@
 					// Wait a while and grab the pasted contents
 					window.setTimeout(function () {
 						var h = '', nl = dom.select('div[id=_mcePaste]');
-						
+
 						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
 						each(nl, function(n) {
 							h += (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
 						});
-						
+
 						// Remove the nodes
 						each(nl, function(n) {
 							dom.remove(n);
 						});
-						
+
 						// Restore the old selection
 						if (or)
 							sel.setRng(or);
 
 						process({content : h});
+
+						// Unblock events ones we got the contents
+						dom.unbind(ed.getDoc(), 'mousedown', block);
+						dom.unbind(ed.getDoc(), 'keydown', block);
 					}, 0);
 				}
 			}
@@ -300,16 +312,19 @@
 				}
 
 				process([
+					// Word comments like conditional comments etc
+					/<!--[\s\S]+?-->/gi,
+
 					// Remove comments, scripts (e.g., msoShowComment), XML tag, VML content, MS Office namespaced tags, and a few other tags
 					/<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi,
-					
+
 					// Convert <s> into <strike> for line-though
 					[/<(\/?)s>/gi, "<$1strike>"],
-					
+
 					// Replace nsbp entites to char since it's easier to handle
 					[/&nbsp;/gi, "\u00a0"]
 				]);
-				
+
 				// Remove bad attributes, with or without quotes, ensuring that attribute text is really inside a tag.
 				// If JavaScript had a RegExp look-behind, we could have integrated this with the last process() array and got rid of the loop. But alas, it does not, so we cannot.
 				do {
@@ -320,40 +335,38 @@
 				// Remove all spans if no styles is to be retained
 				if (getParam(ed, "paste_retain_style_properties").replace(/^none$/i, "").length == 0) {
 					h = h.replace(/<\/?span[^>]*>/gi, "");
-				}
-				
-				// We're keeping styles, so at least clean them up.
-				// CSS Reference: http://msdn.microsoft.com/en-us/library/aa155477.aspx
-				else {
+				} else {
+					// We're keeping styles, so at least clean them up.
+					// CSS Reference: http://msdn.microsoft.com/en-us/library/aa155477.aspx
+
 					process([
-					
 						// Convert <span style="mso-spacerun:yes">___</span> to string of alternating breaking/non-breaking spaces of same length
 						[/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
 							function (str, spaces) {
 								return (spaces.length > 0)? spaces.replace(/./, " ").slice(Math.floor(spaces.length/2)).split("").join("\u00a0") : "";
 							}
 						],
-						
+
 						// Examine all styles: delete junk, transform some, and keep the rest
 						[/(<[a-z][^>]*)\sstyle="([^"]*)"/gi,
 							function (str, tag, style) {
 								var n = [],
 									i = 0,
 									s = explode(trim(style).replace(/&quot;/gi, "'"), ";");
-								
+
 								// Examine each style definition within the tag's style attribute
 								each(s, function (v) {
 									var name, value,
 										parts = explode(v, ":");
-										
+
 									function ensureUnits(v) {
 										return v + ((v !== "0") && (/\d$/.test(v)))? "px" : "";
 									}
-									
+
 									if (parts.length == 2) {
 										name = parts[0].toLowerCase();
 										value = parts[1].toLowerCase();
-										
+
 										// Translate certain MS Office styles into their CSS equivalents
 										switch (name) {
 											case "mso-padding-alt":
@@ -372,65 +385,64 @@
 											case "mso-vertical-align-alt":
 												n[i++] = name.replace(/^mso-|-alt$/g, "") + ":" + ensureUnits(value);
 												return;
-												
+
 											case "horiz-align":
 												n[i++] = "text-align:" + value;
 												return;
-												
+
 											case "vert-align":
 												n[i++] = "vertical-align:" + value;
 												return;
-												
+
 											case "font-color":
 											case "mso-foreground":
 												n[i++] = "color:" + value;
 												return;
-												
+
 											case "mso-background":
 											case "mso-highlight":
 												n[i++] = "background:" + value;
 												return;
-												
+
 											case "mso-default-height":
 												n[i++] = "min-height:" + ensureUnits(value);
 												return;
-												
+
 											case "mso-default-width":
 												n[i++] = "min-width:" + ensureUnits(value);
 												return;
-												
+
 											case "mso-padding-between-alt":
 												n[i++] = "border-collapse:separate;border-spacing:" + ensureUnits(value);
 												return;
-												
+
 											case "text-line-through":
 												if ((value == "single") || (value == "double")) {
 													n[i++] = "text-decoration:line-through";
 												}
 												return;
-												
+
 											case "mso-zero-height":
 												if (value == "yes") {
 													n[i++] = "display:none";
 												}
 												return;
 										}
-										
+
 										// Eliminate all MS Office style definitions that have no CSS equivalent by examining the first characters in the name
 										if (/^(mso|column|font-emph|lang|layout|line-break|list-image|nav|panose|punct|row|ruby|sep|size|src|tab-|table-border|text-(?!align|decor|indent|trans)|top-bar|version|vnd|word-break)/.test(name)) {
 											return;
 										}
-										
+
 										// If it reached this point, it must be a valid CSS style
 										n[i++] = name + ":" + parts[1];		// Lower-case name, but keep value case
 									}
 								});
-								
+
 								// If style attribute contained any valid styles the re-write it; otherwise delete style attribute.
 								if (i > 0) {
 									return tag + ' style="' + n.join(';') + '"';
-								}
-								else {
+								} else {
 									return tag;
 								}
 							}
@@ -450,21 +462,21 @@
 			// Class attribute options are: leave all as-is ("none"), remove all ("all"), or remove only those starting with mso ("mso").
 			// Note:-  paste_strip_class_attributes: "none", verify_css_classes: true is also a good variation.
 			stripClass = getParam(ed, "paste_strip_class_attributes");
-			
+
 			if (stripClass !== "none") {
 				h = h.replace(/(<[a-z](?:"(?:[^"]|\\")*"|'(?:[^']|\\')*'|[^"'>])*)\sclass=("(?:[^"]|\\")*"|'(?:[^']|\\')*'|[-\w]+)/gi,
 					function (match, g1, g2) {
-						
+
 						if (stripClass === "all") {
 							return g1;
 						}
-						
+
 						var cls = grep(explode(g2.replace(/^(["'])(.*)\1$/, "$2"), " "),
 							function (v) {
 								return (/^(?!mso)/i.test(v));
 							}
 						);
-						
+
 						return g1 + (cls.length? 'class="' + cls.join(" ") + '"' : '');							
 					}
 				);
@@ -720,7 +732,7 @@
 				inArray = tinymce.inArray,
 				linebr = getParam(ed, "paste_text_linebreaktype"),
 				rl = getParam(ed, "paste_text_replacements");
-			
+
 			function process(items) {
 				each(items, function (v) {
 					if (v.constructor == RegExp)
@@ -731,11 +743,11 @@
 			}
 
 			if ((typeof(h) === "string") && (h.length > 0)) {
-			
+
 				if (!entities) {
 					entities = ("34,quot,38,amp,39,apos,60,lt,62,gt," + ed.serializer.settings.entities).split(",");
 				}
-				
+
 				// If HTML content with line-breaking tags, then remove all cr/lf chars because only tags will break a line
 				if (/<(?:p|br|h[1-6]|ul|ol|dl|table|t[rdh]|div|blockquote|fieldset|pre|address|center)[^>]*>/i.test(h)) {
 					process([
@@ -758,7 +770,7 @@
 					[
 						// HTML entity
 						/&(#\d+|[a-z0-9]{1,10});/gi,
-						
+
 						// Replace with actual character
 						function (e, s) {
 							if (s.charAt(0) === "#") {
@@ -775,12 +787,12 @@
 				]);
 
 				h = dom.encode(h);
-				
+
 				// Delete any highlighted text before pasting
 				if (!sel.isCollapsed()) {
 					d.execCommand("Delete", false, null);
 				}
-				
+
 				// Perform default or custom replacements
 				if (is(rl, "array") || (is(rl, "array"))) {
 					process(rl);
@@ -788,7 +800,7 @@
 				else if (is(rl, "string")) {
 					process(new RegExp(rl, "gi"));
 				}
-				
+
 				// Treat paragraphs as specified in the config
 				if (linebr == "none") {
 					process([
@@ -827,21 +839,21 @@
 							if (node.nodeName == "TD" || node.nodeName == "BODY") {
 								break;
 							}
-							
+
 							breakElms[breakElms.length] = node;
 						}
 					} while (node = node.parentNode);
-					
+
 					// Are we in the middle of a block node?
 					if (breakElms.length > 0) {
 						before = h.substring(0, pos);
 						after = "";
-						
+
 						for (i=0, len=breakElms.length; i<len; i++) {
 							before += "</" + breakElms[i].nodeName.toLowerCase() + ">";
 							after += "<" + breakElms[breakElms.length-i-1].nodeName.toLowerCase() + ">";
 						}
-						
+
 						if (pos == rpos) {
 							h = before + after + h.substring(pos+7);
 						}
@@ -853,7 +865,7 @@
 
 				// Insert content at the caret, plus add a marker for repositioning the caret
 				ed.execCommand("mceInsertRawHTML", false, h + '<span id="_plain_text_marker">&nbsp;</span>');
-				
+
 				// Reposition the caret to the marker, which was placed immediately after the inserted content.
 				// Needs to be done asynchronously (in window.setTimeout) or else it doesn't work in all browsers.
 				// The second part of the code scrolls the content up if the caret is positioned off-screen.
@@ -861,7 +873,7 @@
 				window.setTimeout(function () {
 					var marker = dom.get('_plain_text_marker'),
 						elm, vp, y, elmHeight;
-						
+
 					sel.select(marker, false);
 					d.execCommand("Delete", false, null);
 					marker = null;
@@ -899,10 +911,10 @@
 			/// <returns type="Function"></returns>
 
 			var a = arguments;
-			
+
 			return function () {
 				var i = 0, j, l = arguments.length, args = [];
-				
+
 				if (l > 0) {
 					for (; i<l; i++) {
 						args[i] = arguments[i];
@@ -932,7 +944,7 @@
 					inline: 1
 				});
 			});
-			
+
 			if (getParam(ed, "paste_text_use_dialog")) {
 				ed.addCommand("mcePasteText", function () {
 					ed.windowManager.open({

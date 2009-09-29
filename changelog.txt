@@ -1,5 +1,6 @@
 Version 3.3 (2009-09-xx)
 	Fixed bug where the decode method of the DOMUtils class could end up in an endless loop.
+	Fixed bug where it was possible to bypass the paste cleanup on non IE browsers if you clicked while pasting.
 	Rewrote the getBookmark/moveToBookmark selection logic to boost performance.
 	Changed the mce_ attribute prefix to the more standard _mce_ prefix.
 	Optimized performance with named entities on Gecko. Regexp replace was executing very slowly probably due to a Gecko bug.
