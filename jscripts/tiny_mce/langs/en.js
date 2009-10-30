@@ -151,4 +151,17 @@ no_mpell:"No misspellings found."
 },
 pagebreak:{
 desc:"Insert page break."
-}}});
+},
+advlist : {
+	types : 'Types',
+	def : 'Default',
+	lower_alpha : "Lower alpha",
+	lower_greek : "Lower greek",
+	lower_roman : "Lower roman",
+	upper_alpha : "Upper alpha",
+	upper_roman : "Upper roman",
+	circle : "Circle",
+	disc : "Disc",
+	square : "Square"
+}
+}});

@@ -346,7 +346,7 @@
 <tr>
 <td class="first">
 <div>
-<a class="memberName" href="class_tinymce.dom.DOMUtils.html#serializeStyle">serializeStyle</a>(o:Object):String</div>
+<a class="memberName" href="class_tinymce.dom.DOMUtils.html#serializeStyle">serializeStyle</a>(o:Object, name:String):String</div>
 <div class="summary">Serializes the specified style object into a string.</div>
 </td>
 <td class="last">DOMUtils</td>
@@ -1071,7 +1071,7 @@ colors to hex values. Urls inside the styles will also be converted to absolute/
 						function processHTML(h:String):String</code>
 <div class="memberDescription">Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
 properly in a RTE environment. It also converts any URLs in links and images and places
-a converted value into a separate attribute with the mce prefix like mce_src or mce_href.
+a converted value into a separate attribute with the mce prefix like _mce_src or _mce_href.
 </div>
 <h4>Parameters</h4>
 <table class="params">
@@ -1201,7 +1201,7 @@ on more complex patterns.
 <h3>serializeStyle<span class="memberType">method</span>
 </h3>
 <code class="syntax">public 
-						function serializeStyle(o:Object):String</code>
+						function serializeStyle(o:Object, name:String):String</code>
 <div class="memberDescription">Serializes the specified style object into a string.
 </div>
 <h4>Parameters</h4>
@@ -1209,6 +1209,10 @@ on more complex patterns.
 <tr>
 <td class="first">o:Object</td>
 <td class="last">Object to serialize as string for example: {border : '1px solid red'}</td>
+</tr>
+<tr>
+<td class="first">name:String</td>
+<td class="last">Optional element name.</td>
 </tr>
 </table>
 <h4>Returns</h4>

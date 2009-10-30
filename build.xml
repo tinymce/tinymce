@@ -89,7 +89,7 @@
 			<fileset dir="${classes_dir}" includes="ControlManager.js" />
 			<fileset dir="${classes_dir}" includes="WindowManager.js" />
 			<fileset dir="${classes_dir}" includes="CommandManager.js" />
-			<fileset dir="${classes_dir}" includes="commands/RemoveFormat.js" />
+			<fileset dir="${classes_dir}" includes="Formatter.js" />
 			<fileset dir="${classes_dir}" includes="commands/BlockQuote.js" />
 			<fileset dir="${classes_dir}" includes="commands/CutCopyPaste.js" />
 			<fileset dir="${classes_dir}" includes="commands/InsertHorizontalRule.js" />
@@ -129,6 +129,7 @@
 		<yuicompress infile="${build_dir}/plugins/advhr/editor_plugin_src.js" outfile="${build_dir}/plugins/advhr/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/advimage/editor_plugin_src.js" outfile="${build_dir}/plugins/advimage/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/advlink/editor_plugin_src.js" outfile="${build_dir}/plugins/advlink/editor_plugin.js" />
+		<yuicompress infile="${build_dir}/plugins/advlist/editor_plugin_src.js" outfile="${build_dir}/plugins/advlist/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/emotions/editor_plugin_src.js" outfile="${build_dir}/plugins/emotions/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/example/editor_plugin_src.js" outfile="${build_dir}/plugins/example/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/iespell/editor_plugin_src.js" outfile="${build_dir}/plugins/iespell/editor_plugin.js" />

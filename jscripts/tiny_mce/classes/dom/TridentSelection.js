@@ -32,18 +32,6 @@
 		function getRange() {
 			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), ieRange2, element, collapsed, isMerged;
 
-			// Returns the index of a node within it's parent
-			function nodeIndex(n) {
-				var i = 0;
-
-				while (n.previousSibling) {
-					i++;
-					n = n.previousSibling;
-				}
-
-				return i;
-			};
-
 			// If selection is outside the current document just return an empty range
 			element = ieRange.item ? ieRange.item(0) : ieRange.parentElement();
 			if (element.ownerDocument != dom.doc)
@@ -51,7 +39,7 @@
 
 			// Handle control selection or text selection of a image
 			if (ieRange.item || !element.hasChildNodes()) {
-				domRange.setStart(element.parentNode, nodeIndex(element));
+				domRange.setStart(element.parentNode, dom.nodeIndex(element));
 				domRange.setEnd(domRange.startContainer, domRange.startOffset + 1);
 
 				return domRange;
@@ -61,14 +49,14 @@
 			ieRange2 = ieRange.duplicate();
 			collapsed = selection.isCollapsed();
 
-			// Insert start marker
+			// Insert invisible start marker
 			ieRange.collapse();
-			ieRange.pasteHTML('<span id="_mce_start">\uFEFF</span>');
+			ieRange.pasteHTML('<span id="_mce_start" style="display:none;line-height:0">\uFEFF</span>');
 
-			// Insert end marker
+			// Insert invisible end marker
 			if (!collapsed) {
 				ieRange2.collapse(false);
-				ieRange2.pasteHTML('<span id="_mce_end">\uFEFF</span>');
+				ieRange2.pasteHTML('<span id="_mce_end" style="display:none;line-height:0">\uFEFF</span>');
 			}
 
 			// Sets the end point of the range by looking for the marker
@@ -105,9 +93,9 @@
 					} else {
 						// Is marker before an element
 						if (sibling)
-							offset = nodeIndex(sibling) - 1;
+							offset = dom.nodeIndex(sibling) - 1;
 						else
-							offset = nodeIndex(marker);
+							offset = dom.nodeIndex(marker);
 
 						container = marker.parentNode;
 					}
@@ -141,6 +129,8 @@
 
 		this.addRange = function(rng) {
 			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker;
+
+			this.destroy();
 
 			// Setup some shorter versions
 			sc = rng.startContainer;
@@ -240,6 +230,12 @@
 			}
 
 			ieRng.select();
+			ieRng.scrollIntoView();
+
+			// Cache native range and W3C range, this boost performance and also solves the
+			// IE issue where it automatically moves the selection range outside/inside elements
+			lastIERng = ieRng;
+			range = rng;
 		};
 
 		this.getRangeAt = function() {
@@ -259,6 +255,79 @@
 			// Destroy cached range and last IE range to avoid memory leaks
 			lastIERng = range = null;
 		};
+
+		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
+		if (selection.dom.boxModel) {
+			(function() {
+				var dom = selection.dom, doc = dom.doc, body = doc.body, started, startRng;
+
+				// Make HTML element unselectable since we are going to handle selection by hand
+				doc.documentElement.unselectable = true;
+
+				// Return range from point or null if it failed
+				function rngFromPoint(x, y) {
+					var rng = body.createTextRange();
+
+					try {
+						rng.moveToPoint(x, y);
+					} catch (ex) {
+						// IE sometimes throws and exception, so lets just ignore it
+						rng = null;
+					}
+
+					return rng;
+				};
+
+				// Fires while the selection is changing
+				function selectionChange(e) {
+					var pointRng;
+
+					// Check if the button is down or not
+					if (e.button) {
+						// Create range from mouse position
+						pointRng = rngFromPoint(e.x, e.y);
+
+						if (pointRng) {
+							// Check if pointRange is before/after selection then change the endPoint
+							if (pointRng.compareEndPoints('StartToStart', startRng) > 0)
+								pointRng.setEndPoint('StartToStart', startRng);
+							else
+								pointRng.setEndPoint('EndToEnd', startRng);
+
+							pointRng.select();
+						}
+					} else
+						endSelection();
+				}
+
+				// Removes listeners
+				function endSelection() {
+					dom.unbind(doc, 'mouseup', endSelection);
+					dom.unbind(doc, 'mousemove', selectionChange);
+					started = 0;
+				};
+
+				// Detect when user selects outside BODY
+				dom.bind(doc, 'mousedown', function(e) {
+					if (e.target.nodeName === 'HTML') {
+						if (started)
+							endSelection();
+
+						started = 1;
+
+						// Setup start position
+						startRng = rngFromPoint(e.x, e.y);
+						if (startRng) {
+							// Listen for selection change events
+							dom.bind(doc, 'mouseup', endSelection);
+							dom.bind(doc, 'mousemove', selectionChange);
+
+							startRng.select();
+						}
+					}
+				});
+			})();
+		}
 	};
 
 	// Expose the selection object

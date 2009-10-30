@@ -134,13 +134,8 @@
 				// Make sure we wrap it compleatly, Opera fails with a simple select call
 				r = d.createRange();
 				r.setStartBefore(c);
-				r.setEndAfter(c);
+				r.setEndBefore(c);
 				t.setRng(r);
-
-				// Delete the marker, and hopefully the caret gets placed in the right location
-				// Removed this since it seems to remove &nbsp; in FF and simply deleting it
-				// doesn't seem to affect the caret position in any browser
-				//d.execCommand('Delete', false, null);
 
 				// Remove the caret position
 				t.dom.remove('__caret');
@@ -236,7 +231,7 @@
 
 			// Handle simple range
 			if (simple)
-				return {rng : t.getRng(true)};
+				return {rng : t.getRng()};
 
 			rng = t.getRng();
 			id = dom.uniqueId();
@@ -298,6 +293,10 @@
 		 */
 		moveToBookmark : function(bookmark) {
 			var t = this, dom = t.dom, marker1, marker2, rng;
+
+			// Clear selection cache
+			if (t.tridentSel)
+				t.tridentSel.destroy();
 
 			if (bookmark) {
 				// Removes the specified node and merges the siblings around them and update the DOM range to it's new merged position
@@ -448,7 +447,10 @@
 			if (!r || r.item)
 				return false;
 
-			return !s || r.boundingWidth == 0 || r.collapsed;
+			if (r.compareEndPoints)
+				return r.compareEndPoints('StartToEnd', r) === 0;
+
+			return !s || r.collapsed;
 		},
 
 		/**

@@ -38,11 +38,11 @@ test("Selection of element containing text", function() {
 	editor.selection.setRng(rng);
 
 	rng = editor.selection.getRng(1);
-	equals(rng.startContainer.nodeName, '#text');
-	equals(rng.endContainer.nodeName, '#text');
-	equals(rng.startOffset, 0);
-	equals(rng.endOffset, 3);
-	equals(editor.dom.getOuterHTML(rng.cloneContents()), '123');
+	equals(rng.startContainer.nodeName, '#text', 'Start container is text node');
+	equals(rng.endContainer.nodeName, '#text', 'End container is text node');
+	equals(rng.startOffset, 0, 'Start of text node');
+	equals(rng.endOffset, 3, 'End of text node');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()), '123', 'Contents matches');
 });
 
 test("Single image selection", function() {
@@ -56,12 +56,12 @@ test("Single image selection", function() {
 	editor.selection.setRng(rng);
 
 	rng = editor.selection.getRng(1);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.startOffset, 0);
-	equals(rng.endOffset, 1);
-	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" _mce_src="about:blank">');
-	ok(editor.selection.getRng().item, 'Is control selection');
+	equals(rng.startContainer.nodeName, 'P', 'Check startContainer');
+	equals(rng.endContainer.nodeName, 'P', 'Check endContainer');
+	equals(rng.startOffset, 0, 'Check startOffset');
+	equals(rng.endOffset, 1, 'Check endOffset');
+	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" _mce_src="about:blank">', 'Check contents');
+	ok(editor.selection.getRng().item, 'Check if it\'s a control selection');
 });
 
 test("Multiple image selection", function() {
@@ -126,8 +126,8 @@ test("Text node selection between two elements", function() {
 	editor.selection.setRng(rng);
 
 	rng = editor.selection.getRng(1);
-	equals(rng.startContainer.nodeName, '#text', "startContainer type check");
-	equals(rng.startOffset, 0, "startOffset doesn't match");
+	equals(rng.startContainer.nodeName, 'BODY', "startContainer type check");
+	equals(rng.startOffset, 1, "startOffset doesn't match");
 
 	equals(rng.endContainer.nodeName, 'BODY', "endContainer type check");
 	equals(rng.endOffset, 3, "endOffset doesn't match");

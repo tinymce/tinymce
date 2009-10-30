@@ -100,11 +100,8 @@
 
 					if (k == v && v >= 1 && v <= 7) {
 						k = v + ' (' + t.sizes[v - 1] + 'pt)';
-
-						if (ed.settings.convert_fonts_to_spans) {
-							cl = s.font_size_classes[v - 1];
-							v = s.font_size_style_values[v - 1] || (t.sizes[v - 1] + 'pt');
-						}
+						cl = s.font_size_classes[v - 1];
+						v = s.font_size_style_values[v - 1] || (t.sizes[v - 1] + 'pt');
 					}
 
 					if (/^\s*\./.test(v))
@@ -124,7 +121,8 @@
 
 			// Init editor
 			ed.onInit.add(function() {
-				ed.onNodeChange.add(t._nodeChanged, t);
+				if (!ed.settings.readonly)
+					ed.onNodeChange.add(t._nodeChanged, t);
 
 				if (ed.settings.content_css !== false)
 					ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/advanced/skins/" + ed.settings.skin + "/content.css"));
@@ -197,36 +195,64 @@
 		},
 
 		_importClasses : function(e) {
-			var ed = this.editor, c = ed.controlManager.get('styleselect');
+			var ed = this.editor, ctrl = ed.controlManager.get('styleselect');
 
-			if (c.getLength() == 0) {
+			if (ctrl.getLength() == 0) {
 				each(ed.dom.getClasses(), function(o) {
-					c.add(o['class'], o['class']);
+					ctrl.add(o['class'], {
+						inline : 'span',
+						classes : o['class']
+					});
 				});
 			}
 		},
 
 		_createStyleSelect : function(n) {
-			var t = this, ed = t.editor, cf = ed.controlManager, c = cf.createListBox('styleselect', {
+			var t = this, ed = t.editor, ctrlMan = ed.controlManager, ctrl, formats = [];
+
+			// Setup style select box
+			ctrl = ctrlMan.createListBox('styleselect', {
 				title : 'advanced.style_select',
-				onselect : function(v) {
-					if (c.selectedValue === v) {
-						ed.execCommand('mceSetStyleInfo', 0, {command : 'removeformat'});
-						c.select();
-						return false;
-					} else
-						ed.execCommand('mceSetCSSClass', 0, v);
+				onselect : function(fmt) {
+					ed.focus();
+					ed.formatter.toggle(fmt);
+
+					return false; // No auto select
 				}
 			});
 
-			if (c) {
-				each(ed.getParam('theme_advanced_styles', '', 'hash'), function(v, k) {
-					if (v)
-						c.add(t.editor.translate(k), v);
+			// Handle older format
+			each(ed.getParam('theme_advanced_styles', '', 'hash'), function(val, key) {
+				if (val) {
+					formats.push({
+						title : t.editor.translate(key),
+						inline : 'span',
+						classes : val
+					});
+				}
+			});
+
+			// Handle specified format
+			ed.settings.style_formats = formats = ed.getParam('style_formats') || formats;
+			each(formats, function(fmt) {
+				var count = 0;
+
+				// Count items
+				each(fmt, function() {
+					count++;
 				});
 
-				c.onPostRender.add(function(ed, n) {
-					if (!c.NativeListBox) {
+				// Only title item then generate a title
+				if (count == 1 && fmt.title)
+					ctrl.add(fmt.title);
+				else
+					ctrl.add(fmt.title, fmt);
+			});
+
+			// Auto import classes if the ctrl box is empty
+			if (ctrl.getLength() == 0) {
+				ctrl.onPostRender.add(function(ed, n) {
+					if (!ctrl.NativeListBox) {
 						Event.add(n.id + '_text', 'focus', t._importClasses, t);
 						Event.add(n.id + '_text', 'mousedown', t._importClasses, t);
 						Event.add(n.id + '_open', 'focus', t._importClasses, t);
@@ -236,13 +262,20 @@
 				});
 			}
 
-			return c;
+			return ctrl;
 		},
 
 		_createFontSelect : function() {
 			var c, t = this, ed = t.editor;
 
-			c = ed.controlManager.createListBox('fontselect', {title : 'advanced.fontdefault', cmd : 'FontName'});
+			c = ed.controlManager.createListBox('fontselect', {
+				title : 'advanced.fontdefault',
+				onselect : function(v) {
+					ed.execCommand('FontName', false, v);
+					return false; // No auto select
+				}
+			});
+
 			if (c) {
 				each(ed.getParam('theme_advanced_fonts', t.settings.theme_advanced_fonts, 'hash'), function(v, k) {
 					c.add(ed.translate(k), v, {style : v.indexOf('dings') == -1 ? 'font-family:' + v : ''});
@@ -266,6 +299,8 @@
 
 					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']}, {check_classes : cl});
 				}
+
+				return false; // No auto select
 			}});
 
 			if (c) {
@@ -807,9 +842,6 @@
 		_nodeChanged : function(ed, cm, n, co) {
 			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn;
 
-			if (s.readonly)
-				return;
-
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
 			});
@@ -846,11 +878,13 @@
 				c.setActive(!!p && n.className.indexOf('mceItem') == -1);
 
 			if (c = cm.get('styleselect')) {
-				if (n.className) {
-					t._importClasses();
-					c.select(n.className);
-				} else
-					c.select();
+				t._importClasses();
+
+				// Check each format and update
+				c.select(function(fmt) {
+					if (fmt)
+						return !!ed.formatter.match(fmt);
+				});
 			}
 
 			if (c = cm.get('formatselect')) {
@@ -860,47 +894,41 @@
 					c.select(p.nodeName.toLowerCase());
 			}
 
-			if (ed.settings.convert_fonts_to_spans) {
-				ed.dom.getParent(n, function(n) {
-					if (n.nodeName === 'SPAN') {
-						if (!cl && n.className)
-							cl = n.className;
+			// Find out current fontSize, fontFamily and fontClass
+			ed.dom.getParent(n, function(n) {
+				if (n.nodeName === 'SPAN') {
+					if (!cl && n.className)
+						cl = n.className;
 
-						if (!fz && n.style.fontSize)
-							fz = n.style.fontSize;
+					if (!fz && n.style.fontSize)
+						fz = n.style.fontSize;
 
-						if (!fn && n.style.fontFamily)
-							fn = n.style.fontFamily.replace(/[\"\']+/g, '').replace(/^([^,]+).*/, '$1').toLowerCase();
-					}
+					if (!fn && n.style.fontFamily)
+						fn = n.style.fontFamily.replace(/[\"\']+/g, '').replace(/^([^,]+).*/, '$1').toLowerCase();
+				}
 
-					return false;
+				return false;
+			});
+
+			if (c = cm.get('fontselect')) {
+				c.select(function(v) {
+					return v.replace(/^([^,]+).*/, '$1').toLowerCase() == fn;
 				});
+			}
 
-				if (c = cm.get('fontselect')) {
-					c.select(function(v) {
-						return v.replace(/^([^,]+).*/, '$1').toLowerCase() == fn;
-					});
-				}
+			// Select font size
+			if (c = cm.get('fontsizeselect')) {
+				// Use computed style
+				if (s.theme_advanced_runtime_fontsize && !fz && !cl)
+					fz = ed.dom.getStyle(n, 'fontSize', true);
 
-				if (c = cm.get('fontsizeselect')) {
-					c.select(function(v) {
-						if (v.fontSize && v.fontSize === fz)
-							return true;
+				c.select(function(v) {
+					if (v.fontSize && v.fontSize === fz)
+						return true;
 
-						if (v['class'] && v['class'] === cl)
-							return true;
-					});
-				}
-			} else {
-				if (c = cm.get('fontselect'))
-					c.select(ed.queryCommandValue('FontName'));
-
-				if (c = cm.get('fontsizeselect')) {
-					v = ed.queryCommandValue('FontSize');
-					c.select(function(iv) {
-						return iv.fontSize == v;
-					});
-				}
+					if (v['class'] && v['class'] === cl)
+						return true;
+				});
 			}
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
@@ -978,9 +1006,9 @@
 						ti += 'id: ' + v + ' ';
 
 					if (v = n.className) {
-						v = v.replace(/(webkit-[\w\-]+|Apple-[\w\-]+|mceItem\w+|mceVisualAid)/g, '');
+						v = v.replace(/\b\s*(webkit|mce|Apple-)\w+\s*\b/g, '')
 
-						if (v && v.indexOf('mceItem') == -1) {
+						if (v) {
 							ti += 'class: ' + v + ' ';
 
 							if (DOM.isBlock(n) || na == 'img' || na == 'span')

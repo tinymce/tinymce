@@ -18,7 +18,7 @@
 			"paste_strip_class_attributes" : "none",
 			"paste_remove_spans" : false,
 			"paste_remove_styles" : false,
-			"paste_remove_styles_if_webkit" : false,
+			"paste_remove_styles_if_webkit" : true,
 			"paste_convert_middot_lists" : true,
 			"paste_convert_headers_to_strong" : false,
 			"paste_dialog_width" : "450",
@@ -142,7 +142,7 @@
 					return;
 
 				// Create container to paste into
-				n = dom.add(body, 'div', {id : '_mcePaste'}, '\uFEFF');
+				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste'}, '\uFEFF');
 
 				// If contentEditable mode we need to find out the position of the closest element
 				if (body != ed.getDoc().body)
@@ -202,10 +202,16 @@
 
 					// Wait a while and grab the pasted contents
 					window.setTimeout(function () {
-						var h = '', nl = dom.select('div[id=_mcePaste]');
+						var h = '', nl = dom.select('div.mcePaste');
 
 						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
 						each(nl, function(n) {
+							// WebKit duplicates the divs so we need to remove them
+							each(dom.select('div.mcePaste', n), function(n) {
+								dom.remove(n, 1);
+							});
+
+							// Contents in WebKit is sometimes wrapped in a apple style span so we need to grab it from that one
 							h += (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
 						});
 

@@ -9,10 +9,13 @@
  */
 
 (function(tinymce) {
-	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, Dispatcher = tinymce.util.Dispatcher;
-	var each = tinymce.each, isGecko = tinymce.isGecko, isIE = tinymce.isIE, isWebKit = tinymce.isWebKit;
-	var is = tinymce.is, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, EditorManager = tinymce.EditorManager;
-	var inArray = tinymce.inArray, grep = tinymce.grep, explode = tinymce.explode;
+	// Shorten these names
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend,
+		Dispatcher = tinymce.util.Dispatcher, each = tinymce.each, isGecko = tinymce.isGecko,
+		isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, is = tinymce.is,
+		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
+		EditorManager = tinymce.EditorManager, inArray = tinymce.inArray,
+		grep = tinymce.grep, explode = tinymce.explode;
 
 	/**
 	 * This class contains the core logic for a TinyMCE editor.
@@ -414,11 +417,9 @@
 				custom_undo_redo_keyboard_shortcuts : 1,
 				custom_undo_redo_restore_selection : 1,
 				custom_undo_redo : 1,
-				doctype : '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">',
+				doctype : '<!DOCTYPE>',
 				visual_table_class : 'mceItemTable',
 				visual : 1,
-				inline_styles : true,
-				convert_fonts_to_spans : true,
 				font_size_style_values : 'xx-small,x-small,small,medium,large,x-large,xx-large',
 				apply_source_formatting : 1,
 				directionality : 'ltr',
@@ -432,7 +433,62 @@
 				indentation : '30px',
 				keep_styles : 1,
 				fix_table_elements : 1,
-				removeformat_selector : 'span,b,strong,em,i,font,u,strike'
+
+				// Default formats
+				removeformat : [
+					{selector : 'b,strong,em,i,font,u,strike', remove : 'all'},
+					{selector : 'span', attributes : ['style', 'class']},
+					{selector : '*', attributes : ['style', 'class'], remove : 'none'}
+				],
+
+				align_formats : {
+					left : [
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', bl2ock : 'p', styles : {textAlign : 'left'}},
+						{selector : 'img,table', styles : {'float' : 'left'}}
+					],
+
+					center : [
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', blo2ck : 'p', styles : {textAlign : 'center'}},
+						{selector : 'img,table', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
+					],
+
+					right : [
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', bl2ock : 'p', styles : {textAlign : 'right'}},
+						{selector : 'img,table', styles : {'float' : 'right'}}
+					],
+
+					full : [
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', styles : {textAlign : 'justify'}}
+					]
+				},
+
+				bold_format : [
+					{inline : 'strong'},
+					{inline : 'span', styles : {fontWeight : 'bold'}},
+					{inline : 'b'}
+				],
+
+				italic_format : [
+					{inline : 'em'},
+					{inline : 'span', styles : {fontStyle : 'italic'}},
+					{inline : 'i'}
+				],
+
+				underline_format : [
+					{inline : 'span', styles : {textDecoration : 'underline'}, exact : true},
+					{inline : 'u'}
+				],
+
+				strikethrough_format : [
+					{inline : 'span', styles : {textDecoration : 'line-through'}, exact : true},
+					{inline : 'u'}
+				],
+
+				forecolor_format : {inline : 'span', styles : {color : '%value'}},
+				hilitecolor_format : {inline : 'span', styles : {backgroundColor : '%value'}},
+				fontname_format : {inline : 'span', styles : {fontFamily : '%value'}},
+				fontsize_format : {inline : 'span', styles : {fontSize : '%value'}},
+				blockquote_format : {block : 'blockquote', container : true}
 			}, s);
 
 			/**
@@ -748,7 +804,7 @@
 			if (s.document_base_url != tinymce.documentBaseURL)
 				t.iframeHTML += '<base href="' + t.documentBaseURI.getURI() + '" />';
 
-			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+			t.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=7" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 			if (tinymce.relaxedDomain)
 				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
@@ -850,7 +906,8 @@
 				hex_colors : s.force_hex_style_colors,
 				class_filter : s.class_filter,
 				update_styles : 1,
-				fix_ie_paragraphs : 1
+				fix_ie_paragraphs : 1,
+				valid_styles : s.valid_styles
 			});
 
 			/**
@@ -871,6 +928,14 @@
 			 * @type tinymce.dom.Selection
 			 */
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
+
+			/**
+			 * Formatter instance.
+			 *
+			 * @property formatter
+			 * @type tinymce.Formatter
+			 */
+			t.formatter = new tinymce.Formatter(this);
 
 			t.forceBlocks = new tinymce.ForceBlocks(t, {
 				forced_root_block : s.forced_root_block
@@ -996,12 +1061,6 @@
 					return v;
 				};
 			}
-
-			if (s.convert_fonts_to_spans)
-				t._convertFonts();
-
-			if (s.inline_styles)
-				t._convertInlineElements();
 
 			if (s.cleanup_callback) {
 				t.onBeforeSetContent.add(function(ed, o) {
@@ -1155,7 +1214,8 @@
 				root_element : t.id,
 				strict_root : 1,
 				fix_ie_paragraphs : 1,
-				update_styles : 1
+				update_styles : 1,
+				valid_styles : s.valid_styles
 			});
 
 			t.serializer = new tinymce.dom.Serializer({
@@ -1168,7 +1228,6 @@
 				fix_table_elements : s.fix_table_elements,
 				fix_list_elements : s.fix_list_elements,
 				fix_content_duplication : s.fix_content_duplication,
-				convert_fonts_to_spans : s.convert_fonts_to_spans,
 				font_size_classes  : s.font_size_classes,
 				font_size_style_values : s.font_size_style_values,
 				apply_source_formatting : s.apply_source_formatting,
@@ -1195,12 +1254,6 @@
 
 			t.controlManager.onPostRender.dispatch(t, t.controlManager);
 			t.onPostRender.dispatch(t);
-
-			if (s.convert_fonts_to_spans)
-				t._convertFonts();
-
-			if (s.inline_styles)
-				t._convertInlineElements();
 
 			t.onSetContent.add(function() {
 				t.addVisual(t.getBody());
@@ -1601,10 +1654,10 @@
 		 * Returns a command specific state, for example if bold is enabled or not.
 		 *
 		 * @method queryCommandState
-		 * @param {string} c Command to query state from.
+		 * @param {string} cmd Command to query state from.
 		 * @return {Boolean} Command specific state, for example if bold is enabled or not.
 		 */
-		queryCommandState : function(c) {
+		queryCommandState : function(cmd) {
 			var t = this, o, s;
 
 			// Is hidden then return undefined
@@ -1612,7 +1665,7 @@
 				return;
 
 			// Registred commands
-			if (o = t.queryStateCommands[c]) {
+			if (o = t.queryStateCommands[cmd]) {
 				s = o.func.call(o.scope);
 
 				// Fall though on true
@@ -1621,13 +1674,13 @@
 			}
 
 			// Registred commands
-			o = t.editorCommands.queryCommandState(c);
+			o = t.editorCommands.queryCommandState(cmd);
 			if (o !== -1)
 				return o;
 
 			// Browser commands
 			try {
-				return this.getDoc().queryCommandState(c);
+				return this.getDoc().queryCommandState(cmd);
 			} catch (ex) {
 				// Fails sometimes see bug: 1896577
 			}
@@ -2486,134 +2539,6 @@
 					}
 				});
 			}
-		},
-
-		_convertInlineElements : function() {
-			var t = this, s = t.settings, dom = t.dom, v, e, na, st, sp;
-
-			function convert(ed, o) {
-				if (!s.inline_styles)
-					return;
-
-				if (o.get) {
-					each(t.dom.select('table,u,strike', o.node), function(n) {
-						switch (n.nodeName) {
-							case 'TABLE':
-								if (v = dom.getAttrib(n, 'height')) {
-									dom.setStyle(n, 'height', v);
-									dom.setAttrib(n, 'height', '');
-								}
-								break;
-
-							case 'U':
-							case 'STRIKE':
-								//sp = dom.create('span', {style : dom.getAttrib(n, 'style')});
-								n.style.textDecoration = n.nodeName == 'U' ? 'underline' : 'line-through';
-								dom.setAttrib(n, '_mce_style', '');
-								dom.setAttrib(n, '_mce_name', 'span');
-								break;
-						}
-					});
-				} else if (o.set) {
-					each(t.dom.select('table,span', o.node).reverse(), function(n) {
-						if (n.nodeName == 'TABLE') {
-							if (v = dom.getStyle(n, 'height'))
-								dom.setAttrib(n, 'height', v.replace(/[^0-9%]+/g, ''));
-						} else {
-							// Convert spans to elements
-							if (n.style.textDecoration == 'underline')
-								na = 'u';
-							else if (n.style.textDecoration == 'line-through')
-								na = 'strike';
-							else
-								na = '';
-
-							if (na) {
-								n.style.textDecoration = '';
-								dom.setAttrib(n, '_mce_style', '');
-
-								e = dom.create(na, {
-									style : dom.getAttrib(n, 'style')
-								});
-
-								dom.replace(e, n, 1);
-							}
-						}
-					});
-				}
-			};
-
-			t.onPreProcess.add(convert);
-
-			if (!s.cleanup_on_startup) {
-				t.onSetContent.add(function(ed, o) {
-					if (o.initial)
-						convert(t, {node : t.getBody(), set : 1});
-				});
-			}
-		},
-
-		_convertFonts : function() {
-			var t = this, s = t.settings, dom = t.dom, fz, fzn, sl, cl;
-
-			// No need
-			if (!s.inline_styles)
-				return;
-
-			// Font pt values and font size names
-			fz = [8, 10, 12, 14, 18, 24, 36];
-			fzn = ['xx-small', 'x-small','small','medium','large','x-large', 'xx-large'];
-
-			if (sl = s.font_size_style_values)
-				sl = explode(sl);
-
-			if (cl = s.font_size_classes)
-				cl = explode(cl);
-
-			function process(no) {
-				var n, sp, nl, x;
-
-				// Keep unit tests happy
-				if (!s.inline_styles)
-					return;
-
-				nl = t.dom.select('font', no);
-				for (x = nl.length - 1; x >= 0; x--) {
-					n = nl[x];
-
-					sp = dom.create('span', {
-						style : dom.getAttrib(n, 'style'),
-						'class' : dom.getAttrib(n, 'class')
-					});
-
-					dom.setStyles(sp, {
-						fontFamily : dom.getAttrib(n, 'face'),
-						color : dom.getAttrib(n, 'color'),
-						backgroundColor : n.style.backgroundColor
-					});
-
-					if (n.size) {
-						if (sl)
-							dom.setStyle(sp, 'fontSize', sl[parseInt(n.size) - 1]);
-						else
-							dom.setAttrib(sp, 'class', cl[parseInt(n.size) - 1]);
-					}
-
-					dom.setAttrib(sp, '_mce_style', '');
-					dom.replace(sp, n, 1);
-				}
-			};
-
-			// Run on cleanup
-			t.onPreProcess.add(function(ed, o) {
-				if (o.get)
-					process(o.node);
-			});
-
-			t.onSetContent.add(function(ed, o) {
-				if (o.initial)
-					process(o.node);
-			});
 		},
 
 		_isHidden : function() {

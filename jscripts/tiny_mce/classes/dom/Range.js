@@ -24,17 +24,6 @@
 		return i;
 	};
 
-	function nodeIndex(n) {
-		var i = 0;
-
-		while (n.previousSibling) {
-			i++;
-			n = n.previousSibling;
-		}
-
-		return i;
-	};
-
 	function getSelectedNode(container, offset) {
 		var child;
 
@@ -90,19 +79,19 @@
 		},
 
 		setStartBefore : function(n) {
-			this.setStart(n.parentNode, nodeIndex(n));
+			this.setStart(n.parentNode, this.dom.nodeIndex(n));
 		},
 
 		setStartAfter : function(n) {
-			this.setStart(n.parentNode, nodeIndex(n) + 1);
+			this.setStart(n.parentNode, this.dom.nodeIndex(n) + 1);
 		},
 
 		setEndBefore : function(n) {
-			this.setEnd(n.parentNode, nodeIndex(n));
+			this.setEnd(n.parentNode, this.dom.nodeIndex(n));
 		},
 
 		setEndAfter : function(n) {
-			this.setEnd(n.parentNode, nodeIndex(n) + 1);
+			this.setEnd(n.parentNode, this.dom.nodeIndex(n) + 1);
 		},
 
 		collapse : function(ts) {

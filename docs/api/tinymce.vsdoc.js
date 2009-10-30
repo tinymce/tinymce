@@ -172,6 +172,7 @@ tinymce.Editor = function(id, s) {
 	/// <field name="dom" type="tinymce.dom.DOMUtils">DOM instance for the editor.</field>
 	/// <field name="serializer" type="tinymce.dom.Serializer">DOM serializer for the editor.</field>
 	/// <field name="selection" type="tinymce.dom.Selection">Selection instance for the editor.</field>
+	/// <field name="formatter" type="tinymce.Formatter">Formatter instance.</field>
 	/// <field name="onPreInit" type="tinymce.util.Dispatcher">Fires before the initialization of the editor. Editor instance.</field>
 	/// <field name="onBeforeRenderUI" type="tinymce.util.Dispatcher">Fires before the initialization of the editor. Editor instance.</field>
 	/// <field name="onPostRender" type="tinymce.util.Dispatcher">Fires after the rendering has completed. Editor instance.</field>
@@ -710,9 +711,10 @@ tinymce.dom.DOMUtils.prototype.parseStyle = function(st) {
 	/// <returns type="Object">Object representation of that style like {border : '1px solid red'}</returns>
 }
 
-tinymce.dom.DOMUtils.prototype.serializeStyle = function(o) {
+tinymce.dom.DOMUtils.prototype.serializeStyle = function(o, name) {
 	/// <summary>Serializes the specified style object into a string.</summary>
 	/// <param name="o" type="Object">Object to serialize as string for example: {border : '1px solid red'}</param>
+	/// <param name="name" type="String">Optional element name.</param>
 	/// <returns type="String">String representation of the style object for example: border: 1px solid red.</returns>
 }
 
@@ -1072,9 +1074,9 @@ tinymce.dom.Selection.prototype.getEnd = function() {
 	/// <returns type="Element" domElement="true">End element of selection range.</returns>
 }
 
-tinymce.dom.Selection.prototype.getBookmark = function(si) {
+tinymce.dom.Selection.prototype.getBookmark = function(simple) {
 	/// <summary>Returns a bookmark location for the current selection.</summary>
-	/// <param name="si" type="Boolean">Optional state if the bookmark should be simple or not. Default is complex.</param>
+	/// <param name="simple" type="Boolean">Optional state if the bookmark should be simple or not. Default is complex.</param>
 	/// <returns type="Object">Bookmark object, use moveToBookmark with this object to restore the selection.</returns>
 }
 

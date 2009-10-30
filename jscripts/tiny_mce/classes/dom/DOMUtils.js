@@ -12,6 +12,7 @@
 	// Shorten names
 	var each = tinymce.each, is = tinymce.is;
 	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
+	var blockRe = /^(H[1-6R]|P|DIV|ADDRESS|PRE|FORM|T(ABLE|BODY|HEAD|FOOT|H|R|D)|LI|OL|UL|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|MENU|ISINDEX|SAMP)$/;
 
 	/**
 	 * Utility class for various DOM manipulation and retrival functions.
@@ -46,7 +47,7 @@
 		 * @param {settings} s Optional settings collection.
 		 */
 		DOMUtils : function(d, s) {
-			var t = this;
+			var t = this, globalStyle;
 
 			t.doc = d;
 			t.win = window;
@@ -69,6 +70,16 @@
 				} catch (e) {
 					t.cssFlicker = true;
 				}
+			}
+
+			// Build styles list
+			if (s.valid_styles) {
+				t._styles = {};
+
+				// Convert styles into a rule list
+				each(s.valid_styles, function(value, key) {
+					t._styles[key] = tinymce.explode(value);
+				});
 			}
 
 			tinymce.addUnload(t.destroy, t);
@@ -673,7 +684,7 @@
 				v = v || e.style.cssText;
 
 				if (v) {
-					v = t.serializeStyle(t.parseStyle(v));
+					v = t.serializeStyle(t.parseStyle(v), e.nodeName);
 
 					if (t.settings.keep_values && !t._isRes(v))
 						e.setAttribute('_mce_style', v);
@@ -908,17 +919,26 @@
 		 *
 		 * @method serializeStyle
 		 * @param {Object} o Object to serialize as string for example: {border : '1px solid red'}
+		 * @param {String} name Optional element name.
 		 * @return {String} String representation of the style object for example: border: 1px solid red.
 		 */
-		serializeStyle : function(o) {
-			var s = '';
+		serializeStyle : function(o, name) {
+			var t = this, s = '';
 
-			each(o, function(v, k) {
+			function add(v, k) {
 				if (k && v) {
-					if (tinymce.isGecko && k.indexOf('-moz-') === 0)
+					// Remove browser specific styles like -moz- or -webkit-
+					if (k.indexOf('-') === 0)
 						return;
 
 					switch (k) {
+						case 'font-weight':
+							// Opera will output bold as 700
+							if (v == 700)
+								v = 'bold';
+
+							break;
+
 						case 'color':
 						case 'background-color':
 							v = v.toLowerCase();
@@ -927,7 +947,19 @@
 
 					s += (s ? ' ' : '') + k + ': ' + v + ';';
 				}
-			});
+			};
+
+			// Validate style output
+			if (name && t._styles) {
+				each(t._styles['*'], function(name) {
+					add(o[name], name);
+				});
+
+				each(t._styles[name.toLowerCase()], function(name) {
+					add(o[name], name);
+				});
+			} else
+				each(o, add);
 
 			return s;
 		},
@@ -1220,11 +1252,7 @@
 			if (!s.process_html)
 				return h;
 
-			// Convert strong and em to b and i in FF since it can't handle them
-			if (tinymce.isGecko) {
-				h = h.replace(/<(\/?)strong>|<strong( [^>]+)>/gi, '<$1b$2>');
-				h = h.replace(/<(\/?)em>|<em( [^>]+)>/gi, '<$1i$2>');
-			} else if (isIE) {
+			if (isIE) {
 				h = h.replace(/&apos;/g, '&#39;'); // IE can't handle apos
 				h = h.replace(/\s+(disabled|checked|readonly|selected)\s*=\s*[\"\']?(false|0)[\"\']?/gi, ''); // IE doesn't handle default values correct
 			}
@@ -1321,7 +1349,7 @@
 								return m;
 
 							// Parse and serialize the style to convert for example uppercase styles like "BORDER: 1px"
-							u = t.encode(t.serializeStyle(t.parseStyle(u)));
+							u = t.encode(t.serializeStyle(t.parseStyle(u), n));
 						} else if (b != 'coords' && b != 'shape') {
 							if (s.url_converter)
 								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));
@@ -1517,7 +1545,7 @@
 
 			n = n.nodeName || n;
 
-			return /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TH|TBODY|TR|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP)$/.test(n);
+			return blockRe.test(n);
 		},
 
 		/**
@@ -1537,8 +1565,8 @@
 
 			return t.run(o, function(o) {
 				if (k) {
-					each(o.childNodes, function(c) {
-						n.appendChild(c.cloneNode(true));
+					each(tinymce.grep(o.childNodes), function(c) {
+						n.appendChild(c);
 					});
 				}
 
@@ -1740,7 +1768,7 @@
 					o.push({specified : 1, nodeName : 'selected'});
 
 				// It's crazy that this is faster in IE but it's because it returns all attributes all the time
-				n.cloneNode(false).outerHTML.replace(/<\/?[\w:]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=\w+|>/gi, '').replace(/[\w:]+/gi, function(a) {
+				n.cloneNode(false).outerHTML.replace(/<\/?[\w:\-]+ ?|=[\"][^\"]+\"|=\'[^\']+\'|=[\w\-]+|>/gi, '').replace(/[\w:\-]+/gi, function(a) {
 					o.push({specified : 1, nodeName : a});
 				});
 
@@ -1782,6 +1810,23 @@
 		},
 
 		/**
+		 * Returns the index of the specified node within it's parent.
+		 *
+		 * @param {Node} node Node to look for.
+		 * @return {Numner} Index of the specified node.
+		 */
+		nodeIndex : function(node) {
+			var idx = 0;
+
+			while (node.previousSibling) {
+				idx++;
+				node = node.previousSibling;
+			}
+
+			return idx;
+		},
+
+		/**
 		 * Splits an element into two new elements and places the specified split
 		 * element or element between the new ones. For example splitting the paragraph at the bold element in
 		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>. 
@@ -1818,29 +1863,16 @@
 				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
 			};
 
-			// Added until Gecko can create real HTML documents using implementation.createHTMLDocument
-			// this is to future proof it if Gecko decides to implement the error checking for range methods.
-			function nodeIndex(n) {
-				var i = 0;
-
-				while (n.previousSibling) {
-					i++;
-					n = n.previousSibling;
-				}
-
-				return i;
-			};
-
 			if (pe && e) {
 				// Get before chunk
-				r.setStart(pe.parentNode, nodeIndex(pe));
-				r.setEnd(e.parentNode, nodeIndex(e));
+				r.setStart(pe.parentNode, t.nodeIndex(pe));
+				r.setEnd(e.parentNode, t.nodeIndex(e));
 				bef = r.extractContents();
 
 				// Get after chunk
 				r = t.createRng();
-				r.setStart(e.parentNode, nodeIndex(e) + 1);
-				r.setEnd(pe.parentNode, nodeIndex(pe) + 1);
+				r.setStart(e.parentNode, t.nodeIndex(e) + 1);
+				r.setEnd(pe.parentNode, t.nodeIndex(pe) + 1);
 				aft = r.extractContents();
 
 				// Insert chunks and remove parent

@@ -66,7 +66,13 @@
 			scrollToHash(hash);
 	}
 
-	$().ready(function(){
+	$().ready(function() {
+		// Loaded directly then load it through the index.page
+		if (!/index\.html$/.test(document.location.pathname)) {
+			document.location.href = 'index.html#' + document.location.pathname.replace(/^.*\//, '');
+			return;
+		}
+
 		$("#browser").treeview();
 		$(window).resize(resizeUI).trigger('resize');
 

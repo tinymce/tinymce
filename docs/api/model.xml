@@ -684,6 +684,10 @@ This method should not be called directly.
 <description>Selection instance for the editor.
 </description>
 </property>
+<property name="formatter" summary="Formatter instance." type="tinymce.Formatter">
+<description>Formatter instance.
+</description>
+</property>
 <method name="setupContentEditable" summary="Sets up the contentEditable mode.">
 <description>Sets up the contentEditable mode.
 </description>
@@ -1624,6 +1628,9 @@ colors to hex values. Urls inside the styles will also be converted to absolute/
 <param name="o" type="Object">
 <description>Object to serialize as string for example: {border : '1px solid red'}</description>
 </param>
+<param name="name" type="String">
+<description>Optional element name.</description>
+</param>
 <return type="String">
 <description>String representation of the style object for example: border: 1px solid red.</description>
 </return>
@@ -1746,7 +1753,7 @@ URLs will get converted, hex color values fixed etc. Check processHTML for detai
 <method name="processHTML" summary="Processes the HTML by replacing strong, em, del in gecko since it doesn't support them properly in a RTE environment.">
 <description>Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
 properly in a RTE environment. It also converts any URLs in links and images and places
-a converted value into a separate attribute with the mce prefix like mce_src or mce_href.
+a converted value into a separate attribute with the mce prefix like _mce_src or _mce_href.
 </description>
 <param name="h" type="String">
 <description>HTML to process.</description>
@@ -2343,7 +2350,7 @@ node the parent element will be returned.
 <description>Returns a bookmark location for the current selection. This bookmark object
 can then be used to restore the selection after some content modification to the document.
 </description>
-<param name="si" type="Boolean">
+<param name="simple" type="Boolean">
 <description>Optional state if the bookmark should be simple or not. Default is complex.</description>
 </param>
 <return type="Object">

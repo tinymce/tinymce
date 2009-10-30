@@ -281,13 +281,25 @@
 			});
 
 			each(t.items, function(o) {
-				o.id = DOM.uniqueId();
-				o.onclick = function() {
-					if (t.settings.onselect(o.value) !== false)
-						t.select(o.value); // Must be runned after
-				};
+				// No value then treat it as a title
+				if (o.value === undefined) {
+					m.add({
+						title : o.title,
+						'class' : 'mceMenuItemTitle',
+						onclick : function() {
+							if (t.settings.onselect('') !== false)
+								t.select(''); // Must be runned after
+						}
+					});
+				} else {
+					o.id = DOM.uniqueId();
+					o.onclick = function() {
+						if (t.settings.onselect(o.value) !== false)
+							t.select(o.value); // Must be runned after
+					};
 
-				m.add(o);
+					m.add(o);
+				}
 			});
 
 			t.onRenderMenu.dispatch(t, m);

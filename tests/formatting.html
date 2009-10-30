@@ -1,0 +1,665 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load("jquery", "1.3");
+</script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
+<script type="text/javascript" src="js/testrunner.js"></script>
+<link rel="stylesheet" href="css/unit.css" type="text/css" />
+<script>
+var editor;
+
+function getContent() {
+	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
+};
+
+
+test('Formatter - apply (inline)', function() {
+	var rng, format;
+
+	// Inline element on selected text
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>1234</b></p>', 'Inline element on selected text');
+
+	// Inline element on partially selected text
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p>1<b>23</b>4</p>', 'Inline element on partially selected text');
+
+	// Inline element on partially selected text in start/end elements
+	editor.getBody().innerHTML = '<p>1234</p><p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[1].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>', 'Inline element on partially selected text in start/end elements');
+
+	// Inline element on selected element
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>1234</b></p>', 'Inline element on selected element');
+
+	// Inline element on multiple selected elements
+	editor.getBody().innerHTML = '<p>1234</p><p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>1234</b></p><p><b>1234</b></p>', 'Inline element on multiple selected elements');
+
+	// Inline element on multiple selected elements with various childnodes
+	editor.getBody().innerHTML = '<p><em>1234</em>5678<span>9</span></p><p><em>1234</em>5678<span>9</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b><em>1234</em>5678<span>9</span></b></p><p><b><em>1234</em>5678<span>9</span></b></p>', 'Inline element on multiple selected elements with various childnodes');
+
+	// Inline element with attributes
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b', attributes : {title : 'value1', id : 'value2'}});
+	equals(getContent(), '<p><b id="value2" title="value1">1234</b></p>', 'Inline element with attributes');
+
+	// Inline element with styles
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b', styles : {color : '#ff0000', fontSize : '10px'}});
+	equals(getContent(), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
+
+	// Inline element with attributes and styles
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b', attributes : {title : 'value1', id : 'value2'}, styles : {color : '#ff0000', fontSize : '10px'}});
+	equals(getContent(), '<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>', 'Inline element with attributes and styles');
+
+	// Inline element with wrapable parents
+	editor.getBody().innerHTML = '<p>x<em><span>1234</span></em>y</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p>x<b><em><span>1234</span></em></b>y</p>', 'Inline element with wrapable parents');
+
+	// Inline element with redundant child
+	editor.getBody().innerHTML = '<p><b>1234</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>1234</b></p>', 'Inline element with redundant child');
+
+	// Inline element with redundant parent
+	editor.getBody().innerHTML = '<p><b><em>1234</em></b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('em')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b><em>1234</em></b></p>', 'Inline element with redundant parent');
+
+	// Inline element with redundant child of similar type 1
+	editor.getBody().innerHTML = '<p><strong>1234</strong></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply([
+		{inline : 'b'},
+		{inline : 'strong'}
+	]);
+	equals(getContent(), '<p><b>1234</b></p>', 'Inline element with redundant child of similar type 1');
+
+	// Inline element with redundant child of similar type 2
+	editor.getBody().innerHTML = '<p><span style="font-weight:bold">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply([
+		{inline : 'b'},
+		{inline : 'span', styles : {fontWeight : 'bold'}}
+	]);
+	equals(getContent(), '<p><b>1234</b></p>', 'Inline element with redundant child of similar type 2');
+
+	// Inline element with redundant children of similar types
+	editor.getBody().innerHTML = '<p><span style="font-weight:bold">a<strong>1234</strong><b>5678</b>b</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply([
+		{inline : 'b'},
+		{inline : 'strong'},
+		{inline : 'span', styles : {fontWeight : 'bold'}}
+	]);
+	equals(getContent(), '<p><b>a12345678b</b></p>', 'Inline element with redundant children of similar types');
+
+	// Inline element with redundant parent 1
+	editor.getBody().innerHTML = '<p><strong>a<em>1234</em>b</strong></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('em')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply([
+		{inline : 'b'},
+		{inline : 'strong'}
+	]);
+	equals(getContent(), '<p><strong>a<em>1234</em>b</strong></p>', 'Inline element with redundant parent 1');
+
+	// Inline element with redundant parent 2
+	editor.getBody().innerHTML = '<p><span style="font-weight:bold">a<em>1234</em>b</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('em')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply([
+		{inline : 'b'},
+		{inline : 'span', styles : {fontWeight : 'bold'}}
+	]);
+	equals(getContent(), '<p><span style="font-weight: bold;">a<em>1234</em>b</span></p>', 'Inline element with redundant parent 2');
+
+	// Inline element with redundant parents of similar types
+	editor.getBody().innerHTML = '<p><span style="font-weight:bold"><strong><b>a<em>1234</em>b</b></strong></span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('em')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply([
+		{inline : 'b'},
+		{inline : 'strong'},
+		{inline : 'span', styles : {fontWeight : 'bold'}}
+	]);
+	equals(getContent(), '<p><span style="font-weight: bold;"><strong><b>a<em>1234</em>b</b></strong></span></p>', 'Inline element with redundant parents of similar types');
+
+	// Inline element merged with parent and child
+	editor.getBody().innerHTML = '<p>a<b>12<b>34</b>56</b>b</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('b')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p>a<b>123456</b>b</p>', 'Inline element merged with parent and child');
+
+	// Inline element merged with child 1
+	editor.getBody().innerHTML = '<p>a<span style="font-weight:bold">1234</span>b</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'span', styles : {fontWeight : 'bold'}});
+	equals(getContent(), '<p><span style="font-weight: bold;">a1234b</span></p>', 'Inline element merged with child 1');
+
+	// Inline element merged with child 2
+	editor.getBody().innerHTML = '<p>a<span style="font-weight:bold; color:#ff0000">1234</span>b</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'span', styles : {fontWeight : 'bold'}});
+	equals(getContent(), '<p><span style=\"font-weight: bold;\">a<span style=\"color: #ff0000;\">1234</span>b</span></p>', 'Inline element merged with child 2');
+
+	// Inline element merged with child 3
+	editor.getBody().innerHTML = '<p>a<span id="id" style="font-weight:bold">1234</span>b</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'span', styles : {fontWeight : 'bold'}});
+	equals(getContent(), '<p><span style=\"font-weight: bold;\">a<span id=\"id\">1234</span>b</span></p>', 'Inline element merged with child 3');
+
+	// Inline element merged with child 3
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'span', styles : {fontWeight : 'bold'}, merge : true});
+	equals(getContent(), '<p><span style="color: #ff0000; font-weight: bold;">1234</span></p>', 'Inline element merged with child 3');
+
+	// Inline element merged with child 4
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'span', styles : {color : '#00ff00'}});
+	equals(getContent(), '<p><span style="color: #00ff00;">1234</span></p>', 'Inline element merged with child 4');
+
+	// Inline element with attributes merged with child 1
+	editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'font', attributes : {face : 'arial'}, merge : true});
+	equals(getContent(), '<p><font face="arial" size="7">1234</font></p>', 'Inline element with attributes merged with child 1');
+
+	// Inline element with attributes merged with child 2
+	editor.getBody().innerHTML = '<p>a<font size="7">1234</font>b</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'font', attributes : {size : '7'}});
+	equals(getContent(), '<p><font size="7">a1234b</font></p>', 'Inline element with attributes merged with child 2');
+
+	// Inline element merged with left sibling
+	editor.getBody().innerHTML = '<p><b>1234</b>5678</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].lastChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>12345678</b></p>', 'Inline element merged with left sibling');
+
+	// Inline element merged with right sibling
+	editor.getBody().innerHTML = '<p>1234<b>5678</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>12345678</b></p>', 'Inline element merged with right sibling');
+
+	// Inline element merged with left and right siblings
+	editor.getBody().innerHTML = '<p><b>12</b>34<b>56</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].childNodes[1], 0);
+	rng.setEnd(editor.dom.select('p')[0].childNodes[1], 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
+
+	// Inline element not merged in exact mode
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'span', styles : {color : '#00ff00'}, exact : true});
+	equals(getContent(), '<p><span style="color: #00ff00;"><span style="color: #ff0000;">1234</span></span></p>', 'Inline element not merged in exact mode');
+
+	// Inline element merged in exact mode
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'span', styles : {color : '#ff0000'}, exact : true});
+	equals(getContent(), '<p><span style="color: #ff0000;">1234</span></p>', 'Inline element merged in exact mode');
+
+	// Deep left branch
+	editor.getBody().innerHTML = '<p><em><i><ins>1234</ins></i></em><em>text1</em><em>text2</em></p><p><em>5678</em></p><p>9012</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('ins')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[2].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><em><i><ins>1<b>234</b></ins></i></em><b><em>text1</em><em>text2</em></b></p><p><b><em>5678</em></b></p><p><b>9012</b></p>', 'Deep left branch');
+
+	// Deep right branch
+	editor.getBody().innerHTML = '<p>9012</p><p><em>5678</em></p><p><em><i><ins>1234</ins></i></em><em>text1</em><em>text2</em></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('em')[3].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>9012</b></p><p><b><em>5678</em></b></p><p><b><em><i><ins>1234</ins></i></em><em>text1</em></b><em><b>text</b>2</em></p>', 'Deep right branch');
+
+	// Full element text selection on two elements with a table in the middle
+	editor.getBody().innerHTML = '<p>1234</p><table><tbody><tr><td>123</td></tr></tbody></table><p>5678</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b'});
+	equals(getContent(), '<p><b>1234</b></p><table><tbody><tr><td><b>123</b></td></tr></tbody></table><p><b>5678</b></p>', 'Full element text selection on two elements with a table in the middle');
+
+	// Inline element on selected text with variables
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({inline : 'b', styles : {color : '%color'}, attributes : {title : '%title'}}, {color : '#ff0000', title : 'title'});
+	equals(getContent(), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
+
+	// Inline element on selected text with function values
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({
+		inline : 'b',
+		styles : {
+			color : function(vars) {
+				return vars.color + '00ff';
+			}
+		},
+		attributes : {
+			title : function(vars) {
+				return vars.title + '2';
+			}
+		}
+	}, {
+		color : '#ff',
+		title : 'title'
+	});
+	equals(getContent(), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
+});
+
+test('Formatter - apply (block)', function() {
+	var rng;
+
+	// Block element on selected text
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({block : 'div'});
+	equals(getContent(), '<div>1234</div>', 'Block element on selected text');
+
+	// Block element on partially selected text
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({block : 'div'});
+	equals(getContent(), '<div>1234</div>', 'Block element on partially selected text');
+
+	// Block element on selected element
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({block : 'div'});
+	equals(getContent(), '<div>1234</div>', 'Block element on selected element');
+
+	// Block element on selected elements
+	editor.getBody().innerHTML = '<p>1234</p><p>5678</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({block : 'div'});
+	equals(getContent(), '<div>1234</div><div>5678</div>', 'Block element on selected elements');
+
+	// Block element on nested element
+	editor.getBody().innerHTML = '<div><h1>1234</h1></div>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('h1')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply({block : 'p'});
+	equals(getContent(), '<div><p>1234</p></div>', 'Block element on nested element');
+
+});
+
+test('Formatter - remove', function() {
+	var rng;
+
+	expect(9);
+
+	// Inline element on selected text
+	editor.getBody().innerHTML = '<p><b>1234</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({inline : 'b'});
+	equals(getContent(), '<p>1234</p>', 'Inline element on selected text');
+
+	// Inline element on selected text with remove=all
+	editor.getBody().innerHTML = '<p><b title="text">1234</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({selector : 'b', remove : 'all'});
+	equals(getContent(), '<p>1234</p>', 'Inline element on selected text with remove=all');
+
+	// Inline element on selected text with remove=none
+	editor.getBody().innerHTML = '<p><span style="font-weight:bold">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({selector : 'span', styles : {fontWeight : 'bold'}, remove : 'none'});
+	equals(getContent(), '<p><span>1234</span></p>', 'Inline element on selected text with remove=none');
+
+	// Partially selected inline element text
+	editor.getBody().innerHTML = '<p><b>1234</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 2);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({inline : 'b'});
+	equals(getContent(), '<p><b>12</b>34</p>', 'Partially selected inline element text');
+
+	// Partially selected inline element text with children
+	editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 2);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({inline : 'b'});
+	equals(getContent(), '<p><b><em><span>12</span></em></b><em><span>34</span></em></p>', 'Partially selected inline element text with children');
+
+	// Partially selected inline element text with complex children
+	editor.getBody().innerHTML = '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[1].firstChild, 2);
+	rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({inline : 'span', styles : {fontWeight : 'bold'}});
+	equals(getContent(), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span></em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
+
+	// Inline elements with exact flag
+	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 2);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({inline : 'span', styles : {color : '#ff0000'}, exact : true});
+	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with exact flag');
+
+	// Inline elements with variables
+	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 2);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({inline : 'span', styles : {color : '%color'}, exact : true}, {color : '#ff0000'});
+	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements on selected text with variables');
+
+	// Inline elements with functions and variables
+	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 2);
+	editor.selection.setRng(rng);
+	editor.formatter.remove({
+		inline : 'span',
+		styles : {
+			color : function(vars) {
+				return vars.color + "00";
+			}
+		},
+		exact : true
+	}, {
+		color : '#ff00'
+	});
+	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with functions and variables');
+});
+
+test('Formatter - match', function() {
+	var rng;
+
+	expect(11);
+
+	// Selected style element text
+	editor.getBody().innerHTML = '<p><b>1234</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({inline : 'b'}), 'Selected style element text');
+
+	// Selected style element with css styles
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({inline : 'span', styles : {color : '#ff0000'}}), 'Selected style element with css styles');
+
+	// Selected style element with attributes
+	editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('font')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({inline : 'font', attributes : {size : '7'}}), 'Selected style element with attributes');
+
+	// Selected style element text multiple formats
+	editor.getBody().innerHTML = '<p><strong>1234</strong></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('strong')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match([
+		{inline : 'b'},
+		{inline : 'strong'}
+	]), 'Selected style element text multiple formats');
+
+	// Selected complex style element
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({inline : 'span', styles : {fontWeight : 'bold'}}), 'Selected complex style element');
+
+	// Selected non style element text
+	editor.getBody().innerHTML = '<p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(!editor.formatter.match({inline : 'b'}), 'Selected non style element text');
+
+	// Selected partial style element (start)
+	editor.getBody().innerHTML = '<p><b>1234</b>5678</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({inline : 'b'}), 'Selected partial style element (start)');
+
+	// Selected partial style element (end)
+	editor.getBody().innerHTML = '<p>1234<b>5678</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].lastChild, 4);
+	editor.selection.setRng(rng);
+	ok(!editor.formatter.match({inline : 'b'}), 'Selected partial style element (end)');
+
+	// Selected element text with parent inline element
+	editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({inline : 'b'}), 'Selected element text with parent inline element');
+
+	// Selected element match with variable
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({inline : 'span', styles : {color : '%color'}}, {color : '#ff0000'}), 'Selected element match with variable');
+
+	// Selected element match with variable and function
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match({
+		inline : 'span',
+		styles : {
+			color : function(vars) {
+				return vars.color + '00';
+			}
+		}
+	}, {color : '#ff00'}), 'Selected element match with variable and function');
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	add_unload_trigger : false,
+	theme_advanced_styles : 'test1=test1;test2=test2',
+	valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
+	apply_source_formatting : 0,
+	valid_styles : {
+		'*' : 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	},
+	init_instance_callback : function(ed) {
+		editor = ed;
+		run();
+	}
+});
+</script>
+</head>
+<body>
+	<h1>TinyMCE formatting</h1>
+	<h2 id="banner"></h2>
+	<h2 id="userAgent"></h2>
+	<ol id="tests"></ol>
+	<div id="main"></div>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+		<div>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+		</div>
+	</div>
+</body>
+</html>
