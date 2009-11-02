@@ -433,6 +433,7 @@
 				indentation : '30px',
 				keep_styles : 1,
 				fix_table_elements : 1,
+				inline_styles : 1,
 
 				// Default formats
 				removeformat : [
@@ -443,22 +444,23 @@
 
 				align_formats : {
 					left : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', bl2ock : 'p', styles : {textAlign : 'left'}},
-						{selector : 'img,table', styles : {'float' : 'left'}}
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}, rename : 0},
+						{selector : 'img,table', styles : {'float' : 'left', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					center : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', blo2ck : 'p', styles : {textAlign : 'center'}},
-						{selector : 'img,table', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}, rename : 0},
+						{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}},
+						{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
 					],
 
 					right : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', bl2ock : 'p', styles : {textAlign : 'right'}},
-						{selector : 'img,table', styles : {'float' : 'right'}}
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}, rename : 0},
+						{selector : 'img,table', styles : {'float' : 'right', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					full : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th', styles : {textAlign : 'justify'}}
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}, rename : 0}
 					]
 				},
 
@@ -488,7 +490,9 @@
 				hilitecolor_format : {inline : 'span', styles : {backgroundColor : '%value'}},
 				fontname_format : {inline : 'span', styles : {fontFamily : '%value'}},
 				fontsize_format : {inline : 'span', styles : {fontSize : '%value'}},
-				blockquote_format : {block : 'blockquote', container : true}
+				blockquote_format : {block : 'blockquote', rename : 0},
+				unorderedlist_format : {block : 'li', container : 'ul', container_selector : 'ol', remove : 'all'},
+				orderedlist_format : {block : 'li', container : 'ol', container_selector : 'ul', remove : 'all'}
 			}, s);
 
 			/**

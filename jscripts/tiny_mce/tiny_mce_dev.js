@@ -120,7 +120,6 @@
 	include('WindowManager.js');
 	include('Formatter.js');
 	include('CommandManager.js');
-	include('commands/BlockQuote.js');
 	include('commands/CutCopyPaste.js');
 	include('commands/InsertHorizontalRule.js');
 	include('commands/UndoRedo.js');

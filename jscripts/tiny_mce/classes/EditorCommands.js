@@ -61,7 +61,7 @@
 			iu = /[a-z%]+$/i.exec(iv);
 			iv = parseInt(iv);
 
-			if (ed.settings.inline_styles && (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList())) {
+			if (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList()) {
 				each(s.getSelectedBlocks(), function(e) {
 					d.setStyle(e, 'paddingLeft', (parseInt(e.style.paddingLeft || 0) + iv) + iu);
 				});
@@ -70,44 +70,33 @@
 			}
 
 			ed.getDoc().execCommand('Indent', false, null);
-
-			if (isIE) {
-				d.getParent(s.getNode(), function(n) {
-					if (n.nodeName == 'BLOCKQUOTE') {
-						n.dir = n.style.cssText = '';
-					}
-				});
-			}
 		},
 
 		Outdent : function() {
-			var ed = this.editor, d = ed.dom, s = ed.selection, e, v, iv, iu;
+			var ed = this.editor, dom = ed.dom, s = ed.selection, e, v, iv, iu;
 
 			// Setup indent level
 			iv = ed.settings.indentation;
 			iu = /[a-z%]+$/i.exec(iv);
 			iv = parseInt(iv);
 
-			if (ed.settings.inline_styles && (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList())) {
+			if (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList()) {
 				each(s.getSelectedBlocks(), function(e) {
 					v = Math.max(0, parseInt(e.style.paddingLeft || 0) - iv);
-					d.setStyle(e, 'paddingLeft', v ? v + iu : '');
+					dom.setStyle(e, 'paddingLeft', v ? v + iu : '');
 				});
 
 				return;
 			}
 
-			ed.getDoc().execCommand('Outdent', false, null);
+			// If outdent is done on last list then remove the list elements
+			if (dom.getParents(s.getStart(), 'ol,ul').length == 1) {
+				ed.formatter.remove(ed.settings.unorderedlist_format);
+				ed.formatter.remove(ed.settings.orderedlist_format);
+			} else
+				ed.getDoc().execCommand('Outdent', false, null);
 		},
 
-/*
-		mceSetAttribute : function(u, v) {
-			var ed = this.editor, d = ed.dom, e;
-
-			if (e = d.getParent(ed.selection.getNode(), d.isBlock))
-				d.setAttrib(e, v.name, v.value);
-		},
-*/
 		mceSetContent : function(u, v) {
 			this.editor.setContent(v);
 		},
@@ -213,6 +202,22 @@
 			}
 
 			this._toggle('fontsize_format', v);
+		},
+
+		mceBlockQuote : function() {
+			this._toggle('blockquote_format');
+		},
+
+		queryStatemceBlockQuote : function() {
+			return this._match('blockquote_format');
+		},
+
+		InsertOrderedList : function() {
+			this._toggle('orderedlist_format');
+		},
+
+		InsertUnorderedList : function() {
+			this._toggle('unorderedlist_format');
 		},
 
 		UnLink : function() {
@@ -382,10 +387,6 @@
 
 		queryStateInsertOrderedList : function() {
 			return this.editor.dom.getParent(this.editor.selection.getNode(), 'OL');
-		},
-
-		queryStatemceBlockQuote : function() {
-			return !!this.editor.dom.getParent(this.editor.selection.getStart(), function(n) {return n.nodeName === 'BLOCKQUOTE';});
 		},
 
 		_match : function(name) {

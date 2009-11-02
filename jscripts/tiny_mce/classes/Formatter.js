@@ -28,13 +28,17 @@
 				// Split classes if needed
 				if (typeof(format.classes) === 'string')
 					format.classes = format.classes.split(/\s+/);
+
+				// Default rename state
+				if (format.rename === undefined)
+					format.rename = TRUE;
 			});
 
 			return formats;
 		};
 
 		function expand(rng, formats) {
-			var startContainer, startOffset, endContainer, endOffset, node;
+			var startContainer, startOffset, endContainer, endOffset, node, isDone;
 
 			// Use locals
 			startContainer = rng.startContainer;
@@ -44,44 +48,77 @@
 
 			// Expand start/end container to matching selector
 			if (formats[0].selector) {
-				node = dom.getParent(startContainer, formats[0].selector);
-				if (node) {
-					startContainer = node.parentNode;
-					startOffset = dom.nodeIndex(node);
-				}
+				if (startContainer.nodeType == 3 && startContainer.nodeValue.length == 0)
+					startContainer = startContainer.nextSibling;
 
-				node = dom.getParent(endContainer, formats[0].selector);
-				if (node) {
-					endContainer = node.parentNode;
-					endOffset = dom.nodeIndex(node) + 1;
-				}
-			}
+				if (endContainer.nodeType == 3 && endContainer.nodeValue.length == 0)
+					endContainer = endContainer.previousSibling;
 
-			// Expand to block elements
-			if (formats[0].block) {
-				node = dom.getParent(startContainer, TEXT_BLOCKS);
+				each(dom.getParents(startContainer), function(node) {
+					each(formats, function(format) {
+						if (dom.is(node, format.selector)) {
+							startContainer = node.parentNode;
+							startOffset = dom.nodeIndex(node);
+							isDone = 1;
+
+							return FALSE;
+						}
+					});
+
+					if (isDone)
+						return FALSE;
+				});
+
+				isDone = 0;
+				each(dom.getParents(endContainer), function(node) {
+					each(formats, function(format) {
+						if (dom.is(node, format.selector)) {
+							endContainer = node.parentNode;
+							endOffset = dom.nodeIndex(node) + 1;
+							isDone = 1;
+
+							return FALSE;
+						}
+					});
+
+					if (isDone)
+						return FALSE;
+				});
+			} else if (formats[0].block) {
+				// Expand to block elements
+				node = dom.getParent(startContainer, formats[0].block) || dom.getParent(startContainer, TEXT_BLOCKS);
+
 				if (node) {
 					startContainer = node.parentNode;
 					startOffset = dom.nodeIndex(node);
 				} else {
 					node = findEndPoint(startContainer, dom.getParent(startContainer, BODY_BLOCKS) || dom.getRoot());
 
-					while (node.previousSibling && !dom.isBlock(node.previousSibling))
+					while (node.previousSibling && !dom.isBlock(node.previousSibling)) {
 						node = node.previousSibling;
+
+						if (isEq(node.nodeName, 'br'))
+							break;
+					}
 
 					startContainer = node.parentNode;
 					startOffset = dom.nodeIndex(node);
 				}
 
-				node = dom.getParent(endContainer, TEXT_BLOCKS);
+				node = dom.getParent(endContainer, formats[0].block) || dom.getParent(endContainer, TEXT_BLOCKS);
+
 				if (node) {
 					endContainer = node.parentNode;
 					endOffset = dom.nodeIndex(node) + 1;
 				} else {
 					node = findEndPoint(endContainer, dom.getParent(endContainer, BODY_BLOCKS) || dom.getRoot());
 
-					while (node.nextSibling && !dom.isBlock(node.nextSibling))
+					while (node.nextSibling && !dom.isBlock(node.nextSibling)) {
 						node = node.nextSibling;
+
+						if (isEq(node.nodeName, 'br'))
+							break;
+					}
 
 					endContainer = node.parentNode;
 					endOffset = dom.nodeIndex(node) + 1;
@@ -294,7 +331,7 @@
 		 * @return {Boolean} TRUE/FALSE if the node was removed or not.
 		 */
 		function removeFormat(format, vars, node, compare_node) {
-			var i, attrs;
+			var i, attrs, sibling;
 
 			// Check if node matches format
 			if (!matchName(node, format))
@@ -380,6 +417,15 @@
 
 			// Remove the inline child if it's empty for example <b> or <span>
 			if ((!format.selector || format.remove == 'all') && format.remove != 'none') {
+				// If it's a block element that gets removed and the block is not in another text block
+				if (format.block && !dom.getParent(node.parentNode, TEXT_BLOCKS)) {
+					// Look for block siblings
+					for (sibling = node.nextSibling; sibling && !dom.isBlock(sibling); sibling = sibling.nextSibling) ;
+
+					if (!sibling)
+						dom.insertAfter(dom.create('br'), node);
+				}
+
 				dom.remove(node, 1);
 				return TRUE;
 			}
@@ -635,16 +681,16 @@
 		 * Checks if the specified nodes name matches the format inline/block or selector.
 		 */
 		function matchName(node, format) {
+			// Check for selector match
+			if (format.selector)
+				return dom.is(node, format.selector);
+
 			// Check for inline match
 			if (format.inline && !isEq(node.nodeName, format.inline))
 				return FALSE;
 
 			// Check for block match
 			if (format.block && !isEq(node.nodeName, format.block))
-				return FALSE;
-
-			// Check for selector match
-			if (format.selector && !dom.is(node, format.selector))
 				return FALSE;
 
 			return TRUE;
@@ -685,6 +731,12 @@
 				if (!matchName(node, format))
 					return FALSE;
 
+				// Match container
+				if (format.container) {
+					if (!isEq(node.parentNode.nodeName, format.container))
+						return FALSE;
+				}
+
 				// Match attributes
 				obj = format.attributes;
 				if (obj) {
@@ -701,7 +753,7 @@
 								if (!similar) {
 									if (!isEq(val, replaceVars(obj[name], vars)))
 										return FALSE;
-								} else if (!val)
+								} else if (!val && obj[name] !== '')
 									return FALSE;
 							}
 						}
@@ -724,7 +776,7 @@
 								if (!similar) {
 									if (!isEq(val, replaceVars(obj[name], vars)))
 										return;
-								} else if (!val)
+								} else if (!val && obj[name] !== '')
 									return;
 							}
 						}
@@ -934,36 +986,72 @@
 				var newElms = [];
 
 				walkRange(expand(rng, formats), function(nodes) {
-					var wrapElm;
+					var wrapElm, containerElm;
 
 					function process(node) {
-						var parent;
+						var parent, isDone;
 
-						// Handle block format
-						if (formats[0].block) {
-							// Is text block then simply rename it
-							if (dom.isBlock(node) || isEq(node.nodeName, 'br')) {
-								if (dom.is(node, TEXT_BLOCKS))
-									setElementFormat(renameElement(node, formats[0].block) || node);
+						// Check for existing matching container and rename that one if it exists
+						if (formats[0].container_selector) {
+							parent = dom.getParent(node, formats[0].container_selector);
 
-								// Remove BR element when we wrap things in blocks
-								if (isEq(node.nodeName, 'br'))
-									dom.remove(node);
-
-								wrapElm = 0;
+							if (parent) {
+								renameElement(parent, formats[0].container);
 								return;
 							}
+						}
+
+						// Check if the node is within a container
+						if (formats[0].container && isEq(node.parentNode.nodeName, formats[0].container)) {
+							containerElm = 0;
+							return;
 						}
 
 						// Handle selector patterns
 						if (formats[0].selector) {
 							// Look for matching formats
 							each(formats, function(format) {
-								if (dom.is(node, format.selector))
+								if (dom.is(node, format.selector)) {
 									setElementFormat(node, format, vars);
+									wrapElm = 0;
+									isDone = 1;
+								}
 							});
 
-							return;
+							// Found an element or the item is block element then stop
+							if (isDone || dom.isBlock(node))
+								return;
+						}
+
+						// Handle block format
+						if (formats[0].block) {
+							// Is text block then simply rename it
+							if (dom.isBlock(node) || isEq(node.nodeName, 'br')) {
+								// Remove BR element when we wrap things in blocks
+								if (isEq(node.nodeName, 'br'))
+									dom.remove(node);
+
+								wrapElm = 0;
+
+								// If block element can be renamed do so and apply element format
+								if (formats[0].rename && dom.is(node, TEXT_BLOCKS)) {
+									// Add element to container
+									if (formats[0].container) {
+										if (!containerElm) {
+											containerElm = dom.create(formats[0].container);
+											node.parentNode.insertBefore(containerElm, node);
+										}
+
+										containerElm.appendChild(node);
+									}
+
+									setElementFormat(renameElement(node, formats[0].block) || node);
+									return;
+								}
+
+								if (isEq(node.nodeName, 'br'))
+									return;
+							}
 						}
 
 						// Cancel wrapping and process children if we find a block element in inline mode
@@ -987,6 +1075,16 @@
 							setElementFormat(wrapElm);
 							parent.insertBefore(wrapElm, node);
 							newElms.push(wrapElm);
+
+							// Add element to container
+							if (formats[0].container) {
+								if (!containerElm) {
+									containerElm = dom.create(formats[0].container);
+									node.parentNode.insertBefore(containerElm, node);
+								}
+
+								containerElm.appendChild(wrapElm);
+							}
 						}
 
 						wrapElm.appendChild(node);
@@ -1099,23 +1197,10 @@
 			}
 
 			// Handle collapsed selection
-			if (selection.isCollapsed()) {
-				if (formats[0].inline) {
-					applyCaretStyle();
-					ed.nodeChanged();
-					return;
-				}
-
-				if (formats[0].selector) {
-					node = selection.getNode();
-
-					each(formats, function(format) {
-						setElementFormat(dom.getParent(node, format.selector), format);
-					});
-
-					ed.nodeChanged();
-					return;
-				}
+			if (selection.isCollapsed() && formats[0].inline) {
+				applyCaretStyle();
+				ed.nodeChanged();
+				return;
 			}
 
 			// Apply formatting to selection
@@ -1134,7 +1219,32 @@
 		 * @param node {Node} Optional DOM Node to apply/remove format to. Defaults to the selection.
 		 */
 		function remove(formats, vars, node) {
-			var startRngPos, rngPos, collapsed, forcedRootBlock = ed.settings.forced_root_block, nodes;
+			var startRngPos, rngPos, collapsed, forcedRootBlock = ed.settings.forced_root_block, nodes, splitBlocks = [];
+
+			function splitToContainers() {
+				each(splitBlocks, function(block) {
+					each(formats, function(format) {
+						var parents;
+
+						// Split the block down to it's container
+						parents = dom.getParents(block, formats[0].container);
+						if (parents.length)
+							dom.split(parents[parents.length - 1], block);
+
+						// If we remove blocks then rename it to the forced_root_block if it's configured
+						if (format.block && forcedRootBlock && matchName(block, format)) {
+							renameElement(block, forcedRootBlock);
+							return FALSE;
+						}
+
+						// Remove the node
+						if (removeFormat(format, vars, block, block)) {
+							state = TRUE;
+							return FALSE; // Break loop
+						}
+					});
+				});
+			};
 
 			// Merges the styles for each node
 			function process(node, deep) {
@@ -1149,8 +1259,14 @@
 
 				// Process current node
 				each(formats, function(format) {
+					// Collect nodes to split later
+					if (format.container && matchName(node, format)) {
+						splitBlocks.push(node);
+						return FALSE;
+					}
+
 					// If we remove blocks then rename it to the forced_root_block if it's configured
-					if (format.block && forcedRootBlock && matchName(node, format)) {
+					if (format.block && format.rename && forcedRootBlock && matchName(node, format)) {
 						renameElement(node, forcedRootBlock);
 						return FALSE;
 					}
@@ -1170,6 +1286,8 @@
 						process(node, TRUE);
 					});
 				});
+
+				splitToContainers();
 			};
 
 			formats = processFormats(formats);
@@ -1204,6 +1322,7 @@
 					process(parent);
 				});
 
+				splitToContainers();
 				restoreRng(startRngPos);
 				ed.nodeChanged();
 				return;
