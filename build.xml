@@ -67,6 +67,7 @@
 			<fileset dir="${classes_dir}" includes="dom/StringWriter.js" />
 			<fileset dir="${classes_dir}" includes="dom/Serializer.js" />
 			<fileset dir="${classes_dir}" includes="dom/ScriptLoader.js" />
+			<fileset dir="${classes_dir}" includes="dom/TreeWalker.js" />
 			<fileset dir="${classes_dir}" includes="ui/Control.js" />
 			<fileset dir="${classes_dir}" includes="ui/Container.js" />
 			<fileset dir="${classes_dir}" includes="ui/Separator.js" />
@@ -91,7 +92,6 @@
 			<fileset dir="${classes_dir}" includes="CommandManager.js" />
 			<fileset dir="${classes_dir}" includes="Formatter.js" />
 			<fileset dir="${classes_dir}" includes="commands/CutCopyPaste.js" />
-			<fileset dir="${classes_dir}" includes="commands/InsertHorizontalRule.js" />
 			<fileset dir="${classes_dir}" includes="commands/UndoRedo.js" />
 		</concat>
 

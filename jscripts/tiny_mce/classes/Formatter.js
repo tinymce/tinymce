@@ -13,12 +13,24 @@
 		var each = tinymce.each,
 			dom = ed.dom,
 			selection = ed.selection,
+			TreeWalker = tinymce.dom.TreeWalker,
 			INVISIBLE_CHAR = '\uFEFF',
 			FALSE = false,
 			TRUE = true,
-			TEXT_BLOCKS = 'h1,h2,h3,h4,h5,h6,p,div',
-			BODY_BLOCKS = 'td,th,body',
 			SELECTED_BLOCKS = 'td.mceSelected,th.mceSelected';
+
+		function getStartContainer(container, offset) {
+			var children = container.childNodes, lastIdx = children.length - 1;
+
+			if (offset > lastIdx) {
+				// Look for next suitable node if it exists
+				container = new TreeWalker(children[lastIdx]).next(true);
+
+				return container || children[lastIdx];
+			}
+
+			return children[offset];
+		};
 
 		function processFormats(formats) {
 			// Force formats into an array
@@ -32,6 +44,14 @@
 				// Default rename state
 				if (format.rename === undefined)
 					format.rename = TRUE;
+
+				// Default text blocks
+				if (format.text_blocks === undefined)
+					format.text_blocks = 'h1,h2,h3,h4,h5,h6,p,div';
+
+				// Default body blocks
+				if (format.body_blocks === undefined)
+					format.body_blocks = 'td,th,li';
 			});
 
 			return formats;
@@ -86,13 +106,13 @@
 				});
 			} else if (formats[0].block) {
 				// Expand to block elements
-				node = dom.getParent(startContainer, formats[0].block) || dom.getParent(startContainer, TEXT_BLOCKS);
+				node = dom.getParent(startContainer, formats[0].block) || dom.getParent(startContainer, formats[0].text_blocks);
 
 				if (node) {
 					startContainer = node.parentNode;
 					startOffset = dom.nodeIndex(node);
 				} else {
-					node = findEndPoint(startContainer, dom.getParent(startContainer, BODY_BLOCKS) || dom.getRoot());
+					node = findEndPoint(startContainer, dom.getParent(startContainer, formats[0].body_blocks) || dom.getRoot());
 
 					while (node.previousSibling && !dom.isBlock(node.previousSibling)) {
 						node = node.previousSibling;
@@ -105,13 +125,13 @@
 					startOffset = dom.nodeIndex(node);
 				}
 
-				node = dom.getParent(endContainer, formats[0].block) || dom.getParent(endContainer, TEXT_BLOCKS);
+				node = dom.getParent(endContainer, formats[0].block) || dom.getParent(endContainer, formats[0].text_blocks);
 
 				if (node) {
 					endContainer = node.parentNode;
 					endOffset = dom.nodeIndex(node) + 1;
 				} else {
-					node = findEndPoint(endContainer, dom.getParent(endContainer, BODY_BLOCKS) || dom.getRoot());
+					node = findEndPoint(endContainer, dom.getParent(endContainer, formats[0].body_blocks) || dom.getRoot());
 
 					while (node.nextSibling && !dom.isBlock(node.nextSibling)) {
 						node = node.nextSibling;
@@ -182,7 +202,7 @@
 
 			// If index based start position then resolve it
 			if (startContainer.nodeType == 1 && startContainer.hasChildNodes())
-				startContainer = startContainer.childNodes[Math.min(startOffset, startContainer.childNodes.length - 1)];
+				startContainer = getStartContainer(startContainer, startOffset);
 
 			// If index based end position then resolve it
 			if (endContainer.nodeType == 1 && endContainer.hasChildNodes())
@@ -418,7 +438,7 @@
 			// Remove the inline child if it's empty for example <b> or <span>
 			if ((!format.selector || format.remove == 'all') && format.remove != 'none') {
 				// If it's a block element that gets removed and the block is not in another text block
-				if (format.block && !dom.getParent(node.parentNode, TEXT_BLOCKS)) {
+				if (format.block && !dom.getParent(node.parentNode, format.text_blocks)) {
 					// Look for block siblings
 					for (sibling = node.nextSibling; sibling && !dom.isBlock(sibling); sibling = sibling.nextSibling) ;
 
@@ -435,7 +455,7 @@
 		 * Split range, this will split the startContainer/endContainer
 		 * text nodes and insert empty text node markers for element selections.
 		 */
-		function splitRng(rng, expand) {
+		function splitRng(rng, formats) {
 			var startContainer, startOffset, endContainer, endOffset, sel;
 
 			// Move start/end point up the tree if the leaves are sharp and if we are in different containers
@@ -448,7 +468,7 @@
 				for (;;) {
 					// Check if we can move up are we at root level or body level
 					parent = container.parentNode;
-					if (parent == root || /^(TR|TD|BODY)$/.test(parent.nodeName) || container.parentNode[child_name] != container)
+					if (parent == root || dom.isBlock(parent) || container.parentNode[child_name] != container)
 						return container;
 
 					container = container.parentNode;
@@ -465,7 +485,7 @@
 
 			// If child index resolve it
 			if (startContainer.nodeType == 1) {
-				startContainer = startContainer.childNodes[Math.min(startOffset, startContainer.childNodes.length - 1)];
+				startContainer = getStartContainer(startContainer, startOffset);
 
 				// Child was text node then move offset to start of it
 				if (startContainer.nodeType == 3)
@@ -517,7 +537,7 @@
 				}
 
 				// Expand the start/end containers
-				if (expand) {
+				if (!formats[0].block) {
 					startContainer = findParentContainer(startContainer, 'firstChild');
 					endContainer = findParentContainer(endContainer, 'lastChild');
 				}
@@ -563,7 +583,7 @@
 		 * normalizes the start/end points of the range.
 		 */
 		function restoreRng(rng) {
-			var startContainer, startOffset, endContainer, endOffset, node, len, sibling;
+			var startContainer, startOffset, endContainer, endOffset, node, len, sibling, walker;
 
 			// Locals
 			startContainer = rng.startContainer;
@@ -627,6 +647,30 @@
 				if (node && node.nodeType == 3) {
 					endContainer.appendData(node.nodeValue);
 					dom.remove(node);
+				}
+			}
+
+			// Move startContainer/startOffset in to a suitable node
+			if (startContainer.nodeType == 1) {
+				walker = new TreeWalker(startContainer.childNodes[startOffset], startContainer.childNodes[startOffset]);
+				for (node = walker.current(); node; node = walker.next()) {
+					if (node.nodeType == 3 && !dom.isBlock(node.parentNode)) {
+						startContainer = node;
+						startOffset = 0;
+						break;
+					}
+				}
+			}
+
+			// Move endContainer/endOffset in to a suitable node
+			if (endContainer.nodeType == 1) {
+				walker = new TreeWalker(endContainer.childNodes[endOffset - 1], endContainer.childNodes[endOffset - 1]);
+				for (node = walker.current(); node; node = walker.prev()) {
+					if (node.nodeType == 3 && !dom.isBlock(node.parentNode)) {
+						endContainer = node;
+						endOffset = node.nodeValue.length;
+						break;
+					}
 				}
 			}
 
@@ -832,7 +876,7 @@
 			function check(node) {
 				// Find first node with similar format settings
 				node = dom.getParent(node, function(node) {
-					return !!matchNode(formats, vars, node, TRUE);
+					return !!matchNode(formats, vars, node, !formats[0].exact);
 				});
 
 				// Do an exact check on the similar format element
@@ -1034,7 +1078,7 @@
 								wrapElm = 0;
 
 								// If block element can be renamed do so and apply element format
-								if (formats[0].rename && dom.is(node, TEXT_BLOCKS)) {
+								if (formats[0].rename && dom.is(node, formats[0].text_blocks)) {
 									// Add element to container
 									if (formats[0].container) {
 										if (!containerElm) {
@@ -1049,8 +1093,12 @@
 									return;
 								}
 
-								if (isEq(node.nodeName, 'br'))
+								if (!dom.is(node, formats[0].text_blocks) || isEq(node.nodeName, 'br')) {
+									// Process children and look for items to wrap
+									each(tinymce.grep(node.childNodes), process);
+
 									return;
+								}
 							}
 						}
 
@@ -1157,7 +1205,7 @@
 
 						// Look for parent with similar style format
 						root = dom.getParent(node.parentNode, function(parent) {
-							return matchNode(formats, vars, parent, TRUE);
+							return !!matchNode(formats, vars, parent, TRUE);
 						});
 
 						// Found a style root with similar format then end the processing here
@@ -1187,7 +1235,7 @@
 							startOffset : 0,
 							endContainer : node,
 							endOffset : node.childNodes.length
-						}, !formats[0].block));
+						}, formats));
 					}
 				});
 
@@ -1204,7 +1252,7 @@
 			}
 
 			// Apply formatting to selection
-			rngPos = splitRng(selection.getRng(TRUE), !formats[0].block);
+			rngPos = splitRng(selection.getRng(TRUE), formats);
 			applyRngStyle(rngPos);
 			restoreRng(rngPos);
 			ed.nodeChanged();
@@ -1313,7 +1361,7 @@
 				return;
 			}
 
-			startRngPos = splitRng(selection.getRng(TRUE), !formats[0].block);
+			startRngPos = splitRng(selection.getRng(TRUE), formats);
 
 			// Handle collapsed range
 			if (collapsed) {
@@ -1340,7 +1388,7 @@
 						matchedFormat = matchNode(formats, vars, parent);
 
 						// If the matched format has a remove none flag we shouldn't split it
-						if (matchedFormat && matchedFormat.remove != 'none')
+						if (matchedFormat && matchedFormat[0].remove != 'none')
 							formatRoot = parent;
 					}
 

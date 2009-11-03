@@ -444,23 +444,23 @@
 
 				align_formats : {
 					left : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}, rename : 0},
 						{selector : 'img,table', styles : {'float' : 'left', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					center : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}, rename : 0},
 						{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}},
 						{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
 					],
 
 					right : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}, rename : 0},
 						{selector : 'img,table', styles : {'float' : 'right', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					full : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}, rename : 0}
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}, rename : 0}
 					]
 				},
 
@@ -490,7 +490,7 @@
 				hilitecolor_format : {inline : 'span', styles : {backgroundColor : '%value'}},
 				fontname_format : {inline : 'span', styles : {fontFamily : '%value'}},
 				fontsize_format : {inline : 'span', styles : {fontSize : '%value'}},
-				blockquote_format : {block : 'blockquote', rename : 0},
+				blockquote_format : {block : 'blockquote', rename : 0, body_blocks : 'td,th,body', text_blocks : 'h1,h2,h3,h4,h5,h6,p,div,ol,ul,table'},
 				unorderedlist_format : {block : 'li', container : 'ul', container_selector : 'ol', remove : 'all'},
 				orderedlist_format : {block : 'li', container : 'ol', container_selector : 'ul', remove : 'all'}
 			}, s);
@@ -944,6 +944,7 @@
 			t.forceBlocks = new tinymce.ForceBlocks(t, {
 				forced_root_block : s.forced_root_block
 			});
+
 			t.editorCommands = new tinymce.EditorCommands(t);
 
 			// Pass through
@@ -1216,7 +1217,6 @@
 				hex_colors : s.force_hex_style_colors,
 				class_filter : s.class_filter,
 				root_element : t.id,
-				strict_root : 1,
 				fix_ie_paragraphs : 1,
 				update_styles : 1,
 				valid_styles : s.valid_styles
@@ -1242,6 +1242,7 @@
 			t.forceBlocks = new tinymce.ForceBlocks(t, {
 				forced_root_block : s.forced_root_block
 			});
+
 			t.editorCommands = new tinymce.EditorCommands(t);
 
 			// Pass through

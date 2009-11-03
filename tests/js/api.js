@@ -1010,7 +1010,7 @@ $(window).load(function() {
 
 			equals(
 				dom.processHTML('test1 <strong>test2</strong> <strong id="test1">test3</strong> <em>test2</em> <em id="test2">test3</em>'),
-				tinymce.isGecko ? 'test1 <b>test2</b> <b id="test1">test3</b> <i>test2</i> <i id="test2">test3</i>' : 'test1 <strong>test2</strong> <strong id="test1">test3</strong> <em>test2</em> <em id="test2">test3</em>'
+				'test1 <strong>test2</strong> <strong id="test1">test3</strong> <em>test2</em> <em id="test2">test3</em>'
 			);
 
 			equals(

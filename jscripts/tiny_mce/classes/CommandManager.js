@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	tinymce.CommandManager = function() {
+	function CommandManager() {
 		var execCommands = {}, queryStateCommands = {}, queryValueCommands = {};
 
 		function add(collection, cmd, func, scope) {
@@ -53,5 +53,5 @@
 		});
 	};
 
-	tinymce.GlobalCommands = new tinymce.CommandManager();
+	tinymce.GlobalCommands = new CommandManager();
 })(tinymce);

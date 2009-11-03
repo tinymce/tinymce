@@ -97,6 +97,7 @@
 	include('dom/StringWriter.js');
 	include('dom/Serializer.js');
 	include('dom/ScriptLoader.js');
+	include('dom/TreeWalker.js');
 	include('ui/Control.js');
 	include('ui/Container.js');
 	include('ui/Separator.js');
@@ -121,7 +122,6 @@
 	include('Formatter.js');
 	include('CommandManager.js');
 	include('commands/CutCopyPaste.js');
-	include('commands/InsertHorizontalRule.js');
 	include('commands/UndoRedo.js');
 
 	// Developer API

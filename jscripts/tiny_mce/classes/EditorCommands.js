@@ -403,5 +403,9 @@
 
 			ed.formatter.toggle(ed.settings[name], vars);
 		},
+
+		InsertHorizontalRule : function() {
+			this.editor.selection.setContent('<hr />');
+		}
 	});
 })(tinymce);

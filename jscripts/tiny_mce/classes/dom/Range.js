@@ -9,219 +9,220 @@
  */
 
 (function(ns) {
-	// Traverse constants
-	var EXTRACT = 0, CLONE = 1, DELETE = 2, extend = tinymce.extend;
-
-	function indexOf(child, parent) {
-		var i, node;
-
-		if (child.parentNode != parent)
-			return -1;
-
-		for (node = parent.firstChild, i = 0; node != child; node = node.nextSibling)
-			i++;
-
-		return i;
-	};
-
-	function getSelectedNode(container, offset) {
-		var child;
-
-		if (container.nodeType == 3 /* TEXT_NODE */)
-			return container;
-
-		if (offset < 0)
-			return container;
-
-		child = container.firstChild;
-		while (child != null && offset > 0) {
-			--offset;
-			child = child.nextSibling;
-		}
-
-		if (child != null)
-			return child;
-
-		return container;
-	};
-
 	// Range constructor
 	function Range(dom) {
-		var d = dom.doc;
+		var t = this,
+			doc = dom.doc,
+			EXTRACT = 0,
+			CLONE = 1,
+			DELETE = 2,
+			TRUE = true,
+			FALSE = false,
+			START_OFFSET = 'startOffset',
+			START_CONTAINER = 'startContainer',
+			END_CONTAINER = 'endContainer',
+			END_OFFSET = 'endOffset',
+			extend = tinymce.extend,
+			nodeIndex = dom.nodeIndex;
 
-		extend(this, {
-			dom : dom,
-
+		extend(t, {
 			// Inital states
-			startContainer : d,
+			startContainer : doc,
 			startOffset : 0,
-			endContainer : d,
+			endContainer : doc,
 			endOffset : 0,
-			collapsed : true,
-			commonAncestorContainer : d,
+			collapsed : TRUE,
+			commonAncestorContainer : doc,
 
 			// Range constants
 			START_TO_START : 0,
 			START_TO_END : 1,
 			END_TO_END : 2,
-			END_TO_START : 3
+			END_TO_START : 3,
+
+			// Public methods
+			setStart : setStart,
+			setEnd : setEnd,
+			setStartBefore : setStartBefore,
+			setStartAfter : setStartAfter,
+			setEndBefore : setEndBefore,
+			setEndAfter : setEndAfter,
+			collapse : collapse,
+			selectNode : selectNode,
+			selectNodeContents : selectNodeContents,
+			compareBoundaryPoints : compareBoundaryPoints,
+			deleteContents : deleteContents,
+			extractContents : extractContents,
+			cloneContents : cloneContents,
+			insertNode : insertNode,
+			surroundContents : surroundContents,
+			cloneRange : cloneRange
 		});
-	};
 
-	// Add range methods
-	extend(Range.prototype, {
-		setStart : function(n, o) {
-			this._setEndPoint(true, n, o);
-		},
+		function setStart(n, o) {
+			_setEndPoint(TRUE, n, o);
+		};
 
-		setEnd : function(n, o) {
-			this._setEndPoint(false, n, o);
-		},
+		function setEnd(n, o) {
+			_setEndPoint(FALSE, n, o);
+		};
 
-		setStartBefore : function(n) {
-			this.setStart(n.parentNode, this.dom.nodeIndex(n));
-		},
+		function setStartBefore(n) {
+			setStart(n.parentNode, nodeIndex(n));
+		};
 
-		setStartAfter : function(n) {
-			this.setStart(n.parentNode, this.dom.nodeIndex(n) + 1);
-		},
+		function setStartAfter(n) {
+			setStart(n.parentNode, nodeIndex(n) + 1);
+		};
 
-		setEndBefore : function(n) {
-			this.setEnd(n.parentNode, this.dom.nodeIndex(n));
-		},
+		function setEndBefore(n) {
+			setEnd(n.parentNode, nodeIndex(n));
+		};
 
-		setEndAfter : function(n) {
-			this.setEnd(n.parentNode, this.dom.nodeIndex(n) + 1);
-		},
+		function setEndAfter(n) {
+			setEnd(n.parentNode, nodeIndex(n) + 1);
+		};
 
-		collapse : function(ts) {
-			var t = this;
-
+		function collapse(ts) {
 			if (ts) {
-				t.endContainer = t.startContainer;
-				t.endOffset = t.startOffset;
+				t[END_CONTAINER] = t[START_CONTAINER];
+				t[END_OFFSET] = t[START_OFFSET];
 			} else {
-				t.startContainer = t.endContainer;
-				t.startOffset = t.endOffset;
+				t[START_CONTAINER] = t[END_CONTAINER];
+				t[START_OFFSET] = t[END_OFFSET];
 			}
 
-			t.collapsed = true;
-		},
+			t.collapsed = TRUE;
+		};
 
-		selectNode : function(n) {
-			this.setStartBefore(n);
-			this.setEndAfter(n);
-		},
+		function selectNode(n) {
+			setStartBefore(n);
+			setEndAfter(n);
+		};
 
-		selectNodeContents : function(n) {
-			this.setStart(n, 0);
-			this.setEnd(n, n.nodeType === 1 ? n.childNodes.length : n.nodeValue.length);
-		},
+		function selectNodeContents(n) {
+			setStart(n, 0);
+			setEnd(n, n.nodeType === 1 ? n.childNodes.length : n.nodeValue.length);
+		};
 
-		compareBoundaryPoints : function(h, r) {
-			var t = this, sc = t.startContainer, so = t.startOffset, ec = t.endContainer, eo = t.endOffset;
+		function compareBoundaryPoints(h, r) {
+			var sc = t[START_CONTAINER], so = t[START_OFFSET], ec = t[END_CONTAINER], eo = t[END_OFFSET];
 
 			// Check START_TO_START
 			if (h === 0)
-				return t._compareBoundaryPoints(sc, so, sc, so);
+				return _compareBoundaryPoints(sc, so, sc, so);
 
 			// Check START_TO_END
 			if (h === 1)
-				return t._compareBoundaryPoints(sc, so, ec, eo);
+				return _compareBoundaryPoints(sc, so, ec, eo);
 
 			// Check END_TO_END
 			if (h === 2)
-				return t._compareBoundaryPoints(ec, eo, ec, eo);
+				return _compareBoundaryPoints(ec, eo, ec, eo);
 
 			// Check END_TO_START
 			if (h === 3)
-				return t._compareBoundaryPoints(ec, eo, sc, so);
-		},
+				return _compareBoundaryPoints(ec, eo, sc, so);
+		};
 
-		deleteContents : function() {
-			this._traverse(DELETE);
-		},
+		function deleteContents() {
+			_traverse(DELETE);
+		};
 
-		extractContents : function() {
-			return this._traverse(EXTRACT);
-		},
+		function extractContents() {
+			return _traverse(EXTRACT);
+		};
 
-		cloneContents : function() {
-			return this._traverse(CLONE);
-		},
+		function cloneContents() {
+			return _traverse(CLONE);
+		};
 
-		insertNode : function(n) {
-			var t = this, nn, o;
+		function insertNode(n) {
+			var nn, o;
 
 			// Node is TEXT_NODE or CDATA
 			if (n.nodeType === 3 || n.nodeType === 4) {
-				nn = t.startContainer.splitText(t.startOffset);
-				t.startContainer.parentNode.insertBefore(n, nn);
+				nn = t[START_CONTAINER].splitText(t[START_OFFSET]);
+				t[START_CONTAINER].parentNode.insertBefore(n, nn);
 			} else {
 				// Insert element node
-				if (t.startContainer.childNodes.length > 0)
-					o = t.startContainer.childNodes[t.startOffset];
+				if (t[START_CONTAINER].childNodes.length > 0)
+					o = t[START_CONTAINER].childNodes[t[START_OFFSET]];
 
-				t.startContainer.insertBefore(n, o);
+				t[START_CONTAINER].insertBefore(n, o);
 			}
-		},
+		};
 
-		surroundContents : function(n) {
-			var t = this, f = t.extractContents();
+		function surroundContents(n) {
+			var f = t.extractContents();
 
 			t.insertNode(n);
 			n.appendChild(f);
 			t.selectNode(n);
-		},
+		};
 
-		cloneRange : function() {
-			var t = this;
-
-			return extend(new Range(t.dom), {
-				startContainer : t.startContainer,
-				startOffset : t.startOffset,
-				endContainer : t.endContainer,
-				endOffset : t.endOffset,
+		function cloneRange() {
+			return extend(new Range(dom), {
+				startContainer : t[START_CONTAINER],
+				startOffset : t[START_OFFSET],
+				endContainer : t[END_CONTAINER],
+				endOffset : t[END_OFFSET],
 				collapsed : t.collapsed,
 				commonAncestorContainer : t.commonAncestorContainer
 			});
-		},
+		};
 
-/*
-		detach : function() {
-			// Not implemented
-		},
-*/
-		// Internal methods
+		// Private methods
 
-		_isCollapsed : function() {
-			return (this.startContainer == this.endContainer && this.startOffset == this.endOffset);
-		},
+		function _getSelectedNode(container, offset) {
+			var child;
 
-		_compareBoundaryPoints : function (containerA, offsetA, containerB, offsetB) {
+			if (container.nodeType == 3 /* TEXT_NODE */)
+				return container;
+
+			if (offset < 0)
+				return container;
+
+			child = container.firstChild;
+			while (child && offset > 0) {
+				--offset;
+				child = child.nextSibling;
+			}
+
+			if (child)
+				return child;
+
+			return container;
+		};
+
+		function _isCollapsed() {
+			return (t[START_CONTAINER] == t[END_CONTAINER] && t[START_OFFSET] == t[END_OFFSET]);
+		};
+
+		function _compareBoundaryPoints(containerA, offsetA, containerB, offsetB) {
 			var c, offsetC, n, cmnRoot, childA, childB;
 
-			// In the first case the boundary-points have the same container. A is before B 
-			// if its offset is less than the offset of B, A is equal to B if its offset is 
-			// equal to the offset of B, and A is after B if its offset is greater than the 
+			// In the first case the boundary-points have the same container. A is before B
+			// if its offset is less than the offset of B, A is equal to B if its offset is
+			// equal to the offset of B, and A is after B if its offset is greater than the
 			// offset of B.
 			if (containerA == containerB) {
-				if (offsetA == offsetB) {
+				if (offsetA == offsetB)
 					return 0; // equal
-				} else if (offsetA < offsetB) {
+
+				if (offsetA < offsetB)
 					return -1; // before
-				} else {
-					return 1; // after
-				}
+
+				return 1; // after
 			}
 
-			// In the second case a child node C of the container of A is an ancestor 
-			// container of B. In this case, A is before B if the offset of A is less than or 
+			// In the second case a child node C of the container of A is an ancestor
+			// container of B. In this case, A is before B if the offset of A is less than or
 			// equal to the index of the child node C and A is after B otherwise.
 			c = containerB;
-			while (c && c.parentNode != containerA) {
+			while (c && c.parentNode != containerA)
 				c = c.parentNode;
-			}
+
 			if (c) {
 				offsetC = 0;
 				n = containerA.firstChild;
@@ -231,15 +232,14 @@
 					n = n.nextSibling;
 				}
 
-				if (offsetA <= offsetC) {
+				if (offsetA <= offsetC)
 					return -1; // before
-				} else {
-					return 1; // after
-				}
+
+				return 1; // after
 			}
 
-			// In the third case a child node C of the container of B is an ancestor container 
-			// of A. In this case, A is before B if the index of the child node C is less than 
+			// In the third case a child node C of the container of B is an ancestor container
+			// of A. In this case, A is before B if the index of the child node C is less than
 			// the offset of B and A is after B otherwise.
 			c = containerA;
 			while (c && c.parentNode != containerB) {
@@ -255,124 +255,113 @@
 					n = n.nextSibling;
 				}
 
-				if (offsetC < offsetB) {
+				if (offsetC < offsetB)
 					return -1; // before
-				} else {
-					return 1; // after
-				}
+
+				return 1; // after
 			}
 
-			// In the fourth case, none of three other cases hold: the containers of A and B 
-			// are siblings or descendants of sibling nodes. In this case, A is before B if 
+			// In the fourth case, none of three other cases hold: the containers of A and B
+			// are siblings or descendants of sibling nodes. In this case, A is before B if
 			// the container of A is before the container of B in a pre-order traversal of the
 			// Ranges' context tree and A is after B otherwise.
-			cmnRoot = this.dom.findCommonAncestor(containerA, containerB);
+			cmnRoot = dom.findCommonAncestor(containerA, containerB);
 			childA = containerA;
 
-			while (childA && childA.parentNode != cmnRoot) {
-				childA = childA.parentNode;  
-			}
+			while (childA && childA.parentNode != cmnRoot)
+				childA = childA.parentNode;
 
-			if (!childA) {
+			if (!childA)
 				childA = cmnRoot;
-			}
 
 			childB = containerB;
-			while (childB && childB.parentNode != cmnRoot) {
+			while (childB && childB.parentNode != cmnRoot)
 				childB = childB.parentNode;
-			}
 
-			if (!childB) {
+			if (!childB)
 				childB = cmnRoot;
-			}
 
-			if (childA == childB) {
+			if (childA == childB)
 				return 0; // equal
-			}
 
 			n = cmnRoot.firstChild;
 			while (n) {
-				if (n == childA) {
+				if (n == childA)
 					return -1; // before
-				}
 
-				if (n == childB) {
+				if (n == childB)
 					return 1; // after
-				}
 
 				n = n.nextSibling;
 			}
-		},
+		};
 
-		_setEndPoint : function(st, n, o) {
-			var t = this, ec, sc;
+		function _setEndPoint(st, n, o) {
+			var ec, sc;
 
 			if (st) {
-				t.startContainer = n;
-				t.startOffset = o;
+				t[START_CONTAINER] = n;
+				t[START_OFFSET] = o;
 			} else {
-				t.endContainer = n;
-				t.endOffset = o;
+				t[END_CONTAINER] = n;
+				t[END_OFFSET] = o;
 			}
 
-			// If one boundary-point of a Range is set to have a root container 
-			// other than the current one for the Range, the Range is collapsed to 
+			// If one boundary-point of a Range is set to have a root container
+			// other than the current one for the Range, the Range is collapsed to
 			// the new position. This enforces the restriction that both boundary-
 			// points of a Range must have the same root container.
-			ec = t.endContainer;
+			ec = t[END_CONTAINER];
 			while (ec.parentNode)
 				ec = ec.parentNode;
 
-			sc = t.startContainer;
+			sc = t[START_CONTAINER];
 			while (sc.parentNode)
 				sc = sc.parentNode;
 
-			if (sc != ec) {
-				t.collapse(st);
-			} else {
-				// The start position of a Range is guaranteed to never be after the 
-				// end position. To enforce this restriction, if the start is set to 
-				// be at a position after the end, the Range is collapsed to that 
+			if (sc == ec) {
+				// The start position of a Range is guaranteed to never be after the
+				// end position. To enforce this restriction, if the start is set to
+				// be at a position after the end, the Range is collapsed to that
 				// position.
-				if (t._compareBoundaryPoints(t.startContainer, t.startOffset, t.endContainer, t.endOffset) > 0)
+				if (_compareBoundaryPoints(t[START_CONTAINER], t[START_OFFSET], t[END_CONTAINER], t[END_OFFSET]) > 0)
 					t.collapse(st);
-			}
+			} else
+				t.collapse(st);
 
-			t.collapsed = t._isCollapsed();
-			t.commonAncestorContainer = t.dom.findCommonAncestor(t.startContainer, t.endContainer);
-		},
+			t.collapsed = _isCollapsed();
+			t.commonAncestorContainer = dom.findCommonAncestor(t[START_CONTAINER], t[END_CONTAINER]);
+		};
 
-		// This code is heavily "inspired" by the Apache Xerces implementation. I hope they don't mind. :)
+		function _traverse(how) {
+			var c, endContainerDepth = 0, startContainerDepth = 0, p, depthDiff, startNode, endNode, sp, ep;
 
-		_traverse : function(how) {
-			var t = this, c, endContainerDepth = 0, startContainerDepth = 0, p, depthDiff, startNode, endNode, sp, ep;
+			if (t[START_CONTAINER] == t[END_CONTAINER])
+				return _traverseSameContainer(how);
 
-			if (t.startContainer == t.endContainer)
-				return t._traverseSameContainer(how);
-
-			for (c = t.endContainer, p = c.parentNode; p != null; c = p, p = p.parentNode) {
-				if (p == t.startContainer)
-					return t._traverseCommonStartContainer(c, how);
+			for (c = t[END_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {
+				if (p == t[START_CONTAINER])
+					return _traverseCommonStartContainer(c, how);
 
 				++endContainerDepth;
 			}
 
-			for (c = t.startContainer, p = c.parentNode; p != null; c = p, p = p.parentNode) {
-				if (p == t.endContainer)
-					return t._traverseCommonEndContainer(c, how);
+			for (c = t[START_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {
+				if (p == t[END_CONTAINER])
+					return _traverseCommonEndContainer(c, how);
 
 				++startContainerDepth;
 			}
 
 			depthDiff = startContainerDepth - endContainerDepth;
 
-			startNode = t.startContainer;
+			startNode = t[START_CONTAINER];
 			while (depthDiff > 0) {
 				startNode = startNode.parentNode;
 				depthDiff--;
 			}
 
-			endNode = t.endContainer;
+			endNode = t[END_CONTAINER];
 			while (depthDiff < 0) {
 				endNode = endNode.parentNode;
 				depthDiff++;
@@ -384,47 +373,47 @@
 				endNode = ep;
 			}
 
-			return t._traverseCommonAncestors(startNode, endNode, how);
-		},
+			return _traverseCommonAncestors(startNode, endNode, how);
+		};
 
-		_traverseSameContainer : function(how) {
-			var t = this, frag, s, sub, n, cnt, sibling, xferNode;
+		 function _traverseSameContainer(how) {
+			var frag, s, sub, n, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.dom.doc.createDocumentFragment();
+				frag = doc.createDocumentFragment();
 
 			// If selection is empty, just return the fragment
-			if (t.startOffset == t.endOffset)
+			if (t[START_OFFSET] == t[END_OFFSET])
 				return frag;
 
 			// Text node needs special case handling
-			if (t.startContainer.nodeType == 3 /* TEXT_NODE */) {
+			if (t[START_CONTAINER].nodeType == 3 /* TEXT_NODE */) {
 				// get the substring
-				s = t.startContainer.nodeValue;
-				sub = s.substring(t.startOffset, t.endOffset);
+				s = t[START_CONTAINER].nodeValue;
+				sub = s.substring(t[START_OFFSET], t[END_OFFSET]);
 
 				// set the original text node to its new value
 				if (how != CLONE) {
-					t.startContainer.deleteData(t.startOffset, t.endOffset - t.startOffset);
+					t[START_CONTAINER].deleteData(t[START_OFFSET], t[END_OFFSET] - t[START_OFFSET]);
 
 					// Nothing is partially selected, so collapse to start point
-					t.collapse(true);
+					t.collapse(TRUE);
 				}
 
 				if (how == DELETE)
-					return null;
+					return;
 
-				frag.appendChild(t.dom.doc.createTextNode(sub));
+				frag.appendChild(doc.createTextNode(sub));
 				return frag;
 			}
 
 			// Copy nodes between the start/end offsets.
-			n = getSelectedNode(t.startContainer, t.startOffset);
-			cnt = t.endOffset - t.startOffset;
+			n = _getSelectedNode(t[START_CONTAINER], t[START_OFFSET]);
+			cnt = t[END_OFFSET] - t[START_OFFSET];
 
 			while (cnt > 0) {
 				sibling = n.nextSibling;
-				xferNode = t._traverseFullySelected(n, how);
+				xferNode = _traverseFullySelected(n, how);
 
 				if (frag)
 					frag.appendChild( xferNode );
@@ -435,31 +424,31 @@
 
 			// Nothing is partially selected, so collapse to start point
 			if (how != CLONE)
-				t.collapse(true);
+				t.collapse(TRUE);
 
 			return frag;
-		},
+		};
 
-		_traverseCommonStartContainer : function(endAncestor, how) {
-			var t = this, frag, n, endIdx, cnt, sibling, xferNode;
+		function _traverseCommonStartContainer(endAncestor, how) {
+			var frag, n, endIdx, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.dom.doc.createDocumentFragment();
+				frag = doc.createDocumentFragment();
 
-			n = t._traverseRightBoundary(endAncestor, how);
+			n = _traverseRightBoundary(endAncestor, how);
 
 			if (frag)
 				frag.appendChild(n);
 
-			endIdx = indexOf(endAncestor, t.startContainer);
-			cnt = endIdx - t.startOffset;
+			endIdx = nodeIndex(endAncestor);
+			cnt = endIdx - t[START_OFFSET];
 
 			if (cnt <= 0) {
-				// Collapse to just before the endAncestor, which 
+				// Collapse to just before the endAncestor, which
 				// is partially selected.
 				if (how != CLONE) {
 					t.setEndBefore(endAncestor);
-					t.collapse(false);
+					t.collapse(FALSE);
 				}
 
 				return frag;
@@ -468,7 +457,7 @@
 			n = endAncestor.previousSibling;
 			while (cnt > 0) {
 				sibling = n.previousSibling;
-				xferNode = t._traverseFullySelected(n, how);
+				xferNode = _traverseFullySelected(n, how);
 
 				if (frag)
 					frag.insertBefore(xferNode, frag.firstChild);
@@ -477,34 +466,34 @@
 				n = sibling;
 			}
 
-			// Collapse to just before the endAncestor, which 
+			// Collapse to just before the endAncestor, which
 			// is partially selected.
 			if (how != CLONE) {
 				t.setEndBefore(endAncestor);
-				t.collapse(false);
+				t.collapse(FALSE);
 			}
 
 			return frag;
-		},
+		};
 
-		_traverseCommonEndContainer : function(startAncestor, how) {
-			var t = this, frag, startIdx, n, cnt, sibling, xferNode;
+		function _traverseCommonEndContainer(startAncestor, how) {
+			var frag, startIdx, n, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = t.dom.doc.createDocumentFragment();
+				frag = doc.createDocumentFragment();
 
-			n = t._traverseLeftBoundary(startAncestor, how);
+			n = _traverseLeftBoundary(startAncestor, how);
 			if (frag)
 				frag.appendChild(n);
 
-			startIdx = indexOf(startAncestor, t.endContainer);
+			startIdx = nodeIndex(startAncestor);
 			++startIdx;  // Because we already traversed it....
 
-			cnt = t.endOffset - startIdx;
+			cnt = t[END_OFFSET] - startIdx;
 			n = startAncestor.nextSibling;
 			while (cnt > 0) {
 				sibling = n.nextSibling;
-				xferNode = t._traverseFullySelected(n, how);
+				xferNode = _traverseFullySelected(n, how);
 
 				if (frag)
 					frag.appendChild(xferNode);
@@ -515,25 +504,25 @@
 
 			if (how != CLONE) {
 				t.setStartAfter(startAncestor);
-				t.collapse(true);
+				t.collapse(TRUE);
 			}
 
 			return frag;
-		},
+		};
 
-		_traverseCommonAncestors : function(startAncestor, endAncestor, how) {
-			var t = this, n, frag, commonParent, startOffset, endOffset, cnt, sibling, nextSibling;
+		function _traverseCommonAncestors(startAncestor, endAncestor, how) {
+			var n, frag, commonParent, startOffset, endOffset, cnt, sibling, nextSibling;
 
 			if (how != DELETE)
-				frag = t.dom.doc.createDocumentFragment();
+				frag = doc.createDocumentFragment();
 
-			n = t._traverseLeftBoundary(startAncestor, how);
+			n = _traverseLeftBoundary(startAncestor, how);
 			if (frag)
 				frag.appendChild(n);
 
 			commonParent = startAncestor.parentNode;
-			startOffset = indexOf(startAncestor, commonParent);
-			endOffset = indexOf(endAncestor, commonParent);
+			startOffset = nodeIndex(startAncestor);
+			endOffset = nodeIndex(endAncestor);
 			++startOffset;
 
 			cnt = endOffset - startOffset;
@@ -541,7 +530,7 @@
 
 			while (cnt > 0) {
 				nextSibling = sibling.nextSibling;
-				n = t._traverseFullySelected(sibling, how);
+				n = _traverseFullySelected(sibling, how);
 
 				if (frag)
 					frag.appendChild(n);
@@ -550,38 +539,37 @@
 				--cnt;
 			}
 
-			n = t._traverseRightBoundary(endAncestor, how);
+			n = _traverseRightBoundary(endAncestor, how);
 
 			if (frag)
 				frag.appendChild(n);
 
 			if (how != CLONE) {
 				t.setStartAfter(startAncestor);
-				t.collapse(true);
+				t.collapse(TRUE);
 			}
 
 			return frag;
-		},
+		};
 
-		_traverseRightBoundary : function(root, how) {
-			var t = this, next = getSelectedNode(t.endContainer, t.endOffset - 1), parent, clonedParent, prevSibling, clonedChild, clonedGrandParent;
-			var isFullySelected = next != t.endContainer;
+		function _traverseRightBoundary(root, how) {
+			var next = _getSelectedNode(t[END_CONTAINER], t[END_OFFSET] - 1), parent, clonedParent, prevSibling, clonedChild, clonedGrandParent, isFullySelected = next != t[END_CONTAINER];
 
 			if (next == root)
-				return t._traverseNode(next, isFullySelected, false, how);
+				return _traverseNode(next, isFullySelected, FALSE, how);
 
 			parent = next.parentNode;
-			clonedParent = t._traverseNode(parent, false, false, how);
+			clonedParent = _traverseNode(parent, FALSE, FALSE, how);
 
-			while (parent != null) {
-				while (next != null) {
+			while (parent) {
+				while (next) {
 					prevSibling = next.previousSibling;
-					clonedChild = t._traverseNode(next, isFullySelected, false, how);
+					clonedChild = _traverseNode(next, isFullySelected, FALSE, how);
 
 					if (how != DELETE)
 						clonedParent.insertBefore(clonedChild, clonedParent.firstChild);
 
-					isFullySelected = true;
+					isFullySelected = TRUE;
 					next = prevSibling;
 				}
 
@@ -591,37 +579,33 @@
 				next = parent.previousSibling;
 				parent = parent.parentNode;
 
-				clonedGrandParent = t._traverseNode(parent, false, false, how);
+				clonedGrandParent = _traverseNode(parent, FALSE, FALSE, how);
 
 				if (how != DELETE)
 					clonedGrandParent.appendChild(clonedParent);
 
 				clonedParent = clonedGrandParent;
 			}
+		};
 
-			// should never occur
-			return null;
-		},
-
-		_traverseLeftBoundary : function(root, how) {
-			var t = this, next = getSelectedNode(t.startContainer, t.startOffset);
-			var isFullySelected = next != t.startContainer, parent, clonedParent, nextSibling, clonedChild, clonedGrandParent;
+		function _traverseLeftBoundary(root, how) {
+			var next = _getSelectedNode(t[START_CONTAINER], t[START_OFFSET]), isFullySelected = next != t[START_CONTAINER], parent, clonedParent, nextSibling, clonedChild, clonedGrandParent;
 
 			if (next == root)
-				return t._traverseNode(next, isFullySelected, true, how);
+				return _traverseNode(next, isFullySelected, TRUE, how);
 
 			parent = next.parentNode;
-			clonedParent = t._traverseNode(parent, false, true, how);
+			clonedParent = _traverseNode(parent, FALSE, TRUE, how);
 
-			while (parent != null) {
-				while (next != null) {
+			while (parent) {
+				while (next) {
 					nextSibling = next.nextSibling;
-					clonedChild = t._traverseNode(next, isFullySelected, true, how);
+					clonedChild = _traverseNode(next, isFullySelected, TRUE, how);
 
 					if (how != DELETE)
 						clonedParent.appendChild(clonedChild);
 
-					isFullySelected = true;
+					isFullySelected = TRUE;
 					next = nextSibling;
 				}
 
@@ -631,33 +615,30 @@
 				next = parent.nextSibling;
 				parent = parent.parentNode;
 
-				clonedGrandParent = t._traverseNode(parent, false, true, how);
+				clonedGrandParent = _traverseNode(parent, FALSE, TRUE, how);
 
 				if (how != DELETE)
 					clonedGrandParent.appendChild(clonedParent);
 
 				clonedParent = clonedGrandParent;
 			}
+		};
 
-			// should never occur
-			return null;
-		},
-
-		_traverseNode : function(n, isFullySelected, isLeft, how) {
-			var t = this, txtValue, newNodeValue, oldNodeValue, offset, newNode;
+		function _traverseNode(n, isFullySelected, isLeft, how) {
+			var txtValue, newNodeValue, oldNodeValue, offset, newNode;
 
 			if (isFullySelected)
-				return t._traverseFullySelected(n, how);
+				return _traverseFullySelected(n, how);
 
 			if (n.nodeType == 3 /* TEXT_NODE */) {
 				txtValue = n.nodeValue;
 
 				if (isLeft) {
-					offset = t.startOffset;
+					offset = t[START_OFFSET];
 					newNodeValue = txtValue.substring(offset);
 					oldNodeValue = txtValue.substring(0, offset);
 				} else {
-					offset = t.endOffset;
+					offset = t[END_OFFSET];
 					newNodeValue = txtValue.substring(0, offset);
 					oldNodeValue = txtValue.substring(offset);
 				}
@@ -666,30 +647,27 @@
 					n.nodeValue = oldNodeValue;
 
 				if (how == DELETE)
-					return null;
+					return;
 
-				newNode = n.cloneNode(false);
+				newNode = n.cloneNode(FALSE);
 				newNode.nodeValue = newNodeValue;
 
 				return newNode;
 			}
 
 			if (how == DELETE)
-				return null;
+				return;
 
-			return n.cloneNode(false);
-		},
+			return n.cloneNode(FALSE);
+		};
 
-		_traverseFullySelected : function(n, how) {
-			var t = this;
-
+		function _traverseFullySelected(n, how) {
 			if (how != DELETE)
-				return how == CLONE ? n.cloneNode(true) : n;
+				return how == CLONE ? n.cloneNode(TRUE) : n;
 
 			n.parentNode.removeChild(n);
-			return null;
-		}
-	});
+		};
+	};
 
 	ns.Range = Range;
 })(tinymce.dom);
