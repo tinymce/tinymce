@@ -128,7 +128,7 @@
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker;
+			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker, len, skipStart;
 
 			this.destroy();
 
@@ -141,7 +141,14 @@
 
 			// If child index resolve it
 			if (sc.nodeType == 1) {
-				sc = sc.childNodes[Math.min(so, sc.childNodes.length - 1)];
+				len = sc.childNodes.length;
+
+				// Index is higher that the child count then we need to jump over the start container
+				if (so >= len) {
+					skipStart = 1;
+					sc = sc.childNodes[len - 1];
+				} else
+					sc = sc.childNodes[so];
 
 				// Child was text node then move offset to start of it
 				if (sc.nodeType == 3)
@@ -184,6 +191,12 @@
 					ieRng.collapse(eo <= rng.endContainer.childNodes.length - 1);
 
 				ieRng.select();
+				ieRng.scrollIntoView();
+
+				// Cache native range and W3C range, this boost performance and also solves the
+				// IE issue where it automatically moves the selection range outside/inside elements
+				lastIERng = ieRng;
+				range = rng;
 
 				return;
 			}
@@ -195,20 +208,42 @@
 
 			// Set start of range to startContainer/startOffset
 			if (sc.nodeType == 3) {
-				// Insert marker before startContainer
-				sc.parentNode.insertBefore(marker, sc);
+				// Insert marker after/before startContainer
+				if (skipStart)
+					dom.insertAfter(marker, sc);
+				else
+					sc.parentNode.insertBefore(marker, sc);
 
 				// Select marker the caret to offset position
 				ieRng.moveToElementText(marker);
 				marker.parentNode.removeChild(marker);
 				ieRng.move('character', so);
-			} else
+			} else {
 				ieRng.moveToElementText(sc);
+
+				if (skipStart)
+					ieRng.collapse(false);
+			}
 
 			// If same text container then we can do a more simple move
 			if (sc == ec && sc.nodeType == 3) {
-				ieRng.moveEnd('character', eo - so);
-				ieRng.select();
+				if (eo == so) {
+					// Hack to force IE to not auto move the caret into the closest inline element
+					sc.insertData(so, invisibleChar);
+					ieRng.move('character', 1);
+					ieRng.select();
+					sc.deleteData(so, 1);
+				} else {
+					ieRng.moveEnd('character', eo - so);
+					ieRng.select();
+				}
+
+				ieRng.scrollIntoView();
+
+				// Cache native range and W3C range, this boost performance and also solves the
+				// IE issue where it automatically moves the selection range outside/inside elements
+				lastIERng = ieRng;
+				range = rng;
 				return;
 			}
 

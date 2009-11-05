@@ -10,9 +10,12 @@
 
 (function(tinymce) {
 	// Shorten names
-	var each = tinymce.each, is = tinymce.is;
-	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
-	var blockRe = /^(H[1-6R]|P|DIV|ADDRESS|PRE|FORM|T(ABLE|BODY|HEAD|FOOT|H|R|D)|LI|OL|UL|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|MENU|ISINDEX|SAMP)$/;
+	var each = tinymce.each,
+		is = tinymce.is,
+		isWebKit = tinymce.isWebKit,
+		isIE = tinymce.isIE,
+		blockRe = /^(H[1-6R]|P|DIV|ADDRESS|PRE|FORM|T(ABLE|BODY|HEAD|FOOT|H|R|D)|LI|OL|UL|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|MENU|ISINDEX|SAMP)$/,
+		simpleSelectorRe = /^([a-z0-9],?)+$/i;
 
 	/**
 	 * Utility class for various DOM manipulation and retrival functions.
@@ -303,10 +306,28 @@
 		 *
 		 * @method is
 		 * @param {Node/NodeList} n DOM node to match or an array of nodes to match.
-		 * @param {String} patt CSS pattern to match the element agains.
+		 * @param {String} selector CSS pattern to match the element agains.
 		 */
-		is : function(n, patt) {
-			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
+		is : function(n, selector) {
+			var i;
+
+			// Simple all selector
+			if (selector === '*')
+				return n.nodeType == 1;
+
+			// Simple selector just elements
+			if (simpleSelectorRe.test(selector)) {
+				selector = selector.toLowerCase().split(/,/);
+				n = n.nodeName.toLowerCase();
+
+				for (i = selector.length - 1; i >= 0; i--) {
+					if (selector[i] == n)
+						return true;
+				}
+
+				return false;
+			} else
+				return tinymce.dom.Sizzle.matches(selector, n.nodeType ? [n] : n).length > 0;
 		},
 
 		// #endif
@@ -1044,8 +1065,15 @@
 						re = new RegExp("(^|\\s+)" + c + "(\\s+|$)", "g");
 
 					v = e.className.replace(re, ' ');
+					v = tinymce.trim(v != ' ' ? v : '');
 
-					return e.className = tinymce.trim(v != ' ' ? v : '');
+					// Empty class attr
+					if (!v) {
+						e.removeAttribute('class');
+						return v;
+					}
+
+					return e.className = v;
 				}
 
 				return e.className;
@@ -1860,7 +1888,7 @@
 				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
 				n = n.replace(/<[^>]+>/g, ''); // Remove all tags
 
-				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
+				return n.replace(/[ \t\r\n]+|\uFEFF|&nbsp;|&#160;/g, '') == '';
 			};
 
 			if (pe && e) {

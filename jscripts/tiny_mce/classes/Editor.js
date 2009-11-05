@@ -444,23 +444,23 @@
 
 				align_formats : {
 					left : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}},
 						{selector : 'img,table', styles : {'float' : 'left', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					center : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}},
 						{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}},
 						{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
 					],
 
 					right : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}},
 						{selector : 'img,table', styles : {'float' : 'right', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					full : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}, rename : 0}
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}}
 					]
 				},
 
@@ -490,9 +490,9 @@
 				hilitecolor_format : {inline : 'span', styles : {backgroundColor : '%value'}},
 				fontname_format : {inline : 'span', styles : {fontFamily : '%value'}},
 				fontsize_format : {inline : 'span', styles : {fontSize : '%value'}},
-				blockquote_format : {block : 'blockquote', rename : 0, body_blocks : 'td,th,body', text_blocks : 'h1,h2,h3,h4,h5,h6,p,div,ol,ul,table'},
-				unorderedlist_format : {block : 'li', container : 'ul', container_selector : 'ol', remove : 'all'},
-				orderedlist_format : {block : 'li', container : 'ol', container_selector : 'ul', remove : 'all'}
+				blockquote_format : {block : 'blockquote', wrapper : 1},
+				unorderedlist_format : {list_block : 'ul', list_item : 'li'},
+				orderedlist_format : {list_block : 'ol', list_item : 'li'}
 			}, s);
 
 			/**
@@ -915,6 +915,14 @@
 			});
 
 			/**
+			 * Schema instance, enables you to validate elements and it's children.
+			 *
+			 * @property schema
+			 * @type tinymce.dom.Schema
+			 */
+			t.schema = new tinymce.dom.Schema();
+
+			/**
 			 * DOM serializer for the editor.
 			 *
 			 * @property serializer
@@ -922,7 +930,8 @@
 			 */
 			t.serializer = new tinymce.dom.Serializer(extend(s, {
 				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
-				dom : t.dom
+				dom : t.dom,
+				schema : t.schema
 			}));
 
 			/**
@@ -1235,7 +1244,8 @@
 				font_size_classes  : s.font_size_classes,
 				font_size_style_values : s.font_size_style_values,
 				apply_source_formatting : s.apply_source_formatting,
-				dom : t.dom
+				dom : t.dom,
+				schema : schema
 			});
 
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
@@ -1450,10 +1460,22 @@
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
 			if (t.initialized) {
+				o = o || {};
+				n = isIE && n.ownerDocument != t.getDoc() ? t.getBody() : n; // Fix for IE initial state
+
+				// Get parents and add them to object
+				o.parents = [];
+				t.dom.getParent(n, function(node) {
+					if (node.nodeName == 'BODY')
+						return true;
+
+					o.parents.push(node);
+				});
+
 				t.onNodeChange.dispatch(
 					t,
 					o ? o.controlManager || t.controlManager : t.controlManager,
-					isIE && n.ownerDocument != t.getDoc() ? t.getBody() : n, // Fix for IE initial state
+					n,
 					s.isCollapsed(),
 					o
 				);

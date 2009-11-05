@@ -839,19 +839,34 @@
 			n = tb = null;
 		},
 
-		_nodeChanged : function(ed, cm, n, co) {
+		_nodeChanged : function(ed, cm, n, co, ob) {
 			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn;
 
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
 			});
 
+			function getParent(name) {
+				var i, parents = ob.parents, func = name;
+
+				if (typeof(name) == 'string') {
+					func = function(node) {
+						return node.nodeName == name;
+					};
+				}
+
+				for (i = 0; i < parents.length; i++) {
+					if (func(parents[i]))
+						return parents[i];
+				}
+			};
+
 			cm.setActive('visualaid', ed.hasVisual);
 			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
 			cm.setDisabled('redo', !ed.undoManager.hasRedo());
 			cm.setDisabled('outdent', !ed.queryCommandState('Outdent'));
 
-			p = DOM.getParent(n, 'A');
+			p = getParent('A');
 			if (c = cm.get('link')) {
 				if (!p || !p.name) {
 					c.setDisabled(!p && co);
@@ -868,12 +883,12 @@
 				c.setActive(!!p && p.name);
 
 				if (tinymce.isWebKit) {
-					p = DOM.getParent(n, 'IMG');
+					p = getParent('IMG');
 					c.setActive(!!p && DOM.getAttrib(p, 'mce_name') == 'a');
 				}
 			}
 
-			p = DOM.getParent(n, 'IMG');
+			p = getParent('IMG');
 			if (c = cm.get('image'))
 				c.setActive(!!p && n.className.indexOf('mceItem') == -1);
 
@@ -888,14 +903,14 @@
 			}
 
 			if (c = cm.get('formatselect')) {
-				p = DOM.getParent(n, DOM.isBlock);
+				p = getParent(DOM.isBlock);
 
 				if (p)
 					c.select(p.nodeName.toLowerCase());
 			}
 
 			// Find out current fontSize, fontFamily and fontClass
-			ed.dom.getParent(n, function(n) {
+			getParent(function(n) {
 				if (n.nodeName === 'SPAN') {
 					if (!cl && n.className)
 						cl = n.className;
@@ -935,7 +950,7 @@
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
 				DOM.setHTML(p, '');
 
-				ed.dom.getParent(n, function(n) {
+				getParent(function(n) {
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
 					// Ignore non element and hidden elements

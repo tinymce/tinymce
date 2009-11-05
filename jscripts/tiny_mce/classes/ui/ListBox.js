@@ -241,16 +241,16 @@
 		hideMenu : function(e) {
 			var t = this;
 
-			// Prevent double toogles by canceling the mouse click event to the button
-			if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
-				return;
+			if (t.menu && t.menu.isMenuVisible) {
+				// Prevent double toogles by canceling the mouse click event to the button
+				if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
+					return;
 
-			if (!e || !DOM.getParent(e.target, '.mceMenu')) {
-				DOM.removeClass(t.id, t.classPrefix + 'Selected');
-				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
-
-				if (t.menu)
+				if (!e || !DOM.getParent(e.target, '.mceMenu')) {
+					DOM.removeClass(t.id, t.classPrefix + 'Selected');
+					Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 					t.menu.hideMenu();
+				}
 			}
 		},
 

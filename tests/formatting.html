@@ -15,7 +15,6 @@ function getContent() {
 	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
 };
 
-
 test('Formatter - apply (inline)', function() {
 	var rng, format;
 
@@ -643,6 +642,9 @@ tinyMCE.init({
 	},
 	init_instance_callback : function(ed) {
 		editor = ed;
+		ed.onNodeChange.addToTop(function() {
+			return false;
+		});
 		run();
 	}
 });

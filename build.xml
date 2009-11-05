@@ -68,6 +68,7 @@
 			<fileset dir="${classes_dir}" includes="dom/Serializer.js" />
 			<fileset dir="${classes_dir}" includes="dom/ScriptLoader.js" />
 			<fileset dir="${classes_dir}" includes="dom/TreeWalker.js" />
+			<fileset dir="${classes_dir}" includes="dom/Schema.js" />
 			<fileset dir="${classes_dir}" includes="ui/Control.js" />
 			<fileset dir="${classes_dir}" includes="ui/Container.js" />
 			<fileset dir="${classes_dir}" includes="ui/Separator.js" />

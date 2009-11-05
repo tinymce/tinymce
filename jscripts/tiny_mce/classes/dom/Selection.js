@@ -181,7 +181,10 @@
 				if (e.nodeType == 1)
 					e = e.childNodes[r.startOffset];
 
-				return t.dom.getParent(e, '*');
+				if (e.nodeType == 3)
+					return e.parentNode;
+
+				return e;
 			}
 		},
 
@@ -214,7 +217,10 @@
 				if (e.nodeType == 1)
 					e = e.childNodes[eo > 0 ? eo - 1 : eo];
 
-				return t.dom.getParent(e, '*');
+				if (e.nodeType == 3)
+					return e.parentNode;
+
+				return e;
 			}
 		},
 
@@ -592,7 +598,10 @@
 					}
 				}
 
-				return t.dom.getParent(e, '*');
+				if (e.nodeType == 3)
+					return e.parentNode;
+
+				return e;
 			}
 
 			return r.item ? r.item(0) : r.parentElement();

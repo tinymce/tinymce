@@ -94,6 +94,7 @@
 	include('dom/Element.js');
 	include('dom/Selection.js');
 	include('dom/XMLWriter.js');
+	include('dom/Schema.js');
 	include('dom/StringWriter.js');
 	include('dom/Serializer.js');
 	include('dom/ScriptLoader.js');

@@ -984,9 +984,12 @@ tinymce.create('static tinymce.util.XHR', {
 	});
 }());(function(tinymce) {
 	// Shorten names
-	var each = tinymce.each, is = tinymce.is;
-	var isWebKit = tinymce.isWebKit, isIE = tinymce.isIE;
-	var blockRe = /^(H[1-6R]|P|DIV|ADDRESS|PRE|FORM|T(ABLE|BODY|HEAD|FOOT|H|R|D)|LI|OL|UL|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|MENU|ISINDEX|SAMP)$/;
+	var each = tinymce.each,
+		is = tinymce.is,
+		isWebKit = tinymce.isWebKit,
+		isIE = tinymce.isIE,
+		blockRe = /^(H[1-6R]|P|DIV|ADDRESS|PRE|FORM|T(ABLE|BODY|HEAD|FOOT|H|R|D)|LI|OL|UL|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|MENU|ISINDEX|SAMP)$/,
+		simpleSelectorRe = /^([a-z0-9],?)+$/i;
 
 	tinymce.create('tinymce.dom.DOMUtils', {
 		doc : null,
@@ -1178,8 +1181,26 @@ tinymce.create('static tinymce.util.XHR', {
 			return tinymce.dom.Sizzle(pa, t.get(s) || t.get(t.settings.root_element) || t.doc, []);
 		},
 
-		is : function(n, patt) {
-			return tinymce.dom.Sizzle.matches(patt, n.nodeType ? [n] : n).length > 0;
+		is : function(n, selector) {
+			var i;
+
+			// Simple all selector
+			if (selector === '*')
+				return n.nodeType == 1;
+
+			// Simple selector just elements
+			if (simpleSelectorRe.test(selector)) {
+				selector = selector.toLowerCase().split(/,/);
+				n = n.nodeName.toLowerCase();
+
+				for (i = selector.length - 1; i >= 0; i--) {
+					if (selector[i] == n)
+						return true;
+				}
+
+				return false;
+			} else
+				return tinymce.dom.Sizzle.matches(selector, n.nodeType ? [n] : n).length > 0;
 		},
 
 
@@ -1783,8 +1804,15 @@ tinymce.create('static tinymce.util.XHR', {
 						re = new RegExp("(^|\\s+)" + c + "(\\s+|$)", "g");
 
 					v = e.className.replace(re, ' ');
+					v = tinymce.trim(v != ' ' ? v : '');
 
-					return e.className = tinymce.trim(v != ' ' ? v : '');
+					// Empty class attr
+					if (!v) {
+						e.removeAttribute('class');
+						return v;
+					}
+
+					return e.className = v;
 				}
 
 				return e.className;
@@ -2427,7 +2455,7 @@ tinymce.create('static tinymce.util.XHR', {
 				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
 				n = n.replace(/<[^>]+>/g, ''); // Remove all tags
 
-				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
+				return n.replace(/[ \t\r\n]+|\uFEFF|&nbsp;|&#160;/g, '') == '';
 			};
 
 			if (pe && e) {
@@ -3329,7 +3357,7 @@ tinymce.create('static tinymce.util.XHR', {
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker;
+			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker, len, skipStart;
 
 			this.destroy();
 
@@ -3342,7 +3370,14 @@ tinymce.create('static tinymce.util.XHR', {
 
 			// If child index resolve it
 			if (sc.nodeType == 1) {
-				sc = sc.childNodes[Math.min(so, sc.childNodes.length - 1)];
+				len = sc.childNodes.length;
+
+				// Index is higher that the child count then we need to jump over the start container
+				if (so >= len) {
+					skipStart = 1;
+					sc = sc.childNodes[len - 1];
+				} else
+					sc = sc.childNodes[so];
 
 				// Child was text node then move offset to start of it
 				if (sc.nodeType == 3)
@@ -3385,6 +3420,12 @@ tinymce.create('static tinymce.util.XHR', {
 					ieRng.collapse(eo <= rng.endContainer.childNodes.length - 1);
 
 				ieRng.select();
+				ieRng.scrollIntoView();
+
+				// Cache native range and W3C range, this boost performance and also solves the
+				// IE issue where it automatically moves the selection range outside/inside elements
+				lastIERng = ieRng;
+				range = rng;
 
 				return;
 			}
@@ -3396,20 +3437,42 @@ tinymce.create('static tinymce.util.XHR', {
 
 			// Set start of range to startContainer/startOffset
 			if (sc.nodeType == 3) {
-				// Insert marker before startContainer
-				sc.parentNode.insertBefore(marker, sc);
+				// Insert marker after/before startContainer
+				if (skipStart)
+					dom.insertAfter(marker, sc);
+				else
+					sc.parentNode.insertBefore(marker, sc);
 
 				// Select marker the caret to offset position
 				ieRng.moveToElementText(marker);
 				marker.parentNode.removeChild(marker);
 				ieRng.move('character', so);
-			} else
+			} else {
 				ieRng.moveToElementText(sc);
+
+				if (skipStart)
+					ieRng.collapse(false);
+			}
 
 			// If same text container then we can do a more simple move
 			if (sc == ec && sc.nodeType == 3) {
-				ieRng.moveEnd('character', eo - so);
-				ieRng.select();
+				if (eo == so) {
+					// Hack to force IE to not auto move the caret into the closest inline element
+					sc.insertData(so, invisibleChar);
+					ieRng.move('character', 1);
+					ieRng.select();
+					sc.deleteData(so, 1);
+				} else {
+					ieRng.moveEnd('character', eo - so);
+					ieRng.select();
+				}
+
+				ieRng.scrollIntoView();
+
+				// Cache native range and W3C range, this boost performance and also solves the
+				// IE issue where it automatically moves the selection range outside/inside elements
+				lastIERng = ieRng;
+				range = rng;
 				return;
 			}
 
@@ -5032,7 +5095,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 				if (e.nodeType == 1)
 					e = e.childNodes[r.startOffset];
 
-				return t.dom.getParent(e, '*');
+				if (e.nodeType == 3)
+					return e.parentNode;
+
+				return e;
 			}
 		},
 
@@ -5058,7 +5124,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 				if (e.nodeType == 1)
 					e = e.childNodes[eo > 0 ? eo - 1 : eo];
 
-				return t.dom.getParent(e, '*');
+				if (e.nodeType == 3)
+					return e.parentNode;
+
+				return e;
 			}
 		},
 
@@ -5369,7 +5438,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 					}
 				}
 
-				return t.dom.getParent(e, '*');
+				if (e.nodeType == 3)
+					return e.parentNode;
+
+				return e;
 			}
 
 			return r.item ? r.item(0) : r.parentElement();
@@ -5665,7 +5737,6 @@ window.tinymce.dom.Sizzle = Sizzle;
 				entities : '160,nbsp,161,iexcl,162,cent,163,pound,164,curren,165,yen,166,brvbar,167,sect,168,uml,169,copy,170,ordf,171,laquo,172,not,173,shy,174,reg,175,macr,176,deg,177,plusmn,178,sup2,179,sup3,180,acute,181,micro,182,para,183,middot,184,cedil,185,sup1,186,ordm,187,raquo,188,frac14,189,frac12,190,frac34,191,iquest,192,Agrave,193,Aacute,194,Acirc,195,Atilde,196,Auml,197,Aring,198,AElig,199,Ccedil,200,Egrave,201,Eacute,202,Ecirc,203,Euml,204,Igrave,205,Iacute,206,Icirc,207,Iuml,208,ETH,209,Ntilde,210,Ograve,211,Oacute,212,Ocirc,213,Otilde,214,Ouml,215,times,216,Oslash,217,Ugrave,218,Uacute,219,Ucirc,220,Uuml,221,Yacute,222,THORN,223,szlig,224,agrave,225,aacute,226,acirc,227,atilde,228,auml,229,aring,230,aelig,231,ccedil,232,egrave,233,eacute,234,ecirc,235,euml,236,igrave,237,iacute,238,icirc,239,iuml,240,eth,241,ntilde,242,ograve,243,oacute,244,ocirc,245,otilde,246,ouml,247,divide,248,oslash,249,ugrave,250,uacute,251,ucirc,252,uuml,253,yacute,254,thorn,255,yuml,402,fnof,913,Alpha,914,Beta,915,Gamma,916,Delta,917,Epsilon,918,Zeta,919,Eta,920,Theta,921,Iota,922,Kappa,923,Lambda,924,Mu,925,Nu,926,Xi,927,Omicron,928,Pi,929,Rho,931,Sigma,932,Tau,933,Upsilon,934,Phi,935,Chi,936,Psi,937,Omega,945,alpha,946,beta,947,gamma,948,delta,949,epsilon,950,zeta,951,eta,952,theta,953,iota,954,kappa,955,lambda,956,mu,957,nu,958,xi,959,omicron,960,pi,961,rho,962,sigmaf,963,sigma,964,tau,965,upsilon,966,phi,967,chi,968,psi,969,omega,977,thetasym,978,upsih,982,piv,8226,bull,8230,hellip,8242,prime,8243,Prime,8254,oline,8260,frasl,8472,weierp,8465,image,8476,real,8482,trade,8501,alefsym,8592,larr,8593,uarr,8594,rarr,8595,darr,8596,harr,8629,crarr,8656,lArr,8657,uArr,8658,rArr,8659,dArr,8660,hArr,8704,forall,8706,part,8707,exist,8709,empty,8711,nabla,8712,isin,8713,notin,8715,ni,8719,prod,8721,sum,8722,minus,8727,lowast,8730,radic,8733,prop,8734,infin,8736,ang,8743,and,8744,or,8745,cap,8746,cup,8747,int,8756,there4,8764,sim,8773,cong,8776,asymp,8800,ne,8801,equiv,8804,le,8805,ge,8834,sub,8835,sup,8836,nsub,8838,sube,8839,supe,8853,oplus,8855,otimes,8869,perp,8901,sdot,8968,lceil,8969,rceil,8970,lfloor,8971,rfloor,9001,lang,9002,rang,9674,loz,9824,spades,9827,clubs,9829,hearts,9830,diams,338,OElig,339,oelig,352,Scaron,353,scaron,376,Yuml,710,circ,732,tilde,8194,ensp,8195,emsp,8201,thinsp,8204,zwnj,8205,zwj,8206,lrm,8207,rlm,8211,ndash,8212,mdash,8216,lsquo,8217,rsquo,8218,sbquo,8220,ldquo,8221,rdquo,8222,bdquo,8224,dagger,8225,Dagger,8240,permil,8249,lsaquo,8250,rsaquo,8364,euro',
 				valid_elements : '*[*]',
 				extended_valid_elements : 0,
-				valid_child_elements : 0,
 				invalid_elements : 0,
 				fix_table_elements : 1,
 				fix_list_elements : true,
@@ -5683,6 +5754,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			}, s);
 
 			t.dom = s.dom;
+			t.schema = s.schema;
 
 			// Use raw entities if no entities are defined
 			if (s.entity_encoding == 'named' && !s.entities)
@@ -5791,82 +5863,6 @@ window.tinymce.dom.Sizzle = Sizzle;
 			}
 
 			t.entityLookup = l;
-		},
-
-		setValidChildRules : function(s) {
-			this.childRules = null;
-			this.addValidChildRules(s);
-		},
-
-		addValidChildRules : function(s) {
-			var t = this, inst, intr, bloc;
-
-			if (!s)
-				return;
-
-			inst = 'A|BR|SPAN|BDO|MAP|OBJECT|IMG|TT|I|B|BIG|SMALL|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|#text|#comment';
-			intr = 'A|BR|SPAN|BDO|OBJECT|APPLET|IMG|MAP|IFRAME|TT|I|B|U|S|STRIKE|BIG|SMALL|FONT|BASEFONT|EM|STRONG|DFN|CODE|Q|SAMP|KBD|VAR|CITE|ABBR|ACRONYM|SUB|SUP|INPUT|SELECT|TEXTAREA|LABEL|BUTTON|#text|#comment';
-			bloc = 'H[1-6]|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|FORM|NOSCRIPT|NOFRAMES|MENU|ISINDEX|SAMP';
-
-			each(s.split(','), function(s) {
-				var p = s.split(/\[|\]/), re;
-
-				s = '';
-				each(p[1].split('|'), function(v) {
-					if (s)
-						s += '|';
-
-					switch (v) {
-						case '%itrans':
-							v = intr;
-							break;
-
-						case '%itrans_na':
-							v = intr.substring(2);
-							break;
-
-						case '%istrict':
-							v = inst;
-							break;
-
-						case '%istrict_na':
-							v = inst.substring(2);
-							break;
-
-						case '%btrans':
-							v = bloc;
-							break;
-
-						case '%bstrict':
-							v = bloc;
-							break;
-					}
-
-					s += v;
-				});
-				re = new RegExp('^(' + s.toLowerCase() + ')$', 'i');
-
-				each(p[0].split('/'), function(s) {
-					t.childRules = t.childRules || {};
-					t.childRules[s] = re;
-				});
-			});
-
-			// Build regex
-			s = '';
-			each(t.childRules, function(v, k) {
-				if (s)
-					s += '|';
-
-				s += k;
-			});
-
-			t.parentElementsRE = new RegExp('^(' + s.toLowerCase() + ')$', 'i');
-
-			/*console.debug(t.parentElementsRE.toString());
-			each(t.childRules, function(v) {
-				console.debug(v.toString());
-			});*/
 		},
 
 		setRules : function(s) {
@@ -6288,12 +6284,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 						}
 
 						// Check if valid child
-						if (t.childRules) {
-							if (t.parentElementsRE.test(t.elementName)) {
-								if (!t.childRules[t.elementName].test(nn)) {
-									iv = true;
-									break;
-								}
+						if (s.validate_children) {
+							if (t.elementName && !t.schema.isValid(t.elementName, nn)) {
+								iv = true;
+								break;
 							}
 
 							t.elementName = nn;
@@ -6385,10 +6379,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 					case 3: // Text
 						// Check if valid child
-						if (t.childRules && t.parentElementsRE.test(t.elementName)) {
-							if (!t.childRules[t.elementName].test(n.nodeName))
-								return;
-						}
+						if (s.validate_children && t.elementName && !t.schema.isValid(t.elementName, '#text'))
+							return;
 
 						return w.writeText(n.nodeValue);
 
@@ -6511,7 +6503,6 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 			t.setRules(s.valid_elements);
 			t.addRules(s.extended_valid_elements);
-			t.addValidChildRules(s.valid_child_elements);
 
 			if (s.invalid_elements)
 				t.invalidElementsRE = new RegExp('^(' + wildcardToRE(s.invalid_elements.replace(/,/g, '|').toLowerCase()) + ')$');
@@ -6892,7 +6883,160 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 		return (node = findSibling(node, 'lastChild', 'lastSibling', shallow));
 	};
 };
-(function(tinymce) {
+(function() {
+	var transitional = {};
+
+	function unpack(lookup, data) {
+		var key;
+
+		function replace(value) {
+			return value.replace(/[A-Z]+/g, function(key) {
+				return replace(lookup[key]);
+			});
+		};
+
+		// Unpack lookup
+		for (key in lookup) {
+			if (lookup.hasOwnProperty(key))
+				lookup[key] = replace(lookup[key]);
+		}
+
+		// Unpack and parse data into object map
+		replace(data).replace(/#/g, '#text').replace(/(\w+)\[([^\]]+)\]/g, function(str, name, children) {
+			var i, map = {};
+
+			children = children.split(/\|/);
+
+			for (i = children.length - 1; i >= 0; i--)
+				map[children[i]] = 1;
+
+			transitional[name] = map;
+		});
+	};
+
+	// This is the XHTML 1.0 transitional elements with it's children packed to reduce it's size
+	// we will later include the attributes here and use it as a default for valid elements but it
+	// requires us to rewrite the serializer engine
+	unpack({
+		Z : '#|H|K|N|O|P',
+		Y : '#|X|form|R|Q',
+		X : 'p|T|div|U|W|isindex|fieldset|table',
+		W : 'pre|hr|blockquote|address|center|noframes',
+		U : 'ul|ol|dl|menu|dir',
+		ZC : '#|p|Y|div|U|W|table|br|span|bdo|object|applet|img|map|K|N|Q',
+		T : 'h1|h2|h3|h4|h5|h6',
+		ZB : '#|X|S|Q',
+		S : 'R|P',
+		ZA : '#|a|G|J|M|O|P',
+		R : '#|a|H|K|N|O',
+		Q : 'noscript|P',
+		P : 'ins|del|script',
+		O : 'input|select|textarea|label|button',
+		N : 'M|L',
+		M : 'em|strong|dfn|code|q|samp|kbd|var|cite|abbr|acronym',
+		L : 'sub|sup',
+		K : 'J|I',
+		J : 'tt|i|b|u|s|strike',
+		I : 'big|small|font|basefont',
+		H : 'G|F',
+		G : 'br|span|bdo',
+		F : 'object|applet|img|map|iframe'
+	}, 'script[]' + 
+		'style[]' + 
+		'object[#|param|X|form|a|H|K|N|O|Q]' + 
+		'param[]' + 
+		'p[S]' + 
+		'a[Z]' + 
+		'br[]' + 
+		'span[S]' + 
+		'bdo[S]' + 
+		'applet[#|param|X|form|a|H|K|N|O|Q]' + 
+		'h1[S]' + 
+		'img[]' + 
+		'map[X|form|Q|area]' + 
+		'h2[S]' + 
+		'iframe[#|X|form|a|H|K|N|O|Q]' + 
+		'h3[S]' + 
+		'tt[S]' + 
+		'i[S]' + 
+		'b[S]' + 
+		'u[S]' + 
+		's[S]' + 
+		'strike[S]' + 
+		'big[S]' + 
+		'small[S]' + 
+		'font[S]' + 
+		'basefont[]' + 
+		'em[S]' + 
+		'strong[S]' + 
+		'dfn[S]' + 
+		'code[S]' + 
+		'q[S]' + 
+		'samp[S]' + 
+		'kbd[S]' + 
+		'var[S]' + 
+		'cite[S]' + 
+		'abbr[S]' + 
+		'acronym[S]' + 
+		'sub[S]' + 
+		'sup[S]' + 
+		'input[]' + 
+		'select[optgroup|option]' + 
+		'optgroup[option]' + 
+		'option[]' + 
+		'textarea[]' + 
+		'label[S]' + 
+		'button[#|p|T|div|U|W|table|G|object|applet|img|map|K|N|Q]' + 
+		'h4[S]' + 
+		'ins[#|X|form|a|H|K|N|O|Q]' + 
+		'h5[S]' + 
+		'del[#|X|form|a|H|K|N|O|Q]' + 
+		'h6[S]' + 
+		'div[#|X|form|a|H|K|N|O|Q]' + 
+		'ul[li]' + 
+		'li[#|X|form|a|H|K|N|O|Q]' + 
+		'ol[li]' + 
+		'dl[dt|dd]' + 
+		'dt[S]' + 
+		'dd[#|X|form|a|H|K|N|O|Q]' + 
+		'menu[li]' + 
+		'dir[li]' + 
+		'pre[ZA]' + 
+		'hr[]' + 
+		'blockquote[#|X|form|a|H|K|N|O|Q]' + 
+		'address[S|p]' + 
+		'center[#|X|form|a|H|K|N|O|Q]' + 
+		'noframes[#|X|form|a|H|K|N|O|Q]' + 
+		'isindex[]' + 
+		'fieldset[#|legend|X|form|a|H|K|N|O|Q]' + 
+		'legend[S]' + 
+		'table[caption|col|colgroup|thead|tfoot|tbody|tr]' + 
+		'caption[S]' + 
+		'col[]' + 
+		'colgroup[col]' + 
+		'thead[tr]' + 
+		'tr[th|td]' + 
+		'th[#|X|form|a|H|K|N|O|Q]' + 
+		'form[#|X|a|H|K|N|O|Q]' + 
+		'noscript[#|X|form|a|H|K|N|O|Q]' + 
+		'td[#|X|form|a|H|K|N|O|Q]' + 
+		'tfoot[tr]' + 
+		'tbody[tr]' + 
+		'area[]' + 
+		'base[]' + 
+		'body[#|X|form|a|H|K|N|O|Q]'
+	);
+
+	tinymce.dom.Schema = function() {
+		var t = this, elements = transitional;
+
+		t.isValid = function(name, child_name) {
+			var element = elements[name];
+
+			return !!(element && (!child_name || element[child_name]));
+		};
+	};
+})();(function(tinymce) {
 	// Shorten class names
 	var DOM = tinymce.DOM, is = tinymce.is;
 
@@ -7656,16 +7800,16 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		hideMenu : function(e) {
 			var t = this;
 
-			// Prevent double toogles by canceling the mouse click event to the button
-			if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
-				return;
+			if (t.menu && t.menu.isMenuVisible) {
+				// Prevent double toogles by canceling the mouse click event to the button
+				if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
+					return;
 
-			if (!e || !DOM.getParent(e.target, '.mceMenu')) {
-				DOM.removeClass(t.id, t.classPrefix + 'Selected');
-				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
-
-				if (t.menu)
+				if (!e || !DOM.getParent(e.target, '.mceMenu')) {
+					DOM.removeClass(t.id, t.classPrefix + 'Selected');
+					Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
 					t.menu.hideMenu();
+				}
 			}
 		},
 
@@ -8865,23 +9009,23 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 				align_formats : {
 					left : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}},
 						{selector : 'img,table', styles : {'float' : 'left', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					center : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}},
 						{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}},
 						{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
 					],
 
 					right : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}, rename : 0},
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}},
 						{selector : 'img,table', styles : {'float' : 'right', display : '', marginLeft : '', marginRight : ''}}
 					],
 
 					full : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}, rename : 0}
+						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}}
 					]
 				},
 
@@ -8911,9 +9055,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				hilitecolor_format : {inline : 'span', styles : {backgroundColor : '%value'}},
 				fontname_format : {inline : 'span', styles : {fontFamily : '%value'}},
 				fontsize_format : {inline : 'span', styles : {fontSize : '%value'}},
-				blockquote_format : {block : 'blockquote', rename : 0, body_blocks : 'td,th,body', text_blocks : 'h1,h2,h3,h4,h5,h6,p,div,ol,ul,table'},
-				unorderedlist_format : {block : 'li', container : 'ul', container_selector : 'ol', remove : 'all'},
-				orderedlist_format : {block : 'li', container : 'ol', container_selector : 'ul', remove : 'all'}
+				blockquote_format : {block : 'blockquote', wrapper : 1},
+				unorderedlist_format : {list_block : 'ul', list_item : 'li'},
+				orderedlist_format : {list_block : 'ol', list_item : 'li'}
 			}, s);
 
 			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL, {
@@ -9265,9 +9409,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				valid_styles : s.valid_styles
 			});
 
+			t.schema = new tinymce.dom.Schema();
+
 			t.serializer = new tinymce.dom.Serializer(extend(s, {
 				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
-				dom : t.dom
+				dom : t.dom,
+				schema : t.schema
 			}));
 
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
@@ -9608,10 +9755,22 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
 			if (t.initialized) {
+				o = o || {};
+				n = isIE && n.ownerDocument != t.getDoc() ? t.getBody() : n; // Fix for IE initial state
+
+				// Get parents and add them to object
+				o.parents = [];
+				t.dom.getParent(n, function(node) {
+					if (node.nodeName == 'BODY')
+						return true;
+
+					o.parents.push(node);
+				});
+
 				t.onNodeChange.dispatch(
 					t,
 					o ? o.controlManager || t.controlManager : t.controlManager,
-					isIE && n.ownerDocument != t.getDoc() ? t.getBody() : n, // Fix for IE initial state
+					n,
 					s.isCollapsed(),
 					o
 				);
@@ -12290,22 +12449,26 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			dom = ed.dom,
 			selection = ed.selection,
 			TreeWalker = tinymce.dom.TreeWalker,
+			isValid = ed.schema.isValid,
+			isBlock = dom.isBlock,
+			forcedRootBlock = ed.settings.forced_root_block,
 			INVISIBLE_CHAR = '\uFEFF',
 			FALSE = false,
-			TRUE = true,
-			SELECTED_BLOCKS = 'td.mceSelected,th.mceSelected';
+			TRUE = true;
 
-		function getStartContainer(container, offset) {
-			var children = container.childNodes, lastIdx = children.length - 1;
+		function getNonWhiteSpaceSibling(node, next, inc) {
+			if (node) {
+				next = next ? 'nextSibling' : 'previousSibling';
 
-			if (offset > lastIdx) {
-				// Look for next suitable node if it exists
-				container = new TreeWalker(children[lastIdx]).next(true);
-
-				return container || children[lastIdx];
+				for (node = inc ? node : node[next]; node; node = node[next]) {
+					if (node.nodeType == 1 || (node.nodeType == 3 && !/^\s+$/.test(node.nodeValue)))
+						return node;
+				}
 			}
+		};
 
-			return children[offset];
+		function isTextBlock(node) {
+			return /^(h[1-6]|p|div)$/i.test(node.nodeName);
 		};
 
 		function processFormats(formats) {
@@ -12317,111 +12480,117 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				if (typeof(format.classes) === 'string')
 					format.classes = format.classes.split(/\s+/);
 
-				// Default rename state
-				if (format.rename === undefined)
-					format.rename = TRUE;
-
-				// Default text blocks
-				if (format.text_blocks === undefined)
-					format.text_blocks = 'h1,h2,h3,h4,h5,h6,p,div';
-
-				// Default body blocks
-				if (format.body_blocks === undefined)
-					format.body_blocks = 'td,th,li';
+				if (format.list_block)
+					format.block = format.list_block;
 			});
 
 			return formats;
 		};
 
 		function expand(rng, formats) {
-			var startContainer, startOffset, endContainer, endOffset, node, isDone;
+			var startContainer = rng.startContainer,
+				startOffset = rng.startOffset,
+				endContainer = rng.endContainer,
+				endOffset = rng.endOffset;
 
-			// Use locals
-			startContainer = rng.startContainer;
-			startOffset = rng.startOffset;
-			endContainer = rng.endContainer;
-			endOffset = rng.endOffset;
+			// Move start/end point up the tree if the leaves are sharp and if we are in different containers
+			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
+			// This will reduce the number of wrapper elements that needs to be created
+			// Move start point up the tree
+			if (formats[0].inline) {
+				function findParentContainer(container, child_name) {
+					var root = dom.getRoot(), parent;
+
+					for (;;) {
+						// Check if we can move up are we at root level or body level
+						parent = container.parentNode;
+						if (parent == root || isBlock(parent) || container.parentNode[child_name] != container)
+							return container;
+
+						container = container.parentNode;
+					}
+
+					return container;
+				};
+
+				startContainer = findParentContainer(startContainer, 'firstChild');
+				endContainer = findParentContainer(endContainer, 'lastChild');
+			}
 
 			// Expand start/end container to matching selector
 			if (formats[0].selector) {
-				if (startContainer.nodeType == 3 && startContainer.nodeValue.length == 0)
-					startContainer = startContainer.nextSibling;
+				function findSelectorEndPoint(container, sibling_name) {
+					var parents, i, y;
 
-				if (endContainer.nodeType == 3 && endContainer.nodeValue.length == 0)
-					endContainer = endContainer.previousSibling;
+					if (container.nodeType == 3 && container.nodeValue.length == 0 && container[sibling_name])
+						container = container[sibling_name];
 
-				each(dom.getParents(startContainer), function(node) {
-					each(formats, function(format) {
-						if (dom.is(node, format.selector)) {
-							startContainer = node.parentNode;
-							startOffset = dom.nodeIndex(node);
-							isDone = 1;
-
-							return FALSE;
+					parents = dom.getParents(container);
+					for (i = 0; i < parents.length; i++) {
+						for (y = 0; y < formats.length; y++) {
+							if (dom.is(parents[i], formats[y].selector))
+								return parents[i];
 						}
-					});
-
-					if (isDone)
-						return FALSE;
-				});
-
-				isDone = 0;
-				each(dom.getParents(endContainer), function(node) {
-					each(formats, function(format) {
-						if (dom.is(node, format.selector)) {
-							endContainer = node.parentNode;
-							endOffset = dom.nodeIndex(node) + 1;
-							isDone = 1;
-
-							return FALSE;
-						}
-					});
-
-					if (isDone)
-						return FALSE;
-				});
-			} else if (formats[0].block) {
-				// Expand to block elements
-				node = dom.getParent(startContainer, formats[0].block) || dom.getParent(startContainer, formats[0].text_blocks);
-
-				if (node) {
-					startContainer = node.parentNode;
-					startOffset = dom.nodeIndex(node);
-				} else {
-					node = findEndPoint(startContainer, dom.getParent(startContainer, formats[0].body_blocks) || dom.getRoot());
-
-					while (node.previousSibling && !dom.isBlock(node.previousSibling)) {
-						node = node.previousSibling;
-
-						if (isEq(node.nodeName, 'br'))
-							break;
 					}
 
-					startContainer = node.parentNode;
-					startOffset = dom.nodeIndex(node);
-				}
+					return container;
+				};
 
-				node = dom.getParent(endContainer, formats[0].block) || dom.getParent(endContainer, formats[0].text_blocks);
-
-				if (node) {
-					endContainer = node.parentNode;
-					endOffset = dom.nodeIndex(node) + 1;
-				} else {
-					node = findEndPoint(endContainer, dom.getParent(endContainer, formats[0].body_blocks) || dom.getRoot());
-
-					while (node.nextSibling && !dom.isBlock(node.nextSibling)) {
-						node = node.nextSibling;
-
-						if (isEq(node.nodeName, 'br'))
-							break;
-					}
-
-					endContainer = node.parentNode;
-					endOffset = dom.nodeIndex(node) + 1;
-				}
+				// Find new startContainer/endContainer if there is better one
+				startContainer = findSelectorEndPoint(startContainer, 'previousSibling');
+				endContainer = findSelectorEndPoint(endContainer, 'nextSibling');
 			}
 
-			// Return new range location object
+			// Expand start/end container to matching block element or text node
+			if (formats[0].block) {
+				function findBlockEndPoint(container, sibling_name) {
+					var node;
+
+					// Expand to block of similar type
+					node = dom.getParent(container, formats[0].block);
+
+					// Expand to first wrappable block element or any block element
+					if (!node) {
+						node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, function(node) {
+							return isBlock(node) && (!formats[0].wrapper || isValid(formats[0].block, node.nodeName.toLowerCase()));
+						});
+					}
+
+					// Didn't find a block element look for first/last wrappable element
+					if (!node) {
+						node = container;
+
+						while (node[sibling_name] && !isBlock(node[sibling_name])) {
+							node = node[sibling_name];
+
+							// Break on BR but include it will be removed later on
+							// we can't remove it now since we need to check if it can be wrapped
+							if (isEq(node, 'br'))
+								break;
+						}
+					}
+
+					return node || container;
+				};
+
+				// Find new startContainer/endContainer if there is better one
+				startContainer = findBlockEndPoint(startContainer, 'previousSibling');
+				endContainer = findBlockEndPoint(endContainer, 'nextSibling');
+			}
+
+			// Setup index for startContainer
+			if (startContainer.nodeType == 1) {
+				startOffset = dom.nodeIndex(startContainer);
+				startContainer = startContainer.parentNode;
+			}
+
+			// Setup index for endContainer
+			if (endContainer.nodeType == 1) {
+				endOffset = dom.nodeIndex(endContainer) + 1;
+				endContainer = endContainer.parentNode;
+			}
+
+			// Return new range like object
 			return {
 				startContainer : startContainer,
 				startOffset : startOffset,
@@ -12430,19 +12599,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			};
 		};
 
-		function findEndPoint(node, root) {
-			do {
-				if (node.parentNode == root)
-					return node;
-
-				node = node.parentNode;
-			} while(node);
-		};
-
 		function renameElement(elm, name) {
 			var newElm;
 
-			if (!isEq(elm.nodeName, name)) {
+			if (!isEq(elm, name)) {
 				// Rename block element
 				newElm = dom.create(name);
 
@@ -12452,20 +12612,30 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				});
 
 				// Replace block
-				dom.replace(newElm, elm, 1);
-
-				return newElm;
+				dom.replace(newElm, elm, TRUE);
 			}
+
+			return newElm || elm;
 		};
 
 		function walkRange(rng, callback) {
-			var startContainer, endContainer, startOffset, endOffset, ancestor, startPoint, endPoint, node, parent, siblings, rangeLoc;
+			var startContainer = rng.startContainer,
+				startOffset = rng.startOffset,
+				endContainer = rng.endContainer,
+				endOffset = rng.endOffset,
+				ancestor, startPoint,
+				endPoint, node, parent, siblings, nodes;
 
-			// Use locals
-			startContainer = rng.startContainer;
-			startOffset = rng.startOffset;
-			endContainer = rng.endContainer;
-			endOffset = rng.endOffset;
+			// Handle table cell selection the table plugin enables
+			// you to fake select table cells and perform formatting actions on them
+			nodes = dom.select('td.mceSelected,th.mceSelected');
+			if (nodes.length > 0) {
+				each(nodes, function(node) {
+					callback([node]);
+				});
+
+				return;
+			}
 
 			function collectSiblings(node, name, end_node) {
 				var siblings = [];
@@ -12476,9 +12646,18 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return siblings;
 			};
 
+			function findEndPoint(node, root) {
+				do {
+					if (node.parentNode == root)
+						return node;
+
+					node = node.parentNode;
+				} while(node);
+			};
+
 			// If index based start position then resolve it
 			if (startContainer.nodeType == 1 && startContainer.hasChildNodes())
-				startContainer = getStartContainer(startContainer, startOffset);
+				startContainer = startContainer.childNodes[startOffset];
 
 			// If index based end position then resolve it
 			if (endContainer.nodeType == 1 && endContainer.hasChildNodes())
@@ -12518,71 +12697,72 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 		};
 
-		function compareElements(node1, node2) {
-			// Missing, not element type or not the same name
-			if (!node1 || !node2 || node1.nodeType != 1 || node1.nodeName != node2.nodeName)
-				return FALSE;
+		function mergeSiblings(prev, next) {
+			var marker;
 
-			function getAttribs(node) {
-				var attribs = {};
+			function compareElements(node1, node2) {
+				// Not the same name
+				if (node1.nodeName != node2.nodeName)
+					return FALSE;
 
-				each(dom.getAttribs(node), function(attr) {
-					var name = attr.nodeName.toLowerCase();
+				function getAttribs(node) {
+					var attribs = {};
 
-					// Don't compare internal attributes or style/class
-					if (name.indexOf('_') !== 0 && name !== 'class' && name !== 'style')
-						attribs[name] = dom.getAttrib(node, name);
-				});
+					each(dom.getAttribs(node), function(attr) {
+						var name = attr.nodeName.toLowerCase();
 
-				return attribs;
-			};
+						// Don't compare internal attributes or style/class
+						if (name.indexOf('_') !== 0 && name !== 'class' && name !== 'style')
+							attribs[name] = dom.getAttrib(node, name);
+					});
 
-			function compareObjects(obj1, obj2) {
-				var value, name;
+					return attribs;
+				};
 
-				for (name in obj1) {
-					// Obj1 has item obj2 doesn't have
-					if (obj1.hasOwnProperty(name)) {
-						value = obj2[name];
+				function compareObjects(obj1, obj2) {
+					var value, name;
 
-						// Obj2 doesn't have obj1 item
-						if (value === undefined)
-							return FALSE;
+					for (name in obj1) {
+						// Obj1 has item obj2 doesn't have
+						if (obj1.hasOwnProperty(name)) {
+							value = obj2[name];
 
-						// Obj2 item has a different value
-						if (obj1[name] != value)
-							return FALSE;
+							// Obj2 doesn't have obj1 item
+							if (value === undefined)
+								return FALSE;
 
-						// Delete similar value
-						delete obj2[name];
+							// Obj2 item has a different value
+							if (obj1[name] != value)
+								return FALSE;
+
+							// Delete similar value
+							delete obj2[name];
+						}
 					}
-				}
 
-				// Check if obj 2 has something obj 1 doesn't have
-				for (name in obj2) {
-					// Obj2 has item obj1 doesn't have
-					if (obj2.hasOwnProperty(name))
-						return FALSE;
-				}
+					// Check if obj 2 has something obj 1 doesn't have
+					for (name in obj2) {
+						// Obj2 has item obj1 doesn't have
+						if (obj2.hasOwnProperty(name))
+							return FALSE;
+					}
+
+					return TRUE;
+				};
+
+				// Attribs are not the same
+				if (!compareObjects(getAttribs(node1), getAttribs(node2)))
+					return FALSE;
+
+				// Styles are not the same
+				if (!compareObjects(dom.parseStyle(dom.getAttrib(node1, 'style')), dom.parseStyle(dom.getAttrib(node2, 'style'))))
+					return FALSE;
 
 				return TRUE;
 			};
 
-			// Attribs are not the same
-			if (!compareObjects(getAttribs(node1), getAttribs(node2)))
-				return FALSE;
-
-			// Styles are not the same
-			if (!compareObjects(dom.parseStyle(dom.getAttrib(node1, 'style')), dom.parseStyle(dom.getAttrib(node2, 'style'))))
-				return FALSE;
-
-			return TRUE;
-		};
-
-		function mergeSiblings(prev, next) {
-			var marker;
-
-			if (prev && next) {
+			// Check if next/prev exists and that they are elements
+			if (prev && next && prev.nodeType == 1) {
 				// If previous sibling is empty then jump over it
 				if (prev.nodeValue === '') {
 					marker = prev;
@@ -12617,7 +12797,25 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function removeFormat(format, vars, node, compare_node) {
-			var i, attrs, sibling;
+			var i, attrs;
+
+			function appendBrElements(node) {
+				if (format.block && isBlock(node) && !isBlock(node.parentNode) && !forcedRootBlock) {
+					function find(node, next, inc) {
+						node = getNonWhiteSpaceSibling(node, next, inc);
+
+						return node && (node.nodeName == 'BR' || isBlock(node));
+					};
+
+					if (!find(node, FALSE) && !find(node.firstChild, TRUE, 1))
+						node.insertBefore(dom.create('br'), node.firstChild);
+
+					if (!find(node, TRUE) && !find(node.lastChild, FALSE, 1))
+						node.appendChild(dom.create('br'));
+				}
+
+				return node;
+			};
 
 			// Check if node matches format
 			if (!matchName(node, format))
@@ -12703,127 +12901,98 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Remove the inline child if it's empty for example <b> or <span>
 			if ((!format.selector || format.remove == 'all') && format.remove != 'none') {
-				// If it's a block element that gets removed and the block is not in another text block
-				if (format.block && !dom.getParent(node.parentNode, format.text_blocks)) {
-					// Look for block siblings
-					for (sibling = node.nextSibling; sibling && !dom.isBlock(sibling); sibling = sibling.nextSibling) ;
-
-					if (!sibling)
-						dom.insertAfter(dom.create('br'), node);
-				}
-
-				dom.remove(node, 1);
+				dom.remove(appendBrElements(node), 1);
 				return TRUE;
 			}
 		};
 
-		function splitRng(rng, formats) {
-			var startContainer, startOffset, endContainer, endOffset, sel;
+		function splitRng(rng) {
+			var startContainer = rng.startContainer,
+				startOffset = rng.startOffset,
+				endContainer = rng.endContainer,
+				endOffset = rng.endOffset,
+				sel, lastIdx;
 
-			// Move start/end point up the tree if the leaves are sharp and if we are in different containers
-			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
-			// This will reduce the number of wrapper elements that needs to be created
-			// Move start point up the tree
-			function findParentContainer(container, child_name) {
-				var root = dom.getRoot(), parent;
+			function splitText(node, offset) {
+				if (offset == node.nodeValue.length)
+					node.appendData(INVISIBLE_CHAR);
 
-				for (;;) {
-					// Check if we can move up are we at root level or body level
-					parent = container.parentNode;
-					if (parent == root || dom.isBlock(parent) || container.parentNode[child_name] != container)
-						return container;
+				node = node.splitText(offset);
 
-					container = container.parentNode;
-				}
+				if (node.nodeValue === INVISIBLE_CHAR)
+					node.nodeValue = '';
 
-				return container;
+				return node;
 			};
-
-			// Setup locals
-			startContainer = rng.startContainer;
-			startOffset = rng.startOffset;
-			endContainer = rng.endContainer;
-			endOffset = rng.endOffset;
 
 			// If child index resolve it
 			if (startContainer.nodeType == 1) {
-				startContainer = getStartContainer(startContainer, startOffset);
+				lastIdx = startContainer.childNodes.length - 1;
+
+				if (startOffset > lastIdx) {
+					// Start position is at a non existent location so lets insert an empty text node and use that for the processing
+					// this is normally when the start location is after the last node in a block element or similar.
+					startContainer = startContainer.childNodes[lastIdx];
+					startContainer = dom.insertAfter(dom.doc.createTextNode(''), startContainer);
+					startOffset = 0;
+				} else
+					startContainer = startContainer.childNodes[startOffset];
 
 				// Child was text node then move offset to start of it
 				if (startContainer.nodeType == 3)
 					startOffset = 0;
 			}
 
-			// Don't split the range if it's collapsed
-			if (!rng.collapsed) {
-				// If child index resolve it
-				if (endContainer.nodeType == 1) {
-					endContainer = endContainer.childNodes[Math.min(startOffset == endOffset ? endOffset : endOffset - 1, endContainer.childNodes.length - 1)];
+			// If child index resolve it
+			if (endContainer.nodeType == 1) {
+				endContainer = endContainer.childNodes[Math.min(startOffset == endOffset ? endOffset : endOffset - 1, endContainer.childNodes.length - 1)];
 
-					// Child was text node then move offset to end of text node
-					if (endContainer.nodeType == 3)
-						endOffset = endContainer.nodeValue.length;
+				// Child was text node then move offset to end of text node
+				if (endContainer.nodeType == 3)
+					endOffset = endContainer.nodeValue.length;
+			}
+
+			// Handle single text node
+			if (startContainer == endContainer) {
+				if (startContainer.nodeType == 3) {
+					if (startOffset != 0)
+						startContainer = endContainer = splitText(startContainer, startOffset);
+
+					if (endOffset - startOffset != startContainer.nodeValue.length)
+						splitText(startContainer, endOffset - startOffset);
 				}
-
-				// Handle single text node
-				if (startContainer == endContainer) {
-					if (startContainer.nodeType == 3) {
-						if (startOffset != 0)
-							startContainer = endContainer = startContainer.splitText(startOffset);
-
-						if (endOffset - startOffset != startContainer.nodeValue.length)
-							startContainer.splitText(endOffset - startOffset);
-					}
-				} else {
-					// Split startContainer text node if needed
-					if (startContainer.nodeType == 3 && startOffset != 0) {
-						// Since IE doesn't support white space nodes in the DOM we need to
-						// add this invisible character so that the splitText function can split the contents
-						// IE would otherwise produce an empty text node with no parentNode
-						if (startOffset == startContainer.nodeValue.length)
-							startContainer.appendData(INVISIBLE_CHAR);
-
-						startContainer = startContainer.splitText(startOffset);
-						startOffset = 0;
-
-						// See the above IE fix
-						if (startContainer.nodeValue === INVISIBLE_CHAR)
-							startContainer.nodeValue = '';
-					}
-
-					// Split endContainer text node if needed
-					if (endContainer.nodeType == 3 && endOffset != endContainer.nodeValue.length) {
-						endContainer = endContainer.splitText(endOffset).previousSibling;
-						endOffset = endContainer.nodeValue.length;
-					}
-				}
-
-				// Expand the start/end containers
-				if (!formats[0].block) {
-					startContainer = findParentContainer(startContainer, 'firstChild');
-					endContainer = findParentContainer(endContainer, 'lastChild');
-				}
-
-				// If start node is element then insert an empty text node before it
-				// this will be removed later when the selection is restored
-				// since text nodes isn't removed/changed it can be used to safely restore the selection
-				if (startContainer.nodeType == 1) {
-					startContainer = startContainer.parentNode.insertBefore(dom.doc.createTextNode(''), startContainer);
+			} else {
+				// Split startContainer text node if needed
+				if (startContainer.nodeType == 3 && startOffset != 0) {
+					startContainer = splitText(startContainer, startOffset);
 					startOffset = 0;
 				}
 
-				// If end node is element then insert an empty text node after it
-				// this will be removed later when the selection is restored
-				// since text nodes isn't removed/changed it can be used to safely restore the selection
-				if (endContainer.nodeType == 1) {
-					endContainer = dom.insertAfter(dom.doc.createTextNode(''), endContainer);
-					endOffset = 0;
+				// Split endContainer text node if needed
+				if (endContainer.nodeType == 3 && endOffset != endContainer.nodeValue.length) {
+					endContainer = splitText(endContainer, endOffset).previousSibling;
+					endOffset = endContainer.nodeValue.length;
 				}
+			}
 
+			// If start node is element then insert an empty text node before it
+			// this will be removed later when the selection is restored
+			// since text nodes isn't removed/changed it can be used to safely restore the selection
+			if (startContainer.nodeType == 1) {
+				startContainer = startContainer.parentNode.insertBefore(dom.doc.createTextNode(''), startContainer);
 				startOffset = 0;
-				endOffset = endContainer.nodeValue.length;
-			} else
-				endOffset = startOffset;
+			}
+
+			// If end node is element then insert an empty text node after it
+			// this will be removed later when the selection is restored
+			// since text nodes isn't removed/changed it can be used to safely restore the selection
+			if (endContainer.nodeType == 1) {
+				endContainer = dom.insertAfter(dom.doc.createTextNode(''), endContainer);
+				endOffset = 0;
+			}
+
+			startOffset = 0;
+			endOffset = endContainer.nodeValue.length;
 
 			// Opera has major performance issues if we modify nodes in the currrent selection
 			// so we remove the selection ranges to avoid this issue on Opera and possible other browsers
@@ -12841,44 +13010,44 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function restoreRng(rng) {
-			var startContainer, startOffset, endContainer, endOffset, node, len, sibling, walker;
-
-			// Locals
-			startContainer = rng.startContainer;
-			startOffset = rng.startOffset;
-			endContainer = rng.endContainer;
-			endOffset = rng.endOffset;
+			var startContainer = rng.startContainer,
+				startOffset = rng.startOffset,
+				endContainer = rng.endContainer,
+				endOffset = rng.endOffset,
+				node, len, sibling, walker;
 
 			// Remove marker node
-			if (startContainer.nodeValue == '') {
-				node = startContainer;
-				sibling = startContainer.nextSibling;
+			if (startContainer != endContainer) {
+				if (startContainer.nodeValue == '') {
+					node = startContainer;
+					sibling = startContainer.nextSibling;
 
-				if (!sibling || sibling.nodeType == 1) {
-					startOffset = dom.nodeIndex(startContainer);
-					startContainer = startContainer.parentNode;
-				} else {
-					startContainer = sibling;
-					startOffset = 0;
+					if (!sibling || sibling.nodeType == 1) {
+						startOffset = dom.nodeIndex(startContainer);
+						startContainer = startContainer.parentNode;
+					} else {
+						startContainer = sibling;
+						startOffset = 0;
+					}
+
+					dom.remove(node);
 				}
 
-				dom.remove(node);
-			}
+				// Remove marker node
+				if (endContainer.nodeValue == '') {
+					node = endContainer;
+					sibling = endContainer.previousSibling;
 
-			// Remove marker node
-			if (endContainer.nodeValue == '') {
-				node = endContainer;
-				sibling = endContainer.previousSibling;
+					if (!sibling || sibling.nodeType == 1) {
+						endOffset = dom.nodeIndex(endContainer);
+						endContainer = endContainer.parentNode;
+					} else {
+						endContainer = sibling;
+						endOffset = endContainer.nodeValue.length;
+					}
 
-				if (!sibling || sibling.nodeType == 1) {
-					endOffset = dom.nodeIndex(endContainer);
-					endContainer = endContainer.parentNode;
-				} else {
-					endContainer = sibling;
-					endOffset = endContainer.nodeValue.length;
+					dom.remove(node);
 				}
-
-				dom.remove(node);
 			}
 
 			// Merge startContainer with nextSibling
@@ -12912,7 +13081,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (startContainer.nodeType == 1) {
 				walker = new TreeWalker(startContainer.childNodes[startOffset], startContainer.childNodes[startOffset]);
 				for (node = walker.current(); node; node = walker.next()) {
-					if (node.nodeType == 3 && !dom.isBlock(node.parentNode)) {
+					if (node.nodeType == 3 && !isBlock(node.parentNode)) {
 						startContainer = node;
 						startOffset = 0;
 						break;
@@ -12922,9 +13091,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Move endContainer/endOffset in to a suitable node
 			if (endContainer.nodeType == 1) {
-				walker = new TreeWalker(endContainer.childNodes[endOffset - 1], endContainer.childNodes[endOffset - 1]);
+				walker = new TreeWalker(endContainer.childNodes[endOffset], endContainer.childNodes[endOffset]);
 				for (node = walker.current(); node; node = walker.prev()) {
-					if (node.nodeType == 3 && !dom.isBlock(node.parentNode)) {
+					if (node.nodeType == 3 && !isBlock(node.parentNode)) {
 						endContainer = node;
 						endOffset = node.nodeValue.length;
 						break;
@@ -12966,6 +13135,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function isEq(str1, str2) {
+			str1 = str1.nodeName || str1;
+			str2 = str2.nodeName || str2;
+
 			return str1.toLowerCase() == str2.toLowerCase();
 		};
 
@@ -12975,11 +13147,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return dom.is(node, format.selector);
 
 			// Check for inline match
-			if (format.inline && !isEq(node.nodeName, format.inline))
+			if (format.inline && !isEq(node, format.inline))
 				return FALSE;
 
 			// Check for block match
-			if (format.block && !isEq(node.nodeName, format.block))
+			if (format.block && !isEq(node, format.block))
 				return FALSE;
 
 			return TRUE;
@@ -13004,7 +13176,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 				// Match container
 				if (format.container) {
-					if (!isEq(node.parentNode.nodeName, format.container))
+					if (!isEq(node.parentNode, format.container))
 						return FALSE;
 				}
 
@@ -13089,6 +13261,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var startNode, matches;
 
 			formats = processFormats(formats);
+
+			//console.log(formats);
 
 			function check(node) {
 				// Find first node with similar format settings
@@ -13239,112 +13413,94 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				var newElms = [];
 
 				walkRange(expand(rng, formats), function(nodes) {
-					var wrapElm, containerElm;
+					var wrapElm, listBlockElm;
 
 					function process(node) {
-						var parent, isDone;
+						var i, wrapName = formats[0].list_item || formats[0].inline || formats[0].block, parent = node.parentNode, parentName = parent.nodeName.toLowerCase();
 
-						// Check for existing matching container and rename that one if it exists
-						if (formats[0].container_selector) {
-							parent = dom.getParent(node, formats[0].container_selector);
-
-							if (parent) {
-								renameElement(parent, formats[0].container);
+						if (formats[0].list_block) {
+							// Never process li items
+							if (isEq(node, wrapName)) {
+								wrapElm = listBlockElm = 0;
 								return;
 							}
-						}
 
-						// Check if the node is within a container
-						if (formats[0].container && isEq(node.parentNode.nodeName, formats[0].container)) {
-							containerElm = 0;
-							return;
+							// Rename text blocks
+							if (isTextBlock(node)) {
+								node = renameElement(node, wrapName);
+
+								if (!listBlockElm) {
+									listBlockElm = dom.create(formats[0].list_block);
+									setElementFormat(listBlockElm);
+									parent.insertBefore(listBlockElm, node);
+								}
+
+								listBlockElm.appendChild(node);
+								return;
+							}
 						}
 
 						// Handle selector patterns
 						if (formats[0].selector) {
 							// Look for matching formats
-							each(formats, function(format) {
-								if (dom.is(node, format.selector)) {
-									setElementFormat(node, format, vars);
+							for (i = 0; i < formats.length; i++) {
+								if (dom.is(node, formats[i].selector)) {
+									setElementFormat(node, formats[i]);
 									wrapElm = 0;
-									isDone = 1;
+									return;
 								}
-							});
-
-							// Found an element or the item is block element then stop
-							if (isDone || dom.isBlock(node))
-								return;
+							}
 						}
 
-						// Handle block format
-						if (formats[0].block) {
-							// Is text block then simply rename it
-							if (dom.isBlock(node) || isEq(node.nodeName, 'br')) {
-								// Remove BR element when we wrap things in blocks
-								if (isEq(node.nodeName, 'br'))
-									dom.remove(node);
+						// Rename text blocks
+						if (formats[0].block && !formats[0].wrapper && !formats[0].list_item && isValid(parentName, wrapName) && isTextBlock(node)) {
+							setElementFormat(renameElement(node, wrapName));
+							wrapElm = 0;
+							return;
+						}
 
+						if (isValid(wrapName, node.nodeName.toLowerCase()) && isValid(parentName, formats[0].list_block || wrapName)) {
+							if (formats[0].list_block && isBlock(node) && !isTextBlock(node)) {
+								// Process it's childen
+								wrapElm = listBlockElm = 0;
+								each(tinymce.grep(node.childNodes), process);
+								return;
+							}
+
+							// Remove BR element when we wrap things in blocks
+							if (formats[0].block && !formats[0].wrapper && isEq(node, 'br')) {
+								dom.remove(node);
 								wrapElm = 0;
+								return;
+							}
 
-								// If block element can be renamed do so and apply element format
-								if (formats[0].rename && dom.is(node, formats[0].text_blocks)) {
-									// Add element to container
-									if (formats[0].container) {
-										if (!containerElm) {
-											containerElm = dom.create(formats[0].container);
-											node.parentNode.insertBefore(containerElm, node);
-										}
+							// Create new wrapper if it doesn't exist sibling nodes will be appended to this wrapper
+							if (!wrapElm) {
+								wrapElm = dom.create(wrapName);
+								setElementFormat(wrapElm);
+								parent.insertBefore(wrapElm, node);
+								newElms.push(wrapElm);
 
-										containerElm.appendChild(node);
+								// Add wrapper to listblock
+								if (formats[0].list_block) {
+									if (!listBlockElm) {
+										listBlockElm = dom.create(formats[0].list_block);
+										setElementFormat(listBlockElm);
+										parent.insertBefore(listBlockElm, node);
 									}
 
-									setElementFormat(renameElement(node, formats[0].block) || node);
-									return;
-								}
-
-								if (!dom.is(node, formats[0].text_blocks) || isEq(node.nodeName, 'br')) {
-									// Process children and look for items to wrap
-									each(tinymce.grep(node.childNodes), process);
-
-									return;
+									listBlockElm.appendChild(wrapElm);
 								}
 							}
+
+							wrapElm.appendChild(node);
+
+							return;
 						}
 
-						// Cancel wrapping and process children if we find a block element in inline mode
-						if (formats[0].inline) {
-							// Walk into blocks or single inline elements
-							if (dom.isBlock(node)) {
-								// Cancel wrapping
-								wrapElm = 0;
-
-								// Process children and look for items to wrap
-								each(tinymce.grep(node.childNodes), process);
-
-								return;
-							}
-						}
-
-						// Insert wrapper and move node inside the new wrapper
-						if (!wrapElm) {
-							parent = node.parentNode;
-							wrapElm = dom.create(formats[0].inline || formats[0].block);
-							setElementFormat(wrapElm);
-							parent.insertBefore(wrapElm, node);
-							newElms.push(wrapElm);
-
-							// Add element to container
-							if (formats[0].container) {
-								if (!containerElm) {
-									containerElm = dom.create(formats[0].container);
-									node.parentNode.insertBefore(containerElm, node);
-								}
-
-								containerElm.appendChild(wrapElm);
-							}
-						}
-
-						wrapElm.appendChild(node);
+						// Process it's childen
+						wrapElm = listBlockElm = 0;
+						each(tinymce.grep(node.childNodes), process);
 					};
 
 					each(nodes, process);
@@ -13352,7 +13508,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 				// Merge new elements with parent elements to reduce reduntant elements
 				each(newElms, function(node) {
-					var root, childCount;
+					var root, childCount, child, sibling;
 
 					function getChildCount(node) {
 						var count = 0;
@@ -13395,6 +13551,26 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						return;
 					}
 
+					// Trim br elements at start/end of blocks
+					if (formats[0].block) {
+						// Remove first BR
+						child = node.firstChild;
+						if (isEq(child, 'br'))
+							dom.remove(child);
+
+						// Remove last BR
+						child = node.lastChild;
+						if (isEq(child, 'br'))
+							dom.remove(child);
+					}
+
+					if (formats[0].list_block) {
+						// Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
+						root = node.parentNode;
+						root = mergeSiblings(getNonWhiteSpaceSibling(root), root);
+						root = mergeSiblings(root, getNonWhiteSpaceSibling(root, TRUE));
+					}
+
 					if (formats[0].inline) {
 						// Merges the current node with it's children of similar type to reduce the number of elements
 						if (!formats[0].exact && childCount === 1) {
@@ -13425,33 +13601,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						}
 
 						// Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
-						node = mergeSiblings(node.previousSibling, node);
-						node = mergeSiblings(node, node.nextSibling);
+						node = mergeSiblings(getNonWhiteSpaceSibling(node), node);
+						node = mergeSiblings(node, getNonWhiteSpaceSibling(node, TRUE));
 					}
 				});
 			};
 
 			formats = processFormats(formats);
-
-			// Handle table cell selection
-			nodes = dom.select(SELECTED_BLOCKS);
-			if (nodes.length) {
-				each(nodes, function(node) {
-					// Apply style to selected cell element if it has any contents
-					if (node.firstChild) {
-						applyRngStyle(splitRng({
-							startContainer : node,
-							startOffset : 0,
-							endContainer : node,
-							endOffset : node.childNodes.length
-						}, formats));
-					}
-				});
-
-				selection.select(nodes[0], TRUE);
-				ed.nodeChanged();
-				return;
-			}
 
 			// Handle collapsed selection
 			if (selection.isCollapsed() && formats[0].inline) {
@@ -13468,7 +13624,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function remove(formats, vars, node) {
-			var startRngPos, rngPos, collapsed, forcedRootBlock = ed.settings.forced_root_block, nodes, splitBlocks = [];
+			var startRngPos, rngPos, collapsed, nodes, splitBlocks = [];
 
 			function splitToContainers() {
 				each(splitBlocks, function(block) {
@@ -13541,31 +13697,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			formats = processFormats(formats);
 			collapsed = selection.isCollapsed();
-
-			// Handle table cell selection
-			nodes = dom.select(SELECTED_BLOCKS);
-			if (nodes.length > 0) {
-				each(nodes, function(node) {
-					var parent = node.parentNode, idx = dom.nodeIndex(node);
-
-					// Apply style to selected cell element
-					removeRngStyle({
-						startContainer : parent,
-						startOffset : idx,
-						endContainer : parent,
-						endOffset : idx + 1
-					});
-				});
-
-				selection.select(nodes[0], TRUE);
-				ed.nodeChanged();
-				return;
-			}
-
 			startRngPos = splitRng(selection.getRng(TRUE), formats);
 
 			// Handle collapsed range
-			if (collapsed) {
+			/*if (collapsed) {
 				// Process parents
 				each(dom.getParents(selection.getNode()), function(parent) {
 					process(parent);
@@ -13575,7 +13710,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				restoreRng(startRngPos);
 				ed.nodeChanged();
 				return;
-			}
+			}*/
 
 			function splitToFormatRoot(container) {
 				var i, parents, formatRoot, wrap, lastClone;
@@ -13624,7 +13759,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Split start/end containers
 			rngPos = expand(startRngPos, formats);
 			splitToFormatRoot(rngPos.startContainer);
-			splitToFormatRoot(rngPos.endContainer);
+
+			if (!collapsed)
+				splitToFormatRoot(rngPos.endContainer);
 
 			removeRngStyle(rngPos);
 			restoreRng(startRngPos);
