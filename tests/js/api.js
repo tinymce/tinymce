@@ -1133,7 +1133,7 @@ $(window).load(function() {
 		test('tinymce.DOM.Serializer - serialize', function() {
 			var ser = new tinymce.dom.Serializer({dom : DOM}), h, a, b;
 
-			expect(78);
+			expect(77);
 
 			DOM.add(document.body, 'div', {id : 'test'});
 			DOM.counter = 0;
@@ -1339,11 +1339,6 @@ $(window).load(function() {
 			ser.setRules('+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],-td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang],*[*]');
 			DOM.setHTML('test', '<br /><hr /><span class="test"><img src="file.gif" /></span>');
 			equals(ser.serialize(DOM.get('test')), '<div id="test"><br /><hr /><span class="test"><img src="file.gif" alt="" /></span></div>');
-
-			ser.setRules('*[*]');
-			ser.setValidChildRules('h1/h2/h3/h4/h5/h6/a[%itrans_na],div[%itrans|%btrans]');
-			DOM.setHTML('test', '<h1>test <a href="file">link</a> test</h1>');
-			equals(ser.serialize(DOM.get('test')), '<div id="test"><h1>test link test</h1></div>');
 
 			ser = new tinymce.dom.Serializer({entity_encoding : 'raw'});
 			ser.setRules('*[*]');

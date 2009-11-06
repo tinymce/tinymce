@@ -1184,23 +1184,27 @@ tinymce.create('static tinymce.util.XHR', {
 		is : function(n, selector) {
 			var i;
 
-			// Simple all selector
-			if (selector === '*')
-				return n.nodeType == 1;
+			// If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
+			if (n.length === undefined) {
+				// Simple all selector
+				if (selector === '*')
+					return n.nodeType == 1;
 
-			// Simple selector just elements
-			if (simpleSelectorRe.test(selector)) {
-				selector = selector.toLowerCase().split(/,/);
-				n = n.nodeName.toLowerCase();
+				// Simple selector just elements
+				if (simpleSelectorRe.test(selector)) {
+					selector = selector.toLowerCase().split(/,/);
+					n = n.nodeName.toLowerCase();
 
-				for (i = selector.length - 1; i >= 0; i--) {
-					if (selector[i] == n)
-						return true;
+					for (i = selector.length - 1; i >= 0; i--) {
+						if (selector[i] == n)
+							return true;
+					}
+
+					return false;
 				}
+			}
 
-				return false;
-			} else
-				return tinymce.dom.Sizzle.matches(selector, n.nodeType ? [n] : n).length > 0;
+			return tinymce.dom.Sizzle.matches(selector, n.nodeType ? [n] : n).length > 0;
 		},
 
 
@@ -12467,6 +12471,48 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 		};
 
+		function removeNode(node, format) {
+			var parentNode = node.parentNode, rootBlockElm;
+
+			if (format.block) {
+				if (!forcedRootBlock) {
+					function find(node, next, inc) {
+						node = getNonWhiteSpaceSibling(node, next, inc);
+
+						return node && (node.nodeName == 'BR' || isBlock(node));
+					};
+
+					// Append BR elements if needed before we remove the block
+					if (isBlock(node) && !isBlock(parentNode)) {
+						if (!find(node, FALSE) && !find(node.firstChild, TRUE, 1))
+							node.insertBefore(dom.create('br'), node.firstChild);
+
+						if (!find(node, TRUE) && !find(node.lastChild, FALSE, 1))
+							node.appendChild(dom.create('br'));
+					}
+				} else {
+					// Wrap the block in a forcedRootBlock if we are at the root of document
+					if (parentNode == dom.getRoot()) {
+						if (!format.list_block || !isEq(node, format.list_block)) {
+							each(tinymce.grep(node.childNodes), function(node) {
+								if (isValid(forcedRootBlock, node.nodeName.toLowerCase())) {
+									if (!rootBlockElm) {
+										rootBlockElm = dom.create(forcedRootBlock);
+										node.parentNode.insertBefore(rootBlockElm, node);
+									}
+
+									rootBlockElm.appendChild(node);
+								} else
+									rootBlockElm = 0;
+							});
+						}
+					}
+				}
+			}
+
+			dom.remove(node, 1);
+		};
+
 		function isTextBlock(node) {
 			return /^(h[1-6]|p|div)$/i.test(node.nodeName);
 		};
@@ -12547,7 +12593,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					var node;
 
 					// Expand to block of similar type
-					node = dom.getParent(container, formats[0].block);
+					if (!formats[0].wrapper)
+						node = dom.getParent(container, formats[0].block);
 
 					// Expand to first wrappable block element or any block element
 					if (!node) {
@@ -12797,25 +12844,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function removeFormat(format, vars, node, compare_node) {
-			var i, attrs;
-
-			function appendBrElements(node) {
-				if (format.block && isBlock(node) && !isBlock(node.parentNode) && !forcedRootBlock) {
-					function find(node, next, inc) {
-						node = getNonWhiteSpaceSibling(node, next, inc);
-
-						return node && (node.nodeName == 'BR' || isBlock(node));
-					};
-
-					if (!find(node, FALSE) && !find(node.firstChild, TRUE, 1))
-						node.insertBefore(dom.create('br'), node.firstChild);
-
-					if (!find(node, TRUE) && !find(node.lastChild, FALSE, 1))
-						node.appendChild(dom.create('br'));
-				}
-
-				return node;
-			};
+			var i, attrs, stylesModified;
 
 			// Check if node matches format
 			if (!matchName(node, format))
@@ -12835,7 +12864,15 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 					if (!compare_node || isEq(getStyle(compare_node, name), value))
 						dom.setStyle(node, name, '');
+
+					stylesModified = 1;
 				});
+
+				// Remove style attribute if it's empty
+				if (stylesModified && dom.getAttrib(node, 'style') == '') {
+					node.removeAttribute('style');
+					node.removeAttribute('_mce_style');
+				}
 
 				// Remove attributes
 				each(format.attributes, function(value, name) {
@@ -12881,16 +12918,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						dom.removeClass(node, value);
 				});
 
-				// Remove style attribute if it's empty
-				if (dom.getAttrib(node, 'style') == '') {
-					node.removeAttribute('style');
-					node.removeAttribute('_mce_style');
-				}
-
-				// Remove style attribute if it's empty
-				if (dom.getAttrib(node, 'class') == '')
-					node.removeAttribute('class');
-
 				// Check for non internal attributes
 				attrs = dom.getAttribs(node);
 				for (i = 0; i < attrs.length; i++) {
@@ -12901,7 +12928,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 			// Remove the inline child if it's empty for example <b> or <span>
 			if ((!format.selector || format.remove == 'all') && format.remove != 'none') {
-				dom.remove(appendBrElements(node), 1);
+				removeNode(node, format);
 				return TRUE;
 			}
 		};
@@ -12911,7 +12938,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
 				endOffset = rng.endOffset,
-				sel, lastIdx;
+				lastIdx;
 
 			function splitText(node, offset) {
 				if (offset == node.nodeValue.length)
@@ -12995,10 +13022,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			endOffset = endContainer.nodeValue.length;
 
 			// Opera has major performance issues if we modify nodes in the currrent selection
-			// so we remove the selection ranges to avoid this issue on Opera and possible other browsers
-			/*sel = selection.getSel();
-			if (sel.removeAllRanges)
-				selection.getSel().removeAllRanges();*/
+			// so we remove the selection ranges to avoid this issue on Opera
+			// without this logic Opera is so slow that the the unit tests takes 100 times longer to run
+			// and we need to sniff here since there is no way to performance test this first
+			if (tinymce.isOpera)
+				selection.getSel().removeAllRanges();
 
 			// Return lightweight range like object (RangePosition) to avoid automatic updates of attached Range objects
 			return {
@@ -13150,6 +13178,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			if (format.inline && !isEq(node, format.inline))
 				return FALSE;
 
+			// Check for list_item match
+			if (format.list_item && isEq(node, format.list_item))
+				return TRUE;
+
 			// Check for block match
 			if (format.block && !isEq(node, format.block))
 				return FALSE;
@@ -13261,8 +13293,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			var startNode, matches;
 
 			formats = processFormats(formats);
-
-			//console.log(formats);
 
 			function check(node) {
 				// Find first node with similar format settings
@@ -13428,6 +13458,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							// Rename text blocks
 							if (isTextBlock(node)) {
 								node = renameElement(node, wrapName);
+								newElms.push(node);
 
 								if (!listBlockElm) {
 									listBlockElm = dom.create(formats[0].list_block);
@@ -13454,7 +13485,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 						// Rename text blocks
 						if (formats[0].block && !formats[0].wrapper && !formats[0].list_item && isValid(parentName, wrapName) && isTextBlock(node)) {
-							setElementFormat(renameElement(node, wrapName));
+							node = renameElement(node, wrapName);
+							setElementFormat(node);
+							newElms.push(node);
 							wrapElm = 0;
 							return;
 						}
@@ -13624,62 +13657,26 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function remove(formats, vars, node) {
-			var startRngPos, rngPos, collapsed, nodes, splitBlocks = [];
-
-			function splitToContainers() {
-				each(splitBlocks, function(block) {
-					each(formats, function(format) {
-						var parents;
-
-						// Split the block down to it's container
-						parents = dom.getParents(block, formats[0].container);
-						if (parents.length)
-							dom.split(parents[parents.length - 1], block);
-
-						// If we remove blocks then rename it to the forced_root_block if it's configured
-						if (format.block && forcedRootBlock && matchName(block, format)) {
-							renameElement(block, forcedRootBlock);
-							return FALSE;
-						}
-
-						// Remove the node
-						if (removeFormat(format, vars, block, block)) {
-							state = TRUE;
-							return FALSE; // Break loop
-						}
-					});
-				});
-			};
+			var rngPos, collapsed, startNode, endNode;
 
 			// Merges the styles for each node
 			function process(node, deep) {
-				var state;
+				var state, children;
 
 				// Process children first
-				if (deep) {
-					each(node.childNodes, function(node) {
-						process(node, deep);
-					});
-				}
+				if (deep)
+					children = tinymce.grep(node.childNodes);
 
 				// Process current node
 				each(formats, function(format) {
-					// Collect nodes to split later
-					if (format.container && matchName(node, format)) {
-						splitBlocks.push(node);
-						return FALSE;
-					}
-
-					// If we remove blocks then rename it to the forced_root_block if it's configured
-					if (format.block && format.rename && forcedRootBlock && matchName(node, format)) {
-						renameElement(node, forcedRootBlock);
-						return FALSE;
-					}
-
 					if (removeFormat(format, vars, node, node)) {
 						state = TRUE;
 						return FALSE; // Break loop
 					}
+				});
+	
+				each(children, function(node) {
+					process(node, deep);
 				});
 
 				return state;
@@ -13691,13 +13688,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						process(node, TRUE);
 					});
 				});
-
-				splitToContainers();
 			};
 
 			formats = processFormats(formats);
 			collapsed = selection.isCollapsed();
-			startRngPos = splitRng(selection.getRng(TRUE), formats);
+			rngPos = splitRng(selection.getRng(TRUE), formats);
 
 			// Handle collapsed range
 			/*if (collapsed) {
@@ -13712,59 +13707,78 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return;
 			}*/
 
-			function splitToFormatRoot(container) {
-				var i, parents, formatRoot, wrap, lastClone;
+			function splitToFormatRoot(node) {
+				var formatRoot, wrap, lastClone;
+
+				// Move split node
+				if (formats[0].block) {
+					if (!formats[0].list_item) {
+						// If the block is a wrapper then split from first suitable text block
+						if (formats[0].wrapper)
+							node = dom.getParent(node, isTextBlock);
+						else
+							node = dom.getParent(node, formats[0].block);
+					} else
+						node = dom.getParent(node, formats[0].list_item);
+				}
 
 				// Find format root and build wrapper
-				each(dom.getParents(container.parentNode).reverse(), function(parent) {
-					var clone, matchedFormat;
+				if (node) {
+					each(dom.getParents(node.parentNode).reverse(), function(parent) {
+						var clone, matchedFormat;
 
-					// Find format root element
-					if (!formatRoot) {
-						matchedFormat = matchNode(formats, vars, parent);
+						// Add node to wrapper
+						if (formatRoot) {
+							clone = parent.cloneNode(FALSE);
 
-						// If the matched format has a remove none flag we shouldn't split it
-						if (matchedFormat && matchedFormat[0].remove != 'none')
-							formatRoot = parent;
-					}
+							// Build wrapper node
+							if (!process(clone)) {
+								if (wrap)
+									lastClone.appendChild(clone);
+								else
+									wrap = clone;
 
-					// Add node to wrapper
-					if (formatRoot) {
-						clone = parent.cloneNode(FALSE);
-
-						// Build wrapper node
-						if (!process(clone)) {
-							if (wrap)
-								lastClone.appendChild(clone);
-							else
-								wrap = clone;
-
-							lastClone = clone;
+								lastClone = clone;
+							}
 						}
-					}
-				});
 
-				if (formatRoot) {
-					// Split the node down to the format root
-					dom.split(formatRoot, container);
+						// Find format root element
+						if (!formatRoot) {
+							matchedFormat = matchNode(formats, vars, parent);
 
-					// Insert wrapper and move node into it
-					if (wrap) {
-						container.parentNode.insertBefore(wrap, container);
-						lastClone.appendChild(container);
+							// If the matched format has a remove none flag we shouldn't split it
+							if (matchedFormat && matchedFormat[0].remove != 'none')
+								formatRoot = parent;
+						}
+					});
+
+					if (formatRoot && formatRoot != node) {
+						// Split the node down to the format root
+						dom.split(formatRoot, node);
+
+						// Remove LI element
+						if (formats[0].list_item)
+							removeNode(node, formats[0]);
+
+						// Insert wrapper and move node into it
+						if (wrap) {
+							node.parentNode.insertBefore(wrap, node);
+							lastClone.appendChild(node);
+						}
 					}
 				}
 			};
 
-			// Split start/end containers
-			rngPos = expand(startRngPos, formats);
+			// Split the start node down to it's format root
 			splitToFormatRoot(rngPos.startContainer);
 
+			// Split the end node down to it's format root if it's needed
 			if (!collapsed)
 				splitToFormatRoot(rngPos.endContainer);
 
-			removeRngStyle(rngPos);
-			restoreRng(startRngPos);
+			// Remove items between start/end
+			removeRngStyle(expand(rngPos, formats));
+			restoreRng(rngPos);
 
 			ed.nodeChanged();
 		};

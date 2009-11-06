@@ -311,23 +311,27 @@
 		is : function(n, selector) {
 			var i;
 
-			// Simple all selector
-			if (selector === '*')
-				return n.nodeType == 1;
+			// If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
+			if (n.length === undefined) {
+				// Simple all selector
+				if (selector === '*')
+					return n.nodeType == 1;
 
-			// Simple selector just elements
-			if (simpleSelectorRe.test(selector)) {
-				selector = selector.toLowerCase().split(/,/);
-				n = n.nodeName.toLowerCase();
+				// Simple selector just elements
+				if (simpleSelectorRe.test(selector)) {
+					selector = selector.toLowerCase().split(/,/);
+					n = n.nodeName.toLowerCase();
 
-				for (i = selector.length - 1; i >= 0; i--) {
-					if (selector[i] == n)
-						return true;
+					for (i = selector.length - 1; i >= 0; i--) {
+						if (selector[i] == n)
+							return true;
+					}
+
+					return false;
 				}
+			}
 
-				return false;
-			} else
-				return tinymce.dom.Sizzle.matches(selector, n.nodeType ? [n] : n).length > 0;
+			return tinymce.dom.Sizzle.matches(selector, n.nodeType ? [n] : n).length > 0;
 		},
 
 		// #endif
