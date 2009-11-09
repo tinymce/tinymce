@@ -491,8 +491,8 @@
 				fontname_format : {inline : 'span', styles : {fontFamily : '%value'}},
 				fontsize_format : {inline : 'span', styles : {fontSize : '%value'}},
 				blockquote_format : {block : 'blockquote', wrapper : 1},
-				unorderedlist_format : {list_block : 'ul', list_item : 'li'},
-				orderedlist_format : {list_block : 'ol', list_item : 'li'}
+				unorderedlist_format : {list_block : 'ul', replace : 'ol', list_item : 'li'},
+				orderedlist_format : {list_block : 'ol', replace : 'ul', list_item : 'li'}
 			}, s);
 
 			/**

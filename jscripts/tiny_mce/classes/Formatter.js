@@ -17,6 +17,7 @@
 			isValid = ed.schema.isValid,
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
+			nodeIndex = dom.nodeIndex,
 			INVISIBLE_CHAR = '\uFEFF',
 			FALSE = false,
 			TRUE = true;
@@ -147,7 +148,7 @@
 		 * @param {Array} formats Array with formats to expand by.
 		 * @return {Object} Expanded range like object.
 		 */
-		function expand(rng, formats) {
+		function expand(rng, formats, remove) {
 			var startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
@@ -203,11 +204,21 @@
 
 			// Expand start/end container to matching block element or text node
 			if (formats[0].block) {
-				function findBlockEndPoint(container, sibling_name) {
+				function findBlockEndPoint(container, sibling_name, sibling_name2) {
 					var node;
 
+					if (remove && container.nodeType == 3 && container.nodeValue == INVISIBLE_CHAR && container[sibling_name2])
+						container = container[sibling_name2];
+
+					if (formats[0].list_item) {
+						node = dom.getParent(container, formats[0].list_item);
+
+						if (remove)
+							return node || container;
+					}
+
 					// Expand to block of similar type
-					if (!formats[0].wrapper)
+					if (!node && !formats[0].wrapper)
 						node = dom.getParent(container, formats[0].block);
 
 					// Expand to first wrappable block element or any block element
@@ -235,19 +246,19 @@
 				};
 
 				// Find new startContainer/endContainer if there is better one
-				startContainer = findBlockEndPoint(startContainer, 'previousSibling');
-				endContainer = findBlockEndPoint(endContainer, 'nextSibling');
+				startContainer = findBlockEndPoint(startContainer, 'previousSibling', 'nextSibling');
+				endContainer = findBlockEndPoint(endContainer, 'nextSibling', 'previousSibling');
 			}
 
 			// Setup index for startContainer
 			if (startContainer.nodeType == 1) {
-				startOffset = dom.nodeIndex(startContainer);
+				startOffset = nodeIndex(startContainer);
 				startContainer = startContainer.parentNode;
 			}
 
 			// Setup index for endContainer
 			if (endContainer.nodeType == 1) {
-				endOffset = dom.nodeIndex(endContainer) + 1;
+				endOffset = nodeIndex(endContainer) + 1;
 				endContainer = endContainer.parentNode;
 			}
 
@@ -324,8 +335,10 @@
 			function collectSiblings(node, name, end_node) {
 				var siblings = [];
 
-				for (; node && node != end_node; node = node[name])
-					siblings.push(node);
+				for (; node && node != end_node; node = node[name]) {
+					if (node.nodeType != 3 || node.nodeValue != INVISIBLE_CHAR)
+						siblings.push(node);
+				}
 
 				return siblings;
 			};
@@ -488,15 +501,15 @@
 			// Check if next/prev exists and that they are elements
 			if (prev && next && prev.nodeType == 1) {
 				// If previous sibling is empty then jump over it
-				if (prev.nodeValue === '') {
+				if (prev.nodeValue === INVISIBLE_CHAR) {
 					marker = prev;
-					prev = prev.previousSibling;
+					prev = prev.previousSibling || prev;
 				}
 
 				// If next sibling is empty then jump over it
-				if (next.nodeValue === '') {
+				if (next.nodeValue === INVISIBLE_CHAR) {
 					marker = next;
-					next = next.nextSibling;
+					next = next.nextSibling || next;
 				}
 
 				// Compare next and previous nodes
@@ -715,7 +728,7 @@
 			// this will be removed later when the selection is restored
 			// since text nodes isn't removed/changed it can be used to safely restore the selection
 			if (startContainer.nodeType == 1) {
-				startContainer = startContainer.parentNode.insertBefore(dom.doc.createTextNode(''), startContainer);
+				startContainer = startContainer.parentNode.insertBefore(dom.doc.createTextNode(INVISIBLE_CHAR), startContainer);
 				startOffset = 0;
 			}
 
@@ -723,7 +736,7 @@
 			// this will be removed later when the selection is restored
 			// since text nodes isn't removed/changed it can be used to safely restore the selection
 			if (endContainer.nodeType == 1) {
-				endContainer = dom.insertAfter(dom.doc.createTextNode(''), endContainer);
+				endContainer = dom.insertAfter(dom.doc.createTextNode(INVISIBLE_CHAR), endContainer);
 				endOffset = 0;
 			}
 
@@ -761,12 +774,12 @@
 
 			// Remove marker node
 			if (startContainer != endContainer) {
-				if (startContainer.nodeValue == '') {
+				if (startContainer.nodeValue == INVISIBLE_CHAR) {
 					node = startContainer;
 					sibling = startContainer.nextSibling;
 
 					if (!sibling || sibling.nodeType == 1) {
-						startOffset = dom.nodeIndex(startContainer);
+						startOffset = nodeIndex(startContainer);
 						startContainer = startContainer.parentNode;
 					} else {
 						startContainer = sibling;
@@ -777,12 +790,12 @@
 				}
 
 				// Remove marker node
-				if (endContainer.nodeValue == '') {
+				if (endContainer.nodeValue == INVISIBLE_CHAR) {
 					node = endContainer;
 					sibling = endContainer.previousSibling;
 
 					if (!sibling || sibling.nodeType == 1) {
-						endOffset = dom.nodeIndex(endContainer);
+						endOffset = nodeIndex(endContainer);
 						endContainer = endContainer.parentNode;
 					} else {
 						endContainer = sibling;
@@ -927,7 +940,7 @@
 				return FALSE;
 
 			// Check for list_item match
-			if (format.list_item && isEq(node, format.list_item))
+			if (format.list_item && isEq(node, format.list_item) && isEq(node.parentNode, format.block))
 				return TRUE;
 
 			// Check for block match
@@ -1229,12 +1242,33 @@
 				walkRange(expand(rng, formats), function(nodes) {
 					var wrapElm, listBlockElm;
 
+					function processChildren(node) {
+						// Clear wrappers
+						wrapElm = listBlockElm = 0;
+
+						each(tinymce.grep(node.childNodes), process);
+
+						// Clear wrappers
+						wrapElm = listBlockElm = 0;
+					};
+
 					function process(node) {
 						var i, wrapName = formats[0].list_item || formats[0].inline || formats[0].block, parent = node.parentNode, parentName = parent.nodeName.toLowerCase();
 
 						if (formats[0].list_block) {
-							// Never process li items
+							// Found LI
 							if (isEq(node, wrapName)) {
+								// Rename parent OL -> UL
+								if (formats[0].replace && isEq(node.parentNode, formats[0].replace)) {
+									node = renameElement(node.parentNode, formats[0].block);
+									newElms.push(node);
+
+									// Rename all lists in lists
+									each(dom.select(formats[0].replace, node), function(node) {
+										renameElement(node, formats[0].block);
+									});
+								}
+
 								wrapElm = listBlockElm = 0;
 								return;
 							}
@@ -1278,9 +1312,7 @@
 
 						if (isValid(wrapName, node.nodeName.toLowerCase()) && isValid(parentName, formats[0].list_block || wrapName)) {
 							if (formats[0].list_block && isBlock(node) && !isTextBlock(node)) {
-								// Process it's childen
-								wrapElm = listBlockElm = 0;
-								each(tinymce.grep(node.childNodes), process);
+								processChildren(node);
 								return;
 							}
 
@@ -1316,8 +1348,7 @@
 						}
 
 						// Process it's childen
-						wrapElm = listBlockElm = 0;
-						each(tinymce.grep(node.childNodes), process);
+						processChildren(node);
 					};
 
 					each(nodes, process);
@@ -1383,7 +1414,7 @@
 
 					if (formats[0].list_block) {
 						// Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
-						root = node.parentNode;
+						root = dom.getParent(node, formats[0].list_block);
 						root = mergeSiblings(getNonWhiteSpaceSibling(root), root);
 						root = mergeSiblings(root, getNonWhiteSpaceSibling(root, TRUE));
 					}
@@ -1461,12 +1492,19 @@
 
 				// Process current node
 				each(formats, function(format) {
+					if (format.list_item) {
+						if (isEq(node, format.list_item)) {
+							removeNode(node, format);
+							return;
+						}
+					}
+
 					if (removeFormat(format, vars, node, node)) {
 						state = TRUE;
 						return FALSE; // Break loop
 					}
 				});
-	
+
 				each(children, function(node) {
 					process(node, deep);
 				});
@@ -1499,77 +1537,93 @@
 				return;
 			}*/
 
-			function splitToFormatRoot(node) {
-				var formatRoot, wrap, lastClone;
+			function splitToFormatRoot(rng, start) {
+				var formatRoot, wrap, lastClone, container, lastIdx,
+					startContainer = rng.startContainer,
+					startOffset = rng.startOffset,
+					endContainer = rng.endContainer,
+					endOffset = rng.endOffset;
 
-				// Move split node
-				if (formats[0].block) {
-					if (!formats[0].list_item) {
-						// If the block is a wrapper then split from first suitable text block
-						if (formats[0].wrapper)
-							node = dom.getParent(node, isTextBlock);
-						else
-							node = dom.getParent(node, formats[0].block);
-					} else
-						node = dom.getParent(node, formats[0].list_item);
+				// Resolve node indexes
+				if (startContainer.nodeType == 1) {
+					lastIdx = startContainer.childNodes.length;
+					startContainer = startContainer.childNodes[startOffset > lastIdx ? lastIdx : startOffset];
 				}
 
+				// Resolve node indexes
+				if (endContainer.nodeType == 1) {
+					if (endOffset)
+						endOffset--;
+
+					lastIdx = endContainer.childNodes.length;
+					endContainer = endContainer.childNodes[endOffset > lastIdx ? lastIdx : endOffset];
+				}
+
+				container = start ? startContainer : endContainer;
+
 				// Find format root and build wrapper
-				if (node) {
-					each(dom.getParents(node.parentNode).reverse(), function(parent) {
-						var clone, matchedFormat;
+				each(dom.getParents(container.parentNode).reverse(), function(parent) {
+					var clone, matchedFormat;
 
-						// Add node to wrapper
-						if (formatRoot) {
-							clone = parent.cloneNode(FALSE);
+					// Add node to wrapper
+					if (formatRoot) {
+						clone = parent.cloneNode(FALSE);
 
-							// Build wrapper node
-							if (!process(clone)) {
-								if (wrap)
-									lastClone.appendChild(clone);
-								else
-									wrap = clone;
+						// Build wrapper node
+						if (!process(clone)) {
+							if (wrap)
+								lastClone.appendChild(clone);
+							else
+								wrap = clone;
 
-								lastClone = clone;
-							}
+							lastClone = clone;
 						}
+					}
 
-						// Find format root element
-						if (!formatRoot) {
-							matchedFormat = matchNode(formats, vars, parent);
+					// Find format root element
+					if (!formatRoot) {
+						matchedFormat = matchNode(formats, vars, parent);
 
-							// If the matched format has a remove none flag we shouldn't split it
-							if (matchedFormat && matchedFormat[0].remove != 'none')
-								formatRoot = parent;
-						}
-					});
+						// If the matched format has a remove none flag we shouldn't split it
+						if (matchedFormat && matchedFormat[0].remove != 'none')
+							formatRoot = parent;
+					}
+				});
 
-					if (formatRoot && formatRoot != node) {
-						// Split the node down to the format root
-						dom.split(formatRoot, node);
+				function wrapNode(name, node) {
+					var wrapper = dom.create(name);
 
-						// Remove LI element
-						if (formats[0].list_item)
-							removeNode(node, formats[0]);
+					node.parentNode.insertBefore(wrapper, node);
+					wrapper.appendChild(node);
 
-						// Insert wrapper and move node into it
-						if (wrap) {
-							node.parentNode.insertBefore(wrap, node);
-							lastClone.appendChild(node);
-						}
+					return wrapper;
+				};
+
+				if (formatRoot && formatRoot != container) {
+					// Split the node down to the format root
+					dom.split(formatRoot, container);
+
+					// Remove LI element
+					if (formats[0].list_item)
+						removeNode(container, formats[0]);
+
+					// Insert wrapper and move node into it
+					if (wrap) {
+						container.parentNode.insertBefore(wrap, container);
+						lastClone.appendChild(container);
 					}
 				}
 			};
 
 			// Split the start node down to it's format root
-			splitToFormatRoot(rngPos.startContainer);
+			splitToFormatRoot(expand(rngPos, formats, TRUE), TRUE);
 
 			// Split the end node down to it's format root if it's needed
 			if (!collapsed)
-				splitToFormatRoot(rngPos.endContainer);
+				splitToFormatRoot(expand(rngPos, formats, TRUE));
 
 			// Remove items between start/end
-			removeRngStyle(expand(rngPos, formats));
+			removeRngStyle(expand(rngPos, formats, TRUE));
 			restoreRng(rngPos);
 
 			ed.nodeChanged();

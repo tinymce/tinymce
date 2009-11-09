@@ -73,8 +73,10 @@
 					if (format) {
 						list = dom.getParent(sel.getNode(), 'ol,ul');
 
-						if (list)
+						if (list) {
 							dom.setStyles(list, format.styles);
+							list.removeAttribute('_mce_style');
+						}
 					}
 				};
 

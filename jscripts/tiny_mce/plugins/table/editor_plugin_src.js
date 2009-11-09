@@ -18,9 +18,12 @@
 		var grid, startPos, endPos, selectedCell;
 
 		buildGrid();
-		startPos = getPos(dom.getParent(selection.getNode(), 'th,td'));
-		endPos = findEndPos();
-		selectedCell = getCell(startPos.x, startPos.y);
+		selectedCell = dom.getParent(selection.getNode(), 'th,td');
+		if (selectedCell) {
+			startPos = getPos(selectedCell);
+			endPos = findEndPos();
+			selectedCell = getCell(startPos.x, startPos.y);
+		}
 
 		function buildGrid() {
 			var startY = 0;
@@ -793,6 +796,8 @@
 				});
 
 				ed.onMouseUp.add(function(ed, e) {
+					var rng, sel = ed.selection;
+
 					// Move selection to startCell
 					if (startCell) {
 						if (tableGrid)
@@ -800,9 +805,14 @@
 
 						startCell = dom.select('td.mceSelected,th.mceSelected')[0];
 						if (startCell) {
-							ed.selection.select(startCell, true);
+							sel.select(startCell, true);
 							ed.nodeChanged();
 						}
+
+						// Remove table selection on Gecko select the text of the first selected cell
+						rng = sel.getRng();
+						if (rng.startContainer && rng.startContainer.nodeName == 'TR')
+							sel.select(rng.startContainer.childNodes[rng.startOffset], 1);
 
 						startCell = tableGrid = startTable = null;
 					}

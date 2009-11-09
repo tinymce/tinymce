@@ -128,7 +128,7 @@
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker, len, skipStart;
+			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker, len, skipStart, skipEnd;
 
 			this.destroy();
 
@@ -157,6 +157,9 @@
 
 			// If child index resolve it
 			if (ec.nodeType == 1) {
+				if (eo == 0)
+					skipEnd = 1;
+
 				ec = ec.childNodes[Math.min(so == eo ? eo : eo - 1, ec.childNodes.length - 1)];
 
 				// Child was text node then move offset to end of text node
@@ -192,12 +195,6 @@
 
 				ieRng.select();
 				ieRng.scrollIntoView();
-
-				// Cache native range and W3C range, this boost performance and also solves the
-				// IE issue where it automatically moves the selection range outside/inside elements
-				lastIERng = ieRng;
-				range = rng;
-
 				return;
 			}
 
@@ -239,11 +236,6 @@
 				}
 
 				ieRng.scrollIntoView();
-
-				// Cache native range and W3C range, this boost performance and also solves the
-				// IE issue where it automatically moves the selection range outside/inside elements
-				lastIERng = ieRng;
-				range = rng;
 				return;
 			}
 
@@ -260,17 +252,12 @@
 				ieRng.setEndPoint('EndToStart', ieRng2);
 			} else {
 				ieRng2.moveToElementText(ec);
+				ieRng2.collapse(!!skipEnd);
 				ieRng.setEndPoint('EndToEnd', ieRng2);
-				ieRng2.collapse();
 			}
 
 			ieRng.select();
 			ieRng.scrollIntoView();
-
-			// Cache native range and W3C range, this boost performance and also solves the
-			// IE issue where it automatically moves the selection range outside/inside elements
-			lastIERng = ieRng;
-			range = rng;
 		};
 
 		this.getRangeAt = function() {

@@ -181,7 +181,7 @@
 				if (e.nodeType == 1)
 					e = e.childNodes[r.startOffset];
 
-				if (e.nodeType == 3)
+				if (e && e.nodeType == 3)
 					return e.parentNode;
 
 				return e;
@@ -217,7 +217,7 @@
 				if (e.nodeType == 1)
 					e = e.childNodes[eo > 0 ? eo - 1 : eo];
 
-				if (e.nodeType == 3)
+				if (e && e.nodeType == 3)
 					return e.parentNode;
 
 				return e;
@@ -598,7 +598,7 @@
 					}
 				}
 
-				if (e.nodeType == 3)
+				if (e && e.nodeType == 3)
 					return e.parentNode;
 
 				return e;

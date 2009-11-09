@@ -1892,7 +1892,7 @@
 				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
 				n = n.replace(/<[^>]+>/g, ''); // Remove all tags
 
-				return n.replace(/[ \t\r\n]+|\uFEFF|&nbsp;|&#160;/g, '') == '';
+				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
 			};
 
 			if (pe && e) {
