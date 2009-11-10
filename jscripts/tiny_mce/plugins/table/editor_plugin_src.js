@@ -997,7 +997,7 @@
 					}, {
 						plugin_url : url
 					});
-				},
+				}
 			}, function(func, name) {
 				ed.addCommand(name, function(ui, val) {
 					func(val);

@@ -10,7 +10,7 @@
 
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '\uFEFF', range, lastIERng;
+		var t = this, invisibleChar = '\uFEFF', range, lastIERng, dom = selection.dom;
 
 		// Compares two IE specific ranges to see if they are different
 		// this method is useful when invalidating the cached selection range
@@ -30,7 +30,7 @@
 
 		// Returns a W3C DOM compatible range object by using the IE Range API
 		function getRange() {
-			var dom = selection.dom, ieRange = selection.getRng(), domRange = dom.createRng(), ieRange2, element, collapsed, isMerged;
+			var ieRange = selection.getRng(), domRange = dom.createRng(), ieRange2, element, collapsed, isMerged;
 
 			// If selection is outside the current document just return an empty range
 			element = ieRange.item ? ieRange.item(0) : ieRange.parentElement();
@@ -128,7 +128,7 @@
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker, len, skipStart, skipEnd;
+			var ieRng, ieRng2, doc = selection.dom.doc, body = doc.body, startPos, endPos, sc, so, ec, eo, marker, lastIndex, skipStart, skipEnd;
 
 			this.destroy();
 
@@ -140,13 +140,13 @@
 			ieRng = body.createTextRange();
 
 			// If child index resolve it
-			if (sc.nodeType == 1) {
-				len = sc.childNodes.length;
+			if (sc.nodeType == 1 && sc.hasChildNodes()) {
+				lastIndex = sc.childNodes.length - 1;
 
 				// Index is higher that the child count then we need to jump over the start container
-				if (so >= len) {
+				if (so > lastIndex) {
 					skipStart = 1;
-					sc = sc.childNodes[len - 1];
+					sc = sc.childNodes[lastIndex];
 				} else
 					sc = sc.childNodes[so];
 
@@ -156,15 +156,19 @@
 			}
 
 			// If child index resolve it
-			if (ec.nodeType == 1) {
-				if (eo == 0)
+			if (ec.nodeType == 1 && ec.hasChildNodes()) {
+				lastIndex = ec.childNodes.length - 1;
+
+				if (eo == 0) {
 					skipEnd = 1;
+					ec = ec.childNodes[0];
+				} else {
+					ec = ec.childNodes[Math.min(lastIndex, eo - 1)];
 
-				ec = ec.childNodes[Math.min(so == eo ? eo : eo - 1, ec.childNodes.length - 1)];
-
-				// Child was text node then move offset to end of text node
-				if (ec.nodeType == 3)
-					eo = ec.nodeValue.length;
+					// Child was text node then move offset to end of text node
+					if (ec.nodeType == 3)
+						eo = ec.nodeValue.length;
+				}
 			}
 
 			// Single element selection
@@ -242,7 +246,7 @@
 			// Set end of range to endContainer/endOffset
 			ieRng2 = body.createTextRange();
 			if (ec.nodeType == 3) {
-				// Insert marker before endContainer
+				// Insert marker after/before startContainer
 				ec.parentNode.insertBefore(marker, ec);
 
 				// Move selection to end marker and move caret to end offset
@@ -281,7 +285,7 @@
 		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
 		if (selection.dom.boxModel) {
 			(function() {
-				var dom = selection.dom, doc = dom.doc, body = doc.body, started, startRng;
+				var doc = dom.doc, body = doc.body, started, startRng;
 
 				// Make HTML element unselectable since we are going to handle selection by hand
 				doc.documentElement.unselectable = true;

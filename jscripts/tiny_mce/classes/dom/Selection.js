@@ -233,7 +233,7 @@
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
 		 */
 		getBookmark : function(simple) {
-			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF';
+			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF', styles;
 
 			// Handle simple range
 			if (simple)
@@ -248,15 +248,16 @@
 				// Text selection
 				if (!rng.item) {
 					rng2 = rng.duplicate();
+					styles = ' style="overflow:hidden;line-height:0px"';
 
 					// Insert start marker
 					rng.collapse();
-					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start">' + chr + '</span>');
+					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start"' + styles + '>' + chr + '</span>');
 
 					// Insert end marker
 					if (!collapsed) {
 						rng2.collapse(false);
-						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end">' + chr + '</span>');
+						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end"' + styles + '>' + chr + '</span>');
 					}
 				} else {
 					// Control selection
@@ -307,16 +308,17 @@
 			if (bookmark) {
 				// Removes the specified node and merges the siblings around them and update the DOM range to it's new merged position
 				function removeAndMerge(node, start) {
-					var prev, next, len;
+					var prev, next, parent, len;
 
 					// Remove node
 					if (node) {
 						prev = node.previousSibling;
 						next = node.nextSibling;
+						parent = node.parentNode;
 						dom.remove(node);
 
 						// Merge text nodes if needed
-						if (prev && prev.nodeType == 3 && next && next.nodeType == 3) {
+						/*if (prev && prev.nodeType == 3 && next && next.nodeType == 3) {
 							len = prev.nodeValue.length;
 							prev.appendData(next.nodeValue);
 							dom.remove(next);
@@ -326,13 +328,11 @@
 							else
 								rng.setEnd(prev, len);
 						} else {
-							if (prev && prev.nodeType == 1) {
-								if (start)
-									rng.setStartBefore(prev);
-								else
-									rng.setEndAfter(prev);
-							}
-						}
+							if (start && next)
+								rng.setStartBefore(next);
+							else if (!start && prev)
+								rng.setEndAfter(prev);
+						}*/
 					}
 				};
 
@@ -348,15 +348,14 @@
 					marker2 = dom.get(bookmark.id + '_end');
 					if (marker2)
 						rng.setEndBefore(marker2);
-
+					if (marker1)
+						t.setRng(rng);
 					// Remove and merge
 					if (!bookmark.keep) {
 						removeAndMerge(marker1, 1);
 						removeAndMerge(marker2, 0);
 					}
 
-					if (marker1)
-						t.setRng(rng);
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);
 				} else if (bookmark.rng)

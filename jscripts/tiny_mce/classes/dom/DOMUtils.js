@@ -1880,19 +1880,35 @@
 			//   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>
 			// this function will then trim of empty edges and produce:
 			//   <p>text 1</p><b>CHOP</b><p>text 2</p>
-			function trimEdge(n, na) {
-				n = n[na];
+			function trim(node) {
+				var i, children = node.childNodes;
 
-				if (n && n[na] && n[na].nodeType == 1 && isEmpty(n[na]))
-					t.remove(n[na]);
-			};
+				if (node.nodeType == 1 && node.getAttribute('_mce_type') == 'bookmark')
+					return;
 
-			function isEmpty(n) {
-				n = t.getOuterHTML(n);
-				n = n.replace(/<(img|hr|table)/gi, '-'); // Keep these convert them to - chars
-				n = n.replace(/<[^>]+>/g, ''); // Remove all tags
+				for (i = children.length - 1; i >= 0; i--)
+					trim(children[i]);
 
-				return n.replace(/[ \t\r\n]+|&nbsp;|&#160;/g, '') == '';
+				if (node.nodeType != 9) {
+					// Keep non whitespace text nodes
+					if (node.nodeType == 3 && !/^\s*$/.test(node.nodeValue))
+						return;
+
+					if (node.nodeType == 1) {
+						// If the only child is a bookmark then move it up
+						children = node.childNodes;
+						if (children.length == 1 && children[0] && children[0].nodeType == 1 && children[0].getAttribute('_mce_type') == 'bookmark')
+							node.parentNode.insertBefore(children[0], node);
+
+						// Keep non empty elements or img, hr etc
+						if (children.length || /^(br|hr|input|img)$/.test(node.nodeName))
+							return;
+					}
+
+					t.remove(node);
+				}
+
+				return node;
 			};
 
 			if (pe && e) {
@@ -1907,26 +1923,18 @@
 				r.setEnd(pe.parentNode, t.nodeIndex(pe) + 1);
 				aft = r.extractContents();
 
-				// Insert chunks and remove parent
+				// Insert before chunk
 				pa = pe.parentNode;
+				pa.insertBefore(trim(bef), pe);
 
-				// Remove right side edge of the before contents
-				trimEdge(bef, 'lastChild');
-
-				if (!isEmpty(bef))
-					pa.insertBefore(bef, pe);
-
+				// Insert middle chunk
 				if (re)
 					pa.replaceChild(re, e);
 				else
 					pa.insertBefore(e, pe);
 
-				// Remove left site edge of the after contents
-				trimEdge(aft, 'firstChild');
-
-				if (!isEmpty(aft))
-					pa.insertBefore(aft, pe);
-
+				// Insert after chunk
+				pa.insertBefore(trim(aft), pe);
 				t.remove(pe);
 
 				return re || e;
