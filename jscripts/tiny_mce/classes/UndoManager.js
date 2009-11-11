@@ -45,13 +45,17 @@
 		add : function(l) {
 			var t = this, i, ed = t.editor, b, s = ed.settings, la;
 
+			function trim(html) {
+				return html.replace(/<span.*?_mce_type=\"?bookmark\"?[^>]*>[^>]*<\/span>/gi, '');
+			};
+
 			l = l || {};
-			l.content = l.content || ed.getContent({format : 'raw', no_events : 1});
+			l.content = trim(l.content || ed.getContent({format : 'raw', no_events : 1}));
 
 			// Add undo level if needed
 			l.content = l.content.replace(/^\s*|\s*$/g, '');
 			la = t.data[t.index > 0 && (t.index == 0 || t.index == t.data.length) ? t.index - 1 : t.index];
-			if (!l.initial && la && l.content == la.content)
+			if (!l.initial && la && l.content == trim(la.content))
 				return null;
 
 			// Time to compress
@@ -68,6 +72,7 @@
 			if (s.custom_undo_redo_restore_selection && !l.initial) {
 				l.bookmark = b = l.bookmark || ed.selection.getBookmark();
 				l.content = ed.getContent({format : 'raw', no_events : 1});
+				ed.selection.moveToBookmark(b);
 			}
 
 			if (t.index < t.data.length)

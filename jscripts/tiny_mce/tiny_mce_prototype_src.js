@@ -2428,10 +2428,7 @@ tinymce.create('static tinymce.util.XHR', {
 		nodeIndex : function(node) {
 			var idx = 0;
 
-			while (node.previousSibling) {
-				idx++;
-				node = node.previousSibling;
-			}
+			for (node = node.previousSibling; node; idx++, node = node.previousSibling) ;
 
 			return idx;
 		},
@@ -5201,56 +5198,47 @@ window.tinymce.dom.Sizzle = Sizzle;
 				t.tridentSel.destroy();
 
 			if (bookmark) {
-				// Removes the specified node and merges the siblings around them and update the DOM range to it's new merged position
-				function removeAndMerge(node, start) {
-					var prev, next, parent, len;
-
-					// Remove node
-					if (node) {
-						prev = node.previousSibling;
-						next = node.nextSibling;
-						parent = node.parentNode;
-						dom.remove(node);
-
-						// Merge text nodes if needed
-						/*if (prev && prev.nodeType == 3 && next && next.nodeType == 3) {
-							len = prev.nodeValue.length;
-							prev.appendData(next.nodeValue);
-							dom.remove(next);
-
-							if (start)
-								rng.setStart(prev, len);
-							else
-								rng.setEnd(prev, len);
-						} else {
-							if (start && next)
-								rng.setStartBefore(next);
-							else if (!start && prev)
-								rng.setEndAfter(prev);
-						}*/
-					}
-				};
-
 				if (bookmark.id) {
 					rng = dom.createRng();
 
-					marker1 = dom.get(bookmark.id + '_start');
-					if (marker1) {
-						rng.setStartAfter(marker1);
-						rng.setEndAfter(marker1);
-					}
+					function restoreEndPoint(suffix, child_name, sibling_name) {
+						var marker = dom.get(bookmark.id + '_' + suffix), selectNode, node;
 
-					marker2 = dom.get(bookmark.id + '_end');
-					if (marker2)
-						rng.setEndBefore(marker2);
-					if (marker1)
-						t.setRng(rng);
-					// Remove and merge
+						if (marker) {
+							// Walk in if we can WebKit and IE does this automatically so lets do it manually for the others
+							selectNode = marker;
+							for (node = marker[sibling_name]; node && node.nodeType == 1; node = node[child_name])
+								selectNode = node;
+
+							if (suffix == 'start') {
+								if (selectNode != marker) {
+									rng.setStartBefore(selectNode);
+									rng.setEndBefore(selectNode);
+								} else {
+									rng.setStartAfter(selectNode);
+									rng.setEndAfter(selectNode);
+								}
+							} else {
+								if (selectNode != marker)
+									rng.setEndAfter(selectNode);
+								else
+									rng.setEndBefore(selectNode);
+							}
+						}
+
+						return marker;
+					};
+
+					// Restore start/end points
+					marker1 = restoreEndPoint('start', 'firstChild', 'nextSibling');
+					marker2 = restoreEndPoint('end', 'lastChild', 'previousSibling');
+
+					t.setRng(rng);
+
 					if (!bookmark.keep) {
-						removeAndMerge(marker1, 1);
-						removeAndMerge(marker2, 0);
+						dom.remove(marker1);
+						dom.remove(marker2);
 					}
-
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);
 				} else if (bookmark.rng)
@@ -11123,13 +11111,17 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		add : function(l) {
 			var t = this, i, ed = t.editor, b, s = ed.settings, la;
 
+			function trim(html) {
+				return html.replace(/<span.*?_mce_type=\"?bookmark\"?[^>]*>[^>]*<\/span>/gi, '');
+			};
+
 			l = l || {};
-			l.content = l.content || ed.getContent({format : 'raw', no_events : 1});
+			l.content = trim(l.content || ed.getContent({format : 'raw', no_events : 1}));
 
 			// Add undo level if needed
 			l.content = l.content.replace(/^\s*|\s*$/g, '');
 			la = t.data[t.index > 0 && (t.index == 0 || t.index == t.data.length) ? t.index - 1 : t.index];
-			if (!l.initial && la && l.content == la.content)
+			if (!l.initial && la && l.content == trim(la.content))
 				return null;
 
 			// Time to compress
@@ -11144,8 +11136,9 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			if (s.custom_undo_redo_restore_selection && !l.initial) {
-				//l.bookmark = b = l.bookmark || ed.selection.getBookmark();
+				l.bookmark = b = l.bookmark || ed.selection.getBookmark();
 				l.content = ed.getContent({format : 'raw', no_events : 1});
+				ed.selection.moveToBookmark(b);
 			}
 
 			if (t.index < t.data.length)
@@ -13660,8 +13653,25 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return formatRoot;
 			};
 
+			function removeCaretStyle() {
+				var caretNode = selection.getNode();
+
+				// Process parents
+				each(dom.getParents(caretNode), function(parent) {
+					process(parent);
+				});
+			};
+
 			formats = processFormats(formats);
 			collapsed = selection.isCollapsed();
+
+			// Handle collapsed selection
+			if (collapsed && formats[0].inline) {
+				removeCaretStyle();
+				ed.nodeChanged();
+				return;
+			}
+
 			bookmark = selection.getBookmark();
 
 			rngPos = expand(toRangePos(selection.getRng(TRUE)), formats, TRUE);

@@ -1850,10 +1850,7 @@
 		nodeIndex : function(node) {
 			var idx = 0;
 
-			while (node.previousSibling) {
-				idx++;
-				node = node.previousSibling;
-			}
+			for (node = node.previousSibling; node; idx++, node = node.previousSibling) ;
 
 			return idx;
 		},

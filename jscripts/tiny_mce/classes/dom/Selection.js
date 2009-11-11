@@ -306,84 +306,47 @@
 				t.tridentSel.destroy();
 
 			if (bookmark) {
-				// Removes the specified node and merges the siblings around them and update the DOM range to it's new merged position
-				function removeAndMerge(node, start) {
-					var prev, next, parent, len;
-
-					// Remove node
-					if (node) {
-						prev = node.previousSibling;
-						next = node.nextSibling;
-						parent = node.parentNode;
-						dom.remove(node);
-
-						// Merge text nodes if needed
-						/*if (prev && prev.nodeType == 3 && next && next.nodeType == 3) {
-							len = prev.nodeValue.length;
-							prev.appendData(next.nodeValue);
-							dom.remove(next);
-
-							if (start)
-								rng.setStart(prev, len);
-							else
-								rng.setEnd(prev, len);
-						} else {
-							if (start && next)
-								rng.setStartBefore(next);
-							else if (!start && prev)
-								rng.setEndAfter(prev);
-						}*/
-					}
-				};
-
 				if (bookmark.id) {
 					rng = dom.createRng();
 
-					function restoreEndPoint(start) {
-						var marker = dom.get(bookmark.id + (start ? '_start' : '_end')), selectNode, childName = start ? 'firstChild' : 'lastChild';
+					function restoreEndPoint(suffix, child_name, sibling_name) {
+						var marker = dom.get(bookmark.id + '_' + suffix), selectNode, node;
 
 						if (marker) {
-							// Walk in
-							for (selectNode = marker; selectNode['childName']; selectNode = selectNode['childName']) ;
+							// Walk in if we can WebKit and IE does this automatically so lets do it manually for the others
+							selectNode = marker;
+							for (node = marker[sibling_name]; node && node.nodeType == 1; node = node[child_name])
+								selectNode = node;
 
-							if (start) {
-								rng.setStartAfter(selectNode);
-								rng.setEndAfter(selectNode);
+							if (suffix == 'start') {
+								if (selectNode != marker) {
+									rng.setStartBefore(selectNode);
+									rng.setEndBefore(selectNode);
+								} else {
+									rng.setStartAfter(selectNode);
+									rng.setEndAfter(selectNode);
+								}
 							} else {
-								rng.setEndBefore(selectNode);
+								if (selectNode != marker)
+									rng.setEndAfter(selectNode);
+								else
+									rng.setEndBefore(selectNode);
 							}
-
-							if (!bookmark.keep)
-								dom.remove(marker);
 						}
+
+						return marker;
 					};
 
 					// Restore start/end points
-					restoreEndPoint(true);
-					restoreEndPoint();
+					marker1 = restoreEndPoint('start', 'firstChild', 'nextSibling');
+					marker2 = restoreEndPoint('end', 'lastChild', 'previousSibling');
 
 					t.setRng(rng);
 
-/*
-					rng = dom.createRng();
-
-					marker1 = dom.get(bookmark.id + '_start');
-					if (marker1) {
-						rng.setStartAfter(marker1);
-						rng.setEndAfter(marker1);
-					}
-
-					marker2 = dom.get(bookmark.id + '_end');
-					if (marker2)
-						rng.setEndBefore(marker2);
-					if (marker1)
-						t.setRng(rng);
-
-					// Remove and merge
 					if (!bookmark.keep) {
-						removeAndMerge(marker1, 1);
-						removeAndMerge(marker2, 0);
-					}*/
+						dom.remove(marker1);
+						dom.remove(marker2);
+					}
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);
 				} else if (bookmark.rng)
