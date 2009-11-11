@@ -12627,13 +12627,13 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
 			// This will reduce the number of wrapper elements that needs to be created
 			// Move start point up the tree
-			if (formats[0].inline && !remove) {
+			if (formats[0].inline) {
 				startContainer = findParentContainer(startContainer, 'firstChild', 'nextSibling');
 				endContainer = findParentContainer(endContainer, 'lastChild', 'previousSibling');
 			}
 
 			// Expand start/end container to matching selector
-			if (formats[0].selector && !remove) {
+			if (formats[0].selector) {
 				function findSelectorEndPoint(container, sibling_name) {
 					var parents, i, y;
 
@@ -13610,37 +13610,25 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			function splitAndClone(format_root, container) {
 				var parent, clone, lastClone, firstClone, i;
 
-				// If parent node is format root then we don't need to split it just remove the format
-				/*if (container.nodeType == 3 && container.parentNode == format_root) {
+				for (parent = container.parentNode; parent && parent != format_root; parent = parent.parentNode) {
+					clone = parent.cloneNode(FALSE);
+
 					for (i = 0; i < formats.length; i++) {
-						if (removeFormat(formats[i], vars, format_root, format_root))
+						if ((formats[i].list_item && isEq(parent, formats[i].list_item)) || removeFormat(formats[i], vars, clone, clone)) {
+							clone = 0;
 							break;
+						}
 					}
 
-					return container;
-				}*/
+					// Build wrapper node
+					if (clone) {
+						if (lastClone)
+							clone.appendChild(lastClone);
 
-				for (parent = container; parent && parent != format_root; parent = parent.parentNode) {
-					if (parent.nodeType == 1) {
-						clone = parent.cloneNode(FALSE);
+						if (!firstClone)
+							firstClone = clone;
 
-						for (i = 0; i < formats.length; i++) {
-							if ((formats[i].list_item && isEq(parent, formats[i].list_item)) || removeFormat(formats[i], vars, clone, clone)) {
-								clone = 0;
-								break;
-							}
-						}
-
-						// Build wrapper node
-						if (clone) {
-							if (lastClone)
-								clone.appendChild(lastClone);
-
-							if (!firstClone)
-								firstClone = clone;
-
-							lastClone = clone;
-						}
+						lastClone = clone;
 					}
 				}
 
@@ -13689,7 +13677,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				// If the start and end format root is the same then we need to wrap
 				// the end node in a span since the split calls might change the reference
 				// Example: <p><b><em>x[yz<span>---</span>12]3</em></b></p>
-				if (startRoot && startRoot == endRoot) {
+				if (startRoot) {
 					tmpWrap = wrapNode(endContainer, 'span');
 					tmpWrap.setAttribute('id', '__end')
 				}
@@ -13699,23 +13687,24 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				startContainer = splitAndClone(startRoot, startContainer);
 
 			if (!collapsed) {
+				// Found a tmpWrapper for the endContainer. Remove it and grab it's firstChild
 				if (tmpWrap) {
 					tmpWrap = dom.get('__end');
 					if (tmpWrap) {
 						endContainer = tmpWrap.firstChild;
 						dom.remove(tmpWrap, 1);
-						endRoot = findFormatRoot(endContainer);
 					}
 				}
 
-				if (!endRoot)
-					endRoot = findFormatRoot(endContainer);
+				// Find format root for the endContainer and split it if it needs to
+				endRoot = findFormatRoot(endContainer);
 
 				if (endRoot && startRoot != endRoot)
 					endContainer = splitAndClone(endRoot, endContainer);
 			} else
 				endContainer = startContainer;
 
+			// Update range positions since they might have changed after the split operations
 			rngPos.startContainer = startContainer.parentNode;
 			rngPos.startOffset = nodeIndex(startContainer);
 			rngPos.endContainer = endContainer.parentNode;

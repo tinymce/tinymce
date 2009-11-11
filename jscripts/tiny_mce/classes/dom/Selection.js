@@ -339,6 +339,34 @@
 				if (bookmark.id) {
 					rng = dom.createRng();
 
+					function restoreEndPoint(start) {
+						var marker = dom.get(bookmark.id + (start ? '_start' : '_end')), selectNode, childName = start ? 'firstChild' : 'lastChild';
+
+						if (marker) {
+							// Walk in
+							for (selectNode = marker; selectNode['childName']; selectNode = selectNode['childName']) ;
+
+							if (start) {
+								rng.setStartAfter(selectNode);
+								rng.setEndAfter(selectNode);
+							} else {
+								rng.setEndBefore(selectNode);
+							}
+
+							if (!bookmark.keep)
+								dom.remove(marker);
+						}
+					};
+
+					// Restore start/end points
+					restoreEndPoint(true);
+					restoreEndPoint();
+
+					t.setRng(rng);
+
+/*
+					rng = dom.createRng();
+
 					marker1 = dom.get(bookmark.id + '_start');
 					if (marker1) {
 						rng.setStartAfter(marker1);
@@ -350,12 +378,12 @@
 						rng.setEndBefore(marker2);
 					if (marker1)
 						t.setRng(rng);
+
 					// Remove and merge
 					if (!bookmark.keep) {
 						removeAndMerge(marker1, 1);
 						removeAndMerge(marker2, 0);
-					}
-
+					}*/
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);
 				} else if (bookmark.rng)
