@@ -1845,14 +1845,25 @@
 		 * Returns the index of the specified node within it's parent.
 		 *
 		 * @param {Node} node Node to look for.
-		 * @return {Numner} Index of the specified node.
+		 * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.
+		 * @return {Number} Index of the specified node.
 		 */
-		nodeIndex : function(node) {
-			var idx = 0;
+		nodeIndex : function(node, normalized) {
+			var idx = 0, lastNode;
 
-			for (node = node.previousSibling; node; idx++, node = node.previousSibling) ;
+			for (node = node; node; idx++, node = node.previousSibling) {
+				if (normalized) {
+					// Skip index position if there are two text nodes after each other
+					if (node.nodeType == 3) {
+						if ((lastNode && lastNode.nodeType == 3) || node.nodeValue.length === 0)
+							idx--;
+					}
 
-			return idx;
+					lastNode = node;
+				}
+			}
+
+			return idx - 1;
 		},
 
 		/**

@@ -45,18 +45,16 @@
 		add : function(l) {
 			var t = this, i, ed = t.editor, b, s = ed.settings, la;
 
-			function trim(html) {
-				return html.replace(/<span.*?_mce_type=\"?bookmark\"?[^>]*>[^>]*<\/span>/gi, '');
-			};
-
 			l = l || {};
-			l.content = trim(l.content || ed.getContent({format : 'raw', no_events : 1}));
+			l.content = l.content || ed.getContent({format : 'raw', no_events : 1});
+			l.content = l.content.replace(/^\s*|\s*$/g, '');
 
 			// Add undo level if needed
-			l.content = l.content.replace(/^\s*|\s*$/g, '');
-			la = t.data[t.index > 0 && (t.index == 0 || t.index == t.data.length) ? t.index - 1 : t.index];
-			if (!l.initial && la && l.content == trim(la.content))
-				return null;
+			la = t.data[t.index];
+			if (la && la.content == l.content) {
+				if (t.index > 0 || t.data.length == 1)
+					return null;
+			}
 
 			// Time to compress
 			if (s.custom_undo_redo_levels) {
@@ -69,34 +67,25 @@
 				}
 			}
 
-			if (s.custom_undo_redo_restore_selection && !l.initial) {
-				l.bookmark = b = l.bookmark || ed.selection.getBookmark();
-				l.content = ed.getContent({format : 'raw', no_events : 1});
-				ed.selection.moveToBookmark(b);
+			if (s.custom_undo_redo_restore_selection)
+				l.bookmark = b = l.bookmark || ed.selection.getBookmark(2);
+
+			// Crop array if needed
+			if (t.index < t.data.length - 1) {
+				// Treat first level as initial
+				if (t.index == 0)
+					t.data = [];
+				else
+					t.data.length = t.index + 1;
 			}
 
-			if (t.index < t.data.length)
-				t.index++;
-
-			// Only initial marked undo levels should be allowed as first item
-			// This to workaround a bug with Firefox and the blur event
-			if (t.data.length === 0 && !l.initial)
-				return null;
-
-			// Add level
-			t.data.length = t.index + 1;
-			t.data[t.index++] = l;
-
-			if (l.initial)
-				t.index = 0;
-
-			// Set initial bookmark use first real undo level
-			if (t.data.length == 2 && t.data[0].initial)
-				t.data[0].bookmark = b;
+			t.data.push(l);
+			t.index = t.data.length - 1;
 
 			t.onAdd.dispatch(t, l);
 			ed.isNotDirty = 0;
 
+			//console.log(t.index);
 			//console.dir(t.data);
 
 			return l;
@@ -117,18 +106,8 @@
 			}
 
 			if (t.index > 0) {
-				// If undo on last index then take snapshot
-				if (t.index == t.data.length && t.index > 1) {
-					i = t.index;
-					t.typing = 0;
-
-					if (!t.add())
-						t.index = i;
-
-					--t.index;
-				}
-
 				l = t.data[--t.index];
+
 				ed.setContent(l.content, {format : 'raw'});
 				ed.selection.moveToBookmark(l.bookmark);
 
@@ -169,7 +148,6 @@
 			t.data = [];
 			t.index = 0;
 			t.typing = 0;
-			t.add({initial : true});
 		},
 
 		/**
@@ -179,7 +157,7 @@
 		 * @return {Boolean} true/false if the undo manager has any undo levels.
 		 */
 		hasUndo : function() {
-			return this.index != 0 || this.typing;
+			return this.index > 0 || this.typing;
 		},
 
 		/**

@@ -725,6 +725,14 @@
 			});
 
 			if (s.custom_undo_redo) {
+				// Add initial undo level
+				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, a) {
+					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo)) {
+						if (!t.undoManager.hasUndo())
+							t.undoManager.add();
+					}
+				});
+
 				t.onExecCommand.add(function(ed, cmd, ui, val, a) {
 					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
 						t.undoManager.add();
@@ -1163,7 +1171,6 @@
 
 				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 				t.startContent = t.getContent({format : 'raw'});
-				t.undoManager.add({initial : true});
 				t.initialized = true;
 
 				t.onInit.dispatch(t);
@@ -2383,7 +2390,7 @@
 
 				// BlockFormat shortcuts keys
 				for (i=1; i<=6; i++)
-					t.addShortcut('ctrl+' + i, '', ['FormatBlock', false, '<h' + i + '>']);
+					t.addShortcut('ctrl+' + i, '', ['FormatBlock', false, 'h' + i]);
 
 				t.addShortcut('ctrl+7', '', ['FormatBlock', false, '<p>']);
 				t.addShortcut('ctrl+8', '', ['FormatBlock', false, '<div>']);
@@ -2519,43 +2526,21 @@
 					t.undoManager.add();
 				};
 
-				// Add undo level on editor blur
-				if (tinymce.isIE) {
-					t.dom.bind(t.getWin(), 'blur', function(e) {
-						var n;
-
-						// Check added for fullscreen bug
-						if (t.selection) {
-							n = t.selection.getNode();
-
-							// Add undo level is selection was lost to another document
-							if (!t.removed && n.ownerDocument && n.ownerDocument != t.getDoc())
-								addUndo();
-						}
-					});
-				} else {
-					t.dom.bind(t.getDoc(), 'blur', function() {
-						if (t.selection && !t.removed)
-							addUndo();
-					});
-				}
-
-				t.onMouseDown.add(addUndo);
+				t.dom.bind(t.getDoc(), 'focusout', function(e) {
+					if (!t.removed && t.undoManager.typing)
+						addUndo();
+				});
 
 				t.onKeyUp.add(function(ed, e) {
-					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey) {
-						t.undoManager.typing = 0;
-						t.undoManager.add();
-					}
+					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey)
+						addUndo();
 				});
 
 				t.onKeyDown.add(function(ed, e) {
 					// Is caracter positon keys
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
-						if (t.undoManager.typing) {
-							t.undoManager.add();
-							t.undoManager.typing = 0;
-						}
+						if (t.undoManager.typing)
+							addUndo();
 
 						return;
 					}
@@ -2564,6 +2549,11 @@
 						t.undoManager.add();
 						t.undoManager.typing = 1;
 					}
+				});
+
+				t.onMouseDown.add(function() {
+					if (t.undoManager.typing)
+						addUndo();
 				});
 			}
 		},

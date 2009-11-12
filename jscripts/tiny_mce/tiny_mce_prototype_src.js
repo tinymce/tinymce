@@ -2425,12 +2425,22 @@ tinymce.create('static tinymce.util.XHR', {
 			return d.createRange ? d.createRange() : new tinymce.dom.Range(this);
 		},
 
-		nodeIndex : function(node) {
-			var idx = 0;
+		nodeIndex : function(node, normalized) {
+			var idx = 0, lastNode;
 
-			for (node = node.previousSibling; node; idx++, node = node.previousSibling) ;
+			for (node = node; node; idx++, node = node.previousSibling) {
+				if (normalized) {
+					// Skip index position if there are two text nodes after each other
+					if (node.nodeType == 3) {
+						if ((lastNode && lastNode.nodeType == 3) || node.nodeValue.length === 0)
+							idx--;
+					}
 
-			return idx;
+					lastNode = node;
+				}
+			}
+
+			return idx - 1;
 		},
 
 		split : function(pe, e, re) {
@@ -5134,6 +5144,52 @@ window.tinymce.dom.Sizzle = Sizzle;
 		getBookmark : function(simple) {
 			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF', styles;
 
+			if (simple == 2) {
+				function getLocation() {
+					var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
+
+					function getPoint(rng, start) {
+						var indexes = [], node, lastIdx,
+							container = rng[start ? 'startContainer' : 'endContainer'],
+							offset = rng[start ? 'startOffset' : 'endOffset'], exclude, point = {};
+
+						// Resolve element index
+						if (container.nodeType == 1) {
+							lastIdx = container.childNodes.length - 1;
+							container = container.childNodes[offset > lastIdx ? lastIdx : offset - (start ? 0 : 1)];
+
+							point.exclude = (start && offset > lastIdx) || (!start && offset == 0);
+
+							if (container.nodeType == 3)
+								offset = start ? 0 : container.nodeValue.length;
+						}
+
+						if (container.nodeType == 3) {
+							for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling)
+								offset += node.nodeValue.length;
+
+							point.offset = offset;
+						}
+
+						for (; container && container != root; container = container.parentNode)
+							indexes.push(t.dom.nodeIndex(container, true));
+
+						point.indexes = indexes;
+
+						return point;
+					};
+
+					bookmark.start = getPoint(rng, true);
+
+					if (!t.isCollapsed())
+						bookmark.end = getPoint(rng);
+
+					return bookmark;
+				};
+
+				return getLocation();
+			}
+
 			// Handle simple range
 			if (simple)
 				return {rng : t.getRng()};
@@ -5198,7 +5254,44 @@ window.tinymce.dom.Sizzle = Sizzle;
 				t.tridentSel.destroy();
 
 			if (bookmark) {
-				if (bookmark.id) {
+				if (bookmark.start) {
+					rng = dom.createRng();
+					var root = dom.getRoot();
+
+					function setEndPoint(start) {
+						var point = bookmark[start ? 'start' : 'end'], i, node, offset;
+
+						if (point) {
+							for (node = root, i = point.indexes.length - 1; i >= 0; i--)
+								node = node.childNodes[point.indexes[i]];
+
+							if (start) {
+								if (point.offset)
+									rng.setStart(node, point.offset);
+								else {
+									if (point.exclude)
+										rng.setStartAfter(node);
+									else
+										rng.setStartBefore(node);
+								}
+							} else {
+								if (point.offset)
+									rng.setEnd(node, point.offset);
+								else {
+									if (point.exclude)
+										rng.setEndBefore(node);
+									else
+										rng.setEndAfter(node);
+								}
+							}
+						}
+					};
+
+					setEndPoint(true);
+					setEndPoint();
+
+					t.setRng(rng);
+				} else if (bookmark.id) {
 					rng = dom.createRng();
 
 					function restoreEndPoint(suffix, child_name, sibling_name) {
@@ -9232,6 +9325,14 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			});
 
 			if (s.custom_undo_redo) {
+				// Add initial undo level
+				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, a) {
+					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo)) {
+						if (!t.undoManager.hasUndo())
+							t.undoManager.add();
+					}
+				});
+
 				t.onExecCommand.add(function(ed, cmd, ui, val, a) {
 					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
 						t.undoManager.add();
@@ -9624,7 +9725,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 				t.startContent = t.getContent({format : 'raw'});
-				t.undoManager.add({initial : true});
 				t.initialized = true;
 
 				t.onInit.dispatch(t);
@@ -10447,7 +10547,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 				// BlockFormat shortcuts keys
 				for (i=1; i<=6; i++)
-					t.addShortcut('ctrl+' + i, '', ['FormatBlock', false, '<h' + i + '>']);
+					t.addShortcut('ctrl+' + i, '', ['FormatBlock', false, 'h' + i]);
 
 				t.addShortcut('ctrl+7', '', ['FormatBlock', false, '<p>']);
 				t.addShortcut('ctrl+8', '', ['FormatBlock', false, '<div>']);
@@ -10583,43 +10683,21 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					t.undoManager.add();
 				};
 
-				// Add undo level on editor blur
-				if (tinymce.isIE) {
-					t.dom.bind(t.getWin(), 'blur', function(e) {
-						var n;
-
-						// Check added for fullscreen bug
-						if (t.selection) {
-							n = t.selection.getNode();
-
-							// Add undo level is selection was lost to another document
-							if (!t.removed && n.ownerDocument && n.ownerDocument != t.getDoc())
-								addUndo();
-						}
-					});
-				} else {
-					t.dom.bind(t.getDoc(), 'blur', function() {
-						if (t.selection && !t.removed)
-							addUndo();
-					});
-				}
-
-				t.onMouseDown.add(addUndo);
+				t.dom.bind(t.getDoc(), 'focusout', function(e) {
+					if (!t.removed && t.undoManager.typing)
+						addUndo();
+				});
 
 				t.onKeyUp.add(function(ed, e) {
-					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey) {
-						t.undoManager.typing = 0;
-						t.undoManager.add();
-					}
+					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey)
+						addUndo();
 				});
 
 				t.onKeyDown.add(function(ed, e) {
 					// Is caracter positon keys
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
-						if (t.undoManager.typing) {
-							t.undoManager.add();
-							t.undoManager.typing = 0;
-						}
+						if (t.undoManager.typing)
+							addUndo();
 
 						return;
 					}
@@ -10628,6 +10706,11 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 						t.undoManager.add();
 						t.undoManager.typing = 1;
 					}
+				});
+
+				t.onMouseDown.add(function() {
+					if (t.undoManager.typing)
+						addUndo();
 				});
 			}
 		},
@@ -11111,18 +11194,16 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		add : function(l) {
 			var t = this, i, ed = t.editor, b, s = ed.settings, la;
 
-			function trim(html) {
-				return html.replace(/<span.*?_mce_type=\"?bookmark\"?[^>]*>[^>]*<\/span>/gi, '');
-			};
-
 			l = l || {};
-			l.content = trim(l.content || ed.getContent({format : 'raw', no_events : 1}));
+			l.content = l.content || ed.getContent({format : 'raw', no_events : 1});
+			l.content = l.content.replace(/^\s*|\s*$/g, '');
 
 			// Add undo level if needed
-			l.content = l.content.replace(/^\s*|\s*$/g, '');
-			la = t.data[t.index > 0 && (t.index == 0 || t.index == t.data.length) ? t.index - 1 : t.index];
-			if (!l.initial && la && l.content == trim(la.content))
-				return null;
+			la = t.data[t.index];
+			if (la && la.content == l.content) {
+				if (t.index > 0 || t.data.length == 1)
+					return null;
+			}
 
 			// Time to compress
 			if (s.custom_undo_redo_levels) {
@@ -11135,34 +11216,25 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				}
 			}
 
-			if (s.custom_undo_redo_restore_selection && !l.initial) {
-				l.bookmark = b = l.bookmark || ed.selection.getBookmark();
-				l.content = ed.getContent({format : 'raw', no_events : 1});
-				ed.selection.moveToBookmark(b);
+			if (s.custom_undo_redo_restore_selection)
+				l.bookmark = b = l.bookmark || ed.selection.getBookmark(2);
+
+			// Crop array if needed
+			if (t.index < t.data.length - 1) {
+				// Treat first level as initial
+				if (t.index == 0)
+					t.data = [];
+				else
+					t.data.length = t.index + 1;
 			}
 
-			if (t.index < t.data.length)
-				t.index++;
-
-			// Only initial marked undo levels should be allowed as first item
-			// This to workaround a bug with Firefox and the blur event
-			if (t.data.length === 0 && !l.initial)
-				return null;
-
-			// Add level
-			t.data.length = t.index + 1;
-			t.data[t.index++] = l;
-
-			if (l.initial)
-				t.index = 0;
-
-			// Set initial bookmark use first real undo level
-			if (t.data.length == 2 && t.data[0].initial)
-				t.data[0].bookmark = b;
+			t.data.push(l);
+			t.index = t.data.length - 1;
 
 			t.onAdd.dispatch(t, l);
 			ed.isNotDirty = 0;
 
+			//console.log(t.index);
 			//console.dir(t.data);
 
 			return l;
@@ -11177,18 +11249,8 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			}
 
 			if (t.index > 0) {
-				// If undo on last index then take snapshot
-				if (t.index == t.data.length && t.index > 1) {
-					i = t.index;
-					t.typing = 0;
-
-					if (!t.add())
-						t.index = i;
-
-					--t.index;
-				}
-
 				l = t.data[--t.index];
+
 				ed.setContent(l.content, {format : 'raw'});
 				ed.selection.moveToBookmark(l.bookmark);
 
@@ -11218,11 +11280,10 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 			t.data = [];
 			t.index = 0;
 			t.typing = 0;
-			t.add({initial : true});
 		},
 
 		hasUndo : function() {
-			return this.index != 0 || this.typing;
+			return this.index > 0 || this.typing;
 		},
 
 		hasRedo : function() {

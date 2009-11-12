@@ -235,6 +235,52 @@
 		getBookmark : function(simple) {
 			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF', styles;
 
+			if (simple == 2) {
+				function getLocation() {
+					var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
+
+					function getPoint(rng, start) {
+						var indexes = [], node, lastIdx,
+							container = rng[start ? 'startContainer' : 'endContainer'],
+							offset = rng[start ? 'startOffset' : 'endOffset'], exclude, point = {};
+
+						// Resolve element index
+						if (container.nodeType == 1) {
+							lastIdx = container.childNodes.length - 1;
+							container = container.childNodes[offset > lastIdx ? lastIdx : offset - (start ? 0 : 1)];
+
+							point.exclude = (start && offset > lastIdx) || (!start && offset == 0);
+
+							if (container.nodeType == 3)
+								offset = start ? 0 : container.nodeValue.length;
+						}
+
+						if (container.nodeType == 3) {
+							for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling)
+								offset += node.nodeValue.length;
+
+							point.offset = offset;
+						}
+
+						for (; container && container != root; container = container.parentNode)
+							indexes.push(t.dom.nodeIndex(container, true));
+
+						point.indexes = indexes;
+
+						return point;
+					};
+
+					bookmark.start = getPoint(rng, true);
+
+					if (!t.isCollapsed())
+						bookmark.end = getPoint(rng);
+
+					return bookmark;
+				};
+
+				return getLocation();
+			}
+
 			// Handle simple range
 			if (simple)
 				return {rng : t.getRng()};
@@ -306,7 +352,44 @@
 				t.tridentSel.destroy();
 
 			if (bookmark) {
-				if (bookmark.id) {
+				if (bookmark.start) {
+					rng = dom.createRng();
+					var root = dom.getRoot();
+
+					function setEndPoint(start) {
+						var point = bookmark[start ? 'start' : 'end'], i, node, offset;
+
+						if (point) {
+							for (node = root, i = point.indexes.length - 1; i >= 0; i--)
+								node = node.childNodes[point.indexes[i]];
+
+							if (start) {
+								if (point.offset)
+									rng.setStart(node, point.offset);
+								else {
+									if (point.exclude)
+										rng.setStartAfter(node);
+									else
+										rng.setStartBefore(node);
+								}
+							} else {
+								if (point.offset)
+									rng.setEnd(node, point.offset);
+								else {
+									if (point.exclude)
+										rng.setEndBefore(node);
+									else
+										rng.setEndAfter(node);
+								}
+							}
+						}
+					};
+
+					setEndPoint(true);
+					setEndPoint();
+
+					t.setRng(rng);
+				} else if (bookmark.id) {
 					rng = dom.createRng();
 
 					function restoreEndPoint(suffix, child_name, sibling_name) {
