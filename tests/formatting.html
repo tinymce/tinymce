@@ -1,14 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Text formatting testcase</title>
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">
-	google.load("jquery", "1.3");
-</script>
+<title>Unit tests for text formatting</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
-<script type="text/javascript" src="js/testrunner.js"></script>
-<link rel="stylesheet" href="css/unit.css" type="text/css" />
 <script>
 var editor;
 
@@ -646,26 +642,26 @@ tinyMCE.init({
 	},
 	init_instance_callback : function(ed) {
 		editor = ed;
+
 		ed.onNodeChange.addToTop(function() {
 			return false;
 		});
-		run();
+
+		QUnit.setup();
 	}
 });
 </script>
 </head>
 <body>
-	<h1>TinyMCE formatting</h1>
-	<h2 id="banner"></h2>
-	<h2 id="userAgent"></h2>
-	<ol id="tests"></ol>
-	<div id="main"></div>
-	<div id="content">
-		<textarea id="elm1" name="elm1"></textarea>
-		<div>
-			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
-			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
-		</div>
+	<h1 id="qunit-header">Unit tests for text formatting</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<textarea id="elm1" name="elm1"></textarea>
+	<div>
+		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
 	</div>
 </body>
 </html>

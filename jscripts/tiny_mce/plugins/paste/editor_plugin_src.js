@@ -14,8 +14,8 @@
 		defs = {
 			"paste_auto_cleanup_on_paste" : true,
 			"paste_block_drop" : false,
-			"paste_retain_style_properties" : "all",
-			"paste_strip_class_attributes" : "none",
+			"paste_retain_style_properties" : "none",
+			"paste_strip_class_attributes" : "mso",
 			"paste_remove_spans" : false,
 			"paste_remove_styles" : false,
 			"paste_remove_styles_if_webkit" : true,
@@ -114,11 +114,9 @@
 					ed.controlManager.setActive('pastetext', ed.pasteAsPlainText);
 
 					if ((ed.pasteAsPlainText) && (!cookie.get("tinymcePasteText"))) {
-
 						if (getParam(ed, "paste_text_sticky")) {
 							ed.windowManager.alert("Paste is now in plain text mode. Click again to toggle back to regular paste mode. After you paste something you will be returned to regular paste mode.");
-						}
-						else {
+						} else {
 							ed.windowManager.alert("Paste is now in plain text mode. Click again to toggle back to regular paste mode.");
 						}
 
@@ -470,22 +468,21 @@
 			stripClass = getParam(ed, "paste_strip_class_attributes");
 
 			if (stripClass !== "none") {
-				h = h.replace(/(<[a-z](?:"(?:[^"]|\\")*"|'(?:[^']|\\')*'|[^"'>])*)\sclass=("(?:[^"]|\\")*"|'(?:[^']|\\')*'|[-\w]+)/gi,
-					function (match, g1, g2) {
+				function removeClasses(match, g1) {
+						if (stripClass === "all")
+							return '';
 
-						if (stripClass === "all") {
-							return g1;
-						}
-
-						var cls = grep(explode(g2.replace(/^(["'])(.*)\1$/, "$2"), " "),
+						var cls = grep(explode(g1.replace(/^(["'])(.*)\1$/, "$2"), " "),
 							function (v) {
 								return (/^(?!mso)/i.test(v));
 							}
 						);
 
-						return g1 + (cls.length? 'class="' + cls.join(" ") + '"' : '');							
-					}
-				);
+						return cls.length ? ' class="' + cls.join(" ") + '"' : '';
+				};
+
+				h = h.replace(/ class="([^"]+)"/gi, removeClasses);
+				h = h.replace(/ class=(\w+)/gi, removeClasses);
 			}
 
 			// Remove spans option

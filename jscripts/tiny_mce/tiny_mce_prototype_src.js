@@ -446,9 +446,9 @@ tinymce._init();
 	// Add a "#ifndefjquery" statement around each core API function you add below
 	var patches = {
 		'tinymce.util.JSON' : {
-			serialize : function(o) {
+			/*serialize : function(o) {
 				return o.toJSON();
-			}
+			}*/
 		},
 	};
 

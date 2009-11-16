@@ -2,28 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Unit tests for the Paste plugin</title>
-<link rel="stylesheet" href="css/unit.css" type="text/css" />
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">
-	google.load("jquery", "1.3");
-</script>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
-<script type="text/javascript" src="js/testrunner.js"></script>
 </head>
 <body>
-	<h1>Unit tests for the Paste plugin</h1>
-	<h2 id="banner"></h2>
-	<h2 id="userAgent"></h2>
-	<ol id="tests"></ol>
-	<div id="main"></div>
-	<div id="sample">
-		<textarea id="elm1" name="elm1"></textarea>
-		<div>
-			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
-			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
-		</div>
-	</div>
-
 <script type="text/javascript">
 var editor;
 
@@ -99,24 +82,23 @@ test("Paste Word table", function() {
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<table border="1" cellspacing="0" cellpadding="0"><tbody><tr><td width="307" valign="top"><p>Cell 1</p></td><td width="307" valign="top"><p>Cell 2</p></td></tr><tr><td width="307" valign="top"><p>Cell 3</p></td><td width="307" valign="top"><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
 });
 
-/*
 test("Paste Word retain styles", function() {
 	var rng = editor.dom.createRng();
 
-	editor.setContent('<p>1234</p>');
-	rng.setStart(editor.getBody().firstChild.firstChild, 0);
-	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
-	editor.selection.setRng(rng);
+	editor.settings.paste_retain_style_properties = 'color,background-color,font-family';
 
-	editor.settings.paste_retain_style_properties = 'color,background,font-family';
+	// Test color
+	editor.setContent('');
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="color: #ff0000">Test</p>'});
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p style=\"color: #ff0000;\">Test</p>');
 
-	editor.execCommand('mceInsertClipboardContent', false, '<p class="MsoNormal"><b style=""><i style=""><s><u><span style="background: red none repeat scroll 0% 0%; font-family: &quot;Arial Black&quot;,&quot;sans-serif&quot;; color: rgb(192, 0, 0); -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;">test</span></u></s></i></b><b style=""><i style=""><s><u><span style="font-family: &quot;Arial Black&quot;,&quot;sans-serif&quot;; color: rgb(192, 0, 0);"><o:p></o:p></span></u></s></i></b></p>');
-
-	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p><strong><em><span style=\"text-decoration: line-through;\"><span style=\"text-decoration: underline;\"><span style=\"background: red none repeat scroll 0% 0%; color: #c00000; font-family: &quot;Arial Black&quot;,&quot;sans-serif&quot;;\">test</span></span></span></em></strong><strong><em><span style=\"text-decoration: line-through;\"></span></em></strong></p>');
+	// Test background-color
+	editor.setContent('');
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="background-color: #ff0000">Test</p>'});
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p style=\"background-color: #ff0000;\">Test</p>');
 
 	editor.settings.paste_retain_style_properties = '';
 });
-*/
 
 tinyMCE.init({
 	mode : "exact",
@@ -126,10 +108,21 @@ tinyMCE.init({
 	plugins : 'paste',
 	init_instance_callback : function(ed) {
 		editor = ed;
-		run();
+		QUnit.setup();
 	}
 });
 </script>
 
+	<h1 id="qunit-header">Unit tests for the Paste plugin</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<textarea id="elm1" name="elm1"></textarea>
+	<div>
+		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+	</div>
 </body>
 </html>
