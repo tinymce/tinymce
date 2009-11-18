@@ -178,8 +178,8 @@
 			} else {
 				e = r.startContainer;
 
-				if (e.nodeType == 1)
-					e = e.childNodes[r.startOffset];
+				if (e.nodeType == 1 && e.hasChildNodes())
+					e = e.childNodes[Math.min(e.childNodes.length - 1, r.startOffset)];
 
 				if (e && e.nodeType == 3)
 					return e.parentNode;
@@ -214,7 +214,7 @@
 				e = r.endContainer;
 				eo = r.endOffset;
 
-				if (e.nodeType == 1)
+				if (e.nodeType == 1 && e.hasChildNodes())
 					e = e.childNodes[eo > 0 ? eo - 1 : eo];
 
 				if (e && e.nodeType == 3)
@@ -230,9 +230,10 @@
 		 *
 		 * @method getBookmark
 		 * @param {Boolean} simple Optional state if the bookmark should be simple or not. Default is complex.
+		 * @param {Boolean} normalized Optional state that enables you to get a position that it would be after normalization.
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
 		 */
-		getBookmark : function(simple) {
+		getBookmark : function(simple, normalized) {
 			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF', styles;
 
 			if (simple == 2) {
@@ -245,25 +246,30 @@
 							offset = rng[start ? 'startOffset' : 'endOffset'], exclude, point = {};
 
 						// Resolve element index
-						if (container.nodeType == 1) {
+						if (container.nodeType == 1 && container.hasChildNodes()) {
 							lastIdx = container.childNodes.length - 1;
-							container = container.childNodes[offset > lastIdx ? lastIdx : offset - (start ? 0 : 1)];
-
 							point.exclude = (start && offset > lastIdx) || (!start && offset == 0);
+
+							if (!start && offset)
+								offset--;
+
+							container = container.childNodes[offset > lastIdx ? lastIdx : offset];
 
 							if (container.nodeType == 3)
 								offset = start ? 0 : container.nodeValue.length;
 						}
 
 						if (container.nodeType == 3) {
-							for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling)
-								offset += node.nodeValue.length;
+							if (normalized) {
+								for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling)
+									offset += node.nodeValue.length;
+							}
 
 							point.offset = offset;
 						}
 
 						for (; container && container != root; container = container.parentNode)
-							indexes.push(t.dom.nodeIndex(container, true));
+							indexes.push(t.dom.nodeIndex(container, normalized));
 
 						point.indexes = indexes;
 
@@ -364,7 +370,7 @@
 								node = node.childNodes[point.indexes[i]];
 
 							if (start) {
-								if (point.offset)
+								if (node.nodeType == 3 && point.offset)
 									rng.setStart(node, point.offset);
 								else {
 									if (point.exclude)
@@ -373,7 +379,7 @@
 										rng.setStartBefore(node);
 								}
 							} else {
-								if (point.offset)
+								if (node.nodeType == 3 && point.offset)
 									rng.setEnd(node, point.offset);
 								else {
 									if (point.exclude)
@@ -393,7 +399,7 @@
 					rng = dom.createRng();
 
 					function restoreEndPoint(suffix, child_name, sibling_name) {
-						var marker = dom.get(bookmark.id + '_' + suffix), selectNode, node;
+						var marker = dom.get(bookmark.id + '_' + suffix), selectNode, node, idx, next, prev;
 
 						if (marker) {
 							// Walk in if we can WebKit and IE does this automatically so lets do it manually for the others
@@ -401,35 +407,50 @@
 							for (node = marker[sibling_name]; node && node.nodeType == 1; node = node[child_name])
 								selectNode = node;
 
+							node = selectNode.parentNode;
+
 							if (suffix == 'start') {
-								if (selectNode != marker) {
-									rng.setStartBefore(selectNode);
-									rng.setEndBefore(selectNode);
-								} else {
-									rng.setStartAfter(selectNode);
-									rng.setEndAfter(selectNode);
-								}
+								idx = dom.nodeIndex(selectNode);
+
+								if (idx > 0 && selectNode == marker)
+									idx++;
+
+								rng.setStart(node, idx);
+								rng.setEnd(node, idx);
 							} else {
-								if (selectNode != marker)
-									rng.setEndAfter(selectNode);
-								else
-									rng.setEndBefore(selectNode);
+								idx = dom.nodeIndex(selectNode);
+								if (bookmark.keep || selectNode != marker)
+									idx++;
+
+								rng.setEnd(node, idx);
+							}
+
+							if (!bookmark.keep) {
+								prev = marker.previousSibling;
+								next = marker.nextSibling;
+								dom.remove(marker);
+
+								// If siblings are text nodes then merge them
+								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3) {
+									idx = prev.nodeValue.length;
+									prev.appendData(next.nodeValue);
+									dom.remove(next);
+
+									if (suffix == 'start') {
+										rng.setStart(prev, idx);
+										rng.setEnd(prev, idx);
+									} else
+										rng.setEnd(prev, idx);
+								}
 							}
 						}
-
-						return marker;
 					};
 
 					// Restore start/end points
-					marker1 = restoreEndPoint('start', 'firstChild', 'nextSibling');
-					marker2 = restoreEndPoint('end', 'lastChild', 'previousSibling');
+					restoreEndPoint('start', 'firstChild', 'nextSibling');
+					restoreEndPoint('end', 'lastChild', 'previousSibling');
 
 					t.setRng(rng);
-
-					if (!bookmark.keep) {
-						dom.remove(marker1);
-						dom.remove(marker2);
-					}
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);
 				} else if (bookmark.rng)
@@ -441,77 +462,52 @@
 		 * Selects the specified element. This will place the start and end of the selection range around the element.
 		 *
 		 * @method select
-		 * @param {Element} n HMTL DOM element to select.
-		 * @param {Boolean} c Bool state if the contents should be selected or not on non IE browser.
+		 * @param {Element} node HMTL DOM element to select.
+		 * @param {Boolean} content Optional bool state if the contents should be selected or not on non IE browser.
 		 * @return {Element} Selected element the same element as the one that got passed in.
 		 */
-		select : function(n, c) {
-			var t = this, r = t.getRng(), s = t.getSel(), b, fn, ln, d = t.win.document;
+		select : function(node, content) {
+			var t = this, dom = t.dom, rng = dom.createRng(), idx;
 
-			function find(n, start) {
-				var walker, o;
+			idx = dom.nodeIndex(node);
+			rng.setStart(node.parentNode, idx);
+			rng.setEnd(node.parentNode, idx + 1);
 
-				if (n) {
-					walker = d.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false);
+			// Find first/last text node or BR element
+			if (content) {
+				function setPoint(node, start) {
+					var walker = new tinymce.dom.TreeWalker(node, node);
 
-					// Find first/last non empty text node
-					while (n = walker.nextNode()) {
-						o = n;
-
-						if (tinymce.trim(n.nodeValue).length != 0) {
+					do {
+						// Text node
+						if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length != 0) {
 							if (start)
-								return n;
+								rng.setStart(node, 0);
 							else
-								o = n;
+								rng.setEnd(node, node.nodeValue.length);
+
+							return;
 						}
-					}
-				}
 
-				return o;
-			};
+						// BR element
+						if (node.nodeName == 'BR') {
+							if (start)
+								rng.setStartBefore(node);
+							else
+								rng.setEndBefore(node);
 
-			if (isIE) {
-				try {
-					b = d.body;
+							return;
+						}
+					} while (node = (start ? walker.next() : walker.prev()));
+				};
 
-					if (/^(IMG|TABLE)$/.test(n.nodeName)) {
-						r = b.createControlRange();
-						r.addElement(n);
-					} else {
-						r = b.createTextRange();
-						r.moveToElementText(n);
-					}
-
-					r.select();
-				} catch (ex) {
-					// Throws illigal agrument in IE some times
-				}
-			} else {
-				if (c) {
-					fn = find(n, 1) || t.dom.select('br:first', n)[0];
-					ln = find(n, 0) || t.dom.select('br:last', n)[0];
-
-					if (fn && ln) {
-						r = d.createRange();
-
-						if (fn.nodeName == 'BR')
-							r.setStartBefore(fn);
-						else
-							r.setStart(fn, 0);
-
-						if (ln.nodeName == 'BR')
-							r.setEndBefore(ln);
-						else
-							r.setEnd(ln, ln.nodeValue.length);
-					} else
-						r.selectNode(n);
-				} else
-					r.selectNode(n);
-
-				t.setRng(r);
+				setPoint(node, 1);
+				setPoint(node);
 			}
 
-			return n;
+			t.setRng(rng);
+
+			return node;
 		},
 
 		/**
@@ -648,36 +644,36 @@
 		 * @return {Element} Currently selected element or common ancestor element.
 		 */
 		getNode : function() {
-			var t = this, r = t.getRng(), s = t.getSel(), e;
+			var t = this, rng = t.getRng(), sel = t.getSel(), elm;
 
 			if (!isIE) {
 				// Range maybe lost after the editor is made visible again
-				if (!r)
+				if (!rng)
 					return t.dom.getRoot();
 
-				e = r.commonAncestorContainer;
+				elm = rng.commonAncestorContainer;
 
 				// Handle selection a image or other control like element such as anchors
-				if (!r.collapsed) {
-					// If the anchor node is a element instead of a text node then return this element
-					if (tinymce.isWebKit && s.anchorNode && s.anchorNode.nodeType == 1) 
-						return s.anchorNode.childNodes[s.anchorOffset]; 
-
-					if (r.startContainer == r.endContainer) {
-						if (r.startOffset - r.endOffset < 2) {
-							if (r.startContainer.hasChildNodes())
-								e = r.startContainer.childNodes[r.startOffset];
+				if (!rng.collapsed) {
+					if (rng.startContainer == rng.endContainer) {
+						if (rng.startOffset - rng.endOffset < 2) {
+							if (rng.startContainer.hasChildNodes())
+								elm = rng.startContainer.childNodes[rng.startOffset];
 						}
 					}
+
+					// If the anchor node is a element instead of a text node then return this element
+					if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1) 
+						return sel.anchorNode.childNodes[sel.anchorOffset]; 
 				}
 
-				if (e && e.nodeType == 3)
-					return e.parentNode;
+				if (elm && elm.nodeType == 3)
+					return elm.parentNode;
 
-				return e;
+				return elm;
 			}
 
-			return r.item ? r.item(0) : r.parentElement();
+			return rng.item ? rng.item(0) : rng.parentElement();
 		},
 
 		getSelectedBlocks : function(st, en) {

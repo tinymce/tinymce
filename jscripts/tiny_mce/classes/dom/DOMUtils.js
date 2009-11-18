@@ -1071,13 +1071,13 @@
 					v = e.className.replace(re, ' ');
 					v = tinymce.trim(v != ' ' ? v : '');
 
-					// Empty class attr
-					if (!v) {
-						e.removeAttribute('class');
-						return v;
-					}
+					e.className = v;
 
-					return e.className = v;
+					// Empty class attr
+					if (!v)
+						e.removeAttribute('class');
+
+					return v;
 				}
 
 				return e.className;
@@ -1899,10 +1899,12 @@
 
 				if (node.nodeType != 9) {
 					// Keep non whitespace text nodes
-					if (node.nodeType == 3 && !/^\s*$/.test(node.nodeValue))
+					if (node.nodeType == 3 && node.nodeValue.length > 0)
 						return;
 
 					if (node.nodeType == 1) {
+						//console.log(node, node.ownerDocument.documentElement.querySelectorAll('body')[0].innerHTML);
+
 						// If the only child is a bookmark then move it up
 						children = node.childNodes;
 						if (children.length == 1 && children[0] && children[0].nodeType == 1 && children[0].getAttribute('_mce_type') == 'bookmark')

@@ -68,7 +68,7 @@
 			}
 
 			if (s.custom_undo_redo_restore_selection)
-				l.bookmark = b = l.bookmark || ed.selection.getBookmark(2);
+				l.bookmark = b = l.bookmark || ed.selection.getBookmark(2, true);
 
 			// Crop array if needed
 			if (t.index < t.data.length - 1) {

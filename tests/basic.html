@@ -8,68 +8,10 @@
 <script>
 var editor;
 
-test('commands - html4TextStyles', function() {
-	var c;
-
-	expect(9);
-
-	editor.settings.inline_styles = false;
-	editor.settings.convert_fonts_to_spans = false;
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('Bold');
-	equals(editor.getContent(), "<p><strong>test 123</strong></p>");
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('Italic');
-	equals(editor.getContent(), "<p><em>test 123</em></p>");
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('Underline');
-	equals(editor.getContent(), "<p><u>test 123</u></p>");
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('Strikethrough');
-	equals(editor.getContent(), "<p><strike>test 123</strike></p>");
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('FontName', false, 'Times');
-	equals(editor.getContent(), '<p><font face="Times">test 123</font></p>');
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('FontSize', false, '7');
-	equals(editor.getContent(), '<p><font size="7">test 123</font></p>');
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('ForeColor', false, '#FF0000');
-	equals(editor.getContent().toLowerCase(), '<p><font color="#ff0000">test 123</font></p>');
-
-	editor.setContent('test 123');
-	editor.execCommand('SelectAll');
-	editor.execCommand('HiliteColor', false, '#FF0000');
-	c = editor.getContent();
-	ok(c == '<p><span style="background-color: #ff0000;">test 123</span></p>' || c == '<p><font style="background-color: #ff0000;">test 123</font></p>');
-
-	editor.setContent('<font style="background-color: red" color="#ff0000">test</font><font face="Arial">test</font>');
-	equals(editor.getContent(), '<p><font style="background-color: red;" color="#ff0000">test</font><font face="Arial">test</font></p>');
-
-	editor.settings.inline_styles = true;
-});
-
 test('commands - xhtmlTextStyles', function() {
 	var c;
 
 	expect(18);
-
-	editor.settings.inline_styles = true;
-	editor.settings.convert_fonts_to_spans = true;
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
@@ -136,22 +78,13 @@ test('commands - xhtmlTextStyles', function() {
 	equals(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
 
 	editor.setContent('<p><font face="Arial" size="7">test 123</font></p>');
-	c = editor.getContent();
-	ok(c == '<p><span style="font-family: Arial; font-size: xx-large;">test 123</span></p>' || c == '<p><span style="font-size: xx-large; font-family: Arial;">test 123</span></p>');
+	equals(editor.getContent(), '<p><span style="font-size: xx-large; font-family: Arial;">test 123</span></p>');
 
 	editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
-
-	// Both responses are ok
-	if (editor.getContent() == '<p><span style="background-color: #ff0000; color: #ff0000;">test</span><span style="font-family: Arial;">test</span></p>')
-		ok(true);
-
-	if (editor.getContent() == '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: Arial;">test</span></p>')
-		ok(true);
+	equals(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: Arial;">test</span></p>');
 });
 
 test('commands - alignInline', function() {
-	editor.settings.inline_styles = true;
-
 	expect(7);
 
 	editor.setContent('<p>test 123</p>');
@@ -182,7 +115,7 @@ test('commands - alignInline', function() {
 	editor.setContent('<img src="../media/logo.jpg" />');
 	editor.selection.select(editor.dom.select('img')[0]);
 	editor.execCommand('JustifyCenter');
-	equals(editor.getContent(), '<p style="text-align: center;"><img src="../media/logo.jpg" alt="" /></p>');
+	equals(editor.getContent(), '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="../media/logo.jpg" alt="" /></p>');
 
 	editor.setContent('<img src="../media/logo.jpg" />');
 	editor.selection.select(editor.dom.select('img')[0]);
@@ -249,15 +182,6 @@ test('commands - blocks', function() {
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'pre');
 	equals(editor.getContent(), '<pre>test 123</pre>');
-});
-
-test('commands - styles', function() {
-	expect(1);
-
-	editor.setContent('<p>test 123</p>');
-	editor.execCommand('SelectAll');
-	editor.execCommand('mceSetStyleInfo', false, {command : 'setattrib', name : "class", value : 'test1'});
-	equals(editor.getContent(), '<p class="test1">test 123</p>');
 });
 
 test('commands - link', function() {
@@ -327,17 +251,7 @@ test('commands - insertHR', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('InsertHorizontalRule');
-
-	// There is some browser differences that we can live with
-	v = '<hr />';
-
-	if (tinymce.isOpera)
-		v = '<hr /><p>&nbsp;</p>';
-
-	if (tinymce.isWebKit)
-		v = '<p><hr /></p>';
-
-	equals(editor.getContent(), v);
+	equals(editor.getContent(), '<hr />');
 });
 
 test('commands - indentOutdent', function() {
@@ -385,7 +299,7 @@ test('commands - removeFormat', function() {
 	editor.setContent('<p><span>test<span id="x">test <strong>123</strong></span><a href="123">123</a> 123</span></p>');
 	editor.selection.select(editor.dom.get('x'));
 	editor.execCommand('RemoveFormat');
-	equals(editor.getContent(), '<p><span>test</span>test 123<span><a href=\"123\">123</a> 123</span></p>');
+	equals(editor.getContent(), '<p><span>test</span><span id=\"x\">test </span>123<span><a href=\"123\">123</a> 123</span></p>');
 });
 
 test('commands - customCommands', function() {
@@ -525,14 +439,23 @@ test('WebKit Serialization range bug', function() {
 });
 
 tinyMCE.init({
-	mode : "textareas",
+	mode : "exact",
+	elements : "elm1",
 	theme : "advanced",
 	add_unload_trigger : false,
-	plugins : 'safari',
+	plugins : 'legacy',
 	theme_advanced_styles : 'test1=test1;test2=test2',
+	valid_styles : {
+		'*' : 'text-align,padding-left,color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	},
 	apply_source_formatting : 0,
 	init_instance_callback : function(ed) {
 		editor = ed;
+
+		ed.onNodeChange.addToTop(function() {
+			return false;
+		});
+
 		QUnit.setup();
 	}
 });

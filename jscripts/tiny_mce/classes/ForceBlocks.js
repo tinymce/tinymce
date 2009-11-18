@@ -39,6 +39,25 @@
 		return n.replace(/[ \t\r\n]+/g, '') == '';
 	};
 
+	function splitList(selection, dom, li) {
+		var listBlock, block;
+
+		if (isEmpty(li)) {
+			listBlock = dom.getParent(li, 'ul,ol');
+
+			if (!dom.getParent(listBlock.parentNode, 'ul,ol')) {
+				dom.split(listBlock, li);
+				block = dom.create('p', 0, '<br _mce_bogus="1" />');
+				dom.replace(block, li);
+				selection.select(block, 1);
+			}
+
+			return false;
+		}
+
+		return true;
+	};
+
 	/**
 	 * This is a internal class and no method in this class should be called directly form the out side.
 	 */
@@ -88,6 +107,7 @@
 
 			// Force root blocks when typing and when getting output
 			if (s.forced_root_block) {
+				ed.onBeforeExecCommand.add(t.forceRoots, t);
 				ed.onKeyUp.add(t.forceRoots, t);
 				ed.onPreProcess.add(t.forceRoots, t);
 			}
@@ -425,8 +445,12 @@
 			bn = sb ? sb.nodeName : se.element; // Get block name to create
 
 			// Return inside list use default browser behavior
-			if (t.dom.getParent(sb, 'ol,ul,pre'))
+			if (sb = t.dom.getParent(sb, 'li,pre')) {
+				if (sb.nodeName == 'LI')
+					return splitList(ed.selection, t.dom, sb);
+
 				return true;
+			}
 
 			// If caption or absolute layers then always generate new blocks within
 			if (sb && (sb.nodeName == 'CAPTION' || /absolute|relative|fixed/gi.test(dom.getStyle(sb, 'position', 1)))) {

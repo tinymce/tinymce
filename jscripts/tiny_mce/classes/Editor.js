@@ -702,28 +702,6 @@
 			 */
 			t.controlManager = new tinymce.ControlManager(t);
 
-			/**
-			 * Undo manager instance, responsible for handling undo levels. 
-			 *
-			 * @property undoManager
-			 * @type tinymce.UndoManager
-			 */
-			t.undoManager = new tinymce.UndoManager(t);
-
-			// Pass through
-			t.undoManager.onAdd.add(function(um, l) {
-				if (!l.initial)
-					return t.onChange.dispatch(t, l, um);
-			});
-
-			t.undoManager.onUndo.add(function(um, l) {
-				return t.onUndo.dispatch(t, l, um);
-			});
-
-			t.undoManager.onRedo.add(function(um, l) {
-				return t.onRedo.dispatch(t, l, um);
-			});
-
 			if (s.custom_undo_redo) {
 				// Add initial undo level
 				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, a) {
@@ -957,6 +935,28 @@
 			 * @type tinymce.Formatter
 			 */
 			t.formatter = new tinymce.Formatter(this);
+
+			/**
+			 * Undo manager instance, responsible for handling undo levels. 
+			 *
+			 * @property undoManager
+			 * @type tinymce.UndoManager
+			 */
+			t.undoManager = new tinymce.UndoManager(t);
+
+			// Pass through
+			t.undoManager.onAdd.add(function(um, l) {
+				if (!l.initial)
+					return t.onChange.dispatch(t, l, um);
+			});
+
+			t.undoManager.onUndo.add(function(um, l) {
+				return t.onUndo.dispatch(t, l, um);
+			});
+
+			t.undoManager.onRedo.add(function(um, l) {
+				return t.onRedo.dispatch(t, l, um);
+			});
 
 			t.forceBlocks = new tinymce.ForceBlocks(t, {
 				forced_root_block : s.forced_root_block
@@ -1249,7 +1249,6 @@
 				fix_list_elements : s.fix_list_elements,
 				fix_content_duplication : s.fix_content_duplication,
 				font_size_classes  : s.font_size_classes,
-				font_size_style_values : s.font_size_style_values,
 				apply_source_formatting : s.apply_source_formatting,
 				dom : t.dom,
 				schema : schema
@@ -2357,6 +2356,18 @@
 
 				t.onBeforeExecCommand.add(setOpts);
 				t.onMouseDown.add(setOpts);
+			}
+
+			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
+			// WebKit can't even do simple things like selecting an image
+			if (tinymce.isWebKit) {
+				t.onClick.add(function(ed, e) {
+					e = e.target;
+
+					// Needs tobe the setBaseAndExtend or it will fail to select floated images
+					if (e.nodeName == 'IMG')
+						t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
+				});
 			}
 
 			// Add node change handlers

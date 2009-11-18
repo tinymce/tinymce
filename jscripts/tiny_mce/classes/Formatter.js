@@ -22,8 +22,8 @@
 			FALSE = false,
 			TRUE = true;
 
-		function wrapNode(node, name) {
-			var wrapper = dom.create(name);
+		function wrapNode(node, name, attrs) {
+			var wrapper = dom.create(name, attrs);
 
 			node.parentNode.insertBefore(wrapper, node);
 			wrapper.appendChild(node);
@@ -66,6 +66,65 @@
 				startOffset : rng.startOffset,
 				endContainer : rng.endContainer,
 				endOffset : rng.endOffset
+			};
+		};
+
+		function splitRng(rng) {
+			var startContainer = rng.startContainer,
+				startOffset = rng.startOffset,
+				endContainer = rng.endContainer,
+				endOffset = rng.endOffset;
+
+			/**
+			 * Since IE doesn't support white space nodes in the DOM we need to
+			 * add this invisible character so that the splitText function can split the contents
+			 * IE would otherwise produce an empty text node with no parentNode.
+			 *
+			 * @private
+			 * @param {Node} Text node to split.
+			 * @param {Number} offset Offset to split at.
+			 * @param {Node} Returns the right part of the splitted node.
+			 */
+			function splitText(node, offset) {
+				if (offset == node.nodeValue.length)
+					node.appendData(INVISIBLE_CHAR);
+
+				node = node.splitText(offset);
+
+				if (node.nodeValue === INVISIBLE_CHAR)
+					node.nodeValue = '';
+
+				return node;
+			};
+
+			// Handle single text node
+			if (startContainer == endContainer) {
+				if (startContainer.nodeType == 3) {
+					if (startOffset != 0)
+						startContainer = endContainer = splitText(startContainer, startOffset);
+
+					if (endOffset - startOffset != startContainer.nodeValue.length)
+						splitText(startContainer, endOffset - startOffset);
+				}
+			} else {
+				// Split startContainer text node if needed
+				if (startContainer.nodeType == 3 && startOffset != 0) {
+					startContainer = splitText(startContainer, startOffset);
+					startOffset = 0;
+				}
+
+				// Split endContainer text node if needed
+				if (endContainer.nodeType == 3 && endOffset != endContainer.nodeValue.length) {
+					endContainer = splitText(endContainer, endOffset).previousSibling;
+					endOffset = endContainer.nodeValue.length;
+				}
+			}
+
+			return {
+				startContainer : startContainer,
+				startOffset : startOffset,
+				endContainer : endContainer,
+				endOffset : endOffset
 			};
 		};
 
@@ -135,7 +194,7 @@
 		 * @return {boolean} True/false if the node is a text block.
 		 */
 		function isTextBlock(node) {
-			return /^(h[1-6]|p|div)$/i.test(node.nodeName);
+			return /^(h[1-6]|p|div|pre|address)$/i.test(node.nodeName);
 		};
 
 		/**
@@ -243,7 +302,7 @@
 			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
 			// This will reduce the number of wrapper elements that needs to be created
 			// Move start point up the tree
-			if (formats[0].inline) {
+			if (formats[0].inline || !remove) {
 				startContainer = findParentContainer(startContainer, 'firstChild', 'nextSibling');
 				endContainer = findParentContainer(endContainer, 'lastChild', 'previousSibling');
 			}
@@ -273,7 +332,7 @@
 			}
 
 			// Expand start/end container to matching block element or text node
-			if (formats[0].block) {
+			if (formats[0].block && !formats[0].selector) {
 				function findBlockEndPoint(container, sibling_name, sibling_name2) {
 					var node;
 
@@ -432,6 +491,22 @@
 				} while(node);
 			};
 
+			function walkBoundary(start_node, end_node, next) {
+				var siblingName = next ? 'nextSibling' : 'previousSibling';
+
+				for (node = start_node, parent = node.parentNode; node && node != end_node; node = parent) {
+					parent = node.parentNode;
+					siblings = collectSiblings(node == start_node ? node : node[siblingName], siblingName);
+
+					if (siblings.length) {
+						if (!next)
+							siblings.reverse();
+
+						callback(siblings);
+					}
+				}
+			};
+
 			// If index based start position then resolve it
 			if (startContainer.nodeType == 1 && startContainer.hasChildNodes())
 				startContainer = startContainer.childNodes[startOffset];
@@ -442,17 +517,35 @@
 
 			// Find common ancestor and end points
 			ancestor = dom.findCommonAncestor(startContainer, endContainer);
+
+			// Same container
+			if (startContainer == endContainer)
+				return callback([startContainer]);
+
+			// Process left side
+			for (node = startContainer; node; node = node.parentNode) {
+				if (node == endContainer)
+					return walkBoundary(startContainer, ancestor, true);
+
+				if (node == ancestor)
+					break;
+			}
+
+			// Process right side
+			for (node = endContainer; node; node = node.parentNode) {
+				if (node == startContainer)
+					return walkBoundary(endContainer, ancestor);
+
+				if (node == ancestor)
+					break;
+			}
+
+			// Find start/end point
 			startPoint = findEndPoint(startContainer, ancestor) || startContainer;
 			endPoint = findEndPoint(endContainer, ancestor) || endContainer;
 
 			// Walk left leaf
-			for (node = startContainer, parent = node.parentNode; node && node != startPoint; node = parent) {
-				parent = node.parentNode;
-				siblings = collectSiblings(node == startContainer ? node : node.nextSibling, 'nextSibling');
-
-				if (siblings.length)
-					callback(siblings);
-			}
+			walkBoundary(startContainer, startPoint, true);
 
 			// Walk the middle from start to end point
 			siblings = collectSiblings(
@@ -465,13 +558,7 @@
 				callback(siblings);
 
 			// Walk right leaf
-			for (node = endContainer, parent = node.parentNode; node && node != endPoint; node = parent) {
-				parent = node.parentNode;
-				siblings = collectSiblings(node == endContainer ? node : node.previousSibling, 'previousSibling');
-
-				if (siblings.length)
-					callback(siblings.reverse());
-			}
+			walkBoundary(endContainer, endPoint);
 		};
 
 		/**
@@ -707,7 +794,7 @@
 			}
 
 			// Remove the inline child if it's empty for example <b> or <span>
-			if ((!format.selector || format.remove == 'all') && format.remove != 'none') {
+			if (format.remove != 'none') {
 				removeNode(node, format);
 				return TRUE;
 			}
@@ -1310,7 +1397,7 @@
 
 			// Apply formatting to selection
 			bookmark = selection.getBookmark();
-			applyRngStyle(expand(selection.getRng(TRUE), formats));
+			applyRngStyle(expand(splitRng(selection.getRng(TRUE)), formats));
 			selection.moveToBookmark(bookmark);
 
 			ed.nodeChanged();
@@ -1368,54 +1455,25 @@
 
 				if (container.nodeType == 1) {
 					lastIdx = container.childNodes.length - 1;
-					container = container.childNodes[offset > lastIdx ? lastIdx : offset - (start ? 0 : 1)];
+
+					if (!start && offset)
+						offset--;
+
+					container = container.childNodes[offset > lastIdx ? lastIdx : offset];
 				}
 
 				return container;
 			};
 
-			function splitAndClone(format_root, container) {
-				var parent, clone, lastClone, firstClone, i;
+			function splitToFormatRoot(container) {
+				var parent, clone, lastClone, firstClone, i, formatRoot;
 
-				for (parent = container.parentNode; parent && parent != format_root; parent = parent.parentNode) {
-					clone = parent.cloneNode(FALSE);
-
-					for (i = 0; i < formats.length; i++) {
-						if ((formats[i].list_item && isEq(parent, formats[i].list_item)) || removeFormat(formats[i], vars, clone, clone)) {
-							clone = 0;
-							break;
-						}
-					}
-
-					// Build wrapper node
-					if (clone) {
-						if (lastClone)
-							clone.appendChild(lastClone);
-
-						if (!firstClone)
-							firstClone = clone;
-
-						lastClone = clone;
-					}
-				}
-
-				container = dom.split(format_root, container);
-
-				// Wrap container in cloned formats
-				if (lastClone) {
-					container.parentNode.insertBefore(lastClone, container);
-					firstClone.appendChild(container);
-				}
-
-				return container;
-			};
-
-			function findFormatRoot(container) {
-				var formatRoot;
-
+				// Find format root
 				each(dom.getParents(container.parentNode).reverse(), function(parent) {
+					var matchedFormat;
+
 					// Find format root element
-					if (!formatRoot) {
+					if (!formatRoot && parent.id != '_start' && parent.id != '_end') {
 						matchedFormat = matchNode(formats, vars, parent);
 
 						// If the matched format has a remove none flag we shouldn't split it
@@ -1424,7 +1482,38 @@
 					}
 				});
 
-				return formatRoot;
+				// Format root found then clone formats and split it
+				if (formatRoot) {
+					for (parent = container.parentNode; parent && parent != formatRoot; parent = parent.parentNode) {
+						clone = parent.cloneNode(FALSE);
+
+						for (i = 0; i < formats.length; i++) {
+							if ((formats[i].list_item && isEq(parent, formats[i].list_item)) || removeFormat(formats[i], vars, clone, clone)) {
+								clone = 0;
+								break;
+							}
+						}
+
+						// Build wrapper node
+						if (clone) {
+							if (lastClone)
+								clone.appendChild(lastClone);
+
+							if (!firstClone)
+								firstClone = clone;
+
+							lastClone = clone;
+						}
+					}
+
+					container = dom.split(formatRoot, container);
+
+					// Wrap container in cloned formats
+					if (lastClone) {
+						container.parentNode.insertBefore(lastClone, container);
+						firstClone.appendChild(container);
+					}
+				}
 			};
 
 			function removeCaretStyle() {
@@ -1434,6 +1523,15 @@
 				each(dom.getParents(caretNode), function(parent) {
 					process(parent);
 				});
+			};
+
+			function unwrap(start) {
+				var node = dom.get(start ? '_start' : '_end'),
+					out = node[start ? 'firstChild' : 'lastChild'];
+
+				dom.remove(node, 1);
+
+				return out;
 			};
 
 			formats = processFormats(formats);
@@ -1447,52 +1545,30 @@
 			}
 
 			bookmark = selection.getBookmark();
-
-			rngPos = expand(toRangePos(selection.getRng(TRUE)), formats, TRUE);
-
+			rngPos = expand(splitRng(toRangePos(selection.getRng(TRUE))), formats, TRUE);
 			startContainer = getContainer(rngPos, TRUE);
 			endContainer = getContainer(rngPos);
 
-			startRoot = findFormatRoot(startContainer);
+			if (startContainer != endContainer) {
+				// Wrap start/end nodes in span element since these might be cloned/moved
+				startContainer = wrapNode(startContainer, 'span', {id : '_start', _mce_type : 'bookmark'});
+				endContainer = wrapNode(endContainer, 'span', {id : '_end', _mce_type : 'bookmark'});
 
-			if (!collapsed) {
-				endRoot = findFormatRoot(endContainer);
+				// Split start/end
+				splitToFormatRoot(startContainer);
+				splitToFormatRoot(endContainer);
 
-				// If the start and end format root is the same then we need to wrap
-				// the end node in a span since the split calls might change the reference
-				// Example: <p><b><em>x[yz<span>---</span>12]3</em></b></p>
-				if (startRoot) {
-					tmpWrap = wrapNode(endContainer, 'span');
-					tmpWrap.setAttribute('id', '__end')
-				}
-			}
+				// Unwrap start/end to get real elements again
+				startContainer = unwrap(TRUE);
+				endContainer = unwrap();
 
-			if (startRoot)
-				startContainer = splitAndClone(startRoot, startContainer);
-
-			if (!collapsed) {
-				// Found a tmpWrapper for the endContainer. Remove it and grab it's firstChild
-				if (tmpWrap) {
-					tmpWrap = dom.get('__end');
-					if (tmpWrap) {
-						endContainer = tmpWrap.firstChild;
-						dom.remove(tmpWrap, 1);
-					}
-				}
-
-				// Find format root for the endContainer and split it if it needs to
-				endRoot = findFormatRoot(endContainer);
-
-				if (endRoot && startRoot != endRoot)
-					endContainer = splitAndClone(endRoot, endContainer);
+				// Update range positions since they might have changed after the split operations
+				rngPos.startContainer = startContainer.parentNode;
+				rngPos.startOffset = nodeIndex(startContainer);
+				rngPos.endContainer = endContainer.parentNode;
+				rngPos.endOffset = nodeIndex(endContainer) + 1;
 			} else
-				endContainer = startContainer;
-
-			// Update range positions since they might have changed after the split operations
-			rngPos.startContainer = startContainer.parentNode;
-			rngPos.startOffset = nodeIndex(startContainer);
-			rngPos.endContainer = endContainer.parentNode;
-			rngPos.endOffset = nodeIndex(endContainer) + 1;
+				splitToFormatRoot(startContainer);
 
 			// Remove items between start/end
 			removeRngStyle(rngPos);

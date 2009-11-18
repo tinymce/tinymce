@@ -61,7 +61,6 @@
 				fix_content_duplication : true,
 				convert_fonts_to_spans : false,
 				font_size_classes : 0,
-				font_size_style_values : 0,
 				apply_source_formatting : 0,
 				indent_mode : 'simple',
 				indent_char : '\t',
