@@ -89,12 +89,7 @@
 				return;
 			}
 
-			// If outdent is done on last list then remove the list elements
-			if (dom.getParents(s.getStart(), 'ol,ul').length == 1) {
-				ed.formatter.remove(ed.settings.unorderedlist_format);
-				ed.formatter.remove(ed.settings.orderedlist_format);
-			} else
-				ed.getDoc().execCommand('Outdent', false, null);
+			ed.getDoc().execCommand('Outdent', false, null);
 		},
 
 		mceSetContent : function(u, v) {
@@ -140,51 +135,51 @@
 		},
 
 		Italic : function() {
-			this._toggle('italic_format');
+			this._toggle('italic');
 		},
 
 		queryStateItalic : function() {
-			return this._match('italic_format');
+			return this._match('italic');
 		},
 
 		Bold : function() {
-			this._toggle('bold_format');
+			this._toggle('bold');
 		},
 
 		queryStateBold : function() {
-			return this._match('bold_format');
+			return this._match('bold');
 		},
 
 		Underline : function() {
-			this._toggle('underline_format');
+			this._toggle('underline');
 		},
 
 		queryStateUnderline : function() {
-			return this._match('underline_format');
+			return this._match('underline');
 		},
 
 		Strikethrough : function() {
-			this._toggle('strikethrough_format');
+			this._toggle('strikethrough');
 		},
 
 		queryStateStrikethrough : function() {
-			return this._match('strikethrough_format');
+			return this._match('strikethrough');
 		},
 
 		ForeColor : function(ui, v) {
-			this._toggle('forecolor_format', v);
+			this._toggle('forecolor', v);
 		},
 
 		HiliteColor : function(ui, v) {
-			this._toggle('hilitecolor_format', v);
+			this._toggle('hilitecolor', v);
 		},
 
 		RemoveFormat : function() {
-			this.editor.formatter.remove(this.editor.settings.removeformat);
+			this.editor.formatter.remove('removeformat');
 		},
 
 		FontName : function(u, v) {
-			this._toggle('fontname_format', v);
+			this._toggle('fontname', v);
 		},
 
 		FontSize : function(u, v) {
@@ -201,23 +196,15 @@
 					v = fontSizes[v - 1] || v;
 			}
 
-			this._toggle('fontsize_format', v);
+			this._toggle('fontsize', v);
 		},
 
 		mceBlockQuote : function() {
-			this._toggle('blockquote_format');
+			this._toggle('blockquote');
 		},
 
 		queryStatemceBlockQuote : function() {
-			return this._match('blockquote_format');
-		},
-
-		InsertOrderedList : function() {
-			this._toggle('orderedlist_format');
-		},
-
-		InsertUnorderedList : function() {
-			this._toggle('unorderedlist_format');
+			return this._match('blockquote');
 		},
 
 		UnLink : function() {
@@ -285,19 +272,15 @@
 		},
 
 		mceJustify : function(c, v) {
-			var ed = this.editor;
-
-			return ed.formatter.toggle(ed.settings.align_formats[v]);
+			return this.editor.formatter.toggle('align' + v);
 		},
 
 		queryStateJustify : function(c, v) {
-			var ed = this.editor;
-
-			return ed.formatter.match(ed.settings.align_formats[v]);
+			return this._match('align' + v);
 		},
 
 		FormatBlock : function(ui, val) {
-			return this.editor.formatter.toggle({block : val, remove : 'all'});
+			return this.editor.formatter.toggle(val);
 		},
 
 		mceCleanup : function() {
@@ -390,18 +373,11 @@
 		},
 
 		_match : function(name) {
-			var ed = this.editor;
-
-			return ed.formatter.match(ed.settings[name]);
+			return this.editor.formatter.match(name);
 		},
 
 		_toggle : function(name, val) {
-			var ed = this.editor, vars;
-
-			if (val)
-				vars = {value : val};
-
-			ed.formatter.toggle(ed.settings[name], vars);
+			this.editor.formatter.toggle(name, val ? {value : val} : null);
 		},
 
 		InsertHorizontalRule : function() {

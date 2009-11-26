@@ -1615,6 +1615,33 @@
 		},
 
 		/**
+		 * Renames the specified element to a new name and keep it's attributes and children.
+		 *
+		 * @method rename
+		 * @param {Element} elm Element to rename.
+		 * @param {String} name Name of the new element.
+		 * @return New element or the old element if it needed renaming.
+		 */
+		rename : function(elm, name) {
+			var t = this, newElm;
+
+			if (elm.nodeName != name.toUpperCase()) {
+				// Rename block element
+				newElm = t.create(name);
+
+				// Copy attribs to new block
+				each(t.getAttribs(elm), function(attr_node) {
+					t.setAttrib(newElm, attr_node.nodeName, t.getAttrib(elm, attr_node.nodeName));
+				});
+
+				// Replace block
+				t.replace(newElm, elm, 1);
+			}
+
+			return newElm || elm;
+		},
+
+		/**
 		 * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.
 		 *
 		 * @method findCommonAncestor

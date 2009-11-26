@@ -18,102 +18,113 @@ test('Formatter - match', function() {
 	expect(11);
 
 	// Selected style element text
+	editor.formatter.register('bold', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234</b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match({inline : 'b'}), 'Selected style element text');
+	ok(editor.formatter.match('bold'), 'Selected style element text');
 
 	// Selected style element with css styles
+	editor.formatter.register('color', {inline : 'span', styles : {color : '#ff0000'}});
 	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match({inline : 'span', styles : {color : '#ff0000'}}), 'Selected style element with css styles');
+	ok(editor.formatter.match('color'), 'Selected style element with css styles');
 
 	// Selected style element with attributes
+	editor.formatter.register('fontsize', {inline : 'font', attributes : {size : '7'}});
 	editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('font')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match({inline : 'font', attributes : {size : '7'}}), 'Selected style element with attributes');
+	ok(editor.formatter.match('fontsize'), 'Selected style element with attributes');
 
 	// Selected style element text multiple formats
+	editor.formatter.register('multiple', [
+		{inline : 'b'},
+		{inline : 'strong'}
+	]);
 	editor.getBody().innerHTML = '<p><strong>1234</strong></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('strong')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match([
-		{inline : 'b'},
-		{inline : 'strong'}
-	]), 'Selected style element text multiple formats');
+	ok(editor.formatter.match('multiple'), 'Selected style element text multiple formats');
 
 	// Selected complex style element
+	editor.formatter.register('complex', {inline : 'span', styles : {fontWeight : 'bold'}});
 	editor.getBody().innerHTML = '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match({inline : 'span', styles : {fontWeight : 'bold'}}), 'Selected complex style element');
+	ok(editor.formatter.match('complex'), 'Selected complex style element');
 
 	// Selected non style element text
+	editor.formatter.register('bold', {inline : 'b'});
 	editor.getBody().innerHTML = '<p>1234</p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(!editor.formatter.match({inline : 'b'}), 'Selected non style element text');
+	ok(!editor.formatter.match('bold'), 'Selected non style element text');
 
 	// Selected partial style element (start)
+	editor.formatter.register('bold', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234</b>5678</p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match({inline : 'b'}), 'Selected partial style element (start)');
+	ok(editor.formatter.match('bold'), 'Selected partial style element (start)');
 
 	// Selected partial style element (end)
+	editor.formatter.register('bold', {inline : 'b'});
 	editor.getBody().innerHTML = '<p>1234<b>5678</b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('b')[0].lastChild, 4);
 	editor.selection.setRng(rng);
-	ok(!editor.formatter.match({inline : 'b'}), 'Selected partial style element (end)');
+	ok(!editor.formatter.match('bold'), 'Selected partial style element (end)');
 
 	// Selected element text with parent inline element
+	editor.formatter.register('bold', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match({inline : 'b'}), 'Selected element text with parent inline element');
+	ok(editor.formatter.match('bold'), 'Selected element text with parent inline element');
 
 	// Selected element match with variable
+	editor.formatter.register('complex', {inline : 'span', styles : {color : '%color'}});
 	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	ok(editor.formatter.match({inline : 'span', styles : {color : '%color'}}, {color : '#ff0000'}), 'Selected element match with variable');
+	ok(editor.formatter.match('complex', {color : '#ff0000'}), 'Selected element match with variable');
 
 	// Selected element match with variable and function
-	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
-	editor.selection.setRng(rng);
-	ok(editor.formatter.match({
+	editor.formatter.register('complex', {
 		inline : 'span',
 		styles : {
 			color : function(vars) {
 				return vars.color + '00';
 			}
 		}
-	}, {color : '#ff00'}), 'Selected element match with variable and function');
+	});
+	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	ok(editor.formatter.match('complex', {color : '#ff00'}), 'Selected element match with variable and function');
 });
 
 tinyMCE.init({

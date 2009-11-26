@@ -215,7 +215,7 @@
 				title : 'advanced.style_select',
 				onselect : function(fmt) {
 					ed.focus();
-					ed.formatter.toggle(fmt);
+					//ed.formatter.toggle(fmt);
 
 					return false; // No auto select
 				}
@@ -896,10 +896,10 @@
 				t._importClasses();
 
 				// Check each format and update
-				c.select(function(fmt) {
+			/*	c.select(function(fmt) {
 					if (fmt)
 						return !!ed.formatter.match(fmt);
-				});
+				});*/
 			}
 
 			if (c = cm.get('formatselect')) {
@@ -953,6 +953,9 @@
 				getParent(function(n) {
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
+					/*if (n.getAttribute('_mce_bogus'))
+						return;
+*/
 					// Ignore non element and hidden elements
 					if (n.nodeType != 1 || n.nodeName === 'BR' || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
 						return;

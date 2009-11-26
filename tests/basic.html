@@ -299,7 +299,7 @@ test('commands - removeFormat', function() {
 	editor.setContent('<p><span>test<span id="x">test <strong>123</strong></span><a href="123">123</a> 123</span></p>');
 	editor.selection.select(editor.dom.get('x'));
 	editor.execCommand('RemoveFormat');
-	equals(editor.getContent(), '<p><span>test</span><span id=\"x\">test </span>123<span><a href=\"123\">123</a> 123</span></p>');
+	equals(editor.getContent(), '<p><span>test<span id="x">test 123</span><a href="123">123</a> 123</span></p>');
 });
 
 test('commands - customCommands', function() {

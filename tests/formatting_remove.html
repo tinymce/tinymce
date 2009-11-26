@@ -18,84 +18,87 @@ test('Formatter - remove', function() {
 	expect(14);
 
 	// Inline element on selected text
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234</b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p>1234</p>', 'Inline element on selected text');
 
 	// Inline element on selected text with remove=all
+	editor.formatter.register('format', {selector : 'b', remove : 'all'});
 	editor.getBody().innerHTML = '<p><b title="text">1234</b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({selector : 'b', remove : 'all'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p>1234</p>', 'Inline element on selected text with remove=all');
 
 	// Inline element on selected text with remove=none
+	editor.formatter.register('format', {selector : 'span', styles : {fontWeight : 'bold'}, remove : 'none'});
 	editor.getBody().innerHTML = '<p><span style="font-weight:bold">1234</span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0], 0);
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({selector : 'span', styles : {fontWeight : 'bold'}, remove : 'none'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><span>1234</span></p>', 'Inline element on selected text with remove=none');
 
 	// Partially selected inline element text
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234</b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('b')[0].firstChild, 2);
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><b>12</b>34</p>', 'Partially selected inline element text');
 
 	// Partially selected inline element text with children
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('span')[0].firstChild, 2);
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><b><em><span>12</span></em></b><em><span>34</span></em></p>', 'Partially selected inline element text with children');
 
 	// Partially selected inline element text with complex children
+	editor.formatter.register('format', {inline : 'span', styles : {fontWeight : 'bold'}});
 	editor.getBody().innerHTML = '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('span')[1].firstChild, 2);
 	rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'span', styles : {fontWeight : 'bold'}});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span></em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
 
 	// Inline elements with exact flag
+	editor.formatter.register('format', {inline : 'span', styles : {color : '#ff0000'}, exact : true});
 	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0], 0);
 	rng.setEnd(editor.dom.select('p')[0], 2);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'span', styles : {color : '#ff0000'}, exact : true});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with exact flag');
 
 	// Inline elements with variables
+	editor.formatter.register('format', {inline : 'span', styles : {color : '%color'}, exact : true});
 	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0], 0);
 	rng.setEnd(editor.dom.select('p')[0], 2);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'span', styles : {color : '%color'}, exact : true}, {color : '#ff0000'});
+	editor.formatter.remove('format', {color : '#ff0000'});
 	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements on selected text with variables');
 
 	// Inline elements with functions and variables
-	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0], 0);
-	rng.setEnd(editor.dom.select('p')[0], 2);
-	editor.selection.setRng(rng);
-	editor.formatter.remove({
+	editor.formatter.register('format', {
 		inline : 'span',
 		styles : {
 			color : function(vars) {
@@ -103,54 +106,65 @@ test('Formatter - remove', function() {
 			}
 		},
 		exact : true
-	}, {
+	});
+	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 2);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format', {
 		color : '#ff00'
 	});
 	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with functions and variables');
 
 	// End within start element
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234<b>5678</b></b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0], 0);
 	rng.setEnd(editor.dom.select('b')[0], 2);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p>12345678</p>', 'End within start element');
 
 	// Start and end within similar format 1
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><b>1234<b>5678</b></b></em></b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('em')[0], 0);
 	rng.setEnd(editor.dom.select('b')[1], 2);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>12345678</em></p>', 'Start and end within similar format 1');
 
 	// Start and end within similar format 2
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><b>1234</b><b>5678</b></em></b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('em')[0], 0);
 	rng.setEnd(editor.dom.select('em')[0], 1);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>1234</em><b><em><b>5678</b></em></b></p>', 'Start and end within similar format 2');
 
 	// Start and end within similar format 3
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><b>1234</b></em></b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('em')[0], 0);
 	rng.setEnd(editor.dom.select('em')[0], 1);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>1234</em></p>', 'Start and end within similar format 3');
 
 	// End within start
+	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em>x<b>abc</b>y</em></b></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0], 0);
 	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
 	editor.selection.setRng(rng);
-	editor.formatter.remove({inline : 'b'});
+	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>x</em><em>abc</em><b><em>y</em></b></p>', 'End within start');
 });
 

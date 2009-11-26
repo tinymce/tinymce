@@ -434,65 +434,6 @@
 				keep_styles : 1,
 				fix_table_elements : 1,
 				inline_styles : 1,
-
-				// Default formats
-				removeformat : [
-					{selector : 'b,strong,em,i,font,u,strike', remove : 'all'},
-					{selector : 'span', attributes : ['style', 'class']},
-					{selector : '*', attributes : ['style', 'class'], remove : 'none'}
-				],
-
-				align_formats : {
-					left : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'left'}},
-						{selector : 'img,table', styles : {'float' : 'left', display : '', marginLeft : '', marginRight : ''}}
-					],
-
-					center : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'center'}},
-						{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}},
-						{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
-					],
-
-					right : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'right'}},
-						{selector : 'img,table', styles : {'float' : 'right', display : '', marginLeft : '', marginRight : ''}}
-					],
-
-					full : [
-						{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', block : s.forced_root_block || 'p', styles : {textAlign : 'justify'}}
-					]
-				},
-
-				bold_format : [
-					{inline : 'strong'},
-					{inline : 'span', styles : {fontWeight : 'bold'}},
-					{inline : 'b'}
-				],
-
-				italic_format : [
-					{inline : 'em'},
-					{inline : 'span', styles : {fontStyle : 'italic'}},
-					{inline : 'i'}
-				],
-
-				underline_format : [
-					{inline : 'span', styles : {textDecoration : 'underline'}, exact : true},
-					{inline : 'u'}
-				],
-
-				strikethrough_format : [
-					{inline : 'span', styles : {textDecoration : 'line-through'}, exact : true},
-					{inline : 'u'}
-				],
-
-				forecolor_format : {inline : 'span', styles : {color : '%value'}},
-				hilitecolor_format : {inline : 'span', styles : {backgroundColor : '%value'}},
-				fontname_format : {inline : 'span', styles : {fontFamily : '%value'}},
-				fontsize_format : {inline : 'span', styles : {fontSize : '%value'}},
-				blockquote_format : {block : 'blockquote', wrapper : 1},
-				unorderedlist_format : {list_block : 'ul', replace : 'ol', list_item : 'li'},
-				orderedlist_format : {list_block : 'ol', replace : 'ul', list_item : 'li'}
 			}, s);
 
 			/**
@@ -935,6 +876,71 @@
 			 * @type tinymce.Formatter
 			 */
 			t.formatter = new tinymce.Formatter(this);
+
+			// Register default formats
+			t.formatter.register({
+				alignleft : [
+					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},
+					{selector : 'img,table', styles : {'float' : 'left', display : '', marginLeft : '', marginRight : ''}}
+				],
+
+				aligncenter : [
+					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'center'}},
+					{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}},
+					{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
+				],
+
+				alignright : [
+					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'right'}},
+					{selector : 'img,table', styles : {'float' : 'right', display : '', marginLeft : '', marginRight : ''}}
+				],
+
+				alignfull : [
+					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'justify'}}
+				],
+
+				bold : [
+					{inline : 'strong'},
+					{inline : 'span', styles : {fontWeight : 'bold'}},
+					{inline : 'b'}
+				],
+
+				italic : [
+					{inline : 'em'},
+					{inline : 'span', styles : {fontStyle : 'italic'}},
+					{inline : 'i'}
+				],
+
+				underline : [
+					{inline : 'span', styles : {textDecoration : 'underline'}, exact : true},
+					{inline : 'u'}
+				],
+
+				strikethrough : [
+					{inline : 'span', styles : {textDecoration : 'line-through'}, exact : true},
+					{inline : 'u'}
+				],
+
+				forecolor : {inline : 'span', styles : {color : '%value'}},
+				hilitecolor : {inline : 'span', styles : {backgroundColor : '%value'}},
+				fontname : {inline : 'span', styles : {fontFamily : '%value'}},
+				fontsize : {inline : 'span', styles : {fontSize : '%value'}},
+				blockquote : {block : 'blockquote', wrapper : 1},
+
+				removeformat : [
+					{selector : 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false},
+					{selector : 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false},
+					{selector : '*', attributes : ['style', 'class'], expand : false}
+				]
+			});
+
+			// Register default block formats
+			each('p h1 h2 h3 h4 h5 h6 div address pre'.split(/\s/), function(name) {
+				t.formatter.register(name, {block : name});
+			});
+
+			// Register user defined formats
+			t.formatter.register(t.settings.formats);
 
 			/**
 			 * Undo manager instance, responsible for handling undo levels. 

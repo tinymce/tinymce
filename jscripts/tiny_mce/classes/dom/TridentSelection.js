@@ -228,17 +228,8 @@
 
 			// If same text container then we can do a more simple move
 			if (sc == ec && sc.nodeType == 3) {
-				if (eo == so) {
-					// Hack to force IE to not auto move the caret into the closest inline element
-					sc.insertData(so, invisibleChar);
-					ieRng.move('character', 1);
-					ieRng.select();
-					sc.deleteData(so, 1);
-				} else {
-					ieRng.moveEnd('character', eo - so);
-					ieRng.select();
-				}
-
+				ieRng.moveEnd('character', eo - so);
+				ieRng.select();
 				ieRng.scrollIntoView();
 				return;
 			}

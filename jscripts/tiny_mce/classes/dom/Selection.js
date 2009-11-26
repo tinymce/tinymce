@@ -229,14 +229,14 @@
 		 * can then be used to restore the selection after some content modification to the document.
 		 *
 		 * @method getBookmark
-		 * @param {Boolean} simple Optional state if the bookmark should be simple or not. Default is complex.
+		 * @param {Number} type Optional state if the bookmark should be simple or not. Default is complex.
 		 * @param {Boolean} normalized Optional state that enables you to get a position that it would be after normalization.
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
 		 */
-		getBookmark : function(simple, normalized) {
+		getBookmark : function(type, normalized) {
 			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF', styles;
 
-			if (simple == 2) {
+			if (type == 2) {
 				function getLocation() {
 					var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
 
@@ -288,28 +288,28 @@
 			}
 
 			// Handle simple range
-			if (simple)
+			if (type)
 				return {rng : t.getRng()};
 
 			rng = t.getRng();
 			id = dom.uniqueId();
 			collapsed = tinyMCE.activeEditor.selection.isCollapsed();
+			styles = 'overflow:hidden;line-height:0px';
 
 			// Explorer method
 			if (rng.duplicate || rng.item) {
 				// Text selection
 				if (!rng.item) {
 					rng2 = rng.duplicate();
-					styles = ' style="overflow:hidden;line-height:0px"';
 
 					// Insert start marker
 					rng.collapse();
-					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start"' + styles + '>' + chr + '</span>');
+					rng.pasteHTML('<span _mce_type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
 
 					// Insert end marker
 					if (!collapsed) {
 						rng2.collapse(false);
-						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end"' + styles + '>' + chr + '</span>');
+						rng2.pasteHTML('<span _mce_type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
 					}
 				} else {
 					// Control selection
@@ -331,11 +331,11 @@
 				// Insert end marker
 				if (!collapsed) {
 					rng2.collapse(false);
-					rng2.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_end', style : 'display:none'}, chr));
+					rng2.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_end', style : styles}, chr));
 				}
 
 				rng.collapse(true);
-				rng.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_start', style : 'display:none'}, chr));
+				rng.insertNode(dom.create('span', {_mce_type : "bookmark", id : id + '_start', style : styles}, chr));
 			}
 
 			t.moveToBookmark({id : id, keep : 1});
@@ -351,7 +351,7 @@
 		 * @return {Boolean} true/false if it was successful or not.
 		 */
 		moveToBookmark : function(bookmark) {
-			var t = this, dom = t.dom, marker1, marker2, rng;
+			var t = this, dom = t.dom, marker1, marker2, rng, root;
 
 			// Clear selection cache
 			if (t.tridentSel)
@@ -360,7 +360,7 @@
 			if (bookmark) {
 				if (bookmark.start) {
 					rng = dom.createRng();
-					var root = dom.getRoot();
+					root = dom.getRoot();
 
 					function setEndPoint(start) {
 						var point = bookmark[start ? 'start' : 'end'], i, node, offset;
@@ -398,34 +398,37 @@
 				} else if (bookmark.id) {
 					rng = dom.createRng();
 
-					function restoreEndPoint(suffix, child_name, sibling_name) {
-						var marker = dom.get(bookmark.id + '_' + suffix), selectNode, node, idx, next, prev;
+					function restoreEndPoint(suffix) {
+						var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
 
 						if (marker) {
-							// Walk in if we can WebKit and IE does this automatically so lets do it manually for the others
-							selectNode = marker;
-							for (node = marker[sibling_name]; node && node.nodeType == 1; node = node[child_name])
-								selectNode = node;
-
-							node = selectNode.parentNode;
+							node = marker.parentNode;
 
 							if (suffix == 'start') {
-								idx = dom.nodeIndex(selectNode);
+								if (!keep) {
+									idx = dom.nodeIndex(marker);
 
-								if (idx > 0 && selectNode == marker)
-									idx++;
+									if (idx > 0)
+										idx++;
+								} else {
+									node = marker;
+									idx = 1;
+								}
 
 								rng.setStart(node, idx);
 								rng.setEnd(node, idx);
 							} else {
-								idx = dom.nodeIndex(selectNode);
-								if (bookmark.keep || selectNode != marker)
-									idx++;
+								if (!keep) {
+									idx = dom.nodeIndex(marker);
+								} else {
+									node = marker;
+									idx = 1;
+								}
 
 								rng.setEnd(node, idx);
 							}
 
-							if (!bookmark.keep) {
+							if (!keep) {
 								prev = marker.previousSibling;
 								next = marker.nextSibling;
 								dom.remove(marker);
@@ -447,8 +450,8 @@
 					};
 
 					// Restore start/end points
-					restoreEndPoint('start', 'firstChild', 'nextSibling');
-					restoreEndPoint('end', 'lastChild', 'previousSibling');
+					restoreEndPoint('start');
+					restoreEndPoint('end');
 
 					t.setRng(rng);
 				} else if (bookmark.name) {

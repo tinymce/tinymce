@@ -32,3 +32,4 @@ scrollbar-track-color:#F5F5F5;
 }
 
 img:-moz-broken {-moz-force-broken-image-icon:1; width:24px; height:24px}
+font[face=mceinline] {font-family:inherit !important}
