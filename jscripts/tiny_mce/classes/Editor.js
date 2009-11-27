@@ -433,7 +433,7 @@
 				indentation : '30px',
 				keep_styles : 1,
 				fix_table_elements : 1,
-				inline_styles : 1,
+				inline_styles : 1
 			}, s);
 
 			/**

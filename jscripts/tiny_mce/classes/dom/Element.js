@@ -174,12 +174,14 @@
 					} else
 						b = dom.get(t.blocker);
 
-					dom.setStyle(b, 'left', t.getStyle('left', 1));
-					dom.setStyle(b, 'top', t.getStyle('top', 1));
-					dom.setStyle(b, 'width', t.getStyle('width', 1));
-					dom.setStyle(b, 'height', t.getStyle('height', 1));
-					dom.setStyle(b, 'display', t.getStyle('display', 1));
-					dom.setStyle(b, 'zIndex', parseInt(t.getStyle('zIndex', 1) || 0) - 1);
+					dom.setStyles(b, {
+						left : t.getStyle('left', 1),
+						top : t.getStyle('top', 1),
+						width : t.getStyle('width', 1),
+						height : t.getStyle('height', 1),
+						display : t.getStyle('display', 1),
+						zIndex : parseInt(t.getStyle('zIndex', 1) || 0) - 1
+					});
 				}
 			}
 		});

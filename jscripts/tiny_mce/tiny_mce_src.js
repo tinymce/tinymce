@@ -4943,12 +4943,14 @@ window.tinymce.dom.Sizzle = Sizzle;
 					} else
 						b = dom.get(t.blocker);
 
-					dom.setStyle(b, 'left', t.getStyle('left', 1));
-					dom.setStyle(b, 'top', t.getStyle('top', 1));
-					dom.setStyle(b, 'width', t.getStyle('width', 1));
-					dom.setStyle(b, 'height', t.getStyle('height', 1));
-					dom.setStyle(b, 'display', t.getStyle('display', 1));
-					dom.setStyle(b, 'zIndex', parseInt(t.getStyle('zIndex', 1) || 0) - 1);
+					dom.setStyles(b, {
+						left : t.getStyle('left', 1),
+						top : t.getStyle('top', 1),
+						width : t.getStyle('width', 1),
+						height : t.getStyle('height', 1),
+						display : t.getStyle('display', 1),
+						zIndex : parseInt(t.getStyle('zIndex', 1) || 0) - 1
+					});
 				}
 			}
 		});
@@ -9225,7 +9227,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				indentation : '30px',
 				keep_styles : 1,
 				fix_table_elements : 1,
-				inline_styles : 1,
+				inline_styles : 1
 			}, s);
 
 			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL, {
@@ -13708,7 +13710,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		};
 
 		function performCaretAction(type, name, vars) {
-			var i, rng, selectedNode = selection.getNode(),
+			var i, rng, selectedNode = selection.getNode().parentNode,
 				doc = ed.getDoc(), marker = 'mceinline',
 				events = ['onKeyDown', 'onKeyUp', 'onKeyPress'],
 				currentPendingFormats = pendingFormats[type],

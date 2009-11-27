@@ -18,7 +18,7 @@
 		var grid, startPos, endPos, selectedCell;
 
 		buildGrid();
-		selectedCell = dom.getParent(selection.getNode(), 'th,td');
+		selectedCell = dom.getParent(selection.getStart(), 'th,td');
 		if (selectedCell) {
 			startPos = getPos(selectedCell);
 			endPos = findEndPos();
@@ -728,10 +728,22 @@
 				ed.addButton(c[0], {title : c[1], cmd : c[2], ui : c[3]});
 			});
 
+			// Select whole table is a table border is clicked
+			if (!tinymce.isIE) {
+				ed.onClick.add(function(ed, e) {
+					e = e.target;
+
+					if (e.nodeName === 'TABLE')
+						ed.selection.select(e);
+				});
+			}
+
 			// Handle node change updates
 			ed.onNodeChange.add(function(ed, cm, n) {
-				var p = ed.dom.getParent(n, 'td,th,caption');
+				var p;
 
+				n = ed.selection.getStart();
+				p = ed.dom.getParent(n, 'td,th,caption');
 				cm.setActive('table', n.nodeName === 'TABLE' || !!p);
 
 				// Disable table tools if we are in caption
@@ -796,24 +808,64 @@
 				});
 
 				ed.onMouseUp.add(function(ed, e) {
-					var rng, sel = ed.selection;
+					var rng, sel = ed.selection, selectedCells, nativeSel = sel.getSel(), walker, node, lastNode, endNode;
 
 					// Move selection to startCell
 					if (startCell) {
 						if (tableGrid)
 							ed.getBody().style.webkitUserSelect = '';
 
-						startCell = dom.select('td.mceSelected,th.mceSelected')[0];
-						if (startCell) {
-							sel.select(startCell, true);
-							ed.nodeChanged();
+						function setPoint(node, start) {
+							var walker = new tinymce.dom.TreeWalker(node, node);
+
+							do {
+								// Text node
+								if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length != 0) {
+									if (start)
+										rng.setStart(node, 0);
+									else
+										rng.setEnd(node, node.nodeValue.length);
+
+									return;
+								}
+
+								// BR element
+								if (node.nodeName == 'BR') {
+									if (start)
+										rng.setStartBefore(node);
+									else
+										rng.setEndBefore(node);
+
+									return;
+								}
+							} while (node = (start ? walker.next() : walker.prev()));
+						};
+
+						// Try to expand text selection as much as we can only Gecko supports cell selection
+						selectedCells = dom.select('td.mceSelected,th.mceSelected');
+						if (selectedCells.length > 0) {
+							rng = dom.createRng();
+							node = selectedCells[0];
+							endNode = selectedCells[selectedCells.length - 1];
+
+							setPoint(node, 1);
+							walker = new tinymce.dom.TreeWalker(node, dom.getParent(selectedCells[0], 'table'));
+
+							do {
+								if (node.nodeName == 'TD' || node.nodeName == 'TH') {
+									if (!dom.hasClass(node, 'mceSelected'))
+										break;
+
+									lastNode = node;
+								}
+							} while (node = walker.next());
+
+							setPoint(lastNode);
+
+							sel.setRng(rng);
 						}
 
-						// Remove table selection on Gecko select the text of the first selected cell
-						rng = sel.getRng();
-						if (rng.startContainer && rng.startContainer.nodeName == 'TR')
-							sel.select(rng.startContainer.childNodes[rng.startOffset], 1);
-
+						ed.nodeChanged();
 						startCell = tableGrid = startTable = null;
 					}
 				});
@@ -872,6 +924,58 @@
 						} else
 							m.add({title : 'table.desc', icon : 'table', cmd : 'mceInsertTable'});
 					});
+				}
+
+				// Fixes an issue on Gecko where it's impossible to place the caret behind a table
+				// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled
+				if (!tinymce.isIE) {
+					function fixTableCaretPos() {
+						var last = ed.getBody().lastChild;
+
+						if (last && last.nodeName == 'TABLE')
+							ed.dom.add(ed.getBody(), 'p', null, '<br mce_bogus="1" />');
+					};
+
+					// Fixes an bug where it's impossible to place the caret before a table in Gecko
+					// this fix solves it by detecting when the caret is at the beginning of such a table
+					// and then manually moves the caret infront of the table
+					if (tinymce.isGecko) {
+						ed.onKeyDown.add(function(ed, e) {
+							var rng, table, dom = ed.dom;
+
+							// On gecko it's not possible to place the caret before a table
+							if (e.keyCode == 37 || e.keyCode == 38) {
+								rng = ed.selection.getRng();
+								table = dom.getParent(rng.startContainer, 'table');
+
+								if (table && ed.getBody().firstChild == table) {
+									if (isAtStart(rng, table)) {
+										rng = dom.createRng();
+
+										rng.setStartBefore(table);
+										rng.setEndBefore(table);
+
+										ed.selection.setRng(rng);
+
+										e.preventDefault();
+									}
+								}
+							}
+						});
+					}
+
+					ed.onKeyUp.add(fixTableCaretPos);
+					ed.onSetContent.add(fixTableCaretPos);
+					ed.onVisualAid.add(fixTableCaretPos);
+
+					ed.onPreProcess.add(function(ed, o) {
+						var last = o.node.lastChild;
+
+						if (last && last.childNodes.length == 1 && last.firstChild.nodeName == 'BR')
+							ed.dom.remove(last);
+					});
+
+					fixTableCaretPos();
 				}
 			});
 

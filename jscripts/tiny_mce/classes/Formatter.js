@@ -1231,7 +1231,7 @@
 		};
 
 		function performCaretAction(type, name, vars) {
-			var i, rng, selectedNode = selection.getNode(),
+			var i, rng, selectedNode = selection.getNode().parentNode,
 				doc = ed.getDoc(), marker = 'mceinline',
 				events = ['onKeyDown', 'onKeyUp', 'onKeyPress'],
 				currentPendingFormats = pendingFormats[type],

@@ -11,7 +11,7 @@ function init() {
 	document.getElementById('bgcolor_pickcontainer').innerHTML = getColorPickerHTML('bgcolor_pick','bgcolor')
 
 	var inst = ed;
-	var tdElm = ed.dom.getParent(ed.selection.getNode(), "td,th");
+	var tdElm = ed.dom.getParent(ed.selection.getStart(), "td,th");
 	var formObj = document.forms[0];
 	var st = ed.dom.parseStyle(ed.dom.getAttrib(tdElm, "style"));
 
@@ -61,7 +61,7 @@ function updateAction() {
 	var el, inst = ed, tdElm, trElm, tableElm, formObj = document.forms[0];
 
 	tinyMCEPopup.restoreSelection();
-	el = ed.selection.getNode();
+	el = ed.selection.getStart();
 	tdElm = ed.dom.getParent(el, "td,th");
 	trElm = ed.dom.getParent(el, "tr");
 	tableElm = ed.dom.getParent(el, "table");
