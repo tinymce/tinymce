@@ -97,35 +97,6 @@
 
 			t.settings = s;
 
-			// If page not loaded and strict mode isn't enabled then load them
-			if (!Event.domLoaded && !s.strict_loading_mode) {
-				// Load language
-				if (s.language)
-					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
-
-				// Load theme
-				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
-					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
-
-				// Load plugins
-				if (s.plugins) {
-					pl = explode(s.plugins);
-
-					// Load rest if plugins
-					each(pl, function(v) {
-						if (v && v.charAt(0) != '-' && !PluginManager.urls[v]) {
-							// Skip safari plugin for other browsers
-							if (!tinymce.isWebKit && v == 'safari')
-								return;
-
-							PluginManager.load(v, 'plugins/' + v + '/editor_plugin' + tinymce.suffix + '.js');
-						}
-					});
-				}
-
-				sl.loadQueue();
-			}
-
 			// Legacy call
 			Event.add(document, 'init', function() {
 				var l, co;

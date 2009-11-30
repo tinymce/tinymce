@@ -6664,276 +6664,143 @@ window.tinymce.dom.Sizzle = Sizzle;
 	});
 })(tinymce);
 (function(tinymce) {
-	var each = tinymce.each, Event = tinymce.dom.Event;
+	tinymce.dom.ScriptLoader = function(settings) {
+		var LOADING = 1,
+			LOADED = 2,
+			states = {},
+			queue = [];
 
-	tinymce.create('tinymce.dom.ScriptLoader', {
-		ScriptLoader : function(s) {
-			this.settings = s || {};
-			this.queue = [];
-			this.lookup = {};
-		},
+		function loadScript(url, callback) {
+			var t = this, dom = tinymce.DOM, elm, uri, loc, id;
 
-		isDone : function(u) {
-			return this.lookup[u] ? this.lookup[u].state == 2 : 0;
-		},
+			// Execute callback when script is loaded
+			function done() {
+				dom.remove(id);
 
-		markDone : function(u) {
-			this.lookup[u] = {state : 2, url : u};
-		},
+				if (elm)
+					elm.onreadystatechange = elm.onload = elm = null;
 
-		add : function(u, cb, s, pr) {
-			var t = this, lo = t.lookup, o;
+				callback();
+			};
 
-			if (o = lo[u]) {
-				// Is loaded fire callback
-				if (cb && o.state == 2)
-					cb.call(s || this);
+			id = dom.uniqueId();
 
-				return o;
-			}
+			if (tinymce.isIE6) {
+				uri = new tinymce.util.URI(url);
+				loc = location;
 
-			o = {state : 0, url : u, func : cb, scope : s || this};
-
-			if (pr)
-				t.queue.unshift(o);
-			else
-				t.queue.push(o);
-
-			lo[u] = o;
-
-			return o;
-		},
-
-		load : function(u, cb, s) {
-			var t = this, o;
-
-			if (o = t.lookup[u]) {
-				// Is loaded fire callback
-				if (cb && o.state == 2)
-					cb.call(s || t);
-
-				return o;
-			}
-
-			function loadScript(u) {
-				if (Event.domLoaded || t.settings.strict_mode) {
+				// If script is from same domain and we
+				// use IE 6 then use XHR since it's more reliable
+				if (uri.host == loc.hostname && uri.port == loc.port && (uri.protocol + ':') == loc.protocol) {
 					tinymce.util.XHR.send({
-						url : tinymce._addVer(u),
-						error : t.settings.error,
-						async : false,
-						success : function(co) {
-							t.eval(co);
+						url : tinymce._addVer(uri.getURI()),
+						success : function(content) {
+							// Create new temp script element
+							var script = dom.create('script', {
+								type : 'text/javascript'
+							});
+
+							// Evaluate script in global scope
+							script.text = content;
+							document.getElementsByTagName('head')[0].appendChild(script);
+							dom.remove(script);
+
+							done();
 						}
 					});
-				} else
-					document.write('<script type="text/javascript" src="' + tinymce._addVer(u) + '"></script>');
-			};
 
-			if (!tinymce.is(u, 'string')) {
-				each(u, function(u) {
-					loadScript(u);
-				});
-
-				if (cb)
-					cb.call(s || t);
-			} else {
-				loadScript(u);
-
-				if (cb)
-					cb.call(s || t);
+					return;
+				}
 			}
-		},
 
-		loadQueue : function(cb, s) {
-			var t = this;
-
-			if (!t.queueLoading) {
-				t.queueLoading = 1;
-				t.queueCallbacks = [];
-
-				t.loadScripts(t.queue, function() {
-					t.queueLoading = 0;
-
-					if (cb)
-						cb.call(s || t);
-
-					each(t.queueCallbacks, function(o) {
-						o.func.call(o.scope);
-					});
-				});
-			} else if (cb)
-				t.queueCallbacks.push({func : cb, scope : s || t});
-		},
-
-		eval : function(co) {
-			var w = window;
-
-			// Evaluate script
-			if (!w.execScript) {
-				try {
-					eval.call(w, co);
-				} catch (ex) {
-					eval(co, w); // Firefox 3.0a8
-				}
-			} else
-				w.execScript(co); // IE
-		},
-
-		loadScripts : function(sc, cb, s) {
-			var t = this, lo = t.lookup;
-
-			function done(o) {
-				o.state = 2; // Has been loaded
-
-				// Run callback
-				if (o.func)
-					o.func.call(o.scope || t);
-			};
-
-			function allDone() {
-				var l;
-
-				// Check if all files are loaded
-				l = sc.length;
-				each(sc, function(o) {
-					o = lo[o.url];
-
-					if (o.state === 2) {// It has finished loading
-						done(o);
-						l--;
-					} else
-						load(o);
-				});
-
-				// They are all loaded
-				if (l === 0 && cb) {
-					cb.call(s || t);
-					cb = 0;
-				}
-			};
-
-			function load(o) {
-				if (o.state > 0)
-					return;
-
-				o.state = 1; // Is loading
-
-				tinymce.dom.ScriptLoader.loadScript(o.url, function() {
-					done(o);
-					allDone();
-				});
-
-				/*
-				tinymce.util.XHR.send({
-					url : o.url,
-					error : t.settings.error,
-					success : function(co) {
-						t.eval(co);
-						done(o);
-						allDone();
-					}
-				});
-				*/
-			};
-
-			each(sc, function(o) {
-				var u = o.url;
-
-				// Add to queue if needed
-				if (!lo[u]) {
-					lo[u] = o;
-					t.queue.push(o);
-				} else
-					o = lo[u];
-
-				// Is already loading or has been loaded
-				if (o.state > 0)
-					return;
-
-				if (!Event.domLoaded && !t.settings.strict_mode) {
-					var ix, ol = '';
-
-					// Add onload events
-					if (cb || o.func) {
-						o.state = 1; // Is loading
-
-						ix = tinymce.dom.ScriptLoader._addOnLoad(function() {
-							done(o);
-							allDone();
-						});
-
-						if (tinymce.isIE)
-							ol = ' onreadystatechange="';
-						else
-							ol = ' onload="';
-
-						ol += 'tinymce.dom.ScriptLoader._onLoad(this,\'' + u + '\',' + ix + ');"';
-					}
-
-					document.write('<script type="text/javascript" src="' + tinymce._addVer(u) + '"' + ol + '></script>');
-
-					if (!o.func)
-						done(o);
-				} else
-					load(o);
+			// Create new script element
+			elm = dom.create('script', {
+				id : id,
+				type : 'text/javascript',
+				src : tinymce._addVer(url)
 			});
 
-			allDone();
-		},
+			// Add onload and readystate listeners
+			elm.onload = done;
+			elm.onreadystatechange = function() {
+				var state = elm.readyState;
 
-		// Static methods
-		'static' : {
-			_addOnLoad : function(f) {
-				var t = this;
+				// Loaded state is passed on IE 6 however there
+				// are known issues with this method but we can't use
+				// XHR in a cross domain loading
+				if (state == 'complete' || state == 'loaded')
+					done();
+			};
 
-				t._funcs = t._funcs || [];
-				t._funcs.push(f);
+			// Add script to document
+			(document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
+		};
 
-				return t._funcs.length - 1;
-			},
+		this.isDone = function(url) {
+			return states[url] == LOADED;
+		};
 
-			_onLoad : function(e, u, ix) {
-				if (!tinymce.isIE || e.readyState == 'complete')
-					this._funcs[ix].call(this);
-			},
+		this.markDone = function(url) {
+			states[url] = LOADED;
+		};
 
-			loadScript : function(u, cb) {
-				var id = tinymce.DOM.uniqueId(), e;
+		this.add = this.load = function(url, callback, scope) {
+			var item;
 
-				function done() {
-					Event.clear(id);
-					tinymce.DOM.remove(id);
+			item = {
+				url : url,
+				func : callback,
+				scope : scope || this
+			};
 
-					if (cb) {
-						cb.call(document, u);
-						cb = 0;
+			queue.push(item);
+		};
+
+		this.loadQueue = function(callback, scope) {
+			this.loadScripts(queue, callback, scope);
+		};
+
+		this.loadScripts = function(scripts, callback, scope) {
+			var t = this;
+
+			scope = scope || t;
+
+			function isDone() {
+				var count = 0;
+
+				tinymce.each(scripts, function(item) {
+					if (t.isDone(item.url))
+						count++;
+				});
+
+				return scripts.length == count;
+			};
+
+			(function loadScripts() {
+				tinymce.each(scripts, function(script) {
+					var url = script.url;
+
+					if (!states[url]) {
+						states[url] = LOADING;
+
+						loadScript(url, function() {
+							states[url] = LOADED;
+
+							// Execute item callback
+							if (script.func)
+								script.func.call(script.scope);
+
+							if (isDone()) {
+								if (callback)
+									callback.call(scope);
+							} else
+								loadScripts();
+						});
 					}
-				};
-
-				if (tinymce.isIE) {
-/*					Event.add(e, 'readystatechange', function(e) {
-						if (e.target && e.target.readyState == 'complete')
-							done();
-					});*/
-
-					tinymce.util.XHR.send({
-						url : tinymce._addVer(u),
-						async : false,
-						success : function(co) {
-							window.execScript(co);
-							done();
-						}
-					});
-				} else {
-					e = tinymce.DOM.create('script', {id : id, type : 'text/javascript', src : tinymce._addVer(u)});
-					Event.add(e, 'load', done);
-
-					// Check for head or body
-					(document.getElementsByTagName('head')[0] || document.body).appendChild(e);
-				}
-			}
-		}
-	});
+				});
+			})();
+		};
+	};
 
 	// Global script loader
 	tinymce.ScriptLoader = new tinymce.dom.ScriptLoader();
@@ -8703,16 +8570,10 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		requireLangPack : function(n) {
-			var u, s = tinymce.EditorManager.settings;
+			var s = tinymce.EditorManager.settings;
 
-			if (s && s.language) {
-				u = this.urls[n] + '/langs/' + s.language + '.js';
-
-				if (!tinymce.dom.Event.domLoaded && !s.strict_mode)
-					tinymce.ScriptLoader.load(u);
-				else
-					tinymce.ScriptLoader.add(u);
-			}
+			if (s && s.language)
+				tinymce.ScriptLoader.add(this.urls[n] + '/langs/' + s.language + '.js');
 		},
 
 		add : function(id, o) {
@@ -8800,35 +8661,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			}, s);
 
 			t.settings = s;
-
-			// If page not loaded and strict mode isn't enabled then load them
-			if (!Event.domLoaded && !s.strict_loading_mode) {
-				// Load language
-				if (s.language)
-					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
-
-				// Load theme
-				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
-					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
-
-				// Load plugins
-				if (s.plugins) {
-					pl = explode(s.plugins);
-
-					// Load rest if plugins
-					each(pl, function(v) {
-						if (v && v.charAt(0) != '-' && !PluginManager.urls[v]) {
-							// Skip safari plugin for other browsers
-							if (!tinymce.isWebKit && v == 'safari')
-								return;
-
-							PluginManager.load(v, 'plugins/' + v + '/editor_plugin' + tinymce.suffix + '.js');
-						}
-					});
-				}
-
-				sl.loadQueue();
-			}
 
 			// Legacy call
 			Event.add(document, 'init', function() {
