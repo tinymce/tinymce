@@ -1,436 +1,436 @@
-var tinymce = {
-	majorVersion : '@@tinymce_major_version@@',
-	minorVersion : '@@tinymce_minor_version@@',
-	releaseDate : '@@tinymce_release_date@@',
+(function() {
+	var whiteSpaceRe = /^\s*|\s*$/g,
+		undefined;
 
-	_init : function() {
-		var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
+	window.tinymce = {
+		majorVersion : '@@tinymce_major_version@@',
+		minorVersion : '@@tinymce_minor_version@@',
+		releaseDate : '@@tinymce_release_date@@',
 
-		t.isOpera = w.opera && opera.buildNumber;
+		_init : function() {
+			var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
 
-		t.isWebKit = /WebKit/.test(ua);
+			t.isOpera = w.opera && opera.buildNumber;
 
-		t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName);
+			t.isWebKit = /WebKit/.test(ua);
 
-		t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
+			t.isIE = !t.isWebKit && !t.isOpera && (/MSIE/gi).test(ua) && (/Explorer/gi).test(na.appName);
 
-		t.isGecko = !t.isWebKit && /Gecko/.test(ua);
+			t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
 
-		t.isMac = ua.indexOf('Mac') != -1;
+			t.isGecko = !t.isWebKit && /Gecko/.test(ua);
 
-		t.isAir = /adobeair/i.test(ua);
+			t.isMac = ua.indexOf('Mac') != -1;
 
-		// TinyMCE .NET webcontrol might be setting the values for TinyMCE
-		if (w.tinyMCEPreInit) {
-			t.suffix = tinyMCEPreInit.suffix;
-			t.baseURL = tinyMCEPreInit.base;
-			t.query = tinyMCEPreInit.query;
-			return;
-		}
+			t.isAir = /adobeair/i.test(ua);
 
-		// Get suffix and base
-		t.suffix = '';
-
-		// If base element found, add that infront of baseURL
-		nl = d.getElementsByTagName('base');
-		for (i=0; i<nl.length; i++) {
-			if (v = nl[i].href) {
-				// Host only value like http://site.com or http://site.com:8008
-				if (/^https?:\/\/[^\/]+$/.test(v))
-					v += '/';
-
-				base = v ? v.match(/.*\//)[0] : ''; // Get only directory
-			}
-		}
-
-		function getBase(n) {
-			if (n.src && /tiny_mce(|_gzip|_jquery|_prototype)(_dev|_src)?.js/.test(n.src)) {
-				if (/_(src|dev)\.js/g.test(n.src))
-					t.suffix = '_src';
-
-				if ((p = n.src.indexOf('?')) != -1)
-					t.query = n.src.substring(p + 1);
-
-				t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
-
-				// If path to script is relative and a base href was found add that one infront
-				// the src property will always be an absolute one on non IE browsers and IE 8
-				// so this logic will basically only be executed on older IE versions
-				if (base && t.baseURL.indexOf('://') == -1 && t.baseURL.indexOf('/') !== 0)
-					t.baseURL = base + t.baseURL;
-
-				return t.baseURL;
-			}
-
-			return null;
-		};
-
-		// Check document
-		nl = d.getElementsByTagName('script');
-		for (i=0; i<nl.length; i++) {
-			if (getBase(nl[i]))
+			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
+			if (w.tinyMCEPreInit) {
+				t.suffix = tinyMCEPreInit.suffix;
+				t.baseURL = tinyMCEPreInit.base;
+				t.query = tinyMCEPreInit.query;
 				return;
-		}
+			}
 
-		// Check head
-		n = d.getElementsByTagName('head')[0];
-		if (n) {
-			nl = n.getElementsByTagName('script');
+			// Get suffix and base
+			t.suffix = '';
+
+			// If base element found, add that infront of baseURL
+			nl = d.getElementsByTagName('base');
+			for (i=0; i<nl.length; i++) {
+				if (v = nl[i].href) {
+					// Host only value like http://site.com or http://site.com:8008
+					if (/^https?:\/\/[^\/]+$/.test(v))
+						v += '/';
+
+					base = v ? v.match(/.*\//)[0] : ''; // Get only directory
+				}
+			}
+
+			function getBase(n) {
+				if (n.src && /tiny_mce(|_gzip|_jquery|_prototype)(_dev|_src)?.js/.test(n.src)) {
+					if (/_(src|dev)\.js/g.test(n.src))
+						t.suffix = '_src';
+
+					if ((p = n.src.indexOf('?')) != -1)
+						t.query = n.src.substring(p + 1);
+
+					t.baseURL = n.src.substring(0, n.src.lastIndexOf('/'));
+
+					// If path to script is relative and a base href was found add that one infront
+					// the src property will always be an absolute one on non IE browsers and IE 8
+					// so this logic will basically only be executed on older IE versions
+					if (base && t.baseURL.indexOf('://') == -1 && t.baseURL.indexOf('/') !== 0)
+						t.baseURL = base + t.baseURL;
+
+					return t.baseURL;
+				}
+
+				return null;
+			};
+
+			// Check document
+			nl = d.getElementsByTagName('script');
 			for (i=0; i<nl.length; i++) {
 				if (getBase(nl[i]))
 					return;
 			}
-		}
 
-		return;
-	},
-
-	is : function(o, t) {
-		var n = typeof(o);
-
-		if (!t)
-			return n != 'undefined';
-
-		if (t == 'array' && (o.hasOwnProperty && o instanceof Array))
-			return true;
-
-		return n == t;
-	},
-
-	each : function(o, cb, s) {
-		var n, l;
-
-		if (!o)
-			return 0;
-
-		s = s || o;
-
-		if (typeof(o.length) != 'undefined') {
-			// Indexed arrays, needed for Safari
-			for (n=0, l = o.length; n<l; n++) {
-				if (cb.call(s, o[n], n, o) === false)
-					return 0;
+			// Check head
+			n = d.getElementsByTagName('head')[0];
+			if (n) {
+				nl = n.getElementsByTagName('script');
+				for (i=0; i<nl.length; i++) {
+					if (getBase(nl[i]))
+						return;
+				}
 			}
-		} else {
-			// Hashtables
-			for (n in o) {
-				if (o.hasOwnProperty(n)) {
+
+			return;
+		},
+
+		is : function(o, t) {
+			if (!t)
+				return o !== undefined;
+
+			if (t == 'array' && (o.hasOwnProperty && o instanceof Array))
+				return true;
+
+			return typeof(o) == t;
+		},
+
+		each : function(o, cb, s) {
+			var n, l;
+
+			if (!o)
+				return 0;
+
+			s = s || o;
+
+			if (o.length !== undefined) {
+				// Indexed arrays, needed for Safari
+				for (n=0, l = o.length; n < l; n++) {
 					if (cb.call(s, o[n], n, o) === false)
 						return 0;
 				}
-			}
-		}
-
-		return 1;
-	},
-
-
-	map : function(a, f) {
-		var o = [];
-
-		tinymce.each(a, function(v) {
-			o.push(f(v));
-		});
-
-		return o;
-	},
-
-	grep : function(a, f) {
-		var o = [];
-
-		tinymce.each(a, function(v) {
-			if (!f || f(v))
-				o.push(v);
-		});
-
-		return o;
-	},
-
-	inArray : function(a, v) {
-		var i, l;
-
-		if (a) {
-			for (i = 0, l = a.length; i < l; i++) {
-				if (a[i] === v)
-					return i;
-			}
-		}
-
-		return -1;
-	},
-
-	extend : function(o, e) {
-		var i, a = arguments;
-
-		for (i=1; i<a.length; i++) {
-			e = a[i];
-
-			tinymce.each(e, function(v, n) {
-				if (typeof(v) !== 'undefined')
-					o[n] = v;
-			});
-		}
-
-		return o;
-	},
-
-
-	trim : function(s) {
-		return (s ? '' + s : '').replace(/^\s*|\s*$/g, '');
-	},
-
-	create : function(s, p) {
-		var t = this, sp, ns, cn, scn, c, de = 0;
-
-		// Parse : <prefix> <class>:<super class>
-		s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
-		cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
-
-		// Create namespace for new class
-		ns = t.createNS(s[3].replace(/\.\w+$/, ''));
-
-		// Class already exists
-		if (ns[cn])
-			return;
-
-		// Make pure static class
-		if (s[2] == 'static') {
-			ns[cn] = p;
-
-			if (this.onCreate)
-				this.onCreate(s[2], s[3], ns[cn]);
-
-			return;
-		}
-
-		// Create default constructor
-		if (!p[cn]) {
-			p[cn] = function() {};
-			de = 1;
-		}
-
-		// Add constructor and methods
-		ns[cn] = p[cn];
-		t.extend(ns[cn].prototype, p);
-
-		// Extend
-		if (s[5]) {
-			sp = t.resolve(s[5]).prototype;
-			scn = s[5].match(/\.(\w+)$/i)[1]; // Class name
-
-			// Extend constructor
-			c = ns[cn];
-			if (de) {
-				// Add passthrough constructor
-				ns[cn] = function() {
-					return sp[scn].apply(this, arguments);
-				};
 			} else {
-				// Add inherit constructor
-				ns[cn] = function() {
-					this.parent = sp[scn];
-					return c.apply(this, arguments);
-				};
+				// Hashtables
+				for (n in o) {
+					if (o.hasOwnProperty(n)) {
+						if (cb.call(s, o[n], n, o) === false)
+							return 0;
+					}
+				}
 			}
-			ns[cn].prototype[cn] = ns[cn];
 
-			// Add super methods
-			t.each(sp, function(f, n) {
-				ns[cn].prototype[n] = sp[n];
+			return 1;
+		},
+
+
+		map : function(a, f) {
+			var o = [];
+
+			tinymce.each(a, function(v) {
+				o.push(f(v));
 			});
 
-			// Add overridden methods
-			t.each(p, function(f, n) {
-				// Extend methods if needed
-				if (sp[n]) {
-					ns[cn].prototype[n] = function() {
-						this.parent = sp[n];
-						return f.apply(this, arguments);
+			return o;
+		},
+
+		grep : function(a, f) {
+			var o = [];
+
+			tinymce.each(a, function(v) {
+				if (!f || f(v))
+					o.push(v);
+			});
+
+			return o;
+		},
+
+		inArray : function(a, v) {
+			var i, l;
+
+			if (a) {
+				for (i = 0, l = a.length; i < l; i++) {
+					if (a[i] === v)
+						return i;
+				}
+			}
+
+			return -1;
+		},
+
+		extend : function(o, e) {
+			var i, l, a = arguments;
+
+			for (i = 1, l = a.length; i < l; i++) {
+				e = a[i];
+
+				tinymce.each(e, function(v, n) {
+					if (v !== undefined)
+						o[n] = v;
+				});
+			}
+
+			return o;
+		},
+
+
+		trim : function(s) {
+			return (s ? '' + s : '').replace(whiteSpaceRe, '');
+		},
+
+		create : function(s, p) {
+			var t = this, sp, ns, cn, scn, c, de = 0;
+
+			// Parse : <prefix> <class>:<super class>
+			s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
+			cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
+
+			// Create namespace for new class
+			ns = t.createNS(s[3].replace(/\.\w+$/, ''));
+
+			// Class already exists
+			if (ns[cn])
+				return;
+
+			// Make pure static class
+			if (s[2] == 'static') {
+				ns[cn] = p;
+
+				if (this.onCreate)
+					this.onCreate(s[2], s[3], ns[cn]);
+
+				return;
+			}
+
+			// Create default constructor
+			if (!p[cn]) {
+				p[cn] = function() {};
+				de = 1;
+			}
+
+			// Add constructor and methods
+			ns[cn] = p[cn];
+			t.extend(ns[cn].prototype, p);
+
+			// Extend
+			if (s[5]) {
+				sp = t.resolve(s[5]).prototype;
+				scn = s[5].match(/\.(\w+)$/i)[1]; // Class name
+
+				// Extend constructor
+				c = ns[cn];
+				if (de) {
+					// Add passthrough constructor
+					ns[cn] = function() {
+						return sp[scn].apply(this, arguments);
 					};
 				} else {
-					if (n != cn)
-						ns[cn].prototype[n] = f;
-				}
-			});
-		}
-
-		// Add static methods
-		t.each(p['static'], function(f, n) {
-			ns[cn][n] = f;
-		});
-
-		if (this.onCreate)
-			this.onCreate(s[2], s[3], ns[cn].prototype);
-	},
-
-	walk : function(o, f, n, s) {
-		s = s || this;
-
-		if (o) {
-			if (n)
-				o = o[n];
-
-			tinymce.each(o, function(o, i) {
-				if (f.call(s, o, i, n) === false)
-					return false;
-
-				tinymce.walk(o, f, n, s);
-			});
-		}
-	},
-
-	createNS : function(n, o) {
-		var i, v;
-
-		o = o || window;
-
-		n = n.split('.');
-		for (i=0; i<n.length; i++) {
-			v = n[i];
-
-			if (!o[v])
-				o[v] = {};
-
-			o = o[v];
-		}
-
-		return o;
-	},
-
-	resolve : function(n, o) {
-		var i, l;
-
-		o = o || window;
-
-		n = n.split('.');
-		for (i = 0, l = n.length; i < l; i++) {
-			o = o[n[i]];
-
-			if (!o)
-				break;
-		}
-
-		return o;
-	},
-
-	addUnload : function(f, s) {
-		var t = this, w = window;
-
-		f = {func : f, scope : s || this};
-
-		if (!t.unloads) {
-			function unload() {
-				var li = t.unloads, o, n;
-
-				if (li) {
-					// Call unload handlers
-					for (n in li) {
-						o = li[n];
-
-						if (o && o.func)
-							o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
-					}
-
-					// Detach unload function
-					if (w.detachEvent) {
-						w.detachEvent('onbeforeunload', fakeUnload);
-						w.detachEvent('onunload', unload);
-					} else if (w.removeEventListener)
-						w.removeEventListener('unload', unload, false);
-
-					// Destroy references
-					t.unloads = o = li = w = unload = 0;
-
-					// Run garbarge collector on IE
-					if (window.CollectGarbage)
-						window.CollectGarbage();
-				}
-			};
-
-			function fakeUnload() {
-				var d = document;
-
-				// Is there things still loading, then do some magic
-				if (d.readyState == 'interactive') {
-					function stop() {
-						// Prevent memory leak
-						d.detachEvent('onstop', stop);
-
-						// Call unload handler
-						if (unload)
-							unload();
-
-						d = 0;
+					// Add inherit constructor
+					ns[cn] = function() {
+						this.parent = sp[scn];
+						return c.apply(this, arguments);
 					};
-
-					// Fire unload when the currently loading page is stopped
-					if (d)
-						d.attachEvent('onstop', stop);
-
-					// Remove onstop listener after a while to prevent the unload function
-					// to execute if the user presses cancel in an onbeforeunload
-					// confirm dialog and then presses the browser stop button
-					window.setTimeout(function() {
-						if (d)
-							d.detachEvent('onstop', stop);
-					}, 0);
 				}
-			};
+				ns[cn].prototype[cn] = ns[cn];
 
-			// Attach unload handler
-			if (w.attachEvent) {
-				w.attachEvent('onunload', unload);
-				w.attachEvent('onbeforeunload', fakeUnload);
-			} else if (w.addEventListener)
-				w.addEventListener('unload', unload, false);
+				// Add super methods
+				t.each(sp, function(f, n) {
+					ns[cn].prototype[n] = sp[n];
+				});
 
-			// Setup initial unload handler array
-			t.unloads = [f];
-		} else
-			t.unloads.push(f);
-
-		return f;
-	},
-
-	removeUnload : function(f) {
-		var u = this.unloads, r = null;
-
-		tinymce.each(u, function(o, i) {
-			if (o && o.func == f) {
-				u.splice(i, 1);
-				r = f;
-				return false;
+				// Add overridden methods
+				t.each(p, function(f, n) {
+					// Extend methods if needed
+					if (sp[n]) {
+						ns[cn].prototype[n] = function() {
+							this.parent = sp[n];
+							return f.apply(this, arguments);
+						};
+					} else {
+						if (n != cn)
+							ns[cn].prototype[n] = f;
+					}
+				});
 			}
-		});
 
-		return r;
-	},
+			// Add static methods
+			t.each(p['static'], function(f, n) {
+				ns[cn][n] = f;
+			});
 
-	explode : function(s, d) {
-		return s ? tinymce.map(s.split(d || ','), tinymce.trim) : s;
-	},
+			if (this.onCreate)
+				this.onCreate(s[2], s[3], ns[cn].prototype);
+		},
 
-	_addVer : function(u) {
-		var v;
+		walk : function(o, f, n, s) {
+			s = s || this;
 
-		if (!this.query)
-			return u;
+			if (o) {
+				if (n)
+					o = o[n];
 
-		v = (u.indexOf('?') == -1 ? '?' : '&') + this.query;
+				tinymce.each(o, function(o, i) {
+					if (f.call(s, o, i, n) === false)
+						return false;
 
-		if (u.indexOf('#') == -1)
-			return u + v;
+					tinymce.walk(o, f, n, s);
+				});
+			}
+		},
 
-		return u.replace('#', v + '#');
-	}
+		createNS : function(n, o) {
+			var i, v;
 
-	};
+			o = o || window;
 
-// Required for GZip AJAX loading
-window.tinymce = tinymce;
+			n = n.split('.');
+			for (i=0; i<n.length; i++) {
+				v = n[i];
 
-// Initialize the API
-tinymce._init();
+				if (!o[v])
+					o[v] = {};
+
+				o = o[v];
+			}
+
+			return o;
+		},
+
+		resolve : function(n, o) {
+			var i, l;
+
+			o = o || window;
+
+			n = n.split('.');
+			for (i = 0, l = n.length; i < l; i++) {
+				o = o[n[i]];
+
+				if (!o)
+					break;
+			}
+
+			return o;
+		},
+
+		addUnload : function(f, s) {
+			var t = this, w = window;
+
+			f = {func : f, scope : s || this};
+
+			if (!t.unloads) {
+				function unload() {
+					var li = t.unloads, o, n;
+
+					if (li) {
+						// Call unload handlers
+						for (n in li) {
+							o = li[n];
+
+							if (o && o.func)
+								o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
+						}
+
+						// Detach unload function
+						if (w.detachEvent) {
+							w.detachEvent('onbeforeunload', fakeUnload);
+							w.detachEvent('onunload', unload);
+						} else if (w.removeEventListener)
+							w.removeEventListener('unload', unload, false);
+
+						// Destroy references
+						t.unloads = o = li = w = unload = 0;
+
+						// Run garbarge collector on IE
+						if (window.CollectGarbage)
+							window.CollectGarbage();
+					}
+				};
+
+				function fakeUnload() {
+					var d = document;
+
+					// Is there things still loading, then do some magic
+					if (d.readyState == 'interactive') {
+						function stop() {
+							// Prevent memory leak
+							d.detachEvent('onstop', stop);
+
+							// Call unload handler
+							if (unload)
+								unload();
+
+							d = 0;
+						};
+
+						// Fire unload when the currently loading page is stopped
+						if (d)
+							d.attachEvent('onstop', stop);
+
+						// Remove onstop listener after a while to prevent the unload function
+						// to execute if the user presses cancel in an onbeforeunload
+						// confirm dialog and then presses the browser stop button
+						window.setTimeout(function() {
+							if (d)
+								d.detachEvent('onstop', stop);
+						}, 0);
+					}
+				};
+
+				// Attach unload handler
+				if (w.attachEvent) {
+					w.attachEvent('onunload', unload);
+					w.attachEvent('onbeforeunload', fakeUnload);
+				} else if (w.addEventListener)
+					w.addEventListener('unload', unload, false);
+
+				// Setup initial unload handler array
+				t.unloads = [f];
+			} else
+				t.unloads.push(f);
+
+			return f;
+		},
+
+		removeUnload : function(f) {
+			var u = this.unloads, r = null;
+
+			tinymce.each(u, function(o, i) {
+				if (o && o.func == f) {
+					u.splice(i, 1);
+					r = f;
+					return false;
+				}
+			});
+
+			return r;
+		},
+
+		explode : function(s, d) {
+			return s ? tinymce.map(s.split(d || ','), tinymce.trim) : s;
+		},
+
+		_addVer : function(u) {
+			var v;
+
+			if (!this.query)
+				return u;
+
+			v = (u.indexOf('?') == -1 ? '?' : '&') + this.query;
+
+			if (u.indexOf('#') == -1)
+				return u + v;
+
+			return u.replace('#', v + '#');
+		}
+
+		};
+
+	// Initialize the API
+	tinymce._init();
+})();
 tinymce.create('tinymce.util.Dispatcher', {
 	scope : null,
 	listeners : null,
@@ -6638,10 +6638,15 @@ window.tinymce.dom.Sizzle = Sizzle;
 })(tinymce);
 (function(tinymce) {
 	tinymce.dom.ScriptLoader = function(settings) {
-		var LOADING = 1,
+		var QUEUED = 0,
+			LOADING = 1,
 			LOADED = 2,
 			states = {},
-			queue = [];
+			queue = [],
+			scriptLoadedCallbacks = {},
+			queueLoadedCallbacks = [],
+			loading = 0,
+			undefined;
 
 		function loadScript(url, callback) {
 			var t = this, dom = tinymce.DOM, elm, uri, loc, id;
@@ -6718,15 +6723,24 @@ window.tinymce.dom.Sizzle = Sizzle;
 		};
 
 		this.add = this.load = function(url, callback, scope) {
-			var item;
+			var item, state = states[url];
 
-			item = {
-				url : url,
-				func : callback,
-				scope : scope || this
-			};
+			// Add url to load queue
+			if (state == undefined) {
+				queue.push(url);
+				states[url] = QUEUED;
+			}
 
-			queue.push(item);
+			if (callback) {
+				// Store away callback for later execution
+				if (!scriptLoadedCallbacks[url])
+					scriptLoadedCallbacks[url] = [];
+
+				scriptLoadedCallbacks[url].push({
+					func : callback,
+					scope : scope || this
+				});
+			}
 		};
 
 		this.loadQueue = function(callback, scope) {
@@ -6734,43 +6748,59 @@ window.tinymce.dom.Sizzle = Sizzle;
 		};
 
 		this.loadScripts = function(scripts, callback, scope) {
-			var t = this;
-
-			scope = scope || t;
-
-			function isDone() {
-				var count = 0;
-
-				tinymce.each(scripts, function(item) {
-					if (t.isDone(item.url))
-						count++;
+			function execScriptLoadedCallbacks(url) {
+				// Execute URL callback functions
+				tinymce.each(scriptLoadedCallbacks[url], function(callback) {
+					callback.func.call(callback.scope);
 				});
 
-				return scripts.length == count;
+				scriptLoadedCallbacks[url] = undefined;
 			};
 
-			(function loadScripts() {
-				tinymce.each(scripts, function(script) {
-					var url = script.url;
+			queueLoadedCallbacks.push({
+				func : callback,
+				scope : scope || this
+			});
 
-					if (!states[url]) {
+			(function loadScripts() {
+				var loadingScripts = tinymce.grep(scripts);
+
+				// Current scripts has been handled
+				scripts.length = 0;
+
+				// Load scripts that needs to be loaded
+				tinymce.each(loadingScripts, function(url) {
+					// Script is already loaded then execute script callbacks directly
+					if (states[url] == LOADED) {
+						execScriptLoadedCallbacks(url);
+						return;
+					}
+
+					// Is script not loading then start loading it
+					if (states[url] != LOADING) {
 						states[url] = LOADING;
+						loading++;
 
 						loadScript(url, function() {
 							states[url] = LOADED;
+							loading--;
 
-							// Execute item callback
-							if (script.func)
-								script.func.call(script.scope);
+							execScriptLoadedCallbacks(url);
 
-							if (isDone()) {
-								if (callback)
-									callback.call(scope);
-							} else
-								loadScripts();
+							// Load more scripts if they where added by the recently loaded script
+							loadScripts();
 						});
 					}
 				});
+
+				// No scripts are currently loading then execute all pending queue loaded callbacks
+				if (!loading) {
+					tinymce.each(queueLoadedCallbacks, function(callback) {
+						callback.func.call(callback.scope);
+					});
+
+					queueLoadedCallbacks.length = 0;
+				}
 			})();
 		};
 	};

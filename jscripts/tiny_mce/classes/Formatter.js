@@ -1,5 +1,5 @@
 /**
- * ForceBlocks.js
+ * Formatter.js
  *
  * Copyright 2009, Moxiecode Systems AB
  * Released under LGPL License.

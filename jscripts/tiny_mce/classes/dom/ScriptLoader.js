@@ -10,10 +10,15 @@
 
 (function(tinymce) {
 	tinymce.dom.ScriptLoader = function(settings) {
-		var LOADING = 1,
+		var QUEUED = 0,
+			LOADING = 1,
 			LOADED = 2,
 			states = {},
-			queue = [];
+			queue = [],
+			scriptLoadedCallbacks = {},
+			queueLoadedCallbacks = [],
+			loading = 0,
+			undefined;
 
 		/**
 		 * Loads a specific script directly without adding it to the load queue.
@@ -120,15 +125,24 @@
 		 * @param {Object} scope Optional scope to execute callback in.
 		 */
 		this.add = this.load = function(url, callback, scope) {
-			var item;
+			var item, state = states[url];
 
-			item = {
-				url : url,
-				func : callback,
-				scope : scope || this
-			};
+			// Add url to load queue
+			if (state == undefined) {
+				queue.push(url);
+				states[url] = QUEUED;
+			}
 
-			queue.push(item);
+			if (callback) {
+				// Store away callback for later execution
+				if (!scriptLoadedCallbacks[url])
+					scriptLoadedCallbacks[url] = [];
+
+				scriptLoadedCallbacks[url].push({
+					func : callback,
+					scope : scope || this
+				});
+			}
 		};
 
 		/**
@@ -152,43 +166,59 @@
 		 * @param {Object} scope Optional scope to execute callback in.
 		 */
 		this.loadScripts = function(scripts, callback, scope) {
-			var t = this;
-
-			scope = scope || t;
-
-			function isDone() {
-				var count = 0;
-
-				tinymce.each(scripts, function(item) {
-					if (t.isDone(item.url))
-						count++;
+			function execScriptLoadedCallbacks(url) {
+				// Execute URL callback functions
+				tinymce.each(scriptLoadedCallbacks[url], function(callback) {
+					callback.func.call(callback.scope);
 				});
 
-				return scripts.length == count;
+				scriptLoadedCallbacks[url] = undefined;
 			};
 
-			(function loadScripts() {
-				tinymce.each(scripts, function(script) {
-					var url = script.url;
+			queueLoadedCallbacks.push({
+				func : callback,
+				scope : scope || this
+			});
 
-					if (!states[url]) {
+			(function loadScripts() {
+				var loadingScripts = tinymce.grep(scripts);
+
+				// Current scripts has been handled
+				scripts.length = 0;
+
+				// Load scripts that needs to be loaded
+				tinymce.each(loadingScripts, function(url) {
+					// Script is already loaded then execute script callbacks directly
+					if (states[url] == LOADED) {
+						execScriptLoadedCallbacks(url);
+						return;
+					}
+
+					// Is script not loading then start loading it
+					if (states[url] != LOADING) {
 						states[url] = LOADING;
+						loading++;
 
 						loadScript(url, function() {
 							states[url] = LOADED;
+							loading--;
 
-							// Execute item callback
-							if (script.func)
-								script.func.call(script.scope);
+							execScriptLoadedCallbacks(url);
 
-							if (isDone()) {
-								if (callback)
-									callback.call(scope);
-							} else
-								loadScripts();
+							// Load more scripts if they where added by the recently loaded script
+							loadScripts();
 						});
 					}
 				});
+
+				// No scripts are currently loading then execute all pending queue loaded callbacks
+				if (!loading) {
+					tinymce.each(queueLoadedCallbacks, function(callback) {
+						callback.func.call(callback.scope);
+					});
+
+					queueLoadedCallbacks.length = 0;
+				}
 			})();
 		};
 	};
