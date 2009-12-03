@@ -21,7 +21,7 @@
 	// PRIVATE VARIABLES
 
 		// The name of the plugin, as specified to TinyMCE
-		pluginName = "autosave",
+	var	pluginName = "autosave",
 
 		// Specifies if localStorage (HTML 5) is available
 		useLocalStorage = false,
@@ -42,6 +42,9 @@
 		// Internal storage of settings for each plugin instance
 		instanceSettings = {},
 
+		// Cached storage of callback function resolution, for performance
+		callbackLookup = {},
+	
 		// Unique key used to test if HTML 5 storage methods are available
 		testKey = "TinyAutoSave_Test_",
 
@@ -61,6 +64,7 @@
 			intervalSeconds: 60,
 			retentionMinutes: 20,
 			minSaveLength: 50,
+			askBeforeUnload: false,
 			canRestore: false,
 			busy: false,
 			timer: null
@@ -114,35 +118,41 @@
 		/// <field name="key" type="String" mayBeNull="false">
 		///		A string value identifying the storage and settings for the plugin, as set by autosave_key.
 		/// </field>
-		/// <field name="onPreSave" type="String" mayBeNull="false">
-		///		Name of a callback function that gets called before each auto-save is performed. The callback
-		///		function must return a Boolean value of true if the auto-save is to proceed normally, or false
-		///		if the auto-save is to be canceled. The editor instance is the context of the callback
-		///		(assigned to 'this').
+		/// <field name="onPreSave" type="String or Function" mayBeNull="false">
+		///		(String) Name of a callback function that gets called before each auto-save is performed.
+		/// 	(Function) A function that gets called before each auto-save is performed.
+		/// 	The callback function must return a Boolean value of true if the auto-save is to proceed
+		/// 	normally, or false if the auto-save is to be canceled. The editor instance is the context of the
+		/// 	callback (assigned to 'this').
 		/// </field>
-		/// <field name="onPostSave" type="String" mayBeNull="false">
-		///		Name of a callback function that gets called after each auto-save is performed. Any return value
-		///		from the callback function is ignored. The editor instance is the context of the callback
-		///		(assigned to 'this').
+		/// <field name="onPostSave" type="String or Function" mayBeNull="false">
+		///		(String) Name of a callback function that gets called after each auto-save is performed.
+		/// 	(Function) A function that gets called after each auto-save is performed.
+		/// 	Any return value from the callback function is ignored. The editor instance is the context of
+		/// 	the callback (assigned to 'this').
 		/// </field>
-		/// <field name="onSaveError" type="String" mayBeNull="false">
-		///		Name of a callback function that gets called each time an auto-save fails in an error condition.
+		/// <field name="onSaveError" type="String or Function" mayBeNull="false">
+		///		(String) Name of a callback function that gets called each time an auto-save fails in an error condition.
+		///		(Function) A function that gets called each time an auto-save fails in an error condition.
 		///		The editor instance is the context of the callback (assigned to 'this').
 		/// </field>
-		/// <field name="onPreRestore" type="String" mayBeNull="false">
-		///		Name of a callback function that gets called before a restore request is performed. The callback
-		///		function must return a Boolean value of true if the restore is to proceed normally, or false if
-		///		the restore is to be canceled. The editor instance is the context of the callback (assigned to
-		///		'this').
-		/// </field>
-		/// <field name="onPostRestore" type="String" mayBeNull="false">
-		///		Name of a callback function that gets called after a restore request is performed. Any return
-		///		value from the callback function is ignored. The editor instance is the context of the callback
+		/// <field name="onPreRestore" type="String or Function" mayBeNull="false">
+		///		(String) Name of a callback function that gets called before a restore request is performed.
+		///		(Function) A function that gets called before a restore request is performed.
+		/// 	The callback function must return a Boolean value of true if the restore is to proceed normally,
+		/// 	or false if the restore is to be canceled. The editor instance is the context of the callback
 		///		(assigned to 'this').
 		/// </field>
-		/// <field name="onRestoreError" type="String" mayBeNull="false">
-		///		Name of a callback function that gets called each time a restore request fails in an error
-		///		condition. The editor instance is the context of the callback (assigned to 'this').
+		/// <field name="onPostRestore" type="String or Function" mayBeNull="false">
+		///		(String) Name of a callback function that gets called after a restore request is performed.
+		///		(Function) A function that gets called after a restore request is performed.
+		/// 	Any return value from the callback function is ignored. The editor instance is the context of
+		/// 	the callback (assigned to 'this').
+		/// </field>
+		/// <field name="onRestoreError" type="String or Function" mayBeNull="false">
+		///		(String) Name of a callback function that gets called each time a restore request fails in an error condition.
+		///		(Function) A function that gets called each time a restore request fails in an error condition.
+		/// 	The editor instance is the context of the callback (assigned to 'this').
 		/// </field>
 		/// <field name="progressDisplayTime" type="Number" integer="true" mayBeNull="false">
 		///		Number of milliseconds that the progress image is displayed after an auto-save. The default is
@@ -227,7 +237,7 @@
 		/// on the client computer. Data stored in the localStorage area has no expiration date, so we must
 		/// manage expiring the data ourselves.  localStorage is fully supported by IE8, and it is supposed
 		/// to be working in Firefox 3 and Safari 3.2, but in reality is is flaky in those browsers.  As
-		/// HTML 5 gets wider support, the AutoSave plugin will use it automatically. In Windows Vista,
+		/// HTML 5 gets wider support, the AutoSave plugin will use it automatically. In Windows Vista/7,
 		/// localStorage is stored in the following folder:
 		/// C:\Users\[username]\AppData\Local\Microsoft\Internet Explorer\DOMStore\[tempFolder]
 		/// 
@@ -306,7 +316,7 @@
 			t.editor = ed;
 			t.id = ed.id;
 			t.url = url;
-			t.key = ed.getParam(pluginName + "_key", ed.id)
+			t.key = ed.getParam(pluginName + "_key", ed.id);
 
 			s = newInstanceSettings(t);
 			s.restoreImage = url + "/images/restore." + (tinymce.isIE6? "gif" : "png");
@@ -333,6 +343,7 @@
 			// Boolean value.  If not specified in config, default is true, progress animation will be displayed after each auto-save.
 			// Specified as 'autosave_showsaveprogress' in the config.
 			t.showSaveProgress = ed.getParam(pluginName + "_showsaveprogress", t.showSaveProgress);
+			s.askBeforeUnload = ed.getParam(pluginName + "_ask_beforeunload", s.askBeforeUnload);
 
 			s.canRestore = t.hasSavedContent();
 
@@ -380,11 +391,17 @@
 			}
 
 			// Add ask before unload dialog
-			if (ed.getParam(pluginName + "_ask_beforeunload", true))
-				window.onbeforeunload = tinymce.plugins.AutoSavePlugin._beforeUnloadHandler;
+			if (s.askBeforeUnload) {
+				tinymce.dom.Event.add(window, "unload", tinymce.plugins.AutoSavePlugin._beforeUnloadHandler);
+			}
 		},
 
-		getInfo : function() {
+		getInfo: function() {
+			/// <summary>
+			///		Called by TinyMCE, returns standard information about the plugin
+			///		to display in the About box.
+			/// </summary>
+
 			return {
 				longname : 'Auto save',
 				author : 'Moxiecode Systems AB',
@@ -484,13 +501,15 @@
 			}
 		},
 
-		'static' : {
-			_beforeUnloadHandler : function() {
+		"static": {
+			_beforeUnloadHandler: function () {
 				var msg;
 
-				tinymce.each(tinyMCE.editors, function(ed) {
-					if (ed.getParam("fullscreen_is_enabled"))
+				tinymce.each(tinyMCE.editors, function (ed) {
+
+					if (ed.getParam("fullscreen_is_enabled")) {
 						return;
+					}
 
 					if (ed.isDirty()) {
 						msg = ed.getLang("autosave.unload_msg");
@@ -524,8 +543,49 @@
 		}
 
 		tinymce.dom.Event.remove(window, "unload", s.saveFinalDelegate);
+		
+		if (s.askBeforeUnload) {
+		tinymce.dom.Event.remove(window, "unload", tinymce.plugins.AutoSavePlugin._beforeUnloadHandler);
+		}
+		
 		t.editor.onRemove.remove(s.saveFinalDelegate);
 		removeInstanceSettings(t);
+	}
+
+	function execCallback(n) {
+		/// <summary>
+		///		Executes a callback function.  The callback function can be specified
+		///		either as a string or a function.
+		/// </summary>
+		/// <remarks>
+		///		Must be called with context ("this" keyword) set to plugin instance
+		/// </remarks>
+		
+		if (!n) {
+			return true;
+		}
+		
+		var c, f,
+			is = tinymce.is;
+		
+		if (is(n, "string")) {
+			c = callbackLookup[n];
+			
+			if (c) {
+				f = c[n];
+			}
+			else {
+				callbackLookup[n] = f = tinymce.resolve(n);
+			}
+		}
+		else if (is(n, "function")) {
+			f = n;
+		}
+		else {
+			return true;
+		}
+		
+		return f.apply(this);
 	}
 
 	function saveFinal() {
@@ -561,24 +621,21 @@
 			ed = t.editor,
 			s = getInstanceSettings(t),
 			is = tinymce.is,
-			execCallback = ed.execCallback,
 			saved = false,
 			now = new Date(),
 			content, exp, a, b, cm, img;
 
 		if ((ed) && (!s.busy)) {
 			s.busy = true;
-
-			if (is(t.onPreSave, "string")) {
-				if (!execCallback(t.onPreSave)) {
-					s.busy = false;
-					return false;
-				}
-			}
-
 			content = ed.getContent();
 
 			if (is(content, "string") && (content.length >= s.minSaveLength)) {
+		
+				if (!execCallback.call(t, t.onPreSave)) {
+					s.busy = false;
+					return false;
+				}
+
 				exp = new Date(now.getTime() + (s.retentionMinutes * 60 * 1000));
 
 				try {
@@ -601,9 +658,7 @@
 					saved = true;
 				}
 				catch (e) {
-					if (is(t.onSaveError, "string")) {
-						execCallback(t.onSaveError);
-					}
+					execCallback.call(t, t.onSaveError);
 				}
 
 				if (saved) {
@@ -613,6 +668,7 @@
 
 					if (t.showSaveProgress) {
 						b = tinymce.DOM.get(cm.get(pluginName).id);
+						
 						if (b) {
 							img = s.restoreImage;
 
@@ -628,9 +684,7 @@
 						}
 					}
 
-					if (is(t.onPostSave, "string")) {
-						execCallback(t.onPostSave);
-					}
+					execCallback.call(t, t.onPostSave);
 				}
 			}
 
@@ -656,17 +710,14 @@
 			s = getInstanceSettings(t),
 			content = null,
 			is = tinymce.is,
-			execCallback = ed.execCallback,
 			i, m;
 
 		if ((ed) && (s.canRestore) && (!s.busy)) {
 			s.busy = true;
 
-			if (is(t.onPreRestore, "string")) {
-				if (!execCallback(t.onPreRestore)) {
-					s.busy = false;
-					return;
-				}
+			if (!execCallback.call(t, t.onPreRestore)) {
+				s.busy = false;
+				return;
 			}
 
 			try {
@@ -700,10 +751,7 @@
 					// If current contents are empty or whitespace, the confirmation is unnecessary
 					if (ed.getContent().replace(/\s|&nbsp;|<\/?p[^>]*>|<br[^>]*>/gi, "").length === 0) {
 						ed.setContent(content);
-
-						if (is(t.onPostRestore, "string")) {
-							execCallback(t.onPostRestore);
-						}
+						execCallback.call(t, t.onPostRestore);
 					}
 					else {
 						ed.windowManager.confirm(
@@ -711,10 +759,7 @@
 							function (ok) {
 								if (ok) {
 									ed.setContent(content);
-
-									if (is(t.onPostRestore, "string")) {
-										execCallback(t.onPostRestore);
-									}
+									execCallback.call(t, t.onPostRestore);
 								}
 								s.busy = false;
 							},
@@ -724,9 +769,7 @@
 				}
 			}
 			catch (e) {
-				if (is(t.onRestoreError, "string")) {
-					execCallback(t.onRestoreError);
-				}
+				execCallback.call(t, t.onRestoreError);
 			}
 
 			s.busy = false;
