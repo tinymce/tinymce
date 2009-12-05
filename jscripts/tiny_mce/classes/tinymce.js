@@ -8,7 +8,7 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
-(function() {
+(function(win) {
 	var whiteSpaceRe = /^\s*|\s*$/g,
 		undefined;
 
@@ -27,16 +27,36 @@
 	 * if (tinymce.isIE)
 	 *   console.log("IE");
 	 */
-	window.tinymce = {
+	win.tinymce = win.tinyMCE = {
+		/**
+		 * Major version of TinyMCE build.
+		 *
+		 * @property majorVersion
+		 * @type String
+		 */
 		majorVersion : '@@tinymce_major_version@@',
+
+		/**
+		 * Major version of TinyMCE build.
+		 *
+		 * @property minorVersion
+		 * @type String
+		 */
 		minorVersion : '@@tinymce_minor_version@@',
+
+		/**
+		 * Release date of TinyMCE build.
+		 *
+		 * @property minorVersion
+		 * @type String
+		 */
 		releaseDate : '@@tinymce_release_date@@',
 
 		/**
 		 * Initializes the TinyMCE global namespace this will setup browser detection and figure out where TinyMCE is running from.
 		 */
 		_init : function() {
-			var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
+			var t = this, d = document, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
 
 			/**
 			 * Constant that is true if the browser is Opera.
@@ -45,7 +65,7 @@
 			 * @type Boolean
 			 * @final
 			 */
-			t.isOpera = w.opera && opera.buildNumber;
+			t.isOpera = win.opera && opera.buildNumber;
 
 			/**
 			 * Constant that is true if the browser is WebKit (Safari/Chrome).
@@ -102,7 +122,7 @@
 			t.isAir = /adobeair/i.test(ua);
 
 			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
-			if (w.tinyMCEPreInit) {
+			if (win.tinyMCEPreInit) {
 				t.suffix = tinyMCEPreInit.suffix;
 				t.baseURL = tinyMCEPreInit.base;
 				t.query = tinyMCEPreInit.query;
@@ -477,7 +497,7 @@
 		resolve : function(n, o) {
 			var i, l;
 
-			o = o || window;
+			o = o || win;
 
 			n = n.split('.');
 			for (i = 0, l = n.length; i < l; i++) {
@@ -500,7 +520,7 @@
 		 * @return {function} Returns the specified unload handler function.
 		 */
 		addUnload : function(f, s) {
-			var t = this, w = window;
+			var t = this;
 
 			f = {func : f, scope : s || this};
 
@@ -518,18 +538,18 @@
 						}
 
 						// Detach unload function
-						if (w.detachEvent) {
-							w.detachEvent('onbeforeunload', fakeUnload);
-							w.detachEvent('onunload', unload);
-						} else if (w.removeEventListener)
-							w.removeEventListener('unload', unload, false);
+						if (win.detachEvent) {
+							win.detachEvent('onbeforeunload', fakeUnload);
+							win.detachEvent('onunload', unload);
+						} else if (win.removeEventListener)
+							win.removeEventListener('unload', unload, false);
 
 						// Destroy references
 						t.unloads = o = li = w = unload = 0;
 
 						// Run garbarge collector on IE
-						if (window.CollectGarbage)
-							window.CollectGarbage();
+						if (win.CollectGarbage)
+							CollectGarbage();
 					}
 				};
 
@@ -556,7 +576,7 @@
 						// Remove onstop listener after a while to prevent the unload function
 						// to execute if the user presses cancel in an onbeforeunload
 						// confirm dialog and then presses the browser stop button
-						window.setTimeout(function() {
+						win.setTimeout(function() {
 							if (d)
 								d.detachEvent('onstop', stop);
 						}, 0);
@@ -564,11 +584,11 @@
 				};
 
 				// Attach unload handler
-				if (w.attachEvent) {
-					w.attachEvent('onunload', unload);
-					w.attachEvent('onbeforeunload', fakeUnload);
-				} else if (w.addEventListener)
-					w.addEventListener('unload', unload, false);
+				if (win.attachEvent) {
+					win.attachEvent('onunload', unload);
+					win.attachEvent('onbeforeunload', fakeUnload);
+				} else if (win.addEventListener)
+					win.addEventListener('unload', unload, false);
 
 				// Setup initial unload handler array
 				t.unloads = [f];
@@ -629,4 +649,4 @@
 
 	// Initialize the API
 	tinymce._init();
-})();
+})(window);

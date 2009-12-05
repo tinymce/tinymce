@@ -10,7 +10,29 @@
 
 (function(tinymce) {
 	// Shorten names
-	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, explode = tinymce.explode;
+	var each = tinymce.each, extend = tinymce.extend,
+		DOM = tinymce.DOM, Event = tinymce.dom.Event,
+		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
+		explode = tinymce.explode;
+
+	// Setup some URLs where the editor API is located and where the document is
+	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
+	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
+		tinymce.documentBaseURL += '/';
+
+	// Setup baseURL/baseURI
+	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
+	tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
+
+	// Add before unload listener
+	// This was required since IE was leaking memory if you added and removed beforeunload listeners
+	// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
+	tinymce.onBeforeUnload = new tinymce.util.Dispatcher(tinymce);
+
+	// Must be on window or IE will leak if the editor is placed in frame or iframe
+	Event.add(window, 'beforeunload', function(e) {
+		tinymce.onBeforeUnload.dispatch(t, e);
+	});
 
 	/**
 	 * This class is used to create multiple editor instances and contain them in a collection. So it's both a factory and a manager for editor instances.
@@ -18,7 +40,7 @@
 	 * @static
 	 * @class tinymce.EditorManager
 	 */
-	tinymce.create('static tinymce.EditorManager', {
+	tinymce.EditorManager = extend(tinymce, {
 		/**
 		 * Collection of editor instances.
 		 *
@@ -36,34 +58,6 @@
 		 * @type tinymce.Editor
 		 */
 		activeEditor : null,
-
-		/**
-		 * Preinitializes the EditorManager class. This method will be called automatically when the page loads and it
-		 * will setup some important paths and URIs and attach some document events.
-		 *
-		 * @method preInit
-		 */
-		preInit : function() {
-			var t = this, lo = window.location;
-
-			// Setup some URLs where the editor API is located and where the document is
-			tinymce.documentBaseURL = lo.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
-			if (!/[\/\\]$/.test(tinymce.documentBaseURL))
-				tinymce.documentBaseURL += '/';
-
-			tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
-			tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
-
-			// Add before unload listener
-			// This was required since IE was leaking memory if you added and removed beforeunload listeners
-			// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
-			t.onBeforeUnload = new tinymce.util.Dispatcher(t);
-
-			// Must be on window or IE will leak if the editor is placed in frame or iframe
-			Event.add(window, 'beforeunload', function(e) {
-				t.onBeforeUnload.dispatch(t, e);
-			});
-		},
 
 		/**
 		 * Initializes a set of editors. This method will create a bunch of editors based in the input.
@@ -91,8 +85,7 @@
 
 			s = extend({
 				theme : "simple",
-				language : "en",
-				strict_loading_mode : document.contentType == 'application/xhtml+xml'
+				language : "en"
 			}, s);
 
 			t.settings = s;
@@ -102,42 +95,6 @@
 				var l, co;
 
 				execCallback(s, 'onpageload');
-
-				// Verify that it's a valid browser
-				if (s.browsers) {
-					l = false;
-
-					each(explode(s.browsers), function(v) {
-						switch (v) {
-							case 'ie':
-							case 'msie':
-								if (tinymce.isIE)
-									l = true;
-								break;
-
-							case 'gecko':
-								if (tinymce.isGecko)
-									l = true;
-								break;
-
-							case 'safari':
-							case 'webkit':
-								if (tinymce.isWebKit)
-									l = true;
-								break;
-
-							case 'opera':
-								if (tinymce.isOpera)
-									l = true;
-
-								break;
-						}
-					});
-
-					// Not a valid one
-					if (!l)
-						return;
-				}
 
 				switch (s.mode) {
 					case "exact":
@@ -435,12 +392,10 @@
 
 		// Private methods
 
-		_setActive : function(e) {
-			this.selectedInstance = this.activeEditor = e;
+		_setActive : function(editor) {
+			this.selectedInstance = this.activeEditor = editor;
 		}
 	});
-
-	tinymce.EditorManager.preInit();
 })(tinymce);
 
 /**
@@ -450,4 +405,3 @@
  * @property tinyMCE
  * @type tinymce.EditorManager
  */
-var tinyMCE = window.tinyMCE = tinymce.EditorManager;

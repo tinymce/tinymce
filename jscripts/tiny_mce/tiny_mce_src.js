@@ -1,16 +1,18 @@
-(function() {
+(function(win) {
 	var whiteSpaceRe = /^\s*|\s*$/g,
 		undefined;
 
-	window.tinymce = {
+	win.tinymce = win.tinyMCE = {
 		majorVersion : '@@tinymce_major_version@@',
+
 		minorVersion : '@@tinymce_minor_version@@',
+
 		releaseDate : '@@tinymce_release_date@@',
 
 		_init : function() {
-			var t = this, d = document, w = window, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
+			var t = this, d = document, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
 
-			t.isOpera = w.opera && opera.buildNumber;
+			t.isOpera = win.opera && opera.buildNumber;
 
 			t.isWebKit = /WebKit/.test(ua);
 
@@ -25,7 +27,7 @@
 			t.isAir = /adobeair/i.test(ua);
 
 			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
-			if (w.tinyMCEPreInit) {
+			if (win.tinyMCEPreInit) {
 				t.suffix = tinyMCEPreInit.suffix;
 				t.baseURL = tinyMCEPreInit.base;
 				t.query = tinyMCEPreInit.query;
@@ -302,7 +304,7 @@
 		resolve : function(n, o) {
 			var i, l;
 
-			o = o || window;
+			o = o || win;
 
 			n = n.split('.');
 			for (i = 0, l = n.length; i < l; i++) {
@@ -316,7 +318,7 @@
 		},
 
 		addUnload : function(f, s) {
-			var t = this, w = window;
+			var t = this;
 
 			f = {func : f, scope : s || this};
 
@@ -334,18 +336,18 @@
 						}
 
 						// Detach unload function
-						if (w.detachEvent) {
-							w.detachEvent('onbeforeunload', fakeUnload);
-							w.detachEvent('onunload', unload);
-						} else if (w.removeEventListener)
-							w.removeEventListener('unload', unload, false);
+						if (win.detachEvent) {
+							win.detachEvent('onbeforeunload', fakeUnload);
+							win.detachEvent('onunload', unload);
+						} else if (win.removeEventListener)
+							win.removeEventListener('unload', unload, false);
 
 						// Destroy references
 						t.unloads = o = li = w = unload = 0;
 
 						// Run garbarge collector on IE
-						if (window.CollectGarbage)
-							window.CollectGarbage();
+						if (win.CollectGarbage)
+							CollectGarbage();
 					}
 				};
 
@@ -372,7 +374,7 @@
 						// Remove onstop listener after a while to prevent the unload function
 						// to execute if the user presses cancel in an onbeforeunload
 						// confirm dialog and then presses the browser stop button
-						window.setTimeout(function() {
+						win.setTimeout(function() {
 							if (d)
 								d.detachEvent('onstop', stop);
 						}, 0);
@@ -380,11 +382,11 @@
 				};
 
 				// Attach unload handler
-				if (w.attachEvent) {
-					w.attachEvent('onunload', unload);
-					w.attachEvent('onbeforeunload', fakeUnload);
-				} else if (w.addEventListener)
-					w.addEventListener('unload', unload, false);
+				if (win.attachEvent) {
+					win.attachEvent('onunload', unload);
+					win.attachEvent('onbeforeunload', fakeUnload);
+				} else if (win.addEventListener)
+					win.addEventListener('unload', unload, false);
 
 				// Setup initial unload handler array
 				t.unloads = [f];
@@ -430,7 +432,7 @@
 
 	// Initialize the API
 	tinymce._init();
-})();
+})(window);
 tinymce.create('tinymce.util.Dispatcher', {
 	scope : null,
 	listeners : null,
@@ -8608,36 +8610,36 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 (function(tinymce) {
 	// Shorten names
-	var each = tinymce.each, extend = tinymce.extend, DOM = tinymce.DOM, Event = tinymce.dom.Event, ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager, explode = tinymce.explode;
+	var each = tinymce.each, extend = tinymce.extend,
+		DOM = tinymce.DOM, Event = tinymce.dom.Event,
+		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
+		explode = tinymce.explode;
 
-	tinymce.create('static tinymce.EditorManager', {
+	// Setup some URLs where the editor API is located and where the document is
+	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
+	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
+		tinymce.documentBaseURL += '/';
+
+	// Setup baseURL/baseURI
+	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
+	tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
+
+	// Add before unload listener
+	// This was required since IE was leaking memory if you added and removed beforeunload listeners
+	// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
+	tinymce.onBeforeUnload = new tinymce.util.Dispatcher(tinymce);
+
+	// Must be on window or IE will leak if the editor is placed in frame or iframe
+	Event.add(window, 'beforeunload', function(e) {
+		tinymce.onBeforeUnload.dispatch(t, e);
+	});
+
+	tinymce.EditorManager = extend(tinymce, {
 		editors : {},
 
 		i18n : {},
 	
 		activeEditor : null,
-
-		preInit : function() {
-			var t = this, lo = window.location;
-
-			// Setup some URLs where the editor API is located and where the document is
-			tinymce.documentBaseURL = lo.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
-			if (!/[\/\\]$/.test(tinymce.documentBaseURL))
-				tinymce.documentBaseURL += '/';
-
-			tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
-			tinymce.EditorManager.baseURI = new tinymce.util.URI(tinymce.baseURL);
-
-			// Add before unload listener
-			// This was required since IE was leaking memory if you added and removed beforeunload listeners
-			// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
-			t.onBeforeUnload = new tinymce.util.Dispatcher(t);
-
-			// Must be on window or IE will leak if the editor is placed in frame or iframe
-			Event.add(window, 'beforeunload', function(e) {
-				t.onBeforeUnload.dispatch(t, e);
-			});
-		},
 
 		init : function(s) {
 			var t = this, pl, sl = tinymce.ScriptLoader, c, e, el = [], ed;
@@ -8659,8 +8661,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			s = extend({
 				theme : "simple",
-				language : "en",
-				strict_loading_mode : document.contentType == 'application/xhtml+xml'
+				language : "en"
 			}, s);
 
 			t.settings = s;
@@ -8670,42 +8671,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				var l, co;
 
 				execCallback(s, 'onpageload');
-
-				// Verify that it's a valid browser
-				if (s.browsers) {
-					l = false;
-
-					each(explode(s.browsers), function(v) {
-						switch (v) {
-							case 'ie':
-							case 'msie':
-								if (tinymce.isIE)
-									l = true;
-								break;
-
-							case 'gecko':
-								if (tinymce.isGecko)
-									l = true;
-								break;
-
-							case 'safari':
-							case 'webkit':
-								if (tinymce.isWebKit)
-									l = true;
-								break;
-
-							case 'opera':
-								if (tinymce.isOpera)
-									l = true;
-
-								break;
-						}
-					});
-
-					// Not a valid one
-					if (!l)
-						return;
-				}
 
 				switch (s.mode) {
 					case "exact":
@@ -8941,15 +8906,12 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 		// Private methods
 
-		_setActive : function(e) {
-			this.selectedInstance = this.activeEditor = e;
+		_setActive : function(editor) {
+			this.selectedInstance = this.activeEditor = editor;
 		}
 	});
-
-	tinymce.EditorManager.preInit();
 })(tinymce);
 
-var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 (function(tinymce) {
 	// Shorten these names
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend,
@@ -9113,11 +9075,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 				return;
 			}
 
-			// Force strict loading mode if render us called by user and not internally
-			if (!nst) {
-				s.strict_loading_mode = 1;
-				tinyMCE.settings = s;
-			}
+			tinyMCE.settings = s;
 
 			// Element not found, then skip initialization
 			if (!t.getElement())

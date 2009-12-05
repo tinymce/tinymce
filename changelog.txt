@@ -11,6 +11,8 @@ Version 3.3b1 (2009-09-xx)
 	Fixed bug where some attributes wasn't serialized correctly on IE if wildcard attribute patters where used.
 	Rewrote the getBookmark/moveToBookmark selection logic to boost performance.
 	Rewrote the table plugin to include new cell selection logic and fixed various bugs and issues.
+	Merged the tinyMCE, tinymce and tinymce.EditorManager into the same instance makes more sense.
+	Removed browser setting since the browser support for TinyMCE is not far better than it was when that setting was introduced.
 	Changed the mce_ attribute prefix to the more standard _mce_ prefix. This is similar to browser vendors prefixes.
 	Optimized performance with named entities on Gecko. Regexp replace was executing very slowly probably due to a Gecko bug.
 	Optimized performance of the IE specific selection/range implementation.
