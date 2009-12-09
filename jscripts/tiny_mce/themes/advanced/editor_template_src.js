@@ -198,55 +198,60 @@
 			var ed = this.editor, ctrl = ed.controlManager.get('styleselect');
 
 			if (ctrl.getLength() == 0) {
-				each(ed.dom.getClasses(), function(o) {
-					ctrl.add(o['class'], {
+				each(ed.dom.getClasses(), function(o, idx) {
+					var name = 'style_' + idx;
+
+					ed.formatter.register(name, {
 						inline : 'span',
 						classes : o['class']
 					});
+
+					ctrl.add(o['class'], name);
 				});
 			}
 		},
 
 		_createStyleSelect : function(n) {
-			var t = this, ed = t.editor, ctrlMan = ed.controlManager, ctrl, formats = [];
+			var t = this, ed = t.editor, ctrlMan = ed.controlManager, ctrl;
 
 			// Setup style select box
 			ctrl = ctrlMan.createListBox('styleselect', {
 				title : 'advanced.style_select',
-				onselect : function(fmt) {
+				onselect : function(name) {
 					ed.focus();
-					//ed.formatter.toggle(fmt);
+					ed.formatter.toggle(name);
 
 					return false; // No auto select
 				}
 			});
 
-			// Handle older format
-			each(ed.getParam('theme_advanced_styles', '', 'hash'), function(val, key) {
-				if (val) {
-					formats.push({
-						title : t.editor.translate(key),
-						inline : 'span',
-						classes : val
+			// Handle specified format
+			ed.onInit.add(function() {
+				var counter = 0, formats = ed.getParam('style_formats');
+
+				if (formats) {
+					each(ed.getParam('style_formats'), function(fmt) {
+						var name = fmt.name = fmt.name || 'style_' + (counter++);
+
+						ed.formatter.register(name, fmt);
+						ctrl.add(fmt.title, name);
+					});
+				} else {
+					each(ed.getParam('theme_advanced_styles', '', 'hash'), function(val, key) {
+						var name;
+
+						if (val) {
+							name = fmt.name = fmt.name || 'style_' + (counter++);
+
+							ed.formatter.register(name, {
+								inline : 'span',
+								classes : val
+							});
+
+							ctrl.add(t.editor.translate(key), name);
+						}
 					});
 				}
-			});
-
-			// Handle specified format
-			ed.settings.style_formats = formats = ed.getParam('style_formats') || formats;
-			each(formats, function(fmt) {
-				var count = 0;
-
-				// Count items
-				each(fmt, function() {
-					count++;
-				});
-
-				// Only title item then generate a title
-				if (count == 1 && fmt.title)
-					ctrl.add(fmt.title);
-				else
-					ctrl.add(fmt.title, fmt);
 			});
 
 			// Auto import classes if the ctrl box is empty
@@ -896,10 +901,9 @@
 				t._importClasses();
 
 				// Check each format and update
-			/*	c.select(function(fmt) {
-					if (fmt)
-						return !!ed.formatter.match(fmt);
-				});*/
+				c.select(function(fmt) {
+					return !!ed.formatter.match(fmt);
+				});
 			}
 
 			if (c = cm.get('formatselect')) {

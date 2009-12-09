@@ -529,7 +529,7 @@
 				return TRUE;
 			};
 
-			if (node) {
+			if (formatList && node) {
 				// Check each format in list
 				for (i = 0; i < formatList.length; i++) {
 					format = formatList[i];
@@ -726,7 +726,6 @@
 				var parent, child;
 
 				root = root || dom.getRoot();
-
 
 				for (;;) {
 					// Check if we can move up are we at root level or body level

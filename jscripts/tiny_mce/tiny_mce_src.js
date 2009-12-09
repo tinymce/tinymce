@@ -9081,11 +9081,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			if (!t.getElement())
 				return;
 
-			if (s.strict_loading_mode) {
-				sl.settings.strict_mode = s.strict_loading_mode;
-				tinymce.DOM.settings.strict = 1;
-			}
-
 			// Add hidden input for non input elements inside form elements
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
@@ -9461,7 +9456,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			});
 
 			// Register default block formats
-			each('p h1 h2 h3 h4 h5 h6 div address pre'.split(/\s/), function(name) {
+			each('p h1 h2 h3 h4 h5 h6 div address pre div code dt dd samp'.split(/\s/), function(name) {
 				t.formatter.register(name, {block : name});
 			});
 
@@ -12957,7 +12952,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				return TRUE;
 			};
 
-			if (node) {
+			if (formatList && node) {
 				// Check each format in list
 				for (i = 0; i < formatList.length; i++) {
 					format = formatList[i];
@@ -13102,7 +13097,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				var parent, child;
 
 				root = root || dom.getRoot();
-
 
 				for (;;) {
 					// Check if we can move up are we at root level or body level
