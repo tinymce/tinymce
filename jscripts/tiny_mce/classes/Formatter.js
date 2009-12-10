@@ -265,6 +265,12 @@
 						return;
 					}
 
+					// Remove nodes that only contains a bookmark
+					if (childCount === 1 && isBookmarkNode(node.firstChild)) {
+						dom.remove(node, 1);
+						return;
+					}
+
 					if (format.inline || format.wrapper) {
 						// Merges the current node with it's children of similar type to reduce the number of elements
 						if (!format.exact && childCount === 1) {
@@ -300,23 +306,26 @@
 				});
 			};
 
-			if (node) {
-				rng = dom.createRng();
+			if (format) {
+				if (node) {
+					rng = dom.createRng();
 
-				rng.setStartBefore(node);
-				rng.setEndAfter(node);
+					rng.setStartBefore(node);
+					rng.setEndAfter(node);
 
-				applyRngStyle(rng);
-			} else {
-				if (!selection.isCollapsed() || !format.inline) {
-					// Apply formatting to selection
-					bookmark = selection.getBookmark();
-					applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
-					selection.moveToBookmark(bookmark);
-					selection.setRng(moveStart(selection.getRng(TRUE)));
-					ed.nodeChanged();
-				} else
-					performCaretAction('apply', name, vars);
+					applyRngStyle(rng);
+				} else {
+					if (!selection.isCollapsed() || !format.inline) {
+						// Apply formatting to selection
+						bookmark = selection.getBookmark();
+						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
+
+						selection.moveToBookmark(bookmark);
+						selection.setRng(moveStart(selection.getRng(TRUE)));
+						ed.nodeChanged();
+					} else
+						performCaretAction('apply', name, vars);
+				}
 			}
 		};
 

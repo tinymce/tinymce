@@ -930,7 +930,10 @@
 				// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled
 				if (!tinymce.isIE) {
 					function fixTableCaretPos() {
-						var last = ed.getBody().lastChild;
+						var last;
+
+						// Skip empty text nodes form the end
+						for (last = ed.getBody().lastChild; last && last.nodeType == 3 && !last.nodeValue.length; last = last.previousSibling) ;
 
 						if (last && last.nodeName == 'TABLE')
 							ed.dom.add(ed.getBody(), 'p', null, '<br mce_bogus="1" />');

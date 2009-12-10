@@ -71,7 +71,7 @@
 					}
 
 					if (el) {
-						if (ed = tinymce.EditorManager.get(el.id || el.name))
+						if (ed = tinymce.get(el.id || el.name))
 							ed.focus();
 						else
 							window.setTimeout(function() {window.focus();el.focus();}, 10);

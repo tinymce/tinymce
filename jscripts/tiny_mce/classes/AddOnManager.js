@@ -46,7 +46,7 @@
 		 * @param {String} n Short name of the add-on.
 		 */
 		requireLangPack : function(n) {
-			var s = tinymce.EditorManager.settings;
+			var s = tinymce.settings;
 
 			if (s && s.language)
 				tinymce.ScriptLoader.add(this.urls[n] + '/langs/' + s.language + '.js');

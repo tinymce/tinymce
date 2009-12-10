@@ -1,15 +1,17 @@
-Version 3.3b1 (2009-09-xx)
+Version 3.3b1 (2009-12-xx)
+	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
 	Added new advlist plugin that enables you to set the formats of list elements.
 	Added new paste plugin logic that enables you to retain style information from Office.
 	Added new autosave plugin logic that automatically saves contents in local storage.
 	Added new valid_styles option. Adds the possibility to restrict styles and their order.
 	Added new theme_advanced_runtime_fontsize option to display the runtime font size in font size select box.
+	Added the possibility to get editors by index as well as name in the tinyMCE.editors collection.
 	Fixed so the contents inside the editor renders in standards mode by default.
 	Fixed bug where it wasn't possible to move the caret on short documents running in standards mode on IE.
 	Fixed bug where the decode method of the DOMUtils class could end up in an endless loop.
 	Fixed bug where it was possible to bypass the paste cleanup on non IE browsers if you clicked while pasting.
 	Fixed bug where some attributes wasn't serialized correctly on IE if wildcard attribute patters where used.
-	Rewrote the getBookmark/moveToBookmark selection logic to boost performance.
+	Rewrote the getBookmark/moveToBookmark selection logic to boost performance on larger documents.
 	Rewrote the table plugin to include new cell selection logic and fixed various bugs and issues.
 	Merged the tinyMCE, tinymce and tinymce.EditorManager into the same instance makes more sense.
 	Removed browser setting since the browser support for TinyMCE is not far better than it was when that setting was introduced.

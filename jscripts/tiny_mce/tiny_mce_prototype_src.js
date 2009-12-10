@@ -2116,7 +2116,7 @@ tinymce.create('static tinymce.util.XHR', {
 
 			function setHTML(e, h, d) {
 				var n, tp;
-				
+
 				tp = d.createElement("body");
 				tp.innerHTML = h;
 
@@ -5348,7 +5348,17 @@ window.tinymce.dom.Sizzle = Sizzle;
 							if (!keep) {
 								prev = marker.previousSibling;
 								next = marker.nextSibling;
-								dom.remove(marker);
+
+								// Remove all marker text nodes
+								each(tinymce.grep(marker.childNodes), function(node) {
+									if (node.nodeType == 3)
+										node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
+								});
+
+								// Remove marker but keep children if for example contents where inserted into the marker
+								// Also remove duplicated instances of the marker for example by a split operation or by WebKit auto split on paste feature
+								while (marker = dom.get(bookmark.id + '_' + suffix))
+									dom.remove(marker, 1);
 
 								// If siblings are text nodes then merge them
 								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3) {
@@ -8602,7 +8612,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		requireLangPack : function(n) {
-			var s = tinymce.EditorManager.settings;
+			var s = tinymce.settings;
 
 			if (s && s.language)
 				tinymce.ScriptLoader.add(this.urls[n] + '/langs/' + s.language + '.js');
@@ -8658,11 +8668,11 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 	// Must be on window or IE will leak if the editor is placed in frame or iframe
 	Event.add(window, 'beforeunload', function(e) {
-		tinymce.onBeforeUnload.dispatch(t, e);
+		tinymce.onBeforeUnload.dispatch(tinymce, e);
 	});
 
 	tinymce.EditorManager = extend(tinymce, {
-		editors : {},
+		editors : [],
 
 		i18n : {},
 	
@@ -8785,6 +8795,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		get : function(id) {
+			if (!id)
+				return this.editors;
+
 			return this.editors[id];
 		},
 
@@ -8792,35 +8805,41 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			return this.get(id);
 		},
 
-		add : function(e) {
-			this.editors[e.id] = e;
-			this._setActive(e);
+		add : function(editor) {
+			var editors = this.editors;
 
-			return e;
+			// Add named and index editor instance
+			editors[editor.id] = editor;
+			editors.push(editor);
+
+			this._setActive(editor);
+
+			return editor;
 		},
 
-		remove : function(e) {
-			var t = this;
+		remove : function(editor) {
+			var t = this, i, editors = t.editors;
 
 			// Not in the collection
-			if (!t.editors[e.id])
+			if (!editors[editor.id])
 				return null;
 
-			delete t.editors[e.id];
+			delete editors[editor.id];
 
-			// Select another editor since the active one was removed
-			if (t.activeEditor == e) {
-				t._setActive(null);
-
-				each(t.editors, function(e) {
-					t._setActive(e);
-					return false; // Break
-				});
+			for (i = 0; i < editors.length; i++) {
+				if (editors[i] == editor) {
+					editors.splice(i, 1);
+					break;
+				}
 			}
 
-			e.destroy();
+			// Select another editor since the active one was removed
+			if (t.activeEditor == editor)
+				t._setActive(editors[0]);
 
-			return e;
+			editor.destroy();
+
+			return editor;
 		},
 
 		execCommand : function(c, u, v) {
@@ -8945,8 +8964,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		Dispatcher = tinymce.util.Dispatcher, each = tinymce.each, isGecko = tinymce.isGecko,
 		isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, is = tinymce.is,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
-		EditorManager = tinymce.EditorManager, inArray = tinymce.inArray,
-		grep = tinymce.grep, explode = tinymce.explode;
+		inArray = tinymce.inArray, grep = tinymce.grep, explode = tinymce.explode;
 
 	tinymce.create('tinymce.Editor', {
 		Editor : function(id, s) {
@@ -9085,7 +9103,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				base_uri : tinyMCE.baseURI
 			});
 
-			t.baseURI = EditorManager.baseURI;
+			t.baseURI = tinymce.baseURI;
 
 			// Call setup
 			t.execCallback('setup', t);
@@ -9157,7 +9175,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 						n._mceOldSubmit = n.submit;
 						n.submit = function() {
 							// Save all instances
-							EditorManager.triggerSave();
+							tinymce.triggerSave();
 							t.isNotDirty = 1;
 
 							return t.formElement._mceOldSubmit(t.formElement);
@@ -9199,7 +9217,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		init : function() {
 			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re;
 
-			EditorManager.add(t);
+			tinymce.add(t);
 
 			if (s.theme) {
 				s.theme = s.theme.replace(/-/, '');
@@ -9737,7 +9755,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				// Handle auto focus
 				if (s.auto_focus) {
 					setTimeout(function () {
-						var ed = EditorManager.get(s.auto_focus);
+						var ed = tinymce.get(s.auto_focus);
 
 						ed.selection.select(ed.getBody(), 1);
 						ed.selection.collapse(1);
@@ -9762,14 +9780,14 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			}
 
-			if (EditorManager.activeEditor != t) {
-				if ((oed = EditorManager.activeEditor) != null)
+			if (tinymce.activeEditor != t) {
+				if ((oed = tinymce.activeEditor) != null)
 					oed.onDeactivate.dispatch(oed, t);
 
 				t.onActivate.dispatch(t, oed);
 			}
 
-			EditorManager._setActive(t);
+			tinymce._setActive(t);
 		},
 
 		execCallback : function(n) {
@@ -9796,7 +9814,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		translate : function(s) {
-			var c = this.settings.language || 'en', i18n = EditorManager.i18n;
+			var c = this.settings.language || 'en', i18n = tinymce.i18n;
 
 			if (!s)
 				return '';
@@ -9807,7 +9825,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		getLang : function(n, dv) {
-			return EditorManager.i18n[(this.settings.language || 'en') + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
+			return tinymce.i18n[(this.settings.language || 'en') + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
 		},
 
 		getParam : function(n, dv, ty) {
@@ -10332,7 +10350,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
 			t.onExecCommand.listeners = [];
 
-			EditorManager.remove(t);
+			tinymce.remove(t);
 			DOM.remove(e);
 		},
 
@@ -12737,6 +12755,12 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 						return;
 					}
 
+					// Remove nodes that only contains a bookmark
+					if (childCount === 1 && isBookmarkNode(node.firstChild)) {
+						dom.remove(node, 1);
+						return;
+					}
+
 					if (format.inline || format.wrapper) {
 						// Merges the current node with it's children of similar type to reduce the number of elements
 						if (!format.exact && childCount === 1) {
@@ -12772,23 +12796,26 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				});
 			};
 
-			if (node) {
-				rng = dom.createRng();
+			if (format) {
+				if (node) {
+					rng = dom.createRng();
 
-				rng.setStartBefore(node);
-				rng.setEndAfter(node);
+					rng.setStartBefore(node);
+					rng.setEndAfter(node);
 
-				applyRngStyle(rng);
-			} else {
-				if (!selection.isCollapsed() || !format.inline) {
-					// Apply formatting to selection
-					bookmark = selection.getBookmark();
-					applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
-					selection.moveToBookmark(bookmark);
-					selection.setRng(moveStart(selection.getRng(TRUE)));
-					ed.nodeChanged();
-				} else
-					performCaretAction('apply', name, vars);
+					applyRngStyle(rng);
+				} else {
+					if (!selection.isCollapsed() || !format.inline) {
+						// Apply formatting to selection
+						bookmark = selection.getBookmark();
+						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
+
+						selection.moveToBookmark(bookmark);
+						selection.setRng(moveStart(selection.getRng(TRUE)));
+						ed.nodeChanged();
+					} else
+						performCaretAction('apply', name, vars);
+				}
 			}
 		};
 

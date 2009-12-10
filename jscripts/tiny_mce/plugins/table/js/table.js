@@ -225,7 +225,7 @@ function insertTable() {
 			inst.dom.split(inst.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 		});
 
-		dom.setOuterHTML(dom.select('._mce_marker')[0], html);
+		dom.setOuterHTML(dom.select('br._mce_marker')[0], html);
 
 		inst.selection.moveToBookmark(bm);
 	} else

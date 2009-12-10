@@ -431,7 +431,17 @@
 							if (!keep) {
 								prev = marker.previousSibling;
 								next = marker.nextSibling;
-								dom.remove(marker);
+
+								// Remove all marker text nodes
+								each(tinymce.grep(marker.childNodes), function(node) {
+									if (node.nodeType == 3)
+										node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
+								});
+
+								// Remove marker but keep children if for example contents where inserted into the marker
+								// Also remove duplicated instances of the marker for example by a split operation or by WebKit auto split on paste feature
+								while (marker = dom.get(bookmark.id + '_' + suffix))
+									dom.remove(marker, 1);
 
 								// If siblings are text nodes then merge them
 								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3) {

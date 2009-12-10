@@ -230,18 +230,24 @@
 				var counter = 0, formats = ed.getParam('style_formats');
 
 				if (formats) {
-					each(ed.getParam('style_formats'), function(fmt) {
-						var name = fmt.name = fmt.name || 'style_' + (counter++);
+					each(formats, function(fmt) {
+						var name, keys = 0;
 
-						ed.formatter.register(name, fmt);
-						ctrl.add(fmt.title, name);
+						each(fmt, function() {keys++;});
+
+						if (keys > 1) {
+							name = fmt.name = fmt.name || 'style_' + (counter++);
+							ed.formatter.register(name, fmt);
+							ctrl.add(fmt.title, name);
+						} else
+							ctrl.add(fmt.title);
 					});
 				} else {
 					each(ed.getParam('theme_advanced_styles', '', 'hash'), function(val, key) {
 						var name;
 
 						if (val) {
-							name = fmt.name = fmt.name || 'style_' + (counter++);
+							name = 'style_' + (counter++);
 
 							ed.formatter.register(name, {
 								inline : 'span',

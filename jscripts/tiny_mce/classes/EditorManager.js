@@ -31,7 +31,7 @@
 
 	// Must be on window or IE will leak if the editor is placed in frame or iframe
 	Event.add(window, 'beforeunload', function(e) {
-		tinymce.onBeforeUnload.dispatch(t, e);
+		tinymce.onBeforeUnload.dispatch(tinymce, e);
 	});
 
 	/**
@@ -47,7 +47,7 @@
 		 * @property editors
 		 * @type Object
 		 */
-		editors : {},
+		editors : [],
 
 		i18n : {},
 	
@@ -189,6 +189,9 @@
 		 * @return {tinymce.Editor} Editor instance to return.
 		 */
 		get : function(id) {
+			if (!id)
+				return this.editors;
+
 			return this.editors[id];
 		},
 
@@ -209,14 +212,19 @@
 		 * Adds an editor instance to the editor collection. This will also set it as the active editor.
 		 *
 		 * @method add
-		 * @param {tinymce.Editor} e Editor instance to add to the collection.
+		 * @param {tinymce.Editor} editor Editor instance to add to the collection.
 		 * @return {tinymce.Editor} The same instance that got passed in.
 		 */
-		add : function(e) {
-			this.editors[e.id] = e;
-			this._setActive(e);
+		add : function(editor) {
+			var editors = this.editors;
 
-			return e;
+			// Add named and index editor instance
+			editors[editor.id] = editor;
+			editors.push(editor);
+
+			this._setActive(editor);
+
+			return editor;
 		},
 
 		/**
@@ -226,28 +234,29 @@
 		 * @param {tinymce.Editor} e Editor instance to remove.
 		 * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
 		 */
-		remove : function(e) {
-			var t = this;
+		remove : function(editor) {
+			var t = this, i, editors = t.editors;
 
 			// Not in the collection
-			if (!t.editors[e.id])
+			if (!editors[editor.id])
 				return null;
 
-			delete t.editors[e.id];
+			delete editors[editor.id];
 
-			// Select another editor since the active one was removed
-			if (t.activeEditor == e) {
-				t._setActive(null);
-
-				each(t.editors, function(e) {
-					t._setActive(e);
-					return false; // Break
-				});
+			for (i = 0; i < editors.length; i++) {
+				if (editors[i] == editor) {
+					editors.splice(i, 1);
+					break;
+				}
 			}
 
-			e.destroy();
+			// Select another editor since the active one was removed
+			if (t.activeEditor == editor)
+				t._setActive(editors[0]);
 
-			return e;
+			editor.destroy();
+
+			return editor;
 		},
 
 		/**

@@ -14,8 +14,7 @@
 		Dispatcher = tinymce.util.Dispatcher, each = tinymce.each, isGecko = tinymce.isGecko,
 		isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, is = tinymce.is,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
-		EditorManager = tinymce.EditorManager, inArray = tinymce.inArray,
-		grep = tinymce.grep, explode = tinymce.explode;
+		inArray = tinymce.inArray, grep = tinymce.grep, explode = tinymce.explode;
 
 	/**
 	 * This class contains the core logic for a TinyMCE editor.
@@ -452,7 +451,7 @@
 			 * @property baseURI
 			 * @type tinymce.util.URI
 			 */
-			t.baseURI = EditorManager.baseURI;
+			t.baseURI = tinymce.baseURI;
 
 			// Call setup
 			t.execCallback('setup', t);
@@ -535,7 +534,7 @@
 						n._mceOldSubmit = n.submit;
 						n.submit = function() {
 							// Save all instances
-							EditorManager.triggerSave();
+							tinymce.triggerSave();
 							t.isNotDirty = 1;
 
 							return t.formElement._mceOldSubmit(t.formElement);
@@ -584,7 +583,7 @@
 		init : function() {
 			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re;
 
-			EditorManager.add(t);
+			tinymce.add(t);
 
 			/**
 			 * Reference to the theme instance that was used to generate the UI. 
@@ -1186,7 +1185,7 @@
 				// Handle auto focus
 				if (s.auto_focus) {
 					setTimeout(function () {
-						var ed = EditorManager.get(s.auto_focus);
+						var ed = tinymce.get(s.auto_focus);
 
 						ed.selection.select(ed.getBody(), 1);
 						ed.selection.collapse(1);
@@ -1314,7 +1313,7 @@
 		// #endif
 
 		/**
-		 * Focuses/activates the editor. This will set this editor as the activeEditor in the EditorManager
+		 * Focuses/activates the editor. This will set this editor as the activeEditor in the tinymce collection
 		 * it will also place DOM focus inside the editor.
 		 *
 		 * @method focus
@@ -1347,14 +1346,14 @@
 				// #endif
 			}
 
-			if (EditorManager.activeEditor != t) {
-				if ((oed = EditorManager.activeEditor) != null)
+			if (tinymce.activeEditor != t) {
+				if ((oed = tinymce.activeEditor) != null)
 					oed.onDeactivate.dispatch(oed, t);
 
 				t.onActivate.dispatch(t, oed);
 			}
 
-			EditorManager._setActive(t);
+			tinymce._setActive(t);
 		},
 
 		/**
@@ -1397,7 +1396,7 @@
 		 * @return {String} Translated string.
 		 */
 		translate : function(s) {
-			var c = this.settings.language || 'en', i18n = EditorManager.i18n;
+			var c = this.settings.language || 'en', i18n = tinymce.i18n;
 
 			if (!s)
 				return '';
@@ -1415,7 +1414,7 @@
 		 * @param {String} dv Optional default value to retrive.
 		 */
 		getLang : function(n, dv) {
-			return EditorManager.i18n[(this.settings.language || 'en') + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
+			return tinymce.i18n[(this.settings.language || 'en') + '.' + n] || (is(dv) ? dv : '{#' + n + '}');
 		},
 
 		/**
@@ -2140,7 +2139,7 @@
 		},
 
 		/**
-		 * Removes the editor from the dom and EditorManager collection.
+		 * Removes the editor from the dom and tinymce collection.
 		 *
 		 * @method remove
 		 */
@@ -2156,7 +2155,7 @@
 			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
 			t.onExecCommand.listeners = [];
 
-			EditorManager.remove(t);
+			tinymce.remove(t);
 			DOM.remove(e);
 		},
 
