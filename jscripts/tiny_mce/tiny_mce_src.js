@@ -12691,7 +12691,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 						var count = 0;
 
 						each(node.childNodes, function(node) {
-							if (node.nodeType != 3 || !isWhiteSpaceNode(node))
+							if (!isWhiteSpaceNode(node) && !isBookmarkNode(node))
 								count++;
 						});
 
