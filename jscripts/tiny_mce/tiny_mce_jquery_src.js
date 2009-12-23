@@ -12005,11 +12005,13 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			};
 
 			function wrapAndSplit(format_root, container, target, split) {
-				var parent, clone, lastClone, firstClone, i, formatRoot;
+				var parent, clone, lastClone, firstClone, i, formatRootParent;
 
 				// Format root found then clone formats and split it
 				if (format_root) {
-					for (parent = container.parentNode; parent && parent != format_root; parent = parent.parentNode) {
+					formatRootParent = format_root.parentNode;
+
+					for (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {
 						clone = parent.cloneNode(FALSE);
 
 						for (i = 0; i < formatList.length; i++) {

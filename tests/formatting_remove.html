@@ -15,7 +15,7 @@ function getContent() {
 test('Formatter - remove', function() {
 	var rng;
 
-	expect(14);
+	expect(15);
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -46,6 +46,21 @@ test('Formatter - remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><span>1234</span></p>', 'Inline element on selected text with remove=none');
+
+	// Inline element style where element is format root
+	editor.formatter.register('format', {inline : 'span', styles : {fontWeight : 'bold'}});
+	editor.getBody().innerHTML = '<p><span style="font-weight:bold; color:#FF0000"><em>1234</em></span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('em')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('em')[0].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(getContent(),
+		'<p><span style="color: #ff0000; font-weight: bold;">' +
+		'<em>1</em></span><span style="color: #ff0000;"><em>23</em></span>' +
+		'<span style=\"color: #ff0000; font-weight: bold;\"><em>4' +
+		'</em></span></p>',
+	'Inline element style where element is format root');
 
 	// Partially selected inline element text
 	editor.formatter.register('format', {inline : 'b'});
