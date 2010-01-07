@@ -2746,18 +2746,31 @@ tinymce.create('static tinymce.util.XHR', {
 		};
 
 		function insertNode(n) {
-			var nn, o;
+			var startContainer = this[START_CONTAINER],
+				startOffset = this[START_OFFSET], nn, o;
 
 			// Node is TEXT_NODE or CDATA
-			if (n.nodeType === 3 || n.nodeType === 4) {
-				nn = t[START_CONTAINER].splitText(t[START_OFFSET]);
-				t[START_CONTAINER].parentNode.insertBefore(n, nn);
+			if ((startContainer.nodeType === 3 || startContainer.nodeType === 4) && startContainer.nodeValue) {
+				if (!startOffset) {
+					// At the start of text
+					startContainer.parentNode.insertBefore(n, startContainer);
+				} else if (startOffset >= startContainer.nodeValue.length) {
+					// At the end of text
+					dom.insertAfter(n, startContainer);
+				} else {
+					// Middle, need to split
+					nn = startContainer.splitText(startOffset);
+					startContainer.parentNode.insertBefore(n, nn);
+				}
 			} else {
 				// Insert element node
-				if (t[START_CONTAINER].childNodes.length > 0)
-					o = t[START_CONTAINER].childNodes[t[START_OFFSET]];
+				if (startContainer.childNodes.length > 0)
+					o = startContainer.childNodes[startOffset];
 
-				t[START_CONTAINER].insertBefore(n, o);
+				if (o)
+					startContainer.insertBefore(n, o);
+				else
+					startContainer.appendChild(n);
 			}
 		};
 
