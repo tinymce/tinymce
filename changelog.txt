@@ -11,6 +11,7 @@ Version 3.3b1 (2009-12-xx)
 	Fixed bug where the decode method of the DOMUtils class could end up in an endless loop.
 	Fixed bug where it was possible to bypass the paste cleanup on non IE browsers if you clicked while pasting.
 	Fixed bug where some attributes wasn't serialized correctly on IE if wildcard attribute patters where used.
+	Fixed bug where entity decoding was performed on strings that didn't have any valid entities in them.
 	Rewrote the getBookmark/moveToBookmark selection logic to boost performance on larger documents.
 	Rewrote the table plugin to include new cell selection logic and fixed various bugs and issues.
 	Merged the tinyMCE, tinymce and tinymce.EditorManager into the same instance makes more sense.

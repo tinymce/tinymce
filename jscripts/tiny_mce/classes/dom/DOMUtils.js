@@ -1490,7 +1490,7 @@
 			var e, n, v;
 
 			// Look for entities to decode
-			if (/&[^;]+;/.test(s)) {
+			if (/&[\w#]+;/.test(s)) {
 				// Decode the entities using a div element not super efficient but less code
 				e = this.doc.createElement("div");
 				e.innerHTML = s;
