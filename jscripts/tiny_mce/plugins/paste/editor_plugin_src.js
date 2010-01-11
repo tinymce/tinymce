@@ -8,7 +8,7 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
-(function () {
+(function() {
 	var each = tinymce.each,
 		entities = null,
 		defs = {
@@ -39,7 +39,7 @@
 	}
 
 	tinymce.create('tinymce.plugins.PastePlugin', {
-		init : function (ed, url) {
+		init : function(ed, url) {
 			var t = this;
 
 			t.editor = ed;
@@ -54,12 +54,12 @@
 			t.onPostProcess.add(t._postProcess);
 
 			// Register optional preprocess handler
-			t.onPreProcess.add(function (pl, o) {
+			t.onPreProcess.add(function(pl, o) {
 				ed.execCallback('paste_preprocess', pl, o);
 			});
 
 			// Register optional postprocess
-			t.onPostProcess.add(function (pl, o) {
+			t.onPostProcess.add(function(pl, o) {
 				ed.execCallback('paste_postprocess', pl, o);
 			});
 
@@ -67,8 +67,8 @@
 			ed.pasteAsPlainText = false;
 
 			// This function executes the process handlers and inserts the contents
-			// forceRich overrides plain text mode set by user, important for pasting with execCommand
-			function process(o, forceRich) {
+			// force_rich overrides plain text mode set by user, important for pasting with execCommand
+			function process(o, force_rich) {
 				var dom = ed.dom;
 
 				// Execute pre process handlers
@@ -84,30 +84,28 @@
 				o.content = ed.serializer.serialize(o.node, {getInner : 1});
 
 				// Plain text option active?
-				if ((!forceRich) && (ed.pasteAsPlainText)) {
+				if ((!force_rich) && (ed.pasteAsPlainText)) {
 					t._insertPlainText(ed, dom, o.content);
 
 					if (!getParam(ed, "paste_text_sticky")) {
 						ed.pasteAsPlainText = false;
 						ed.controlManager.setActive("pastetext", false);
 					}
-				}
-				// Handle insertion of contents containing block elements separately
-				else if (/<(p|h[1-6]|ul|ol)/.test(o.content)) {
+				} else if (/<(p|h[1-6]|ul|ol)/.test(o.content)) {
+					// Handle insertion of contents containing block elements separately
 					t._insertBlockContent(ed, dom, o.content);
-				}
-				else {
+				} else {
 					t._insert(o.content);
 				}
 			}
 
 			// Add command for external usage
-			ed.addCommand('mceInsertClipboardContent', function (u, o) {
+			ed.addCommand('mceInsertClipboardContent', function(u, o) {
 				process(o, true);
 			});
 
 			if (!getParam(ed, "paste_text_use_dialog")) {
-				ed.addCommand('mcePasteText', function (u, v) {
+				ed.addCommand('mcePasteText', function(u, v) {
 					var cookie = tinymce.util.Cookie;
 
 					ed.pasteAsPlainText = !ed.pasteAsPlainText;
@@ -199,7 +197,7 @@
 					sel.setRng(rng);
 
 					// Wait a while and grab the pasted contents
-					window.setTimeout(function () {
+					window.setTimeout(function() {
 						var h = '', nl = dom.select('div.mcePaste');
 
 						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
@@ -235,13 +233,13 @@
 			if (getParam(ed, "paste_auto_cleanup_on_paste")) {
 				// Is it's Opera or older FF use key handler
 				if (tinymce.isOpera || /Firefox\/2/.test(navigator.userAgent)) {
-					ed.onKeyDown.add(function (ed, e) {
+					ed.onKeyDown.add(function(ed, e) {
 						if (((tinymce.isMac ? e.metaKey : e.ctrlKey) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45))
 							grabContent(e);
 					});
 				} else {
 					// Grab contents on paste event on Gecko and WebKit
-					ed.onPaste.addToTop(function (ed, e) {
+					ed.onPaste.addToTop(function(ed, e) {
 						return grabContent(e);
 					});
 				}
@@ -249,8 +247,8 @@
 
 			// Block all drag/drop events
 			if (getParam(ed, "paste_block_drop")) {
-				ed.onInit.add(function () {
-					ed.dom.bind(ed.getBody(), ['dragend', 'dragover', 'draggesture', 'dragdrop', 'drop', 'drag'], function (e) {
+				ed.onInit.add(function() {
+					ed.dom.bind(ed.getBody(), ['dragend', 'dragover', 'draggesture', 'dragdrop', 'drop', 'drag'], function(e) {
 						e.preventDefault();
 						e.stopPropagation();
 
@@ -263,7 +261,7 @@
 			t._legacySupport();
 		},
 
-		getInfo : function () {
+		getInfo : function() {
 			return {
 				longname : 'Paste text/word',
 				author : 'Moxiecode Systems AB',
@@ -273,7 +271,7 @@
 			};
 		},
 
-		_preProcess : function (pl, o) {
+		_preProcess : function(pl, o) {
 			//console.log('Before preprocess:' + o.content);
 
 			var ed = this.editor,
@@ -284,7 +282,7 @@
 				len, stripClass;
 
 			function process(items) {
-				each(items, function (v) {
+				each(items, function(v) {
 					// Remove or replace
 					if (v.constructor == RegExp)
 						h = h.replace(v, '');
@@ -346,20 +344,20 @@
 					process([
 						// Convert <span style="mso-spacerun:yes">___</span> to string of alternating breaking/non-breaking spaces of same length
 						[/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
-							function (str, spaces) {
+							function(str, spaces) {
 								return (spaces.length > 0)? spaces.replace(/./, " ").slice(Math.floor(spaces.length/2)).split("").join("\u00a0") : "";
 							}
 						],
 
 						// Examine all styles: delete junk, transform some, and keep the rest
 						[/(<[a-z][^>]*)\sstyle="([^"]*)"/gi,
-							function (str, tag, style) {
+							function(str, tag, style) {
 								var n = [],
 									i = 0,
 									s = explode(trim(style).replace(/&quot;/gi, "'"), ";");
 
 								// Examine each style definition within the tag's style attribute
-								each(s, function (v) {
+								each(s, function(v) {
 									var name, value,
 										parts = explode(v, ":");
 
@@ -473,7 +471,7 @@
 							return '';
 
 						var cls = grep(explode(g1.replace(/^(["'])(.*)\1$/, "$2"), " "),
-							function (v) {
+							function(v) {
 								return (/^(?!mso)/i.test(v));
 							}
 						);
@@ -498,12 +496,12 @@
 		/**
 		 * Various post process items.
 		 */
-		_postProcess : function (pl, o) {
+		_postProcess : function(pl, o) {
 			var t = this, ed = t.editor, dom = ed.dom, styleProps;
 
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
-				each(dom.select('a', o.node), function (a) {
+				each(dom.select('a', o.node), function(a) {
 					if (!a.href || a.href.indexOf('#_Toc') != -1)
 						dom.remove(a, 1);
 				});
@@ -520,7 +518,7 @@
 					styleProps = tinymce.explode(styleProps.replace(/^none$/i, ""));
 
 					// Retains some style properties
-					each(dom.select('*', o.node), function (el) {
+					each(dom.select('*', o.node), function(el) {
 						var newStyle = {}, npc = 0, i, sp, sv;
 
 						// Store a subset of the existing styles
@@ -550,7 +548,7 @@
 
 			// Remove all style information or only specifically on WebKit to avoid the style bug on that browser
 			if (getParam(ed, "paste_remove_styles") || (getParam(ed, "paste_remove_styles_if_webkit") && tinymce.isWebKit)) {
-				each(dom.select('*[style]', o.node), function (el) {
+				each(dom.select('*[style]', o.node), function(el) {
 					el.removeAttribute('style');
 					el.removeAttribute('_mce_style');
 				});
@@ -558,7 +556,7 @@
 				if (tinymce.isWebKit) {
 					// We need to compress the styles on WebKit since if you paste <img border="0" /> it will become <img border="0" style="... lots of junk ..." />
 					// Removing the mce_style that contains the real value will force the Serializer engine to compress the styles
-					each(dom.select('*', o.node), function (el) {
+					each(dom.select('*', o.node), function(el) {
 						el.removeAttribute('_mce_style');
 					});
 				}
@@ -568,11 +566,11 @@
 		/**
 		 * Converts the most common bullet and number formats in Office into a real semantic UL/LI list.
 		 */
-		_convertLists : function (pl, o) {
+		_convertLists : function(pl, o) {
 			var dom = pl.editor.dom, listElm, li, lastMargin = -1, margin, levels = [], lastType, html;
 
 			// Convert middot lists into real semantic lists
-			each(dom.select('p', o.node), function (p) {
+			each(dom.select('p', o.node), function(p) {
 				var sib, val = '', type, html, idx, parents;
 
 				// Get text node value at beginning of paragraph
@@ -612,7 +610,7 @@
 					}
 
 					// Remove middot or number spans if they exists
-					each(dom.select('span', p), function (span) {
+					each(dom.select('span', p), function(span) {
 						var html = span.innerHTML.replace(/<\/?\w+[^>]*>/gi, '');
 
 						// Remove span with the middot or the number
@@ -650,7 +648,7 @@
 		 * This method will split the current block parent and insert the contents inside the split position.
 		 * This logic can be improved so text nodes at the start/end remain in the start/end block elements
 		 */
-		_insertBlockContent : function (ed, dom, content) {
+		_insertBlockContent : function(ed, dom, content) {
 			var parentBlock, marker, sel = ed.selection, last, elm, vp, y, elmHeight;
 
 			function select(n) {
@@ -678,7 +676,7 @@
 				marker = dom.split(parentBlock, marker);
 
 				// Insert nodes before the marker
-				each(dom.create('div', 0, content).childNodes, function (n) {
+				each(dom.create('div', 0, content).childNodes, function(n) {
 					last = marker.parentNode.insertBefore(n.cloneNode(true), marker);
 				});
 
@@ -706,7 +704,7 @@
 		/**
 		 * Inserts the specified contents at the caret position.
 		 */
-		_insert : function (h, skip_undo) {
+		_insert : function(h, skip_undo) {
 			var ed = this.editor;
 
 			// First delete the contents seems to work better on WebKit
@@ -726,7 +724,7 @@
 		 * plugin, and requires minimal changes to add the new functionality.
 		 * Speednet - June 2009
 		 */
-		_insertPlainText : function (ed, dom, h) {
+		_insertPlainText : function(ed, dom, h) {
 			var i, len, pos, rpos, node, breakElms, before, after,
 				w = ed.getWin(),
 				d = ed.getDoc(),
@@ -737,28 +735,25 @@
 				rl = getParam(ed, "paste_text_replacements");
 
 			function process(items) {
-				each(items, function (v) {
+				each(items, function(v) {
 					if (v.constructor == RegExp)
 						h = h.replace(v, "");
 					else
 						h = h.replace(v[0], v[1]);
 				});
-			}
+			};
 
 			if ((typeof(h) === "string") && (h.length > 0)) {
-
-				if (!entities) {
+				if (!entities)
 					entities = ("34,quot,38,amp,39,apos,60,lt,62,gt," + ed.serializer.settings.entities).split(",");
-				}
 
 				// If HTML content with line-breaking tags, then remove all cr/lf chars because only tags will break a line
 				if (/<(?:p|br|h[1-6]|ul|ol|dl|table|t[rdh]|div|blockquote|fieldset|pre|address|center)[^>]*>/i.test(h)) {
 					process([
 						/[\n\r]+/g
 					]);
-				}
-				// Otherwise just get rid of carriage returns (only need linefeeds)
-				else {
+				} else {
+					// Otherwise just get rid of carriage returns (only need linefeeds)
 					process([
 						/\r+/g
 					]);
@@ -775,7 +770,7 @@
 						/&(#\d+|[a-z0-9]{1,10});/gi,
 
 						// Replace with actual character
-						function (e, s) {
+						function(e, s) {
 							if (s.charAt(0) === "#") {
 								return String.fromCharCode(s.slice(1));
 							}
@@ -873,7 +868,7 @@
 				// Needs to be done asynchronously (in window.setTimeout) or else it doesn't work in all browsers.
 				// The second part of the code scrolls the content up if the caret is positioned off-screen.
 				// This is only necessary for WebKit browsers, but it doesn't hurt to use for all.
-				window.setTimeout(function () {
+				window.setTimeout(function() {
 					var marker = dom.get('_plain_text_marker'),
 						elm, vp, y, elmHeight;
 
@@ -895,51 +890,14 @@
 			}
 		},
 
-		_createDelegate: function (context, method) {
-			/// <summary>
-			///		Wraps the specified function/method in context, optionally passing arguments to the specified
-			///		function. Useful if you need 'this' to refer to a specific object when calling the function.
-			///		If you want to pass arguments to the function at the time it is called, simply include them 
-			///		as arguments to the _createDelegate() function call after 'method'. For example,
-			///		myFunc = this._createDelegate(myContext, targetFunc, arg1, arg2, arg3) will return the original
-			///		function with myContext assigned to 'this', with arg1, arg2, and arg3 passed as arguments.
-			///		Those arguments are included in the function call *after* any arguments explicity specified
-			///		when the delegate is called. For example, if this is used as an event handler, the event object
-			///		would be the first argument, since it is specified when the delegate is called, and the additional
-			///		arguments specified at the time the delegate was created are included next.
-			/// </summary>
-			/// <param name="context" mayBeNull="true"></param>
-			/// <param name="method" type="Function"></param>
-			///	</param>
-			/// <returns type="Function"></returns>
-
-			var a = arguments;
-
-			return function () {
-				var i = 0, j, l = arguments.length, args = [];
-
-				if (l > 0) {
-					for (; i<l; i++) {
-						args[i] = arguments[i];
-					}
-				}
-				if ((l = a.length) > 2) {
-					for (j=2; j<l; j++) {
-						args[i++] = a[j];
-					}
-				}
-				return method.apply(context, args);
-			};
-		},
-
 		/**
 		 * This method will open the old style paste dialogs. Some users might want the old behavior but still use the new cleanup engine.
 		 */
-		_legacySupport : function () {
+		_legacySupport : function() {
 			var t = this, ed = t.editor;
 
 			// Register command(s) for backwards compatibility
-			ed.addCommand("mcePasteWord", function () {
+			ed.addCommand("mcePasteWord", function() {
 				ed.windowManager.open({
 					file: t.url + "/pasteword.htm",
 					width: parseInt(getParam(ed, "paste_dialog_width")),
@@ -949,7 +907,7 @@
 			});
 
 			if (getParam(ed, "paste_text_use_dialog")) {
-				ed.addCommand("mcePasteText", function () {
+				ed.addCommand("mcePasteText", function() {
 					ed.windowManager.open({
 						file : t.url + "/pastetext.htm",
 						width: parseInt(getParam(ed, "paste_dialog_width")),

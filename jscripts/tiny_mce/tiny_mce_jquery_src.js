@@ -4233,8 +4233,13 @@ tinymce.create('static tinymce.util.XHR', {
 				h += '<span id="__caret">_</span>';
 
 				// Delete and insert new node
-				r.deleteContents();
-				r.insertNode(t.getRng().createContextualFragment(h));
+				if (r.startContainer == d && r.endContainer == d) {
+					// WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
+					d.body.innerHTML = h;
+				} else {
+					r.deleteContents();
+					r.insertNode(t.getRng().createContextualFragment(h));
+				}
 
 				// Move to caret marker
 				c = t.dom.get('__caret');
@@ -5908,6 +5913,12 @@ tinymce.create('static tinymce.util.XHR', {
 				// XHR in a cross domain loading
 				if (state == 'complete' || state == 'loaded')
 					done();
+			};
+
+			// Most browsers support this feature so we report errors
+			// for those at least to help users track their missing plugins etc
+			elm.onerror = function() {
+				alert('Failed to load: ' + url);
 			};
 
 			// Add script to document
@@ -7811,7 +7822,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	var each = tinymce.each, extend = tinymce.extend,
 		DOM = tinymce.DOM, Event = tinymce.dom.Event,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
-		explode = tinymce.explode;
+		explode = tinymce.explode,
+		Dispatcher = tinymce.util.Dispatcher;
 
 	// Setup some URLs where the editor API is located and where the document is
 	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
@@ -7825,12 +7837,16 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	// Add before unload listener
 	// This was required since IE was leaking memory if you added and removed beforeunload listeners
 	// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
-	tinymce.onBeforeUnload = new tinymce.util.Dispatcher(tinymce);
+	tinymce.onBeforeUnload = new Dispatcher(tinymce);
 
 	// Must be on window or IE will leak if the editor is placed in frame or iframe
 	Event.add(window, 'beforeunload', function(e) {
 		tinymce.onBeforeUnload.dispatch(tinymce, e);
 	});
+
+	tinymce.onAddEditor = new Dispatcher(tinymce);
+
+	tinymce.onRemoveEditor = new Dispatcher(tinymce);
 
 	tinymce.EditorManager = extend(tinymce, {
 		editors : [],
@@ -7967,13 +7983,14 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		add : function(editor) {
-			var editors = this.editors;
+			var self = this, editors = self.editors;
 
 			// Add named and index editor instance
 			editors[editor.id] = editor;
 			editors.push(editor);
 
-			this._setActive(editor);
+			self._setActive(editor);
+			self.onAddEditor.dispatch(self, editor);
 
 			return editor;
 		},
@@ -7999,6 +8016,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				t._setActive(editors[0]);
 
 			editor.destroy();
+			t.onRemoveEditor.dispatch(t, editor);
 
 			return editor;
 		},
@@ -11916,12 +11934,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 						return;
 					}
 
-					// Remove nodes that only contains a bookmark
-					if (childCount === 1 && isBookmarkNode(node.firstChild)) {
-						dom.remove(node, 1);
-						return;
-					}
-
 					if (format.inline || format.wrapper) {
 						// Merges the current node with it's children of similar type to reduce the number of elements
 						if (!format.exact && childCount === 1) {
@@ -12896,3 +12908,53 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		return false; // Run browser command
 	});
 })();
+(function() {
+	tinymce.onAddEditor.add(function(tinymce, ed) {
+		var filters, fontSizes, dom;
+
+		fontSizes = tinymce.explode(ed.settings.font_size_style_values);
+
+		function replaceWithSpan(node, styles) {
+			dom.replace(dom.create('span', {
+				style : styles
+			}), node, 1);
+		};
+
+		filters = {
+			font : function(dom, node) {
+				replaceWithSpan(node, {
+					backgroundColor : node.style.backgroundColor,
+					color : node.color,
+					fontFamily : node.face,
+					fontSize : fontSizes[parseInt(node.size) - 1]
+				});
+			},
+
+			u : function(dom, node) {
+				replaceWithSpan(node, {
+					textDecoration : 'underline'
+				});
+			},
+
+			strike : function(dom, node) {
+				replaceWithSpan(node, {
+					textDecoration : 'line-through'
+				});
+			}
+		};
+
+		function convert() {
+			dom = ed.dom;
+
+			tinymce.each(dom.select('font,u,strike'), function(node) {
+				filters[node.nodeName.toLowerCase()](ed.dom, node);
+			});
+		};
+
+		ed.onSetContent.add(convert);
+
+		ed.onInit.add(function() {
+			ed.selection.onSetContent.add(convert);
+		});
+	});
+})(tinymce);

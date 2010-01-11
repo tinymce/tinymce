@@ -90,6 +90,12 @@
 					done();
 			};
 
+			// Most browsers support this feature so we report errors
+			// for those at least to help users track their missing plugins etc
+			elm.onerror = function() {
+				alert('Failed to load: ' + url);
+			};
+
 			// Add script to document
 			(document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
 		};

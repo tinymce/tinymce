@@ -25,6 +25,7 @@ test("Paste simple text content", function() {
 test("Paste styled text content", function() {
 	var rng = editor.dom.createRng();
 
+	editor.settings.paste_remove_styles_if_webkit = false;
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 3);

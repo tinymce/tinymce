@@ -13,7 +13,8 @@
 	var each = tinymce.each, extend = tinymce.extend,
 		DOM = tinymce.DOM, Event = tinymce.dom.Event,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
-		explode = tinymce.explode;
+		explode = tinymce.explode,
+		Dispatcher = tinymce.util.Dispatcher;
 
 	// Setup some URLs where the editor API is located and where the document is
 	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
@@ -27,12 +28,28 @@
 	// Add before unload listener
 	// This was required since IE was leaking memory if you added and removed beforeunload listeners
 	// with attachEvent/detatchEvent so this only adds one listener and instances can the attach to the onBeforeUnload event
-	tinymce.onBeforeUnload = new tinymce.util.Dispatcher(tinymce);
+	tinymce.onBeforeUnload = new Dispatcher(tinymce);
 
 	// Must be on window or IE will leak if the editor is placed in frame or iframe
 	Event.add(window, 'beforeunload', function(e) {
 		tinymce.onBeforeUnload.dispatch(tinymce, e);
 	});
+
+	/**
+	 * Fires when a new editor instance is added to the tinymce collection.
+	 *
+	 * @event onAddEditor
+	 * @param {tinymce} sender Editor instance.
+	 */
+	tinymce.onAddEditor = new Dispatcher(tinymce);
+
+	/**
+	 * Fires when an editor instance is removed from the tinymce collection.
+	 *
+	 * @event onRemoveEditor
+	 * @param {tinymce} sender Editor instance.
+	 */
+	tinymce.onRemoveEditor = new Dispatcher(tinymce);
 
 	/**
 	 * This class is used to create multiple editor instances and contain them in a collection. So it's both a factory and a manager for editor instances.
@@ -216,13 +233,14 @@
 		 * @return {tinymce.Editor} The same instance that got passed in.
 		 */
 		add : function(editor) {
-			var editors = this.editors;
+			var self = this, editors = self.editors;
 
 			// Add named and index editor instance
 			editors[editor.id] = editor;
 			editors.push(editor);
 
-			this._setActive(editor);
+			self._setActive(editor);
+			self.onAddEditor.dispatch(self, editor);
 
 			return editor;
 		},
@@ -255,6 +273,7 @@
 				t._setActive(editors[0]);
 
 			editor.destroy();
+			t.onRemoveEditor.dispatch(t, editor);
 
 			return editor;
 		},

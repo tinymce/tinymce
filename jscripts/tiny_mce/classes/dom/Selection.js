@@ -125,8 +125,13 @@
 				h += '<span id="__caret">_</span>';
 
 				// Delete and insert new node
-				r.deleteContents();
-				r.insertNode(t.getRng().createContextualFragment(h));
+				if (r.startContainer == d && r.endContainer == d) {
+					// WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
+					d.body.innerHTML = h;
+				} else {
+					r.deleteContents();
+					r.insertNode(t.getRng().createContextualFragment(h));
+				}
 
 				// Move to caret marker
 				c = t.dom.get('__caret');

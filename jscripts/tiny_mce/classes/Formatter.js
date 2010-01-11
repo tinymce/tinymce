@@ -265,12 +265,6 @@
 						return;
 					}
 
-					// Remove nodes that only contains a bookmark
-					if (childCount === 1 && isBookmarkNode(node.firstChild)) {
-						dom.remove(node, 1);
-						return;
-					}
-
 					if (format.inline || format.wrapper) {
 						// Merges the current node with it's children of similar type to reduce the number of elements
 						if (!format.exact && childCount === 1) {
