@@ -200,7 +200,7 @@
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
 
-	<target name="release" description="Builds release packages">
+	<target name="release" depends="build" description="Builds release packages">
 		<!-- Copy the current repos and start processing it -->
 		<delete dir="${temp_dir}" quiet="true" />
 		<copy todir="${temp_dir}/tinymce">
@@ -260,6 +260,13 @@
 				<include name="jscripts/tiny_mce/tiny_mce_jquery_src.js" />
 				<include name="jscripts/tiny_mce/tiny_mce_prototype.js" />
 				<include name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Replaces the tiny_mce_dev.js with tiny_mce.js in examples -->
+		<replaceregexp match="tiny_mce_dev\.js" replace="tiny_mce.js" flags="g" byline="true">
+			<fileset dir="${temp_dir}/tinymce/examples">
+				<include name="**/*.htm*" />
 			</fileset>
 		</replaceregexp>
 
