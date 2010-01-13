@@ -1,5 +1,5 @@
 TinyMCE - The JavaScript Rich Text editor
-=========================================
+==========================================
 
 What you need to build TinyMCE
 -------------------------------
@@ -22,7 +22,7 @@ Will generate API Documentation for the project using the Moxiedoc tool. The doc
 
 `ant release`
 
-Will produce an release package of the current repository code. The release package will be placed in the export directory. Release packages will be placed in the tmp directory.
+Will produce an release package of the current repository code. The release packages will be placed in the tmp directory.
 
 Contributing to the TinyMCE project
 ------------------------------------
