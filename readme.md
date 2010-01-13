@@ -3,8 +3,8 @@ TinyMCE - The JavaScript Rich Text editor
 
 What you need to build TinyMCE
 -------------------------------
-* Install the Java JDK or JRE packages you can find it at: http://java.sun.com/javase/downloads/index.jsp
-* Install Apache Ant you can find it at: http://ant.apache.org/
+* Install the Java JDK or JRE packages you can find it at: [http://java.sun.com/javase/downloads/index.jsp](http://java.sun.com/javase/downloads/index.jsp)
+* Install Apache Ant you can find it at: [http://ant.apache.org/](http://ant.apache.org/)
 * Add Apache Ant to your systems path environment variable, this is not required but makes it easier to issue commands to Ant without having to type the full path for it.
 
 How to build TinyMCE
@@ -26,4 +26,4 @@ Will produce an release package of the current repository code. The release pack
 
 Contributing to the TinyMCE project
 ------------------------------------
-You can read more about how to contribute to this project at http://tinymce.moxiecode.com/contributing
+You can read more about how to contribute to this project at [http://tinymce.moxiecode.com/contributing](http://tinymce.moxiecode.com/contributing)
