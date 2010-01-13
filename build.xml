@@ -25,6 +25,7 @@
 
 	<!-- Generate JS documentation -->
 	<target name="moxiedoc" depends="" description="Generates HTML documentation out of js source">
+		<mkdir dir="docs"/>
 		<delete quiet="true">
 			<fileset dir="docs\api" includes="**/*"/>
 		</delete>
