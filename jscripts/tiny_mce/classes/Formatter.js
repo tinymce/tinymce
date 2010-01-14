@@ -109,7 +109,7 @@
 				if (container.nodeType == 1) {
 					walker = new TreeWalker(container.childNodes[offset], container.childNodes[offset]);
 					for (node = walker.current(); node; node = walker.next()) {
-						if (node.nodeType == 3 && !isBlock(node.parentNode)) {
+						if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
 							rng.setStart(node, 0);
 							break;
 						}
