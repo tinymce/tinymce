@@ -14,7 +14,7 @@
 		DOM = tinymce.DOM, Event = tinymce.dom.Event,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
 		explode = tinymce.explode,
-		Dispatcher = tinymce.util.Dispatcher;
+		Dispatcher = tinymce.util.Dispatcher, undefined;
 
 	// Setup some URLs where the editor API is located and where the document is
 	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
@@ -206,7 +206,7 @@
 		 * @return {tinymce.Editor} Editor instance to return.
 		 */
 		get : function(id) {
-			if (!id)
+			if (id === undefined)
 				return this.editors;
 
 			return this.editors[id];
