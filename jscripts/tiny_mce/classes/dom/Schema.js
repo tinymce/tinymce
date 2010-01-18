@@ -160,6 +160,9 @@
 	 * Schema validator class.
 	 *
 	 * @class tinymce.dom.Schema
+	 * @example
+	 *  if (tinymce.activeEditor.schema.isValid('p', 'span'))
+	 *    alert('span is valid child of p.');
 	 */
 	tinymce.dom.Schema = function() {
 		var t = this, elements = transitional;
@@ -168,9 +171,10 @@
 		 * Returns true/false if the specified element and optionally it's child is valid or not
 		 * according to the XHTML transitional DTD.
 		 *
+		 * @method isValid
 		 * @param {String} name Element name to check for.
 		 * @param {String} child_name Element child name to check for.
-		 * @return true/false if the element is valid or not.
+		 * @return {boolean} true/false if the element is valid or not.
 		 */
 		t.isValid = function(name, child_name) {
 			var element = elements[name];

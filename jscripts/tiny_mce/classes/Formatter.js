@@ -9,6 +9,27 @@
  */
 
 (function(tinymce) {
+	/**
+	 * Text formatter engine class. This class is used to apply formats like bold, italic, font size
+	 * etc to the current selection or specific nodes. This engine was build to replace the browsers
+	 * default formatting logic for execCommand due to it's inconsistant and buggy behavior.
+	 *
+	 * @class tinymce.Formatter
+	 * @example
+	 *  tinymce.activeEditor.formatter.register('mycustomformat', {
+	 *    inline : 'span',
+	 *    styles : {color : '#ff0000'}
+     *  });
+	 *
+	 *  tinymce.activeEditor.formatter.apply('mycustomformat');
+	 */
+
+	/**
+	 * Constructs a new formatter instance.
+	 *
+	 * @constructor Formatter
+	 * @param {tinymce.Editor} ed Editor instance to construct the formatter engine to.
+	 */
 	tinymce.Formatter = function(ed) {
 		var formats = {},
 			each = tinymce.each,
@@ -45,6 +66,7 @@
 		/**
 		 * Returns the format by name or all formats if no name is specified.
 		 *
+		 * @method get
 		 * @param {String} name Optional name to retrive by.
 		 * @return {Array/Object} Array/Object with all registred formats or a specific format.
 		 */
@@ -55,6 +77,7 @@
 		/**
 		 * Registers a specific format by name.
 		 *
+		 * @method register
 		 * @param {Object/String} name Name of the format for example "bold".
 		 * @param {Object/Array} format Optional format object or array of format variants can only be omitted if the first arg is an object.
 		 */
@@ -90,6 +113,7 @@
 		/**
 		 * Applies the specified format to the current selection or specified node.
 		 *
+		 * @method apply
 		 * @param {String} name Name of format to apply.
 		 * @param {Object} vars Optional list of variables to replace within format before applying it.
 		 * @param {Node} node Optional node to apply the format to defaults to current selection.
@@ -326,6 +350,7 @@
 		/**
 		 * Removes the specified format from the current selection or specified node.
 		 *
+		 * @method remove
 		 * @param {String} name Name of format to remove.
 		 * @param {Object} vars Optional list of variables to replace within format before removing it.
 		 * @param {Node} node Optional node to remove the format from defaults to current selection.
@@ -491,6 +516,7 @@
 		/**
 		 * Toggles the specifed format on/off.
 		 *
+		 * @method toggle
 		 * @param {String} name Name of format to apply/remove.
 		 * @param {Object} vars Optional list of variables to replace within format before applying/removing it.
 		 * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.
@@ -505,6 +531,7 @@
 		/**
 		 * Return true/false if the specified node has the specified format.
 		 *
+		 * @method matchNode
 		 * @param {Node} node Node to check the format on.
 		 * @param {String} name Format name to check.
 		 * @param {Object} vars Optional list of variables to replace before checking it.
@@ -558,6 +585,7 @@
 		/**
 		 * Matches the current selection or specifed node against the specified format name.
 		 *
+		 * @method match
 		 * @param {String} name Name of format to match.
 		 * @param {Object} vars Optional list of variables to replace before checking it.
 		 * @param {Node} node Optional node to check.
@@ -610,6 +638,37 @@
 			return FALSE;
 		};
 
+		/**
+		 * Returns true/false if the specified format can be applied to the current selection or not. It will currently only check the state for selector formats, it returns true on all other format types.
+		 *
+		 * @method canApply
+		 * @param {String} name Name of format to check.
+		 * @return {boolean} true/false if the specified format can be applied to the current selection/node.
+		 */
+		function canApply(name) {
+			var formatList = get(name), startNode, parents, i, x, selector;
+
+			if (formatList) {
+				startNode = selection.getStart();
+				parents = getParents(startNode);
+
+				for (x = formatList.length - 1; x >= 0; x--) {
+					selector = formatList[x].selector;
+
+					// Format is not selector based, then always return TRUE
+					if (!selector)
+						return TRUE;
+
+					for (i = parents.length - 1; i >= 0; i--) {
+						if (dom.is(parents[i], selector))
+							return TRUE;
+					}
+				}
+			}
+
+			return FALSE;
+		};
+
 		// Expose to public
 		tinymce.extend(this, {
 			get : get,
@@ -618,7 +677,8 @@
 			remove : remove,
 			toggle : toggle,
 			match : match,
-			matchNode : matchNode
+			matchNode : matchNode,
+			canApply : canApply
 		});
 
 		// Private functions

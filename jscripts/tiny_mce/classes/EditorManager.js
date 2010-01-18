@@ -9,6 +9,10 @@
  */
 
 (function(tinymce) {
+	/**
+	 * @class tinymce
+	 */
+
 	// Shorten names
 	var each = tinymce.each, extend = tinymce.extend,
 		DOM = tinymce.DOM, Event = tinymce.dom.Event,
@@ -21,8 +25,14 @@
 	if (!/[\/\\]$/.test(tinymce.documentBaseURL))
 		tinymce.documentBaseURL += '/';
 
-	// Setup baseURL/baseURI
 	tinymce.baseURL = new tinymce.util.URI(tinymce.documentBaseURL).toAbsolute(tinymce.baseURL);
+
+	/**
+	 * Absolute baseURI for the installation path of TinyMCE.
+	 *
+	 * @property baseURI
+	 * @type tinymce.util.URI
+	 */
 	tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
 
 	// Add before unload listener
@@ -39,7 +49,8 @@
 	 * Fires when a new editor instance is added to the tinymce collection.
 	 *
 	 * @event onAddEditor
-	 * @param {tinymce} sender Editor instance.
+	 * @param {tinymce} sender TinyMCE root class/namespace.
+	 * @param {tinymce.Editor} editor Editor instance.
 	 */
 	tinymce.onAddEditor = new Dispatcher(tinymce);
 
@@ -47,16 +58,11 @@
 	 * Fires when an editor instance is removed from the tinymce collection.
 	 *
 	 * @event onRemoveEditor
-	 * @param {tinymce} sender Editor instance.
+	 * @param {tinymce} sender TinyMCE root class/namespace.
+	 * @param {tinymce.Editor} editor Editor instance.
 	 */
 	tinymce.onRemoveEditor = new Dispatcher(tinymce);
 
-	/**
-	 * This class is used to create multiple editor instances and contain them in a collection. So it's both a factory and a manager for editor instances.
-	 *
-	 * @static
-	 * @class tinymce.EditorManager
-	 */
 	tinymce.EditorManager = extend(tinymce, {
 		/**
 		 * Collection of editor instances.
@@ -66,8 +72,14 @@
 		 */
 		editors : [],
 
+		/**
+		 * Collection of language pack data.
+		 *
+		 * @property i18n
+		 * @type Object
+		 */
 		i18n : {},
-	
+
 		/**
 		 * Currently active editor instance.
 		 *
@@ -202,7 +214,7 @@
 		 * Returns a editor instance by id.
 		 *
 		 * @method get
-		 * @param {String} id Editor instance id to return.
+		 * @param {String/Number} id Editor instance id or index to return.
 		 * @return {tinymce.Editor} Editor instance to return.
 		 */
 		get : function(id) {
@@ -427,9 +439,9 @@
 })(tinymce);
 
 /**
- * Shorter version of tinymce.EditorManager also added for 2.x compatibility.
+ * Alternative name for tinymce added for 2.x compatibility.
  *
  * @member
  * @property tinyMCE
- * @type tinymce.EditorManager
+ * @type tinymce
  */
