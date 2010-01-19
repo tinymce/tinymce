@@ -356,14 +356,18 @@
 				// Does the item exist at all
 				exists = !!storage.getItem(self.key);
 				if (exists) {
-					expDate = new Date(storage.getItem(self.key + "_expires"));
+					// Storage needs autoexpire
+					if (!self.storage.autoExpires) {
+						expDate = new Date(storage.getItem(self.key + "_expires"));
 
-					// Contents hasn't expired
-					if (new Date().getTime() < expDate.getTime())
+						// Contents hasn't expired
+						if (new Date().getTime() < expDate.getTime())
+							return TRUE;
+
+						// Remove it if it has
+						self.removeDraft();
+					} else
 						return TRUE;
-
-					// Remove it if it has
-					self.removeDraft();
 				}
 			}
 
