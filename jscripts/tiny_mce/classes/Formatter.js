@@ -438,15 +438,6 @@
 				return wrapAndSplit(findFormatRoot(container), container, container, true);
 			};
 
-			function wrap(node, name, attrs) {
-				var wrapper = dom.create(name, attrs);
-
-				node.parentNode.insertBefore(wrapper, node);
-				wrapper.appendChild(node);
-
-				return wrapper;
-			};
-
 			function unwrap(start) {
 				var node = dom.get(start ? '_start' : '_end'),
 					out = node[start ? 'firstChild' : 'lastChild'];
@@ -770,6 +761,15 @@
 			return node && node.nodeType === 3 && /^\s*$/.test(node.nodeValue);
 		};
 
+		function wrap(node, name, attrs) {
+			var wrapper = dom.create(name, attrs);
+
+			node.parentNode.insertBefore(wrapper, node);
+			wrapper.appendChild(node);
+
+			return wrapper;
+		};
+
 		/**
 		 * Expands the specified range like object to depending on format.
 		 *
@@ -1089,7 +1089,7 @@
 							each(tinymce.grep(node.childNodes), function(node) {
 								if (isValid(forcedRootBlock, node.nodeName.toLowerCase())) {
 									if (!rootBlockElm)
-										rootBlockElm = wrapNode(node, forcedRootBlock);
+										rootBlockElm = wrap(node, forcedRootBlock);
 									else
 										rootBlockElm.appendChild(node);
 								} else

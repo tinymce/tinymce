@@ -15,7 +15,7 @@ function getContent() {
 test('Formatter - remove', function() {
 	var rng;
 
-	expect(15);
+	expect(16);
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -181,6 +181,16 @@ test('Formatter - remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>x</em><em>abc</em><b><em>y</em></b></p>', 'End within start');
+
+	// Remove block format
+	editor.formatter.register('format', {block : 'h1'});
+	editor.getBody().innerHTML = '<h1>text</h1>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('h1')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(getContent(), '<p>text</p>', 'Remove block format');
 });
 
 tinyMCE.init({
