@@ -11,11 +11,33 @@
 (function() {
 	var Event = tinymce.dom.Event, each = tinymce.each, DOM = tinymce.DOM;
 
+	/**
+	 * This plugin a context menu to TinyMCE editor instances.
+	 *
+	 * @class tinymce.plugins.ContextMenu
+	 */
 	tinymce.create('tinymce.plugins.ContextMenu', {
+		/**
+		 * Initializes the plugin, this will be executed after the plugin has been created.
+		 * This call is done before the editor instance has finished it's initialization so use the onInit event
+		 * of the editor instance to intercept that event.
+		 *
+		 * @method init
+		 * @param {tinymce.Editor} ed Editor instance that the plugin is initialized in.
+		 * @param {string} url Absolute URL to where the plugin is located.
+		 */
 		init : function(ed) {
 			var t = this;
 
 			t.editor = ed;
+
+			/**
+			 * This event gets fired when the context menu is shown.
+			 *
+			 * @event onContextMenu
+			 * @param {tinymce.plugins.ContextMenu} sender Plugin instance sending the event.
+			 * @param {tinymce.ui.DropMenu} menu Drop down menu to fill with more items if needed.
+			 */
 			t.onContextMenu = new tinymce.util.Dispatcher(this);
 
 			ed.onContextMenu.add(function(ed, e) {
@@ -38,6 +60,13 @@
 			ed.onKeyDown.add(hide);
 		},
 
+		/**
+		 * Returns information about the plugin as a name/value array.
+		 * The current keys are longname, author, authorurl, infourl and version.
+		 *
+		 * @method getInfo
+		 * @return {Object} Name/value array containing information about the plugin.
+		 */
 		getInfo : function() {
 			return {
 				longname : 'Contextmenu',

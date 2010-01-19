@@ -149,8 +149,8 @@
 			 * This event gets fired when a draft is stored to local storage.
 			 *
 			 * @event onStoreDraft
-			 * @param {tinymce.plugins.AutoSave} sender
-			 * @param {Object} draft
+			 * @param {tinymce.plugins.AutoSave} sender Plugin instance sending the event.
+			 * @param {Object} draft Draft object containing the HTML contents of the editor.
 			 */
 			self.onStoreDraft = new Dispatcher(self);
 
@@ -158,8 +158,8 @@
 			 * This event gets fired when a draft is restored from local storage.
 			 *
 			 * @event onStoreDraft
-			 * @param {tinymce.plugins.AutoSave} sender
-			 * @param {Object} draft
+			 * @param {tinymce.plugins.AutoSave} sender Plugin instance sending the event.
+			 * @param {Object} draft Draft object containing the HTML contents of the editor.
 			 */
 			self.onRestoreDraft = new Dispatcher(self);
 
@@ -167,8 +167,8 @@
 			 * This event gets fired when a draft removed/expired.
 			 *
 			 * @event onRemoveDraft
-			 * @param {tinymce.plugins.AutoSave} sender
-			 * @param {Object} draft
+			 * @param {tinymce.plugins.AutoSave} sender Plugin instance sending the event.
+			 * @param {Object} draft Draft object containing the HTML contents of the editor.
 			 */
 			self.onRemoveDraft = new Dispatcher(self);
 

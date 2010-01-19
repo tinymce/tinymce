@@ -34,6 +34,14 @@
 			<fileset dir="jscripts\tiny_mce\classes">
 				<include name="**/*.js" /> 
 			</fileset>
+
+			<fileset dir="jscripts\tiny_mce\themes">
+				<include name="**/editor_template_src.js" /> 
+			</fileset>
+
+			<fileset dir="jscripts\tiny_mce\plugins">
+				<include name="**/editor_plugin_src.js" /> 
+			</fileset>
 		</moxiedoc>
 	</target>
 
