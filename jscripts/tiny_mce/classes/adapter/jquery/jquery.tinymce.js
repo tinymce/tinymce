@@ -15,10 +15,7 @@
 		win = window;
 
 	$.fn.tinymce = function(settings) {
-		var self = this, url, ed, base, pos,
-			query = "",
-			suffix = "",
-			lang = "en";
+		var self = this, url, ed, base, pos, lang, query = "", suffix = "";
 
 		// No match then just ignore the call
 		if (!self.length)
@@ -29,7 +26,7 @@
 			return tinyMCE.get(self[0].id);
 
 		function init() {
-			var editors = [];
+			var editors = [], initCount = 0;
 
 			// Apply patches to the jQuery object, only once
 			if (applyPatch) {
@@ -39,7 +36,7 @@
 
 			// Create an editor instance for each matched node
 			self.each(function(i, node) {
-				var ed, id = node.id;
+				var ed, id = node.id, oninit = settings.oninit;
 
 				// Generate unique id for target element if needed
 				if (!id)
@@ -48,24 +45,33 @@
 				// Create editor instance and render it
 				ed = new tinymce.Editor(id, settings);
 				editors.push(ed);
-				ed.render();
+
+				// Add onInit event listener if the oninit setting is defined
+				// this logic will fire the oninit callback ones each
+				// matched editor instance is initialized
+				if (oninit) {
+					ed.onInit.add(function() {
+						var scope, func = oninit;
+
+						// Fire the oninit event ones each editor instance is initialized
+						if (++initCount == editors.length) {
+							if (tinymce.is(func, "string")) {
+								scope = (func.indexOf(".") === -1) ? null : tinymce.resolve(func.replace(/\.\w+$/, ""));
+								func = tinymce.resolve(func);
+							}
+
+							// Call the oninit function with the object
+							func.apply(scope || tinymce, editors);
+						}
+					});
+				}
 			});
 
-			// Call oninit function defined in settings for each instance initialized.
-			// oninit can be either a string value containing the function name, or can be a function.
-			// Function name can include dot notation (e.g., "myObject.myFunction").
-			if (settings.oninit) {
-				$.each(editors, function(i, ed) {
-					var s, f = settings.oninit;
-
-					if (tinymce.is(f, "string")) {
-						s = (f.indexOf(".") === -1)? null : tinymce.resolve(f.replace(/\.\w+$/, ""));
-						f = tinymce.resolve(f);
-					}
-
-					f.apply(s || ed);
-				});
-			}
+			// Render the editor instances in a separate loop since we
+			// need to have the full editors array used in the onInit calls
+			$.each(editors, function(i, ed) {
+				ed.render();
+			});
 		}
 
 		// Load TinyMCE on demand, if we need to
