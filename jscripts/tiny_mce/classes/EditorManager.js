@@ -254,6 +254,14 @@
 			self._setActive(editor);
 			self.onAddEditor.dispatch(self, editor);
 
+			// #ifdef jquery
+
+			// Patch the tinymce.Editor instance with jQuery adapter logic
+			if (tinymce.adapter)
+				tinymce.adapter.patchEditor(editor);
+
+			// #endif
+
 			return editor;
 		},
 

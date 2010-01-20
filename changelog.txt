@@ -6,6 +6,7 @@ Version 3.3b1 (2009-12-xx)
 	Added new valid_styles option. Adds the possibility to restrict styles and their order.
 	Added new theme_advanced_runtime_fontsize option to display the runtime font size in font size select box.
 	Added new jquery plugin version that handles the gzip compressor amongst other things. Contributed by Speednet.
+	Added new $ function to tinymce namespace and editor instances for the jQuery build.
 	Added the possibility to get editors by index as well as name in the tinyMCE.editors collection.
 	Fixed so the contents inside the editor renders in standards mode by default.
 	Fixed bug where it wasn't possible to move the caret on short documents running in standards mode on IE.
