@@ -13,7 +13,7 @@
  */
 
 (function() {
-	var i, nl = document.getElementsByTagName('script'), base, src, p, li, query = '', it;
+	var i, nl = document.getElementsByTagName('script'), base, src, p, li, query = '', it, scripts = [];
 
 	if (window.tinyMCEPreInit) {
 		base = tinyMCEPreInit.base;
@@ -39,32 +39,19 @@
 		query[unescape(it[0])] = unescape(it[1]);
 	}
 
-	nl = null;
+	nl = null; // IE leak fix
 
 	function include(u) {
-		//document.write('<script type="text/javascript" src="' + base + '/classes/' + u + '"></script>');
-		var w = window, x = w.XMLHttpRequest, da;
+		scripts.push(base + '/classes/' + u);
+	};
 
-		u = base + '/classes/' + u;
+	function load() {
+		var i, html = '';
 
-		if (x && w.opera) {
-			x = new XMLHttpRequest();
-			x.open('GET', u, false);
-			x.async = false;
-			x.send('');
-			da = x.responseText;
+		for (i = 0; i < scripts.length; i++)
+			html += '<script type="text/javascript" src="' + scripts[i] + '"></script>\n';
 
-			// Evaluate script
-			if (!w.execScript) {
-				try {
-					eval.call(w, da);
-				} catch (ex) {
-					eval(da, w); // Firefox 3.0a8
-				}
-			} else
-				w.execScript(da); // IE
-		} else
-			document.write('<script type="text/javascript" src="' + u + '"></script>');
+		document.write(html);
 	};
 
 	// Firebug
@@ -131,4 +118,6 @@
 	// Developer API
 	include('xml/Parser.js');
 	include('Developer.js');
+
+	load();
 }());
