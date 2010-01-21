@@ -963,6 +963,18 @@ function fakeKeyEvent(e, na, o) {
 			dom.processHTML('<a/>'),
 			'<a></a>'
 		);
+
+		equals(
+			dom.processHTML('<checkbox selected>'),
+			'<checkbox selected="selected">',
+			'Force boolean attribute format'
+		);
+
+		equals(
+			dom.processHTML('<span title=" selected "></span>'),
+			'<span title=" selected "></span>',
+			'Attribute with boolean value'
+		);
 	});
 
 	test('tinymce.dom.DOMUtils - encodeDecode', 2, function() {
