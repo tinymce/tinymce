@@ -15,7 +15,23 @@
 		isWebKit = tinymce.isWebKit,
 		isIE = tinymce.isIE,
 		blockRe = /^(H[1-6R]|P|DIV|ADDRESS|PRE|FORM|T(ABLE|BODY|HEAD|FOOT|H|R|D)|LI|OL|UL|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|MENU|ISINDEX|SAMP)$/,
-		simpleSelectorRe = /^([a-z0-9],?)+$/i;
+		boolAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected'),
+		mceAttribs = makeMap('src,href,style,coords,shape'),
+		encodedChars = {'&' : '&amp;', '"' : '&quot;', '<' : '&lt;', '>' : '&gt;'},
+		encodeCharsRe = /[<>&\"]/g,
+		simpleSelectorRe = /^([a-z0-9],?)+$/i,
+		tagRegExp = /<(\w+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)(\s*\/?)>/g,
+		attrRegExp = /(\w+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
+
+	function makeMap(str) {
+		var map = {}, i;
+
+		str = str.split(',');
+		for (i = str.length; i >= 0; i--)
+			map[str[i]] = 1;
+
+		return map;
+	};
 
 	/**
 	 * Utility class for various DOM manipulation and retrival functions.
@@ -1348,53 +1364,46 @@
 
 				h = h.replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->');
 
-				// Remove false bool attributes and force attributes into xhtml style attr="attr"
-				h = h.replace(/<([\w:]+) [^>]*(checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)[^>]*>/gi, function(val) {
-					function handle(val, name, value) {
-						// Remove false/0 attribs
-						if (value === 'false' || value === '0')
-							return '';
+				// This function processes the attributes in the HTML string to force boolean
+				// attributes to the attr="attr" format and convert style, src and href to _mce_ versions
+				function processTags(html) {
+					return html.replace(tagRegExp, function(match, elm_name, attrs, end) {
+						return '<' + elm_name + attrs.replace(attrRegExp, function(match, name, value, val2, val3) {
+							var mceValue;
 
-						return ' ' + name + '="' + name + '"';
-					};
+							name = name.toLowerCase();
+							value = value || val2 || val3 || "";
 
-					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)=[\"]([^\"]+)[\"]/gi, handle); // W3C
-					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)=[\']([^\']+)[\']/gi, handle); // W3C
-					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)=([^\s\"\'>]+)/gi, handle); // IE
-					val = val.replace(/ (checked|compact|declare|defer|disabled|ismap|multiple|nohref|noshade|nowrap|readonly|selected)([\s>])/gi, ' $1="$1"$2'); // Force attr="attr"
+							// Treat boolean attributes
+							if (boolAttrs[name]) {
+								// false or 0 is treated as a missing attribute
+								if (value === 'false' || value === '0')
+									return;
 
-					return val;
-				});
+								return name + '="' + name + '"';
+							}
 
-				// Process all tags with src, href or style
-				h = h.replace(/<([\w:]+) [^>]*(src|href|style|shape|coords)[^>]*>/gi, function(a, n) {
-					function handle(m, b, c) {
-						var u = c;
+							// Is attribute one that needs special treatment
+							if (mceAttribs[name] && attrs.indexOf('_mce_' + name) == -1) {
+								mceValue = t.decode(value);
 
-						// Tag already got a _mce_ version
-						if (a.indexOf('_mce_' + b) != -1)
-							return m;
+								// Convert URLs to relative/absolute ones
+								if (s.url_converter && (name == "src" || name == "href"))
+									mceValue = s.url_converter.call(s.url_converter_scope || t, mceValue, name, elm_name);
 
-						if (b == 'style') {
-							// No _mce_style for elements with these since they might get resized by the user
-							if (t._isRes(c))
-								return m;
+								// Process styles lowercases them and compresses them
+								if (name == 'style')
+									mceValue = t.serializeStyle(t.parseStyle(mceValue), name);
 
-							// Parse and serialize the style to convert for example uppercase styles like "BORDER: 1px"
-							u = t.encode(t.serializeStyle(t.parseStyle(u), n));
-						} else if (b != 'coords' && b != 'shape') {
-							if (s.url_converter)
-								u = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(c), b, n));
-						}
+								return name + '="' + value + '"' + ' _mce_' + name + '="' + t.encode(mceValue) + '"';
+							}
 
-						return ' ' + b + '="' + c + '" _mce_' + b + '="' + u + '"';
-					};
+							return match;
+						}) + end + '>';
+					});
+				};
 
-					a = a.replace(/ (src|href|style|coords|shape)=[\"]([^\"]+)[\"]/gi, handle); // W3C
-					a = a.replace(/ (src|href|style|coords|shape)=[\']([^\']+)[\']/gi, handle); // W3C
-
-					return a.replace(/ (src|href|style|coords|shape)=([^\s\"\'>]+)/gi, handle); // IE
-				});
+				h = processTags(h);
 
 				// Restore script blocks
 				h = h.replace(/MCE_SCRIPT:([0-9]+)/g, function(val, idx) {
@@ -1516,24 +1525,10 @@
 		 * @param {String} s String to encode with entities.
 		 * @return {String} Entity encoded string.
 		 */
-		encode : function(s) {
-			return s ? ('' + s).replace(/[<>&\"]/g, function (c, b) {
-				switch (c) {
-					case '&':
-						return '&amp;';
-
-					case '"':
-						return '&quot;';
-
-					case '<':
-						return '&lt;';
-
-					case '>':
-						return '&gt;';
-				}
-
-				return c;
-			}) : s;
+		encode : function(str) {
+			return ('' + str).replace(encodeCharsRe, function(chr) {
+				return encodedChars[chr];
+			});
 		},
 
 		/**
