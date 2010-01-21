@@ -75,7 +75,7 @@
 			// with other jQuery logic on the page. Only instances created by TinyMCE should be patched.
 			function patch(jq) {
 				// Patch some functions, only patch the object once
-				if (!jq.tinymce) {
+				if (jq.css !== css) {
 					// Patch css/attr to use the _mce_ prefixed attribute variants
 					jq.css = css;
 					jq.attr = attr;

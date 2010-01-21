@@ -273,7 +273,7 @@
 		</replaceregexp>
 
 		<!-- Replaces the tiny_mce_dev.js with tiny_mce.js in examples -->
-		<replaceregexp match="tiny_mce_dev\.js" replace="tiny_mce.js" flags="g" byline="true">
+		<replaceregexp match="tiny_mce_(dev|jquery)\.js" replace="tiny_mce.js" flags="g" byline="true">
 			<fileset dir="${temp_dir}/tinymce/examples">
 				<include name="**/*.htm*" />
 			</fileset>
