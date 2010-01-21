@@ -102,7 +102,9 @@
 			// Add a $ function on each editor instance this one is scoped for the editor document object
 			// this way you can do chaining like this tinymce.get(0).$('p').append('text').css('color', 'red');
 			editor.$ = function(selector, scope) {
-				return patch($(selector, editor.getDoc() || scope));
+				var doc = editor.getDoc();
+
+				return patch($(selector || doc, doc || scope));
 			};
 		}
 	};
