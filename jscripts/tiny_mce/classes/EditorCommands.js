@@ -122,7 +122,7 @@
 		};
 
 		function toggleFormat(name, value) {
-			editor.formatter.toggle(name, value ? {value : value} : null);
+			editor.formatter.toggle(name, value ? {value : value} : undefined);
 		};
 
 		function storeSelection(type) {
@@ -149,7 +149,15 @@
 
 			// Override justify commands to use the text formatter engine
 			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull' : function(command) {
-				toggleFormat('align' + command.substring(7));
+				var align = command.substring(7);
+
+				// Remove all other alignments first
+				each('left,center,right,full'.split(','), function(name) {
+					if (align != name)
+						editor.formatter.remove('align' + name);
+				});
+
+				toggleFormat('align' + align);
 			},
 
 			// Override list commands to fix WebKit bug

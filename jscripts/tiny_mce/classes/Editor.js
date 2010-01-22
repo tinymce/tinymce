@@ -872,18 +872,18 @@
 			t.formatter.register({
 				alignleft : [
 					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}},
-					{selector : 'img,table', styles : {'float' : 'left', display : '', marginLeft : '', marginRight : ''}}
+					{selector : 'img,table', styles : {'float' : 'left'}}
 				],
 
 				aligncenter : [
 					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'center'}},
-					{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto', 'float' : ''}},
-					{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto', 'float' : ''}}
+					{selector : 'img', styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto'}},
+					{selector : 'table', styles : {marginLeft : 'auto', marginRight : 'auto'}}
 				],
 
 				alignright : [
 					{selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'right'}},
-					{selector : 'img,table', styles : {'float' : 'right', display : '', marginLeft : '', marginRight : ''}}
+					{selector : 'img,table', styles : {'float' : 'right'}}
 				],
 
 				alignfull : [
