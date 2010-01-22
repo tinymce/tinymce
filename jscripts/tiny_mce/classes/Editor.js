@@ -556,8 +556,8 @@
 
 				each(explode(s.plugins), function(p) {
 					if (p && p.charAt(0) != '-' && !PluginManager.urls[p]) {
-						// Skip safari plugin for other browsers
-						if (!isWebKit && p == 'safari')
+						// Skip safari plugin, since it is removed as of 3.3b1
+						if (p == 'safari')
 							return;
 
 						PluginManager.load(p, 'plugins/' + p + '/editor_plugin' + tinymce.suffix + '.js');
