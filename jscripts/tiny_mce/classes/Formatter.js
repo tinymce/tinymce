@@ -126,12 +126,12 @@
 			 */
 			function moveStart(rng) {
 				var container = rng.startContainer,
-					offset = rng.endOffset,
+					offset = rng.startOffset,
 					walker, node;
 
 				// Move startContainer/startOffset in to a suitable node
-				if (container.nodeType == 1) {
-					walker = new TreeWalker(container.childNodes[offset], container.childNodes[offset]);
+				if (container.nodeType == 1 || container.nodeValue === "") {
+					walker = new TreeWalker(container.childNodes[offset]);
 					for (node = walker.current(); node; node = walker.next()) {
 						if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
 							rng.setStart(node, 0);
