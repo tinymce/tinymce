@@ -9,379 +9,374 @@
  */
 
 (function(tinymce) {
-	var each = tinymce.each, isIE = tinymce.isIE, isGecko = tinymce.isGecko, isOpera = tinymce.isOpera, isWebKit = tinymce.isWebKit;
+	// Added for compression purposes
+	var each = tinymce.each, undefined, TRUE = true, FALSE = false;
 
 	/**
-	 * This is a internal class and no method in this class should be called directly form the out side.
+	 * This class enables you to add custom editor commands and it contains
+	 * overrides for native browser commands to address various bugs and issues.
+	 *
+	 * @class tinymce.EditorCommands
 	 */
-	tinymce.create('tinymce.EditorCommands', {
-		EditorCommands : function(ed) {
-			this.editor = ed;
-		},
+	tinymce.EditorCommands = function(editor) {
+		var dom = editor.dom,
+			selection = editor.selection,
+			commands = {state: {}, exec : {}, value : {}},
+			settings = editor.settings,
+			bookmark;
 
-		execCommand : function(cmd, ui, val) {
-			var t = this, ed = t.editor, f;
+		/**
+		 * Executes the specified command.
+		 *
+		 * @method execCommand
+		 * @param {String} command Command to execute.
+		 * @param {Boolean} ui Optional user interface state.
+		 * @param {Object} value Optional value for command.
+		 * @return {Boolean} true/false if the command was found or not.
+		 */
+		function execCommand(command, ui, value) {
+			var func;
 
-			switch (cmd) {
-				// Ignore these
-				case 'mceResetDesignMode':
-				case 'mceBeginUndoLevel':
-					return true;
-
-				// Ignore these
-				case 'unlink':
-					t.UnLink();
-					return true;
-
-				// Bundle these together
-				case 'JustifyLeft':
-				case 'JustifyCenter':
-				case 'JustifyRight':
-				case 'JustifyFull':
-					t.mceJustify(cmd, cmd.substring(7).toLowerCase());
-					return true;
-
-				default:
-					f = this[cmd];
-
-					if (f) {
-						f.call(this, ui, val);
-						return true;
-					}
+			command = command.toLowerCase();
+			if (func = commands.exec[command]) {
+				func(command, ui, value);
+				return TRUE;
 			}
 
-			return false;
-		},
+			return FALSE;
+		};
 
-		Indent : function() {
-			var ed = this.editor, d = ed.dom, s = ed.selection, e, iv, iu;
+		/**
+		 * Queries the current state for a command for example if the current selection is "bold".
+		 *
+		 * @method queryCommandState
+		 * @param {String} command Command to check the state of.
+		 * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it's not found.
+		 */
+		function queryCommandState(command) {
+			var func;
 
-			// Setup indent level
-			iv = ed.settings.indentation;
-			iu = /[a-z%]+$/i.exec(iv);
-			iv = parseInt(iv);
-
-			if (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList()) {
-				each(s.getSelectedBlocks(), function(e) {
-					d.setStyle(e, 'paddingLeft', (parseInt(e.style.paddingLeft || 0) + iv) + iu);
-				});
-
-				return;
-			}
-
-			ed.getDoc().execCommand('Indent', false, null);
-		},
-
-		Outdent : function() {
-			var ed = this.editor, dom = ed.dom, s = ed.selection, e, v, iv, iu;
-
-			// Setup indent level
-			iv = ed.settings.indentation;
-			iu = /[a-z%]+$/i.exec(iv);
-			iv = parseInt(iv);
-
-			if (!this.queryStateInsertUnorderedList() && !this.queryStateInsertOrderedList()) {
-				each(s.getSelectedBlocks(), function(e) {
-					v = Math.max(0, parseInt(e.style.paddingLeft || 0) - iv);
-					dom.setStyle(e, 'paddingLeft', v ? v + iu : '');
-				});
-
-				return;
-			}
-
-			ed.getDoc().execCommand('Outdent', false, null);
-		},
-
-		mceSetContent : function(u, v) {
-			this.editor.setContent(v);
-		},
-
-		mceToggleVisualAid : function() {
-			var ed = this.editor;
-
-			ed.hasVisual = !ed.hasVisual;
-			ed.addVisual();
-		},
-
-		mceReplaceContent : function(u, v) {
-			var s = this.editor.selection;
-
-			s.setContent(v.replace(/\{\$selection\}/g, s.getContent({format : 'text'})));
-		},
-
-		mceInsertLink : function(u, v) {
-			var ed = this.editor, s = ed.selection, e = ed.dom.getParent(s.getNode(), 'a');
-
-			if (tinymce.is(v, 'string'))
-				v = {href : v};
-
-			function set(e) {
-				each(v, function(v, k) {
-					ed.dom.setAttrib(e, k, v);
-				});
-			};
-
-			if (!e) {
-				ed.execCommand('CreateLink', false, 'javascript:mctmp(0);');
-				each(ed.dom.select('a[href=javascript:mctmp(0);]'), function(e) {
-					set(e);
-				});
-			} else {
-				if (v.href)
-					set(e);
-				else
-					ed.dom.remove(e, 1);
-			}
-		},
-
-		Italic : function() {
-			this._toggle('italic');
-		},
-
-		queryStateItalic : function() {
-			return this._match('italic');
-		},
-
-		Bold : function() {
-			this._toggle('bold');
-		},
-
-		queryStateBold : function() {
-			return this._match('bold');
-		},
-
-		Underline : function() {
-			this._toggle('underline');
-		},
-
-		queryStateUnderline : function() {
-			return this._match('underline');
-		},
-
-		Strikethrough : function() {
-			this._toggle('strikethrough');
-		},
-
-		queryStateStrikethrough : function() {
-			return this._match('strikethrough');
-		},
-
-		ForeColor : function(ui, v) {
-			this._toggle('forecolor', v);
-		},
-
-		HiliteColor : function(ui, v) {
-			this._toggle('hilitecolor', v);
-		},
-
-		RemoveFormat : function() {
-			this.editor.formatter.remove('removeformat');
-		},
-
-		FontName : function(u, v) {
-			this._toggle('fontname', v);
-		},
-
-		FontSize : function(u, v) {
-			var ed = this.editor, settings = ed.settings, fontClasses, fontSizes;
-
-			// Convert font size 1-7 to styles
-			if (v >= 1 && v <= 7) {
-				fontSizes = tinymce.explode(settings.font_size_style_values);
-				fontClasses = tinymce.explode(settings.font_size_classes);
-
-				if (fontClasses)
-					v = fontClasses[v - 1] || v;
-				else
-					v = fontSizes[v - 1] || v;
-			}
-
-			this._toggle('fontsize', v);
-		},
-
-		mceBlockQuote : function() {
-			this._toggle('blockquote');
-		},
-
-		queryStatemceBlockQuote : function() {
-			return this._match('blockquote');
-		},
-
-		UnLink : function() {
-			var ed = this.editor, s = ed.selection;
-
-			if (s.isCollapsed())
-				s.select(s.getNode());
-
-			ed.getDoc().execCommand('unlink', false, null);
-			s.collapse(0);
-		},
-
-		queryCommandValue : function(c) {
-			var f = this['queryValue' + c];
-
-			if (f)
-				return f.call(this, c);
-
-			return false;
-		},
-
-		queryCommandState : function(cmd) {
-			var f;
-
-			switch (cmd) {
-				// Bundle these together
-				case 'JustifyLeft':
-				case 'JustifyCenter':
-				case 'JustifyRight':
-				case 'JustifyFull':
-					return this.queryStateJustify(cmd, cmd.substring(7).toLowerCase());
-
-				default:
-					if (f = this['queryState' + cmd])
-						return f.call(this, cmd);
-			}
+			command = command.toLowerCase();
+			if (func = commands.state[command])
+				return func(command);
 
 			return -1;
-		},
+		};
 
-		_queryState : function(c) {
-			try {
-				return this.editor.getDoc().queryCommandState(c);
-			} catch (ex) {
-				// Ignore exception
-			}
-		},
+		/**
+		 * Queries the command value for example the current fontsize.
+		 *
+		 * @method queryCommandValue
+		 * @param {String} command Command to check the value of.
+		 * @return {Object} Command value of false if it's not found.
+		 */
+		function queryCommandValue(command) {
+			var func;
 
-		queryValueFontSize : function() {
-			var ed = this.editor, v = 0, p;
+			command = command.toLowerCase();
+			if (func = commands.value[command])
+				return func(command);
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'span'))
-				v = p.style.fontSize;
+			return FALSE;
+		};
 
-			return v;
-		},
+		/**
+		 * Adds commands to the command collection.
+		 *
+		 * @method addCommands
+		 * @param {Object} command_list Name/value collection with commands to add, the names can also be comma separated.
+		 * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.
+		 */
+		function addCommands(command_list, type) {
+			type = type || 'exec';
 
-		queryValueFontName : function() {
-			var ed = this.editor, v, p;
+			each(command_list, function(callback, command) {
+				each(command.toLowerCase().split(','), function(command) {
+					commands[type][command] = callback;
+				});
+			});
+		};
 
-			if (p = ed.dom.getParent(ed.selection.getNode(), 'span'))
-				v = p.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
+		// Expose public methods
+		tinymce.extend(this, {
+			execCommand : execCommand,
+			queryCommandState : queryCommandState,
+			queryCommandValue : queryCommandValue,
+			addCommands : addCommands
+		});
 
-			return v;
-		},
+		// Private methods
 
-		mceJustify : function(c, v) {
-			return this.editor.formatter.toggle('align' + v);
-		},
+		function execNativeCommand(command, ui, value) {
+			if (ui === undefined)
+				ui = FALSE;
 
-		queryStateJustify : function(c, v) {
-			return this._match('align' + v);
-		},
+			if (value === undefined)
+				value = null;
 
-		FormatBlock : function(ui, val) {
-			return this.editor.formatter.toggle(val);
-		},
+			return editor.getDoc().execCommand(command, ui, value);
+		};
 
-		mceCleanup : function() {
-			var ed = this.editor, sel = ed.selection, bookmark = sel.getBookmark();
+		function isFormatMatch(name) {
+			return editor.formatter.match(name);
+		};
 
-			ed.setContent(ed.getContent({cleanup : true}));
+		function toggleFormat(name, value) {
+			editor.formatter.toggle(name, value ? {value : value} : null);
+		};
 
-			sel.moveToBookmark(bookmark);
-		},
+		function storeSelection(type) {
+			bookmark = selection.getBookmark(type);
+		};
 
-		mceRemoveNode : function(ui, val) {
-			var ed = this.editor, s = ed.selection, b, n = val || s.getNode();
+		function restoreSelection() {
+			selection.moveToBookmark(bookmark);
+		};
 
-			// Make sure that the body node isn't removed
-			if (n == ed.getBody())
-				return;
+		// Add execCommand overrides
+		addCommands({
+			// Ignore these, added for compatibility
+			'mceResetDesignMode,mceBeginUndoLevel' : function() {},
 
-			b = s.getBookmark();
-			ed.dom.remove(n, 1);
-			s.moveToBookmark(b);
-			ed.nodeChanged();
-		},
+			// Override unlink command
+			unlink : function(command) {
+				if (selection.isCollapsed())
+					selection.select(selection.getNode());
 
-		mceSelectNodeDepth : function(ui, val) {
-			var ed = this.editor, s = ed.selection, c = 0;
+				execNativeCommand(command);
+				selection.collapse(FALSE);
+			},
 
-			ed.dom.getParent(s.getNode(), function(n) {
-				if (n.nodeType == 1 && c++ == val) {
-					s.select(n);
-					ed.nodeChanged();
-					return false;
+			// Override justify commands to use the text formatter engine
+			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull' : function(command) {
+				toggleFormat('align' + command.substring(7));
+			},
+
+			// Override list commands to fix WebKit bug
+			'InsertUnorderedList,InsertOrderedList' : function(command) {
+				var listElm, listParent;
+
+				execNativeCommand(command);
+
+				// WebKit produces lists within block elements so we need to split them
+				// we will replace the native list creation logic to custom logic later on
+				// TODO: Remove this when the list creation logic is removed
+				listElm = dom.getParent(selection.getNode(), 'ol,ul');
+				if (listElm) {
+					listParent = listElm.parentNode;
+
+					// If list is within a text block then split that block
+					if (/^(H[1-6]|P|ADDRESS|PRE)$/.test(listParent.nodeName)) {
+						storeSelection();
+						dom.split(listParent, listElm);
+						restoreSelection();
+					}
 				}
-			}, ed.getBody());
-		},
+			},
 
-		mceSelectNode : function(u, v) {
-			this.editor.selection.select(v);
-		},
+			// Override commands to use the text formatter engine
+			'Bold,Italic,Underline,Strikethrough' : function(command) {
+				toggleFormat(command);
+			},
 
-		mceInsertContent : function(ui, val) {
-			this.editor.selection.setContent(val);
-		},
+			// Override commands to use the text formatter engine
+			'ForeColor,HiliteColor,FontName' : function(command, ui, value) {
+				toggleFormat(command, value);
+			},
 
-		mceInsertRawHTML : function(ui, val) {
-			var ed = this.editor;
+			FontSize : function(command, ui, value) {
+				var fontClasses, fontSizes;
 
-			ed.selection.setContent('tiny_mce_marker');
-			ed.setContent(ed.getContent().replace(/tiny_mce_marker/g, val));
-		},
+				// Convert font size 1-7 to styles
+				if (value >= 1 && value <= 7) {
+					fontSizes = tinymce.explode(settings.font_size_style_values);
+					fontClasses = tinymce.explode(settings.font_size_classes);
 
-		mceRepaint : function() {
-			var s, b, e = this.editor;
+					if (fontClasses)
+						value = fontClasses[value - 1] || value;
+					else
+						value = fontSizes[value - 1] || value;
+				}
 
-			if (tinymce.isGecko) {
-				try {
-					s = e.selection;
-					b = s.getBookmark(true);
+				toggleFormat(command, value);
+			},
 
-					if (s.getSel())
-						s.getSel().selectAllChildren(e.getBody());
+			RemoveFormat : function(command) {
+				editor.formatter.remove(command);
+			},
 
-					s.collapse(true);
-					s.moveToBookmark(b);
-				} catch (ex) {
-					// Ignore
+			mceBlockQuote : function(command) {
+				toggleFormat('blockquote');
+			},
+
+			FormatBlock : function(command, ui, value) {
+				return toggleFormat(value);
+			},
+
+			mceCleanup : function() {
+				storeSelection();
+				editor.setContent(editor.getContent({cleanup : TRUE}));
+				restoreSelection();
+			},
+
+			mceRemoveNode : function(command, ui, value) {
+				var node = value || selection.getNode();
+
+				// Make sure that the body node isn't removed
+				if (node != ed.getBody()) {
+					storeSelection();
+					editor.dom.remove(node, TRUE);
+					restoreSelection();
+				}
+			},
+
+			mceSelectNodeDepth : function(command, ui, value) {
+				var counter = 0;
+
+				dom.getParent(selection.getNode(), function(node) {
+					if (node.nodeType == 1 && counter++ == value) {
+						selection.select(node);
+						return FALSE;
+					}
+				}, editor.getBody());
+			},
+
+			mceSelectNode : function(command, ui, value) {
+				selection.select(value);
+			},
+
+			mceInsertContent : function(command, ui, value) {
+				selection.setContent(value);
+			},
+
+			mceInsertRawHTML : function(command, ui, value) {
+				selection.setContent('tiny_mce_marker');
+				editor.setContent(editor.getContent().replace(/tiny_mce_marker/g, value));
+			},
+
+			mceSetContent : function(command, ui, value) {
+				editor.setContent(value);
+			},
+
+			'Indent,Outdent' : function(command) {
+				var intentValue, indentUnit, value;
+
+				// Setup indent level
+				intentValue = settings.indentation;
+				indentUnit = /[a-z%]+$/i.exec(intentValue);
+				intentValue = parseInt(intentValue);
+
+				if (!queryCommandState('InsertUnorderedList') && !queryCommandState('InsertOrderedList')) {
+					each(selection.getSelectedBlocks(), function(element) {
+						if (command == 'outdent') {
+							value = Math.max(0, parseInt(element.style.paddingLeft || 0) - intentValue);
+							dom.setStyle(element, 'paddingLeft', value ? value + indentUnit : '');
+						} else
+							dom.setStyle(element, 'paddingLeft', (parseInt(element.style.paddingLeft || 0) + intentValue) + indentUnit);
+					});
+				} else
+					execNativeCommand(command);
+			},
+
+			mceRepaint : function() {
+				var bookmark;
+
+				if (tinymce.isGecko) {
+					try {
+						storeSelection(TRUE);
+
+						if (selection.getSel())
+							selection.getSel().selectAllChildren(editor.getBody());
+
+						selection.collapse(TRUE);
+						restoreSelection();
+					} catch (ex) {
+						// Ignore
+					}
+				}
+			},
+
+			InsertHorizontalRule : function() {
+				selection.setContent('<hr />');
+			},
+
+			mceToggleVisualAid : function() {
+				editor.hasVisual = !editor.hasVisual;
+				editor.addVisual();
+			},
+
+			mceReplaceContent : function(command, ui, value) {
+				selection.setContent(value.replace(/\{\$selection\}/g, selection.getContent({format : 'text'})));
+			},
+
+			mceInsertLink : function(command, ui, value) {
+				var link = dom.getParent(selection.getNode(), 'a');
+
+				if (tinymce.is(value, 'string'))
+					value = {href : value};
+
+				if (!link) {
+					execNativeCommand('CreateLink', FALSE, 'javascript:mctmp(0);');
+					each(dom.select('a[href=javascript:mctmp(0);]'), function(link) {
+						dom.setAttribs(link, value);
+					});
+				} else {
+					if (value.href)
+						dom.setAttribs(link, value);
+					else
+						ed.dom.remove(link, TRUE);
 				}
 			}
-		},
+		});
 
-		queryStateOutdent : function() {
-			var ed = this.editor, n;
+		// Add queryCommandState overrides
+		addCommands({
+			// Override justify commands
+			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull' : function(command) {
+				return isFormatMatch('align' + command.substring(7));
+			},
 
-			if (ed.settings.inline_styles) {
-				if ((n = ed.dom.getParent(ed.selection.getStart(), ed.dom.isBlock)) && parseInt(n.style.paddingLeft) > 0)
-					return true;
+			'Bold,Italic,Underline,Strikethrough' : function(command) {
+				return isFormatMatch(command);
+			},
 
-				if ((n = ed.dom.getParent(ed.selection.getEnd(), ed.dom.isBlock)) && parseInt(n.style.paddingLeft) > 0)
-					return true;
+			mceBlockQuote : function() {
+				return isFormatMatch('blockquote');
+			},
+
+			Outdent : function() {
+				var node;
+
+				if (settings.inline_styles) {
+					if ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseInt(node.style.paddingLeft) > 0)
+						return TRUE;
+
+					if ((node = dom.getParent(selection.getEnd(), dom.isBlock)) && parseInt(node.style.paddingLeft) > 0)
+						return TRUE;
+				}
+
+				return queryCommandState('InsertUnorderedList') || queryCommandState('InsertOrderedList') || (!settings.inline_styles && !!dom.getParent(selection.getNode(), 'BLOCKQUOTE'));
+			},
+
+			'InsertUnorderedList,InsertOrderedList' : function(command) {
+				return dom.getParent(selection.getNode(), command == 'insertunorderedlist' ? 'UL' : 'OL');
 			}
+		}, 'state');
 
-			return this.queryStateInsertUnorderedList() || this.queryStateInsertOrderedList() || (!ed.settings.inline_styles && !!ed.dom.getParent(ed.selection.getNode(), 'BLOCKQUOTE'));
-		},
+		// Add queryCommandValue overrides
+		addCommands({
+			'FontSize,FontName' : function(command) {
+				var value = 0, parent;
 
-		queryStateInsertUnorderedList : function() {
-			return this.editor.dom.getParent(this.editor.selection.getNode(), 'UL');
-		},
+				if (parent = dom.getParent(selection.getNode(), 'span')) {
+					if (command == 'fontsize')
+						value = parent.style.fontSize;
+					else
+						value = parent.style.fontFamily.replace(/, /g, ',').replace(/[\'\"]/g, '').toLowerCase();
+				}
 
-		queryStateInsertOrderedList : function() {
-			return this.editor.dom.getParent(this.editor.selection.getNode(), 'OL');
-		},
-
-		_match : function(name) {
-			return this.editor.formatter.match(name);
-		},
-
-		_toggle : function(name, val) {
-			this.editor.formatter.toggle(name, val ? {value : val} : null);
-		},
-
-		InsertHorizontalRule : function() {
-			this.editor.selection.setContent('<hr />');
-		}
-	});
+				return value;
+			}
+		}, 'value');
+	};
 })(tinymce);
