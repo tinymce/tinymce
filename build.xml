@@ -164,7 +164,6 @@
 		<yuicompress infile="${build_dir}/plugins/xhtmlxtras/editor_plugin_src.js" outfile="${build_dir}/plugins/xhtmlxtras/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/template/editor_plugin_src.js" outfile="${build_dir}/plugins/template/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/bbcode/editor_plugin_src.js" outfile="${build_dir}/plugins/bbcode/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/safari/editor_plugin_src.js" outfile="${build_dir}/plugins/safari/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/pagebreak/editor_plugin_src.js" outfile="${build_dir}/plugins/pagebreak/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
 		<yuicompress infile="${build_dir}/plugins/tabfocus/editor_plugin_src.js" outfile="${build_dir}/plugins/tabfocus/editor_plugin.js" />
