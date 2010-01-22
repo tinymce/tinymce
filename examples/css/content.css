@@ -49,3 +49,57 @@ th {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 13px;
 }
+
+/* Basic formats */
+
+.bold {
+	font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+/* Global align classes */
+
+.left {
+	text-align: inherit;
+}
+
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
+
+.full {
+	text-align: justify
+}
+
+/* Image and table specific aligns */
+
+img.left, table.left {
+	float: left;
+	text-align: inherit;
+}
+
+img.center, table.center {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: inherit;
+}
+
+img.center {
+	display: block;
+}
+
+img.right, table.right {
+	float: right;
+	text-align: inherit;
+}
