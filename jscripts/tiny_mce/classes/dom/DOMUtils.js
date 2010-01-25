@@ -1180,6 +1180,10 @@
 
 				if (isIE) {
 					function set() {
+						// Remove all child nodes
+						while (e.firstChild)
+							e.firstChild.removeNode();
+
 						try {
 							// IE will remove comments from the beginning
 							// unless you padd the contents with something
@@ -1188,10 +1192,6 @@
 						} catch (ex) {
 							// IE sometimes produces an unknown runtime error on innerHTML if it's an block element within a block element for example a div inside a p
 							// This seems to fix this problem
-
-							// Remove all child nodes
-							while (e.firstChild)
-								e.firstChild.removeNode();
 
 							// Create new div with HTML contents and a BR infront to keep comments
 							x = t.create('div');
