@@ -1,4 +1,4 @@
-Version 3.3b1 (2009-12-xx)
+Version 3.3b1 (2010-01-25)
 	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
 	Added new advlist plugin that enables you to set the formats of list elements.
 	Added new paste plugin logic that enables you to retain style information from Office.
