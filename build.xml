@@ -215,6 +215,7 @@
 			<fileset dir=".">
 				<include name="**"/>
 				<exclude name="**/.git/**"/>
+				<exclude name="**/.*"/>
 			</fileset>
 		</copy>
 
