@@ -241,6 +241,17 @@
 		getBookmark : function(type, normalized) {
 			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF', styles;
 
+			function findIndex(name, element) {
+				var index = 0;
+
+				each(dom.select(name), function(node, i) {
+					if (node == element)
+						index = i;
+				});
+
+				return index;
+			};
+
 			if (type == 2) {
 				function getLocation() {
 					var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
@@ -321,15 +332,14 @@
 					element = rng.item(0);
 					name = element.nodeName;
 
-					// Find element index
-					each(dom.select(name), function(node, i) {
-						if (node == element)
-							index = i;
-					});
-
-					return {name : name, index : index};
+					return {name : name, index : findIndex(name, element)};
 				}
 			} else {
+				element = t.getNode();
+				name = element.nodeName;
+				if (name == 'IMG')
+					return {name : name, index : findIndex(name, element)};
+
 				// W3C method
 				rng2 = rng.cloneRange();
 

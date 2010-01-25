@@ -1503,5 +1503,8 @@ function fakeKeyEvent(e, na, o) {
 })();
 
 tinymce.dom.Event.add(window, 'load', function() {
-	QUnit.setup();
+	// IE6 chokes if you stress it
+	window.setTimeout(function() {
+		QUnit.setup();
+	}, 1);
 });
