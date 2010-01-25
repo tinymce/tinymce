@@ -1871,21 +1871,25 @@
 		 * @return {Number} Index of the specified node.
 		 */
 		nodeIndex : function(node, normalized) {
-			var idx = 0, lastNode;
+			var idx = 0, lastNode, nodeType;
 
-			for (node = node; node; idx++, node = node.previousSibling) {
-				if (normalized) {
-					// Skip index position if there are two text nodes after each other
-					if (node.nodeType == 3) {
-						if ((lastNode && lastNode.nodeType == 3) || node.nodeValue.length === 0)
-							idx--;
-					}
+			if (node) {
+				for (node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
+					nodeType = node.nodeType;
+
+					// Text nodes needs special treatment if the normalized argument is specified
+					if (normalized && nodeType == 3) {
+						// Checks if the current node has contents and that the last node is a non text node or empty
+						if (node.nodeValue.length > 0 && (lastNode.nodeType != nodeType || lastNode.nodeValue.length === 0))
+							idx++;
+					} else
+						idx++;
 
 					lastNode = node;
 				}
 			}
 
-			return idx - 1;
+			return idx;
 		},
 
 		/**
