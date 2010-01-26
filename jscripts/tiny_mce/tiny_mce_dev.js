@@ -87,7 +87,6 @@
 	include('dom/ScriptLoader.js');
 	include('dom/TreeWalker.js');
 	include('dom/RangeUtils.js');
-	include('dom/NodeList.js');
 	include('ui/Control.js');
 	include('ui/Container.js');
 	include('ui/Separator.js');

@@ -52,9 +52,6 @@
 		unloadHandlerAdded,
 		Dispatcher = tinymce.util.Dispatcher;
 
-	// Load language pack for the autosave plugin
-	tinymce.PluginManager.requireLangPack(PLUGIN_NAME);
-
 	/**
 	 * This plugin adds auto-save capability to the TinyMCE text editor to rescue content
 	 * inadvertently lost. By using localStorage.
