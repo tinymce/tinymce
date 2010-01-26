@@ -1906,8 +1906,8 @@
 		split : function(pe, e, re) {
 			var t = this, r = t.createRng(), bef, aft, pa;
 
-			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents, this makes sence
-			// but we don't want that in our code since it serves no purpose
+			// W3C valid browsers tend to leave empty nodes to the left/right side of the contents, this makes sense
+			// but we don't want that in our code since it serves no purpose for the end user
 			// For example if this is chopped:
 			//   <p>text 1<span><b>CHOP</b></span>text 2</p>
 			// would produce:
@@ -1929,15 +1929,13 @@
 						return;
 
 					if (node.nodeType == 1) {
-						//console.log(node, node.ownerDocument.documentElement.querySelectorAll('body')[0].innerHTML);
-
 						// If the only child is a bookmark then move it up
 						children = node.childNodes;
 						if (children.length == 1 && children[0] && children[0].nodeType == 1 && children[0].getAttribute('_mce_type') == 'bookmark')
 							node.parentNode.insertBefore(children[0], node);
 
 						// Keep non empty elements or img, hr etc
-						if (children.length || /^(br|hr|input|img)$/.test(node.nodeName))
+						if (children.length || /^(br|hr|input|img)$/i.test(node.nodeName))
 							return;
 					}
 

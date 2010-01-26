@@ -92,6 +92,11 @@
 					format = format.length ? format : [format];
 
 					each(format, function(format) {
+						// Set deep to false by default on selector formats this to avoid removing
+						// alignment on images inside paragraphs when alignment is changed on paragraphs
+						if (format.deep === undefined)
+							format.deep = !format.selector;
+
 						// Default to true
 						if (format.split === undefined)
 							format.split = !format.selector;
@@ -223,7 +228,7 @@
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
-								currentWrapElm = wrapElm.cloneNode(false);
+								currentWrapElm = wrapElm.cloneNode(FALSE);
 								node.parentNode.insertBefore(currentWrapElm, node);
 								newWrappers.push(currentWrapElm);
 							}
@@ -263,7 +268,7 @@
 						var child, clone;
 
 						each(node.childNodes, function(node) {
-							if (node.nodeType == 1) {
+							if (node.nodeType == 1 && !isBookmarkNode(node)) {
 								child = node;
 								return FALSE; // break loop
 							}
@@ -362,7 +367,7 @@
 			function process(node) {
 				var children;
 
-				// Process children first
+				// Grab the children first since the nodelist might be changed
 				children = tinymce.grep(node.childNodes);
 
 				// Process current node
@@ -371,9 +376,14 @@
 						return FALSE; // Break loop
 				});
 
-				each(children, function(node) {
-					process(node);
-				});
+				// Process the children
+				if (format.deep) {
+					each(formatList, function(format) {
+						each(children, function(node) {
+							process(node);
+						});
+					});
+				}
 			};
 
 			function findFormatRoot(container) {
@@ -1123,6 +1133,12 @@
 			}
 		};
 
+		/**
+		 * Checks if the specified node is a bookmark node or not.
+		 *
+		 * @param {Node} node Node to check if it's a bookmark node or not.
+		 * @return {Boolean} true/false if the node is a bookmark node.
+		 */
 		function isBookmarkNode(node) {
 			return node && node.nodeType == 1 && node.getAttribute('_mce_type') == 'bookmark';
 		};
