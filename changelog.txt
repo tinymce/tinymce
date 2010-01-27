@@ -1,6 +1,7 @@
 Version 3.3b2 (2010-xx-xx)
 	Fixed bug where sometimes img elements would be removed by split method in DOMUtils.
 	Fixed bug where merging of span elements could occur on bookmark nodes.
+	Fixed bug where classes wasn't properly removed when removeformat was used on IE 6.
 Version 3.3b1 (2010-01-25)
 	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
 	Added new advlist plugin that enables you to set the formats of list elements.
