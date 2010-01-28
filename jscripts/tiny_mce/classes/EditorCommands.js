@@ -223,7 +223,7 @@
 
 			mceCleanup : function() {
 				storeSelection();
-				editor.setContent(editor.getContent({cleanup : TRUE}));
+				editor.setContent(editor.getContent({cleanup : TRUE}), {cleanup : TRUE});
 				restoreSelection();
 			},
 

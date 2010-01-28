@@ -139,6 +139,14 @@
 			eo = rng.endOffset;
 			ieRng = body.createTextRange();
 
+			// If document selection move caret to first node in document
+			if (sc == doc || ec == doc) {
+				ieRng = body.createTextRange();
+				ieRng.collapse();
+				ieRng.select();
+				return;
+			}
+
 			// If child index resolve it
 			if (sc.nodeType == 1 && sc.hasChildNodes()) {
 				lastIndex = sc.childNodes.length - 1;

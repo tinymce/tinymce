@@ -3,6 +3,9 @@ Version 3.3b2 (2010-xx-xx)
 	Fixed bug where merging of span elements could occur on bookmark nodes.
 	Fixed bug where classes wasn't properly removed when removeformat was used on IE 6.
 	Fixed bug where multiple calls to an tinyMCE.init with mode set to exact could produce the same unique ID.
+	Fixed bug with the IE selection implementation when it was feeded an document range.
+	Fixed bug where block elements formatting wasn't properly removed by removeformat on all browsers.
+	Fixed bug where selection location was lost if you performed a manual cleanup.
 Version 3.3b1 (2010-01-25)
 	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
 	Added new advlist plugin that enables you to set the formats of list elements.

@@ -797,6 +797,7 @@
 				endContainer = rng.endContainer,
 				endOffset = rng.endOffset, sibling, lastIdx;
 
+			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(container, child_name, sibling_name, root) {
 				var parent, child;
 
@@ -805,8 +806,9 @@
 				for (;;) {
 					// Check if we can move up are we at root level or body level
 					parent = container.parentNode;
-					
-					if (parent == root || isBlock(parent))
+
+					// Stop expanding on block elements or root depending on format
+					if (parent == root || (!format[0].block_expand && isBlock(parent)))
 						return container;
 
 					for (sibling = parent[child_name]; sibling && sibling != container; sibling = sibling[sibling_name]) {
@@ -858,7 +860,7 @@
 			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
 			// This will reduce the number of wrapper elements that needs to be created
 			// Move start point up the tree
-			if (format[0].inline) {
+			if (format[0].inline || format[0].block_expand) {
 				startContainer = findParentContainer(startContainer, 'firstChild', 'nextSibling');
 				endContainer = findParentContainer(endContainer, 'lastChild', 'previousSibling');
 			}
