@@ -394,7 +394,7 @@
 					// Find format root element
 					if (!formatRoot && parent.id != '_start' && parent.id != '_end') {
 						// If the matched format has a remove none flag we shouldn't split it
-						if (matchNode(parent, name, vars))
+						if (!isBlock(parent) && matchNode(parent, name, vars))
 							formatRoot = parent;
 					}
 				});
@@ -542,19 +542,28 @@
 			var formatList = get(name), format, i, classes;
 
 			function matchItems(node, format, item_name) {
-				var key, value, items = format[item_name];
+				var key, value, items = format[item_name], i;
 
-					// Check all items
+				// Check all items
 				if (items) {
-					for (key in items) {
-						if (items.hasOwnProperty(key)) {
-							if (item_name === 'attributes')
-								value = dom.getAttrib(node, key);
-							else
-								value = getStyle(node, key);
+					// Non indexed object
+					if (items.length === undefined) {
+						for (key in items) {
+							if (items.hasOwnProperty(key)) {
+								if (item_name === 'attributes')
+									value = dom.getAttrib(node, key);
+								else
+									value = getStyle(node, key);
 
-							if (!isEq(value, replaceVars(items[key], vars)))
-								return;
+								if (!isEq(value, replaceVars(items[key], vars)))
+									return;
+							}
+						}
+					} else {
+						// Only one match needed for indexed arrays
+						for (i = 0; i < items.length; i++) {
+							if (item_name === 'attributes' ? dom.getAttrib(node, items[i]) : getStyle(node, items[i]))
+								return TRUE;
 						}
 					}
 				}

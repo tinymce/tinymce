@@ -15,7 +15,7 @@ function getContent() {
 test('Formatter - remove', function() {
 	var rng;
 
-	expect(16);
+	expect(17);
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -191,6 +191,16 @@ test('Formatter - remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p>text</p>', 'Remove block format');
+
+	// Remove span format within block with style
+	editor.formatter.register('format', {selector : 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true});
+	rng = editor.dom.createRng();
+	editor.getBody().innerHTML = '<p style="color:#ff0000"><span style="color:#00ff00">text</span></p>';
+	rng.setStart(editor.dom.select('span')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(getContent(), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
 });
 
 tinyMCE.init({

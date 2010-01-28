@@ -6,6 +6,7 @@ Version 3.3b2 (2010-xx-xx)
 	Fixed bug with the IE selection implementation when it was feeded an document range.
 	Fixed bug where block elements formatting wasn't properly removed by removeformat on all browsers.
 	Fixed bug where selection location was lost if you performed a manual cleanup.
+	Fixed bug where removeformat wouldn't remove span elements within styled block elements.
 Version 3.3b1 (2010-01-25)
 	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
 	Added new advlist plugin that enables you to set the formats of list elements.
