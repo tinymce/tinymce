@@ -100,8 +100,6 @@
 			<fileset dir="${classes_dir}" includes="WindowManager.js" />
 			<fileset dir="${classes_dir}" includes="CommandManager.js" />
 			<fileset dir="${classes_dir}" includes="Formatter.js" />
-			<fileset dir="${classes_dir}" includes="commands/CutCopyPaste.js" />
-			<fileset dir="${classes_dir}" includes="commands/UndoRedo.js" />
 			<fileset dir="${classes_dir}" includes="LegacyInput.js" />
 		</concat>
 

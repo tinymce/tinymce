@@ -110,8 +110,6 @@
 	include('WindowManager.js');
 	include('Formatter.js');
 	include('CommandManager.js');
-	include('commands/CutCopyPaste.js');
-	include('commands/UndoRedo.js');
 	include('LegacyInput.js');
 
 	// Developer API
