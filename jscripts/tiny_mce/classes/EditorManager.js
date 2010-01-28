@@ -18,7 +18,7 @@
 		DOM = tinymce.DOM, Event = tinymce.dom.Event,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
 		explode = tinymce.explode,
-		Dispatcher = tinymce.util.Dispatcher, undefined;
+		Dispatcher = tinymce.util.Dispatcher, undefined, instanceCounter = 0;
 
 	// Setup some URLs where the editor API is located and where the document is
 	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
@@ -95,7 +95,7 @@
 		 * @param {Object} s Settings object to be passed to each editor instance.
 		 */
 		init : function(s) {
-			var t = this, pl, sl = tinymce.ScriptLoader, c, e, el = [], ed;
+			var t = this, pl, sl = tinymce.ScriptLoader, e, el = [], ed;
 
 			function execCallback(se, n, s) {
 				var f = se[n];
@@ -136,12 +136,10 @@
 									el.push(ed);
 									ed.render(1);
 								} else {
-									c = 0;
-
 									each(document.forms, function(f) {
 										each(f.elements, function(e) {
 											if (e.name === v) {
-												v = 'mce_editor_' + c;
+												v = 'mce_editor_' + instanceCounter++;
 												DOM.setAttrib(e, 'id', v);
 
 												ed = new tinymce.Editor(v, s);
@@ -187,7 +185,7 @@
 				if (s.oninit) {
 					l = co = 0;
 
-					each (el, function(ed) {
+					each(el, function(ed) {
 						co++;
 
 						if (!ed.initialized) {
