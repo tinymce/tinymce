@@ -1009,9 +1009,6 @@
 							break;
 
 						case 'font':
-							if (s.convert_fonts_to_spans)
-								na = 'span';
-
 							if (v = DOM.getAttrib(n, 'face'))
 								ti += 'font: ' + v + ' ';
 

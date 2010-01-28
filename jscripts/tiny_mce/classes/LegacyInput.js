@@ -11,50 +11,52 @@
 tinymce.onAddEditor.add(function(tinymce, ed) {
 	var filters, fontSizes, dom, settings = ed.settings;
 
-	fontSizes = tinymce.explode(settings.font_size_style_values);
+	if (settings.inline_styles) {
+		fontSizes = tinymce.explode(settings.font_size_style_values);
 
-	function replaceWithSpan(node, styles) {
-		dom.replace(dom.create('span', {
-			style : styles
-		}), node, 1);
-	};
+		function replaceWithSpan(node, styles) {
+			dom.replace(dom.create('span', {
+				style : styles
+			}), node, 1);
+		};
 
-	filters = {
-		font : function(dom, node) {
-			replaceWithSpan(node, {
-				backgroundColor : node.style.backgroundColor,
-				color : node.color,
-				fontFamily : node.face,
-				fontSize : fontSizes[parseInt(node.size) - 1]
-			});
-		},
+		filters = {
+			font : function(dom, node) {
+				replaceWithSpan(node, {
+					backgroundColor : node.style.backgroundColor,
+					color : node.color,
+					fontFamily : node.face,
+					fontSize : fontSizes[parseInt(node.size) - 1]
+				});
+			},
 
-		u : function(dom, node) {
-			replaceWithSpan(node, {
-				textDecoration : 'underline'
-			});
-		},
+			u : function(dom, node) {
+				replaceWithSpan(node, {
+					textDecoration : 'underline'
+				});
+			},
 
-		strike : function(dom, node) {
-			replaceWithSpan(node, {
-				textDecoration : 'line-through'
-			});
-		}
-	};
+			strike : function(dom, node) {
+				replaceWithSpan(node, {
+					textDecoration : 'line-through'
+				});
+			}
+		};
 
-	function convert() {
-		dom = ed.dom;
+		function convert() {
+			dom = ed.dom;
 
-		if (settings.convert_fonts_to_spans) {
-			tinymce.each(dom.select('font,u,strike'), function(node) {
-				filters[node.nodeName.toLowerCase()](ed.dom, node);
-			});
-		}
-	};
+			if (settings.convert_fonts_to_spans) {
+				tinymce.each(dom.select('font,u,strike'), function(node) {
+					filters[node.nodeName.toLowerCase()](ed.dom, node);
+				});
+			}
+		};
 
-	ed.onSetContent.add(convert);
+		ed.onSetContent.add(convert);
 
-	ed.onInit.add(function() {
-		ed.selection.onSetContent.add(convert);
-	});
+		ed.onInit.add(function() {
+			ed.selection.onSetContent.add(convert);
+		});
+	}
 });
