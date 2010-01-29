@@ -86,7 +86,7 @@
 
 			// Parse out query part, this will be appended to all scripts, css etc to clear browser cache
 			pos = url.lastIndexOf("?");
-			if (pos)
+			if (pos != -1)
 				query = url.substring(pos + 1);
 
 			// Setup tinyMCEPreInit object this will later be used by the TinyMCE
