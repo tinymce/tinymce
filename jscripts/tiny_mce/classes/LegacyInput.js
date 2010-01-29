@@ -43,17 +43,17 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 			}
 		};
 
-		function convert() {
-			dom = ed.dom;
+		function convert(editor, params) {
+			dom = editor.dom;
 
 			if (settings.convert_fonts_to_spans) {
-				tinymce.each(dom.select('font,u,strike'), function(node) {
+				tinymce.each(dom.select('font,u,strike', params.node), function(node) {
 					filters[node.nodeName.toLowerCase()](ed.dom, node);
 				});
 			}
 		};
 
-		ed.onSetContent.add(convert);
+		ed.onPreProcess.add(convert);
 
 		ed.onInit.add(function() {
 			ed.selection.onSetContent.add(convert);
