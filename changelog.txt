@@ -9,6 +9,7 @@ Version 3.3b2 (2010-xx-xx)
 	Fixed bug where removeformat wouldn't remove span elements within styled block elements.
 	Fixed bug where an error would be thrown if you clicked on the separator lines in menus.
 	Fixed bug with the jQuery plugin adding always adding a querystring value to other resources.
+	Fixed bug where IE would produce an error message if you had an empty editor instance.
 Version 3.3b1 (2010-01-25)
 	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
 	Added new advlist plugin that enables you to set the formats of list elements.

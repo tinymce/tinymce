@@ -177,7 +177,7 @@
 				e = r.parentElement();
 
 				if (e && e.nodeName == 'BODY')
-					return e.firstChild;
+					return e.firstChild || e;
 
 				return e;
 			} else {
@@ -212,7 +212,7 @@
 				e = r.parentElement();
 
 				if (e && e.nodeName == 'BODY')
-					return e.lastChild;
+					return e.lastChild || e;
 
 				return e;
 			} else {
