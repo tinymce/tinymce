@@ -10,14 +10,14 @@
 
 (function(tinymce) {
 	// Shorten names
-	var Event, isIE, isGecko, isOpera, each, extend;
-
-	Event = tinymce.dom.Event;
-	isIE = tinymce.isIE;
-	isGecko = tinymce.isGecko;
-	isOpera = tinymce.isOpera;
-	each = tinymce.each;
-	extend = tinymce.extend;
+	var Event = tinymce.dom.Event,
+		isIE = tinymce.isIE,
+		isGecko = tinymce.isGecko,
+		isOpera = tinymce.isOpera,
+		each = tinymce.each,
+		extend = tinymce.extend,
+		TRUE = true,
+		FALSE = false;
 
 	// Checks if the selection/caret is at the end of the specified block element
 	function isAtEnd(rng, par) {
@@ -52,10 +52,10 @@
 				selection.select(block, 1);
 			}
 
-			return false;
+			return FALSE;
 		}
 
-		return true;
+		return TRUE;
 	};
 
 	/**
@@ -144,9 +144,34 @@
 					});
 				});*/
 
+				function insertBr(ed) {
+					var dom = ed.dom, selection = ed.selection, rng = selection.getRng(), br;
+
+					// Insert BR element
+					rng.insertNode(br = dom.create('br'));
+
+					// Place caret after BR
+					rng.setStartAfter(br);
+					rng.setEndAfter(br);
+					selection.setRng(rng);
+
+					// Could not place caret after BR then insert an nbsp entity and move the caret
+					if (selection.getSel().focusNode == br.previousSibling) {
+						selection.select(dom.insertAfter(dom.doc.createTextNode('\u00a0'), br));
+						selection.collapse(TRUE);
+					}
+
+					// Scroll to new position, scrollIntoView can't be used due to bug: http://bugs.webkit.org/show_bug.cgi?id=16117
+					ed.getWin().scrollTo(0, dom.getPos(selection.getRng().startContainer).y);
+				};
+
 				ed.onKeyPress.add(function(ed, e) {
-					if (e.keyCode == 13 && !e.shiftKey) {
-						if (!t.insertPara(e))
+					if (e.keyCode == 13) {
+						// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
+						if (tinymce.isWebKit && e.shiftKey) {
+							insertBr(ed);
+							Event.cancel(e);
+						} else if (!e.shiftKey && !t.insertPara(e))
 							Event.cancel(e);
 					}
 				});
@@ -168,7 +193,7 @@
 				});
 
 				each(rn.childNodes, function(n) {
-					ne.appendChild(n.cloneNode(true));
+					ne.appendChild(n.cloneNode(TRUE));
 				});
 
 				rn.parentNode.replaceChild(ne, rn);
@@ -184,7 +209,7 @@
 						each(ed.dom.select('span,em,strong,b,i', o.node), function(n) {
 							if (!n.hasChildNodes()) {
 								n.appendChild(ed.getDoc().createTextNode('\u00a0'));
-								return false; // Break the loop one padding is enough
+								return FALSE; // Break the loop one padding is enough
 							}
 						});
 					}
@@ -221,7 +246,7 @@
 		},
 
 		find : function(n, t, s) {
-			var ed = this.editor, w = ed.getDoc().createTreeWalker(n, 4, null, false), c = -1;
+			var ed = this.editor, w = ed.getDoc().createTreeWalker(n, 4, null, FALSE), c = -1;
 
 			while (n = w.nextNode()) {
 				c++;
@@ -244,7 +269,7 @@
 
 			// Fix for bug #1863847
 			//if (e && e.keyCode == 13)
-			//	return true;
+			//	return TRUE;
 
 			// Wrap non blocks into blocks
 			for (i = nl.length - 1; i >= 0; i--) {
@@ -375,21 +400,21 @@
 			// If root blocks are forced then use Operas default behavior since it's really good
 // Removed due to bug: #1853816
 //			if (se.forced_root_block && isOpera)
-//				return true;
+//				return TRUE;
 
 			// Setup before range
 			rb = d.createRange();
 
 			// If is before the first block element and in body, then move it into first block element
 			rb.setStart(s.anchorNode, s.anchorOffset);
-			rb.collapse(true);
+			rb.collapse(TRUE);
 
 			// Setup after range
 			ra = d.createRange();
 
 			// If is before the first block element and in body, then move it into first block element
 			ra.setStart(s.focusNode, s.focusOffset);
-			ra.collapse(true);
+			ra.collapse(TRUE);
 
 			// Setup start/end points
 			dir = rb.compareBoundaryPoints(rb.START_TO_END, ra) < 0;
@@ -420,7 +445,7 @@
 				r.collapse(1);
 				ed.selection.setRng(r);
 
-				return false;
+				return FALSE;
 			}
 
 			// If the caret is in an invalid location in FF we need to move it into the first block
@@ -449,7 +474,7 @@
 				if (sb.nodeName == 'LI')
 					return splitList(ed.selection, t.dom, sb);
 
-				return true;
+				return TRUE;
 			}
 
 			// If caption or absolute layers then always generate new blocks within
@@ -562,7 +587,7 @@
 					do {
 						// We only want style specific elements
 						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(n.nodeName)) {
-							nn = n.cloneNode(false);
+							nn = n.cloneNode(FALSE);
 							dom.setAttrib(nn, 'id', ''); // Remove ID since it needs to be unique
 							nl.push(nn);
 						}
@@ -599,7 +624,7 @@
 			bef.normalize();
 
 			function first(n) {
-				return d.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false).nextNode() || n;
+				return d.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, FALSE).nextNode() || n;
 			};
 
 			// Move cursor and scroll into view
@@ -619,7 +644,7 @@
 				//console.debug('SCROLL!', 'vp.y: ' + vp.y, 'y' + y, 'vp.h' + vp.h, 'clientHeight' + aft.clientHeight, 'yyy: ' + (y < vp.y ? y : y - vp.h + aft.clientHeight));
 			}
 
-			return false;
+			return FALSE;
 		},
 
 		backspaceDelete : function(e, bs) {
@@ -648,7 +673,7 @@
 							// Copy all children from next sibling block and remove it
 							if (nextBlock) {
 								each(nextBlock.childNodes, function(node) {
-									par.appendChild(node.cloneNode(true));
+									par.appendChild(node.cloneNode(TRUE));
 								});
 
 								dom.remove(nextBlock);
@@ -675,7 +700,7 @@
 					if (n) {
 						if (sc != b.firstChild) {
 							// Find last text node
-							w = ed.dom.doc.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, false);
+							w = ed.dom.doc.createTreeWalker(n, NodeFilter.SHOW_TEXT, null, FALSE);
 							while (tn = w.nextNode())
 								n = tn;
 
