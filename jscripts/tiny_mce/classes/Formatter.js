@@ -1041,7 +1041,7 @@
 
 						// IE6 has a bug where the attribute doesn't get removed correctly
 						if (name == "class")
-							node.className = "";
+							node.removeAttribute('className');
 
 						node.removeAttribute(name);
 					}
