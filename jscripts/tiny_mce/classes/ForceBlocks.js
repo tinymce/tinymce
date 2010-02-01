@@ -103,7 +103,7 @@
 		},
 
 		setup : function() {
-			var t = this, ed = t.editor, s = ed.settings;
+			var t = this, ed = t.editor, s = ed.settings, dom = ed.dom, selection = ed.selection;
 
 			// Force root blocks when typing and when getting output
 			if (s.forced_root_block) {
@@ -116,36 +116,38 @@
 				// Force IE to produce BRs on enter
 				if (isIE) {
 					ed.onKeyPress.add(function(ed, e) {
-						var n, s = ed.selection;
+						var n;
 
-						if (e.keyCode == 13 && s.getNode().nodeName != 'LI') {
-							s.setContent('<br id="__" /> ', {format : 'raw'});
-							n = ed.dom.get('__');
+						if (e.keyCode == 13 && selection.getNode().nodeName != 'LI') {
+							selection.setContent('<br id="__" /> ', {format : 'raw'});
+							n = dom.get('__');
 							n.removeAttribute('id');
-							s.select(n);
-							s.collapse();
+							selection.select(n);
+							selection.collapse();
 							return Event.cancel(e);
 						}
 					});
 				}
-
-				return;
 			}
 
 			if (!isIE && s.force_p_newlines) {
-/*				ed.onPreProcess.add(function(ed, o) {
-					each(ed.dom.select('br', o.node), function(n) {
-						var p = n.parentNode;
+				ed.onKeyPress.add(function(ed, e) {
+					if (e.keyCode == 13 && !e.shiftKey && !t.insertPara(e))
+						Event.cancel(e);
+				});
 
-						// Replace <p><br /></p> with <p>&nbsp;</p>
-						if (p && p.nodeName == 'p' && (p.childNodes.length == 1 || p.lastChild == n)) {
-							p.replaceChild(ed.getDoc().createTextNode('\u00a0'), n);
-						}
+				if (isGecko) {
+					ed.onKeyDown.add(function(ed, e) {
+						if ((e.keyCode == 8 || e.keyCode == 46) && !e.shiftKey)
+							t.backspaceDelete(e, e.keyCode == 8);
 					});
-				});*/
+				}
+			}
 
+			// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
+			if (tinymce.isWebKit) {
 				function insertBr(ed) {
-					var dom = ed.dom, selection = ed.selection, rng = selection.getRng(), br;
+					var rng = selection.getRng(), br;
 
 					// Insert BR element
 					rng.insertNode(br = dom.create('br'));
@@ -166,47 +168,19 @@
 				};
 
 				ed.onKeyPress.add(function(ed, e) {
-					if (e.keyCode == 13) {
-						// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
-						if (tinymce.isWebKit && e.shiftKey) {
-							insertBr(ed);
-							Event.cancel(e);
-						} else if (!e.shiftKey && !t.insertPara(e))
-							Event.cancel(e);
+					if (e.keyCode == 13 && (e.shiftKey || s.force_br_newlines)) {
+						insertBr(ed);
+						Event.cancel(e);
 					}
 				});
-
-				if (isGecko) {
-					ed.onKeyDown.add(function(ed, e) {
-						if ((e.keyCode == 8 || e.keyCode == 46) && !e.shiftKey)
-							t.backspaceDelete(e, e.keyCode == 8);
-					});
-				}
 			}
-
-			function ren(rn, na) {
-				var ne = ed.dom.create(na);
-
-				each(rn.attributes, function(a) {
-					if (a.specified && a.nodeValue)
-						ne.setAttribute(a.nodeName.toLowerCase(), a.nodeValue);
-				});
-
-				each(rn.childNodes, function(n) {
-					ne.appendChild(n.cloneNode(TRUE));
-				});
-
-				rn.parentNode.replaceChild(ne, rn);
-
-				return ne;
-			};
 
 			// Padd empty inline elements within block elements
 			// For example: <p><strong><em></em></strong></p> becomes <p><strong><em>&nbsp;</em></strong></p>
 			ed.onPreProcess.add(function(ed, o) {
-				each(ed.dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
+				each(dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
 					if (isEmpty(p)) {
-						each(ed.dom.select('span,em,strong,b,i', o.node), function(n) {
+						each(dom.select('span,em,strong,b,i', o.node), function(n) {
 							if (!n.hasChildNodes()) {
 								n.appendChild(ed.getDoc().createTextNode('\u00a0'));
 								return FALSE; // Break the loop one padding is enough
@@ -221,22 +195,22 @@
 				// Replaces IE:s auto generated paragraphs with the specified element name
 				if (s.element != 'P') {
 					ed.onKeyPress.add(function(ed, e) {
-						t.lastElm = ed.selection.getNode().nodeName;
+						t.lastElm = selection.getNode().nodeName;
 					});
 
 					ed.onKeyUp.add(function(ed, e) {
-						var bl, sel = ed.selection, n = sel.getNode(), b = ed.getBody();
+						var bl, n = selection.getNode(), b = ed.getBody();
 
 						if (b.childNodes.length === 1 && n.nodeName == 'P') {
-							n = ren(n, s.element);
-							sel.select(n);
-							sel.collapse();
+							n = dom.rename(n, s.element);
+							selection.select(n);
+							selection.collapse();
 							ed.nodeChanged();
 						} else if (e.keyCode == 13 && !e.shiftKey && t.lastElm != 'P') {
-							bl = ed.dom.getParent(n, 'p');
+							bl = dom.getParent(n, 'p');
 
 							if (bl) {
-								ren(bl, s.element);
+								dom.rename(bl, s.element);
 								ed.nodeChanged();
 							}
 						}
@@ -470,9 +444,9 @@
 			bn = sb ? sb.nodeName : se.element; // Get block name to create
 
 			// Return inside list use default browser behavior
-			if (sb = t.dom.getParent(sb, 'li,pre')) {
-				if (sb.nodeName == 'LI')
-					return splitList(ed.selection, t.dom, sb);
+			if (n = t.dom.getParent(sb, 'li,pre')) {
+				if (n.nodeName == 'LI')
+					return splitList(ed.selection, t.dom, n);
 
 				return TRUE;
 			}
@@ -649,45 +623,6 @@
 
 		backspaceDelete : function(e, bs) {
 			var t = this, ed = t.editor, b = ed.getBody(), dom = ed.dom, n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn;
-
-			/*
-			var par, rng, nextBlock;
-
-			// Delete key will not merge paragraphs on Gecko so we need to do this manually
-			// Hitting the delete key at the following caret position doesn't merge the elements <p>A|</p><p>B</p>
-			// This logic will merge them into this: <p>A|B</p>
-			if (e.keyCode == 46) {
-				if (r.collapsed) {
-					par = dom.getParent(sc, 'p,h1,h2,h3,h4,h5,h6,div');
-
-					if (par) {
-						rng = dom.createRng();
-
-						rng.setStart(sc, r.startOffset);
-						rng.setEndAfter(par);
-
-						// Get number of characters to the right of the cursor if it's zero then we are at the end and need to merge the next block element
-						if (dom.getOuterHTML(rng.cloneContents()).replace(/<[^>]+>/g, '').length == 0) {
-							nextBlock = dom.getNext(par, 'p,h1,h2,h3,h4,h5,h6,div');
-
-							// Copy all children from next sibling block and remove it
-							if (nextBlock) {
-								each(nextBlock.childNodes, function(node) {
-									par.appendChild(node.cloneNode(TRUE));
-								});
-
-								dom.remove(nextBlock);
-							}
-
-							// Block the default even since the Gecko team might eventually fix this
-							// We will remove this logic once they do we can't feature detect this one
-							e.preventDefault();
-							return;
-						}
-					}
-				}
-			}
-			*/
 
 			// The caret sometimes gets stuck in Gecko if you delete empty paragraphs
 			// This workaround removes the element by hand and moves the caret to the previous element
