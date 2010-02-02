@@ -649,7 +649,7 @@
 		 * This logic can be improved so text nodes at the start/end remain in the start/end block elements
 		 */
 		_insertBlockContent : function(ed, dom, content) {
-			var parentBlock, marker, sel = ed.selection, last, elm, vp, y, elmHeight;
+			var parentBlock, marker, sel = ed.selection, last, elm, vp, y, elmHeight, markerId = 'mce_marker';
 
 			function select(n) {
 				var r;
@@ -666,8 +666,8 @@
 			}
 
 			// Insert a marker for the caret position
-			this._insert('<span id="_marker">&nbsp;</span>', 1);
-			marker = dom.get('_marker');
+			this._insert('<span id="' + markerId + '">&nbsp;</span>', 1);
+			marker = dom.get(markerId);
 			parentBlock = dom.getParent(marker, 'p,h1,h2,h3,h4,h5,h6,ul,ol,th,td');
 
 			// If it's a parent block but not a table cell
@@ -688,7 +688,9 @@
 				sel.collapse(0);
 			}
 
-			dom.remove('_marker'); // Remove marker if it's left
+			// Remove marker if it's left
+			while (elm = dom.get(markerId))
+				dom.remove(elm);
 
 			// Get element, position and height
 			elm = sel.getStart();
