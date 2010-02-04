@@ -382,7 +382,7 @@
 
 						if (point) {
 							for (node = root, i = point.indexes.length - 1; i >= 0; i--)
-								node = node.childNodes[point.indexes[i]];
+								node = node.childNodes[point.indexes[i]] || node;
 
 							if (start) {
 								if (node.nodeType == 3 && point.offset)

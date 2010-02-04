@@ -12,6 +12,7 @@ Version 3.3b2 (2010-xx-xx)
 	Fixed bug where IE would produce an error message if you had an empty editor instance.
 	Fixed bug where Shift+Enter didn't produce br elements on WebKit browsers.
 	Fixed bug where a temporary marker element wasn't removed by the paste plugin.
+	Fixed bug where inserting a table would produce two undo levels instead of one.
 Version 3.3b1 (2010-01-25)
 	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
 	Added new advlist plugin that enables you to set the formats of list elements.
