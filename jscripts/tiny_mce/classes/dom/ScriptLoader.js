@@ -173,6 +173,8 @@
 		 * @param {Object} scope Optional scope to execute callback in.
 		 */
 		this.loadScripts = function(scripts, callback, scope) {
+			var loadScripts;
+
 			function execScriptLoadedCallbacks(url) {
 				// Execute URL callback functions
 				tinymce.each(scriptLoadedCallbacks[url], function(callback) {
@@ -187,7 +189,7 @@
 				scope : scope || this
 			});
 
-			(function loadScripts() {
+			loadScripts = function() {
 				var loadingScripts = tinymce.grep(scripts);
 
 				// Current scripts has been handled
@@ -226,7 +228,9 @@
 
 					queueLoadedCallbacks.length = 0;
 				}
-			})();
+			};
+
+			loadScripts();
 		};
 	};
 
