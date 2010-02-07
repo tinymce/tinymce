@@ -1,3 +1,5 @@
+Version 3.3b3 (2010-xx-xx)
+	Fixed bug with new legacyoutput plugin not working correctly on it's own.
 Version 3.3b2 (2010-02-04)
 	Fixed bug where sometimes img elements would be removed by split method in DOMUtils.
 	Fixed bug where merging of span elements could occur on bookmark nodes.

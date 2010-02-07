@@ -58,6 +58,9 @@
 					hilitecolor : {inline : 'font', styles : {backgroundColor : '%value'}},
 				});
 
+				// Force parsing of the serializer rules
+				serializer._setup();
+
 				// Check that deprecated elements are allowed if not add them
 				tinymce.each('b,i,u,strike'.split(','), function(name) {
 					var rule = serializer.rules[name];
