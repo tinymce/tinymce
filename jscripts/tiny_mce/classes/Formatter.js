@@ -42,6 +42,7 @@
 			forcedRootBlock = ed.settings.forced_root_block,
 			nodeIndex = dom.nodeIndex,
 			INVISIBLE_CHAR = '\uFEFF',
+			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
 			undefined,
@@ -365,24 +366,21 @@
 
 			// Merges the styles for each node
 			function process(node) {
-				var children;
+				var children, i, l;
 
 				// Grab the children first since the nodelist might be changed
 				children = tinymce.grep(node.childNodes);
 
 				// Process current node
-				each(formatList, function(format) {
-					if (removeFormat(format, vars, node, node))
-						return FALSE; // Break loop
-				});
+				for (i = 0, l = formatList.length; i < l; i++) {
+					if (removeFormat(formatList[i], vars, node, node))
+						break;
+				}
 
 				// Process the children
 				if (format.deep) {
-					each(formatList, function(format) {
-						each(children, function(node) {
-							process(node);
-						});
-					});
+					for (i = 0, l = children.length; i < l; i++)
+						process(children[i]);
 				}
 			};
 
@@ -937,11 +935,13 @@
 				endContainer = findBlockEndPoint(endContainer, 'nextSibling');
 
 				// Non block element then try to expand up the leaf
-				if (!isBlock(startContainer))
-					startContainer = findParentContainer(startContainer, 'firstChild', 'nextSibling');
+				if (format[0].block) {
+					if (!isBlock(startContainer))
+						startContainer = findParentContainer(startContainer, 'firstChild', 'nextSibling');
 
-				if (!isBlock(endContainer))
-					endContainer = findParentContainer(endContainer, 'lastChild', 'previousSibling');
+					if (!isBlock(endContainer))
+						endContainer = findParentContainer(endContainer, 'lastChild', 'previousSibling');
+				}
 			}
 
 			// Setup index for startContainer
@@ -1042,6 +1042,10 @@
 						// IE6 has a bug where the attribute doesn't get removed correctly
 						if (name == "class")
 							node.removeAttribute('className');
+
+						// Remove mce prefixed attributes
+						if (MCE_ATTR_RE.test(name))
+							node.removeAttribute('_mce_' + name);
 
 						node.removeAttribute(name);
 					}
