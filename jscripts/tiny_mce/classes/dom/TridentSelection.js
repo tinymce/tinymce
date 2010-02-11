@@ -10,7 +10,7 @@
 
 (function() {
 	function Selection(selection) {
-		var t = this, invisibleChar = '\uFEFF', range, lastIERng, dom = selection.dom;
+		var t = this, invisibleChar = '\uFEFF', range, lastIERng, dom = selection.dom, TRUE = true, FALSE = false;
 
 		// Compares two IE specific ranges to see if they are different
 		// this method is useful when invalidating the cached selection range
@@ -18,14 +18,24 @@
 			if (rng1 && rng2) {
 				// Both are control ranges and the selected element matches
 				if (rng1.item && rng2.item && rng1.item(0) === rng2.item(0))
-					return 1;
+					return TRUE;
 
 				// Both are text ranges and the range matches
-				if (rng1.isEqual && rng2.isEqual && rng2.isEqual(rng1))
-					return 1;
+				if (rng1.isEqual && rng2.isEqual && rng2.isEqual(rng1)) {
+					// IE will say that the range is equal then produce an invalid argument exception
+					// if you perform specific operations in a keyup event. For example Ctrl+Del.
+					// This hack will invalidate the range cache if the exception occurs
+					try {
+						// Try accessing nextSibling will producer an invalid argument some times
+						range.startContainer.nextSibling;
+						return TRUE;
+					} catch (ex) {
+						// Ignore
+					}
+				}
 			}
 
-			return 0;
+			return FALSE;
 		};
 
 		// Returns a W3C DOM compatible range object by using the IE Range API
@@ -51,12 +61,12 @@
 
 			// Insert invisible start marker
 			ieRange.collapse();
-			ieRange.pasteHTML('<span id="_mce_start" style="display:none;line-height:0">\uFEFF</span>');
+			ieRange.pasteHTML('<span id="_mce_start" style="display:none;line-height:0">' + invisibleChar + '</span>');
 
 			// Insert invisible end marker
 			if (!collapsed) {
-				ieRange2.collapse(false);
-				ieRange2.pasteHTML('<span id="_mce_end" style="display:none;line-height:0">\uFEFF</span>');
+				ieRange2.collapse(FALSE);
+				ieRange2.pasteHTML('<span id="_mce_end" style="display:none;line-height:0">' + invisibleChar + '</span>');
 			}
 
 			// Sets the end point of the range by looking for the marker
@@ -79,7 +89,7 @@
 					// Merge text nodes to reduce DOM fragmentation
 					sibling = container.nextSibling;
 					if (sibling && sibling.nodeType == 3) {
-						isMerged = true;
+						isMerged = TRUE;
 						container.appendData(sibling.nodeValue);
 						dom.remove(sibling);
 					}
@@ -113,11 +123,11 @@
 			};
 
 			// Set start of range
-			setEndPoint(true);
+			setEndPoint(TRUE);
 
 			// Set end of range if needed
 			if (!collapsed)
-				setEndPoint(false);
+				setEndPoint(FALSE);
 
 			// Restore selection if the range contents was merged
 			// since the selection was then moved since the text nodes got changed
@@ -197,7 +207,7 @@
 
 					// If it's only containing a padding remove it so the caret remains
 					if (sc.innerHTML == invisibleChar) {
-						ieRng.collapse(true);
+						ieRng.collapse(TRUE);
 						sc.removeChild(sc.firstChild);
 					}
 				}
@@ -231,7 +241,7 @@
 				ieRng.moveToElementText(sc);
 
 				if (skipStart)
-					ieRng.collapse(false);
+					ieRng.collapse(FALSE);
 			}
 
 			// If same text container then we can do a more simple move
@@ -287,7 +297,7 @@
 				var doc = dom.doc, body = doc.body, started, startRng;
 
 				// Make HTML element unselectable since we are going to handle selection by hand
-				doc.documentElement.unselectable = true;
+				doc.documentElement.unselectable = TRUE;
 
 				// Return range from point or null if it failed
 				function rngFromPoint(x, y) {
