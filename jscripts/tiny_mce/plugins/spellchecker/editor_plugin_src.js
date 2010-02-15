@@ -265,11 +265,20 @@
 					} else
 						m.add({title : 'spellchecker.no_sug', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
 
+                    var ignore_rpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
 					m.add({
 						title : 'spellchecker.ignore_word',
 						onclick : function() {
 							dom.remove(e.target, 1);
 							t._checkDone();
+
+                            // tell the server if we need to
+                            if(ignore_rpc) {
+                                ed.setProgressState(1);
+                                t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
+                                    ed.setProgressState(0);
+                                });
+                            }
 						}
 					});
 
@@ -278,6 +287,14 @@
 						onclick : function() {
 							t._removeWords(dom.decode(e.target.innerHTML));
 							t._checkDone();
+
+                            // tell the server if we need to
+                            if(ignore_rpc) {
+                                ed.setProgressState(1);
+                                t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
+                                    ed.setProgressState(0);
+                                });
+                            }
 						}
 					});
 
