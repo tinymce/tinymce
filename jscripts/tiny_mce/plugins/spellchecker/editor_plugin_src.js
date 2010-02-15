@@ -300,6 +300,23 @@
 						}
 					});
 
+
+                    if( t.editor.getParam("spellchecker_enable_learn_rpc") ) {
+                        m.add({
+                            title : 'spellchecker.learn_word',
+                            onclick : function() {
+                                var word = e.target.innerHTML;
+                                dom.remove(e.target, 1);
+                                t._checkDone();
+
+                                ed.setProgressState(1);
+                                t._sendRPC('learnWord', [t.selectedLang, word], function(r) {
+                                    ed.setProgressState(0);
+                                });
+                            }
+                        });
+                    }
+
 					m.update();
 				});
 
