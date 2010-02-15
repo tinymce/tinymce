@@ -152,12 +152,20 @@
 					tx += n.nodeValue + ' ';
 			});
 
-			// Split words by separator
-			tx = tx.replace(new RegExp('([0-9]|[' + this._getSeparators() + '])', 'g'), ' ');
-			tx = tinymce.trim(tx.replace(/(\s+)/g, ' '));
+            // split the text up into individual words
+            var raw_words = [];
+            if( ed.getParam('spellchecker_word_pattern') ) {
+                // look for words that match the pattern
+                raw_words = tx.match('(' + ed.getParam('spellchecker_word_pattern') + ')', 'gi');
+            } else {
+                // Split words by separator
+                tx = tx.replace(new RegExp('([0-9]|[' + this._getSeparators() + '])', 'g'), ' ');
+                tx = tinymce.trim(tx.replace(/(\s+)/g, ' '));
+                raw_words = tx.split(' ');
+            }
 
 			// Build word array and remove duplicates
-			each(tx.split(' '), function(v) {
+			each(raw_words, function(v) {
 				if (!lo[v]) {
 					wl.push(v);
 					lo[v] = 1;
