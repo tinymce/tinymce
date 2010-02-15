@@ -269,6 +269,7 @@
 					m.add({
 						title : 'spellchecker.ignore_word',
 						onclick : function() {
+                            var word = e.target.innerHTML;
 							dom.remove(e.target, 1);
 							t._checkDone();
 
@@ -285,7 +286,8 @@
 					m.add({
 						title : 'spellchecker.ignore_words',
 						onclick : function() {
-							t._removeWords(dom.decode(e.target.innerHTML));
+                            var word = e.target.innerHTML;
+							t._removeWords(dom.decode(word));
 							t._checkDone();
 
                             // tell the server if we need to
