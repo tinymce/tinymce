@@ -4,6 +4,7 @@ Version 3.3b3 (2010-xx-xx)
 	Fixed bug where TinyMCE specific attributes wasn't removed properly by remove format.
 	Fixed bug where it wasn't possible to align images within inline elements.
 	Fixed bug where Ctrl+Delete/Backspace would produce an invalid argument exception on IE.
+	Fixed bug where the search/replace logic could produce an infinite loop on IE for reverse searches.
 Version 3.3b2 (2010-02-04)
 	Fixed bug where sometimes img elements would be removed by split method in DOMUtils.
 	Fixed bug where merging of span elements could occur on bookmark nodes.

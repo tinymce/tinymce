@@ -75,6 +75,10 @@ var SearchReplaceDialog = {
 						r.select();
 						replace();
 						fo = 1;
+
+						if (b) {
+							r.moveEnd("character", -(rs.length)); // Otherwise will loop forever
+						}
 					}
 
 					tinyMCEPopup.storeSelection();
