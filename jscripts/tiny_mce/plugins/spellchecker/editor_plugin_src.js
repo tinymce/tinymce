@@ -40,7 +40,10 @@
 							ed.nodeChanged();
 						} else {
 							ed.setProgressState(0);
-							ed.windowManager.alert('spellchecker.no_mpell');
+                            var show_alert = ed.getParam('spellchecker_report_no_misspellings');
+                            if(show_alert == null || show_alert == true) {
+                                ed.windowManager.alert('spellchecker.no_mpell');
+                            }
 						}
 					});
 				} else
