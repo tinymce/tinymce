@@ -126,15 +126,15 @@
 
 						if (!formatNode)
 							formatNode = curNode = node;
-						else
+						else if (curNode)
 							curNode.appendChild(node);
 
 						curNode = node;
 					});
 
 					// Add something to the inner node
-					if (curNode && !tinymce.isIE)
-						curNode.innerHTML = '<br _mce_bogus="1" />';
+					if (curNode)
+						curNode.innerHTML = tinymce.isIE ? '&nbsp;' : '<br _mce_bogus="1" />';
 
 					return false;
 				}
