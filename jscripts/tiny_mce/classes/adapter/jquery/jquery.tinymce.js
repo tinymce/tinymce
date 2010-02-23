@@ -172,7 +172,17 @@
 	// automatically destroyed by the TinyMCE API
 	function applyPatch() {
 		// Removes any child editor instances by looking for editor wrapper elements
-		function removeEditors() {
+		function removeEditors(remove) {
+			// If the function is remove
+			if (remove) {
+				this.each(function(i, node) {
+					var ed = tinyMCEInstance(node);
+
+					if (ed)
+						ed.remove();
+				});
+			}
+
 			this.find("span.mceEditor,div.mceEditor").each(function(i, node) {
 				var ed = tinyMCE.get(node.id.replace(/_parent$/, ""));
 
@@ -283,7 +293,7 @@
 			var origFn = jQueryFn[name] = $.fn[name];
 
 			$.fn[name] = function() {
-				removeEditors.apply(this);
+				removeEditors.apply(this, name === "remove");
 
 				return origFn.apply(this, arguments);
 			};
