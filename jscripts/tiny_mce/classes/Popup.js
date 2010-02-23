@@ -134,10 +134,7 @@ tinyMCEPopup = {
 		dw = t.getWindowArg('mce_width') - vp.w;
 		dh = t.getWindowArg('mce_height') - vp.h;
 
-		if (t.isWindow)
-			window.resizeBy(dw, dh);
-		else
-			t.editor.windowManager.resizeBy(dw, dh, t.id);
+		t.editor.windowManager.resizeBy(dw, dh, t.id || window);
 	},
 
 	/**
@@ -341,7 +338,7 @@ tinyMCEPopup = {
 
 		if (!tinymce.isIE && !t.isWindow) {
 			tinymce.dom.Event._add(document, 'focus', function() {
-				t.editor.windowManager.focus(t.id)
+				t.editor.windowManager.focus(t.id);
 			});
 		}
 
