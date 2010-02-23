@@ -6,6 +6,7 @@ Version 3.3rc1 (2010-xx-xx)
 	Fixed bug where Ctrl+Delete/Backspace would produce an invalid argument exception on IE.
 	Fixed bug where the search/replace logic could produce an infinite loop on IE for reverse searches.
 	Fixed bug where cloning formats in cells didn't work properly on IE.
+	Fixed bug where IE6 would produce a horizontal scroll bar.
 	Fixed so selected rows and cells gets updated using the row/cell properties dialogs.
 Version 3.3b2 (2010-02-04)
 	Fixed bug where sometimes img elements would be removed by split method in DOMUtils.
