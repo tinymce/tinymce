@@ -1,4 +1,4 @@
-Version 3.3rc1 (2010-xx-xx)
+Version 3.3rc1 (2010-02-23)
 	Fixed bug with new legacyoutput plugin not working correctly on it's own.
 	Fixed bug some performance issues with removing text formats.
 	Fixed bug where TinyMCE specific attributes wasn't removed properly by remove format.
@@ -7,6 +7,7 @@ Version 3.3rc1 (2010-xx-xx)
 	Fixed bug where the search/replace logic could produce an infinite loop on IE for reverse searches.
 	Fixed bug where cloning formats in cells didn't work properly on IE.
 	Fixed bug where IE6 would produce a horizontal scroll bar.
+	Fixed so remove jQuery method removes the TinyMCE instance as well as the specified textarea.
 	Fixed so selected rows and cells gets updated using the row/cell properties dialogs.
 Version 3.3b2 (2010-02-04)
 	Fixed bug where sometimes img elements would be removed by split method in DOMUtils.
