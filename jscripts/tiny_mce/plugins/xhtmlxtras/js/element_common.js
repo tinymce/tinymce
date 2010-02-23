@@ -160,9 +160,6 @@ SXE.insertElement = function(element_name) {
 		if(s.length > 0) {
 			tagName = element_name;
 
-			if (tinymce.isIE && element_name.indexOf('html:') == 0)
-				element_name = element_name.substring(5).toLowerCase();
-
 			insertInlineElement(element_name);
 			var elementArray = tinymce.grep(SXE.inst.dom.select(element_name));
 			for (var i=0; i<elementArray.length; i++) {
@@ -197,7 +194,7 @@ SXE.removeElement = function(element_name){
 }
 
 SXE.showRemoveButton = function() {
-		document.getElementById("remove").style.display = 'block';
+		document.getElementById("remove").style.display = '';
 }
 
 SXE.containsClass = function(elm,cl) {

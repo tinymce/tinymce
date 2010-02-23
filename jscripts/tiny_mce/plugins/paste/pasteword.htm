@@ -1,6 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<title>{#paste.paste_word_desc}</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/pasteword.js?v={tinymce_version}"></script>
@@ -14,13 +13,8 @@
 		<div id="iframecontainer"></div>
 
 		<div class="mceActionPanel">
-			<div style="float: left">
-				<input type="submit" id="insert" name="insert" value="{#insert}" />
-			</div>
-
-			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
-			</div>
+			<input type="submit" id="insert" name="insert" value="{#insert}" />
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
 	</form>
 </body>
