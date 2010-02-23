@@ -163,6 +163,17 @@
 				cb.call(s || t);
 		},
 
+		/**
+		 * Resizes the specified window or id.
+		 *
+		 * @param {Number} dw Delta width.
+		 * @param {Number} dh Delta height.
+		 * @param {window/id} win Window if the dialog isn't inline. Id if the dialog is inline.
+		 */
+		resizeBy : function(dw, dh, win) {
+			win.resizeBy(dw, dh);
+		},
+
 		// Internal functions
 
 		_decode : function(s) {

@@ -416,7 +416,7 @@
 				custom_undo_redo_keyboard_shortcuts : 1,
 				custom_undo_redo_restore_selection : 1,
 				custom_undo_redo : 1,
-				doctype : '<!DOCTYPE>',
+				doctype : tinymce.isIE6 ? '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' : '<!DOCTYPE>', // Use old doctype on IE 6 to avoid horizontal scroll
 				visual_table_class : 'mceItemTable',
 				visual : 1,
 				font_size_style_values : 'xx-small,x-small,small,medium,large,x-large,xx-large',
@@ -2357,12 +2357,13 @@
 
 			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
 			// WebKit can't even do simple things like selecting an image
+			// This also fixes so it's possible to select mceItemAnchors
 			if (tinymce.isWebKit) {
 				t.onClick.add(function(ed, e) {
 					e = e.target;
 
 					// Needs tobe the setBaseAndExtend or it will fail to select floated images
-					if (e.nodeName == 'IMG')
+					if (e.nodeName == 'IMG' || (e.nodeName == 'A' && t.dom.hasClass(e, 'mceItemAnchor')))
 						t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
 				});
 			}

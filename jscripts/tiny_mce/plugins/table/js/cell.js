@@ -34,27 +34,30 @@ function init() {
 	addClassesToList('class', 'table_cell_styles');
 	TinyMCE_EditableSelects.init();
 
-	formObj.bordercolor.value = bordercolor;
-	formObj.bgcolor.value = bgcolor;
-	formObj.backgroundimage.value = backgroundimage;
-	formObj.width.value = width;
-	formObj.height.value = height;
-	formObj.id.value = id;
-	formObj.lang.value = lang;
-	formObj.style.value = ed.dom.serializeStyle(st);
-	selectByValue(formObj, 'align', align);
-	selectByValue(formObj, 'valign', valign);
-	selectByValue(formObj, 'class', className, true, true);
-	selectByValue(formObj, 'celltype', celltype);
-	selectByValue(formObj, 'dir', dir);
-	selectByValue(formObj, 'scope', scope);
+	if (!ed.dom.hasClass(tdElm, 'mceSelected')) {
+		formObj.bordercolor.value = bordercolor;
+		formObj.bgcolor.value = bgcolor;
+		formObj.backgroundimage.value = backgroundimage;
+		formObj.width.value = width;
+		formObj.height.value = height;
+		formObj.id.value = id;
+		formObj.lang.value = lang;
+		formObj.style.value = ed.dom.serializeStyle(st);
+		selectByValue(formObj, 'align', align);
+		selectByValue(formObj, 'valign', valign);
+		selectByValue(formObj, 'class', className, true, true);
+		selectByValue(formObj, 'celltype', celltype);
+		selectByValue(formObj, 'dir', dir);
+		selectByValue(formObj, 'scope', scope);
 
-	// Resize some elements
-	if (isVisible('backgroundimagebrowser'))
-		document.getElementById('backgroundimage').style.width = '180px';
+		// Resize some elements
+		if (isVisible('backgroundimagebrowser'))
+			document.getElementById('backgroundimage').style.width = '180px';
 
-	updateColor('bordercolor_pick', 'bordercolor');
-	updateColor('bgcolor_pick', 'bgcolor');
+		updateColor('bordercolor_pick', 'bordercolor');
+		updateColor('bgcolor_pick', 'bgcolor');
+	} else
+		tinyMCEPopup.dom.hide('action');
 }
 
 function updateAction() {
@@ -65,6 +68,20 @@ function updateAction() {
 	tdElm = ed.dom.getParent(el, "td,th");
 	trElm = ed.dom.getParent(el, "tr");
 	tableElm = ed.dom.getParent(el, "table");
+
+	// Cell is selected
+	if (ed.dom.hasClass(tdElm, 'mceSelected')) {
+		// Update all selected sells
+		tinymce.each(ed.dom.select('td.mceSelected,th.mceSelected'), function(td) {
+			updateCell(td);
+		});
+
+		ed.addVisual();
+		ed.nodeChanged();
+		inst.execCommand('mceEndUndoLevel');
+		tinyMCEPopup.close();
+		return;
+	}
 
 	ed.execCommand('mceBeginUndoLevel');
 

@@ -121,6 +121,11 @@
 					} while (n = n.parentNode);
 				}
 			});
+
+			ed.onPreInit.add(function() {
+				// Fixed IE issue where it can't handle these elements correctly
+				ed.dom.create('abbr');
+			});
 		},
 
 		getInfo : function() {
