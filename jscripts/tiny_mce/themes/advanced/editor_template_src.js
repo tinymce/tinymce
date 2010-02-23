@@ -892,11 +892,6 @@
 
 			if (c = cm.get('anchor')) {
 				c.setActive(!!p && p.name);
-
-				if (tinymce.isWebKit) {
-					p = getParent('IMG');
-					c.setActive(!!p && DOM.getAttrib(p, 'mce_name') == 'a');
-				}
 			}
 
 			p = getParent('IMG');
