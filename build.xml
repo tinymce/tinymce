@@ -53,7 +53,7 @@
 	<!-- Concat and minify classes and scripts -->
 	<target name="build" depends="" description="Builds the project">
 		<!-- Combine all class files into one single script file -->
-		<concat destfile="${build_dir}/tiny_mce_tmp.js">
+		<concat destfile="${build_dir}/tiny_mce_tmp.js" fixlastline="yes">
 			<fileset dir="${classes_dir}" includes="tinymce.js" />
 			<fileset dir="${classes_dir}" includes="adapter/jquery/adapter.js" />
 			<fileset dir="${classes_dir}" includes="adapter/prototype/adapter.js" />
