@@ -27,7 +27,7 @@
 	 * if (tinymce.isIE)
 	 *   console.log("IE");
 	 */
-	win.tinymce = win.tinyMCE = {
+	var tinymce = {
 		/**
 		 * Major version of TinyMCE build.
 		 *
@@ -471,7 +471,7 @@
 		createNS : function(n, o) {
 			var i, v;
 
-			o = o || window;
+			o = o || win;
 
 			n = n.split('.');
 			for (i=0; i<n.length; i++) {
@@ -649,4 +649,7 @@
 
 	// Initialize the API
 	tinymce._init();
+
+	// Expose tinymce namespace to the global namespace (window)
+	win.tinymce = win.tinyMCE = tinymce;
 })(window);
