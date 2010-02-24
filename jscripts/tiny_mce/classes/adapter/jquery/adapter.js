@@ -331,6 +331,6 @@
 	tinymce.onCreate = function(ty, c, p) {
 		tinymce.extend(p, patches[c]);
 	};
-})(jQuery, tinymce);
+})(window.jQuery, tinymce);
 
 // #endif
