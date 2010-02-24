@@ -129,12 +129,19 @@ tinyMCEPopup = {
 	 * @method resizeToInnerSize
 	 */
 	resizeToInnerSize : function() {
-		var t = this, n, b = document.body, vp = t.dom.getViewPort(window), dw, dh;
+		var t = this;
 
-		dw = t.getWindowArg('mce_width') - vp.w;
-		dh = t.getWindowArg('mce_height') - vp.h;
+		// Detach it to workaround a Chrome specific bug
+		// https://sourceforge.net/tracker/?func=detail&atid=635682&aid=2926339&group_id=103281
+		setTimeout(function() {
+			var vp = t.dom.getViewPort(window);
 
-		t.editor.windowManager.resizeBy(dw, dh, t.id || window);
+			t.editor.windowManager.resizeBy(
+				t.getWindowArg('mce_width') - vp.w,
+				t.getWindowArg('mce_height') - vp.h,
+				t.id || window
+			);
+		}, 0);
 	},
 
 	/**
