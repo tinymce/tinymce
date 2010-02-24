@@ -2505,7 +2505,7 @@
 						case 8:
 							// Fix IE control + backspace browser bug
 							if (t.selection.getRng().item) {
-								t.selection.getRng().item(0).removeNode();
+								ed.dom.remove(t.selection.getRng().item(0));
 								return Event.cancel(e);
 							}
 					}
