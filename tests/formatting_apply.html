@@ -15,7 +15,7 @@ function getContent() {
 test('Formatter - apply (inline)', function() {
 	var rng, format;
 
-	expect(36);
+	expect(37);
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -386,6 +386,16 @@ test('Formatter - apply (inline)', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format', {color : '#ff0000', title : 'title'});
 	equals(getContent(), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
+
+	// Remove redundant children
+	editor.formatter.register('format', {inline : 'span', styles : {fontFamily : 'arial'}});
+	editor.getBody().innerHTML = '<p><span style="font-family: sans-serif;"><span style="font-family: palatino;">1</span>2<span style="font-family: verdana;">3</span>4</span></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0], 0);
+	rng.setEnd(editor.dom.select('p')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><span style=\"font-family: arial;\">1234</span></p>', 'Remove redundant children');
 
 	// Inline element on selected text with function values
 	editor.formatter.register('format', {

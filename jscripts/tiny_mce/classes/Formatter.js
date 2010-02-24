@@ -282,9 +282,9 @@
 
 							dom.replace(clone, node, TRUE);
 							dom.remove(child, 1);
-
-							return TRUE;
 						}
+
+						return clone || node;
 					};
 
 					childCount = getChildCount(node);
@@ -297,10 +297,8 @@
 
 					if (format.inline || format.wrapper) {
 						// Merges the current node with it's children of similar type to reduce the number of elements
-						if (!format.exact && childCount === 1) {
-							if (mergeStyles(node))
-								return;
-						}
+						if (!format.exact && childCount === 1)
+							node = mergeStyles(node);
 
 						// Remove/merge children
 						each(formatList, function(format) {
