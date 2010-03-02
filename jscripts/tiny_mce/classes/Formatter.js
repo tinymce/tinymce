@@ -1198,8 +1198,8 @@
 					each(dom.getAttribs(node), function(attr) {
 						var name = attr.nodeName.toLowerCase();
 
-						// Don't compare internal attributes or style/class
-						if (name.indexOf('_') !== 0 && name !== 'class' && name !== 'style')
+						// Don't compare internal attributes or style
+						if (name.indexOf('_') !== 0 && name !== 'style')
 							attribs[name] = dom.getAttrib(node, name);
 					});
 
