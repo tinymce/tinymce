@@ -147,7 +147,7 @@
 			// Workaround for missing shift+enter support, http://bugs.webkit.org/show_bug.cgi?id=16973
 			if (tinymce.isWebKit) {
 				function insertBr(ed) {
-					var rng = selection.getRng(), br;
+					var rng = selection.getRng(), br, div = dom.create('div', null, ' '), divYPos, vpHeight = dom.getViewPort(ed.getWin()).h;
 
 					// Insert BR element
 					rng.insertNode(br = dom.create('br'));
@@ -163,8 +163,15 @@
 						selection.collapse(TRUE);
 					}
 
-					// Scroll to new position, scrollIntoView can't be used due to bug: http://bugs.webkit.org/show_bug.cgi?id=16117
-					ed.getWin().scrollTo(0, dom.getPos(selection.getRng().startContainer).y);
+                    // Create a temporary DIV after the BR and get the position as it
+                    // seems like getPos() returns 0 for text nodes and BR elements.
+                    dom.insertAfter(div, br);
+                    divYPos = dom.getPos(div).y;
+                    dom.remove(div);
+
+                    // Scroll to new position, scrollIntoView can't be used due to bug: http://bugs.webkit.org/show_bug.cgi?id=16117
+                    if ( divYPos > vpHeight ) // It is not necessary to scroll if the DIV is inside the view port.
+					    ed.getWin().scrollTo(0, divYPos);
 				};
 
 				ed.onKeyPress.add(function(ed, e) {
