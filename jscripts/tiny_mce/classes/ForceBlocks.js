@@ -163,15 +163,15 @@
 						selection.collapse(TRUE);
 					}
 
-                    // Create a temporary DIV after the BR and get the position as it
-                    // seems like getPos() returns 0 for text nodes and BR elements.
-                    dom.insertAfter(div, br);
-                    divYPos = dom.getPos(div).y;
-                    dom.remove(div);
+					// Create a temporary DIV after the BR and get the position as it
+					// seems like getPos() returns 0 for text nodes and BR elements.
+					dom.insertAfter(div, br);
+					divYPos = dom.getPos(div).y;
+					dom.remove(div);
 
-                    // Scroll to new position, scrollIntoView can't be used due to bug: http://bugs.webkit.org/show_bug.cgi?id=16117
-                    if ( divYPos > vpHeight ) // It is not necessary to scroll if the DIV is inside the view port.
-					    ed.getWin().scrollTo(0, divYPos);
+					// Scroll to new position, scrollIntoView can't be used due to bug: http://bugs.webkit.org/show_bug.cgi?id=16117
+					if (divYPos > vpHeight) // It is not necessary to scroll if the DIV is inside the view port.
+						ed.getWin().scrollTo(0, divYPos);
 				};
 
 				ed.onKeyPress.add(function(ed, e) {
