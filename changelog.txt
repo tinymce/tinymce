@@ -1,4 +1,4 @@
-Version 3.3 (2010-xx-xx)
+Version 3.3 (2010-03-10)
 	Fixed bug where backspace on a table on IE would produce an empty tbody and some JS exceptions.
 	Fixed bug where some redundant children wasn't removed properly when applying inline styles to them.
 	Fixed bug where Chrome would produce incorect dialog sizes if the inlinepopups plugin wasn't used.
@@ -6,6 +6,7 @@ Version 3.3 (2010-xx-xx)
 	Fixed bug where IE 8 would crash if you used the spellchecker.
 	Fixed bug where Input Method for non western languages didn't work correctly.
 	Fixed bug where the UI would render incorrectly in FF 3.6 on Mac due to a bug n their rendering engine.
+	Fixed bug where WebKit wouldn't scroll down correctly if Shift+Enter was used. Patch contributed by Thomas Andersen.
 Version 3.3rc1 (2010-02-23)
 	Fixed bug with new legacyoutput plugin not working correctly on it's own.
 	Fixed bug some performance issues with removing text formats.
