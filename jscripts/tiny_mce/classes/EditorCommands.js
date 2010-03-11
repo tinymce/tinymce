@@ -332,6 +332,10 @@
 				}
 			},
 
+			mceToggleFormat : function(command, ui, value) {
+				editor.formatter.toggle(value);
+			},
+
 			InsertHorizontalRule : function() {
 				selection.setContent('<hr />');
 			},

@@ -218,8 +218,7 @@
 			ctrl = ctrlMan.createListBox('styleselect', {
 				title : 'advanced.style_select',
 				onselect : function(name) {
-					ed.focus();
-					ed.formatter.toggle(name);
+					ed.execCommand('mceToggleFormat', false, name);
 
 					return false; // No auto select
 				}
