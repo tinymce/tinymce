@@ -1,3 +1,5 @@
+Version 3.3.1 (2010-xx-xx)
+	Fixed bug where it wasn't possible to toggle off blockquotes.
 Version 3.3 (2010-03-10)
 	Fixed bug where backspace on a table on IE would produce an empty tbody and some JS exceptions.
 	Fixed bug where some redundant children wasn't removed properly when applying inline styles to them.
