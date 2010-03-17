@@ -1324,10 +1324,8 @@
 			var oed, t = this, ce = t.settings.content_editable;
 
 			if (!sf) {
-				// Is not content editable or the selection is outside the area in IE
-				// the IE statement is needed to avoid bluring if element selections inside layers since
-				// the layer is like it's own document in IE
-				if (!ce && (!isIE || t.selection.getNode().ownerDocument != t.getDoc()))
+				// Is not content editable
+				if (!ce)
 					t.getWin().focus();
 
 				// #ifdef contentEditable
