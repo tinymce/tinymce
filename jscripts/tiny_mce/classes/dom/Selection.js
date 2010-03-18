@@ -257,23 +257,8 @@
 					var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
 
 					function getPoint(rng, start) {
-						var indexes = [], node, lastIdx,
-							container = rng[start ? 'startContainer' : 'endContainer'],
-							offset = rng[start ? 'startOffset' : 'endOffset'], exclude, point = {};
-
-						// Resolve element index
-						if (container.nodeType == 1 && container.hasChildNodes()) {
-							lastIdx = container.childNodes.length - 1;
-							point.exclude = (start && offset > lastIdx) || (!start && offset == 0);
-
-							if (!start && offset)
-								offset--;
-
-							container = container.childNodes[offset > lastIdx ? lastIdx : offset];
-
-							if (container.nodeType == 3)
-								offset = start ? 0 : container.nodeValue.length;
-						}
+						var container = rng[start ? 'startContainer' : 'endContainer'],
+							offset = rng[start ? 'startOffset' : 'endOffset'], point = [], childNodes, after = 0;
 
 						if (container.nodeType == 3) {
 							if (normalized) {
@@ -281,13 +266,20 @@
 									offset += node.nodeValue.length;
 							}
 
-							point.offset = offset;
+							point.push(offset);
+						} else {
+							childNodes = container.childNodes;
+							
+							if (offset >= childNodes.length) {
+								after = 1;
+								offset = childNodes.length - 1;
+							}
+
+							point.push(t.dom.nodeIndex(childNodes[offset], normalized) + after);
 						}
 
 						for (; container && container != root; container = container.parentNode)
-							indexes.push(t.dom.nodeIndex(container, normalized));
-
-						point.indexes = indexes;
+							point.push(t.dom.nodeIndex(container, normalized));
 
 						return point;
 					};
@@ -381,28 +373,15 @@
 						var point = bookmark[start ? 'start' : 'end'], i, node, offset;
 
 						if (point) {
-							for (node = root, i = point.indexes.length - 1; i >= 0; i--)
-								node = node.childNodes[point.indexes[i]] || node;
+							// Find container node
+							for (node = root, i = point.length - 1; i >= 1; i--)
+								node = node.childNodes[point[i]];
 
-							if (start) {
-								if (node.nodeType == 3 && point.offset)
-									rng.setStart(node, point.offset);
-								else {
-									if (point.exclude)
-										rng.setStartAfter(node);
-									else
-										rng.setStartBefore(node);
-								}
-							} else {
-								if (node.nodeType == 3 && point.offset)
-									rng.setEnd(node, point.offset);
-								else {
-									if (point.exclude)
-										rng.setEndBefore(node);
-									else
-										rng.setEndAfter(node);
-								}
-							}
+							// Set offset within container node
+							if (start)
+								rng.setStart(node, point[0]);
+							else
+								rng.setEnd(node, point[0]);
 						}
 					};
 
@@ -422,6 +401,9 @@
 							if (suffix == 'start') {
 								if (!keep) {
 									idx = dom.nodeIndex(marker);
+
+									if (idx > 0)
+										idx++;
 								} else {
 									node = marker;
 									idx = 1;

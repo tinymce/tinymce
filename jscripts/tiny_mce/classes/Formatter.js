@@ -377,10 +377,13 @@
 
 				// Find format root
 				each(getParents(container.parentNode).reverse(), function(parent) {
+					var format;
+
 					// Find format root element
 					if (!formatRoot && parent.id != '_start' && parent.id != '_end') {
 						// Is the node matching the format we are looking for
-						if (matchNode(parent, name, vars))
+						format = matchNode(parent, name, vars);
+						if (format && format.split !== false)
 							formatRoot = parent;
 					}
 				});
@@ -522,7 +525,7 @@
 		 * @param {Node} node Node to check the format on.
 		 * @param {String} name Format name to check.
 		 * @param {Object} vars Optional list of variables to replace before checking it.
-		 * @returns {boolean} True/false state if the format matches or not.
+		 * @return {Object} Returns the format object it matches or undefined if it doesn't match.
 		 */
 		function matchNode(node, name, vars) {
 			var formatList = get(name), format, i, classes;
@@ -549,12 +552,12 @@
 						// Only one match needed for indexed arrays
 						for (i = 0; i < items.length; i++) {
 							if (item_name === 'attributes' ? dom.getAttrib(node, items[i]) : getStyle(node, items[i]))
-								return TRUE;
+								return format;
 						}
 					}
 				}
 
-				return TRUE;
+				return format;
 			};
 
 			if (formatList && node) {
@@ -572,7 +575,7 @@
 							}
 						}
 
-						return TRUE;
+						return format;
 					}
 				}
 			}
