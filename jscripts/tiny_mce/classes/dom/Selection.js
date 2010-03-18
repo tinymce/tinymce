@@ -401,9 +401,6 @@
 							if (suffix == 'start') {
 								if (!keep) {
 									idx = dom.nodeIndex(marker);
-
-									if (idx > 0)
-										idx++;
 								} else {
 									node = marker;
 									idx = 1;

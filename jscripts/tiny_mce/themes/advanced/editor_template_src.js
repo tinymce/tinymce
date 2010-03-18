@@ -203,7 +203,8 @@
 
 					ed.formatter.register(name, {
 						inline : 'span',
-						classes : o['class']
+						classes : o['class'],
+						selector : '*'
 					});
 
 					ctrl.add(o['class'], name);

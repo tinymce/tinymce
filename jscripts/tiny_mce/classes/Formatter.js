@@ -52,6 +52,10 @@
 			return dom.getParents(node, selector, dom.getRoot());
 		};
 
+		function isCaretNode(node) {
+			return node.nodeType === 1 && (node.face === 'mceinline' || node.style.fontFamily === 'mceinline');
+		};
+
 		// Public functions
 
 		/**
@@ -90,10 +94,10 @@
 
 						// Default to true
 						if (format.split === undefined)
-							format.split = !format.selector;
+							format.split = !format.selector || format.inline;
 
 						// Default to true
-						if (format.remove === undefined && format.selector)
+						if (format.remove === undefined && format.selector && !format.inline)
 							format.remove = 'none';
 
 						// Split classes if needed
@@ -175,7 +179,7 @@
 					 * Process a list of nodes wrap them.
 					 */
 					function process(node) {
-						var nodeName = node.nodeName.toLowerCase(), parentName = node.parentNode.nodeName.toLowerCase();
+						var nodeName = node.nodeName.toLowerCase(), parentName = node.parentNode.nodeName.toLowerCase(), found;
 
 						// Stop wrapping on br elements
 						if (isEq(nodeName, 'br')) {
@@ -207,11 +211,15 @@
 						if (format.selector) {
 							// Look for matching formats
 							each(formatList, function(format) {
-								if (dom.is(node, format.selector))
+								if (dom.is(node, format.selector) && !isCaretNode(node)) {
 									setElementFormat(node, format);
+									found = true;
+								}
 							});
 
-							return;
+							// Contine processing if a selector match wasn't found and a inline element is defined
+							if (!format.inline || found)
+								return;
 						}
 
 						// Is it valid to wrap this item
@@ -259,7 +267,7 @@
 						var child, clone;
 
 						each(node.childNodes, function(node) {
-							if (node.nodeType == 1 && !isBookmarkNode(node)) {
+							if (node.nodeType == 1 && !isBookmarkNode(node) && !isCaretNode(node)) {
 								child = node;
 								return FALSE; // break loop
 							}
@@ -864,7 +872,7 @@
 			}
 
 			// Expand start/end container to matching selector
-			if (format[0].selector && format[0].expand !== FALSE) {
+			if (format[0].selector && format[0].expand !== FALSE && !format[0].inline) {
 				function findSelectorEndPoint(container, sibling_name) {
 					var parents, i, y;
 
@@ -1120,6 +1128,10 @@
 				}
 			}
 
+			// Never remove nodes that isn't the specified inline element if a selector is specified too
+			if (format.selector && format.inline && !isEq(format.inline, node))
+				return;
+
 			dom.remove(node, 1);
 		};
 
@@ -1321,12 +1333,8 @@
 		};
 
 		function performCaretAction(type, name, vars) {
-			var i, marker = 'mceinline', currentPendingFormats = pendingFormats[type],
+			var i, currentPendingFormats = pendingFormats[type],
 				otherPendingFormats = pendingFormats[type == 'apply' ? 'remove' : 'apply'];
-
-			function isMarker(node) {
-				return node.face == marker || node.style.fontFamily == marker;
-			};
 
 			function hasPending() {
 				return pendingFormats.apply.length || pendingFormats.remove.length;
@@ -1374,7 +1382,7 @@
 				each(dom.select('font,span'), function(node) {
 					var bookmark;
 
-					if (isMarker(node)) {
+					if (isCaretNode(node)) {
 						bookmark = selection.getBookmark();
 						perform(node);
 						selection.moveToBookmark(bookmark);
@@ -1393,7 +1401,7 @@
 									var bookmark, textNode, rng;
 
 									// Look for marker
-									if (isMarker(node)) {
+									if (isCaretNode(node)) {
 										textNode = node.firstChild;
 
 										perform(node);
