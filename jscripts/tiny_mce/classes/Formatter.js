@@ -100,6 +100,12 @@
 						if (format.remove === undefined && format.selector && !format.inline)
 							format.remove = 'none';
 
+						// Mark format as a mixed format inline + block level
+						if (format.selector && format.inline) {
+							format.mixed = true;
+							format.block_expand = true;
+						}
+
 						// Split classes if needed
 						if (typeof(format.classes) === 'string')
 							format.classes = format.classes.split(/\s+/);
@@ -430,7 +436,8 @@
 						}
 					}
 
-					if (split)
+					// Never split block elements if the format is mixed
+					if (split && (!format.mixed || !isBlock(format_root)))
 						container = dom.split(format_root, container);
 
 					// Wrap container in cloned formats
