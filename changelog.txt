@@ -1,3 +1,5 @@
+Version 3.3.x (2010-xx-xx)
+	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.
 Version 3.3.1 (2010-03-18)
 	Added new live resize feature, the editor contents is now visible while resizing.
 	Fixed bug where some valid_element patterns would produce an unknown property error.

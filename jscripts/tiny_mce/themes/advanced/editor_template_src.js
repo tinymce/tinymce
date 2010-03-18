@@ -533,6 +533,10 @@
 			// Resize iframe and container
 			DOM.setStyles(e, {width : '', height : ''});
 			DOM.setStyles(ifr, {width : w, height : h});
+
+			// Make sure that the size is never smaller than the over all ui
+			if (w < e.clientWidth)
+				DOM.setStyle(ifr, 'width', e.clientWidth);
 		},
 
 		destroy : function() {
