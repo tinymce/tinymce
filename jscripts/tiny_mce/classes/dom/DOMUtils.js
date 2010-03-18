@@ -1852,7 +1852,7 @@
 			var idx = 0, lastNodeType, nodeType;
 
 			if (node) {
-				for (node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
+				for (lastNodeType = node.nodeType, node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
 					nodeType = node.nodeType;
 
 					// Handle normalization of text nodes
