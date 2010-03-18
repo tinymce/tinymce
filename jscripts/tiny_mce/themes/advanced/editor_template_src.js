@@ -204,7 +204,8 @@
 					ed.formatter.register(name, {
 						inline : 'span',
 						classes : o['class'],
-						selector : '*'
+						selector : '*',
+						block_expand : true
 					});
 
 					ctrl.add(o['class'], name);

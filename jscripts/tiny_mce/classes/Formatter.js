@@ -218,8 +218,10 @@
 							});
 
 							// Contine processing if a selector match wasn't found and a inline element is defined
-							if (!format.inline || found)
+							if (!format.inline || found) {
+								currentWrapElm = 0;
 								return;
+							}
 						}
 
 						// Is it valid to wrap this item
