@@ -522,7 +522,7 @@
 		},
 
 		resizeTo : function(w, h) {
-			var ed = this.editor, s = ed.settings, e = DOM.get(ed.id + '_tbl'), ifr = DOM.get(ed.id + '_ifr'), dh;
+			var ed = this.editor, s = ed.settings, e = DOM.get(ed.id + '_tbl'), ifr = DOM.get(ed.id + '_ifr');
 
 			// Boundery fix box
 			w = Math.max(s.theme_advanced_resizing_min_width || 100, w);
@@ -530,12 +530,9 @@
 			w = Math.min(s.theme_advanced_resizing_max_width || 0xFFFF, w);
 			h = Math.min(s.theme_advanced_resizing_max_height || 0xFFFF, h);
 
-			// Calc difference between iframe and container
-			dh = e.clientHeight - ifr.clientHeight;
-
 			// Resize iframe and container
-			DOM.setStyle(ifr, 'height', h - dh);
-			DOM.setStyles(e, {width : w, height : h});
+			DOM.setStyles(e, {width : '', height : ''});
+			DOM.setStyles(ifr, {width : w, height : h});
 		},
 
 		destroy : function() {
@@ -756,7 +753,7 @@
 				ed.onPostRender.add(function() {
 					Event.add(ed.id + '_resize', 'mousedown', function(e) {
 						var mouseMoveHandler1, mouseMoveHandler2, mouseUpHandler,
-							startX, startY, startWidth, startHeight, width, height, tblElm;
+							startX, startY, startWidth, startHeight, width, height, ifrElm;
 
 						function resizeOnMove(e) {
 							width = startWidth + (e.screenX - startX);
@@ -770,9 +767,9 @@
 						// Get the current rect size
 						startX = e.screenX;
 						startY = e.screenY;
-						tblElm = DOM.get(t.editor.id + '_tbl');
-						startWidth = width = tblElm.clientWidth;
-						startHeight = height = tblElm.clientHeight;
+						ifrElm = DOM.get(t.editor.id + '_ifr');
+						startWidth = width = ifrElm.clientWidth;
+						startHeight = height = ifrElm.clientHeight;
 
 						// Register envent handlers
 						mouseMoveHandler1 = Event.add(DOM.doc, 'mousemove', resizeOnMove);
