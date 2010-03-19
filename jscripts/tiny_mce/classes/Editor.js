@@ -916,7 +916,7 @@
 				hilitecolor : {inline : 'span', styles : {backgroundColor : '%value'}},
 				fontname : {inline : 'span', styles : {fontFamily : '%value'}},
 				fontsize : {inline : 'span', styles : {fontSize : '%value'}},
-				blockquote : {block : 'blockquote', wrapper : 1},
+				blockquote : {block : 'blockquote', wrapper : 1, remove : 'all'},
 
 				removeformat : [
 					{selector : 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand : true, deep : true},
@@ -927,7 +927,7 @@
 
 			// Register default block formats
 			each('p h1 h2 h3 h4 h5 h6 div address pre div code dt dd samp'.split(/\s/), function(name) {
-				t.formatter.register(name, {block : name});
+				t.formatter.register(name, {block : name, remove : 'all'});
 			});
 
 			// Register user defined formats
