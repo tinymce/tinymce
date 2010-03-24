@@ -168,7 +168,7 @@
 		getStart : function() {
 			var t = this, r = t.getRng(), e;
 
-			if (isIE) {
+			if (r.duplicate || r.item) {
 				if (r.item)
 					return r.item(0);
 
@@ -203,7 +203,7 @@
 		getEnd : function() {
 			var t = this, r = t.getRng(), e, eo;
 
-			if (isIE) {
+			if (r.duplicate || r.item) {
 				if (r.item)
 					return r.item(0);
 
@@ -589,7 +589,7 @@
 			// This can occur when the editor is placed in a hidden container element on Gecko
 			// Or on IE when there was an exception
 			if (!r)
-				r = isIE ? t.win.document.body.createTextRange() : t.win.document.createRange();
+				r = t.win.document.createRange ? t.win.document.createRange() : t.win.document.body.createTextRange();
 
 			return r;
 		},
@@ -650,7 +650,7 @@
 		getNode : function() {
 			var t = this, rng = t.getRng(), sel = t.getSel(), elm;
 
-			if (!isIE) {
+			if (rng.setStart) {
 				// Range maybe lost after the editor is made visible again
 				if (!rng)
 					return t.dom.getRoot();
