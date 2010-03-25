@@ -794,8 +794,8 @@
 			str1 = str1 || '';
 			str2 = str2 || '';
 
-			str1 = str1.nodeName || str1;
-			str2 = str2.nodeName || str2;
+			str1 = '' + (str1.nodeName || str1);
+			str2 = '' + (str2.nodeName || str2);
 
 			return str1.toLowerCase() == str2.toLowerCase();
 		};
