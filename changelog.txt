@@ -1,6 +1,8 @@
-Version 3.3.x (2010-xx-xx)
+Version 3.3.2 (2010-03-25)
 	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.
 	Fixed bug where some of the resizing option didn't work with the new live resize.
+	Fixed bug where the format listbox didn't show nestled formats correctly.
+	Fixed bug where the native listboxes didn't work correctly.
 	Fixed so block and blockquote formats remove their matching element regardless of it's attributes.
 Version 3.3.1 (2010-03-18)
 	Added new live resize feature, the editor contents is now visible while resizing.

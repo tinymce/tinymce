@@ -811,7 +811,7 @@
 		},
 
 		_nodeChanged : function(ed, cm, n, co, ob) {
-			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn;
+			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn, formatNames, matches;
 
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
@@ -861,10 +861,13 @@
 			if (c = cm.get('styleselect')) {
 				t._importClasses();
 
-				// Check each format and update
-				c.select(function(fmt) {
-					return !!ed.formatter.match(fmt);
+				formatNames = [];
+				each(c.items, function(item) {
+					formatNames.push(item.value);
 				});
+
+				matches = ed.formatter.matchAll(formatNames);
+				c.select(matches[0]);
 			}
 
 			if (c = cm.get('formatselect')) {

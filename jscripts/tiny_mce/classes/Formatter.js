@@ -48,6 +48,10 @@
 			undefined,
 			pendingFormats = {apply : [], remove : []};
 
+		function isArray(obj) {
+			return obj instanceof Array;
+		};
+
 		function getParents(node, selector) {
 			return dom.getParents(node, selector, dom.getRoot());
 		};
@@ -655,6 +659,62 @@
 		};
 
 		/**
+		 * Matches the current selection against the array of formats and returns a new array with matching formats.
+		 *
+		 * @method matchAll
+		 * @param {Array} names Name of format to match.
+		 * @param {Object} vars Optional list of variables to replace before checking it.
+		 * @return {Array} Array with matched formats.
+		 */
+		function matchAll(names, vars) {
+			var startElement, matchedFormatNames = [], checkedMap = {}, i, ni, name;
+
+			// If the selection is collapsed then check pending formats
+			if (selection.isCollapsed()) {
+				for (ni = 0; ni < names.length; ni++) {
+					// If the name is to be removed, then stop it from being added
+					for (i = pendingFormats.remove.length - 1; i >= 0; i--) {
+						name = names[ni];
+
+						if (pendingFormats.remove[i].name == name) {
+							checkedMap[name] = true;
+							break;
+						}
+					}
+				}
+
+				// If the format is to be applied
+				for (i = pendingFormats.apply.length - 1; i >= 0; i--) {
+					for (ni = 0; ni < names.length; ni++) {
+						name = names[ni];
+
+						if (!checkedMap[name] && pendingFormats.apply[i].name == name) {
+							checkedMap[name] = true;
+							matchedFormatNames.push(name);
+						}
+					}
+				}
+			}
+
+			// Check start of selection for formats
+			startElement = selection.getStart();
+			dom.getParent(startElement, function(node) {
+				var i, name;
+
+				for (i = 0; i < names.length; i++) {
+					name = names[i];
+
+					if (!checkedMap[name] && matchNode(node, name, vars)) {
+						checkedMap[name] = true;
+						matchedFormatNames.push(name);
+					}
+				}
+			});
+
+			return matchedFormatNames;
+		};
+
+		/**
 		 * Returns true/false if the specified format can be applied to the current selection or not. It will currently only check the state for selector formats, it returns true on all other format types.
 		 *
 		 * @method canApply
@@ -693,6 +753,7 @@
 			remove : remove,
 			toggle : toggle,
 			match : match,
+			matchAll : matchAll,
 			matchNode : matchNode,
 			canApply : canApply
 		});
