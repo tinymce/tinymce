@@ -91,7 +91,8 @@
 
 			// Setup tinyMCEPreInit object this will later be used by the TinyMCE
 			// core script to locate other resources like CSS files, dialogs etc
-			win.tinyMCEPreInit = {
+			// You can also predefined a tinyMCEPreInit object and then it will use that instead
+			win.tinyMCEPreInit = win.tinyMCEPreInit || {
 				base : base,
 				suffix : suffix,
 				query : query
