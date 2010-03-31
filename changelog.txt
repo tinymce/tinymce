@@ -1,5 +1,6 @@
 Version 3.3.3 (2010-xx-xx)
 	Added new script_loaded callback function setting for the jQuery plugin.
+	Added various fixes and new rpc methods for the spellchecker plugin. Patch contributed by Michael Peters.
 	Removed some unnecessary inline style information from some of the dialogs.
 	Fixed some issues with the changing for the TinyMCE jQuery plugin.
 	Fixed bug where some texts in the new paste plugin wasn't placed in language pack.
