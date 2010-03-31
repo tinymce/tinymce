@@ -143,6 +143,11 @@
 				success : function() {
 					tinymce.dom.Event.domLoaded = 1;
 					lazyLoading = 2;
+
+					// Execute callback after mainscript has been loaded and before the initialization occurs
+					if (settings.script_loaded)
+						settings.script_loaded();
+
 					init();
 
 					$.each(delayedInits, function(i, init) {
