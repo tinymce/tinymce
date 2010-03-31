@@ -3,6 +3,7 @@ Version 3.3.3 (2010-xx-xx)
 	Fixed some issues with the changing for the TinyMCE jQuery plugin.
 	Fixed bug where some texts in the new paste plugin wasn't placed in language pack.
 	Fixed bug where IE would produce an incorrect information message when cutting.
+	Fixed bug where removing items using the xhtmlxtras plugin wouldn't work correctly.
 Version 3.3.2 (2010-03-25)
 	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.
 	Fixed bug where some of the resizing option didn't work with the new live resize.
