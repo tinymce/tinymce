@@ -19,7 +19,7 @@
 
 		// No match then just ignore the call
 		if (!self.length)
-			return;
+			return self;
 
 		// Get editor instance
 		if (!settings)
@@ -157,6 +157,8 @@
 			else
 				init();
 		}
+
+		return self;
 	};
 
 	// Add :tinymce psuedo selector this will select elements that has been converted into editor instances
