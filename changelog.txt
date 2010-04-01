@@ -1,3 +1,39 @@
+Version 3.3.3 (2010-xx-xx)
+	Added new script_loaded callback function setting for the jQuery plugin.
+	Added various fixes and new rpc methods for the spellchecker plugin. Patch contributed by Michael Peters.
+	Removed some unnecessary inline style information from some of the dialogs.
+	Fixed some issues with the changing for the TinyMCE jQuery plugin.
+	Fixed bug where some texts in the new paste plugin wasn't placed in language pack.
+	Fixed bug where IE would produce an incorrect information message when cutting.
+	Fixed bug where removing items using the xhtmlxtras plugin wouldn't work correctly.
+	Fixed bug where setting table background images would add extra quotes on Gecko.
+Version 3.3.2 (2010-03-25)
+	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.
+	Fixed bug where some of the resizing option didn't work with the new live resize.
+	Fixed bug where the format listbox didn't show nestled formats correctly.
+	Fixed bug where the native listboxes didn't work correctly.
+	Fixed bug where font size selection in using the legacyoutput plugin would produce errors.
+	Fixed so block and blockquote formats remove their matching element regardless of it's attributes.
+Version 3.3.1 (2010-03-18)
+	Added new live resize feature, the editor contents is now visible while resizing.
+	Fixed bug where some valid_element patterns would produce an unknown property error.
+	Fixed bug where it wasn't possible to toggle off blockquotes.
+	Fixed bug where an undo level wasn't produced when applying formatting using the styles dropdown.
+	Fixed bug where IE 6/7 wouldn't perform caret formatting due to a focus/event bug in IE.
+	Fixed bug where undo/redo wasn't restoring the previous selection correctly.
+	Fixed bug where the caret would become invisible if you resized the editor in latest Gecko.
+	Fixed bug where the class attribute wasn't completely removed in IE 6/7 when the removeClass function was used.
+	Fixed so the matchNode method of the Formatter class returns the matched format rule.
+	Fixed so it's possible to apply formatting to both blocks and as inline elements.
+Version 3.3 (2010-03-10)
+	Fixed bug where backspace on a table on IE would produce an empty tbody and some JS exceptions.
+	Fixed bug where some redundant children wasn't removed properly when applying inline styles to them.
+	Fixed bug where Chrome would produce incorect dialog sizes if the inlinepopups plugin wasn't used.
+	Fixed bug where spans with different classes would get merged if they where siblings to each other.
+	Fixed bug where IE 8 would crash if you used the spellchecker.
+	Fixed bug where Input Method for non western languages didn't work correctly.
+	Fixed bug where the UI would render incorrectly in FF 3.6 on Mac due to a bug n their rendering engine.
+	Fixed bug where WebKit wouldn't scroll down correctly if Shift+Enter was used. Patch contributed by Thomas Andersen.
 Version 3.3rc1 (2010-02-23)
 	Fixed bug with new legacyoutput plugin not working correctly on it's own.
 	Fixed bug some performance issues with removing text formats.

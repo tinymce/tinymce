@@ -161,7 +161,9 @@ test('getBookmark/setBookmark (simple)', function() {
 test('getBookmark/setBookmark (non intrusive)', function() {
 	var rng, bookmark;
 
-	// Get persistent bookmark simple text selection
+	expect(8);
+
+	// Get non intrusive bookmark simple text selection
 	editor.setContent('text');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 1);
@@ -172,7 +174,7 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
-	// Get persistent bookmark multiple elements text selection
+	// Get non intrusive bookmark multiple elements text selection
 	editor.setContent('<p>text</p><p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
@@ -183,7 +185,7 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (elements)');
 
-	// Get persistent bookmark multiple elements text selection fragmented
+	// Get non intrusive bookmark multiple elements text selection fragmented
 	editor.setContent('<p>text</p><p>text</p>');
 	editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
 	editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
@@ -198,7 +200,7 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (fragmented, elements)');
 
-	// Get persistent bookmark multiple elements text selection fragmented
+	// Get non intrusive bookmark multiple elements text selection fragmented
 	editor.setContent('<p>text</p><p>text</p>');
 	editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
 	editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));

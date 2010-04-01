@@ -137,7 +137,7 @@
 		 * @method getLength
 		 */
 		getLength : function() {
-			return DOM.get(this.id).options.length - 1;
+			return this.items.length;
 		},
 
 		/**

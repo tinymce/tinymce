@@ -19,7 +19,7 @@
 
 		// No match then just ignore the call
 		if (!self.length)
-			return;
+			return self;
 
 		// Get editor instance
 		if (!settings)
@@ -91,7 +91,8 @@
 
 			// Setup tinyMCEPreInit object this will later be used by the TinyMCE
 			// core script to locate other resources like CSS files, dialogs etc
-			win.tinyMCEPreInit = {
+			// You can also predefined a tinyMCEPreInit object and then it will use that instead
+			win.tinyMCEPreInit = win.tinyMCEPreInit || {
 				base : base,
 				suffix : suffix,
 				query : query
@@ -143,6 +144,11 @@
 				success : function() {
 					tinymce.dom.Event.domLoaded = 1;
 					lazyLoading = 2;
+
+					// Execute callback after mainscript has been loaded and before the initialization occurs
+					if (settings.script_loaded)
+						settings.script_loaded();
+
 					init();
 
 					$.each(delayedInits, function(i, init) {
@@ -157,6 +163,8 @@
 			else
 				init();
 		}
+
+		return self;
 	};
 
 	// Add :tinymce psuedo selector this will select elements that has been converted into editor instances

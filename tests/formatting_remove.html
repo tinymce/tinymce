@@ -15,7 +15,7 @@ function getContent() {
 test('Formatter - remove', function() {
 	var rng;
 
-	expect(17);
+	expect(18);
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -191,6 +191,16 @@ test('Formatter - remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p>text</p>', 'Remove block format');
+
+	// Remove wrapper block format
+	editor.formatter.register('format', {block : 'blockquote', wrapper : true});
+	editor.getBody().innerHTML = '<blockquote><p>text</p></blockquote>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(getContent(), '<p>text</p>', 'Remove wrapper block format');
 
 	// Remove span format within block with style
 	editor.formatter.register('format', {selector : 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true});

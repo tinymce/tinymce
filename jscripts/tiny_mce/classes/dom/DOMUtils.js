@@ -425,42 +425,30 @@
 		 * Removes/deletes the specified element(s) from the DOM.
 		 *
 		 * @method remove
-		 * @param {String/Element/Array} n ID of element or DOM element object or array containing multiple elements/ids.
-		 * @param {Boolean} k Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.
+		 * @param {String/Element/Array} node ID of element or DOM element object or array containing multiple elements/ids.
+		 * @param {Boolean} keep_children Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.
 		 * @return {Element/Array} HTML DOM element that got removed or array of elements depending on input.
 		 */
-		remove : function(n, k) {
-			var t = this;
+		remove : function(node, keep_children) {
+			return this.run(node, function(node) {
+				var parent, child;
 
-			return this.run(n, function(n) {
-				var p, g, i;
+				parent = node.parentNode;
 
-				p = n.parentNode;
-
-				if (!p)
+				if (!parent)
 					return null;
 
-				if (k) {
-					for (i = n.childNodes.length - 1; i >= 0; i--)
-						t.insertAfter(n.childNodes[i], n);
-
-					//each(n.childNodes, function(c) {
-					//	p.insertBefore(c.cloneNode(true), n);
-					//});
+				if (keep_children) {
+					while (child = node.firstChild) {
+						// IE 8 will crash if you don't remove completely empty text nodes
+						if (child.nodeType !== 3 || child.nodeValue)
+							parent.insertBefore(child, node);
+						else
+							node.removeChild(child);
+					}
 				}
 
-				// Fix IE psuedo leak
-				if (t.fixPsuedoLeaks) {
-					p = n.cloneNode(true);
-					k = 'IELeakGarbageBin';
-					g = t.get(k) || t.add(t.doc.body, 'div', {id : k, style : 'display:none'});
-					g.appendChild(n);
-					g.innerHTML = '';
-
-					return p;
-				}
-
-				return p.removeChild(n);
+				return parent.removeChild(node);
 			});
 		},
 
@@ -524,7 +512,7 @@
 		 * @method getStyle
 		 * @param {String/Element} n HTML element or element id string to get style from.
 		 * @param {String} na Style name to return.
-		 * @param {String} c Computed style.
+		 * @param {Boolean} c Computed style.
 		 * @return {String} Current style or computed style value of a element.
 		 */
 		getStyle : function(n, na, c) {
@@ -1090,8 +1078,10 @@
 					e.className = v;
 
 					// Empty class attr
-					if (!v)
+					if (!v) {
 						e.removeAttribute('class');
+						e.removeAttribute('className');
+					}
 
 					return v;
 				}
@@ -1535,27 +1525,25 @@
 		 * Inserts a element after the reference element.
 		 *
 		 * @method insertAfter
-		 * @param {Element} Element to insert after the reference.
-		 * @param {Element/String/Array} r Reference element, element id or array of elements to insert after.
+		 * @param {Element} node Element to insert after the reference.
+		 * @param {Element/String/Array} reference_node Reference element, element id or array of elements to insert after.
 		 * @return {Element/Array} Element that got added or an array with elements. 
 		 */
-		insertAfter : function(n, r) {
-			var t = this;
+		insertAfter : function(node, reference_node) {
+			reference_node = this.get(reference_node);
 
-			r = t.get(r);
+			return this.run(node, function(node) {
+				var parent, nextSibling;
 
-			return this.run(n, function(n) {
-				var p, ns;
+				parent = reference_node.parentNode;
+				nextSibling = reference_node.nextSibling;
 
-				p = r.parentNode;
-				ns = r.nextSibling;
-
-				if (ns)
-					p.insertBefore(n, ns);
+				if (nextSibling)
+					parent.insertBefore(node, nextSibling);
 				else
-					p.appendChild(n);
+					parent.appendChild(node);
 
-				return n;
+				return node;
 			});
 		},
 
@@ -1595,14 +1583,6 @@
 					each(tinymce.grep(o.childNodes), function(c) {
 						n.appendChild(c);
 					});
-				}
-
-				// Fix IE psuedo leak for elements since replacing elements if fairly common
-				// Will break parentNode for some unknown reason
-				if (t.fixPsuedoLeaks && o.nodeType === 1) {
-					o.parentNode.insertBefore(n, o);
-					t.remove(o);
-					return n;
 				}
 
 				return o.parentNode.replaceChild(n, o);
@@ -1871,21 +1851,17 @@
 		 * @return {Number} Index of the specified node.
 		 */
 		nodeIndex : function(node, normalized) {
-			var idx = 0, lastNode, nodeType;
+			var idx = 0, lastNodeType, lastNode, nodeType;
 
 			if (node) {
-				for (node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
+				for (lastNodeType = node.nodeType, node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
 					nodeType = node.nodeType;
 
-					// Text nodes needs special treatment if the normalized argument is specified
-					if (normalized && nodeType == 3) {
-						// Checks if the current node has contents and that the last node is a non text node or empty
-						if (node.nodeValue.length > 0 && (lastNode.nodeType != nodeType || lastNode.nodeValue.length === 0))
-							idx++;
-					} else
+					// Handle normalization of text nodes
+					if (!normalized || nodeType != 3 || (lastNodeType != nodeType && node.nodeValue.length))
 						idx++;
 
-					lastNode = node;
+					lastNodeType = nodeType;
 				}
 			}
 

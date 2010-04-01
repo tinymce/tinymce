@@ -40,10 +40,9 @@
 							ed.nodeChanged();
 						} else {
 							ed.setProgressState(0);
-                            var show_alert = ed.getParam('spellchecker_report_no_misspellings');
-                            if(show_alert == null || show_alert == true) {
-                                ed.windowManager.alert('spellchecker.no_mpell');
-                            }
+
+							if (ed.getParam('spellchecker_report_no_misspellings', true))
+								ed.windowManager.alert('spellchecker.no_mpell');
 						}
 					});
 				} else
@@ -147,7 +146,7 @@
 		},
 
 		_getWords : function() {
-			var ed = this.editor, wl = [], tx = '', lo = {};
+			var ed = this.editor, wl = [], tx = '', lo = {}, rawWords = [];
 
 			// Get area text
 			this._walk(ed.getBody(), function(n) {
@@ -155,20 +154,19 @@
 					tx += n.nodeValue + ' ';
 			});
 
-            // split the text up into individual words
-            var raw_words = [];
-            if( ed.getParam('spellchecker_word_pattern') ) {
-                // look for words that match the pattern
-                raw_words = tx.match('(' + ed.getParam('spellchecker_word_pattern') + ')', 'gi');
-            } else {
-                // Split words by separator
-                tx = tx.replace(new RegExp('([0-9]|[' + this._getSeparators() + '])', 'g'), ' ');
-                tx = tinymce.trim(tx.replace(/(\s+)/g, ' '));
-                raw_words = tx.split(' ');
-            }
+			// split the text up into individual words
+			if (ed.getParam('spellchecker_word_pattern')) {
+				// look for words that match the pattern
+				rawWords = tx.match('(' + ed.getParam('spellchecker_word_pattern') + ')', 'gi');
+			} else {
+				// Split words by separator
+				tx = tx.replace(new RegExp('([0-9]|[' + this._getSeparators() + '])', 'g'), ' ');
+				tx = tinymce.trim(tx.replace(/(\s+)/g, ' '));
+				rawWords = tx.split(' ');
+			}
 
 			// Build word array and remove duplicates
-			each(raw_words, function(v) {
+			each(rawWords, function(v) {
 				if (!lo[v]) {
 					wl.push(v);
 					lo[v] = 1;
@@ -253,6 +251,8 @@
 				m.add({title : 'spellchecker.wait', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
 
 				t._sendRPC('getSuggestions', [t.selectedLang, dom.decode(e.target.innerHTML)], function(r) {
+					var ignoreRpc;
+
 					m.removeAll();
 
 					if (r.length > 0) {
@@ -268,57 +268,60 @@
 					} else
 						m.add({title : 'spellchecker.no_sug', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
 
-                    var ignore_rpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
+					ignoreRpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
 					m.add({
 						title : 'spellchecker.ignore_word',
 						onclick : function() {
-                            var word = e.target.innerHTML;
+							var word = e.target.innerHTML;
+
 							dom.remove(e.target, 1);
 							t._checkDone();
 
-                            // tell the server if we need to
-                            if(ignore_rpc) {
-                                ed.setProgressState(1);
-                                t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
-                                    ed.setProgressState(0);
-                                });
-                            }
+							// tell the server if we need to
+							if (ignore_rpc) {
+								ed.setProgressState(1);
+								t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
+									ed.setProgressState(0);
+								});
+							}
 						}
 					});
 
 					m.add({
 						title : 'spellchecker.ignore_words',
 						onclick : function() {
-                            var word = e.target.innerHTML;
+							var word = e.target.innerHTML;
+
 							t._removeWords(dom.decode(word));
 							t._checkDone();
 
-                            // tell the server if we need to
-                            if(ignore_rpc) {
-                                ed.setProgressState(1);
-                                t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
-                                    ed.setProgressState(0);
-                                });
-                            }
+							// tell the server if we need to
+							if (ignore_rpc) {
+								ed.setProgressState(1);
+								t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
+									ed.setProgressState(0);
+								});
+							}
 						}
 					});
 
 
-                    if( t.editor.getParam("spellchecker_enable_learn_rpc") ) {
-                        m.add({
-                            title : 'spellchecker.learn_word',
-                            onclick : function() {
-                                var word = e.target.innerHTML;
-                                dom.remove(e.target, 1);
-                                t._checkDone();
+					if (t.editor.getParam("spellchecker_enable_learn_rpc")) {
+						m.add({
+							title : 'spellchecker.learn_word',
+							onclick : function() {
+								var word = e.target.innerHTML;
 
-                                ed.setProgressState(1);
-                                t._sendRPC('learnWord', [t.selectedLang, word], function(r) {
-                                    ed.setProgressState(0);
-                                });
-                            }
-                        });
-                    }
+								dom.remove(e.target, 1);
+								t._checkDone();
+
+								ed.setProgressState(1);
+								t._sendRPC('learnWord', [t.selectedLang, word], function(r) {
+									ed.setProgressState(0);
+								});
+							}
+						});
+					}
 
 					m.update();
 				});

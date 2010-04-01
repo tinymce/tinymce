@@ -661,6 +661,13 @@
 						}
 
 						ru = t.findRule(nn);
+						
+						// No valid rule for this element could be found then skip it
+						if (!ru) {
+							iv = true;
+							break;
+						}
+
 						nn = ru.name || nn;
 						closed = s.closed.test(nn);
 
