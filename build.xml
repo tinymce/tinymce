@@ -224,8 +224,9 @@
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
 		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
-		<propertyregex property="version.minor" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
-		<propertyregex property="file_version" input="${version}" regexp="\." replace="_" />
+		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
+		<property name="version.minor" value="${version.minor.upstream}-${BUILD_NUMBER}" />
+		<propertyregex property="file_version" input="${version}-${BUILD_NUMBER}" regexp="\." replace="_" />
 
 		<!-- Replace major version -->
 		<replaceregexp byline="true">
@@ -245,7 +246,7 @@
 		<!-- Replace minor version -->
 		<replaceregexp byline="true">
 			<regexp pattern="@@tinymce_minor_version@@" />
-			<substitution expression="${version.minor}-${BUILD_NUMBER}" />
+			<substitution expression="${version.minor}" />
 
 			<fileset dir="${temp_dir}/tinymce">
 				<include name="jscripts/tiny_mce/tiny_mce.js" />
@@ -323,6 +324,7 @@
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+				<exclude name="commercial_only/**" />
 			</fileset>
 		</zip>
 
@@ -342,6 +344,7 @@
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
+				<exclude name="commercial_only/**" />
 			</fileset>
 
 			<zipfileset dir="${temp_dir}" includes="tinymce/examples/full_jquery.html" fullpath="tinymce/examples/index.html"/>
@@ -373,6 +376,7 @@ If you have any questions regarding your license, contact Moxiecode Systems AB (
 				<include name="tinymce/**" />
 				<exclude name="tinymce/**/license.txt" />
 				<exclude name="tinymce/**/advanced/about.htm" />
+				<exclude name="commercial_only/**" />
 			</fileset>
 			<zipfileset dir="${commercial_only}" prefix="tinymce" />
 		</zip>
