@@ -3,6 +3,7 @@
 	<!-- Path properties -->
 	<property description="Classes directory" name="classes_dir" value="jscripts/tiny_mce/classes" />
 	<property description="Build directory" name="build_dir" value="jscripts/tiny_mce" />
+	<property description="Commercial only files" name="commercial_only" value="commercial_only" />
 	<property description="Temp directory" name="temp_dir" value="tmp" />
 
 	<!-- Allow any user specific values to override the defaults -->
@@ -373,6 +374,7 @@ If you have any questions regarding your license, contact Moxiecode Systems AB (
 				<exclude name="tinymce/**/license.txt" />
 				<exclude name="tinymce/**/advanced/about.htm" />
 			</fileset>
+			<zipfileset dir="${commercial_only}" prefix="tinymce" />
 		</zip>
 	</target>
 
