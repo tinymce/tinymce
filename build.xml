@@ -244,7 +244,7 @@
 		<!-- Replace minor version -->
 		<replaceregexp byline="true">
 			<regexp pattern="@@tinymce_minor_version@@" />
-			<substitution expression="${version.minor}" />
+			<substitution expression="${version.minor}-${BUILD_NUMBER}" />
 
 			<fileset dir="${temp_dir}/tinymce">
 				<include name="jscripts/tiny_mce/tiny_mce.js" />
