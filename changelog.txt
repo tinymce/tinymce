@@ -1,4 +1,4 @@
-Version 3.3.2 (2010-xx-xx)
+Version 3.3.2 (xxxx-xx-xx)
 	Ephox supported release of TinyMCE 3.3.2
 Version 3.3.2 (2010-03-25)
 	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.

@@ -223,6 +223,15 @@
 		</copy>
 
 		<!-- Parse minor version, major version and release date from changelog -->
+
+		<tstamp>
+			<format property="now" pattern="yyyy-MM-dd" timezone="GMT" />
+		</tstamp>
+		<replaceregexp byline="true">
+			<regexp pattern="xxxx-xx-xx" />
+			<substitution expression="${now}" />
+			<fileset dir="." includes="${temp_dir}/tinymce/changelog.txt" />
+		</replaceregexp>
 		<loadfile property="changelog" srcFile="${temp_dir}/tinymce/changelog.txt" />
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
