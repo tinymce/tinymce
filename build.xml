@@ -369,7 +369,7 @@
 				<include name="tinymce/**" />
 				<exclude name="tinymce/**/license.txt" />
 				<exclude name="tinymce/**/advanced/about.htm" />
-				<exclude name="commercial_only/**" />
+				<exclude name="tinymce/commercial_only/**" />
 			</fileset>
 			<zipfileset dir="${commercial_only}" prefix="tinymce" />
 		</zip>
