@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="JsUnit Aggregate" default="aggregate_distributed_test" basedir=".">
+
+    <!--
+     The following are the properties used to configure an Aggregate JsUnit Server.  You need to provide values for the mandatory properties.
+     See the documentation at http://www.jsunit.net for more information.
+     -->
+
+    <property
+            id="description"
+            name="description"
+            value=""
+            description="description is a human-readable description of a standard or aggregate server. This is not a mandatory property. The default is blank. For example: 'This is our Mac - it's only running Safari right now'"
+            />
+
+    <property
+            id="ignoreUnresponsiveRemoteMachines"
+            name="ignoreUnresponsiveRemoteMachines"
+            value=""
+            description="ignoreUnresponsiveRemoteMachines is a property used only by the JsUnit Aggregate Server and the distributed_test target. Its value is whether to ignore a remote machine that does not respond.  If true, test runs will be green even if one or more remote machines fail to respond; if false, an unresponsive remote machine results in a failure.  This is not a mandatory property.  Its default is false. For example: 'true'"
+            />
+
+    <property
+            id="port"
+            name="port"
+            value=""
+            description="port is the port on which the JsUnitStandardServer runs. This is not a mandatory property. If not specified, 8080 is assumed. For exapmle: '8080'"
+            />
+
+    <property
+            id="remoteMachineURLs"
+            name="remoteMachineURLs"
+            value=""
+            description="remoteMachineURLs is a property used only by the JsUnit Aggregate Server and the distributed_test target. Its value is the list of URLs of remote machines to which a request to run tests will be sent. For example: 'http://machine1.company.com:8080,http://localhost:8080,http://192.168.1.200:9090'"
+            />
+
+    <property
+            id="resourceBase"
+            name="resourceBase"
+            value=""
+            description="resourceBase is the directory that the JsUnitStandardServer considers to be its document root. It can be specified relative to the working directory. This is not a mandatory property. If not specified, the working directory is assumed. For example: 'c:\jsunit'"
+            />
+
+    <property
+            id="timeoutSeconds"
+            name="timeoutSeconds"
+            value=""
+            description="timeoutSeconds is the number of seconds to wait before timing out a browser during a test run. This is not a mandatory property. If not specified, 60 is assumed. For example: '60'"
+            />
+
+    <property
+            id="url"
+            name="url"
+            value=""
+            description="url is the URL (HTTP or file protocol) to open in the browser. For a JsUnit Server, this is a mandatory property for a test run if the server is not passed the 'url' parameter. For example: 'file:///c:/jsunit/testRunner.html?testPage=c:/jsunit/tests/jsUnitTestSuite.html'"
+            />
+
+    <property name="bin" location="java/bin"/>
+    <property name="lib" location="java/lib"/>
+    <property name="loggingPropertiesFile" location="logging.properties"/>
+
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+            <include name="*/*.jar"/>
+        </fileset>
+        <fileset dir="${bin}">
+            <include name="jsunit.jar"/>
+        </fileset>
+    </path>
+
+    <target name="start_aggregate_server" description="Starts a JsUnit Aggregate Server">
+        <java fork="true" classname="net.jsunit.JsUnitAggregateServer">
+            <classpath refid="classpath"/>
+            <sysproperty key="java.util.logging.config.file" value="${loggingPropertiesFile}"/>
+            <sysproperty key="description" value="${description}"/>
+            <sysproperty key="ignoreUnresponsiveRemoteMachines" value="${ignoreUnresponsiveRemoteMachines}"/>
+            <sysproperty key="port" value="${port}"/>
+            <sysproperty key="remoteMachineURLs" value="${remoteMachineURLs}"/>
+            <sysproperty key="resourceBase" value="${resourceBase}"/>
+            <sysproperty key="url" value="${url}"/>
+        </java>
+    </target>
+
+    <target name="aggregate_distributed_test"
+            description="Runs tests on the remote machines, each of which could be running an aggregate or standard JsUnit server">
+        <junit showoutput="true" haltonerror="true" haltonfailure="true">
+            <formatter type="plain" usefile="false"/>
+            <classpath refid="classpath"/>
+            <sysproperty key="java.util.logging.config.file" value="${loggingPropertiesFile}"/>
+            <sysproperty key="description" value="${description}"/>
+            <sysproperty key="ignoreUnresponsiveRemoteMachines" value="${ignoreUnresponsiveRemoteMachines}"/>
+            <sysproperty key="port" value="${port}"/>
+            <sysproperty key="remoteMachineURLs" value="${remoteMachineURLs}"/>
+            <sysproperty key="resourceBase" value="${resourceBase}"/>
+            <sysproperty key="url" value="${url}"/>
+            <test name="net.jsunit.AggregateDistributedTest"/>
+        </junit>
+    </target>
+
+</project>

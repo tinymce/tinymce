@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Test loading a local HTML Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../app/jsUnitTestManager.js"></script>
+    <script type="text/javascript" src="../app/BaseUiManager.js"></script>
+    <script type="text/javascript" src="../app/ClassicUiManager.js"></script>
+    <script type="text/javascript" src="../app/jsUnitParams.js"></script>
+    <script type="text/javascript">
+        function testGetTestFunctionNamesUsingPlainTextSearch() {
+            var scriptWithTests = "function te" + "stFoo() {} function te" + "stBar() {}";
+            var scriptWithNoTests = "function baz() {}";
+
+            var frameWithTests = { document: { scripts: [ { text: scriptWithTests } ] } }
+            var frameWithNoTests = { document: { scripts: [ { text: scriptWithNoTests } ] } }
+
+            var manager = new JsUnitTestManager();
+
+            assertNull(manager.getTestFunctionNamesUsingPlainTextSearch(frameWithNoTests));
+
+            assertEqualsIgnoringOrder(
+                ["testBar", "testFoo"],
+                manager.getTestFunctionNamesUsingPlainTextSearch(frameWithTests));
+        }
+
+        function testGetTestFunctionNamesFromFrameProperties() {
+            var frameWithNoTests = { foo: function() {}, n: 10 };
+            var frameWithTests = { testFoo: function() { }, testBar: 10 };
+            var manager = new JsUnitTestManager();
+
+            assertNull(manager.getTestFunctionNamesFromFrameProperties(frameWithNoTests));
+            assertEqualsIgnoringOrder(
+                ["testFoo"],
+                manager.getTestFunctionNamesFromFrameProperties(frameWithTests));
+        }
+
+        function testIsTestFunction() {
+            assertFalse("Test methods must start with 'test'",
+                new JsUnitTestManager().isTestFunction("foo", {foo: function() {}}));
+
+            assertFalse("Test methods must be functions",
+                new JsUnitTestManager().isTestFunction("testFoo", {testFoo: 10}));
+
+            assertTrue(new JsUnitTestManager().isTestFunction("testFoo", {testFoo: function() {}}));
+        }
+
+        function testGetFunctionNamesFromRuntimeObject() {
+            var manager = new JsUnitTestManager();
+
+            var frameWithNoTests = {
+                RuntimeObject: function() {
+                    return { foo: function() {}, n: 10 };
+                }
+            };
+
+            assertNull(manager.getTestFunctionNamesFromRuntimeObject(frameWithNoTests));
+
+            var frameWithTests = {
+                RuntimeObject: function() {
+                    return { testFoo: function() { }, testBar: 10 };
+                }
+            };
+
+            assertEqualsIgnoringOrder(
+                ["testFoo"],
+                manager.getTestFunctionNamesFromRuntimeObject(frameWithTests));
+        }
+
+        function testGetSubmitUrl_WhenResultUrlNotSpecified() {
+            var manager = new JsUnitTestManager();
+            manager.getWebserver = function() { return "faked-web-host:1234"; };
+            assertEquals("http://faked-web-host:1234/jsunit/acceptor", manager.getSubmitUrl());
+        }
+
+        function testGetSubmitUrl_WhenResultUrlNotSpecifiedAndFileProtocol() {
+            var manager = new JsUnitTestManager();
+            manager.getWebserver = function() { return null; };
+            assertEquals("http://localhost:8080/jsunit/acceptor", manager.getSubmitUrl());
+        }
+
+        function testGetSubmitUrl_WhenSubmitResultsTrue() {
+            var manager = new JsUnitTestManager(new JsUnit.Params("submitresults=true"));
+            manager.getWebserver = function() { return "faked-web-host:8080"; };
+            assertEquals("http://faked-web-host:8080/jsunit/acceptor", manager.getSubmitUrl());
+        }
+
+        function testGetSubmitUrl_WhenSubmitResultsIsUrl() {
+            var manager = new JsUnitTestManager(new JsUnit.Params("submitresults=" + escape("http://submit-host:1234/url?query")));
+            assertEquals("http://submit-host:1234/url?query", manager.getSubmitUrl());
+
+            manager = new JsUnitTestManager(new JsUnit.Params("submitresults=" + escape("submit-host:1234/url?query")));
+            assertEquals("http://submit-host:1234/url?query", manager.getSubmitUrl());
+        }
+
+        function testDetermineBaseUrl() {
+            var manager = new JsUnitTestManager();
+            assertEquals("http://some.host:8080/jsunit/tests/",
+                    manager._determineBaseUrl("http://some.host:8080/jsunit/tests/jsUnitTestSuite.html?some=query&string"));
+            assertEquals("file:///tmp/jsunit/tests/",
+                    manager._determineBaseUrl("file:///tmp/jsunit/tests/jsUnitTestSuite.html"));
+
+            // are these two really valid?  [xw 20070916]
+            assertEquals("/tmp/jsunit/tests/",
+                    manager._determineBaseUrl("/tmp/jsunit/tests/jsUnitTestSuite.html"));
+            assertEquals("c:\\tmp\\jsunit\\tests\\",
+                    manager._determineBaseUrl("c:\\tmp\\jsunit\\tests\\"));
+        }
+
+//        function testCalculateProgressBarProportion() {
+//            var manager = new JsUnitTestManager();
+//            manager.totalCount = 1;
+//            var group1 = new JsUnit.TestGroup();
+//            var page1 = group1.addTestPage("/some/page1.html");
+//            var page2 = group1.addTestPage("/some/page2.html");
+//            var page3 = group1.addTestPage("/some/page3.html");
+//            group1._index = 2;
+//            manager._testGroupStack = [ group1 ];
+//            manager._testIndex = 1;
+//            manager._numberOfTestsInPage = 10;
+//
+//            assertRoughlyEquals(1/3, manager.calculateProgressBarProportion(), .01);
+//        }
+
+        /*
+        function testThisMethodShouldNotBeConsideredAtTest() {
+            fail("This method is commented-out and should therefore not be considered a test.");
+        }
+        */
+    </script>
+</head>
+
+<body>
+    <h1>JsUnit test suite tests</h1>
+</body>
+</html>

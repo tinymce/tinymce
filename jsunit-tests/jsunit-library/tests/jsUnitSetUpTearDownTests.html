@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+    <title>JsUnit Framework tests</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript">
+
+        var atLeastOneTestHasRun = false;
+        var aVariable = null;
+
+        function setUp() {
+            aVariable = "foo";
+        }
+
+        function tearDown() {
+            atLeastOneTestHasRun = true;
+            aVariable = null;
+        }
+
+        function testEmpty1() {
+        }
+
+        function testSetUp() {
+            assertEquals("foo", aVariable);
+        }
+
+        function testEmpty2() {
+        }
+
+        function testTearDown() {
+            assertTrue(atLeastOneTestHasRun);
+        }
+
+        function testEmpty3() {
+        }
+
+    </script>
+</head>
+
+<body>
+<h1>JsUnit Framework tests</h1>
+
+<p>This page contains tests for the JsUnit setUp and tearDown framework. To see them, take a look at the source.</p>
+</body>
+</html>

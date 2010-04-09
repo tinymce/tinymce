@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Tests for jsUnitAjax.js</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../lib/jsUnitAjax.js"></script>
+    <script type="text/javascript">
+
+        var request;
+
+        function setUp() {
+            request = createXmlHttpRequest();
+        }
+
+        function testOpenRequest() {
+            request.open("GET", "http://www.example.com", true, "jsmith", "qwerty");
+            assertEquals("GET", request.method);
+            assertEquals("http://www.example.com", request.url);
+            assertTrue(request.isAsync);
+            assertEquals("jsmith", request.userName);
+            assertEquals("qwerty", request.password);
+        }
+
+        function testSetRequestHeader() {
+            request.setRequestHeader("key1", "value1");
+            request.setRequestHeader("key2", "value2");
+            assertEquals("value1", request.requestHeaderNamesToValues["key1"]);
+            assertEquals("value2", request.requestHeaderNamesToValues["key2"]);
+            assertUndefined(request.requestHeaderNamesToValues["key3"]);
+        }
+
+        function testSendRequest() {
+            request.send("foobar");
+            assertTrue(request.sendCalled);
+            assertEquals("foobar", request.data);
+        }
+
+    </script>
+
+</head>
+
+<body>
+<h1>JsUnit AJAX Tests</h1>
+
+<p>This page contains tests for the JsUnit AJAX library. To see them, take a look at the source.</p>
+</body>
+</html>

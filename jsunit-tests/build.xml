@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project name="tinymce-jsunit-tests" default="run-tests">
+	<property name="jsunit-library" location="jsunit-library" />
+
+	<property name="browserScripts" location="browserScripts/osx" />
+	<property name="tmp_dir" location="../tmp" />
+	
+	<condition property="browsers" value="${browserScripts}/start-safari.sh;${browserScripts}/stop-safari.sh;Safari,${browserScripts}/start-firefox.sh;${browserScripts}/stop-firefox.sh;FireFox">
+		<os family="mac" />
+	</condition>
+	
+	<condition property="browsers" value="c:\program files\internet explorer\iexplore.exe,c:\program files\Mozilla Firefox\firefox.exe ">
+		<os family="windows" />
+	</condition>
+	
+	<target name="run-tests">
+		<mkdir dir="${tmp_dir}/test-results" />
+	
+		<property name="urlPrefix" value="http://localhost:7459/jsunit/jsunit-tests" />
+		<ant dir="${jsunit-library}" target="standalone_test" inheritAll="false">
+			<property name="port" value="7459" />
+			<property name="url" value="${urlPrefix}/jsunit-library/testRunner.html?testPage=${urlPrefix}/bold.html&amp;autoRun=true&amp;submitResults=true" />
+			<property name="resourceBase" location=".." />
+			<property name="logsDirectory" location="${tmp_dir}/test-results" />
+			<property name="browserFileNames" value="${browsers}" />
+		</ant>
+	</target>
+</project>

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Tests for jsUnitMockTimeout.js</title>
+<script type="text/javascript" src="../app/jsUnitCore.js"></script>
+<script type="text/javascript" src="../lib/jsUnitMockTimeout.js"></script>
+<script type="text/javascript">
+var clockLand;
+
+function setUp() {
+    Clock.reset();
+    clockLand = "";
+}
+
+function testSimpleClock() {
+    setTimeout(function() {
+        clockLand = 'A';
+    }, 1000);
+    setTimeout(function() {
+        clockLand = 'B';
+    }, 2000);
+    setTimeout(function() {
+        clockLand = 'C';
+    }, 3000);
+    Clock.tick(1000);
+    assertEquals('A', clockLand);
+    Clock.tick(1000);
+    assertEquals('B', clockLand);
+    Clock.tick(1000);
+    assertEquals('C', clockLand);
+}
+
+function testClockOutOfOrder() {
+    setTimeout(function() {
+        clockLand = 'A';
+    }, 2000);
+    setTimeout(function() {
+        clockLand = 'B';
+    }, 1000);
+    setTimeout(function() {
+        clockLand = 'C';
+    }, 3000);
+    Clock.tick(1000);
+    assertEquals('B', clockLand);
+    Clock.tick(1000);
+    assertEquals('A', clockLand);
+    Clock.tick(1000);
+    assertEquals('C', clockLand);
+}
+
+function testTimeoutsCanBeCleared() {
+    setTimeout(function() {
+        clockLand = 'A';
+    }, 1000);
+    var timeoutToClear = setTimeout(function() {
+        clockLand = 'B';
+    }, 2000);
+    setTimeout(function() {
+        clockLand = 'C';
+    }, 3000);
+    clearTimeout(timeoutToClear);
+    Clock.tick(1000);
+    assertEquals('A', clockLand);
+    Clock.tick(1000);
+    assertEquals('A', clockLand);
+    Clock.tick(1000);
+    assertEquals('C', clockLand);
+}
+
+function testTimeoutWithinTimeout() {
+    var timeoutFunction = function() {
+        clockLand = "A";
+        setTimeout(function() {
+            clockLand = "B";
+        }, 10)
+    };
+
+    setTimeout(timeoutFunction, 100);
+    Clock.tick(100);
+    assertEquals('A', clockLand);
+    Clock.tick(10);
+    assertEquals('B', clockLand);
+}
+
+function testTimeoutWithRecursion() {
+    var recursiveFunction = function() {
+        clockLand = "A";
+        setTimeout(
+                function() {
+                    recursiveFunction();
+                    clockLand = "B";
+                }, 10);
+    }
+    setTimeout(recursiveFunction, 100);
+    Clock.tick(100);
+    assertEquals("A", clockLand);
+    Clock.tick(10);
+    assertEquals("B", clockLand);
+}
+
+function testTimeoutWithRecursionWithinTick() {
+    var recursiveFunction = function() {
+        clockLand = "A";
+        setTimeout(
+                function() {
+                    recursiveFunction();
+                    clockLand = "B";
+                }, 10);
+    }
+    setTimeout(recursiveFunction, 100);
+    Clock.tick(110);
+    assertEquals("B", clockLand);
+}
+
+function testTimeoutWithDelayedRecursion() {
+    var recursiveFunction = function() {
+        clockLand = "A";
+        setTimeout(
+                function() {
+                    recursiveFunction();
+                    clockLand = "B";
+                }, 100);
+    }
+    setTimeout(recursiveFunction, 10);
+    Clock.tick(10);
+    assertEquals("A", clockLand);
+    Clock.tick(100);
+    assertEquals("B", clockLand);
+}
+
+function testComplicatedBigTickWithOutOfOrderTimeouts() {
+    setTimeout(function() {
+        clockLand = 'A';
+    }, 4000);
+    setTimeout(function() {
+        clockLand = 'B';
+    }, 1000);
+    setTimeout(function() {
+        setTimeout(function() {
+            clockLand = 'D';
+        }, 1000);
+        clockLand = 'C';
+    }, 2000);
+    Clock.tick(4000);
+    assertEquals('D', clockLand);
+}
+
+function testBigTickWithOutOfOrderTimeouts() {
+    setTimeout(function() {
+        clockLand = 'A';
+    }, 3000);
+    setTimeout(function() {
+        clockLand = 'B';
+    }, 1000);
+    setTimeout(function() {
+        clockLand = 'C';
+    }, 2000);
+    Clock.tick(3000);
+    assertEquals('A', clockLand);
+}
+
+function testInterval() {
+    var currentInterval = 0;
+    var intervalKey = setInterval(function () {
+        ++currentInterval;
+    }, 200);
+    Clock.tick(200);
+    assertEquals(1, currentInterval);
+    Clock.tick(400);
+    assertEquals(3, currentInterval);
+    clearInterval(intervalKey);
+    Clock.tick(400);
+    assertEquals(3, currentInterval);
+}
+</script>
+
+</head>
+
+<body>
+<h1>JsUnit Mock Timeout Tests</h1>
+
+<p>This page contains tests for the JsUnit Clock library. To see them, take a look at the source.</p>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JsUnit StackTrace Tests</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript">
+
+        function testJsUnitTestSuiteClass() {
+            var aSuite = new JsUnitTestSuite();
+            aSuite.addTestPage("foo.html");
+            aSuite.addTestPage("bar.html");
+            assertEquals(2, aSuite._testPages.length);
+            assertEquals("foo.html", aSuite._testPages[0]);
+            assertEquals("bar.html", aSuite._testPages[1]);
+            var anotherSuite = new JsUnitTestSuite();
+            anotherSuite.addTestPage("foo2.html");
+            anotherSuite.addTestPage("bar2.html");
+            aSuite.addTestSuite(anotherSuite);
+            assertEquals(4, aSuite._testPages.length);
+            assertEquals("foo.html", aSuite._testPages[0]);
+            assertEquals("bar.html", aSuite._testPages[1]);
+            assertEquals("foo2.html", aSuite._testPages[2]);
+            assertEquals("bar2.html", aSuite._testPages[3]);
+        }
+
+        function testTracing() {
+            warn("This is warning 1", "foo");
+            warn("This is warning 2");
+            inform("This is info 1", "foo");
+            inform("This is info 2");
+            debug("This is debug 1", "foo");
+            debug("This is debug 2");
+            info("This is info 3", "foo");
+            info("This is info 4");
+        }
+
+        function testTracingWithUndefinedValue() {
+            inform(JSUNIT_UNDEFINED_VALUE);
+            inform("JSUNIT_UNDEFINED_VALUE", JSUNIT_UNDEFINED_VALUE);
+        }
+
+        function testTraceLevel() {
+            var levelA = new top.JsUnitTraceLevel(100, "foo");
+            var levelB = new top.JsUnitTraceLevel(200, "bar");
+            var levelC = new top.JsUnitTraceLevel(300, "foobar");
+            assertFalse(levelA.matches(levelB));
+            assertTrue(levelB.matches(levelB));
+            assertTrue(levelC.matches(levelB));
+            assertEquals("bar", levelB.getColor());
+        }
+
+        function testDisplayStringForNumber() {
+            assertEquals("<3> (Number)", JsUnit._displayStringForValue(3));
+        }
+
+        function testDisplayStringForString() {
+            assertEquals("<foo> (String)", JsUnit._displayStringForValue("foo"));
+        }
+
+        function testDisplayStringForNull() {
+            assertEquals("<null>", JsUnit._displayStringForValue(null));
+        }
+
+        function testDisplayStringForUndefined() {
+            assertEquals("<undefined>", JsUnit._displayStringForValue(JSUNIT_UNDEFINED_VALUE));
+        }
+
+        function testDisplayStringForArray() {
+            var anArray = new Array();
+            anArray[0] = "foo";
+            anArray[1] = "bar";
+            assertEquals("<foo,bar> (Array)", JsUnit._displayStringForValue(anArray));
+        }
+
+    </script>
+</head>
+
+<body>
+<h1>JsUnit Utility Tests</h1>
+
+<p>This page contains tests for the JsUnit framework uses. To see them, take a look at the source.</p>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<pages>
+    <page title="MockXmlHttpRequest" type="class" url="http://www.jsunit.net/jsdoc/MockXmlHttpRequest.html">
+        <page title="requestHeaderNamesToValues" type="property" url="http://www.jsunit.net/jsdoc/MockXmlHttpRequest.html#requestHeaderNamesToValues"/>
+        <page title="open" type="method" url="http://www.jsunit.net/jsdoc/MockXmlHttpRequest.html#open"/>
+        <page title="send" type="method" url="http://www.jsunit.net/jsdoc/MockXmlHttpRequest.html#send"/>
+        <page title="setRequestHeaders" type="method" url="http://www.jsunit.net/jsdoc/MockXmlHttpRequest.html#setRequestHeader"/>
+    </page>
+
+    <page title="Clock" type="class" url="http://www.jsunit.net/jsdoc/Clock.html">
+        <page title="nowMillis" type="property" url="http://www.jsunit.net/jsdoc/Clock.html#!s!nowMillis"/>
+        <page title="scheduledFunctions" type="property" url="http://www.jsunit.net/jsdoc/Clock.html#!s!scheduledFunctions"/>
+        <page title="timeoutsMade" type="property" url="http://www.jsunit.net/jsdoc/Clock.html#!s!timeoutsMade"/>
+        <page title="reset" type="method" url="http://www.jsunit.net/jsdoc/Clock.html#!s!reset"/>
+        <page title="scheduleFunction" type="method" url="http://www.jsunit.net/jsdoc/Clock.html#!s!scheduleFunction"/>
+        <page title="tick" type="method" url="http://www.jsunit.net/jsdoc/Clock.html#!s!tick"/>
+    </page>
+
+    <page title="JsUnitAssertionArgumentError" type="class" url="http://www.jsunit.net/jsdoc/JsUnitAssertionArgumentError.html">
+        <page title="JsUnitAssertionArgumentError" type="method" url="http://www.jsunit.net/jsdoc/JsUnitAssertionArgumentError.html#JsUnitAssertionArgumentError()"/>
+        <page title="description" type="property" url="http://www.jsunit.net/jsdoc/JsUnitAssertionArgumentError.html#description"/>
+    </page>
+
+    <page title="JsUnitError" type="class" url="http://www.jsunit.net/jsdoc/JsUnitError.html">
+        <page title="JsUnitError" type="method" url="http://www.jsunit.net/jsdoc/JsUnitError.html#JsUnitError()"/>
+        <page title="description" type="property" url="http://www.jsunit.net/jsdoc/JsUnitError.html#description"/>
+        <page title="stackTrace" type="property" url="http://www.jsunit.net/jsdoc/JsUnitError.html#stackTrace"/>
+    </page>
+
+    <page title="JsUnitFailure" type="class" url="http://www.jsunit.net/jsdoc/JsUnitFailure.html">
+        <page title="JsUnitFailure" type="method" url="http://www.jsunit.net/jsdoc/JsUnitFailure.html#JsUnitFailure()"/>
+        <page title="comment" type="property" url="http://www.jsunit.net/jsdoc/JsUnitFailure.html#comment"/>
+        <page title="jsUnitMessage" type="property" url="http://www.jsunit.net/jsdoc/JsUnitFailure.html#jsUnitMessage"/>
+        <page title="stackTrace" type="property" url="http://www.jsunit.net/jsdoc/JsUnitFailure.html#stackTrace"/>
+    </page>
+
+    <page title="JsUnitTestSuite" type="class" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html">
+        <page title="isJsUnitTestSuite" type="property" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#isJsUnitTestSuite"/>
+        <page title="JsUnitTestSuite" type="method" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#JsUnitTestSuite()"/>
+        <page title="addTestPage" type="method" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#addTestPage"/>
+        <page title="addTestSuite" type="method" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#addTestSuite"/>
+        <page title="cone" type="method" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#clone"/>
+        <page title="containsTestPages" type="method" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#containsTestPages"/>
+        <page title="hasMorePages" type="method" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#hasMorePages"/>
+        <page title="nextPage" type="method" url="http://www.jsunit.net/jsdoc/JsUnitTestSuite.html#nextPage"/>
+    </page>
+
+    <page title="Utilities" type="class" url="http://www.jsunit.net/jsdoc/Utilities.html">
+        <page title="getFunctionName" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!getFunctionName"/>
+        <page title="getStackTrace" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!getStackTrace"/>
+        <page title="isBlank" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!isBlank"/>
+        <page title="parseErrorStack" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!parseErrorStack"/>
+        <page title="pop" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!pop"/>
+        <page title="push" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!push"/>
+        <page title="standardizeHTML" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!standardizeHTML"/>
+        <page title="trim" type="method" url="http://www.jsunit.net/jsdoc/Utilities.html#!s!trim"/>
+    </page>
+
+    <page title="assert" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assert"/>
+    <page title="assertArrayEquals" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertArrayEquals"/>
+    <page title="assertArrayEqualsIgnoringOrder" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertArrayEqualsIgnoringOrder"/>
+    <page title="assertContains" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertContains"/>
+    <page title="assertEquals" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertEquals"/>
+    <page title="assertEqualsIgnoringOrder" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertEqualsIgnoringOrder"/>
+    <page title="assertEvaluatesToFalse" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertEvaluatesToFalse"/>
+    <page title="assertEvaluatesToTrue" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertEvaluatesToTrue"/>
+    <page title="assertFalse" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertFalse"/>
+    <page title="assertHashEquals" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertHashEquals"/>
+    <page title="assertHTMLEquals" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertHTMLEquals"/>
+    <page title="assertNaN" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertNaN"/>
+    <page title="assertNotEquals" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertNotEquals"/>
+    <page title="assertNotNaN" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertNotNaN"/>
+    <page title="assertNotNull" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertNotNull"/>
+    <page title="assertNotUndefined" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertNotUndefined"/>
+    <page title="assertNull" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertNull"/>
+    <page title="assertObjectEquals" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertObjectEquals"/>
+    <page title="assertRoughlyEquals" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertRoughlyEquals"/>
+    <page title="assertTrue" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertTrue"/>
+    <page title="assertUndefined" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!assertUndefined"/>
+    <page title="clearInterval" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!clearInterval"/>
+    <page title="clearTimeout" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!clearTimeout"/>
+    <page title="createXmlHttpRequest" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!createXmlHttpRequest"/>
+    <page title="error" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!error"/>
+    <page title="fail" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!fail"/>
+    <page title="info" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!info"/>
+    <page title="setInterval" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!setInterval"/>
+    <page title="setTimeout" type="method" url="http://www.jsunit.net/jsdoc/GLOBALS.html#!s!setTimeout"/>
+
+</pages>

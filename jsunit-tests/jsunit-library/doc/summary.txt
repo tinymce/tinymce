@@ -1,0 +1,1 @@
+JsUnit is an open-source unit testing framework for JavaScript. JsUnit conforms to the standards of the xUnit frameworks - it has the usual set of assertions (plus some JavaScript-specific ones), setUp, tearDown, test suites, etc.

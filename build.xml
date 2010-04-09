@@ -8,6 +8,7 @@
 
 	<property environment="env" />
 	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
+	<property name="jsunit" location="jsunit-tests" />
 
 	<!-- Allow any user specific values to override the defaults -->
 	<property file="${user.home}/tinymce_build.properties" />
@@ -210,8 +211,12 @@
 		<!-- Cleanup -->
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
+	
+	<target name="test" depends="build" description="Runs the JSUnit tests.  The 'browsers' property controls which browsers are used.">
+		<ant dir="${jsunit}" inheritAll="true" />
+	</target>
 
-	<target name="release" depends="build" description="Builds release packages">
+	<target name="release" depends="test" description="Builds release packages">
 		<!-- Copy the current repos and start processing it -->
 		<delete dir="${temp_dir}" quiet="true" />
 		<copy todir="${temp_dir}/tinymce">

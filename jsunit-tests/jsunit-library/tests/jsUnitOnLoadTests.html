@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JsUnit OnLoad Tests</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript">
+
+        var aVar = null;
+
+        function testOnLoadFired() {
+            assertEquals("foo", aVar);
+        }
+        function myOnLoadEvent() {
+            aVar = "foo";
+        }
+    </script>
+</head>
+
+<body onload="myOnLoadEvent()">
+<h1>JsUnit OnLoad Tests</h1>
+
+<p>This page contains tests for the JsUnit Framework. To see them, take a look at the source.</p>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Test JsUnit.Params object</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../app/jsUnitTestManager.js"></script>
+    <script type="text/javascript" src="../app/jsUnitParams.js"></script>
+    <script type="text/javascript">
+
+        function testQueryStringParsing_Basic() {
+            assertObjectEquals({a: "b", c: "d", e: true, f: true},
+                    new JsUnit.Params("a=b&c=d&e&f").hash);
+        }
+
+        function testQueryStringParsing_CaseIsIgnored() {
+            assertObjectEquals({anycaseisallowed: "true", value: "IsPreserved"},
+                    new JsUnit.Params("AnyCaseIsAllowed=true&value=IsPreserved").hash);
+        }
+
+        function testQueryStringParsing_InitialPathIsRemoved() {
+            assertObjectEquals({a: "b", c: "d"},
+                    new JsUnit.Params("/some/path?a=b&c=d").hash);
+        }
+
+        function testQueryStringParsing_HexEscapedCharactersAreUnescaped() {
+            assertObjectEquals({a: "a string", b: "don't"},
+                    new JsUnit.Params("a=a%20string&b=don%27t").hash);
+        }
+
+        function testQueryStringParsing_MagicHexEscapedCharactersAreIgnored() {
+            assertObjectEquals({a: "y = x & 0xff % 3"},
+                    new JsUnit.Params("a=y %3D x %26 0xff %25 3").hash);
+        }
+
+        function testConstructTestParams_IgnoreCertainKeys() {
+            assertEquals("all=other&values=are&passed",
+                    new JsUnit.Params("testpage=A&autorun=B&submitresults=C&showtestframe=D&browserid=E&resultid=F&all=other&values=are&passed").constructTestParams());
+        }
+
+        function testConstructTestParams_ValuesAreEscaped() {
+            assertEquals("values=are%20url%20escaped",
+                    new JsUnit.Params("values=are%20url%20escaped").constructTestParams());
+        }
+
+        function testConstructTestParams_BooleansHaveNoValueWritten() {
+            assertEquals("test",
+                    new JsUnit.Params("test").constructTestParams());
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1>JsUnit.Params tests</h1>
+</body>
+</html>

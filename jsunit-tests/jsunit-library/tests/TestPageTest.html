@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>TestPage Tests</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../app/jsUnitTestManager.js"></script>
+    <script type="text/javascript" src="../app/BaseUiManager.js"></script>
+    <script type="text/javascript" src="../app/ClassicUiManager.js"></script>
+    <script type="text/javascript" src="../app/jsUnitParams.js"></script>
+    <script type="text/javascript">
+
+        function testGetStatus() {
+            assertEquals("noTestsYet",
+                    createTestPage(0, false, 0, 0, 0).getStatus());
+
+            assertEquals("ready",
+                    createTestPage(2, false, 0, 0, 0).getStatus());
+
+            assertEquals("running",
+                    createTestPage(2, true, 0, 0, 0).getStatus());
+
+            assertEquals("running",
+                    createTestPage(2, true, 1, 1, 1).getStatus());
+
+            assertEquals("success",
+                    createTestPage(2, false, 1, 0, 0).getStatus());
+
+            assertEquals("failure",
+                    createTestPage(2, false, 1, 1, 0).getStatus());
+
+            assertEquals("error",
+                    createTestPage(2, false, 1, 1, 1).getStatus());
+        }
+
+        function createTestPage(testCount, isRunning, successCount, failureCount, errorCount) {
+            var testPage = new JsUnit.TestPage("url");
+            for (var i = 0; i < testCount; i++) {
+                testPage.addTest("test " + i);
+            }
+            testPage.running = isRunning;
+            testPage.successCount = successCount;
+            testPage.failureCount = failureCount;
+            testPage.errorCount = errorCount;
+            return testPage;
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1>TestPage Tests</h1>
+</body>
+</html>

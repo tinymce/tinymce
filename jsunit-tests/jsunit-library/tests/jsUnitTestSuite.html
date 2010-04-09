@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JsUnit Test Suite</title>
+    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
+    <script type="text/javascript" src="../app/jsUnitCore.js"></script>
+    <script type="text/javascript">
+
+        function coreSuite() {
+            var result = new JsUnitTestSuite();
+            result.addTestPage("tests/jsUnitAssertionTests.html");
+            result.addTestPage("tests/jsUnitFrameworkUtilityTests.html");
+            result.addTestPage("tests/jsUnitOnLoadTests.html");
+            result.addTestPage("tests/jsUnitRestoredHTMLDivTests.html");
+            result.addTestPage("tests/jsUnitSetUpTearDownTests.html");
+            result.addTestPage("tests/jsUnitTestManagerTests.html");
+            result.addTestPage("tests/jsUnitParamsTests.html");
+            result.addTestPage("tests/jsUnitTestSetUpPages.html");
+            result.addTestPage("tests/jsUnitTestSuiteTests.html");
+            result.addTestPage("tests/jsUnitUtilityTests.html");
+            result.addTestPage("tests/TestPageTest.html");
+            result.addTestPage("tests/UiManagerTest.html");
+            return result;
+        }
+
+        function librariesSuite() {
+            var result = new JsUnitTestSuite();
+            result.addTestPage("tests/jsUnitMockTimeoutTest.html");
+            result.addTestPage("tests/jsUnitAjaxTest.html");
+            return result;
+        }
+
+        function suite() {
+            var newsuite = new JsUnitTestSuite();
+            newsuite.addTestSuite(coreSuite());
+            newsuite.addTestSuite(librariesSuite());
+            return newsuite;
+        }
+    </script>
+</head>
+
+<body>
+<h1>JsUnit Test Suite</h1>
+
+<p>This page contains a suite of tests for testing JsUnit.</p>
+</body>
+</html>
