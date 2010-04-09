@@ -13,6 +13,10 @@
 		<os family="windows" />
 	</condition>
 	
+	<condition property="browsers" value="/usr/bin/firefox">
+		<os family="unix" />
+	</condition>
+	
 	<target name="run-tests">
 		<mkdir dir="${tmp_dir}/test-results" />
 	
