@@ -2,10 +2,10 @@
 <project name="tinymce-jsunit-tests" default="run-tests">
 	<property name="jsunit-library" location="jsunit-library" />
 
-	<property name="browserScripts" location="browserScripts/osx" />
+	<property name="browserScripts" location="browserScripts" />
 	<property name="tmp_dir" location="../tmp" />
 	
-	<condition property="browsers" value="${browserScripts}/start-safari.sh;${browserScripts}/stop-safari.sh;Safari,${browserScripts}/start-firefox.sh;${browserScripts}/stop-firefox.sh;FireFox">
+	<condition property="browsers" value="${browserScripts}/osx/start-safari.sh;${browserScripts}/osx/stop-safari.sh;Safari,${browserScripts}/osx/start-firefox.sh;${browserScripts}/osx/stop-firefox.sh;FireFox">
 		<os family="mac" />
 	</condition>
 	
@@ -13,7 +13,7 @@
 		<os family="windows" />
 	</condition>
 	
-	<condition property="browsers" value="/usr/bin/firefox">
+	<condition property="browsers" value="${browserScripts}/unix/start-firefox.sh;${browserScripts}/unix/stop-firefox.sh;FireFox">
 		<os family="unix" />
 	</condition>
 	
