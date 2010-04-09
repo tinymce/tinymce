@@ -1,3 +1,3 @@
 #!/bin/sh
 killall -9 -w firefox-bin
-firefox $1 &
+firefox --display=:100 -no-remote $1 &
