@@ -3,7 +3,7 @@
 	<property name="jsunit-library" location="jsunit-library" />
 
 	<property name="browserScripts" location="browserScripts" />
-	<property name="tmp_dir" location="../tmp" />
+	<property name="reports-dir" location="tmp/reports" />
 	
 	<condition property="browsers" value="${browserScripts}/osx/start-safari.sh;${browserScripts}/osx/stop-safari.sh;Safari,${browserScripts}/osx/start-firefox.sh;${browserScripts}/osx/stop-firefox.sh;FireFox">
 		<os family="mac" />
@@ -18,14 +18,14 @@
 	</condition>
 	
 	<target name="run-tests">
-		<mkdir dir="${tmp_dir}/test-results" />
+		<mkdir dir="${reports-dir}" />
 	
 		<property name="urlPrefix" value="http://localhost:7459/jsunit/jsunit-tests" />
 		<ant dir="${jsunit-library}" target="standalone_test" inheritAll="false">
 			<property name="port" value="7459" />
 			<property name="url" value="${urlPrefix}/jsunit-library/testRunner.html?testPage=${urlPrefix}/bold.html&amp;autoRun=true&amp;submitResults=true" />
 			<property name="resourceBase" location=".." />
-			<property name="logsDirectory" location="${tmp_dir}/test-results" />
+			<property name="logsDirectory" location="${reports-dir}" />
 			<property name="browserFileNames" value="${browsers}" />
 		</ant>
 	</target>
