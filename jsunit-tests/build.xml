@@ -19,6 +19,9 @@
 	
 	<target name="run-tests">
 		<mkdir dir="${reports-dir}" />
+		<chmod perm="ugo+rx" type="file">
+			<fileset dir="${browserScripts}" includes="**/*.sh" />
+		</chmod>
 	
 		<property name="urlPrefix" value="http://localhost:7459/jsunit/jsunit-tests" />
 		<ant dir="${jsunit-library}" target="standalone_test" inheritAll="false">
