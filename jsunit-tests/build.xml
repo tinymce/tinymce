@@ -22,14 +22,22 @@
 		<chmod perm="ugo+rx" type="file">
 			<fileset dir="${browserScripts}" includes="**/*.sh" />
 		</chmod>
-	
-		<property name="urlPrefix" value="http://localhost:7459/jsunit/jsunit-tests" />
+
+		<path id="testFilesPath">
+			<fileset dir="../tests" includes="*.html" excludes="crossdomain.html">
+				<contains text="qunit.js" />
+			</fileset>
+		</path>
+		<pathconvert dirsep="/" pathsep=";" property="testfiles" refid="testFilesPath">
+			<mapper type="regexp" from="(tests/[^/\\]+.html)" to="\1" />
+		</pathconvert>
 		<ant dir="${jsunit-library}" target="standalone_test" inheritAll="false">
 			<property name="port" value="7459" />
-			<property name="url" value="${urlPrefix}/jsunit-library/testRunner.html?testPage=${urlPrefix}/bold.html&amp;autoRun=true&amp;submitResults=true" />
+			<property name="url" value="http://localhost:7459/jsunit/tests/qunit/qunitRunner.html?urls=${testfiles}&amp;submitResults=true" />
 			<property name="resourceBase" location=".." />
 			<property name="logsDirectory" location="${reports-dir}" />
 			<property name="browserFileNames" value="${browsers}" />
 		</ant>
 	</target>
+
 </project>
