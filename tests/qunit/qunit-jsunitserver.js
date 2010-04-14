@@ -1,6 +1,6 @@
-(function(window) {
-
-	var submitForm = document.getElementById("submitForm");
+function init() {
+	var controllerWindow = window.frames['controller'];
+	var submitForm = controllerWindow.document.getElementById("submitForm");
 	
 	createSimpleField('id', '');
 	createSimpleField('browserId', getParameter('browserId'));
@@ -11,18 +11,18 @@
 	createSimpleField('userProperty', '');
 
 	var timeField = createSimpleField('time', 0);
-	var testCasesField = document.getElementById("testCaseResults");
+	var testCasesField = controllerWindow.document.getElementById("testCaseResults");
 	
-	document.body.appendChild(submitForm);
+	controllerWindow.document.body.appendChild(submitForm);
 	
-	var runnerFrame = document.getElementById('runner');
 	
 	var urls = getParameter('urls').split(';');
 	var nextUrlIndex = 0;
+	var runnerFrame = window.frames['runner'];
 	
 	window.initListener = function() {
 		// TODO: Not sure if this will work on all browsers.
-		var contentWindow = runnerFrame.contentWindow;
+		var contentWindow = runnerFrame;
 		var QUnit = contentWindow.QUnit;
 		
 		var testState = {
@@ -54,7 +54,7 @@
 	
 	function loadNextUrl() {
 		if (nextUrlIndex < urls.length) {
-			runnerFrame.src = '/jsunit/' + urls[nextUrlIndex];
+			runnerFrame.location = '/jsunit/' + urls[nextUrlIndex];
 			nextUrlIndex++;
 		} else {
 			submitResults();
@@ -69,7 +69,7 @@
 	}
 	
 	function createSimpleField(name, value) {
-		var field = document.createElement('input');
+		var field = controllerWindow.document.createElement('input');
 		field.name = name;
 		field.value = value;
 		submitForm.appendChild(field);
@@ -86,12 +86,12 @@
 	var startTime = new Date().getTime();
 	function submitResults() {
 		timeField.value = new Date().getTime() - startTime;
-		document.body.appendChild(submitForm);
 		if (window.location.href.toLowerCase().match(/[?&]submitresults=true/)) {
 			submitForm.submit();
 		} else {
 			submitForm.style.display = "";
 		}
 	}
-})(this);
+}
+
 
