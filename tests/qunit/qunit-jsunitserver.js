@@ -31,7 +31,7 @@
 		};
 		QUnit.log = function(result, message) {
 			if (!result && message) {
-				testState.messages += message + "-";
+				testState.messages += message + "\n";
 			}
 		};
 		QUnit.testStart = function(name) {
