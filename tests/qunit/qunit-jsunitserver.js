@@ -1,10 +1,6 @@
 (function(window) {
 
-	var submitForm = document.createElement('form');
-	submitForm.id = 'submitForm';
-	submitForm.action = '/jsunit/acceptor';
-	submitForm.method = 'POST';
-	submitForm.style.display = 'none';
+	var submitForm = document.getElementById("submitForm");
 	
 	createSimpleField('id', '');
 	createSimpleField('browserId', getParameter('browserId'));
@@ -15,10 +11,7 @@
 	createSimpleField('userProperty', '');
 
 	var timeField = createSimpleField('time', 0);
-	var testCasesField = document.createElement('select');
-	testCasesField.name = 'testCaseResults';
-	testCasesField.multiple = 'multiple';
-	submitForm.appendChild(testCasesField);
+	var testCasesField = document.getElementById("testCaseResults");
 	
 	document.body.appendChild(submitForm);
 	
