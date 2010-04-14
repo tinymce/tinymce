@@ -37,6 +37,7 @@
 			<property name="resourceBase" location=".." />
 			<property name="logsDirectory" location="${reports-dir}" />
 			<property name="browserFileNames" value="${browsers}" />
+			<property name="timeoutSeconds" value="180" />
 		</ant>
 	</target>
 
