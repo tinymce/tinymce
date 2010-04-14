@@ -9,7 +9,7 @@
 <body>
 <script type="text/javascript">
 var editor, rng;
-
+if (tinyMCE.isIE) {
 test("Selection of element containing text", function() {
 	expect(5);
 
@@ -225,6 +225,9 @@ test("Selection of empty text element", function() {
 	equals(rng.startContainer.childNodes[0].innerHTML, '');
 	equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div>&nbsp;</div>');
 });
+} else {
+	test("Skipped ie_selection tests as not running in IE.", function() {});
+}
 
 tinyMCE.init({
 	mode : "exact",
