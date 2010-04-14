@@ -29,7 +29,7 @@
 			</fileset>
 		</path>
 		<pathconvert dirsep="/" pathsep=";" property="testfiles" refid="testFilesPath">
-			<mapper type="regexp" from="(tests/[^/\\]+.html)" to="\1" />
+			<mapper type="regexp" from="(tests/[^/\\]+.html)" to="\1" handledirsep="true" />
 		</pathconvert>
 		<ant dir="${jsunit-library}" target="standalone_test" inheritAll="false">
 			<property name="port" value="7459" />
