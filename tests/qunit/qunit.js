@@ -1040,4 +1040,6 @@ QUnit.jsDump = (function() {
 })();
 
 })(this);
-window.top.initListener(QUnit);
+if (window.top && window.top.initListener) {
+	window.top.initListener(QUnit);
+}
