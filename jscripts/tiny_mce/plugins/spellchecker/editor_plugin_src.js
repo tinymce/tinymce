@@ -27,9 +27,30 @@
 
 			t.url = url;
 			t.editor = ed;
+			t.rpcUrl = ed.getParam("spellchecker_rpc_url", "{backend}")
+
+			if (t.rpcUrl == '{backend}') {
+				// Sniff if the browser supports native spellchecking (Don't know of a better way)
+				if (tinymce.isIE)
+					return;
+
+				t.hasSupport = true;
+
+				// Disable the context menu when spellchecking is active
+				ed.onContextMenu.addToTop(function(ed, e) {
+					if (t.active)
+						return false;
+				});
+			}
 
 			// Register commands
 			ed.addCommand('mceSpellCheck', function() {
+				if (t.rpcUrl == '{backend}') {
+					// Enable/disable native spellchecker
+					t.editor.getBody().spellcheck = t.active = !t.active;
+					return;
+				}
+
 				if (!t.active) {
 					ed.setProgressState(1);
 					t._sendRPC('checkWords', [t.selectedLang, t._getWords()], function(r) {
@@ -94,6 +115,15 @@
 			var t = this, c, ed = t.editor;
 
 			if (n == 'spellchecker') {
+				// Use basic button if we use the native spellchecker
+				if (t.rpcUrl == '{backend}') {
+					// Create simple toggle button if we have native support
+					if (t.hasSupport)
+						c = cm.createButton(n, {title : 'spellchecker.desc', cmd : 'mceSpellCheck', scope : t});
+
+					return c;
+				}
+
 				c = cm.createSplitButton(n, {title : 'spellchecker.desc', cmd : 'mceSpellCheck', scope : t});
 
 				c.onRenderMenu.add(function(c, m) {
@@ -365,16 +395,10 @@
 		},
 
 		_sendRPC : function(m, p, cb) {
-			var t = this, url = t.editor.getParam("spellchecker_rpc_url", "{backend}");
-
-			if (url == '{backend}') {
-				t.editor.setProgressState(0);
-				alert('Please specify: spellchecker_rpc_url');
-				return;
-			}
+			var t = this;
 
 			JSONRequest.sendRPC({
-				url : url,
+				url : t.rpcUrl,
 				method : m,
 				params : p,
 				success : cb,
