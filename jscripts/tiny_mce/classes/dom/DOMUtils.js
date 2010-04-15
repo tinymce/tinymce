@@ -1932,7 +1932,12 @@
 				r.setStart(e.parentNode, t.nodeIndex(e) + 1);
 				r.setEnd(pe.parentNode, t.nodeIndex(pe) + 1);
 				aft = r.extractContents();
-
+				
+				// Work around for Safari and Opera inserting a BR that isn't actually there.
+				if (r.collapsed && aft.childNodes.length === 1 && t.getOuterHTML(aft.firstChild).toLowerCase() === "<p><br></p>") {
+					t.remove(aft.firstChild);
+				}
+				
 				// Insert before chunk
 				pa = pe.parentNode;
 				pa.insertBefore(trim(bef), pe);
