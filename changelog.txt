@@ -9,6 +9,7 @@ Version 3.3.3 (2010-xx-xx)
 	Fixed bug where removing items using the xhtmlxtras plugin wouldn't work correctly.
 	Fixed bug where setting table background images would add extra quotes on Gecko.
 	Fixed bug where shortcut for bold/italic/underline wouldn't work properly on WebKit.
+	Fixed bug where IE would produce an error message if only contents was an image tag and bold was used.
 Version 3.3.2 (2010-03-25)
 	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.
 	Fixed bug where some of the resizing option didn't work with the new live resize.
