@@ -141,7 +141,8 @@
 
 				// Move startContainer/startOffset in to a suitable node
 				if (container.nodeType == 1 || container.nodeValue === "") {
-					walker = new TreeWalker(container.childNodes[offset]);
+					container = container.nodeType == 1 ? container.childNodes[offset] : container;
+					walker = new TreeWalker(container, container);
 					for (node = walker.current(); node; node = walker.next()) {
 						if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
 							rng.setStart(node, 0);
