@@ -2389,11 +2389,9 @@
 				}
 
 				// Add default shortcuts for gecko
-				if (isGecko) {
-					t.addShortcut('ctrl+b', t.getLang('bold_desc'), 'Bold');
-					t.addShortcut('ctrl+i', t.getLang('italic_desc'), 'Italic');
-					t.addShortcut('ctrl+u', t.getLang('underline_desc'), 'Underline');
-				}
+				t.addShortcut('ctrl+b', t.getLang('bold_desc'), 'Bold');
+				t.addShortcut('ctrl+i', t.getLang('italic_desc'), 'Italic');
+				t.addShortcut('ctrl+u', t.getLang('underline_desc'), 'Underline');
 
 				// BlockFormat shortcuts keys
 				for (i=1; i<=6; i++)
