@@ -1382,7 +1382,7 @@
 		 * @return {boolean} True/false if the node is a text block.
 		 */
 		function isTextBlock(name) {
-			return /^(h[1-6]|p|div|pre|address)$/.test(name);
+			return /^(h[1-6]|p|div|pre|address|dl|dt|dd)$/.test(name);
 		};
 
 		function getContainer(rng, start) {
