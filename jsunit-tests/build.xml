@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="tinymce-jsunit-tests" default="run-tests">
+<project name="tinymce-jsunit-tests" default="test">
 	<property name="jsunit-library" location="jsunit-library" />
 
 	<property name="browserScripts" location="browserScripts" />
@@ -27,7 +27,7 @@
 		<ant dir="${tinymce_dir}" target="build" />
 	</target>
 	
-	<target name="run-tests" depends="build">
+	<target name="test" depends="build">
 		<mkdir dir="${reports-dir}" />
 		<chmod perm="ugo+rx" type="file">
 			<fileset dir="${browserScripts}" includes="**/*.sh" />
