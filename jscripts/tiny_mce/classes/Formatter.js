@@ -1448,6 +1448,7 @@
 			// Pending apply or remove formats
 			if (hasPending()) {
 				ed.getDoc().execCommand('FontName', false, 'mceinline');
+				pendingFormats.lastRng = selection.getRng();
 
 				// IE will convert the current word
 				each(dom.select('font,span'), function(node) {
@@ -1467,7 +1468,8 @@
 
 					each('onKeyDown,onKeyUp,onKeyPress,onMouseUp'.split(','), function(event) {
 						ed[event].addToTop(function(ed, e) {
-							if (hasPending()) {
+							// Do we have pending formats and is the selection moved has moved
+							if (hasPending() && !tinymce.dom.RangeUtils.compareRanges(pendingFormats.lastRng, selection.getRng())) {
 								each(dom.select('font,span'), function(node) {
 									var bookmark, textNode, rng;
 
