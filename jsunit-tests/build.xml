@@ -16,8 +16,18 @@
 	<condition property="browsers" value="${browserScripts}/unix/start-firefox.sh;${browserScripts}/unix/stop-firefox.sh;FireFox">
 		<os family="unix" />
 	</condition>
+
+	<property name="tinymce_dir" location=".." />
+
+	<target name="clean">
+		<ant dir="${tinymce_dir}" target="clean" />
+	</target>
+
+	<target name="build">
+		<ant dir="${tinymce_dir}" target="build" />
+	</target>
 	
-	<target name="run-tests">
+	<target name="run-tests" depends="build">
 		<mkdir dir="${reports-dir}" />
 		<chmod perm="ugo+rx" type="file">
 			<fileset dir="${browserScripts}" includes="**/*.sh" />

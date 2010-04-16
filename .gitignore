@@ -8,7 +8,9 @@ docs
 *.patch
 *.bak
 *.log
+*.swp
 .DS_Store
+.project
 editor_plugin.js
 editor_template.js
 jscripts/tiny_mce/jquery.tinymce.js

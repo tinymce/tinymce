@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="TinyMCE" default="build" basedir=".">
 	<!-- Path properties -->
-	<property description="Classes directory" name="classes_dir" value="jscripts/tiny_mce/classes" />
-	<property description="Build directory" name="build_dir" value="jscripts/tiny_mce" />
-	<property description="Commercial only files" name="commercial_only" value="commercial_only" />
-	<property description="Temp directory" name="temp_dir" value="tmp" />
+	<property description="Classes directory" name="classes_dir" location="jscripts/tiny_mce/classes" />
+	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
+	<property description="Temp directory" name="temp_dir" location="tmp" />
 
 	<property environment="env" />
 	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
-	<property name="jsunit" location="jsunit-tests" />
 
 	<!-- Allow any user specific values to override the defaults -->
 	<property file="${user.home}/tinymce_build.properties" />
@@ -212,10 +210,6 @@
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
 	
-	<target name="test" depends="build" description="Runs the JSUnit tests.  The 'browsers' property controls which browsers are used.">
-		<ant dir="${jsunit}" inheritAll="true" />
-	</target>
-
 	<target name="release" depends="build" description="Builds release packages">
 		<!-- Copy the current repos and start processing it -->
 		<delete dir="${temp_dir}" quiet="true" />
@@ -235,7 +229,7 @@
 		<replaceregexp byline="true">
 			<regexp pattern="xxxx-xx-xx" />
 			<substitution expression="${now}" />
-			<fileset dir="." includes="${temp_dir}/tinymce/changelog.txt" />
+			<fileset dir="${temp_dir}/tinymce" includes="changelog.txt" />
 		</replaceregexp>
 		<loadfile property="changelog" srcFile="${temp_dir}/tinymce/changelog.txt" />
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
@@ -244,6 +238,12 @@
 		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
 		<property name="version.minor" value="${version.minor.upstream}-${ephox-build-number}" />
 		<propertyregex property="file_version" input="${version}-${ephox-build-number}" regexp="\." replace="_" />
+
+		<replaceregexp byline="true">
+			<regexp pattern="^Version ${version} \(${now}\)" />
+			<substitution expression="Version ${version}-${ephox-build-number} (${now})" />
+			<fileset dir="${temp_dir}/tinymce" includes="changelog.txt" />
+		</replaceregexp>
 
 		<!-- Replace major version -->
 		<replaceregexp byline="true">
@@ -342,7 +342,6 @@
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
-				<exclude name="commercial_only/**" />
 			</fileset>
 		</zip>
 
@@ -362,7 +361,6 @@
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
-				<exclude name="commercial_only/**" />
 			</fileset>
 
 			<zipfileset dir="${temp_dir}" includes="tinymce/examples/full_jquery.html" fullpath="tinymce/examples/index.html"/>
@@ -384,10 +382,7 @@
 			<fileset dir="${temp_dir}">
 				<include name="tinymce/**" />
 				<exclude name="tinymce/**/license.txt" />
-				<exclude name="tinymce/**/advanced/about.htm" />
-				<exclude name="tinymce/commercial_only/**" />
 			</fileset>
-			<zipfileset dir="${commercial_only}" prefix="tinymce" />
 		</zip>
 	</target>
 
