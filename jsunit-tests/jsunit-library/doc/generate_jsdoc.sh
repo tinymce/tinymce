@@ -1,1 +1,0 @@
-perl ../../JSDoc-1.10.2/jsdoc.pl --project-summary=summary.txt --logo=../images/logo_jsunit.jpg --project-name='JsUnit' --no-sources --page-footer='<a href="http://www.jsunit.net">www.jsunit.net</a>' ../app/jsUnitCore.js ../lib/*.js
