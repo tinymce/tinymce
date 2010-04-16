@@ -320,6 +320,7 @@
 			</else>
 		</if>
 
+		
 		<!-- Compress development package -->
 		<delete file="${temp_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
 		<zip destfile="${temp_dir}/tinymce_${file_version}_dev.zip">
@@ -377,8 +378,9 @@
 		</replaceregexp>
 
 		<!-- Compress development package (commercial) -->
-		<delete file="${temp_dir}/tinymce_${file_version}_dev_commercial.zip" quiet="true" />
-		<zip destfile="${temp_dir}/tinymce_${file_version}_dev_commercial.zip" excludes="**/license.txt">
+		<property name="ephox.zip" location="${temp_dir}/enterprisetinymce_${file_version}.zip" />
+		<delete file="${ephox.zip}" quiet="true" />
+		<zip destfile="${ephox.zip}" excludes="**/license.txt">
 			<fileset dir="${temp_dir}">
 				<include name="tinymce/**" />
 				<exclude name="tinymce/**/license.txt" />
