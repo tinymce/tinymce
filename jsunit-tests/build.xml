@@ -3,7 +3,10 @@
 	<property name="jsunit-library" location="jsunit-library" />
 
 	<property name="browserScripts" location="browserScripts" />
-	<property name="reports-dir" location="tmp/reports" />
+	<property name="tmp-dir" location="tmp" />
+	<property name="reports-dir" location="${tmp-dir}/reports" />
+	<property name="tinymce-src" value="http://hudson.dev.ephox.com/job/TinyMCE%20Stable%20Build/lastSuccessfulBuild/artifact/*zip*/archive.zip" />
+	<property name="tinymce-dir" location="tmp/archive/" />
 	
 	<condition property="browsers" value="${browserScripts}/osx/start-safari.sh;${browserScripts}/osx/stop-safari.sh;Safari,${browserScripts}/osx/start-firefox.sh;${browserScripts}/osx/stop-firefox.sh;FireFox">
 		<os family="mac" />
@@ -20,11 +23,15 @@
 	<property name="tinymce_dir" location=".." />
 
 	<target name="clean">
-		<ant dir="${tinymce_dir}" target="clean" />
+		<delete dir="${tmp-dir}" failonerror="false" />
 	</target>
 
 	<target name="build">
-		<ant dir="${tinymce_dir}" target="build" />
+		<mkdir dir="${tmp-dir}" />
+		<get dest="${tmp-dir}/tinymce.zip"
+			src="http://hudson.dev.ephox.com/job/TinyMCE%20Stable%20Build/lastSuccessfulBuild/artifact/*zip*/archive.zip"
+			username="${username}" password="${password}"/>
+		<unzip dest="${tmp-dir}" src="${tmp-dir}/tinymce.zip" />
 	</target>
 	
 	<target name="test" depends="build">
@@ -34,17 +41,17 @@
 		</chmod>
 
 		<path id="testFilesPath">
-			<fileset dir="../tests" includes="*.html" excludes="crossdomain.html">
+			<fileset dir="${tinymce-dir}/tests" includes="*.html" excludes="crossdomain.html">
 				<contains text="qunit.js" />
 			</fileset>
 		</path>
 		<pathconvert dirsep="/" pathsep=";" property="testfiles" refid="testFilesPath">
-			<regexpmapper from="(tests/[^/\\]+.html)" to="\1" handledirsep="true" />
+			<regexpmapper from="(tests/[^/\\]+.html)" to="tmp/archive/\1" handledirsep="true" />
 		</pathconvert>
 		<ant dir="${jsunit-library}" target="standalone_test" inheritAll="false">
 			<property name="port" value="7459" />
-			<property name="url" value="http://localhost:7459/jsunit/tests/qunit/qunitRunner.html?urls=${testfiles}&amp;submitResults=true" />
-			<property name="resourceBase" location=".." />
+			<property name="url" value="http://localhost:7459/jsunit/qunitRunner.html?urls=${testfiles}&amp;submitResults=true" />
+			<property name="resourceBase" location="." />
 			<property name="logsDirectory" location="${reports-dir}" />
 			<property name="browserFileNames" value="${browsers}" />
 			<property name="timeoutSeconds" value="180" />
