@@ -32,6 +32,7 @@
 			src="http://hudson.dev.ephox.com/job/TinyMCE%20Stable%20Build/lastSuccessfulBuild/artifact/*zip*/archive.zip"
 			username="${username}" password="${password}"/>
 		<unzip dest="${tmp-dir}" src="${tmp-dir}/tinymce.zip" />
+		<concat destfile="${tinymce-dir}/tests/qunit/qunit.js" append="true">window.top.initListener(QUnit);</concat>
 	</target>
 	
 	<target name="test" depends="build">
