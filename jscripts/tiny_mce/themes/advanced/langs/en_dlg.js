@@ -1,5 +1,5 @@
 tinyMCE.addI18n('en.advanced_dlg',{
-about_title:"About TinyMCE",
+about_title:"Ephox Enterprise TinyMCE Gold Edition",
 about_general:"About",
 about_help:"Help",
 about_license:"License",

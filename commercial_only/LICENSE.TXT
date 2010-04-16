@@ -1,0 +1,546 @@
+                    EPHOX MASTER LICENSE AGREEMENT
+                 EPHOX ENTERPRISE TINYMCE GOLD EDITION
+
+NOTICE: BY DOWNLOADING AND INSTALLING, COPYING OR OTHERWISE USING THE SOFTWARE,
+YOU AGREE TO BE BOUND BY THE TERMS OF THIS EPHOX MASTER LICENSE AGREEMENT
+("MLA"). IF YOU DO NOT AGREE TO THE TERMS OF THIS MLA, YOU MAY NOT DOWNLOAD,
+INSTALL, COPY OR USER THE SOFTWARE. "YOU" MEANS THE NATURAL PERSON OR THE ENTITY
+THAT IS AGREEING TO BE BOUND BY THIS MLA, THEIR EMPLOYEES AND THIRD PARTY
+CONTRACTORS THAT PROVIDE SERVICES TO YOU. YOU SHALL BE LIABLE FOR ANY FAILURE BY
+SUCH EMPLOYEES AND THIRD PARTY CONTRACTORS TO COMPLY WITH THE TERMS OF THIS
+AGREEMENT.
+
+1.	Definitions
+
+	The following definitions of terms apply to this Agreement and any Product
+	License issued under this Agreement:
+	
+	"Agreement" means the Ephox Master License Agreement ("MLA") including any
+	Exhibits, Schedules and Attachments.
+	
+	"CPU" means a single central processing unit of a machine with up to 2
+	cores. For multi-core CPUs, each 2 cores will count as a single CPU.
+	
+	"Development Environment" means the technical environment in which you use
+	the Software for testing and development purposes only.
+	
+	"Disaster Recovery Environment" means your technical environment designed
+	solely for you to respond to an interruption in services due to an event that
+	creates an inability to provide critical business functions for a material
+	period of time.
+	
+	"Domain Names" means the Internet host name through which a Web site is
+	accessible to Users.
+	
+	"Effective Date" means, unless otherwise specified in the Agreement, the
+	date that you downloaded the Software.
+	
+	"Ephox Partner" means an organization that has a current and valid agreement
+	with Ephox to sell the Software or incorporate the Software in an application. 
+	
+	"Internal Network" means your private, proprietary network resource
+	accessible only by employees and individual contractors of a specific corporate
+	enterprise or similar business entity. Internal Network specifically excludes
+	the Internet. Connection by secure links such as VPN or dial up to your Internal
+	Network is considered use over an Internal Network.
+	
+	"Major Version" means any version of the Licensed Software associated with a
+	primary number in the version numbering scheme such as "version x.y" where "x"
+	is the indicator of the Major Version.
+	
+	"Permitted Number" means the authorized number of CPUs, Development Servers,
+	Servers, PVUs, Domain Names and/or Users as indicated on an invoice provided by
+	Ephox.
+	
+	"Processor" has the same meaning as "CPU".
+	
+	"Product" means a software product produced or sold by Ephox.
+	
+	"Product License" means a license issued under this Agreement to use a
+	specified Ephox software product under the conditions specified in the Product
+	License and included in this Agreement as Exhibit A.
+	
+	"Production Environment" means the technical environment in which you use
+	the Software for your business purposes.
+	
+	"Production Purposes" means any use purpose other than for Evaluation
+	Purposes prior to purchase of the Software.
+	
+	"PVU" means Processor Value Unit as determined by the IBM calculation that
+	is described at http://www.ephox.com/pvu-definition 
+	
+	"Server" means a network server that contains one or more CPUs.
+	
+	"Software" means (a) all the contents of the files with which this Agreement
+	is provided, including but not limited to (i) Ephox or third party computer
+	information or software and (ii) related explanatory written materials or files
+	("Documentation"); and (b) upgrades, modified versions, Major Versions,
+	additions, and copies of the Software, if any, licensed to you by Ephox
+	(collectively, "Updates").
+	
+	"Technical Support" means reasonable technical support (as more specifically
+	set forth in Section 9) for the Software.
+	
+	"Updates" means major upgrades, minor upgrades, modified versions and
+	additions to the Software.
+	
+	"Upgrade & Support" means the service under which Ephox provides support,
+	maintenance and upgrades to the Licensee as set forth in Section 4.
+	
+	"Upgrade & Support Fee" means a payment in recognition of support,
+	maintenance and upgrades provided by Ephox to the Licensee as part of this
+	Agreement.
+	
+	"Use" means to access, install, download, copy or otherwise benefit from
+	using the functionality of the Software in accordance with the Documentation and
+	the terms and conditions of this Agreement.
+	
+	"User" means any and all (i.e. non-concurrent) natural persons (i.e., not a
+	corporation or other legal entity) who are authorized by you to access and use
+	the Software for your own internal business processes.
+	
+	"VPN" means a private communications network generally used within
+	enterprises to communicate over a public network using secure protocols.
+	
+	"Workstation" means a computer workstation or personal computer that allows
+	the Software to only be accessed by a single processor and that is not used as a
+	network server.
+
+2.	Grant of License and Restrictions
+
+2.1	Ephox grants you a limited, non-exclusive and non-transferable license to
+	use the Software listed in the Product License(s) subject to the terms and
+	conditions of this Agreement.  Ephox shall at all times retain ownership of all
+	Software including any documentation and any copies thereof.
+
+2.2	Backup and Disaster Recovery. You may make and install a reasonable
+	number of copies of the Software for backup and archival purposes provided that
+	all titles, trademark symbols, copyright symbols and legends, and other
+	proprietary markings are reproduced.  Ephox shall retain all rights and title to
+	the backup or archival copy.  You may only use such archival copies solely in
+	the event that the primary copy has failed or is destroyed, but in no event may
+	you use such copies concurrently with your Production Environment. You may also
+	install copies of the Software in a Disaster Recovery Environment for use solely
+	in disaster recovery and not for production, development, evaluation or testing
+	purposes other than to ensure that the Software is capable of replacing the
+	primary usage of the Software in case of a disaster.
+
+2.3	Restrictions.  You agree that you will not yourself, or through any
+	parent, subsidiary, affiliate, agent or other third party:
+	(a)	sell, lease, license, sublicense, encumber or otherwise transfer any
+		right in any portion of the Software or documentation; 
+	(b)	decompile, disassemble, or reverse engineer any portion of the Software
+		or attempt to discover any source code or underlying ideas or algorithms of the
+		Software;
+	(c)	create any derivative work (as defined in the United States copyright Act
+		of 1976, Title 17 USC Section 101 et. Seq.) based on the Software;
+	(d)	without the express permission of Ephox use the Software to provide
+		direct processing services to third parties, commercial timesharing, rental or
+		sharing arrangements, or on a "service bureau" basis or otherwise use or allow
+		others to use the Software for the benefit of any third party; 
+	 (e)	use any Software, or allow the transfer, transmission, export, or
+		re-export of any Software or portion thereof in violation of any export control
+		laws or regulations administered by the U.S. Commerce Department, OFAC, or any
+		other U.S. government agency; and
+	(f)	prevent the software licensing information contained in the "About"
+		toolbar item from being displayed to any user of the Software.
+		2.4	No Other Rights Granted. Except as expressly set forth herein, Ephox
+		grants and you receive no other rights or licenses to the Software, derivative
+		works (as defined in the United States Copyright Act of 1976, Title 17 USC
+		Section 101 et. Seq.) or any intellectual property rights related to the
+		Software whether by implication, estoppel or otherwise.
+
+3.	Pre-release Software Additional Terms
+
+3.1	If the Software accompanying this Agreement is pre-commercial release
+	Software (Pre-release Software), then the following Section applies. 
+
+3.2	You acknowledge that the Software that you have received is a Pre-Release
+	Software version, does not represent final product from Ephox, and may contain
+	bugs, errors and other problems that could cause system or other failures and
+	data loss. Consequently, the Pre-release Software is provided to you as is and
+	Ephox disclaims any warranty or liability obligations to you of any kind. Where
+	legal liability cannot be excluded, but it may be limited, Ephox liability and
+	that of its suppliers shall be limited to the sum of fifty dollars (U.S. $50) in
+	total.
+	
+3.3	You acknowledge that Ephox has not promised or guaranteed to you that
+	Pre-release Software will be announced or made available to anyone in the
+	future, that Ephox has no express or implied obligation to you to announce or
+	introduce the Pre-release Software and that Ephox may not introduce a product
+	similar to or compatible with the Pre-release Software. Accordingly, you
+	acknowledge that any research or development that you perform regarding the
+	Pre-release Software is done entirely at your own risk. During the term of this
+	Agreement, if requested by Ephox, you will provide feedback to Ephox regarding
+	testing and use of the Pre-release Software, including error or bug reports.
+
+3.4	Upon receipt of a later unreleased version of the Pre-release Software or
+	release by Ephox of a publicly released commercial version of the Software,
+	whether as a stand-alone product or as a part of a larger product, you agree to
+	abide by the terms and conditions of the agreement for any such later versions
+	of the Pre-release Software.
+
+4.	Upgrade & Support Terms and Conditions
+
+4.1	Technical Support
+
+4.1.1	Support Period
+	Ephox offers a product upgrade service and access to technical support service
+	("Support") to you under this Agreement.
+	Support covers the Software for which it is being purchased. Support extends
+	initially from the Effective Date for a period specified in the Product License
+	or as renewed in accordance with this Section (the "Support Period").
+	Support may be renewed by your payment prior to the date of expiration of the
+	then-current Support Fee or other fee as specified in writing ("Renewal").
+	During the Support Period, you will receive services from Ephox as described in
+	the Product License issued under this Agreement.
+	During the Support Period Ephox will provide technical support for problems in
+	the operation of the Software. 
+	
+4.1.2	Access to Support
+	Ephox will provide you with access to the Ephox Online Support Center located at
+	http://www.ephox.com where you will be provided access to downloads,
+	documentation, community forums and a Web-based support form to submit a support
+	case.  Ephox’s specific support obligations are specified in a Product License
+	attached to this Agreement.
+
+4.1.3	Support Conditions
+	Ephox’s obligation to provide technical support is conditioned upon the
+	following: (a) you make reasonable efforts to solve the problem after consulting
+	with Ephox; (b) you provide Ephox with sufficient information and resources to
+	correct the problem either at Ephox’s offices or via remote access to your site,
+	as well as access to the personnel, hardware, and any additional software
+	involved in discovering the problem; (c) you promptly install all Updates; and
+	(d) you procure, install and maintain all equipment necessary to operate the
+	Software.
+	
+	This Agreement does not extend to the operation of third party software and
+	Ephox will not provide you with generic consultation, assistance, or advice.
+	
+4.2	Updates
+
+	Ephox will make available to you Updates that Ephox releases during the Support
+	Period. Updates will be made available through http://www.ephox.com and notified
+	to you by e-mail. The features and the release schedule of all Updates are
+	determined solely by Ephox.
+
+4.3	Maintenance
+
+	During the Support Period you may report any Software problem or error to Ephox.
+	If Ephox in its reasonable discretion determines that a reported, reproducible,
+	material error in the Software exists that significantly impairs the usability
+	and utility of the Software, Ephox agrees to use reasonable commercial efforts
+	to correct the problem or error and to provided an Update to resolve the problem
+	or error.
+ 
+4.4	Service Exclusions
+
+	Ephox is not obligated to provide technical support in the following situations:
+	(a) the Software has been changed, modified or damaged; (b) the problem is
+	caused by your negligence, hardware malfunction or other causes beyond the
+	reasonable control of Ephox; (c) the problem is traced to a third party software
+	not licensed through Ephox; or (d) you have not paid fees when due.
+	Ephox will have no obligation to support or maintain any Major Version of
+	Software that is not the then current version of Software or the immediately
+	preceding Major Version of Software for a period of six (6) months after it is
+	first superseded.
+5.	Term and Termination
+
+5.1	This Agreement commences on the Effective Date and will remain in force
+	until it is terminated (as set forth herein).  Your rights under this Agreement
+	will terminate automatically without notice from Ephox if: (a) you fail to
+	comply with any term(s) of this Agreement or (b) you terminate your business
+	activities or become insolvent, admit in writing to your inability to pay your
+	debts as they mature, make an assignment for the benefit of creditors, or become
+	subject to direct control of a trustee, receiver or similar authority. Upon
+	termination, you agree to cease using the Software and to destroy all copies,
+	full or partial, of the Software.
+	
+6.	Limited Warranty
+
+6.1	Except as otherwise provided in Section 3, Ephox warrants that the
+	Software substantially conforms to the written specifications therefore existing
+	at the time of delivery.  Said warranty is for a period of ninety (90) days from
+	and after the Effective Date (the "Warranty Period"). Notwithstanding the
+	foregoing, Ephox does not warrant that the Software will operate without
+	interruption or that the performance of said Software will be error free.  Ephox
+	cannot guarantee the privacy, security, authenticity and non-corruption of any
+	information transmitted through or stored on any server maintained or used by
+	you in connection with the Software. Ephox is not responsible for any delays,
+	errors, crashes, failures to perform, disruptions or other problems with the
+	Software caused by or resulting from any act, omission or condition beyond
+	Ephox’s reasonable control.  The foregoing warranties shall not apply to the
+	extent that the Ephox Software is used or interfaced with other software, data
+	or operating systems which are not functioning properly or if the Ephox Software
+	has been modified in a manner not authorized by Ephox.  
+
+6.2	The warranties set forth above are made to and for your benefit only and
+	will be enforceable against Ephox only if:
+	(a)	The Ephox Software has been properly installed and has been used at all
+		times in accordance with the documentation and this Agreement;
+	(b)	All modifications, alterations or additions to the Ephox Software, if
+		any, have been made by Ephox; and
+	(c)	You have not made modifications, alterations or additions to the Ephox
+		Software that cause it to deviate from the documentation
+
+6.3	All warranty claims must be made, along with proof of purchase, within
+	the Warranty Period. If the Software does not perform substantially in
+	accordance with the documentation, your sole and exclusive remedy and the entire
+	liability of Ephox for breach of warranty shall be limited to the refund of the
+	license fee you paid for the software.
+
+7.	Audit
+	Upon Ephox’s reasonable belief that any term of this Agreement has been
+	violated, Licensee agrees to allow an independent third party to inspect
+	Licensee’s site, books and records to determine whether Licensee has complied
+	with the terms of this Agreement. The third party will be chosen by Ephox and
+	approved by Licensee, whose approval must not be unreasonably withheld. The
+	reviews will occur at mutually agreeable times during normal business hours. The
+	third party will be instructed to keep all information learned strictly
+	confidential except as it relates to breaches of this Agreement. If such an
+	audit discloses a violation of this Agreement Licensee agrees to pay the cost of
+	the audit plus interest on the deficiency from the time due until paid at the
+	lesser of eighteen percent per annum or the maximum allowed by law.
+
+8.	Disclaimer
+
+	Except as expressly set forth in section 6 no other warranty, express or
+	implied, is made with respect to the software or services provided herein. 
+	Ephox specifically disclaims any other representations and warranties including
+	without limitation any implied warranty of merchantability, fitness for a
+	particular purpose, non-infringement of third party rights and those arising
+	from a course of dealing or performance or usage of trade.  Ephox specifically
+	disclaims any representation and warranty that the software will be error free
+	or will function uninterrupted, that any errors or defects in the software can
+	or will be corrected, that any such correction can or will be made in a timely
+	manner, that the software will operate in the combinations which you may select
+	for your use, will produce the results you desire, or that the software
+	functionality will meet your requirements.
+
+9.	Limitation of Liability
+
+	Ephox’s total liability under this agreement or for breach of this agreement
+	shall be limited to fifty dollars (USD $50).  In no event shall Ephox be liable
+	for costs of procurement of substitute goods or technology, loss of profits, or
+	for any indirect, special, exemplary, punitive, consequential or incidental
+	damages, however caused, whether for breach of warranty, breach of contract,
+	repudiation of contract, negligence or otherwise, even if Ephox has been advised
+	of the possibility of such damages.
+	
+	In no event will Ephox be liable for fines or penalties imposed on you.
+	Furthermore, Ephox disclaims any liability for loss of or inaccuracy of your
+	data or the data maintained by you on behalf of others. Ephox also disclaims
+	liability or responsibility for violations of applicable privacy laws and
+	regulations, or for breaches of security of hardware, software or systems for
+	which it is hereby agreed that you shall have sole and exclusive responsibility.
+	You agree that Ephox will not be liable for loss of or damage to goodwill or
+	"costs of cover" (including, without limitation, costs of procuring substitute
+	products or services) which arise directly or indirectly out of the purchase,
+	sale, use of and/or inability to use of software provided in connection with
+	this agreement whether such damages are based upon contract, tort, intentional
+	conduct, equity or pursuant to some other theory, including, without limitation,
+	breach of warranty, negligence or strict liability, whether the possibility of
+	such damages was made known to or was foreseeable by Ephox and whether such
+	damages are asserted by you or some other party.
+	
+	You agree to assume the responsibility for insuring against or otherwise bearing
+	the risk of damages in excess of the liability of Ephox.  The limitations of
+	liability set forth herein are intended to limit Ephox’s liability and will
+	apply notwithstanding the failure of the essential purpose of any remedy.  
+	Any action, claim or proceeding relating to these terms and conditions, and the
+	software provided in connection with the agreement or the transactions
+	contemplated by the terms and conditions of said agreement, must be brought
+	within twelve (12) months following the action or event giving rise to such
+	action, claim or proceeding. 
+	
+	You agree to use reasonable efforts to mitigate any damages sustained by you
+	pursuant to or in connection with the use of or your inability to use the
+	software provided in connection with this agreement.  
+	
+	Notwithstanding the foregoing, the disclaimer of warranties and/or the
+	disclaimer and/or limitation of damages will not be deemed to disclaim liability
+	specifically imposed on Ephox by statute or regulation, to the extent such
+	liability cannot be waived or disclaimed.  
+	
+	Some jurisdictions do not allow the disclaimer of implied warranties or the
+	exclusion or limitation of liability for consequential or incidental damages, so
+	the disclaimers or limitations set forth herein may not fully apply to you.  To
+	the extent that the disclaimers and/or limitations set forth herein are not
+	fully enforceable under applicable law, you may have other legal rights which
+	vary from jurisdiction to jurisdiction.
+
+10.	Remedies for Infringement
+
+	In the event that Ephox reasonably believes that the Software may be subject to
+	an infringement claim, Ephox may, at its opinion, either: (1) substitute
+	substantially equivalent non-infringing Software; (2) modify the infringing item
+	so that it no longer infringes but remains substantially equivalent; (3) if none
+	of the foregoing is commercially feasible, Ephox may terminate the license
+	granted hereunder.
+	
+	THIS SECTION STATES YOUR SOLE AND EXCLUSIVE REMEDY WITH RESPECT TO CLAIMS OF
+	INFRINGEMENT OF PROPRIETARY RIGHTS OF ANY KIND.
+
+11.	General
+
+11.1	Assignment
+
+	Neither this Agreement nor any rights under this Agreement may be assigned or
+	otherwise transferred by you, in whole or in part, whether voluntary or by
+	operation of law, including by way of sale of assets, merger or consolidation,
+	without the prior written consent of Ephox, which shall not be unreasonably
+	withheld. Subject to the foregoing, this Agreement will be binding upon and will
+	vest to the benefit of the parties and their respective successors and
+	assignors. Notwithstanding the foregoing, no transfer or assignment of your
+	rights hereunder shall be effective unless and until the purported assignee
+	agrees in writing to be bound by all of your obligations hereunder.
+
+11.2	Waiver
+
+	A party’s failure to act under this Agreement shall not indicate a waiver of the
+	party’s rights under this Agreement. No waiver of any provision of this
+	Agreement shall be valid unless made in writing and signed by the waiving party.
+	The failure of either party to require the performance of any term or obligation
+	of this Agreement or the waiver by either party of any breach of this Agreement
+	shall not prevent any subsequent enforcement of such term and shall not be
+	deemed a waiver of any subsequent breach.
+
+11.3	U.S. Government End Users
+
+	The Software is a "Commercial Item," as that term is defined at 48 C.F.R.
+	§2.101, consisting of "Commercial Computer Software" as such term is used in 48
+	C.F.R. §12.212 . Consistent with 48 C.F.R. §12.212, the Commercial Computer
+	Software is being licensed to U.S. Government end users (a) only as Commercial
+	Items and (b) with only those rights as are granted to all other end users
+	pursuant to the terms and conditions herein. Unpublished-rights reserved under
+	the copyright laws of the United States.
+
+11.4	US Export Restrictions
+
+	The Software is subject to certain export restrictions of the United States
+	Government. If you are (a) in a country to which export from the United States
+	is restricted for anti-terrorism reasons, or a national of any such country,
+	wherever located, (b) in a country to which the United States has embargoed or
+	restricted the export of goods or services, or a national of any such country,
+	wherever located, or (c) a person or entity who has been prohibited from
+	participating in United States export transactions by any agency of the United
+	States Government, then you may not install, download, access, use, or license
+	the Software. By accepting this License, you warrant and represent to Ephox that
+	(1) you do not match the criteria set forth in (a), (b), or (c) above, (2) that
+	you will not export or re-export the Software to any country, person, or entity
+	subject to U.S. export restrictions, including those persons and entities that
+	match the criteria set forth in (a), (b), or (c) above, and (3) that neither the
+	United States Bureau of Industry and Security, nor any other U.S. federal
+	agency, has suspended, revoked, or denied your export privileges.
+
+11.5	Governing Law
+
+This Agreement is governed by and construed and enforced in accordance with the
+substantive laws in force in the State of California, USA, and in no event shall
+the United Nations Convention on Contracts for the International Sale of Goods
+govern this Agreement.
+
+                                    EXHIBIT A
+            EPHOX PRODUCT LICENSE: EPHOX ENTERPRISE TINYMCE GOLD EDITION
+
+This Ephox Product License (the "License") is issued under the Ephox Master
+License Agreement (the "Agreement") listed above.  
+
+A.	Product(s) Licensed
+
+	The following Ephox Product (the "Software") is licensed under the Agreement:
+
+		Ephox Enterprise TinyMCE Gold Edition
+
+B.	Conditions of Use
+
+	1.	Production License: You may install and Use the Software on Servers with
+		no more than the Permitted Number of Processors or other method as specified in
+		a receipt or receipts provided by Ephox. You may connect an unlimited number of
+		client computers to the Server(s) used in your Production Environment.
+	
+	2.	Development License. You may install and Use the Software on Servers with
+		no more than the Permitted Number of Processors or other method as specified in
+		a receipt or receipts provided by Ephox. You may connect an unlimited number of
+		client computers to the Server(s) used in your Development Environment.
+
+C.	Support
+
+	Licensee will be provided with Support as provided for under Section 4 of the
+	Agreement and as described in Schedule A.
+	The initial Support Period commences on the Effective Date for a period of 12
+	months or as renewed in accordance with Section 4.1 of the Agreement.
+	
+D.	Special Conditions and Agreement Variations
+
+	This product contains code licensed under an agreement with Moxiecode AG
+	("Moxiecode"). Moxiecode remains the owner of the trademark "TinyMCE" and
+	warrants the ownership of its intellectual property.
+
+
+
+Copyright 2010 Ephox Corporation. Ephox and EditLive are registered trademarks of
+Ephox Corporation. 
+
+                                   Exhibit A
+                                   Schedule A
+	                       SUPPORT LEVEL DEFINITIONS
+	                  Ephox Enterprise TinyMCE Gold Edition
+	
+EPHOX TECHNICAL SUPPORT SERVICE LEVELS
+	
+	Ephox undertakes to remedy problems in accordance with the following Service
+	Levels. 
+	
+	(a)	Ephox Technical Support Service Level - Problem Category 1:
+		- Response times within the Service Hours: 4 hrs
+		- Workaround times within the Service Hour: 24 hrs 
+	(b)	Ephox Technical Support Service Level - Problem Category 2:
+		- Response times within the Service Hours: 8 hrs
+		- Workaround times within the Service Hour: 36 hrs 
+	(c)	Ephox Technical Support Service Level - Problem Category 3:
+		- Response times within the Service Hours: 24 hrs
+		- Workaround times within the Service Hours: 48 hrs 
+	
+SERVICE HOURS
+	
+	Ephox’s Service Hours:
+	
+	(a)	UK office: 9:00 AM to 5:00 PM Monday to Friday local time excluding UK
+		bank holidays.
+	(b)	California, US office: 9:00 AM to 5:00 PM Monday to Friday local time
+		excluding US public holidays. 
+	(c)	Queensland, Australia office: 7:30 AM to 3:30 PM Monday to Friday local
+		time excluding Queensland public holidays
+	
+	Office contact information available at http://www.ephox.com/aboutus/offices.html.
+	
+PROBLEM CATEGORIES
+	
+	(a)	Category 1:
+		Effective use (commercially tenable use) is not possible due to such
+		malfunctions, or is unreasonably restricted or impaired.
+	
+	(b)	Category 2:
+		Effective use of the software is not gravely impaired, so that working with the
+		software according to the specifications stipulated (software documentation) is
+		possible.
+	
+	(c)	Category 3:
+		Effective use is not restricted due to this malfunction.
+		The categorization of these malfunctions into one of the malfunction classes is
+		advised at the time that the malfunction is reported.
+	
+REPORTING OF PROBLEMS
+	
+	All problems are to be reported by a Licensee representative through the Ephox
+	technical support form on the Ephox website at: http://www.ephox.com/support/. 
+	After submission include the Ephox Technical Support case number that was
+	advised by email in response to the initial reporting.
+	
+APPLICATION TO EPHOX PRODUCTS
+	
+	Ephox technical support applies only to the current Major Upgrade version of the
+	Licensed Software and the immediately preceding Major Upgrade version of the
+	Licensed Software for 90 days after the release of the current Major Upgrade
+	version of the Licensed Software.
