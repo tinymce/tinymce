@@ -27,7 +27,7 @@
 
 			t.url = url;
 			t.editor = ed;
-			t.rpcUrl = ed.getParam("spellchecker_rpc_url", "{backend}")
+			t.rpcUrl = ed.getParam("spellchecker_rpc_url", "{backend}");
 
 			if (t.rpcUrl == '{backend}') {
 				// Sniff if the browser supports native spellchecking (Don't know of a better way)
