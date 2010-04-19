@@ -110,7 +110,6 @@
 					});
 
 					t.fullscreenEditor.render();
-					tinyMCE.add(t.fullscreenEditor);
 
 					t.fullscreenElement = new tinymce.dom.Element('mce_fullscreen_container');
 					t.fullscreenElement.update();
