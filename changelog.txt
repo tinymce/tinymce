@@ -1,4 +1,4 @@
-Version 3.3.3 (2010-xx-xx)
+Version 3.3.3 (2010-04-19)
 	Added new script_loaded callback function setting for the jQuery plugin.
 	Added various fixes and new rpc methods for the spellchecker plugin. Patch contributed by Michael Peters.
 	Removed some unnecessary inline style information from some of the dialogs.
