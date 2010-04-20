@@ -113,9 +113,9 @@
 
 					if ((ed.pasteAsPlainText) && (!cookie.get("tinymcePasteText"))) {
 						if (getParam(ed, "paste_text_sticky")) {
-							ed.windowManager.alert("Paste is now in plain text mode. Click again to toggle back to regular paste mode. After you paste something you will be returned to regular paste mode.");
+							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
 						} else {
-							ed.windowManager.alert("Paste is now in plain text mode. Click again to toggle back to regular paste mode.");
+							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
 						}
 
 						if (!getParam(ed, "paste_text_notifyalways")) {

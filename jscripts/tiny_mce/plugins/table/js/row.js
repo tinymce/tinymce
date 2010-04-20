@@ -19,7 +19,7 @@ function init() {
 	var height = trimSize(getStyle(trElm, 'height', 'height'));
 	var className = dom.getAttrib(trElm, 'class');
 	var bgcolor = convertRGBToHex(getStyle(trElm, 'bgcolor', 'backgroundColor'));
-	var backgroundimage = getStyle(trElm, 'background', 'backgroundImage').replace(new RegExp("url\\('?([^']*)'?\\)", 'gi'), "$1");;
+	var backgroundimage = getStyle(trElm, 'background', 'backgroundImage').replace(new RegExp("url\\(['\"]?([^'\"]*)['\"]?\\)", 'gi'), "$1");
 	var id = dom.getAttrib(trElm, 'id');
 	var lang = dom.getAttrib(trElm, 'lang');
 	var dir = dom.getAttrib(trElm, 'dir');

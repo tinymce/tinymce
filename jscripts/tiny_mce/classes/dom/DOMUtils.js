@@ -512,7 +512,7 @@
 		 * @method getStyle
 		 * @param {String/Element} n HTML element or element id string to get style from.
 		 * @param {String} na Style name to return.
-		 * @param {String} c Computed style.
+		 * @param {Boolean} c Computed style.
 		 * @return {String} Current style or computed style value of a element.
 		 */
 		getStyle : function(n, na, c) {

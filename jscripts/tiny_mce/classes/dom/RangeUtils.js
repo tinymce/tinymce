@@ -197,4 +197,32 @@
 		};
 */
 	};
+
+	/**
+	 * Compares two ranges and checks if they are equal.
+	 *
+	 * @static
+	 * @param {DOMRange} rng1 First range to compare.
+	 * @param {DOMRange} rng2 First range to compare.
+	 * @return {Boolean} true/false if the ranges are equal.
+	 */
+	tinymce.dom.RangeUtils.compareRanges = function(rng1, rng2) {
+		if (rng1 && rng2) {
+			// Compare native IE ranges
+			if (rng1.item || rng1.duplicate) {
+				// Both are control ranges and the selected element matches
+				if (rng1.item && rng2.item && rng1.item(0) === rng2.item(0))
+					return true;
+
+				// Both are text ranges and the range matches
+				if (rng1.isEqual && rng2.isEqual && rng2.isEqual(rng1))
+					return true;
+			} else {
+				// Compare w3c ranges
+				return rng1.startContainer == rng2.startContainer && rng1.startOffset == rng2.startOffset;
+			}
+		}
+
+		return false;
+	};
 })(tinymce);
