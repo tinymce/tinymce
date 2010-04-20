@@ -1493,12 +1493,12 @@ function fakeKeyEvent(e, na, o) {
 
 		p = new Parser({async : false});
 		p.load('test.xml', function(d) {
-			equals(tinymce.trim(p.getText(d.getElementsByTagName('tag')[0])), 'едж');
+			equals(tinymce.trim(p.getText(d.getElementsByTagName('tag')[0])), '\u00C5\u00C4\u00D6');
 		});
 
 		p = new Parser({async : false});
-		d = p.loadXML('<root><tag>едж</tag></root>');
-		equals(tinymce.trim(p.getText(d.getElementsByTagName('tag')[0])), 'едж');
+		d = p.loadXML('<root><tag>\u00C5\u00C4\u00D6</tag></root>');
+		equals(tinymce.trim(p.getText(d.getElementsByTagName('tag')[0])), '\u00C5\u00C4\u00D6');
 	});
 })();
 
