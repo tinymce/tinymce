@@ -601,7 +601,7 @@ function fakeKeyEvent(e, na, o) {
 	});
 
 	test('tinymce.dom.DOMUtils - encode', 1, function() {
-		equals(DOM.encode('abc<>"&\'едц'), 'abc&lt;&gt;&quot;&amp;\'едц');
+		equals(DOM.encode('abc<>"&\'\u00E5\u00E4\u00F6'), 'abc&lt;&gt;&quot;&amp;\'\u00E5\u00E4\u00F6');
 	});
 
 	test('tinymce.dom.DOMUtils - setGetAttrib', 11, function() {
@@ -978,8 +978,8 @@ function fakeKeyEvent(e, na, o) {
 	});
 
 	test('tinymce.dom.DOMUtils - encodeDecode', 2, function() {
-		equals(DOM.encode('едц&<>"'), 'едц&amp;&lt;&gt;&quot;');
-		equals(DOM.decode('&aring;&auml;&ouml;&amp;&lt;&gt;&quot;'), 'едц&<>"');
+		equals(DOM.encode('\u00E5\u00E4\u00F6&<>"'), '\u00E5\u00E4\u00F6&amp;&lt;&gt;&quot;');
+		equals(DOM.decode('&aring;&auml;&ouml;&amp;&lt;&gt;&quot;'), '\u00E5\u00E4\u00F6&<>"');
 	});
 
 	test('tinymce.dom.DOMUtils - split', 1, function() {
@@ -1237,20 +1237,20 @@ function fakeKeyEvent(e, na, o) {
 		equals(ser.serialize(DOM.get('test')), '<div id="test"><img src="file.gif" /></div>');
 
 		ser = new tinymce.dom.Serializer({entity_encoding : 'numeric'});
-		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
+		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;\u00E5\u00E4\u00F6');
 		equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&#160;&#229;&#228;&#246;</div>');
 
 		ser = new tinymce.dom.Serializer({entity_encoding : 'named'});
-		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
+		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;\u00E5\u00E4\u00F6');
 		equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;</div>');
 
 		ser = new tinymce.dom.Serializer({entity_encoding : 'named+numeric',entities : '160,nbsp,34,quot,38,amp,60,lt,62,gt'});
-		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
+		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;\u00E5\u00E4\u00F6');
 		equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&nbsp;&#229;&#228;&#246;</div>');
 
 		ser = new tinymce.dom.Serializer({entity_encoding : 'raw'});
-		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
-		equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"\u00a0едц</div>');
+		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;\u00E5\u00E4\u00F6');
+		equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"\u00a0\u00E5\u00E4\u00F6</div>');
 
 		ser.setRules('+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],-strong/-b[class|style],-em/-i[class|style],-strike[class|style],-u[class|style],#p[id|style|dir|class|align],-ol[class|style],-ul[class|style],-li[class|style],br,img[id|dir|lang|longdesc|usemap|style|class|src|onmouseover|onmouseout|border|alt=|title|hspace|vspace|width|height|align],-sub[style|class],-sup[style|class],-blockquote[dir|style],-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|style|dir|id|lang|bgcolor|background|bordercolor],-tr[id|lang|dir|class|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor],tbody[id|class],thead[id|class],tfoot[id|class],-td[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|bgcolor|background|bordercolor|scope],-th[id|lang|dir|class|colspan|rowspan|width|height|align|valign|style|scope],caption[id|lang|dir|class|style],-div[id|dir|class|align|style],-span[style|class|align],-pre[class|align|style],address[class|align|style],-h1[id|style|dir|class|align],-h2[id|style|dir|class|align],-h3[id|style|dir|class|align],-h4[id|style|dir|class|align],-h5[id|style|dir|class|align],-h6[id|style|dir|class|align],hr[class|style],-font[face|size|style|id|class|dir|color],dd[id|class|title|style|dir|lang],dl[id|class|title|style|dir|lang],dt[id|class|title|style|dir|lang],*[*]');
 		DOM.setHTML('test', '<br /><hr /><span class="test"><img src="file.gif" /></span>');
