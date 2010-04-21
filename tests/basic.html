@@ -438,7 +438,6 @@ test('WebKit Serialization range bug', function() {
 	// wind up testing the serialization functionality we were aiming for and the test fails.
 	var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
 	editor.dom.replace(p, editor.getBody().firstChild);
-	console.log(editor.getBody().innerHTML);
 	equals(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>');
 });
 
