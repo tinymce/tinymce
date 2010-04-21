@@ -125,17 +125,21 @@
 				h += '<span id="__caret">_</span>';
 
 				// Delete and insert new node
-				if (r.startContainer == d && r.endContainer == d) {
+				
+				if (r.startContainer == d && r.endContainer ==  d) {
 					// WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
 					d.body.innerHTML = h;
 				} else {
 					r.deleteContents();
-					r.insertNode(t.getRng().createContextualFragment(h));
+					if (d.body.childNodes.length == 0) {
+						d.body.innerHTML = h;
+					} else {
+						r.insertNode(t.getRng().createContextualFragment(h));
+					}
 				}
 
 				// Move to caret marker
 				c = t.dom.get('__caret');
-
 				// Make sure we wrap it compleatly, Opera fails with a simple select call
 				r = d.createRange();
 				r.setStartBefore(c);
@@ -591,6 +595,17 @@
 			if (!r)
 				r = t.win.document.createRange ? t.win.document.createRange() : t.win.document.body.createTextRange();
 
+			if (t.selectedRange && t.explicitRange) {
+				if (t.selectedRange.startContainer === r.startContainer && t.selectedRange.endContainer === r.endContainer &&
+						t.selectedRange.startOffset === r.startOffset && t.selectedRange.endOffset === r.endOffset) {
+					// Safari, Opera and Chrome only ever select text which causes the range to change.
+					// This lets us use the originally set range if the selection hasn't been changed by the user.
+					r = t.explicitRange;
+				} else {
+					t.selectedRange = undefined;
+					t.explicitRange = undefined;
+				}
+			}
 			return r;
 		},
 
@@ -602,13 +617,15 @@
 		 */
 		setRng : function(r) {
 			var s, t = this;
-
+			
 			if (!t.tridentSel) {
 				s = t.getSel();
 
 				if (s) {
+					t.explicitRange = r;
 					s.removeAllRanges();
 					s.addRange(r);
+					t.selectedRange = s.getRangeAt(0);
 				}
 			} else {
 				// Is W3C Range
