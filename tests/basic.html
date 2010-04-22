@@ -252,12 +252,7 @@ test('commands - insertHR', function() {
 	editor.execCommand('SelectAll');
 	editor.execCommand('InsertHorizontalRule');
 
-	if (tinymce.isWebKit) {
-		// TODO: Ideally the browser wouldn't insert the HR inside a P.
-		equals(editor.getContent(), '<p><hr /></p>');
-	} else {
-		equals(editor.getContent(), '<hr />');
-	}
+	equals(editor.getContent(), '<hr />');
 });
 
 test('commands - indentOutdent', function() {
