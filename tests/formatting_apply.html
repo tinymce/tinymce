@@ -395,7 +395,11 @@ test('Formatter - apply (inline)', function() {
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style=\"font-family: arial;\">1234</span></p>', 'Remove redundant children');
+	var expectedFont = 'arial';
+	if (tinymce.isOpera) {
+		expectedFont = '&quot;arial&quot;';
+	} 
+	equals(getContent(), '<p><span style=\"font-family: ' + expectedFont + ';\">1234</span></p>', 'Remove redundant children');
 
 	// Inline element on selected text with function values
 	editor.formatter.register('format', {
