@@ -1,5 +1,6 @@
 Version 3.3.x (2010-xx-xx)
 	Fixed bug where fullscreen plugin would add two editor instances to EditorManager collection.
+	Fixed bug where it was difficult to enter text on non western languages such as Japanese on IE.
 Version 3.3.3 (2010-04-19)
 	Added new script_loaded callback function setting for the jQuery plugin.
 	Added various fixes and new rpc methods for the spellchecker plugin. Patch contributed by Michael Peters.
