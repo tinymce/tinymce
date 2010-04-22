@@ -596,8 +596,7 @@
 				r = t.win.document.createRange ? t.win.document.createRange() : t.win.document.body.createTextRange();
 
 			if (t.selectedRange && t.explicitRange) {
-				if (t.selectedRange.startContainer === r.startContainer && t.selectedRange.endContainer === r.endContainer &&
-						t.selectedRange.startOffset === r.startOffset && t.selectedRange.endOffset === r.endOffset) {
+				if (r.compareBoundaryPoints(r.START_TO_START, t.selectedRange) === 0 && r.compareBoundaryPoints(r.END_TO_END, t.selectedRange) === 0) {
 					// Safari, Opera and Chrome only ever select text which causes the range to change.
 					// This lets us use the originally set range if the selection hasn't been changed by the user.
 					r = t.explicitRange;
