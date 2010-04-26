@@ -110,11 +110,13 @@ test("Paste Word retain styles", function() {
 
 	// Test color
 	editor.setContent('');
+	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="color: #ff0000">Test</p>'});
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p style=\"color: #ff0000;\">Test</p>');
 
 	// Test background-color
 	editor.setContent('');
+	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="background-color: #ff0000">Test</p>'});
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p style=\"background-color: #ff0000;\">Test</p>');
 
