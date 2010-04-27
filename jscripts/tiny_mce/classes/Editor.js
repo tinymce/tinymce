@@ -480,6 +480,12 @@
 			if (!t.getElement())
 				return;
 
+			// Is a iPad/iPhone, then skip initialization. We need to sniff here since the
+			// browser says it has contentEditable support but there is no visible caret
+			// We will remove this check ones Apple implements full contentEditable support
+			if (tinymce.isIDevice)
+				return;
+
 			// Add hidden input for non input elements inside form elements
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
