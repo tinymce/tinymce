@@ -1,4 +1,4 @@
-Version 3.3.x (2010-xx-xx)
+Version 3.3.4 (2010-04-27)
 	Fixed bug where fullscreen plugin would add two editor instances to EditorManager collection.
 	Fixed bug where it was difficult to enter text on non western languages such as Japanese on IE.
 	Fixed bug where removing contents from nodes could result in an exception when using undo/redo.
