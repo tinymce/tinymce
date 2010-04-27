@@ -273,10 +273,10 @@
 							point.push(offset);
 						} else {
 							childNodes = container.childNodes;
-							
-							if (offset >= childNodes.length) {
+
+							if (offset >= childNodes.length && childNodes.length) {
 								after = 1;
-								offset = childNodes.length - 1;
+								offset = Math.max(0, childNodes.length - 1);
 							}
 
 							point.push(t.dom.nodeIndex(childNodes[offset], normalized) + after);
