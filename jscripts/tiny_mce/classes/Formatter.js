@@ -463,7 +463,7 @@
 				var node = dom.get(start ? '_start' : '_end'),
 					out = node[start ? 'firstChild' : 'lastChild'];
 
-				dom.remove(node, 1);
+				dom.remove(node, true);
 
 				return out;
 			};

@@ -1,3 +1,6 @@
+Version 3.3.5 (2010-xx-xx)
+	Fixed bug where selecting contents using double click on Gecko would produce errors when using removing format.
+	Fixed bug where the IE DOM could get messed up when non valid contents was pasted into the editor.
 Version 3.3.4 (2010-04-27)
 	Fixed bug where fullscreen plugin would add two editor instances to EditorManager collection.
 	Fixed bug where it was difficult to enter text on non western languages such as Japanese on IE.
