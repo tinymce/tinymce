@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<project name="build-utils">
+	<dirname property="build-utils.dir" file="${ant.file.build-utils}" />
+	
+	<!-- Setup classpath for js-build-tools ant tasks -->
+	<path id="tasks.classpath">
+		<pathelement location="."/>
+
+		<fileset dir="${build-utils.dir}/tools/ant">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- Register new js-build-tools ant tasks -->
+	<taskdef name="preprocess" classname="com.moxiecode.ant.tasks.PreProcessTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+	<taskdef name="moxiedoc" classname="com.moxiecode.ant.tasks.MoxieDocTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
+	
+	<!-- Hudson Retrieval Utils -->
+	
+	<property name="artifact-name-url" value="http://hudson.dev.ephox.com/job/TinyMCE%20Stable%20Build/lastSuccessfulBuild/api/xml?xpath=artifact/relativePath[contains(text(),'enterprisetinymce')]/text()" />
+
+	<macrodef name="getArtifactName">
+		<attribute name="artifactUrl" 
+			description="The URL to retrieve the name from." />
+		
+		<attribute name="username" default="${username}"
+			description="The username to login with." />
+		
+		<attribute name="password" default="${password}"
+			description="The password to login with." />
+		
+		<attribute name="property" description="The property to put the artifact name into." />
+		
+		<sequential>
+			<get dest="${build-utils.dir}/filename"
+				src="@{artifactUrl}" username="@{username}" password="@{password}" />
+			<loadfile property="@{property}" srcfile="${build-utils.dir}/filename" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="getArtifact">
+		<attribute name="dest" description="The file or directory to store the artifact in. If this is a directory, the original artifact name will be used." />
+		
+		<attribute name="buildUrl"
+			description="The URL to the build to get the artifact name from." />
+		
+		<attribute name="partialName"
+			description="Part of the artifact name to retrieve. This allows selecting a particular artifact from a build that produces multiple things." />
+		
+		<attribute name="artifactUrl" default="@{buildUrl}/api/xml?xpath=/*/artifact/relativePath[contains(text(),'@{partialName}')]/text()"
+			description="The exact URL to retrieve the name from. Normally calculated from the URL and partial name" />
+
+		<attribute name="username" default="${username}"
+			description="The username to login with." />
+		
+		<attribute name="password" default="${password}"
+			description="The password to login with." />
+		
+		<sequential>
+			<getArtifactName property="build-utils.artifactName" artifacturl="@{artifactUrl}" username="@{username}" password="@{password}" />
+			<get dest="@{dest}"
+				src="@{buildUrl}/artifact/${build-utils.artifactName}"
+				username="${username}" password="${password}"/>
+		</sequential>
+	</macrodef>
+</project>
