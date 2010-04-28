@@ -879,7 +879,7 @@
 					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
 						var sm, se = ed.selection, el = se.getNode() || ed.getBody();
 
-						if (ed.dom.getParent(e, 'td') || ed.dom.getParent(e, 'th')) {
+						if (ed.dom.getParent(e, 'td') || ed.dom.getParent(e, 'th') || ed.dom.select('td.mceSelected,th.mceSelected').length) {
 							m.removeAll();
 
 							if (el.nodeName == 'A' && !ed.dom.getAttrib(el, 'name')) {
