@@ -18,7 +18,6 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
 	
 	<!-- Hudson Retrieval Utils -->
-	
 	<property name="artifact-name-url" value="http://hudson.dev.ephox.com/job/TinyMCE%20Stable%20Build/lastSuccessfulBuild/api/xml?xpath=artifact/relativePath[contains(text(),'enterprisetinymce')]/text()" />
 
 	<macrodef name="getArtifactName">
