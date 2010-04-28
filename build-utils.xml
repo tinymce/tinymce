@@ -1,21 +1,6 @@
 <?xml version="1.0" ?>
 <project name="build-utils">
 	<dirname property="build-utils.dir" file="${ant.file.build-utils}" />
-
-	<!-- Setup classpath for js-build-tools ant tasks -->
-	<path id="build-utils.tasks.classpath">
-		<pathelement location="."/>
-
-		<fileset dir="${build-utils.dir}/tools/ant">
-			<include name="**/*.jar"/>
-		</fileset>
-	</path>
-
-	<!-- Register new js-build-tools ant tasks -->
-	<taskdef name="preprocess" classname="com.moxiecode.ant.tasks.PreProcessTask" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
-	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
-	<taskdef name="moxiedoc" classname="com.moxiecode.ant.tasks.MoxieDocTask" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
 	
 	<!-- Hudson Retrieval Utils -->
 	<property name="artifact-name-url" value="http://hudson.dev.ephox.com/job/TinyMCE%20Stable%20Build/lastSuccessfulBuild/api/xml?xpath=artifact/relativePath[contains(text(),'enterprisetinymce')]/text()" />
