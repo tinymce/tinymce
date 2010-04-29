@@ -1,8 +1,10 @@
 Version 3.3.5 (2010-xx-xx)
+	Added new merge_with_parents option to formats, enables the control of removal of elements with similar parents.
 	Fixed so the default behavior for applying classes isn't a toggle state but the old behavior from before the 3.3 release.
 	Fixed bug where selecting contents using double click on Gecko would produce errors when using removing format.
 	Fixed bug where the IE DOM could get messed up when non valid contents was pasted into the editor.
 	Fixed bug where merging selected table cells using the context menu didn't work as expected.
+	Fixed bug where some nestled formatting would be applied incorrectly.
 	Fixed bug with enter in list items when using the force_br_newlines mode on WebKit patch contributed by Ryan Koopmans.
 Version 3.3.4 (2010-04-27)
 	Fixed bug where fullscreen plugin would add two editor instances to EditorManager collection.

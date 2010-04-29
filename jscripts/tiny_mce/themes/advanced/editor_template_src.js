@@ -219,7 +219,20 @@
 			ctrl = ctrlMan.createListBox('styleselect', {
 				title : 'advanced.style_select',
 				onselect : function(name) {
-					ed.execCommand('mceToggleFormat', false, name);
+					var matches, formatNames = [];
+
+					each(ctrl.items, function(item) {
+						formatNames.push(item.value);
+					});
+
+					ed.focus();
+
+					// Toggle off the current format
+					matches = ed.formatter.matchAll(formatNames);
+					if (matches[0] == name)
+						ed.formatter.remove(name);
+					else
+						ed.formatter.apply(name);
 
 					return false; // No auto select
 				}
@@ -251,7 +264,7 @@
 
 							ed.formatter.register(name, {
 								inline : 'span',
-								attributes : {'class' : val},
+								classes : val,
 								selector : '*'
 							});
 
