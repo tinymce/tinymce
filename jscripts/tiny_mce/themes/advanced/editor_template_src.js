@@ -203,7 +203,7 @@
 
 					ed.formatter.register(name, {
 						inline : 'span',
-						classes : o['class'],
+						attributes : {'class' : o['class']},
 						selector : '*'
 					});
 
@@ -251,7 +251,8 @@
 
 							ed.formatter.register(name, {
 								inline : 'span',
-								classes : val
+								attributes : {'class' : val},
+								selector : '*'
 							});
 
 							ctrl.add(t.editor.translate(key), name);

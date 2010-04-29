@@ -1,4 +1,5 @@
 Version 3.3.5 (2010-xx-xx)
+	Fixed so the default behavior for applying classes isn't a toggle state but the old behavior from before the 3.3 release.
 	Fixed bug where selecting contents using double click on Gecko would produce errors when using removing format.
 	Fixed bug where the IE DOM could get messed up when non valid contents was pasted into the editor.
 	Fixed bug where merging selected table cells using the context menu didn't work as expected.
