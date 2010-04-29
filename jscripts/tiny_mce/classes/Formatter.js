@@ -142,7 +142,7 @@
 				// Move startContainer/startOffset in to a suitable node
 				if (container.nodeType == 1 || container.nodeValue === "") {
 					container = container.nodeType == 1 ? container.childNodes[offset] : container;
-					walker = new TreeWalker(container, container);
+					walker = new TreeWalker(container, container.parentNode);
 					for (node = walker.current(); node; node = walker.next()) {
 						if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
 							rng.setStart(node, 0);
@@ -228,7 +228,7 @@
 								}
 							});
 
-							// Contine processing if a selector match wasn't found and a inline element is defined
+							// Continue processing if a selector match wasn't found and a inline element is defined
 							if (!format.inline || found) {
 								currentWrapElm = 0;
 								return;
@@ -535,7 +535,7 @@
 		};
 
 		/**
-		 * Toggles the specifed format on/off.
+		 * Toggles the specified format on/off.
 		 *
 		 * @method toggle
 		 * @param {String} name Name of format to apply/remove.
@@ -576,7 +576,10 @@
 								else
 									value = getStyle(node, key);
 
-								if ((similar && !value) || (!similar && !isEq(value, replaceVars(items[key], vars))))
+								if (similar && !value && !format.exact)
+									return;
+
+								if ((!similar || format.exact) && !isEq(value, replaceVars(items[key], vars)))
 									return;
 							}
 						}
@@ -614,7 +617,7 @@
 		};
 
 		/**
-		 * Matches the current selection or specifed node against the specified format name.
+		 * Matches the current selection or specified node against the specified format name.
 		 *
 		 * @method match
 		 * @param {String} name Name of format to match.
@@ -775,7 +778,7 @@
 		 * Checks if the specified nodes name matches the format inline/block or selector.
 		 *
 		 * @private
-		 * @param {Node} node Node to match agains the specified format.
+		 * @param {Node} node Node to match against the specified format.
 		 * @param {Object} format Format object o match with.
 		 * @return {boolean} true/false if the format matches.
 		 */
@@ -1053,7 +1056,7 @@
 		 * @param {Object} format Format object with items to remove from node.
 		 * @param {Object} vars Name/value object with variables to apply to format.
 		 * @param {Node} node Node to remove the format styles on.
-		 * @param {Node} compare_node Optional compare node, if specidied the styles will be compared to that node.
+		 * @param {Node} compare_node Optional compare node, if specified the styles will be compared to that node.
 		 * @return {Boolean} True/false if the node was removed or not.
 		 */
 		function removeFormat(format, vars, node, compare_node) {
@@ -1263,7 +1266,7 @@
 			 *
 			 * @private
 			 * @param {Node} node1 First node to compare with.
-			 * @param {Node} node2 Secont node to compare with.
+			 * @param {Node} node2 Second node to compare with.
 			 * @return {boolean} True/false if the nodes are the same or not.
 			 */
 			function compareElements(node1, node2) {
