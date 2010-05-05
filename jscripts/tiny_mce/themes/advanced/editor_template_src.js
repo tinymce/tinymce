@@ -314,28 +314,18 @@
 			var t = this, ed = t.editor, c, i = 0, cl = [];
 
 			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
-				if (v.fontSize)
+				if (v['class']) {
+					ed.focus();
+					ed.formatter.toggle('fontsize_class', {value : v['class']});
+				} else
 					ed.execCommand('FontSize', false, v.fontSize);
-				else {
-					each(t.settings.theme_advanced_font_sizes, function(v, k) {
-						if (v['class'])
-							cl.push(v['class']);
-					});
-
-					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']}, {check_classes : cl});
-				}
 
 				return false; // No auto select
 			}});
 
 			if (c) {
 				each(t.settings.theme_advanced_font_sizes, function(v, k) {
-					var fz = v.fontSize;
-
-					if (fz >= 1 && fz <= 7)
-						fz = t.sizes[parseInt(fz) - 1] + 'pt';
-
-					c.add(k, v, {'style' : 'font-size:' + fz, 'class' : 'mceFontSize' + (i++) + (' ' + (v['class'] || ''))});
+					c.add(k, v);
 				});
 			}
 
