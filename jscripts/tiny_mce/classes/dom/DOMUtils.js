@@ -1857,10 +1857,13 @@
 				for (lastNodeType = node.nodeType, node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
 					nodeType = node.nodeType;
 
-					// Handle normalization of text nodes
-					if (!normalized || nodeType != 3 || (lastNodeType != nodeType && node.nodeValue.length))
-						idx++;
+					// Normalize text nodes
+					if (normalized && nodeType == 3) {
+						if (nodeType == lastNodeType || !node.nodeValue.length)
+							continue;
+					}
 
+					idx++;
 					lastNodeType = nodeType;
 				}
 			}
