@@ -1,4 +1,4 @@
-Version 3.3.5 (2010-xx-xx)
+Version 3.3.5 (2010-05-05)
 	Added new merge_with_parents option to formats, enables the control of removal of elements with similar parents.
 	Fixed so the default behavior for applying classes isn't a toggle state but the old behavior from before the 3.3 release.
 	Fixed bug where selecting contents using double click on Gecko would produce errors when using removing format.
