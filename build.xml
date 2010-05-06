@@ -210,7 +210,7 @@
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
 	
-	<target name="release" depends="build" description="Builds release packages">
+	<target name="release" depends="build,moxiedoc" description="Builds release packages">
 		<!-- Copy the current repos and start processing it -->
 		<delete dir="${temp_dir}" quiet="true" />
 		<copy todir="${temp_dir}/tinymce">
