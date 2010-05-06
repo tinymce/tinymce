@@ -121,6 +121,15 @@
 			 */
 			t.isAir = /adobeair/i.test(ua);
 
+			/**
+			 * Constant that tells if the current browser is an iPhone or iPad.
+			 *
+			 * @property isIDevice
+			 * @type Boolean
+			 * @final
+			 */
+			t.isIDevice = /(iPad|iPhone)/.test(ua);
+
 			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
 			if (win.tinyMCEPreInit) {
 				t.suffix = tinyMCEPreInit.suffix;

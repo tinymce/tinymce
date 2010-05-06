@@ -1,12 +1,35 @@
-Version 3.3.3 (2010-xx-xx)
+Version 3.3.5 (2010-05-06)
+	Added new merge_with_parents option to formats, enables the control of removal of elements with similar parents.
+	Fixed so the default behavior for applying classes isn't a toggle state but the old behavior from before the 3.3 release.
+	Fixed bug where selecting contents using double click on Gecko would produce errors when using removing format.
+	Fixed bug where the IE DOM could get messed up when non valid contents was pasted into the editor.
+	Fixed bug where merging selected table cells using the context menu didn't work as expected.
+	Fixed bug where some nestled formatting would be applied incorrectly.
+	Fixed bug with enter in list items when using the force_br_newlines mode on WebKit patch contributed by Ryan Koopmans.
+	Fixed bug where undo/redo could produce js errors on some specific operations.
+	Fixed bug where the theme_advanced_font_sizes didn't work as before 3.3 when complex settings where used.
+	Fixed bug where the table plugin would copy cell/row id attributes when making new rows/cells.
+Version 3.3.4 (2010-04-27)
+	Fixed bug where fullscreen plugin would add two editor instances to EditorManager collection.
+	Fixed bug where it was difficult to enter text on non western languages such as Japanese on IE.
+	Fixed bug where removing contents from nodes could result in an exception when using undo/redo.
+	Fixed bug with selection of images inside layers or other resizable containers on IE.
+	Fixed so editors isn't initialized on iPhone/iPad devices since they don't have caret support.
+Version 3.3.3 (2010-04-19)
 	Added new script_loaded callback function setting for the jQuery plugin.
 	Added various fixes and new rpc methods for the spellchecker plugin. Patch contributed by Michael Peters.
 	Removed some unnecessary inline style information from some of the dialogs.
-	Fixed some issues with the changing for the TinyMCE jQuery plugin.
+	Fixed some issues with the chaining for the TinyMCE jQuery plugin.
+	Fixed so any extra arguments passed to patched jQuery functions gets passed through. Patch contributed by Lee Henson.
+	Fixed so spellchecking/contextmenu can be toggled on/off if the browser has native spellchecker support.
 	Fixed bug where some texts in the new paste plugin wasn't placed in language pack.
 	Fixed bug where IE would produce an incorrect information message when cutting.
 	Fixed bug where removing items using the xhtmlxtras plugin wouldn't work correctly.
 	Fixed bug where setting table background images would add extra quotes on Gecko.
+	Fixed bug where shortcut for bold/italic/underline wouldn't work properly on WebKit.
+	Fixed bug where IE would produce an error message if only contents was an image tag and bold was used.
+	Fixed bug where the caret would move if alignment was applied to empty block elements.
+	Fixed bug where some shortcut key commands wouldn't apply formatting correctly.
 Version 3.3.2 (2010-03-25)
 	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.
 	Fixed bug where some of the resizing option didn't work with the new live resize.

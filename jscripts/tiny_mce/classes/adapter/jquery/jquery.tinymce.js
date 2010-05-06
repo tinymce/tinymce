@@ -250,20 +250,21 @@
 				var self = this;
 
 				if (!containsTinyMCE(self))
-					return origFn.call(self, value);
+					return origFn.apply(self, arguments);
 
 				if (value !== undefined) {
 					loadOrSave.call(self.filter(":tinymce"), value);
-					origFn.call(self.not(":tinymce"), value);
+					origFn.apply(self.not(":tinymce"), arguments);
 
 					return self; // return original set for chaining
 				} else {
 					var ret = "";
-
+					var args = arguments;
+					
 					(textProc ? self : self.eq(0)).each(function(i, node) {
 						var ed = tinyMCEInstance(node);
 
-						ret += ed ? (textProc ? ed.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : ed.getContent()) : origFn.call($(node), value);
+						ret += ed ? (textProc ? ed.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : ed.getContent()) : origFn.apply($(node), args);
 					});
 
 					return ret;
@@ -280,7 +281,7 @@
 				var self = this;
 
 				if (!containsTinyMCE(self))
-					return origFn.call(self, value);
+					return origFn.apply(self, arguments);
 
 				if (value !== undefined) {
 					self.filter(":tinymce").each(function(i, node) {
@@ -289,7 +290,7 @@
 						ed && ed.setContent(prepend ? value + ed.getContent() : ed.getContent() + value);
 					});
 
-					origFn.call(self.not(":tinymce"), value);
+					origFn.apply(self.not(":tinymce"), arguments);
 
 					return self; // return original set for chaining
 				}

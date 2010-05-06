@@ -203,7 +203,7 @@
 
 					ed.formatter.register(name, {
 						inline : 'span',
-						classes : o['class'],
+						attributes : {'class' : o['class']},
 						selector : '*'
 					});
 
@@ -219,7 +219,20 @@
 			ctrl = ctrlMan.createListBox('styleselect', {
 				title : 'advanced.style_select',
 				onselect : function(name) {
-					ed.execCommand('mceToggleFormat', false, name);
+					var matches, formatNames = [];
+
+					each(ctrl.items, function(item) {
+						formatNames.push(item.value);
+					});
+
+					ed.focus();
+
+					// Toggle off the current format
+					matches = ed.formatter.matchAll(formatNames);
+					if (matches[0] == name)
+						ed.formatter.remove(name);
+					else
+						ed.formatter.apply(name);
 
 					return false; // No auto select
 				}
@@ -251,7 +264,8 @@
 
 							ed.formatter.register(name, {
 								inline : 'span',
-								classes : val
+								classes : val,
+								selector : '*'
 							});
 
 							ctrl.add(t.editor.translate(key), name);
@@ -300,28 +314,18 @@
 			var t = this, ed = t.editor, c, i = 0, cl = [];
 
 			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
-				if (v.fontSize)
+				if (v['class']) {
+					ed.focus();
+					ed.formatter.toggle('fontsize_class', {value : v['class']});
+				} else
 					ed.execCommand('FontSize', false, v.fontSize);
-				else {
-					each(t.settings.theme_advanced_font_sizes, function(v, k) {
-						if (v['class'])
-							cl.push(v['class']);
-					});
-
-					ed.editorCommands._applyInlineStyle('span', {'class' : v['class']}, {check_classes : cl});
-				}
 
 				return false; // No auto select
 			}});
 
 			if (c) {
 				each(t.settings.theme_advanced_font_sizes, function(v, k) {
-					var fz = v.fontSize;
-
-					if (fz >= 1 && fz <= 7)
-						fz = t.sizes[parseInt(fz) - 1] + 'pt';
-
-					c.add(k, v, {'style' : 'font-size:' + fz, 'class' : 'mceFontSize' + (i++) + (' ' + (v['class'] || ''))});
+					c.add(k, v);
 				});
 			}
 
