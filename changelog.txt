@@ -1,5 +1,16 @@
-Version 3.3.4 (xxxx-xx-xx)
-	Ephox supported release of TinyMCE 3.3.3 including the Ephox commercial license terms.
+Version 3.3.5 (xxxx-xx-xx)
+	Ephox supported release of TinyMCE 3.3.5 including the Ephox commercial license terms.
+Version 3.3.5 (2010-05-06)
+	Added new merge_with_parents option to formats, enables the control of removal of elements with similar parents.
+	Fixed so the default behavior for applying classes isn't a toggle state but the old behavior from before the 3.3 release.
+	Fixed bug where selecting contents using double click on Gecko would produce errors when using removing format.
+	Fixed bug where the IE DOM could get messed up when non valid contents was pasted into the editor.
+	Fixed bug where merging selected table cells using the context menu didn't work as expected.
+	Fixed bug where some nestled formatting would be applied incorrectly.
+	Fixed bug with enter in list items when using the force_br_newlines mode on WebKit patch contributed by Ryan Koopmans.
+	Fixed bug where undo/redo could produce js errors on some specific operations.
+	Fixed bug where the theme_advanced_font_sizes didn't work as before 3.3 when complex settings where used.
+	Fixed bug where the table plugin would copy cell/row id attributes when making new rows/cells.
 Version 3.3.4 (2010-04-27)
 	Fixed bug where fullscreen plugin would add two editor instances to EditorManager collection.
 	Fixed bug where it was difficult to enter text on non western languages such as Japanese on IE.

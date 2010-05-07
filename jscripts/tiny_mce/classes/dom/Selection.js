@@ -134,7 +134,7 @@
 					if (d.body.childNodes.length == 0) {
 						d.body.innerHTML = h;
 					} else {
-						r.insertNode(t.getRng().createContextualFragment(h));
+						r.insertNode(r.createContextualFragment(h));
 					}
 				}
 
@@ -362,7 +362,7 @@
 		 * @return {Boolean} true/false if it was successful or not.
 		 */
 		moveToBookmark : function(bookmark) {
-			var t = this, dom = t.dom, marker1, marker2, rng, root;
+			var t = this, dom = t.dom, marker1, marker2, rng, root, startContainer, endContainer, startOffset, endOffset;
 
 			// Clear selection cache
 			if (t.tridentSel)
@@ -394,8 +394,6 @@
 
 					t.setRng(rng);
 				} else if (bookmark.id) {
-					rng = dom.createRng();
-
 					function restoreEndPoint(suffix) {
 						var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
 
@@ -410,8 +408,8 @@
 									idx = 1;
 								}
 
-								rng.setStart(node, idx);
-								rng.setEnd(node, idx);
+								startContainer = endContainer = node;
+								startOffset = endOffset = idx;
 							} else {
 								if (!keep) {
 									idx = dom.nodeIndex(marker);
@@ -420,7 +418,8 @@
 									idx = 1;
 								}
 
-								rng.setEnd(node, idx);
+								endContainer = node;
+								endOffset = idx;
 							}
 
 							if (!keep) {
@@ -445,10 +444,12 @@
 									dom.remove(next);
 
 									if (suffix == 'start') {
-										rng.setStart(prev, idx);
-										rng.setEnd(prev, idx);
-									} else
-										rng.setEnd(prev, idx);
+										startContainer = endContainer = prev;
+										startOffset = endOffset = idx;
+									} else {
+										endContainer = prev;
+										endOffset = idx;
+									}
 								}
 							}
 						}
@@ -458,6 +459,9 @@
 					restoreEndPoint('start');
 					restoreEndPoint('end');
 
+					rng = dom.createRng();
+					rng.setStart(startContainer, startOffset);
+					rng.setEnd(endContainer, endOffset);
 					t.setRng(rng);
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);

@@ -175,7 +175,7 @@
 				};
 
 				ed.onKeyPress.add(function(ed, e) {
-					if (e.keyCode == 13 && (e.shiftKey || s.force_br_newlines)) {
+					if (e.keyCode == 13 && (e.shiftKey || (s.force_br_newlines && !dom.getParent(selection.getNode(), 'ol,ul')))) {
 						insertBr(ed);
 						Event.cancel(e);
 					}

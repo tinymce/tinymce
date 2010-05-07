@@ -308,7 +308,7 @@
 							t._checkDone();
 
 							// tell the server if we need to
-							if (ignore_rpc) {
+							if (ignoreRpc) {
 								ed.setProgressState(1);
 								t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
 									ed.setProgressState(0);
@@ -326,7 +326,7 @@
 							t._checkDone();
 
 							// tell the server if we need to
-							if (ignore_rpc) {
+							if (ignoreRpc) {
 								ed.setProgressState(1);
 								t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
 									ed.setProgressState(0);
