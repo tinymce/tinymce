@@ -707,10 +707,10 @@
 		 * Inserts the specified contents at the caret position.
 		 */
 		_insert : function(h, skip_undo) {
-			var ed = this.editor;
+			var ed = this.editor, r = ed.selection.getRng();
 
-			// First delete the contents seems to work better on WebKit
-			if (!ed.selection.isCollapsed())
+			// First delete the contents seems to work better on WebKit when the selection spans multiple list items or multiple table cells.
+			if (!ed.selection.isCollapsed() && r.startContainer != r.endContainer)
 				ed.getDoc().execCommand('Delete', false, null);
 
 			// It's better to use the insertHTML method on Gecko since it will combine paragraphs correctly before inserting the contents

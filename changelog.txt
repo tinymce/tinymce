@@ -1,5 +1,8 @@
-Version 3.3.5 (xxxx-xx-xx)
+<<<<<<< HEAD
+Version 3.3.5.1 (xxxx-xx-xx)
 	Ephox supported release of TinyMCE 3.3.5 including the Ephox commercial license terms.
+Version 3.3.5.1 (2010-05-07)
+	Fixed a critical bug with the fullscreen plugin. Produced error messages when the state was toggled on/off.
 Version 3.3.5 (2010-05-06)
 	Added new merge_with_parents option to formats, enables the control of removal of elements with similar parents.
 	Fixed so the default behavior for applying classes isn't a toggle state but the old behavior from before the 3.3 release.
