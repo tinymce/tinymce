@@ -605,8 +605,8 @@
 					// This lets us use the originally set range if the selection hasn't been changed by the user.
 					r = t.explicitRange;
 				} else {
-					t.selectedRange = undefined;
-					t.explicitRange = undefined;
+					t.selectedRange = null;
+					t.explicitRange = null;
 				}
 			}
 			return r;
