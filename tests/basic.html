@@ -14,14 +14,6 @@ test('commands - xhtmlTextStyles', function() {
 
 	expect(18);
 
-	function fontFace(face) {
-		if (tinymce.isOpera) {
-			return '&quot;' + face + '&quot;';
-		} else {
-			return face;
-		}
-	}
-
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Bold');
