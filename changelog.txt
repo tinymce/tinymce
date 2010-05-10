@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Version 3.3.5.1 (xxxx-xx-xx)
 	Ephox supported release of TinyMCE 3.3.5 including the Ephox commercial license terms.
 Version 3.3.5.1 (2010-05-07)
