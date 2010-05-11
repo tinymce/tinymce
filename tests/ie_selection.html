@@ -248,8 +248,33 @@ if (tinyMCE.isIE) {
 		equals(rng.startContainer.childNodes[0].innerHTML, '');
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div>&nbsp;</div>');
 	});
+	
+	test("Caret position before table", function() {
+		editor.setContent('<p>Before</p><table id="table" border="1"><tr><td>Cell 1</td><td>Cell 2</td></tr><tr><td>Cell 3</td><td>Cell 4</td></tr></table><p>After</p>');
+		
+		var table = editor.dom.get('table');
+		
+		rng = editor.selection.getRng();
+		rng.moveToElementText(table);
+		rng.move('character', -1);
+		rng.select();
+		
+		rng = editor.selection.getRng(1);
+		equals(rng.startContainer.nodeName, 'BODY');
+		equals(rng.startOffset, 1);
+		equals(rng.endContainer.nodeName, 'BODY');
+		equals(rng.endOffset, 1);
+	});
 } else {
 	test("Skipped ie_selection tests as not running in IE.", function() {});
+}
+
+function getCaretInfo() {
+	editor.focus();
+	var rng = editor.selection.getRng(1);
+	alert(rng.startContainer + " - " + rng.startOffset);
+	alert(rng.endContainer + " - " + rng.endOffset);
+	editor.focus();
 }
 
 tinyMCE.init({
@@ -275,6 +300,7 @@ tinyMCE.init({
 		<div>
 			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
 			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+			<a href="javascript:getCaretInfo();">[getCaretInfo]</a>
 		</div>
 	</div>
 </body>
