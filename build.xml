@@ -324,7 +324,12 @@
 		<!-- Compress development package -->
 		<delete file="${temp_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
 		<zip destfile="${temp_dir}/tinymce_${file_version}_dev.zip">
-			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce" />
+			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce">
+				<exclude name="LICENSE.TXT" />
+			</zipfileset>
+			<zipfileset dir="${temp_dir}/tinymce/jscripts/tiny_mce" prefix="tinymce">
+				<include name="license.txt" />
+			</zipfileset>
 		</zip>
 
 		<!-- Compress production package -->
@@ -334,6 +339,7 @@
 				<include name="tinymce/jscripts/**" />
 				<include name="tinymce/examples/**" />
 				<include name="tinymce/changelog.txt" />
+				<exclude name="tinymce/LICENSE.TXT" />
 				<exclude name="tinymce/examples/full_jquery.html" />
 				<exclude name="tinymce/jscripts/tiny_mce/classes/**" />
 				<exclude name="tinymce/jscripts/tiny_mce/jquery.tinymce.js" />
@@ -343,6 +349,9 @@
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
+			<zipfileset dir="${temp_dir}/tinymce/jscripts/tiny_mce" prefix="tinymce">
+				<include name="license.txt" />
+			</zipfileset>
 		</zip>
 
 		<!-- Compress production package for jquery -->

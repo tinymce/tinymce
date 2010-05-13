@@ -1,5 +1,5 @@
 Version 3.3.5.1 (xxxx-xx-xx)
-	Ephox supported release of TinyMCE 3.3.5 including the Ephox commercial license terms.
+	Ephox supported release of TinyMCE 3.3.5.1.
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
 Version 3.3.5.1 (2010-05-07)
 	Fixed a critical bug with the fullscreen plugin. Produced error messages when the state was toggled on/off.
