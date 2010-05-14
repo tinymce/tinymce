@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
 <script>
 var editor;
 
@@ -520,10 +520,10 @@ test('Formatter - apply (block)', function() {
 	equals(getContent(), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 3');
 });
 
-test('Formatter - apply (block wrapper 1)', function() {
+test('Formatter - apply (block wrapper)', function() {
 	var rng;
 
-	expect(1);
+	expect(3);
 
 	// Block element wrapper 1
 	editor.formatter.register('format', {block : 'blockquote', wrapper : 1});
@@ -534,12 +534,6 @@ test('Formatter - apply (block wrapper 1)', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	equals(getContent(), '<blockquote><h1>1234</h1><p>5678</p></blockquote>', 'Block element wrapper 1');
-});
-
-test('Formatter - apply (block wrapper 2)', function() { 
-	var rng;
-
-	expect(1);
 
 	// Block element wrapper 2
 	editor.formatter.register('format', {block : 'blockquote', wrapper : 1});
@@ -548,24 +542,16 @@ test('Formatter - apply (block wrapper 2)', function() {
 	rng.setStart(editor.dom.select('h1')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
 	editor.selection.setRng(rng);
-	
 	editor.formatter.apply('format');
 	equals(getContent(), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 2');
-});
 
-test('Formatter - apply (block wrapper 3)', function() {
-	var rng;
-
-	expect(1);
-	
 	// Block element wrapper 3
 	editor.formatter.register('format', {block : 'blockquote', wrapper : 1});
 	editor.getBody().innerHTML = '<br /><h1>1234</h1><br /><p>foo</p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody(), 0);
-	rng.setEnd(editor.getBody(), 4);
+	rng.setEnd(editor.getBody(), 3);
 	editor.selection.setRng(rng);
-
 	editor.formatter.apply('format');
 	equals(getContent(), '<blockquote><h1>1234</h1><p>foo</p></blockquote>', 'Block element wrapper 3');
 });

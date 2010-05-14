@@ -1935,7 +1935,7 @@
 				r.setStart(e.parentNode, t.nodeIndex(e) + 1);
 				r.setEnd(pe.parentNode, t.nodeIndex(pe) + 1);
 				aft = r.extractContents();
-				
+
 				// Insert before chunk
 				pa = pe.parentNode;
 				pa.insertBefore(trim(bef), pe);
