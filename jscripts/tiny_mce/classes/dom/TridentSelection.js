@@ -225,9 +225,17 @@
 
 			// If same text container then we can do a more simple move
 			if (sc == ec && sc.nodeType == 3) {
-				ieRng.moveEnd('character', eo - so);
-				ieRng.select();
-				ieRng.scrollIntoView();
+				try {
+					ieRng.moveEnd('character', eo - so);
+					ieRng.select();
+					ieRng.scrollIntoView();
+				} catch (ex) {
+					// Some times a Runtime error of the 800a025e type gets thrown
+					// especially when the caret is placed before a table.
+					// This is a somewhat strange location for the caret.
+					// TODO: Find a better solution for this would possible require a rewrite of the setRng method
+				}
+
 				return;
 			}
 

@@ -1,6 +1,7 @@
 Version 3.3.x (2010-05-xx)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
 	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.
+	Fixed bug where IE would produce an error if the caret was placed before a table and you used the align buttons.
 Version 3.3.5.1 (2010-05-07)
 	Fixed a critical bug with the fullscreen plugin. Produced error messages when the state was toggled on/off.
 Version 3.3.5 (2010-05-06)
