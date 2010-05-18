@@ -1,9 +1,6 @@
 <?xml version="1.0" ?>
 <project name="build-utils">
 	<dirname property="build-utils.dir" file="${ant.file.build-utils}" />
-	
-	<!-- Hudson Retrieval Utils -->
-	<property name="artifact-name-url" value="http://hudson.dev.ephox.com/job/TinyMCE%20Stable%20Build/lastSuccessfulBuild/api/xml?xpath=artifact/relativePath[contains(text(),'enterprisetinymce')]/text()" />
 
 	<macrodef name="getArtifactName">
 		<attribute name="artifactUrl" 
@@ -24,7 +21,7 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="getArtifact">
+	<macrodef name="getArtifact" description="Retrieves an artifact from a Hudson build.">
 		<attribute name="dest" description="The file or directory to store the artifact in. If this is a directory, the original artifact name will be used." />
 		
 		<attribute name="buildUrl"
@@ -46,6 +43,25 @@
 			<getArtifactName property="build-utils.artifactName" artifacturl="@{artifactUrl}" username="@{username}" password="@{password}" />
 			<get dest="@{dest}"
 				src="@{buildUrl}/artifact/${build-utils.artifactName}"
+				username="${username}" password="${password}"/>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="getBuildInfo" description="Retrieves the XML build information from Hudson.">
+		<attribute name="dest" description="The file to store the build details in." />
+		
+		<attribute name="buildUrl"
+			description="The URL to the build to get the details for." />
+		
+		<attribute name="username" default="${username}"
+			description="The username to login with." />
+		
+		<attribute name="password" default="${password}"
+			description="The password to login with." />
+		
+		<sequential>
+			<get dest="@{dest}"
+				src="@{buildUrl}/api/xml"
 				username="${username}" password="${password}"/>
 		</sequential>
 	</macrodef>
