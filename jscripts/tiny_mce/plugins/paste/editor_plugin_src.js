@@ -134,6 +134,13 @@
 			function grabContent(e) {
 				var n, or, rng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY;
 
+				// Check if browser supports direct plaintext access
+				if (ed.pasteAsPlainText && (e.clipboardData || dom.doc.dataTransfer)) {
+					e.preventDefault();
+					process({content : (e.clipboardData || dom.doc.dataTransfer).getData('Text')}, true);
+					return;
+				}
+
 				if (dom.get('_mcePaste'))
 					return;
 
@@ -207,8 +214,12 @@
 								dom.remove(n, 1);
 							});
 
-							// Contents in WebKit is sometimes wrapped in a apple style span so we need to grab it from that one
-							h += (dom.select('> span.Apple-style-span div', n)[0] || dom.select('> span.Apple-style-span', n)[0] || n).innerHTML;
+							// Remove apply style spans
+							each(dom.select('span.Apple-style-span', n), function(n) {
+								dom.remove(n, 1);
+							});
+
+							h += n.innerHTML;
 						});
 
 						// Remove the nodes

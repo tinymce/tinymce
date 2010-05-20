@@ -1,6 +1,13 @@
-Version 3.3.5.1 (xxxx-xx-xx)
-	Ephox supported release of TinyMCE 3.3.5.1.
+Version 3.3.6 (xxxx-xx-xx)
+	Ephox distribution of TinyMCE 3.3.6.
+Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
+	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.
+	Fixed bug where IE would produce an error if the caret was placed before a table and you used the align buttons.
+	Fixed bug where the font size drop down didn't display the a preview correctly.
+	Fixed bug where the paste plugin wouldn't include all contents some times on WebKit browsers.
+	Fixed bug where the plain text mode toggle wouldn't work properly on WebKit.
+	Fixed bug where the editors statusbar would become invisible when you resized the window in fullscreen mode.
 Version 3.3.5.1 (2010-05-07)
 	Fixed a critical bug with the fullscreen plugin. Produced error messages when the state was toggled on/off.
 Version 3.3.5 (2010-05-06)

@@ -472,6 +472,12 @@
 				var node = dom.get(start ? '_start' : '_end'),
 					out = node[start ? 'firstChild' : 'lastChild'];
 
+				// If the end is placed within the start the result will be removed
+				// So this checks if the out node is a bookmark node if it is it
+				// checks for another more suitable node
+				if (isBookmarkNode(out))
+					out = out[start ? 'firstChild' : 'lastChild'];
+
 				dom.remove(node, true);
 
 				return out;
@@ -1484,7 +1490,7 @@
 							// Do we have pending formats and is the selection moved has moved
 							if (hasPending() && !tinymce.dom.RangeUtils.compareRanges(pendingFormats.lastRng, selection.getRng())) {
 								each(dom.select('font,span'), function(node) {
-									var bookmark, textNode, rng;
+									var textNode, rng;
 
 									// Look for marker
 									if (isCaretNode(node)) {

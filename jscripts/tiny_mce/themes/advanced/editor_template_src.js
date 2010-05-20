@@ -325,7 +325,12 @@
 
 			if (c) {
 				each(t.settings.theme_advanced_font_sizes, function(v, k) {
-					c.add(k, v);
+					var fz = v.fontSize;
+
+					if (fz >= 1 && fz <= 7)
+						fz = t.sizes[parseInt(fz) - 1] + 'pt';
+
+					c.add(k, v, {'style' : 'font-size:' + fz, 'class' : 'mceFontSize' + (i++) + (' ' + (v['class'] || ''))});
 				});
 			}
 
