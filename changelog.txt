@@ -1,4 +1,4 @@
-Version 3.3.6 (2010-05-xx)
+Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
 	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.
 	Fixed bug where IE would produce an error if the caret was placed before a table and you used the align buttons.
