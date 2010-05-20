@@ -213,7 +213,7 @@
 		<copy todir="${temp_dir}/tinymce">
 			<fileset dir=".">
 				<include name="**"/>
-				<exclude name="**/.git/**"/>
+				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 		</copy>
