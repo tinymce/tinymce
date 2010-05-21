@@ -1,5 +1,6 @@
 Version 3.3.x (2010-xx-xx)
 	Fixed bug where context menu would produce an error on IE if you right clicked twice and left clicked once.
+	Fixed bug where resizing of the window on WebKit browsers in fullscreen mode wouldn't position the statusbar correctly.
 Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
 	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.
