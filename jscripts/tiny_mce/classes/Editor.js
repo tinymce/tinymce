@@ -2390,7 +2390,7 @@
 
 			// Add node change handlers
 			t.onMouseUp.add(t.nodeChanged);
-			t.onClick.add(t.nodeChanged);
+			//t.onClick.add(t.nodeChanged);
 			t.onKeyUp.add(function(ed, e) {
 				var c = e.keyCode;
 

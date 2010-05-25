@@ -3,6 +3,7 @@ Version 3.3.x (2010-xx-xx)
 	Fixed bug where resizing of the window on WebKit browsers in fullscreen mode wouldn't position the statusbar correctly.
 	Fixed bug where IE would produce an error if the editor was empty and you where undoing to that initial level.
 	Fixed bug where setting the table background on gecko would produce \" entities inside the url style property.
+	Fixed bug where the button states wouldn't be updated correctly on IE if you placed the caret inside the new element.
 	Fixed bug a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
 Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
