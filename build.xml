@@ -323,7 +323,7 @@
 		
 		<!-- Compress development package -->
 		<delete file="${temp_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
-		<zip destfile="${temp_dir}/tinymce_${file_version}_dev.zip">
+		<zip destfile="${temp_dir}/communitytinymce_${file_version}.zip">
 			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce">
 				<exclude name="LICENSE.TXT" />
 			</zipfileset>
@@ -334,7 +334,7 @@
 
 		<!-- Compress production package -->
 		<delete file="${temp_dir}/tinymce_${file_version}.zip" quiet="true" />
-		<zip destfile="${temp_dir}/communitytinymce_${file_version}.zip" excludes="**/classes">
+		<zip destfile="${temp_dir}/tinymce_${file_version}.zip" excludes="**/classes">
 			<fileset dir="${temp_dir}">
 				<include name="tinymce/jscripts/**" />
 				<include name="tinymce/examples/**" />
