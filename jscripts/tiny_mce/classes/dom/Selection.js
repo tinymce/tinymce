@@ -374,12 +374,16 @@
 					root = dom.getRoot();
 
 					function setEndPoint(start) {
-						var point = bookmark[start ? 'start' : 'end'], i, node, offset;
+						var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
 
 						if (point) {
 							// Find container node
-							for (node = root, i = point.length - 1; i >= 1; i--)
-								node = node.childNodes[point[i]];
+							for (node = root, i = point.length - 1; i >= 1; i--) {
+								children = node.childNodes;
+
+								if (children.length)
+									node = children[point[i]];
+							}
 
 							// Set offset within container node
 							if (start)
