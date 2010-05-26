@@ -41,6 +41,13 @@
 				// Create marker and insert it at the end of the endpoints parent
 				marker = dom.create('a');
 				parent = checkRng.parentElement();
+
+				// If parent doesn't have any children then set the container to that parent and the index to 0
+				if (!parent.hasChildNodes()) {
+					domRange[start ? 'setStart' : 'setEnd'](parent, 0);
+					return;
+				}
+
 				parent.appendChild(marker);
 				checkRng.moveToElementText(marker);
 				position = ieRange.compareEndPoints(start ? 'StartToStart' : 'EndToEnd', checkRng);
@@ -78,7 +85,9 @@
 
 				// Setup container
 				container = position > 0 || index == 0 ? marker.nextSibling : marker.previousSibling;
-
+if (!container) {
+	console.log(start, parent, parent.innerHTML);
+}
 				// Handle element selection
 				if (container.nodeType == 1) {
 					dom.remove(marker);

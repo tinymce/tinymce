@@ -267,6 +267,21 @@ if (tinyMCE.isIE) {
 		equals(rng.endContainer.nodeName, 'BODY');
 		equals(rng.endOffset, 1);
 	});
+
+	test("Selection end within emtpy element", function() {
+		var rng;
+
+		editor.focus();
+		editor.getBody().innerHTML = '<p>123</p><p></p>';
+
+		rng = editor.execCommand('SelectAll');
+
+		rng = editor.selection.getRng(true);
+		equals(rng.startContainer.nodeName, '#text');
+		equals(rng.startOffset, 0);
+		equals(rng.endContainer.nodeName, 'P');
+		equals(rng.endOffset, 0);
+	});
 } else {
 	test("Skipped ie_selection tests as not running in IE.", function() {});
 }
