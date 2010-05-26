@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Basic editor functionality tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script>
+var editor;
+
+function getFunctionName(func) {
+	if (typeof func == "function" || typeof func == "object") {
+	  	var fName = ("" + func).match(/function\s*([\w\$]*)\s*\(/);
+	  	if (fName !== null) {
+	  		return fName[1];
+	  	}
+	}
+}
+
+function assertState(expected, message) {
+	equals(editor.getContent(), expected, message);
+}
+
+// Note: this only triggers the default action in FireFox.
+function fakeKeyPress(keyCode) {
+	function fireKeyEvent(type, keyCode){
+		var doc = editor.getWin().document;
+		var targetElement = editor.selection.getNode();
+		if (doc.createEvent) {
+			var evt;
+			if (editor.getWin().KeyEvent) {
+				evt = doc.createEvent('KeyEvents');
+				// type, canBubble, cancelable, view, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
+				evt.initKeyEvent(type, true, true, editor.getWin(), false, false, false, false, keyCode, '\n');
+			} else {
+				evt = doc.createEvent('UIEvents');
+				evt.initUIEvent(type, true, true, editor.getWin(), 1);
+				evt.keyCode = keyCode;
+				evt.keyChar = '\n';
+			}
+			targetElement.dispatchEvent(evt);
+		} else {
+			if (doc.createEventObject) {
+				var evt = doc.createEventObject();
+				evt.keyCode = keyCode;
+				evt.keyChar = '\n';
+				targetElement.fireEvent("on" + type, evt);
+			}
+		}
+	}
+	
+	return function() {
+		fireKeyEvent("keydown", keyCode);
+		fireKeyEvent("keypress", keyCode);
+		fireKeyEvent("keyup", keyCode);
+	};
+}
+
+// Initial States
+function setupState(content, selector, offset) {
+	editor.setContent(content);
+	setSelection(selector, offset);
+}
+
+function setSelection(selector, offset){
+	var container;
+	if (tinymce.is(selector, 'string')) {
+		container = editor.dom.select(selector)[0];
+	} else {
+		container = selector;
+	}
+	if (container.firstChild) {
+		container = container.firstChild;
+	}
+	var rng = editor.dom.createRng();
+	rng.setStart(container, offset);
+	rng.setEnd(container, offset);
+	editor.selection.setRng(rng);
+}
+
+function EmptyParagraph() {
+	var body = editor.getBody();
+	while (body.firstChild) {
+		editor.dom.remove(body.firstChild);
+	}
+	var p = body.ownerDocument.createElement('p');
+	p.appendChild(body.ownerDocument.createTextNode(''));
+	body.appendChild(p, body);
+	setSelection(p.firstChild, 0);
+}
+
+function EmptyHeading() {
+	EmptyParagraph();
+	editor.formatter.apply('h1');
+}
+
+function NonEmptyParagraph() {
+	setupState('<p>Test</p>', 'p', 0);
+}
+
+function NonEmptyHeading() {
+	setupState('<h1>Test</h1>', 'h1', 0);
+}
+
+function TableCellWithoutBrs() {
+	setupState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
+}
+
+function TableCellWithBrs() {
+	setupState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+}
+
+function EndOfParagraphBeforeOL() {
+	setupState('<p>Test</p><ol><li>Item</li></ol>', 'p', 4);
+}
+
+function EndOfParagraphBeforeUL() {
+	setupState('<p>Test</p><ul><li>Item</li></ul>', 'p', 4);
+}
+
+function StartOfParagraphAfterOL() {
+	// TODO: This should be 0 but then IE seems to select the element before. Something wrong with the IE range emulation?
+	setupState('<ol><li>Item</li></ol><p>Test</p>', 'p', 1);
+}
+
+function StartOfParagraphAfterUL() {
+	// TODO: This should be 0 but then IE seems to select the element before. Something wrong with the IE range emulation?
+	setupState('<ul><li>Item</li></ul><p>Test</p>', 'p', 1);
+}
+
+function EmptyOrderedListItem() {
+	setupState('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>', 'li:nth-child(2)', 0);
+}
+
+function EmptyUnorderedListItem() {
+	setupState('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>', 'li:nth-child(2)', 0);
+}
+
+function NonEmptyOrderedListItem() {
+	setupState('<ol><li>Before</li><li>Test</li><li>After</li></ol>', 'li:nth-child(2)', 0);
+}
+
+function NonEmptyUnorderedListItem() {
+	setupState('<ul><li>Before</li><li>Test</li><li>After</li></ul>', 'li:nth-child(2)', 0);
+}
+
+function NestedEmptyOrderedListItem() {
+	setupState('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>', 'li ol li', 0);
+}
+
+function NestedEmptyUnorderedListItem() {
+	setupState('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>', 'li ul li', 0);
+}
+
+function NestedNonEmptyOrderedListItem() {
+	setupState('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>', 'li ol li', 0);
+}
+
+function NestedNonEmptyUnorderedListItem() {
+	setupState('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>', 'li ul li', 0);
+}
+
+// Expected Results
+var EmptyOL = "<ol><li></li></ol>";
+var EmptyUL = "<ul><li></li></ul>";
+var NonEmptyOL = "<ol><li>Test</li></ol>";
+var NonEmptyUL = "<ul><li>Test</li></ul>";
+var EmptyOLConvertedToP = '<ol><li>Before</li></ol><p>&nbsp;</p><ol><li>After</li></ol>';
+var EmptyULConvertedToP = '<ul><li>Before</li></ul><p>&nbsp;</p><ul><li>After</li></ul>';
+var NonEmptyOLConvertedToP = '<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>';
+var NonEmptyULConvertedToP = '<ul><li>Before</li></ul><p>Test</p><ul><li>After</li></ul>';
+
+// User Actions
+
+tinymce.create('dsl.Action', {
+	Action: function(name, action) {
+		this.name = name;
+		this.a = this.to;
+		this.inA = this.to;
+		if (tinymce.is(action, 'string')) {
+			this.action = function() { editor.execCommand(action); };
+		} else {
+			this.action = action;
+		}
+	},
+	
+	to: function(state) {
+		this.message = this.name + " to " + getFunctionName(state); 
+		state();
+		this.action();
+		return this;
+	},
+	
+	gives: function(expected) {
+		assertState(expected, this.message);
+	}
+});
+
+function createAction(name, action) {
+	window[name.replace(/\s+/, '')] = new dsl.Action(name, action);
+}
+createAction('Applying OL', 'InsertOrderedList');
+createAction('Applying UL', 'InsertUnorderedList');
+createAction('Indenting', 'Indent');
+createAction('Outdenting', 'Outdent');
+createAction('TypingEnter', fakeKeyPress(13));
+
+// Tests
+test('Collapsed Selection - Apply OL Actions', function() {
+	expect(14);
+	
+	ApplyingOL.to(EmptyParagraph).gives(EmptyOL);
+	
+	ApplyingOL.to(EmptyHeading).gives(EmptyOL);
+	
+	ApplyingOL.to(NonEmptyParagraph).gives(NonEmptyOL);
+	ApplyingOL.to(NonEmptyHeading).gives(NonEmptyOL);
+	
+	ApplyingOL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingOL.to(TableCellWithBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingOL.to(EndOfParagraphBeforeOL).gives('<ol><li>Test</li><li>Item</li></ol>');
+	ApplyingOL.to(EndOfParagraphBeforeUL).gives('<ol><li>Test</li></ol><ul><li>Item</li></ul>');
+	
+	ApplyingOL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li><li>Test</li></ol>');
+	ApplyingOL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
+	
+	ApplyingOL.to(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
+	ApplyingOL.to(EmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>&nbsp;</li></ol><ul><li>After</li></ul>');
+	
+	ApplyingOL.to(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
+	ApplyingOL.to(NonEmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
+});
+
+test('Collapsed Selection - Apply UL Actions', function() {
+	expect(14);
+	ApplyingUL.to(EmptyParagraph).gives(EmptyUL);
+	ApplyingUL.to(EmptyHeading).gives(EmptyUL);
+	
+	ApplyingUL.to(NonEmptyParagraph).gives(NonEmptyUL);
+	ApplyingUL.to(NonEmptyHeading).gives(NonEmptyUL);
+	
+	ApplyingUL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ul><li>Test</li></ul></td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingUL.to(TableCellWithBrs).gives('<table><tbody><tr><td><ul><li>Test</li></ul>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingUL.to(EndOfParagraphBeforeOL).gives('<ul><li>Test</li></ul><ol><li>Item</li></ol>');
+	ApplyingUL.to(EndOfParagraphBeforeUL).gives('<ul><li>Test</li><li>Item</li></ul>');
+	
+	ApplyingUL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li></ol><ul><li>Test</li></ul>');
+	ApplyingUL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li><li>Test</li></ul>');
+	
+	ApplyingUL.to(EmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>&nbsp;</li></ul><ol><li>After</li></ol>');
+	ApplyingUL.to(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
+	
+	ApplyingUL.to(NonEmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>Test</li></ul><ol><li>After</li></ol>');
+	ApplyingUL.to(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+});
+
+test('Collapsed Selection - Indent Actions', function() {
+	expect(8);
+	Indenting.a(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
+	Indenting.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
+	Indenting.a(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
+	Indenting.a(NonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
+	
+	Indenting.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
+	Indenting.a(NestedEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
+	Indenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
+	Indenting.a(NestedNonEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
+});
+
+test('Collapsed Selection - Outdent Actions', function() {
+	expect(8);
+	Outdenting.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
+	Outdenting.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
+	Outdenting.a(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
+	Outdenting.a(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+	
+	Outdenting.a(NestedEmptyOrderedListItem).gives('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>');
+	Outdenting.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
+	Outdenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
+	Outdenting.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
+});
+
+test('Collapsed Selection - Type Enter', function() {
+	TypingEnter.inA(EmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ol>');
+});
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	cleanup: true,
+	fix_list_elements: true,
+	add_unload_trigger : false,
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+
+		ed.onNodeChange.addToTop(function() {
+			return false;
+		});
+
+		QUnit.setup();
+	}
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Basic editor functionality tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+		<div>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+		</div>
+	</div>
+</body>
+</html>
