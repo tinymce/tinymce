@@ -226,6 +226,7 @@
 					});
 
 					ed.focus();
+					ed.undoManager.add();
 
 					// Toggle off the current format
 					matches = ed.formatter.matchAll(formatNames);
@@ -233,6 +234,9 @@
 						ed.formatter.remove(name);
 					else
 						ed.formatter.apply(name);
+
+					ed.undoManager.add();
+					ed.nodeChanged();
 
 					return false; // No auto select
 				}
@@ -316,7 +320,10 @@
 			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
 				if (v['class']) {
 					ed.focus();
+					ed.undoManager.add();
 					ed.formatter.toggle('fontsize_class', {value : v['class']});
+					ed.undoManager.add();
+					ed.nodeChanged();
 				} else
 					ed.execCommand('FontSize', false, v.fontSize);
 
