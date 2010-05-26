@@ -224,7 +224,10 @@ if (!container) {
 				// Select marker the caret to offset position
 				ieRng.moveToElementText(marker);
 				marker.parentNode.removeChild(marker);
-				ieRng.move('character', so);
+
+				// Move if we need to, moving it 0 characters actually moves it!
+				if (so > 0)
+					ieRng.move('character', so);
 			} else {
 				ieRng.moveToElementText(sc);
 
