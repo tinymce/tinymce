@@ -301,6 +301,12 @@
 				title : 'advanced.fontdefault',
 				onselect : function(v) {
 					ed.execCommand('FontName', false, v);
+
+					// Fake selection, execCommand will fire a nodeChange and update the selection
+					c.select(function(sv) {
+						return v == sv;
+					});
+
 					return false; // No auto select
 				}
 			});
@@ -326,6 +332,11 @@
 					ed.nodeChanged();
 				} else
 					ed.execCommand('FontSize', false, v.fontSize);
+
+				// Fake selection, execCommand will fire a nodeChange and update the selection
+				c.select(function(sv) {
+					return v == sv;
+				});
 
 				return false; // No auto select
 			}});

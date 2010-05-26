@@ -355,7 +355,7 @@
 					rng.setStartBefore(node);
 					rng.setEndAfter(node);
 
-					applyRngStyle(rng);
+					applyRngStyle(expandRng(rng, formatList));
 				} else {
 					if (!selection.isCollapsed() || !format.inline) {
 						// Apply formatting to selection
