@@ -1496,13 +1496,16 @@
 									if (isCaretNode(node)) {
 										textNode = node.firstChild;
 
-										perform(node);
+										if (textNode) {
+											perform(node);
 
-										rng = dom.createRng();
-										rng.setStart(textNode, textNode.nodeValue.length);
-										rng.setEnd(textNode, textNode.nodeValue.length);
-										selection.setRng(rng);
-										ed.nodeChanged();
+											rng = dom.createRng();
+											rng.setStart(textNode, textNode.nodeValue.length);
+											rng.setEnd(textNode, textNode.nodeValue.length);
+											selection.setRng(rng);
+											ed.nodeChanged();
+										} else
+											dom.remove(node);
 									}
 								});
 

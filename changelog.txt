@@ -7,7 +7,8 @@ Version 3.3.x (2010-xx-xx)
 	Fixed bug where undo levels wasn't properly added after applying styles or font sizes.
 	Fixed bug where IE would throw an error if you used "select all" on empty elements and applied formatting to that.
 	Fixed bug where IE could select one extra character when you did a bookmark call on a caret location.
-	Fixed bug a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
+	Fixed bug where formatting states wasn't updated on IE if you pressed enter at the end of a block with formatting.
+	Fixed a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
 	Fixed so formats applied to the current caret gets merged to reduce the number of output elements.
 Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.

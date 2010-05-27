@@ -19,6 +19,27 @@
 		TRUE = true,
 		FALSE = false;
 
+	function cloneFormats(node) {
+		var clone, temp, inner;
+
+		do {
+			if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(node.nodeName)) {
+				if (clone) {
+					temp = node.cloneNode(false);
+					temp.appendChild(clone);
+					clone = temp;
+				} else {
+					clone = inner = node.cloneNode(false);
+				}
+
+				clone.removeAttribute('id');
+			}
+		} while (node = node.parentNode);
+
+		if (clone)
+			return {wrapper : clone, inner : inner};
+	};
+
 	// Checks if the selection/caret is at the end of the specified block element
 	function isAtEnd(rng, par) {
 		var rng2 = par.ownerDocument.createRange();
@@ -130,11 +151,54 @@
 				}
 			}
 
-			if (!isIE && s.force_p_newlines) {
-				ed.onKeyPress.add(function(ed, e) {
-					if (e.keyCode == 13 && !e.shiftKey && !t.insertPara(e))
-						Event.cancel(e);
-				});
+			if (s.force_p_newlines) {
+				if (!isIE) {
+					ed.onKeyPress.add(function(ed, e) {
+						if (e.keyCode == 13 && !e.shiftKey && !t.insertPara(e))
+							Event.cancel(e);
+					});
+				} else {
+					// Ungly hack to for IE to preserve the formatting when you press
+					// enter at the end of a block element with formatted contents
+					// This logic overrides the browsers default logic with
+					// custom logic that enables us to control the output
+					tinymce.addUnload(function() {
+						t._previousFormats = 0; // Fix IE leak
+					});
+
+					ed.onKeyPress.add(function(ed, e) {
+						t._previousFormats = 0;
+
+						// Clone the current formats, this will later be applied to the new block contents
+						if (e.keyCode == 13 && !e.shiftKey && ed.selection.isCollapsed() && s.keep_styles)
+							t._previousFormats = cloneFormats(ed.selection.getStart());
+					});
+
+					ed.onKeyUp.add(function(ed, e) {
+						// Let IE break the element and the wrap the new caret location in the previous formats
+						if (e.keyCode == 13 && !e.shiftKey) {
+							var parent = ed.selection.getStart(), fmt = t._previousFormats;
+
+							// Parent is an empty block
+							if (!parent.hasChildNodes()) {
+								parent = dom.getParent(parent, dom.isBlock);
+
+								if (parent) {
+									parent.innerHTML = '';
+	
+									if (t._previousFormats) {
+										parent.appendChild(fmt.wrapper);
+										fmt.inner.innerHTML = '\uFEFF';
+									} else
+										parent.innerHTML = '\uFEFF';
+
+									selection.select(parent, 1);
+									ed.getDoc().execCommand('Delete', false, null);
+								}
+							}
+						}
+					});
+				}
 
 				if (isGecko) {
 					ed.onKeyDown.add(function(ed, e) {
