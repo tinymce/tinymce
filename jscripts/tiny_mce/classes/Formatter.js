@@ -142,11 +142,15 @@
 				// Move startContainer/startOffset in to a suitable node
 				if (container.nodeType == 1 || container.nodeValue === "") {
 					container = container.nodeType == 1 ? container.childNodes[offset] : container;
-					walker = new TreeWalker(container, container.parentNode);
-					for (node = walker.current(); node; node = walker.next()) {
-						if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
-							rng.setStart(node, 0);
-							break;
+
+					// Might fail if the offset is behind the last element in it's container
+					if (container) {
+						walker = new TreeWalker(container, container.parentNode);
+						for (node = walker.current(); node; node = walker.next()) {
+							if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
+								rng.setStart(node, 0);
+								break;
+							}
 						}
 					}
 				}
