@@ -85,9 +85,7 @@
 
 				// Setup container
 				container = position > 0 || index == 0 ? marker.nextSibling : marker.previousSibling;
-if (!container) {
-	console.log(start, parent, parent.innerHTML);
-}
+
 				// Handle element selection
 				if (container.nodeType == 1) {
 					dom.remove(marker);

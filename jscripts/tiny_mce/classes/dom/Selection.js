@@ -408,7 +408,7 @@
 								if (!keep) {
 									idx = dom.nodeIndex(marker);
 								} else {
-									node = marker;
+									node = marker.firstChild;
 									idx = 1;
 								}
 
@@ -418,7 +418,7 @@
 								if (!keep) {
 									idx = dom.nodeIndex(marker);
 								} else {
-									node = marker;
+									node = marker.firstChild;
 									idx = 1;
 								}
 
