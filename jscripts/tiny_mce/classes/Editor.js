@@ -2564,6 +2564,23 @@
 				});
 
 				t.onKeyDown.add(function(ed, e) {
+					var node, tempNode;
+
+					// IE has a really odd bug where the DOM might include an node that doesn't have
+					// a proper structure. If you try to access nodeValue it would throw an illegal value exception.
+					// This seems to only happen when you delete contents and you seem to be able to avoid it by adding a node
+					// before the selection start and then instantly remove it. Maybe IE refreshes the node collection?!?
+					// Who knows since it's closed source. See: #3008923
+					if (isIE && e.keyCode == 46) {
+						node = t.selection.getStart();
+
+						if (node.firstChild) {
+							tempNode = t.getDoc().createComment('<!-- IE! -->');
+							node.insertBefore(tempNode, node.firstChild);
+							node.removeChild(tempNode);
+						}
+					}
+
 					// Is caracter positon keys
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
 						if (t.undoManager.typing)
