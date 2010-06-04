@@ -10,6 +10,7 @@
 	<property name="src-dir" location="jscripts/tiny_mce/plugins/${ant.project.name}" />
 	<property name="plugin-src" value="${src-dir}/editor_plugin_src.js" />
 	<property name="plugin-minified" value="${src-dir}/editor_plugin.js" />
+	<property name="dist-file" value="${tmp-dir}/${ant.project.name}.zip" />
 	
 	<!-- Setup classpath for js-build-tools ant tasks -->
 	<path id="build-utils.tasks.classpath">
@@ -43,8 +44,10 @@
 	<target name="concatenate" depends="concatenate-file-list">
 		<concat destfile="${plugin-src}" eol="dos" fixlastline="true" encoding="UTF-8" outputencoding="UTF-8">
 			<header trimleading="true">(function() {</header>
-			<footer trimleading="true">})();</footer>
+				
 			<filelist dir="${src-dir}" files="${concatenate-file-list}" />
+			
+			<footer trimleading="true">})();</footer>
 		</concat>
 	</target>
 	
@@ -62,6 +65,13 @@
 		<copy todir="${tmp-dir}/${artifact-directory-name}">
 			<fileset refid="dist-files" />
 		</copy>
+	</target>
+	
+	<target name="dist" depends="minify">
+		<mkdir dir="${tmp-dir}" />
+		<zip destfile="${dist-file}">
+			<fileset refid="dist-files" />
+		</zip>
 	</target>
 	
 	<target name="release">
