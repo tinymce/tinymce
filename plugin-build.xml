@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project name="plugin-build">
+	<dirname property="plugin-build.dir" file="${ant.file.plugin-build}" />
+
+	<property name="build-dir" location="src" />
+	
+	<!-- Setup classpath for js-build-tools ant tasks -->
+	<path id="build-utils.tasks.classpath">
+		<pathelement location="."/>
+
+		<fileset dir="${plugin-build.dir}/tools/ant">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<!-- Register new js-build-tools ant tasks -->
+	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
+	
+	<target name="clean">
+	</target>
+		
+	<target name="build">
+		<yuicompress infile="${build-dir}/editor_plugin_src.js" outfile="${build-dir}/editor_plugin.js" />
+	</target>
+	
+	<target name="release">
+	</target>
+</project>
