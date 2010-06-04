@@ -1,8 +1,15 @@
 <?xml version="1.0"?>
 <project name="plugin-build">
 	<dirname property="plugin-build.dir" file="${ant.file.plugin-build}" />
+	
+	<property file="project.properties" />
+	
+	<import file="${plugin-build.dir}/build-utils.xml" />
 
-	<property name="build-dir" location="src" />
+	<property name="tmp-dir" location="tmp" />
+	<property name="src-dir" location="jscripts/tiny_mce/plugins/${ant.project.name}" />
+	<property name="plugin-src" value="${src-dir}/editor_plugin_src.js" />
+	<property name="plugin-minified" value="${src-dir}/editor_plugin.js" />
 	
 	<!-- Setup classpath for js-build-tools ant tasks -->
 	<path id="build-utils.tasks.classpath">
@@ -12,15 +19,49 @@
 			<include name="**/*.jar"/>
 		</fileset>
 	</path>
+
+	<fileset id="dist-files" dir="." includes="jscripts/**" excludes="**/filelist" />
 	
 	<!-- Register new js-build-tools ant tasks -->
 	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
 	
 	<target name="clean">
+		<delete file="${plugin-src}" />
+		<delete file="${plugin-minified}" />
+		<delete dir="${tmp-dir}" />
 	</target>
 		
-	<target name="build">
-		<yuicompress infile="${build-dir}/editor_plugin_src.js" outfile="${build-dir}/editor_plugin.js" />
+	<target name="concatenate-file-list">
+		<loadfile property="concatenate-file-list" srcfile="${src-dir}/filelist">
+			<filterchain>
+				<tokenfilter delimOutput="," />
+			</filterchain>
+		</loadfile>
+		<echo message="Concatenating files in order: ${concatenate-file-list}" />
+	</target>
+	
+	<target name="concatenate" depends="concatenate-file-list">
+		<concat destfile="${plugin-src}" eol="dos" fixlastline="true" encoding="UTF-8" outputencoding="UTF-8">
+			<header trimleading="true">(function() {</header>
+			<footer trimleading="true">})();</footer>
+			<filelist dir="${src-dir}" files="${concatenate-file-list}" />
+		</concat>
+	</target>
+	
+	<target name="minify" depends="concatenate">
+		<yuicompress infile="${plugin-src}" outfile="${plugin-minified}" />
+	</target>
+	
+	<target name="tinymce" unless="offline">
+		<mkdir dir="${tmp-dir}" />
+		<getArtifact buildurl="${artifact-build-url}" partialname="${artifact-name-contains}" dest="${tmp-dir}/tinymce.zip" />
+		<unzip dest="${tmp-dir}" src="${tmp-dir}/tinymce.zip" />
+	</target>
+		
+	<target name="build" depends="minify, tinymce">
+		<copy todir="${tmp-dir}/${artifact-directory-name}">
+			<fileset refid="dist-files" />
+		</copy>
 	</target>
 	
 	<target name="release">
