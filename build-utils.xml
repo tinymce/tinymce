@@ -15,7 +15,7 @@
 		<attribute name="property" description="The property to put the artifact name into." />
 		
 		<sequential>
-			<get dest="${build-utils.dir}/filename"
+			<get dest="${build-utils.dir}/filename" usetimestamp="true"
 				src="@{artifactUrl}" username="@{username}" password="@{password}" />
 			<loadfile property="@{property}" srcfile="${build-utils.dir}/filename" />
 		</sequential>
@@ -41,7 +41,7 @@
 		
 		<sequential>
 			<getArtifactName property="build-utils.artifactName" artifacturl="@{artifactUrl}" username="@{username}" password="@{password}" />
-			<get dest="@{dest}"
+			<get dest="@{dest}" usetimestamp="true"
 				src="@{buildUrl}/artifact/${build-utils.artifactName}"
 				username="${username}" password="${password}"/>
 		</sequential>
@@ -60,7 +60,7 @@
 			description="The password to login with." />
 		
 		<sequential>
-			<get dest="@{dest}"
+			<get dest="@{dest}" usetimestamp="true"
 				src="@{buildUrl}/api/xml"
 				username="${username}" password="${password}"/>
 		</sequential>
