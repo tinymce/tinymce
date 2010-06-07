@@ -395,7 +395,9 @@
 				<exclude name="tinymce/**/license.txt" />
 			</fileset>
 		</zip>
-		
+	</target>
+	
+	<target name="publish-integration">
 		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" />
 	</target>
 
