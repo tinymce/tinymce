@@ -1,6 +1,8 @@
 <?xml version="1.0" ?>
 <project name="build-utils">
 	<dirname property="build-utils.dir" file="${ant.file.build-utils}" />
+	
+	<import file="${build-utils.dir}/ivy/ivy-macros.xml" />
 
 	<macrodef name="getArtifactName">
 		<attribute name="artifactUrl" 

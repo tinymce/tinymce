@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="plugin-build">
+<project name="plugin-build" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<dirname property="plugin-build.dir" file="${ant.file.plugin-build}" />
 	
 	<property file="project.properties" />
@@ -11,6 +11,9 @@
 	<property name="plugin-src" value="${src-dir}/editor_plugin_src.js" />
 	<property name="plugin-minified" value="${src-dir}/editor_plugin.js" />
 	<property name="dist-file" value="${tmp-dir}/${ant.project.name}.zip" />
+	
+	<property environment="env" />
+	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
 	
 	<!-- Setup classpath for js-build-tools ant tasks -->
 	<path id="build-utils.tasks.classpath">
@@ -74,6 +77,8 @@
 		</zip>
 	</target>
 	
-	<target name="release">
+	<target name="release" depends="dist">
+		<ivy:resolve />
+		<publish artifactDir="${tmp-dir}" type="release" version="${ephox-build-number}" />
 	</target>
 </project>
