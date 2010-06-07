@@ -6,6 +6,7 @@
 	<property description="Classes directory" name="classes_dir" location="jscripts/tiny_mce/classes" />
 	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
 	<property description="Temp directory" name="temp_dir" location="tmp" />
+	<property description="Distribution files" name="dist_dir" location="${temp_dir}/dist" />
 
 	<property environment="env" />
 	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
@@ -399,11 +400,31 @@
 		<echo message="${file_version}" file="${temp_dir}/version-number.txt" append="false" />
 	</target>
 	
-	<target name="publish-integration">
+	<target name="built-version">
 		<loadfile srcFile="${temp_dir}/version-number.txt" property="file_version" />
+	</target>
+	
+	<target name="publish-integration" depends="built-version">
 		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" />
 	</target>
+	
+	<target name="htaccess" depends="built-version">
+		<mkdir dir="${dist_dir}" />
+		<concat destfile="${dist_dir}/.htaccess">Redirect /downloads/enterprisetinymce.zip http://tinymce.ephox.com/downloads/enterprisetinymce_${file_version}.zip
+	Redirect /downloads/communitytinymce.zip http://tinymce.ephox.com/downloads/communitytinymce_${file_version}.zip</concat>
+	</target>
 
+	<target name="publish-release" depends="built-version, htaccess">
+		<copy todir="${dist_dir}">
+			<fileset dir="${temp_dir}">
+				<include name="enterprisetinymce*.zip" />
+				<include name="communitytinymce*.zip" />
+			</fileset>
+		</copy>
+		<publish type="release" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" />
+		<unzip dest="${dist_dir}/expanded" src="${dist_dir}/enterprisetinymce_${file_version}.zip" />
+	</target>
+				
 	<target name="addsuffixes" description="Adds version suffixes to all requests">
 		<property name="version_queries" value="true" />
 	</target>
