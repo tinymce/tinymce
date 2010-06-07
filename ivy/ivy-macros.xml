@@ -33,6 +33,8 @@
 		<attribute name="version" />
 		<attribute name="artifactDir" />
 		<attribute name="artifactPattern" default="[artifact].[ext]" />
+		<attribute name="overwrite" default="false" description="Whether or not to overwrite if the revision already exists." />
+			
 		<sequential>
 			<condition property="ivy.publish.repository" value="local" else="shared">
 				<equals arg1="@{type}" arg2="local" />
@@ -41,7 +43,18 @@
 				<equals arg1="@{type}" arg2="release" />
 			</condition>
 			<ivy:resolve />
-			<ivy:publish artifactspattern="@{artifactDir}/@{artifactPattern}" resolver="${ivy.publish.repository}" status="${ivy.publish.status}" pubrevision="@{version}" forcedeliver="true" />
+			<ivy:publish artifactspattern="@{artifactDir}/@{artifactPattern}" resolver="${ivy.publish.repository}" status="${ivy.publish.status}" pubrevision="@{version}" forcedeliver="true" overwrite="@{overwrite}" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="dependencies" description="Retrieve dependencies from the Ivy repository.">
+		<attribute name="dest" description="Where to put the retrieved artifacts" />
+		<attribute name="configuration" default="*" description="Retrieve dependencies in a specific configuration only." />
+		<attribute name="pattern" default="[artifact]_[revision].[ext]" description="The pattern to use when naming artifacts (Optional)." />
+
+		<sequential>
+			<ivy:resolve />
+			<ivy:retrieve pattern="@{dest}/@{pattern}" sync="true" symlink="true" conf="@{configuration}" />
 		</sequential>
 	</macrodef>
 </project>
