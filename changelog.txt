@@ -12,6 +12,7 @@ Version 3.3.x (2010-xx-xx)
 	Fixed bug where formatting states wasn't updated on IE if you pressed enter at the end of a block with formatting.
 	Fixed bug where submenus for the context menu wasn't removed correctly when the editor was destroyed.
 	Fixed bug where Gecko could select the wrong element after applying format to multiple elements.
+	Fixed bug where Gecko would delete parts of the previous element if the selection range was a element selection.
 	Fixed a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
 	Fixed so formats applied to the current caret gets merged to reduce the number of output elements.
 	Added the latest version of Sizzle for the CSS selector logic.
