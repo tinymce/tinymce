@@ -1,0 +1,47 @@
+<project name="ivy-macros" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<dirname property="ivy-macros.dir" file="${ant.file.ivy-macros}" />
+
+	<!-- Note that we use the Ant 1.5 taskdef method of loading the ivy tasks instead of the Ant 1.6 ones.
+	This avoids the need to put the ivy jars in the ant lib directory. -->
+	<path id="ivy-classpath">
+		<fileset dir="${ivy-macros.dir}/lib" />
+	</path>
+
+	<echo message="Setting up ivy tasks." />
+	<taskdef resource="org/apache/ivy/ant/antlib.xml"
+			 uri="antlib:org.apache.ivy.ant" classpathref="ivy-classpath"/>
+
+	<ivy:configure file="${ivy-macros.dir}/ivy-settings.xml" />
+
+	<target name="ivy-install" description="Install libraries from the Maven repository to Ephox public.">
+		<ivy:settings id="install.settings" file="${ivy-macros.dir}/ivy-import-settings.xml" />
+		<property name="transitive" value="true" />
+		<input addproperty="install.organisation" message="Organisation?" />
+		<input addproperty="install.module" message="Module?" />
+		<input addproperty="install.revision" message="Revision?" />
+		<ivy:install from="maven" to="public"  validate="true" overwrite="false" transitive="${transitive}" settingsref="install.settings"
+					 organisation="${install.organisation}" module="${install.module}" revision="${install.revision}" />
+	</target>
+
+	<target name="dependency-report" description="Create a report of project dependencies.">
+		<ivy:resolve />
+		<ivy:report todir="${scratch}/reports/dependencies/"/>
+	</target>
+
+	<macrodef name="publish" description="Publish the artifacts to the Ivy repository.  Type is either local, integration or release.">
+		<attribute name="type" />
+		<attribute name="version" />
+		<attribute name="artifactDir" />
+		<attribute name="artifactPattern" default="[artifact].[ext]" />
+		<sequential>
+			<condition property="ivy.publish.repository" value="local" else="shared">
+				<equals arg1="@{type}" arg2="local" />
+			</condition>
+			<condition property="ivy.publish.status" value="release" else="integration">
+				<equals arg1="@{type}" arg2="release" />
+			</condition>
+			<ivy:resolve />
+			<ivy:publish artifactspattern="@{artifactDir}/@{artifactPattern}" resolver="${ivy.publish.repository}" status="${ivy.publish.status}" pubrevision="@{version}" forcedeliver="true" />
+		</sequential>
+	</macrodef>
+</project>
