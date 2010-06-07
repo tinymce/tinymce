@@ -32,6 +32,7 @@
 		<attribute name="type" />
 		<attribute name="version" />
 		<attribute name="artifactDir" />
+		<attribute name="artifactPattern" default="[artifact].[ext]" />
 		<sequential>
 			<condition property="ivy.publish.repository" value="local" else="shared">
 				<equals arg1="@{type}" arg2="local" />
@@ -39,7 +40,7 @@
 			<condition property="ivy.publish.status" value="release" else="integration">
 				<equals arg1="@{type}" arg2="release" />
 			</condition>
-			<ivy:publish artifactspattern="@{artifactDir}/[artifact].[ext]" resolver="${ivy.publish.repository}" status="${ivy.publish.status}" pubrevision="@{version}" forcedeliver="true" />
+			<ivy:publish artifactspattern="@{artifactDir}/@{artifactPattern}" resolver="${ivy.publish.repository}" status="${ivy.publish.status}" pubrevision="@{version}" forcedeliver="true" />
 		</sequential>
 	</macrodef>
 </project>
