@@ -707,7 +707,7 @@
 				walker = new tinymce.dom.TreeWalker(sc.lastChild, sc);
 
 				// Walk the dom backwards until we find a text node
-				while (n = walker.prev()) {
+				for (n = sc.lastChild; n; n = walker.prev()) {
 					if (n.nodeType == 3) {
 						r.setStart(n, n.nodeValue.length);
 						r.collapse(true);
