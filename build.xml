@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="TinyMCE" default="build" basedir=".">
+<project name="tinymce" default="build" basedir=".">
+	<import file="build-utils/ivy/ivy-macros.xml" />
+	
 	<!-- Path properties -->
 	<property description="Classes directory" name="classes_dir" location="jscripts/tiny_mce/classes" />
 	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
@@ -237,7 +239,7 @@
 		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
 		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
 		<property name="version.minor" value="${version.minor.upstream}-${ephox-build-number}" />
-		<propertyregex property="file_version" input="${version}-${ephox-build-number}" regexp="\." replace="_" />
+		<property name="file_version" value="${version}-${ephox-build-number}" />
 
 		<replaceregexp byline="true">
 			<regexp pattern="^Version ${version} \(${now}\)" />
@@ -322,7 +324,7 @@
 
 		
 		<!-- Compress development package -->
-		<delete file="${temp_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
+		<delete file="${temp_dir}/communitytinymce_${file_version}.zip" quiet="true" />
 		<zip destfile="${temp_dir}/communitytinymce_${file_version}.zip">
 			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce">
 				<exclude name="LICENSE.TXT" />
@@ -393,6 +395,8 @@
 				<exclude name="tinymce/**/license.txt" />
 			</fileset>
 		</zip>
+		
+		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" />
 	</target>
 
 	<target name="addsuffixes" description="Adds version suffixes to all requests">
