@@ -40,6 +40,7 @@
 			<condition property="ivy.publish.status" value="release" else="integration">
 				<equals arg1="@{type}" arg2="release" />
 			</condition>
+			<ivy:resolve />
 			<ivy:publish artifactspattern="@{artifactDir}/@{artifactPattern}" resolver="${ivy.publish.repository}" status="${ivy.publish.status}" pubrevision="@{version}" forcedeliver="true" />
 		</sequential>
 	</macrodef>
