@@ -395,9 +395,12 @@
 				<exclude name="tinymce/**/license.txt" />
 			</fileset>
 		</zip>
+		
+		<echo message="${file_version}" file="${temp_dir}/version-number.txt" append="false" />
 	</target>
 	
 	<target name="publish-integration">
+		<loadFile srcFile="${temp_dir}/version-number.txt" property="file_version" />
 		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" />
 	</target>
 
