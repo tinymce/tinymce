@@ -147,7 +147,7 @@
 					if (container) {
 						walker = new TreeWalker(container, container.parentNode);
 						for (node = walker.current(); node; node = walker.next()) {
-							if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
+							if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
 								rng.setStart(node, 0);
 								break;
 							}
@@ -868,7 +868,7 @@
 		};
 
 		function isWhiteSpaceNode(node) {
-			return node && node.nodeType === 3 && /^\s*$/.test(node.nodeValue);
+			return node && node.nodeType === 3 && /^([\s\r\n]+|)$/.test(node.nodeValue);
 		};
 
 		function wrap(node, name, attrs) {
