@@ -703,7 +703,7 @@
 			var t = this, ed = t.editor, b = ed.getBody(), dom = ed.dom, n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn, walker;
 
 			// Delete when caret is behind a element doesn't work correctly on Gecko see #3011651
-			if (!bs && r.collapsed && sc.nodeType == 1) {
+			if (!bs && r.collapsed && sc.nodeType == 1 && r.startOffset == sc.childNodes.length) {
 				walker = new tinymce.dom.TreeWalker(sc.lastChild, sc);
 
 				// Walk the dom backwards until we find a text node
