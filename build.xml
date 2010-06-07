@@ -421,7 +421,7 @@
 				<include name="communitytinymce*.zip" />
 			</fileset>
 		</copy>
-		<publish type="release" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" />
+		<publish type="release" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
 		<unzip dest="${dist_dir}/expanded" src="${dist_dir}/enterprisetinymce_${file_version}.zip" />
 	</target>
 				
