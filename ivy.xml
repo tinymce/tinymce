@@ -8,8 +8,8 @@
 	</configurations>
 
 	<publications>
-		<artifact name="enterprisetinymce" type="enterprise" ext="zip" conf="master" />
-		<artifact name="communitytinymce" type="community" ext="zip" conf="master" />
+		<artifact name="enterprisetinymce" type="zip" conf="master" />
+		<artifact name="communitytinymce" type="zip" conf="master" />
 	</publications>
 
 
