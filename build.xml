@@ -398,6 +398,7 @@
 		</zip>
 		
 		<echo message="${file_version}" file="${temp_dir}/version-number.txt" append="false" />
+		<publish type="untested" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="false" />
 	</target>
 	
 	<target name="built-version">
@@ -405,7 +406,7 @@
 	</target>
 	
 	<target name="publish-integration" depends="built-version">
-		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" />
+		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
 	</target>
 	
 	<target name="htaccess" depends="built-version">
