@@ -1,7 +1,7 @@
 <ivysettings>
 	<settings defaultResolver="default"/>
 	<include file="${ivy.settings.dir}/ivy-ephox-repositories.xml" />
-	<include file="${ivy.settings.dir}/ivy-ephox-statuses" />
+	<include file="${ivy.settings.dir}/ivy-ephox-statuses.xml" />
 
 	<include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
 	<include url="${ivy.default.settings.dir}/ivysettings-main-chain.xml"/>
