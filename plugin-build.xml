@@ -75,7 +75,7 @@
 		<zip destfile="${dist-file}">
 			<fileset refid="dist-files" />
 		</zip>
-		<publish artifactDir="${tmp-dir}" type="integration" version="${ephox-build-number}" />
+		<publish artifactDir="${tmp-dir}" type="untested" version="${ephox-build-number}" />
 	</target>
 	
 	<target name="release" depends="dist">
