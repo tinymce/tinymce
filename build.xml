@@ -231,6 +231,7 @@
 				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
 				<exclude name="build-utils/**" />
+				<exclude name="ivy.xml" />
 			</fileset>
 		</copy>
 
