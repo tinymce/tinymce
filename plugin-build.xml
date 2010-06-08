@@ -60,7 +60,7 @@
 	
 	<target name="tinymce" unless="offline">
 		<mkdir dir="${tmp-dir}" />
-		<dependencies dest="${tmp-dir}" pattern="[artifact].[ext]" type="enterprise" configuration="compile" />
+		<dependencies dest="${tmp-dir}" pattern="[artifact].[ext]" type="zip" configuration="compile" />
 		<unzip dest="${tmp-dir}" src="${tmp-dir}/enterprisetinymce.zip" />
 	</target>
 		
