@@ -39,8 +39,8 @@
 			<condition property="ivy.publish.repository" value="local" else="shared">
 				<equals arg1="@{type}" arg2="local" />
 			</condition>
-			<condition property="ivy.publish.status" value="release" else="integration">
-				<equals arg1="@{type}" arg2="release" />
+			<condition property="ivy.publish.status" value="integration" else="@{type}">
+				<equals arg1="@{type}" arg2="local" />
 			</condition>
 			<ivy:resolve />
 			<ivy:publish artifactspattern="@{artifactDir}/@{artifactPattern}" resolver="${ivy.publish.repository}" status="${ivy.publish.status}" pubrevision="@{version}" forcedeliver="true" overwrite="@{overwrite}" />
