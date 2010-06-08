@@ -14,6 +14,6 @@
 
 
 	<dependencies>
-		<!--<dependency org="com.ephox" name="module_name" rev="latest.integration" conf="runtime->master" /> -->
+		<!--<dependency org="com.ephox" name="plugin" rev="latest.integration" conf="plugins->master" />--> 
 	</dependencies>
 </ivy-module>

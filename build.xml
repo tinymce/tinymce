@@ -7,7 +7,7 @@
 	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
 	<property description="Temp directory" name="temp_dir" location="tmp" />
 	<property description="Distribution files" name="dist_dir" location="${temp_dir}/dist" />
-
+	<property description="Directory for Ephox added plugins" name="plugins_dir" location="${temp_dir}/plugins" />
 	<property environment="env" />
 	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
 
@@ -213,9 +213,18 @@
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
 	
-	<target name="release" depends="build,moxiedoc" description="Builds release packages">
-		<!-- Copy the current repos and start processing it -->
+	<target name="plugins">
 		<delete dir="${temp_dir}" quiet="true" />
+		<mkdir dir="${plugins_dir}" />
+		<dependencies configuration="plugins" dest="${plugins_dir}" />
+		<mkdir dir="${plugins_dir}/expanded" />
+		<unzip dest="${plugins_dir}/expanded">
+			<fileset dir="${plugins_dir}" includes="*.zip" />
+		</unzip>
+	</target>
+		
+	<target name="release" depends="build,moxiedoc,plugins" description="Builds release packages">
+		<!-- Copy the current repos and start processing it -->
 		<copy todir="${temp_dir}/tinymce">
 			<fileset dir=".">
 				<include name="**"/>
@@ -395,6 +404,7 @@
 				<include name="tinymce/**" />
 				<exclude name="tinymce/**/license.txt" />
 			</fileset>
+			<zipfileset dir="${plugins_dir}/expanded" prefix="tinymce/jscripts/tiny_mce/plugins" />
 		</zip>
 		
 		<echo message="${file_version}" file="${temp_dir}/version-number.txt" append="false" />
