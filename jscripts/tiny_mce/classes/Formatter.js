@@ -1197,7 +1197,7 @@
 					};
 
 					// Append BR elements if needed before we remove the block
-					if (isBlock(node) && parentNode && !isBlock(parentNode)) {
+					if (isBlock(node) && !isBlock(parentNode)) {
 						if (!find(node, FALSE) && !find(node.firstChild, TRUE, 1))
 							node.insertBefore(dom.create('br'), node.firstChild);
 
