@@ -226,6 +226,7 @@
 					});
 
 					ed.focus();
+					ed.undoManager.add();
 
 					// Toggle off the current format
 					matches = ed.formatter.matchAll(formatNames);
@@ -233,6 +234,9 @@
 						ed.formatter.remove(name);
 					else
 						ed.formatter.apply(name);
+
+					ed.undoManager.add();
+					ed.nodeChanged();
 
 					return false; // No auto select
 				}
@@ -297,6 +301,12 @@
 				title : 'advanced.fontdefault',
 				onselect : function(v) {
 					ed.execCommand('FontName', false, v);
+
+					// Fake selection, execCommand will fire a nodeChange and update the selection
+					c.select(function(sv) {
+						return v == sv;
+					});
+
 					return false; // No auto select
 				}
 			});
@@ -316,16 +326,29 @@
 			c = ed.controlManager.createListBox('fontsizeselect', {title : 'advanced.font_size', onselect : function(v) {
 				if (v['class']) {
 					ed.focus();
+					ed.undoManager.add();
 					ed.formatter.toggle('fontsize_class', {value : v['class']});
+					ed.undoManager.add();
+					ed.nodeChanged();
 				} else
 					ed.execCommand('FontSize', false, v.fontSize);
+
+				// Fake selection, execCommand will fire a nodeChange and update the selection
+				c.select(function(sv) {
+					return v == sv;
+				});
 
 				return false; // No auto select
 			}});
 
 			if (c) {
 				each(t.settings.theme_advanced_font_sizes, function(v, k) {
-					c.add(k, v);
+					var fz = v.fontSize;
+
+					if (fz >= 1 && fz <= 7)
+						fz = t.sizes[parseInt(fz) - 1] + 'pt';
+
+					c.add(k, v, {'style' : 'font-size:' + fz, 'class' : 'mceFontSize' + (i++) + (' ' + (v['class'] || ''))});
 				});
 			}
 

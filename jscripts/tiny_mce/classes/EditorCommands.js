@@ -250,9 +250,11 @@
 			},
 
 			mceCleanup : function() {
-				storeSelection();
+				var bookmark = selection.getBookmark();
+
 				editor.setContent(editor.getContent({cleanup : TRUE}), {cleanup : TRUE});
-				restoreSelection();
+
+				selection.moveToBookmark(bookmark);
 			},
 
 			mceRemoveNode : function(command, ui, value) {
@@ -366,6 +368,14 @@
 					else
 						editor.dom.remove(link, TRUE);
 				}
+			},
+			
+			selectAll : function() {
+				var root = dom.getRoot();
+				var rng = dom.createRng();
+				rng.setStart(root, 0);
+				rng.setEnd(root, root.childNodes.length);
+				editor.selection.setRng(rng);
 			}
 		});
 

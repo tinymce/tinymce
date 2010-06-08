@@ -30,7 +30,7 @@
 							tinyMCE.get(ed.getParam('fullscreen_editor_id')).setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
 							tinyMCE.remove(ed);
 							DOM.remove('mce_fullscreen_container');
-							ed.style.overflow = ed.getParam('fullscreen_html_overflow');
+							de.style.overflow = ed.getParam('fullscreen_html_overflow');
 							DOM.setStyle(DOM.doc.body, 'overflow', ed.getParam('fullscreen_overflow'));
 							DOM.win.scrollTo(ed.getParam('fullscreen_scrollx'), ed.getParam('fullscreen_scrolly'));
 							tinyMCE.settings = tinyMCE.oldSettings; // Restore old settings
@@ -116,9 +116,13 @@
 					//document.body.overflow = 'hidden';
 
 					t.resizeFunc = tinymce.dom.Event.add(DOM.win, 'resize', function() {
-						var vp = tinymce.DOM.getViewPort();
+						var vp = tinymce.DOM.getViewPort(), fed = t.fullscreenEditor, outerSize, innerSize;
 
-						t.fullscreenEditor.theme.resizeTo(vp.w, vp.h);
+						// Get outer/inner size to get a delta size that can be used to calc the new iframe size
+						outerSize = fed.dom.getSize(fed.getContainer().firstChild);
+						innerSize = fed.dom.getSize(fed.getContainer().getElementsByTagName('iframe')[0]);
+
+						fed.theme.resizeTo(vp.w - outerSize.w + innerSize.w, vp.h - outerSize.h + innerSize.h);
 					});
 				}
 			});

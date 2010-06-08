@@ -4,6 +4,7 @@
 <title>Basic editor functionality tests</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
 <script>
 var editor;
@@ -36,7 +37,7 @@ test('commands - xhtmlTextStyles', function() {
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('FontName',false,'Arial');
-	equals(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
+	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
@@ -72,16 +73,16 @@ test('commands - xhtmlTextStyles', function() {
 	equals(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
 
 	editor.setContent('<p><font face="Arial">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
+	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('<p><font size="7">test 123</font></p>');
 	equals(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
 
 	editor.setContent('<p><font face="Arial" size="7">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="font-size: xx-large; font-family: Arial;">test 123</span></p>');
+	equals(editor.getContent(), '<p><span style="font-size: xx-large; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
-	equals(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: Arial;">test</span></p>');
+	equals(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: ' + fontFace('Arial') + ';">test</span></p>');
 });
 
 test('commands - alignInline', function() {
@@ -434,7 +435,11 @@ test('editor_methods - getParam', function() {
 test('WebKit Serialization range bug', function() {
 	expect(1);
 
-	editor.getBody().innerHTML = '<p>123<table><tbody><tr><td>X</td></tr></tbody></table>456</p>';
+    // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
+    // wind up testing the serialization functionality we were aiming for and the test fails.
+    var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
+    editor.dom.replace(p, editor.getBody().firstChild);
+
 	equals(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>');
 });
 

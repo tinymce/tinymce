@@ -4,6 +4,7 @@
 <title>Unit tests for text formatting</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
 <script>
 var editor;
@@ -395,7 +396,7 @@ test('Formatter - apply (inline)', function() {
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style=\"font-family: arial;\">1234</span></p>', 'Remove redundant children');
+	equals(getContent(), '<p><span style=\"font-family: ' + fontFace('arial') + ';\">1234</span></p>', 'Remove redundant children');
 
 	// Inline element on selected text with function values
 	editor.formatter.register('format', {

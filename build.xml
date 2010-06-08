@@ -27,19 +27,19 @@
 	<target name="moxiedoc" depends="" description="Generates HTML documentation out of js source">
 		<mkdir dir="docs"/>
 		<delete quiet="true">
-			<fileset dir="docs\api" includes="**/*"/>
+			<fileset dir="docs/api" includes="**/*"/>
 		</delete>
 
-		<moxiedoc outdir="docs\api" templatedir="tools\templates" msintellisense="docs\api\tinymce.vsdoc.js" eventclass="tinymce.util.Dispatcher" title="TinyMCE API">
-			<fileset dir="jscripts\tiny_mce\classes">
+		<moxiedoc outdir="docs/api" templatedir="tools/templates" msintellisense="docs/api/tinymce.vsdoc.js" eventclass="tinymce.util.Dispatcher" title="TinyMCE API">
+			<fileset dir="jscripts/tiny_mce/classes">
 				<include name="**/*.js" /> 
 			</fileset>
 
-			<fileset dir="jscripts\tiny_mce\themes">
+			<fileset dir="jscripts/tiny_mce/themes">
 				<include name="**/editor_template_src.js" /> 
 			</fileset>
 
-			<fileset dir="jscripts\tiny_mce\plugins">
+			<fileset dir="jscripts/tiny_mce/plugins">
 				<include name="**/editor_plugin_src.js" /> 
 			</fileset>
 		</moxiedoc>
@@ -213,7 +213,7 @@
 		<copy todir="${temp_dir}/tinymce">
 			<fileset dir=".">
 				<include name="**"/>
-				<exclude name="**/.git/**"/>
+				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 		</copy>

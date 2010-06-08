@@ -316,7 +316,7 @@
 			var t = this, cp = t.classPrefix;
 
 			Event.add(t.id, 'click', t.showMenu, t);
-			Event.add(t.id + '_text', 'focus', function(e) {
+			Event.add(t.id + '_text', 'focus', function() {
 				if (!t._focused) {
 					t.keyDownHandler = Event.add(t.id + '_text', 'keydown', function(e) {
 						var idx = -1, v, kc = e.keyCode;
