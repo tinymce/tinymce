@@ -49,12 +49,13 @@
 	
 	<macrodef name="dependencies" description="Retrieve dependencies from the Ivy repository.">
 		<attribute name="dest" description="Where to put the retrieved artifacts" />
-		<attribute name="configuration" default="*" description="Retrieve dependencies in a specific configuration only." />
+		<attribute name="configuration" default="*" description="Retrieve dependencies in a specific configuration only (Optional)." />
+		<attribute name="type" default="*" description="Retrieve only a specific type of artifact (Optional)." />
 		<attribute name="pattern" default="[artifact]_[revision].[ext]" description="The pattern to use when naming artifacts (Optional)." />
 
 		<sequential>
 			<ivy:resolve />
-			<ivy:retrieve pattern="@{dest}/@{pattern}" sync="true" symlink="true" conf="@{configuration}" />
+			<ivy:retrieve pattern="@{dest}/@{pattern}" sync="true" symlink="true" type="@{type}" conf="@{configuration}" />
 		</sequential>
 	</macrodef>
 </project>

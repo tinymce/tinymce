@@ -60,8 +60,8 @@
 	
 	<target name="tinymce" unless="offline">
 		<mkdir dir="${tmp-dir}" />
-		<getArtifact buildurl="${artifact-build-url}" partialname="${artifact-name-contains}" dest="${tmp-dir}/tinymce.zip" />
-		<unzip dest="${tmp-dir}" src="${tmp-dir}/tinymce.zip" />
+		<dependencies dest="${tmp-dir}" pattern="[artifact].[ext]" type="enterprise" configuration="compile" />
+		<unzip dest="${tmp-dir}" src="${tmp-dir}/enterprisetinymce.zip" />
 	</target>
 		
 	<target name="build" depends="minify, tinymce">
@@ -75,10 +75,10 @@
 		<zip destfile="${dist-file}">
 			<fileset refid="dist-files" />
 		</zip>
+		<publish artifactDir="${tmp-dir}" type="integration" version="${ephox-build-number}" />
 	</target>
 	
 	<target name="release" depends="dist">
-		<ivy:resolve />
 		<publish artifactDir="${tmp-dir}" type="release" version="${ephox-build-number}" />
 	</target>
 </project>
