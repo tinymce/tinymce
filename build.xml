@@ -230,6 +230,7 @@
 				<include name="**"/>
 				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="build-utils/**" />
 			</fileset>
 		</copy>
 
