@@ -746,37 +746,6 @@
 					}
 				}
 			}
-
-			// Gecko generates BR elements here and there, we don't like those so lets remove them
-			function handler(e) {
-				var pr;
-
-				e = e.target;
-
-				// A new BR was created in a block element, remove it
-				if (e && e.parentNode && e.nodeName == 'BR' && (n = t.getParentBlock(e))) {
-					pr = e.previousSibling;
-
-					Event.remove(b, 'DOMNodeInserted', handler);
-
-					// Is there whitespace at the end of the node before then we might need the pesky BR
-					// to place the caret at a correct location see bug: #2013943
-					if (pr && pr.nodeType == 3 && /\s+$/.test(pr.nodeValue))
-						return;
-
-					// Only remove BR elements that got inserted in the middle of the text
-					if (e.previousSibling || e.nextSibling)
-						ed.dom.remove(e);
-				}
-			};
-
-			// Listen for new nodes
-			Event._add(b, 'DOMNodeInserted', handler);
-
-			// Remove listener
-			window.setTimeout(function() {
-				Event._remove(b, 'DOMNodeInserted', handler);
-			}, 1);
 		}
 	});
 })(tinymce);
