@@ -1,5 +1,3 @@
-Version 3.3.6 (xxxx-xx-xx)
-	Ephox distribution of TinyMCE 3.3.6.
 Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
 	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.
