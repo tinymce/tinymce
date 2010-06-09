@@ -1,10 +1,10 @@
 <resolvers>
-	<sftp name="public" user="ivy" keyFile="/home/ivy/build_dsa" host="hudson.dev.ephox.com">
+	<sftp name="public" user="ivy" keyFile="${ivy.settings.dir}/id_dsa" host="hudson.dev.ephox.com">
 		<ivy pattern="/home/ivy/ivyrepo/public/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
 		<artifact pattern="/home/ivy/ivyrepo/public/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
 	</sftp>
 
-	<sftp name="shared" user="ivy" keyFile="/home/ivy/build_dsa" host="hudson.dev.ephox.com">
+	<sftp name="shared" user="ivy" keyFile="${ivy.settings.dir}/id_dsa" host="hudson.dev.ephox.com">
 		<ivy pattern="/home/ivy/ivyrepo/shared/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
 		<artifact pattern="/home/ivy/ivyrepo/shared/[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" />
 	</sftp>
