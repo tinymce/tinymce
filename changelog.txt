@@ -16,6 +16,7 @@ Version 3.3.x (2010-xx-xx)
 	Fixed bug where Gecko would not merge paragraph elements correctly if they contained br elements.
 	Fixed bug where the cleanup button could produce span artifacts if you pressed it twice in a row.
 	Fixed bug where the fullpage plugin header/footer would be have it's header reseted to it's initial state on undo.
+	Fixed bug where an empty paragraph would be collapsed if you performed a cleanup while having the caret inside it.
 	Fixed a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
 	Fixed so formats applied to the current caret gets merged to reduce the number of output elements.
 	Added the latest version of Sizzle for the CSS selector logic.
