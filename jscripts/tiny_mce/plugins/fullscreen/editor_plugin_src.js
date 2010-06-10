@@ -119,7 +119,7 @@
 						var vp = tinymce.DOM.getViewPort(), fed = t.fullscreenEditor, outerSize, innerSize;
 
 						// Get outer/inner size to get a delta size that can be used to calc the new iframe size
-						outerSize = fed.dom.getSize(fed.getContainer());
+						outerSize = fed.dom.getSize(fed.getContainer().firstChild);
 						innerSize = fed.dom.getSize(fed.getContainer().getElementsByTagName('iframe')[0]);
 
 						fed.theme.resizeTo(vp.w - outerSize.w + innerSize.w, vp.h - outerSize.h + innerSize.h);

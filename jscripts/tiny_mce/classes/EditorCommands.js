@@ -250,9 +250,11 @@
 			},
 
 			mceCleanup : function() {
-				storeSelection();
+				var bookmark = selection.getBookmark();
+
 				editor.setContent(editor.getContent({cleanup : TRUE}), {cleanup : TRUE});
-				restoreSelection();
+
+				selection.moveToBookmark(bookmark);
 			},
 
 			mceRemoveNode : function(command, ui, value) {

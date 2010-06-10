@@ -142,11 +142,15 @@
 				// Move startContainer/startOffset in to a suitable node
 				if (container.nodeType == 1 || container.nodeValue === "") {
 					container = container.nodeType == 1 ? container.childNodes[offset] : container;
-					walker = new TreeWalker(container, container.parentNode);
-					for (node = walker.current(); node; node = walker.next()) {
-						if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
-							rng.setStart(node, 0);
-							break;
+
+					// Might fail if the offset is behind the last element in it's container
+					if (container) {
+						walker = new TreeWalker(container, container.parentNode);
+						for (node = walker.current(); node; node = walker.next()) {
+							if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
+								rng.setStart(node, 0);
+								break;
+							}
 						}
 					}
 				}
@@ -355,7 +359,7 @@
 					rng.setStartBefore(node);
 					rng.setEndAfter(node);
 
-					applyRngStyle(rng);
+					applyRngStyle(expandRng(rng, formatList));
 				} else {
 					if (!selection.isCollapsed() || !format.inline) {
 						// Apply formatting to selection
@@ -864,7 +868,7 @@
 		};
 
 		function isWhiteSpaceNode(node) {
-			return node && node.nodeType === 3 && /^\s*$/.test(node.nodeValue);
+			return node && node.nodeType === 3 && /^([\s\r\n]+|)$/.test(node.nodeValue);
 		};
 
 		function wrap(node, name, attrs) {
@@ -1496,13 +1500,16 @@
 									if (isCaretNode(node)) {
 										textNode = node.firstChild;
 
-										perform(node);
+										if (textNode) {
+											perform(node);
 
-										rng = dom.createRng();
-										rng.setStart(textNode, textNode.nodeValue.length);
-										rng.setEnd(textNode, textNode.nodeValue.length);
-										selection.setRng(rng);
-										ed.nodeChanged();
+											rng = dom.createRng();
+											rng.setStart(textNode, textNode.nodeValue.length);
+											rng.setEnd(textNode, textNode.nodeValue.length);
+											selection.setRng(rng);
+											ed.nodeChanged();
+										} else
+											dom.remove(node);
 									}
 								});
 

@@ -170,30 +170,43 @@
 		 * @return {Element} Start element of selection range.
 		 */
 		getStart : function() {
-			var t = this, r = t.getRng(), e;
+			var rng = this.getRng(), startElement, parentElement, checkRng, node;
 
-			if (r.duplicate || r.item) {
-				if (r.item)
-					return r.item(0);
+			if (rng.duplicate || rng.item) {
+				// Control selection, return first item
+				if (rng.item)
+					return rng.item(0);
 
-				r = r.duplicate();
-				r.collapse(1);
-				e = r.parentElement();
+				// Get start element
+				checkRng = rng.duplicate();
+				checkRng.collapse(1);
+				startElement = checkRng.parentElement();
 
-				if (e && e.nodeName == 'BODY')
-					return e.firstChild || e;
+				// Check if range parent is inside the start element, then return the inner parent element
+				// This will fix issues when a single element is selected, IE would otherwise return the wrong start element
+				parentElement = node = rng.parentElement();
+				while (node = node.parentNode) {
+					if (node == startElement) {
+						startElement = parentElement;
+						break;
+					}
+				}
 
-				return e;
+				// If start element is body element try to move to the first child if it exists
+				if (startElement && startElement.nodeName == 'BODY')
+					return startElement.firstChild || startElement;
+
+				return startElement;
 			} else {
-				e = r.startContainer;
+				startElement = rng.startContainer;
 
-				if (e.nodeType == 1 && e.hasChildNodes())
-					e = e.childNodes[Math.min(e.childNodes.length - 1, r.startOffset)];
+				if (startElement.nodeType == 1 && startElement.hasChildNodes())
+					startElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];
 
-				if (e && e.nodeType == 3)
-					return e.parentNode;
+				if (startElement && startElement.nodeType == 3)
+					return startElement.parentNode;
 
-				return e;
+				return startElement;
 			}
 		},
 
@@ -374,12 +387,16 @@
 					root = dom.getRoot();
 
 					function setEndPoint(start) {
-						var point = bookmark[start ? 'start' : 'end'], i, node, offset;
+						var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
 
 						if (point) {
 							// Find container node
-							for (node = root, i = point.length - 1; i >= 1; i--)
-								node = node.childNodes[point[i]];
+							for (node = root, i = point.length - 1; i >= 1; i--) {
+								children = node.childNodes;
+
+								if (children.length)
+									node = children[point[i]];
+							}
 
 							// Set offset within container node
 							if (start)
@@ -404,7 +421,7 @@
 								if (!keep) {
 									idx = dom.nodeIndex(marker);
 								} else {
-									node = marker;
+									node = marker.firstChild;
 									idx = 1;
 								}
 
@@ -414,7 +431,7 @@
 								if (!keep) {
 									idx = dom.nodeIndex(marker);
 								} else {
-									node = marker;
+									node = marker.firstChild;
 									idx = 1;
 								}
 
@@ -455,13 +472,22 @@
 						}
 					};
 
+					function addBogus(node) {
+						// Adds a bogus BR element for empty block elements
+						// on non IE browsers just to have a place to put the caret
+						if (!isIE && dom.isBlock(node) && !node.innerHTML)
+							node.innerHTML = '<br _mce_bogus="1" />';
+
+						return node;
+					};
+
 					// Restore start/end points
 					restoreEndPoint('start');
 					restoreEndPoint('end');
 
 					rng = dom.createRng();
-					rng.setStart(startContainer, startOffset);
-					rng.setEnd(endContainer, endOffset);
+					rng.setStart(addBogus(startContainer), startOffset);
+					rng.setEnd(addBogus(endContainer), endOffset);
 					t.setRng(rng);
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);

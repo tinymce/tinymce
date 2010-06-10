@@ -2390,7 +2390,7 @@
 
 			// Add node change handlers
 			t.onMouseUp.add(t.nodeChanged);
-			t.onClick.add(t.nodeChanged);
+			//t.onClick.add(t.nodeChanged);
 			t.onKeyUp.add(function(ed, e) {
 				var c = e.keyCode;
 
@@ -2564,6 +2564,55 @@
 				});
 
 				t.onKeyDown.add(function(ed, e) {
+					var rng, tmpRng, parent, offset;
+
+					// IE has a really odd bug where the DOM might include an node that doesn't have
+					// a proper structure. If you try to access nodeValue it would throw an illegal value exception.
+					// This seems to only happen when you delete contents and it seems to be avoidable if you refresh the element
+					// after you delete contents from it. See: #3008923
+					if (isIE && e.keyCode == 46) {
+						rng = t.selection.getRng();
+
+						if (rng.parentElement) {
+							parent = rng.parentElement();
+
+							// Get the current caret position within the element
+							tmpRng = rng.duplicate();
+							tmpRng.moveToElementText(parent);
+							tmpRng.setEndPoint('EndToEnd', rng);
+							offset = tmpRng.text.length;
+
+							// Select next word when ctrl key is used in combo with delete
+							if (e.ctrlKey) {
+								rng.moveEnd('word', 1);
+								rng.select();
+							}
+
+							// Delete contents
+							t.selection.getSel().clear();
+
+							// Check if we are within the same parent
+							if (rng.parentElement() == parent) {
+								try {
+									// Update the HTML and hopefully it will remove the artifacts
+									parent.innerHTML = parent.innerHTML;
+								} catch (ex) {
+									// And since it's IE it can sometimes produce an unknown runtime error
+								}
+
+								// Restore the caret position
+								tmpRng.moveToElementText(parent);
+								tmpRng.collapse();
+								tmpRng.move('character', offset);
+								tmpRng.select();
+							}
+
+							// Block the default delete behavior since it might be broken
+							e.preventDefault();
+							return;
+						}
+					}
+
 					// Is caracter positon keys
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
 						if (t.undoManager.typing)

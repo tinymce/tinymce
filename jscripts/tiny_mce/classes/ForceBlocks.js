@@ -19,6 +19,27 @@
 		TRUE = true,
 		FALSE = false;
 
+	function cloneFormats(node) {
+		var clone, temp, inner;
+
+		do {
+			if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(node.nodeName)) {
+				if (clone) {
+					temp = node.cloneNode(false);
+					temp.appendChild(clone);
+					clone = temp;
+				} else {
+					clone = inner = node.cloneNode(false);
+				}
+
+				clone.removeAttribute('id');
+			}
+		} while (node = node.parentNode);
+
+		if (clone)
+			return {wrapper : clone, inner : inner};
+	};
+
 	// Checks if the selection/caret is at the end of the specified block element
 	function isAtEnd(rng, par) {
 		var rng2 = par.ownerDocument.createRange();
@@ -130,11 +151,54 @@
 				}
 			}
 
-			if (!isIE && s.force_p_newlines) {
-				ed.onKeyPress.add(function(ed, e) {
-					if (e.keyCode == 13 && !e.shiftKey && !t.insertPara(e))
-						Event.cancel(e);
-				});
+			if (s.force_p_newlines) {
+				if (!isIE) {
+					ed.onKeyPress.add(function(ed, e) {
+						if (e.keyCode == 13 && !e.shiftKey && !t.insertPara(e))
+							Event.cancel(e);
+					});
+				} else {
+					// Ungly hack to for IE to preserve the formatting when you press
+					// enter at the end of a block element with formatted contents
+					// This logic overrides the browsers default logic with
+					// custom logic that enables us to control the output
+					tinymce.addUnload(function() {
+						t._previousFormats = 0; // Fix IE leak
+					});
+
+					ed.onKeyPress.add(function(ed, e) {
+						t._previousFormats = 0;
+
+						// Clone the current formats, this will later be applied to the new block contents
+						if (e.keyCode == 13 && !e.shiftKey && ed.selection.isCollapsed() && s.keep_styles)
+							t._previousFormats = cloneFormats(ed.selection.getStart());
+					});
+
+					ed.onKeyUp.add(function(ed, e) {
+						// Let IE break the element and the wrap the new caret location in the previous formats
+						if (e.keyCode == 13 && !e.shiftKey) {
+							var parent = ed.selection.getStart(), fmt = t._previousFormats;
+
+							// Parent is an empty block
+							if (!parent.hasChildNodes()) {
+								parent = dom.getParent(parent, dom.isBlock);
+
+								if (parent) {
+									parent.innerHTML = '';
+	
+									if (t._previousFormats) {
+										parent.appendChild(fmt.wrapper);
+										fmt.inner.innerHTML = '\uFEFF';
+									} else
+										parent.innerHTML = '\uFEFF';
+
+									selection.select(parent, 1);
+									ed.getDoc().execCommand('Delete', false, null);
+								}
+							}
+						}
+					});
+				}
 
 				if (isGecko) {
 					ed.onKeyDown.add(function(ed, e) {
@@ -636,7 +700,22 @@
 		},
 
 		backspaceDelete : function(e, bs) {
-			var t = this, ed = t.editor, b = ed.getBody(), dom = ed.dom, n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn;
+			var t = this, ed = t.editor, b = ed.getBody(), dom = ed.dom, n, se = ed.selection, r = se.getRng(), sc = r.startContainer, n, w, tn, walker;
+
+			// Delete when caret is behind a element doesn't work correctly on Gecko see #3011651
+			if (!bs && r.collapsed && sc.nodeType == 1 && r.startOffset == sc.childNodes.length) {
+				walker = new tinymce.dom.TreeWalker(sc.lastChild, sc);
+
+				// Walk the dom backwards until we find a text node
+				for (n = sc.lastChild; n; n = walker.prev()) {
+					if (n.nodeType == 3) {
+						r.setStart(n, n.nodeValue.length);
+						r.collapse(true);
+						se.setRng(r);
+						return;
+					}
+				}
+			}
 
 			// The caret sometimes gets stuck in Gecko if you delete empty paragraphs
 			// This workaround removes the element by hand and moves the caret to the previous element
@@ -667,37 +746,6 @@
 					}
 				}
 			}
-
-			// Gecko generates BR elements here and there, we don't like those so lets remove them
-			function handler(e) {
-				var pr;
-
-				e = e.target;
-
-				// A new BR was created in a block element, remove it
-				if (e && e.parentNode && e.nodeName == 'BR' && (n = t.getParentBlock(e))) {
-					pr = e.previousSibling;
-
-					Event.remove(b, 'DOMNodeInserted', handler);
-
-					// Is there whitespace at the end of the node before then we might need the pesky BR
-					// to place the caret at a correct location see bug: #2013943
-					if (pr && pr.nodeType == 3 && /\s+$/.test(pr.nodeValue))
-						return;
-
-					// Only remove BR elements that got inserted in the middle of the text
-					if (e.previousSibling || e.nextSibling)
-						ed.dom.remove(e);
-				}
-			};
-
-			// Listen for new nodes
-			Event._add(b, 'DOMNodeInserted', handler);
-
-			// Remove listener
-			window.setTimeout(function() {
-				Event._remove(b, 'DOMNodeInserted', handler);
-			}, 1);
 		}
 	});
 })(tinymce);

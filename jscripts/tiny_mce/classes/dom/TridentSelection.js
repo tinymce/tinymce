@@ -41,6 +41,13 @@
 				// Create marker and insert it at the end of the endpoints parent
 				marker = dom.create('a');
 				parent = checkRng.parentElement();
+
+				// If parent doesn't have any children then set the container to that parent and the index to 0
+				if (!parent.hasChildNodes()) {
+					domRange[start ? 'setStart' : 'setEnd'](parent, 0);
+					return;
+				}
+
 				parent.appendChild(marker);
 				checkRng.moveToElementText(marker);
 				position = ieRange.compareEndPoints(start ? 'StartToStart' : 'EndToEnd', checkRng);
@@ -215,7 +222,10 @@
 				// Select marker the caret to offset position
 				ieRng.moveToElementText(marker);
 				marker.parentNode.removeChild(marker);
-				ieRng.move('character', so);
+
+				// Move if we need to, moving it 0 characters actually moves it!
+				if (so > 0)
+					ieRng.move('character', so);
 			} else {
 				ieRng.moveToElementText(sc);
 
