@@ -1,4 +1,4 @@
-Version 3.3.x (2010-xx-xx)
+Version 3.3.7 (2010-06-10)
 	Fixed bug where context menu would produce an error on IE if you right clicked twice and left clicked once.
 	Fixed bug where resizing of the window on WebKit browsers in fullscreen mode wouldn't position the statusbar correctly.
 	Fixed bug where IE would produce an error if the editor was empty and you where undoing to that initial level.
@@ -19,7 +19,7 @@ Version 3.3.x (2010-xx-xx)
 	Fixed bug where an empty paragraph would be collapsed if you performed a cleanup while having the caret inside it.
 	Fixed a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
 	Fixed so formats applied to the current caret gets merged to reduce the number of output elements.
-	Added the latest version of Sizzle for the CSS selector logic.
+	Added the latest version of Sizzle for the CSS selector logic to fix a compatibility issue with prototype.
 Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
 	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.
