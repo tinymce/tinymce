@@ -240,7 +240,7 @@
 			<format property="now" pattern="yyyy-MM-dd" timezone="GMT" />
 		</tstamp>
 		<concat destfile="${temp_dir}/tinymce/changelog.txt" eol="dos" fixlastline="true">
-			<header>Version 3.3.6 (${now})&#13;&#10;	Ephox distribution of TinyMCE ${version}.</header>
+			<header>Version ${file_version} (${now})&#13;&#10;	Ephox distribution of TinyMCE ${version}.</header>
 			<filelist files="changelog.txt" />
 		</concat>
 		
