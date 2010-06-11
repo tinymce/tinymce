@@ -23,7 +23,8 @@ function assertState(expected, message) {
 }
 
 // Note: this only triggers the default action in FireFox.
-function fakeKeyPress(keyCode) {
+function fakeKeyPress(keyCode, shiftKey) {
+	shiftKey = !!shiftKey; // Convert to a real boolean.
 	function fireKeyEvent(type, keyCode){
 		var doc = editor.getWin().document;
 		var targetElement = editor.selection.getNode();
@@ -32,11 +33,12 @@ function fakeKeyPress(keyCode) {
 			if (editor.getWin().KeyEvent) {
 				evt = doc.createEvent('KeyEvents');
 				// type, canBubble, cancelable, view, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
-				evt.initKeyEvent(type, true, true, editor.getWin(), false, false, false, false, keyCode, '\n');
+				evt.initKeyEvent(type, true, true, editor.getWin(), false, false, shiftKey, false, keyCode, '\n');
 			} else {
 				evt = doc.createEvent('UIEvents');
 				evt.initUIEvent(type, true, true, editor.getWin(), 1);
 				evt.keyCode = keyCode;
+				evt.shiftKey = shiftKey;
 				evt.keyChar = '\n';
 			}
 			targetElement.dispatchEvent(evt);
@@ -44,6 +46,7 @@ function fakeKeyPress(keyCode) {
 			if (doc.createEventObject) {
 				var evt = doc.createEventObject();
 				evt.keyCode = keyCode;
+				evt.shiftKey = shiftKey;
 				evt.keyChar = '\n';
 				targetElement.fireEvent("on" + type, evt);
 			}
@@ -205,6 +208,8 @@ createAction('Applying UL', 'InsertUnorderedList');
 createAction('Indenting', 'Indent');
 createAction('Outdenting', 'Outdent');
 createAction('TypingEnter', fakeKeyPress(13));
+createAction('TypingTab', fakeKeyPress(9));
+createAction('TypingShiftTab', fakeKeyPress(9, true));
 
 // Tests
 test('Collapsed Selection - Apply OL Actions', function() {
@@ -266,6 +271,7 @@ test('Collapsed Selection - Indent Actions', function() {
 	Indenting.a(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
 	Indenting.a(NonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
 	
+	// TODO: Test invalid starting point like <ol><li>Before</li><ol><li>Indented</li></ol></ol>
 	Indenting.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
 	Indenting.a(NestedEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
 	Indenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
@@ -285,9 +291,31 @@ test('Collapsed Selection - Outdent Actions', function() {
 	Outdenting.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
 });
 
-test('Collapsed Selection - Type Enter', function() {
-	TypingEnter.inA(EmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ol>');
+test('Collapsed Selection - Type Tab', function() {
+	TypingTab.inA(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
+	TypingTab.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
+	TypingTab.a(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
+	TypingTab.a(NonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
+	
+	TypingTab.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
+	TypingTab.a(NestedEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
+	TypingTab.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
+	TypingTab.a(NestedNonEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
 });
+
+test('Collapsed Selection - Type Shift-Tab', function() {
+	expect(8);
+	TypingShiftTab.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
+	TypingShiftTab.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
+	TypingShiftTab.a(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
+	TypingShiftTab.a(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+	
+	TypingShiftTab.a(NestedEmptyOrderedListItem).gives('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>');
+	TypingShiftTab.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
+	TypingShiftTab.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
+	TypingShiftTab.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
