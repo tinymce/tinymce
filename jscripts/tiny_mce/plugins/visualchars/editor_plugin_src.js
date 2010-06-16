@@ -22,7 +22,7 @@
 			ed.addButton('visualchars', {title : 'visualchars.desc', cmd : 'mceVisualChars'});
 
 			ed.onBeforeGetContent.add(function(ed, o) {
-				if (t.state) {
+				if (t.state && o.format != 'raw') {
 					t.state = true;
 					t._toggleVisualChars();
 				}
@@ -42,10 +42,11 @@
 		// Private methods
 
 		_toggleVisualChars : function() {
-			var t = this, ed = t.editor, nl, i, h, d = ed.getDoc(), b = ed.getBody(), nv, s = ed.selection, bo;
+			var t = this, ed = t.editor, nl, i, h, d = ed.getDoc(), b = ed.getBody(), nv, s = ed.selection, bo, div, bm;
 
 			t.state = !t.state;
 			ed.controlManager.setActive('visualchars', t.state);
+			bm = s.getBookmark();
 
 			if (t.state) {
 				nl = [];
@@ -56,18 +57,22 @@
 
 				for (i=0; i<nl.length; i++) {
 					nv = nl[i].nodeValue;
-					nv = nv.replace(/(\u00a0+)/g, '<span class="mceItemHidden mceVisualNbsp">$1</span>');
-					nv = nv.replace(/\u00a0/g, '\u00b7');
-					ed.dom.setOuterHTML(nl[i], nv, d);
+					nv = nv.replace(/(\u00a0)/g, '<span _mce_bogus="1" class="mceItemHidden mceItemNbsp">$1</span>');
+
+					div = ed.dom.create('div', null, nv);
+					while (node = div.firstChild)
+						ed.dom.insertAfter(node, nl[i]);
+
+					ed.dom.remove(nl[i]);
 				}
 			} else {
-				nl = tinymce.grep(ed.dom.select('span', b), function(n) {
-					return ed.dom.hasClass(n, 'mceVisualNbsp');
-				});
+				nl = ed.dom.select('span.mceItemNbsp', b);
 
-				for (i=0; i<nl.length; i++)
-					ed.dom.setOuterHTML(nl[i], nl[i].innerHTML.replace(/(&middot;|\u00b7)/g, '&nbsp;'), d);
+				for (i = nl.length - 1; i >= 0; i--)
+					ed.dom.remove(nl[i], 1);
 			}
+
+			s.moveToBookmark(bm);
 		}
 	});
 
