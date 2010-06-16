@@ -24,7 +24,7 @@
 			ed.onBeforeGetContent.add(function(ed, o) {
 				if (t.state && o.format != 'raw' && !o.draft) {
 					t.state = true;
-					t._toggleVisualChars();
+					t._toggleVisualChars(false);
 				}
 			});
 		},
@@ -41,12 +41,14 @@
 
 		// Private methods
 
-		_toggleVisualChars : function() {
+		_toggleVisualChars : function(bookmark) {
 			var t = this, ed = t.editor, nl, i, h, d = ed.getDoc(), b = ed.getBody(), nv, s = ed.selection, bo, div, bm;
 
 			t.state = !t.state;
 			ed.controlManager.setActive('visualchars', t.state);
-			bm = s.getBookmark();
+
+			if (bookmark)
+				bm = s.getBookmark();
 
 			if (t.state) {
 				nl = [];
