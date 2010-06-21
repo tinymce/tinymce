@@ -24,39 +24,8 @@ function assertState(expected, message) {
 
 // Note: this only triggers the default action in FireFox.
 function fakeKeyPress(keyCode, shiftKey) {
-	shiftKey = !!shiftKey; // Convert to a real boolean.
-	function fireKeyEvent(type, keyCode){
-		var doc = editor.getWin().document;
-		var targetElement = editor.selection.getNode();
-		if (doc.createEvent) {
-			var evt;
-			if (editor.getWin().KeyEvent) {
-				evt = doc.createEvent('KeyEvents');
-				// type, canBubble, cancelable, view, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
-				evt.initKeyEvent(type, true, true, editor.getWin(), false, false, shiftKey, false, keyCode, '\n');
-			} else {
-				evt = doc.createEvent('UIEvents');
-				evt.initUIEvent(type, true, true, editor.getWin(), 1);
-				evt.keyCode = keyCode;
-				evt.shiftKey = shiftKey;
-				evt.keyChar = '\n';
-			}
-			targetElement.dispatchEvent(evt);
-		} else {
-			if (doc.createEventObject) {
-				var evt = doc.createEventObject();
-				evt.keyCode = keyCode;
-				evt.shiftKey = shiftKey;
-				evt.keyChar = '\n';
-				targetElement.fireEvent("on" + type, evt);
-			}
-		}
-	}
-	
-	return function() {
-		fireKeyEvent("keydown", keyCode);
-		fireKeyEvent("keypress", keyCode);
-		fireKeyEvent("keyup", keyCode);
+	return function(callback) {
+		window.robot.type(keyCode, shiftKey, callback);
 	};
 }
 
@@ -176,26 +145,66 @@ var NonEmptyULConvertedToP = '<ul><li>Before</li></ul><p>Test</p><ul><li>After</
 
 // User Actions
 
+tinymce.create('dsl.Queue', {
+	Queue: function() {
+		this.queue = [];
+	},
+	
+	add: function(task) {
+		this.queue.push(task);
+	},
+	
+	next: function() {
+		if (this.queue.length > 0) {
+			var task = this.queue.shift();
+			task();
+			return true;
+		} else {
+			QUnit.start();
+			return false;
+		}
+	},
+	
+	done: function() {
+		expect(this.queue.length);
+		this.next();
+		//QUnit.start();
+	}
+});
+
 tinymce.create('dsl.Action', {
 	Action: function(name, action) {
 		this.name = name;
 		this.a = this.to;
 		this.inA = this.to;
 		if (tinymce.is(action, 'string')) {
-			this.action = function() { editor.execCommand(action); };
+			this.action = function(callback) {
+				editor.execCommand(action);
+				callback();
+			};
 		} else {
 			this.action = action;
 		}
 	},
 	
 	to: function(state) {
-		this.message = this.name + " to " + getFunctionName(state); 
-		state();
-		this.action();
-		return this;
+		var message = this.name + " to " + getFunctionName(state);
+		var action = this.action;
+		return {
+			gives: function(expected) {
+				queue.add(function() {
+					state();
+					action(function() {
+						assertState(expected, message);
+						queue.next();
+					});
+				});
+			}
+		};
 	},
 	
 	gives: function(expected) {
+		fail();
 		assertState(expected, this.message);
 	}
 });
@@ -207,12 +216,18 @@ createAction('Applying OL', 'InsertOrderedList');
 createAction('Applying UL', 'InsertUnorderedList');
 createAction('Indenting', 'Indent');
 createAction('Outdenting', 'Outdent');
-createAction('TypingEnter', fakeKeyPress(13));
-createAction('TypingTab', fakeKeyPress(9));
-createAction('TypingShiftTab', fakeKeyPress(9, true));
+createAction('TypingEnter', fakeKeyPress('\n'));
+createAction('TypingTab', fakeKeyPress('\t'));
+createAction('TypingShiftTab', fakeKeyPress('\t', true));
+
+module('Lists', {
+	setup: function() {
+		window.queue = new dsl.Queue();
+	}
+});
 
 // Tests
-test('Collapsed Selection - Apply OL Actions', function() {
+asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	expect(14);
 	
 	ApplyingOL.to(EmptyParagraph).gives(EmptyOL);
@@ -237,9 +252,10 @@ test('Collapsed Selection - Apply OL Actions', function() {
 	
 	ApplyingOL.to(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
 	ApplyingOL.to(NonEmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
+	queue.done();
 });
 
-test('Collapsed Selection - Apply UL Actions', function() {
+asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	expect(14);
 	ApplyingUL.to(EmptyParagraph).gives(EmptyUL);
 	ApplyingUL.to(EmptyHeading).gives(EmptyUL);
@@ -262,9 +278,10 @@ test('Collapsed Selection - Apply UL Actions', function() {
 	
 	ApplyingUL.to(NonEmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>Test</li></ul><ol><li>After</li></ol>');
 	ApplyingUL.to(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+	queue.done();
 });
 
-test('Collapsed Selection - Indent Actions', function() {
+asyncTest('Collapsed Selection - Indent Actions', function() {
 	expect(8);
 	Indenting.a(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
 	Indenting.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
@@ -276,9 +293,10 @@ test('Collapsed Selection - Indent Actions', function() {
 	Indenting.a(NestedEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
 	Indenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
 	Indenting.a(NestedNonEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
+	queue.done();
 });
 
-test('Collapsed Selection - Outdent Actions', function() {
+asyncTest('Collapsed Selection - Outdent Actions', function() {
 	expect(8);
 	Outdenting.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
 	Outdenting.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
@@ -289,21 +307,35 @@ test('Collapsed Selection - Outdent Actions', function() {
 	Outdenting.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
 	Outdenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
 	Outdenting.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
+	queue.done();
 });
 
-test('Collapsed Selection - Type Tab', function() {
+asyncTest('Collapsed Selection - Type Enter', function() {
+	TypingEnter.inA(EmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ol>');
+	TypingEnter.a(EmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ul>');
+	TypingEnter.a(NonEmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>Test</li><li>After</li></ol>');
+	TypingEnter.a(NonEmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>Test</li><li>After</li></ul>');
+	
+	TypingEnter.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>&nbsp;</li></ol></li><li>After</li></ol>');
+	TypingEnter.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>&nbsp;</li></ul></li><li>After</li></ul>');
+	TypingEnter.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>Test</li></ol></li><li>After</li></ol>');
+	TypingEnter.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>Test</li></ul></li><li>After</li></ul>');
+	queue.done();
+});
+asyncTest('Collapsed Selection - Type Tab', function() {
 	TypingTab.inA(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
 	TypingTab.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
 	TypingTab.a(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
 	TypingTab.a(NonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
 	
 	TypingTab.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
-	TypingTab.a(NestedEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
+	TypingTab.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>&nbsp;</li></ul></li></ul></li><li>After</li></ul>');
 	TypingTab.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
-	TypingTab.a(NestedNonEmptyUnorderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
+	TypingTab.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>Test</li></ul></li></ul></li><li>After</li></ul>');
+	queue.done();
 });
 
-test('Collapsed Selection - Type Shift-Tab', function() {
+asyncTest('Collapsed Selection - Type Shift-Tab', function() {
 	expect(8);
 	TypingShiftTab.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
 	TypingShiftTab.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
@@ -314,6 +346,7 @@ test('Collapsed Selection - Type Shift-Tab', function() {
 	TypingShiftTab.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
 	TypingShiftTab.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
 	TypingShiftTab.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
+	queue.done();
 });
 
 tinyMCE.init({
@@ -326,14 +359,16 @@ tinyMCE.init({
 	apply_source_formatting : 0,
 	init_instance_callback : function(ed) {
 		editor = ed;
-
-		ed.onNodeChange.addToTop(function() {
-			return false;
-		});
-
-		QUnit.setup();
+		window.tinyLoaded = true;
+		initWhenReady();
 	}
 });
+
+function initWhenReady() {
+	if (window.tinyLoaded && window.robotLoaded) {
+		QUnit.setup();
+	}
+}
 </script>
 </head>
 <body>
@@ -344,10 +379,13 @@ tinyMCE.init({
 	<ol id="qunit-tests"></ol>
 	<div id="content">
 		<textarea id="elm1" name="elm1"></textarea>
-		<div>
-			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
-			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
-		</div>
 	</div>
+	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
+	<script>
+		window.robot.onload(function() {
+			window.robotLoaded = true;
+			initWhenReady();
+		});
+	</script>
 </body>
 </html>
