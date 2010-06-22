@@ -109,6 +109,33 @@ MultipleHeadingSelection = createState('<h1>This is a test</h1><h1>Second paragr
 SingleBlockSelection = createState('<div>This is a test</div>', 'h1', 5, 'h1', 7);
 MultipleBlockSelection = createState('<div>This is a test</div><div>Second paragraph</div>', 'div:nth-child(1)', 5, 'div:nth-child(2)', 6);
 
+CellWithoutBrSelection = createState('<table><tbody><tr><td>Cell 1</td></tr></tbody></table>', 'td', 1, 'td', 4);
+CellWithBrSingleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);
+CellWithBrMultipleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);
+
+ParagraphToHeadingSelection = createState('<p>This is a test</p><h1>Second paragraph</h1>', 'p', 5, 'h1', 6);
+ParagraphToBlockSelection = createState('<p>This is a test</p><div>Second paragraph</div>', 'p', 5, 'div', 6);
+HeadingToParagraphSelection = createState('<h1>This is a test</h1><p>Second paragraph</p>', 'h1', 5, 'p', 6);
+BlockToParagraphSelection = createState('<div>This is a test</div><p>Second paragraph</p>', 'div', 5, 'p', 6);
+MultipleParagraphAndHeadingSelection = createState('<p>This is a test</p><h1>Second paragraph</h1><div>Third paragraph</div>', 'p', 5, 'div', 5);
+
+SingleLiOlSelection = createState('<ol><li>Item 1</li></ol>', 'li', 1, 'li', 4);
+MultiLiOlSelection = createState('<ol><li>Item 1</li><li>Item 2</li></ol>', 'li:nth-child(1)', 1, 'li:nth-child(2)', 4);
+SingleLiUlSelection = createState('<ul><li>Item 1</li></ul>', 'li', 1, 'li', 4);
+MultiLiUlSelection = createState('<ul><li>Item 1</li><li>Item 2</li></ul>', 'li:nth-child(1)', 1, 'li:nth-child(2)', 4);
+
+IndentedOlInOlCorrectSelection = createState('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>', 'li', 1, 'li li', 4);
+IndentedUlInUlCorrectSelection = createState('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>', 'li', 1, 'li li', 4);
+IndentedOlInOlIncorrectSelection = createState('<ol><li>Item 1</li><ol><li>Indented</li></ol></ol>', 'li', 1, 'ol ol li', 4);
+IndentedUlInUlIncorrectSelection = createState('<ul><li>Item 1</li><ul><li>Indented</li></ul></ul>', 'li', 1, 'ul ul li', 4);
+
+IndentedOlInUlCorrectSelection = createState('<ul><li>Item 1<ol><li>Indented</li></ol></li></ul>', 'li', 1, 'li li', 4);
+IndentedUlInOlCorrectSelection = createState('<ol><li>Item 1<ul><li>Indented</li></ul></li></ol>', 'li', 1, 'li li', 4);
+IndentedOlInUlIncorrectSelection = createState('<ul><li>Item 1</li><ol><li>Indented</li></ol></ul>', 'li', 1, 'ul ol li', 4);
+IndentedUlInOlIncorrectSelection = createState('<ol><li>Item 1</li><ul><li>Indented</li></ul></ol>', 'li', 1, 'ol ul li', 4);
+
+// TODO: Paragraph/heading to list combinations.
+
 // Expected Results
 var EmptyOL = "<ol><li></li></ol>";
 var EmptyUL = "<ul><li></li></ul>";
