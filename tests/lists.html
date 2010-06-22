@@ -30,12 +30,18 @@ function fakeKeyPress(keyCode, shiftKey) {
 }
 
 // Initial States
-function setupState(content, selector, offset) {
+function setupState(content, startSelector, startOffset, endSelector, endOffset) {
 	editor.setContent(content);
-	setSelection(selector, offset);
+	setSelection(startSelector, startOffset, endSelector, endOffset);
 }
 
-function setSelection(selector, offset){
+function createState(content, startSelector, startOffset, endSelector, endOffset) {
+	return function() {
+		setupState(content, startSelector, startOffset, endSelector, endOffset);
+	};
+}
+
+function findContainer(selector) {
 	var container;
 	if (tinymce.is(selector, 'string')) {
 		container = editor.dom.select(selector)[0];
@@ -45,12 +51,23 @@ function setSelection(selector, offset){
 	if (container.firstChild) {
 		container = container.firstChild;
 	}
+	return container;
+}
+
+function setSelection(startSelector, startOffset, endSelector, endOffset) {
+	if (!endSelector) {
+		endSelector = startSelector;
+		endOffset = startOffset;
+	}
+	var startContainer = findContainer(startSelector);
+	var endContainer = findContainer(endSelector);
 	var rng = editor.dom.createRng();
-	rng.setStart(container, offset);
-	rng.setEnd(container, offset);
+	rng.setStart(startContainer, startOffset);
+	rng.setEnd(endContainer, endOffset);
 	editor.selection.setRng(rng);
 }
 
+/** Collasped Selection States **/
 function EmptyParagraph() {
 	var body = editor.getBody();
 	while (body.firstChild) {
@@ -67,71 +84,30 @@ function EmptyHeading() {
 	editor.formatter.apply('h1');
 }
 
-function NonEmptyParagraph() {
-	setupState('<p>Test</p>', 'p', 0);
-}
+NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
+NonEmptyHeading = createState('<h1>Test</h1>', 'h1', 0);
+TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
+TableCellWithBrs = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+EndOfParagraphBeforeOL = createState('<p>Test</p><ol><li>Item</li></ol>', 'p', 4);
+EndOfParagraphBeforeUL = createState('<p>Test</p><ul><li>Item</li></ul>', 'p', 4);
+StartOfParagraphAfterOL = createState('<ol><li>Item</li></ol><p>Test</p>', 'p', 1);
+StartOfParagraphAfterUL = createState('<ul><li>Item</li></ul><p>Test</p>', 'p', 1);
+EmptyOrderedListItem = createState('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>', 'li:nth-child(2)', 0);
+EmptyUnorderedListItem = createState('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>', 'li:nth-child(2)', 0);
+NonEmptyOrderedListItem = createState('<ol><li>Before</li><li>Test</li><li>After</li></ol>', 'li:nth-child(2)', 0);
+NonEmptyUnorderedListItem = createState('<ul><li>Before</li><li>Test</li><li>After</li></ul>', 'li:nth-child(2)', 0);
+NestedEmptyOrderedListItem = createState('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>', 'li ol li', 0);
+NestedEmptyUnorderedListItem = createState('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>', 'li ul li', 0);
+NestedNonEmptyOrderedListItem = createState('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>', 'li ol li', 0);
+NestedNonEmptyUnorderedListItem = createState('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>', 'li ul li', 0);
 
-function NonEmptyHeading() {
-	setupState('<h1>Test</h1>', 'h1', 0);
-}
-
-function TableCellWithoutBrs() {
-	setupState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
-}
-
-function TableCellWithBrs() {
-	setupState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
-}
-
-function EndOfParagraphBeforeOL() {
-	setupState('<p>Test</p><ol><li>Item</li></ol>', 'p', 4);
-}
-
-function EndOfParagraphBeforeUL() {
-	setupState('<p>Test</p><ul><li>Item</li></ul>', 'p', 4);
-}
-
-function StartOfParagraphAfterOL() {
-	// TODO: This should be 0 but then IE seems to select the element before. Something wrong with the IE range emulation?
-	setupState('<ol><li>Item</li></ol><p>Test</p>', 'p', 1);
-}
-
-function StartOfParagraphAfterUL() {
-	// TODO: This should be 0 but then IE seems to select the element before. Something wrong with the IE range emulation?
-	setupState('<ul><li>Item</li></ul><p>Test</p>', 'p', 1);
-}
-
-function EmptyOrderedListItem() {
-	setupState('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>', 'li:nth-child(2)', 0);
-}
-
-function EmptyUnorderedListItem() {
-	setupState('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>', 'li:nth-child(2)', 0);
-}
-
-function NonEmptyOrderedListItem() {
-	setupState('<ol><li>Before</li><li>Test</li><li>After</li></ol>', 'li:nth-child(2)', 0);
-}
-
-function NonEmptyUnorderedListItem() {
-	setupState('<ul><li>Before</li><li>Test</li><li>After</li></ul>', 'li:nth-child(2)', 0);
-}
-
-function NestedEmptyOrderedListItem() {
-	setupState('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>', 'li ol li', 0);
-}
-
-function NestedEmptyUnorderedListItem() {
-	setupState('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>', 'li ul li', 0);
-}
-
-function NestedNonEmptyOrderedListItem() {
-	setupState('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>', 'li ol li', 0);
-}
-
-function NestedNonEmptyUnorderedListItem() {
-	setupState('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>', 'li ul li', 0);
-}
+/** Expanded Selection States **/
+SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);
+MultipleParagraphSelection = createState('<p>This is a test</p><p>Second paragraph</p>', 'p:nth-child(1)', 5, 'p:nth-child(2)', 6);
+SingleHeadingSelection = createState('<h1>This is a test</h1>', 'h1', 5, 'h1', 7);
+MultipleHeadingSelection = createState('<h1>This is a test</h1><h1>Second paragraph</h1>', 'h1:nth-child(1)', 5, 'h1:nth-child(2)', 6);
+SingleBlockSelection = createState('<div>This is a test</div>', 'h1', 5, 'h1', 7);
+MultipleBlockSelection = createState('<div>This is a test</div><div>Second paragraph</div>', 'div:nth-child(1)', 5, 'div:nth-child(2)', 6);
 
 // Expected Results
 var EmptyOL = "<ol><li></li></ol>";
@@ -322,6 +298,7 @@ asyncTest('Collapsed Selection - Type Enter', function() {
 	TypingEnter.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>Test</li></ul></li><li>After</li></ul>');
 	queue.done();
 });
+
 asyncTest('Collapsed Selection - Type Tab', function() {
 	TypingTab.inA(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
 	TypingTab.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
@@ -346,6 +323,11 @@ asyncTest('Collapsed Selection - Type Shift-Tab', function() {
 	TypingShiftTab.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
 	TypingShiftTab.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
 	TypingShiftTab.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
+	queue.done();
+});
+
+asyncTest('Expanded Selection - Ordered List Action', function() {
+	ApplyingOL.to(SingleParagraphSelection).gives('<ol><li>This is a test</li></ol>');
 	queue.done();
 });
 
