@@ -10,11 +10,20 @@
 var editor;
 
 function getFunctionName(func) {
-	if (typeof func == "function" || typeof func == "object") {
-	  	var fName = ("" + func).match(/function\s*([\w\$]*)\s*\(/);
+	if (func.name && func.name != "") {
+		return func.name;
+	} else if (typeof func == "function" || typeof func == "object") {
+	  	var fName = ("" + func).match(/function\s*([\w\$]+)\s*\(/);
 	  	if (fName !== null) {
 	  		return fName[1];
-	  	}
+	  	} else {
+			for (var v in window) {
+				if (window[v] === func) {
+					func.name = v;
+					return v;
+				}
+			}
+		}
 	}
 }
 
@@ -106,7 +115,7 @@ SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);
 MultipleParagraphSelection = createState('<p>This is a test</p><p>Second paragraph</p>', 'p:nth-child(1)', 5, 'p:nth-child(2)', 6);
 SingleHeadingSelection = createState('<h1>This is a test</h1>', 'h1', 5, 'h1', 7);
 MultipleHeadingSelection = createState('<h1>This is a test</h1><h1>Second paragraph</h1>', 'h1:nth-child(1)', 5, 'h1:nth-child(2)', 6);
-SingleBlockSelection = createState('<div>This is a test</div>', 'h1', 5, 'h1', 7);
+SingleBlockSelection = createState('<div>This is a test</div>', 'div', 5, 'div', 7);
 MultipleBlockSelection = createState('<div>This is a test</div><div>Second paragraph</div>', 'div:nth-child(1)', 5, 'div:nth-child(2)', 6);
 
 CellWithoutBrSelection = createState('<table><tbody><tr><td>Cell 1</td></tr></tbody></table>', 'td', 1, 'td', 4);
@@ -315,46 +324,74 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 
 asyncTest('Collapsed Selection - Type Enter', function() {
 	TypingEnter.inA(EmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ol>');
-	TypingEnter.a(EmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ul>');
-	TypingEnter.a(NonEmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>Test</li><li>After</li></ol>');
-	TypingEnter.a(NonEmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>Test</li><li>After</li></ul>');
+	TypingEnter.inA(EmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ul>');
+	TypingEnter.inA(NonEmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>Test</li><li>After</li></ol>');
+	TypingEnter.inA(NonEmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>Test</li><li>After</li></ul>');
 	
-	TypingEnter.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>&nbsp;</li></ol></li><li>After</li></ol>');
-	TypingEnter.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>&nbsp;</li></ul></li><li>After</li></ul>');
-	TypingEnter.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>Test</li></ol></li><li>After</li></ol>');
-	TypingEnter.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>Test</li></ul></li><li>After</li></ul>');
+	TypingEnter.inA(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>&nbsp;</li></ol></li><li>After</li></ol>');
+	TypingEnter.inA(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>&nbsp;</li></ul></li><li>After</li></ul>');
+	TypingEnter.inA(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>Test</li></ol></li><li>After</li></ol>');
+	TypingEnter.inA(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>Test</li></ul></li><li>After</li></ul>');
 	queue.done();
 });
 
 asyncTest('Collapsed Selection - Type Tab', function() {
 	TypingTab.inA(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
-	TypingTab.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
-	TypingTab.a(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
-	TypingTab.a(NonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
+	TypingTab.inA(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
+	TypingTab.inA(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
+	TypingTab.inA(NonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
 	
-	TypingTab.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
-	TypingTab.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>&nbsp;</li></ul></li></ul></li><li>After</li></ul>');
-	TypingTab.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
-	TypingTab.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>Test</li></ul></li></ul></li><li>After</li></ul>');
+	TypingTab.inA(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
+	TypingTab.inA(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>&nbsp;</li></ul></li></ul></li><li>After</li></ul>');
+	TypingTab.inA(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
+	TypingTab.inA(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>Test</li></ul></li></ul></li><li>After</li></ul>');
 	queue.done();
 });
 
 asyncTest('Collapsed Selection - Type Shift-Tab', function() {
 	expect(8);
-	TypingShiftTab.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
-	TypingShiftTab.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
-	TypingShiftTab.a(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
-	TypingShiftTab.a(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+	TypingShiftTab.inA(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
+	TypingShiftTab.inA(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
+	TypingShiftTab.inA(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
+	TypingShiftTab.inA(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
 	
-	TypingShiftTab.a(NestedEmptyOrderedListItem).gives('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>');
-	TypingShiftTab.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
-	TypingShiftTab.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
-	TypingShiftTab.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
+	TypingShiftTab.inA(NestedEmptyOrderedListItem).gives('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>');
+	TypingShiftTab.inA(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
+	TypingShiftTab.inA(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
+	TypingShiftTab.inA(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
 	queue.done();
 });
 
-asyncTest('Expanded Selection - Ordered List Action', function() {
+asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function() {
 	ApplyingOL.to(SingleParagraphSelection).gives('<ol><li>This is a test</li></ol>');
+	ApplyingOL.to(MultipleParagraphSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
+	ApplyingOL.to(SingleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li></ol>');
+	ApplyingOL.to(MultipleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li><li><h1>Second paragraph</h1></li></ol>');
+	ApplyingOL.to(SingleBlockSelection).gives('<div><ol><li>This is a test</li></ol></div>');
+	// TODO: This result seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
+	ApplyingOL.to(MultipleBlockSelection).gives('<ol><li><div>This is a test</div></li><li><div>Second paragraph</div></li></ol>');
+	
+	// TODO: Mixed paragraph/heading states.
+	queue.done();
+});
+
+//asyncTest('Expanded Selection, Table Types - Ordered List Actin', function() {
+	// TODO
+//});
+
+asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
+	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
+	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1</p><p>Item 2</p>');  // Constant Contact fail case
+	ApplyingOL.to(SingleLiUlSelection).gives('<ol><li>Item 1</li></ol>');
+	ApplyingOL.to(MultiLiUlSelection).gives('<ol><li>Item 1</li><li>Item 2</li></ol>');
+	
+	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	ApplyingOL.to(IndentedOlInOlInorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	
+	// TODO: Selection only in indented list.
+	
+	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	ApplyingOL.to(IndentedOlInOlInorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 	queue.done();
 });
 
