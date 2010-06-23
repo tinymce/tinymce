@@ -1,3 +1,8 @@
+QUnit.config.autostart = false;
+module("API", {
+	autostart: false
+});
+
 /**
  * Fakes a mouse event.
  *
@@ -907,7 +912,7 @@ function fakeKeyEvent(e, na, o) {
 		DOM.remove('test');
 	});
 
-	test('tinymce.dom.DOMUtils - processHTML', 10, function() {
+	test('tinymce.dom.DOMUtils - processHTML', 12, function() {
 		var dom;
 
 		dom = new tinymce.dom.DOMUtils(document, {hex_colors : true, keep_values : true, url_converter : function(u) {
@@ -1505,6 +1510,6 @@ function fakeKeyEvent(e, na, o) {
 tinymce.dom.Event.add(window, 'load', function() {
 	// IE6 chokes if you stress it
 	window.setTimeout(function() {
-		QUnit.setup();
+		QUnit.start();
 	}, 1);
 });

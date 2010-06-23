@@ -4,9 +4,15 @@
 <title>Unit tests for tinymce.dom.Selection</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
 <script>
 var editor;
+
+QUnit.config.autostart = false;
+module("Selection", {
+	autostart: false
+});
 
 test('getContent', function() {
 	var rng, eventObj;
@@ -265,7 +271,7 @@ tinyMCE.init({
 			return false;
 		});
 
-		QUnit.setup();
+		QUnit.start();
 	}
 });
 </script>

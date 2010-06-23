@@ -1,10 +1,70 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>Testcases for TinyMCE</title>
+	<meta charset="UTF-8" />
+	<title>TinyMCE Unit Tests</title>
+	<link rel="stylesheet" href="qunit/qunit.css" type="text/css"/>
+	<style type="text/css">
+	ul { font-family: 'trebuchet ms', verdana, arial; }
+	h2, ul {font-size: 10pt; }
+	h2 {
+		background-color:#EEEEEE;
+		color:black;
+		font-size:small;
+		font-weight:normal;
+		margin:0;
+		padding:10px;
+	}
+	.pass {
+		background-color:#D2E0E6; 
+	}
+	.fail {
+		background-color:#EE5757; 
+	}
+	</style>
+	<script type="text/javascript" src="qunit/runner.js"></script>
+	<script type="text/javascript">
+		// Init QUnitRunner
+		QUnitRunner.init({
+			suites: [
+				{title: 'Core tests', tests: [
+					{title: 'Core API', url: 'api.html'},
+					{title: 'Core API (jQuery)', url: 'api_jquery.html'},
+					{title: 'Basic functionality', url: 'basic.html'}
+				]},
+
+				{title: 'Plugins tests', tests: [
+					{title: 'Media plugin', url: 'media.html'},
+					{title: 'Paste plugin', url: 'paste.html'},
+					{title: 'jQuery plugin', url: 'jquery_plugin.html'}
+				]},
+
+				{title: 'Selection tests', tests: [
+					{title: 'Selection', url: 'selection.html'},
+					{title: 'IE Selection', url: 'ie_selection.html'},
+					{title: 'IE Range', url: 'ie_range.html'}
+				]},
+
+				{title: 'Formatter tests', tests: [
+					{title: 'Apply formatting', url: 'formatting_apply.html'},
+					{title: 'Remove formatting', url: 'formatting_remove.html'},
+					{title: 'Check formatting', url: 'formatting_check.html'}
+				]}
+			]
+		});
+	</script>
 </head>
-<frameset cols="200,80%">
-	<frame src="menu.html" name="menu" />
-	<frame src="main.html" name="main" />
-</frameset>
+<body>
+
+<h1 id="qunit-header">TinyMCE Unit Tests</h1>
+
+<div id="menu">
+</div>
+
+<input type="button" value="Run all" onclick="QUnitRunner.run();" />
+
+<div id="log">
+</div>
+
+</body>
 </html>
