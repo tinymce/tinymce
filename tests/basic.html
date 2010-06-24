@@ -253,12 +253,17 @@ test('commands - subscriptSuperscript', function() {
 test('commands - insertHR', function() {
 	var v;
 
-	expect(1);
+	expect(2);
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('InsertHorizontalRule');
 	equals(trimContent(editor.getContent()), '<hr />');
+
+	editor.setContent('<p>test123</p>');
+	setSelection('p', 4);
+	editor.execCommand('InsertHorizontalRule');
+	equals(editor.getContent(), '<p>test</p><hr /><p>123</p>');
 });
 
 test('commands - indentOutdent', function() {
