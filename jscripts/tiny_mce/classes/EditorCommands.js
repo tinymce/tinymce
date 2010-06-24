@@ -339,7 +339,23 @@
 			},
 
 			InsertHorizontalRule : function() {
-				selection.setContent('<hr />');
+				var hrElm, hrParent, rng;
+				selection.setContent('<hr id="_mce_inserted_hr" />');
+
+				// WebKit produces lists within block elements so we need to split them
+				// we will replace the native list creation logic to custom logic later on
+				// TODO: Remove this when the list creation logic is removed
+				hrElm = dom.get('_mce_inserted_hr');
+				hrParent = hrElm.parentNode;
+				// If list is within a text block then split that block
+				if (/^(H[1-6]|P|ADDRESS|PRE)$/.test(hrParent.nodeName)) {
+					dom.split(hrParent, hrElm);
+				}
+				dom.removeAllAttribs(hrElm);
+				rng = dom.createRng();
+				rng.setStartAfter(hrElm);
+				rng.setEndAfter(hrElm);
+				selection.setRng(rng);
 			},
 
 			mceToggleVisualAid : function() {
