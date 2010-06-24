@@ -221,6 +221,7 @@
 				<exclude name="build-utils/**" />
 				<exclude name="ivy.xml" />
 				<exclude name="enterprisetinymce.xml" />
+				<exclude name="ephox-changelog.txt" />
 			</fileset>
 		</copy>
 	</target>
@@ -241,7 +242,7 @@
 		</tstamp>
 		<concat destfile="${temp_dir}/tinymce/changelog.txt" eol="dos" fixlastline="true">
 			<header>Version ${file_version} (${now})&#13;&#10;	Ephox distribution of TinyMCE ${version}.</header>
-			<filelist files="changelog.txt" />
+			<filelist files="ephox-changelog.txt,changelog.txt" />
 		</concat>
 		
 		<!-- Replace major version -->

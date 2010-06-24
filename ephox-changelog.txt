@@ -1,0 +1,1 @@
+	Fixed bug where HR was inserted inside P elements insted of splitting them.
