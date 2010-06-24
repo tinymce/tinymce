@@ -349,10 +349,7 @@
 					dom.split(hrParent, hrElm);
 				}
 				dom.removeAllAttribs(hrElm);
-				rng = dom.createRng();
-				rng.setStartAfter(hrElm);
-				rng.setEndAfter(hrElm);
-				selection.setRng(rng);
+				selection.moveAfterNode(hrElm);
 			},
 
 			mceToggleVisualAid : function() {
