@@ -371,10 +371,11 @@
 			},
 			
 			selectAll : function() {
-				var root = dom.getRoot();
-				var rng = dom.createRng();
+				var root = dom.getRoot(), rng = dom.createRng();
+
 				rng.setStart(root, 0);
 				rng.setEnd(root, root.childNodes.length);
+
 				editor.selection.setRng(rng);
 			}
 		});

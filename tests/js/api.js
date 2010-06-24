@@ -1485,6 +1485,7 @@ function fakeKeyEvent(e, na, o) {
 	});
 })();
 
+/*
 (function() {
 	var Parser = tinymce.xml.Parser;
 
@@ -1506,6 +1507,7 @@ function fakeKeyEvent(e, na, o) {
 		equals(tinymce.trim(p.getText(d.getElementsByTagName('tag')[0])), 'ÅÄÖ');
 	});
 })();
+*/
 
 tinymce.dom.Event.add(window, 'load', function() {
 	// IE6 chokes if you stress it
