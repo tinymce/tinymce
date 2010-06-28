@@ -2576,12 +2576,6 @@
 						if (rng.parentElement) {
 							parent = rng.parentElement();
 
-							// Get the current caret position within the element
-							tmpRng = rng.duplicate();
-							tmpRng.moveToElementText(parent);
-							tmpRng.setEndPoint('EndToEnd', rng);
-							offset = tmpRng.text.length;
-
 							// Select next word when ctrl key is used in combo with delete
 							if (e.ctrlKey) {
 								rng.moveEnd('word', 1);
@@ -2590,6 +2584,12 @@
 
 							// Delete contents
 							t.selection.getSel().clear();
+
+							// Get the current caret position within the element
+							tmpRng = rng.duplicate();
+							tmpRng.moveToElementText(parent);
+							tmpRng.setEndPoint('EndToEnd', rng);
+							offset = tmpRng.text.length;
 
 							// Check if we are within the same parent
 							if (rng.parentElement() == parent) {
