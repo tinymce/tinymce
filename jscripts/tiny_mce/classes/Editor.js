@@ -2564,7 +2564,7 @@
 				});
 
 				t.onKeyDown.add(function(ed, e) {
-					var rng, tmpRng, parent, offset;
+					var rng, parent, bookmark;
 
 					// IE has a really odd bug where the DOM might include an node that doesn't have
 					// a proper structure. If you try to access nodeValue it would throw an illegal value exception.
@@ -2585,14 +2585,10 @@
 							// Delete contents
 							t.selection.getSel().clear();
 
-							// Get the current caret position within the element
-							tmpRng = rng.duplicate();
-							tmpRng.moveToElementText(parent);
-							tmpRng.setEndPoint('EndToEnd', rng);
-							offset = tmpRng.text.length;
-
 							// Check if we are within the same parent
 							if (rng.parentElement() == parent) {
+								bookmark = t.selection.getBookmark();
+
 								try {
 									// Update the HTML and hopefully it will remove the artifacts
 									parent.innerHTML = parent.innerHTML;
@@ -2601,10 +2597,7 @@
 								}
 
 								// Restore the caret position
-								tmpRng.moveToElementText(parent);
-								tmpRng.collapse();
-								tmpRng.move('character', offset);
-								tmpRng.select();
+								t.selection.moveToBookmark(bookmark);
 							}
 
 							// Block the default delete behavior since it might be broken
