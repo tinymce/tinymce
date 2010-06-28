@@ -219,6 +219,20 @@ test('Formatter - remove', function() {
 	equals(getContent(), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
 });
 
+test('Formatter - remove and verify start element', function() {
+	var rng;
+
+	editor.formatter.register('format', {inline : 'b'});
+	rng = editor.dom.createRng();
+	editor.getBody().innerHTML = '<p><b>text</b></p>';
+	rng.setStart(editor.dom.select('b')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(getContent(), '<p><b>t</b>ex<b>t</b></p>');
+	equals(editor.selection.getStart().nodeName, 'P');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
