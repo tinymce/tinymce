@@ -5,6 +5,7 @@ Version 3.3.x (2010-xx-xx)
 	Fixed bug where the format states would be enabled even after the format was removed.
 	Fixed bug where the delete key would move the caret to an incorrect position.
 	Fixed bug where it wasn't possible to toggle of the current font size/family/style by clicking the title item.
+	Fixed bug where the abbr element wouldn't get serialized correctly on IE6.
 	Fixed so that the examples checks if they are executed from the local file system since that might not work properly.
 Version 3.3.7 (2010-06-10)
 	Fixed bug where context menu would produce an error on IE if you right clicked twice and left clicked once.

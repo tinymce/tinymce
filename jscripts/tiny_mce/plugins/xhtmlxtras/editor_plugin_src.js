@@ -86,18 +86,6 @@
 			ed.addButton('ins', {title : 'xhtmlxtras.ins_desc', cmd : 'mceIns'});
 			ed.addButton('attribs', {title : 'xhtmlxtras.attribs_desc', cmd : 'mceAttributes'});
 
-			if (tinymce.isIE) {
-				function fix(ed, o) {
-					if (o.set) {
-						o.content = o.content.replace(/<abbr([^>]+)>/gi, '<html:abbr $1>');
-						o.content = o.content.replace(/<\/abbr>/gi, '</html:abbr>');
-					}
-				};
-
-				ed.onBeforeSetContent.add(fix);
-				ed.onPostProcess.add(fix);
-			}
-
 			ed.onNodeChange.add(function(ed, cm, n, co) {
 				n = ed.dom.getParent(n, 'CITE,ACRONYM,ABBR,DEL,INS');
 
