@@ -575,6 +575,20 @@
 		},
 
 		/**
+		 * Removes all attributes from an element or elements.
+		 * 
+		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.
+		 */
+		removeAllAttribs: function(e) {
+			return this.run(e, function(e) {
+				var attrs = e.attributes;
+				for (var i = attrs.length - 1; i >= 0; i--) {
+					e.removeAttributeNode(attrs.item(i));
+				}
+			});
+		},
+
+		/**
 		 * Sets the specified attributes value of a element or elements.
 		 *
 		 * @method setAttrib

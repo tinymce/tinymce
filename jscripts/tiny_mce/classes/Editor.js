@@ -2625,6 +2625,47 @@
 						addUndo();
 				});
 			}
+			
+			// Bug fix for FireFox keeping styles from end of selection instead of start.
+			if (tinymce.isGecko) {
+				function getAttributeApplyFunction() {
+					t.undoManager.typing = 0;
+					t.undoManager.add();
+					var template = t.dom.getAttribs(t.selection.getStart().cloneNode(false));
+					return function() {
+						var target = t.selection.getStart();
+						t.dom.removeAllAttribs(target);
+						t.dom.setAttribs(target, template);
+						t.undoManager.typing = 0;
+						t.undoManager.add();
+					};
+				}
+				
+				function isSelectionAcrossElements() {
+					var s = t.selection;
+					return !s.isCollapsed() && s.getStart() != s.getEnd();
+				}
+				
+				t.onKeyPress.add(function(ed, e) {
+					if ((e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
+						var applyAttributes = getAttributeApplyFunction();
+						t.getDoc().execCommand('delete', false, null);
+						applyAttributes();
+						return Event.cancel(e);
+					}
+				});
+				
+				t.dom.bind(t.getDoc(), 'cut', function(e) {
+					if (isSelectionAcrossElements()) {
+						var applyAttributes = getAttributeApplyFunction();
+						t.onKeyUp.addToTop(Event.cancel, Event);
+						setTimeout(function() {
+							applyAttributes();
+							t.onKeyUp.remove(Event.cancel, Event);
+						}, 0);
+					}
+				});
+			}
 		},
 
 		_isHidden : function() {
