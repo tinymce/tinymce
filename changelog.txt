@@ -1,4 +1,4 @@
-Version 3.3.8 (2010-03-30)
+Version 3.3.8 (2010-06-30)
 	Fixed bug where WebKit would not move the caret to a correct position after a paste operation.
 	Fixed bug where WebKit would produce a div wrapper element when pasting some contents.
 	Fixed bug where the visual chars and nonbreaking plugin wouldn't show nbsp elements correctly.
