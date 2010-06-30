@@ -4,6 +4,7 @@ tmp
 docs
 .settings
 .project
+.externalToolBuilders
 *~
 *.diff
 *.patch
