@@ -592,7 +592,7 @@
 		},
 
 		_serializeNode : function(n, inner) {
-			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv, closed, keep, type;
+			var t = this, s = t.settings, w = t.writer, hc, el, cn, i, l, a, at, no, v, nn, ru, ar, iv, closed, keep, type, scopeName;
 
 			if (!s.node_filter || s.node_filter(n)) {
 				switch (n.nodeType) {
@@ -616,8 +616,9 @@
 
 						// Add correct prefix on IE
 						if (isIE) {
-							if (n.scopeName !== 'HTML' && n.scopeName !== 'html')
-								nn = n.scopeName + ':' + nn;
+							scopeName = n.scopeName;
+							if (scopeName && scopeName !== 'HTML' && scopeName !== 'html')
+								nn = scopeName + ':' + nn;
 						}
 
 						// Remove mce prefix on IE needed for the abbr element

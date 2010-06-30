@@ -1,3 +1,12 @@
+Version 3.3.8 (2010-06-30)
+	Fixed bug where WebKit would not move the caret to a correct position after a paste operation.
+	Fixed bug where WebKit would produce a div wrapper element when pasting some contents.
+	Fixed bug where the visual chars and nonbreaking plugin wouldn't show nbsp elements correctly.
+	Fixed bug where the format states would be enabled even after the format was removed.
+	Fixed bug where the delete key would move the caret to an incorrect position.
+	Fixed bug where it wasn't possible to toggle of the current font size/family/style by clicking the title item.
+	Fixed bug where the abbr element wouldn't get serialized correctly on IE6.
+	Fixed so that the examples checks if they are executed from the local file system since that might not work properly.
 Version 3.3.7 (2010-06-10)
 	Fixed bug where context menu would produce an error on IE if you right clicked twice and left clicked once.
 	Fixed bug where resizing of the window on WebKit browsers in fullscreen mode wouldn't position the statusbar correctly.
