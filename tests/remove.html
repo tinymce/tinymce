@@ -25,10 +25,9 @@ asyncTest('Backspace with indented text', function() {
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.type('\b', false, function() {
 		equals(editor.getContent(), "<p>Line2</p>");
-		robot.typeAsShortcut('z', function() {
-			equals(editor.getContent(), originalContent);
-			QUnit.start();
-		});
+		editor.execCommand('undo', false, null);
+		equals(editor.getContent(), originalContent);
+		QUnit.start();
 	});
 });
 
@@ -44,13 +43,12 @@ if (!tinymce.isGecko || !/Firefox\/[12].[0-9]/.test(navigator.userAgent)) {
 		setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 		robot.cut(function() {
 			equals(editor.getContent(), "<p>Line2</p>", 'Cut text');
-			robot.typeAsShortcut('z', function() {
-				equals(editor.getContent(), originalContent, 'Undo cut');
-				editor.execCommand('SelectAll');
-				robot.paste(function() {
-					ok(/Line/.test(editor.getContent()), 'Content should have been on clipboard. Got: ' + editor.getContent());
-					QUnit.start();
-				});
+			editor.execCommand('undo', false, null);
+			equals(editor.getContent(), originalContent, 'Undo cut');
+			editor.execCommand('SelectAll');
+			robot.paste(function() {
+				ok(/Line/.test(editor.getContent()), 'Content should have been on clipboard. Got: ' + editor.getContent());
+				QUnit.start();
 			});
 		});
 	});
@@ -68,10 +66,9 @@ asyncTest('Forward delete with indented text', function() {
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.forwardDelete(function() {
 		equals(editor.getContent(), "<p>Line2</p>");
-		robot.typeAsShortcut('z', function() {
-			equals(editor.getContent(), originalContent);
-			QUnit.start();
-		});
+		editor.execCommand('undo', false, null);
+		equals(editor.getContent(), originalContent);
+		QUnit.start();
 	});
 });
 
