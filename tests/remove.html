@@ -24,9 +24,9 @@ asyncTest('Backspace with indented text', function() {
 	editor.focus();
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.type('\b', false, function() {
-		equals(editor.getContent(), "<p>Line2</p>");
+		equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
 		editor.execCommand('undo', false, null);
-		equals(editor.getContent(), originalContent);
+		equals(editor.getContent(), originalContent, 'Undo deletion');
 		QUnit.start();
 	});
 });
@@ -65,9 +65,9 @@ asyncTest('Forward delete with indented text', function() {
 	editor.focus();
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.forwardDelete(function() {
-		equals(editor.getContent(), "<p>Line2</p>");
+		equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
 		editor.execCommand('undo', false, null);
-		equals(editor.getContent(), originalContent);
+		equals(editor.getContent(), originalContent, 'Undo deletion');
 		QUnit.start();
 	});
 });
@@ -75,15 +75,13 @@ asyncTest('Forward delete with indented text', function() {
 asyncTest('Forward delete with first paragraph indented', function() {
 	var c, originalContent = '<p style="margin-left: 30px;">Line1</p><p>Line2</p>';
 
-	expect(2);
+	expect(1);
 
 	editor.setContent(originalContent);
 	editor.focus();
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.forwardDelete(function() {
-		equals(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>');
-		editor.execCommand('undo', false, null);
-		equals(editor.getContent(), originalContent);
+		equals(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>', 'Delete content');
 		QUnit.start();
 	});
 });
