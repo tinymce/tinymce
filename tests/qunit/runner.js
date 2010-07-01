@@ -72,10 +72,10 @@
 			if (!iframe) {
 				iframe = document.createElement('iframe');
 				iframe.style.position = 'absolute';
-				iframe.style.left = '-5000px';
-				iframe.style.top = '-5000px';
-				iframe.style.width = '1000px';
-				iframe.style.height = '1000px';
+				iframe.style.left = '300px';
+				iframe.style.top = '0px';
+				iframe.style.width = '800px';
+				iframe.style.height = '600px';
 				document.body.appendChild(iframe);
 			}
 
@@ -99,7 +99,10 @@
 				runNext();
 			} else {
 				log("Finished running all tests. Total: " + testTotal + ", Failed: " + testFailures);
-
+				if (iframe) {
+					document.body.removeChild(iframe);
+					iframe = null;
+				}
 				// Post results
 				if (this.query.id) {
 					this.postResults(this.query.id, testTotal, testFailures, testLog);
