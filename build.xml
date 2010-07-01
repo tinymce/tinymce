@@ -186,7 +186,6 @@
 			<fileset dir="${build_dir}" includes="plugins/advlink/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/advlist/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/emotions/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/example/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/iespell/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/insertdatetime/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/preview/editor_plugin.js" />
@@ -215,8 +214,6 @@
 			<fileset dir="${build_dir}" includes="plugins/tabfocus/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/autoresize/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/wordcount/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/legacyoutput/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="themes/simple/editor_template.js" />
 			<fileset dir="${build_dir}" includes="themes/advanced/langs/en.js" />
 			<fileset dir="${build_dir}" includes="themes/advanced/editor_template.js" />
 		</concat>
