@@ -85,6 +85,10 @@
 		_setContent : function(ed, o) {
 			var t = this, sp, ep, c = o.content, v, st = '';
 
+			// Ignore raw updated if we already have a head, this will fix issues with undo/redo keeping the head/foot separate
+			if (o.format == 'raw' && t.head)
+				return;
+
 			if (o.source_view && ed.getParam('fullpage_hide_in_source_view'))
 				return;
 

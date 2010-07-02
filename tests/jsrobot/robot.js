@@ -1,4 +1,18 @@
-/* Copyright 2010 Ephox Corporation.  All rights reserved. */
+/*
+   Copyright 2010 Ephox Corporation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 (function() {
 	if (window.robot) {
 		// Don't load if there's already a version of robot loaded.
@@ -38,15 +52,27 @@
 		
 		type: function(key, shiftKey, callback) {
 			shiftKey = !!shiftKey;
-			var errorMessage = this.getApplet().typeKey(this.getKeycode(key), shiftKey);
-			if (errorMessage) {
-				throw { message: "JSRobot failed to type the requested key: " + errorMessage };
-			}
-			setTimeout(callback, 100);
+			this.appletAction(this.getApplet().typeKey(this.getKeycode(key), shiftKey), callback);
 		},
 		
 		forwardDelete: function(callback) {
 			this.type(0x7F, false, callback);
+		},
+		
+		cut: function(callback) {
+			this.typeAsShortcut('x', callback);
+		},
+		
+		copy: function(callback) {
+			this.typeAsShortcut('c', callback);
+		},
+		
+		paste: function(callback) {
+			this.typeAsShortcut('v', callback);
+		},
+		
+		typeAsShortcut: function(key, callback) {
+			this.appletAction(this.getApplet().typeAsShortcut(this.getKeycode(key)), callback);
 		},
 		
 		getKeycode: function(key) {
@@ -60,7 +86,7 @@
 			return key;
 		},
 		
-		captureScreenShot: function(key) {
+		captureScreenShot: function() {
 			return this.getApplet().captureScreenShot();
 		},
 		
@@ -70,6 +96,13 @@
 		
 		getApplet: function() {
 			return this.appletInstance;
+		},
+		
+		appletAction: function(actionResult, callback) {
+			if (actionResult) {
+				throw { message: "JSRobot error: " + actionResult };
+			}
+			setTimeout(callback, 100);
 		}
 	};
 	

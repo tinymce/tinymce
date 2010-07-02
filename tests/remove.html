@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Removing content tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script><!--
+var editor;
+
+QUnit.config.autostart = false;
+module("Remove Content", {
+	autostart: false
+});
+
+asyncTest('Backspace with indented text', function() {
+	var c, originalContent = '<p>Line1</p><p style="margin-left: 30px;">Line2</p>';
+
+	expect(2);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
+	robot.type('\b', false, function() {
+		equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
+		editor.execCommand('undo', false, null);
+		equals(editor.getContent(), originalContent, 'Undo deletion');
+		QUnit.start();
+	});
+});
+
+// oncut is not supported by FireFox 2.0 so this is impossible to fix there.
+if (!tinymce.isGecko || !/Firefox\/[12].[0-9]/.test(navigator.userAgent)) {
+	asyncTest('Cut with indented text', function() {
+		var c, originalContent = '<p>Line1</p><p style="margin-left: 30px;">Line2</p>';
+	
+		expect(3);
+	
+		editor.setContent(originalContent);
+		editor.focus();
+		setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
+		robot.cut(function() {
+			equals(editor.getContent(), "<p>Line2</p>", 'Cut text');
+			editor.execCommand('undo', false, null);
+			equals(editor.getContent(), originalContent, 'Undo cut');
+			editor.execCommand('SelectAll');
+			robot.paste(function() {
+				ok(/Line/.test(editor.getContent()), 'Content should have been on clipboard. Got: ' + editor.getContent());
+				QUnit.start();
+			});
+		});
+	});
+} else {
+	test('Skipped on FireFox 2.x: Cut with indented text', function() {});
+}
+
+asyncTest('Forward delete with indented text', function() {
+	var c, originalContent = '<p>Line1</p><p style="margin-left: 30px;">Line2</p>';
+
+	expect(2);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
+	robot.forwardDelete(function() {
+		equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
+		editor.execCommand('undo', false, null);
+		equals(editor.getContent(), originalContent, 'Undo deletion');
+		QUnit.start();
+	});
+});
+
+asyncTest('Forward delete with first paragraph indented', function() {
+	var c, originalContent = '<p style="margin-left: 30px;">Line1</p><p>Line2</p>';
+
+	expect(1);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
+	robot.forwardDelete(function() {
+		equals(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>', 'Delete content');
+		QUnit.start();
+	});
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	add_unload_trigger : false,
+	theme_advanced_styles : 'test1=test1;test2=test2',
+	valid_styles : {
+		'*' : 'text-align,padding-left,color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	},
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+
+		ed.onNodeChange.addToTop(function() {
+			return false;
+		});
+	}
+});
+--></script>
+</head>
+<body>
+	<h1 id="qunit-header">Removing content tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+	</div>
+	<script type="text/javascript" src="jsrobot/robot.js"></script>
+	<script>
+		initWhenTinyAndRobotAreReady();
+	</script>
+</body>
+</html>

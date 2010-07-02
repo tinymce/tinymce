@@ -1,0 +1,19 @@
+<ivy-module version="2.0"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="com.ephox" module="${ant.project.name}" status="integration" />
+
+	<configurations>
+		<include file="build-utils/ivy/configurations.xml" />
+	</configurations>
+
+	<publications>
+		<artifact name="enterprisetinymce" type="zip" conf="master" />
+		<artifact name="communitytinymce" type="zip" conf="master" />
+	</publications>
+
+
+	<dependencies>
+		<!--<dependency org="com.ephox" name="plugin" rev="latest.integration" conf="plugins->master" />--> 
+	</dependencies>
+</ivy-module>

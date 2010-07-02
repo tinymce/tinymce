@@ -31,3 +31,28 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 	rng.setEnd(endContainer, endOffset);
 	editor.selection.setRng(rng);
 }
+
+function initWhenTinyAndRobotAreReady() {
+	var tinyLoaded = false;
+	function checkLoaded() {
+		if (tinyLoaded && window.robot && window.robot.ready) {
+			QUnit.start();
+		}
+	}
+	window.robot.onload(checkLoaded);
+	tinymce.onAddEditor.add(function(tinymce, ed) {
+		if (tinyLoaded) {
+			return;
+		}
+		ed.onInit.add(function() {
+			tinyLoaded = true;
+			checkLoaded();
+		});
+	});
+}
+function trimContent(content) {
+	if (tinymce.isOpera)
+		return content.replace(/^<p>&nbsp;<\/p>/, '').replace(/<p>&nbsp;<\/p>$/, '');
+
+	return content;
+}

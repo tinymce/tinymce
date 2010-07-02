@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<project name="plugin-build" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<dirname property="plugin-build.dir" file="${ant.file.plugin-build}" />
+	
+	<property file="project.properties" />
+	
+	<import file="${plugin-build.dir}/build-utils.xml" />
+
+	<property name="tmp-dir" location="tmp" />
+	<property name="src-dir" location="plugins/${ant.project.name}" />
+	<property name="plugin-src" value="${src-dir}/editor_plugin_src.js" />
+	<property name="plugin-minified" value="${src-dir}/editor_plugin.js" />
+	<property name="dist-file" value="${tmp-dir}/${ant.project.name}.zip" />
+	
+	<property environment="env" />
+	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
+	
+	<!-- Setup classpath for js-build-tools ant tasks -->
+	<path id="build-utils.tasks.classpath">
+		<pathelement location="."/>
+
+		<fileset dir="${plugin-build.dir}/tools/ant">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<fileset id="dist-files" dir="plugins" excludes="**/filelist" />
+	
+	<!-- Register new js-build-tools ant tasks -->
+	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="build-utils.tasks.classpath" loaderref="tasks.classpath.loader" />
+	
+	<target name="clean">
+		<delete file="${plugin-src}" />
+		<delete file="${plugin-minified}" />
+		<delete dir="${tmp-dir}" />
+	</target>
+		
+	<target name="concatenate-file-list">
+		<loadfile property="concatenate-file-list" srcfile="${src-dir}/filelist">
+			<filterchain>
+				<tokenfilter delimOutput="," />
+			</filterchain>
+		</loadfile>
+		<echo message="Concatenating files in order: ${concatenate-file-list}" />
+	</target>
+	
+	<target name="concatenate" depends="concatenate-file-list">
+		<concat destfile="${plugin-src}" eol="dos" fixlastline="true" encoding="UTF-8" outputencoding="UTF-8">
+			<header trimleading="true">(function() {</header>
+				
+			<filelist dir="${src-dir}" files="${concatenate-file-list}" />
+			
+			<footer trimleading="true">})();</footer>
+		</concat>
+	</target>
+	
+	<target name="minify" depends="concatenate">
+		<yuicompress infile="${plugin-src}" outfile="${plugin-minified}" />
+	</target>
+	
+	<target name="tinymce" unless="offline">
+		<mkdir dir="${tmp-dir}" />
+		<dependencies dest="${tmp-dir}" pattern="[artifact].[ext]" type="zip" configuration="compile" />
+		<unzip dest="${tmp-dir}" src="${tmp-dir}/enterprisetinymce.zip" />
+	</target>
+		
+	<target name="build" depends="minify, tinymce">
+		<copy todir="${tmp-dir}/${artifact-directory-name}/jscripts/tiny_mce/plugins/">
+			<fileset refid="dist-files" />
+		</copy>
+	</target>
+	
+	<target name="zip" depends="minify">
+		<mkdir dir="${tmp-dir}" />
+		<zip destfile="${dist-file}">
+			<fileset refid="dist-files" />
+		</zip>
+	</target>
+
+	<target name="dist" depends="zip">
+		<publish artifactDir="${tmp-dir}" type="untested" version="${ephox-build-number}" />
+	</target>
+	
+	<target name="release" depends="dist">
+		<publish artifactDir="${tmp-dir}" type="release" version="${ephox-build-number}" />
+	</target>
+</project>

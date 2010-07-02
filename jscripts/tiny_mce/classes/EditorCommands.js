@@ -246,13 +246,15 @@
 			},
 
 			FormatBlock : function(command, ui, value) {
-				return toggleFormat(value);
+				return toggleFormat(value || 'p');
 			},
 
 			mceCleanup : function() {
-				storeSelection();
+				var bookmark = selection.getBookmark();
+
 				editor.setContent(editor.getContent({cleanup : TRUE}), {cleanup : TRUE});
-				restoreSelection();
+
+				selection.moveToBookmark(bookmark);
 			},
 
 			mceRemoveNode : function(command, ui, value) {
@@ -337,7 +339,17 @@
 			},
 
 			InsertHorizontalRule : function() {
-				selection.setContent('<hr />');
+				var hrElm, hrParent, rng;
+				selection.setContent('<hr id="_mce_inserted_hr" />');
+				
+				hrElm = dom.get('_mce_inserted_hr');
+				hrParent = hrElm.parentNode;
+				// If HR is within a text block then split that block
+				if (/^(H[1-6]|P|ADDRESS|PRE)$/.test(hrParent.nodeName)) {
+					dom.split(hrParent, hrElm);
+				}
+				dom.removeAllAttribs(hrElm);
+				selection.moveAfterNode(hrElm);
 			},
 
 			mceToggleVisualAid : function() {
@@ -369,10 +381,11 @@
 			},
 			
 			selectAll : function() {
-				var root = dom.getRoot();
-				var rng = dom.createRng();
+				var root = dom.getRoot(), rng = dom.createRng();
+
 				rng.setStart(root, 0);
 				rng.setEnd(root, root.childNodes.length);
+
 				editor.selection.setRng(rng);
 			}
 		});

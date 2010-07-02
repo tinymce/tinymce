@@ -4,9 +4,15 @@
 <title>Unit tests for Media Plugin</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 <script>
 var editor;
+
+QUnit.config.autostart = false;
+module("Media plugin", {
+	autostart: false
+});
 
 test("Flash object elements - strict output", function() {
 	expect(13);
@@ -202,7 +208,7 @@ tinyMCE.init({
 	plugins : 'safari,media',
 	init_instance_callback : function(ed) {
 		editor = ed;
-		QUnit.setup();
+		QUnit.start();
 	}
 });
 </script>

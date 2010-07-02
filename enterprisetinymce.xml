@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project name="enterprisetinymce" basedir=".">
+	<import file="build.xml" />
+	<import file="build-utils/ivy/ivy-macros.xml" />
+	
+	<property description="Distribution files" name="dist_dir" location="${temp_dir}/dist" />
+	<property description="Extra plugins directory" name="plugins_dir" location="${temp_dir}/plugins" />
+	
+	<target name="release" depends="tinymce.release, commercial-release">
+		<echo message="${file_version}" file="${temp_dir}/version-number.txt" append="false" />
+		<publish type="untested" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="false" />
+	</target>
+	
+	<target name="commercial-release" depends="prepare-release, tinymce.release, plugins">
+		<!-- Remove copyright headers for commerical version -->
+		<replaceregexp match="^/\*(.*?)\*\/\s*" replace="" flags="gs" byline="false">
+			<fileset dir="${temp_dir}/tinymce">
+				<include name="**/*.js" />
+			</fileset>
+		</replaceregexp>
+
+		<!-- Compress development package (commercial) -->
+		<property name="ephox.zip" location="${temp_dir}/enterprisetinymce_${file_version}.zip" />
+		<delete file="${ephox.zip}" quiet="true" />
+		<zip destfile="${ephox.zip}">
+			<fileset dir="${temp_dir}">
+				<include name="tinymce/**" />
+				<exclude name="tinymce/**/license.txt" />
+			</fileset>
+			<zipfileset dir="${plugins_dir}/expanded" prefix="tinymce/jscripts/tiny_mce/plugins" />
+		</zip>
+	</target>
+	
+	<target name="plugins">
+		<mkdir dir="${plugins_dir}" />
+		<dependencies configuration="plugins" dest="${plugins_dir}" />
+		<mkdir dir="${plugins_dir}/expanded" />
+		<unzip dest="${plugins_dir}/expanded">
+			<fileset dir="${plugins_dir}" includes="*.zip" />
+		</unzip>
+	</target>
+
+	<target name="built-version">
+		<loadfile srcFile="${temp_dir}/version-number.txt" property="file_version" />
+	</target>
+	
+	<target name="publish-integration" depends="built-version">
+		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
+	</target>
+	
+	<target name="htaccess" depends="built-version">
+		<mkdir dir="${dist_dir}" />
+		<concat destfile="${dist_dir}/.htaccess">Redirect /downloads/enterprisetinymce.zip http://tinymce.ephox.com/downloads/enterprisetinymce_${file_version}.zip
+	Redirect /downloads/communitytinymce.zip http://tinymce.ephox.com/downloads/communitytinymce_${file_version}.zip</concat>
+	</target>
+
+	<target name="publish-release" depends="built-version, htaccess">
+		<copy todir="${dist_dir}">
+			<fileset dir="${temp_dir}">
+				<include name="enterprisetinymce*.zip" />
+				<include name="communitytinymce*.zip" />
+			</fileset>
+		</copy>
+		<publish type="release" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
+		<unzip dest="${temp_dir}/expanded" src="${dist_dir}/enterprisetinymce_${file_version}.zip" />
+	</target>
+</project>

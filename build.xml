@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="TinyMCE" default="build" basedir=".">
+<project name="tinymce" default="build" basedir=".">
+	
 	<!-- Path properties -->
 	<property description="Classes directory" name="classes_dir" location="jscripts/tiny_mce/classes" />
 	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
 	<property description="Temp directory" name="temp_dir" location="tmp" />
-
 	<property environment="env" />
 	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
 
@@ -209,42 +209,42 @@
 		<!-- Cleanup -->
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
 	</target>
-	
-	<target name="release" depends="build,moxiedoc" description="Builds release packages">
-		<!-- Copy the current repos and start processing it -->
+
+	<target name="prepare-release-files" depends="build,moxiedoc">
 		<delete dir="${temp_dir}" quiet="true" />
+		<!-- Copy the current repos and start processing it -->
 		<copy todir="${temp_dir}/tinymce">
 			<fileset dir=".">
 				<include name="**"/>
 				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="build-utils/**" />
+				<exclude name="ivy.xml" />
+				<exclude name="enterprisetinymce.xml" />
+				<exclude name="ephox-changelog.txt" />
 			</fileset>
 		</copy>
-
+	</target>
+		
+	<target name="prepare-versions" depends="prepare-release-files" description="Builds release packages">
 		<!-- Parse minor version, major version and release date from changelog -->
 
-		<tstamp>
-			<format property="now" pattern="yyyy-MM-dd" timezone="GMT" />
-		</tstamp>
-		<replaceregexp byline="true">
-			<regexp pattern="xxxx-xx-xx" />
-			<substitution expression="${now}" />
-			<fileset dir="${temp_dir}/tinymce" includes="changelog.txt" />
-		</replaceregexp>
 		<loadfile property="changelog" srcFile="${temp_dir}/tinymce/changelog.txt" />
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
 		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
 		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
 		<property name="version.minor" value="${version.minor.upstream}-${ephox-build-number}" />
-		<propertyregex property="file_version" input="${version}-${ephox-build-number}" regexp="\." replace="_" />
+		<property name="file_version" value="${version}-${ephox-build-number}" />
 
-		<replaceregexp byline="true">
-			<regexp pattern="^Version ${version} \(${now}\)" />
-			<substitution expression="Version ${version}-${ephox-build-number} (${now})" />
-			<fileset dir="${temp_dir}/tinymce" includes="changelog.txt" />
-		</replaceregexp>
-
+		<tstamp>
+			<format property="now" pattern="yyyy-MM-dd" timezone="GMT" />
+		</tstamp>
+		<concat destfile="${temp_dir}/tinymce/changelog.txt" eol="dos" fixlastline="true">
+			<header>Version ${file_version} (${now})&#13;&#10;	Ephox distribution of TinyMCE ${version}.</header>
+			<filelist files="ephox-changelog.txt,changelog.txt" />
+		</concat>
+		
 		<!-- Replace major version -->
 		<replaceregexp byline="true">
 			<regexp pattern="@@tinymce_major_version@@" />
@@ -289,14 +289,18 @@
 				<include name="jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
 		</replaceregexp>
-
+	</target>
+		
+	<target name="prepare-examples" depends="prepare-release-files">
 		<!-- Replaces the tiny_mce_dev.js with tiny_mce.js in examples -->
 		<replaceregexp match="tiny_mce_(dev|jquery)\.js" replace="tiny_mce.js" flags="g" byline="true">
 			<fileset dir="${temp_dir}/tinymce/examples">
 				<include name="**/*.htm*" />
 			</fileset>
 		</replaceregexp>
-
+	</target>
+	
+	<target name="prepare-version-queries" depends="prepare-release-files, prepare-versions">
 		<!-- Add or remove version queries -->
 		<if>
 			<equals arg1="${version_queries}" arg2="true" />
@@ -319,10 +323,13 @@
 				</replaceregexp>
 			</else>
 		</if>
-
+	</target>
 		
+	<target name="prepare-release" depends="prepare-release-files, prepare-versions, prepare-examples, prepare-version-queries" />
+		
+	<target name="community-release" depends="prepare-release" description="Builds release packages">
 		<!-- Compress development package -->
-		<delete file="${temp_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
+		<delete file="${temp_dir}/communitytinymce_${file_version}.zip" quiet="true" />
 		<zip destfile="${temp_dir}/communitytinymce_${file_version}.zip">
 			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce">
 				<exclude name="LICENSE.TXT" />
@@ -331,7 +338,9 @@
 				<include name="license.txt" />
 			</zipfileset>
 		</zip>
+	</target>
 
+	<target name="production-release" depends="prepare-release">
 		<!-- Compress production package -->
 		<delete file="${temp_dir}/tinymce_${file_version}.zip" quiet="true" />
 		<zip destfile="${temp_dir}/tinymce_${file_version}.zip" excludes="**/classes">
@@ -353,7 +362,9 @@
 				<include name="license.txt" />
 			</zipfileset>
 		</zip>
-
+	</target>
+	
+	<target name="jquery-release" depends="prepare-release">
 		<!-- Compress production package for jquery -->
 		<delete file="${temp_dir}/tinymce_${file_version}_jquery.zip" quiet="true" />
 		<zip destfile="${temp_dir}/tinymce_${file_version}_jquery.zip" excludes="**/classes">
@@ -376,25 +387,10 @@
 			<zipfileset dir="${temp_dir}" includes="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" fullpath="tinymce/jscripts/tiny_mce/tiny_mce.js"/>
 			<zipfileset dir="${temp_dir}" includes="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" fullpath="tinymce/jscripts/tiny_mce/tiny_mce_src.js"/>
 		</zip>
-
-		<!-- Remove copyright headers for commerical version -->
-		<replaceregexp match="^/\*(.*?)\*\/\s*" replace="" flags="gs" byline="false">
-			<fileset dir="${temp_dir}/tinymce">
-				<include name="**/*.js" />
-			</fileset>
-		</replaceregexp>
-
-		<!-- Compress development package (commercial) -->
-		<property name="ephox.zip" location="${temp_dir}/enterprisetinymce_${file_version}.zip" />
-		<delete file="${ephox.zip}" quiet="true" />
-		<zip destfile="${ephox.zip}" excludes="**/license.txt">
-			<fileset dir="${temp_dir}">
-				<include name="tinymce/**" />
-				<exclude name="tinymce/**/license.txt" />
-			</fileset>
-		</zip>
 	</target>
-
+	
+	<target name="release" depends="community-release, production-release, jquery-release" />
+	
 	<target name="addsuffixes" description="Adds version suffixes to all requests">
 		<property name="version_queries" value="true" />
 	</target>

@@ -1,0 +1,10 @@
+<ivysettings>
+	<!-- These settings are used only when installing libraries from the maven repository to our 'public' repository. -->
+	<settings defaultCache="${ivy.cache.dir}/no-namespace"
+			defaultResolver="maven"
+			defaultConflictManager="all" />		<!-- in order to get all revisions without any eviction -->
+	<resolvers>
+		<ibiblio name="maven" m2compatible="true" />
+	</resolvers>
+	<include file="${ivy.settings.dir}/ivy-ephox-repositories.xml" />
+</ivysettings>

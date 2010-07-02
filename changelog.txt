@@ -1,5 +1,34 @@
-Version 3.3.6 (xxxx-xx-xx)
-	Ephox distribution of TinyMCE 3.3.6.
+Version 3.3.8 (2010-06-30)
+	Fixed bug where WebKit would not move the caret to a correct position after a paste operation.
+	Fixed bug where WebKit would produce a div wrapper element when pasting some contents.
+	Fixed bug where the visual chars and nonbreaking plugin wouldn't show nbsp elements correctly.
+	Fixed bug where the format states would be enabled even after the format was removed.
+	Fixed bug where the delete key would move the caret to an incorrect position.
+	Fixed bug where it wasn't possible to toggle of the current font size/family/style by clicking the title item.
+	Fixed bug where the abbr element wouldn't get serialized correctly on IE6.
+	Fixed so that the examples checks if they are executed from the local file system since that might not work properly.
+Version 3.3.7 (2010-06-10)
+	Fixed bug where context menu would produce an error on IE if you right clicked twice and left clicked once.
+	Fixed bug where resizing of the window on WebKit browsers in fullscreen mode wouldn't position the statusbar correctly.
+	Fixed bug where IE would produce an error if the editor was empty and you where undoing to that initial level.
+	Fixed bug where setting the table background on gecko would produce \" entities inside the url style property.
+	Fixed bug where the button states wouldn't be updated correctly on IE if you placed the caret inside the new element.
+	Fixed bug where undo levels wasn't properly added after applying styles or font sizes.
+	Fixed bug where IE would throw an error if you used "select all" on empty elements and applied formatting to that.
+	Fixed bug where IE could select one extra character when you did a bookmark call on a caret location.
+	Fixed bug where IE could produce a script error on delete since it would sometimes produce an invalid DOM.
+	Fixed bug where IE would return the wrong start element if the whole element was selected.
+	Fixed bug where formatting states wasn't updated on IE if you pressed enter at the end of a block with formatting.
+	Fixed bug where submenus for the context menu wasn't removed correctly when the editor was destroyed.
+	Fixed bug where Gecko could select the wrong element after applying format to multiple elements.
+	Fixed bug where Gecko would delete parts of the previous element if the selection range was a element selection.
+	Fixed bug where Gecko would not merge paragraph elements correctly if they contained br elements.
+	Fixed bug where the cleanup button could produce span artifacts if you pressed it twice in a row.
+	Fixed bug where the fullpage plugin header/footer would be have it's header reseted to it's initial state on undo.
+	Fixed bug where an empty paragraph would be collapsed if you performed a cleanup while having the caret inside it.
+	Fixed a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
+	Fixed so formats applied to the current caret gets merged to reduce the number of output elements.
+	Added the latest version of Sizzle for the CSS selector logic to fix a compatibility issue with prototype.
 Version 3.3.6 (2010-05-20)
 	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
 	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.

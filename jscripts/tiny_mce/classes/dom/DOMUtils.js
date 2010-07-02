@@ -575,6 +575,20 @@
 		},
 
 		/**
+		 * Removes all attributes from an element or elements.
+		 * 
+		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.
+		 */
+		removeAllAttribs: function(e) {
+			return this.run(e, function(e) {
+				var attrs = e.attributes;
+				for (var i = attrs.length - 1; i >= 0; i--) {
+					e.removeAttributeNode(attrs.item(i));
+				}
+			});
+		},
+
+		/**
 		 * Sets the specified attributes value of a element or elements.
 		 *
 		 * @method setAttrib
@@ -812,7 +826,6 @@
 					e = t.boxModel ? d.documentElement : d.body;
 					x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
 					x = (x == 'medium' || t.boxModel && !t.isIE6) && 2 || x;
-					n.top += t.win.self != t.win.top ? 2 : 0; // IE adds some strange extra cord if used in a frameset
 
 					return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
 				}

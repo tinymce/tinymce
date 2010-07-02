@@ -2390,7 +2390,7 @@
 
 			// Add node change handlers
 			t.onMouseUp.add(t.nodeChanged);
-			t.onClick.add(t.nodeChanged);
+			//t.onClick.add(t.nodeChanged);
 			t.onKeyUp.add(function(ed, e) {
 				var c = e.keyCode;
 
@@ -2564,6 +2564,48 @@
 				});
 
 				t.onKeyDown.add(function(ed, e) {
+					var rng, parent, bookmark;
+
+					// IE has a really odd bug where the DOM might include an node that doesn't have
+					// a proper structure. If you try to access nodeValue it would throw an illegal value exception.
+					// This seems to only happen when you delete contents and it seems to be avoidable if you refresh the element
+					// after you delete contents from it. See: #3008923
+					if (isIE && e.keyCode == 46) {
+						rng = t.selection.getRng();
+
+						if (rng.parentElement) {
+							parent = rng.parentElement();
+
+							// Select next word when ctrl key is used in combo with delete
+							if (e.ctrlKey) {
+								rng.moveEnd('word', 1);
+								rng.select();
+							}
+
+							// Delete contents
+							t.selection.getSel().clear();
+
+							// Check if we are within the same parent
+							if (rng.parentElement() == parent) {
+								bookmark = t.selection.getBookmark();
+
+								try {
+									// Update the HTML and hopefully it will remove the artifacts
+									parent.innerHTML = parent.innerHTML;
+								} catch (ex) {
+									// And since it's IE it can sometimes produce an unknown runtime error
+								}
+
+								// Restore the caret position
+								t.selection.moveToBookmark(bookmark);
+							}
+
+							// Block the default delete behavior since it might be broken
+							e.preventDefault();
+							return;
+						}
+					}
+
 					// Is caracter positon keys
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
 						if (t.undoManager.typing)
@@ -2581,6 +2623,50 @@
 				t.onMouseDown.add(function() {
 					if (t.undoManager.typing)
 						addUndo();
+				});
+			}
+			
+			// Bug fix for FireFox keeping styles from end of selection instead of start.
+			if (tinymce.isGecko) {
+				function getAttributeApplyFunction() {
+					t.undoManager.typing = 0;
+					t.undoManager.add();
+					var template = t.dom.getAttribs(t.selection.getStart().cloneNode(false));
+					return function() {
+						var target = t.selection.getStart();
+						t.dom.removeAllAttribs(target);
+						each(template, function(attr) {
+							target.setAttributeNode(attr.cloneNode(true));
+						});
+						//t.dom.setAttribs(target, template);
+						t.undoManager.typing = 0;
+						t.undoManager.add();
+					};
+				}
+				
+				function isSelectionAcrossElements() {
+					var s = t.selection;
+					return !s.isCollapsed() && s.getStart() != s.getEnd();
+				}
+				
+				t.onKeyPress.add(function(ed, e) {
+					if ((e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
+						var applyAttributes = getAttributeApplyFunction();
+						t.getDoc().execCommand('delete', false, null);
+						applyAttributes();
+						return Event.cancel(e);
+					}
+				});
+				
+				t.dom.bind(t.getDoc(), 'cut', function(e) {
+					if (isSelectionAcrossElements()) {
+						var applyAttributes = getAttributeApplyFunction();
+						t.onKeyUp.addToTop(Event.cancel, Event);
+						setTimeout(function() {
+							applyAttributes();
+							t.onKeyUp.remove(Event.cancel, Event);
+						}, 0);
+					}
 				});
 			}
 		},

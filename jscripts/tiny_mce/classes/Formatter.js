@@ -142,11 +142,15 @@
 				// Move startContainer/startOffset in to a suitable node
 				if (container.nodeType == 1 || container.nodeValue === "") {
 					container = container.nodeType == 1 ? container.childNodes[offset] : container;
-					walker = new TreeWalker(container, container.parentNode);
-					for (node = walker.current(); node; node = walker.next()) {
-						if (node.nodeType == 3 && !isBlock(node.parentNode) && !isWhiteSpaceNode(node)) {
-							rng.setStart(node, 0);
-							break;
+
+					// Might fail if the offset is behind the last element in it's container
+					if (container) {
+						walker = new TreeWalker(container, container.parentNode);
+						for (node = walker.current(); node; node = walker.next()) {
+							if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
+								rng.setStart(node, 0);
+								break;
+							}
 						}
 					}
 				}
@@ -355,7 +359,7 @@
 					rng.setStartBefore(node);
 					rng.setEndAfter(node);
 
-					applyRngStyle(rng);
+					applyRngStyle(expandRng(rng, formatList));
 				} else {
 					if (!selection.isCollapsed() || !format.inline) {
 						// Apply formatting to selection
@@ -381,6 +385,48 @@
 		 */
 		function remove(name, vars, node) {
 			var formatList = get(name), format = formatList[0], bookmark, i, rng;
+
+			/**
+			 * Moves the start to the first suitable text node.
+			 */
+			function moveStart(rng) {
+				var container = rng.startContainer,
+					offset = rng.startOffset,
+					walker, node, nodes, tmpNode;
+
+				// Convert text node into index if possible
+				if (container.nodeType == 3 && offset >= container.nodeValue.length - 1) {
+					container = container.parentNode;
+					offset = nodeIndex(container) + 1;
+				}
+
+				// Move startContainer/startOffset in to a suitable node
+				if (container.nodeType == 1) {
+					nodes = container.childNodes;
+					container = nodes[Math.min(offset, nodes.length - 1)];
+					walker = new TreeWalker(container);
+
+					// If offset is at end of the parent node walk to the next one
+					if (offset > nodes.length - 1)
+						walker.next();
+
+					for (node = walker.current(); node; node = walker.next()) {
+						if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
+							// IE has a "neat" feature where it moves the start node into the closest element
+							// we can avoid this by inserting an element before it and then remove it after we set the selection
+							tmpNode = dom.create('a', null, INVISIBLE_CHAR);
+							node.parentNode.insertBefore(tmpNode, node);
+
+							// Set selection and remove tmpNode
+							rng.setStart(node, 0);
+							selection.setRng(rng);
+							dom.remove(tmpNode);
+
+							return;
+						}
+					}
+				}
+			};
 
 			// Merges the styles for each node
 			function process(node) {
@@ -535,6 +581,12 @@
 				bookmark = selection.getBookmark();
 				removeRngStyle(selection.getRng(TRUE));
 				selection.moveToBookmark(bookmark);
+
+				// Check if start element still has formatting then we are at: "<b>text|</b>text" and need to move the start into the next text node
+				if (match(name, vars, selection.getStart())) {
+					moveStart(selection.getRng(true));
+				}
+
 				ed.nodeChanged();
 			} else
 				performCaretAction('remove', name, vars);
@@ -864,7 +916,7 @@
 		};
 
 		function isWhiteSpaceNode(node) {
-			return node && node.nodeType === 3 && /^\s*$/.test(node.nodeValue);
+			return node && node.nodeType === 3 && /^([\s\r\n]+|)$/.test(node.nodeValue);
 		};
 
 		function wrap(node, name, attrs) {
@@ -1496,13 +1548,16 @@
 									if (isCaretNode(node)) {
 										textNode = node.firstChild;
 
-										perform(node);
+										if (textNode) {
+											perform(node);
 
-										rng = dom.createRng();
-										rng.setStart(textNode, textNode.nodeValue.length);
-										rng.setEnd(textNode, textNode.nodeValue.length);
-										selection.setRng(rng);
-										ed.nodeChanged();
+											rng = dom.createRng();
+											rng.setStart(textNode, textNode.nodeValue.length);
+											rng.setEnd(textNode, textNode.nodeValue.length);
+											selection.setRng(rng);
+											ed.nodeChanged();
+										} else
+											dom.remove(node);
 									}
 								});
 
