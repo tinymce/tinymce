@@ -22,8 +22,7 @@
 		},
 		
 		indent: function() {
-			var ed = this.ed;
-			var indentAmount, indentUnits;
+			var ed = this.ed, indentAmount, indentUnits, indented = [], bookmark = ed.selection.getBookmark();
 			
 			indentAmount = ed.settings.indentation;
 			indentUnits = /[a-z%]+/i.exec(indentAmount);
@@ -55,8 +54,6 @@
 				return wrapList;
 			}
 			
-			var indented = [];
-			var bookmark = ed.selection.getBookmark();
 			function indentLI(element) {
 				var indentedParent = ed.dom.getParent(element, function(p) {
 					return tinymce.inArray(indented, p) != -1;
@@ -67,6 +64,7 @@
 					indented.push(element);
 				}
 			}
+			
 			each(ed.selection.getSelectedBlocks(), function(element) {
 				if ('LI' == element.tagName) {
 					indentLI(element);
@@ -80,8 +78,6 @@
 			});
 			ed.selection.moveToBookmark(bookmark);
 		},
-		
-		
 		
 		getInfo : function() {
 			return {
