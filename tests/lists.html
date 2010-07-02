@@ -282,6 +282,7 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 
 asyncTest('Collapsed Selection - Indent Actions', function() {
 	expect(8);
+	// TODO: Test indenting paragraphs which already have padding.
 	Indenting.a(NonEmptyParagraph).gives('<p style="padding-left: 30px;">Test</p>');
 	Indenting.a(NonEmptyHeading).gives('<h1 style="padding-left: 30px;">Test</h1>');
 	Indenting.a(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
@@ -302,6 +303,9 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 
 asyncTest('Collapsed Selection - Outdent Actions', function() {
 	expect(8);
+	Outdenting.a(NonEmptyParagraph).gives('<p>Test</p>');
+	Outdenting.a(NonEmptyHeading).gives('<h1>Test</h1>');
+	// TODO: Test outdenting items which have padding-left.
 	Outdenting.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
 	Outdenting.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
 	Outdenting.a(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);

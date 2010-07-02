@@ -4,9 +4,9 @@
 		init: function(ed, url) {
 			this.ed = ed;
 			ed.addCommand('Indent', this.indent, this);
+			ed.addCommand('Outdent', this.outdent, this);
 			
 			ed.onKeyUp.add(function(ed, e) {
-				console.log(e.keyCode);
 				if (e.keyCode === 9) {
 					ed.execCommand(e.shiftKey ? 'Outdent' : 'Indent', true, null);
 					return Event.cancel(e);
@@ -75,7 +75,51 @@
 					var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
 					ed.dom.setStyle(element, 'padding-left', (currentIndent + indentAmount) + indentUnits);
 				}
-			});
+			}, this);
+			ed.selection.moveToBookmark(bookmark);
+		},
+		
+		outdent: function() {
+			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], bookmark = ed.selection.getBookmark(), newIndentAmount;
+			
+			indentAmount = ed.settings.indentation;
+			indentUnits = /[a-z%]+/i.exec(indentAmount);
+			indentAmount = parseInt(indentAmount);
+			
+			function outdentLI(element) {
+				var outdentedParent = ed.dom.getParent(element, function(p) {
+					return tinymce.inArray(outdented, p) != -1;
+				});
+				if (!outdentedParent) {
+					var listElement = element.parentNode;
+					var targetParent = element.parentNode.parentNode;
+					dom.split(listElement, element);
+					if (targetParent.tagName === 'LI') {
+						// Nested list, need to split the LI and go back out to the OL/UL element.
+						dom.split(targetParent, element);
+					} else if (!dom.is(targetParent, 'ol,ul')) {
+						dom.rename(element, 'p');
+					}
+					
+					outdented.push(element);
+				}
+			}
+			
+			each(ed.selection.getSelectedBlocks(), function(element) {
+				if ('LI' == element.tagName) {
+					outdentLI(element);
+				} else if (ed.dom.is(element, 'ul,ol')) {
+					each(element.childNodes, indentLI);
+					outdented.push(element);
+				} else {
+					var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
+					if (currentIndent > 0) {
+						newIndentAmount = currentIndent - indentAmount, 0;
+						ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
+					}
+				}
+			}, this);
+
 			ed.selection.moveToBookmark(bookmark);
 		},
 		
