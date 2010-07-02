@@ -34,7 +34,9 @@ function assertState(expected, message) {
 // Note: this only triggers the default action in FireFox.
 function fakeKeyPress(keyCode, shiftKey) {
 	return function(callback) {
-		window.robot.type(keyCode, shiftKey, callback);
+		setTimeout(function() {
+			window.robot.type(keyCode, shiftKey, callback);
+		}, 1);
 	};
 }
 
@@ -179,6 +181,7 @@ tinymce.create('dsl.Action', {
 		return {
 			gives: function(expected) {
 				queue.add(function() {
+					editor.focus();
 					state();
 					action(function() {
 						assertState(expected, message);
@@ -352,13 +355,13 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 	queue.done();
 });
 
-//asyncTest('Expanded Selection, Table Types - Ordered List Actin', function() {
+//asyncTest('Expanded Selection, Table Types - Ordered List Action', function() {
 	// TODO
 //});
 
 asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
-	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1</p><p>Item 2</p>');  // Constant Contact fail case
+	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1</p><p>Item 2</p>');
 	ApplyingOL.to(SingleLiUlSelection).gives('<ol><li>Item 1</li></ol>');
 	ApplyingOL.to(MultiLiUlSelection).gives('<ol><li>Item 1</li><li>Item 2</li></ol>');
 	
@@ -367,8 +370,26 @@ asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	
 	// TODO: Selection only in indented list.
 	
-	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
-	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	ApplyingOL.to(IndentedUlInUlCorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+	ApplyingOL.to(IndentedUlInUlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+	queue.done();
+});
+
+asyncTest('Expanded Selection, List Types - Indent Action', function() {
+	Indenting.a(SingleLiOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
+	Indenting.a(MultiLiOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li></ol></li></ol>');
+	Indenting.a(SingleLiUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
+	Indenting.a(MultiLiUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li><li>Item 2</li></ul></li></ul>');
+
+	Indenting.a(IndentedOlInOlCorrectSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1<ol><li>Indented</li></ol></li></ol></li></ol>');
+	Indenting.a(IndentedOlInOlIncorrectSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1<ol><li>Indented</li></ol></li></ol></li></ol>');
+
+	// TODO: Selection only in indented list.
+	
+	Indenting.a(IndentedUlInUlCorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
+	Indenting.a(IndentedUlInUlIncorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
+
+	// TODO: Selection from paragraph before to paragraph after list.
 	queue.done();
 });
 
@@ -377,7 +398,8 @@ tinyMCE.init({
 	elements : "elm1",
 	theme : "advanced",
 	cleanup: true,
-	fix_list_elements: true,
+	// Turn this off because we want the list actions to create the right DOM structure from the start.
+	fix_list_elements: false,
 	add_unload_trigger : false,
 	apply_source_formatting : 0,
 	init_instance_callback : function(ed) {
