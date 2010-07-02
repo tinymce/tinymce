@@ -1,9 +1,24 @@
 (function() {
-	var each = tinymce.each;
+	var each = tinymce.each, Event = tinymce.dom.Event;
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
 			this.ed = ed;
 			ed.addCommand('Indent', this.indent, this);
+			
+			ed.onKeyUp.add(function(ed, e) {
+				console.log(e.keyCode);
+				if (e.keyCode === 9) {
+					ed.execCommand(e.shiftKey ? 'Outdent' : 'Indent', true, null);
+					return Event.cancel(e);
+				}
+			});
+			
+			function cancelTab(ed, e) {
+				if (e.keyCode === 9)
+					return Event.cancel(e);
+			}
+			ed.onKeyPress.add(cancelTab);
+			ed.onKeyDown.add(cancelTab);
 		},
 		
 		indent: function() {
