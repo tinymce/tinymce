@@ -16,9 +16,7 @@
 			
 			function createWrapItem(element) {
 				var wrapItem = element.previousSibling;
-				console.log("Wrap item: " + wrapItem);
 				while (wrapItem && wrapItem.nodeType != 1) {
-					console.log("Wrap item: " + wrapItem);
 					wrapItem = wrapItem.previousSibling;
 				}
 				console.log(wrapItem);
@@ -30,7 +28,6 @@
 			}
 			
 			each(ed.selection.getSelectedBlocks(), function(element) {
-				console.log(element);
 				if ('LI' == element.tagName) {
 					var bookmark = ed.selection.getBookmark();
 					var wrapItem = createWrapItem(element);
@@ -38,9 +35,7 @@
 					wrapItem.appendChild(wrapList);
 					wrapList.appendChild(element);
 					ed.selection.moveToBookmark(bookmark);
-					console.log('LI');
 				} else if (ed.dom.is(element, 'ul,ol')) {
-					console.log("List element.");
 				} else {
 					var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
 					ed.dom.setStyle(element, 'padding-left', (currentIndent + indentAmount) + indentUnits);
