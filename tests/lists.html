@@ -206,7 +206,10 @@ createAction('TypingEnter', fakeKeyPress('\n'));
 createAction('TypingTab', fakeKeyPress('\t'));
 createAction('TypingShiftTab', fakeKeyPress('\t', true));
 
+QUnit.config.autostart = false;
+
 module('Lists', {
+	autostart: false,
 	setup: function() {
 		window.queue = new dsl.Queue();
 	}
@@ -360,12 +363,12 @@ asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	ApplyingOL.to(MultiLiUlSelection).gives('<ol><li>Item 1</li><li>Item 2</li></ol>');
 	
 	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
-	ApplyingOL.to(IndentedOlInOlInorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 	
 	// TODO: Selection only in indented list.
 	
 	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
-	ApplyingOL.to(IndentedOlInOlInorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 	queue.done();
 });
 
@@ -379,16 +382,9 @@ tinyMCE.init({
 	apply_source_formatting : 0,
 	init_instance_callback : function(ed) {
 		editor = ed;
-		window.tinyLoaded = true;
-		initWhenReady();
 	}
 });
 
-function initWhenReady() {
-	if (window.tinyLoaded && window.robotLoaded) {
-		QUnit.setup();
-	}
-}
 </script>
 </head>
 <body>
@@ -402,10 +398,7 @@ function initWhenReady() {
 	</div>
 	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
 	<script>
-		window.robot.onload(function() {
-			window.robotLoaded = true;
-			initWhenReady();
-		});
+	initWhenTinyAndRobotAreReady();
 	</script>
 </body>
 </html>
