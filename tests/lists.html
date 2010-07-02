@@ -397,8 +397,8 @@ asyncTest('Expanded Selection, List Types - Indent Action', function() {
 	Indenting.a(IndentedUlInUlCorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
 	Indenting.a(IndentedUlInUlIncorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
 
-	Indenting.a(ParagraphBeforeOlSelection).gives('<p style="padding-left: 30px;">Before</p><ol><li><ol><li>Item 1</li></ol></li></ol>');
-	Indenting.a(ParagraphBeforeUlSelection).gives('<p style="padding-left: 30px;">Before</p><ul><li><ul><li>Item 1</li></ul></li></ul>');
+	Indenting.a(ParagraphBeforeOlSelection).gives('<p style="padding-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
+	Indenting.a(ParagraphBeforeUlSelection).gives('<p style="padding-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
 	
 	Indenting.a(ParagraphAfterOlSelection).gives('<ol><li><ol><li>Item 1</li></ol></li></ol><p style="padding-left: 30px;">After</p>');
 	Indenting.a(ParagraphAfterUlSelection).gives('<ul><li><ul><li>Item 1</li></ul></li></ul><p style="padding-left: 30px;">After</p>');
