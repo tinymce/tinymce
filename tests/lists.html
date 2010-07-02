@@ -293,6 +293,9 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 	Indenting.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>&nbsp;</li></ul></li></ul></li><li>After</li></ul>');
 	Indenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
 	Indenting.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>Test</li></ul></li></ul></li><li>After</li></ul>');
+
+	// TODO: Tests for indenting and merging adjacent lists. e.g. <ol><li>Item1<ol><li>Indent1</li></ol></li><li>IndentMe</li><li><ol><li>Indent3</li></ol></li></ol>
+	// should only have one indented list with three items when done.
 	queue.done();
 });
 
@@ -400,12 +403,12 @@ asyncTest('Expanded Selection, List Types - Indent Action', function() {
 	Indenting.a(ParagraphBeforeOlSelection).gives('<p style="padding-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
 	Indenting.a(ParagraphBeforeUlSelection).gives('<p style="padding-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
 	
-	Indenting.a(ParagraphAfterOlSelection).gives('<ol><li><ol><li>Item 1</li></ol></li></ol><p style="padding-left: 30px;">After</p>');
-	Indenting.a(ParagraphAfterUlSelection).gives('<ul><li><ul><li>Item 1</li></ul></li></ul><p style="padding-left: 30px;">After</p>');
+	Indenting.a(ParagraphAfterOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="padding-left: 30px;">After</p>');
+	Indenting.a(ParagraphAfterUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="padding-left: 30px;">After</p>');
 
 	
-	Indenting.a(ParagraphBeforeAndAfterOlSelection).gives('<p style="padding-left: 30px;">Before</p><ol><li><ol><li>Item 1</li></ol></li></ol><p style="padding-left: 30px;">After</p>');
-	Indenting.a(ParagraphBeforeAndAfterUlSelection).gives('<p style="padding-left: 30px;">Before</p><ul><li><ul><li>Item 1</li></ul></li></ul><p style="padding-left: 30px;">After</p>');
+	Indenting.a(ParagraphBeforeAndAfterOlSelection).gives('<p style="padding-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="padding-left: 30px;">After</p>');
+	Indenting.a(ParagraphBeforeAndAfterUlSelection).gives('<p style="padding-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="padding-left: 30px;">After</p>');
 	queue.done();
 });
 

@@ -40,18 +40,30 @@
 				return wrapList;
 			}
 			
-			each(ed.selection.getSelectedBlocks(), function(element) {
-				if ('LI' == element.tagName) {
-					var bookmark = ed.selection.getBookmark();
+			var indented = [];
+			var bookmark = ed.selection.getBookmark();
+			function indentLI(element) {
+				var indentedParent = ed.dom.getParent(element, function(p) {
+					return tinymce.inArray(indented, p) != -1;
+				});
+				if (!indentedParent) {
 					var wrapList = createWrapList(element);
 					wrapList.appendChild(element);
-					ed.selection.moveToBookmark(bookmark);
+					indented.push(element);
+				}
+			}
+			each(ed.selection.getSelectedBlocks(), function(element) {
+				if ('LI' == element.tagName) {
+					indentLI(element);
 				} else if (ed.dom.is(element, 'ul,ol')) {
+					each(element.childNodes, indentLI);
+					indented.push(element);
 				} else {
 					var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
 					ed.dom.setStyle(element, 'padding-left', (currentIndent + indentAmount) + indentUnits);
 				}
 			});
+			ed.selection.moveToBookmark(bookmark);
 		},
 		
 		
