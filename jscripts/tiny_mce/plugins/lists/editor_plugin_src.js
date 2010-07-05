@@ -67,15 +67,8 @@
 				}
 			}
 			
-			function processList(element) {
-				each(element.childNodes, indentLI);
-				indented.push(element);
-			}
-			
 			this.process({
 				'LI': indentLI,
-				'OL': processList,
-				'UL': processList,
 				defaultAction: this.adjustPaddingFunction(true)
 			});
 			
@@ -100,28 +93,29 @@
 				}
 			}
 			
-			function processList(element) {
-				each(element.childNodes, outdentLI);
-				outdented.push(element);
-			}
-			
 			this.process({
 				'LI': outdentLI,
-				'OL': processList,
-				'UL': processList,
 				defaultAction: this.adjustPaddingFunction(false)
 			});
 		},
 		
 		process: function(actions) {
 			var sel = this.ed.selection, bookmark = sel.getBookmark();
-			each(sel.getSelectedBlocks(), function(element) {
+			function recurse(element) {
+				each(element.childNodes, processElement);
+			}
+			
+			function processElement(element) {
 				var action = actions[element.tagName];
 				if (!action) {
 					action = actions.defaultAction;
 				}
 				action(element);
-			});
+			}
+			
+			actions.OL = recurse;
+			actions.UL = recurse;
+			each(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
 		},
 		
