@@ -76,6 +76,8 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	
 	ApplyingUL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li></ol><ul><li>Test</li></ul>');
 	ApplyingUL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li><li>Test</li></ul>');
+
+	// TODO: Between lists.
 	
 	ApplyingUL.to(EmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>&nbsp;</li></ul><ol><li>After</li></ol>');
 	ApplyingUL.to(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
