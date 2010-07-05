@@ -81,12 +81,16 @@
 				if (!hasParentInList(ed, element, outdented)) {
 					var listElement = element.parentNode;
 					var targetParent = element.parentNode.parentNode;
-					dom.split(listElement, element);
-					if (targetParent.tagName === 'LI') {
-						// Nested list, need to split the LI and go back out to the OL/UL element.
-						dom.split(targetParent, element);
-					} else if (!dom.is(targetParent, 'ol,ul')) {
-						dom.rename(element, 'p');
+					if (targetParent.tagName == 'P') {
+						dom.split(targetParent, element.parentNode);
+					} else {
+						dom.split(listElement, element);
+						if (targetParent.tagName === 'LI') {
+							// Nested list, need to split the LI and go back out to the OL/UL element.
+							dom.split(targetParent, element);
+						} else if (!dom.is(targetParent, 'ol,ul')) {
+							dom.rename(element, 'p');
+						}
 					}
 					
 					outdented.push(element);
@@ -103,6 +107,9 @@
 			var sel = this.ed.selection, bookmark = sel.getBookmark();
 			
 			function processElement(element) {
+				if (element.nodeType != 1) {
+					return;
+				}
 				var action = actions[element.tagName];
 				if (!action) {
 					action = actions.defaultAction;
