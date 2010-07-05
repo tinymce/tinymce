@@ -119,7 +119,7 @@
 		},
 		
 		process: function(actions) {
-			var sel = this.ed.selection, bookmark = sel.getBookmark();
+			var sel = this.ed.selection, bookmark = sel.getBookmark(), dom = this.ed.dom;
 			
 			function processElement(element) {
 				if (element.nodeType != 1) {
@@ -135,9 +135,32 @@
 				each(element.childNodes, processElement);
 			}
 			actions.OL = actions.UL = recurse;
-			
-			each(sel.getSelectedBlocks(), processElement);
+			this.splitSafeEach(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
+		},
+		
+		splitSafeEach: function(elements, f) {
+			if (tinymce.isGecko && (/Firefox\/[12]\.[0-9]/.test(navigator.userAgent) ||
+					/Firefox\/3\.[0-4]/.test(navigator.userAgent))) {
+				this.classBasedEach(elements, f);
+			} else {
+				each(elements, f);
+			}
+		},
+		
+		classBasedEach: function(elements, f) {
+			var dom = this.ed.dom;
+			// Mark nodes
+			each(elements, function(element) {
+				dom.addClass(element, '_mce_act_on');
+			});
+			var nodes = dom.select('._mce_act_on');
+			while (nodes.length > 0) {
+				var element = nodes.shift();
+				dom.removeClass(element, '_mce_act_on');
+				f(element);
+				nodes = dom.select('._mce_act_on');
+			}
 		},
 		
 		adjustPaddingFunction: function(isIndent) {
