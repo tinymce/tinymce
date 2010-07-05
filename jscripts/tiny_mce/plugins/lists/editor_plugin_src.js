@@ -109,7 +109,7 @@
 				if ('LI' == element.tagName) {
 					outdentLI(element);
 				} else if (ed.dom.is(element, 'ul,ol')) {
-					each(element.childNodes, indentLI);
+					each(element.childNodes, outdentLI);
 					outdented.push(element);
 				} else {
 					var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);

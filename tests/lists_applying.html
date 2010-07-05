@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Applying and Unapplying List Tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="js/lists/lists-dsl.js"></script>
+<script type="text/javascript" src="js/lists/states.js"></script>
+<script type="text/javascript" src="js/lists/actions.js"></script>
+<script>
+// Expected Results
+var EmptyOL = "<ol><li></li></ol>";
+var EmptyUL = "<ul><li></li></ul>";
+var NonEmptyOL = "<ol><li>Test</li></ol>";
+var NonEmptyUL = "<ul><li>Test</li></ul>";
+var EmptyOLConvertedToP = '<ol><li>Before</li></ol><p>&nbsp;</p><ol><li>After</li></ol>';
+var EmptyULConvertedToP = '<ul><li>Before</li></ul><p>&nbsp;</p><ul><li>After</li></ul>';
+var NonEmptyOLConvertedToP = '<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>';
+var NonEmptyULConvertedToP = '<ul><li>Before</li></ul><p>Test</p><ul><li>After</li></ul>';
+
+QUnit.config.autostart = false;
+
+module('Lists - Applying', {
+	autostart: false,
+	setup: function() {
+		window.queue = new dsl.Queue();
+	}
+});
+
+// Tests
+asyncTest('Collapsed Selection - Apply OL Actions', function() {
+	expect(14);
+	
+	ApplyingOL.to(EmptyParagraph).gives(EmptyOL);
+	
+	ApplyingOL.to(EmptyHeading).gives(EmptyOL);
+	
+	ApplyingOL.to(NonEmptyParagraph).gives(NonEmptyOL);
+	ApplyingOL.to(NonEmptyHeading).gives(NonEmptyOL);
+	
+	ApplyingOL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingOL.to(TableCellWithBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingOL.to(EndOfParagraphBeforeOL).gives('<ol><li>Test</li><li>Item</li></ol>');
+	ApplyingOL.to(EndOfParagraphBeforeUL).gives('<ol><li>Test</li></ol><ul><li>Item</li></ul>');
+	
+	ApplyingOL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li><li>Test</li></ol>');
+	ApplyingOL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
+	
+	ApplyingOL.to(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
+	ApplyingOL.to(EmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>&nbsp;</li></ol><ul><li>After</li></ul>');
+	
+	ApplyingOL.to(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
+	ApplyingOL.to(NonEmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
+	queue.done();
+});
+
+asyncTest('Collapsed Selection - Apply UL Actions', function() {
+	expect(14);
+	ApplyingUL.to(EmptyParagraph).gives(EmptyUL);
+	ApplyingUL.to(EmptyHeading).gives(EmptyUL);
+	
+	ApplyingUL.to(NonEmptyParagraph).gives(NonEmptyUL);
+	ApplyingUL.to(NonEmptyHeading).gives(NonEmptyUL);
+	
+	ApplyingUL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ul><li>Test</li></ul></td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingUL.to(TableCellWithBrs).gives('<table><tbody><tr><td><ul><li>Test</li></ul>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	
+	ApplyingUL.to(EndOfParagraphBeforeOL).gives('<ul><li>Test</li></ul><ol><li>Item</li></ol>');
+	ApplyingUL.to(EndOfParagraphBeforeUL).gives('<ul><li>Test</li><li>Item</li></ul>');
+	
+	ApplyingUL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li></ol><ul><li>Test</li></ul>');
+	ApplyingUL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li><li>Test</li></ul>');
+	
+	ApplyingUL.to(EmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>&nbsp;</li></ul><ol><li>After</li></ol>');
+	ApplyingUL.to(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
+	
+	ApplyingUL.to(NonEmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>Test</li></ul><ol><li>After</li></ol>');
+	ApplyingUL.to(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+	queue.done();
+});
+
+
+
+asyncTest('Collapsed Selection - Type Enter', function() {
+	TypingEnter.inA(EmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ol>');
+	TypingEnter.inA(EmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ul>');
+	TypingEnter.inA(NonEmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>Test</li><li>After</li></ol>');
+	TypingEnter.inA(NonEmptyUnorderedListItem).gives('<ul><li>Before</li><li></li><li>Test</li><li>After</li></ul>');
+	
+	TypingEnter.inA(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>&nbsp;</li></ol></li><li>After</li></ol>');
+	TypingEnter.inA(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>&nbsp;</li></ul></li><li>After</li></ul>');
+	TypingEnter.inA(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>Test</li></ol></li><li>After</li></ol>');
+	TypingEnter.inA(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>Test</li></ul></li><li>After</li></ul>');
+	queue.done();
+});
+
+asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function() {
+	ApplyingOL.to(SingleParagraphSelection).gives('<ol><li>This is a test</li></ol>');
+	ApplyingOL.to(MultipleParagraphSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
+	ApplyingOL.to(SingleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li></ol>');
+	ApplyingOL.to(MultipleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li><li><h1>Second paragraph</h1></li></ol>');
+	ApplyingOL.to(SingleBlockSelection).gives('<div><ol><li>This is a test</li></ol></div>');
+	// TODO: This result seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
+	ApplyingOL.to(MultipleBlockSelection).gives('<ol><li><div>This is a test</div></li><li><div>Second paragraph</div></li></ol>');
+	
+	// TODO: Mixed paragraph/heading states.
+	queue.done();
+});
+
+//asyncTest('Expanded Selection, Table Types - Ordered List Action', function() {
+	// TODO
+//});
+
+asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
+	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
+	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1</p><p>Item 2</p>');
+	ApplyingOL.to(SingleLiUlSelection).gives('<ol><li>Item 1</li></ol>');
+	ApplyingOL.to(MultiLiUlSelection).gives('<ol><li>Item 1</li><li>Item 2</li></ol>');
+	
+	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	
+	// TODO: Selection only in indented list.
+	
+	ApplyingOL.to(IndentedUlInUlCorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+	ApplyingOL.to(IndentedUlInUlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+	queue.done();
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	cleanup: true,
+	// Turn this off because we want the list actions to create the right DOM structure from the start.
+	fix_list_elements: false,
+	plugins : 'lists',
+	add_unload_trigger : false,
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+	}
+});
+
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Applying and Unapplying List Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+	</div>
+	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
+	<script>
+	initWhenTinyAndRobotAreReady();
+	</script>
+</body>
+</html>
