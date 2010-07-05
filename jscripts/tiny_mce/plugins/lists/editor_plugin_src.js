@@ -1,5 +1,14 @@
 (function() {
 	var each = tinymce.each, Event = tinymce.dom.Event;
+	
+	// Skips text nodes that only contain whitespace since they aren't semantically important.
+	function skipWhitespaceNodesBackwards(e) {
+		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /[ \t\n\r]/.test(e.nodeValue)))) {
+			e = e.previousSibling;
+		}
+		return e;
+	}
+	
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
 			this.ed = ed;
@@ -25,10 +34,7 @@
 			var ed = this.ed, indentAmount, indentUnits, indented = [];
 			
 			function createWrapItem(element) {
-				var wrapItem = element.previousSibling;
-				while (wrapItem && wrapItem.nodeType != 1) {
-					wrapItem = wrapItem.previousSibling;
-				}
+				var wrapItem = skipWhitespaceNodesBackwards(element.previousSibling);
 				if (!wrapItem || wrapItem.nodeName != 'LI') {
 					wrapItem = ed.dom.create('li', { style: 'list-style-type: none;'});
 					ed.dom.insertAfter(wrapItem, element);
@@ -39,10 +45,7 @@
 			function createWrapList(element) {
 				var wrapItem = createWrapItem(element);
 				var listType = ed.dom.getParent(element, 'ol,ul').tagName;
-				var wrapList = wrapItem.lastChild;
-				while (wrapList && wrapList.nodeType != 1) {
-					wrapList = wrapList.previousSibling;
-				}
+				var wrapList = skipWhitespaceNodesBackwards(wrapItem.lastChild);
 				if (!wrapList || wrapList.tagName != listType) {
 					wrapList = ed.dom.create(ed.dom.getParent(element, 'ol,ul').tagName);
 					wrapItem.appendChild(wrapList);
