@@ -19,7 +19,8 @@ function EmptyParagraph() {
 
 function EmptyHeading() {
 	EmptyParagraph();
-	editor.formatter.apply('h1');
+	editor.dom.rename(editor.getBody().firstChild, 'h1');
+	setSelection(editor.getBody().firstChild.firstChild, 0);
 }
 
 NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
