@@ -40,6 +40,21 @@
 			var ed = this.ed, indentAmount, indentUnits, indented = [];
 			
 			function createWrapItem(element) {
+				if (element.parentNode.parentNode.tagName == 'OL' || element.parentNode.parentNode.tagName == 'UL') {
+					// Invalidly nested lists.
+					var listType = ed.dom.getParent(element, 'ol,ul').tagName;
+					var wrapList = skipWhitespaceNodesBackwards(element.parentNode.previousSibling);
+					if (wrapList && wrapList.tagName == 'LI') {
+						// The previous list item will have already been indented and we just looked one level up, so we need to drill down another level.
+						var nestedList = skipWhitespaceNodesBackwards(wrapList.lastChild);
+						if (nestedList && (nestedList.tagName == 'OL' || nestedList.tagName == 'UL')) {
+							var lastLI = skipWhitespaceNodesBackwards(nestedList.lastChild);
+							if (lastLI && lastLI.tagName == 'LI') {
+								return lastLI;
+							}
+						}
+					}
+				}
 				var wrapItem = skipWhitespaceNodesBackwards(element.previousSibling);
 				if (!wrapItem || wrapItem.nodeName != 'LI') {
 					wrapItem = ed.dom.create('li', { style: 'list-style-type: none;'});
@@ -92,7 +107,7 @@
 							dom.rename(element, 'p');
 						}
 					}
-					
+
 					outdented.push(element);
 				}
 			}
