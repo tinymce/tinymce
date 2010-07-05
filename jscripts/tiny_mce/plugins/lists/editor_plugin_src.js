@@ -24,10 +24,6 @@
 		indent: function() {
 			var ed = this.ed, indentAmount, indentUnits, indented = [];
 			
-			indentAmount = ed.settings.indentation;
-			indentUnits = /[a-z%]+/i.exec(indentAmount);
-			indentAmount = parseInt(indentAmount);
-			
 			function createWrapItem(element) {
 				var wrapItem = element.previousSibling;
 				while (wrapItem && wrapItem.nodeType != 1) {
@@ -70,26 +66,17 @@
 					indented.push(element);
 			}
 			
-			function defaultAction(element) {
-				var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
-				ed.dom.setStyle(element, 'padding-left', (currentIndent + indentAmount) + indentUnits);
-			}
-			
 			this.process({
 				'LI': indentLI,
 				'OL': processList,
 				'UL': processList,
-				defaultAction: defaultAction
+				defaultAction: this.adjustPaddingFunction(true)
 			});
 			
 		},
 		
 		outdent: function() {
 			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], newIndentAmount;
-			
-			indentAmount = ed.settings.indentation;
-			indentUnits = /[a-z%]+/i.exec(indentAmount);
-			indentAmount = parseInt(indentAmount);
 			
 			function outdentLI(element) {
 				var outdentedParent = ed.dom.getParent(element, function(p) {
@@ -115,17 +102,11 @@
 				outdented.push(element);
 			}
 			
-			function defaultAction(element) {
-				var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
-				var newIndentAmount = currentIndent - indentAmount;
-				ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
-			}
-			
 			this.process({
 				'LI': outdentLI,
 				'OL': processList,
 				'UL': processList,
-				defaultAction: defaultAction
+				defaultAction: this.adjustPaddingFunction(false)
 			});
 		},
 		
@@ -139,6 +120,23 @@
 				action(element);
 			});
 			sel.moveToBookmark(bookmark);
+		},
+		
+		adjustPaddingFunction: function(isIndent) {
+			var indentAmount, indentUnits, ed = this.ed;
+			indentAmount = ed.settings.indentation;
+			indentUnits = /[a-z%]+/i.exec(indentAmount);
+			indentAmount = parseInt(indentAmount);
+			return function(element) {
+				var currentIndent, newIndentAmount;
+				currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
+				if (isIndent) {
+					newIndentAmount = currentIndent + indentAmount;
+				} else {
+					newIndentAmount = currentIndent - indentAmount;
+				}
+				ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
+			};
 		},
 		
 		getInfo: function() {
