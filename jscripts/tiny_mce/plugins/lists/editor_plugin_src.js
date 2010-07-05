@@ -117,11 +117,10 @@
 			
 			function defaultAction(element) {
 				var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
-				if (currentIndent > 0) {
-					newIndentAmount = currentIndent - indentAmount, 0;
-					ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
-				}
+				var newIndentAmount = currentIndent - indentAmount;
+				ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
 			}
+			
 			this.process({
 				'LI': outdentLI,
 				'OL': processList,
