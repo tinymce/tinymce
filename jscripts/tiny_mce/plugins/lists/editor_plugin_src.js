@@ -101,9 +101,6 @@
 		
 		process: function(actions) {
 			var sel = this.ed.selection, bookmark = sel.getBookmark();
-			function recurse(element) {
-				each(element.childNodes, processElement);
-			}
 			
 			function processElement(element) {
 				var action = actions[element.tagName];
@@ -113,8 +110,8 @@
 				action(element);
 			}
 			
-			actions.OL = recurse;
-			actions.UL = recurse;
+			actions.OL = actions.UL = function(element) { each(element.childNodes, processElement); };
+			
 			each(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
 		},
