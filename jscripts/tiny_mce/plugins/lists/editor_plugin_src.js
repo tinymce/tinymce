@@ -9,6 +9,13 @@
 		return e;
 	}
 	
+	function skipWhitespaceNodesForwards(e) {
+		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /[ \t\n\r]/.test(e.nodeValue)))) {
+			e = e.nextSibling;
+		}
+		return e;
+	}
+	
 	function hasParentInList(ed, e, list) {
 		return ed.dom.getParent(e, function(p) {
 			return tinymce.inArray(list, p) != -1;
@@ -20,6 +27,7 @@
 			this.ed = ed;
 			ed.addCommand('Indent', this.indent, this);
 			ed.addCommand('Outdent', this.outdent, this);
+			ed.addCommand('InsertUnorderedList', this.insertUnorderedList, this);
 			
 			ed.onKeyUp.add(function(ed, e) {
 				if (e.keyCode === 9) {
@@ -34,6 +42,50 @@
 			}
 			ed.onKeyPress.add(cancelTab);
 			ed.onKeyDown.add(cancelTab);
+		},
+		
+		insertUnorderedList: function() {
+			var ed = this.ed, dom = ed.dom;
+			function makeList(element) {
+				var previousList = skipWhitespaceNodesBackwards(element.previousSibling);
+				var nextList = skipWhitespaceNodesForwards(element.nextSibling);
+				if (previousList && previousList.tagName == 'UL') {
+					previousList.appendChild(element);
+				} else if (nextList && nextList.tagName == 'UL') {
+					nextList.insertBefore(element, nextList.firstChild);
+				} else {
+					var list = dom.create('ul');
+					dom.insertAfter(list, element);
+					list.appendChild(element);
+				}
+				dom.rename(element, 'li');
+			}
+			
+			function wrapList(element) {
+				var li = dom.create('li');
+				while (element.firstChild) {
+					li.appendChild(element.firstChild);
+				}
+				element.appendChild(li);
+				makeList(li);
+			}
+			
+			function changeList(element) {
+				if (element.parentNode.tagName == 'OL') {
+					dom.split(element.parentNode, element);
+					makeList(element);
+				} else {
+					//unapplyList....
+				}
+			}
+			
+			// TODO: Going to need a mergeAdjacentLists kind of function instead of trying to anticipate the merge all the time.
+			
+			this.process({
+				'LI': changeList,
+				'TD': wrapList,
+				defaultAction: makeList
+			});
 		},
 		
 		indent: function() {
@@ -120,7 +172,6 @@
 		
 		process: function(actions) {
 			var sel = this.ed.selection, bookmark = sel.getBookmark(), dom = this.ed.dom;
-			
 			function processElement(element) {
 				if (element.nodeType != 1) {
 					return;
