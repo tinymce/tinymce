@@ -9,6 +9,12 @@
 		return e;
 	}
 	
+	function hasParentInList(ed, e, list) {
+		return ed.dom.getParent(e, function(p) {
+			return tinymce.inArray(list, p) != -1;
+		});
+	}
+	
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
 			this.ed = ed;
@@ -54,10 +60,7 @@
 			}
 			
 			function indentLI(element) {
-				var indentedParent = ed.dom.getParent(element, function(p) {
-					return tinymce.inArray(indented, p) != -1;
-				});
-				if (!indentedParent) {
+				if (!hasParentInList(ed, element, indented)) {
 					var wrapList = createWrapList(element);
 					wrapList.appendChild(element);
 					indented.push(element);
@@ -65,8 +68,8 @@
 			}
 			
 			function processList(element) {
-					each(element.childNodes, indentLI);
-					indented.push(element);
+				each(element.childNodes, indentLI);
+				indented.push(element);
 			}
 			
 			this.process({
@@ -82,10 +85,7 @@
 			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], newIndentAmount;
 			
 			function outdentLI(element) {
-				var outdentedParent = ed.dom.getParent(element, function(p) {
-					return tinymce.inArray(outdented, p) != -1;
-				});
-				if (!outdentedParent) {
+				if (!hasParentInList(ed, element, outdented)) {
 					var listElement = element.parentNode;
 					var targetParent = element.parentNode.parentNode;
 					dom.split(listElement, element);
