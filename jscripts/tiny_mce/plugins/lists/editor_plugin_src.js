@@ -109,8 +109,10 @@
 				}
 				action(element);
 			}
-			
-			actions.OL = actions.UL = function(element) { each(element.childNodes, processElement); };
+			function recurse(element) {
+				each(element.childNodes, processElement);
+			}
+			actions.OL = actions.UL = recurse;
 			
 			each(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
