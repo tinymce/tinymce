@@ -1,4 +1,6 @@
 Version 3.3.x (2010-xx-xx)
+	Fixed bug where inserting table rows into a table with subtable would produce an incorrect column count.
+	Fixed bug where the selection of cells in a table with subtables could produce invalid selections.
 	Fixed minor issue where the select boxes wouldn't be set the not set by default in the table dialog.
 Version 3.3.8 (2010-06-30)
 	Fixed bug where WebKit would not move the caret to a correct position after a paste operation.

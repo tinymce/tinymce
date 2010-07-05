@@ -38,12 +38,12 @@
 			grid = [];
 
 			each(['thead', 'tbody', 'tfoot'], function(part) {
-				var rows = dom.select(part + ' tr', table);
+				var rows = dom.select('> ' + part + ' tr', table);
 
 				each(rows, function(tr, y) {
 					y += startY;
 
-					each(dom.select('td,th', tr), function(td, x) {
+					each(dom.select('> td, > th', tr), function(td, x) {
 						var x2, y2, rowspan, colspan;
 
 						// Skip over existing cells produced by rowspan
