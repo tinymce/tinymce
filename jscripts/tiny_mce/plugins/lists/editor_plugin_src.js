@@ -22,7 +22,7 @@
 		},
 		
 		indent: function() {
-			var ed = this.ed, indentAmount, indentUnits, indented = [], bookmark = ed.selection.getBookmark();
+			var ed = this.ed, indentAmount, indentUnits, indented = [];
 			
 			indentAmount = ed.settings.indentation;
 			indentUnits = /[a-z%]+/i.exec(indentAmount);
@@ -65,22 +65,27 @@
 				}
 			}
 			
-			each(ed.selection.getSelectedBlocks(), function(element) {
-				if ('LI' == element.tagName) {
-					indentLI(element);
-				} else if (ed.dom.is(element, 'ul,ol')) {
+			function processList(element) {
 					each(element.childNodes, indentLI);
 					indented.push(element);
-				} else {
-					var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
-					ed.dom.setStyle(element, 'padding-left', (currentIndent + indentAmount) + indentUnits);
-				}
-			}, this);
-			ed.selection.moveToBookmark(bookmark);
+			}
+			
+			function defaultAction(element) {
+				var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
+				ed.dom.setStyle(element, 'padding-left', (currentIndent + indentAmount) + indentUnits);
+			}
+			
+			this.process({
+				'LI': indentLI,
+				'OL': processList,
+				'UL': processList,
+				defaultAction: defaultAction
+			});
+			
 		},
 		
 		outdent: function() {
-			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], bookmark = ed.selection.getBookmark(), newIndentAmount;
+			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], newIndentAmount;
 			
 			indentAmount = ed.settings.indentation;
 			indentUnits = /[a-z%]+/i.exec(indentAmount);
@@ -105,25 +110,39 @@
 				}
 			}
 			
-			each(ed.selection.getSelectedBlocks(), function(element) {
-				if ('LI' == element.tagName) {
-					outdentLI(element);
-				} else if (ed.dom.is(element, 'ul,ol')) {
-					each(element.childNodes, outdentLI);
-					outdented.push(element);
-				} else {
-					var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
-					if (currentIndent > 0) {
-						newIndentAmount = currentIndent - indentAmount, 0;
-						ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
-					}
+			function processList(element) {
+				each(element.childNodes, outdentLI);
+				outdented.push(element);
+			}
+			
+			function defaultAction(element) {
+				var currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
+				if (currentIndent > 0) {
+					newIndentAmount = currentIndent - indentAmount, 0;
+					ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
 				}
-			}, this);
-
-			ed.selection.moveToBookmark(bookmark);
+			}
+			this.process({
+				'LI': outdentLI,
+				'OL': processList,
+				'UL': processList,
+				defaultAction: defaultAction
+			});
 		},
 		
-		getInfo : function() {
+		process: function(actions) {
+			var sel = this.ed.selection, bookmark = sel.getBookmark();
+			each(sel.getSelectedBlocks(), function(element) {
+				var action = actions[element.tagName];
+				if (!action) {
+					action = actions.defaultAction;
+				}
+				action(element);
+			});
+			sel.moveToBookmark(bookmark);
+		},
+		
+		getInfo: function() {
 			return {
 				longname : 'Lists',
 				author : 'Ephox Corporation',
