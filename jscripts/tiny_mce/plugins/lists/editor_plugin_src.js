@@ -27,7 +27,12 @@
 			this.ed = ed;
 			ed.addCommand('Indent', this.indent, this);
 			ed.addCommand('Outdent', this.outdent, this);
-			ed.addCommand('InsertUnorderedList', this.insertUnorderedList, this);
+			ed.addCommand('InsertUnorderedList', function() {
+				this.applyList('UL', 'OL');
+			}, this);
+			ed.addCommand('InsertOrderedList', function() {
+				this.applyList('OL', 'UL');
+			}, this);
 			
 			ed.onKeyUp.add(function(ed, e) {
 				if (e.keyCode === 9) {
@@ -44,17 +49,17 @@
 			ed.onKeyDown.add(cancelTab);
 		},
 		
-		insertUnorderedList: function() {
-			var ed = this.ed, dom = ed.dom;
+		applyList: function(targetListType, oppositeListType) {
+			var ed = this.ed, dom = ed.dom, t = this;
 			function makeList(element) {
 				var previousList = skipWhitespaceNodesBackwards(element.previousSibling);
 				var nextList = skipWhitespaceNodesForwards(element.nextSibling);
-				if (previousList && previousList.tagName == 'UL') {
+				if (previousList && previousList.tagName == targetListType) {
 					previousList.appendChild(element);
-				} else if (nextList && nextList.tagName == 'UL') {
+				} else if (nextList && nextList.tagName == targetListType) {
 					nextList.insertBefore(element, nextList.firstChild);
 				} else {
-					var list = dom.create('ul');
+					var list = dom.create(targetListType);
 					dom.insertAfter(list, element);
 					list.appendChild(element);
 				}
@@ -71,11 +76,11 @@
 			}
 			
 			function changeList(element) {
-				if (element.parentNode.tagName == 'OL') {
+				if (element.parentNode.tagName == oppositeListType) {
 					dom.split(element.parentNode, element);
 					makeList(element);
 				} else {
-					//unapplyList....
+					// TODO: Unapply list.
 				}
 			}
 			

@@ -130,8 +130,8 @@ asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	
 	// TODO: Selection only in indented list.
 	
-	ApplyingOL.to(IndentedUlInUlCorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
-	ApplyingOL.to(IndentedUlInUlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+	ApplyingOL.to(IndentedUlInUlCorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
+	ApplyingOL.to(IndentedUlInUlIncorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
 	queue.done();
 });
 
