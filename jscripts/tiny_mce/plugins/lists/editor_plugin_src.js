@@ -49,8 +49,17 @@
 			ed.onKeyDown.add(cancelTab);
 		},
 		
+		convertListItemToParagraph: function(element) {
+			var ed = this.ed, dom = ed.dom;
+			// Split all the way out to the body.
+			while (element.parentNode !== dom.getRoot()) {
+				dom.split(element.parentNode, element);
+			}
+			dom.rename(element, 'p');
+		},
+		
 		applyList: function(targetListType, oppositeListType) {
-			var ed = this.ed, dom = ed.dom, t = this;
+			var ed = this.ed, dom = ed.dom, t = this, applied = [];
 			function makeList(element) {
 				var previousList = skipWhitespaceNodesBackwards(element.previousSibling);
 				var nextList = skipWhitespaceNodesForwards(element.nextSibling);
@@ -64,6 +73,7 @@
 					list.appendChild(element);
 				}
 				dom.rename(element, 'li');
+				applied.push(element);
 			}
 			
 			function wrapList(element) {
@@ -76,16 +86,19 @@
 			}
 			
 			function changeList(element) {
+				if (tinymce.inArray(applied, element) != -1) {
+					return;
+				}
 				if (element.parentNode.tagName == oppositeListType) {
 					dom.split(element.parentNode, element);
 					makeList(element);
 				} else {
-					// TODO: Unapply list.
+					t.convertListItemToParagraph(element);
 				}
+				applied.push(element);
 			}
 			
 			// TODO: Going to need a mergeAdjacentLists kind of function instead of trying to anticipate the merge all the time.
-			
 			this.process({
 				'LI': changeList,
 				'TD': wrapList,
