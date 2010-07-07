@@ -216,8 +216,14 @@
 			
 			function createWrapList(element) {
 				var wrapItem = createWrapItem(element);
-				var listType = dom.getParent(element, 'ol,ul').tagName;
-				var wrapList = dom.create(listType);
+				var list = dom.getParent(element, 'ol,ul');
+				var listType = list.tagName;
+				var listStyle = dom.getStyle(list, 'list-style-type');
+				var attrs = {};
+				if (listStyle != '') {
+					attrs.style = 'list-style-type: ' + listStyle + ';';
+				}
+				var wrapList = dom.create(listType, attrs);
 				wrapItem.appendChild(wrapList);
 				return wrapList;
 			}

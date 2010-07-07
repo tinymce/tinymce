@@ -56,6 +56,9 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 	// TODO: Tests for indenting and merging adjacent lists. e.g. <ol><li>Item1<ol><li>Indent1</li></ol></li><li>IndentMe</li><li><ol><li>Indent3</li></ol></li></ol>
 	// should only have one indented list with three items when done.
 	Indenting.a(OrderedListWithAdjacentNestedLists).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></li></ol>');
+
+	Indenting.a(OrderedLowerGreekListItem).gives('<ol style="list-style-type: lower-greek;"><li>Item 1<ol style="list-style-type: lower-greek;"><li>Item 2</li></ol></li></ol>');
+	Indenting.a(UnorderedSquareListItem).gives('<ul style="list-style-type: square;"><li>Item 1<ul style="list-style-type: square;"><li>Item 2</li></ul></li></ul>');
 	queue.done();
 });
 
