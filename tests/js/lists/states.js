@@ -24,9 +24,14 @@ function EmptyHeading() {
 }
 
 NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
+ParagraphWithMarginLeft = createState('<p style="margin-left: 30px;">Test</p>', 'p', 0);
+ParagraphWithPaddingLeft = createState('<p style="padding-left: 30px;">Test</p>', 'p', 0);
+ParagraphWithMarginAndPaddingLeft = createState('<p style="margin-left: 30px; padding-left: 30px;">Test</p>', 'p', 0);
 NonEmptyHeading = createState('<h1>Test</h1>', 'h1', 0);
 TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
 TableCellWithBrs = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+DefinitionListDescription = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dd', 2);
+DefinitionListTerm = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dt', 2);
 EndOfParagraphBeforeOL = createState('<p>Test</p><ol><li>Item</li></ol>', 'p', 4);
 EndOfParagraphBeforeUL = createState('<p>Test</p><ul><li>Item</li></ul>', 'p', 4);
 StartOfParagraphAfterOL = createState('<ol><li>Item</li></ol><p>Test</p>', 'p', 1);

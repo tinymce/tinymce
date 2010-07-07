@@ -64,6 +64,8 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(OrderedListItemWithNestedChild).gives('<p>Item1</p><ol><li style="list-style-type: none;"><ol><li>Nested</li></ol></li></ol>');
 	ApplyingOL.to(UnorderedListItemWithNestedChild).gives('<ol><li>Item1<ul><li>Nested</li></ul></li></ol>');
 
+	ApplyingOL.to(DefinitionListTerm).gives('<dl><dt><ol><li>Term</li></ol></dt><dd>Description</dd></dl>');
+	ApplyingOL.to(DefinitionListDescription).gives('<dl><dt>Term</dt><dd><ol><li>Description</li></ol></dd></dl>');
 	// TODO: Test that styles like padding-left are removed
 				
 	queue.done();
@@ -105,6 +107,9 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	
 	ApplyingUL.to(OrderedListItemWithNestedChild).gives('<ul><li>Item1<ol><li>Nested</li></ol></li></ul>');
 	ApplyingUL.to(UnorderedListItemWithNestedChild).gives('<p>Item1</p><ul><li style="list-style-type: none;"><ul><li>Nested</li></ul></li></ul>');
+
+	ApplyingUL.to(DefinitionListTerm).gives('<dl><dt><ul><li>Term</li></ul></dt><dd>Description</dd></dl>');
+	ApplyingUL.to(DefinitionListDescription).gives('<dl><dt>Term</dt><dd><ul><li>Description</li></ul></dd></dl>');
 	queue.done();
 });
 

@@ -141,13 +141,17 @@
 				
 				// Correctly preserve block tags inside the LI.  So <h1>Foo</h1> becomes <li><h1>Foo</h1></li>
 				// TODO: Be more specific about what we wrap and what we put the list into so things like definition lists work.
-				if (element.tagName != 'P' && element.tagName != 'LI' && skipWhitespaceNodesForwards(element.firstChild)) {
+				if (element.tagName == 'LI') {
+					// No change required.
+				} else if (element.tagName == 'P') {
+					// Convert the element to an LI.
+					element = dom.rename(element, 'li');
+				} else {
+					// Put the list around the element.
 					var li = dom.create('li');
 					dom.insertAfter(li, element);
 					li.appendChild(element);
 					element = li;
-				} else {
-					dom.rename(element, 'li');
 				}
 				attemptMergeWithAdjacent(list);
 				applied.push(element);
@@ -188,8 +192,16 @@
 			
 			this.process({
 				'LI': changeList,
-				'TD': wrapList,
-				defaultAction: makeList
+//				'TD': wrapList,
+				'H1': makeList,
+				'H2': makeList,
+				'H3': makeList,
+				'H4': makeList,
+				'H5': makeList,
+				'H6': makeList,
+				'P': makeList,
+				'DIV': makeList,
+				defaultAction: wrapList
 			});
 		},
 		
@@ -310,13 +322,14 @@
 			indentAmount = parseInt(indentAmount);
 			return function(element) {
 				var currentIndent, newIndentAmount;
-				currentIndent = parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
+				currentIndent = parseInt(ed.dom.getStyle(element, 'margin-left') || 0) + parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
 				if (isIndent) {
 					newIndentAmount = currentIndent + indentAmount;
 				} else {
 					newIndentAmount = currentIndent - indentAmount;
 				}
-				ed.dom.setStyle(element, 'padding-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
+				ed.dom.setStyle(element, 'padding-left', '');
+				ed.dom.setStyle(element, 'margin-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
 			};
 		},
 		

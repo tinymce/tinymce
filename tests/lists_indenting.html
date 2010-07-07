@@ -34,8 +34,12 @@ module('Lists - Indenting', {
 asyncTest('Collapsed Selection - Indent Actions', function() {
 	expect(8);
 	// TODO: Test indenting paragraphs which already have padding.
-	Indenting.a(NonEmptyParagraph).gives('<p style="padding-left: 30px;">Test</p>');
-	Indenting.a(NonEmptyHeading).gives('<h1 style="padding-left: 30px;">Test</h1>');
+	Indenting.a(NonEmptyParagraph).gives('<p style="margin-left: 30px;">Test</p>');
+	Indenting.a(NonEmptyHeading).gives('<h1 style="margin-left: 30px;">Test</h1>');
+	Indenting.a(ParagraphWithMarginLeft).gives('<p style="margin-left: 60px;">Test</p>');
+	Indenting.a(ParagraphWithPaddingLeft).gives('<p style="margin-left: 60px;">Test</p>');
+	Indenting.a(ParagraphWithMarginAndPaddingLeft).gives('<p style="margin-left: 90px;">Test</p>');
+	
 	Indenting.a(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
 	Indenting.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
 	Indenting.a(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
@@ -59,7 +63,7 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 	expect(8);
 	Outdenting.a(NonEmptyParagraph).gives('<p>Test</p>');
 	Outdenting.a(NonEmptyHeading).gives('<h1>Test</h1>');
-	// TODO: Test outdenting items which have padding-left.
+	// TODO: Test outdenting items which have margin-left.
 	Outdenting.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
 	Outdenting.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
 	Outdenting.a(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
@@ -118,15 +122,15 @@ asyncTest('Expanded Selection, List Types - Indent Action', function() {
 	Indenting.a(IndentedUlInUlCorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
 	Indenting.a(IndentedUlInUlIncorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
 
-	Indenting.a(ParagraphBeforeOlSelection).gives('<p style="padding-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
-	Indenting.a(ParagraphBeforeUlSelection).gives('<p style="padding-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
+	Indenting.a(ParagraphBeforeOlSelection).gives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
+	Indenting.a(ParagraphBeforeUlSelection).gives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
 	
-	Indenting.a(ParagraphAfterOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="padding-left: 30px;">After</p>');
-	Indenting.a(ParagraphAfterUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="padding-left: 30px;">After</p>');
+	Indenting.a(ParagraphAfterOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="margin-left: 30px;">After</p>');
+	Indenting.a(ParagraphAfterUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="margin-left: 30px;">After</p>');
 
 	
-	Indenting.a(ParagraphBeforeAndAfterOlSelection).gives('<p style="padding-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="padding-left: 30px;">After</p>');
-	Indenting.a(ParagraphBeforeAndAfterUlSelection).gives('<p style="padding-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="padding-left: 30px;">After</p>');
+	Indenting.a(ParagraphBeforeAndAfterOlSelection).gives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="margin-left: 30px;">After</p>');
+	Indenting.a(ParagraphBeforeAndAfterUlSelection).gives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="margin-left: 30px;">After</p>');
 	queue.done();
 });
 
