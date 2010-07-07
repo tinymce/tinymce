@@ -22,6 +22,70 @@
 		});
 	}
 	
+	function isList(e) {
+		return e && (e.tagName == 'OL' || e.tagName == 'UL');
+	}
+	
+	function splitNestedLists(element, dom) {
+		var tmp, nested, wrapItem;
+		tmp = skipWhitespaceNodesBackwards(element.lastChild);
+		while (isList(tmp)) {
+			nested = tmp;
+			tmp = skipWhitespaceNodesBackwards(nested.previousSibling);
+		}
+		if (nested) {
+			wrapItem = dom.create('li', { style: 'list-style-type: none;'});
+			dom.split(element, nested);
+			dom.insertAfter(wrapItem, nested);
+			wrapItem.appendChild(nested);
+			wrapItem.appendChild(nested);
+			element = wrapItem.previousSibling;
+		}
+		return element;
+	}
+	
+	function attemptMergeWithNext(e) {
+		var next = skipWhitespaceNodesForwards(e.nextSibling);
+		return attemptMerge(e, next);
+	}
+	
+	function attemptMerge(previous, element) {
+		if (canMerge(previous, element)) {
+			return merge(previous, element);
+		//} else if (previous.tagName == 'LI' && isList(element)) {
+			// Fix invalidly nested lists.
+			//previous.appendChild(element);
+		}
+		return element;
+	}
+	
+	function canMerge(e1, e2) {
+		if (!e1 || !e2) {
+			return false;
+		} else if (e1.tagName == 'LI' && e2.tagName == 'LI') {
+			return e2.style.listStyleType == 'none';
+		} else if (isList(e1)) {
+			return e1.tagName == e2.tagName || isListForIndent(e2);
+		} else {
+			return false;
+		}
+	}
+	
+	function isListForIndent(e) {
+		var firstLI = skipWhitespaceNodesForwards(e.firstChild), lastLI = skipWhitespaceNodesBackwards(e.lastChild);
+		return isList(e) && firstLI == lastLI && (isList(firstLI) || firstLI.style.listStyleType == 'none');
+	}
+	
+	function merge(e1, e2) {
+		var lastOriginal = skipWhitespaceNodesBackwards(e1.lastChild), firstNew = skipWhitespaceNodesForwards(e2.firstChild);
+		while (e2.firstChild) {
+			e1.appendChild(e2.firstChild);
+		}
+		e2.parentNode.removeChild(e2);
+		attemptMerge(lastOriginal, firstNew);
+		return e1;
+	}
+	
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
 			this.ed = ed;
@@ -51,6 +115,8 @@
 		
 		convertListItemToParagraph: function(element) {
 			var ed = this.ed, dom = ed.dom;
+			// First split off any nested elements.
+			element = splitNestedLists(element, dom);
 			// Split all the way out to the body.
 			while (element.parentNode !== dom.getRoot()) {
 				dom.split(element.parentNode, element);
@@ -92,6 +158,7 @@
 				if (element.parentNode.tagName == oppositeListType) {
 					dom.split(element.parentNode, element);
 					makeList(element);
+					attemptMergeWithNext(element.parentNode);
 				} else {
 					t.convertListItemToParagraph(element);
 				}
@@ -146,8 +213,10 @@
 			
 			function indentLI(element) {
 				if (!hasParentInList(ed, element, indented)) {
+					element = splitNestedLists(element, ed.dom);
 					var wrapList = createWrapList(element);
 					wrapList.appendChild(element);
+					attemptMergeWithNext(wrapList.parentNode);
 					indented.push(element);
 				}
 			}
@@ -164,6 +233,7 @@
 			
 			function outdentLI(element) {
 				if (!hasParentInList(ed, element, outdented)) {
+					element = splitNestedLists(element, dom);
 					var listElement = element.parentNode;
 					var targetParent = element.parentNode.parentNode;
 					if (targetParent.tagName == 'P') {
@@ -177,7 +247,7 @@
 							dom.rename(element, 'p');
 						}
 					}
-
+					attemptMergeWithNext(element);
 					outdented.push(element);
 				}
 			}

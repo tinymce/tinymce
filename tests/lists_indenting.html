@@ -51,6 +51,7 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 	Indenting.a(UnorderedListItemWithNestedChild).gives('<ul><li style="list-style-type: none;"><ul><li>Item1</li><li>Nested</li></ul></li></ul>');
 	// TODO: Tests for indenting and merging adjacent lists. e.g. <ol><li>Item1<ol><li>Indent1</li></ol></li><li>IndentMe</li><li><ol><li>Indent3</li></ol></li></ol>
 	// should only have one indented list with three items when done.
+	Indenting.a(OrderedListWithAdjacentNestedLists).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></li></ol>');
 	queue.done();
 });
 
