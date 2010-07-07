@@ -44,9 +44,27 @@
 		return element;
 	}
 	
+	function attemptMergeWithAdjacent(e) {
+		e = attemptMergeWithPrevious(e);
+		return attemptMergeWithNext(e);
+	}
+	
+	function attemptMergeWithPrevious(e) {
+		var prev = skipWhitespaceNodesBackwards(e.previousSibling);
+		if (prev) {
+			return attemptMerge(prev, e);
+		} else {
+			return e;
+		}
+	}
+	
 	function attemptMergeWithNext(e) {
 		var next = skipWhitespaceNodesForwards(e.nextSibling);
-		return attemptMerge(e, next);
+		if (next) {
+			return attemptMerge(e, next);
+		} else {
+			return e;
+		}
 	}
 	
 	function attemptMerge(previous, element) {
@@ -59,6 +77,7 @@
 		return element;
 	}
 	
+	// TODO: Should compare attributes/styles.
 	function canMerge(e1, e2) {
 		if (!e1 || !e2) {
 			return false;
@@ -127,17 +146,12 @@
 		applyList: function(targetListType, oppositeListType) {
 			var ed = this.ed, dom = ed.dom, t = this, applied = [];
 			function makeList(element) {
-				var previousList = skipWhitespaceNodesBackwards(element.previousSibling);
-				var nextList = skipWhitespaceNodesForwards(element.nextSibling);
-				if (previousList && previousList.tagName == targetListType) {
-					previousList.appendChild(element);
-				} else if (nextList && nextList.tagName == targetListType) {
-					nextList.insertBefore(element, nextList.firstChild);
-				} else {
-					var list = dom.create(targetListType);
-					dom.insertAfter(list, element);
-					list.appendChild(element);
-				}
+				var list = dom.create(targetListType);
+				dom.insertAfter(list, element);
+				list.appendChild(element);
+				
+				// Correctly preserve block tags inside the LI.  So <h1>Foo</h1> becomes <li><h1>Foo</h1></li>
+				// TODO: Be more specific about what we wrap and what we put the list into so things like definition lists work.
 				if (element.tagName != 'P' && element.tagName != 'LI' && skipWhitespaceNodesForwards(element.firstChild)) {
 					var li = dom.create('li');
 					dom.insertAfter(li, element);
@@ -146,6 +160,7 @@
 				} else {
 					dom.rename(element, 'li');
 				}
+				attemptMergeWithAdjacent(list);
 				applied.push(element);
 			}
 			
@@ -172,7 +187,6 @@
 				applied.push(element);
 			}
 			
-			// TODO: Going to need a mergeAdjacentLists kind of function instead of trying to anticipate the merge all the time.
 			this.process({
 				'LI': changeList,
 				'TD': wrapList,
@@ -181,50 +195,29 @@
 		},
 		
 		indent: function() {
-			var ed = this.ed, indentAmount, indentUnits, indented = [];
+			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, indented = [];
 			
 			function createWrapItem(element) {
-				if (element.parentNode.parentNode.tagName == 'OL' || element.parentNode.parentNode.tagName == 'UL') {
-					// Invalidly nested lists.
-					var listType = ed.dom.getParent(element, 'ol,ul').tagName;
-					var wrapList = skipWhitespaceNodesBackwards(element.parentNode.previousSibling);
-					if (wrapList && wrapList.tagName == 'LI') {
-						// The previous list item will have already been indented and we just looked one level up, so we need to drill down another level.
-						var nestedList = skipWhitespaceNodesBackwards(wrapList.lastChild);
-						if (nestedList && (nestedList.tagName == 'OL' || nestedList.tagName == 'UL')) {
-							var lastLI = skipWhitespaceNodesBackwards(nestedList.lastChild);
-							if (lastLI && lastLI.tagName == 'LI') {
-								return lastLI;
-							}
-						}
-					}
-				}
-				var wrapItem = skipWhitespaceNodesBackwards(element.previousSibling);
-				if (!wrapItem || wrapItem.nodeName != 'LI') {
-					wrapItem = ed.dom.create('li', { style: 'list-style-type: none;'});
-					ed.dom.insertAfter(wrapItem, element);
-				}
+				var wrapItem = dom.create('li', { style: 'list-style-type: none;'});
+				dom.insertAfter(wrapItem, element);
 				return wrapItem;
 			}
 			
 			function createWrapList(element) {
 				var wrapItem = createWrapItem(element);
-				var listType = ed.dom.getParent(element, 'ol,ul').tagName;
-				var wrapList = skipWhitespaceNodesBackwards(wrapItem.lastChild);
-				if (!wrapList || wrapList.tagName != listType) {
-					wrapList = ed.dom.create(ed.dom.getParent(element, 'ol,ul').tagName);
-					wrapItem.appendChild(wrapList);
-				}
+				var listType = dom.getParent(element, 'ol,ul').tagName;
+				var wrapList = dom.create(listType);
+				wrapItem.appendChild(wrapList);
 				return wrapList;
 			}
 			
 			function indentLI(element) {
 				if (!hasParentInList(ed, element, indented)) {
-					element = splitNestedLists(element, ed.dom);
+					element = splitNestedLists(element, dom);
 					var wrapList = createWrapList(element);
 					wrapList.appendChild(element);
-					attemptMergeWithNext(wrapList.parentNode);
-					attemptMergeWithNext(wrapList);
+					attemptMergeWithAdjacent(wrapList.parentNode);
+					attemptMergeWithAdjacent(wrapList);
 					indented.push(element);
 				}
 			}
@@ -255,7 +248,7 @@
 							dom.rename(element, 'p');
 						}
 					}
-					attemptMergeWithNext(element);
+					attemptMergeWithAdjacent(element);
 					outdented.push(element);
 				}
 			}
