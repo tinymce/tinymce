@@ -160,6 +160,8 @@ tinyMCE.init({
 	elements : "elm1",
 	theme : "advanced",
 	cleanup: true,
+	// TODO: Determine why TinyMCE defaults to stripping out empty h1,ul,ol and li element since it results in invalid HTML (but only on FF3.0 and IE).
+	extended_valid_elements: 'li[style],ul[type|compact],ol[type|compact],h1',
 	// Turn this off because we want the list actions to create the right DOM structure from the start.
 	fix_list_elements: false,
 	plugins : 'lists',

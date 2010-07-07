@@ -267,8 +267,9 @@
 		},
 		
 		process: function(actions) {
-			var sel = this.ed.selection, bookmark = sel.getBookmark(), dom = this.ed.dom;
+			var t = this, sel = t.ed.selection, bookmark = sel.getBookmark(), dom = t.ed.dom;
 			function processElement(element) {
+				dom.removeClass(element, '_mce_act_on');
 				if (element.nodeType != 1) {
 					return;
 				}
@@ -279,10 +280,10 @@
 				action(element);
 			}
 			function recurse(element) {
-				each(element.childNodes, processElement);
+				t.splitSafeEach(element.childNodes, processElement);
 			}
 			actions.OL = actions.UL = recurse;
-			this.splitSafeEach(sel.getSelectedBlocks(), processElement);
+			t.splitSafeEach(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
 		},
 		
