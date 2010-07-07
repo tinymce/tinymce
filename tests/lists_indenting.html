@@ -33,7 +33,6 @@ module('Lists - Indenting', {
 // Tests
 asyncTest('Collapsed Selection - Indent Actions', function() {
 	expect(8);
-	// TODO: Test indenting paragraphs which already have padding.
 	Indenting.a(NonEmptyParagraph).gives('<p style="margin-left: 30px;">Test</p>');
 	Indenting.a(NonEmptyHeading).gives('<h1 style="margin-left: 30px;">Test</h1>');
 	Indenting.a(ParagraphWithMarginLeft).gives('<p style="margin-left: 60px;">Test</p>');
@@ -53,9 +52,10 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 
 	Indenting.a(OrderedListItemWithNestedChild).gives('<ol><li style="list-style-type: none;"><ol><li>Item1</li><li>Nested</li></ol></li></ol>');
 	Indenting.a(UnorderedListItemWithNestedChild).gives('<ul><li style="list-style-type: none;"><ul><li>Item1</li><li>Nested</li></ul></li></ul>');
-	// TODO: Tests for indenting and merging adjacent lists. e.g. <ol><li>Item1<ol><li>Indent1</li></ol></li><li>IndentMe</li><li><ol><li>Indent3</li></ol></li></ol>
-	// should only have one indented list with three items when done.
+
 	Indenting.a(OrderedListWithAdjacentNestedLists).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></li></ol>');
+	Indenting.a(UnorderedListWithAdjacentNestedLists).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></li></ul>');
+	
 
 	Indenting.a(OrderedLowerAlphaListItem).gives('<ol style="list-style-type: lower-alpha;"><li>Item 1<ol style="list-style-type: lower-alpha;"><li>Item 2</li></ol></li></ol>');
 	Indenting.a(UnorderedSquareListItem).gives('<ul style="list-style-type: square;"><li>Item 1<ul style="list-style-type: square;"><li>Item 2</li></ul></li></ul>');

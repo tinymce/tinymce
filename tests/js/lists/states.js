@@ -51,6 +51,7 @@ OrderedListItemWithNestedChild = createState('<ol><li>Item1<ol><li>Nested</li></
 UnorderedListItemWithNestedChild = createState('<ul><li>Item1<ul><li>Nested</li></ul></li></ul>', 'li:nth-child(1)', 2);
 
 OrderedListWithAdjacentNestedLists = createState('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li><li>Item 2</li><li style="list-style-type: none;"><ol><li>Item 3</li></ol></li></ol>', 'li:nth-child(2)', 4);
+UnorderedListWithAdjacentNestedLists = createState('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li><li>Item 2</li><li style="list-style-type: none;"><ul><li>Item 3</li></ul></li></ul>', 'li:nth-child(2)', 4);
 
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);
