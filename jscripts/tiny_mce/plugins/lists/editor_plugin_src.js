@@ -251,10 +251,13 @@
 		},
 		
 		outdent: function() {
-			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], newIndentAmount;
+			var t = this, ed = t.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], newIndentAmount;
 			
 			function outdentLI(element) {
 				if (!hasParentInList(ed, element, outdented)) {
+					if (dom.getStyle(element, 'margin-left') != '' || dom.getStyle(element, 'padding-left') != '') {
+						return t.adjustPaddingFunction(false)(element);
+					}
 					element = splitNestedLists(element, dom);
 					var listElement = element.parentNode;
 					var targetParent = element.parentNode.parentNode;

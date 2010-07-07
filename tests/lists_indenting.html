@@ -85,6 +85,9 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 
 	Outdenting.a(NestedOrderedListWithMultipleItems).gives('<ol><li>Before</li><li>Item1<ol><li>Item2</li></ol></li></ol>');
 	Outdenting.a(NestedUnorderedListWithMultipleItems).gives('<ul><li>Before</li><li>Item1<ul><li>Item2</li></ul></li></ul>');
+
+	Outdenting.a(OrderedListItemWithMargin).gives('<ol><li style="margin-left: 30px;">Test</li></ol>');
+	Outdenting.a(UnorderedListItemWithMargin).gives('<ul><li style="margin-left: 30px;">Test</li></ul>');
 	
 	queue.done();
 });
