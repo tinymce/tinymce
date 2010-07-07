@@ -132,17 +132,6 @@
 			ed.onKeyDown.add(cancelTab);
 		},
 		
-		convertListItemToParagraph: function(element) {
-			var ed = this.ed, dom = ed.dom;
-			// First split off any nested elements.
-			element = splitNestedLists(element, dom);
-			// Split all the way out to the body.
-			while (element.parentNode !== dom.getRoot()) {
-				dom.split(element.parentNode, element);
-			}
-			dom.rename(element, 'p');
-		},
-		
 		applyList: function(targetListType, oppositeListType) {
 			var ed = this.ed, dom = ed.dom, t = this, applied = [];
 			function makeList(element) {
@@ -182,9 +171,19 @@
 					makeList(element);
 					attemptMergeWithNext(element.parentNode);
 				} else {
-					t.convertListItemToParagraph(element);
+					convertListItemToParagraph(element);
 				}
 				applied.push(element);
+			}
+			
+			function convertListItemToParagraph(element) {
+				// First split off any nested elements.
+				element = splitNestedLists(element, dom);
+				// Split all the way out to the body.
+				while (element.parentNode !== dom.getRoot()) {
+					dom.split(element.parentNode, element);
+				}
+				dom.rename(element, 'p');
 			}
 			
 			this.process({

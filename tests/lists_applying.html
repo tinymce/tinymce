@@ -63,6 +63,8 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	
 	ApplyingOL.to(OrderedListItemWithNestedChild).gives('<p>Item1</p><ol><li style="list-style-type: none;"><ol><li>Nested</li></ol></li></ol>');
 	ApplyingOL.to(UnorderedListItemWithNestedChild).gives('<ol><li>Item1<ul><li>Nested</li></ul></li></ol>');
+
+	// TODO: Test that styles like padding-left are removed
 				
 	queue.done();
 });
