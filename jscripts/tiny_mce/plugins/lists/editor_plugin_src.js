@@ -3,15 +3,16 @@
 	
 	// Skips text nodes that only contain whitespace since they aren't semantically important.
 	function skipWhitespaceNodesBackwards(e) {
-		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /^[ \t\n\r]*$/.test(e.nodeValue)))) {
-			e = e.previousSibling;
-		}
-		return e;
+		return skipWhitespaceNodes(e, function(e) { return e.previousSibling; });
 	}
 	
 	function skipWhitespaceNodesForwards(e) {
+		return skipWhitespaceNodes(e, function(e) { return e.nextSibling; });
+	}
+	
+	function skipWhitespaceNodes(e, next) {
 		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /^[ \t\n\r]*$/.test(e.nodeValue)))) {
-			e = e.nextSibling;
+			e = next(e);
 		}
 		return e;
 	}
