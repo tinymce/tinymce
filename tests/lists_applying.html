@@ -12,10 +12,6 @@
 <script type="text/javascript" src="js/lists/actions.js"></script>
 <script>
 // Expected Results
-var EmptyOL = "<ol><li></li></ol>";
-var EmptyUL = "<ul><li></li></ul>";
-var NonEmptyOL = "<ol><li>Test</li></ol>";
-var NonEmptyUL = "<ul><li>Test</li></ul>";
 var EmptyOLConvertedToP = '<ol><li>Before</li></ol><p>&nbsp;</p><ol><li>After</li></ol>';
 var EmptyULConvertedToP = '<ul><li>Before</li></ul><p>&nbsp;</p><ul><li>After</li></ul>';
 var NonEmptyOLConvertedToP = '<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>';
@@ -34,12 +30,12 @@ module('Lists - Applying', {
 asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	expect(14);
 	
-	ApplyingOL.to(EmptyParagraph).gives(EmptyOL);
+	ApplyingOL.to(EmptyParagraph).gives('<ol><li></li></ol>');
 	
-	ApplyingOL.to(EmptyHeading).gives(EmptyOL);
+	ApplyingOL.to(EmptyHeading).gives('<ol><li><h1></h1></li></ol>');
 	
-	ApplyingOL.to(NonEmptyParagraph).gives(NonEmptyOL);
-	ApplyingOL.to(NonEmptyHeading).gives(NonEmptyOL);
+	ApplyingOL.to(NonEmptyParagraph).gives('<ol><li>Test</li></ol>');
+	ApplyingOL.to(NonEmptyHeading).gives('<ol><li><h1>Test</h1></li></ol>');
 	
 	ApplyingOL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
 	
@@ -73,11 +69,11 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 
 asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	expect(14);
-	ApplyingUL.to(EmptyParagraph).gives(EmptyUL);
-	ApplyingUL.to(EmptyHeading).gives(EmptyUL);
+	ApplyingUL.to(EmptyParagraph).gives('<ul><li></li></ul>');
+	ApplyingUL.to(EmptyHeading).gives('<ul><li><h1></h1></li></ul>');
 	
-	ApplyingUL.to(NonEmptyParagraph).gives(NonEmptyUL);
-	ApplyingUL.to(NonEmptyHeading).gives(NonEmptyUL);
+	ApplyingUL.to(NonEmptyParagraph).gives('<ul><li>Test</li></ul>');
+	ApplyingUL.to(NonEmptyHeading).gives('<ul><li><h1>Test</h1></li></ul>');
 	
 	ApplyingUL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ul><li>Test</li></ul></td><td>&nbsp;</td></tr></tbody></table>');
 	
@@ -150,8 +146,9 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 	ApplyingOL.to(MultipleParagraphSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
 	ApplyingOL.to(SingleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li></ol>');
 	ApplyingOL.to(MultipleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li><li><h1>Second paragraph</h1></li></ol>');
-	ApplyingOL.to(SingleBlockSelection).gives('<div><ol><li>This is a test</li></ol></div>');
-	// TODO: This result seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
+	
+	// TODO: DIV handling seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
+	ApplyingOL.to(SingleBlockSelection).gives('<ol><li><div>This is a test</div></li></ol>');
 	ApplyingOL.to(MultipleBlockSelection).gives('<ol><li><div>This is a test</div></li><li><div>Second paragraph</div></li></ol>');
 	
 	// TODO: Mixed paragraph/heading states.

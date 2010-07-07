@@ -3,14 +3,14 @@
 	
 	// Skips text nodes that only contain whitespace since they aren't semantically important.
 	function skipWhitespaceNodesBackwards(e) {
-		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /[ \t\n\r]/.test(e.nodeValue)))) {
+		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /^[ \t\n\r]*$/.test(e.nodeValue)))) {
 			e = e.previousSibling;
 		}
 		return e;
 	}
 	
 	function skipWhitespaceNodesForwards(e) {
-		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /[ \t\n\r]/.test(e.nodeValue)))) {
+		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /^[ \t\n\r]*$/.test(e.nodeValue)))) {
 			e = e.nextSibling;
 		}
 		return e;
@@ -52,9 +52,9 @@
 	function attemptMerge(previous, element) {
 		if (canMerge(previous, element)) {
 			return merge(previous, element);
-		//} else if (previous.tagName == 'LI' && isList(element)) {
+		} else if (previous.tagName == 'LI' && isList(element)) {
 			// Fix invalidly nested lists.
-			//previous.appendChild(element);
+			previous.appendChild(element);
 		}
 		return element;
 	}
@@ -138,7 +138,14 @@
 					dom.insertAfter(list, element);
 					list.appendChild(element);
 				}
-				dom.rename(element, 'li');
+				if (element.tagName != 'P' && element.tagName != 'LI' && skipWhitespaceNodesForwards(element.firstChild)) {
+					var li = dom.create('li');
+					dom.insertAfter(li, element);
+					li.appendChild(element);
+					element = li;
+				} else {
+					dom.rename(element, 'li');
+				}
 				applied.push(element);
 			}
 			
@@ -217,6 +224,7 @@
 					var wrapList = createWrapList(element);
 					wrapList.appendChild(element);
 					attemptMergeWithNext(wrapList.parentNode);
+					attemptMergeWithNext(wrapList);
 					indented.push(element);
 				}
 			}
