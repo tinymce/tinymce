@@ -125,8 +125,12 @@ asyncTest('Collapsed Selection - Type Enter', function() {
 	TypingEnter.inA(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>&nbsp;</li></ul></li><li>After</li></ul>');
 	TypingEnter.inA(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li></li><li>Test</li></ol></li><li>After</li></ol>');
 	TypingEnter.inA(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li></li><li>Test</li></ul></li><li>After</li></ul>');
+
+	// TODO: Typing enter in correctly nested lists
 	queue.done();
 });
+
+// TODO: Typing backspace in a paragraph between two lists should merge the lists.
 
 //asyncTest('Expanded Selection, Table Types - Ordered List Action', function() {
 	// TODO
