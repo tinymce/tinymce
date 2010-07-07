@@ -72,6 +72,8 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 
 	Outdenting.a(OrderedListItemWithNestedChild).gives('<p>Item1</p><ol><li style="list-style-type: none;"><ol><li>Nested</li></ol></li></ol>');
 	Outdenting.a(UnorderedListItemWithNestedChild).gives('<p>Item1</p><ul><li style="list-style-type: none;"><ul><li>Nested</li></ul></li></ul>');
+
+	// TODO: Outdenting first item of a nested list with multiple items shouldn't leave an extra bullet around.
 	
 	queue.done();
 });
