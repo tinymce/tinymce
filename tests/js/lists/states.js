@@ -44,6 +44,8 @@ NestedEmptyOrderedListItem = createState('<ol><li>Before<ol><li>&nbsp;</li></ol>
 NestedEmptyUnorderedListItem = createState('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>', 'li ul li', 0);
 NestedNonEmptyOrderedListItem = createState('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>', 'li ol li', 0);
 NestedNonEmptyUnorderedListItem = createState('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>', 'li ul li', 0);
+NestedOrderedListWithMultipleItems = createState('<ol><li>Before<ol><li>Item1</li><li>Item2</li></ol></li></ol>', 'li ol li', 0);
+NestedUnorderedListWithMultipleItems = createState('<ul><li>Before<ul><li>Item1</li><li>Item2</li></ul></li></ul>', 'li ul li', 0);
 OrderedLowerAlphaListItem = createState('<ol style="list-style-type: lower-alpha;"><li>Item 1</li><li>Item 2</li></ol>', 'li:nth-child(2)', 0);
 UnorderedSquareListItem = createState('<ul style="list-style-type: square;"><li>Item 1</li><li>Item 2</li></ul>', 'li:nth-child(2)', 0);
 

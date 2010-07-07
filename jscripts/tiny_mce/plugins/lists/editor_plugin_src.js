@@ -83,7 +83,7 @@
 		if (!e1 || !e2) {
 			return false;
 		} else if (e1.tagName == 'LI' && e2.tagName == 'LI') {
-			return e2.style.listStyleType == 'none';
+			return e2.style.listStyleType == 'none' || containsOnlyAList(e2);
 		} else if (isList(e1)) {
 			return e1.tagName == e2.tagName || isListForIndent(e2);
 		} else {
@@ -93,7 +93,12 @@
 	
 	function isListForIndent(e) {
 		var firstLI = skipWhitespaceNodesForwards(e.firstChild), lastLI = skipWhitespaceNodesBackwards(e.lastChild);
-		return firstLI && lastLI && isList(e) && firstLI == lastLI && (isList(firstLI) || firstLI.style.listStyleType == 'none');
+		return firstLI && lastLI && isList(e) && firstLI == lastLI && (isList(firstLI) || firstLI.style.listStyleType == 'none'  || containsOnlyAList(firstLI));
+	}
+	
+	function containsOnlyAList(e) {
+		var firstChild = skipWhitespaceNodesForwards(e.firstChild), lastChild = skipWhitespaceNodesBackwards(e.lastChild);
+		return firstChild && lastChild && firstChild == lastChild && isList(firstChild);
 	}
 	
 	function merge(e1, e2) {
