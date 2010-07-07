@@ -140,8 +140,6 @@
 				dom.insertAfter(list, element);
 				list.appendChild(element);
 				
-				// Correctly preserve block tags inside the LI.  So <h1>Foo</h1> becomes <li><h1>Foo</h1></li>
-				// TODO: Be more specific about what we wrap and what we put the list into so things like definition lists work.
 				if (element.tagName == 'LI') {
 					// No change required.
 				} else if (element.tagName == 'P') {

@@ -57,7 +57,7 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 	// should only have one indented list with three items when done.
 	Indenting.a(OrderedListWithAdjacentNestedLists).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></li></ol>');
 
-	Indenting.a(OrderedLowerGreekListItem).gives('<ol style="list-style-type: lower-greek;"><li>Item 1<ol style="list-style-type: lower-greek;"><li>Item 2</li></ol></li></ol>');
+	Indenting.a(OrderedLowerAlphaListItem).gives('<ol style="list-style-type: lower-alpha;"><li>Item 1<ol style="list-style-type: lower-alpha;"><li>Item 2</li></ol></li></ol>');
 	Indenting.a(UnorderedSquareListItem).gives('<ul style="list-style-type: square;"><li>Item 1<ul style="list-style-type: square;"><li>Item 2</li></ul></li></ul>');
 	queue.done();
 });
