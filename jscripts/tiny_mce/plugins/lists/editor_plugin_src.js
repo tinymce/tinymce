@@ -92,7 +92,7 @@
 	
 	function isListForIndent(e) {
 		var firstLI = skipWhitespaceNodesForwards(e.firstChild), lastLI = skipWhitespaceNodesBackwards(e.lastChild);
-		return isList(e) && firstLI == lastLI && (isList(firstLI) || firstLI.style.listStyleType == 'none');
+		return firstLI && lastLI && isList(e) && firstLI == lastLI && (isList(firstLI) || firstLI.style.listStyleType == 'none');
 	}
 	
 	function merge(e1, e2) {
