@@ -61,7 +61,7 @@ var LinkDialog = {
 					e = n;
 
 					ed.dom.setAttribs(e, {
-						href : f.href.value,
+						href : f.href.value.replace(' ', '%20'),
 						title : f.linktitle.value,
 						target : f.target_list ? getSelectValue(f, "target_list") : null,
 						'class' : f.class_list ? getSelectValue(f, "class_list") : null
