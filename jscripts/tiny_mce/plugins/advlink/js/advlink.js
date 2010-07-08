@@ -425,7 +425,7 @@ function insertAction() {
 
 function setAllAttribs(elm) {
 	var formObj = document.forms[0];
-	var href = formObj.href.value;
+	var href = formObj.href.value.replace(' ', '%20');
 	var target = getSelectValue(formObj, 'targetlist');
 
 	setAttrib(elm, 'href', href);
