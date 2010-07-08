@@ -192,7 +192,7 @@ test('commands - blocks', function() {
 });
 
 test('commands - link', function() {
-	expect(4);
+	expect(5);
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
@@ -213,6 +213,11 @@ test('commands - link', function() {
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, {href : '"&<>', 'class' : 'test'});
 	equals(editor.getContent(), '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+
+	editor.setContent('<p>test 123</p>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('mceInsertLink', false, {href : 'foo bar'});
+	equals(editor.getContent(), '<p><a href="foo%20bar">test 123</a></p>');
 });
 
 test('commands - unlink', function() {

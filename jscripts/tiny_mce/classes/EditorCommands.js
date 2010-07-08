@@ -367,6 +367,9 @@
 				if (tinymce.is(value, 'string'))
 					value = {href : value};
 
+				// Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
+				value.href = value.href.replace(' ', '%20');
+
 				if (!link) {
 					execNativeCommand('CreateLink', FALSE, 'javascript:mctmp(0);');
 					each(dom.select('a[href=javascript:mctmp(0);]'), function(link) {
