@@ -27,6 +27,11 @@ NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
 ParagraphWithMarginLeft = createState('<p style="margin-left: 30px;">Test</p>', 'p', 0);
 ParagraphWithPaddingLeft = createState('<p style="padding-left: 30px;">Test</p>', 'p', 0);
 ParagraphWithMarginAndPaddingLeft = createState('<p style="margin-left: 30px; padding-left: 30px;">Test</p>', 'p', 0);
+
+ParagraphBetweenOrderedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ol><li>Item2</li></ol>', 'p', 2);
+ParagraphBetweenUnorderedLists = createState('<ul><li>Item1</li></ul><p>Test</p><ul><li>Item2</li></ul>', 'p', 2);
+ParagraphBetweenMixedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ul><li>Item2</li></ul>', 'p', 2);
+
 NonEmptyHeading = createState('<h1>Test</h1>', 'h1', 0);
 TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
 TableCellWithBrs = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);

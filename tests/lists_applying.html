@@ -46,6 +46,10 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	
 	ApplyingOL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li><li>Test</li></ol>');
 	ApplyingOL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
+
+	ApplyingOL.to(ParagraphBetweenOrderedLists).gives('<ol><li>Item1</li><li>Test</li><li>Item2</li></ol>');
+	ApplyingOL.to(ParagraphBetweenUnorderedLists).gives('<ul><li>Item1</li></ul><ol><li>Test</li></ol><ul><li>Item2</li></ul>');
+	ApplyingOL.to(ParagraphBetweenMixedLists).gives('<ol><li>Item1</li><li>Test</li></ol><ul><li>Item2</li></ul>');
 	
 	ApplyingOL.to(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
 	ApplyingOL.to(EmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>&nbsp;</li></ol><ul><li>After</li></ul>');
@@ -66,8 +70,11 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 
 	ApplyingOL.to(DefinitionListTerm).gives('<dl><dt><ol><li>Term</li></ol></dt><dd>Description</dd></dl>');
 	ApplyingOL.to(DefinitionListDescription).gives('<dl><dt>Term</dt><dd><ol><li>Description</li></ol></dd></dl>');
-	// TODO: Test that styles like padding-left are removed
-				
+
+	ApplyingOL.to(ParagraphWithMarginLeft).gives('<ol><li style="margin-left: 30px;">Test</li></ol>');
+	ApplyingOL.to(ParagraphWithPaddingLeft).gives('<ol><li style="padding-left: 30px;">Test</li></ol>'); // TODO: Padding-left renders weird, should it be removed?
+	ApplyingOL.to(ParagraphWithMarginAndPaddingLeft).gives('<ol><li style="margin-left: 30px; padding-left: 30px;">Test</li></ol>');
+	
 	queue.done();
 });
 
@@ -89,7 +96,9 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	ApplyingUL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li></ol><ul><li>Test</li></ul>');
 	ApplyingUL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li><li>Test</li></ul>');
 
-	// TODO: Between lists.
+	ApplyingUL.to(ParagraphBetweenOrderedLists).gives('<ol><li>Item1</li></ol><ul><li>Test</li></ul><ol><li>Item2</li></ol>');
+	ApplyingUL.to(ParagraphBetweenUnorderedLists).gives('<ul><li>Item1</li><li>Test</li><li>Item2</li></ul>');
+	ApplyingUL.to(ParagraphBetweenMixedLists).gives('<ol><li>Item1</li></ol><ul><li>Test</li><li>Item2</li></ul>');
 	
 	ApplyingUL.to(EmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>&nbsp;</li></ul><ol><li>After</li></ol>');
 	ApplyingUL.to(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
@@ -110,6 +119,10 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 
 	ApplyingUL.to(DefinitionListTerm).gives('<dl><dt><ul><li>Term</li></ul></dt><dd>Description</dd></dl>');
 	ApplyingUL.to(DefinitionListDescription).gives('<dl><dt>Term</dt><dd><ul><li>Description</li></ul></dd></dl>');
+
+	ApplyingUL.to(ParagraphWithMarginLeft).gives('<ul><li style="margin-left: 30px;">Test</li></ul>');
+	ApplyingUL.to(ParagraphWithPaddingLeft).gives('<ul><li style="padding-left: 30px;">Test</li></ul>'); // TODO: Padding-left renders weird, should it be removed?
+	ApplyingUL.to(ParagraphWithMarginAndPaddingLeft).gives('<ul><li style="margin-left: 30px; padding-left: 30px;">Test</li></ul>');
 	queue.done();
 });
 
@@ -152,6 +165,22 @@ asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	queue.done();
 });
 
+asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
+	ApplyingUL.to(SingleLiOlSelection).gives('<ul><li>Item 1</li></ul>');
+	ApplyingUL.to(MultiLiOlSelection).gives('<ul><li>Item 1</li><li>Item 2</li></ul>');
+	ApplyingUL.to(SingleLiUlSelection).gives('<p>Item 1</p>');
+	ApplyingUL.to(MultiLiUlSelection).gives('<p>Item 1</p><p>Item 2</p>');
+	
+	ApplyingUL.to(IndentedOlInOlCorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+	ApplyingUL.to(IndentedOlInOlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+
+	// TODO: Selection only in indented list.
+	
+	ApplyingUL.to(IndentedUlInUlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	ApplyingUL.to(IndentedUlInUlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+	queue.done();
+});
+
 asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function() {
 	ApplyingOL.to(SingleParagraphSelection).gives('<ol><li>This is a test</li></ol>');
 	ApplyingOL.to(MultipleParagraphSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
@@ -161,8 +190,36 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 	// TODO: DIV handling seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
 	ApplyingOL.to(SingleBlockSelection).gives('<ol><li><div>This is a test</div></li></ol>');
 	ApplyingOL.to(MultipleBlockSelection).gives('<ol><li><div>This is a test</div></li><li><div>Second paragraph</div></li></ol>');
+
+	ApplyingOL.to(CellWithoutBrSelection).gives('<table><tbody><tr><td><ol><li>Cell 1</li></ol></td></tr></tbody></table>');
+	// TODO: Tables with BRs.
 	
-	// TODO: Mixed paragraph/heading states.
+	ApplyingOL.to(ParagraphToHeadingSelection).gives('<ol><li>This is a test</li><li><h1>Second paragraph</h1></li></ol>');
+	ApplyingOL.to(ParagraphToBlockSelection).gives('<ol><li>This is a test</li><li><div>Second paragraph</div></li></ol>');
+	ApplyingOL.to(HeadingToParagraphSelection).gives('<ol><li><h1>This is a test</h1></li><li>Second paragraph</li></ol>');
+	ApplyingOL.to(BlockToParagraphSelection).gives('<ol><li><div>This is a test</div></li><li>Second paragraph</li></ol>');
+	ApplyingOL.to(MultipleParagraphAndHeadingSelection).gives('<ol><li>This is a test</li><li><h1>Second paragraph</h1></li><li><div>Third paragraph</div></li></ol>');
+	queue.done();
+});
+
+asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', function() {
+	ApplyingUL.to(SingleParagraphSelection).gives('<ul><li>This is a test</li></ul>');
+	ApplyingUL.to(MultipleParagraphSelection).gives('<ul><li>This is a test</li><li>Second paragraph</li></ul>');
+	ApplyingUL.to(SingleHeadingSelection).gives('<ul><li><h1>This is a test</h1></li></ul>');
+	ApplyingUL.to(MultipleHeadingSelection).gives('<ul><li><h1>This is a test</h1></li><li><h1>Second paragraph</h1></li></ul>');
+	
+	// TODO: DIV handling seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
+	ApplyingUL.to(SingleBlockSelection).gives('<ul><li><div>This is a test</div></li></ul>');
+	ApplyingUL.to(MultipleBlockSelection).gives('<ul><li><div>This is a test</div></li><li><div>Second paragraph</div></li></ul>');
+
+	ApplyingUL.to(CellWithoutBrSelection).gives('<table><tbody><tr><td><ul><li>Cell 1</li></ul></td></tr></tbody></table>');
+	// TODO: Tables with BRs.
+	
+	ApplyingUL.to(ParagraphToHeadingSelection).gives('<ul><li>This is a test</li><li><h1>Second paragraph</h1></li></ul>');
+	ApplyingUL.to(ParagraphToBlockSelection).gives('<ul><li>This is a test</li><li><div>Second paragraph</div></li></ul>');
+	ApplyingUL.to(HeadingToParagraphSelection).gives('<ul><li><h1>This is a test</h1></li><li>Second paragraph</li></ul>');
+	ApplyingUL.to(BlockToParagraphSelection).gives('<ul><li><div>This is a test</div></li><li>Second paragraph</li></ul>');
+	ApplyingUL.to(MultipleParagraphAndHeadingSelection).gives('<ul><li>This is a test</li><li><h1>Second paragraph</h1></li><li><div>Third paragraph</div></li></ul>');
 	queue.done();
 });
 
