@@ -162,6 +162,11 @@ asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	
 	ApplyingOL.to(IndentedUlInUlCorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
 	ApplyingOL.to(IndentedUlInUlIncorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
+
+	ApplyingOL.to(IndentedOlInUlCorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
+	ApplyingOL.to(IndentedUlInOlCorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
+	ApplyingOL.to(IndentedOlInUlIncorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
+	ApplyingOL.to(IndentedUlInOlIncorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>');
 	queue.done();
 });
 
@@ -178,6 +183,11 @@ asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
 	
 	ApplyingUL.to(IndentedUlInUlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 	ApplyingUL.to(IndentedUlInUlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
+
+	ApplyingUL.to(IndentedOlInUlCorrectSelection).gives('<ul><li>Item 1<ol><li>Indented</li></ul></li></ol>');
+	ApplyingUL.to(IndentedUlInOlCorrectSelection).gives('<ul><li>Item 1<ol><li>Indented</li></ul></li></ol>');
+	ApplyingUL.to(IndentedOlInUlIncorrectSelection).gives('<ul><li>Item 1<ol><li>Indented</li></ul></li></ol>');
+	ApplyingUL.to(IndentedUlInOlIncorrectSelection).gives('<ol><li>Item 1<ol><li>Indented</li></ul></li></ol>');
 	queue.done();
 });
 
