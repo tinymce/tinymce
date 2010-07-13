@@ -178,35 +178,57 @@
 					dom.split(element.parentNode, element);
 					makeList(element);
 					attemptMergeWithNext(element.parentNode);
-				} else {
-					convertListItemToParagraph(element);
 				}
 				applied.push(element);
 			}
 			
 			function convertListItemToParagraph(element) {
+				if (tinymce.inArray(applied, element) != -1) {
+					return;
+				}
 				// First split off any nested elements.
 				element = splitNestedLists(element, dom);
 				// Split all the way out to the body.
+				// TODO: Can't split out to body because the list structure may be in a table or a DIV.
 				while (element.parentNode !== dom.getRoot()) {
 					dom.split(element.parentNode, element);
 				}
 				dom.rename(element, 'p');
+				applied.push(element);
 			}
 			
-			this.process({
-				'LI': changeList,
-//				'TD': wrapList,
-				'H1': makeList,
-				'H2': makeList,
-				'H3': makeList,
-				'H4': makeList,
-				'H5': makeList,
-				'H6': makeList,
-				'P': makeList,
-				'DIV': makeList,
-				defaultAction: wrapList
+			var hasSameType = false;
+			var hasOppositeType = false;
+			var hasNonList = false;
+			each(ed.selection.getSelectedBlocks(), function(e) {
+				if (e.tagName == oppositeListType || (e.tagName == 'LI' && e.parentNode.tagName == oppositeListType)) {
+					hasOppositeType = true;
+				} else if (e.tagName == targetListType || (e.tagName == 'LI' && e.parentNode.tagName == targetListType)) {
+					hasSameType = true;
+				} else {
+					hasNonList = true;
+				}
 			});
+			var actions;
+			if (hasNonList || hasOppositeType) {
+				actions = {
+					'LI': changeList,
+					'H1': makeList,
+					'H2': makeList,
+					'H3': makeList,
+					'H4': makeList,
+					'H5': makeList,
+					'H6': makeList,
+					'P': makeList,
+					'DIV': makeList,
+					defaultAction: wrapList
+				};
+			} else {
+				actions = {
+					defaultAction: convertListItemToParagraph
+				};
+			}
+			this.process(actions);
 		},
 		
 		indent: function() {
@@ -287,7 +309,7 @@
 			var t = this, sel = t.ed.selection, bookmark = sel.getBookmark(), dom = t.ed.dom;
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
-				if (element.nodeType != 1) {
+				if (!element || element.nodeType != 1) {
 					return;
 				}
 				var action = actions[element.tagName];
