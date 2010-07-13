@@ -54,7 +54,7 @@
 	Redirect /downloads/communitytinymce.zip http://tinymce.ephox.com/downloads/communitytinymce_${file_version}.zip</concat>
 	</target>
 
-	<target name="prepare-release" depends="built-version, htaccess">
+	<target name="pre-publish-release" depends="built-version, htaccess">
 		<copy todir="${dist_dir}">
 			<fileset dir="${temp_dir}">
 				<include name="enterprisetinymce*.zip" />
