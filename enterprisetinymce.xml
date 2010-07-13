@@ -48,13 +48,13 @@
 		<publish type="integration" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
 	</target>
 	
-	<target name="htaccess" depends="built-version">
+	<target name="ea-htaccess" depends="built-version">
 		<mkdir dir="${dist_dir}" />
-		<concat destfile="${dist_dir}/.htaccess">Redirect /downloads/enterprisetinymce.zip http://tinymce.ephox.com/downloads/enterprisetinymce_${file_version}.zip
-	Redirect /downloads/communitytinymce.zip http://tinymce.ephox.com/downloads/communitytinymce_${file_version}.zip</concat>
+		<concat destfile="${dist_dir}/.htaccess">Redirect /downloads/early-access/enterprisetinymce.zip http://tinymce.ephox.com/downloads/early-access/enterprisetinymce_${file_version}.zip
+	Redirect /downloads/early-access/communitytinymce.zip http://tinymce.ephox.com/downloads/early-access/communitytinymce_${file_version}.zip</concat>
 	</target>
 
-	<target name="pre-publish-release" depends="built-version, htaccess">
+	<target name="pre-publish-release" depends="built-version, ea-htaccess">
 		<copy todir="${dist_dir}">
 			<fileset dir="${temp_dir}">
 				<include name="enterprisetinymce*.zip" />
@@ -63,8 +63,14 @@
 		</copy>
 		<unzip dest="${temp_dir}/expanded" src="${dist_dir}/enterprisetinymce_${file_version}.zip" />
 	</target>
+	
+	<target name="release-htaccess" depends="pre-publish-release">
+		<mkdir dir="${dist_dir}" />
+		<concat destfile="${dist_dir}/.htaccess">Redirect /downloads/enterprisetinymce.zip http://tinymce.ephox.com/downloads/enterprisetinymce_${file_version}.zip
+	Redirect /downloads/communitytinymce.zip http://tinymce.ephox.com/downloads/communitytinymce_${file_version}.zip</concat>
+	</target>
 		
-	<target name="publish-release" depends="prepare-release">
+	<target name="publish-release" depends="pre-publish-release,release-htaccess">
 		<publish type="release" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
 	</target>
 </project>
