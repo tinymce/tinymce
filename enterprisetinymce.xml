@@ -54,14 +54,17 @@
 	Redirect /downloads/communitytinymce.zip http://tinymce.ephox.com/downloads/communitytinymce_${file_version}.zip</concat>
 	</target>
 
-	<target name="publish-release" depends="built-version, htaccess">
+	<target name="prepare-release" depends="built-version, htaccess">
 		<copy todir="${dist_dir}">
 			<fileset dir="${temp_dir}">
 				<include name="enterprisetinymce*.zip" />
 				<include name="communitytinymce*.zip" />
 			</fileset>
 		</copy>
-		<publish type="release" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
 		<unzip dest="${temp_dir}/expanded" src="${dist_dir}/enterprisetinymce_${file_version}.zip" />
+	</target>
+		
+	<target name="publish-release" depends="prepare-release">
+		<publish type="release" version="${file_version}" artifactDir="${temp_dir}" artifactPattern="[artifact]_[revision].[ext]" overwrite="true" />
 	</target>
 </project>
