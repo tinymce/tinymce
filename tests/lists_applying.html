@@ -225,11 +225,13 @@ asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', functio
 
 asyncTest('Expanded Selection, Table Types - Ordered List Action', function() {
 	ApplyingOL.to(CellWithoutBrSelection).gives('<table><tbody><tr><td><ol><li>Cell 1</li></ol></td></tr></tbody></table>');
+	queue.done();
 	// TODO: Tables with BRs.
 });
 
 asyncTest('Expanded Selection, Table Types - Unordered List Action', function() {
 	ApplyingUL.to(CellWithoutBrSelection).gives('<table><tbody><tr><td><ul><li>Cell 1</li></ul></td></tr></tbody></table>');
+	queue.done();
 	// TODO: Tables with BRs.
 });
 
