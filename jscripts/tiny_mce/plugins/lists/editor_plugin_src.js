@@ -109,7 +109,7 @@
 			e1.style.listStyleType = masterElement.style.listStyleType;
 		}
 		e2.parentNode.removeChild(e2);
-		attemptMerge(lastOriginal, firstNew, masterElement);
+		attemptMerge(lastOriginal, firstNew, false);
 		return e1;
 	}
 	
@@ -142,7 +142,7 @@
 		},
 		
 		applyList: function(targetListType, oppositeListType) {
-			var ed = this.ed, dom = ed.dom, t = this, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
+			var ed = this.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
 			function makeList(element) {
 				var list = dom.create(targetListType), li;
 				dom.insertAfter(list, element);
@@ -180,7 +180,7 @@
 				if (element.parentNode.tagName === oppositeListType) {
 					dom.split(element.parentNode, element);
 					makeList(element);
-					attemptMergeWithNext(element.parentNode);
+					attemptMergeWithNext(element.parentNode, false);
 				}
 				applied.push(element);
 			}
@@ -230,7 +230,7 @@
 		},
 		
 		indent: function() {
-			var ed = this.ed, dom = ed.dom, indentAmount, indentUnits, indented = [];
+			var ed = this.ed, dom = ed.dom, indented = [];
 			
 			function createWrapItem(element) {
 				var wrapItem = dom.create('li', { style: 'list-style-type: none;'});
@@ -258,8 +258,8 @@
 					element = splitNestedLists(element, dom);
 					var wrapList = createWrapList(element);
 					wrapList.appendChild(element);
-					attemptMergeWithAdjacent(wrapList.parentNode);
-					attemptMergeWithAdjacent(wrapList);
+					attemptMergeWithAdjacent(wrapList.parentNode, false);
+					attemptMergeWithAdjacent(wrapList, false);
 					indented.push(element);
 				}
 			}
@@ -272,7 +272,7 @@
 		},
 		
 		outdent: function() {
-			var t = this, ed = t.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], newIndentAmount;
+			var t = this, ed = t.ed, dom = ed.dom, outdented = [];
 			
 			function outdentLI(element) {
 				var listElement, targetParent;
@@ -294,7 +294,7 @@
 							dom.rename(element, 'p');
 						}
 					}
-					attemptMergeWithAdjacent(element);
+					attemptMergeWithAdjacent(element, false);
 					outdented.push(element);
 				}
 			}
