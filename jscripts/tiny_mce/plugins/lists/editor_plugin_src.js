@@ -1,7 +1,14 @@
 (function() {
 	var each = tinymce.each, Event = tinymce.dom.Event;
-	
+
 	// Skips text nodes that only contain whitespace since they aren't semantically important.
+	function skipWhitespaceNodes(e, next) {
+		while (e && (e.nodeType === 8 || (e.nodeType === 3 && /^[ \t\n\r]*$/.test(e.nodeValue)))) {
+			e = next(e);
+		}
+		return e;
+	}
+	
 	function skipWhitespaceNodesBackwards(e) {
 		return skipWhitespaceNodes(e, function(e) { return e.previousSibling; });
 	}
@@ -10,21 +17,14 @@
 		return skipWhitespaceNodes(e, function(e) { return e.nextSibling; });
 	}
 	
-	function skipWhitespaceNodes(e, next) {
-		while (e && (e.nodeType == 8 || (e.nodeType == 3 && /^[ \t\n\r]*$/.test(e.nodeValue)))) {
-			e = next(e);
-		}
-		return e;
-	}
-	
 	function hasParentInList(ed, e, list) {
 		return ed.dom.getParent(e, function(p) {
-			return tinymce.inArray(list, p) != -1;
+			return tinymce.inArray(list, p) !== -1;
 		});
 	}
 	
 	function isList(e) {
-		return e && (e.tagName == 'OL' || e.tagName == 'UL');
+		return e && (e.tagName === 'OL' || e.tagName === 'UL');
 	}
 	
 	function splitNestedLists(element, dom) {
@@ -71,7 +71,7 @@
 	function attemptMerge(previous, element) {
 		if (canMerge(previous, element)) {
 			return merge(previous, element);
-		} else if (previous.tagName == 'LI' && isList(element)) {
+		} else if (previous.tagName === 'LI' && isList(element)) {
 			// Fix invalidly nested lists.
 			previous.appendChild(element);
 		}
@@ -82,10 +82,10 @@
 	function canMerge(e1, e2) {
 		if (!e1 || !e2) {
 			return false;
-		} else if (e1.tagName == 'LI' && e2.tagName == 'LI') {
-			return e2.style.listStyleType == 'none' || containsOnlyAList(e2);
+		} else if (e1.tagName === 'LI' && e2.tagName === 'LI') {
+			return e2.style.listStyleType === 'none' || containsOnlyAList(e2);
 		} else if (isList(e1)) {
-			return e1.tagName == e2.tagName || isListForIndent(e2);
+			return e1.tagName === e2.tagName || isListForIndent(e2);
 		} else {
 			return false;
 		}
@@ -93,12 +93,12 @@
 	
 	function isListForIndent(e) {
 		var firstLI = skipWhitespaceNodesForwards(e.firstChild), lastLI = skipWhitespaceNodesBackwards(e.lastChild);
-		return firstLI && lastLI && isList(e) && firstLI == lastLI && (isList(firstLI) || firstLI.style.listStyleType == 'none'  || containsOnlyAList(firstLI));
+		return firstLI && lastLI && isList(e) && firstLI === lastLI && (isList(firstLI) || firstLI.style.listStyleType === 'none'  || containsOnlyAList(firstLI));
 	}
 	
 	function containsOnlyAList(e) {
 		var firstChild = skipWhitespaceNodesForwards(e.firstChild), lastChild = skipWhitespaceNodesBackwards(e.lastChild);
-		return firstChild && lastChild && firstChild == lastChild && isList(firstChild);
+		return firstChild && lastChild && firstChild === lastChild && isList(firstChild);
 	}
 	
 	function merge(e1, e2) {
@@ -131,28 +131,29 @@
 			});
 			
 			function cancelTab(ed, e) {
-				if (e.keyCode === 9)
+				if (e.keyCode === 9) {
 					return Event.cancel(e);
+				}
 			}
 			ed.onKeyPress.add(cancelTab);
 			ed.onKeyDown.add(cancelTab);
 		},
 		
 		applyList: function(targetListType, oppositeListType) {
-			var ed = this.ed, dom = ed.dom, t = this, applied = [];
+			var ed = this.ed, dom = ed.dom, t = this, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
 			function makeList(element) {
-				var list = dom.create(targetListType);
+				var list = dom.create(targetListType), li;
 				dom.insertAfter(list, element);
 				list.appendChild(element);
 				
-				if (element.tagName == 'LI') {
+				if (element.tagName === 'LI') {
 					// No change required.
-				} else if (element.tagName == 'P') {
+				} else if (element.tagName === 'P') {
 					// Convert the element to an LI.
 					element = dom.rename(element, 'li');
 				} else {
 					// Put the list around the element.
-					var li = dom.create('li');
+					li = dom.create('li');
 					dom.insertAfter(li, element);
 					li.appendChild(element);
 					element = li;
@@ -171,10 +172,10 @@
 			}
 			
 			function changeList(element) {
-				if (tinymce.inArray(applied, element) != -1) {
+				if (tinymce.inArray(applied, element) !== -1) {
 					return;
 				}
-				if (element.parentNode.tagName == oppositeListType) {
+				if (element.parentNode.tagName === oppositeListType) {
 					dom.split(element.parentNode, element);
 					makeList(element);
 					attemptMergeWithNext(element.parentNode);
@@ -183,7 +184,7 @@
 			}
 			
 			function convertListItemToParagraph(element) {
-				if (tinymce.inArray(applied, element) != -1) {
+				if (tinymce.inArray(applied, element) !== -1) {
 					return;
 				}
 				// First split off any nested elements.
@@ -197,19 +198,17 @@
 				applied.push(element);
 			}
 			
-			var hasSameType = false;
-			var hasOppositeType = false;
-			var hasNonList = false;
+			
 			each(ed.selection.getSelectedBlocks(), function(e) {
-				if (e.tagName == oppositeListType || (e.tagName == 'LI' && e.parentNode.tagName == oppositeListType)) {
+				if (e.tagName === oppositeListType || (e.tagName === 'LI' && e.parentNode.tagName === oppositeListType)) {
 					hasOppositeType = true;
-				} else if (e.tagName == targetListType || (e.tagName == 'LI' && e.parentNode.tagName == targetListType)) {
+				} else if (e.tagName === targetListType || (e.tagName === 'LI' && e.parentNode.tagName === targetListType)) {
 					hasSameType = true;
 				} else {
 					hasNonList = true;
 				}
 			});
-			var actions;
+
 			if (hasNonList || hasOppositeType) {
 				actions = {
 					'LI': changeList,
@@ -241,15 +240,16 @@
 			}
 			
 			function createWrapList(element) {
-				var wrapItem = createWrapItem(element);
-				var list = dom.getParent(element, 'ol,ul');
-				var listType = list.tagName;
-				var listStyle = dom.getStyle(list, 'list-style-type');
-				var attrs = {};
-				if (listStyle != '') {
+				var wrapItem = createWrapItem(element),
+					list = dom.getParent(element, 'ol,ul'),
+					listType = list.tagName,
+					listStyle = dom.getStyle(list, 'list-style-type'),
+					attrs = {},
+					wrapList;
+				if (listStyle !== '') {
 					attrs.style = 'list-style-type: ' + listStyle + ';';
 				}
-				var wrapList = dom.create(listType, attrs);
+				wrapList = dom.create(listType, attrs);
 				wrapItem.appendChild(wrapList);
 				return wrapList;
 			}
@@ -276,14 +276,15 @@
 			var t = this, ed = t.ed, dom = ed.dom, indentAmount, indentUnits, outdented = [], newIndentAmount;
 			
 			function outdentLI(element) {
+				var listElement, targetParent;
 				if (!hasParentInList(ed, element, outdented)) {
-					if (dom.getStyle(element, 'margin-left') != '' || dom.getStyle(element, 'padding-left') != '') {
+					if (dom.getStyle(element, 'margin-left') !== '' || dom.getStyle(element, 'padding-left') !== '') {
 						return t.adjustPaddingFunction(false)(element);
 					}
 					element = splitNestedLists(element, dom);
-					var listElement = element.parentNode;
-					var targetParent = element.parentNode.parentNode;
-					if (targetParent.tagName == 'P') {
+					listElement = element.parentNode;
+					targetParent = element.parentNode.parentNode;
+					if (targetParent.tagName === 'P') {
 						dom.split(targetParent, element.parentNode);
 					} else {
 						dom.split(listElement, element);
@@ -309,7 +310,7 @@
 			var t = this, sel = t.ed.selection, bookmark = sel.getBookmark(), dom = t.ed.dom;
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
-				if (!element || element.nodeType != 1) {
+				if (!element || element.nodeType !== 1) {
 					return;
 				}
 				var action = actions[element.tagName];
@@ -336,14 +337,14 @@
 		},
 		
 		classBasedEach: function(elements, f) {
-			var dom = this.ed.dom;
+			var dom = this.ed.dom, nodes, element;
 			// Mark nodes
 			each(elements, function(element) {
 				dom.addClass(element, '_mce_act_on');
 			});
-			var nodes = dom.select('._mce_act_on');
+			nodes = dom.select('._mce_act_on');
 			while (nodes.length > 0) {
-				var element = nodes.shift();
+				element = nodes.shift();
 				dom.removeClass(element, '_mce_act_on');
 				f(element);
 				nodes = dom.select('._mce_act_on');
@@ -354,10 +355,10 @@
 			var indentAmount, indentUnits, ed = this.ed;
 			indentAmount = ed.settings.indentation;
 			indentUnits = /[a-z%]+/i.exec(indentAmount);
-			indentAmount = parseInt(indentAmount);
+			indentAmount = parseInt(indentAmount, 10);
 			return function(element) {
 				var currentIndent, newIndentAmount;
-				currentIndent = parseInt(ed.dom.getStyle(element, 'margin-left') || 0) + parseInt(ed.dom.getStyle(element, 'padding-left') || 0);
+				currentIndent = parseInt(ed.dom.getStyle(element, 'margin-left') || 0, 10) + parseInt(ed.dom.getStyle(element, 'padding-left') || 0, 10);
 				if (isIndent) {
 					newIndentAmount = currentIndent + indentAmount;
 				} else {
@@ -379,4 +380,4 @@
 		}
 	});
 	tinymce.PluginManager.add("lists", tinymce.ephox.plugins.Lists);
-})();
+}());
