@@ -93,15 +93,31 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 	queue.done();
 });
 
-asyncTest('Type Tab', function() {
-	checkKeystrokeFiresAction('\t', false, 'Indent');
+asyncTest('Type Tab in List', function() {
+	editor.setContent('<ol><li>Test</li></ol>');
+	setSelection('li', 0);
+	checkIfKeystrokeFiresAction('\t', false, 'Indent', true);
 });
 
-asyncTest('Type Shift-Tab', function() {
-	checkKeystrokeFiresAction('\t', true, 'Outdent');
+asyncTest('Type Tab in Paragraph', function() {
+	editor.setContent('<p>Test</p>');
+	setSelection('p', 0);
+	checkIfKeystrokeFiresAction('\t', false, 'Indent', false);
 });
 
-function checkKeystrokeFiresAction(keystroke, shift, actionName) {
+asyncTest('Type Shift-Tab in List', function() {
+	editor.setContent('<ol><li>Test</li></ol>');
+	setSelection('li', 0);
+	checkIfKeystrokeFiresAction('\t', true, 'Outdent', true);
+});
+
+asyncTest('Type Shift-Tab in Paragraph', function() {
+	editor.setContent('<p>Test</p>');
+	setSelection('p', 0);
+	checkIfKeystrokeFiresAction('\t', true, 'Outdent', false);
+});
+
+function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
 	expect(1);
 	var actionFired = false;
 	function listener(ed, e) {
@@ -113,7 +129,7 @@ function checkKeystrokeFiresAction(keystroke, shift, actionName) {
 	editor.onBeforeExecCommand.add(listener);
 
 	fakeKeyPressAction(keystroke, shift)(function() {
-		ok(actionFired, actionName + ' command triggered.');
+		equals(actionFired, expected, actionName + ' command triggered?');
 		editor.onBeforeExecCommand.remove(listener);
 		QUnit.start();
 	});

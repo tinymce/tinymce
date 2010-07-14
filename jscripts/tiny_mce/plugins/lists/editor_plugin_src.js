@@ -115,6 +115,15 @@
 	
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
+			function isTriggerKey(e) {
+				return e.keyCode === 9 && (ed.queryCommandState('InsertUnorderedList') || ed.queryCommandState('InsertOrderedList'));
+			}
+			function cancelTab(ed, e) {
+				if (isTriggerKey(e)) {
+					return Event.cancel(e);
+				}
+			}
+			
 			this.ed = ed;
 			ed.addCommand('Indent', this.indent, this);
 			ed.addCommand('Outdent', this.outdent, this);
@@ -126,17 +135,12 @@
 			}, this);
 			
 			ed.onKeyUp.add(function(ed, e) {
-				if (e.keyCode === 9) {
+				if (isTriggerKey(e)) {
 					ed.execCommand(e.shiftKey ? 'Outdent' : 'Indent', true, null);
 					return Event.cancel(e);
 				}
 			});
 			
-			function cancelTab(ed, e) {
-				if (e.keyCode === 9) {
-					return Event.cancel(e);
-				}
-			}
 			ed.onKeyPress.add(cancelTab);
 			ed.onKeyDown.add(cancelTab);
 		},
