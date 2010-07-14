@@ -38,9 +38,11 @@ TableCellWithBrs = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nb
 DefinitionListDescription = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dd', 2);
 DefinitionListTerm = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dt', 2);
 EndOfParagraphBeforeOL = createState('<p>Test</p><ol><li>Item</li></ol>', 'p', 4);
+EndOfParagraphBeforeOLWithListType = createState('<p>Test</p><ol style="list-style-type: lower-alpha;"><li>Item</li></ol>', 'p', 4);
 EndOfParagraphBeforeUL = createState('<p>Test</p><ul><li>Item</li></ul>', 'p', 4);
 StartOfParagraphAfterOL = createState('<ol><li>Item</li></ol><p>Test</p>', 'p', 1);
 StartOfParagraphAfterUL = createState('<ul><li>Item</li></ul><p>Test</p>', 'p', 1);
+StartOfParagraphAfterOLWithListType = createState('<ol style="list-style-type: lower-alpha;"><li>Item</li></ol><p>Test</p>', 'p', 1);
 EmptyOrderedListItem = createState('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>', 'li:nth-child(2)', 0);
 EmptyUnorderedListItem = createState('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>', 'li:nth-child(2)', 0);
 NonEmptyOrderedListItem = createState('<ol><li>Before</li><li>Test</li><li>After</li></ol>', 'li:nth-child(2)', 0);
@@ -65,6 +67,8 @@ UnorderedListItemWithMargin = createState('<ul><li style="margin-left: 60px;">Te
 
 OrderedListItemInsideDiv = createState('<div id="div"><ol>\n<li>Item1</li><li>Item2</li></ol></div>', 'li:nth-child(1)', 2);
 UnorderedListItemInsideDiv = createState('<div id="div"><ul>\n<li>Item1</li><li>Item2</li></ul></div>', 'li:nth-child(1)', 2);
+
+OrderedListItemWithNestedAlphaList = createState('<ol><li>Item<ol style="list-style-type: lower-alpha;"><li>Nested</li></ol></li></ol>', 'li', 2);
 
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);

@@ -45,47 +45,46 @@
 		return element;
 	}
 	
-	function attemptMergeWithAdjacent(e) {
-		e = attemptMergeWithPrevious(e);
-		return attemptMergeWithNext(e);
+	function attemptMergeWithAdjacent(e, allowDifferentListStyles) {
+		e = attemptMergeWithPrevious(e, allowDifferentListStyles);
+		return attemptMergeWithNext(e, allowDifferentListStyles);
 	}
 	
-	function attemptMergeWithPrevious(e) {
+	function attemptMergeWithPrevious(e, allowDifferentListStyles) {
 		var prev = skipWhitespaceNodesBackwards(e.previousSibling);
 		if (prev) {
-			return attemptMerge(prev, e);
+			return attemptMerge(prev, e, allowDifferentListStyles ? prev : false);
 		} else {
 			return e;
 		}
 	}
 	
-	function attemptMergeWithNext(e) {
+	function attemptMergeWithNext(e, allowDifferentListStyles) {
 		var next = skipWhitespaceNodesForwards(e.nextSibling);
 		if (next) {
-			return attemptMerge(e, next);
+			return attemptMerge(e, next, allowDifferentListStyles ? next : false);
 		} else {
 			return e;
 		}
 	}
 	
-	function attemptMerge(previous, element) {
-		if (canMerge(previous, element)) {
-			return merge(previous, element);
-		} else if (previous.tagName === 'LI' && isList(element)) {
+	function attemptMerge(e1, e2, differentStylesMasterElement) {
+		if (canMerge(e1, e2, !!differentStylesMasterElement)) {
+			return merge(e1, e2, differentStylesMasterElement);
+		} else if (e1.tagName === 'LI' && isList(e2)) {
 			// Fix invalidly nested lists.
-			previous.appendChild(element);
+			e1.appendChild(e2);
 		}
-		return element;
+		return e2;
 	}
 	
-	// TODO: Should compare attributes/styles.
-	function canMerge(e1, e2) {
+	function canMerge(e1, e2, allowDifferentListStyles) {
 		if (!e1 || !e2) {
 			return false;
 		} else if (e1.tagName === 'LI' && e2.tagName === 'LI') {
 			return e2.style.listStyleType === 'none' || containsOnlyAList(e2);
 		} else if (isList(e1)) {
-			return e1.tagName === e2.tagName || isListForIndent(e2);
+			return (e1.tagName === e2.tagName && (allowDifferentListStyles || e1.style.listStyleType === e2.style.listStyleType)) || isListForIndent(e2);
 		} else {
 			return false;
 		}
@@ -101,13 +100,16 @@
 		return firstChild && lastChild && firstChild === lastChild && isList(firstChild);
 	}
 	
-	function merge(e1, e2) {
+	function merge(e1, e2, masterElement) {
 		var lastOriginal = skipWhitespaceNodesBackwards(e1.lastChild), firstNew = skipWhitespaceNodesForwards(e2.firstChild);
 		while (e2.firstChild) {
 			e1.appendChild(e2.firstChild);
 		}
+		if (masterElement) {
+			e1.style.listStyleType = masterElement.style.listStyleType;
+		}
 		e2.parentNode.removeChild(e2);
-		attemptMerge(lastOriginal, firstNew);
+		attemptMerge(lastOriginal, firstNew, masterElement);
 		return e1;
 	}
 	
@@ -158,7 +160,7 @@
 					li.appendChild(element);
 					element = li;
 				}
-				attemptMergeWithAdjacent(list);
+				attemptMergeWithAdjacent(list, true);
 				applied.push(element);
 			}
 			

@@ -28,8 +28,6 @@ module('Lists - Applying', {
 
 // Tests
 asyncTest('Collapsed Selection - Apply OL Actions', function() {
-	expect(14);
-	
 	ApplyingOL.to(EmptyParagraph).gives('<ol><li></li></ol>');
 	
 	ApplyingOL.to(EmptyHeading).gives('<ol><li><h1></h1></li></ol>');
@@ -43,9 +41,12 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	
 	ApplyingOL.to(EndOfParagraphBeforeOL).gives('<ol><li>Test</li><li>Item</li></ol>');
 	ApplyingOL.to(EndOfParagraphBeforeUL).gives('<ol><li>Test</li></ol><ul><li>Item</li></ul>');
+
+	ApplyingOL.to(EndOfParagraphBeforeOLWithListType).gives('<ol style="list-style-type: lower-alpha;"><li>Test</li><li>Item</li></ol>');
 	
 	ApplyingOL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li><li>Test</li></ol>');
 	ApplyingOL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
+	ApplyingOL.to(StartOfParagraphAfterOLWithListType).gives('<ol style="list-style-type: lower-alpha;"><li>Item</li><li>Test</li></ol>');
 
 	ApplyingOL.to(ParagraphBetweenOrderedLists).gives('<ol><li>Item1</li><li>Test</li><li>Item2</li></ol>');
 	ApplyingOL.to(ParagraphBetweenUnorderedLists).gives('<ul><li>Item1</li></ul><ol><li>Test</li></ol><ul><li>Item2</li></ul>');
@@ -246,7 +247,7 @@ tinyMCE.init({
 	theme : "advanced",
 	cleanup: true,
 	// TODO: Determine why TinyMCE defaults to stripping out empty h1,ul,ol and li element since it results in invalid HTML (but only on FF3.0 and IE).
-	extended_valid_elements: 'li[style],ul[type|compact],ol[type|compact],h1',
+	extended_valid_elements: 'li[style],ul[type|compact|style],ol[type|compact|style],h1',
 	// Turn this off because we want the list actions to create the right DOM structure from the start.
 	fix_list_elements: false,
 	plugins : 'lists',
