@@ -35,9 +35,9 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 	expect(8);
 	Indenting.a(NonEmptyParagraph).gives('<p style="margin-left: 30px;">Test</p>');
 	Indenting.a(NonEmptyHeading).gives('<h1 style="margin-left: 30px;">Test</h1>');
-	Indenting.a(ParagraphWithMarginLeft).gives('<p style="margin-left: 60px;">Test</p>');
-	Indenting.a(ParagraphWithPaddingLeft).gives('<p style="margin-left: 60px;">Test</p>');
-	Indenting.a(ParagraphWithMarginAndPaddingLeft).gives('<p style="margin-left: 90px;">Test</p>');
+	Indenting.a(ParagraphWithMarginLeft).gives('<p style="margin-left: 90px;">Test</p>');
+	Indenting.a(ParagraphWithPaddingLeft).gives('<p style="margin-left: 90px;">Test</p>');
+	Indenting.a(ParagraphWithMarginAndPaddingLeft).gives('<p style="margin-left: 150px;">Test</p>');
 	
 	Indenting.a(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
 	Indenting.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
@@ -67,9 +67,9 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 	expect(8);
 	Outdenting.a(NonEmptyParagraph).gives('<p>Test</p>');
 	Outdenting.a(NonEmptyHeading).gives('<h1>Test</h1>');
-	Outdenting.a(ParagraphWithMarginLeft).gives('<p>Test</p>');
-	Outdenting.a(ParagraphWithPaddingLeft).gives('<p>Test</p>');
-	Outdenting.a(ParagraphWithMarginAndPaddingLeft).gives('<p style="margin-left: 30px;">Test</p>');
+	Outdenting.a(ParagraphWithMarginLeft).gives('<p style="margin-left: 30px;">Test</p>');
+	Outdenting.a(ParagraphWithPaddingLeft).gives('<p style="margin-left: 30px;">Test</p>');
+	Outdenting.a(ParagraphWithMarginAndPaddingLeft).gives('<p style="margin-left: 90px;">Test</p>');
 
 	Outdenting.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
 	Outdenting.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);

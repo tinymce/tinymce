@@ -75,8 +75,8 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(DefinitionListDescription).gives('<dl><dt>Term</dt><dd><ol><li>Description</li></ol></dd></dl>');
 
 	ApplyingOL.to(ParagraphWithMarginLeft).gives('<ol><li style="margin-left: 30px;">Test</li></ol>');
-	ApplyingOL.to(ParagraphWithPaddingLeft).gives('<ol><li style="padding-left: 30px;">Test</li></ol>'); // TODO: Padding-left renders weird, should it be removed?
-	ApplyingOL.to(ParagraphWithMarginAndPaddingLeft).gives('<ol><li style="margin-left: 30px; padding-left: 30px;">Test</li></ol>');
+	ApplyingOL.to(ParagraphWithPaddingLeft).gives('<ol><li style="margin-left: 30px;">Test</li></ol>'); // TODO: Padding-left renders weird, should it be removed?
+	ApplyingOL.to(ParagraphWithMarginAndPaddingLeft).gives('<ol><li style="margin-left: 90px;">Test</li></ol>');
 	
 	queue.done();
 });
@@ -127,8 +127,8 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	ApplyingUL.to(DefinitionListDescription).gives('<dl><dt>Term</dt><dd><ul><li>Description</li></ul></dd></dl>');
 
 	ApplyingUL.to(ParagraphWithMarginLeft).gives('<ul><li style="margin-left: 30px;">Test</li></ul>');
-	ApplyingUL.to(ParagraphWithPaddingLeft).gives('<ul><li style="padding-left: 30px;">Test</li></ul>'); // TODO: Padding-left renders weird, should it be removed?
-	ApplyingUL.to(ParagraphWithMarginAndPaddingLeft).gives('<ul><li style="margin-left: 30px; padding-left: 30px;">Test</li></ul>');
+	ApplyingUL.to(ParagraphWithPaddingLeft).gives('<ul><li style="margin-left: 30px;">Test</li></ul>'); // TODO: Padding-left renders weird, should it be removed?
+	ApplyingUL.to(ParagraphWithMarginAndPaddingLeft).gives('<ul><li style="margin-left: 90px;">Test</li></ul>');
 	queue.done();
 });
 

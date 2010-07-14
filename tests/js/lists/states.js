@@ -24,9 +24,9 @@ function EmptyHeading() {
 }
 
 NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
-ParagraphWithMarginLeft = createState('<p style="margin-left: 30px;">Test</p>', 'p', 0);
-ParagraphWithPaddingLeft = createState('<p style="padding-left: 30px;">Test</p>', 'p', 0);
-ParagraphWithMarginAndPaddingLeft = createState('<p style="margin-left: 30px; padding-left: 30px;">Test</p>', 'p', 0);
+ParagraphWithMarginLeft = createState('<p style="margin-left: 60px;">Test</p>', 'p', 0);
+ParagraphWithPaddingLeft = createState('<p style="padding-left: 60px;">Test</p>', 'p', 0);
+ParagraphWithMarginAndPaddingLeft = createState('<p style="margin-left: 60px; padding-left: 60px;">Test</p>', 'p', 0);
 
 ParagraphBetweenOrderedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ol><li>Item2</li></ol>', 'p', 2);
 ParagraphBetweenUnorderedLists = createState('<ul><li>Item1</li></ul><p>Test</p><ul><li>Item2</li></ul>', 'p', 2);

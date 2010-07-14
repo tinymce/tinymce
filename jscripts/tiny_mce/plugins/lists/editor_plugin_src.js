@@ -142,9 +142,16 @@
 		},
 		
 		applyList: function(targetListType, oppositeListType) {
-			var ed = this.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
+			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
+			
 			function makeList(element) {
 				var list = dom.create(targetListType), li;
+				function adjustIndentForNewList(element) {
+					// If there's a margin-left, outdent one level to account for the extra list margin.
+					if (element.style.marginLeft || element.style.paddingLeft) {
+						t.adjustPaddingFunction(false)(element);
+					}
+				}
 				dom.insertAfter(list, element);
 				list.appendChild(element);
 				
@@ -153,11 +160,13 @@
 				} else if (element.tagName === 'P') {
 					// Convert the element to an LI.
 					element = dom.rename(element, 'li');
+					adjustIndentForNewList(element);
 				} else {
 					// Put the list around the element.
 					li = dom.create('li');
 					dom.insertAfter(li, element);
 					li.appendChild(element);
+					adjustIndentForNewList(element);
 					element = li;
 				}
 				attemptMergeWithAdjacent(list, true);
