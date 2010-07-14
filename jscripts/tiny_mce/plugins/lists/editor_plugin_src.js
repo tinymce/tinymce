@@ -187,11 +187,8 @@
 				if (tinymce.inArray(applied, element) !== -1) {
 					return;
 				}
-				// First split off any nested elements.
 				element = splitNestedLists(element, dom);
-				// Split all the way out to the body.
-				// TODO: Can't split out to body because the list structure may be in a table or a DIV.
-				while (element.parentNode !== dom.getRoot()) {
+				while (dom.is(element.parentNode, 'ol,ul,li')) {
 					dom.split(element.parentNode, element);
 				}
 				dom.rename(element, 'p');

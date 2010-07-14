@@ -57,10 +57,12 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
 	ApplyingOL.to(NonEmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
 
+	ApplyingOL.to(OrderedListItemInsideDiv).gives('<div id="div"><p>Item1</p><ol><li>Item2</li></ol></div>');
+	ApplyingOL.to(UnorderedListItemInsideDiv).gives('<div id="div"><ol><li>Item1</li></ol><ul><li>Item2</li></ul></div>');
+
 	ApplyingOL.to(NestedEmptyOrderedListItem).gives('<ol><li>Before</li></ol><p>&nbsp;</p><ol><li>After</li></ol>');
 	ApplyingOL.to(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ul>');
-
-
+	
 	ApplyingOL.to(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>');
 	ApplyingOL.to(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ol><li>Test</li></ol></li><li>After</li></ul>');
 
@@ -105,6 +107,9 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	
 	ApplyingUL.to(NonEmptyOrderedListItem).gives('<ol><li>Before</li></ol><ul><li>Test</li></ul><ol><li>After</li></ol>');
 	ApplyingUL.to(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+
+	ApplyingUL.to(OrderedListItemInsideDiv).gives('<div id="div"><ul><li>Item1</li></ul><ol><li>Item2</li></ol></div>');
+	ApplyingUL.to(UnorderedListItemInsideDiv).gives('<div id="div"><p>Item1</p><ul><li>Item2</li></ul></div>');
 
 	ApplyingUL.to(NestedEmptyOrderedListItem).gives('<ol><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ol>');
 	ApplyingUL.to(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li></ul><p>&nbsp;</p><ul><li>After</li></ul>');

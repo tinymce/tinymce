@@ -63,6 +63,9 @@ UnorderedListWithAdjacentNestedLists = createState('<ul><li style="list-style-ty
 OrderedListItemWithMargin = createState('<ol><li style="margin-left: 60px;">Test</li></ol>', 'li', 0);
 UnorderedListItemWithMargin = createState('<ul><li style="margin-left: 60px;">Test</li></ul>', 'li', 0);
 
+OrderedListItemInsideDiv = createState('<div id="div"><ol>\n<li>Item1</li><li>Item2</li></ol></div>', 'li:nth-child(1)', 2);
+UnorderedListItemInsideDiv = createState('<div id="div"><ul>\n<li>Item1</li><li>Item2</li></ul></div>', 'li:nth-child(1)', 2);
+
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);
 MultipleParagraphSelection = createState('<p>This is a test</p><p>Second paragraph</p>', 'p:nth-child(1)', 5, 'p:nth-child(2)', 6);
