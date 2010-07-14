@@ -5,7 +5,7 @@ function createState(content, startSelector, startOffset, endSelector, endOffset
 	};
 }
 
-/** Collasped Selection States **/
+/** Collapsed Selection States **/
 function EmptyParagraph() {
 	var body = editor.getBody();
 	while (body.firstChild) {
