@@ -193,16 +193,28 @@
 				makeList(li);
 			}
 			
+			var selectionRange = ed.selection.getRng(true).cloneRange();
+			function selectionSafeRemove(e) {
+				var parent = e.parentNode, offset = dom.nodeIndex(e);
+				if (parent == selectionRange.startContainer && offset < selectionRange.startOffset) {
+					selectionRange.setStart(selectionRange.startContainer, selectionRange.startOffset - 1);
+				}
+				if (parent == selectionRange.endContainer && offset < selectionRange.endOffset) {
+					selectionRange.setEnd(selectionRange.endContainer, selectionRange.endOffset - 1);
+				}
+				dom.remove(e);
+			}
+			
 			function wrapList(element) {
-				var startSection, previousBR;
+				var startSection, previousBR, END_TO_START = 3, START_TO_END = 1;
 				function isAnyPartSelected(start, end) {
-					var r = dom.createRng(), sel = ed.selection.getRng(true);
+					var r = dom.createRng(), sel = selectionRange;
 					if (!end) {
 						end = start.parentNode.lastChild;
 					}
 					r.setStartBefore(start);
 					r.setEndAfter(end);
-					return !(r.compareBoundaryPoints(/*Range.END_TO_START*/ 3, sel) === 1 || r.compareBoundaryPoints(/*Range.START_TO_END*/ 1, sel) === -1);
+					return !(r.compareBoundaryPoints(END_TO_START, sel) > 0 || r.compareBoundaryPoints(START_TO_END, sel) <= 0);
 				}
 				// Split on BRs within the range and process those.
 				startSection = element.firstChild;
@@ -212,9 +224,9 @@
 					if (isAnyPartSelected(startSection, br)) { // TODO: Handle adjacent BRs.
 						// Need to indent this part
 						doWrapList(startSection, br);
-						dom.remove(br);
+						selectionSafeRemove(br);
 						if (previousBR) {
-							dom.remove(previousBR);
+							selectionSafeRemove(previousBR);
 						}
 						previousBR = null;
 					} else {
@@ -225,7 +237,7 @@
 				if (startSection && isAnyPartSelected(startSection, startSection.parentNode.lastChild)) {
 					doWrapList(startSection, undefined);
 					if (previousBR) {
-						dom.remove(previousBR);
+						selectionSafeRemove(previousBR);
 					}
 				}
 			}
