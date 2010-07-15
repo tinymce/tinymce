@@ -15,7 +15,7 @@ module("IE Range", {
 });
 
 function createRng() {
-	return document.createRange2 ? document.createRange() : new tinymce.dom.Range(tinymce.DOM);
+	return document.createRange ? document.createRange() : new tinymce.dom.Range(tinymce.DOM);
 };
 
 function getHTML(co) {
@@ -495,6 +495,43 @@ test("test_deleteContents4", function() {
 	equals(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 	equals(r.collapsed, true)
 	equals(r.commonAncestorContainer.nodeName, 'DIV')
+});
+
+test("test_compareBoundaryPoints", function() {
+	var r1 = createRng(), r2 = createRng(), START_TO_START = 0, START_TO_END = 1, END_TO_END = 2, END_TO_START = 3;
+	setup();
+     
+	r1.setStartBefore(document.getElementById('strong'));
+	r1.setEndAfter(document.getElementById('strong'));
+	r2.setStartBefore(document.getElementById('strong'));
+	r2.setEndAfter(document.getElementById('strong'));
+	equals(r1.compareBoundaryPoints(START_TO_START, r2), 0, 'Start to start for same ranges');
+	equals(r1.compareBoundaryPoints(END_TO_END, r2), 0, 'End to end for same ranges');
+	equals(r1.compareBoundaryPoints(START_TO_END, r1), 1, 'Start to end for same ranges');
+	equals(r1.compareBoundaryPoints(END_TO_START, r2), -1, 'End to start for same ranges');
+
+	r1.setStartBefore(document.getElementById('strong'));
+	r1.setEndAfter(document.getElementById('strong'));
+	r2.setStartBefore(document.getElementById('em'));
+	r2.setEndAfter(document.getElementById('em'));
+	equals(r1.compareBoundaryPoints(START_TO_START, r2), -1, 'Start to start for range before');
+	equals(r1.compareBoundaryPoints(END_TO_END, r2), -1, 'End to end for range before');
+	equals(r1.compareBoundaryPoints(START_TO_END, r2), -1, 'Start to end for range before');
+	equals(r1.compareBoundaryPoints(END_TO_START, r2), -1, 'End to start for range before');
+
+	equals(r2.compareBoundaryPoints(START_TO_START, r1), 1, 'Start to start for range after');
+	equals(r2.compareBoundaryPoints(END_TO_END, r1), 1, 'End to end for range after');
+	equals(r2.compareBoundaryPoints(START_TO_END, r1), 1, 'Start to end for range after');
+	equals(r2.compareBoundaryPoints(END_TO_START, r1), 1, 'End to start for range after');
+
+	r1.setStartBefore(document.getElementById('strong'));
+	r1.setEndAfter(document.getElementById('strong'));
+	r2.setStart(document.getElementById('strong').firstChild, 2);
+	r2.setEnd(document.getElementById('strong').firstChild, 3);
+	equals(r1.compareBoundaryPoints(START_TO_START, r2), -1, 'Start to start for range inside');
+	equals(r1.compareBoundaryPoints(END_TO_END, r2), 1, 'End to end for range inside');
+	equals(r1.compareBoundaryPoints(START_TO_END, r2), 1, 'Start to end for range inside');
+	equals(r1.compareBoundaryPoints(END_TO_START, r2), -1, 'End to start for range inside');
 });
 
 tinymce.dom.Event.add(window, 'load', function() {
