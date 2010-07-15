@@ -106,23 +106,24 @@
 		};
 
 		function compareBoundaryPoints(h, r) {
-			var sc = t[START_CONTAINER], so = t[START_OFFSET], ec = t[END_CONTAINER], eo = t[END_OFFSET];
+			var sc = t[START_CONTAINER], so = t[START_OFFSET], ec = t[END_CONTAINER], eo = t[END_OFFSET],
+			rsc = r.startContainer, rso = r.startOffset, rec = r.endContainer, reo = r.endOffset;
 
 			// Check START_TO_START
 			if (h === 0)
-				return _compareBoundaryPoints(sc, so, sc, so);
-
+				return _compareBoundaryPoints(sc, so, rsc, rso);
+	
 			// Check START_TO_END
 			if (h === 1)
-				return _compareBoundaryPoints(sc, so, ec, eo);
-
+				return _compareBoundaryPoints(ec, eo, rsc, rso);
+	
 			// Check END_TO_END
 			if (h === 2)
-				return _compareBoundaryPoints(ec, eo, ec, eo);
-
+				return _compareBoundaryPoints(ec, eo, rec, reo);
+	
 			// Check END_TO_START
-			if (h === 3)
-				return _compareBoundaryPoints(ec, eo, sc, so);
+			if (h === 3) 
+				return _compareBoundaryPoints(sc, so, rec, reo);
 		};
 
 		function deleteContents() {
@@ -214,7 +215,7 @@
 
 		function _compareBoundaryPoints(containerA, offsetA, containerB, offsetB) {
 			var c, offsetC, n, cmnRoot, childA, childB;
-
+			
 			// In the first case the boundary-points have the same container. A is before B
 			// if its offset is less than the offset of B, A is equal to B if its offset is
 			// equal to the offset of B, and A is after B if its offset is greater than the
