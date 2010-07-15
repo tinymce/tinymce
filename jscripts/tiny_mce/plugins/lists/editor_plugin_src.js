@@ -202,7 +202,7 @@
 					}
 					r.setStartBefore(start);
 					r.setEndAfter(end);
-					return !(r.compareBoundaryPoints(Range.END_TO_START, sel) === 1 || r.compareBoundaryPoints(Range.START_TO_END, sel) === -1);
+					return !(r.compareBoundaryPoints(/*Range.END_TO_START*/ 3, sel) === 1 || r.compareBoundaryPoints(/*Range.START_TO_END*/ 1, sel) === -1);
 				}
 				// Split on BRs within the range and process those.
 				startSection = element.firstChild;
