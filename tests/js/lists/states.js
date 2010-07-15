@@ -34,7 +34,10 @@ ParagraphBetweenMixedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ul>
 
 NonEmptyHeading = createState('<h1>Test</h1>', 'h1', 0);
 TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
-TableCellWithBrs = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+TableCellWithBrsFirstLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
+TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
+
 DefinitionListDescription = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dd', 2);
 DefinitionListTerm = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dt', 2);
 EndOfParagraphBeforeOL = createState('<p>Test</p><ol><li>Item</li></ol>', 'p', 4);

@@ -37,7 +37,9 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	
 	ApplyingOL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
 	
-	// TODO: ApplyingOL.to(TableCellWithBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithBrsFirstLine).gives('<table><tbody><tr><td><ol><li>Test</li></ol>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithBrsMiddleLine).gives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol>Line 3</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithBrsLastLine).gives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
 	
 	ApplyingOL.to(EndOfParagraphBeforeOL).gives('<ol><li>Test</li><li>Item</li></ol>');
 	ApplyingOL.to(EndOfParagraphBeforeUL).gives('<ol><li>Test</li></ol><ul><li>Item</li></ul>');
@@ -90,8 +92,9 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	ApplyingUL.to(NonEmptyHeading).gives('<ul><li><h1>Test</h1></li></ul>');
 	
 	ApplyingUL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ul><li>Test</li></ul></td><td>&nbsp;</td></tr></tbody></table>');
-	
-	// TODO: ApplyingUL.to(TableCellWithBrs).gives('<table><tbody><tr><td><ul><li>Test</li></ul>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingUL.to(TableCellWithBrsFirstLine).gives('<table><tbody><tr><td><ul><li>Test</li></ul>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingUL.to(TableCellWithBrsMiddleLine).gives('<table><tbody><tr><td>Test<ul><li>Line 2</li></ul>Line 3</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingUL.to(TableCellWithBrsLastLine).gives('<table><tbody><tr><td>Test<ul><li>Line 2</li></ul></td><td>&nbsp;</td></tr></tbody></table>');
 	
 	ApplyingUL.to(EndOfParagraphBeforeOL).gives('<ul><li>Test</li></ul><ol><li>Item</li></ol>');
 	ApplyingUL.to(EndOfParagraphBeforeUL).gives('<ul><li>Test</li><li>Item</li></ul>');

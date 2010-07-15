@@ -147,7 +147,12 @@
 		
 		applyList: function(targetListType, oppositeListType) {
 			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
-			
+			function splitBrs(e) {
+				each(dom.select('br', e), function(br) {
+					dom.split(e, br);
+					dom.remove(br);
+				});
+			}
 			function makeList(element) {
 				var list = dom.create(targetListType), li;
 				function adjustIndentForNewList(element) {
@@ -177,13 +182,52 @@
 				applied.push(element);
 			}
 			
-			function wrapList(element) {
-				var li = dom.create('li');
-				while (element.firstChild) {
-					li.appendChild(element.firstChild);
+			function doWrapList(start, end) {
+				var li = dom.create('li'), n = start, tmp;
+				start.parentNode.insertBefore(li, start);
+				while (n != end) {
+					tmp = n.nextSibling;
+					li.appendChild(n);
+					n = tmp;
 				}
-				element.appendChild(li);
 				makeList(li);
+			}
+			
+			function wrapList(element) {
+				var startSection, previousBR;
+				function isAnyPartSelected(start, end) {
+					var r = dom.createRng(), sel = ed.selection.getRng(true);
+					if (!end) {
+						end = start.parentNode.lastChild;
+					}
+					r.setStartBefore(start);
+					r.setEndAfter(end);
+					return !(r.compareBoundaryPoints(Range.END_TO_START, sel) === 1 || r.compareBoundaryPoints(Range.START_TO_END, sel) === -1);
+				}
+				// Split on BRs within the range and process those.
+				startSection = element.firstChild;
+				each(dom.select('br', element), function(br) {
+					// Got a section from start to br.
+					var tmp = br.nextSibling;
+					if (isAnyPartSelected(startSection, br)) { // TODO: Handle adjacent BRs.
+						// Need to indent this part
+						doWrapList(startSection, br);
+						dom.remove(br);
+						if (previousBR) {
+							dom.remove(previousBR);
+						}
+						previousBR = null;
+					} else {
+						previousBR = br;
+					}
+					startSection = tmp;
+				});
+				if (startSection && isAnyPartSelected(startSection, startSection.parentNode.lastChild)) {
+					doWrapList(startSection, undefined);
+					if (previousBR) {
+						dom.remove(previousBR);
+					}
+				}
 			}
 			
 			function changeList(element) {
@@ -338,6 +382,8 @@
 			actions.OL = actions.UL = recurse;
 			t.splitSafeEach(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
+			// TODO: Probably only required when in a table (maybe also images)
+			t.ed.execCommand('mceRepaint');
 		},
 		
 		splitSafeEach: function(elements, f) {
