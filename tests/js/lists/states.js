@@ -92,6 +92,8 @@ SingleLiOlSelection = createState('<ol><li>Item 1</li></ol>', 'li', 1, 'li', 4);
 MultiLiOlSelection = createState('<ol><li>Item 1</li><li>Item 2</li></ol>', 'li:nth-child(1)', 1, 'li:nth-child(2)', 4);
 SingleLiUlSelection = createState('<ul><li>Item 1</li></ul>', 'li', 1, 'li', 4);
 MultiLiUlSelection = createState('<ul><li>Item 1</li><li>Item 2</li></ul>', 'li:nth-child(1)', 1, 'li:nth-child(2)', 4);
+MultiNestedLiUlSelection = createState('<ul><li style="list-style-type: none;"><ul><li>Item 1</li><li>Item 2</li></ul></li></ul>', 'li li:nth-child(1)', 1, 'li li:nth-child(2)', 4);
+MultiNestedLiOlSelection = createState('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li></ol></li></ol>', 'li li:nth-child(1)', 1, 'li li:nth-child(2)', 4);
 
 IndentedOlInOlCorrectSelection = createState('<ol><li>Item 1<ol><li>Indented</li></ol></li></ol>', 'li', 1, 'li li', 4);
 IndentedUlInUlCorrectSelection = createState('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>', 'li', 1, 'li li', 4);

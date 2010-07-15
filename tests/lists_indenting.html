@@ -175,6 +175,8 @@ asyncTest('Expanded Selection, List Types - Outdent Action', function() {
 	Outdenting.a(IndentedUlInUlCorrectSelection).gives('<p>Item 1</p><ul><li>Indented</li></ul>');
 	Outdenting.a(IndentedUlInUlIncorrectSelection).gives('<p>Item 1</p><ul><li>Indented</li></ul>');
 
+	Outdenting.a(MultiNestedLiOlSelection).gives('<ol><li>Item 1</li><li>Item 2</li></ol>');
+
 	Outdenting.a(ParagraphBeforeOlSelection).gives('<p>Before</p><p>Item 1</p>');
 	Outdenting.a(ParagraphBeforeUlSelection).gives('<p>Before</p><p>Item 1</p>');
 	

@@ -307,7 +307,6 @@
 							dom.rename(element, 'p');
 						}
 					}
-					attemptMergeWithAdjacent(element, false);
 					outdented.push(element);
 				}
 			}
@@ -316,6 +315,8 @@
 				'LI': outdentLI,
 				defaultAction: this.adjustPaddingFunction(false)
 			});
+			
+			each(outdented, attemptMergeWithAdjacent);
 		},
 		
 		process: function(actions) {
