@@ -17,8 +17,6 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 
-        //var _triggerCharacters = { ' ', '\n', '\r', ')', };
-
 		init : function(ed, url) {
 			// Add a node change handler
 			ed.onKeyUp.add(function(ed, e) {
@@ -33,35 +31,45 @@
 */
                 
                     case 32:  // space character
-                        var end = ed.selection.getRng().endOffset -1;
-                        while (ed.selection.getContent({format : 'html'}) != ' ' && ed.selection.getRng().startOffset > 0) 
+                        var end = start = ed.selection.getRng().endOffset -1;
+                        do
                         {
-                            alert(ed.selection.getContent({format : 'html'}) == ' ');
                             var j = ed.selection.getNode();
                             var rng = ed.selection.getRng();
 
                             var r = ed.dom.createRng();
-                            r.setStart(rng.endContainer, end - 1);
-                            r.setEnd(rng.endContainer, end);
+                            r.setStart(rng.endContainer, end - 2);
+                            r.setEnd(rng.endContainer, end - 1);
                             ed.selection.setRng(r);
                             end -= 1;
+                        } while (ed.selection.getContent({format : 'text'}) != ' ' && 
+                                 ed.selection.getContent({format : 'text'}) != '' && (ed.selection.getRng().startOffset -1) >= 0)
+
+                        if (ed.selection.getRng().startOffset == 0) {
+                            var r = ed.dom.createRng();
+                            r.setStart(rng.endContainer, 0)
+                            r.setEnd(rng.endContainer, start);
+                            ed.selection.setRng(r);
+                        }
+                        else {
+                            var r = ed.dom.createRng();
+                            r.setStart(rng.endContainer, end);
+                            r.setEnd(rng.endContainer, start);
+                            ed.selection.setRng(r);
                         }
 
-                        var r = ed.dom.createRng();
-                        r.setStart(rng.endContainer, end);
-                        r.setEnd(rng.endContainer, end);
-                        ed.selection.setRng(r);
+                        break;
 
                     default:
                         return;
                 }
 
-                tinyMCE.execCommand('mceInsertContent',false,'H');
-/*
-                if (this.isTriggerCharacter(e.keyCode)) {
-                    this.checkForUrlsToConvert();
-                }
-*/
+                var text = ed.selection.getContent({format : 'text'});
+                var matches = text.match(/^(https?:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
+                if (matches)
+                    tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
+
+                // return caret to previous location
 			});
 		},
 
@@ -74,12 +82,6 @@
                 }
             }
             return isTriggerCharacter;
-        },
-
-        checkForUrlsToConvert : function() {
-            var linkText = getMostLikelyLinkText();
-            var endOffset = _pane.getCaretPosition();
-            applyHyperlink(endOffset - linkText.length(), endOffset, uri.toURL().toString());
         },
 
 		/**
