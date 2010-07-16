@@ -89,6 +89,11 @@ MultipleHeadingSelection = createState('<h1>This is a test</h1><h1>Second paragr
 SingleBlockSelection = createState('<div>This is a test</div>', 'div', 5, 'div', 7);
 MultipleBlockSelection = createState('<div>This is a test</div><div>Second paragraph</div>', 'div:nth-child(1)', 5, 'div:nth-child(2)', 6);
 
+SingleBlockWithBrSelection = createState('<div>Item1<br />Item2</div>', 'div', 3, 'br', 'after');
+MultipleBlockWithBrSelection = createState('<div>Item1<br />Item2</div><div>Item3</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
+MultipleBlockWithBrPartialSelection = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
+MultipleBlockWithBrPartialSelectionAtEnd = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1) br', 'after', 'div:nth-child(2) br', 'after');
+
 CellWithoutBrSelection = createState('<table><tbody><tr><td>Cell 1</td></tr></tbody></table>', 'td', 1, 'td', 4);
 CellWithBrSingleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);
 CellWithBrMultipleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);

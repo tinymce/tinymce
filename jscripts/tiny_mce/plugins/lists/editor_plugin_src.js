@@ -149,6 +149,7 @@
 			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions,
 				selectionRange = ed.selection.getRng(true).cloneRange(),
 				selectedBlocks = ed.selection.getSelectedBlocks();
+			
 			function makeList(element) {
 				var list = dom.create(targetListType), li;
 				function adjustIndentForNewList(element) {
@@ -157,15 +158,23 @@
 						t.adjustPaddingFunction(false)(element);
 					}
 				}
-				dom.insertAfter(list, element);
-				list.appendChild(element);
 				
 				if (element.tagName === 'LI') {
 					// No change required.
 				} else if (element.tagName === 'P' || element.tagName === 'DIV') {
-					// Convert the element to an LI.
-					element = dom.rename(element, 'li');
-					adjustIndentForNewList(element);
+					processBrs(element, function(startSection, br, previousBR) {
+						doWrapList(startSection, br, dom.getAttribs(startSection.parentNode));
+						li = startSection.parentNode;
+						adjustIndentForNewList(li);
+						if (br) {
+							dom.remove(br);
+						}
+					});
+					if (element.tagName === 'P' || selectedBlocks.length > 1) {
+						dom.split(li.parentNode.parentNode, li.parentNode);
+					}
+					attemptMergeWithAdjacent(li.parentNode, true);
+					return;
 				} else {
 					// Put the list around the element.
 					li = dom.create('li');
@@ -174,12 +183,17 @@
 					adjustIndentForNewList(element);
 					element = li;
 				}
+				dom.insertAfter(list, element);
+				list.appendChild(element);
 				attemptMergeWithAdjacent(list, true);
 				applied.push(element);
 			}
 			
-			function doWrapList(start, end) {
-				var li = dom.create('li'), n = start, tmp;
+			function doWrapList(start, end, attribs) {
+				var li = dom.create('li'), n = start, tmp, i;
+				for (i = 0; attribs && i < attribs.length; i++) {
+					li.setAttributeNode(attribs.item(i).cloneNode(true));
+				}
 				start.parentNode.insertBefore(li, start);
 				while (n != end) {
 					tmp = n.nextSibling;
@@ -200,7 +214,7 @@
 				dom.remove(e);
 			}
 			
-			function wrapList(element) {
+			function processBrs(element, callback) {
 				var startSection, previousBR, END_TO_START = 3, START_TO_END = 1;
 				function isAnyPartSelected(start, end) {
 					var r = dom.createRng(), sel = selectionRange;
@@ -217,12 +231,7 @@
 					// Got a section from start to br.
 					var tmp = br.nextSibling;
 					if (isAnyPartSelected(startSection, br)) { // TODO: Handle adjacent BRs.
-						// Need to indent this part
-						doWrapList(startSection, br);
-						selectionSafeRemove(br);
-						if (previousBR) {
-							selectionSafeRemove(previousBR);
-						}
+						callback(startSection, br, previousBR);
 						previousBR = null;
 					} else {
 						previousBR = br;
@@ -230,11 +239,21 @@
 					startSection = tmp;
 				});
 				if (startSection && isAnyPartSelected(startSection, startSection.parentNode.lastChild)) {
-					doWrapList(startSection, undefined);
+					callback(startSection, undefined, previousBR);
+				}
+			}
+			
+			function wrapList(element) {
+				processBrs(element, function(startSection, br, previousBR) {
+					// Need to indent this part
+					doWrapList(startSection, br);
+					if (br) {
+						selectionSafeRemove(br);
+					}
 					if (previousBR) {
 						selectionSafeRemove(previousBR);
 					}
-				}
+				});
 			}
 			
 			function changeList(element) {
@@ -260,7 +279,6 @@
 				dom.rename(element, 'p');
 				applied.push(element);
 			}
-			
 			
 			each(selectedBlocks, function(e) {
 				if (e.tagName === oppositeListType || (e.tagName === 'LI' && e.parentNode.tagName === oppositeListType)) {
