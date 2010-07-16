@@ -22,27 +22,38 @@
 		init : function(ed, url) {
 			// Add a node change handler
 			ed.onKeyUp.add(function(ed, e) {
-                if (e.keyCode == 13) {
+                switch(e.keyCode) {
+                    case 13: // \n character
 /*
-                    var a = ed.selection.getNode();
-                    var b = a.previousSibling;
-                    ed.selection.select(b);
-                    ed.selection.collapse(true);
-                    var r = ed.selection.getRng();
+                        var a = ed.selection.getNode();
+                        var b = a.previousSibling;
+                        ed.selection.select(b);
+                        ed.selection.collapse(true);
+                        var r = ed.selection.getRng();
 */
-                }
-                else { 
-                    var end = ed.selection.getRng().endOffset;
-                    while (ed.selection.getContent({format : 'text'}) != ' ' && ed.selection.getRng().startOffset > 0) 
-                    {
-                        alert(ed.selection.getContent({format : 'text'}));
+                
+                    case 32:  // space character
+                        var end = ed.selection.getRng().endOffset -1;
+                        while (ed.selection.getContent({format : 'html'}) != ' ' && ed.selection.getRng().startOffset > 0) 
+                        {
+                            alert(ed.selection.getContent({format : 'html'}) == ' ');
+                            var j = ed.selection.getNode();
+                            var rng = ed.selection.getRng();
+
+                            var r = ed.dom.createRng();
+                            r.setStart(rng.endContainer, end - 1);
+                            r.setEnd(rng.endContainer, end);
+                            ed.selection.setRng(r);
+                            end -= 1;
+                        }
 
                         var r = ed.dom.createRng();
-                        r.setStart(ed.selection.getNode(), end - 1);
-                        r.setEnd(ed.selection.getNode(), end);
+                        r.setStart(rng.endContainer, end);
+                        r.setEnd(rng.endContainer, end);
                         ed.selection.setRng(r);
-                        end -= 1;
-                    }
+
+                    default:
+                        return;
                 }
 
                 tinyMCE.execCommand('mceInsertContent',false,'H');
