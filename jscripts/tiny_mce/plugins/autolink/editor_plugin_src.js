@@ -55,14 +55,22 @@
 
                 var text = ed.selection.getContent({format : 'text'});
                 var matches = text.match(/^(https?:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
-                if (matches)
+                if (matches) {
                     tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
 
-                // collapse the selection, moving caret to end of selection
-                ed.selection.collapse(false);
-                ed.selection.select(ed.selection.getNode().nextSibling);
-                ed.selection.collapse(true);
-                tinyMCE.execCommand('mceInsertContent',false, ' ');
+                    // collapse the selection, moving caret to end of selection
+                    ed.selection.collapse(false);
+                    ed.selection.select(ed.selection.getNode().nextSibling);
+                    ed.selection.collapse(true);
+                    tinyMCE.execCommand('mceInsertContent',false, ' ');
+                } else {
+                    // move the caret to its original position
+                    ed.selection.collapse(false);
+                    var r = ed.dom.createRng();
+                    r.setStart(endContainer, start + 1);
+                    r.setEnd(endContainer, start + 1);
+                    ed.selection.setRng(r);
+                }
             });
 		},
 
