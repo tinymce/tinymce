@@ -147,12 +147,6 @@
 		
 		applyList: function(targetListType, oppositeListType) {
 			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
-			function splitBrs(e) {
-				each(dom.select('br', e), function(br) {
-					dom.split(e, br);
-					dom.remove(br);
-				});
-			}
 			function makeList(element) {
 				var list = dom.create(targetListType), li;
 				function adjustIndentForNewList(element) {
