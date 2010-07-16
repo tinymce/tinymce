@@ -54,7 +54,7 @@
                 }
 
                 var text = ed.selection.getContent({format : 'text'});
-                var matches = text.match(/^(https?:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
+                var matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
                 if (matches) {
                     tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
 
