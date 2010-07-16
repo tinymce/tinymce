@@ -69,10 +69,17 @@ UnorderedListWithAdjacentNestedLists = createState('<ul><li style="list-style-ty
 OrderedListItemWithMargin = createState('<ol><li style="margin-left: 60px;">Test</li></ol>', 'li', 0);
 UnorderedListItemWithMargin = createState('<ul><li style="margin-left: 60px;">Test</li></ul>', 'li', 0);
 
+OrderedListItemWithNestedAlphaList = createState('<ol><li>Item<ol style="list-style-type: lower-alpha;"><li>Nested</li></ol></li></ol>', 'li', 2);
+
+/** Collapsed DIV Tests **/
 OrderedListItemInsideDiv = createState('<div id="div"><ol>\n<li>Item1</li><li>Item2</li></ol></div>', 'li:nth-child(1)', 2);
 UnorderedListItemInsideDiv = createState('<div id="div"><ul>\n<li>Item1</li><li>Item2</li></ul></div>', 'li:nth-child(1)', 2);
 
-OrderedListItemWithNestedAlphaList = createState('<ol><li>Item<ol style="list-style-type: lower-alpha;"><li>Nested</li></ol></li></ol>', 'li', 2);
+ParagraphInDiv = createState('<div><p>Item</p></div>', 'p', 2);
+TextInDiv = createState('<div>Item</div>', 'div', 2);
+TextWithBrsInDivFirstLine = createState('<div>Item1<br />Item2</div>', 'div', 2);
+TextWithBrsInDivMiddleLine = createState('<div>Item1<br />Item2<br />Item3</div>', 'br:nth-child(2)', 'after');
+TextWithBrsInDivLastLine = createState('<div>Item1<br />Item2</div>', 'br:nth-child(2)', 'after');
 
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);

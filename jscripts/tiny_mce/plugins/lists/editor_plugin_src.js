@@ -146,7 +146,9 @@
 		},
 		
 		applyList: function(targetListType, oppositeListType) {
-			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions;
+			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions,
+				selectionRange = ed.selection.getRng(true).cloneRange(),
+				selectedBlocks = ed.selection.getSelectedBlocks();
 			function makeList(element) {
 				var list = dom.create(targetListType), li;
 				function adjustIndentForNewList(element) {
@@ -160,7 +162,7 @@
 				
 				if (element.tagName === 'LI') {
 					// No change required.
-				} else if (element.tagName === 'P') {
+				} else if (element.tagName === 'P' || element.tagName === 'DIV') {
 					// Convert the element to an LI.
 					element = dom.rename(element, 'li');
 					adjustIndentForNewList(element);
@@ -187,7 +189,6 @@
 				makeList(li);
 			}
 			
-			var selectionRange = ed.selection.getRng(true).cloneRange();
 			function selectionSafeRemove(e) {
 				var parent = e.parentNode, offset = dom.nodeIndex(e);
 				if (parent == selectionRange.startContainer && offset < selectionRange.startOffset) {
@@ -261,7 +262,7 @@
 			}
 			
 			
-			each(ed.selection.getSelectedBlocks(), function(e) {
+			each(selectedBlocks, function(e) {
 				if (e.tagName === oppositeListType || (e.tagName === 'LI' && e.parentNode.tagName === oppositeListType)) {
 					hasOppositeType = true;
 				} else if (e.tagName === targetListType || (e.tagName === 'LI' && e.parentNode.tagName === targetListType)) {
@@ -270,7 +271,7 @@
 					hasNonList = true;
 				}
 			});
-
+			
 			if (hasNonList || hasOppositeType) {
 				actions = {
 					'LI': changeList,
@@ -281,7 +282,7 @@
 					'H5': makeList,
 					'H6': makeList,
 					'P': makeList,
-					'DIV': makeList,
+					'DIV': selectedBlocks.length > 1 ? makeList : wrapList,
 					defaultAction: wrapList
 				};
 			} else {

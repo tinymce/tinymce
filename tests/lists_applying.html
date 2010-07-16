@@ -204,15 +204,15 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 	ApplyingOL.to(SingleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li></ol>');
 	ApplyingOL.to(MultipleHeadingSelection).gives('<ol><li><h1>This is a test</h1></li><li><h1>Second paragraph</h1></li></ol>');
 	
-	// TODO: DIV handling seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
-	ApplyingOL.to(SingleBlockSelection).gives('<ol><li><div>This is a test</div></li></ol>');
-	ApplyingOL.to(MultipleBlockSelection).gives('<ol><li><div>This is a test</div></li><li><div>Second paragraph</div></li></ol>');
+	ApplyingOL.to(SingleBlockSelection).gives('<div><ol><li>This is a test</li></ol></div>');
+	ApplyingOL.to(MultipleBlockSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
+	// TODO: Selection across BRs in DIVs.
 	
 	ApplyingOL.to(ParagraphToHeadingSelection).gives('<ol><li>This is a test</li><li><h1>Second paragraph</h1></li></ol>');
-	ApplyingOL.to(ParagraphToBlockSelection).gives('<ol><li>This is a test</li><li><div>Second paragraph</div></li></ol>');
+	ApplyingOL.to(ParagraphToBlockSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
 	ApplyingOL.to(HeadingToParagraphSelection).gives('<ol><li><h1>This is a test</h1></li><li>Second paragraph</li></ol>');
-	ApplyingOL.to(BlockToParagraphSelection).gives('<ol><li><div>This is a test</div></li><li>Second paragraph</li></ol>');
-	ApplyingOL.to(MultipleParagraphAndHeadingSelection).gives('<ol><li>This is a test</li><li><h1>Second paragraph</h1></li><li><div>Third paragraph</div></li></ol>');
+	ApplyingOL.to(BlockToParagraphSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
+	ApplyingOL.to(MultipleParagraphAndHeadingSelection).gives('<ol><li>This is a test</li><li><h1>Second paragraph</h1></li><li>Third paragraph</li></ol>');
 	queue.done();
 });
 
@@ -222,20 +222,21 @@ asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', functio
 	ApplyingUL.to(SingleHeadingSelection).gives('<ul><li><h1>This is a test</h1></li></ul>');
 	ApplyingUL.to(MultipleHeadingSelection).gives('<ul><li><h1>This is a test</h1></li><li><h1>Second paragraph</h1></li></ul>');
 	
-	// TODO: DIV handling seems wrong but putting the whole list in just one div is also definitely wrong and the div may be important (e.g. have an ID etc)
-	ApplyingUL.to(SingleBlockSelection).gives('<ul><li><div>This is a test</div></li></ul>');
-	ApplyingUL.to(MultipleBlockSelection).gives('<ul><li><div>This is a test</div></li><li><div>Second paragraph</div></li></ul>');
+	ApplyingUL.to(SingleBlockSelection).gives('<div><ul><li>This is a test</li></ul></div>');
+	ApplyingUL.to(MultipleBlockSelection).gives('<ul><li>This is a test</li><li>Second paragraph</li></ul>');
+	// TODO: Expanded selection with BRs in DIVs.
 	
 	ApplyingUL.to(ParagraphToHeadingSelection).gives('<ul><li>This is a test</li><li><h1>Second paragraph</h1></li></ul>');
-	ApplyingUL.to(ParagraphToBlockSelection).gives('<ul><li>This is a test</li><li><div>Second paragraph</div></li></ul>');
+	ApplyingUL.to(ParagraphToBlockSelection).gives('<ul><li>This is a test</li><li>Second paragraph</li></ul>');
 	ApplyingUL.to(HeadingToParagraphSelection).gives('<ul><li><h1>This is a test</h1></li><li>Second paragraph</li></ul>');
-	ApplyingUL.to(BlockToParagraphSelection).gives('<ul><li><div>This is a test</div></li><li>Second paragraph</li></ul>');
-	ApplyingUL.to(MultipleParagraphAndHeadingSelection).gives('<ul><li>This is a test</li><li><h1>Second paragraph</h1></li><li><div>Third paragraph</div></li></ul>');
+	ApplyingUL.to(BlockToParagraphSelection).gives('<ul><li>This is a test</li><li>Second paragraph</li></ul>');
+	ApplyingUL.to(MultipleParagraphAndHeadingSelection).gives('<ul><li>This is a test</li><li><h1>Second paragraph</h1></li><li>Third paragraph</li></ul>');
 	queue.done();
 });
 
 asyncTest('Expanded Selection, Table Types - Ordered List Action', function() {
 	ApplyingOL.to(CellWithoutBrSelection).gives('<table><tbody><tr><td><ol><li>Cell 1</li></ol></td></tr></tbody></table>');
+	// TODO: Cells with BR selection
 	queue.done();
 	// TODO: Tables with BRs.
 });
