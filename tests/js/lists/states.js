@@ -78,8 +78,8 @@ UnorderedListItemInsideDiv = createState('<div id="div"><ul>\n<li>Item1</li><li>
 ParagraphInDiv = createState('<div><p>Item</p></div>', 'p', 2);
 TextInDiv = createState('<div>Item</div>', 'div', 2);
 TextWithBrsInDivFirstLine = createState('<div>Item1<br />Item2</div>', 'div', 2);
-TextWithBrsInDivMiddleLine = createState('<div>Item1<br />Item2<br />Item3</div>', 'br:nth-child(2)', 'after');
-TextWithBrsInDivLastLine = createState('<div>Item1<br />Item2</div>', 'br:nth-child(2)', 'after');
+TextWithBrsInDivMiddleLine = createState('<div>Item1<br />Item2<br />Item3</div>', 'br:nth-child(1)', 'after');
+TextWithBrsInDivLastLine = createState('<div>Item1<br />Item2</div>', 'br:nth-child(1)', 'after');
 
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);

@@ -137,7 +137,23 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	queue.done();
 });
 
+asyncTest('Collapsed Selection - Apply OL Actions - Divs', function() {
+	ApplyingOL.to(ParagraphInDiv).gives('<div><ol><li>Item</li></ol></div>');
+	ApplyingOL.to(TextInDiv).gives('<div><ol><li>Item</li></ol></div>');
+	ApplyingOL.to(TextWithBrsInDivFirstLine).gives('<div><ol><li>Item1</li></ol>Item2</div>');
+	ApplyingOL.to(TextWithBrsInDivMiddleLine).gives('<div>Item1<ol><li>Item2</li></ol>Item3</div>');
+	ApplyingOL.to(TextWithBrsInDivLastLine).gives('<div>Item1<ol><li>Item2</li></ol></div>');
+	queue.done();
+});
 
+asyncTest('Collapsed Selection - Apply UL Actions - Divs', function() {
+	ApplyingUL.to(ParagraphInDiv).gives('<div><ul><li>Item</li></ul></div>');
+	ApplyingUL.to(TextInDiv).gives('<div><ul><li>Item</li></ul></div>');
+	ApplyingUL.to(TextWithBrsInDivFirstLine).gives('<div><ul><li>Item1</li></ul>Item2</div>');
+	ApplyingUL.to(TextWithBrsInDivMiddleLine).gives('<div>Item1<ul><li>Item2</li></ul>Item3</div>');
+	ApplyingUL.to(TextWithBrsInDivLastLine).gives('<div>Item1<ul><li>Item2</li></ul></div>');
+	queue.done();
+});
 
 asyncTest('Collapsed Selection - Type Enter', function() {
 	TypingEnter.inA(EmptyOrderedListItem).gives('<ol><li>Before</li><li></li><li>&nbsp;</li><li>After</li></ol>');
