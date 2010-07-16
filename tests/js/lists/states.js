@@ -37,6 +37,7 @@ TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td
 TableCellWithBrsFirstLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
 TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
 TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
+TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
 
 DefinitionListDescription = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dd', 2);
 DefinitionListTerm = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dt', 2);
