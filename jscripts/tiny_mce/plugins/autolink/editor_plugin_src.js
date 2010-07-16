@@ -32,14 +32,12 @@
                 
                     case 32:  // space character
                         var end = start = ed.selection.getRng().endOffset -1;
+                        var endContainer = ed.selection.getRng().endContainer;
                         do
                         {
-                            var j = ed.selection.getNode();
-                            var rng = ed.selection.getRng();
-
                             var r = ed.dom.createRng();
-                            r.setStart(rng.endContainer, end - 2);
-                            r.setEnd(rng.endContainer, end - 1);
+                            r.setStart(endContainer, end - 2);
+                            r.setEnd(endContainer, end - 1);
                             ed.selection.setRng(r);
                             end -= 1;
                         } while (ed.selection.getContent({format : 'text'}) != ' ' && 
@@ -47,14 +45,14 @@
 
                         if (ed.selection.getRng().startOffset == 0) {
                             var r = ed.dom.createRng();
-                            r.setStart(rng.endContainer, 0)
-                            r.setEnd(rng.endContainer, start);
+                            r.setStart(endContainer, 0)
+                            r.setEnd(endContainer, start);
                             ed.selection.setRng(r);
                         }
                         else {
                             var r = ed.dom.createRng();
-                            r.setStart(rng.endContainer, end);
-                            r.setEnd(rng.endContainer, start);
+                            r.setStart(endContainer, end);
+                            r.setEnd(endContainer, start);
                             ed.selection.setRng(r);
                         }
 
@@ -69,20 +67,13 @@
                 if (matches)
                     tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
 
-                // return caret to previous location
-			});
+                // collapse the selection, moving caret to end of selection
+                ed.selection.collapse(false);
+                ed.selection.select(ed.selection.getNode().nextSibling);
+                ed.selection.collapse(true);
+                tinyMCE.execCommand('mceInsertContent',false, ' ');
+            });
 		},
-
-        isTriggerCharacter : function(keyCode) {
-            var isTriggerCharacter = false;
-            for (var i = 0; i < _triggerCharacters.length; i++) {
-                if (keyCode == _triggerCharacters[i]) {
-                    isTriggerCharacter = true;
-                    break;
-                }
-            }
-            return isTriggerCharacter;
-        },
 
 		/**
 		 * Creates control instances based in the incomming name. This method is normally not
