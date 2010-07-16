@@ -21,45 +21,36 @@
 			// Add a node change handler
 			ed.onKeyUp.add(function(ed, e) {
                 switch(e.keyCode) {
-                    case 13: // \n character
-/*
-                        var a = ed.selection.getNode();
-                        var b = a.previousSibling;
-                        ed.selection.select(b);
-                        ed.selection.collapse(true);
-                        var r = ed.selection.getRng();
-*/
-                
                     case 32:  // space character
                         var end = start = ed.selection.getRng().endOffset -1;
                         var endContainer = ed.selection.getRng().endContainer;
-                        do
-                        {
-                            var r = ed.dom.createRng();
-                            r.setStart(endContainer, end - 2);
-                            r.setEnd(endContainer, end - 1);
-                            ed.selection.setRng(r);
-                            end -= 1;
-                        } while (ed.selection.getContent({format : 'text'}) != ' ' && 
-                                 ed.selection.getContent({format : 'text'}) != '' && (ed.selection.getRng().startOffset -1) >= 0)
-
-                        if (ed.selection.getRng().startOffset == 0) {
-                            var r = ed.dom.createRng();
-                            r.setStart(endContainer, 0)
-                            r.setEnd(endContainer, start);
-                            ed.selection.setRng(r);
-                        }
-                        else {
-                            var r = ed.dom.createRng();
-                            r.setStart(endContainer, end);
-                            r.setEnd(endContainer, start);
-                            ed.selection.setRng(r);
-                        }
-
                         break;
 
                     default:
                         return;
+                }
+
+                do
+                {
+                    var r = ed.dom.createRng();
+                    r.setStart(endContainer, end - 2);
+                    r.setEnd(endContainer, end - 1);
+                    ed.selection.setRng(r);
+                    end -= 1;
+                } while (ed.selection.getContent({format : 'text'}) != ' ' && 
+                        ed.selection.getContent({format : 'text'}) != '' && (ed.selection.getRng().startOffset -1) >= 0)
+
+                if (ed.selection.getRng().startOffset == 0) {
+                    var r = ed.dom.createRng();
+                    r.setStart(endContainer, 0)
+                        r.setEnd(endContainer, start);
+                    ed.selection.setRng(r);
+                }
+                else {
+                    var r = ed.dom.createRng();
+                    r.setStart(endContainer, end);
+                    r.setEnd(endContainer, start);
+                    ed.selection.setRng(r);
                 }
 
                 var text = ed.selection.getContent({format : 'text'});
