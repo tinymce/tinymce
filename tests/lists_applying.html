@@ -137,7 +137,7 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	queue.done();
 });
 
-asyncTest('Collapsed Selection - Apply OL Actions - Divs', function() {
+asyncTest('Collapsed Selection - Apply OL in Divs', function() {
 	ApplyingOL.to(ParagraphInDiv).gives('<div><ol><li>Item</li></ol></div>');
 	ApplyingOL.to(TextInDiv).gives('<div><ol><li>Item</li></ol></div>');
 	ApplyingOL.to(TextWithBrsInDivFirstLine).gives('<div><ol><li>Item1</li></ol>Item2</div>');
@@ -146,7 +146,7 @@ asyncTest('Collapsed Selection - Apply OL Actions - Divs', function() {
 	queue.done();
 });
 
-asyncTest('Collapsed Selection - Apply UL Actions - Divs', function() {
+asyncTest('Collapsed Selection - Apply UL in Divs', function() {
 	ApplyingUL.to(ParagraphInDiv).gives('<div><ul><li>Item</li></ul></div>');
 	ApplyingUL.to(TextInDiv).gives('<div><ul><li>Item</li></ul></div>');
 	ApplyingUL.to(TextWithBrsInDivFirstLine).gives('<div><ul><li>Item1</li></ul>Item2</div>');
@@ -299,9 +299,15 @@ tinyMCE.init({
 	<div id="content">
 		<textarea id="elm1" name="elm1"></textarea>
 	</div>
+	<p><input type="text" id="state"><input type="button" value="Load state" onclick="loadState();"></p>
 	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
 	<script>
 	initWhenTinyAndRobotAreReady();
+
+	function loadState() {
+		window[document.getElementById('state').value]();
+		editor.focus();
+	}
 	</script>
 </body>
 </html>

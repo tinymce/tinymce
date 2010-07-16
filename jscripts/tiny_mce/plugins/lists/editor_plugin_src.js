@@ -1,5 +1,5 @@
 (function() {
-	var each = tinymce.each, Event = tinymce.dom.Event;
+	var each = tinymce.each, Event = tinymce.dom.Event, bookmark;
 
 	// Skips text nodes that only contain whitespace since they aren't semantically important.
 	function skipWhitespaceNodes(e, next) {
@@ -147,7 +147,6 @@
 		
 		applyList: function(targetListType, oppositeListType) {
 			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions,
-				selectionRange = ed.selection.getRng(true).cloneRange(),
 				selectedBlocks = ed.selection.getSelectedBlocks();
 			
 			function makeList(element) {
@@ -163,7 +162,7 @@
 					// No change required.
 				} else if (element.tagName === 'P' || element.tagName === 'DIV') {
 					processBrs(element, function(startSection, br, previousBR) {
-						doWrapList(startSection, br, dom.getAttribs(startSection.parentNode));
+						doWrapList(startSection, br, startSection.parentNode);
 						li = startSection.parentNode;
 						adjustIndentForNewList(li);
 						if (br) {
@@ -189,12 +188,17 @@
 				applied.push(element);
 			}
 			
-			function doWrapList(start, end, attribs) {
-				var li = dom.create('li'), n = start, tmp, i;
-				for (i = 0; attribs && i < attribs.length; i++) {
-					li.setAttributeNode(attribs.item(i).cloneNode(true));
+			function doWrapList(start, end, template) {
+				var li, n = start, tmp, i;
+				if (template) {
+					li = template.cloneNode(true);
+					start.parentNode.insertBefore(li, start);
+					while (li.firstChild) dom.remove(li.firstChild);
+					li = dom.rename(li, 'li');
+				} else {
+					li = dom.create('li');
+					start.parentNode.insertBefore(li, start);
 				}
-				start.parentNode.insertBefore(li, start);
 				while (n != end) {
 					tmp = n.nextSibling;
 					li.appendChild(n);
@@ -203,21 +207,14 @@
 				makeList(li);
 			}
 			
-			function selectionSafeRemove(e) {
-				var parent = e.parentNode, offset = dom.nodeIndex(e);
-				if (parent == selectionRange.startContainer && offset < selectionRange.startOffset) {
-					selectionRange.setStart(selectionRange.startContainer, selectionRange.startOffset - 1);
-				}
-				if (parent == selectionRange.endContainer && offset < selectionRange.endOffset) {
-					selectionRange.setEnd(selectionRange.endContainer, selectionRange.endOffset - 1);
-				}
-				dom.remove(e);
-			}
-			
 			function processBrs(element, callback) {
 				var startSection, previousBR, END_TO_START = 3, START_TO_END = 1;
 				function isAnyPartSelected(start, end) {
-					var r = dom.createRng(), sel = selectionRange;
+					var r = dom.createRng(), sel;
+					bookmark.keep = true;
+					ed.selection.moveToBookmark(bookmark);
+					bookmark.keep = false;
+					sel = ed.selection.getRng(true);
 					if (!end) {
 						end = start.parentNode.lastChild;
 					}
@@ -227,10 +224,21 @@
 				}
 				// Split on BRs within the range and process those.
 				startSection = element.firstChild;
+				// First mark the BRs that have any part of the previous section selected.
+				var trailingContentSelected = false;
+				each(dom.select('br', element), function(br) {
+					var b;
+					if (isAnyPartSelected(startSection, br)) {
+						dom.addClass(br, '_mce_tagged_br');
+						startSection = br.nextSibling;
+					}
+				});
+				trailingContentSelected = (startSection && isAnyPartSelected(startSection, undefined));
+				startSection = element.firstChild;
 				each(dom.select('br', element), function(br) {
 					// Got a section from start to br.
 					var tmp = br.nextSibling;
-					if (isAnyPartSelected(startSection, br)) { // TODO: Handle adjacent BRs.
+					if (dom.hasClass(br, '_mce_tagged_br')) {
 						callback(startSection, br, previousBR);
 						previousBR = null;
 					} else {
@@ -238,7 +246,7 @@
 					}
 					startSection = tmp;
 				});
-				if (startSection && isAnyPartSelected(startSection, startSection.parentNode.lastChild)) {
+				if (trailingContentSelected) {
 					callback(startSection, undefined, previousBR);
 				}
 			}
@@ -248,10 +256,10 @@
 					// Need to indent this part
 					doWrapList(startSection, br);
 					if (br) {
-						selectionSafeRemove(br);
+						dom.remove(br);
 					}
 					if (previousBR) {
-						selectionSafeRemove(previousBR);
+						dom.remove(previousBR);
 					}
 				});
 			}
@@ -389,7 +397,8 @@
 		},
 		
 		process: function(actions) {
-			var t = this, sel = t.ed.selection, bookmark = sel.getBookmark(), dom = t.ed.dom;
+			var t = this, sel = t.ed.selection, dom = t.ed.dom;
+			bookmark = sel.getBookmark()
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
 				if (!element || element.nodeType !== 1) {
@@ -407,6 +416,7 @@
 			actions.OL = actions.UL = recurse;
 			t.splitSafeEach(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
+			bookmark = null;
 			// TODO: Probably only required when in a table (maybe also images)
 			t.ed.execCommand('mceRepaint');
 		},
