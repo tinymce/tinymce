@@ -20,6 +20,7 @@
 		init : function(ed, url) {
 			// Add a node change handler
 			ed.onKeyUp.add(function(ed, e) {
+				var r = ed.dom.createRng();
                 switch(e.keyCode) {
                     case 32:  // space character
                         var end = start = ed.selection.getRng().endOffset - 1;
@@ -31,44 +32,38 @@
                     default:
                         return;
                 }
-                var bookmark = ed.selection.getBookmark();
 
                 do
                 {
-                    var r = ed.dom.createRng();
                     r.setStart(endContainer, end - 2);
                     r.setEnd(endContainer, end - 1);
-                    ed.selection.setRng(r);
                     end -= 1;
-                } while (ed.selection.getContent({format : 'text'}) != ' ' && 
-                        ed.selection.getContent({format : 'text'}) != '' && (ed.selection.getRng().startOffset -1) >= 0)
+                } while (r.toString() != ' ' && 
+                		r.toString() != '' && (r.startOffset - 1) >= 0)
 
-                if (ed.selection.getRng().startOffset == 0) {
-                    var r = ed.dom.createRng();
+                if (r.startOffset == 0) {
                     r.setStart(endContainer, 0)
                         r.setEnd(endContainer, start);
-                    ed.selection.setRng(r);
                 }
                 else {
-                    var r = ed.dom.createRng();
                     r.setStart(endContainer, end);
                     r.setEnd(endContainer, start);
-                    ed.selection.setRng(r);
                 }
 
-                var text = ed.selection.getContent({format : 'text'});
+                var text = r.toString();
                 var matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
                 if (matches) {
                     if (matches[1] == 'www.') {
                         matches[1] = 'http://www.';
                     }
+                    var bookmark = ed.selection.getBookmark();
+                    ed.selection.setRng(r);
                     tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
                     
                     ed.selection.moveToBookmark(bookmark);
                 } else {
                     // move the caret to its original position
                     ed.selection.collapse(false);
-                    var r = ed.dom.createRng();
                     r.setStart(endContainer, start + 1);
                     r.setEnd(endContainer, start + 1);
                     ed.selection.setRng(r);
