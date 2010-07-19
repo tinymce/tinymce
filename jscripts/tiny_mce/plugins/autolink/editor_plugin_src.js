@@ -22,7 +22,7 @@
 			ed.onKeyUp.add(function(ed, e) {
                 switch(e.keyCode) {
                     case 32:  // space character
-                        var end = start = ed.selection.getRng().endOffset -1;
+                        var end = start = ed.selection.getRng().endOffset - 1;
                         var endContainer = ed.selection.getRng().endContainer;
                         //var end = start = ed.selection.getRng().startOffset -1;
                         //var endContainer = ed.selection.getRng().startContainer;
@@ -31,6 +31,7 @@
                     default:
                         return;
                 }
+                var bookmark = ed.selection.getBookmark();
 
                 do
                 {
@@ -62,12 +63,8 @@
                         matches[1] = 'http://www.';
                     }
                     tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
-
-                    // collapse the selection, moving caret to end of selection
-                    ed.selection.collapse(false);
-                    ed.selection.select(ed.selection.getNode().nextSibling);
-                    ed.selection.collapse(true);
-                    tinyMCE.execCommand('mceInsertContent',false, ' ');
+                    
+                    ed.selection.moveToBookmark(bookmark);
                 } else {
                     // move the caret to its original position
                     ed.selection.collapse(false);
