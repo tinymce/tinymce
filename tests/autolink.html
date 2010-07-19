@@ -11,8 +11,7 @@
 <script type="text/javascript" src="js/autolink/actions.js"></script>
 <script type="text/javascript" src="js/autolink/states.js"></script>
 <script><!--
-var editor;
-
+var editor; 
 QUnit.config.autostart = false;
 module("Automatic Links", {
     autostart: false,
@@ -42,8 +41,7 @@ asyncTest('Non-Empty Paragraph - Typing a FTP URL', function() {
 });
 
 asyncTest('Non-Empty Paragraph - Typing a WWW URL', function() {
-    // TODO: A default scheme should have been added to the URL
-    TypingWWWURL.inA(NonEmptyParagraph).gives('<p>Test <a href="www.ephox.com">www.ephox.com</a>  ');
+    TypingWWWURL.inA(NonEmptyParagraph).gives('<p>Test <a href="http://www.ephox.com">www.ephox.com</a>  ');
     queue.done();
 });
 
