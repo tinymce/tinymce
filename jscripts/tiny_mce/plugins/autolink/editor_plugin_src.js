@@ -24,6 +24,8 @@
                     case 32:  // space character
                         var end = start = ed.selection.getRng().endOffset -1;
                         var endContainer = ed.selection.getRng().endContainer;
+                        //var end = start = ed.selection.getRng().startOffset -1;
+                        //var endContainer = ed.selection.getRng().startContainer;
                         break;
 
                     default:

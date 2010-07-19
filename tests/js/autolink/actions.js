@@ -12,9 +12,14 @@ function createAction(name, action) {
 
 function fakeTypeAURL(url)
 {
-    // enter the URL and then press the space bar
-    tinyMCE.execCommand('mceInsertContent', false, url); 
-    fakeKeyPressAction(32, false);
+	return function(callback) {
+        // TODO: move the caret to the end of the paragraph.
+        // enter the URL and then press the space bar
+        tinyMCE.execCommand('mceInsertContent', false, url); 
+		setTimeout(function() {
+			window.robot.type(32, false, callback);
+		}, 1);
+    };
 }
 
 createAction('Typing HTTP URL', fakeTypeAURL('http://www.ephox.com'));
