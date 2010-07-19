@@ -1917,7 +1917,7 @@
 
 				if (node.nodeType != 9) {
 					// Keep non whitespace text nodes
-					if (node.nodeType == 3 && node.nodeValue.length > 0)
+					if (node.nodeType == 3 && node.nodeValue.length > 0 && !/^[ \t\n\r]*$/.test(node.nodeValue))
 						return;
 
 					if (node.nodeType == 1) {

@@ -27,8 +27,16 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 	var startContainer = findContainer(startSelector);
 	var endContainer = findContainer(endSelector);
 	var rng = editor.dom.createRng();
-	rng.setStart(startContainer, startOffset);
-	rng.setEnd(endContainer, endOffset);
+	if (startOffset === 'after') {
+		rng.setStartAfter(startContainer);
+	} else {
+		rng.setStart(startContainer, startOffset);
+	}
+	if (endOffset === 'after') {
+		rng.setEndAfter(endContainer);
+	} else {
+		rng.setEnd(endContainer, endOffset);
+	}
 	editor.selection.setRng(rng);
 }
 

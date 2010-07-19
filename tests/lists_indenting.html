@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>List Indenting and Outdenting Tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="js/lists/lists-dsl.js"></script>
+<script type="text/javascript" src="js/lists/states.js"></script>
+<script type="text/javascript" src="js/lists/actions.js"></script>
+<script>
+// Expected Results
+var EmptyOL = "<ol><li></li></ol>";
+var EmptyUL = "<ul><li></li></ul>";
+var NonEmptyOL = "<ol><li>Test</li></ol>";
+var NonEmptyUL = "<ul><li>Test</li></ul>";
+var EmptyOLConvertedToP = '<ol><li>Before</li></ol><p>&nbsp;</p><ol><li>After</li></ol>';
+var EmptyULConvertedToP = '<ul><li>Before</li></ul><p>&nbsp;</p><ul><li>After</li></ul>';
+var NonEmptyOLConvertedToP = '<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>';
+var NonEmptyULConvertedToP = '<ul><li>Before</li></ul><p>Test</p><ul><li>After</li></ul>';
+
+QUnit.config.autostart = false;
+
+module('Lists - Indenting', {
+	autostart: false,
+	setup: function() {
+		window.queue = new dsl.Queue();
+	}
+});
+
+// Tests
+asyncTest('Collapsed Selection - Indent Actions', function() {
+	expect(8);
+	Indenting.a(NonEmptyParagraph).gives('<p style="margin-left: 30px;">Test</p>');
+	Indenting.a(NonEmptyHeading).gives('<h1 style="margin-left: 30px;">Test</h1>');
+	Indenting.a(ParagraphWithMarginLeft).gives('<p style="margin-left: 90px;">Test</p>');
+	Indenting.a(ParagraphWithPaddingLeft).gives('<p style="margin-left: 90px;">Test</p>');
+	Indenting.a(ParagraphWithMarginAndPaddingLeft).gives('<p style="margin-left: 150px;">Test</p>');
+	
+	Indenting.a(EmptyOrderedListItem).gives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
+	Indenting.a(EmptyUnorderedListItem).gives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
+	Indenting.a(NonEmptyOrderedListItem).gives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
+	Indenting.a(NonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
+	
+	// TODO: Test invalid starting point like <ol><li>Before</li><ol><li>Indented</li></ol></ol>
+	Indenting.a(NestedEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
+	Indenting.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>&nbsp;</li></ul></li></ul></li><li>After</li></ul>');
+	Indenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>Test</li></ol></li></ol></li><li>After</li></ol>');
+	Indenting.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>Test</li></ul></li></ul></li><li>After</li></ul>');
+
+	Indenting.a(OrderedListItemWithNestedChild).gives('<ol><li style="list-style-type: none;"><ol><li>Item1</li><li>Nested</li></ol></li></ol>');
+	Indenting.a(UnorderedListItemWithNestedChild).gives('<ul><li style="list-style-type: none;"><ul><li>Item1</li><li>Nested</li></ul></li></ul>');
+
+	Indenting.a(OrderedListWithAdjacentNestedLists).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li><li>Item 3</li></ol></li></ol>');
+	Indenting.a(UnorderedListWithAdjacentNestedLists).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></li></ul>');
+
+	Indenting.a(OrderedListItemWithNestedAlphaList).gives('<ol><li style="list-style-type: none;"><ol><li>Item</li></ol><ol style="list-style-type: lower-alpha;"><li>Nested</li></ol></li></ol>');
+
+	Indenting.a(OrderedLowerAlphaListItem).gives('<ol style="list-style-type: lower-alpha;"><li>Item 1<ol style="list-style-type: lower-alpha;"><li>Item 2</li></ol></li></ol>');
+	Indenting.a(UnorderedSquareListItem).gives('<ul style="list-style-type: square;"><li>Item 1<ul style="list-style-type: square;"><li>Item 2</li></ul></li></ul>');
+	queue.done();
+});
+
+asyncTest('Collapsed Selection - Outdent Actions', function() {
+	expect(8);
+	Outdenting.a(NonEmptyParagraph).gives('<p>Test</p>');
+	Outdenting.a(NonEmptyHeading).gives('<h1>Test</h1>');
+	Outdenting.a(ParagraphWithMarginLeft).gives('<p style="margin-left: 30px;">Test</p>');
+	Outdenting.a(ParagraphWithPaddingLeft).gives('<p style="margin-left: 30px;">Test</p>');
+	Outdenting.a(ParagraphWithMarginAndPaddingLeft).gives('<p style="margin-left: 90px;">Test</p>');
+
+	Outdenting.a(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
+	Outdenting.a(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
+	Outdenting.a(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
+	Outdenting.a(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
+	
+	Outdenting.a(NestedEmptyOrderedListItem).gives('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>');
+	Outdenting.a(NestedEmptyUnorderedListItem).gives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
+	Outdenting.a(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
+	Outdenting.a(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before</li><li>Test</li><li>After</li></ul>');
+
+	Outdenting.a(OrderedListItemWithNestedChild).gives('<p>Item1</p><ol><li style="list-style-type: none;"><ol><li>Nested</li></ol></li></ol>');
+	Outdenting.a(UnorderedListItemWithNestedChild).gives('<p>Item1</p><ul><li style="list-style-type: none;"><ul><li>Nested</li></ul></li></ul>');
+
+	Outdenting.a(NestedOrderedListWithMultipleItems).gives('<ol><li>Before</li><li>Item1<ol><li>Item2</li></ol></li></ol>');
+	Outdenting.a(NestedUnorderedListWithMultipleItems).gives('<ul><li>Before</li><li>Item1<ul><li>Item2</li></ul></li></ul>');
+
+	Outdenting.a(OrderedListItemWithMargin).gives('<ol><li style="margin-left: 30px;">Test</li></ol>');
+	Outdenting.a(UnorderedListItemWithMargin).gives('<ul><li style="margin-left: 30px;">Test</li></ul>');
+	
+	queue.done();
+});
+
+asyncTest('Type Tab in List', function() {
+	editor.setContent('<ol><li>Test</li></ol>');
+	setSelection('li', 0);
+	checkIfKeystrokeFiresAction('\t', false, 'Indent', true);
+});
+
+asyncTest('Type Tab in Paragraph', function() {
+	editor.setContent('<p>Test</p>');
+	setSelection('p', 0);
+	checkIfKeystrokeFiresAction('\t', false, 'Indent', false);
+});
+
+asyncTest('Type Shift-Tab in List', function() {
+	editor.setContent('<ol><li>Test</li></ol>');
+	setSelection('li', 0);
+	checkIfKeystrokeFiresAction('\t', true, 'Outdent', true);
+});
+
+asyncTest('Type Shift-Tab in Paragraph', function() {
+	editor.setContent('<p>Test</p>');
+	setSelection('p', 0);
+	checkIfKeystrokeFiresAction('\t', true, 'Outdent', false);
+});
+
+function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
+	expect(1);
+	var actionFired = false;
+	function listener(ed, e) {
+		if (e == actionName) {
+			actionFired = true;
+			return false;
+		}
+	}
+	editor.onBeforeExecCommand.add(listener);
+
+	fakeKeyPressAction(keystroke, shift)(function() {
+		equals(actionFired, expected, actionName + ' command triggered?');
+		editor.onBeforeExecCommand.remove(listener);
+		QUnit.start();
+	});
+}
+
+asyncTest('Expanded Selection, List Types - Indent Action', function() {
+	Indenting.a(SingleLiOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
+	Indenting.a(MultiLiOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li><li>Item 2</li></ol></li></ol>');
+	Indenting.a(SingleLiUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
+	Indenting.a(MultiLiUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li><li>Item 2</li></ul></li></ul>');
+
+	Indenting.a(IndentedOlInOlCorrectSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1<ol><li>Indented</li></ol></li></ol></li></ol>');
+	Indenting.a(IndentedOlInOlIncorrectSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1<ol><li>Indented</li></ol></li></ol></li></ol>');
+
+	// TODO: Selection only in indented list.
+	
+	Indenting.a(IndentedUlInUlCorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
+	Indenting.a(IndentedUlInUlIncorrectSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
+
+	Indenting.a(ParagraphBeforeOlSelection).gives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
+	Indenting.a(ParagraphBeforeUlSelection).gives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
+	
+	Indenting.a(ParagraphAfterOlSelection).gives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="margin-left: 30px;">After</p>');
+	Indenting.a(ParagraphAfterUlSelection).gives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="margin-left: 30px;">After</p>');
+
+	
+	Indenting.a(ParagraphBeforeAndAfterOlSelection).gives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="margin-left: 30px;">After</p>');
+	Indenting.a(ParagraphBeforeAndAfterUlSelection).gives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="margin-left: 30px;">After</p>');
+	queue.done();
+});
+
+asyncTest('Expanded Selection, List Types - Outdent Action', function() {
+	Outdenting.a(SingleLiOlSelection).gives('<p>Item 1</p>');
+	Outdenting.a(MultiLiOlSelection).gives('<p>Item 1</p><p>Item 2</p>');
+	Outdenting.a(SingleLiUlSelection).gives('<p>Item 1</p>');
+	Outdenting.a(MultiLiUlSelection).gives('<p>Item 1</p><p>Item 2</p>');
+
+	Outdenting.a(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><ol><li>Indented</li></ol>');
+	Outdenting.a(IndentedOlInOlIncorrectSelection).gives('<p>Item 1</p><ol><li>Indented</li></ol>');
+
+	// TODO: Selection only in indented list.
+	
+	Outdenting.a(IndentedUlInUlCorrectSelection).gives('<p>Item 1</p><ul><li>Indented</li></ul>');
+	Outdenting.a(IndentedUlInUlIncorrectSelection).gives('<p>Item 1</p><ul><li>Indented</li></ul>');
+
+	Outdenting.a(MultiNestedLiOlSelection).gives('<ol><li>Item 1</li><li>Item 2</li></ol>');
+
+	Outdenting.a(ParagraphBeforeOlSelection).gives('<p>Before</p><p>Item 1</p>');
+	Outdenting.a(ParagraphBeforeUlSelection).gives('<p>Before</p><p>Item 1</p>');
+	
+	Outdenting.a(ParagraphAfterOlSelection).gives('<p>Item 1</p><p>After</p>');
+	Outdenting.a(ParagraphAfterUlSelection).gives('<p>Item 1</p><p>After</p>');
+
+	
+	Outdenting.a(ParagraphBeforeAndAfterOlSelection).gives('<p>Before</p><p>Item 1</p><p>After</p>');
+	Outdenting.a(ParagraphBeforeAndAfterUlSelection).gives('<p>Before</p><p>Item 1</p><p>After</p>');
+	queue.done();
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	cleanup: true,
+	// Turn this off because we want the list actions to create the right DOM structure from the start.
+	fix_list_elements: false,
+	plugins : 'lists',
+	add_unload_trigger : false,
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+	}
+});
+
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">List Indenting and Outdenting Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+	</div>
+	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
+	<script>
+	initWhenTinyAndRobotAreReady();
+	</script>
+</body>
+</html>
