@@ -13,12 +13,9 @@ function createAction(name, action) {
 function fakeTypeAURL(url)
 {
 	return function(callback) {
-        // TODO: move the caret to the end of the paragraph.
-        // enter the URL and then press the space bar
-        tinyMCE.execCommand('mceInsertContent', false, url); 
-		setTimeout(function() {
-			window.robot.type(32, false, callback);
-		}, 1);
+        // type the URL and then press the space bar
+        tinyMCE.execCommand('mceInsertContent', false, url);
+        window.robot.type(32, false, callback);
     };
 }
 

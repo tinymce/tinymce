@@ -18,32 +18,37 @@
 		 */
 
 		init : function(ed, url) {
+            // Internet Explorer has built-in automatic linking
+            if (tinyMCE.isIE)
+                return;
+
 			// Add a node change handler
 			ed.onKeyUp.add(function(ed, e) {
-				var r = ed.dom.createRng();
-                switch(e.keyCode) {
-                    case 32:  // space character
-                        var end = start = ed.selection.getRng().endOffset - 1;
-                        var endContainer = ed.selection.getRng().endContainer;
-                        //var end = start = ed.selection.getRng().startOffset -1;
-                        //var endContainer = ed.selection.getRng().startContainer;
-                        break;
+                if (e.keyCode != 32)
+                    return;
 
-                    default:
-                        return;
-                }
+                // We need atleast five characters to form a URL,
+                // hence, at minimum, five characters from the beginning of the line.
+				var r = ed.selection.getRng();
+                if (r.startOffset < 5)
+                    return;
+
+                var end = r.endOffset - 1;
+                var start = end;
+                var endContainer = r.endContainer;
+                var bookmark = ed.selection.getBookmark();
 
                 do
                 {
+                    // Move the selection one character backwards.
                     r.setStart(endContainer, end - 2);
                     r.setEnd(endContainer, end - 1);
                     end -= 1;
-                } while (r.toString() != ' ' && 
-                		r.toString() != '' && (r.startOffset - 1) >= 0)
+                } while (r.toString() != ' ' && r.toString() != '' && (end -2) >= 0)
 
                 if (r.startOffset == 0) {
-                    r.setStart(endContainer, 0)
-                        r.setEnd(endContainer, start);
+                    r.setStart(endContainer, 0);
+                    r.setEnd(endContainer, start);
                 }
                 else {
                     r.setStart(endContainer, end);
@@ -94,10 +99,10 @@
 		getInfo : function() {
 			return {
 				longname : 'Autolink plugin',
-				author : 'Ephox - Yonas Yanfa',
-				authorurl : 'http://www.ephox.com',
-				infourl : 'http://www.ephox.com',
-				version : "1.0"
+                author : 'Ephox Corporation',
+                authorurl : 'http://tinymce.ephox.com',
+                infourl : 'http://tinymce.ephox.com',
+                version : tinymce.majorVersion + "." + tinymce.minorVersion,
 			};
 		}
 	});
