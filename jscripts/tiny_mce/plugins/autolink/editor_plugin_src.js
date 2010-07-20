@@ -22,21 +22,36 @@
             if (tinyMCE.isIE)
                 return;
 
-			// Add a node change handler
+            // Add a node change handler
 			ed.onKeyUp.add(function(ed, e) {
+                var r, end, start, endContainer, bookmark, text, matches, prev, len;
+
                 if (e.keyCode != 32)
                     return;
 
                 // We need atleast five characters to form a URL,
                 // hence, at minimum, five characters from the beginning of the line.
-				var r = ed.selection.getRng();
+                r = ed.selection.getRng();
                 if (r.startOffset < 5)
-                    return;
+                {
+                    // During testing, the caret is placed inbetween two text nodes. 
+                    // The previous text node contains the URL.
+                    prev = r.endContainer.previousSibling;
+                    len = r.endContainer.previousSibling.length;
+                    r.setStart(prev, len);
+                    r.setEnd(prev, len);
 
-                var end = r.endOffset - 1;
-                var start = end;
-                var endContainer = r.endContainer;
-                var bookmark = ed.selection.getBookmark();
+                    if (r.endOffset < 5)
+                        return;
+
+                    end = r.endOffset;
+                }
+                else
+                    end = r.endOffset - 1;
+
+                start = end;
+                endContainer = r.endContainer;
+                bookmark = ed.selection.getBookmark();
 
                 do
                 {
@@ -55,8 +70,8 @@
                     r.setEnd(endContainer, start);
                 }
 
-                var text = r.toString();
-                var matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
+                text = r.toString();
+                matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
                 if (matches) {
                     if (matches[1] == 'www.') {
                         matches[1] = 'http://www.';
