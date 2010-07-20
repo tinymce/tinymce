@@ -105,6 +105,10 @@ tinymce.create('dsl.Action', {
 
 			enablesState: defer(function(state) {
 				ok(editor.queryCommandState(state), message + " enables " + state + " command");
+			}),
+			
+			disablesState: defer(function(state) {
+				ok(!editor.queryCommandState(state), message + " disables " + state + " command");
 			})
 		};
 		dslState.andGives = dslState.gives;

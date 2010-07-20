@@ -28,58 +28,58 @@ module('Lists - Applying', {
 
 // Tests
 asyncTest('Collapsed Selection - Apply OL Actions', function() {
-	ApplyingOL.to(EmptyParagraph).gives('<ol><li></li></ol>');
+	ApplyingOL.to(EmptyParagraph).enablesState('Outdent').andGives('<ol><li></li></ol>');
 	
-	ApplyingOL.to(EmptyHeading).gives('<ol><li><h1></h1></li></ol>');
+	ApplyingOL.to(EmptyHeading).enablesState('Outdent').andGives('<ol><li><h1></h1></li></ol>');
 	
-	ApplyingOL.to(NonEmptyParagraph).gives('<ol><li>Test</li></ol>');
-	ApplyingOL.to(NonEmptyHeading).gives('<ol><li><h1>Test</h1></li></ol>');
+	ApplyingOL.to(NonEmptyParagraph).enablesState('Outdent').andGives('<ol><li>Test</li></ol>');
+	ApplyingOL.to(NonEmptyHeading).enablesState('Outdent').andGives('<ol><li><h1>Test</h1></li></ol>');
 	
-	ApplyingOL.to(TableCellWithoutBrs).gives('<table><tbody><tr><td><ol><li>Test</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithoutBrs).enablesState('Outdent').andGives('<table><tbody><tr><td><ol><li>Test</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
 	
-	ApplyingOL.to(TableCellWithBrsFirstLine).gives('<table><tbody><tr><td><ol><li>Test</li></ol>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
-	ApplyingOL.to(TableCellWithBrsMiddleLine).gives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol>Line 3</td><td>&nbsp;</td></tr></tbody></table>');
-	ApplyingOL.to(TableCellWithBrsLastLine).gives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
-	ApplyingOL.to(TableCellWithAdjacentBrsFirstLine).gives('<table><tbody><tr><td><ol><li>Test</li></ol><br />Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithBrsFirstLine).enablesState('Outdent').andGives('<table><tbody><tr><td><ol><li>Test</li></ol>Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithBrsMiddleLine).enablesState('Outdent').andGives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol>Line 3</td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithBrsLastLine).enablesState('Outdent').andGives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
+	ApplyingOL.to(TableCellWithAdjacentBrsFirstLine).enablesState('Outdent').andGives('<table><tbody><tr><td><ol><li>Test</li></ol><br />Line 2</td><td>&nbsp;</td></tr></tbody></table>');
 	
-	ApplyingOL.to(EndOfParagraphBeforeOL).gives('<ol><li>Test</li><li>Item</li></ol>');
-	ApplyingOL.to(EndOfParagraphBeforeUL).gives('<ol><li>Test</li></ol><ul><li>Item</li></ul>');
+	ApplyingOL.to(EndOfParagraphBeforeOL).enablesState('Outdent').andGives('<ol><li>Test</li><li>Item</li></ol>');
+	ApplyingOL.to(EndOfParagraphBeforeUL).enablesState('Outdent').andGives('<ol><li>Test</li></ol><ul><li>Item</li></ul>');
 
-	ApplyingOL.to(EndOfParagraphBeforeOLWithListType).gives('<ol style="list-style-type: lower-alpha;"><li>Test</li><li>Item</li></ol>');
+	ApplyingOL.to(EndOfParagraphBeforeOLWithListType).enablesState('Outdent').andGives('<ol style="list-style-type: lower-alpha;"><li>Test</li><li>Item</li></ol>');
 	
-	ApplyingOL.to(StartOfParagraphAfterOL).gives('<ol><li>Item</li><li>Test</li></ol>');
-	ApplyingOL.to(StartOfParagraphAfterUL).gives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
-	ApplyingOL.to(StartOfParagraphAfterOLWithListType).gives('<ol style="list-style-type: lower-alpha;"><li>Item</li><li>Test</li></ol>');
+	ApplyingOL.to(StartOfParagraphAfterOL).enablesState('Outdent').andGives('<ol><li>Item</li><li>Test</li></ol>');
+	ApplyingOL.to(StartOfParagraphAfterUL).enablesState('Outdent').andGives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
+	ApplyingOL.to(StartOfParagraphAfterOLWithListType).enablesState('Outdent').andGives('<ol style="list-style-type: lower-alpha;"><li>Item</li><li>Test</li></ol>');
 
-	ApplyingOL.to(ParagraphBetweenOrderedLists).gives('<ol><li>Item1</li><li>Test</li><li>Item2</li></ol>');
-	ApplyingOL.to(ParagraphBetweenUnorderedLists).gives('<ul><li>Item1</li></ul><ol><li>Test</li></ol><ul><li>Item2</li></ul>');
-	ApplyingOL.to(ParagraphBetweenMixedLists).gives('<ol><li>Item1</li><li>Test</li></ol><ul><li>Item2</li></ul>');
+	ApplyingOL.to(ParagraphBetweenOrderedLists).enablesState('Outdent').andGives('<ol><li>Item1</li><li>Test</li><li>Item2</li></ol>');
+	ApplyingOL.to(ParagraphBetweenUnorderedLists).enablesState('Outdent').andGives('<ul><li>Item1</li></ul><ol><li>Test</li></ol><ul><li>Item2</li></ul>');
+	ApplyingOL.to(ParagraphBetweenMixedLists).enablesState('Outdent').andGives('<ol><li>Item1</li><li>Test</li></ol><ul><li>Item2</li></ul>');
 	
-	ApplyingOL.to(EmptyOrderedListItem).gives(EmptyOLConvertedToP);
-	ApplyingOL.to(EmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>&nbsp;</li></ol><ul><li>After</li></ul>');
+	ApplyingOL.to(EmptyOrderedListItem).disablesState('Outdent').andGives(EmptyOLConvertedToP);
+	ApplyingOL.to(EmptyUnorderedListItem).enablesState('Outdent').andGives('<ul><li>Before</li></ul><ol><li>&nbsp;</li></ol><ul><li>After</li></ul>');
 	
-	ApplyingOL.to(NonEmptyOrderedListItem).gives(NonEmptyOLConvertedToP);
-	ApplyingOL.to(NonEmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
+	ApplyingOL.to(NonEmptyOrderedListItem).disablesState('Outdent').andGives(NonEmptyOLConvertedToP);
+	ApplyingOL.to(NonEmptyUnorderedListItem).enablesState('Outdent').andGives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
 
-	ApplyingOL.to(OrderedListItemInsideDiv).gives('<div id="div"><p>Item1</p><ol><li>Item2</li></ol></div>');
-	ApplyingOL.to(UnorderedListItemInsideDiv).gives('<div id="div"><ol><li>Item1</li></ol><ul><li>Item2</li></ul></div>');
+	ApplyingOL.to(OrderedListItemInsideDiv).disablesState('Outdent').andGives('<div id="div"><p>Item1</p><ol><li>Item2</li></ol></div>');
+	ApplyingOL.to(UnorderedListItemInsideDiv).enablesState('Outdent').andGives('<div id="div"><ol><li>Item1</li></ol><ul><li>Item2</li></ul></div>');
 
-	ApplyingOL.to(NestedEmptyOrderedListItem).gives('<ol><li>Before</li></ol><p>&nbsp;</p><ol><li>After</li></ol>');
-	ApplyingOL.to(NestedEmptyUnorderedListItem).gives('<ul><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ul>');
+	ApplyingOL.to(NestedEmptyOrderedListItem).disablesState('Outdent').andGives('<ol><li>Before</li></ol><p>&nbsp;</p><ol><li>After</li></ol>');
+	ApplyingOL.to(NestedEmptyUnorderedListItem).enablesState('Outdent').andGives('<ul><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ul>');
 	
-	ApplyingOL.to(NestedNonEmptyOrderedListItem).gives('<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>');
-	ApplyingOL.to(NestedNonEmptyUnorderedListItem).gives('<ul><li>Before<ol><li>Test</li></ol></li><li>After</li></ul>');
+	ApplyingOL.to(NestedNonEmptyOrderedListItem).disablesState('Outdent').andGives('<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>');
+	ApplyingOL.to(NestedNonEmptyUnorderedListItem).enablesState('Outdent').andGives('<ul><li>Before<ol><li>Test</li></ol></li><li>After</li></ul>');
 
 	
-	ApplyingOL.to(OrderedListItemWithNestedChild).gives('<p>Item1</p><ol><li style="list-style-type: none;"><ol><li>Nested</li></ol></li></ol>');
-	ApplyingOL.to(UnorderedListItemWithNestedChild).gives('<ol><li>Item1<ul><li>Nested</li></ul></li></ol>');
+	ApplyingOL.to(OrderedListItemWithNestedChild).disablesState('Outdent').andGives('<p>Item1</p><ol><li style="list-style-type: none;"><ol><li>Nested</li></ol></li></ol>');
+	ApplyingOL.to(UnorderedListItemWithNestedChild).enablesState('Outdent').andGives('<ol><li>Item1<ul><li>Nested</li></ul></li></ol>');
 
-	ApplyingOL.to(DefinitionListTerm).gives('<dl><dt><ol><li>Term</li></ol></dt><dd>Description</dd></dl>');
-	ApplyingOL.to(DefinitionListDescription).gives('<dl><dt>Term</dt><dd><ol><li>Description</li></ol></dd></dl>');
+	ApplyingOL.to(DefinitionListTerm).enablesState('Outdent').andGives('<dl><dt><ol><li>Term</li></ol></dt><dd>Description</dd></dl>');
+	ApplyingOL.to(DefinitionListDescription).enablesState('Outdent').andGives('<dl><dt>Term</dt><dd><ol><li>Description</li></ol></dd></dl>');
 
-	ApplyingOL.to(ParagraphWithMarginLeft).gives('<ol><li style="margin-left: 30px;">Test</li></ol>');
-	ApplyingOL.to(ParagraphWithPaddingLeft).gives('<ol><li style="margin-left: 30px;">Test</li></ol>'); // TODO: Padding-left renders weird, should it be removed?
-	ApplyingOL.to(ParagraphWithMarginAndPaddingLeft).gives('<ol><li style="margin-left: 90px;">Test</li></ol>');
+	ApplyingOL.to(ParagraphWithMarginLeft).enablesState('Outdent').andGives('<ol><li style="margin-left: 30px;">Test</li></ol>');
+	ApplyingOL.to(ParagraphWithPaddingLeft).enablesState('Outdent').andGives('<ol><li style="margin-left: 30px;">Test</li></ol>'); // TODO: Padding-left renders weird, should it be removed?
+	ApplyingOL.to(ParagraphWithMarginAndPaddingLeft).enablesState('Outdent').andGives('<ol><li style="margin-left: 90px;">Test</li></ol>');
 	
 	queue.done();
 });
