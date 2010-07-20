@@ -134,6 +134,19 @@
 				this.applyList('OL', 'UL');
 			}, this);
 			
+			ed.onInit.add(function() {
+				ed.editorCommands.addCommands({
+					'outdent': function() {
+						var sel = ed.selection, dom = ed.dom;
+						function hasStyleIndent(n) {
+							n = dom.getParent(n, dom.isBlock);
+							return n && (parseInt(ed.dom.getStyle(n, 'margin-left') || 0, 10) + parseInt(ed.dom.getStyle(n, 'padding-left') || 0, 10)) > 0;
+						}
+						return hasStyleIndent(sel.getStart()) || hasStyleIndent(sel.getEnd()) || ed.queryCommandState('InsertOrderedList') || ed.queryCommandState('InsertUnorderedList');
+					}
+				}, 'state');
+			});
+			
 			ed.onKeyUp.add(function(ed, e) {
 				if (isTriggerKey(e)) {
 					ed.execCommand(e.shiftKey ? 'Outdent' : 'Indent', true, null);
