@@ -28,9 +28,9 @@ module('Lists - Applying', {
 
 // Tests
 asyncTest('Collapsed Selection - Apply OL Actions', function() {
-	ApplyingOL.to(EmptyParagraph).enablesState('Outdent').andGives('<ol><li></li></ol>');
+	ApplyingOL.to(EmptyParagraph).gives('<ol><li></li></ol>');
 	
-	ApplyingOL.to(EmptyHeading).enablesState('Outdent').andGives('<ol><li><h1></h1></li></ol>');
+	ApplyingOL.to(EmptyHeading).gives('<ol><li><h1></h1></li></ol>');
 	
 	ApplyingOL.to(NonEmptyParagraph).enablesState('Outdent').andGives('<ol><li>Test</li></ol>');
 	ApplyingOL.to(NonEmptyHeading).enablesState('Outdent').andGives('<ol><li><h1>Test</h1></li></ol>');
@@ -56,10 +56,10 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(ParagraphBetweenMixedLists).enablesState('Outdent').andGives('<ol><li>Item1</li><li>Test</li></ol><ul><li>Item2</li></ul>');
 	
 	ApplyingOL.to(EmptyOrderedListItem).disablesState('Outdent').andGives(EmptyOLConvertedToP);
-	ApplyingOL.to(EmptyUnorderedListItem).enablesState('Outdent').andGives('<ul><li>Before</li></ul><ol><li>&nbsp;</li></ol><ul><li>After</li></ul>');
+	ApplyingOL.to(EmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>&nbsp;</li></ol><ul><li>After</li></ul>');
 	
 	ApplyingOL.to(NonEmptyOrderedListItem).disablesState('Outdent').andGives(NonEmptyOLConvertedToP);
-	ApplyingOL.to(NonEmptyUnorderedListItem).enablesState('Outdent').andGives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
+	ApplyingOL.to(NonEmptyUnorderedListItem).gives('<ul><li>Before</li></ul><ol><li>Test</li></ol><ul><li>After</li></ul>');
 
 	ApplyingOL.to(OrderedListItemInsideDiv).disablesState('Outdent').andGives('<div id="div"><p>Item1</p><ol><li>Item2</li></ol></div>');
 	ApplyingOL.to(UnorderedListItemInsideDiv).enablesState('Outdent').andGives('<div id="div"><ol><li>Item1</li></ol><ul><li>Item2</li></ul></div>');
