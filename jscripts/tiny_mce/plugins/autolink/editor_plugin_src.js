@@ -22,74 +22,104 @@
             if (tinyMCE.isIE)
                 return;
 
-            // Add a node change handler
+            var t = this;
+
+            // Add a key down handler
+			ed.onKeyDown.add(function(ed, e) {
+                if (e.keyCode == 13)
+                    return t.handleEnter(ed);
+                if (e.shiftKey && e.keyCode == 48)
+                    return t.handleEclipse(ed);
+            });
+            
+            // Add a key up handler
 			ed.onKeyUp.add(function(ed, e) {
-                var r, end, start, endContainer, bookmark, text, matches, prev, len;
-
-                if (e.keyCode != 32)
-                    return;
-
-                // We need atleast five characters to form a URL,
-                // hence, at minimum, five characters from the beginning of the line.
-                r = ed.selection.getRng();
-                if (r.startOffset < 5)
-                {
-                    // During testing, the caret is placed inbetween two text nodes. 
-                    // The previous text node contains the URL.
-                    prev = r.endContainer.previousSibling;
-                    len = r.endContainer.previousSibling.length;
-                    r.setStart(prev, len);
-                    r.setEnd(prev, len);
-
-                    if (r.endOffset < 5)
-                        return;
-
-                    end = r.endOffset;
-                }
-                else
-                    end = r.endOffset - 1;
-
-                start = end;
-                endContainer = r.endContainer;
-                bookmark = ed.selection.getBookmark();
-
-                do
-                {
-                    // Move the selection one character backwards.
-                    r.setStart(endContainer, end - 2);
-                    r.setEnd(endContainer, end - 1);
-                    end -= 1;
-                } while (r.toString() != ' ' && r.toString() != '' && (end -2) >= 0)
-
-                if (r.startOffset == 0) {
-                    r.setStart(endContainer, 0);
-                    r.setEnd(endContainer, start);
-                }
-                else {
-                    r.setStart(endContainer, end);
-                    r.setEnd(endContainer, start);
-                }
-
-                text = r.toString();
-                matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
-                if (matches) {
-                    if (matches[1] == 'www.') {
-                        matches[1] = 'http://www.';
-                    }
-                    var bookmark = ed.selection.getBookmark();
-                    ed.selection.setRng(r);
-                    tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
-                    
-                    ed.selection.moveToBookmark(bookmark);
-                } else {
-                    // move the caret to its original position
-                    ed.selection.collapse(false);
-                    r.setStart(endContainer, start + 1);
-                    r.setEnd(endContainer, start + 1);
-                    ed.selection.setRng(r);
-                }
+                if (e.keyCode == 32)
+                    return t.handleSpacebar(ed);
             });
 		},
+
+        handleEclipse : function(ed) {
+            this.parseCurrentLine(ed, -1, '(', true);
+        },
+        handleSpacebar : function(ed) {
+            this.parseCurrentLine(ed, 0, '', true);
+        },
+        handleEnter : function(ed) {
+            this.parseCurrentLine(ed, -1, '', false);
+        },
+
+        parseCurrentLine : function(ed, end_offset, delimiter, goback) {
+            var r, end, start, endContainer, bookmark, text, matches, prev, len;
+
+            // We need atleast five characters to form a URL,
+            // hence, at minimum, five characters from the beginning of the line.
+            r = ed.selection.getRng();
+            if (r.startOffset < 5)
+            {
+                // During testing, the caret is placed inbetween two text nodes. 
+                // The previous text node contains the URL.
+                prev = r.endContainer.previousSibling;
+                if (prev == null)
+                    return;
+                len = r.endContainer.previousSibling.length;
+                r.setStart(prev, len);
+                r.setEnd(prev, len);
+
+                if (r.endOffset < 5)
+                    return;
+
+                end = r.endOffset;
+            }
+            else
+                end = r.endOffset - 1 - end_offset;
+
+            start = end;
+            endContainer = r.endContainer;
+            bookmark = ed.selection.getBookmark();
+
+            do
+            {
+                // Move the selection one character backwards.
+                r.setStart(endContainer, end - 2);
+                r.setEnd(endContainer, end - 1);
+                end -= 1;
+            } while (r.toString() != ' ' && r.toString() != '' && (end -2) >= 0 && r.toString() != delimiter)
+
+            if (r.startOffset == 0) {
+                r.setStart(endContainer, 0);
+                r.setEnd(endContainer, start);
+            }
+            else {
+                r.setStart(endContainer, end);
+                r.setEnd(endContainer, start);
+            }
+
+            text = r.toString();
+            matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
+            bookmark = ed.selection.getBookmark();
+            if (matches) {
+                if (matches[1] == 'www.') {
+                    matches[1] = 'http://www.';
+                }
+
+                ed.selection.setRng(r);
+                tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
+                ed.selection.moveToBookmark(bookmark);
+            }
+            else {
+                // move the caret to its original position
+                if (!goback)
+                {
+                    ed.selection.moveToBookmark(bookmark);
+                    return;
+                }
+                ed.selection.collapse(false);
+                r.setStart(endContainer, start + 1);
+                r.setEnd(endContainer, start + 1);
+                ed.selection.setRng(r);
+            }
+        },
 
 		/**
 		 * Creates control instances based in the incomming name. This method is normally not
