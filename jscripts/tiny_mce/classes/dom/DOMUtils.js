@@ -877,19 +877,30 @@
 				delete o[p + '-left' + s];
 			};
 
+			function canCompress(key) {
+				var split, value = o[key];
+				if (!value || value.indexOf(' ') < 0) {
+					return;
+				}
+				split = value.split(' ');
+				if (each(split, function(v) { return v === split[0]; })) {
+					o[key] = split[0];
+					return true;
+				} else {
+					return false;
+				}
+			}
+
 			function compress2(ta, a, b, c) {
 				var t;
-
-				t = o[a];
-				if (!t)
+				
+				if (!canCompress(a))
 					return;
 
-				t = o[b];
-				if (!t)
+				if (!canCompress(b))
 					return;
 
-				t = o[c];
-				if (!t)
+				if (!canCompress(c))
 					return;
 
 				// Compress
