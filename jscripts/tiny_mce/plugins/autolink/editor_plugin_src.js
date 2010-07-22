@@ -60,9 +60,13 @@
                 // During testing, the caret is placed inbetween two text nodes. 
                 // The previous text node contains the URL.
                 prev = r.endContainer.previousSibling;
-                if (prev == null)
-                    return;
-                len = r.endContainer.previousSibling.length;
+                if (prev == null) {
+                    if (r.endContainer.firstChild == null || r.endContainer.firstChild.nextSibling == null)
+                        return;
+
+                    prev = r.endContainer.firstChild.nextSibling;
+                }
+                len = prev.length;
                 r.setStart(prev, len);
                 r.setEnd(prev, len);
 
@@ -70,12 +74,15 @@
                     return;
 
                 end = r.endOffset;
+                endContainer = prev;
             }
             else
+            {
                 end = r.endOffset - 1 - end_offset;
+                endContainer = r.endContainer;
+            }
 
             start = end;
-            endContainer = r.endContainer;
             bookmark = ed.selection.getBookmark();
 
             do
@@ -83,10 +90,15 @@
                 // Move the selection one character backwards.
                 r.setStart(endContainer, end - 2);
                 r.setEnd(endContainer, end - 1);
+                var j = r.toString();
                 end -= 1;
             } while (r.toString() != ' ' && r.toString() != '' && (end -2) >= 0 && r.toString() != delimiter)
 
-            if (r.startOffset == 0) {
+            if (r.toString() == delimiter) {
+                r.setStart(endContainer, end);
+                r.setEnd(endContainer, start);
+                end += 1;
+            } else if (r.startOffset == 0) {
                 r.setStart(endContainer, 0);
                 r.setEnd(endContainer, start);
             }
@@ -115,8 +127,9 @@
                     return;
                 }
                 ed.selection.collapse(false);
-                r.setStart(endContainer, start + 1);
-                r.setEnd(endContainer, start + 1);
+                var max = Math.min(endContainer.length, start + 1);
+                r.setStart(endContainer, max);
+                r.setEnd(endContainer, max);
                 ed.selection.setRng(r);
             }
         },
