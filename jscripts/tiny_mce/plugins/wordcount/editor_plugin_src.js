@@ -18,7 +18,7 @@
 		init : function(ed, url) {
 			var t = this, last = 0;
 
-			t.countre = ed.getParam('wordcount_countregex', /\S\s+/g);
+			t.countre = ed.getParam('wordcount_countregex', /[\w'-]+/g);
 			t.cleanre = ed.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$¿'"_+=\\\/-]*/g);
 			t.id = ed.id + '-word-count';
 
@@ -28,15 +28,16 @@
 				// Add it to the specified id or the theme advanced path
 				id = ed.getParam('wordcount_target_id');
 				if (!id) {
-					row = tinymce.DOM.get(ed.id + '_path_row');
+				        row = tinymce.DOM.get(ed.id + '_path_row');
 
 					if (row)
 						tinymce.DOM.add(row.parentNode, 'div', {'style': 'float: right'}, ed.getLang('wordcount.words', 'Words: ') + '<span id="' + t.id + '">0</span>');
-				} else
-					tinymce.DOM.add(id, 'span', {}, '<span id="' + t.id + '">0</span>');
+				} else {
+                                        tinymce.DOM.add(id, 'span', {}, '<span id="' + t.id + '">0</span>');
+                                }
 			});
 
-            ed.onInit.add(function(ed) {
+                        ed.onInit.add(function(ed) {
 				ed.selection.onSetContent.add(function() {
 					t._count(ed);
 				});
@@ -57,26 +58,37 @@
 
 				last = e.keyCode;
 			});
-		},
+                },
 
-		_count : function(ed) {
-			var t = this, tc = 0;
+                _getCount : function(ed) {
+                        var tc = 0;
+                        var tx = ed.getContent({ format: 'raw' });
+
+                        if (tx) {
+                                tx = tx.replace(/\.\.\./g, ' '); // convert ellipses to spaces
+                                tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
+                                tx = tx.replace(this.cleanre, ''); // remove numbers and punctuation
+
+                                var wordArray = tx.match(this.countre);
+                                if (wordArray) {
+                                        tc = wordArray.length;
+                                }
+                        }
+
+                        return tc;
+                },
+
+                _count : function(ed) {
+                        var t = this;
 
 			// Keep multiple calls from happening at the same time
-			if (t.block)
-				return;
+                        if (t.block)
+                                return;
 
 			t.block = 1;
 
-			setTimeout(function() {
-				var tx = ed.getContent({format : 'raw'});
-
-				if (tx) {
-					tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
-					tx = tx.replace(t.cleanre, ''); // remove numbers and punctuation
-					tx.replace(t.countre, function() {tc++;}); // count the words
-				}
-
+                        setTimeout(function() {
+                                var tc = t._getCount(ed);
 				tinymce.DOM.setHTML(t.id, tc.toString());
 
 				setTimeout(function() {t.block = 0;}, 2000);
