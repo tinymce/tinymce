@@ -4,6 +4,13 @@
  * Copyright 2010, Ephox * Released under TODO
  *
  * License: TODO
+ *
+ * BUGS:
+ *   
+ *   1. Typing two URLs one after another: every other URL will be converted to a link.
+ *   2. Typing www.ephox.com) will leave the ')' inside the bookmark span node, which breaks
+ *      tests
+ *
  */
 
 (function() {
@@ -84,6 +91,7 @@
 
             start = end;
             bookmark = ed.selection.getBookmark();
+            var id1 = bookmark.id;
 
             do
             {
@@ -110,6 +118,8 @@
             text = r.toString();
             matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
             bookmark = ed.selection.getBookmark();
+            var id2 = bookmark.id;
+
             if (matches) {
                 if (matches[1] == 'www.') {
                     matches[1] = 'http://www.';
@@ -118,12 +128,19 @@
                 ed.selection.setRng(r);
                 tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
                 ed.selection.moveToBookmark(bookmark);
+
+                // delete the bookmarks
+                ed.dom.remove(id1);
+                ed.dom.remove(id2);
             }
             else {
                 // move the caret to its original position
                 if (!goback)
                 {
                     ed.selection.moveToBookmark(bookmark);
+
+                    // delete the bookmark
+                    ed.dom.remove(id1);
                     return;
                 }
                 ed.selection.collapse(false);
