@@ -34,7 +34,7 @@ function fakeTypeANewlineURL(url)
 	return function(callback) {
         // type the URL and then press the enter key
         tinyMCE.execCommand('mceInsertContent', false, url);
-        window.robot.type(13, false, callback);
+        window.robot.type('\n', false, callback);
     };
 }
 
