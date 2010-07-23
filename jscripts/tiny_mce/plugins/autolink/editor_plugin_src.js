@@ -57,7 +57,7 @@
         },
 
         parseCurrentLine : function(ed, end_offset, delimiter, goback) {
-            var r, end, start, endContainer, bookmark, text, matches, prev, len;
+            var r, end, start, endContainer, bookmark1, bookmark2, text, matches, prev, len;
 
             // We need atleast five characters to form a URL,
             // hence, at minimum, five characters from the beginning of the line.
@@ -90,15 +90,13 @@
             }
 
             start = end;
-            bookmark = ed.selection.getBookmark();
-            var id1 = bookmark.id;
+            bookmark1 = ed.selection.getBookmark();
 
             do
             {
                 // Move the selection one character backwards.
                 r.setStart(endContainer, end - 2);
                 r.setEnd(endContainer, end - 1);
-                var j = r.toString();
                 end -= 1;
             } while (r.toString() != ' ' && r.toString() != '' && (end -2) >= 0 && r.toString() != delimiter)
 
@@ -117,8 +115,7 @@
 
             text = r.toString();
             matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
-            bookmark = ed.selection.getBookmark();
-            var id2 = bookmark.id;
+            bookmark2 = ed.selection.getBookmark();
 
             if (matches) {
                 if (matches[1] == 'www.') {
@@ -127,11 +124,14 @@
 
                 ed.selection.setRng(r);
                 tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
-                ed.selection.moveToBookmark(bookmark);
+                ed.selection.moveToBookmark(bookmark2);
 
                 // delete the bookmarks
-                ed.dom.remove(id1);
-                ed.dom.remove(id2);
+                ed.dom.remove(bookmark1.id);
+                ed.dom.remove(bookmark2.id);
+                var id = parseInt(ed.dom.uniqueId().substring(4));
+                ed.dom.remove('mce_' + (id-1) + '_start');
+                ed.dom.remove('mce_' + (id-2) + '_start');
             }
             else {
                 // move the caret to its original position

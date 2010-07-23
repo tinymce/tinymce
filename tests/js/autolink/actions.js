@@ -24,7 +24,8 @@ function fakeTypeAnEclipsedURL(url)
 	return function(callback) {
         // type the URL and then type ')'
         tinyMCE.execCommand('mceInsertContent', false, '(' + url);
-        window.robot.type(48, true, callback);
+        window.robot.type(48, true, null);
+        window.robot.type(32, true, callback);
     };
 }
 
