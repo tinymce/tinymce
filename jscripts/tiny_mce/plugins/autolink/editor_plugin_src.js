@@ -7,9 +7,8 @@
  *
  * BUGS:
  *   
- *   1. Typing two URLs one after another: every other URL will be converted to a link.
- *   2. Typing www.ephox.com) will leave the ')' inside the bookmark span node, which breaks
- *      tests
+ *   1. Typing "www.ephox.com)   " will return the cursor to the beginning of the URL.
+ *
  *
  */
 
@@ -134,15 +133,18 @@
                 ed.dom.remove('mce_' + (id-2) + '_start');
             }
             else {
-                // move the caret to its original position
-                if (!goback)
-                {
-                    ed.selection.moveToBookmark(bookmark);
+                // delete the bookmarks
+                ed.dom.remove(bookmark1.id);
+                ed.dom.remove(bookmark2.id);
+                var id = parseInt(ed.dom.uniqueId().substring(4));
+                ed.dom.remove('mce_' + (id-1) + '_start');
+                ed.dom.remove('mce_' + (id-2) + '_start');
 
-                    // delete the bookmark
-                    ed.dom.remove(id1);
+                // do not move the caret to its original position
+                if (!goback)
                     return;
-                }
+
+                // move the caret to its original position
                 ed.selection.collapse(false);
                 var max = Math.min(endContainer.length, start + 1);
                 r.setStart(endContainer, max);
