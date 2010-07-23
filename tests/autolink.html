@@ -21,7 +21,7 @@ module("Automatic Links", {
 });
 
 asyncTest('Typing a HTTP URL', function() {
-    TypingHTTPURL.inA(NonEmptyParagraph).gives('<p><a href="http://www.ephox.com">http://www.ephox.com</a> Test</p>');
+    TypingHTTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingHTTPURL.inA(ParagraphWithMarginLeft).gives('<p style="margin-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a> Test</p>');
     TypingHTTPURL.inA(ParagraphWithPaddingLeft).gives('<p style="padding-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a> Test</p>');
     TypingHTTPURL.inA(ParagraphWithMarginAndPaddingLeft).gives('<p style="padding-left: 60px; margin-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a> Test</p>');

@@ -19,7 +19,14 @@ function getFunctionName(func) {
 }
 
 function assertState(expected, message) {
-	equals(editor.getContent(), expected, message);
+	if (typeof expected == "object") {
+        if (expected.test(editor.getContent()))
+            equals(editor.getContent(), editor.getContent(), message);
+        else 
+            equals(editor.getContent(), expected.toString(), message);
+    } else {
+        equals(editor.getContent(), expected, message);
+    }
 }
 
 tinymce.create('dsl.Queue', {
