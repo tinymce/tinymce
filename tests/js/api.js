@@ -377,7 +377,7 @@ function fakeKeyEvent(e, na, o) {
 (function() {
 	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
 
-	test('tinymce.dom.DOMUtils - parseStyle', 9, function() {
+	test('tinymce.dom.DOMUtils - parseStyle', 11, function() {
 		var dom;
 
 		DOM.add(document.body, 'div', {id : 'test'});
@@ -399,6 +399,16 @@ function fakeKeyEvent(e, na, o) {
 		equals(
 			dom.serializeStyle(dom.parseStyle('border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;')),
 			'border: 1px solid red;'
+		);
+		
+		equals(
+			dom.serializeStyle(dom.parseStyle('border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;')),
+			'border: 1pt none black;'
+		);
+		
+		equals(
+			dom.serializeStyle(dom.parseStyle('border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;')),
+			'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;'
 		);
 
 		equals(
