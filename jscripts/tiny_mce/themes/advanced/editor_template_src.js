@@ -121,8 +121,14 @@
 
 			// Init editor
 			ed.onInit.add(function() {
-				if (!ed.settings.readonly)
+				if (!ed.settings.readonly) {
 					ed.onNodeChange.add(t._nodeChanged, t);
+					ed.onKeyUp.add(t._updateUndoStatus, t);
+					ed.onMouseUp.add(t._updateUndoStatus, t);
+					ed.dom.bind(ed.dom.getRoot(), 'dragend', function() {
+						t._updateUndoStatus(ed);
+					});
+				}
 
 				if (ed.settings.content_css !== false)
 					ed.dom.loadCSS(ed.baseURI.toAbsolute("themes/advanced/skins/" + ed.settings.skin + "/content.css"));
@@ -859,6 +865,12 @@
 			o.deltaHeight -= 21;
 			n = tb = null;
 		},
+		
+		_updateUndoStatus : function(ed) {
+			var cm = ed.controlManager;
+			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
+			cm.setDisabled('redo', !ed.undoManager.hasRedo());
+		},
 
 		_nodeChanged : function(ed, cm, n, co, ob) {
 			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn, formatNames, matches;
@@ -883,8 +895,7 @@
 			};
 
 			cm.setActive('visualaid', ed.hasVisual);
-			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
-			cm.setDisabled('redo', !ed.undoManager.hasRedo());
+			t._updateUndoStatus(ed);
 			cm.setDisabled('outdent', !ed.queryCommandState('Outdent'));
 
 			p = getParent('A');
