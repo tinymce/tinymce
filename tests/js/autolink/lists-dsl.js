@@ -19,7 +19,8 @@ function getFunctionName(func) {
 }
 
 function assertState(expected, message) {
-	if (typeof expected == "object") {
+    // Safari reports "function", while Firefox and IE report "object"
+    if (typeof expected == "function" || typeof expected == "object") {
         if (expected.test(editor.getContent()))
             equals(editor.getContent(), editor.getContent(), message);
         else 
