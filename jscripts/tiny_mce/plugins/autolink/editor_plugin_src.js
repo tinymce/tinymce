@@ -97,9 +97,11 @@
                 r.setStart(endContainer, end - 2);
                 r.setEnd(endContainer, end - 1);
                 end -= 1;
-            } while (r.toString() != ' ' && r.toString() != '' && (end -2) >= 0 && r.toString() != delimiter)
 
-            if (r.toString() == delimiter) {
+                // Loop until one of the following is found: a blank space, &nbsp;, delimeter, (end-2) >= 0
+            } while (r.toString() != ' ' && r.toString() != '' && r.toString().charCodeAt(0) != 160 && (end -2) >= 0 && r.toString() != delimiter)
+
+            if (r.toString() == delimiter || r.toString().charCodeAt(0) == 160) {
                 r.setStart(endContainer, end);
                 r.setEnd(endContainer, start);
                 end += 1;
