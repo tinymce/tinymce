@@ -13,6 +13,7 @@
 		entities = null,
 		defs = {
 			paste_auto_cleanup_on_paste : true,
+			paste_enable_default_filters : true,
 			paste_block_drop : false,
 			paste_retain_style_properties : "none",
 			paste_strip_class_attributes : "mso",
@@ -313,6 +314,10 @@
 						h = h.replace(v[0], v[1]);
 				});
 			}
+			
+			if (ed.settings.paste_enable_default_filters == false) {
+				return;
+			}
 
 			// Detect Word content and process it more aggressive
 			if (/class="?Mso|style="[^"]*\bmso-|w:WordDocument/i.test(h) || o.wordContent) {
@@ -522,6 +527,10 @@
 		_postProcess : function(pl, o) {
 			var t = this, ed = t.editor, dom = ed.dom, styleProps;
 
+			if (ed.settings.paste_enable_default_filters == false) {
+				return;
+			}
+			
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
 				each(dom.select('a', o.node), function(a) {
