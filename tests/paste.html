@@ -108,6 +108,21 @@ test("Paste Word retain styles", function() {
 	editor.settings.paste_retain_style_properties = '';
 });
 
+test("Disable default filters", function() {
+	var rng = editor.dom.createRng();
+
+	editor.settings.paste_enable_default_filters = false;
+
+	// Test color
+	editor.setContent('');
+	editor.execCommand('SelectAll');
+	
+	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="color: #ff0000;">Test</p>'});
+	equals(trimContent(editor.getContent().replace(/[\r\n]+/g, '')), '<p class="MsoNormal" style="color: #ff0000;">Test</p>');
+
+	editor.settings.paste_enable_default_filters = true;
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
