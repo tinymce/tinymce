@@ -1,3 +1,5 @@
+	Added paste_enable_default_filters setting to enable the default paste filters to be disabled.
+	Fixed bug where border styles were incorrectly merged.
 	Added significantly improved list handling via the new 'lists' plugin.
 	Fixed bug where image resize handles were left behind when changing the alignment of an image in Firefox.
 	Spaces in URLs are now automatically encoded as %20 since they are always invalid.
