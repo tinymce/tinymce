@@ -43,10 +43,9 @@ asyncTest('Typing a HTTP URL', function() {
     TypingHTTPURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
     TypingHTTPURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
 
-    // BROKEN: Safari - Closing parenthesis is not present
     TypingEclipsedHTTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="http://www.ephox.com">http://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingHTTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a>(Test|</p><p>Test)</p>$'));
+    TypingHTTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a>(Test|</p><p><a href=\"http://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -74,10 +73,9 @@ asyncTest('Typing a HTTPS URL', function() {
     TypingHTTPSURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
     TypingHTTPSURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
 
-    // BROKEN: Safari - Closing parenthesis is not present
     TypingEclipsedHTTPSURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="https://www.ephox.com">https://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingHTTPSURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a>(Test|</p><p>Test)</p>$'));
+    TypingHTTPSURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a>(Test|</p><p><a href=\"https://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -105,10 +103,9 @@ asyncTest('Typing a SSH URL', function() {
     TypingSSHURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
     TypingSSHURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
 
-    // BROKEN: Safari - Closing parenthesis is not present
     TypingEclipsedSSHURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingSSHURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(Test|</p><p>Test)</p>$'));
+    TypingSSHURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(Test|</p><p><a href=\"ssh://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -136,10 +133,9 @@ asyncTest('Typing a FTP URL', function() {
     TypingFTPURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
     TypingFTPURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
 
-    // BROKEN: Safari - Closing parenthesis is not present
     TypingEclipsedFTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingFTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(Test|</p><p>Test)</p>$'));
+    TypingFTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(Test|</p><p><a href=\"ftp://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -167,10 +163,9 @@ asyncTest('Typing a WWW URL', function() {
     TypingWWWURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
     TypingWWWURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
 
-    // BROKEN: Safari - Closing parenthesis is not present
     TypingEclipsedWWWURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="http://www.ephox.com">www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingWWWURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a>(Test|</p><p>Test)</p>$'));
+    TypingWWWURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a>(Test|</p><p><a href=\"http://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });

@@ -7,7 +7,6 @@
  *
  * BUGS:
  *   
- *   1. Typing "www.ephox.com)   " will return the cursor to the beginning of the URL.
  *
  *
  */
@@ -133,6 +132,15 @@
                 var id = parseInt(ed.dom.uniqueId().substring(4));
                 ed.dom.remove('mce_' + (id-1) + '_start');
                 ed.dom.remove('mce_' + (id-2) + '_start');
+
+                if (tinyMCE.isWebKit) {
+                    // move the caret to its original position
+                    ed.selection.collapse(false);
+                    var max = Math.min(endContainer.length, start + 1);
+                    r.setStart(endContainer, max);
+                    r.setEnd(endContainer, max);
+                    ed.selection.setRng(r);
+                }
             }
             else {
                 // delete the bookmarks
