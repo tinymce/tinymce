@@ -146,9 +146,11 @@
                 // delete the bookmarks
                 ed.dom.remove(bookmark1.id);
                 ed.dom.remove(bookmark2.id);
-                var id = parseInt(ed.dom.uniqueId().substring(4));
-                ed.dom.remove('mce_' + (id-1) + '_start');
-                ed.dom.remove('mce_' + (id-2) + '_start');
+                if (!tinyMCE.isWebKit) {
+                    var id = parseInt(ed.dom.uniqueId().substring(4));
+                    ed.dom.remove('mce_' + (id-1) + '_start');
+                    ed.dom.remove('mce_' + (id-2) + '_start');
+                }
 
                 // do not move the caret to its original position
                 if (!goback)
