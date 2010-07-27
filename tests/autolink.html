@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Automatic link tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="js/autolink/lists-dsl.js"></script>
+<script type="text/javascript" src="js/autolink/actions.js"></script>
+<script type="text/javascript" src="js/autolink/states.js"></script>
+<script><!--
+var editor; 
+QUnit.config.autostart = false;
+module("Automatic Links", {
+    autostart: false,
+    setup: function() {
+        window.queue = new dsl.Queue();
+    }
+});
+
+asyncTest('Typing a HTTP URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
+    TypingHTTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPURL.inA(ParagraphWithMarginAndPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px; margin-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
+    TypingHTTPURL.inA(TableCellWithoutBrs).gives(new RegExp('^<table><tbody><tr><td>Test<a href="http://www.ephox.com">http://www.ephox.com</a>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingHTTPURL.inA(TableCellWithBrs).gives(new RegExp('^<table><tbody><tr><td>T<a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)est<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingHTTPURL.inA(SingleParagraphSelection).gives(new RegExp('^<p>This <a href="http://www.ephox.com">http://www.ephox.com</a>&nbsp; a test</p>$'));
+    TypingHTTPURL.inA(MultipleParagraphSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingHTTPURL.inA(SingleHeadingSelection).gives(new RegExp('^<h1>This <a href="http://www.ephox.com">http://www.ephox.com</a>&nbsp; a test</h1>$'));
+    TypingHTTPURL.inA(MultipleHeadingSelection).gives(new RegExp('^<h1>This</h1><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingHTTPURL.inA(SingleBlockSelection).gives(new RegExp('^<div>This <a href="http://www.ephox.com">http://www.ephox.com</a>&nbsp; a test</div>$'));
+    TypingHTTPURL.inA(MultipleBlockSelection).gives(new RegExp('^<div>This</div><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingHTTPURL.inA(CellWithoutBrSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="http://www.ephox.com">http://www.ephox.com</a>&nbsp; 1</td></tr></tbody></table>$'));
+    TypingHTTPURL.inA(CellWithBrSingleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="http://www.ephox.com">http://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingHTTPURL.inA(CellWithBrMultipleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="http://www.ephox.com">http://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingHTTPURL.inA(ParagraphToHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingHTTPURL.inA(ParagraphToBlockSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingHTTPURL.inA(HeadingToParagraphSelection).gives(new RegExp('^<h1>This</h1><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingHTTPURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingHTTPURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">http://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+
+    TypingEclipsedHTTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="http://www.ephox.com">http://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
+
+    TypingHTTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a></p><p>(Test|<a href=\"http://www.ephox.com\"></a>Test)</p>$'));
+
+    queue.done();
+});
+
+asyncTest('Typing a HTTPS URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
+    TypingHTTPSURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPSURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPSURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPSURL.inA(ParagraphWithMarginAndPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px; margin-left: 60px;"><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingHTTPSURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
+    TypingHTTPSURL.inA(TableCellWithoutBrs).gives(new RegExp('^<table><tbody><tr><td>Test<a href="https://www.ephox.com">https://www.ephox.com</a>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingHTTPSURL.inA(TableCellWithBrs).gives(new RegExp('^<table><tbody><tr><td>T<a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)est<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingHTTPSURL.inA(SingleParagraphSelection).gives(new RegExp('^<p>This <a href="https://www.ephox.com">https://www.ephox.com</a>&nbsp; a test</p>$'));
+    TypingHTTPSURL.inA(MultipleParagraphSelection).gives(new RegExp('^<p>This</p><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingHTTPSURL.inA(SingleHeadingSelection).gives(new RegExp('^<h1>This <a href="https://www.ephox.com">https://www.ephox.com</a>&nbsp; a test</h1>$'));
+    TypingHTTPSURL.inA(MultipleHeadingSelection).gives(new RegExp('^<h1>This</h1><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingHTTPSURL.inA(SingleBlockSelection).gives(new RegExp('^<div>This <a href="https://www.ephox.com">https://www.ephox.com</a>&nbsp; a test</div>$'));
+    TypingHTTPSURL.inA(MultipleBlockSelection).gives(new RegExp('^<div>This</div><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingHTTPSURL.inA(CellWithoutBrSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="https://www.ephox.com">https://www.ephox.com</a>&nbsp; 1</td></tr></tbody></table>$'));
+    TypingHTTPSURL.inA(CellWithBrSingleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="https://www.ephox.com">https://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingHTTPSURL.inA(CellWithBrMultipleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="https://www.ephox.com">https://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingHTTPSURL.inA(ParagraphToHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingHTTPSURL.inA(ParagraphToBlockSelection).gives(new RegExp('^<p>This</p><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingHTTPSURL.inA(HeadingToParagraphSelection).gives(new RegExp('^<h1>This</h1><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingHTTPSURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingHTTPSURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="https://www.ephox.com">https://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+
+    TypingEclipsedHTTPSURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="https://www.ephox.com">https://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
+
+    TypingHTTPSURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a></p><p>(Test|<a href=\"https://www.ephox.com\"></a>Test)</p>$'));
+
+    queue.done();
+});
+
+asyncTest('Typing a SSH URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
+    TypingSSHURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingSSHURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingSSHURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingSSHURL.inA(ParagraphWithMarginAndPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px; margin-left: 60px;"><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingSSHURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
+    TypingSSHURL.inA(TableCellWithoutBrs).gives(new RegExp('^<table><tbody><tr><td>Test<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingSSHURL.inA(TableCellWithBrs).gives(new RegExp('^<table><tbody><tr><td>T<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)est<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingSSHURL.inA(SingleParagraphSelection).gives(new RegExp('^<p>This <a href="ssh://www.ephox.com">ssh://www.ephox.com</a>&nbsp; a test</p>$'));
+    TypingSSHURL.inA(MultipleParagraphSelection).gives(new RegExp('^<p>This</p><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingSSHURL.inA(SingleHeadingSelection).gives(new RegExp('^<h1>This <a href="ssh://www.ephox.com">ssh://www.ephox.com</a>&nbsp; a test</h1>$'));
+    TypingSSHURL.inA(MultipleHeadingSelection).gives(new RegExp('^<h1>This</h1><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingSSHURL.inA(SingleBlockSelection).gives(new RegExp('^<div>This <a href="ssh://www.ephox.com">ssh://www.ephox.com</a>&nbsp; a test</div>$'));
+    TypingSSHURL.inA(MultipleBlockSelection).gives(new RegExp('^<div>This</div><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingSSHURL.inA(CellWithoutBrSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>&nbsp; 1</td></tr></tbody></table>$'));
+    TypingSSHURL.inA(CellWithBrSingleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingSSHURL.inA(CellWithBrMultipleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingSSHURL.inA(ParagraphToHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingSSHURL.inA(ParagraphToBlockSelection).gives(new RegExp('^<p>This</p><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingSSHURL.inA(HeadingToParagraphSelection).gives(new RegExp('^<h1>This</h1><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingSSHURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingSSHURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+
+    TypingEclipsedSSHURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
+
+    TypingSSHURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a></p><p>(Test|<a href=\"ssh://www.ephox.com\"></a>Test)</p>$'));
+
+    queue.done();
+});
+
+asyncTest('Typing a FTP URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
+    TypingFTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingFTPURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingFTPURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingFTPURL.inA(ParagraphWithMarginAndPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px; margin-left: 60px;"><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingFTPURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
+    TypingFTPURL.inA(TableCellWithoutBrs).gives(new RegExp('^<table><tbody><tr><td>Test<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingFTPURL.inA(TableCellWithBrs).gives(new RegExp('^<table><tbody><tr><td>T<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)est<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingFTPURL.inA(SingleParagraphSelection).gives(new RegExp('^<p>This <a href="ftp://www.ephox.com">ftp://www.ephox.com</a>&nbsp; a test</p>$'));
+    TypingFTPURL.inA(MultipleParagraphSelection).gives(new RegExp('^<p>This</p><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingFTPURL.inA(SingleHeadingSelection).gives(new RegExp('^<h1>This <a href="ftp://www.ephox.com">ftp://www.ephox.com</a>&nbsp; a test</h1>$'));
+    TypingFTPURL.inA(MultipleHeadingSelection).gives(new RegExp('^<h1>This</h1><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingFTPURL.inA(SingleBlockSelection).gives(new RegExp('^<div>This <a href="ftp://www.ephox.com">ftp://www.ephox.com</a>&nbsp; a test</div>$'));
+    TypingFTPURL.inA(MultipleBlockSelection).gives(new RegExp('^<div>This</div><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingFTPURL.inA(CellWithoutBrSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>&nbsp; 1</td></tr></tbody></table>$'));
+    TypingFTPURL.inA(CellWithBrSingleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingFTPURL.inA(CellWithBrMultipleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingFTPURL.inA(ParagraphToHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingFTPURL.inA(ParagraphToBlockSelection).gives(new RegExp('^<p>This</p><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingFTPURL.inA(HeadingToParagraphSelection).gives(new RegExp('^<h1>This</h1><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingFTPURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingFTPURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+
+    TypingEclipsedFTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
+
+    TypingFTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a></p><p>(Test|<a href=\"ftp://www.ephox.com\"></a>Test)</p>$'));
+
+    queue.done();
+});
+
+asyncTest('Typing a WWW URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
+    TypingWWWURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingWWWURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingWWWURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingWWWURL.inA(ParagraphWithMarginAndPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px; margin-left: 60px;"><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingWWWURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
+    TypingWWWURL.inA(TableCellWithoutBrs).gives(new RegExp('^<table><tbody><tr><td>Test<a href="http://www.ephox.com">www.ephox.com</a>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingWWWURL.inA(TableCellWithBrs).gives(new RegExp('^<table><tbody><tr><td>T<a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)est<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
+    TypingWWWURL.inA(SingleParagraphSelection).gives(new RegExp('^<p>This <a href="http://www.ephox.com">www.ephox.com</a>&nbsp; a test</p>$'));
+    TypingWWWURL.inA(MultipleParagraphSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingWWWURL.inA(SingleHeadingSelection).gives(new RegExp('^<h1>This <a href="http://www.ephox.com">www.ephox.com</a>&nbsp; a test</h1>$'));
+    TypingWWWURL.inA(MultipleHeadingSelection).gives(new RegExp('^<h1>This</h1><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingWWWURL.inA(SingleBlockSelection).gives(new RegExp('^<div>This <a href="http://www.ephox.com">www.ephox.com</a>&nbsp; a test</div>$'));
+    TypingWWWURL.inA(MultipleBlockSelection).gives(new RegExp('^<div>This</div><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingWWWURL.inA(CellWithoutBrSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="http://www.ephox.com">www.ephox.com</a>&nbsp; 1</td></tr></tbody></table>$'));
+    TypingWWWURL.inA(CellWithBrSingleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="http://www.ephox.com">www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingWWWURL.inA(CellWithBrMultipleLineSelection).gives(new RegExp('^<table><tbody><tr><td>C<a href="http://www.ephox.com">www.ephox.com</a>&nbsp; 1<br />Line 2</td></tr></tbody></table>$'));
+    TypingWWWURL.inA(ParagraphToHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><h1>paragraph</h1>$'));
+    TypingWWWURL.inA(ParagraphToBlockSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+    TypingWWWURL.inA(HeadingToParagraphSelection).gives(new RegExp('^<h1>This</h1><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingWWWURL.inA(BlockToParagraphSelection).gives(new RegExp('^<div>This</div><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><p>paragraph</p>$'));
+    TypingWWWURL.inA(MultipleParagraphAndHeadingSelection).gives(new RegExp('^<p>This</p><p><a href="http://www.ephox.com">www.ephox.com</a>(&nbsp;|</p><p>&nbsp;)</p><div>paragraph</div>$'));
+
+    TypingEclipsedWWWURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="http://www.ephox.com">www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
+
+    TypingWWWURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a></p><p>(Test|<a href=\"http://www.ephox.com\"></a>Test)</p>$'));
+
+    queue.done();
+});
+
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+    plugins : "autolink",
+	add_unload_trigger : false,
+	theme_advanced_styles : 'test1=test1;test2=test2',
+	valid_styles : {
+		'*' : 'text-align,padding-left,color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	},
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+
+		ed.onNodeChange.addToTop(function() {
+			return false;
+		});
+	}
+});
+--></script>
+</head>
+<body>
+	<h1 id="qunit-header">Automatic link tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+	</div>
+	<script type="text/javascript" src="jsrobot/robot.js"></script>
+	<script>
+		initWhenTinyAndRobotAreReady();
+	</script>
+</body>
+</html>
