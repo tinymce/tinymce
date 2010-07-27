@@ -21,6 +21,11 @@ module("Automatic Links", {
 });
 
 asyncTest('Typing a HTTP URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
     TypingHTTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingHTTPURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingHTTPURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="http://www.ephox.com">http://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
@@ -51,6 +56,11 @@ asyncTest('Typing a HTTP URL', function() {
 });
 
 asyncTest('Typing a HTTPS URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
     TypingHTTPSURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingHTTPSURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingHTTPSURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="https://www.ephox.com">https://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
@@ -81,6 +91,11 @@ asyncTest('Typing a HTTPS URL', function() {
 });
 
 asyncTest('Typing a SSH URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
     TypingSSHURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingSSHURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingSSHURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
@@ -111,6 +126,11 @@ asyncTest('Typing a SSH URL', function() {
 });
 
 asyncTest('Typing a FTP URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
     TypingFTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingFTPURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingFTPURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
@@ -141,6 +161,11 @@ asyncTest('Typing a FTP URL', function() {
 });
 
 asyncTest('Typing a WWW URL', function() {
+    if (tinyMCE.isIE) {
+        queue.done();
+        return;
+    }
+
     TypingWWWURL.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingWWWURL.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
     TypingWWWURL.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</p>$'));
