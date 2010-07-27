@@ -2558,10 +2558,6 @@
 						addUndo();
 				});
 				
-				t.dom.bind(t.dom.getRoot(), 'drop', function(e) {
-					addUndo();
-				});
-				
 				t.dom.bind(t.dom.getRoot(), 'dragend', function(e) {
 					addUndo();
 				});
