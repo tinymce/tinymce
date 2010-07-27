@@ -50,7 +50,7 @@ asyncTest('Typing a HTTP URL', function() {
 
     TypingEclipsedHTTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="http://www.ephox.com">http://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingHTTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a>(Test|</p><p><a href=\"http://www.ephox.com\"></a>Test)</p>$'));
+    TypingHTTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a></p><p>(Test|<a href=\"http://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -85,7 +85,7 @@ asyncTest('Typing a HTTPS URL', function() {
 
     TypingEclipsedHTTPSURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="https://www.ephox.com">https://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingHTTPSURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a>(Test|</p><p><a href=\"https://www.ephox.com\"></a>Test)</p>$'));
+    TypingHTTPSURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a></p><p>(Test|<a href=\"https://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -120,7 +120,7 @@ asyncTest('Typing a SSH URL', function() {
 
     TypingEclipsedSSHURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingSSHURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(Test|</p><p><a href=\"ssh://www.ephox.com\"></a>Test)</p>$'));
+    TypingSSHURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a></p><p>(Test|<a href=\"ssh://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -155,7 +155,7 @@ asyncTest('Typing a FTP URL', function() {
 
     TypingEclipsedFTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingFTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(Test|</p><p><a href=\"ftp://www.ephox.com\"></a>Test)</p>$'));
+    TypingFTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a></p><p>(Test|<a href=\"ftp://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
@@ -190,7 +190,7 @@ asyncTest('Typing a WWW URL', function() {
 
     TypingEclipsedWWWURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="http://www.ephox.com">www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
-    TypingWWWURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a>(Test|</p><p><a href=\"http://www.ephox.com\"></a>Test)</p>$'));
+    TypingWWWURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a></p><p>(Test|<a href=\"http://www.ephox.com\"></a>Test)</p>$'));
 
     queue.done();
 });
