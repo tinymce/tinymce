@@ -1,3 +1,4 @@
+	Added plugin to enable automatically linking URLs.
 	Added paste_enable_default_filters setting to enable the default paste filters to be disabled.
 	Fixed bug where border styles were incorrectly merged.
 	Added significantly improved list handling via the new 'lists' plugin.
