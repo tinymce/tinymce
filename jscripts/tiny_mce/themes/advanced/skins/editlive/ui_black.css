@@ -1,0 +1,71 @@
+/* Black */
+.editliveSkinBlack .mceToolbar .mceToolbarStart span, .editliveSkinBlack .mceToolbar .mceToolbarEnd span, .editliveSkinBlack .mceButton, .editliveSkinBlack .mceSplitButton, .editliveSkinBlack .mceSeparator, .editliveSkinBlack .mceSplitButton a.mceOpen, .editliveSkinBlack .mceListBox a.mceOpen {
+	background-image:url(img/button_bg_editlive.png);
+}
+
+.editliveSkinBlack table, .editliveSkinBlack .mceMenuItemTitle a, .editliveSkinBlack .mceStatusbar div, .editliveSkinBlack .mceStatusbar span, .editliveSkinBlack .mceStatusbar a {
+	background:#d8d7d7; 
+	color:#000000
+}
+
+td.mceToolbar {
+	background-image:url(img/editlivebg.png);
+	background-position:bottom;
+	background-repeat:repeat-x
+}
+
+.mceIframeContainer iframe{
+	border:1px solid #838383; 
+}
+
+.mceMenuItemTitle a .mceMenuItemTitle a:hover .mceMenuItemTitle .mceMenuItemEnabled tr:hover .mceMenuItemEnabled a:hover {
+	color:#ffffff
+}
+
+.editliveSkinBlack table.mceListBoxEnabled .mceText, .editliveSkinBlack .mceListBox .mceText {
+	background:#FFF; 
+	border:1px solid #838383; 
+	border-bottom-color:#989FA9; 
+	border-right:0
+}
+
+.editliveSkinBlack table.mceListBoxEnabled:hover .mceText, .editliveSkinBlack .mceListBoxHover .mceText, .editliveSkinBlack .mceListBoxSelected .mceText {
+	background:#FFF; 
+	border:1px solid #838383;
+	border-right:0;
+	color:black;
+}
+
+.editliveSkinBlack .mceExternalToolbar, .editliveSkinBlack .mceListBox .mceText, .editliveSkinBlack div.mceMenu, .editliveSkinBlack table.mceLayout, .editliveSkinBlack .mceMenuItemTitle a, .editliveSkinBlack table.mceLayout tr.mceFirst td, .editliveSkinBlack table.mceLayout, .editliveSkinBlack .mceMenuItemTitle a, .editliveSkinBlack table.mceLayout tr.mceLast td, .editliveSkinBlack .mceIframeContainer {
+	border:none;
+}
+
+.editliveSkinBlack table.mceSplitButtonEnabled:hover a.mceAction, .editliveSkinBlack .mceSplitButtonHover a.mceAction, .editliveSkinBlack .mceSplitButtonSelected {
+	background-image:url(img/button_bg_editlive.png)
+}
+
+.editliveSkinBlack .mceMenu  .mceMenuItemEnabled a:hover  , .editliveSkinBlack .mceMenu .mceMenuItemActive{
+	background-color:#3399ff;
+}
+
+.editliveSkinBlack .mceToolbar  table{
+	background-color:transparent;
+}
+
+.editliveSkin .mceColorSplitMenu a.mceMoreColors:hover {
+background-color:#e6edf6;
+border:1px solid #aecff7;
+}
+
+.editliveSkin table.mceLayout {
+border-top:1px solid #a0a0a0;
+}
+
+.editliveSkin table.mceToolbar {
+	margin-left:2px;
+	margin-top:2px;
+}
+
+.editliveSkin .mceIcon {
+	background:url(../../img/editlive-icons.gif) no-repeat 20px 20px
+}
