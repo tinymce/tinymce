@@ -213,3 +213,74 @@
 .ephoxSkin span.mce_pagebreak {background-position:0 -40px}
 .ephoxSkin span.mce_restoredraft {background-position:-20px -40px}
 .ephoxSkin span.mce_spellchecker {background-position:-540px -20px}
+/* Black */
+.ephoxSkin .mceToolbar .mceToolbarStart span, .ephoxSkin .mceToolbar .mceToolbarEnd span, .ephoxSkin .mceButton, .ephoxSkin .mceSplitButton, .ephoxSkin .mceSeparator, .ephoxSkin .mceSplitButton a.mceOpen, .ephoxSkin .mceListBox a.mceOpen {
+	background-image:url(img/button_bg_ephox.png);
+}
+
+.ephoxSkin table, .ephoxSkin .mceMenuItemTitle a, .ephoxSkin .mceStatusbar div, .ephoxSkin .mceStatusbar span, .ephoxSkin .mceStatusbar a {
+	background:#d8d7d7; 
+	color:#000000
+}
+
+td.mceToolbar {
+	background-image:url(img/ephoxbg.png);
+	background-position:bottom;
+	background-repeat:repeat-x
+}
+
+.mceIframeContainer iframe{
+	border:1px solid #838383; 
+}
+
+.mceMenuItemTitle a .mceMenuItemTitle a:hover .mceMenuItemTitle .mceMenuItemEnabled tr:hover .mceMenuItemEnabled a:hover {
+	color:#ffffff
+}
+
+.ephoxSkin table.mceListBoxEnabled .mceText, .ephoxSkin .mceListBox .mceText {
+	background:#FFF; 
+	border:1px solid #838383; 
+	border-bottom-color:#989FA9; 
+	border-right:0
+}
+
+.ephoxSkin table.mceListBoxEnabled:hover .mceText, .ephoxSkin .mceListBoxHover .mceText, .ephoxSkin .mceListBoxSelected .mceText {
+	background:#FFF; 
+	border:1px solid #838383;
+	border-right:0;
+	color:black;
+}
+
+.ephoxSkin .mceExternalToolbar, .ephoxSkin .mceListBox .mceText, .ephoxSkin div.mceMenu, .ephoxSkin table.mceLayout, .ephoxSkin .mceMenuItemTitle a, .ephoxSkin table.mceLayout tr.mceFirst td, .ephoxSkin table.mceLayout, .ephoxSkin .mceMenuItemTitle a, .ephoxSkin table.mceLayout tr.mceLast td, .ephoxSkin .mceIframeContainer {
+	border:none;
+}
+
+.ephoxSkin table.mceSplitButtonEnabled:hover a.mceAction, .ephoxSkin .mceSplitButtonHover a.mceAction, .ephoxSkin .mceSplitButtonSelected {
+	background-image:url(img/button_bg_ephox.png)
+}
+
+.ephoxSkin .mceMenu  .mceMenuItemEnabled a:hover  , .ephoxSkin .mceMenu .mceMenuItemActive{
+	background-color:#3399ff;
+}
+
+.ephoxSkin .mceToolbar  table{
+	background-color:transparent;
+}
+
+.ephoxSkin .mceColorSplitMenu a.mceMoreColors:hover {
+background-color:#e6edf6;
+border:1px solid #aecff7;
+}
+
+.ephoxSkin table.mceLayout {
+border-top:1px solid #a0a0a0;
+}
+
+.ephoxSkin table.mceToolbar {
+	margin-left:2px;
+	margin-top:2px;
+}
+
+.ephoxSkin .mceIcon {
+	background:url(../../img/ephox-icons.gif) no-repeat 20px 20px
+}
