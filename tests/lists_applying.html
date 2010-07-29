@@ -23,6 +23,9 @@ module('Lists - Applying', {
 	autostart: false,
 	setup: function() {
 		window.queue = new dsl.Queue();
+	},
+	tearDown: function() {
+		editor.settings.force_br_newlines = false;
 	}
 });
 
@@ -211,6 +214,26 @@ asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
 	ApplyingUL.to(IndentedUlInOlCorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
 	ApplyingUL.to(IndentedOlInUlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
 	ApplyingUL.to(IndentedUlInOlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+	queue.done();
+});
+
+asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', function() {
+	editor.settings.force_br_newlines = true;
+	ApplyingUL.to(SingleLiUlSelection).gives('<p>Item 1</p>');
+	ApplyingUL.to(MultiLiUlSelection).gives('<p>Item 1<br />Item 2</p>');
+
+	ApplyingUL.to(IndentedUlInUlCorrectSelection).gives('<p>Item 1<br />Indented</p>');
+	ApplyingUL.to(IndentedUlInUlIncorrectSelection).gives('<p>Item 1<br />Indented</p>');
+	queue.done();
+});
+
+asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', function() {
+	editor.settings.force_br_newlines = true;
+	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
+	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1<br />Item 2</p>');
+	
+	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1<br />Indented</p>');
+	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1<br />Indented</p>');
 	queue.done();
 });
 
