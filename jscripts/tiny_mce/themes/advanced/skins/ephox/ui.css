@@ -24,9 +24,9 @@
 .ephoxSkin .mceStatusbar a.mceResize {display:block; float:right; background:url(../../img/ephox-icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize; outline:0}
 .ephoxSkin .mceStatusbar a:hover {text-decoration:underline}
 .ephoxSkin table.mceToolbar {margin-left:3px}
-.ephoxSkin .mceToolbar .mceToolbarStart span {display:block; background:url(img/button_bg.png) -22px 0; width:1px; height:22px; margin-left:3px;}
+.ephoxSkin .mceToolbar .mceToolbarStart span {display:block; background:url(img/button_bg_ephox.png) -22px 0; width:1px; height:22px; margin-left:3px;}
 .ephoxSkin .mceToolbar td.mceFirst span {margin:0}
-.ephoxSkin .mceToolbar .mceToolbarEnd span {display:block; background:url(img/button_bg.png) -22px 0; width:1px; height:22px}
+.ephoxSkin .mceToolbar .mceToolbarEnd span {display:block; background:url(img/button_bg_ephox.png) -22px 0; width:1px; height:22px}
 .ephoxSkin .mceToolbar .mceToolbarEndListBox span, .ephoxSkin .mceToolbar .mceToolbarStartListBox span {display:none}
 .ephoxSkin span.mceIcon, .ephoxSkin img.mceIcon {display:block; width:20px; height:20px}
 .ephoxSkin .mceIcon {background:url(../../img/ephox-icons.gif) no-repeat 20px 20px}
@@ -35,7 +35,7 @@
 .ephoxSkin td.mceRight table {margin:0 0 0 auto;}
 
 /* Button */
-.ephoxSkin .mceButton {display:block; background:url(img/button_bg.png); width:22px; height:22px}
+.ephoxSkin .mceButton {display:block; background:url(img/button_bg_ephox.png); width:22px; height:22px}
 .ephoxSkin a.mceButton span, .ephoxSkin a.mceButton img {margin-left:1px}
 .ephoxSkin .mceOldBoxModel a.mceButton span, .ephoxSkin .mceOldBoxModel a.mceButton img {margin:0 0 0 1px}
 .ephoxSkin a.mceButtonEnabled:hover {background-color:#B2BBD0; background-position:0 -22px}
@@ -47,13 +47,13 @@
 .ephoxSkin .mceButtonDisabled .mceButtonLabel {color:#888}
 
 /* Separator */
-.ephoxSkin .mceSeparator {display:block; background:url(img/button_bg.png) -22px 0; width:5px; height:22px;}
+.ephoxSkin .mceSeparator {display:block; background:url(img/button_bg_ephox.png) -22px 0; width:5px; height:22px;}
 
 /* ListBox */
 .ephoxSkin .mceListBox {margin-left:3px}
 .ephoxSkin .mceListBox, .ephoxSkin .mceListBox a {display:block}
 .ephoxSkin .mceListBox .mceText {padding-left:4px; text-align:left; width:70px; border:1px solid #b3c7e1; border-right:0; background:#eaf2fb; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; height:20px; line-height:20px; overflow:hidden}
-.ephoxSkin .mceListBox .mceOpen {width:14px; height:22px; background:url(img/button_bg.png) -66px 0}
+.ephoxSkin .mceListBox .mceOpen {width:14px; height:22px; background:url(img/button_bg_ephox.png) -66px 0}
 .ephoxSkin table.mceListBoxEnabled:hover .mceText, .ephoxSkin .mceListBoxHover .mceText, .ephoxSkin .mceListBoxSelected .mceText {background:#FFF}
 .ephoxSkin table.mceListBoxEnabled:hover .mceOpen, .ephoxSkin .mceListBoxHover .mceOpen, .ephoxSkin .mceListBoxSelected .mceOpen {background-position:-66px -22px}
 .ephoxSkin .mceListBoxDisabled .mceText {color:gray}
@@ -63,12 +63,12 @@
 
 /* SplitButton */
 .ephoxSkin .mceSplitButton, .ephoxSkin .mceSplitButton a, .ephoxSkin .mceSplitButton span {display:block; height:22px}
-.ephoxSkin .mceSplitButton {background:url(img/button_bg.png)}
+.ephoxSkin .mceSplitButton {background:url(img/button_bg_ephox.png)}
 .ephoxSkin .mceSplitButton a.mceAction {width:22px}
 .ephoxSkin .mceSplitButton span.mceAction {width:22px; background-image:url(../../img/ephox-icons.gif)}
-.ephoxSkin .mceSplitButton a.mceOpen {width:10px; background:url(img/button_bg.png) -44px 0}
+.ephoxSkin .mceSplitButton a.mceOpen {width:10px; background:url(img/button_bg_ephox.png) -44px 0}
 .ephoxSkin .mceSplitButton span.mceOpen {display:none}
-.ephoxSkin table.mceSplitButtonEnabled:hover a.mceAction, .ephoxSkin .mceSplitButtonHover a.mceAction, .ephoxSkin .mceSplitButtonSelected {background:url(img/button_bg.png) 0 -22px}
+.ephoxSkin table.mceSplitButtonEnabled:hover a.mceAction, .ephoxSkin .mceSplitButtonHover a.mceAction, .ephoxSkin .mceSplitButtonSelected {background:url(img/button_bg_ephox.png) 0 -22px}
 .ephoxSkin table.mceSplitButtonEnabled:hover a.mceOpen, .ephoxSkin .mceSplitButtonHover a.mceOpen, .ephoxSkin .mceSplitButtonSelected a.mceOpen {background-position:-44px -44px}
 .ephoxSkin .mceSplitButtonDisabled .mceAction {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
 .ephoxSkin .mceSplitButtonActive {background-position:0 -44px}
