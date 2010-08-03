@@ -31,7 +31,7 @@ var LinkDialog = {
 	},
 
 	update : function() {
-		var f = document.forms[0], ed = tinyMCEPopup.editor, e, b;
+		var f = document.forms[0], ed = tinyMCEPopup.editor, e, b, href = f.href.value.replace(/ /g, '%20');
 
 		tinyMCEPopup.restoreSelection();
 		e = ed.dom.getParent(ed.selection.getNode(), 'A');
@@ -61,7 +61,7 @@ var LinkDialog = {
 					e = n;
 
 					ed.dom.setAttribs(e, {
-						href : f.href.value.replace(' ', '%20'),
+						href : href,
 						title : f.linktitle.value,
 						target : f.target_list ? getSelectValue(f, "target_list") : null,
 						'class' : f.class_list ? getSelectValue(f, "class_list") : null
@@ -70,7 +70,7 @@ var LinkDialog = {
 			});
 		} else {
 			ed.dom.setAttribs(e, {
-				href : f.href.value,
+				href : href,
 				title : f.linktitle.value,
 				target : f.target_list ? getSelectValue(f, "target_list") : null,
 				'class' : f.class_list ? getSelectValue(f, "class_list") : null
