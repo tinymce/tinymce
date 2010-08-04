@@ -23,11 +23,11 @@
 		 */
 
 		init : function(ed, url) {
+			var t = this;
+        
             // Internet Explorer has built-in automatic linking
             if (tinyMCE.isIE)
                 return;
-
-            var t = this;
 
             // Add a key down handler
 			ed.onKeyDown.add(function(ed, e) {
@@ -47,21 +47,22 @@
         handleEclipse : function(ed) {
             this.parseCurrentLine(ed, -1, '(', true);
         },
+        
         handleSpacebar : function(ed) {
             this.parseCurrentLine(ed, 0, '', true);
         },
+        
         handleEnter : function(ed) {
             this.parseCurrentLine(ed, -1, '', false);
         },
 
         parseCurrentLine : function(ed, end_offset, delimiter, goback) {
-            var r, end, start, endContainer, bookmark1, bookmark2, text, matches, prev, len;
+            var r, end, start, endContainer, bookmark, text, matches, prev, len;
 
-            // We need atleast five characters to form a URL,
+            // We need at least five characters to form a URL,
             // hence, at minimum, five characters from the beginning of the line.
-            r = ed.selection.getRng();
-            if (r.startOffset < 5)
-            {
+            r = ed.selection.getRng().cloneRange();
+            if (r.startOffset < 5) {
                 // During testing, the caret is placed inbetween two text nodes. 
                 // The previous text node contains the URL.
                 prev = r.endContainer.previousSibling;
@@ -80,15 +81,12 @@
 
                 end = r.endOffset;
                 endContainer = prev;
-            }
-            else
-            {
+            } else {
                 end = r.endOffset - 1 - end_offset;
                 endContainer = r.endContainer;
             }
 
             start = end;
-            bookmark1 = ed.selection.getBookmark();
 
             do
             {
@@ -98,7 +96,7 @@
                 end -= 1;
 
                 // Loop until one of the following is found: a blank space, &nbsp;, delimeter, (end-2) >= 0
-            } while (r.toString() != ' ' && r.toString() != '' && r.toString().charCodeAt(0) != 160 && (end -2) >= 0 && r.toString() != delimiter)
+            } while (r.toString() != ' ' && r.toString() != '' && r.toString().charCodeAt(0) != 160 && (end -2) >= 0 && r.toString() != delimiter);
 
             if (r.toString() == delimiter || r.toString().charCodeAt(0) == 160) {
                 r.setStart(endContainer, end);
@@ -115,24 +113,19 @@
 
             text = r.toString();
             matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
-            bookmark2 = ed.selection.getBookmark();
 
             if (matches) {
                 if (matches[1] == 'www.') {
                     matches[1] = 'http://www.';
                 }
 
+                bookmark = ed.selection.getBookmark();
+                
                 ed.selection.setRng(r);
                 tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
-                ed.selection.moveToBookmark(bookmark2);
+                ed.selection.moveToBookmark(bookmark);
 
-                // delete the bookmarks
-                ed.dom.remove(bookmark1.id);
-                ed.dom.remove(bookmark2.id);
-                var id = parseInt(ed.dom.uniqueId().substring(4));
-                ed.dom.remove('mce_' + (id-1) + '_start');
-                ed.dom.remove('mce_' + (id-2) + '_start');
-
+                // TODO: Determine if this is still needed.
                 if (tinyMCE.isWebKit) {
                     // move the caret to its original position
                     ed.selection.collapse(false);
@@ -142,42 +135,7 @@
                     ed.selection.setRng(r);
                 }
             }
-            else {
-                // delete the bookmarks
-                ed.dom.remove(bookmark1.id);
-                ed.dom.remove(bookmark2.id);
-                if (!tinyMCE.isWebKit) {
-                    var id = parseInt(ed.dom.uniqueId().substring(4));
-                    ed.dom.remove('mce_' + (id-1) + '_start');
-                    ed.dom.remove('mce_' + (id-2) + '_start');
-                }
-
-                // do not move the caret to its original position
-                if (!goback)
-                    return;
-
-                // move the caret to its original position
-                ed.selection.collapse(false);
-                var max = Math.min(endContainer.length, start + 1);
-                r.setStart(endContainer, max);
-                r.setEnd(endContainer, max);
-                ed.selection.setRng(r);
-            }
         },
-
-		/**
-		 * Creates control instances based in the incomming name. This method is normally not
-		 * needed since the addButton method of the tinymce.Editor class is a more easy way of adding buttons
-		 * but you sometimes need to create more complex controls like listboxes, split buttons etc then this
-		 * method can be used to create those.
-		 *
-		 * @param {String} n Name of the control to create.
-		 * @param {tinymce.ControlManager} cm Control manager to use inorder to create new control.
-		 * @return {tinymce.ui.Control} New control instance or null if no control was created.
-		 */
-		createControl : function(n, cm) {
-			return null;
-		},
 
 		/**
 		 * Returns information about the plugin as a name/value array.
