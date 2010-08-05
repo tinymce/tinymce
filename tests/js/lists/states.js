@@ -41,6 +41,7 @@ TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><
 
 HeadingInOrderedList = createState('<ol><li><h2>Test</h2></li></ol>', 'h2', '2');
 HeadingInUnorderedList = createState('<ul><li><h2>Test</h2></li></ul>', 'h2', '2');
+HeadingInOrderedListBeforeParagraph = createState('<ol><li><h2>Test</h2></li></ol><p>Content<br />After</p>', 'h2', '2');
 
 DefinitionListDescription = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dd', 2);
 DefinitionListTerm = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dt', 2);

@@ -118,6 +118,17 @@
 		return e1;
 	}
 	
+	function findItemToOperateOn(e, dom) {
+		var item;
+		if (!dom.is(e, 'li,ol,ul')) {
+			item = dom.getParent(e, 'li');
+			if (item) {
+				e = item;
+			}
+		}
+		return e;
+	}
+	
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
 			function isTriggerKey(e) {
@@ -295,6 +306,7 @@
 			}
 			
 			function convertListItemToParagraph(element) {
+				var child, nextChild, mergedElement;
 				if (tinymce.inArray(applied, element) !== -1) {
 					return;
 				}
@@ -305,10 +317,29 @@
 				// Push the original element we have from the selection, not the renamed one.
 				applied.push(element);
 				element = dom.rename(element, 'p');
-				attemptMergeWithAdjacent(element, false, ed.settings.force_br_newlines);
+				mergedElement = attemptMergeWithAdjacent(element, false, ed.settings.force_br_newlines);
+				if (mergedElement === element) {
+					// Now split out any block elements that can't be contained within a P.
+					// Manually iterate to ensure we handle modifications correctly (doesn't work with tinymce.each)
+					child = element.firstChild;
+					while (child) {
+						nextChild = child.nextSibling;
+						if (dom.isBlock(child)) {
+							dom.split(child.parentNode, child);
+							if (nextChild && nextChild.tagName === 'BR') {
+								// Remove the now redundant BR.
+								child = nextChild;
+								nextChild = child.nextSibling;
+								dom.remove(child);
+							}
+						}
+						child = nextChild;
+					}
+				}
 			}
 			
 			each(selectedBlocks, function(e) {
+				e = findItemToOperateOn(e, dom);
 				if (e.tagName === oppositeListType || (e.tagName === 'LI' && e.parentNode.tagName === oppositeListType)) {
 					hasOppositeType = true;
 				} else if (e.tagName === targetListType || (e.tagName === 'LI' && e.parentNode.tagName === targetListType)) {
@@ -424,12 +455,7 @@
 				if (!element || element.nodeType !== 1) {
 					return;
 				}
-				if (!dom.is(element, 'li,ol,ul')) {
-					parentList = dom.getParent(element, 'li');
-					if (parentList) {
-						element = parentList;
-					}
-				}
+				element = findItemToOperateOn(element, dom);
 				var action = actions[element.tagName];
 				if (!action) {
 					action = actions.defaultAction;
@@ -443,7 +469,6 @@
 			t.splitSafeEach(sel.getSelectedBlocks(), processElement);
 			sel.moveToBookmark(bookmark);
 			bookmark = null;
-			// TODO: Probably only required when in a table (maybe also images)
 			t.ed.execCommand('mceRepaint');
 		},
 		
