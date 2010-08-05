@@ -418,7 +418,7 @@
 		
 		process: function(actions) {
 			var t = this, sel = t.ed.selection, dom = t.ed.dom;
-			bookmark = sel.getBookmark()
+			bookmark = sel.getBookmark();
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
 				if (!element || element.nodeType !== 1) {
