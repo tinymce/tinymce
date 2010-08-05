@@ -186,6 +186,7 @@
 				});
 
 				toggleFormat('align' + align);
+				execCommand('mceRepaint');
 			},
 
 			// Override list commands to fix WebKit bug
