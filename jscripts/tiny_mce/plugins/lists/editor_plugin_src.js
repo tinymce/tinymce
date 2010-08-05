@@ -417,12 +417,18 @@
 		},
 		
 		process: function(actions) {
-			var t = this, sel = t.ed.selection, dom = t.ed.dom;
+			var t = this, sel = t.ed.selection, dom = t.ed.dom, parentList;
 			bookmark = sel.getBookmark();
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
 				if (!element || element.nodeType !== 1) {
 					return;
+				}
+				if (!dom.is(element, 'li,ol,ul')) {
+					parentList = dom.getParent(element, 'li');
+					if (parentList) {
+						element = parentList;
+					}
 				}
 				var action = actions[element.tagName];
 				if (!action) {

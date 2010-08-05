@@ -39,6 +39,9 @@ TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<
 TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
 TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
 
+HeadingInOrderedList = createState('<ol><li><h2>Test</h2></li></ol>', 'h2', '2');
+HeadingInUnorderedList = createState('<ul><li><h2>Test</h2></li></ul>', 'h2', '2');
+
 DefinitionListDescription = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dd', 2);
 DefinitionListTerm = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dt', 2);
 EndOfParagraphBeforeOL = createState('<p>Test</p><ol><li>Item</li></ol>', 'p', 4);
