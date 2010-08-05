@@ -306,7 +306,7 @@
 			}
 			
 			function convertListItemToParagraph(element) {
-				var child, nextChild, mergedElement;
+				var child, nextChild, mergedElement, splitLast;
 				if (tinymce.inArray(applied, element) !== -1) {
 					return;
 				}
@@ -326,12 +326,12 @@
 						nextChild = child.nextSibling;
 						if (dom.isBlock(child)) {
 							dom.split(child.parentNode, child);
-							if (nextChild && nextChild.tagName === 'BR') {
-								// Remove the now redundant BR.
-								child = nextChild;
-								nextChild = child.nextSibling;
-								dom.remove(child);
-							}
+							splitLast = true;
+						} else if (splitLast && child.tagName === 'BR') {
+							dom.remove(child);
+							splitLast = false;
+						} else {
+							splitLast = false;
 						}
 						child = nextChild;
 					}
