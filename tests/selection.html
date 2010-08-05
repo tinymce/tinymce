@@ -4,9 +4,15 @@
 <title>Unit tests for tinymce.dom.Selection</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 <script>
 var editor;
+
+QUnit.config.autostart = false;
+module("Selection", {
+	autostart: false
+});
 
 test('getContent', function() {
 	var rng, eventObj;
@@ -224,7 +230,7 @@ test('select', function() {
 	editor.setContent('<p>text1</p><p>text2</p>');
 	editor.selection.select(editor.dom.select('p')[0]);
 	equals(editor.selection.getContent(), '<p>text1</p>', 'Select simple element, content');
-	equals(editor.selection.getNode().nodeName, 'P', 'Select simple element, nodeName');
+	equals(editor.selection.getStart().nodeName, 'P', 'Select simple element, nodeName');
 
 	// Select complex element
 	editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
@@ -265,7 +271,7 @@ tinyMCE.init({
 			return false;
 		});
 
-		QUnit.setup();
+		QUnit.start();
 	}
 });
 </script>

@@ -4,11 +4,18 @@
 <title>Unit tests for the Paste plugin</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 </head>
 <body>
 <script type="text/javascript">
 var editor;
+
+QUnit.config.autostart = false;
+module("Paste plugin", {
+	autostart: false
+});
 
 test("Paste simple text content", function() {
 	var rng = editor.dom.createRng();
@@ -91,12 +98,12 @@ test("Paste Word retain styles", function() {
 	// Test color
 	editor.setContent('');
 	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="color: #ff0000">Test</p>'});
-	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p style=\"color: #ff0000;\">Test</p>');
+	equals(trimContent(editor.getContent().replace(/[\r\n]+/g, '')), '<p style=\"color: #ff0000;\">Test</p>');
 
 	// Test background-color
 	editor.setContent('');
 	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="background-color: #ff0000">Test</p>'});
-	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p style=\"background-color: #ff0000;\">Test</p>');
+	equals(trimContent(editor.getContent().replace(/[\r\n]+/g, '')), '<p style=\"background-color: #ff0000;\">Test</p>');
 
 	editor.settings.paste_retain_style_properties = '';
 });
@@ -109,7 +116,7 @@ tinyMCE.init({
 	plugins : 'paste',
 	init_instance_callback : function(ed) {
 		editor = ed;
-		QUnit.setup();
+		QUnit.start();
 	}
 });
 </script>

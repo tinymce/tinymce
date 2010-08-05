@@ -4,11 +4,17 @@
 <title>Unit tests for DOM Selection IE implementation</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 </head>
 <body>
 <script type="text/javascript">
 var editor, rng;
+
+QUnit.config.autostart = false;
+module("IE Selection", {
+	autostart: false
+});
 
 if (tinyMCE.isIE) {
 	test("Selection of element containing text", function(){
@@ -240,13 +246,13 @@ if (tinyMCE.isIE) {
 		rng.setEnd(editor.getBody(), 1);
 		editor.selection.setRng(rng);
 		
-		rng = editor.selection.getRng(1);
+		rng = editor.selection.getRng(true);
 		equals(rng.startContainer.nodeName, 'BODY');
 		equals(rng.endContainer.nodeName, 'BODY');
 		equals(rng.startOffset, 0);
 		equals(rng.endOffset, 1);
 		equals(rng.startContainer.childNodes[0].innerHTML, '');
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div>&nbsp;</div>');
+		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div></div>');
 	});
 	
 	test("Caret position before table", function() {
@@ -268,7 +274,7 @@ if (tinyMCE.isIE) {
 		equals(rng.endOffset, 1);
 	});
 
-	test("Selection end within emtpy element", function() {
+	test("Selection end within empty element", function() {
 		var rng;
 
 		editor.focus();
@@ -279,8 +285,27 @@ if (tinyMCE.isIE) {
 		rng = editor.selection.getRng(true);
 		equals(rng.startContainer.nodeName, '#text');
 		equals(rng.startOffset, 0);
-		equals(rng.endContainer.nodeName, 'P');
-		equals(rng.endOffset, 0);
+		equals(rng.endContainer.nodeName, 'BODY');
+		equals(rng.endOffset, 2);
+	});
+
+	test("Selection after paragraph", function() {
+		var rng;
+
+		editor.focus();
+		editor.getBody().innerHTML = '<p>123</p><p>abcd</p>';
+
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild, 1);
+		rng.setEnd(editor.getBody().firstChild, 1);
+		editor.selection.setRng(rng);
+
+		rng = editor.selection.getRng(true);
+		ok(rng.startContainer == rng.endContainer);
+		equals(rng.startContainer.nodeName, '#text');
+		equals(rng.startOffset, 3);
+		equals(rng.endContainer.nodeName, '#text');
+		equals(rng.endOffset, 3);
 	});
 } else {
 	test("Skipped ie_selection tests as not running in IE.", function() {});
@@ -299,10 +324,9 @@ tinyMCE.init({
 	elements : "elm1",
 	theme : "advanced",
 	add_unload_trigger : false,
-	plugins : 'safari',
 	init_instance_callback : function(ed) {
 		editor = ed;
-		QUnit.setup();
+		QUnit.start();
 	}
 });
 </script>

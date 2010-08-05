@@ -172,39 +172,51 @@
 		<!-- Compress jQuery plugin -->
 		<yuicompress infile="${classes_dir}/adapter/jquery/jquery.tinymce.js" outfile="${build_dir}/jquery.tinymce.js" />
 
-		<!-- Process dialogs -->
-		<!--
-		<jswrap infile="plugins/advhr/rule.htm" outfile="plugins/advhr/rule.htm.js" />
-		<jswrap infile="plugins/advimage/image.htm" outfile="plugins/advimage/image.htm.js" />
-		<jswrap infile="plugins/advlink/link.htm" outfile="plugins/advlink/link.htm.js" />
-		<jswrap infile="plugins/emotions/emotions.htm" outfile="plugins/emotions/emotions.htm.js" />
-		<jswrap infile="plugins/example/dialog.htm" outfile="plugins/example/dialog.htm.js" />
-		<jswrap infile="plugins/fullpage/fullpage.htm" outfile="plugins/fullpage/fullpage.htm.js" />
-		<jswrap infile="plugins/media/media.htm" outfile="plugins/media/media.htm.js" />
-		<jswrap infile="plugins/searchreplace/searchreplace.htm" outfile="plugins/searchreplace/searchreplace.htm.js" />
-		<jswrap infile="plugins/style/props.htm" outfile="plugins/style/props.htm.js" />
-		<jswrap infile="plugins/table/cell.htm" outfile="plugins/table/cell.htm.js" />
-		<jswrap infile="plugins/table/merge_cells.htm" outfile="plugins/table/merge_cells.htm.js" />
-		<jswrap infile="plugins/table/row.htm" outfile="plugins/table/row.htm.js" />
-		<jswrap infile="plugins/table/table.htm" outfile="plugins/table/table.htm.js" />
-		<jswrap infile="plugins/template/template.htm" outfile="plugins/template/template.htm.js" />
-		<jswrap infile="plugins/xhtmlxtras/abbr.htm" outfile="plugins/xhtmlxtras/abbr.htm.js" />
-		<jswrap infile="plugins/xhtmlxtras/acronym.htm" outfile="plugins/xhtmlxtras/acronym.htm.js" />
-		<jswrap infile="plugins/xhtmlxtras/attributes.htm" outfile="plugins/xhtmlxtras/attributes.htm.js" />
-		<jswrap infile="plugins/xhtmlxtras/cite.htm" outfile="plugins/xhtmlxtras/cite.htm.js" />
-		<jswrap infile="plugins/xhtmlxtras/del.htm" outfile="plugins/xhtmlxtras/del.htm.js" />
-		<jswrap infile="plugins/xhtmlxtras/ins.htm" outfile="plugins/xhtmlxtras/ins.htm.js" />
-		<jswrap infile="themes/advanced/about.htm" outfile="themes/advanced/about.htm.js" />
-		<jswrap infile="themes/advanced/anchor.htm" outfile="themes/advanced/anchor.htm.js" />
-		<jswrap infile="themes/advanced/charmap.htm" outfile="themes/advanced/charmap.htm.js" />
-		<jswrap infile="themes/advanced/color_picker.htm" outfile="themes/advanced/color_picker.htm.js" />
-		<jswrap infile="themes/advanced/image.htm" outfile="themes/advanced/image.htm.js" />
-		<jswrap infile="themes/advanced/link.htm" outfile="themes/advanced/link.htm.js" />
-		<jswrap infile="themes/advanced/source_editor.htm" outfile="themes/advanced/source_editor.htm.js" />
-		-->
-
 		<!-- Cleanup -->
 		<delete file="${build_dir}/tiny_mce_tmp.js" quiet="true"/>
+	</target>
+
+	<target name="build_full" depends="build" description="Builds a complete package">
+		<!-- Combine all files -->
+		<concat destfile="${build_dir}/tiny_mce_full.js">
+			<fileset dir="${build_dir}" includes="tiny_mce.js" />
+			<fileset dir="${build_dir}" includes="langs/en.js" />
+			<fileset dir="${build_dir}" includes="plugins/advhr/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/advimage/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/advlink/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/advlist/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/emotions/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/iespell/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/insertdatetime/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/preview/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/print/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/save/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/searchreplace/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/table/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/contextmenu/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/paste/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/fullscreen/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/directionality/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/inlinepopups/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/autosave/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/noneditable/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/fullpage/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/layer/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/style/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/media/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/visualchars/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/nonbreaking/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/xhtmlxtras/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/template/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/bbcode/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/pagebreak/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/spellchecker/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/tabfocus/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/autoresize/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="plugins/wordcount/editor_plugin.js" />
+			<fileset dir="${build_dir}" includes="themes/advanced/langs/en.js" />
+			<fileset dir="${build_dir}" includes="themes/advanced/editor_template.js" />
+		</concat>
 	</target>
 
 	<target name="release" depends="build" description="Builds release packages">

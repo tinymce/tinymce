@@ -1,12 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Unit tests for text formatting</title>
+<title>Unit tests for remove formatting</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 <script>
 var editor;
+
+QUnit.config.autostart = false;
+module("Remove formatting", {
+	autostart: false
+});
 
 function getContent() {
 	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
@@ -213,6 +219,20 @@ test('Formatter - remove', function() {
 	equals(getContent(), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
 });
 
+test('Formatter - remove and verify start element', function() {
+	var rng;
+
+	editor.formatter.register('format', {inline : 'b'});
+	rng = editor.dom.createRng();
+	editor.getBody().innerHTML = '<p><b>text</b></p>';
+	rng.setStart(editor.dom.select('b')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(getContent(), '<p><b>t</b>ex<b>t</b></p>');
+	equals(editor.selection.getStart().nodeName, 'P');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
@@ -234,7 +254,7 @@ tinyMCE.init({
 			return false;
 		});
 
-		QUnit.setup();
+		QUnit.start();
 	}
 });
 </script>

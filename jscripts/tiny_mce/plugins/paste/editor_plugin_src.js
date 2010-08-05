@@ -145,7 +145,7 @@
 					return;
 
 				// Create container to paste into
-				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste'}, '\uFEFF');
+				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste'}, '\uFEFF<br _mce_bogus="1">');
 
 				// If contentEditable mode we need to find out the position of the closest element
 				if (body != ed.getDoc().body)
@@ -209,6 +209,13 @@
 
 						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
 						each(nl, function(n) {
+							var child = n.firstChild;
+
+							// WebKit inserts a DIV container with lots of odd styles
+							if (child && child.nodeName == 'DIV' && child.style.marginTop && child.style.backgroundColor) {
+								dom.remove(child, 1);
+							}
+
 							// WebKit duplicates the divs so we need to remove them
 							each(dom.select('div.mcePaste', n), function(n) {
 								dom.remove(n, 1);
@@ -217,6 +224,11 @@
 							// Remove apply style spans
 							each(dom.select('span.Apple-style-span', n), function(n) {
 								dom.remove(n, 1);
+							});
+
+							// Remove bogus br elements
+							each(dom.select('br[_mce_bogus]', n), function(n) {
+								dom.remove(n);
 							});
 
 							h += n.innerHTML;
@@ -677,7 +689,7 @@
 			}
 
 			// Insert a marker for the caret position
-			this._insert('<span id="' + markerId + '">&nbsp;</span>', 1);
+			this._insert('<span id="' + markerId + '"></span>', 1);
 			marker = dom.get(markerId);
 			parentBlock = dom.getParent(marker, 'p,h1,h2,h3,h4,h5,h6,ul,ol,th,td');
 

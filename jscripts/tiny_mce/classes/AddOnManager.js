@@ -17,16 +17,20 @@
 	 * @class tinymce.AddOnManager
 	 */
 	tinymce.create('tinymce.AddOnManager', {
-		items : [],
-		urls : {},
-		lookup : {},
+		AddOnManager : function() {
+			var self = this;
+
+			self.items = [];
+			self.urls = {};
+			self.lookup = {};
+			self.onAdd = new Dispatcher(self);
+		},
 
 		/**
 		 * Fires when a item is added.
 		 *
 		 * @event onAdd
 		 */
-		onAdd : new Dispatcher(this),
 
 		/**
 		 * Returns the specified add on by the short name.
@@ -87,7 +91,9 @@
 				u = tinymce.baseURL + '/' +  u;
 
 			t.urls[n] = u.substring(0, u.lastIndexOf('/'));
-			tinymce.ScriptLoader.add(u, cb, s);
+
+			if (!t.lookup[n])
+				tinymce.ScriptLoader.add(u, cb, s);
 		}
 	});
 

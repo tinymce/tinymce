@@ -4,10 +4,16 @@
 <title>Basic editor functionality tests</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 <script>
 var editor;
+
+QUnit.config.autostart = false;
+module("Basic functionality", {
+	autostart: false
+});
 
 test('commands - xhtmlTextStyles', function() {
 	var c;
@@ -252,7 +258,7 @@ test('commands - insertHR', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('InsertHorizontalRule');
-	equals(editor.getContent(), '<hr />');
+	equals(trimContent(editor.getContent()), '<hr />');
 });
 
 test('commands - indentOutdent', function() {
@@ -460,7 +466,7 @@ tinyMCE.init({
 			return false;
 		});
 
-		QUnit.setup();
+		QUnit.start();
 	}
 });
 </script>

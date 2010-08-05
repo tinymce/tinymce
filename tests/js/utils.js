@@ -5,3 +5,10 @@ function fontFace(face) {
 		return face;
 	}
 }
+
+function trimContent(content) {
+	if (tinymce.isOpera)
+		return content.replace(/^<p>&nbsp;<\/p>/, '').replace(/<p>&nbsp;<\/p>$/, '');
+
+	return content;
+}

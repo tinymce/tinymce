@@ -472,13 +472,22 @@
 						}
 					};
 
+					function addBogus(node) {
+						// Adds a bogus BR element for empty block elements
+						// on non IE browsers just to have a place to put the caret
+						if (!isIE && dom.isBlock(node) && !node.innerHTML)
+							node.innerHTML = '<br _mce_bogus="1" />';
+
+						return node;
+					};
+
 					// Restore start/end points
 					restoreEndPoint('start');
 					restoreEndPoint('end');
 
 					rng = dom.createRng();
-					rng.setStart(startContainer, startOffset);
-					rng.setEnd(endContainer, endOffset);
+					rng.setStart(addBogus(startContainer), startOffset);
+					rng.setEnd(addBogus(endContainer), endOffset);
 					t.setRng(rng);
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);
