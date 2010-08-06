@@ -323,14 +323,15 @@
 					// Manually iterate to ensure we handle modifications correctly (doesn't work with tinymce.each)
 					child = element.firstChild;
 					while (child) {
-						nextChild = child.nextSibling;
 						if (dom.isBlock(child)) {
-							dom.split(child.parentNode, child);
+							child = dom.split(child.parentNode, child);
 							splitLast = true;
-						} else if (splitLast && child.tagName === 'BR') {
-							dom.remove(child);
-							splitLast = false;
+							nextChild = child.nextSibling && child.nextSibling.firstChild; 
 						} else {
+							nextChild = child.nextSibling;
+							if (splitLast && child.tagName === 'BR') {
+								dom.remove(child);
+							}
 							splitLast = false;
 						}
 						child = nextChild;
