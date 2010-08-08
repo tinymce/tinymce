@@ -23,6 +23,7 @@ function EmptyHeading() {
 	setSelection(editor.getBody().firstChild.firstChild, 0);
 }
 
+PlainText = createState('', 'body', 0);
 NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
 ParagraphWithMarginLeft = createState('<p style="margin-left: 60px;">Test</p>', 'p', 0);
 ParagraphWithPaddingLeft = createState('<p style="padding-left: 60px;">Test</p>', 'p', 0);
@@ -38,6 +39,10 @@ TableCellWithBrsFirstLine = createState('<table><tbody><tr><td>Test<br>Line 2</t
 TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
 TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
 TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+
+HeadingInOrderedList = createState('<ol><li><h2>Test</h2></li></ol>', 'h2', '2');
+HeadingInUnorderedList = createState('<ul><li><h2>Test</h2></li></ul>', 'h2', '2');
+HeadingInOrderedListBeforeParagraph = createState('<ol><li><h2>Test</h2></li></ol><p>Content<br />After</p>', 'h2', '2');
 
 DefinitionListDescription = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dd', 2);
 DefinitionListTerm = createState('<dl><dt>Term</dt><dd>Description</dd></dl>', 'dt', 2);

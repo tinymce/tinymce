@@ -118,6 +118,17 @@
 		return e1;
 	}
 	
+	function findItemToOperateOn(e, dom) {
+		var item;
+		if (!dom.is(e, 'li,ol,ul')) {
+			item = dom.getParent(e, 'li');
+			if (item) {
+				e = item;
+			}
+		}
+		return e;
+	}
+	
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
 			function isTriggerKey(e) {
@@ -295,6 +306,7 @@
 			}
 			
 			function convertListItemToParagraph(element) {
+				var child, nextChild, mergedElement, splitLast;
 				if (tinymce.inArray(applied, element) !== -1) {
 					return;
 				}
@@ -305,10 +317,30 @@
 				// Push the original element we have from the selection, not the renamed one.
 				applied.push(element);
 				element = dom.rename(element, 'p');
-				attemptMergeWithAdjacent(element, false, ed.settings.force_br_newlines);
+				mergedElement = attemptMergeWithAdjacent(element, false, ed.settings.force_br_newlines);
+				if (mergedElement === element) {
+					// Now split out any block elements that can't be contained within a P.
+					// Manually iterate to ensure we handle modifications correctly (doesn't work with tinymce.each)
+					child = element.firstChild;
+					while (child) {
+						if (dom.isBlock(child)) {
+							child = dom.split(child.parentNode, child);
+							splitLast = true;
+							nextChild = child.nextSibling && child.nextSibling.firstChild; 
+						} else {
+							nextChild = child.nextSibling;
+							if (splitLast && child.tagName === 'BR') {
+								dom.remove(child);
+							}
+							splitLast = false;
+						}
+						child = nextChild;
+					}
+				}
 			}
 			
 			each(selectedBlocks, function(e) {
+				e = findItemToOperateOn(e, dom);
 				if (e.tagName === oppositeListType || (e.tagName === 'LI' && e.parentNode.tagName === oppositeListType)) {
 					hasOppositeType = true;
 				} else if (e.tagName === targetListType || (e.tagName === 'LI' && e.parentNode.tagName === targetListType)) {
@@ -317,8 +349,8 @@
 					hasNonList = true;
 				}
 			});
-			
-			if (hasNonList || hasOppositeType) {
+
+			if (hasNonList || hasOppositeType || selectedBlocks.length == 0) {
 				actions = {
 					'LI': changeList,
 					'H1': makeList,
@@ -417,13 +449,13 @@
 		},
 		
 		process: function(actions) {
-			var t = this, sel = t.ed.selection, dom = t.ed.dom;
-			bookmark = sel.getBookmark()
+			var t = this, sel = t.ed.selection, dom = t.ed.dom, selectedBlocks;
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
 				if (!element || element.nodeType !== 1) {
 					return;
 				}
+				element = findItemToOperateOn(element, dom);
 				var action = actions[element.tagName];
 				if (!action) {
 					action = actions.defaultAction;
@@ -433,11 +465,16 @@
 			function recurse(element) {
 				t.splitSafeEach(element.childNodes, processElement);
 			}
+			selectedBlocks = sel.getSelectedBlocks();
+			if (selectedBlocks.length === 0) {
+				selectedBlocks = [ dom.getParent(sel.getStart(), '*') ];
+			}
+			bookmark = sel.getBookmark();
 			actions.OL = actions.UL = recurse;
-			t.splitSafeEach(sel.getSelectedBlocks(), processElement);
+			t.splitSafeEach(selectedBlocks, processElement);
 			sel.moveToBookmark(bookmark);
 			bookmark = null;
-			// TODO: Probably only required when in a table (maybe also images)
+			// Avoids table or image handles being left behind in Firefox.
 			t.ed.execCommand('mceRepaint');
 		},
 		

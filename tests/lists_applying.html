@@ -44,6 +44,9 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(TableCellWithBrsMiddleLine).enablesState('Outdent').andGives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol>Line 3</td><td>&nbsp;</td></tr></tbody></table>');
 	ApplyingOL.to(TableCellWithBrsLastLine).enablesState('Outdent').andGives('<table><tbody><tr><td>Test<ol><li>Line 2</li></ol></td><td>&nbsp;</td></tr></tbody></table>');
 	ApplyingOL.to(TableCellWithAdjacentBrsFirstLine).enablesState('Outdent').andGives('<table><tbody><tr><td><ol><li>Test</li></ol><br />Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+
+	ApplyingOL.to(HeadingInOrderedList).gives('<h2>Test</h2>');
+	ApplyingOL.to(HeadingInUnorderedList).gives('<ol><li><h2>Test</h2></li></ol>');
 	
 	ApplyingOL.to(EndOfParagraphBeforeOL).enablesState('Outdent').andGives('<ol><li>Test</li><li>Item</li></ol>');
 	ApplyingOL.to(EndOfParagraphBeforeUL).enablesState('Outdent').andGives('<ol><li>Test</li></ol><ul><li>Item</li></ul>');
@@ -100,6 +103,9 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	ApplyingUL.to(TableCellWithBrsMiddleLine).gives('<table><tbody><tr><td>Test<ul><li>Line 2</li></ul>Line 3</td><td>&nbsp;</td></tr></tbody></table>');
 	ApplyingUL.to(TableCellWithBrsLastLine).gives('<table><tbody><tr><td>Test<ul><li>Line 2</li></ul></td><td>&nbsp;</td></tr></tbody></table>');
 	ApplyingUL.to(TableCellWithAdjacentBrsFirstLine).gives('<table><tbody><tr><td><ul><li>Test</li></ul><br />Line 2</td><td>&nbsp;</td></tr></tbody></table>');
+
+	ApplyingUL.to(HeadingInOrderedList).gives('<ul><li><h2>Test</h2></li></ul>');
+	ApplyingUL.to(HeadingInUnorderedList).gives('<h2>Test</h2>');
 	
 	ApplyingUL.to(EndOfParagraphBeforeOL).gives('<ul><li>Test</li></ul><ol><li>Item</li></ol>');
 	ApplyingUL.to(EndOfParagraphBeforeUL).gives('<ul><li>Test</li><li>Item</li></ul>');
@@ -219,6 +225,7 @@ asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
 
 asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', function() {
 	editor.settings.force_br_newlines = true;
+	ApplyingUL.to(PlainText).gives('<ul><li></li></ul>');
 	ApplyingUL.to(SingleLiUlSelection).gives('<p>Item 1</p>');
 	ApplyingUL.to(MultiLiUlSelection).gives('<p>Item 1<br />Item 2</p>');
 
@@ -229,8 +236,11 @@ asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', 
 
 asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', function() {
 	editor.settings.force_br_newlines = true;
+	ApplyingOL.to(PlainText).gives('<ol><li></li></ol>');
 	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
 	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1<br />Item 2</p>');
+	
+	ApplyingOL.to(HeadingInOrderedListBeforeParagraph).gives('<h2>Test</h2><p>Content<br />After</p>');
 	
 	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1<br />Indented</p>');
 	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1<br />Indented</p>');
