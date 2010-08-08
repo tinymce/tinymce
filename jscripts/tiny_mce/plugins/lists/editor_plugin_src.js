@@ -349,8 +349,8 @@
 					hasNonList = true;
 				}
 			});
-			
-			if (hasNonList || hasOppositeType) {
+
+			if (hasNonList || hasOppositeType || selectedBlocks.length == 0) {
 				actions = {
 					'LI': changeList,
 					'H1': makeList,
@@ -449,8 +449,7 @@
 		},
 		
 		process: function(actions) {
-			var t = this, sel = t.ed.selection, dom = t.ed.dom, parentList;
-			bookmark = sel.getBookmark();
+			var t = this, sel = t.ed.selection, dom = t.ed.dom, selectedBlocks;
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
 				if (!element || element.nodeType !== 1) {
@@ -466,10 +465,16 @@
 			function recurse(element) {
 				t.splitSafeEach(element.childNodes, processElement);
 			}
+			selectedBlocks = sel.getSelectedBlocks();
+			if (selectedBlocks.length === 0) {
+				selectedBlocks = [ dom.getParent(sel.getStart(), '*') ];
+			}
+			bookmark = sel.getBookmark();
 			actions.OL = actions.UL = recurse;
-			t.splitSafeEach(sel.getSelectedBlocks(), processElement);
+			t.splitSafeEach(selectedBlocks, processElement);
 			sel.moveToBookmark(bookmark);
 			bookmark = null;
+			// Avoids table or image handles being left behind in Firefox.
 			t.ed.execCommand('mceRepaint');
 		},
 		

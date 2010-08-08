@@ -23,6 +23,7 @@ function EmptyHeading() {
 	setSelection(editor.getBody().firstChild.firstChild, 0);
 }
 
+PlainText = createState('', 'body', 2);
 NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
 ParagraphWithMarginLeft = createState('<p style="margin-left: 60px;">Test</p>', 'p', 0);
 ParagraphWithPaddingLeft = createState('<p style="padding-left: 60px;">Test</p>', 'p', 0);

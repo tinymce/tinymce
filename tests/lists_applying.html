@@ -225,6 +225,7 @@ asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
 
 asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', function() {
 	editor.settings.force_br_newlines = true;
+	ApplyingUL.to(PlainText).gives('<ul><li></li></ul>');
 	ApplyingUL.to(SingleLiUlSelection).gives('<p>Item 1</p>');
 	ApplyingUL.to(MultiLiUlSelection).gives('<p>Item 1<br />Item 2</p>');
 
@@ -235,6 +236,7 @@ asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', 
 
 asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', function() {
 	editor.settings.force_br_newlines = true;
+	ApplyingOL.to(PlainText).gives('<ol><li></li></ol>');
 	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
 	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1<br />Item 2</p>');
 	
