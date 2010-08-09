@@ -25,7 +25,7 @@ module('Lists - Applying', {
 // Tests
 
 asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', function() {
-	ApplyingUL.to(TextAfterUL).gives('<ul><li>Item</li></ul><ul><li>Test</li></ul>');
+	//ApplyingUL.to(TextAfterUL).gives('<ul><li>Item</li></ul><ul><li>Test</li></ul>');
 	ApplyingUL.to(EmptyContent).gives('<ul><li></li></ul>');
 	ApplyingUL.to(PlainText).gives('<ul><li>Test</li></ul>');
 	ApplyingUL.to(SingleLiUlSelection).gives('<p>Item 1</p>');
