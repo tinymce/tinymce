@@ -71,7 +71,7 @@
 	function attemptMerge(e1, e2, differentStylesMasterElement, mergeParagraphs) {
 		if (canMerge(e1, e2, !!differentStylesMasterElement, mergeParagraphs)) {
 			return merge(e1, e2, differentStylesMasterElement);
-		} else if (e1.tagName === 'LI' && isList(e2)) {
+		} else if (e1 && e1.tagName === 'LI' && isList(e2)) {
 			// Fix invalidly nested lists.
 			e1.appendChild(e2);
 		}
