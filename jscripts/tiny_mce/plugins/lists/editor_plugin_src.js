@@ -189,9 +189,9 @@
 				
 				if (element.tagName === 'LI') {
 					// No change required.
-				} else if (element.tagName === 'P' || element.tagName === 'DIV') {
+				} else if (element.tagName === 'P' || element.tagName === 'DIV' || element.tagName === 'BODY') {
 					processBrs(element, function(startSection, br, previousBR) {
-						doWrapList(startSection, br, startSection.parentNode);
+						doWrapList(startSection, br, element.tagName === 'BODY' ? null : startSection.parentNode);
 						li = startSection.parentNode;
 						adjustIndentForNewList(li);
 						if (br) {
@@ -233,6 +233,9 @@
 					li.appendChild(n);
 					n = tmp;
 				}
+				if (li.childNodes.length === 0) {
+					li.innerHTML = '<br _mce_bogus="1" />';
+				}
 				makeList(li);
 			}
 			
@@ -257,6 +260,9 @@
 				var trailingContentSelected = false;
 				each(dom.select('br', element), function(br) {
 					var b;
+					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
+						return true; // Skip the bogus Brs that are put in to appease Firefox and Safari.
+					}
 					if (isAnyPartSelected(startSection, br)) {
 						dom.addClass(br, '_mce_tagged_br');
 						startSection = br.nextSibling;
@@ -267,6 +273,9 @@
 				each(dom.select('br', element), function(br) {
 					// Got a section from start to br.
 					var tmp = br.nextSibling;
+					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
+						return true; // Skip the bogus Brs that are put in to appease Firefox and Safari.
+					}
 					if (dom.hasClass(br, '_mce_tagged_br')) {
 						callback(startSection, br, previousBR);
 						previousBR = null;
@@ -360,6 +369,7 @@
 					'H5': makeList,
 					'H6': makeList,
 					'P': makeList,
+					'BODY': makeList,
 					'DIV': selectedBlocks.length > 1 ? makeList : wrapList,
 					defaultAction: wrapList
 				};
@@ -467,7 +477,7 @@
 			}
 			selectedBlocks = sel.getSelectedBlocks();
 			if (selectedBlocks.length === 0) {
-				selectedBlocks = [ dom.getParent(sel.getStart(), '*') ];
+				selectedBlocks = [ dom.getRoot() ];
 			}
 			bookmark = sel.getBookmark();
 			actions.OL = actions.UL = recurse;
