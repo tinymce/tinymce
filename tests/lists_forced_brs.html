@@ -25,11 +25,8 @@ module('Lists - Applying', {
 // Tests
 
 asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', function() {
-	if (!tinymce.isIE) {
-		// TODO: Fix the range implementation so that this works correctly on IE.
-		ApplyingUL.to(TextAfterUL).gives('<ul><li>Item</li><li>Test</li></ul>');
-		ApplyingUL.to(TextAfterOL).gives('<ol><li>Item</li></ol><ul><li>Test</li></ul>');
-	}
+	ApplyingUL.to(TextAfterUL).gives('<ul><li>Item</li><li>Test</li></ul>');
+	ApplyingUL.to(TextAfterOL).gives('<ol><li>Item</li></ol><ul><li>Test</li></ul>');
 	ApplyingUL.to(EmptyContent).gives('<ul><li></li></ul>');
 	ApplyingUL.to(PlainText).gives('<ul><li>Test</li></ul>');
 	ApplyingUL.to(SingleLiUlSelection).gives('<p>Item 1</p>');
@@ -41,11 +38,8 @@ asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', 
 });
 
 asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', function() {
-	if (!tinymce.isIE) {
-		// TODO: Fix the range implementation so that this works correctly on IE.
-		ApplyingOL.to(TextAfterOL).gives('<ol><li>Item</li><li>Test</li></ol>');
-		ApplyingOL.to(TextAfterUL).gives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
-	}
+	ApplyingOL.to(TextAfterOL).gives('<ol><li>Item</li><li>Test</li></ol>');
+	ApplyingOL.to(TextAfterUL).gives('<ul><li>Item</li></ul><ol><li>Test</li></ol>');
 	ApplyingOL.to(EmptyContent).gives('<ol><li></li></ol>');
 	ApplyingOL.to(PlainText).gives('<ol><li>Test</li></ol>');
 	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
