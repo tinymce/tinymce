@@ -260,7 +260,7 @@
 				var trailingContentSelected = false;
 				each(dom.select('br', element), function(br) {
 					var b;
-					if (br.hasAttribute('_mce_bogus')) {
+					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
 						return true; // Skip the bogus Brs that are put in to appease Firefox and Safari.
 					}
 					if (isAnyPartSelected(startSection, br)) {
@@ -273,7 +273,7 @@
 				each(dom.select('br', element), function(br) {
 					// Got a section from start to br.
 					var tmp = br.nextSibling;
-					if (br.hasAttribute('_mce_bogus')) {
+					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
 						return true; // Skip the bogus Brs that are put in to appease Firefox and Safari.
 					}
 					if (dom.hasClass(br, '_mce_tagged_br')) {
