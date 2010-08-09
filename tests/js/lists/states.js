@@ -23,7 +23,8 @@ function EmptyHeading() {
 	setSelection(editor.getBody().firstChild.firstChild, 0);
 }
 
-PlainText = createState('', 'body', 0);
+EmptyContent = createState('', 'body', 0);
+PlainText = createState('Test', 'body', 0);
 NonEmptyParagraph = createState('<p>Test</p>', 'p', 0);
 ParagraphWithMarginLeft = createState('<p style="margin-left: 60px;">Test</p>', 'p', 0);
 ParagraphWithPaddingLeft = createState('<p style="padding-left: 60px;">Test</p>', 'p', 0);
@@ -52,6 +53,7 @@ EndOfParagraphBeforeUL = createState('<p>Test</p><ul><li>Item</li></ul>', 'p', 4
 StartOfParagraphAfterOL = createState('<ol><li>Item</li></ol><p>Test</p>', 'p', 1);
 StartOfParagraphAfterUL = createState('<ul><li>Item</li></ul><p>Test</p>', 'p', 1);
 StartOfParagraphAfterOLWithListType = createState('<ol style="list-style-type: lower-alpha;"><li>Item</li></ol><p>Test</p>', 'p', 1);
+TextAfterUL = createState('<ol><li>Item</li></ol>Test', 'li', 3);
 EmptyOrderedListItem = createState('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>', 'li:nth-child(2)', 0);
 EmptyUnorderedListItem = createState('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>', 'li:nth-child(2)', 0);
 NonEmptyOrderedListItem = createState('<ol><li>Before</li><li>Test</li><li>After</li></ol>', 'li:nth-child(2)', 0);
