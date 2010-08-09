@@ -131,11 +131,20 @@
 	
 	tinymce.create('tinymce.ephox.plugins.Lists', {
 		init: function(ed, url) {
+			var enterDownInEmptyList = false;
 			function isTriggerKey(e) {
 				return e.keyCode === 9 && (ed.queryCommandState('InsertUnorderedList') || ed.queryCommandState('InsertOrderedList'));
 			}
-			function cancelTab(ed, e) {
-				if (isTriggerKey(e)) {
+			function isEnterInEmptyListItem(ed, e) {
+				var sel = ed.selection, n;
+				if (e.keyCode === 13) {
+					n = sel.getStart();
+					enterDownInEmptyList = sel.isCollapsed() && n && n.tagName === 'LI' && n.childNodes.length === 0;
+					return enterDownInEmptyList;
+				}
+			}
+			function cancelKeys(ed, e) {
+				if (isTriggerKey(e) || isEnterInEmptyListItem(ed, e)) {
 					return Event.cancel(e);
 				}
 			}
@@ -164,14 +173,35 @@
 			});
 			
 			ed.onKeyUp.add(function(ed, e) {
+				var n, rng;
 				if (isTriggerKey(e)) {
 					ed.execCommand(e.shiftKey ? 'Outdent' : 'Indent', true, null);
 					return Event.cancel(e);
+				} else if (enterDownInEmptyList && isEnterInEmptyListItem(ed, e)) {
+					if (ed.queryCommandState('InsertOrderedList')) {
+						ed.execCommand('InsertOrderedList');
+					} else {
+						ed.execCommand('InsertUnorderedList');
+					}
+					n = ed.selection.getStart();
+					if (n && n.tagName === 'LI') {
+						// Fix the caret position on IE since it jumps back up to the previous list item.
+						n = ed.dom.getParent(n, 'ol,ul').nextSibling;
+						if (n && n.tagName === 'P') {
+							if (!n.firstChild) {
+								n.appendChild(ed.getDoc().createTextNode(''));
+							}
+							rng = ed.dom.createRng();
+							rng.setStart(n.firstChild, 1);
+							rng.setEnd(n.firstChild, 1);
+							ed.selection.setRng(rng);
+						}
+					}
+					return Event.cancel(e);
 				}
 			});
-			
-			ed.onKeyPress.add(cancelTab);
-			ed.onKeyDown.add(cancelTab);
+			ed.onKeyPress.add(cancelKeys);
+			ed.onKeyDown.add(cancelKeys);
 		},
 		
 		applyList: function(targetListType, oppositeListType) {
