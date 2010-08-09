@@ -307,6 +307,29 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endContainer.nodeName, '#text');
 		equals(rng.endOffset, 3);
 	});
+
+	test("Selection of text outside of a block element", function() {
+		var r;
+		
+		editor.settings.forced_root_block = '';
+		editor.focus();
+		editor.getBody().innerHTML = '<ul><li>Item</li></ul>Text';
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().lastChild, 2);
+		r.setEnd(editor.getBody().lastChild, 2);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().lastChild, "Start container is text node.");
+		equals(r.endContainer, editor.getBody().lastChild, "End container is text node.");
+		equals(r.startOffset, 2);
+		equals(r.endOffset, 2);
+
+		equals(editor.selection.getStart(), editor.getBody(), "Selection start is body.");
+		same(editor.selection.getSelectedBlocks(), [], "No blocks selected.");
+	});
+	
 } else {
 	test("Skipped ie_selection tests as not running in IE.", function() {});
 }
