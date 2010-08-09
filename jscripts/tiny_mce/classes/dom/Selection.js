@@ -192,10 +192,6 @@
 					}
 				}
 
-				// If start element is body element try to move to the first child if it exists
-				if (startElement && startElement.nodeName == 'BODY')
-					return startElement.firstChild || startElement;
-
 				return startElement;
 			} else {
 				startElement = rng.startContainer;
