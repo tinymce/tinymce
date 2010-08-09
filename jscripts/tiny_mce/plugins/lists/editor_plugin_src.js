@@ -240,7 +240,8 @@
 			}
 			
 			function processBrs(element, callback) {
-				var startSection, previousBR, END_TO_START = 3, START_TO_END = 1;
+				var startSection, previousBR, END_TO_START = 3, START_TO_END = 1,
+					breakElements = 'br,ul,ol,p,div,h1,h2,h3,h4,h5,h6,table,blockquote,address,pre,form,center,dl';
 				function isAnyPartSelected(start, end) {
 					var r = dom.createRng(), sel;
 					bookmark.keep = true;
@@ -258,7 +259,7 @@
 				startSection = element.firstChild;
 				// First mark the BRs that have any part of the previous section selected.
 				var trailingContentSelected = false;
-				each(dom.select('br', element), function(br) {
+				each(dom.select(breakElements, element), function(br) {
 					var b;
 					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
 						return true; // Skip the bogus Brs that are put in to appease Firefox and Safari.
@@ -270,7 +271,7 @@
 				});
 				trailingContentSelected = (startSection && isAnyPartSelected(startSection, undefined));
 				startSection = element.firstChild;
-				each(dom.select('br', element), function(br) {
+				each(dom.select(breakElements, element), function(br) {
 					// Got a section from start to br.
 					var tmp = br.nextSibling;
 					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
@@ -359,7 +360,7 @@
 				}
 			});
 
-			if (hasNonList || hasOppositeType || selectedBlocks.length == 0) {
+			if (hasNonList || hasOppositeType || selectedBlocks.length === 0) {
 				actions = {
 					'LI': changeList,
 					'H1': makeList,
