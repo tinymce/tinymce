@@ -133,41 +133,15 @@
 		<yuicompress infile="${build_dir}/themes/advanced/editor_template_src.js" outfile="${build_dir}/themes/advanced/editor_template.js" />
 
 		<!-- Compress plugins -->
-		<yuicompress infile="${build_dir}/plugins/advhr/editor_plugin_src.js" outfile="${build_dir}/plugins/advhr/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/advimage/editor_plugin_src.js" outfile="${build_dir}/plugins/advimage/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/advlink/editor_plugin_src.js" outfile="${build_dir}/plugins/advlink/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/advlist/editor_plugin_src.js" outfile="${build_dir}/plugins/advlist/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/emotions/editor_plugin_src.js" outfile="${build_dir}/plugins/emotions/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/example/editor_plugin_src.js" outfile="${build_dir}/plugins/example/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/iespell/editor_plugin_src.js" outfile="${build_dir}/plugins/iespell/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/insertdatetime/editor_plugin_src.js" outfile="${build_dir}/plugins/insertdatetime/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/preview/editor_plugin_src.js" outfile="${build_dir}/plugins/preview/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/print/editor_plugin_src.js" outfile="${build_dir}/plugins/print/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/save/editor_plugin_src.js" outfile="${build_dir}/plugins/save/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/searchreplace/editor_plugin_src.js" outfile="${build_dir}/plugins/searchreplace/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/table/editor_plugin_src.js" outfile="${build_dir}/plugins/table/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/contextmenu/editor_plugin_src.js" outfile="${build_dir}/plugins/contextmenu/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/paste/editor_plugin_src.js" outfile="${build_dir}/plugins/paste/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/fullscreen/editor_plugin_src.js" outfile="${build_dir}/plugins/fullscreen/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/directionality/editor_plugin_src.js" outfile="${build_dir}/plugins/directionality/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/inlinepopups/editor_plugin_src.js" outfile="${build_dir}/plugins/inlinepopups/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/autosave/editor_plugin_src.js" outfile="${build_dir}/plugins/autosave/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/noneditable/editor_plugin_src.js" outfile="${build_dir}/plugins/noneditable/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/fullpage/editor_plugin_src.js" outfile="${build_dir}/plugins/fullpage/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/layer/editor_plugin_src.js" outfile="${build_dir}/plugins/layer/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/style/editor_plugin_src.js" outfile="${build_dir}/plugins/style/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/media/editor_plugin_src.js" outfile="${build_dir}/plugins/media/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/visualchars/editor_plugin_src.js" outfile="${build_dir}/plugins/visualchars/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/nonbreaking/editor_plugin_src.js" outfile="${build_dir}/plugins/nonbreaking/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/xhtmlxtras/editor_plugin_src.js" outfile="${build_dir}/plugins/xhtmlxtras/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/template/editor_plugin_src.js" outfile="${build_dir}/plugins/template/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/bbcode/editor_plugin_src.js" outfile="${build_dir}/plugins/bbcode/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/pagebreak/editor_plugin_src.js" outfile="${build_dir}/plugins/pagebreak/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/spellchecker/editor_plugin_src.js" outfile="${build_dir}/plugins/spellchecker/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/tabfocus/editor_plugin_src.js" outfile="${build_dir}/plugins/tabfocus/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/autoresize/editor_plugin_src.js" outfile="${build_dir}/plugins/autoresize/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/wordcount/editor_plugin_src.js" outfile="${build_dir}/plugins/wordcount/editor_plugin.js" />
-		<yuicompress infile="${build_dir}/plugins/legacyoutput/editor_plugin_src.js" outfile="${build_dir}/plugins/legacyoutput/editor_plugin.js" />
+		<for param="file">
+			<path>
+				<fileset dir="${build_dir}/plugins/" includes="*/editor_plugin_src.js" />
+			</path>
+			<sequential>
+				<propertyregex property="file.compressed" input="@{file}" regexp="_src.js$" replace=".js" override="yes" />
+				<yuicompress infile="@{file}" outfile="${file.compressed}" />
+			</sequential>
+		</for>
 
 		<!-- Compress jQuery plugin -->
 		<yuicompress infile="${classes_dir}/adapter/jquery/jquery.tinymce.js" outfile="${build_dir}/jquery.tinymce.js" />
