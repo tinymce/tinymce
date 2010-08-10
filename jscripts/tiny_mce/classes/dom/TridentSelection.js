@@ -186,7 +186,6 @@
 						ctrlRng = body.createControlRange();
 						ctrlRng.addElement(startContainer.childNodes[startOffset]);
 						ctrlRng.select();
-						ctrlRng.scrollIntoView();
 						return;
 					} catch (ex) {
 						// Ignore
@@ -200,7 +199,6 @@
 
 			// Select the new range and scroll it into view
 			ieRng.select();
-			ieRng.scrollIntoView();
 		};
 
 		this.getRangeAt = function() {
