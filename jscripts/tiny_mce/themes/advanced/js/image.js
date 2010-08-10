@@ -77,7 +77,7 @@ var ImageDialog = {
 			args.style = this.styleVal;
 
 		tinymce.extend(args, {
-			src : f.src.value,
+			src : f.src.value.replace(/ /g, '%20'),
 			alt : f.alt.value,
 			width : f.width.value,
 			height : f.height.value
