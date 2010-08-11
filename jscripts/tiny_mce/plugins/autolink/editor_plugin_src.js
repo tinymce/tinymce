@@ -149,7 +149,7 @@
                 author : 'Ephox Corporation',
                 authorurl : 'http://tinymce.ephox.com',
                 infourl : 'http://tinymce.ephox.com',
-                version : tinymce.majorVersion + "." + tinymce.minorVersion,
+                version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
 		}
 	});
