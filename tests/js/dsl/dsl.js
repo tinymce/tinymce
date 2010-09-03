@@ -84,22 +84,42 @@ tinymce.create('dsl.Action', {
 		}
 		var message = this.name + " " + preposition + " " + getFunctionName(state);
 		var action = this.action;
-		return {
-			gives: function(expected) {
+		var actionPerformed = false;
+		function defer(callback) {
+			return function() {
+				var args = arguments;
 				queue.add(function() {
+					if (actionPerformed) {
+						callback.apply(undefined, args);
+						queue.next();
+						return;
+					}
 					editor.focus();
 					state();
 					action(function() {
-						assertState(expected, message);
+						actionPerformed = true;
+						callback.apply(undefined, args);
 						queue.next();
 					});
 				});
-			}
+				return this;
+			};
+		}
+		
+		var dslState = {
+			gives: defer(function(expected) {
+				assertState(expected, message);
+			}),
+
+			enablesState: defer(function(state) {
+				ok(editor.queryCommandState(state), message + " enables " + state + " command");
+			}),
+			
+			disablesState: defer(function(state) {
+				ok(!editor.queryCommandState(state), message + " disables " + state + " command");
+			})
 		};
-	},
-	
-	gives: function(expected) {
-		fail();
-		assertState(expected, this.message);
+		dslState.andGives = dslState.gives;
+		return dslState;
 	}
 });
