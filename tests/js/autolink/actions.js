@@ -1,15 +1,3 @@
-function fakeKeyPressAction(keyCode, shiftKey) {
-	return function(callback) {
-		setTimeout(function() {
-			window.robot.type(keyCode, shiftKey, callback);
-		}, 1);
-	};
-}
-
-function createAction(name, action) {
-	window[name.replace(/\s+/g, '')] = new dsl.Action(name, action);
-}
-
 function fakeTypeAURL(url)
 {
 	return function(callback) {
@@ -24,8 +12,9 @@ function fakeTypeAnEclipsedURL(url)
 	return function(callback) {
         // type the URL and then type ')'
         tinyMCE.execCommand('mceInsertContent', false, '(' + url);
-        window.robot.type(48, true, null);
-        window.robot.type(32, true, callback);
+        window.robot.type(48, true, function() {
+            window.robot.type(32, true, callback);
+        });
     };
 }
 
