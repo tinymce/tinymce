@@ -1,546 +1,504 @@
-                    EPHOX MASTER LICENSE AGREEMENT
-                 EPHOX ENTERPRISE TINYMCE GOLD EDITION
+		  GNU LESSER GENERAL PUBLIC LICENSE
+		       Version 2.1, February 1999
 
-NOTICE: BY DOWNLOADING AND INSTALLING, COPYING OR OTHERWISE USING THE SOFTWARE,
-YOU AGREE TO BE BOUND BY THE TERMS OF THIS EPHOX MASTER LICENSE AGREEMENT
-("MLA"). IF YOU DO NOT AGREE TO THE TERMS OF THIS MLA, YOU MAY NOT DOWNLOAD,
-INSTALL, COPY OR USER THE SOFTWARE. "YOU" MEANS THE NATURAL PERSON OR THE ENTITY
-THAT IS AGREEING TO BE BOUND BY THIS MLA, THEIR EMPLOYEES AND THIRD PARTY
-CONTRACTORS THAT PROVIDE SERVICES TO YOU. YOU SHALL BE LIABLE FOR ANY FAILURE BY
-SUCH EMPLOYEES AND THIRD PARTY CONTRACTORS TO COMPLY WITH THE TERMS OF THIS
-AGREEMENT.
+ Copyright (C) 1991, 1999 Free Software Foundation, Inc.
+ 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
 
-1.	Definitions
+[This is the first released version of the Lesser GPL.  It also counts
+ as the successor of the GNU Library Public License, version 2, hence
+ the version number 2.1.]
 
-	The following definitions of terms apply to this Agreement and any Product
-	License issued under this Agreement:
-	
-	"Agreement" means the Ephox Master License Agreement ("MLA") including any
-	Exhibits, Schedules and Attachments.
-	
-	"CPU" means a single central processing unit of a machine with up to 2
-	cores. For multi-core CPUs, each 2 cores will count as a single CPU.
-	
-	"Development Environment" means the technical environment in which you use
-	the Software for testing and development purposes only.
-	
-	"Disaster Recovery Environment" means your technical environment designed
-	solely for you to respond to an interruption in services due to an event that
-	creates an inability to provide critical business functions for a material
-	period of time.
-	
-	"Domain Names" means the Internet host name through which a Web site is
-	accessible to Users.
-	
-	"Effective Date" means, unless otherwise specified in the Agreement, the
-	date that you downloaded the Software.
-	
-	"Ephox Partner" means an organization that has a current and valid agreement
-	with Ephox to sell the Software or incorporate the Software in an application. 
-	
-	"Internal Network" means your private, proprietary network resource
-	accessible only by employees and individual contractors of a specific corporate
-	enterprise or similar business entity. Internal Network specifically excludes
-	the Internet. Connection by secure links such as VPN or dial up to your Internal
-	Network is considered use over an Internal Network.
-	
-	"Major Version" means any version of the Licensed Software associated with a
-	primary number in the version numbering scheme such as "version x.y" where "x"
-	is the indicator of the Major Version.
-	
-	"Permitted Number" means the authorized number of CPUs, Development Servers,
-	Servers, PVUs, Domain Names and/or Users as indicated on an invoice provided by
-	Ephox.
-	
-	"Processor" has the same meaning as "CPU".
-	
-	"Product" means a software product produced or sold by Ephox.
-	
-	"Product License" means a license issued under this Agreement to use a
-	specified Ephox software product under the conditions specified in the Product
-	License and included in this Agreement as Exhibit A.
-	
-	"Production Environment" means the technical environment in which you use
-	the Software for your business purposes.
-	
-	"Production Purposes" means any use purpose other than for Evaluation
-	Purposes prior to purchase of the Software.
-	
-	"PVU" means Processor Value Unit as determined by the IBM calculation that
-	is described at http://www.ephox.com/pvu-definition 
-	
-	"Server" means a network server that contains one or more CPUs.
-	
-	"Software" means (a) all the contents of the files with which this Agreement
-	is provided, including but not limited to (i) Ephox or third party computer
-	information or software and (ii) related explanatory written materials or files
-	("Documentation"); and (b) upgrades, modified versions, Major Versions,
-	additions, and copies of the Software, if any, licensed to you by Ephox
-	(collectively, "Updates").
-	
-	"Technical Support" means reasonable technical support (as more specifically
-	set forth in Section 9) for the Software.
-	
-	"Updates" means major upgrades, minor upgrades, modified versions and
-	additions to the Software.
-	
-	"Upgrade & Support" means the service under which Ephox provides support,
-	maintenance and upgrades to the Licensee as set forth in Section 4.
-	
-	"Upgrade & Support Fee" means a payment in recognition of support,
-	maintenance and upgrades provided by Ephox to the Licensee as part of this
-	Agreement.
-	
-	"Use" means to access, install, download, copy or otherwise benefit from
-	using the functionality of the Software in accordance with the Documentation and
-	the terms and conditions of this Agreement.
-	
-	"User" means any and all (i.e. non-concurrent) natural persons (i.e., not a
-	corporation or other legal entity) who are authorized by you to access and use
-	the Software for your own internal business processes.
-	
-	"VPN" means a private communications network generally used within
-	enterprises to communicate over a public network using secure protocols.
-	
-	"Workstation" means a computer workstation or personal computer that allows
-	the Software to only be accessed by a single processor and that is not used as a
-	network server.
+			    Preamble
 
-2.	Grant of License and Restrictions
+  The licenses for most software are designed to take away your
+freedom to share and change it.  By contrast, the GNU General Public
+Licenses are intended to guarantee your freedom to share and change
+free software--to make sure the software is free for all its users.
 
-2.1	Ephox grants you a limited, non-exclusive and non-transferable license to
-	use the Software listed in the Product License(s) subject to the terms and
-	conditions of this Agreement.  Ephox shall at all times retain ownership of all
-	Software including any documentation and any copies thereof.
+  This license, the Lesser General Public License, applies to some
+specially designated software packages--typically libraries--of the
+Free Software Foundation and other authors who decide to use it.  You
+can use it too, but we suggest you first think carefully about whether
+this license or the ordinary General Public License is the better
+strategy to use in any particular case, based on the explanations below.
 
-2.2	Backup and Disaster Recovery. You may make and install a reasonable
-	number of copies of the Software for backup and archival purposes provided that
-	all titles, trademark symbols, copyright symbols and legends, and other
-	proprietary markings are reproduced.  Ephox shall retain all rights and title to
-	the backup or archival copy.  You may only use such archival copies solely in
-	the event that the primary copy has failed or is destroyed, but in no event may
-	you use such copies concurrently with your Production Environment. You may also
-	install copies of the Software in a Disaster Recovery Environment for use solely
-	in disaster recovery and not for production, development, evaluation or testing
-	purposes other than to ensure that the Software is capable of replacing the
-	primary usage of the Software in case of a disaster.
+  When we speak of free software, we are referring to freedom of use,
+not price.  Our General Public Licenses are designed to make sure that
+you have the freedom to distribute copies of free software (and charge
+for this service if you wish); that you receive source code or can get
+it if you want it; that you can change the software and use pieces of
+it in new free programs; and that you are informed that you can do
+these things.
 
-2.3	Restrictions.  You agree that you will not yourself, or through any
-	parent, subsidiary, affiliate, agent or other third party:
-	(a)	sell, lease, license, sublicense, encumber or otherwise transfer any
-		right in any portion of the Software or documentation; 
-	(b)	decompile, disassemble, or reverse engineer any portion of the Software
-		or attempt to discover any source code or underlying ideas or algorithms of the
-		Software;
-	(c)	create any derivative work (as defined in the United States copyright Act
-		of 1976, Title 17 USC Section 101 et. Seq.) based on the Software;
-	(d)	without the express permission of Ephox use the Software to provide
-		direct processing services to third parties, commercial timesharing, rental or
-		sharing arrangements, or on a "service bureau" basis or otherwise use or allow
-		others to use the Software for the benefit of any third party; 
-	 (e)	use any Software, or allow the transfer, transmission, export, or
-		re-export of any Software or portion thereof in violation of any export control
-		laws or regulations administered by the U.S. Commerce Department, OFAC, or any
-		other U.S. government agency; and
-	(f)	prevent the software licensing information contained in the "About"
-		toolbar item from being displayed to any user of the Software.
-		2.4	No Other Rights Granted. Except as expressly set forth herein, Ephox
-		grants and you receive no other rights or licenses to the Software, derivative
-		works (as defined in the United States Copyright Act of 1976, Title 17 USC
-		Section 101 et. Seq.) or any intellectual property rights related to the
-		Software whether by implication, estoppel or otherwise.
+  To protect your rights, we need to make restrictions that forbid
+distributors to deny you these rights or to ask you to surrender these
+rights.  These restrictions translate to certain responsibilities for
+you if you distribute copies of the library or if you modify it.
 
-3.	Pre-release Software Additional Terms
+  For example, if you distribute copies of the library, whether gratis
+or for a fee, you must give the recipients all the rights that we gave
+you.  You must make sure that they, too, receive or can get the source
+code.  If you link other code with the library, you must provide
+complete object files to the recipients, so that they can relink them
+with the library after making changes to the library and recompiling
+it.  And you must show them these terms so they know their rights.
 
-3.1	If the Software accompanying this Agreement is pre-commercial release
-	Software (Pre-release Software), then the following Section applies. 
+  We protect your rights with a two-step method: (1) we copyright the
+library, and (2) we offer you this license, which gives you legal
+permission to copy, distribute and/or modify the library.
 
-3.2	You acknowledge that the Software that you have received is a Pre-Release
-	Software version, does not represent final product from Ephox, and may contain
-	bugs, errors and other problems that could cause system or other failures and
-	data loss. Consequently, the Pre-release Software is provided to you as is and
-	Ephox disclaims any warranty or liability obligations to you of any kind. Where
-	legal liability cannot be excluded, but it may be limited, Ephox liability and
-	that of its suppliers shall be limited to the sum of fifty dollars (U.S. $50) in
-	total.
-	
-3.3	You acknowledge that Ephox has not promised or guaranteed to you that
-	Pre-release Software will be announced or made available to anyone in the
-	future, that Ephox has no express or implied obligation to you to announce or
-	introduce the Pre-release Software and that Ephox may not introduce a product
-	similar to or compatible with the Pre-release Software. Accordingly, you
-	acknowledge that any research or development that you perform regarding the
-	Pre-release Software is done entirely at your own risk. During the term of this
-	Agreement, if requested by Ephox, you will provide feedback to Ephox regarding
-	testing and use of the Pre-release Software, including error or bug reports.
+  To protect each distributor, we want to make it very clear that
+there is no warranty for the free library.  Also, if the library is
+modified by someone else and passed on, the recipients should know
+that what they have is not the original version, so that the original
+author's reputation will not be affected by problems that might be
+introduced by others.
 
-3.4	Upon receipt of a later unreleased version of the Pre-release Software or
-	release by Ephox of a publicly released commercial version of the Software,
-	whether as a stand-alone product or as a part of a larger product, you agree to
-	abide by the terms and conditions of the agreement for any such later versions
-	of the Pre-release Software.
+  Finally, software patents pose a constant threat to the existence of
+any free program.  We wish to make sure that a company cannot
+effectively restrict the users of a free program by obtaining a
+restrictive license from a patent holder.  Therefore, we insist that
+any patent license obtained for a version of the library must be
+consistent with the full freedom of use specified in this license.
 
-4.	Upgrade & Support Terms and Conditions
+  Most GNU software, including some libraries, is covered by the
+ordinary GNU General Public License.  This license, the GNU Lesser
+General Public License, applies to certain designated libraries, and
+is quite different from the ordinary General Public License.  We use
+this license for certain libraries in order to permit linking those
+libraries into non-free programs.
 
-4.1	Technical Support
+  When a program is linked with a library, whether statically or using
+a shared library, the combination of the two is legally speaking a
+combined work, a derivative of the original library.  The ordinary
+General Public License therefore permits such linking only if the
+entire combination fits its criteria of freedom.  The Lesser General
+Public License permits more lax criteria for linking other code with
+the library.
 
-4.1.1	Support Period
-	Ephox offers a product upgrade service and access to technical support service
-	("Support") to you under this Agreement.
-	Support covers the Software for which it is being purchased. Support extends
-	initially from the Effective Date for a period specified in the Product License
-	or as renewed in accordance with this Section (the "Support Period").
-	Support may be renewed by your payment prior to the date of expiration of the
-	then-current Support Fee or other fee as specified in writing ("Renewal").
-	During the Support Period, you will receive services from Ephox as described in
-	the Product License issued under this Agreement.
-	During the Support Period Ephox will provide technical support for problems in
-	the operation of the Software. 
-	
-4.1.2	Access to Support
-	Ephox will provide you with access to the Ephox Online Support Center located at
-	http://www.ephox.com where you will be provided access to downloads,
-	documentation, community forums and a Web-based support form to submit a support
-	case.  Ephox’s specific support obligations are specified in a Product License
-	attached to this Agreement.
+  We call this license the "Lesser" General Public License because it
+does Less to protect the user's freedom than the ordinary General
+Public License.  It also provides other free software developers Less
+of an advantage over competing non-free programs.  These disadvantages
+are the reason we use the ordinary General Public License for many
+libraries.  However, the Lesser license provides advantages in certain
+special circumstances.
 
-4.1.3	Support Conditions
-	Ephox’s obligation to provide technical support is conditioned upon the
-	following: (a) you make reasonable efforts to solve the problem after consulting
-	with Ephox; (b) you provide Ephox with sufficient information and resources to
-	correct the problem either at Ephox’s offices or via remote access to your site,
-	as well as access to the personnel, hardware, and any additional software
-	involved in discovering the problem; (c) you promptly install all Updates; and
-	(d) you procure, install and maintain all equipment necessary to operate the
-	Software.
-	
-	This Agreement does not extend to the operation of third party software and
-	Ephox will not provide you with generic consultation, assistance, or advice.
-	
-4.2	Updates
+  For example, on rare occasions, there may be a special need to
+encourage the widest possible use of a certain library, so that it becomes
+a de-facto standard.  To achieve this, non-free programs must be
+allowed to use the library.  A more frequent case is that a free
+library does the same job as widely used non-free libraries.  In this
+case, there is little to gain by limiting the free library to free
+software only, so we use the Lesser General Public License.
 
-	Ephox will make available to you Updates that Ephox releases during the Support
-	Period. Updates will be made available through http://www.ephox.com and notified
-	to you by e-mail. The features and the release schedule of all Updates are
-	determined solely by Ephox.
+  In other cases, permission to use a particular library in non-free
+programs enables a greater number of people to use a large body of
+free software.  For example, permission to use the GNU C Library in
+non-free programs enables many more people to use the whole GNU
+operating system, as well as its variant, the GNU/Linux operating
+system.
 
-4.3	Maintenance
+  Although the Lesser General Public License is Less protective of the
+users' freedom, it does ensure that the user of a program that is
+linked with the Library has the freedom and the wherewithal to run
+that program using a modified version of the Library.
 
-	During the Support Period you may report any Software problem or error to Ephox.
-	If Ephox in its reasonable discretion determines that a reported, reproducible,
-	material error in the Software exists that significantly impairs the usability
-	and utility of the Software, Ephox agrees to use reasonable commercial efforts
-	to correct the problem or error and to provided an Update to resolve the problem
-	or error.
- 
-4.4	Service Exclusions
+  The precise terms and conditions for copying, distribution and
+modification follow.  Pay close attention to the difference between a
+"work based on the library" and a "work that uses the library".  The
+former contains code derived from the library, whereas the latter must
+be combined with the library in order to run.
 
-	Ephox is not obligated to provide technical support in the following situations:
-	(a) the Software has been changed, modified or damaged; (b) the problem is
-	caused by your negligence, hardware malfunction or other causes beyond the
-	reasonable control of Ephox; (c) the problem is traced to a third party software
-	not licensed through Ephox; or (d) you have not paid fees when due.
-	Ephox will have no obligation to support or maintain any Major Version of
-	Software that is not the then current version of Software or the immediately
-	preceding Major Version of Software for a period of six (6) months after it is
-	first superseded.
-5.	Term and Termination
+		  GNU LESSER GENERAL PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
-5.1	This Agreement commences on the Effective Date and will remain in force
-	until it is terminated (as set forth herein).  Your rights under this Agreement
-	will terminate automatically without notice from Ephox if: (a) you fail to
-	comply with any term(s) of this Agreement or (b) you terminate your business
-	activities or become insolvent, admit in writing to your inability to pay your
-	debts as they mature, make an assignment for the benefit of creditors, or become
-	subject to direct control of a trustee, receiver or similar authority. Upon
-	termination, you agree to cease using the Software and to destroy all copies,
-	full or partial, of the Software.
-	
-6.	Limited Warranty
+  0. This License Agreement applies to any software library or other
+program which contains a notice placed by the copyright holder or
+other authorized party saying it may be distributed under the terms of
+this Lesser General Public License (also called "this License").
+Each licensee is addressed as "you".
 
-6.1	Except as otherwise provided in Section 3, Ephox warrants that the
-	Software substantially conforms to the written specifications therefore existing
-	at the time of delivery.  Said warranty is for a period of ninety (90) days from
-	and after the Effective Date (the "Warranty Period"). Notwithstanding the
-	foregoing, Ephox does not warrant that the Software will operate without
-	interruption or that the performance of said Software will be error free.  Ephox
-	cannot guarantee the privacy, security, authenticity and non-corruption of any
-	information transmitted through or stored on any server maintained or used by
-	you in connection with the Software. Ephox is not responsible for any delays,
-	errors, crashes, failures to perform, disruptions or other problems with the
-	Software caused by or resulting from any act, omission or condition beyond
-	Ephox’s reasonable control.  The foregoing warranties shall not apply to the
-	extent that the Ephox Software is used or interfaced with other software, data
-	or operating systems which are not functioning properly or if the Ephox Software
-	has been modified in a manner not authorized by Ephox.  
+  A "library" means a collection of software functions and/or data
+prepared so as to be conveniently linked with application programs
+(which use some of those functions and data) to form executables.
 
-6.2	The warranties set forth above are made to and for your benefit only and
-	will be enforceable against Ephox only if:
-	(a)	The Ephox Software has been properly installed and has been used at all
-		times in accordance with the documentation and this Agreement;
-	(b)	All modifications, alterations or additions to the Ephox Software, if
-		any, have been made by Ephox; and
-	(c)	You have not made modifications, alterations or additions to the Ephox
-		Software that cause it to deviate from the documentation
+  The "Library", below, refers to any such software library or work
+which has been distributed under these terms.  A "work based on the
+Library" means either the Library or any derivative work under
+copyright law: that is to say, a work containing the Library or a
+portion of it, either verbatim or with modifications and/or translated
+straightforwardly into another language.  (Hereinafter, translation is
+included without limitation in the term "modification".)
 
-6.3	All warranty claims must be made, along with proof of purchase, within
-	the Warranty Period. If the Software does not perform substantially in
-	accordance with the documentation, your sole and exclusive remedy and the entire
-	liability of Ephox for breach of warranty shall be limited to the refund of the
-	license fee you paid for the software.
+  "Source code" for a work means the preferred form of the work for
+making modifications to it.  For a library, complete source code means
+all the source code for all modules it contains, plus any associated
+interface definition files, plus the scripts used to control compilation
+and installation of the library.
 
-7.	Audit
-	Upon Ephox’s reasonable belief that any term of this Agreement has been
-	violated, Licensee agrees to allow an independent third party to inspect
-	Licensee’s site, books and records to determine whether Licensee has complied
-	with the terms of this Agreement. The third party will be chosen by Ephox and
-	approved by Licensee, whose approval must not be unreasonably withheld. The
-	reviews will occur at mutually agreeable times during normal business hours. The
-	third party will be instructed to keep all information learned strictly
-	confidential except as it relates to breaches of this Agreement. If such an
-	audit discloses a violation of this Agreement Licensee agrees to pay the cost of
-	the audit plus interest on the deficiency from the time due until paid at the
-	lesser of eighteen percent per annum or the maximum allowed by law.
+  Activities other than copying, distribution and modification are not
+covered by this License; they are outside its scope.  The act of
+running a program using the Library is not restricted, and output from
+such a program is covered only if its contents constitute a work based
+on the Library (independent of the use of the Library in a tool for
+writing it).  Whether that is true depends on what the Library does
+and what the program that uses the Library does.
+  
+  1. You may copy and distribute verbatim copies of the Library's
+complete source code as you receive it, in any medium, provided that
+you conspicuously and appropriately publish on each copy an
+appropriate copyright notice and disclaimer of warranty; keep intact
+all the notices that refer to this License and to the absence of any
+warranty; and distribute a copy of this License along with the
+Library.
 
-8.	Disclaimer
+  You may charge a fee for the physical act of transferring a copy,
+and you may at your option offer warranty protection in exchange for a
+fee.
 
-	Except as expressly set forth in section 6 no other warranty, express or
-	implied, is made with respect to the software or services provided herein. 
-	Ephox specifically disclaims any other representations and warranties including
-	without limitation any implied warranty of merchantability, fitness for a
-	particular purpose, non-infringement of third party rights and those arising
-	from a course of dealing or performance or usage of trade.  Ephox specifically
-	disclaims any representation and warranty that the software will be error free
-	or will function uninterrupted, that any errors or defects in the software can
-	or will be corrected, that any such correction can or will be made in a timely
-	manner, that the software will operate in the combinations which you may select
-	for your use, will produce the results you desire, or that the software
-	functionality will meet your requirements.
+  2. You may modify your copy or copies of the Library or any portion
+of it, thus forming a work based on the Library, and copy and
+distribute such modifications or work under the terms of Section 1
+above, provided that you also meet all of these conditions:
 
-9.	Limitation of Liability
+    a) The modified work must itself be a software library.
 
-	Ephox’s total liability under this agreement or for breach of this agreement
-	shall be limited to fifty dollars (USD $50).  In no event shall Ephox be liable
-	for costs of procurement of substitute goods or technology, loss of profits, or
-	for any indirect, special, exemplary, punitive, consequential or incidental
-	damages, however caused, whether for breach of warranty, breach of contract,
-	repudiation of contract, negligence or otherwise, even if Ephox has been advised
-	of the possibility of such damages.
-	
-	In no event will Ephox be liable for fines or penalties imposed on you.
-	Furthermore, Ephox disclaims any liability for loss of or inaccuracy of your
-	data or the data maintained by you on behalf of others. Ephox also disclaims
-	liability or responsibility for violations of applicable privacy laws and
-	regulations, or for breaches of security of hardware, software or systems for
-	which it is hereby agreed that you shall have sole and exclusive responsibility.
-	You agree that Ephox will not be liable for loss of or damage to goodwill or
-	"costs of cover" (including, without limitation, costs of procuring substitute
-	products or services) which arise directly or indirectly out of the purchase,
-	sale, use of and/or inability to use of software provided in connection with
-	this agreement whether such damages are based upon contract, tort, intentional
-	conduct, equity or pursuant to some other theory, including, without limitation,
-	breach of warranty, negligence or strict liability, whether the possibility of
-	such damages was made known to or was foreseeable by Ephox and whether such
-	damages are asserted by you or some other party.
-	
-	You agree to assume the responsibility for insuring against or otherwise bearing
-	the risk of damages in excess of the liability of Ephox.  The limitations of
-	liability set forth herein are intended to limit Ephox’s liability and will
-	apply notwithstanding the failure of the essential purpose of any remedy.  
-	Any action, claim or proceeding relating to these terms and conditions, and the
-	software provided in connection with the agreement or the transactions
-	contemplated by the terms and conditions of said agreement, must be brought
-	within twelve (12) months following the action or event giving rise to such
-	action, claim or proceeding. 
-	
-	You agree to use reasonable efforts to mitigate any damages sustained by you
-	pursuant to or in connection with the use of or your inability to use the
-	software provided in connection with this agreement.  
-	
-	Notwithstanding the foregoing, the disclaimer of warranties and/or the
-	disclaimer and/or limitation of damages will not be deemed to disclaim liability
-	specifically imposed on Ephox by statute or regulation, to the extent such
-	liability cannot be waived or disclaimed.  
-	
-	Some jurisdictions do not allow the disclaimer of implied warranties or the
-	exclusion or limitation of liability for consequential or incidental damages, so
-	the disclaimers or limitations set forth herein may not fully apply to you.  To
-	the extent that the disclaimers and/or limitations set forth herein are not
-	fully enforceable under applicable law, you may have other legal rights which
-	vary from jurisdiction to jurisdiction.
+    b) You must cause the files modified to carry prominent notices
+    stating that you changed the files and the date of any change.
 
-10.	Remedies for Infringement
+    c) You must cause the whole of the work to be licensed at no
+    charge to all third parties under the terms of this License.
 
-	In the event that Ephox reasonably believes that the Software may be subject to
-	an infringement claim, Ephox may, at its opinion, either: (1) substitute
-	substantially equivalent non-infringing Software; (2) modify the infringing item
-	so that it no longer infringes but remains substantially equivalent; (3) if none
-	of the foregoing is commercially feasible, Ephox may terminate the license
-	granted hereunder.
-	
-	THIS SECTION STATES YOUR SOLE AND EXCLUSIVE REMEDY WITH RESPECT TO CLAIMS OF
-	INFRINGEMENT OF PROPRIETARY RIGHTS OF ANY KIND.
+    d) If a facility in the modified Library refers to a function or a
+    table of data to be supplied by an application program that uses
+    the facility, other than as an argument passed when the facility
+    is invoked, then you must make a good faith effort to ensure that,
+    in the event an application does not supply such function or
+    table, the facility still operates, and performs whatever part of
+    its purpose remains meaningful.
 
-11.	General
+    (For example, a function in a library to compute square roots has
+    a purpose that is entirely well-defined independent of the
+    application.  Therefore, Subsection 2d requires that any
+    application-supplied function or table used by this function must
+    be optional: if the application does not supply it, the square
+    root function must still compute square roots.)
 
-11.1	Assignment
+These requirements apply to the modified work as a whole.  If
+identifiable sections of that work are not derived from the Library,
+and can be reasonably considered independent and separate works in
+themselves, then this License, and its terms, do not apply to those
+sections when you distribute them as separate works.  But when you
+distribute the same sections as part of a whole which is a work based
+on the Library, the distribution of the whole must be on the terms of
+this License, whose permissions for other licensees extend to the
+entire whole, and thus to each and every part regardless of who wrote
+it.
 
-	Neither this Agreement nor any rights under this Agreement may be assigned or
-	otherwise transferred by you, in whole or in part, whether voluntary or by
-	operation of law, including by way of sale of assets, merger or consolidation,
-	without the prior written consent of Ephox, which shall not be unreasonably
-	withheld. Subject to the foregoing, this Agreement will be binding upon and will
-	vest to the benefit of the parties and their respective successors and
-	assignors. Notwithstanding the foregoing, no transfer or assignment of your
-	rights hereunder shall be effective unless and until the purported assignee
-	agrees in writing to be bound by all of your obligations hereunder.
+Thus, it is not the intent of this section to claim rights or contest
+your rights to work written entirely by you; rather, the intent is to
+exercise the right to control the distribution of derivative or
+collective works based on the Library.
 
-11.2	Waiver
+In addition, mere aggregation of another work not based on the Library
+with the Library (or with a work based on the Library) on a volume of
+a storage or distribution medium does not bring the other work under
+the scope of this License.
 
-	A party’s failure to act under this Agreement shall not indicate a waiver of the
-	party’s rights under this Agreement. No waiver of any provision of this
-	Agreement shall be valid unless made in writing and signed by the waiving party.
-	The failure of either party to require the performance of any term or obligation
-	of this Agreement or the waiver by either party of any breach of this Agreement
-	shall not prevent any subsequent enforcement of such term and shall not be
-	deemed a waiver of any subsequent breach.
+  3. You may opt to apply the terms of the ordinary GNU General Public
+License instead of this License to a given copy of the Library.  To do
+this, you must alter all the notices that refer to this License, so
+that they refer to the ordinary GNU General Public License, version 2,
+instead of to this License.  (If a newer version than version 2 of the
+ordinary GNU General Public License has appeared, then you can specify
+that version instead if you wish.)  Do not make any other change in
+these notices.
 
-11.3	U.S. Government End Users
+  Once this change is made in a given copy, it is irreversible for
+that copy, so the ordinary GNU General Public License applies to all
+subsequent copies and derivative works made from that copy.
 
-	The Software is a "Commercial Item," as that term is defined at 48 C.F.R.
-	§2.101, consisting of "Commercial Computer Software" as such term is used in 48
-	C.F.R. §12.212 . Consistent with 48 C.F.R. §12.212, the Commercial Computer
-	Software is being licensed to U.S. Government end users (a) only as Commercial
-	Items and (b) with only those rights as are granted to all other end users
-	pursuant to the terms and conditions herein. Unpublished-rights reserved under
-	the copyright laws of the United States.
+  This option is useful when you wish to copy part of the code of
+the Library into a program that is not a library.
 
-11.4	US Export Restrictions
+  4. You may copy and distribute the Library (or a portion or
+derivative of it, under Section 2) in object code or executable form
+under the terms of Sections 1 and 2 above provided that you accompany
+it with the complete corresponding machine-readable source code, which
+must be distributed under the terms of Sections 1 and 2 above on a
+medium customarily used for software interchange.
 
-	The Software is subject to certain export restrictions of the United States
-	Government. If you are (a) in a country to which export from the United States
-	is restricted for anti-terrorism reasons, or a national of any such country,
-	wherever located, (b) in a country to which the United States has embargoed or
-	restricted the export of goods or services, or a national of any such country,
-	wherever located, or (c) a person or entity who has been prohibited from
-	participating in United States export transactions by any agency of the United
-	States Government, then you may not install, download, access, use, or license
-	the Software. By accepting this License, you warrant and represent to Ephox that
-	(1) you do not match the criteria set forth in (a), (b), or (c) above, (2) that
-	you will not export or re-export the Software to any country, person, or entity
-	subject to U.S. export restrictions, including those persons and entities that
-	match the criteria set forth in (a), (b), or (c) above, and (3) that neither the
-	United States Bureau of Industry and Security, nor any other U.S. federal
-	agency, has suspended, revoked, or denied your export privileges.
+  If distribution of object code is made by offering access to copy
+from a designated place, then offering equivalent access to copy the
+source code from the same place satisfies the requirement to
+distribute the source code, even though third parties are not
+compelled to copy the source along with the object code.
 
-11.5	Governing Law
+  5. A program that contains no derivative of any portion of the
+Library, but is designed to work with the Library by being compiled or
+linked with it, is called a "work that uses the Library".  Such a
+work, in isolation, is not a derivative work of the Library, and
+therefore falls outside the scope of this License.
 
-This Agreement is governed by and construed and enforced in accordance with the
-substantive laws in force in the State of California, USA, and in no event shall
-the United Nations Convention on Contracts for the International Sale of Goods
-govern this Agreement.
+  However, linking a "work that uses the Library" with the Library
+creates an executable that is a derivative of the Library (because it
+contains portions of the Library), rather than a "work that uses the
+library".  The executable is therefore covered by this License.
+Section 6 states terms for distribution of such executables.
 
-                                    EXHIBIT A
-            EPHOX PRODUCT LICENSE: EPHOX ENTERPRISE TINYMCE GOLD EDITION
+  When a "work that uses the Library" uses material from a header file
+that is part of the Library, the object code for the work may be a
+derivative work of the Library even though the source code is not.
+Whether this is true is especially significant if the work can be
+linked without the Library, or if the work is itself a library.  The
+threshold for this to be true is not precisely defined by law.
 
-This Ephox Product License (the "License") is issued under the Ephox Master
-License Agreement (the "Agreement") listed above.  
+  If such an object file uses only numerical parameters, data
+structure layouts and accessors, and small macros and small inline
+functions (ten lines or less in length), then the use of the object
+file is unrestricted, regardless of whether it is legally a derivative
+work.  (Executables containing this object code plus portions of the
+Library will still fall under Section 6.)
 
-A.	Product(s) Licensed
+  Otherwise, if the work is a derivative of the Library, you may
+distribute the object code for the work under the terms of Section 6.
+Any executables containing that work also fall under Section 6,
+whether or not they are linked directly with the Library itself.
 
-	The following Ephox Product (the "Software") is licensed under the Agreement:
+  6. As an exception to the Sections above, you may also combine or
+link a "work that uses the Library" with the Library to produce a
+work containing portions of the Library, and distribute that work
+under terms of your choice, provided that the terms permit
+modification of the work for the customer's own use and reverse
+engineering for debugging such modifications.
 
-		Ephox Enterprise TinyMCE Gold Edition
+  You must give prominent notice with each copy of the work that the
+Library is used in it and that the Library and its use are covered by
+this License.  You must supply a copy of this License.  If the work
+during execution displays copyright notices, you must include the
+copyright notice for the Library among them, as well as a reference
+directing the user to the copy of this License.  Also, you must do one
+of these things:
 
-B.	Conditions of Use
+    a) Accompany the work with the complete corresponding
+    machine-readable source code for the Library including whatever
+    changes were used in the work (which must be distributed under
+    Sections 1 and 2 above); and, if the work is an executable linked
+    with the Library, with the complete machine-readable "work that
+    uses the Library", as object code and/or source code, so that the
+    user can modify the Library and then relink to produce a modified
+    executable containing the modified Library.  (It is understood
+    that the user who changes the contents of definitions files in the
+    Library will not necessarily be able to recompile the application
+    to use the modified definitions.)
 
-	1.	Production License: You may install and Use the Software on Servers with
-		no more than the Permitted Number of Processors or other method as specified in
-		a receipt or receipts provided by Ephox. You may connect an unlimited number of
-		client computers to the Server(s) used in your Production Environment.
-	
-	2.	Development License. You may install and Use the Software on Servers with
-		no more than the Permitted Number of Processors or other method as specified in
-		a receipt or receipts provided by Ephox. You may connect an unlimited number of
-		client computers to the Server(s) used in your Development Environment.
+    b) Use a suitable shared library mechanism for linking with the
+    Library.  A suitable mechanism is one that (1) uses at run time a
+    copy of the library already present on the user's computer system,
+    rather than copying library functions into the executable, and (2)
+    will operate properly with a modified version of the library, if
+    the user installs one, as long as the modified version is
+    interface-compatible with the version that the work was made with.
 
-C.	Support
+    c) Accompany the work with a written offer, valid for at
+    least three years, to give the same user the materials
+    specified in Subsection 6a, above, for a charge no more
+    than the cost of performing this distribution.
 
-	Licensee will be provided with Support as provided for under Section 4 of the
-	Agreement and as described in Schedule A.
-	The initial Support Period commences on the Effective Date for a period of 12
-	months or as renewed in accordance with Section 4.1 of the Agreement.
-	
-D.	Special Conditions and Agreement Variations
+    d) If distribution of the work is made by offering access to copy
+    from a designated place, offer equivalent access to copy the above
+    specified materials from the same place.
 
-	This product contains code licensed under an agreement with Moxiecode AG
-	("Moxiecode"). Moxiecode remains the owner of the trademark "TinyMCE" and
-	warrants the ownership of its intellectual property.
+    e) Verify that the user has already received a copy of these
+    materials or that you have already sent this user a copy.
+
+  For an executable, the required form of the "work that uses the
+Library" must include any data and utility programs needed for
+reproducing the executable from it.  However, as a special exception,
+the materials to be distributed need not include anything that is
+normally distributed (in either source or binary form) with the major
+components (compiler, kernel, and so on) of the operating system on
+which the executable runs, unless that component itself accompanies
+the executable.
+
+  It may happen that this requirement contradicts the license
+restrictions of other proprietary libraries that do not normally
+accompany the operating system.  Such a contradiction means you cannot
+use both them and the Library together in an executable that you
+distribute.
+
+  7. You may place library facilities that are a work based on the
+Library side-by-side in a single library together with other library
+facilities not covered by this License, and distribute such a combined
+library, provided that the separate distribution of the work based on
+the Library and of the other library facilities is otherwise
+permitted, and provided that you do these two things:
+
+    a) Accompany the combined library with a copy of the same work
+    based on the Library, uncombined with any other library
+    facilities.  This must be distributed under the terms of the
+    Sections above.
+
+    b) Give prominent notice with the combined library of the fact
+    that part of it is a work based on the Library, and explaining
+    where to find the accompanying uncombined form of the same work.
+
+  8. You may not copy, modify, sublicense, link with, or distribute
+the Library except as expressly provided under this License.  Any
+attempt otherwise to copy, modify, sublicense, link with, or
+distribute the Library is void, and will automatically terminate your
+rights under this License.  However, parties who have received copies,
+or rights, from you under this License will not have their licenses
+terminated so long as such parties remain in full compliance.
+
+  9. You are not required to accept this License, since you have not
+signed it.  However, nothing else grants you permission to modify or
+distribute the Library or its derivative works.  These actions are
+prohibited by law if you do not accept this License.  Therefore, by
+modifying or distributing the Library (or any work based on the
+Library), you indicate your acceptance of this License to do so, and
+all its terms and conditions for copying, distributing or modifying
+the Library or works based on it.
+
+  10. Each time you redistribute the Library (or any work based on the
+Library), the recipient automatically receives a license from the
+original licensor to copy, distribute, link with or modify the Library
+subject to these terms and conditions.  You may not impose any further
+restrictions on the recipients' exercise of the rights granted herein.
+You are not responsible for enforcing compliance by third parties with
+this License.
+
+  11. If, as a consequence of a court judgment or allegation of patent
+infringement or for any other reason (not limited to patent issues),
+conditions are imposed on you (whether by court order, agreement or
+otherwise) that contradict the conditions of this License, they do not
+excuse you from the conditions of this License.  If you cannot
+distribute so as to satisfy simultaneously your obligations under this
+License and any other pertinent obligations, then as a consequence you
+may not distribute the Library at all.  For example, if a patent
+license would not permit royalty-free redistribution of the Library by
+all those who receive copies directly or indirectly through you, then
+the only way you could satisfy both it and this License would be to
+refrain entirely from distribution of the Library.
+
+If any portion of this section is held invalid or unenforceable under any
+particular circumstance, the balance of the section is intended to apply,
+and the section as a whole is intended to apply in other circumstances.
+
+It is not the purpose of this section to induce you to infringe any
+patents or other property right claims or to contest validity of any
+such claims; this section has the sole purpose of protecting the
+integrity of the free software distribution system which is
+implemented by public license practices.  Many people have made
+generous contributions to the wide range of software distributed
+through that system in reliance on consistent application of that
+system; it is up to the author/donor to decide if he or she is willing
+to distribute software through any other system and a licensee cannot
+impose that choice.
+
+This section is intended to make thoroughly clear what is believed to
+be a consequence of the rest of this License.
+
+  12. If the distribution and/or use of the Library is restricted in
+certain countries either by patents or by copyrighted interfaces, the
+original copyright holder who places the Library under this License may add
+an explicit geographical distribution limitation excluding those countries,
+so that distribution is permitted only in or among countries not thus
+excluded.  In such case, this License incorporates the limitation as if
+written in the body of this License.
+
+  13. The Free Software Foundation may publish revised and/or new
+versions of the Lesser General Public License from time to time.
+Such new versions will be similar in spirit to the present version,
+but may differ in detail to address new problems or concerns.
+
+Each version is given a distinguishing version number.  If the Library
+specifies a version number of this License which applies to it and
+"any later version", you have the option of following the terms and
+conditions either of that version or of any later version published by
+the Free Software Foundation.  If the Library does not specify a
+license version number, you may choose any version ever published by
+the Free Software Foundation.
+
+  14. If you wish to incorporate parts of the Library into other free
+programs whose distribution conditions are incompatible with these,
+write to the author to ask for permission.  For software which is
+copyrighted by the Free Software Foundation, write to the Free
+Software Foundation; we sometimes make exceptions for this.  Our
+decision will be guided by the two goals of preserving the free status
+of all derivatives of our free software and of promoting the sharing
+and reuse of software generally.
+
+			    NO WARRANTY
+
+  15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO
+WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
+EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
+OTHER PARTIES PROVIDE THE LIBRARY "AS IS" WITHOUT WARRANTY OF ANY
+KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+LIBRARY IS WITH YOU.  SHOULD THE LIBRARY PROVE DEFECTIVE, YOU ASSUME
+THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+  16. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
+WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
+AND/OR REDISTRIBUTE THE LIBRARY AS PERMITTED ABOVE, BE LIABLE TO YOU
+FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+LIBRARY (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+FAILURE OF THE LIBRARY TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGES.
+
+		     END OF TERMS AND CONDITIONS
+
+           How to Apply These Terms to Your New Libraries
+
+  If you develop a new library, and you want it to be of the greatest
+possible use to the public, we recommend making it free software that
+everyone can redistribute and change.  You can do so by permitting
+redistribution under these terms (or, alternatively, under the terms of the
+ordinary General Public License).
+
+  To apply these terms, attach the following notices to the library.  It is
+safest to attach them to the start of each source file to most effectively
+convey the exclusion of warranty; and each file should have at least the
+"copyright" line and a pointer to where the full notice is found.
+
+    <one line to give the library's name and a brief idea of what it does.>
+    Copyright (C) <year>  <name of author>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+Also add information on how to contact you by electronic and paper mail.
+
+You should also get your employer (if you work as a programmer) or your
+school, if any, to sign a "copyright disclaimer" for the library, if
+necessary.  Here is a sample; alter the names:
+
+  Yoyodyne, Inc., hereby disclaims all copyright interest in the
+  library `Frob' (a library for tweaking knobs) written by James Random Hacker.
+
+  <signature of Ty Coon>, 1 April 1990
+  Ty Coon, President of Vice
+
+That's all there is to it!
 
 
-
-Copyright 2010 Ephox Corporation. Ephox and EditLive are registered trademarks of
-Ephox Corporation. 
-
-                                   Exhibit A
-                                   Schedule A
-	                       SUPPORT LEVEL DEFINITIONS
-	                  Ephox Enterprise TinyMCE Gold Edition
-	
-EPHOX TECHNICAL SUPPORT SERVICE LEVELS
-	
-	Ephox undertakes to remedy problems in accordance with the following Service
-	Levels. 
-	
-	(a)	Ephox Technical Support Service Level - Problem Category 1:
-		- Response times within the Service Hours: 4 hrs
-		- Workaround times within the Service Hour: 24 hrs 
-	(b)	Ephox Technical Support Service Level - Problem Category 2:
-		- Response times within the Service Hours: 8 hrs
-		- Workaround times within the Service Hour: 36 hrs 
-	(c)	Ephox Technical Support Service Level - Problem Category 3:
-		- Response times within the Service Hours: 24 hrs
-		- Workaround times within the Service Hours: 48 hrs 
-	
-SERVICE HOURS
-	
-	Ephox’s Service Hours:
-	
-	(a)	UK office: 9:00 AM to 5:00 PM Monday to Friday local time excluding UK
-		bank holidays.
-	(b)	California, US office: 9:00 AM to 5:00 PM Monday to Friday local time
-		excluding US public holidays. 
-	(c)	Queensland, Australia office: 7:30 AM to 3:30 PM Monday to Friday local
-		time excluding Queensland public holidays
-	
-	Office contact information available at http://www.ephox.com/aboutus/offices.html.
-	
-PROBLEM CATEGORIES
-	
-	(a)	Category 1:
-		Effective use (commercially tenable use) is not possible due to such
-		malfunctions, or is unreasonably restricted or impaired.
-	
-	(b)	Category 2:
-		Effective use of the software is not gravely impaired, so that working with the
-		software according to the specifications stipulated (software documentation) is
-		possible.
-	
-	(c)	Category 3:
-		Effective use is not restricted due to this malfunction.
-		The categorization of these malfunctions into one of the malfunction classes is
-		advised at the time that the malfunction is reported.
-	
-REPORTING OF PROBLEMS
-	
-	All problems are to be reported by a Licensee representative through the Ephox
-	technical support form on the Ephox website at: http://www.ephox.com/support/. 
-	After submission include the Ephox Technical Support case number that was
-	advised by email in response to the initial reporting.
-	
-APPLICATION TO EPHOX PRODUCTS
-	
-	Ephox technical support applies only to the current Major Upgrade version of the
-	Licensed Software and the immediately preceding Major Upgrade version of the
-	Licensed Software for 90 days after the release of the current Major Upgrade
-	version of the Licensed Software.

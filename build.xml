@@ -33,16 +33,16 @@
 			<fileset dir="docs/api" includes="**/*"/>
 		</delete>
 
-		<moxiedoc outdir="docs/api" templatedir="tools/templates" msintellisense="docs/api/tinymce.vsdoc.js" eventclass="tinymce.util.Dispatcher" title="TinyMCE API">
-			<fileset dir="jscripts/tiny_mce/classes">
+		<moxiedoc outdir="${basedir}/docs/api" templatedir="${basedir}/tools/templates" msintellisense="${basedir}/docs/api/tinymce.vsdoc.js" eventclass="tinymce.util.Dispatcher" title="TinyMCE API">
+			<fileset dir="${basedir}/jscripts/tiny_mce/classes">
 				<include name="**/*.js" /> 
 			</fileset>
 
-			<fileset dir="jscripts/tiny_mce/themes">
+			<fileset dir="${basedir}/jscripts/tiny_mce/themes">
 				<include name="**/editor_template_src.js" /> 
 			</fileset>
 
-			<fileset dir="jscripts/tiny_mce/plugins">
+			<fileset dir="${basedir}/jscripts/tiny_mce/plugins">
 				<include name="**/editor_plugin_src.js" /> 
 			</fileset>
 		</moxiedoc>
@@ -220,9 +220,6 @@
 				<include name="**"/>
 				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
-				<exclude name="build-utils/**" />
-				<exclude name="ivy.xml" />
-				<exclude name="enterprisetinymce.xml" />
 				<exclude name="ephox-changelog.txt" />
 			</fileset>
 		</copy>
@@ -244,7 +241,7 @@
 		</tstamp>
 		<concat destfile="${temp_dir}/tinymce/changelog.txt" eol="dos" fixlastline="true">
 			<header>Version ${file_version} (${now})&#13;&#10;	Ephox distribution of TinyMCE ${version}.</header>
-			<filelist files="ephox-changelog.txt,changelog.txt" />
+			<filelist files="${basedir}/ephox-changelog.txt,${basedir}/changelog.txt" />
 		</concat>
 		
 		<!-- Replace major version -->
@@ -334,10 +331,6 @@
 		<delete file="${temp_dir}/communitytinymce_${file_version}.zip" quiet="true" />
 		<zip destfile="${temp_dir}/communitytinymce_${file_version}.zip">
 			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce">
-				<exclude name="LICENSE.TXT" />
-			</zipfileset>
-			<zipfileset dir="${temp_dir}/tinymce/jscripts/tiny_mce" prefix="tinymce">
-				<include name="license.txt" />
 			</zipfileset>
 		</zip>
 	</target>

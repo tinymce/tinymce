@@ -1,5 +1,0 @@
-<statuses default="integration">
-	<status name="release" integration="no" />
-	<status name="integration" integration="yes" />
-	<status name="untested" integration="yes" />
-</statuses>
