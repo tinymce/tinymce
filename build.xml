@@ -242,7 +242,10 @@
 		</tstamp>
 		<concat destfile="${temp_dir}/tinymce/changelog.txt" eol="dos" fixlastline="true">
 			<header>Version ${file_version} (${now})&#13;&#10;	Ephox distribution of TinyMCE ${version}.</header>
-			<filelist files="${basedir}/ephox-changelog.txt,${basedir}/changelog.txt" />
+			<filelist>
+				<file name="${basedir}/ephox-changelog.txt" />
+				<file name="${basedir}/changelog.txt" />
+			</filelist>
 		</concat>
 		
 		<!-- Replace major version -->
