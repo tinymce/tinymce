@@ -6,7 +6,7 @@
 	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
 	<property description="Temp directory" name="temp_dir" location="tmp" />
 	<property environment="env" />
-	<property description="Ephox Build Number" name="ephox-build-number" value="${env.BUILD_NUMBER}" />
+	<property description="Build number" name="build-number" value="${env.BUILD_NUMBER}" />
 
 	<!-- Allow any user specific values to override the defaults -->
 	<property file="${user.home}/tinymce_build.properties" />
@@ -234,8 +234,8 @@
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
 		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
 		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
-		<property name="version.minor" value="${version.minor.upstream}-${ephox-build-number}" />
-		<property name="file_version" value="${version}-${ephox-build-number}" />
+		<property name="version.minor" value="${version.minor.upstream}-${build-number}" />
+		<property name="file_version" value="${version}-${build-number}" />
 
 		<tstamp>
 			<format property="now" pattern="yyyy-MM-dd" timezone="GMT" />
