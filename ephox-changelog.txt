@@ -4,5 +4,5 @@
 	Added significantly improved list handling via the new 'lists' plugin.
 	Fixed bug where image resize handles were left behind when changing the alignment of an image in Firefox.
 	Spaces in URLs are now automatically encoded as %20 since they are always invalid.
-	Fixed bug where HR was inserted inside P elements insted of splitting them.
+	Fixed bug where HR was inserted inside P elements instead of splitting them.
 	Fixed bug where deleting content in Firefox used the attributes from the end element instead of the start.
