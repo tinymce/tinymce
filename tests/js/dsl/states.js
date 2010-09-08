@@ -47,8 +47,8 @@ ParagraphBetweenMixedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ul>
 NonEmptyHeading = createState('<h1>Test</h1>', 'h1', 0);
 TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
 TableCellWithBrsFirstLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
-TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
-TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'after');
+TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
+TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
 TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
 
 HeadingInOrderedList = createState('<ol><li><h2>Test</h2></li></ol>', 'h2', '2');
@@ -94,8 +94,8 @@ UnorderedListItemInsideDiv = createState('<div id="div"><ul>\n<li>Item1</li><li>
 ParagraphInDiv = createState('<div><p>Item</p></div>', 'p', 2);
 TextInDiv = createState('<div>Item</div>', 'div', 2);
 TextWithBrsInDivFirstLine = createState('<div>Item1<br />Item2</div>', 'div', 2);
-TextWithBrsInDivMiddleLine = createState('<div>Item1<br />Item2<br />Item3</div>', 'br:nth-child(1)', 'after');
-TextWithBrsInDivLastLine = createState('<div>Item1<br />Item2</div>', 'br:nth-child(1)', 'after');
+TextWithBrsInDivMiddleLine = createState('<div>Item1<br />Item2<br />Item3</div>', 'br:nth-child(1)', 'afterNextCharacter');
+TextWithBrsInDivLastLine = createState('<div>Item1<br />Item2</div>', 'br:nth-child(1)', 'afterNextCharacter');
 
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);
@@ -105,10 +105,10 @@ MultipleHeadingSelection = createState('<h1>This is a test</h1><h1>Second paragr
 SingleBlockSelection = createState('<div>This is a test</div>', 'div', 5, 'div', 7);
 MultipleBlockSelection = createState('<div>This is a test</div><div>Second paragraph</div>', 'div:nth-child(1)', 5, 'div:nth-child(2)', 6);
 
-SingleBlockWithBrSelection = createState('<div>Item1<br />Item2</div>', 'div', 3, 'br', 'after');
+SingleBlockWithBrSelection = createState('<div>Item1<br />Item2</div>', 'div', 3, 'br', 'afterNextCharacter');
 MultipleBlockWithBrSelection = createState('<div>Item1<br />Item2</div><div>Item3</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
 MultipleBlockWithBrPartialSelection = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
-MultipleBlockWithBrPartialSelectionAtEnd = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1) br', 'after', 'div:nth-child(2) br', 'after');
+MultipleBlockWithBrPartialSelectionAtEnd = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1) br', 'afterNextCharacter', 'div:nth-child(2) br', 'afterNextCharacter');
 
 CellWithoutBrSelection = createState('<table><tbody><tr><td>Cell 1</td></tr></tbody></table>', 'td', 1, 'td', 4);
 CellWithBrSingleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);
@@ -144,3 +144,6 @@ ParagraphAfterOlSelection = createState('<ol><li>Item 1</li></ol><p>After</p>', 
 ParagraphAfterUlSelection = createState('<ul><li>Item 1</li></ul><p>After</p>', 'li', 4, 'p', 3);
 ParagraphBeforeAndAfterOlSelection = createState('<p>Before</p><ol><li>Item 1</li></ol><p>After</p>', 'p:nth-child(1)', 4, 'p:nth-child(3)', 3);
 ParagraphBeforeAndAfterUlSelection = createState('<p>Before</p><ul><li>Item 1</li></ul><p>After</p>', 'p:nth-child(1)', 4, 'p:nth-child(3)', 3);
+
+SelectionEndingAtBr = createState('<p>Item<br>After</p>', 'p', 2, 'br', 'after');
+SelectionStartingAtBr = createState('<p>Before<br>Item</p>', 'p', 'after', 'br', 'afterNextCharacter');

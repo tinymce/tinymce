@@ -27,16 +27,27 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 	var startContainer = findContainer(startSelector);
 	var endContainer = findContainer(endSelector);
 	var rng = editor.dom.createRng();
-	if (startOffset === 'after') {
-		rng.setStartAfter(startContainer);
-	} else {
-		rng.setStart(startContainer, startOffset);
+	
+	function setRange(container, offset, start) {
+		if (offset === 'after') {
+			if (start) {
+				rng.setStartAfter(container);
+			} else {
+				rng.setEndAfter(container);
+			}
+			return;
+		} else if (offset === 'afterNextCharacter') {
+			container = container.nextSibling;
+			offset = 1;
+		}
+		if (start) {
+			rng.setStart(container, offset);
+		} else {
+			rng.setEnd(container, offset);
+		}
 	}
-	if (endOffset === 'after') {
-		rng.setEndAfter(endContainer);
-	} else {
-		rng.setEnd(endContainer, endOffset);
-	}
+	setRange(startContainer, startOffset, true);
+	setRange(endContainer, endOffset, false);
 	editor.selection.setRng(rng);
 }
 

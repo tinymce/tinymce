@@ -490,7 +490,7 @@
 		},
 		
 		process: function(actions) {
-			var t = this, sel = t.ed.selection, dom = t.ed.dom, selectedBlocks;
+			var t = this, sel = t.ed.selection, dom = t.ed.dom, selectedBlocks, r;
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
 				if (!element || element.nodeType !== 1) {
@@ -506,9 +506,24 @@
 			function recurse(element) {
 				t.splitSafeEach(element.childNodes, processElement);
 			}
+			function brAtEdgeOfSelection(container, offset, start) {
+				return offset >= 0 && container.hasChildNodes() && container.childNodes[offset].tagName === 'BR';
+			}
 			selectedBlocks = sel.getSelectedBlocks();
 			if (selectedBlocks.length === 0) {
 				selectedBlocks = [ dom.getRoot() ];
+			}
+
+			r = sel.getRng(true);
+			if (!r.collapsed) {
+				if (brAtEdgeOfSelection(r.endContainer, r.endOffset - 1)) {
+					r.setEnd(r.endContainer, r.endOffset - 1);
+					sel.setRng(r);
+				}
+				if (brAtEdgeOfSelection(r.startContainer, r.startOffset)) {
+					r.setStart(r.startContainer, r.startOffset + 1);
+					sel.setRng(r);
+				}
 			}
 			bookmark = sel.getBookmark();
 			actions.OL = actions.UL = recurse;
