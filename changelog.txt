@@ -1,4 +1,4 @@
-Version 3.3.x (2010-xx-xx)
+Version 3.3.9 (2010-09-08)
 	Fixed bug where inserting table rows into a table with subtable would produce an incorrect column count.
 	Fixed bug where the selection of cells in a table with subtables could produce invalid selections.
 	Fixed bug where the table plugin would produce a script error if you tried to move the caret before a first child table.
