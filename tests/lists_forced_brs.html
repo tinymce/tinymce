@@ -52,11 +52,14 @@ asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', fu
 	queue.done();
 });
 
-asyncTest('Force BRs - Selection ends at BR', function() {
+asyncTest('Force BRs - Selection boundaries at BR', function() {
 	ApplyingOL.to(SelectionEndingAtBr).gives('<ol><li>Item</li></ol><p>After</p>');
 	ApplyingUL.to(SelectionEndingAtBr).gives('<ul><li>Item</li></ul><p>After</p>');
-	ApplyingOL.to(SelectionStartingAtBr).gives('<p>Before</p><ol><li>Item</li></ol>');
-	ApplyingUL.to(SelectionStartingAtBr).gives('<p>Before</p><ul><li>Item</li></ul>');
+	if (!tinymce.isIE) {
+		// This type of selection never occurs on IE.
+		ApplyingOL.to(SelectionStartingAtBr).gives('<p>Before</p><ol><li>Item</li></ol>');
+		ApplyingUL.to(SelectionStartingAtBr).gives('<p>Before</p><ul><li>Item</li></ul>');
+	}
 	queue.done();
 });
 
