@@ -1,3 +1,10 @@
+Version 3.3.9 (2010-09-08)
+	Fixed bug where inserting table rows into a table with subtable would produce an incorrect column count.
+	Fixed bug where the selection of cells in a table with subtables could produce invalid selections.
+	Fixed bug where the table plugin would produce a script error if you tried to move the caret before a first child table.
+	Fixed bug where the keep_styles feature on IE would move the caret to an incorrect location at the end of list blocks.
+	Fixed so attributes from legacy elements such as font gets retained when they get converted to spans.
+	Fixed minor issue where the select boxes wouldn't be set the not set by default in the table dialog.
 Version 3.3.8 (2010-06-30)
 	On IE8+ and FireFox 3.5+, dragging an image now correctly adds an undo
 	event.

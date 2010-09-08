@@ -11,6 +11,20 @@
 (function(tinymce) {
 	var each = tinymce.each;
 
+	// Checks if the selection/caret is at the start of the specified block element
+	function isAtStart(rng, par) {
+		var doc = par.ownerDocument, rng2 = doc.createRange(), elm;
+
+		rng2.setStartBefore(par);
+		rng2.setEnd(rng.endContainer, rng.endOffset);
+
+		elm = doc.createElement('body');
+		elm.appendChild(rng2.cloneContents());
+
+		// Check for text characters of other elements that should be treated as content
+		return elm.innerHTML.replace(/<(br|img|object|embed|input|textarea)[^>]*>/gi, '-').replace(/<[^>]+>/g, '').length == 0;
+	};
+
 	/**
 	 * Table Grid class.
 	 */
@@ -38,12 +52,12 @@
 			grid = [];
 
 			each(['thead', 'tbody', 'tfoot'], function(part) {
-				var rows = dom.select(part + ' tr', table);
+				var rows = dom.select('> ' + part + ' tr', table);
 
 				each(rows, function(tr, y) {
 					y += startY;
 
-					each(dom.select('td,th', tr), function(td, x) {
+					each(dom.select('> td, > th', tr), function(td, x) {
 						var x2, y2, rowspan, colspan;
 
 						// Skip over existing cells produced by rowspan

@@ -18,7 +18,7 @@ module("Basic functionality", {
 test('commands - xhtmlTextStyles', function() {
 	var c;
 
-	expect(18);
+	expect(19);
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
@@ -89,6 +89,9 @@ test('commands - xhtmlTextStyles', function() {
 
 	editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
 	equals(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: ' + fontFace('Arial') + ';">test</span></p>');
+
+	editor.setContent('<p><font face="Arial" style="color: #ff0000">test 123</font></p>');
+	equals(editor.getContent(), '<p><span style="color: #ff0000; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 });
 
 test('commands - alignInline', function() {
