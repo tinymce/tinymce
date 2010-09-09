@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
 <script>
 var editor;
 
@@ -251,6 +251,35 @@ test('select', function() {
 	editor.selection.select(editor.dom.select('table')[0], true);
 	equals(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
 	equals(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
+});
+
+test('getNode', function() {
+	var rng;
+
+	editor.setContent('<p id="p1"><span id="s1">span1</span> word <span id="s2">span2</span> word <span id="s3">span3</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.get('s1').firstChild, 0);
+	rng.setEnd(editor.dom.get('s1').nextSibling, 0);
+	editor.selection.setRng(rng);
+	same(editor.selection.getNode(), editor.dom.get('s1'), 'Detect selection ends immediately after node at start of paragraph.');
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
+	rng.setEnd(editor.dom.get('s2').nextSibling, 0);
+	editor.selection.setRng(rng);
+	same(editor.selection.getNode(), editor.dom.get('s2'), 'Detect selection immediately surrounds node in middle of paragraph.');
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.get('s3').previousSibling, editor.dom.get('s3').previousSibling.length);
+	rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
+	editor.selection.setRng(rng);
+	same(editor.selection.getNode(), editor.dom.get('s3'), 'Detect selection starts immediately before node at end of paragraph.');
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
+	rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
+	editor.selection.setRng(rng);
+	same(editor.selection.getNode(), editor.dom.get('p1'), 'Detect selection wrapping multiple nodes does not collapse.');
 });
 
 tinyMCE.init({
