@@ -946,7 +946,7 @@
 						cl = n.className;
 				}
 
-				if (ed.dom.is(n, ed.settings.theme_advanced_font_selector)) {
+				if (ed.dom.is(n, s.theme_advanced_font_selector)) {
 					if (!fz && n.style.fontSize)
 						fz = n.style.fontSize;
 
