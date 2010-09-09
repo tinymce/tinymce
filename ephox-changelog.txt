@@ -1,3 +1,4 @@
+	Fixed bug where double clicking an underlined word in FireFox didn't detect the underline correctly.
 	Added 'autolink' plugin to enable automatically linking URLs.
 	Added paste_enable_default_filters setting to enable the default paste filters to be disabled.
 	Fixed bug where border styles were incorrectly merged.
