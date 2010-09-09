@@ -81,6 +81,7 @@
 				theme_advanced_resize_horizontal : 1,
 				theme_advanced_resizing_use_cookie : 1,
 				theme_advanced_font_sizes : "1,2,3,4,5,6,7",
+				theme_advanced_font_selector : "span",
 				readonly : ed.settings.readonly
 			}, ed.settings);
 
@@ -945,7 +946,9 @@
 				if (n.nodeName === 'SPAN') {
 					if (!cl && n.className)
 						cl = n.className;
+				}
 
+				if (ed.dom.is(n, ed.settings.theme_advanced_font_selector)) {
 					if (!fz && n.style.fontSize)
 						fz = n.style.fontSize;
 
