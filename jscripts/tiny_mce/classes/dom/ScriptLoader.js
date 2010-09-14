@@ -40,6 +40,14 @@
 
 				callback();
 			};
+			
+			function error() {
+				// Report the error and then try to carry on anyway - it's probably just a plugin that will go missing.
+				if (typeof(console) !== "undefined" && console.log)
+					console.log("Failed to load: " + url);
+				
+				done();
+			};
 
 			id = dom.uniqueId();
 
@@ -64,7 +72,9 @@
 							dom.remove(script);
 
 							done();
-						}
+						},
+						
+						error : error
 					});
 
 					return;
@@ -80,6 +90,7 @@
 
 			// Add onload and readystate listeners
 			elm.onload = done;
+			elm.onerror = error;
 			elm.onreadystatechange = function() {
 				var state = elm.readyState;
 
