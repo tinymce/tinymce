@@ -454,8 +454,9 @@
 								while (marker = dom.get(bookmark.id + '_' + suffix))
 									dom.remove(marker, 1);
 
-								// If siblings are text nodes then merge them
-								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3) {
+								// If siblings are text nodes then merge them unless it's Opera since it some how removes the node
+								// and we are sniffing since adding a lot of detection code for a browser with 3% of the market isn't worth the effort. Sorry, Opera but it's just a fact
+								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !tinymce.isOpera) {
 									idx = prev.nodeValue.length;
 									prev.appendData(next.nodeValue);
 									dom.remove(next);
