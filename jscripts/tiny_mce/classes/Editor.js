@@ -2383,8 +2383,10 @@
 					e = e.target;
 
 					// Needs tobe the setBaseAndExtend or it will fail to select floated images
-					if (e.nodeName == 'IMG' || (e.nodeName == 'A' && t.dom.hasClass(e, 'mceItemAnchor')))
+					if (e.nodeName == 'IMG' || (e.nodeName == 'A' && t.dom.hasClass(e, 'mceItemAnchor'))) {
 						t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
+						t.nodeChanged();
+					}
 				});
 			}
 

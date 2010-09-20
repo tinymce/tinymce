@@ -1,3 +1,5 @@
+Version 3.x.x (2010-xx-xx)
+	Fixed bug where WebKit browsers wouldn't activate the image button when images where selected.
 Version 3.3.9 (2010-09-08)
 	Fixed bug where inserting table rows into a table with subtable would produce an incorrect column count.
 	Fixed bug where the selection of cells in a table with subtables could produce invalid selections.
