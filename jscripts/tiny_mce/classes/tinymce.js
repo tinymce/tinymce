@@ -47,7 +47,7 @@
 		/**
 		 * Release date of TinyMCE build.
 		 *
-		 * @property minorVersion
+		 * @property releaseDate
 		 * @type String
 		 */
 		releaseDate : '@@tinymce_release_date@@',
