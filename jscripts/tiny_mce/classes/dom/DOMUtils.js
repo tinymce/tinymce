@@ -1018,7 +1018,7 @@
 				// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
 				// This fix seems to resolve that issue by realcing the document ones a stylesheet finishes loading
 				// It's ugly but it seems to work fine.
-				if (isIE && d.documentMode) {
+				if (isIE && d.documentMode && d.recalc) {
 					link.onload = function() {
 						d.recalc();
 						link.onload = null;
