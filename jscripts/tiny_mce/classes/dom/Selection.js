@@ -134,7 +134,18 @@
 					if (d.body.childNodes.length == 0) {
 						d.body.innerHTML = h;
 					} else {
-						r.insertNode(r.createContextualFragment(h));
+						// createContextualFragment doesn't exists in IE 9 DOMRanges
+						if (r.createContextualFragment) {
+							r.insertNode(r.createContextualFragment(h));
+						} else {
+							// Fake createContextualFragment call in IE 9
+							var frag = d.createDocumentFragment(), temp = d.createElement('div');
+
+							frag.appendChild(temp);
+							temp.outerHTML = h;
+
+							r.insertNode(frag);
+						}
 					}
 				}
 
@@ -609,7 +620,7 @@
 		 * @return {Range} Internal browser range object.
 		 */
 		getRng : function(w3c) {
-			var t = this, s, r;
+			var t = this, s, r, elm, doc = t.win.document;
 
 			// Found tridentSel object then we need to use that one
 			if (w3c && t.tridentSel)
@@ -617,16 +628,24 @@
 
 			try {
 				if (s = t.getSel())
-					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
+					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : doc.createRange());
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
+			}
+
+			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
+			if (r.setStart && tinymce.isIE && doc.selection.createRange().item) {
+				elm = doc.selection.createRange().item(0);
+				r = doc.createRange();
+				r.setStartBefore(elm);
+				r.setEndAfter(elm);
 			}
 
 			// No range found then create an empty one
 			// This can occur when the editor is placed in a hidden container element on Gecko
 			// Or on IE when there was an exception
 			if (!r)
-				r = t.win.document.createRange ? t.win.document.createRange() : t.win.document.body.createTextRange();
+				r = doc.createRange ? doc.createRange() : doc.body.createTextRange();
 
 			if (t.selectedRange && t.explicitRange) {
 				if (r.compareBoundaryPoints(r.START_TO_START, t.selectedRange) === 0 && r.compareBoundaryPoints(r.END_TO_END, t.selectedRange) === 0) {

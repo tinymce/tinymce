@@ -9,6 +9,8 @@
  */
 
 (function(tinymce) {
+	var attrsCharsRegExp = /[&\"<>]/g, textCharsRegExp = /[<>&]/g, encodedChars = {'&' : '&amp;', '"' : '&quot;', '<' : '&lt;', '>' : '&gt;'};
+
 	/**
 	 * This class writes nodes into a string.
 	 * @class tinymce.dom.StringWriter
@@ -61,6 +63,7 @@
 			this.inAttr = true;
 			this.count++;
 			this.elementCount = this.count;
+			this.attrs = {};
 		},
 
 		/**
@@ -73,7 +76,10 @@
 		writeAttribute : function(n, v) {
 			var t = this;
 
-			t.writeRaw(" " + t.encode(n) + '="' + t.encode(v) + '"');
+			if (!t.attrs[n]) {
+				t.writeRaw(" " + t.encode(n, true) + '="' + t.encode(v, true) + '"');
+				t.attrs[n] = v;
+			}
 		},
 
 		/**
@@ -142,7 +148,7 @@
 		 */
 		writeComment : function(v) {
 			this._writeAttributesEnd();
-			this.writeRaw('<!-- ' + v + '-->');
+			this.writeRaw('<!--' + v + '-->');
 			this.count++;
 		},
 
@@ -163,23 +169,9 @@
 		 * @param {String} s String to encode.
 		 * @return {String} String with entity encoding of the raw elements like <>&".
 		 */
-		encode : function(s) {
-			return s.replace(/[<>&"]/g, function(v) {
-				switch (v) {
-					case '<':
-						return '&lt;';
-
-					case '>':
-						return '&gt;';
-
-					case '&':
-						return '&amp;';
-
-					case '"':
-						return '&quot;';
-				}
-
-				return v;
+		encode : function(s, attr) {
+			return s.replace(attr ? attrsCharsRegExp : textCharsRegExp, function(v) {
+				return encodedChars[v];
 			});
 		},
 

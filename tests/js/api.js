@@ -418,7 +418,7 @@ function fakeKeyEvent(e, na, o) {
 		equals(dom.getAttrib('test2', 'style'), 'background-image: url(Xtest.gifY);');
 
 		dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
-		equals(dom.getAttrib('test2', 'style'), tinymce.isIE ? 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
+		equals(dom.getAttrib('test2', 'style'), tinymce.isIE && !window.getSelection ? 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
 		dom.get('test').innerHTML = '<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>';
 		equals(dom.getAttrib('test2', 'style'), 'background-image: url(Xhttp://www.site.com/test.gifY);');
@@ -899,15 +899,15 @@ function fakeKeyEvent(e, na, o) {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
-		equals(DOM.getOuterHTML('test2').toLowerCase(), tinymce.isIE ? '<span id=test2><span>test</span><span>test2</span></span>' : '<span id="test2"><span>test</span><span>test2</span></span>');
+		equals(DOM.getOuterHTML('test2').toLowerCase().replace(/\"/g, ''), '<span id=test2><span>test</span><span>test2</span></span>');
 
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
 		DOM.setOuterHTML('test2', '<div id="test2">123</div>');
-		equals(tinymce.trim(DOM.getOuterHTML('test2') || '').toLowerCase(), tinymce.isIE ? '<div id=test2>123</div>' : '<div id="test2">123</div>');
+		equals(tinymce.trim(DOM.getOuterHTML('test2') || '').toLowerCase().replace(/\"/g, ''), '<div id=test2>123</div>');
 
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
 		DOM.setOuterHTML('test2', '<div id="test2">123</div><div id="test3">abc</div>');
-		equals(tinymce.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><'), tinymce.isIE ? '<div id=test2>123</div><div id=test3>abc</div>' : '<div id="test2">123</div><div id="test3">abc</div>');
+		equals(tinymce.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><').replace(/\"/g, ''), '<div id=test2>123</div><div id=test3>abc</div>');
 
 		DOM.remove('test');
 	});

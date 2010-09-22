@@ -153,7 +153,7 @@
 			var h;
 
 			h = this.doc.xml || new XMLSerializer().serializeToString(this.doc);
-			h = h.replace(/<\?[^?]+\?>|<html>|<\/html>|<html\/>|<!DOCTYPE[^>]+>/g, '');
+			h = h.replace(/<\?[^?]+\?>|<html[^>]*>|<\/html>|<html\/>|<!DOCTYPE[^>]+>/g, '');
 			h = h.replace(/ ?\/>/g, ' />');
 
 			if (this.valid)
