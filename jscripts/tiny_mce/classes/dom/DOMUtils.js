@@ -74,7 +74,7 @@
 			t.cssFlicker = false;
 			t.counter = 0;
 			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat"; 
-			t.stdMode = d.documentMode > 8;
+			t.stdMode = d.documentMode >= 8;
 
 			t.settings = s = tinymce.extend({
 				keep_values : false,
