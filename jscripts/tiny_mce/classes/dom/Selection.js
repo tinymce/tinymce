@@ -706,7 +706,7 @@
 		 * @return {Element} Currently selected element or common ancestor element.
 		 */
 		getNode : function() {
-			var t = this, rng = t.getRng(), sel = t.getSel(), elm;
+			var t = this, rng = t.getRng(), sel = t.getSel(), elm, start = rng.startContainer, end = rng.endContainer;
 
 			if (rng.setStart) {
 				// Range maybe lost after the editor is made visible again
@@ -744,7 +744,6 @@
 							start = start.parentNode;
 						}
 						if (rng.endOffset === 0) {
-							end = end.previousSibling;
 							end = skipEmptyTextNodes(end.previousSibling, false);
 						} else {
 							end = end.parentNode;
