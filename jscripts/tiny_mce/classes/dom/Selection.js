@@ -740,8 +740,25 @@
 					// Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
 					// This happens when you double click an underlined word in FireFox.
 					if (start.nodeType === 3 && end.nodeType === 3) {
-						start = (start.length === rng.startOffset) ? start.nextSibling : start.parentNode;
-						end = (rng.endOffset === 0) ? end.previousSibling : end.parentNode;
+						function skipEmptyTextNodes(n, forwards) {
+							var orig = n;
+							while (n && n.nodeType === 3 && n.length === 0) {
+								n = forwards ? n.nextSibling : n.previousSibling;
+							}
+							return n || orig;
+						}
+						if (start.length === rng.startOffset) {
+							start = skipEmptyTextNodes(start.nextSibling, true);
+						} else {
+							start = start.parentNode;
+						}
+						if (rng.endOffset === 0) {
+							end = end.previousSibling;
+							end = skipEmptyTextNodes(end.previousSibling, false);
+						} else {
+							end = end.parentNode;
+						}
+
 						if (start && start === end)
 							return start;
 					}
