@@ -240,7 +240,8 @@
 						}
 
 						// Is it valid to wrap this item
-						if (isValid(wrapName, nodeName) && isValid(parentName, wrapName)) {
+						if (isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
+								!(node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279)) {
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
