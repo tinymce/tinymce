@@ -10,7 +10,7 @@
 
 (function(win) {
 	var whiteSpaceRe = /^\s*|\s*$/g,
-		undefined;
+		undefined, isRegExpBroken = 'B'.replace(/A(.)|B/, '$1') === '$1';
 
 	/**
 	 * Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
@@ -657,7 +657,7 @@
 		// Todo: remove me once MS fixes the bug
 		_replace : function(find, replace, str) {
 			// On IE9 we have to fake $x replacement
-			if (tinymce.isIE && window.getSelection) {
+			if (isRegExpBroken) {
 				return str.replace(find, function() {
 					var val = replace, args = arguments, i;
 
