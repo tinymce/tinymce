@@ -1,4 +1,4 @@
-Version 3.3.9.1 (2010-09-xx)
+Version 3.3.9.1 (2010-09-23)
 	Fixed bug where WebKit browsers wouldn't activate the image button when images where selected.
 	Fixed bug where Opera Presto 10.60 deletes elements when restoring bookmarks.
 	Fixed bug where IE9 beta1 doesn't handle regexp replacement values correctly.
