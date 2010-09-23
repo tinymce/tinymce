@@ -753,7 +753,6 @@
 							start = start.parentNode;
 						}
 						if (rng.endOffset === 0) {
-							end = end.previousSibling;
 							end = skipEmptyTextNodes(end.previousSibling, false);
 						} else {
 							end = end.parentNode;
