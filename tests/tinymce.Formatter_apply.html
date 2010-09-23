@@ -608,6 +608,23 @@ test('Formatter - apply (selector)', function() {
 	equals(getContent(), '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>', 'Apply format on top of existing selector element');
 });
 
+test('Formatter - apply (mixed inline/selector)', function() {
+	var rng;
+
+	expect(1);
+
+	// Apply format on single element that matches a selector
+	editor.formatter.register('format', {inline : 'span', selector : 'li', attributes : {title : 'test'}, styles : {'color' : '#ff0000'}, classes : 'a b c'});
+	editor.getBody().innerHTML = '<table><tbody><tr><td>cell 1</td><td>cell 2</td></tr></tbody></table>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('tr')[0], 0);
+	rng.setEnd(editor.dom.select('tr')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<table><tbody><tr><td><span class="a b c" style="color: #ff0000;" title="test">cell 1</span></td><td>cell 2</td></tr></tbody></table>', 'Apply format on single element that matches a selector');
+			//'<p class="a b c" style="color: #ff0000;" title="test">1234</p>', 'Apply format on single element that matches a selector');
+});
+
 /*
 test('Formatter - apply (list block)', function() {
 	var rng;
