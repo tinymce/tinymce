@@ -52,6 +52,9 @@
 			if (!t.win.getSelection)
 				t.tridentSel = new tinymce.dom.TridentSelection(t);
 
+			if (tinymce.isIE && dom.boxModel)
+				this._fixIESelection();
+
 			// Prevent leaks
 			tinymce.addUnload(t.destroy, t);
 		},
@@ -783,6 +786,78 @@
 			// Manual destroy then remove unload handler
 			if (!s)
 				tinymce.removeUnload(t.destroy);
+		},
+
+		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
+		_fixIESelection : function() {
+			var dom = this.dom, doc = dom.doc, body = doc.body, started, startRng;
+
+			// Make HTML element unselectable since we are going to handle selection by hand
+			doc.documentElement.unselectable = true;
+
+			// Return range from point or null if it failed
+			function rngFromPoint(x, y) {
+				var rng = body.createTextRange();
+
+				try {
+					rng.moveToPoint(x, y);
+				} catch (ex) {
+					// IE sometimes throws and exception, so lets just ignore it
+					rng = null;
+				}
+
+				return rng;
+			};
+
+			// Fires while the selection is changing
+			function selectionChange(e) {
+				var pointRng;
+
+				// Check if the button is down or not
+				if (e.button) {
+					// Create range from mouse position
+					pointRng = rngFromPoint(e.x, e.y);
+
+					if (pointRng) {
+						// Check if pointRange is before/after selection then change the endPoint
+						if (pointRng.compareEndPoints('StartToStart', startRng) > 0)
+							pointRng.setEndPoint('StartToStart', startRng);
+						else
+							pointRng.setEndPoint('EndToEnd', startRng);
+
+						pointRng.select();
+					}
+				} else
+					endSelection();
+			}
+
+			// Removes listeners
+			function endSelection() {
+				dom.unbind(doc, 'mouseup', endSelection);
+				dom.unbind(doc, 'mousemove', selectionChange);
+				started = 0;
+			};
+
+			// Detect when user selects outside BODY
+			dom.bind(doc, 'mousedown', function(e) {
+				if (e.target.nodeName === 'HTML') {
+					if (started)
+						endSelection();
+
+					started = 1;
+
+					// Setup start position
+					startRng = rngFromPoint(e.x, e.y);
+					if (startRng) {
+						// Listen for selection change events
+						dom.bind(doc, 'mouseup', endSelection);
+						dom.bind(doc, 'mousemove', selectionChange);
+
+						dom.win.focus();
+						startRng.select();
+					}
+				}
+			});
 		}
 	});
 })(tinymce);
