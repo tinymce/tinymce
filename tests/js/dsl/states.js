@@ -114,6 +114,8 @@ CellWithoutBrSelection = createState('<table><tbody><tr><td>Cell 1</td></tr></tb
 CellWithBrSingleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);
 CellWithBrMultipleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);
 
+TableCellWithTextAfterUL = createState('<table><tbody><tr><td><ul><li>Existing</li></ul><span id="start">Line1</span><br />Line2<br id="end" />Line3<br />Line4</td></tr></tbody></table>', '#start', 1, '#end', 'afterNextCharacter');
+
 ParagraphToHeadingSelection = createState('<p>This is a test</p><h1>Second paragraph</h1>', 'p', 5, 'h1', 6);
 ParagraphToBlockSelection = createState('<p>This is a test</p><div>Second paragraph</div>', 'p', 5, 'div', 6);
 HeadingToParagraphSelection = createState('<h1>This is a test</h1><p>Second paragraph</p>', 'h1', 5, 'p', 6);

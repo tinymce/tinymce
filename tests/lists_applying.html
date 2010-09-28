@@ -217,6 +217,8 @@ asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
 	ApplyingUL.to(IndentedUlInOlCorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
 	ApplyingUL.to(IndentedOlInUlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
 	ApplyingUL.to(IndentedUlInOlIncorrectSelection).gives('<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>');
+
+	ApplyingUL.to(TableCellWithTextAfterUL).gives('<table><tbody><tr><td><ul><li>Existing</li><li><span id="start">Line1</span></li><li>Line2</li><li>Line3</li></ul>Line4</td></tr></tbody></table>');
 	queue.done();
 });
 
