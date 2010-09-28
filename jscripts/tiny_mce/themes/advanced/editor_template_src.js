@@ -826,6 +826,8 @@
 							startX, startY, startWidth, startHeight, width, height, ifrElm;
 
 						function resizeOnMove(e) {
+							e.preventDefault();
+
 							width = startWidth + (e.screenX - startX);
 							height = startHeight + (e.screenY - startY);
 
