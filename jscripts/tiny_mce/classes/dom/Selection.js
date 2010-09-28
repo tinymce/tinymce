@@ -637,7 +637,7 @@
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (r.setStart && tinymce.isIE && doc.selection.createRange().item) {
+			if (tinymce.isIE && r.setStart && doc.selection.createRange().item) {
 				elm = doc.selection.createRange().item(0);
 				r = doc.createRange();
 				r.setStartBefore(elm);
