@@ -820,6 +820,10 @@
 				}
 
 				ed.onPostRender.add(function() {
+					Event.add(ed.id + '_resize', 'click', function(e) {
+						e.preventDefault();
+					});
+
 					Event.add(ed.id + '_resize', 'mousedown', function(e) {
 						var mouseMoveHandler1, mouseMoveHandler2,
 							mouseUpHandler1, mouseUpHandler2,
