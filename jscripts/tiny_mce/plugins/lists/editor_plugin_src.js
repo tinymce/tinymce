@@ -208,6 +208,12 @@
 			var t = this, ed = t.ed, dom = ed.dom, applied = [], hasSameType = false, hasOppositeType = false, hasNonList = false, actions,
 				selectedBlocks = ed.selection.getSelectedBlocks();
 			
+			function cleanupBr(e) {
+				if (e && e.tagName === 'BR') {
+					dom.remove(e);
+				}
+			}
+			
 			function makeList(element) {
 				var list = dom.create(targetListType), li;
 				function adjustIndentForNewList(element) {
@@ -224,9 +230,7 @@
 						doWrapList(startSection, br, element.tagName === 'BODY' ? null : startSection.parentNode);
 						li = startSection.parentNode;
 						adjustIndentForNewList(li);
-						if (br) {
-							dom.remove(br);
-						}
+						cleanupBr(br);
 					});
 					if (element.tagName === 'P' || selectedBlocks.length > 1) {
 						dom.split(li.parentNode.parentNode, li.parentNode);
@@ -324,12 +328,8 @@
 				processBrs(element, function(startSection, br, previousBR) {
 					// Need to indent this part
 					doWrapList(startSection, br);
-					if (br) {
-						dom.remove(br);
-					}
-					if (previousBR) {
-						dom.remove(previousBR);
-					}
+					cleanupBr(br);
+					cleanupBr(previousBR);
 				});
 			}
 			
