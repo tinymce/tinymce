@@ -138,6 +138,13 @@
 				language : "en"
 			}, s);
 
+			// Allow the baseURL to be set when tinymce is initialized. Instances where the base URI
+			// would need to be manually set would be when tinyMCE is truly dynamically loaded and
+			// therefore does not have a script tag to parse a base URI from.
+			if (s.base_uri) {
+				tinymce.baseURL = s.base_uri;
+			}
+
 			t.settings = s;
 
 			// Legacy call
