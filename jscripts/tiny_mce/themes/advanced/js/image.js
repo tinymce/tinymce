@@ -88,7 +88,7 @@ var ImageDialog = {
 		if (el && el.nodeName == 'IMG') {
 			ed.dom.setAttribs(el, args);
 			tinyMCEPopup.editor.execCommand('mceRepaint');
-			//tinyMCEPopup.editor.focus();
+			tinyMCEPopup.editor.focus();
 		} else {
 			ed.execCommand('mceInsertContent', false, '<img id="__mce_tmp" />', {skip_undo : 1});
 			ed.dom.setAttribs('__mce_tmp', args);
