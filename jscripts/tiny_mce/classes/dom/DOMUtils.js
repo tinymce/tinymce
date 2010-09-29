@@ -1704,7 +1704,7 @@
 
 									// Remove everything but class name
 									ov = v;
-									v = tinymce._replace(/.*\.([a-z0-9_\-]+).*/i, '$1', h);
+									v = tinymce._replace(/.*\.([a-z0-9_\-]+).*/i, '$1', v);
 
 									// Filter classes
 									if (f && !(v = f(v, ov)))
