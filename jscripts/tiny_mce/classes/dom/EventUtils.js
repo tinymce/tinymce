@@ -298,6 +298,7 @@
 				return;
 
 			t.domLoaded = true;
+			win.TINYMCE_PAGE_LOADED = true;
 
 			each(t.inits, function(c) {
 				c();
