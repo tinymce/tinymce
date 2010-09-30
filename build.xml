@@ -61,6 +61,16 @@
 	<!-- Cleanup the build -->
 	<target name="clean" depends="" description="Cleans up the project from temporary files">
 		<delete dir="${temp_dir}" quiet="true" />
+		<delete>
+			<fileset dir="${build_dir}" includes="tiny_mce.js" />
+			<fileset dir="${build_dir}" includes="tiny_mce_src.js" />
+			<fileset dir="${build_dir}" includes="tiny_mce_popup.js" />
+			<fileset dir="${build_dir}" includes="jquery.tinymce.js" />
+			<fileset dir="${build_dir}" includes="tiny_mce_jquery.js" />
+			<fileset dir="${build_dir}" includes="tiny_mce_jquery_src.js" />
+			<fileset dir="${build_dir}" includes="tiny_mce_prototype.js" />
+			<fileset dir="${build_dir}" includes="tiny_mce_prototype_src.js" />
+		</delete>
 	</target>
 
 	<!-- Concat and minify classes and scripts -->
