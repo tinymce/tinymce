@@ -209,13 +209,23 @@
 		 * @param {String} c Color code value in hex for example: #FF00FF
 		 */
 		setColor : function(c) {
+			this.displayColor(c);
+			this.hideMenu();
+			this.settings.onselect(c);
+		},
+		
+		/**
+		 * Change the currently selected color for the control.
+		 *
+		 * @method displayColor
+		 * @param {String} c Color code value in hex for example: #FF00FF
+		 */
+		displayColor : function(c) {
 			var t = this;
 
 			DOM.setStyle(t.id + '_preview', 'backgroundColor', c);
 
 			t.value = c;
-			t.hideMenu();
-			t.settings.onselect(c);
 		},
 
 		/**
