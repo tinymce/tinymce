@@ -991,7 +991,7 @@
 						if (!color)
 							color = c.settings.default_color;
 						if (color !== c.value) {
-							c.setColor(color);
+							c.displayColor(color);
 						}
 					}
 				}
