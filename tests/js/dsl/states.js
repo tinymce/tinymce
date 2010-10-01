@@ -40,6 +40,11 @@ ParagraphWithMarginLeft = createState('<p style="margin-left: 60px;">Test</p>', 
 ParagraphWithPaddingLeft = createState('<p style="padding-left: 60px;">Test</p>', 'p', 0);
 ParagraphWithMarginAndPaddingLeft = createState('<p style="margin-left: 60px; padding-left: 60px;">Test</p>', 'p', 0);
 
+CenteredListItem = createState('<ul><li style="text-align: center;">Item1</li><li>Item2</li></ul>', 'li:nth-child(1)', 2);
+ItemInCenteredList = createState('<ul style="text-align: center;"><li>Item1</li><li>Item2</li></ul>', 'li:nth-child(1)', 2);
+RightAlignedListItem = createState('<ul><li style="text-align: right;">Item1</li><li>Item2</li></ul>', 'li:nth-child(1)', 2);
+ItemInRightAlignedList = createState('<ul style="text-align: right;"><li>Item1</li><li>Item2</li></ul>', 'li:nth-child(1)', 2);
+
 ParagraphBetweenOrderedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ol><li>Item2</li></ol>', 'p', 2);
 ParagraphBetweenUnorderedLists = createState('<ul><li>Item1</li></ul><p>Test</p><ul><li>Item2</li></ul>', 'p', 2);
 ParagraphBetweenMixedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ul><li>Item2</li></ul>', 'p', 2);
