@@ -88,7 +88,11 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 
 	Outdenting.a(OrderedListItemWithMargin).enablesState('outdent').andGives('<ol><li style="margin-left: 30px;">Test</li></ol>');
 	Outdenting.a(UnorderedListItemWithMargin).enablesState('outdent').andGives('<ul><li style="margin-left: 30px;">Test</li></ul>');
-	
+
+	Outdenting.a(CenteredListItem).enablesState('outdent').andGives('<ul><li style="text-align: left;">Item1</li><li>Item2</li></ul>');
+	Outdenting.a(ItemInCenteredList).enablesState('outdent').andGives('<ul style="text-align: center;"><li style="text-align: left;">Item1</li><li>Item2</li></ul>');
+	Outdenting.a(RightAlignedListItem).enablesState('outdent').andGives('<ul><li style="text-align: left;">Item1</li><li>Item2</li></ul>');
+	Outdenting.a(ItemInRightAlignedList).enablesState('outdent').andGives('<ul style="text-align: right;"><li style="text-align: left;">Item1</li><li>Item2</li></ul>');
 	queue.done();
 });
 

@@ -458,10 +458,15 @@
 			var t = this, ed = t.ed, dom = ed.dom, outdented = [];
 			
 			function outdentLI(element) {
-				var listElement, targetParent;
+				var listElement, targetParent, align;
 				if (!hasParentInList(ed, element, outdented)) {
 					if (dom.getStyle(element, 'margin-left') !== '' || dom.getStyle(element, 'padding-left') !== '') {
 						return t.adjustPaddingFunction(false)(element);
+					}
+					align = dom.getStyle(element, 'text-align', true);
+					if (align === 'center' || align === 'right') {
+						dom.setStyle(element, 'text-align', 'left');
+						return;
 					}
 					element = splitNestedLists(element, dom);
 					listElement = element.parentNode;
