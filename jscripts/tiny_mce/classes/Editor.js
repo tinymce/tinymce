@@ -2638,7 +2638,6 @@
 						each(template, function(attr) {
 							target.setAttributeNode(attr.cloneNode(true));
 						});
-						//t.dom.setAttribs(target, template);
 						t.undoManager.typing = 0;
 						t.undoManager.add();
 					};
