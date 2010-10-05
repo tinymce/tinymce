@@ -1,3 +1,23 @@
+Version 3.3.9.2 (2010-09-29)
+	Fixed bug where placing the caret in IE 9 beta 1 would not work correctly if you clicked out side the document body element.
+	Fixed bug where IE 9 beta 1 wouldn't resize the editor correctly since the events didn't fire as previous versions did.
+	Fixed bug where FF would produce an error message when being rendered inside a hidden div element.
+	Fixed bug where resize logic could produce a cookie with a width/height less than the size of the container.
+	Fixed bug where content_css wouldn't populate the styles dropdown correctly.
+Version 3.3.9.1 (2010-09-23)
+	Fixed bug where WebKit browsers wouldn't activate the image button when images where selected.
+	Fixed bug where Opera Presto 10.60 deletes elements when restoring bookmarks.
+	Fixed bug where IE9 beta1 doesn't handle regexp replacement values correctly.
+	Fixed bug where IE9 beta1 didn't render the inline dialogs correctly due to a bug with CSS clip.
+	Fixed bug where IE9 beta1 would produce error messages on load since they removed the document.recalc method.
+	Fixed bug where IE9 beta1 would produce <html xmlns=""> since they haven't implemented document.implementation.createDocument correctly.
+	Fixed bug where IE9 beta1 would searchreplace doesn't work since their native DOM Range doesn't have a find method.
+	Fixed bug where IE9 beta1 would render the source view incorrectly due to incorrect viewport size measurements.
+	Fixed bug where IE9 beta1 would crash when running the basic functionality unit tests.
+	Fixed bug where IE9 beta1 would wrap elements in blocks correctly due to changes to the selection object.
+	Fixed bug where IE9 beta1 would fail to insert contents since they havn't implemented the createContextualFragment method in their DOM Range.
+	Fixed bug where IE9 beta1 would fail to handle image selection since they currently doesn't support control selections in their DOM Range.
+	Fixed bug where IE9 beta1 would fail to load scripts since they fire the onload event before the scripts are parsed and executed.
 Version 3.3.9 (2010-09-08)
 	Fixed bug where inserting table rows into a table with subtable would produce an incorrect column count.
 	Fixed bug where the selection of cells in a table with subtables could produce invalid selections.

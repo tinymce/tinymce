@@ -43,6 +43,11 @@
 				t.writer = new tinymce.dom.StringWriter();
 			}
 
+			// IE9 broke the XML attributes order so it can't be used anymore
+			if (tinymce.isIE && document.documentMode > 8) {
+				t.writer = new tinymce.dom.StringWriter();
+			}
+
 			// Default settings
 			t.settings = s = extend({
 				dom : tinymce.DOM,
@@ -552,23 +557,23 @@
 				// This process is only done when getting contents out from the editor.
 				if (!o.set) {
 					// We need to replace paragraph whitespace with an nbsp before indentation to keep the \u00a0 char
-					h = h.replace(/<p>\s+<\/p>|<p([^>]+)>\s+<\/p>/g, s.entity_encoding == 'numeric' ? '<p$1>&#160;</p>' : '<p$1>&nbsp;</p>');
+					h = tinymce._replace(/<p>\s+<\/p>|<p([^>]+)>\s+<\/p>/g, s.entity_encoding == 'numeric' ? '<p$1>&#160;</p>' : '<p$1>&nbsp;</p>', h);
 
 					if (s.remove_linebreaks) {
 						h = h.replace(/\r?\n|\r/g, ' ');
-						h = h.replace(/(<[^>]+>)\s+/g, '$1 ');
-						h = h.replace(/\s+(<\/[^>]+>)/g, ' $1');
-						h = h.replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>'); // Trim block start
-						h = h.replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>'); // Trim block start
-						h = h.replace(/\s+<\/(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>'); // Trim block end
+						h = tinymce._replace(/(<[^>]+>)\s+/g, '$1 ', h);
+						h = tinymce._replace(/\s+(<\/[^>]+>)/g, ' $1', h);
+						h = tinymce._replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>', h); // Trim block start
+						h = tinymce._replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>', h); // Trim block start
+						h = tinymce._replace(/\s+<\/(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>', h); // Trim block end
 					}
 
 					// Simple indentation
 					if (s.apply_source_formatting && s.indent_mode == 'simple') {
 						// Add line breaks before and after block elements
-						h = h.replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html|map)(|[^>]+)>\s*/g, '\n<$1$2$3>\n');
-						h = h.replace(/\s*<(p|h[1-6]|blockquote|div|title|style|pre|script|td|li|area)(|[^>]+)>/g, '\n<$1$2>');
-						h = h.replace(/<\/(p|h[1-6]|blockquote|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n');
+						h = tinymce._replace(/<(\/?)(ul|hr|table|meta|link|tbody|tr|object|body|head|html|map)(|[^>]+)>\s*/g, '\n<$1$2$3>\n', h);
+						h = tinymce._replace(/\s*<(p|h[1-6]|blockquote|div|title|style|pre|script|td|li|area)(|[^>]+)>/g, '\n<$1$2>', h);
+						h = tinymce._replace(/<\/(p|h[1-6]|blockquote|div|title|style|pre|script|td|li)>\s*/g, '</$1>\n', h);
 						h = h.replace(/\n\n/g, '\n');
 					}
 				}
@@ -576,11 +581,11 @@
 				h = t._unprotect(h, p);
 
 				// Restore CDATA sections
-				h = h.replace(/<!--\[CDATA\[([\s\S]+)\]\]-->/g, '<![CDATA[$1]]>');
+				h = tinymce._replace(/<!--\[CDATA\[([\s\S]+)\]\]-->/g, '<![CDATA[$1]]>', h);
 
 				// Restore the \u00a0 character if raw mode is enabled
 				if (s.entity_encoding == 'raw')
-					h = h.replace(/<p>&nbsp;<\/p>|<p([^>]+)>&nbsp;<\/p>/g, '<p$1>\u00a0</p>');
+					h = tinymce._replace(/<p>&nbsp;<\/p>|<p([^>]+)>&nbsp;<\/p>/g, '<p$1>\u00a0</p>', h);
 
 				// Restore noscript elements
 				h = h.replace(/<noscript([^>]+|)>([\s\S]*?)<\/noscript>/g, function(v, attribs, text) {

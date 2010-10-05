@@ -2238,7 +2238,7 @@
 
 		_addEvents : function() {
 			// 'focus', 'blur', 'dblclick', 'beforedeactivate', submit, reset
-			var t = this, i, s = t.settings, lo = {
+			var t = this, i, s = t.settings, dom = t.dom, lo = {
 				mouseup : 'onMouseUp',
 				mousedown : 'onMouseDown',
 				click : 'onClick',
@@ -2272,33 +2272,33 @@
 					case 'contextmenu':
 						if (tinymce.isOpera) {
 							// Fake contextmenu on Opera
-							t.dom.bind(t.getBody(), 'mousedown', function(e) {
+							dom.bind(t.getBody(), 'mousedown', function(e) {
 								if (e.ctrlKey) {
 									e.fakeType = 'contextmenu';
 									eventHandler(e);
 								}
 							});
 						} else
-							t.dom.bind(t.getBody(), k, eventHandler);
+							dom.bind(t.getBody(), k, eventHandler);
 						break;
 
 					case 'paste':
-						t.dom.bind(t.getBody(), k, function(e) {
+						dom.bind(t.getBody(), k, function(e) {
 							eventHandler(e);
 						});
 						break;
 
 					case 'submit':
 					case 'reset':
-						t.dom.bind(t.getElement().form || DOM.getParent(t.id, 'form'), k, eventHandler);
+						dom.bind(t.getElement().form || DOM.getParent(t.id, 'form'), k, eventHandler);
 						break;
 
 					default:
-						t.dom.bind(s.content_editable ? t.getBody() : t.getDoc(), k, eventHandler);
+						dom.bind(s.content_editable ? t.getBody() : t.getDoc(), k, eventHandler);
 				}
 			});
 
-			t.dom.bind(s.content_editable ? t.getBody() : (isGecko ? t.getDoc() : t.getWin()), 'focus', function(e) {
+			dom.bind(s.content_editable ? t.getBody() : (isGecko ? t.getDoc() : t.getWin()), 'focus', function(e) {
 				t.focus(true);
 			});
 
@@ -2310,8 +2310,8 @@
 					t.focus(true);
 				};
 
-				t.dom.bind(t.getBody(), 'click', doFocus);
-				t.dom.bind(t.getBody(), 'keydown', doFocus);
+				dom.bind(t.getBody(), 'click', doFocus);
+				dom.bind(t.getBody(), 'keydown', doFocus);
 			}
 
 			// #endif
@@ -2319,17 +2319,7 @@
 			// Fixes bug where a specified document_base_uri could result in broken images
 			// This will also fix drag drop of images in Gecko
 			if (tinymce.isGecko) {
-				// Convert all images to absolute URLs
-/*				t.onSetContent.add(function(ed, o) {
-					each(ed.dom.select('img'), function(e) {
-						var v;
-
-						if (v = e.getAttribute('_mce_src'))
-							e.src = t.documentBaseURI.toAbsolute(v);
-					})
-				});*/
-
-				t.dom.bind(t.getDoc(), 'DOMNodeInserted', function(e) {
+				dom.bind(t.getDoc(), 'DOMNodeInserted', function(e) {
 					var v;
 
 					e = e.target;
@@ -2383,8 +2373,10 @@
 					e = e.target;
 
 					// Needs tobe the setBaseAndExtend or it will fail to select floated images
-					if (e.nodeName == 'IMG' || (e.nodeName == 'A' && t.dom.hasClass(e, 'mceItemAnchor')))
+					if (e.nodeName == 'IMG' || (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor'))) {
 						t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
+						t.nodeChanged();
+					}
 				});
 			}
 
@@ -2477,7 +2469,7 @@
 			if (tinymce.isIE) {
 				// Fix so resize will only update the width and height attributes not the styles of an image
 				// It will also block mceItemNoResize items
-				t.dom.bind(t.getDoc(), 'controlselect', function(e) {
+				dom.bind(t.getDoc(), 'controlselect', function(e) {
 					var re = t.resizeInfo, cb;
 
 					e = e.target;
@@ -2487,28 +2479,28 @@
 						return;
 
 					if (re)
-						t.dom.unbind(re.node, re.ev, re.cb);
+						dom.unbind(re.node, re.ev, re.cb);
 
-					if (!t.dom.hasClass(e, 'mceItemNoResize')) {
+					if (!dom.hasClass(e, 'mceItemNoResize')) {
 						ev = 'resizeend';
-						cb = t.dom.bind(e, ev, function(e) {
+						cb = dom.bind(e, ev, function(e) {
 							var v;
 
 							e = e.target;
 
-							if (v = t.dom.getStyle(e, 'width')) {
-								t.dom.setAttrib(e, 'width', v.replace(/[^0-9%]+/g, ''));
-								t.dom.setStyle(e, 'width', '');
+							if (v = dom.getStyle(e, 'width')) {
+								dom.setAttrib(e, 'width', v.replace(/[^0-9%]+/g, ''));
+								dom.setStyle(e, 'width', '');
 							}
 
-							if (v = t.dom.getStyle(e, 'height')) {
-								t.dom.setAttrib(e, 'height', v.replace(/[^0-9%]+/g, ''));
-								t.dom.setStyle(e, 'height', '');
+							if (v = dom.getStyle(e, 'height')) {
+								dom.setAttrib(e, 'height', v.replace(/[^0-9%]+/g, ''));
+								dom.setStyle(e, 'height', '');
 							}
 						});
 					} else {
 						ev = 'resizestart';
-						cb = t.dom.bind(e, 'resizestart', Event.cancel, Event);
+						cb = dom.bind(e, 'resizestart', Event.cancel, Event);
 					}
 
 					re = t.resizeInfo = {
@@ -2553,7 +2545,7 @@
 					t.undoManager.add();
 				};
 
-				t.dom.bind(t.getDoc(), 'focusout', function(e) {
+				dom.bind(t.getDoc(), 'focusout', function(e) {
 					if (!t.removed && t.undoManager.typing)
 						addUndo();
 				});

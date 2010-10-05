@@ -88,9 +88,12 @@
 				src : tinymce._addVer(url)
 			});
 
-			// Add onload and readystate listeners
-			elm.onload = done;
+			// Add onload listener for non IE browsers since IE9
+			// fires onload event before the script is parsed and executed
+			if (!tinymce.isIE)
+				elm.onload = done;
 			elm.onerror = error;
+
 			elm.onreadystatechange = function() {
 				var state = elm.readyState;
 
