@@ -1,4 +1,0 @@
-1) edit config.ini and fill in your framework list.
-2) edit selectors.list and edit your selectors list.
-3) edit style.css, header.html and footer.html if you wish.
-4) edit template.html if you want to change the selectors html file. It DOES NOT accept the full document, just elements.
