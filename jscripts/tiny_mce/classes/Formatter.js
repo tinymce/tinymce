@@ -943,7 +943,7 @@
 			var startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
-				endOffset = rng.endOffset, sibling, lastIdx;
+				endOffset = rng.endOffset, sibling, lastIdx, leaf;
 
 			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(container, child_name, sibling_name, root) {
@@ -973,6 +973,19 @@
 				return container;
 			};
 
+			// This function walks down the tree to find the leaf at the selection.
+			// The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
+			function findLeaf(node, offset) {
+				if (offset === undefined)
+					offset = node.nodeType === 3 ? node.length : node.childNodes.length;
+				while (node && node.hasChildNodes()) {
+					node = node.childNodes[offset];
+					if (node)
+						offset = node.nodeType === 3 ? node.length : node.childNodes.length;
+				}
+				return { node: node, offset: offset };
+			}
+
 			// If index based start position then resolve it
 			if (startContainer.nodeType == 1 && startContainer.hasChildNodes()) {
 				lastIdx = startContainer.childNodes.length - 1;
@@ -998,12 +1011,36 @@
 			if (isBookmarkNode(startContainer))
 				startContainer = startContainer.nextSibling || startContainer;
 
-			if (isBookmarkNode(endContainer.parentNode))
+			if (isBookmarkNode(endContainer.parentNode)) {
+				endOffset = dom.nodeIndex(endContainer);
 				endContainer = endContainer.parentNode;
+			}
 
-			if (isBookmarkNode(endContainer))
-				endContainer = endContainer.previousSibling || endContainer;
+			if (isBookmarkNode(endContainer) && endContainer.previousSibling) {
+				endContainer = endContainer.previousSibling;
+				endOffset = endContainer.length;
+			}
 
+			if (format[0].inline) {
+				// Avoid applying formatting to a trailing space.
+				leaf = findLeaf(endContainer, endOffset);
+				if (leaf.node) {
+					while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling)
+						leaf = findLeaf(leaf.node.previousSibling);
+
+					if (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&
+							leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
+
+						if (leaf.offset > 1) {
+							endContainer = leaf.node;
+							endContainer.splitText(leaf.offset - 1);
+						} else if (leaf.node.previousSibling) {
+							endContainer = leaf.node.previousSibling;
+						}
+					}
+				}
+			}
+			
 			// Move start/end point up the tree if the leaves are sharp and if we are in different containers
 			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
 			// This will reduce the number of wrapper elements that needs to be created

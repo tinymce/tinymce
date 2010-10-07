@@ -430,6 +430,53 @@ test('Formatter - apply (inline)', function() {
 	equals(getContent(), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
 });
 
+test('Formatter - apply inline formats ignore trailing space', function() {
+	var rng;
+	editor.formatter.register('format', {inline : 'b'});
+	editor.getBody().innerHTML = '<p>1234 6789 1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 4);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 10);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p>1234<b> 6789</b> 1234</p>', 'Inline element on selected text excludes trailing space');
+
+	// Now undo it so that we leave some nasty split text nodes around.
+	editor.formatter.remove('format');
+	equals(getContent(), '<p>1234 6789 1234</p>', 'Inline element on selected text excludes trailing space when unapplying');
+
+	editor.formatter.apply('format');
+	equals(getContent(), '<p>1234<b> 6789</b> 1234</p>', 'Inline element on selected text excludes trailing space with split text nodes');
+
+	editor.setContent('<p>1234<i> </i>6789</p>');
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild.nextSibling, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>1234<i> </i></b>6789</p>', 'Apply to space if it already has special formatting');
+
+	editor.setContent('<p>123<i>4</i> 6789</p>');
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>123<i>4</i></b> 6789</p>', 'Skip space when it is at start of element');
+
+	// Create a lot of empty text nodes.
+	editor.setContent('<p>1234 6789</p>');
+	editor.dom.select('p')[0].firstChild.splitText(4);
+	editor.dom.select('p')[0].firstChild.splitText(4);
+	editor.dom.select('p')[0].firstChild.splitText(4);
+	editor.dom.select('p')[0].firstChild.splitText(4);
+	editor.dom.select('p')[0].lastChild.splitText(1);
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 0);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>1234</b> 6789</p>', 'Skip empty text nodes');
+	
+});
+
 test('Formatter - apply (block)', function() {
 	var rng;
 
