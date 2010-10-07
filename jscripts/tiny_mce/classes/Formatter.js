@@ -998,12 +998,57 @@
 			if (isBookmarkNode(startContainer))
 				startContainer = startContainer.nextSibling || startContainer;
 
-			if (isBookmarkNode(endContainer.parentNode))
+			if (isBookmarkNode(endContainer.parentNode)) {
 				endContainer = endContainer.parentNode;
+				endOffset = endContainer.childNodes.length;
+			}
 
-			if (isBookmarkNode(endContainer))
-				endContainer = endContainer.previousSibling || endContainer;
+			if (isBookmarkNode(endContainer) && endContainer.previousSibling) {
+				endContainer = endContainer.previousSibling;
+				endOffset = endContainer.length;
+			}
 
+			if (format[0].inline) {
+				// Avoid applying formatting to a trailing space.
+				function findLeaf(node, offset) {
+					if (offset === undefined && node)
+						offset = node.childNodes ? node.childNodes.length : node.length;
+					while (node && node.hasChildNodes()) {
+						node = node.childNodes[offset];
+						if (node)
+							offset = node.childNodes ? node.childNodes.length : node.length;
+					}
+					return { node: node, offset: offset };
+				}
+				function findPrevious(node) {
+					var offset;
+					if (node.previousSibling)
+						return node.previousSibling;
+					
+					while (!node.previousSibling) {
+						offset = dom.nodeIndex(node);
+						node = node.parentNode;
+					}
+					return findLeaf(node.previousSibling).node;
+				}
+				var leaf = findLeaf(endContainer, endOffset);
+				if (leaf.node) {
+					while (leaf.node && leaf.offset == 0 && leaf.node.previousSibling)
+						leaf = findLeaf(leaf.node.previousSibling);
+
+					if (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&
+							leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
+
+						if (leaf.offset === 1) {
+							endContainer = findPrevious(leaf.node);
+						} else {
+							endContainer = leaf.node;
+							endContainer.splitText(leaf.offset - 1);
+						}
+					}
+				}
+			}
+			
 			// Move start/end point up the tree if the leaves are sharp and if we are in different containers
 			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
 			// This will reduce the number of wrapper elements that needs to be created
