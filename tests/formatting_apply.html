@@ -449,6 +449,7 @@ test('Formatter - apply inline formats ignore trailing space', function() {
 	equals(getContent(), '<p>1234<b> 6789</b> 1234</p>', 'Inline element on selected text excludes trailing space with split text nodes');
 
 	editor.setContent('<p>1234<i> </i>6789</p>');
+	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].firstChild.nextSibling, 1);
 	editor.selection.setRng(rng);
@@ -456,6 +457,7 @@ test('Formatter - apply inline formats ignore trailing space', function() {
 	equals(getContent(), '<p><b>1234<i> </i></b>6789</p>', 'Apply to space if it already has special formatting');
 
 	editor.setContent('<p>123<i>4</i> 6789</p>');
+	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].lastChild, 1);
 	editor.selection.setRng(rng);
@@ -469,6 +471,7 @@ test('Formatter - apply inline formats ignore trailing space', function() {
 	editor.dom.select('p')[0].firstChild.splitText(4);
 	editor.dom.select('p')[0].firstChild.splitText(4);
 	editor.dom.select('p')[0].lastChild.splitText(1);
+	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].lastChild, 0);
 	editor.selection.setRng(rng);
