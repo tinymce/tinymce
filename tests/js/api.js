@@ -606,7 +606,7 @@ function fakeKeyEvent(e, na, o) {
 	});
 
 	test('tinymce.dom.DOMUtils - encode', 1, function() {
-		equals(DOM.encode('abc<>"&\'едц'), 'abc&lt;&gt;&quot;&amp;\'едц');
+		equals(DOM.encode('abc<>"&\'едц'), 'abc&lt;&gt;&quot;&amp;&#39;едц');
 	});
 
 	test('tinymce.dom.DOMUtils - setGetAttrib', 11, function() {
@@ -853,7 +853,7 @@ function fakeKeyEvent(e, na, o) {
 		ok(DOM.isBlock(DOM.create('div')));
 		ok(DOM.isBlock('DIV'));
 		ok(!DOM.isBlock('SPAN'));
-		ok(!DOM.isBlock('div'));
+		ok(DOM.isBlock('div'));
 	});
 
 	test('tinymce.dom.DOMUtils - remove', 3, function() {
@@ -910,76 +910,6 @@ function fakeKeyEvent(e, na, o) {
 		equals(tinymce.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><').replace(/\"/g, ''), '<div id=test2>123</div><div id=test3>abc</div>');
 
 		DOM.remove('test');
-	});
-
-	test('tinymce.dom.DOMUtils - processHTML', 12, function() {
-		var dom;
-
-		dom = new tinymce.dom.DOMUtils(document, {hex_colors : true, keep_values : true, url_converter : function(u) {
-			return '&<>"' + u + '&<>"';
-		}});
-
-		equals(
-			dom.processHTML('<span style="background-image:url(\'http://www.somesite.com\');">test</span>'),
-			'<span style="background-image:url(\'http://www.somesite.com\');" _mce_style="background-image: url(&amp;&lt;&gt;&quot;http://www.somesite.com&amp;&lt;&gt;&quot;);">test</span>'
-		);
-
-		equals(
-			dom.processHTML('test1 <strong>test2</strong> <strong id="test1">test3</strong> <em>test2</em> <em id="test2">test3</em>'),
-			'test1 <strong>test2</strong> <strong id="test1">test3</strong> <em>test2</em> <em id="test2">test3</em>'
-		);
-
-		equals(
-			dom.processHTML('some content <img src="some.gif" /> some more content <a href="somelink.htm">link</a>'),
-			'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
-		);
-
-		equals(
-			dom.processHTML('some content <img src=some.gif /> some more content <a href=somelink.htm>link</a>'),
-			'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
-		);
-
-		equals(
-			dom.processHTML("some content <img src='some.gif' /> some more content <a href='somelink.htm'>link</a>"),
-			'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
-		);
-
-		equals(
-			dom.processHTML('some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'),
-			'some content <img src="some.gif" _mce_src="&amp;&lt;&gt;&quot;some.gif&amp;&lt;&gt;&quot;" /> some more content <a href="somelink.htm" _mce_href="&amp;&lt;&gt;&quot;somelink.htm&amp;&lt;&gt;&quot;">link</a>'
-		);
-
-		equals(
-			dom.processHTML('<span style="border-left-color: rgb(0, 255, 255); border-top-color: rgb(0, 255, 255);"></span>'),
-			'<span style="border-left-color: rgb(0, 255, 255); border-top-color: rgb(0, 255, 255);" _mce_style="border-left-color: #00ffff; border-top-color: #00ffff;"></span>'
-		);
-
-		equals(
-			dom.processHTML('<span style="background: url(test.gif);"></span>'),
-			'<span style="background: url(test.gif);" _mce_style="background: url(&amp;&lt;&gt;&quot;test.gif&amp;&lt;&gt;&quot;);"></span>'
-		);
-
-		equals(
-			dom.processHTML('<a href="test.html"/>'),
-			'<a href="test.html" _mce_href="&amp;&lt;&gt;&quot;test.html&amp;&lt;&gt;&quot;"></a>'
-		);
-
-		equals(
-			dom.processHTML('<a/>'),
-			'<a></a>'
-		);
-
-		equals(
-			dom.processHTML('<checkbox selected>'),
-			'<checkbox selected="selected">',
-			'Force boolean attribute format'
-		);
-
-		equals(
-			dom.processHTML('<span title=" selected "></span>'),
-			'<span title=" selected "></span>',
-			'Attribute with boolean value'
-		);
 	});
 
 	test('tinymce.dom.DOMUtils - encodeDecode', 2, function() {
@@ -1054,7 +984,7 @@ function fakeKeyEvent(e, na, o) {
 	var Serializer = tinymce.dom.Serializer, DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
 
 	test('tinymce.DOM.Serializer - serialize', 77, function() {
-		var ser = new tinymce.dom.Serializer({dom : DOM}), h;
+		var ser = new tinymce.dom.Serializer({fix_list_elements : true, dom : DOM}), h;
 
 		DOM.add(document.body, 'div', {id : 'test'});
 		DOM.counter = 0;

@@ -14,24 +14,9 @@
 		is = tinymce.is,
 		isWebKit = tinymce.isWebKit,
 		isIE = tinymce.isIE,
-		blockRe = /^(H[1-6R]|P|DIV|ADDRESS|PRE|FORM|T(ABLE|BODY|HEAD|FOOT|H|R|D)|LI|OL|UL|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|DIR|FIELDSET|NOSCRIPT|MENU|ISINDEX|SAMP)$/,
-		boolAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected'),
-		mceAttribs = makeMap('src,href,style,coords,shape'),
-		encodedChars = {'&' : '&amp;', '"' : '&quot;', '<' : '&lt;', '>' : '&gt;'},
-		encodeCharsRe = /[<>&\"]/g,
+		Entities = tinymce.html.Entities,
 		simpleSelectorRe = /^([a-z0-9],?)+$/i,
-		tagRegExp = /<(\w+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)(\s*\/?)>/g,
-		attrRegExp = /(\w+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
-
-	function makeMap(str) {
-		var map = {}, i;
-
-		str = str.split(',');
-		for (i = str.length; i >= 0; i--)
-			map[str[i]] = 1;
-
-		return map;
-	};
+		blockElementsMap = tinymce.html.Schema.blockElementsMap;
 
 	/**
 	 * Utility class for various DOM manipulation and retrival functions.
@@ -73,13 +58,12 @@
 			t.files = {};
 			t.cssFlicker = false;
 			t.counter = 0;
-			t.stdMode = d.documentMode >= 8;
+			t.stdMode = !tinymce.isIE || d.documentMode >= 8;
 			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat" || t.stdMode;
 
 			t.settings = s = tinymce.extend({
 				keep_values : false,
-				hex_colors : 1,
-				process_html : 1
+				hex_colors : 1
 			}, s);
 
 			// Fix IE6SP2 flicker and check it failed for pre SP2
@@ -89,6 +73,17 @@
 				} catch (e) {
 					t.cssFlicker = true;
 				}
+			}
+
+			if (isIE) {
+				// Add missing HTML 4/5 elements to IE
+				('abbr article aside audio canvas ' +
+				'details figcaption figure footer ' +
+				'header hgroup mark menu meter nav ' +
+				'output progress section summary ' +
+				'time video').replace(/\w+/g, function(name) {
+					d.createElement(name);
+				});
 			}
 
 			// Build styles list
@@ -1160,248 +1155,11 @@
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set HTML inside.
 		 * @param {String} h HTML content to set as inner HTML of the element.
 		 */
-		setHTML : function(e, h) {
-			var t = this;
-
-			return this.run(e, function(e) {
-				var x, i, nl, n, p, x;
-
-				h = t.processHTML(h);
-
-				if (isIE) {
-					function set() {
-						// Remove all child nodes
-						while (e.firstChild)
-							e.firstChild.removeNode();
-
-						try {
-							// IE will remove comments from the beginning
-							// unless you padd the contents with something
-							e.innerHTML = '<br />' + h;
-							e.removeChild(e.firstChild);
-						} catch (ex) {
-							// IE sometimes produces an unknown runtime error on innerHTML if it's an block element within a block element for example a div inside a p
-							// This seems to fix this problem
-
-							// Create new div with HTML contents and a BR infront to keep comments
-							x = t.create('div');
-							x.innerHTML = '<br />' + h;
-
-							// Add all children from div to target
-							each (x.childNodes, function(n, i) {
-								// Skip br element
-								if (i)
-									e.appendChild(n);
-							});
-						}
-					};
-
-					// IE has a serious bug when it comes to paragraphs it can produce an invalid
-					// DOM tree if contents like this <p><ul><li>Item 1</li></ul></p> is inserted
-					// It seems to be that IE doesn't like a root block element placed inside another root block element
-					if (t.settings.fix_ie_paragraphs)
-						h = h.replace(/<p><\/p>|<p([^>]+)><\/p>|<p[^\/+]\/>/gi, '<p$1 _mce_keep="true">&nbsp;</p>');
-
-					set();
-
-					if (t.settings.fix_ie_paragraphs) {
-						// Check for odd paragraphs this is a sign of a broken DOM
-						nl = e.getElementsByTagName("p");
-						for (i = nl.length - 1, x = 0; i >= 0; i--) {
-							n = nl[i];
-
-							if (!n.hasChildNodes()) {
-								if (!n._mce_keep) {
-									x = 1; // Is broken
-									break;
-								}
-
-								n.removeAttribute('_mce_keep');
-							}
-						}
-					}
-
-					// Time to fix the madness IE left us
-					if (x) {
-						// So if we replace the p elements with divs and mark them and then replace them back to paragraphs
-						// after we use innerHTML we can fix the DOM tree
-						h = h.replace(/<p ([^>]+)>|<p>/ig, '<div $1 _mce_tmp="1">');
-						h = h.replace(/<\/p>/gi, '</div>');
-
-						// Set the new HTML with DIVs
-						set();
-
-						// Replace all DIV elements with the _mce_tmp attibute back to paragraphs
-						// This is needed since IE has a annoying bug see above for details
-						// This is a slow process but it has to be done. :(
-						if (t.settings.fix_ie_paragraphs) {
-							nl = e.getElementsByTagName("DIV");
-							for (i = nl.length - 1; i >= 0; i--) {
-								n = nl[i];
-
-								// Is it a temp div
-								if (n._mce_tmp) {
-									// Create new paragraph
-									p = t.doc.createElement('p');
-
-									// Copy all attributes
-									n.cloneNode(false).outerHTML.replace(/([a-z0-9\-_]+)=/gi, function(a, b) {
-										var v;
-
-										if (b !== '_mce_tmp') {
-											v = n.getAttribute(b);
-
-											if (!v && b === 'class')
-												v = n.className;
-
-											p.setAttribute(b, v);
-										}
-									});
-
-									// Append all children to new paragraph
-									for (x = 0; x<n.childNodes.length; x++)
-										p.appendChild(n.childNodes[x].cloneNode(true));
-
-									// Replace div with new paragraph
-									n.swapNode(p);
-								}
-							}
-						}
-					}
-				} else
-					e.innerHTML = h;
-
-				return h;
+		setHTML : function(element, html) {
+			return this.run(element, function(element) {
+				element.innerHTML = html;
+				return html;
 			});
-		},
-
-		/**
-		 * Processes the HTML by replacing strong, em, del in gecko since it doesn't support them
-		 * properly in a RTE environment. It also converts any URLs in links and images and places
-		 * a converted value into a separate attribute with the mce prefix like _mce_src or _mce_href.
-		 *
-		 * @method processHTML
-		 * @param {String} h HTML to process.
-		 * @return {String} Processed HTML code.
-		 */
-		processHTML : function(h) {
-			var t = this, s = t.settings, codeBlocks = [];
-
-			if (!s.process_html)
-				return h;
-
-			if (isIE) {
-				h = h.replace(/&apos;/g, '&#39;'); // IE can't handle apos
-				h = h.replace(/\s+(disabled|checked|readonly|selected)\s*=\s*[\"\']?(false|0)[\"\']?/gi, ''); // IE doesn't handle default values correct
-			}
-
-			// Force tags open, and on IE9 replace $1$2 that got left behind due to bugs in their RegExp engine
-			h = tinymce._replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>', h); // Force open
-
-			// Store away src and href in _mce_src and mce_href since browsers mess them up
-			if (s.keep_values) {
-				// Wrap scripts and styles in comments for serialization purposes
-				if (/<script|noscript|style/i.test(h)) {
-					function trim(s) {
-						// Remove prefix and suffix code for element
-						s = s.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n');
-						s = s.replace(/^[\r\n]*|[\r\n]*$/g, '');
-						s = s.replace(/^\s*(\/\/\s*<!--|\/\/\s*<!\[CDATA\[|<!--|<!\[CDATA\[)[\r\n]*/g, '');
-						s = s.replace(/\s*(\/\/\s*\]\]>|\/\/\s*-->|\]\]>|-->|\]\]-->)\s*$/g, '');
-
-						return s;
-					};
-
-					// Wrap the script contents in CDATA and keep them from executing
-					h = h.replace(/<script([^>]+|)>([\s\S]*?)<\/script>/gi, function(v, attribs, text) {
-						// Force type attribute
-						if (!attribs)
-							attribs = ' type="text/javascript"';
-
-						// Convert the src attribute of the scripts
-						attribs = attribs.replace(/src=\"([^\"]+)\"?/i, function(a, url) {
-							if (s.url_converter)
-								url = t.encode(s.url_converter.call(s.url_converter_scope || t, t.decode(url), 'src', 'script'));
-
-							return '_mce_src="' + url + '"';
-						});
-
-						// Wrap text contents
-						if (tinymce.trim(text)) {
-							codeBlocks.push(trim(text));
-							text = '<!--\nMCE_SCRIPT:' + (codeBlocks.length - 1) + '\n// -->';
-						}
-
-						return '<mce:script' + attribs + '>' + text + '</mce:script>';
-					});
-
-					// Wrap style elements
-					h = h.replace(/<style([^>]+|)>([\s\S]*?)<\/style>/gi, function(v, attribs, text) {
-						// Wrap text contents
-						if (text) {
-							codeBlocks.push(trim(text));
-							text = '<!--\nMCE_SCRIPT:' + (codeBlocks.length - 1) + '\n-->';
-						}
-
-						return '<mce:style' + attribs + '>' + text + '</mce:style><style ' + attribs + ' _mce_bogus="1">' + text + '</style>';
-					});
-
-					// Wrap noscript elements
-					h = h.replace(/<noscript([^>]+|)>([\s\S]*?)<\/noscript>/g, function(v, attribs, text) {
-						return '<mce:noscript' + attribs + '><!--' + t.encode(text).replace(/--/g, '&#45;&#45;') + '--></mce:noscript>';
-					});
-				}
-
-				h = tinymce._replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->', h);
-
-				// This function processes the attributes in the HTML string to force boolean
-				// attributes to the attr="attr" format and convert style, src and href to _mce_ versions
-				function processTags(html) {
-					return html.replace(tagRegExp, function(match, elm_name, attrs, end) {
-						return '<' + elm_name + attrs.replace(attrRegExp, function(match, name, value, val2, val3) {
-							var mceValue;
-
-							name = name.toLowerCase();
-							value = value || val2 || val3 || "";
-
-							// Treat boolean attributes
-							if (boolAttrs[name]) {
-								// false or 0 is treated as a missing attribute
-								if (value === 'false' || value === '0')
-									return;
-
-								return name + '="' + name + '"';
-							}
-
-							// Is attribute one that needs special treatment
-							if (mceAttribs[name] && attrs.indexOf('_mce_' + name) == -1) {
-								mceValue = t.decode(value);
-
-								// Convert URLs to relative/absolute ones
-								if (s.url_converter && (name == "src" || name == "href"))
-									mceValue = s.url_converter.call(s.url_converter_scope || t, mceValue, name, elm_name);
-
-								// Process styles lowercases them and compresses them
-								if (name == 'style')
-									mceValue = t.serializeStyle(t.parseStyle(mceValue), name);
-
-								return name + '="' + value + '"' + ' _mce_' + name + '="' + t.encode(mceValue) + '"';
-							}
-
-							return match;
-						}) + end + '>';
-					});
-				};
-
-				h = processTags(h);
-
-				// Restore script blocks
-				h = h.replace(/MCE_SCRIPT:([0-9]+)/g, function(val, idx) {
-					return codeBlocks[idx];
-				});
-			}
-
-			return h;
 		},
 
 		/**
@@ -1485,41 +1243,16 @@
 		 * @param {String} s String to decode entities on.
 		 * @return {String} Entity decoded string.
 		 */
-		decode : function(s) {
-			var e, n, v;
-
-			// Look for entities to decode
-			if (/&[\w#]+;/.test(s)) {
-				// Decode the entities using a div element not super efficient but less code
-				e = this.doc.createElement("div");
-				e.innerHTML = s;
-				n = e.firstChild;
-				v = '';
-
-				if (n) {
-					do {
-						v += n.nodeValue;
-					} while (n = n.nextSibling);
-				}
-
-				return v || s;
-			}
-
-			return s;
-		},
+		decode : Entities.decode,
 
 		/**
 		 * Entity encodes a string, encodes the most common entities <>"& into entities.
 		 *
 		 * @method encode
-		 * @param {String} s String to encode with entities.
+		 * @param {String} text String to encode with entities.
 		 * @return {String} Entity encoded string.
 		 */
-		encode : function(str) {
-			return ('' + str).replace(encodeCharsRe, function(chr) {
-				return encodedChars[chr];
-			});
-		},
+		encode : Entities.encodeAllRaw,
 
 		/**
 		 * Inserts a element after the reference element.
@@ -1551,16 +1284,17 @@
 		 * Returns true/false if the specified element is a block element or not.
 		 *
 		 * @method isBlock
-		 * @param {Node} n Element/Node to check.
+		 * @param {Node/String} node Element/Node to check.
 		 * @return {Boolean} True/False state if the node is a block element or not.
 		 */
-		isBlock : function(n) {
-			if (n.nodeType && n.nodeType !== 1)
-				return false;
+		isBlock : function(node) {
+			var type = node.nodeType;
 
-			n = n.nodeName || n;
+			// If it's a node then check the type and use the nodeName
+			if (type)
+				return !!(type === 1 && blockElementsMap[node.nodeName]);
 
-			return blockRe.test(n);
+			return !!blockElementsMap[node];
 		},
 
 		/**

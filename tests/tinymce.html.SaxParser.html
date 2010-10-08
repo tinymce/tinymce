@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>tinymce.html.SaxParser tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script>
+module("tinymce.html.SaxParser");
+
+var writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();
+
+test('Parse elements', function() {
+	expect(21);
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<span id=id1 title="title value" class=\'class1 class2\' data-value="value1" MYATTR="val1" myns:myattr="val2" disabled empty=""></span>');
+	equals(writer.getContent(), '<span id="id1" title="title value" class="class1 class2" data-value="value1" myattr="val1" myns:myattr="val2" disabled="disabled" empty=""></span>', 'Parse attribute formats.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<img src="test">');
+	equals(writer.getContent(), '<img src="test" />', 'Parse empty element.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<input disabled="false" multiple="0" readonly="true">');
+	equals(writer.getContent(), '<input readonly="readonly" />', 'Parse falsy boolean attributes.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<img\nsrc="test"\ntitle="row1\nrow2">');
+	equals(writer.getContent(), '<img src="test" title="row1\nrow2" />', 'Parse attributes with linebreak.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<img     \t  \t   src="test"     \t  \t   title="\t    row1\t     row2">');
+	equals(writer.getContent(), '<img src="test" title="\t    row1\t     row2" />', 'Parse attributes with whitespace.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<myns:mytag>text</myns:mytag>');
+	equals(writer.getContent(), '<myns:mytag>text</myns:mytag>', 'Parse element with namespace.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<myns-mytag>text</myns-mytag>');
+	equals(writer.getContent(), '<myns-mytag>text</myns-mytag>', 'Parse element with dash name.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<span><script>// <b>tag</b></s' + 'cript>text2</span>');
+	equals(writer.getContent(), 'text1<span><script>// <b>tag</b></s' + 'cript>text2</span>', 'Parse script element.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<span><script id="id">// <b>tag</b></s' + 'cript>text2</span>');
+	equals(writer.getContent(), 'text1<span><script id="id">// <b>tag</b></s' + 'cript>text2</span>', 'Parse script element with attributes.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<span><script></s' + 'cript>text2</span>');
+	equals(writer.getContent(), 'text1<span><script></s' + 'cript>text2</span>', 'Parse empty script element.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<span><style>// <b>tag</b></st' + 'yle>text2</span>');
+	equals(writer.getContent(), 'text1<span><style>// <b>tag</b></st' + 'yle>text2</span>', 'Parse style element.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<span><style id="id">// <b>tag</b></st' + 'yle>text2</span>');
+	equals(writer.getContent(), 'text1<span><style id="id">// <b>tag</b></st' + 'yle>text2</span>', 'Parse style element with attributes.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<span><style></st' + 'yle>text2</span>');
+	equals(writer.getContent(), 'text1<span><style></st' + 'yle>text2</span>', 'Parse empty style element.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<p>text2<b>text3</p>text4</b>text5');
+	equals(writer.getContent(), 'text1<p>text2<b>text3</b></p>text4text5', 'Parse tag soup 1.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<P>text2<B>text3</p>text4</b>text5');
+	equals(writer.getContent(), 'text1<p>text2<b>text3</b></p>text4text5', 'Parse tag soup 2.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<P>text2<B>tex<t3</p>te>xt4</b>text5');
+	equals(writer.getContent(), 'text1<p>text2<b>tex<t3</b></p>te>xt4text5', 'Parse tag soup 3.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<p>text2<b>text3');
+	equals(writer.getContent(), 'text1<p>text2<b>text3</b></p>', 'Parse tag soup 4.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<script>text2');
+	equals(writer.getContent(), 'text1<script>text2</s' + 'cript>', 'Parse tag soup 5.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<style>text2');
+	equals(writer.getContent(), 'text1<style>text2</st' + 'yle>', 'Parse tag soup 5.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<span title="<test" data-test="test>"></span>');
+	equals(writer.getContent(), 'text1<span title="<test" data-test="test>"></span>', 'Parse element with </> in attributes.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse("text\n<SC"+"RIPT type=mce-text/javascript>// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></SC"+"RIPT>");
+	equals(writer.getContent(), "text\n<sc"+"ript type=\"mce-text/javascript\">// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></sc"+"ript>", 'Parse cdata script.');
+});
+
+test('Parse text', function() {
+	expect(5);
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('');
+	equals(writer.getContent(), '', 'Parse empty.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text');
+	equals(writer.getContent(), 'text', 'Parse single text node.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<b>text</b>');
+	equals(writer.getContent(), '<b>text</b>', 'Parse wrapped text.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<b>text2</b>');
+	equals(writer.getContent(), 'text1<b>text2</b>', 'Parse text at start.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<b>text1</b>text2');
+	equals(writer.getContent(), '<b>text1</b>text2', 'Parse text at end.');
+});
+
+test('Parsing comments', function() {
+	expect(4);
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<!-- comment value -->');
+	equals(writer.getContent(), '<!-- comment value -->', 'Parse comment with value.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<!---->');
+	equals(writer.getContent(), '', 'Parse comment without value.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<!--<b></b>-->');
+	equals(writer.getContent(), '<!--<b></b>-->', 'Parse comment with tag inside.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<b>a<!-- value -->b</b>');
+	equals(writer.getContent(), '<b>a<!-- value -->b</b>', 'Parse comment with tags around it.');
+});
+
+test('Parsing cdata', function() {
+	expect(4);
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<![CDATA[test text]]>');
+	equals(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<![CDATA[]]>');
+	equals(writer.getContent(), '', 'Parse cdata without value.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<![CDATA[<b>a</b>]]>');
+	equals(writer.getContent(), '<![CDATA[<b>a</b>]]>', 'Parse cdata with tag inside.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<b>a<![CDATA[value]]>b</b>');
+	equals(writer.getContent(), '<b>a<![CDATA[value]]>b</b>', 'Parse cdata with tags around it.');
+});
+
+test('Retain PI', function() {
+	expect(1);
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
+	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
+});
+
+test('Retain doctype', function() {
+	expect(1);
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">text1');
+	equals(writer.getContent(), '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">text1', 'Parse DOCTYPE.');
+});
+
+test('Parse (validate)', function() {
+	//expect(21);
+
+	writer.validate = true;
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<invalid1>123<invalid2 />456<span title="title" invalid3="value">789</span>012</invalid1>');
+	equals(writer.getContent(), '123456<span title="title">789</span>012', 'Parse attribute formats.');
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">tinymce.html.SaxParser tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content"></div>
+</body>
+</html>

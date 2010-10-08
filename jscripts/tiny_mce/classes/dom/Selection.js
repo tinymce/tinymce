@@ -117,7 +117,7 @@
 
 			s = s || {format : 'html'};
 			s.set = true;
-			h = s.content = t.dom.processHTML(h);
+			h = s.content = h;
 
 			// Dispatch before set content event
 			t.onBeforeSetContent.dispatch(t, s);

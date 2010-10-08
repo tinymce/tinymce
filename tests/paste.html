@@ -26,7 +26,7 @@ test("Paste simple text content", function() {
 	editor.selection.setRng(rng);
 
 	editor.execCommand('mceInsertClipboardContent', false, {content : 'TEST'});
-	equals(editor.getContent(), '<p>1TEST4</p>');
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p>1TEST4</p>');
 });
 
 test("Paste styled text content", function() {
@@ -39,7 +39,7 @@ test("Paste styled text content", function() {
 	editor.selection.setRng(rng);
 
 	editor.execCommand('mceInsertClipboardContent', false, {content : '<strong><em><span style="color: red;">TEST</span></em></strong>'});
-	equals(editor.getContent(), '<p>1<strong><em><span style="color: red;">TEST</span></em></strong>4</p>');
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p>1<strong><em><span style="color: red;">TEST</span></em></strong>4</p>');
 });
 
 test("Paste paragraph in paragraph", function() {

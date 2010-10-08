@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>tinymce.html.DomParser tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script>
+module("tinymce.html.DomParser");
+
+var schema = new tinymce.html.Schema();
+var serializer = new tinymce.html.Serializer({}, schema);
+
+test('Parse element', function() {
+	var parser, root;
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<B title="title" class="class">test</B>');
+	equals(serializer.serialize(root), '<b class="class" title="title">test</b>', 'Inline element');
+	equals(root.firstChild.type, 1, 'Element type');
+	equals(root.firstChild.name, 'b', 'Element name');
+	deepEqual(root.firstChild.attributes, [{name: 'title', value: 'title'}, {name: 'class', value: 'class'}], 'Element attributes');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   a < b > \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
+	equals(serializer.serialize(root), '<script>  \t\r\n   a < b > \t\r\n   </s' + 'cript>', 'Retain code inside SCRIPT');
+});
+
+test('Whitespace', function() {
+	var parser, root;
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
+	equals(serializer.serialize(root), ' <b> test </b> ', 'Redundant whitespace (inline element)');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <P>  \t\r\n   test  \t\r\n   </P>   \t\r\n  ');
+	equals(serializer.serialize(root), '<p>test</p>', 'Redundant whitespace (block element)');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
+	equals(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   test  \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
+	equals(serializer.serialize(root), '<script>  \t\r\n   test  \t\r\n   </s' + 'cript>', 'Whitespace around and inside SCRIPT');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
+	equals(serializer.serialize(root), '<style>  \t\r\n   test  \t\r\n   </style>', 'Whitespace around and inside STYLE');
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">tinymce.html.DomParser tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content"></div>
+</body>
+</html>

@@ -54,15 +54,29 @@
 	<target name="build" depends="" description="Builds the project">
 		<!-- Combine all class files into one single script file -->
 		<concat destfile="${build_dir}/tiny_mce_tmp.js" fixlastline="yes">
+			<!-- tinymce base -->
 			<fileset dir="${classes_dir}" includes="tinymce.js" />
 			<fileset dir="${classes_dir}" includes="adapter/jquery/adapter.js" />
 			<fileset dir="${classes_dir}" includes="adapter/prototype/adapter.js" />
+
+			<!-- tinymce.util.* -->
 			<fileset dir="${classes_dir}" includes="util/Dispatcher.js" />
 			<fileset dir="${classes_dir}" includes="util/URI.js" />
 			<fileset dir="${classes_dir}" includes="util/Cookie.js" />
 			<fileset dir="${classes_dir}" includes="util/JSON.js" />
 			<fileset dir="${classes_dir}" includes="util/XHR.js" />
 			<fileset dir="${classes_dir}" includes="util/JSONRequest.js" />
+
+			<!-- tinymce.html.* -->
+			<fileset dir="${classes_dir}" includes="html/Entities.js" />
+			<fileset dir="${classes_dir}" includes="html/Schema.js" />
+			<fileset dir="${classes_dir}" includes="html/SaxParser.js" />
+			<fileset dir="${classes_dir}" includes="html/Node.js" />
+			<fileset dir="${classes_dir}" includes="html/DomParser.js" />
+			<fileset dir="${classes_dir}" includes="html/Writer.js" />
+			<fileset dir="${classes_dir}" includes="html/Serializer.js" />
+
+			<!-- tinymce.dom.* -->
 			<fileset dir="${classes_dir}" includes="dom/DOMUtils.js" />
 			<fileset dir="${classes_dir}" includes="dom/Range.js" />
 			<fileset dir="${classes_dir}" includes="dom/TridentSelection.js" />
@@ -70,13 +84,12 @@
 			<fileset dir="${classes_dir}" includes="dom/EventUtils.js" />
 			<fileset dir="${classes_dir}" includes="dom/Element.js" />
 			<fileset dir="${classes_dir}" includes="dom/Selection.js" />
-			<fileset dir="${classes_dir}" includes="dom/XMLWriter.js" />
-			<fileset dir="${classes_dir}" includes="dom/StringWriter.js" />
 			<fileset dir="${classes_dir}" includes="dom/Serializer.js" />
 			<fileset dir="${classes_dir}" includes="dom/ScriptLoader.js" />
 			<fileset dir="${classes_dir}" includes="dom/TreeWalker.js" />
-			<fileset dir="${classes_dir}" includes="dom/Schema.js" />
 			<fileset dir="${classes_dir}" includes="dom/RangeUtils.js" />
+
+			<!-- tinymce.ui.* -->
 			<fileset dir="${classes_dir}" includes="ui/Control.js" />
 			<fileset dir="${classes_dir}" includes="ui/Container.js" />
 			<fileset dir="${classes_dir}" includes="ui/Separator.js" />
@@ -90,6 +103,8 @@
 			<fileset dir="${classes_dir}" includes="ui/SplitButton.js" />
 			<fileset dir="${classes_dir}" includes="ui/ColorSplitButton.js" />
 			<fileset dir="${classes_dir}" includes="ui/Toolbar.js" />
+
+			<!-- tinymce.* -->
 			<fileset dir="${classes_dir}" includes="AddOnManager.js" />
 			<fileset dir="${classes_dir}" includes="EditorManager.js" />
 			<fileset dir="${classes_dir}" includes="Editor.js" />

@@ -70,7 +70,7 @@ test('setContent', function() {
 	rng.setEnd(editor.getBody(), 0);
 	editor.selection.setRng(rng);
 	editor.selection.setContent('<div>test</div>');
-	equals(editor.getContent(), '<div>test</div><p>text</p>', 'Set contents at selection (collapsed)');
+	equals(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
 
 	// Set selected contents, onSetContent event
 	eventObj = {};
@@ -103,7 +103,7 @@ test('getStart/getEnd', function() {
 	equals(editor.selection.getEnd().id, 'b', 'Selected contents (getEnd)');
 
 	// Selected contents (collapsed)
-	editor.setContent('<p id="a">text</p><p id="b">text</p>');
+	editor.setContent('<p id="a">text</p>\n<p id="b">text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 0);
@@ -127,13 +127,13 @@ test('getBookmark/setBookmark (persistent)', function() {
 	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
 	// Get persistent bookmark multiple elements text selection
-	editor.setContent('<p>text</p><p>text</p>');
+	editor.setContent('<p>text</p>\n<p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark();
-	equals(editor.getContent(), '<p>text</p><p>text</p>', 'Editor contents (elements)');
+	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (elements)');
 });
@@ -153,15 +153,15 @@ test('getBookmark/setBookmark (simple)', function() {
 	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
 	// Get persistent bookmark multiple elements text selection
-	editor.setContent('<p>text</p><p>text</p>');
+	editor.setContent('<p>text</p>\n<p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(1);
-	equals(editor.getContent(), '<p>text</p><p>text</p>', 'Editor contents (elements)');
+	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (elements)');
+	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 });
 
 test('getBookmark/setBookmark (non intrusive)', function() {
@@ -181,15 +181,15 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
 	// Get non intrusive bookmark multiple elements text selection
-	editor.setContent('<p>text</p><p>text</p>');
+	editor.setContent('<p>text</p>\n<p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
-	equals(editor.getContent(), '<p>text</p><p>text</p>', 'Editor contents (elements)');
+	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (elements)');
+	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 
 	// Get non intrusive bookmark multiple elements text selection fragmented
 	editor.setContent('<p>text</p><p>text</p>');
@@ -202,9 +202,9 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
-	equals(editor.getContent(), '<p>textaaatext</p><p>text</p>', 'Editor contents (fragmented, elements)');
+	equals(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (fragmented, elements)');
+	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 
 	// Get non intrusive bookmark multiple elements text selection fragmented
 	editor.setContent('<p>text</p><p>text</p>');
@@ -218,9 +218,9 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2, true);
 	editor.setContent(editor.getContent());
-	equals(editor.getContent(), '<p>textaaatext</p><p>text</p>', 'Editor contents (fragmented, elements)');
+	equals(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (fragmented, elements)');
+	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 });
 
 test('select', function() {
@@ -235,7 +235,7 @@ test('select', function() {
 	// Select complex element
 	editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
 	editor.selection.select(editor.dom.select('table')[0]);
-	equals(editor.selection.getContent(), '<table><tbody><tr><td>text1</td></tr></tbody></table>', 'Select complex element, content');
+	equals(editor.selection.getContent(), '<table><tbody><tr>\n<td>text1</td>\n</tr></tbody></table>', 'Select complex element, content');
 	equals(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
 
 	// Select contents 1

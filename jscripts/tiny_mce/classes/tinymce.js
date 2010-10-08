@@ -214,6 +214,33 @@
 		},
 
 		/**
+		 * Makes a name/object map out of an array with names.
+		 *
+		 * @method makeMap
+		 * @param {Array/String} items Items to make map out of.
+		 * @param {String} delim Optional delimiter to split string by.
+		 * @param {Object} map Optional map to add items to.
+		 * @return {Object} Name/value map of items.
+		 */
+		makeMap : function(items, delim, map) {
+			var i;
+
+			items = items || [];
+			delim = delim || ',';
+
+			if (typeof(items) == "string")
+				items = items.split(delim);
+
+			map = map || {};
+
+			i = items.length;
+			while (i--)
+				map[items[i]] = {};
+
+			return map;
+		},
+
+		/**
 		 * Performs an iteration of all items in a collection such as an object or array. This method will execure the
 		 * callback function for each item in the collection, if the callback returns false the iteration will terminate.
 		 * The callback has the following format: cb(value, key_or_index).

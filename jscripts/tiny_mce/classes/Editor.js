@@ -433,7 +433,14 @@
 				keep_styles : 1,
 				fix_table_elements : 1,
 				inline_styles : 1,
-				convert_fonts_to_spans : true
+				convert_fonts_to_spans : true,
+				indent : 'simple',
+				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area',
+				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area',
+				validate : true,
+				entity_encoding : 'named',
+				url_converter : t.convertURL,
+				url_converter_scope : t
 			}, s);
 
 			/**
@@ -822,6 +829,14 @@
 			}
 
 			/**
+			 * Schema instance, enables you to validate elements and it's children.
+			 *
+			 * @property schema
+			 * @type tinymce.html.Schema
+			 */
+			t.schema = new tinymce.html.Schema(s);
+
+			/**
 			 * DOM instance for the editor.
 			 *
 			 * @property dom
@@ -839,24 +854,62 @@
 			});
 
 			/**
-			 * Schema instance, enables you to validate elements and it's children.
+			 * HTML parser will be used when contents is inserted into the editor.
 			 *
-			 * @property schema
-			 * @type tinymce.dom.Schema
+			 * @property parser
+			 * @type tinymce.html.DomParser
 			 */
-			t.schema = new tinymce.dom.Schema();
+			t.parser = new tinymce.html.DomParser(s, t.schema);
+
+			// Convert src and href into _mce_src, _mce_href and _mce_style
+			t.parser.addAttributeFilter('src,href,style', function(nodes, name) {
+				var i = nodes.length, node, dom;
+
+				while (i--) {
+					node = nodes[i];
+
+					if (name === "style") {
+						dom = t.dom;
+						node.attr('_mce_style', dom.serializeStyle(dom.parseStyle(node.attr(name)), node.name));
+					} else
+						node.attr('_mce_' + name, t.convertURL(node.attr(name), name, node.name));
+				}
+			});
+
+			// Keep scripts from executing
+			t.parser.addNodeFilter('script,style', function(nodes, name) {
+				var i = nodes.length, node, value;
+
+				function trim(value) {
+					return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
+							.replace(/^[\r\n]*|[\r\n]*$/g, '')
+							.replace(/^\s*(\/\/\s*<!--|\/\/\s*<!\[CDATA\[|<!--|<!\[CDATA\[)[\r\n]*/g, '')
+							.replace(/\s*(\/\/\s*\]\]>|\/\/\s*-->|\]\]>|-->|\]\]-->)\s*$/g, '');
+				};
+
+				while (i--) {
+					node = nodes[i];
+					value = node.firstChild ? node.firstChild.value : '';
+
+					if (name === "script") {
+						node.attr('type', 'mce-text/javascript');
+
+						if (value.length > 0)
+							node.firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';
+					} else {
+						if (value.length > 0)
+							node.firstChild.value = '<!--\n' + trim(value) + '\n-->';
+					}
+				}
+			});
 
 			/**
-			 * DOM serializer for the editor.
+			 * DOM serializer for the editor. Will be used when contents is extracted from the editor.
 			 *
 			 * @property serializer
 			 * @type tinymce.dom.Serializer
 			 */
-			t.serializer = new tinymce.dom.Serializer(extend(s, {
-				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
-				dom : t.dom,
-				schema : t.schema
-			}));
+			t.serializer = new tinymce.dom.Serializer(s, t.dom, t.schema);
 
 			/**
 			 * Selection instance for the editor.
@@ -1242,21 +1295,7 @@
 				valid_styles : s.valid_styles
 			});
 
-			t.serializer = new tinymce.dom.Serializer({
-				entity_encoding : s.entity_encoding,
-				entities : s.entities,
-				valid_elements : s.verify_html === false ? '*[*]' : s.valid_elements,
-				extended_valid_elements : s.extended_valid_elements,
-				valid_child_elements : s.valid_child_elements,
-				invalid_elements : s.invalid_elements,
-				fix_table_elements : s.fix_table_elements,
-				fix_list_elements : s.fix_list_elements,
-				fix_content_duplication : s.fix_content_duplication,
-				font_size_classes  : s.font_size_classes,
-				apply_source_formatting : s.apply_source_formatting,
-				dom : t.dom,
-				schema : schema
-			});
+			t.serializer = new tinymce.dom.Serializer(s, t.dom, schema);
 
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
 			t.forceBlocks = new tinymce.ForceBlocks(t, {
@@ -1915,39 +1954,43 @@
 		 * the different cleanup rules options.
 		 *
 		 * @method setContent
-		 * @param {String} h Content to set to editor, normally HTML contents but can be other formats as well.
-		 * @param {Object} o Optional content object, this gets passed around through the whole set process.
+		 * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.
+		 * @param {Object} args Optional content object, this gets passed around through the whole set process.
 		 * @return {String} HTML string that got set into the editor.
 		 */
-		setContent : function(h, o) {
-			var t = this;
+		setContent : function(content, args) {
+			var self = this, rootNode, body = self.getBody();
 
-			o = o || {};
-			o.format = o.format || 'html';
-			o.set = true;
-			o.content = h;
+			// Setup args object
+			args = args || {};
+			args.format = args.format || 'html';
+			args.set = true;
+			args.content = content;
 
-			if (!o.no_events)
-				t.onBeforeSetContent.dispatch(t, o);
+			// Do preprocessing
+			if (!args.no_events)
+				self.onBeforeSetContent.dispatch(self, args);
 
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
-			if (!tinymce.isIE && (h.length === 0 || /^\s+$/.test(h))) {
-				o.content = t.dom.setHTML(t.getBody(), '<br _mce_bogus="1" />');
-				o.format = 'raw';
+			if (!tinymce.isIE && (content.length === 0 || /^\s+$/.test(content))) {
+				body.innerHTML = '<br _mce_bogus="1" />';
+				return;
 			}
 
-			o.content = t.dom.setHTML(t.getBody(), tinymce.trim(o.content));
+			// Parse and serialize the html
+			args.content = new tinymce.html.Serializer({}, self.schema).serialize(
+				self.parser.parse(args.content)
+			);
 
-			if (o.format != 'raw' && t.settings.cleanup) {
-				o.getInner = true;
-				o.content = t.dom.setHTML(t.getBody(), t.serializer.serialize(t.getBody(), o));
-			}
+			// Set the new cleaned contents to the editor
+			body.innerHTML = args.content;
 
-			if (!o.no_events)
-				t.onSetContent.dispatch(t, o);
+			// Do post processing
+			if (!args.no_events)
+				self.onSetContent.dispatch(self, args);
 
-			return o.content;
+			return args.content;
 		},
 
 		/**
@@ -1955,32 +1998,34 @@
 		 * the different cleanup rules options.
 		 *
 		 * @method getContent
-		 * @param {Object} o Optional content object, this gets passed around through the whole get process.
+		 * @param {Object} args Optional content object, this gets passed around through the whole get process.
 		 * @return {String} Cleaned content string, normally HTML contents.
 		 */
-		getContent : function(o) {
-			var t = this, h;
+		getContent : function(args) {
+			var self = this, content;
 
-			o = o || {};
-			o.format = o.format || 'html';
-			o.get = true;
+			// Setup args object
+			args = args || {};
+			args.format = args.format || 'html';
+			args.get = true;
 
-			if (!o.no_events)
-				t.onBeforeGetContent.dispatch(t, o);
+			// Do preprocessing
+			if (!args.no_events)
+				self.onBeforeGetContent.dispatch(self, args);
 
-			if (o.format != 'raw' && t.settings.cleanup) {
-				o.getInner = true;
-				h = t.serializer.serialize(t.getBody(), o);
-			} else
-				h = t.getBody().innerHTML;
+			// Get raw contents or by default the cleaned contents
+			if (args.format == 'raw')
+				content = self.getBody().innerHTML;
+			else
+				content = self.serializer.serialize(self.getBody(), args);
 
-			h = h.replace(/^\s*|\s*$/g, '');
-			o.content = h;
+			args.content = content;
 
-			if (!o.no_events)
-				t.onGetContent.dispatch(t, o);
+			// Do post processing
+			if (!args.no_events)
+				self.onGetContent.dispatch(self, args);
 
-			return o.content;
+			return args.content;
 		},
 
 		/**
@@ -1990,9 +2035,9 @@
 		 * @return {Boolean} True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
 		 */
 		isDirty : function() {
-			var t = this;
+			var self = this;
 
-			return tinymce.trim(t.startContent) != tinymce.trim(t.getContent({format : 'raw', no_events : 1})) && !t.isNotDirty;
+			return tinymce.trim(self.startContent) != tinymce.trim(self.getContent({format : 'raw', no_events : 1})) && !self.isNotDirty;
 		},
 
 		/**
