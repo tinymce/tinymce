@@ -9,12 +9,19 @@
  */
 
 tinymce.html.Writer = function(settings) {
-	var html = [], indent, indentBefore, indentAfter;
+	var html = [], indent, indentBefore, indentAfter, encode;
 
 	settings = settings || {};
 	indent = settings.indent;
 	indentBefore = tinymce.makeMap(settings.indent_before || '');
 	indentAfter = tinymce.makeMap(settings.indent_after || '');
+
+	if (!settings.entity_encoding) {
+		encode = function(str) {
+			return str;
+		};
+	} else
+		encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding);
 
 	return {
 		start: function(name, attrs, empty) {
@@ -31,7 +38,7 @@ tinymce.html.Writer = function(settings) {
 
 			for (i = 0, l = attrs.length; i < l; i++) {
 				attr = attrs[i];
-				html.push(' ', attr.name, '="', attr.value, '"');
+				html.push(' ', attr.name, '="', encode(attr.value), '"');
 			}
 
 			if (!empty) {
@@ -63,8 +70,8 @@ tinymce.html.Writer = function(settings) {
 			}
 		},
 
-		text: function(text) {
-			html[html.length] = text;
+		text: function(text, raw) {
+			html[html.length] = raw ? text : encode(text);
 		},
 
 		cdata: function(text) {
@@ -73,6 +80,14 @@ tinymce.html.Writer = function(settings) {
 
 		comment: function(text) {
 			html.push('<!--', text, '-->');
+		},
+
+		pi: function(text) {
+			html.push('<?xml', text, '?>');
+		},
+
+		doctype: function(text) {
+			html.push('<!DOCTYPE', text, '>');
 		},
 
 		reset: function() {

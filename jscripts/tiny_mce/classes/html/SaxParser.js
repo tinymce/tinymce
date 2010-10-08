@@ -48,7 +48,7 @@
 		settings = settings || {};
 
 		// Add handler functions from settings and setup default handlers
-		tinymce.each('comment cdata text start end'.split(' '), function(name) {
+		tinymce.each('comment cdata text start end pi doctype'.split(' '), function(name) {
 			if (name)
 				self[name] = settings[name] || noop;
 		});
@@ -64,15 +64,17 @@
 		this.parse = function(html) {
 			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i,
 				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr,
-				validAttributesMap, validAttributePatterns, requiredAttributes, attributesDefault, attributesForced,
-				tokenRegExp, attrRegExp, scriptEndRegExp, styleEndRegExp, keepInternal;
+				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
+				tokenRegExp, attrRegExp, scriptEndRegExp, styleEndRegExp, keepInternal, attrValue, idCount = 0;
 
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp([
+				'<([\\w:\\-]+)((?:\\s+[\\w:\\-]+(?:\\s*=\\s*(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>\\s]+))?)*)\\s*(\\/?)>', // Start element
+				'<\\/([\\w:\\-]+)[^>]*>', // End element
 				'<!--(.*?)-->', // Comments
 				'<!\\[CDATA\\[(.*?)\\]\\]>', // CDATA sections
-				'<([\\w:\\-]+)((?:\\s+[\\w:\\-]+(?:\\s*=\\s*(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>\\s]+))?)*)\\s*(\\/?)>', // Start element
-				'<\\/([\\w:\\-]+)[^>]*>' // End element
+				'<\\?xml(.*?)\\?>', // PI
+				'<!DOCTYPE\\[(.*?)\\]>', // Doctype
 			].join('|'), 'g');
 
 			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
@@ -90,11 +92,7 @@
 				if (index < matches.index)
 					self.text(html.substr(index, matches.index - index));
 
-				if (value = matches[1]) { // Comment
-					self.comment(value);
-				} else if (value = matches[2]) { // CDATA
-					self.cdata(value);
-				} else if (value = matches[3]) { // Start element
+				if (value = matches[1]) { // Start element
 					value = value.toLowerCase();
 					isEmpty = value in emptyElmMap;
 
@@ -111,7 +109,7 @@
 						}
 
 						// Parse attributes
-						matches[4].replace(attrRegExp, function(match, name, value, val2, val3) {
+						matches[2].replace(attrRegExp, function(match, name, value, val2, val3) {
 							var isBool, attrRule, i;
 
 							name = name.toLowerCase();
@@ -161,17 +159,23 @@
 
 						// Process attributes if validation is enabled
 						if (validate) {
-							requiredAttributes = elementRule.requiredAttributes;
+							attributesRequired = elementRule.attributesRequired;
 							attributesDefault = elementRule.attributesDefault;
-							attributesForced = elementRule.attributesDefault;
+							attributesForced = elementRule.attributesForced;
 
 							// Handle forced attributes
 							if (attributesForced) {
 								i = attributesForced.length;
 								while (i--) {
 									attr = attributesForced[i];
-									attrList.map[name] = attr.value;
-									attrList.push({name: attr.name, value: attr.value});
+									name = attr.name;
+									attrValue = attr.value;
+
+									if (attrValue === '{$uid}')
+										attrValue = 'mce_' + idCount++;
+
+									attrList.map[name] = attrValue;
+									attrList.push({name: name, value: attrValue});
 								}
 							}
 
@@ -180,18 +184,25 @@
 								i = attributesDefault.length;
 								while (i--) {
 									attr = attributesDefault[i];
-									if (!(attr.name in attrList.map)) {
-										attrList.map[name] = attr.value;
-										attrList.push({name: attr.name, value: attr.value});
+									name = attr.name;
+
+									if (!(name in attrList.map)) {
+										attrValue = attr.value;
+
+										if (attrValue === '{$uid}')
+											attrValue = 'mce_' + idCount++;
+
+										attrList.map[name] = attrValue;
+										attrList.push({name: name, value: attrValue});
 									}
 								}
 							}
 
 							// Handle required attributes
-							if (requiredAttributes) {
-								i = requiredAttributes.length;
+							if (attributesRequired) {
+								i = attributesRequired.length;
 								while (i--) {
-									if (requiredAttributes[i] in attrList.map)
+									if (attributesRequired[i] in attrList.map)
 										break;
 								}
 
@@ -212,10 +223,10 @@
 						endRegExp.lastIndex = index = matches.index + matches[0].length;
 
 						if (matches = endRegExp.exec(html)) {
-							self.text(html.substr(index, matches.index - index));
+							self.text(html.substr(index, matches.index - index), true);
 							index = matches.index + matches[0].length;
 						} else {
-							self.text(html.substr(index));
+							self.text(html.substr(index), true);
 							index = html.length;
 						}
 
@@ -227,7 +238,7 @@
 					// Push value on to stack
 					if (!isEmpty)
 						stack.push({name: value, valid: isValidElement});
-				} else if (value = matches[6]) { // End element
+				} else if (value = matches[4]) { // End element
 					value = value.toLowerCase();
 
 					// Find position of parent of the same type
@@ -250,6 +261,14 @@
 						// Remove the open elements from the stack
 						stack.length = pos;
 					}
+				} else if (value = matches[5]) { // Comment
+					self.comment(value);
+				} else if (value = matches[6]) { // CDATA
+					self.cdata(value);
+				} else if (value = matches[7]) { // PI
+					self.pi(value);
+				} else if (value = matches[8]) { // DOCTYPE
+					self.doctype(value);
 				}
 
 				index = matches.index + matches[0].length;

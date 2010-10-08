@@ -47,6 +47,7 @@
 			}
 		});
 
+		// Remove internal classes mceItem<..>
 		htmlParser.addAttributeFilter('class', function(nodes, name) {
 			var i = nodes.length, node, value;
 
@@ -57,13 +58,31 @@
 			}
 		});
 
-		// Remove mce- prefix from script elements
-		htmlParser.addNodeFilter('script', function(nodes, name) {
+		// Force script into CDATA sections and remove the mce- prefix also add comments around styles
+		htmlParser.addNodeFilter('script,style', function(nodes, name) {
 			var i = nodes.length, node, value;
+
+			function trim(value) {
+				return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
+						.replace(/^[\r\n]*|[\r\n]*$/g, '')
+						.replace(/^\s*(\/\/\s*<!--|\/\/\s*<!\[CDATA\[|<!--|<!\[CDATA\[)[\r\n]*/g, '')
+						.replace(/\s*(\/\/\s*\]\]>|\/\/\s*-->|\]\]>|-->|\]\]-->)\s*$/g, '');
+			};
 
 			while (i--) {
 				node = nodes[i];
-				node.attr('type', (node.attr('type') || 'text/javascript').replace(/^mce\-/, ''));
+				value = node.firstChild ? node.firstChild.value : '';
+
+				if (name === "script") {
+					// Remove mce- prefix from script elements
+					node.attr('type', (node.attr('type') || 'text/javascript').replace(/^mce\-/, ''));
+
+					if (value.length > 0)
+						node.firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';
+				} else {
+					if (value.length > 0)
+						node.firstChild.value = '<!--\n' + trim(value) + '\n-->';
+				}
 			}
 		});
 

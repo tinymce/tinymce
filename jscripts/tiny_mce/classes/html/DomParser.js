@@ -42,7 +42,7 @@
 
 		self.parse = function(html) {
 			var parser, rootNode, node, Node = tinymce.html.Node, matchedNodes = {}, matchedAttributes = {},
-				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp,
+				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, decode,
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, lastEndWasBlock;
 
 			blockElements = tinymce.extend({
@@ -54,6 +54,7 @@
 			startWhiteSpaceRegExp = /^[\s\r\n]+/;
 			endWhiteSpaceRegExp = /[\s\r\n]+$/;
 			allWhiteSpaceRegExp = /[\s\r\n]+/g;
+			decode = tinymce.html.Entities.decode;
 
 			function createNode(name, type) {
 				var node = new Node(name, type), list;
@@ -75,7 +76,9 @@
 					node.append(createNode('#cdata', 4)).value = text;
 				},
 
-				text: function(text) {
+				text: function(text, raw) {
+					var textNode;
+
 					// Trim all redundant whitespace on non white space elements
 					if (!whiteSpaceElements[node.name]) {
 						text = text.replace(allWhiteSpaceRegExp, ' ');
@@ -85,12 +88,28 @@
 					}
 
 					// Do we need to create the node
-					if (text.length !== 0)
-						node.append(createNode('#text', 3)).value = text;
+					if (text.length !== 0) {
+						textNode = createNode('#text', 3);
+
+						if (raw)
+							textNode.raw = true;
+						else
+							text = decode(text);
+
+						node.append(textNode).value = text;
+					}
 				},
 
 				comment: function(text) {
 					node.append(createNode('#comment', 8)).value = text;
+				},
+
+				pi: function(text) {
+					node.append(createNode('#pi', 7)).value = text;
+				},
+
+				doctype: function(text) {
+					node.append(createNode('#doctype', 10)).value = text;
 				},
 
 				start: function(name, attrs, empty) {
@@ -98,7 +117,7 @@
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
-						newNode = createNode(elementRule.outputName || name, 1);
+						newNode = createNode(elementRule.outputName || attrs.map._mce_name || name, 1);
 						newNode.attributes = attrs;
 						newNode.empty = empty;
 

@@ -12,6 +12,7 @@
 	tinymce.html.Serializer = function(settings, schema) {
 		var self = this, writer = new tinymce.html.Writer(settings);
 
+		settings.validate = true;
 		self.writer = writer;
 
 		self.serialize = function(node) {
@@ -20,12 +21,20 @@
 			validate = settings.validate || true;
 
 			handlers = {
-				'#text' : function(node) {
-					writer.text(node.value);
+				'#text' : function(node, raw) {
+					writer.text(node.value, node.raw);
 				},
 
 				'#comment' : function(node) {
 					writer.comment(node.value);
+				},
+
+				'#pi' : function(node) {
+					writer.pi(node.value);
+				},
+
+				'#doctype' : function(node) {
+					writer.doctype(node.value);
 				},
 
 				'#cdata' : function(node) {

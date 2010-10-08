@@ -877,30 +877,11 @@
 			});
 
 			// Keep scripts from executing
-			t.parser.addNodeFilter('script,style', function(nodes, name) {
-				var i = nodes.length, node, value;
+			t.parser.addNodeFilter('script', function(nodes, name) {
+				var i = nodes.length;
 
-				function trim(value) {
-					return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
-							.replace(/^[\r\n]*|[\r\n]*$/g, '')
-							.replace(/^\s*(\/\/\s*<!--|\/\/\s*<!\[CDATA\[|<!--|<!\[CDATA\[)[\r\n]*/g, '')
-							.replace(/\s*(\/\/\s*\]\]>|\/\/\s*-->|\]\]>|-->|\]\]-->)\s*$/g, '');
-				};
-
-				while (i--) {
-					node = nodes[i];
-					value = node.firstChild ? node.firstChild.value : '';
-
-					if (name === "script") {
-						node.attr('type', 'mce-text/javascript');
-
-						if (value.length > 0)
-							node.firstChild.value = '// <![CDATA[\n' + trim(value) + '\n// ]]>';
-					} else {
-						if (value.length > 0)
-							node.firstChild.value = '<!--\n' + trim(value) + '\n-->';
-					}
-				}
+				while (i--)
+					nodes[i].attr('type', 'mce-text/javascript');
 			});
 
 			/**
