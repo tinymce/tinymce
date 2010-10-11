@@ -135,7 +135,7 @@ test('getBookmark/setBookmark (persistent)', function() {
 	bookmark = editor.selection.getBookmark();
 	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p><p>tex</p>', 'Selected contents (elements)');
+	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 });
 
 test('getBookmark/setBookmark (simple)', function() {

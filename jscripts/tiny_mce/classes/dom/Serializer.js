@@ -58,6 +58,18 @@
 			}
 		});
 
+		// Remove bookmark elements
+		htmlParser.addAttributeFilter('_mce_type', function(nodes, name) {
+			var i = nodes.length, node;
+
+			while (i--) {
+				node = nodes[i];
+
+				if (node.attributes.map._mce_type === 'bookmark')
+					node.remove();
+			}
+		});
+
 		// Force script into CDATA sections and remove the mce- prefix also add comments around styles
 		htmlParser.addNodeFilter('script,style', function(nodes, name) {
 			var i = nodes.length, node, value;
@@ -86,14 +98,14 @@
 			}
 		});
 
-		// Remove <br> at end of li elements
-		htmlParser.addNodeFilter('li', function(nodes, name) {
-			var i = nodes.length, node;
+		// Remove <br> at end of block elements
+		htmlParser.addNodeFilter('br', function(nodes, name) {
+			var i = nodes.length, node, blockElements = schema.getBlockElements();
 
 			while (i--) {
-				node = nodes[i].lastChild;
+				node = nodes[i];
 
-				if (node && node.name === 'br')
+				if (blockElements[node.parent.name] && node === node.parent.lastChild)
 					node.remove();
 			}
 		});
@@ -112,6 +124,24 @@
 				}
 			}
 		});
+
+		// Fix list elements, TODO: Replace this later
+		if (settings.fix_list_elements) {
+			htmlParser.addNodeFilter('ul,ol', function(nodes, name) {
+				var i = nodes.length, node, parentNode;
+
+				while (i--) {
+					node = nodes[i];
+					parentNode = node.parent;
+
+					if (parentNode.name === 'ul' || parentNode.name === 'ol') {
+						if (node.prev && node.prev.name === 'li') {
+							node.prev.append(node.remove());
+						}
+					}
+				}
+			});
+		}
 
 		// Return public methods
 		return {

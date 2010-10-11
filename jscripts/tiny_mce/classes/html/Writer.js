@@ -21,7 +21,7 @@ tinymce.html.Writer = function(settings) {
 			return str;
 		};
 	} else
-		encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding);
+		encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding, settings.entities);
 
 	return {
 		start: function(name, attrs, empty) {

@@ -6,14 +6,14 @@
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 <script>
 module("tinymce.html.SaxParser");
 
 var writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();
 
 test('Parse elements', function() {
-	expect(21);
+	expect(22);
 
 	var parser = new tinymce.html.SaxParser(writer, schema);
 	writer.reset();
@@ -119,6 +119,11 @@ test('Parse elements', function() {
 	writer.reset();
 	parser.parse("text\n<SC"+"RIPT type=mce-text/javascript>// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></SC"+"RIPT>");
 	equals(writer.getContent(), "text\n<sc"+"ript type=\"mce-text/javascript\">// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></sc"+"ript>", 'Parse cdata script.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('text1<noscript>te<br>xt2</noscript>text3');
+	equals(writer.getContent(), 'text1<noscript>te<br>xt2</noscript>text3', 'noscript elements.');
 });
 
 test('Parse text', function() {

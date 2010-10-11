@@ -65,27 +65,29 @@
 			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i,
 				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
-				tokenRegExp, attrRegExp, scriptEndRegExp, styleEndRegExp, keepInternal, attrValue, idCount = 0;
+				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
 
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp([
 				'<([\\w:\\-]+)((?:\\s+[\\w:\\-]+(?:\\s*=\\s*(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>\\s]+))?)*)\\s*(\\/?)>', // Start element
 				'<\\/([\\w:\\-]+)[^>]*>', // End element
-				'<!--(.*?)-->', // Comments
-				'<!\\[CDATA\\[(.*?)\\]\\]>', // CDATA sections
-				'<\\?xml(.*?)\\?>', // PI
-				'<!DOCTYPE\\[(.*?)\\]>', // Doctype
+				'<!--([\\w\\W]*?)-->', // Comments
+				'<!\\[CDATA\\[([\\w\\W]*?)\\]\\]>', // CDATA sections
+				'<\\?xml([\\w\\W]*?)\\?>', // PI
+				'<!DOCTYPE\\[([\\w\\W]*?)\\]>', // Doctype
 			].join('|'), 'g');
 
 			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
-			scriptEndRegExp = /<\/script[^>]*>/gi;
-			styleEndRegExp = /<\/style[^>]*>/gi;
+			specialElements = {
+				'script' : /<\/script[^>]*>/gi,
+				'style' : /<\/style[^>]*>/gi,
+				'noscript' : /<\/noscript[^>]*>/gi
+			};
 
 			// Setup lookup tables for empty elements and boolean attributes
 			emptyElmMap = schema.getEmptyElements();
 			fillAttrsMap = schema.getBoolAttrs();
 			validate = settings.validate;
-			keepInternal = settings.keep_internal;
 
 			while (matches = tokenRegExp.exec(html)) {
 				// Text
@@ -125,7 +127,7 @@
 							}
 
 							// Validate name and value
-							if (validate && (!keepInternal || name.indexOf('_mce_') !== 0)) {
+							if (validate && name.indexOf('_mce_') !== 0) {
 								attrRule = validAttributesMap[name];
 
 								// Find rule by pattern matching
@@ -137,7 +139,9 @@
 											break;
 									}
 
-									attrRule = null;
+									// No rule matched
+									if (i === -1)
+										attrRule = null;
 								}
 
 								// No attribute rule found
@@ -145,7 +149,7 @@
 									return;
 
 								// Validate value
-								if (attrRule.validValues && value in attrRule.validValues)
+								if (attrRule.validValues && !(value in attrRule.validValues))
 									return;
 							}
 
@@ -207,7 +211,7 @@
 								}
 
 								// None of the required attributes where found
-								if (i === 0)
+								if (i === -1)
 									isValidElement = false;
 							}
 						}
@@ -217,9 +221,8 @@
 					} else
 						isValidElement = false;
 
-					// Treat script and style a bit different since they may include code that looks like elements
-					if (value === 'script' || value === 'style') {
-						endRegExp = value === 'script' ? scriptEndRegExp : styleEndRegExp;
+					// Treat script, noscript and style a bit different since they may include code that looks like elements
+					if (endRegExp = specialElements[value]) {
 						endRegExp.lastIndex = index = matches.index + matches[0].length;
 
 						if (matches = endRegExp.exec(html)) {

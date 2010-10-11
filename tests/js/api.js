@@ -983,7 +983,7 @@ function fakeKeyEvent(e, na, o) {
 (function() {
 	var Serializer = tinymce.dom.Serializer, DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
 
-	test('tinymce.DOM.Serializer - serialize', 77, function() {
+	test('tinymce.DOM.Serializer - serialize', 76, function() {
 		var ser = new tinymce.dom.Serializer({fix_list_elements : true, dom : DOM}), h;
 
 		DOM.add(document.body, 'div', {id : 'test'});
@@ -1126,10 +1126,6 @@ function fakeKeyEvent(e, na, o) {
 		equals(ser.serialize(DOM.get('test')), '<div id="test"><span title="test abc">test</span></div>');
 
 		ser.setRules('*[*]');
-		DOM.setHTML('test', '<div _mce_name="mytag" class="test">test</div>');
-		equals(ser.serialize(DOM.get('test')), '<div id="test"><mytag class="test">test</mytag></div>', null, tinymce.isOldWebKit);
-
-		ser.setRules('*[*]');
 		DOM.setHTML('test', '<div test:attr="test">test</div>');
 		equals(ser.serialize(DOM.get('test'), {getInner : 1}), '<div test:attr="test">test</div>');
 
@@ -1179,7 +1175,7 @@ function fakeKeyEvent(e, na, o) {
 		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
 		equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;</div>');
 
-		ser = new tinymce.dom.Serializer({entity_encoding : 'named+numeric',entities : '160,nbsp,34,quot,38,amp,60,lt,62,gt'});
+		ser = new tinymce.dom.Serializer({entity_encoding : 'named+numeric', entities : '160,nbsp,34,quot,38,amp,60,lt,62,gt'});
 		DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
 		equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&nbsp;&#229;&#228;&#246;</div>');
 

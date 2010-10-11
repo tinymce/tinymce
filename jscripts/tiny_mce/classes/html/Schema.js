@@ -198,7 +198,7 @@
 		function patternToRegExp(str) {
 			return new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
 		};
-this.elements = elements;
+
 		// Parses the specified valid_elements string and adds to the current rules
 		// This function is a bit hard to read since it's heavily optimized for speed
 		function addValidElements(valid_elements) {
@@ -337,6 +337,7 @@ this.elements = elements;
 
 		function setValidElements(valid_elements) {
 			elements = {};
+			patternElements = [];
 
 			addValidElements(valid_elements);
 

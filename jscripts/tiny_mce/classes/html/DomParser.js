@@ -51,9 +51,9 @@
 			}, schema.getBlockElements());
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();
-			startWhiteSpaceRegExp = /^[\s\r\n]+/;
-			endWhiteSpaceRegExp = /[\s\r\n]+$/;
-			allWhiteSpaceRegExp = /[\s\r\n]+/g;
+			startWhiteSpaceRegExp = /^[ \t\r\n]+/;
+			endWhiteSpaceRegExp = /[ \t\r\n]+$/;
+			allWhiteSpaceRegExp = /[ \t\r\n]+/g;
 			decode = tinymce.html.Entities.decode;
 
 			function createNode(name, type) {
@@ -117,7 +117,7 @@
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
-						newNode = createNode(elementRule.outputName || attrs.map._mce_name || name, 1);
+						newNode = createNode(elementRule.outputName || name, 1);
 						newNode.attributes = attrs;
 						newNode.empty = empty;
 
@@ -145,7 +145,7 @@
 				},
 
 				end: function(name) {
-					var textNode, elementRule;
+					var textNode, elementRule, tempNode;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
@@ -170,6 +170,17 @@
 							lastEndWasBlock = true;
 						} else
 							lastEndWasBlock = false;
+
+						// Handle empty nodes
+						if (!node.firstChild) {
+							if (elementRule.removeEmpty) {
+								tempNode = node.parent;
+								node.unwrap();
+								node = tempNode;
+								return;
+							} else if (elementRule.paddEmpty)
+								node.append(new Node('#text', 3)).value = '\u00a0';
+						}
 
 						node = node.parent;
 					}
