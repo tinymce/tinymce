@@ -71,7 +71,8 @@ tinymce.html.Writer = function(settings) {
 		},
 
 		text: function(text, raw) {
-			html[html.length] = raw ? text : encode(text);
+			if (text.length > 0)
+				html[html.length] = raw ? text : encode(text);
 		},
 
 		cdata: function(text) {

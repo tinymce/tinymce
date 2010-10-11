@@ -215,7 +215,7 @@
 
 				// Parse and serialize HTML
 				args.content = htmlSerializer.serialize(
-					htmlParser.parse(args.getInner ? node.innerHTML : dom.getOuterHTML(node), args)
+					htmlParser.parse(args.getInner ? node.innerHTML : tinymce.trim(dom.getOuterHTML(node)), args)
 				);
 
 				// Post process

@@ -116,7 +116,7 @@
 
 							name = name.toLowerCase();
 							isBool = name in fillAttrsMap;
-							value = value || val2 || val3;
+							value = value || val2 || val3 || '';
 
 							// If a bool attribute is set to false or 0 we just ignore it
 							if (isBool) {

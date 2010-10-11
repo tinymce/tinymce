@@ -1079,12 +1079,6 @@
 				});
 			}
 
-			if (s.fix_nesting && isIE) {
-				t.onBeforeSetContent.add(function(ed, o) {
-					o.content = t._fixNesting(o.content);
-				});
-			}
-
 			if (s.preformatted) {
 				t.onPostProcess.add(function(ed, o) {
 					o.content = o.content.replace(/^\s*<pre.*?>/, '');
@@ -2656,57 +2650,6 @@
 			// Weird, wheres that cursor selection?
 			s = this.selection.getSel();
 			return (!s || !s.rangeCount || s.rangeCount == 0);
-		},
-
-		// Fix for bug #1867292
-		_fixNesting : function(s) {
-			var d = [], i;
-
-			s = s.replace(/<(\/)?([^\s>]+)[^>]*?>/g, function(a, b, c) {
-				var e;
-
-				// Handle end element
-				if (b === '/') {
-					if (!d.length)
-						return '';
-
-					if (c !== d[d.length - 1].tag) {
-						for (i=d.length - 1; i>=0; i--) {
-							if (d[i].tag === c) {
-								d[i].close = 1;
-								break;
-							}
-						}
-
-						return '';
-					} else {
-						d.pop();
-
-						if (d.length && d[d.length - 1].close) {
-							a = a + '</' + d[d.length - 1].tag + '>';
-							d.pop();
-						}
-					}
-				} else {
-					// Ignore these
-					if (/^(br|hr|input|meta|img|link|param)$/i.test(c))
-						return a;
-
-					// Ignore closed ones
-					if (/\/>$/.test(a))
-						return a;
-
-					d.push({tag : c}); // Push start element
-				}
-
-				return a;
-			});
-
-			// End all open tags
-			for (i=d.length - 1; i>=0; i--)
-				s += '</' + d[i].tag + '>';
-
-			return s;
 		}
 	});
 })(tinymce);

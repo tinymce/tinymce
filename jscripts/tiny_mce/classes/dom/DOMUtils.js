@@ -1156,8 +1156,37 @@
 		 * @param {String} h HTML content to set as inner HTML of the element.
 		 */
 		setHTML : function(element, html) {
-			return this.run(element, function(element) {
-				element.innerHTML = html;
+			var self = this;
+
+			return self.run(element, function(element) {
+				if (isIE) {
+					// Remove all child nodes, IE keeps empty text nodes in DOM
+					while (element.firstChild)
+						element.firstChild.removeNode();
+
+					try {
+						// IE will remove comments from the beginning
+						// unless you padd the contents with something
+						element.innerHTML = '<br />' + html;
+						element.removeChild(element.firstChild);
+					} catch (ex) {
+						// IE sometimes produces an unknown runtime error on innerHTML if it's an block element within a block element for example a div inside a p
+						// This seems to fix this problem
+
+						// Create new div with HTML contents and a BR infront to keep comments
+						element = self.create('div');
+						element.innerHTML = '<br />' + html;
+
+						// Add all children from div to target
+						each (element.childNodes, function(node, i) {
+							// Skip br element
+							if (i)
+								element.appendChild(node);
+						});
+					}
+				} else
+					element.innerHTML = html;
+
 				return html;
 			});
 		},
