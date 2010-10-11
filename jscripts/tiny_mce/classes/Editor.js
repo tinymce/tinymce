@@ -1960,9 +1960,11 @@
 			}
 
 			// Parse and serialize the html
-			args.content = new tinymce.html.Serializer({}, self.schema).serialize(
-				self.parser.parse(args.content)
-			);
+			if (args.format !== 'raw') {
+				args.content = new tinymce.html.Serializer({}, self.schema).serialize(
+					self.parser.parse(args.content)
+				);
+			}
 
 			// Set the new cleaned contents to the editor
 			body.innerHTML = args.content;

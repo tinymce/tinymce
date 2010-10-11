@@ -54,7 +54,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endContainer.nodeName, 'P', 'Check endContainer');
 		equals(rng.startOffset, 0, 'Check startOffset');
 		equals(rng.endOffset, 1, 'Check endOffset');
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" _mce_src="about:blank">', 'Check contents');
+		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">', 'Check contents');
 		ok(editor.selection.getRng().item, 'Check if it\'s a control selection');
 	});
 	
@@ -75,7 +75,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endContainer.nodeName, 'P');
 		equals(rng.startOffset, 0);
 		equals(rng.endOffset, 2);
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" _mce_src="about:blank"><img src="about:blank" _mce_src="about:blank">');
+		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank"><img src="about:blank">');
 		ok(editor.selection.getRng().parentElement, 'Is text selection');
 	});
 	
@@ -151,7 +151,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endContainer.nodeName, '#text');
 		equals(rng.startOffset, 0);
 		equals(rng.endOffset, 3);
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank" _mce_src="about:blank">tex');
+		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">tex');
 	});
 	
 	test("Mixed selection start at text end at element", function(){
@@ -174,7 +174,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endContainer.nodeName, 'P');
 		equals(rng.endOffset, 2);
 		
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), 'ext<img src="about:blank" _mce_src="about:blank">');
+		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), 'ext<img src="about:blank">');
 	});
 	
 	test("Caret position before image", function(){
