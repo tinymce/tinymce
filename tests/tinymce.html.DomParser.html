@@ -16,6 +16,8 @@ var serializer = new tinymce.html.Serializer({}, schema);
 test('Parse element', function() {
 	var parser, root;
 
+	expect(5);
+
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<B title="title" class="class">test</B>');
 	equals(serializer.serialize(root), '<b class="class" title="title">test</b>', 'Inline element');
@@ -30,6 +32,8 @@ test('Parse element', function() {
 
 test('Whitespace', function() {
 	var parser, root;
+
+	expect(6);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
@@ -50,6 +54,10 @@ test('Whitespace', function() {
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
 	equals(serializer.serialize(root), '<style>  \t\r\n   test  \t\r\n   </style>', 'Whitespace around and inside STYLE');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p>test   <hr>    </p>');
+	equals(serializer.serialize(root), '<p>test<hr /></p>', 'Redundant whitespace (inline block element)');
 });
 </script>
 </head>

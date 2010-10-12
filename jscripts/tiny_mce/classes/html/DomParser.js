@@ -113,7 +113,7 @@
 				},
 
 				start: function(name, attrs, empty) {
-					var newNode, attrFiltersLen, elementRule;
+					var newNode, attrFiltersLen, elementRule, textNode;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
@@ -139,8 +139,16 @@
 
 						if (!empty)
 							node = newNode;
-						else
+						else {
+							if (blockElements[name]) {
+								// Trim start white space
+								textNode = newNode.prev;
+								if (textNode && textNode.type === 3)
+									textNode.value = textNode.value.replace(endWhiteSpaceRegExp, '');
+							}
+
 							lastEndWasBlock = false;
+						}
 					}
 				},
 

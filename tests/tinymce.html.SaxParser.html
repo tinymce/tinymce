@@ -13,7 +13,7 @@ module("tinymce.html.SaxParser");
 var writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();
 
 test('Parse elements', function() {
-	expect(22);
+	expect(21);
 
 	var parser = new tinymce.html.SaxParser(writer, schema);
 	writer.reset();
@@ -24,11 +24,6 @@ test('Parse elements', function() {
 	writer.reset();
 	parser.parse('<img src="test">');
 	equals(writer.getContent(), '<img src="test" />', 'Parse empty element.');
-
-	var parser = new tinymce.html.SaxParser(writer, schema);
-	writer.reset();
-	parser.parse('<input disabled="false" multiple="0" readonly="true">');
-	equals(writer.getContent(), '<input readonly="readonly" />', 'Parse falsy boolean attributes.');
 
 	var parser = new tinymce.html.SaxParser(writer, schema);
 	writer.reset();
@@ -222,7 +217,7 @@ test('Retain doctype', function() {
 });
 
 test('Parse (validate)', function() {
-	//expect(21);
+	expect(1);
 
 	writer.validate = true;
 

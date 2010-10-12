@@ -73,7 +73,7 @@
 				'<\\/([\\w:\\-]+)[^>]*>', // End element
 				'<!--([\\w\\W]*?)-->', // Comments
 				'<!\\[CDATA\\[([\\w\\W]*?)\\]\\]>', // CDATA sections
-				'<\\?xml([\\w\\W]*?)\\?>', // PI
+				'<\\?xml([\\w\\W]*?)\\??>', // PI
 				'<!DOCTYPE\\[([\\w\\W]*?)\\]>' // Doctype
 			].join('|'), 'g');
 
@@ -112,19 +112,10 @@
 
 						// Parse attributes
 						matches[2].replace(attrRegExp, function(match, name, value, val2, val3) {
-							var isBool, attrRule, i;
+							var attrRule, i;
 
 							name = name.toLowerCase();
-							isBool = name in fillAttrsMap;
-							value = value || val2 || val3 || '';
-
-							// If a bool attribute is set to false or 0 we just ignore it
-							if (isBool) {
-								if (value === 'false' || value === '0')
-									return;
-
-								value = name;
-							}
+							value = name in fillAttrsMap ? name : (value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
 							// Validate name and value
 							if (validate && name.indexOf('_mce_') !== 0) {
