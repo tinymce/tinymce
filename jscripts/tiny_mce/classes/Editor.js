@@ -884,6 +884,17 @@
 					nodes[i].attr('type', 'mce-text/javascript');
 			});
 
+			t.parser.addNodeFilter('#cdata', function(nodes, name) {
+				var i = nodes.length, node;
+
+				while (i--) {
+					node = nodes[i];
+					node.type = 8;
+					node.name = '#comment';
+					node.value = '[CDATA[' + node.value + ']]';
+				}
+			});
+
 			/**
 			 * DOM serializer for the editor. Will be used when contents is extracted from the editor.
 			 *

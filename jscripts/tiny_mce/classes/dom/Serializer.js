@@ -110,7 +110,7 @@
 			}
 		});
 
-		// Convert comments to cdata
+		// Convert comments to cdata and handle protected comments
 		htmlParser.addNodeFilter('#comment', function(nodes, name) {
 			var i = nodes.length, node;
 
@@ -121,6 +121,25 @@
 					node.name = '#cdata';
 					node.type = 4;
 					node.value = node.value.replace(/^\[CDATA\[|\]\]$/g, '');
+				} else if (node.value.indexOf('mce:protected ') === 0) {
+					node.name = "#text";
+					node.type = 3;
+					node.raw = true;
+					node.value = unescape(node.value).substr(14);
+				}
+			}
+		});
+
+		htmlParser.addNodeFilter('#pi,input', function(nodes, name) {
+			var i = nodes.length, node;
+
+			while (i--) {
+				node = nodes[i];
+				if (node.type === 7 && node.value.indexOf(':namespace ') === 0)
+					node.remove();
+				else if (node.type === 1) {
+					if (name === "input" && !("type" in node.attributes.map))
+						node.attr('type', 'text');
 				}
 			}
 		});
@@ -154,27 +173,14 @@
 			onPostProcess : onPostProcess,
 
 			serialize : function(node, args) {
-				var impl, selected, doc, oldDoc, htmlSerializer;
+				var impl, doc, oldDoc, htmlSerializer, content;
 
-				// IE looses the selected attribute on option elements so we need to store it
-				// See: http://support.microsoft.com/kb/829907
 				if (isIE) {
-					selected = [];
-					each(node.getElementsByTagName('option'), function(node) {
-						var value = dom.getAttrib(node, 'selected');
-
-						selected.push(value ? value : null);
-					});
-				}
-
-				node = node.cloneNode(true);
-
-				// IE looses the selected attribute on option elements so we need to restore it
-				if (isIE) {
-					each(node.getElementsByTagName('option'), function(node, i) {
-						dom.setAttrib(node, 'selected', selected[i]);
-					});
-				}
+					content = node.innerHTML;
+					node = node.cloneNode(false);
+					dom.setHTML(node, content);
+				} else
+					node = node.cloneNode(true);
 
 				// Nodes needs to be attached to something in WebKit/Opera
 				// Older builds of Opera crashes if you attach the node to an document created dynamically
