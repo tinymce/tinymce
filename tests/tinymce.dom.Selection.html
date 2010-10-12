@@ -226,6 +226,8 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 test('select', function() {
 	var rng;
 
+	expect(8);
+
 	// Select simple element
 	editor.setContent('<p>text1</p><p>text2</p>');
 	editor.selection.select(editor.dom.select('p')[0]);
