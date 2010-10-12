@@ -155,7 +155,7 @@
 
 					if (parentNode.name === 'ul' || parentNode.name === 'ol') {
 						if (node.prev && node.prev.name === 'li') {
-							node.prev.append(node.remove());
+							node.prev.append(node);
 						}
 					}
 				}

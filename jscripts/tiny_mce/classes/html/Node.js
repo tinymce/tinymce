@@ -117,20 +117,23 @@
 				next.prev = prev;
 			}
 
+			self.parent = self.next = self.prev = null;
+
 			return self;
 		},
 
 		append : function(node) {
 			var self = this, last = self.lastChild;
 
+			if (node.parent)
+				node.remove();
+
 			if (last) {
 				last.next = node;
 				node.prev = last;
 				self.lastChild = node;
-			} else {
+			} else
 				self.lastChild = self.firstChild = node;
-				node.next = node.prev = null;
-			}
 
 			node.parent = self;
 
