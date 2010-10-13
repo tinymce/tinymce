@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js?debug=1"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -58,20 +58,20 @@ test('Entity encoding', function() {
 	expect(4);
 
 	ser = new tinymce.dom.Serializer({entity_encoding : 'numeric'});
-	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
+	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
 	equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&#160;&#229;&#228;&#246;</div>');
 
 	ser = new tinymce.dom.Serializer({entity_encoding : 'named'});
-	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
+	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
 	equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;</div>');
 
 	ser = new tinymce.dom.Serializer({entity_encoding : 'named+numeric', entities : '160,nbsp,34,quot,38,amp,60,lt,62,gt'});
-	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
+	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
 	equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"&nbsp;&#229;&#228;&#246;</div>');
 
 	ser = new tinymce.dom.Serializer({entity_encoding : 'raw'});
-	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;едц');
-	equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"\u00a0едц</div>');
+	DOM.setHTML('test', '&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;');
+	equals(ser.serialize(DOM.get('test')), '<div id="test">&lt;&gt;&amp;"\u00a0\u00e5\u00e4\u00f6</div>');
 });
 
 test('Form elements (general)', function() {
@@ -166,7 +166,7 @@ test('List elements', function() {
 	equals(ser.serialize(DOM.get('test')), '<ul></ul>');
 
 	DOM.setHTML('test', '<ol><li>a</li><ol><li>b</li><li>c</li></ol><li>e</li></ol>');
-	equals(ser.serialize(DOM.get('test')), '<div id="test"><ol><li>a<ol><li>b</li><li>c</li></ol></li><li>e</li></ol></div>');
+	equals(ser.serialize(DOM.get('test')), '<ol><li>a<ol><li>b</li><li>c</li></ol></li><li>e</li></ol>');
 });
 
 test('Tables', function() {

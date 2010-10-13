@@ -336,16 +336,16 @@ test('internals - forcedBlocks', function() {
 	expect(4);
 
 	editor.setContent('<p></p><p>&nbsp;</p><p /><p id="x"></p><p id="y">&nbsp;</p><p id="z" />');
-	equals(editor.getContent(), '<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p id="x">&nbsp;</p><p id="y">&nbsp;</p><p id="z">&nbsp;</p>');
+	equals(editor.getContent(), '<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p id="x">&nbsp;</p>\n<p id="y">&nbsp;</p>\n<p id="z">&nbsp;</p>');
 
 	editor.setContent('test <strong>test2</strong> <em>test3</em>');
 	equals(editor.getContent(), '<p>test <strong>test2</strong> <em>test3</em></p>');
 
 	editor.setContent('<p>test</p>test <strong>test2</strong> <em>test3</em>');
-	equals(editor.getContent(), '<p>test</p><p>test <strong>test2</strong> <em>test3</em></p>');
+	equals(editor.getContent(), '<p>test</p>\n<p>test <strong>test2</strong> <em>test3</em></p>');
 
 	editor.setContent('<p>test 1</p>test <strong>test2</strong> <em>test3</em><p>test 2</p>test');
-	equals(editor.getContent(), '<p>test 1</p><p>test <strong>test2</strong> <em>test3</em></p><p>test 2</p><p>test</p>');
+	equals(editor.getContent(), '<p>test 1</p>\n<p>test <strong>test2</strong> <em>test3</em></p>\n<p>test 2</p>\n<p>test</p>');
 });
 
 test('internals - explorerBugs', function() {

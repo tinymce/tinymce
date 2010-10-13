@@ -15,13 +15,7 @@ tinymce.html.Writer = function(settings) {
 	indent = settings.indent;
 	indentBefore = tinymce.makeMap(settings.indent_before || '');
 	indentAfter = tinymce.makeMap(settings.indent_after || '');
-
-	if (!settings.entity_encoding) {
-		encode = function(str) {
-			return str;
-		};
-	} else
-		encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding, settings.entities);
+	encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
 
 	return {
 		start: function(name, attrs, empty) {
@@ -38,7 +32,7 @@ tinymce.html.Writer = function(settings) {
 
 			for (i = 0, l = attrs.length; i < l; i++) {
 				attr = attrs[i];
-				html.push(' ', attr.name, '="', encode(attr.value), '"');
+				html.push(' ', attr.name, '="', encode(attr.value, true), '"');
 			}
 
 			if (!empty) {

@@ -65,7 +65,7 @@
 			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i,
 				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
-				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
+				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode;
 
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp([
@@ -74,7 +74,7 @@
 				'<!--([\\w\\W]*?)-->', // Comments
 				'<!\\[CDATA\\[([\\w\\W]*?)\\]\\]>', // CDATA sections
 				'<\\?xml([\\w\\W]*?)\\??>', // PI
-				'<!DOCTYPE\\[([\\w\\W]*?)\\]>' // Doctype
+				'<!DOCTYPE([\\w\\W]*?)\\>' // Doctype
 			].join('|'), 'g');
 
 			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
@@ -92,7 +92,7 @@
 			while (matches = tokenRegExp.exec(html)) {
 				// Text
 				if (index < matches.index)
-					self.text(html.substr(index, matches.index - index));
+					self.text(decode(html.substr(index, matches.index - index)));
 
 				if (value = matches[1]) { // Start element
 					value = value.toLowerCase();
@@ -115,7 +115,7 @@
 							var attrRule, i;
 
 							name = name.toLowerCase();
-							value = name in fillAttrsMap ? name : (value || val2 || val3 || ''); // Handle boolean attribute than value attribute
+							value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
 							// Validate name and value
 							if (validate && name.indexOf('_mce_') !== 0) {
@@ -230,8 +230,12 @@
 					}
 
 					// Push value on to stack
-					if (!isEmpty)
-						stack.push({name: value, valid: isValidElement});
+					if (!isEmpty) {
+						if (!matches[3])
+							stack.push({name: value, valid: isValidElement});
+						else if (isValidElement)
+							self.end(value);
+					}
 				} else if (value = matches[4]) { // End element
 					value = value.toLowerCase();
 
@@ -270,7 +274,7 @@
 
 			// Text
 			if (index < html.length)
-				self.text(html.substr(index));
+				self.text(decode(html.substr(index)));
 
 			// Close any open elements
 			for (i = stack.length - 1; i >= 0; i--) {

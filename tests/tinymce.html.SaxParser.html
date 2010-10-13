@@ -13,7 +13,7 @@ module("tinymce.html.SaxParser");
 var writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();
 
 test('Parse elements', function() {
-	expect(21);
+	expect(22);
 
 	var parser = new tinymce.html.SaxParser(writer, schema);
 	writer.reset();
@@ -88,7 +88,7 @@ test('Parse elements', function() {
 	var parser = new tinymce.html.SaxParser(writer, schema);
 	writer.reset();
 	parser.parse('text1<P>text2<B>tex<t3</p>te>xt4</b>text5');
-	equals(writer.getContent(), 'text1<p>text2<b>tex<t3</b></p>te>xt4text5', 'Parse tag soup 3.');
+	equals(writer.getContent(), 'text1<p>text2<b>tex&lt;t3</b></p>te&gt;xt4text5', 'Parse tag soup 3.');
 
 	var parser = new tinymce.html.SaxParser(writer, schema);
 	writer.reset();
@@ -119,6 +119,11 @@ test('Parse elements', function() {
 	writer.reset();
 	parser.parse('text1<noscript>te<br>xt2</noscript>text3');
 	equals(writer.getContent(), 'text1<noscript>te<br>xt2</noscript>text3', 'noscript elements.');
+
+	var parser = new tinymce.html.SaxParser(writer, schema);
+	writer.reset();
+	parser.parse('<p>a</p><p /><p>b</p>');
+	equals(writer.getContent(), '<p>a</p><p></p><p>b</p>', 'Parse invalid closed element.');
 });
 
 test('Parse text', function() {

@@ -23,15 +23,15 @@
 
 		// Convert move _mce_src, _mce_href and _mce_style into nodes or process them if needed
 		htmlParser.addAttributeFilter('src,href,style', function(nodes, name) {
-			var i = nodes.length, node, value, internalName = '_mce_' + name, urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope;
+			var i = nodes.length, node, value, internalName = '_mce_' + name, urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope, undef;
 
 			while (i--) {
 				node = nodes[i];
 
 				value = node.attributes.map[internalName];
-				if (value) {
+				if (value !== undef) {
 					// Set external name to internal value and remove internal
-					node.attr(name, value);
+					node.attr(name, value.length > 0 ? value : null);
 					node.attr(internalName, null);
 				} else {
 					// No internal attribute found then convert the value we have in the DOM
@@ -42,7 +42,7 @@
 					else if (urlConverter)
 						value = urlConverter.call(urlConverterScope, value, name, node.name);
 
-					node.attr(name, value);
+					node.attr(name, value.length > 0 ? value : null);
 				}
 			}
 		});
@@ -100,13 +100,18 @@
 
 		// Remove <br> at end of block elements
 		htmlParser.addNodeFilter('br', function(nodes, name) {
-			var i = nodes.length, node, blockElements = schema.getBlockElements();
+			var i = nodes.length, node, blockElements = schema.getBlockElements(), emptyElements = schema.getEmptyElements(), parent;
 
 			while (i--) {
 				node = nodes[i];
+				parent = node.parent;
 
-				if (blockElements[node.parent.name] && node === node.parent.lastChild)
+				if (blockElements[node.parent.name] && node === parent.lastChild) {
 					node.remove();
+
+					if (parent.isEmpty(emptyElements))
+						parent.clear().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+				}
 			}
 		});
 

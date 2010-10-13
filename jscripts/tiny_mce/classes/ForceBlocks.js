@@ -93,29 +93,6 @@
 
 			ed.onPreInit.add(t.setup, t);
 
-			t.reOpera = new RegExp('(\\u00a0|&#160;|&nbsp;)<\/' + elm + '>', 'gi');
-			t.rePadd = new RegExp('<p( )([^>]+)><\\\/p>|<p( )([^>]+)\\\/>|<p( )([^>]+)>\\s+<\\\/p>|<p><\\\/p>|<p\\\/>|<p>\\s+<\\\/p>'.replace(/p/g, elm), 'gi');
-			t.reNbsp2BR1 = new RegExp('<p( )([^>]+)>[\\s\\u00a0]+<\\\/p>|<p>[\\s\\u00a0]+<\\\/p>'.replace(/p/g, elm), 'gi');
-			t.reNbsp2BR2 = new RegExp('<%p()([^>]+)>(&nbsp;|&#160;)<\\\/%p>|<%p>(&nbsp;|&#160;)<\\\/%p>'.replace(/%p/g, elm), 'gi');
-			t.reBR2Nbsp = new RegExp('<p( )([^>]+)>\\s*<br \\\/>\\s*<\\\/p>|<p>\\s*<br \\\/>\\s*<\\\/p>'.replace(/p/g, elm), 'gi');
-
-			function padd(ed, o) {
-				if (isOpera)
-					o.content = o.content.replace(t.reOpera, '</' + elm + '>');
-
-				o.content = tinymce._replace(t.rePadd, '<' + elm + '$1$2$3$4$5$6>\u00a0</' + elm + '>', o.content);
-
-				if (!isIE && !isOpera && o.set) {
-					// Use &nbsp; instead of BR in padded paragraphs
-					o.content = o.content.replace(t.reNbsp2BR1, '<' + elm + '$1$2><br /></' + elm + '>');
-					o.content = o.content.replace(t.reNbsp2BR2, '<' + elm + '$1$2><br /></' + elm + '>');
-				} else
-					o.content = tinymce._replace(t.reBR2Nbsp, '<' + elm + '$1$2>\u00a0</' + elm + '>', o.content);
-			};
-
-			ed.onBeforeSetContent.add(padd);
-			ed.onPostProcess.add(padd);
-
 			if (s.forced_root_block) {
 				ed.onInit.add(t.forceRoots, t);
 				ed.onSetContent.add(t.forceRoots, t);
@@ -246,21 +223,6 @@
 					}
 				});
 			}
-
-			// Padd empty inline elements within block elements
-			// For example: <p><strong><em></em></strong></p> becomes <p><strong><em>&nbsp;</em></strong></p>
-			ed.onPreProcess.add(function(ed, o) {
-				each(dom.select('p,h1,h2,h3,h4,h5,h6,div', o.node), function(p) {
-					if (isEmpty(p)) {
-						each(dom.select('span,em,strong,b,i', o.node), function(n) {
-							if (!n.hasChildNodes()) {
-								n.appendChild(ed.getDoc().createTextNode('\u00a0'));
-								return FALSE; // Break the loop one padding is enough
-							}
-						});
-					}
-				});
-			});
 
 			// IE specific fixes
 			if (isIE) {

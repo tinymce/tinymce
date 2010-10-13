@@ -863,16 +863,16 @@
 
 			// Convert src and href into _mce_src, _mce_href and _mce_style
 			t.parser.addAttributeFilter('src,href,style', function(nodes, name) {
-				var i = nodes.length, node, dom;
+				var i = nodes.length, node, dom = t.dom, value;
 
 				while (i--) {
 					node = nodes[i];
+					value = node.attr(name);
 
-					if (name === "style") {
-						dom = t.dom;
-						node.attr('_mce_style', dom.serializeStyle(dom.parseStyle(node.attr(name)), node.name));
-					} else
-						node.attr('_mce_' + name, t.convertURL(node.attr(name), name, node.name));
+					if (name === "style")
+						node.attr('_mce_style', dom.serializeStyle(dom.parseStyle(value), node.name));
+					else
+						node.attr('_mce_' + name, t.convertURL(value, name, node.name));
 				}
 			});
 
@@ -892,6 +892,17 @@
 					node.type = 8;
 					node.name = '#comment';
 					node.value = '[CDATA[' + node.value + ']]';
+				}
+			});
+
+			t.parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function(nodes, name) {
+				var i = nodes.length, node, emptyElements = t.schema.getEmptyElements();
+
+				while (i--) {
+					node = nodes[i];
+
+					if (node.isEmpty(emptyElements))
+						node.clear().append(new tinymce.html.Node('br', 1)).empty = true;
 				}
 			});
 

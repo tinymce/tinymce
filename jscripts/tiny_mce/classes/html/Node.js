@@ -9,14 +9,24 @@
  */
 
 (function(tinymce) {
+	var whiteSpaceRegExp = /^[ \t\r\n]*$/;
+
 	function Node(name, type) {
 		this.name = name;
 		this.type = type;
+
+		if (type === 1) {
+			this.attributes = [];
+			this.attributes.map = {};
+		}
 	}
 
 	tinymce.extend(Node.prototype, {
 		replace : function(node) {
 			var self = this;
+
+			if (node.parent)
+				node.remove();
 
 			self.insert(node, self);
 			self.remove();
@@ -143,7 +153,8 @@
 		insert : function(node, ref_node, before) {
 			var self = this, parent = this.parent, refParent = ref_node.parent;
 
-			self.remove(node);
+			if (node.parent)
+				node.remove();
 
 			if (before) {
 				if (ref_node === parent.firstChild)
@@ -166,6 +177,49 @@
 			}
 
 			return node;
+		},
+
+		walk : function(node, root_node, prev, shallow) {
+			var sibling, parent, startName = prev ? 'lastChild' : 'firstChild', siblingName = prev ? 'prev' : 'next';
+
+			// Walk into nodes if it has a start
+			if (!shallow && node[startName])
+				return node[startName];
+
+			// Return the sibling if it has one
+			if (node !== root_node) {
+				sibling = node[siblingName];
+
+				if (sibling)
+					return sibling;
+
+				// Walk up the parents to look for siblings
+				for (parent = node.parentNode; parent && parent !== root_node; parent = parent.parentNode) {
+					sibling = parent[siblingName];
+
+					if (sibling)
+						return sibling;
+				}
+			}
+		},
+
+		clear : function() {
+			var self = this;
+
+			self.firstChild = self.lastChild = null;
+
+			return self;
+		},
+
+		isEmpty : function(empty_elements) {
+			var self = this, node = self;
+
+			while (node = self.walk(node, self)) {
+				if ((node.type === 3 && !whiteSpaceRegExp.test(node.value)) || empty_elements[node.name])
+					return false;
+			}
+
+			return true;
 		}
 	});
 

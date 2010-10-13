@@ -42,8 +42,8 @@
 
 		self.parse = function(html) {
 			var parser, rootNode, node, Node = tinymce.html.Node, matchedNodes = {}, matchedAttributes = {},
-				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, decode,
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, lastEndWasBlock;
+				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp,
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements;
 
 			blockElements = tinymce.extend({
 				script: 1,
@@ -54,7 +54,6 @@
 			startWhiteSpaceRegExp = /^[ \t\r\n]+/;
 			endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 			allWhiteSpaceRegExp = /[ \t\r\n]+/g;
-			decode = tinymce.html.Entities.decode;
 
 			function createNode(name, type) {
 				var node = new Node(name, type), list;
@@ -83,19 +82,14 @@
 					if (!whiteSpaceElements[node.name]) {
 						text = text.replace(allWhiteSpaceRegExp, ' ');
 
-						if (lastEndWasBlock)
-							text = text.replace(endWhiteSpaceRegExp, '');
+						if (node.lastChild && blockElements[node.lastChild.name])
+							text = text.replace(startWhiteSpaceRegExp, '');
 					}
 
 					// Do we need to create the node
 					if (text.length !== 0) {
 						textNode = createNode('#text', 3);
-
-						if (raw)
-							textNode.raw = true;
-						else
-							text = decode(text);
-
+						textNode.raw = !!raw;
 						node.append(textNode).value = text;
 					}
 				},
@@ -127,7 +121,7 @@
 						while (attrFiltersLen--) {
 							name = attributeFilters[attrFiltersLen].name;
 
-							if (attrs.map[name]) {
+							if (name in attrs.map) {
 								list = matchedAttributes[name];
 
 								if (list)
@@ -146,14 +140,12 @@
 								if (textNode && textNode.type === 3)
 									textNode.value = textNode.value.replace(endWhiteSpaceRegExp, '');
 							}
-
-							lastEndWasBlock = false;
 						}
 					}
 				},
 
 				end: function(name) {
-					var textNode, elementRule, tempNode;
+					var textNode, elementRule;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
@@ -174,20 +166,16 @@
 							textNode = node.prev;
 							if (textNode && textNode.type === 3)
 								textNode.value = textNode.value.replace(startWhiteSpaceRegExp, '');
-
-							lastEndWasBlock = true;
-						} else
-							lastEndWasBlock = false;
+						}
 
 						// Handle empty nodes
-						if (!node.firstChild) {
-							if (elementRule.removeEmpty) {
-								tempNode = node.parent;
-								node.unwrap();
-								node = tempNode;
-								return;
-							} else if (elementRule.paddEmpty)
-								node.append(new Node('#text', 3)).value = '\u00a0';
+						if (elementRule.removeEmpty || elementRule.paddEmpty) {
+							if (node.isEmpty(schema.getEmptyElements())) {
+								if (elementRule.paddEmpty)
+									node.clear().append(new tinymce.html.Node('#text', '3')).value = '\u00a0';
+								else
+									return node.remove();
+							}
 						}
 
 						node = node.parent;
