@@ -208,7 +208,7 @@
 						node = doc.body;
 
 					// set the new document in DOMUtils so createElement etc works
-					orgDoc = dom.doc;
+					oldDoc = dom.doc;
 					dom.doc = doc;
 				}
 
