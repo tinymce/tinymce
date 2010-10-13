@@ -107,7 +107,7 @@
 				},
 
 				start: function(name, attrs, empty) {
-					var newNode, attrFiltersLen, elementRule, textNode;
+					var newNode, attrFiltersLen, elementRule, textNode, attrName;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
@@ -119,28 +119,27 @@
 
 						attrFiltersLen = attributeFilters.length;
 						while (attrFiltersLen--) {
-							name = attributeFilters[attrFiltersLen].name;
+							attrName = attributeFilters[attrFiltersLen].name;
 
-							if (name in attrs.map) {
-								list = matchedAttributes[name];
+							if (attrName in attrs.map) {
+								list = matchedAttributes[attrName];
 
 								if (list)
 									list.push(newNode);
 								else
-									matchedAttributes[name] = [newNode];
+									matchedAttributes[attrName] = [newNode];
 							}
 						}
 
-						if (!empty)
-							node = newNode;
-						else {
+						if (empty) {
 							if (blockElements[name]) {
 								// Trim start white space
 								textNode = newNode.prev;
 								if (textNode && textNode.type === 3)
 									textNode.value = textNode.value.replace(endWhiteSpaceRegExp, '');
 							}
-						}
+						} else
+							node = newNode;
 					}
 				},
 
