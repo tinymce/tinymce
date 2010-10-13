@@ -8,7 +8,7 @@ function fontFace(face) {
 
 function trimContent(content) {
 	if (tinymce.isOpera)
-		return content.replace(/^<p>&nbsp;<\/p>/, '').replace(/<p>&nbsp;<\/p>$/, '');
+		return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/<p>&nbsp;<\/p>$/, '');
 
 	return content;
 }
