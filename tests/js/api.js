@@ -411,8 +411,8 @@ function fakeKeyEvent(e, na, o) {
 			'background: transparent url(Xhttp://www.site.com/test.gif?a=1&b=2Y);'
 		);
 
-		dom.setHTML('test', '<span id="test2" style="border: 1px solid #00ff00;"></span>');
-		equals(dom.getAttrib('test2', 'style'), 'border: 1px solid #00ff00;');
+		dom.setHTML('test', '<span id="test2" style="   margin-left: 1px;    margin-top: 1px;   margin-right: 1px;   margin-bottom: 1px   "></span>');
+		equals(dom.getAttrib('test2', 'style'), 'margin: 1px;');
 
 		dom.setHTML('test', '<span id="test2" style="background-image: url(test.gif);"></span>');
 		equals(dom.getAttrib('test2', 'style'), 'background-image: url(Xtest.gifY);');
