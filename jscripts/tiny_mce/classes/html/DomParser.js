@@ -133,9 +133,8 @@
 
 						if (empty) {
 							if (blockElements[name]) {
-								// Trim start white space
-								textNode = newNode.prev;
-								if (textNode && textNode.type === 3)
+								// Trim whitespace before block
+								for (textNode = newNode.prev; textNode && textNode.type === 3; textNode = textNode.prev)
 									textNode.value = textNode.value.replace(endWhiteSpaceRegExp, '');
 							}
 						} else
@@ -150,14 +149,12 @@
 					if (elementRule) {
 						if (blockElements[name]) {
 							if (!whiteSpaceElements[node.name]) {
-								// Trim start white space
-								textNode = node.firstChild;
-								if (textNode && textNode.type === 3)
+								// Trim whitespace at beginning of block
+								for (textNode = node.firstChild; textNode && textNode.type === 3; textNode = textNode.next)
 									textNode.value = textNode.value.replace(startWhiteSpaceRegExp, '');
 
-								// Trim end white space
-								textNode = node.lastChild;
-								if (textNode && textNode.type === 3)
+								// Trim whitespace at end of block
+								for (textNode = node.lastChild; textNode && textNode.type === 3; textNode = textNode.prev)
 									textNode.value = textNode.value.replace(endWhiteSpaceRegExp, '');
 							}
 
