@@ -13,6 +13,68 @@
 		var self = this, nodeFilters = {}, attributeFilters = [];
 
 		settings = settings || {};
+		settings.root_name = settings.root_name || 'body';
+
+		function fixInvalidChildren(nodes) {
+			var ni, node, parent, parents, newParent, currentNode, tempNode, childClone, emptyElements = schema.getEmptyElements();
+
+			for (ni = 0; ni < nodes.length; ni++) {
+				node = nodes[ni];
+
+				// Get list of all parent nodes until we find a valid parent to stick the child into
+				parents = [];
+				for (parent = node; parent && !schema.isValidChild(parent.name, node.name); parent = parent.parent)
+					parents.push(parent);
+
+				// Found a suitable parent
+				if (parent && parent !== node) {
+					// Reverse the array since it makes looping easier
+					parents.reverse();
+
+					// Clone the related parent and insert that after the moved node
+					newParent = currentNode = parents[0].clone();
+
+					// Start cloning and moving children on the left side of the target node
+					for (i = 0; i < parents.length - 1; i++) {
+						if (schema.isValidChild(currentNode.name, parents[i].name)) {
+							tempNode = parents[i].clone();
+							currentNode.append(tempNode);
+						} else
+							tempNode = currentNode;
+
+						for (childNode = parents[i].firstChild; childNode && childNode != parents[i + 1]; childNode = childNode.next) {
+							tempNode.append(childNode);
+						}
+
+						currentNode = tempNode;
+					}
+
+					if (!newParent.isEmpty(emptyElements)) {
+						parent.insert(newParent, parents[0], true);
+						parent.insert(node, newParent);
+					} else {
+						parent.insert(node, parents[0], true);
+					}
+
+					if (parents[0].isEmpty(emptyElements)) {
+						parents[0].remove();
+					}
+				} else {
+					// Try wrapping the element in a DIV
+					if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
+						tempNode = new tinymce.html.Node('div', 1);
+						node.parent.insert(tempNode, node);
+						tempNode.append(node);
+					} else {
+						// We failed wrapping it, then remove it
+						if (node.name === 'style')
+							node.remove();
+						else
+							node.unwrap();
+					}
+				}
+			}
+		}
 
 		self.addNodeFilter = function(name, callback) {
 			tinymce.each(tinymce.explode(name), function(name) {
@@ -42,7 +104,7 @@
 
 		self.parse = function(html) {
 			var parser, rootNode, node, Node = tinymce.html.Node, matchedNodes = {}, matchedAttributes = {},
-				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp,
+				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements;
 
 			blockElements = tinymce.extend({
@@ -117,6 +179,10 @@
 
 						node.append(newNode);
 
+						// Check if element position is valid
+						if (!schema.isValidChild(node.name, newNode.name))
+							invalidChildren.push(newNode);
+
 						attrFiltersLen = attributeFilters.length;
 						while (attrFiltersLen--) {
 							attrName = attributeFilters[attrFiltersLen].name;
@@ -179,9 +245,11 @@
 				}
 			}, settings), schema);
 
-			rootNode = node = new Node('#frag', 11);
+			rootNode = node = new Node(settings.root_name, 8);
 
 			parser.parse(html);
+
+			fixInvalidChildren(invalidChildren);
 
 			// Run node filters
 			for (name in matchedNodes) {

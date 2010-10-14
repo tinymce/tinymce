@@ -372,17 +372,28 @@
 
 		// Adds valid children to the schema object
 		function addValidChildren(valid_children) {
-			var childRuleRegExp = /^(\w+)\[([^\]]+)\]$/;
+			var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
 
 			if (valid_children) {
 				each(split(valid_children), function(rule) {
-					var matches = childRuleRegExp.exec(rule), parent;
+					var matches = childRuleRegExp.exec(rule), parent, prefix;
 
 					if (matches) {
-						parent = children[matches[1]] = {'#comment' : {}};
+						prefix = matches[1];
 
-						each(split(matches[2], '|'), function(child) {
-							parent[child] = {};
+						// Add/remove items from default
+						if (prefix)
+							parent = children[matches[2]];
+						else
+							parent = children[matches[2]] = {'#comment' : {}};
+
+						parent = children[matches[2]];
+
+						each(split(matches[3], '|'), function(child) {
+							if (prefix === '-')
+								delete parent[child];
+							else
+								parent[child] = {};
 						});
 					}
 				});
@@ -413,8 +424,11 @@
 			setValidElements(settings.valid_elements);
 
 		addCustomElements(settings.custom_elements);
-		addValidChildren(settings.valid_child_elements);
+		addValidChildren(settings.valid_children);
 		addValidElements(settings.extended_valid_elements);
+
+		// Todo: Remove this when we fix list handling to be valid
+		addValidChildren('+ol[ul|ol],+ul[ul|ol]');
 
 		// Delete invalid elements
 		if (settings.invalid_elements) {

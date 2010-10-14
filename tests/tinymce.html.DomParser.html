@@ -13,6 +13,8 @@ module("tinymce.html.DomParser");
 var schema = new tinymce.html.Schema();
 var serializer = new tinymce.html.Serializer({}, schema);
 
+schema.addValidChildren('+body[style]');
+
 test('Parse element', function() {
 	var parser, root;
 
@@ -33,7 +35,7 @@ test('Parse element', function() {
 test('Whitespace', function() {
 	var parser, root;
 
-	expect(6);
+	expect(5);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
@@ -54,10 +56,40 @@ test('Whitespace', function() {
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
 	equals(serializer.serialize(root), '<style>  \t\r\n   test  \t\r\n   </style>', 'Whitespace around and inside STYLE');
+});
+
+test('Parse invalid contents', function() {
+	var parser, root;
+
+	expect(7);
 
 	parser = new tinymce.html.DomParser({}, schema);
-	root = parser.parse('<p>test   <hr>    </p>');
-	equals(serializer.serialize(root), '<p>test<hr /></p>', 'Redundant whitespace (inline block element)');
+	root = parser.parse('<p class="a"><p class="b">123</p></p>');
+	equals(serializer.serialize(root), '<p class="b">123</p>', 'P in P, no nodes before/after');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p class="a">abc<p class="b">def</p></p>');
+	equals(serializer.serialize(root), '<p class="a">abc</p><p class="b">def</p>', 'P in P with nodes before');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p class="a"><p class="b">abc</p>def</p>');
+	equals(serializer.serialize(root), '<p class="b">abc</p><p class="a">def</p>', 'P in P with nodes after');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p class="a">a<strong>b<span>c<em>d<p class="b">e</p>f</em>g</span>h</strong>i</p>');
+	equals(serializer.serialize(root), '<p class="a">a<strong>b<span>c<em>d</em></span></strong></p><p class="b">e</p><p class="a"><strong><span><em>f</em>g</span>h</strong>i</p>', 'P in P wrapped in inline elements');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p class="a">a<p class="b">b<p class="c">c</p>d</p>e</p>');
+	equals(serializer.serialize(root), '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="b">d</p><p class="a">e</p>', 'P in P in P with text before/after');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<li>abc</li>');
+	equals(serializer.serialize(root), 'abc', 'LI inside BODY');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
+	equals(serializer.serialize(root), '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>', 'UL inside P');
 });
 </script>
 </head>

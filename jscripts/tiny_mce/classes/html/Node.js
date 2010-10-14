@@ -76,15 +76,18 @@
 
 			// Clone element attributes
 			if (selfAttrs = self.attributes) {
-				i = selfAttrs.length - 1;
+				i = selfAttrs.length;
 				cloneAttrs = [];
+				cloneAttrs.map = {};
 
 				while (i--) {
 					selfAttr = selfAttrs[i];
 
 					// Clone everything except id
-					if (selfAttr.name !== 'id')
+					if (selfAttr.name !== 'id') {
 						cloneAttrs[cloneAttrs.length] = {name: selfAttr.name, value: selfAttr.value};
+						cloneAttrs.map[selfAttr.name] = selfAttr.value;
+					}
 				}
 
 				clone.attributes = cloneAttrs;
@@ -151,7 +154,7 @@
 		},
 
 		insert : function(node, ref_node, before) {
-			var self = this, parent = this.parent, refParent = ref_node.parent;
+			var self = this, parent = self.parent || self, refParent = ref_node.parent;
 
 			if (node.parent)
 				node.remove();
@@ -164,7 +167,7 @@
 
 				node.prev = ref_node.prev;
 				node.next = ref_node;
-				ref_node.previous = node;
+				ref_node.prev = node;
 			} else {
 				if (ref_node === parent.lastChild)
 					parent.lastChild = node;
@@ -175,6 +178,8 @@
 				node.prev = ref_node;
 				ref_node.next = node;
 			}
+
+			node.parent = self;
 
 			return node;
 		},

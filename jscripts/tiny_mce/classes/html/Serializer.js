@@ -104,7 +104,11 @@
 					handler(node);
 			}
 
-			walk(node);
+			// Serialize element and treat all non elements as fragments
+			if (node.type == 1)
+				walk(node);
+			else
+				handlers['#frag'](node);
 
 			return writer.getContent();
 		};

@@ -324,7 +324,7 @@ test('Protected blocks', function() {
 });
 
 test('Style', function() {
-	var ser = new tinymce.dom.Serializer({fix_list_elements : true, dom : DOM});
+	var ser = new tinymce.dom.Serializer({fix_list_elements : true, valid_children: '+body[style]', dom : DOM});
 
 	expect(2);
 
