@@ -109,6 +109,13 @@
 	);
 
 	tinymce.html = tinymce.html || {};
+
+	/**
+	 * Entity encoder class.
+	 *
+	 * @class tinymce.html.SaxParser
+	 * @static
+	 */
 	tinymce.html.Entities = {
 		/**
 		 * Encodes the specified string using raw entities. This means only the required XML base entities will be endoded.

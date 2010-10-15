@@ -37,8 +37,23 @@
 	 *     end: function(name) {
 	 *         console.log('End:', name);
 	 *     }
+	 *
+	 *     pi: function(name) {
+	 *         console.log('PI:', name);
+	 *     }
+	 *
+	 *     doctype: function(name) {
+	 *         console.log('DocType:', name);
+	 *     }
 	 * }, schema);
 	 * @class tinymce.html.SaxParser
+	 */
+
+	/**
+	 * Constructs a new SaxParser instance.
+	 *
+	 * @constructor
+	 * @method SaxParser
 	 * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
 	 * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
 	 */
@@ -46,6 +61,7 @@
 		var self = this, noop = function() {};
 
 		settings = settings || {};
+		self.schema = schema = schema || new tinymce.html.Schema();
 
 		// Add handler functions from settings and setup default handlers
 		tinymce.each('comment cdata text start end pi doctype'.split(' '), function(name) {
@@ -61,7 +77,7 @@
 		 * @method parse
 		 * @param {String} html Html string to sax parse.
 		 */
-		this.parse = function(html) {
+		self.parse = function(html) {
 			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i,
 				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,

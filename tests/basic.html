@@ -348,23 +348,6 @@ test('internals - forcedBlocks', function() {
 	equals(editor.getContent(), '<p>test 1</p>\n<p>test <strong>test2</strong> <em>test3</em></p>\n<p>test 2</p>\n<p>test</p>');
 });
 
-test('internals - explorerBugs', function() {
-	expect(2);
-
-	// Don't run real test on non IE browsers
-	if (!tinymce.isIE) {
-		ok(1);
-		ok(1);
-		return;
-	}
-
-	editor.setContent('<p><span><ul><li>Item 1</li></ul></span></p>');
-	equals(editor.getContent(), '<p><span><ul><li>Item 1</li></ul></span></p>');
-
-	editor.setContent('<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>');
-	equals(editor.getContent(), tinymce.isIE ? '<p class="test">test1</p><p><div>test2</div></p><p class="test">test3</p>' : '<p class="test">test1</p><p>&nbsp;</p><div>test2</div><p>&nbsp;</p><p class="test">test3</p>');
-});
-
 test('urls - relativeURLs', function() {
 	expect(5);
 

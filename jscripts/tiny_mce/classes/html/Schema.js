@@ -188,6 +188,16 @@
 	 *
 	 *  if (tinymce.activeEditor.schema.getElementRule('p'))
 	 *    alert('P is a valid element.');
+	 *
+	 * @class tinymce.html.Schema
+	 */
+
+	/**
+	 * Constructs a new Schema instance.
+	 *
+	 * @constructor
+	 * @method Schema
+	 * @param {Object} settings Name/value settings object.
 	 */
 	tinymce.html.Schema = function(settings) {
 		var self = this, elements = {}, children = {}, patternElements = [];

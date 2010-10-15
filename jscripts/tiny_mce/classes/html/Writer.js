@@ -1,13 +1,32 @@
 /**
  * Writer.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright 2010, Moxiecode Systems AB
  * Released under LGPL License.
  *
  * License: http://tinymce.moxiecode.com/license
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
+/**
+ * This class is used to write HTML tags out it can be used with the Serializer or the SaxParser.
+ *
+ * @class tinymce.html.Writer
+ * @example
+ * var writer = new tinymce.html.Writer({indent : true});
+ * var parser = new tinymce.html.SaxParser(writer).parse('<p><br></p>');
+ * console.log(writer.getContent());
+ *
+ * @class tinymce.html.Writer
+ */
+
+/**
+ * Constructs a new Writer instance.
+ *
+ * @constructor
+ * @method Writer
+ * @param {Object} settings Name/value settings object.
+ */
 tinymce.html.Writer = function(settings) {
 	var html = [], indent, indentBefore, indentAfter, encode;
 
@@ -18,6 +37,14 @@ tinymce.html.Writer = function(settings) {
 	encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
 
 	return {
+		/**
+		 * Writes the a start element such as <p id="a">.
+		 *
+		 * @method start
+		 * @param {String} name Name of the element.
+		 * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
+		 * @param {Boolean} empty Optional empty state if the tag should end like <br />.
+		 */
 		start: function(name, attrs, empty) {
 			var i, l, attr, value;
 
@@ -46,6 +73,12 @@ tinymce.html.Writer = function(settings) {
 				html.push('\n');*/
 		},
 
+		/**
+		 * Writes the a end element such as </p>.
+		 *
+		 * @method end
+		 * @param {String} name Name of the element.
+		 */
 		end: function(name) {
 			var value;
 
@@ -66,31 +99,73 @@ tinymce.html.Writer = function(settings) {
 			}
 		},
 
+		/**
+		 * Writes a text node.
+		 *
+		 * @method text
+		 * @param {String} text String to write out.
+		 * @param {Boolean} raw Optional raw state if true the contents wont get encoded.
+		 */
 		text: function(text, raw) {
 			if (text.length > 0)
 				html[html.length] = raw ? text : encode(text);
 		},
 
+		/**
+		 * Writes a cdata node such as <![CDATA[data]]>.
+		 *
+		 * @method cdata
+		 * @param {String} text String to write out inside the cdata.
+		 */
 		cdata: function(text) {
 			html.push('<![CDATA[', text, ']]>');
 		},
 
+		/**
+		 * Writes a comment node such as <!-- Comment -->.
+		 *
+		 * @method cdata
+		 * @param {String} text String to write out inside the comment.
+		 */
 		comment: function(text) {
 			html.push('<!--', text, '-->');
 		},
 
+		/**
+		 * Writes a PI node such as <?xml text ?>.
+		 *
+		 * @method pi
+		 * @param {String} text String to write out inside the pi.
+		 */
 		pi: function(text) {
 			html.push('<?xml', text, '?>');
 		},
 
+		/**
+		 * Writes a doctype node such as <!DOCTYPE data>.
+		 *
+		 * @method doctype
+		 * @param {String} text String to write out inside the doctype.
+		 */
 		doctype: function(text) {
 			html.push('<!DOCTYPE', text, '>');
 		},
 
+		/**
+		 * Resets the internal buffer if one wants to reuse the writer.
+		 *
+		 * @method reset
+		 */
 		reset: function() {
 			html.length = 0;
 		},
 
+		/**
+		 * Returns the contents that got serialized.
+		 *
+		 * @method getContent
+		 * @return {String} HTML contents that got written down.
+		 */
 		getContent: function() {
 			return html.join('').replace(/\n$/, '');
 		}

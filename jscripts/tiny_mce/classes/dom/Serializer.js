@@ -110,7 +110,7 @@
 					node.remove();
 
 					if (parent.isEmpty(emptyElements))
-						parent.clear().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+						parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
 				}
 			}
 		});

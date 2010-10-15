@@ -9,12 +9,41 @@
  */
 
 (function(tinymce) {
+	/**
+	 * This class is used to serialize down the DOM tree into a string using a Writer instance.
+	 *
+	 *
+	 * @example
+	 * new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
+	 * @class tinymce.html.Serializer
+	 */
+
+	/**
+	 * Constructs a new Serializer instance.
+	 *
+	 * @constructor
+	 * @method Serializer
+	 * @param {Object} settings Name/value settings object.
+	 * @param {tinymce.html.Schema} schema Schema instance to use.
+	 */
 	tinymce.html.Serializer = function(settings, schema) {
 		var self = this, writer = new tinymce.html.Writer(settings);
 
+		settings = settings || {};
 		settings.validate = true;
+
+		self.schema = schema = schema || new tinymce.html.Schema();
 		self.writer = writer;
 
+		/**
+		 * Serializes the specified node into a string.
+		 *
+		 * @example
+		 * new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
+		 * @method serialize
+		 * @param {tinymce.html.Node} node Node instance to serialize.
+		 * @return {String} String with HTML based on DOM tree.
+		 */
 		self.serialize = function(node) {
 			var handlers, validate;
 
@@ -57,7 +86,7 @@
 
 				if (!handler) {
 					name = node.name;
-					isEmpty = node.empty;
+					isEmpty = node.shortEnded;
 
 					// Sort attributes
 					attrs = node.attributes;
