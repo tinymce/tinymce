@@ -1983,7 +1983,7 @@
 			}
 
 			// Set the new cleaned contents to the editor
-			body.innerHTML = args.content;
+			body.innerHTML = tinymce.trim(args.content);
 
 			// Do post processing
 			if (!args.no_events)
@@ -2018,7 +2018,7 @@
 			else
 				content = self.serializer.serialize(self.getBody(), args);
 
-			args.content = content;
+			args.content = tinymce.trim(content);
 
 			// Do post processing
 			if (!args.no_events)
