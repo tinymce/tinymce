@@ -69,13 +69,25 @@
 			// This function executes the process handlers and inserts the contents
 			// force_rich overrides plain text mode set by user, important for pasting with execCommand
 			function process(o, force_rich) {
-				var dom = ed.dom;
+				var dom = ed.dom, rng, nodes;
 
 				// Execute pre process handlers
 				t.onPreProcess.dispatch(t, o);
 
 				// Create DOM structure
 				o.node = dom.create('div', 0, o.content);
+
+				// If pasting inside the same element and the contents is only one block
+				// remove the block and keep the text since Firefox will copy parts of pre and h1-h6 as a pre element
+				if (tinymce.isGecko) {
+					rng = ed.selection.getRng(true);
+					if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == 3) {
+						nodes = dom.select('p,h1,h2,h3,h4,h5,h6,pre', o.node);
+
+						if (nodes.length == 1)
+							dom.remove(nodes.reverse(), true);
+					}
+				}
 
 				// Execute post process handlers
 				t.onPostProcess.dispatch(t, o);
