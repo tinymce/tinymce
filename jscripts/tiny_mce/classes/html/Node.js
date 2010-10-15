@@ -100,10 +100,12 @@
 		},
 
 		unwrap : function() {
-			var self = this, node;
+			var self = this, node, next;
 
-			for (node = self.firstChild; node; node = node.next) {
-				self.insert(node, self);
+			for (node = self.firstChild; node; ) {
+				next = node.next;
+				self.insert(node, self, true);
+				node = next;
 			}
 
 			self.remove();

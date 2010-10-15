@@ -10,7 +10,202 @@
 <script>
 module("tinymce.html.Node");
 
-test('..', function() {
+test('construction', function() {
+	var node;
+
+	expect(15);
+
+	node = new tinymce.html.Node('#text', 3);
+	equals(node.name, '#text');
+	equals(node.type, 3);
+
+	node = new tinymce.html.Node('#comment', 8);
+	equals(node.name, '#comment');
+	equals(node.type, 8);
+
+	node = new tinymce.html.Node('b', 1);
+	equals(node.name, 'b');
+	equals(node.type, 1);
+	deepEqual(node.attributes, []);
+
+	node = new tinymce.html.Node('#pi', 7);
+	equals(node.name, '#pi');
+	equals(node.type, 7);
+
+	node = new tinymce.html.Node('#doctype', 10);
+	equals(node.name, '#doctype');
+	equals(node.type, 10);
+
+	node = new tinymce.html.Node('#cdata', 4);
+	equals(node.name, '#cdata');
+	equals(node.type, 4);
+
+	node = new tinymce.html.Node('#frag', 11);
+	equals(node.name, '#frag');
+	equals(node.type, 11);
+});
+
+test('append inside empty node', function() {
+	var root, node, node2;
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('b', 1));
+	ok(root.firstChild.parent === root);
+	equals(root.firstChild.next, undefined);
+	equals(root.firstChild.prev, undefined);
+	equals(root.firstChild.firstChild, undefined);
+	equals(root.firstChild.lastChild, undefined);
+	ok(node.parent === root);
+	equals(node.next, undefined);
+	equals(node.prev, undefined);
+	equals(node.firstChild, undefined);
+	equals(node.lastChild, undefined);
+});
+
+test('append node after node', function() {
+	var root, node, node2;
+
+	root = new tinymce.html.Node('#frag', 11);
+	node2 = root.append(new tinymce.html.Node('a', 1));
+	node = root.append(new tinymce.html.Node('b', 1));
+	ok(root.firstChild.parent === root, 'root.firstChild.parent === root');
+	ok(root.firstChild === node2, 'root.firstChild');
+	ok(root.lastChild === node, 'root.firstChild');
+	ok(root.firstChild.next === node, 'root.firstChild.next');
+	equals(root.firstChild.prev, undefined, 'root.firstChild.prev');
+	equals(root.firstChild.firstChild, undefined, 'root.firstChild.firstChild');
+	equals(root.firstChild.lastChild, undefined, 'root.firstChild.lastChild');
+	ok(node2.parent === root, 'node2.parent === root');
+	ok(node2.next === node, 'node2.next');
+	equals(node2.prev, undefined, 'node2.prev');
+	equals(node2.firstChild, undefined, 'node2.firstChild');
+	equals(node2.lastChild, undefined, 'node2.lastChild');
+	ok(node.parent === root, 'node.parent === root');
+	equals(node.next, undefined, 'node.next');
+	ok(node.prev === node2, 'node.prev');
+	equals(node.firstChild, undefined, 'node.firstChild');
+	equals(node.lastChild, undefined, 'node.lastChild');
+});
+
+test('append existing node before other existing node', function() {
+	var root, node, node2;
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('a', 1));
+	node2 = root.append(new tinymce.html.Node('b', 1));
+	root.append(node);
+	ok(root.firstChild === node2, 'root.firstChild');
+	ok(root.lastChild === node, 'root.lastChild');
+	equals(node.next, undefined, 'node.next');
+	ok(node.prev === node2, 'node.prev');
+	ok(node.parent === root, 'node.parent');
+	ok(node2.parent === root, 'node2.parent');
+	equals(node2.prev, undefined, 'node2.prev');
+	ok(node2.next === node, 'node2.next');
+});
+
+test('remove single child', function() {
+	var root, node, node2, node3;
+
+	//expect(13);
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('p', 1));
+	node = root.firstChild.remove();
+	equals(root.firstChild, undefined);
+	equals(root.lastChild, undefined);
+	equals(node.parent, undefined);
+	equals(node.next, undefined);
+	equals(node.prev, undefined);
+	equals(node.name, 'p');
+});
+
+test('remove middle node', function() {
+	var root, node, node2, node3;
+
+	//expect(13);
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('a', 1));
+	node2 = root.append(new tinymce.html.Node('b', 1));
+	node3 = root.append(new tinymce.html.Node('c', 1));
+	node2.remove();
+	equals(node2.parent, undefined);
+	equals(node2.next, undefined);
+	equals(node2.prev, undefined);
+	ok(root.firstChild === node, 'root.firstChild');
+	ok(root.lastChild === node3, 'root.lastChild');
+	ok(node.next === node3, 'node.next');
+	equals(node.prev, undefined, 'node.prev');
+	ok(node3.prev, node, 'node3.prev');
+	equals(node3.next, undefined, 'node3.next');
+});
+
+test('insert after last', function() {
+	var root, node, node2;
+
+	//expect(13);
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('a', 1));
+	node2 = root.insert(new tinymce.html.Node('x', 1), node);
+	ok(root.firstChild === node, 'root.firstChild');
+	ok(root.lastChild === node2, 'root.lastChild');
+	ok(node.next === node2, 'node.next');
+	ok(node2.prev === node, 'node2.prev');
+	ok(node2.parent === root, 'node3.next');
+});
+
+test('insert before first', function() {
+	var root, node, node2;
+
+	//expect(13);
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('a', 1));
+	node2 = root.insert(new tinymce.html.Node('x', 1), node, true);
+	ok(root.firstChild === node2, 'root.firstChild');
+	ok(root.lastChild === node, 'root.lastChild');
+	ok(node2.parent === root, 'node2.lastChild');
+	ok(node2.next === node, 'node2.next');
+	ok(node2.prev === undefined, 'node2.prev');
+	ok(node.parent === root, 'node.lastChild');
+	ok(node.next === undefined, 'node.next');
+	ok(node.prev === node2, 'node.prev');
+});
+
+test('insert before second', function() {
+	var root, node, node2;
+
+	//expect(13);
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('a', 1));
+	node2 = root.append(new tinymce.html.Node('b', 1));
+	node3 = root.insert(new tinymce.html.Node('x', 1), node2, true);
+	ok(root.firstChild === node, 'root.firstChild');
+	ok(root.lastChild === node2, 'root.lastChild');
+	ok(node3.parent === root, 'node3.parent');
+	ok(node3.next === node2, 'node3.next');
+	ok(node3.prev === node, 'node3.prev');
+});
+
+test('insert after and between two nodes', function() {
+	var root, node, node2, node3;
+
+	//expect(13);
+
+	root = new tinymce.html.Node('#frag', 11);
+	node = root.append(new tinymce.html.Node('a', 1));
+	node2 = root.append(new tinymce.html.Node('b', 1));
+	node3 = root.insert(new tinymce.html.Node('x', 1), node);
+	ok(root.firstChild === node, 'root.firstChild');
+	ok(root.lastChild === node2, 'root.lastChild');
+	ok(node.next === node3, 'node.next');
+	ok(node2.prev === node3, 'node2.prev');
+	ok(node3.parent === root, 'node3.next');
+	ok(node3.next === node2, 'node3.next');
+	ok(node3.prev === node, 'node3.prev');
 });
 </script>
 </head>

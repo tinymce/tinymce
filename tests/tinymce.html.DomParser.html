@@ -61,11 +61,15 @@ test('Whitespace', function() {
 test('Parse invalid contents', function() {
 	var parser, root;
 
-	expect(7);
+	expect(8);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a"><p class="b">123</p></p>');
 	equals(serializer.serialize(root), '<p class="b">123</p>', 'P in P, no nodes before/after');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p class="a">a<p class="b">b</p><p class="c">c</p>d</p>');
+	equals(serializer.serialize(root), '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="a">d</p>', 'Two P in P, no nodes before/after');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a">abc<p class="b">def</p></p>');

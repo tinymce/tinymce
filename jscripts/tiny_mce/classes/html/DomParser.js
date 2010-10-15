@@ -22,8 +22,8 @@
 				node = nodes[ni];
 
 				// Get list of all parent nodes until we find a valid parent to stick the child into
-				parents = [];
-				for (parent = node; parent && !schema.isValidChild(parent.name, node.name); parent = parent.parent)
+				parents = [node];
+				for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name); parent = parent.parent)
 					parents.push(parent);
 
 				// Found a suitable parent

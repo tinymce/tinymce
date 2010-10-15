@@ -169,6 +169,8 @@
 
 		// Return public methods
 		return {
+			schema : schema,
+
 			addNodeFilter : htmlParser.addNodeFilter,
 
 			addAttributeFilter : htmlParser.addAttributeFilter,

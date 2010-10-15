@@ -217,6 +217,7 @@ test('Non HTML elements and attributes', function() {
 	expect(2);
 
 	ser.setRules('*[*]');
+	ser.schema.addValidChildren('+div[prefix:test]');
 
 	DOM.setHTML('test', '<div test:attr="test">test</div>');
 	equals(ser.serialize(DOM.get('test'), {getInner : 1}), '<div test:attr="test">test</div>');
