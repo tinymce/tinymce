@@ -141,7 +141,7 @@ tinyMCEPopup = {
 				t.getWindowArg('mce_height') - vp.h,
 				t.id || window
 			);
-		}, 0);
+		}, 10);
 	},
 
 	/**
