@@ -13,12 +13,30 @@ module("tinymce.html.DomParser");
 var schema = new tinymce.html.Schema();
 var serializer = new tinymce.html.Serializer({}, schema);
 
+function countNodes(node, counter) {
+	var sibling;
+
+	if (!counter)
+		counter = {};
+
+	if (node.name in counter) {
+		counter[node.name]++;
+	} else
+		counter[node.name] = 1;
+
+	for (sibling = node.firstChild; sibling; sibling = sibling.next) {
+		countNodes(sibling, counter);
+	}
+
+	return counter;
+}
+
 schema.addValidChildren('+body[style]');
 
 test('Parse element', function() {
 	var parser, root;
 
-	expect(5);
+	expect(7);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<B title="title" class="class">test</B>');
@@ -26,74 +44,89 @@ test('Parse element', function() {
 	equals(root.firstChild.type, 1, 'Element type');
 	equals(root.firstChild.name, 'b', 'Element name');
 	deepEqual(root.firstChild.attributes, [{name: 'title', value: 'title'}, {name: 'class', value: 'class'}], 'Element attributes');
+	deepEqual(countNodes(root), {body:1, b:1, '#text':1}, 'Element attributes (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   a < b > \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
 	equals(serializer.serialize(root), '<script>  \t\r\n   a < b > \t\r\n   </s' + 'cript>', 'Retain code inside SCRIPT');
+	deepEqual(countNodes(root), {body:1, script:1, '#text':1}, 'Retain code inside SCRIPT (count)');
 });
 
 test('Whitespace', function() {
 	var parser, root;
 
-	expect(5);
+	expect(10);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
 	equals(serializer.serialize(root), ' <b> test </b> ', 'Redundant whitespace (inline element)');
+	deepEqual(countNodes(root), {body:1, b:1, '#text':3}, 'Redundant whitespace (inline element) (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <P>  \t\r\n   test  \t\r\n   </P>   \t\r\n  ');
 	equals(serializer.serialize(root), '<p>test</p>', 'Redundant whitespace (block element)');
+	deepEqual(countNodes(root), {body:1, p:1, '#text':1}, 'Redundant whitespace (block element) (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
 	equals(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
+	deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   test  \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
 	equals(serializer.serialize(root), '<script>  \t\r\n   test  \t\r\n   </s' + 'cript>', 'Whitespace around and inside SCRIPT');
+	deepEqual(countNodes(root), {body:1, script:1, '#text':1}, 'Whitespace around and inside SCRIPT (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
 	equals(serializer.serialize(root), '<style>  \t\r\n   test  \t\r\n   </style>', 'Whitespace around and inside STYLE');
+	deepEqual(countNodes(root), {body:1, style:1, '#text':1}, 'Whitespace around and inside STYLE (count)');
 });
 
 test('Parse invalid contents', function() {
 	var parser, root;
 
-	expect(8);
+	expect(16);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a"><p class="b">123</p></p>');
 	equals(serializer.serialize(root), '<p class="b">123</p>', 'P in P, no nodes before/after');
+	deepEqual(countNodes(root), {body:1, p:1, '#text':1}, 'P in P, no nodes before/after (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a">a<p class="b">b</p><p class="c">c</p>d</p>');
 	equals(serializer.serialize(root), '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="a">d</p>', 'Two P in P, no nodes before/after');
+	deepEqual(countNodes(root), {body: 1, p:4, '#text': 4}, 'Two P in P, no nodes before/after (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a">abc<p class="b">def</p></p>');
 	equals(serializer.serialize(root), '<p class="a">abc</p><p class="b">def</p>', 'P in P with nodes before');
+	deepEqual(countNodes(root), {body: 1, p:2, '#text': 2}, 'P in P with nodes before (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a"><p class="b">abc</p>def</p>');
 	equals(serializer.serialize(root), '<p class="b">abc</p><p class="a">def</p>', 'P in P with nodes after');
+	deepEqual(countNodes(root), {body: 1, p:2, '#text': 2}, 'P in P with nodes after (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a">a<strong>b<span>c<em>d<p class="b">e</p>f</em>g</span>h</strong>i</p>');
 	equals(serializer.serialize(root), '<p class="a">a<strong>b<span>c<em>d</em></span></strong></p><p class="b">e</p><p class="a"><strong><span><em>f</em>g</span>h</strong>i</p>', 'P in P wrapped in inline elements');
+	deepEqual(countNodes(root), {"body":1, "p":3, "#text":9, "strong":2, "span":2, "em": 2}, 'P in P wrapped in inline elements (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a">a<p class="b">b<p class="c">c</p>d</p>e</p>');
 	equals(serializer.serialize(root), '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="b">d</p><p class="a">e</p>', 'P in P in P with text before/after');
+	deepEqual(countNodes(root), {body: 1, p:5, '#text': 5}, 'P in P in P with text before/after (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<li>abc</li>');
 	equals(serializer.serialize(root), 'abc', 'LI inside BODY');
+	deepEqual(countNodes(root), {body: 1, '#text': 1}, 'LI inside BODY (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
 	equals(serializer.serialize(root), '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>', 'UL inside P');
+	deepEqual(countNodes(root), {body: 1, p:2, ul:1, li:2, '#text': 4}, 'UL inside P (count)');
 });
 </script>
 </head>

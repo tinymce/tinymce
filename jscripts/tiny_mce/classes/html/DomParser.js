@@ -226,7 +226,7 @@
 				},
 
 				start: function(name, attrs, empty) {
-					var newNode, attrFiltersLen, elementRule, textNode, attrName;
+					var newNode, attrFiltersLen, elementRule, textNode, attrName, text;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
@@ -257,8 +257,14 @@
 						if (empty) {
 							if (blockElements[name]) {
 								// Trim whitespace before block
-								for (textNode = newNode.prev; textNode && textNode.type === 3; textNode = textNode.prev)
-									textNode.value = textNode.value.replace(endWhiteSpaceRegExp, '');
+								for (textNode = newNode.prev; textNode && textNode.type === 3; textNode = textNode.prev) {
+									text = textNode.value.replace(endWhiteSpaceRegExp, '');
+
+									if (text.length > 0)
+										textNode.value = text;
+									else
+										textNode.remove();
+								}
 							}
 						} else
 							node = newNode;
@@ -266,25 +272,43 @@
 				},
 
 				end: function(name) {
-					var textNode, elementRule;
+					var textNode, elementRule, text;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
 						if (blockElements[name]) {
 							if (!whiteSpaceElements[node.name]) {
 								// Trim whitespace at beginning of block
-								for (textNode = node.firstChild; textNode && textNode.type === 3; textNode = textNode.next)
-									textNode.value = textNode.value.replace(startWhiteSpaceRegExp, '');
+								for (textNode = node.firstChild; textNode && textNode.type === 3; textNode = textNode.next) {
+									text = textNode.value.replace(startWhiteSpaceRegExp, '');
+
+									if (text.length > 0)
+										textNode.value = text;
+									else
+										textNode.remove();
+								}
 
 								// Trim whitespace at end of block
-								for (textNode = node.lastChild; textNode && textNode.type === 3; textNode = textNode.prev)
-									textNode.value = textNode.value.replace(endWhiteSpaceRegExp, '');
+								for (textNode = node.lastChild; textNode && textNode.type === 3; textNode = textNode.prev) {
+									text = textNode.value.replace(endWhiteSpaceRegExp, '');
+
+									if (text.length > 0)
+										textNode.value = text;
+									else
+										textNode.remove();
+								}
 							}
 
 							// Trim start white space
 							textNode = node.prev;
-							if (textNode && textNode.type === 3)
-								textNode.value = textNode.value.replace(startWhiteSpaceRegExp, '');
+							if (textNode && textNode.type === 3) {
+								text = textNode.value.replace(startWhiteSpaceRegExp, '');
+
+								if (text.length > 0)
+									textNode.value = text;
+								else
+									textNode.remove();
+							}
 						}
 
 						// Handle empty nodes
