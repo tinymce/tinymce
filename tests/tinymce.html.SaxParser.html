@@ -12,224 +12,377 @@ module("tinymce.html.SaxParser");
 
 var writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();
 
-test('Parse elements', function() {
-	expect(22);
+function createCounter(writer) {
+	var counts = {};
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	return {
+		counts : counts,
+
+		comment: function(text) {
+			if ("comment" in counts)
+				counts.comment++;
+			else
+				counts.comment = 1;
+
+			writer.comment(text);
+		},
+
+		cdata: function(text) {
+			if ("cdata" in counts)
+				counts.cdata++;
+			else
+				counts.cdata = 1;
+
+			writer.cdata(text);
+		},
+
+		text: function(text, raw) {
+			if ("text" in counts)
+				counts.text++;
+			else
+				counts.text = 1;
+
+			writer.text(text, raw);
+		},
+
+		start: function(name, attrs, empty) {
+			if ("start" in counts)
+				counts.start++;
+			else
+				counts.start = 1;
+
+			writer.start(name, attrs, empty);
+		},
+
+		end: function(name) {
+			if ("end" in counts)
+				counts.end++;
+			else
+				counts.end = 1;
+
+			writer.end(name);
+		},
+
+		pi: function(text) {
+			if ("pi" in counts)
+				counts.pi++;
+			else
+				counts.pi = 1;
+
+			writer.pi(text);
+		},
+
+		doctype: function(text) {
+			if ("doctype:" in counts)
+				counts.doctype++;
+			else
+				counts.doctype = 1;
+
+			writer.doctype(text);
+		}
+	};
+}
+
+test('Parse elements', function() {
+	expect(44);
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<span id=id1 title="title value" class=\'class1 class2\' data-value="value1" MYATTR="val1" myns:myattr="val2" disabled empty=""></span>');
 	equals(writer.getContent(), '<span id="id1" title="title value" class="class1 class2" data-value="value1" myattr="val1" myns:myattr="val2" disabled="disabled" empty=""></span>', 'Parse attribute formats.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Parse attribute formats counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<img src="test">');
 	equals(writer.getContent(), '<img src="test" />', 'Parse empty element.');
+	deepEqual(counter.counts, {start:1}, 'Parse empty element counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<img\nsrc="test"\ntitle="row1\nrow2">');
 	equals(writer.getContent(), '<img src="test" title="row1\nrow2" />', 'Parse attributes with linebreak.');
+	deepEqual(counter.counts, {start: 1}, 'Parse attributes with linebreak counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<img     \t  \t   src="test"     \t  \t   title="\t    row1\t     row2">');
 	equals(writer.getContent(), '<img src="test" title="\t    row1\t     row2" />', 'Parse attributes with whitespace.');
+	deepEqual(counter.counts, {start: 1}, 'Parse attributes with whitespace counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<myns:mytag>text</myns:mytag>');
 	equals(writer.getContent(), '<myns:mytag>text</myns:mytag>', 'Parse element with namespace.');
+	deepEqual(counter.counts, {start:1, end: 1, text:1}, 'Parse element with namespace counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<myns-mytag>text</myns-mytag>');
 	equals(writer.getContent(), '<myns-mytag>text</myns-mytag>', 'Parse element with dash name.');
+	deepEqual(counter.counts, {start:1, end:1, text:1}, 'Parse element with dash name counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span><script>// <b>tag</b></s' + 'cript>text2</span>');
 	equals(writer.getContent(), 'text1<span><script>// <b>tag</b></s' + 'cript>text2</span>', 'Parse script element.');
+	deepEqual(counter.counts, {start:2, end:2, text:3}, 'Parse script element counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span><script id="id">// <b>tag</b></s' + 'cript>text2</span>');
 	equals(writer.getContent(), 'text1<span><script id="id">// <b>tag</b></s' + 'cript>text2</span>', 'Parse script element with attributes.');
+	deepEqual(counter.counts, {start:2, end:2, text:3}, 'Parse script element with attributes counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span><script></s' + 'cript>text2</span>');
 	equals(writer.getContent(), 'text1<span><script></s' + 'cript>text2</span>', 'Parse empty script element.');
+	deepEqual(counter.counts, {text: 2, start:2, end: 2}, 'Parse empty script element counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span><style>// <b>tag</b></st' + 'yle>text2</span>');
 	equals(writer.getContent(), 'text1<span><style>// <b>tag</b></st' + 'yle>text2</span>', 'Parse style element.');
+	deepEqual(counter.counts, {start: 2, end: 2, text: 3}, 'Parse style element counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span><style id="id">// <b>tag</b></st' + 'yle>text2</span>');
 	equals(writer.getContent(), 'text1<span><style id="id">// <b>tag</b></st' + 'yle>text2</span>', 'Parse style element with attributes.');
+	deepEqual(counter.counts, {text:3, start:2, end:2}, 'Parse style element with attributes counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span><style></st' + 'yle>text2</span>');
 	equals(writer.getContent(), 'text1<span><style></st' + 'yle>text2</span>', 'Parse empty style element.');
+	deepEqual(counter.counts, {text:2, start:2, end:2}, 'Parse empty style element counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<p>text2<b>text3</p>text4</b>text5');
 	equals(writer.getContent(), 'text1<p>text2<b>text3</b></p>text4text5', 'Parse tag soup 1.');
+	deepEqual(counter.counts, {text:5, start: 2, end: 2}, 'Parse tag soup 1 counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<P>text2<B>text3</p>text4</b>text5');
 	equals(writer.getContent(), 'text1<p>text2<b>text3</b></p>text4text5', 'Parse tag soup 2.');
+	deepEqual(counter.counts, {text: 5, start: 2, end: 2}, 'Parse tag soup 2 counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<P>text2<B>tex<t3</p>te>xt4</b>text5');
 	equals(writer.getContent(), 'text1<p>text2<b>tex&lt;t3</b></p>te&gt;xt4text5', 'Parse tag soup 3.');
+	deepEqual(counter.counts, {text: 5, start: 2, end: 2}, 'Parse tag soup 3 counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<p>text2<b>text3');
 	equals(writer.getContent(), 'text1<p>text2<b>text3</b></p>', 'Parse tag soup 4.');
+	deepEqual(counter.counts, {text: 3, start: 2, end: 2}, 'Parse tag soup 4 counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<script>text2');
 	equals(writer.getContent(), 'text1<script>text2</s' + 'cript>', 'Parse tag soup 5.');
+	deepEqual(counter.counts, {text: 2, start: 1, end: 1}, 'Parse tag soup 5 counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<style>text2');
-	equals(writer.getContent(), 'text1<style>text2</st' + 'yle>', 'Parse tag soup 5.');
+	equals(writer.getContent(), 'text1<style>text2</st' + 'yle>', 'Parse tag soup 6.');
+	deepEqual(counter.counts, {text: 2, start: 1, end: 1}, 'Parse tag soup 6 counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span title="<test" data-test="test>"></span>');
 	equals(writer.getContent(), 'text1<span title="<test" data-test="test>"></span>', 'Parse element with </> in attributes.');
+	deepEqual(counter.counts, {text: 1, start: 1, end: 1}, 'Parse element with </> in attributes counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse("text\n<SC"+"RIPT type=mce-text/javascript>// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></SC"+"RIPT>");
 	equals(writer.getContent(), "text\n<sc"+"ript type=\"mce-text/javascript\">// <![CDATA[\nalert('HELLO WORLD!');\n// ]]></sc"+"ript>", 'Parse cdata script.');
+	deepEqual(counter.counts, {text: 2, start: 1, end: 1}, 'Parse cdata script counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<noscript>te<br>xt2</noscript>text3');
-	equals(writer.getContent(), 'text1<noscript>te<br>xt2</noscript>text3', 'noscript elements.');
+	equals(writer.getContent(), 'text1<noscript>te<br>xt2</noscript>text3', 'Parse noscript elements.');
+	deepEqual(counter.counts, {text: 3, start: 1, end: 1}, 'Parse noscript elements counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<p>a</p><p /><p>b</p>');
 	equals(writer.getContent(), '<p>a</p><p></p><p>b</p>', 'Parse invalid closed element.');
+	deepEqual(counter.counts, {text: 2, start: 3, end: 3}, 'Parse invalid closed element counts.');
 });
 
 test('Parse text', function() {
-	expect(5);
+	expect(10);
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('');
 	equals(writer.getContent(), '', 'Parse empty.');
+	deepEqual(counter.counts, {}, 'Parse empty counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text');
 	equals(writer.getContent(), 'text', 'Parse single text node.');
+	deepEqual(counter.counts, {text: 1}, 'Parse single text node counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<b>text</b>');
 	equals(writer.getContent(), '<b>text</b>', 'Parse wrapped text.');
+	deepEqual(counter.counts, {start:1, text:1, end:1}, 'Parse wrapped text counts');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<b>text2</b>');
 	equals(writer.getContent(), 'text1<b>text2</b>', 'Parse text at start.');
+	deepEqual(counter.counts, {start:1, text:2, end:1}, 'Parse text at start counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<b>text1</b>text2');
 	equals(writer.getContent(), '<b>text1</b>text2', 'Parse text at end.');
+	deepEqual(counter.counts, {start:1, end:1, text:2}, 'Parse text at end counts.');
 });
 
 test('Parsing comments', function() {
-	expect(4);
+	expect(8);
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<!-- comment value -->');
 	equals(writer.getContent(), '<!-- comment value -->', 'Parse comment with value.');
+	deepEqual(counter.counts, {comment:1}, 'Parse comment with value count.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<!---->');
 	equals(writer.getContent(), '', 'Parse comment without value.');
+	deepEqual(counter.counts, {}, 'Parse comment without value count.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<!--<b></b>-->');
 	equals(writer.getContent(), '<!--<b></b>-->', 'Parse comment with tag inside.');
+	deepEqual(counter.counts, {comment:1}, 'Parse comment with tag inside counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<b>a<!-- value -->b</b>');
 	equals(writer.getContent(), '<b>a<!-- value -->b</b>', 'Parse comment with tags around it.');
+	deepEqual(counter.counts, {comment:1, text:2, start:1, end:1}, 'Parse comment with tags around it counts.');
 });
 
 test('Parsing cdata', function() {
-	expect(4);
+	expect(8);
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<![CDATA[test text]]>');
 	equals(writer.getContent(), '<![CDATA[test text]]>', 'Parse cdata with value.');
+	deepEqual(counter.counts, {cdata:1}, 'Parse cdata with value counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<![CDATA[]]>');
 	equals(writer.getContent(), '', 'Parse cdata without value.');
+	deepEqual(counter.counts, {}, 'Parse cdata without value counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<![CDATA[<b>a</b>]]>');
 	equals(writer.getContent(), '<![CDATA[<b>a</b>]]>', 'Parse cdata with tag inside.');
+	deepEqual(counter.counts, {cdata:1}, 'Parse cdata with tag inside counts.');
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<b>a<![CDATA[value]]>b</b>');
 	equals(writer.getContent(), '<b>a<![CDATA[value]]>b</b>', 'Parse cdata with tags around it.');
+	deepEqual(counter.counts, {cdata:1, start:1, end:1, text:2}, 'Parse cdata with tags around it counts.');
 });
 
-test('Retain PI', function() {
-	expect(1);
+test('Parse PI', function() {
+	expect(2);
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
 	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
+	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with attributes counts.');
 });
 
-test('Retain doctype', function() {
-	expect(1);
+test('Parse doctype', function() {
+	expect(4);
 
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">text1');
 	equals(writer.getContent(), '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">text1', 'Parse DOCTYPE.');
+	deepEqual(counter.counts, {doctype:1, text:1}, 'Parse HTML5 DOCTYPE counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<!DOCTYPE html>text1');
+	equals(writer.getContent(), '<!DOCTYPE html>text1', 'Parse HTML5 DOCTYPE.');
+	deepEqual(counter.counts, {doctype:1, text:1}, 'Parse HTML5 DOCTYPE counts.');
 });
 
 test('Parse (validate)', function() {
-	expect(1);
+	expect(2);
 
-	writer.validate = true;
-
-	var parser = new tinymce.html.SaxParser(writer, schema);
+	var counter = createCounter(writer);
+	counter.validate = true;
+	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<invalid1>123<invalid2 />456<span title="title" invalid3="value">789</span>012</invalid1>');
-	equals(writer.getContent(), '123456<span title="title">789</span>012', 'Parse attribute formats.');
+	equals(writer.getContent(), '123456<span title="title">789</span>012', 'Parse invalid elements and attributes.');
+	deepEqual(counter.counts, {start:1, end:1, text:4}, 'Parse invalid elements and attributes counts.');
 });
 </script>
 </head>

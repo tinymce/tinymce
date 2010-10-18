@@ -26,8 +26,8 @@
 	 *         console.log('CDATA:', text);
 	 *     },
 	 *
-	 *     text: function(text) {
-	 *         console.log('Text:', text);
+	 *     text: function(text, raw) {
+	 *         console.log('Text:', text, 'Raw:', raw);
 	 *     },
 	 *
 	 *     start: function(name, attrs, empty) {
@@ -36,13 +36,13 @@
 	 *
 	 *     end: function(name) {
 	 *         console.log('End:', name);
-	 *     }
+	 *     },
 	 *
-	 *     pi: function(name) {
+	 *     pi: function(text) {
 	 *         console.log('PI:', name);
-	 *     }
+	 *     },
 	 *
-	 *     doctype: function(name) {
+	 *     doctype: function(text) {
 	 *         console.log('DocType:', name);
 	 *     }
 	 * }, schema);
@@ -78,7 +78,7 @@
 		 * @param {String} html Html string to sax parse.
 		 */
 		self.parse = function(html) {
-			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i,
+			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i, text,
 				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
 				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode;
@@ -233,12 +233,15 @@
 						endRegExp.lastIndex = index = matches.index + matches[0].length;
 
 						if (matches = endRegExp.exec(html)) {
-							self.text(html.substr(index, matches.index - index), true);
+							text = html.substr(index, matches.index - index);
 							index = matches.index + matches[0].length;
 						} else {
-							self.text(html.substr(index), true);
+							text = html.substr(index);
 							index = html.length;
 						}
+
+						if (text.length > 0)
+							self.text(text, true);
 
 						self.end(value);
 						tokenRegExp.lastIndex = index;
