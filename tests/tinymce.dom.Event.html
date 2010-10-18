@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Unit tests for DOM Selection IE implementation</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+module("tinymce.dom.Event", {
+});
+
+/**
+ * Fakes a mouse event.
+ *
+ * @param {Element/String} e DOM element object or element id to send fake event to.
+ * @param {String} na Event name to fake like "click".
+ * @param {Object} o Optional object with data to send with the event like cordinates.
+ */
+function fakeMouseEvent(e, na, o) {
+	var ev;
+
+	o = tinymce.extend({
+		screenX : 0,
+		screenY : 0,
+		clientX : 0,
+		clientY : 0
+	}, o);
+
+	e = tinymce.DOM.get(e);
+
+	if (e.fireEvent) {
+		ev = document.createEventObject();
+		tinymce.extend(ev, o);
+		e.fireEvent('on' + na, ev);
+		return;
+	}
+
+	ev = document.createEvent('MouseEvents');
+
+	if (ev.initMouseEvent)
+		ev.initMouseEvent(na, true, true, window, 1, o.screenX, o.screenY, o.clientX, o.clientY, false, false, true, false, 0, null);
+
+	e.dispatchEvent(ev);
+};
+
+/**
+ * Fakes a key event.
+ *
+ * @param {Element/String} e DOM element object or element id to send fake event to.
+ * @param {String} na Event name to fake like "keydown".
+ * @param {Object} o Optional object with data to send with the event like keyCode and charCode.
+ */
+function fakeKeyEvent(e, na, o) {
+	var ev;
+
+	o = tinymce.extend({
+		keyCode : 13,
+		charCode : 0
+	}, o);
+
+	e = tinymce.DOM.get(e);
+
+	if (e.fireEvent) {
+		ev = document.createEventObject();
+		tinymce.extend(ev, o);
+		e.fireEvent('on' + na, ev);
+		return;
+	}
+
+	if (document.createEvent) {
+		try {
+			// Fails in Safari
+			ev = document.createEvent('KeyEvents');
+			ev.initKeyEvent(na, true, true, window, false, false, false, false, o.keyCode, o.charCode);
+		} catch (ex) {
+			ev = document.createEvent('Events');
+			ev.initEvent(na, true, true);
+
+			ev.keyCode = o.keyCode;
+			ev.charCode = o.charCode;
+		}
+	} else {
+		ev = document.createEvent('UIEvents');
+
+		if (ev.initUIEvent)
+			ev.initUIEvent(na, true, true, window, 1);
+
+		ev.keyCode = o.keyCode;
+		ev.charCode = o.charCode;
+	}
+
+	e.dispatchEvent(ev);
+};
+
+(function() {
+	var Event = tinymce.dom.Event, DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
+
+	test('addRemove', 2, function() {
+		var c = 0;
+
+		DOM.add(document.body, 'div', {id : 'test'});
+		DOM.get('test').innerHTML = '<span id="test2"></span>';
+
+		function mouseCheck(e) {
+			if (e.clientX == 10 || e.clientX == 101)
+				c++;
+		};
+
+		function mouseCheckCancel(e) {
+			if (e.clientX == 101)
+				return Event.cancel(e);
+		};
+
+		function keyCheck(e) {
+			if (e.keyCode == 13)
+				c++;
+		};
+
+		Event.add('test2', 'click', mouseCheckCancel);
+		Event.add('test', 'click', mouseCheck);
+		fakeMouseEvent('test', 'click', {clientX : 10});
+		fakeMouseEvent('test2', 'click', {clientX : 101});
+
+		Event.add('test', 'keydown', keyCheck);
+		fakeKeyEvent('test', 'keydown', {keyCode : 13});
+
+		equals(c, 2, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
+
+		c = 0;
+		Event.remove('test', 'click', mouseCheck);
+		Event.remove('test', 'keydown', keyCheck);
+		fakeMouseEvent('test', 'click', {clientX : 10});
+		fakeKeyEvent('test', 'keydown', {keyCode : 13});
+
+		equals(c, 0, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
+
+		DOM.remove('test');
+	});
+})();
+</script>
+
+	<h1 id="qunit-header">Unit tests for DOM Selection IE implementation</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content"></div>
+</body>
+</html>

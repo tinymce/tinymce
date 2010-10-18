@@ -1,19 +1,22 @@
 (function() {
-	var iframe, logElement, initSettings, index, testFailures, testTotal, testLog;
+	var iframe, logElement, initSettings, index, testFailures, testTotal, testLog, currentTest;
 
-	function log(message, failures) {
-		var div = document.createElement('div');
+	function log(message, display) {
+		var div;
+		
+		if (display) {
+			div = document.createElement('div');
+			div.appendChild(document.createTextNode(message));
+			logElement.appendChild(div);
+		}
 
-		div.className = failures > 0 ? 'fail' : 'pass';
-		div.appendChild(document.createTextNode(message));
-
-		logElement.appendChild(div);
-
-		testLog += (failures > 0 ? '[FAILED] ' : '') + message + '\n';
+		testLog += message + '\n';
 	}
 
 	function runNext() {
-		iframe.src = QUnitRunner.tests[index++].url;
+		currentTest = QUnitRunner.tests[index++];
+		document.getElementById(currentTest.id + '_status').innerHTML = '(Running)';
+		iframe.src = currentTest.url;
 	}
 
 	function parseQuery(query) {
@@ -43,14 +46,16 @@
 
 			this.tests = [];
 			for (i = 0; i < suites.length; i++) {
-				html += '<h2>' + suites[i].title + '</h2><ul>';
+				html += '<h2>' + suites[i].title + '</h2><ol>';
 				tests = suites[i].tests;
 
 				for (y = 0; y < tests.length; y++) {
-					html += '<li><a href="' + tests[y].url + '">' + tests[y].title + '</a></li>';
+					tests[y].id = 'test_' + i + '_' + y;
+					tests[y].suite = suites[i];
+					html += '<li id="' + tests[y].id + '"><a href="' + tests[y].url + '">' + tests[y].title + '</a> <span id="' + tests[y].id + '_status"></span></li>';
 				}
 
-				html += '</ul>';
+				html += '</ol>';
 
 				this.tests = this.tests.concat(tests);
 			}
@@ -68,6 +73,15 @@
 		},
 
 		run: function() {
+			var i, y, suites = initSettings.suites;
+
+			// Reset status states
+			for (i = 0; i < suites.length; i++) {
+				for (y = 0; y < suites[i].tests.length; y++) {
+					document.getElementById(suites[i].tests[y].id).className = '';
+				}
+			}
+
 			// Add iframe
 			if (!iframe) {
 				iframe = document.createElement('iframe');
@@ -82,7 +96,7 @@
 			// Reset log
 			logElement = document.getElementById('log');
 			testLog = logElement.innerHTML = '';
-			log("Started running all unit tests.");
+			document.getElementById('total_status').className = '';
 
 			// Run tests in iframe
 			index = testFailures = testTotal = 0;
@@ -93,12 +107,19 @@
 			testFailures += failures;
 			testTotal += total;
 
-			log(title + ". Tests: " + total + ", Failed: " + failures, failures);
+			document.getElementById(currentTest.id).className = failures > 0 ? 'fail' : 'pass';
+			document.getElementById(currentTest.id + '_status').innerHTML = '<strong><b style="color: black;">(<b class="fail">' + failures + '</b>, <b class="pass">' + (total - failures) + '</b>, ' + total + ')</b></strong>';
+			
+			if (testFailures > 0)
+				document.getElementById('total_status').className = 'fail';
+
+			log((failures > 0 ? "[FAILED]" : "[PASSED]") + " " + currentTest.suite.title + " - " + currentTest.title + ". Tests: " + total + ", Failed: " + failures);
 
 			if (index < this.tests.length) {
 				runNext();
 			} else {
-				log("Finished running all tests. Total: " + testTotal + ", Failed: " + testFailures);
+				log("Finished running all tests. Total: " + testTotal + ", Failed: " + testFailures, true);
+				document.getElementById('total_status').className = testFailures > 0 ? 'fail' : 'pass';
 
 				// Post results
 				if (this.query.id) {

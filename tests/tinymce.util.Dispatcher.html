@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>tinymce.util.Dispatcher tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script>
+module("tinymce.util.Dispatcher");
+
+(function() {
+	var Dispatcher = tinymce.util.Dispatcher;
+
+	test('dispatcher', 5, function() {
+		var ev, v, f;
+
+		ev = new Dispatcher();
+		ev.add(function(a, b, c) {
+			v = a + b + c;
+		});
+		ev.dispatch(1, 2, 3);
+		equals(v, 6);
+
+		ev = new Dispatcher();
+		v = 0;
+		f = ev.add(function(a, b, c) {
+			v = a + b + c;
+		});
+		ev.remove(f);
+		ev.dispatch(1, 2, 3);
+		equals(v, 0);
+
+		ev = new Dispatcher({test : 1});
+		v = 0;
+		f = ev.add(function(a, b, c) {
+			v = a + b + c + this.test;
+		});
+		ev.dispatch(1, 2, 3);
+		equals(v, 7);
+
+		ev = new Dispatcher();
+		v = 0;
+		f = ev.add(function(a, b, c) {
+			v = a + b + c + this.test;
+		}, {test : 1});
+		ev.dispatch(1, 2, 3);
+		equals(v, 7);
+
+		ev = new Dispatcher();
+		v = '';
+		f = ev.add(function(a, b, c) {
+			v += 'b';
+		}, {test : 1});
+		f = ev.addToTop(function(a, b, c) {
+			v += 'a';
+		}, {test : 1});
+		ev.dispatch();
+		equals(v, 'ab');
+	});
+})();
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">tinymce.util.Dispatcher tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content"></div>
+</body>
+</html>

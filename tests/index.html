@@ -5,8 +5,8 @@
 	<title>TinyMCE Unit Tests</title>
 	<link rel="stylesheet" href="qunit/qunit.css" type="text/css"/>
 	<style type="text/css">
-	ul { font-family: 'trebuchet ms', verdana, arial; }
-	h2, ul {font-size: 10pt; }
+	ol { font-family: 'trebuchet ms', verdana, arial; }
+	h2, ol {font-size: 10pt; }
 	h2 {
 		background-color:#EEEEEE;
 		color:black;
@@ -15,11 +15,17 @@
 		margin:0;
 		padding:10px;
 	}
-	.pass {
+	#total_status.pass {
+		background-color:#C6E746; 
+	}
+	li.pass {
 		background-color:#D2E0E6; 
 	}
-	.fail {
+	li.fail, #total_status.fail {
 		background-color:#EE5757; 
+	}
+	#total_status {
+		height: 5px;
 	}
 	</style>
 	<script type="text/javascript" src="qunit/runner.js"></script>
@@ -27,9 +33,8 @@
 		// Init QUnitRunner
 		QUnitRunner.init({
 			suites: [
-				{title: 'Core tests', tests: [
+				{title: 'Editor tests', tests: [
 					{title: 'Core API', url: 'api.html'},
-					{title: 'Core API (jQuery)', url: 'api_jquery.html'},
 					{title: 'Basic functionality', url: 'basic.html'}
 				]},
 
@@ -43,7 +48,10 @@
 					{title: 'Selection', url: 'tinymce.dom.Selection.html'},
 					{title: 'TridentSelection (IE)', url: 'tinymce.dom.TridentSelection.html'},
 					{title: 'Range (IE/Native)', url: 'tinymce.dom.Range.html'},
-					{title: 'Serializer', url: 'tinymce.dom.Serializer.html'}
+					{title: 'Serializer', url: 'tinymce.dom.Serializer.html'},
+					{title: 'DOMUtils', url: 'tinymce.dom.DOMUtils.html'},
+					{title: 'DOMUtils (jQuery)', url: 'tinymce.dom.DOMUtils_jquery.html'},
+					{title: 'Event', url: 'tinymce.dom.Event.html'}
 				]},
 
 				{title: 'tinymce.html', tests: [
@@ -63,7 +71,10 @@
 				]},
 
 				{title: 'tinymce.util', tests: [
-					{title: 'URI', url: 'tinymce.util.URI.html'}
+					{title: 'URI', url: 'tinymce.util.URI.html'},
+					{title: 'Dispatcher', url: 'tinymce.util.Dispatcher.html'},
+					{title: 'Cookie', url: 'tinymce.util.Cookie.html'},
+					{title: 'JSON', url: 'tinymce.util.JSON.html'}
 				]}
 			]
 		});
@@ -72,14 +83,10 @@
 <body>
 
 <h1 id="qunit-header">TinyMCE Unit Tests</h1>
-
-<div id="menu">
-</div>
-
+<div id="total_status"></div>
+<div id="menu"></div>
 <input type="button" value="Run all" onclick="QUnitRunner.run();" />
-
-<div id="log">
-</div>
+<div id="log"></div>
 
 </body>
 </html>
