@@ -147,15 +147,14 @@
 		 * @return {tinymce.html.Node} New copy of the original node.
 		 */
 		clone : function() {
-			var self = this, clone = new Node(self.name, self.type), i, selfAttrs, selfAttr, cloneAttrs;
+			var self = this, clone = new Node(self.name, self.type), i, l, selfAttrs, selfAttr, cloneAttrs;
 
 			// Clone element attributes
 			if (selfAttrs = self.attributes) {
-				i = selfAttrs.length;
 				cloneAttrs = [];
 				cloneAttrs.map = {};
 
-				while (i--) {
+				for (i = 0, l = selfAttrs.length; i < l; i++) {
 					selfAttr = selfAttrs[i];
 
 					// Clone everything except id
@@ -294,7 +293,7 @@
 				ref_node.next = node;
 			}
 
-			node.parent = self;
+			node.parent = parent;
 
 			return node;
 		},
