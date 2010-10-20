@@ -254,19 +254,20 @@
 							}
 						}
 
-						if (empty) {
-							if (blockElements[name]) {
-								// Trim whitespace before block
-								for (textNode = newNode.prev; textNode && textNode.type === 3; textNode = textNode.prev) {
-									text = textNode.value.replace(endWhiteSpaceRegExp, '');
+						// Trim whitespace before block
+						if (blockElements[name]) {
+							for (textNode = newNode.prev; textNode && textNode.type === 3; textNode = textNode.prev) {
+								text = textNode.value.replace(endWhiteSpaceRegExp, '');
 
-									if (text.length > 0)
-										textNode.value = text;
-									else
-										textNode.remove();
-								}
+								if (text.length > 0)
+									textNode.value = text;
+								else
+									textNode.remove();
 							}
-						} else
+						}
+
+						// Change current node if the element wasn't empty i.e not <br /> or <img />
+						if (!empty)
 							node = newNode;
 					}
 				},

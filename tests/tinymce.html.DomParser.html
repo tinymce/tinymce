@@ -6,7 +6,7 @@
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
 <script>
 module("tinymce.html.DomParser");
 
@@ -55,7 +55,7 @@ test('Parse element', function() {
 test('Whitespace', function() {
 	var parser, root;
 
-	expect(10);
+	expect(12);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
@@ -81,6 +81,11 @@ test('Whitespace', function() {
 	root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
 	equals(serializer.serialize(root), '<style>  \t\r\n   test  \t\r\n   </style>', 'Whitespace around and inside STYLE');
 	deepEqual(countNodes(root), {body:1, style:1, '#text':1}, 'Whitespace around and inside STYLE (count)');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<ul>\n<li>Item 1\n<ul>\n<li>\n \t Indented \t \n</li>\n</ul>\n</li>\n</ul>\n');
+	equals(serializer.serialize(root), '<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>', 'Whitespace around and inside blocks (ul/li)');
+	deepEqual(countNodes(root), {body:1, li:2, ul:2, '#text':2}, 'Whitespace around and inside blocks (ul/li) (count)');
 });
 
 test('Parse invalid contents', function() {
