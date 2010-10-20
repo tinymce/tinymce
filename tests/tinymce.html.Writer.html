@@ -10,8 +10,154 @@
 <script>
 module("tinymce.html.Writer");
 
-test('..', function() {
+test('Comment', function() {
+	expect(2);
+
+	var writer = new tinymce.html.Writer();
+	writer.comment('text');
+	equals(writer.getContent(), '<!--text-->');
+
+	var writer = new tinymce.html.Writer();
+	writer.comment('');
+	equals(writer.getContent(), '<!---->');
 });
+
+test('CDATA', function() {
+	expect(2);
+
+	var writer = new tinymce.html.Writer();
+	writer.cdata('text');
+	equals(writer.getContent(), '<![CDATA[text]]>');
+
+	var writer = new tinymce.html.Writer();
+	writer.cdata('');
+	equals(writer.getContent(), '<![CDATA[]]>');
+});
+
+test('PI', function() {
+	expect(2);
+
+	var writer = new tinymce.html.Writer();
+	writer.pi(' text');
+	equals(writer.getContent(), '<?xml text?>');
+
+	var writer = new tinymce.html.Writer();
+	writer.pi('');
+	equals(writer.getContent(), '<?xml?>');
+});
+
+test('Doctype', function() {
+	expect(2);
+
+	var writer = new tinymce.html.Writer();
+	writer.doctype(' text');
+	equals(writer.getContent(), '<!DOCTYPE text>');
+
+	var writer = new tinymce.html.Writer();
+	writer.doctype('');
+	equals(writer.getContent(), '<!DOCTYPE>');
+});
+
+test('Text', function() {
+	expect(2);
+
+	var writer = new tinymce.html.Writer();
+	writer.text('te<xt');
+	equals(writer.getContent(), 'te&lt;xt');
+
+	var writer = new tinymce.html.Writer();
+	writer.text('');
+	equals(writer.getContent(), '');
+});
+
+test('Text raw', function() {
+	expect(2);
+
+	var writer = new tinymce.html.Writer();
+	writer.text('te<xt', true);
+	equals(writer.getContent(), 'te<xt');
+
+	var writer = new tinymce.html.Writer();
+	writer.text('', true);
+	equals(writer.getContent(), '');
+});
+
+test('Start', function() {
+	expect(5);
+
+	var writer = new tinymce.html.Writer();
+	writer.start('b');
+	equals(writer.getContent(), '<b>');
+
+	var writer = new tinymce.html.Writer();
+	writer.start('b', [{name: 'attr1', value: 'value1'}, {name: 'attr2', value: 'value2'}]);
+	equals(writer.getContent(), '<b attr1="value1" attr2="value2">');
+
+	var writer = new tinymce.html.Writer();
+	writer.start('b', [{name: 'attr1', value: 'val<"ue1'}]);
+	equals(writer.getContent(), '<b attr1="val<&quot;ue1">');
+
+	var writer = new tinymce.html.Writer();
+	writer.start('img', [{name: 'attr1', value: 'value1'}, {name: 'attr2', value: 'value2'}], true);
+	equals(writer.getContent(), '<img attr1="value1" attr2="value2" />');
+
+	var writer = new tinymce.html.Writer();
+	writer.start('br', null, true);
+	equals(writer.getContent(), '<br />');
+});
+
+test('End', function() {
+	expect(1);
+
+	var writer = new tinymce.html.Writer();
+	writer.end('b');
+	equals(writer.getContent(), '</b>');
+});
+
+test('Indentation', function() {
+	expect(2);
+
+	var writer = new tinymce.html.Writer({indent: true, indent_before: 'p', indent_after:'p'});
+	writer.start('p');
+	writer.start('span');
+	writer.text('a');
+	writer.end('span');
+	writer.end('p');
+	writer.start('p');
+	writer.text('a');
+	writer.end('p');
+	equals(writer.getContent(), '<p><span>a</span></p>\n<p>a</p>');
+
+	var writer = new tinymce.html.Writer({indent: true, indent_before: 'p', indent_after:'p'});
+	writer.start('p');
+	writer.text('a');
+	writer.end('p');
+	equals(writer.getContent(), '<p>a</p>');
+});
+
+test('Entities', function() {
+	expect(3);
+
+	var writer = new tinymce.html.Writer();
+	writer.start('p', [{name: "title", value: '<>"\'&\u00e5\u00e4\u00f6'}]);
+	writer.text('<>"\'&\u00e5\u00e4\u00f6');
+	writer.end('p');
+	equals(writer.getContent(), '<p title="<>&quot;&#39;&amp;\u00e5\u00e4\u00f6">&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6</p>');
+
+	var writer = new tinymce.html.Writer({entity_encoding: 'numeric'});
+	writer.start('p', [{name: "title", value: '<>"\'&\u00e5\u00e4\u00f6'}]);
+	writer.text('<>"\'&\u00e5\u00e4\u00f6');
+	writer.end('p');
+	equals(writer.getContent(), '<p title="<>&quot;&#39;&amp;&#229;&#228;&#246;">&lt;&gt;"\'&amp;&#229;&#228;&#246;</p>');
+
+	var writer = new tinymce.html.Writer({entity_encoding: 'named'});
+	writer.start('p', [{name: "title", value: '<>"\'&\u00e5\u00e4\u00f6'}]);
+	writer.text('<>"\'&\u00e5\u00e4\u00f6');
+	writer.end('p');
+	equals(writer.getContent(), '<p title="<>&quot;&#39;&amp;&aring;&auml;&ouml;">&lt;&gt;"\'&amp;&aring;&auml;&ouml;</p>');
+});
+
+
 </script>
 </head>
 <body>

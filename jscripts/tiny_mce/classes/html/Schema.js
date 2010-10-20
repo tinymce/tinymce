@@ -222,6 +222,11 @@
 				// Split valid elements into an array with rules
 				valid_elements = split(valid_elements);
 
+				if (elements['@']) {
+					globalAttributes = elements['@'].attributes;
+					globalAttributesOrder = elements['@'].attributesOrder;
+				}
+
 				// Loop all rules
 				for (ei = 0, el = valid_elements.length; ei < el; ei++) {
 					// Parse element rule
@@ -326,20 +331,20 @@
 						if (!globalAttributes && elementName == '@') {
 							globalAttributes = attributes;
 							globalAttributesOrder = attributesOrder;
-						} else {
-							// Handle substitute elements such as b/strong
-							if (outputName) {
-								element.outputName = elementName;
-								elements[outputName] = element;
-							}
-
-							// Add pattern or exact element
-							if (hasPatternsRegExp.test(elementName)) {
-								element.pattern = patternToRegExp(elementName);
-								patternElements.push(element);
-							} else
-								elements[elementName] = element;
 						}
+
+						// Handle substitute elements such as b/strong
+						if (outputName) {
+							element.outputName = elementName;
+							elements[outputName] = element;
+						}
+
+						// Add pattern or exact element
+						if (hasPatternsRegExp.test(elementName)) {
+							element.pattern = patternToRegExp(elementName);
+							patternElements.push(element);
+						} else
+							elements[elementName] = element;
 					}
 				}
 			}
@@ -362,20 +367,17 @@
 
 			if (custom_elements) {
 				each(split(custom_elements), function(rule) {
-					var matches = customElementRegExp.exec(rule), name = matches[2], element;
+					var matches = customElementRegExp.exec(rule),
+						cloneName = matches[1] === '~' ? 'span' : 'div',
+						name = matches[2];
 
-					if (matches[1] === '~') {
-						// Treat as inline element (span)
-						element = elements.span || transitional.span;
-						children[name] = children.span;
-					} else {
-						// Treat as block element (div)
-						element = elements.div || transitional.div;
-						children[name] = children.div;
-					}
+					children[name] = children[cloneName];
 
-					if (element)
-						elements[name] = element;
+					// Add custom elements at span/div positions
+					each(children, function(element, child) {
+						if (element[cloneName])
+							element[name] = element[cloneName];
+					});
 				});
 			}
 		};
