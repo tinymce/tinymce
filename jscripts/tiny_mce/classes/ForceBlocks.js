@@ -228,9 +228,10 @@
 
 									if (t._previousFormats) {
 										parent.appendChild(fmt.wrapper);
-										fmt.inner.innerHTML = '\uFEFF';
-									} else
-										parent.innerHTML = '\uFEFF';
+										fmt.inner.appendChild(document.createTextNode('\uFEFF'));
+									} else {
+										parent.appendChild(document.createTextNode('\uFEFF'));
+									}
 
 									selection.select(parent, 1);
 									selection.collapse(true);
