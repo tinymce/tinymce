@@ -1,3 +1,13 @@
+Version 3.4 (2010-xx-xx)
+	Added new serialization engine that increases performance and enforces valid output according to the specified schema settings.
+	Added new HTML parser logic used by the serialization engine and can handle malformed html contents.
+	Added new valid_children config option, enables more fine grain control of elements can be inside other elements.
+	Added new entities encoding logic boost performance and will only encode entities based on context i.e. attributes/text nodes.
+	Replaced the internal _mce_ prefixed attributes to the more standard HTML5 data-mce- prefix. This will also resolve future browser santiaztion issues.
+	Fixed bug where the paste plugin wouldn't convert Word lists with more than 9 items to real ol lists. Patch contributed by Mike (yogaboy).
+	Fixed bug where clicking on a format title would produce errors if the current selection didn't have any formats.
+	Fixed bug where paste of simple texts wouldn't work correctly in Gecko using the paste plugin since it keeps block formatting.
+	Fixed bug where confirm dialogs didn't display correctly due to resent IE9 fixes.
 Version 3.3.9.3 (2010-xx-xx)
 	Fixed issue where WebKit wouldn't correctly apply ins/del in xhtmlxtras plugin.
 	Fixed bug where paste as plaintext on WebKit wouldn't produce br and p elements correctly.
