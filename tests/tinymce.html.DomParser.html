@@ -55,7 +55,7 @@ test('Parse element', function() {
 test('Whitespace', function() {
 	var parser, root;
 
-	expect(12);
+	expect(14);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
@@ -86,6 +86,11 @@ test('Whitespace', function() {
 	root = parser.parse('<ul>\n<li>Item 1\n<ul>\n<li>\n \t Indented \t \n</li>\n</ul>\n</li>\n</ul>\n');
 	equals(serializer.serialize(root), '<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>', 'Whitespace around and inside blocks (ul/li)');
 	deepEqual(countNodes(root), {body:1, li:2, ul:2, '#text':2}, 'Whitespace around and inside blocks (ul/li) (count)');
+
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'hr,br'}));
+	root = parser.parse('\n<hr />\n<br />\n<div>\n<hr />\n<br />\n<img src="file.gif" data-mce_src="file.gif" />\n<hr />\n<br />\n</div>\n<hr />\n<br />\n');
+	equals(serializer.serialize(root), '<div><img src="file.gif" data-mce_src="file.gif" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
+	deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (ul/li) (count)');
 });
 
 test('Parse invalid contents', function() {
