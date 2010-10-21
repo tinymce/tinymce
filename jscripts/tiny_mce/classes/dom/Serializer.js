@@ -59,13 +59,13 @@
 		});
 
 		// Remove bookmark elements
-		htmlParser.addAttributeFilter('data-mce_type', function(nodes, name) {
+		htmlParser.addAttributeFilter('data-mce_type', function(nodes, name, args) {
 			var i = nodes.length, node;
 
 			while (i--) {
 				node = nodes[i];
 
-				if (node.attributes.map['data-mce_type'] === 'bookmark')
+				if (node.attributes.map['data-mce_type'] === 'bookmark' && !args.cleanup)
 					node.remove();
 			}
 		});
@@ -228,7 +228,7 @@
 
 				// Parse and serialize HTML
 				args.content = htmlSerializer.serialize(
-					htmlParser.parse(args.getInner ? node.innerHTML : tinymce.trim(dom.getOuterHTML(node)), args)
+					htmlParser.parse(args.getInner ? node.innerHTML : tinymce.trim(dom.getOuterHTML(node), args), args)
 				);
 
 				// Post process
