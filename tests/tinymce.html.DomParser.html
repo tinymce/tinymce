@@ -90,7 +90,7 @@ test('Whitespace', function() {
 	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'hr,br'}));
 	root = parser.parse('\n<hr />\n<br />\n<div>\n<hr />\n<br />\n<img src="file.gif" data-mce_src="file.gif" />\n<hr />\n<br />\n</div>\n<hr />\n<br />\n');
 	equals(serializer.serialize(root), '<div><img src="file.gif" data-mce_src="file.gif" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
-	deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (ul/li) (count)');
+	deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (count)');
 });
 
 test('Parse invalid contents', function() {
@@ -137,6 +137,114 @@ test('Parse invalid contents', function() {
 	root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
 	equals(serializer.serialize(root), '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>', 'UL inside P');
 	deepEqual(countNodes(root), {body: 1, p:2, ul:1, li:2, '#text': 4}, 'UL inside P (count)');
+});
+
+test('addNodeFilter', function() {
+	var parser, result;
+
+	expect(7);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	parser.addNodeFilter('#comment', function(nodes, name, args) {
+		result = {nodes : nodes, name : name, args : args};
+	});
+	parser.parse('text<!--text1-->text<!--text2-->');
+
+	deepEqual(result.args, {}, 'Parser args');
+	equals(result.name, '#comment', 'Parser filter result name');
+	equals(result.nodes.length, 2, 'Parser filter result node');
+	equals(result.nodes[0].name, '#comment', 'Parser filter result node(0) name');
+	equals(result.nodes[0].value, 'text1', 'Parser filter result node(0) value');
+	equals(result.nodes[1].name, '#comment', 'Parser filter result node(1) name');
+	equals(result.nodes[1].value, 'text2', 'Parser filter result node(1) value');
+});
+
+test('addNodeFilter multiple names', function() {
+	var parser, results = {};
+
+	expect(14);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	parser.addNodeFilter('#comment,#text', function(nodes, name, args) {
+		results[name] = {nodes : nodes, name : name, args : args};
+	});
+	parser.parse('text1<!--text1-->text2<!--text2-->');
+
+	deepEqual(results['#comment'].args, {}, 'Parser args');
+	equals(results['#comment'].name, '#comment', 'Parser filter result name');
+	equals(results['#comment'].nodes.length, 2, 'Parser filter result node');
+	equals(results['#comment'].nodes[0].name, '#comment', 'Parser filter result node(0) name');
+	equals(results['#comment'].nodes[0].value, 'text1', 'Parser filter result node(0) value');
+	equals(results['#comment'].nodes[1].name, '#comment', 'Parser filter result node(1) name');
+	equals(results['#comment'].nodes[1].value, 'text2', 'Parser filter result node(1) value');
+	deepEqual(results['#text'].args, {}, 'Parser args');
+	equals(results['#text'].name, '#text', 'Parser filter result name');
+	equals(results['#text'].nodes.length, 2, 'Parser filter result node');
+	equals(results['#text'].nodes[0].name, '#text', 'Parser filter result node(0) name');
+	equals(results['#text'].nodes[0].value, 'text1', 'Parser filter result node(0) value');
+	equals(results['#text'].nodes[1].name, '#text', 'Parser filter result node(1) name');
+	equals(results['#text'].nodes[1].value, 'text2', 'Parser filter result node(1) value');
+});
+
+test('addNodeFilter with parser args', function() {
+	var parser, result;
+
+	expect(1);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	parser.addNodeFilter('#comment', function(nodes, name, args) {
+		result = {nodes : nodes, name : name, args : args};
+	});
+	parser.parse('text<!--text1-->text<!--text2-->', {value: 1});
+
+	deepEqual(result.args, {value: 1}, 'Parser args');
+});
+
+test('addAttributeFilter', function() {
+	var parser, result;
+
+	expect(7);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	parser.addAttributeFilter('src', function(nodes, name, args) {
+		result = {nodes : nodes, name : name, args : args};
+	});
+	parser.parse('<b>a<img src="1.gif" />b<img src="1.gif" />c</b>');
+
+	deepEqual(result.args, {}, 'Parser args');
+	equals(result.name, 'src', 'Parser filter result name');
+	equals(result.nodes.length, 2, 'Parser filter result node');
+	equals(result.nodes[0].name, 'img', 'Parser filter result node(0) name');
+	equals(result.nodes[0].attr('src'), '1.gif', 'Parser filter result node(0) attr');
+	equals(result.nodes[1].name, 'img', 'Parser filter result node(1) name');
+	equals(result.nodes[1].attr('src'), '1.gif', 'Parser filter result node(1) attr');
+});
+
+test('addAttributeFilter multiple', function() {
+	var parser, results = {};
+
+	expect(14);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	parser.addAttributeFilter('src,href', function(nodes, name, args) {
+		results[name] = {nodes : nodes, name : name, args : args};
+	});
+	parser.parse('<b><a href="1.gif">a</a><img src="1.gif" />b<img src="1.gif" /><a href="2.gif">c</a></b>');
+
+	deepEqual(results['src'].args, {}, 'Parser args');
+	equals(results['src'].name, 'src', 'Parser filter result name');
+	equals(results['src'].nodes.length, 2, 'Parser filter result node');
+	equals(results['src'].nodes[0].name, 'img', 'Parser filter result node(0) name');
+	equals(results['src'].nodes[0].attr('src'), '1.gif', 'Parser filter result node(0) attr');
+	equals(results['src'].nodes[1].name, 'img', 'Parser filter result node(1) name');
+	equals(results['src'].nodes[1].attr('src'), '1.gif', 'Parser filter result node(1) attr');
+	deepEqual(results['href'].args, {}, 'Parser args');
+	equals(results['href'].name, 'href', 'Parser filter result name');
+	equals(results['href'].nodes.length, 2, 'Parser filter result node');
+	equals(results['href'].nodes[0].name, 'a', 'Parser filter result node(0) name');
+	equals(results['href'].nodes[0].attr('href'), '1.gif', 'Parser filter result node(0) attr');
+	equals(results['href'].nodes[1].name, 'a', 'Parser filter result node(1) name');
+	equals(results['href'].nodes[1].attr('href'), '2.gif', 'Parser filter result node(1) attr');
 });
 </script>
 </head>
