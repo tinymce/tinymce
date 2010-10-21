@@ -10,7 +10,25 @@
 <script>
 module("tinymce.html.Serializer");
 
-test('..', function() {
+test('Basic serialization', function() {
+	var serializer = new tinymce.html.Serializer();
+
+	expect(6);
+
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('text<text&')), 'text&lt;text&amp;');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<B>text</B><IMG src="1.gif">')), '<b>text</b><img src="1.gif" />');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<!-- comment -->')), '<!-- comment -->');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<![CDATA[cdata]]>')), '<![CDATA[cdata]]>');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<?xml pi ?>')), '<?xml pi ?>');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<!DOCTYPE html>')), '<!DOCTYPE html>');
+});
+
+test('Sorting of attributes', function() {
+	var serializer = new tinymce.html.Serializer();
+
+	expect(1);
+
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<b class="class" id="id"></b>')), '<b id="id" class="class"></b>');
 });
 </script>
 </head>
