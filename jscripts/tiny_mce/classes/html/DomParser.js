@@ -157,13 +157,15 @@
 		 * var rootNode = new DomParser({...}).parse('<b>text</b>');
 		 * @method parse
 		 * @param {String} html Html string to sax parse.
+		 * @param {Object} args Optional args object that gets passed to all filter functions.
 		 * @return {tinymce.html.Node} Root node containing the tree.
 		 */
-		self.parse = function(html) {
+		self.parse = function(html, args) {
 			var parser, rootNode, node, Node = tinymce.html.Node, matchedNodes = {}, matchedAttributes = {},
 				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements;
 
+			args = args || {};
 			blockElements = tinymce.extend({
 				script: 1,
 				style: 1
@@ -350,7 +352,7 @@
 				list = nodeFilters[name];
 
 				for (i = 0, l = list.length; i < l; i++) {
-					list[i](matchedNodes[name], name);
+					list[i](matchedNodes[name], name, args);
 				}
 			}
 
@@ -360,7 +362,7 @@
 
 				if (list.name in matchedAttributes) {
 					for (fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
-						list.callbacks[fi](matchedAttributes[list.name], list.name);
+						list.callbacks[fi](matchedAttributes[list.name], list.name, args);
 					}
 				}
 			}
