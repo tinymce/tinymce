@@ -82,7 +82,7 @@ function insertTable() {
 			capEl = elm.ownerDocument.createElement('caption');
 
 			if (!tinymce.isIE)
-				capEl.innerHTML = '<br data-mce_bogus="1"/>';
+				capEl.innerHTML = '<br data-mce-bogus="1"/>';
 
 			elm.insertBefore(capEl, elm.firstChild);
 		}
@@ -151,7 +151,7 @@ function insertTable() {
 	html += makeAttrib('border', border);
 	html += makeAttrib('cellpadding', cellpadding);
 	html += makeAttrib('cellspacing', cellspacing);
-	html += makeAttrib('data-mce_new', '1');
+	html += makeAttrib('data-mce-new', '1');
 
 	if (width && inst.settings.inline_styles) {
 		if (style)
@@ -187,7 +187,7 @@ function insertTable() {
 
 	if (caption) {
 		if (!tinymce.isIE)
-			html += '<caption><br data-mce_bogus="1"/></caption>';
+			html += '<caption><br data-mce-bogus="1"/></caption>';
 		else
 			html += '<caption></caption>';
 	}
@@ -197,7 +197,7 @@ function insertTable() {
 
 		for (var x=0; x<cols; x++) {
 			if (!tinymce.isIE)
-				html += '<td><br data-mce_bogus="1"/></td>';
+				html += '<td><br data-mce-bogus="1"/></td>';
 			else
 				html += '<td></td>';
 		}
@@ -231,7 +231,7 @@ function insertTable() {
 	} else
 		inst.execCommand('mceInsertContent', false, html);
 
-	tinymce.each(dom.select('table[data-mce_new]'), function(node) {
+	tinymce.each(dom.select('table[data-mce-new]'), function(node) {
 		var td = dom.select('td', node);
 
 		try {
@@ -242,7 +242,7 @@ function insertTable() {
 			// Ignore
 		}
 
-		dom.setAttrib(node, 'data-mce_new', '');
+		dom.setAttrib(node, 'data-mce-new', '');
 	});
 
 	inst.addVisual();

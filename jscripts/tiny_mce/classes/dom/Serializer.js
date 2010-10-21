@@ -21,9 +21,9 @@
 		onPostProcess = new tinymce.util.Dispatcher(self);
 		htmlParser = new tinymce.html.DomParser(settings, schema);
 
-		// Convert move data-mce_src, data-mce_href and data-mce_style into nodes or process them if needed
+		// Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed
 		htmlParser.addAttributeFilter('src,href,style', function(nodes, name) {
-			var i = nodes.length, node, value, internalName = 'data-mce_' + name, urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope, undef;
+			var i = nodes.length, node, value, internalName = 'data-mce-' + name, urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope, undef;
 
 			while (i--) {
 				node = nodes[i];
@@ -59,13 +59,13 @@
 		});
 
 		// Remove bookmark elements
-		htmlParser.addAttributeFilter('data-mce_type', function(nodes, name, args) {
+		htmlParser.addAttributeFilter('data-mce-type', function(nodes, name, args) {
 			var i = nodes.length, node;
 
 			while (i--) {
 				node = nodes[i];
 
-				if (node.attributes.map['data-mce_type'] === 'bookmark' && !args.cleanup)
+				if (node.attributes.map['data-mce-type'] === 'bookmark' && !args.cleanup)
 					node.remove();
 			}
 		});

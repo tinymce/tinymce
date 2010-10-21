@@ -984,7 +984,7 @@
 				getParent(function(n) {
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
-					/*if (n.getAttribute('data-mce_bogus'))
+					/*if (n.getAttribute('data-mce-bogus'))
 						return;
 */
 					// Ignore non element and hidden elements

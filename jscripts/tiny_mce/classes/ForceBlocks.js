@@ -68,7 +68,7 @@
 
 			if (!dom.getParent(listBlock.parentNode, 'ul,ol')) {
 				dom.split(listBlock, li);
-				block = dom.create('p', 0, '<br data-mce_bogus="1" />');
+				block = dom.create('p', 0, '<br data-mce-bogus="1" />');
 				dom.replace(block, li);
 				selection.select(block, 1);
 			}
@@ -284,7 +284,7 @@
 				nx = nl[i];
 
 				// Ignore internal elements
-				if (nx.nodeType === 1 && nx.getAttribute('data-mce_type')) {
+				if (nx.nodeType === 1 && nx.getAttribute('data-mce-type')) {
 					bl = null;
 					continue;
 				}

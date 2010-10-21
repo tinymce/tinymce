@@ -171,7 +171,7 @@
 					style : {
 						backgroundColor : '#' + c
 					},
-					'data-mce_color' : '#' + c
+					'data-mce-color' : '#' + c
 				});
 			});
 
@@ -193,7 +193,7 @@
 
 				e = e.target;
 
-				if (e.nodeName == 'A' && (c = e.getAttribute('data-mce_color')))
+				if (e.nodeName == 'A' && (c = e.getAttribute('data-mce-color')))
 					t.setColor(c);
 
 				return Event.cancel(e); // Prevent IE auto save warning

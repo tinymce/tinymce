@@ -165,11 +165,11 @@ SXE.insertElement = function(element_name) {
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
 
-				if (SXE.inst.dom.getAttrib(elm, 'data-mce_new')) {
+				if (SXE.inst.dom.getAttrib(elm, 'data-mce-new')) {
 					elm.id = '';
 					elm.setAttribute('id', '');
 					elm.removeAttribute('id');
-					elm.removeAttribute('data-mce_new');
+					elm.removeAttribute('data-mce-new');
 
 					setAllCommonAttribs(elm);
 				}
@@ -226,6 +226,6 @@ function insertInlineElement(en) {
 	ed.getDoc().execCommand('FontName', false, 'mceinline');
 	tinymce.each(dom.select('span,font'), function(n) {
 		if (n.style.fontFamily == 'mceinline' || n.face == 'mceinline')
-			dom.replace(dom.create(en, {'data-mce_new' : 1}), n, 1);
+			dom.replace(dom.create(en, {'data-mce-new' : 1}), n, 1);
 	});
 }

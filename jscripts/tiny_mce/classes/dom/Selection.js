@@ -343,12 +343,12 @@
 
 					// Insert start marker
 					rng.collapse();
-					rng.pasteHTML('<span data-mce_type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
+					rng.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
 
 					// Insert end marker
 					if (!collapsed) {
 						rng2.collapse(false);
-						rng2.pasteHTML('<span data-mce_type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
+						rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
 					}
 				} else {
 					// Control selection
@@ -369,11 +369,11 @@
 				// Insert end marker
 				if (!collapsed) {
 					rng2.collapse(false);
-					rng2.insertNode(dom.create('span', {'data-mce_type' : "bookmark", id : id + '_end', style : styles}, chr));
+					rng2.insertNode(dom.create('span', {'data-mce-type' : "bookmark", id : id + '_end', style : styles}, chr));
 				}
 
 				rng.collapse(true);
-				rng.insertNode(dom.create('span', {'data-mce_type' : "bookmark", id : id + '_start', style : styles}, chr));
+				rng.insertNode(dom.create('span', {'data-mce-type' : "bookmark", id : id + '_start', style : styles}, chr));
 			}
 
 			t.moveToBookmark({id : id, keep : 1});
@@ -491,7 +491,7 @@
 						// Adds a bogus BR element for empty block elements
 						// on non IE browsers just to have a place to put the caret
 						if (!isIE && dom.isBlock(node) && !node.innerHTML)
-							node.innerHTML = '<br data-mce_bogus="1" />';
+							node.innerHTML = '<br data-mce-bogus="1" />';
 
 						return node;
 					};

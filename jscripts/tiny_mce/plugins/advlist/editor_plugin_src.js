@@ -75,7 +75,7 @@
 
 						if (list) {
 							dom.setStyles(list, format.styles);
-							list.removeAttribute('data-mce_style');
+							list.removeAttribute('data-mce-style');
 						}
 					}
 				};

@@ -861,7 +861,7 @@
 			 */
 			t.parser = new tinymce.html.DomParser(s, t.schema);
 
-			// Convert src and href into data-mce_src, data-mce_href and data-mce_style
+			// Convert src and href into data-mce-src, data-mce-href and data-mce-style
 			t.parser.addAttributeFilter('src,href,style', function(nodes, name) {
 				var i = nodes.length, node, dom = t.dom, value;
 
@@ -870,9 +870,9 @@
 					value = node.attr(name);
 
 					if (name === "style")
-						node.attr('data-mce_style', dom.serializeStyle(dom.parseStyle(value), node.name));
+						node.attr('data-mce-style', dom.serializeStyle(dom.parseStyle(value), node.name));
 					else
-						node.attr('data-mce_' + name, t.convertURL(value, name, node.name));
+						node.attr('data-mce-' + name, t.convertURL(value, name, node.name));
 				}
 			});
 
@@ -1171,7 +1171,7 @@
 						var pn = n.parentNode;
 
 						if (ed.dom.isBlock(pn) && pn.lastChild === n)
-							ed.dom.add(pn, 'br', {'data-mce_bogus' : 1});
+							ed.dom.add(pn, 'br', {'data-mce-bogus' : 1});
 					});
 				};
 
@@ -1948,7 +1948,7 @@
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (content.length === 0 || /^\s+$/.test(content))) {
-				body.innerHTML = '<br data-mce_bogus="1" />';
+				body.innerHTML = '<br data-mce-bogus="1" />';
 				return;
 			}
 
@@ -2345,7 +2345,7 @@
 
 					e = e.target;
 
-					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('data-mce_src')))
+					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('data-mce-src')))
 						e.src = t.documentBaseURI.toAbsolute(v);
 				});
 			}

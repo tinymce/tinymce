@@ -155,7 +155,7 @@
 
 					// Add something to the inner node
 					if (curNode)
-						curNode.innerHTML = tinymce.isIE ? '&nbsp;' : '<br data-mce_bogus="1" />';
+						curNode.innerHTML = tinymce.isIE ? '&nbsp;' : '<br data-mce-bogus="1" />';
 
 					return false;
 				}
@@ -168,7 +168,7 @@
 				cell.appendChild(formatNode);
 			} else {
 				if (!tinymce.isIE)
-					cell.innerHTML = '<br data-mce_bogus="1" />';
+					cell.innerHTML = '<br data-mce-bogus="1" />';
 			}
 
 			return cell;

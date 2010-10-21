@@ -157,7 +157,7 @@
 					return;
 
 				// Create container to paste into
-				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste'}, '\uFEFF<br data-mce_bogus="1">');
+				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste'}, '\uFEFF<br data-mce-bogus="1">');
 
 				// If contentEditable mode we need to find out the position of the closest element
 				if (body != ed.getDoc().body)
@@ -239,7 +239,7 @@
 							});
 
 							// Remove bogus br elements
-							each(dom.select('br[data-mce_bogus]', n), function(n) {
+							each(dom.select('br[data-mce-bogus]', n), function(n) {
 								dom.remove(n);
 							});
 
@@ -585,14 +585,14 @@
 			if (getParam(ed, "paste_remove_styles") || (getParam(ed, "paste_remove_styles_if_webkit") && tinymce.isWebKit)) {
 				each(dom.select('*[style]', o.node), function(el) {
 					el.removeAttribute('style');
-					el.removeAttribute('data-mce_style');
+					el.removeAttribute('data-mce-style');
 				});
 			} else {
 				if (tinymce.isWebKit) {
 					// We need to compress the styles on WebKit since if you paste <img border="0" /> it will become <img border="0" style="... lots of junk ..." />
 					// Removing the mce_style that contains the real value will force the Serializer engine to compress the styles
 					each(dom.select('*', o.node), function(el) {
-						el.removeAttribute('data-mce_style');
+						el.removeAttribute('data-mce-style');
 					});
 				}
 			}

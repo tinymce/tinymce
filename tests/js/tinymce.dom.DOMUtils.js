@@ -243,7 +243,7 @@
 
 		DOM.setAttrib('test', 'src', 'url');
 		equals(DOM.getAttrib('test', 'src'), 'url');
-		equals(DOM.getAttrib('test', 'data-mce_src'), 'url');
+		equals(DOM.getAttrib('test', 'data-mce-src'), 'url');
 		equals(DOM.getAttrib('test', 'abc'), '');
 
 		DOM.setAttribs('test', {'class' : '123', title : 'abc'});
