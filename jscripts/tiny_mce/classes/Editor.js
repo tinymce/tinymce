@@ -861,7 +861,7 @@
 			 */
 			t.parser = new tinymce.html.DomParser(s, t.schema);
 
-			// Convert src and href into _mce_src, _mce_href and _mce_style
+			// Convert src and href into data-mce_src, data-mce_href and data-mce_style
 			t.parser.addAttributeFilter('src,href,style', function(nodes, name) {
 				var i = nodes.length, node, dom = t.dom, value;
 
@@ -870,9 +870,9 @@
 					value = node.attr(name);
 
 					if (name === "style")
-						node.attr('_mce_style', dom.serializeStyle(dom.parseStyle(value), node.name));
+						node.attr('data-mce_style', dom.serializeStyle(dom.parseStyle(value), node.name));
 					else
-						node.attr('_mce_' + name, t.convertURL(value, name, node.name));
+						node.attr('data-mce_' + name, t.convertURL(value, name, node.name));
 				}
 			});
 
@@ -1050,29 +1050,6 @@
 			if (s.nowrap)
 				t.getBody().style.whiteSpace = "nowrap";
 
-			if (s.custom_elements) {
-				function handleCustom(ed, o) {
-					each(explode(s.custom_elements), function(v) {
-						var n;
-
-						if (v.indexOf('~') === 0) {
-							v = v.substring(1);
-							n = 'span';
-						} else
-							n = 'div';
-
-						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' _mce_name="$1"$2>');
-						o.content = o.content.replace(new RegExp('</(' + v + ')>', 'g'), '</' + n + '>');
-					});
-				};
-
-				t.onBeforeSetContent.add(handleCustom);
-				t.onPostProcess.add(function(ed, o) {
-					if (o.set)
-						handleCustom(ed, o);
-				});
-			}
-
 			if (s.handle_node_change_callback) {
 				t.onNodeChange.add(function(ed, cm, n) {
 					t.execCallback('handle_node_change_callback', t.id, n, -1, -1, true, t.selection.isCollapsed());
@@ -1194,7 +1171,7 @@
 						var pn = n.parentNode;
 
 						if (ed.dom.isBlock(pn) && pn.lastChild === n)
-							ed.dom.add(pn, 'br', {'_mce_bogus' : 1});
+							ed.dom.add(pn, 'br', {'data-mce_bogus' : 1});
 					});
 				};
 
@@ -1971,7 +1948,7 @@
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (content.length === 0 || /^\s+$/.test(content))) {
-				body.innerHTML = '<br _mce_bogus="1" />';
+				body.innerHTML = '<br data-mce_bogus="1" />';
 				return;
 			}
 
@@ -2368,7 +2345,7 @@
 
 					e = e.target;
 
-					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('_mce_src')))
+					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('data-mce_src')))
 						e.src = t.documentBaseURI.toAbsolute(v);
 				});
 			}

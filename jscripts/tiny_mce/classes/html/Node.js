@@ -204,25 +204,27 @@
 		remove : function() {
 			var self = this, parent = self.parent, next = self.next, prev = self.prev;
 
-			if (parent.firstChild === self) {
-				parent.firstChild = next;
+			if (parent) {
+				if (parent.firstChild === self) {
+					parent.firstChild = next;
 
-				if (next)
-					next.prev = null;
-			} else {
-				prev.next = next;
+					if (next)
+						next.prev = null;
+				} else {
+					prev.next = next;
+				}
+
+				if (parent.lastChild === self) {
+					parent.lastChild = prev;
+
+					if (prev)
+						prev.next = null;
+				} else {
+					next.prev = prev;
+				}
+
+				self.parent = self.next = self.prev = null;
 			}
-
-			if (parent.lastChild === self) {
-				parent.lastChild = prev;
-
-				if (prev)
-					prev.next = null;
-			} else {
-				next.prev = prev;
-			}
-
-			self.parent = self.next = self.prev = null;
 
 			return self;
 		},
@@ -238,11 +240,12 @@
 		 * @return {tinymce.html.Node} The node that got appended.
 		 */
 		append : function(node) {
-			var self = this, last = self.lastChild;
+			var self = this, last;
 
 			if (node.parent)
 				node.remove();
 
+			last = self.lastChild;
 			if (last) {
 				last.next = node;
 				node.prev = last;
@@ -268,10 +271,13 @@
 		 * @return {tinymce.html.Node} The node that got inserted.
 		 */
 		insert : function(node, ref_node, before) {
-			var self = this, parent = self.parent || self, refParent = ref_node.parent;
+			var self = this, parent, refParent;
 
 			if (node.parent)
 				node.remove();
+
+			parent = self.parent || self;
+			refParent = ref_node.parent
 
 			if (before) {
 				if (ref_node === parent.firstChild)
@@ -322,12 +328,26 @@
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty : function(elements) {
-			var self = this, node = self;
+			var self = this, node = self, i;
 
-			while (node = walk(node, self)) {
-				if ((node.type === 3 && !whiteSpaceRegExp.test(node.value)) || elements[node.name])
+			do {
+				if (node.type === 1) {
+					// Keep empty elements like <img />
+					if (elements[node.name])
+						return false;
+
+					// Keep elements with data attributes
+					i = node.attributes.length;
+					while (i--) {
+						if (node.attributes[i].name.indexOf('data-') === 0)
+							return false;
+					}
+				}
+
+				// Keep non whitespace text nodes
+				if ((node.type === 3 && !whiteSpaceRegExp.test(node.value)))
 					return false;
-			}
+			} while (node = walk(node, self));
 
 			return true;
 		}

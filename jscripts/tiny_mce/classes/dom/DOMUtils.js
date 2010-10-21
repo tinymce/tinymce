@@ -498,7 +498,7 @@
 
 				// Force update of the style data
 				if (t.settings.update_styles)
-					t.setAttrib(e, '_mce_style');
+					t.setAttrib(e, 'data-mce_style');
 			});
 		},
 
@@ -605,9 +605,9 @@
 						// No mce_style for elements with these since they might get resized by the user
 						if (s.keep_values) {
 							if (v && !t._isRes(v))
-								e.setAttribute('_mce_style', v, 2);
+								e.setAttribute('data-mce_style', v, 2);
 							else
-								e.removeAttribute('_mce_style', 2);
+								e.removeAttribute('data-mce_style', 2);
 						}
 
 						e.style.cssText = v;
@@ -623,13 +623,13 @@
 							if (s.url_converter)
 								v = s.url_converter.call(s.url_converter_scope || t, v, n, e);
 
-							t.setAttrib(e, '_mce_' + n, v, 2);
+							t.setAttrib(e, 'data-mce_' + n, v, 2);
 						}
 
 						break;
 					
 					case "shape":
-						e.setAttribute('_mce_style', v);
+						e.setAttribute('data-mce_style', v);
 						break;
 				}
 
@@ -679,7 +679,7 @@
 
 			// Try the mce variant for these
 			if (/^(src|href|style|coords|shape)$/.test(n)) {
-				v = e.getAttribute("_mce_" + n);
+				v = e.getAttribute("data-mce_" + n);
 
 				if (v)
 					return v;
@@ -712,7 +712,7 @@
 					v = t.serializeStyle(t.parseStyle(v), e.nodeName);
 
 					if (t.settings.keep_values && !t._isRes(v))
-						e.setAttribute('_mce_style', v);
+						e.setAttribute('data-mce_style', v);
 				}
 			}
 
@@ -1659,7 +1659,7 @@
 			function trim(node) {
 				var i, children = node.childNodes;
 
-				if (node.nodeType == 1 && node.getAttribute('_mce_type') == 'bookmark')
+				if (node.nodeType == 1 && node.getAttribute('data-mce_type') == 'bookmark')
 					return;
 
 				for (i = children.length - 1; i >= 0; i--)
@@ -1676,7 +1676,7 @@
 					if (node.nodeType == 1) {
 						// If the only child is a bookmark then move it up
 						children = node.childNodes;
-						if (children.length == 1 && children[0] && children[0].nodeType == 1 && children[0].getAttribute('_mce_type') == 'bookmark')
+						if (children.length == 1 && children[0] && children[0].nodeType == 1 && children[0].getAttribute('data-mce_type') == 'bookmark')
 							node.parentNode.insertBefore(children[0], node);
 
 						// Keep non empty elements or img, hr etc

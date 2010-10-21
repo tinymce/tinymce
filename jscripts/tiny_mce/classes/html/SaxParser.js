@@ -134,7 +134,7 @@
 							value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
 							// Validate name and value
-							if (validate && name.indexOf('_mce_') !== 0) {
+							if (validate && name.indexOf('data-') !== 0) {
 								attrRule = validAttributesMap[name];
 
 								// Find rule by pattern matching

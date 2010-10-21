@@ -110,6 +110,12 @@ test('append existing node before other existing node', function() {
 	ok(node2.next === node, 'node2.next');
 });
 
+test('remove unattached node', function() {
+	expect(1);
+
+	ok(!new tinymce.html.Node('#text', 3).remove().parent);
+});
+
 test('remove single child', function() {
 	var root, node, node2, node3;
 

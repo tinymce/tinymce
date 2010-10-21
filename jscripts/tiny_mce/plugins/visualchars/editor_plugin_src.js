@@ -59,7 +59,7 @@
 
 				for (i = 0; i < nl.length; i++) {
 					nv = nl[i].nodeValue;
-					nv = nv.replace(/(\u00a0)/g, '<span _mce_bogus="1" class="mceItemHidden mceItemNbsp">$1</span>');
+					nv = nv.replace(/(\u00a0)/g, '<span data-mce_bogus="1" class="mceItemHidden mceItemNbsp">$1</span>');
 
 					div = ed.dom.create('div', null, nv);
 					while (node = div.lastChild)

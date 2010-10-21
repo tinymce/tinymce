@@ -25,23 +25,23 @@
 		patchEditor : function(editor) {
 			var fn = $.fn;
 
-			// Adapt the css function to make sure that the _mce_style
+			// Adapt the css function to make sure that the data-mce_style
 			// attribute gets updated with the new style information
 			function css(name, value) {
 				var self = this;
 
-				// Remove _mce_style when set operation occurs
+				// Remove data-mce_style when set operation occurs
 				if (value)
-					self.removeAttr('_mce_style');
+					self.removeAttr('data-mce_style');
 
 				return fn.css.apply(self, arguments);
 			};
 
-			// Apapt the attr function to make sure that it uses the _mce_ prefixed variants
+			// Apapt the attr function to make sure that it uses the data-mce_ prefixed variants
 			function attr(name, value) {
 				var self = this;
 
-				// Update/retrive _mce_ attribute variants
+				// Update/retrive data-mce_ attribute variants
 				if (attrRegExp.test(name)) {
 					if (value !== undefined) {
 						// Use TinyMCE behavior when setting the specifc attributes
@@ -51,7 +51,7 @@
 
 						return self;
 					} else
-						return self.attr('_mce_' + name);
+						return self.attr('data-mce_' + name);
 				}
 
 				// Default behavior
@@ -61,7 +61,7 @@
 			function htmlPatchFunc(func) {
 				// Returns a modified function that processes
 				// the HTML before executing the action this makes sure
-				// that href/src etc gets moved into the _mce_ variants
+				// that href/src etc gets moved into the data-mce_ variants
 				return function(content) {
 					if (content)
 						content = editor.dom.processHTML(content);
@@ -76,7 +76,7 @@
 			function patch(jq) {
 				// Patch some functions, only patch the object once
 				if (jq.css !== css) {
-					// Patch css/attr to use the _mce_ prefixed attribute variants
+					// Patch css/attr to use the data-mce_ prefixed attribute variants
 					jq.css = css;
 					jq.attr = attr;
 
@@ -238,7 +238,7 @@
 					case "style":
 						e.each(function(i, v){
 							if (s.keep_values)
-								$(v).attr('_mce_style', v);
+								$(v).attr('data-mce_style', v);
 
 							v.style.cssText = v;
 						});
@@ -257,7 +257,7 @@
 								if (s.url_converter)
 									v = s.url_converter.call(s.url_converter_scope || t, v, n, v);
 
-								t.setAttrib(v, '_mce_' + n, v);
+								t.setAttrib(v, 'data-mce_' + n, v);
 							}
 						});
 

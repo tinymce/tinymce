@@ -540,8 +540,8 @@
 
 					if (startContainer != endContainer) {
 						// Wrap start/end nodes in span element since these might be cloned/moved
-						startContainer = wrap(startContainer, 'span', {id : '_start', _mce_type : 'bookmark'});
-						endContainer = wrap(endContainer, 'span', {id : '_end', _mce_type : 'bookmark'});
+						startContainer = wrap(startContainer, 'span', {id : '_start', 'data-mce_type' : 'bookmark'});
+						endContainer = wrap(endContainer, 'span', {id : '_end', 'data-mce_type' : 'bookmark'});
 
 						// Split start/end
 						splitToFormatRoot(startContainer);
@@ -1145,7 +1145,7 @@
 				// Remove style attribute if it's empty
 				if (stylesModified && dom.getAttrib(node, 'style') == '') {
 					node.removeAttribute('style');
-					node.removeAttribute('_mce_style');
+					node.removeAttribute('data-mce_style');
 				}
 
 				// Remove attributes
@@ -1186,7 +1186,7 @@
 
 						// Remove mce prefixed attributes
 						if (MCE_ATTR_RE.test(name))
-							node.removeAttribute('_mce_' + name);
+							node.removeAttribute('data-mce_' + name);
 
 						node.removeAttribute(name);
 					}
@@ -1304,7 +1304,7 @@
 		 * @return {Boolean} true/false if the node is a bookmark node.
 		 */
 		function isBookmarkNode(node) {
-			return node && node.nodeType == 1 && node.getAttribute('_mce_type') == 'bookmark';
+			return node && node.nodeType == 1 && node.getAttribute('data-mce_type') == 'bookmark';
 		};
 
 		/**

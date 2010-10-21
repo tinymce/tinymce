@@ -79,7 +79,7 @@
 					if (parents[0].isEmpty(emptyElements)) {
 						parents[0].remove();
 					}
-				} else {
+				} else if (node.parent) {
 					// Try wrapping the element in a DIV
 					if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
 						tempNode = new tinymce.html.Node('div', 1);
