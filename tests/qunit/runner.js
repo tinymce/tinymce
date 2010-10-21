@@ -42,23 +42,30 @@
 
 	window.QUnitRunner = {
 		init: function(settings) {
-			var self = this, suites = settings.suites, i, y, html = '', tests;
+			var self = this, suites, c, i, y, html = '', tests;
 
 			this.tests = [];
-			for (i = 0; i < suites.length; i++) {
-				html += '<h2>' + suites[i].title + '</h2><ol>';
-				tests = suites[i].tests;
+			for (c = 0; c < settings.columns.length; c++) {
+				suites = settings.columns[c];
+				html += '<div class="column">';
+				for (i = 0; i < suites.length; i++) {
+					html += '<h2>' + suites[i].title + '</h2><ol>';
+					tests = suites[i].tests;
 
-				for (y = 0; y < tests.length; y++) {
-					tests[y].id = 'test_' + i + '_' + y;
-					tests[y].suite = suites[i];
-					html += '<li id="' + tests[y].id + '"><a href="' + tests[y].url + '">' + tests[y].title + '</a> <span id="' + tests[y].id + '_status"></span></li>';
+					for (y = 0; y < tests.length; y++) {
+						tests[y].id = 'test_' + c + '_' + i + '_' + y;
+						tests[y].suite = suites[i];
+						html += '<li id="' + tests[y].id + '"><a href="' + tests[y].url + '">' + tests[y].title + '</a> <span id="' + tests[y].id + '_status"></span></li>';
+					}
+
+					html += '</ol>';
+
+					this.tests = this.tests.concat(tests);
 				}
-
-				html += '</ol>';
-
-				this.tests = this.tests.concat(tests);
+				html += '</div>';
 			}
+
+			html += '<br style="clear: both" />';
 
 			initSettings = settings;
 			this.query = parseQuery(document.location.search.substr(1));
@@ -73,12 +80,16 @@
 		},
 
 		run: function() {
-			var i, y, suites = initSettings.suites;
+			var i, y, c;
 
 			// Reset status states
-			for (i = 0; i < suites.length; i++) {
-				for (y = 0; y < suites[i].tests.length; y++) {
-					document.getElementById(suites[i].tests[y].id).className = '';
+			for (c = 0; c < initSettings.columns.length; c++) {
+				suites = initSettings.columns[c];
+
+				for (i = 0; i < suites.length; i++) {
+					for (y = 0; y < suites[i].tests.length; y++) {
+						document.getElementById(suites[i].tests[y].id).className = '';
+					}
 				}
 			}
 

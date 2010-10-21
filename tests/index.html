@@ -8,18 +8,15 @@
 	ol { font-family: 'trebuchet ms', verdana, arial; }
 	h2, ol {font-size: 10pt; }
 	h2 {
-		background-color:#EEEEEE;
 		color:black;
 		font-size:small;
-		font-weight:normal;
+		font-weight:bold;
 		margin:0;
-		padding:10px;
 	}
 	#total_status.pass {
 		background-color:#C6E746; 
 	}
 	li.pass {
-		background-color:#D2E0E6; 
 	}
 	li.fail, #total_status.fail {
 		background-color:#EE5757; 
@@ -27,55 +24,65 @@
 	#total_status {
 		height: 5px;
 	}
+	.column {
+		float: left;
+		width: 300px;
+		margin-right: 10px;
+	}
+	#menu {
+		margin: 10px;
+	}
 	</style>
 	<script type="text/javascript" src="qunit/runner.js"></script>
 	<script type="text/javascript">
 		// Init QUnitRunner
 		QUnitRunner.init({
-			suites: [
-				{title: 'Editor tests', tests: [
-					{title: 'Core API', url: 'api.html'},
-					{title: 'Basic functionality', url: 'basic.html'}
-				]},
+			columns: [
+				[
+					{title: 'Editor tests', tests: [
+						{title: 'Core API', url: 'api.html'},
+						{title: 'Basic functionality', url: 'basic.html'}
+					]},
 
-				{title: 'Plugins tests', tests: [
-					// {title: 'Media plugin', url: 'media.html'},
-					{title: 'Paste plugin', url: 'paste.html'},
-					{title: 'jQuery plugin', url: 'jquery_plugin.html'}
-				]},
+					{title: 'Plugins tests', tests: [
+						// {title: 'Media plugin', url: 'media.html'},
+						{title: 'Paste plugin', url: 'paste.html'},
+						{title: 'jQuery plugin', url: 'jquery_plugin.html'}
+					]},
 
-				{title: 'tinymce.dom', tests: [
-					{title: 'Selection', url: 'tinymce.dom.Selection.html'},
-					{title: 'TridentSelection (IE)', url: 'tinymce.dom.TridentSelection.html'},
-					{title: 'Range (IE/Native)', url: 'tinymce.dom.Range.html'},
-					{title: 'Serializer', url: 'tinymce.dom.Serializer.html'},
-					{title: 'DOMUtils', url: 'tinymce.dom.DOMUtils.html'},
-					{title: 'DOMUtils (jQuery)', url: 'tinymce.dom.DOMUtils_jquery.html'},
-					{title: 'EventUtils', url: 'tinymce.dom.EventUtils.html'}
-				]},
+					{title: 'tinymce.dom', tests: [
+						{title: 'Selection', url: 'tinymce.dom.Selection.html'},
+						{title: 'TridentSelection (IE)', url: 'tinymce.dom.TridentSelection.html'},
+						{title: 'Range (IE/Native)', url: 'tinymce.dom.Range.html'},
+						{title: 'Serializer', url: 'tinymce.dom.Serializer.html'},
+						{title: 'DOMUtils', url: 'tinymce.dom.DOMUtils.html'},
+						{title: 'DOMUtils (jQuery)', url: 'tinymce.dom.DOMUtils_jquery.html'},
+						{title: 'EventUtils', url: 'tinymce.dom.EventUtils.html'}
+					]},
+				], [
+					{title: 'tinymce.html', tests: [
+						{title: 'Entities', url: 'tinymce.html.Entities.html'},
+						{title: 'Schema', url: 'tinymce.html.Schema.html'},
+						{title: 'SaxParser', url: 'tinymce.html.SaxParser.html'},
+						{title: 'Node', url: 'tinymce.html.Node.html'},
+						{title: 'DomParser', url: 'tinymce.html.DomParser.html'},
+						{title: 'Writer', url: 'tinymce.html.Writer.html'},
+						{title: 'Serializer', url: 'tinymce.html.Serializer.html'}
+					]},
 
-				{title: 'tinymce.html', tests: [
-					{title: 'Entities', url: 'tinymce.html.Entities.html'},
-					{title: 'Schema', url: 'tinymce.html.Schema.html'},
-					{title: 'SaxParser', url: 'tinymce.html.SaxParser.html'},
-					{title: 'Node', url: 'tinymce.html.Node.html'},
-					{title: 'DomParser', url: 'tinymce.html.DomParser.html'},
-					{title: 'Writer', url: 'tinymce.html.Writer.html'},
-					{title: 'Serializer', url: 'tinymce.html.Serializer.html'}
-				]},
+					{title: 'tinymce.Formatter', tests: [
+						{title: 'Apply formatting', url: 'tinymce.Formatter_apply.html'},
+						{title: 'Remove formatting', url: 'tinymce.Formatter_remove.html'},
+						{title: 'Check formatting', url: 'tinymce.Formatter_check.html'}
+					]},
 
-				{title: 'tinymce.Formatter', tests: [
-					{title: 'Apply formatting', url: 'tinymce.Formatter_apply.html'},
-					{title: 'Remove formatting', url: 'tinymce.Formatter_remove.html'},
-					{title: 'Check formatting', url: 'tinymce.Formatter_check.html'}
-				]},
-
-				{title: 'tinymce.util', tests: [
-					{title: 'URI', url: 'tinymce.util.URI.html'},
-					{title: 'Dispatcher', url: 'tinymce.util.Dispatcher.html'},
-					{title: 'Cookie', url: 'tinymce.util.Cookie.html'},
-					{title: 'JSON', url: 'tinymce.util.JSON.html'}
-				]}
+					{title: 'tinymce.util', tests: [
+						{title: 'URI', url: 'tinymce.util.URI.html'},
+						{title: 'Dispatcher', url: 'tinymce.util.Dispatcher.html'},
+						{title: 'Cookie', url: 'tinymce.util.Cookie.html'},
+						{title: 'JSON', url: 'tinymce.util.JSON.html'}
+					]}
+				]
 			]
 		});
 	</script>
@@ -85,7 +92,7 @@
 <h1 id="qunit-header">TinyMCE Unit Tests</h1>
 <div id="total_status"></div>
 <div id="menu"></div>
-<input type="button" value="Run all" onclick="QUnitRunner.run();" />
+<div><input type="button" value="Run all" onclick="QUnitRunner.run();" /></div>
 <div id="log"></div>
 
 </body>
