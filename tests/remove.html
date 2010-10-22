@@ -16,7 +16,7 @@ module("Remove Content", {
 });
 
 asyncTest('Backspace with indented text', function() {
-	var c, originalContent = '<p>Line1</p><p style="margin-left: 30px;">Line2</p>';
+	var c, originalContent = '<p>Line1</p>\n<p style="margin-left: 30px;">Line2</p>';
 
 	expect(2);
 
@@ -34,7 +34,7 @@ asyncTest('Backspace with indented text', function() {
 // oncut is not supported by FireFox 2.0 so this is impossible to fix there.
 if (!tinymce.isGecko || !/Firefox\/[12].[0-9]/.test(navigator.userAgent)) {
 	asyncTest('Cut with indented text', function() {
-		var c, originalContent = '<p>Line1</p><p style="margin-left: 30px;">Line2</p>';
+		var c, originalContent = '<p>Line1</p>\n<p style="margin-left: 30px;">Line2</p>';
 	
 		expect(3);
 	
@@ -57,7 +57,7 @@ if (!tinymce.isGecko || !/Firefox\/[12].[0-9]/.test(navigator.userAgent)) {
 }
 
 asyncTest('Forward delete with indented text', function() {
-	var c, originalContent = '<p>Line1</p><p style="margin-left: 30px;">Line2</p>';
+	var c, originalContent = '<p>Line1</p>\n<p style="margin-left: 30px;">Line2</p>';
 
 	expect(2);
 
@@ -73,7 +73,7 @@ asyncTest('Forward delete with indented text', function() {
 });
 
 asyncTest('Forward delete with first paragraph indented', function() {
-	var c, originalContent = '<p style="margin-left: 30px;">Line1</p><p>Line2</p>';
+	var c, originalContent = '<p style="margin-left: 30px;">Line1</p>\n<p>Line2</p>';
 
 	expect(1);
 
