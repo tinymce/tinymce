@@ -191,7 +191,9 @@
 				return node;
 			}
 
-			parser = new tinymce.html.SaxParser(tinymce.extend({
+			parser = new tinymce.html.SaxParser({
+				validate : settings.validate,
+
 				cdata: function(text) {
 					node.append(createNode('#cdata', 4)).value = text;
 				},
@@ -279,7 +281,7 @@
 				},
 
 				end: function(name) {
-					var textNode, elementRule, text, sibling;
+					var textNode, elementRule, text, sibling, tempNode;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
@@ -331,15 +333,19 @@
 							if (node.isEmpty(schema.getEmptyElements())) {
 								if (elementRule.paddEmpty)
 									node.empty().append(new tinymce.html.Node('#text', '3')).value = '\u00a0';
-								else
-									return node.remove();
+								else {
+									tempNode = node.parent;
+									node.remove();
+									node = tempNode;
+									return;
+								}
 							}
 						}
 
 						node = node.parent;
 					}
 				}
-			}, settings), schema);
+			}, schema);
 
 			rootNode = node = new Node(settings.root_name, 8);
 
