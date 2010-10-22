@@ -226,11 +226,18 @@
 								if (parent && parent.nodeName != 'LI') {
 									parent.innerHTML = '';
 
+									var el;
 									if (t._previousFormats) {
 										parent.appendChild(fmt.wrapper);
-										fmt.inner.appendChild(document.createTextNode('\uFEFF'));
+										el = fmt.inner;
 									} else {
-										parent.appendChild(document.createTextNode('\uFEFF'));
+										el = parent;
+									}
+
+									try {
+										el.appendChild(document.createTextNode('\uFEFF'));
+									} catch(e) {
+										// Catch "Invalid Argument" error in IE7
 									}
 
 									selection.select(parent, 1);
