@@ -2570,6 +2570,10 @@
 					if (!t.removed && t.undoManager.typing)
 						addUndo();
 				});
+				
+				t.dom.bind(t.dom.getRoot(), 'dragend', function(e) {
+					addUndo();
+				});
 
 				t.onKeyUp.add(function(ed, e) {
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey)
@@ -2619,8 +2623,14 @@
 						}
 					}
 
+					// Special handling for enter to ensure typing is still set to true
+					if (e.keyCode == 13 && t.undoManager.typing) {
+						addUndo();
+						t.undoManager.typing = 1;
+					}
+					
 					// Is caracter positon keys
-					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
+					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 45) {
 						if (t.undoManager.typing)
 							addUndo();
 
@@ -2651,6 +2661,7 @@
 						each(template, function(attr) {
 							target.setAttributeNode(attr.cloneNode(true));
 						});
+
 						t.undoManager.typing = 0;
 						t.undoManager.add();
 					};

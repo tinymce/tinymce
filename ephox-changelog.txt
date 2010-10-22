@@ -1,0 +1,11 @@
+	Fixed issue where extra, empty span tags were added when using a format with both selector and inline modes.
+	Selection.getNode now detects ranges that are wrapped immediately around a node.
+	Added 'theme_advanced_show_current_color' setting to enable the forecolor and backcolor buttons to continuously show the current text color.
+	Added 'autolink' plugin to enable automatically linking URLs.
+	Added paste_enable_default_filters setting to enable the default paste filters to be disabled.
+	Fixed bug where border styles were incorrectly merged.
+	Added significantly improved list handling via the new 'lists' plugin.
+	Fixed bug where image resize handles were left behind when changing the alignment of an image in Firefox.
+	Spaces in URLs are now automatically encoded as %20 since they are always invalid.
+	Fixed bug where HR was inserted inside P elements instead of splitting them.
+	Fixed bug where deleting content in Firefox used the attributes from the end element instead of the start.

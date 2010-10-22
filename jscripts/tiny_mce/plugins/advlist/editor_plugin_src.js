@@ -72,7 +72,6 @@
 					// Append styles to new list element
 					if (format) {
 						list = dom.getParent(sel.getNode(), 'ol,ul');
-
 						if (list) {
 							dom.setStyles(list, format.styles);
 							list.removeAttribute('data-mce-style');

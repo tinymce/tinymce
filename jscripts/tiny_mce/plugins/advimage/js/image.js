@@ -177,6 +177,8 @@ var ImageDialog = {
 			ed.undoManager.add();
 		}
 
+		tinyMCEPopup.editor.execCommand('mceRepaint');
+		tinyMCEPopup.editor.focus();
 		tinyMCEPopup.close();
 	},
 

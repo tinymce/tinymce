@@ -186,6 +186,7 @@
 				});
 
 				toggleFormat('align' + align);
+				execCommand('mceRepaint');
 			},
 
 			// Override list commands to fix WebKit bug
@@ -339,7 +340,17 @@
 			},
 
 			InsertHorizontalRule : function() {
-				selection.setContent('<hr />');
+				var hrElm, hrParent, rng;
+				selection.setContent('<hr id="_mce_inserted_hr" />');
+				
+				hrElm = dom.get('_mce_inserted_hr');
+				hrParent = hrElm.parentNode;
+				// If HR is within a text block then split that block
+				if (/^(H[1-6]|P|ADDRESS|PRE)$/.test(hrParent.nodeName)) {
+					dom.split(hrParent, hrElm);
+				}
+				dom.removeAllAttribs(hrElm);
+				selection.moveAfterNode(hrElm);
 			},
 
 			mceToggleVisualAid : function() {

@@ -134,7 +134,10 @@
 			} else {
 				log("Finished running all tests. Total: " + testTotal + ", Failed: " + testFailures, true);
 				document.getElementById('total_status').className = testFailures > 0 ? 'fail' : 'pass';
-
+				if (iframe) {
+					document.body.removeChild(iframe);
+					iframe = null;
+				}
 				// Post results
 				if (this.query.id) {
 					this.postResults(this.query.id, testTotal, testFailures, testLog);
