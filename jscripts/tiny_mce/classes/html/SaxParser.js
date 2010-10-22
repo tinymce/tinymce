@@ -85,7 +85,7 @@
 
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp([
-				'<([\\w:\\-]+)((?:\\s+[\\w:\\-]+(?:\\s*=\\s*(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>\\s]+))?)*)\\s*(\\/?)>', // Start element
+				'<([\\w:\\-]+)((?:\\s*[\\w:\\-]+(?:\\s*=\\s*(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>\\s]*))?)*)\\s*(\\/?)>', // Start element
 				'<\\/([\\w:\\-]+)[^>]*>', // End element
 				'<!--([\\w\\W]*?)-->', // Comments
 				'<!\\[CDATA\\[([\\w\\W]*?)\\]\\]>', // CDATA sections
