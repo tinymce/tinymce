@@ -235,7 +235,7 @@
 									}
 
 									try {
-										el.appendChild(document.createTextNode('\uFEFF'));
+										el.appendChild(t.editor.getDoc().createTextNode('\uFEFF'));
 									} catch(e) {
 										// Catch "Invalid Argument" error in IE7
 									}
