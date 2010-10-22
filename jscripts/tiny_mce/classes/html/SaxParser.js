@@ -233,17 +233,21 @@
 						endRegExp.lastIndex = index = matches.index + matches[0].length;
 
 						if (matches = endRegExp.exec(html)) {
-							text = html.substr(index, matches.index - index);
+							if (isValidElement)
+								text = html.substr(index, matches.index - index);
+
 							index = matches.index + matches[0].length;
 						} else {
 							text = html.substr(index);
 							index = html.length;
 						}
 
-						if (text.length > 0)
+						if (isValidElement && text.length > 0)
 							self.text(text, true);
 
-						self.end(value);
+						if (isValidElement)
+							self.end(value);
+
 						tokenRegExp.lastIndex = index;
 						continue;
 					}
