@@ -97,10 +97,13 @@
 			if (!iframe) {
 				iframe = document.createElement('iframe');
 				iframe.style.position = 'absolute';
-				iframe.style.left = '300px';
+				iframe.style.right = '0px';
 				iframe.style.top = '0px';
 				iframe.style.width = '800px';
-				iframe.style.height = '600px';
+				iframe.style.height = '100%';
+				iframe.style.background = '#fff';
+				iframe.style.borderLeft = '1px solid gray';
+				iframe.frameBorder = 0;
 				document.body.appendChild(iframe);
 			}
 
