@@ -154,11 +154,12 @@ test('remove middle node', function() {
 });
 
 test('insert after last', function() {
-	var root, node, node2;
+	var fragment, root, node, node2;
 
 	expect(5);
 
-	root = new tinymce.html.Node('#frag', 11);
+	fragment = new tinymce.html.Node('#frag', 11);
+	root = fragment.append(new tinymce.html.Node('body', 1));
 	node = root.append(new tinymce.html.Node('a', 1));
 	node2 = root.insert(new tinymce.html.Node('x', 1), node);
 	ok(root.firstChild === node, 'root.firstChild');
@@ -169,11 +170,12 @@ test('insert after last', function() {
 });
 
 test('insert before first', function() {
-	var root, node, node2;
+	var fragment, root, node, node2;
 
 	expect(8);
 
-	root = new tinymce.html.Node('#frag', 11);
+	fragment = new tinymce.html.Node('#frag', 11);
+	root = fragment.append(new tinymce.html.Node('body', 1));
 	node = root.append(new tinymce.html.Node('a', 1));
 	node2 = root.insert(new tinymce.html.Node('x', 1), node, true);
 	ok(root.firstChild === node2, 'root.firstChild');
@@ -187,11 +189,12 @@ test('insert before first', function() {
 });
 
 test('insert before second', function() {
-	var root, node, node2;
+	var fragment, root, node, node2;
 
 	expect(5);
 
-	root = new tinymce.html.Node('#frag', 11);
+	fragment = new tinymce.html.Node('#frag', 11);
+	root = fragment.append(new tinymce.html.Node('body', 1));
 	node = root.append(new tinymce.html.Node('a', 1));
 	node2 = root.append(new tinymce.html.Node('b', 1));
 	node3 = root.insert(new tinymce.html.Node('x', 1), node2, true);
@@ -207,7 +210,8 @@ test('insert after and between two nodes', function() {
 
 	expect(7);
 
-	root = new tinymce.html.Node('#frag', 11);
+	fragment = new tinymce.html.Node('#frag', 11);
+	root = fragment.append(new tinymce.html.Node('body', 1));
 	node = root.append(new tinymce.html.Node('a', 1));
 	node2 = root.append(new tinymce.html.Node('b', 1));
 	node3 = root.insert(new tinymce.html.Node('x', 1), node);
