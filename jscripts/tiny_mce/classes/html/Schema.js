@@ -451,6 +451,18 @@
 		}
 
 		/**
+		 * Name/value map object with valid parents and children to those parents.
+		 *
+		 * @example
+		 * children = {
+		 *    div:{p:{}, h1:{}}
+		 * };
+		 * @field children
+		 * @type {Object}
+		 */
+		self.children = children;
+
+		/**
 		 * Returns a map with boolean attributes.
 		 *
 		 * @method getBoolAttrs
