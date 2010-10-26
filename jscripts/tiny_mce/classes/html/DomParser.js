@@ -36,18 +36,20 @@
 		self.schema = schema = schema || new tinymce.html.Schema();
 
 		function fixInvalidChildren(nodes) {
-			var ni, node, parent, parents, newParent, currentNode, tempNode, childClone, emptyElements = schema.getEmptyElements();
+			var ni, node, parent, parents, newParent, currentNode, tempNode, childClone, emptyElements = schema.getEmptyElements(), nonSplitableElements;
+
+			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
 
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
 
 				// Get list of all parent nodes until we find a valid parent to stick the child into
 				parents = [node];
-				for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name); parent = parent.parent)
+				for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) && !nonSplitableElements[parent.name]; parent = parent.parent)
 					parents.push(parent);
 
 				// Found a suitable parent
-				if (parent && parent !== node) {
+				if (parent && parents.length > 1) {
 					// Reverse the array since it makes looping easier
 					parents.reverse();
 
@@ -86,8 +88,8 @@
 						node.parent.insert(tempNode, node);
 						tempNode.append(node);
 					} else {
-						// We failed wrapping it, then remove it
-						if (node.name === 'style')
+						// We failed wrapping it, then remove or unwrap it
+						if (node.name === 'style' || node.name === 'script')
 							node.remove();
 						else
 							node.unwrap();
@@ -163,13 +165,14 @@
 		self.parse = function(html, args) {
 			var parser, rootNode, node, Node = tinymce.html.Node, matchedNodes = {}, matchedAttributes = {},
 				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements;
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children;
 
 			args = args || {};
 			blockElements = tinymce.extend({
 				script: 1,
 				style: 1
 			}, schema.getBlockElements());
+			children = schema.children;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();
 			startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -230,7 +233,7 @@
 				},
 
 				start: function(name, attrs, empty) {
-					var newNode, attrFiltersLen, elementRule, textNode, attrName, text, sibling;
+					var newNode, attrFiltersLen, elementRule, textNode, attrName, text, sibling, parent;
 
 					elementRule = schema.getElementRule(name);
 					if (elementRule) {
@@ -240,8 +243,10 @@
 
 						node.append(newNode);
 
-						// Check if element position is valid
-						if (!schema.isValidChild(node.name, newNode.name))
+						// Check if node is valid child of the parent node is the child is
+						// unknown we don't collect it since it's probably a custom element
+						parent = children[node.name];
+						if (parent && children[newNode.name] && !parent[newNode.name])
 							invalidChildren.push(newNode);
 
 						attrFiltersLen = attributeFilters.length;
@@ -347,7 +352,7 @@
 				}
 			}, schema);
 
-			rootNode = node = new Node(settings.root_name, 8);
+			rootNode = node = new Node(settings.root_name, 11);
 
 			parser.parse(html);
 
