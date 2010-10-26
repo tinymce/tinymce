@@ -49,6 +49,14 @@ test("Does not count asterisks, non-word characters", function() {
 	equals(result, 3);
 });
 
+test("Does not count htmlentities", function() {
+	expect(1);
+
+	editor.setContent('<p>It&rsquo;s my life &ndash; don\'t you forget.</p>');
+	var result = editor.plugins.wordcount._getCount(editor);
+	equals(result, 6);
+});
+
 test("Counts hyphenated words as one word", function() {
 	expect(1);
 

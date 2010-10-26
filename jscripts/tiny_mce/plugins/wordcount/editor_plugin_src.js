@@ -18,8 +18,8 @@
 		init : function(ed, url) {
 			var t = this, last = 0;
 
-			t.countre = ed.getParam('wordcount_countregex', /[\w'-]+/g);
-			t.cleanre = ed.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$¿'"_+=\\\/-]*/g);
+			t.countre = ed.getParam('wordcount_countregex', /[\w\u2019\'-]+/g); // u2019 == &rsquo;
+			t.cleanre = ed.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$?\'\"_+=\\\/-]*/g);
 			t.id = ed.id + '-word-count';
 
 			ed.onPostRender.add(function(ed, cm) {
@@ -67,6 +67,9 @@
 			if (tx) {
 					tx = tx.replace(/\.\.\./g, ' '); // convert ellipses to spaces
 					tx = tx.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' '); // remove html tags and space chars
+
+					// deal with html entities
+					tx = tx.replace(/(\w+)(&.+?;)+(\w+)/, "$1$3").replace(/&.+?;/g, ' ');
 					tx = tx.replace(this.cleanre, ''); // remove numbers and punctuation
 
 					var wordArray = tx.match(this.countre);
