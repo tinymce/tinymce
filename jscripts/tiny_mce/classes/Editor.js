@@ -1200,7 +1200,7 @@
 				if (t.removed)
 					return;
 
-				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
+				t.load({initial : true, format : 'html'});
 				t.startContent = t.getContent({format : 'raw'});
 				t.initialized = true;
 
