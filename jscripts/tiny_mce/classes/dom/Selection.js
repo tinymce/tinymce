@@ -154,6 +154,7 @@
 
 				// Move to caret marker
 				c = t.dom.get('__caret');
+
 				// Make sure we wrap it compleatly, Opera fails with a simple select call
 				r = d.createRange();
 				r.setStartBefore(c);
@@ -162,6 +163,7 @@
 
 				// Remove the caret position
 				t.dom.remove('__caret');
+				t.setRng(r);
 			} else {
 				if (r.item) {
 					// Delete content and get caret text selection
