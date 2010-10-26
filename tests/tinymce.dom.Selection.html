@@ -72,6 +72,44 @@ test('setContent', function() {
 	editor.selection.setContent('<div>test</div>');
 	equals(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
 
+	// Insert in middle of paragraph
+	editor.setContent('<p>beforeafter</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild.firstChild, 'before'.length);
+	rng.setEnd(editor.getBody().firstChild.firstChild, 'before'.length);
+	editor.selection.setRng(rng);
+	editor.selection.setContent('<br />');
+	equals(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
+	
+	// Check the caret is left in the correct position.
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
+	equals(rng.startOffset, 2, 'Selection start offset');
+	equals(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
+	equals(rng.endOffset, 2, 'Selection end offset');
+
+	
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 0);
+	editor.selection.setRng(rng);
+	editor.selection.setContent('');
+	equals(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
+	rng = editor.selection.getRng(true);
+	if (!document.createRange) {
+		// The old IE selection can only be positioned in text nodes
+		equals(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
+		equals(rng.startOffset, 0, 'Selection start offset');
+		equals(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
+		equals(rng.endOffset, 0, 'Selection end offset');
+	} else {
+		equals(rng.startContainer, editor.getBody(), 'Selection start container');
+		equals(rng.startOffset, 0, 'Selection start offset');
+		equals(rng.endContainer, editor.getBody(), 'Selection end container');
+		equals(rng.endOffset, 0, 'Selection end offset');
+	}
+	
 	// Set selected contents, onSetContent event
 	eventObj = {};
 
