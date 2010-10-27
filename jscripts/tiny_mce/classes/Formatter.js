@@ -249,6 +249,9 @@
 								newWrappers.push(currentWrapElm);
 							}
 
+                            if (node.style && node.style.color && format.styles && format.styles.textDecoration && format.styles.textDecoration === 'underline')
+                                setElementFormat(node, format);
+
 							currentWrapElm.appendChild(node);
 						} else {
 							// Start a new wrapper for possible children
@@ -321,7 +324,8 @@
 							// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
-								removeFormat(format, vars, child, format.exact ? child : null);
+                                if (!(child.style && child.style.color && format.styles && format.styles.textDecoration && format.styles.textDecoration === 'underline'))
+                                    removeFormat(format, vars, child, format.exact ? child : null);
 							});
 						});
 
