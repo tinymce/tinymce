@@ -1,3 +1,5 @@
+	Fixed issue where bullet lists weren't always detected correctly.
+	Fixed issue where list item content may be deleted when pasting from Word.
 	Fixed issue where extra, empty span tags were added when using a format with both selector and inline modes.
 	Selection.getNode now detects ranges that are wrapped immediately around a node.
 	Added 'theme_advanced_show_current_color' setting to enable the forecolor and backcolor buttons to continuously show the current text color.
