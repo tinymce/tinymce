@@ -79,6 +79,7 @@ test("Paste Word fake list", function() {
 
 	editor.settings.paste_retain_style_properties = 'border';
 	
+	rng = editor.dom.createRng();
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
@@ -86,6 +87,7 @@ test("Paste Word fake list", function() {
 	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="ListStyle" style="margin-top:0cm;margin-right:0cm;margin-bottom:3.0pt;margin-left:18.0pt;mso-add-space:auto;text-align:justify;text-indent:-18.0pt;mso-list:l0 level1 lfo1;tab-stops:list 18.0pt"><span lang="DE" style="font-family:Verdana;mso-fareast-font-family:Verdana;mso-bidi-font-family:Verdana;color:black"><span style="mso-list:Ignore">\u25CF<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><span lang="DE" style="font-family:Arial;mso-fareast-font-family:Arial;mso-bidi-font-family:Arial;color:black">Item&nbsp; Spaces.<o:p></o:p></span></p>'});
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<ul><li>Item&nbsp; Spaces.</li></ul>');
 
+	rng = editor.dom.createRng();
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 4);
