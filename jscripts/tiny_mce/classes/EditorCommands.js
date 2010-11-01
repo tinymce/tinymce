@@ -353,7 +353,7 @@
 			},
 
 			mceInsertLink : function(command, ui, value) {
-				var link = dom.getParent(selection.getNode(), 'a');
+				var link = dom.getParent(selection.getNode(), 'a'), img, floatVal;
 
 				if (tinymce.is(value, 'string'))
 					value = {href : value};
@@ -362,7 +362,19 @@
 				value.href = value.href.replace(' ', '%20');
 
 				if (!link) {
+					// WebKit can't create links on float images for some odd reason so just remove it and restore it later
+					if (tinymce.isWebKit) {
+						img = dom.getParent(selection.getNode(), 'img');
+						floatVal = img.style.cssFloat;
+						img.style.cssFloat = null;
+					}
+
 					execNativeCommand('CreateLink', FALSE, 'javascript:mctmp(0);');
+
+					// Restore float value
+					if (floatVal)
+						img.style.cssFloat = floatVal;
+
 					each(dom.select('a[href=javascript:mctmp(0);]'), function(link) {
 						dom.setAttribs(link, value);
 					});
