@@ -254,7 +254,28 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.startContainer.childNodes[0].innerHTML, '');
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div></div>');
 	});
-	
+
+	test("Selection of empty text element with caret inside", function(){
+		expect(6);
+		
+		editor.setContent('<div></div>', {
+			format: 'raw'
+		});
+		
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody().firstChild, 0);
+		rng.setEnd(editor.getBody().firstChild, 0);
+		editor.selection.setRng(rng);
+		
+		rng = editor.selection.getRng(true);
+		equals(rng.startContainer.nodeName, 'DIV');
+		equals(rng.endContainer.nodeName, 'DIV');
+		equals(rng.startOffset, 0);
+		equals(rng.endOffset, 0);
+		equals(rng.startContainer.innerHTML, '');
+		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '');
+	});
+
 	test("Caret position before table", function() {
 		var table, rng;
 
