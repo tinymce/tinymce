@@ -365,8 +365,11 @@
 					// WebKit can't create links on float images for some odd reason so just remove it and restore it later
 					if (tinymce.isWebKit) {
 						img = dom.getParent(selection.getNode(), 'img');
-						floatVal = img.style.cssFloat;
-						img.style.cssFloat = null;
+
+						if (img) {
+							floatVal = img.style.cssFloat;
+							img.style.cssFloat = null;
+						}
 					}
 
 					execNativeCommand('CreateLink', FALSE, 'javascript:mctmp(0);');
