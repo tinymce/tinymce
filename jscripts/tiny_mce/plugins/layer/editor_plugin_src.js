@@ -198,6 +198,8 @@
 						le.style.height = le.height ? (le.height + 'px') : '100px';
 
 					le.style.position = "absolute";
+
+					ed.dom.setAttrib(le, 'data-mce-style', '');
 					ed.addVisual(ed.getBody());
 				}
 

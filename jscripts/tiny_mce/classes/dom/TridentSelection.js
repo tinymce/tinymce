@@ -21,15 +21,20 @@
 			if (element.ownerDocument != dom.doc)
 				return domRange;
 
+			collapsed = selection.isCollapsed();
+
 			// Handle control selection or text selection of a image
 			if (ieRange.item || !element.hasChildNodes()) {
-				domRange.setStart(element.parentNode, dom.nodeIndex(element));
-				domRange.setEnd(domRange.startContainer, domRange.startOffset + 1);
+				if (collapsed) {
+					domRange.setStart(element, 0);
+					domRange.setEnd(element, 0);
+				} else {
+					domRange.setStart(element.parentNode, dom.nodeIndex(element));
+					domRange.setEnd(domRange.startContainer, domRange.startOffset + 1);
+				}
 
 				return domRange;
 			}
-
-			collapsed = selection.isCollapsed();
 
 			function findEndPoint(start) {
 				var marker, container, offset, nodes, startIndex = 0, endIndex, index, parent, checkRng, position;

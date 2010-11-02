@@ -8,6 +8,17 @@ Version 3.4 (2010-xx-xx)
 	Fixed bug where clicking on a format title would produce errors if the current selection didn't have any formats.
 	Fixed bug where paste of simple texts wouldn't work correctly in Gecko using the paste plugin since it keeps block formatting.
 	Fixed bug where confirm dialogs didn't display correctly due to resent IE9 fixes.
+	Fixed bug where spaces in URLs wouldn't be properly encoded to %20 if the user entered them in the link dialogs. Patch contributed by Ephox.
+	Fixed bug where the image alignment buttons wouldn't reposition the resize handles on FF due to a browser issue. Patch contributed by Ephox.
+	Fixed bug where the compareBoundaryPoints method of the IE Range class didn't work correctly. Patch contributed by Ephox.
+	Fixed bug where selection of elements using double click wouldn't select the clicked element but rather the parent node on FF. Patch contributed by Ephox.
+	Fixed bug where IE would scroll the user to the current selection causing parent document to scroll as well. Patch contributed by Ephox.
+	Fixed bug where style compression would incorrectly compress items with different values. It now only compresses if the values are the same. Patch contributed by Ephox.
+	Fixed bug where FF would add non breaking spaces outside TD elements if formatting was applied to table cells. Patch contributed by Ephox.
+	Fixed bug where the caret position would be lost on WebKit browsers if you pasted images multiple times. Patch contributed by Ephox.
+	Fixed bug where non word contents like * would be counted as words in the wordcount pluging. Patch contributed by David Balatero.
+	Fixed bug where the toggle absolute button in the layer plugin wouldn't remove the existing internal style attribute first.
+	Fixed bug where WebKit wouldn't create links on images with a float style.
 Version 3.3.9.3 (2010-xx-xx)
 	Fixed issue where WebKit wouldn't correctly apply ins/del in xhtmlxtras plugin.
 	Fixed bug where paste as plaintext on WebKit wouldn't produce br and p elements correctly.

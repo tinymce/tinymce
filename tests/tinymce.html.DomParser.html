@@ -96,7 +96,7 @@ test('Whitespace', function() {
 test('Parse invalid contents', function() {
 	var parser, root;
 
-	expect(16);
+	expect(20);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a"><p class="b">123</p></p>');
@@ -137,6 +137,16 @@ test('Parse invalid contents', function() {
 	root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
 	equals(serializer.serialize(root), '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>', 'UL inside P');
 	deepEqual(countNodes(root), {body: 1, p:2, ul:1, li:2, '#text': 4}, 'UL inside P (count)');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<table><tr><td><tr>a</tr></td></tr></table>');
+	equals(serializer.serialize(root), '<table><tr><td>a</td></tr></table>', 'TR inside TD');
+	deepEqual(countNodes(root), {body: 1, table:1, tr:1, td:1, '#text': 1}, 'TR inside TD (count)');
+
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'p,section,div'}));
+	root = parser.parse('<div><section><p>a</p></section></div>');
+	equals(serializer.serialize(root), '<div><section><p>a</p></section></div>', 'P inside SECTION');
+	deepEqual(countNodes(root), {"body":1, "div":1, "section":1, "p":1, "#text":1}, 'P inside SECTION (count)');
 });
 
 test('addNodeFilter', function() {

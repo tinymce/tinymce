@@ -255,6 +255,11 @@
 				 * @event onPreProcess
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Object} obj PreProcess object.
+				 * @option {Node} node DOM node for the item being serialized.
+				 * @option {String} format The specified output format normally "html".
+				 * @option {Boolean} get Is true if the process is on a getContent operation.
+				 * @option {Boolean} set Is true if the process is on a setContent operation.
+				 * @option {Boolean} cleanup Is true if the process is on a cleanup operation.
 				 */
 				'onPreProcess',
 
@@ -1200,7 +1205,7 @@
 				if (t.removed)
 					return;
 
-				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
+				t.load({initial : true, format : 'html'});
 				t.startContent = t.getContent({format : 'raw'});
 				t.initialized = true;
 
@@ -1539,12 +1544,20 @@
 		 * The command that you add can be executed with execCommand.
 		 *
 		 * @method addCommand
-		 * @param {String} n Command name to add/override.
-		 * @param {function} f Function to execute when the command occurs.
-		 * @param {Object} s Optional scope to execute the function in.
+		 * @param {String} name Command name to add/override.
+		 * @param {addCommandCallback} callback Function to execute when the command occurs.
+		 * @param {Object} scope Optional scope to execute the function in.
 		 */
-		addCommand : function(n, f, s) {
-			this.execCommands[n] = {func : f, scope : s || this};
+		addCommand : function(name, callback, scope) {
+			/**
+			 * Callback function that gets called when a command is executed.
+			 *
+			 * @callback addCommandCallback
+			 * @param {Boolean} ui Display UI state true/false.
+			 * @param {Object} value Optional value for command.
+			 * @return {Boolean} True/false state if the command was handled or not.
+			 */
+			this.execCommands[name] = {func : callback, scope : scope || this};
 		},
 
 		/**
@@ -1552,12 +1565,18 @@
 		 * The command that you add can be executed with queryCommandState function.
 		 *
 		 * @method addQueryStateHandler
-		 * @param {String} n Command name to add/override.
-		 * @param {function} f Function to execute when the command state retrival occurs.
-		 * @param {Object} s Optional scope to execute the function in.
+		 * @param {String} name Command name to add/override.
+		 * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrival occurs.
+		 * @param {Object} scope Optional scope to execute the function in.
 		 */
-		addQueryStateHandler : function(n, f, s) {
-			this.queryStateCommands[n] = {func : f, scope : s || this};
+		addQueryStateHandler : function(name, callback, scope) {
+			/**
+			 * Callback function that gets called when a queryCommandState is executed.
+			 *
+			 * @callback addQueryStateHandlerCallback
+			 * @return {Boolean} True/false state if the command is enabled or not like is it bold.
+			 */
+			this.queryStateCommands[name] = {func : callback, scope : scope || this};
 		},
 
 		/**
@@ -1565,12 +1584,18 @@
 		 * The command that you add can be executed with queryCommandValue function.
 		 *
 		 * @method addQueryValueHandler
-		 * @param {String} n Command name to add/override.
-		 * @param {function} f Function to execute when the command value retrival occurs.
-		 * @param {Object} s Optional scope to execute the function in.
+		 * @param {String} name Command name to add/override.
+		 * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrival occurs.
+		 * @param {Object} scope Optional scope to execute the function in.
 		 */
-		addQueryValueHandler : function(n, f, s) {
-			this.queryValueCommands[n] = {func : f, scope : s || this};
+		addQueryValueHandler : function(name, callback, scope) {
+			/**
+			 * Callback function that gets called when a queryCommandValue is executed.
+			 *
+			 * @callback addQueryValueHandlerCallback
+			 * @return {Object} Value of the command or undefined.
+			 */
+			this.queryValueCommands[name] = {func : callback, scope : scope || this};
 		},
 
 		/**

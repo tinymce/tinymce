@@ -103,7 +103,6 @@
 				iframe.style.height = '100%';
 				iframe.style.background = '#fff';
 				iframe.style.borderLeft = '1px solid gray';
-				iframe.frameBorder = 0;
 				document.body.appendChild(iframe);
 			}
 

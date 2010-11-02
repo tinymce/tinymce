@@ -9,7 +9,14 @@
  */
 
 (function(tinymce) {
-	var whiteSpaceRegExp = /^[ \t\r\n]*$/;
+	var whiteSpaceRegExp = /^[ \t\r\n]*$/, typeLookup = {
+		'#text' : 3,
+		'#comment' : 8,
+		'#cdata' : 4,
+		'#pi' : 7,
+		'#doctype' : 10,
+		'#document-fragment' : 11
+	};
 
 	// Walks the tree left/right
 	function walk(node, root_node, prev) {
@@ -262,7 +269,7 @@
 		 * Inserts a node at a specific position as a child of the current node.
 		 *
 		 * @example
-		 * node.insert(newNode, oldNode);
+		 * parentNode.insert(newChildNode, oldChildNode);
 		 *
 		 * @method insert
 		 * @param {tinymce.html.Node} node Node to insert as a child of the current node.
@@ -271,13 +278,12 @@
 		 * @return {tinymce.html.Node} The node that got inserted.
 		 */
 		insert : function(node, ref_node, before) {
-			var self = this, parent, refParent;
+			var parent;
 
 			if (node.parent)
 				node.remove();
 
-			parent = self.parent || self;
-			refParent = ref_node.parent
+			parent = ref_node.parent || this;
 
 			if (before) {
 				if (ref_node === parent.firstChild)
@@ -302,6 +308,24 @@
 			node.parent = parent;
 
 			return node;
+		},
+
+		/**
+		 * Get all children by name.
+		 *
+		 * @method getAll
+		 * @param {String} name Name of the child nodes to collect.
+		 * @return {Array} Array with child nodes matchin the specified name.
+		 */
+		getAll : function(name) {
+			var self = this, node, collection = [];
+
+			for (node = self.firstChild; node; node = walk(node, self)) {
+				if (node.name === name)
+					collection.push(node);
+			}
+
+			return collection;
 		},
 
 		/**
@@ -350,6 +374,31 @@
 			} while (node = walk(node, self));
 
 			return true;
+		}
+	});
+
+	tinymce.extend(Node, {
+		/**
+		 * Creates a node of a specific type.
+		 *
+		 * @static
+		 * @method create
+		 * @param {String} name Name of the node type to create for example "b" or "#text".
+		 * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
+		 */
+		create : function(name, attrs) {
+			var node, attrName;
+
+			// Create node
+			node = new Node(name, typeLookup[name] || 1);
+
+			// Add attributes if needed
+			if (attrs) {
+				for (attrName in attrs)
+					node.attr(attrName, attrs[attrName]);
+			}
+
+			return node;
 		}
 	});
 
