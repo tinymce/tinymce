@@ -321,6 +321,7 @@
 							// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
+                                // Colored nodes should be underlined so that the color of the underline matches the text color.
                                 if (child.style && child.style.color && format.styles && format.styles.textDecoration && format.styles.textDecoration === 'underline')
                                     setElementFormat(child, format);
                                 else

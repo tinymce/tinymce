@@ -471,6 +471,12 @@ test('coloured elements in a paragraph', function() {
 	editor.execCommand('SelectAll');
 	editor.execCommand('Underline');
 	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Coloured elements should be underlined');
+
+	editor.setContent('<p><span style="font-family: \'arial black\', \'avant garde\'; text-decoration: underline;"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\', \'avant garde\'; text-decoration: underline;"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Underline');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Coloured elements should be underlined when selection is across multiple paragraphs');
+
 });
 
 tinyMCE.init({
