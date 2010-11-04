@@ -127,6 +127,7 @@
 			<fileset dir="${classes_dir}" includes="ui/MenuButton.js" />
 			<fileset dir="${classes_dir}" includes="ui/SplitButton.js" />
 			<fileset dir="${classes_dir}" includes="ui/ColorSplitButton.js" />
+			<fileset dir="${classes_dir}" includes="ui/ColorButton.js" />
 			<fileset dir="${classes_dir}" includes="ui/ToolbarGroup.js" />
 			<fileset dir="${classes_dir}" includes="ui/Toolbar.js" />
 

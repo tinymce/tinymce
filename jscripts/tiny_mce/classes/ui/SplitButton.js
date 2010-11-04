@@ -126,10 +126,21 @@
 				t.showMenu();
 				Event.cancel(evt);
 			});
-			Event.add([t.id, t.id + '_open'], 'focus', function() {t._focused = 1;});
-			Event.add([t.id, t.id + '_open'], 'blur', function() {t._focused = 0;});
+
+			// Handle focus events
+			t.setUpFocus();
 
 			// Old IE doesn't have hover on all elements
+			t.setUpIEHover();
+		},
+
+		/**
+		 * Set up hover handlers for older versions of IE that don't support :hover on all elements.
+		 *
+		 * @method setUpIEHover
+		 */
+		setUpIEHover : function() {
+			var t = this;
 			if (tinymce.isIE6 || !DOM.boxModel) {
 				Event.add(t.id, 'mouseover', function() {
 					if (!DOM.hasClass(t.id, 'mceSplitButtonDisabled'))
@@ -141,6 +152,17 @@
 						DOM.removeClass(t.id, 'mceSplitButtonHover');
 				});
 			}
+		},
+
+		/**
+		 * Handle setting the flag that describes whether this control is focused or not.
+		 *
+		 * @method setUpFocus
+		 */
+		setUpFocus : function() {
+			var t = this;
+			Event.add([t.id, t.id + '_open'], 'focus', function() {t._focused = 1;});
+			Event.add([t.id, t.id + '_open'], 'blur', function() {t._focused = 0;});
 		},
 
 		destroy : function() {

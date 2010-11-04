@@ -125,9 +125,9 @@
 			var t = this;
 
 			if (t.isMenuVisible) {
-				// Prevent double toogles by canceling the mouse click event to the button
-				if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id + '_open';}))
-					return;
+                // Prevent double toogles by canceling the mouse click event to the button
+                if (e && e.type == "mousedown" && DOM.getParent(e.target, t.preventHideMenu.bind(this)))
+                    return;
 
 				if (!e || !DOM.getParent(e.target, '.mceSplitButtonMenu')) {
 					DOM.removeClass(t.id, 'mceSplitButtonSelected');
@@ -138,6 +138,17 @@
 
 				t.isMenuVisible = 0;
 			}
+		},
+
+		/**
+		 * Function that determines whether the given event should prevent the menu from hiding.
+		 *
+		 * @method preventHideMenu
+		 * @param {Event} e Event object
+		 */
+		preventHideMenu: function(e) {
+			var t = this;
+			return e.id === t.id + '_open';
 		},
 
 		/**
@@ -260,11 +271,23 @@
 		 * @method postRender
 		 */
 		postRender : function() {
-			var t = this, id = t.id;
+			var t = this;
 
 			t.parent();
+
+			t.setUpColorPreview();
+		},
+
+		/**
+		 * Set up the color preview that shows up at the bottom of the color split button.
+		 *
+		 * @method setUpColorPreview
+		 */
+		setUpColorPreview: function() {
+			var t = this, id = t.id;
 			DOM.add(id + '_action', 'div', {id : id + '_preview', 'class' : 'mceColorPreview'});
 			DOM.setStyle(t.id + '_preview', 'backgroundColor', t.value);
+			
 		},
 
 		/**
