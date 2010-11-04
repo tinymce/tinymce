@@ -37,10 +37,24 @@
 					alignfull : {selector : alignElements, attributes : {align : 'full'}},
 
 					// Change the basic formatting elements to use deprecated element types
-					bold : {inline : 'b', remove : 'all'},
-					italic : {inline : 'i', remove : 'all'},
-					underline : {inline : 'u', remove : 'all'},
-					strikethrough : {inline : 'strike', remove : 'all'},
+					bold : [
+						{inline : 'b', remove : 'all'},
+						{inline : 'strong', remove : 'all'},
+						{inline : 'span', styles : {fontWeight : 'bold'}}
+					],
+					italic : [
+						{inline : 'i', remove : 'all'},
+						{inline : 'em', remove : 'all'},
+						{inline : 'span', styles : {fontStyle : 'italic'}}
+					],
+					underline : [
+						{inline : 'u', remove : 'all'},
+						{inline : 'span', styles : {textDecoration : 'underline'}, exact : true}
+					],
+					strikethrough : [
+						{inline : 'strike', remove : 'all'},
+						{inline : 'span', styles : {textDecoration: 'line-through'}, exact : true}
+					],
 
 					// Change font size and font family to use the deprecated font element
 					fontname : {inline : 'font', attributes : {face : '%value'}},
