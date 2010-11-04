@@ -79,19 +79,68 @@
 		 */
 		self.parse = function(html) {
 			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i, text,
-				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr,
+				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr, attribsValue,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
 				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode;
 
+			function parseAttributes(attrs) {
+				var attrList;
+				
+				attrList = [];
+				attrList.map = {};
+
+				attrs.replace(attrRegExp, function(match, name, value, val2, val3) {
+					var attrRule, i;
+
+					name = name.toLowerCase();
+					value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
+
+					// Validate name and value
+					if (validate && name.indexOf('data-') !== 0) {
+						attrRule = validAttributesMap[name];
+
+						// Find rule by pattern matching
+						if (!attrRule && validAttributePatterns) {
+							i = validAttributePatterns.length;
+							while (i--) {
+								attrRule = validAttributePatterns[i];
+								if (attrRule.pattern.test(name))
+									break;
+							}
+
+							// No rule matched
+							if (i === -1)
+								attrRule = null;
+						}
+
+						// No attribute rule found
+						if (!attrRule)
+							return;
+
+						// Validate value
+						if (attrRule.validValues && !(value in attrRule.validValues))
+							return;
+					}
+
+					// Add attribute to list and map
+					attrList.map[name] = value;
+					attrList.push({
+						name: name,
+						value: value
+					});
+				});
+
+				return attrList;
+			}
+
 			// Precompile RegExps and map objects
-			tokenRegExp = new RegExp([
-				'<([\\w:\\-]+)((?:\\s*[\\w:\\-]+(?:\\s*=\\s*(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>\\s]*))?)*)\\s*(\\/?)>', // Start element
-				'<\\/([\\w:\\-]+)[^>]*>', // End element
-				'<!--([\\w\\W]*?)-->', // Comments
-				'<!\\[CDATA\\[([\\w\\W]*?)\\]\\]>', // CDATA sections
-				'<\\?xml([\\w\\W]*?)\\??>', // PI
-				'<!DOCTYPE([\\w\\W]*?)\\>' // Doctype
-			].join('|'), 'g');
+			tokenRegExp = new RegExp('<' +
+				'(?:(?:!--([\\w\\W]*?)-->)|' + // Comment
+				'(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
+				'(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
+				'(?:\\/([^>]+)>)|' + // End element
+				'(?:([^\\s\\/<>]+)\\s*((?:[^"\'>]+(?:"[^"]*")|(?:\'[^\']*\')|(?:[^>]+))*))>)' // Start element
+			, 'g');
 
 			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
 			specialElements = {
@@ -110,15 +159,43 @@
 				if (index < matches.index)
 					self.text(decode(html.substr(index, matches.index - index)));
 
-				if (value = matches[1]) { // Start element
+				if (value = matches[4]) { // End element
+					value = value.toLowerCase();
+
+					// Find position of parent of the same type
+					pos = stack.length;
+					while (pos--) {
+						if (stack[pos].name === value)
+							break;						
+					}
+
+					// Found parent
+					if (pos >= 0) {
+						// Close all the open elements
+						for (i = stack.length - 1; i >= pos; i--) {
+							value = stack[i];
+
+							if (value.valid)
+								self.end(value.name);
+						}
+
+						// Remove the open elements from the stack
+						stack.length = pos;
+					}
+				} else if (value = matches[5]) { // Start element
+					// Handle XML PI
+					if (value === '?xml') {
+						self.pi(parseAttributes(matches[6]));
+						index += matches[0].length;
+						continue;
+					}
+
 					value = value.toLowerCase();
 					isEmpty = value in emptyElmMap;
 
 					// Validate element
 					if (!validate || (elementRule = schema.getElementRule(value))) {
 						isValidElement = true;
-						attrList = [];
-						attrList.map = {};
 
 						// Grab attributes map and patters when validation is enabled
 						if (validate) {
@@ -127,46 +204,12 @@
 						}
 
 						// Parse attributes
-						matches[2].replace(attrRegExp, function(match, name, value, val2, val3) {
-							var attrRule, i;
-
-							name = name.toLowerCase();
-							value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
-
-							// Validate name and value
-							if (validate && name.indexOf('data-') !== 0) {
-								attrRule = validAttributesMap[name];
-
-								// Find rule by pattern matching
-								if (!attrRule && validAttributePatterns) {
-									i = validAttributePatterns.length;
-									while (i--) {
-										attrRule = validAttributePatterns[i];
-										if (attrRule.pattern.test(name))
-											break;
-									}
-
-									// No rule matched
-									if (i === -1)
-										attrRule = null;
-								}
-
-								// No attribute rule found
-								if (!attrRule)
-									return;
-
-								// Validate value
-								if (attrRule.validValues && !(value in attrRule.validValues))
-									return;
-							}
-
-							// Add attribute to list and map
-							attrList.map[name] = value;
-							attrList.push({
-								name: name,
-								value: value
-							});
-						});
+						if (attribsValue = matches[6]) {
+							attrList = parseAttributes(attribsValue);
+						} else {
+							attrList = [];
+							attrList.map = {};
+						}
 
 						// Process attributes if validation is enabled
 						if (validate) {
@@ -254,41 +297,16 @@
 
 					// Push value on to stack
 					if (!isEmpty) {
-						if (!matches[3])
+						if (!attribsValue || attribsValue.indexOf('/') != attribsValue.length - 1)
 							stack.push({name: value, valid: isValidElement});
 						else if (isValidElement)
 							self.end(value);
 					}
-				} else if (value = matches[4]) { // End element
-					value = value.toLowerCase();
-
-					// Find position of parent of the same type
-					pos = stack.length;
-					while (pos--) {
-						if (stack[pos].name === value)
-							break;						
-					}
-
-					// Found parent
-					if (pos >= 0) {
-						// Close all the open elements
-						for (i = stack.length - 1; i >= pos; i--) {
-							value = stack[i];
-
-							if (value.valid)
-								self.end(value.name);
-						}
-
-						// Remove the open elements from the stack
-						stack.length = pos;
-					}
-				} else if (value = matches[5]) { // Comment
+				} else if (value = matches[1]) { // Comment
 					self.comment(value);
-				} else if (value = matches[6]) { // CDATA
+				} else if (value = matches[2]) { // CDATA
 					self.cdata(value);
-				} else if (value = matches[7]) { // PI
-					self.pi(value);
-				} else if (value = matches[8]) { // DOCTYPE
+				} else if (value = matches[3]) { // DOCTYPE
 					self.doctype(value);
 				}
 

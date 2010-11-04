@@ -153,8 +153,8 @@ test('Parse elements', function() {
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<P>text2<B>tex<t3</p>te>xt4</b>text5');
-	equals(writer.getContent(), 'text1<p>text2<b>tex&lt;t3</b></p>te&gt;xt4text5', 'Parse tag soup 3.');
-	deepEqual(counter.counts, {text: 5, start: 2, end: 2}, 'Parse tag soup 3 counts.');
+	equals(writer.getContent(), 'text1<p>text2<b>tex<t3 p="">te&gt;xt4</t3></b>text5</p>', 'Parse tag soup 3.');
+	deepEqual(counter.counts, {text: 5, start: 3, end: 3}, 'Parse tag soup 3 counts.');
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -379,8 +379,8 @@ test('Parse PI', function() {
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
-	parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
-	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
+	parser.parse('<?xml version="1.0" encoding="UTF-8"?>text1');
+	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8"?>text1', 'Parse PI with attributes.');
 	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with attributes counts.');
 });
 
