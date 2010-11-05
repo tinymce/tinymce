@@ -8,19 +8,50 @@
 var editor;
 
 var performanceTests = {
-	'Cleanup text blocks': {
+	'tinymce.Editor.getContent (text blocks)': {
 		setup: function() {
-			var html = '';
-			
-			// Generate some paragraphs with words in them
-			for (var i = 0; i < 500; i++) {
-				html += '<p>';
+			var html;
 
-				for (var a = 0; a < 100; a++)
-					html += 'word' + i + ',' + a + '    ';
+			if (!this.html) {
+				html = [];
+				for (var i = 0; i < 400; i++) {
+					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
 
-				html += '</p>';
+					for (var a = 0; a < 100; a++)
+						html.push('word' + i + ',' + a + '    ');
+
+					html.push('</p>');
+				}
+
+				this.html = html.join('');
 			}
+
+			editor.setContent(this.html);
+		},
+
+		run: function() {
+			return editor.getContent();
+		}
+	},
+
+	'tinymce.Editor.getContent (text blocks with entities)': {
+		setup: function() {
+			var html;
+
+			if (!this.html) {
+				html = [];
+				for (var i = 0; i < 400; i++) {
+					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
+
+					for (var a = 0; a < 100; a++)
+						html.push('word' + i + ',' + a + ' &aring;&auml;&ouml;');
+
+					html.push('</p>');
+				}
+
+				this.html = html = html.join('');
+			} else
+				html = this.html;
 
 			editor.setContent(html);
 		},
@@ -30,29 +61,121 @@ var performanceTests = {
 		}
 	},
 
-	'Cleanup text blocks with entities': {
+	'tinymce.html.DomParser (validate: false)': {
 		setup: function() {
-			var html = '';
-			
-			// Generate some paragraphs with words in them
-			for (var i = 0; i < 500; i++) {
-				html += '<p>';
+			var html;
 
-				for (var a = 0; a < 100; a++)
-					html += 'word' + i + ',' + a + ' &aring;&auml;&ouml;';
+			if (!this.html) {
+				html = [];
+				for (var i = 0; i < 400; i++) {
+					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
+					html.push('<strong>bold</strong><em>italic</em>');
 
-				html += '</p>';
+					for (var a = 0; a < 100; a++)
+						html.push('word' + i + ',' + a + ' &aring;&auml;&ouml;');
+
+					html.push('</p>');
+				}
+
+				this.html = html = html.join('');
 			}
 
-			editor.setContent(html);
+			editor.setContent(this.html);
 		},
 
 		run: function() {
-			return editor.getContent();
+			return new tinymce.html.DomParser({validate: false}).parse(this.html);
 		}
 	},
 
-	'Url parsing tests': {
+	'tinymce.html.DomParser (validate: true)': {
+		setup: function() {
+			var html;
+
+			if (!this.html) {
+				html = [];
+				for (var i = 0; i < 400; i++) {
+					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
+					html.push('<strong>bold</strong><em>italic</em>');
+
+					for (var a = 0; a < 100; a++)
+						html.push('word' + i + ',' + a + ' &aring;&auml;&ouml;');
+
+					html.push('</p>');
+				}
+
+				this.html = html = html.join('');
+			}
+
+			editor.setContent(this.html);
+		},
+
+		run: function() {
+			return new tinymce.html.DomParser().parse(this.html);
+		}
+	},
+
+	'tinymce.html.SaxParser (validate: false)': {
+		setup: function() {
+			var html;
+
+			if (!this.html) {
+				html = [];
+				for (var i = 0; i < 400; i++) {
+					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
+
+					for (var a = 0; a < 100; a++)
+						html.push('word' + i + ',' + a + ' &aring;&auml;&ouml;');
+
+					html.push('</p>');
+				}
+
+				this.html = html = html.join('');
+			}
+
+			editor.setContent(this.html);
+		},
+
+		run: function() {
+			return new tinymce.html.SaxParser({validate: false}).parse(this.html);
+		}
+	},
+
+	'tinymce.html.SaxParser (validate: true)': {
+		setup: function() {
+			var html;
+
+			if (!this.html) {
+				html = [];
+				for (var i = 0; i < 400; i++) {
+					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
+
+					for (var a = 0; a < 100; a++)
+						html.push('word' + i + ',' + a + ' &aring;&auml;&ouml;');
+
+					html.push('</p>');
+				}
+
+				this.html = html = html.join('');
+			}
+
+			editor.setContent(this.html);
+		},
+
+		run: function() {
+			return new tinymce.html.SaxParser().parse(this.html);
+		}
+	},
+
+	'tinymce.html.Entities.decode': {
+		run: function() {
+			for (var i = 0; i < 10000; i++) {
+				tinymce.html.Entities.decode('text&aring;&auml;&uml;&lt;&gt;&amp;text');
+			}
+		}
+	},
+
+	'tinymce.util.URI (absolute/relative)': {
 		run: function() {
 			for (var i = 0; i < 200; i++) {
 				new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html');
@@ -63,7 +186,7 @@ var performanceTests = {
 		}
 	},
 
-	'Style parsing/serializing tests': {
+	'tinymce.dom.DOMUtils.parseStyle/serializeStyle': {
 		run: function() {
 			for (var i = 0; i < 1000; i++) {
 				tinymce.DOM.serializeStyle(
@@ -91,27 +214,36 @@ tinyMCE.init({
 		tinymce.each(performanceTests, function(test, title) {
 			tinymce.DOM.add('tests', 'li', null, '<a id="test_' + (++count) + '" href="#">' + title + '</a>');
 			tinymce.DOM.bind('test_' + count, 'click', function(e) {
-				e.preventDefault();
-				e.target.innerHTML = title + ' (running)';
+				var count = 0, numberOfRuns;
+	
+				numberOfRuns = parseInt(document.getElementById('runs').value);
 
-				setTimeout(function() {
+				e.preventDefault();
+				e.target.innerHTML = title + ' (Running)';
+
+				function runTest() {
 					var i, time, times = [], sum = 0;
 
-					for (i = 0; i < 10; i++) {
-						if (test.setup)
-							test.setup();
+					if (test.setup)
+						test.setup();
 
-						time = +new Date;
-						test.run();
-						times.push((+new Date) - time);
+					time = +new Date;
+					test.run();
+					time = (+new Date) - time;
+					times.push(time);
+
+					if (count++ >= numberOfRuns) {
+						for (i = 0; i < times.length; i++)
+							sum += times[i];
+
+						e.target.innerHTML = title + ' (Avarage: ' + (sum / times.length) + 'ms)';
+					} else {
+						e.target.innerHTML = title + ' (Runned ' + count + " of " + numberOfRuns + ", " + time + "ms)";
+						setTimeout(runTest, 10);
 					}
+				};
 
-					for (i = 0; i < times.length; i++) {
-						sum += times[i];
-					}
-
-					e.target.innerHTML = title + ' (' + (sum / times.length) + 'ms)';
-				}, 1);
+				setTimeout(runTest, 10);
 			});
 		});
 	}
@@ -120,6 +252,7 @@ tinyMCE.init({
 </head>
 <body>
 	<h1>Performance tests</h1>
+	<p style="margin-left: 10px">Runs: <input id="runs" type="text" value="10" size="3" /></p>
 	<ul id="tests"></ul>
 	<textarea id="elm1"></textarea>
 </body>
