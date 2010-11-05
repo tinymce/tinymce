@@ -134,13 +134,13 @@
 			}
 
 			// Precompile RegExps and map objects
-			tokenRegExp = new RegExp('<' +
-				'(?:(?:!--([\\w\\W]*?)-->)|' + // Comment
+			tokenRegExp = new RegExp('<(?:' +
+				'(?:!--([\\w\\W]*?)-->)|' + // Comment
 				'(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
 				'(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
 				'(?:\\/([^>]+)>)|' + // End element
-				'(?:([^\\s\\/<>]+)\\s*((?:[^"\'>]+(?:"[^"]*")|(?:\'[^\']*\')|(?:[^>]+))*))>)' // Start element
-			, 'g');
+				'(?:([^\\s\\/<>]+)\\s*((?:[^"\'>]+(?:"[^"]*")|(?:\'[^\']*\')|(?:[^>]+))*)>)' + // Start element
+			')', 'g');
 
 			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
 			specialElements = {

@@ -84,7 +84,7 @@ function createCounter(writer) {
 }
 
 test('Parse elements', function() {
-	expect(34);
+	expect(40);
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -99,6 +99,27 @@ test('Parse elements', function() {
 	parser.parse('<span title=" "class=" "></span>');
 	equals(writer.getContent(), '<span title=" " class=" "></span>', 'Parse compressed attributes.');
 	deepEqual(counter.counts, {start:1, end:1}, 'Parse compressed attributes (count).');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span title></span>');
+	equals(writer.getContent(), '<span title=""></span>', 'Single empty attribute.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Single empty attributes (count).');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span class="class" title></span>');
+	equals(writer.getContent(), '<span class="class" title=""></span>', 'Empty attribute at end.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Empty attribute at end (count).');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span title class="class"></span>');
+	equals(writer.getContent(), '<span title="" class="class"></span>', 'Empty attribute at start.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Empty attribute at start (count).');
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
