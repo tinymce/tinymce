@@ -626,18 +626,8 @@ test('Formatter - apply (mixed inline/selector)', function() {
 });
 
 test('Formatter - Bold and italics is applied to text that is not highlighted', function() {
-	editor.setContent('<p>test1 test2 test3 test4 test5 test6</p>');
-	editor.execCommand('SelectAll');
-	editor.execCommand('FontName',false,'Arial');
-	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test1 test2 test3 test4 test5 test6</span></p>', 'Font face should be Arial.');
-
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('span')[0].firstChild, 12);
-	editor.selection.setRng(rng);
-	editor.execCommand('Bold');
-	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
-
+	var rng = editor.dom.createRng();
+	editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
 	rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
 	rng.setEnd(editor.dom.select('strong')[0].firstChild, 11);
 	editor.selection.setRng(rng);
