@@ -274,9 +274,9 @@ test('commands - insertHR', function() {
 	equals(editor.getContent(), '<p>test</p><hr /><p>123</p>');
 	// Check the selection is after the HR
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.dom.select('p')[1], 'Selection start container');
+	equals(rng.startContainer, tinymce.isIE ? editor.dom.select('p')[1].firstChild : editor.dom.select('p')[1], 'Selection start container');
 	equals(rng.startOffset, 0, 'Selection start offset');
-	equals(rng.endContainer, editor.dom.select('p')[1], 'Selection end container');
+	equals(rng.endContainer, tinymce.isIE ? editor.dom.select('p')[1].firstChild : editor.dom.select('p')[1], 'Selection end container');
 	equals(rng.endOffset, 0, 'Selection end offset');
 });
 
