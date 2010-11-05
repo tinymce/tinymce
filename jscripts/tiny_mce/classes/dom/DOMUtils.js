@@ -60,6 +60,7 @@
 			t.counter = 0;
 			t.stdMode = !tinymce.isIE || d.documentMode >= 8;
 			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat" || t.stdMode;
+			t.hasOuterHTML = "outerHTML" in d.createElement("a");
 
 			t.settings = s = tinymce.extend({
 				keep_values : false,
@@ -1220,24 +1221,24 @@
 		 * Returns the outer HTML of an element.
 		 *
 		 * @method getOuterHTML
-		 * @param {String/Element} e Element ID or element object to get outer HTML from.
+		 * @param {String/Element} elm Element ID or element object to get outer HTML from.
 		 * @return {String} Outer HTML string.
 		 */
-		getOuterHTML : function(e) {
-			var d;
+		getOuterHTML : function(elm) {
+			var doc, self = this;
 
-			e = this.get(e);
+			elm = self.get(elm);
 
-			if (!e)
+			if (!elm)
 				return null;
 
-			if (e.outerHTML !== undefined)
-				return e.outerHTML;
+			if (self.hasOuterHTML)
+				return elm.outerHTML;
 
-			d = (e.ownerDocument || this.doc).createElement("body");
-			d.appendChild(e.cloneNode(true));
+			doc = (elm.ownerDocument || self.doc).createElement("body");
+			doc.appendChild(elm.cloneNode(true));
 
-			return d.innerHTML;
+			return doc.innerHTML;
 		},
 
 		/**
