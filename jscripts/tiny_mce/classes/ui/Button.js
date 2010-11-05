@@ -48,11 +48,25 @@
 			if (s.image && !(this.editor  &&this.editor.forcedHighContrastMode) )
 				h += '<img class="mceIcon" src="' + s.image + '" alt="' + DOM.encode(s.title) + '" />' + l;
 			else
-				h += '<span class="mceIcon ' + s['class'] + '"></span>' + (l ? '<span class="' + cp + 'Label">' + l + '</span>' : '');
+				h += '<span class="mceIcon ' + s['class'] + '"></span>' + (l ? '<span class="' + cp + 'Label" id="' + this.id + '_label">' + l + '</span>' : '') + '</a>';
 
 			h += '<span class="mceVoiceLabel mceIconOnly" style="display: none;" id="' + this.id + '_voice">' + s.title + '</span>'; 
 			h += '</a>';
 			return h;
+		},
+
+		setLabel: function(label) {
+			var element = DOM.get(this.id + '_label');
+			if (element) {
+				element.innerHTML = DOM.encode(label || '');
+			}
+		},
+
+		setTitle: function(title) {
+			var element = DOM.get(this.id);
+			if (element) {
+				element.title = DOM.encode(title || ''); 
+			}
 		},
 
 		/**
