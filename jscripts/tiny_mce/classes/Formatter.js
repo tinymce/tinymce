@@ -321,11 +321,7 @@
 							// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
-                                // Colored nodes should be underlined so that the color of the underline matches the text color.
-                                if (child.style && child.style.color && format.styles && format.styles.textDecoration && format.styles.textDecoration === 'underline')
-                                    setElementFormat(child, format);
-                                else
-                                    removeFormat(format, vars, child, format.exact ? child : null);
+                                removeFormat(format, vars, child, format.exact ? child : null);
 							});
 						});
 
@@ -356,6 +352,29 @@
 				});
 			};
 
+             var getTextDecoration = function(node) {
+                 var decoration;
+
+                 ed.dom.getParent(node, function(n) {
+                     decoration = ed.dom.getStyle(n, 'text-decoration');
+                     return decoration && decoration !== 'none';
+                 });
+
+                return decoration;
+             };
+
+            var processUnderlineAndColor = function(node) {
+                var textDecoration;
+                if (node.nodeType === 1) {
+                    textDecoration = getTextDecoration(node.parentNode);
+                    if (ed.dom.getStyle(node, 'color') && textDecoration) {
+                        ed.dom.setStyle(node, 'text-decoration', textDecoration);
+                    } else if (ed.dom.getStyle(node, 'text-decoration') === textDecoration) {
+                        ed.dom.setStyle(node, 'text-decoration', null);
+                    }
+                }
+            };
+
 			if (format) {
 				if (node) {
 					rng = dom.createRng();
@@ -369,6 +388,12 @@
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
+
+                        // Colored nodes should be underlined so that the color of the underline matches the text color.
+                        if (format.styles && (format.styles.color || format.styles.textDecoration)) {
+                            tinymce.walk(ed.selection.getNode(), processUnderlineAndColor, 'childNodes');
+                            processUnderlineAndColor(ed.selection.getNode());
+                        }
 
 						selection.moveToBookmark(bookmark);
 						selection.setRng(moveStart(selection.getRng(TRUE)));
