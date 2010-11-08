@@ -22,7 +22,37 @@ function getContent() {
 test('Formatter - apply (inline)', function() {
 	var rng, format;
 
-	expect(37);
+	expect(42);
+
+	// Toggle OFF - Inline element on selected text
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p><b>1234</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p><b>1234</b></p>', 'Toggle OFF - Inline element on selected text');
+
+	// Toggle OFF - Inline element on partially selected text
+	editor.formatter.register('format', {inline : 'b', toggle: 0});
+	editor.getBody().innerHTML = '<p>1<b>23</b>4</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1<b>23</b>4</p>', 'Toggle OFF - Inline element on partially selected text');
+
+	// Toggle OFF - Inline element on partially selected text in start/end elements
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p>1<b>234</b></p><p><b>123</b>4</p>';//'<p>1234</p><p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>', 'Toggle OFF - Inline element on partially selected text in start/end elements');
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -33,6 +63,8 @@ test('Formatter - apply (inline)', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	equals(getContent(), '<p><b>1234</b></p>', 'Inline element on selected text');
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on selected text');
 
 	// Inline element on partially selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -43,6 +75,8 @@ test('Formatter - apply (inline)', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	equals(getContent(), '<p>1<b>23</b>4</p>', 'Inline element on partially selected text');
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on partially selected text');
 
 	// Inline element on partially selected text in start/end elements
 	editor.formatter.register('format', {inline : 'b'});

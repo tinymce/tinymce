@@ -601,9 +601,11 @@
 		 * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.
 		 */
 		function toggle(name, vars, node) {
-			if (match(name, vars, node))
-				remove(name, vars, node);
-			else
+			var fmt = get(name);
+			if (match(name, vars, node)) {
+				if (!('toggle' in fmt[0]) || fmt[0]['toggle'])
+					remove(name, vars, node);
+			} else
 				apply(name, vars, node);
 		};
 
