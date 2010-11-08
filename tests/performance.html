@@ -15,10 +15,10 @@ var performanceTests = {
 			if (!this.html) {
 				html = [];
 				for (var i = 0; i < 400; i++) {
-					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
+					html.push('<p id="x" title="my title abc" class="myclass">');
 
 					for (var a = 0; a < 100; a++)
-						html.push('word' + i + ',' + a + '    ');
+						html.push('word' + i + ',' + a + ' abc');
 
 					html.push('</p>');
 				}
@@ -41,7 +41,7 @@ var performanceTests = {
 			if (!this.html) {
 				html = [];
 				for (var i = 0; i < 400; i++) {
-					html.push('<p id="x" title="my title &aring;&auml;&ouml" class="myclass">');
+					html.push('<p id="x" title="my title &aring;&auml;&ouml;" class="myclass">');
 
 					for (var a = 0; a < 100; a++)
 						html.push('word' + i + ',' + a + ' &aring;&auml;&ouml;');
