@@ -37,7 +37,7 @@ var ImageDialog = {
 	},
 
 	fillFileList : function(id, l) {
-		var dom = tinyMCEPopup.dom, lst = dom.get(id), v, cl;
+		var dom = tinyMCEPopup.dom, lst = dom.get(id), v, cl, grp;
 
 		l = window[l];
 
@@ -45,7 +45,16 @@ var ImageDialog = {
 			lst.options[lst.options.length] = new Option('', '');
 
 			tinymce.each(l, function(o) {
-				lst.options[lst.options.length] = new Option(o[0], o[1]);
+				if (o[1] instanceof Array) {
+					grp = dom.create('optgroup', { 'label': o[0] });
+					dom.add(lst, grp);
+
+					tinymce.each(o[1], function(p) {
+						dom.add(grp, dom.create('option', { 'value': p[1] }, p[0]));
+					});
+				} else {
+					dom.add(grp, dom.create('option', { 'value': o[1] }, o[0]));
+				}
 			});
 		} else
 			dom.remove(dom.getParent(id, 'tr'));
