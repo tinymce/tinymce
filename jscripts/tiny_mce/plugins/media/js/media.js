@@ -281,15 +281,30 @@ function updatePreview() {
 	generatePreview();
 }
 
+function escapeHTML(str) {
+	return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function getMediaListHTML() {
 	if (typeof(tinyMCEMediaList) != "undefined" && tinyMCEMediaList.length > 0) {
-		var html = "";
+		var html = "", o, p;
 
 		html += '<select id="linklist" name="linklist" style="width: 250px" onchange="this.form.src.value=this.options[this.selectedIndex].value;updatePreview();">';
 		html += '<option value="">---</option>';
 
-		for (var i=0; i<tinyMCEMediaList.length; i++)
-			html += '<option value="' + tinyMCEMediaList[i][1] + '">' + tinyMCEMediaList[i][0] + '</option>';
+		for (var i=0; i<tinyMCEMediaList.length; i++) {
+			o = tinyMCEMediaList[i];
+			if (o[1] instanceof Array) {
+				html += '<optgroup label="'+o[0]+'">';
+				for (var j=0; j < o[1].length; j++) {
+					p = o[1][j];
+					html += '<option value="' + escapeHTML(p[1]) + '">' + escapeHTML(p[0]) + '</option>';
+				}
+				html += '</optgroup>'
+			} else {
+				html += '<option value="' + escapeHTML(o[1]) + '">' + escapeHTML(o[0]) + '</option>';
+			}
+		}
 
 		html += '</select>';
 
