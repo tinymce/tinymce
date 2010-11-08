@@ -529,7 +529,7 @@
 		equals(DOM.toHex('   RGB  (  0  , 0  , 255  )  '), '#0000ff');
 	});
 
-	test('getOuterHTML', 3, function() {
+	test('getOuterHTML', 4, function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -542,6 +542,9 @@
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
 		DOM.setOuterHTML('test2', '<div id="test2">123</div><div id="test3">abc</div>');
 		equals(tinymce.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><').replace(/\"/g, ''), '<div id=test2>123</div><div id=test3>abc</div>');
+
+		DOM.setHTML('test', 'test');
+		equals(tinymce.trim(DOM.getOuterHTML(DOM.get('test').firstChild)), 'test');
 
 		DOM.remove('test');
 	});
