@@ -135,12 +135,12 @@
 			}
 		});
 
-		htmlParser.addNodeFilter('#pi,input', function(nodes, name) {
+		htmlParser.addNodeFilter('xml:namespace,input', function(nodes, name) {
 			var i = nodes.length, node;
 
 			while (i--) {
 				node = nodes[i];
-				if (node.type === 7 && node.value.indexOf(':namespace ') === 0)
+				if (node.type === 7)
 					node.remove();
 				else if (node.type === 1) {
 					if (name === "input" && !("type" in node.attributes.map))

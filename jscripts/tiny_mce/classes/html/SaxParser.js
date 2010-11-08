@@ -38,8 +38,8 @@
 	 *         console.log('End:', name);
 	 *     },
 	 *
-	 *     pi: function(text) {
-	 *         console.log('PI:', name);
+	 *     pi: function(name, text) {
+	 *         console.log('PI:', name, text);
 	 *     },
 	 *
 	 *     doctype: function(text) {
@@ -83,63 +83,14 @@
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
 				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode;
 
-			function parseAttributes(attrs) {
-				var attrList;
-				
-				attrList = [];
-				attrList.map = {};
-
-				attrs.replace(attrRegExp, function(match, name, value, val2, val3) {
-					var attrRule, i;
-
-					name = name.toLowerCase();
-					value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
-
-					// Validate name and value
-					if (validate && name.indexOf('data-') !== 0) {
-						attrRule = validAttributesMap[name];
-
-						// Find rule by pattern matching
-						if (!attrRule && validAttributePatterns) {
-							i = validAttributePatterns.length;
-							while (i--) {
-								attrRule = validAttributePatterns[i];
-								if (attrRule.pattern.test(name))
-									break;
-							}
-
-							// No rule matched
-							if (i === -1)
-								attrRule = null;
-						}
-
-						// No attribute rule found
-						if (!attrRule)
-							return;
-
-						// Validate value
-						if (attrRule.validValues && !(value in attrRule.validValues))
-							return;
-					}
-
-					// Add attribute to list and map
-					attrList.map[name] = value;
-					attrList.push({
-						name: name,
-						value: value
-					});
-				});
-
-				return attrList;
-			}
-
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp('<(?:' +
 				'(?:!--([\\w\\W]*?)-->)|' + // Comment
 				'(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + // CDATA
 				'(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
+				'(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
 				'(?:\\/([^>]+)>)|' + // End element
-				'(?:([^\\s\\/<>]+)\\s*((?:[^"\'>]+(?:"[^"]*")|(?:\'[^\']*\')|(?:[^>]+))*)>)' + // Start element
+				'(?:([^\\s\\/<>]+)\\s*((?:[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]+))*)>)' + // Start element
 			')', 'g');
 
 			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
@@ -159,7 +110,7 @@
 				if (index < matches.index)
 					self.text(decode(html.substr(index, matches.index - index)));
 
-				if (value = matches[4]) { // End element
+				if (value = matches[6]) { // End element
 					value = value.toLowerCase();
 
 					// Find position of parent of the same type
@@ -182,14 +133,7 @@
 						// Remove the open elements from the stack
 						stack.length = pos;
 					}
-				} else if (value = matches[5]) { // Start element
-					// Handle XML PI
-					if (value === '?xml') {
-						self.pi(parseAttributes(matches[6]));
-						index += matches[0].length;
-						continue;
-					}
-
+				} else if (value = matches[7]) { // Start element
 					value = value.toLowerCase();
 					isEmpty = value in emptyElmMap;
 
@@ -204,8 +148,50 @@
 						}
 
 						// Parse attributes
-						if (attribsValue = matches[6]) {
-							attrList = parseAttributes(attribsValue);
+						if (attribsValue = matches[8]) {
+							attrList = [];
+							attrList.map = {};
+
+							attribsValue.replace(attrRegExp, function(match, name, value, val2, val3) {
+								var attrRule, i;
+
+								name = name.toLowerCase();
+								value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
+
+								// Validate name and value
+								if (validate && name.indexOf('data-') !== 0) {
+									attrRule = validAttributesMap[name];
+
+									// Find rule by pattern matching
+									if (!attrRule && validAttributePatterns) {
+										i = validAttributePatterns.length;
+										while (i--) {
+											attrRule = validAttributePatterns[i];
+											if (attrRule.pattern.test(name))
+												break;
+										}
+
+										// No rule matched
+										if (i === -1)
+											attrRule = null;
+									}
+
+									// No attribute rule found
+									if (!attrRule)
+										return;
+
+									// Validate value
+									if (attrRule.validValues && !(value in attrRule.validValues))
+										return;
+								}
+
+								// Add attribute to list and map
+								attrList.map[name] = value;
+								attrList.push({
+									name: name,
+									value: value
+								});
+							});
 						} else {
 							attrList = [];
 							attrList.map = {};
@@ -308,6 +294,8 @@
 					self.cdata(value);
 				} else if (value = matches[3]) { // DOCTYPE
 					self.doctype(value);
+				} else if (value = matches[4]) { // PI
+					self.pi(value, matches[5]);
 				}
 
 				index = matches.index + matches[0].length;

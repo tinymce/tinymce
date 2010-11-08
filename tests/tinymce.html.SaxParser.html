@@ -63,13 +63,13 @@ function createCounter(writer) {
 			writer.end(name);
 		},
 
-		pi: function(text) {
+		pi: function(name, text) {
 			if ("pi" in counts)
 				counts.pi++;
 			else
 				counts.pi = 1;
 
-			writer.pi(text);
+			writer.pi(name, text);
 		},
 
 		doctype: function(text) {
@@ -84,7 +84,7 @@ function createCounter(writer) {
 }
 
 test('Parse elements', function() {
-	expect(40);
+	expect(42);
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -92,6 +92,13 @@ test('Parse elements', function() {
 	parser.parse('<span id=id1 title="title value" class=\'class1 class2\' data-value="value1" MYATTR="val1" myns:myattr="val2" disabled empty=""></span>');
 	equals(writer.getContent(), '<span id="id1" title="title value" class="class1 class2" data-value="value1" myattr="val1" myns:myattr="val2" disabled="disabled" empty=""></span>', 'Parse attribute formats.');
 	deepEqual(counter.counts, {start:1, end:1}, 'Parse attribute formats counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<b href=\'"&amp;<>\'></b>');
+	equals(writer.getContent(), '<b href="&quot;&amp;<>"></b>', 'Parse attributes with <> in them.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Parse attributes with <> in them (count).');
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -395,14 +402,28 @@ test('Parsing cdata', function() {
 });
 
 test('Parse PI', function() {
-	expect(2);
+	expect(6);
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
-	parser.parse('<?xml version="1.0" encoding="UTF-8"?>text1');
-	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8"?>text1', 'Parse PI with attributes.');
+	parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
+	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
 	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with attributes counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<?xml?>text1');
+	equals(writer.getContent(), '<?xml?>text1', 'Parse PI with no data.');
+	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with data counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<?xml somevalue/>text1');
+	equals(writer.getContent(), '<?xml somevalue?>text1', 'Parse PI with IE style ending.');
+	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with IE style ending counts.');
 });
 
 test('Parse doctype', function() {

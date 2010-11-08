@@ -50,27 +50,33 @@
 			validate = settings.validate || true;
 
 			handlers = {
-				'#text' : function(node, raw) {
+				// #text
+				3: function(node, raw) {
 					writer.text(node.value, node.raw);
 				},
 
-				'#comment' : function(node) {
+				// #comment
+				8: function(node) {
 					writer.comment(node.value);
 				},
 
-				'#pi' : function(node) {
-					writer.pi(node.value);
+				// Processing instruction
+				7: function(node) {
+					writer.pi(node.name, node.value);
 				},
 
-				'#doctype' : function(node) {
+				// Doctype
+				10: function(node) {
 					writer.doctype(node.value);
 				},
 
-				'#cdata' : function(node) {
+				// CDATA
+				4: function(node) {
 					writer.cdata(node.value);
 				},
 
- 				'#frag' : function(node) {
+ 				// Document fragment
+				11: function(node) {
 					if ((node = node.firstChild)) {
 						do {
 							walk(node);
@@ -82,7 +88,7 @@
 			writer.reset();
 
 			function walk(node) {
-				var handler = handlers[node.name], name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
+				var handler = handlers[node.type], name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 
 				if (!handler) {
 					name = node.name;
@@ -137,7 +143,7 @@
 			if (node.type == 1)
 				walk(node);
 			else
-				handlers['#frag'](node);
+				handlers[11](node);
 
 			return writer.getContent();
 		};

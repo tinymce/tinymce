@@ -135,21 +135,14 @@ tinymce.html.Writer = function(settings) {
 		 * Writes a PI node such as <?xml attr="value" ?>.
 		 *
 		 * @method pi
-		 * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
+		 * @param {String} name Name of the pi.
+		 * @param {String} text String to write out inside the pi.
 		 */
-		pi: function(attrs) {
-			var i, l;
-
-			html.push('<?xml');
-
-			if (attrs) {
-				for (i = 0, l = attrs.length; i < l; i++) {
-					attr = attrs[i];
-					html.push(' ', attr.name, '="', encode(attr.value, true), '"');
-				}
-			}
-
-			html.push('?>');
+		pi: function(name, text) {
+			if (text)
+				html.push('<?', name, ' ', text, '?>');
+			else
+				html.push('<?', name, '?>');
 		},
 
 		/**

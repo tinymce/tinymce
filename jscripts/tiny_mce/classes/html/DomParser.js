@@ -224,8 +224,8 @@
 					node.append(createNode('#comment', 8)).value = text;
 				},
 
-				pi: function(text) {
-					node.append(createNode('#pi', 7)).value = text;
+				pi: function(name, text) {
+					node.append(createNode(name, 7)).value = text;
 				},
 
 				doctype: function(text) {

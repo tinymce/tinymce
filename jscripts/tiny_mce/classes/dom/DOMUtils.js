@@ -1232,7 +1232,7 @@
 			if (!elm)
 				return null;
 
-			if (self.hasOuterHTML)
+			if (elm.nodeType === 1 && self.hasOuterHTML)
 				return elm.outerHTML;
 
 			doc = (elm.ownerDocument || self.doc).createElement("body");

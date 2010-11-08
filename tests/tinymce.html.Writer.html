@@ -38,11 +38,11 @@ test('PI', function() {
 	expect(2);
 
 	var writer = new tinymce.html.Writer();
-	writer.pi([{name: 'attr1', value: 'value1'}, {name: 'attr2', value: 'value2'}]);
-	equals(writer.getContent(), '<?xml attr1="value1" attr2="value2"?>');
+	writer.pi('xml', 'someval');
+	equals(writer.getContent(), '<?xml someval?>');
 
 	var writer = new tinymce.html.Writer();
-	writer.pi();
+	writer.pi('xml');
 	equals(writer.getContent(), '<?xml?>');
 });
 
