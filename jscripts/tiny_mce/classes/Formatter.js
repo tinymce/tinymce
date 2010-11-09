@@ -352,16 +352,16 @@
 				});
 			};
 
-             var getTextDecoration = function(node) {
-                 var decoration;
+            var getTextDecoration = function(node) {
+                var decoration;
 
-                 ed.dom.getParent(node, function(n) {
-                     decoration = ed.dom.getStyle(n, 'text-decoration');
-                     return decoration && decoration !== 'none';
-                 });
+                ed.dom.getParent(node, function(n) {
+                    decoration = ed.dom.getStyle(n, 'text-decoration');
+                    return decoration && decoration !== 'none';
+                });
 
                 return decoration;
-             };
+            };
 
             var processUnderlineAndColor = function(node) {
                 var textDecoration;
@@ -385,14 +385,16 @@
 					applyRngStyle(expandRng(rng, formatList));
 				} else {
 					if (!selection.isCollapsed() || !format.inline) {
+                        // Obtain selection node before selection is unselected by applyRngStyle()
+                        var curSelNode = ed.selection.getNode();
+
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
 
                         // Colored nodes should be underlined so that the color of the underline matches the text color.
                         if (format.styles && (format.styles.color || format.styles.textDecoration)) {
-                            tinymce.walk(ed.selection.getNode(), processUnderlineAndColor, 'childNodes');
-                            processUnderlineAndColor(ed.selection.getNode());
+                            tinymce.walk(curSelNode, processUnderlineAndColor, 'childNodes');
                         }
 
 						selection.moveToBookmark(bookmark);
