@@ -49,7 +49,7 @@
 		// Private plugin internal methods
 
 		_setBodyAttribs : function(ed, o) {
-			var bdattr, i, len, kv, k, v, t, attr = this.head.match(/body(.*?)>/i);
+			var bdattr, i, len, kv, k, v, t, attr = this.head.match(/body(.*?)>/i), bddir = '';
 
 			if (attr && attr[1]) {
 				bdattr = attr[1].match(/\s*(\w+\s*=\s*".*?"|\w+\s*=\s*'.*?'|\w+\s*=\s*\w+|\w+)\s*/g);
@@ -66,6 +66,8 @@
 
 							if (t)
 								v = t[1];
+							if(k == 'dir')
+								bddir = v;
 						} else
 							v = k;
 
@@ -73,6 +75,8 @@
 					}
 				}
 			}
+			bd = ed.getBody();
+			bd.setAttribute('dir', bddir);
 		},
 
 		_createSerializer : function() {
