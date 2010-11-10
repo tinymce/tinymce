@@ -109,6 +109,13 @@
 		attr : function(name, value) {
 			var self = this, attrs, i, undef;
 
+			if (typeof name !== "string") {
+				for (i in name)
+					self.attr(i, name[i]);
+
+				return self;
+			}
+
 			if (attrs = self.attributes) {
 				if (value !== undef) {
 					if (name in attrs.map) {
@@ -120,7 +127,7 @@
 							while (i--) {
 								if (attrs[i].name === name) {
 									attrs = attrs.splice(i, 1);
-									return;
+									return self;
 								}
 							}
 						}
@@ -137,6 +144,8 @@
 						attrs.push({name: name, value: value});
 
 					attrs.map[name] = value;
+
+					return self;
 				} else {
 					return attrs.map[name];
 				}
