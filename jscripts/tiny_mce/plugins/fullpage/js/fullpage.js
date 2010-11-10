@@ -371,7 +371,12 @@ function updateAction() {
 		h = h.replace(/<head.*?>/, '$&\n' + '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
 	else
 		h = h.replace(/<title>(.*?)<\/title>/, '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
-
+	
+	if(v = f.langcode.value)
+		h = '<html lang="' + v + '" xml:lang="' + v + '">\n' + h;
+	else 
+		h = '<html>\n' + h;
+	
 	if ((v = getSelectValue(f, 'doctypes')) != '')
 		h = v + '\n' + h;
 
