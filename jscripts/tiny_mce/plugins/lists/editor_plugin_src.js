@@ -262,7 +262,7 @@
 					li = dom.create('li');
 					start.parentNode.insertBefore(li, start);
 				}
-				while (n != end) {
+				while (n && n != end) {
 					tmp = n.nextSibling;
 					li.appendChild(n);
 					n = tmp;
