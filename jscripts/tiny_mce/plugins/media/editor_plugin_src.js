@@ -9,22 +9,88 @@
  */
 
 (function() {
-	var each = tinymce.each;
+	var excludedEmbedAttrs = tinymce.makeMap('id,width,height,type'), Node = tinymce.html.Node, mediaTypes = [
+		// Type, clsid:s, mime types, codebase
+		["Flash", "d27cdb6e-ae6d-11cf-96b8-444553540000", "application/x-shockwave-flash", "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"],
+		["ShockWave", "166b1bca-3f9c-11cf-8075-444553540000", "application/x-director", "http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=8,5,1,0"],
+		["WindowsMedia", "6bf52a52-394a-11d3-b153-00c04f79faa6,22d6f312-b0f6-11d0-94ab-0080c74c7e95,05589fa1-c356-11ce-bf01-00aa0055595a", "application/x-mplayer2", "http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"],
+		["QuickTime", "02bf25d5-8c17-4b23-bc80-d3488abddc6b", "video/quicktime", "http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"],
+		["RealMedia", "cfcdaa03-8be4-11cf-b84b-0020afbbccfa", "audio/x-pn-realaudio-plugin", "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"],
+		["Java", "8AD9C840-044E-11D1-B3E9-00805F499D93", "application/x-java-applet", "http://java.sun.com/products/plugin/autodl/jinstall-1_5_0-windows-i586.cab#Version=1,5,0,0"],
+		["Silverlight", "dfeaf541-f3e1-4c24-acac-99c30715084a", "application/x-silverlight-2"]
+	];
 
 	tinymce.create('tinymce.plugins.MediaPlugin', {
 		init : function(ed, url) {
-			var t = this;
-			
-			t.editor = ed;
-			t.url = url;
+			var self = this, lookup = {}, i, y, item;
 
-			function isMediaElm(n) {
-				return /^(mceItemFlash|mceItemShockWave|mceItemWindowsMedia|mceItemQuickTime|mceItemRealMedia)$/.test(n.className);
-			};
+			self.editor = ed;
+			self.url = url;
+
+			// Parse media types into a lookup table
+			for (i = 0; i < mediaTypes.length; i++) {
+				item = {
+					type : mediaTypes[i][0],
+					clsids : tinymce.explode(mediaTypes[i][1]),
+					mimes : tinymce.explode(mediaTypes[i][2]),
+					codebase : mediaTypes[i][3]
+				};
+
+				for (y = 0; y < item.clsids.length; y++)
+					lookup['clsid:' + item.clsids[y]] = item;
+
+				for (y = 0; y < item.mimes.length; y++)
+					lookup[item.mimes[y]] = item;
+
+				lookup['mceItem' + mediaTypes[i][0]] = item;
+			}
+
+			self.lookup = lookup;
 
 			ed.onPreInit.add(function() {
-				// Force in _value parameter this extra parameter is required for older Opera versions
-				ed.serializer.addRules('param[name|value|_mce_value]');
+				// Allow video elements
+				ed.schema.addValidElements('object[*],param[name|value],embed[*],video[*],source[*]');
+
+				// Convert video elements to image placeholder
+				ed.parser.addNodeFilter('object,embed,video', function(nodes) {
+					var i = nodes.length;
+
+					while (i--)
+						self.objectToImg(nodes[i]);
+				});
+
+				// Convert image placeholders to video elements
+				ed.serializer.addNodeFilter('img', function(nodes) {
+					var i = nodes.length, node;
+
+					while (i--) {
+						node = nodes[i];
+						if (node.attr('class').indexOf('mceItemMedia') !== -1)
+							self.imgToObject(node);
+					}
+				});
+			});
+
+			ed.onInit.add(function() {
+				// Load the media specific CSS file
+				if (ed.settings.content_css !== false)
+					ed.dom.loadCSS(url + "/css/content.css");
+
+				// Display "media" instead of "img" in element path
+				if (ed.theme && ed.theme.onResolveName) {
+					ed.theme.onResolveName.add(function(theme, path_object) {
+						if (path_object.name === 'img' && ed.dom.hasClass(path_object.node, 'mceItemMedia'))
+							path_object.name = 'media';
+					});
+				}
+
+				// Add contect menu if it's loaded
+				if (ed && ed.plugins.contextmenu) {
+					ed.plugins.contextmenu.onContextMenu.add(function(plugin, menu, element) {
+						if (element.nodeName === 'IMG' && element.className.indexOf('mceItemMedia') !== -1)
+							menu.add({title : 'media.edit', icon : 'media', cmd : 'mceMedia'});
+					});
+				}
 			});
 
 			// Register commands
@@ -42,153 +108,9 @@
 			// Register buttons
 			ed.addButton('media', {title : 'media.desc', cmd : 'mceMedia'});
 
-			ed.onNodeChange.add(function(ed, cm, n) {
-				cm.setActive('media', n.nodeName == 'IMG' && isMediaElm(n));
-			});
-
-			ed.onInit.add(function() {
-				var lo = {
-					mceItemFlash : 'flash',
-					mceItemShockWave : 'shockwave',
-					mceItemWindowsMedia : 'windowsmedia',
-					mceItemQuickTime : 'quicktime',
-					mceItemRealMedia : 'realmedia'
-				};
-
-				ed.selection.onSetContent.add(function() {
-					t._spansToImgs(ed.getBody());
-				});
-
-				ed.selection.onBeforeSetContent.add(t._objectsToSpans, t);
-
-				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(url + "/css/content.css");
-
-				if (ed.theme && ed.theme.onResolveName) {
-					ed.theme.onResolveName.add(function(th, o) {
-						if (o.name == 'img') {
-							each(lo, function(v, k) {
-								if (ed.dom.hasClass(o.node, k)) {
-									o.name = v;
-									o.title = ed.dom.getAttrib(o.node, 'title');
-									return false;
-								}
-							});
-						}
-					});
-				}
-
-				if (ed && ed.plugins.contextmenu) {
-					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
-						if (e.nodeName == 'IMG' && /mceItem(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)/.test(e.className)) {
-							m.add({title : 'media.edit', icon : 'media', cmd : 'mceMedia'});
-						}
-					});
-				}
-			});
-
-			ed.onBeforeSetContent.add(t._objectsToSpans, t);
-
-			ed.onSetContent.add(function() {
-				t._spansToImgs(ed.getBody());
-			});
-
-			ed.onPreProcess.add(function(ed, o) {
-				var dom = ed.dom;
-
-				if (o.set) {
-					t._spansToImgs(o.node);
-
-					each(dom.select('IMG', o.node), function(n) {
-						var p;
-
-						if (isMediaElm(n)) {
-							p = t._parse(n.title);
-							dom.setAttrib(n, 'width', dom.getAttrib(n, 'width', p.width || 100));
-							dom.setAttrib(n, 'height', dom.getAttrib(n, 'height', p.height || 100));
-						}
-					});
-				}
-
-				if (o.get) {
-					each(dom.select('IMG', o.node), function(n) {
-						var ci, cb, mt;
-
-						if (ed.getParam('media_use_script')) {
-							if (isMediaElm(n))
-								n.className = n.className.replace(/mceItem/g, 'mceTemp');
-
-							return;
-						}
-
-						switch (n.className) {
-							case 'mceItemFlash':
-								ci = 'd27cdb6e-ae6d-11cf-96b8-444553540000';
-								cb = 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0';
-								mt = 'application/x-shockwave-flash';
-								break;
-
-							case 'mceItemShockWave':
-								ci = '166b1bca-3f9c-11cf-8075-444553540000';
-								cb = 'http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=8,5,1,0';
-								mt = 'application/x-director';
-								break;
-
-							case 'mceItemWindowsMedia':
-								ci = ed.getParam('media_wmp6_compatible') ? '05589fa1-c356-11ce-bf01-00aa0055595a' : '6bf52a52-394a-11d3-b153-00c04f79faa6';
-								cb = 'http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701';
-								mt = 'application/x-mplayer2';
-								break;
-
-							case 'mceItemQuickTime':
-								ci = '02bf25d5-8c17-4b23-bc80-d3488abddc6b';
-								cb = 'http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0';
-								mt = 'video/quicktime';
-								break;
-
-							case 'mceItemRealMedia':
-								ci = 'cfcdaa03-8be4-11cf-b84b-0020afbbccfa';
-								cb = 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0';
-								mt = 'audio/x-pn-realaudio-plugin';
-								break;
-						}
-
-						if (ci) {
-							dom.replace(t._buildObj({
-								classid : ci,
-								codebase : cb,
-								type : mt
-							}, n), n);
-						}
-					});
-				}
-			});
-
-			ed.onPostProcess.add(function(ed, o) {
-				o.content = o.content.replace(/_mce_value=/g, 'value=');
-			});
-
-			function getAttr(s, n) {
-				n = new RegExp(n + '=\"([^\"]+)\"', 'g').exec(s);
-
-				return n ? ed.dom.decode(n[1]) : '';
-			};
-
-			ed.onPostProcess.add(function(ed, o) {
-				if (ed.getParam('media_use_script')) {
-					o.content = o.content.replace(/<img[^>]+>/g, function(im) {
-						var cl = getAttr(im, 'class');
-
-						if (/^(mceTempFlash|mceTempShockWave|mceTempWindowsMedia|mceTempQuickTime|mceTempRealMedia)$/.test(cl)) {
-							at = t._parse(getAttr(im, 'title'));
-							at.width = getAttr(im, 'width');
-							at.height = getAttr(im, 'height');
-							im = '<script type="text/javascript">write' + cl.substring(7) + '({' + t._serialize(at) + '});</script>';
-						}
-
-						return im;
-					});
-				}
+			// Update media selection status
+			ed.onNodeChange.add(function(ed, cm, node) {
+				cm.setActive('media', node.nodeName == 'IMG' && ed.dom.hasClass(node, 'mceItemMedia'));
 			});
 		},
 
@@ -202,210 +124,178 @@
 			};
 		},
 
-		// Private methods
-		_objectsToSpans : function(ed, o) {
-			var t = this, h = o.content;
+		imgToObject : function(node) {
+			var replacement, embed, name, value, data, param, typeItem, i, classes, item;
 
-			h = h.replace(/<script[^>]*>\s*write(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)\(\{([^\)]*)\}\);\s*<\/script>/gi, function(a, b, c) {
-				var o = t._parse(c);
+			data = tinymce.util.JSON.parse(node.attr('data-mce-data'));
 
-				return '<img class="mceItem' + b + '" title="' + ed.dom.encode(c) + '" src="' + t.url + '/img/trans.gif" width="' + o.width + '" height="' + o.height + '" />'
+			// Find type by checking the classes
+			classes = tinymce.explode(node.attr('class'), ' ');
+			for (i = 0; i < classes.length; i++) {
+				typeItem = this.lookup[classes[i]];
+				if (typeItem)
+					break;
+			}
+
+			// Create new object element
+			replacement = new Node('object', 1);
+			replacement.attr({
+				id : node.attr('id'),
+				width: node.attr('width'),
+				height: node.attr('height'),
+				style : node.attr('style')
 			});
 
-			h = h.replace(/<object([^>]*)>/gi, '<span class="mceItemObject" $1>');
-			h = h.replace(/<embed([^>]*)\/?>/gi, '<span class="mceItemEmbed" $1></span>');
-			h = h.replace(/<embed([^>]*)>/gi, '<span class="mceItemEmbed" $1>');
-			h = h.replace(/<\/(object)([^>]*)>/gi, '</span>');
-			h = h.replace(/<\/embed>/gi, '');
-			h = h.replace(/<param([^>]*)>/gi, function(a, b) {return '<span ' + b.replace(/value=/gi, '_mce_value=') + ' class="mceItemParam"></span>'});
-			h = h.replace(/\/ class=\"mceItemParam\"><\/span>/gi, 'class="mceItemParam"></span>');
+			// Add params
+			for (name in data.params) {
+				param = new Node('param', 1);
+				param.shortEnded = true;
+				value = data.params[name];
 
-			o.content = h;
-		},
+				if (name === 'src' && typeItem.type === 'WindowsMedia')
+					name = 'url';
 
-		_buildObj : function(o, n) {
-			var ob, ed = this.editor, dom = ed.dom, p = this._parse(n.title), stc;
-			
-			stc = ed.getParam('media_strict', true) && o.type == 'application/x-shockwave-flash';
+				param.attr({name: name, value: value});
+				replacement.append(param);
+			}
 
-			p.width = o.width = dom.getAttrib(n, 'width') || 100;
-			p.height = o.height = dom.getAttrib(n, 'height') || 100;
-
-			if (p.src)
-				p.src = ed.convertURL(p.src, 'src', n);
-
-			if (stc) {
-				ob = dom.create('span', {
-					id : p.id,
-					_mce_name : 'object',
-					type : 'application/x-shockwave-flash',
-					data : p.src,
-					style : dom.getAttrib(n, 'style'),
-					width : o.width,
-					height : o.height
+			// Setup add type and classid if strict is disabled
+			if (this.editor.getParam('media_strict', true)) {
+				replacement.attr({
+					data: data.params.src,
+					type: typeItem.mimes[0]
 				});
 			} else {
-				ob = dom.create('span', {
-					id : p.id,
-					_mce_name : 'object',
-					classid : "clsid:" + o.classid,
-					style : dom.getAttrib(n, 'style'),
-					codebase : o.codebase,
-					width : o.width,
-					height : o.height
+				replacement.attr({
+					classid: "clsid:" + typeItem.clsids[0],
+					codebase: typeItem.codebase
 				});
+
+				embed = new Node('embed', 1);
+				embed.attr({
+					id: node.attr('id'),
+					width: node.attr('width'),
+					height: node.attr('height'),
+					style : node.attr('style'),
+					type: typeItem.mimes[0]
+				});
+
+				for (name in data.params)
+					embed.attr(name, data.params[name]);
+
+				replacement.append(embed);
 			}
 
-			each (p, function(v, k) {
-				if (!/^(width|height|codebase|classid|id|_cx|_cy)$/.test(k)) {
-					// Use url instead of src in IE for Windows media
-					if (o.type == 'application/x-mplayer2' && k == 'src' && !p.url)
-						k = 'url';
-
-					if (v)
-						dom.add(ob, 'span', {_mce_name : 'param', name : k, '_mce_value' : v});
-				}
-			});
-
-			if (!stc)
-				dom.add(ob, 'span', tinymce.extend({_mce_name : 'embed', type : o.type, style : dom.getAttrib(n, 'style')}, p));
-
-			return ob;
+			node.replace(replacement);
 		},
 
-		_spansToImgs : function(p) {
-			var t = this, dom = t.editor.dom, im, ci;
+		objectToImg : function(node) {
+			var object, embed, video, img, name, id, width, height, style, i,
+				param, params, data, type, lookup = this.lookup;
 
-			each(dom.select('span', p), function(n) {
-				// Convert object into image
-				if (dom.getAttrib(n, 'class') == 'mceItemObject') {
-					ci = dom.getAttrib(n, "classid").toLowerCase().replace(/\s+/g, '');
+			// If node isn't in document
+			if (!node.parent)
+				return;
 
-					switch (ci) {
-						case 'clsid:d27cdb6e-ae6d-11cf-96b8-444553540000':
-							dom.replace(t._createImg('mceItemFlash', n), n);
-							break;
+			// Setup data objects
+			data = {
+				video : {},
+				params : {}
+			};
 
-						case 'clsid:166b1bca-3f9c-11cf-8075-444553540000':
-							dom.replace(t._createImg('mceItemShockWave', n), n);
-							break;
+			// Setup new image object
+			img = new Node('img', 1);
+			img.attr({
+				src : this.url + '/img/trans.gif'
+			});
 
-						case 'clsid:6bf52a52-394a-11d3-b153-00c04f79faa6':
-						case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
-						case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
-							dom.replace(t._createImg('mceItemWindowsMedia', n), n);
-							break;
+			// Video element
+			name = node.name;
+			if (name === 'video') {
+				video = node;
+				object = node.getAll('object')[0];
+				embed = node.getAll('embed')[0];
+				width = video.attr('width');
+				height = video.attr('height');
+				id = video.attr('id');
 
-						case 'clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b':
-							dom.replace(t._createImg('mceItemQuickTime', n), n);
-							break;
+				// Get all video attributes
+				for (name in video.attributes.map)
+					data.video[name] = video.attributes.map[name];
+			}
 
-						case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
-							dom.replace(t._createImg('mceItemRealMedia', n), n);
-							break;
+			// Object element
+			if (node.name === 'object') {
+				object = node;
+				embed = node.getAll('embed')[0];
+			}
 
-						default:
-							dom.replace(t._createImg('mceItemFlash', n), n);
-					}
-					
-					return;
+			// Embed element
+			if (node.name === 'embed')
+				embed = node;
+
+			if (object) {
+				// Get width/height
+				width = width || object.attr('width');
+				height = height || object.attr('height');
+				style = style || object.attr('style');
+				id = id || object.attr('id');
+
+				// Get all object params
+				params = object.getAll("param");
+				for (i = 0; i < params.length; i++) {
+					param = params[i];
+					name = param.attr('name');
+
+					if (!excludedEmbedAttrs[name])
+						data.params[name] = param.attr('value');
 				}
 
-				// Convert embed into image
-				if (dom.getAttrib(n, 'class') == 'mceItemEmbed') {
-					switch (dom.getAttrib(n, 'type')) {
-						case 'application/x-shockwave-flash':
-							dom.replace(t._createImg('mceItemFlash', n), n);
-							break;
+				data.params.src = object.attr('data');
+			}
 
-						case 'application/x-director':
-							dom.replace(t._createImg('mceItemShockWave', n), n);
-							break;
+			if (embed) {
+				// Get width/height
+				width = width || embed.attr('width');
+				height = height || embed.attr('height');
+				style = style || embed.attr('style');
+				id = id || embed.attr('id');
 
-						case 'application/x-mplayer2':
-							dom.replace(t._createImg('mceItemWindowsMedia', n), n);
-							break;
-
-						case 'video/quicktime':
-							dom.replace(t._createImg('mceItemQuickTime', n), n);
-							break;
-
-						case 'audio/x-pn-realaudio-plugin':
-							dom.replace(t._createImg('mceItemRealMedia', n), n);
-							break;
-
-						default:
-							dom.replace(t._createImg('mceItemFlash', n), n);
-					}
-				}			
-			});
-		},
-
-		_createImg : function(cl, n) {
-			var im, dom = this.editor.dom, pa = {}, ti = '', args;
-
-			args = ['id', 'name', 'width', 'height', 'bgcolor', 'align', 'flashvars', 'src', 'wmode', 'allowfullscreen', 'quality', 'data'];	
-
-			// Create image
-			im = dom.create('img', {
-				src : this.url + '/img/trans.gif',
-				width : dom.getAttrib(n, 'width') || 100,
-				height : dom.getAttrib(n, 'height') || 100,
-				style : dom.getAttrib(n, 'style'),
-				'class' : cl
-			});
-
-			// Setup base parameters
-			each(args, function(na) {
-				var v = dom.getAttrib(n, na);
-
-				if (v)
-					pa[na] = v;
-			});
-
-			// Add optional parameters
-			each(dom.select('span', n), function(n) {
-				if (dom.hasClass(n, 'mceItemParam'))
-					pa[dom.getAttrib(n, 'name')] = dom.getAttrib(n, '_mce_value');
-			});
+				// Get all embed attributes
+				for (name in embed.attributes.map) {
+					if (!excludedEmbedAttrs[name] && !data.params[name])
+						data.params[name] = embed.attributes.map[name];
+				}
+			}
 
 			// Use src not movie
-			if (pa.movie) {
-				pa.src = pa.movie;
-				delete pa.movie;
+			if (data.params.movie) {
+				data.params.src = data.params.movie;
+				delete data.params.movie;
 			}
 
-			// No src try data
-			if (!pa.src) {
-				pa.src = pa.data;
-				delete pa.data;
-			}
+			// Convert the URL to relative/absolute depending on configuration
+			data.params.src = this.editor.convertURL(data.params.src, 'src', 'object');
 
-			// Merge with embed args
-			n = dom.select('.mceItemEmbed', n)[0];
-			if (n) {
-				each(args, function(na) {
-					var v = dom.getAttrib(n, na);
+			// Get media type based on clsid or mime type
+			if (object)
+				type = (lookup[(object.attr('clsid') || '').toLowerCase()] || lookup[(object.attr('type') || '').toLowerCase()] || {}).type;
 
-					if (v && !pa[na])
-						pa[na] = v;
-				});
-			}
+			if (embed && !type)
+				type = (lookup[(embed.attr('type') || '').toLowerCase()] || {}).type;
 
-			delete pa.width;
-			delete pa.height;
+			// Set width/height of placeholder
+			img.attr({
+				id : id,
+				'class' : 'mceItemMedia mceItem' + (type || 'Flash'),
+				style : style,
+				width : width || "100",
+				height : height || "100",
+				"data-mce-data" : tinymce.util.JSON.serialize(data).replace(/"/g, "'") // Replace quotes to reduce HTML size since they get encoded
+			});
 
-			im.title = this._serialize(pa);
-
-			return im;
-		},
-
-		_parse : function(s) {
-			return tinymce.util.JSON.parse('{' + s + '}');
-		},
-
-		_serialize : function(o) {
-			return tinymce.util.JSON.serialize(o).replace(/[{}]/g, '');
+			// Replace the video/object/embed element with a placeholder image containing the data
+			node.replace(img);
 		}
 	});
 
