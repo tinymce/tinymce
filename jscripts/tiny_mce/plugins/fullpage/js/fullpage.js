@@ -47,7 +47,7 @@ var defaultFontNames = 'Arial=arial,helvetica,sans-serif;Courier New=courier new
 var defaultFontSizes = '10px,11px,12px,13px,14px,15px,16px';
 
 function init() {
-	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style;
+	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, dir, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style;
 
 	// Setup doctype select box
 	doctypes = ed.getParam("fullpage_doctypes", defaultDocTypes).split(',');
@@ -135,6 +135,11 @@ function init() {
 	xmlEnc = getReItem(/<\?\s*?xml.*?encoding\s*?=\s*?"(.*?)".*?\?>/gi, h, 1);
 	docType = getReItem(/<\!DOCTYPE.*?>/gi, h.replace(/\n/g, ''), 0).replace(/ +/g, ' ');
 	f.langcode.value = getReItem(/lang="(.*?)"/gi, h, 1);
+	
+	// Get direction and inherit it from the html-tag too (according to w3c recommandation)
+	dir = getReItem(/dir\s*=\s*["']([^"']*)["']/i, h, 1);
+	if(doc.body.hasAttribute('dir') && (doc.body.getAttribute('dir') != ''))
+		dir = doc.body.getAttribute('dir');
 
 	// Parse title
 	if (e = doc.getElementsByTagName('title')[0])
@@ -168,7 +173,7 @@ function init() {
 
 	selectByValue(f, 'doctypes', docType, true, true);
 	selectByValue(f, 'docencoding', xmlEnc, true, true);
-	selectByValue(f, 'langdir', doc.body.getAttribute('dir', 2) || '', true, true);
+	selectByValue(f, 'langdir', dir, true, true);
 
 	if (xmlVer != '')
 		el.xml_pi.checked = true;
