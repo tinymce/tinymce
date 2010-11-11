@@ -104,7 +104,8 @@
 		 *
 		 * @method attr
 		 * @param {String} name Attribute name to set or get.
-		 * @return {String} value Optional value to set.
+		 * @param {String} value Optional value to set.
+		 * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
 		 */
 		attr : function(name, value) {
 			var self = this, attrs, i, undef;
@@ -118,9 +119,9 @@
 
 			if (attrs = self.attributes) {
 				if (value !== undef) {
-					if (name in attrs.map) {
-						// Remove attribute
-						if (value === null) {
+					// Remove attribute
+					if (value === null) {
+						if (name in attrs.map) {
 							delete attrs.map[name];
 
 							i = attrs.length;
@@ -132,6 +133,11 @@
 							}
 						}
 
+						return self;
+					}
+
+					// Set attribute
+					if (name in attrs.map) {
 						// Set attribute
 						i = attrs.length;
 						while (i--) {
@@ -216,6 +222,7 @@
 		 * node.remove();
 		 *
 		 * @method remove
+		 * @return {tinymce.html.Node} Current node that got removed.
 		 */
 		remove : function() {
 			var self = this, parent = self.parent, next = self.next, prev = self.prev;

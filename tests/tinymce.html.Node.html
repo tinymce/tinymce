@@ -295,7 +295,7 @@ test('replace middle child', function() {
 test('attr', function() {
 	var node;
 
-	expect(18);
+	expect(20);
 
 	node = new tinymce.html.Node('b', 1);
 	deepEqual(node.attributes, []);
@@ -329,6 +329,11 @@ test('attr', function() {
 	equal(node.attr('attr1'), undefined);
 	deepEqual(node.attributes, []);
 	deepEqual(node.attributes.map, {});
+
+	node = new tinymce.html.Node('b', 1);
+	node.attr({a:'1', b:'2'});
+	deepEqual(node.attributes, [{name: 'a', value: '1'}, {name: 'b', value: '2'}]);
+	deepEqual(node.attributes.map, {a:'1', b:'2'});
 });
 
 test('clone', function() {
