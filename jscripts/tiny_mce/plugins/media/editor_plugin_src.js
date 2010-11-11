@@ -9,7 +9,9 @@
  */
 
 (function() {
-	var excludedEmbedAttrs = tinymce.makeMap('id,width,height,type'), Node = tinymce.html.Node, mediaTypes = [
+	var excludedEmbedAttrs = tinymce.makeMap('id,width,height,type'), Node = tinymce.html.Node, mediaTypes, scriptRegExp, JSON = tinymce.util.JSON;
+
+	mediaTypes = [
 		// Type, clsid:s, mime types, codebase
 		["Flash", "d27cdb6e-ae6d-11cf-96b8-444553540000", "application/x-shockwave-flash", "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"],
 		["ShockWave", "166b1bca-3f9c-11cf-8075-444553540000", "application/x-director", "http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=8,5,1,0"],
@@ -28,6 +30,7 @@
 			self.url = url;
 
 			// Parse media types into a lookup table
+			scriptRegExp = '';
 			for (i = 0; i < mediaTypes.length; i++) {
 				item = {
 					type : mediaTypes[i][0],
@@ -43,16 +46,19 @@
 					lookup[item.mimes[y]] = item;
 
 				lookup['mceItem' + mediaTypes[i][0]] = item;
+
+				scriptRegExp += (scriptRegExp ? '|' : '') + mediaTypes[i][0];
 			}
 
+			scriptRegExp = new RegExp('write(' + scriptRegExp + ')\\(([^)]+)\\)');
 			self.lookup = lookup;
 
 			ed.onPreInit.add(function() {
 				// Allow video elements
-				ed.schema.addValidElements('object[*],param[name|value],embed[*],video[*],source[*]');
+				ed.schema.addValidElements('object[*],param[name|value],embed[*],video[*],audio[*],source[*]');
 
 				// Convert video elements to image placeholder
-				ed.parser.addNodeFilter('object,embed,video', function(nodes) {
+				ed.parser.addNodeFilter('object,embed,video,audio,script', function(nodes) {
 					var i = nodes.length;
 
 					while (i--)
@@ -125,9 +131,9 @@
 		},
 
 		imgToObject : function(node) {
-			var replacement, embed, name, value, data, param, typeItem, i, classes, item;
+			var video, object, embed, name, value, data, source, param, typeItem, i, classes, item;
 
-			data = tinymce.util.JSON.parse(node.attr('data-mce-data'));
+			data = JSON.parse(node.attr('data-mce-data'));
 
 			// Find type by checking the classes
 			classes = tinymce.explode(node.attr('class'), ' ');
@@ -137,68 +143,152 @@
 					break;
 			}
 
-			// Create new object element
-			replacement = new Node('object', 1);
-			replacement.attr({
-				id : node.attr('id'),
-				width: node.attr('width'),
-				height: node.attr('height'),
-				style : node.attr('style')
-			});
+			// Handle scripts
+			if (this.editor.settings.media_use_script) {
+				replacement = new Node('script', 1).attr('type', 'text/javascript');
 
-			// Add params
-			for (name in data.params) {
-				param = new Node('param', 1);
-				param.shortEnded = true;
-				value = data.params[name];
+				value = new Node('#text', 3);
+				value.value = 'write' + typeItem.type + '(' + JSON.serialize(tinymce.extend(data.params, {
+					width: node.attr('width'),
+					height: node.attr('height')
+				})) + ');';
 
-				if (name === 'src' && typeItem.type === 'WindowsMedia')
-					name = 'url';
+				replacement.append(value);
+				node.replace(replacement);
 
-				param.attr({name: name, value: value});
-				replacement.append(param);
+				return;
 			}
 
-			// Setup add type and classid if strict is disabled
-			if (this.editor.getParam('media_strict', true)) {
-				replacement.attr({
-					data: data.params.src,
-					type: typeItem.mimes[0]
-				});
-			} else {
-				replacement.attr({
-					classid: "clsid:" + typeItem.clsids[0],
-					codebase: typeItem.codebase
-				});
-
-				embed = new Node('embed', 1);
-				embed.attr({
-					id: node.attr('id'),
+			// Add HTML5 video element
+			if (data.video.attrs) {
+				// Create new object element
+				video = new Node('video', 1).attr({
+					id : node.attr('id'),
 					width: node.attr('width'),
 					height: node.attr('height'),
-					style : node.attr('style'),
-					type: typeItem.mimes[0]
+					style : node.attr('style')
 				});
 
-				for (name in data.params)
-					embed.attr(name, data.params[name]);
+				for (name in data.video.attrs)
+					video.attr(name, data.video.attrs[name]);
 
-				replacement.append(embed);
+				for (i = 0; i < data.video.sources.length; i++) {
+					source = new Node('source', 1).attr(data.video.sources[i]);
+					source.shortEnded = true;
+					video.append(source);
+				}
 			}
 
-			node.replace(replacement);
+			// Do we have a params src then we can generate object
+			if (data.params.src) {
+				// Create new object element
+				object = new Node('object', 1).attr({
+					id : node.attr('id'),
+					width: node.attr('width'),
+					height: node.attr('height'),
+					style : node.attr('style')
+				});
+
+				// Add params
+				for (name in data.params) {
+					param = new Node('param', 1);
+					param.shortEnded = true;
+					value = data.params[name];
+
+					// Windows media needs to use url instead of src for the media URL
+					if (name === 'src' && typeItem.type === 'WindowsMedia')
+						name = 'url';
+
+					param.attr({name: name, value: value});
+					object.append(param);
+				}
+
+				// Setup add type and classid if strict is disabled
+				if (this.editor.getParam('media_strict', true)) {
+					object.attr({
+						data: data.params.src,
+						type: typeItem.mimes[0]
+					});
+				} else {
+					object.attr({
+						classid: "clsid:" + typeItem.clsids[0],
+						codebase: typeItem.codebase
+					});
+
+					embed = new Node('embed', 1);
+					embed.shortEnded = true;
+					embed.attr({
+						id: node.attr('id'),
+						width: node.attr('width'),
+						height: node.attr('height'),
+						style : node.attr('style'),
+						type: typeItem.mimes[0]
+					});
+
+					for (name in data.params)
+						embed.attr(name, data.params[name]);
+
+					object.append(embed);
+				}
+
+				// Insert raw HTML
+				if (data.object_html) {
+					value = new Node('#text', 3);
+					value.raw = true;
+					value.value = data.object_html;
+					object.append(value);
+				}
+
+				// Append object to video element if it exists
+				if (video)
+					video.append(object);
+			}
+
+			if (video) {
+				// Insert raw HTML
+				if (data.video_html) {
+					value = new Node('#text', 3);
+					value.raw = true;
+					value.value = data.video_html;
+					video.append(value);
+				}
+			}
+
+			if (video || object)
+				node.replace(video || object);
 		},
 
 		objectToImg : function(node) {
 			var object, embed, video, img, name, id, width, height, style, i,
-				param, params, data, type, lookup = this.lookup;
+				param, params, source, sources, data, type, lookup = this.lookup, matches;
+
+			function getInnerHTML(node) {
+				return new tinymce.html.Serializer({
+					inner: true,
+					validate: false
+				}).serialize(node);
+			};
 
 			// If node isn't in document
 			if (!node.parent)
 				return;
 
+			// Handle media scripts
+			if (node.name === 'script') {
+				if (node.firstChild)
+					matches = scriptRegExp.exec(node.firstChild.value);
+
+				if (!matches)
+					return;
+
+				type = matches[1];
+				data = {video : {}, params : JSON.parse(matches[2])};
+				width = data.params.width;
+				height = data.params.height;
+			}
+
 			// Setup data objects
-			data = {
+			data = data || {
 				video : {},
 				params : {}
 			};
@@ -218,10 +308,23 @@
 				width = video.attr('width');
 				height = video.attr('height');
 				id = video.attr('id');
+				data.video = {attrs : {}, sources : []};
 
 				// Get all video attributes
 				for (name in video.attributes.map)
-					data.video[name] = video.attributes.map[name];
+					data.video.attrs[name] = video.attributes.map[name];
+
+				// Get all sources
+				sources = video.getAll("source");
+				for (i = 0; i < sources.length; i++) {
+					source = sources[i].remove();
+
+					data.video.sources.push({
+						src: source.attr('src'),
+						type: source.attr('type'),
+						media: source.attr('media')
+					});
+				}
 			}
 
 			// Object element
@@ -245,7 +348,7 @@
 				params = object.getAll("param");
 				for (i = 0; i < params.length; i++) {
 					param = params[i];
-					name = param.attr('name');
+					name = param.remove().attr('name');
 
 					if (!excludedEmbedAttrs[name])
 						data.params[name] = param.attr('value');
@@ -275,7 +378,8 @@
 			}
 
 			// Convert the URL to relative/absolute depending on configuration
-			data.params.src = this.editor.convertURL(data.params.src, 'src', 'object');
+			if (data.params.src)
+				data.params.src = this.editor.convertURL(data.params.src, 'src', 'object');
 
 			// Get media type based on clsid or mime type
 			if (object)
@@ -284,6 +388,29 @@
 			if (embed && !type)
 				type = (lookup[(embed.attr('type') || '').toLowerCase()] || {}).type;
 
+			// Replace the video/object/embed element with a placeholder image containing the data
+			node.replace(img);
+
+			// Remove embed
+			if (embed)
+				embed.remove();
+
+			// Serialize the inner HTML of the object element
+			if (object) {
+				html = getInnerHTML(object.remove());
+
+				if (html)
+					data.object_html = html;
+			}
+
+			// Serialize the inner HTML of the video element
+			if (video) {
+				html = getInnerHTML(video.remove());
+
+				if (html)
+					data.video_html = html;
+			}
+
 			// Set width/height of placeholder
 			img.attr({
 				id : id,
@@ -291,11 +418,8 @@
 				style : style,
 				width : width || "100",
 				height : height || "100",
-				"data-mce-data" : tinymce.util.JSON.serialize(data).replace(/"/g, "'") // Replace quotes to reduce HTML size since they get encoded
+				"data-mce-data" : JSON.serialize(data, "'")
 			});
-
-			// Replace the video/object/embed element with a placeholder image containing the data
-			node.replace(img);
 		}
 	});
 
