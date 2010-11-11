@@ -658,6 +658,45 @@ test('Formatter - apply (selector)', function() {
 	equals(getContent(), '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>', 'Apply format on top of existing selector element');
 });
 
+test('Colored elements in a paragraph', function() {
+	editor.formatter.register('format', {inline: 'span', styles : {'color' : '#ff0000'}});
+	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;">test</span></p>');
+	editor.execCommand('SelectAll');
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>', 'Coloring an underlined text should result in a colored underline');
+
+	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
+	editor.setContent('<p><span style="font-family: \'arial black\'; color: rgb(255, 0, 0);">test</span></p>');
+	editor.execCommand('SelectAll');
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></span></p>', 'Underlining colored text should result in a colored underline');
+
+	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
+	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
+	editor.execCommand('SelectAll');
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline');
+
+	editor.formatter.register('format', {inline: 'span', styles : {'color' : '#ff0000'}});
+	editor.setContent('<p style="font-size: 22pt;"><span style=\"text-decoration: underline;\"><span style=\"color: yellow; text-decoration: underline;\">yellowredyellow</span></span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[1].firstChild, 6);
+	rng.setEnd(editor.dom.select('span')[1].firstChild, 9);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow; text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>', 'Coloring an colored underdlined text should result in newly colored underline');
+
+	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
+	editor.setContent('<p><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[4].lastChild, 5);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
+
+});
+
 /*
 test('Formatter - apply (list block)', function() {
 	var rng;
