@@ -30,7 +30,7 @@
 		var self = this, writer = new tinymce.html.Writer(settings);
 
 		settings = settings || {};
-		settings.validate = true;
+		settings.validate = "validate" in settings ? settings.validate : true;
 
 		self.schema = schema = schema || new tinymce.html.Schema();
 		self.writer = writer;
@@ -47,7 +47,7 @@
 		self.serialize = function(node) {
 			var handlers, validate;
 
-			validate = settings.validate || true;
+			validate = settings.validate;
 
 			handlers = {
 				// #text
@@ -140,7 +140,7 @@
 			}
 
 			// Serialize element and treat all non elements as fragments
-			if (node.type == 1)
+			if (node.type == 1 && !settings.inner)
 				walk(node);
 			else
 				handlers[11](node);
