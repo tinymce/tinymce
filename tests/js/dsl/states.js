@@ -126,6 +126,7 @@ ParagraphToBlockSelection = createState('<p>This is a test</p><div>Second paragr
 HeadingToParagraphSelection = createState('<h1>This is a test</h1><p>Second paragraph</p>', 'h1', 5, 'p', 6);
 BlockToParagraphSelection = createState('<div>This is a test</div><p>Second paragraph</p>', 'div', 5, 'p', 6);
 MultipleParagraphAndHeadingSelection = createState('<p>This is a test</p><h1>Second paragraph</h1><div>Third paragraph</div>', 'p', 5, 'div', 5);
+ThreeBoldDivsWithBrSelection = createState('<div><strong>One</strong></div><div><strong>Two</strong></div><div><strong>Three<br></strong></div>', 'div:nth-child(1) strong', 2, 'div:nth-child(3) strong', 2);
 
 SingleLiOlSelection = createState('<ol><li>Item 1</li></ol>', 'li', 1, 'li', 4);
 MultiLiOlSelection = createState('<ol><li>Item 1</li><li>Item 2</li></ol>', 'li:nth-child(1)', 1, 'li:nth-child(2)', 4);
