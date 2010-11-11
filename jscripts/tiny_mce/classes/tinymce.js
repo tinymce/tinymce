@@ -385,9 +385,10 @@
 		 *
 		 * @method create
 		 * @param {String} s Class name, inheritage and prefix.
-		 * @param {Object} o Collection of methods to add to the class.
+		 * @param {Object} p Collection of methods to add to the class.
+		 * @param {Object} root Optional root object defaults to the global window object.
 		 */
-		create : function(s, p) {
+		create : function(s, p, root) {
 			var t = this, sp, ns, cn, scn, c, de = 0;
 
 			// Parse : <prefix> <class>:<super class>
@@ -395,7 +396,7 @@
 			cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
 
 			// Create namespace for new class
-			ns = t.createNS(s[3].replace(/\.\w+$/, ''));
+			ns = t.createNS(s[3].replace(/\.\w+$/, ''), root);
 
 			// Class already exists
 			if (ns[cn])
