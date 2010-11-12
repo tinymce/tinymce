@@ -120,6 +120,29 @@
 			}
 		};
 
+		var getTextDecoration = function(node) {
+			var decoration;
+
+			ed.dom.getParent(node, function(n) {
+				decoration = ed.dom.getStyle(n, 'text-decoration');
+				return decoration && decoration !== 'none';
+			});
+
+			return decoration;
+		};
+
+		var processUnderlineAndColor = function(node) {
+			var textDecoration;
+			if (node.nodeType === 1) {
+				textDecoration = getTextDecoration(node.parentNode);
+				if (ed.dom.getStyle(node, 'color') && textDecoration) {
+					ed.dom.setStyle(node, 'text-decoration', textDecoration);
+				} else if (ed.dom.getStyle(node, 'textdecoration') === textDecoration) {
+					ed.dom.setStyle(node, 'text-decoration', null);
+				}
+			}
+		};
+
 		/**
 		 * Applies the specified format to the current selection or specified node.
 		 *
@@ -351,29 +374,6 @@
 					}
 				});
 			};
-
-            var getTextDecoration = function(node) {
-                var decoration;
-
-                ed.dom.getParent(node, function(n) {
-                    decoration = ed.dom.getStyle(n, 'text-decoration');
-                    return decoration && decoration !== 'none';
-                });
-
-                return decoration;
-            };
-
-            var processUnderlineAndColor = function(node) {
-                var textDecoration;
-                if (node.nodeType === 1) {
-                    textDecoration = getTextDecoration(node.parentNode);
-                    if (ed.dom.getStyle(node, 'color') && textDecoration) {
-                        ed.dom.setStyle(node, 'text-decoration', textDecoration);
-                    } else if (ed.dom.getStyle(node, 'text-decoration') === textDecoration) {
-                        ed.dom.setStyle(node, 'text-decoration', null);
-                    }
-                }
-            };
 
 			if (format) {
 				if (node) {
@@ -1559,6 +1559,10 @@
 				// Apply pending formats
 				each(pendingFormats.apply.reverse(), function(item) {
 					apply(item.name, item.vars, caret_node);
+
+					// Colored nodes should be underlined so that the color of the underline matches the text color.
+					if (item.name === 'forecolor' && item.vars.value)
+						processUnderlineAndColor(caret_node.parentNode);
 				});
 
 				// Remove pending formats
