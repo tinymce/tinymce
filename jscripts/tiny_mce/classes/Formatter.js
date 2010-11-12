@@ -395,7 +395,7 @@
                         // Colored nodes should be underlined so that the color of the underline matches the text color.
                         if (format.styles && (format.styles.color || format.styles.textDecoration)) {
                             tinymce.walk(curSelNode, processUnderlineAndColor, 'childNodes');
-                            processUnderlineAndColor(curSelNode, 'childNodes');
+                            processUnderlineAndColor(curSelNode);
                         }
 
 						selection.moveToBookmark(bookmark);
