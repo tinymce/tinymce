@@ -189,7 +189,7 @@ tinyMCEPopup = {
 	requireLangPack : function() {
 		var t = this, u = t.getWindowArg('plugin_url') || t.getWindowArg('theme_url');
 
-		if (u && t.editor.settings.language && t.features.translate_i18n !== false) {
+		if (u && t.editor.settings.language && t.features.translate_i18n !== false && t.editor.settings.language_load !== false) {
 			u += '/langs/' + t.editor.settings.language + '_dlg.js';
 
 			if (!tinymce.ScriptLoader.isDone(u)) {

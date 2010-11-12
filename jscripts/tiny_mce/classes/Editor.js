@@ -566,7 +566,7 @@
 
 			// Load scripts
 			function loadScripts() {
-				if (s.language)
+				if (s.language && s.language_load !== false)
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
 				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])

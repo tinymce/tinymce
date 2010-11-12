@@ -52,7 +52,7 @@
 		requireLangPack : function(n) {
 			var s = tinymce.settings;
 
-			if (s && s.language)
+			if (s && s.language && s.language_load !== false)
 				tinymce.ScriptLoader.add(this.urls[n] + '/langs/' + s.language + '.js');
 		},
 
