@@ -18,6 +18,7 @@ Version 3.4 (2010-xx-xx)
 	Fixed bug where the caret position would be lost on WebKit browsers if you pasted images multiple times. Patch contributed by Ephox.
 	Fixed bug where non word contents like * would be counted as words in the wordcount pluging. Patch contributed by David Balatero.
 	Fixed bug where the toggle absolute button in the layer plugin wouldn't remove the existing internal style attribute first.
+	Fixed bug where the autosave plugin would generate an exception on IE if the user had disabled userdata persistence.
 	Fixed bug where WebKit wouldn't create links on images with a float style.
 Version 3.3.9.3 (2010-xx-xx)
 	Fixed issue where WebKit wouldn't correctly apply ins/del in xhtmlxtras plugin.
