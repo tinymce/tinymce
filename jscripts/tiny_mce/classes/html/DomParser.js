@@ -18,6 +18,7 @@
 	 * var rootNode = parser.parse('<h1>content</h1>');
 	 *
 	 * @class tinymce.html.DomParser
+	 * @version 3.4
 	 */
 
 	/**

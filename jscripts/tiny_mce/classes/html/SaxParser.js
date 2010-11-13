@@ -47,6 +47,7 @@
 	 *     }
 	 * }, schema);
 	 * @class tinymce.html.SaxParser
+	 * @version 3.4
 	 */
 
 	/**

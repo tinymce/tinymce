@@ -14,7 +14,7 @@ test('encodeRaw', function() {
 	expect(2);
 
 	equals(tinymce.html.Entities.encodeRaw('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding text');
-	equals(tinymce.html.Entities.encodeRaw('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;\u00e5\u00e4\u00f6', 'Raw encoding attribute');
+	equals(tinymce.html.Entities.encodeRaw('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding attribute');
 });
 
 test('encodeAllRaw', function() {
@@ -27,16 +27,16 @@ test('encodeNumeric', function() {
 	expect(2);
 
 	equals(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;', 'Numeric encoding text');
-	equals(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;&#229;&#228;&#246;', 'Numeric encoding attribute');
+	equals(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;&#229;&#228;&#246;', 'Numeric encoding attribute');
 });
 
 test('encodeNamed', function() {
 	expect(4);
 
 	equals(tinymce.html.Entities.encodeNamed('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&auml;&ouml;', 'Named encoding text');
-	equals(tinymce.html.Entities.encodeNamed('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;&aring;&auml;&ouml;', 'Named encoding attribute');
+	equals(tinymce.html.Entities.encodeNamed('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;&aring;&auml;&ouml;', 'Named encoding attribute');
 	equals(tinymce.html.Entities.encodeNamed('<>"\'\u00e5\u00e4\u00f6', false, {'\u00e5' : '&aring;'}), '&lt;&gt;"\'&aring;\u00e4\u00f6', 'Named encoding text');
-	equals(tinymce.html.Entities.encodeNamed('<>"\'\u00e5\u00e4\u00f6', true, {'\u00e5' : '&aring;'}), '<>&quot;&#39;&aring;\u00e4\u00f6', 'Named encoding attribute');
+	equals(tinymce.html.Entities.encodeNamed('<>"\'\u00e5\u00e4\u00f6', true, {'\u00e5' : '&aring;'}), '<>&quot;\'&aring;\u00e4\u00f6', 'Named encoding attribute');
 });
 
 test('getEncodeFunc', function() {
@@ -46,23 +46,23 @@ test('getEncodeFunc', function() {
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('raw');
 	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding text');
-	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;\u00e5\u00e4\u00f6', 'Raw encoding attribute');
+	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;\u00e5\u00e4\u00f6', 'Raw encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('named');
 	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&auml;&ouml;', 'Named encoding text');
-	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;&aring;&auml;&ouml;', 'Named encoding attribute');
+	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;&aring;&auml;&ouml;', 'Named encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('numeric');
 	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;', 'Named encoding text');
-	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;&#229;&#228;&#246;', 'Named encoding attribute');
+	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;&#229;&#228;&#246;', 'Named encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('named+numeric', '229,aring');
 	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding text');
-	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;&aring;&#228;&#246;', 'Named+numeric encoding attribute');
+	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding attribute');
 
 	encodeFunc = tinymce.html.Entities.getEncodeFunc('named,numeric', '229,aring');
 	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding text');
-	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;&#39;&amp;&aring;&#228;&#246;', 'Named+numeric encoding attribute');
+	equals(encodeFunc('<>"\'&\u00e5\u00e4\u00f6', true), '<>&quot;\'&amp;&aring;&#228;&#246;', 'Named+numeric encoding attribute');
 });
 
 test('decode', function() {

@@ -10,7 +10,7 @@
 
 (function(tinymce) {
 	var namedEntities, baseEntities, reverseEntities,
-		attrsCharsRegExp = /[&\"\'\u007E-\uFFFF]/g,
+		attrsCharsRegExp = /[&\"\u007E-\uFFFF]/g,
 		textCharsRegExp = /[<>&\u007E-\uFFFF]/g,
 		rawCharsRegExp = /[<>&\"\']/g,
 		entityRegExp = /&(#)?([\w]+);/g;
@@ -103,6 +103,7 @@
 	 *
 	 * @class tinymce.html.SaxParser
 	 * @static
+	 * @version 3.4
 	 */
 	tinymce.html.Entities = {
 		/**

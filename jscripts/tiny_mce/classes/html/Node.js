@@ -51,6 +51,7 @@
 	 * someRoot.append(node);
 	 *
 	 * @class tinymce.html.Node
+	 * @version 3.4
 	 */
 
 	/**

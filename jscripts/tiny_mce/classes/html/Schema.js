@@ -1,7 +1,7 @@
 /**
  * Schema.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright 2010, Moxiecode Systems AB
  * Released under LGPL License.
  *
  * License: http://tinymce.moxiecode.com/license
@@ -190,6 +190,7 @@
 	 *    alert('P is a valid element.');
 	 *
 	 * @class tinymce.html.Schema
+	 * @version 3.4
 	 */
 
 	/**

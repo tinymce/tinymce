@@ -18,6 +18,7 @@
  * console.log(writer.getContent());
  *
  * @class tinymce.html.Writer
+ * @version 3.4
  */
 
 /**
