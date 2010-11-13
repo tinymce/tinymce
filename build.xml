@@ -113,7 +113,6 @@
 			<fileset dir="${classes_dir}" includes="ForceBlocks.js" />
 			<fileset dir="${classes_dir}" includes="ControlManager.js" />
 			<fileset dir="${classes_dir}" includes="WindowManager.js" />
-			<fileset dir="${classes_dir}" includes="CommandManager.js" />
 			<fileset dir="${classes_dir}" includes="Formatter.js" />
 			<fileset dir="${classes_dir}" includes="LegacyInput.js" />
 		</concat>

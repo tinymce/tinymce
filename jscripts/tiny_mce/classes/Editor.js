@@ -1721,12 +1721,6 @@
 				return true;
 			}
 
-			// Execute global commands
-			if (tinymce.GlobalCommands.execCommand(t, cmd, ui, val)) {
-				t.onExecCommand.dispatch(t, cmd, ui, val, a);
-				return true;
-			}
-
 			// Editor commands
 			if (t.editorCommands.execCommand(cmd, ui, val)) {
 				t.onExecCommand.dispatch(t, cmd, ui, val, a);
