@@ -36,6 +36,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 	 * @return {String} HTML for the separator control element.
 	 */
 	renderHTML : function() {
-		return tinymce.DOM.createHTML('span', {'class' : this.classPrefix});
+		return tinymce.DOM.createHTML('span', {'class' : this.classPrefix, role : 'separator', 'aria-orientation' : 'vertical', tabindex : '-1'});
 	}
 });

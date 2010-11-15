@@ -774,6 +774,7 @@
 			t.contentAreaContainer = o.iframeContainer;
 			DOM.get(o.editorContainer).style.display = t.orgDisplay;
 			DOM.get(t.id).style.display = 'none';
+			DOM.setAttrib(t.id, 'aria-hidden', true);
 
 			if (!isIE || !tinymce.relaxedDomain)
 				t.setupIframe();

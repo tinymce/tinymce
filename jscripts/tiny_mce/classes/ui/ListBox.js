@@ -179,7 +179,7 @@
 		renderHTML : function() {
 			var h = '', t = this, s = t.settings, cp = t.classPrefix;
 
-			h = '<table id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
+			h = '<table role="combobox" aria-labelledby="' + t.id + '_text" tabindex="0" id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
@@ -316,6 +316,12 @@
 			var t = this, cp = t.classPrefix;
 
 			Event.add(t.id, 'click', t.showMenu, t);
+			Event.add(t.id, 'focus', function() { console.log("Focussed");});
+			Event.add(t.id, 'keypress', function(evt) {
+				if (evt.keyCode === 32) { // Space
+					return t.showMenu(evt);
+				}
+			});
 			Event.add(t.id + '_text', 'focus', function() {
 				if (!t._focused) {
 					t.keyDownHandler = Event.add(t.id + '_text', 'keydown', function(e) {
