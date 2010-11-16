@@ -133,7 +133,7 @@
 
 		var processUnderlineAndColor = function(node) {
 			var textDecoration;
-			if (node.nodeType === 1) {
+			if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
 				textDecoration = getTextDecoration(node.parentNode);
 				if (ed.dom.getStyle(node, 'color') && textDecoration) {
 					ed.dom.setStyle(node, 'text-decoration', textDecoration);
