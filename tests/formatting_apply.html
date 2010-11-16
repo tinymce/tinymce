@@ -695,6 +695,24 @@ test('Colored elements in a paragraph', function() {
 	editor.formatter.apply('format');
 	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
 
+	editor.formatter.register('format', {inline: 'span', exact: true, styles : {'color' : '#ff0000'}});
+	editor.setContent('<p><span style="text-decoration: underline;">This is some text.</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 8);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 12);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;">This is some text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
+
+	editor.formatter.register('format', {inline: 'span', exact: true, styles : {'color' : '#ff0000'}});
+	editor.setContent('<p><span style="text-decoration: underline;">This is <span style="color: #ff0000; text-decoration: underline; background-color: #ff0000">some</span> text.</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[1].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 });
 
 /*
