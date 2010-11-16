@@ -6,7 +6,7 @@
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
 <script>
 var editor;
 
@@ -22,7 +22,7 @@ function getContent() {
 test('Formatter - apply (inline)', function() {
 	var rng, format;
 
-	expect(42);
+	expect(43);
 
 	// Toggle OFF - Inline element on selected text
 	editor.formatter.register('format', {inline : 'b', toggle: false});
@@ -55,7 +55,7 @@ test('Formatter - apply (inline)', function() {
 	equals(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>', 'Toggle OFF - Inline element on partially selected text in start/end elements');
 
 	// Inline element on selected text
-	editor.formatter.register('format', {inline : 'b'});
+	editor.formatter.register('format', {inline : 'b', toggle: true});
 	editor.getBody().innerHTML = '<p>1234</p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
@@ -65,6 +65,16 @@ test('Formatter - apply (inline)', function() {
 	equals(getContent(), '<p><b>1234</b></p>', 'Inline element on selected text');
 	editor.formatter.toggle('format');
 	equals(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on selected text');
+
+	// Selection spanning from within format to outside format with toggle off
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p><b>12</b>34</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p><b>1234</b></p>', 'Extend formating if start of selection is already formatted');
 
 	// Inline element on partially selected text
 	editor.formatter.register('format', {inline : 'b'});
