@@ -602,10 +602,9 @@
 		 */
 		function toggle(name, vars, node) {
 			var fmt = get(name);
-			if (match(name, vars, node)) {
-				if (!('toggle' in fmt[0]) || fmt[0]['toggle'])
-					remove(name, vars, node);
-			} else
+			if (match(name, vars, node) && (!('toggle' in fmt[0]) || fmt[0]['toggle']))
+				remove(name, vars, node);
+			else
 				apply(name, vars, node);
 		};
 
