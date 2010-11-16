@@ -385,18 +385,18 @@
 					applyRngStyle(expandRng(rng, formatList));
 				} else {
 					if (!selection.isCollapsed() || !format.inline) {
-                        // Obtain selection node before selection is unselected by applyRngStyle()
-                        var curSelNode = ed.selection.getNode();
+						// Obtain selection node before selection is unselected by applyRngStyle()
+						var curSelNode = ed.selection.getNode();
 
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
 
-                        // Colored nodes should be underlined so that the color of the underline matches the text color.
-                        if (format.styles && (format.styles.color || format.styles.textDecoration)) {
-                            tinymce.walk(curSelNode, processUnderlineAndColor, 'childNodes');
-                            processUnderlineAndColor(curSelNode);
-                        }
+						// Colored nodes should be underlined so that the color of the underline matches the text color.
+						if (format.styles && (format.styles.color || format.styles.textDecoration)) {
+							tinymce.walk(curSelNode, processUnderlineAndColor, 'childNodes');
+							processUnderlineAndColor(curSelNode);
+						}
 
 						selection.moveToBookmark(bookmark);
 						selection.setRng(moveStart(selection.getRng(TRUE)));
