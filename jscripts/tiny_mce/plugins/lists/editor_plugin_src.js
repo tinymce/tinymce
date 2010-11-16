@@ -289,6 +289,12 @@
 					r.setEndAfter(end);
 					return !(r.compareBoundaryPoints(END_TO_START, sel) > 0 || r.compareBoundaryPoints(START_TO_END, sel) <= 0);
 				}
+				function nextLeaf(br) {
+					if (br.nextSibling)
+						return br.nextSibling;
+					if (!dom.isBlock(br.parentNode))
+						return nextLeaf(br.parentNode);
+				}
 				// Split on BRs within the range and process those.
 				startSection = element.firstChild;
 				// First mark the BRs that have any part of the previous section selected.
@@ -300,14 +306,14 @@
 					}
 					if (isAnyPartSelected(startSection, br)) {
 						dom.addClass(br, '_mce_tagged_br');
-						startSection = br.nextSibling;
+						startSection = nextLeaf(br);
 					}
 				});
 				trailingContentSelected = (startSection && isAnyPartSelected(startSection, undefined));
 				startSection = element.firstChild;
 				each(dom.select(breakElements, element), function(br) {
 					// Got a section from start to br.
-					var tmp = br.nextSibling;
+					var tmp = nextLeaf(br);
 					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
 						return true; // Skip the bogus Brs that are put in to appease Firefox and Safari.
 					}
