@@ -598,7 +598,7 @@
 						process(node);
 
 						// Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.
-						if (ed.dom.getAttrib(node, 'style') === 'text-decoration: underline;' && getTextDecoration(node.parentNode) === 'underline') {
+						if (ed.dom.getStyle(node, 'text-decoration') === 'underline' && getTextDecoration(node.parentNode) === 'underline') {
 							removeFormat({'deep': false, 'exact': true, 'inline': 'span', 'styles': {'textDecoration' : 'underline'}}, null, node);
 						}
 					});
