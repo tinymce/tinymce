@@ -253,6 +253,11 @@
 			
 			function doWrapList(start, end, template) {
 				var li, n = start, tmp, i;
+				while (!dom.isBlock(start.parentNode) && start.parentNode !== dom.getRoot()) {
+					start = dom.split(start.parentNode, start.previousSibling);
+					start = start.nextSibling;
+					n = start;
+				}
 				if (template) {
 					li = template.cloneNode(true);
 					start.parentNode.insertBefore(li, start);
@@ -517,8 +522,9 @@
 			function recurse(element) {
 				t.splitSafeEach(element.childNodes, processElement);
 			}
-			function brAtEdgeOfSelection(container, offset, start) {
-				return offset >= 0 && container.hasChildNodes() && container.childNodes[offset].tagName === 'BR';
+			function brAtEdgeOfSelection(container, offset) {
+				return offset >= 0 && container.hasChildNodes() && offset < container.childNodes.length &&
+						container.childNodes[offset].tagName === 'BR';
 			}
 			selectedBlocks = sel.getSelectedBlocks();
 			if (selectedBlocks.length === 0) {
