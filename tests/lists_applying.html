@@ -240,6 +240,9 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 	ApplyingOL.to(HeadingToParagraphSelection).gives('<ol><li><h1>This is a test</h1></li><li>Second paragraph</li></ol>');
 	ApplyingOL.to(BlockToParagraphSelection).gives('<ol><li>This is a test</li><li>Second paragraph</li></ol>');
 	ApplyingOL.to(MultipleParagraphAndHeadingSelection).gives('<ol><li>This is a test</li><li><h1>Second paragraph</h1></li><li>Third paragraph</li></ol>');
+
+	ApplyingOL.to(TextWithBrsInFormattingInDiv).gives('<div><strong>Before</strong><ol><li>Item1</li><li>Item2</li><li>Item3</li></ol></div>');
+	ApplyingOL.to(TextWithBrInsideFormatting).gives('<div><em><strong>Before</strong></em><ol><li><em><strong><span class="foo">Item1</span></strong></em>Item2</li><li>Item3</li></ol></div>');
 	queue.done();
 });
 
@@ -265,6 +268,8 @@ asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', functio
 	ApplyingUL.to(HeadingToParagraphSelection).gives('<ul><li><h1>This is a test</h1></li><li>Second paragraph</li></ul>');
 	ApplyingUL.to(BlockToParagraphSelection).gives('<ul><li>This is a test</li><li>Second paragraph</li></ul>');
 	ApplyingUL.to(MultipleParagraphAndHeadingSelection).gives('<ul><li>This is a test</li><li><h1>Second paragraph</h1></li><li>Third paragraph</li></ul>');
+
+	ApplyingUL.to(TextWithBrsInFormattingInDiv).gives('<div><strong>Before</strong><ul><li>Item1</li><li>Item2</li><li>Item3</li></ul></div>');
 	queue.done();
 });
 

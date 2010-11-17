@@ -101,6 +101,22 @@ TextInDiv = createState('<div>Item</div>', 'div', 2);
 TextWithBrsInDivFirstLine = createState('<div>Item1<br />Item2</div>', 'div', 2);
 TextWithBrsInDivMiddleLine = createState('<div>Item1<br />Item2<br />Item3</div>', 'br:nth-child(1)', 'afterNextCharacter');
 TextWithBrsInDivLastLine = createState('<div>Item1<br />Item2</div>', 'br:nth-child(1)', 'afterNextCharacter');
+TextWithBrsInFormattingInDiv = function() {
+	var rng;
+	editor.setContent('<div><strong>Before<br /></strong>Item1<br />Item2<br />Item3</div>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('div')[0].childNodes[1], 0);
+	rng.setEnd(editor.dom.select('div')[0], 6);
+	editor.selection.setRng(rng);
+};
+TextWithBrInsideFormatting = function() {
+	var rng;
+	editor.setContent('<div><em><strong>Before<br /><span class="foo">Item1</span></strong></em>Item2<br />Item3</div>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].childNodes[0], 2);
+	rng.setEnd(editor.dom.select('div')[0], 4);
+	editor.selection.setRng(rng);
+};
 
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);
