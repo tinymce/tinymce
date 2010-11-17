@@ -120,29 +120,6 @@
 			}
 		};
 
-		var getTextDecoration = function(node) {
-			var decoration;
-
-			ed.dom.getParent(node, function(n) {
-				decoration = ed.dom.getStyle(n, 'text-decoration');
-				return decoration && decoration !== 'none';
-			});
-
-			return decoration;
-		};
-
-		var processUnderlineAndColor = function(node) {
-			var textDecoration;
-			if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
-				textDecoration = getTextDecoration(node.parentNode);
-				if (ed.dom.getStyle(node, 'color') && textDecoration) {
-					ed.dom.setStyle(node, 'text-decoration', textDecoration);
-				} else if (ed.dom.getStyle(node, 'textdecoration') === textDecoration) {
-					ed.dom.setStyle(node, 'text-decoration', null);
-				}
-			}
-		};
-
 		/**
 		 * Applies the specified format to the current selection or specified node.
 		 *
@@ -344,7 +321,7 @@
 							// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
-                                removeFormat(format, vars, child, format.exact ? child : null);
+								removeFormat(format, vars, child, format.exact ? child : null);
 							});
 						});
 
@@ -385,18 +362,9 @@
 					applyRngStyle(expandRng(rng, formatList));
 				} else {
 					if (!selection.isCollapsed() || !format.inline) {
-						// Obtain selection node before selection is unselected by applyRngStyle()
-						var curSelNode = ed.selection.getNode();
-
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
-
-						// Colored nodes should be underlined so that the color of the underline matches the text color.
-						if (format.styles && (format.styles.color || format.styles.textDecoration)) {
-							tinymce.walk(curSelNode, processUnderlineAndColor, 'childNodes');
-							processUnderlineAndColor(curSelNode);
-						}
 
 						selection.moveToBookmark(bookmark);
 						selection.setRng(moveStart(selection.getRng(TRUE)));
@@ -596,11 +564,6 @@
 				rangeUtils.walk(rng, function(nodes) {
 					each(nodes, function(node) {
 						process(node);
-
-						// Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.
-						if (ed.dom.getStyle(node, 'text-decoration') === 'underline' && getTextDecoration(node.parentNode) === 'underline') {
-							removeFormat({'deep': false, 'exact': true, 'inline': 'span', 'styles': {'textDecoration' : 'underline'}}, null, node);
-						}
 					});
 				});
 			};
@@ -1566,10 +1529,6 @@
 				// Apply pending formats
 				each(pendingFormats.apply.reverse(), function(item) {
 					apply(item.name, item.vars, caret_node);
-
-					// Colored nodes should be underlined so that the color of the underline matches the text color.
-					if (item.name === 'forecolor' && item.vars.value)
-						processUnderlineAndColor(caret_node.parentNode);
 				});
 
 				// Remove pending formats
