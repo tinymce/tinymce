@@ -10,7 +10,7 @@
 <script>
 module("tinymce.html.DomParser");
 
-var schema = new tinymce.html.Schema();
+var schema = new tinymce.html.Schema({valid_elements: '*[class|title]'});
 var serializer = new tinymce.html.Serializer({}, schema);
 
 function countNodes(node, counter) {

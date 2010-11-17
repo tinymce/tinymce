@@ -424,8 +424,17 @@
 				children[name] = element.children;
 			});
 
-			// Remove these by default
-			each(split('ol,ul,li,sub,sup,span,font,a,table,tbody'), function(name) {
+			// Switch these
+			each(split('strong/b,em/i'), function(item) {
+				item = split(item, '/');
+				elements[item[1]].outputName = item[0];
+			});
+
+			// Add default alt attribute for images
+			elements.img.attributesDefault = [{name: 'alt', value: ''}];
+
+			// Remove these if they are empty by default
+			each(split('ol,ul,li,sub,sup,blockquote,tr,div,span,font,a,table,tbody'), function(name) {
 				elements[name].removeEmpty = true;
 			});
 
