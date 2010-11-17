@@ -297,7 +297,7 @@
 				function nextLeaf(br) {
 					if (br.nextSibling)
 						return br.nextSibling;
-					if (!dom.isBlock(br.parentNode))
+					if (!dom.isBlock(br.parentNode) && br.parentNode !== dom.getRoot())
 						return nextLeaf(br.parentNode);
 				}
 				// Split on BRs within the range and process those.
