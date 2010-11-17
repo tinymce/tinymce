@@ -958,25 +958,25 @@
 				],
 
 				bold : [
-					{inline : 'strong'},
+					{inline : 'strong', remove : 'all'},
 					{inline : 'span', styles : {fontWeight : 'bold'}},
-					{inline : 'b'}
+					{inline : 'b', remove : 'all'}
 				],
 
 				italic : [
-					{inline : 'em'},
+					{inline : 'em', remove : 'all'},
 					{inline : 'span', styles : {fontStyle : 'italic'}},
-					{inline : 'i'}
+					{inline : 'i', remove : 'all'}
 				],
 
 				underline : [
 					{inline : 'span', styles : {textDecoration : 'underline'}, exact : true},
-					{inline : 'u'}
+					{inline : 'u', remove : 'all'}
 				],
 
 				strikethrough : [
 					{inline : 'span', styles : {textDecoration : 'line-through'}, exact : true},
-					{inline : 'u'}
+					{inline : 'strike', remove : 'all'}
 				],
 
 				forecolor : {inline : 'span', styles : {color : '%value'}},
