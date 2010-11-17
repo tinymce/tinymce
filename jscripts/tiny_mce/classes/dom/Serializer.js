@@ -196,7 +196,7 @@
 				// and since we can't feature detect a crash we need to sniff the acutal build number
 				// This fix will make DOM ranges and make Sizzle happy!
 				impl = node.ownerDocument.implementation;
-				if (impl.createHTMLDocument && (tinymce.isOpera && opera.buildNumber() >= 1767)) {
+				if (impl.createHTMLDocument) {
 					// Create an empty HTML document
 					doc = impl.createHTMLDocument("");
 
