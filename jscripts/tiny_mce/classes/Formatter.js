@@ -341,7 +341,7 @@
 						// Remove/merge children
 						each(formatList, function(format) {
 							// Merge all children of similar type will move styles from child to parent
-							// this: <span style="color:red"><b><spa6 style="color:red; font-size:10px">text</span></b></span>
+							// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
 								removeFormat(format, vars, child, format.exact ? child : null);
