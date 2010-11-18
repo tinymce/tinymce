@@ -1,7 +1,7 @@
-#id, #name, #hspace, #vspace, #class_name, #align {	width: 100px }
+#id, #name, #hspace, #vspace, #class_name, #align { width: 100px }
 #hspace, #vspace { width: 50px }
 #flash_quality, #flash_align, #flash_scale, #flash_salign, #flash_wmode { width: 100px }
-#flash_base, #flash_flashvars { width: 240px }
+#flash_base, #flash_flashvars, #html5_altsource1, #html5_altsource2, #html5_poster { width: 240px }
 #width, #height { width: 40px }
 #src, #media_type { width: 250px }
 #class { width: 120px }

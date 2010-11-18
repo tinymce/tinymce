@@ -252,6 +252,22 @@ test("Shockwave (script/relative urls)", function() {
 	equals(editor.getContent(), '<p>\n<script type="text/javascript">writeShockWave({"src":"test","width":"320","height":"240"});</'+'script>\n</p>');
 });
 
+test("Internal dataToHtml", function() {
+	expect(1);
+
+	editor.settings.media_use_script = false;
+	editor.settings.relative_urls = true;
+
+	equals(
+		'<object width="100" height="100" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="url" /><embed width="100" height="100" type="application/x-shockwave-flash" src="url" /></object>',
+		editor.plugins.media.dataToHtml({
+			type: 'flash',
+			params: {src:'url'},
+			video: {}
+		})
+	);
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

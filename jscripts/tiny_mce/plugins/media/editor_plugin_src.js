@@ -9,8 +9,10 @@
  */
 
 (function() {
-	var excludedEmbedAttrs = tinymce.makeMap('id,width,height,type'), Node = tinymce.html.Node, mediaTypes, scriptRegExp, JSON = tinymce.util.JSON;
+	var excludedEmbedAttrs = tinymce.makeMap('id,width,height,type'), Node = tinymce.html.Node,
+		mediaTypes, scriptRegExp, JSON = tinymce.util.JSON, mimeTypes;
 
+	// Media types supported by this plugin
 	mediaTypes = [
 		// Type, clsid:s, mime types, codebase
 		["Flash", "d27cdb6e-ae6d-11cf-96b8-444553540000", "application/x-shockwave-flash", "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"],
@@ -18,13 +20,18 @@
 		["WindowsMedia", "6bf52a52-394a-11d3-b153-00c04f79faa6,22d6f312-b0f6-11d0-94ab-0080c74c7e95,05589fa1-c356-11ce-bf01-00aa0055595a", "application/x-mplayer2", "http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"],
 		["QuickTime", "02bf25d5-8c17-4b23-bc80-d3488abddc6b", "video/quicktime", "http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"],
 		["RealMedia", "cfcdaa03-8be4-11cf-b84b-0020afbbccfa", "audio/x-pn-realaudio-plugin", "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"],
-		["Java", "8AD9C840-044E-11D1-B3E9-00805F499D93", "application/x-java-applet", "http://java.sun.com/products/plugin/autodl/jinstall-1_5_0-windows-i586.cab#Version=1,5,0,0"],
-		["Silverlight", "dfeaf541-f3e1-4c24-acac-99c30715084a", "application/x-silverlight-2"]
+		["Java", "8ad9c840-044e-11d1-b3e9-00805f499d93", "application/x-java-applet", "http://java.sun.com/products/plugin/autodl/jinstall-1_5_0-windows-i586.cab#Version=1,5,0,0"],
+		["Silverlight", "dfeaf541-f3e1-4c24-acac-99c30715084a", "application/x-silverlight-2"],
+		["Video"]
 	];
 
 	tinymce.create('tinymce.plugins.MediaPlugin', {
 		init : function(ed, url) {
-			var self = this, lookup = {}, i, y, item;
+			var self = this, lookup = {}, i, y, item, name;
+
+			function isMediaImg(node) {
+				return node && node.nodeName === 'IMG' && ed.dom.hasClass(node, 'mceItemMedia');
+			};
 
 			self.editor = ed;
 			self.url = url;
@@ -32,10 +39,12 @@
 			// Parse media types into a lookup table
 			scriptRegExp = '';
 			for (i = 0; i < mediaTypes.length; i++) {
+				name = mediaTypes[i][0];
+
 				item = {
-					type : mediaTypes[i][0],
-					clsids : tinymce.explode(mediaTypes[i][1]),
-					mimes : tinymce.explode(mediaTypes[i][2]),
+					name : name,
+					clsids : tinymce.explode(mediaTypes[i][1] || ''),
+					mimes : tinymce.explode(mediaTypes[i][2] || ''),
 					codebase : mediaTypes[i][3]
 				};
 
@@ -45,17 +54,42 @@
 				for (y = 0; y < item.mimes.length; y++)
 					lookup[item.mimes[y]] = item;
 
-				lookup['mceItem' + mediaTypes[i][0]] = item;
+				lookup['mceItem' + name] = item;
+				lookup[name.toLowerCase()] = item;
 
-				scriptRegExp += (scriptRegExp ? '|' : '') + mediaTypes[i][0];
+				scriptRegExp += (scriptRegExp ? '|' : '') + name;
 			}
+
+			// Handle the media_types setting
+			tinymce.each(ed.getParam("media_types",
+				"video=mp4,ogv,webm;" +
+				"silverlight=xap;" +
+				"flash=swf;" +
+				"shockwave=dcr;" +
+				"quicktime=mov,qt,mpg,mp3,mpeg;" +
+				"shockwave=dcr;" +
+				"windowsmedia=avi,wmv,wm,asf,asx,wmx,wvx;" +
+				"realmedia=rm,ra,ram;" +
+				"java=jar"
+			).split(';'), function(item) {
+				var i, extensions, type;
+
+				item = item.split(/=/);
+				extensions = tinymce.explode(item[1].toLowerCase());
+				for (i = 0; i < extensions.length; i++) {
+					type = lookup[item[0].toLowerCase()];
+
+					if (type)
+						lookup[extensions[i]] = type;
+				}
+			});
 
 			scriptRegExp = new RegExp('write(' + scriptRegExp + ')\\(([^)]+)\\)');
 			self.lookup = lookup;
 
 			ed.onPreInit.add(function() {
 				// Allow video elements
-				ed.schema.addValidElements('object[*],param[name|value],embed[*],video[*],audio[*],source[*]');
+				ed.schema.addValidElements('object[id|style|width|height|classid|codebase|*],param[name|value],embed[id|style|width|height|type|src|*],video[*],audio[*],source[*]');
 
 				// Convert video elements to image placeholder
 				ed.parser.addNodeFilter('object,embed,video,audio,script', function(nodes) {
@@ -71,7 +105,7 @@
 
 					while (i--) {
 						node = nodes[i];
-						if (node.attr('class').indexOf('mceItemMedia') !== -1)
+						if ((node.attr('class') || '').indexOf('mceItemMedia') !== -1)
 							self.imgToObject(node);
 					}
 				});
@@ -101,13 +135,39 @@
 
 			// Register commands
 			ed.addCommand('mceMedia', function() {
+				var data, img;
+
+				img = ed.selection.getNode();
+				if (isMediaImg(img)) {
+					data = JSON.parse(ed.dom.getAttrib(img, 'data-mce-json'));
+
+					// Add some extra properties to the data object
+					tinymce.each('id,width,height,class'.split(','), function(name) {
+						var value = ed.dom.getAttrib(img, name);
+
+						if (value)
+							data[name] = value;
+					});
+
+					data.type = self.getType(img.className).name.toLowerCase();
+				}
+
+				if (!data) {
+					data = {
+						type : 'flash',
+						video: {},
+						params: {}
+					};
+				}
+
 				ed.windowManager.open({
 					file : url + '/media.htm',
 					width : 430 + parseInt(ed.getLang('media.delta_width', 0)),
 					height : 470 + parseInt(ed.getLang('media.delta_height', 0)),
 					inline : 1
 				}, {
-					plugin_url : url
+					plugin_url : url,
+					data : data
 				});
 			});
 
@@ -116,7 +176,7 @@
 
 			// Update media selection status
 			ed.onNodeChange.add(function(ed, cm, node) {
-				cm.setActive('media', node.nodeName == 'IMG' && ed.dom.hasClass(node, 'mceItemMedia'));
+				cm.setActive('media', isMediaImg(node));
 			});
 		},
 
@@ -130,25 +190,102 @@
 			};
 		},
 
-		imgToObject : function(node) {
-			var video, object, embed, name, value, data, source, param, typeItem, i, classes, item;
+		/**
+		 * Converts the JSON data object to an img node.
+		 */
+		dataToImg : function(data, force_absolute) {
+			var editor = this.editor, baseUri = editor.documentBaseURI;
 
-			data = JSON.parse(node.attr('data-mce-data'));
+			function convertUrl(url) {
+				if (!url)
+					return url;
+
+				if (force_absolute)
+					return baseUri.toAbsolute(url);
+				else
+					return editor.convertURL(url, 'src', 'object');
+			};
+
+			data.params.src = convertUrl(data.params.src);
+
+			return this.editor.dom.create('img', {
+				id : data.id,
+				width : data.width || "100",
+				height : data.height || "100",
+				style : data.style,
+				src : this.url + '/img/trans.gif',
+				'class' : 'mceItemMedia mceItem' + this.getType(data.type).name,
+				'data-mce-json' : JSON.serialize(data, "'")
+			});
+		},
+
+		/**
+		 * Converts the JSON data object to a HTML string.
+		 */
+		dataToHtml : function(data, force_absolute) {
+			return this.editor.serializer.serialize(this.dataToImg(data, force_absolute));
+		},
+
+		/**
+		 * Converts the JSON data object to a HTML string.
+		 */
+		htmlToData : function(html) {
+			var fragment, img, data;
+
+			fragment = this.editor.parser.parse(html);
+			img = fragment.getAll('img')[0];
+
+			if (img) {
+				data = JSON.parse(img.attr('data-mce-json'));
+				data.type = this.getType(img.attr('class')).name.toLowerCase();
+
+				// Add some extra properties to the data object
+				tinymce.each('id,width,height,class'.split(','), function(name) {
+					var value = img.attr(name);
+
+					if (value)
+						data[name] = value;
+				});
+
+				return data;
+			}
+		},
+
+		/**
+		 * Get type item by extension, class, clsid or mime type.
+		 *
+		 * @method getType
+		 * @param {String} value Value to get type item by.
+		 * @return {Object} Type item object or undefined.
+		 */
+		getType : function(value) {
+			var i, values, typeItem;
 
 			// Find type by checking the classes
-			classes = tinymce.explode(node.attr('class'), ' ');
-			for (i = 0; i < classes.length; i++) {
-				typeItem = this.lookup[classes[i]];
+			values = tinymce.explode(value, ' ');
+			for (i = 0; i < values.length; i++) {
+				typeItem = this.lookup[values[i]];
+
 				if (typeItem)
-					break;
+					return typeItem;
 			}
+		},
+
+		/**
+		 * Converts a tinymce.html.Node image element to video/object/embed.
+		 */
+		imgToObject : function(node) {
+			var video, object, embed, name, value, data, source, param, typeItem, i, item;
+
+			data = JSON.parse(node.attr('data-mce-json'));
+			typeItem = this.getType(node.attr('class'));
 
 			// Handle scripts
 			if (this.editor.settings.media_use_script) {
 				replacement = new Node('script', 1).attr('type', 'text/javascript');
 
 				value = new Node('#text', 3);
-				value.value = 'write' + typeItem.type + '(' + JSON.serialize(tinymce.extend(data.params, {
+				value.value = 'write' + typeItem.name + '(' + JSON.serialize(tinymce.extend(data.params, {
 					width: node.attr('width'),
 					height: node.attr('height')
 				})) + ');';
@@ -160,7 +297,7 @@
 			}
 
 			// Add HTML5 video element
-			if (data.video.attrs) {
+			if (typeItem.name === 'Video') {
 				// Create new object element
 				video = new Node('video', 1).attr({
 					id : node.attr('id'),
@@ -177,6 +314,9 @@
 					source.shortEnded = true;
 					video.append(source);
 				}
+
+				// Get fallback type
+				typeItem = this.getType('flash');
 			}
 
 			// Do we have a params src then we can generate object
@@ -196,7 +336,7 @@
 					value = data.params[name];
 
 					// Windows media needs to use url instead of src for the media URL
-					if (name === 'src' && typeItem.type === 'WindowsMedia')
+					if (name === 'src' && typeItem.name === 'WindowsMedia')
 						name = 'url';
 
 					param.attr({name: name, value: value});
@@ -256,10 +396,21 @@
 
 			if (video || object)
 				node.replace(video || object);
+			else
+				node.remove();
 		},
 
+		/**
+		 * Converts a tinymce.html.Node video/object/embed to an img element.
+		 *
+		 * The video/object/embed will be converted into an image placeholder with a JSON data attribute like this:
+		 * <img class="mceItemMedia mceItemFlash" width="100" height="100" data-mce-json="{..}" />
+		 *
+		 * The JSON structure will be like this:
+		 * {'params':{'flashvars':'something','quality':'high','src':'someurl'}, 'video':{'sources':[{src: 'someurl', type: 'video/mp4'}]}}
+		 */
 		objectToImg : function(node) {
-			var object, embed, video, img, name, id, width, height, style, i,
+			var object, embed, video, img, name, id, width, height, style, i, html,
 				param, params, source, sources, data, type, lookup = this.lookup, matches;
 
 			function getInnerHTML(node) {
@@ -381,12 +532,14 @@
 			if (data.params.src)
 				data.params.src = this.editor.convertURL(data.params.src, 'src', 'object');
 
-			// Get media type based on clsid or mime type
-			if (object)
-				type = (lookup[(object.attr('clsid') || '').toLowerCase()] || lookup[(object.attr('type') || '').toLowerCase()] || {}).type;
+			if (video)
+				type = lookup.video.name;
+
+			if (object && !type)
+				type = (lookup[(object.attr('clsid') || '').toLowerCase()] || lookup[(object.attr('type') || '').toLowerCase()] || {}).name;
 
 			if (embed && !type)
-				type = (lookup[(embed.attr('type') || '').toLowerCase()] || {}).type;
+				type = (lookup[(embed.attr('type') || '').toLowerCase()] || {}).name;
 
 			// Replace the video/object/embed element with a placeholder image containing the data
 			node.replace(img);
@@ -418,7 +571,7 @@
 				style : style,
 				width : width || "100",
 				height : height || "100",
-				"data-mce-data" : JSON.serialize(data, "'")
+				"data-mce-json" : JSON.serialize(data, "'")
 			});
 		}
 	});
