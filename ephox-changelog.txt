@@ -1,3 +1,4 @@
+	Fixed issue where pasting part of a list from IE did not wrap the list in a UL element.
 	Fixed issue in list plugin which left the final list item outside the list element.
 	Fixed issue where inline formatting may be applied beyond the end of the selection.
 	Fixed issue where bullet lists weren't always detected correctly.
