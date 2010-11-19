@@ -2570,6 +2570,7 @@
 						rng = t.selection.getRng();
 
 						if (rng.parentElement) {
+							addUndo();
 							parent = rng.parentElement();
 
 							// Select next word when ctrl key is used in combo with delete
@@ -2595,6 +2596,8 @@
 								// Restore the caret position
 								t.selection.moveToBookmark(bookmark);
 							}
+
+							addUndo();
 
 							// Block the default delete behavior since it might be broken
 							e.preventDefault();
