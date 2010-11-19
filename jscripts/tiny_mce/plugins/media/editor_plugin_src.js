@@ -62,7 +62,7 @@
 
 			// Handle the media_types setting
 			tinymce.each(ed.getParam("media_types",
-				"video=mp4,ogv,webm;" +
+				"video=mp4,m4v,ogv,webm;" +
 				"silverlight=xap;" +
 				"flash=swf;" +
 				"shockwave=dcr;" +
@@ -206,7 +206,7 @@
 					return editor.convertURL(url, 'src', 'object');
 			};
 
-			data.params.src = convertUrl(data.params.src);
+			data.src = convertUrl(data.src);
 
 			return this.editor.dom.create('img', {
 				id : data.id,
@@ -320,13 +320,20 @@
 			}
 
 			// Do we have a params src then we can generate object
-			if (data.params.src) {
+			if (data.src) {
+				data.params.src = data.src;
+
 				// Create new object element
 				object = new Node('object', 1).attr({
 					id : node.attr('id'),
 					width: node.attr('width'),
 					height: node.attr('height'),
 					style : node.attr('style')
+				});
+
+				tinymce.each(tinymce.explode('name,bgcolor,align,vspace,hspace'), function(name) {
+					if (data[name])
+						object.attr(name, data[name]);
 				});
 
 				// Add params
@@ -346,7 +353,7 @@
 				// Setup add type and classid if strict is disabled
 				if (this.editor.getParam('media_strict', true)) {
 					object.attr({
-						data: data.params.src,
+						data: data.src,
 						type: typeItem.mimes[0]
 					});
 				} else {
@@ -367,6 +374,11 @@
 
 					for (name in data.params)
 						embed.attr(name, data.params[name]);
+
+					tinymce.each(tinymce.explode('name,bgcolor,align,vspace,hspace'), function(name) {
+						if (data[name])
+							embed.attr(name, data[name]);
+					});
 
 					object.append(embed);
 				}
@@ -505,7 +517,7 @@
 						data.params[name] = param.attr('value');
 				}
 
-				data.params.src = object.attr('data');
+				data.src = object.attr('data');
 			}
 
 			if (embed) {
@@ -523,14 +535,16 @@
 			}
 
 			// Use src not movie
-			if (data.params.movie) {
-				data.params.src = data.params.movie;
+			if (data.params.movie && !data.src) {
+				data.src = data.params.movie;
 				delete data.params.movie;
 			}
 
+			data.src = data.src || data.params.src;
+
 			// Convert the URL to relative/absolute depending on configuration
-			if (data.params.src)
-				data.params.src = this.editor.convertURL(data.params.src, 'src', 'object');
+			if (data.src)
+				data.src = this.editor.convertURL(data.src, 'src', 'object');
 
 			if (video)
 				type = lookup.video.name;
