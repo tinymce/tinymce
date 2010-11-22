@@ -102,22 +102,10 @@ asyncTest('Type Tab in List', function() {
 	checkIfKeystrokeFiresAction('\t', false, 'Indent', true);
 });
 
-asyncTest('Type Tab in Paragraph', function() {
-	editor.setContent('<p>Test</p>');
-	setSelection('p', 0);
-	checkIfKeystrokeFiresAction('\t', false, 'Indent', false);
-});
-
 asyncTest('Type Shift-Tab in List', function() {
 	editor.setContent('<ol><li>Test</li></ol>');
 	setSelection('li', 0);
 	checkIfKeystrokeFiresAction('\t', true, 'Outdent', true);
-});
-
-asyncTest('Type Shift-Tab in Paragraph', function() {
-	editor.setContent('<p>Test</p>');
-	setSelection('p', 0);
-	checkIfKeystrokeFiresAction('\t', true, 'Outdent', false);
 });
 
 function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
@@ -135,7 +123,7 @@ function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
 		equals(actionFired, expected, actionName + ' command triggered?');
 		editor.onBeforeExecCommand.remove(listener);
 		QUnit.start();
-	});
+	}, editor.selection.getNode());
 }
 
 asyncTest('Expanded Selection, List Types - Indent Action', function() {
