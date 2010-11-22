@@ -28,7 +28,7 @@ asyncTest('Backspace with indented text', function() {
 		editor.execCommand('undo', false, null);
 		equals(editor.getContent(), originalContent, 'Undo deletion');
 		QUnit.start();
-	});
+	}, editor.selection.getNode());
 });
 
 // oncut is not supported by FireFox 2.0 so this is impossible to fix there.
@@ -42,15 +42,18 @@ if (!tinymce.isGecko || !/Firefox\/[12].[0-9]/.test(navigator.userAgent)) {
 		editor.focus();
 		setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 		robot.cut(function() {
-			equals(editor.getContent(), "<p>Line2</p>", 'Cut text');
-			editor.execCommand('undo', false, null);
-			equals(editor.getContent(), originalContent, 'Undo cut');
-			editor.execCommand('SelectAll');
-			robot.paste(function() {
-				ok(/Line/.test(editor.getContent()), 'Content should have been on clipboard. Got: ' + editor.getContent());
-				QUnit.start();
-			});
-		});
+			// The fix for this bug happens in a timeout after cut so we need to make sure that happens first by adding an additional delay.
+			setTimeout(function() {
+				equals(editor.getContent(), "<p>Line2</p>", 'Cut text');
+				editor.execCommand('undo', false, null);
+				equals(editor.getContent(), originalContent, 'Undo cut');
+				editor.execCommand('SelectAll');
+				robot.paste(function() {
+					ok(/Line/.test(editor.getContent()), 'Content should have been on clipboard. Got: ' + editor.getContent());
+					QUnit.start();
+				}, editor.selection.getNode());
+			}, 100);
+		}, editor.selection.getNode());
 	});
 } else {
 	test('Skipped on FireFox 2.x: Cut with indented text', function() {});
@@ -69,7 +72,7 @@ asyncTest('Forward delete with indented text', function() {
 		editor.execCommand('undo', false, null);
 		equals(editor.getContent(), originalContent, 'Undo deletion');
 		QUnit.start();
-	});
+	}, editor.selection.getNode());
 });
 
 asyncTest('Forward delete with first paragraph indented', function() {
@@ -83,7 +86,7 @@ asyncTest('Forward delete with first paragraph indented', function() {
 	robot.forwardDelete(function() {
 		equals(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>', 'Delete content');
 		QUnit.start();
-	});
+	}, editor.selection.getNode());
 });
 
 tinyMCE.init({
