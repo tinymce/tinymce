@@ -60,7 +60,7 @@ asyncTest('Forward delete triggers undo in IE', function() {
 		equals(editor.getContent(), '<p>Test1 Test2</p>', 'First word has been restored');
 
 		QUnit.start();
-	});
+	}, editor.selection.getNode());
 });
 
 tinyMCE.init({
