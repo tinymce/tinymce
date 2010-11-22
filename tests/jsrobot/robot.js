@@ -128,15 +128,22 @@
 				setTimeout(continueCallback, 0);
 			};
 			var doListeners = function(add) {
+				var target = focusElement.document || focusElement.ownerDocument || focusElement;
 				if (focusElement.addEventListener) {
-					focusElement.ownerDocument[add ? 'addEventListener' : 'removeEventListener'](listenerType, listener, true);
+					target[add ? 'addEventListener' : 'removeEventListener'](listenerType, listener, true);
 				} else {
 					focusElement[add ? 'attachEvent' : 'detachEvent']('on' + listenerType, listener);
 				}
 			};
 			
 			focusElement = focusElement || document.activeElement;
+			if (focusElement.frameElement) {
+				// If we have an iframe window we need to make sure the iframe element in the parent document is focussed
+				// Otherwise calls to focus within the frame won't have any effect in Safari/Mac.
+				focusElement.frameElement.focus();
+			}
 			if (focusElement && focusElement.contentWindow) {
+				// If the element to focus is an iframe element, focus the active element within the frame instead (if available).
 				focusElement = focusElement.contentWindow.document.activeElement;
 			}
 			if (focusElement) {
