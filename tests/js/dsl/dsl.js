@@ -129,7 +129,7 @@ tinymce.create('dsl.Action', {
 function fakeKeyPressAction(keyCode, shiftKey) {
 	return function(callback) {
 		setTimeout(function() {
-			window.robot.type(keyCode, shiftKey, callback);
+			window.robot.type(keyCode, shiftKey, callback, editor.selection.getNode());
 		}, 1);
 	};
 }
