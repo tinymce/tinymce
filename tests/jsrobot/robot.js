@@ -125,7 +125,9 @@
 				listenerActivated = true;
 				clearTimeout(timeout);
 				doListeners(false);
-				setTimeout(continueCallback, 0);
+				if (continueCallback) {
+					setTimeout(continueCallback, 0);
+				}
 			};
 			var doListeners = function(add) {
 				var target = focusElement.document || focusElement.ownerDocument || focusElement;
@@ -152,7 +154,7 @@
 
 				// Add a timeout of 5 seconds in case the target event isn't supported or something goes wrong.
 				timeout = setTimeout(function() {
-					if (!listenerActivated) {
+					if (!listenerActivated && continueCallback) {
 						continueCallback();
 					}
 				}, 5000);
@@ -161,7 +163,7 @@
 			if (actionResult) {
 				throw { message: "JSRobot error: " + actionResult };
 			}
-			if (!focusElement) {
+			if (!focusElement && continueCallback) {
 				setTimeout(continueCallback, 100);
 			}
 		}
