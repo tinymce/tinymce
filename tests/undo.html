@@ -30,7 +30,7 @@ function assertUndoEnabledWhenTyping(c, expectedContent) {
 		equals(editor.getContent(), expectedContent);
 		ok(isUndoEnabled(), 'Undo is enabled.');
 		QUnit.start();
-	});
+	}, editor.selection.getNode());
 }
 
 asyncTest('Undo added when typing character', function() {
