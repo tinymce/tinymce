@@ -58,37 +58,41 @@
 			return "Callback received.";
 		},
 		
-		type: function(key, shiftKey, callback) {
+		type: function(key, shiftKey, callback, focusElement) {
 			shiftKey = !!shiftKey;
-			this.appletAction(this.getApplet().typeKey(this.getKeycode(key), shiftKey), callback);
+			this.appletAction(focusElement, callback, function() {
+				return this.getApplet().typeKey(this.getKeycode(key), shiftKey);
+			});
 		},
 		
-		forwardDelete: function(callback) {
-			this.type(0x7F, false, callback);
+		forwardDelete: function(callback, focusElement) {
+			this.type(0x7F, false, callback, focusElement);
 		},
 		
-		cut: function(callback) {
-			this.typeAsShortcut('x', callback);
+		cut: function(callback, focusElement) {
+			this.typeAsShortcut('x', callback, focusElement, 'cut');
 		},
 		
-		copy: function(callback) {
-			this.typeAsShortcut('c', callback);
+		copy: function(callback, focusElement) {
+			this.typeAsShortcut('c', callback, focusElement, 'copy');
 		},
 		
-		paste: function(callback) {
-			this.typeAsShortcut('v', callback);
+		paste: function(callback, focusElement) {
+			this.typeAsShortcut('v', callback, focusElement, 'paste');
 		},
 		
-		pasteText: function(content, callback) {
+		pasteText: function(content, callback, focusElement) {
 			var actionResult = this.getApplet().setClipboard(content);
 			if (actionResult) {
 				throw { message: "JSRobot error: " + actionResult };
 			}
-			this.paste(callback);
+			this.paste(callback, focusElement);
 		},
 		
-		typeAsShortcut: function(key, callback) {
-			this.appletAction(this.getApplet().typeAsShortcut(this.getKeycode(key)), callback);
+		typeAsShortcut: function(key, callback, focusElement, event) {
+			this.appletAction(focusElement, callback, function() {
+				return this.getApplet().typeAsShortcut(this.getKeycode(key));
+			}, event);
 		},
 		
 		getKeycode: function(key) {
@@ -114,11 +118,45 @@
 			return this.appletInstance;
 		},
 		
-		appletAction: function(actionResult, callback) {
+		appletAction: function(focusElement, continueCallback, action, event) {
+			var actionResult, listenerActivated = false, listenerType = event || 'keyup', timeout;
+			var listener = function() {
+				if (listenerActivated) return;
+				listenerActivated = true;
+				clearTimeout(timeout);
+				doListeners(false);
+				setTimeout(continueCallback, 0);
+			};
+			var doListeners = function(add) {
+				if (focusElement.addEventListener) {
+					focusElement.ownerDocument[add ? 'addEventListener' : 'removeEventListener'](listenerType, listener, true);
+				} else {
+					focusElement[add ? 'attachEvent' : 'detachEvent']('on' + listenerType, listener);
+				}
+			};
+			
+			focusElement = focusElement || document.activeElement;
+			if (focusElement && focusElement.contentWindow) {
+				focusElement = focusElement.contentWindow.document.activeElement;
+			}
+			if (focusElement) {
+				focusElement.focus();
+				doListeners(true);
+
+				// Add a timeout of 5 seconds in case the target event isn't supported or something goes wrong.
+				timeout = setTimeout(function() {
+					if (!listenerActivated) {
+						continueCallback();
+					}
+				}, 5000);
+			}
+			actionResult = action.apply(this);
 			if (actionResult) {
 				throw { message: "JSRobot error: " + actionResult };
 			}
-			setTimeout(callback, 100);
+			if (!focusElement) {
+				setTimeout(continueCallback, 100);
+			}
 		}
 	};
 	
