@@ -137,7 +137,7 @@
 			};
 			
 			focusElement = focusElement || document.activeElement;
-			if (focusElement.frameElement) {
+			if (focusElement && focusElement.frameElement) {
 				// If we have an iframe window we need to make sure the iframe element in the parent document is focussed
 				// Otherwise calls to focus within the frame won't have any effect in Safari/Mac.
 				focusElement.frameElement.focus();
