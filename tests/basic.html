@@ -18,7 +18,7 @@ module("Basic functionality", {
 test('commands - xhtmlTextStyles', function() {
 	var c;
 
-	expect(18);
+	expect(19);
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
@@ -89,6 +89,9 @@ test('commands - xhtmlTextStyles', function() {
 
 	editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
 	equals(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: ' + fontFace('Arial') + ';">test</span></p>');
+
+	editor.setContent('<p><font face="Arial" style="color: #ff0000">test 123</font></p>');
+	equals(editor.getContent(), '<p><span style="color: #ff0000; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 });
 
 test('commands - alignInline', function() {
@@ -441,12 +444,16 @@ test('editor_methods - getParam', function() {
 test('WebKit Serialization range bug', function() {
 	expect(1);
 
-    // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
-    // wind up testing the serialization functionality we were aiming for and the test fails.
-    var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
-    editor.dom.replace(p, editor.getBody().firstChild);
+	if (tinymce.isIE) {
+		ok(true, "Skip IE");
+	} else {
+		// Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
+		// wind up testing the serialization functionality we were aiming for and the test fails.
+		var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
+		editor.dom.replace(p, editor.getBody().firstChild);
 
-	equals(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>');
+		equals(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>');
+	}
 });
 
 tinyMCE.init({

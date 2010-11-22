@@ -137,7 +137,7 @@
 				// Check if browser supports direct plaintext access
 				if (ed.pasteAsPlainText && (e.clipboardData || dom.doc.dataTransfer)) {
 					e.preventDefault();
-					process({content : (e.clipboardData || dom.doc.dataTransfer).getData('Text')}, true);
+					process({content : (e.clipboardData || dom.doc.dataTransfer).getData('Text').replace(/\r?\n/g, '<br />')});
 					return;
 				}
 

@@ -107,7 +107,7 @@
 
 			// Create DOM objects
 			t._addAll(DOM.doc.body, 
-				['div', {id : id, 'class' : ed.settings.inlinepopups_skin || 'clearlooks2', style : 'width:100px;height:100px'}, 
+				['div', {id : id, 'class' : (ed.settings.inlinepopups_skin || 'clearlooks2') + (tinymce.isIE && window.getSelection ? ' ie9' : ''), style : 'width:100px;height:100px'}, 
 					['div', {id : id + '_wrapper', 'class' : 'mceWrapper' + opt},
 						['div', {id : id + '_top', 'class' : 'mceTop'}, 
 							['div', {'class' : 'mceLeft'}],

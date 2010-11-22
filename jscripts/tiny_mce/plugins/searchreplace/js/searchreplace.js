@@ -42,6 +42,10 @@ var SearchReplaceDialog = {
 		ca = f[m + '_panel_casesensitivebox'].checked;
 		rs = f['replace_panel_replacestring'].value;
 
+		if (tinymce.isIE) {
+			r = ed.getDoc().selection.createRange();
+		}
+
 		if (s == '')
 			return;
 
@@ -105,6 +109,10 @@ var SearchReplaceDialog = {
 
 		se.collapse(b);
 		r = se.getRng();
+
+		if (tinymce.isIE) {
+			r = ed.getDoc().selection.createRange();
+		}
 
 		// Whats the point
 		if (!s)

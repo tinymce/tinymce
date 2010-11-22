@@ -571,7 +571,7 @@
 			this.resizeTo(e.clientWidth + dw, e.clientHeight + dh);
 		},
 
-		resizeTo : function(w, h) {
+		resizeTo : function(w, h, store) {
 			var ed = this.editor, s = this.settings, e = DOM.get(ed.id + '_tbl'), ifr = DOM.get(ed.id + '_ifr');
 
 			// Boundery fix box
@@ -589,8 +589,18 @@
 				DOM.setStyle(ifr, 'width', w);
 
 				// Make sure that the size is never smaller than the over all ui
-				if (w < e.clientWidth)
+				if (w < e.clientWidth) {
+					w = e.clientWidth;
 					DOM.setStyle(ifr, 'width', e.clientWidth);
+				}
+			}
+
+			// Store away the size
+			if (store && s.theme_advanced_resizing_use_cookie) {
+				Cookie.setHash("TinyMCE_" + ed.id + "_size", {
+					cw : w,
+					ch : h
+				});
 			}
 		},
 
@@ -810,12 +820,18 @@
 				}
 
 				ed.onPostRender.add(function() {
+					Event.add(ed.id + '_resize', 'click', function(e) {
+						e.preventDefault();
+					});
+
 					Event.add(ed.id + '_resize', 'mousedown', function(e) {
 						var mouseMoveHandler1, mouseMoveHandler2,
 							mouseUpHandler1, mouseUpHandler2,
 							startX, startY, startWidth, startHeight, width, height, ifrElm;
 
 						function resizeOnMove(e) {
+							e.preventDefault();
+
 							width = startWidth + (e.screenX - startX);
 							height = startHeight + (e.screenY - startY);
 
@@ -829,13 +845,9 @@
 							Event.remove(DOM.doc, 'mouseup', mouseUpHandler1);
 							Event.remove(ed.getDoc(), 'mouseup', mouseUpHandler2);
 
-							// Store away the size
-							if (s.theme_advanced_resizing_use_cookie) {
-								Cookie.setHash("TinyMCE_" + ed.id + "_size", {
-									cw : width,
-									ch : height
-								});
-							}
+							width = startWidth + (e.screenX - startX);
+							height = startHeight + (e.screenY - startY);
+							t.resizeTo(width, height, true);
 						};
 
 						e.preventDefault();

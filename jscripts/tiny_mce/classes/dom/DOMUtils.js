@@ -73,8 +73,8 @@
 			t.files = {};
 			t.cssFlicker = false;
 			t.counter = 0;
-			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat"; 
-			t.stdMode = d.documentMode === 8;
+			t.stdMode = d.documentMode >= 8;
+			t.boxModel = !tinymce.isIE || d.compatMode == "CSS1Compat" || t.stdMode;
 
 			t.settings = s = tinymce.extend({
 				keep_values : false,
@@ -415,7 +415,8 @@
 					o += ' ' + k + '="' + t.encode(a[k]) + '"';
 			}
 
-			if (tinymce.is(h))
+			// A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
+			if (typeof(h) != "undefined")
 				return o + '>' + h + '</' + n + '>';
 
 			return o + ' />';
@@ -784,7 +785,7 @@
 					default:
 						// IE has odd anonymous function for event attributes
 						if (n.indexOf('on') === 0 && v)
-							v = ('' + v).replace(/^function\s+\w+\(\)\s+\{\s+(.*)\s+\}$/, '$1');
+							v = tinymce._replace(/^function\s+\w+\(\)\s+\{\s+(.*)\s+\}$/, '$1', '' + v);
 				}
 			}
 
@@ -1018,7 +1019,7 @@
 				// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug
 				// This fix seems to resolve that issue by realcing the document ones a stylesheet finishes loading
 				// It's ugly but it seems to work fine.
-				if (isIE && d.documentMode) {
+				if (isIE && d.documentMode && d.recalc) {
 					link.onload = function() {
 						d.recalc();
 						link.onload = null;
@@ -1294,8 +1295,8 @@
 				h = h.replace(/\s+(disabled|checked|readonly|selected)\s*=\s*[\"\']?(false|0)[\"\']?/gi, ''); // IE doesn't handle default values correct
 			}
 
-			// Fix some issues
-			h = h.replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>'); // Force open
+			// Force tags open, and on IE9 replace $1$2 that got left behind due to bugs in their RegExp engine
+			h = tinymce._replace(/<a( )([^>]+)\/>|<a\/>/gi, '<a$1$2></a>', h); // Force open
 
 			// Store away src and href in _mce_src and mce_href since browsers mess them up
 			if (s.keep_values) {
@@ -1351,7 +1352,7 @@
 					});
 				}
 
-				h = h.replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->');
+				h = tinymce._replace(/<!\[CDATA\[([\s\S]+)\]\]>/g, '<!--[CDATA[$1]]-->', h);
 
 				// This function processes the attributes in the HTML string to force boolean
 				// attributes to the attr="attr" format and convert style, src and href to _mce_ versions
@@ -1703,7 +1704,7 @@
 
 									// Remove everything but class name
 									ov = v;
-									v = v.replace(/.*\.([a-z0-9_\-]+).*/i, '$1');
+									v = tinymce._replace(/.*\.([a-z0-9_\-]+).*/i, '$1', v);
 
 									// Filter classes
 									if (f && !(v = f(v, ov)))
@@ -1903,8 +1904,11 @@
 
 				if (node.nodeType != 9) {
 					// Keep non whitespace text nodes
-					if (node.nodeType == 3 && node.nodeValue.length > 0)
-						return;
+					if (node.nodeType == 3 && node.nodeValue.length > 0) {
+						// If parent element isn't a block or there isn't any useful contents for example "<p>   </p>"
+						if (!t.isBlock(node.parentNode) || tinymce.trim(node.nodeValue).length > 0)
+							return;
+					}
 
 					if (node.nodeType == 1) {
 						// If the only child is a bookmark then move it up

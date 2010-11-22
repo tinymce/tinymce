@@ -16,7 +16,7 @@ module("IE Selection", {
 	autostart: false
 });
 
-if (tinyMCE.isIE) {
+if (tinyMCE.isIE && !window.getSelection) {
 	test("Selection of element containing text", function(){
 		expect(5);
 		

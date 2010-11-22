@@ -11,40 +11,7 @@
 (function(window) {
 
 var QUnit = {
-	config: {},
 
-	// Initialize the configuration options
-	init: function() {
-		config = {
-			stats: { all: 0, bad: 0 },
-			moduleStats: { all: 0, bad: 0 },
-			started: +new Date,
-			updateRate: 1000,
-			blocking: false,
-			autorun: false,
-			autostart: true,
-			assertions: [],
-			filters: [],
-			queue: []
-		};
-
-		var tests = id("qunit-tests"),
-			banner = id("qunit-banner"),
-			result = id("qunit-testresult");
-
-		if ( tests ) {
-			tests.innerHTML = "";
-		}
-
-		if ( banner ) {
-			banner.className = "";
-		}
-
-		if ( result ) {
-			result.parentNode.removeChild( result );
-		}
-	},
-	
 	// call on start of module test to prepend name to all tests
 	module: function(name, testEnvironment) {
 		config.currentModule = name;
@@ -72,7 +39,7 @@ var QUnit = {
 	},
 	
 	test: function(testName, expected, callback, async) {
-		var name = testName, testEnvironment, testEnvironmentArg;
+		var name = '<span class="test-name">' + testName + '</span>', testEnvironment, testEnvironmentArg;
 
 		if ( arguments.length === 2 ) {
 			callback = expected;
@@ -85,15 +52,14 @@ var QUnit = {
 		}
 
 		if ( config.currentModule ) {
-			name = config.currentModule + " module: " + name;
+			name = '<span class="module-name">' + config.currentModule + "</span>: " + name;
 		}
 
-		if ( !validTest(name) ) {
+		if ( !validTest(config.currentModule + ": " + testName) ) {
 			return;
 		}
 
 		synchronize(function() {
-			QUnit.testStart( testName );
 
 			testEnvironment = extend({
 				setup: function() {},
@@ -103,11 +69,23 @@ var QUnit = {
 				extend(testEnvironment,testEnvironmentArg);
 			}
 
+			QUnit.testStart( testName, testEnvironment );
+
 			// allow utility functions to access the current test environment
 			QUnit.current_testEnvironment = testEnvironment;
 			
 			config.assertions = [];
 			config.expected = expected;
+			
+			var tests = id("qunit-tests");
+			if (tests) {
+				var b = document.createElement("strong");
+					b.innerHTML = "Running " + name;
+				var li = document.createElement("li");
+					li.appendChild( b );
+					li.id = "current-test-output";
+				tests.appendChild( li )
+			}
 
 			try {
 				if ( !config.pollution ) {
@@ -115,11 +93,12 @@ var QUnit = {
 				}
 
 				testEnvironment.setup.call(testEnvironment);
-				config.started = +new Date; // We don't want to measure the startup time
 			} catch(e) {
 				QUnit.ok( false, "Setup failed on " + name + ": " + e.message );
 			}
-
+	    });
+	
+	    synchronize(function() {
 			if ( async ) {
 				QUnit.stop();
 			}
@@ -146,7 +125,9 @@ var QUnit = {
 			} catch(e) {
 				QUnit.ok( false, "Teardown failed on " + name + ": " + e.message );
 			}
-
+	    });
+	
+	    synchronize(function() {
 			try {
 				QUnit.reset();
 			} catch(e) {
@@ -165,14 +146,13 @@ var QUnit = {
 
 			if ( tests ) {
 				var ol  = document.createElement("ol");
-				ol.style.display = "none";
 
 				for ( var i = 0; i < config.assertions.length; i++ ) {
 					var assertion = config.assertions[i];
 
 					var li = document.createElement("li");
 					li.className = assertion.result ? "pass" : "fail";
-					li.appendChild(document.createTextNode(assertion.message || "(no message)"));
+					li.innerHTML = assertion.message || "(no message)";
 					ol.appendChild( li );
 
 					if ( assertion.result ) {
@@ -182,6 +162,9 @@ var QUnit = {
 						config.stats.bad++;
 						config.moduleStats.bad++;
 					}
+				}
+				if (bad == 0) {
+					ol.style.display = "none";
 				}
 
 				var b = document.createElement("strong");
@@ -194,27 +177,20 @@ var QUnit = {
 				
 				addEvent(b, "dblclick", function(e) {
 					var target = e && e.target ? e.target : window.event.srcElement;
-					if ( target.nodeName.toLowerCase() === "strong" ) {
-						var text = "", node = target.firstChild;
-
-						while ( node.nodeType === 3 ) {
-							text += node.nodeValue;
-							node = node.nextSibling;
-						}
-
-						text = text.replace(/(^\s*|\s*$)/g, "");
-
-						if ( window.location ) {
-							window.location.href = window.location.href.match(/^(.+?)(\?.*)?$/)[1] + "?" + encodeURIComponent(text);
-						}
+					if ( target.nodeName.toLowerCase() == "span" || target.nodeName.toLowerCase() == "b" ) {
+						target = target.parentNode;
+					}
+					if ( window.location && target.nodeName.toLowerCase() === "strong" ) {
+						window.location.search = "?" + encodeURIComponent(getText([target]).replace(/\(.+\)$/, "").replace(/(^\s*|\s*$)/g, ""));
 					}
 				});
 
-				var li = document.createElement("li");
+				var li = id("current-test-output");
+				li.id = "";
 				li.className = bad ? "fail" : "pass";
+				li.removeChild( li.firstChild );
 				li.appendChild( b );
 				li.appendChild( ol );
-				tests.appendChild( li );
 
 				if ( bad ) {
 					var toolbar = id("qunit-testrunner-toolbar");
@@ -265,6 +241,7 @@ var QUnit = {
 	 * @example ok( "asdfasdf".length > 5, "There must be at least 5 chars" );
 	 */
 	ok: function(a, msg) {
+		msg = escapeHtml(msg);
 		QUnit.log(a, msg);
 
 		config.assertions.push({
@@ -293,12 +270,12 @@ var QUnit = {
 		push(expected != actual, actual, expected, message);
 	},
 	
-	deepEqual: function(a, b, message) {
-		push(QUnit.equiv(a, b), a, b, message);
+	deepEqual: function(actual, expected, message) {
+		push(QUnit.equiv(actual, expected), actual, expected, message);
 	},
 
-	notDeepEqual: function(a, b, message) {
-		push(!QUnit.equiv(a, b), a, b, message);
+	notDeepEqual: function(actual, expected, message) {
+		push(!QUnit.equiv(actual, expected), actual, expected, message);
 	},
 
 	strictEqual: function(actual, expected, message) {
@@ -308,7 +285,17 @@ var QUnit = {
 	notStrictEqual: function(actual, expected, message) {
 		push(expected !== actual, actual, expected, message);
 	},
-	
+
+	raises: function(fn,  message) {
+		try {
+			fn();
+			ok( false, message );
+		}
+		catch (e) {
+			ok( true, message );
+		}
+	},
+
 	start: function() {
 		// A slight delay, to avoid any current callbacks
 		if ( window.setTimeout ) {
@@ -335,51 +322,8 @@ var QUnit = {
 				QUnit.start();
 			}, timeout);
 		}
-	},
-	
-	/**
-	 * Resets the test setup. Useful for tests that modify the DOM.
-	 */
-	reset: function() {
-		if ( window.jQuery ) {
-			jQuery("#main").html( config.fixture );
-			jQuery.event.global = {};
-			jQuery.ajaxSettings = extend({}, config.ajaxSettings);
-		}
-	},
-	
-	/**
-	 * Trigger an event on an element.
-	 *
-	 * @example triggerEvent( document.body, "click" );
-	 *
-	 * @param DOMElement elem
-	 * @param String type
-	 */
-	triggerEvent: function( elem, type, event ) {
-		if ( document.createEvent ) {
-			event = document.createEvent("MouseEvents");
-			event.initMouseEvent(type, true, true, elem.ownerDocument.defaultView,
-				0, 0, 0, 0, 0, false, false, false, false, 0, null);
-			elem.dispatchEvent( event );
+	}
 
-		} else if ( elem.fireEvent ) {
-			elem.fireEvent("on"+type);
-		}
-	},
-	
-	// Safe object type checking
-	is: function( type, obj ) {
-		return Object.prototype.toString.call( obj ) === "[object "+ type +"]";
-	},
-	
-	// Logging callbacks
-	done: function(failures, total) {},
-	log: function(result, message) {},
-	testStart: function(name) {},
-	testDone: function(name, failures, total) {},
-	moduleStart: function(name, testEnvironment) {},
-	moduleDone: function(name, failures, total) {}
 };
 
 // Backwards compatibility, deprecated
@@ -429,13 +373,129 @@ if ( typeof exports === "undefined" || typeof require === "undefined" ) {
 	exports.QUnit = QUnit;
 }
 
+// define these after exposing globals to keep them in these QUnit namespace only
+extend(QUnit, {
+	config: config,
+
+	// Initialize the configuration options
+	init: function() {
+		extend(config, {
+			stats: { all: 0, bad: 0 },
+			moduleStats: { all: 0, bad: 0 },
+			started: +new Date,
+			updateRate: 1000,
+			blocking: false,
+			autostart: true,
+			autorun: false,
+			assertions: [],
+			filters: [],
+			queue: []
+		});
+
+		var tests = id("qunit-tests"),
+			banner = id("qunit-banner"),
+			result = id("qunit-testresult");
+
+		if ( tests ) {
+			tests.innerHTML = "";
+		}
+
+		if ( banner ) {
+			banner.className = "";
+		}
+
+		if ( result ) {
+			result.parentNode.removeChild( result );
+		}
+	},
+	
+	/**
+	 * Resets the test setup. Useful for tests that modify the DOM.
+	 */
+	reset: function() {
+		if ( window.jQuery ) {
+			jQuery("#main, #qunit-fixture").html( config.fixture );
+		}
+	},
+	
+	/**
+	 * Trigger an event on an element.
+	 *
+	 * @example triggerEvent( document.body, "click" );
+	 *
+	 * @param DOMElement elem
+	 * @param String type
+	 */
+	triggerEvent: function( elem, type, event ) {
+		if ( document.createEvent ) {
+			event = document.createEvent("MouseEvents");
+			event.initMouseEvent(type, true, true, elem.ownerDocument.defaultView,
+				0, 0, 0, 0, 0, false, false, false, false, 0, null);
+			elem.dispatchEvent( event );
+
+		} else if ( elem.fireEvent ) {
+			elem.fireEvent("on"+type);
+		}
+	},
+	
+	// Safe object type checking
+	is: function( type, obj ) {
+		return QUnit.objectType( obj ) == type;
+	},
+	
+	objectType: function( obj ) {
+		if (typeof obj === "undefined") {
+				return "undefined";
+
+		// consider: typeof null === object
+		}
+		if (obj === null) {
+				return "null";
+		}
+
+		var type = Object.prototype.toString.call( obj )
+			.match(/^\[object\s(.*)\]$/)[1] || '';
+
+		switch (type) {
+				case 'Number':
+						if (isNaN(obj)) {
+								return "nan";
+						} else {
+								return "number";
+						}
+				case 'String':
+				case 'Boolean':
+				case 'Array':
+				case 'Date':
+				case 'RegExp':
+				case 'Function':
+						return type.toLowerCase();
+		}
+		if (typeof obj === "object") {
+				return "object";
+		}
+		return undefined;
+	},
+	
+	// Logging callbacks
+	begin: function() {},
+	done: function(failures, total) {},
+	log: function(result, message) {},
+	testStart: function(name, testEnvironment) {},
+	testDone: function(name, failures, total) {},
+	moduleStart: function(name, testEnvironment) {},
+	moduleDone: function(name, failures, total) {}
+});
+
 if ( typeof document === "undefined" || document.readyState === "complete" ) {
 	config.autorun = true;
 }
 
 addEvent(window, "load", function() {
+	QUnit.begin();
+	
 	// Initialize the config, saving the execution queue
-	var oldconfig = extend(QUnit.config, config);
+	var oldconfig = extend({}, config);
 	QUnit.init();
 	extend(config, oldconfig);
 
@@ -489,16 +549,12 @@ addEvent(window, "load", function() {
 		toolbar.appendChild( label );
 	}
 
-	var main = id('main');
+	var main = id('main') || id('qunit-fixture');
 	if ( main ) {
 		config.fixture = main.innerHTML;
 	}
 
-	if ( window.jQuery ) {
-		config.ajaxSettings = window.jQuery.ajaxSettings;
-	}
-
-	if ( config.autostart ) {
+	if (config.autostart) {
 		QUnit.start();
 	}
 });
@@ -582,9 +638,36 @@ function validTest( name ) {
 	return run;
 }
 
+function escapeHtml(s) {
+	s = s === null ? "" : s + "";
+	return s.replace(/[\&"<>\\]/g, function(s) {
+		switch(s) {
+			case "&": return "&amp;";
+			case "\\": return "\\\\";
+			case '"': return '\"';
+			case "<": return "&lt;";
+			case ">": return "&gt;";
+			default: return s;
+		}
+	});
+}
+
 function push(result, actual, expected, message) {
-	message = message || (result ? "okay" : "failed");
-	QUnit.ok( result, result ? message + ": " + QUnit.jsDump.parse(expected) : message + ", expected: " + QUnit.jsDump.parse(expected) + " result: " + QUnit.jsDump.parse(actual) );
+	message = escapeHtml(message) || (result ? "okay" : "failed");
+	message = '<span class="test-message">' + message + "</span>";
+	expected = escapeHtml(QUnit.jsDump.parse(expected));
+	actual = escapeHtml(QUnit.jsDump.parse(actual));
+	var output = message + ', expected: <span class="test-expected">' + expected + '</span>';
+	if (actual != expected) {
+		output += ' result: <span class="test-actual">' + actual + '</span>, diff: ' + QUnit.diff(expected, actual);
+	}
+	
+	// can't use ok, as that would double-escape messages
+	QUnit.log(result, output);
+	config.assertions.push({
+		result: !!result,
+		message: output
+	});
 }
 
 function synchronize( callback ) {
@@ -695,60 +778,11 @@ QUnit.equiv = function () {
     var callers = []; // stack to decide between skip/abort functions
     var parents = []; // stack to avoiding loops from circular referencing
 
-
-    // Determine what is o.
-    function hoozit(o) {
-        if (QUnit.is("String", o)) {
-            return "string";
-            
-        } else if (QUnit.is("Boolean", o)) {
-            return "boolean";
-
-        } else if (QUnit.is("Number", o)) {
-
-            if (isNaN(o)) {
-                return "nan";
-            } else {
-                return "number";
-            }
-
-        } else if (typeof o === "undefined") {
-            return "undefined";
-
-        // consider: typeof null === object
-        } else if (o === null) {
-            return "null";
-
-        // consider: typeof [] === object
-        } else if (QUnit.is( "Array", o)) {
-            return "array";
-        
-        // consider: typeof new Date() === object
-        } else if (QUnit.is( "Date", o)) {
-            return "date";
-
-        // consider: /./ instanceof Object;
-        //           /./ instanceof RegExp;
-        //          typeof /./ === "function"; // => false in IE and Opera,
-        //                                          true in FF and Safari
-        } else if (QUnit.is( "RegExp", o)) {
-            return "regexp";
-
-        } else if (typeof o === "object") {
-            return "object";
-
-        } else if (QUnit.is( "Function", o)) {
-            return "function";
-        } else {
-            return undefined;
-        }
-    }
-
     // Call the o related callback with the given arguments.
     function bindCallbacks(o, callbacks, args) {
-        var prop = hoozit(o);
+        var prop = QUnit.objectType(o);
         if (prop) {
-            if (hoozit(callbacks[prop]) === "function") {
+            if (QUnit.objectType(callbacks[prop]) === "function") {
                 return callbacks[prop].apply(callbacks, args);
             } else {
                 return callbacks[prop]; // or undefined
@@ -782,11 +816,11 @@ QUnit.equiv = function () {
             },
 
             "date": function (b, a) {
-                return hoozit(b) === "date" && a.valueOf() === b.valueOf();
+                return QUnit.objectType(b) === "date" && a.valueOf() === b.valueOf();
             },
 
             "regexp": function (b, a) {
-                return hoozit(b) === "regexp" &&
+                return QUnit.objectType(b) === "regexp" &&
                     a.source === b.source && // the regex itself
                     a.global === b.global && // and its modifers (gmi) ...
                     a.ignoreCase === b.ignoreCase &&
@@ -807,7 +841,7 @@ QUnit.equiv = function () {
                 var len;
 
                 // b could be an object literal here
-                if ( ! (hoozit(b) === "array")) {
+                if ( ! (QUnit.objectType(b) === "array")) {
                     return false;
                 }   
                 
@@ -885,7 +919,7 @@ QUnit.equiv = function () {
         return (function (a, b) {
             if (a === b) {
                 return true; // catch the most you can
-            } else if (a === null || b === null || typeof a === "undefined" || typeof b === "undefined" || hoozit(a) !== hoozit(b)) {
+            } else if (a === null || b === null || typeof a === "undefined" || typeof b === "undefined" || QUnit.objectType(a) !== QUnit.objectType(b)) {
                 return false; // don't lose time with error prone cases
             } else {
                 return bindCallbacks(a, callbacks, [b, a]);
@@ -1069,6 +1103,163 @@ QUnit.jsDump = (function() {
 	};
 
 	return jsDump;
+})();
+
+// from Sizzle.js
+function getText( elems ) {
+	var ret = "", elem;
+
+	for ( var i = 0; elems[i]; i++ ) {
+		elem = elems[i];
+
+		// Get the text from text nodes and CDATA nodes
+		if ( elem.nodeType === 3 || elem.nodeType === 4 ) {
+			ret += elem.nodeValue;
+
+		// Traverse everything else, except comment nodes
+		} else if ( elem.nodeType !== 8 ) {
+			ret += getText( elem.childNodes );
+		}
+	}
+
+	return ret;
+};
+
+/*
+ * Javascript Diff Algorithm
+ *  By John Resig (http://ejohn.org/)
+ *  Modified by Chu Alan "sprite"
+ *
+ * Released under the MIT license.
+ *
+ * More Info:
+ *  http://ejohn.org/projects/javascript-diff-algorithm/
+ *  
+ * Usage: QUnit.diff(expected, actual)
+ * 
+ * QUnit.diff("the quick brown fox jumped over", "the quick fox jumps over") == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"
+ */
+QUnit.diff = (function() {
+	function diff(o, n){
+		var ns = new Object();
+		var os = new Object();
+		
+		for (var i = 0; i < n.length; i++) {
+			if (ns[n[i]] == null) 
+				ns[n[i]] = {
+					rows: new Array(),
+					o: null
+				};
+			ns[n[i]].rows.push(i);
+		}
+		
+		for (var i = 0; i < o.length; i++) {
+			if (os[o[i]] == null) 
+				os[o[i]] = {
+					rows: new Array(),
+					n: null
+				};
+			os[o[i]].rows.push(i);
+		}
+		
+		for (var i in ns) {
+			if (ns[i].rows.length == 1 && typeof(os[i]) != "undefined" && os[i].rows.length == 1) {
+				n[ns[i].rows[0]] = {
+					text: n[ns[i].rows[0]],
+					row: os[i].rows[0]
+				};
+				o[os[i].rows[0]] = {
+					text: o[os[i].rows[0]],
+					row: ns[i].rows[0]
+				};
+			}
+		}
+		
+		for (var i = 0; i < n.length - 1; i++) {
+			if (n[i].text != null && n[i + 1].text == null && n[i].row + 1 < o.length && o[n[i].row + 1].text == null &&
+			n[i + 1] == o[n[i].row + 1]) {
+				n[i + 1] = {
+					text: n[i + 1],
+					row: n[i].row + 1
+				};
+				o[n[i].row + 1] = {
+					text: o[n[i].row + 1],
+					row: i + 1
+				};
+			}
+		}
+		
+		for (var i = n.length - 1; i > 0; i--) {
+			if (n[i].text != null && n[i - 1].text == null && n[i].row > 0 && o[n[i].row - 1].text == null &&
+			n[i - 1] == o[n[i].row - 1]) {
+				n[i - 1] = {
+					text: n[i - 1],
+					row: n[i].row - 1
+				};
+				o[n[i].row - 1] = {
+					text: o[n[i].row - 1],
+					row: i - 1
+				};
+			}
+		}
+		
+		return {
+			o: o,
+			n: n
+		};
+	}
+	
+	return function(o, n){
+		o = o.replace(/\s+$/, '');
+		n = n.replace(/\s+$/, '');
+		var out = diff(o == "" ? [] : o.split(/\s+/), n == "" ? [] : n.split(/\s+/));
+
+		var str = "";
+		
+		var oSpace = o.match(/\s+/g);
+		if (oSpace == null) {
+			oSpace = [" "];
+		}
+		else {
+			oSpace.push(" ");
+		}
+		var nSpace = n.match(/\s+/g);
+		if (nSpace == null) {
+			nSpace = [" "];
+		}
+		else {
+			nSpace.push(" ");
+		}
+		
+		if (out.n.length == 0) {
+			for (var i = 0; i < out.o.length; i++) {
+				str += '<del>' + out.o[i] + oSpace[i] + "</del>";
+			}
+		}
+		else {
+			if (out.n[0].text == null) {
+				for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
+					str += '<del>' + out.o[n] + oSpace[n] + "</del>";
+				}
+			}
+			
+			for (var i = 0; i < out.n.length; i++) {
+				if (out.n[i].text == null) {
+					str += '<ins>' + out.n[i] + nSpace[i] + "</ins>";
+				}
+				else {
+					var pre = "";
+					
+					for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++) {
+						pre += '<del>' + out.o[n] + oSpace[n] + "</del>";
+					}
+					str += " " + out.n[i].text + nSpace[i] + pre;
+				}
+			}
+		}
+		
+		return str;
+	}
 })();
 
 })(this);

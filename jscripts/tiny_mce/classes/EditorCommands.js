@@ -289,7 +289,7 @@
 
 			mceInsertRawHTML : function(command, ui, value) {
 				selection.setContent('tiny_mce_marker');
-				editor.setContent(editor.getContent().replace(/tiny_mce_marker/g, value));
+				editor.setContent(editor.getContent().replace(/tiny_mce_marker/g, function() { return value }));
 			},
 
 			mceSetContent : function(command, ui, value) {

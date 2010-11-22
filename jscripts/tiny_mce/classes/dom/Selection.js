@@ -52,6 +52,9 @@
 			if (!t.win.getSelection)
 				t.tridentSel = new tinymce.dom.TridentSelection(t);
 
+			if (tinymce.isIE && dom.boxModel)
+				this._fixIESelection();
+
 			// Prevent leaks
 			tinymce.addUnload(t.destroy, t);
 		},
@@ -134,7 +137,18 @@
 					if (d.body.childNodes.length == 0) {
 						d.body.innerHTML = h;
 					} else {
-						r.insertNode(r.createContextualFragment(h));
+						// createContextualFragment doesn't exists in IE 9 DOMRanges
+						if (r.createContextualFragment) {
+							r.insertNode(r.createContextualFragment(h));
+						} else {
+							// Fake createContextualFragment call in IE 9
+							var frag = d.createDocumentFragment(), temp = d.createElement('div');
+
+							frag.appendChild(temp);
+							temp.outerHTML = h;
+
+							r.insertNode(frag);
+						}
 					}
 				}
 
@@ -454,8 +468,9 @@
 								while (marker = dom.get(bookmark.id + '_' + suffix))
 									dom.remove(marker, 1);
 
-								// If siblings are text nodes then merge them
-								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3) {
+								// If siblings are text nodes then merge them unless it's Opera since it some how removes the node
+								// and we are sniffing since adding a lot of detection code for a browser with 3% of the market isn't worth the effort. Sorry, Opera but it's just a fact
+								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !tinymce.isOpera) {
 									idx = prev.nodeValue.length;
 									prev.appendData(next.nodeValue);
 									dom.remove(next);
@@ -485,10 +500,12 @@
 					restoreEndPoint('start');
 					restoreEndPoint('end');
 
-					rng = dom.createRng();
-					rng.setStart(addBogus(startContainer), startOffset);
-					rng.setEnd(addBogus(endContainer), endOffset);
-					t.setRng(rng);
+					if (startContainer) {
+						rng = dom.createRng();
+						rng.setStart(addBogus(startContainer), startOffset);
+						rng.setEnd(addBogus(endContainer), endOffset);
+						t.setRng(rng);
+					}
 				} else if (bookmark.name) {
 					t.select(dom.select(bookmark.name)[bookmark.index]);
 				} else if (bookmark.rng)
@@ -606,7 +623,7 @@
 		 * @return {Range} Internal browser range object.
 		 */
 		getRng : function(w3c) {
-			var t = this, s, r;
+			var t = this, s, r, elm, doc = t.win.document;
 
 			// Found tridentSel object then we need to use that one
 			if (w3c && t.tridentSel)
@@ -614,16 +631,24 @@
 
 			try {
 				if (s = t.getSel())
-					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : t.win.document.createRange());
+					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : doc.createRange());
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
+			}
+
+			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
+			if (tinymce.isIE && r.setStart && doc.selection.createRange().item) {
+				elm = doc.selection.createRange().item(0);
+				r = doc.createRange();
+				r.setStartBefore(elm);
+				r.setEndAfter(elm);
 			}
 
 			// No range found then create an empty one
 			// This can occur when the editor is placed in a hidden container element on Gecko
 			// Or on IE when there was an exception
 			if (!r)
-				r = t.win.document.createRange ? t.win.document.createRange() : t.win.document.body.createTextRange();
+				r = doc.createRange ? doc.createRange() : doc.body.createTextRange();
 
 			if (t.selectedRange && t.explicitRange) {
 				if (r.compareBoundaryPoints(r.START_TO_START, t.selectedRange) === 0 && r.compareBoundaryPoints(r.END_TO_END, t.selectedRange) === 0) {
@@ -761,6 +786,78 @@
 			// Manual destroy then remove unload handler
 			if (!s)
 				tinymce.removeUnload(t.destroy);
+		},
+
+		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
+		_fixIESelection : function() {
+			var dom = this.dom, doc = dom.doc, body = doc.body, started, startRng;
+
+			// Make HTML element unselectable since we are going to handle selection by hand
+			doc.documentElement.unselectable = true;
+
+			// Return range from point or null if it failed
+			function rngFromPoint(x, y) {
+				var rng = body.createTextRange();
+
+				try {
+					rng.moveToPoint(x, y);
+				} catch (ex) {
+					// IE sometimes throws and exception, so lets just ignore it
+					rng = null;
+				}
+
+				return rng;
+			};
+
+			// Fires while the selection is changing
+			function selectionChange(e) {
+				var pointRng;
+
+				// Check if the button is down or not
+				if (e.button) {
+					// Create range from mouse position
+					pointRng = rngFromPoint(e.x, e.y);
+
+					if (pointRng) {
+						// Check if pointRange is before/after selection then change the endPoint
+						if (pointRng.compareEndPoints('StartToStart', startRng) > 0)
+							pointRng.setEndPoint('StartToStart', startRng);
+						else
+							pointRng.setEndPoint('EndToEnd', startRng);
+
+						pointRng.select();
+					}
+				} else
+					endSelection();
+			}
+
+			// Removes listeners
+			function endSelection() {
+				dom.unbind(doc, 'mouseup', endSelection);
+				dom.unbind(doc, 'mousemove', selectionChange);
+				started = 0;
+			};
+
+			// Detect when user selects outside BODY
+			dom.bind(doc, 'mousedown', function(e) {
+				if (e.target.nodeName === 'HTML') {
+					if (started)
+						endSelection();
+
+					started = 1;
+
+					// Setup start position
+					startRng = rngFromPoint(e.x, e.y);
+					if (startRng) {
+						// Listen for selection change events
+						dom.bind(doc, 'mouseup', endSelection);
+						dom.bind(doc, 'mousemove', selectionChange);
+
+						dom.win.focus();
+						startRng.select();
+					}
+				}
+			});
 		}
 	});
 })(tinymce);

@@ -10,7 +10,7 @@
 
 (function(win) {
 	var whiteSpaceRe = /^\s*|\s*$/g,
-		undefined;
+		undefined, isRegExpBroken = 'B'.replace(/A(.)|B/, '$1') === '$1';
 
 	/**
 	 * Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
@@ -47,7 +47,7 @@
 		/**
 		 * Release date of TinyMCE build.
 		 *
-		 * @property minorVersion
+		 * @property releaseDate
 		 * @type String
 		 */
 		releaseDate : '@@tinymce_release_date@@',
@@ -651,6 +651,29 @@
 				return u + v;
 
 			return u.replace('#', v + '#');
+		},
+
+		// Fix function for IE 9 where regexps isn't working correctly
+		// Todo: remove me once MS fixes the bug
+		_replace : function(find, replace, str) {
+			// On IE9 we have to fake $x replacement
+			if (isRegExpBroken) {
+				return str.replace(find, function() {
+					var val = replace, args = arguments, i;
+
+					for (i = 0; i < args.length - 2; i++) {
+						if (args[i] === undefined) {
+							val = val.replace(new RegExp('\\$' + i, 'g'), '');
+						} else {
+							val = val.replace(new RegExp('\\$' + i, 'g'), args[i]);
+						}
+					}
+
+					return val;
+				});
+			}
+
+			return str.replace(find, replace);
 		}
 
 		/**#@-*/

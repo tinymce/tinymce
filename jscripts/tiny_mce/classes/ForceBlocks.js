@@ -103,14 +103,14 @@
 				if (isOpera)
 					o.content = o.content.replace(t.reOpera, '</' + elm + '>');
 
-				o.content = o.content.replace(t.rePadd, '<' + elm + '$1$2$3$4$5$6>\u00a0</' + elm + '>');
+				o.content = tinymce._replace(t.rePadd, '<' + elm + '$1$2$3$4$5$6>\u00a0</' + elm + '>', o.content);
 
 				if (!isIE && !isOpera && o.set) {
 					// Use &nbsp; instead of BR in padded paragraphs
 					o.content = o.content.replace(t.reNbsp2BR1, '<' + elm + '$1$2><br /></' + elm + '>');
 					o.content = o.content.replace(t.reNbsp2BR2, '<' + elm + '$1$2><br /></' + elm + '>');
 				} else
-					o.content = o.content.replace(t.reBR2Nbsp, '<' + elm + '$1$2>\u00a0</' + elm + '>');
+					o.content = tinymce._replace(t.reBR2Nbsp, '<' + elm + '$1$2>\u00a0</' + elm + '>', o.content);
 			};
 
 			ed.onBeforeSetContent.add(padd);
@@ -180,12 +180,12 @@
 							var parent = ed.selection.getStart(), fmt = t._previousFormats;
 
 							// Parent is an empty block
-							if (!parent.hasChildNodes()) {
+							if (!parent.hasChildNodes() && fmt) {
 								parent = dom.getParent(parent, dom.isBlock);
 
-								if (parent) {
+								if (parent && parent.nodeName != 'LI') {
 									parent.innerHTML = '';
-	
+
 									if (t._previousFormats) {
 										parent.appendChild(fmt.wrapper);
 										fmt.inner.innerHTML = '\uFEFF';
@@ -194,6 +194,7 @@
 
 									selection.select(parent, 1);
 									ed.getDoc().execCommand('Delete', false, null);
+									t._previousFormats = 0;
 								}
 							}
 						}
@@ -333,7 +334,7 @@
 						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {
 							// Store selection
 							if (si == -2 && r) {
-								if (!isIE) {
+								if (!isIE || r.setStart) {
 									// If selection is element then mark it
 									if (r.startContainer.nodeType == 1 && (n = r.startContainer.childNodes[r.startOffset]) && n.nodeType == 1) {
 										// Save the id of the selected element
@@ -392,7 +393,7 @@
 
 			// Restore selection
 			if (si != -2) {
-				if (!isIE) {
+				if (!isIE || r.setStart) {
 					bl = b.getElementsByTagName(ed.settings.element)[0];
 					r = d.createRange();
 
@@ -424,7 +425,7 @@
 						// Ignore
 					}
 				}
-			} else if (!isIE && (n = ed.dom.get('__mce'))) {
+			} else if ((!isIE || r.setStart) && (n = ed.dom.get('__mce'))) {
 				// Restore the id of the selected element
 				if (eid)
 					n.setAttribute('id', eid);
