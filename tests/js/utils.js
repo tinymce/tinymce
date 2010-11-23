@@ -62,6 +62,7 @@ function initWhenTinyAndRobotAreReady() {
 		// Paste events are not always available on old browsers so we let them timeout.
 		if (event === 'keyup') {
 			ok(false, 'Received timeout from JSRobot');
+			window.robot.captureScreenShot();
 		}
 		continueCallback();
 	};
