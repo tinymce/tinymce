@@ -67,6 +67,10 @@
 				hex_colors : 1
 			}, s);
 
+			t.styles = new tinymce.html.Styles({
+				url_converter : s.url_converter
+			}, s.schema);
+
 			// Fix IE6SP2 flicker and check it failed for pre SP2
 			if (tinymce.isIE6) {
 				try {
@@ -84,16 +88,6 @@
 				'output progress section summary ' +
 				'time video').replace(/\w+/g, function(name) {
 					d.createElement(name);
-				});
-			}
-
-			// Build styles list
-			if (s.valid_styles) {
-				t._styles = {};
-
-				// Convert styles into a rule list
-				each(s.valid_styles, function(value, key) {
-					t._styles[key] = tinymce.explode(value);
 				});
 			}
 
@@ -855,113 +849,7 @@
 		 * @return {Object} Object representation of that style like {border : '1px solid red'}
 		 */
 		parseStyle : function(st) {
-			var t = this, s = t.settings, o = {};
-
-			if (!st)
-				return o;
-
-			function compress(p, s, ot) {
-				var t, r, b, l;
-
-				// Get values and check it it needs compressing
-				t = o[p + '-top' + s];
-				if (!t)
-					return;
-
-				r = o[p + '-right' + s];
-				if (t != r)
-					return;
-
-				b = o[p + '-bottom' + s];
-				if (r != b)
-					return;
-
-				l = o[p + '-left' + s];
-				if (b != l)
-					return;
-
-				// Compress
-				o[ot] = l;
-				delete o[p + '-top' + s];
-				delete o[p + '-right' + s];
-				delete o[p + '-bottom' + s];
-				delete o[p + '-left' + s];
-			};
-
-			function canCompress(key) {
-				var split, value = o[key];
-				if (!value || value.indexOf(' ') < 0) {
-					return;
-				}
-				split = value.split(' ');
-				if (each(split, function(v) { return v === split[0]; })) {
-					o[key] = split[0];
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			function compress2(ta, a, b, c) {
-				var t;
-				
-				if (!canCompress(a))
-					return;
-
-				if (!canCompress(b))
-					return;
-
-				if (!canCompress(c))
-					return;
-
-				// Compress
-				o[ta] = o[a] + ' ' + o[b] + ' ' + o[c];
-				delete o[a];
-				delete o[b];
-				delete o[c];
-			};
-
-			st = st.replace(/&(#?[a-z0-9]+);/g, '&$1_MCE_SEMI_'); // Protect entities
-
-			each(st.split(';'), function(v) {
-				var sv, ur = [];
-
-				if (v) {
-					v = v.replace(/_MCE_SEMI_/g, ';'); // Restore entities
-					v = v.replace(/url\([^\)]+\)/g, function(v) {ur.push(v);return 'url(' + ur.length + ')';});
-					v = v.split(':');
-					sv = tinymce.trim(v[1]);
-					sv = sv.replace(/url\(([^\)]+)\)/g, function(a, b) {return ur[parseInt(b) - 1];});
-
-					sv = sv.replace(/rgb\([^\)]+\)/g, function(v) {
-						return t.toHex(v);
-					});
-
-					if (s.url_converter) {
-						sv = sv.replace(/url\([\'\"]?([^\)\'\"]+)[\'\"]?\)/g, function(x, c) {
-							return 'url(' + s.url_converter.call(s.url_converter_scope || t, t.decode(c), 'style', null) + ')';
-						});
-					}
-
-					o[tinymce.trim(v[0]).toLowerCase()] = sv;
-				}
-			});
-
-			compress("border", "", "border");
-			compress("border", "-width", "border-width");
-			compress("border", "-color", "border-color");
-			compress("border", "-style", "border-style");
-			compress("padding", "", "padding");
-			compress("margin", "", "margin");
-			compress2('border', 'border-width', 'border-style', 'border-color');
-
-			if (isIE) {
-				// Remove pointless border
-				if (o.border == 'medium none')
-					o.border = '';
-			}
-
-			return o;
+			return this.styles.parse(st);
 		},
 
 		/**
@@ -973,45 +861,7 @@
 		 * @return {String} String representation of the style object for example: border: 1px solid red.
 		 */
 		serializeStyle : function(o, name) {
-			var t = this, s = '';
-
-			function add(v, k) {
-				if (k && v) {
-					// Remove browser specific styles like -moz- or -webkit-
-					if (k.indexOf('-') === 0)
-						return;
-
-					switch (k) {
-						case 'font-weight':
-							// Opera will output bold as 700
-							if (v == 700)
-								v = 'bold';
-
-							break;
-
-						case 'color':
-						case 'background-color':
-							v = v.toLowerCase();
-							break;
-					}
-
-					s += (s ? ' ' : '') + k + ': ' + v + ';';
-				}
-			};
-
-			// Validate style output
-			if (name && t._styles) {
-				each(t._styles['*'], function(name) {
-					add(o[name], name);
-				});
-
-				each(t._styles[name.toLowerCase()], function(name) {
-					add(o[name], name);
-				});
-			} else
-				each(o, add);
-
-			return s;
+			return this.styles.serialize(o, name);
 		},
 
 		/**

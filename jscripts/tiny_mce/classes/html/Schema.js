@@ -201,9 +201,19 @@
 	 * @param {Object} settings Name/value settings object.
 	 */
 	tinymce.html.Schema = function(settings) {
-		var self = this, elements = {}, children = {}, patternElements = [];
+		var self = this, elements = {}, children = {}, patternElements = [], validStyles;
 
 		settings = settings || {};
+
+		// Build styles list
+		if (settings.valid_styles) {
+			validStyles = {};
+
+			// Convert styles into a rule list
+			each(settings.valid_styles, function(value, key) {
+				validStyles[key] = tinymce.explode(value);
+			});
+		}
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
 		function patternToRegExp(str) {
@@ -471,6 +481,14 @@
 		 * @type {Object}
 		 */
 		self.children = children;
+
+		/**
+		 * Name/value map object with valid styles for each element.
+		 *
+		 * @field styles
+		 * @type {Object}
+		 */
+		self.styles = validStyles;
 
 		/**
 		 * Returns a map with boolean attributes.

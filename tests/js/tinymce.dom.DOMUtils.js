@@ -37,25 +37,25 @@
 
 		equals(
 			dom.serializeStyle(dom.parseStyle('background: transparent url(test.gif);')),
-			'background: transparent url(Xtest.gifY);'
+			'background: transparent url(\'Xtest.gifY\');'
 		);
 
 		equals(
 			dom.serializeStyle(dom.parseStyle('background: transparent url(http://www.site.com/test.gif?a=1&b=2);')),
-			'background: transparent url(Xhttp://www.site.com/test.gif?a=1&b=2Y);'
+			'background: transparent url(\'Xhttp://www.site.com/test.gif?a=1&b=2Y\');'
 		);
 
 		dom.setHTML('test', '<span id="test2" style="   margin-left: 1px;    margin-top: 1px;   margin-right: 1px;   margin-bottom: 1px   "></span>');
 		equals(dom.getAttrib('test2', 'style'), 'margin: 1px;');
 
 		dom.setHTML('test', '<span id="test2" style="background-image: url(test.gif);"></span>');
-		equals(dom.getAttrib('test2', 'style'), 'background-image: url(Xtest.gifY);');
+		equals(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xtest.gifY\');');
 
 		dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
 		equals(dom.getAttrib('test2', 'style'), tinymce.isIE && !window.getSelection ? 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
 		dom.get('test').innerHTML = '<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>';
-		equals(dom.getAttrib('test2', 'style'), 'background-image: url(Xhttp://www.site.com/test.gifY);');
+		equals(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xhttp://www.site.com/test.gifY\');');
 
 		DOM.remove('test');
 	});

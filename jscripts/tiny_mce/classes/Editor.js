@@ -854,7 +854,7 @@
 				class_filter : s.class_filter,
 				update_styles : 1,
 				fix_ie_paragraphs : 1,
-				valid_styles : s.valid_styles
+				schema : t.schema
 			});
 
 			/**
@@ -1269,8 +1269,7 @@
 				class_filter : s.class_filter,
 				root_element : t.id,
 				fix_ie_paragraphs : 1,
-				update_styles : 1,
-				valid_styles : s.valid_styles
+				update_styles : 1
 			});
 
 			t.serializer = new tinymce.dom.Serializer(s, t.dom, schema);

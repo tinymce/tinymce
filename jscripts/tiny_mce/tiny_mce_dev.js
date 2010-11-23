@@ -76,6 +76,7 @@
 
 	// tinymce.html.*
 	include('html/Entities.js');
+	include('html/Styles.js');
 	include('html/Schema.js');
 	include('html/SaxParser.js');
 	include('html/Node.js');

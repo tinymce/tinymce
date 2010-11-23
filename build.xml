@@ -69,6 +69,7 @@
 
 			<!-- tinymce.html.* -->
 			<fileset dir="${classes_dir}" includes="html/Entities.js" />
+			<fileset dir="${classes_dir}" includes="html/Styles.js" />
 			<fileset dir="${classes_dir}" includes="html/Schema.js" />
 			<fileset dir="${classes_dir}" includes="html/SaxParser.js" />
 			<fileset dir="${classes_dir}" includes="html/Node.js" />

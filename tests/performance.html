@@ -194,6 +194,28 @@ var performanceTests = {
 				);
 			}
 		}
+	},
+
+	'tinymce.html.Styles': {
+		setup: function() {
+			this.styles = new tinymce.html.Styles({
+				url_converter : function(url) {
+					return '|' + url + '|';
+				}
+			});
+		},
+
+		run: function() {
+			for (var i = 0; i < 1000; i++) {
+				this.styles.serialize(this.styles.parse("key:rgb(1,2,3) url(a) url('b') url(\"c\") \"st\\\"r'st'r\" 'st\\'r\"str\"str'"));
+				this.styles.serialize(this.styles.parse("key:rgb(1,2,3) rgb(1,2,3) rgb(1,2,3) rgb(1,2,3)"));
+				this.styles.serialize(this.styles.parse("font-size: 10px; font-weight: bold; font-family: Arial"));
+
+				//tinymce.DOM.serializeStyle(tinymce.DOM.parseStyle("key:rgb(1,2,3) url(a) url('b') url(\"c\") \"st\\\"r'st'r\" 'st\\'r\"str\"str'"));
+				//tinymce.DOM.serializeStyle(tinymce.DOM.parseStyle("key:rgb(1,2,3) rgb(1,2,3) rgb(1,2,3) rgb(1,2,3)"));
+				//tinymce.DOM.serializeStyle(tinymce.DOM.parseStyle("font-size: 10px; font-weight: bold; font-family: Arial"));
+			}
+		}
 	}
 };
 
