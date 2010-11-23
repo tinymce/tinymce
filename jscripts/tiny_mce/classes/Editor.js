@@ -1075,6 +1075,18 @@
 				});
 			}
 
+			if (s.protect) {
+				t.onBeforeSetContent.add(function(ed, o) {
+					if (s.protect) {
+						each(s.protect, function(pattern) {
+							o.content = o.content.replace(pattern, function(str) {
+								return '<!--mce:protected ' + escape(str) + '-->';
+							});
+						});
+					}
+				});
+			}
+
 			if (s.convert_newlines_to_brs) {
 				t.onBeforeSetContent.add(function(ed, o) {
 					if (o.initial)

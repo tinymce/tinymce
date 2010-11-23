@@ -3,6 +3,7 @@ Version 3.4 (2010-xx-xx)
 	Added new HTML parser logic used by the serialization engine and can handle malformed html contents.
 	Added new valid_children config option, enables more fine grain control of elements can be inside other elements.
 	Added new entities encoding logic boost performance and will only encode entities based on context i.e. attributes/text nodes.
+	Added new protect setting that enables users to protect template items from being removed by the serializer logic.
 	Replaced the internal _mce_ prefixed attributes to the more standard HTML5 data-mce- prefix. This will also resolve future browser santiaztion issues.
 	Fixed bug where the paste plugin wouldn't convert Word lists with more than 9 items to real ol lists. Patch contributed by Mike (yogaboy).
 	Fixed bug where clicking on a format title would produce errors if the current selection didn't have any formats.
