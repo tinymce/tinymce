@@ -223,8 +223,8 @@
 
 			return this.editor.dom.create('img', {
 				id : data.id,
-				width : data.width || "100",
-				height : data.height || "100",
+				width : data.width || "320",
+				height : data.height || "240",
 				style : data.style,
 				src : this.url + '/img/trans.gif',
 				'class' : 'mceItemMedia mceItem' + this.getType(data.type).name,
@@ -245,6 +245,12 @@
 		htmlToData : function(html) {
 			var fragment, img, data;
 
+			data = {
+				type : 'flash',
+				video: {sources:[]},
+				params: {}
+			};
+
 			fragment = this.editor.parser.parse(html);
 			img = fragment.getAll('img')[0];
 
@@ -259,9 +265,9 @@
 					if (value)
 						data[name] = value;
 				});
-
-				return data;
 			}
+
+			return data;
 		},
 
 		/**
@@ -288,7 +294,8 @@
 		 * Converts a tinymce.html.Node image element to video/object/embed.
 		 */
 		imgToObject : function(node) {
-			var video, object, embed, name, value, data, source, sources, param, typeItem, i, item, mp4Source, posterSrc;
+			var editor = this.editor, video, object, embed, name, value, data,
+				source, sources, params, param, typeItem, i, item, mp4Source, posterSrc;
 
 			data = JSON.parse(node.attr('data-mce-json'));
 			typeItem = this.getType(node.attr('class'));
@@ -310,19 +317,14 @@
 			}
 
 			// Add HTML5 video element
-			if (typeItem.name === 'Video') {
+			if (typeItem.name === 'Video' && data.video.sources[0] && data.video.sources[0].src) {
 				// Create new object element
-				video = new Node('video', 1);
-
-				for (name in data.video.attrs)
-					video.attr(name, data.video.attrs[name]);
-
-				video.attr({
+				video = new Node('video', 1).attr(tinymce.extend({
 					id : node.attr('id'),
 					width: node.attr('width'),
 					height: node.attr('height'),
 					style : node.attr('style')
-				});
+				}, data.video.attrs));
 
 				// Get poster source and use that for flash fallback
 				if (data.video.attrs)
@@ -340,8 +342,23 @@
 
 				// Create flash fallback for video if we have a mp4 source
 				if (mp4Source) {
-					data.params.src = 'flv_player.swf';
+					data.params.src = editor.getParam('flash_video_player_url', 'video_player.swf');
 					data.params.flashvars = 'url=' + mp4Source;
+
+					flashVars = editor.getParam('flash_video_player_flashvars');
+					tinymce.each(flashVars, function(value, name) {
+						//data.params[name] = value;
+					});
+
+					params = editor.getParam('flash_video_player_params', {
+						fullscreen: true,
+						allowscriptaccess: true
+					});
+
+					tinymce.each(params, function(value, name) {
+						data.params[name] = "" + value;
+					});
+
 					typeItem = this.getType('flash');
 				} else
 					data.params.src = '';
@@ -506,6 +523,10 @@
 				for (name in video.attributes.map)
 					attrs[name] = video.attributes.map[name];
 
+				source = node.attr('src');
+				if (source)
+					data.video.sources.push({src : source});
+
 				// Get all sources
 				sources = video.getAll("source");
 				for (i = 0; i < sources.length; i++) {
@@ -568,8 +589,8 @@
 			}
 
 			// Use src not movie
-			if (data.params.movie && !data.params.src) {
-				data.params.src = data.params.movie;
+			if (data.params.movie) {
+				data.params.src = data.params.src || data.params.movie;
 				delete data.params.movie;
 			}
 
@@ -614,8 +635,8 @@
 				id : id,
 				'class' : 'mceItemMedia mceItem' + (type || 'Flash'),
 				style : style,
-				width : width || "100",
-				height : height || "100",
+				width : width || "320",
+				height : height || "240",
 				"data-mce-json" : JSON.serialize(data, "'")
 			});
 		}

@@ -166,7 +166,7 @@ test("Video (attributes)", function() {
 	editor.settings.relative_urls = true;
 
 	editor.setContent('<video src="320x240.ogg" preload autoplay loop controls></video>');
-	equals(editor.getContent(), '<p><video width="100" height="100" src="320x240.ogg" preload="preload" autoplay="autoplay" loop="loop" controls="controls"></video></p>');
+	equals(editor.getContent(), '<p><video width="320" height="240" src="320x240.ogg" preload="preload" autoplay="autoplay" loop="loop" controls="controls"></video></p>');
 });
 
 test("Video (fallback html)", function() {
@@ -175,7 +175,7 @@ test("Video (fallback html)", function() {
 	editor.settings.relative_urls = true;
 
 	editor.setContent('<video src="320x240.ogg">text<a href="#">link</a></video>');
-	equals(editor.getContent(), '<p><video width="100" height="100" src="320x240.ogg">text<a href="#">link</a></video></p>');
+	equals(editor.getContent(), '<p><video width="320" height="240" src="320x240.ogg">text<a href="#">link</a></video></p>');
 });
 
 test("Video (attributes/source)", function() {
@@ -184,7 +184,7 @@ test("Video (attributes/source)", function() {
 	editor.settings.relative_urls = true;
 
 	editor.setContent('<video src="320x240.ogg" preload autoplay loop controls><source src="video.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" /><source src=\'video.3gp\' type=\'video/3gpp; codecs="mp4v.20.8, samr"\' /></video>');
-	equals(editor.getContent(), '<p><video width="100" height="100" src="320x240.ogg" preload="preload" autoplay="autoplay" loop="loop" controls="controls"><source src="video.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" /><source src="video.3gp" type="video/3gpp; codecs=&quot;mp4v.20.8, samr&quot;" /></video></p>');
+	equals(editor.getContent(), '<p><video width="320" height="240" src="320x240.ogg" preload="preload" autoplay="autoplay" loop="loop" controls="controls"><source src="video.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" /><source src="video.3gp" type="video/3gpp; codecs=&quot;mp4v.20.8, samr&quot;" /></video></p>');
 });
 
 test("Flash (script/relative urls)", function() {
@@ -259,7 +259,7 @@ test("Internal dataToHtml", function() {
 	editor.settings.relative_urls = true;
 
 	equals(
-		'<object width="100" height="100" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="url" /><embed width="100" height="100" type="application/x-shockwave-flash" src="url" /></object>',
+		'<object width="320" height="240" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="url" /><embed width="320" height="240" type="application/x-shockwave-flash" src="url" /></object>',
 		editor.plugins.media.dataToHtml({
 			type: 'flash',
 			src: 'url',

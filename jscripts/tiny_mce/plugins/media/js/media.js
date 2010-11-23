@@ -134,6 +134,9 @@
 								delete list[name];
 
 								value = getVal(formItemName);
+								if (type == 'video' && value === true)
+									value = name;
+
 								if (defaultStates[formItemName]) {
 									if (value !== defaultStates[formItemName]) {
 										value = "" + value;
@@ -250,8 +253,8 @@
 			var width, height, scale, size;
 
 			if (get('constrain').checked) {
-				width = parseInt(getVal('width') || "100", 10);
-				height = parseInt(getVal('height') || "100", 10);
+				width = parseInt(getVal('width') || "320", 10);
+				height = parseInt(getVal('height') || "240", 10);
 
 				if (type == 'width')
 					setVal('height', Math.round((width / this.data.width) * width));
