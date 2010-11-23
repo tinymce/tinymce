@@ -1038,7 +1038,7 @@
 				if (isIE) {
 					// Remove all child nodes, IE keeps empty text nodes in DOM
 					while (element.firstChild)
-						element.firstChild.removeNode();
+						element.removeChild(element.firstChild);
 
 					try {
 						// IE will remove comments from the beginning
