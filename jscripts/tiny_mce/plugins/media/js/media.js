@@ -45,7 +45,7 @@
 			get('bgcolor_pickcontainer').innerHTML = getColorPickerHTML('bgcolor_pick','bgcolor');
 			get('video_altsource1_filebrowser').innerHTML = getBrowserHTML('filebrowser_altsource1','video_altsource1','media','media');
 			get('video_altsource2_filebrowser').innerHTML = getBrowserHTML('filebrowser_altsource2','video_altsource2','media','media');
-			get('posterfilebrowsercontainer').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','media','image');
+			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','media','image');
 
 			html = this.getMediaListHTML('medialist', 'src', 'media', 'media');
 			if (html == "")
@@ -74,6 +74,7 @@
 			var editor = tinyMCEPopup.editor;
 
 			this.formToData();
+			editor.execCommand('mceRepaint');
 			tinyMCEPopup.restoreSelection();
 			editor.selection.setNode(editor.plugins.media.dataToImg(this.data));
 			tinyMCEPopup.close();
@@ -83,37 +84,28 @@
 			get('prev').innerHTML = this.editor.plugins.media.dataToHtml(this.data, true);
 		},
 
-		viewSource : function() {
-			setVal('source', this.editor.plugins.media.dataToHtml(this.data));
-			this.panel = 'source';
-		},
-
 		moveStates : function(to_form, field) {
 			var data = this.data, editor = this.editor, data = this.data,
-				mediaPlugin = editor.plugins.media, ext, src, typeInfo, defaultStates;
+				mediaPlugin = editor.plugins.media, ext, src, typeInfo, defaultStates, src;
 
 			defaultStates = {
 				// QuickTime
-				autoplay : true,
-				controller : true,
+				quicktime_autoplay : true,
+				quicktime_controller : true,
 
 				// Flash
-				play : true,
-				loop : true,
-				menu : true,
+				flash_play : true,
+				flash_loop : true,
+				flash_menu : true,
 
 				// WindowsMedia
-				autostart : true,
-				enablecontextmenu : true,
-				invokeurls : true,
+				windowsmedia_autostart : true,
+				windowsmedia_enablecontextmenu : true,
+				windowsmedia_invokeurls : true,
 
 				// RealMedia
-				autogotourl : true,
-				imagestatus : true,
-
-				// Video
-				preload : true,
-				controls : true
+				realmedia_autogotourl : true,
+				realmedia_imagestatus : true
 			};
 
 			function setOptions(type, names) {
@@ -127,25 +119,30 @@
 
 						if (type == 'global')
 							list = data;
-						else if (type == 'video')
-							list = data.video;
-						else
+						else if (type == 'video') {
+							list = data.video.attrs;
+
+							if (!list && !to_form)
+								data.video.attrs = list = {};
+						} else
 							list = data.params;
 
-						if (to_form) {
-							setVal(formItemName, list[name]);
-						} else {
-							delete list[name];
+						if (list) {
+							if (to_form) {
+								setVal(formItemName, list[name]);
+							} else {
+								delete list[name];
 
-							value = getVal(formItemName);
-							if (defaultStates[name]) {
-								if (value !== defaultStates[name]) {
+								value = getVal(formItemName);
+								if (defaultStates[formItemName]) {
+									if (value !== defaultStates[formItemName]) {
+										value = "" + value;
+										list[name] = value;
+									}
+								} else if (value) {
 									value = "" + value;
 									list[name] = value;
 								}
-							} else if (value) {
-								value = "" + value;
-								list[name] = value;
 							}
 						}
 					}
@@ -161,7 +158,7 @@
 
 				// Switch type based on extension
 				src = getVal('src');
-				if (field == 'src' || !data.type) {
+				if (field == 'src') {
 					ext = src.replace(/^.*\.([^.]+)$/, '$1');
 					if (typeInfo = mediaPlugin.getType(ext))
 						data.type = typeInfo.name.toLowerCase();
@@ -173,7 +170,7 @@
 					if (!data.video.sources)
 						data.video.sources = [];
 
-					data.video.sources[0] = {src: getVal('src'), type: 'video/mp4'};
+					data.video.sources[0] = {src: getVal('src')};
 				}
 			}
 
@@ -192,8 +189,40 @@
 			setOptions('shockwave', 'sound,progress,autostart,swliveconnect,swvolume,swstretchstyle,swstretchhalign,swstretchvalign');
 			setOptions('windowsmedia', 'autostart,enabled,enablecontextmenu,fullscreen,invokeurls,mute,stretchtofit,windowlessvideo,balance,baseurl,captioningid,currentmarker,currentposition,defaultframe,playcount,rate,uimode,volume');
 			setOptions('realmedia', 'autostart,loop,autogotourl,center,imagestatus,maintainaspect,nojava,prefetch,shuffle,console,controls,numloop,scriptcallbacks');
-			setOptions('video', 'poster,play,loop,preload,controls');
-			setOptions('global', 'id,src,name,vspace,hspace,bgcolor,align,width,height');
+			setOptions('video', 'poster,autoplay,loop,preload,controls');
+			setOptions('global', 'id,name,vspace,hspace,bgcolor,align,width,height');
+
+			if (to_form) {
+				if (data.type == 'video') {
+					if (data.video.sources[0])
+						setVal('src', data.video.sources[0].src);
+
+					src = data.video.sources[1];
+					if (src)
+						setVal('video_altsource1', src.src);
+
+					src = data.video.sources[2];
+					if (src)
+						setVal('video_altsource2', src.src);
+				} else
+					setVal('src', data.params.src);
+			} else {
+				if (data.type == 'video') {
+					if (!data.video.sources)
+						data.video.sources = [];
+
+					data.video.sources[0] = {src : getVal("src")};
+
+					src = getVal("video_altsource1");
+					if (src)
+						data.video.sources[1] = {src : src};
+
+					src = getVal("video_altsource2");
+					if (src)
+						data.video.sources[2] = {src : src};
+				} else
+					data.params.src = getVal("src");
+			}
 		},
 
 		dataToForm : function() {
@@ -201,14 +230,20 @@
 		},
 
 		formToData : function(field) {
-			if (this.panel == 'source') {
-				this.data = this.editor.plugins.media.htmlToData(getVal('source'));
-				this.dataToForm();
-				this.panel = '';
-			}
+			if (field == 'source') {
+				this.moveStates(false, field);
+				setVal('source', this.editor.plugins.media.dataToHtml(this.data));
+				this.panel = 'source';
+			} else {
+				if (this.panel == 'source') {
+					this.data = this.editor.plugins.media.htmlToData(getVal('source'));
+					this.dataToForm();
+					this.panel = '';
+				}
 
-			this.moveStates(false, field);
-			this.preview();
+				this.moveStates(false, field);
+				this.preview();
+			}
 		},
 
 		changeSize : function(type) {

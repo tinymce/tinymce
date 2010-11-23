@@ -155,7 +155,7 @@
 				if (!data) {
 					data = {
 						type : 'flash',
-						video: {},
+						video: {sources:[]},
 						params: {}
 					};
 				}
@@ -194,7 +194,7 @@
 		 * Converts the JSON data object to an img node.
 		 */
 		dataToImg : function(data, force_absolute) {
-			var editor = this.editor, baseUri = editor.documentBaseURI;
+			var editor = this.editor, baseUri = editor.documentBaseURI, sources, attrs;
 
 			function convertUrl(url) {
 				if (!url)
@@ -206,7 +206,20 @@
 					return editor.convertURL(url, 'src', 'object');
 			};
 
-			data.src = convertUrl(data.src);
+			data.params.src = convertUrl(data.params.src);
+
+			attrs = data.video.attrs;
+			if (attrs)
+				attrs.src = convertUrl(attrs.src);
+
+			if (attrs)
+				attrs.poster = convertUrl(attrs.poster);
+
+			sources = data.video.sources;
+			if (sources) {
+				for (i = 0; i < sources.length; i++)
+					sources[i].src = convertUrl(sources[i].src);
+			}
 
 			return this.editor.dom.create('img', {
 				id : data.id,
@@ -275,7 +288,7 @@
 		 * Converts a tinymce.html.Node image element to video/object/embed.
 		 */
 		imgToObject : function(node) {
-			var video, object, embed, name, value, data, source, param, typeItem, i, item;
+			var video, object, embed, name, value, data, source, sources, param, typeItem, i, item, mp4Source, posterSrc;
 
 			data = JSON.parse(node.attr('data-mce-json'));
 			typeItem = this.getType(node.attr('class'));
@@ -299,30 +312,43 @@
 			// Add HTML5 video element
 			if (typeItem.name === 'Video') {
 				// Create new object element
-				video = new Node('video', 1).attr({
+				video = new Node('video', 1);
+
+				for (name in data.video.attrs)
+					video.attr(name, data.video.attrs[name]);
+
+				video.attr({
 					id : node.attr('id'),
 					width: node.attr('width'),
 					height: node.attr('height'),
 					style : node.attr('style')
 				});
 
-				for (name in data.video.attrs)
-					video.attr(name, data.video.attrs[name]);
+				// Get poster source and use that for flash fallback
+				if (data.video.attrs)
+					posterSrc = data.video.attrs;
 
-				for (i = 0; i < data.video.sources.length; i++) {
-					source = new Node('source', 1).attr(data.video.sources[i]);
+				sources = data.video.sources;
+				for (i = 0; i < sources.length; i++) {
+					if (/\.mp4$/.test(sources[i].src))
+						mp4Source = sources[i].src;
+
+					source = new Node('source', 1).attr(sources[i]);
 					source.shortEnded = true;
 					video.append(source);
 				}
 
-				// Get fallback type
-				typeItem = this.getType('flash');
+				// Create flash fallback for video if we have a mp4 source
+				if (mp4Source) {
+					data.params.src = 'flv_player.swf';
+					data.params.flashvars = 'url=' + mp4Source;
+					typeItem = this.getType('flash');
+				} else
+					data.params.src = '';
 			}
 
 			// Do we have a params src then we can generate object
-			if (data.src) {
-				data.params.src = data.src;
-
+			if (data.params.src) {
 				// Create new object element
 				object = new Node('object', 1).attr({
 					id : node.attr('id'),
@@ -353,7 +379,7 @@
 				// Setup add type and classid if strict is disabled
 				if (this.editor.getParam('media_strict', true)) {
 					object.attr({
-						data: data.src,
+						data: data.params.src,
 						type: typeItem.mimes[0]
 					});
 				} else {
@@ -423,7 +449,9 @@
 		 */
 		objectToImg : function(node) {
 			var object, embed, video, img, name, id, width, height, style, i, html,
-				param, params, source, sources, data, type, lookup = this.lookup, matches;
+				param, params, source, sources, data, type, lookup = this.lookup,
+				matches, attrs, urlConverter = this.editor.settings.url_converter,
+				urlConverterScope = this.editor.settings.url_converter_scope;
 
 			function getInnerHTML(node) {
 				return new tinymce.html.Serializer({
@@ -474,8 +502,9 @@
 				data.video = {attrs : {}, sources : []};
 
 				// Get all video attributes
+				attrs = data.video.attrs;
 				for (name in video.attributes.map)
-					data.video.attrs[name] = video.attributes.map[name];
+					attrs[name] = video.attributes.map[name];
 
 				// Get all sources
 				sources = video.getAll("source");
@@ -483,11 +512,15 @@
 					source = sources[i].remove();
 
 					data.video.sources.push({
-						src: source.attr('src'),
+						src: urlConverter.call(urlConverterScope, source.attr('src'), 'src', 'source'),
 						type: source.attr('type'),
 						media: source.attr('media')
 					});
 				}
+
+				// Convert the poster URL
+				if (attrs.poster)
+					attrs.poster = urlConverter.call(urlConverterScope, attrs.poster, 'poster', 'video');
 			}
 
 			// Object element
@@ -517,7 +550,7 @@
 						data.params[name] = param.attr('value');
 				}
 
-				data.src = object.attr('data');
+				data.params.src = data.params.src || object.attr('data');
 			}
 
 			if (embed) {
@@ -535,16 +568,14 @@
 			}
 
 			// Use src not movie
-			if (data.params.movie && !data.src) {
-				data.src = data.params.movie;
+			if (data.params.movie && !data.params.src) {
+				data.params.src = data.params.movie;
 				delete data.params.movie;
 			}
 
-			data.src = data.src || data.params.src;
-
 			// Convert the URL to relative/absolute depending on configuration
-			if (data.src)
-				data.src = this.editor.convertURL(data.src, 'src', 'object');
+			if (data.params.src)
+				data.params.src = urlConverter.call(urlConverterScope, data.params.src, 'src', 'object');
 
 			if (video)
 				type = lookup.video.name;

@@ -16,7 +16,7 @@
 			<ul>
 				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');Media.formToData();" onmousedown="return false;">{#media_dlg.general}</a></span></li>
 				<li id="advanced_tab"><span><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');Media.formToData();" onmousedown="return false;">{#media_dlg.advanced}</a></span></li>
-				<li id="source_tab"><span><a href="javascript:mcTabs.displayTab('source_tab','source_panel');Media.formToData();Media.viewSource();" onmousedown="return false;">{#media_dlg.source}</a></span></li>
+				<li id="source_tab"><span><a href="javascript:mcTabs.displayTab('source_tab','source_panel');Media.formToData('source');" onmousedown="return false;">{#media_dlg.source}</a></span></li>
 			</ul>
 		</div>
 
@@ -128,7 +128,7 @@
 							<td>
 								<table border="0" cellspacing="0" cellpadding="0">
 									  <tr>
-										<td><input type="text" id="video_altsource1" name="video_altsource1" onchange="Media.formToData();" /></td>
+										<td><input type="text" id="video_altsource1" name="video_altsource1" onchange="Media.formToData();" style="width: 240px" /></td>
 										<td id="video_altsource1_filebrowser">&nbsp;</td>
 									  </tr>
 								</table>
@@ -140,7 +140,7 @@
 							<td>
 								<table border="0" cellspacing="0" cellpadding="0">
 									  <tr>
-										<td><input type="text" id="video_altsource2" name="video_altsource2" onchange="Media.formToData();" /></td>
+										<td><input type="text" id="video_altsource2" name="video_altsource2" onchange="Media.formToData();" style="width: 240px" /></td>
 										<td id="video_altsource2_filebrowser">&nbsp;</td>
 									  </tr>
 								</table>
@@ -152,8 +152,8 @@
 							<td>
 								<table border="0" cellspacing="0" cellpadding="0">
 									  <tr>
-										<td><input type="text" id="video_poster" name="video_poster" onchange="Media.formToData();" /></td>
-										<td id="posterfilebrowsercontainer">&nbsp;</td>
+										<td><input type="text" id="video_poster" name="video_poster" onchange="Media.formToData();" style="width: 240px" /></td>
+										<td id="video_poster_filebrowser">&nbsp;</td>
 									  </tr>
 								</table>
 							</td>
@@ -165,8 +165,8 @@
 							<td>
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
-										<td><input type="checkbox" class="checkbox" id="video_play" name="video_play" checked="checked" onchange="Media.formToData();" /></td>
-										<td><label for="video_play">{#media_dlg.play}</label></td>
+										<td><input type="checkbox" class="checkbox" id="video_autoplay" name="video_autoplay" onchange="Media.formToData();" /></td>
+										<td><label for="video_autoplay">{#media_dlg.play}</label></td>
 									</tr>
 								</table>
 							</td>
@@ -174,7 +174,7 @@
 							<td>
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
-										<td><input type="checkbox" class="checkbox" id="video_loop" name="video_loop" checked="checked" onchange="Media.formToData();" /></td>
+										<td><input type="checkbox" class="checkbox" id="video_loop" name="video_loop" onchange="Media.formToData();" /></td>
 										<td><label for="video_loop">{#media_dlg.loop}</label></td>
 									</tr>
 								</table>
@@ -183,7 +183,7 @@
 							<td>
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tr>
-										<td><input type="checkbox" class="checkbox" id="video_preload" name="video_preload" checked="checked" onchange="Media.formToData();" /></td>
+										<td><input type="checkbox" class="checkbox" id="video_preload" name="video_preload" onchange="Media.formToData();" /></td>
 										<td><label for="video_preload">{#media_dlg.preload}</label></td>
 									</tr>
 								</table>

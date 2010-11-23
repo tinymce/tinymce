@@ -9,5 +9,5 @@ var tinyMCEMediaList = [
 	["Some AVI", "media/sample.avi"],
 	["Some RealMedia", "media/sample.rm"],
 	["Some Shockwave", "media/sample.dcr"],
-	["Some Video", "media/sample.m4v"]
+	["Some Video", "media/sample.mp4"]
 ];
