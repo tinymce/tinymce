@@ -47,6 +47,10 @@
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
 
+				// Already removed
+				if (!node.parent)
+					continue;
+
 				// Get list of all parent nodes until we find a valid parent to stick the child into
 				parents = [node];
 				for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) && !nonSplitableElements[parent.name]; parent = parent.parent)
@@ -83,7 +87,7 @@
 					}
 
 					if (parents[0].isEmpty(emptyElements)) {
-						parents[0].remove();
+						parents[0].empty().remove();
 					}
 				} else if (node.parent) {
 					// If it's an LI try to find a UL/OL for it or wrap it
@@ -110,7 +114,7 @@
 					} else {
 						// We failed wrapping it, then remove or unwrap it
 						if (node.name === 'style' || node.name === 'script')
-							node.remove();
+							node.empty().remove();
 						else
 							node.unwrap();
 					}
@@ -360,7 +364,7 @@
 									node.empty().append(new Node('#text', '3')).value = '\u00a0';
 								else {
 									tempNode = node.parent;
-									node.remove();
+									node.empty().remove();
 									node = tempNode;
 									return;
 								}
@@ -381,10 +385,17 @@
 			// Run node filters
 			for (name in matchedNodes) {
 				list = nodeFilters[name];
+				nodes = matchedNodes[name];
 
-				for (i = 0, l = list.length; i < l; i++) {
-					list[i](matchedNodes[name], name, args);
+				// Remove already removed children
+				fi = nodes.length;
+				while (fi--) {
+					if (!nodes[fi].parent)
+						nodes.splice(fi, 1);
 				}
+
+				for (i = 0, l = list.length; i < l; i++)
+					list[i](nodes, name, args);
 			}
 
 			// Run attribute filters
@@ -392,9 +403,17 @@
 				list = attributeFilters[i];
 
 				if (list.name in matchedAttributes) {
-					for (fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
-						list.callbacks[fi](matchedAttributes[list.name], list.name, args);
+					nodes = matchedAttributes[list.name];
+
+					// Remove already removed children
+					fi = nodes.length;
+					while (fi--) {
+						if (!nodes[fi].parent)
+							nodes.splice(fi, 1);
 					}
+
+					for (fi = 0, fl = list.callbacks.length; fi < fl; fi++)
+						list.callbacks[fi](nodes, list.name, args);
 				}
 			}
 

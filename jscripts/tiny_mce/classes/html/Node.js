@@ -369,7 +369,23 @@
 		 * @return {tinymce.html.Node} The current node that got cleared.
 		 */
 		empty : function() {
-			var self = this;
+			var self = this, nodes, i, node;
+
+			// Remove all children
+			if (self.firstChild) {
+				nodes = [];
+
+				// Collect the children
+				for (node = self.firstChild; node; node = walk(node, self))
+					nodes.push(node);
+
+				// Remove the children
+				i = nodes.length;
+				while (i--) {
+					node = nodes[i];
+					node.parent = node.firstChild = node.lastChild = node.next = node.prev = null;
+				}
+			}
 
 			self.firstChild = self.lastChild = null;
 
