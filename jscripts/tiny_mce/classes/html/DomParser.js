@@ -9,6 +9,8 @@
  */
 
 (function(tinymce) {
+	var Node = tinymce.html.Node;
+
 	/**
 	 * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
 	 * sure that the node tree is valid according to the specified schema. So for example: <p>a<p>b</p>c</p> will become <p>a</p><p>b</p><p>c</p>
@@ -37,7 +39,8 @@
 		self.schema = schema = schema || new tinymce.html.Schema();
 
 		function fixInvalidChildren(nodes) {
-			var ni, node, parent, parents, newParent, currentNode, tempNode, childClone, emptyElements = schema.getEmptyElements(), nonSplitableElements;
+			var ni, node, parent, parents, newParent, currentNode, tempNode,
+				childClone, emptyElements = schema.getEmptyElements(), nonSplitableElements, sibling;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
 
@@ -83,11 +86,27 @@
 						parents[0].remove();
 					}
 				} else if (node.parent) {
+					// If it's an LI try to find a UL/OL for it or wrap it
+					if (node.name === 'li') {
+						sibling = node.prev;
+						if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+							sibling.append(node);
+							continue;
+						}
+
+						sibling = node.next;
+						if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+							sibling.insert(node, sibling.firstChild, true);
+							continue;
+						}
+
+						node.wrap(new Node('ul', 1));
+						continue;
+					}
+
 					// Try wrapping the element in a DIV
 					if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-						tempNode = new tinymce.html.Node('div', 1);
-						node.parent.insert(tempNode, node);
-						tempNode.append(node);
+						node.wrap(new Node('div', 1));
 					} else {
 						// We failed wrapping it, then remove or unwrap it
 						if (node.name === 'style' || node.name === 'script')
@@ -164,7 +183,7 @@
 		 * @return {tinymce.html.Node} Root node containing the tree.
 		 */
 		self.parse = function(html, args) {
-			var parser, rootNode, node, Node = tinymce.html.Node, matchedNodes = {}, matchedAttributes = {},
+			var parser, rootNode, node, matchedNodes = {}, matchedAttributes = {},
 				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children;
 
@@ -338,7 +357,7 @@
 						if (elementRule.removeEmpty || elementRule.paddEmpty) {
 							if (node.isEmpty(schema.getEmptyElements())) {
 								if (elementRule.paddEmpty)
-									node.empty().append(new tinymce.html.Node('#text', '3')).value = '\u00a0';
+									node.empty().append(new Node('#text', '3')).value = '\u00a0';
 								else {
 									tempNode = node.parent;
 									node.remove();

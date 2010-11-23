@@ -197,6 +197,23 @@
 		},
 
 		/**
+		 * Wraps the node in in another node.
+		 *
+		 * @example
+		 * node.wrap(wrapperNode);
+		 *
+		 * @method wrap
+		 */
+		wrap : function(wrapper) {
+			var self = this;
+
+			self.parent.insert(wrapper, self);
+			wrapper.append(self);
+
+			return self;
+		},
+
+		/**
 		 * Unwraps the node in other words it removes the node but keeps the children.
 		 *
 		 * @example

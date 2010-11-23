@@ -96,7 +96,7 @@ test('Whitespace', function() {
 test('Parse invalid contents', function() {
 	var parser, root;
 
-	expect(20);
+	expect(18);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a"><p class="b">123</p></p>');
@@ -127,11 +127,6 @@ test('Parse invalid contents', function() {
 	root = parser.parse('<p class="a">a<p class="b">b<p class="c">c</p>d</p>e</p>');
 	equals(serializer.serialize(root), '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="b">d</p><p class="a">e</p>', 'P in P in P with text before/after');
 	deepEqual(countNodes(root), {body: 1, p:5, '#text': 5}, 'P in P in P with text before/after (count)');
-
-	parser = new tinymce.html.DomParser({}, schema);
-	root = parser.parse('<li>abc</li>');
-	equals(serializer.serialize(root), 'abc', 'LI inside BODY');
-	deepEqual(countNodes(root), {body: 1, '#text': 1}, 'LI inside BODY (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
@@ -255,6 +250,24 @@ test('addAttributeFilter multiple', function() {
 	equals(results['href'].nodes[0].attr('href'), '1.gif', 'Parser filter result node(0) attr');
 	equals(results['href'].nodes[1].name, 'a', 'Parser filter result node(1) name');
 	equals(results['href'].nodes[1].attr('href'), '2.gif', 'Parser filter result node(1) attr');
+});
+
+test('Fix orphan LI elements', function() {
+	var parser, result;
+
+	expect(3);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<ul><li>a</li></ul><li>b</li>');
+	equals(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to previous sibling UL');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<li>a</li><ul><li>b</li></ul>');
+	equals(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to next sibling UL');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<li>a</li>');
+	equals(serializer.serialize(root), '<ul><li>a</li></ul>', 'LI wrapped in new UL');
 });
 </script>
 </head>
