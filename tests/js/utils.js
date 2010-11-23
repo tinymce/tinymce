@@ -58,6 +58,14 @@ function initWhenTinyAndRobotAreReady() {
 			QUnit.start();
 		}
 	}
+	window.robot.onTimeout = function(event, continueCallback) {
+		if (event === 'keyup') {
+			ok(false, 'Received timeout from JSRobot');
+		} else {
+			// Paste events are not always available on old browsers so we let them timeout.
+			continueCallback();
+		}
+	};
 	window.robot.onload(checkLoaded);
 	tinymce.onAddEditor.add(function(tinymce, ed) {
 		if (tinyLoaded) {

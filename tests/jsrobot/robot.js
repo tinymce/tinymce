@@ -154,7 +154,9 @@
 
 				// Add a timeout of 5 seconds in case the target event isn't supported or something goes wrong.
 				timeout = setTimeout(function() {
-					if (!listenerActivated && continueCallback) {
+					if (this.onTimeout) {
+						this.onTimeout();
+					} else if (continueCallback) {
 						continueCallback();
 					}
 				}, 5000);
