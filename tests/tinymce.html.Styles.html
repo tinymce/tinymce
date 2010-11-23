@@ -13,7 +13,7 @@ module("tinymce.html.Styles");
 test('Basic parsing/serializing', function() {
 	var styles = new tinymce.html.Styles();
 
-	expect(10);
+	expect(11);
 
 	equals(styles.serialize(styles.parse('FONT-SIZE:10px')), "font-size: 10px;");
 	equals(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), "font-size: 10px; color: red;");
@@ -25,6 +25,7 @@ test('Basic parsing/serializing', function() {
 	equals(styles.serialize(styles.parse('value:_; value2:"_"')), 'value: _; value2: \'_\';');
 	equals(styles.serialize(styles.parse('value: "&amp;"')), "value: '&amp;';");
 	equals(styles.serialize(styles.parse('value: "&"')), "value: '&';");
+	equals(styles.serialize(styles.parse('value: ')), "");
 });
 
 test('Colors force hex and lowercase', function() {

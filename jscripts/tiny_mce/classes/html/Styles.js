@@ -178,37 +178,40 @@ tinymce.html.Styles = function(settings, schema) {
 					name = matches[1].replace(trimRightRegExp, '').toLowerCase();
 					value = matches[2].replace(trimRightRegExp, '');
 
-					// Opera will produce 700 instead of bold in their style values
-					if (name === 'font-weight' && value === '700')
-						value = 'bold';
-					else if (name === 'color' || name === 'background-color') // Lowercase colors like RED
-						value = value.toLowerCase();		
+					if (name && value.length > 0) {
+						// Opera will produce 700 instead of bold in their style values
+						if (name === 'font-weight' && value === '700')
+							value = 'bold';
+						else if (name === 'color' || name === 'background-color') // Lowercase colors like RED
+							value = value.toLowerCase();		
 
-					// Convert RGB colors to HEX
-					value = value.replace(rgbRegExp, toHex);
+						// Convert RGB colors to HEX
+						value = value.replace(rgbRegExp, toHex);
 
-					// Convert URLs and force them into url('value') format
-					value = value.replace(urlOrStrRegExp, function(match, url, url2, url3, str, str2) {
-						str = str || str2;
+						// Convert URLs and force them into url('value') format
+						value = value.replace(urlOrStrRegExp, function(match, url, url2, url3, str, str2) {
+							str = str || str2;
 
-						if (str) {
-							str = decode(str);
+							if (str) {
+								str = decode(str);
 
-							// Force strings into single quote format
-							return "'" + str.replace(/\'/g, "\\'") + "'";
-						}
+								// Force strings into single quote format
+								return "'" + str.replace(/\'/g, "\\'") + "'";
+							}
 
-						url = decode(url || url2 || url3);
+							url = decode(url || url2 || url3);
 
-						// Convert the URL to relative/absolute depending on config
-						if (urlConverter)
-							url = urlConverter(url, 'style');
+							// Convert the URL to relative/absolute depending on config
+							if (urlConverter)
+								url = urlConverter(url, 'style');
 
-						// Output new URL format
-						return "url('" + url.replace(/\'/g, "\\'") + "')";
-					});
+							// Output new URL format
+							return "url('" + url.replace(/\'/g, "\\'") + "')";
+						});
 
-					styles[name] = isEncoded ? decode(value, true) : value;
+						styles[name] = isEncoded ? decode(value, true) : value;
+					}
+
 					styleRegExp.lastIndex = matches.index + matches[0].length;
 				}
 
