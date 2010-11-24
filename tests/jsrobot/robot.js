@@ -141,9 +141,11 @@
 			focusElement = focusElement || document.activeElement;
 			curEl = focusElement;
 			while (curEl) {
+				toFocus.push(curEl);
 				if (curEl.frameElement) {
-					toFocus.push(curEl.frameElement);
 					curEl = frameElement;
+				} else if (curEl.parent && curEl.parent !== curEl) {
+					curEl = curEl.parent;
 				} else if (curEl.defaultView) {
 					curEl = curEl.defaultView;
 				} else if (curEl.ownerDocument) {
@@ -153,16 +155,8 @@
 				}
 			}
 			while (toFocus.length > 0) {
-				toFocus.pop().focus();
-			}
-			if (focusElement && focusElement.frameElement) {
-				// If we have an iframe window we need to make sure the iframe element in the parent document is focussed
-				// Otherwise calls to focus within the frame won't have any effect in Safari/Mac.
-				focusElement.frameElement.focus();
-			}
-			if (focusElement && focusElement.contentWindow) {
-				// If the element to focus is an iframe element, focus the active element within the frame instead (if available).
-				focusElement = focusElement.contentWindow.document.activeElement;
+				curEl = toFocus.pop();
+				if (curEl.focus) curEl.focus();
 			}
 			if (focusElement) {
 				focusElement.focus();
@@ -177,16 +171,13 @@
 					}
 				}, 5000);
 			}
-			// Make sure the browser event loop has a chance to move the focus.
-			setTimeout(function() {
-				actionResult = action.apply(t);
-				if (actionResult) {
-					throw { message: "JSRobot error: " + actionResult };
-				}
-				if (!focusElement && continueCallback) {
-					setTimeout(continueCallback, 100);
-				}
-			}, 0);
+			actionResult = action.apply(t);
+			if (actionResult) {
+				throw { message: "JSRobot error: " + actionResult };
+			}
+			if (!focusElement && continueCallback) {
+				setTimeout(continueCallback, 100);
+			}
 		}
 	};
 	
