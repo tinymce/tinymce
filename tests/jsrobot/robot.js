@@ -119,7 +119,7 @@
 		},
 		
 		appletAction: function(focusElement, continueCallback, action, event) {
-			var actionResult, listenerActivated = false, listenerType = event || 'keyup', timeout;
+			var actionResult, listenerActivated = false, listenerType = event || 'keyup', timeout, curEl, toFocus = [], t = this;
 			var listener = function() {
 				if (listenerActivated) return;
 				listenerActivated = true;
@@ -139,6 +139,22 @@
 			};
 			
 			focusElement = focusElement || document.activeElement;
+			curEl = focusElement;
+			while (curEl) {
+				if (curEl.frameElement) {
+					toFocus.push(curEl.frameElement);
+					curEl = frameElement;
+				} else if (curEl.defaultView) {
+					curEl = curEl.defaultView;
+				} else if (curEl.ownerDocument) {
+					curEl = curEl.ownerDocument;
+				} else {
+					curEl = curEl.parentNode;
+				}
+			}
+			while (toFocus.length > 0) {
+				toFocus.pop().focus();
+			}
 			if (focusElement && focusElement.frameElement) {
 				// If we have an iframe window we need to make sure the iframe element in the parent document is focussed
 				// Otherwise calls to focus within the frame won't have any effect in Safari/Mac.
@@ -155,19 +171,22 @@
 				// Add a timeout of 5 seconds in case the target event isn't supported or something goes wrong.
 				timeout = setTimeout(function() {
 					if (this.onTimeout) {
-						this.onTimeout();
+						this.onTimeout(listenerType, continueCallback);
 					} else if (continueCallback) {
 						continueCallback();
 					}
 				}, 5000);
 			}
-			actionResult = action.apply(this);
-			if (actionResult) {
-				throw { message: "JSRobot error: " + actionResult };
-			}
-			if (!focusElement && continueCallback) {
-				setTimeout(continueCallback, 100);
-			}
+			// Make sure the browser event loop has a chance to move the focus.
+			setTimeout(function() {
+				actionResult = action.apply(t);
+				if (actionResult) {
+					throw { message: "JSRobot error: " + actionResult };
+				}
+				if (!focusElement && continueCallback) {
+					setTimeout(continueCallback, 100);
+				}
+			}, 0);
 		}
 	};
 	
