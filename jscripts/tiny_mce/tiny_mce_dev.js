@@ -122,7 +122,6 @@
 	include('ControlManager.js');
 	include('WindowManager.js');
 	include('Formatter.js');
-	include('CommandManager.js');
 	include('LegacyInput.js');
 
 	// Developer API

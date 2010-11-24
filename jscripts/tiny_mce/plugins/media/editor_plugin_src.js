@@ -295,7 +295,8 @@
 		 */
 		imgToObject : function(node) {
 			var editor = this.editor, video, object, embed, name, value, data,
-				source, sources, params, param, typeItem, i, item, mp4Source, posterSrc;
+				source, sources, params, param, typeItem, i, item, mp4Source,
+				posterSrc, flashVarsOutput;
 
 			data = JSON.parse(node.attr('data-mce-json'));
 			typeItem = this.getType(node.attr('class'));
@@ -317,7 +318,7 @@
 			}
 
 			// Add HTML5 video element
-			if (typeItem.name === 'Video' && data.video.sources[0] && data.video.sources[0].src) {
+			if (typeItem.name === 'Video' && data.video.sources[0]) {
 				// Create new object element
 				video = new Node('video', 1).attr(tinymce.extend({
 					id : node.attr('id'),
@@ -328,13 +329,20 @@
 
 				// Get poster source and use that for flash fallback
 				if (data.video.attrs)
-					posterSrc = data.video.attrs;
+					posterSrc = data.video.attrs.poster;
 
 				sources = data.video.sources;
 				for (i = 0; i < sources.length; i++) {
 					if (/\.mp4$/.test(sources[i].src))
 						mp4Source = sources[i].src;
+				}
 
+				if (!sources[0].type) {
+					video.attr('src', sources[0].src);
+					sources.splice(0, 1);
+				}
+
+				for (i = 0; i < sources.length; i++) {
 					source = new Node('source', 1).attr(sources[i]);
 					source.shortEnded = true;
 					video.append(source);
@@ -342,16 +350,22 @@
 
 				// Create flash fallback for video if we have a mp4 source
 				if (mp4Source) {
-					data.params.src = editor.getParam('flash_video_player_url', 'video_player.swf');
-					data.params.flashvars = 'url=' + mp4Source;
+					data.params.src = editor.getParam('flash_video_player_url', this.url + '/img/flv_player.swf');
 
-					flashVars = editor.getParam('flash_video_player_flashvars');
+					flashVarsOutput = '';
+					flashVars = editor.getParam('flash_video_player_flashvars', {url : '$url', poster : '$poster'});
 					tinymce.each(flashVars, function(value, name) {
-						//data.params[name] = value;
+						// Replace $url and $poster variables in flashvars value
+						value = value.replace(/\$url/, mp4Source || '');
+						value = value.replace(/\$poster/, posterSrc || '');
+
+						if (value.length > 0)
+							flashVarsOutput += (flashVarsOutput ? '&' : '') + name + '=' + escape(value);
 					});
+					data.params.flashvars = flashVarsOutput;
 
 					params = editor.getParam('flash_video_player_params', {
-						fullscreen: true,
+						allowfullscreen: true,
 						allowscriptaccess: true
 					});
 
@@ -525,7 +539,7 @@
 
 				source = node.attr('src');
 				if (source)
-					data.video.sources.push({src : source});
+					data.video.sources.push({src : urlConverter.call(urlConverterScope, source, 'src', 'video')});
 
 				// Get all sources
 				sources = video.getAll("source");
