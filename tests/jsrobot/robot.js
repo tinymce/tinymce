@@ -125,13 +125,14 @@
 
 			// Make sure the focus change has taken effect.
 			var afterFocused = function() {
-				actionResult = action.apply(t);
 				timeout = setTimeout(function() {
+					if (listenerActivated) return false;
 					doListeners(false);
 					if (continueCallback) {
 						setTimeout(continueCallback, 0);
 					}
 				}, 10000);
+				actionResult = action.apply(t);
 				if (actionResult) {
 					throw { message: "JSRobot error: " + actionResult };
 				}
