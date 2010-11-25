@@ -53,7 +53,6 @@ tinymce.create('dsl.Queue', {
 	done: function() {
 		expect(this.queue.length);
 		this.next();
-		//QUnit.start();
 	}
 });
 
@@ -62,6 +61,7 @@ tinymce.create('dsl.Action', {
 		this.name = name;
 		this.a = this.curryPreposition('a');
 		this.inA = this.curryPreposition('in a');
+		this.to = this.curryPreposition('to');
 		if (tinymce.is(action, 'string')) {
 			this.action = function(callback) {
 				editor.execCommand(action);
@@ -74,14 +74,11 @@ tinymce.create('dsl.Action', {
 	
 	curryPreposition: function(preposition) {
 		return function(state) {
-			return this.to(state, preposition);
+			return this.go(state, preposition);
 		};
 	},
 	
-	to: function(state, preposition) {
-		if (!preposition) {
-			preposition = 'to';
-		}
+	go: function(state, preposition) {
 		var message = this.name + " " + preposition + " " + getFunctionName(state);
 		var action = this.action;
 		var actionPerformed = false;
