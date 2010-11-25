@@ -14,7 +14,7 @@ function fakeTypeAnEclipsedURL(url)
         tinyMCE.execCommand('mceInsertContent', false, '(' + url);
         window.robot.type(48, true, function() {
             window.robot.type(32, true, callback, editor.selection.getNode());
-        }, editor.getWin());
+        }, editor.selection.getNode());
     };
 }
 
