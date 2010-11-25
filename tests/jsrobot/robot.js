@@ -146,37 +146,50 @@
 				clearTimeout(timeout);
 				doListeners(false);
 				if (continueCallback) {
-					setTimeout(continueCallback, 0);
+					setTimeout(continueCallback, 100);
 				}
 			};
 			var doListeners = function(add) {
-				var target = focusElement.document || focusElement.ownerDocument || focusElement;
-				if (target.defaultView) {
-					target = target.defaultView;
-				}
+				// Listen as high up in the hierarchy as possible to give us the best chance of getting the event before any JS listeners cancel it.
+				var target = focusElement.defaultView || focusElement.ownerDocument || focusElement;
 				if (focusElement.addEventListener) {
 					target[add ? 'addEventListener' : 'removeEventListener'](listenerType, listener, true);
 				} else {
 					focusElement[add ? 'attachEvent' : 'detachEvent']('on' + listenerType, listener);
+					target[add ? 'attachEvent' : 'detachEvent']('on' + listenerType, listener);
 				}
 			};
 			
-			focusElement = focusElement || document.activeElement;
-			curEl = focusElement;
-			while (curEl) {
-				toFocus.push(curEl);
-				if (curEl.frameElement) {
-					curEl = frameElement;
-				} else if (curEl.parent && curEl.parent !== curEl) {
-					curEl = curEl.parent;
-				} else if (curEl.defaultView) {
-					curEl = curEl.defaultView;
-				} else if (curEl.ownerDocument) {
-					curEl = curEl.ownerDocument;
-				} else {
-					curEl = curEl.parentNode;
+			if (!focusElement) {
+				focusElement = document.activeElement;
+				while (focusElement && (focusElement.contentDocument || focusElement.contentWindow)) {
+					if (focusElement.contentDocument) {
+						focusElement = focusElement.contentDocument.activeElement;
+					} else {
+						focusElement = focusElement.contentWindow.document.activeElement;
+					}
 				}
 			}
+			curEl = focusElement;
+			while (curEl) {
+				if (curEl.frameElement) {
+					toFocus.push(curEl);
+					toFocus.push(curEl.frameElement);
+					curEl = curEl.frameElement;
+				} else if (curEl.parent && curEl.parent !== curEl) {
+					toFocus.push(curEl.parent);
+					curEl = curEl.parent;
+				} else if (curEl.defaultView) {
+					toFocus.push(curEl.defaultView);
+					curEl = curEl.defaultView;
+				} else if (curEl.ownerDocument) {
+					toFocus.push(curEl.ownerDocument.body);
+					curEl = curEl.ownerDocument;
+				} else {
+					curEl = null;
+				}
+			}
+			
 			var focused = [];
 			var focusNext = function() {
 				if (toFocus.length > 0) {
@@ -188,13 +201,7 @@
 					doListeners(true);
 					focusElement.focus();
 					
-					setTimeout(function() {
-						var doc = (focusElement.document || focusElement.ownerDocument), focused = doc.activeElement;
-						if (focused !== focusElement && focused !== doc.body) {
-							alert("Not focused: " + focusElement.ownerDocument.activeElement);
-						}
-						afterFocused();
-					}, 0);
+					setTimeout(afterFocused, 0);
 				}
 			};
 			if (focusElement) {
