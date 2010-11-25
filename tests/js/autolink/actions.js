@@ -1,5 +1,4 @@
-function fakeTypeAURL(url)
-{
+function fakeTypeAURL(url) {
 	return function(callback) {
         // type the URL and then press the space bar
         tinyMCE.execCommand('mceInsertContent', false, url);
@@ -7,19 +6,17 @@ function fakeTypeAURL(url)
     };
 }
 
-function fakeTypeAnEclipsedURL(url)
-{
+function fakeTypeAnEclipsedURL(url) {
 	return function(callback) {
         // type the URL and then type ')'
         tinyMCE.execCommand('mceInsertContent', false, '(' + url);
         window.robot.type(48, true, function() {
-            window.robot.type(32, true, callback, editor.selection.getNode());
+            window.robot.type(32, false, callback, editor.selection.getNode());
         }, editor.selection.getNode());
     };
 }
 
-function fakeTypeANewlineURL(url)
-{
+function fakeTypeANewlineURL(url) {
 	return function(callback) {
         // type the URL and then press the enter key
         tinyMCE.execCommand('mceInsertContent', false, url);
