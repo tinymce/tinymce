@@ -52,31 +52,23 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 }
 
 function initWhenTinyAndRobotAreReady() {
-	var tinyLoaded = false;
+	var readyCount = 0;
 	function checkLoaded() {
-		if (tinyLoaded && window.robot && window.robot.ready) {
+		readyCount++;
+		if (readyCount > 2) {
+			ok(false, "Critical error: Received too many onload events.");
+		} else if (readyCount === 2) {
 			QUnit.start();
 		}
 	}
-	window.robot.onTimeout = function(event, continueCallback) {
-		// Paste events are not always available on old browsers so we let them timeout.
-		if (event === 'keyup') {
-			ok(false, 'Received timeout from JSRobot');
-			window.robot.captureScreenShot();
-		}
-		continueCallback();
-	};
 	window.robot.onload(checkLoaded);
 	tinymce.onAddEditor.add(function(tinymce, ed) {
-		if (tinyLoaded) {
-			return;
-		}
 		ed.onInit.add(function() {
-			tinyLoaded = true;
 			checkLoaded();
 		});
 	});
 }
+
 function trimContent(content) {
 	if (tinymce.isOpera)
 		return content.replace(/^<p>&nbsp;<\/p>/, '').replace(/<p>&nbsp;<\/p>$/, '');
