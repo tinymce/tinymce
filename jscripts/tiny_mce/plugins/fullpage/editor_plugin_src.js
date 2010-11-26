@@ -101,9 +101,8 @@
 				t.head = c.substring(0, sp + 1);
 
 				ep = c.indexOf('</body', sp);
-				if (ep == -1) {
-					ep = c.length - 1;
-				}
+				if (ep == -1)
+					ep = c.length;
 
 				o.content = c.substring(sp + 1, ep);
 				t.foot = c.substring(ep);
