@@ -44,6 +44,10 @@
 				DOM.setAttrib(element, 'aria-' + property, !!value);
 			}
 		},
+		
+		focus : function() {
+			DOM.get(this.id).focus();
+		},
 
 		/**
 		 * Sets the disabled state for the control. This will add CSS classes to the

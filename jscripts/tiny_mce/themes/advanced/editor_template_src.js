@@ -62,6 +62,7 @@
 		init : function(ed, url) {
 			var t = this, s, v, o;
 	
+			t.toolbars = [];
 			t.editor = ed;
 			t.url = url;
 			t.onResolveName = new tinymce.util.Dispatcher(this);
@@ -559,8 +560,18 @@
 			ed.onKeyDown.add(function(ed, evt) {
 				var DOM_VK_F10 = 121;
 				if (evt.keyCode === DOM_VK_F10 && evt.altKey) {
-					tinymce.DOM.select('.mceButton', tinymce.DOM.select('.mceToolbar')[0])[0].focus();
-					Event.cancel(evt);
+					each(t.toolbars, function(toolbar) {
+						var focussed = false;
+						each(toolbar.controls, function(control) {
+							if (!control.isDisabled()) {
+								control.focus();
+								focussed = true;
+								return false;
+							}
+						});
+						return !focussed;
+					});
+					return Event.cancel(evt);
 				}
 			});
 
@@ -797,7 +808,8 @@
 					v = s['theme_advanced_buttons' + i + '_add_before'] + ',' + v;
 
 				t._addControls(v, tb);
-
+				t.toolbars.push(tb);
+				
 				//n.appendChild(n = tb.render());
 				h.push(tb.renderHTML());
 
