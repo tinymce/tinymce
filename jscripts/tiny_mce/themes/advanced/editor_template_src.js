@@ -478,8 +478,7 @@
 
 			// TODO: Should have an aria-describedby attribute which is user-configurable to describe what this field is actually for.
 			// Maybe actually inherit it from the original textara?
-      // TODO i18n.
-      ariaLabel = tinymce.DOM.getAttrib(ed.getElement(), 'aria-label', ed.getLang('advanced.rich_text_area'));
+			ariaLabel = tinymce.DOM.getAttrib(ed.getElement(), 'aria-label', ed.getLang('advanced.rich_text_area'));
 			n = p = DOM.create('span', {role : 'application', 'aria-label' : ariaLabel, id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin' + (s.skin_variant ? ' ' + ed.settings.skin + 'Skin' + t._ufirst(s.skin_variant) : '')});
 
 			if (!DOM.boxModel)
