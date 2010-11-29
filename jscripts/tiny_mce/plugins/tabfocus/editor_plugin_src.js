@@ -89,6 +89,9 @@
 			} else
 				ed.onKeyDown.add(tabHandler);
 
+			// TODO: This breaks the option-F10 shortcut to move focus to the first toolbar button since it immediately moves it back to the editor.
+			// Plus, you really should be able to tab to the first button and activate it...
+			// Also, what if the first item is a combo box, not a button?
 			ed.onInit.add(function() {
 				each(DOM.select('a:first,a:last', ed.getContainer()), function(n) {
 					Event.add(n, 'focus', function() {ed.focus();});

@@ -28,7 +28,12 @@ need navigation.
 
 highlighting on navigation
 
-
+Make tabbing through toolbar buttons work correctly on Safari.  Currently tab moves to the next drop down but skips buttons.  We should be setting tabindex="0" on the parent toolbar and tabindex="-1" on each button, then manually manage the tab key within the toolbar.
+	See http://wiki.codetalks.org/wiki/index.php/Docs/Keyboard_navigable_JS_widgets
+	Seems to work OK on IE (you can tab to each button, but you can't skip over all the toolbar buttons)
+	Also the tabfocus button is currently adding an onfocus listener only to buttons so if the first control on the toolbar is a drop box it doesn't move focus to the editor.
+		- and if it is a button you can't tab to the first button because the tabfocus plugin will immediately move focus to the editor.
+	
 Done
 
-alt-f10 to go to the toolbar
+alt-f10 to go to the toolbar (but with issues caused by the tabfocus plugin as noted above)
