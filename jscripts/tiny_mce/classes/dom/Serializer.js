@@ -144,21 +144,17 @@
 
 			if (s.fix_table_elements) {
 				t.onPreProcess.add(function(se, o) {
-					// Since Opera will crash if you attach the node to a dynamic document we need to brrowser sniff a specific build
-					// so Opera users with an older version will have to live with less compaible output not much we can do here
-					if (!tinymce.isOpera || opera.buildNumber() >= 1767) {
-						each(t.dom.select('p table', o.node).reverse(), function(n) {
-							var parent = t.dom.getParent(n.parentNode, 'table,p');
+					each(t.dom.select('p table', o.node).reverse(), function(n) {
+						var parent = t.dom.getParent(n.parentNode, 'table,p');
 
-							if (parent.nodeName != 'TABLE') {
-								try {
-									t.dom.split(parent, n);
-								} catch (ex) {
-									// IE can sometimes fire an unknown runtime error so we just ignore it
-								}
+						if (parent.nodeName != 'TABLE') {
+							try {
+								t.dom.split(parent, n);
+							} catch (ex) {
+								// IE can sometimes fire an unknown runtime error so we just ignore it
 							}
-						});
-					}
+						}
+					});
 				});
 			}
 		},
@@ -468,7 +464,7 @@
 			// and since we can't feature detect a crash we need to sniff the acutal build number
 			// This fix will make DOM ranges and make Sizzle happy!
 			impl = n.ownerDocument.implementation;
-			if (impl.createHTMLDocument && (tinymce.isOpera && opera.buildNumber() >= 1767)) {
+			if (impl.createHTMLDocument) {
 				// Create an empty HTML document
 				doc = impl.createHTMLDocument("");
 
