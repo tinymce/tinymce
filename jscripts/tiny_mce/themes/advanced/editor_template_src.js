@@ -780,14 +780,11 @@
 
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
+      
+      //TODO need a way of going from the editor to the toolbar. - perhaps an event listener
+      //TODO on the editor
 
 			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"toolbar"});
-
-			// TODO: These two should be replaced with ARIA-roles istead of creating bad HTML hacks.
-			if (!ed.getParam('accessibility_focus'))
-				h.push(DOM.createHTML('a', {href : '#', onfocus : 'tinyMCE.get(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
-
-			h.push(DOM.createHTML('a', {href : '#', accesskey : 'q', title : ed.getLang("advanced.toolbar_focus")}, '<!-- IE -->'));
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
@@ -807,7 +804,6 @@
 				o.deltaHeight -= s.theme_advanced_row_height;
 			}
 
-			h.push(DOM.createHTML('a', {href : '#', accesskey : 'z', title : ed.getLang("advanced.toolbar_focus"), onfocus : 'tinyMCE.getInstanceById(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
 			DOM.setHTML(n, h.join(''));
 		},
 

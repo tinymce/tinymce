@@ -9,3 +9,21 @@ To get tab working well, enable the tabfocus plugin.  The following seems to be 
 Translations are stored in the theme under the accessibility comment.
 
 The application will use a default aria label of Rich Text Area, or derive it from the defining element if it was specified there. 
+
+Known Issues
+
+Use Voice Over to move voice cursor and focus into TinyMCE and then tab or shift-tab out and back into the editor. The keyboard focus moves but the voice over focus does not. Probably should be in sync?
+
+ToDo
+
+Probably want to make a way of doing editor short cuts.
+
+perhaps in the tinymce init settings have something like:
+shortcuts : { 'ctrl-b', 'bold'} 
+
+iFrame needs a keyboard shortcut to enable accessibility help.
+
+alt-f10 to go to the toolbar
+need navigation.
+
+highlighting on navigation
