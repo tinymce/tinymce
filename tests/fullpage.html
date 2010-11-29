@@ -15,12 +15,17 @@ module("Basic functionality", {
 	autostart: false
 });
 
+function normalizeHTML(html)
+{
+	return html.replace(/\s/g, '');
+}
+
 test('Fullpage plugin', function() {
 	expect(2);
 	
 	ok(editor.plugins.fullpage, 'Fullpage plugin is enabled.');
 	editor.setContent('<html><body><p>Test</p>');
-	ok(editor.getContent({format: 'raw'}).match(/<html>\s*<body>\s*<p>Test<\/p>\s*$/), 'Invalid HTML content is still editable.');
+	equals(normalizeHTML(editor.getContent()), '<html><body><p>Test</p>', 'Invalid HTML content is still editable.');
 });
 
 tinyMCE.init({
