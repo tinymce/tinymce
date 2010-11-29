@@ -316,7 +316,6 @@
 			var t = this, cp = t.classPrefix;
 
 			Event.add(t.id, 'click', t.showMenu, t);
-			Event.add(t.id, 'focus', function() { console.log("Focussed");});
 			Event.add(t.id, 'keypress', function(evt) {
 				if (evt.keyCode === 32) { // Space
 					return t.showMenu(evt);
