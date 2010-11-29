@@ -1,0 +1,11 @@
+Accessibility required plugins
+
+To get tab working well, enable the tabfocus plugin.  The following seems to be a good combination.
+ 
+   tabfocus_elements: ':prev,:next',
+    plugins : 'tabfocus',
+
+
+Translations are stored in the theme under the accessibility comment.
+
+The application will use a default aria label of Rich Text Area, or derive it from the defining element if it was specified there. 
