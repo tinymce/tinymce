@@ -17,11 +17,12 @@ Use Voice Over to move voice cursor and focus into TinyMCE and then tab or shift
 ToDo
 
 Probably want to make a way of doing editor short cuts.
+Should remove the shortcut text from the button titles as it makes it JAWS read things like "Bold left paren, control plus B, right paren, button". Better to put shortcuts in a single help document.
 
 perhaps in the tinymce init settings have something like:
 shortcuts : { 'ctrl-b', 'bold'} 
 
-iFrame needs a keyboard shortcut to enable accessibility help.
+iFrame needs a keyboard shortcut to enable accessibility help. Also need to provide the accessibility help.
 
 alt-f10 to go to the toolbar
 need navigation.
