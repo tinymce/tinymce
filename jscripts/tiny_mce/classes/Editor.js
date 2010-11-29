@@ -652,14 +652,6 @@
 			t.controlManager = new tinymce.ControlManager(t);
 
 			if (s.custom_undo_redo) {
-				// Add initial undo level
-				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, a) {
-					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo)) {
-						if (!t.undoManager.hasUndo())
-							t.undoManager.add();
-					}
-				});
-
 				t.onExecCommand.add(function(ed, cmd, ui, val, a) {
 					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
 						t.undoManager.add();
@@ -1218,6 +1210,7 @@
 
 				t.load({initial : true, format : 'html'});
 				t.startContent = t.getContent({format : 'raw'});
+				t.undoManager.add();
 				t.initialized = true;
 
 				t.onInit.dispatch(t);
@@ -1920,7 +1913,7 @@
 
 			// Add undo level will trigger onchange event
 			if (!o.no_events) {
-				t.undoManager.typing = 0;
+				t.undoManager.typing = false;
 				t.undoManager.add();
 			}
 
@@ -2591,7 +2584,7 @@
 			// Add custom undo/redo handlers
 			if (s.custom_undo_redo) {
 				function addUndo() {
-					t.undoManager.typing = 0;
+					t.undoManager.typing = false;
 					t.undoManager.add();
 				};
 
@@ -2658,7 +2651,7 @@
 
 					if (!t.undoManager.typing) {
 						t.undoManager.add();
-						t.undoManager.typing = 1;
+						t.undoManager.typing = true;
 					}
 				});
 
@@ -2671,7 +2664,7 @@
 			// Bug fix for FireFox keeping styles from end of selection instead of start.
 			if (tinymce.isGecko) {
 				function getAttributeApplyFunction() {
-					t.undoManager.typing = 0;
+					t.undoManager.typing = false;
 					t.undoManager.add();
 					var template = t.dom.getAttribs(t.selection.getStart().cloneNode(false));
 					return function() {
@@ -2680,7 +2673,7 @@
 						each(template, function(attr) {
 							target.setAttributeNode(attr.cloneNode(true));
 						});
-						t.undoManager.typing = 0;
+						t.undoManager.typing = false;
 						t.undoManager.add();
 					};
 				}

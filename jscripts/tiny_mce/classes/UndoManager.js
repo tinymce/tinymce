@@ -24,10 +24,39 @@
 		};
 
 		return self = {
-			typing : 0,
+			/**
+			 * State if the user is currently typing or not. This will add a typing operation into one undo
+			 * level instead of one new level for each keystroke.
+			 *
+			 * @field {Boolean} typing
+			 */
+			typing : false,
 
+			/**
+			 * This event will fire each time a new undo level is added to the undo manager.
+			 *
+			 * @event onAdd
+			 * @param {tinymce.UndoManager} sender UndoManager instance that got the new level.
+			 * @param {Object} level The new level object containing a bookmark and contents.
+			 */
 			onAdd : new Dispatcher(self),
+
+			/**
+			 * This event will fire when the user make an undo of a change.
+			 *
+			 * @event onUndo
+			 * @param {tinymce.UndoManager} sender UndoManager instance that got the new level.
+			 * @param {Object} level The old level object containing a bookmark and contents.
+			 */
 			onUndo : new Dispatcher(self),
+
+			/**
+			 * This event will fire when the user make an redo of a change.
+			 *
+			 * @event onRedo
+			 * @param {tinymce.UndoManager} sender UndoManager instance that got the new level.
+			 * @param {Object} level The old level object containing a bookmark and contents.
+			 */
 			onRedo : new Dispatcher(self),
 
 			/**
@@ -65,13 +94,8 @@
 				level.bookmark = editor.selection.getBookmark(2, true);
 
 				// Crop array if needed
-				if (index < data.length - 1) {
-					// Treat first level as initial
-					if (index == 0)
-						data = [];
-					else
-						data.length = index + 1;
-				}
+				if (index < data.length - 1)
+					data.length = index + 1;
 
 				data.push(level);
 				index = data.length - 1;
@@ -93,7 +117,7 @@
 
 				if (self.typing) {
 					self.add();
-					self.typing = 0;
+					self.typing = false;
 				}
 
 				if (index > 0) {
@@ -136,7 +160,8 @@
 			 */
 			clear : function() {
 				data = [];
-				index = self.typing = 0;
+				index = 0;
+				self.typing = false;
 			},
 
 			/**
