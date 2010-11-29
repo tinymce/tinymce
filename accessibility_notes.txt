@@ -24,7 +24,11 @@ shortcuts : { 'ctrl-b', 'bold'}
 
 iFrame needs a keyboard shortcut to enable accessibility help. Also need to provide the accessibility help.
 
-alt-f10 to go to the toolbar
 need navigation.
 
 highlighting on navigation
+
+
+Done
+
+alt-f10 to go to the toolbar

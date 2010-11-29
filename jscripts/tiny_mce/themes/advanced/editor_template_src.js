@@ -550,15 +550,19 @@
 			}
 */
 
-			// TODO: This is actually really bad for accessibility and should become an aria property on the iframe instead.
-			if (!ed.getParam('accessibility_focus'))
-				Event.add(DOM.add(p, 'a', {href : '#'}, '<!-- IE -->'), 'focus', function() {tinyMCE.get(ed.id).focus();});
-
 			if (s.theme_advanced_toolbar_location == 'external')
 				o.deltaHeight = 0;
 
 			t.deltaHeight = o.deltaHeight;
 			o.targetNode = null;
+			
+			ed.onKeyDown.add(function(ed, evt) {
+				var DOM_VK_F10 = 121;
+				if (evt.keyCode === DOM_VK_F10 && evt.altKey) {
+					tinymce.DOM.select('.mceButton', tinymce.DOM.select('.mceToolbar')[0])[0].focus();
+					Event.cancel(evt);
+				}
+			});
 
 			return {
 				iframeContainer : ic,
@@ -780,9 +784,6 @@
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
       
-      //TODO need a way of going from the editor to the toolbar. - perhaps an event listener
-      //TODO on the editor
-
 			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"toolbar"});
 
 			// Create toolbar and add the controls
