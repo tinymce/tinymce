@@ -779,7 +779,7 @@
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
 
-			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a});
+			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"toolbar"});
 
 			// TODO: These two should be replaced with ARIA-roles istead of creating bad HTML hacks.
 			if (!ed.getParam('accessibility_focus'))
