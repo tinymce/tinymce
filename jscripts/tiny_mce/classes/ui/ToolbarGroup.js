@@ -31,7 +31,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 		return h.join('');
 	},
 	
-	focus: function() {
+	focus : function() {
 		this.controls[0].focus();
 	}
 });
