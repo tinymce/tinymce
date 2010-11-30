@@ -62,5 +62,5 @@ more_colors:"More colors",
 
 // Accessibility Strings
 rich_text_area:"Rich Text Area",
-toolbar:"Toolbar"
+toolbars:"Toolbars"
 });

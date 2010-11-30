@@ -795,11 +795,11 @@
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
       
-			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"toolbar", 'aria-label': ed.getLang('advanced.toolbar')});
+			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"group", 'aria-label': ed.getLang('advanced.toolbars')});
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
-				tb = cf.createToolbar("toolbar" + i, {'class' : 'mceToolbarRow' + i});
+				tb = cf.createToolbar("toolbar" + i, {'class' : 'mceToolbarRow' + i, 'name' : s['theme_advanced_toolbar_name' + i]});
 
 				if (s['theme_advanced_buttons' + i + '_add'])
 					v += ',' + s['theme_advanced_buttons' + i + '_add'];
