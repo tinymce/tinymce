@@ -99,6 +99,7 @@
 	include('ui/MenuButton.js');
 	include('ui/SplitButton.js');
 	include('ui/ColorSplitButton.js');
+	include('ui/ToolbarGroup.js');
 	include('ui/Toolbar.js');
 	include('AddOnManager.js');
 	include('EditorManager.js');

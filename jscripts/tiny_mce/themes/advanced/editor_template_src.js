@@ -62,7 +62,6 @@
 		init : function(ed, url) {
 			var t = this, s, v, o;
 	
-			t.toolbars = [];
 			t.editor = ed;
 			t.url = url;
 			t.onResolveName = new tinymce.util.Dispatcher(this);
@@ -560,17 +559,7 @@
 			ed.onKeyDown.add(function(ed, evt) {
 				var DOM_VK_F10 = 121;
 				if (evt.keyCode === DOM_VK_F10 && evt.altKey) {
-					each(t.toolbars, function(toolbar) {
-						var focussed = false;
-						each(toolbar.controls, function(control) {
-							if (!control.isDisabled()) {
-								control.focus();
-								focussed = true;
-								return false;
-							}
-						});
-						return !focussed;
-					});
+					t.toolbarGroup.focus();
 					return Event.cancel(evt);
 				}
 			});
@@ -790,12 +779,15 @@
 		},
 
 		_addToolbars : function(c, o) {
-			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [], a;
+			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, a, toolbarGroup;
 
+			toolbarGroup = cf.createToolbarGroup('toolbargroup', {'name': ed.getLang('advanced.toolbars')});
+			t.toolbarGroup = toolbarGroup;
+			
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
       
-			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"group", 'aria-label': ed.getLang('advanced.toolbars')});
+			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"presentation"});
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
@@ -808,15 +800,12 @@
 					v = s['theme_advanced_buttons' + i + '_add_before'] + ',' + v;
 
 				t._addControls(v, tb);
-				t.toolbars.push(tb);
-				
-				//n.appendChild(n = tb.render());
-				h.push(tb.renderHTML());
+				toolbarGroup.add(tb);
 
 				o.deltaHeight -= s.theme_advanced_row_height;
 			}
 
-			DOM.setHTML(n, h.join(''));
+			DOM.setHTML(n, toolbarGroup.renderHTML());
 		},
 
 		_addStatusBar : function(tb, o) {

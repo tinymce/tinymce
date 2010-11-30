@@ -93,6 +93,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				dom.setAttrib(toolbarElement, 'aria-activedescendant', control.id);
 			});
 		});
+		dom.bind(toolbarElement, 'focus', function() {
+			dom.get(dom.getAttrib(toolbarElement, 'aria-activedescendant')).focus();
+		});
 	},
 	
 	keydown : function(evt) {
