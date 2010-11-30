@@ -474,12 +474,11 @@
 		},
 
 		renderUI : function(o) {
-			var n, ic, tb, t = this, ed = t.editor, s = t.settings, sc, p, nl, ariaLabel;
+			var n, ic, tb, t = this, ed = t.editor, s = t.settings, sc, p, nl;
 
 			// TODO: Should have an aria-describedby attribute which is user-configurable to describe what this field is actually for.
 			// Maybe actually inherit it from the original textara?
-			ariaLabel = tinymce.DOM.getAttrib(ed.getElement(), 'aria-label', ed.getLang('advanced.rich_text_area'));
-			n = p = DOM.create('span', {role : 'application', 'aria-label' : ariaLabel, id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin' + (s.skin_variant ? ' ' + ed.settings.skin + 'Skin' + t._ufirst(s.skin_variant) : '')});
+			n = p = DOM.create('span', {role : 'application', 'aria-label' : s.aria_label, id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin' + (s.skin_variant ? ' ' + ed.settings.skin + 'Skin' + t._ufirst(s.skin_variant) : '')});
 
 			if (!DOM.boxModel)
 				n = DOM.add(n, 'div', {'class' : 'mceOldBoxModel'});

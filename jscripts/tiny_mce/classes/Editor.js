@@ -591,6 +591,8 @@
 			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re;
 
 			tinymce.add(t);
+			
+			s.aria_label = s.aria_label || DOM.getAttrib(e, 'aria-label', t.getLang('aria.rich_text_area'));
 
 			/**
 			 * Reference to the theme instance that was used to generate the UI. 
@@ -765,6 +767,8 @@
 				id : t.id + "_ifr",
 				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder : '0',
+				title : s.aria_label,
+
 				style : {
 					width : '100%',
 					height : h

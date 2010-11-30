@@ -167,4 +167,7 @@ upper_roman:"Upper roman",
 circle:"Circle",
 disc:"Disc",
 square:"Square"
+},
+aria:{
+rich_text_area:"Rich Text Area"
 }}});
