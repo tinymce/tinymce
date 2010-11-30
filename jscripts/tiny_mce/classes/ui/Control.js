@@ -27,7 +27,7 @@
 		 * @param {String} id Control id.
 		 * @param {Object} s Optional name/value settings object.
 		 */
-		Control : function(id, s) {
+		Control : function(id, s, editor) {
 			this.id = id;
 			this.settings = s = s || {};
 			this.rendered = false;
@@ -36,6 +36,7 @@
 			this.scope = s.scope || this;
 			this.disabled = 0;
 			this.active = 0;
+			this.editor = editor;
 		},
 		
 		setAriaProperty : function(property, value) {

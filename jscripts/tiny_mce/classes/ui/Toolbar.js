@@ -96,7 +96,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	},
 	
 	keydown : function(evt) {
-		var t = this, DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, dom = tinymce.DOM, controls = t.controls, focussedId = dom.getAttrib(t.id, 'aria-activedescendant'), idx, newFocus;
+		var t = this, DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_ESCAPE = 27, dom = tinymce.DOM, controls = t.controls, focussedId = dom.getAttrib(t.id, 'aria-activedescendant'), idx, newFocus;
 		// TODO: May need to reverse direction in RTL languages.
 		function moveFocus(dir) {
 			if (!focussedId) return;
@@ -128,10 +128,16 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			tinymce.dom.Event.cancel(evt);
 		}
 		
-		if (evt.keyCode === DOM_VK_LEFT) {
-			moveFocus(-1);
-		} else if(evt.keyCode === DOM_VK_RIGHT) {
-			moveFocus(1);
+		switch (evt.keyCode) {
+			case DOM_VK_LEFT:
+				moveFocus(-1);
+				break;
+			case DOM_VK_RIGHT:
+				moveFocus(1);
+				break;
+			case DOM_VK_ESCAPE:
+				t.editor.focus();
+				break;
 		}
 	}
 });

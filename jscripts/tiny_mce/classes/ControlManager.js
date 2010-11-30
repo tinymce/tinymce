@@ -458,7 +458,7 @@
 
 			id = t.prefix + id;
 			cls = cc || t._cls.toolbar || tinymce.ui.Toolbar;
-			c = new cls(id, s);
+			c = new cls(id, s, t.editor);
 
 			if (t.get(id))
 				return null;
