@@ -1,37 +1,26 @@
-// Since the autolink function is also waiting for keyup events we need to make sure it gets the first chance to apply the links
-// hence this additional delay.
-function delay(callback) {
-	return function() {
-		setTimeout(callback, 100);
-	};
-}
-
-function fakeTypeAURL(url)
-{
+function fakeTypeAURL(url) {
 	return function(callback) {
         // type the URL and then press the space bar
         tinyMCE.execCommand('mceInsertContent', false, url);
-        window.robot.type(32, false, delay(callback), editor.getWin());
+        window.robot.type(32, false, callback, editor.selection.getNode());
     };
 }
 
-function fakeTypeAnEclipsedURL(url)
-{
+function fakeTypeAnEclipsedURL(url) {
 	return function(callback) {
         // type the URL and then type ')'
         tinyMCE.execCommand('mceInsertContent', false, '(' + url);
         window.robot.type(48, true, function() {
-            window.robot.type(32, true, delay(callback), editor.getWin());
-        }, editor.getWin());
+            window.robot.type(32, false, callback, editor.selection.getNode());
+        }, editor.selection.getNode());
     };
 }
 
-function fakeTypeANewlineURL(url)
-{
+function fakeTypeANewlineURL(url) {
 	return function(callback) {
         // type the URL and then press the enter key
         tinyMCE.execCommand('mceInsertContent', false, url);
-        window.robot.type('\n', false, delay(callback), editor.getWin());
+        window.robot.type('\n', false, callback, editor.selection.getNode());
     };
 }
 

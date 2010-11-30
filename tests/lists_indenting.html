@@ -114,16 +114,16 @@ function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
 	function listener(ed, e) {
 		if (e == actionName) {
 			actionFired = true;
-			return false;
+			return true;
 		}
 	}
 	editor.onBeforeExecCommand.add(listener);
-
+	
 	fakeKeyPressAction(keystroke, shift)(function() {
 		equals(actionFired, expected, actionName + ' command triggered?');
 		editor.onBeforeExecCommand.remove(listener);
 		QUnit.start();
-	}, editor.selection.getNode());
+	}, editor.getWin());
 }
 
 asyncTest('Expanded Selection, List Types - Indent Action', function() {

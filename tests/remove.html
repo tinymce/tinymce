@@ -24,10 +24,14 @@ asyncTest('Backspace with indented text', function() {
 	editor.focus();
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.type('\b', false, function() {
-		equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
-		editor.execCommand('undo', false, null);
-		equals(editor.getContent(), originalContent, 'Undo deletion');
-		QUnit.start();
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
+			editor.execCommand('undo', false, null);
+			equals(editor.getContent(), originalContent, 'Undo deletion');
+			QUnit.start();
+		}, 100);
 	}, editor.selection.getNode());
 });
 
@@ -68,10 +72,14 @@ asyncTest('Forward delete with indented text', function() {
 	editor.focus();
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.forwardDelete(function() {
-		equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
-		editor.execCommand('undo', false, null);
-		equals(editor.getContent(), originalContent, 'Undo deletion');
-		QUnit.start();
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
+			editor.execCommand('undo', false, null);
+			equals(editor.getContent(), originalContent, 'Undo deletion');
+			QUnit.start();
+		}, 100);
 	}, editor.selection.getNode());
 });
 
@@ -84,8 +92,12 @@ asyncTest('Forward delete with first paragraph indented', function() {
 	editor.focus();
 	setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);
 	robot.forwardDelete(function() {
-		equals(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>', 'Delete content');
-		QUnit.start();
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>', 'Delete content');
+			QUnit.start();
+		}, 100);
 	}, editor.selection.getNode());
 });
 

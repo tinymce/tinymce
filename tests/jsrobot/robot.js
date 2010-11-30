@@ -59,9 +59,10 @@
 		},
 		
 		type: function(key, shiftKey, callback, focusElement) {
+			var keycode = this.getKeycode(key);
 			shiftKey = !!shiftKey;
 			this.appletAction(focusElement, callback, function() {
-				return this.getApplet().typeKey(this.getKeycode(key), shiftKey);
+				return this.getApplet().typeKey(keycode, shiftKey);
 			});
 		},
 		
@@ -90,8 +91,9 @@
 		},
 		
 		typeAsShortcut: function(key, callback, focusElement, event) {
+			var keycode = this.getKeycode(key);
 			this.appletAction(focusElement, callback, function() {
-				return this.getApplet().typeAsShortcut(this.getKeycode(key));
+				return this.getApplet().typeAsShortcut(keycode);
 			}, event);
 		},
 		
@@ -119,52 +121,96 @@
 		},
 		
 		appletAction: function(focusElement, continueCallback, action, event) {
-			var actionResult, listenerActivated = false, listenerType = event || 'keyup', timeout;
+			var actionResult, listenerActivated = false, listenerType = event || 'keyup', timeout, curEl, toFocus = [], t = this;
+
+			// Make sure the focus change has taken effect.
+			var afterFocused = function() {
+				timeout = setTimeout(function() {
+					if (listenerActivated) return false;
+					doListeners(false);
+					if (continueCallback) {
+						setTimeout(continueCallback, 0);
+					}
+				}, 10000);
+				actionResult = action.apply(t);
+				if (actionResult) {
+					throw { message: "JSRobot error: " + actionResult };
+				}
+				if (!focusElement && continueCallback) {
+					setTimeout(continueCallback, 100);
+				}
+			};
+			
 			var listener = function() {
 				if (listenerActivated) return;
 				listenerActivated = true;
 				clearTimeout(timeout);
 				doListeners(false);
 				if (continueCallback) {
-					setTimeout(continueCallback, 0);
+					setTimeout(continueCallback, 100);
 				}
 			};
 			var doListeners = function(add) {
-				var target = focusElement.document || focusElement.ownerDocument || focusElement;
+				// Listen as high up in the hierarchy as possible to give us the best chance of getting the event before any JS listeners cancel it.
+				var target = focusElement.defaultView || focusElement.ownerDocument || focusElement;
 				if (focusElement.addEventListener) {
 					target[add ? 'addEventListener' : 'removeEventListener'](listenerType, listener, true);
 				} else {
 					focusElement[add ? 'attachEvent' : 'detachEvent']('on' + listenerType, listener);
+					target[add ? 'attachEvent' : 'detachEvent']('on' + listenerType, listener);
 				}
 			};
 			
-			focusElement = focusElement || document.activeElement;
-			if (focusElement && focusElement.frameElement) {
-				// If we have an iframe window we need to make sure the iframe element in the parent document is focussed
-				// Otherwise calls to focus within the frame won't have any effect in Safari/Mac.
-				focusElement.frameElement.focus();
-			}
-			if (focusElement && focusElement.contentWindow) {
-				// If the element to focus is an iframe element, focus the active element within the frame instead (if available).
-				focusElement = focusElement.contentWindow.document.activeElement;
-			}
-			if (focusElement) {
-				focusElement.focus();
-				doListeners(true);
-
-				// Add a timeout of 5 seconds in case the target event isn't supported or something goes wrong.
-				timeout = setTimeout(function() {
-					if (!listenerActivated && continueCallback) {
-						continueCallback();
+			if (!focusElement) {
+				focusElement = document.activeElement;
+				while (focusElement && (focusElement.contentDocument || focusElement.contentWindow)) {
+					if (focusElement.contentDocument) {
+						focusElement = focusElement.contentDocument.activeElement;
+					} else {
+						focusElement = focusElement.contentWindow.document.activeElement;
 					}
-				}, 5000);
+				}
 			}
-			actionResult = action.apply(this);
-			if (actionResult) {
-				throw { message: "JSRobot error: " + actionResult };
+			if (navigator.userAgent.indexOf('MSIE') < 0) {
+				curEl = focusElement;
+				while (curEl) {
+					if (curEl.frameElement) {
+						toFocus.push(curEl);
+						toFocus.push(curEl.frameElement);
+						curEl = curEl.frameElement;
+					} else if (curEl.parent && curEl.parent !== curEl) {
+						toFocus.push(curEl.parent);
+						curEl = curEl.parent;
+					} else if (curEl.defaultView) {
+						toFocus.push(curEl.defaultView);
+						curEl = curEl.defaultView;
+					} else if (curEl.ownerDocument) {
+						toFocus.push(curEl.ownerDocument.body);
+						curEl = curEl.ownerDocument;
+					} else {
+						curEl = null;
+					}
+				}
 			}
-			if (!focusElement && continueCallback) {
-				setTimeout(continueCallback, 100);
+			
+			var focused = [];
+			var focusNext = function() {
+				if (toFocus.length > 0) {
+					curEl = toFocus.pop();
+					focused.push(curEl);
+					if (curEl.focus) curEl.focus();
+					setTimeout(focusNext, 0);
+				} else {
+					doListeners(true);
+					focusElement.focus();
+					
+					setTimeout(afterFocused, 0);
+				}
+			};
+			if (focusElement) {
+				focusNext();
+			} else {
+				afterFocused();
 			}
 		}
 	};
