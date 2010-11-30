@@ -108,7 +108,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				}
 			});
 
-			while (!newFocus || !newFocus.id || newFocus.isDisabled()) {
+			while (!newFocus || !newFocus.id) {
 				idx += dir;
 				// TODO: Avoid infinite loop if nothing is focussable.
 				if (idx < 0) {
