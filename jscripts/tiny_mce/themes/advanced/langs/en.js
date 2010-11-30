@@ -61,5 +61,6 @@ toolbar_focus:"Jump to tool buttons - Alt+Q, Jump to editor - Alt-Z, Jump to ele
 more_colors:"More colors",
 
 // Accessibility Strings
-rich_text_area:"Rich Text Area"
+rich_text_area:"Rich Text Area",
+toolbar:"Toolbar"
 });

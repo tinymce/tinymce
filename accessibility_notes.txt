@@ -28,6 +28,18 @@ need navigation.
 
 highlighting on navigation
 
+** Toolbar Requirements **
+(from http://www.w3.org/TR/wai-aria-practices/#toolbar)
+If there are multiple toolbars there must be an aria-label property for each toolbar.
+If there are many toolbars they should be placed in a container element with a role of "group".
+Recommended to provide access to these functions via menubar and menus to avoid cluttering the user interface with a surplus of toolbars.
+
+Keyboard Interaction
+* Tba moves focus to the first enabled toolbar button
+* A subsequent tab moves focus out of the toolbar
+* Left arrow and right arrow keys navigate to the enabled buttons in the toolbar (direction may need to be adjusted in RTL languages)
+* Disabled buttons may either be not focussable or focussable but read by the screen reader as disabled.
+
 Make tabbing through toolbar buttons work correctly on Safari.  Currently tab moves to the next drop down but skips buttons.  We should be setting tabindex="0" on the parent toolbar and tabindex="-1" on each button, then manually manage the tab key within the toolbar.
 	See http://wiki.codetalks.org/wiki/index.php/Docs/Keyboard_navigable_JS_widgets
 	Seems to work OK on IE (you can tab to each button, but you can't skip over all the toolbar buttons)
