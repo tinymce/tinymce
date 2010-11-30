@@ -42,6 +42,13 @@ var SearchReplaceDialog = {
 		ca = f[m + '_panel_casesensitivebox'].checked;
 		rs = f['replace_panel_replacestring'].value;
 
+		if (tinymce.isIE) {
+			r = ed.getDoc().selection.createRange();
+		}
+
+		if (s == '')
+			return;
+
 		function fix() {
 			// Correct Firefox graphics glitches
 			r = se.getRng().cloneRange();
@@ -55,17 +62,6 @@ var SearchReplaceDialog = {
 			else
 				ed.getDoc().execCommand('InsertHTML', false, rs);
 		};
-
-		// Whats the point
-		if (!s || s == '')
-			return;
-
-		if (tinymce.isIE && r.parentElement().document !== ed.getDoc()) {
-			// Move caret to end of text
-			ed.execCommand('SelectAll');
-			ed.selection.collapse(false);
-			r = se.getRng();
-		}
 
 		// IE flags
 		if (ca)
@@ -113,6 +109,14 @@ var SearchReplaceDialog = {
 
 		se.collapse(b);
 		r = se.getRng();
+
+		if (tinymce.isIE) {
+			r = ed.getDoc().selection.createRange();
+		}
+
+		// Whats the point
+		if (!s)
+			return;
 
 		if (tinymce.isIE) {
 			if (r.findText(s, b ? -1 : 1, fl)) {
