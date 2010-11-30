@@ -8,6 +8,9 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
+(function(tinymce) {
+// Shorten class names
+var dom = tinymce.DOM, each = tinymce.each
 /**
  * This class is used to create toolbars a toolbar is a container for other controls like buttons etc.
  *
@@ -23,7 +26,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	 * @return {String} HTML for the toolbar control.
 	 */
 	renderHTML : function() {
-		var t = this, h = '', c, co, dom = tinymce.DOM, s = t.settings, i, pr, nx, cl, toolbarName = s.name || '';
+		var t = this, h = '', c, co, s = t.settings, i, pr, nx, cl, toolbarName = s.name || '';
 
 		cl = t.controls;
 		for (i=0; i<cl.length; i++) {
@@ -81,66 +84,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		h += dom.createHTML('td', {'class' : c, role : 'presentation'}, dom.createHTML('span', null, '<!-- IE -->'));
 
 		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || '', role: 'toolbar', 'aria-label': toolbarName, tabindex: '-1'}, '<tbody><tr role="presentation">' + h + '</tr></tbody>');
-	},
-	
-	postRender : function() {
-		var t = this, dom = tinymce.DOM, toolbarElement = dom.get(t.id);
-		dom.bind(toolbarElement, 'keydown', t.keydown, t);
-		dom.setAttrib(t.controls[0].id, 'tabindex', 0);
-		dom.setAttrib(toolbarElement, 'aria-activedescendant', t.controls[0].id);
-		tinymce.each(t.controls, function(control) {
-			dom.bind(control.id, 'focus', function() {
-				dom.setAttrib(toolbarElement, 'aria-activedescendant', control.id);
-			});
-		});
-		dom.bind(toolbarElement, 'focus', function() {
-			dom.get(dom.getAttrib(toolbarElement, 'aria-activedescendant')).focus();
-		});
-	},
-	
-	keydown : function(evt) {
-		var t = this, DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_ESCAPE = 27, dom = tinymce.DOM, controls = t.controls, focussedId = dom.getAttrib(t.id, 'aria-activedescendant'), idx, newFocus;
-		// TODO: May need to reverse direction in RTL languages.
-		function moveFocus(dir) {
-			if (!focussedId) return;
-			
-			tinymce.each(t.controls, function(control, itemIndex) {
-				if (focussedId === control.id) {
-					idx = itemIndex;
-					return false;
-				}
-			});
-
-			while (!newFocus || !newFocus.id) {
-				idx += dir;
-				// TODO: Avoid infinite loop if nothing is focussable.
-				if (idx < 0) {
-					idx = controls.length - 1;
-				} else if (idx >= controls.length) {
-					idx = 0;
-				}
-				newFocus = controls[idx];
-				// Avoid going into an infinite loop if we get back to where we started and still don't have anything to focus.
-				if (newFocus.id === focussedId) break;
-			}
-
-			dom.setAttrib(focussedId, 'tabindex', '-1');
-			dom.setAttrib(t.id, 'aria-activedescendant', newFocus.id);
-			dom.setAttrib(newFocus.id, 'tabindex', '0');
-			dom.get(newFocus.id).focus();
-			tinymce.dom.Event.cancel(evt);
-		}
-		
-		switch (evt.keyCode) {
-			case DOM_VK_LEFT:
-				moveFocus(-1);
-				break;
-			case DOM_VK_RIGHT:
-				moveFocus(1);
-				break;
-			case DOM_VK_ESCAPE:
-				t.editor.focus();
-				break;
-		}
 	}
 });
+})(tinymce);
