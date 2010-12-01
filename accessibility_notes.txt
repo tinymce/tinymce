@@ -33,6 +33,7 @@ Currently we use role="button" for all buttons.  For alignment should we use rad
 
 Provide an icon for the accessibility help dialog (so that user's have a chance of reaching it if the alt-0 shortcut conflicts with something).
 
+Ensure that use_native_selects:true is set (it appears to be impossible to create an accessible custom combo box that works on OS X). Fix the CSS in the Ephox theme around combo boxes.
 
 Done
 
