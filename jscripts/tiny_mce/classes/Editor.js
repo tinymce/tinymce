@@ -1343,8 +1343,10 @@
 				}
 
 				// Is not content editable
-				if (!ce)
+				if (!ce) {
+					if (t.getWin().frameElement) t.getWin().frameElement.focus();
 					t.getWin().focus();
+				}
 
 				// Restore selected control element
 				// This is needed when for example an image is selected within a
