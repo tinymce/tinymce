@@ -780,7 +780,10 @@
 		_addToolbars : function(c, o) {
 			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, a, toolbarGroup;
 
-			toolbarGroup = cf.createToolbarGroup('toolbargroup', {'name': ed.getLang('advanced.toolbars')});
+			toolbarGroup = cf.createToolbarGroup('toolbargroup', {
+				'name': ed.getLang('advanced.toolbars'),
+				'tab_focus_toolbar':ed.getParam('theme_advanced_tab_focus_toolbar')
+			});
 			t.toolbarGroup = toolbarGroup;
 			
 			a = s.theme_advanced_toolbar_align.toLowerCase();

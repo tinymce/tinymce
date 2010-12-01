@@ -39,15 +39,22 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	},
 	
 	postRender : function() {
-		var t = this, groupElement = dom.get(t.id);
+		var t = this, groupElement = dom.get(t.id), tabFocusToolbar = t.settings.tab_focus_toolbar;
 		dom.bind(groupElement, 'keydown', t.keydown, t);
-		dom.setAttrib(t.controls[0].controls[0].id, 'tabindex', 0);
+		if (tabFocusToolbar) {
+			dom.setAttrib(t.controls[0].controls[0].id, 'tabindex', 0);
+		}
 		dom.setAttrib(groupElement, 'aria-activedescendant', t.controls[0].controls[0].id);
 		each(t.controls, function(toolbar) {
 			each(toolbar.controls, function(control) {
 				dom.bind(control.id, 'focus', function() {
 					dom.setAttrib(groupElement, 'aria-activedescendant', control.id);
 				});
+				if (tabFocusToolbar) {
+					dom.bind(control.id, 'blur', function() {
+						dom.setAttrib(control.id, 'tabindex', '-1');
+					});
+				}
 			});
 		});
 	},
