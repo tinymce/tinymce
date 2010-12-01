@@ -168,7 +168,7 @@
 		 * @method postRender
 		 */
 		postRender : function() {
-			var t = this, ch;
+			var t = this, ch, changeListenerAdded = true;
 
 			t.rendered = true;
 
@@ -190,8 +190,11 @@
 				var bf;
 
 				Event.remove(t.id, 'change', ch);
+				changeListenerAdded = false;
 
 				bf = Event.add(t.id, 'blur', function() {
+					if (changeListenerAdded) return;
+					changeListenerAdded = true;
 					Event.add(t.id, 'change', onChange);
 					Event.remove(t.id, 'blur', bf);
 				});
