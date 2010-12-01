@@ -41,28 +41,29 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	postRender : function() {
 		var t = this, groupElement = dom.get(t.id), tabFocusToolbar = t.settings.tab_focus_toolbar;
 		dom.bind(groupElement, 'keydown', t.keydown, t);
-		if (tabFocusToolbar) {
-			dom.setAttrib(t.controls[0].controls[0].id, 'tabindex', 0);
-		}
 		dom.setAttrib(groupElement, 'aria-activedescendant', t.controls[0].controls[0].id);
 		each(t.controls, function(toolbar) {
 			each(toolbar.controls, function(control) {
+				dom.setAttrib(control.id, 'tabindex', '-1');
 				dom.bind(control.id, 'focus', function() {
 					dom.setAttrib(groupElement, 'aria-activedescendant', control.id);
 				});
-				if (tabFocusToolbar) {
+				if (!tabFocusToolbar) {
 					dom.bind(control.id, 'blur', function() {
 						dom.setAttrib(control.id, 'tabindex', '-1');
 					});
 				}
 			});
 		});
+		if (tabFocusToolbar) {
+			dom.setAttrib(t.controls[0].controls[0].id, 'tabindex', 0);
+		}
 	},
 	
 	keydown : function(evt) {
 		var t = this, DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, controls = t.controls, focussedId = dom.getAttrib(t.id, 'aria-activedescendant'), idx, toolbarIdx, newFocus;
 		// TODO: May need to reverse direction in RTL languages.
-		function moveFocus(dir, toolbarDir) {
+		function moveFocus(dir) {
 			if (!focussedId) return;
 			
 			function nextToolbar(dir) {
@@ -83,12 +84,6 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 					}
 				});
 			});
-			
-			if (toolbarDir) {
-				nextToolbar(toolbarDir);
-				idx = Math.min(idx, controls[toolbarIdx].controls.length - 1);
-				newFocus = controls[toolbarIdx].controls[idx];
-			}
 
 			while (!newFocus || !newFocus.id) {
 				idx += dir;
@@ -117,12 +112,6 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 				break;
 			case DOM_VK_RIGHT:
 				moveFocus(1);
-				break;
-			case DOM_VK_UP:
-				moveFocus(1, -1);
-				break;
-			case DOM_VK_DOWN:
-				moveFocus(1, 1);
 				break;
 			case DOM_VK_ESCAPE:
 				t.editor.focus();
