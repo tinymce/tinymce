@@ -31,6 +31,9 @@ highlighting on navigation
 Provide better visualisation of focussed toolbar buttons (probably change the background color).  Use :focus and :active pseudo-classes in CSS.
 Currently we use role="button" for all buttons.  For alignment should we use radio groups? For bold/italic/etc should we use checkboxes? Current behaviour matches CK but doesn't provide audible feedback on if the button is pressed or not (despite setting the aria-pressed attribute)
 
+Provide an icon for the accessibility help dialog (so that user's have a chance of reaching it if the alt-0 shortcut conflicts with something).
+
+
 Done
 
 alt-f10 to go to the toolbar (but with issues caused by the tabfocus plugin as noted above)

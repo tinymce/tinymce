@@ -41,6 +41,7 @@
 			image : ['image_desc', 'mceImage'],
 			cleanup : ['cleanup_desc', 'mceCleanup'],
 			help : ['help_desc', 'mceHelp'],
+			shortcuts : ['shortcuts_desc', 'mceShortcuts'],
 			code : ['code_desc', 'mceCodeEditor'],
 			hr : ['hr_desc', 'InsertHorizontalRule'],
 			removeformat : ['removeformat_desc', 'RemoveFormat'],
@@ -562,6 +563,9 @@
 					return Event.cancel(evt);
 				}
 			});
+			
+			// alt+0 is the UK recommended shortcut for accessing the list of access controls.
+			ed.addShortcut('alt+0', '', 'mceShortcuts', t);
 
 			return {
 				iframeContainer : ic,
@@ -1161,6 +1165,18 @@
 				inline : true
 			}, {
 				theme_url : this.url
+			});
+		},
+		
+		_mceShortcuts : function() {
+			var ed = this.editor;
+			ed.windowManager.open({
+				url: this.url + '/shortcuts.htm',
+				width: 480,
+				height: 380,
+				inline: true
+			}, {
+				theme_url: this.url
 			});
 		},
 
