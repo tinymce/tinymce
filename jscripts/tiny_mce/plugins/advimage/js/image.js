@@ -300,7 +300,7 @@ var ImageDialog = {
 						dom.add(grp, dom.create('option', { 'value': p[1] }, p[0]));
 					});
 				} else {
-					dom.add(grp, dom.create('option', { 'value': o[1] }, o[0]));
+					dom.add(lst, dom.create('option', { 'value': o[1] }, o[0]));
 				}
 			});
 		} else
