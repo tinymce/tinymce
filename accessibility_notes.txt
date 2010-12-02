@@ -38,4 +38,32 @@ Ensure that use_native_selects:true is set (it appears to be impossible to creat
 Done
 
 alt-f10 to go to the toolbar (but with issues caused by the tabfocus plugin as noted above)
-Keyboard navigation through toolbar items (arrow keys). Tab moves to editor.
+
+
+Dialog accessability...
+
+Add labels.
+
+titles?
+
+preview dialog -- very simple?
+
+
+
+link dialog - 
+
+
+Tab focus
+
+aria required attribute
+
+input type= button don't need role = button
+
+use html semantics over aria semantics.
+
+help
+
+focus issue on safari
+toolbar widgets
+dialogs
+tab widget
