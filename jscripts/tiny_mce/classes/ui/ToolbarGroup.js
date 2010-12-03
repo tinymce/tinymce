@@ -10,7 +10,7 @@
 
 (function(tinymce) {
 // Shorten class names
-var dom = tinymce.DOM, each = tinymce.each;
+var dom = tinymce.DOM, each = tinymce.each, Event = tinymce.dom.Event;
 /**
  * This class is used to group a set of toolbars together and control the keyboard navigation and focus.
  *
@@ -103,7 +103,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 			dom.setAttrib(t.id, 'aria-activedescendant', newFocus.id);
 			dom.setAttrib(newFocus.id, 'tabindex', '0');
 			dom.get(newFocus.id).focus();
-			tinymce.dom.Event.cancel(evt);
+			Event.cancel(evt);
 		}
 		
 		switch (evt.keyCode) {
