@@ -35,12 +35,12 @@
 
 						if (d > 0) {
 							for (i = x + 1; i < el.length; i++) {
-								if (el[i].type != 'hidden')
+								if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
 									return el[i];
 							}
 						} else {
 							for (i = x - 1; i >= 0; i--) {
-								if (el[i].type != 'hidden')
+								if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
 									return el[i];
 							}
 						}
