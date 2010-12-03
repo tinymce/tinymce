@@ -15,14 +15,13 @@ Known Issues
 Use Voice Over to move voice cursor and focus into TinyMCE and then tab or shift-tab out and back into the editor. The keyboard focus moves but the voice over focus does not. Probably should be in sync?
 
 ToDo
+====
 
 Probably want to make a way of doing editor short cuts.
 Should remove the shortcut text from the button titles as it makes it JAWS read things like "Bold left paren, control plus B, right paren, button". Better to put shortcuts in a single help document.
 
 perhaps in the tinymce init settings have something like:
 shortcuts : { 'ctrl-b', 'bold'} 
-
-iFrame needs a keyboard shortcut to enable accessibility help. Also need to provide the accessibility help.
 
 need navigation.
 
@@ -33,14 +32,21 @@ Currently we use role="button" for all buttons.  For alignment should we use rad
 
 Provide an icon for the accessibility help dialog (so that user's have a chance of reaching it if the alt-0 shortcut conflicts with something).
 
-Ensure that use_native_selects:true is set (it appears to be impossible to create an accessible custom combo box that works on OS X). Fix the CSS in the Ephox theme around combo boxes.
 
 Done
+====
 
 alt-f10 to go to the toolbar (but with issues caused by the tabfocus plugin as noted above)
 
+Keyboard navigation through toolbar items (arrow keys). Tab moves to editor.
+
+Fake combo boxes and split buttons now work with both JAWS and voice over.  Strictly speaking the comboboxes are treated as popup buttons because role="combobox" just doesn't work anywhere properly.
+
+iFrame needs a keyboard shortcut to enable accessibility help. Also need to provide the accessibility help.
+
 
 Dialog accessability...
+=======================
 
 Add labels.
 
