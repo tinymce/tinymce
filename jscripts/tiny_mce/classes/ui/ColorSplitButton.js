@@ -26,11 +26,12 @@
 		 * @method ColorSplitButton
 		 * @param {String} id Control id for the color split button.
 		 * @param {Object} s Optional name/value settings object.
+		 * @param {Editor} ed The editor instance this button is for.
 		 */
-		ColorSplitButton : function(id, s) {
+		ColorSplitButton : function(id, s, ed) {
 			var t = this;
 
-			t.parent(id, s);
+			t.parent(id, s, ed);
 
 			/**
 			 * Settings object.
@@ -147,11 +148,11 @@
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr, w;
 
-			w = DOM.add(s.menu_container, 'div', {id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
+			w = DOM.add(s.menu_container, 'div', {role: 'listbox', id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
 			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 
-			n = DOM.add(m, 'table', {'class' : 'mceColorSplitMenu'});
+			n = DOM.add(m, 'table', {role: 'presentation', 'class' : 'mceColorSplitMenu'});
 			tb = DOM.add(n, 'tbody');
 
 			// Generate color grid
@@ -160,25 +161,27 @@
 				c = c.replace(/^#/, '');
 
 				if (!i--) {
-					tr = DOM.add(tb, 'tr');
+					tr = DOM.add(tb, 'tr', {role: 'presentation'});
 					i = s.grid_width - 1;
 				}
 
-				n = DOM.add(tr, 'td');
+				n = DOM.add(tr, 'td', {role: 'presentation'});
 
 				n = DOM.add(n, 'a', {
+					role : 'option',
 					href : 'javascript:;',
 					style : {
 						backgroundColor : '#' + c
 					},
+					'title': t.editor.getLang('colors.' + c, c),
 					_mce_color : '#' + c
 				});
 			});
 
 			if (s.more_colors_func) {
-				n = DOM.add(tb, 'tr');
-				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'mceMoreColors'});
-				n = DOM.add(n, 'a', {id : t.id + '_more', href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
+				n = DOM.add(tb, 'tr', {role: 'presentation'});
+				n = DOM.add(n, 'td', {role: 'presentation', colspan : s.grid_width, 'class' : 'mceMoreColors'});
+				n = DOM.add(n, 'a', {role: 'option', id : t.id + '_more', href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
 					s.more_colors_func.call(s.more_colors_scope || this);

@@ -417,7 +417,7 @@
 
 			id = t.prefix + id;
 			cls = cc || t._cls.colorsplitbutton || tinymce.ui.ColorSplitButton;
-			c = new cls(id, s);
+			c = new cls(id, s, ed);
 			ed.onMouseDown.add(c.hideMenu, c);
 
 			// Remove the menu element when the editor is removed

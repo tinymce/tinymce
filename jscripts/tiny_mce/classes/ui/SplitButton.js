@@ -25,9 +25,10 @@
 		 * @method SplitButton
 		 * @param {String} id Control id for the split button.
 		 * @param {Object} s Optional name/value settings object.
+		 * @param {Editor} ed Optional the editor instance this button is for.
 		 */
-		SplitButton : function(id, s) {
-			this.parent(id, s);
+		SplitButton : function(id, s, ed) {
+			this.parent(id, s, ed);
 			this.classPrefix = 'mceSplitButton';
 		},
 

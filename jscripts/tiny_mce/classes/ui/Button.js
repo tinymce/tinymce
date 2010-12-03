@@ -26,9 +26,10 @@
 		 * @method Button
 		 * @param {String} id Control id for the button.
 		 * @param {Object} s Optional name/value settings object.
+		 * @param {Editor} ed Optional the editor instance this button is for.
 		 */
-		Button : function(id, s) {
-			this.parent(id, s);
+		Button : function(id, s, ed) {
+			this.parent(id, s, ed);
 			this.classPrefix = 'mceButton';
 		},
 
