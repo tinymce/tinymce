@@ -128,12 +128,13 @@
 					t.selectedIndex = idx;
 					DOM.setHTML(e, DOM.encode(o.title));
 					DOM.removeClass(e, 'mceTitle');
+					DOM.setAttrib(t.id, 'aria-valuenow', o.title);
 				} else {
 					DOM.setHTML(e, DOM.encode(t.settings.title));
 					DOM.addClass(e, 'mceTitle');
 					t.selectedValue = t.selectedIndex = null;
+					DOM.setAttrib(t.id, 'aria-valuenow', t.settings.title);
 				}
-
 				e = 0;
 			}
 		},
@@ -179,9 +180,9 @@
 		renderHTML : function() {
 			var h = '', t = this, s = t.settings, cp = t.classPrefix;
 
-			h = '<table role="combobox" aria-labelledby="' + t.id + '_text" tabindex="0" id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_text', href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
-			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
+			h = '<table role="combobox" aria-label="' + t.settings.title +'" tabindex="0" id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr role="presentation">';
+			h += '<td role="presentation">' + DOM.createHTML('a', {id : t.id + '_text', tabindex : -1, href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
+			h += '<td role="presentation">' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
 
 			return h;
@@ -316,14 +317,15 @@
 			var t = this, cp = t.classPrefix;
 
 			Event.add(t.id, 'click', t.showMenu, t);
-			Event.add(t.id, 'keypress', function(evt) {
-				if (evt.keyCode === 32) { // Space
-					return t.showMenu(evt);
+			Event.add(t.id, 'keydown', function(evt) {
+				if (evt.keyCode == 32) { // Space
+					t.showMenu(evt);
+					Event.cancel(evt);
 				}
 			});
-			Event.add(t.id + '_text', 'focus', function() {
+			Event.add(t.id, 'focus', function() {
 				if (!t._focused) {
-					t.keyDownHandler = Event.add(t.id + '_text', 'keydown', function(e) {
+					t.keyDownHandler = Event.add(t.id, 'keydown', function(e) {
 						var idx = -1, v, kc = e.keyCode;
 
 						// Find current index
@@ -335,26 +337,39 @@
 						// Move up/down
 						if (kc == 38)
 							v = t.items[idx - 1];
-						else if (kc == 40)
-							v = t.items[idx + 1];
-						else if (kc == 13) {
-							// Fake select on enter
-							v = t.selectedValue;
-							t.selectedValue = null; // Needs to be null to fake change
-							t.settings.onselect(v);
-							return Event.cancel(e);
+						else if (kc == 40) {
+							if (!e.altKey) {
+								v = t.items[idx + 1];
+							} else {
+								t.showMenu();
+							}
 						}
 
 						if (v) {
 							t.hideMenu();
 							t.select(v.value);
+							Event.cancel(e);
+						}
+					});
+					t.keyPressHandler = Event.add(t.id, 'keypress', function(e) {
+						var v;
+						if (e.keyCode == 13) {
+							// Fake select on enter
+							v = t.selectedValue;
+							t.selectedValue = null; // Needs to be null to fake change
+							Event.cancel(e);
+							t.settings.onselect(v);
 						}
 					});
 				}
 
 				t._focused = 1;
 			});
-			Event.add(t.id + '_text', 'blur', function() {Event.remove(t.id + '_text', 'keydown', t.keyDownHandler); t._focused = 0;});
+			Event.add(t.id, 'blur', function() {
+				Event.remove(t.id, 'keydown', t.keyDownHandler);
+				Event.remove(t.id, 'keypress', t.keyPressHandler);
+				t._focused = 0;
+			});
 
 			// Old IE doesn't have hover on all elements
 			if (tinymce.isIE6 || !DOM.boxModel) {
