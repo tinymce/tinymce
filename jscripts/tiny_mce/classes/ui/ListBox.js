@@ -180,7 +180,7 @@
 		renderHTML : function() {
 			var h = '', t = this, s = t.settings, cp = t.classPrefix;
 
-			h = '<table role="combobox" aria-label="' + t.settings.title +'" tabindex="0" id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr role="presentation">';
+			h = '<table role="button" aria-haspopup="true" aria-label="' + t.settings.title +'" tabindex="0" id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr role="presentation">';
 			h += '<td role="presentation">' + DOM.createHTML('a', {id : t.id + '_text', tabindex : -1, href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
 			h += '<td role="presentation">' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span></span>') + '</td>';
 			h += '</tr></tbody></table>';
@@ -326,28 +326,8 @@
 			Event.add(t.id, 'focus', function() {
 				if (!t._focused) {
 					t.keyDownHandler = Event.add(t.id, 'keydown', function(e) {
-						var idx = -1, v, kc = e.keyCode;
-
-						// Find current index
-						each(t.items, function(v, i) {
-							if (t.selectedValue == v.value)
-								idx = i;
-						});
-
-						// Move up/down
-						if (kc == 38)
-							v = t.items[idx - 1];
-						else if (kc == 40) {
-							if (!e.altKey) {
-								v = t.items[idx + 1];
-							} else {
-								t.showMenu();
-							}
-						}
-
-						if (v) {
-							t.hideMenu();
-							t.select(v.value);
+						if (e.keyCode == 40) {
+							t.showMenu();
 							Event.cancel(e);
 						}
 					});
