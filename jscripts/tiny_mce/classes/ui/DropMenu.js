@@ -310,7 +310,7 @@
 		renderNode : function() {
 			var t = this, s = t.settings, n, tb, co, w;
 
-			w = DOM.create('div', {role: 'menu', id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
+			w = DOM.create('div', {role: 'listbox', id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
 			co = DOM.add(w, 'div', {role: 'presentation', id : 'menu_' + t.id + '_co', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
@@ -374,9 +374,9 @@
 				return;
 			}
 
-			n = ro = DOM.add(tb, 'tr', {role: 'presentation', id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
+			n = ro = DOM.add(tb, 'tr', {role: 'option', 'aria-label': o.settings.title, id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
 			n = it = DOM.add(n, 'td', {role: 'presentation'});
-			n = a = DOM.add(n, 'a', {role: 'menuitem', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
+			n = a = DOM.add(n, 'a', {role: 'presentation', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
 
 			DOM.addClass(it, s['class']);
 //			n = DOM.add(n, 'span', {'class' : 'item'});
