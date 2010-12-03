@@ -55,7 +55,6 @@
 
 			h += '</tr></tbody>';
 
-// TODO: Need to add an aria-owns reference to the actual menu
 			return DOM.createHTML('table', {id : t.id, role: 'button', tabindex: '0', 'aria-label': s.title, 'aria-haspopup': 'true', 'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'], cellpadding : '0', cellspacing : '0', title : s.title}, h);
 		},
 
