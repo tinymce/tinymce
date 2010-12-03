@@ -41,6 +41,7 @@
 		 */
 		setDisabled : function(s) {
 			DOM.get(this.id).disabled = s;
+			this.setAriaProperty('disabled', s);
 		},
 
 		/**
