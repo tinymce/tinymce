@@ -374,7 +374,7 @@
 				return;
 			}
 
-			n = ro = DOM.add(tb, 'tr', {role: 'option', 'aria-label': o.settings.title, id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
+			n = ro = DOM.add(tb, 'tr', {role: 'option', 'aria-labelledby': o.id, id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
 			n = it = DOM.add(n, 'td', {role: 'presentation'});
 			n = a = DOM.add(n, 'a', {role: 'presentation', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
 
