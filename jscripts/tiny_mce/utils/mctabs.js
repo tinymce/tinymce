@@ -30,33 +30,32 @@ MCTabs.prototype.getParam = function(name, default_value) {
 
 MCTabs.prototype.showTab =function(tab){
 	tab.className = 'current';
-	tab["aria-selected"]=true;
-	tab["aria-hidden"]=false;
+	tab.setAttribute("aria-selected", true);
     tab.tabIndex=0;
 };
 
 MCTabs.prototype.hideTab =function(tab){
     tab.className = '';  
-	tab["aria-selected"]=false;  
-	tab["aria-hidden"]=true;
-	tab.role="tab" ;
+	tab.setAttribute("aria-selected",false);  
+	tab.setAttribute("role","tab") ;
 	tab.tabIndex=-1;
 };
 
 MCTabs.prototype.showPanel = function(panel) {
-	panel.className = 'current';
+	panel.className = 'current'; 
+	panel.setAttribute("aria-hidden", false);
 };
 
 MCTabs.prototype.hidePanel = function(panel) {
     panel.className = 'panel';   
-	panel.role="tabpanel";  
+	panel.setAttribute("aria-hidden", true);
 }; 
 
 MCTabs.prototype.getPanelForTab = function(tabElm) {
     return tabElm.getAttribute("aria-controls");
 }
 
-MCTabs.prototype.displayTab = function(tab_id, panel_id) {
+MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
 	var panelElm, panelContainerElm, tabElm, tabContainerElm, selectionClass, nodes, i, t;
 	t = this;
 	tabElm = document.getElementById(tab_id);
@@ -70,7 +69,7 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id) {
     
 	if (tabElm && tabContainerElm) {
 		nodes = tabContainerElm.childNodes;
-        tabContainerElm.role = "tablist"; 
+        tabContainerElm.setAttribute("role", "tablist"); 
         
         tabContainerElm.onkeydown=function (event) {t.doNavigation(event)};
 		// Hide all other tabs
@@ -91,6 +90,9 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id) {
 		for (i = 0; i < nodes.length; i++) {
 			if (nodes[i].nodeName == "DIV")
 			    this.hidePanel(nodes[i]);
+		}
+		if (!avoid_focus) {
+		    tabElm.focus();
 		}
 		// Show selected panel
         this.showPanel(panelElm);
@@ -139,7 +141,6 @@ MCTabs.prototype.doNavigation = function(event){
     } else if (this.listContains(this.PREVIOUS_KEYS, event.keyCode)) {
         newElement = this.findPreviousTab(element);
     }
-    newElement.focus();
     this.displayTab(newElement.id);
 } 
 
