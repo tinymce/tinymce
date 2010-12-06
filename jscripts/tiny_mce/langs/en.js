@@ -18,9 +18,9 @@ more_colors:"More colors"
 colors:{
 '000000':'Black',
 '993300':'Burnt orange',
-'333300':'Deep olive',
-'003300':'Deep green',
-'003366':'Deep azure',
+'333300':'Dark olive',
+'003300':'Dark green',
+'003366':'Dark azure',
 '000080':'Navy Blue',
 '333399':'Indigo',
 '333333':'Very dark gray',
