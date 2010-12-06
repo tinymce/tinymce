@@ -280,6 +280,7 @@
 		/**
 		 * Returns the next node that matches selector or function
 		 *
+		 * @method getNext
 		 * @param {Node} node Node to find siblings from.
 		 * @param {String/function} selector Selector CSS expression or function.
 		 * @return {Node} Next node item matching the selector or null if it wasn't found.
@@ -291,6 +292,7 @@
 		/**
 		 * Returns the previous node that matches selector or function
 		 *
+		 * @method getPrev
 		 * @param {Node} node Node to find siblings from.
 		 * @param {String/function} selector Selector CSS expression or function.
 		 * @return {Node} Previous node item matching the selector or null if it wasn't found.
