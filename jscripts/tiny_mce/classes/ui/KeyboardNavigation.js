@@ -8,8 +8,6 @@
 	 * @class tinymce.ui.KeyboardNavigation
 	 */
 	tinymce.create('tinymce.ui.KeyboardNavigation', {
-		// Root must be an element or ID of the root node.
-		// items must be an array of focusable objects, each with an ID property to link to the appropriate DOM element.
 		
 		/**
 		 * 
