@@ -39,84 +39,31 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	},
 	
 	postRender : function() {
-		var t = this, groupElement = dom.get(t.id), tabFocusToolbar = t.settings.tab_focus_toolbar;
-		dom.bind(groupElement, 'keydown', t.keydown, t);
-		dom.setAttrib(groupElement, 'aria-activedescendant', t.controls[0].controls[0].id);
+		var t = this, items = [], tabFocusToolbar = t.settings.tab_focus_toolbar;;
 		each(t.controls, function(toolbar) {
-			each(toolbar.controls, function(control) {
-				dom.setAttrib(control.id, 'tabindex', '-1');
-				dom.bind(control.id, 'focus', function() {
-					dom.setAttrib(groupElement, 'aria-activedescendant', control.id);
-				});
-				if (!tabFocusToolbar) {
-					dom.bind(control.id, 'blur', function() {
-						dom.setAttrib(control.id, 'tabindex', '-1');
-					});
+			each (toolbar.controls, function(control) {
+				if (control.id) {
+					items.push(control);
+					if (!tabFocusToolbar) {
+						dom.bind(control.id, 'blur', function() {
+							dom.setAttrib(control.id, 'tabindex', '-1');
+						});
+					}
 				}
 			});
 		});
-		if (tabFocusToolbar) {
-			dom.setAttrib(t.controls[0].controls[0].id, 'tabindex', 0);
+		new tinymce.ui.KeyboardNavigation(t.id, items, function() {
+			t.editor.focus();
+		});
+		if (!tabFocusToolbar) {
+			dom.setAttrib(items[0].id, 'tabindex', '-1');
+			dom.setAttrib(t.id, 'tabindex', '-1');
 		}
 	},
 	
-	keydown : function(evt) {
-		var t = this, DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, controls = t.controls, focussedId = dom.getAttrib(t.id, 'aria-activedescendant'), idx, toolbarIdx, newFocus;
-		// TODO: May need to reverse direction in RTL languages.
-		function moveFocus(dir) {
-			if (!focussedId) return;
-			
-			function nextToolbar(dir) {
-				toolbarIdx += dir;
-				if (toolbarIdx < 0) {
-					toolbarIdx = controls.length - 1;
-				} else if (toolbarIdx >= controls.length) {
-					toolbarIdx = 0;
-				}
-			}
-			
-			each(t.controls, function(toolbar, toolbarIndex) {
-				each(toolbar.controls, function(control, itemIndex) {
-					if (focussedId === control.id) {
-						idx = itemIndex;
-						toolbarIdx = toolbarIndex;
-						return false;
-					}
-				});
-			});
-
-			while (!newFocus || !newFocus.id) {
-				idx += dir;
-				if (idx < 0) {
-					nextToolbar(-1);
-					idx = controls[toolbarIdx].controls.length - 1;
-				} else if (idx >= controls[toolbarIdx].controls.length) {
-					nextToolbar(1);
-					idx = 0;
-				}
-				newFocus = controls[toolbarIdx].controls[idx];
-				// Avoid going into an infinite loop if we get back to where we started and still don't have anything to focus.
-				if (newFocus.id === focussedId) break;
-			}
-
-			dom.setAttrib(focussedId, 'tabindex', '-1');
-			dom.setAttrib(t.id, 'aria-activedescendant', newFocus.id);
-			dom.setAttrib(newFocus.id, 'tabindex', '0');
-			dom.get(newFocus.id).focus();
-			Event.cancel(evt);
-		}
-		
-		switch (evt.keyCode) {
-			case DOM_VK_LEFT:
-				moveFocus(-1);
-				break;
-			case DOM_VK_RIGHT:
-				moveFocus(1);
-				break;
-			case DOM_VK_ESCAPE:
-				t.editor.focus();
-				break;
-		}
+	destroy : function() {
+		this.parent();
+		Event.clear(t.id);
 	}
 });
 })(tinymce);
