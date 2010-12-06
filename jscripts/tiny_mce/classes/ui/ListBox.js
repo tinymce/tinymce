@@ -26,11 +26,12 @@
 		 * @method ListBox
 		 * @param {String} id Control id for the list box.
 		 * @param {Object} s Optional name/value settings object.
+		 * @param {Editor} ed Optional the editor instance this button is for.
 		 */
-		ListBox : function(id, s) {
+		ListBox : function(id, s, ed) {
 			var t = this;
 
-			t.parent(id, s);
+			t.parent(id, s, ed);
 
 			/**
 			 * Array of ListBox items.
@@ -253,6 +254,7 @@
 					t.menu.hideMenu();
 				}
 			}
+			t.editor.focus();
 		},
 
 		/**

@@ -138,6 +138,7 @@
 			t.onHideMenu.dispatch(t);
 
 			t.isMenuVisible = 0;
+			t.editor.focus();
 		},
 
 		/**
