@@ -52,7 +52,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 				}
 			});
 		});
-		new tinymce.ui.KeyboardNavigation(t.id, items, function() {
+		new tinymce.ui.KeyboardNavigation(dom, t.id, items, function() {
 			t.editor.focus();
 		});
 		if (!tabFocusToolbar) {

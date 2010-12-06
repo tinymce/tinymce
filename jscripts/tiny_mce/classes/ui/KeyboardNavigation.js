@@ -1,19 +1,11 @@
-(function() {
-	var dom, tinymce, Event, each;
-	if (window.tinyMCEPopup) {
-		dom = tinyMCEPopup.dom;
-		tinymce = tinyMCEPopup.getWin().tinymce;
-	} else {
-		tinymce = window.tinymce;
-		dom = tinymce.DOM;
-	}
-	Event = tinymce.dom.Event;
-	each = tinymce.each;
-	
+(function(tinymce) {
+	var Event = tinymce.dom.Event, each = tinymce.each;
+
 	tinymce.create('tinymce.ui.KeyboardNavigation', {
 		// Root must be an element or ID of the root node.
 		// items must be an array of focusable objects, each with an ID property to link to the appropriate DOM element.
-		KeyboardNavigation: function(root, items, cancelAction, verticalOrientation) {
+		KeyboardNavigation: function(dom, root, items, cancelAction, actionHandler, verticalOrientation) {
+		
 			var t = this;//, items = dom.select(selector, root);
 
 			// Set up state and listeners for each item.
@@ -22,7 +14,7 @@
 					item.id = dom.uniqueId('_mce_item_');
 				}
 				dom.setAttrib(item.id, 'tabindex', '-1');
-				dom.bind(item.id, 'focus', function() {
+				dom.bind(dom.get(item.id), 'focus', function() {
 					dom.setAttrib(root, 'aria-activedescendant', item.id);
 				});
 			});
@@ -37,12 +29,13 @@
 			});
 			
 			dom.bind(root, 'keydown', function(evt) {
-				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, controls = t.controls, focussedId = dom.getAttrib(root, 'aria-activedescendant'), newFocus;
+				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32, controls = t.controls, focussedId = dom.getAttrib(root, 'aria-activedescendant'), newFocus;
 				var nextKey = verticalOrientation ? DOM_VK_DOWN : DOM_VK_RIGHT;
 				var prevKey = verticalOrientation ? DOM_VK_UP : DOM_VK_LEFT;
-				
+
 				function moveFocus(dir) {
-					var idx;
+					var idx = -1;
+					
 					if (!focussedId) return;
 					each(items, function(item, index) {
 						if (item.id === focussedId) {
@@ -50,6 +43,7 @@
 							return false;
 						}
 					});
+
 					idx += dir;
 					if (idx < 0) {
 						idx = items.length - 1;
@@ -74,8 +68,16 @@
 					case DOM_VK_ESCAPE:
 						cancelAction();
 						break;
+					case DOM_VK_ENTER:
+					case DOM_VK_RETURN:
+					case DOM_VK_SPACE:
+						if (actionHandler) {
+							actionHandler(focussedId);
+							Event.cancel(evt);
+						}
+						break;
 				}
 			});
 		}
 	});
-})();
+})(tinymce);

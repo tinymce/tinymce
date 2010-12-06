@@ -10,9 +10,9 @@
 <form onsubmit="insertAction();return false" action="#">
 	<div class="tabs">
 		<ul>
-			<li id="picker_tab" class="current"><span><a href="javascript:mcTabs.displayTab('picker_tab','picker_panel');" onmousedown="return false;">{#advanced_dlg.colorpicker_picker_tab}</a></span></li>
-			<li id="rgb_tab"><span><a href="javascript:;" onclick="generateWebColors();mcTabs.displayTab('rgb_tab','rgb_panel');" onmousedown="return false;">{#advanced_dlg.colorpicker_palette_tab}</a></span></li>
-			<li id="named_tab"><span><a  href="javascript:;" onclick="generateNamedColors();javascript:mcTabs.displayTab('named_tab','named_panel');" onmousedown="return false;">{#advanced_dlg.colorpicker_named_tab}</a></span></li>
+			<li id="picker_tab" aria-controls="picker_panel" class="current"><span><a href="javascript:mcTabs.displayTab('picker_tab','picker_panel');" onmousedown="return false;">{#advanced_dlg.colorpicker_picker_tab}</a></span></li>
+			<li id="rgb_tab" aria-controls="rgb_panel"><span><a href="javascript:;" onclick="mcTabs.displayTab('rgb_tab','rgb_panel');" onmousedown="return false;">{#advanced_dlg.colorpicker_palette_tab}</a></span></li>
+			<li id="named_tab" aria-controls="named_panel"><span><a  href="javascript:;" onclick="javascript:mcTabs.displayTab('named_tab','named_panel');" onmousedown="return false;">{#advanced_dlg.colorpicker_named_tab}</a></span></li>
 		</ul>
 	</div>
 

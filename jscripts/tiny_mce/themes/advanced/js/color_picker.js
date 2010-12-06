@@ -64,6 +64,8 @@ function init() {
 	tinyMCEPopup.resizeToInnerSize();
 
 	generatePicker();
+	generateWebColors();
+	generateNamedColors();
 
 	if (inputColor) {
 		changeFinalColor(inputColor);

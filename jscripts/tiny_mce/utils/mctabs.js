@@ -39,7 +39,6 @@ MCTabs.prototype.hideTab =function(tab){
     tab.className = '';  
 	tab.setAttribute("aria-selected",false);  
 	tab.setAttribute("role","tab") ;
-	tab.onclick=function(){t.displayTab(tab.id)};
 	tab.tabIndex=-1;
 };
 
@@ -54,8 +53,8 @@ MCTabs.prototype.hidePanel = function(panel) {
 }; 
 
 MCTabs.prototype.getPanelForTab = function(tabElm) {
-    return tabElm.getAttribute("aria-controls");
-}
+    return tinyMCEPopup.dom.getAttrib(tabElm, "aria-controls");
+};
 
 MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
 	var panelElm, panelContainerElm, tabElm, tabContainerElm, selectionClass, nodes, i, t;
@@ -73,7 +72,6 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
 		nodes = tabContainerElm.childNodes;
         tabContainerElm.setAttribute("role", "tablist"); 
         
-        tabContainerElm.onkeydown=function (event) {t.doNavigation(event)};
 		// Hide all other tabs
 		for (i = 0; i < nodes.length; i++) {
 			if (nodes[i].nodeName == "LI") {
@@ -111,63 +109,27 @@ MCTabs.prototype.getAnchor = function() {
 	return "";
 };
 
-//key bindings
-//TODO add extra keys?
-MCTabs.prototype.KEY_UP = 38;
-MCTabs.prototype.KEY_DOWN = 40;
-MCTabs.prototype.KEY_LEFT = 37;
-MCTabs.prototype.KEY_RIGHT = 39;
-
-MCTabs.prototype.NAV_KEYS = [MCTabs.prototype.KEY_UP, MCTabs.prototype.KEY_DOWN, MCTabs.prototype.KEY_LEFT, MCTabs.prototype.KEY_RIGHT];
-MCTabs.prototype.PREVIOUS_KEYS = [MCTabs.prototype.KEY_UP, MCTabs.prototype.KEY_LEFT];
-MCTabs.prototype.NEXT_KEYS = [MCTabs.prototype.KEY_DOWN, MCTabs.prototype.KEY_RIGHT];
-
-MCTabs.prototype.listContains = function(items, item) {
-    for(var i = 0; i < items.length; i++) {
-        if(items[i] === item){
-            return true;
-        }
-    }
-    return false;
-}
-
-MCTabs.prototype.doNavigation = function(event){
-    var element, keyCode, container, newElement;
-    element = event.srcElement;
-    keyCode = event.keyCode;
-    container = element.parentNode;
-
-    if (!this.listContains(this.NAV_KEYS, event.keyCode)){
-        return;
-    }
-    if (this.listContains(this.NEXT_KEYS, event.keyCode)){
-        newElement = this.findNextTab(element);
-    } else if (this.listContains(this.PREVIOUS_KEYS, event.keyCode)) {
-        newElement = this.findPreviousTab(element);
-    }
-    this.displayTab(newElement.id);
-} 
-
-MCTabs.prototype.findNextTab = function(element){
-    var next = element.nextSibling;
-    while (next!==null && next.nodeType!=1){
-        next = next.nextSibling;
-    } 
-    if (next===null){
-        return element.parentNode.children[0];
-    }
-    return next;
-}
-MCTabs.prototype.findPreviousTab = function(element){
-    var prev = element.previousSibling;
-    while (prev!==null && prev.nodeType!=1){
-        prev = prev.previousSibling;
-    } 
-    if (prev===null){
-        return element.parentNode.children[element.parentNode.children.length-1];
-    }
-    return prev;
-}
-
 // Global instance
 var mcTabs = new MCTabs();
+
+tinyMCEPopup.onInit.add(function() {
+	var tinymce = tinyMCEPopup.getWin().tinymce, dom = tinyMCEPopup.dom, each = tinymce.each;
+	each(dom.select('div.tabs'), function(tabContainerElm) {
+		var items = tinyMCEPopup.dom.select('li', tabContainerElm);
+		var action = function(id) {
+			mcTabs.displayTab(id, mcTabs.getPanelForTab(id));
+		};
+		each(items, function(item) {
+			dom.bind(item, 'click', function(evt) {
+				action(item.id);
+			});
+		});
+		
+		each(dom.select('a', tabContainerElm), function(a) {
+			dom.setAttrib(a, 'tabindex', '-1');
+		});
+		
+	    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation',
+	    		tinyMCEPopup.dom, tabContainerElm, items, null, action);
+	});
+});
