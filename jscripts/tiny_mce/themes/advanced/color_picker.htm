@@ -34,7 +34,7 @@
 
 		<div id="rgb_panel" class="panel">
 			<fieldset>
-				<legend>{#advanced_dlg.colorpicker_palette_title}</legend>
+				<legend id="webcolors_title">{#advanced_dlg.colorpicker_palette_title}</legend>
 				<div id="webcolors">
 					<!-- Gets filled with web safe colors-->
 				</div>
@@ -45,8 +45,8 @@
 
 		<div id="named_panel" class="panel">
 			<fieldset>
-				<legend>{#advanced_dlg.colorpicker_named_title}</legend>
-				<div id="namedcolors">
+				<legend id="named_title">{#advanced_dlg.colorpicker_named_title}</legend>
+				<div id="namedcolors" role="listbox" tabindex="0" aria-label="{#advanced_dlg.colorpicker_named_title}">
 					<!-- Gets filled with named colors-->
 				</div>
 

@@ -153,18 +153,19 @@ function generateWebColors() {
 	if (el.className == 'generated')
 		return;
 
-	h += '<table role="presentation" border="0" cellspacing="1" cellpadding="0">'
+	// VoiceOver doesn't seem to support legend as a label referend by labelledby.
+	h += '<div role="listbox" aria-label="' + document.getElementById('webcolors_title').textContent + '" tabindex="0"><table role="presentation" border="0" cellspacing="1" cellpadding="0">'
 		+ '<tr role="presentation">';
 
 	for (i=0; i<colors.length; i++) {
 		h += '<td role="presentation" bgcolor="' + colors[i] + '" width="10" height="10">'
-			+ '<a href="javascript:insertAction();" role="button" aria-label="' + colors[i].toUpperCase() + '" onfocus="showColor(\'' + colors[i] +  '\');" onmouseover="showColor(\'' + colors[i] +  '\');" style="display:block;width:10px;height:10px;overflow:hidden;">'
+			+ '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-label="' + colors[i].toUpperCase() + '" onfocus="showColor(\'' + colors[i] +  '\');" onmouseover="showColor(\'' + colors[i] +  '\');" style="display:block;width:10px;height:10px;overflow:hidden;">'
 			+ '</a></td>';
 		if ((i+1) % 18 == 0)
 			h += '</tr><tr>';
 	}
 
-	h += '</table>';
+	h += '</table></div>';
 
 	el.innerHTML = h;
 	el.className = 'generated';
@@ -178,7 +179,7 @@ function generateNamedColors() {
 
 	for (n in named) {
 		v = named[n];
-		h += '<a href="javascript:insertAction();" role="button" aria-label="' + v + '" onmouseover="showColor(\'' + n +  '\',\'' + v + '\');" style="background-color: ' + n + '"><!-- IE --></a>'
+		h += '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-label="' + v + '" onmouseover="showColor(\'' + n +  '\',\'' + v + '\');" style="background-color: ' + n + '"><!-- IE --></a>'
 	}
 
 	el.innerHTML = h;
