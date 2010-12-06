@@ -161,7 +161,7 @@ function generateWebColors() {
 
 	for (i=0; i<colors.length; i++) {
 		h += '<td role="presentation" bgcolor="' + colors[i] + '" width="10" height="10">'
-			+ '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-label="' + colors[i].toUpperCase() + '" onfocus="showColor(\'' + colors[i] +  '\');" onmouseover="showColor(\'' + colors[i] +  '\');" style="display:block;width:10px;height:10px;overflow:hidden;">'
+			+ '<a id="' + i + '" href="javascript:insertAction();" role="option" tabindex="-1" aria-label="' + colors[i].toUpperCase() + '" onfocus="showColor(\'' + colors[i] +  '\');" onmouseover="showColor(\'' + colors[i] +  '\');" style="display:block;width:10px;height:10px;overflow:hidden;">'
 			+ '</a></td>';
 		if ((i+1) % 18 == 0)
 			h += '</tr><tr>';
@@ -171,6 +171,9 @@ function generateWebColors() {
 
 	el.innerHTML = h;
 	el.className = 'generated';
+	
+    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation',
+    		tinyMCEPopup.dom, el, tinyMCEPopup.dom.select('a', el));
 }
 
 function generateNamedColors() {
@@ -186,6 +189,9 @@ function generateNamedColors() {
 
 	el.innerHTML = h;
 	el.className = 'generated';
+	
+    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation',
+    		tinyMCEPopup.dom, el, tinyMCEPopup.dom.select('a', el));
 }
 
 function dechex(n) {
