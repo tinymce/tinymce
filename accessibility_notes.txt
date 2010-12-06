@@ -52,19 +52,11 @@ Add labels.
 
 titles?
 
-preview dialog -- very simple?
-
-
-
 link dialog - 
-
 
 Tab focus
 
 aria required attribute
-
-input type= button don't need role = button
-
 use html semantics over aria semantics.
 
 help
