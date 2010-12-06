@@ -206,7 +206,9 @@
 			t.onShowMenu.dispatch(t);
 
 			if (s.keyboard_focus) {
-				Event.add(co, 'keydown', t._keyHandler, t);
+				new tinymce.ui.KeyboardNavigation('menu_' + t.id, DOM.select('a', 'menu_' + t.id), function() {
+					t.hideMenu();
+				}, true);
 				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
 				t._focusIdx = 0;
 			}

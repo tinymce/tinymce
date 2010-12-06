@@ -12,12 +12,15 @@
 	
 	tinymce.create('tinymce.ui.KeyboardNavigation', {
 		// Root must be an element or ID of the root node.
-		// items must be an array of focusable objects, each with an ID property to link to the approprate DOM element.
-		KeyboardNavigation: function(root, items, cancelAction) {
+		// items must be an array of focusable objects, each with an ID property to link to the appropriate DOM element.
+		KeyboardNavigation: function(root, items, cancelAction, verticalOrientation) {
 			var t = this;//, items = dom.select(selector, root);
-			
+
 			// Set up state and listeners for each item.
 			each(items, function(item) {
+				if (!item.id) {
+					item.id = dom.uniqueId('_mce_item_');
+				}
 				dom.setAttrib(item.id, 'tabindex', '-1');
 				dom.bind(item.id, 'focus', function() {
 					dom.setAttrib(root, 'aria-activedescendant', item.id);
@@ -35,6 +38,8 @@
 			
 			dom.bind(root, 'keydown', function(evt) {
 				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, controls = t.controls, focussedId = dom.getAttrib(root, 'aria-activedescendant'), newFocus;
+				var nextKey = verticalOrientation ? DOM_VK_DOWN : DOM_VK_RIGHT;
+				var prevKey = verticalOrientation ? DOM_VK_UP : DOM_VK_LEFT;
 				
 				function moveFocus(dir) {
 					var idx;
@@ -60,10 +65,10 @@
 				}
 				
 				switch (evt.keyCode) {
-					case DOM_VK_LEFT:
+					case prevKey:
 						moveFocus(-1);
 						break;
-					case DOM_VK_RIGHT:
+					case nextKey:
 						moveFocus(1);
 						break;
 					case DOM_VK_ESCAPE:
