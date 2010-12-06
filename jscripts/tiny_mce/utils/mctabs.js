@@ -70,7 +70,6 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
     
 	if (tabElm && tabContainerElm) {
 		nodes = tabContainerElm.childNodes;
-        tabContainerElm.setAttribute("role", "tablist"); 
         
 		// Hide all other tabs
 		for (i = 0; i < nodes.length; i++) {
@@ -115,11 +114,13 @@ var mcTabs = new MCTabs();
 tinyMCEPopup.onInit.add(function() {
 	var tinymce = tinyMCEPopup.getWin().tinymce, dom = tinyMCEPopup.dom, each = tinymce.each;
 	each(dom.select('div.tabs'), function(tabContainerElm) {
+        dom.setAttrib(tabContainerElm, "role", "tablist"); 
 		var items = tinyMCEPopup.dom.select('li', tabContainerElm);
 		var action = function(id) {
 			mcTabs.displayTab(id, mcTabs.getPanelForTab(id));
 		};
 		each(items, function(item) {
+			dom.setAttrib(item, 'role', 'tab');
 			dom.bind(item, 'click', function(evt) {
 				action(item.id);
 			});
