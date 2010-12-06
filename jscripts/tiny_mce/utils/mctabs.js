@@ -35,9 +35,11 @@ MCTabs.prototype.showTab =function(tab){
 };
 
 MCTabs.prototype.hideTab =function(tab){
+    var t=this;
     tab.className = '';  
 	tab.setAttribute("aria-selected",false);  
 	tab.setAttribute("role","tab") ;
+	tab.onclick=function(){t.displayTab(tab.id)};
 	tab.tabIndex=-1;
 };
 
@@ -91,7 +93,8 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
 			if (nodes[i].nodeName == "DIV")
 			    this.hidePanel(nodes[i]);
 		}
-		if (!avoid_focus) {
+		if (!avoid_focus) { 
+		    //todo - should this be done in a timer?
 		    tabElm.focus();
 		}
 		// Show selected panel
@@ -109,6 +112,7 @@ MCTabs.prototype.getAnchor = function() {
 };
 
 //key bindings
+//TODO add extra keys?
 MCTabs.prototype.KEY_UP = 38;
 MCTabs.prototype.KEY_DOWN = 40;
 MCTabs.prototype.KEY_LEFT = 37;
