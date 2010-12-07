@@ -1139,7 +1139,10 @@
 					t.statusKeyboardNavigation = new tinymce.ui.KeyboardNavigation({
 						root: ed.id + "_path_row",
 						items: DOM.select('a', p),
-						excludeFromTabOrder: true
+						excludeFromTabOrder: true,
+						onCancel: function() {
+							ed.focus();
+						}
 					}, DOM);
 				}
 			}
