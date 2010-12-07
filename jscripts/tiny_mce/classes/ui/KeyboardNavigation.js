@@ -29,11 +29,11 @@
 			var t = this, root = settings.root, items = settings.items,
 					enableUpDown = settings.enableUpDown, enableLeftRight = settings.enableLeftRight || !settings.enableUpDown,
 					excludeFromTabOrder = settings.excludeFromTabOrder,
-					itemFocussed, itemBlurred, rootKeydown, rootFocussed;
+					itemFocussed, itemBlurred, rootKeydown, rootFocussed, focussedId;
 			dom = dom || tinymce.DOM;
 			
 			itemFocussed = function(evt) {
-				dom.setAttrib(root, 'aria-activedescendant', evt.target.id);
+				focussedId = evt.target.id;
 			};
 			
 			itemBlurred = function(evt) {
@@ -41,7 +41,13 @@
 			};
 			
 			rootFocussed = function(evt) {
-				dom.get(dom.getAttrib(root, 'aria-activedescendant')).focus();
+				var item = dom.get(focussedId);
+				dom.setAttrib(item, 'tabindex', '0');
+				item.focus();
+			};
+			
+			t.focus = function() {
+				dom.get(focussedId).focus();
 			};
 			
 			t.destroy = function() {
@@ -51,11 +57,11 @@
 				});
 				dom.unbind(root, 'focus', rootFocussed);
 				dom.unbind(root, 'keydown', rootKeydown);
-				items = dom = root = t.destroy = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
+				items = dom = root = t.destroy = t.focus = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
 			};
 			
 			rootKeydown = function(evt) {
-				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32, controls = t.controls, focussedId = dom.getAttrib(root, 'aria-activedescendant'), newFocus;
+				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32, controls = t.controls, newFocus;
 				function moveFocus(dir) {
 					var idx = -1;
 
@@ -133,7 +139,7 @@
 			});
 			
 			// Setup initial state for root element.
-			dom.setAttrib(root, 'aria-activedescendant', items[0].id);
+			focussedId = items[0].id;
 			dom.setAttrib(root, 'tabindex', '-1');
 			
 			// Setup listeners for root element.

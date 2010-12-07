@@ -35,7 +35,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	},
 	
 	focus : function() {
-		dom.get(dom.getAttrib(this.id, 'aria-activedescendant')).focus();
+		this.keyNav.focus();
 	},
 	
 	postRender : function() {
@@ -47,7 +47,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 				}
 			});
 		});
-		new tinymce.ui.KeyboardNavigation({
+		t.keyNav = new tinymce.ui.KeyboardNavigation({
 			root: t.id,
 			items: items,
 			onCancel: function() {
@@ -59,6 +59,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	
 	destroy : function() {
 		this.parent();
+		t.keyNav.destroy();
 		Event.clear(t.id);
 	}
 });

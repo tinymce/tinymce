@@ -795,7 +795,7 @@
 			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, a, toolbarGroup;
 
 			toolbarGroup = cf.createToolbarGroup('toolbargroup', {
-				'name': ed.getLang('advanced.toolbars'),
+				'name': ed.getLang('advanced.toolbar'),
 				'tab_focus_toolbar':ed.getParam('theme_advanced_tab_focus_toolbar')
 			});
 			t.toolbarGroup = toolbarGroup;
@@ -1125,7 +1125,7 @@
 					na = na.name;
 
 					//u = "javascript:tinymce.EditorManager.get('" + ed.id + "').theme._sel('" + (de++) + "');";
-					pi = DOM.create('a', {'href' : "javascript:;", role: 'button', onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
+					pi = DOM.create('a', {'href' : "javascript:;", role: 'button', 'aria-label': ti, onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
 
 					if (p.hasChildNodes()) {
 						p.insertBefore(DOM.doc.createTextNode(' \u00bb '), p.firstChild);
