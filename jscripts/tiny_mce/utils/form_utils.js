@@ -11,9 +11,9 @@
 var themeBaseURL = tinyMCEPopup.editor.baseURI.toAbsolute('themes/' + tinyMCEPopup.getParam("theme"));
 
 function getColorPickerHTML(id, target_form_element) {
-	var h = "";
-
-	h += '<a id="' + id + '_link" href="javascript:;" onclick="tinyMCEPopup.pickColor(event,\'' + target_form_element +'\');" onmousedown="return false;" class="pickcolor">';
+	var h = "", dom = tinyMCEPopup.dom, label = dom.select('label[for=' + target_form_element + ']')[0];
+	label.id = label.id || dom.uniqueId();
+	h += '<a role="button" aria-labelledby="' + label.id + '" id="' + id + '_link" href="javascript:;" onclick="tinyMCEPopup.pickColor(event,\'' + target_form_element +'\');" onmousedown="return false;" class="pickcolor">';
 	h += '<span id="' + id + '" title="' + tinyMCEPopup.getLang('browse') + '">&nbsp;</span></a>';
 
 	return h;
