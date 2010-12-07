@@ -561,10 +561,15 @@
 			o.targetNode = null;
 			
 			ed.onKeyDown.add(function(ed, evt) {
-				var DOM_VK_F10 = 121;
-				if (evt.keyCode === DOM_VK_F10 && evt.altKey) {
-					t.toolbarGroup.focus();
-					return Event.cancel(evt);
+				var DOM_VK_F10 = 121, DOM_VK_F11 = 122;
+				if (evt.altKey) {
+					if (evt.keyCode === DOM_VK_F10) {
+						t.toolbarGroup.focus();
+						return Event.cancel(evt);
+					} else if (evt.keyCode === DOM_VK_F11) {
+						DOM.get(ed.id + '_path').focus();
+						return Event.cancel(evt);
+					}
 				}
 			});
 			
@@ -824,7 +829,6 @@
 			n = DOM.add(tb, 'tr');
 			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'});
 			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&#160;');
-			DOM.add(n, 'a', {href : '#', accesskey : 'x'});
 
 			if (s.theme_advanced_resizing) {
 				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize'});
@@ -1026,6 +1030,11 @@
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
 				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
+				// Dispose of any listeners on existing elements (eg from the keyboard navigation)
+				each(DOM.select('a', p), function(e) {
+					DOM.events.clear(e);
+				});
+				DOM.events.clear(p);
 				DOM.setHTML(p, '');
 
 				getParent(function(n) {
@@ -1123,7 +1132,15 @@
 						p.insertBefore(pi, p.firstChild);
 					} else
 						p.appendChild(pi);
+					
 				}, ed.getBody());
+
+				if (DOM.select('a', p).length > 0) {
+					new tinymce.ui.KeyboardNavigation({
+						root: p,
+						items: DOM.select('a', p)
+					}, DOM);
+				}
 			}
 		},
 

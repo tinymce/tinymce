@@ -54,7 +54,7 @@
 
 				function moveFocus(dir) {
 					var idx = -1;
-					
+
 					if (!focussedId) return;
 					each(items, function(item, index) {
 						if (item.id === focussedId) {
