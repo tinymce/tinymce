@@ -30,11 +30,11 @@
 			dom = dom || tinymce.DOM;
 			
 			// Set up state and listeners for each item.
-			each(items, function(item) {
+			each(items, function(item, idx) {
 				if (!item.id) {
 					item.id = dom.uniqueId('_mce_item_');
 				}
-				dom.setAttrib(item.id, 'tabindex', '-1');
+				dom.setAttrib(item.id, 'tabindex', idx === 0 ? '0' : '-1');
 				dom.bind(dom.get(item.id), 'focus', function() {
 					dom.setAttrib(root, 'aria-activedescendant', item.id);
 				});
@@ -42,7 +42,7 @@
 			
 			// Setup initial state for root element.
 			dom.setAttrib(root, 'aria-activedescendant', items[0].id);
-			dom.setAttrib(root, 'tabindex', '0');
+			dom.setAttrib(root, 'tabindex', '-1');
 			
 			// Setup listeners for root element.
 			dom.bind(root, 'focus', function() {

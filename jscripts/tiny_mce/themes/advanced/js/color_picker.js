@@ -172,7 +172,7 @@ function generateWebColors() {
 	el.innerHTML = h;
 	el.className = 'generated';
 
-	enableKeyboardNavigation(el);
+	enableKeyboardNavigation(el.firstChild);
 }
 
 function generateNamedColors() {
