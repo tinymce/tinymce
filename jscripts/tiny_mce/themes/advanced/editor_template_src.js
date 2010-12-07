@@ -567,7 +567,7 @@
 						t.toolbarGroup.focus();
 						return Event.cancel(evt);
 					} else if (evt.keyCode === DOM_VK_F11) {
-						DOM.get(ed.id + '_path').focus();
+						DOM.get(ed.id + '_path_row').focus();
 						return Event.cancel(evt);
 					}
 				}
@@ -646,8 +646,8 @@
 			var t = this, ed = t.editor, lo = s.theme_advanced_toolbar_location, sl = s.theme_advanced_statusbar_location, n, ic, etb, c;
 
 			if (s.readonly) {
-				n = DOM.add(tb, 'tr');
-				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
+				n = DOM.add(tb, 'tr', {role: 'presentation'});
+				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer', role : 'presentation'});
 				return ic;
 			}
 
@@ -700,8 +700,8 @@
 
 			// Create iframe container
 			if (!s.theme_advanced_toolbar_container) {
-				n = DOM.add(tb, 'tr');
-				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
+				n = DOM.add(tb, 'tr', {role: 'presentation'});
+				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer', role : 'presentation'});
 			}
 
 			// Create toolbar container at bottom
@@ -725,8 +725,8 @@
 
 				switch (v.toLowerCase()) {
 					case 'mceeditor':
-						n = DOM.add(tb, 'tr');
-						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
+						n = DOM.add(tb, 'tr', {role: 'presentation'});
+						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer', role: 'presentation'});
 						break;
 
 					case 'mceelementpath':
@@ -737,8 +737,9 @@
 						a = (s['theme_advanced_container_' + c + '_align'] || da).toLowerCase();
 						a = 'mce' + t._ufirst(a);
 
-						n = DOM.add(DOM.add(tb, 'tr'), 'td', {
-							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + a || da
+						n = DOM.add(DOM.add(tb, 'tr', {role: 'presentation'}), 'td', {
+							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + a || da,
+							role : 'presentation'
 						});
 
 						to = cf.createToolbar("toolbar" + i);
@@ -802,7 +803,7 @@
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
       
-			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a, "role":"presentation"});
+			n = DOM.add(DOM.add(c, 'tr', {role: 'presentation'}), 'td', {'class' : 'mceToolbar ' + a, "role":"presentation"});
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
@@ -826,9 +827,9 @@
 		_addStatusBar : function(tb, o) {
 			var n, t = this, ed = t.editor, s = t.settings, r, mf, me, td;
 
-			n = DOM.add(tb, 'tr');
-			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'});
-			n = DOM.add(n, 'div', {id : ed.id + '_path_row'}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&#160;');
+			n = DOM.add(tb, 'tr', {role: 'presentation'});
+			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar', role: 'presentation'});
+			n = DOM.add(n, 'div', {id : ed.id + '_path_row', 'role': 'group', 'aria-label': ed.translate('advanced.path')}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&#160;');
 
 			if (s.theme_advanced_resizing) {
 				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize'});
@@ -1125,7 +1126,7 @@
 					na = na.name;
 
 					//u = "javascript:tinymce.EditorManager.get('" + ed.id + "').theme._sel('" + (de++) + "');";
-					pi = DOM.create('a', {'href' : "javascript:;", onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
+					pi = DOM.create('a', {'href' : "javascript:;", role: 'button', onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
 
 					if (p.hasChildNodes()) {
 						p.insertBefore(DOM.doc.createTextNode(' \u00bb '), p.firstChild);
@@ -1137,7 +1138,7 @@
 
 				if (DOM.select('a', p).length > 0) {
 					new tinymce.ui.KeyboardNavigation({
-						root: p,
+						root: ed.id + "_path_row",
 						items: DOM.select('a', p),
 						excludeFromTabOrder: true
 					}, DOM);
