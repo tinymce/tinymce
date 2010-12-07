@@ -1030,12 +1030,11 @@
 			}
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
-				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
-				// Dispose of any listeners on existing elements (eg from the keyboard navigation)
-				each(DOM.select('a', p), function(e) {
-					DOM.events.clear(e);
-				});
-				DOM.events.clear(p);
+				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path', role : 'presentation'});
+				if (t.statusKeyboardNavigation) {
+						t.statusKeyboardNavigation.destroy();
+						t.statusKeyboardNavigation = null;
+				}
 				DOM.setHTML(p, '');
 
 				getParent(function(n) {
@@ -1137,7 +1136,7 @@
 				}, ed.getBody());
 
 				if (DOM.select('a', p).length > 0) {
-					new tinymce.ui.KeyboardNavigation({
+					t.statusKeyboardNavigation = new tinymce.ui.KeyboardNavigation({
 						root: ed.id + "_path_row",
 						items: DOM.select('a', p),
 						excludeFromTabOrder: true

@@ -26,42 +26,36 @@
 		 * Note for both up/down and left/right explicitly set both enableLeftRight and enableUpDown to true.
 		 */
 		KeyboardNavigation: function(settings, dom) {
-			var t = this, root = settings.root, items = settings.items, enableUpDown = settings.enableUpDown, enableLeftRight = settings.enableLeftRight || !settings.enableUpDown, excludeFromTabOrder = settings.excludeFromTabOrder;
+			var t = this, root = settings.root, items = settings.items,
+					enableUpDown = settings.enableUpDown, enableLeftRight = settings.enableLeftRight || !settings.enableUpDown,
+					excludeFromTabOrder = settings.excludeFromTabOrder,
+					itemFocussed, itemBlurred, rootKeydown, rootFocussed;
 			dom = dom || tinymce.DOM;
 			
-			// Set up state and listeners for each item.
-			each(items, function(item, idx) {
-				var tabindex;
-				if (!item.id) {
-					item.id = dom.uniqueId('_mce_item_');
-				}
-
-				if (excludeFromTabOrder) {
-					dom.bind(item.id, 'blur', function() {
-						dom.setAttrib(item.id, 'tabindex', '-1');
-					});
-					tabindex = '-1';
-				} else {
-					tabindex = (idx === 0 ? '0' : '-1');
-				}
-				dom.setAttrib(item.id, 'tabindex', tabindex);
-				dom.bind(dom.get(item.id), 'focus', function() {
-					dom.setAttrib(root, 'aria-activedescendant', item.id);
-				});
-			});
+			itemFocussed = function(evt) {
+				dom.setAttrib(root, 'aria-activedescendant', evt.target.id);
+			};
 			
-			// Setup initial state for root element.
-			dom.setAttrib(root, 'aria-activedescendant', items[0].id);
-			dom.setAttrib(root, 'tabindex', '-1');
+			itemBlurred = function(evt) {
+				dom.setAttrib(evt.target.id, 'tabindex', '-1');
+			};
 			
-			// Setup listeners for root element.
-			dom.bind(root, 'focus', function() {
+			rootFocussed = function(evt) {
 				dom.get(dom.getAttrib(root, 'aria-activedescendant')).focus();
-			});
+			};
 			
-			dom.bind(root, 'keydown', function(evt) {
+			t.destroy = function() {
+				each(items, function(item) {
+					dom.unbind(item.id, 'focus', itemFocussed);
+					dom.unbind(item.id, 'blur', itemBlurred);
+				});
+				dom.unbind(root, 'focus', rootFocussed);
+				dom.unbind(root, 'keydown', rootKeydown);
+				items = dom = root = t.destroy = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
+			};
+			
+			rootKeydown = function(evt) {
 				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32, controls = t.controls, focussedId = dom.getAttrib(root, 'aria-activedescendant'), newFocus;
-
 				function moveFocus(dir) {
 					var idx = -1;
 
@@ -118,7 +112,33 @@
 						}
 						break;
 				}
+			};
+			
+
+			// Set up state and listeners for each item.
+			each(items, function(item, idx) {
+				var tabindex;
+				if (!item.id) {
+					item.id = dom.uniqueId('_mce_item_');
+				}
+
+				if (excludeFromTabOrder) {
+					dom.bind(item.id, 'blur', itemBlurred);
+					tabindex = '-1';
+				} else {
+					tabindex = (idx === 0 ? '0' : '-1');
+				}
+				dom.setAttrib(item.id, 'tabindex', tabindex);
+				dom.bind(dom.get(item.id), 'focus', itemFocussed);
 			});
+			
+			// Setup initial state for root element.
+			dom.setAttrib(root, 'aria-activedescendant', items[0].id);
+			dom.setAttrib(root, 'tabindex', '-1');
+			
+			// Setup listeners for root element.
+			dom.bind(root, 'focus', rootFocussed);
+			dom.bind(root, 'keydown', rootKeydown);
 		}
 	});
 })(tinymce);
