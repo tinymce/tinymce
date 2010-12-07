@@ -199,7 +199,9 @@ tinyMCEPopup.onInit.add(function() {
 	    	root: tabContainerElm,
 	    	items: items,
 	    	onAction: action,
-	    	actOnFocus: true
+	    	actOnFocus: true,
+	    	enableLeftRight: true,
+	    	enableUpDown: true
 	    }, tinyMCEPopup.dom);
 	});
 });
