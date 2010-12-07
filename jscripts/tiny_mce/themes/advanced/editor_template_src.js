@@ -807,7 +807,7 @@
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
-				tb = cf.createToolbar("toolbar" + i, {'class' : 'mceToolbarRow' + i, 'name' : s['theme_advanced_toolbar_name' + i]});
+				tb = cf.createToolbar("toolbar" + i, {'class' : 'mceToolbarRow' + i});
 
 				if (s['theme_advanced_buttons' + i + '_add'])
 					v += ',' + s['theme_advanced_buttons' + i + '_add'];
