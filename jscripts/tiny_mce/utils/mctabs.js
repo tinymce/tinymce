@@ -195,7 +195,10 @@ tinyMCEPopup.onInit.add(function() {
 			dom.setAttrib(a, 'tabindex', '-1');
 		});
 		
-	    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation',
-	    		tinyMCEPopup.dom, tabContainerElm, items, null, action);
+	    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', {
+	    	root: tabContainerElm,
+	    	items: items,
+	    	onAction: action
+	    }, tinyMCEPopup.dom);
 	});
 });

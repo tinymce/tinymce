@@ -52,8 +52,12 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 				}
 			});
 		});
-		new tinymce.ui.KeyboardNavigation(dom, t.id, items, function() {
-			t.editor.focus();
+		new tinymce.ui.KeyboardNavigation({
+			root: t.id,
+			items: items,
+			onCancel: function() {
+				t.editor.focus();
+			}
 		});
 		if (!tabFocusToolbar) {
 			dom.setAttrib(items[0].id, 'tabindex', '-1');

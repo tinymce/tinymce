@@ -192,8 +192,12 @@
 
 			DOM.addClass(m, 'mceColorSplitMenu');
 			
-			new tinymce.ui.KeyboardNavigation(DOM, t.id + '_menu', DOM.select('a', t.id + '_menu'), function() {
-				t.hideMenu();
+			new tinymce.ui.KeyboardNavigation({
+				root: t.id + '_menu',
+				items: DOM.select('a', t.id + '_menu'),
+				onCancel: function() {
+					t.hideMenu();
+				}
 			});
 
 			Event.add(t.id + '_menu', 'click', function(e) {

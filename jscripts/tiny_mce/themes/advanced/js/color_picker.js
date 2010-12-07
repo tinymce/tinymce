@@ -155,7 +155,7 @@ function generateWebColors() {
 	if (el.className == 'generated')
 		return;
 
-	// VoiceOver doesn't seem to support legend as a label referend by labelledby.
+	// VoiceOver doesn't seem to support legend as a label referenced by labelledby.
 	h += '<div role="listbox" aria-label="' + document.getElementById('webcolors_title').textContent + '" tabindex="0"><table role="presentation" border="0" cellspacing="1" cellpadding="0">'
 		+ '<tr role="presentation">';
 
@@ -171,9 +171,8 @@ function generateWebColors() {
 
 	el.innerHTML = h;
 	el.className = 'generated';
-	
-    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation',
-    		tinyMCEPopup.dom, el, tinyMCEPopup.dom.select('a', el));
+
+	enableKeyboardNavigation(el);
 }
 
 function generateNamedColors() {
@@ -190,8 +189,14 @@ function generateNamedColors() {
 	el.innerHTML = h;
 	el.className = 'generated';
 	
-    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation',
-    		tinyMCEPopup.dom, el, tinyMCEPopup.dom.select('a', el));
+	enableKeyboardNavigation(el);
+}
+
+function enableKeyboardNavigation(el) {
+	tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', {
+    	root: el,
+    	items: tinyMCEPopup.dom.select('a', el)    	
+    }, tinyMCEPopup.dom);
 }
 
 function dechex(n) {

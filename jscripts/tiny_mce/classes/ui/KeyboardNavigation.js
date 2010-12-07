@@ -10,20 +10,25 @@
 	tinymce.create('tinymce.ui.KeyboardNavigation', {
 		
 		/**
+		 * Create a new KeyboardNavigation instance to handle the focus for a specific element.
 		 * 
 		 * @constructor
 		 * @method KeyboardNavigation
+		 * @param {Object} settings the settings object to define how keyboard navigation works.
 		 * @param {DOMUtils} dom the DOMUtils instance to use.
-		 * @param {Element/String} the root element or ID of the root element for the control.
-		 * @param {Array} items an array containing the items to move focus between. Every object in this array must have an id attribute which maps to the actual DOM element. If the actual elements are passed without an ID then one is automatically assigned.
-		 * @param {Function} cancelAction the callback for when the user presses escape or otherwise indicates cancelling.
-		 * @param {Function} actionHandler (optional) the action handler to call when the user activates an item.
-		 * @param {Boolean} verticalOrientation (optional) when true, the up/down arrows move through items instead of left/right.
+		 * 
+		 * @setting {Element/String} root the root element or ID of the root element for the control.
+		 * @setting {Array} items an array containing the items to move focus between. Every object in this array must have an id attribute which maps to the actual DOM element. If the actual elements are passed without an ID then one is automatically assigned.
+		 * @setting {Function} onCancel the callback for when the user presses escape or otherwise indicates cancelling.
+		 * @setting {Function} onAction (optional) the action handler to call when the user activates an item.
+		 * @setting {Boolean} enableLeftRight (optional, default) when true, the up/down arrows move through items.
+		 * @setting {Boolean} enableUpDown (optional) when true, the up/down arrows move through items.
+		 * Note for both up/down and left/right explicitly set both enableLeftRight and enableUpDown to true.
 		 */
-		KeyboardNavigation: function(dom, root, items, cancelAction, actionHandler, verticalOrientation) {
-		
-			var t = this;//, items = dom.select(selector, root);
-
+		KeyboardNavigation: function(settings, dom) {
+			var t = this, root = settings.root, items = settings.items, enableUpDown = settings.enableUpDown, enableLeftRight = settings.enableLeftRight || !settings.enableUpDown;
+			dom = dom || tinymce.DOM;
+			
 			// Set up state and listeners for each item.
 			each(items, function(item) {
 				if (!item.id) {
@@ -46,8 +51,6 @@
 			
 			dom.bind(root, 'keydown', function(evt) {
 				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32, controls = t.controls, focussedId = dom.getAttrib(root, 'aria-activedescendant'), newFocus;
-				var nextKey = verticalOrientation ? DOM_VK_DOWN : DOM_VK_RIGHT;
-				var prevKey = verticalOrientation ? DOM_VK_UP : DOM_VK_LEFT;
 
 				function moveFocus(dir) {
 					var idx = -1;
@@ -75,20 +78,29 @@
 				}
 				
 				switch (evt.keyCode) {
-					case prevKey:
-						moveFocus(-1);
+					case DOM_VK_LEFT:
+						if (enableLeftRight) moveFocus(-1);
 						break;
-					case nextKey:
-						moveFocus(1);
+					case DOM_VK_RIGHT:
+						if (enableLeftRight) moveFocus(1);
+						break;
+					case DOM_VK_UP:
+						if (enableUpDown) moveFocus(-1);
+						break;
+					case DOM_VK_DOWN:
+						if (enableUpDown) moveFocus(1);
 						break;
 					case DOM_VK_ESCAPE:
-						cancelAction();
+						if (settings.onCancel) {
+							settings.onCancel();
+							Event.cancel(evt);
+						}
 						break;
 					case DOM_VK_ENTER:
 					case DOM_VK_RETURN:
 					case DOM_VK_SPACE:
-						if (actionHandler) {
-							actionHandler(focussedId);
+						if (settings.onAction) {
+							settings.onAction(focussedId);
 							Event.cancel(evt);
 						}
 						break;

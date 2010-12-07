@@ -206,9 +206,14 @@
 			t.onShowMenu.dispatch(t);
 
 			if (s.keyboard_focus) {
-				new tinymce.ui.KeyboardNavigation(DOM, 'menu_' + t.id, DOM.select('a', 'menu_' + t.id), function() {
-					t.hideMenu();
-				}, null, true);
+				new tinymce.ui.KeyboardNavigation({
+					root: 'menu_' + t.id,
+					items: DOM.select('a', 'menu_' + t.id),
+					onCancel: function() {
+						t.hideMenu();
+					},
+					enableUpDown: true
+				});
 				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
 				t._focusIdx = 0;
 			}
