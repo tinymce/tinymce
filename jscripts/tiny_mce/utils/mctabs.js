@@ -198,7 +198,8 @@ tinyMCEPopup.onInit.add(function() {
 	    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', {
 	    	root: tabContainerElm,
 	    	items: items,
-	    	onAction: action
+	    	onAction: action,
+	    	actOnFocus: true
 	    }, tinyMCEPopup.dom);
 	});
 });

@@ -74,6 +74,9 @@
 					dom.setAttrib(focussedId, 'tabindex', '-1');
 					dom.setAttrib(newFocus.id, 'tabindex', '0');
 					dom.get(newFocus.id).focus();
+					if (settings.actOnFocus) {
+						settings.onAction(newFocus.id);
+					}
 					Event.cancel(evt);
 				}
 				
