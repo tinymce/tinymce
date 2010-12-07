@@ -26,15 +26,25 @@
 		 * Note for both up/down and left/right explicitly set both enableLeftRight and enableUpDown to true.
 		 */
 		KeyboardNavigation: function(settings, dom) {
-			var t = this, root = settings.root, items = settings.items, enableUpDown = settings.enableUpDown, enableLeftRight = settings.enableLeftRight || !settings.enableUpDown;
+			var t = this, root = settings.root, items = settings.items, enableUpDown = settings.enableUpDown, enableLeftRight = settings.enableLeftRight || !settings.enableUpDown, excludeFromTabOrder = settings.excludeFromTabOrder;
 			dom = dom || tinymce.DOM;
 			
 			// Set up state and listeners for each item.
 			each(items, function(item, idx) {
+				var tabindex;
 				if (!item.id) {
 					item.id = dom.uniqueId('_mce_item_');
 				}
-				dom.setAttrib(item.id, 'tabindex', idx === 0 ? '0' : '-1');
+
+				if (excludeFromTabOrder) {
+					dom.bind(item.id, 'blur', function() {
+						dom.setAttrib(item.id, 'tabindex', '-1');
+					});
+					tabindex = '-1';
+				} else {
+					tabindex = (idx === 0 ? '0' : '-1');
+				}
+				dom.setAttrib(item.id, 'tabindex', tabindex);
 				dom.bind(dom.get(item.id), 'focus', function() {
 					dom.setAttrib(root, 'aria-activedescendant', item.id);
 				});

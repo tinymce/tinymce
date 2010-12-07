@@ -1138,7 +1138,8 @@
 				if (DOM.select('a', p).length > 0) {
 					new tinymce.ui.KeyboardNavigation({
 						root: p,
-						items: DOM.select('a', p)
+						items: DOM.select('a', p),
+						excludeFromTabOrder: true
 					}, DOM);
 				}
 			}

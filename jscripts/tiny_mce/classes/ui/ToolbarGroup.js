@@ -39,16 +39,11 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	},
 	
 	postRender : function() {
-		var t = this, items = [], tabFocusToolbar = t.settings.tab_focus_toolbar;;
+		var t = this, items = [];
 		each(t.controls, function(toolbar) {
 			each (toolbar.controls, function(control) {
 				if (control.id) {
 					items.push(control);
-					if (!tabFocusToolbar) {
-						dom.bind(control.id, 'blur', function() {
-							dom.setAttrib(control.id, 'tabindex', '-1');
-						});
-					}
 				}
 			});
 		});
@@ -57,12 +52,9 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 			items: items,
 			onCancel: function() {
 				t.editor.focus();
-			}
+			},
+			excludeFromTabOrder: !t.settings.tab_focus_toolbar
 		});
-		if (!tabFocusToolbar) {
-			dom.setAttrib(items[0].id, 'tabindex', '-1');
-			dom.setAttrib(t.id, 'tabindex', '-1');
-		}
 	},
 	
 	destroy : function() {
