@@ -285,7 +285,20 @@
 			},
 
 			mceInsertContent : function(command, ui, value) {
-				selection.setContent(value);
+				var caretNode, rng;
+
+				selection.setContent(value.replace(/\{\$caret\}/g, '<br id="_mce_caret" />'));
+
+				// Move selection to caret marker and remove marker. This enables users to insert contents
+				// and control where the caret ends up by using a template like: <b>a{$caret}c</b>
+				caretNode = dom.select('#_mce_caret')[0];
+				if (caretNode) {
+					rng = dom.createRng();
+					rng.setStartBefore(caretNode);
+					rng.setEndBefore(caretNode);
+					selection.setRng(rng);
+					dom.remove(caretNode);
+				}
 			},
 
 			mceInsertRawHTML : function(command, ui, value) {
