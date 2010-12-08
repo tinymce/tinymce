@@ -359,14 +359,16 @@
 			var t = this, e;
 			switch (evt.keyCode) {
 				case 37: // Left
-					t.hideMenu();
-					t.settings.parent.focus();
-					Event.cancel(evt);
-					return;
+					if (t.settings.parent) {
+						t.hideMenu();
+						t.settings.parent.focus();
+						Event.cancel(evt);
+					}
+					break;
 				case 39: // Right
 					if (t.mouseOverFunc)
 						t.mouseOverFunc(evt);
-					return;
+					break;
 			}
 		},
 
