@@ -6,7 +6,8 @@
 	<script type="text/javascript" src="../../utils/mctabs.js?v={tinymce_version}"></script>
 	<script type="text/javascript" src="js/color_picker.js?v={tinymce_version}"></script>
 </head>
-<body id="colorpicker" style="display: none" role="application">
+<body id="colorpicker" style="display: none" role="application" aria-labelledby="app_label">
+	<span class="mceVoiceLabel" id="app_label" style="display:none;">{#advanced_dlg.colorpicker_title}</span>
 <form onsubmit="insertAction();return false" action="#">
 	<div class="tabs">
 		<ul>
