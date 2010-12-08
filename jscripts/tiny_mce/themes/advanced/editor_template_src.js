@@ -477,14 +477,13 @@
 		renderUI : function(o) {
 			var n, ic, tb, t = this, ed = t.editor, s = t.settings, sc, p, nl;
 
-			s.aria_label += ed.getLang('advanced.help_shortcut');
 			if (ed.settings) {
-				ed.settings.aria_label = s.aria_label;
+				ed.settings.aria_label = s.aria_label + ed.getLang('advanced.help_shortcut');
 			}
 			// TODO: Should have an aria-describedby attribute which is user-configurable to describe what this field is actually for.
 			// Maybe actually inherit it from the original textara?
-			n = p = DOM.create('span', {role : 'application', 'aria-label' : s.aria_label, id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin' + (s.skin_variant ? ' ' + ed.settings.skin + 'Skin' + t._ufirst(s.skin_variant) : '')});
-
+			n = p = DOM.create('span', {role : 'application', 'aria-labelledby' : ed.id + '_voice', id : ed.id + '_parent', 'class' : 'mceEditor ' + ed.settings.skin + 'Skin' + (s.skin_variant ? ' ' + ed.settings.skin + 'Skin' + t._ufirst(s.skin_variant) : '')});
+			DOM.add(n, 'span', {'class': 'mceVoiceLabel', 'style': 'display:none;', id: ed.id + '_voice'}, s.aria_label);
 			if (!DOM.boxModel)
 				n = DOM.add(n, 'div', {'class' : 'mceOldBoxModel'});
 
@@ -829,7 +828,13 @@
 
 			n = DOM.add(tb, 'tr', {role: 'presentation'});
 			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar', role: 'presentation'});
-			n = DOM.add(n, 'div', {id : ed.id + '_path_row', 'role': 'group', 'aria-label': ed.translate('advanced.path')}, s.theme_advanced_path ? ed.translate('advanced.path') + ': ' : '&#160;');
+			n = DOM.add(n, 'div', {id : ed.id + '_path_row', 'role': 'group', 'aria-labelledby': ed.id + '_path_voice'});
+			if (s.theme_advanced_path) {
+				DOM.add(n, 'span', {id: ed.id + '_path_voice'}, ed.translate('advanced.path'));
+				DOM.add(n, 'span', {}, ': ');
+			} else {
+				DOm.add(n, 'span', {}, '&#160;');
+			}
 
 			if (s.theme_advanced_resizing) {
 				DOM.add(td, 'a', {id : ed.id + '_resize', href : 'javascript:;', onclick : "return false;", 'class' : 'mceResize'});
@@ -1125,10 +1130,10 @@
 					na = na.name;
 
 					//u = "javascript:tinymce.EditorManager.get('" + ed.id + "').theme._sel('" + (de++) + "');";
-					pi = DOM.create('a', {'href' : "javascript:;", role: 'button', 'aria-label': ti, onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
+					pi = DOM.create('a', {'href' : "javascript:;", role: 'button', onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
 
 					if (p.hasChildNodes()) {
-						p.insertBefore(DOM.doc.createTextNode(' \u00bb '), p.firstChild);
+						p.insertBefore(DOM.create('span', { 'aria-hidden': 'true' }, ' \u00bb '), p.firstChild);
 						p.insertBefore(pi, p.firstChild);
 					} else
 						p.appendChild(pi);
