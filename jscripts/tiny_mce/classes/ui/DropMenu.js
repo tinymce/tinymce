@@ -60,6 +60,7 @@
 			s['class'] = s['class'] || cs['class'];
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
+			s.keyboard_focus = cs.keyboard_focus;
 			m = new tinymce.ui.DropMenu(s.id || DOM.uniqueId(), s);
 
 			m.onAddItem.add(t.onAddItem.dispatch, t.onAddItem);
@@ -201,12 +202,13 @@
 						}
 					}
 				});
+				Event.add(DOM.select('a', co), 'focus', t.mouseOverFunc);
 			}
 
 			t.onShowMenu.dispatch(t);
 
 			if (s.keyboard_focus) {
-				new tinymce.ui.KeyboardNavigation({
+				t.keyboardNav = new tinymce.ui.KeyboardNavigation({
 					root: 'menu_' + t.id,
 					items: DOM.select('a', 'menu_' + t.id),
 					onCancel: function() {
@@ -230,7 +232,9 @@
 			if (!t.isMenuVisible)
 				return;
 
-			Event.remove(co, 'mouseover', t.mouseOverFunc);
+			if (t.keyboardNav) t.keyboardNav.destroy();
+			Event.remove(co, ['mouseover', 'focus'], t.mouseOverFunc);
+			Event.remove(DOM.select('a', co), 'focus', t.mouseOverFunc);
 			Event.remove(co, 'click', t.mouseClickFunc);
 			Event.remove(co, 'keydown', t._keyHandler);
 			DOM.hide(co);
@@ -299,7 +303,9 @@
 		destroy : function() {
 			var t = this, co = DOM.get('menu_' + t.id);
 
-			Event.remove(co, 'mouseover', t.mouseOverFunc);
+			if (t.keyboardNav) t.keyboardNav.destroy();
+			Event.remove(co, ['mouseover', 'focus'], t.mouseOverFunc);
+			Event.remove(DOM.select('a', co), 'focus', t.mouseOverFunc);
 			Event.remove(co, 'click', t.mouseClickFunc);
 
 			if (t.element)
@@ -372,8 +378,8 @@
 			var n, s = o.settings, a, ro, it, cp = this.classPrefix, ic;
 
 			if (s.separator) {
-				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'ItemSeparator'});
-				DOM.add(ro, 'td', {'class' : cp + 'ItemSeparator'});
+				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'ItemSeparator', role: "presentation"});
+				DOM.add(ro, 'td', {'class' : cp + 'ItemSeparator', role: "presentation"});
 
 				if (n = ro.previousSibling)
 					DOM.addClass(n, 'mceLast');

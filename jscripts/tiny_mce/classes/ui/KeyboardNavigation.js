@@ -57,7 +57,8 @@
 				});
 				dom.unbind(dom.get(root), 'focus', rootFocussed);
 				dom.unbind(dom.get(root), 'keydown', rootKeydown);
-				items = dom = root = t.destroy = t.focus = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
+				items = dom = root = t.focus = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
+				t.destroy = function() {};
 			};
 			
 			rootKeydown = function(evt) {
