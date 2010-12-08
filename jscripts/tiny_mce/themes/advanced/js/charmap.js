@@ -275,19 +275,33 @@ var charmap = [
 
 tinyMCEPopup.onInit.add(function() {
 	tinyMCEPopup.dom.setHTML('charmapView', renderCharMapHTML());
+	addKeyboardNavigation();
 });
+
+function addKeyboardNavigation(){
+    var tableElm, cells, settings;
+    cells = tinyMCEPopup.dom.select(".charmaplink");
+    settings ={
+    	root: "charmapgroup",
+    	items: cells    	
+    };
+    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', settings, tinyMCEPopup.dom);
+	
+}
 
 function renderCharMapHTML() {
 	var charsPerRow = 20, tdWidth=20, tdHeight=20, i;
-	var html = '<table border="0" cellspacing="1" cellpadding="0" width="' + (tdWidth*charsPerRow) + '"><tr height="' + tdHeight + '">';
+	var html = '<div id="charmapgroup" aria-label="custom characters" tabindex="0" role="listbox"><table role="presentation" border="0" cellspacing="1" cellpadding="0" width="' + (tdWidth*charsPerRow) + '"><tr height="' + tdHeight + '">';
 	var cols=-1;
 
 	for (i=0; i<charmap.length; i++) {
+	    var previewCharFn;
 		if (charmap[i][2]==true) {
 			cols++;
+			previewCharFn = 'previewChar(\'' + charmap[i][1].substring(1,charmap[i][1].length) + '\',\'' + charmap[i][0].substring(1,charmap[i][0].length) + '\',\'' + charmap[i][3] + '\');';
 			html += ''
 				+ '<td class="charmap">'
-				+ '<a onmouseover="previewChar(\'' + charmap[i][1].substring(1,charmap[i][1].length) + '\',\'' + charmap[i][0].substring(1,charmap[i][0].length) + '\',\'' + charmap[i][3] + '\');" onfocus="previewChar(\'' + charmap[i][1].substring(1,charmap[i][1].length) + '\',\'' + charmap[i][0].substring(1,charmap[i][0].length) + '\',\'' + charmap[i][3] + '\');" href="javascript:void(0)" onclick="insertChar(\'' + charmap[i][1].substring(2,charmap[i][1].length-1) + '\');" onclick="return false;" onmousedown="return false;" title="' + charmap[i][3] + '">'
+				+ '<a class="charmaplink" role="button" onmouseover="'+previewCharFn+'" onfocus="'+previewCharFn+'" href="javascript:void(0)" onclick="insertChar(\'' + charmap[i][1].substring(2,charmap[i][1].length-1) + '\');" onclick="return false;" onmousedown="return false;" title="' + charmap[i][3] + '">'
 				+ charmap[i][1]
 				+ '</a></td>';
 			if ((cols+1) % charsPerRow == 0)
@@ -301,7 +315,7 @@ function renderCharMapHTML() {
 			html += '<td width="' + tdWidth + '" height="' + tdHeight + '" class="charmap">&nbsp;</td>';
 	}
 
-	html += '</tr></table>';
+	html += '</tr></table></div>';
 
 	return html;
 }
