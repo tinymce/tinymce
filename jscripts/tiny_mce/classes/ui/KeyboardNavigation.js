@@ -31,7 +31,7 @@
 					excludeFromTabOrder = settings.excludeFromTabOrder,
 					itemFocussed, itemBlurred, rootKeydown, rootFocussed, focussedId;
 			dom = dom || tinymce.DOM;
-			
+
 			itemFocussed = function(evt) {
 				focussedId = evt.target.id;
 			};
@@ -52,16 +52,17 @@
 			
 			t.destroy = function() {
 				each(items, function(item) {
-					dom.unbind(item.id, 'focus', itemFocussed);
-					dom.unbind(item.id, 'blur', itemBlurred);
+					dom.unbind(dom.get(item.id), 'focus', itemFocussed);
+					dom.unbind(dom.get(item.id), 'blur', itemBlurred);
 				});
-				dom.unbind(root, 'focus', rootFocussed);
-				dom.unbind(root, 'keydown', rootKeydown);
+				dom.unbind(dom.get(root), 'focus', rootFocussed);
+				dom.unbind(dom.get(root), 'keydown', rootKeydown);
 				items = dom = root = t.destroy = t.focus = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
 			};
 			
 			rootKeydown = function(evt) {
 				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32, controls = t.controls, newFocus;
+				
 				function moveFocus(dir) {
 					var idx = -1;
 
@@ -143,8 +144,8 @@
 			dom.setAttrib(root, 'tabindex', '-1');
 			
 			// Setup listeners for root element.
-			dom.bind(root, 'focus', rootFocussed);
-			dom.bind(root, 'keydown', rootKeydown);
+			dom.bind(dom.get(root), 'focus', rootFocussed);
+			dom.bind(dom.get(root), 'keydown', rootKeydown);
 		}
 	});
 })(tinymce);
