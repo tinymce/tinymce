@@ -184,7 +184,7 @@ function generateNamedColors() {
 
 	for (n in named) {
 		v = named[n];
-		h += '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-labelledby="named_colors_' + i + '" onmouseover="showColor(\'' + n +  '\',\'' + v + '\');" style="background-color: ' + n + '">';
+		h += '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-labelledby="named_colors_' + i + '" onfocus="showColor(\'' + n + '\',\'' + v + '\');" onmouseover="showColor(\'' + n +  '\',\'' + v + '\');" style="background-color: ' + n + '">';
 		h += '<span class="mceVoiceLabel mceIconOnly" style="display:none;" id="named_colors_' + i + '">' + v + '</span></a>'
 		i++;
 	}
