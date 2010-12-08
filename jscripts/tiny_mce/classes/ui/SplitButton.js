@@ -49,6 +49,7 @@
 			else
 				h1 = DOM.createHTML('span', {'class' : 'mceAction ' + s['class']}, '');
 
+			h1 += DOM.createHTML('span', {'class': 'mceVoiceLabel mceIconOnly', id: t.id + '_voice', style: 'display:none;'}, s.title);
 			h += '<td role="presentation">' + DOM.createHTML('a', {role: 'button', id : t.id + '_action', tabindex: '-1', href : 'javascript:;', 'class' : 'mceAction ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 	
 			h1 = DOM.createHTML('span', {'class' : 'mceOpen ' + s['class']});
@@ -56,7 +57,7 @@
 
 			h += '</tr></tbody>';
 
-			return DOM.createHTML('table', {id : t.id, role: 'button', tabindex: '0', 'aria-label': s.title, 'aria-haspopup': 'true', 'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'], cellpadding : '0', cellspacing : '0', title : s.title}, h);
+			return DOM.createHTML('table', {id : t.id, role: 'button', tabindex: '0', 'aria-labelledby': t.id + '_voice', 'aria-haspopup': 'true', 'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'], cellpadding : '0', cellspacing : '0', title : s.title}, h);
 		},
 
 		/**
