@@ -67,6 +67,13 @@
 
 			return m;
 		},
+		
+		focus : function() {
+			var t = this;
+			if (t.keyboardNav) {
+				t.keyboardNav.focus();
+			}
+		},
 
 		/**
 		 * Repaints the menu after new items have been added dynamically.
@@ -202,8 +209,9 @@
 						}
 					}
 				});
-				Event.add(DOM.select('a', co), 'focus', t.mouseOverFunc);
 			}
+			
+			Event.add(co, 'keydown', t._keyHandler, t);
 
 			t.onShowMenu.dispatch(t);
 
@@ -217,7 +225,6 @@
 					enableUpDown: true
 				});
 				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
-				t._focusIdx = 0;
 			}
 		},
 
@@ -233,8 +240,7 @@
 				return;
 
 			if (t.keyboardNav) t.keyboardNav.destroy();
-			Event.remove(co, ['mouseover', 'focus'], t.mouseOverFunc);
-			Event.remove(DOM.select('a', co), 'focus', t.mouseOverFunc);
+			Event.remove(co, 'mouseover', t.mouseOverFunc);
 			Event.remove(co, 'click', t.mouseClickFunc);
 			Event.remove(co, 'keydown', t._keyHandler);
 			DOM.hide(co);
@@ -304,9 +310,10 @@
 			var t = this, co = DOM.get('menu_' + t.id);
 
 			if (t.keyboardNav) t.keyboardNav.destroy();
-			Event.remove(co, ['mouseover', 'focus'], t.mouseOverFunc);
+			Event.remove(co, 'mouseover', t.mouseOverFunc);
 			Event.remove(DOM.select('a', co), 'focus', t.mouseOverFunc);
 			Event.remove(co, 'click', t.mouseClickFunc);
+			Event.remove(co, 'keydown', t._keyHandler);
 
 			if (t.element)
 				t.element.remove();
@@ -324,6 +331,9 @@
 			var t = this, s = t.settings, n, tb, co, w;
 
 			w = DOM.create('div', {role: 'listbox', id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
+			if (t.settings.parent) {
+				DOM.setAttrib(w, 'aria-parent', 'menu_' + t.settings.parent.id);
+			}
 			co = DOM.add(w, 'div', {role: 'presentation', id : 'menu_' + t.id + '_co', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
@@ -345,32 +355,18 @@
 
 		// Internal functions
 
-		_keyHandler : function(e) {
-			var t = this, kc = e.keyCode;
-
-			function focus(d) {
-				var i = t._focusIdx + d, e = DOM.select('a', 'menu_' + t.id)[i];
-
-				if (e) {
-					t._focusIdx = i;
-					e.focus();
-				}
-			};
-
-			switch (kc) {
-				case 38:
-					focus(-1); // Select first link
+		_keyHandler : function(evt) {
+			var t = this, e;
+			switch (evt.keyCode) {
+				case 37: // Left
+					t.hideMenu();
+					t.settings.parent.focus();
+					Event.cancel(evt);
 					return;
-
-				case 40:
-					focus(1);
+				case 39: // Right
+					if (t.mouseOverFunc)
+						t.mouseOverFunc(evt);
 					return;
-
-				case 13:
-					return;
-
-				case 27:
-					return this.hideMenu();
 			}
 		},
 
@@ -390,6 +386,11 @@
 			n = ro = DOM.add(tb, 'tr', {role: 'presentation', id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
 			n = it = DOM.add(n, 'td', {role: 'presentation'});
 			n = a = DOM.add(n, 'a', {role: 'option', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
+			
+			if (s.parent) {
+				DOM.setAttrib(a, 'aria-haspopup', 'true');
+				DOM.setAttrib(a, 'aria-owns', 'menu_' + o.id);
+			}
 
 			DOM.addClass(it, s['class']);
 //			n = DOM.add(n, 'span', {'class' : 'item'});
