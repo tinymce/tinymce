@@ -14,10 +14,10 @@
     <form onsubmit="insertAction();return false;" action="#">
 		<div class="tabs" role="presentation">
 			<ul>
-				<li id="general_tab" class="current" aria-controls="general_panel" ><span role="presentation"><a role="presentation" href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#advlink_dlg.general_tab}</a></span></li>
-				<li id="popup_tab" aria-controls="popup_panel" ><span role="presentation"><a role="presentation"href="javascript:mcTabs.displayTab('popup_tab','popup_panel');" onmousedown="return false;">{#advlink_dlg.popup_tab}</a></span></li>
-				<li id="events_tab" aria-controls="events_panel"><span role="presentation"><a role="presentation" href="javascript:mcTabs.displayTab('events_tab','events_panel');" onmousedown="return false;">{#advlink_dlg.events_tab}</a></span></li>
-				<li id="advanced_tab" aria-controls="advanced_panel"><span role="presentation"><a role="presentation" href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');" onmousedown="return false;">{#advlink_dlg.advanced_tab}</a></span></li>
+				<li id="general_tab" class="current" aria-controls="general_panel" ><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#advlink_dlg.general_tab}</a></span></li>
+				<li id="popup_tab" aria-controls="popup_panel" ><span><a href="javascript:mcTabs.displayTab('popup_tab','popup_panel');" onmousedown="return false;">{#advlink_dlg.popup_tab}</a></span></li>
+				<li id="events_tab" aria-controls="events_panel"><span><a href="javascript:mcTabs.displayTab('events_tab','events_panel');" onmousedown="return false;">{#advlink_dlg.events_tab}</a></span></li>
+				<li id="advanced_tab" aria-controls="advanced_panel"><span><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');" onmousedown="return false;">{#advlink_dlg.advanced_tab}</a></span></li>
 			</ul>
 		</div>
 
@@ -31,7 +31,7 @@
 						  <td class="nowrap"><label id="hreflabel" for="href">{#advlink_dlg.url}</label></td>
 						  <td><table border="0" cellspacing="0" cellpadding="0">
 								<tr>
-								  <td><input id="href" name="href" type="text" class="mceFocus" value="" onchange="selectByValue(this.form,'linklisthref',this.value);" /></td>
+								  <td><input id="href" name="href" type="text" class="mceFocus" value="" onchange="selectByValue(this.form,'linklisthref',this.value);" aria-required="true" /></td>
 								  <td id="hrefbrowsercontainer">&nbsp;</td>
 								</tr>
 							  </table></td>
@@ -87,18 +87,22 @@
 							<td class="nowrap"><label for="popupname">{#advlink_dlg.popup_name}</label>&nbsp;</td>
 							<td><input type="text" name="popupname" id="popupname" value="" onchange="buildOnClick();" /></td>
 						</tr>
-						<tr>
-							<td class="nowrap"><label>{#advlink_dlg.popup_size}</label>&nbsp;</td>
+						<tr role="group" aria-labelledby="popup_size_label">
+							<td class="nowrap"><label id="popup_size_label">{#advlink_dlg.popup_size}</label>&nbsp;</td>
 							<td class="nowrap">
-								<input type="text" id="popupwidth" name="popupwidth" value="" onchange="buildOnClick();" /> x
-								<input type="text" id="popupheight" name="popupheight" value="" onchange="buildOnClick();" /> px
+								<span style="display:none" id="width_voiceLabel">{#advlink_dlg.width}</span>
+								<input type="text" id="popupwidth" name="popupwidth" value="" onchange="buildOnClick();" aria-labelledby="width_voiceLabel" /> x
+								<span style="display:none" id="height_voiceLabel">{#advlink_dlg.height}</span>
+								<input type="text" id="popupheight" name="popupheight" value="" onchange="buildOnClick();" aria-labelledby="height_voiceLabel" /> px
 							</td>
 						</tr>
-						<tr>
-							<td class="nowrap" id="labelleft"><label>{#advlink_dlg.popup_position}</label>&nbsp;</td>
+						<tr role="group" aria-labelledby="popup_position_label center_hint">
+							<td class="nowrap" id="labelleft"><label id="popup_position_label">{#advlink_dlg.popup_position}</label>&nbsp;</td>
 							<td class="nowrap">
-								<input type="text" id="popupleft" name="popupleft" value="" onchange="buildOnClick();" /> /                                
-								<input type="text" id="popuptop" name="popuptop" value="" onchange="buildOnClick();" /> (c /c = center)
+								<span style="display:none" id="x_voiceLabel">X</span>
+								<input type="text" id="popupleft" name="popupleft" value="" onchange="buildOnClick();" aria-labelledby="x_voiceLabel" /> /                                
+								<span style="display:none" id="y_voiceLabel">Y</span>
+								<input type="text" id="popuptop" name="popuptop" value="" onchange="buildOnClick();" aria-labelledby="y_voiceLabel" /> <span id="center_hint">(c /c = center)</span>
 							</td>
 						</tr>
 					</table>
