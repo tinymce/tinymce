@@ -117,9 +117,9 @@
 						],
 
 						['div', {id : id + '_middle', 'class' : 'mceMiddle'}, 
-							['div', {id : id + '_left', 'class' : 'mceLeft'}],
+							['div', {id : id + '_left', 'class' : 'mceLeft', tabindex : '0'}],
 							['span', {id : id + '_content'}],
-							['div', {id : id + '_right', 'class' : 'mceRight'}]
+							['div', {id : id + '_right', 'class' : 'mceRight', tabindex : '0'}]
 						],
 
 						['div', {id : id + '_bottom', 'class' : 'mceBottom'},
@@ -239,6 +239,17 @@
 					}
 				}
 			});
+			
+			// Make sure the tab order loops within the dialog.
+			Event.add([id + '_left', id + '_right'], 'focus', function(evt) {
+				var body = DOM.get(id + '_ifr').contentWindow.document.body;
+				var focusable = DOM.select(':input:enabled,*[tabindex=0]', body);
+				if (evt.target.id === (id + '_left')) {
+					focusable[focusable.length - 1].focus();
+				} else {
+					focusable[0].focus();
+				}
+			});
 
 			// Add window
 			w = t.windows[id] = {
@@ -261,7 +272,8 @@
 				DOM.add(DOM.doc.body, 'div', {
 					id : 'mceModalBlocker',
 					'class' : (t.editor.settings.inlinepopups_skin || 'clearlooks2') + '_modalBlocker',
-					style : {zIndex : t.zIndex - 1}
+					style : {zIndex : t.zIndex - 1},
+					tabindex : 0
 				});
 
 				DOM.show('mceModalBlocker'); // Reduces flicker in IE
@@ -271,6 +283,7 @@
 			if (tinymce.isIE6 || /Firefox\/2\./.test(navigator.userAgent) || (tinymce.isIE && !DOM.boxModel))
 				DOM.setStyles('mceModalBlocker', {position : 'absolute', left : vp.x, top : vp.y, width : vp.w - 2, height : vp.h - 2});
 
+			
 			t.focus(id);
 			t._fixIELayout(id, 1);
 
