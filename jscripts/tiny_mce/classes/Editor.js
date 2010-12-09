@@ -2286,7 +2286,7 @@
 								}
 							});
 						} else
-							dom.bind(t.getBody(), k, eventHandler);
+							dom.bind(isGecko ? t.getDoc() : t.getBody(), k, eventHandler);
 						break;
 
 					case 'paste':
