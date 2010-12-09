@@ -10,6 +10,7 @@
 
 function MCTabs() {
 	this.settings = [];
+	this.onChange = tinyMCEPopup.editor.windowManager.createInstance('tinymce.util.Dispatcher');
 };
 
 MCTabs.prototype.init = function(settings) {
@@ -57,16 +58,15 @@ MCTabs.prototype.getPanelForTab = function(tabElm) {
 };
 
 MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
-	var panelElm, panelContainerElm, tabElm, tabContainerElm, selectionClass, nodes, i, t;
-	t = this;
+	var panelElm, panelContainerElm, tabElm, tabContainerElm, selectionClass, nodes, i, t = this;
 	tabElm = document.getElementById(tab_id);
-    if (panel_id===undefined){    
-        panel_id = this.getPanelForTab(tabElm);
+    if (panel_id === undefined) {
+        panel_id = t.getPanelForTab(tabElm);
     }
 	panelElm= document.getElementById(panel_id);
 	panelContainerElm = panelElm ? panelElm.parentNode : null;
 	tabContainerElm = tabElm ? tabElm.parentNode : null;
-	selectionClass = this.getParam('selection_class', 'current');
+	selectionClass = t.getParam('selection_class', 'current');
     
 	if (tabElm && tabContainerElm) {
 		nodes = tabContainerElm.childNodes;
@@ -74,12 +74,12 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
 		// Hide all other tabs
 		for (i = 0; i < nodes.length; i++) {
 			if (nodes[i].nodeName == "LI") {
-			    this.hideTab(nodes[i]);
+			    t.hideTab(nodes[i]);
 			}
 		}
 
 		// Show selected tab
-		this.showTab(tabElm);
+		t.showTab(tabElm);
 	}
 
 	if (panelElm && panelContainerElm) {
@@ -88,14 +88,13 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
 		// Hide all other panels
 		for (i = 0; i < nodes.length; i++) {
 			if (nodes[i].nodeName == "DIV")
-			    this.hidePanel(nodes[i]);
+			    t.hidePanel(nodes[i]);
 		}
 		if (!avoid_focus) { 
-		    //todo - should this be done in a timer?
 		    tabElm.focus();
 		}
 		// Show selected panel
-        this.showPanel(panelElm);
+        t.showPanel(panelElm);
 	}
 };
 
@@ -184,6 +183,7 @@ tinyMCEPopup.onInit.add(function() {
 		var items = tinyMCEPopup.dom.select('li', tabContainerElm);
 		var action = function(id) {
 			mcTabs.displayTab(id, mcTabs.getPanelForTab(id));
+		    mcTabs.onChange.dispatch(id);
 		};
 		each(items, function(item) {
 			dom.setAttrib(item, 'role', 'tab');
