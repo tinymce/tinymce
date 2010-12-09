@@ -179,6 +179,7 @@ var mcTabs = new MCTabs();
 tinyMCEPopup.onInit.add(function() {
 	var tinymce = tinyMCEPopup.getWin().tinymce, dom = tinyMCEPopup.dom, each = tinymce.each;
 	each(dom.select('div.tabs'), function(tabContainerElm) {
+		var keyNav;
         dom.setAttrib(tabContainerElm, "role", "tablist"); 
 		var items = tinyMCEPopup.dom.select('li', tabContainerElm);
 		var action = function(id) {
@@ -191,11 +192,18 @@ tinyMCEPopup.onInit.add(function() {
 			});
 		});
 		
+		dom.bind(dom.getRoot(), 'keydown', function(evt) {
+			if (evt.keyCode === 9 && evt.ctrlKey && !evt.altKey) { // Tab
+				keyNav.moveFocus(evt.shiftKey ? -1 : 1);
+				tinymce.dom.Event.cancel(evt);
+			}
+		});
+		
 		each(dom.select('a', tabContainerElm), function(a) {
 			dom.setAttrib(a, 'tabindex', '-1');
 		});
 		
-	    tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', {
+	    keyNav = tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', {
 	    	root: tabContainerElm,
 	    	items: items,
 	    	onAction: action,

@@ -61,49 +61,49 @@
 				t.destroy = function() {};
 			};
 			
-			rootKeydown = function(evt) {
-				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32, controls = t.controls, newFocus;
-				
-				function moveFocus(dir) {
-					var idx = -1;
+			t.moveFocus = function(dir, evt) {
+				var idx = -1, controls = t.controls, newFocus;
 
-					if (!focussedId) return;
-					each(items, function(item, index) {
-						if (item.id === focussedId) {
-							idx = index;
-							return false;
-						}
-					});
+				if (!focussedId) return;
+				each(items, function(item, index) {
+					if (item.id === focussedId) {
+						idx = index;
+						return false;
+					}
+				});
 
-					idx += dir;
-					if (idx < 0) {
-						idx = items.length - 1;
-					} else if (idx >= items.length) {
-						idx = 0;
-					}
-					
-					newFocus = items[idx];
-					dom.setAttrib(focussedId, 'tabindex', '-1');
-					dom.setAttrib(newFocus.id, 'tabindex', '0');
-					dom.get(newFocus.id).focus();
-					if (settings.actOnFocus) {
-						settings.onAction(newFocus.id);
-					}
-					Event.cancel(evt);
+				idx += dir;
+				if (idx < 0) {
+					idx = items.length - 1;
+				} else if (idx >= items.length) {
+					idx = 0;
 				}
+				
+				newFocus = items[idx];
+				dom.setAttrib(focussedId, 'tabindex', '-1');
+				dom.setAttrib(newFocus.id, 'tabindex', '0');
+				dom.get(newFocus.id).focus();
+				if (settings.actOnFocus) {
+					settings.onAction(newFocus.id);
+				}
+				if (evt) Event.cancel(evt);
+			};
+			
+			rootKeydown = function(evt) {
+				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
 				
 				switch (evt.keyCode) {
 					case DOM_VK_LEFT:
-						if (enableLeftRight) moveFocus(-1);
+						if (enableLeftRight) t.moveFocus(-1);
 						break;
 					case DOM_VK_RIGHT:
-						if (enableLeftRight) moveFocus(1);
+						if (enableLeftRight) t.moveFocus(1);
 						break;
 					case DOM_VK_UP:
-						if (enableUpDown) moveFocus(-1);
+						if (enableUpDown) t.moveFocus(-1);
 						break;
 					case DOM_VK_DOWN:
-						if (enableUpDown) moveFocus(1);
+						if (enableUpDown) t.moveFocus(1);
 						break;
 					case DOM_VK_ESCAPE:
 						if (settings.onCancel) {
