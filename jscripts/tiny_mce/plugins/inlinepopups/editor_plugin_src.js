@@ -272,18 +272,18 @@
 				DOM.add(DOM.doc.body, 'div', {
 					id : 'mceModalBlocker',
 					'class' : (t.editor.settings.inlinepopups_skin || 'clearlooks2') + '_modalBlocker',
-					style : {zIndex : t.zIndex - 1},
-					tabindex : 0
+					style : {zIndex : t.zIndex - 1}
 				});
 
 				DOM.show('mceModalBlocker'); // Reduces flicker in IE
+				DOM.setAttrib(DOM.doc.body, 'aria-hidden', 'true');
 			} else
 				DOM.setStyle('mceModalBlocker', 'z-index', t.zIndex - 1);
 
 			if (tinymce.isIE6 || /Firefox\/2\./.test(navigator.userAgent) || (tinymce.isIE && !DOM.boxModel))
 				DOM.setStyles('mceModalBlocker', {position : 'absolute', left : vp.x, top : vp.y, width : vp.w - 2, height : vp.h - 2});
 
-			
+			DOM.setAttrib(id, 'aria-hidden', 'false');
 			t.focus(id);
 			t._fixIELayout(id, 1);
 
@@ -503,8 +503,10 @@
 
 			t.count--;
 
-			if (t.count == 0)
+			if (t.count == 0) {
 				DOM.remove('mceModalBlocker');
+				DOM.setAttrib(DOM.doc.body, 'aria-hidden', 'false');
+			}
 
 			if (w = t.windows[id]) {
 				t.onClose.dispatch(t);
