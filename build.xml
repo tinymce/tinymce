@@ -170,41 +170,13 @@
 		<concat destfile="${build_dir}/tiny_mce_full.js">
 			<fileset dir="${build_dir}" includes="tiny_mce.js" />
 			<fileset dir="${build_dir}" includes="langs/en.js" />
-			<fileset dir="${build_dir}" includes="plugins/advhr/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/advimage/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/advlink/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/advlist/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/emotions/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/iespell/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/insertdatetime/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/preview/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/print/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/save/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/searchreplace/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/table/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/contextmenu/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/paste/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/fullscreen/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/directionality/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/inlinepopups/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/autosave/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/noneditable/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/fullpage/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/layer/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/style/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/media/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/visualchars/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/nonbreaking/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/xhtmlxtras/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/template/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/bbcode/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/pagebreak/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/spellchecker/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/tabfocus/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/autoresize/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/wordcount/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="themes/advanced/langs/en.js" />
 			<fileset dir="${build_dir}" includes="themes/advanced/editor_template.js" />
+			<fileset dir="${build_dir}" includes="**/editor_plugin.js">
+				<exclude name="**/legacyoutput/*" />
+				<exclude name="**/example/*" />
+				<exclude name="**/fullpage/*" />
+			</fileset>
 		</concat>
 	</target>
 
