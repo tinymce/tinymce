@@ -1,0 +1,95 @@
+/* Reset */
+.highcontrastSkin table, .highcontrastSkin tbody, .highcontrastSkin a, .highcontrastSkin img, .highcontrastSkin tr, .highcontrastSkin div, .highcontrastSkin td, .highcontrastSkin iframe, .highcontrastSkin span, .highcontrastSkin *, .highcontrastSkin .mceText {border:0; margin:0; padding:0; background:transparent; text-decoration:none; font-weight:normal; cursor:default; color:#000; vertical-align:baseline; width:auto; border-collapse:separate; text-align:left}
+.highcontrastSkin a:hover, .highcontrastSkin a:link, .highcontrastSkin a:visited, .highcontrastSkin a:active {text-decoration:none; font-weight:normal; cursor:default; color:#000}
+.highcontrastSkin table td {vertical-align:middle}
+
+.highcontrastSkin .mceIconOnly {display: block !important;}
+
+/* External */
+.highcontrastSkin .mceExternalToolbar {position:absolute; border:1px solid #ABC6DD; border-bottom:0; display:none}
+.highcontrastSkin .mceExternalToolbar td.mceToolbar {padding-right:13px;}
+.highcontrastSkin .mceExternalClose {position:absolute; top:3px; right:3px; width:7px; height:7px;}
+
+/* Layout */
+.highcontrastSkin table.mceLayout {border:0; border-left:1px solid #ABC6DD; border-right:1px solid #ABC6DD}
+.highcontrastSkin table.mceLayout tr.mceFirst td {border-top:1px solid #ABC6DD}
+.highcontrastSkin table.mceLayout tr.mceLast td {border-bottom:1px solid #ABC6DD}
+.highcontrastSkin table.mceToolbar, .highcontrastSkin tr.mceFirst .mceToolbar tr td, .highcontrastSkin tr.mceLast .mceToolbar tr td {border:0; margin:0; padding:0}
+.highcontrastSkin .mceIframeContainer {border-top:1px solid #ABC6DD; border-bottom:1px solid #ABC6DD}
+.highcontrastSkin .mceStatusbar {display:block; font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:20px; overflow:visible; color:#000; height:20px}
+.highcontrastSkin .mceStatusbar div {float:left}
+.highcontrastSkin .mceStatusbar a.mceResize {display:block; float:right; width:20px; height:20px; cursor:se-resize; outline:0}
+.highcontrastSkin .mceStatusbar a:hover {text-decoration:underline}
+
+.highcontrastSkin .mceToolbar td { display: inline-block; }
+.highcontrastSkin .mceToolbar tr { display: block; }
+.highcontrastSkin .mceToolbar table { display: block; }
+
+.highcontrastSkin .mceToolbar :FOCUS, .highcontrastSkin .mceToolbar :ACTIVE { border: 3px solid black !important; }
+
+/* Button */
+.highcontrastSkin .mceButton {display:block; padding-left: 10px; padding-right: 10px;  border: 1px solid black;}
+.highcontrastSkin .mceButton .mceIcon { display:none; }
+.highcontrastSkin a.mceButton span, .highcontrastSkin a.mceButton img {margin-left:3px;}
+.highcontrastSkin .mceOldBoxModel a.mceButton span, .highcontrastSkin .mceOldBoxModel a.mceButton img {margin:0 0 0 1px}
+.highcontrastSkin .mceButtonDisabled .mceIcon {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30);}
+.highcontrastSkin span.mceButtonLabel {display:block; font-size:10px; padding:6px 6px 0 24px; font-family:Tahoma,Verdana,Arial,Helvetica}
+.highcontrastSkin .mceButtonDisabled .mceButtonLabel {color:#888}
+
+/* Separator */
+.highcontrastSkin .mceSeparator {display:block; width:9px; height:26px;}
+
+/* ListBox */
+.highcontrastSkin .mceListBox {margin-left:7px}
+.highcontrastSkin .mceListBox, .highcontrastSkin .mceListBox a {display:block}
+.highcontrastSkin .mceListBox .mceText {padding-left:4px; text-align:left; width:70px; border:1px solid #b3c7e1; border-right:0; background:#eaf2fb; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; height:24px; line-height:24px; overflow:hidden}
+.highcontrastSkin .mceListBox .mceOpen {width:18px; height:26px;}
+.highcontrastSkin table.mceListBoxEnabled:hover .mceText, .highcontrastSkin .mceListBoxHover .mceText, .highcontrastSkin .mceListBoxSelected .mceText {background:#FFF}
+.highcontrastSkin table.mceListBoxEnabled:hover .mceOpen, .highcontrastSkin .mceListBoxHover .mceOpen, .highcontrastSkin .mceListBoxSelected .mceOpen {background-position:-78px -26px}
+.highcontrastSkin .mceListBoxDisabled .mceText {color:gray}
+.highcontrastSkin .mceListBoxMenu {overflow:auto; overflow-x:hidden}
+.highcontrastSkin .mceOldBoxModel .mceListBox .mceText {height:26px}
+.highcontrastSkin select.mceListBox {font-family:Tahoma,Verdana,Arial,Helvetica; font-size:12px; border:1px solid #b3c7e1; background:#FFF;}
+
+/* SplitButton */
+.highcontrastSkin .mceSplitButtonDisabled .mceAction {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
+
+.highcontrastSkin .mceSplitButton { display: block; padding-left: 10px; padding-right: 10px;  border: 1px solid black;}
+
+/* Menu */
+.highcontrastSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #ABC6DD}
+.highcontrastSkin .mceNoIcons span.mceIcon {width:0;}
+.highcontrastSkin .mceNoIcons a .mceText {padding-left:10px}
+.highcontrastSkin .mceMenu table {background:#FFF}
+.highcontrastSkin .mceMenu a, .highcontrastSkin .mceMenu span, .highcontrastSkin .mceMenu {display:block}
+.highcontrastSkin .mceMenu td {height:20px}
+.highcontrastSkin .mceMenu a {position:relative;padding:3px 0 4px 0}
+.highcontrastSkin .mceMenu .mceText {position:relative; display:block; font-family:Tahoma,Verdana,Arial,Helvetica; color:#000; cursor:default; margin:0; padding:0 25px 0 25px; display:block}
+.highcontrastSkin .mceMenu span.mceText, .highcontrastSkin .mceMenu .mcePreview {font-size:11px}
+.highcontrastSkin .mceMenu pre.mceText {font-family:Monospace}
+.highcontrastSkin .mceMenu .mceIcon {position:absolute; top:0; left:0; width:26px;}
+.highcontrastSkin .mceMenu .mceMenuItemEnabled a:hover, .highcontrastSkin .mceMenu .mceMenuItemActive {background-color:#dbecf3}
+.highcontrastSkin td.mceMenuItemSeparator {background:#DDD; height:1px}
+.highcontrastSkin .mceMenuItemTitle a {border:0; background:#E5EFFD; border-bottom:1px solid #ABC6DD}
+.highcontrastSkin .mceMenuItemTitle span.mceText {color:#000; font-weight:bold; padding-left:4px}
+.highcontrastSkin .mceMenuItemDisabled .mceText {color:#888}
+.highcontrastSkin .mceMenuItemSelected .mceIcon {background:url(img/menu_check.gif)}
+.highcontrastSkin .mceNoIcons .mceMenuItemSelected a {background:url(img/menu_arrow.gif) no-repeat -6px center}
+.highcontrastSkin .mceMenu span.mceMenuLine {display:none}
+.highcontrastSkin .mceMenuItemSub a {background:url(img/menu_arrow.gif) no-repeat top right;}
+
+/* Progress,Resize */
+.highcontrastSkin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.5; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=50); background:#FFF}
+.highcontrastSkin .mceProgress {position:absolute; left:0; top:0; z-index:1001; background:url(img/progress.gif) no-repeat; width:32px; height:32px; margin:-16px 0 0 -16px}
+
+/* Formats */
+.highcontrastSkin .mce_formatPreview a {font-size:10px}
+.highcontrastSkin .mce_p span.mceText {}
+.highcontrastSkin .mce_address span.mceText {font-style:italic}
+.highcontrastSkin .mce_pre span.mceText {font-family:monospace}
+.highcontrastSkin .mce_h1 span.mceText {font-weight:bolder; font-size: 2em}
+.highcontrastSkin .mce_h2 span.mceText {font-weight:bolder; font-size: 1.5em}
+.highcontrastSkin .mce_h3 span.mceText {font-weight:bolder; font-size: 1.17em}
+.highcontrastSkin .mce_h4 span.mceText {font-weight:bolder; font-size: 1em}
+.highcontrastSkin .mce_h5 span.mceText {font-weight:bolder; font-size: .83em}
+.highcontrastSkin .mce_h6 span.mceText {font-weight:bolder; font-size: .75em}
