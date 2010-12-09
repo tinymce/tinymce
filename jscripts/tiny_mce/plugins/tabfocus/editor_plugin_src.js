@@ -22,27 +22,24 @@
 				var x, i, f, el, v;
 
 				function find(d) {
-					f = DOM.getParent(ed.id, 'form');
-					el = f.elements;
+					el = DOM.select(':input:enabled,*[tabindex=0]');
 
-					if (f) {
-						each(el, function(e, i) {
-							if (e.id == ed.id) {
-								x = i;
-								return false;
-							}
-						});
+					each(el, function(e, i) {
+						if (e.id == ed.id) {
+							x = i;
+							return false;
+						}
+					});
 
-						if (d > 0) {
-							for (i = x + 1; i < el.length; i++) {
-								if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
-									return el[i];
-							}
-						} else {
-							for (i = x - 1; i >= 0; i--) {
-								if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
-									return el[i];
-							}
+					if (d > 0) {
+						for (i = x + 1; i < el.length; i++) {
+							if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
+								return el[i];
+						}
+					} else {
+						for (i = x - 1; i >= 0; i--) {
+							if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
+								return el[i];
 						}
 					}
 
@@ -71,7 +68,7 @@
 					}
 
 					if (el) {
-						if (ed = tinymce.get(el.id || el.name))
+						if (el.id && (ed = tinymce.get(el.id || el.name)))
 							ed.focus();
 						else
 							window.setTimeout(function() {window.focus();el.focus();}, 10);
