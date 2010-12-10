@@ -303,7 +303,6 @@
 			// Focus ok button
 			if (DOM.get(id + '_ok'))
 				DOM.get(id + '_ok').focus();
-
 			t.count++;
 
 			return w;
@@ -321,10 +320,13 @@
 				DOM.removeClass(t.lastId, 'mceFocus');
 				DOM.addClass(id, 'mceFocus');
 				t.lastId = id;
+				
 				if (w.focussedElement) {
 					w.focussedElement.focus();
 				} else if (DOM.get(id + '_ok')) {
 					DOM.get(w.id + '_ok').focus();
+				} else if (DOM.get(w.id + '_ifr')) {
+					DOM.get(w.id + '_ifr').focus();
 				}
 			}
 		},
