@@ -192,10 +192,7 @@
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children;
 
 			args = args || {};
-			blockElements = tinymce.extend({
-				script: 1,
-				style: 1
-			}, schema.getBlockElements());
+			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,title,meta,param'), schema.getBlockElements());
 			children = schema.children;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();

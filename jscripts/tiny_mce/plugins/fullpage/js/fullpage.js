@@ -279,7 +279,7 @@ function updateAction() {
 	nl = doc.getElementsByTagName('script');
 	for (i=0; i<nl.length; i++) {
 		if (tinyMCEPopup.dom.getAttrib(nl[i], 'data-mce-type') == '')
-			nl[i].setAttribute('data-mce-type', 'text/javascript');
+			nl[i].setAttribute('mce-type', 'text/javascript');
 	}
 
 	// Get primary stylesheet
@@ -319,13 +319,22 @@ function updateAction() {
 	setMeta(head, 'robots', getSelectValue(f, 'metarobots'));
 	setMeta(head, 'Content-Type', getSelectValue(f, 'docencoding'));
 
-	doc.body.dir = getSelectValue(f, 'langdir');
+	setAttr(doc.body, 'dir', getSelectValue(f, 'langdir'));
 	doc.body.style.cssText = f.style.value;
 
-	doc.body.setAttribute('vLink', f.visited_color.value);
-	doc.body.setAttribute('link', f.link_color.value);
-	doc.body.setAttribute('text', f.textcolor.value);
-	doc.body.setAttribute('aLink', f.active_color.value);
+	function setAttr(elm, name, value) {
+		value = "" + value;
+
+		if (value.length > 0)
+			elm.setAttribute(name, value);
+		else
+			elm.removeAttribute(name, value);
+	}
+
+	setAttr(doc.body, 'vLink', f.visited_color.value);
+	setAttr(doc.body, 'link', f.link_color.value);
+	setAttr(doc.body, 'text', f.textcolor.value);
+	setAttr(doc.body, 'aLink', f.active_color.value);
 
 	doc.body.style.fontFamily = getSelectValue(f, 'fontface');
 	doc.body.style.fontSize = getSelectValue(f, 'fontsize');
@@ -344,8 +353,8 @@ function updateAction() {
 		doc.body.style.marginTop = f.topmargin.value + 'px';
 
 	html = doc.getElementsByTagName('html')[0];
-	html.setAttribute('lang', f.langcode.value);
-	html.setAttribute('xml:lang', f.langcode.value);
+	setAttr(html, 'lang', f.langcode.value);
+	setAttr(html, 'xml:lang', f.langcode.value);
 
 	if (f.bgimage.value != '')
 		doc.body.style.backgroundImage = "url('" + f.bgimage.value + "')";

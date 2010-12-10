@@ -78,7 +78,10 @@
 		_createSerializer : function() {
 			return new tinymce.dom.Serializer({
 				dom : this.editor.dom,
-				apply_source_formatting : true
+				indent : true,
+				apply_source_formatting : true,
+				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,title,meta,head',
+				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,title,meta,head'
 			});
 		},
 
