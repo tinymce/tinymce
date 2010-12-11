@@ -159,7 +159,7 @@
 				if (body != ed.getDoc().body)
 					posY = dom.getPos(ed.selection.getStart(), body).y;
 				else
-					posY = body.scrollTop;
+					posY = body.scrollTop + dom.getViewPort().y;
 
 				// Styles needs to be applied after the element is added to the document since WebKit will otherwise remove all styles
 				dom.setStyles(n, {
