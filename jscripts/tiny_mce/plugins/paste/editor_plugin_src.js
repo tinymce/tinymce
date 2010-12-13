@@ -516,7 +516,7 @@
 				};
 
 				h = h.replace(/ class="([^"]+)"/gi, removeClasses);
-				h = h.replace(/ class=(\w+)/gi, removeClasses);
+				h = h.replace(/ class=([\-\w]+)/gi, removeClasses);
 			}
 
 			// Remove spans option
