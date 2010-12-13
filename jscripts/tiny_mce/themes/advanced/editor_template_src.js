@@ -67,6 +67,8 @@
 			t.url = url;
 			t.onResolveName = new tinymce.util.Dispatcher(this);
 
+			ed.settings.skin = t._isHighContrast() ? 'highcontrast' : ed.settings.skin;
+			
 			// Default settings
 			t.settings = s = extend({
 				theme_advanced_path : true,
@@ -160,6 +162,12 @@
 
 			if (s.skin_variant)
 				DOM.loadCSS(url + "/skins/" + ed.settings.skin + "/ui_" + s.skin_variant + ".css");
+		},
+		
+		_isHighContrast : function() {
+			var actualColor, div = DOM.add(DOM.getRoot(), 'div', { 'style': 'background-color: rgb(171,239,86);'});
+			actualColor = (DOM.getStyle(div, 'background-color', true) + '').replace(/ /g, '');
+			return actualColor != 'rgb(171,239,86)';
 		},
 
 		createControl : function(n, cf) {
