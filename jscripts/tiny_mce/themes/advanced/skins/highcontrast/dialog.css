@@ -6,6 +6,8 @@ padding:0;
 margin:8px 8px 0 8px;
 }
 
+.mceIconOnly {display: block !important;}
+
 html {background:#F0F0EE;}
 td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
 textarea {resize:none;outline:none;}
