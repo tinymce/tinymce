@@ -167,6 +167,7 @@
 		_isHighContrast : function() {
 			var actualColor, div = DOM.add(DOM.getRoot(), 'div', { 'style': 'background-color: rgb(171,239,86);'});
 			actualColor = (DOM.getStyle(div, 'background-color', true) + '').replace(/ /g, '');
+			DOM.remove(div);
 			return actualColor != 'rgb(171,239,86)';
 		},
 
