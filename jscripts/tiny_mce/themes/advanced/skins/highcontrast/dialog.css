@@ -2,6 +2,7 @@
 body {
 font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;
 background:#F0F0EE;
+color: black;
 padding:0;
 margin:8px 8px 0 8px;
 }
@@ -11,17 +12,17 @@ margin:8px 8px 0 8px;
 html {background:#F0F0EE;}
 td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
 textarea {resize:none;outline:none;}
-a:link, a:visited {color:black;}
-a:hover {color:#2B6FB6;}
+a:link, a:visited {color:black;background-color:transparent;}
+a:hover {color:#2B6FB6;background-color:transparent;}
 .nowrap {white-space: nowrap}
 
 /* Forms */
 fieldset {margin:0; padding:4px; border:1px solid #919B9C; font-family:Verdana, Arial; font-size:10px;}
 legend {color:#2B6FB6; font-weight:bold;}
 label.msg {display:none;}
-label.invalid {color:#EE0000; display:inline;}
-input.invalid {border:1px solid #EE0000;}
-input {background:#FFF; border:1px solid #CCC;}
+label.invalid {color:#EE0000; display:inline;background-color:transparent;}
+input.invalid {border:1px solid #EE0000;background-color:transparent;}
+input {background:#FFF; border:1px solid #CCC;color:black;}
 input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
 input, select, textarea {border:1px solid #808080;}
 input.radio {border:1px none #000000; background:transparent; vertical-align:middle;}
