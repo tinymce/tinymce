@@ -120,13 +120,13 @@
 			if (s.theme_advanced_statusbar_location == 'none')
 				s.theme_advanced_statusbar_location = 0;
 
+			if (ed.settings.content_css !== false)
+				ed.contentCSS.push(ed.baseURI.toAbsolute(url + "/skins/" + ed.settings.skin + "/content.css"));
+
 			// Init editor
 			ed.onInit.add(function() {
 				if (!ed.settings.readonly)
 					ed.onNodeChange.add(t._nodeChanged, t);
-
-				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(ed.baseURI.toAbsolute(url + "/skins/" + ed.settings.skin + "/content.css"));
 			});
 
 			ed.onSetProgressState.add(function(ed, b, ti) {

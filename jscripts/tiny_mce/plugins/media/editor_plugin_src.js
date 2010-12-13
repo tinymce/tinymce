@@ -111,11 +111,11 @@
 				});
 			});
 
-			ed.onInit.add(function() {
-				// Load the media specific CSS file
-				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(url + "/css/content.css");
+			// Load the media specific CSS file
+			if (ed.settings.content_css !== false)
+				ed.contentCSS.push(url + "/css/content.css");
 
+			ed.onInit.add(function() {
 				// Display "media" instead of "img" in element path
 				if (ed.theme && ed.theme.onResolveName) {
 					ed.theme.onResolveName.add(function(theme, path_object) {

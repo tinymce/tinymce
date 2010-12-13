@@ -465,6 +465,14 @@
 			 */
 			t.baseURI = tinymce.baseURI;
 
+			/**
+			 * Array with CSS files to load into the iframe.
+			 *
+			 * @property contentCSS
+			 * @type Array
+			 */			
+			t.contentCSS = [];
+
 			// Call setup
 			t.execCallback('setup', t);
 		},
@@ -599,7 +607,7 @@
 		 * @method init
 		 */
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re;
+			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re, i;
 
 			tinymce.add(t);
 
@@ -724,6 +732,13 @@
 				height : h
 			});
 
+			// Load specified content CSS last
+			if (s.content_css) {
+				tinymce.each(explode(s.content_css), function(u) {
+					t.contentCSS.push(t.documentBaseURI.toAbsolute(u));
+				});
+			}
+
 			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
 			if (h < 100)
 				h = 100;
@@ -736,6 +751,9 @@
 				t.iframeHTML += '<base href="' + t.documentBaseURI.getURI() + '" />';
 
 			t.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=7" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+
+			for (i = 0; i < t.contentCSS.length; i++)
+				t.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + t.contentCSS[i] + '" />';
 
 			if (tinymce.relaxedDomain)
 				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
@@ -1218,13 +1236,6 @@
 				t.execCallback('init_instance_callback', t);
 				t.focus(true);
 				t.nodeChanged({initial : 1});
-
-				// Load specified content CSS last
-				if (s.content_css) {
-					tinymce.each(explode(s.content_css), function(u) {
-						t.dom.loadCSS(t.documentBaseURI.toAbsolute(u));
-					});
-				}
 
 				// Handle auto focus
 				if (s.auto_focus) {
