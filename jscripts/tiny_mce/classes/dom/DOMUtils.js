@@ -892,7 +892,9 @@
 				// It's ugly but it seems to work fine.
 				if (isIE && d.documentMode && d.recalc) {
 					link.onload = function() {
-						d.recalc();
+						if (d.recalc)
+							d.recalc();
+
 						link.onload = null;
 					};
 				}
