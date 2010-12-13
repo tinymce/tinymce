@@ -25,9 +25,10 @@
 
 /* Button */
 
-.highcontrastSkin .mceButton { display:block; margin: 2px; padding-left: 10px; padding-right: 10px; border: 1px solid; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -ms-border-radius: 3px; height: 2em;}
+.highcontrastSkin .mceButton { display:block; margin: 2px; padding: 5px 10px;border: 1px solid; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -ms-border-radius: 3px; height: 2em;}
 .highcontrastSkin .mceButton .mceVoiceLabel { height: 100%; vertical-align: center; line-height: 2em}
 .highcontrastSkin .mceButtonDisabled .mceVoiceLabel { opacity:0.6; -ms-filter:'alpha(opacity=60)'; filter:alpha(opacity=60);}
+.highcontrastSkin .mceButtonActive { border: 5px solid; padding: 0 6px;}
 
 
 /* Separator */
@@ -35,7 +36,7 @@
 
 /* ListBox */
 .highcontrastSkin .mceListBox { display: block; margin:2px; height: 2em;}
-.highcontrastSkin .mceListBox .mceText {padding-right: 6px; height: 100%; line-height: 2em;}
+.highcontrastSkin .mceListBox .mceText {padding-right: 6px; height: 100%; line-height: 2em; width: 15ex; overflow: hidden;}
 .highcontrastSkin .mceListBoxDisabled .mceText { opacity:0.6; -ms-filter:'alpha(opacity=60)'; filter:alpha(opacity=60);}
 .highcontrastSkin .mceListBox a.mceText { padding-left: 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-right: 0; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px; -ms-border-radius: 3px 0px 0px 3px;}
 .highcontrastSkin .mceListBox a.mceOpen { padding-right: 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-left: 0; border-radius: 0px 3px 3px 0px; -moz-border-radius: 0px 3px 3px 0px; -webkit-border-radius: 0px 3px 3px 0px; -ms-border-radius: 0px 3px 3px 0px;}
