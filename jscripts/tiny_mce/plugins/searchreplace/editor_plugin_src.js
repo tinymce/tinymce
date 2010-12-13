@@ -12,6 +12,10 @@
 	tinymce.create('tinymce.plugins.SearchReplacePlugin', {
 		init : function(ed, url) {
 			function open(m) {
+				// Keep IE from writing out the f/r character to the editor
+				// instance while initializing a new dialog. See: #3131190
+				window.focus();
+
 				ed.windowManager.open({
 					file : url + '/searchreplace.htm',
 					width : 420 + parseInt(ed.getLang('searchreplace.delta_width', 0)),

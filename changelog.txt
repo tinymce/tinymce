@@ -22,6 +22,7 @@ Version 3.4 (2010-xx-xx)
 	Fixed bug where the toggle absolute button in the layer plugin wouldn't remove the existing internal style attribute first.
 	Fixed bug where the autosave plugin would generate an exception on IE if the user had disabled userdata persistence.
 	Fixed bug where the paste plugin would remove dashed classes on IE since the regexps didn't include that character.
+	Fixed bug where the searchreplace plugin would add a f or r character when shortcuts where used on IE while using default dialogs.
 	Fixed issue where &nbsp; wouldn't be handled correctly in the bbcode plugin if entity_encoding was set to raw.
 	Fixed issue where contents would flicker since the content css files where asynchronously loaded.
 	Fixed bug where WebKit wouldn't create links on images with a float style.
