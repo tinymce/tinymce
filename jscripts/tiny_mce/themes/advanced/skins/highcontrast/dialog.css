@@ -9,7 +9,7 @@ margin:8px 8px 0 8px;
 
 .mceIconOnly {display: block !important;}
 
-html {background:#F0F0EE;}
+html {background:#F0F0EE; color:#000;}
 td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
 textarea {resize:none;outline:none;}
 a:link, a:visited {color:black;background-color:transparent;}
