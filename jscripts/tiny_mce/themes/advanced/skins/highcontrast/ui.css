@@ -58,9 +58,9 @@
 /* Menu */
 .highcontrastSkin .mceNoIcons span.mceIcon {width:0;}
 .highcontrastSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid; }
-.highcontrastSkin .mceMenu table, .highcontrastSkin .mceColorSplitMenu table {background:white; color: black}
+.highcontrastSkin .mceMenu table {background:white; color: black}
 .highcontrastSkin .mceNoIcons a .mceText {padding-left:10px}
-.highcontrastSkin .mceColorSplitMenu a, .highcontrastSkin .mceMenu a, .highcontrastSkin .mceMenu span, .highcontrastSkin .mceMenu {display:block;background:white; color: black}
+.highcontrastSkin .mceMenu a, .highcontrastSkin .mceMenu span, .highcontrastSkin .mceMenu {display:block;background:white; color: black}
 .highcontrastSkin .mceMenu td {height:2em}
 .highcontrastSkin .mceMenu a {position:relative;padding:3px 0 4px 0; display: block;}
 .highcontrastSkin .mceMenu .mceText {position:relative; display:block; cursor:default; margin:0; padding:0 25px 0 25px;}
@@ -72,6 +72,17 @@
 .highcontrastSkin .mceNoIcons .mceMenuItemSelected span.mceText:before {content: "\2713\A0";}
 .highcontrastSkin .mceMenu span.mceMenuLine {display:none}
 .highcontrastSkin .mceMenuItemSub a .mceText:after {content: "\A0\25B8"}
+
+/* ColorSplitButton */
+.highcontrastSkin div.mceColorSplitMenu table {background:#FFF; border:1px solid; color: #000}
+.highcontrastSkin .mceColorSplitMenu td {padding:2px}
+.highcontrastSkin .mceColorSplitMenu a {display:block; width:9px; height:9px; overflow:hidden; border:1px solid #808080; color:#000;}
+.highcontrastSkin .mceColorSplitMenu td.mceMoreColors {padding:1px 3px 1px 1px}
+.highcontrastSkin .mceColorSplitMenu a.mceMoreColors {width:100%; height:auto; text-align:center; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px; border:1px solid #FFF}
+.highcontrastSkin .mceColorSplitMenu a.mceMoreColors:hover {border:1px solid; background-color:#B6BDD2}
+.highcontrastSkin a.mceMoreColors:hover {border:1px solid #0A246A; color: #000;}
+.highcontrastSkin .mceColorPreview {display:none;}
+.highcontrastSkin .mce_forecolor span.mceAction, .highcontrastSkin .mce_backcolor span.mceAction {height:17px;overflow:hidden}
 
 
 /* Progress,Resize */
