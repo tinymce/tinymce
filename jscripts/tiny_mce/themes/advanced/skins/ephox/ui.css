@@ -1,11 +1,10 @@
 /* Reset */
-.ephoxSkin table, .ephoxSkin tbody, .ephoxSkin a, .ephoxSkin img, .ephoxSkin tr, .ephoxSkin div, .ephoxSkin td, .ephoxSkin iframe, .ephoxSkin span, .ephoxSkin *, .ephoxSkin .mceText {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#000; vertical-align:baseline; width:auto; border-collapse:separate; text-align:left}
-.ephoxSkin a:hover, .ephoxSkin a:link, .ephoxSkin a:visited, .ephoxSkin a:active {text-decoration:none; font-weight:normal; cursor:default; color:#000}
+.ephoxSkin table, .ephoxSkin tbody, .ephoxSkin a, .ephoxSkin img, .ephoxSkin tr, .ephoxSkin div, .ephoxSkin td, .ephoxSkin iframe, .ephoxSkin span, .ephoxSkin *, .ephoxSkin .mceText {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; vertical-align:baseline; width:auto; border-collapse:separate; text-align:left}
+.ephoxSkin a:hover, .ephoxSkin a:link, .ephoxSkin a:visited, .ephoxSkin a:active {text-decoration:none; font-weight:normal; cursor:default;}
 .ephoxSkin table td {vertical-align:middle}
 
 /* Containers */
-.ephoxSkin table {background:#E5EFFD}
-.ephoxSkin iframe {display:block; background:#FFF}
+.ephoxSkin iframe {display:block;}
 .ephoxSkin .mceToolbar {height:31px}
 
 /* External */
@@ -19,7 +18,7 @@
 .ephoxSkin table.mceLayout tr.mceLast td {border-bottom:1px solid #ABC6DD}
 .ephoxSkin table.mceToolbar, .ephoxSkin tr.mceFirst .mceToolbar tr td, .ephoxSkin tr.mceLast .mceToolbar tr td {border:0; margin:0; padding:0}
 .ephoxSkin .mceIframeContainer {border-top:1px solid #ABC6DD; border-bottom:1px solid #ABC6DD}
-.ephoxSkin .mceStatusbar {display:block; font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:20px; overflow:visible; color:#000; height:20px}
+.ephoxSkin .mceStatusbar {display:block; font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:20px; overflow:visible; color:#000; height:22px;background:#D8D7D7}
 .ephoxSkin .mceStatusbar div {float:left}
 .ephoxSkin .mceStatusbar a.mceResize {display:block; float:right; background:url(img/ephox-icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize; outline:0}
 .ephoxSkin .mceStatusbar a:hover {text-decoration:underline}
@@ -52,9 +51,9 @@
 /* ListBox */
 .ephoxSkin .mceListBox {margin-left:7px}
 .ephoxSkin .mceListBox, .ephoxSkin .mceListBox a {display:block}
-.ephoxSkin .mceListBox .mceText {padding-left:4px; text-align:left; width:70px; border:1px solid #b3c7e1; border-right:0; background:#eaf2fb; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; height:24px; line-height:24px; overflow:hidden}
+.ephoxSkin .mceListBox .mceText {padding-left:4px; text-align:left; width:70px; border:1px solid #b3c7e1; border-right:0; background:#eaf2fb; color:#000; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; height:24px; line-height:24px; overflow:hidden}
 .ephoxSkin .mceListBox .mceOpen {width:18px; height:26px; background:url(img/button_bg.png) -78px 0}
-.ephoxSkin table.mceListBoxEnabled:hover .mceText, .ephoxSkin .mceListBoxHover .mceText, .ephoxSkin .mceListBoxSelected .mceText {background:#FFF}
+.ephoxSkin table.mceListBoxEnabled:hover .mceText, .ephoxSkin .mceListBoxHover .mceText, .ephoxSkin .mceListBoxSelected .mceText {background:#FFF; color:#000}
 .ephoxSkin table.mceListBoxEnabled:hover .mceOpen, .ephoxSkin .mceListBoxHover .mceOpen, .ephoxSkin .mceListBoxSelected .mceOpen {background-position:-78px -26px}
 .ephoxSkin .mceListBoxDisabled .mceText {color:gray}
 .ephoxSkin .mceListBoxMenu {overflow:auto; overflow-x:hidden}
@@ -218,15 +217,16 @@
 	background-image:url(img/button_bg.png);
 }
 
-.ephoxSkin table, .ephoxSkin .mceMenuItemTitle a, .ephoxSkin .mceStatusbar div, .ephoxSkin .mceStatusbar span, .ephoxSkin .mceStatusbar a {
-	background:#d8d7d7; 
+.ephoxSkin .mceMenuItemTitle a, .ephoxSkin .mceStatusbar div, .ephoxSkin .mceStatusbar span, .ephoxSkin .mceStatusbar a {
+	background:#d8d7d7;
 	color:#000000
 }
 
 td.mceToolbar {
 	background-image:url(img/ephoxbg.png);
 	background-position:bottom;
-	background-repeat:repeat-x
+	background-repeat:repeat-x;
+	background:#d8d7d7;
 }
 
 .mceIframeContainer iframe{
