@@ -147,7 +147,7 @@
 		 * @method renderMenu
 		 */
 		renderMenu : function() {
-			var t = this, m, i = 0, s = t.settings, n, tb, tr, w;
+			var t = this, m, i = 0, s = t.settings, n, tb, tr, w, context;
 
 			w = DOM.add(s.menu_container, 'div', {role: 'listbox', id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
 			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
@@ -177,6 +177,16 @@
 					'title': t.editor.getLang('colors.' + c, c),
 					_mce_color : '#' + c
 				});
+				if (t.editor.forcedHighContrastMode) {
+					n = DOM.add(n, 'canvas', { width: 16, height: 16, 'aria-hidden': 'true' });
+					if (n.getContext && (context = n.getContext("2d"))) {
+						context.fillStyle = '#' + c;
+						context.fillRect(0, 0, 16, 16);
+					} else {
+						// No point leaving a canvas element around if it's not supported for drawing on anyway.
+						DOM.remove(n);
+					}
+				}
 			});
 
 			if (s.more_colors_func) {
@@ -205,6 +215,9 @@
 
 				e = e.target;
 
+				if (e.nodeName === 'CANVAS')
+					e = e.parentNode;
+				
 				if (e.nodeName == 'A' && (c = e.getAttribute('_mce_color')))
 					t.setColor(c);
 

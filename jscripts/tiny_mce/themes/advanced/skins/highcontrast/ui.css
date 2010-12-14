@@ -76,14 +76,13 @@
 /* ColorSplitButton */
 .highcontrastSkin div.mceColorSplitMenu table {background:#FFF; border:1px solid; color: #000}
 .highcontrastSkin .mceColorSplitMenu td {padding:2px}
-.highcontrastSkin .mceColorSplitMenu a {display:block; width:9px; height:9px; overflow:hidden; border:1px solid #808080; color:#000;}
+.highcontrastSkin .mceColorSplitMenu a {display:block; width:16px; height:16px; overflow:hidden; color:#000; margin: 0; padding: 0;}
 .highcontrastSkin .mceColorSplitMenu td.mceMoreColors {padding:1px 3px 1px 1px}
 .highcontrastSkin .mceColorSplitMenu a.mceMoreColors {width:100%; height:auto; text-align:center; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px; border:1px solid #FFF}
 .highcontrastSkin .mceColorSplitMenu a.mceMoreColors:hover {border:1px solid; background-color:#B6BDD2}
 .highcontrastSkin a.mceMoreColors:hover {border:1px solid #0A246A; color: #000;}
 .highcontrastSkin .mceColorPreview {display:none;}
 .highcontrastSkin .mce_forecolor span.mceAction, .highcontrastSkin .mce_backcolor span.mceAction {height:17px;overflow:hidden}
-
 
 /* Progress,Resize */
 .highcontrastSkin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.5; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=50); background:#FFF}

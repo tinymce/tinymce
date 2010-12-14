@@ -67,7 +67,8 @@
 			t.url = url;
 			t.onResolveName = new tinymce.util.Dispatcher(this);
 
-			ed.settings.skin = t._isHighContrast() ? 'highcontrast' : ed.settings.skin;
+			ed.forcedHighContrastMode = t._isHighContrast();
+			ed.settings.skin = ed.forcedHighContrastMode ? 'highcontrast' : ed.settings.skin;
 			
 			// Default settings
 			t.settings = s = extend({
