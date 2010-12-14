@@ -10,11 +10,12 @@
 	<script type="text/javascript" src="js/cite.js?v={tinymce_version}"></script>
 	<link rel="stylesheet" type="text/css" href="css/popup.css?v={tinymce_version}" />
 </head>
-<body style="display: none">
+<body style="display: none" role="application" aria-labelledby="app_title">
+<span style="display:none;" id="app_title">{#xhtmlxtras_dlg.title_cite_element}</span>
 <form onsubmit="insertCite();return false;" action="#">
 	<div class="tabs">
 		<ul>
-			<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.general_tab}</a></span></li>
+			<li id="general_tab" class="current" aria-controls="general_panel"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.general_tab}</a></span></li>
 			<!-- <li id="events_tab"><span><a href="javascript:mcTabs.displayTab('events_tab','events_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.events_tab}</a></span></li> -->
 		</ul>
 	</div>
@@ -23,30 +24,30 @@
 		<div id="general_panel" class="panel current">
 			<fieldset>
 				<legend>{#xhtmlxtras_dlg.fieldset_attrib_tab}</legend>
-				<table border="0" cellpadding="0" cellspacing="4">
-					<tr>
-						<td class="label"><label id="titlelabel" for="title">{#xhtmlxtras_dlg.attribute_label_title}</label>:</td> 
-						<td><input id="title" name="title" type="text" value="" class="field mceFocus" /></td> 
+				<table role="presentation" border="0" cellpadding="0" cellspacing="4">
+					<tr role="presentation">
+						<td role="presentation" class="label"><label id="titlelabel" for="title">{#xhtmlxtras_dlg.attribute_label_title}</label>:</td> 
+						<td role="presentation"><input id="title" name="title" type="text" value="" class="field mceFocus" /></td> 
 					</tr>
-					<tr>
-						<td class="label"><label id="idlabel" for="id">{#xhtmlxtras_dlg.attribute_label_id}</label>:</td> 
-						<td><input id="id" name="id" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label id="idlabel" for="id">{#xhtmlxtras_dlg.attribute_label_id}</label>:</td> 
+						<td role="presentation"><input id="id" name="id" type="text" value="" class="field" /></td> 
 					</tr>
-					<tr>
-						<td class="label"><label id="classlabel" for="class">{#xhtmlxtras_dlg.attribute_label_class}</label>:</td> 
-						<td>
+					<tr role="presentation">
+						<td role="presentation" class="label"><label id="classlabel" for="class">{#xhtmlxtras_dlg.attribute_label_class}</label>:</td> 
+						<td role="presentation">
 							<select id="class" name="class" class="field mceEditableSelect">
 								<option value="">{#not_set}</option> 
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<td class="label"><label id="stylelabel" for="class">{#xhtmlxtras_dlg.attribute_label_style}</label>:</td> 
-						<td><input id="style" name="style" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label id="stylelabel" for="class">{#xhtmlxtras_dlg.attribute_label_style}</label>:</td> 
+						<td role="presentation"><input id="style" name="style" type="text" value="" class="field" /></td> 
 					</tr>
-					<tr>
-						<td class="label"><label id="dirlabel" for="dir">{#xhtmlxtras_dlg.attribute_label_langdir}</label>:</td> 
-						<td>
+					<tr role="presentation">
+						<td role="presentation" class="label"><label id="dirlabel" for="dir">{#xhtmlxtras_dlg.attribute_label_langdir}</label>:</td> 
+						<td role="presentation">
 							<select id="dir" name="dir" class="field"> 
 								<option value="">{#not_set}</option> 
 								<option value="ltr">{#xhtmlxtras_dlg.attribute_option_ltr}</option> 
@@ -54,9 +55,9 @@
 							</select>
 						</td> 
 					</tr>
-					<tr>
-						<td class="label"><label id="langlabel" for="lang">{#xhtmlxtras_dlg.attribute_label_langcode}</label>:</td> 
-						<td>
+					<tr role="presentation">
+						<td role="presentation" class="label"><label id="langlabel" for="lang">{#xhtmlxtras_dlg.attribute_label_langcode}</label>:</td> 
+						<td role="presentation">
 							<input id="lang" name="lang" type="text" value="" class="field" />
 						</td> 
 					</tr>
@@ -67,65 +68,65 @@
 			<fieldset>
 				<legend>{#xhtmlxtras_dlg.fieldset_events_tab}</legend>
 
-				<table border="0" cellpadding="0" cellspacing="4">
-					<tr>
-						<td class="label"><label for="onfocus">onfocus</label>:</td> 
-						<td><input id="onfocus" name="onfocus" type="text" value="" class="field" /></td> 
+				<table role="presentation" border="0" cellpadding="0" cellspacing="4">
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onfocus">onfocus</label>:</td> 
+						<td role="presentation"><input id="onfocus" name="onfocus" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onblur">onblur</label>:</td> 
-						<td><input id="onblur" name="onblur" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onblur">onblur</label>:</td> 
+						<td role="presentation"><input id="onblur" name="onblur" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onclick">onclick</label>:</td> 
-						<td><input id="onclick" name="onclick" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onclick">onclick</label>:</td> 
+						<td role="presentation"><input id="onclick" name="onclick" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="ondblclick">ondblclick</label>:</td> 
-						<td><input id="ondblclick" name="ondblclick" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="ondblclick">ondblclick</label>:</td> 
+						<td role="presentation"><input id="ondblclick" name="ondblclick" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onmousedown">onmousedown</label>:</td> 
-						<td><input id="onmousedown" name="onmousedown" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onmousedown">onmousedown</label>:</td> 
+						<td role="presentation"><input id="onmousedown" name="onmousedown" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onmouseup">onmouseup</label>:</td> 
-						<td><input id="onmouseup" name="onmouseup" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onmouseup">onmouseup</label>:</td> 
+						<td role="presentation"><input id="onmouseup" name="onmouseup" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onmouseover">onmouseover</label>:</td> 
-						<td><input id="onmouseover" name="onmouseover" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onmouseover">onmouseover</label>:</td> 
+						<td role="presentation"><input id="onmouseover" name="onmouseover" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onmousemove">onmousemove</label>:</td> 
-						<td><input id="onmousemove" name="onmousemove" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onmousemove">onmousemove</label>:</td> 
+						<td role="presentation"><input id="onmousemove" name="onmousemove" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onmouseout">onmouseout</label>:</td> 
-						<td><input id="onmouseout" name="onmouseout" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onmouseout">onmouseout</label>:</td> 
+						<td role="presentation"><input id="onmouseout" name="onmouseout" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onkeypress">onkeypress</label>:</td> 
-						<td><input id="onkeypress" name="onkeypress" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onkeypress">onkeypress</label>:</td> 
+						<td role="presentation"><input id="onkeypress" name="onkeypress" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onkeydown">onkeydown</label>:</td> 
-						<td><input id="onkeydown" name="onkeydown" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onkeydown">onkeydown</label>:</td> 
+						<td role="presentation"><input id="onkeydown" name="onkeydown" type="text" value="" class="field" /></td> 
 					</tr>
 
-					<tr>
-						<td class="label"><label for="onkeyup">onkeyup</label>:</td> 
-						<td><input id="onkeyup" name="onkeyup" type="text" value="" class="field" /></td> 
+					<tr role="presentation">
+						<td role="presentation" class="label"><label for="onkeyup">onkeyup</label>:</td> 
+						<td role="presentation"><input id="onkeyup" name="onkeyup" type="text" value="" class="field" /></td> 
 					</tr>
 				</table>
 			</fieldset>
