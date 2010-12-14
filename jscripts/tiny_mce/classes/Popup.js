@@ -324,6 +324,8 @@ tinyMCEPopup = {
 				document.title = ti = nv;
 		}
 
+		if (!t.isWindow)
+			t.dom.addClass(document.body, 'forceColors');
 		document.body.style.display = '';
 
 		// Restore selection in IE when focus is placed on a non textarea or input element of the type text
