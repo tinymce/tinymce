@@ -18,8 +18,8 @@
 .highcontrastSkin .mceStatusbar div {float:left}
 .highcontrastSkin .mceStatusbar a.mceResize {display:block; float:right; width:20px; height:20px; cursor:se-resize; outline:0}
 
-.highcontrastSkin .mceToolbar td { display: inline-block; }
-.highcontrastSkin .mceToolbar tr { display: block; }
+.highcontrastSkin .mceToolbar td { display: inline-block; float: left;}
+.highcontrastSkin .mceToolbar tr { display: block;}
 .highcontrastSkin .mceToolbar table { display: block; }
 
 
@@ -35,30 +35,32 @@
 .highcontrastSkin .mceSeparator {display:block; width:16px; height:26px;}
 
 /* ListBox */
-.highcontrastSkin .mceListBox { display: block; margin:2px; height: 2em;}
-.highcontrastSkin .mceListBox .mceText {padding-right: 6px; height: 100%; line-height: 2em; width: 15ex; overflow: hidden;}
+.highcontrastSkin .mceListBox { display: block; margin:2px;}
+.highcontrastSkin .mceListBox .mceText {padding: 5px 6px;  line-height: 2em; width: 15ex; overflow: hidden;}
 .highcontrastSkin .mceListBoxDisabled .mceText { opacity:0.6; -ms-filter:'alpha(opacity=60)'; filter:alpha(opacity=60);}
-.highcontrastSkin .mceListBox a.mceText { padding-left: 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-right: 0; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px; -ms-border-radius: 3px 0px 0px 3px;}
-.highcontrastSkin .mceListBox a.mceOpen { padding-right: 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-left: 0; border-radius: 0px 3px 3px 0px; -moz-border-radius: 0px 3px 3px 0px; -webkit-border-radius: 0px 3px 3px 0px; -ms-border-radius: 0px 3px 3px 0px;}
+.highcontrastSkin .mceListBox a.mceText { padding: 5px 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-right: 0; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px; -ms-border-radius: 3px 0px 0px 3px;}
+.highcontrastSkin .mceListBox a.mceOpen { padding: 5px 2px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-left: 0; border-radius: 0px 3px 3px 0px; -moz-border-radius: 0px 3px 3px 0px; -webkit-border-radius: 0px 3px 3px 0px; -ms-border-radius: 0px 3px 3px 0px;}
 
 .highcontrastSkin .mceListBoxMenu {overflow-y:auto}
 
 /* SplitButton */
 .highcontrastSkin .mceSplitButtonDisabled .mceAction {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
 
-.highcontrastSkin .mceSplitButton { border-collapse: collapse; margin: 2px;}
-.highcontrastSkin .mceSplitButton td { margin: 0; padding: 0;}
-.highcontrastSkin .mceSplitButton { display: block; height: 2em;}
-.highcontrastSkin .mceSplitButton a.mceAction { padding-left: 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-right: 0; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px; -ms-border-radius: 3px 0px 0px 3px;}
-.highcontrastSkin .mceSplitButton a.mceOpen { padding-right: 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-left: 0; border-radius: 0px 3px 3px 0px; -moz-border-radius: 0px 3px 3px 0px; -webkit-border-radius: 0px 3px 3px 0px; -ms-border-radius: 0px 3px 3px 0px;}
-.highcontrastSkin .mceSplitButton .mceIconOnly { margin-left: 6px;}
+.highcontrastSkin .mceSplitButton { border-collapse: collapse; margin: 2px; height: 2em; line-height: 2em;}
+.highcontrastSkin .mceSplitButton td { display: table-cell; float: none; margin: 0; padding: 0; height: 2em;}
+.highcontrastSkin .mceSplitButton tr { display: table-row; }
+.highcontrastSkin table.mceSplitButton  { display: table; }
+.highcontrastSkin .mceSplitButton a.mceAction { padding: 5px 10px; display: block; height: 2em; line-height: 2em; overflow: hidden; border: 1px solid; border-right: 0; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px; -ms-border-radius: 3px 0px 0px 3px;}
+.highcontrastSkin .mceSplitButton a.mceOpen { padding: 5px 2px;  display: block; height: 2em; line-height: 2em; border: 1px solid; border-radius: 0px 3px 3px 0px; -moz-border-radius: 0px 3px 3px 0px; -webkit-border-radius: 0px 3px 3px 0px; -ms-border-radius: 0px 3px 3px 0px;}
+.highcontrastSkin .mceSplitButton .mceVoiceLabel { height: 2em; vertical-align: center; line-height: 2em; } 
+
 
 /* Menu */
 .highcontrastSkin .mceNoIcons span.mceIcon {width:0;}
 .highcontrastSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid; }
-.highcontrastSkin .mceMenu table {background:white; color: black}
+.highcontrastSkin .mceMenu table, .highcontrastSkin .mceColorSplitMenu table {background:white; color: black}
 .highcontrastSkin .mceNoIcons a .mceText {padding-left:10px}
-.highcontrastSkin .mceMenu a, .highcontrastSkin .mceMenu span, .highcontrastSkin .mceMenu {display:block;background:white; color: black}
+.highcontrastSkin .mceColorSplitMenu a, .highcontrastSkin .mceMenu a, .highcontrastSkin .mceMenu span, .highcontrastSkin .mceMenu {display:block;background:white; color: black}
 .highcontrastSkin .mceMenu td {height:2em}
 .highcontrastSkin .mceMenu a {position:relative;padding:3px 0 4px 0; display: block;}
 .highcontrastSkin .mceMenu .mceText {position:relative; display:block; cursor:default; margin:0; padding:0 25px 0 25px;}
@@ -70,6 +72,7 @@
 .highcontrastSkin .mceNoIcons .mceMenuItemSelected span.mceText:before {content: "\2713\A0";}
 .highcontrastSkin .mceMenu span.mceMenuLine {display:none}
 .highcontrastSkin .mceMenuItemSub a .mceText:after {content: "\A0\25B8"}
+
 
 /* Progress,Resize */
 .highcontrastSkin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.5; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=50); background:#FFF}
