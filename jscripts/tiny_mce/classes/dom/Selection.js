@@ -486,10 +486,9 @@
 					};
 
 					function addBogus(node) {
-						// Adds a bogus BR element for empty block elements
-						// on non IE browsers just to have a place to put the caret
-						if (!isIE && dom.isBlock(node) && !node.innerHTML)
-							node.innerHTML = '<br data-mce-bogus="1" />';
+						// Adds a bogus BR element for empty block elements or just a space on IE since it renders BR elements incorrectly
+						if (dom.isBlock(node) && !node.innerHTML)
+							node.innerHTML = !isIE ? '<br data-mce-bogus="1" />' : ' ';
 
 						return node;
 					};
