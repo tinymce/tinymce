@@ -213,12 +213,9 @@
 			Event.add(t.id + '_menu', 'click', function(e) {
 				var c;
 
-				e = e.target;
+				e = DOM.getParent(e.target, 'a', tb);
 
-				if (e.nodeName === 'CANVAS')
-					e = e.parentNode;
-				
-				if (e.nodeName == 'A' && (c = e.getAttribute('_mce_color')))
+				if (e && (c = e.getAttribute('_mce_color')))
 					t.setColor(c);
 
 				return Event.cancel(e); // Prevent IE auto save warning
