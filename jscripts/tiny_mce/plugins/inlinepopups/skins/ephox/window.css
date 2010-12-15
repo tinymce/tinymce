@@ -12,34 +12,34 @@
 
 /* Top */
 .ephox .mceTop, .ephox .mceTop div {top:0; width:100%; height:23px}
-.ephox .mceTop .mceLeft {width:6px; background:url(img/corners.gif)}
-.ephox .mceTop .mceCenter {right:6px; width:100%; height:23px; background:url(img/horizontal.gif) 12px 0; clip:rect(auto auto auto 12px)}
-.ephox .mceTop .mceRight {right:0; width:6px; height:23px; background:url(img/corners.gif) -12px 0}
+.ephox .mceTop .mceLeft {width:6px; background:url(img/corners.gif) #ccc}
+.ephox .mceTop .mceCenter {right:6px; width:100%; height:23px; background:url(img/horizontal.gif) 12px 0 #ccc; clip:rect(auto auto auto 12px)}
+.ephox .mceTop .mceRight {right:0; width:6px; height:23px; background:url(img/corners.gif) -12px 0 #ccc}
 .ephox .mceTop span {width:100%; text-align:center; vertical-align:middle; line-height:23px; font-weight:bold}
-.ephox .mceFocus .mceTop .mceLeft {background:url(img/corners.gif) -6px 0}
-.ephox .mceFocus .mceTop .mceCenter {background:url(img/horizontal.gif) 0 -23px}
-.ephox .mceFocus .mceTop .mceRight {background:url(img/corners.gif) -18px 0}
+.ephox .mceFocus .mceTop .mceLeft {background:url(img/corners.gif) -6px 0 #ccc}
+.ephox .mceFocus .mceTop .mceCenter {background:url(img/horizontal.gif) 0 -23px #ccc}
+.ephox .mceFocus .mceTop .mceRight {background:url(img/corners.gif) -18px 0 #ccc}
 .ephox .mceFocus .mceTop span {color:#FFF}
 
 /* Middle */
 .ephox .mceMiddle, .ephox .mceMiddle div {top:0}
 .ephox .mceMiddle {width:100%; height:100%; clip:rect(23px auto auto auto)}
-.ephox .mceMiddle .mceLeft {left:0; width:5px; height:100%; background:url(img/vertical.gif) -5px 0}
+.ephox .mceMiddle .mceLeft {left:0; width:5px; height:100%; background:url(img/vertical.gif) -5px 0 #ccc}
 .ephox .mceMiddle span {top:23px; left:5px; width:100%; height:100%; background:#FFF}
-.ephox .mceMiddle .mceRight {right:0; width:5px; height:100%; background:url(img/vertical.gif)}
+.ephox .mceMiddle .mceRight {right:0; width:5px; height:100%; background:url(img/vertical.gif) #ccc}
 
 /* Bottom */
 .ephox .mceBottom, .ephox .mceBottom div {height:6px}
 .ephox .mceBottom {left:0; bottom:0; width:100%}
 .ephox .mceBottom div {top:0}
-.ephox .mceBottom .mceLeft {left:0; width:5px; background:url(img/corners.gif) -34px -6px}
-.ephox .mceBottom .mceCenter {left:5px; width:100%; background:url(img/horizontal.gif) 0 -46px}
-.ephox .mceBottom .mceRight {right:0; width:5px; background: url(img/corners.gif) -34px 0}
+.ephox .mceBottom .mceLeft {left:0; width:5px; background:url(img/corners.gif) -34px -6px #ccc}
+.ephox .mceBottom .mceCenter {left:5px; width:100%; background:url(img/horizontal.gif) 0 -46px #ccc}
+.ephox .mceBottom .mceRight {right:0; width:5px; background: url(img/corners.gif) -34px 0 #ccc}
 .ephox .mceBottom span {display:none}
 .ephox .mceStatusbar .mceBottom, .ephox .mceStatusbar .mceBottom div {height:23px}
-.ephox .mceStatusbar .mceBottom .mceLeft {background:url(img/corners.gif) -29px 0}
-.ephox .mceStatusbar .mceBottom .mceCenter {background:url(img/horizontal.gif) 0 -52px}
-.ephox .mceStatusbar .mceBottom .mceRight {background:url(img/corners.gif) -24px 0}
+.ephox .mceStatusbar .mceBottom .mceLeft {background:url(img/corners.gif) -29px 0 #ccc}
+.ephox .mceStatusbar .mceBottom .mceCenter {background:url(img/horizontal.gif) 0 -52px #ccc}
+.ephox .mceStatusbar .mceBottom .mceRight {background:url(img/corners.gif) -24px 0 #ccc}
 .ephox .mceStatusbar .mceBottom span {display:block; left:7px; font-family:Arial, Verdana; font-size:11px; line-height:23px}
 
 /* Actions */
