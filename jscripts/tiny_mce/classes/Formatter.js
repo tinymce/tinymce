@@ -240,7 +240,7 @@
 						}
 
 						// Is it valid to wrap this item
-						if (isValid(wrapName, nodeName) && isValid(parentName, wrapName)) {
+						if ((format.wrap_links !== false || nodeName != 'a') && isValid(wrapName, nodeName) && isValid(parentName, wrapName)) {
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
