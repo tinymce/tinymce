@@ -1,6 +1,6 @@
 function fontFace(face) {
 	if (tinymce.isOpera) {
-		return '&quot;' + face + '&quot;';
+		return "'" + face + "'";
 	} else {
 		return face;
 	}
