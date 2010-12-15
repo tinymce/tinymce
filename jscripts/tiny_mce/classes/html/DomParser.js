@@ -187,7 +187,7 @@
 		 * @return {tinymce.html.Node} Root node containing the tree.
 		 */
 		self.parse = function(html, args) {
-			var parser, rootNode, node, matchedNodes = {}, matchedAttributes = {},
+			var parser, rootNode, node, nodes, matchedNodes = {}, matchedAttributes = {},
 				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children;
 
