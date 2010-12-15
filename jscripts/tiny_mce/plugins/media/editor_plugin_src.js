@@ -194,7 +194,7 @@
 		 * Converts the JSON data object to an img node.
 		 */
 		dataToImg : function(data, force_absolute) {
-			var editor = this.editor, baseUri = editor.documentBaseURI, sources, attrs;
+			var editor = this.editor, baseUri = editor.documentBaseURI, sources, attrs, img;
 
 			function convertUrl(url) {
 				if (!url)
@@ -221,15 +221,18 @@
 					sources[i].src = convertUrl(sources[i].src);
 			}
 
-			return this.editor.dom.create('img', {
+			img = this.editor.dom.create('img', {
 				id : data.id,
-				width : data.width || "320",
-				height : data.height || "240",
 				style : data.style,
 				src : this.url + '/img/trans.gif',
 				'class' : 'mceItemMedia mceItem' + this.getType(data.type).name,
 				'data-mce-json' : JSON.serialize(data, "'")
 			});
+
+			img.width = data.width || "320";
+			img.height = data.height || "240";
+
+			return img;
 		},
 
 		/**
@@ -296,10 +299,18 @@
 		imgToObject : function(node) {
 			var editor = this.editor, video, object, embed, name, value, data,
 				source, sources, params, param, typeItem, i, item, mp4Source,
-				posterSrc, flashVarsOutput;
+				posterSrc, flashVarsOutput, style;
 
 			data = JSON.parse(node.attr('data-mce-json'));
 			typeItem = this.getType(node.attr('class'));
+
+			style = node.attr('data-mce-style')
+			if (!style) {
+				style = node.attr('style');
+
+				if (style)
+					style = editor.dom.serializeStyle(editor.dom.parseStyle(style, 'img'));
+			}
 
 			// Handle scripts
 			if (this.editor.settings.media_use_script) {
@@ -324,7 +335,7 @@
 					id : node.attr('id'),
 					width: node.attr('width'),
 					height: node.attr('height'),
-					style : node.attr('style')
+					style : style
 				}, data.video.attrs));
 
 				// Get poster source and use that for flash fallback
@@ -385,7 +396,7 @@
 					id : node.attr('id'),
 					width: node.attr('width'),
 					height: node.attr('height'),
-					style : node.attr('style')
+					style : style
 				});
 
 				tinymce.each(tinymce.explode('name,bgcolor,align,vspace,hspace'), function(name) {
@@ -425,7 +436,7 @@
 						id: node.attr('id'),
 						width: node.attr('width'),
 						height: node.attr('height'),
-						style : node.attr('style'),
+						style : style,
 						type: typeItem.mimes[0]
 					});
 

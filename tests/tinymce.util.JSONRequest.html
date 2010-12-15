@@ -13,53 +13,77 @@ module("tinymce.util.JSONRequest");
 asyncTest("Successful request - send method", function() {
 	expect(1);
 
-	new tinymce.util.JSONRequest({}).send({
-		type : 'GET',
-		url : 'json_rpc_ok.js',
-		success: function(data) {
-			equals(data, 'Hello JSON-RPC');
-			start();
-		}
-	});
+	if (tinymce.isIE6) {
+		// IE6 doesn't support GET
+		ok(true);
+		start();
+	} else {
+		new tinymce.util.JSONRequest({}).send({
+			type : 'GET',
+			url : 'json_rpc_ok.js',
+			success: function(data) {
+				equals(data, 'Hello JSON-RPC');
+				start();
+			}
+		});
+	}
 });
 
 asyncTest("Successful request - sendRPC static method", function() {
 	expect(1);
 
-	tinymce.util.JSONRequest.sendRPC({
-		type : 'GET',
-		url : 'json_rpc_ok.js',
-		success: function(data) {
-			equals(data, 'Hello JSON-RPC');
-			start();
-		}
-	});
+	if (tinymce.isIE6) {
+		// IE6 doesn't support GET
+		ok(true);
+		start();
+	} else {
+		tinymce.util.JSONRequest.sendRPC({
+			type : 'GET',
+			url : 'json_rpc_ok.js',
+			success: function(data) {
+				equals(data, 'Hello JSON-RPC');
+				start();
+			}
+		});
+	}
 });
 
 asyncTest("Error request - send method", function() {
 	expect(1);
 
-	new tinymce.util.JSONRequest({}).send({
-		type : 'GET',
-		url : 'json_rpc_error.js',
-		error: function(error) {
-			equals(error.code, 42);
-			start();
-		}
-	});
+	if (tinymce.isIE6) {
+		// IE6 doesn't support GET
+		ok(true);
+		start();
+	} else {
+		new tinymce.util.JSONRequest({}).send({
+			type : 'GET',
+			url : 'json_rpc_error.js',
+			error: function(error) {
+				equals(error.code, 42);
+				start();
+			}
+		});
+	}
 });
 
 asyncTest("Error request - sendRPC static method", function() {
 	expect(1);
 
-	tinymce.util.JSONRequest.sendRPC({
-		type : 'GET',
-		url : 'json_rpc_error.js',
-		error: function(error) {
-			equals(error.code, 42);
-			start();
-		}
-	});
+	if (tinymce.isIE6) {
+		// IE6 doesn't support GET
+		ok(true);
+		start();
+	} else {
+		tinymce.util.JSONRequest.sendRPC({
+			type : 'GET',
+			url : 'json_rpc_error.js',
+			error: function(error) {
+				equals(error.code, 42);
+				start();
+			}
+		});
+	}
 });
 </script>
 </head>

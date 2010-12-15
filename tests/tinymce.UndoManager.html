@@ -91,7 +91,7 @@ test('Typing state', function() {
 
 	expect(2);
 
-	QUnit.triggerEvent(editor.getBody(), 'keydown', {keyCode : 65});
+	fakeKeyEvent(editor.getBody(), 'keydown', {keyCode : 65});
 	ok(editor.undoManager.typing)
 
 	fakeKeyEvent(editor.getBody(), 'keyup', {keyCode : 13});
