@@ -83,15 +83,18 @@
 			if (!tinymce.isIE)
 				elm.onload = done;
 
-			elm.onreadystatechange = function() {
-				var state = elm.readyState;
+			// Opera 9.60 doesn't seem to fire the onreadystate event at correctly
+			if (!tinymce.isOpera) {
+				elm.onreadystatechange = function() {
+					var state = elm.readyState;
 
-				// Loaded state is passed on IE 6 however there
-				// are known issues with this method but we can't use
-				// XHR in a cross domain loading
-				if (state == 'complete' || state == 'loaded')
-					done();
-			};
+					// Loaded state is passed on IE 6 however there
+					// are known issues with this method but we can't use
+					// XHR in a cross domain loading
+					if (state == 'complete' || state == 'loaded')
+						done();
+				};
+			}
 
 			// Most browsers support this feature so we report errors
 			// for those at least to help users track their missing plugins etc
