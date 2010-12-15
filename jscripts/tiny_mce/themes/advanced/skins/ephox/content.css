@@ -1,4 +1,4 @@
-body, td, pre { font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px; margin:8px;background:#FFF; color:#000;}
+body { font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px; margin:8px;background:#FFF; color:#000;}
 body.mceDefaultColors {background:transparent; color:inherit;}
 h1 {font-size: 2em}
 h2 {font-size: 1.5em}
