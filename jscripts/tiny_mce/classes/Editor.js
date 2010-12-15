@@ -439,8 +439,8 @@
 				inline_styles : 1,
 				convert_fonts_to_spans : true,
 				indent : 'simple',
-				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,param',
-				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,param',
+				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area',
+				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area',
 				validate : true,
 				entity_encoding : 'named',
 				url_converter : t.convertURL,
@@ -752,8 +752,13 @@
 
 			t.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=7" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
-			for (i = 0; i < t.contentCSS.length; i++)
-				t.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + t.contentCSS[i] + '" />';
+			// Firefox 2 doesn't load stylesheets correctly this way
+			if (!isGecko || !/Firefox\/2/.test(navigator.userAgent)) {
+				for (i = 0; i < t.contentCSS.length; i++)
+					t.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + t.contentCSS[i] + '" />';
+
+				t.contentCSS = [];
+			}
 
 			if (tinymce.relaxedDomain)
 				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
@@ -1236,6 +1241,11 @@
 				t.execCallback('init_instance_callback', t);
 				t.focus(true);
 				t.nodeChanged({initial : 1});
+
+				// Load specified content CSS last
+				each(t.contentCSS, function(u) {
+					t.dom.loadCSS(u);
+				});
 
 				// Handle auto focus
 				if (s.auto_focus) {
