@@ -161,9 +161,12 @@ function generateWebColors() {
 
 	for (i=0; i<colors.length; i++) {
 		h += '<td role="presentation" bgcolor="' + colors[i] + '" width="10" height="10">'
-			+ '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-labelledby="web_colors_' + i + '" onfocus="showColor(\'' + colors[i] +  '\');" onmouseover="showColor(\'' + colors[i] +  '\');" style="display:block;width:10px;height:10px;overflow:hidden;">'
-			+ '<span class="mceVoiceLabel mceIconOnly" style="display:none;" id="web_colors_' + i + '">' + colors[i].toUpperCase() + '</span>';
-			+ '</a></td>';
+			+ '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-labelledby="web_colors_' + i + '" onfocus="showColor(\'' + colors[i] +  '\');" onmouseover="showColor(\'' + colors[i] +  '\');" style="display:block;width:10px;height:10px;overflow:hidden;">';
+		if (tinyMCEPopup.editor.forcedHighContrastMode) {
+			h += '<canvas class="mceColorSwatch" height="10" width="10" data-color="' + colors[i] + '"></canvas>';
+		}
+		h += '<span class="mceVoiceLabel" style="display:none;" id="web_colors_' + i + '">' + colors[i].toUpperCase() + '</span>';
+		h += '</a></td>';
 		if ((i+1) % 18 == 0)
 			h += '</tr><tr>';
 	}
@@ -173,9 +176,19 @@ function generateWebColors() {
 	el.innerHTML = h;
 	el.className = 'generated';
 
+	paintCanvas(el);
 	enableKeyboardNavigation(el.firstChild);
 }
 
+function paintCanvas(el) {
+	tinyMCEPopup.getWin().tinymce.each(tinyMCEPopup.dom.select('canvas.mceColorSwatch', el), function(canvas) {
+		var context;
+		if (canvas.getContext && (context = canvas.getContext("2d"))) {
+			context.fillStyle = canvas.getAttribute('data-color');
+			context.fillRect(0, 0, 10, 10);
+		}
+	});
+}
 function generateNamedColors() {
 	var el = document.getElementById('namedcolors'), h = '', n, v, i = 0;
 
@@ -185,13 +198,18 @@ function generateNamedColors() {
 	for (n in named) {
 		v = named[n];
 		h += '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-labelledby="named_colors_' + i + '" onfocus="showColor(\'' + n + '\',\'' + v + '\');" onmouseover="showColor(\'' + n +  '\',\'' + v + '\');" style="background-color: ' + n + '">';
-		h += '<span class="mceVoiceLabel mceIconOnly" style="display:none;" id="named_colors_' + i + '">' + v + '</span></a>'
+		if (tinyMCEPopup.editor.forcedHighContrastMode) {
+			h += '<canvas class="mceColorSwatch" height="10" width="10" data-color="' + colors[i] + '"></canvas>';
+		}
+		h += '<span class="mceVoiceLabel" style="display:none;" id="named_colors_' + i + '">' + v + '</span>';
+		h += '</a>';
 		i++;
 	}
 
 	el.innerHTML = h;
 	el.className = 'generated';
-	
+
+	paintCanvas(el);
 	enableKeyboardNavigation(el);
 }
 
