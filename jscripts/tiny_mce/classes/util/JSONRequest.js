@@ -57,7 +57,8 @@
 			};
 
 			o.error = function(ty, x) {
-				ecb.call(o.error_scope || o.scope, ty, x);
+				if (ecb)
+					ecb.call(o.error_scope || o.scope, ty, x);
 			};
 
 			o.data = JSON.serialize({
