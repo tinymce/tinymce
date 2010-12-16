@@ -39,7 +39,6 @@ MCTabs.prototype.hideTab =function(tab){
 	var t=this;
 	tab.className = '';  
 	tab.setAttribute("aria-selected",false);  
-	tab.setAttribute("role","tab") ;
 	tab.tabIndex=-1;
 };
 
@@ -70,7 +69,6 @@ MCTabs.prototype.displayTab = function(tab_id, panel_id, avoid_focus) {
 
 	if (tabElm && tabContainerElm) {
 		nodes = tabContainerElm.childNodes;
-
 		// Hide all other tabs
 		for (i = 0; i < nodes.length; i++) {
 			if (nodes[i].nodeName == "LI") {
@@ -107,67 +105,6 @@ MCTabs.prototype.getAnchor = function() {
 	return "";
 };
 
-//key bindings
-//TODO add extra keys?
-MCTabs.prototype.KEY_UP = 38;
-MCTabs.prototype.KEY_DOWN = 40;
-MCTabs.prototype.KEY_LEFT = 37;
-MCTabs.prototype.KEY_RIGHT = 39;
-
-MCTabs.prototype.NAV_KEYS = [MCTabs.prototype.KEY_UP, MCTabs.prototype.KEY_DOWN, MCTabs.prototype.KEY_LEFT, MCTabs.prototype.KEY_RIGHT];
-MCTabs.prototype.PREVIOUS_KEYS = [MCTabs.prototype.KEY_UP, MCTabs.prototype.KEY_LEFT];
-MCTabs.prototype.NEXT_KEYS = [MCTabs.prototype.KEY_DOWN, MCTabs.prototype.KEY_RIGHT];
-
-MCTabs.prototype.listContains = function(items, item) {
-    for(var i = 0; i < items.length; i++) {
-        if(items[i] === item){
-            return true;
-        }
-    }
-    return false;
-}
-
-MCTabs.prototype.doNavigation = function(event){
-    var element, keyCode, container, newElement;
-    element = event.srcElement;
-    keyCode = event.keyCode;
-    container = element.parentNode;
-
-    if (!this.listContains(this.NAV_KEYS, event.keyCode)){
-        return;
-    }
-    if (this.listContains(this.NEXT_KEYS, event.keyCode)){
-        newElement = this.findNextTab(element);
-    } else if (this.listContains(this.PREVIOUS_KEYS, event.keyCode)) {
-        newElement = this.findPreviousTab(element);
-    }
-    this.displayTab(newElement.id);
-} 
-
-MCTabs.prototype.findNextTab = function(element){   
-    //TODO use DOMUtils - tinymcepopup.DOM
-    
-    var next = element.nextSibling;
-    while (next!==null && next.nodeType!=1){
-        next = next.nextSibling;
-    } 
-    if (next===null){
-        return element.parentNode.children[0];
-    }
-    return next;
-}
-MCTabs.prototype.findPreviousTab = function(element){
-    //TODO use DOMUtils - tinymcepopup.DOM
-    
-    var prev = element.previousSibling;
-    while (prev!==null && prev.nodeType!=1){
-        prev = prev.previousSibling;
-    } 
-    if (prev===null){
-        return element.parentNode.children[element.parentNode.children.length-1];
-    }
-    return prev;
-}
 
 //Global instance
 var mcTabs = new MCTabs();
