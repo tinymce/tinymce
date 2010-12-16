@@ -760,9 +760,6 @@
 				t.contentCSS = [];
 			}
 
-			if (tinymce.relaxedDomain)
-				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
-
 			bi = s.body_id || 'tinymce';
 			if (bi.indexOf('=') != -1) {
 				bi = t.getParam('body_id', '', 'hash');
@@ -778,12 +775,9 @@
 			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
 
 			// Domain relaxing enabled, then set document domain
-			if (tinymce.relaxedDomain) {
+			if (tinymce.relaxedDomain && (isIE || (tinymce.isOpera && parseFloat(opera.version()) < 11))) {
 				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
-				if (isIE || (tinymce.isOpera && parseFloat(opera.version()) >= 9.5))
-					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
-				else if (tinymce.isOpera)
-					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
+				u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';				
 			}
 
 			// Create iframe
@@ -801,7 +795,7 @@
 			DOM.get(o.editorContainer).style.display = t.orgDisplay;
 			DOM.get(t.id).style.display = 'none';
 
-			if (!isIE || !tinymce.relaxedDomain)
+			if (!tinymce.relaxedDomain || !u)
 				t.setupIframe();
 
 			e = n = o = null; // Cleanup
@@ -822,6 +816,9 @@
 				d.open();
 				d.write(t.iframeHTML);
 				d.close();
+
+				if (tinymce.relaxedDomain)
+					d.domain = tinymce.relaxedDomain;
 			}
 
 			// Design mode needs to be added here Ctrl+A will fail otherwise
