@@ -1,4 +1,4 @@
-Version 3.3.9.3 (2010-xx-xx)
+Version 3.3.9.3 (2010-12-16)
 	Fixed issue where WebKit wouldn't correctly apply ins/del in xhtmlxtras plugin.
 	Fixed bug where paste as plaintext on WebKit wouldn't produce br and p elements correctly.
 	Fixed bug where the confirm dialog texts would be incorrectly placed due to recent IE 9 workarounds in the window.css.
