@@ -1,4 +1,4 @@
-Version 3.4 (2010-12-16)
+Version 3.4b1 (2010-12-16)
 	Added new serialization engine that increases performance and enforces valid output according to the specified schema settings.
 	Added new HTML parser logic used by the serialization engine and can handle malformed html contents.
 	Added new valid_children config option, enables more fine grain control of elements can be inside other elements.
