@@ -1,11 +1,11 @@
 /* Reset */
-.ephoxSkin table, .ephoxSkin tbody, .ephoxSkin a, .ephoxSkin img, .ephoxSkin tr, .ephoxSkin div, .ephoxSkin td, .ephoxSkin iframe, .ephoxSkin span, .ephoxSkin *, .ephoxSkin .mceText {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; vertical-align:baseline; width:auto; border-collapse:separate; text-align:left}
+.ephoxSkin table, .ephoxSkin tbody, .ephoxSkin a, .ephoxSkin img, .ephoxSkin tr, .ephoxSkin div, .ephoxSkin td, .ephoxSkin iframe, .ephoxSkin span, .ephoxSkin *, .ephoxSkin .mceText {border:0; margin:0; padding:0; background:transparent; text-decoration:none; font-weight:normal; cursor:default; vertical-align:baseline; width:auto; border-collapse:separate; text-align:left}
 .ephoxSkin a:hover, .ephoxSkin a:link, .ephoxSkin a:visited, .ephoxSkin a:active {text-decoration:none; font-weight:normal; cursor:default;}
 .ephoxSkin table td {vertical-align:middle}
 
 /* Containers */
 .ephoxSkin iframe {display:block;}
-.ephoxSkin .mceToolbar {height:31px}
+.ephoxSkin .mceToolbar {}
 
 /* External */
 .ephoxSkin .mceExternalToolbar {position:absolute; border:1px solid #ABC6DD; border-bottom:0; display:none}
@@ -16,7 +16,8 @@
 .ephoxSkin table.mceLayout {border:0; border-left:1px solid #ABC6DD; border-right:1px solid #ABC6DD}
 .ephoxSkin table.mceLayout tr.mceFirst td {border-top:1px solid #ABC6DD}
 .ephoxSkin table.mceLayout tr.mceLast td {border-bottom:1px solid #ABC6DD}
-.ephoxSkin table.mceToolbar, .ephoxSkin tr.mceFirst .mceToolbar tr td, .ephoxSkin tr.mceLast .mceToolbar tr td {border:0; margin:0; padding:0}
+.ephoxSkin tr.mceFirst .mceToolbar tr td, .ephoxSkin tr.mceLast .mceToolbar tr td {border:0; margin: 0; padding:0}
+.ephoxSkin table.mceToolbar {border:0; margin: 3px 0; padding:0}
 .ephoxSkin .mceIframeContainer {border-top:1px solid #ABC6DD; border-bottom:1px solid #ABC6DD}
 .ephoxSkin .mceStatusbar {display:block; font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:20px; overflow:visible; color:#000; height:22px;background:#D8D7D7}
 .ephoxSkin .mceStatusbar div {float:left}
@@ -32,6 +33,10 @@
 .ephoxSkin td.mceCenter {text-align:center;}
 .ephoxSkin td.mceCenter table {margin:0 auto; text-align:left;}
 .ephoxSkin td.mceRight table {margin:0 0 0 auto;}
+
+.ephoxSkin .mceToolbar td { display: inline-block; float: left;}
+.ephoxSkin .mceToolbar tr { display: block;}
+.ephoxSkin .mceToolbar table { display: block; }
 
 /* Button */
 .ephoxSkin .mceButton {display:block; background:url(img/button_bg.png); width:26px; height:26px}
