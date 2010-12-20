@@ -71,7 +71,11 @@
 						if (el.id && (ed = tinymce.get(el.id || el.name)))
 							ed.focus();
 						else
-							window.setTimeout(function() {window.focus();el.focus();}, 10);
+							window.setTimeout(function() {
+								if (!tinymce.isWebKit)
+									window.focus();
+								el.focus();
+							}, 10);
 
 						return Event.cancel(e);
 					}
