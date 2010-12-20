@@ -77,6 +77,7 @@
 							list.removeAttribute('_mce_style');
 						}
 					}
+					ed.focus();
 				};
 
 				btn = cm.createSplitButton(name, {
