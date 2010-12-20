@@ -32,6 +32,7 @@ MCTabs.prototype.getParam = function(name, default_value) {
 MCTabs.prototype.showTab =function(tab){
 	tab.className = 'current';
 	tab.setAttribute("aria-selected", true);
+	tab.setAttribute("aria-expanded", true);
 	tab.tabIndex=0;
 };
 
@@ -39,6 +40,7 @@ MCTabs.prototype.hideTab =function(tab){
 	var t=this;
 	tab.className = '';  
 	tab.setAttribute("aria-selected",false);  
+	tab.setAttribute("aria-expanded", false);
 	tab.tabIndex=-1;
 };
 
