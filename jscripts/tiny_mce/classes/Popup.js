@@ -324,7 +324,7 @@ tinyMCEPopup = {
 				document.title = ti = nv;
 		}
 
-		if (!t.isWindow)
+		if (!t.editor.getParam('browser_preferred_colors', false) || !t.isWindow)
 			t.dom.addClass(document.body, 'forceColors');
 		document.body.style.display = '';
 
