@@ -1,4 +1,4 @@
-Version 3.4b1 (2010-12-16)
+Version 3.4b1 (2010-12-20)
 	Added new serialization engine that increases performance and enforces valid output according to the specified schema settings.
 	Added new HTML parser logic used by the serialization engine and can handle malformed html contents.
 	Added new valid_children config option, enables more fine grain control of elements can be inside other elements.
@@ -30,7 +30,7 @@ Version 3.4b1 (2010-12-16)
 	Fixed issue where &nbsp; wouldn't be handled correctly in the bbcode plugin if entity_encoding was set to raw.
 	Fixed issue where contents would flicker since the content css files where asynchronously loaded.
 	Fixed bug where WebKit wouldn't create links on images with a float style.
-Version 3.3.9.3 (2010-12-16)
+Version 3.3.9.3 (2010-12-20)
 	Fixed issue where WebKit wouldn't correctly apply ins/del in xhtmlxtras plugin.
 	Fixed bug where paste as plaintext on WebKit wouldn't produce br and p elements correctly.
 	Fixed bug where the confirm dialog texts would be incorrectly placed due to recent IE 9 workarounds in the window.css.
