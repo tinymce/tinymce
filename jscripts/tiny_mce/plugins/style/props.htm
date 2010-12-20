@@ -37,15 +37,13 @@
 				</td>
 			</tr>
 			<tr role="presentation">
-				<td role="presentation"><label id="textsizelabel" for="text_size">{#style_dlg.text_size}</label></td>
+				<td role="presentation"><label for="text_size">{#style_dlg.text_size}</label></td>
 				<td role="presentation">
 					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
 						<tr role="presentation">
-							<fieldset aria-labelledby="textsizelabel">
-								<td role="presentation"><select id="text_size" name="text_size" class="mceEditableSelect"></select></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="text_size_measurement" name="text_size_measurement" aria-labelledby="textsizelabel"></select></td>
-							</fieldset>
+							<td role="presentation"><select id="text_size" name="text_size" class="mceEditableSelect"></select></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="text_size_measurement" name="text_size_measurement"></select></td>
 						</tr>
 					</table>
 				</td>
@@ -290,129 +288,128 @@
 				<td role="presentation"><select id="box_clear" name="box_clear" class="mceEditableSelect"></select></td>
 			</tr>
 		</table>
-		<div style="float: left; width: 49%">
-		<fieldset>
-			<legend>{#style_dlg.padding}</legend>
+<div style="float: left; width: 49%">
+	<fieldset>
+		<legend>{#style_dlg.padding}</legend>
 
-			<table role="presentation" border="0">
-				<tr role="presentation">
-					<td role="presentation">&nbsp;</td>
-					<td role="presentation"><input type="checkbox" id="box_padding_same" name="box_padding_same" class="checkbox" checked="checked" onClick="toggleSame(this,'box_padding');" /> <label for="box_padding_same">{#style_dlg.same}</label></td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_padding_top">{#style_dlg.top}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_padding_top" name="box_padding_top" class="mceEditableSelect" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_padding_top_measurement" name="box_padding_top_measurement"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_padding_right">{#style_dlg.right}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_padding_right" name="box_padding_right" class="mceEditableSelect" disabled="disabled" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_padding_right_measurement" name="box_padding_right_measurement" disabled="disabled"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_padding_bottom">{#style_dlg.bottom}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_padding_bottom" name="box_padding_bottom" class="mceEditableSelect" disabled="disabled" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_padding_bottom_measurement" name="box_padding_bottom_measurement" disabled="disabled"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_padding_left">{#style_dlg.left}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_padding_left" name="box_padding_left" class="mceEditableSelect" disabled="disabled" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_padding_left_measurement" name="box_padding_left_measurement" disabled="disabled"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</fieldset>
-	</div>
-
-	<div style="float: right; width: 49%">
-		<fieldset>
-			<legend>{#style_dlg.margin}</legend>
-
-			<table role="presentation" border="0">
-				<tr role="presentation">
-					<td role="presentation">&nbsp;</td>
-					<td role="presentation"><input type="checkbox" id="box_margin_same" name="box_margin_same" class="checkbox" checked="checked" onClick="toggleSame(this,'box_margin');" /> <label for="box_margin_same">{#style_dlg.same}</label></td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_margin_top">{#style_dlg.top}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_margin_top" name="box_margin_top" class="mceEditableSelect" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_margin_top_measurement" name="box_margin_top_measurement"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_margin_right">{#style_dlg.right}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_margin_right" name="box_margin_right" class="mceEditableSelect" disabled="disabled" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_margin_right_measurement" name="box_margin_right_measurement" disabled="disabled"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_margin_bottom">{#style_dlg.bottom}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_margin_bottom" name="box_margin_bottom" class="mceEditableSelect" disabled="disabled" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_margin_bottom_measurement" name="box_margin_bottom_measurement" disabled="disabled"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr role="presentation">
-					<td role="presentation"><label for="box_margin_left">{#style_dlg.left}</label></td>
-					<td role="presentation">
-						<table role="presentation" border="0" cellspacing="0" cellpadding="0">
-							<tr role="presentation">
-								<td role="presentation"><input type="text" id="box_margin_left" name="box_margin_left" class="mceEditableSelect" disabled="disabled" /></td>
-								<td role="presentation">&nbsp;</td>
-								<td role="presentation"><select id="box_margin_left_measurement" name="box_margin_left_measurement" disabled="disabled"></select></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</fieldset>
-	</div>
-	<br style="clear: both" />
+		<table role="presentation" border="0">
+			<tr role="presentation">
+				<td role="presentation">&nbsp;</td>
+				<td role="presentation"><input type="checkbox" id="box_padding_same" name="box_padding_same" class="checkbox" checked="checked" onClick="toggleSame(this,'box_padding');" /> <label for="box_padding_same">{#style_dlg.same}</label></td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_padding_top">{#style_dlg.top}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_padding_top" name="box_padding_top" class="mceEditableSelect" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_padding_top_measurement" name="box_padding_top_measurement"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_padding_right">{#style_dlg.right}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_padding_right" name="box_padding_right" class="mceEditableSelect" disabled="disabled" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_padding_right_measurement" name="box_padding_right_measurement" disabled="disabled"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_padding_bottom">{#style_dlg.bottom}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_padding_bottom" name="box_padding_bottom" class="mceEditableSelect" disabled="disabled" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_padding_bottom_measurement" name="box_padding_bottom_measurement" disabled="disabled"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_padding_left">{#style_dlg.left}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_padding_left" name="box_padding_left" class="mceEditableSelect" disabled="disabled" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_padding_left_measurement" name="box_padding_left_measurement" disabled="disabled"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 	</fieldset>
+</div>
+
+<div style="float: right; width: 49%">
+	<fieldset>
+		<legend>{#style_dlg.margin}</legend>
+
+		<table role="presentation" border="0">
+			<tr role="presentation">
+				<td role="presentation">&nbsp;</td>
+				<td role="presentation"><input type="checkbox" id="box_margin_same" name="box_margin_same" class="checkbox" checked="checked" onClick="toggleSame(this,'box_margin');" /> <label for="box_margin_same">{#style_dlg.same}</label></td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_margin_top">{#style_dlg.top}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_margin_top" name="box_margin_top" class="mceEditableSelect" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_margin_top_measurement" name="box_margin_top_measurement"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_margin_right">{#style_dlg.right}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_margin_right" name="box_margin_right" class="mceEditableSelect" disabled="disabled" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_margin_right_measurement" name="box_margin_right_measurement" disabled="disabled"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_margin_bottom">{#style_dlg.bottom}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_margin_bottom" name="box_margin_bottom" class="mceEditableSelect" disabled="disabled" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_margin_bottom_measurement" name="box_margin_bottom_measurement" disabled="disabled"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr role="presentation">
+				<td role="presentation"><label for="box_margin_left">{#style_dlg.left}</label></td>
+				<td role="presentation">
+					<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+						<tr role="presentation">
+							<td role="presentation"><input type="text" id="box_margin_left" name="box_margin_left" class="mceEditableSelect" disabled="disabled" /></td>
+							<td role="presentation">&nbsp;</td>
+							<td role="presentation"><select id="box_margin_left_measurement" name="box_margin_left_measurement" disabled="disabled"></select></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+</div>
+<br style="clear: both" />
 </div>
 
 <div id="border_panel" class="panel">
