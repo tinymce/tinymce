@@ -189,10 +189,18 @@
 				DOM.add(id + '_middle', 'div', {'class' : 'mceIcon'});
 				DOM.setHTML(id + '_content', f.content.replace('\n', '<br />'));
 				
-				Event.add(id, 'keyup', function(evt) {
-					var w, VK_ESCAPE = 27;
+				Event.add(id, 'keydown', function(evt) {
+					var cancelButton, VK_ESCAPE = 27, VK_TAB = 9;
 					if (evt.keyCode === VK_ESCAPE) {
 						f.button_func(false);
+						return Event.cancel(evt);
+					} else if (evt.keyCode === VK_TAB) {
+						cancelButton = DOM.select('a.mceCancel', id + '_wrapper')[0];
+						if (cancelButton && cancelButton !== evt.target) {
+							cancelButton.focus();
+						} else {
+							DOM.get(id + '_ok').focus();
+						}
 						return Event.cancel(evt);
 					}
 				});
@@ -255,12 +263,17 @@
 			
 			// Make sure the tab order loops within the dialog.
 			Event.add([id + '_left', id + '_right'], 'focus', function(evt) {
-				var body = DOM.get(id + '_ifr').contentWindow.document.body;
-				var focusable = DOM.select(':input:enabled,*[tabindex=0]', body);
-				if (evt.target.id === (id + '_left')) {
-					focusable[focusable.length - 1].focus();
+				var iframe = DOM.get(id + '_ifr');
+				if (iframe) {
+					var body = iframe.contentWindow.document.body;
+					var focusable = DOM.select(':input:enabled,*[tabindex=0]', body);
+					if (evt.target.id === (id + '_left')) {
+						focusable[focusable.length - 1].focus();
+					} else {
+						focusable[0].focus();
+					}
 				} else {
-					focusable[0].focus();
+					DOM.get(id + '_ok').focus();
 				}
 			});
 			
