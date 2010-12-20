@@ -111,6 +111,16 @@ var AutoValidator = {
 	invalidate : function(n) {
 		this.mark(n.form, n);
 	},
+	
+	getInvalidFieldLabels : function(f) {
+		var nl, i, s = this.settings, invalid = [];
+		nl = this.tags(f, "label");
+		for (i=0; i<nl.length; i++) {
+			if (this.hasClass(nl[i], s.invalid_cls))
+				invalid.push(nl[i].textContent);
+		}
+		return invalid;
+	},
 
 	reset : function(e) {
 		var t = ['label', 'input', 'select', 'textarea'];
