@@ -96,8 +96,10 @@ var AutoValidator = {
 		var i, nl, s = this.settings, c = 0;
 
 		nl = this.tags(f, 'label');
-		for (i=0; i<nl.length; i++)
+		for (i=0; i<nl.length; i++) {
 			this.removeClass(nl[i], s.invalid_cls);
+			nl[i].setAttribute('aria-invalid', false);
+		}
 
 		c += this.validateElms(f, 'input');
 		c += this.validateElms(f, 'select');
@@ -119,8 +121,10 @@ var AutoValidator = {
 
 		for (i=0; i<t.length; i++) {
 			nl = this.tags(e.form ? e.form : e, t[i]);
-			for (j=0; j<nl.length; j++)
+			for (j=0; j<nl.length; j++) {
 				this.removeClass(nl[j], s.invalid_cls);
+				nl[j].setAttribute('aria-invalid', false);
+			}
 		}
 	},
 
@@ -201,6 +205,7 @@ var AutoValidator = {
 		var s = this.settings;
 
 		this.addClass(n, s.invalid_cls);
+		n.setAttribute('aria-invalid', 'true');
 		this.markLabels(f, n, s.invalid_cls);
 
 		return false;
