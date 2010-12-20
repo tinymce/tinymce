@@ -207,6 +207,7 @@
 				items: DOM.select('a', t.id + '_menu'),
 				onCancel: function() {
 					t.hideMenu();
+					t.focus();
 				}
 			});
 
