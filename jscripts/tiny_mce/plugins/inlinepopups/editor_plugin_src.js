@@ -189,12 +189,17 @@
 				DOM.add(id + '_middle', 'div', {'class' : 'mceIcon'});
 				DOM.setHTML(id + '_content', f.content.replace('\n', '<br />'));
 				
-				Event.add(id, 'keydown', function(evt) {
-					var cancelButton, VK_ESCAPE = 27, VK_TAB = 9;
+				Event.add(id, 'keyup', function(evt) {
+					var VK_ESCAPE = 27;
 					if (evt.keyCode === VK_ESCAPE) {
 						f.button_func(false);
 						return Event.cancel(evt);
-					} else if (evt.keyCode === VK_TAB) {
+					}
+				});
+
+				Event.add(id, 'keydown', function(evt) {
+					var cancelButton, VK_TAB = 9;
+					if (evt.keyCode === VK_TAB) {
 						cancelButton = DOM.select('a.mceCancel', id + '_wrapper')[0];
 						if (cancelButton && cancelButton !== evt.target) {
 							cancelButton.focus();
