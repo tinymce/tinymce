@@ -27,13 +27,13 @@
 .highcontrastSkin .mceButton { display:block; margin: 2px; padding: 5px 10px;border: 1px solid; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -ms-border-radius: 3px; height: 2em;}
 .highcontrastSkin .mceButton .mceVoiceLabel { height: 100%; vertical-align: center; line-height: 2em}
 .highcontrastSkin .mceButtonDisabled .mceVoiceLabel { opacity:0.6; -ms-filter:'alpha(opacity=60)'; filter:alpha(opacity=60);}
-.highcontrastSkin .mceButtonActive, .highcontrastSkin .mceButton:focus, .highcontrastSkin .mceButton:active { border: 5px solid; padding: 1px 6px;}
+.highcontrastSkin .mceButtonActive, .highcontrastSkin .mceButton:focus, .highcontrastSkin .mceButton:active { border: 5px solid; padding: 1px 6px;-webkit-focus-ring-color:none;outline:none;}
 
 /* Separator */
 .highcontrastSkin .mceSeparator {display:block; width:16px; height:26px;}
 
 /* ListBox */
-.highcontrastSkin .mceListBox { display: block; margin:2px;}
+.highcontrastSkin .mceListBox { display: block; margin:2px;-webkit-focus-ring-color:none;outline:none;}
 .highcontrastSkin .mceListBox .mceText {padding: 5px 6px;  line-height: 2em; width: 15ex; overflow: hidden;}
 .highcontrastSkin .mceListBoxDisabled .mceText { opacity:0.6; -ms-filter:'alpha(opacity=60)'; filter:alpha(opacity=60);}
 .highcontrastSkin .mceListBox a.mceText { padding: 5px 10px; display: block; height: 2em; line-height: 2em; border: 1px solid; border-right: 0; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px; -ms-border-radius: 3px 0px 0px 3px;}
@@ -46,15 +46,15 @@
 /* SplitButton */
 .highcontrastSkin .mceSplitButtonDisabled .mceAction {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
 
-.highcontrastSkin .mceSplitButton { border-collapse: collapse; margin: 2px; height: 2em; line-height: 2em;}
+.highcontrastSkin .mceSplitButton { border-collapse: collapse; margin: 2px; height: 2em; line-height: 2em;-webkit-focus-ring-color:none;outline:none;}
 .highcontrastSkin .mceSplitButton td { display: table-cell; float: none; margin: 0; padding: 0; height: 2em;}
 .highcontrastSkin .mceSplitButton tr { display: table-row; }
 .highcontrastSkin table.mceSplitButton  { display: table; }
 .highcontrastSkin .mceSplitButton a.mceAction { padding: 5px 10px; display: block; height: 2em; line-height: 2em; overflow: hidden; border: 1px solid; border-right: 0; border-radius: 3px 0px 0px 3px; -moz-border-radius: 3px 0px 0px 3px; -webkit-border-radius: 3px 0px 0px 3px; -ms-border-radius: 3px 0px 0px 3px;}
 .highcontrastSkin .mceSplitButton a.mceOpen { padding: 5px 4px;  display: block; height: 2em; line-height: 2em; border: 1px solid; border-radius: 0px 3px 3px 0px; -moz-border-radius: 0px 3px 3px 0px; -webkit-border-radius: 0px 3px 3px 0px; -ms-border-radius: 0px 3px 3px 0px;}
 .highcontrastSkin .mceSplitButton .mceVoiceLabel { height: 2em; vertical-align: center; line-height: 2em; } 
-.highcontrastSkin .mceSplitButton:focus a.mceAction, .highcontrastSkin .mceSplitButton:active a.mceAction { border-width: 5px; border-right-width: 1px; padding: 1px 10px 1px 6px;}
-.highcontrastSkin .mceSplitButton:focus a.mceOpen, .highcontrastSkin .mceSplitButton:active a.mceOpen { border-width: 5px; border-left-width: 1px; padding: 1px 0px 1px 4px;}
+.highcontrastSkin .mceSplitButton:focus a.mceAction, .highcontrastSkin .mceSplitButton:active a.mceAction { border-width: 5px; border-right-width: 1px; padding: 1px 10px 1px 6px;-webkit-focus-ring-color:none;outline:none;}
+.highcontrastSkin .mceSplitButton:focus a.mceOpen, .highcontrastSkin .mceSplitButton:active a.mceOpen { border-width: 5px; border-left-width: 1px; padding: 1px 0px 1px 4px;-webkit-focus-ring-color:none;outline:none;}
 
 /* Menu */
 .highcontrastSkin .mceNoIcons span.mceIcon {width:0;}
