@@ -255,7 +255,7 @@
 					t.menu.hideMenu();
 				}
 			}
-			t.editor.focus();
+			t.focus();
 		},
 
 		/**
