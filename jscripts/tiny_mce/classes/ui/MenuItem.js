@@ -41,6 +41,7 @@
 		 */
 		setSelected : function(s) {
 			this.setState('Selected', s);
+			this.setAriaProperty('checked', !!s);
 			this.selected = s;
 		},
 

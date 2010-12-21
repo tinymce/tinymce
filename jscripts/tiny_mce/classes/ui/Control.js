@@ -40,7 +40,7 @@
 		},
 		
 		setAriaProperty : function(property, value) {
-			var element = DOM.get(this.id);
+			var element = DOM.get(this.id + '_aria') || DOM.get(this.id);
 			if (element) {
 				DOM.setAttrib(element, 'aria-' + property, !!value);
 			}

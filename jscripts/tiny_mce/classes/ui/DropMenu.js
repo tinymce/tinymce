@@ -387,7 +387,7 @@
 
 			n = ro = DOM.add(tb, 'tr', {role: 'presentation', id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
 			n = it = DOM.add(n, 'td', {role: 'presentation'});
-			n = a = DOM.add(n, 'a', {role: 'option', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
+			n = a = DOM.add(n, 'a', {id: o.id + '_aria', role: 'option', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
 			
 			if (s.parent) {
 				DOM.setAttrib(a, 'aria-haspopup', 'true');
