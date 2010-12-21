@@ -122,7 +122,7 @@
 						}
 					});
 
-					menu.add({id : t.editor.dom.uniqueId(), title : 'advlist.types', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
+					menu.add({id : t.editor.dom.uniqueId(), title : 'advlist.types', 'class' : 'mceMenuItemTitle', titleItem: true}).setDisabled(1);
 
 					each(t[name], function(item) {
 						item.id = t.editor.dom.uniqueId();

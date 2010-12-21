@@ -218,13 +218,13 @@
 			if (s.keyboard_focus) {
 				t.keyboardNav = new tinymce.ui.KeyboardNavigation({
 					root: 'menu_' + t.id,
-					items: DOM.select('a', 'menu_' + t.id),
+					items: DOM.select('a[role=option]', 'menu_' + t.id),
 					onCancel: function() {
 						t.hideMenu();
 					},
 					enableUpDown: true
 				});
-				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
+				DOM.select('a[role=option]', 'menu_' + t.id)[0].focus(); // Select first link
 			}
 		},
 
@@ -386,9 +386,9 @@
 			}
 
 			n = ro = DOM.add(tb, 'tr', {role: 'presentation', id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
-			n = it = DOM.add(n, 'td', {role: 'presentation'});
-			n = a = DOM.add(n, 'a', {id: o.id + '_aria', role: 'option', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
-			
+			n = it = DOM.add(n, s.titleItem ? 'th' : 'td', {role: 'presentation'});
+			n = a = DOM.add(n, 'a', {id: o.id + '_aria',  role: s.titleItem ? 'presentation' : 'option', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
+
 			if (s.parent) {
 				DOM.setAttrib(a, 'aria-haspopup', 'true');
 				DOM.setAttrib(a, 'aria-owns', 'menu_' + o.id);
