@@ -112,14 +112,31 @@ var AutoValidator = {
 		this.mark(n.form, n);
 	},
 	
-	getInvalidFieldLabels : function(f) {
-		var nl, i, s = this.settings, invalid = [];
+	getErrorMessages : function(f) {
+		var nl, i, s = this.settings, field, msg, values, messages = [], ed = tinyMCEPopup.editor;
 		nl = this.tags(f, "label");
 		for (i=0; i<nl.length; i++) {
-			if (this.hasClass(nl[i], s.invalid_cls))
-				invalid.push(nl[i].textContent);
+			if (this.hasClass(nl[i], s.invalid_cls)) {
+				field = document.getElementById(nl[i].getAttribute("for"));
+				values = { field: nl[i].textContent };
+				if (this.hasClass(field, s.min_cls, true)) {
+					message = ed.getLang('invalid_data_min');
+					values.min = this.getNum(field, s.min_cls);
+				} else if (this.hasClass(field, s.number_cls)) {
+					message = ed.getLang('invalid_data_number');
+				} else if (this.hasClass(field, s.size_cls)) {
+					message = ed.getLang('invalid_data_size');
+				} else {
+					message = ed.getLang('invalid_data');
+				}
+				
+				message = message.replace(/{\#([^}]+)\}/g, function(a, b) {
+					return values[b] || '{#' + b + '}';
+				});
+				messages.push(message);
+			}
 		}
-		return invalid;
+		return messages;
 	},
 
 	reset : function(e) {
