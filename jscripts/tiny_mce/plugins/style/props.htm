@@ -44,8 +44,8 @@
 							<td role="presentation"><select id="text_size" name="text_size" class="mceEditableSelect"></select></td>
 							<td role="presentation">&nbsp;</td>
 							<td role="presentation">
-								<label id="textsizemeasturementlabel" for="text_size_measurement" style="display: none; visibility: hidden;">Text Size Measurement Unit</label>
-								<select id="text_size_measurement" name="text_size_measurement" aria-labelledby="textsizemeasturementlabel"></select>
+								<label id="text_size_measurement_label" for="text_size_measurement" style="display: none; visibility: hidden;">Text Size Measurement Unit</label>
+								<select id="text_size_measurement" name="text_size_measurement" aria-labelledby="text_size_measurement_label"></select>
 							</td>
 						</tr>
 					</table>
@@ -75,8 +75,8 @@
 							</td>
 							<td role="presentation">&nbsp;</td>
 							<td role="presentation">
-								<label id="textlineheightmeasurementlabel" for="text_lineheight_measurement" style="display: none; visibility: hidden;">Line Height Measurement Unit</label>
-								<select id="text_lineheight_measurement" name="text_lineheight_measurement" aria-labelledby="textlineheightmeasurementlabel"></select>
+								<label id="text_lineheight_measurement_label" for="text_lineheight_measurement" style="display: none; visibility: hidden;">Line Height Measurement Unit</label>
+								<select id="text_lineheight_measurement" name="text_lineheight_measurement" aria-labelledby="text_lineheight_measurement_label"></select>
 							</td>
 						</tr>
 					</table>
@@ -253,7 +253,11 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="block_text_indent" name="block_text_indent" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="block_text_indent_measurement" name="block_text_indent_measurement"></select></td>
+							<td role="presentation">
+								<label id="block_text_indent_measurement_label" for="block_text_indent_measurement" style="display: none; visibility: hidden;">Text Indent Measurement Unit</label>
+
+								<select id="block_text_indent_measurement" name="block_text_indent_measurement" aria-labelledby="block_text_indent_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -283,7 +287,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_width" name="box_width" class="mceEditableSelect" onChange="synch('box_width','positioning_width');" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_width_measurement" name="box_width_measurement"></select></td>
+							<td role="presentation">
+								<label id="box_width_measurement_label" for="box_width_measurement" style="display: none; visibility: hidden;">Box Width Measurement Unit</label>
+								<select id="box_width_measurement" name="box_width_measurement" aria-labelledby="box_width_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -298,7 +305,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_height" name="box_height" class="mceEditableSelect" onChange="synch('box_height','positioning_height');" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_height_measurement" name="box_height_measurement"></select></td>
+							<td role="presentation">
+								<label id="box_height_measurement_label" for="box_height_measurement" style="display: none; visibility: hidden;">Box Height Measurement Unit</label>
+								<select id="box_height_measurement" name="box_height_measurement" aria-labelledby="box_height_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -322,7 +332,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_padding_top" name="box_padding_top" class="mceEditableSelect" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_padding_top_measurement" name="box_padding_top_measurement"></select></td>
+							<td role="presentation">
+								<label id="box_padding_top_measurement_label" for="box_padding_top_measurement" style="display: none; visibility: hidden;">Padding Top Measurement Unit</label>
+								<select id="box_padding_top_measurement" name="box_padding_top_measurement" aria-labelledby="box_padding_top_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -334,7 +347,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_padding_right" name="box_padding_right" class="mceEditableSelect" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_padding_right_measurement" name="box_padding_right_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="box_padding_right_measurement_label" for="box_padding_right_measurement" style="display: none; visibility: hidden;">Padding Right Measurement Unit</label>
+								<select id="box_padding_right_measurement" name="box_padding_right_measurement" disabled="disabled" aria-labelledby="box_padding_right_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -346,7 +362,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_padding_bottom" name="box_padding_bottom" class="mceEditableSelect" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_padding_bottom_measurement" name="box_padding_bottom_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="box_padding_bottom_measurement_label" for="box_padding_bottom_measurement" style="display: none; visibility: hidden;">Padding Bottom Measurement Unit</label>
+								<select id="box_padding_bottom_measurement" name="box_padding_bottom_measurement" disabled="disabled" aria-labelledby="box_padding_bottom_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -358,7 +377,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_padding_left" name="box_padding_left" class="mceEditableSelect" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_padding_left_measurement" name="box_padding_left_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="box_padding_left_measurement_label" for="box_padding_left_measurement" style="display: none; visibility: hidden;">Padding Left Measurement Unit</label>
+								<select id="box_padding_left_measurement" name="box_padding_left_measurement" disabled="disabled" aria-labelledby="box_padding_left_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -383,7 +405,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_margin_top" name="box_margin_top" class="mceEditableSelect" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_margin_top_measurement" name="box_margin_top_measurement"></select></td>
+							<td role="presentation">
+								<label id="box_margin_top_measurement_label" for="box_margin_top_measurement" style="display: none; visibility: hidden;">Margin Top Measurement Unit</label>
+								<select id="box_margin_top_measurement" name="box_margin_top_measurement" aria-labelledby="box_margin_top_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -395,7 +420,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_margin_right" name="box_margin_right" class="mceEditableSelect" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_margin_right_measurement" name="box_margin_right_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="box_margin_right_measurement_label" for="box_margin_right_measurement" style="display: none; visibility: hidden;">Margin Right Measurement Unit</label>
+								<select id="box_margin_right_measurement" name="box_margin_right_measurement" disabled="disabled" aria-labelledby="box_margin_right_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -407,7 +435,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_margin_bottom" name="box_margin_bottom" class="mceEditableSelect" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_margin_bottom_measurement" name="box_margin_bottom_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="box_margin_bottom_measurement_label" for="box_margin_bottom_measurement" style="display: none; visibility: hidden;">Margin Bottom Measurement Unit</label>
+								<select id="box_margin_bottom_measurement" name="box_margin_bottom_measurement" disabled="disabled" aria-labelledby="box_margin_bottom_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -419,7 +450,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="box_margin_left" name="box_margin_left" class="mceEditableSelect" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="box_margin_left_measurement" name="box_margin_left_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="box_margin_left_measurement_label" for="box_margin_left_measurement" style="display: none; visibility: hidden;">Margin Left Measurement Unit</label>
+								<select id="box_margin_left_measurement" name="box_margin_left_measurement" disabled="disabled" aria-labelledby="box_margin_left_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -464,7 +498,10 @@
 					<tr role="presentation">
 						<td role="presentation"><select id="border_width_top" name="border_width_top" class="mceEditableSelect"></select></td>
 						<td role="presentation">&nbsp;</td>
-						<td role="presentation"><select id="border_width_top_measurement" name="border_width_top_measurement"></select></td>
+						<td role="presentation">
+							<label id="border_width_top_measurement_label" for="border_width_top_measurement" style="display: none; visibility: hidden;">Width top Measurement Unit</label>
+							<select id="border_width_top_measurement" name="border_width_top_measurement" aria-labelledby="border_width_top_measurement_label"></select>
+						</td>
 					</tr>
 				</table>
 			</td>
@@ -489,7 +526,10 @@
 					<tr role="presentation">
 						<td role="presentation"><select id="border_width_right" name="border_width_right" class="mceEditableSelect" disabled="disabled"></select></td>
 						<td role="presentation">&nbsp;</td>
-						<td role="presentation"><select id="border_width_right_measurement" name="border_width_right_measurement" disabled="disabled"></select></td>
+						<td role="presentation">
+							<label id="border_width_right_measurement_label" for="border_width_right_measurement" style="display: none; visibility: hidden;">Width Right Measurement Unit</label>
+							<select id="border_width_right_measurement" name="border_width_right_measurement" disabled="disabled" aria-labelledby="border_width_right_measurement_label"></select>
+						</td>
 					</tr>
 				</table>
 			</td>
@@ -514,7 +554,10 @@
 					<tr role="presentation">
 						<td role="presentation"><select id="border_width_bottom" name="border_width_bottom" class="mceEditableSelect" disabled="disabled"></select></td>
 						<td role="presentation">&nbsp;</td>
-						<td role="presentation"><select id="border_width_bottom_measurement" name="border_width_bottom_measurement" disabled="disabled"></select></td>
+						<td role="presentation">
+							<label id="border_width_bottom_measurement_label" for="border_width_bottom_measurement" style="display: none; visibility: hidden;">Width Bottom Measurement Unit</label>
+							<select id="border_width_bottom_measurement" name="border_width_bottom_measurement" disabled="disabled" aria-labelledby="border_width_bottom_measurement_label"></select>
+						</td>
 					</tr>
 				</table>
 			</td>
@@ -539,7 +582,10 @@
 					<tr role="presentation">
 						<td role="presentation"><select id="border_width_left" name="border_width_left" class="mceEditableSelect" disabled="disabled"></select></td>
 						<td role="presentation">&nbsp;</td>
-						<td role="presentation"><select id="border_width_left_measurement" name="border_width_left_measurement" disabled="disabled"></select></td>
+						<td role="presentation">
+							<label id="border_width_left_measurement_label" for="border_width_left_measurement" style="display: none; visibility: hidden;">Width Left Measurement Unit</label>
+							<select id="border_width_left_measurement" name="border_width_left_measurement" disabled="disabled" aria-labelledby="border_width_left_measurement_label"></select>
+						</td>
 					</tr>
 				</table>
 			</td>
@@ -597,7 +643,10 @@
 				<tr role="presentation">
 					<td role="presentation"><input type="text" id="positioning_width" name="positioning_width" onChange="synch('positioning_width','box_width');" /></td>
 					<td role="presentation">&nbsp;</td>
-					<td role="presentation"><select id="positioning_width_measurement" name="positioning_width_measurement"></select></td>
+					<td role="presentation">
+						<label id="positioning_width_measurement_label" for="positioning_width_measurement" style="display: none; visibility: hidden;">Positioning width Measurement Unit</label>
+						<select id="positioning_width_measurement" name="positioning_width_measurement" aria-labelledby="positioning_width_measurement_label"></select>
+					</td>
 				</tr>
 			</table>
 		</td>
@@ -612,7 +661,10 @@
 				<tr role="presentation">
 					<td role="presentation"><input type="text" id="positioning_height" name="positioning_height" onChange="synch('positioning_height','box_height');" /></td>
 					<td role="presentation">&nbsp;</td>
-					<td role="presentation"><select id="positioning_height_measurement" name="positioning_height_measurement"></select></td>
+					<td role="presentation">
+						<label id="positioning_height_measurement_label" for="positioning_height_measurement" style="display: none; visibility: hidden;">Positioning Height Measurement Unit</label>
+						<select id="positioning_height_measurement" name="positioning_height_measurement" aria-labelledby="positioning_height_measurement_label"></select>
+					</td>
 				</tr>
 			</table>
 		</td>
@@ -637,7 +689,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_placement_top" name="positioning_placement_top" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_placement_top_measurement" name="positioning_placement_top_measurement"></select></td>
+							<td role="presentation">
+								<label id="positioning_placement_top_measurement_label" for="positioning_placement_top_measurement" style="display: none; visibility: hidden;">Placement Top Measurement Unit</label>
+								<select id="positioning_placement_top_measurement" name="positioning_placement_top_measurement" aria-labelledby="positioning_placement_top_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -649,7 +704,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_placement_right" name="positioning_placement_right" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_placement_right_measurement" name="positioning_placement_right_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="positioning_placement_right_measurement_label" for="positioning_placement_right_measurement" style="display: none; visibility: hidden;">Placement Right Measurement Unit</label>
+								<select id="positioning_placement_right_measurement" name="positioning_placement_right_measurement" disabled="disabled" aria-labelledby="positioning_placement_right_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -661,7 +719,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_placement_bottom" name="positioning_placement_bottom" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_placement_bottom_measurement" name="positioning_placement_bottom_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="positioning_placement_bottom_measurement_label" for="positioning_placement_bottom_measurement" style="display: none; visibility: hidden;">Placement Bottom Measurement Unit</label>
+								<select id="positioning_placement_bottom_measurement" name="positioning_placement_bottom_measurement" disabled="disabled" aria-labelledby="positioning_placement_bottom_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -673,7 +734,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_placement_left" name="positioning_placement_left" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_placement_left_measurement" name="positioning_placement_left_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="positioning_placement_left_measurement_label" for="positioning_placement_left_measurement" style="display: none; visibility: hidden;">Placement Left Measurement Unit</label>
+								<select id="positioning_placement_left_measurement" name="positioning_placement_left_measurement" disabled="disabled" aria-labelledby="positioning_placement_left_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -698,7 +762,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_clip_top" name="positioning_clip_top" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_clip_top_measurement" name="positioning_clip_top_measurement"></select></td>
+							<td role="presentation">
+								<label id="positioning_clip_top_measurement_label" for="positioning_clip_top_measurement" style="display: none; visibility: hidden;">Clip Top Measurement Unit</label>
+								<select id="positioning_clip_top_measurement" name="positioning_clip_top_measurement" aria-labelledby="positioning_clip_top_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -710,7 +777,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_clip_right" name="positioning_clip_right" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_clip_right_measurement" name="positioning_clip_right_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="positioning_clip_right_measurement_label" for="positioning_clip_right_measurement" style="display: none; visibility: hidden;">Clip Right Measurement Unit</label>
+								<select id="positioning_clip_right_measurement" name="positioning_clip_right_measurement" disabled="disabled" aria-labelledby="positioning_clip_right_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -722,7 +792,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_clip_bottom" name="positioning_clip_bottom" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_clip_bottom_measurement" name="positioning_clip_bottom_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="positioning_clip_bottom_measurement_label" for="positioning_clip_bottom_measurement" style="display: none; visibility: hidden;">Clip Bottom Measurement Unit</label>
+								<select id="positioning_clip_bottom_measurement" name="positioning_clip_bottom_measurement" disabled="disabled" aria-labelledby="positioning_clip_bottom_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -734,7 +807,10 @@
 						<tr role="presentation">
 							<td role="presentation"><input type="text" id="positioning_clip_left" name="positioning_clip_left" disabled="disabled" /></td>
 							<td role="presentation">&nbsp;</td>
-							<td role="presentation"><select id="positioning_clip_left_measurement" name="positioning_clip_left_measurement" disabled="disabled"></select></td>
+							<td role="presentation">
+								<label id="positioning_clip_left_measurement_label" for="positioning_clip_left_measurement" style="display: none; visibility: hidden;">Clip Left Measurement Unit</label>
+								<select id="positioning_clip_left_measurement" name="positioning_clip_left_measurement" disabled="disabled" aria-labelledby="positioning_clip_left_measurement_label"></select>
+							</td>
 						</tr>
 					</table>
 				</td>
