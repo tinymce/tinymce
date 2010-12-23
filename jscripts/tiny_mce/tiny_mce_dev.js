@@ -124,9 +124,5 @@
 	include('Formatter.js');
 	include('LegacyInput.js');
 
-	// Developer API
-	include('xml/Parser.js');
-	include('Developer.js');
-
 	load();
 }());
