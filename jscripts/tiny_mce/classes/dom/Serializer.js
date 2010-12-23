@@ -9,6 +9,21 @@
  */
 
 (function(tinymce) {
+	/**
+	 * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for more details and examples on how to use this class. 
+	 *
+	 * @class tinymce.dom.Serializer
+	 */
+
+	/**
+	 * Constucts a new DOM serializer class.
+	 *
+	 * @constructor
+	 * @method Serializer
+	 * @param {Object} settings Serializer settings object.
+	 * @param {tinymce.dom.DOMUtils} dom DOMUtils instance reference.
+	 * @param {tinymce.html.Schema} schema Optional schema reference.
+	 */
 	tinymce.dom.Serializer = function(settings, dom, schema) {
 		var onPreProcess, onPostProcess, isIE = tinymce.isIE, each = tinymce.each, htmlParser;
 

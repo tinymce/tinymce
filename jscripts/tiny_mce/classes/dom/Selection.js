@@ -21,6 +21,9 @@
 	 * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
 	 *
 	 * @class tinymce.dom.Selection
+	 * @example
+	 * // Getting the currently selected node for the active editor
+	 * alert(tinymce.activeEditor.selection.getNode().nodeName);
 	 */
 	tinymce.create('tinymce.dom.Selection', {
 		/**
