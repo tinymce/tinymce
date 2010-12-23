@@ -15,6 +15,12 @@
 	 * since it's bound to an element.
 	 *
 	 * @class tinymce.dom.Element
+	 * @example
+	 * // Creates an basic element for an existing element
+	 * var elm = new tinymce.dom.Element('someid');
+	 * 
+	 * elm.setStyle('background-color', 'red');
+	 * elm.moveTo(10, 10);
 	 */
 
 	/**

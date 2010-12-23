@@ -21,8 +21,37 @@
 		schema = schema || new tinymce.html.Schema(settings);
 		settings.entity_encoding = settings.entity_encoding || 'named';
 
+		/**
+		 * This event gets executed before a HTML fragment gets serialized into a HTML string. This event enables you to do modifications to the DOM before the serialization occurs. It's important to know that the element that is getting serialized is cloned so it's not inside a document.
+		 *
+		 * @event onPreProcess
+		 * @param {tinymce.dom.Serializer} sender object/Serializer instance that is serializing an element.
+		 * @param {Object} args Object containing things like the current node.
+		 * @example
+		 * // Adds an observer to the onPreProcess event
+		 * serializer.onPreProcess.add(function(se, o) {
+		 *     // Add a class to each paragraph
+		 *     se.dom.addClass(se.dom.select('p', o.node), 'myclass');
+		 * });
+		 */
 		onPreProcess = new tinymce.util.Dispatcher(self);
+
+		/**
+		 * This event gets executed after a HTML fragment has been serialized into a HTML string. This event enables you to do modifications to the HTML string like regexp replaces etc. 
+		 *
+		 * @event onPreProcess
+		 * @param {tinymce.dom.Serializer} sender object/Serializer instance that is serializing an element.
+		 * @param {Object} args Object containing things like the current contents. 
+		 * @example
+		 * // Adds an observer to the onPostProcess event
+		 * serializer.onPostProcess.add(function(se, o) {
+		 *    // Remove all paragraphs and replace with BR
+		 *    o.content = o.content.replace(/<p[^>]+>|<p>/g, '');
+		 *    o.content = o.content.replace(/<\/p>/g, '<br />');
+		 * });
+		 */
 		onPostProcess = new tinymce.util.Dispatcher(self);
+
 		htmlParser = new tinymce.html.DomParser(settings, schema);
 
 		// Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed

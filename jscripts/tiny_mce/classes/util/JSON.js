@@ -58,6 +58,12 @@
 	 *
 	 * @class tinymce.util.JSON
 	 * @static
+	 * @example
+	 * // JSON parse a string into an object
+	 * var obj = tinymce.util.JSON.parse(somestring);
+	 * 
+	 * // JSON serialize a object into an string
+	 * var str = tinymce.util.JSON.serialize(obj);
 	 */
 	tinymce.util.JSON = {
 		/**

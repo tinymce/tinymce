@@ -16,6 +16,39 @@
 	 *
 	 * @class tinymce.ui.SplitButton
 	 * @extends tinymce.ui.Button
+	 * @example
+	 * // Creates a new plugin class and a custom split button
+	 * tinymce.create('tinymce.plugins.ExamplePlugin', {
+	 *     createControl: function(n, cm) {
+	 *         switch (n) {
+	 *             case 'mysplitbutton':
+	 *                 var c = cm.createSplitButton('mysplitbutton', {
+	 *                     title : 'My split button',
+	 *                     image : 'some.gif',
+	 *                     onclick : function() {
+	 *                         alert('Button was clicked.');
+	 *                     }
+	 *                 });
+	 * 
+	 *                 c.onRenderMenu.add(function(c, m) {
+	 *                     m.add({title : 'Some title', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
+	 * 
+	 *                     m.add({title : 'Some item 1', onclick : function() {
+	 *                         alert('Some item 1 was clicked.');
+	 *                     }});
+	 * 
+	 *                     m.add({title : 'Some item 2', onclick : function() {
+	 *                         alert('Some item 2 was clicked.');
+	 *                     }});
+	 *                 });
+	 * 
+	 *               // Return the new splitbutton instance
+	 *               return c;
+	 *         }
+	 * 
+	 *         return null;
+	 *     }
+	 * });
 	 */
 	tinymce.create('tinymce.ui.SplitButton:tinymce.ui.MenuButton', {
 		/**

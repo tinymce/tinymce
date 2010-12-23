@@ -17,6 +17,41 @@
 	 *
 	 * @class tinymce.ui.ListBox
 	 * @extends tinymce.ui.Control
+	 * @example
+	 * // Creates a new plugin class and a custom listbox
+	 * tinymce.create('tinymce.plugins.ExamplePlugin', {
+	 *     createControl: function(n, cm) {
+	 *         switch (n) {
+	 *             case 'mylistbox':
+	 *                 var mlb = cm.createListBox('mylistbox', {
+	 *                      title : 'My list box',
+	 *                      onselect : function(v) {
+	 *                          tinyMCE.activeEditor.windowManager.alert('Value selected:' + v);
+	 *                      }
+	 *                 });
+	 * 
+	 *                 // Add some values to the list box
+	 *                 mlb.add('Some item 1', 'val1');
+	 *                 mlb.add('some item 2', 'val2');
+	 *                 mlb.add('some item 3', 'val3');
+	 * 
+	 *                 // Return the new listbox instance
+	 *                 return mlb;
+	 *         }
+	 * 
+	 *         return null;
+	 *     }
+	 * });
+	 * 
+	 * // Register plugin with a short name
+	 * tinymce.PluginManager.add('example', tinymce.plugins.ExamplePlugin);
+	 * 
+	 * // Initialize TinyMCE with the new plugin and button
+	 * tinyMCE.init({
+	 *    ...
+	 *    plugins : '-example', // - means TinyMCE will not try to load it
+	 *    theme_advanced_buttons1 : 'mylistbox' // Add the new example listbox to the toolbar
+	 * });
 	 */
 	tinymce.create('tinymce.ui.ListBox:tinymce.ui.Control', {
 		/**

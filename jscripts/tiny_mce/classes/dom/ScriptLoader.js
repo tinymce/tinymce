@@ -9,6 +9,30 @@
  */
 
 (function(tinymce) {
+	/**
+	 * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when various items gets loaded. This class is useful to load external JavaScript files. 
+	 *
+	 * @class tinymce.dom.ScriptLoader
+	 * @example
+	 * // Load a script from a specific URL using the global script loader
+	 * tinymce.ScriptLoader.load('somescript.js');
+	 * 
+	 * // Load a script using a unique instance of the script loader
+	 * var scriptLoader = new tinymce.dom.ScriptLoader();
+	 * 
+	 * scriptLoader.load('somescript.js');
+	 * 
+	 * // Load multiple scripts
+	 * var scriptLoader = new tinymce.dom.ScriptLoader();
+	 * 
+	 * scriptLoader.add('somescript1.js');
+	 * scriptLoader.add('somescript2.js');
+	 * scriptLoader.add('somescript3.js');
+	 * 
+	 * scriptLoader.loadQueue(function() {
+	 *    alert('All scripts are now loaded.');
+	 * });
+	 */
 	tinymce.dom.ScriptLoader = function(settings) {
 		var QUEUED = 0,
 			LOADING = 1,

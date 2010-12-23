@@ -20,7 +20,14 @@
 
 	/**
 	 * Utility class for various DOM manipulation and retrival functions.
+	 *
 	 * @class tinymce.dom.DOMUtils
+	 * @example
+	 * // Add a class to an element by id in the page
+	 * tinymce.DOM.addClass('someid', 'someclass');
+	 *
+	 * // Add a class to an element by id inside the editor
+	 * tinyMCE.activeEditor.dom.addClass('someid', 'someclass');
 	 */
 	tinymce.create('tinymce.dom.DOMUtils', {
 		doc : null,
@@ -300,6 +307,12 @@
 		 * @param {String} p CSS level 1 pattern to select/find elements by.
 		 * @param {Object} s Optional root element/scope element to search in.
 		 * @return {Array} Array with all matched elements.
+		 * @example
+		 * // Adds a class to all paragraphs in the currently active editor
+		 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
+		 * 
+		 * // Adds a class to all spans that has the test class in the currently active editor
+		 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('span.test'), 'someclass')
 		 */
 		select : function(pa, s) {
 			var t = this;
@@ -352,6 +365,9 @@
 		 * @param {String} h Optional inner HTML contents to add for each element.
 		 * @param {Boolean} c Optional internal state to indicate if it should create or add.
 		 * @return {Element/Array} Element that got created or array with elements if multiple elements where passed.
+		 * @example
+		 * // Adds a new paragraph to the end of the active editor
+		 * tinyMCE.activeEditor.dom.add(tinyMCE.activeEditor.getBody(), 'p', {title : 'my title'}, 'Some content');
 		 */
 		add : function(p, n, a, h, c) {
 			var t = this;
@@ -381,6 +397,10 @@
 		 * @param {Object} a Optional object name/value collection with element attributes.
 		 * @param {String} h Optional HTML string to set as inner HTML of the element.
 		 * @return {Element} HTML DOM node element that got created.
+		 * @example
+		 * // Adds an element where the caret/selection is in the active editor
+		 * var el = tinyMCE.activeEditor.dom.create('div', {id : 'test', 'class' : 'myclass'}, 'some content');
+		 * tinyMCE.activeEditor.selection.setNode(el);
 		 */
 		create : function(n, a, h) {
 			return this.add(this.doc.createElement(n), n, a, h, 1);
@@ -394,6 +414,9 @@
 		 * @param {Object} a Optional object name/value collection with element attributes.
 		 * @param {String} h Optional HTML string to set as inner HTML of the element.
 		 * @return {String} String with new HTML element like for example: <a href="#">test</a>.
+		 * @example
+		 * // Creates a html chunk and inserts it at the current selection/caret location
+		 * tinyMCE.activeEditor.selection.setContent(tinyMCE.activeEditor.dom.createHTML('a', {href : 'test.html'}, 'some line'));
 		 */
 		createHTML : function(n, a, h) {
 			var o = '', t = this, k;
@@ -419,6 +442,12 @@
 		 * @param {String/Element/Array} node ID of element or DOM element object or array containing multiple elements/ids.
 		 * @param {Boolean} keep_children Optional state to keep children or not. If set to true all children will be placed at the location of the removed element.
 		 * @return {Element/Array} HTML DOM element that got removed or array of elements depending on input.
+		 * @example
+		 * // Removes all paragraphs in the active editor
+		 * tinyMCE.activeEditor.dom.remove(tinyMCE.activeEditor.dom.select('p'));
+		 * 
+		 * // Removes a element by id in the document
+		 * tinyMCE.DOM.remove('mydiv');
 		 */
 		remove : function(node, keep_children) {
 			return this.run(node, function(node) {
@@ -451,6 +480,12 @@
 		 * @param {String/Element/Array} n HTML element/Element ID or Array of elements/ids to set CSS style value on.
 		 * @param {String} na Name of the style value to set.
 		 * @param {String} v Value to set on the style.
+		 * @example
+		 * // Sets a style value on all paragraphs in the currently active editor
+		 * tinyMCE.activeEditor.dom.setStyle(tinyMCE.activeEditor.dom.select('p'), 'background-color', 'red');
+		 * 
+		 * // Sets a style value to an element by id in the current document
+		 * tinyMCE.DOM.setStyle('mydiv', 'background-color', 'red');
 		 */
 		setStyle : function(n, na, v) {
 			var t = this;
@@ -548,6 +583,12 @@
 		 * @method setStyles
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set styles on.
 		 * @param {Object} o Name/Value collection of style items to add to the element(s).
+		 * @example
+		 * // Sets styles on all paragraphs in the currently active editor
+		 * tinyMCE.activeEditor.dom.setStyles(tinyMCE.activeEditor.dom.select('p'), {'background-color' : 'red', 'color' : 'green'});
+		 * 
+		 * // Sets styles to an element by id in the current document
+		 * tinyMCE.DOM.setStyles('mydiv', {'background-color' : 'red', 'color' : 'green'});
 		 */
 		setStyles : function(e, o) {
 			var t = this, s = t.settings, ol;
@@ -586,6 +627,12 @@
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set attribute on.
 		 * @param {String} n Name of attribute to set.
 		 * @param {String} v Value to set on the attribute of this value is falsy like null 0 or '' it will remove the attribute instead.
+		 * @example
+		 * // Sets an attribute to all paragraphs in the active editor
+		 * tinyMCE.activeEditor.dom.setAttrib(tinyMCE.activeEditor.dom.select('p'), 'class', 'myclass');
+		 * 
+		 * // Sets an attribute to a specific element in the current page
+		 * tinyMCE.dom.setAttrib('mydiv', 'class', 'myclass');
 		 */
 		setAttrib : function(e, n, v) {
 			var t = this;
@@ -655,6 +702,12 @@
 		 * @method setAttribs
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set attributes on.
 		 * @param {Object} o Name/Value collection of attribute items to add to the element(s).
+		 * @example
+		 * // Sets some attributes to all paragraphs in the active editor
+		 * tinyMCE.activeEditor.dom.setAttribs(tinyMCE.activeEditor.dom.select('p'), {'class' : 'myclass', title : 'some title'});
+		 * 
+		 * // Sets some attributes to a specific element in the current page
+		 * tinyMCE.DOM.setAttribs('mydiv', {'class' : 'myclass', title : 'some title'});
 		 */
 		setAttribs : function(e, o) {
 			var t = this;
@@ -869,6 +922,18 @@
 		 *
 		 * @method loadCSS
 		 * @param {String} u URL to CSS file to load.
+		 * @example
+		 * // Loads a CSS file dynamically into the current document
+		 * tinymce.DOM.loadCSS('somepath/some.css');
+		 * 
+		 * // Loads a CSS file into the currently active editor instance
+		 * tinyMCE.activeEditor.dom.loadCSS('somepath/some.css');
+		 * 
+		 * // Loads a CSS file into an editor instance by id
+		 * tinyMCE.get('someid').dom.loadCSS('somepath/some.css');
+		 * 
+		 * // Loads multiple CSS files into the current document
+		 * tinymce.DOM.loadCSS('somepath/some.css,somepath/someother.css');
 		 */
 		loadCSS : function(u) {
 			var t = this, d = t.doc, head;
@@ -910,6 +975,12 @@
 		 * @param {String/Element/Array} Element ID string or DOM element or array with elements or IDs.
 		 * @param {String} c Class name to add to each element.
 		 * @return {String/Array} String with new class value or array with new class values for all elements.
+		 * @example
+		 * // Adds a class to all paragraphs in the active editor
+		 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'myclass');
+		 * 
+		 * // Adds a class to a specific element in the current page
+		 * tinyMCE.DOM.addClass('mydiv', 'myclass');
 		 */
 		addClass : function(e, c) {
 			return this.run(e, function(e) {
@@ -934,6 +1005,12 @@
 		 * @param {String/Element/Array} Element ID string or DOM element or array with elements or IDs.
 		 * @param {String} c Class name to remove to each element.
 		 * @return {String/Array} String with new class value or array with new class values for all elements.
+		 * @example
+		 * // Removes a class from all paragraphs in the active editor
+		 * tinyMCE.activeEditor.dom.removeClass(tinyMCE.activeEditor.dom.select('p'), 'myclass');
+		 * 
+		 * // Removes a class from a specific element in the current page
+		 * tinyMCE.DOM.removeClass('mydiv', 'myclass');
 		 */
 		removeClass : function(e, c) {
 			var t = this, re;
@@ -995,6 +1072,9 @@
 		 *
 		 * @method hide
 		 * @param {String/Element/Array} e ID of DOM element or DOM element or array with elements or IDs to hide.
+		 * @example
+		 * // Hides a element by id in the document
+		 * tinymce.DOM.hide('myid');
 		 */
 		hide : function(e) {
 			return this.setStyle(e, 'display', 'none');
@@ -1032,6 +1112,12 @@
 		 * @method setHTML
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set HTML inside.
 		 * @param {String} h HTML content to set as inner HTML of the element.
+		 * @example
+		 * // Sets the inner HTML of all paragraphs in the active editor
+		 * tinyMCE.activeEditor.dom.setHTML(tinyMCE.activeEditor.dom.select('p'), 'some inner html');
+		 * 
+		 * // Sets the inner HTML of a element by id in the document
+		 * tinyMCE.DOM.setHTML('mydiv', 'some inner html');
 		 */
 		setHTML : function(element, html) {
 			var self = this;
@@ -1075,6 +1161,9 @@
 		 * @method getOuterHTML
 		 * @param {String/Element} elm Element ID or element object to get outer HTML from.
 		 * @return {String} Outer HTML string.
+		 * @example
+		 * tinymce.DOM.getOuterHTML(editorElement);
+		 * tinyMCE.activeEditor.getOuterHTML(tinyMCE.activeEditor.getBody());
 		 */
 		getOuterHTML : function(elm) {
 			var doc, self = this;
@@ -1100,6 +1189,12 @@
 		 * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set outer HTML on.
 		 * @param {Object} h HTML code to set as outer value for the element.
 		 * @param {Document} d Optional document scope to use in this process defaults to the document of the DOM class.
+		 * @example
+		 * // Sets the outer HTML of all paragraphs in the active editor
+		 * tinyMCE.activeEditor.dom.setOuterHTML(tinyMCE.activeEditor.dom.select('p'), '<div>some html</div>');
+		 * 
+		 * // Sets the outer HTML of a element by id in the document
+		 * tinyMCE.DOM.setOuterHTML('mydiv', '<div>some html</div>');
 		 */
 		setOuterHTML : function(e, h, d) {
 			var t = this;
@@ -1477,6 +1572,9 @@
 		 *
 		 * @method createRng
 		 * @return {DOMRange} DOM Range object.
+		 * @example
+		 * var rng = tinymce.DOM.createRng();
+		 * alert(rng.startContainer + "," + rng.startOffset);
 		 */
 		createRng : function() {
 			var d = this.doc;
@@ -1706,6 +1804,9 @@
 	 * @property DOM
 	 * @member tinymce
 	 * @type tinymce.dom.DOMUtils
+	 * @example
+	 * // Example of how to add a class to some element by id
+	 * tinymce.DOM.addClass('someid', 'someclass');
 	 */
 	tinymce.DOM = new tinymce.dom.DOMUtils(document, {process_html : 0});
 })(tinymce);

@@ -20,7 +20,6 @@
 	 * This class contains the core logic for a TinyMCE editor.
 	 *
 	 * @class tinymce.Editor
-	 * @author Moxiecode
 	 * @example
 	 * // Add a class to all paragraphs in the editor.
 	 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
@@ -70,6 +69,15 @@
 			 *
 			 * @property isNotDirty
 			 * @type Boolean
+			 * @example
+			 * function ajaxSave() {
+			 *     var ed = tinyMCE.get('elm1');
+			 *
+			 *     // Save contents using some XHR call
+			 *     alert(ed.getContent());
+			 *
+			 *     ed.isNotDirty = 1; // Force not dirty state
+			 * }
 			 */
 			t.isNotDirty = false;
 
@@ -78,6 +86,9 @@
 			 *
 			 * @property plugins
 			 * @type Object
+			 * @example
+			 * // Execute a method inside a plugin directly
+			 * tinyMCE.activeEditor.plugins.someplugin.someMethod();
 			 */
 			t.plugins = {};
 
@@ -89,6 +100,16 @@
 				 * @event onPreInit
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @see #onInit
+				 * @example
+				 * // Adds an observer to the onPreInit event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onPreInit.add(function(ed) {
+				 *           console.debug('PreInit: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onPreInit',
 
@@ -97,6 +118,16 @@
 				 *
 				 * @event onBeforeRenderUI
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onBeforeRenderUI event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+ 				 *      ed.onBeforeRenderUI.add(function(ed, cm) {
+ 				 *          console.debug('Before render: ' + ed.id);
+ 				 *      });
+				 *    }
+				 * });
 				 */
 				'onBeforeRenderUI',
 
@@ -105,6 +136,16 @@
 				 *
 				 * @event onPostRender
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onPostRender event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onPostRender.add(function(ed, cm) {
+				 *           console.debug('After render: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onPostRender',
 
@@ -114,6 +155,16 @@
 				 * @event onInit
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @see #onPreInit
+				 * @example
+				 * // Adds an observer to the onInit event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onInit.add(function(ed) {
+				 *           console.debug('Editor is done: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onInit',
 
@@ -122,6 +173,16 @@
 				 *
 				 * @event onRemove
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onRemove event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onRemove.add(function(ed) {
+				 *           console.debug('Editor was removed: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onRemove',
 
@@ -130,6 +191,16 @@
 				 *
 				 * @event onActivate
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onActivate event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onActivate.add(function(ed) {
+				 *           console.debug('Editor was activated: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onActivate',
 
@@ -138,6 +209,16 @@
 				 *
 				 * @event onDeactivate
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onDeactivate event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onDeactivate.add(function(ed) {
+				 *           console.debug('Editor was deactivated: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onDeactivate',
 
@@ -147,6 +228,16 @@
 				 * @event onClick
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onClick event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onClick.add(function(ed, e) {
+				 *           console.debug('Editor was clicked: ' + e.target.nodeName);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onClick',
 
@@ -156,6 +247,16 @@
 				 * @event onEvent
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onEvent event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onEvent.add(function(ed, e) {
+ 				 *          console.debug('Editor event occured: ' + e.target.nodeName);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onEvent',
 
@@ -165,6 +266,16 @@
 				 * @event onMouseUp
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onMouseUp event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onMouseUp.add(function(ed, e) {
+				 *           console.debug('Mouse up event: ' + e.target.nodeName);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onMouseUp',
 
@@ -174,6 +285,16 @@
 				 * @event onMouseDown
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onMouseDown event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onMouseDown.add(function(ed, e) {
+				 *           console.debug('Mouse down event: ' + e.target.nodeName);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onMouseDown',
 
@@ -183,6 +304,16 @@
 				 * @event onDblClick
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onDblClick event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onDblClick.add(function(ed, e) {
+ 				 *          console.debug('Double click event: ' + e.target.nodeName);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onDblClick',
 
@@ -192,6 +323,16 @@
 				 * @event onKeyDown
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onKeyDown event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onKeyDown.add(function(ed, e) {
+				 *           console.debug('Key down event: ' + e.keyCode);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onKeyDown',
 
@@ -201,6 +342,16 @@
 				 * @event onKeyUp
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onKeyUp event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onKeyUp.add(function(ed, e) {
+				 *           console.debug('Key up event: ' + e.keyCode);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onKeyUp',
 
@@ -210,6 +361,16 @@
 				 * @event onKeyPress
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onKeyPress event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onKeyPress.add(function(ed, e) {
+				 *           console.debug('Key press event: ' + e.keyCode);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onKeyPress',
 
@@ -219,6 +380,16 @@
 				 * @event onContextMenu
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onContextMenu event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onContextMenu.add(function(ed, e) {
+				 *            console.debug('Context menu event:' + e.target);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onContextMenu',
 
@@ -228,6 +399,16 @@
 				 * @event onSubmit
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onSubmit event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onSubmit.add(function(ed, e) {
+				 *            console.debug('Form submit:' + e.target);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onSubmit',
 
@@ -237,6 +418,16 @@
 				 * @event onReset
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onReset event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onReset.add(function(ed, e) {
+				 *            console.debug('Form reset:' + e.target);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onReset',
 
@@ -246,6 +437,16 @@
 				 * @event onPaste
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onPaste event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onPaste.add(function(ed, e) {
+				 *            console.debug('Pasted plain text');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onPaste',
 
@@ -260,6 +461,17 @@
 				 * @option {Boolean} get Is true if the process is on a getContent operation.
 				 * @option {Boolean} set Is true if the process is on a setContent operation.
 				 * @option {Boolean} cleanup Is true if the process is on a cleanup operation.
+				 * @example
+				 * // Adds an observer to the onPreProcess event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onPreProcess.add(function(ed, o) {
+				 *            // Add a class to each paragraph in the editor
+				 *            ed.dom.addClass(ed.dom.select('p', o.node), 'myclass');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onPreProcess',
 
@@ -269,6 +481,18 @@
 				 * @event onPostProcess
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Object} obj PreProcess object.
+				 * @example
+				 * // Adds an observer to the onPostProcess event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onPostProcess.add(function(ed, o) {
+				 *            // Remove all paragraphs and replace with BR
+				 *            o.content = o.content.replace(/<p[^>]+>|<p>/g, '');
+				 *            o.content = o.content.replace(/<\/p>/g, '<br />');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onPostProcess',
 
@@ -277,6 +501,17 @@
 				 *
 				 * @event onBeforeSetContent
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onBeforeSetContent event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onBeforeSetContent.add(function(ed, o) {
+				 *            // Replaces all a characters with b characters
+				 *            o.content = o.content.replace(/a/g, 'b');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onBeforeSetContent',
 
@@ -286,6 +521,16 @@
 				 * @event onBeforeGetContent
 				 * @param {tinymce.Editor} sender Editor instance.
 				 * @param {Event} evt W3C DOM Event instance.
+				 * @example
+				 * // Adds an observer to the onBeforeGetContent event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onBeforeGetContent.add(function(ed, o) {
+				 *            console.debug('Before get content.');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onBeforeGetContent',
 
@@ -294,6 +539,17 @@
 				 *
 				 * @event onSetContent
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onSetContent event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onSetContent.add(function(ed, o) {
+				 *            // Replaces all a characters with b characters
+				 *            o.content = o.content.replace(/a/g, 'b');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onSetContent',
 
@@ -302,6 +558,17 @@
 				 *
 				 * @event onGetContent
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onGetContent event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onGetContent.add(function(ed, o) {
+				 *           // Replace all a characters with b
+				 *           o.content = o.content.replace(/a/g, 'b');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onGetContent',
 
@@ -310,6 +577,17 @@
 				 *
 				 * @event onLoadContent
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onLoadContent event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onLoadContent.add(function(ed, o) {
+				 *           // Output the element name
+				 *           console.debug(o.element.nodeName);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onLoadContent',
 
@@ -318,6 +596,17 @@
 				 *
 				 * @event onSaveContent
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onSaveContent event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onSaveContent.add(function(ed, o) {
+				 *           // Output the element name
+				 *           console.debug(o.element.nodeName);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onSaveContent',
 
@@ -326,6 +615,18 @@
 				 *
 				 * @event onNodeChange
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onNodeChange event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onNodeChange.add(function(ed, cm, e) {
+				 *           // Activates the link button when the caret is placed in a anchor element
+				 *           if (e.nodeName == 'A')
+				 *              cm.setActive('link', true);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onNodeChange',
 
@@ -334,6 +635,16 @@
 				 *
 				 * @event onChange
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onChange event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 * 	  ed.onChange.add(function(ed, l) {
+				 * 		  console.debug('Editor contents was modified. Contents: ' + l.content);
+				 * 	  });
+				 *    }
+				 * });
 				 */
 				'onChange',
 
@@ -342,6 +653,16 @@
 				 *
 				 * @event onBeforeExecCommand
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onBeforeExecCommand event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onBeforeExecCommand.add(function(ed, cmd, ui, val) {
+				 *           console.debug('Command is to be executed: ' + cmd);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onBeforeExecCommand',
 
@@ -350,6 +671,16 @@
 				 *
 				 * @event onExecCommand
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onExecCommand event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onExecCommand.add(function(ed, cmd, ui, val) {
+				 *           console.debug('Command was executed: ' + cmd);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onExecCommand',
 
@@ -358,7 +689,17 @@
 				 *
 				 * @event onUndo
 				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
+				 * @param {Object} level Undo level object.
+				 * @ example
+				 * // Adds an observer to the onUndo event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onUndo.add(function(ed, level) {
+				 *           console.debug('Undo was performed: ' + level.content);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onUndo',
 
@@ -367,7 +708,17 @@
 				 *
 				 * @event onRedo
 				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
+				 * @param {Object} level Undo level object.
+				 * @example
+				 * // Adds an observer to the onRedo event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onRedo.add(function(ed, level) {
+				 *           console.debug('Redo was performed: ' +level.content);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onRedo',
 
@@ -376,6 +727,16 @@
 				 *
 				 * @event onVisualAid
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onVisualAid event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onVisualAid.add(function(ed, e, s) {
+				 *           console.debug('onVisualAid event: ' + ed.id + ", State: " + s);
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onVisualAid',
 
@@ -384,6 +745,19 @@
 				 *
 				 * @event onSetProgressState
 				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onSetProgressState event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onSetProgressState.add(function(ed, b) {
+				 *            if (b)
+				 *                 console.debug('SHOW!');
+				 *            else
+				 *                 console.debug('HIDE!');
+				 *       });
+				 *    }
+				 * });
 				 */
 				'onSetProgressState'
 			], function(e) {
@@ -395,6 +769,9 @@
 			 *
 			 * @property settings
 			 * @type Object
+			 * @example
+			 * // Get the value of the theme setting
+			 * tinyMCE.activeEditor.windowManager.alert("You are using the " + tinyMCE.activeEditor.settings.theme + " theme");
 			 */
 			t.settings = s = extend({
 				id : id,
@@ -452,6 +829,12 @@
 			 *
 			 * @property documentBaseURI
 			 * @type tinymce.util.URI
+			 * @example
+			 * // Get relative URL from the location of document_base_url
+			 * tinyMCE.activeEditor.documentBaseURI.toRelative('/somedir/somefile.htm');
+			 * 
+			 * // Get absolute URL from the location of document_base_url
+			 * tinyMCE.activeEditor.documentBaseURI.toAbsolute('somefile.htm');
 			 */
 			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL, {
 				base_uri : tinyMCE.baseURI
@@ -462,6 +845,12 @@
 			 *
 			 * @property baseURI
 			 * @type tinymce.util.URI
+			 * @example
+			 * // Get relative URL from the location of the API
+			 * tinyMCE.activeEditor.baseURI.toRelative('/somedir/somefile.htm');
+			 * 
+			 * // Get absolute URL from the location of the API
+			 * tinyMCE.activeEditor.baseURI.toAbsolute('somefile.htm');
 			 */
 			t.baseURI = tinymce.baseURI;
 
@@ -514,6 +903,19 @@
 			 *
 			 * @property windowManager
 			 * @type tinymce.WindowManager
+			 * @example
+			 * // Shows an alert message
+			 * tinyMCE.activeEditor.windowManager.alert('Hello world!');
+			 * 
+			 * // Opens a new dialog with the file.htm file and the size 320x240
+			 * // It also adds a custom parameter this can be retrieved by using tinyMCEPopup.getWindowArg inside the dialog.
+			 * tinyMCE.activeEditor.windowManager.open({
+			 *    url : 'file.htm',
+			 *    width : 320,
+			 *    height : 240
+			 * }, {
+			 *    custom_param : 1
+			 * });
 			 */
 			if (tinymce.WindowManager)
 				t.windowManager = new tinymce.WindowManager(t);
@@ -616,6 +1018,9 @@
 			 *
 			 * @property theme
 			 * @type tinymce.Theme
+			 * @example
+			 * // Executes a method on the theme directly
+			 * tinyMCE.activeEditor.theme.someMethod();
 			 */
 			if (s.theme) {
 				s.theme = s.theme.replace(/-/, '');
@@ -656,6 +1061,9 @@
 			 *
 			 * @property controlManager
 			 * @type tinymce.ControlManager
+			 * @example
+			 * // Disables the bold button
+			 * tinyMCE.activeEditor.controlManager.setDisabled('bold', true);
 			 */
 			t.controlManager = new tinymce.ControlManager(t);
 
@@ -857,6 +1265,9 @@
 			 *
 			 * @property dom
 			 * @type tinymce.dom.DOMUtils
+			 * @example
+			 * // Adds a class to all paragraphs within the editor
+			 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
 			 */
 			t.dom = new tinymce.dom.DOMUtils(t.getDoc(), {
 				keep_values : true,
@@ -927,6 +1338,9 @@
 			 *
 			 * @property serializer
 			 * @type tinymce.dom.Serializer
+			 * @example
+			 * // Serializes the first paragraph in the editor into a string
+			 * tinyMCE.activeEditor.serializer.serialize(tinyMCE.activeEditor.dom.select('p')[0]);
 			 */
 			t.serializer = new tinymce.dom.Serializer(s, t.dom, t.schema);
 
@@ -935,6 +1349,15 @@
 			 *
 			 * @property selection
 			 * @type tinymce.dom.Selection
+			 * @example
+			 * // Sets some contents to the current selection in the editor
+			 * tinyMCE.activeEditor.selection.setContent('Some contents');
+			 *
+			 * // Gets the current selection
+			 * alert(tinyMCE.activeEditor.selection.getContent());
+			 *
+			 * // Selects the first paragraph found
+			 * tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.dom.select('p')[0]);
 			 */
 			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
 
@@ -1017,6 +1440,9 @@
 			 *
 			 * @property undoManager
 			 * @type tinymce.UndoManager
+			 * @example
+			 * // Undoes the last modification to the editor
+			 * tinyMCE.activeEditor.undoManager.undo();
 			 */
 			t.undoManager = new tinymce.UndoManager(t);
 
@@ -1485,6 +1911,12 @@
 		 * @param {String} dv Optional default value to return.
 		 * @param {String} ty Optional type parameter.
 		 * @return {String} Configuration parameter value or default value.
+		 * @example
+		 * // Returns a specific config value from the currently active editor
+		 * var someval = tinyMCE.activeEditor.getParam('myvalue');
+		 * 
+		 * // Returns a specific config value from a specific editor instance by id
+		 * var someval2 = tinyMCE.get('my_editor').getParam('myvalue');
 		 */
 		getParam : function(n, dv, ty) {
 			var tr = tinymce.trim, v = is(this.settings[n]) ? this.settings[n] : dv, o;
@@ -1552,6 +1984,25 @@
 		 * @method addButton
 		 * @param {String} n Button name to add.
 		 * @param {Object} s Settings object with title, cmd etc.
+		 * @example
+		 * // Adds a custom button to the editor and when a user clicks the button it will open
+		 * // an alert box with the selected contents as plain text.
+		 * tinyMCE.init({
+		 *    ...
+		 * 
+		 *    theme_advanced_buttons1 : 'example,..'
+		 * 
+		 *    setup : function(ed) {
+		 *       // Register example button
+		 *       ed.addButton('example', {
+		 *          title : 'example.desc',
+		 *          image : '../jscripts/tiny_mce/plugins/example/img/example.gif',
+		 *          onclick : function() {
+		 *             ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({format : 'text'}));
+		 *          }
+		 *       });
+		 *    }
+		 * });
 		 */
 		addButton : function(n, s) {
 			var t = this;
@@ -1568,6 +2019,18 @@
 		 * @param {String} name Command name to add/override.
 		 * @param {addCommandCallback} callback Function to execute when the command occurs.
 		 * @param {Object} scope Optional scope to execute the function in.
+		 * @example
+		 * // Adds a custom command that later can be executed using execCommand
+		 * tinyMCE.init({
+		 *    ...
+		 * 
+		 *    setup : function(ed) {
+		 *       // Register example command
+		 *       ed.addCommand('mycommand', function(ui, v) {
+		 *          ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({format : 'text'}));
+		 *       });
+		 *    }
+		 * });
 		 */
 		addCommand : function(name, callback, scope) {
 			/**
@@ -1875,6 +2338,15 @@
 		 * @param {Number} ti Optional time to wait before the progress gets shown.
 		 * @param {Object} o Optional object to pass to the progress observers.
 		 * @return {Boolean} Same as the input state.
+		 * @example
+		 * // Show progress for the active editor
+		 * tinyMCE.activeEditor.setProgressState(true);
+		 * 
+		 * // Hide progress for the active editor
+		 * tinyMCE.activeEditor.setProgressState(false);
+		 * 
+		 * // Show progress after 3 seconds
+		 * tinyMCE.activeEditor.setProgressState(true, 3000);
 		 */
 		setProgressState : function(b, ti, o) {
 			this.onSetProgressState.dispatch(this, b, ti, o);
@@ -1971,6 +2443,18 @@
 		 * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.
 		 * @param {Object} args Optional content object, this gets passed around through the whole set process.
 		 * @return {String} HTML string that got set into the editor.
+		 * @example
+		 * // Sets the HTML contents of the activeEditor editor
+		 * tinyMCE.activeEditor.setContent('<span>some</span> html');
+		 * 
+		 * // Sets the raw contents of the activeEditor editor
+		 * tinyMCE.activeEditor.setContent('<span>some</span> html', {format : 'raw'});
+		 * 
+		 * // Sets the content of a specific editor (my_editor in this example)
+		 * tinyMCE.get('my_editor').setContent(data);
+		 * 
+		 * // Sets the bbcode contents of the activeEditor editor if the bbcode plugin was added
+		 * tinyMCE.activeEditor.setContent('[b]some[/b] html', {format : 'bbcode'});
 		 */
 		setContent : function(content, args) {
 			var self = this, rootNode, body = self.getBody();
@@ -2016,6 +2500,15 @@
 		 * @method getContent
 		 * @param {Object} args Optional content object, this gets passed around through the whole get process.
 		 * @return {String} Cleaned content string, normally HTML contents.
+		 * @example
+		 * // Get the HTML contents of the currently active editor
+		 * console.debug(tinyMCE.activeEditor.getContent());
+		 * 
+		 * // Get the raw contents of the currently active editor
+		 * tinyMCE.activeEditor.getContent({format : 'raw'});
+		 * 
+		 * // Get content of a specific editor:
+		 * tinyMCE.get('content id').getContent()
 		 */
 		getContent : function(args) {
 			var self = this, content;
@@ -2049,6 +2542,9 @@
 		 *
 		 * @method isDirty
 		 * @return {Boolean} True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
+		 * @example
+		 * if (tinyMCE.activeEditor.isDirty())
+		 *     alert("You must save your contents.");
 		 */
 		isDirty : function() {
 			var self = this;

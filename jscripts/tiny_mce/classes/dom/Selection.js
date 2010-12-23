@@ -19,6 +19,7 @@
 	/**
 	 * This class handles text and control selection it's an crossbrowser utility class.
 	 * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
+	 *
 	 * @class tinymce.dom.Selection
 	 */
 	tinymce.create('tinymce.dom.Selection', {
@@ -40,9 +41,40 @@
 
 			// Add events
 			each([
+				/**
+			     * This event gets executed before contents is extracted from the selection.
+				 *
+				 * @event onBeforeSetContent
+				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
+				 * @param {Object} args Contains things like the contents that will be returned. 
+				 */
 				'onBeforeSetContent',
+
+				/**
+			     * This event gets executed before contents is inserted into selection. 
+				 *
+				 * @event onBeforeGetContent
+				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
+				 * @param {Object} args Contains things like the contents that will be inserted. 
+				 */
 				'onBeforeGetContent',
+
+				/**
+			     * This event gets executed when contents is inserted into selection.
+				 *
+				 * @event onSetContent
+				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
+				 * @param {Object} args Contains things like the contents that will be inserted. 
+				 */
 				'onSetContent',
+
+				/**
+			     * This event gets executed when contents is extracted from the selection.
+				 *
+				 * @event onGetContent
+				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
+				 * @param {Object} args Contains things like the contents that will be returned. 
+				 */
 				'onGetContent'
 			], function(e) {
 				t[e] = new tinymce.util.Dispatcher(t);
@@ -65,6 +97,12 @@
 		 * @method getContent
 		 * @param {Object} s Optional settings class with for example output format text or html.
 		 * @return {String} Selected contents in for example HTML format.
+		 * @example
+		 * // Alerts the currently selected contents
+		 * alert(tinyMCE.activeEditor.selection.getContent());
+		 * 
+		 * // Alerts the currently selected contents as plain text
+		 * alert(tinyMCE.activeEditor.selection.getContent({format : 'text'}));
 		 */
 		getContent : function(s) {
 			var t = this, r = t.getRng(), e = t.dom.create("body"), se = t.getSel(), wb, wa, n;
@@ -111,6 +149,9 @@
 		 * @method setContent
 		 * @param {String} h HTML contents to set could also be other formats depending on settings.
 		 * @param {Object} s Optional settings object with for example data format.
+		 * @example
+		 * // Inserts some HTML contents at the current selection
+		 * tinyMCE.activeEditor.selection.setContent('<strong>Some contents</strong>');
 		 */
 		setContent : function(h, s) {
 			var t = this, r = t.getRng(), c, d = t.win.document;
@@ -266,6 +307,14 @@
 		 * @param {Number} type Optional state if the bookmark should be simple or not. Default is complex.
 		 * @param {Boolean} normalized Optional state that enables you to get a position that it would be after normalization.
 		 * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
+		 * @example
+		 * // Stores a bookmark of the current selection
+		 * var bm = tinyMCE.activeEditor.selection.getBookmark();
+		 * 
+		 * tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent() + 'Some new content');
+		 * 
+		 * // Restore the selection bookmark
+		 * tinyMCE.activeEditor.selection.moveToBookmark(bm);
 		 */
 		getBookmark : function(type, normalized) {
 			var t = this, dom = t.dom, rng, rng2, id, collapsed, name, element, index, chr = '\uFEFF', styles;
@@ -385,6 +434,14 @@
 		 * @method moveToBookmark
 		 * @param {Object} bookmark Bookmark to restore selection from.
 		 * @return {Boolean} true/false if it was successful or not.
+		 * @example
+		 * // Stores a bookmark of the current selection
+		 * var bm = tinyMCE.activeEditor.selection.getBookmark();
+		 * 
+		 * tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent() + 'Some new content');
+		 * 
+		 * // Restore the selection bookmark
+		 * tinyMCE.activeEditor.selection.moveToBookmark(bm);
 		 */
 		moveToBookmark : function(bookmark) {
 			var t = this, dom = t.dom, marker1, marker2, rng, root, startContainer, endContainer, startOffset, endOffset;
@@ -517,6 +574,9 @@
 		 * @param {Element} node HMTL DOM element to select.
 		 * @param {Boolean} content Optional bool state if the contents should be selected or not on non IE browser.
 		 * @return {Element} Selected element the same element as the one that got passed in.
+		 * @example
+		 * // Select the first paragraph in the active editor
+		 * tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.dom.select('p')[0]);
 		 */
 		select : function(node, content) {
 			var t = this, dom = t.dom, rng = dom.createRng(), idx;
@@ -618,6 +678,8 @@
 		 * @method getRng
 		 * @param {Boolean} w3c Forces a compatible W3C range on IE.
 		 * @return {Range} Internal browser range object.
+		 * @see http://www.quirksmode.org/dom/range_intro.html
+		 * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
 		 */
 		getRng : function(w3c) {
 			var t = this, s, r, elm, doc = t.win.document;
@@ -700,6 +762,9 @@
 		 * @method setNode
 		 * @param {Element} n Element to set as the contents of the selection.
 		 * @return {Element} Returns the element that got passed in.
+		 * @example
+		 * // Inserts a DOM node at current selection/caret location
+		 * tinyMCE.activeEditor.selection.setNode(tinyMCE.activeEditor.dom.create('img', {src : 'some.gif', title : 'some title'}));
 		 */
 		setNode : function(n) {
 			var t = this;
@@ -714,6 +779,9 @@
 		 *
 		 * @method getNode
 		 * @return {Element} Currently selected element or common ancestor element.
+		 * @example
+		 * // Alerts the currently selected elements node name
+		 * alert(tinyMCE.activeEditor.selection.getNode().nodeName);
 		 */
 		getNode : function() {
 			var t = this, rng = t.getRng(), sel = t.getSel(), elm, start = rng.startContainer, end = rng.endContainer;

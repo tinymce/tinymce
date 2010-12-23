@@ -106,6 +106,9 @@
 		 * @method toRelative
 		 * @param {String} u URI to convert into a relative path/URI.
 		 * @return {String} Relative URI from the point specified in the current URI instance.
+		 * @example
+		 * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm
+		 * var url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
 		 */
 		toRelative : function(u) {
 			var t = this, o;
@@ -139,6 +142,9 @@
 		 * @param {String} u URI to convert into a relative path/URI.
 		 * @param {Boolean} nh No host and protocol prefix.
 		 * @return {String} Absolute URI from the point specified in the current URI instance.
+		 * @example
+		 * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm
+		 * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
 		 */
 		toAbsolute : function(u, nh) {
 			var u = new tinymce.util.URI(u, {base_uri : this});

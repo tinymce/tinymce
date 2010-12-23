@@ -45,6 +45,21 @@ tinyMCEPopup = {
 
 		// Setup on init listeners
 		t.listeners = [];
+
+		/**
+		 * Fires when the popup is initialized.
+		 *
+		 * @event onInit
+		 * @param {tinymce.Editor} editor Editor instance.
+		 * @example
+		 * // Alerts the selected contents when the dialog is loaded
+		 * tinyMCEPopup.onInit.add(function(ed) {
+		 *     alert(ed.selection.getContent());
+		 * });
+		 * 
+		 * // Executes the init method on page load in some object using the SomeObject scope
+		 * tinyMCEPopup.onInit.add(SomeObject.init, SomeObject);
+		 */
 		t.onInit = {
 			add : function(f, s) {
 				t.listeners.push({func : f, scope : s});
