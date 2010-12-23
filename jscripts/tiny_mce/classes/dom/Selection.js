@@ -855,9 +855,15 @@
 
 			// Removes listeners
 			function endSelection() {
+				var rng = doc.selection.createRange();
+
+				// If the range is collapsed then use the last start range
+				if (!rng.item && rng.compareEndPoints('StartToEnd', rng) === 0)
+					startRng.select();
+
 				dom.unbind(doc, 'mouseup', endSelection);
 				dom.unbind(doc, 'mousemove', selectionChange);
-				started = 0;
+				startRng = started = 0;
 			};
 
 			// Detect when user selects outside BODY
