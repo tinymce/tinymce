@@ -1,6 +1,7 @@
 Version 3.4b2 (2011-01-xx)
 	Fixed so mceInsertContent handles context correctly to enforce valid nesting of elements.
 	Fixed bug where paste as plain text would throw exception of missing entities setting.
+	Fixed bug where anchor nodes where removed by the new serializer engine.
 Version 3.4b1 (2010-12-20)
 	Added new serialization engine that increases performance and enforces valid output according to the specified schema settings.
 	Added new HTML parser logic used by the serialization engine and can handle malformed html contents.

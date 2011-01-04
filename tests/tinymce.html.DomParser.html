@@ -270,6 +270,28 @@ test('Fix orphan LI elements', function() {
 	root = parser.parse('<li>a</li>');
 	equals(serializer.serialize(root), '<ul><li>a</li></ul>', 'LI wrapped in new UL');
 });
+
+test('Remove empty elements', function() {
+	var parser, result, schema = new tinymce.html.Schema({valid_elements: 'span,-a,img'});
+
+	expect(4);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a href="#"></a>');
+	equals(serializer.serialize(root), '<span></span>', 'Remove empty a element');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a href="#"><!-- x --></a>');
+	equals(serializer.serialize(root), '<span></span>', 'Remove empty a element containing comment');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a name="anchor"></a>');
+	equals(serializer.serialize(root), '<span></span><a name="anchor"></a>', 'Leave a with name attribute');
+	
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
+	equals(serializer.serialize(root), '<span></span><a href="#"><img src="about:blank" /></a>', 'Leave elements with img in it');
+});
 </script>
 </head>
 <body>

@@ -360,9 +360,12 @@
 								if (elementRule.paddEmpty)
 									node.empty().append(new Node('#text', '3')).value = '\u00a0';
 								else {
-									tempNode = node.parent;
-									node.empty().remove();
-									node = tempNode;
+									// Leave nodes that have a name like <a name="name">
+									if (!node.attributes.map.name) {
+										tempNode = node.parent;
+										node.empty().remove();
+										node = tempNode;
+									}
 									return;
 								}
 							}
