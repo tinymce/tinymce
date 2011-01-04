@@ -45,7 +45,7 @@
 			// Add events
 			each([
 				/**
-			     * This event gets executed before contents is extracted from the selection.
+				 * This event gets executed before contents is extracted from the selection.
 				 *
 				 * @event onBeforeSetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
@@ -54,7 +54,7 @@
 				'onBeforeSetContent',
 
 				/**
-			     * This event gets executed before contents is inserted into selection. 
+				 * This event gets executed before contents is inserted into selection. 
 				 *
 				 * @event onBeforeGetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
@@ -63,7 +63,7 @@
 				'onBeforeGetContent',
 
 				/**
-			     * This event gets executed when contents is inserted into selection.
+				 * This event gets executed when contents is inserted into selection.
 				 *
 				 * @event onSetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
@@ -72,7 +72,7 @@
 				'onSetContent',
 
 				/**
-			     * This event gets executed when contents is extracted from the selection.
+				 * This event gets executed when contents is extracted from the selection.
 				 *
 				 * @event onGetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
@@ -173,7 +173,7 @@
 
 				// Delete and insert new node
 				
-				if (r.startContainer == d && r.endContainer ==  d) {
+				if (r.startContainer == d && r.endContainer == d) {
 					// WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
 					d.body.innerHTML = h;
 				} else {
