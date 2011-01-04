@@ -10,7 +10,6 @@
 
 (function() {
 	var each = tinymce.each,
-		entities = null,
 		defs = {
 			paste_auto_cleanup_on_paste : true,
 			paste_block_drop : false,
@@ -103,9 +102,6 @@
 						ed.pasteAsPlainText = false;
 						ed.controlManager.setActive("pastetext", false);
 					}
-				} else if (/<(p|h[1-6]|ul|ol)/.test(o.content)) {
-					// Handle insertion of contents containing block elements separately
-					t._insertBlockContent(ed, dom, o.content);
 				} else {
 					t._insert(o.content);
 				}
@@ -681,65 +677,6 @@
 		},
 
 		/**
-		 * This method will split the current block parent and insert the contents inside the split position.
-		 * This logic can be improved so text nodes at the start/end remain in the start/end block elements
-		 */
-		_insertBlockContent : function(ed, dom, content) {
-			var parentBlock, marker, sel = ed.selection, last, elm, vp, y, elmHeight, markerId = 'mce_marker';
-
-			function select(n) {
-				var r;
-
-				if (tinymce.isIE) {
-					r = ed.getDoc().body.createTextRange();
-					r.moveToElementText(n);
-					r.collapse(false);
-					r.select();
-				} else {
-					sel.select(n, 1);
-					sel.collapse(false);
-				}
-			}
-
-			// Insert a marker for the caret position
-			this._insert('<span id="' + markerId + '"></span>', 1);
-			marker = dom.get(markerId);
-			parentBlock = dom.getParent(marker, 'p,h1,h2,h3,h4,h5,h6,ul,ol,th,td');
-
-			// If it's a parent block but not a table cell
-			if (parentBlock && !/TD|TH/.test(parentBlock.nodeName)) {
-				// Split parent block
-				marker = dom.split(parentBlock, marker);
-
-				// Insert nodes before the marker
-				each(dom.create('div', 0, content).childNodes, function(n) {
-					last = marker.parentNode.insertBefore(n.cloneNode(true), marker);
-				});
-
-				// Move caret after marker
-				select(last);
-			} else {
-				dom.setOuterHTML(marker, content);
-				sel.select(ed.getBody(), 1);
-				sel.collapse(0);
-			}
-
-			// Remove marker if it's left
-			while (elm = dom.get(markerId))
-				dom.remove(elm);
-
-			// Get element, position and height
-			elm = sel.getStart();
-			vp = dom.getViewPort(ed.getWin());
-			y = ed.dom.getPos(elm).y;
-			elmHeight = elm.clientHeight;
-
-			// Is element within viewport if not then scroll it into view
-			if (y < vp.y || y + elmHeight > vp.y + vp.h)
-				ed.getDoc().body.scrollTop = y < vp.y ? y : y - vp.h + 25;
-		},
-
-		/**
 		 * Inserts the specified contents at the caret position.
 		 */
 		_insert : function(h, skip_undo) {
@@ -782,9 +719,6 @@
 			};
 
 			if ((typeof(h) === "string") && (h.length > 0)) {
-				if (!entities)
-					entities = ("34,quot,38,amp,39,apos,60,lt,62,gt," + ed.serializer.settings.entities).split(",");
-
 				// If HTML content with line-breaking tags, then remove all cr/lf chars because only tags will break a line
 				if (/<(?:p|br|h[1-6]|ul|ol|dl|table|t[rdh]|div|blockquote|fieldset|pre|address|center)[^>]*>/i.test(h)) {
 					process([
@@ -803,20 +737,6 @@
 					[/<\/t[dh]>\s*<t[dh][^>]*>/gi, "\t"],		// Table cells get tabs betweem them
 					/<[a-z!\/?][^>]*>/gi,						// Delete all remaining tags
 					[/&nbsp;/gi, " "],							// Convert non-break spaces to regular spaces (remember, *plain text*)
-					[
-						// HTML entity
-						/&(#\d+|[a-z0-9]{1,10});/gi,
-
-						// Replace with actual character
-						function(e, s) {
-							if (s.charAt(0) === "#") {
-								return String.fromCharCode(s.slice(1));
-							}
-							else {
-								return ((e = inArray(entities, s)) > 0)? String.fromCharCode(entities[e-1]) : " ";
-							}
-						}
-					],
 					[/(?:(?!\n)\s)*(\n+)(?:(?!\n)\s)*/gi, "$1"],	// Cool little RegExp deletes whitespace around linebreak chars.
 					[/\n{3,}/g, "\n\n"],							// Max. 2 consecutive linebreaks
 					/^\s+|\s+$/g									// Trim the front & back

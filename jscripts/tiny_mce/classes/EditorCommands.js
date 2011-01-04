@@ -285,19 +285,57 @@
 			},
 
 			mceInsertContent : function(command, ui, value) {
-				var caretNode, rng;
+				var caretNode, rng, rootNode, parent;
 
-				selection.setContent(value.replace(/\{\$caret\}/g, '<br id="_mce_caret" />'));
+				// Add caret at end of contents if it's missing
+				if (value.indexOf('{$caret}') == -1)
+					value += '{$caret}';
 
-				// Move selection to caret marker and remove marker. This enables users to insert contents
-				// and control where the caret ends up by using a template like: <b>a{$caret}c</b>
-				caretNode = dom.select('#_mce_caret')[0];
+				// Set the content at selection to a span and replace it's contents with the value
+				selection.setContent('<span id="__mce">_</span>');
+				dom.setOuterHTML('__mce', value.replace(/\{\$caret\}/, '<span data-mce-type="bookmark" id="__mce">\uFEFF</span>'));
+
+				// Find caret root parent and clean it up using the serializer to avoid nesting
+				caretNode = dom.select('#__mce')[0];
+				rootNode = dom.getRoot();
+				while (caretNode) {
+					if (caretNode === rootNode) {
+						// Clean up the parent element by parsing and serializing it
+						// This will remove invalid elements/attributes and fix nesting issues
+						dom.setOuterHTML(parent, 
+							new tinymce.html.Serializer({}, editor.schema).serialize(
+								new tinymce.html.DomParser({}, editor.schema).parse(dom.getOuterHTML(parent))
+							)
+						);
+
+						break;
+					}
+
+					parent = caretNode;
+					caretNode = caretNode.parentNode;
+				}
+
+				// Find caret after cleanup and move selection to that location
+				caretNode = dom.select('#__mce')[0];
 				if (caretNode) {
+					if (caretNode.parentNode.childNodes.length == 1)
+						caretNode = caretNode.parentNode;
+
+					// Move selection to caret marker and remove marker. This enables users to insert contents
+					// and control where the caret ends up by using a template like: <b>a{$caret}c</b>
 					rng = dom.createRng();
 					rng.setStartBefore(caretNode);
-					rng.setEndBefore(caretNode);
+					rng.setEndAfter(caretNode);
 					selection.setRng(rng);
-					dom.remove(caretNode);
+
+					// IE will render an invisible caret if we remove the DOM node so use Delete command instead
+					if (tinymce.isIE) {
+						editor.getDoc().execCommand('Delete', false, null);
+						dom.remove(caretNode);
+					} else {
+						dom.remove(caretNode);
+						selection.setRng(rng); // Needed on WebKit to update the selection after the node was removed
+					}
 				}
 			},
 
