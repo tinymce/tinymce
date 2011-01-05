@@ -647,20 +647,20 @@
 		 * Collapse the selection to start or end of range.
 		 *
 		 * @method collapse
-		 * @param {Boolean} b Optional boolean state if to collapse to end or not. Defaults to start.
+		 * @param {Boolean} to_start Optional boolean state if to collapse to end or not. Defaults to start.
 		 */
-		collapse : function(b) {
-			var t = this, r = t.getRng(), n;
+		collapse : function(to_start) {
+			var self = this, rng = self.getRng(), node;
 
 			// Control range on IE
-			if (r.item) {
-				n = r.item(0);
-				r = this.win.document.body.createTextRange();
-				r.moveToElementText(n);
+			if (rng.item) {
+				node = rng.item(0);
+				rng = self.win.document.body.createTextRange();
+				rng.moveToElementText(node);
 			}
 
-			r.collapse(!!b);
-			t.setRng(r);
+			rng.collapse(!!to_start);
+			self.setRng(rng);
 		},
 
 		/**
