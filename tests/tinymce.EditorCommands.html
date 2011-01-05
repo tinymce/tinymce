@@ -23,7 +23,7 @@ function getContent() {
 test('mceInsertContent', function() {
 	var rng;
 	
-	expect(5);
+	expect(25);
 
 	editor.setContent('<p>1234</p>');
 	rng = editor.dom.createRng();
@@ -32,6 +32,11 @@ test('mceInsertContent', function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<p>abc</p>');
 	equals(getContent(), '<p>1</p><p>abc</p><p>4</p>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.startOffset, 0);
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 0);
 
 	editor.setContent('<p>1234</p>');
 	rng = editor.dom.createRng();
@@ -40,6 +45,11 @@ test('mceInsertContent', function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<p>abc</p>');
 	equals(getContent(), '<p>abc</p>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.startOffset, 1);
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 1);
 
 	editor.setContent('<pre>1234</pre>');
 	rng = editor.dom.createRng();
@@ -48,6 +58,11 @@ test('mceInsertContent', function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<pre>abc</pre>');
 	equals(getContent(), '<pre>1</pre><pre>abc</pre><pre>4</pre>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	equals(rng.startContainer.nodeName, 'PRE');
+	equals(rng.startOffset, 0);
+	equals(rng.endContainer.nodeName, 'PRE');
+	equals(rng.endOffset, 0);
 
 	editor.setContent('<h1>1234</h1>');
 	rng = editor.dom.createRng();
@@ -56,6 +71,11 @@ test('mceInsertContent', function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<h1>abc</h1>');
 	equals(getContent(), '<h1>1</h1><h1>abc</h1><h1>4</h1>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	equals(rng.startContainer.nodeName, 'H1');
+	equals(rng.startOffset, 0);
+	equals(rng.endContainer.nodeName, 'H1');
+	equals(rng.endOffset, 0);
 
 	editor.setContent('<ul><li>1234</li></ul>');
 	rng = editor.dom.createRng();
@@ -64,6 +84,12 @@ test('mceInsertContent', function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<li>abc</li>');
 	equals(getContent(), '<ul><li>1</li><li>abc</li><li>4</li></ul>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	equals(rng.startContainer.nodeName, 'LI');
+	equals(rng.startOffset, 0);
+	equals(rng.endContainer.nodeName, 'LI');
+	equals(rng.endOffset, 0);
+
 });
 
 tinyMCE.init({
