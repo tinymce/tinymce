@@ -224,11 +224,6 @@
 								dom.remove(child, 1);
 							}
 
-							// WebKit duplicates the divs so we need to remove them
-							each(dom.select('div.mcePaste', n), function(n) {
-								dom.remove(n, 1);
-							});
-
 							// Remove apply style spans
 							each(dom.select('span.Apple-style-span', n), function(n) {
 								dom.remove(n, 1);
@@ -239,11 +234,13 @@
 								dom.remove(n);
 							});
 
-							h += n.innerHTML;
+							// WebKit will make a copy of the DIV for each line of plain text pasted and insert them into the DIV
+							if (n.parentNode.className != 'mcePaste')
+								h += n.innerHTML;
 						});
 
 						// Remove the nodes
-						each(nl, function(n) {
+						each(dom.select('div.mcePaste'), function(n) {
 							dom.remove(n);
 						});
 
