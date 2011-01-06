@@ -3108,6 +3108,18 @@
 				});
 
 				t.onKeyUp.add(function(ed, e) {
+					var rng, parent, bookmark;
+
+					// Fix for bug #3168, to remove odd ".." nodes from the DOM we need to get/set the HTML of the parent node.
+					if (isIE && e.keyCode == 8) {
+						rng = t.selection.getRng();
+						parent = rng.parentElement();
+
+						bookmark = t.selection.getBookmark();
+						parent.innerHTML = parent.innerHTML;
+						t.selection.moveToBookmark(bookmark);
+					}
+
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey)
 						addUndo();
 				});
