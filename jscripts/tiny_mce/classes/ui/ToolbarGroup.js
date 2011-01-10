@@ -27,10 +27,13 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	renderHTML : function() {
 		var t = this, h = [], controls = t.controls, each = tinymce.each, settings = t.settings;
 		h.push('<div id="' + t.id + '" role="group" aria-labelledby="' + t.id + '_voice">');
+		//TODO: ACC test this out - adding a role = application for getting the landmarks working well.
+		h.push("<span role='application'>");
 		h.push('<span id="' + t.id + '_voice" class="mceVoiceLabel" style="display:none;">' + dom.encode(settings.name) + '</span>');
 		each(controls, function(toolbar) {
 			h.push(toolbar.renderHTML());
 		});
+		h.push("</span>");
 		h.push('</div>');
 		return h.join('');
 	},
