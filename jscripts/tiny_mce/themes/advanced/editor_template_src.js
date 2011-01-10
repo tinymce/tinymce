@@ -842,7 +842,7 @@
 				DOM.add(n, 'span', {id: ed.id + '_path_voice'}, ed.translate('advanced.path'));
 				DOM.add(n, 'span', {}, ': ');
 			} else {
-				DOm.add(n, 'span', {}, '&#160;');
+				DOM.add(n, 'span', {}, '&#160;');
 			}
 
 			if (s.theme_advanced_resizing) {
