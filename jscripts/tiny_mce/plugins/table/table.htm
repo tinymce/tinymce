@@ -24,46 +24,46 @@
 			<div id="general_panel" class="panel current">
 				<fieldset>
 					<legend>{#table_dlg.general_props}</legend>
-					  <table border="0" cellpadding="4" cellspacing="0" width="100%" role="presentation">
-							  <tr role="presentation">
-								<td role="presentation"><label id="colslabel" for="cols">{#table_dlg.cols}</label></td>
-								<td role="presentation"><input id="cols" name="cols" type="text" value="" size="3" maxlength="3" class="required number min1 mceFocus" aria-required="true" /></td>
-								<td role="presentation"><label id="rowslabel" for="rows">{#table_dlg.rows}</label></td>
-								<td role="presentation"><input id="rows" name="rows" type="text" value="" size="3" maxlength="3" class="required number min1" aria-required="true" /></td>
+					  <table role="presentation" border="0" cellpadding="4" cellspacing="0" width="100%">
+							  <tr>
+								<td><label id="colslabel" for="cols">{#table_dlg.cols}</label></td>
+								<td><input id="cols" name="cols" type="text" value="" size="3" maxlength="3" class="required number min1 mceFocus" aria-required="true" /></td>
+								<td><label id="rowslabel" for="rows">{#table_dlg.rows}</label></td>
+								<td><input id="rows" name="rows" type="text" value="" size="3" maxlength="3" class="required number min1" aria-required="true" /></td>
 							  </tr>
-							  <tr role="presentation">
-								<td role="presentation"><label id="cellpaddinglabel" for="cellpadding">{#table_dlg.cellpadding}</label></td>
-								<td role="presentation"><input id="cellpadding" name="cellpadding" type="text" value="" size="3" maxlength="3" class="number" /></td>
-								<td role="presentation"><label id="cellspacinglabel" for="cellspacing">{#table_dlg.cellspacing}</label></td>
-								<td role="presentation"><input id="cellspacing" name="cellspacing" type="text" value="" size="3" maxlength="3" class="number" /></td>
+							  <tr>
+								<td><label id="cellpaddinglabel" for="cellpadding">{#table_dlg.cellpadding}</label></td>
+								<td><input id="cellpadding" name="cellpadding" type="text" value="" size="3" maxlength="3" class="number" /></td>
+								<td><label id="cellspacinglabel" for="cellspacing">{#table_dlg.cellspacing}</label></td>
+								<td><input id="cellspacing" name="cellspacing" type="text" value="" size="3" maxlength="3" class="number" /></td>
 							  </tr>
-							  <tr role="presentation">
-								<td role="presentation"><label id="alignlabel" for="align">{#table_dlg.align}</label></td>
-								<td role="presentation"><select id="align" name="align">
+							  <tr>
+								<td><label id="alignlabel" for="align">{#table_dlg.align}</label></td>
+								<td><select id="align" name="align">
 									<option value="">{#not_set}</option>
 									<option value="center">{#table_dlg.align_middle}</option>
 									<option value="left">{#table_dlg.align_left}</option>
 									<option value="right">{#table_dlg.align_right}</option>
 								  </select></td>
-								<td role="presentation"><label id="borderlabel" for="border">{#table_dlg.border}</label></td>
-								<td role="presentation"><input id="border" name="border" type="text" value="" size="3" maxlength="3" onchange="changedBorder();" class="number" /></td>
+								<td><label id="borderlabel" for="border">{#table_dlg.border}</label></td>
+								<td><input id="border" name="border" type="text" value="" size="3" maxlength="3" onchange="changedBorder();" class="number" /></td>
 							  </tr>
-							  <tr id="width_row" role="presentation">
-								<td role="presentation"><label id="widthlabel" for="width">{#table_dlg.width}</label></td>
-								<td role="presentation"><input name="width" type="text" id="width" value="" size="4" maxlength="4" onchange="changedSize();" class="size" /></td>
-								<td role="presentation"><label id="heightlabel" for="height">{#table_dlg.height}</label></td>
-								<td role="presentation"><input name="height" type="text" id="height" value="" size="4" maxlength="4" onchange="changedSize();" class="size" /></td>
+							  <tr id="width_row">
+								<td><label id="widthlabel" for="width">{#table_dlg.width}</label></td>
+								<td><input name="width" type="text" id="width" value="" size="4" maxlength="4" onchange="changedSize();" class="size" /></td>
+								<td><label id="heightlabel" for="height">{#table_dlg.height}</label></td>
+								<td><input name="height" type="text" id="height" value="" size="4" maxlength="4" onchange="changedSize();" class="size" /></td>
 							  </tr>
-							  <tr id="styleSelectRow" role="presentation">
-								<td role="presentation"><label id="classlabel" for="class">{#class_name}</label></td>
-								<td colspan="3" role="presentation">
+							  <tr id="styleSelectRow" >
+								<td><label id="classlabel" for="class">{#class_name}</label></td>
+								<td colspan="3" >
 								 <select id="class" name="class" class="mceEditableSelect">
 									<option value="" selected="selected">{#not_set}</option>
 								 </select></td>
 							  </tr>
-							  <tr role="presentation">
-								<td class="column1" role="presentation"><label for="caption">{#table_dlg.caption}</label></td> 
-								<td role="presentation"><input id="caption" name="caption" type="checkbox" class="checkbox" value="true" /></td> 
+							  <tr>
+								<td class="column1" ><label for="caption">{#table_dlg.caption}</label></td> 
+								<td><input id="caption" name="caption" type="checkbox" class="checkbox" value="true" /></td> 
 							  </tr>
 							</table>
 				</fieldset>
@@ -73,44 +73,44 @@
 				<fieldset>
 					<legend>{#table_dlg.advanced_props}</legend>
 
-					<table border="0" cellpadding="0" cellspacing="4" role="presentation">
-						<tr role="presentation">
-							<td class="column1" role="presentation"><label for="id">{#table_dlg.id}</label></td> 
-							<td role="presentation"><input id="id" name="id" type="text" value="" class="advfield" /></td> 
+					<table role="presentation" border="0" cellpadding="0" cellspacing="4">
+						<tr>
+							<td class="column1"><label for="id">{#table_dlg.id}</label></td> 
+							<td><input id="id" name="id" type="text" value="" class="advfield" /></td> 
 						</tr>
 
-						<tr role="presentation">
-							<td role="presentation" class="column1"><label for="summary">{#table_dlg.summary}</label></td> 
-							<td role="presentation"><input id="summary" name="summary" type="text" value="" class="advfield" /></td> 
+						<tr>
+							<td class="column1"><label for="summary">{#table_dlg.summary}</label></td> 
+							<td><input id="summary" name="summary" type="text" value="" class="advfield" /></td> 
 						</tr>
 
-						<tr role="presentation">
-							<td role="presentation"><label for="style">{#table_dlg.style}</label></td>
-							<td role="presentation"><input type="text" id="style" name="style" value="" class="advfield" onchange="changedStyle();" /></td>
+						<tr>
+							<td><label for="style">{#table_dlg.style}</label></td>
+							<td><input type="text" id="style" name="style" value="" class="advfield" onchange="changedStyle();" /></td>
 						</tr>
 
-						<tr role="presentation">
-							<td role="presentation" class="column1"><label id="langlabel" for="lang">{#table_dlg.langcode}</label></td> 
-							<td role="presentation">
+						<tr>
+							<td class="column1"><label id="langlabel" for="lang">{#table_dlg.langcode}</label></td> 
+							<td>
 								<input id="lang" name="lang" type="text" value="" class="advfield" />
 							</td> 
 						</tr>
 
-						<tr role="presentation">
-							<td role="presentation" class="column1"><label for="backgroundimage">{#table_dlg.bgimage}</label></td> 
-							<td role="presentation">
-								<table aria-labelledby="backgroundimage_label" role="presentation" border="0" cellpadding="0" cellspacing="0">
-									<tr role="presentation">
-										<td role="presentation"><input id="backgroundimage" name="backgroundimage" type="text" value="" class="advfield" onchange="changedBackgroundImage();" /></td>
-										<td role="presentation" id="backgroundimagebrowsercontainer">&nbsp;</td>
+						<tr>
+							<td class="column1"><label for="backgroundimage">{#table_dlg.bgimage}</label></td> 
+							<td>
+								<table role="presentation" aria-labelledby="backgroundimage_label" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td><input id="backgroundimage" name="backgroundimage" type="text" value="" class="advfield" onchange="changedBackgroundImage();" /></td>
+										<td id="backgroundimagebrowsercontainer">&nbsp;</td>
 									</tr>
 								</table>
-							</td role="presentation"> 
+							</td> 
 						</tr>
 
 						<tr>
-							<td role="presentation" class="column1"><label for="tframe">{#table_dlg.frame}</label></td> 
-							<td role="presentation">
+							<td class="column1"><label for="tframe">{#table_dlg.frame}</label></td> 
+							<td>
 								<select id="tframe" name="tframe" class="advfield"> 
 										<option value="">{#not_set}</option>
 										<option value="void">{#table_dlg.rules_void}</option>
@@ -126,9 +126,9 @@
 							</td> 
 						</tr>
 
-						<tr role="presentation">
-							<td role="presentation" class="column1"><label for="rules">{#table_dlg.rules}</label></td> 
-							<td role="presentation">
+						<tr>
+							<td class="column1"><label for="rules">{#table_dlg.rules}</label></td> 
+							<td>
 								<select id="rules" name="rules" class="advfield"> 
 										<option value="">{#not_set}</option> 
 										<option value="none">{#table_dlg.frame_none}</option>
@@ -140,9 +140,9 @@
 							</td> 
 						</tr>
 
-						<tr role="presentation">
-							<td role="presentation" class="column1"><label for="dir">{#table_dlg.langdir}</label></td> 
-							<td role="presentation">
+						<tr>
+							<td class="column1"><label for="dir">{#table_dlg.langdir}</label></td> 
+							<td>
 								<select id="dir" name="dir" class="advfield"> 
 										<option value="">{#not_set}</option> 
 										<option value="ltr">{#table_dlg.ltr}</option> 
@@ -152,24 +152,24 @@
 						</tr>
 
 						<tr role="group" aria-labelledby="bordercolor_label">
-							<td role="presentation" class="column1"><label id="bordercolor_label" for="bordercolor">{#table_dlg.bordercolor}</label></td> 
-							<td role="presentation">
+							<td class="column1"><label id="bordercolor_label" for="bordercolor">{#table_dlg.bordercolor}</label></td> 
+							<td>
 								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
-									<tr role="presentation">
-										<td role="presentation"><input id="bordercolor" name="bordercolor" type="text" value="" size="9" onchange="updateColor('bordercolor_pick','bordercolor');changedColor();" /></td>
-										<td role="presentation" id="bordercolor_pickcontainer">&nbsp;</td>
+									<tr>
+										<td><input id="bordercolor" name="bordercolor" type="text" value="" size="9" onchange="updateColor('bordercolor_pick','bordercolor');changedColor();" /></td>
+										<td id="bordercolor_pickcontainer">&nbsp;</td>
 									</tr>
 								</table>
 							</td> 
 						</tr>
 
 						<tr role="group" aria-labelledby="bgcolor_label">
-							<td role="presentation" class="column1"><label id="bgcolor_label" for="bgcolor">{#table_dlg.bgcolor}</label></td> 
-							<td role="presentation">
+							<td class="column1"><label id="bgcolor_label" for="bgcolor">{#table_dlg.bgcolor}</label></td> 
+							<td>
 								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
-									<tr role="presentation">
-										<td role="presentation"><input id="bgcolor" name="bgcolor" type="text" value="" size="9" onchange="updateColor('bgcolor_pick','bgcolor');changedColor();" /></td>
-										<td role="presentation" id="bgcolor_pickcontainer">&nbsp;</td>
+									<tr>
+										<td><input id="bgcolor" name="bgcolor" type="text" value="" size="9" onchange="updateColor('bgcolor_pick','bgcolor');changedColor();" /></td>
+										<td id="bgcolor_pickcontainer">&nbsp;</td>
 									</tr>
 								</table>
 							</td> 
