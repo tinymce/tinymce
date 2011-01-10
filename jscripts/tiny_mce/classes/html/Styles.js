@@ -74,7 +74,7 @@ tinymce.html.Styles = function(settings, schema) {
 		 * @return {Object} Object representation of that style like {border : '1px solid red'}
 		 */
 		parse : function(css) {
-			var styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;
+			var styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope || this;
 
 			function compress(prefix, suffix) {
 				var top, right, bottom, left;
@@ -203,7 +203,7 @@ tinymce.html.Styles = function(settings, schema) {
 
 							// Convert the URL to relative/absolute depending on config
 							if (urlConverter)
-								url = urlConverter(url, 'style');
+								url = urlConverter.call(urlConverterScope, url, 'style');
 
 							// Output new URL format
 							return "url('" + url.replace(/\'/g, "\\'") + "')";

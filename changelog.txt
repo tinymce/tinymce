@@ -5,6 +5,8 @@ Version 3.4b2 (2011-01-xx)
 	Fixed bug where anchor nodes where removed by the new serializer engine.
 	Fixed bug where IE would crash if when backspace where used on some specific contents.
 	Fixed bug where pasting of plain text in WebKit would result in merging of text lines.
+	Fixed bug where it wasn't possible to delete images or tables using backspace on IE9.
+	Fixed bug where urls in styles would generate a JS error due to incorrect scope.
 Version 3.4b1 (2010-12-20)
 	Added new serialization engine that increases performance and enforces valid output according to the specified schema settings.
 	Added new HTML parser logic used by the serialization engine and can handle malformed html contents.

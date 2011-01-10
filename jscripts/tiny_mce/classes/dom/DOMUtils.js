@@ -75,7 +75,8 @@
 			}, s);
 
 			t.styles = new tinymce.html.Styles({
-				url_converter : s.url_converter
+				url_converter : s.url_converter,
+				url_converter_scope : s.url_converter_scope
 			}, s.schema);
 
 			// Fix IE6SP2 flicker and check it failed for pre SP2
