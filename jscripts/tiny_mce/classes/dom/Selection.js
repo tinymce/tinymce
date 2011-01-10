@@ -883,7 +883,7 @@
 
 		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
 		_fixIESelection : function() {
-			var dom = this.dom, doc = dom.doc, body = doc.body, started, startRng;
+			var dom = this.dom, doc = dom.doc, body = doc.body, started, startRng, htmlElm;
 
 			// Make HTML element unselectable since we are going to handle selection by hand
 			doc.documentElement.unselectable = true;
@@ -929,7 +929,7 @@
 				var rng = doc.selection.createRange();
 
 				// If the range is collapsed then use the last start range
-				if (!rng.item && rng.compareEndPoints('StartToEnd', rng) === 0)
+				if (startRng && !rng.item && rng.compareEndPoints('StartToEnd', rng) === 0)
 					startRng.select();
 
 				dom.unbind(doc, 'mouseup', endSelection);
@@ -943,8 +943,12 @@
 					if (started)
 						endSelection();
 
-					started = 1;
+					// Detect vertical scrollbar, since IE will fire a mousedown on the scrollbar and have target set as HTML
+					htmlElm = doc.documentElement;
+					if (htmlElm.scrollHeight > htmlElm.clientHeight)
+						return;
 
+					started = 1;
 					// Setup start position
 					startRng = rngFromPoint(e.x, e.y);
 					if (startRng) {
