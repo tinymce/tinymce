@@ -1,4 +1,5 @@
 Version 3.3.9.x (2011-x-x)
+	Fixed bug where it wasn't possible to delete images or tables using backspace on IE9.
 	Fixed IE9 bug #4172, search/replace not working
 	Backported paste plugin fixes from 3.4 - IE, IE9, Gecko, WebKit related problems.
 	Fixed bug where focus of the editor would get on control contents on IE lost due to a bug in the ColorSplitButton control.
