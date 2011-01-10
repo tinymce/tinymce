@@ -162,11 +162,11 @@
 				c = c.replace(/^#/, '');
 
 				if (!i--) {
-					tr = DOM.add(tb, 'tr', {role: 'presentation'});
+					tr = DOM.add(tb, 'tr');
 					i = s.grid_width - 1;
 				}
 
-				n = DOM.add(tr, 'td', {role: 'presentation'});
+				n = DOM.add(tr, 'td');
 
 				n = DOM.add(n, 'a', {
 					role : 'option',
@@ -190,8 +190,8 @@
 			});
 
 			if (s.more_colors_func) {
-				n = DOM.add(tb, 'tr', {role: 'presentation'});
-				n = DOM.add(n, 'td', {role: 'presentation', colspan : s.grid_width, 'class' : 'mceMoreColors'});
+				n = DOM.add(tb, 'tr');
+				n = DOM.add(n, 'td', {colspan : s.grid_width, 'class' : 'mceMoreColors'});
 				n = DOM.add(n, 'a', {role: 'option', id : t.id + '_more', href : 'javascript:;', onclick : 'return false;', 'class' : 'mceMoreColors'}, s.more_colors_title);
 
 				Event.add(n, 'click', function(e) {
