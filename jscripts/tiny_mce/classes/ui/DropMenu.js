@@ -376,8 +376,8 @@
 			var n, s = o.settings, a, ro, it, cp = this.classPrefix, ic;
 
 			if (s.separator) {
-				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'ItemSeparator', role: "presentation"});
-				DOM.add(ro, 'td', {'class' : cp + 'ItemSeparator', role: "presentation"});
+				ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'ItemSeparator'});
+				DOM.add(ro, 'td', {'class' : cp + 'ItemSeparator'});
 
 				if (n = ro.previousSibling)
 					DOM.addClass(n, 'mceLast');
@@ -385,8 +385,8 @@
 				return;
 			}
 
-			n = ro = DOM.add(tb, 'tr', {role: 'presentation', id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
-			n = it = DOM.add(n, s.titleItem ? 'th' : 'td', {role: 'presentation'});
+			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
+			n = it = DOM.add(n, s.titleItem ? 'th' : 'td');
 			n = a = DOM.add(n, 'a', {id: o.id + '_aria',  role: s.titleItem ? 'presentation' : 'option', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
 
 			if (s.parent) {

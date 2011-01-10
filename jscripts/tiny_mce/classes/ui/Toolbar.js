@@ -46,29 +46,29 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				else if (co.ListBox)
 					c += ' mceToolbarStartListBox';
 
-				h += dom.createHTML('td', {'class' : c, role : 'presentation'}, dom.createHTML('span', null, '<!-- IE -->'));
+				h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
 			}
 
 			// Add toolbar end before list box and after the previous button
 			// This is to fix the o2k7 editor skins
 			if (pr && co.ListBox) {
 				if (pr.Button || pr.SplitButton)
-					h += dom.createHTML('td', {'class' : 'mceToolbarEnd', role : 'presentation'}, dom.createHTML('span', null, '<!-- IE -->'));
+					h += dom.createHTML('td', {'class' : 'mceToolbarEnd'}, dom.createHTML('span', null, '<!-- IE -->'));
 			}
 
 			// Render control HTML
 
 			// IE 8 quick fix, needed to propertly generate a hit area for anchors
 			if (dom.stdMode)
-				h += '<td style="position: relative" role="presentation">' + co.renderHTML() + '</td>';
+				h += '<td style="position: relative">' + co.renderHTML() + '</td>';
 			else
-				h += '<td role="presentation">' + co.renderHTML() + '</td>';
+				h += '<td>' + co.renderHTML() + '</td>';
 
 			// Add toolbar start after list box and before the next button
 			// This is to fix the o2k7 editor skins
 			if (nx && co.ListBox) {
 				if (nx.Button || nx.SplitButton)
-					h += dom.createHTML('td', {'class' : 'mceToolbarStart', role : 'presentation'}, dom.createHTML('span', null, '<!-- IE -->'));
+					h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
 			}
 		}
 
@@ -81,9 +81,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		else if (co.ListBox)
 			c += ' mceToolbarEndListBox';
 
-		h += dom.createHTML('td', {'class' : c, role : 'presentation'}, dom.createHTML('span', null, '<!-- IE -->'));
+		h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
 
-		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || '', role: 'presentation', tabindex: '-1'}, '<tbody><tr role="presentation">' + h + '</tr></tbody>');
+		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || '', role: 'presentation', tabindex: '-1'}, '<tbody><tr>' + h + '</tr></tbody>');
 	}
 });
 })(tinymce);
