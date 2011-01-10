@@ -3068,25 +3068,19 @@
 				});
 
 				t.onKeyDown.add(function(ed, e) {
+					var sel;
+
 					switch (e.keyCode) {
 						case 8:
+							sel = t.getDoc().selection;
+
 							// Fix IE control + backspace browser bug
-							if (t.selection.getRng().item) {
-								ed.dom.remove(t.selection.getRng().item(0));
+							if (sel.createRange && sel.createRange().item) {
+								ed.dom.remove(sel.createRange().item(0));
 								return Event.cancel(e);
 							}
 					}
 				});
-
-				/*if (t.dom.boxModel) {
-					t.getBody().style.height = '100%';
-
-					Event.add(t.getWin(), 'resize', function(e) {
-						var docElm = t.getDoc().documentElement;
-
-						docElm.style.height = (docElm.offsetHeight - 10) + 'px';
-					});
-				}*/
 			}
 
 			if (tinymce.isOpera) {
@@ -3113,11 +3107,12 @@
 					// Fix for bug #3168, to remove odd ".." nodes from the DOM we need to get/set the HTML of the parent node.
 					if (isIE && e.keyCode == 8) {
 						rng = t.selection.getRng();
-						parent = rng.parentElement();
-
-						bookmark = t.selection.getBookmark();
-						parent.innerHTML = parent.innerHTML;
-						t.selection.moveToBookmark(bookmark);
+						if (rng.parentElement) {
+							parent = rng.parentElement();
+							bookmark = t.selection.getBookmark();
+							parent.innerHTML = parent.innerHTML;
+							t.selection.moveToBookmark(bookmark);
+						}
 					}
 
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey)
