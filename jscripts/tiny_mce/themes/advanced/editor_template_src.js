@@ -497,7 +497,7 @@
 			if (!DOM.boxModel)
 				n = DOM.add(n, 'div', {'class' : 'mceOldBoxModel'});
 
-			n = sc = DOM.add(n, 'table', {id : ed.id + '_tbl', 'class' : 'mceLayout', cellSpacing : 0, cellPadding : 0, role : 'presentation'});
+			n = sc = DOM.add(n, 'table', {id : ed.id + '_tbl', 'class' : 'mceLayout', cellSpacing : 0, cellPadding : 0});
 			n = tb = DOM.add(n, 'tbody');
 
 			switch ((s.theme_advanced_layout_manager || '').toLowerCase()) {
@@ -655,8 +655,8 @@
 			var t = this, ed = t.editor, lo = s.theme_advanced_toolbar_location, sl = s.theme_advanced_statusbar_location, n, ic, etb, c;
 
 			if (s.readonly) {
-				n = DOM.add(tb, 'tr', {role: 'presentation'});
-				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer', role : 'presentation'});
+				n = DOM.add(tb, 'tr');
+				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
 				return ic;
 			}
 
@@ -709,8 +709,8 @@
 
 			// Create iframe container
 			if (!s.theme_advanced_toolbar_container) {
-				n = DOM.add(tb, 'tr', {role: 'presentation'});
-				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer', role : 'presentation'});
+				n = DOM.add(tb, 'tr');
+				n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
 			}
 
 			// Create toolbar container at bottom
@@ -734,8 +734,8 @@
 
 				switch (v.toLowerCase()) {
 					case 'mceeditor':
-						n = DOM.add(tb, 'tr', {role: 'presentation'});
-						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer', role: 'presentation'});
+						n = DOM.add(tb, 'tr');
+						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
 						break;
 
 					case 'mceelementpath':
@@ -746,9 +746,8 @@
 						a = (s['theme_advanced_container_' + c + '_align'] || da).toLowerCase();
 						a = 'mce' + t._ufirst(a);
 
-						n = DOM.add(DOM.add(tb, 'tr', {role: 'presentation'}), 'td', {
-							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + a || da,
-							role : 'presentation'
+						n = DOM.add(DOM.add(tb, 'tr'), 'td', {
+							'class' : 'mceToolbar ' + (s['theme_advanced_container_' + c + '_class'] || dc) + ' ' + a || da
 						});
 
 						to = cf.createToolbar("toolbar" + i);
@@ -812,7 +811,7 @@
 			a = s.theme_advanced_toolbar_align.toLowerCase();
 			a = 'mce' + t._ufirst(a);
       
-			n = DOM.add(DOM.add(c, 'tr', {role: 'presentation'}), 'td', {'class' : 'mceToolbar ' + a, "role":"presentation"});
+			n = DOM.add(DOM.add(c, 'tr'), 'td', {'class' : 'mceToolbar ' + a});
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
@@ -836,8 +835,8 @@
 		_addStatusBar : function(tb, o) {
 			var n, t = this, ed = t.editor, s = t.settings, r, mf, me, td;
 
-			n = DOM.add(tb, 'tr', {role: 'presentation'});
-			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar', role: 'presentation'});
+			n = DOM.add(tb, 'tr');
+			n = td = DOM.add(n, 'td', {'class' : 'mceStatusbar'});
 			n = DOM.add(n, 'div', {id : ed.id + '_path_row', 'role': 'group', 'aria-labelledby': ed.id + '_path_voice'});
 			if (s.theme_advanced_path) {
 				DOM.add(n, 'span', {id: ed.id + '_path_voice'}, ed.translate('advanced.path'));
@@ -1045,7 +1044,7 @@
 			}
 
 			if (s.theme_advanced_path && s.theme_advanced_statusbar_location) {
-				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path', role : 'presentation'});
+				p = DOM.get(ed.id + '_path') || DOM.add(ed.id + '_path_row', 'span', {id : ed.id + '_path'});
 				if (t.statusKeyboardNavigation) {
 						t.statusKeyboardNavigation.destroy();
 						t.statusKeyboardNavigation = null;
