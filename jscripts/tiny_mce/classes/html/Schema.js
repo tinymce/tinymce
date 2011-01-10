@@ -205,6 +205,10 @@
 
 		settings = settings || {};
 
+		// Allow all elements and attributes if verify_html is set to false
+		if (settings.verify_html === false)
+			settings.valid_elements = '*[*]';
+
 		// Build styles list
 		if (settings.valid_styles) {
 			validStyles = {};

@@ -8,6 +8,7 @@ Version 3.4b2 (2011-01-xx)
 	Fixed bug where it wasn't possible to delete images or tables using backspace on IE9.
 	Fixed bug where urls in styles would generate a JS error due to incorrect scope.
 	Fixed bug where copy paste from Java applications would produce extra contents in FF on Mac.
+	Fixed bug where the verify_html option wouldn't allow all elements and attributes.
 Version 3.4b1 (2010-12-20)
 	Added new serialization engine that increases performance and enforces valid output according to the specified schema settings.
 	Added new HTML parser logic used by the serialization engine and can handle malformed html contents.
