@@ -171,15 +171,10 @@
 					});
 
 					each(fmt.classes, function(value) {
-						if(!fmt.exact) {
-							value = replaceVars(value, vars);
+						value = replaceVars(value, vars);
 
-							if (!dom.hasClass(elm, value))
-								dom.addClass(elm, value);
-						}
-						else {
-							dom.setAttrib(elm, 'class', replaceVars(value, vars));
-						}
+						if (!dom.hasClass(elm, value))
+						dom.addClass(elm, value);
 					});
 				}
 			};
