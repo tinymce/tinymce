@@ -1,6 +1,8 @@
-Version 3.3.9.3 (2010-xx-xx)
+Version 3.3.9.3 (2010-12-20)
 	Fixed issue where WebKit wouldn't correctly apply ins/del in xhtmlxtras plugin.
 	Fixed bug where paste as plaintext on WebKit wouldn't produce br and p elements correctly.
+	Fixed bug where the confirm dialog texts would be incorrectly placed due to recent IE 9 workarounds in the window.css.
+	Fixed bug where applying text color would not add spans inside link elements. This is needed due to CSS style inheritance.
 Version 3.3.9.2 (2010-09-29)
 	Fixed bug where placing the caret in IE 9 beta 1 would not work correctly if you clicked out side the document body element.
 	Fixed bug where IE 9 beta 1 wouldn't resize the editor correctly since the events didn't fire as previous versions did.
