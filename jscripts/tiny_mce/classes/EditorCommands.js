@@ -337,7 +337,9 @@
 
 						// IE will render an invisible caret if we remove the DOM node so use Delete command instead
 						if (tinymce.isIE) {
-							editor.getDoc().execCommand('Delete', false, null);
+							if (editor.getDoc().documentMode < 8)
+								editor.getDoc().execCommand('Delete', false, null);
+
 							dom.remove(caretNode);
 						} else {
 							dom.remove(caretNode);
