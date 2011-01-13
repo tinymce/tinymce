@@ -79,7 +79,7 @@
 		 * @param {String} html Html string to sax parse.
 		 */
 		self.parse = function(html) {
-			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i, text,
+			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i, text, name,
 				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr, attribsValue,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
 				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode;
