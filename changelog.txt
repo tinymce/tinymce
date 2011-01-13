@@ -1,4 +1,5 @@
-Version 3.4b2 (2011-01-xx)
+Version 3.4b2 (2011-01-13)
+	Added new custom flash player, this player supports mp4 and flv and has skin support.
 	Fixed so mceInsertContent handles context correctly to enforce valid nesting of elements.
 	Fixed bug where scrolling would become jerky on IE on some contents.
 	Fixed bug where paste as plain text would throw exception of missing entities setting.
