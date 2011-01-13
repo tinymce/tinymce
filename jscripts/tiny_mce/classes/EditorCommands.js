@@ -332,7 +332,7 @@
 						// and control where the caret ends up by using a template like: <b>a{$caret}c</b>
 						rng = dom.createRng();
 						rng.setStartBefore(caretNode);
-						rng.setEndAfter(caretNode);
+						rng.setEndBefore(caretNode);
 						selection.setRng(rng);
 
 						// IE will render an invisible caret if we remove the DOM node so use Delete command instead
