@@ -108,6 +108,20 @@
 				realmedia_imagestatus : true
 			};
 
+			function parseQueryParams(str) {
+				var out = {};
+
+				if (str) {
+					tinymce.each(str.split('&'), function(item) {
+						var parts = item.split('=');
+
+						out[unescape(parts[0])] = unescape(parts[1]);
+					});
+				}
+
+				return out;
+			};
+
 			function setOptions(type, names) {
 				var i, name, formItemName, value, list;
 
@@ -207,8 +221,17 @@
 					src = data.video.sources[2];
 					if (src)
 						setVal('video_altsource2', src.src);
-				} else
+				} else {
+					// Check flash vars
+					if (data.type == 'flash') {
+						tinymce.each(editor.getParam('flash_video_player_flashvars', {url : '$url', poster : '$poster'}), function(value, name) {
+							if (value == '$url')
+								data.params.src = parseQueryParams(data.params.flashvars)[name] || data.params.src;
+						});
+					}
+
 					setVal('src', data.params.src);
+				}
 			} else {
 				if (data.type == 'video') {
 					if (!data.video.sources)

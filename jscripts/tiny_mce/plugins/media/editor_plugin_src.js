@@ -25,6 +25,25 @@
 		["Video"]
 	];
 
+	function toArray(obj) {
+		var undef, out, i;
+
+		if (obj && toString.call(obj) != '[object Array]') {
+			out = [];
+
+			for (i = 0; true; i++) {
+				if (obj[i])
+					out[i] = obj[i];
+				else
+					break;
+			}
+
+			return out;
+		}
+
+		return obj;
+	};
+
 	tinymce.create('tinymce.plugins.MediaPlugin', {
 		init : function(ed, url) {
 			var self = this, lookup = {}, i, y, item, name;
@@ -64,7 +83,7 @@
 			tinymce.each(ed.getParam("media_types",
 				"video=mp4,m4v,ogv,webm;" +
 				"silverlight=xap;" +
-				"flash=swf;" +
+				"flash=swf,flv;" +
 				"shockwave=dcr;" +
 				"quicktime=mov,qt,mpg,mp3,mpeg;" +
 				"shockwave=dcr;" +
@@ -100,13 +119,13 @@
 				});
 
 				// Convert image placeholders to video elements
-				ed.serializer.addNodeFilter('img', function(nodes) {
+				ed.serializer.addNodeFilter('img', function(nodes, name, args) {
 					var i = nodes.length, node;
 
 					while (i--) {
 						node = nodes[i];
 						if ((node.attr('class') || '').indexOf('mceItemMedia') !== -1)
-							self.imgToObject(node);
+							self.imgToObject(node, args);
 					}
 				});
 			});
@@ -180,6 +199,20 @@
 			});
 		},
 
+		convertUrl : function(url, force_absolute) {
+			var self = this, editor = self.editor, settings = editor.settings,
+				urlConverter = settings.url_converter,
+				urlConverterScope = settings.url_converter_scope || self;
+
+			if (!url)
+				return url;
+
+			if (force_absolute)
+				return editor.documentBaseURI.toAbsolute(url);
+
+			return urlConverter.call(urlConverterScope, url, 'src', 'object');
+		},
+
 		getInfo : function() {
 			return {
 				longname : 'Media',
@@ -194,38 +227,28 @@
 		 * Converts the JSON data object to an img node.
 		 */
 		dataToImg : function(data, force_absolute) {
-			var editor = this.editor, baseUri = editor.documentBaseURI, sources, attrs, img;
+			var self = this, editor = self.editor, baseUri = editor.documentBaseURI, sources, attrs, img, i;
 
-			function convertUrl(url) {
-				if (!url)
-					return url;
-
-				if (force_absolute)
-					return baseUri.toAbsolute(url);
-				else
-					return editor.convertURL(url, 'src', 'object');
-			};
-
-			data.params.src = convertUrl(data.params.src);
+			data.params.src = self.convertUrl(data.params.src, force_absolute);
 
 			attrs = data.video.attrs;
 			if (attrs)
-				attrs.src = convertUrl(attrs.src);
+				attrs.src = self.convertUrl(attrs.src, force_absolute);
 
 			if (attrs)
-				attrs.poster = convertUrl(attrs.poster);
+				attrs.poster = self.convertUrl(attrs.poster, force_absolute);
 
-			sources = data.video.sources;
+			sources = toArray(data.video.sources);
 			if (sources) {
 				for (i = 0; i < sources.length; i++)
-					sources[i].src = convertUrl(sources[i].src);
+					sources[i].src = self.convertUrl(sources[i].src, force_absolute);
 			}
 
-			img = this.editor.dom.create('img', {
+			img = self.editor.dom.create('img', {
 				id : data.id,
 				style : data.style,
-				src : this.url + '/img/trans.gif',
-				'class' : 'mceItemMedia mceItem' + this.getType(data.type).name,
+				src : self.url + '/img/trans.gif',
+				'class' : 'mceItemMedia mceItem' + self.getType(data.type).name,
 				'data-mce-json' : JSON.serialize(data, "'")
 			});
 
@@ -239,7 +262,7 @@
 		 * Converts the JSON data object to a HTML string.
 		 */
 		dataToHtml : function(data, force_absolute) {
-			return this.editor.serializer.serialize(this.dataToImg(data, force_absolute));
+			return this.editor.serializer.serialize(this.dataToImg(data, force_absolute), {force_absolute : force_absolute});
 		},
 
 		/**
@@ -296,10 +319,48 @@
 		/**
 		 * Converts a tinymce.html.Node image element to video/object/embed.
 		 */
-		imgToObject : function(node) {
-			var editor = this.editor, video, object, embed, name, value, data,
+		imgToObject : function(node, args) {
+			var self = this, editor = self.editor, video, object, embed, name, value, data,
 				source, sources, params, param, typeItem, i, item, mp4Source,
-				posterSrc, flashVarsOutput, style;
+				posterSrc, style;
+
+			// Adds the flash player
+			function addPlayer(video_src, poster_src) {
+				var baseUri, flashVars, flashVarsOutput, params;
+
+				baseUri = editor.documentBaseURI;
+				data.params.src = editor.getParam('flash_video_player_url', self.convertUrl(self.url + '/img/flv_player.swf'));
+
+				// Convert the movie url to absolute urls
+				if (editor.getParam('flash_video_player_absvideourl')) {
+					video_src = baseUri.toAbsolute(video_src || '', true);
+					poster_src = baseUri.toAbsolute(poster_src || '', true);
+				}
+
+				// Generate flash vars
+				flashVarsOutput = '';
+				flashVars = editor.getParam('flash_video_player_flashvars', {url : '$url', poster : '$poster'});
+				tinymce.each(flashVars, function(value, name) {
+					// Replace $url and $poster variables in flashvars value
+					value = value.replace(/\$url/, video_src || '');
+					value = value.replace(/\$poster/, poster_src || '');
+
+					if (value.length > 0)
+						flashVarsOutput += (flashVarsOutput ? '&' : '') + name + '=' + escape(value);
+				});
+
+				if (flashVarsOutput.length)
+					data.params.flashvars = flashVarsOutput;
+
+				params = editor.getParam('flash_video_player_params', {
+					allowfullscreen: true,
+					allowscriptaccess: true
+				});
+
+				tinymce.each(params, function(value, name) {
+					data.params[name] = "" + value;
+				});
+			};
 
 			data = JSON.parse(node.attr('data-mce-json'));
 			typeItem = this.getType(node.attr('class'));
@@ -342,7 +403,7 @@
 				if (data.video.attrs)
 					posterSrc = data.video.attrs.poster;
 
-				sources = data.video.sources;
+				sources = data.video.sources = toArray(data.video.sources);
 				for (i = 0; i < sources.length; i++) {
 					if (/\.mp4$/.test(sources[i].src))
 						mp4Source = sources[i].src;
@@ -361,36 +422,21 @@
 
 				// Create flash fallback for video if we have a mp4 source
 				if (mp4Source) {
-					data.params.src = editor.getParam('flash_video_player_url', this.url + '/img/flv_player.swf');
-
-					flashVarsOutput = '';
-					flashVars = editor.getParam('flash_video_player_flashvars', {url : '$url', poster : '$poster'});
-					tinymce.each(flashVars, function(value, name) {
-						// Replace $url and $poster variables in flashvars value
-						value = value.replace(/\$url/, mp4Source || '');
-						value = value.replace(/\$poster/, posterSrc || '');
-
-						if (value.length > 0)
-							flashVarsOutput += (flashVarsOutput ? '&' : '') + name + '=' + escape(value);
-					});
-					data.params.flashvars = flashVarsOutput;
-
-					params = editor.getParam('flash_video_player_params', {
-						allowfullscreen: true,
-						allowscriptaccess: true
-					});
-
-					tinymce.each(params, function(value, name) {
-						data.params[name] = "" + value;
-					});
-
-					typeItem = this.getType('flash');
+					addPlayer(mp4Source, posterSrc);
+					typeItem = self.getType('flash');
 				} else
 					data.params.src = '';
 			}
 
 			// Do we have a params src then we can generate object
 			if (data.params.src) {
+				// Is flv movie add player for it
+				if (/\.flv$/i.test(data.params.src))
+					addPlayer(data.params.src, '');
+
+				if (args && args.force_absolute)
+					data.params.src = editor.documentBaseURI.toAbsolute(data.params.src);
+
 				// Create new object element
 				object = new Node('object', 1).attr({
 					id : node.attr('id'),
