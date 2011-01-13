@@ -28,7 +28,7 @@
 	function toArray(obj) {
 		var undef, out, i;
 
-		if (obj && toString.call(obj) != '[object Array]') {
+		if (obj && !obj.splice) {
 			out = [];
 
 			for (i = 0; true; i++) {
