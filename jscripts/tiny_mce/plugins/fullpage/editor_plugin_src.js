@@ -100,17 +100,6 @@
 				sp = c.indexOf('>', sp);
 				t.head = c.substring(0, sp + 1);
 
-				// Concatenate all <style>'s text into t.css
-				var ss = 0, es;
-				t.css = '';
-				while ((ss = t.head.indexOf('<style', ss)) != -1) {
-					ss = c.indexOf('>', ss) + 1;
-					if ( (es = t.head.indexOf('</style', ss)) == -1)
-						break;
-					t.css += t.head.substring(ss, es);
-					ss = es;
-				}
-
 				ep = c.indexOf('</body', sp);
 				if (ep == -1)
 					ep = c.length;
@@ -154,27 +143,9 @@
 		_getContent : function(ed, o) {
 			var t = this;
 
-			if (!o.source_view || !ed.getParam('fullpage_hide_in_source_view')) {
+			if (!o.source_view || !ed.getParam('fullpage_hide_in_source_view'))
 				o.content = tinymce.trim(t.head) + '\n' + tinymce.trim(o.content) + '\n' + tinymce.trim(t.foot);
-
-				if (t.css)
-					t._setStyle(ed, t.css);
-			}
-		},
-
-		_setStyle : function(ed, css) {
-			ed.dom.remove('injectedCSS');
-			var doc = ed.dom.doc, style = doc.createElement('style');
-			style.type = 'text/css';
-			style.id = 'injectedCSS';
-
-			if (style.styleSheet) // IE
-				style.styleSheet.cssText = css;
-			else // other browsers
-				style.appendChild(doc.createTextNode(css));
-
-			doc.getElementsByTagName('head')[0].appendChild(style);
- 		}
+		}
 	});
 
 	// Register plugin
