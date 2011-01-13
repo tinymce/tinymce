@@ -332,14 +332,12 @@
 						// and control where the caret ends up by using a template like: <b>a{$caret}c</b>
 						rng = dom.createRng();
 						rng.setStartBefore(caretNode);
-						rng.setEndBefore(caretNode);
+						rng.setEndAfter(caretNode);
 						selection.setRng(rng);
 
 						// IE will render an invisible caret if we remove the DOM node so use Delete command instead
 						if (tinymce.isIE) {
-							if (editor.getDoc().documentMode < 8)
-								editor.getDoc().execCommand('Delete', false, null);
-
+							editor.getDoc().execCommand('Delete', false, null);
 							dom.remove(caretNode);
 						} else {
 							dom.remove(caretNode);

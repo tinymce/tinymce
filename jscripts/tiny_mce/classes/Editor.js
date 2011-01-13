@@ -821,7 +821,8 @@
 				validate : true,
 				entity_encoding : 'named',
 				url_converter : t.convertURL,
-				url_converter_scope : t
+				url_converter_scope : t,
+				ie7_compat : true
 			}, s);
 
 			/**
