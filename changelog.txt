@@ -1,3 +1,5 @@
+Version 3.4b3 (2011-01-xx)
+	Fixed bug where anchors would wrap the text contents after it.
 Version 3.4b2 (2011-01-13)
 	Added new custom flash player, this player supports mp4 and flv and has skin support.
 	Fixed so mceInsertContent handles context correctly to enforce valid nesting of elements.

@@ -365,8 +365,8 @@
 										tempNode = node.parent;
 										node.empty().remove();
 										node = tempNode;
+										return;
 									}
-									return;
 								}
 							}
 						}
