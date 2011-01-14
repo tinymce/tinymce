@@ -277,6 +277,8 @@
 			var t = this;
 
 			if (t.menu && t.menu.isMenuVisible) {
+				DOM.removeClass(t.id, t.classPrefix + 'Selected');
+
 				// Prevent double toogles by canceling the mouse click event to the button
 				if (e && e.type == "mousedown" && (e.target.id == t.id + '_text' || e.target.id == t.id + '_open'))
 					return;
