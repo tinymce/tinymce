@@ -1005,7 +1005,7 @@
 						} else
 							n = 'div';
 
-						o.content = o.content.replace(new RegExp('<(' + v + ')([^>]*)>', 'g'), '<' + n + ' _mce_name="$1"$2>');
+						o.content = o.content.replace(new RegExp('<(' + v + ')(\\s[^>]*)>', 'g'), '<' + n + ' _mce_name="$1"$2>');
 						o.content = o.content.replace(new RegExp('</(' + v + ')>', 'g'), '</' + n + '>');
 					});
 				};
