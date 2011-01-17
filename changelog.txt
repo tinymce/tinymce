@@ -1,6 +1,7 @@
 Version 3.4b3 (2011-01-xx)
 	Fixed bug where anchors would wrap the text contents after it due to a bug in the DomParser logic.
 	Fixed bug where the selected state wouldn't be removed on ListBox controls when a menu item was selected.
+	Fixed bug where color wasn't correctly applied to anchor elements.
 Version 3.4b2 (2011-01-13)
 	Added new custom flash player, this player supports mp4 and flv and has skin support.
 	Fixed so mceInsertContent handles context correctly to enforce valid nesting of elements.
