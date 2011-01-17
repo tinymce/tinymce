@@ -391,14 +391,19 @@
 				if (!rng.item) {
 					rng2 = rng.duplicate();
 
-					// Insert start marker
-					rng.collapse();
-					rng.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
+					try {
+						// Insert start marker
+						rng.collapse();
+						rng.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_start" style="' + styles + '">' + chr + '</span>');
 
-					// Insert end marker
-					if (!collapsed) {
-						rng2.collapse(false);
-						rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
+						// Insert end marker
+						if (!collapsed) {
+							rng2.collapse(false);
+							rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
+						}
+					} catch (ex) {
+						// IE might throw unspecified error so lets ignore it
+						return null;
 					}
 				} else {
 					// Control selection
