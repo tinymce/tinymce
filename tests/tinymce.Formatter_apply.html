@@ -20,7 +20,7 @@ function getContent() {
 	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
 };
 
-test('Formatter - apply (inline)', function() {
+test('apply (inline)', function() {
 	var rng, format;
 
 	expect(37);
@@ -431,7 +431,7 @@ test('Formatter - apply (inline)', function() {
 	equals(getContent(), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
 });
 
-test('Formatter - apply (block)', function() {
+test('apply (block)', function() {
 	var rng;
 
 	expect(9);
@@ -527,7 +527,7 @@ test('Formatter - apply (block)', function() {
 	equals(getContent(), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 3');
 });
 
-test('Formatter - apply (block wrapper)', function() {
+test('apply (block wrapper)', function() {
 	var rng;
 
 	expect(3);
@@ -563,7 +563,7 @@ test('Formatter - apply (block wrapper)', function() {
 	equals(getContent(), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 3');
 });
 
-test('Formatter - apply (selector)', function() {
+test('apply (selector)', function() {
 	var rng;
 
 	expect(4);
@@ -609,7 +609,7 @@ test('Formatter - apply (selector)', function() {
 	equals(getContent(), '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>', 'Apply format on top of existing selector element');
 });
 
-test('Formatter - apply (mixed inline/selector)', function() {
+test('apply (mixed inline/selector)', function() {
 	var rng;
 
 	expect(2);
@@ -635,8 +635,11 @@ test('Formatter - apply (mixed inline/selector)', function() {
 	equals(getContent(), '<div class="a b c" style="color: #ff0000;" title="test">text</div>', 'Apply format on single element that matches a selector');
 });
 
-test('Formatter - Bold and italics is applied to text that is not highlighted', function() {
+test('Bold and italics is applied to text that is not highlighted', function() {
 	var rng = editor.dom.createRng();
+
+	expect(1);
+
 	editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
 	rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
 	rng.setEnd(editor.dom.select('strong')[0].firstChild, 11);
@@ -645,8 +648,34 @@ test('Formatter - Bold and italics is applied to text that is not highlighted', 
 	equals(editor.getContent(), '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
 });
 
+test('No wrapping of links', function() {
+	var rng = editor.dom.createRng();
+
+	expect(2);
+
+	editor.setContent('<p>123<a href="#">abc</a>456</p>');
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 3);
+	editor.selection.setRng(rng);
+
+	editor.formatter.register('format', {inline : 'span', styles : {color : '#FF0000'}, wrap_links : false});
+	editor.formatter.apply('format');
+
+	equals(editor.getContent(), '<p><span style="color: #ff0000;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+
+	editor.setContent('<p><span style="font-size: 10px;">123<a href="#">abc</a>456</span></p>');
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].lastChild, 3);
+	editor.selection.setRng(rng);
+
+	editor.formatter.register('format', {inline : 'span', styles : {color : '#FF0000'}, wrap_links : false});
+	editor.formatter.apply('format');
+
+	equals(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+});
+
 /*
-test('Formatter - apply (list block)', function() {
+test('apply (list block)', function() {
 	var rng;
 
 	// Ordered list on selected paragraph text
