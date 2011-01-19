@@ -141,7 +141,9 @@
 			});
 			
 			// Setup initial state for root element.
-			focussedId = items[0].id;
+			if (items[0]){
+				focussedId = items[0].id;
+			}
 			dom.setAttrib(root, 'tabindex', '-1');
 			
 			// Setup listeners for root element.
