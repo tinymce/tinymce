@@ -614,7 +614,7 @@
 				return;
 			}
 
-			if (!selection.isCollapsed() || !format.inline) {
+			if (!selection.isCollapsed() || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
 				bookmark = selection.getBookmark();
 				removeRngStyle(selection.getRng(TRUE));
 				selection.moveToBookmark(bookmark);
