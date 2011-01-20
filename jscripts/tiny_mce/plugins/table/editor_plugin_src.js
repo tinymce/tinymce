@@ -104,6 +104,17 @@
 			return parseInt(td.getAttribute(name) || 1);
 		};
 
+		function setSpanVal(td, name, val) {
+			if (td) {
+				val = parseInt(val);
+
+				if (val === 1)
+					td.removeAttribute(name, 1);
+				else
+					td.setAttribute(name, val, 1);
+			}
+		}
+
 		function isCellSelected(cell) {
 			return dom.hasClass(cell.elm, 'mceSelected') || cell == selectedCell;
 		};
@@ -162,7 +173,8 @@
 			}, 'childNodes');
 
 			cell = cloneNode(cell, false);
-			cell.rowSpan = cell.colSpan = 1;
+			setSpanVal(cell, 'rowspan', 1);
+			setSpanVal(cell, 'colspan', 1);
 
 			if (formatNode) {
 				cell.appendChild(formatNode);
@@ -250,7 +262,8 @@
 						rowSpan = getSpanVal(cell, 'rowspan');
 
 						if (colSpan > 1 || rowSpan > 1) {
-							cell.colSpan = cell.rowSpan = 1;
+							setSpanVal(cell, 'rowspan', 1);
+							setSpanVal(cell, 'colspan', 1);
 
 							// Insert cells right
 							for (i = 0; i < colSpan - 1; i++)
@@ -293,8 +306,8 @@
 
 				// Set row/col span to start cell
 				startCell = getCell(startX, startY).elm;
-				startCell.colSpan = (endX - startX) + 1;
-				startCell.rowSpan = (endY - startY) + 1;
+				setSpanVal(startCell, 'colspan', (endX - startX) + 1);
+				setSpanVal(startCell, 'rowspan', (endY - startY) + 1);
 
 				// Remove other cells and add it's contents to the start cell
 				for (y = startY; y <= endY; y++) {
@@ -304,12 +317,18 @@
 						if (cell != startCell) {
 							// Move children to startCell
 							children = tinymce.grep(cell.childNodes);
-							each(children, function(node, i) {
-								// Jump over last BR element
-								if (node.nodeName != 'BR' || i != children.length - 1)
-									startCell.appendChild(node);
+							each(children, function(node) {
+								startCell.appendChild(node);
 							});
 
+							// Remove bogus nodes if there is children in the target cell
+							if (children.length) {
+								each(tinymce.grep(startCell.childNodes), function(node) {
+									if (node.nodeName == 'BR' && dom.getAttrib(node, 'data-mce-bogus'))
+										startCell.removeChild(node);
+								});
+							}
+							
 							// Remove cell
 							dom.remove(cell);
 						}
@@ -349,7 +368,7 @@
 					if (!before) {
 						rowSpan = getSpanVal(cell, 'rowspan');
 						if (rowSpan > 1) {
-							cell.rowSpan = rowSpan + 1;
+							setSpanVal(cell, 'rowspan', rowSpan + 1);
 							continue;
 						}
 					} else {
@@ -358,15 +377,16 @@
 							otherCell = grid[posY - 1][x].elm;
 							rowSpan = getSpanVal(otherCell, 'rowspan');
 							if (rowSpan > 1) {
-								otherCell.rowSpan = rowSpan + 1;
+								setSpanVal(otherCell, 'rowspan', rowSpan + 1);
 								continue;
 							}
 						}
 					}
 
 					// Insert new cell into new row
-					newCell = cloneCell(cell)
-					newCell.colSpan = cell.colSpan;
+					newCell = cloneCell(cell);
+					setSpanVal(newCell, 'colspan', cell.colSpan);
+
 					newRow.appendChild(newCell);
 
 					lastCell = cell;
@@ -415,7 +435,7 @@
 							fillLeftDown(posX, y, rowSpan - 1, colSpan);
 						}
 					} else
-						cell.colSpan++;
+						setSpanVal(cell, 'colspan', cell.colSpan + 1);
 
 					lastCell = cell;
 				}
@@ -435,7 +455,7 @@
 							colSpan = getSpanVal(cell, 'colspan');
 
 							if (colSpan > 1)
-								cell.colSpan = colSpan - 1;
+								setSpanVal(cell, 'colspan', colSpan - 1);
 							else
 								dom.remove(cell);
 						});
@@ -461,7 +481,7 @@
 					var rowSpan = getSpanVal(cell, 'rowspan');
 
 					if (rowSpan > 1) {
-						cell.rowSpan = rowSpan - 1;
+						setSpanVal(cell, 'rowspan', rowSpan - 1);
 						pos = getPos(cell);
 						fillLeftDown(pos.x, pos.y, 1, 1);
 					}
@@ -480,7 +500,7 @@
 						if (rowSpan <= 1)
 							dom.remove(cell);
 						else
-							cell.rowSpan = rowSpan - 1;
+							setSpanVal(cell, 'rowspan', rowSpan - 1);
 
 						lastCell = cell;
 					}
@@ -548,7 +568,8 @@
 				// Remove col/rowspans
 				for (i = 0; i < cellCount; i++) {
 					cell = row.cells[i];
-					cell.colSpan = cell.rowSpan = 1;
+					setSpanVal(cell, 'colspan', 1);
+					setSpanVal(cell, 'rowspan', 1);
 				}
 
 				// Needs more cells
