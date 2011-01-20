@@ -233,11 +233,31 @@
 					setVal('src', data.params.src);
 				}
 			} else {
+				src = getVal("src");
+	
+				// YouTube
+				if (src.match(/youtube.com(.+)v=([^&]+)/)) {
+					data.width = 425;
+					data.height = 350;
+					data.type = 'flash';
+					src = 'http://www.youtube.com/v/' + src.match(/v=([^&]+)/)[1];
+					setVal('src', src);
+				}
+
+				// Google video
+				if (src.match(/video.google.com(.+)docid=([^&]+)/)) {
+					data.width = 425;
+					data.height = 326;
+					data.type = 'flash';
+					src = 'http://video.google.com/googleplayer.swf?docId=' + src.match(/docid=([^&]+)/)[1] + '&hl=en';
+					setVal('src', src);
+				}
+
 				if (data.type == 'video') {
 					if (!data.video.sources)
 						data.video.sources = [];
 
-					data.video.sources[0] = {src : getVal("src")};
+					data.video.sources[0] = {src : src};
 
 					src = getVal("video_altsource1");
 					if (src)
@@ -247,7 +267,7 @@
 					if (src)
 						data.video.sources[2] = {src : src};
 				} else
-					data.params.src = getVal("src");
+					data.params.src = src;
 			}
 		},
 
