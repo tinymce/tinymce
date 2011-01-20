@@ -490,3 +490,14 @@
  *    ...
  * });
  */
+
+/**
+ * Alternative name for tinymce added for compatibility.
+ *
+ * @member tinymce
+ * @property EditorManager
+ * @type tinymce
+ * @example
+ * // To initialize editor instances
+ * tinymce.EditorManager.get('editor');
+ */
