@@ -189,10 +189,11 @@
 		self.parse = function(html, args) {
 			var parser, rootNode, node, nodes, matchedNodes = {}, matchedAttributes = {},
 				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children;
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, emptyElements;
 
 			args = args || {};
 			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,title,meta,param'), schema.getBlockElements());
+			emptyElements = tinymce.extend(tinymce.makeMap('td,th'), schema.getEmptyElements());
 			children = schema.children;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();
@@ -356,7 +357,7 @@
 
 						// Handle empty nodes
 						if (elementRule.removeEmpty || elementRule.paddEmpty) {
-							if (node.isEmpty(schema.getEmptyElements())) {
+							if (node.isEmpty(emptyElements)) {
 								if (elementRule.paddEmpty)
 									node.empty().append(new Node('#text', '3')).value = '\u00a0';
 								else {

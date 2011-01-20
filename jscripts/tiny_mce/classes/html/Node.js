@@ -402,26 +402,28 @@
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty : function(elements) {
-			var self = this, node = self, i;
+			var self = this, node = self.firstChild, i;
 
-			do {
-				if (node.type === 1) {
-					// Keep empty elements like <img />
-					if (elements[node.name])
-						return false;
-
-					// Keep elements with data attributes
-					i = node.attributes.length;
-					while (i--) {
-						if (node.attributes[i].name.indexOf('data-') === 0)
+			if (node) {
+				do {
+					if (node.type === 1) {
+						// Keep empty elements like <img />
+						if (elements[node.name])
 							return false;
-					}
-				}
 
-				// Keep non whitespace text nodes
-				if ((node.type === 3 && !whiteSpaceRegExp.test(node.value)))
-					return false;
-			} while (node = walk(node, self));
+						// Keep elements with data attributes
+						i = node.attributes.length;
+						while (i--) {
+							if (!node.attributes.map['data-mce-bogus'] && node.attributes[i].name.indexOf('data-') === 0)
+								return false;
+						}
+					}
+
+					// Keep non whitespace text nodes
+					if ((node.type === 3 && !whiteSpaceRegExp.test(node.value)))
+						return false;
+				} while (node = walk(node, self));
+			}
 
 			return true;
 		}

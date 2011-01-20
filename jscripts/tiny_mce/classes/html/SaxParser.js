@@ -251,6 +251,10 @@
 								if (i === -1)
 									isValidElement = false;
 							}
+
+							// Invalidate element if it's marked as bogus
+							if (attrList.map['data-mce-bogus'])
+								isValidElement = false;
 						}
 
 						if (isValidElement)

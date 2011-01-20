@@ -277,7 +277,7 @@
 		};
 
 		function merge(cell, cols, rows) {
-			var startX, startY, endX, endY, x, y, startCell, endCell, cell, children;
+			var startX, startY, endX, endY, x, y, startCell, endCell, cell, children, count;
 
 			// Use specified cell and cols/rows
 			if (cell) {
@@ -323,8 +323,10 @@
 
 							// Remove bogus nodes if there is children in the target cell
 							if (children.length) {
-								each(tinymce.grep(startCell.childNodes), function(node) {
-									if (node.nodeName == 'BR' && dom.getAttrib(node, 'data-mce-bogus'))
+								children = tinymce.grep(startCell.childNodes);
+								count = 0;
+								each(children, function(node) {
+									if (node.nodeName == 'BR' && dom.getAttrib(node, 'data-mce-bogus') && count++ < children.length - 1)
 										startCell.removeChild(node);
 								});
 							}

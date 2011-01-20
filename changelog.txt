@@ -6,6 +6,7 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where applying inline format wouldn't work if the start cell in the selection was empty.
 	Fixed bug where auto detection logic for YouTube and Google Video wouldn't work in the new media plugin.
 	Fixed bug where td elements would get a colspan/rowspan of 1 when created by the table plugin.
+	Fixed bug where removal/padding of empty elements wasn't handled correctly.
 	Fixed bug where internal elements would show up in element path.
 	Fixed bug where internal elements would get serialized as valid output.
 	Fixed bug where color wasn't correctly applied to anchor elements.
