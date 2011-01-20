@@ -167,4 +167,6 @@ upper_roman:"Upper roman",
 circle:"Circle",
 disc:"Disc",
 square:"Square"
+},wordcount:{
+words: 'Words: '
 }}});
