@@ -94,9 +94,20 @@
 				if (!handler) {
 					name = node.name;
 					isEmpty = node.shortEnded;
+					attrs = node.attributes;
+
+					// Is element is bogus, just walk it's children
+					if (attrs.map['data-mce-bogus']) {
+						if ((node = node.firstChild)) {
+							do {
+								walk(node);
+							} while (node = node.next);
+						}
+
+						return;
+					}
 
 					// Sort attributes
-					attrs = node.attributes;
 					if (validate && attrs && attrs.length > 1) {
 						sortedAttrs = [];
 						sortedAttrs.map = {};
