@@ -3,6 +3,8 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where the selected state wouldn't be removed on ListBox controls when a menu item was selected.
 	Fixed bug where IE could throw an unspecified error exception when the getBookmark logic was executed.
 	Fixed bug where IE would throw an invalid argument error when focus was applied to an empty editor instance.
+	Fixed bug where applying inline format wouldn't work if the start cell in the selection was empty.
+	Fixed bug where auto detection logic for YouTube and Google Video wouldn't work in the new media plugin.
 	Fixed bug where td elements would get a colspan/rowspan of 1 when created by the table plugin.
 	Fixed bug where internal elements would show up in element path.
 	Fixed bug where internal elements would get serialized as valid output.

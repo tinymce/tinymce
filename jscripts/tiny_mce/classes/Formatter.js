@@ -398,7 +398,7 @@
 
 					applyRngStyle(expandRng(rng, formatList));
 				} else {
-					if (!selection.isCollapsed() || !format.inline) {
+					if (!selection.isCollapsed() || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
