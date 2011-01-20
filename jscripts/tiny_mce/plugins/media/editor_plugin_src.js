@@ -130,10 +130,6 @@
 				});
 			});
 
-			// Load the media specific CSS file
-			if (ed.settings.content_css !== false)
-				ed.contentCSS.push(url + "/css/content.css");
-
 			ed.onInit.add(function() {
 				// Display "media" instead of "img" in element path
 				if (ed.theme && ed.theme.onResolveName) {
@@ -247,7 +243,7 @@
 			img = self.editor.dom.create('img', {
 				id : data.id,
 				style : data.style,
-				src : self.url + '/img/trans.gif',
+				src : self.editor.theme.url + '/img/trans.gif',
 				'class' : 'mceItemMedia mceItem' + self.getType(data.type).name,
 				'data-mce-json' : JSON.serialize(data, "'")
 			});
@@ -329,7 +325,7 @@
 				var baseUri, flashVars, flashVarsOutput, params;
 
 				baseUri = editor.documentBaseURI;
-				data.params.src = editor.getParam('flash_video_player_url', self.convertUrl(self.url + '/img/moxieplayer.swf'));
+				data.params.src = editor.getParam('flash_video_player_url', self.convertUrl(self.url + '/moxieplayer.swf'));
 
 				// Convert the movie url to absolute urls
 				if (editor.getParam('flash_video_player_absvideourl', true)) {

@@ -10,6 +10,8 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where internal elements would show up in element path.
 	Fixed bug where internal elements would get serialized as valid output.
 	Fixed bug where color wasn't correctly applied to anchor elements.
+	Moved some plugin css contents into the skin content css files to reduce the number of http requests.
+	Moved some plugin specific images into the theme img directory since they can then be shared.
 Version 3.4b2 (2011-01-13)
 	Added new custom flash player, this player supports mp4 and flv and has skin support.
 	Fixed so mceInsertContent handles context correctly to enforce valid nesting of elements.
