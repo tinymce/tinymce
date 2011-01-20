@@ -276,7 +276,7 @@ test('select', function() {
 	// Select complex element
 	editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
 	editor.selection.select(editor.dom.select('table')[0]);
-	equals(editor.selection.getContent(), '<table><tbody><tr>\n<td>text1</td>\n</tr></tbody></table>', 'Select complex element, content');
+	equals(editor.selection.getContent(), '<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>', 'Select complex element, content');
 	equals(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
 
 	// Select contents 1

@@ -441,7 +441,7 @@ test('WebKit Serialization range bug', function() {
 		var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
 		editor.dom.replace(p, editor.getBody().firstChild);
 
-		equals(editor.getContent(), '<p>123</p>\n<table><tbody><tr>\n<td>X</td>\n</tr></tbody></table>\n<p>456</p>');
+		equals(editor.getContent(), '<p>123</p>\n<table>\n<tbody>\n<tr>\n<td>X</td>\n</tr>\n</tbody>\n</table>\n<p>456</p>');
 	}
 });
 
