@@ -268,6 +268,10 @@
 						data.video.sources[2] = {src : src};
 				} else
 					data.params.src = src;
+
+				// Set default size
+				setVal('width', data.width || 320);
+				setVal('height', data.height || 240);
 			}
 		},
 
