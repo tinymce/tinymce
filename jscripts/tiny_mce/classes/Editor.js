@@ -1336,7 +1336,7 @@
 					node = nodes[i];
 
 					if (node.isEmpty(emptyElements))
-						node.empty().append(new tinymce.html.Node('br', 1)).empty = true;
+						node.empty().append(new tinymce.html.Node('br', 1)).shortEnded = true;
 				}
 			});
 

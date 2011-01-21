@@ -191,7 +191,7 @@
 			}
 
 			clone.value = self.value;
-			clone.empty = self.empty;
+			clone.shortEnded = self.shortEnded;
 
 			return clone;
 		},
