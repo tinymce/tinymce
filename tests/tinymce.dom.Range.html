@@ -15,7 +15,7 @@ if (/Firefox\/2/.test(navigator.userAgent)) {
 	test("Skipped for FF 2 since the native range object isn't working correctly and it's a legacy browser.", function() {});
 } else {
 	QUnit.config.autostart = false;
-	module("IE Range", {
+	module("Range", {
 		autostart: false
 	});
 

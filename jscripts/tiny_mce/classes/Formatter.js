@@ -270,15 +270,17 @@
 				if (format.wrap_links === false) {
 					each(newWrappers, function(node) {
 						function process(node) {
-							var i, currentWrapElm;
+							var i, currentWrapElm, children;
 
 							if (node.nodeName === 'A') {
 								currentWrapElm = wrapElm.cloneNode(FALSE);
 								newWrappers.push(currentWrapElm);
-								node.appendChild(currentWrapElm);
 
-								for (i = 0; i < node.childNodes.length; i++)
-									currentWrapElm.appendChild(node.childNodes[i]);
+								children = tinymce.grep(node.childNodes);
+								for (i = 0; i < children.length; i++)
+									currentWrapElm.appendChild(children[i]);
+
+								node.appendChild(currentWrapElm);
 							}
 
 							each(tinymce.grep(node.childNodes), process);

@@ -636,11 +636,12 @@ test('apply (mixed inline/selector)', function() {
 });
 
 test('Bold and italics is applied to text that is not highlighted', function() {
-	var rng = editor.dom.createRng();
+	var rng;
 
 	expect(1);
 
 	editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
+	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
 	rng.setEnd(editor.dom.select('strong')[0].firstChild, 11);
 	editor.selection.setRng(rng);
@@ -649,11 +650,12 @@ test('Bold and italics is applied to text that is not highlighted', function() {
 });
 
 test('No wrapping of links', function() {
-	var rng = editor.dom.createRng();
+	var rng;
 
 	expect(2);
 
 	editor.setContent('<p>123<a href="#">abc</a>456</p>');
+	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('p')[0].lastChild, 3);
 	editor.selection.setRng(rng);
@@ -664,6 +666,7 @@ test('No wrapping of links', function() {
 	equals(editor.getContent(), '<p><span style="color: #ff0000;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
 
 	editor.setContent('<p><span style="font-size: 10px;">123<a href="#">abc</a>456</span></p>');
+	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
 	rng.setEnd(editor.dom.select('span')[0].lastChild, 3);
 	editor.selection.setRng(rng);
