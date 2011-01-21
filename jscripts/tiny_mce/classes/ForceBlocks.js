@@ -97,6 +97,12 @@
 				ed.onInit.add(t.forceRoots, t);
 				ed.onSetContent.add(t.forceRoots, t);
 				ed.onBeforeGetContent.add(t.forceRoots, t);
+				ed.onExecCommand.add(function(ed, cmd) {
+					if (cmd == 'mceInsertContent') {
+						t.forceRoots();
+						ed.nodeChanged();
+					}
+				});
 			}
 		},
 

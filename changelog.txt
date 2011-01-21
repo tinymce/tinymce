@@ -13,7 +13,7 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where float option in the style plugin dialog wouldn't be handled correctly on WebKit.
 	Fixed bug where the tinymce.dom.TreeWalker prev function wouldn't walk the DOM correctly.
 	Fixed bug where mceInsertContent command could produce empty block elements after the inserted content.
-	Fixed bug where mceInsertContent wouldn't apply visual aids on tables and similar elements.
+	Fixed bug where mceInsertContent command wouldn't apply visual aids on tables and similar elements.
 	Moved some plugin css contents into the skin content css files to reduce the number of http requests.
 	Moved some plugin specific images into the theme img directory since they can then be shared.
 Version 3.4b2 (2011-01-13)

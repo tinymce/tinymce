@@ -285,7 +285,18 @@
 			},
 
 			mceInsertContent : function(command, ui, value) {
-				var caretNode, rng, rootNode, parent, walker, node;
+				var caretNode, rng, rootNode, parent, node, rng;
+
+				function findSuitableCaretNode(start_node, root_node) {
+					var node, walker = new tinymce.dom.TreeWalker(start_node, root_node);
+
+					while ((node = walker.current())) {
+						if ((node.nodeType == 3 && tinymce.trim(node.nodeValue).length) || node.nodeName == 'BR')
+							return node;
+
+						walker.prev();
+					}
+				};
 
 				// Add caret at end of contents if it's missing
 				if (value.indexOf('{$caret}') == -1)
@@ -294,23 +305,18 @@
 				// Set the content at selection to a span and replace it's contents with the value
 				selection.setContent('<span id="__mce">\uFEFF</span>');
 				dom.setOuterHTML('__mce', value.replace(/\{\$caret\}/, '<span data-mce-type="bookmark" id="__mce">\uFEFF</span>'));
-	
+
 				caretNode = dom.select('#__mce')[0];
 				rootNode = dom.getRoot();
 
 				// Move the caret into the last suitable location within the previous sibling if it's a block since the block might be split
-				if (dom.isBlock(caretNode.previousSibling)) {
-					walker = new tinymce.dom.TreeWalker(caretNode.previousSibling, rootNode);
-					while ((node = walker.prev())) {
-						if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length) {
+				if (caretNode.previousSibling && dom.isBlock(caretNode.previousSibling) || caretNode.parentNode == rootNode) {
+					node = findSuitableCaretNode(caretNode.previousSibling, rootNode);
+					if (node) {
+						if (node.nodeType == 3)
 							dom.insertAfter(caretNode, node);
-							break;
-						}
-
-						if (node.nodeName == 'BR') {
+						else
 							node.parentNode.insertBefore(caretNode, node);
-							break;
-						}
 					}
 				}
 
@@ -335,31 +341,21 @@
 				// Find caret after cleanup and move selection to that location
 				caretNode = dom.select('#__mce')[0];
 				if (caretNode) {
-					if (caretNode.parentNode.childNodes.length == 1) {
-						parent = caretNode.parentNode;
+					node = findSuitableCaretNode(caretNode.previousSibling, rootNode);
+					dom.remove(caretNode);
 
-						// Select previous element and move the caret to the end of that element
-						selection.select(parent.previousSibling, true);
-						selection.collapse(false);
-
-						// Remove the caret parent node
-						dom.remove(parent);
-					} else {
-						// Move selection to caret marker and remove marker. This enables users to insert contents
-						// and control where the caret ends up by using a template like: <b>a{$caret}c</b>
+					if (node) {
 						rng = dom.createRng();
-						rng.setStartBefore(caretNode);
-						rng.setEndAfter(caretNode);
-						selection.setRng(rng);
 
-						// IE will render an invisible caret if we remove the DOM node so use Delete command instead
-						if (tinymce.isIE) {
-							editor.getDoc().execCommand('Delete', false, null);
-							dom.remove(caretNode);
+						if (node.nodeType == 3) {
+							rng.setStart(node, node.length);
+							rng.setEnd(node, node.length);
 						} else {
-							dom.remove(caretNode);
-							selection.setRng(rng); // Needed on WebKit to update the selection after the node was removed
+							rng.setStartBefore(node);
+							rng.setEndBefore(node);							
 						}
+
+						selection.setRng(rng);
 					}
 				}
 
