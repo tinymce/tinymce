@@ -39,7 +39,7 @@
 		self.schema = schema = schema || new tinymce.html.Schema();
 
 		function fixInvalidChildren(nodes) {
-			var ni, node, parent, parents, newParent, currentNode, tempNode,
+			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i,
 				childClone, emptyElements = schema.getEmptyElements(), nonSplitableElements, sibling;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
