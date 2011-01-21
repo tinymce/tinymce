@@ -690,7 +690,7 @@
 				ed.getDoc().execCommand('Delete', false, null);
 
 			// It's better to use the insertHTML method on Gecko since it will combine paragraphs correctly before inserting the contents
-			ed.execCommand(tinymce.isGecko ? 'insertHTML' : 'mceInsertContent', false, h, {skip_undo : skip_undo});
+			ed.execCommand('mceInsertContent', false, h, {skip_undo : skip_undo});
 		},
 
 		/**

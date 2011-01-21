@@ -285,7 +285,7 @@
 			},
 
 			mceInsertContent : function(command, ui, value) {
-				var caretNode, rng, rootNode, parent;
+				var caretNode, rng, rootNode, parent, walker, node;
 
 				// Add caret at end of contents if it's missing
 				if (value.indexOf('{$caret}') == -1)
@@ -294,10 +294,27 @@
 				// Set the content at selection to a span and replace it's contents with the value
 				selection.setContent('<span id="__mce">\uFEFF</span>');
 				dom.setOuterHTML('__mce', value.replace(/\{\$caret\}/, '<span data-mce-type="bookmark" id="__mce">\uFEFF</span>'));
-
-				// Find caret root parent and clean it up using the serializer to avoid nesting
+	
 				caretNode = dom.select('#__mce')[0];
 				rootNode = dom.getRoot();
+
+				// Move the caret into the last suitable location within the previous sibling if it's a block since the block might be split
+				if (dom.isBlock(caretNode.previousSibling)) {
+					walker = new tinymce.dom.TreeWalker(caretNode.previousSibling, rootNode);
+					while ((node = walker.prev())) {
+						if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length) {
+							dom.insertAfter(caretNode, node);
+							break;
+						}
+
+						if (node.nodeName == 'BR') {
+							node.parentNode.insertBefore(caretNode, node);
+							break;
+						}
+					}
+				}
+
+				// Find caret root parent and clean it up using the serializer to avoid nesting
 				while (caretNode) {
 					if (caretNode === rootNode) {
 						// Clean up the parent element by parsing and serializing it
@@ -345,6 +362,8 @@
 						}
 					}
 				}
+
+				editor.addVisual();
 			},
 
 			mceInsertRawHTML : function(command, ui, value) {

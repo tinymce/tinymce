@@ -407,6 +407,9 @@
 			if (node) {
 				do {
 					if (node.type === 1) {
+						if (node.attributes.map['data-mce-bogus'])
+							continue;
+
 						// Keep empty elements like <img />
 						if (elements[node.name])
 							return false;
@@ -414,7 +417,7 @@
 						// Keep elements with data attributes
 						i = node.attributes.length;
 						while (i--) {
-							if (!node.attributes.map['data-mce-bogus'] && node.attributes[i].name.indexOf('data-') === 0)
+							if (node.attributes[i].name.indexOf('data-') === 0)
 								return false;
 						}
 					}
