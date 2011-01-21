@@ -291,7 +291,7 @@
 					var node, walker = new tinymce.dom.TreeWalker(start_node, root_node);
 
 					while ((node = walker.current())) {
-						if ((node.nodeType == 3 && tinymce.trim(node.nodeValue).length) || node.nodeName == 'BR')
+						if ((node.nodeType == 3 && tinymce.trim(node.nodeValue).length) || node.nodeName == 'BR' || node.nodeName == 'IMG')
 							return node;
 
 						walker.prev();
@@ -313,10 +313,10 @@
 				if (caretNode.previousSibling && dom.isBlock(caretNode.previousSibling) || caretNode.parentNode == rootNode) {
 					node = findSuitableCaretNode(caretNode.previousSibling, rootNode);
 					if (node) {
-						if (node.nodeType == 3)
-							dom.insertAfter(caretNode, node);
-						else
+						if (node.nodeName == 'BR')
 							node.parentNode.insertBefore(caretNode, node);
+						else
+							dom.insertAfter(caretNode, node);
 					}
 				}
 
@@ -351,8 +351,13 @@
 							rng.setStart(node, node.length);
 							rng.setEnd(node, node.length);
 						} else {
-							rng.setStartBefore(node);
-							rng.setEndBefore(node);							
+							if (node.nodeName == 'BR') {
+								rng.setStartBefore(node);
+								rng.setEndBefore(node);
+							} else {
+								rng.setStartAfter(node);
+								rng.setEndAfter(node);
+							}
 						}
 
 						selection.setRng(rng);

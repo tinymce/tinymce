@@ -23,7 +23,7 @@ function getContent() {
 test('mceInsertContent', function() {
 	var rng;
 	
-	expect(42);
+	expect(48);
 
 	editor.setContent('<p>1234</p>');
 	rng = editor.dom.createRng();
@@ -110,6 +110,20 @@ test('mceInsertContent', function() {
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.innerHTML, 'abc');
+
+	editor.setContent('<p>1</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
+	equals(getContent(), '<p><img src="about:blank"></p>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	ok(rng.collapsed);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.startOffset, 1);
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 1);
 });
 
 tinyMCE.init({
