@@ -285,7 +285,7 @@
 			},
 
 			mceInsertContent : function(command, ui, value) {
-				var caretNode, rng, rootNode, parent, node, rng;
+				var caretNode, rng, rootNode, parent, node, rng, nodeRect, viewPortRect;
 
 				function findSuitableCaretNode(start_node, root_node) {
 					var node, walker = new tinymce.dom.TreeWalker(start_node, root_node);
@@ -361,6 +361,23 @@
 						}
 
 						selection.setRng(rng);
+
+						// Scroll range into view scrollIntoView on element can't be used since it will scroll the main view port as well
+						if (!tinymce.isIE) {
+							node = dom.create('span', null, '&nbsp;');
+							rng.insertNode(node);
+							nodeRect = dom.getRect(node);
+							viewPortRect = dom.getViewPort(editor.getWin());
+
+							// Check if node is out side the viewport if it is then scroll to it
+							if ((nodeRect.y > viewPortRect.y + viewPortRect.h || nodeRect.y < viewPortRect.y) ||
+								(nodeRect.x > viewPortRect.x + viewPortRect.w || nodeRect.x < viewPortRect.x)) {
+								editor.getBody().scrollLeft = nodeRect.x;
+								editor.getBody().scrollTop = nodeRect.y;
+							}
+
+							dom.remove(node);
+						}
 					}
 				}
 
