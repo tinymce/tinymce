@@ -59,6 +59,6 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 	 * @return {Node} Current node where the walker is after moving to the previous node.
 	 */
 	this.prev = function(shallow) {
-		return (node = findSibling(node, 'lastChild', 'lastSibling', shallow));
+		return (node = findSibling(node, 'lastChild', 'previousSibling', shallow));
 	};
 };
