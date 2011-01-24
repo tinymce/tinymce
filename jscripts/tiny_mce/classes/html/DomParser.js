@@ -40,9 +40,10 @@
 
 		function fixInvalidChildren(nodes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i,
-				childClone, emptyElements = schema.getEmptyElements(), nonSplitableElements, sibling;
+				childClone, emptyElements, nonSplitableElements, sibling;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
+			emptyElements = tinymce.extend(tinymce.makeMap('td,th,iframe'), schema.getEmptyElements());
 
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
@@ -193,7 +194,7 @@
 
 			args = args || {};
 			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,title,meta,param'), schema.getBlockElements());
-			emptyElements = tinymce.extend(tinymce.makeMap('td,th'), schema.getEmptyElements());
+			emptyElements = tinymce.extend(tinymce.makeMap('td,th,iframe'), schema.getEmptyElements());
 			children = schema.children;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();

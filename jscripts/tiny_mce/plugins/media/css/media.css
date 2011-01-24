@@ -14,3 +14,4 @@
 #rmp_console, #rmp_numloop, #rmp_controls, #rmp_scriptcallbacks { width: 70px }
 #shockwave_swvolume, #shockwave_swframe, #shockwave_swurl, #shockwave_swstretchvalign, #shockwave_swstretchhalign, #shockwave_swstretchstyle { width: 90px }
 #qt_qtsrc { width: 200px }
+iframe {border: 1px solid gray}

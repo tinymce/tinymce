@@ -198,7 +198,10 @@
 			get('shockwave_options').style.display = 'none';
 			get('windowsmedia_options').style.display = 'none';
 			get('realmedia_options').style.display = 'none';
-			get(data.type + '_options').style.display = 'block';
+
+			if (get(data.type + '_options'))
+				get(data.type + '_options').style.display = 'block';
+
 			setVal('media_type', data.type);
 
 			setOptions('flash', 'play,loop,menu,swliveconnect,quality,scale,salign,wmode,base,flashvars');
@@ -239,8 +242,8 @@
 				if (src.match(/youtube.com(.+)v=([^&]+)/)) {
 					data.width = 425;
 					data.height = 350;
-					data.type = 'flash';
-					src = 'http://www.youtube.com/v/' + src.match(/v=([^&]+)/)[1];
+					data.type = 'iframe';
+					src = 'http://www.youtube.com/embed/' + src.match(/v=([^&]+)/)[1];
 					setVal('src', src);
 				}
 

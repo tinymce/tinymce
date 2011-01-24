@@ -1330,7 +1330,7 @@
 			});
 
 			t.parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function(nodes, name) {
-				var i = nodes.length, node, emptyElements = t.schema.getEmptyElements();
+				var i = nodes.length, node, emptyElements = tinymce.extend(tinymce.makeMap('td,th,iframe'), t.schema.getEmptyElements());
 
 				while (i--) {
 					node = nodes[i];
