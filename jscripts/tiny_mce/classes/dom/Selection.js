@@ -589,43 +589,45 @@
 		select : function(node, content) {
 			var t = this, dom = t.dom, rng = dom.createRng(), idx;
 
-			idx = dom.nodeIndex(node);
-			rng.setStart(node.parentNode, idx);
-			rng.setEnd(node.parentNode, idx + 1);
+			if (node) {
+				idx = dom.nodeIndex(node);
+				rng.setStart(node.parentNode, idx);
+				rng.setEnd(node.parentNode, idx + 1);
 
-			// Find first/last text node or BR element
-			if (content) {
-				function setPoint(node, start) {
-					var walker = new tinymce.dom.TreeWalker(node, node);
+				// Find first/last text node or BR element
+				if (content) {
+					function setPoint(node, start) {
+						var walker = new tinymce.dom.TreeWalker(node, node);
 
-					do {
-						// Text node
-						if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length != 0) {
-							if (start)
-								rng.setStart(node, 0);
-							else
-								rng.setEnd(node, node.nodeValue.length);
+						do {
+							// Text node
+							if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length != 0) {
+								if (start)
+									rng.setStart(node, 0);
+								else
+									rng.setEnd(node, node.nodeValue.length);
 
-							return;
-						}
+								return;
+							}
 
-						// BR element
-						if (node.nodeName == 'BR') {
-							if (start)
-								rng.setStartBefore(node);
-							else
-								rng.setEndBefore(node);
+							// BR element
+							if (node.nodeName == 'BR') {
+								if (start)
+									rng.setStartBefore(node);
+								else
+									rng.setEndBefore(node);
 
-							return;
-						}
-					} while (node = (start ? walker.next() : walker.prev()));
-				};
+								return;
+							}
+						} while (node = (start ? walker.next() : walker.prev()));
+					};
 
-				setPoint(node, 1);
-				setPoint(node);
+					setPoint(node, 1);
+					setPoint(node);
+				}
+
+				t.setRng(rng);
 			}
-
-			t.setRng(rng);
 
 			return node;
 		},
