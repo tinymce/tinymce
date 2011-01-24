@@ -167,8 +167,6 @@
 			}
 
 			if (!to_form) {
-				data.params = {};
-
 				data.type = get('media_type').options[get('media_type').selectedIndex].value;
 				data.width = getVal('width');
 				data.height = getVal('height');
@@ -242,6 +240,7 @@
 				if (src.match(/youtube.com(.+)v=([^&]+)/)) {
 					data.width = 425;
 					data.height = 350;
+					data.params.frameborder = '0';
 					data.type = 'iframe';
 					src = 'http://www.youtube.com/embed/' + src.match(/v=([^&]+)/)[1];
 					setVal('src', src);

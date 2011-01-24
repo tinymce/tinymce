@@ -385,6 +385,9 @@
 						replacement.attr(name, value);
 				});
 
+				for (name in data.params)
+					replacement.attr(name, data.params[name]);
+
 				replacement.attr({
 					style: style,
 					src: data.params.src
