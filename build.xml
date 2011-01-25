@@ -158,6 +158,7 @@
 		<concat destfile="${build_dir}/tiny_mce_full.js">
 			<fileset dir="${build_dir}" includes="tiny_mce.js" />
 			<fileset dir="${build_dir}" includes="langs/en.js" />
+            <fileset dir="${build_dir}" includes="plugins/accnav/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/advhr/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/advimage/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="plugins/advlink/editor_plugin.js" />

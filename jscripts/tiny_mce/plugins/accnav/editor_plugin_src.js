@@ -19,9 +19,7 @@
 
             }
             function escapeHandler(ed, e){
-                console.log("HERE");
                 if (e.keyCode === KEY_ESCAPE) {
-                    //TODO: move this?
                     window.focus();
                     ed.getContainer().focus();
                 }
@@ -39,6 +37,7 @@
 
             ed.onInit.add(function() {
                 DOM.setAttrib(ed.getContainer(), "tabindex", 0);
+                DOM.setAttrib(DOM.select("#"+ed.id+"_ifr"), "tabindex", -1);
                 function enterCancel(ed, e){
                     if (e.keyCode === KEY_ENTER)
                         return Event.cancel(e);
@@ -46,17 +45,17 @@
                 }
                 function enterHandler(e){
                     if (e.keyCode === KEY_ENTER) {
-                        //TODO: move this?
                         ed.focus();
                         Event.cancel(e);
                     }
                 }
+                Event.add(ed.getContainer(), "keyup", enterCancel);
+                if (tinymce.isGecko) {
+                    Event.add(ed.getContainer(), "keypress", enterHandler);
+                    Event.add(ed.getContainer(), "keydown", enterCancel);
+                } else
+                    Event.add(ed.getContainer(), "keydown", enterHandler);
 
-                Event.add(ed.getContainer(), "keydown", enterHandler);
-
-//                each(DOM.select('a:first,a:last', ed.getContainer()), function(n) {
-//                    Event.add(n, 'focus', function() {ed.focus();});
-//                });
             });
 
 		},
@@ -64,9 +63,9 @@
 		getInfo : function() {
 			return {
 				longname : 'Accessible Navigation',
-				author : 'Ephox Pty LTD',
-				authorurl : 'http://tinymce.moxiecode.com',
-				infourl : 'http://tinymce.moxiecode.com',
+				author : 'Ephox Pty Ltd',
+				authorurl : 'http://tinymce.ephox.com',
+				infourl : 'http://tinymce.ephox.com',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
 		}
