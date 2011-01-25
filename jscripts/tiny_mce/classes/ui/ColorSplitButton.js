@@ -188,6 +188,9 @@
 
 			DOM.addClass(m, 'mceColorSplitMenu');
 
+			// Prevent IE from scrolling and hindering click to occur #4019
+			Event.add(t.id + '_menu', 'mousedown', function(e) {return Event.cancel(e);});
+
 			Event.add(t.id + '_menu', 'click', function(e) {
 				var c;
 
