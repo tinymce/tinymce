@@ -445,7 +445,7 @@
 			},
 
 			mceReplaceContent : function(command, ui, value) {
-				selection.setContent(value.replace(/\{\$selection\}/g, selection.getContent({format : 'text'})));
+				editor.execCommand('mceInsertContent', false, selection.setContent(value.replace(/\{\$selection\}/g, selection.getContent({format : 'text'}))));
 			},
 
 			mceInsertLink : function(command, ui, value) {

@@ -17,6 +17,7 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where mceInsertContent command wouldn't apply visual aids on tables and similar elements.
 	Fixed bug where empty block elements would get double br bogus elements in them.
 	Fixed bug where the color menu wouldn't apply the color correctly on IE when the viewport was to small.
+	Fixed so mceReplaceContent supports caret position and makes sure that the contents inserted gets validated.
 	Moved some plugin css contents into the skin content css files to reduce the number of http requests.
 	Moved some plugin specific images into the theme img directory since they can then be shared.
 Version 3.4b2 (2011-01-13)
