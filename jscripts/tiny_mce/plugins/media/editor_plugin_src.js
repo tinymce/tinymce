@@ -324,40 +324,43 @@
 
 			// Adds the flash player
 			function addPlayer(video_src, poster_src) {
-				var baseUri, flashVars, flashVarsOutput, params;
+				var baseUri, flashVars, flashVarsOutput, params, flashPlayer;
 
-				baseUri = editor.documentBaseURI;
-				data.params.src = editor.getParam('flash_video_player_url', self.convertUrl(self.url + '/moxieplayer.swf'));
+				flashPlayer = editor.getParam('flash_video_player_url', self.convertUrl(self.url + '/moxieplayer.swf'));
+				if (flashPlayer) {
+					baseUri = editor.documentBaseURI;
+					data.params.src = flashPlayer;
 
-				// Convert the movie url to absolute urls
-				if (editor.getParam('flash_video_player_absvideourl', true)) {
-					video_src = baseUri.toAbsolute(video_src || '', true);
-					poster_src = baseUri.toAbsolute(poster_src || '', true);
+					// Convert the movie url to absolute urls
+					if (editor.getParam('flash_video_player_absvideourl', true)) {
+						video_src = baseUri.toAbsolute(video_src || '', true);
+						poster_src = baseUri.toAbsolute(poster_src || '', true);
+					}
+
+					// Generate flash vars
+					flashVarsOutput = '';
+					flashVars = editor.getParam('flash_video_player_flashvars', {url : '$url', poster : '$poster'});
+					tinymce.each(flashVars, function(value, name) {
+						// Replace $url and $poster variables in flashvars value
+						value = value.replace(/\$url/, video_src || '');
+						value = value.replace(/\$poster/, poster_src || '');
+
+						if (value.length > 0)
+							flashVarsOutput += (flashVarsOutput ? '&' : '') + name + '=' + escape(value);
+					});
+
+					if (flashVarsOutput.length)
+						data.params.flashvars = flashVarsOutput;
+
+					params = editor.getParam('flash_video_player_params', {
+						allowfullscreen: true,
+						allowscriptaccess: true
+					});
+
+					tinymce.each(params, function(value, name) {
+						data.params[name] = "" + value;
+					});
 				}
-
-				// Generate flash vars
-				flashVarsOutput = '';
-				flashVars = editor.getParam('flash_video_player_flashvars', {url : '$url', poster : '$poster'});
-				tinymce.each(flashVars, function(value, name) {
-					// Replace $url and $poster variables in flashvars value
-					value = value.replace(/\$url/, video_src || '');
-					value = value.replace(/\$poster/, poster_src || '');
-
-					if (value.length > 0)
-						flashVarsOutput += (flashVarsOutput ? '&' : '') + name + '=' + escape(value);
-				});
-
-				if (flashVarsOutput.length)
-					data.params.flashvars = flashVarsOutput;
-
-				params = editor.getParam('flash_video_player_params', {
-					allowfullscreen: true,
-					allowscriptaccess: true
-				});
-
-				tinymce.each(params, function(value, name) {
-					data.params[name] = "" + value;
-				});
 			};
 
 			data = JSON.parse(node.attr('data-mce-json'));
