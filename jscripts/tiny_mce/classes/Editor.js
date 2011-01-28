@@ -2834,16 +2834,7 @@
 			each(lo, function(v, k) {
 				switch (k) {
 					case 'contextmenu':
-						if (tinymce.isOpera) {
-							// Fake contextmenu on Opera
-							dom.bind(t.getBody(), 'mousedown', function(e) {
-								if (e.ctrlKey) {
-									e.fakeType = 'contextmenu';
-									eventHandler(e);
-								}
-							});
-						} else
-							dom.bind(t.getBody(), k, eventHandler);
+						dom.bind(t.getDoc(), k, eventHandler);
 						break;
 
 					case 'paste':
