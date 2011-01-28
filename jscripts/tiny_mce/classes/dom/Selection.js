@@ -945,7 +945,7 @@
 			};
 
 			// Detect when user selects outside BODY
-			dom.bind(doc, 'mousedown', function(e) {
+			dom.bind(doc, ['mousedown', 'contextmenu'], function(e) {
 				if (e.target.nodeName === 'HTML') {
 					if (started)
 						endSelection();
