@@ -148,7 +148,7 @@
 
 		// Remove <br> at end of block elements
 		htmlParser.addNodeFilter('br', function(nodes, name) {
-			var i = nodes.length, node, blockElements = schema.getBlockElements(), emptyElements = schema.getEmptyElements(), parent;
+			var i = nodes.length, node, blockElements = schema.getBlockElements(), nonEmptyElements = schema.getNonEmptyElements(), parent;
 
 			while (i--) {
 				node = nodes[i];
@@ -157,7 +157,7 @@
 				if (blockElements[node.parent.name] && node === parent.lastChild) {
 					node.remove();
 
-					if (parent.isEmpty(emptyElements))
+					if (parent.isEmpty(nonEmptyElements))
 						parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
 				}
 			}

@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	var transitional = {}, boolAttrMap, blockElementsMap, emptyElementsMap, whiteSpaceElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
+	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap, whiteSpaceElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
 
 	function split(str, delim) {
 		return str.split(delim || ',');
@@ -175,7 +175,8 @@
 	);
 
 	boolAttrMap = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected,preload,autoplay,loop,controls');
-	emptyElementsMap = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,source');
+	shortEndedElementsMap = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,source');
+	nonEmptyElementsMap = tinymce.extend(makeMap('td,th,iframe,video,object'), shortEndedElementsMap);
 	whiteSpaceElementsMap = makeMap('pre,script,style');
 
 	/**
@@ -515,13 +516,24 @@
 		};
 
 		/**
-		 * Returns a map with empty elements.
+		 * Returns a map with short ended elements such as BR or IMG.
 		 *
-		 * @method getEmptyElements
-		 * @return {Object} Name/value lookup map for empty elements.
+		 * @method getShortEndedElements
+		 * @return {Object} Name/value lookup map for short ended elements.
 		 */
-		self.getEmptyElements = function() {
-			return emptyElementsMap;
+		self.getShortEndedElements = function() {
+			return shortEndedElementsMap;
+		};
+
+		/**
+		 * Returns a map with elements that should be treated as contents regardless if it has text
+		 * content in them or not such as TD, VIDEO or IMG.
+		 *
+		 * @method getNonEmptyElements
+		 * @return {Object} Name/value lookup map for non empty elements.
+		 */
+		self.getNonEmptyElements = function() {
+			return nonEmptyElementsMap;
 		};
 
 		/**

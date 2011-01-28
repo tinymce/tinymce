@@ -80,7 +80,7 @@
 		 */
 		self.parse = function(html) {
 			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i, text, name,
-				emptyElmMap, fillAttrsMap, isEmpty, validate, elementRule, isValidElement, attr, attribsValue,
+				shortEndedElements, fillAttrsMap, isShortEnded, validate, elementRule, isValidElement, attr, attribsValue,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
 				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode;
 
@@ -102,7 +102,7 @@
 			};
 
 			// Setup lookup tables for empty elements and boolean attributes
-			emptyElmMap = schema.getEmptyElements();
+			shortEndedElements = schema.getShortEndedElements();
 			fillAttrsMap = schema.getBoolAttrs();
 			validate = settings.validate;
 
@@ -136,7 +136,7 @@
 					}
 				} else if (value = matches[7]) { // Start element
 					value = value.toLowerCase();
-					isEmpty = value in emptyElmMap;
+					isShortEnded = value in shortEndedElements;
 
 					// Validate element
 					if (!validate || (elementRule = schema.getElementRule(value))) {
@@ -258,7 +258,7 @@
 						}
 
 						if (isValidElement)
-							self.start(value, attrList, isEmpty);
+							self.start(value, attrList, isShortEnded);
 					} else
 						isValidElement = false;
 
@@ -287,7 +287,7 @@
 					}
 
 					// Push value on to stack
-					if (!isEmpty) {
+					if (!isShortEnded) {
 						if (!attribsValue || attribsValue.indexOf('/') != attribsValue.length - 1)
 							stack.push({name: value, valid: isValidElement});
 						else if (isValidElement)

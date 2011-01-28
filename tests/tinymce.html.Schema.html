@@ -167,14 +167,26 @@ test('getBlockElements', function() {
 	});
 });
 
-test('getEmptyElements', function() {
+test('getShortEndedElements', function() {
 	expect(1);
 
 	var schema = new tinymce.html.Schema();
-	deepEqual(schema.getEmptyElements(), {
+	deepEqual(schema.getShortEndedElements(), {
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
 		"basefont": {}, "base": {}, "area": {}, "source" : {}
+	});
+});
+
+test('getNonEmptyElements', function() {
+	expect(1);
+
+	var schema = new tinymce.html.Schema();
+	deepEqual(schema.getNonEmptyElements(), {
+		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
+		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
+		"basefont": {}, "base": {}, "area": {}, "source" : {},
+		"td": {}, "th": {}, "iframe": {}, "video": {}, "object": {}
 	});
 });
 

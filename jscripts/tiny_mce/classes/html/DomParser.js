@@ -40,10 +40,10 @@
 
 		function fixInvalidChildren(nodes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i,
-				childClone, emptyElements, nonSplitableElements, sibling;
+				childClone, nonEmptyElements, nonSplitableElements, sibling;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
-			emptyElements = tinymce.extend(tinymce.makeMap('td,th,iframe'), schema.getEmptyElements());
+			nonEmptyElements = schema.getNonEmptyElements();
 
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
@@ -80,14 +80,14 @@
 						currentNode = tempNode;
 					}
 
-					if (!newParent.isEmpty(emptyElements)) {
+					if (!newParent.isEmpty(nonEmptyElements)) {
 						parent.insert(newParent, parents[0], true);
 						parent.insert(node, newParent);
 					} else {
 						parent.insert(node, parents[0], true);
 					}
 
-					if (parents[0].isEmpty(emptyElements)) {
+					if (parents[0].isEmpty(nonEmptyElements)) {
 						parents[0].empty().remove();
 					}
 				} else if (node.parent) {
@@ -190,11 +190,11 @@
 		self.parse = function(html, args) {
 			var parser, rootNode, node, nodes, matchedNodes = {}, matchedAttributes = {},
 				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, emptyElements;
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements;
 
 			args = args || {};
 			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,title,meta,param'), schema.getBlockElements());
-			emptyElements = tinymce.extend(tinymce.makeMap('td,th,iframe'), schema.getEmptyElements());
+			nonEmptyElements = schema.getNonEmptyElements();
 			children = schema.children;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();
@@ -358,7 +358,7 @@
 
 						// Handle empty nodes
 						if (elementRule.removeEmpty || elementRule.paddEmpty) {
-							if (node.isEmpty(emptyElements)) {
+							if (node.isEmpty(nonEmptyElements)) {
 								if (elementRule.paddEmpty)
 									node.empty().append(new Node('#text', '3')).value = '\u00a0';
 								else {
