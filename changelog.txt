@@ -20,6 +20,7 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where right clicking out side the body element of the editor iframe would prevent paste from working on IE.
 	Fixed bug where the onContextMenu event wouldn't fire correctly on IE if you clicked out side the body element.
 	Fixed bug where the onContextMenu event wouldn't fire correctly on modern Opera versions that now support it by default.
+	Fixed bug where legacy content wasn't converted correctly when inserted using mceInsertContent or through the source dialog.
 	Fixed so mceReplaceContent supports caret position and makes sure that the contents inserted gets validated.
 	Moved some plugin css contents into the skin content css files to reduce the number of http requests.
 	Moved some plugin specific images into the theme img directory since they can then be shared.

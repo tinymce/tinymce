@@ -285,7 +285,7 @@
 			},
 
 			mceInsertContent : function(command, ui, value) {
-				var caretNode, rng, rootNode, parent, node, rng, nodeRect, viewPortRect;
+				var caretNode, rng, rootNode, parent, node, rng, nodeRect, viewPortRect, args;
 
 				function findSuitableCaretNode(start_node, root_node) {
 					var node, walker = new tinymce.dom.TreeWalker(start_node, root_node);
@@ -298,12 +298,16 @@
 					}
 				};
 
+				args = {content: value, format: 'html'};
+				selection.onBeforeSetContent.dispatch(selection, args);
+				value = args.content;
+
 				// Add caret at end of contents if it's missing
 				if (value.indexOf('{$caret}') == -1)
 					value += '{$caret}';
 
 				// Set the content at selection to a span and replace it's contents with the value
-				selection.setContent('<span id="__mce">\uFEFF</span>');
+				selection.setContent('<span id="__mce">\uFEFF</span>', {no_events : false});
 				dom.setOuterHTML('__mce', value.replace(/\{\$caret\}/, '<span data-mce-type="bookmark" id="__mce">\uFEFF</span>'));
 
 				caretNode = dom.select('#__mce')[0];
@@ -381,6 +385,7 @@
 					}
 				}
 
+				selection.onSetContent.dispatch(selection, args);
 				editor.addVisual();
 			},
 
