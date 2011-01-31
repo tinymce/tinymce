@@ -150,76 +150,80 @@
 		 * where the caret is placed in the editor/page.
 		 *
 		 * @method setContent
-		 * @param {String} h HTML contents to set could also be other formats depending on settings.
-		 * @param {Object} s Optional settings object with for example data format.
+		 * @param {String} content HTML contents to set could also be other formats depending on settings.
+		 * @param {Object} args Optional settings object with for example data format.
 		 * @example
 		 * // Inserts some HTML contents at the current selection
 		 * tinyMCE.activeEditor.selection.setContent('<strong>Some contents</strong>');
 		 */
-		setContent : function(h, s) {
-			var t = this, r = t.getRng(), c, d = t.win.document;
+		setContent : function(content, args) {
+			var self = this, rng = self.getRng(), caretNode, doc = self.win.document, frag, temp;
 
-			s = s || {format : 'html'};
-			s.set = true;
-			h = s.content = h;
+			args = args || {format : 'html'};
+			args.set = true;
+			content = args.content = content;
 
 			// Dispatch before set content event
-			t.onBeforeSetContent.dispatch(t, s);
-			h = s.content;
+			if (!args.no_events)
+				self.onBeforeSetContent.dispatch(self, args);
 
-			if (r.insertNode) {
+			content = args.content;
+
+			if (rng.insertNode) {
 				// Make caret marker since insertNode places the caret in the beginning of text after insert
-				h += '<span id="__caret">_</span>';
+				content += '<span id="__caret">_</span>';
 
 				// Delete and insert new node
-				
-				if (r.startContainer == d && r.endContainer == d) {
+				if (rng.startContainer == doc && rng.endContainer == doc) {
 					// WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
-					d.body.innerHTML = h;
+					doc.body.innerHTML = content;
 				} else {
-					r.deleteContents();
-					if (d.body.childNodes.length == 0) {
-						d.body.innerHTML = h;
+					rng.deleteContents();
+
+					if (doc.body.childNodes.length == 0) {
+						doc.body.innerHTML = content;
 					} else {
 						// createContextualFragment doesn't exists in IE 9 DOMRanges
-						if (r.createContextualFragment) {
-							r.insertNode(r.createContextualFragment(h));
+						if (rng.createContextualFragment) {
+							rng.insertNode(rng.createContextualFragment(content));
 						} else {
 							// Fake createContextualFragment call in IE 9
-							var frag = d.createDocumentFragment(), temp = d.createElement('div');
+							frag = doc.createDocumentFragment();
+							temp = doc.createElement('div');
 
 							frag.appendChild(temp);
-							temp.outerHTML = h;
+							temp.outerHTML = content;
 
-							r.insertNode(frag);
+							rng.insertNode(frag);
 						}
 					}
 				}
 
 				// Move to caret marker
-				c = t.dom.get('__caret');
+				caretNode = self.dom.get('__caret');
 
 				// Make sure we wrap it compleatly, Opera fails with a simple select call
-				r = d.createRange();
-				r.setStartBefore(c);
-				r.setEndBefore(c);
-				t.setRng(r);
+				rng = doc.createRange();
+				rng.setStartBefore(caretNode);
+				rng.setEndBefore(caretNode);
+				self.setRng(rng);
 
 				// Remove the caret position
-				t.dom.remove('__caret');
-				t.setRng(r);
+				self.dom.remove('__caret');
+				self.setRng(rng);
 			} else {
-				if (r.item) {
+				if (rng.item) {
 					// Delete content and get caret text selection
-					d.execCommand('Delete', false, null);
-					r = t.getRng();
+					doc.execCommand('Delete', false, null);
+					rng = self.getRng();
 				}
 
-				r.pasteHTML(h);
+				rng.pasteHTML(content);
 			}
 
 			// Dispatch set content event
-			t.onSetContent.dispatch(t, s);
+			if (!args.no_events)
+				self.onSetContent.dispatch(self, args);
 		},
 
 		/**
