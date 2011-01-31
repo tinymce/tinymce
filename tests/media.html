@@ -268,10 +268,10 @@ test("Iframe (relative urls)", function() {
 	editor.settings.relative_urls = true;
 
 	editor.setContent('<iframe src="test"></iframe>');
-	equals(editor.getContent(), '<p><iframe src="test" height="240" width="320"></iframe></p>');
+	equals(editor.getContent(), '<p><iframe src="test" width="320" height="240"></iframe></p>');
 
 	editor.setContent('<iframe frameborder="0" src="test" style="color: #FF0000" align="right" id="id" width="100" height="200"></iframe>');
-	equals(editor.getContent(), '<p><iframe id="id" style="color: #ff0000;" src="test" frameborder="0" align="right" height="200" width="100"></iframe></p>');
+	equals(editor.getContent(), '<p><iframe id="id" style="color: #ff0000;" src="test" frameborder="0" align="right" width="100" height="200"></iframe></p>');
 });
 
 test("Iframe (absolute urls)", function() {
@@ -280,10 +280,10 @@ test("Iframe (absolute urls)", function() {
 	editor.settings.relative_urls = false;
 
 	editor.setContent('<iframe src="test"></iframe>');
-	equals(editor.getContent(), '<p><iframe src="/tinymce/tinymce/trunk/tests/test" height="240" width="320"></iframe></p>');
+	equals(editor.getContent(), '<p><iframe src="/tinymce/tinymce/trunk/tests/test" width="320" height="240"></iframe></p>');
 
 	editor.setContent('<iframe frameborder="0" src="test" style="color: #FF0000" align="right" id="id" width="100" height="200"></iframe>');
-	equals(editor.getContent(), '<p><iframe id="id" style="color: #ff0000;" src="/tinymce/tinymce/trunk/tests/test" frameborder="0" align="right" height="200" width="100"></iframe></p>');
+	equals(editor.getContent(), '<p><iframe id="id" style="color: #ff0000;" src="/tinymce/tinymce/trunk/tests/test" frameborder="0" align="right" width="100" height="200"></iframe></p>');
 });
 
 test("Internal dataToHtml", function() {

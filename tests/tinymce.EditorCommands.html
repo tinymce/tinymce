@@ -23,7 +23,7 @@ function getContent() {
 test('mceInsertContent', function() {
 	var rng;
 	
-	expect(48);
+	expect(49);
 
 	editor.setContent('<p>1234</p>');
 	rng = editor.dom.createRng();
@@ -124,6 +124,15 @@ test('mceInsertContent', function() {
 	equals(rng.startOffset, 1);
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.endOffset, 1);
+
+	// Convert legacy content
+	editor.setContent('<p>1</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertContent', false, '<u>u</u><strike>strike</strike><font size="7">font</font>');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: xx-large;">font</span></p>');
 });
 
 tinyMCE.init({

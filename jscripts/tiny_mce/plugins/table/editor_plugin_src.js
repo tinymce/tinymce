@@ -782,6 +782,27 @@
 				});
 			}
 
+			ed.onPreProcess.add(function(ed, args) {
+				var nodes, i, node, dom = ed.dom, value;
+
+				nodes = dom.select('table', args.node);
+				i = nodes.length;
+				while (i--) {
+					node = nodes[i];
+					dom.setAttrib(node, 'data-mce-style', '');
+
+					if ((value = dom.getAttrib(node, 'width'))) {
+						dom.setStyle(node, 'width', value);
+						dom.setAttrib(node, 'width', '');
+					}
+
+					if ((value = dom.getAttrib(node, 'height'))) {
+						dom.setStyle(node, 'height', value);
+						dom.setAttrib(node, 'height', '');
+					}
+				}
+			});
+
 			// Handle node change updates
 			ed.onNodeChange.add(function(ed, cm, n) {
 				var p;

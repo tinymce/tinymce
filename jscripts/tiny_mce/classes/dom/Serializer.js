@@ -215,6 +215,15 @@
 			});
 		}
 
+		// Remove internal data attributes
+		htmlParser.addAttributeFilter('data-mce-src,data-mce-href,data-mce-style', function(nodes, name) {
+			var i = nodes.length;
+
+			while (i--) {
+				nodes[i].attr(name, null);
+			}
+		});
+
 		// Return public methods
 		return {
 			/**
