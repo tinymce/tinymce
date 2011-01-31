@@ -90,7 +90,7 @@
 		A : 'id|class|style|title'
 	}, 'script[id|charset|type|language|src|defer|xml:space][]' + 
 		'style[B|id|type|media|title|xml:space][]' + 
-		'object[E|declare|classid|codebase|data|type|codetype|archive|standby|height|width|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' + 
+		'object[E|declare|classid|codebase|data|type|codetype|archive|standby|width|height|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' + 
 		'param[id|name|value|valuetype|type][]' + 
 		'p[E|align][#|S]' + 
 		'a[E|D|charset|type|name|href|hreflang|rel|rev|shape|coords|target][#|Z]' + 
@@ -99,10 +99,10 @@
 		'bdo[A|C|B][#|S]' + 
 		'applet[A|codebase|archive|code|object|alt|name|width|height|align|hspace|vspace][#|param|Y]' + 
 		'h1[E|align][#|S]' + 
-		'img[E|src|alt|name|longdesc|height|width|usemap|ismap|align|border|hspace|vspace][]' + 
+		'img[E|src|alt|name|longdesc|width|height|usemap|ismap|align|border|hspace|vspace][]' + 
 		'map[B|C|A|name][X|form|Q|area]' + 
 		'h2[E|align][#|S]' + 
-		'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|height|width][#|Y]' + 
+		'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height][#|Y]' + 
 		'h3[E|align][#|S]' + 
 		'tt[E][#|S]' + 
 		'i[E][#|S]' + 
