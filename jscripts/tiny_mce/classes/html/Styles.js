@@ -241,7 +241,7 @@ tinymce.html.Styles = function(settings, schema) {
 		 * @return {String} String representation of the style object for example: border: 1px solid red.
 		 */
 		serialize : function(styles, element_name) {
-			var css = '', name;
+			var css = '', name, value;
 
 			function serializeStyles(name) {
 				var styleList, i, l, name, value;
@@ -265,8 +265,12 @@ tinymce.html.Styles = function(settings, schema) {
 				serializeStyles(name);
 			} else {
 				// Output the styles in the order they are inside the object
-				for (name in styles)
-					css += (css.length > 0 ? ' ' : '') + name + ': ' + styles[name] + ';';
+				for (name in styles) {
+					value = styles[name];
+
+					if (value !== undef)
+						css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
+				}
 			}
 
 			return css;
