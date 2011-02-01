@@ -1,13 +1,3 @@
-/**
- * editor_plugin_src.js
- *
- * Copyright 2009, Moxiecode Systems AB
- * Released under LGPL License.
- *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
- */
-
 (function() {
     var KEY_ESCAPE = 27, KEY_ENTER= 13;
     var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, explode = tinymce.explode;
