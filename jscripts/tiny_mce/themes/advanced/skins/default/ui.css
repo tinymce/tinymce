@@ -27,7 +27,7 @@
 .defaultSkin .mceStatusbar a.mceResize {display:block; float:right; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize; outline:0}
 .defaultSkin .mceStatusbar a:hover {text-decoration:underline}
 .defaultSkin table.mceToolbar {margin-left:3px}
-.defaultSkin span.mceIcon, .defaultSkin img.mceIcon {display:block; width:20px; height:20px}
+.defaultSkin span.mceIcon, .defaultSkin img.mceIcon {display:block; width:20px; height:20px; float:left;}
 .defaultSkin .mceIcon {background:url(../../img/icons.gif) no-repeat 20px 20px}
 .defaultSkin td.mceCenter {text-align:center;}
 .defaultSkin td.mceCenter table {margin:0 auto; text-align:left;}
