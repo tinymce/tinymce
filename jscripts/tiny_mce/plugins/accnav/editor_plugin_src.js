@@ -28,7 +28,7 @@
             ed.onInit.add(function() {
                 DOM.setAttrib(ed.getContainer(), "tabindex", 0);
                 DOM.setAttrib(DOM.select("#"+ed.id+"_ifr"), "tabindex", -1);
-                function enterCancel(ed, e){
+                function enterCancel(e){
                     if (e.keyCode === KEY_ENTER)
                         return Event.cancel(e);
 
