@@ -24,8 +24,8 @@ tinymce.create('tinymce.ui.Container:tinymce.ui.Control', {
 	 * @param {String} id Control id to use for the container.
 	 * @param {Object} s Optional name/value settings object.
 	 */
-	Container : function(id, s) {
-		this.parent(id, s);
+	Container : function(id, s, editor) {
+		this.parent(id, s, editor);
 
 		/**
 		 * Array of controls added to the container.

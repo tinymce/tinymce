@@ -353,7 +353,7 @@
 		},
 
 		_stoppers : {
-			preventDefault :  function() {
+			preventDefault : function() {
 				this.returnValue = false;
 			},
 

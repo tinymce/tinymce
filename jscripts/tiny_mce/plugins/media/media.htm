@@ -10,13 +10,13 @@
 	<script type="text/javascript" src="../../utils/editable_selects.js?v={tinymce_version}"></script>
 	<link href="css/media.css?v={tinymce_version}" rel="stylesheet" type="text/css" />
 </head>
-<body style="display: none">
-    <form onsubmit="Media.insert();return false;" action="#">
-		<div class="tabs">
+<body style="display: none" role="application">
+<form onsubmit="Media.insert();return false;" action="#">
+		<div class="tabs" role="presentation">
 			<ul>
-				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');Media.formToData();" onmousedown="return false;">{#media_dlg.general}</a></span></li>
-				<li id="advanced_tab"><span><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');Media.formToData();" onmousedown="return false;">{#media_dlg.advanced}</a></span></li>
-				<li id="source_tab"><span><a href="javascript:mcTabs.displayTab('source_tab','source_panel');Media.formToData('source');" onmousedown="return false;">{#media_dlg.source}</a></span></li>
+				<li id="general_tab" class="current" aria-controls="general_panel"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');Media.formToData();" onmousedown="return false;">{#media_dlg.general}</a></span></li>
+				<li id="advanced_tab" aria-controls="advanced_panel"><span><a href="javascript:mcTabs.displayTab('advanced_tab','advanced_panel');Media.formToData();" onmousedown="return false;">{#media_dlg.advanced}</a></span></li>
+				<li id="source_tab" aria-controls="source_panel"><span><a href="javascript:mcTabs.displayTab('source_tab','source_panel');Media.formToData('source');" onmousedown="return false;">{#media_dlg.source}</a></span></li>
 			</ul>
 		</div>
 
@@ -25,7 +25,7 @@
 				<fieldset>
 					<legend>{#media_dlg.general}</legend>
 
-					<table border="0" cellpadding="4" cellspacing="0">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0">
 							<tr>
 								<td><label for="media_type">{#media_dlg.type}</label></td>
 								<td>
@@ -42,12 +42,12 @@
 							</tr>
 							<tr>
 							<td><label for="src">{#media_dlg.file}</label></td>
-							  <td>
-									<table border="0" cellspacing="0" cellpadding="0">
-									  <tr>
-										<td><input id="src" name="src" type="text" value="" class="mceFocus" onchange="Media.formToData('src');" /></td>
+								<td>
+									<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td><input id="src" name="src" type="text" value="" class="mceFocus" onchange="switchType(this.value);Media.formToData();" /></td>
 										<td id="filebrowsercontainer">&nbsp;</td>
-									  </tr>
+									</tr>
 									</table>
 								</td>
 							</tr>
@@ -58,9 +58,9 @@
 							<tr>
 								<td><label for="width">{#media_dlg.size}</label></td>
 								<td>
-									<table border="0" cellpadding="0" cellspacing="0">
+									<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 										<tr>
-											<td><input type="text" id="width" name="width" value="" class="size" onchange="Media.changeSize('width');" /> x <input type="text" id="height" name="height" value="" class="size"  onchange="Media.changeSize('height');" /></td>
+											<td><input type="text" id="width" name="width" value="" class="size" onchange="Media.formToData('width');" /> x <input type="text" id="height" name="height" value="" class="size"  onchange="Media.formToData('height');" /></td>
 											<td>&nbsp;&nbsp;<input id="constrain" type="checkbox" name="constrain" class="checkbox" /></td>
 											<td><label id="constrainlabel" for="constrain">{#media_dlg.constrain_proportions}</label></td>
 										</tr>
@@ -80,7 +80,7 @@
 				<fieldset>
 					<legend>{#media_dlg.advanced}</legend>
 
-					<table border="0" cellpadding="4" cellspacing="0" width="100%">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0" width="100%">
 						<tr>
 							<td><label for="id">{#media_dlg.id}</label></td>
 							<td><input type="text" id="id" name="id" onchange="Media.formToData();" /></td>
@@ -102,7 +102,7 @@
 
 							<td><label for="bgcolor">{#media_dlg.bgcolor}</label></td>
 							<td>
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input id="bgcolor" name="bgcolor" type="text" value="" size="9" onchange="updateColor('bgcolor_pick','bgcolor');Media.formToData();" /></td>
 										<td id="bgcolor_pickcontainer">&nbsp;</td>
@@ -123,15 +123,15 @@
 				<fieldset id="video_options">
 					<legend>{#media_dlg.html5_video_options}</legend>
 
-					<table>
+					<table role="presentation">
 						<tr>
 							<td><label for="video_altsource1">{#media_dlg.altsource1}</label></td>
 							<td>
-								<table border="0" cellspacing="0" cellpadding="0">
-									  <tr>
+								<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+									<tr>
 										<td><input type="text" id="video_altsource1" name="video_altsource1" onchange="Media.formToData();" style="width: 240px" /></td>
 										<td id="video_altsource1_filebrowser">&nbsp;</td>
-									  </tr>
+									</tr>
 								</table>
 							</td>
 						</tr>
@@ -139,11 +139,11 @@
 						<tr>
 							<td><label for="video_altsource2">{#media_dlg.altsource2}</label></td>
 							<td>
-								<table border="0" cellspacing="0" cellpadding="0">
-									  <tr>
+								<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+									<tr>
 										<td><input type="text" id="video_altsource2" name="video_altsource2" onchange="Media.formToData();" style="width: 240px" /></td>
 										<td id="video_altsource2_filebrowser">&nbsp;</td>
-									  </tr>
+									</tr>
 								</table>
 							</td>
 						</tr>
@@ -151,20 +151,20 @@
 						<tr>
 							<td><label for="video_poster">{#media_dlg.poster}</label></td>
 							<td>
-								<table border="0" cellspacing="0" cellpadding="0">
-									  <tr>
+								<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+									<tr>
 										<td><input type="text" id="video_poster" name="video_poster" onchange="Media.formToData();" style="width: 240px" /></td>
 										<td id="video_poster_filebrowser">&nbsp;</td>
-									  </tr>
+									</tr>
 								</table>
 							</td>
 						</tr>
 					</table>
 
-					<table border="0" cellpadding="4" cellspacing="0">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0">
 						<tr>
 							<td>
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="video_autoplay" name="video_autoplay" onchange="Media.formToData();" /></td>
 										<td><label for="video_autoplay">{#media_dlg.play}</label></td>
@@ -173,7 +173,7 @@
 							</td>
 
 							<td>
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="video_loop" name="video_loop" onchange="Media.formToData();" /></td>
 										<td><label for="video_loop">{#media_dlg.loop}</label></td>
@@ -182,7 +182,7 @@
 							</td>
 
 							<td>
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="video_preload" name="video_preload" onchange="Media.formToData();" /></td>
 										<td><label for="video_preload">{#media_dlg.preload}</label></td>
@@ -191,7 +191,7 @@
 							</td>
 
 							<td>
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="video_controls" name="video_controls" onchange="Media.formToData();" /></td>
 										<td><label for="video_controls">{#media_dlg.controls}</label></td>
@@ -205,7 +205,7 @@
 				<fieldset id="flash_options">
 					<legend>{#media_dlg.flash_options}</legend>
 
-					<table border="0" cellpadding="4" cellspacing="0">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0">
 						<tr>
 							<td><label for="flash_quality">{#media_dlg.quality}</label></td>
 							<td>
@@ -260,7 +260,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="flash_play" name="flash_play" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="flash_play">{#media_dlg.play}</label></td>
@@ -269,7 +269,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="flash_loop" name="flash_loop" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="flash_loop">{#media_dlg.loop}</label></td>
@@ -280,7 +280,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="flash_menu" name="flash_menu" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="flash_menu">{#media_dlg.menu}</label></td>
@@ -289,7 +289,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="flash_swliveconnect" name="flash_swliveconnect" onchange="Media.formToData();" /></td>
 										<td><label for="flash_swliveconnect">{#media_dlg.liveconnect}</label></td>
@@ -299,7 +299,7 @@
 						</tr>
 					</table>
 
-					<table>
+					<table role="presentation">
 						<tr>
 							<td><label for="flash_base">{#media_dlg.base}</label></td>
 							<td><input type="text" id="flash_base" name="flash_base" onchange="Media.formToData();" /></td>
@@ -315,10 +315,10 @@
 				<fieldset id="quicktime_options">
 					<legend>{#media_dlg.qt_options}</legend>
 
-					<table border="0" cellpadding="4" cellspacing="0">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0">
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_loop" name="quicktime_loop" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_loop">{#media_dlg.loop}</label></td>
@@ -327,7 +327,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_autoplay" name="quicktime_autoplay" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_autoplay">{#media_dlg.play}</label></td>
@@ -338,7 +338,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_cache" name="quicktime_cache" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_cache">{#media_dlg.cache}</label></td>
@@ -347,7 +347,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_controller" name="quicktime_controller" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_controller">{#media_dlg.controller}</label></td>
@@ -358,7 +358,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_correction" name="quicktime_correction" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_correction">{#media_dlg.correction}</label></td>
@@ -367,7 +367,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_enablejavascript" name="quicktime_enablejavascript" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_enablejavascript">{#media_dlg.enablejavascript}</label></td>
@@ -378,7 +378,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_kioskmode" name="quicktime_kioskmode" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_kioskmode">{#media_dlg.kioskmode}</label></td>
@@ -387,7 +387,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_autohref" name="quicktime_autohref" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_autohref">{#media_dlg.autohref}</label></td>
@@ -398,7 +398,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_playeveryframe" name="quicktime_playeveryframe" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_playeveryframe">{#media_dlg.playeveryframe}</label></td>
@@ -407,7 +407,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="quicktime_targetcache" name="quicktime_targetcache" onchange="Media.formToData();" /></td>
 										<td><label for="quicktime_targetcache">{#media_dlg.targetcache}</label></td>
@@ -455,12 +455,12 @@
 						<tr>
 							<td><label for="quicktime_qtsrc">{#media_dlg.qtsrc}</label></td>
 							<td colspan="4">
-							<table border="0" cellspacing="0" cellpadding="0">
-								  <tr>
-									<td><input type="text" id="quicktime_qtsrc" name="quicktime_qtsrc" onchange="Media.formToData();" /></td>
-									<td id="qtsrcfilebrowsercontainer">&nbsp;</td>
-								  </tr>
-							</table>
+								<table role="presentation" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td><input type="text" id="quicktime_qtsrc" name="quicktime_qtsrc" onchange="Media.formToData();" /></td>
+										<td id="qtsrcfilebrowsercontainer">&nbsp;</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
 					</table>
@@ -469,10 +469,10 @@
 				<fieldset id="windowsmedia_options">
 					<legend>{#media_dlg.wmp_options}</legend>
 
-					<table border="0" cellpadding="4" cellspacing="0">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0">
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_autostart" name="windowsmedia_autostart" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_autostart">{#media_dlg.autostart}</label></td>
@@ -481,7 +481,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_enabled" name="windowsmedia_enabled" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_enabled">{#media_dlg.enabled}</label></td>
@@ -492,7 +492,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_enablecontextmenu" name="windowsmedia_enablecontextmenu" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_enablecontextmenu">{#media_dlg.menu}</label></td>
@@ -501,7 +501,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_fullscreen" name="windowsmedia_fullscreen" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_fullscreen">{#media_dlg.fullscreen}</label></td>
@@ -512,7 +512,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_invokeurls" name="windowsmedia_invokeurls" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_invokeurls">{#media_dlg.invokeurls}</label></td>
@@ -521,7 +521,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_mute" name="windowsmedia_mute" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_mute">{#media_dlg.mute}</label></td>
@@ -532,7 +532,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_stretchtofit" name="windowsmedia_stretchtofit" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_stretchtofit">{#media_dlg.stretchtofit}</label></td>
@@ -541,7 +541,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="windowsmedia_windowlessvideo" name="windowsmedia_windowlessvideo" onchange="Media.formToData();" /></td>
 										<td><label for="windowsmedia_windowlessvideo">{#media_dlg.windowlessvideo}</label></td>
@@ -589,16 +589,17 @@
 							<td><label for="windowsmedia_volume">{#media_dlg.volume}</label></td>
 							<td><input type="text" id="windowsmedia_volume" name="windowsmedia_volume" onchange="Media.formToData();" /></td>
 						</tr>
+
 					</table>
 				</fieldset>
 
 				<fieldset id="realmedia_options">
 					<legend>{#media_dlg.rmp_options}</legend>
 
-					<table border="0" cellpadding="4" cellspacing="0">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0">
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_autostart" name="realmedia_autostart" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_autostart">{#media_dlg.autostart}</label></td>
@@ -607,7 +608,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_loop" name="realmedia_loop" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_loop">{#media_dlg.loop}</label></td>
@@ -618,7 +619,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_autogotourl" name="realmedia_autogotourl" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_autogotourl">{#media_dlg.autogotourl}</label></td>
@@ -627,7 +628,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_center" name="realmedia_center" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_center">{#media_dlg.center}</label></td>
@@ -638,7 +639,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_imagestatus" name="realmedia_imagestatus" checked="checked" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_imagestatus">{#media_dlg.imagestatus}</label></td>
@@ -647,7 +648,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_maintainaspect" name="realmedia_maintainaspect" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_maintainaspect">{#media_dlg.maintainaspect}</label></td>
@@ -658,7 +659,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_nojava" name="realmedia_nojava" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_nojava">{#media_dlg.nojava}</label></td>
@@ -667,7 +668,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_prefetch" name="realmedia_prefetch" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_prefetch">{#media_dlg.prefetch}</label></td>
@@ -678,7 +679,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="realmedia_shuffle" name="realmedia_shuffle" onchange="Media.formToData();" /></td>
 										<td><label for="realmedia_shuffle">{#media_dlg.shuffle}</label></td>
@@ -712,7 +713,7 @@
 				<fieldset id="shockwave_options">
 					<legend>{#media_dlg.shockwave_options}</legend>
 
-					<table border="0" cellpadding="4" cellspacing="0">
+					<table role="presentation" border="0" cellpadding="4" cellspacing="0">
 						<tr>
 							<td><label for="shockwave_swstretchstyle">{#media_dlg.swstretchstyle}</label></td>
 							<td>
@@ -752,7 +753,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="shockwave_autostart" name="shockwave_autostart" onchange="Media.formToData();" checked="checked" /></td>
 										<td><label for="shockwave_autostart">{#media_dlg.autostart}</label></td>
@@ -761,7 +762,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="shockwave_sound" name="shockwave_sound" onchange="Media.formToData();" checked="checked" /></td>
 										<td><label for="shockwave_sound">{#media_dlg.sound}</label></td>
@@ -773,7 +774,7 @@
 
 						<tr>
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="shockwave_swliveconnect" name="shockwave_swliveconnect" onchange="Media.formToData();" /></td>
 										<td><label for="shockwave_swliveconnect">{#media_dlg.liveconnect}</label></td>
@@ -782,7 +783,7 @@
 							</td>
 
 							<td colspan="2">
-								<table border="0" cellpadding="0" cellspacing="0">
+								<table role="presentation" border="0" cellpadding="0" cellspacing="0">
 									<tr>
 										<td><input type="checkbox" class="checkbox" id="shockwave_progress" name="shockwave_progress" onchange="Media.formToData();" checked="checked" /></td>
 										<td><label for="shockwave_progress">{#media_dlg.progress}</label></td>

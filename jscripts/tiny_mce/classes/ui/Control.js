@@ -27,7 +27,7 @@
 		 * @param {String} id Control id.
 		 * @param {Object} s Optional name/value settings object.
 		 */
-		Control : function(id, s) {
+		Control : function(id, s, editor) {
 			this.id = id;
 			this.settings = s = s || {};
 			this.rendered = false;
@@ -36,6 +36,18 @@
 			this.scope = s.scope || this;
 			this.disabled = 0;
 			this.active = 0;
+			this.editor = editor;
+		},
+		
+		setAriaProperty : function(property, value) {
+			var element = DOM.get(this.id + '_aria') || DOM.get(this.id);
+			if (element) {
+				DOM.setAttrib(element, 'aria-' + property, !!value);
+			}
+		},
+		
+		focus : function() {
+			DOM.get(this.id).focus();
 		},
 
 		/**
@@ -46,19 +58,8 @@
 		 * @param {Boolean} s Boolean state if the control should be disabled or not.
 		 */
 		setDisabled : function(s) {
-			var e;
-
 			if (s != this.disabled) {
-				e = DOM.get(this.id);
-
-				// Add accessibility title for unavailable actions
-				if (e && this.settings.unavailable_prefix) {
-					if (s) {
-						this.prevTitle = e.title;
-						e.title = this.settings.unavailable_prefix + ": " + e.title;
-					} else
-						e.title = this.prevTitle;
-				}
+				this.setAriaProperty('disabled', s);
 
 				this.setState('Disabled', s);
 				this.setState('Enabled', !s);
@@ -88,6 +89,7 @@
 			if (s != this.active) {
 				this.setState('Active', s);
 				this.active = s;
+				this.setAriaProperty('pressed', s);
 			}
 		},
 

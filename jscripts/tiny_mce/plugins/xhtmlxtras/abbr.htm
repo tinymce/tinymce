@@ -10,11 +10,12 @@
 	<script type="text/javascript" src="js/abbr.js?v={tinymce_version}"></script>
 	<link rel="stylesheet" type="text/css" href="css/popup.css?v={tinymce_version}" />
 </head>
-<body style="display: none">
+<body style="display: none" role="application" aria-labelledby="app_title">
+<span style="display:none;" id="app_title">{#xhtmlxtras_dlg.title_abbr_element}</span>
 <form onsubmit="insertAbbr();return false;" action="#">
 	<div class="tabs">
 		<ul>
-			<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.general_tab}</a></span></li>
+			<li id="general_tab" class="current" aria-controls="general_panel"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.general_tab}</a></span></li>
 			<!-- <li id="events_tab"><span><a href="javascript:mcTabs.displayTab('events_tab','events_panel');" onmousedown="return false;">{#xhtmlxtras_dlg.events_tab}</a></span></li> -->
 		</ul>
 	</div>
@@ -23,7 +24,7 @@
 		<div id="general_panel" class="panel current">
 			<fieldset>
 				<legend>{#xhtmlxtras_dlg.fieldset_attrib_tab}</legend>
-				<table border="0" cellpadding="0" cellspacing="4">
+				<table role="presentation" border="0" cellpadding="0" cellspacing="4">
 					<tr>
 						<td class="label"><label id="titlelabel" for="title">{#xhtmlxtras_dlg.attribute_label_title}</label>:</td> 
 						<td><input id="title" name="title" type="text" value="" class="field mceFocus" /></td> 
@@ -41,7 +42,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="label"><label id="stylelabel" for="class">{#xhtmlxtras_dlg.attribute_label_style}</label>:</td> 
+						<td class="label"><label id="stylelabel" for="style">{#xhtmlxtras_dlg.attribute_label_style}</label>:</td> 
 						<td><input id="style" name="style" type="text" value="" class="field" /></td> 
 					</tr>
 					<tr>
@@ -67,7 +68,7 @@
 			<fieldset>
 				<legend>{#xhtmlxtras_dlg.fieldset_events_tab}</legend>
 
-				<table border="0" cellpadding="0" cellspacing="4">
+				<table role="presentation" border="0" cellpadding="0" cellspacing="4">
 					<tr>
 						<td class="label"><label for="onfocus">onfocus</label>:</td> 
 						<td><input id="onfocus" name="onfocus" type="text" value="" class="field" /></td> 

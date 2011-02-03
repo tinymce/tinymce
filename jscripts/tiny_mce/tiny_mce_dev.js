@@ -98,6 +98,7 @@
 	include('dom/RangeUtils.js');
 
 	// tinymce.ui.*
+	include('ui/KeyboardNavigation.js');
 	include('ui/Control.js');
 	include('ui/Container.js');
 	include('ui/Separator.js');
@@ -110,6 +111,7 @@
 	include('ui/MenuButton.js');
 	include('ui/SplitButton.js');
 	include('ui/ColorSplitButton.js');
+	include('ui/ToolbarGroup.js');
 	include('ui/Toolbar.js');
 
 	// tinymce.*

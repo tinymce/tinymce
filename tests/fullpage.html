@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Basic editor functionality tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script>
+var editor;
+
+QUnit.config.autostart = false;
+module("Basic functionality", {
+	autostart: false
+});
+
+function normalizeHTML(html)
+{
+	return html.replace(/\s/g, '');
+}
+
+test('Fullpage plugin', function() {
+	expect(2);
+	
+	ok(editor.plugins.fullpage, 'Fullpage plugin is enabled.');
+	editor.setContent('<html><body><p>Test</p>');
+	equals(normalizeHTML(editor.getContent()), '<html><body><p>Test</p>', 'Invalid HTML content is still editable.');
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	plugins : "fullpage",
+	theme : "advanced",
+	add_unload_trigger : false,
+	valid_styles : {
+		'*' : 'text-align,padding-left,color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
+	},
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+
+		ed.onNodeChange.addToTop(function() {
+			return false;
+		});
+
+		QUnit.start();
+	}
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Basic editor functionality tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+		<div>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+		</div>
+	</div>
+</body>
+</html>

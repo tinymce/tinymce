@@ -115,7 +115,7 @@
 				return;
 
 			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
-				u = tinymce.baseURL + '/' +  u;
+				u = tinymce.baseURL + '/' + u;
 
 			t.urls[n] = u.substring(0, u.lastIndexOf('/'));
 

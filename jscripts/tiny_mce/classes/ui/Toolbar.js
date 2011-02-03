@@ -8,6 +8,9 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
+(function(tinymce) {
+// Shorten class names
+var dom = tinymce.DOM, each = tinymce.each
 /**
  * This class is used to create toolbars a toolbar is a container for other controls like buttons etc.
  *
@@ -23,7 +26,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	 * @return {String} HTML for the toolbar control.
 	 */
 	renderHTML : function() {
-		var t = this, h = '', c, co, dom = tinymce.DOM, s = t.settings, i, pr, nx, cl;
+		var t = this, h = '', c, co, s = t.settings, i, pr, nx, cl;
 
 		cl = t.controls;
 		for (i=0; i<cl.length; i++) {
@@ -80,6 +83,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 		h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
 
-		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || ''}, '<tbody><tr>' + h + '</tr></tbody>');
+		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || '', role: 'presentation', tabindex: '-1'}, '<tbody><tr>' + h + '</tr></tbody>');
 	}
 });
+})(tinymce);

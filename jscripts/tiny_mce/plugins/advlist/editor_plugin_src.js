@@ -72,12 +72,12 @@
 					// Append styles to new list element
 					if (format) {
 						list = dom.getParent(sel.getNode(), 'ol,ul');
-
 						if (list) {
 							dom.setStyles(list, format.styles);
 							list.removeAttribute('data-mce-style');
 						}
 					}
+					ed.focus();
 				};
 
 				btn = cm.createSplitButton(name, {
@@ -122,7 +122,7 @@
 						}
 					});
 
-					menu.add({id : t.editor.dom.uniqueId(), title : 'advlist.types', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
+					menu.add({id : t.editor.dom.uniqueId(), title : 'advlist.types', 'class' : 'mceMenuItemTitle', titleItem: true}).setDisabled(1);
 
 					each(t[name], function(item) {
 						item.id = t.editor.dom.uniqueId();

@@ -1014,6 +1014,8 @@
 
 			tinymce.add(t);
 
+			s.aria_label = s.aria_label || DOM.getAttrib(e, 'aria-label', t.getLang('aria.rich_text_area'));
+
 			/**
 			 * Reference to the theme instance that was used to generate the UI. 
 			 *
@@ -1197,9 +1199,11 @@
 
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
+				role :"application",
 				id : t.id + "_ifr",
 				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
-				frameBorder : '0',
+				frameBorder : '0', 
+				title : s.aria_label,
 				style : {
 					width : '100%',
 					height : h
@@ -1209,6 +1213,7 @@
 			t.contentAreaContainer = o.iframeContainer;
 			DOM.get(o.editorContainer).style.display = t.orgDisplay;
 			DOM.get(t.id).style.display = 'none';
+			DOM.setAttrib(t.id, 'aria-hidden', true);
 
 			if (!tinymce.relaxedDomain || !u)
 				t.setupIframe();
