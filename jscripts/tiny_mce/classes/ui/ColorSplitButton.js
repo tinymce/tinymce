@@ -178,7 +178,6 @@
 					'data-mce-color' : '#' + c
 				});
 
-				/*
 				if (t.editor.forcedHighContrastMode) {
 					n = DOM.add(n, 'canvas', { width: 16, height: 16, 'aria-hidden': 'true' });
 					if (n.getContext && (context = n.getContext("2d"))) {
@@ -188,7 +187,7 @@
 						// No point leaving a canvas element around if it's not supported for drawing on anyway.
 						DOM.remove(n);
 					}
-				}*/
+				}
 			});
 
 			if (s.more_colors_func) {
