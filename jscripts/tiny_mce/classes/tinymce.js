@@ -244,7 +244,7 @@
 			} else {
 				// Hashtables
 				for (n in o) {
-					if (o.hasOwnProperty(n)) {
+					if (Object.prototype.hasOwnProperty.call(o, n)) {  //IE doesn't give certain DOM objects a hasOwnProperty method
 						if (cb.call(s, o[n], n, o) === false)
 							return 0;
 					}

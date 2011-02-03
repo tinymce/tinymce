@@ -23,6 +23,9 @@
 		tagRegExp = /<(\w+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)(\s*\/?)>/g,
 		attrRegExp = /(\w+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
 
+    // See UIUX-1018
+    var selfClosingTags = /base|basefont|frame|link|meta|area|br|col|hr|img|input|param/i;
+
 	function makeMap(str) {
 		var map = {}, i;
 
@@ -33,7 +36,9 @@
 		return map;
 	};
 
-	/**
+    var extractRangeContents = null; //for split; work around for Chrome regression.  TODO: remove me if chrome fixes this quickly.
+
+    /**
 	 * Utility class for various DOM manipulation and retrival functions.
 	 * @class tinymce.dom.DOMUtils
 	 */
@@ -129,6 +134,8 @@
 
 			w = !w ? this.win : w;
 			d = w.document;
+            if(d == null) return {x : 0, y : 0, w : 1, h : 1};
+
 			b = this.boxModel ? d.documentElement : d.body;
 
 			// Returns viewport size excluding scrollbars
@@ -419,7 +426,14 @@
 			if (typeof(h) != "undefined")
 				return o + '>' + h + '</' + n + '>';
 
-			return o + ' />';
+            // Certain tags will not behave correctly in certain browsers, such
+            // as IE8, if they are self-closed.  This check was added as a fix
+            // for UIUX-1018.
+            if (n.match(selfClosingTags)) {
+			    return o + ' />';
+            } else {
+                return o + '></' + n + '>';
+            }
 		},
 
 		/**
@@ -496,7 +510,7 @@
 					case 'float':
 						isIE ? s.styleFloat = v : s.cssFloat = v;
 						break;
-					
+
 					default:
 						s[na] = v || '';
 				}
@@ -538,6 +552,7 @@
 			}
 
 			// Camelcase it, if needed
+            if(typeof(na) == "undefined") return false;
 			na = na.replace(/-(\D)/g, function(a, b){
 				return b.toUpperCase();
 			});
@@ -632,7 +647,7 @@
 						}
 
 						break;
-					
+
 					case "shape":
 						e.setAttribute('_mce_style', v);
 						break;
@@ -686,8 +701,16 @@
 			if (/^(src|href|style|coords|shape)$/.test(n)) {
 				v = e.getAttribute("_mce_" + n);
 
-				if (v)
+				if (v){
+                    if(typeof(v) == "object" && n == "style"){
+                        var oldv = t.serializeStyle(v);
+                        if(v != null && typeof(v["cssText"]) != "undefined"){
+                            v = v["cssText"];
+                        }
+                        v = t.serializeStyle(t.parseStyle(v));
+                    }
 					return v;
+			    }
 			}
 
 			if (isIE && t.props[n]) {
@@ -932,7 +955,7 @@
 			compress("border", "-style", "border-style");
 			compress("padding", "", "padding");
 			compress("margin", "", "margin");
-			compress2('border', 'border-width', 'border-style', 'border-color');
+//			compress2('border', 'border-width', 'border-style', 'border-color');
 
 			if (isIE) {
 				// Remove pointless border
@@ -1527,7 +1550,7 @@
 		 * @method insertAfter
 		 * @param {Element} node Element to insert after the reference.
 		 * @param {Element/String/Array} reference_node Reference element, element id or array of elements to insert after.
-		 * @return {Element/Array} Element that got added or an array with elements. 
+		 * @return {Element/Array} Element that got added or an array with elements.
 		 */
 		insertAfter : function(node, reference_node) {
 			reference_node = this.get(reference_node);
@@ -1874,7 +1897,7 @@
 		/**
 		 * Splits an element into two new elements and places the specified split
 		 * element or element between the new ones. For example splitting the paragraph at the bold element in
-		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>. 
+		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.
 		 *
 		 * @method split
 		 * @param {Element} pe Parent element to split.
@@ -1928,16 +1951,47 @@
 			};
 
 			if (pe && e) {
+                //Work around a possible issue with the browser's built-in extractContents
+                extractRangeContents = extractRangeContents || (function() {
+                    if (t.doc.createRange && tinymce.isWebKit) {
+                        //extractContents might be broken
+                        var div = t.create("div");
+                        div.innerHTML = "<p><span>1234</span><span>two</span><br /></p>";
+                        var rng = t.doc.createRange();
+                        rng.setStart(div, 0);
+                        rng.setEnd(div.firstChild, 2);
+
+                        var df = rng.extractContents();
+                        if(!df || !df.firstChild || !df.firstChild.childNodes || df.firstChild.childNodes.length != 2){
+//                            console.log("faking extractContents");
+                            return function fakeExtract(rng) {
+                                var fakeRng = new tinymce.dom.Range(t);
+                                fakeRng.setStart(rng.startContainer, rng.startOffset);
+                                fakeRng.setEnd(rng.endContainer, rng.endOffset);
+                                var ret = fakeRng.extractContents();
+                                rng.setStart(fakeRng.startContainer, fakeRng.startOffset);
+                                rng.setEnd(fakeRng.endContainer, fakeRng.endOffset);
+                                return ret;
+                            };
+                        }
+                    }
+                    return function realExtract(rng) {
+                        return rng.extractContents();
+                    };
+                })();
+
 				// Get before chunk
 				r.setStart(pe.parentNode, t.nodeIndex(pe));
 				r.setEnd(e.parentNode, t.nodeIndex(e));
-				bef = r.extractContents();
+//				bef = r.extractContents();
+				bef = extractRangeContents(r);
 
 				// Get after chunk
 				r = t.createRng();
 				r.setStart(e.parentNode, t.nodeIndex(e) + 1);
 				r.setEnd(pe.parentNode, t.nodeIndex(pe) + 1);
-				aft = r.extractContents();
+//				aft = r.extractContents();
+				aft = extractRangeContents(r);
 
 				// Insert before chunk
 				pa = pe.parentNode;
@@ -1945,7 +1999,7 @@
 
 				// Insert middle chunk
 				if (re)
-					pa.replaceChild(re, e);
+					pa.insertBefore(re, pe);
 				else
 					pa.insertBefore(e, pe);
 

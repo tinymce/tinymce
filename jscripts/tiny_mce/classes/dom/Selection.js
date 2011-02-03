@@ -128,7 +128,7 @@
 				h += '<span id="__caret">_</span>';
 
 				// Delete and insert new node
-				
+
 				if (r.startContainer == d && r.endContainer ==  d) {
 					// WebKit will fail if the body is empty since the range is then invalid and it can't insert contents
 					d.body.innerHTML = h;
@@ -358,9 +358,10 @@
 					return {name : name, index : findIndex(name, element)};
 				}
 			} else {
+                //if we've selected just an image, then return an image bookmark
 				element = t.getNode();
 				name = element.nodeName;
-				if (name == 'IMG')
+				if (name == 'IMG' && rng.toString() == "")
 					return {name : name, index : findIndex(name, element)};
 
 				// W3C method
@@ -390,127 +391,130 @@
 		 */
 		moveToBookmark : function(bookmark) {
 			var t = this, dom = t.dom, marker1, marker2, rng, root, startContainer, endContainer, startOffset, endOffset;
+            try{
+                // Clear selection cache
+                if (t.tridentSel)
+                    t.tridentSel.destroy();
 
-			// Clear selection cache
-			if (t.tridentSel)
-				t.tridentSel.destroy();
+                if (bookmark) {
+                    if (bookmark.start) {
+                        rng = dom.createRng();
+                        root = dom.getRoot();
 
-			if (bookmark) {
-				if (bookmark.start) {
-					rng = dom.createRng();
-					root = dom.getRoot();
+                        function setEndPoint(start) {
+                            var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
 
-					function setEndPoint(start) {
-						var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
+                            if (point) {
+                                // Find container node
+                                for (node = root, i = point.length - 1; i >= 1; i--) {
+                                    children = node.childNodes;
 
-						if (point) {
-							// Find container node
-							for (node = root, i = point.length - 1; i >= 1; i--) {
-								children = node.childNodes;
+                                    if (children.length)
+                                            node = children[Math.min(point[i], children.length-1)];
+                                }
 
-								if (children.length)
-									node = children[point[i]];
-							}
+                                // Set offset within container node
+                                if (start)
+                                    rng.setStart(node, point[0]);
+                                else
+                                    rng.setEnd(node, point[0]);
+                            }
+                        };
 
-							// Set offset within container node
-							if (start)
-								rng.setStart(node, point[0]);
-							else
-								rng.setEnd(node, point[0]);
-						}
-					};
+                        setEndPoint(true);
+                        setEndPoint();
 
-					setEndPoint(true);
-					setEndPoint();
+                        t.setRng(rng);
+                    } else if (bookmark.id) {
+                        function restoreEndPoint(suffix) {
+                            var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
 
-					t.setRng(rng);
-				} else if (bookmark.id) {
-					function restoreEndPoint(suffix) {
-						var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
+                            if (marker) {
+                                node = marker.parentNode;
 
-						if (marker) {
-							node = marker.parentNode;
+                                if (suffix == 'start') {
+                                    if (!keep) {
+                                        idx = dom.nodeIndex(marker);
+                                    } else {
+                                        node = marker.firstChild;
+                                        idx = 1;
+                                    }
 
-							if (suffix == 'start') {
-								if (!keep) {
-									idx = dom.nodeIndex(marker);
-								} else {
-									node = marker.firstChild;
-									idx = 1;
-								}
+                                    startContainer = endContainer = node;
+                                    startOffset = endOffset = idx;
+                                } else {
+                                    if (!keep) {
+                                        idx = dom.nodeIndex(marker);
+                                    } else {
+                                        node = marker.firstChild;
+                                        idx = 1;
+                                    }
 
-								startContainer = endContainer = node;
-								startOffset = endOffset = idx;
-							} else {
-								if (!keep) {
-									idx = dom.nodeIndex(marker);
-								} else {
-									node = marker.firstChild;
-									idx = 1;
-								}
+                                    endContainer = node;
+                                    endOffset = idx;
+                                }
 
-								endContainer = node;
-								endOffset = idx;
-							}
+                                if (!keep) {
+                                    prev = marker.previousSibling;
+                                    next = marker.nextSibling;
 
-							if (!keep) {
-								prev = marker.previousSibling;
-								next = marker.nextSibling;
+                                    // Remove all marker text nodes
+                                    each(tinymce.grep(marker.childNodes), function(node) {
+                                        if (node.nodeType == 3)
+                                            node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
+                                    });
 
-								// Remove all marker text nodes
-								each(tinymce.grep(marker.childNodes), function(node) {
-									if (node.nodeType == 3)
-										node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
-								});
+                                    // Remove marker but keep children if for example contents where inserted into the marker
+                                    // Also remove duplicated instances of the marker for example by a split operation or by WebKit auto split on paste feature
+                                    while (marker = dom.get(bookmark.id + '_' + suffix))
+                                        dom.remove(marker, 1);
 
-								// Remove marker but keep children if for example contents where inserted into the marker
-								// Also remove duplicated instances of the marker for example by a split operation or by WebKit auto split on paste feature
-								while (marker = dom.get(bookmark.id + '_' + suffix))
-									dom.remove(marker, 1);
+                                    // If siblings are text nodes then merge them unless it's Opera since it some how removes the node
+                                    // and we are sniffing since adding a lot of detection code for a browser with 3% of the market isn't worth the effort. Sorry, Opera but it's just a fact
+                                    if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !tinymce.isOpera) {
+                                        idx = prev.nodeValue.length;
+                                        prev.appendData(next.nodeValue);
+                                        dom.remove(next);
 
-								// If siblings are text nodes then merge them unless it's Opera since it some how removes the node
-								// and we are sniffing since adding a lot of detection code for a browser with 3% of the market isn't worth the effort. Sorry, Opera but it's just a fact
-								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !tinymce.isOpera) {
-									idx = prev.nodeValue.length;
-									prev.appendData(next.nodeValue);
-									dom.remove(next);
+                                        if (suffix == 'start') {
+                                            startContainer = endContainer = prev;
+                                            startOffset = endOffset = idx;
+                                        } else {
+                                            endContainer = prev;
+                                            endOffset = idx;
+                                        }
+                                    }
+                                }
+                            }
+                        };
 
-									if (suffix == 'start') {
-										startContainer = endContainer = prev;
-										startOffset = endOffset = idx;
-									} else {
-										endContainer = prev;
-										endOffset = idx;
-									}
-								}
-							}
-						}
-					};
+                        function addBogus(node) {
+                            // Adds a bogus BR element for empty block elements
+                            // on non IE browsers just to have a place to put the caret
+                            if (!isIE && dom.isBlock(node) && !node.innerHTML)
+                                node.innerHTML = '<br _mce_bogus="1" />';
 
-					function addBogus(node) {
-						// Adds a bogus BR element for empty block elements
-						// on non IE browsers just to have a place to put the caret
-						if (!isIE && dom.isBlock(node) && !node.innerHTML)
-							node.innerHTML = '<br _mce_bogus="1" />';
+                            return node;
+                        };
 
-						return node;
-					};
+                        // Restore start/end points
+                        restoreEndPoint('start');
+                        restoreEndPoint('end');
 
-					// Restore start/end points
-					restoreEndPoint('start');
-					restoreEndPoint('end');
+                        if (startContainer) {
+                            rng = dom.createRng();
+                            rng.setStart(addBogus(startContainer), startOffset);
+                            rng.setEnd(addBogus(endContainer), endOffset);
+                            t.setRng(rng);
+                        }
+                    } else if (bookmark.name) {
+                        t.select(dom.select(bookmark.name)[bookmark.index]);
+                    } else if (bookmark.rng)
+                        t.setRng(bookmark.rng);
+                }
+            }catch(e){
 
-					if (startContainer) {
-						rng = dom.createRng();
-						rng.setStart(addBogus(startContainer), startOffset);
-						rng.setEnd(addBogus(endContainer), endOffset);
-						t.setRng(rng);
-					}
-				} else if (bookmark.name) {
-					t.select(dom.select(bookmark.name)[bookmark.index]);
-				} else if (bookmark.rng)
-					t.setRng(bookmark.rng);
-			}
+            }
 		},
 
 		/**
@@ -671,7 +675,7 @@
 		 */
 		setRng : function(r) {
 			var s, t = this;
-			
+
 			if (!t.tridentSel) {
 				s = t.getSel();
 
@@ -738,8 +742,8 @@
 					}
 
 					// If the anchor node is a element instead of a text node then return this element
-					if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1) 
-						return sel.anchorNode.childNodes[sel.anchorOffset]; 
+					if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)
+						return sel.anchorNode.childNodes[sel.anchorOffset];
 				}
 
 				if (elm && elm.nodeType == 3)

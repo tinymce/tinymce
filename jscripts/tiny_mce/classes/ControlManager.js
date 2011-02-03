@@ -490,7 +490,7 @@
 		setControlType : function(n, c) {
 			return this._cls[n.toLowerCase()] = c;
 		},
-	
+
 		/**
 		 * Destroy.
 		 *

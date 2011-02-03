@@ -131,7 +131,7 @@
 
 			return o;
 		},
-	
+
 		/**
 		 * Converts the specified URI into a absolute URI based on the current URI instance location.
 		 *

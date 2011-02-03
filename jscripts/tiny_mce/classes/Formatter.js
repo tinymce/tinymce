@@ -129,7 +129,12 @@
 		 * @param {Node} node Optional node to apply the format to defaults to current selection.
 		 */
 		function apply(name, vars, node) {
-			var formatList = get(name), format = formatList[0], bookmark, rng, i;
+			var formatList = get(name);
+            if(formatList == null){
+                console.log("no such format: " + name);
+                return;
+            }
+            var format = formatList[0], bookmark, rng, i;
 
 			/**
 			 * Moves the start to the first suitable text node.
@@ -350,6 +355,7 @@
 						}
 					}
 				});
+                ed.onFormatChange.dispatch(format, true);
 			};
 
 			if (format) {
@@ -566,6 +572,7 @@
 						process(node);
 					});
 				});
+                ed.onFormatChange.dispatch(format, false);
 			};
 
 			// Handle node
@@ -1518,7 +1525,18 @@
 
 			// Pending apply or remove formats
 			if (hasPending()) {
-				ed.getDoc().execCommand('FontName', false, 'mceinline');
+                if(tinymce.isIE){
+				    ed.getDoc().execCommand('FontName', false, 'mceinline');
+                }else{
+                    //console.log("creating caret");
+                    var caret = dom.create("span", {style: "font-family: mceinline"});
+                    var newRng = selection.getRng(true);
+                    newRng.insertNode(caret);
+                    newRng.setStart(caret, 0);
+                    newRng.collapse(true);
+                    selection.setRng(newRng);
+                }
+
 				pendingFormats.lastRng = selection.getRng();
 
 				// IE will convert the current word

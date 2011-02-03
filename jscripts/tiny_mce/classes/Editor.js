@@ -24,20 +24,20 @@
 	 * @example
 	 * // Add a class to all paragraphs in the editor.
 	 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
-	 * 
+	 *
 	 * // Gets the current editors selection as text
 	 * tinyMCE.activeEditor.selection.getContent({format : 'text'});
-	 * 
+	 *
 	 * // Creates a new editor instance
 	 * var ed = new tinymce.Editor('textareaid', {
 	 *     some_setting : 1
 	 * });
-	 * 
+	 *
 	 * // Select each item the user clicks on
 	 * ed.onClick.add(function(ed, e) {
 	 *     ed.selection.select(e.target);
 	 * });
-	 * 
+	 *
 	 * ed.render();
 	 */
 	tinymce.create('tinymce.Editor', {
@@ -54,7 +54,7 @@
 			var t = this;
 
 			/**
-			 * Editor instance id, normally the same as the div/textarea that was replaced. 
+			 * Editor instance id, normally the same as the div/textarea that was replaced.
 			 *
 			 * @property id
 			 * @type String
@@ -66,7 +66,7 @@
 			t.queryValueCommands = {};
 
 			/**
-			 * State to force the editor to return false on a isDirty call. 
+			 * State to force the editor to return false on a isDirty call.
 			 *
 			 * @property isNotDirty
 			 * @type Boolean
@@ -380,7 +380,12 @@
 				 * @event onSetProgressState
 				 * @param {tinymce.Editor} sender Editor instance.
 				 */
-				'onSetProgressState'
+				'onSetProgressState',
+
+                /**
+                 * (format, wasAdded) Raised by the formatter when a format is added/removed.
+                 */
+                'onFormatChange'
 			], function(e) {
 				t[e] = new Dispatcher(t);
 			});
@@ -433,7 +438,8 @@
 				keep_styles : 1,
 				fix_table_elements : 1,
 				inline_styles : 1,
-				convert_fonts_to_spans : true
+				convert_fonts_to_spans : true,
+                removeformat_selector : 'span,b,strong,em,i,font,u,strike'
 			}, s);
 
 			/**
@@ -483,8 +489,8 @@
 			// Is a iPad/iPhone, then skip initialization. We need to sniff here since the
 			// browser says it has contentEditable support but there is no visible caret
 			// We will remove this check ones Apple implements full contentEditable support
-			if (tinymce.isIDevice)
-				return;
+//			if (tinymce.isIDevice)
+//				return;
 
 			// Add hidden input for non input elements inside form elements
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
@@ -593,7 +599,7 @@
 			tinymce.add(t);
 
 			/**
-			 * Reference to the theme instance that was used to generate the UI. 
+			 * Reference to the theme instance that was used to generate the UI.
 			 *
 			 * @property theme
 			 * @type tinymce.Theme
@@ -732,7 +738,8 @@
 			if (s.document_base_url != tinymce.documentBaseURL)
 				t.iframeHTML += '<base href="' + t.documentBaseURI.getURI() + '" />';
 
-			t.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=7" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+            t.iframeHTML += '<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />';
+			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 			if (tinymce.relaxedDomain)
 				t.iframeHTML += '<script type="text/javascript">document.domain = "' + tinymce.relaxedDomain + '";</script>';
@@ -749,7 +756,7 @@
 				bc = bc[t.id] || '';
 			}
 
-			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
+			t.iframeHTML += '</head><body id="' + bi + '" class="tiny_mce_content mceContentBody ' + bc + '"></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain) {
@@ -757,17 +764,19 @@
 				if (isIE || (tinymce.isOpera && parseFloat(opera.version()) >= 9.5))
 					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
 				else if (tinymce.isOpera)
-					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';					
+					u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";document.close();ed.setupIframe();})()';
 			}
 
 			// Create iframe
 			n = DOM.add(o.iframeContainer, 'iframe', {
 				id : t.id + "_ifr",
 				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
+                allowTransparency : true,
 				frameBorder : '0',
 				style : {
 					width : '100%',
-					height : h
+					height : h,
+                    position : 'relative'
 				}
 			});
 
@@ -941,7 +950,7 @@
 			t.formatter.register(t.settings.formats);
 
 			/**
-			 * Undo manager instance, responsible for handling undo levels. 
+			 * Undo manager instance, responsible for handling undo levels.
 			 *
 			 * @property undoManager
 			 * @type tinymce.UndoManager
@@ -1105,7 +1114,7 @@
 					if (o.set)
 						o.content = t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o);
 
-					if (o.get)						
+					if (o.get)
 						o.content = t.execCallback('cleanup_callback', 'get_from_editor', o.content, o);
 				});
 			}
@@ -1175,6 +1184,7 @@
 
 				t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 				t.startContent = t.getContent({format : 'raw'});
+				t.undoManager.add({initial : true});
 				t.initialized = true;
 
 				t.onInit.dispatch(t);
@@ -1201,7 +1211,7 @@
 					}, 100);
 				}
 			}, 1);
-	
+
 			e = null;
 		},
 
@@ -1696,7 +1706,14 @@
 			}
 
 			// Browser commands
-			t.getDoc().execCommand(cmd, ui, val);
+            var d = t.getDoc();
+            try{
+                d.execCommand(cmd, ui, val);
+            }catch(ex){
+                if(console && console.log){
+                    console.log("execCommand(" + cmd + "...) failed: ", ex);
+                }
+            }
 			t.onExecCommand.dispatch(t, cmd, ui, val, a);
 		},
 
@@ -1879,6 +1896,7 @@
 			// Add undo level will trigger onchange event
 			if (!o.no_events) {
 				t.undoManager.typing = 0;
+				t.undoManager.deleting = 0;
 				t.undoManager.add();
 			}
 
@@ -2399,6 +2417,7 @@
 			if (s.custom_shortcuts) {
 				if (s.custom_undo_redo_keyboard_shortcuts) {
 					t.addShortcut('ctrl+z', t.getLang('undo_desc'), 'Undo');
+                    t.addShortcut('ctrl+shift+z', t.getLang('redo_desc'), 'Redo');
 					t.addShortcut('ctrl+y', t.getLang('redo_desc'), 'Redo');
 				}
 
@@ -2422,7 +2441,7 @@
 						return v;
 
 					each(t.shortcuts, function(o) {
-						if (tinymce.isMac && o.ctrl != e.metaKey)
+						if (tinymce.isMac && o.ctrl != e.metaKey && o.ctrl != e.ctrlKey)
 							return;
 						else if (!tinymce.isMac && o.ctrl != e.ctrlKey)
 							return;
@@ -2542,11 +2561,12 @@
 			if (s.custom_undo_redo) {
 				function addUndo() {
 					t.undoManager.typing = 0;
+					t.undoManager.deleting = 0;
 					t.undoManager.add();
 				};
 
 				dom.bind(t.getDoc(), 'focusout', function(e) {
-					if (!t.removed && t.undoManager.typing)
+					if (!t.removed && (t.undoManager.typing || t.undoManager.deleting))
 						addUndo();
 				});
 
@@ -2594,26 +2614,35 @@
 
 							// Block the default delete behavior since it might be broken
 							e.preventDefault();
-							return;
 						}
 					}
 
 					// Is caracter positon keys
 					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
-						if (t.undoManager.typing)
+						if (t.undoManager.typing || t.undoManager.deleting)
 							addUndo();
 
 						return;
 					}
 
+                    if(e.keyCode == 8 || e.keyCode == 46) {
+                        //backspace or delete
+                        if(!t.undoManager.deleting){
+                            addUndo();
+                            t.undoManager.deleting = 1;
+                        }
+                        return;
+                    }
+
+                    //some sort of normal keystroke
 					if (!t.undoManager.typing) {
-						t.undoManager.add();
+						addUndo();
 						t.undoManager.typing = 1;
 					}
 				});
 
 				t.onMouseDown.add(function() {
-					if (t.undoManager.typing)
+					if (t.undoManager.typing || t.undoManager.deleting)
 						addUndo();
 				});
 			}

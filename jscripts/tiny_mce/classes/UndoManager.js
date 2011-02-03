@@ -25,6 +25,7 @@
 
 		return self = {
 			typing : 0,
+			deleting : 0,
 
 			onAdd : new Dispatcher(self),
 			onUndo : new Dispatcher(self),
@@ -82,6 +83,30 @@
 				return level;
 			},
 
+            /**
+             * Make a change that is guaranteed transparent to the undo stack.  If the current undo level
+             * is equal to the current state, then we advance the current undo level to the new state after
+             * the operation.  Otherwise, we do nothing to the undo stack.  The operation is performed in
+             * either case.
+             * @param cb The operation to perform.
+             * @return cb's return code.
+             */
+            transparentChange : function(cb){
+                var currentContent = getContent(), lastLevel = data[index];
+
+                if(lastLevel && lastLevel.content == currentContent){
+                    if(index > 0 || data.length == 1){
+                        //the current undo point is equal to the current document state.  Run cb and update that undo point to the current state.
+                        var ret = cb();
+                        lastLevel.content = currentContent;
+                        lastLevel.bookmark = editor.selection.getBookmark(2, true);
+                        return ret;
+                    }
+                }
+                //fall though; the current undo point is stale, so we can just make changes.
+                return cb();
+            },
+
 			/**
 			 * Undoes the last action.
 			 *
@@ -91,9 +116,10 @@
 			undo : function() {
 				var level, i;
 
-				if (self.typing) {
+				if (self.typing || self.deleting) {
 					self.add();
 					self.typing = 0;
+                    self.deleting = 0;
 				}
 
 				if (index > 0) {
@@ -136,7 +162,7 @@
 			 */
 			clear : function() {
 				data = [];
-				index = self.typing = 0;
+				index = self.typing = self.deleting = 0;
 			},
 
 			/**
@@ -146,7 +172,7 @@
 			 * @return {Boolean} true/false if the undo manager has any undo levels.
 			 */
 			hasUndo : function() {
-				return index > 0 || self.typing;
+				return index > 0 || self.typing || self.deleting;
 			},
 
 			/**

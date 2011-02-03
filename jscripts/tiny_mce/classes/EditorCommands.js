@@ -369,7 +369,7 @@
 						editor.dom.remove(link, TRUE);
 				}
 			},
-			
+
 			selectAll : function() {
 				var root = dom.getRoot(), rng = dom.createRng();
 

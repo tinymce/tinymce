@@ -560,8 +560,8 @@
 						h = tinymce._replace(/(<[^>]+>)\s+/g, '$1 ', h);
 						h = tinymce._replace(/\s+(<\/[^>]+>)/g, ' $1', h);
 						h = tinymce._replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object) ([^>]+)>\s+/g, '<$1 $2>', h); // Trim block start
-						h = tinymce._replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>', h); // Trim block start
-						h = tinymce._replace(/\s+<\/(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>', h); // Trim block end
+//						h = tinymce._replace(/<(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>\s+/g, '<$1>', h); // Trim block start
+//						h = tinymce._replace(/\s+<\/(p|h[1-6]|blockquote|hr|div|table|tbody|tr|td|body|head|html|title|meta|style|pre|script|link|object)>/g, '</$1>', h); // Trim block end
 					}
 
 					// Simple indentation
@@ -663,7 +663,7 @@
 						}
 
 						ru = t.findRule(nn);
-						
+
 						// No valid rule for this element could be found then skip it
 						if (!ru) {
 							iv = true;
@@ -889,6 +889,7 @@
 
 		_getAttrib : function(n, a, na) {
 			var i, v;
+            if(!a) return null;
 
 			na = na || a.name;
 
