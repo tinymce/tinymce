@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Basic editor functionality tests</title>
+<title>Jive Selection tests</title>
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <style>
 textarea{
@@ -20,60 +20,6 @@ var ed;
 
 var $j = $;
 
-
-
-function trimContent(content) {
-	if (tinymce.isOpera)
-		return content.replace(/^<p>&nbsp;<\/p>/, '').replace(/<p>&nbsp;<\/p>$/, '');
-
-	return content;
-}
-
-function normalizeContentWhitespace(content){
-    return trimContent(content.replace(/[\r\n]+/g, ''));
-}
-
-function stripIEProblems(ed, html){
-    //TODO: normalize styles instead
-    var elem = $j("<div>" + html + "</div>").find("*").removeAttr("style").end()
-            .find("img").removeAttr("height").removeAttr("width").end().get(0);
-    return ed.serializer.serialize(elem, {format: "html", getInner: true});
-}
-
-function checkContent(ed, expected, message, stripProblems){
-    if(message == null){
-        message = "Document content";
-    }
-
-    var actual = normalizeContentWhitespace(ed.getContent());
-    expected = normalizeContentWhitespace(expected);
-    if(actual == expected){
-        equal(actual, expected, message);
-    }else{
-        if(tinymce.isIE || stripProblems){
-            actual = normalizeContentWhitespace(stripIEProblems(ed, actual));
-            expected = normalizeContentWhitespace(stripIEProblems(ed, expected));
-        }
-        equal(actual, expected, message);
-    }
-}
-
-function rangeEqual(value, expected){
-    var result = equal(value.startContainer, expected.startContainer, "start container");
-    if(!result){
-        console.error("start container mismatch: actual, expected", value.startContainer, expected.startContainer);
-    }
-    equal(value.startOffset, expected.startOffset, "start offset");
-    if(expected.collapsed && value.collapsed){
-        ok(true, "collapsed");
-    }else{
-        result = equal(value.endContainer, expected.endContainer, "end container");
-        if(!result){
-            console.error("end container mismatch: actual, expected", value.endContainer, expected.endContainer);
-        }
-        equal(value.endOffset, expected.endOffset, "end offset");
-    }
-}
 
 QUnit.config.autostart = false;
 module("Jive Selection Plugin", {

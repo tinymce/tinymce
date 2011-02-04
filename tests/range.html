@@ -1,0 +1,179 @@
+<!--
+  ~ $Revision$
+  ~ $Date$
+  ~
+  ~ Copyright (C) 1999-2011 Jive Software. All rights reserved.
+  ~
+  ~
+  ~ These tests are for the browsers range API and are independent of TinyMCE core or plugin code
+  ~ These tests show the recent problems introduced by a Chrome range regression
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Range unit tests</title>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">
+    <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+</head>
+<body>
+<script type="text/javascript" charset="utf-8">
+
+QUnit.config.autostart = true;
+module("Range unit test: chrome regression", {
+	autostart: true
+});
+
+function getTestDoc(){
+    return document;
+//    return document.getElementById("testIframe").contentWindow.document;
+}
+
+function makeRange(){
+    return getTestDoc().createRange();
+}
+
+function getTestNode(){
+    var doc = getTestDoc();
+    return doc.getElementById("testNode");
+}
+
+function setContent(htmlStr){
+    getTestNode().innerHTML = htmlStr;
+}
+
+test("extractContents, br marker, select one child of p", function(){
+    setContent('<p><span>1234</span><br /></p>');
+
+    var container = getTestNode().firstChild;
+
+    var marker = container.lastChild;
+
+    var rng = makeRange();
+    rng.setStart(container.parentNode, 0);
+    rng.setEnd(container, 1);
+
+    var df = rng.extractContents();
+
+    equal(df.childNodes.length, 1);
+    equal(df.childNodes[0].nodeName, "P");
+    equal(df.childNodes[0].childNodes.length, 1);
+    equal(df.childNodes[0].childNodes[0].nodeName, "SPAN");
+    equal(marker.parentNode.parentNode, getTestNode(), "marker grandparent should be body");
+    equal(marker.parentNode, getTestNode().firstChild, "marker parent");
+    equal(getTestNode().firstChild.firstChild.nodeName, "BR", "marker reachable from body");
+});
+
+test("extractContents, br marker, select two children of p", function(){
+    setContent('<p><span>1234</span><span>two</span><br /></p>');
+
+    var container = getTestNode().firstChild;
+
+    var marker = container.lastChild;
+
+    var rng = makeRange();
+    rng.setStart(container.parentNode, 0);
+    rng.setEnd(container, 2);
+
+    var df = rng.extractContents();
+
+    equal(df.childNodes.length, 1);
+    equal(df.childNodes[0].nodeName, "P");
+    equal(df.childNodes[0].childNodes.length, 2);
+    equal(df.childNodes[0].childNodes[0].nodeName, "SPAN");
+    equal(df.childNodes[0].childNodes[1].nodeName, "SPAN");
+    equal(marker.parentNode.parentNode, getTestNode(), "marker grandparent should be body");
+    equal(marker.parentNode, getTestNode().firstChild, "marker parent");
+    equal(getTestNode().firstChild.firstChild.nodeName, "BR", "marker reachable from body");
+});
+
+test("extractContents, non-empty span marker, select two children of p", function(){
+    setContent('<p><span>1234</span><span>two</span><span>marker</span></p>');
+
+    var container = getTestNode().firstChild;
+
+    var marker = container.lastChild;
+
+    var rng = makeRange();
+    rng.setStart(container.parentNode, 0);
+    rng.setEnd(container, 2);
+
+    var df = rng.extractContents();
+
+    equal(df.childNodes.length, 1);
+    equal(df.childNodes[0].nodeName, "P");
+    equal(df.childNodes[0].childNodes.length, 2);
+    equal(df.childNodes[0].childNodes[0].nodeName, "SPAN");
+    equal(df.childNodes[0].childNodes[1].nodeName, "SPAN");
+    equal(marker.parentNode.parentNode, getTestNode(), "marker grandparent should be body");
+    equal(marker.parentNode, getTestNode().firstChild, "marker parent");
+    equal(getTestNode().firstChild.firstChild.nodeName, "SPAN", "marker reachable from body");
+});
+
+test("extractContents, br marker, select two children of ul", function(){
+    setContent('<ul><li>1234</li><li>two</li><br /></ul>');
+
+    var container = getTestNode().firstChild;
+
+    var marker = container.lastChild;
+
+    var rng = makeRange();
+    rng.setStart(container.parentNode, 0);
+    rng.setEnd(container, 2);
+
+    var df = rng.extractContents();
+
+    equal(df.childNodes.length, 1);
+    equal(df.childNodes[0].nodeName, "UL");
+    equal(df.childNodes[0].childNodes.length, 2);
+    equal(df.childNodes[0].childNodes[0].nodeName, "LI");
+    equal(df.childNodes[0].childNodes[1].nodeName, "LI");
+    equal(marker.parentNode.parentNode, getTestNode(), "marker grandparent should be body");
+    equal(marker.parentNode, getTestNode().firstChild, "marker parent");
+    equal(getTestNode().firstChild.firstChild.nodeName, "BR", "marker reachable from body");
+});
+
+test("extractContents, br marker, select three children of ul", function(){
+    setContent('<ul><li>1234</li><li>two</li><li>three</li><br /></ul>');
+
+    var container = getTestNode().firstChild;
+
+    var marker = container.lastChild;
+
+    var rng = makeRange();
+    rng.setStart(container.parentNode, 0);
+    rng.setEnd(container, 3);
+
+    var df = rng.extractContents();
+
+    equal(df.childNodes.length, 1);
+    equal(df.childNodes[0].nodeName, "UL");
+    equal(df.childNodes[0].childNodes.length, 3);
+    equal(df.childNodes[0].childNodes[0].nodeName, "LI");
+    equal(df.childNodes[0].childNodes[1].nodeName, "LI");
+    equal(df.childNodes[0].childNodes[2].nodeName, "LI");
+    equal(marker.parentNode.parentNode, getTestNode(), "marker grandparent should be body");
+    equal(marker.parentNode, getTestNode().firstChild, "marker parent");
+    equal(getTestNode().firstChild.firstChild.nodeName, "BR", "marker reachable from body");
+});
+
+</script>
+
+<h1 id="qunit-header">Unit tests for the Chrome Range bug</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+
+<div id="testNode">
+</div>
+<!--
+<iframe id="testIframe"></iframe>
+<script type="text/javascript">
+    var doc = getTestDoc();
+    doc.open();
+    doc.write('<html><head></head><body id="testNode" contentEditable="true"></body></html>');
+    doc.close();
+</script>
+-->
+</body>
+</html>

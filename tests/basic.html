@@ -456,6 +456,24 @@ test('WebKit Serialization range bug', function() {
 	}
 });
 
+// for JIVE-1179
+// "The Chrome Bug"
+test("tinymce.dom.DOMUtils - split - chrome regression test", function(){
+    var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
+    
+    DOM.add(document.body, 'div', {id : 'test'}, '<p><span>1234</span><span>two</span><br /><span>three</span></p>');
+
+    var container = DOM.get('test').firstChild;
+
+    var marker = container.lastChild.previousSibling;
+
+    DOM.split(container, marker);
+
+    equal(DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''), '<p><span>1234</span><span>two</span></p><br><p><span>three</span></p>');
+
+    DOM.remove('test');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
