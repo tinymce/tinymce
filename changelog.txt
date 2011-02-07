@@ -25,6 +25,7 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where resizing images or tables wouldn't update the style attribute correctly or leave data-mce prefixed attributes.
 	Fixed bug where adding links wouldn't work correctly when using TinyMCE jQuery version with jQuery 1.5.
 	Fixed bug where single quotes inside param elements wasn't treated correctly by the media plugin.
+	Fixed bug where pasting plain text in WebKit wouldn't work correctly. It will now auto detect the WebKit bug and use plain text mode.
 	Fixed so mceReplaceContent supports caret position and makes sure that the contents inserted gets validated.
 	Moved some plugin css contents into the skin content css files to reduce the number of http requests.
 	Moved some plugin specific images into the theme img directory since they can then be shared.

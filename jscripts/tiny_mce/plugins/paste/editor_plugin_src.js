@@ -140,20 +140,24 @@
 			// hidden div and placing the caret inside it and after the browser paste
 			// is done it grabs that contents and processes that
 			function grabContent(e) {
-				var n, or, rng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY;
+				var n, or, rng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY, textContent;
 
 				// Check if browser supports direct plaintext access
-				if (ed.pasteAsPlainText && (e.clipboardData || dom.doc.dataTransfer)) {
-					e.preventDefault();
-					process({content : (e.clipboardData || dom.doc.dataTransfer).getData('Text').replace(/\r?\n/g, '<br />')});
-					return;
+				if (e.clipboardData || dom.doc.dataTransfer) {
+					textContent = (e.clipboardData || dom.doc.dataTransfer).getData('Text');
+
+					if (ed.pasteAsPlainText) {
+						e.preventDefault();
+						process({content : textContent.replace(/\r?\n/g, '<br />')});
+						return;
+					}
 				}
 
 				if (dom.get('_mcePaste'))
 					return;
 
 				// Create container to paste into
-				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste'}, '\uFEFF<br data-mce-bogus="1">');
+				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste', 'data-mce-bogus' : '1'}, '\uFEFF<br data-mce-bogus="1">');
 
 				// If contentEditable mode we need to find out the position of the closest element
 				if (body != ed.getDoc().body)
@@ -213,31 +217,39 @@
 
 					// Wait a while and grab the pasted contents
 					window.setTimeout(function() {
-						var h = '', nl = dom.select('div.mcePaste');
+						var h = '', nl;
 
-						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
-						each(nl, function(n) {
-							var child = n.firstChild;
+						// Paste divs duplicated in paste divs seems to happen when you paste plain text so lets first look for that broken behavior in WebKit
+						if (!dom.select('div.mcePaste > div.mcePaste').length) {
+							nl = dom.select('div.mcePaste');
 
-							// WebKit inserts a DIV container with lots of odd styles
-							if (child && child.nodeName == 'DIV' && child.style.marginTop && child.style.backgroundColor) {
-								dom.remove(child, 1);
-							}
+							// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
+							each(nl, function(n) {
+								var child = n.firstChild;
 
-							// Remove apply style spans
-							each(dom.select('span.Apple-style-span', n), function(n) {
-								dom.remove(n, 1);
+								// WebKit inserts a DIV container with lots of odd styles
+								if (child && child.nodeName == 'DIV' && child.style.marginTop && child.style.backgroundColor) {
+									dom.remove(child, 1);
+								}
+
+								// Remove apply style spans
+								each(dom.select('span.Apple-style-span', n), function(n) {
+									dom.remove(n, 1);
+								});
+
+								// Remove bogus br elements
+								each(dom.select('br[data-mce-bogus]', n), function(n) {
+									dom.remove(n);
+								});
+
+								// WebKit will make a copy of the DIV for each line of plain text pasted and insert them into the DIV
+								if (n.parentNode.className != 'mcePaste')
+									h += n.innerHTML;
 							});
-
-							// Remove bogus br elements
-							each(dom.select('br[data-mce-bogus]', n), function(n) {
-								dom.remove(n);
-							});
-
-							// WebKit will make a copy of the DIV for each line of plain text pasted and insert them into the DIV
-							if (n.parentNode.className != 'mcePaste')
-								h += n.innerHTML;
-						});
+						} else {
+							// Found WebKit weirdness so force the content into plain text mode
+							h = '<pre>' + dom.encode(textContent).replace(/\r?\n/g, '<br />') + '</pre>';
+						}
 
 						// Remove the nodes
 						each(dom.select('div.mcePaste'), function(n) {
