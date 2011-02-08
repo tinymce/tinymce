@@ -456,6 +456,17 @@ test('Parse (validate)', function() {
 	equals(writer.getContent(), '123456<span title="title">789</span>012', 'Parse invalid elements and attributes.');
 	deepEqual(counter.counts, {start:1, end:1, text:4}, 'Parse invalid elements and attributes counts.');
 });
+
+test('Self closing', function() {
+	expect(1);
+
+	var counter = createCounter(writer);
+	counter.validate = true;
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
+	equals(writer.getContent(), '<ul><li>1</li><li><b>2</b></li><li><em><b>3</b></em></li></ul>', 'Parse list with self closing items.');
+});
 </script>
 </head>
 <body>

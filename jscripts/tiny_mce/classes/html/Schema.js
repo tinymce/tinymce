@@ -9,7 +9,8 @@
  */
 
 (function(tinymce) {
-	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap, whiteSpaceElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
+	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap,
+		whiteSpaceElementsMap, selfClosingElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
 
 	function split(str, delim) {
 		return str.split(delim || ',');
@@ -178,6 +179,7 @@
 	shortEndedElementsMap = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,source');
 	nonEmptyElementsMap = tinymce.extend(makeMap('td,th,iframe,video,object'), shortEndedElementsMap);
 	whiteSpaceElementsMap = makeMap('pre,script,style');
+	selfClosingElementsMap = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr');
 
 	/**
 	 * Schema validator class.
@@ -523,6 +525,16 @@
 		 */
 		self.getShortEndedElements = function() {
 			return shortEndedElementsMap;
+		};
+
+		/**
+		 * Returns a map with self closing tags such as <li>.
+		 *
+		 * @method getSelfClosingElements
+		 * @return {Object} Name/value lookup map for self closing tags elements.
+		 */
+		self.getSelfClosingElements = function() {
+			return selfClosingElementsMap;
 		};
 
 		/**

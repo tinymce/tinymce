@@ -221,6 +221,7 @@
 
 			parser = new tinymce.html.SaxParser({
 				validate : settings.validate,
+				fix_self_closing : false, // Let the DOM parser handle <li> in <li> or <p> in <p> for better results
 
 				cdata: function(text) {
 					node.append(createNode('#cdata', 4)).value = text;

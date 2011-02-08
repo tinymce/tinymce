@@ -64,6 +64,9 @@
 		settings = settings || {};
 		self.schema = schema = schema || new tinymce.html.Schema();
 
+		if (settings.fix_self_closing !== false)
+			settings.fix_self_closing = true;
+
 		// Add handler functions from settings and setup default handlers
 		tinymce.each('comment cdata text start end pi doctype'.split(' '), function(name) {
 			if (name)
@@ -79,10 +82,35 @@
 		 * @param {String} html Html string to sax parse.
 		 */
 		self.parse = function(html) {
-			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, pos, i, text, name,
+			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name,
 				shortEndedElements, fillAttrsMap, isShortEnded, validate, elementRule, isValidElement, attr, attribsValue,
-				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced,
-				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode;
+				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced, selfClosing,
+				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode, fixSelfClosing;
+
+			function processEndTag(name) {
+				var pos, i;
+
+				// Find position of parent of the same type
+				pos = stack.length;
+				while (pos--) {
+					if (stack[pos].name === name)
+						break;						
+				}
+
+				// Found parent
+				if (pos >= 0) {
+					// Close all the open elements
+					for (i = stack.length - 1; i >= pos; i--) {
+						name = stack[i];
+
+						if (name.valid)
+							self.end(name.name);
+					}
+
+					// Remove the open elements from the stack
+					stack.length = pos;
+				}
+			};
 
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp('<(?:' +
@@ -103,8 +131,10 @@
 
 			// Setup lookup tables for empty elements and boolean attributes
 			shortEndedElements = schema.getShortEndedElements();
+			selfClosing = schema.getSelfClosingElements();
 			fillAttrsMap = schema.getBoolAttrs();
 			validate = settings.validate;
+			fixSelfClosing = settings.fix_self_closing;
 
 			while (matches = tokenRegExp.exec(html)) {
 				// Text
@@ -112,31 +142,14 @@
 					self.text(decode(html.substr(index, matches.index - index)));
 
 				if (value = matches[6]) { // End element
-					value = value.toLowerCase();
-
-					// Find position of parent of the same type
-					pos = stack.length;
-					while (pos--) {
-						if (stack[pos].name === value)
-							break;						
-					}
-
-					// Found parent
-					if (pos >= 0) {
-						// Close all the open elements
-						for (i = stack.length - 1; i >= pos; i--) {
-							value = stack[i];
-
-							if (value.valid)
-								self.end(value.name);
-						}
-
-						// Remove the open elements from the stack
-						stack.length = pos;
-					}
+					processEndTag(value.toLowerCase());
 				} else if (value = matches[7]) { // Start element
 					value = value.toLowerCase();
 					isShortEnded = value in shortEndedElements;
+
+					// Is self closing tag for example an <li> after an open <li>
+					if (fixSelfClosing && selfClosing[value] && stack.length > 0 && stack[stack.length - 1].name === value)
+						processEndTag(value);
 
 					// Validate element
 					if (!validate || (elementRule = schema.getElementRule(value))) {
