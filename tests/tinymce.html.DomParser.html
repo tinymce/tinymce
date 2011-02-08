@@ -292,6 +292,16 @@ test('Remove empty elements', function() {
 	root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
 	equals(serializer.serialize(root), '<span></span><a href="#"><img src="about:blank" /></a>', 'Leave elements with img in it');
 });
+
+test('Self closing list elements', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	expect(1);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
+	equals(serializer.serialize(root), '<ul><li>1</li><li><strong>2</strong></li><li><em><strong>3</strong></em></li></ul>', 'Split out LI elements in LI elements.');
+});
 </script>
 </head>
 <body>

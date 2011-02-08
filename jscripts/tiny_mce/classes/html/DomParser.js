@@ -40,7 +40,7 @@
 
 		function fixInvalidChildren(nodes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i,
-				childClone, nonEmptyElements, nonSplitableElements, sibling;
+				childClone, nonEmptyElements, nonSplitableElements, sibling, nextNode;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
 			nonEmptyElements = schema.getNonEmptyElements();
@@ -73,8 +73,10 @@
 						} else
 							tempNode = currentNode;
 
-						for (childNode = parents[i].firstChild; childNode && childNode != parents[i + 1]; childNode = childNode.next) {
+						for (childNode = parents[i].firstChild; childNode && childNode != parents[i + 1]; ) {
+							nextNode = childNode.next;
 							tempNode.append(childNode);
+							childNode = nextNode;
 						}
 
 						currentNode = tempNode;
