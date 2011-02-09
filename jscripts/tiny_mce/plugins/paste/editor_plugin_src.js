@@ -757,7 +757,7 @@
 					/^\s+|\s+$/g									// Trim the front & back
 				]);
 
-				h = dom.encode(h);
+				h = dom.decode(h);
 
 				// Delete any highlighted text before pasting
 				if (!sel.isCollapsed()) {
