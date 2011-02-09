@@ -29,6 +29,7 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where the DomParser would fail to move out invalid elements within invalid elements on complex contents.
 	Fixed bug where paste as plain text would not decode html entities properly.
 	Fixed so mceReplaceContent supports caret position and makes sure that the contents inserted gets validated.
+	Fixed so unnecessary traling br elements in blocks gets removed on Gecko/WebKit when using mceInsertContent command.
 	Moved some plugin css contents into the skin content css files to reduce the number of http requests.
 	Moved some plugin specific images into the theme img directory since they can then be shared.
 Version 3.4b2 (2011-01-13)

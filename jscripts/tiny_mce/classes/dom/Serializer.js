@@ -31,6 +31,8 @@
 		if (!settings.apply_source_formatting)
 			settings.indent = false;
 
+		settings.remove_trailing_brs = true;
+
 		// Default DOM and Schema if they are undefined
 		dom = dom || tinymce.DOM;
 		schema = schema || new tinymce.html.Schema(settings);
@@ -142,23 +144,6 @@
 				} else {
 					if (value.length > 0)
 						node.firstChild.value = '<!--\n' + trim(value) + '\n-->';
-				}
-			}
-		});
-
-		// Remove <br> at end of block elements
-		htmlParser.addNodeFilter('br', function(nodes, name) {
-			var i = nodes.length, node, blockElements = schema.getBlockElements(), nonEmptyElements = schema.getNonEmptyElements(), parent;
-
-			while (i--) {
-				node = nodes[i];
-				parent = node.parent;
-
-				if (blockElements[node.parent.name] && node === parent.lastChild) {
-					node.remove();
-
-					if (parent.isEmpty(nonEmptyElements))
-						parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
 				}
 			}
 		});

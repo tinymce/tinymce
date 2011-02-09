@@ -331,7 +331,9 @@
 						// This will remove invalid elements/attributes and fix nesting issues
 						dom.setOuterHTML(parent, 
 							new tinymce.html.Serializer({}, editor.schema).serialize(
-								new tinymce.html.DomParser({}, editor.schema).parse(dom.getOuterHTML(parent))
+								new tinymce.html.DomParser({
+									remove_trailing_brs : true
+								}, editor.schema).parse(dom.getOuterHTML(parent))
 							)
 						);
 

@@ -424,5 +424,24 @@
 
 			return rootNode;
 		};
+
+		// Remove <br> at end of block elements
+		if (settings.remove_trailing_brs) {
+			self.addNodeFilter('br', function(nodes, name) {
+				var i = nodes.length, node, blockElements = schema.getBlockElements(), nonEmptyElements = schema.getNonEmptyElements(), parent;
+
+				while (i--) {
+					node = nodes[i];
+					parent = node.parent;
+
+					if (blockElements[node.parent.name] && node === parent.lastChild) {
+						node.remove();
+
+						if (parent.isEmpty(nonEmptyElements))
+							parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+					}
+				}
+			});
+		}
 	}
 })(tinymce);
