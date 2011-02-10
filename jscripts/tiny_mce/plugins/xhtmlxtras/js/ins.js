@@ -21,6 +21,7 @@ function setElementAttribs(elm) {
 	setAllCommonAttribs(elm);
 	setAttrib(elm, 'datetime');
 	setAttrib(elm, 'cite');
+	elm.removeAttribute('data-mce-new');
 }
 
 function insertIns() {
@@ -29,8 +30,8 @@ function insertIns() {
 	if (elm == null) {
 		var s = SXE.inst.selection.getContent();
 		if(s.length > 0) {
-			insertInlineElement('INS');
-			var elementArray = tinymce.grep(SXE.inst.dom.select('ins'), function(n) {return n.id == '#sxe_temp_ins#';});
+			insertInlineElement('ins');
+			var elementArray = SXE.inst.dom.select('ins[data-mce-new]');
 			for (var i=0; i<elementArray.length; i++) {
 				var elm = elementArray[i];
 				setElementAttribs(elm);
