@@ -1,4 +1,4 @@
-Version 3.4b3 (2011-01-xx)
+Version 3.4b3 (2011-02-10)
 	Added WAI-ARIA support for the main UI and dialogs this feature was contributed by Ephox.
 	Added iframe support to media plugin in order to handle the new YouTube HTML5 video formats.
 	Fixed bug where anchors would wrap the text contents after it due to a bug in the DomParser logic.
