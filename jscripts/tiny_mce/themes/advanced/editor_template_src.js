@@ -66,7 +66,7 @@
 			t.url = url;
 			t.onResolveName = new tinymce.util.Dispatcher(this);
 
-			ed.forcedHighContrastMode = t._isHighContrast();
+			ed.forcedHighContrastMode = ed.settings.detect_highcontrast && t._isHighContrast();
 			ed.settings.skin = ed.forcedHighContrastMode ? 'highcontrast' : ed.settings.skin;
 
 			// Default settings
@@ -164,10 +164,12 @@
 		},
 
 		_isHighContrast : function() {
-			var actualColor, div = DOM.add(DOM.getRoot(), 'div', { 'style': 'background-color: rgb(171,239,86);'});
-			actualColor = (DOM.getStyle(div, 'background-color', true) + '').replace(/ /g, '');
+			var actualColor, div = DOM.add(DOM.getRoot(), 'div', {'style': 'background-color: rgb(171,239,86);'});
+
+			actualColor = (DOM.getStyle(div, 'background-color', true) + '').toLowerCase().replace(/ /g, '');
 			DOM.remove(div);
-			return actualColor != 'rgb(171,239,86)';
+
+			return actualColor != 'rgb(171,239,86)' && actualColor != '#abef56';
 		},
 
 		createControl : function(n, cf) {
