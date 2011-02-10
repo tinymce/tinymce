@@ -28,6 +28,8 @@ Version 3.4b3 (2011-01-xx)
 	Fixed bug where pasting plain text in WebKit wouldn't work correctly. It will now auto detect the WebKit bug and use plain text mode.
 	Fixed bug where the DomParser would fail to move out invalid elements within invalid elements on complex contents.
 	Fixed bug where paste as plain text would not decode html entities properly.
+	Fixed bug where large paragraphs would cause incorrect scrolling behavior if you would split them using enter.
+	Fixed bug where the SaxParser wouldn't properly parse some specific short ended elements.
 	Fixed so mceReplaceContent supports caret position and makes sure that the contents inserted gets validated.
 	Fixed so unnecessary traling br elements in blocks gets removed on Gecko/WebKit when using mceInsertContent command.
 	Moved some plugin css contents into the skin content css files to reduce the number of http requests.

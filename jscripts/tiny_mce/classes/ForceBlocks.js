@@ -657,12 +657,16 @@
 
 			// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
 			y = ed.dom.getPos(aft).y;
-			ch = aft.clientHeight;
+			//ch = aft.clientHeight;
 
 			// Is element within viewport
-			if (y < vp.y || y + ch > vp.y + vp.h) {
+			if (y < vp.y || y + 25 > vp.y + vp.h) {
 				ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + 25); // Needs to be hardcoded to roughly one line of text if a huge text block is broken into two blocks
-				//console.debug('SCROLL!', 'vp.y: ' + vp.y, 'y' + y, 'vp.h' + vp.h, 'clientHeight' + aft.clientHeight, 'yyy: ' + (y < vp.y ? y : y - vp.h + aft.clientHeight));
+
+				/*console.debug(
+					'Element: y=' + y + ', h=' + ch + ', ' +
+					'Viewport: y=' + vp.y + ", h=" + vp.h + ', bottom=' + (vp.y + vp.h)
+				);*/
 			}
 
 			return FALSE;
