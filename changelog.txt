@@ -1,5 +1,6 @@
 Version 3.4 (2011-02-xx)
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.
+	Fixed bug where the image.htm had some strange td artifacts probably due to auto merging.
 Version 3.4b3 (2011-02-10)
 	Added WAI-ARIA support for the main UI and dialogs this feature was contributed by Ephox.
 	Added iframe support to media plugin in order to handle the new YouTube HTML5 video formats.
