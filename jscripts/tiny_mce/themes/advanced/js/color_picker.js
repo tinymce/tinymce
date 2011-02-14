@@ -157,10 +157,10 @@ function generateWebColors() {
 
 	// TODO: VoiceOver doesn't seem to support legend as a label referenced by labelledby.
 	h += '<div role="listbox" aria-labelledby="webcolors_title" tabindex="0"><table role="presentation" border="0" cellspacing="1" cellpadding="0">'
-		+ '<tr role="presentation">';
+		+ '<tr>';
 
 	for (i=0; i<colors.length; i++) {
-		h += '<td role="presentation" bgcolor="' + colors[i] + '" width="10" height="10">'
+		h += '<td bgcolor="' + colors[i] + '" width="10" height="10">'
 			+ '<a href="javascript:insertAction();" role="option" tabindex="-1" aria-labelledby="web_colors_' + i + '" onfocus="showColor(\'' + colors[i] +  '\');" onmouseover="showColor(\'' + colors[i] +  '\');" style="display:block;width:10px;height:10px;overflow:hidden;">';
 		if (tinyMCEPopup.editor.forcedHighContrastMode) {
 			h += '<canvas class="mceColorSwatch" height="10" width="10" data-color="' + colors[i] + '"></canvas>';

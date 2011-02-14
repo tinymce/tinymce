@@ -763,7 +763,9 @@
 			}
 
 			// Create iframe
-			n = DOM.add(o.iframeContainer, 'iframe', {
+			//TODO: ACC add the appropriate description on this.
+			n = DOM.add(o.iframeContainer, 'iframe', { 
+			    role :"application",
 				id : t.id + "_ifr",
 				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder : '0',
@@ -923,8 +925,8 @@
 					{inline : 'u'}
 				],
 
-				forecolor : {inline : 'span', styles : {color : '%value'}},
-				hilitecolor : {inline : 'span', styles : {backgroundColor : '%value'}},
+				forecolor : {inline : 'span', styles : {color : '%value'}, wrap_links : false},
+				hilitecolor : {inline : 'span', styles : {backgroundColor : '%value'}, wrap_links : false},
 				fontname : {inline : 'span', styles : {fontFamily : '%value'}},
 				fontsize : {inline : 'span', styles : {fontSize : '%value'}},
 				fontsize_class : {inline : 'span', attributes : {'class' : '%value'}},

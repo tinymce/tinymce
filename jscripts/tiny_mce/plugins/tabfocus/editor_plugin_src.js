@@ -22,7 +22,13 @@
 				var x, i, f, el, v;
 
 				function find(d) {
-					el = DOM.select(':input:enabled,*[tabindex=0]');
+					el = DOM.select(':input:enabled,*[tabindex]');
+					function canSelect(e) {
+						return e.type != 'hidden' && 
+						e.tabIndex != '-1' && 
+							!(el[i].style.display == "none") && 
+							!(el[i].style.visibility == "hidden");
+				    }
 
 					each(el, function(e, i) {
 						if (e.id == ed.id) {
@@ -33,12 +39,12 @@
 
 					if (d > 0) {
 						for (i = x + 1; i < el.length; i++) {
-							if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
+							if (canSelect(el[i]))
 								return el[i];
 						}
 					} else {
 						for (i = x - 1; i >= 0; i--) {
-							if (el[i].type != 'hidden' && el[i].tabIndex != '-1')
+							if (canSelect(el[i]))
 								return el[i];
 						}
 					}
