@@ -4,7 +4,7 @@
 .defaultSkin table td {vertical-align:middle}
 
 /* Containers */
-.defaultSkin table {direction:ltr;}
+.defaultSkin table {direction:ltr; background:#F0F0EE}
 .defaultSkin iframe {display:block;}
 .defaultSkin .mceToolbar {height:26px}
 .defaultSkin .mceLeft {text-align:left}
