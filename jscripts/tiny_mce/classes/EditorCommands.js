@@ -370,7 +370,7 @@
 
 						// Scroll range into view scrollIntoView on element can't be used since it will scroll the main view port as well
 						if (!tinymce.isIE) {
-							node = dom.create('span', null, '&nbsp;');
+							node = dom.create('span', null, '\u00a0');
 							rng.insertNode(node);
 							nodeRect = dom.getRect(node);
 							viewPortRect = dom.getViewPort(editor.getWin());

@@ -1151,7 +1151,7 @@
 					pi = DOM.create('a', {'href' : "javascript:;", role: 'button', onmousedown : "return false;", title : ti, 'class' : 'mcePath_' + (de++)}, na);
 
 					if (p.hasChildNodes()) {
-						p.insertBefore(DOM.create('span', {'aria-hidden': 'true'}, '&nbsp;\u00bb '), p.firstChild);
+						p.insertBefore(DOM.create('span', {'aria-hidden': 'true'}, '\u00a0\u00bb '), p.firstChild);
 						p.insertBefore(pi, p.firstChild);
 					} else
 						p.appendChild(pi);

@@ -174,7 +174,6 @@
 						backgroundColor : '#' + c
 					},
 					'title': t.editor.getLang('colors.' + c, c),
-					_mce_color : '#' + c,
 					'data-mce-color' : '#' + c
 				});
 
@@ -220,7 +219,7 @@
 
 				e = DOM.getParent(e.target, 'a', tb);
 
-				if (e.nodeName == 'A' && (c = e.getAttribute('data-mce-color')))
+				if (e.nodeName.toLowerCase() == 'a' && (c = e.getAttribute('data-mce-color')))
 					t.setColor(c);
 
 				return Event.cancel(e); // Prevent IE auto save warning

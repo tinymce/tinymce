@@ -621,10 +621,10 @@
 						nn = nn.appendChild(nl[i]);
 
 					// Padd most inner style element
-					nl[0].innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
+					nl[0].innerHTML = isOpera ? '\u00a0' : '<br />'; // Extra space for Opera so that the caret can move there
 					return nl[0]; // Move caret to most inner element
 				} else
-					e.innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
+					e.innerHTML = isOpera ? '\u00a0' : '<br />'; // Extra space for Opera so that the caret can move there
 			};
 
 			// Fill empty afterblook with current style
