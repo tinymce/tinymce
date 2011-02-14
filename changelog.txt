@@ -2,6 +2,7 @@ Version 3.4 (2011-02-xx)
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.
 	Fixed bug where the image.htm had some strange td artifacts probably due to auto merging.
 	Fixed bug where the ToolbarGroup had an missing reference to this in it's destroy method.
+	Fixed bug with the resizeBy function in the advanced theme where it was scaled by the wrong parent.
 	Removed obsolete calls in various plugins to the mceBeginUndoLevel command.
 Version 3.4b3 (2011-02-10)
 	Added WAI-ARIA support for the main UI and dialogs this feature was contributed by Ephox.

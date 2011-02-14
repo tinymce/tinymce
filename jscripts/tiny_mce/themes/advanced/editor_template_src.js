@@ -610,7 +610,7 @@
 		},
 
 		resizeBy : function(dw, dh) {
-			var e = DOM.get(this.editor.id + '_tbl');
+			var e = DOM.get(this.editor.id + '_ifr');
 
 			this.resizeTo(e.clientWidth + dw, e.clientHeight + dh);
 		},
