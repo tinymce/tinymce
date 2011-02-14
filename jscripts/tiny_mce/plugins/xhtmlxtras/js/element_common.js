@@ -154,7 +154,6 @@ SXE.initElementDialog = function(element_name) {
 SXE.insertElement = function(element_name) {
 	var elm = SXE.inst.dom.getParent(SXE.focusElement, element_name.toUpperCase()), h, tagName;
 
-	tinyMCEPopup.execCommand('mceBeginUndoLevel');
 	if (elm == null) {
 		var s = SXE.inst.selection.getContent();
 		if(s.length > 0) {
@@ -186,7 +185,6 @@ SXE.removeElement = function(element_name){
 	element_name = element_name.toLowerCase();
 	elm = SXE.inst.dom.getParent(SXE.focusElement, element_name.toUpperCase());
 	if(elm && elm.nodeName.toUpperCase() == element_name.toUpperCase()){
-		tinyMCEPopup.execCommand('mceBeginUndoLevel');
 		tinyMCE.execCommand('mceRemoveNode', false, elm);
 		SXE.inst.nodeChanged();
 		tinyMCEPopup.execCommand('mceEndUndoLevel');

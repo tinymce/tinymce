@@ -80,8 +80,6 @@ function updateAction() {
 		return;
 	}
 
-	inst.execCommand('mceBeginUndoLevel');
-
 	switch (action) {
 		case "row":
 			updateRow(trElm);

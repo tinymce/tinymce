@@ -389,7 +389,6 @@ function insertAction() {
 
 	// Remove element if there is no href
 	if (!document.forms[0].href.value) {
-		tinyMCEPopup.execCommand("mceBeginUndoLevel");
 		i = inst.selection.getBookmark();
 		inst.dom.remove(elm, 1);
 		inst.selection.moveToBookmark(i);
@@ -397,8 +396,6 @@ function insertAction() {
 		tinyMCEPopup.close();
 		return;
 	}
-
-	tinyMCEPopup.execCommand("mceBeginUndoLevel");
 
 	// Create new anchor elements
 	if (elm == null) {

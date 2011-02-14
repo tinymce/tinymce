@@ -83,8 +83,6 @@ function updateAction() {
 		return;
 	}
 
-	ed.execCommand('mceBeginUndoLevel');
-
 	switch (getSelectValue(formObj, 'action')) {
 		case "cell":
 			var celltype = getSelectValue(formObj, 'celltype');

@@ -26,7 +26,7 @@ function setElementAttribs(elm) {
 
 function insertIns() {
 	var elm = tinyMCEPopup.editor.dom.getParent(SXE.focusElement, 'INS');
-	tinyMCEPopup.execCommand('mceBeginUndoLevel');
+
 	if (elm == null) {
 		var s = SXE.inst.selection.getContent();
 		if(s.length > 0) {

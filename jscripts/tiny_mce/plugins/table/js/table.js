@@ -58,8 +58,6 @@ function insertTable() {
 
 	// Update table
 	if (action == "update") {
-		inst.execCommand('mceBeginUndoLevel');
-
 		dom.setAttrib(elm, 'cellPadding', cellpadding, true);
 		dom.setAttrib(elm, 'cellSpacing', cellspacing, true);
 		dom.setAttrib(elm, 'border', border);
@@ -206,8 +204,6 @@ function insertTable() {
 	}
 
 	html += "</table>";
-
-	inst.execCommand('mceBeginUndoLevel');
 
 	// Move table
 	if (inst.settings.fix_table_elements) {
