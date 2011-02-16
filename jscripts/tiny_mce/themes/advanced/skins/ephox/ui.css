@@ -99,7 +99,7 @@
 .ephoxSkin .mceMenu .mceText {position:relative; display:block; font-family:Tahoma,Verdana,Arial,Helvetica; color:#000; cursor:default; margin:0; padding:0 25px 0 25px; display:block}
 .ephoxSkin .mceMenu span.mceText, .ephoxSkin .mceMenu .mcePreview {font-size:11px}
 .ephoxSkin .mceMenu pre.mceText {font-family:Monospace}
-.ephoxSkin .mceMenu .mceIcon {position:absolute; top:0; left:0; width:26px;}
+.ephoxSkin .mceMenu .mceIcon {position:absolute; top:0; left:0; width:20px;}
 .ephoxSkin .mceMenu .mceMenuItemEnabled a:hover, .ephoxSkin .mceMenu .mceMenuItemActive {background-color:#dbecf3}
 .ephoxSkin td.mceMenuItemSeparator {background:#DDD; height:1px}
 .ephoxSkin .mceMenuItemTitle a {border:0; background:#E5EFFD; border-bottom:1px solid #ABC6DD}
