@@ -1,3 +1,4 @@
+	Included moxiecode fix from 3.4 - Fixed bug where the editor would scroll to the toolbar when clicked due to a call to focus in ListBox.
 	Fixed issue where pasting part of a list from IE did not wrap the list in a UL element.
 	Fixed issue in list plugin which left the final list item outside the list element.
 	Fixed issue where inline formatting may be applied beyond the end of the selection.
