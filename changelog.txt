@@ -6,6 +6,7 @@ Version 3.4 (2011-02-xx)
 	Fixed bug where an exception would be thrown by the element if the page was served in xhtml mode.
 	Fixed bug where mceInsertContent would throw an exception when page was served in xhtml mode.
 	Fixed bug where you couldn't select a forground/background color when page was served in xhtml mode.
+	Fixed bug where the editor would scroll to the toolbar when clicked due to a call to focus in ListBox.
 	Removed obsolete calls in various plugins to the mceBeginUndoLevel command.
 Version 3.4b3 (2011-02-10)
 	Added WAI-ARIA support for the main UI and dialogs this feature was contributed by Ephox.

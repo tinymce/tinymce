@@ -121,7 +121,10 @@
 				icons : t.settings.icons
 			});
 
-			m.onHideMenu.add(t.hideMenu, t);
+			m.onHideMenu.add(function() {
+				t.hideMenu();
+				t.focus();
+			});
 
 			t.onRenderMenu.dispatch(t, m);
 			t.menu = m;
@@ -149,7 +152,6 @@
 			}
 
 			t.isMenuVisible = 0;
-			t.focus();
 		},
 
 		/**
