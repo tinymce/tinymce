@@ -143,6 +143,9 @@
 
 				if (node.nodeType == 3) {
 					each(dom.getParents(node.parentNode, null, cell).reverse(), function(node) {
+						if (node.nodeName == 'A') {
+							return;
+						}
 						node = cloneNode(node, false);
 
 						if (!formatNode)
