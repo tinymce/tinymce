@@ -357,9 +357,11 @@
 					ed.execCommand('FontSize', false, v.fontSize);
 
 				// Fake selection, execCommand will fire a nodeChange and update the selection
-				c.select(function(sv) {
-					return v == sv;
-				});
+				if (ed.selection.getContent().length == 0) {
+					c.select(function(sv) {
+						return v == sv;
+					});
+				}
 
 				return false; // No auto select
 			}});
