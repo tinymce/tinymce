@@ -1876,7 +1876,7 @@
 		 * @return {Number} Index of the specified node.
 		 */
 		nodeIndex : function(node, normalized) {
-			var idx = 0, lastNodeType, lastNode, nodeType;
+			var idx = 0, lastNodeType, lastNode, nodeType, nodeValueExists;
 
 			if (node) {
 				for (lastNodeType = node.nodeType, node = node.previousSibling, lastNode = node; node; node = node.previousSibling) {
@@ -1884,10 +1884,13 @@
 
 					// Normalize text nodes
 					if (normalized && nodeType == 3) {
-						if (nodeType == lastNodeType || !node.nodeValue.length)
+						// ensure that text nodes that have been removed are handled correctly in Internet Explorer.
+						// (the nodeValue attribute will not exist, and will error here).
+						nodeValueExists = false;
+						try {nodeValueExists == node.nodeValue.length} catch (c) {}
+						if (nodeType == lastNodeType || !nodeValueExists)
 							continue;
 					}
-
 					idx++;
 					lastNodeType = nodeType;
 				}
