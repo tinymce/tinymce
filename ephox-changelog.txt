@@ -1,3 +1,4 @@
+	Backported fix for colorpicker color validation.
 	Fixed issue where styles were not included when using the full page plugin.
 	Fixed issue where deleting some paragraphs on IE would cause an exception.
 	Fixed issue where pasting part of a list from IE did not wrap the list in a UL element.
