@@ -1070,10 +1070,6 @@
 					if (n.nodeType != 1 || n.nodeName === 'BR' || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
 						return;
 
-					// Fake name
-					if (v = DOM.getAttrib(n, 'mce_name'))
-						na = v;
-
 					// Handle prefix
 					if (tinymce.isIE && n.scopeName !== 'HTML')
 						na = n.scopeName + ':' + na;
