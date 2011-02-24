@@ -215,16 +215,8 @@
 
 			t.onShowMenu.dispatch(t);
 
-			if (s.keyboard_focus) {
-				t.keyboardNav = new tinymce.ui.KeyboardNavigation({
-					root: 'menu_' + t.id,
-					items: DOM.select('a[role=option]', 'menu_' + t.id),
-					onCancel: function() {
-						t.hideMenu();
-					},
-					enableUpDown: true
-				});
-				DOM.select('a[role=option]', 'menu_' + t.id)[0].focus(); // Select first link
+			if (s.keyboard_focus) { 
+				t._setupKeyboardNav(); 
 			}
 		},
 
@@ -330,7 +322,7 @@
 		renderNode : function() {
 			var t = this, s = t.settings, n, tb, co, w;
 
-			w = DOM.create('div', {role: 'listbox', id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
+			w = DOM.create('div', {role: 'listbox', id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000;outline:0'});
 			if (t.settings.parent) {
 				DOM.setAttrib(w, 'aria-parent', 'menu_' + t.settings.parent.id);
 			}
@@ -354,6 +346,21 @@
 		},
 
 		// Internal functions
+		_setupKeyboardNav : function(){
+			var contextMenu, menuItems, t=this; 
+			contextMenu = DOM.select('#menu_' + t.id)[0];
+			menuItems = DOM.select('a[role=option]', 'menu_' + t.id);
+			menuItems.splice(0,0,contextMenu);
+			t.keyboardNav = new tinymce.ui.KeyboardNavigation({
+				root: 'menu_' + t.id,
+				items: menuItems,
+				onCancel: function() {
+					t.hideMenu();
+				},
+				enableUpDown: true
+			});
+			contextMenu.focus();
+		},
 
 		_keyHandler : function(evt) {
 			var t = this, e;
