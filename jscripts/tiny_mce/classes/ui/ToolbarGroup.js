@@ -62,6 +62,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	},
 	
 	destroy : function() {
+		var t = this;
 		this.parent();
 		t.keyNav.destroy();
 		Event.clear(t.id);
