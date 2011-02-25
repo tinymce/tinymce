@@ -25,15 +25,23 @@
 					if (ed.getParam('fullscreen_new_window'))
 						closeFullscreen(); // Call to close in new window
 					else {
-						DOM.win.setTimeout(function() {
+                                                DOM.win.setTimeout(function() {
 							tinymce.dom.Event.remove(DOM.win, 'resize', t.resizeFunc);
-							tinyMCE.get(ed.getParam('fullscreen_editor_id')).setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
+							
+							var fullContent = ed.getContent({format : 'raw'});
+							var fullEditorId = ed.getParam('fullscreen_editor_id')
+							
 							tinyMCE.remove(ed);
 							DOM.remove('mce_fullscreen_container');
 							de.style.overflow = ed.getParam('fullscreen_html_overflow');
 							DOM.setStyle(DOM.doc.body, 'overflow', ed.getParam('fullscreen_overflow'));
 							DOM.win.scrollTo(ed.getParam('fullscreen_scrollx'), ed.getParam('fullscreen_scrolly'));
 							tinyMCE.settings = tinyMCE.oldSettings; // Restore old settings
+							
+							tinyMCE.execCommand('mceRemoveControl', false, fullEditorId);
+							document.getElementById(ed.getParam('fullscreen_editor_id')).value = fullContent;
+							tinyMCE.execCommand('mceAddControl', false, fullEditorId);
+							
 						}, 10);
 					}
 
