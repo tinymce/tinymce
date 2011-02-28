@@ -10,6 +10,7 @@ Version 3.4 (2011-02-xx)
 	Fixed bug where pages with rtl dir wouldn't render split buttons correctly when using the o2k7 theme.
 	Fixed so the drop menus doesn't get an outline border visible when focused, patch contributed by Ephox.
 	Fixed so the values entered in the color picker are forced to hex values.
+	Removed dialog workaround for IE 9 beta since the RC is now out and people should upgrade.
 	Removed obsolete calls in various plugins to the mceBeginUndoLevel command.
 Version 3.4b3 (2011-02-10)
 	Added WAI-ARIA support for the main UI and dialogs this feature was contributed by Ephox.
