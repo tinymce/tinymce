@@ -62,7 +62,7 @@
 .o2k7Skin select.mceListBox {font-family:Tahoma,Verdana,Arial,Helvetica; font-size:12px; border:1px solid #b3c7e1; background:#FFF;}
 
 /* SplitButton */
-.o2k7Skin .mceSplitButton, .o2k7Skin .mceSplitButton a, .o2k7Skin .mceSplitButton span {display:block; height:22px}
+.o2k7Skin .mceSplitButton, .o2k7Skin .mceSplitButton a, .o2k7Skin .mceSplitButton span {display:block; height:22px; direction:ltr}
 .o2k7Skin .mceSplitButton {background:url(img/button_bg.png)}
 .o2k7Skin .mceSplitButton a.mceAction {width:22px}
 .o2k7Skin .mceSplitButton span.mceAction {width:22px; background-image:url(../../img/icons.gif)}
