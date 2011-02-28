@@ -123,6 +123,7 @@ link_desc:"Insert/edit link"
 },
 xhtmlxtras:{
 cite_desc:"Citation",
+q_desc:"Quotation",
 abbr_desc:"Abbreviation",
 acronym_desc:"Acronym",
 del_desc:"Deletion",
