@@ -475,9 +475,20 @@
 							for (node = root, i = point.length - 1; i >= 1; i--) {
 								children = node.childNodes;
 
-								if (children.length)
+								if (children.length) {
 									node = children[point[i]];
+
+									// Node position not found
+									if (!node)
+										return;
+								}
 							}
+
+							// Text index not found
+							if (node.nodeType === 3 && point[0] > node.nodeValue.length - 1)
+								return;
+							else if (point[0] > node.childNodes.length)
+								return;
 
 							// Set offset within container node
 							if (start)
@@ -485,12 +496,13 @@
 							else
 								rng.setEnd(node, point[0]);
 						}
+
+						return true;
 					};
 
-					setEndPoint(true);
-					setEndPoint();
-
-					t.setRng(rng);
+					if (setEndPoint(true) && setEndPoint()) {
+						t.setRng(rng);
+					}
 				} else if (bookmark.id) {
 					function restoreEndPoint(suffix) {
 						var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
