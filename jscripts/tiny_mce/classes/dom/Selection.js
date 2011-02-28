@@ -487,7 +487,7 @@
 							// Text index not found
 							if (node.nodeType === 3 && point[0] > node.nodeValue.length - 1)
 								return;
-							else if (point[0] > node.childNodes.length)
+							else if (node.nodeType === 1 && point[0] > node.childNodes.length)
 								return;
 
 							// Set offset within container node
