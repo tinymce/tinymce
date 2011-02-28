@@ -22,6 +22,17 @@
 					plugin_url : url
 				});
 			});
+			
+			ed.addCommand('mceQ', function() {
+				ed.windowManager.open({
+					file : url + '/q.html',
+					width : 350 + parseInt(ed.getLang('xhtmlxtras.q_delta_width', 0)),
+					height : 250 + parseInt(ed.getLang('xhtmlxtras.q_delta_height', 0)),
+					inline : 1
+				}, {
+					plugin_url : url
+				});
+			});
 
 			ed.addCommand('mceAcronym', function() {
 				ed.windowManager.open({
@@ -80,6 +91,7 @@
 
 			// Register buttons
 			ed.addButton('cite', {title : 'xhtmlxtras.cite_desc', cmd : 'mceCite'});
+			ed.addButton('q', {title: 'xhtmlxtras.q_desc', cmd : 'mceQ'});
 			ed.addButton('acronym', {title : 'xhtmlxtras.acronym_desc', cmd : 'mceAcronym'});
 			ed.addButton('abbr', {title : 'xhtmlxtras.abbr_desc', cmd : 'mceAbbr'});
 			ed.addButton('del', {title : 'xhtmlxtras.del_desc', cmd : 'mceDel'});
@@ -87,15 +99,17 @@
 			ed.addButton('attribs', {title : 'xhtmlxtras.attribs_desc', cmd : 'mceAttributes'});
 
 			ed.onNodeChange.add(function(ed, cm, n, co) {
-				n = ed.dom.getParent(n, 'CITE,ACRONYM,ABBR,DEL,INS');
+				n = ed.dom.getParent(n, 'CITE,Q,ACRONYM,ABBR,DEL,INS');
 
 				cm.setDisabled('cite', co);
+				cm.setDisabled('q', co);
 				cm.setDisabled('acronym', co);
 				cm.setDisabled('abbr', co);
 				cm.setDisabled('del', co);
 				cm.setDisabled('ins', co);
 				cm.setDisabled('attribs', n && n.nodeName == 'BODY');
 				cm.setActive('cite', 0);
+				cm.setActive('q', 0);
 				cm.setActive('acronym', 0);
 				cm.setActive('abbr', 0);
 				cm.setActive('del', 0);
