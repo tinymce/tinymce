@@ -810,7 +810,7 @@
 				// Handle selection a image or other control like element such as anchors
 				if (!rng.collapsed) {
 					if (rng.startContainer == rng.endContainer) {
-						if (rng.startOffset - rng.endOffset < 2) {
+						if (rng.endOffset - rng.startOffset < 2) {
 							if (rng.startContainer.hasChildNodes())
 								elm = rng.startContainer.childNodes[rng.startOffset];
 						}

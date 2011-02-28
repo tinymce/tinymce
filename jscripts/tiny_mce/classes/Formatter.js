@@ -129,7 +129,7 @@
 		 * @param {Node} node Optional node to apply the format to defaults to current selection.
 		 */
 		function apply(name, vars, node) {
-			var formatList = get(name), format = formatList[0], bookmark, rng, i;
+			var formatList = get(name), format = formatList[0], bookmark, rng, i, isCollapsed = selection.isCollapsed();
 
 			/**
 			 * Moves the start to the first suitable text node.
@@ -226,6 +226,11 @@
 						if (format.selector) {
 							// Look for matching formats
 							each(formatList, function(format) {
+								// Check collapsed state if it exists
+								if ('collapsed' in format && format.collapsed !== isCollapsed) {
+									return;
+								}
+
 								if (dom.is(node, format.selector) && !isCaretNode(node)) {
 									setElementFormat(node, format);
 									found = true;
@@ -400,7 +405,7 @@
 
 					applyRngStyle(expandRng(rng, formatList));
 				} else {
-					if (!selection.isCollapsed() || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
+					if (!isCollapsed || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
@@ -1055,7 +1060,7 @@
 			// Expand start/end container to matching selector
 			if (format[0].selector && format[0].expand !== FALSE && !format[0].inline) {
 				function findSelectorEndPoint(container, sibling_name) {
-					var parents, i, y;
+					var parents, i, y, curFormat;
 
 					if (container.nodeType == 3 && container.nodeValue.length == 0 && container[sibling_name])
 						container = container[sibling_name];
@@ -1063,7 +1068,13 @@
 					parents = getParents(container);
 					for (i = 0; i < parents.length; i++) {
 						for (y = 0; y < format.length; y++) {
-							if (dom.is(parents[i], format[y].selector))
+							curFormat = format[y];
+
+							// If collapsed state is set then skip formats that doesn't match that
+							if ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed)
+								continue;
+
+							if (dom.is(parents[i], curFormat.selector))
 								return parents[i];
 						}
 					}

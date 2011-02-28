@@ -970,12 +970,12 @@
 			}
 
 			if (c = cm.get('anchor')) {
-				c.setActive(!!p && p.name);
+				c.setActive(!co && !!p && p.name);
 			}
 
 			p = getParent('IMG');
 			if (c = cm.get('image'))
-				c.setActive(!!p && n.className.indexOf('mceItem') == -1);
+				c.setActive(!co && !!p && n.className.indexOf('mceItem') == -1);
 
 			if (c = cm.get('styleselect')) {
 				t._importClasses();
