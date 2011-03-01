@@ -58,8 +58,10 @@ var named = {
 	'#F5DEB3':'Wheat','#FFFFFF':'White','#F5F5F5':'White Smoke','#FFFF00':'Yellow','#9ACD32':'Yellow Green'
 };
 
+var namedLookup = {};
+
 function init() {
-	var inputColor = convertRGBToHex(tinyMCEPopup.getWindowArg('input_color'));
+	var inputColor = convertRGBToHex(tinyMCEPopup.getWindowArg('input_color')), key, value;
 
 	tinyMCEPopup.resizeToInnerSize();
 
@@ -75,6 +77,45 @@ function init() {
 		if (col)
 			updateLight(col.r, col.g, col.b);
 	}
+	
+	for (key in named) {
+		value = named[key];
+		namedLookup[value.replace(/\s+/, '').toLowerCase()] = key.replace(/#/, '').toLowerCase();
+	}
+}
+
+function toHexColor(color) {
+	var matches, red, green, blue, toInt = parseInt;
+
+	function hex(value) {
+		value = parseInt(value).toString(16);
+
+		return value.length > 1 ? value : '0' + value; // Padd with leading zero
+	};
+
+	color = color.replace(/[\s#]+/g, '').toLowerCase();
+	color = namedLookup[color] || color;
+	matches = /^rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)|([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})|([a-f0-9])([a-f0-9])([a-f0-9])$/.exec(color);
+
+	if (matches) {
+		if (matches[1]) {
+			red = toInt(matches[1]);
+			green = toInt(matches[2]);
+			blue = toInt(matches[3]);
+		} else if (matches[4]) {
+			red = toInt(matches[4], 16);
+			green = toInt(matches[5], 16);
+			blue = toInt(matches[6], 16);
+		} else if (matches[7]) {
+			red = toInt(matches[7] + matches[7], 16);
+			green = toInt(matches[8] + matches[8], 16);
+			blue = toInt(matches[9] + matches[9], 16);
+		}
+
+		return '#' + hex(red) + hex(green) + hex(blue);
+	}
+
+	return '';
 }
 
 function insertAction() {
@@ -83,7 +124,7 @@ function insertAction() {
 	tinyMCEPopup.restoreSelection();
 
 	if (f)
-		f(color);
+		f(toHexColor(color));
 
 	tinyMCEPopup.close();
 }
