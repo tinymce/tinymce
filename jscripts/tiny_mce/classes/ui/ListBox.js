@@ -255,7 +255,6 @@
 					t.menu.hideMenu();
 				}
 			}
-			t.focus();
 		},
 
 		/**
@@ -273,7 +272,10 @@
 				max_height : 150
 			});
 
-			m.onHideMenu.add(t.hideMenu, t);
+			m.onHideMenu.add(function() {
+				t.hideMenu();
+				t.focus();
+			});
 
 			m.add({
 				title : t.settings.title,

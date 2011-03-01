@@ -1,3 +1,4 @@
+	Included moxiecode fix from 3.4 - Fixed bug where the editor would scroll to the toolbar when clicked due to a call to focus in ListBox.
 	Added support for ARIA Accessibility.
 	Fixed issue where styles were not included when using the full page plugin.
 	Fixed issue where deleting some paragraphs on IE would cause an exception.

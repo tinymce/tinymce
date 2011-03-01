@@ -4,6 +4,7 @@
  * Copyright 2010, Moxiecode Systems AB
  * Released under LGPL License.
  *
+ *
  * License: http://tinymce.moxiecode.com/license
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
@@ -62,7 +63,8 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	},
 	
 	destroy : function() {
-		this.parent();
+		var t = this;
+		t.parent();
 		t.keyNav.destroy();
 		Event.clear(t.id);
 	}
