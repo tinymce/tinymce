@@ -29,13 +29,14 @@
  * @param {Object} settings Name/value settings object.
  */
 tinymce.html.Writer = function(settings) {
-	var html = [], indent, indentBefore, indentAfter, encode;
+	var html = [], indent, indentBefore, indentAfter, encode, htmlOutput;
 
 	settings = settings || {};
 	indent = settings.indent;
 	indentBefore = tinymce.makeMap(settings.indent_before || '');
 	indentAfter = tinymce.makeMap(settings.indent_after || '');
 	encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
+	htmlOutput = settings.element_format == "html";
 
 	return {
 		/**
@@ -65,9 +66,9 @@ tinymce.html.Writer = function(settings) {
 				}
 			}
 
-			if (!empty) {
+			if (!empty || htmlOutput)
 				html[html.length] = '>';
-			} else
+			else
 				html[html.length] = ' />';
 
 			/*if (indent && indentAfter[name])

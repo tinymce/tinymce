@@ -12,6 +12,7 @@ Version 3.4 (2011-02-xx)
 	Fixed bug where WebKit wouldn't properly handle image selection if it was done left to right.
 	Fixed bug where the formatter would align images when the selection range was collapsed.
 	Fixed bug where the image button would be active when the selection range was collapsed.
+	Fixed bug where the element_format option wasn't used by the new (X)HTML serializer logic.
 	Fixed so the drop menus doesn't get an outline border visible when focused, patch contributed by Ephox.
 	Fixed so the values entered in the color picker are forced to hex values.
 	Removed dialog workaround for IE 9 beta since the RC is now out and people should upgrade.
