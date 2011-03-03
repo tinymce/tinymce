@@ -1,3 +1,4 @@
+	Fixed issue with alt-f10 navigation to toolbar with JAWS12 (removed role=application attribute from the iFrame).
 	Included moxiecode fix from 3.4 - Fixed bug where the editor would scroll to the toolbar when clicked due to a call to focus in ListBox.
 	Added support for ARIA Accessibility.
 	Backported fix for colorpicker color validation.
