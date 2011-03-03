@@ -23,7 +23,7 @@ function getContent() {
 test('apply (inline)', function() {
 	var rng, format;
 
-	expect(37);
+	expect(39);
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -334,6 +334,26 @@ test('apply (inline)', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	equals(getContent(), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
+
+	// Don't merge siblings with whitespace between 1
+	editor.formatter.register('format', {inline : 'b'});
+	editor.getBody().innerHTML = '<p><b>a</b> b</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].lastChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 1');
+
+	// Don't merge siblings with whitespace between 1
+	editor.formatter.register('format', {inline : 'b'});
+	editor.getBody().innerHTML = '<p>a <b>b</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 2');
 
 	// Inline element not merged in exact mode
 	editor.formatter.register('format', {inline : 'span', styles : {color : '#00ff00'}, exact : true});

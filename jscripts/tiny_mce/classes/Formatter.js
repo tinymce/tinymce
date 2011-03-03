@@ -1457,7 +1457,7 @@
 			if (prev && next) {
 				function findElementSibling(node, sibling_name) {
 					for (sibling = node; sibling; sibling = sibling[sibling_name]) {
-						if (sibling.nodeType == 3 && !isWhiteSpaceNode(sibling))
+						if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0)
 							return node;
 
 						if (sibling.nodeType == 1 && !isBookmarkNode(sibling))
