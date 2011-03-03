@@ -16,6 +16,7 @@ Version 3.4 (2011-02-xx)
 	Fixed bug where the table cell/row dialogs would produce empty attributes.
 	Fixed bug where the tfoot wouldn't be added to the top of the table.
 	Fixed bug where the formatter would merge siblings with white space between them.
+	Fixed bug where pasting headers and paragraphs would produce an extra paragraph.
 	Fixed so the drop menus doesn't get an outline border visible when focused, patch contributed by Ephox.
 	Fixed so the values entered in the color picker are forced to hex values.
 	Removed dialog workaround for IE 9 beta since the RC is now out and people should upgrade.
