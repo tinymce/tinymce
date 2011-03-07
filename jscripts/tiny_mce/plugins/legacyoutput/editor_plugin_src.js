@@ -4,8 +4,8 @@
  * Copyright 2009, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://tinymce.moxiecode.com/wiki.php/License
+ * Contributing: http://tinymce.moxiecode.com/develop/contributing.php
  *
  * This plugin will force TinyMCE to produce deprecated legacy output such as font elements, u elements, align
  * attributes and so forth. There are a few cases where these old items might be needed for example in email applications or with Flash

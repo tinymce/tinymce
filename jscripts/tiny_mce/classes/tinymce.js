@@ -4,8 +4,8 @@
  * Copyright 2009, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://tinymce.moxiecode.com/wiki.php/License
+ * Contributing: http://tinymce.moxiecode.com/develop/contributing.php
  */
 
 (function(win) {
