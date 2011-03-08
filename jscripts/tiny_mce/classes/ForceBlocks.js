@@ -176,6 +176,7 @@
 										parent.innerHTML = '\uFEFF';
 
 									selection.select(parent, 1);
+									selection.collapse(true);
 									ed.getDoc().execCommand('Delete', false, null);
 									t._previousFormats = 0;
 								}
