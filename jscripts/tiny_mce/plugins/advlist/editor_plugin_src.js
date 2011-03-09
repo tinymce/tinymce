@@ -74,6 +74,13 @@
 						list = dom.getParent(sel.getNode(), 'ol,ul');
 						if (list) {
 							dom.setStyles(list, format.styles);
+
+							// Set the styles on each li
+							var children = list.getElementsByTagName('li');
+							for (var i = 0; i < children.length; i++){
+								dom.setStyles(children[i], format.styles);
+							}
+
 							list.removeAttribute('data-mce-style');
 						}
 					}

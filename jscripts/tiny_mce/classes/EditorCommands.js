@@ -329,7 +329,7 @@
 					if (caretNode === rootNode) {
 						// Clean up the parent element by parsing and serializing it
 						// This will remove invalid elements/attributes and fix nesting issues
-						dom.setOuterHTML(parent, 
+						dom.setOuterHTML(parent,
 							new tinymce.html.Serializer({}, editor.schema).serialize(
 								new tinymce.html.DomParser({
 									remove_trailing_brs : true
@@ -416,8 +416,25 @@
 						} else
 							dom.setStyle(element, 'paddingLeft', (parseInt(element.style.paddingLeft || 0) + intentValue) + indentUnit);
 					});
-				} else
+				} else {
 					execNativeCommand(command);
+					// Append the parent list's style to each of it's direct children.
+					if (command == 'indent' || command == 'outdent'){
+						each(selection.getSelectedBlocks(), function(element) {
+							var list = element.parentNode;
+							var style = list.style['list-style-type'];
+
+							// Set the styles on each child li
+							if (style !== ''){
+								var children = list.getElementsByTagName('li');
+
+								for (var i = 0; i < children.length; i++){
+									dom.setStyle(children[i], 'list-style-type', style);
+								}
+							}
+						});
+					}
+				}
 			},
 
 			mceRepaint : function() {
@@ -491,7 +508,7 @@
 						editor.dom.remove(link, TRUE);
 				}
 			},
-			
+
 			selectAll : function() {
 				var root = dom.getRoot(), rng = dom.createRng();
 
