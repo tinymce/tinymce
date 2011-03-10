@@ -309,8 +309,13 @@ test('Remove redundant br elements', function() {
 	expect(1);
 
 	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
-	root = parser.parse('<p>a<br></p><p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p><p>a<span data-mce-type="bookmark"></span><br></p>');
-	equals(serializer.serialize(root), '<p>a</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
+	root = parser.parse(
+		'<p>a<br></p>' +
+		'<p>a<br>b<br></p>' +
+		'<p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p>' +
+		'<p>a<span data-mce-type="bookmark"></span><br></p>'
+	);
+	equals(serializer.serialize(root), '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
 });
 </script>
 </head>
