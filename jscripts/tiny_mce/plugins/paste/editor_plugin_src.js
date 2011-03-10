@@ -756,7 +756,7 @@
 					/^\s+|\s+$/g									// Trim the front & back
 				]);
 
-				h = dom.decode(h);
+				h = dom.decode(tinymce.html.Entities.encodeRaw(h));
 
 				// Delete any highlighted text before pasting
 				if (!sel.isCollapsed()) {
