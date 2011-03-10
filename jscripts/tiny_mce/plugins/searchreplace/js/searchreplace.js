@@ -55,16 +55,14 @@ var SearchReplaceDialog = {
 
 		function fix() {
 			// Correct Firefox graphics glitches
+			// TODO: Verify if this is actually needed any more, maybe it was for very old FF versions? 
 			r = se.getRng().cloneRange();
 			ed.getDoc().execCommand('SelectAll', false, null);
 			se.setRng(r);
 		};
 
 		function replace() {
-			if (tinymce.isIE)
-				ed.selection.getRng().duplicate().pasteHTML(rs); // Needs to be duplicated due to selection bug in IE
-			else
-				ed.getDoc().execCommand('InsertHTML', false, rs);
+			ed.selection.setContent(rs); // Needs to be duplicated due to selection bug in IE
 		};
 
 		// IE flags
