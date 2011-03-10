@@ -21,6 +21,7 @@ Version 3.4 (2011-02-xx)
 	Fixed bug where the ColorSplitButton would throw an exception if you clicked out side a color.
 	Fixed bug where IE9 wouldn't properly produce new paragraphs on enter if the current paragraph had formatting.
 	Fixed bug where multiple BR elements at end of block elements where removed.
+	Fixed bug where fullscreen plugin wouldn't correctly display the edit area on IE6 for long pages.
 	Fixed so the drop menus doesn't get an outline border visible when focused, patch contributed by Ephox.
 	Fixed so the values entered in the color picker are forced to hex values.
 	Removed dialog workaround for IE 9 beta since the RC is now out and people should upgrade.
