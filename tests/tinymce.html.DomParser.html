@@ -302,6 +302,16 @@ test('Self closing list elements', function() {
 	root = parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
 	equals(serializer.serialize(root), '<ul><li>1</li><li><strong>2</strong></li><li><em><strong>3</strong></em></li></ul>', 'Split out LI elements in LI elements.');
 });
+
+test('Remove redundant br elements', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	expect(1);
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<p>a<br></p><p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p><p>a<span data-mce-type="bookmark"></span><br></p>');
+	equals(serializer.serialize(root), '<p>a</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
+});
 </script>
 </head>
 <body>

@@ -425,20 +425,56 @@
 			return rootNode;
 		};
 
-		// Remove <br> at end of block elements
+		// Remove <br> at end of block elements Gecko and WebKit injects BR elements to
+		// make it possible to place the caret inside empty blocks. This logic tries to remove
+		// these elements and keep br elements that where intended to be there intact
 		if (settings.remove_trailing_brs) {
 			self.addNodeFilter('br', function(nodes, name) {
-				var i = nodes.length, node, blockElements = schema.getBlockElements(), nonEmptyElements = schema.getNonEmptyElements(), parent;
+				var i, l = nodes.length, node, blockElements = schema.getBlockElements(),
+					nonEmptyElements = schema.getNonEmptyElements(), parent, prev, prevName;
 
-				while (i--) {
+				// Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
+				for (i = 0; i < l; i++) {
 					node = nodes[i];
 					parent = node.parent;
 
 					if (blockElements[node.parent.name] && node === parent.lastChild) {
-						node.remove();
+						// Loop all nodes to the right of the current node and check for other BR elements
+						// excluding bookmarks since they are invisible
+						prev = node.prev;
+						while (prev) {
+							prevName = prev.name;
 
-						if (parent.isEmpty(nonEmptyElements))
-							parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+							// Ignore bookmarks
+							if (prevName !== "span" || prev.attr('data-mce-type') !== 'bookmark') {
+								// Found a non BR element
+								if (prevName !== "br")
+									break;
+	
+								// Found another br it's a <br><br> structure then don't remove anything
+								if (prevName === 'br') {
+									node = null;
+									break;
+								}
+							}
+
+							prev = prev.prev;
+						}
+
+						if (node) {
+							node.remove();
+
+							// Is the parent to be considered empty after we removed the BR
+							if (parent.isEmpty(nonEmptyElements)) {
+								elementRule = schema.getElementRule(parent.name);
+
+								// Remove or padd the element depending on schema rule
+								if (elementRule.removeEmpty)
+									parent.remove();
+								else if (elementRule.paddEmpty) 
+									parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+							}
+						}
 					}
 				}
 			});
