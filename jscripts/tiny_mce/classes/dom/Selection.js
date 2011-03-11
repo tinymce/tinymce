@@ -471,24 +471,25 @@
 						var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
 
 						if (point) {
+							offset = point[0];
+
 							// Find container node
 							for (node = root, i = point.length - 1; i >= 1; i--) {
 								children = node.childNodes;
 
-								if (children.length) {
-									node = children[point[i]];
+								if (point[i] > children.length - 1)
+									return;
 
-									// Node position not found
-									if (!node)
-										return;
-								}
+								node = children[point[i]];
 							}
 
-							// Text index not found
-							if (node.nodeType === 3 && point[0] > node.nodeValue.length - 1)
-								return;
-							else if (node.nodeType === 1 && point[0] > node.childNodes.length)
-								return;
+							// Move text offset to best suitable location
+							if (node.nodeType === 3)
+								offset = Math.min(point[0], node.nodeValue.length - 1);
+
+							// Move element offset to best suitable location
+							if (node.nodeType === 1)
+								offset = Math.min(point[0], node.childNodes.length);
 
 							// Set offset within container node
 							if (start)
@@ -722,7 +723,7 @@
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (tinymce.isIE && r.setStart && doc.selection.createRange().item) {
+			if (tinymce.isIE && r && r.setStart && doc.selection.createRange().item) {
 				elm = doc.selection.createRange().item(0);
 				r = doc.createRange();
 				r.setStartBefore(elm);
@@ -745,6 +746,7 @@
 					t.explicitRange = null;
 				}
 			}
+
 			return r;
 		},
 

@@ -568,5 +568,21 @@
 		DOM.remove('test');
 	});
 
+	test('nodeIndex', 5, function() {
+		DOM.add(document.body, 'div', {id : 'test'}, 'abc<b>abc</b>abc');
+
+		equals(DOM.nodeIndex(DOM.get('test').childNodes[0]), 0, 'Index of first child.');
+		equals(DOM.nodeIndex(DOM.get('test').childNodes[1]), 1, 'Index of second child.');
+		equals(DOM.nodeIndex(DOM.get('test').childNodes[2]), 2, 'Index of third child.');
+
+		DOM.get('test').insertBefore(DOM.doc.createTextNode('a'), DOM.get('test').firstChild);
+		DOM.get('test').insertBefore(DOM.doc.createTextNode('b'), DOM.get('test').firstChild);
+
+		equals(DOM.nodeIndex(DOM.get('test').lastChild), 4, 'Index of last child with fragmented DOM.');
+		equals(DOM.nodeIndex(DOM.get('test').lastChild, true), 2, 'Normalized index of last child with fragmented DOM.');
+
+		DOM.remove('test');
+	});
+
 	DOM.remove('test');
 })();

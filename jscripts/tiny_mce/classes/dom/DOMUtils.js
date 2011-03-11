@@ -1602,7 +1602,7 @@
 						// ensure that text nodes that have been removed are handled correctly in Internet Explorer.
 						// (the nodeValue attribute will not exist, and will error here).
 						nodeValueExists = false;
-						try {nodeValueExists == node.nodeValue.length} catch (c) {}
+						try {nodeValueExists = node.nodeValue.length} catch (c) {}
 						if (nodeType == lastNodeType || !nodeValueExists)
 							continue;
 					}
