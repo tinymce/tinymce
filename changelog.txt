@@ -1,6 +1,10 @@
 Version 3.4.1 (2011-xx-x)
 	Fixed bug where selection locations on undo/redo didn't work correctly on specific contents.
 	Fixed bug where an exception would be trown on IE when loading TinyMCE inside an iframe.
+	Fixed bug where some ascii numeric entities wasn't properly decoded.
+	Fixed bug where some non western language codes wasn't properly decoded/encoded.
+	Fixed bug where undo levels wasn't created when deleting contents on IE.
+	Fixed bug where the initial undo levels bookmark wasn't updated correctly.
 Version 3.4 (2011-03-10)
 	Added accessibility example with various accessibility options contributed by Ephox.
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.

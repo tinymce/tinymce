@@ -3155,6 +3155,11 @@
 						if (rng.parentElement) {
 							parent = rng.parentElement();
 
+							if (!t.undoManager.typing) {
+								t.undoManager.typing = true;
+								t.undoManager.add();
+							}
+
 							// Select next word when ctrl key is used in combo with delete
 							if (e.ctrlKey) {
 								rng.moveEnd('word', 1);
