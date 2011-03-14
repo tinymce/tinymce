@@ -5,6 +5,7 @@ Version 3.4.1 (2011-xx-x)
 	Fixed bug where some non western language codes wasn't properly decoded/encoded.
 	Fixed bug where undo levels wasn't created when deleting contents on IE.
 	Fixed bug where the initial undo levels bookmark wasn't updated correctly.
+	Fixed bug where search/replace wouldn't be scoped to editor instances on IE8.
 Version 3.4 (2011-03-10)
 	Added accessibility example with various accessibility options contributed by Ephox.
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.
