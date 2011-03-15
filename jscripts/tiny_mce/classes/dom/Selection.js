@@ -485,7 +485,7 @@
 
 							// Move text offset to best suitable location
 							if (node.nodeType === 3)
-								offset = Math.min(point[0], node.nodeValue.length - 1);
+								offset = Math.min(point[0], node.nodeValue.length);
 
 							// Move element offset to best suitable location
 							if (node.nodeType === 1)
@@ -493,9 +493,9 @@
 
 							// Set offset within container node
 							if (start)
-								rng.setStart(node, point[0]);
+								rng.setStart(node, offset);
 							else
-								rng.setEnd(node, point[0]);
+								rng.setEnd(node, offset);
 						}
 
 						return true;

@@ -3213,38 +3213,42 @@
 			// Bug fix for FireFox keeping styles from end of selection instead of start.
 			if (tinymce.isGecko) {
 				function getAttributeApplyFunction() {
-					t.undoManager.typing = false;
-					t.undoManager.add();
 					var template = t.dom.getAttribs(t.selection.getStart().cloneNode(false));
+
 					return function() {
 						var target = t.selection.getStart();
 						t.dom.removeAllAttribs(target);
 						each(template, function(attr) {
 							target.setAttributeNode(attr.cloneNode(true));
 						});
-						t.undoManager.typing = false;
-						t.undoManager.add();
 					};
 				}
-				
+
 				function isSelectionAcrossElements() {
 					var s = t.selection;
+
 					return !s.isCollapsed() && s.getStart() != s.getEnd();
 				}
-				
+
 				t.onKeyPress.add(function(ed, e) {
+					var applyAttributes;
+
 					if ((e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
-						var applyAttributes = getAttributeApplyFunction();
+						applyAttributes = getAttributeApplyFunction();
 						t.getDoc().execCommand('delete', false, null);
 						applyAttributes();
+
 						return Event.cancel(e);
 					}
 				});
-				
+
 				t.dom.bind(t.getDoc(), 'cut', function(e) {
+					var applyAttributes;
+
 					if (isSelectionAcrossElements()) {
-						var applyAttributes = getAttributeApplyFunction();
+						applyAttributes = getAttributeApplyFunction();
 						t.onKeyUp.addToTop(Event.cancel, Event);
+
 						setTimeout(function() {
 							applyAttributes();
 							t.onKeyUp.remove(Event.cancel, Event);
