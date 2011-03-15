@@ -38,7 +38,7 @@ asyncTest('Undo added when typing character', function() {
 });
 
 asyncTest('Undo added when typing enter', function() {
-	assertUndoEnabledWhenTyping('\n', '<p>Cont</p>\n<p>ent</p>');
+	assertUndoEnabledWhenTyping('\n', '<p>Cont</p><p>ent</p>');
 });
 
 asyncTest('Forward delete triggers undo in IE', function() {
