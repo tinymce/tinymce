@@ -32,7 +32,7 @@
 	 * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
 	 */
 	tinymce.html.DomParser = function(settings, schema) {
-		var self = this, nodeFilters = {}, attributeFilters = [];
+		var self = this, nodeFilters = {}, attributeFilters = [], matchedNodes = {}, matchedAttributes = {};
 
 		settings = settings || {};
 		settings.root_name = settings.root_name || 'body';
@@ -63,12 +63,12 @@
 					parents.reverse();
 
 					// Clone the related parent and insert that after the moved node
-					newParent = currentNode = parents[0].clone();
+					newParent = currentNode = self.filterNode(parents[0].clone());
 
 					// Start cloning and moving children on the left side of the target node
 					for (i = 0; i < parents.length - 1; i++) {
 						if (schema.isValidChild(currentNode.name, parents[i].name)) {
-							tempNode = parents[i].clone();
+							tempNode = self.filterNode(parents[i].clone());
 							currentNode.append(tempNode);
 						} else
 							tempNode = currentNode;
@@ -107,13 +107,13 @@
 							continue;
 						}
 
-						node.wrap(new Node('ul', 1));
+						node.wrap(self.filterNode(new Node('ul', 1)));
 						continue;
 					}
 
 					// Try wrapping the element in a DIV
 					if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-						node.wrap(new Node('div', 1));
+						node.wrap(self.filterNode(new Node('div', 1)));
 					} else {
 						// We failed wrapping it, then remove or unwrap it
 						if (node.name === 'style' || node.name === 'script')
@@ -123,7 +123,44 @@
 					}
 				}
 			}
-		}
+		};
+
+		/**
+		 * Runs the specified node though the element and attributes filters.
+		 *
+		 * @param {tinymce.html.Node} Node the node to run filters on.
+		 * @return {tinymce.html.Node} The passed in node.
+		 */
+		self.filterNode = function(node) {
+			var i, name, list;
+
+			// Run element filters
+			if (name in nodeFilters) {
+				list = matchedNodes[name];
+
+				if (list)
+					list.push(node);
+				else
+					matchedNodes[name] = [node];
+			}
+
+			// Run attribute filters
+			i = attributeFilters.length;
+			while (i--) {
+				name = attributeFilters[i].name;
+
+				if (name in node.attributes.map) {
+					list = matchedAttributes[name];
+
+					if (list)
+						list.push(node);
+					else
+						matchedAttributes[name] = [node];
+				}
+			}
+
+			return node;
+		};
 
 		/**
 		 * Adds a node filter function to the parser, the parser will collect the specified nodes by name
@@ -190,11 +227,13 @@
 		 * @return {tinymce.html.Node} Root node containing the tree.
 		 */
 		self.parse = function(html, args) {
-			var parser, rootNode, node, nodes, matchedNodes = {}, matchedAttributes = {},
-				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
+			var parser, rootNode, node, nodes, i, l, fi, fl, list, name,
+				blockElements, startWhiteSpaceRegExp, invalidChildren = [],
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements;
 
 			args = args || {};
+			matchedNodes = {};
+			matchedAttributes = {};
 			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,title,meta,param'), schema.getBlockElements());
 			nonEmptyElements = schema.getNonEmptyElements();
 			children = schema.children;
@@ -217,7 +256,7 @@
 				}
 
 				return node;
-			}
+			};
 
 			parser = new tinymce.html.SaxParser({
 				validate : settings.validate,
