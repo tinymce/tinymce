@@ -75,13 +75,12 @@
 				// Add undo level if needed
 				lastLevel = data[index];
 				if (lastLevel) {
-					// Update bookmark on initial level
-					if (index === 0)
-						lastLevel.bookmark = editor.selection.getBookmark(2, true);
-
 					if (lastLevel.content == level.content) {
-						if (index > 0 || data.length == 1)
-							return null;
+						// Update bookmark on initial level
+						if (index == 0)
+							lastLevel.bookmark = editor.selection.getBookmark(2, true);
+
+						return null;
 					}
 				}
 

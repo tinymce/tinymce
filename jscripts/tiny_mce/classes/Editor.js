@@ -1071,10 +1071,13 @@
 			t.controlManager = new tinymce.ControlManager(t);
 
 			if (s.custom_undo_redo) {
-				t.onExecCommand.add(function(ed, cmd, ui, val, a) {
+				function addCommandUndo(ed, cmd, ui, val, a) {
 					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
 						t.undoManager.add();
-				});
+				};
+
+				t.onBeforeExecCommand.add(addCommandUndo); // Updates bookmark of initial level
+				t.onExecCommand.add(addCommandUndo);
 			}
 
 			t.onExecCommand.add(function(ed, c) {
