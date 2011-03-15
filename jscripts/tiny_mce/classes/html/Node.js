@@ -51,6 +51,7 @@
 	 * someRoot.append(node);
 	 *
 	 * @class tinymce.html.Node
+	 * @version 3.4
 	 */
 
 	/**
@@ -104,27 +105,40 @@
 		 *
 		 * @method attr
 		 * @param {String} name Attribute name to set or get.
-		 * @return {String} value Optional value to set.
+		 * @param {String} value Optional value to set.
+		 * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
 		 */
 		attr : function(name, value) {
 			var self = this, attrs, i, undef;
 
+			if (typeof name !== "string") {
+				for (i in name)
+					self.attr(i, name[i]);
+
+				return self;
+			}
+
 			if (attrs = self.attributes) {
 				if (value !== undef) {
-					if (name in attrs.map) {
-						// Remove attribute
-						if (value === null) {
+					// Remove attribute
+					if (value === null) {
+						if (name in attrs.map) {
 							delete attrs.map[name];
 
 							i = attrs.length;
 							while (i--) {
 								if (attrs[i].name === name) {
 									attrs = attrs.splice(i, 1);
-									return;
+									return self;
 								}
 							}
 						}
 
+						return self;
+					}
+
+					// Set attribute
+					if (name in attrs.map) {
 						// Set attribute
 						i = attrs.length;
 						while (i--) {
@@ -137,6 +151,8 @@
 						attrs.push({name: name, value: value});
 
 					attrs.map[name] = value;
+
+					return self;
 				} else {
 					return attrs.map[name];
 				}
@@ -175,9 +191,26 @@
 			}
 
 			clone.value = self.value;
-			clone.empty = self.empty;
+			clone.shortEnded = self.shortEnded;
 
 			return clone;
+		},
+
+		/**
+		 * Wraps the node in in another node.
+		 *
+		 * @example
+		 * node.wrap(wrapperNode);
+		 *
+		 * @method wrap
+		 */
+		wrap : function(wrapper) {
+			var self = this;
+
+			self.parent.insert(wrapper, self);
+			wrapper.append(self);
+
+			return self;
 		},
 
 		/**
@@ -207,6 +240,7 @@
 		 * node.remove();
 		 *
 		 * @method remove
+		 * @return {tinymce.html.Node} Current node that got removed.
 		 */
 		remove : function() {
 			var self = this, parent = self.parent, next = self.next, prev = self.prev;
@@ -335,7 +369,23 @@
 		 * @return {tinymce.html.Node} The current node that got cleared.
 		 */
 		empty : function() {
-			var self = this;
+			var self = this, nodes, i, node;
+
+			// Remove all children
+			if (self.firstChild) {
+				nodes = [];
+
+				// Collect the children
+				for (node = self.firstChild; node; node = walk(node, self))
+					nodes.push(node);
+
+				// Remove the children
+				i = nodes.length;
+				while (i--) {
+					node = nodes[i];
+					node.parent = node.firstChild = node.lastChild = node.next = node.prev = null;
+				}
+			}
 
 			self.firstChild = self.lastChild = null;
 
@@ -352,26 +402,31 @@
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty : function(elements) {
-			var self = this, node = self, i;
+			var self = this, node = self.firstChild, i;
 
-			do {
-				if (node.type === 1) {
-					// Keep empty elements like <img />
-					if (elements[node.name])
-						return false;
+			if (node) {
+				do {
+					if (node.type === 1) {
+						if (node.attributes.map['data-mce-bogus'])
+							continue;
 
-					// Keep elements with data attributes
-					i = node.attributes.length;
-					while (i--) {
-						if (node.attributes[i].name.indexOf('data-') === 0)
+						// Keep empty elements like <img />
+						if (elements[node.name])
 							return false;
-					}
-				}
 
-				// Keep non whitespace text nodes
-				if ((node.type === 3 && !whiteSpaceRegExp.test(node.value)))
-					return false;
-			} while (node = walk(node, self));
+						// Keep elements with data attributes
+						i = node.attributes.length;
+						while (i--) {
+							if (node.attributes[i].name.indexOf('data-') === 0)
+								return false;
+						}
+					}
+
+					// Keep non whitespace text nodes
+					if ((node.type === 3 && !whiteSpaceRegExp.test(node.value)))
+						return false;
+				} while (node = walk(node, self));
+			}
 
 			return true;
 		}

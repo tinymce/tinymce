@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Unit tests for tinymce.dom.Selection</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
@@ -205,7 +206,7 @@ test('getBookmark/setBookmark (simple)', function() {
 test('getBookmark/setBookmark (non intrusive)', function() {
 	var rng, bookmark;
 
-	expect(8);
+	expect(9);
 
 	// Get non intrusive bookmark simple text selection
 	editor.setContent('text');
@@ -217,6 +218,16 @@ test('getBookmark/setBookmark (non intrusive)', function() {
 	equals(editor.getContent(), 'text', 'Editor contents (text)');
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+
+	// Get non intrusive bookmark simple element selection
+	editor.setContent('<p>text<em>a<strong>b</strong>c</em></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('em')[0], 1);
+	rng.setEnd(editor.dom.select('em')[0], 2);
+	editor.selection.setRng(rng);
+	bookmark = editor.selection.getBookmark(2);
+	editor.selection.moveToBookmark(bookmark);
+	equals(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
 
 	// Get non intrusive bookmark multiple elements text selection
 	editor.setContent('<p>text</p>\n<p>text</p>');
@@ -275,7 +286,7 @@ test('select', function() {
 	// Select complex element
 	editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
 	editor.selection.select(editor.dom.select('table')[0]);
-	equals(editor.selection.getContent(), '<table><tbody><tr>\n<td>text1</td>\n</tr></tbody></table>', 'Select complex element, content');
+	equals(editor.selection.getContent(), '<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>', 'Select complex element, content');
 	equals(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
 
 	// Select contents 1
@@ -325,7 +336,6 @@ tinyMCE.init({
 	elements : "elm1",
 	theme : "advanced",
 	add_unload_trigger : false,
-	apply_source_formatting : 0,
 	fix_list_elements : 0,
 	fix_table_elements : 0,
 	forced_root_block : '',

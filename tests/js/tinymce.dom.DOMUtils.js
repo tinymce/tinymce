@@ -37,25 +37,25 @@
 
 		equals(
 			dom.serializeStyle(dom.parseStyle('background: transparent url(test.gif);')),
-			'background: transparent url(Xtest.gifY);'
+			'background: transparent url(\'Xtest.gifY\');'
 		);
 
 		equals(
 			dom.serializeStyle(dom.parseStyle('background: transparent url(http://www.site.com/test.gif?a=1&b=2);')),
-			'background: transparent url(Xhttp://www.site.com/test.gif?a=1&b=2Y);'
+			'background: transparent url(\'Xhttp://www.site.com/test.gif?a=1&b=2Y\');'
 		);
 
 		dom.setHTML('test', '<span id="test2" style="   margin-left: 1px;    margin-top: 1px;   margin-right: 1px;   margin-bottom: 1px   "></span>');
 		equals(dom.getAttrib('test2', 'style'), 'margin: 1px;');
 
 		dom.setHTML('test', '<span id="test2" style="background-image: url(test.gif);"></span>');
-		equals(dom.getAttrib('test2', 'style'), 'background-image: url(Xtest.gifY);');
+		equals(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xtest.gifY\');');
 
 		dom.get('test').innerHTML = '<span id="test2" style="border: 1px solid #00ff00"></span>';
 		equals(dom.getAttrib('test2', 'style'), tinymce.isIE && !window.getSelection ? 'border: #00ff00 1px solid;' : 'border: 1px solid #00ff00;'); // IE has a separate output
 
 		dom.get('test').innerHTML = '<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>';
-		equals(dom.getAttrib('test2', 'style'), 'background-image: url(Xhttp://www.site.com/test.gifY);');
+		equals(dom.getAttrib('test2', 'style'), 'background-image: url(\'Xhttp://www.site.com/test.gifY\');');
 
 		DOM.remove('test');
 	});
@@ -529,7 +529,7 @@
 		equals(DOM.toHex('   RGB  (  0  , 0  , 255  )  '), '#0000ff');
 	});
 
-	test('getOuterHTML', 3, function() {
+	test('getOuterHTML', 4, function() {
 		DOM.add(document.body, 'div', {id : 'test'});
 
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -542,6 +542,9 @@
 		DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
 		DOM.setOuterHTML('test2', '<div id="test2">123</div><div id="test3">abc</div>');
 		equals(tinymce.trim(DOM.get('test').innerHTML).toLowerCase().replace(/>\s+</g, '><').replace(/\"/g, ''), '<div id=test2>123</div><div id=test3>abc</div>');
+
+		DOM.setHTML('test', 'test');
+		equals(tinymce.trim(DOM.getOuterHTML(DOM.get('test').firstChild)), 'test');
 
 		DOM.remove('test');
 	});
@@ -561,6 +564,22 @@
 
 		DOM.split(parent, point);
 		equals(DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''), '<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>');
+
+		DOM.remove('test');
+	});
+
+	test('nodeIndex', 5, function() {
+		DOM.add(document.body, 'div', {id : 'test'}, 'abc<b>abc</b>abc');
+
+		equals(DOM.nodeIndex(DOM.get('test').childNodes[0]), 0, 'Index of first child.');
+		equals(DOM.nodeIndex(DOM.get('test').childNodes[1]), 1, 'Index of second child.');
+		equals(DOM.nodeIndex(DOM.get('test').childNodes[2]), 2, 'Index of third child.');
+
+		DOM.get('test').insertBefore(DOM.doc.createTextNode('a'), DOM.get('test').firstChild);
+		DOM.get('test').insertBefore(DOM.doc.createTextNode('b'), DOM.get('test').firstChild);
+
+		equals(DOM.nodeIndex(DOM.get('test').lastChild), 4, 'Index of last child with fragmented DOM.');
+		equals(DOM.nodeIndex(DOM.get('test').lastChild, true), 2, 'Normalized index of last child with fragmented DOM.');
 
 		DOM.remove('test');
 	});

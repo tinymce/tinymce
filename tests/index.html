@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>TinyMCE Unit Tests</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<link rel="stylesheet" href="qunit/qunit.css" type="text/css"/>
 	<style type="text/css">
 	ol { font-family: 'trebuchet ms', verdana, arial; }
@@ -35,6 +36,9 @@
 	</style>
 	<script type="text/javascript" src="qunit/runner.js"></script>
 	<script type="text/javascript">
+		// Focus the browser
+		top.focus();
+
 		// Init QUnitRunner
 		QUnitRunner.init({
 			columns: [
@@ -47,11 +51,12 @@
 					]},
 
 					{title: 'Plugins tests', tests: [
-						// {title: 'Media plugin', url: 'media.html'},
+						{title: 'Media plugin', url: 'media.html'},
 						{title: 'Paste plugin', url: 'paste.html'},
 						{title: 'jQuery plugin', url: 'jquery_plugin.html'},
 						{title: 'Autolink plugin', url: 'autolink.html'},
 						{title: 'Wordcount plugin', url: 'wordcount.html'}
+						{title: 'Fullpage plugin', url: 'fullpage.html'}
 					]},
 
 					{title: 'tinymce.dom', tests: [
@@ -62,10 +67,16 @@
 						{title: 'DOMUtils', url: 'tinymce.dom.DOMUtils.html'},
 						{title: 'DOMUtils (jQuery)', url: 'tinymce.dom.DOMUtils_jquery.html'},
 						{title: 'EventUtils', url: 'tinymce.dom.EventUtils.html'}
+					]},
+
+					{title: 'tinymce', tests: [
+						{title: 'UndoManager', url: 'tinymce.UndoManager.html'},
+						{title: 'EditorCommands', url: 'tinymce.EditorCommands.html'}
 					]}
 				], [
 					{title: 'tinymce.html', tests: [
 						{title: 'Entities', url: 'tinymce.html.Entities.html'},
+						{title: 'Styles', url: 'tinymce.html.Styles.html'},
 						{title: 'Schema', url: 'tinymce.html.Schema.html'},
 						{title: 'SaxParser', url: 'tinymce.html.SaxParser.html'},
 						{title: 'Node', url: 'tinymce.html.Node.html'},
@@ -85,13 +96,16 @@
 						{title: 'Dispatcher', url: 'tinymce.util.Dispatcher.html'},
 						{title: 'Cookie', url: 'tinymce.util.Cookie.html'},
 						{title: 'JSON', url: 'tinymce.util.JSON.html'}
+						{title: 'XHR', url: 'tinymce.util.XHR.html'},
+						{title: 'JSONRequest', url: 'tinymce.util.JSONRequest.html'}
 					]},
 
 					{title: 'List tests', tests: [
 	                    {title: 'Applying lists', url: 'lists_applying.html'},
 	                    {title: 'Indenting lists', url: 'lists_indenting.html'},
 	                    {title: 'Forced BRs', url: 'lists_forced_brs.html'}
-	                ]}
+						{title: 'JSON', url: 'tinymce.util.JSON.html'},
+					]}
 				]
 			]
 		});

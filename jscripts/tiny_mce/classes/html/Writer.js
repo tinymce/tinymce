@@ -18,6 +18,7 @@
  * console.log(writer.getContent());
  *
  * @class tinymce.html.Writer
+ * @version 3.4
  */
 
 /**
@@ -28,13 +29,14 @@
  * @param {Object} settings Name/value settings object.
  */
 tinymce.html.Writer = function(settings) {
-	var html = [], indent, indentBefore, indentAfter, encode;
+	var html = [], indent, indentBefore, indentAfter, encode, htmlOutput;
 
 	settings = settings || {};
 	indent = settings.indent;
 	indentBefore = tinymce.makeMap(settings.indent_before || '');
 	indentAfter = tinymce.makeMap(settings.indent_after || '');
 	encode = tinymce.html.Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
+	htmlOutput = settings.element_format == "html";
 
 	return {
 		/**
@@ -64,9 +66,9 @@ tinymce.html.Writer = function(settings) {
 				}
 			}
 
-			if (!empty) {
+			if (!empty || htmlOutput)
 				html[html.length] = '>';
-			} else
+			else
 				html[html.length] = ' />';
 
 			/*if (indent && indentAfter[name])
@@ -135,21 +137,14 @@ tinymce.html.Writer = function(settings) {
 		 * Writes a PI node such as <?xml attr="value" ?>.
 		 *
 		 * @method pi
-		 * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
+		 * @param {String} name Name of the pi.
+		 * @param {String} text String to write out inside the pi.
 		 */
-		pi: function(attrs) {
-			var i, l;
-
-			html.push('<?xml');
-
-			if (attrs) {
-				for (i = 0, l = attrs.length; i < l; i++) {
-					attr = attrs[i];
-					html.push(' ', attr.name, '="', encode(attr.value, true), '"');
-				}
-			}
-
-			html.push('?>');
+		pi: function(name, text) {
+			if (text)
+				html.push('<?', name, ' ', text, '?>');
+			else
+				html.push('<?', name, '?>');
 		},
 
 		/**

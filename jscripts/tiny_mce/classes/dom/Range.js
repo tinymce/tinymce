@@ -501,7 +501,7 @@
 				frag.appendChild(n);
 
 			startIdx = nodeIndex(startAncestor);
-			++startIdx;  // Because we already traversed it....
+			++startIdx; // Because we already traversed it
 
 			cnt = t[END_OFFSET] - startIdx;
 			n = startAncestor.nextSibling;

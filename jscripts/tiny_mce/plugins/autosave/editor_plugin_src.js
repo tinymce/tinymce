@@ -257,15 +257,24 @@
 
 								userDataElement.setAttribute(key, value);
 								userDataElement.expires = self.getExpDate();
-								userDataElement.save("TinyMCE");
+
+								try {
+									userDataElement.save("TinyMCE");
+								} catch (e) {
+									// Ignore, saving might fail if "Userdata Persistence" is disabled in IE
+								}
 							},
 
 							getItem : function(key) {
 								var userDataElement = ed.getElement();
 
-								userDataElement.load("TinyMCE");
-
-								return userDataElement.getAttribute(key);
+								try {
+									userDataElement.load("TinyMCE");
+									return userDataElement.getAttribute(key);
+								} catch (e) {
+									// Ignore, loading might fail if "Userdata Persistence" is disabled in IE
+									return null;
+								}
 							},
 
 							removeItem : function(key) {

@@ -17,6 +17,36 @@
 	 *
 	 * @class tinymce.ui.MenuButton
 	 * @extends tinymce.ui.Control
+	 * @example
+	 * // Creates a new plugin class and a custom menu button
+	 * tinymce.create('tinymce.plugins.ExamplePlugin', {
+	 *     createControl: function(n, cm) {
+	 *         switch (n) {
+	 *             case 'mymenubutton':
+	 *                 var c = cm.createSplitButton('mysplitbutton', {
+	 *                     title : 'My menu button',
+	 *                     image : 'some.gif'
+	 *                 });
+	 * 
+	 *                 c.onRenderMenu.add(function(c, m) {
+	 *                     m.add({title : 'Some title', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
+	 * 
+	 *                     m.add({title : 'Some item 1', onclick : function() {
+	 *                         alert('Some item 1 was clicked.');
+	 *                     }});
+	 * 
+	 *                     m.add({title : 'Some item 2', onclick : function() {
+	 *                         alert('Some item 2 was clicked.');
+	 *                     }});
+	 *               });
+	 * 
+	 *               // Return the new menubutton instance
+	 *               return c;
+	 *         }
+	 * 
+	 *         return null;
+	 *     }
+	 * });
 	 */
 	tinymce.create('tinymce.ui.MenuButton:tinymce.ui.Button', {
 		/**
@@ -26,9 +56,10 @@
 		 * @method MenuButton
 		 * @param {String} id Control id for the split button.
 		 * @param {Object} s Optional name/value settings object.
+		 * @param {Editor} ed Optional the editor instance this button is for.
 		 */
-		MenuButton : function(id, s) {
-			this.parent(id, s);
+		MenuButton : function(id, s, ed) {
+			this.parent(id, s, ed);
 
 			/**
 			 * Fires when the menu is rendered.
@@ -90,7 +121,10 @@
 				icons : t.settings.icons
 			});
 
-			m.onHideMenu.add(t.hideMenu, t);
+			m.onHideMenu.add(function() {
+				t.hideMenu();
+				t.focus();
+			});
 
 			t.onRenderMenu.dispatch(t, m);
 			t.menu = m;

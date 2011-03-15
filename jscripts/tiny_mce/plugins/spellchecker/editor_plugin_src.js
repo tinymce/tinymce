@@ -70,10 +70,8 @@
 					t._done();
 			});
 
-			ed.onInit.add(function() {
-				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(url + '/css/content.css');
-			});
+			if (ed.settings.content_css !== false)
+				ed.contentCSS.push(url + '/css/content.css');
 
 			ed.onClick.add(t._showMenu, t);
 			ed.onContextMenu.add(t._showMenu, t);

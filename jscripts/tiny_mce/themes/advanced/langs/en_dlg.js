@@ -10,6 +10,7 @@ about_version:"Version",
 about_loaded:"Loaded plugins",
 anchor_title:"Insert/edit anchor",
 anchor_name:"Anchor name",
+anchor_invalid:"Please specify a valid anchor name.",
 code_title:"HTML Source Editor",
 code_wordwrap:"Word wrap",
 colorpicker_title:"Select a color",
@@ -47,5 +48,7 @@ link_target_blank:"Open link in a new window",
 link_titlefield:"Title",
 link_is_email:"The URL you entered seems to be an email address, do you want to add the required mailto: prefix?",
 link_is_external:"The URL you entered seems to external link, do you want to add the required http:// prefix?",
-link_list:"Link list"
+link_list:"Link list",
+accessibility_help:"Accessibility Help",
+accessibility_usage_title:"General Usage"
 });

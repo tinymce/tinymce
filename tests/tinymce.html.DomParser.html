@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>tinymce.html.DomParser tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
@@ -10,7 +11,7 @@
 <script>
 module("tinymce.html.DomParser");
 
-var schema = new tinymce.html.Schema();
+var schema = new tinymce.html.Schema({valid_elements: '*[class|title]'});
 var serializer = new tinymce.html.Serializer({}, schema);
 
 function countNodes(node, counter) {
@@ -96,7 +97,7 @@ test('Whitespace', function() {
 test('Parse invalid contents', function() {
 	var parser, root;
 
-	expect(20);
+	expect(18);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a"><p class="b">123</p></p>');
@@ -127,11 +128,6 @@ test('Parse invalid contents', function() {
 	root = parser.parse('<p class="a">a<p class="b">b<p class="c">c</p>d</p>e</p>');
 	equals(serializer.serialize(root), '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="b">d</p><p class="a">e</p>', 'P in P in P with text before/after');
 	deepEqual(countNodes(root), {body: 1, p:5, '#text': 5}, 'P in P in P with text before/after (count)');
-
-	parser = new tinymce.html.DomParser({}, schema);
-	root = parser.parse('<li>abc</li>');
-	equals(serializer.serialize(root), 'abc', 'LI inside BODY');
-	deepEqual(countNodes(root), {body: 1, '#text': 1}, 'LI inside BODY (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
@@ -255,6 +251,71 @@ test('addAttributeFilter multiple', function() {
 	equals(results['href'].nodes[0].attr('href'), '1.gif', 'Parser filter result node(0) attr');
 	equals(results['href'].nodes[1].name, 'a', 'Parser filter result node(1) name');
 	equals(results['href'].nodes[1].attr('href'), '2.gif', 'Parser filter result node(1) attr');
+});
+
+test('Fix orphan LI elements', function() {
+	var parser, result;
+
+	expect(3);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<ul><li>a</li></ul><li>b</li>');
+	equals(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to previous sibling UL');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<li>a</li><ul><li>b</li></ul>');
+	equals(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to next sibling UL');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<li>a</li>');
+	equals(serializer.serialize(root), '<ul><li>a</li></ul>', 'LI wrapped in new UL');
+});
+
+test('Remove empty elements', function() {
+	var parser, result, schema = new tinymce.html.Schema({valid_elements: 'span,-a,img'});
+
+	expect(4);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a href="#"></a>');
+	equals(serializer.serialize(root), '<span></span>', 'Remove empty a element');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a href="#"><!-- x --></a>');
+	equals(serializer.serialize(root), '<span></span>', 'Remove empty a element containing comment');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a name="anchor"></a>');
+	equals(serializer.serialize(root), '<span></span><a name="anchor"></a>', 'Leave a with name attribute');
+	
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
+	equals(serializer.serialize(root), '<span></span><a href="#"><img src="about:blank" /></a>', 'Leave elements with img in it');
+});
+
+test('Self closing list elements', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	expect(1);
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
+	equals(serializer.serialize(root), '<ul><li>1</li><li><strong>2</strong></li><li><em><strong>3</strong></em></li></ul>', 'Split out LI elements in LI elements.');
+});
+
+test('Remove redundant br elements', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	expect(1);
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse(
+		'<p>a<br></p>' +
+		'<p>a<br>b<br></p>' +
+		'<p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p>' +
+		'<p>a<span data-mce-type="bookmark"></span><br></p>'
+	);
+	equals(serializer.serialize(root), '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
 });
 </script>
 </head>

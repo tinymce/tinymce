@@ -19,7 +19,7 @@
 	 *  tinymce.activeEditor.formatter.register('mycustomformat', {
 	 *    inline : 'span',
 	 *    styles : {color : '#ff0000'}
-     *  });
+	 *  });
 	 *
 	 *  tinymce.activeEditor.formatter.apply('mycustomformat');
 	 */
@@ -129,7 +129,7 @@
 		 * @param {Node} node Optional node to apply the format to defaults to current selection.
 		 */
 		function apply(name, vars, node) {
-			var formatList = get(name), format = formatList[0], bookmark, rng, i;
+			var formatList = get(name), format = formatList[0], bookmark, rng, i, isCollapsed = selection.isCollapsed();
 
 			/**
 			 * Moves the start to the first suitable text node.
@@ -226,6 +226,11 @@
 						if (format.selector) {
 							// Look for matching formats
 							each(formatList, function(format) {
+								// Check collapsed state if it exists
+								if ('collapsed' in format && format.collapsed !== isCollapsed) {
+									return;
+								}
+
 								if (dom.is(node, format.selector) && !isCaretNode(node)) {
 									setElementFormat(node, format);
 									found = true;
@@ -265,6 +270,30 @@
 					// Process siblings from range
 					each(nodes, process);
 				});
+
+				// Wrap links inside as well, for example color inside a link when the wrapper is around the link
+				if (format.wrap_links === false) {
+					each(newWrappers, function(node) {
+						function process(node) {
+							var i, currentWrapElm, children;
+
+							if (node.nodeName === 'A') {
+								currentWrapElm = wrapElm.cloneNode(FALSE);
+								newWrappers.push(currentWrapElm);
+
+								children = tinymce.grep(node.childNodes);
+								for (i = 0; i < children.length; i++)
+									currentWrapElm.appendChild(children[i]);
+
+								node.appendChild(currentWrapElm);
+							}
+
+							each(tinymce.grep(node.childNodes), process);
+						};
+
+						process(node);
+					});
+				}
 
 				// Cleanup
 				each(newWrappers, function(node) {
@@ -323,6 +352,19 @@
 							// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
 							// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
 							each(dom.select(format.inline, node), function(child) {
+								var parent;
+
+								// When wrap_links is set to false we don't want
+								// to remove the format on children within links
+								if (format.wrap_links === false) {
+									parent = child.parentNode;
+
+									do {
+										if (parent.nodeName === 'A')
+											return;
+									} while (parent = parent.parentNode);
+								}
+
 								removeFormat(format, vars, child, format.exact ? child : null);
 							});
 						});
@@ -363,7 +405,7 @@
 
 					applyRngStyle(expandRng(rng, formatList));
 				} else {
-					if (!selection.isCollapsed() || !format.inline) {
+					if (!isCollapsed || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
@@ -579,7 +621,7 @@
 				return;
 			}
 
-			if (!selection.isCollapsed() || !format.inline) {
+			if (!selection.isCollapsed() || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
 				bookmark = selection.getBookmark();
 				removeRngStyle(selection.getRng(TRUE));
 				selection.moveToBookmark(bookmark);
@@ -1055,7 +1097,7 @@
 			// Expand start/end container to matching selector
 			if (format[0].selector && format[0].expand !== FALSE && !format[0].inline) {
 				function findSelectorEndPoint(container, sibling_name) {
-					var parents, i, y;
+					var parents, i, y, curFormat;
 
 					if (container.nodeType == 3 && container.nodeValue.length == 0 && container[sibling_name])
 						container = container[sibling_name];
@@ -1063,7 +1105,13 @@
 					parents = getParents(container);
 					for (i = 0; i < parents.length; i++) {
 						for (y = 0; y < format.length; y++) {
-							if (dom.is(parents[i], format[y].selector))
+							curFormat = format[y];
+
+							// If collapsed state is set then skip formats that doesn't match that
+							if ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed)
+								continue;
+
+							if (dom.is(parents[i], curFormat.selector))
 								return parents[i];
 						}
 					}
@@ -1446,7 +1494,7 @@
 			if (prev && next) {
 				function findElementSibling(node, sibling_name) {
 					for (sibling = node; sibling; sibling = sibling[sibling_name]) {
-						if (sibling.nodeType == 3 && !isWhiteSpaceNode(sibling))
+						if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0)
 							return node;
 
 						if (sibling.nodeType == 1 && !isBookmarkNode(sibling))

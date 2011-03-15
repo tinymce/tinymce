@@ -60,11 +60,19 @@
 			s['class'] = s['class'] || cs['class'];
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
+			s.keyboard_focus = cs.keyboard_focus;
 			m = new tinymce.ui.DropMenu(s.id || DOM.uniqueId(), s);
 
 			m.onAddItem.add(t.onAddItem.dispatch, t.onAddItem);
 
 			return m;
+		},
+		
+		focus : function() {
+			var t = this;
+			if (t.keyboardNav) {
+				t.keyboardNav.focus();
+			}
 		},
 
 		/**
@@ -202,13 +210,13 @@
 					}
 				});
 			}
+			
+			Event.add(co, 'keydown', t._keyHandler, t);
 
 			t.onShowMenu.dispatch(t);
 
-			if (s.keyboard_focus) {
-				Event.add(co, 'keydown', t._keyHandler, t);
-				DOM.select('a', 'menu_' + t.id)[0].focus(); // Select first link
-				t._focusIdx = 0;
+			if (s.keyboard_focus) { 
+				t._setupKeyboardNav(); 
 			}
 		},
 
@@ -223,6 +231,7 @@
 			if (!t.isMenuVisible)
 				return;
 
+			if (t.keyboardNav) t.keyboardNav.destroy();
 			Event.remove(co, 'mouseover', t.mouseOverFunc);
 			Event.remove(co, 'click', t.mouseClickFunc);
 			Event.remove(co, 'keydown', t._keyHandler);
@@ -292,8 +301,11 @@
 		destroy : function() {
 			var t = this, co = DOM.get('menu_' + t.id);
 
+			if (t.keyboardNav) t.keyboardNav.destroy();
 			Event.remove(co, 'mouseover', t.mouseOverFunc);
+			Event.remove(DOM.select('a', co), 'focus', t.mouseOverFunc);
 			Event.remove(co, 'click', t.mouseClickFunc);
+			Event.remove(co, 'keydown', t._keyHandler);
 
 			if (t.element)
 				t.element.remove();
@@ -310,15 +322,18 @@
 		renderNode : function() {
 			var t = this, s = t.settings, n, tb, co, w;
 
-			w = DOM.create('div', {id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000'});
-			co = DOM.add(w, 'div', {id : 'menu_' + t.id + '_co', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
+			w = DOM.create('div', {role: 'listbox', id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000;outline:0'});
+			if (t.settings.parent) {
+				DOM.setAttrib(w, 'aria-parent', 'menu_' + t.settings.parent.id);
+			}
+			co = DOM.add(w, 'div', {role: 'presentation', id : 'menu_' + t.id + '_co', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
 			if (s.menu_line)
 				DOM.add(co, 'span', {'class' : t.classPrefix + 'Line'});
 
 //			n = DOM.add(co, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenuContainer'});
-			n = DOM.add(co, 'table', {id : 'menu_' + t.id + '_tbl', border : 0, cellPadding : 0, cellSpacing : 0});
+			n = DOM.add(co, 'table', {role: 'presentation', id : 'menu_' + t.id + '_tbl', border : 0, cellPadding : 0, cellSpacing : 0});
 			tb = DOM.add(n, 'tbody');
 
 			each(t.items, function(o) {
@@ -331,33 +346,36 @@
 		},
 
 		// Internal functions
+		_setupKeyboardNav : function(){
+			var contextMenu, menuItems, t=this; 
+			contextMenu = DOM.select('#menu_' + t.id)[0];
+			menuItems = DOM.select('a[role=option]', 'menu_' + t.id);
+			menuItems.splice(0,0,contextMenu);
+			t.keyboardNav = new tinymce.ui.KeyboardNavigation({
+				root: 'menu_' + t.id,
+				items: menuItems,
+				onCancel: function() {
+					t.hideMenu();
+				},
+				enableUpDown: true
+			});
+			contextMenu.focus();
+		},
 
-		_keyHandler : function(e) {
-			var t = this, kc = e.keyCode;
-
-			function focus(d) {
-				var i = t._focusIdx + d, e = DOM.select('a', 'menu_' + t.id)[i];
-
-				if (e) {
-					t._focusIdx = i;
-					e.focus();
-				}
-			};
-
-			switch (kc) {
-				case 38:
-					focus(-1); // Select first link
-					return;
-
-				case 40:
-					focus(1);
-					return;
-
-				case 13:
-					return;
-
-				case 27:
-					return this.hideMenu();
+		_keyHandler : function(evt) {
+			var t = this, e;
+			switch (evt.keyCode) {
+				case 37: // Left
+					if (t.settings.parent) {
+						t.hideMenu();
+						t.settings.parent.focus();
+						Event.cancel(evt);
+					}
+					break;
+				case 39: // Right
+					if (t.mouseOverFunc)
+						t.mouseOverFunc(evt);
+					break;
 			}
 		},
 
@@ -375,8 +393,13 @@
 			}
 
 			n = ro = DOM.add(tb, 'tr', {id : o.id, 'class' : cp + 'Item ' + cp + 'ItemEnabled'});
-			n = it = DOM.add(n, 'td');
-			n = a = DOM.add(n, 'a', {href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
+			n = it = DOM.add(n, s.titleItem ? 'th' : 'td');
+			n = a = DOM.add(n, 'a', {id: o.id + '_aria',  role: s.titleItem ? 'presentation' : 'option', href : 'javascript:;', onclick : "return false;", onmousedown : 'return false;'});
+
+			if (s.parent) {
+				DOM.setAttrib(a, 'aria-haspopup', 'true');
+				DOM.setAttrib(a, 'aria-owns', 'menu_' + o.id);
+			}
 
 			DOM.addClass(it, s['class']);
 //			n = DOM.add(n, 'span', {'class' : 'item'});

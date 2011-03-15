@@ -47,7 +47,7 @@ var defaultFontNames = 'Arial=arial,helvetica,sans-serif;Courier New=courier new
 var defaultFontSizes = '10px,11px,12px,13px,14px,15px,16px';
 
 function init() {
-	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style;
+	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, dir, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style;
 
 	// Setup doctype select box
 	doctypes = ed.getParam("fullpage_doctypes", defaultDocTypes).split(',');
@@ -135,6 +135,11 @@ function init() {
 	xmlEnc = getReItem(/<\?\s*?xml.*?encoding\s*?=\s*?"(.*?)".*?\?>/gi, h, 1);
 	docType = getReItem(/<\!DOCTYPE.*?>/gi, h.replace(/\n/g, ''), 0).replace(/ +/g, ' ');
 	f.langcode.value = getReItem(/lang="(.*?)"/gi, h, 1);
+	
+	// Get direction and inherit it from the html-tag too (according to w3c recommandation)
+	dir = getReItem(/dir\s*=\s*["']([^"']*)["']/i, h, 1);
+	if(doc.body.hasAttribute('dir') && (doc.body.getAttribute('dir') != ''))
+		dir = doc.body.getAttribute('dir');
 
 	// Parse title
 	if (e = doc.getElementsByTagName('title')[0])
@@ -168,7 +173,7 @@ function init() {
 
 	selectByValue(f, 'doctypes', docType, true, true);
 	selectByValue(f, 'docencoding', xmlEnc, true, true);
-	selectByValue(f, 'langdir', doc.body.getAttribute('dir', 2) || '', true, true);
+	selectByValue(f, 'langdir', dir, true, true);
 
 	if (xmlVer != '')
 		el.xml_pi.checked = true;
@@ -279,7 +284,7 @@ function updateAction() {
 	nl = doc.getElementsByTagName('script');
 	for (i=0; i<nl.length; i++) {
 		if (tinyMCEPopup.dom.getAttrib(nl[i], 'data-mce-type') == '')
-			nl[i].setAttribute('data-mce-type', 'text/javascript');
+			nl[i].setAttribute('mce-type', 'text/javascript');
 	}
 
 	// Get primary stylesheet
@@ -319,13 +324,22 @@ function updateAction() {
 	setMeta(head, 'robots', getSelectValue(f, 'metarobots'));
 	setMeta(head, 'Content-Type', getSelectValue(f, 'docencoding'));
 
-	doc.body.dir = getSelectValue(f, 'langdir');
+	setAttr(doc.body, 'dir', getSelectValue(f, 'langdir'));
 	doc.body.style.cssText = f.style.value;
 
-	doc.body.setAttribute('vLink', f.visited_color.value);
-	doc.body.setAttribute('link', f.link_color.value);
-	doc.body.setAttribute('text', f.textcolor.value);
-	doc.body.setAttribute('aLink', f.active_color.value);
+	function setAttr(elm, name, value) {
+		value = "" + value;
+
+		if (value.length > 0)
+			elm.setAttribute(name, value);
+		else
+			elm.removeAttribute(name, value);
+	}
+
+	setAttr(doc.body, 'vLink', f.visited_color.value);
+	setAttr(doc.body, 'link', f.link_color.value);
+	setAttr(doc.body, 'text', f.textcolor.value);
+	setAttr(doc.body, 'aLink', f.active_color.value);
 
 	doc.body.style.fontFamily = getSelectValue(f, 'fontface');
 	doc.body.style.fontSize = getSelectValue(f, 'fontsize');
@@ -344,8 +358,8 @@ function updateAction() {
 		doc.body.style.marginTop = f.topmargin.value + 'px';
 
 	html = doc.getElementsByTagName('html')[0];
-	html.setAttribute('lang', f.langcode.value);
-	html.setAttribute('xml:lang', f.langcode.value);
+	setAttr(html, 'lang', f.langcode.value);
+	setAttr(html, 'xml:lang', f.langcode.value);
 
 	if (f.bgimage.value != '')
 		doc.body.style.backgroundImage = "url('" + f.bgimage.value + "')";
@@ -362,7 +376,14 @@ function updateAction() {
 		h = h.replace(/<head.*?>/, '$&\n' + '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
 	else
 		h = h.replace(/<title>(.*?)<\/title>/, '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
-
+	
+	if(v = f.langcode.value)
+		htmlt = '<html lang="' + v + '" xml:lang="' + v + '">';
+	else 
+		htmlt = '<html>';
+	
+	h = h.replace(/<html.*?>/, htmlt);
+	
 	if ((v = getSelectValue(f, 'doctypes')) != '')
 		h = v + '\n' + h;
 

@@ -230,6 +230,15 @@ module("API", {
 		equals(tinymce.Test5.method1(), 3);
 	});
 
+	test('tinymce - create in namespace', 1, function() {
+		var o, myNS = {};
+
+		tinymce.create('tinymce.Test1', {
+		}, myNS);
+
+		ok(myNS.tinymce.Test1);
+	});
+
 	test('tinymce - walk', 3, function() {
 		var c;
 

@@ -42,7 +42,7 @@
 		},
 
 		open : function(f, p) {
-			var t = this, id, opt = '', ed = t.editor, dw = 0, dh = 0, vp, po, mdf, clf, we, w, u;
+			var t = this, id, opt = '', ed = t.editor, dw = 0, dh = 0, vp, po, mdf, clf, we, w, u, parentWindow;
 
 			f = f || {};
 			p = p || {};
@@ -51,6 +51,11 @@
 			if (!f.inline)
 				return t.parent(f, p);
 
+			parentWindow = t._frontWindow();
+			if (parentWindow && DOM.get(parentWindow.id + '_ifr')) {
+				parentWindow.focussedElement = DOM.get(parentWindow.id + '_ifr').contentWindow.document.activeElement;
+			}
+			
 			// Only store selection if the type is a normal window
 			if (!f.type)
 				t.bookmark = ed.selection.getBookmark(1);
@@ -107,7 +112,7 @@
 
 			// Create DOM objects
 			t._addAll(DOM.doc.body, 
-				['div', {id : id, 'class' : (ed.settings.inlinepopups_skin || 'clearlooks2') + (tinymce.isIE && window.getSelection ? ' ie9' : ''), style : 'width:100px;height:100px'}, 
+				['div', {id : id, role : 'dialog', 'aria-labelledby': f.type ? id + '_content' : id + '_title', 'class' : (ed.settings.inlinepopups_skin || 'clearlooks2') + (tinymce.isIE && window.getSelection ? ' ie9' : ''), style : 'width:100px;height:100px'}, 
 					['div', {id : id + '_wrapper', 'class' : 'mceWrapper' + opt},
 						['div', {id : id + '_top', 'class' : 'mceTop'}, 
 							['div', {'class' : 'mceLeft'}],
@@ -117,9 +122,9 @@
 						],
 
 						['div', {id : id + '_middle', 'class' : 'mceMiddle'}, 
-							['div', {id : id + '_left', 'class' : 'mceLeft'}],
+							['div', {id : id + '_left', 'class' : 'mceLeft', tabindex : '0'}],
 							['span', {id : id + '_content'}],
-							['div', {id : id + '_right', 'class' : 'mceRight'}]
+							['div', {id : id + '_right', 'class' : 'mceRight', tabindex : '0'}]
 						],
 
 						['div', {id : id + '_bottom', 'class' : 'mceBottom'},
@@ -183,6 +188,27 @@
 
 				DOM.add(id + '_middle', 'div', {'class' : 'mceIcon'});
 				DOM.setHTML(id + '_content', f.content.replace('\n', '<br />'));
+				
+				Event.add(id, 'keyup', function(evt) {
+					var VK_ESCAPE = 27;
+					if (evt.keyCode === VK_ESCAPE) {
+						f.button_func(false);
+						return Event.cancel(evt);
+					}
+				});
+
+				Event.add(id, 'keydown', function(evt) {
+					var cancelButton, VK_TAB = 9;
+					if (evt.keyCode === VK_TAB) {
+						cancelButton = DOM.select('a.mceCancel', id + '_wrapper')[0];
+						if (cancelButton && cancelButton !== evt.target) {
+							cancelButton.focus();
+						} else {
+							DOM.get(id + '_ok').focus();
+						}
+						return Event.cancel(evt);
+					}
+				});
 			}
 
 			// Register events
@@ -239,7 +265,23 @@
 					}
 				}
 			});
-
+			
+			// Make sure the tab order loops within the dialog.
+			Event.add([id + '_left', id + '_right'], 'focus', function(evt) {
+				var iframe = DOM.get(id + '_ifr');
+				if (iframe) {
+					var body = iframe.contentWindow.document.body;
+					var focusable = DOM.select(':input:enabled,*[tabindex=0]', body);
+					if (evt.target.id === (id + '_left')) {
+						focusable[focusable.length - 1].focus();
+					} else {
+						focusable[0].focus();
+					}
+				} else {
+					DOM.get(id + '_ok').focus();
+				}
+			});
+			
 			// Add window
 			w = t.windows[id] = {
 				id : id,
@@ -265,19 +307,20 @@
 				});
 
 				DOM.show('mceModalBlocker'); // Reduces flicker in IE
+				DOM.setAttrib(DOM.doc.body, 'aria-hidden', 'true');
 			} else
 				DOM.setStyle('mceModalBlocker', 'z-index', t.zIndex - 1);
 
 			if (tinymce.isIE6 || /Firefox\/2\./.test(navigator.userAgent) || (tinymce.isIE && !DOM.boxModel))
 				DOM.setStyles('mceModalBlocker', {position : 'absolute', left : vp.x, top : vp.y, width : vp.w - 2, height : vp.h - 2});
 
+			DOM.setAttrib(id, 'aria-hidden', 'false');
 			t.focus(id);
 			t._fixIELayout(id, 1);
 
 			// Focus ok button
 			if (DOM.get(id + '_ok'))
 				DOM.get(id + '_ok').focus();
-
 			t.count++;
 
 			return w;
@@ -295,6 +338,14 @@
 				DOM.removeClass(t.lastId, 'mceFocus');
 				DOM.addClass(id, 'mceFocus');
 				t.lastId = id;
+				
+				if (w.focussedElement) {
+					w.focussedElement.focus();
+				} else if (DOM.get(id + '_ok')) {
+					DOM.get(w.id + '_ok').focus();
+				} else if (DOM.get(w.id + '_ifr')) {
+					DOM.get(w.id + '_ifr').focus();
+				}
 			}
 		},
 
@@ -478,7 +529,7 @@
 		},
 
 		close : function(win, id) {
-			var t = this, w, d = DOM.doc, ix = 0, fw, id;
+			var t = this, w, d = DOM.doc, fw, id;
 
 			id = t._findId(id || win);
 
@@ -490,8 +541,11 @@
 
 			t.count--;
 
-			if (t.count == 0)
+			if (t.count == 0) {
 				DOM.remove('mceModalBlocker');
+				DOM.setAttrib(DOM.doc.body, 'aria-hidden', 'false');
+				t.editor.focus();
+			}
 
 			if (w = t.windows[id]) {
 				t.onClose.dispatch(t);
@@ -504,17 +558,24 @@
 				w.element.remove();
 				delete t.windows[id];
 
-				// Find front most window and focus that
-				each (t.windows, function(w) {
-					if (w.zIndex > ix) {
-						fw = w;
-						ix = w.zIndex;
-					}
-				});
+				fw = t._frontWindow();
 
 				if (fw)
 					t.focus(fw.id);
 			}
+		},
+		
+		// Find front most window
+		_frontWindow : function() {
+			var fw, ix = 0;
+			// Find front most window and focus that
+			each (this.windows, function(w) {
+				if (w.zIndex > ix) {
+					fw = w;
+					ix = w.zIndex;
+				}
+			});
+			return fw;
 		},
 
 		setTitle : function(w, ti) {

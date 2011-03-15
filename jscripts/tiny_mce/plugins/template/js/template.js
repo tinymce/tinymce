@@ -42,7 +42,7 @@ var TemplateDialog = {
 
 		if (e) {
 			e.style.height = Math.abs(h) + 'px';
-			e.style.width  = Math.abs(w - 5) + 'px';
+			e.style.width = Math.abs(w - 5) + 'px';
 		}
 	},
 

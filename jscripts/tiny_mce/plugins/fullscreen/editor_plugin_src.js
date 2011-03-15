@@ -13,7 +13,7 @@
 
 	tinymce.create('tinymce.plugins.FullScreenPlugin', {
 		init : function(ed, url) {
-			var t = this, s = {}, vp;
+			var t = this, s = {}, vp, posCss;
 
 			t.editor = ed;
 
@@ -78,7 +78,15 @@
 					if (tinymce.isIE)
 						vp.h -= 1;
 
-					n = DOM.add(DOM.doc.body, 'div', {id : 'mce_fullscreen_container', style : 'position:' + (tinymce.isIE6 || (tinymce.isIE && !DOM.boxModel) ? 'absolute' : 'fixed') + ';top:0;left:0;width:' + vp.w + 'px;height:' + vp.h + 'px;z-index:200000;'});
+					// Use fixed position if it exists
+					if (tinymce.isIE6)
+						posCss = 'absolute;top:' + vp.y;
+					else
+						posCss = 'fixed;top:0';
+
+					n = DOM.add(DOM.doc.body, 'div', {
+						id : 'mce_fullscreen_container', 
+						style : 'position:' + posCss + ';left:0;width:' + vp.w + 'px;height:' + vp.h + 'px;z-index:200000;'});
 					DOM.add(n, 'div', {id : 'mce_fullscreen'});
 
 					tinymce.each(ed.settings, function(v, n) {

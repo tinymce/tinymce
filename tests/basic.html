@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Basic editor functionality tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
@@ -445,7 +446,7 @@ test('WebKit Serialization range bug', function() {
 		var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
 		editor.dom.replace(p, editor.getBody().firstChild);
 
-		equals(editor.getContent(), '<p>123</p>\n<table><tbody><tr>\n<td>X</td>\n</tr></tbody></table>\n<p>456</p>');
+		equals(editor.getContent(), '<p>123</p>\n<table>\n<tbody>\n<tr>\n<td>X</td>\n</tr>\n</tbody>\n</table>\n<p>456</p>');
 	}
 });
 
@@ -458,7 +459,6 @@ tinyMCE.init({
 	valid_styles : {
 		'*' : 'text-align,padding-left,color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
 	},
-	apply_source_formatting : 0,
 	init_instance_callback : function(ed) {
 		editor = ed;
 

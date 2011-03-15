@@ -97,6 +97,12 @@
 				ed.onInit.add(t.forceRoots, t);
 				ed.onSetContent.add(t.forceRoots, t);
 				ed.onBeforeGetContent.add(t.forceRoots, t);
+				ed.onExecCommand.add(function(ed, cmd) {
+					if (cmd == 'mceInsertContent') {
+						t.forceRoots();
+						ed.nodeChanged();
+					}
+				});
 			}
 		},
 
@@ -170,6 +176,7 @@
 										parent.innerHTML = '\uFEFF';
 
 									selection.select(parent, 1);
+									selection.collapse(true);
 									ed.getDoc().execCommand('Delete', false, null);
 									t._previousFormats = 0;
 								}
@@ -615,10 +622,10 @@
 						nn = nn.appendChild(nl[i]);
 
 					// Padd most inner style element
-					nl[0].innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
+					nl[0].innerHTML = isOpera ? '\u00a0' : '<br />'; // Extra space for Opera so that the caret can move there
 					return nl[0]; // Move caret to most inner element
 				} else
-					e.innerHTML = isOpera ? '&nbsp;' : '<br />'; // Extra space for Opera so that the caret can move there
+					e.innerHTML = isOpera ? '\u00a0' : '<br />'; // Extra space for Opera so that the caret can move there
 			};
 
 			// Fill empty afterblook with current style
@@ -651,12 +658,16 @@
 
 			// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
 			y = ed.dom.getPos(aft).y;
-			ch = aft.clientHeight;
+			//ch = aft.clientHeight;
 
 			// Is element within viewport
-			if (y < vp.y || y + ch > vp.y + vp.h) {
+			if (y < vp.y || y + 25 > vp.y + vp.h) {
 				ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + 25); // Needs to be hardcoded to roughly one line of text if a huge text block is broken into two blocks
-				//console.debug('SCROLL!', 'vp.y: ' + vp.y, 'y' + y, 'vp.h' + vp.h, 'clientHeight' + aft.clientHeight, 'yyy: ' + (y < vp.y ? y : y - vp.h + aft.clientHeight));
+
+				/*console.debug(
+					'Element: y=' + y + ', h=' + ch + ', ' +
+					'Viewport: y=' + vp.y + ", h=" + vp.h + ', bottom=' + (vp.y + vp.h)
+				);*/
 			}
 
 			return FALSE;

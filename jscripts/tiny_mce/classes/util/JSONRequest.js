@@ -15,6 +15,28 @@
 	 * This class enables you to use JSON-RPC to call backend methods.
 	 *
 	 * @class tinymce.util.JSONRequest
+	 * @example
+	 * var json = new tinymce.util.JSONRequest({
+	 *     url : 'somebackend.php'
+	 * });
+	 * 
+	 * // Send RPC call 1
+	 * json.send({
+	 *     method : 'someMethod1',
+	 *     params : ['a', 'b'],
+	 *     success : function(result) {
+	 *         console.dir(result);
+	 *     }
+	 * });
+	 * 
+	 * // Send RPC call 2
+	 * json.send({
+	 *     method : 'someMethod2',
+	 *     params : ['a', 'b'],
+	 *     success : function(result) {
+	 *         console.dir(result);
+	 *     }
+	 * });
 	 */
 	tinymce.create('tinymce.util.JSONRequest', {
 		/**
@@ -57,7 +79,8 @@
 			};
 
 			o.error = function(ty, x) {
-				ecb.call(o.error_scope || o.scope, ty, x);
+				if (ecb)
+					ecb.call(o.error_scope || o.scope, ty, x);
 			};
 
 			o.data = JSON.serialize({

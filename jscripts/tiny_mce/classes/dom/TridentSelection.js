@@ -139,7 +139,7 @@
 				offset = start ? startOffset : endOffset;
 				tmpRng = ieRng.duplicate();
 
-				if (container == doc) {
+				if (container == doc || container == doc.documentElement) {
 					container = body;
 					offset = 0;
 				}

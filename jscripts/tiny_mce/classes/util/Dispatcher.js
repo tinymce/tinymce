@@ -13,6 +13,12 @@
  * All internal events inside TinyMCE uses this class.
  *
  * @class tinymce.util.Dispatcher
+ * @example
+ * // Creates a custom event
+ * this.onSomething = new tinymce.util.Dispatcher(this);
+ * 
+ * // Dispatch/fire the event
+ * this.onSomething.dispatch('some string');
  */
 tinymce.create('tinymce.util.Dispatcher', {
 	scope : null,

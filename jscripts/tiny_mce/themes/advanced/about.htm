@@ -9,9 +9,9 @@
 <body id="about" style="display: none">
 		<div class="tabs">
 			<ul>
-				<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#advanced_dlg.about_general}</a></span></li>
-				<li id="help_tab" style="display:none"><span><a href="javascript:mcTabs.displayTab('help_tab','help_panel');" onmousedown="return false;">{#advanced_dlg.about_help}</a></span></li>
-				<li id="plugins_tab"><span><a href="javascript:mcTabs.displayTab('plugins_tab','plugins_panel');" onmousedown="return false;">{#advanced_dlg.about_plugins}</a></span></li>
+				<li id="general_tab" class="current" aria-controls="general_panel"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{#advanced_dlg.about_general}</a></span></li>
+				<li id="help_tab" style="display:none" aria-hidden="true" aria-controls="help_panel"><span><a href="javascript:mcTabs.displayTab('help_tab','help_panel');" onmousedown="return false;">{#advanced_dlg.about_help}</a></span></li>
+				<li id="plugins_tab" aria-controls="plugins_panel"><span><a href="javascript:mcTabs.displayTab('plugins_tab','plugins_panel');" onmousedown="return false;">{#advanced_dlg.about_plugins}</a></span></li>
 			</ul>
 		</div>
 

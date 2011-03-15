@@ -45,6 +45,21 @@ tinyMCEPopup = {
 
 		// Setup on init listeners
 		t.listeners = [];
+
+		/**
+		 * Fires when the popup is initialized.
+		 *
+		 * @event onInit
+		 * @param {tinymce.Editor} editor Editor instance.
+		 * @example
+		 * // Alerts the selected contents when the dialog is loaded
+		 * tinyMCEPopup.onInit.add(function(ed) {
+		 *     alert(ed.selection.getContent());
+		 * });
+		 * 
+		 * // Executes the init method on page load in some object using the SomeObject scope
+		 * tinyMCEPopup.onInit.add(SomeObject.init, SomeObject);
+		 */
 		t.onInit = {
 			add : function(f, s) {
 				t.listeners.push({func : f, scope : s});
@@ -189,7 +204,7 @@ tinyMCEPopup = {
 	requireLangPack : function() {
 		var t = this, u = t.getWindowArg('plugin_url') || t.getWindowArg('theme_url');
 
-		if (u && t.editor.settings.language && t.features.translate_i18n !== false) {
+		if (u && t.editor.settings.language && t.features.translate_i18n !== false && t.editor.settings.language_load !== false) {
 			u += '/langs/' + t.editor.settings.language + '_dlg.js';
 
 			if (!tinymce.ScriptLoader.isDone(u)) {
@@ -323,6 +338,9 @@ tinyMCEPopup = {
 			if ((nv = t.editor.translate(ti)) && nv != ti)
 				document.title = ti = nv;
 		}
+
+		if (!t.editor.getParam('browser_preferred_colors', false) || !t.isWindow)
+			t.dom.addClass(document.body, 'forceColors');
 
 		document.body.style.display = '';
 

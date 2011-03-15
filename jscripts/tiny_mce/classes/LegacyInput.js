@@ -57,6 +57,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 		};
 
 		ed.onPreProcess.add(convert);
+		ed.onSetContent.add(convert);
 
 		ed.onInit.add(function() {
 			ed.selection.onSetContent.add(convert);

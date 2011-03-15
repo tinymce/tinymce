@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>tinymce.html.Node tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
@@ -295,7 +296,7 @@ test('replace middle child', function() {
 test('attr', function() {
 	var node;
 
-	expect(18);
+	expect(20);
 
 	node = new tinymce.html.Node('b', 1);
 	deepEqual(node.attributes, []);
@@ -329,6 +330,11 @@ test('attr', function() {
 	equal(node.attr('attr1'), undefined);
 	deepEqual(node.attributes, []);
 	deepEqual(node.attributes.map, {});
+
+	node = new tinymce.html.Node('b', 1);
+	node.attr({a:'1', b:'2'});
+	deepEqual(node.attributes, [{name: 'a', value: '1'}, {name: 'b', value: '2'}]);
+	deepEqual(node.attributes.map, {a:'1', b:'2'});
 });
 
 test('clone', function() {

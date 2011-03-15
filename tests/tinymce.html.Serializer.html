@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>tinymce.html.Serializer tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
@@ -16,10 +17,10 @@ test('Basic serialization', function() {
 	expect(6);
 
 	equals(serializer.serialize(new tinymce.html.DomParser().parse('text<text&')), 'text&lt;text&amp;');
-	equals(serializer.serialize(new tinymce.html.DomParser().parse('<B>text</B><IMG src="1.gif">')), '<b>text</b><img src="1.gif" />');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<B>text</B><IMG src="1.gif">')), '<strong>text</strong><img src="1.gif" />');
 	equals(serializer.serialize(new tinymce.html.DomParser().parse('<!-- comment -->')), '<!-- comment -->');
 	equals(serializer.serialize(new tinymce.html.DomParser().parse('<![CDATA[cdata]]>')), '<![CDATA[cdata]]>');
-	equals(serializer.serialize(new tinymce.html.DomParser().parse('<?xml pi ?>')), '<?xml pi ?>');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<?xml attr="value" ?>')), '<?xml attr="value" ?>');
 	equals(serializer.serialize(new tinymce.html.DomParser().parse('<!DOCTYPE html>')), '<!DOCTYPE html>');
 });
 
@@ -28,7 +29,7 @@ test('Sorting of attributes', function() {
 
 	expect(1);
 
-	equals(serializer.serialize(new tinymce.html.DomParser().parse('<b class="class" id="id"></b>')), '<b id="id" class="class"></b>');
+	equals(serializer.serialize(new tinymce.html.DomParser().parse('<b class="class" id="id"></b>')), '<strong id="id" class="class"></strong>');
 });
 </script>
 </head>

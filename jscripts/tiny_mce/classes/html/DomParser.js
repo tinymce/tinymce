@@ -9,6 +9,8 @@
  */
 
 (function(tinymce) {
+	var Node = tinymce.html.Node;
+
 	/**
 	 * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
 	 * sure that the node tree is valid according to the specified schema. So for example: <p>a<p>b</p>c</p> will become <p>a</p><p>b</p><p>c</p>
@@ -18,6 +20,7 @@
 	 * var rootNode = parser.parse('<h1>content</h1>');
 	 *
 	 * @class tinymce.html.DomParser
+	 * @version 3.4
 	 */
 
 	/**
@@ -36,12 +39,18 @@
 		self.schema = schema = schema || new tinymce.html.Schema();
 
 		function fixInvalidChildren(nodes) {
-			var ni, node, parent, parents, newParent, currentNode, tempNode, childClone, emptyElements = schema.getEmptyElements(), nonSplitableElements;
+			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i,
+				childClone, nonEmptyElements, nonSplitableElements, sibling, nextNode;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
+			nonEmptyElements = schema.getNonEmptyElements();
 
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
+
+				// Already removed
+				if (!node.parent)
+					continue;
 
 				// Get list of all parent nodes until we find a valid parent to stick the child into
 				parents = [node];
@@ -64,33 +73,51 @@
 						} else
 							tempNode = currentNode;
 
-						for (childNode = parents[i].firstChild; childNode && childNode != parents[i + 1]; childNode = childNode.next) {
+						for (childNode = parents[i].firstChild; childNode && childNode != parents[i + 1]; ) {
+							nextNode = childNode.next;
 							tempNode.append(childNode);
+							childNode = nextNode;
 						}
 
 						currentNode = tempNode;
 					}
 
-					if (!newParent.isEmpty(emptyElements)) {
+					if (!newParent.isEmpty(nonEmptyElements)) {
 						parent.insert(newParent, parents[0], true);
 						parent.insert(node, newParent);
 					} else {
 						parent.insert(node, parents[0], true);
 					}
 
-					if (parents[0].isEmpty(emptyElements)) {
-						parents[0].remove();
+					if (parents[0].isEmpty(nonEmptyElements)) {
+						parents[0].empty().remove();
 					}
 				} else if (node.parent) {
+					// If it's an LI try to find a UL/OL for it or wrap it
+					if (node.name === 'li') {
+						sibling = node.prev;
+						if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+							sibling.append(node);
+							continue;
+						}
+
+						sibling = node.next;
+						if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+							sibling.insert(node, sibling.firstChild, true);
+							continue;
+						}
+
+						node.wrap(new Node('ul', 1));
+						continue;
+					}
+
 					// Try wrapping the element in a DIV
 					if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-						tempNode = new tinymce.html.Node('div', 1);
-						node.parent.insert(tempNode, node);
-						tempNode.append(node);
+						node.wrap(new Node('div', 1));
 					} else {
 						// We failed wrapping it, then remove or unwrap it
 						if (node.name === 'style' || node.name === 'script')
-							node.remove();
+							node.empty().remove();
 						else
 							node.unwrap();
 					}
@@ -163,15 +190,13 @@
 		 * @return {tinymce.html.Node} Root node containing the tree.
 		 */
 		self.parse = function(html, args) {
-			var parser, rootNode, node, Node = tinymce.html.Node, matchedNodes = {}, matchedAttributes = {},
+			var parser, rootNode, node, nodes, matchedNodes = {}, matchedAttributes = {},
 				i, l, fi, fl, list, name, blockElements, startWhiteSpaceRegExp, invalidChildren = [],
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children;
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements;
 
 			args = args || {};
-			blockElements = tinymce.extend({
-				script: 1,
-				style: 1
-			}, schema.getBlockElements());
+			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,title,meta,param'), schema.getBlockElements());
+			nonEmptyElements = schema.getNonEmptyElements();
 			children = schema.children;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();
@@ -196,6 +221,7 @@
 
 			parser = new tinymce.html.SaxParser({
 				validate : settings.validate,
+				fix_self_closing : false, // Let the DOM parser handle <li> in <li> or <p> in <p> for better results
 
 				cdata: function(text) {
 					node.append(createNode('#cdata', 4)).value = text;
@@ -224,8 +250,8 @@
 					node.append(createNode('#comment', 8)).value = text;
 				},
 
-				pi: function(text) {
-					node.append(createNode('#pi', 7)).value = text;
+				pi: function(name, text) {
+					node.append(createNode(name, 7)).value = text;
 				},
 
 				doctype: function(text) {
@@ -335,14 +361,17 @@
 
 						// Handle empty nodes
 						if (elementRule.removeEmpty || elementRule.paddEmpty) {
-							if (node.isEmpty(schema.getEmptyElements())) {
+							if (node.isEmpty(nonEmptyElements)) {
 								if (elementRule.paddEmpty)
-									node.empty().append(new tinymce.html.Node('#text', '3')).value = '\u00a0';
+									node.empty().append(new Node('#text', '3')).value = '\u00a0';
 								else {
-									tempNode = node.parent;
-									node.remove();
-									node = tempNode;
-									return;
+									// Leave nodes that have a name like <a name="name">
+									if (!node.attributes.map.name) {
+										tempNode = node.parent;
+										node.empty().remove();
+										node = tempNode;
+										return;
+									}
 								}
 							}
 						}
@@ -361,10 +390,17 @@
 			// Run node filters
 			for (name in matchedNodes) {
 				list = nodeFilters[name];
+				nodes = matchedNodes[name];
 
-				for (i = 0, l = list.length; i < l; i++) {
-					list[i](matchedNodes[name], name, args);
+				// Remove already removed children
+				fi = nodes.length;
+				while (fi--) {
+					if (!nodes[fi].parent)
+						nodes.splice(fi, 1);
 				}
+
+				for (i = 0, l = list.length; i < l; i++)
+					list[i](nodes, name, args);
 			}
 
 			// Run attribute filters
@@ -372,13 +408,76 @@
 				list = attributeFilters[i];
 
 				if (list.name in matchedAttributes) {
-					for (fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
-						list.callbacks[fi](matchedAttributes[list.name], list.name, args);
+					nodes = matchedAttributes[list.name];
+
+					// Remove already removed children
+					fi = nodes.length;
+					while (fi--) {
+						if (!nodes[fi].parent)
+							nodes.splice(fi, 1);
 					}
+
+					for (fi = 0, fl = list.callbacks.length; fi < fl; fi++)
+						list.callbacks[fi](nodes, list.name, args);
 				}
 			}
 
 			return rootNode;
 		};
+
+		// Remove <br> at end of block elements Gecko and WebKit injects BR elements to
+		// make it possible to place the caret inside empty blocks. This logic tries to remove
+		// these elements and keep br elements that where intended to be there intact
+		if (settings.remove_trailing_brs) {
+			self.addNodeFilter('br', function(nodes, name) {
+				var i, l = nodes.length, node, blockElements = schema.getBlockElements(),
+					nonEmptyElements = schema.getNonEmptyElements(), parent, prev, prevName;
+
+				// Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
+				for (i = 0; i < l; i++) {
+					node = nodes[i];
+					parent = node.parent;
+
+					if (blockElements[node.parent.name] && node === parent.lastChild) {
+						// Loop all nodes to the right of the current node and check for other BR elements
+						// excluding bookmarks since they are invisible
+						prev = node.prev;
+						while (prev) {
+							prevName = prev.name;
+
+							// Ignore bookmarks
+							if (prevName !== "span" || prev.attr('data-mce-type') !== 'bookmark') {
+								// Found a non BR element
+								if (prevName !== "br")
+									break;
+	
+								// Found another br it's a <br><br> structure then don't remove anything
+								if (prevName === 'br') {
+									node = null;
+									break;
+								}
+							}
+
+							prev = prev.prev;
+						}
+
+						if (node) {
+							node.remove();
+
+							// Is the parent to be considered empty after we removed the BR
+							if (parent.isEmpty(nonEmptyElements)) {
+								elementRule = schema.getElementRule(parent.name);
+
+								// Remove or padd the element depending on schema rule
+								if (elementRule.removeEmpty)
+									parent.remove();
+								else if (elementRule.paddEmpty) 
+									parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+							}
+						}
+					}
+				}
+			});
+		}
 	}
 })(tinymce);

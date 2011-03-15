@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>tinymce.html.SaxParser tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
@@ -63,13 +64,13 @@ function createCounter(writer) {
 			writer.end(name);
 		},
 
-		pi: function(text) {
+		pi: function(name, text) {
 			if ("pi" in counts)
 				counts.pi++;
 			else
 				counts.pi = 1;
 
-			writer.pi(text);
+			writer.pi(name, text);
 		},
 
 		doctype: function(text) {
@@ -84,7 +85,7 @@ function createCounter(writer) {
 }
 
 test('Parse elements', function() {
-	expect(34);
+	expect(44);
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -96,9 +97,37 @@ test('Parse elements', function() {
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
+	parser.parse('<b href=\'"&amp;<>\'></b>');
+	equals(writer.getContent(), '<b href="&quot;&amp;<>"></b>', 'Parse attributes with <> in them.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Parse attributes with <> in them (count).');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
 	parser.parse('<span title=" "class=" "></span>');
 	equals(writer.getContent(), '<span title=" " class=" "></span>', 'Parse compressed attributes.');
 	deepEqual(counter.counts, {start:1, end:1}, 'Parse compressed attributes (count).');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span title></span>');
+	equals(writer.getContent(), '<span title=""></span>', 'Single empty attribute.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Single empty attributes (count).');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span class="class" title></span>');
+	equals(writer.getContent(), '<span class="class" title=""></span>', 'Empty attribute at end.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Empty attribute at end (count).');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span title class="class"></span>');
+	equals(writer.getContent(), '<span title="" class="class"></span>', 'Empty attribute at start.');
+	deepEqual(counter.counts, {start:1, end:1}, 'Empty attribute at start (count).');
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -204,6 +233,13 @@ test('Parse elements', function() {
 	parser.parse('<p>a</p><p /><p>b</p>');
 	equals(writer.getContent(), '<p>a</p><p></p><p>b</p>', 'Parse invalid closed element.');
 	deepEqual(counter.counts, {text: 2, start: 3, end: 3}, 'Parse invalid closed element counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<br><br /><br/>');
+	equals(writer.getContent(), '<br /><br /><br />', 'Parse short ended elements.');
+	deepEqual(counter.counts, {start: 3}, 'Parse short ended elements counts.');
 });
 
 test('Parse style elements', function() {
@@ -374,14 +410,28 @@ test('Parsing cdata', function() {
 });
 
 test('Parse PI', function() {
-	expect(2);
+	expect(6);
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
-	parser.parse('<?xml version="1.0" encoding="UTF-8"?>text1');
-	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8"?>text1', 'Parse PI with attributes.');
+	parser.parse('<?xml version="1.0" encoding="UTF-8" ?>text1');
+	equals(writer.getContent(), '<?xml version="1.0" encoding="UTF-8" ?>text1', 'Parse PI with attributes.');
 	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with attributes counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<?xml?>text1');
+	equals(writer.getContent(), '<?xml?>text1', 'Parse PI with no data.');
+	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with data counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<?xml somevalue/>text1');
+	equals(writer.getContent(), '<?xml somevalue?>text1', 'Parse PI with IE style ending.');
+	deepEqual(counter.counts, {pi:1, text:1}, 'Parse PI with IE style ending counts.');
 });
 
 test('Parse doctype', function() {
@@ -412,6 +462,17 @@ test('Parse (validate)', function() {
 	parser.parse('<invalid1>123<invalid2 />456<span title="title" invalid3="value">789</span>012</invalid1>');
 	equals(writer.getContent(), '123456<span title="title">789</span>012', 'Parse invalid elements and attributes.');
 	deepEqual(counter.counts, {start:1, end:1, text:4}, 'Parse invalid elements and attributes counts.');
+});
+
+test('Self closing', function() {
+	expect(1);
+
+	var counter = createCounter(writer);
+	counter.validate = true;
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
+	equals(writer.getContent(), '<ul><li>1</li><li><b>2</b></li><li><em><b>3</b></em></li></ul>', 'Parse list with self closing items.');
 });
 </script>
 </head>

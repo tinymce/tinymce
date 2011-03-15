@@ -1,7 +1,7 @@
 /**
  * Schema.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright 2010, Moxiecode Systems AB
  * Released under LGPL License.
  *
  * License: http://tinymce.moxiecode.com/license
@@ -9,7 +9,8 @@
  */
 
 (function(tinymce) {
-	var transitional = {}, boolAttrMap, blockElementsMap, emptyElementsMap, whiteSpaceElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
+	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap,
+		whiteSpaceElementsMap, selfClosingElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
 
 	function split(str, delim) {
 		return str.split(delim || ',');
@@ -90,7 +91,7 @@
 		A : 'id|class|style|title'
 	}, 'script[id|charset|type|language|src|defer|xml:space][]' + 
 		'style[B|id|type|media|title|xml:space][]' + 
-		'object[E|declare|classid|codebase|data|type|codetype|archive|standby|height|width|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' + 
+		'object[E|declare|classid|codebase|data|type|codetype|archive|standby|width|height|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' + 
 		'param[id|name|value|valuetype|type][]' + 
 		'p[E|align][#|S]' + 
 		'a[E|D|charset|type|name|href|hreflang|rel|rev|shape|coords|target][#|Z]' + 
@@ -99,10 +100,10 @@
 		'bdo[A|C|B][#|S]' + 
 		'applet[A|codebase|archive|code|object|alt|name|width|height|align|hspace|vspace][#|param|Y]' + 
 		'h1[E|align][#|S]' + 
-		'img[E|src|alt|name|longdesc|height|width|usemap|ismap|align|border|hspace|vspace][]' + 
+		'img[E|src|alt|name|longdesc|width|height|usemap|ismap|align|border|hspace|vspace][]' + 
 		'map[B|C|A|name][X|form|Q|area]' + 
 		'h2[E|align][#|S]' + 
-		'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|height|width][#|Y]' + 
+		'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height][#|Y]' + 
 		'h3[E|align][#|S]' + 
 		'tt[E][#|S]' + 
 		'i[E][#|S]' + 
@@ -174,9 +175,11 @@
 		'body[E|onload|onunload|background|bgcolor|text|link|vlink|alink][#|Y]'
 	);
 
-	boolAttrMap = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected');
-	emptyElementsMap = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed');
+	boolAttrMap = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected,preload,autoplay,loop,controls');
+	shortEndedElementsMap = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,source');
+	nonEmptyElementsMap = tinymce.extend(makeMap('td,th,iframe,video,object'), shortEndedElementsMap);
 	whiteSpaceElementsMap = makeMap('pre,script,style');
+	selfClosingElementsMap = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr');
 
 	/**
 	 * Schema validator class.
@@ -190,6 +193,7 @@
 	 *    alert('P is a valid element.');
 	 *
 	 * @class tinymce.html.Schema
+	 * @version 3.4
 	 */
 
 	/**
@@ -200,9 +204,23 @@
 	 * @param {Object} settings Name/value settings object.
 	 */
 	tinymce.html.Schema = function(settings) {
-		var self = this, elements = {}, children = {}, patternElements = [];
+		var self = this, elements = {}, children = {}, patternElements = [], validStyles;
 
 		settings = settings || {};
+
+		// Allow all elements and attributes if verify_html is set to false
+		if (settings.verify_html === false)
+			settings.valid_elements = '*[*]';
+
+		// Build styles list
+		if (settings.valid_styles) {
+			validStyles = {};
+
+			// Convert styles into a rule list
+			each(settings.valid_styles, function(value, key) {
+				validStyles[key] = tinymce.explode(value);
+			});
+		}
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
 		function patternToRegExp(str) {
@@ -423,8 +441,17 @@
 				children[name] = element.children;
 			});
 
-			// Remove these by default
-			each(split('ol,ul,li,sub,sup,span,font,a,table,tbody'), function(name) {
+			// Switch these
+			each(split('strong/b,em/i'), function(item) {
+				item = split(item, '/');
+				elements[item[1]].outputName = item[0];
+			});
+
+			// Add default alt attribute for images
+			elements.img.attributesDefault = [{name: 'alt', value: ''}];
+
+			// Remove these if they are empty by default
+			each(split('ol,ul,li,sub,sup,blockquote,tr,div,span,font,a,table,tbody'), function(name) {
 				elements[name].removeEmpty = true;
 			});
 
@@ -463,6 +490,14 @@
 		self.children = children;
 
 		/**
+		 * Name/value map object with valid styles for each element.
+		 *
+		 * @field styles
+		 * @type {Object}
+		 */
+		self.styles = validStyles;
+
+		/**
 		 * Returns a map with boolean attributes.
 		 *
 		 * @method getBoolAttrs
@@ -483,13 +518,34 @@
 		};
 
 		/**
-		 * Returns a map with empty elements.
+		 * Returns a map with short ended elements such as BR or IMG.
 		 *
-		 * @method getEmptyElements
-		 * @return {Object} Name/value lookup map for empty elements.
+		 * @method getShortEndedElements
+		 * @return {Object} Name/value lookup map for short ended elements.
 		 */
-		self.getEmptyElements = function() {
-			return emptyElementsMap;
+		self.getShortEndedElements = function() {
+			return shortEndedElementsMap;
+		};
+
+		/**
+		 * Returns a map with self closing tags such as <li>.
+		 *
+		 * @method getSelfClosingElements
+		 * @return {Object} Name/value lookup map for self closing tags elements.
+		 */
+		self.getSelfClosingElements = function() {
+			return selfClosingElementsMap;
+		};
+
+		/**
+		 * Returns a map with elements that should be treated as contents regardless if it has text
+		 * content in them or not such as TD, VIDEO or IMG.
+		 *
+		 * @method getNonEmptyElements
+		 * @return {Object} Name/value lookup map for non empty elements.
+		 */
+		self.getNonEmptyElements = function() {
+			return nonEmptyElementsMap;
 		};
 
 		/**

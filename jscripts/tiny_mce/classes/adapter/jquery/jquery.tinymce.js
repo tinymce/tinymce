@@ -25,6 +25,8 @@
 		if (!settings)
 			return tinyMCE.get(self[0].id);
 
+		self.css('visibility', 'hidden'); // Hide textarea to avoid flicker
+
 		function init() {
 			var editors = [], initCount = 0;
 
@@ -46,13 +48,15 @@
 				ed = new tinymce.Editor(id, settings);
 				editors.push(ed);
 
-				// Add onInit event listener if the oninit setting is defined
-				// this logic will fire the oninit callback ones each
-				// matched editor instance is initialized
-				if (oninit) {
-					ed.onInit.add(function() {
-						var scope, func = oninit;
+				ed.onInit.add(function() {
+					var scope, func = oninit;
 
+					self.css('visibility', '');
+
+					// Run this if the oninit setting is defined
+					// this logic will fire the oninit callback ones each
+					// matched editor instance is initialized
+					if (oninit) {
 						// Fire the oninit event ones each editor instance is initialized
 						if (++initCount == editors.length) {
 							if (tinymce.is(func, "string")) {
@@ -63,8 +67,8 @@
 							// Call the oninit function with the object
 							func.apply(scope || tinymce, editors);
 						}
-					});
-				}
+					}
+				});
 			});
 
 			// Render the editor instances in a separate loop since we

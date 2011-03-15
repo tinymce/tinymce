@@ -6,5 +6,9 @@ var tinyMCEMediaList = [
 	// Name, URL
 	["Some Flash", "media/sample.swf"],
 	["Some Quicktime", "media/sample.mov"],
-	["Some AVI", "media/sample.avi"]
+	["Some AVI", "media/sample.avi"],
+	["Some RealMedia", "media/sample.rm"],
+	["Some Shockwave", "media/sample.dcr"],
+	["Some Video", "media/sample.mp4"],
+	["Some FLV", "media/sample.flv"],
 ];

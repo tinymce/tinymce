@@ -51,6 +51,11 @@
 	 * @event onAddEditor
 	 * @param {tinymce} sender TinyMCE root class/namespace.
 	 * @param {tinymce.Editor} editor Editor instance.
+	 * @example
+	 * tinyMCE.execCommand("mceAddControl", false, "some_textarea");
+	 * tinyMCE.onAddEditor.add(function(mgr,ed) {
+	 *     console.debug('A new editor is available' + ed.id);
+	 * });
 	 */
 	tinymce.onAddEditor = new Dispatcher(tinymce);
 
@@ -69,6 +74,9 @@
 		 *
 		 * @property editors
 		 * @type Object
+		 * @example
+		 * for (edId in tinyMCE.editors)
+		 *     tinyMCE.editors[edId].save();
 		 */
 		editors : [],
 
@@ -85,6 +93,9 @@
 		 *
 		 * @property activeEditor
 		 * @type tinymce.Editor
+		 * @example
+		 * tinyMCE.activeEditor.selection.getContent();
+		 * tinymce.EditorManager.activeEditor.selection.getContent();
 		 */
 		activeEditor : null,
 
@@ -93,6 +104,16 @@
 		 *
 		 * @method init
 		 * @param {Object} s Settings object to be passed to each editor instance.
+		 * @example
+		 * // Initializes a editor using the longer method
+		 * tinymce.EditorManager.init({
+		 *    some_settings : 'some value'
+		 * });
+		 * 
+		 * // Initializes a editor instance using the shorter version
+		 * tinyMCE.init({
+		 *    some_settings : 'some value'
+		 * });
 		 */
 		init : function(s) {
 			var t = this, pl, sl = tinymce.ScriptLoader, e, el = [], ed;
@@ -214,6 +235,16 @@
 		 * @method get
 		 * @param {String/Number} id Editor instance id or index to return.
 		 * @return {tinymce.Editor} Editor instance to return.
+		 * @example
+		 * // Adds an onclick event to an editor by id (shorter version)
+		 * tinyMCE.get('mytextbox').onClick.add(function(ed, e) {
+		 *    ed.windowManager.alert('Hello world!');
+		 * });
+		 * 
+		 * // Adds an onclick event to an editor by id (longer version)
+		 * tinymce.EditorManager.get('mytextbox').onClick.add(function(ed, e) {
+		 *    ed.windowManager.alert('Hello world!');
+		 * });
 		 */
 		get : function(id) {
 			if (id === undefined)
@@ -401,6 +432,9 @@
 		 * Calls the save method on all editor instances in the collection. This can be useful when a form is to be submitted.
 		 *
 		 * @method triggerSave
+		 * @example
+		 * // Saves all contents
+		 * tinyMCE.triggerSave();
 		 */
 		triggerSave : function() {
 			each(this.editors, function(e) {
@@ -450,4 +484,20 @@
  * @member
  * @property tinyMCE
  * @type tinymce
+ * @example
+ * // To initialize editor instances
+ * tinyMCE.init({
+ *    ...
+ * });
+ */
+
+/**
+ * Alternative name for tinymce added for compatibility.
+ *
+ * @member tinymce
+ * @property EditorManager
+ * @type tinymce
+ * @example
+ * // To initialize editor instances
+ * tinymce.EditorManager.get('editor');
  */

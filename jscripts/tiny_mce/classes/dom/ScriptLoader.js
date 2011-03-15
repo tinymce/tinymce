@@ -9,6 +9,30 @@
  */
 
 (function(tinymce) {
+	/**
+	 * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when various items gets loaded. This class is useful to load external JavaScript files. 
+	 *
+	 * @class tinymce.dom.ScriptLoader
+	 * @example
+	 * // Load a script from a specific URL using the global script loader
+	 * tinymce.ScriptLoader.load('somescript.js');
+	 * 
+	 * // Load a script using a unique instance of the script loader
+	 * var scriptLoader = new tinymce.dom.ScriptLoader();
+	 * 
+	 * scriptLoader.load('somescript.js');
+	 * 
+	 * // Load multiple scripts
+	 * var scriptLoader = new tinymce.dom.ScriptLoader();
+	 * 
+	 * scriptLoader.add('somescript1.js');
+	 * scriptLoader.add('somescript2.js');
+	 * scriptLoader.add('somescript3.js');
+	 * 
+	 * scriptLoader.loadQueue(function() {
+	 *    alert('All scripts are now loaded.');
+	 * });
+	 */
 	tinymce.dom.ScriptLoader = function(settings) {
 		var QUEUED = 0,
 			LOADING = 1,
@@ -94,15 +118,18 @@
 				elm.onload = done;
 			elm.onerror = error;
 
-			elm.onreadystatechange = function() {
-				var state = elm.readyState;
+			// Opera 9.60 doesn't seem to fire the onreadystate event at correctly
+			if (!tinymce.isOpera) {
+				elm.onreadystatechange = function() {
+					var state = elm.readyState;
 
-				// Loaded state is passed on IE 6 however there
-				// are known issues with this method but we can't use
-				// XHR in a cross domain loading
-				if (state == 'complete' || state == 'loaded')
-					done();
-			};
+					// Loaded state is passed on IE 6 however there
+					// are known issues with this method but we can't use
+					// XHR in a cross domain loading
+					if (state == 'complete' || state == 'loaded')
+						done();
+				};
+			}
 
 			// Most browsers support this feature so we report errors
 			// for those at least to help users track their missing plugins etc

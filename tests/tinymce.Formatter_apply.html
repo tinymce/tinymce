@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Unit tests for apply formatting</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
@@ -19,10 +20,10 @@ function getContent() {
 	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
 };
 
-test('Formatter - apply (inline)', function() {
+test('apply (inline)', function() {
 	var rng, format;
 
-	expect(37);
+	expect(39);
 
 	// Inline element on selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -334,6 +335,26 @@ test('Formatter - apply (inline)', function() {
 	editor.formatter.apply('format');
 	equals(getContent(), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
 
+	// Don't merge siblings with whitespace between 1
+	editor.formatter.register('format', {inline : 'b'});
+	editor.getBody().innerHTML = '<p><b>a</b> b</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].lastChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 1');
+
+	// Don't merge siblings with whitespace between 1
+	editor.formatter.register('format', {inline : 'b'});
+	editor.getBody().innerHTML = '<p>a <b>b</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 2');
+
 	// Inline element not merged in exact mode
 	editor.formatter.register('format', {inline : 'span', styles : {color : '#00ff00'}, exact : true});
 	editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
@@ -430,57 +451,7 @@ test('Formatter - apply (inline)', function() {
 	equals(getContent(), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
 });
 
-test('Formatter - apply inline formats ignore trailing space', function() {
-	var rng;
-	editor.formatter.register('format', {inline : 'b'});
-	editor.getBody().innerHTML = '<p>1234 6789 1234</p>';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 4);
-	rng.setEnd(editor.dom.select('p')[0].firstChild, 10);
-	editor.selection.setRng(rng);
-	editor.formatter.apply('format');
-	equals(getContent(), '<p>1234<b> 6789</b> 1234</p>', 'Inline element on selected text excludes trailing space');
-
-	// Now undo it so that we leave some nasty split text nodes around.
-	editor.formatter.remove('format');
-	equals(getContent(), '<p>1234 6789 1234</p>', 'Inline element on selected text excludes trailing space when unapplying');
-
-	editor.formatter.apply('format');
-	equals(getContent(), '<p>1234<b> 6789</b> 1234</p>', 'Inline element on selected text excludes trailing space with split text nodes');
-
-	editor.setContent('<p>1234<i> </i>6789</p>');
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[0].firstChild.nextSibling, 1);
-	editor.selection.setRng(rng);
-	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234<i> </i></b>6789</p>', 'Apply to space if it already has special formatting');
-
-	editor.setContent('<p>123<i>4</i> 6789</p>');
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[0].lastChild, 1);
-	editor.selection.setRng(rng);
-	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>123<i>4</i></b> 6789</p>', 'Skip space when it is at start of element');
-
-	// Create a lot of empty text nodes.
-	editor.setContent('<p>1234 6789</p>');
-	editor.dom.select('p')[0].firstChild.splitText(4);
-	editor.dom.select('p')[0].firstChild.splitText(4);
-	editor.dom.select('p')[0].firstChild.splitText(4);
-	editor.dom.select('p')[0].firstChild.splitText(4);
-	editor.dom.select('p')[0].lastChild.splitText(1);
-	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
-	rng.setEnd(editor.dom.select('p')[0].lastChild, 0);
-	editor.selection.setRng(rng);
-	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b> 6789</p>', 'Skip empty text nodes');
-	
-});
-
-test('Formatter - apply (block)', function() {
+test('apply (block)', function() {
 	var rng;
 
 	expect(9);
@@ -576,7 +547,7 @@ test('Formatter - apply (block)', function() {
 	equals(getContent(), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 3');
 });
 
-test('Formatter - apply (block wrapper)', function() {
+test('apply (block wrapper)', function() {
 	var rng;
 
 	expect(3);
@@ -603,16 +574,16 @@ test('Formatter - apply (block wrapper)', function() {
 
 	// Block element wrapper 3
 	editor.formatter.register('format', {block : 'blockquote', wrapper : 1});
-	editor.getBody().innerHTML = '<br /><h1>1234</h1><br /><p>foo</p>';
+	editor.getBody().innerHTML = '<br /><h1>1234</h1><br />';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody(), 0);
-	rng.setEnd(editor.getBody(), 4);
+	rng.setEnd(editor.getBody(), 3);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<blockquote><h1>1234</h1><p>foo</p></blockquote>', 'Block element wrapper 3');
+	equals(getContent(), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 3');
 });
 
-test('Formatter - apply (selector)', function() {
+test('apply (selector)', function() {
 	var rng;
 
 	expect(4);
@@ -658,25 +629,76 @@ test('Formatter - apply (selector)', function() {
 	equals(getContent(), '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>', 'Apply format on top of existing selector element');
 });
 
-test('Formatter - apply (mixed inline/selector)', function() {
+test('apply (mixed inline/selector)', function() {
+	var rng;
+
+	expect(2);
+
+	// Apply format on single element that matches a selector
+	editor.formatter.register('format', {inline : 'span', selector : 'li', attributes : {title : 'test'}, styles : {'color' : '#ff0000'}, classes : 'a b c'});
+	editor.getBody().innerHTML = '<div>text</div>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('div')[0], 0);
+	rng.setEnd(editor.dom.select('div')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<div><span class="a b c" style="color: #ff0000;" title="test">text</span></div>', 'Apply format on single element that matches a selector');
+
+	// Apply format on single element that matches a selector
+	editor.formatter.register('format', {inline : 'span', selector : 'div', attributes : {title : 'test'}, styles : {'color' : '#ff0000'}, classes : 'a b c'});
+	editor.getBody().innerHTML = '<div>text</div>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('div')[0], 0);
+	rng.setEnd(editor.dom.select('div')[0], 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<div class="a b c" style="color: #ff0000;" title="test">text</div>', 'Apply format on single element that matches a selector');
+});
+
+test('Bold and italics is applied to text that is not highlighted', function() {
 	var rng;
 
 	expect(1);
 
-	// Apply format on single element that matches a selector
-	editor.formatter.register('format', {inline : 'span', selector : 'li', attributes : {title : 'test'}, styles : {'color' : '#ff0000'}, classes : 'a b c'});
-	editor.getBody().innerHTML = '<table><tbody><tr><td>cell 1</td><td>cell 2</td></tr></tbody></table>';
+	editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
 	rng = editor.dom.createRng();
-	rng.setStart(editor.dom.select('tr')[0], 0);
-	rng.setEnd(editor.dom.select('tr')[0], 1);
+	rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
+	rng.setEnd(editor.dom.select('strong')[0].firstChild, 11);
 	editor.selection.setRng(rng);
+	editor.execCommand('Italic');
+	equals(editor.getContent(), '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
+});
+
+test('No wrapping of links', function() {
+	var rng;
+
+	expect(2);
+
+	editor.setContent('<p>123<a href="#">abc</a>456</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 3);
+	editor.selection.setRng(rng);
+
+	editor.formatter.register('format', {inline : 'span', styles : {color : '#FF0000'}, wrap_links : false});
 	editor.formatter.apply('format');
-	equals(getContent(), '<table><tbody><tr><td><span class="a b c" style="color: #ff0000;" title="test">cell 1</span></td><td>cell 2</td></tr></tbody></table>', 'Apply format on single element that matches a selector');
-			//'<p class="a b c" style="color: #ff0000;" title="test">1234</p>', 'Apply format on single element that matches a selector');
+
+	equals(editor.getContent(), '<p><span style="color: #ff0000;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+
+	editor.setContent('<p><span style="font-size: 10px;">123<a href="#">abc</a>456</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[0].lastChild, 3);
+	editor.selection.setRng(rng);
+
+	editor.formatter.register('format', {inline : 'span', styles : {color : '#FF0000'}, wrap_links : false});
+	editor.formatter.apply('format');
+
+	equals(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
 });
 
 /*
-test('Formatter - apply (list block)', function() {
+test('apply (list block)', function() {
 	var rng;
 
 	// Ordered list on selected paragraph text
@@ -760,7 +782,6 @@ tinyMCE.init({
 	add_unload_trigger : false,
 	theme_advanced_styles : 'test1=test1;test2=test2',
 	valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
-	apply_source_formatting : 0,
 	fix_list_elements : 0,
 	fix_table_elements : 0,
 	forced_root_block : '',

@@ -250,8 +250,14 @@
 		 * @param {function} cb Callback function to execute for each item.
 		 * @param {Object} s Optional scope to execute the callback in.
 		 * @example
-		 * tinymce.each([1, 2, 3], function(v, i) {
-		 *   console.log(i + '=' + v);
+		 * // Iterate an array
+		 * tinymce.each([1,2,3], function(v, i) {
+		 *     console.debug("Value: " + v + ", Index: " + i);
+		 * });
+		 * 
+		 * // Iterate an object
+		 * tinymce.each({a : 1, b : 2, c: 3], function(v, k) {
+		 *     console.debug("Value: " + v + ", Key: " + k);
 		 * });
 		 */
 		each : function(o, cb, s) {
@@ -310,6 +316,9 @@
 		 * @param {Array} a Array of items to loop though.
 		 * @param {function} f Function to call for each item. Include/exclude depends on it's return value.
 		 * @return {Array} New array with values imported and filtered based in input.
+		 * @example
+		 * // Filter out some items, this will return an array with 4 and 5
+		 * var items = tinymce.grep([1,2,3,4,5], function(v) {return v > 3;});
 		 */
 		grep : function(a, f) {
 			var o = [];
@@ -329,6 +338,9 @@
 		 * @param {Array} a Array/Object to search for value in.
 		 * @param {Object} v Value to check for inside the array.
 		 * @return {Number/String} Index of item inside the array inside an object. Or -1 if it wasn't found.
+		 * @example
+		 * // Get index of value in array this will alert 1 since 2 is at that index
+		 * alert(tinymce.inArray([1,2,3], 2));
 		 */
 		inArray : function(a, v) {
 			var i, l;
@@ -350,6 +362,15 @@
 		 * @param {Object} o Object to extend with new items.
 		 * @param {Object} e..n Object(s) to extend the specified object with.
 		 * @return {Object} o New extended object, same reference as the input object.
+		 * @example
+		 * // Extends obj1 with two new fields
+		 * var obj = tinymce.extend(obj1, {
+		 *     somefield1 : 'a',
+		 *     somefield2 : 'a'
+		 * });
+		 * 
+		 * // Extends obj with obj2 and obj3
+		 * tinymce.extend(obj, obj2, obj3);
 		 */
 		extend : function(o, e) {
 			var i, l, a = arguments;
@@ -385,9 +406,47 @@
 		 *
 		 * @method create
 		 * @param {String} s Class name, inheritage and prefix.
-		 * @param {Object} o Collection of methods to add to the class.
+		 * @param {Object} p Collection of methods to add to the class.
+		 * @param {Object} root Optional root object defaults to the global window object.
+		 * @example
+		 * // Creates a basic class
+		 * tinymce.create('tinymce.somepackage.SomeClass', {
+		 *     SomeClass : function() {
+		 *         // Class constructor
+		 *     },
+		 * 
+		 *     method : function() {
+		 *         // Some method
+		 *     }
+		 * });
+		 *
+		 * // Creates a basic subclass class
+		 * tinymce.create('tinymce.somepackage.SomeSubClass:tinymce.somepackage.SomeClass', {
+		 *     SomeSubClass: function() {
+		 *         // Class constructor
+		 *         this.parent(); // Call parent constructor
+		 *     },
+		 * 
+		 *     method : function() {
+		 *         // Some method
+		 *         this.parent(); // Call parent method
+		 *     },
+		 * 
+		 *     'static' : {
+		 *         staticMethod : function() {
+		 *             // Static method
+		 *         }
+		 *     }
+		 * });
+		 *
+		 * // Creates a singleton/static class
+		 * tinymce.create('static tinymce.somepackage.SomeSingletonClass', {
+		 *     method : function() {
+		 *         // Some method
+		 *     }
+		 * });
 		 */
-		create : function(s, p) {
+		create : function(s, p, root) {
 			var t = this, sp, ns, cn, scn, c, de = 0;
 
 			// Parse : <prefix> <class>:<super class>
@@ -395,7 +454,7 @@
 			cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
 
 			// Create namespace for new class
-			ns = t.createNS(s[3].replace(/\.\w+$/, ''));
+			ns = t.createNS(s[3].replace(/\.\w+$/, ''), root);
 
 			// Class already exists
 			if (ns[cn])
@@ -503,6 +562,16 @@
 		 * @param {String} n Namespace to create for example a.b.c.d.
 		 * @param {Object} o Optional object to add namespace to, defaults to window.
 		 * @return {Object} New namespace object the last item in path.
+		 * @example
+		 * // Create some namespace
+		 * tinymce.createNS('tinymce.somepackage.subpackage');
+		 *
+		 * // Add a singleton
+		 * var tinymce.somepackage.subpackage.SomeSingleton = {
+		 *     method : function() {
+		 *         // Some method
+		 *     }
+		 * };
 		 */
 		createNS : function(n, o) {
 			var i, v;
@@ -529,6 +598,9 @@
 		 * @param {String} n Path to resolve for example a.b.c.d.
 		 * @param {Object} o Optional object to search though, defaults to window.
 		 * @return {Object} Last object in path or null if it couldn't be resolved.
+		 * @example
+		 * // Resolve a path into an object reference
+		 * var obj = tinymce.resolve('a.b.c.d');
 		 */
 		resolve : function(n, o) {
 			var i, l;
@@ -554,6 +626,12 @@
 		 * @param {function} f Function to execute before the document gets unloaded.
 		 * @param {Object} s Optional scope to execute the function in.
 		 * @return {function} Returns the specified unload handler function.
+		 * @example
+		 * // Fixes a leak with a DOM element that was palces in the someObject
+		 * tinymce.addUnload(function() {
+		 *     // Null DOM element to reduce IE memory leak
+		 *     someObject.someElement = null;
+		 * });
 		 */
 		addUnload : function(f, s) {
 			var t = this;
@@ -661,6 +739,9 @@
 		 * @method explode
 		 * @param {string} s String to split.
 		 * @param {string} d Delimiter to split by.
+		 * @example
+		 * // Split a string into an array with a,b,c
+		 * var arr = tinymce.explode('a, b,   c');
 		 */
 		explode : function(s, d) {
 			return s ? tinymce.map(s.split(d || ','), tinymce.trim) : s;

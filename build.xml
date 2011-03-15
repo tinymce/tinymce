@@ -72,6 +72,7 @@
 
 			<!-- tinymce.html.* -->
 			<fileset dir="${classes_dir}" includes="html/Entities.js" />
+			<fileset dir="${classes_dir}" includes="html/Styles.js" />
 			<fileset dir="${classes_dir}" includes="html/Schema.js" />
 			<fileset dir="${classes_dir}" includes="html/SaxParser.js" />
 			<fileset dir="${classes_dir}" includes="html/Node.js" />
@@ -93,6 +94,7 @@
 			<fileset dir="${classes_dir}" includes="dom/RangeUtils.js" />
 
 			<!-- tinymce.ui.* -->
+			<fileset dir="${classes_dir}" includes="ui/KeyboardNavigation.js" />
 			<fileset dir="${classes_dir}" includes="ui/Control.js" />
 			<fileset dir="${classes_dir}" includes="ui/Container.js" />
 			<fileset dir="${classes_dir}" includes="ui/Separator.js" />
@@ -105,6 +107,7 @@
 			<fileset dir="${classes_dir}" includes="ui/MenuButton.js" />
 			<fileset dir="${classes_dir}" includes="ui/SplitButton.js" />
 			<fileset dir="${classes_dir}" includes="ui/ColorSplitButton.js" />
+			<fileset dir="${classes_dir}" includes="ui/ToolbarGroup.js" />
 			<fileset dir="${classes_dir}" includes="ui/Toolbar.js" />
 
 			<!-- tinymce.* -->
@@ -116,7 +119,6 @@
 			<fileset dir="${classes_dir}" includes="ForceBlocks.js" />
 			<fileset dir="${classes_dir}" includes="ControlManager.js" />
 			<fileset dir="${classes_dir}" includes="WindowManager.js" />
-			<fileset dir="${classes_dir}" includes="CommandManager.js" />
 			<fileset dir="${classes_dir}" includes="Formatter.js" />
 			<fileset dir="${classes_dir}" includes="LegacyInput.js" />
 		</concat>
@@ -173,41 +175,13 @@
 		<concat destfile="${build_dir}/tiny_mce_full.js">
 			<fileset dir="${build_dir}" includes="tiny_mce.js" />
 			<fileset dir="${build_dir}" includes="langs/en.js" />
-			<fileset dir="${build_dir}" includes="plugins/advhr/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/advimage/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/advlink/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/advlist/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/emotions/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/iespell/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/insertdatetime/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/preview/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/print/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/save/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/searchreplace/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/table/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/contextmenu/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/paste/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/fullscreen/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/directionality/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/inlinepopups/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/autosave/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/noneditable/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/fullpage/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/layer/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/style/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/media/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/visualchars/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/nonbreaking/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/xhtmlxtras/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/template/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/bbcode/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/pagebreak/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/spellchecker/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/tabfocus/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/autoresize/editor_plugin.js" />
-			<fileset dir="${build_dir}" includes="plugins/wordcount/editor_plugin.js" />
 			<fileset dir="${build_dir}" includes="themes/advanced/langs/en.js" />
 			<fileset dir="${build_dir}" includes="themes/advanced/editor_template.js" />
+			<fileset dir="${build_dir}" includes="**/editor_plugin.js">
+				<exclude name="**/legacyoutput/*" />
+				<exclude name="**/example/*" />
+				<exclude name="**/fullpage/*" />
+			</fileset>
 		</concat>
 	</target>
 
@@ -368,7 +342,6 @@
 		<zip destfile="${temp_dir}/tinymce_${file_version}_jquery.zip" excludes="**/classes">
 			<fileset dir="${temp_dir}">
 				<include name="tinymce/jscripts/**" />
-				<include name="tinymce/examples/**" />
 				<include name="tinymce/changelog.txt" />
 				<exclude name="tinymce/examples/**" />
 				<exclude name="tinymce/jscripts/tiny_mce/classes/**" />
@@ -381,6 +354,7 @@
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
 
+			<zipfileset dir="${temp_dir}" includes="tinymce/examples/css/content.css" fullpath="tinymce/examples/css/content.css"/>
 			<zipfileset dir="${temp_dir}" includes="tinymce/examples/full_jquery.html" fullpath="tinymce/examples/index.html"/>
 			<zipfileset dir="${temp_dir}" includes="tinymce/jscripts/tiny_mce/tiny_mce_jquery.js" fullpath="tinymce/jscripts/tiny_mce/tiny_mce.js"/>
 			<zipfileset dir="${temp_dir}" includes="tinymce/jscripts/tiny_mce/tiny_mce_jquery_src.js" fullpath="tinymce/jscripts/tiny_mce/tiny_mce_src.js"/>

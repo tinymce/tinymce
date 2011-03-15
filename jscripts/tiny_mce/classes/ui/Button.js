@@ -26,9 +26,10 @@
 		 * @method Button
 		 * @param {String} id Control id for the button.
 		 * @param {Object} s Optional name/value settings object.
+		 * @param {Editor} ed Optional the editor instance this button is for.
 		 */
-		Button : function(id, s) {
-			this.parent(id, s);
+		Button : function(id, s, ed) {
+			this.parent(id, s, ed);
 			this.classPrefix = 'mceButton';
 		},
 
@@ -43,13 +44,15 @@
 			var cp = this.classPrefix, s = this.settings, h, l;
 
 			l = DOM.encode(s.label || '');
-			h = '<a id="' + this.id + '" href="javascript:;" class="' + cp + ' ' + cp + 'Enabled ' + s['class'] + (l ? ' ' + cp + 'Labeled' : '') +'" onmousedown="return false;" onclick="return false;" title="' + DOM.encode(s.title) + '">';
+			h = '<a role="button" id="' + this.id + '" href="javascript:;" class="' + cp + ' ' + cp + 'Enabled ' + s['class'] + (l ? ' ' + cp + 'Labeled' : '') +'" onmousedown="return false;" onclick="return false;" aria-labelledby="' + this.id + '_voice" title="' + DOM.encode(s.title) + '">';
 
 			if (s.image)
-				h += '<img class="mceIcon" src="' + s.image + '" />' + l + '</a>';
+				h += '<img class="mceIcon" src="' + s.image + '" alt="' + DOM.encode(s.title) + '" />' + l;
 			else
-				h += '<span class="mceIcon ' + s['class'] + '"></span>' + (l ? '<span class="' + cp + 'Label">' + l + '</span>' : '') + '</a>';
+				h += '<span class="mceIcon ' + s['class'] + '"></span>' + (l ? '<span class="' + cp + 'Label">' + l + '</span>' : '');
 
+			h += '<span class="mceVoiceLabel mceIconOnly" style="display: none;" id="' + this.id + '_voice">' + s.title + '</span>'; 
+			h += '</a>';
 			return h;
 		},
 
