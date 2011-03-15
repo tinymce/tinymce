@@ -3157,6 +3157,7 @@
 						rng = t.selection.getRng();
 
 						if (rng.parentElement) {
+							addUndo();
 							parent = rng.parentElement();
 
 							if (!t.undoManager.typing) {
@@ -3187,6 +3188,8 @@
 								// Restore the caret position
 								t.selection.moveToBookmark(bookmark);
 							}
+
+							addUndo();
 
 							// Block the default delete behavior since it might be broken
 							e.preventDefault();

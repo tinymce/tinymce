@@ -253,6 +253,11 @@
 			
 			function doWrapList(start, end, template) {
 				var li, n = start, tmp, i;
+				while (!dom.isBlock(start.parentNode) && start.parentNode !== dom.getRoot()) {
+					start = dom.split(start.parentNode, start.previousSibling);
+					start = start.nextSibling;
+					n = start;
+				}
 				if (template) {
 					li = template.cloneNode(true);
 					start.parentNode.insertBefore(li, start);
@@ -262,7 +267,7 @@
 					li = dom.create('li');
 					start.parentNode.insertBefore(li, start);
 				}
-				while (n != end) {
+				while (n && n != end) {
 					tmp = n.nextSibling;
 					li.appendChild(n);
 					n = tmp;
@@ -289,6 +294,12 @@
 					r.setEndAfter(end);
 					return !(r.compareBoundaryPoints(END_TO_START, sel) > 0 || r.compareBoundaryPoints(START_TO_END, sel) <= 0);
 				}
+				function nextLeaf(br) {
+					if (br.nextSibling)
+						return br.nextSibling;
+					if (!dom.isBlock(br.parentNode) && br.parentNode !== dom.getRoot())
+						return nextLeaf(br.parentNode);
+				}
 				// Split on BRs within the range and process those.
 				startSection = element.firstChild;
 				// First mark the BRs that have any part of the previous section selected.
@@ -300,14 +311,14 @@
 					}
 					if (isAnyPartSelected(startSection, br)) {
 						dom.addClass(br, '_mce_tagged_br');
-						startSection = br.nextSibling;
+						startSection = nextLeaf(br);
 					}
 				});
 				trailingContentSelected = (startSection && isAnyPartSelected(startSection, undefined));
 				startSection = element.firstChild;
 				each(dom.select(breakElements, element), function(br) {
 					// Got a section from start to br.
-					var tmp = br.nextSibling;
+					var tmp = nextLeaf(br);
 					if (br.hasAttribute && br.hasAttribute('_mce_bogus')) {
 						return true; // Skip the bogus Brs that are put in to appease Firefox and Safari.
 					}
@@ -511,8 +522,9 @@
 			function recurse(element) {
 				t.splitSafeEach(element.childNodes, processElement);
 			}
-			function brAtEdgeOfSelection(container, offset, start) {
-				return offset >= 0 && container.hasChildNodes() && container.childNodes[offset].tagName === 'BR';
+			function brAtEdgeOfSelection(container, offset) {
+				return offset >= 0 && container.hasChildNodes() && offset < container.childNodes.length &&
+						container.childNodes[offset].tagName === 'BR';
 			}
 			selectedBlocks = sel.getSelectedBlocks();
 			if (selectedBlocks.length === 0) {

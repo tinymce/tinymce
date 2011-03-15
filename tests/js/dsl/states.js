@@ -101,6 +101,22 @@ TextInDiv = createState('<div>Item</div>', 'div', 2);
 TextWithBrsInDivFirstLine = createState('<div>Item1<br />Item2</div>', 'div', 2);
 TextWithBrsInDivMiddleLine = createState('<div>Item1<br />Item2<br />Item3</div>', 'br:nth-child(1)', 'afterNextCharacter');
 TextWithBrsInDivLastLine = createState('<div>Item1<br />Item2</div>', 'br:nth-child(1)', 'afterNextCharacter');
+TextWithBrsInFormattingInDiv = function() {
+	var rng;
+	editor.setContent('<div><strong>Before<br /></strong>Item1<br />Item2<br />Item3</div>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('div')[0].childNodes[1], 0);
+	rng.setEnd(editor.dom.select('div')[0], 6);
+	editor.selection.setRng(rng);
+};
+TextWithBrInsideFormatting = function() {
+	var rng;
+	editor.setContent('<div><em><strong>Before<br /><span class="foo">Item1</span></strong></em>Item2<br />Item3</div>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].childNodes[0], 2);
+	rng.setEnd(editor.dom.select('div')[0], 4);
+	editor.selection.setRng(rng);
+};
 
 /** Expanded Selection States **/
 SingleParagraphSelection = createState('<p>This is a test</p>', 'p', 5, 'p', 7);
@@ -126,6 +142,7 @@ ParagraphToBlockSelection = createState('<p>This is a test</p><div>Second paragr
 HeadingToParagraphSelection = createState('<h1>This is a test</h1><p>Second paragraph</p>', 'h1', 5, 'p', 6);
 BlockToParagraphSelection = createState('<div>This is a test</div><p>Second paragraph</p>', 'div', 5, 'p', 6);
 MultipleParagraphAndHeadingSelection = createState('<p>This is a test</p><h1>Second paragraph</h1><div>Third paragraph</div>', 'p', 5, 'div', 5);
+ThreeBoldDivsWithBrSelection = createState('<div><strong>One</strong></div><div><strong>Two</strong></div><div><strong>Three<br></strong></div>', 'div:nth-child(1) strong', 2, 'div:nth-child(3) strong', 2);
 
 SingleLiOlSelection = createState('<ol><li>Item 1</li></ol>', 'li', 1, 'li', 4);
 MultiLiOlSelection = createState('<ol><li>Item 1</li><li>Item 2</li></ol>', 'li:nth-child(1)', 1, 'li:nth-child(2)', 4);

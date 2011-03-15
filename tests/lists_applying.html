@@ -233,12 +233,16 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 	ApplyingOL.to(MultipleBlockSelection).gives('<ol>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ol>');
 	ApplyingOL.to(MultipleBlockWithBrSelection).gives('<ol>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ol>');
 	ApplyingOL.to(MultipleBlockWithBrPartialSelection).gives('<ol>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ol>\n<div>Item4</div>');
+	ApplyingOL.to(ThreeBoldDivsWithBrSelection).gives('<ol><li><strong>One</strong></li><li><strong>Two</strong></li><li><strong>Three</strong></li></ol>');
 	
 	ApplyingOL.to(ParagraphToHeadingSelection).gives('<ol>\n<li>This is a test</li>\n<li>\n<h1>Second paragraph</h1>\n</li>\n</ol>');
 	ApplyingOL.to(ParagraphToBlockSelection).gives('<ol>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ol>');
 	ApplyingOL.to(HeadingToParagraphSelection).gives('<ol>\n<li>\n<h1>This is a test</h1>\n</li>\n<li>Second paragraph</li>\n</ol>');
 	ApplyingOL.to(BlockToParagraphSelection).gives('<ol>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ol>');
 	ApplyingOL.to(MultipleParagraphAndHeadingSelection).gives('<ol>\n<li>This is a test</li>\n<li>\n<h1>Second paragraph</h1>\n</li>\n<li>Third paragraph</li>\n</ol>');
+
+	ApplyingOL.to(TextWithBrsInFormattingInDiv).gives('<div><strong>Before</strong><ol><li>Item1</li><li>Item2</li><li>Item3</li></ol></div>');
+	ApplyingOL.to(TextWithBrInsideFormatting).gives('<div><em><strong>Before</strong></em><ol><li><em><strong><span class="foo">Item1</span></strong></em>Item2</li><li>Item3</li></ol></div>');
 	queue.done();
 });
 
@@ -254,6 +258,7 @@ asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', functio
 	ApplyingUL.to(MultipleBlockWithBrSelection).gives('<ul>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ul>');
 	ApplyingUL.to(MultipleBlockWithBrPartialSelection).gives('<ul>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ul>\n<div>Item4</div>');
 	ApplyingUL.to(MultipleBlockWithBrPartialSelectionAtEnd).gives('\n<div>Item1</div>\n<ul>\n<li>Item2</li>\n<li>Item3</li>\n<li>Item4</li>\n</ul>');
+	ApplyingUL.to(ThreeBoldDivsWithBrSelection).gives('<ul><li><strong>One</strong></li><li><strong>Two</strong></li><li><strong>Three</strong></li></ul>');
 
 	// TODO: Divs with BRs and Paragraphs.
 	// TODO: Divs with BRs in paragraphs?  Divs with a mix of BRs and paragraph child.
@@ -263,6 +268,8 @@ asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', functio
 	ApplyingUL.to(HeadingToParagraphSelection).gives('<ul>\n<li>\n<h1>This is a test</h1>\n</li>\n<li>Second paragraph</li>\n</ul>');
 	ApplyingUL.to(BlockToParagraphSelection).gives('<ul>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ul>');
 	ApplyingUL.to(MultipleParagraphAndHeadingSelection).gives('<ul>\n<li>This is a test</li>\n<li>\n<h1>Second paragraph</h1>\n</li>\n<li>Third paragraph</li>\n</ul>');
+
+	ApplyingUL.to(TextWithBrsInFormattingInDiv).gives('<div><strong>Before</strong><ul><li>Item1</li><li>Item2</li><li>Item3</li></ul></div>');
 	queue.done();
 });
 
