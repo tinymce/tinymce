@@ -50,8 +50,9 @@ ParagraphBetweenUnorderedLists = createState('<ul><li>Item1</li></ul><p>Test</p>
 ParagraphBetweenMixedLists = createState('<ol><li>Item1</li></ol><p>Test</p><ul><li>Item2</li></ul>', 'p', 2);
 
 NonEmptyHeading = createState('<h1>Test</h1>', 'h1', 0);
-TableCellWithoutBrs = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 4);
+TableCellWithoutBrs2 = createState('<table><tbody><tr><td>Test</td><td>&nbsp;</td></tr></tbody></table>', 'td', 0);
 TableCellWithBrsFirstLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
+TableCellWithBrsFirstLine2 = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 0);
 TableCellWithBrsMiddleLine = createState('<table><tbody><tr><td>Test<br/>Line 2<br/>Line 3</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
 TableCellWithBrsLastLine = createState('<table><tbody><tr><td>Test<br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td br:nth-child(1)', 'afterNextCharacter');
 TableCellWithAdjacentBrsFirstLine = createState('<table><tbody><tr><td>Test<br><br>Line 2</td><td>&nbsp;</td></tr></tbody></table>', 'td', 1);
