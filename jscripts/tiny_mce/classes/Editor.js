@@ -3146,13 +3146,13 @@
 				});
 
 				t.onKeyDown.add(function(ed, e) {
-					var rng, parent, bookmark;
+					var rng, parent, bookmark, keyCode = e.keyCode;
 
 					// IE has a really odd bug where the DOM might include an node that doesn't have
 					// a proper structure. If you try to access nodeValue it would throw an illegal value exception.
 					// This seems to only happen when you delete contents and it seems to be avoidable if you refresh the element
 					// after you delete contents from it. See: #3008923
-					if (isIE && e.keyCode == 46) {
+					if (isIE && keyCode == 46) {
 						rng = t.selection.getRng();
 
 						if (rng.parentElement) {
@@ -3193,15 +3193,16 @@
 						}
 					}
 
-					// Is caracter positon keys
-					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45) {
+					// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter
+					if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45) {
 						if (t.undoManager.typing)
 							addUndo();
 
 						return;
 					}
 
-					if (!t.undoManager.typing) {
+					// If key isn't shift,ctrl,alt,capslock,metakey
+					if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !t.undoManager.typing) {
 						t.undoManager.add();
 						t.undoManager.typing = true;
 					}

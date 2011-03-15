@@ -176,7 +176,7 @@
 			 * @return {Boolean} true/false if the undo manager has any undo levels.
 			 */
 			hasUndo : function() {
-				return index > 0;
+				return index > 0 || this.typing;
 			},
 
 			/**
