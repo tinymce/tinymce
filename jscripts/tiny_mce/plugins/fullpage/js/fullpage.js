@@ -47,7 +47,7 @@ var defaultFontNames = 'Arial=arial,helvetica,sans-serif;Courier New=courier new
 var defaultFontSizes = '10px,11px,12px,13px,14px,15px,16px';
 
 function init() {
-	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, dir, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style;
+	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, dir, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style, xmlVer, xmlEnc, docType;
 
 	// Setup doctype select box
 	doctypes = ed.getParam("fullpage_doctypes", defaultDocTypes).split(',');
