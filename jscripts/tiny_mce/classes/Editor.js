@@ -1071,13 +1071,15 @@
 			t.controlManager = new tinymce.ControlManager(t);
 
 			if (s.custom_undo_redo) {
-				function addCommandUndo(ed, cmd, ui, val, a) {
+				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, a) {
+					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
+						t.undoManager.beforeChange();
+				});
+
+				t.onExecCommand.add(function(ed, cmd, ui, val, a) {
 					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
 						t.undoManager.add();
-				};
-
-				t.onBeforeExecCommand.add(addCommandUndo); // Updates bookmark of initial level
-				t.onExecCommand.add(addCommandUndo);
+				});
 			}
 
 			t.onExecCommand.add(function(ed, c) {
@@ -3159,6 +3161,7 @@
 							parent = rng.parentElement();
 
 							if (!t.undoManager.typing) {
+								t.undoManager.beforeChange();
 								t.undoManager.typing = true;
 								t.undoManager.add();
 							}
@@ -3203,6 +3206,7 @@
 
 					// If key isn't shift,ctrl,alt,capslock,metakey
 					if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !t.undoManager.typing) {
+						t.undoManager.beforeChange();
 						t.undoManager.add();
 						t.undoManager.typing = true;
 					}

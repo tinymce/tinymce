@@ -60,6 +60,18 @@
 			onRedo : new Dispatcher(self),
 
 			/**
+			 * Stores away a bookmark to be used when performing an undo action so that the selection is before
+			 * the change has been made.
+			 *
+			 * @method beforeChange
+			 */
+			beforeChange : function() {
+				// Set before bookmark on previous level
+				if (data[index])
+					data[index].beforeBookmark = editor.selection.getBookmark(2, true);
+			},
+
+			/**
 			 * Adds a new undo level/snapshot to the undo list.
 			 *
 			 * @method add
@@ -74,15 +86,8 @@
 
 				// Add undo level if needed
 				lastLevel = data[index];
-				if (lastLevel) {
-					if (lastLevel.content == level.content) {
-						// Update bookmark on initial level
-						if (index == 0)
-							lastLevel.bookmark = editor.selection.getBookmark(2, true);
-
-						return null;
-					}
-				}
+				if (lastLevel && lastLevel.content == level.content)
+					return null;
 
 				// Time to compress
 				if (settings.custom_undo_redo_levels) {
@@ -129,7 +134,7 @@
 					level = data[--index];
 
 					editor.setContent(level.content, {format : 'raw'});
-					editor.selection.moveToBookmark(level.bookmark);
+					editor.selection.moveToBookmark(level.beforeBookmark);
 
 					self.onUndo.dispatch(self, level);
 				}
