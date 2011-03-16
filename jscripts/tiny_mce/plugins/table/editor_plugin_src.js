@@ -116,7 +116,7 @@
 		}
 
 		function isCellSelected(cell) {
-			return dom.hasClass(cell.elm, 'mceSelected') || cell == selectedCell;
+			return cell && (dom.hasClass(cell.elm, 'mceSelected') || cell == selectedCell);
 		};
 
 		function getSelectedRows() {
@@ -312,6 +312,9 @@
 				// Remove other cells and add it's contents to the start cell
 				for (y = startY; y <= endY; y++) {
 					for (x = startX; x <= endX; x++) {
+						if (!grid[y] || !grid[y][x])
+							continue;
+
 						cell = grid[y][x].elm;
 
 						if (cell != startCell) {
@@ -343,7 +346,7 @@
 		};
 
 		function insertRow(before) {
-			var posY, cell, lastCell, x, rowElm, newRow, newCell, otherCell;
+			var posY, cell, lastCell, x, rowElm, newRow, newCell, otherCell, rowSpan;
 
 			// Find first/last row
 			each(grid, function(row, y) {
@@ -364,6 +367,10 @@
 			});
 
 			for (x = 0; x < grid[0].length; x++) {
+				// Cell not found could be because of an invalid table structure
+				if (!grid[posY][x])
+					continue;
+
 				cell = grid[posY][x].elm;
 
 				if (cell != lastCell) {
@@ -422,8 +429,12 @@
 			});
 
 			each(grid, function(row, y) {
-				var cell = row[posX].elm, rowSpan, colSpan;
+				var cell, rowSpan, colSpan;
 
+				if (!row[posX])
+					return;
+
+				cell = row[posX].elm;
 				if (cell != lastCell) {
 					colSpan = getSpanVal(cell, 'colspan');
 					rowSpan = getSpanVal(cell, 'rowspan');
@@ -713,8 +724,10 @@
 
 				// Add new selection
 				for (y = startY; y <= maxY; y++) {
-					for (x = startX; x <= maxX; x++)
-						dom.addClass(grid[y][x].elm, 'mceSelected');
+					for (x = startX; x <= maxX; x++) {
+						if (grid[y][x])
+							dom.addClass(grid[y][x].elm, 'mceSelected');
+					}
 				}
 			}
 		};
