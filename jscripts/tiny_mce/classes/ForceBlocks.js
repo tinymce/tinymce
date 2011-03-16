@@ -419,6 +419,8 @@
 			var t = this, ed = t.editor, dom = ed.dom, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = s.getRangeAt(0), b = d.body;
 			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, vp = dom.getViewPort(ed.getWin()), y, ch, car;
 
+			ed.undoManager.beforeChange();
+
 			// If root blocks are forced then use Operas default behavior since it's really good
 // Removed due to bug: #1853816
 //			if (se.forced_root_block && isOpera)
@@ -669,6 +671,8 @@
 					'Viewport: y=' + vp.y + ", h=" + vp.h + ', bottom=' + (vp.y + vp.h)
 				);*/
 			}
+
+			ed.undoManager.add();
 
 			return FALSE;
 		},
