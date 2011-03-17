@@ -198,8 +198,13 @@
 						return;
 					}
 
-					// Process contents
-					process({content : n.innerHTML});
+					// For some odd reason we need to detach the the mceInsertContent call from the paste event
+					// It's like IE has a reference to the parent element that you paste in and the selection gets messed up
+					// when it tries to restore the selection
+					setTimeout(function() {
+						// Process contents
+						process({content : n.innerHTML});
+					}, 0);
 
 					// Block the real paste event
 					return tinymce.dom.Event.cancel(e);
@@ -710,15 +715,7 @@
 			if (!ed.selection.isCollapsed() && r.startContainer != r.endContainer)
 				ed.getDoc().execCommand('Delete', false, null);
 
-			function insert() {
-				ed.execCommand('mceInsertContent', false, h, {skip_undo : skip_undo});
-			};
-
-			// We need to delay the insert since the paste event seems to be moving the caret after it's completed on IE
-			if (tinymce.isIE)
-				window.setTimeout(insert, 0);
-			else
-				insert();
+			ed.execCommand('mceInsertContent', false, h, {skip_undo : skip_undo});
 		},
 
 		/**
