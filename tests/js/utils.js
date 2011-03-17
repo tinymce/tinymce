@@ -52,10 +52,7 @@ function initWhenTinyAndRobotAreReady() {
 }
 
 function trimContent(content) {
-	if (tinymce.isOpera)
-		return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/<p>&nbsp;<\/p>$/, '');
-
-	return content;
+	return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/\n?<p>&nbsp;<\/p>$/, '');
 }
 
 /**
