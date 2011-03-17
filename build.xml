@@ -4,9 +4,8 @@
 	<property description="Classes directory" name="classes_dir" location="jscripts/tiny_mce/classes" />
 	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
 	<property description="Temp directory" name="temp_dir" location="tmp" />
-	<!--TODO Use or lose-->
 	<property environment="env" />
-	<property description="Build number" name="build-number" value="${env.BUILD_NUMBER}" />
+
 
 	<!-- Allow any user specific values to override the defaults -->
 	<property file="${user.home}/tinymce_build.properties" />
@@ -20,6 +19,17 @@
 		</fileset>
 	</path>
 
+	<!-- use a build number from the environment, defaulting it if not set. -->
+	<target name="default-build-number" unless="env.BUILD_NUMBER">
+		<tstamp />
+		<property description="Build number" name="build-number" value="${DSTAMP}${TSTAMP}" />
+		<echo message="${build-number}" />
+	</target>
+	<target name="env-build-number" if="env.BUILD_NUMBER">
+		<property description="Build number" name="build-number" value="${env.BUILD_NUMBER}" />
+	</target>
+	<target name="init-build-number" depends="env-build-number,default-build-number"/>
+	
 	<!-- Register new js-build-tools ant tasks -->
 	<taskdef name="preprocess" classname="com.moxiecode.ant.tasks.PreProcessTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
 	<taskdef name="yuicompress" classname="com.moxiecode.ant.tasks.YuiCompressTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
@@ -198,15 +208,16 @@
 		</copy>
 	</target>
 
-	<target name="prepare-versions" depends="prepare-release-files" description="Builds release packages">
+	<target name="prepare-versions" depends="init-build-number,prepare-release-files" description="Builds release packages">
 		<!-- Parse minor version, major version and release date from changelog -->
 		<!-- TODO consider including the build number here. -->
 		<loadfile property="changelog" srcFile="${temp_dir}/tinymce/changelog.txt" />
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
 		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
-		<propertyregex property="version.minor" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
-		<propertyregex property="file_version" input="${version}" regexp="\." replace="_" />
+		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
+		<property name="version.minor" value="${version.minor.upstream}-${build-number}" />
+		<property name="file_version" value="${version}-${build-number}" />
 
 		<!-- Replace major version -->
 		<replaceregexp byline="true">
