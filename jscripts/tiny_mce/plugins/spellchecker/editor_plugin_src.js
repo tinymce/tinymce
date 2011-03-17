@@ -221,18 +221,14 @@
 		},
 
 		_markWords : function(wl) {
-			var r1, r2, r3, r4, r5, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [];
+			var rx, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [];
 			var se = ed.selection, b = se.getBookmark();
 
 			each(wl, function(v) {
 				w += (w ? '|' : '') + v;
 			});
 
-			r1 = new RegExp('([' + re + '])(' + w + ')([' + re + '])', 'g');
-			r2 = new RegExp('^(' + w + ')', 'g');
-			r3 = new RegExp('(' + w + ')([' + re + ']?)$', 'g');
-			r4 = new RegExp('^(' + w + ')([' + re + ']?)$', 'g');
-			r5 = new RegExp('(' + w + ')([' + re + '])', 'g');
+			rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
 
 			// Collect all text nodes
 			this._walk(this.editor.getBody(), function(n) {
@@ -248,10 +244,9 @@
 				if (n.nodeType == 3) {
 					v = n.nodeValue;
 
-					if (r1.test(v) || r2.test(v) || r3.test(v) || r4.test(v)) {
+					if (rx.test(v)) {
 						v = dom.encode(v);
-						v = v.replace(r5, '<span class="mceItemHiddenSpellWord">$1</span>$2');
-						v = v.replace(r3, '<span class="mceItemHiddenSpellWord">$1</span>$2');
+						v = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
 
 						dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
 					}

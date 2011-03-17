@@ -11,6 +11,7 @@ Version 3.4.1 (2011-xx-x)
 	Fixed bug where the table plugin couldn't correctly handle invalid table structures.
 	Fixed bug where charset and title of the page were handled incorrectly by the fullpage plugin.
 	Fixed bug where item could be unselected in spellchecker's language selector.
+	Fixed bug where some mispelled words could be not highlighted using spellchecker plugin.
 Version 3.4 (2011-03-10)
 	Added accessibility example with various accessibility options contributed by Ephox.
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.
