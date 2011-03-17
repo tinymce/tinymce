@@ -130,6 +130,9 @@
 						var o = {icon : 1}, mi;
 
 						o.onclick = function() {
+							if (v == t.selectedLang) {
+								return;
+							}
 							mi.setSelected(1);
 							t.selectedItem.setSelected(0);
 							t.selectedItem = mi;
