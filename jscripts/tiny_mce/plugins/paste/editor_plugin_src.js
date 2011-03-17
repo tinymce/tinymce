@@ -331,6 +331,10 @@
 				});
 			}
 
+			// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
+			if (tinymce.isIE && document.documentMode >= 9)
+				process([[/(?:<br>&nbsp;[\s\r\n]+|<br>)*(<\/?(h[1-6r]|p|div|address|pre|form|table|tbody|thead|tfoot|th|tr|td|li|ol|ul|caption|blockquote|center|dl|dt|dd|dir|fieldset)[^>]*>)(?:<br>&nbsp;[\s\r\n]+|<br>)*/g, '$1']]);
+
 			// Detect Word content and process it more aggressive
 			if (/class="?Mso|style="[^"]*\bmso-|w:WordDocument/i.test(h) || o.wordContent) {
 				o.wordContent = true;			// Mark the pasted contents as word specific content
@@ -504,8 +508,7 @@
 
 			process([
 				// Copy paste from Java like Open Office will produce this junk on FF
-				[/Version:[\d.]+\nStartHTML:\d+\nEndHTML:\d+\nStartFragment:\d+\nEndFragment:\d+/gi, ''],
-				[/^<br><br>|(<\/(?:p|h[1-6]|ol|ul|div)>)<br><br>/gi, '$1'] // IE9 adds double BR elements before/after blocks
+				[/Version:[\d.]+\nStartHTML:\d+\nEndHTML:\d+\nStartFragment:\d+\nEndFragment:\d+/gi, '']
 			]);
 
 			// Class attribute options are: leave all as-is ("none"), remove all ("all"), or remove only those starting with mso ("mso").
@@ -701,8 +704,15 @@
 			if (!ed.selection.isCollapsed() && r.startContainer != r.endContainer)
 				ed.getDoc().execCommand('Delete', false, null);
 
-			// It's better to use the insertHTML method on Gecko since it will combine paragraphs correctly before inserting the contents
-			ed.execCommand('mceInsertContent', false, h, {skip_undo : skip_undo});
+			function insert() {
+				ed.execCommand('mceInsertContent', false, h, {skip_undo : skip_undo});
+			};
+
+			// We need to delay the insert since the paste event seems to be moving the caret after it's completed on IE
+			if (tinymce.isIE)
+				window.setTimeout(insert, 0);
+			else
+				insert();
 		},
 
 		/**
