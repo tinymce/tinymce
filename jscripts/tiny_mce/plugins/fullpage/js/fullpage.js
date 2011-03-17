@@ -147,7 +147,7 @@ function init() {
 
 	// Parse meta
 	tinymce.each(doc.getElementsByTagName('meta'), function(n) {
-		var na = (n.getAttribute('name', 2) || '').toLowerCase(), va = n.getAttribute('content', 2), eq = n.getAttribute('httpEquiv', 2) || '';
+		var na = (n.getAttribute('name', 2) || '').toLowerCase(), va = n.getAttribute('content', 2), eq = n.getAttribute('http-equiv', 2) || '';
 
 		e = el['meta' + na];
 
