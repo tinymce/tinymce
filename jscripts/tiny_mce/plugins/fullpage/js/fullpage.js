@@ -47,7 +47,7 @@ var defaultFontNames = 'Arial=arial,helvetica,sans-serif;Courier New=courier new
 var defaultFontSizes = '10px,11px,12px,13px,14px,15px,16px';
 
 function init() {
-	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, dir, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style;
+	var f = document.forms['fullpage'], el = f.elements, e, i, p, doctypes, encodings, mediaTypes, dir, fonts, ed = tinyMCEPopup.editor, dom = tinyMCEPopup.dom, style, xmlVer, xmlEnc, docType;
 
 	// Setup doctype select box
 	doctypes = ed.getParam("fullpage_doctypes", defaultDocTypes).split(',');
@@ -147,7 +147,7 @@ function init() {
 
 	// Parse meta
 	tinymce.each(doc.getElementsByTagName('meta'), function(n) {
-		var na = (n.getAttribute('name', 2) || '').toLowerCase(), va = n.getAttribute('content', 2), eq = n.getAttribute('httpEquiv', 2) || '';
+		var na = (n.getAttribute('name', 2) || '').toLowerCase(), va = n.getAttribute('content', 2), eq = n.getAttribute('http-equiv', 2) || '';
 
 		e = el['meta' + na];
 
@@ -372,18 +372,20 @@ function updateAction() {
 	h = ser.serialize(doc.documentElement);
 	h = h.substring(0, h.lastIndexOf('</body>'));
 
-	if (h.indexOf('<title>') == -1)
+	if (h.indexOf('<title>') == -1 && f.metatitle.value)
 		h = h.replace(/<head.*?>/, '$&\n' + '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
-	else
+	else if (f.metatitle.value)
 		h = h.replace(/<title>(.*?)<\/title>/, '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
-	
+	else
+		h = h.replace(/<title>(.*?)<\/title>\n*/, '');
+
 	if(v = f.langcode.value)
 		htmlt = '<html lang="' + v + '" xml:lang="' + v + '">';
 	else 
 		htmlt = '<html>';
-	
+
 	h = h.replace(/<html.*?>/, htmlt);
-	
+
 	if ((v = getSelectValue(f, 'doctypes')) != '')
 		h = v + '\n' + h;
 
