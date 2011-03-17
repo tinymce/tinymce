@@ -89,8 +89,10 @@
 						parent.insert(node, parents[0], true);
 					}
 
-					if (parents[0].isEmpty(nonEmptyElements)) {
-						parents[0].empty().remove();
+					// Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
+					parent = parents[0];
+					if (parent.isEmpty(nonEmptyElements) || parent.firstChild === parent.lastChild && parent.firstChild.name === 'br') {
+						parent.empty().remove();
 					}
 				} else if (node.parent) {
 					// If it's an LI try to find a UL/OL for it or wrap it

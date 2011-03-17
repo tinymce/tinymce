@@ -97,7 +97,7 @@ test('Whitespace', function() {
 test('Parse invalid contents', function() {
 	var parser, root;
 
-	expect(18);
+	expect(20);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a"><p class="b">123</p></p>');
@@ -118,6 +118,11 @@ test('Parse invalid contents', function() {
 	root = parser.parse('<p class="a"><p class="b">abc</p>def</p>');
 	equals(serializer.serialize(root), '<p class="b">abc</p><p class="a">def</p>', 'P in P with nodes after');
 	deepEqual(countNodes(root), {body: 1, p:2, '#text': 2}, 'P in P with nodes after (count)');
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<p class="a"><p class="b">abc</p><br></p>');
+	equals(serializer.serialize(root), '<p class="b">abc</p>', 'P in P with BR after');
+	deepEqual(countNodes(root), {body: 1, p:1, '#text': 1}, 'P in P with BR after (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('<p class="a">a<strong>b<span>c<em>d<p class="b">e</p>f</em>g</span>h</strong>i</p>');
