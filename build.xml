@@ -210,7 +210,6 @@
 
 	<target name="prepare-versions" depends="init-build-number,prepare-release-files" description="Builds release packages">
 		<!-- Parse minor version, major version and release date from changelog -->
-		<!-- TODO consider including the build number here. -->
 		<loadfile property="changelog" srcFile="${temp_dir}/tinymce/changelog.txt" />
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
