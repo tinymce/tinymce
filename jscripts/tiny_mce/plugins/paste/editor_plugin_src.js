@@ -62,6 +62,12 @@
 				ed.execCallback('paste_postprocess', pl, o);
 			});
 
+			ed.onKeyDown.addToTop(function(ed, e) {
+				// Block ctrl+v from adding an undo level since the default logic in tinymce.Editor will add that
+				if (((tinymce.isMac ? e.metaKey : e.ctrlKey) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45))
+					return false; // Stop other listeners
+			});
+
 			// Initialize plain text flag
 			ed.pasteAsPlainText = false;
 
@@ -273,7 +279,7 @@
 			if (getParam(ed, "paste_auto_cleanup_on_paste")) {
 				// Is it's Opera or older FF use key handler
 				if (tinymce.isOpera || /Firefox\/2/.test(navigator.userAgent)) {
-					ed.onKeyDown.add(function(ed, e) {
+					ed.onKeyDown.addToTop(function(ed, e) {
 						if (((tinymce.isMac ? e.metaKey : e.ctrlKey) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45))
 							grabContent(e);
 					});

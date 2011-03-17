@@ -9,6 +9,7 @@ Version 3.4.1 (2011-xx-x)
 	Fixed bug where search/replace wouldn't be scoped to editor instances on IE8.
 	Fixed bug where IE9 would produce two br elements after block elements when pasting.
 	Fixed bug where IE would place the caret at an incorrect position after a paste operation.
+	Fixed bug where a paste operation using the keyboard would add an extra undo level.
 	Fixed bug where some attributes/elements wasn't correctly filtered when invalid contents was inserted.
 	Fixed bug where the table plugin couldn't correctly handle invalid table structures.
 Version 3.4 (2011-03-10)
