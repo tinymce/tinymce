@@ -334,6 +334,10 @@
 						return v == sv;
 					});
 
+					if (cur && cur.value == v) {
+						c.select(null);
+					}
+
 					return false; // No auto select
 				}
 			});
@@ -381,6 +385,10 @@
 					return v == sv;
 				});
 
+				if (cur && (cur.value.fontSize == v.fontSize || cur.value['class'] == v['class'])) {
+					c.select(null);
+				}
+
 				return false; // No auto select
 			}});
 
@@ -417,7 +425,11 @@
 				samp : 'advanced.samp'
 			}, t = this;
 
-			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', cmd : 'FormatBlock'});
+			c = t.editor.controlManager.createListBox('formatselect', {title : 'advanced.block', onselect : function(v) {
+				t.editor.execCommand('FormatBlock', false, v);
+				return false;
+			}});
+
 			if (c) {
 				each(t.editor.getParam('theme_advanced_blockformats', t.settings.theme_advanced_blockformats, 'hash'), function(v, k) {
 					c.add(t.editor.translate(k != v ? k : fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
