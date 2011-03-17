@@ -372,18 +372,20 @@ function updateAction() {
 	h = ser.serialize(doc.documentElement);
 	h = h.substring(0, h.lastIndexOf('</body>'));
 
-	if (h.indexOf('<title>') == -1)
+	if (h.indexOf('<title>') == -1 && f.metatitle.value)
 		h = h.replace(/<head.*?>/, '$&\n' + '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
-	else
+	else if (f.metatitle.value)
 		h = h.replace(/<title>(.*?)<\/title>/, '<title>' + tinyMCEPopup.dom.encode(f.metatitle.value) + '</title>');
-	
+	else
+		h = h.replace(/<title>(.*?)<\/title>\n*/, '');
+
 	if(v = f.langcode.value)
 		htmlt = '<html lang="' + v + '" xml:lang="' + v + '">';
 	else 
 		htmlt = '<html>';
-	
+
 	h = h.replace(/<html.*?>/, htmlt);
-	
+
 	if ((v = getSelectValue(f, 'doctypes')) != '')
 		h = v + '\n' + h;
 
