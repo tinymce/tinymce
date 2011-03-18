@@ -69,8 +69,21 @@
 				end = r.endOffset;
 				endContainer = prev;
 			} else {
-				end = r.endOffset - 1 - end_offset;
 				endContainer = r.endContainer;
+
+				// Get a text node
+				if (endContainer.nodeType != 3 && endContainer.firstChild) {
+					while (endContainer.nodeType != 3 && endContainer.firstChild)
+						endContainer = endContainer.firstChild;
+
+					r.setStart(endContainer, 0);
+					r.setEnd(endContainer, endContainer.nodeValue.length);
+				}
+
+				if (r.endOffset == 1)
+					end = 2;
+				else
+					end = r.endOffset - 1 - end_offset;
 			}
 
 			start = end;
