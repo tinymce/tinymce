@@ -86,17 +86,6 @@
 			</textarea>
 		</div>
 
-		<!-- Some integration calls -->
-		<a href="javascript:;" onmousedown="tinyMCE.get('elm1').show();">[Show]</a>
-		<a href="javascript:;" onmousedown="tinyMCE.get('elm1').hide();">[Hide]</a>
-		<a href="javascript:;" onmousedown="tinyMCE.get('elm1').execCommand('Bold');">[Bold]</a>
-		<a href="javascript:;" onmousedown="alert(tinyMCE.get('elm1').getContent());">[Get contents]</a>
-		<a href="javascript:;" onmousedown="alert(tinyMCE.get('elm1').selection.getContent());">[Get selected HTML]</a>
-		<a href="javascript:;" onmousedown="alert(tinyMCE.get('elm1').selection.getContent({format : 'text'}));">[Get selected text]</a>
-		<a href="javascript:;" onmousedown="alert(tinyMCE.get('elm1').selection.getNode().nodeName);">[Get selected element]</a>
-		<a href="javascript:;" onmousedown="tinyMCE.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');">[Insert HTML]</a>
-		<a href="javascript:;" onmousedown="tinyMCE.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');">[Replace selection]</a>
-
 		<br />
 		<input type="submit" name="save" value="Submit" />
 		<input type="reset" name="reset" value="Reset" />
