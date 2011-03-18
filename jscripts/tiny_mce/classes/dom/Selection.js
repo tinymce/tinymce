@@ -403,6 +403,12 @@
 						// Insert end marker
 						if (!collapsed) {
 							rng2.collapse(false);
+
+							// Detect the empty space after block elements in IE and move the end back one character <p></p>] becomes <p>]</p>
+							rng.moveToElementText(rng2.parentElement());
+							if (rng.compareEndPoints('StartToEnd', rng2) == 0)
+								rng2.move('character', -1);
+
 							rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
 						}
 					} catch (ex) {

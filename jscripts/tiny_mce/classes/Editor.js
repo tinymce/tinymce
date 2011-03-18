@@ -1989,7 +1989,7 @@
 		 * @param {Object} o Optional object to pass along for the node changed event.
 		 */
 		nodeChanged : function(o) {
-			var t = this, s = t.selection, n = (isIE ? s.getNode() : s.getStart()) || t.getBody();
+			var t = this, s = t.selection, n = s.getStart() || t.getBody();
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
 			if (t.initialized) {
