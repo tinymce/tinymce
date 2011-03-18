@@ -3130,7 +3130,8 @@
 					if (!t.removed && t.undoManager.typing)
 						addUndo();
 				});
-				
+
+				// Add undo level when contents is drag/dropped within the editor
 				t.dom.bind(t.dom.getRoot(), 'dragend', function(e) {
 					addUndo();
 				});
@@ -3164,7 +3165,6 @@
 						rng = t.selection.getRng();
 
 						if (rng.parentElement) {
-							addUndo();
 							parent = rng.parentElement();
 
 							if (!t.undoManager.typing) {
@@ -3197,22 +3197,14 @@
 								t.selection.moveToBookmark(bookmark);
 							}
 
-							addUndo();
-
 							// Block the default delete behavior since it might be broken
 							e.preventDefault();
 							return;
 						}
 					}
 
-					// Special handling for enter to ensure typing is still set to true
-					if (e.keyCode == 13 && t.undoManager.typing) {
-						addUndo();
-						t.undoManager.typing = true;
-					}
-					
-					// Is caracter positon keys
-					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 45) {
+					// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter
+					if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45) {
 						if (t.undoManager.typing)
 							addUndo();
 
