@@ -19,9 +19,12 @@ if (/Firefox\/2/.test(navigator.userAgent)) {
 		autostart: false
 	});
 
-	function createRng() {
-		return document.createRange ? document.createRange() : new tinymce.dom.Range(tinymce.DOM);
-	};
+function createRng() {
+	// Early versions of Firefox have various bugs that cause tests to fail if we use the native Range.
+	// These tests are aimed at the IE compatibility so we don't need to test Gecko, but we use the native Range in Safari and Chrome
+	// to ensure the IE behaviour matches.
+	return document.createRange && !tinymce.isGecko ? document.createRange() : new tinymce.dom.Range(tinymce.DOM);
+};
 
 	function getHTML(co) {
 		var div = document.createElement('div'), h;

@@ -161,6 +161,8 @@ Version 3.3.9 (2010-09-08)
 	Fixed so attributes from legacy elements such as font gets retained when they get converted to spans.
 	Fixed minor issue where the select boxes wouldn't be set the not set by default in the table dialog.
 Version 3.3.8 (2010-06-30)
+	On IE8+ and FireFox 3.5+, dragging an image now correctly adds an undo
+	event.
 	Fixed bug where WebKit would not move the caret to a correct position after a paste operation.
 	Fixed bug where WebKit would produce a div wrapper element when pasting some contents.
 	Fixed bug where the visual chars and nonbreaking plugin wouldn't show nbsp elements correctly.

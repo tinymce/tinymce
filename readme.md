@@ -26,4 +26,4 @@ Will produce an release package of the current repository code. The release pack
 
 Contributing to the TinyMCE project
 ------------------------------------
-You can read more about how to contribute to this project at [http://tinymce.moxiecode.com/contributing](http://tinymce.moxiecode.com/contributing)
+You can read more about how to contribute to this project at [http://tinymce.ephox.com/contributors](http://tinymce.ephox.com/contributors)

@@ -260,14 +260,25 @@ test('commands - subscriptSuperscript', function() {
 });
 
 test('commands - insertHR', function() {
-	var v;
+	var v, rng;
 
-	expect(1);
+	expect(6);
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('InsertHorizontalRule');
 	equals(trimContent(editor.getContent()), '<hr />');
+
+	editor.setContent('<p>test123</p>');
+	setSelection('p', 4);
+	editor.execCommand('InsertHorizontalRule');
+	equals(editor.getContent(), '<p>test</p>\n<hr />\n<p>123</p>');
+	// Check the selection is after the HR
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer, tinymce.isIE ? editor.dom.select('p')[1].firstChild : editor.dom.select('p')[1], 'Selection start container');
+	equals(rng.startOffset, 0, 'Selection start offset');
+	equals(rng.endContainer, tinymce.isIE ? editor.dom.select('p')[1].firstChild : editor.dom.select('p')[1], 'Selection end container');
+	equals(rng.endOffset, 0, 'Selection end offset');
 });
 
 test('commands - indentOutdent', function() {
