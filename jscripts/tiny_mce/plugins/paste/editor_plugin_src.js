@@ -631,30 +631,6 @@
 					});
 				}
 			}
-
-			t._fixListItems(pl, o);
-		},
-
-		/**
-		 * Detects any LI elements pasted outside of a UL or OL and fixes the nesting. This happens when copying part of a list in IE.
-		 */
-		_fixListItems : function(pl, o) {
-			var ul, i, n, dom = this.editor.dom;
-			for (i = 0; i < o.node.childNodes.length; i++) {
-				n = o.node.childNodes[i];
-
-				if (n.tagName === 'LI') {
-					if (!ul) {
-						ul = dom.create('UL');
-						n.parentNode.insertBefore(ul, n);
-						i++;
-					}
-					ul.appendChild(n);
-					i--;
-				} else {
-					ul = null;
-				}
-			}
 		},
 
 		/**
