@@ -3200,6 +3200,11 @@
 
 					// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter
 					if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45) {
+						// Add position before enter key is pressed, used by IE since it still uses the default browser behavior
+						// Todo: Remove this once we normalize enter behavior on IE
+						if (tinymce.isIE && keyCode == 13)
+							t.undoManager.beforeChange();
+
 						if (t.undoManager.typing)
 							addUndo();
 
