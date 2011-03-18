@@ -1,5 +1,5 @@
 Version 3.4.1 (2011-xx-x)
-	Removed background colors from ui.css to improve compliance with users browser color preferences.
+	Set table background colors to transparent in ui.css to improve compliance with users browser color preferences.
 	Fixed bug where selection locations on undo/redo didn't work correctly on specific contents.
 	Fixed bug where an exception would be trown on IE when loading TinyMCE inside an iframe.
 	Fixed bug where some ascii numeric entities wasn't properly decoded.
