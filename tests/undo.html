@@ -22,6 +22,7 @@ function assertUndoEnabledWhenTyping(c, expectedContent) {
 	editor.setContent('<p>Content</p>');
 
 	editor.undoManager.clear();
+	editor.undoManager.add();
 	editor.execCommand('mceRepaint');
 	setSelection('p', 4);
 	ok(!isUndoEnabled(), 'Undo starts disabled.');
