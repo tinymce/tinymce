@@ -74,15 +74,15 @@
 		</div>
 
 		<!-- Some integration calls -->
-		<a href="javascript:;" onmousedown="$('#elm1').tinymce().show();">[Show]</a>
-		<a href="javascript:;" onmousedown="$('#elm1').tinymce().hide();">[Hide]</a>
-		<a href="javascript:;" onmousedown="$('#elm1').tinymce().execCommand('Bold');">[Bold]</a>
-		<a href="javascript:;" onmousedown="alert($('#elm1').html());">[Get contents]</a>
-		<a href="javascript:;" onmousedown="alert($('#elm1').tinymce().selection.getContent());">[Get selected HTML]</a>
-		<a href="javascript:;" onmousedown="alert($('#elm1').tinymce().selection.getContent({format : 'text'}));">[Get selected text]</a>
-		<a href="javascript:;" onmousedown="alert($('#elm1').tinymce().selection.getNode().nodeName);">[Get selected element]</a>
-		<a href="javascript:;" onmousedown="$('#elm1').tinymce().execCommand('mceInsertContent',false,'<b>Hello world!!</b>');">[Insert HTML]</a>
-		<a href="javascript:;" onmousedown="$('#elm1').tinymce().execCommand('mceReplaceContent',false,'<b>{$selection}</b>');">[Replace selection]</a>
+		<a href="javascript:;" onclick="$('#elm1').tinymce().show();return false;">[Show]</a>
+		<a href="javascript:;" onclick="$('#elm1').tinymce().hide();return false;">[Hide]</a>
+		<a href="javascript:;" onclick="$('#elm1').tinymce().execCommand('Bold');return false;">[Bold]</a>
+		<a href="javascript:;" onclick="alert($('#elm1').html());return false;">[Get contents]</a>
+		<a href="javascript:;" onclick="alert($('#elm1').tinymce().selection.getContent());return false;">[Get selected HTML]</a>
+		<a href="javascript:;" onclick="alert($('#elm1').tinymce().selection.getContent({format : 'text'}));return false;">[Get selected text]</a>
+		<a href="javascript:;" onclick="alert($('#elm1').tinymce().selection.getNode().nodeName);return false;">[Get selected element]</a>
+		<a href="javascript:;" onclick="$('#elm1').tinymce().execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
+		<a href="javascript:;" onclick="$('#elm1').tinymce().execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
 
 		<br />
 		<input type="submit" name="save" value="Submit" />
