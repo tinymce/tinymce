@@ -385,7 +385,7 @@ var ImageDialog = {
 				v = f.border.value;
 				if (v || v == '0') {
 					if (v == '0')
-						img.style.border = '0';
+						img.style.border = '0 none none';
 					else
 						img.style.border = v + 'px solid black';
 				}
