@@ -597,20 +597,6 @@
 					t.setRng(bookmark.rng);
 			}
 		},
-		
-		/**
-		 * Moves the selection to be collapsed immediately after the node.
-		 * 
-		 * @method moveAfterNode
-		 * @param {Element} node HTML DOM element to position caret after.
-		 * @return {Element} the same element as the one that got passed in. 
-		 */
-		moveAfterNode: function(node) {
-			var rng = this.dom.createRng();
-			rng.setStartAfter(node);
-			rng.setEndAfter(node);
-			this.setRng(rng);
-		},
 
 		/**
 		 * Selects the specified element. This will place the start and end of the selection range around the element.
