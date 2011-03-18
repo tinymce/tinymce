@@ -137,9 +137,6 @@
 						t._updateUndoStatus(ed);
 					});
 				}
-
-				if (ed.settings.content_css !== false)
-					ed.dom.loadCSS(ed.baseURI.toAbsolute(url + "/skins/" + ed.settings.skin + "/content.css"));
 			});
 
 			ed.onSetProgressState.add(function(ed, b, ti) {
@@ -936,12 +933,6 @@
 
 			o.deltaHeight -= 21;
 			n = tb = null;
-		},
-		
-		_updateUndoStatus : function(ed) {
-			var cm = ed.controlManager;
-			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
-			cm.setDisabled('redo', !ed.undoManager.hasRedo());
 		},
 
 		_updateUndoStatus : function(ed) {
