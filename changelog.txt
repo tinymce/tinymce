@@ -18,6 +18,8 @@ Version 3.4.1 (2011-xx-x)
 	Fixed bug where the constrain proportions checkbox wouldn't work in the media plugin.
 	Fixed bug where block elements containing trailing br elements wouldn't treated properly if they where invalid.
 	Fixed bug where the color picker dialog wouldn't be rendered correctly when using the o2k7 theme.
+	Fixed bug where setting border=0 using advimage plugin invalid style attribute content was created in Chrome.
+    Fixed bug with references to non-existing images in css of fullpage plugin.
 Version 3.4 (2011-03-10)
 	Added accessibility example with various accessibility options contributed by Ephox.
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.
