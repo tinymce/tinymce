@@ -35,12 +35,17 @@
 	width: 240px;
 }
 
+#doctypes {
+	width: 200px;
+}
+
 /* Head list classes */
 
 .headlistwrapper {
 	width: 100%;
 }
 
+/* not implemented advanced tab buttons
 .addbutton, .removebutton, .moveupbutton, .movedownbutton {
 	border-top: 1px solid;
 	border-left: 1px solid;
@@ -51,10 +56,6 @@
 	display: block;
 	width: 20px;
 	height: 20px;
-}
-
-#doctypes {
-	width: 200px;
 }
 
 .addbutton:hover, .removebutton:hover, .moveupbutton:hover, .movedownbutton:hover {
@@ -83,6 +84,7 @@
 	background-image: url('../images/move_down.gif');
 	float: left;
 }
+*/
 
 .selected {
 	border: 1px solid #0A246A;
