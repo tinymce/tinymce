@@ -2508,6 +2508,8 @@
 			if (!args.no_events)
 				self.onBeforeSetContent.dispatch(self, args);
 
+			content = args.content;
+
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (content.length === 0 || /^\s+$/.test(content))) {
@@ -2517,13 +2519,13 @@
 
 			// Parse and serialize the html
 			if (args.format !== 'raw') {
-				args.content = new tinymce.html.Serializer({}, self.schema).serialize(
-					self.parser.parse(args.content)
+				content = new tinymce.html.Serializer({}, self.schema).serialize(
+					self.parser.parse(content)
 				);
 			}
 
 			// Set the new cleaned contents to the editor
-			body.innerHTML = tinymce.trim(args.content);
+			body.innerHTML = args.content = tinymce.trim(content);
 
 			// Do post processing
 			if (!args.no_events)

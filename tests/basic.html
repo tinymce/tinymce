@@ -445,6 +445,31 @@ test('WebKit Serialization range bug', function() {
 	}
 });
 
+test('setContent', function() {
+	var count;
+
+	expect(4);
+
+	function callback(ed, args) {
+		args.content = args.content.replace(/test/, 'X');
+		count++;
+	};
+
+	editor.onSetContent.add(callback);
+	editor.onBeforeSetContent.add(callback);
+	count = 0;
+	editor.setContent('<p>test</p>');
+	equals(editor.getContent(), "<p>X</p>");
+	equals(count, 2);
+	editor.onSetContent.remove(callback);
+	editor.onBeforeSetContent.remove(callback);
+
+	count = 0;
+	editor.setContent('<p>test</p>');
+	equals(editor.getContent(), "<p>test</p>");
+	equals(count, 0);
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
