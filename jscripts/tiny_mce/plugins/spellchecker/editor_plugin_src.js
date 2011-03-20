@@ -221,7 +221,7 @@
 		},
 
 		_markWords : function(wl) {
-			var rx, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [], se = ed.selection, b = se.getBookmark();
+			var rx, w = '', ws = /^\s+$/, ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [], se = ed.selection, b = se.getBookmark();
 
 			each(wl, function(v) {
 				w += (w ? '|' : '') + v;
@@ -238,11 +238,18 @@
 
 			// Wrap incorrect words in spans
 			each(nl, function(n) {
-				var v;
-
-				v = n.nodeValue;
+				var tn, pr, v = n.nodeValue;
 
 				if (rx.test(v)) {
+					// Bug #1408: Fix preceding whitespace characters in IE, because they will be
+					// removed in dom.create() below. If previous node was a "tagged" node
+					// then there will be no space between the created span and this node.
+					// @TODO: Not tested with IE9 where this might be unwanted
+					if (tinymce.isIE && (pr = RegExp.$1) && pr.match(ws)) {
+						tn = document.createTextNode(pr);
+						n.parentNode.insertBefore(tn, n);
+					}
+
 					v = dom.encode(v);
 					v = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
 
