@@ -221,8 +221,7 @@
 		},
 
 		_markWords : function(wl) {
-			var rx, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [];
-			var se = ed.selection, b = se.getBookmark();
+			var rx, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [], se = ed.selection, b = se.getBookmark();
 
 			each(wl, function(v) {
 				w += (w ? '|' : '') + v;
@@ -241,15 +240,13 @@
 			each(nl, function(n) {
 				var v;
 
-				if (n.nodeType == 3) {
-					v = n.nodeValue;
+				v = n.nodeValue;
 
-					if (rx.test(v)) {
-						v = dom.encode(v);
-						v = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
+				if (rx.test(v)) {
+					v = dom.encode(v);
+					v = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
 
-						dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
-					}
+					dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
 				}
 			});
 
