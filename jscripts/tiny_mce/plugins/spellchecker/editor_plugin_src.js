@@ -242,7 +242,7 @@
 
 				if (rx.test(v)) {
 					// Bug #1408: Fix preceding whitespace characters in IE, because they will be
-					// removed in dom.create() below. If previous node was a "tagged" node
+					// removed in dom.create() below. If previous node wasn't a text node
 					// then there will be no space between the created span and this node.
 					// @TODO: Not tested with IE9 where this might be unwanted
 					if (tinymce.isIE && (pr = RegExp.$1) && pr.match(ws)) {
