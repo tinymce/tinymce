@@ -1487,7 +1487,7 @@
 
 			// Pass through
 			t.undoManager.onAdd.add(function(um, l) {
-				if (!l.initial)
+				if (um.hasUndo())
 					return t.onChange.dispatch(t, l, um);
 			});
 
