@@ -90,7 +90,8 @@
 					if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == 3) {
 						nodes = dom.select('p,h1,h2,h3,h4,h5,h6,pre', o.node);
 
-						if (nodes.length == 1)
+						// Is only one block node and it doesn't contain word stuff
+						if (nodes.length == 1 && o.content.indexOf('__MCE_ITEM__') === -1)
 							dom.remove(nodes.reverse(), true);
 					}
 				}
