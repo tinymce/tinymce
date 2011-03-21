@@ -130,6 +130,9 @@
 						var o = {icon : 1}, mi;
 
 						o.onclick = function() {
+							if (v == t.selectedLang) {
+								return;
+							}
 							mi.setSelected(1);
 							t.selectedItem.setSelected(0);
 							t.selectedItem = mi;
@@ -218,18 +221,13 @@
 		},
 
 		_markWords : function(wl) {
-			var r1, r2, r3, r4, r5, w = '', ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [];
-			var se = ed.selection, b = se.getBookmark();
+			var rx, w = '', ws = /^\s+$/, ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [], se = ed.selection, b = se.getBookmark();
 
 			each(wl, function(v) {
 				w += (w ? '|' : '') + v;
 			});
 
-			r1 = new RegExp('([' + re + '])(' + w + ')([' + re + '])', 'g');
-			r2 = new RegExp('^(' + w + ')', 'g');
-			r3 = new RegExp('(' + w + ')([' + re + ']?)$', 'g');
-			r4 = new RegExp('^(' + w + ')([' + re + ']?)$', 'g');
-			r5 = new RegExp('(' + w + ')([' + re + '])', 'g');
+			rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
 
 			// Collect all text nodes
 			this._walk(this.editor.getBody(), function(n) {
@@ -240,18 +238,22 @@
 
 			// Wrap incorrect words in spans
 			each(nl, function(n) {
-				var v;
+				var tn, pr, v = n.nodeValue;
 
-				if (n.nodeType == 3) {
-					v = n.nodeValue;
-
-					if (r1.test(v) || r2.test(v) || r3.test(v) || r4.test(v)) {
-						v = dom.encode(v);
-						v = v.replace(r5, '<span class="mceItemHiddenSpellWord">$1</span>$2');
-						v = v.replace(r3, '<span class="mceItemHiddenSpellWord">$1</span>$2');
-
-						dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
+				if (rx.test(v)) {
+					// Bug #1408: Fix preceding whitespace characters in IE, because they will be
+					// removed in dom.create() below. If previous node wasn't a text node
+					// then there will be no space between the created span and this node.
+					// @TODO: Not tested with IE9 where this might be unwanted
+					if (tinymce.isIE && (pr = RegExp.$1) && pr.match(ws)) {
+						tn = document.createTextNode(pr);
+						n.parentNode.insertBefore(tn, n);
 					}
+
+					v = dom.encode(v);
+					v = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
+
+					dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
 				}
 			});
 
