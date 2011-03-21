@@ -266,15 +266,7 @@
 			e = 0; // Fixes IE memory leak
 
 			if (!m) {
-				p1 = DOM.getPos(ed.getContentAreaContainer());
-				//p2 = DOM.getPos(ed.getContainer());
-
-				m = ed.controlManager.createDropMenu('spellcheckermenu', {
-					offset_x : p1.x,
-					offset_y : p1.y,
-					'class' : 'mceNoIcons'
-				});
-
+				m = ed.controlManager.createDropMenu('spellcheckermenu', {'class' : 'mceNoIcons'});
 				t._menu = m;
 			}
 
@@ -357,6 +349,10 @@
 
 					m.update();
 				});
+
+				p1 = dom.getPos(ed.getContentAreaContainer());
+				m.settings.offset_x = p1.x;
+				m.settings.offset_y = p1.y;
 
 				ed.selection.select(wordSpan);
 				p1 = dom.getPos(wordSpan);
