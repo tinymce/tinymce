@@ -360,16 +360,14 @@ function setAttrib(elm, attrib, value) {
 }
 
 function getAnchorListHTML(id, target) {
-	var inst = tinyMCEPopup.editor;
-	var nodes = inst.dom.select('a.mceItemAnchor,img.mceItemAnchor'), name, i;
-	var html = "";
+	var ed = tinyMCEPopup.editor, nodes = ed.dom.select('a'), name, i, len, html = "";
 
 	html += '<select id="' + id + '" name="' + id + '" class="mceAnchorList" o2nfocus="tinyMCE.addSelectAccessibility(event, this, window);" onchange="this.form.' + target + '.value=';
 	html += 'this.options[this.selectedIndex].value;">';
 	html += '<option value="">---</option>';
 
-	for (i=0; i<nodes.length; i++) {
-		if ((name = inst.dom.getAttrib(nodes[i], "name")) != "")
+	for (i=0, len=nodes.length; i<len; i++) {
+		if ((name = ed.dom.getAttrib(nodes[i], "name")) != "")
 			html += '<option value="#' + name + '">' + name + '</option>';
 	}
 
