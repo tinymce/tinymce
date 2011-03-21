@@ -384,6 +384,10 @@
 
 							dom.remove(node);
 						}
+
+						// Make sure that the selection is collapsed after we removed the node fixes a WebKit bug
+						// where WebKit would place the endContainer/endOffset at a different location than the startContainer/startOffset
+						selection.collapse(true);
 					}
 				}
 
