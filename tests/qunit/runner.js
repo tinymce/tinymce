@@ -14,9 +14,21 @@
 	}
 
 	function runNext() {
-		currentTest = QUnitRunner.tests[index++];
+		do {
+			currentTest = QUnitRunner.tests[index++];
+
+			if (!currentTest || (initSettings.jsrobot_tests || !currentTest.jsrobot))
+				break;
+		} while (currentTest);
+
+		// We are done
+		if (index > QUnitRunner.tests.length)
+			return false;
+
 		document.getElementById(currentTest.id + '_status').innerHTML = '(Running)';
-		iframe.src = currentTest.url;
+		iframe.src = currentTest.url + "?min=" + initSettings.min_tests;
+
+		return true;
 	}
 
 	function parseQuery(query) {
@@ -71,6 +83,12 @@
 			this.query = parseQuery(document.location.search.substr(1));
 
 			window.onload = function() {
+				if (document.location.search.indexOf('min=true') > 0)
+					document.getElementById('min').checked = true;
+
+				if (document.location.search.indexOf('jsrobot=false') > 0)
+					document.getElementById('jsrobot').checked = false;
+
 				document.getElementById('menu').innerHTML = html;
 
 				if (self.query.id) {
@@ -106,6 +124,10 @@
 				document.body.appendChild(iframe);
 			}
 
+			// Get min/jsrobot status
+			initSettings.min_tests = document.getElementById('min').checked;
+			initSettings.jsrobot_tests = document.getElementById('jsrobot').checked;
+
 			// Reset log
 			logElement = document.getElementById('log');
 			testLog = logElement.innerHTML = '';
@@ -128,9 +150,7 @@
 
 			log((failures > 0 ? "[FAILED]" : "[PASSED]") + " " + currentTest.suite.title + " - " + currentTest.title + ". Tests: " + total + ", Failed: " + failures);
 
-			if (index < this.tests.length) {
-				runNext();
-			} else {
+			if (!runNext()) {
 				log("Finished running all tests. Total: " + testTotal + ", Failed: " + testFailures, true);
 				document.getElementById('total_status').className = testFailures > 0 ? 'fail' : 'pass';
 				if (iframe) {

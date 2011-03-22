@@ -46,15 +46,15 @@
 					{title: 'Editor tests', tests: [
 						{title: 'Core API', url: 'api.html'},
 						{title: 'Basic functionality', url: 'basic.html'},
-						{title: 'Remove', url: 'remove.html'},
-						{title: 'Undo', url: 'undo.html'}
+						{title: 'Remove', url: 'remove.html', jsrobot: true},
+						{title: 'Undo', url: 'undo.html', jsrobot: true}
 					]},
 
 					{title: 'Plugins tests', tests: [
 						{title: 'Media plugin', url: 'media.html'},
 						{title: 'Paste plugin', url: 'paste.html'},
 						{title: 'jQuery plugin', url: 'jquery_plugin.html'},
-						{title: 'Autolink plugin', url: 'autolink.html'},
+						{title: 'Autolink plugin', url: 'autolink.html', jsrobot: true},
 						{title: 'Wordcount plugin', url: 'wordcount.html'},
 						{title: 'Fullpage plugin', url: 'fullpage.html'}
 					]},
@@ -101,9 +101,9 @@
 					]},
 
 					{title: 'List tests', tests: [
-	                    {title: 'Applying lists', url: 'lists_applying.html'},
-	                    {title: 'Indenting lists', url: 'lists_indenting.html'},
-	                    {title: 'Forced BRs', url: 'lists_forced_brs.html'}
+	                    {title: 'Applying lists', url: 'lists_applying.html', jsrobot: true},
+	                    {title: 'Indenting lists', url: 'lists_indenting.html', jsrobot: true},
+	                    {title: 'Forced BRs', url: 'lists_forced_brs.html', jsrobot: true}
 					]}
 				]
 			]
@@ -115,7 +115,7 @@
 <h1 id="qunit-header">TinyMCE Unit Tests</h1>
 <div id="total_status"></div>
 <div id="menu"></div>
-<div><input type="button" value="Run all" onclick="QUnitRunner.run();" /></div>
+<div><input type="button" value="Run all" onclick="QUnitRunner.run();" /><input type="checkbox" id="min" name="min" checked="checked" /> Run on minified code <input type="checkbox" id="jsrobot" name="jsrobot" checked="checked" /> JSRobot tests</div>
 <div id="log"></div>
 
 </body>
