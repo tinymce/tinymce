@@ -338,12 +338,15 @@ function updateAction() {
 
 	setAttr(doc.body, 'vLink', f.visited_color.value);
 	setAttr(doc.body, 'link', f.link_color.value);
-	setAttr(doc.body, 'text', f.textcolor.value);
 	setAttr(doc.body, 'aLink', f.active_color.value);
 
 	doc.body.style.fontFamily = getSelectValue(f, 'fontface');
 	doc.body.style.fontSize = getSelectValue(f, 'fontsize');
 	doc.body.style.backgroundColor = f.bgcolor.value;
+
+	// Bug #4216: Using deprecated text attribute does not work in all browsers
+	doc.body.style.color = f.textcolor.value;
+	setAttr(doc.body, 'text', '');
 
 	if (f.leftmargin.value != '')
 		doc.body.style.marginLeft = f.leftmargin.value + 'px';
