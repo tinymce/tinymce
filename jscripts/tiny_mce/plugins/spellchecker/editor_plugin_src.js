@@ -266,8 +266,8 @@
 						}
 						// Add text node for the rest of the content
 						if (v.length) {
-                            node = document.createTextNode(dom.decode(v));
-                            elem.appendChild(node);
+							node = document.createTextNode(dom.decode(v));
+							elem.appendChild(node);
 						}
 					} else {
 						// Other browsers preserve whitespace characters on innerHTML usage
