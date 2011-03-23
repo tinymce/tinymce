@@ -26,9 +26,12 @@
 
 			if (elm.nodeName == "SELECT")
 				selectByValue(document.forms[0], id, value);
-			else if (elm.type == "checkbox")
-				elm.checked = !!value;
-			else
+			else if (elm.type == "checkbox") {
+				if (typeof(value) == 'string')
+					elm.checked = value === 'true' ? true : false;
+				else
+					elm.checked = !!value;
+			} else
 				elm.value = value;
 		}
 	}
@@ -244,7 +247,6 @@
 					data.type = 'iframe';
 					src = 'http://www.youtube.com/embed/' + src.match(/v=([^&]+)/)[1];
 					setVal('src', src);
-					setVal('media_type', data.type);
 				}
 
 				// Google video
@@ -254,7 +256,6 @@
 					data.type = 'flash';
 					src = 'http://video.google.com/googleplayer.swf?docId=' + src.match(/docid=([^&]+)/)[1] + '&hl=en';
 					setVal('src', src);
-					setVal('media_type', data.type);
 				}
 
 				if (data.type == 'video') {
@@ -284,9 +285,6 @@
 		},
 
 		formToData : function(field) {
-			if (field == "width" || field == "height")
-				this.changeSize(field);
-
 			if (field == 'source') {
 				this.moveStates(false, field);
 				setVal('source', this.editor.plugins.media.dataToHtml(this.data));
@@ -303,11 +301,6 @@
 			}
 		},
 
-		beforeResize : function() {
-			this.width = parseInt(getVal('width') || "320", 10);
-			this.height = parseInt(getVal('height') || "240", 10);
-		},
-
 		changeSize : function(type) {
 			var width, height, scale, size;
 
@@ -315,14 +308,13 @@
 				width = parseInt(getVal('width') || "320", 10);
 				height = parseInt(getVal('height') || "240", 10);
 
-				if (type == 'width') {
-					this.height = Math.round((width / this.width) * height);
-					setVal('height', this.height);
-				} else {
-					this.width = Math.round((height / this.height) * width);
-					setVal('width', this.width);
-				}
+				if (type == 'width')
+					setVal('height', Math.round((width / this.data.width) * width));
+				else
+					setVal('width', Math.round((height / this.data.height) * height));
 			}
+
+			this.formToData();
 		},
 
 		getMediaListHTML : function() {
