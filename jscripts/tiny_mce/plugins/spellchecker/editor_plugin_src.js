@@ -221,16 +221,11 @@
 		},
 
 		_markWords : function(wl) {
-			var rx, w = '', ws = /^\s+$/, ed = this.editor, re = this._getSeparators(), dom = ed.dom, nl = [], se = ed.selection, b = se.getBookmark();
-
-			each(wl, function(v) {
-				w += (w ? '|' : '') + v;
-			});
-
-			rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
+			var ws = /^\s+$/, ed = this.editor, dom = ed.dom, nl = [], se = ed.selection, b = se.getBookmark(),
+				w = wl.join('|'), re = this._getSeparators(), rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
 
 			// Collect all text nodes
-			this._walk(this.editor.getBody(), function(n) {
+			this._walk(ed.getBody(), function(n) {
 				if (n.nodeType == 3) {
 					nl.push(n);
 				}
@@ -238,22 +233,49 @@
 
 			// Wrap incorrect words in spans
 			each(nl, function(n) {
-				var tn, pr, v = n.nodeValue;
+				var node, elem, txt, pos, v = n.nodeValue;
 
 				if (rx.test(v)) {
-					// Bug #1408: Fix preceding whitespace characters in IE, because they will be
-					// removed in dom.create() below. If previous node wasn't a text node
-					// then there will be no space between the created span and this node.
-					// @TODO: Not tested with IE9 where this might be unwanted
-					if (tinymce.isIE && (pr = RegExp.$1) && pr.match(ws)) {
-						tn = document.createTextNode(pr);
-						n.parentNode.insertBefore(tn, n);
+					// Encode the content
+					v = dom.encode(v);
+					// Create container element
+					elem = dom.create('span', {'class' : 'mceItemHidden'});
+
+					// Following code fixes IE issues by creating text nodes
+					// using DOM methods instead of innerHTML.
+					// Bug #3124: <PRE> elements content is broken after spellchecking.
+					// Bug #1408: Preceding whitespace characters are removed
+					// @TODO: I'm not sure that both are still issues on IE9.
+					if (tinymce.isIE) {
+						// Enclose mispelled words with temporal tag
+						v = v.replace(rx, '$1<mcespell>$2</mcespell>');
+						// Loop over the content finding mispelled words
+						while ((pos = v.indexOf('<mcespell>')) != -1) {
+							// Add text node for the content before the word
+							txt = v.substring(0, pos);
+							if (txt.length) {
+								node = document.createTextNode(dom.decode(txt));
+								elem.appendChild(node);
+							}
+							v = v.substring(pos+10);
+							pos = v.indexOf('</mcespell>');
+							txt = v.substring(0, pos);
+							v = v.substring(pos+11);
+							// Add span element for the word
+							elem.appendChild(dom.create('span', {'class' : 'mceItemHiddenSpellWord'}, txt));
+						}
+						// Add text node for the rest of the content
+						if (v.length) {
+                            node = document.createTextNode(dom.decode(v));
+                            elem.appendChild(node);
+						}
+					} else {
+						// Other browsers preserve whitespace characters on innerHTML usage
+						elem.innerHTML = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
 					}
 
-					v = dom.encode(v);
-					v = v.replace(rx, '$1<span class="mceItemHiddenSpellWord">$2</span>');
-
-					dom.replace(dom.create('span', {'class' : 'mceItemHidden'}, v), n);
+					// Finally, replace the node with the container
+					dom.replace(elem, n);
 				}
 			});
 
