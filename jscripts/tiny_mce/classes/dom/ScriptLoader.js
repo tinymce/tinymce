@@ -73,7 +73,7 @@
 
 				// If script is from same domain and we
 				// use IE 6 then use XHR since it's more reliable
-				if (uri.host == loc.hostname && uri.port == loc.port && (uri.protocol + ':') == loc.protocol) {
+				if (uri.host == loc.hostname && uri.port == loc.port && (uri.protocol + ':') == loc.protocol && uri.protocol.toLowerCase() != 'file') {
 					tinymce.util.XHR.send({
 						url : tinymce._addVer(uri.getURI()),
 						success : function(content) {
