@@ -221,7 +221,7 @@
 		},
 
 		_markWords : function(wl) {
-			var ws = /^\s+$/, ed = this.editor, dom = ed.dom, nl = [], se = ed.selection, b = se.getBookmark(),
+			var ed = this.editor, dom = ed.dom, se = ed.selection, b = se.getBookmark(), nl = [],
 				w = wl.join('|'), re = this._getSeparators(), rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
 
 			// Collect all text nodes
