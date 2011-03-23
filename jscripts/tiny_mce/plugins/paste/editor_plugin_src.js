@@ -146,7 +146,7 @@
 			// hidden div and placing the caret inside it and after the browser paste
 			// is done it grabs that contents and processes that
 			function grabContent(e) {
-				var n, or, rng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY, textContent;
+				var n, or, rng, oldRng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY, textContent;
 
 				// Check if browser supports direct plaintext access
 				if (e.clipboardData || dom.doc.dataTransfer) {
@@ -163,7 +163,7 @@
 					return;
 
 				// Create container to paste into
-				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste', 'data-mce-bogus' : '1'}, '\uFEFF<br data-mce-bogus="1">');
+				n = dom.add(body, 'div', {id : '_mcePaste', 'class' : 'mcePaste', 'data-mce-bogus' : '1'}, '\uFEFF\uFEFF<br data-mce-bogus="1">');
 
 				// If contentEditable mode we need to find out the position of the closest element
 				if (body != ed.getDoc().body)
@@ -182,6 +182,9 @@
 				});
 
 				if (tinymce.isIE) {
+					// Store away the old range
+					oldRng = sel.getRng();
+
 					// Select the container
 					rng = dom.doc.body.createTextRange();
 					rng.moveToElementText(n);
@@ -197,6 +200,10 @@
 						e.preventDefault();
 						return;
 					}
+
+					// Restore the old range and clear the contents before pasting
+					sel.setRng(oldRng);
+					sel.setContent('');
 
 					// For some odd reason we need to detach the the mceInsertContent call from the paste event
 					// It's like IE has a reference to the parent element that you paste in and the selection gets messed up

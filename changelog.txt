@@ -27,6 +27,7 @@ Version 3.4.1 (2011-xx-x)
 	Fixed bug with empty anchors list in advlink popup when Invisible Elements feature was disabled.
 	Fixed bug where older IE versions wouldn't properly handle some elements if they where placed at the top of editor contents.
 	Fixed bug where selecting the whole table would enable table tools for cells and rows.
+	Fixed bug where it wasn't possible to replace selected contents on IE when pasting using the paste plugin.
 Version 3.4 (2011-03-10)
 	Added accessibility example with various accessibility options contributed by Ephox.
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.
