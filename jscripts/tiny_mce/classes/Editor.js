@@ -2525,7 +2525,8 @@
 			}
 
 			// Set the new cleaned contents to the editor
-			body.innerHTML = args.content = tinymce.trim(content);
+			args.content = tinymce.trim(content);
+			self.dom.setHTML(body, args.content);
 
 			// Do post processing
 			if (!args.no_events)
