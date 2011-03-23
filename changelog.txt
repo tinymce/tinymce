@@ -25,6 +25,7 @@ Version 3.4.1 (2011-xx-x)
 	Fixed bug where spellchecking would merge some words on IE.
 	Fixed bug where spellchecker context menu was not always positioned correctly.
 	Fixed bug with empty anchors list in advlink popup when Invisible Elements feature was disabled.
+	Fixed bug where older IE versions wouldn't properly handle some elements if they where placed at the top of editor contents.
 	Fixed bug where setting text color in fullpage plugin doesn't work.
 Version 3.4 (2011-03-10)
 	Added accessibility example with various accessibility options contributed by Ephox.
