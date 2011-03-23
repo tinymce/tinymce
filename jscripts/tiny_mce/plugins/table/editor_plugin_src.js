@@ -790,8 +790,10 @@
 				ed.onClick.add(function(ed, e) {
 					e = e.target;
 
-					if (e.nodeName === 'TABLE')
+					if (e.nodeName === 'TABLE') {
 						ed.selection.select(e);
+						ed.nodeChanged();
+					}
 				});
 			}
 
