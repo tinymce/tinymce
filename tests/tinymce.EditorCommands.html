@@ -117,7 +117,7 @@ test('mceInsertContent', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
-	equals(getContent(), '<p><img src="about:blank"></p>');
+	equals(getContent(), '<p><img src="about:blank" alt="" data-mce-src="about:blank"></p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
 	equals(rng.startContainer.nodeName, 'P');
