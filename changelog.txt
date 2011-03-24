@@ -1,5 +1,6 @@
 Version 3.4.1.x (2011-03-xx)
 	Fixed bug where contents inserted with mceInsertContent wasn't parsed using the default dom parser.
+	Fixed bug where merging of table cells on IE 6, 7 wouldn't look correctly until the contents was refreshed.
 Version 3.4.1 (2011-03-24)
 	Added significantly improved list handling via the new 'lists' plugin.
 	Added 'autolink' plugin to enable automatically linking URLs. Similar to the behavior IE has by default.
