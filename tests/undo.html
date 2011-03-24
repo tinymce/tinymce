@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Undo Tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/tiny_mce_loader.js"></script>
+<script>
+QUnit.config.autostart = false;
+
+module('Undo', {
+	autostart: false
+});
+
+function isUndoEnabled() {
+	return !editor.controlManager.get('undo').isDisabled();
+}
+
+function assertUndoEnabledWhenTyping(c, expectedContent) {
+	editor.setContent('<p>Content</p>');
+
+	editor.undoManager.clear();
+	editor.undoManager.add();
+	editor.execCommand('mceRepaint');
+	setSelection('p', 4);
+	ok(!isUndoEnabled(), 'Undo starts disabled.');
+	editor.focus();
+	robot.type(c, false, function() {
+		equals(editor.getContent(), expectedContent);
+		ok(isUndoEnabled(), 'Undo is enabled.');
+		QUnit.start();
+	}, editor.selection.getNode());
+}
+
+asyncTest('Undo added when typing character', function() {
+	assertUndoEnabledWhenTyping('b', '<p>Contbent</p>');
+});
+
+asyncTest('Undo added when typing enter', function() {
+	assertUndoEnabledWhenTyping('\n', '<p>Cont</p><p>ent</p>');
+});
+
+asyncTest('Forward delete triggers undo in IE', function() {
+	editor.setContent('<p>Test1 Test2</p>');
+	editor.undoManager.clear();
+	editor.execCommand('mceRepaint');
+	ok(!isUndoEnabled(), 'Undo is disabled.');
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 6);
+	editor.selection.setRng(rng);
+
+	robot.forwardDelete(function() {
+		equals(editor.getContent(), '<p>Test2</p>', 'First word has been deleted');
+		ok(isUndoEnabled(), 'Undo is enabled.');
+
+		editor.undoManager.undo();
+		equals(editor.getContent(), '<p>Test1 Test2</p>', 'First word has been restored');
+
+		QUnit.start();
+	}, editor.selection.getNode());
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	cleanup: true,
+	add_unload_trigger : false,
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+	}
+});
+
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Undo Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1">Content
+		</textarea>
+	</div>
+	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
+	<script>
+	initWhenTinyAndRobotAreReady();
+	</script>
+</body>
+</html>

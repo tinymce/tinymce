@@ -27,25 +27,43 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 	var startContainer = findContainer(startSelector);
 	var endContainer = findContainer(endSelector);
 	var rng = editor.dom.createRng();
-	rng.setStart(startContainer, startOffset);
-	rng.setEnd(endContainer, endOffset);
+	
+	function setRange(container, offset, start) {
+		if (offset === 'after') {
+			if (start) {
+				rng.setStartAfter(container);
+			} else {
+				rng.setEndAfter(container);
+			}
+			return;
+		} else if (offset === 'afterNextCharacter') {
+			container = container.nextSibling;
+			offset = 1;
+		}
+		if (start) {
+			rng.setStart(container, offset);
+		} else {
+			rng.setEnd(container, offset);
+		}
+	}
+	setRange(startContainer, startOffset, true);
+	setRange(endContainer, endOffset, false);
 	editor.selection.setRng(rng);
 }
 
 function initWhenTinyAndRobotAreReady() {
-	var tinyLoaded = false;
+	var readyCount = 0;
 	function checkLoaded() {
-		if (tinyLoaded && window.robot && window.robot.ready) {
+		readyCount++;
+		if (readyCount > 2) {
+			ok(false, "Critical error: Received too many onload events.");
+		} else if (readyCount === 2) {
 			QUnit.start();
 		}
 	}
 	window.robot.onload(checkLoaded);
 	tinymce.onAddEditor.add(function(tinymce, ed) {
-		if (tinyLoaded) {
-			return;
-		}
 		ed.onInit.add(function() {
-			tinyLoaded = true;
 			checkLoaded();
 		});
 	});

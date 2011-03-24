@@ -7,7 +7,7 @@
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="js/tiny_mce_loader.js"></script>
 <script>
 var editor;
 
@@ -23,10 +23,40 @@ function getContent() {
 test('apply (inline)', function() {
 	var rng, format;
 
-	expect(39);
+	expect(45);
+
+	// Toggle OFF - Inline element on selected text
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p><b>1234</b></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p><b>1234</b></p>', 'Toggle OFF - Inline element on selected text');
+
+	// Toggle OFF - Inline element on partially selected text
+	editor.formatter.register('format', {inline : 'b', toggle: 0});
+	editor.getBody().innerHTML = '<p>1<b>23</b>4</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1<b>23</b>4</p>', 'Toggle OFF - Inline element on partially selected text');
+
+	// Toggle OFF - Inline element on partially selected text in start/end elements
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p>1<b>234</b></p><p><b>123</b>4</p>';//'<p>1234</p><p>1234</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>', 'Toggle OFF - Inline element on partially selected text in start/end elements');
 
 	// Inline element on selected text
-	editor.formatter.register('format', {inline : 'b'});
+	editor.formatter.register('format', {inline : 'b', toggle: true});
 	editor.getBody().innerHTML = '<p>1234</p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
@@ -34,6 +64,18 @@ test('apply (inline)', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	equals(getContent(), '<p><b>1234</b></p>', 'Inline element on selected text');
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on selected text');
+
+	// Selection spanning from within format to outside format with toggle off
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p><b>12</b>34</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p><b>1234</b></p>', 'Extend formating if start of selection is already formatted');
 
 	// Inline element on partially selected text
 	editor.formatter.register('format', {inline : 'b'});
@@ -44,6 +86,8 @@ test('apply (inline)', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	equals(getContent(), '<p>1<b>23</b>4</p>', 'Inline element on partially selected text');
+	editor.formatter.toggle('format');
+	equals(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on partially selected text');
 
 	// Inline element on partially selected text in start/end elements
 	editor.formatter.register('format', {inline : 'b'});
@@ -655,13 +699,9 @@ test('apply (mixed inline/selector)', function() {
 	equals(getContent(), '<div class="a b c" style="color: #ff0000;" title="test">text</div>', 'Apply format on single element that matches a selector');
 });
 
-test('Bold and italics is applied to text that is not highlighted', function() {
-	var rng;
-
-	expect(1);
-
+test('Formatter - Bold and italics is applied to text that is not highlighted', function() {
+	var rng = editor.dom.createRng();
 	editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
-	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
 	rng.setEnd(editor.dom.select('strong')[0].firstChild, 11);
 	editor.selection.setRng(rng);
@@ -695,6 +735,63 @@ test('No wrapping of links', function() {
 	editor.formatter.apply('format');
 
 	equals(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+});
+
+test('Colored elements in a paragraph', function() {
+	editor.formatter.register('format', {inline: 'span', styles : {'color' : '#ff0000'}});
+	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;">test</span></p>');
+	editor.execCommand('SelectAll');
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>', 'Coloring an underlined text should result in a colored underline');
+
+	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
+	editor.setContent('<p><span style="font-family: \'arial black\'; color: rgb(255, 0, 0);">test</span></p>');
+	editor.execCommand('SelectAll');
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></span></p>', 'Underlining colored text should result in a colored underline');
+
+	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
+	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
+	editor.execCommand('SelectAll');
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline');
+
+	editor.formatter.register('format', {inline: 'span', styles : {'color' : '#ff0000'}});
+	editor.setContent('<p style="font-size: 22pt;"><span style=\"text-decoration: underline;\"><span style=\"color: yellow; text-decoration: underline;\">yellowredyellow</span></span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[1].firstChild, 6);
+	rng.setEnd(editor.dom.select('span')[1].firstChild, 9);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow; text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>', 'Coloring an colored underdlined text should result in newly colored underline');
+
+	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
+	editor.setContent('<p><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[4].lastChild, 5);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\n<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\n<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
+
+	editor.formatter.register('format', {inline: 'span', exact: true, styles : {'color' : '#ff0000'}});
+	editor.setContent('<p><span style="text-decoration: underline;">This is some text.</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[0].firstChild, 8);
+	rng.setEnd(editor.dom.select('span')[0].firstChild, 12);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;">This is some text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
+
+	editor.formatter.register('format', {inline: 'span', exact: true, styles : {'color' : '#ff0000'}});
+	editor.setContent('<p><span style="text-decoration: underline;">This is <span style="color: #ff0000; text-decoration: underline; background-color: #ff0000">some</span> text.</span></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('span')[1].firstChild, 0);
+	rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 });
 
 /*

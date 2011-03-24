@@ -7,7 +7,7 @@
 <script type="text/javascript" src="qunit/qunit.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="js/tiny_mce_loader.js"></script>
 <script>
 var editor;
 
@@ -260,14 +260,25 @@ test('commands - subscriptSuperscript', function() {
 });
 
 test('commands - insertHR', function() {
-	var v;
+	var v, rng;
 
-	expect(1);
+	expect(6);
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('InsertHorizontalRule');
 	equals(trimContent(editor.getContent()), '<hr />');
+
+	editor.setContent('<p>test123</p>');
+	setSelection('p', 4);
+	editor.execCommand('InsertHorizontalRule');
+	equals(editor.getContent(), '<p>test</p>\n<hr />\n<p>123</p>');
+	// Check the selection is after the HR
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer, editor.dom.select('p')[0].firstChild, 'Selection start container');
+	equals(rng.startOffset, 4, 'Selection start offset');
+	equals(rng.endContainer, editor.dom.select('p')[0].firstChild, 'Selection end container');
+	equals(rng.endOffset, 4, 'Selection end offset');
 });
 
 test('commands - indentOutdent', function() {

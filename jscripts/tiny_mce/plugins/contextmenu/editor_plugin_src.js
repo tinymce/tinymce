@@ -27,9 +27,11 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 		init : function(ed) {
-			var t = this, lastRng, showMenu;
+			var t = this, lastRng, showMenu, contextmenuNeverUseNative;
 
 			t.editor = ed;
+
+			contextmenuNeverUseNative = ed.settings.contextmenu_never_use_native;
 
 			/**
 			 * This event gets fired when the context menu is shown.
@@ -41,17 +43,17 @@
 			t.onContextMenu = new tinymce.util.Dispatcher(this);
 
 			showMenu = ed.onContextMenu.add(function(ed, e) {
-				if (!e.ctrlKey) {
-					// Restore the last selection since it was removed
-					if (lastRng)
-						ed.selection.setRng(lastRng);
+				if (e.ctrlKey && !contextmenuNeverUseNative) return;
 
-					t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageX);
-					Event.add(ed.getDoc(), 'click', function(e) {
-						hide(ed, e);
-					});
-					Event.cancel(e);
-				}
+				// Restore the last selection since it was removed
+				if (lastRng)
+					ed.selection.setRng(lastRng);
+
+				t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageX);
+				Event.add(ed.getDoc(), 'click', function(e) {
+					hide(ed, e);
+				});
+				Event.cancel(e);
 			});
 
 			ed.onRemove.add(function() {

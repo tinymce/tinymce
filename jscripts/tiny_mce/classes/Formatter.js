@@ -120,6 +120,29 @@
 			}
 		};
 
+		var getTextDecoration = function(node) {
+			var decoration;
+
+			ed.dom.getParent(node, function(n) {
+				decoration = ed.dom.getStyle(n, 'text-decoration');
+				return decoration && decoration !== 'none';
+			});
+
+			return decoration;
+		};
+
+		var processUnderlineAndColor = function(node) {
+			var textDecoration;
+			if (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {
+				textDecoration = getTextDecoration(node.parentNode);
+				if (ed.dom.getStyle(node, 'color') && textDecoration) {
+					ed.dom.setStyle(node, 'text-decoration', textDecoration);
+				} else if (ed.dom.getStyle(node, 'textdecoration') === textDecoration) {
+					ed.dom.setStyle(node, 'text-decoration', null);
+				}
+			}
+		};
+
 		/**
 		 * Applies the specified format to the current selection or specified node.
 		 *
@@ -406,9 +429,18 @@
 					applyRngStyle(expandRng(rng, formatList));
 				} else {
 					if (!isCollapsed || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
+						// Obtain selection node before selection is unselected by applyRngStyle()
+						var curSelNode = ed.selection.getNode();
+
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
+
+						// Colored nodes should be underlined so that the color of the underline matches the text color.
+						if (format.styles && (format.styles.color || format.styles.textDecoration)) {
+							tinymce.walk(curSelNode, processUnderlineAndColor, 'childNodes');
+							processUnderlineAndColor(curSelNode);
+						}
 
 						selection.moveToBookmark(bookmark);
 						selection.setRng(moveStart(selection.getRng(TRUE)));
@@ -608,6 +640,11 @@
 				rangeUtils.walk(rng, function(nodes) {
 					each(nodes, function(node) {
 						process(node);
+
+						// Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.
+						if (node.nodeType === 1 && ed.dom.getStyle(node, 'text-decoration') === 'underline' && node.parentNode && getTextDecoration(node.parentNode) === 'underline') {
+							removeFormat({'deep': false, 'exact': true, 'inline': 'span', 'styles': {'textDecoration' : 'underline'}}, null, node);
+						}
 					});
 				});
 			};
@@ -645,7 +682,9 @@
 		 * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.
 		 */
 		function toggle(name, vars, node) {
-			if (match(name, vars, node))
+			var fmt = get(name);
+
+			if (match(name, vars, node) && (!('toggle' in fmt[0]) || fmt[0]['toggle']))
 				remove(name, vars, node);
 			else
 				apply(name, vars, node);
@@ -987,7 +1026,7 @@
 			var startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
-				endOffset = rng.endOffset, sibling, lastIdx;
+				endOffset = rng.endOffset, sibling, lastIdx, leaf;
 
 			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(container, child_name, sibling_name, root) {
@@ -1017,6 +1056,19 @@
 				return container;
 			};
 
+			// This function walks down the tree to find the leaf at the selection.
+			// The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
+			function findLeaf(node, offset) {
+				if (offset === undefined)
+					offset = node.nodeType === 3 ? node.length : node.childNodes.length;
+				while (node && node.hasChildNodes()) {
+					node = node.childNodes[offset];
+					if (node)
+						offset = node.nodeType === 3 ? node.length : node.childNodes.length;
+				}
+				return { node: node, offset: offset };
+			}
+
 			// If index based start position then resolve it
 			if (startContainer.nodeType == 1 && startContainer.hasChildNodes()) {
 				lastIdx = startContainer.childNodes.length - 1;
@@ -1042,12 +1094,36 @@
 			if (isBookmarkNode(startContainer))
 				startContainer = startContainer.nextSibling || startContainer;
 
-			if (isBookmarkNode(endContainer.parentNode))
+			if (isBookmarkNode(endContainer.parentNode)) {
+				endOffset = dom.nodeIndex(endContainer);
 				endContainer = endContainer.parentNode;
+			}
 
-			if (isBookmarkNode(endContainer))
-				endContainer = endContainer.previousSibling || endContainer;
+			if (isBookmarkNode(endContainer) && endContainer.previousSibling) {
+				endContainer = endContainer.previousSibling;
+				endOffset = endContainer.length;
+			}
 
+			if (format[0].inline) {
+				// Avoid applying formatting to a trailing space.
+				leaf = findLeaf(endContainer, endOffset);
+				if (leaf.node) {
+					while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling)
+						leaf = findLeaf(leaf.node.previousSibling);
+
+					if (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&
+							leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
+
+						if (leaf.offset > 1) {
+							endContainer = leaf.node;
+							endContainer.splitText(leaf.offset - 1);
+						} else if (leaf.node.previousSibling) {
+							endContainer = leaf.node.previousSibling;
+						}
+					}
+				}
+			}
+			
 			// Move start/end point up the tree if the leaves are sharp and if we are in different containers
 			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
 			// This will reduce the number of wrapper elements that needs to be created
@@ -1541,6 +1617,10 @@
 				// Apply pending formats
 				each(pendingFormats.apply.reverse(), function(item) {
 					apply(item.name, item.vars, caret_node);
+
+					// Colored nodes should be underlined so that the color of the underline matches the text color.
+					if (item.name === 'forecolor' && item.vars.value)
+						processUnderlineAndColor(caret_node.parentNode);
 				});
 
 				// Remove pending formats

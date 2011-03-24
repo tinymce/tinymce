@@ -12,6 +12,7 @@
 	var each = tinymce.each,
 		defs = {
 			paste_auto_cleanup_on_paste : true,
+			paste_enable_default_filters : true,
 			paste_block_drop : false,
 			paste_retain_style_properties : "none",
 			paste_strip_class_attributes : "mso",
@@ -89,7 +90,8 @@
 					if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == 3) {
 						nodes = dom.select('p,h1,h2,h3,h4,h5,h6,pre', o.node);
 
-						if (nodes.length == 1)
+						// Is only one block node and it doesn't contain word stuff
+						if (nodes.length == 1 && o.content.indexOf('__MCE_ITEM__') === -1)
 							dom.remove(nodes.reverse(), true);
 					}
 				}
@@ -348,6 +350,10 @@
 						h = h.replace(v[0], v[1]);
 				});
 			}
+			
+			if (ed.settings.paste_enable_default_filters == false) {
+				return;
+			}
 
 			// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
 			if (tinymce.isIE && document.documentMode >= 9)
@@ -567,6 +573,10 @@
 		_postProcess : function(pl, o) {
 			var t = this, ed = t.editor, dom = ed.dom, styleProps;
 
+			if (ed.settings.paste_enable_default_filters == false) {
+				return;
+			}
+			
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
 				each(dom.select('a', o.node), function(a) {
@@ -648,7 +658,7 @@
 				val = p.innerHTML.replace(/<\/?\w+[^>]*>/gi, '').replace(/&nbsp;/g, '\u00a0');
 
 				// Detect unordered lists look for bullets
-				if (/^(__MCE_ITEM__)+[\u2022\u00b7\u00a7\u00d8o]\s*\u00a0*/.test(val))
+				if (/^(__MCE_ITEM__)+[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*\u00a0*/.test(val))
 					type = 'ul';
 
 				// Detect ordered lists 1., a. or ixv.
@@ -682,9 +692,9 @@
 						var html = span.innerHTML.replace(/<\/?\w+[^>]*>/gi, '');
 
 						// Remove span with the middot or the number
-						if (type == 'ul' && /^[\u2022\u00b7\u00a7\u00d8o]/.test(html))
+						if (type == 'ul' && /^__MCE_ITEM__[\u2022\u00b7\u00a7\u00d8o\u25CF]/.test(html))
 							dom.remove(span);
-						else if (/^[\s\S]*\w+\.(&nbsp;|\u00a0)*\s*/.test(html))
+						else if (/^__MCE_ITEM__[\s\S]*\w+\.(&nbsp;|\u00a0)*\s*/.test(html))
 							dom.remove(span);
 					});
 
@@ -692,7 +702,7 @@
 
 					// Remove middot/list items
 					if (type == 'ul')
-						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o]\s*(&nbsp;|\u00a0)+\s*/, '');
+						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*(&nbsp;|\u00a0)+\s*/, '');
 					else
 						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^\s*\w+\.(&nbsp;|\u00a0)+\s*/, '');
 

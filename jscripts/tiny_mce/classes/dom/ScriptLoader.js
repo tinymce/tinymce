@@ -64,6 +64,17 @@
 
 				callback();
 			};
+			
+			function error() {
+				// Report the error so it's easier for people to spot loading errors
+				if (typeof(console) !== "undefined" && console.log)
+					console.log("Failed to load: " + url);
+
+				// We can't mark it as done if there is a load error since
+				// A) We don't want to produce 404 errors on the server and
+				// B) the onerror event won't fire on all browsers.
+				// done();
+			};
 
 			id = dom.uniqueId();
 
@@ -88,7 +99,9 @@
 							dom.remove(script);
 
 							done();
-						}
+						},
+						
+						error : error
 					});
 
 					return;
@@ -106,6 +119,9 @@
 			// fires onload event before the script is parsed and executed
 			if (!tinymce.isIE)
 				elm.onload = done;
+
+			// Add onerror event will get fired on some browsers but not all of them
+			elm.onerror = error;
 
 			// Opera 9.60 doesn't seem to fire the onreadystate event at correctly
 			if (!tinymce.isOpera) {

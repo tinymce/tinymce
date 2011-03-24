@@ -85,6 +85,7 @@
 				theme_advanced_resizing_use_cookie : 1,
 				theme_advanced_font_sizes : "1,2,3,4,5,6,7",
 				theme_advanced_font_selector : "span",
+				theme_advanced_show_current_color: 0,
 				readonly : ed.settings.readonly
 			}, ed.settings);
 
@@ -942,7 +943,7 @@
 		},
 
 		_nodeChanged : function(ed, cm, n, co, ob) {
-			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn, formatNames, matches;
+			var t = this, p, de = 0, v, c, s = t.settings, cl, fz, fn, fc, bc, formatNames, matches;
 
 			tinymce.each(t.stateControls, function(c) {
 				cm.setActive(c, ed.queryCommandState(t.controls[c][1]));
@@ -964,8 +965,7 @@
 			};
 
 			cm.setActive('visualaid', ed.hasVisual);
-			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
-			cm.setDisabled('redo', !ed.undoManager.hasRedo());
+			t._updateUndoStatus(ed);
 			cm.setDisabled('outdent', !ed.queryCommandState('Outdent'));
 
 			p = getParent('A');
@@ -1021,6 +1021,12 @@
 
 					if (!fn && n.style.fontFamily)
 						fn = n.style.fontFamily.replace(/[\"\']+/g, '').replace(/^([^,]+).*/, '$1').toLowerCase();
+					
+					if (!fc && n.style.color)
+						fc = n.style.color;
+
+					if (!bc && n.style.backgroundColor)
+						bc = n.style.backgroundColor;
 				}
 
 				return false;
@@ -1045,6 +1051,20 @@
 					if (v['class'] && v['class'] === cl)
 						return true;
 				});
+			}
+			
+			if (s.theme_advanced_show_current_color) {
+				function updateColor(controlId, color) {
+					if (c = cm.get(controlId)) {
+						if (!color)
+							color = c.settings.default_color;
+						if (color !== c.value) {
+							c.displayColor(color);
+						}
+					}
+				}
+				updateColor('forecolor', fc);
+				updateColor('backcolor', bc);
 			}
 
 			if (s.theme_advanced_show_current_color) {
