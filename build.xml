@@ -215,7 +215,7 @@
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
 		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
 		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
-		<property name="version.minor" value="${version.minor.upstream}-${build-number}" />
+		<property name="version.minor" value="${version.minor.upstream}" />
 		<property name="file_version" value="${version}-${build-number}" />
 
 		<!-- Replace major version -->
