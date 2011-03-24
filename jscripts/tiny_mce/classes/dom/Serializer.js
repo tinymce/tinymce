@@ -103,7 +103,7 @@
 
 			while (i--) {
 				node = nodes[i];
-				value = node.attr('class').replace(/\s*mceItem\w+\s*/g, '');
+				value = node.attr('class').replace(/\s*mce(Item\w+|Selected)\s*/g, '');
 				node.attr('class', value.length > 0 ? value : null);
 			}
 		});

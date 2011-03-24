@@ -42,6 +42,7 @@ Version 3.4.1 (2011-03-24)
 	Fixed bug where deleting some paragraphs on IE would cause an exception.
 	Fixed bug where the json encoder logic wouldn't properly encode \ characters.
 	Fixed bug where the onChange event would be fired when the editor was first initialized.
+	Fixed bug where mceSelected wouldn't be removed properly from output even if it's an internal class.
 	Fixed issue where styles were not included when using the full page plugin.
 	Fixed issue where drag/drop operations wasn't properly added to the undo levels.
 	Fixed issue where colors wasn't correctly applied to elements with underline decoration.
