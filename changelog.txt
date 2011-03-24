@@ -1,4 +1,9 @@
-Version 3.4.1 (2011-xx-x)
+Version 3.4.1 (2011-03-24)
+	Added significantly improved list handling via the new 'lists' plugin.
+	Added 'autolink' plugin to enable automatically linking URLs. Similar to the behavior IE has by default.
+	Added 'theme_advanced_show_current_color' setting to enable the forecolor and backcolor buttons to continuously show the current text color.
+	Added 'contextmenu_never_use_native' setting to disable the ctrl-right-click showing the native browser context menu behaviour.
+	Added 'paste_enable_default_filters' setting to enable the default paste filters to be disabled.
 	Set table background colors to transparent in ui.css to improve compliance with users browser color preferences.
 	Fixed bug where selection locations on undo/redo didn't work correctly on specific contents.
 	Fixed bug where an exception would be trown on IE when loading TinyMCE inside an iframe.
@@ -31,6 +36,16 @@ Version 3.4.1 (2011-xx-x)
 	Fixed bug where setting text color in fullpage plugin doesn't work.
 	Fixed bug where the state of checkboxes in media plugin wouldn't be set correctly.
 	Fixed bug where spellchecking would remove whitespace characters from PRE block in IE.
+	Fixed bug where HR was inserted inside P elements instead of splitting them.
+	Fixed bug where extra, empty span tags were added when using a format with both selector and inline modes.
+	Fixed bug where bullet lists weren't always detected correctly.
+	Fixed bug where deleting some paragraphs on IE would cause an exception.
+	Fixed bug where the json encoder logic wouldn't properly encode \ characters.
+	Fixed bug where the onChange event would be fired when the editor was first initialized.
+	Fixed issue where styles were not included when using the full page plugin.
+	Fixed issue where drag/drop operations wasn't properly added to the undo levels.
+	Fixed issue where colors wasn't correctly applied to elements with underline decoration.
+	Fixed issue where deleting some paragraphs on IE would cause an exception.
 Version 3.4 (2011-03-10)
 	Added accessibility example with various accessibility options contributed by Ephox.
 	Fixed bug where attributes wasn't properly handled in the xhtmlxtras plugin.
