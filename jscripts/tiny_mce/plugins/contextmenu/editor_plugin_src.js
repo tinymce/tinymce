@@ -27,7 +27,7 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 		init : function(ed) {
-			var t = this, lastRng, showMenu, contextmenuNeverUseNative;
+			var t = this, showMenu, contextmenuNeverUseNative, realCtrlKey;
 
 			t.editor = ed;
 
@@ -43,11 +43,7 @@
 			t.onContextMenu = new tinymce.util.Dispatcher(this);
 
 			showMenu = ed.onContextMenu.add(function(ed, e) {
-				if (e.ctrlKey && !contextmenuNeverUseNative) return;
-
-				// Restore the last selection since it was removed
-				if (lastRng)
-					ed.selection.setRng(lastRng);
+				if ((realCtrlKey !== 0 ? realCtrlKey : e.ctrlKey) && !contextmenuNeverUseNative) return;
 
 				t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageX);
 				Event.add(ed.getDoc(), 'click', function(e) {
@@ -62,12 +58,12 @@
 			});
 
 			function hide(ed, e) {
-				lastRng = null;
+				realCtrlKey = 0;
 
 				// Since the contextmenu event moves
 				// the selection we need to store it away
 				if (e && e.button == 2) {
-					lastRng = ed.selection.getRng();
+					realCtrlKey = e.ctrlKey;
 					return;
 				}
 
