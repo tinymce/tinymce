@@ -43,13 +43,22 @@
 			t.onContextMenu = new tinymce.util.Dispatcher(this);
 
 			showMenu = ed.onContextMenu.add(function(ed, e) {
-				if ((realCtrlKey !== 0 ? realCtrlKey : e.ctrlKey) && !contextmenuNeverUseNative) return;
+				// Block TinyMCE menu on ctrlKey and work around Safari issue
+				if ((realCtrlKey !== 0 ? realCtrlKey : e.ctrlKey) && !contextmenuNeverUseNative)
+					return;
+
+				Event.cancel(e);
+
+				// Select the image if it's clicked. WebKit would other wise expand the selection
+				if (e.target.nodeName == 'IMG')
+					ed.selection.select(e.target);
 
 				t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageX);
 				Event.add(ed.getDoc(), 'click', function(e) {
 					hide(ed, e);
 				});
-				Event.cancel(e);
+
+				ed.nodeChanged();
 			});
 
 			ed.onRemove.add(function() {
