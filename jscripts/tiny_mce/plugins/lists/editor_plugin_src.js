@@ -1,5 +1,5 @@
 /**
- * EditorCommands.js
+ * editor_plugin_src.js
  *
  * Copyright 2011, Moxiecode Systems AB
  * Released under LGPL License.
@@ -7,6 +7,7 @@
  * License: http://tinymce.moxiecode.com/license
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
+
 (function() {
 	var each = tinymce.each, Event = tinymce.dom.Event, bookmark;
 
@@ -138,7 +139,7 @@
 		return e;
 	}
 	
-	tinymce.create('tinymce.ephox.plugins.Lists', {
+	tinymce.create('tinymce.plugins.Lists', {
 		init: function(ed, url) {
 			var enterDownInEmptyList = false;
 			function isTriggerKey(e) {
@@ -605,12 +606,12 @@
 		getInfo: function() {
 			return {
 				longname : 'Lists',
-				author : 'Ephox Corporation',
-				authorurl : 'http://tinymce.ephox.com',
-				infourl : 'http://tinymce.ephox.com',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/lists',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
 		}
 	});
-	tinymce.PluginManager.add("lists", tinymce.ephox.plugins.Lists);
+	tinymce.PluginManager.add("lists", tinymce.plugins.Lists);
 }());

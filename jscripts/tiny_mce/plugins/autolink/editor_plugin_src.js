@@ -1,5 +1,5 @@
 /**
- * EditorCommands.js
+ * editor_plugin_src.js
  *
  * Copyright 2011, Moxiecode Systems AB
  * Released under LGPL License.
@@ -7,6 +7,7 @@
  * License: http://tinymce.moxiecode.com/license
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
+
 (function() {
 	tinymce.create('tinymce.plugins.AutolinkPlugin', {
 	/**
@@ -154,12 +155,12 @@
 		*/
 		getInfo : function() {
 			return {
-				longname : 'Autolink plugin',
-				author : 'Ephox Corporation',
-				authorurl : 'http://tinymce.ephox.com',
-				infourl : 'http://tinymce.ephox.com',
+				longname : 'Autolink',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/autolink',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
-				};
+			};
 		}
 	});
 
