@@ -10,7 +10,7 @@ function fakeTypeAnEclipsedURL(url) {
 	return function(callback) {
         // type the URL and then type ')'
         tinyMCE.execCommand('mceInsertContent', false, '(' + url);
-        window.robot.type(48, true, function() {
+		window.robot.typeSymbol(")", function() {
             window.robot.type(32, false, callback, editor.selection.getNode());
         }, editor.selection.getNode());
     };

@@ -48,22 +48,51 @@
 				div.innerHTML = appletTag;
 			}
 			this.appletInstance = document.getElementById('robotApplet');
+//			var loadFunction =
+//			this.onload(loadFunction);
 		},
 		
 		callback: function() {
 			this.ready = true;
+			this.setupSymbols();
 			if (this.userCallback) {
 				setTimeout(this.userCallback, 100);
 			}
 			return "Callback received.";
 		},
 		
+		setupSymbols: function(){
+			var t = this;
+			var input = document.createElement("input");
+			input.id="fake";
+			document.body.appendChild(input);
+			input.focus();
+			function callback(){
+				t.symbols = input.value;
+				document.body.removeChild(input);
+			}
+			for (var i=0;i<9 ;i++) {
+				this.type(48+i, true, function(){},input);
+			}
+			this.type(48+9, true, callback,input);
+		},
+
 		type: function(key, shiftKey, callback, focusElement) {
 			var keycode = this.getKeycode(key);
 			shiftKey = !!shiftKey;
 			this.appletAction(focusElement, callback, function() {
 				return this.getApplet().typeKey(keycode, shiftKey);
 			});
+		},
+
+		typeSymbol: function(symbol, callback, focusElement) {
+			var t = this;
+
+			var symbolNumber = t.symbols.search("\\"+symbol);
+			if (symbolNumber <0) {
+				throw new Error("The symbol "+ symbol + " could not be located on your keyboard.  Unable to press key");
+			}
+			return t.type(symbolNumber+48, true, callback, focusElement);
 		},
 		
 		forwardDelete: function(callback, focusElement) {
