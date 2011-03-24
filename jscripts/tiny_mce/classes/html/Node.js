@@ -393,7 +393,7 @@
 		},
 
 		/**
-		 * Returns true/false if the node is to be considered empty or not
+		 * Returns true/false if the node is to be considered empty or not.
 		 *
 		 * @example
 		 * node.isEmpty({img : true});
@@ -402,11 +402,12 @@
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty : function(elements) {
-			var self = this, node = self.firstChild, i;
+			var self = this, node = self.firstChild, i, name;
 
 			if (node) {
 				do {
 					if (node.type === 1) {
+						// Ignore bogus elements
 						if (node.attributes.map['data-mce-bogus'])
 							continue;
 
@@ -414,10 +415,11 @@
 						if (elements[node.name])
 							return false;
 
-						// Keep elements with data attributes
+						// Keep elements with data attributes or name attribute like <a name="1"></a>
 						i = node.attributes.length;
 						while (i--) {
-							if (node.attributes[i].name.indexOf('data-') === 0)
+							name = node.attributes[i].name;
+							if (name === "name" || name.indexOf('data-') === 0)
 								return false;
 						}
 					}

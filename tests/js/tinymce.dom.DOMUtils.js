@@ -584,5 +584,41 @@
 		DOM.remove('test');
 	});
 
+	test('isEmpty', 10, function() {
+		DOM.schema = new tinymce.html.Schema(); // A schema will be added when used within a editor instance
+		DOM.add(document.body, 'div', {id : 'test'}, '');
+
+		ok(DOM.isEmpty(DOM.get('test')), 'No children');
+
+		DOM.setHTML('test', '<br />');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Br child');
+
+		DOM.setHTML('test', 'text');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Text child');
+
+		DOM.setHTML('test', '<span>text</span>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Text child in span');
+
+		DOM.setHTML('test', '<span></span>');
+		ok(DOM.isEmpty(DOM.get('test')), 'Empty span child');
+
+		DOM.setHTML('test', '<div><span><b></b></span><b></b><em></em></div>');
+		ok(DOM.isEmpty(DOM.get('test')), 'Empty complex HTML');
+
+		DOM.setHTML('test', '<div><span><b></b></span><b></b><em>X</em></div>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Non empty complex HTML');
+
+		DOM.setHTML('test', '<div><span><b></b></span><b></b><em> </em></div>');
+		ok(DOM.isEmpty(DOM.get('test')), 'Non empty complex HTML with space');
+
+		DOM.setHTML('test', '<div><span><b></b></span><b></b><em><a name="x"></a></em></div>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Non empty complex HTML with achor name');
+
+		DOM.setHTML('test', '<img src="x">');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Non empty html with img element');
+
+		DOM.remove('test');
+	});
+
 	DOM.remove('test');
 })();
