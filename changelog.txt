@@ -3,6 +3,7 @@ Version 3.4.1.x (2011-03-xx)
 	Fixed bug where blocks containing a single anchor element would be treated as empty.
 	Fixed bug where merging of table cells on IE 6, 7 wouldn't look correctly until the contents was refreshed.
 	Fixed bug where context menu wouldn't work properly on Safari since it was passing out the ctrl key as pressed.
+	Fixed bug where image border color/style values were overwritten by advimage plugin.
 	Fixed bug where the context menu wouldn't select images on WebKit browsers.
 Version 3.4.1 (2011-03-24)
 	Added significantly improved list handling via the new 'lists' plugin.

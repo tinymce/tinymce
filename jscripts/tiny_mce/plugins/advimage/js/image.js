@@ -361,7 +361,7 @@ var ImageDialog = {
 	},
 
 	updateStyle : function(ty) {
-		var dom = tinyMCEPopup.dom, st, v, f = document.forms[0], img = dom.create('img', {style : dom.get('style').value});
+		var dom = tinyMCEPopup.dom, b, bStyle, bColor, v, f = document.forms[0], img = dom.create('img', {style : dom.get('style').value});
 
 		if (tinyMCEPopup.editor.settings.inline_styles) {
 			// Handle align
@@ -380,14 +380,21 @@ var ImageDialog = {
 
 			// Handle border
 			if (ty == 'border') {
+				b = img.style.border ? img.style.border.split(' ') : [];
+				bStyle = dom.getStyle(img, 'border-style');
+				bColor = dom.getStyle(img, 'border-color');
+
 				dom.setStyle(img, 'border', '');
 
 				v = f.border.value;
 				if (v || v == '0') {
 					if (v == '0')
 						img.style.border = '0 none none';
-					else
-						img.style.border = v + 'px solid black';
+					else {
+						bStyle = b[1] ? b[1] : bStyle ? bStyle : 'solid';
+						bColor = b[2] ? b[2] : bColor ? bColor : 'black';
+						img.style.border = v + 'px ' + bStyle + ' ' + bColor;
+					}
 				}
 			}
 
