@@ -361,7 +361,7 @@ var ImageDialog = {
 	},
 
 	updateStyle : function(ty) {
-		var dom = tinyMCEPopup.dom, st, v, f = document.forms[0], img = dom.create('img', {style : dom.get('style').value});
+		var dom = tinyMCEPopup.dom, b, bStyle, bColor, v, isIE = tinymce.isIE, f = document.forms[0], img = dom.create('img', {style : dom.get('style').value});
 
 		if (tinyMCEPopup.editor.settings.inline_styles) {
 			// Handle align
@@ -380,14 +380,27 @@ var ImageDialog = {
 
 			// Handle border
 			if (ty == 'border') {
+				b = img.style.border ? img.style.border.split(' ') : [];
+				bStyle = dom.getStyle(img, 'border-style');
+				bColor = dom.getStyle(img, 'border-color');
+
 				dom.setStyle(img, 'border', '');
 
 				v = f.border.value;
 				if (v || v == '0') {
 					if (v == '0')
-						img.style.border = '0 none none';
-					else
-						img.style.border = v + 'px solid black';
+						img.style.border = isIE ? '0' : '0 none none';
+					else {
+						if (b.length == 3 && b[isIE ? 2 : 1])
+							bStyle = b[isIE ? 2 : 1];
+						else if (!bStyle || bStyle == 'none')
+							bStyle = 'solid';
+						if (b.length == 3 && b[isIE ? 0 : 2])
+							bColor = b[isIE ? 0 : 2];
+						else if (!bColor || bColor == 'none')
+							bColor = 'black';
+						img.style.border = v + 'px ' + bStyle + ' ' + bColor;
+					}
 				}
 			}
 
