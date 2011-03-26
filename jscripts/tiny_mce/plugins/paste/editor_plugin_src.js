@@ -25,6 +25,7 @@
 			paste_dialog_height : "400",
 			paste_text_use_dialog : false,
 			paste_text_sticky : false,
+			paste_text_sticky_default : false,
 			paste_text_notifyalways : false,
 			paste_text_linebreaktype : "p",
 			paste_text_replacements : [
@@ -70,7 +71,7 @@
 			});
 
 			// Initialize plain text flag
-			ed.pasteAsPlainText = false;
+			ed.pasteAsPlainText = getParam(ed, 'paste_text_sticky_default');
 
 			// This function executes the process handlers and inserts the contents
 			// force_rich overrides plain text mode set by user, important for pasting with execCommand
@@ -305,17 +306,19 @@
 				}
 			}
 
-			// Block all drag/drop events
-			if (getParam(ed, "paste_block_drop")) {
-				ed.onInit.add(function() {
+			ed.onInit.add(function() {
+				ed.controlManager.setActive("pastetext", ed.pasteAsPlainText);
+
+				// Block all drag/drop events
+				if (getParam(ed, "paste_block_drop")) {
 					ed.dom.bind(ed.getBody(), ['dragend', 'dragover', 'draggesture', 'dragdrop', 'drop', 'drag'], function(e) {
 						e.preventDefault();
 						e.stopPropagation();
 
 						return false;
 					});
-				});
-			}
+				}
+			});
 
 			// Add legacy support
 			t._legacySupport();

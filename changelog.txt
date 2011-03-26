@@ -1,4 +1,5 @@
 Version 3.4.1.x (2011-03-xx)
+	Added a "paste_text_sticky_default" option to paste plugin, enables you to set the default state for paste as plain text.
 	Fixed bug where contents inserted with mceInsertContent wasn't parsed using the default dom parser.
 	Fixed bug where blocks containing a single anchor element would be treated as empty.
 	Fixed bug where merging of table cells on IE 6, 7 wouldn't look correctly until the contents was refreshed.
