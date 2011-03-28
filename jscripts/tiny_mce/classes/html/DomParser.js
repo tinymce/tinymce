@@ -35,6 +35,7 @@
 		var self = this, nodeFilters = {}, attributeFilters = [], matchedNodes = {}, matchedAttributes = {};
 
 		settings = settings || {};
+		settings.validate = "validate" in settings ? settings.validate : true;
 		settings.root_name = settings.root_name || 'body';
 		self.schema = schema = schema || new tinymce.html.Schema();
 
@@ -229,16 +230,17 @@
 		 * @return {tinymce.html.Node} Root node containing the tree.
 		 */
 		self.parse = function(html, args) {
-			var parser, rootNode, node, nodes, i, l, fi, fl, list, name,
+			var parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate,
 				blockElements, startWhiteSpaceRegExp, invalidChildren = [],
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements;
 
 			args = args || {};
 			matchedNodes = {};
 			matchedAttributes = {};
-			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,title,meta,param'), schema.getBlockElements());
+			blockElements = tinymce.extend(tinymce.makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
 			nonEmptyElements = schema.getNonEmptyElements();
 			children = schema.children;
+			validate = settings.validate;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();
 			startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -260,9 +262,26 @@
 				return node;
 			};
 
+			function removeWhitespaceBefore(node) {
+				var textNode, textVal, sibling;
+
+				for (textNode = node.prev; textNode && textNode.type === 3; ) {
+					textVal = textNode.value.replace(endWhiteSpaceRegExp, '');
+
+					if (textVal.length > 0) {
+						textNode.value = textVal;
+						textNode = textNode.prev;
+					} else {
+						sibling = textNode.prev;
+						textNode.remove();
+						textNode = sibling;
+					}
+				}
+			};
+
 			parser = new tinymce.html.SaxParser({
-				validate : settings.validate,
-				fix_self_closing : false, // Let the DOM parser handle <li> in <li> or <p> in <p> for better results
+				validate : validate,
+				fix_self_closing : !validate, // Let the DOM parser handle <li> in <li> or <p> in <p> for better results
 
 				cdata: function(text) {
 					node.append(createNode('#cdata', 4)).value = text;
@@ -293,16 +312,21 @@
 
 				pi: function(name, text) {
 					node.append(createNode(name, 7)).value = text;
+					removeWhitespaceBefore(node);
 				},
 
 				doctype: function(text) {
-					node.append(createNode('#doctype', 10)).value = text;
+					var newNode;
+		
+					newNode = node.append(createNode('#doctype', 10));
+					newNode.value = text;
+					removeWhitespaceBefore(node);
 				},
 
 				start: function(name, attrs, empty) {
 					var newNode, attrFiltersLen, elementRule, textNode, attrName, text, sibling, parent;
 
-					elementRule = schema.getElementRule(name);
+					elementRule = validate ? schema.getElementRule(name) : {};
 					if (elementRule) {
 						newNode = createNode(elementRule.outputName || name, 1);
 						newNode.attributes = attrs;
@@ -331,20 +355,8 @@
 						}
 
 						// Trim whitespace before block
-						if (blockElements[name]) {
-							for (textNode = newNode.prev; textNode && textNode.type === 3; ) {
-								text = textNode.value.replace(endWhiteSpaceRegExp, '');
-
-								if (text.length > 0) {
-									textNode.value = text;
-									textNode = textNode.prev;
-								} else {
-									sibling = textNode.prev;
-									textNode.remove();
-									textNode = sibling;
-								}
-							}
-						}
+						if (blockElements[name])
+							removeWhitespaceBefore(newNode);
 
 						// Change current node if the element wasn't empty i.e not <br /> or <img />
 						if (!empty)
@@ -355,7 +367,7 @@
 				end: function(name) {
 					var textNode, elementRule, text, sibling, tempNode;
 
-					elementRule = schema.getElementRule(name);
+					elementRule = validate ? schema.getElementRule(name) : {};
 					if (elementRule) {
 						if (blockElements[name]) {
 							if (!whiteSpaceElements[node.name]) {
@@ -426,7 +438,8 @@
 
 			parser.parse(html);
 
-			fixInvalidChildren(invalidChildren);
+			if (validate)
+				fixInvalidChildren(invalidChildren);
 
 			// Run node filters
 			for (name in matchedNodes) {
