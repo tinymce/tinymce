@@ -6,6 +6,7 @@ Version 3.4.1.x (2011-03-xx)
 	Fixed bug where context menu wouldn't work properly on Safari since it was passing out the ctrl key as pressed.
 	Fixed bug where image border color/style values were overwritten by advimage plugin.
 	Fixed bug where setting border in advimage plugin would throw error in IE.
+	Fixed bug where xhtmlextras popups were missing localized popup-size parameters.
 	Fixed bug where the context menu wouldn't select images on WebKit browsers.
 Version 3.4.1 (2011-03-24)
 	Added significantly improved list handling via the new 'lists' plugin.
