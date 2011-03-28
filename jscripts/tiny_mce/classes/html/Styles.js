@@ -252,7 +252,7 @@ tinymce.html.Styles = function(settings, schema) {
 						name = styleList[i];
 						value = styles[name];
 
-						if (value !== undef)
+						if (value !== undef && value.length > 0)
 							css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
 					}
 				}
@@ -268,7 +268,7 @@ tinymce.html.Styles = function(settings, schema) {
 				for (name in styles) {
 					value = styles[name];
 
-					if (value !== undef)
+					if (value !== undef && value.length > 0)
 						css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
 				}
 			}
