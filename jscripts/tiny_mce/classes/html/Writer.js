@@ -71,8 +71,12 @@ tinymce.html.Writer = function(settings) {
 			else
 				html[html.length] = ' />';
 
-			/*if (indent && indentAfter[name])
-				html.push('\n');*/
+			if (empty && indent && indentAfter[name] && html.length > 0) {
+				value = html[html.length - 1];
+
+				if (value.length > 0 && value !== '\n')
+					html.push('\n');
+			}
 		},
 
 		/**
@@ -145,6 +149,9 @@ tinymce.html.Writer = function(settings) {
 				html.push('<?', name, ' ', text, '?>');
 			else
 				html.push('<?', name, '?>');
+
+			if (indent)
+				html.push('\n');
 		},
 
 		/**
@@ -154,7 +161,7 @@ tinymce.html.Writer = function(settings) {
 		 * @param {String} text String to write out inside the doctype.
 		 */
 		doctype: function(text) {
-			html.push('<!DOCTYPE', text, '>');
+			html.push('<!DOCTYPE', text, '>', indent ? '\n' : '');
 		},
 
 		/**
