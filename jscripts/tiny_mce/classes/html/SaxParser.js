@@ -43,7 +43,7 @@
 	 *     },
 	 *
 	 *     doctype: function(text) {
-	 *         console.log('DocType:', name);
+	 *         console.log('DocType:', text);
 	 *     }
 	 * }, schema);
 	 * @class tinymce.html.SaxParser
