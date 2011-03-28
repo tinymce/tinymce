@@ -30,8 +30,6 @@ function init() {
 
 	document.getElementById('hrefbrowsercontainer').innerHTML = getBrowserHTML('hrefbrowser','href','file','advlink');
 	document.getElementById('popupurlbrowsercontainer').innerHTML = getBrowserHTML('popupurlbrowser','popupurl','file','advlink');
-	document.getElementById('linklisthrefcontainer').innerHTML = getLinkListHTML('linklisthref','href');
-	document.getElementById('anchorlistcontainer').innerHTML = getAnchorListHTML('anchorlist','href');
 	document.getElementById('targetlistcontainer').innerHTML = getTargetListHTML('targetlist','target');
 
 	// Link list
@@ -40,6 +38,13 @@ function init() {
 		document.getElementById("linklisthrefrow").style.display = 'none';
 	else
 		document.getElementById("linklisthrefcontainer").innerHTML = html;
+
+	// Anchor list
+	html = getAnchorListHTML('anchorlist','href');
+	if (html == "")
+		document.getElementById("anchorlistrow").style.display = 'none';
+	else
+		document.getElementById("anchorlistcontainer").innerHTML = html;
 
 	// Resize some elements
 	if (isVisible('hrefbrowser'))
@@ -362,16 +367,20 @@ function setAttrib(elm, attrib, value) {
 function getAnchorListHTML(id, target) {
 	var ed = tinyMCEPopup.editor, nodes = ed.dom.select('a'), name, i, len, html = "";
 
-	html += '<select id="' + id + '" name="' + id + '" class="mceAnchorList" o2nfocus="tinyMCE.addSelectAccessibility(event, this, window);" onchange="this.form.' + target + '.value=';
-	html += 'this.options[this.selectedIndex].value;">';
-	html += '<option value="">---</option>';
-
 	for (i=0, len=nodes.length; i<len; i++) {
 		if ((name = ed.dom.getAttrib(nodes[i], "name")) != "")
 			html += '<option value="#' + name + '">' + name + '</option>';
 	}
 
-	html += '</select>';
+	if (html == "")
+		return "";
+
+	html = '<select id="' + id + '" name="' + id + '" class="mceAnchorList"'
+		+ ' onchange="this.form.' + target + '.value=this.options[this.selectedIndex].value"'
+		+ '>'
+		+ '<option value="">---</option>'
+		+ html
+		+ '</select>';
 
 	return html;
 }
