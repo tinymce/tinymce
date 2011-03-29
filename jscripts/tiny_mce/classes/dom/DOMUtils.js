@@ -412,7 +412,7 @@
 		},
 
 		/**
-		 * Create HTML string for element. The elemtn will be closed unless an empty inner HTML string is passed.
+		 * Create HTML string for element. The element will be closed unless an empty inner HTML string is passed.
 		 *
 		 * @method createHTML
 		 * @param {String} n Name of new element.
@@ -456,9 +456,7 @@
 		 */
 		remove : function(node, keep_children) {
 			return this.run(node, function(node) {
-				var parent, child;
-
-				parent = node.parentNode;
+				var child, parent = node.parentNode;
 
 				if (!parent)
 					return null;
@@ -618,8 +616,8 @@
 		 */
 		removeAllAttribs: function(e) {
 			return this.run(e, function(e) {
-				var attrs = e.attributes;
-				for (var i = attrs.length - 1; i >= 0; i--) {
+				var i, attrs = e.attributes;
+				for (i = attrs.length - 1; i >= 0; i--) {
 					e.removeAttributeNode(attrs.item(i));
 				}
 			});
@@ -688,7 +686,7 @@
 						}
 
 						break;
-					
+
 					case "shape":
 						e.setAttribute('data-mce-style', v);
 						break;
@@ -1689,23 +1687,21 @@
 			// this function will then trim of empty edges and produce:
 			//   <p>text 1</p><b>CHOP</b><p>text 2</p>
 			function trim(node) {
-				var i, children = node.childNodes;
+				var i, children = node.childNodes, type = node.nodeType;
 
-				if (node.nodeType == 1 && node.getAttribute('data-mce-type') == 'bookmark')
+				if (type == 1 && node.getAttribute('data-mce-type') == 'bookmark')
 					return;
 
 				for (i = children.length - 1; i >= 0; i--)
 					trim(children[i]);
 
-				if (node.nodeType != 9) {
+				if (type != 9) {
 					// Keep non whitespace text nodes
-					if (node.nodeType == 3 && node.nodeValue.length > 0) {
+					if (type == 3 && node.nodeValue.length > 0) {
 						// If parent element isn't a block or there isn't any useful contents for example "<p>   </p>"
 						if (!t.isBlock(node.parentNode) || tinymce.trim(node.nodeValue).length > 0)
 							return;
-					}
-
-					if (node.nodeType == 1) {
+					} else if (type == 1) {
 						// If the only child is a bookmark then move it up
 						children = node.childNodes;
 						if (children.length == 1 && children[0] && children[0].nodeType == 1 && children[0].getAttribute('data-mce-type') == 'bookmark')
