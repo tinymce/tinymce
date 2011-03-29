@@ -1,3 +1,5 @@
+Version 3.3.9.x (2011-x-x)
+	Fixed bug where focus of the editor would get on control contents on IE lost due to a bug in the ColorSplitButton control.
 Version 3.3.9.3 (2010-12-20)
 	Fixed issue where WebKit wouldn't correctly apply ins/del in xhtmlxtras plugin.
 	Fixed bug where paste as plaintext on WebKit wouldn't produce br and p elements correctly.

@@ -124,21 +124,20 @@
 		hideMenu : function(e) {
 			var t = this;
 
-			// Prevent double toogles by canceling the mouse click event to the button
-			if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id + '_open';}))
-				return;
+			if (t.isMenuVisible) {
+				// Prevent double toogles by canceling the mouse click event to the button
+				if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id + '_open';}))
+					return;
 
-			if (!e || !DOM.getParent(e.target, '.mceSplitButtonMenu')) {
-				DOM.removeClass(t.id, 'mceSplitButtonSelected');
-				Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
-				Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
-				DOM.hide(t.id + '_menu');
+				if (!e || !DOM.getParent(e.target, '.mceSplitButtonMenu')) {
+					DOM.removeClass(t.id, 'mceSplitButtonSelected');
+					Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
+					Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
+					DOM.hide(t.id + '_menu');
+				}
+
+				t.isMenuVisible = 0;
 			}
-
-			t.onHideMenu.dispatch(t);
-
-			t.isMenuVisible = 0;
-			t.editor.focus();
 		},
 
 		/**
