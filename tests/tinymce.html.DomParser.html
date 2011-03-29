@@ -90,7 +90,7 @@ test('Whitespace', function() {
 
 	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'hr,br'}));
 	root = parser.parse('\n<hr />\n<br />\n<div>\n<hr />\n<br />\n<img src="file.gif" data-mce-src="file.gif" />\n<hr />\n<br />\n</div>\n<hr />\n<br />\n');
-	equals(serializer.serialize(root), '<div><img src="file.gif" data-mce-src="file.gif" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
+	equals(serializer.serialize(root), '<div><img src="file.gif" data-mce-src="file.gif" alt="" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
 	deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (count)');
 });
 
@@ -216,7 +216,7 @@ test('addAttributeFilter', function() {
 
 	expect(7);
 
-	parser = new tinymce.html.DomParser({}, schema);
+	parser = new tinymce.html.DomParser({});
 	parser.addAttributeFilter('src', function(nodes, name, args) {
 		result = {nodes : nodes, name : name, args : args};
 	});
@@ -236,7 +236,7 @@ test('addAttributeFilter multiple', function() {
 
 	expect(14);
 
-	parser = new tinymce.html.DomParser({}, schema);
+	parser = new tinymce.html.DomParser({});
 	parser.addAttributeFilter('src,href', function(nodes, name, args) {
 		results[name] = {nodes : nodes, name : name, args : args};
 	});
@@ -289,11 +289,11 @@ test('Remove empty elements', function() {
 	root = parser.parse('<span></span><a href="#"><!-- x --></a>');
 	equals(serializer.serialize(root), '<span></span>', 'Remove empty a element containing comment');
 
-	parser = new tinymce.html.DomParser({}, schema);
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[name],img'}));
 	root = parser.parse('<span></span><a name="anchor"></a>');
 	equals(serializer.serialize(root), '<span></span><a name="anchor"></a>', 'Leave a with name attribute');
 	
-	parser = new tinymce.html.DomParser({}, schema);
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[href],img[src]'}));
 	root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
 	equals(serializer.serialize(root), '<span></span><a href="#"><img src="about:blank" /></a>', 'Leave elements with img in it');
 });

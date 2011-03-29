@@ -9,6 +9,8 @@
  */
 
 (function() {
+	var each = tinymce.each, Node = tinymce.html.Node;
+
 	tinymce.create('tinymce.plugins.FullPagePlugin', {
 		init : function(ed, url) {
 			var t = this;
@@ -24,7 +26,7 @@
 					inline : 1
 				}, {
 					plugin_url : url,
-					head_html : t.head
+					data : t._htmlToData()
 				});
 			});
 
@@ -32,7 +34,6 @@
 			ed.addButton('fullpage', {title : 'fullpage.desc', cmd : 'mceFullPageProperties'});
 
 			ed.onBeforeSetContent.add(t._setContent, t);
-			ed.onSetContent.add(t._setBodyAttribs, t);
 			ed.onGetContent.add(t._getContent, t);
 		},
 
@@ -48,149 +49,349 @@
 
 		// Private plugin internal methods
 
-		_setBodyAttribs : function(ed, o) {
-			var bdattr, i, len, kv, k, v, t, attr = this.head.match(/body(.*?)>/i), bddir = '',htattr, hattr = this.head.match(/<html([^>]*?)>/i);
+		_htmlToData : function() {
+			var headerFragment = this._parseHeader(), data = {}, nodes, elm, matches, editor = this.editor;
 
-			if (attr && attr[1]) {
-				bdattr = attr[1].match(/\s*(\w+\s*=\s*".*?"|\w+\s*=\s*'.*?'|\w+\s*=\s*\w+|\w+)\s*/g);
+			function getAttr(elm, name) {
+				var value = elm.attr(name);
 
-				if (bdattr) {
-					for(i = 0, len = bdattr.length; i < len; i++) {
-						kv = bdattr[i].split('=');
-						k = kv[0].replace(/\s/,'');
-						v = kv[1];
+				return value || '';
+			};
 
-						if (v) {
-							v = v.replace(/^\s+/,'').replace(/\s+$/,'');
-							t = v.match(/^["'](.*)["']$/);
+			// Default some values
+			data.fontface = editor.getParam("fullpage_default_fontface", "");
+			data.fontsize = editor.getParam("fullpage_default_fontsize", "");
 
-							if (t)
-								v = t[1];
-							if(k == 'dir')
-								bddir = v;
-						} else
-							v = k;
+			// Parse XML PI
+			elm = headerFragment.firstChild;
+			if (elm.type == 7) {
+				data.xml_pi = true;
+				matches = /encoding="([^"]+)"/.exec(elm.value);
+				if (matches)
+					data.docencoding = matches[1];
+			}
 
-						ed.dom.setAttrib(ed.getBody(), 'style', v);
-					}
+			// Parse doctype
+			elm = headerFragment.getAll('#doctype')[0];
+			if (elm)
+				data.doctype = '<!DOCTYPE' + elm.value + ">"; 
+
+			// Parse title element
+			elm = headerFragment.getAll('title')[0];
+			if (elm && elm.firstChild) {
+				data.metatitle = elm.firstChild.value;
+			}
+
+			// Parse meta elements
+			each(headerFragment.getAll('meta'), function(meta) {
+				var name = meta.attr('name'), httpEquiv = meta.attr('http-equiv'), matches;
+
+				if (name)
+					data['meta' + name.toLowerCase()] = meta.attr('content');
+				else if (httpEquiv == "Content-Type") {
+					matches = /charset\s*=\s*(.*)\s*/gi.exec(meta.attr('content'));
+
+					if (matches)
+						data.docencoding = matches[1];
 				}
+			});
+
+			// Parse html attribs
+			elm = headerFragment.getAll('html')[0];
+			if (elm)
+				data.langcode = getAttr(elm, 'lang') || getAttr(elm, 'xml:lang');
+	
+			// Parse stylesheet
+			elm = headerFragment.getAll('link')[0];
+			if (elm && elm.attr('rel') == 'stylesheet')
+				data.stylesheet = elm.attr('href');
+
+			// Parse body parts
+			elm = headerFragment.getAll('body')[0];
+			if (elm) {
+				data.langdir = getAttr(elm, 'dir');
+				data.style = getAttr(elm, 'style');
+				data.visited_color = getAttr(elm, 'vlink');
+				data.link_color = getAttr(elm, 'link');
+				data.active_color = getAttr(elm, 'alink');
 			}
-			//if found fetch the dir-attribute from the html-tag and apply it to the editor-body
-			if(bddir == '' && hattr && hattr[1]){
-				htattr = hattr[1].match(/dir\s*=\s*["']([^"']*)["']/i);
-				if (htattr && htattr[1])
-					bddir = htattr[1];
-			}
-			bd = ed.getBody();
-			bd.setAttribute('dir', bddir);
+
+			return data;
 		},
 
-		_createSerializer : function() {
-			return new tinymce.dom.Serializer({
-				dom : this.editor.dom,
-				indent : true,
-				apply_source_formatting : true,
-				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,title,meta,head',
-				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,title,meta,head'
+		_dataToHtml : function(data) {
+			var headerFragment, headElement, html, elm, value, dom = this.editor.dom;
+
+			function setAttr(elm, name, value) {
+				elm.attr(name, value ? value : undefined);
+			};
+
+			function addHeadNode(node) {
+				if (headElement.firstChild)
+					headElement.insert(node, headElement.firstChild);
+				else
+					headElement.append(node);
+			};
+
+			headerFragment = this._parseHeader();
+			headElement = headerFragment.getAll('head')[0];
+			if (!headElement) {
+				elm = headerFragment.getAll('html')[0];
+				headElement = new Node('head', 1);
+
+				if (elm.firstChild)
+					elm.insert(headElement, elm.firstChild, true);
+				else
+					elm.append(headElement);
+			}
+
+			// Add/update/remove XML-PI
+			elm = headerFragment.firstChild;
+			if (data.xml_pi) {
+				value = 'version="1.0"';
+
+				if (data.docencoding)
+					value += ' encoding="' + data.docencoding + '"';
+
+				if (elm.type != 7) {
+					elm = new Node('xml', 7);
+					headerFragment.insert(elm, headerFragment.firstChild, true);
+				}
+
+				elm.value = value;
+			} else if (elm && elm.type == 7)
+				elm.remove();
+
+			// Add/update/remove doctype
+			elm = headerFragment.getAll('#doctype')[0];
+			if (data.doctype) {
+				if (!elm) {
+					elm = new Node('#doctype', 10);
+
+					if (data.xml_pi)
+						headerFragment.insert(elm, headerFragment.firstChild);
+					else
+						addHeadNode(elm);
+				}
+
+				elm.value = data.doctype.substring(9, data.doctype.length - 1);
+			} else if (elm)
+				elm.remove();
+
+			// Add/update/remove title
+			elm = headerFragment.getAll('title')[0];
+			if (data.metatitle) {
+				if (!elm) {
+					elm = new Node('title', 1);
+					elm.append(new Node('#text', 3)).value = data.metatitle;
+					addHeadNode(elm);
+				}
+			}
+
+			// Add meta encoding
+			if (data.docencoding) {
+				elm = null;
+				each(headerFragment.getAll('meta'), function(meta) {
+					if (meta.attr('http-equiv') == 'Content-Type')
+						elm = meta;
+				});
+
+				if (!elm) {
+					elm = new Node('meta', 1);
+					elm.attr('http-equiv', 'Content-Type');
+					elm.shortEnded = true;
+					addHeadNode(elm);
+				}
+
+				elm.attr('content', 'text/html; charset=' + data.docencoding);
+			}
+
+			// Add/update/remove meta
+			each('keywords,description,author,copyright,robots'.split(','), function(name) {
+				var nodes = headerFragment.getAll('meta'), i, meta, value = data['meta' + name];
+
+				for (i = 0; i < nodes.length; i++) {
+					meta = nodes[i];
+
+					if (meta.attr('name') == name) {
+						if (value)
+							meta.attr('content', value);
+						else
+							meta.remove();
+
+						return;
+					}
+				}
+
+				if (value) {
+					elm = new Node('meta', 1);
+					elm.attr('name', name);
+					elm.attr('content', value);
+					elm.shortEnded = true;
+
+					addHeadNode(elm);
+				}
 			});
+
+			// Add/update/delete link
+			elm = headerFragment.getAll('link')[0];
+			if (elm && elm.attr('rel') == 'stylesheet') {
+				if (data.stylesheet)
+					elm.attr('href', data.stylesheet);
+				else
+					elm.remove();
+			} else if (data.stylesheet) {
+				elm = new Node('link', 1);
+				elm.attr({
+					rel : 'stylesheet',
+					text : 'text/css',
+					href : data.stylesheet
+				});
+				elm.shortEnded = true;
+
+				addHeadNode(elm);
+			}
+
+			// Update body attributes
+			elm = headerFragment.getAll('body')[0];
+			if (elm) {
+				setAttr(elm, 'dir', data.langdir);
+				setAttr(elm, 'style', data.style);
+				setAttr(elm, 'vlink', data.visited_color);
+				setAttr(elm, 'link', data.link_color);
+				setAttr(elm, 'alink', data.active_color);
+
+				// Update iframe body as well
+				dom.setAttribs(this.editor.getBody(), {
+					style : data.style,
+					dir : data.dir,
+					vLink : data.visited_color,
+					link : data.link_color,
+					aLink : data.active_color
+				});
+			}
+
+			// Set html attributes
+			elm = headerFragment.getAll('html')[0];
+			if (elm) {
+				setAttr(elm, 'lang', data.langcode);
+				setAttr(elm, 'xml:lang', data.langcode);
+			}
+
+			// Serialize header fragment and crop away body part
+			html = new tinymce.html.Serializer({
+				validate: false,
+				indent: true,
+				apply_source_formatting : true,
+				indent_before: 'head,html,body,meta,title,script,link,style',
+				indent_after: 'head,html,body,meta,title,script,link,style'
+			}).serialize(headerFragment);
+
+			this.head = html.substring(0, html.indexOf('</body>'));
+		},
+
+		_parseHeader : function() {
+			// Parse the contents with a DOM parser
+			return new tinymce.html.DomParser({
+				validate: false,
+				root_name: '#document'
+			}).parse(this.head);
 		},
 
 		_setContent : function(ed, o) {
-			var t = this, sp, ep, c = o.content, v, st = '';
+			var self = this, startPos, endPos, content = o.content, headerFragment, styles = '', dom = self.editor.dom, elm;
+
+			function low(s) {
+				return s.replace(/<\/?[A-Z]+/g, function(a) {
+					return a.toLowerCase();
+				})
+			};
 
 			// Ignore raw updated if we already have a head, this will fix issues with undo/redo keeping the head/foot separate
-			if (o.format == 'raw' && t.head)
+			if (o.format == 'raw' && self.head)
 				return;
 
 			if (o.source_view && ed.getParam('fullpage_hide_in_source_view'))
 				return;
 
 			// Parse out head, body and footer
-			c = c.replace(/<(\/?)BODY/gi, '<$1body');
-			sp = c.indexOf('<body');
+			content = content.replace(/<(\/?)BODY/gi, '<$1body');
+			startPos = content.indexOf('<body');
 
-			if (sp != -1) {
-				sp = c.indexOf('>', sp);
-				t.head = c.substring(0, sp + 1);
+			if (startPos != -1) {
+				startPos = content.indexOf('>', startPos);
+				self.head = low(content.substring(0, startPos + 1));
 
-				// Concatenate all <style>'s text into t.css
-				var ss = 0, es;
-				t.css = '';
-				while ((ss = t.head.indexOf('<style', ss)) != -1) {
-					ss = c.indexOf('>', ss) + 1;
-					if ( (es = t.head.indexOf('</style', ss)) == -1)
-						break;
-					t.css += t.head.substring(ss, es);
-					ss = es;
-				}
+				endPos = content.indexOf('</body', startPos);
+				if (endPos == -1)
+					endPos = content.length;
 
-				ep = c.indexOf('</body', sp);
-				if (ep == -1)
-					ep = c.length;
-
-				o.content = c.substring(sp + 1, ep);
-				t.foot = c.substring(ep);
-
-				function low(s) {
-					return s.replace(/<\/?[A-Z]+/g, function(a) {
-						return a.toLowerCase();
-					})
-				};
-
-				t.head = low(t.head);
-				t.foot = low(t.foot);
+				o.content = content.substring(startPos + 1, endPos);
+				self.foot = low(content.substring(endPos));
 			} else {
-				t.head = '';
-				if (ed.getParam('fullpage_default_xml_pi'))
-					t.head += '<?xml version="1.0" encoding="' + ed.getParam('fullpage_default_encoding', 'ISO-8859-1') + '" ?>\n';
-
-				t.head += ed.getParam('fullpage_default_doctype', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
-				t.head += '\n<html>\n<head>\n';
-
-				if (v = ed.getParam('fullpage_default_title'))
-					t.head += '<title>' + v + '</title>\n';
-
-				if (v = ed.getParam('fullpage_default_encoding'))
-					t.head += '<meta http-equiv="Content-Type" content="text/html; charset=' + v + '" />\n';
-
-				if (v = ed.getParam('fullpage_default_font_family'))
-					st += 'font-family: ' + v + ';';
-
-				if (v = ed.getParam('fullpage_default_font_size'))
-					st += 'font-size: ' + v + ';';
-
-				if (v = ed.getParam('fullpage_default_text_color'))
-					st += 'color: ' + v + ';';
-
-				t.head += '</head>\n<body' + (st ? ' style="' + st + '"' : '') + '>\n';
-				t.foot = '\n</body>\n</html>';
+				self.head = this._getDefaultHeader();
+				self.foot = '\n</body>\n</html>';
 			}
+
+			// Parse header and update iframe
+			headerFragment = self._parseHeader();
+			each(headerFragment.getAll('style'), function(node) {
+				if (node.firstChild)
+					styles += node.firstChild.value;
+			});
+
+			elm = headerFragment.getAll('body')[0];
+			if (elm) {
+				dom.setAttribs(self.editor.getBody(), {
+					style : elm.attr('style') || '',
+					dir : elm.attr('dir') || '',
+					vLink : elm.attr('vlink') || '',
+					link : elm.attr('link') || '',
+					aLink : elm.attr('alink') || ''
+				});
+			}
+
+			if (styles)
+				dom.add(self.editor.getDoc().getElementsByTagName('head')[0], 'style', {id : 'fullpage_styles'}, styles);
+			else
+				dom.remove('fullpage_styles');
+		},
+
+		_getDefaultHeader : function() {
+			var header = '', editor = this.editor, value, styles = '';
+
+			if (editor.getParam('fullpage_default_xml_pi'))
+				header += '<?xml version="1.0" encoding="' + editor.getParam('fullpage_default_encoding', 'ISO-8859-1') + '" ?>\n';
+
+			header += editor.getParam('fullpage_default_doctype', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
+			header += '\n<html>\n<head>\n';
+
+			if (value = editor.getParam('fullpage_default_title'))
+				header += '<title>' + v + '</title>\n';
+
+			if (value = editor.getParam('fullpage_default_encoding'))
+				header += '<meta http-equiv="Content-Type" content="text/html; charset=' + value + '" />\n';
+
+			if (value = editor.getParam('fullpage_default_font_family'))
+				styles += 'font-family: ' + value + ';';
+
+			if (value = editor.getParam('fullpage_default_font_size'))
+				styles += 'font-size: ' + value + ';';
+
+			if (value = editor.getParam('fullpage_default_text_color'))
+				styles += 'color: ' + value + ';';
+
+			header += '</head>\n<body' + (styles ? ' style="' + styles + '"' : '') + '>\n';
+
+			return header;
 		},
 
 		_getContent : function(ed, o) {
-			var t = this;
+			var self = this;
 
-			if (!o.source_view || !ed.getParam('fullpage_hide_in_source_view')) {
-				o.content = tinymce.trim(t.head) + '\n' + tinymce.trim(o.content) + '\n' + tinymce.trim(t.foot);
-
-				if (t.css)
-					t._setStyle(ed, t.css);
-			}
-		},
-
-		_setStyle : function(ed, css) {
-			ed.dom.remove('injectedCSS');
-			var doc = ed.dom.doc, style = doc.createElement('style');
-			style.type = 'text/css';
-			style.id = 'injectedCSS';
-
-			if (style.styleSheet) // IE
-				style.styleSheet.cssText = css;
-			else // other browsers
-				style.appendChild(doc.createTextNode(css));
-
-			doc.getElementsByTagName('head')[0].appendChild(style);
- 		}
+			if (!o.source_view || !ed.getParam('fullpage_hide_in_source_view'))
+				o.content = tinymce.trim(self.head) + '\n' + tinymce.trim(o.content) + '\n' + tinymce.trim(self.foot);
+		}
 	});
 
 	// Register plugin
