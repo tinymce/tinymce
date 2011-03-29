@@ -284,7 +284,7 @@
 				indent: true,
 				apply_source_formatting : true,
 				indent_before: 'head,html,body,meta,title,script,link,style',
-				indent_after: 'head,html,body,meta,title,script,link,style',
+				indent_after: 'head,html,body,meta,title,script,link,style'
 			}).serialize(headerFragment);
 
 			this.head = html.substring(0, html.indexOf('</body>'));
