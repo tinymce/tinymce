@@ -26,6 +26,7 @@
 			paste_dialog_height : "400",
 			paste_text_use_dialog : false,
 			paste_text_sticky : false,
+			paste_text_sticky_default : false,
 			paste_text_notifyalways : false,
 			paste_text_linebreaktype : "p",
 			paste_text_replacements : [
@@ -38,7 +39,6 @@
 	function getParam(ed, name) {
 		return ed.getParam(name, defs[name]);
 	}
-
 	tinymce.create('tinymce.plugins.PastePlugin', {
 		init : function(ed, url) {
 			var t = this;
@@ -64,19 +64,38 @@
 				ed.execCallback('paste_postprocess', pl, o);
 			});
 
+			ed.onKeyDown.addToTop(function(ed, e) {
+				// Block ctrl+v from adding an undo level since the default logic in tinymce.Editor will add that
+				if (((tinymce.isMac ? e.metaKey : e.ctrlKey) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45))
+					return false; // Stop other listeners
+			});
+
 			// Initialize plain text flag
-			ed.pasteAsPlainText = false;
+			ed.pasteAsPlainText = getParam(ed, 'paste_text_sticky_default');
 
 			// This function executes the process handlers and inserts the contents
 			// force_rich overrides plain text mode set by user, important for pasting with execCommand
 			function process(o, force_rich) {
-				var dom = ed.dom;
+				var dom = ed.dom, rng, nodes;
 
 				// Execute pre process handlers
 				t.onPreProcess.dispatch(t, o);
 
 				// Create DOM structure
 				o.node = dom.create('div', 0, o.content);
+
+				// If pasting inside the same element and the contents is only one block
+				// remove the block and keep the text since Firefox will copy parts of pre and h1-h6 as a pre element
+				if (tinymce.isGecko) {
+					rng = ed.selection.getRng(true);
+					if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == 3) {
+						nodes = dom.select('p,h1,h2,h3,h4,h5,h6,pre', o.node);
+
+						// Is only one block node and it doesn't contain word stuff
+						if (nodes.length == 1 && o.content.indexOf('__MCE_ITEM__') === -1)
+							dom.remove(nodes.reverse(), true);
+					}
+				}
 
 				// Execute post process handlers
 				t.onPostProcess.dispatch(t, o);
@@ -133,13 +152,17 @@
 			// hidden div and placing the caret inside it and after the browser paste
 			// is done it grabs that contents and processes that
 			function grabContent(e) {
-				var n, or, rng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY;
+				var n, or, rng, oldRng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY, textContent;
 
 				// Check if browser supports direct plaintext access
-				if (ed.pasteAsPlainText && (e.clipboardData || dom.doc.dataTransfer)) {
-					e.preventDefault();
-					process({content : (e.clipboardData || dom.doc.dataTransfer).getData('Text').replace(/\r?\n/g, '<br />')});
-					return;
+				if (e.clipboardData || dom.doc.dataTransfer) {
+					textContent = (e.clipboardData || dom.doc.dataTransfer).getData('Text');
+
+					if (ed.pasteAsPlainText) {
+						e.preventDefault();
+						process({content : textContent.replace(/\r?\n/g, '<br />')});
+						return;
+					}
 				}
 
 				if (dom.get('_mcePaste'))
@@ -152,7 +175,7 @@
 				if (body != ed.getDoc().body)
 					posY = dom.getPos(ed.selection.getStart(), body).y;
 				else
-					posY = body.scrollTop;
+					posY = body.scrollTop + dom.getViewPort().y;
 
 				// Styles needs to be applied after the element is added to the document since WebKit will otherwise remove all styles
 				dom.setStyles(n, {
@@ -165,6 +188,9 @@
 				});
 
 				if (tinymce.isIE) {
+					// Store away the old range
+					oldRng = sel.getRng();
+
 					// Select the container
 					rng = dom.doc.body.createTextRange();
 					rng.moveToElementText(n);
@@ -181,8 +207,17 @@
 						return;
 					}
 
+					// Restore the old range and clear the contents before pasting
+					sel.setRng(oldRng);
+					sel.setContent('');
+
+					// For some odd reason we need to detach the the mceInsertContent call from the paste event
+					// It's like IE has a reference to the parent element that you paste in and the selection gets messed up
+					// when it tries to restore the selection
+					setTimeout(function() {
 					// Process contents
-					process({content : n.innerHTML});
+						process({content : n.innerHTML});
+					}, 0);
 
 					// Block the real paste event
 					return tinymce.dom.Event.cancel(e);
@@ -206,37 +241,42 @@
 
 					// Wait a while and grab the pasted contents
 					window.setTimeout(function() {
-						var h = '', nl = dom.select('div.mcePaste');
+						var h = '', nl;
 
-						// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
-						each(nl, function(n) {
-							var child = n.firstChild;
+						// Paste divs duplicated in paste divs seems to happen when you paste plain text so lets first look for that broken behavior in WebKit
+						if (!dom.select('div.mcePaste > div.mcePaste').length) {
+							nl = dom.select('div.mcePaste');
 
-							// WebKit inserts a DIV container with lots of odd styles
-							if (child && child.nodeName == 'DIV' && child.style.marginTop && child.style.backgroundColor) {
-								dom.remove(child, 1);
-							}
+							// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
+							each(nl, function(n) {
+								var child = n.firstChild;
 
-							// WebKit duplicates the divs so we need to remove them
-							each(dom.select('div.mcePaste', n), function(n) {
-								dom.remove(n, 1);
+								// WebKit inserts a DIV container with lots of odd styles
+								if (child && child.nodeName == 'DIV' && child.style.marginTop && child.style.backgroundColor) {
+									dom.remove(child, 1);
+								}
+
+								// Remove apply style spans
+								each(dom.select('span.Apple-style-span', n), function(n) {
+									dom.remove(n, 1);
+								});
+
+								// Remove bogus br elements
+								each(dom.select('br[_mce_bogus]', n), function(n) {
+									dom.remove(n);
+								});
+
+								// WebKit will make a copy of the DIV for each line of plain text pasted and insert them into the DIV
+								if (n.parentNode.className != 'mcePaste')
+									h += n.innerHTML;
 							});
-
-							// Remove apply style spans
-							each(dom.select('span.Apple-style-span', n), function(n) {
-								dom.remove(n, 1);
-							});
-
-							// Remove bogus br elements
-							each(dom.select('br[_mce_bogus]', n), function(n) {
-								dom.remove(n);
-							});
-
-							h += n.innerHTML;
-						});
+						} else {
+							// Found WebKit weirdness so force the content into plain text mode
+							h = '<pre>' + dom.encode(textContent).replace(/\r?\n/g, '<br />') + '</pre>';
+						}
 
 						// Remove the nodes
-						each(nl, function(n) {
+						each(dom.select('div.mcePaste'), function(n) {
 							dom.remove(n);
 						});
 
@@ -257,7 +297,7 @@
 			if (getParam(ed, "paste_auto_cleanup_on_paste")) {
 				// Is it's Opera or older FF use key handler
 				if (tinymce.isOpera || /Firefox\/2/.test(navigator.userAgent)) {
-					ed.onKeyDown.add(function(ed, e) {
+					ed.onKeyDown.addToTop(function(ed, e) {
 						if (((tinymce.isMac ? e.metaKey : e.ctrlKey) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45))
 							grabContent(e);
 					});
@@ -319,6 +359,10 @@
 				return;
 			}
 
+			// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
+			if (tinymce.isIE && document.documentMode >= 9)
+				process([[/(?:<br>&nbsp;[\s\r\n]+|<br>)*(<\/?(h[1-6r]|p|div|address|pre|form|table|tbody|thead|tfoot|th|tr|td|li|ol|ul|caption|blockquote|center|dl|dt|dd|dir|fieldset)[^>]*>)(?:<br>&nbsp;[\s\r\n]+|<br>)*/g, '$1']]);
+
 			// Detect Word content and process it more aggressive
 			if (/class="?Mso|style="[^"]*\bmso-|w:WordDocument/i.test(h) || o.wordContent) {
 				o.wordContent = true;			// Mark the pasted contents as word specific content
@@ -337,7 +381,8 @@
 				if (getParam(ed, "paste_convert_middot_lists")) {
 					process([
 						[/<!--\[if !supportLists\]-->/gi, '$&__MCE_ITEM__'],					// Convert supportLists to a list item marker
-						[/(<span[^>]+(?:mso-list:|:\s*symbol)[^>]+>)/gi, '$1__MCE_ITEM__']		// Convert mso-list and symbol spans to item markers
+						[/(<span[^>]+(?:mso-list:|:\s*symbol)[^>]+>)/gi, '$1__MCE_ITEM__'],		// Convert mso-list and symbol spans to item markers
+						[/(<p[^>]+(?:MsoListParagraph)[^>]+>)/gi, '$1__MCE_ITEM__']				// Convert mso-list and symbol paragraphs to item markers (FF)
 					]);
 				}
 
@@ -488,6 +533,11 @@
 					[/<\/h[1-6][^>]*>/gi, "</strong></p>"]
 				]);
 			}
+
+			process([
+				// Copy paste from Java like Open Office will produce this junk on FF
+				[/Version:[\d.]+\nStartHTML:\d+\nEndHTML:\d+\nStartFragment:\d+\nEndFragment:\d+/gi, '']
+			]);
 
 			// Class attribute options are: leave all as-is ("none"), remove all ("all"), or remove only those starting with mso ("mso").
 			// Note:-  paste_strip_class_attributes: "none", verify_css_classes: true is also a good variation.
