@@ -73,11 +73,13 @@
 					ed.onKeyPress.addToTop(t._block);
 					ed.onKeyUp.addToTop(t._block);
 					ed.onPaste.addToTop(t._block);
+					ed.onContextMenu.addToTop(t._block);
 				} else {
 					ed.onKeyDown.remove(t._block);
 					ed.onKeyPress.remove(t._block);
 					ed.onKeyUp.remove(t._block);
 					ed.onPaste.remove(t._block);
+					ed.onContextMenu.remove(t._block);
 				}
 
 				t.disabled = s;

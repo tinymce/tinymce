@@ -1,5 +1,6 @@
 Version 3.4.1.x (2011-03-xx)
 	Added a "paste_text_sticky_default" option to paste plugin, enables you to set the default state for paste as plain text.
+	Rewritten the fullpage plugin to handle style contents better and have a more normalized behavior across browsers.
 	Fixed bug where contents inserted with mceInsertContent wasn't parsed using the default dom parser.
 	Fixed bug where blocks containing a single anchor element would be treated as empty.
 	Fixed bug where merging of table cells on IE 6, 7 wouldn't look correctly until the contents was refreshed.
@@ -11,8 +12,8 @@ Version 3.4.1.x (2011-03-xx)
 	Fixed bug where the context menu wouldn't select images on WebKit browsers.
 	Fixed bug where paste plugin wouldn't properly extract the contents on WebKit due to recent changes in browser behavior.
 	Fixed bug where focus of the editor would get on control contents on IE lost due to a bug in the ColorSplitButton control.
+	Fixed bug where contextmenu wasn't disabled on noneditable elements.
 	Fixed bug in xhtmlxtras plugin where it wasn't possible to remove some attributes in the attributes dialog.
-	Rewrote the fullpage plugin to handle style contents better and have a more normalized behavior across browsers.
 Version 3.4.1 (2011-03-24)
 	Added significantly improved list handling via the new 'lists' plugin.
 	Added 'autolink' plugin to enable automatically linking URLs. Similar to the behavior IE has by default.
