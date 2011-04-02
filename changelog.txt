@@ -14,6 +14,7 @@ Version 3.4.1.x (2011-03-xx)
 	Fixed bug where focus of the editor would get on control contents on IE lost due to a bug in the ColorSplitButton control.
 	Fixed bug where contextmenu wasn't disabled on noneditable elements.
 	Fixed bug where getStyle function would trigger error when called on element without style property.
+	Fixed bug where editor fail to load if Javascript Compressor was used.
 	Fixed bug in xhtmlxtras plugin where it wasn't possible to remove some attributes in the attributes dialog.
 Version 3.4.1 (2011-03-24)
 	Added significantly improved list handling via the new 'lists' plugin.
