@@ -221,7 +221,7 @@
 		},
 
 		_markWords : function(wl) {
-			var ed = this.editor, dom = ed.dom, se = ed.selection, b = se.getBookmark(), nl = [],
+			var ed = this.editor, dom = ed.dom, doc = ed.getDoc(), se = ed.selection, b = se.getBookmark(), nl = [],
 				w = wl.join('|'), re = this._getSeparators(), rx = new RegExp('(^|[' + re + '])(' + w + ')(?=[' + re + ']|$)', 'g');
 
 			// Collect all text nodes
@@ -254,7 +254,7 @@
 							// Add text node for the content before the word
 							txt = v.substring(0, pos);
 							if (txt.length) {
-								node = document.createTextNode(dom.decode(txt));
+								node = doc.createTextNode(dom.decode(txt));
 								elem.appendChild(node);
 							}
 							v = v.substring(pos+10);
@@ -266,7 +266,7 @@
 						}
 						// Add text node for the rest of the content
 						if (v.length) {
-							node = document.createTextNode(dom.decode(v));
+							node = doc.createTextNode(dom.decode(v));
 							elem.appendChild(node);
 						}
 					} else {
