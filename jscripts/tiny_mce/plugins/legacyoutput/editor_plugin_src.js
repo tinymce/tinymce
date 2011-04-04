@@ -34,7 +34,7 @@
 					alignleft : {selector : alignElements, attributes : {align : 'left'}},
 					aligncenter : {selector : alignElements, attributes : {align : 'center'}},
 					alignright : {selector : alignElements, attributes : {align : 'right'}},
-					alignfull : {selector : alignElements, attributes : {align : 'full'}},
+					alignfull : {selector : alignElements, attributes : {align : 'justify'}},
 
 					// Change the basic formatting elements to use deprecated element types
 					bold : [
