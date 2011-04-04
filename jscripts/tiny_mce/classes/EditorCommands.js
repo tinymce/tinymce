@@ -287,14 +287,17 @@
 			mceInsertContent : function(command, ui, value) {
 				var caretNode, rng, rootNode, parent, node, rng, nodeRect, viewPortRect, args;
 
-				function findSuitableCaretNode(start_node, root_node) {
-					var node, walker = new tinymce.dom.TreeWalker(start_node, root_node);
+				function findSuitableCaretNode(node, root_node, next) {
+					var walker = new tinymce.dom.TreeWalker(next ? node.nextSibling : node.previousSibling, root_node);
 
 					while ((node = walker.current())) {
 						if ((node.nodeType == 3 && tinymce.trim(node.nodeValue).length) || node.nodeName == 'BR' || node.nodeName == 'IMG')
 							return node;
 
-						walker.prev();
+						if (next)
+							walker.next();
+						else
+							walker.prev();
 					}
 				};
 
@@ -315,7 +318,7 @@
 
 				// Move the caret into the last suitable location within the previous sibling if it's a block since the block might be split
 				if (caretNode.previousSibling && dom.isBlock(caretNode.previousSibling) || caretNode.parentNode == rootNode) {
-					node = findSuitableCaretNode(caretNode.previousSibling, rootNode);
+					node = findSuitableCaretNode(caretNode, rootNode);
 					if (node) {
 						if (node.nodeName == 'BR')
 							node.parentNode.insertBefore(caretNode, node);
@@ -345,7 +348,7 @@
 				// Find caret after cleanup and move selection to that location
 				caretNode = dom.select('#__mce')[0];
 				if (caretNode) {
-					node = findSuitableCaretNode(caretNode.previousSibling, rootNode);
+					node = findSuitableCaretNode(caretNode, rootNode, true) || findSuitableCaretNode(caretNode, rootNode);
 					dom.remove(caretNode);
 
 					if (node) {
@@ -454,7 +457,7 @@
 			},
 
 			mceReplaceContent : function(command, ui, value) {
-				editor.execCommand('mceInsertContent', false, selection.setContent(value.replace(/\{\$selection\}/g, selection.getContent({format : 'text'}))));
+				editor.execCommand('mceInsertContent', false, value.replace(/\{\$selection\}/g, selection.getContent({format : 'text'})));
 			},
 
 			mceInsertLink : function(command, ui, value) {
