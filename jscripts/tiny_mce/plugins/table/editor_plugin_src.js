@@ -878,10 +878,14 @@
 						// Remove current selection
 						sel = ed.selection.getSel();
 
-						if (sel.removeAllRanges)
-							sel.removeAllRanges();
-						else
-							sel.empty();
+						try {
+							if (sel.removeAllRanges)
+								sel.removeAllRanges();
+							else
+								sel.empty();
+						} catch (ex) {
+							// IE9 might throw errors here
+						}
 
 						e.preventDefault();
 					}
