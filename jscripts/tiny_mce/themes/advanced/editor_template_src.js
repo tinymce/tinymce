@@ -752,7 +752,7 @@
 			each(explode(s.theme_advanced_containers || ''), function(c, i) {
 				var v = s['theme_advanced_container_' + c] || '';
 
-				switch (v.toLowerCase()) {
+				switch (c.toLowerCase()) {
 					case 'mceeditor':
 						n = DOM.add(tb, 'tr');
 						n = ic = DOM.add(n, 'td', {'class' : 'mceIframeContainer'});
