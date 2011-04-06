@@ -1,14 +1,11 @@
 /**
  * editor_plugin_src.js
  *
- * Copyright 2010, Ephox * Released under TODO
+ * Copyright 2011, Moxiecode Systems AB
+ * Released under LGPL License.
  *
- * License: TODO
- *
- * BUGS:
- *   
- *
- *
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 (function() {
