@@ -498,7 +498,7 @@
 					case 'float':
 						isIE ? s.styleFloat = v : s.cssFloat = v;
 						break;
-					
+
 					default:
 						s[na] = v || '';
 				}
@@ -648,7 +648,7 @@
 						}
 
 						break;
-					
+
 					case "shape":
 						e.setAttribute('_mce_style', v);
 						break;
@@ -1199,7 +1199,7 @@
 					function set() {
 						// Remove all child nodes
 						while (e.firstChild)
-							e.firstChild.removeNode();
+								e.removeChild(e.firstChild);
 
 						try {
 							// IE will remove comments from the beginning
@@ -1554,7 +1554,7 @@
 		 * @method insertAfter
 		 * @param {Element} node Element to insert after the reference.
 		 * @param {Element/String/Array} reference_node Reference element, element id or array of elements to insert after.
-		 * @return {Element/Array} Element that got added or an array with elements. 
+		 * @return {Element/Array} Element that got added or an array with elements.
 		 */
 		insertAfter : function(node, reference_node) {
 			reference_node = this.get(reference_node);
@@ -1904,7 +1904,7 @@
 		/**
 		 * Splits an element into two new elements and places the specified split
 		 * element or element between the new ones. For example splitting the paragraph at the bold element in
-		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>. 
+		 * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.
 		 *
 		 * @method split
 		 * @param {Element} pe Parent element to split.
