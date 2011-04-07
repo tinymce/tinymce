@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="tinymce" default="build" basedir=".">
-	
 	<!-- Path properties -->
 	<property description="Classes directory" name="classes_dir" location="jscripts/tiny_mce/classes" />
 	<property description="Build directory" name="build_dir" location="jscripts/tiny_mce" />
 	<property description="Temp directory" name="temp_dir" location="tmp" />
 	<property environment="env" />
-	<property description="Build number" name="build-number" value="${env.BUILD_NUMBER}" />
+
 
 	<!-- Allow any user specific values to override the defaults -->
 	<property file="${user.home}/tinymce_build.properties" />
@@ -19,6 +18,17 @@
 			<include name="**/*.jar"/>
 		</fileset>
 	</path>
+
+	<!-- use a build number from the environment, defaulting it if not set. -->
+	<target name="default-build-number" unless="env.BUILD_NUMBER">
+		<tstamp />
+		<property description="Build number" name="build-number" value="${DSTAMP}${TSTAMP}" />
+		<echo message="${build-number}" />
+	</target>
+	<target name="env-build-number" if="env.BUILD_NUMBER">
+		<property description="Build number" name="build-number" value="${env.BUILD_NUMBER}" />
+	</target>
+	<target name="init-build-number" depends="env-build-number,default-build-number"/>
 
 	<!-- Register new js-build-tools ant tasks -->
 	<taskdef name="preprocess" classname="com.moxiecode.ant.tasks.PreProcessTask" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
@@ -207,33 +217,20 @@
 				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
 				<exclude name="build-utils/**" />
-				<exclude name="ephox-changelog.txt" />
 			</fileset>
 		</copy>
 	</target>
 		
-	<target name="prepare-versions" depends="prepare-release-files" description="Builds release packages">
+	<target name="prepare-versions" depends="init-build-number,prepare-release-files" description="Builds release packages">
 		<!-- Parse minor version, major version and release date from changelog -->
-
 		<loadfile property="changelog" srcFile="${temp_dir}/tinymce/changelog.txt" />
 		<propertyregex property="version" input="${changelog}" regexp="^Version ([0-9xabrc.]+)" select="\1" />
 		<propertyregex property="release_date" input="${changelog}" regexp="^Version [^\(]+\(([^\)]+)\)" select="\1" />
 		<propertyregex property="version.major" input="${version}" regexp="^([0-9]+)\." select="\1" />
 		<propertyregex property="version.minor.upstream" input="${version}" regexp="^[^\.]+.([0-9xabrc.]+)" select="\1" />
-		<property name="version.minor" value="${version.minor.upstream}-b-${build-number}" />
-		<property name="file_version" value="${version}-b-${build-number}" />
+		<property name="version.minor" value="${version.minor.upstream}" />
+		<property name="file_version" value="${version}-${build-number}" />
 
-		<tstamp>
-			<format property="now" pattern="yyyy-MM-dd" timezone="GMT" />
-		</tstamp>
-		<concat destfile="${temp_dir}/tinymce/changelog.txt" eol="dos" fixlastline="true">
-			<header>Version ${file_version} (${now})&#13;&#10;	Ephox distribution of TinyMCE ${version}.</header>
-			<filelist>
-				<file name="${basedir}/ephox-changelog.txt" />
-				<file name="${basedir}/changelog.txt" />
-			</filelist>
-		</concat>
-		
 		<!-- Replace major version -->
 		<replaceregexp byline="true">
 			<regexp pattern="@@tinymce_major_version@@" />
@@ -313,15 +310,16 @@
 			</else>
 		</if>
 	</target>
-		
+
 	<target name="prepare-release" depends="prepare-release-files, prepare-versions, prepare-examples, prepare-version-queries" />
-		
+
+	<!--TODO consider if the community release name is the right one for this. -->
 	<target name="community-release" depends="prepare-release" description="Builds release packages">
 		<!-- Compress development package -->
-		<delete file="${temp_dir}/communitytinymce_${file_version}.zip" quiet="true" />
-		<zip destfile="${temp_dir}/communitytinymce_${file_version}.zip">
-			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce">
-			</zipfileset>
+		<delete file="${temp_dir}/tinymce_${file_version}_dev.zip" quiet="true" />
+		<zip destfile="${temp_dir}/tinymce_${file_version}_dev.zip">
+			<zipfileset dir="${temp_dir}/tinymce" prefix="tinymce" />
+
 		</zip>
 	</target>
 
@@ -333,7 +331,6 @@
 				<include name="tinymce/jscripts/**" />
 				<include name="tinymce/examples/**" />
 				<include name="tinymce/changelog.txt" />
-				<exclude name="tinymce/LICENSE.TXT" />
 				<exclude name="tinymce/examples/full_jquery.html" />
 				<exclude name="tinymce/jscripts/tiny_mce/classes/**" />
 				<exclude name="tinymce/jscripts/tiny_mce/jquery.tinymce.js" />
@@ -343,9 +340,6 @@
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype.js" />
 				<exclude name="tinymce/jscripts/tiny_mce/tiny_mce_prototype_src.js" />
 			</fileset>
-			<zipfileset dir="${temp_dir}/tinymce/jscripts/tiny_mce" prefix="tinymce">
-				<include name="license.txt" />
-			</zipfileset>
 		</zip>
 	</target>
 	
@@ -355,7 +349,6 @@
 		<zip destfile="${temp_dir}/tinymce_${file_version}_jquery.zip" excludes="**/classes">
 			<fileset dir="${temp_dir}">
 				<include name="tinymce/jscripts/**" />
-				<include name="tinymce/examples/**" />
 				<include name="tinymce/changelog.txt" />
 				<exclude name="tinymce/examples/**" />
 				<exclude name="tinymce/jscripts/tiny_mce/classes/**" />

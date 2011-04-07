@@ -142,11 +142,11 @@
 		 */
 		getInfo : function() {
 			return {
-				longname : 'Autolink plugin',
-                author : 'Ephox Corporation',
-                authorurl : 'http://tinymce.ephox.com',
-                infourl : 'http://tinymce.ephox.com',
-                version : tinymce.majorVersion + "." + tinymce.minorVersion
+				longname : 'Autolink',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/autolink',
+				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
 		}
 	});

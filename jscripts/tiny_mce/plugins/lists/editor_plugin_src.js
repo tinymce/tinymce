@@ -139,7 +139,7 @@
 		return e;
 	}
 	
-	tinymce.create('tinymce.ephox.plugins.Lists', {
+	tinymce.create('tinymce.plugins.Lists', {
 		init: function(ed, url) {
 			var enterDownInEmptyList = false;
 			function isTriggerKey(e) {
@@ -606,12 +606,12 @@
 		getInfo: function() {
 			return {
 				longname : 'Lists',
-				author : 'Ephox Corporation',
-				authorurl : 'http://tinymce.ephox.com',
-				infourl : 'http://tinymce.ephox.com',
+				author : 'Moxiecode Systems AB',
+				authorurl : 'http://tinymce.moxiecode.com',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/lists',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
 		}
 	});
-	tinymce.PluginManager.add("lists", tinymce.ephox.plugins.Lists);
+	tinymce.PluginManager.add("lists", tinymce.plugins.Lists);
 }());
