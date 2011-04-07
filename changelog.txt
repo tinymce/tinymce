@@ -1,4 +1,5 @@
 Version 3.3.9.x (2011-x-x)
+	Set table background colors to transparent in ui.css to improve compliance with users browser color preferences.
 	Fixed bug where IE9 did not perform setContent of paragraphs correctly.
 	Fixed bug where IE9 namespaced tags were prefixed with extra namespace when serialized.
 	Fixed bug where it wasn't possible to delete images or tables using backspace on IE9.

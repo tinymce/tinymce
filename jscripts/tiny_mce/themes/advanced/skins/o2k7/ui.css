@@ -4,8 +4,8 @@
 .o2k7Skin table td {vertical-align:middle}
 
 /* Containers */
-.o2k7Skin table {background:#E5EFFD}
-.o2k7Skin iframe {display:block; background:#FFF}
+.o2k7Skin table {background:transparent}
+.o2k7Skin iframe {display:block;}
 .o2k7Skin .mceToolbar {height:26px}
 
 /* External */
