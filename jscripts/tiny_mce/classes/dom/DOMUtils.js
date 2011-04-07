@@ -1267,7 +1267,7 @@
 								n = nl[i];
 
 								// Is it a temp div
-								if (n._mce_tmp) {
+								if (n.hasAttribute("_mce_tmp")) {
 									// Create new paragraph
 									p = t.doc.createElement('p');
 
