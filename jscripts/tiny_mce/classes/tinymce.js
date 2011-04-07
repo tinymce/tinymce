@@ -95,6 +95,15 @@
 			t.isIE6 = t.isIE && /MSIE [56]/.test(ua);
 
 			/**
+			 * Constant that is true if the browser is IE 9 or newer.
+			 *
+			 * @property isIE9
+			 * @type Boolean
+			 * @final
+			 */
+			t.isIE9 = t.isIE && !/MSIE [5678]/.test(ua);
+
+			/**
 			 * Constant that is true if the browser is Gecko.
 			 *
 			 * @property isGecko
