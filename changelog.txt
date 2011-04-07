@@ -1,4 +1,4 @@
-Version 3.4.1.x (2011-03-xx)
+Version 3.4.1.x (2011-04-07)
 	Added new 'paste_text_sticky_default' option to paste plugin, enables you to set the default state for paste as plain text.
 	Added new autoresize_bottom_margin option to autoresize plugin that enables you to add an extra margin at the bottom. Patch contributed by Andrew Ozz.
 	Rewritten the fullpage plugin to handle style contents better and have a more normalized behavior across browsers.
@@ -20,6 +20,7 @@ Version 3.4.1.x (2011-03-xx)
 	Fixed bug where spellchecker plugin would produce errors on IE6-7.
 	Fixed bug where theme_advanced_containers configuration option causes error.
 	Fixed bug where the mceReplaceContent command would produce an error since it didn't correctly handle a return value.
+	Fixed bug where you couldn't enter float point values for em in dialog input fields since it wouldn't be considered a valid size.
 	Fixed bug in xhtmlxtras plugin where it wasn't possible to remove some attributes in the attributes dialog.
 Version 3.4.1 (2011-03-24)
 	Added significantly improved list handling via the new 'lists' plugin.

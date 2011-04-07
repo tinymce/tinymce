@@ -32,7 +32,7 @@ var Validator = {
 	},
 
 	isSize : function(s) {
-		return this.test(s, '^[0-9]+(%|in|cm|mm|em|ex|pt|pc|px)?$');
+		return this.test(s, '^[0-9.]+(%|in|cm|mm|em|ex|pt|pc|px)?$');
 	},
 
 	isId : function(s) {
