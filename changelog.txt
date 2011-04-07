@@ -1,4 +1,4 @@
-Version 3.4.1.x (2011-04-07)
+Version 3.4.2 (2011-04-07)
 	Added new 'paste_text_sticky_default' option to paste plugin, enables you to set the default state for paste as plain text.
 	Added new autoresize_bottom_margin option to autoresize plugin that enables you to add an extra margin at the bottom. Patch contributed by Andrew Ozz.
 	Rewritten the fullpage plugin to handle style contents better and have a more normalized behavior across browsers.
