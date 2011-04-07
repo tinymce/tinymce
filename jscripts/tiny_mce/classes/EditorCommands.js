@@ -348,7 +348,7 @@
 				// Find caret after cleanup and move selection to that location
 				caretNode = dom.select('#__mce')[0];
 				if (caretNode) {
-					node = findSuitableCaretNode(caretNode, rootNode, true) || findSuitableCaretNode(caretNode, rootNode);
+					node = findSuitableCaretNode(caretNode, rootNode) || findSuitableCaretNode(caretNode, rootNode, true);
 					dom.remove(caretNode);
 
 					if (node) {
