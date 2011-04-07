@@ -712,24 +712,35 @@ test('Formatter - Bold and italics is applied to text that is not highlighted', 
 	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
 });
 
+//This is a hack to work around the fact that for some reason in ie9 the ' char is converted to &quot; for the first span.
+function quotes(text){
+	console.log(tinymce.isIE9);
+	if (tinymce.isIE9) {
+		var replaceAll = text.replace(/\\'/g,"&quot;");
+		console.log(replaceAll);
+		return text.replace(/&quot;/g,"'");;
+	}
+	return text;
+}
+
 test('Colored elements in a paragraph', function() {
 	editor.formatter.register('format', {inline: 'span', styles : {'color' : '#ff0000'}});
 	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;">test</span></p>');
 	editor.execCommand('SelectAll');
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>', 'Coloring an underlined text should result in a colored underline');
+	equals(quotes(editor.getContent()), '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>', 'Coloring an underlined text should result in a colored underline');
 
 	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
 	editor.setContent('<p><span style="font-family: \'arial black\'; color: rgb(255, 0, 0);">test</span></p>');
 	editor.execCommand('SelectAll');
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></span></p>', 'Underlining colored text should result in a colored underline');
+	equals(quotes(editor.getContent()), quotes('<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></span></p>'), 'Underlining colored text should result in a colored underline');
 
 	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
 	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
 	editor.execCommand('SelectAll');
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline');
+	equals(quotes(editor.getContent()), quotes('<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>'), 'Underlining colored and underlined text should result in a colored underline');
 
 	editor.formatter.register('format', {inline: 'span', styles : {'color' : '#ff0000'}});
 	editor.setContent('<p style="font-size: 22pt;"><span style=\"text-decoration: underline;\"><span style=\"color: yellow; text-decoration: underline;\">yellowredyellow</span></span></p>');
@@ -738,7 +749,7 @@ test('Colored elements in a paragraph', function() {
 	rng.setEnd(editor.dom.select('span')[1].firstChild, 9);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow; text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>', 'Coloring an colored underdlined text should result in newly colored underline');
+	equals(quotes(getContent()), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow; text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>', 'Coloring an colored underdlined text should result in newly colored underline');
 
 	editor.formatter.register('format', {inline: "span", exact: true, styles: {'textDecoration' : 'underline'}});
 	editor.setContent('<p><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
@@ -747,7 +758,7 @@ test('Colored elements in a paragraph', function() {
 	rng.setEnd(editor.dom.select('span')[4].lastChild, 5);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
+	equals(quotes(editor.getContent()), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
 
 	editor.formatter.register('format', {inline: 'span', exact: true, styles : {'color' : '#ff0000'}});
 	editor.setContent('<p><span style="text-decoration: underline;">This is some text.</span></p>');
@@ -757,7 +768,7 @@ test('Colored elements in a paragraph', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	editor.formatter.remove('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;">This is some text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
+	equals(quotes(editor.getContent()), '<p><span style="text-decoration: underline;">This is some text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 
 	editor.formatter.register('format', {inline: 'span', exact: true, styles : {'color' : '#ff0000'}});
 	editor.setContent('<p><span style="text-decoration: underline;">This is <span style="color: #ff0000; text-decoration: underline; background-color: #ff0000">some</span> text.</span></p>');
@@ -766,7 +777,7 @@ test('Colored elements in a paragraph', function() {
 	rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
+	equals(quotes(editor.getContent()), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 });
 
 /*
