@@ -3,80 +3,83 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>TinyMCE Unit Tests</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<link rel="stylesheet" href="qunit/qunit.css" type="text/css"/>
 	<style type="text/css">
-	ul { font-family: 'trebuchet ms', verdana, arial; }
-	h2, ul {font-size: 10pt; }
+	ol { font-family: 'trebuchet ms', verdana, arial; }
+	h2, ol {font-size: 10pt; }
 	h2 {
-		background-color:#EEEEEE;
 		color:black;
 		font-size:small;
-		font-weight:normal;
+		font-weight:bold;
 		margin:0;
-		padding:10px;
 	}
-	.pass {
-		background-color:#D2E0E6; 
+	#total_status.pass {
+		background-color:#C6E746; 
 	}
-	.fail {
+	li.pass {
+	}
+	li.fail, #total_status.fail {
 		background-color:#EE5757; 
+	}
+	#total_status {
+		height: 5px;
+	}
+	.column {
+		float: left;
+		width: 300px;
+		margin-right: 10px;
+	}
+	#menu {
+		margin: 10px;
 	}
 	</style>
 	<script type="text/javascript" src="qunit/runner.js"></script>
 	<script type="text/javascript">
+		// Focus the browser
+		top.focus();
+
 		// Init QUnitRunner
 		QUnitRunner.init({
-			suites: [
-				{title: 'Core tests', tests: [
-					{title: 'Core API', url: 'api.html'},
-					{title: 'Core API (jQuery)', url: 'api_jquery.html'},
-					{title: 'Basic functionality', url: 'basic.html'},
-					{title: 'Undo', url: 'undo.html'}
-				]},
+			columns: [
+				[
+					{title: 'Core tests', tests: [
+						{title: 'Core API', url: 'api.html'},
+						{title: 'Core API (jQuery)', url: 'api_jquery.html'},
+						{title: 'Basic functionality', url: 'basic.html'},
+						{title: 'Undo', url: 'undo.html', jsrobot: true}
+					]},
 
-				{title: 'Plugins tests', tests: [
-					{title: 'Media plugin', url: 'media.html'},
-					{title: 'Paste plugin', url: 'paste.html'},
-					{title: 'jQuery plugin', url: 'jquery_plugin.html'},
-					{title: 'Autolink plugin', url: 'autolink.html'},
-					{title: 'Fullpage plugin', url: 'fullpage.html'}
-				]},
+					{title: 'Plugins tests', tests: [
+						{title: 'Media plugin', url: 'media.html'},
+						{title: 'Paste plugin', url: 'paste.html'},
+						{title: 'jQuery plugin', url: 'jquery_plugin.html'},
+						{title: 'Autolink plugin', url: 'autolink.html', jsrobot: true},
+						{title: 'Fullpage plugin', url: 'fullpage.html'}
+					]},
 
-				{title: 'Selection tests', tests: [
-					{title: 'Selection', url: 'selection.html'},
-					{title: 'IE Selection', url: 'ie_selection.html'},
-					{title: 'IE Range', url: 'ie_range.html'}
-				]},
+					{title: 'Selection tests', tests: [
+						{title: 'Selection', url: 'selection.html'},
+						{title: 'IE Selection', url: 'ie_selection.html'},
+						{title: 'IE Range', url: 'ie_range.html'}
+					]},
 
-				{title: 'Remove tests', tests: [
-                    {title: 'Remove', url: 'remove.html'}
-                ]},
+					{title: 'Remove tests', tests: [
+						{title: 'Remove', url: 'remove.html', jsrobot: true}
+					]},
 
-				{title: 'Formatter tests', tests: [
-					{title: 'Apply formatting', url: 'formatting_apply.html'},
-					{title: 'Remove formatting', url: 'formatting_remove.html'},
-					{title: 'Check formatting', url: 'formatting_check.html'}
-				]},
+					{title: 'Formatter tests', tests: [
+						{title: 'Apply formatting', url: 'formatting_apply.html'},
+						{title: 'Remove formatting', url: 'formatting_remove.html'},
+						{title: 'Check formatting', url: 'formatting_check.html'}
+					]},
 
-				{title: 'List tests', tests: [
-                    {title: 'Applying lists', url: 'lists_applying.html'},
-                    {title: 'Indenting lists', url: 'lists_indenting.html'},
-                    {title: 'Forced BRs', url: 'lists_forced_brs.html'}
-                ]},
-
- 				{title: 'Accessibility Milestones', tests: [
- 					{title: 'Milestone 0', url: 'accessibility0.html'},
- 					{title: 'Milestone 1', url: 'accessibility1.html'},
- 					{title: 'Milestone 2', url: 'accessibility2.html'},
- 					{title: 'Milestone 3', url: 'accessibility3.html'},
- 					{title: 'Milestone 4', url: 'accessibility4.html'},
- 					{title: 'Milestone 5', url: 'accessibility5.html'},
- 					{title: 'Milestone 6', url: 'accessibility6.html'},
- 					{title: 'Milestone 7', url: 'accessibility7.html'},
- 					{title: 'Milestone 8', url: 'accessibility8.html'},
- 					{title: 'Milestone 9', url: 'accessibility9.html'},
- 					{title: 'Milestone 10', url: 'accessibility10.html'}
- 				]}
+					{title: 'List tests', tests: [
+						{title: 'Applying lists', url: 'lists_applying.html', jsrobot: true},
+						{title: 'Indenting lists', url: 'lists_indenting.html', jsrobot: true},
+						{title: 'Forced BRs', url: 'lists_forced_brs.html', jsrobot: true}
+					]}
+				]
 			]
 		});
 	</script>
@@ -84,14 +87,10 @@
 <body>
 
 <h1 id="qunit-header">TinyMCE Unit Tests</h1>
-
-<div id="menu">
-</div>
-
-<input type="button" value="Run all" onclick="QUnitRunner.run();" />
-
-<div id="log">
-</div>
+<div id="total_status"></div>
+<div id="menu"></div>
+<div><input type="button" value="Run all" onclick="QUnitRunner.run();" /><input type="checkbox" id="min" name="min" checked="checked" /> Run on minified code <input type="checkbox" id="jsrobot" name="jsrobot" checked="checked" /> JSRobot tests</div>
+<div id="log"></div>
 
 </body>
 </html>

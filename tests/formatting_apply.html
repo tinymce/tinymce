@@ -714,12 +714,12 @@ test('Formatter - Bold and italics is applied to text that is not highlighted', 
 
 //This is a hack to work around the fact that for some reason in ie9 the ' char is converted to &quot; for the first span.
 function quotes(text){
-	console.log(tinymce.isIE9);
 	if (tinymce.isIE9) {
 		var replaceAll = text.replace(/\\'/g,"&quot;");
-		console.log(replaceAll);
+
 		return text.replace(/&quot;/g,"'");;
 	}
+
 	return text;
 }
 
