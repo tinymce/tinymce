@@ -334,6 +334,10 @@
 					htmlParser.parse(args.getInner ? node.innerHTML : tinymce.trim(dom.getOuterHTML(node), args), args)
 				);
 
+				// Replace all BOM characters for now until we can find a better solution
+				if (!args.cleanup)
+					args.content = args.content.replace(/\uFEFF/g, '');
+
 				// Post process
 				if (!args.no_events)
 					onPostProcess.dispatch(self, args);
