@@ -123,6 +123,36 @@ function updateAction() {
 
 			break;
 
+		case "col":
+			var curr, col = 0, cell = trElm.firstChild, rows = tableElm.getElementsByTagName("tr");
+
+			if (cell.nodeName != "TD" && cell.nodeName != "TH")
+				cell = nextCell(cell);
+
+			do {
+				if (cell == tdElm)
+					break;
+				col += cell.getAttribute("colspan");
+			} while ((cell = nextCell(cell)) != null);
+
+			for (var i=0; i<rows.length; i++) {
+				cell = rows[i].firstChild;
+
+				if (cell.nodeName != "TD" && cell.nodeName != "TH")
+					cell = nextCell(cell);
+
+				curr = 0;
+				do {
+					if (curr == col) {
+						cell = updateCell(cell, true);
+						break;
+					}
+					curr += cell.getAttribute("colspan");
+				} while ((cell = nextCell(cell)) != null);
+			}
+
+			break;
+
 		case "all":
 			var rows = tableElm.getElementsByTagName("tr");
 
