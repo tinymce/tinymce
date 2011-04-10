@@ -936,10 +936,10 @@
 		},
 
 		_updateUndoStatus : function(ed) {
-			var cm = ed.controlManager;
+			var cm = ed.controlManager, um = ed.undoManager;
 
-			cm.setDisabled('undo', !ed.undoManager.hasUndo() && !ed.typing);
-			cm.setDisabled('redo', !ed.undoManager.hasRedo());
+			cm.setDisabled('undo', !um.hasUndo() && !um.typing);
+			cm.setDisabled('redo', !um.hasRedo());
 		},
 
 		_nodeChanged : function(ed, cm, n, co, ob) {

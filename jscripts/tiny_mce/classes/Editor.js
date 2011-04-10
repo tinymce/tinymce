@@ -3172,8 +3172,7 @@
 
 							if (!t.undoManager.typing) {
 								t.undoManager.beforeChange();
-								t.undoManager.typing = true;
-								t.undoManager.add();
+								addUndo();
 							}
 
 							// Select next word when ctrl key is used in combo with delete
@@ -3222,8 +3221,7 @@
 					// If key isn't shift,ctrl,alt,capslock,metakey
 					if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !t.undoManager.typing) {
 						t.undoManager.beforeChange();
-						t.undoManager.add();
-						t.undoManager.typing = true;
+						addUndo();
 					}
 				});
 
@@ -3232,7 +3230,7 @@
 						addUndo();
 				});
 			}
-			
+
 			// Bug fix for FireFox keeping styles from end of selection instead of start.
 			if (tinymce.isGecko) {
 				function getAttributeApplyFunction() {
