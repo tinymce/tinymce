@@ -5,6 +5,7 @@ Version 3.4.3 (2011-??-??)
 	Fixed bug where hasUndo() would return wrong answer.
 	Fixed bug where page title would be set to undefined by fullpage plugin.
 	Fixed bug where HTML5 video properties were not updated in embedded media settings.
+	Fixed bug where HTML comment on the first line would cause an error.
 Version 3.4.2 (2011-04-07)
 	Added new 'paste_text_sticky_default' option to paste plugin, enables you to set the default state for paste as plain text.
 	Added new autoresize_bottom_margin option to autoresize plugin that enables you to add an extra margin at the bottom. Patch contributed by Andrew Ozz.

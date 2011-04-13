@@ -1095,11 +1095,8 @@
 				getParent(function(n) {
 					var na = n.nodeName.toLowerCase(), u, pi, ti = '';
 
-					if (n.getAttribute('data-mce-bogus'))
-						return;
-
-					// Ignore non element and hidden elements
-					if (n.nodeType != 1 || n.nodeName === 'BR' || (DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved')))
+					// Ignore non element and bogus/hidden elements
+					if (n.nodeType != 1 || na === 'br' || n.getAttribute('data-mce-bogus') || DOM.hasClass(n, 'mceItemHidden') || DOM.hasClass(n, 'mceItemRemoved'))
 						return;
 
 					// Handle prefix
