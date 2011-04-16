@@ -53,7 +53,7 @@
 				if (e.target.nodeName == 'IMG')
 					ed.selection.select(e.target);
 
-				t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageX);
+				t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageY);
 				Event.add(ed.getDoc(), 'click', function(e) {
 					hide(ed, e);
 				});
