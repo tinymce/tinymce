@@ -351,7 +351,6 @@
 						}
 					});
 
-
 					if (t.editor.getParam("spellchecker_enable_learn_rpc")) {
 						m.add({
 							title : 'spellchecker.learn_word',
