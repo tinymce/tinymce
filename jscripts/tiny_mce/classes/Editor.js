@@ -3172,7 +3172,8 @@
 
 							if (!t.undoManager.typing) {
 								t.undoManager.beforeChange();
-								addUndo();
+								t.undoManager.typing = true;
+								t.undoManager.add();
 							}
 
 							// Select next word when ctrl key is used in combo with delete
@@ -3221,7 +3222,8 @@
 					// If key isn't shift,ctrl,alt,capslock,metakey
 					if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !t.undoManager.typing) {
 						t.undoManager.beforeChange();
-						addUndo();
+						t.undoManager.typing = true;
+						t.undoManager.add();
 					}
 				});
 
