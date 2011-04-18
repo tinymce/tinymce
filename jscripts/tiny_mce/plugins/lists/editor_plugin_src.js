@@ -142,23 +142,32 @@
 	tinymce.create('tinymce.plugins.Lists', {
 		init: function(ed, url) {
 			var enterDownInEmptyList = false;
+
 			function isTriggerKey(e) {
 				return e.keyCode === 9 && (ed.queryCommandState('InsertUnorderedList') || ed.queryCommandState('InsertOrderedList'));
-			}
+			};
+
 			function isEnterInEmptyListItem(ed, e) {
 				var sel = ed.selection, n;
 				if (e.keyCode === 13) {
 					n = sel.getStart();
-					enterDownInEmptyList = sel.isCollapsed() && n && n.tagName === 'LI' && n.childNodes.length === 0;
+
+					// Get start will return BR if the LI only contains a BR
+					if (n.tagName == 'BR' && n.parentNode.tagName == 'LI')
+						n = n.parentNode;
+
+					// Check for empty LI or a LI with just one BR since Gecko and WebKit uses BR elements to place the caret
+					enterDownInEmptyList = sel.isCollapsed() && n && n.tagName === 'LI' && (n.childNodes.length === 0 || (n.firstChild.nodeName == 'BR' && n.childNodes.length === 1));
 					return enterDownInEmptyList;
 				}
-			}
+			};
+
 			function cancelKeys(ed, e) {
 				if (isTriggerKey(e) || isEnterInEmptyListItem(ed, e)) {
 					return Event.cancel(e);
 				}
-			}
-			
+			};
+
 			this.ed = ed;
 			ed.addCommand('Indent', this.indent, this);
 			ed.addCommand('Outdent', this.outdent, this);
