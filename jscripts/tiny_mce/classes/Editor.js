@@ -1207,7 +1207,8 @@
 			n = DOM.add(o.iframeContainer, 'iframe', { 
 				id : t.id + "_ifr",
 				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
-				frameBorder : '0', 
+				frameBorder : '0',
+				allowTransparency : "true",
 				title : s.aria_label,
 				style : {
 					width : '100%',
