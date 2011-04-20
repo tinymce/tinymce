@@ -106,6 +106,7 @@
 .o2k7Skin .mceNoIcons .mceMenuItemSelected a {background:url(../default/img/menu_arrow.gif) no-repeat -6px center}
 .o2k7Skin .mceMenu span.mceMenuLine {display:none}
 .o2k7Skin .mceMenuItemSub a {background:url(../default/img/menu_arrow.gif) no-repeat top right;}
+.o2k7Skin .mceMenuItem td, .o2k7Skin .mceMenuItem th {line-height: normal}
 
 /* Progress,Resize */
 .o2k7Skin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.5; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=50); background:#FFF}

@@ -56,6 +56,11 @@ function updateAction() {
 	var inst = tinyMCEPopup.editor, dom = inst.dom, trElm, tableElm, formObj = document.forms[0];
 	var action = getSelectValue(formObj, 'action');
 
+	if (!AutoValidator.validate(formObj)) {
+		tinyMCEPopup.alert(AutoValidator.getErrorMessages(formObj).join('. ') + '.');
+		return false;
+	}
+
 	tinyMCEPopup.restoreSelection();
 	trElm = dom.getParent(inst.selection.getStart(), "tr");
 	tableElm = dom.getParent(inst.selection.getStart(), "table");

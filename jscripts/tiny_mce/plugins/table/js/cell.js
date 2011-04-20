@@ -63,6 +63,11 @@ function init() {
 function updateAction() {
 	var el, inst = ed, tdElm, trElm, tableElm, formObj = document.forms[0];
 
+	if (!AutoValidator.validate(formObj)) {
+		tinyMCEPopup.alert(AutoValidator.getErrorMessages(formObj).join('. ') + '.');
+		return false;
+	}
+
 	tinyMCEPopup.restoreSelection();
 	el = ed.selection.getStart();
 	tdElm = ed.dom.getParent(el, "td,th");
