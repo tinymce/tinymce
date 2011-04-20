@@ -53,7 +53,7 @@
 				if (e.target.nodeName == 'IMG')
 					ed.selection.select(e.target);
 
-				t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageX);
+				t._getMenu(ed).showMenu(e.clientX || e.pageX, e.clientY || e.pageY);
 				Event.add(ed.getDoc(), 'click', function(e) {
 					hide(ed, e);
 				});
@@ -111,19 +111,18 @@
 		},
 
 		_getMenu : function(ed) {
-			var t = this, m = t._menu, se = ed.selection, col = se.isCollapsed(), el = se.getNode() || ed.getBody(), am, p1, p2;
+			var t = this, m = t._menu, se = ed.selection, col = se.isCollapsed(), el = se.getNode() || ed.getBody(), am, p;
 
 			if (m) {
 				m.removeAll();
 				m.destroy();
 			}
 
-			p1 = DOM.getPos(ed.getContentAreaContainer());
-			p2 = DOM.getPos(ed.getContainer());
+			p = DOM.getPos(ed.getContentAreaContainer());
 
 			m = ed.controlManager.createDropMenu('contextmenu', {
-				offset_x : p1.x + ed.getParam('contextmenu_offset_x', 0),
-				offset_y : p1.y + ed.getParam('contextmenu_offset_y', 0),
+				offset_x : p.x + ed.getParam('contextmenu_offset_x', 0),
+				offset_y : p.y + ed.getParam('contextmenu_offset_y', 0),
 				constrain : 1,
 				keyboard_focus: true
 			});
