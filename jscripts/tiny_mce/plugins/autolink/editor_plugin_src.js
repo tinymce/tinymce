@@ -122,7 +122,13 @@
 			}
 
 			text = r.toString();
-			matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
+
+            var userConfigSchemesPattern = ed.getParam('autolink_schemes_pattern');
+            if (userConfigSchemesPattern !== '') {
+                matches = text.match( new RegExp(userConfigSchemesPattern, 'i'));
+            } else {
+                matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)(.+)$/i);
+            }
 
 			if (matches) {
 				if (matches[1] == 'www.') {
