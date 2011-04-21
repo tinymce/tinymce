@@ -9,13 +9,13 @@ var ImageDialog = {
 	},
 
 	init : function(ed) {
-		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, dom = ed.dom, n = ed.selection.getNode();
+		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, dom = ed.dom, n = ed.selection.getNode(), fl = tinyMCEPopup.getParam('external_image_list', 'tinyMCEImageList');
 
 		tinyMCEPopup.resizeToInnerSize();
 		this.fillClassList('class_list');
-		this.fillFileList('src_list', 'tinyMCEImageList');
-		this.fillFileList('over_list', 'tinyMCEImageList');
-		this.fillFileList('out_list', 'tinyMCEImageList');
+		this.fillFileList('src_list', fl);
+		this.fillFileList('over_list', fl);
+		this.fillFileList('out_list', fl);
 		TinyMCE_EditableSelects.init();
 
 		if (n.nodeName == 'IMG') {
@@ -287,7 +287,7 @@ var ImageDialog = {
 	fillFileList : function(id, l) {
 		var dom = tinyMCEPopup.dom, lst = dom.get(id), v, cl;
 
-		l = window[l];
+		l = typeof(l) === 'function' ? l() : window[l];
 		lst.options.length = 0;
 
 		if (l && l.length > 0) {

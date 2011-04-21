@@ -359,8 +359,17 @@
 			}
 
 			// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
-			if (tinymce.isIE && document.documentMode >= 9)
+			if (tinymce.isIE && document.documentMode >= 9) {
+				// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
 				process([[/(?:<br>&nbsp;[\s\r\n]+|<br>)*(<\/?(h[1-6r]|p|div|address|pre|form|table|tbody|thead|tfoot|th|tr|td|li|ol|ul|caption|blockquote|center|dl|dt|dd|dir|fieldset)[^>]*>)(?:<br>&nbsp;[\s\r\n]+|<br>)*/g, '$1']]);
+
+				// IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
+				process([
+					[/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
+					/<br>/g, // Remove single br elements
+					[/<BR><BR>/g, '<br>'], // Replace back the double brs but into a single BR
+				]);
+			}
 
 			// Detect Word content and process it more aggressive
 			if (/class="?Mso|style="[^"]*\bmso-|w:WordDocument/i.test(h) || o.wordContent) {

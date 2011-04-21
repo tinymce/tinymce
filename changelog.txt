@@ -1,5 +1,6 @@
 Version 3.4.3 (2011-??-??)
 	Added possibility to change properties of all table cells in a column.
+	Added external_image_list option to get images list from user-defined variable or function.
 	Fixed bug where the autoresize plugin wouldn't reduce the editors height on Chrome.
 	Fixed bug where table size inputs were to small for values with size units.
 	Fixed bug where table cell/row size input values were not validated.
@@ -10,6 +11,7 @@ Version 3.4.3 (2011-??-??)
 	Fixed bug where HTML comment on the first line would cause an error.
 	Fixed bug where spellchecker menu was positioned incorrectly on IE.
 	Fixed bug where breaking out of list elements on WebKit would produce a DIV instead of P after the list.
+	Fixed bug where pasting from Word in IE9 would add extra BR elements when text was word wrapped.
 Version 3.4.2 (2011-04-07)
 	Added new 'paste_text_sticky_default' option to paste plugin, enables you to set the default state for paste as plain text.
 	Added new autoresize_bottom_margin option to autoresize plugin that enables you to add an extra margin at the bottom. Patch contributed by Andrew Ozz.
