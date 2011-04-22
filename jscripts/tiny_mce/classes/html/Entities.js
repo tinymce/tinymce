@@ -235,7 +235,7 @@
 		decode : function(text) {
 			return text.replace(entityRegExp, function(all, numeric, value) {
 				if (numeric) {
-					value = parseInt(value);
+					value = parseInt(value, 10);
 
 					// Support upper UTF
 					if (value > 0xFFFF) {
