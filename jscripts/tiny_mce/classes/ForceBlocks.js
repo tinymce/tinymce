@@ -93,6 +93,9 @@
 				function addRootBlocks() {
 					var node = selection.getStart(), rootNode = ed.getBody(), rng, startContainer, startOffset, endContainer, endOffset, rootBlockNode, tempNode, offset = -0xFFFFFF;
 
+					if (!node || node.nodeType !== 1)
+						return;
+
 					// Check if node is wrapped in block
 					while (node != rootNode) {
 						if (blockElements[node.nodeName])
@@ -117,12 +120,12 @@
 
 						tmpRng = rng.duplicate();
 						tmpRng.collapse(true);
-						startOffset = tmpRng.move('character', -0xFFFFFF) * -1;
+						startOffset = tmpRng.move('character', offset) * -1;
 
 						if (!tmpRng.collapsed) {
 							tmpRng = rng.duplicate();
 							tmpRng.collapse(false);
-							endOffset = (tmpRng.move('character', -0xFFFFFF) * -1) - startOffset;
+							endOffset = (tmpRng.move('character', offset) * -1) - startOffset;
 						}
 					}
 
@@ -162,7 +165,7 @@
 							// Ignore
 						}
 					}
-					
+
 					ed.nodeChanged();
 				};
 
