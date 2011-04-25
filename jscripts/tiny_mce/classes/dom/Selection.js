@@ -210,7 +210,12 @@
 
 				// Remove the caret position
 				self.dom.remove('__caret');
-				self.setRng(rng);
+
+				try {
+					self.setRng(rng);
+				} catch (ex) {
+					// Might fail on Opera for some odd reason
+				}
 			} else {
 				if (rng.item) {
 					// Delete content and get caret text selection
