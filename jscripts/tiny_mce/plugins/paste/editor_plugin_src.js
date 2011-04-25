@@ -366,7 +366,7 @@
 				// IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
 				process([
 					[/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
-					/<br>/g, // Remove single br elements
+					[/<br>/g, ' '], // Replace single br elements with space since they are word wrap BR:s
 					[/<BR><BR>/g, '<br>'], // Replace back the double brs but into a single BR
 				]);
 			}
