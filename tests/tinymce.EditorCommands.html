@@ -23,7 +23,7 @@ function getContent() {
 test('mceInsertContent', function() {
 	var rng;
 	
-	expect(49);
+	expect(51);
 
 	editor.setContent('<p>1234</p>');
 	rng = editor.dom.createRng();
@@ -133,6 +133,17 @@ test('mceInsertContent', function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<u>u</u><strike>strike</strike><font size="7">font</font>');
 	equals(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: xx-large;">font</span></p>');
+
+	// Forced root block
+	editor.getBody().innerHTML = '';
+	editor.execCommand('mceInsertContent', false, '<!-- a -->test<b>123</b>');
+	equals(editor.getContent(), '<!-- a --><p>test</p><p><strong>123</strong></p>');
+
+	// Forced root block
+	editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
+	setSelection('td', 0, 'td', 0);
+	editor.execCommand('mceInsertContent', false, '<!-- a -->test<b>123</b>');
+	equals(editor.getContent(), '<table><tbody><tr><td><!-- a -->test<strong>123</strong>X</td></tr></tbody></table>');
 });
 
 tinyMCE.init({

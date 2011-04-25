@@ -83,28 +83,91 @@
 			s.element = elm.toUpperCase();
 
 			ed.onPreInit.add(t.setup, t);
-
-			if (s.forced_root_block) {
-				ed.onInit.add(t.forceRoots, t);
-				ed.onSetContent.add(t.forceRoots, t);
-				ed.onBeforeGetContent.add(t.forceRoots, t);
-				ed.onExecCommand.add(function(ed, cmd) {
-					if (cmd == 'mceInsertContent') {
-						t.forceRoots();
-						ed.nodeChanged();
-					}
-				});
-			}
 		},
 
 		setup : function() {
-			var t = this, ed = t.editor, s = ed.settings, dom = ed.dom, selection = ed.selection;
+			var t = this, ed = t.editor, s = ed.settings, dom = ed.dom, selection = ed.selection, blockElements = ed.schema.getBlockElements();
 
-			// Force root blocks when typing and when getting output
+			// Force root blocks
 			if (s.forced_root_block) {
-				ed.onBeforeExecCommand.add(t.forceRoots, t);
-				ed.onKeyUp.add(t.forceRoots, t);
-				ed.onPreProcess.add(t.forceRoots, t);
+				function addRootBlocks() {
+					var node = selection.getStart(), rootNode = ed.getBody(), rng, startContainer, startOffset, endContainer, endOffset, rootBlockNode, tempNode, offset = -0xFFFFFF;
+
+					// Check if node is wrapped in block
+					while (node != rootNode) {
+						if (blockElements[node.nodeName])
+							return;
+
+						node = node.parentNode;
+					}
+
+					// Get current selection
+					rng = selection.getRng();
+					if (rng.setStart) {
+						startContainer = rng.startContainer;
+						startOffset = rng.startOffset;
+						endContainer = rng.endContainer;
+						endOffset = rng.endOffset;
+					} else {
+						// Force control range into text range
+						if (rng.item) {
+							rng = ed.getDoc().body.createTextRange();
+							rng.moveToElementText(rng.item(0));
+						}
+
+						tmpRng = rng.duplicate();
+						tmpRng.collapse(true);
+						startOffset = tmpRng.move('character', -0xFFFFFF) * -1;
+
+						if (!tmpRng.collapsed) {
+							tmpRng = rng.duplicate();
+							tmpRng.collapse(false);
+							endOffset = (tmpRng.move('character', -0xFFFFFF) * -1) - startOffset;
+						}
+					}
+
+					// Wrap non block elements and text nodes
+					for (node = rootNode.firstChild; node; node) {
+						if (node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName])) {
+							if (!rootBlockNode) {
+								rootBlockNode = dom.create(s.forced_root_block);
+								node.parentNode.insertBefore(rootBlockNode, node);
+							}
+
+							tempNode = node;
+							node = node.nextSibling;
+							rootBlockNode.appendChild(tempNode);
+						} else {
+							rootBlockNode = null;
+							node = node.nextSibling;
+						}
+					}
+
+					if (rng.setStart) {
+						rng.setStart(startContainer, startOffset);
+						rng.setEnd(endContainer, endOffset);
+						selection.setRng(rng);
+					} else {
+						try {
+							rng = ed.getDoc().body.createTextRange();
+							rng.moveToElementText(rootNode);
+							rng.collapse(true);
+							rng.moveStart('character', startOffset);
+
+							if (endOffset > 0)
+								rng.moveEnd('character', endOffset);
+
+							rng.select();
+						} catch (ex) {
+							// Ignore
+						}
+					}
+					
+					ed.nodeChanged();
+				};
+
+				ed.onKeyUp.add(addRootBlocks);
+				ed.onClick.add(addRootBlocks);
 			}
 
 			if (s.force_br_newlines) {
@@ -248,155 +311,6 @@
 						}
 					});
 				}
-			}
-		},
-
-		find : function(n, t, s) {
-			var ed = this.editor, w = ed.getDoc().createTreeWalker(n, 4, null, FALSE), c = -1;
-
-			while (n = w.nextNode()) {
-				c++;
-
-				// Index by node
-				if (t == 0 && n == s)
-					return c;
-
-				// Node by index
-				if (t == 1 && c == s)
-					return n;
-			}
-
-			return -1;
-		},
-
-		forceRoots : function(ed, e) {
-			var t = this, ed = t.editor, b = ed.getBody(), d = ed.getDoc(), se = ed.selection, s = se.getSel(), r = se.getRng(), si = -2, ei, so, eo, tr, c = -0xFFFFFF;
-			var nx, bl, bp, sp, le, nl = b.childNodes, i, n, eid;
-
-			// Fix for bug #1863847
-			//if (e && e.keyCode == 13)
-			//	return TRUE;
-
-			// Wrap non blocks into blocks
-			for (i = nl.length - 1; i >= 0; i--) {
-				nx = nl[i];
-
-				// Ignore internal elements
-				if (nx.nodeType === 1 && nx.getAttribute('data-mce-type')) {
-					bl = null;
-					continue;
-				}
-
-				// Is text or non block element
-				if (nx.nodeType === 3 || (!t.dom.isBlock(nx) && nx.nodeType !== 8 && !/^(script|mce:script|style|mce:style)$/i.test(nx.nodeName))) {
-					if (!bl) {
-						// Create new block but ignore whitespace
-						if (nx.nodeType != 3 || /[^\s]/g.test(nx.nodeValue)) {
-							// Store selection
-							if (si == -2 && r) {
-								if (!isIE || r.setStart) {
-									// If selection is element then mark it
-									if (r.startContainer.nodeType == 1 && (n = r.startContainer.childNodes[r.startOffset]) && n.nodeType == 1) {
-										// Save the id of the selected element
-										eid = n.getAttribute("id");
-										n.setAttribute("id", "__mce");
-									} else {
-										// If element is inside body, might not be the case in contentEdiable mode
-										if (ed.dom.getParent(r.startContainer, function(e) {return e === b;})) {
-											so = r.startOffset;
-											eo = r.endOffset;
-											si = t.find(b, 0, r.startContainer);
-											ei = t.find(b, 0, r.endContainer);
-										}
-									}
-								} else {
-									// Force control range into text range
-									if (r.item) {
-										tr = d.body.createTextRange();
-										tr.moveToElementText(r.item(0));
-										r = tr;
-									}
-
-									tr = d.body.createTextRange();
-									tr.moveToElementText(b);
-									tr.collapse(1);
-									bp = tr.move('character', c) * -1;
-
-									tr = r.duplicate();
-									tr.collapse(1);
-									sp = tr.move('character', c) * -1;
-
-									tr = r.duplicate();
-									tr.collapse(0);
-									le = (tr.move('character', c) * -1) - sp;
-
-									si = sp - bp;
-									ei = le;
-								}
-							}
-
-							// Uses replaceChild instead of cloneNode since it removes selected attribute from option elements on IE
-							// See: http://support.microsoft.com/kb/829907
-							bl = ed.dom.create(ed.settings.forced_root_block);
-							nx.parentNode.replaceChild(bl, nx);
-							bl.appendChild(nx);
-						}
-					} else {
-						if (bl.hasChildNodes())
-							bl.insertBefore(nx, bl.firstChild);
-						else
-							bl.appendChild(nx);
-					}
-				} else
-					bl = null; // Time to create new block
-			}
-
-			// Restore selection
-			if (si != -2) {
-				if (!isIE || r.setStart) {
-					bl = b.getElementsByTagName(ed.settings.element)[0];
-					r = d.createRange();
-
-					// Select last location or generated block
-					if (si != -1)
-						r.setStart(t.find(b, 1, si), so);
-					else
-						r.setStart(bl, 0);
-
-					// Select last location or generated block
-					if (ei != -1)
-						r.setEnd(t.find(b, 1, ei), eo);
-					else
-						r.setEnd(bl, 0);
-
-					if (s) {
-						s.removeAllRanges();
-						s.addRange(r);
-					}
-				} else {
-					try {
-						r = s.createRange();
-						r.moveToElementText(b);
-						r.collapse(1);
-						r.moveStart('character', si);
-						r.moveEnd('character', ei);
-						r.select();
-					} catch (ex) {
-						// Ignore
-					}
-				}
-			} else if ((!isIE || r.setStart) && (n = ed.dom.get('__mce'))) {
-				// Restore the id of the selected element
-				if (eid)
-					n.setAttribute('id', eid);
-				else
-					n.removeAttribute('id');
-
-				// Move caret before selected element
-				r = d.createRange();
-				r.setStartBefore(n);
-				r.setEndBefore(n);
-				se.setRng(r);
 			}
 		},
 

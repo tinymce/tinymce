@@ -69,7 +69,7 @@ test('getEncodeFunc', function() {
 test('decode', function() {
 	expect(3);
 
-	equals(tinymce.html.Entities.decode('&lt;&gt;&quot;&#39;&amp;&aring;&auml;&ouml;&unknown;'), '<>"\'&\u00e5\u00e4\u00f6&unknown;', 'Decode text with various entities');
+	equals(tinymce.html.Entities.decode('&lt;&gt;&quot;&#39;&amp;&aring;&auml;&ouml;&unknown;&#039;'), '<>"\'&\u00e5\u00e4\u00f6&unknown;\'', 'Decode text with various entities');
 
 	equals(tinymce.html.Entities.encodeNumeric(tinymce.html.Entities.decode(
 		'&#130;&#131;&#132;&#133;&#134;&#135;&#136;&#137;&#138;' +

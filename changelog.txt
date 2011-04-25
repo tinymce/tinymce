@@ -13,6 +13,7 @@ Version 3.4.3 (2011-??-??)
 	Fixed bug where breaking out of list elements on WebKit would produce a DIV instead of P after the list.
 	Fixed bug where pasting from Word in IE9 would add extra BR elements when text was word wrapped.
 	Fixed bug where numeric entities with leading zeros would produce incorrect decoding.
+	Fixed performance issue with older IE version and huge documents by optimizing the forced root blocks logic.
 Version 3.4.2 (2011-04-07)
 	Added new 'paste_text_sticky_default' option to paste plugin, enables you to set the default state for paste as plain text.
 	Added new autoresize_bottom_margin option to autoresize plugin that enables you to add an extra margin at the bottom. Patch contributed by Andrew Ozz.

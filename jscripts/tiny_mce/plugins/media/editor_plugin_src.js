@@ -260,7 +260,7 @@
 		 * Converts the JSON data object to a HTML string.
 		 */
 		dataToHtml : function(data, force_absolute) {
-			return this.editor.serializer.serialize(this.dataToImg(data, force_absolute), {force_absolute : force_absolute});
+			return this.editor.serializer.serialize(this.dataToImg(data, force_absolute), {forced_root_block : '', force_absolute : force_absolute});
 		},
 
 		/**

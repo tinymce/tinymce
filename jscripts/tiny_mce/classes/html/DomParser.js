@@ -232,7 +232,7 @@
 		self.parse = function(html, args) {
 			var parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate,
 				blockElements, startWhiteSpaceRegExp, invalidChildren = [],
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements;
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements, rootBlockName;
 
 			args = args || {};
 			matchedNodes = {};
@@ -241,11 +241,34 @@
 			nonEmptyElements = schema.getNonEmptyElements();
 			children = schema.children;
 			validate = settings.validate;
+			rootBlockName = "forced_root_block" in args ? args.forced_root_block : settings.forced_root_block;
 
 			whiteSpaceElements = schema.getWhiteSpaceElements();
 			startWhiteSpaceRegExp = /^[ \t\r\n]+/;
 			endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 			allWhiteSpaceRegExp = /[ \t\r\n]+/g;
+
+			function addRootBlocks() {
+				var node = rootNode.firstChild, next, rootBlockNode;
+
+				while (node) {
+					next = node.next;
+
+					if (node.type == 3 || (node.type == 1 && node.name !== 'p' && !blockElements[node.name])) {
+						if (!rootBlockNode) {
+							// Create a new root block element
+							rootBlockNode = createNode(rootBlockName, 1);
+							rootNode.insert(rootBlockNode, node);
+							rootBlockNode.append(node);
+						} else
+							rootBlockNode.append(node);
+					} else {
+						rootBlockNode = null;
+					}
+
+					node = next;
+				};
+			};
 
 			function createNode(name, type) {
 				var node = new Node(name, type), list;
@@ -440,6 +463,9 @@
 
 			if (validate)
 				fixInvalidChildren(invalidChildren);
+
+			if (rootBlockName)
+				addRootBlocks();
 
 			// Run node filters
 			for (name in matchedNodes) {

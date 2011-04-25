@@ -101,7 +101,7 @@
 				t.onPostProcess.dispatch(t, o);
 
 				// Serialize content
-				o.content = ed.serializer.serialize(o.node, {getInner : 1});
+				o.content = ed.serializer.serialize(o.node, {getInner : 1, forced_root_block : ''});
 
 				// Plain text option active?
 				if ((!force_rich) && (ed.pasteAsPlainText)) {

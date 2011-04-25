@@ -322,6 +322,25 @@ test('Remove redundant br elements', function() {
 	);
 	equals(serializer.serialize(root), '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
 });
+
+test('Forced root blocks', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	expect(1);
+
+	parser = new tinymce.html.DomParser({forced_root_block : 'p'}, schema);
+	root = parser.parse(
+		'<!-- a -->' +
+		'b' +
+		'<b>c</b>' +
+		'<p>d</p>' +
+		'<p>e</p>' +
+		'f' +
+		'<b>g</b>' +
+		'h'
+	);
+	equals(serializer.serialize(root), '<!-- a --><p>b<strong>c</strong></p><p>d</p><p>e</p><p>f<strong>g</strong>h</p>', 'Mixed text nodes, inline elements and blocks.');
+});
 </script>
 </head>
 <body>

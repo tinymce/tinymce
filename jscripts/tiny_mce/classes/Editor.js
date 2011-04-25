@@ -2497,7 +2497,7 @@
 		 * tinyMCE.activeEditor.setContent('[b]some[/b] html', {format : 'bbcode'});
 		 */
 		setContent : function(content, args) {
-			var self = this, rootNode, body = self.getBody();
+			var self = this, rootNode, body = self.getBody(), forcedRootBlockName;
 
 			// Setup args object
 			args = args || {};
@@ -2514,7 +2514,15 @@
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
 			if (!tinymce.isIE && (content.length === 0 || /^\s+$/.test(content))) {
-				body.innerHTML = '<br data-mce-bogus="1" />';
+				forcedRootBlockName = self.settings.forced_root_block;
+				if (forcedRootBlockName)
+					content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
+				else
+					content = '<br data-mce-bogus="1">';
+
+				body.innerHTML = content;
+				self.selection.select(body, true);
+				self.selection.collapse(true);
 				return;
 			}
 
