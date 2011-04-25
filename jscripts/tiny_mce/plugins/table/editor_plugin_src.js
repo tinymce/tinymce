@@ -752,7 +752,7 @@
 
 	tinymce.create('tinymce.plugins.TablePlugin', {
 		init : function(ed, url) {
-			var winMan, clipboardRows;
+			var winMan, clipboardRows, hasCellSelection = true; // Might be selected cells on reload
 
 			function createTableGrid(node) {
 				var selection = ed.selection, tblElm = ed.dom.getParent(node || selection.getNode(), 'table');
@@ -764,7 +764,11 @@
 			function cleanup() {
 				// Restore selection possibilities
 				ed.getBody().style.webkitUserSelect = '';
-				ed.dom.removeClass(ed.dom.select('td.mceSelected,th.mceSelected'), 'mceSelected');
+
+				if (hasCellSelection) {
+					ed.dom.removeClass(ed.dom.select('td.mceSelected,th.mceSelected'), 'mceSelected');
+					hasCellSelection = false;
+				}
 			};
 
 			// Register buttons
@@ -873,6 +877,7 @@
 							}
 
 							tableGrid.setEndCell(target);
+							hasCellSelection = true;
 						}
 
 						// Remove current selection
