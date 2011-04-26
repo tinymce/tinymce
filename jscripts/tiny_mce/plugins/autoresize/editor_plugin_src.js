@@ -44,6 +44,13 @@
 				if (myHeight > t.autoresize_min_height)
 					resizeHeight = myHeight;
 
+				// If a maximum height has been defined don't exceed this height
+				if (t.autoresize_max_height && myHeight > t.autoresize_max_height) {
+					resizeHeight = t.autoresize_max_height;
+					ed.getBody().style.overflowY = "auto";
+				} else
+					ed.getBody().style.overflowY = "hidden";
+
 				// Resize content element
 				if (resizeHeight !== oldSize) {
 					DOM.setStyle(DOM.get(ed.id + '_ifr'), 'height', resizeHeight + 'px');
@@ -60,7 +67,10 @@
 			t.editor = ed;
 
 			// Define minimum height
-			t.autoresize_min_height = ed.getElement().offsetHeight;
+			t.autoresize_min_height = parseInt( ed.getParam('autoresize_min_height', ed.getElement().offsetHeight) );
+
+			// Define maximum height	
+			t.autoresize_max_height = parseInt( ed.getParam('autoresize_max_height', 0) );
 
 			// Add padding at the bottom for better UX
 			ed.onInit.add(function(ed){
