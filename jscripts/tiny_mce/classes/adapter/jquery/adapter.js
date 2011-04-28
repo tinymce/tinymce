@@ -14,8 +14,9 @@
 	var is = tinymce.is, attrRegExp = /^(href|src|style)$/i, undefined;
 
 	// jQuery is undefined
-	if (!$)
-		return alert("Load jQuery first!");
+	if (!$ && window.console) {
+		return console.log("Load jQuery first!");
+	}
 
 	// Stick jQuery into the tinymce namespace
 	tinymce.$ = $;
