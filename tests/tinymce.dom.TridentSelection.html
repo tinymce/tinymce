@@ -41,7 +41,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 	test("Single image selection", function(){
 		expect(6);
 		
-		editor.setContent('<img src="about:blank" />', {
+		editor.setContent('<p><img src="about:blank" /></p>', {
 			format: 'raw'
 		});
 		
@@ -62,7 +62,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 	test("Multiple image selection", function(){
 		expect(6);
 		
-		editor.setContent('<img src="about:blank" /><img src="about:blank" />', {
+		editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {
 			format: 'raw'
 		});
 		
@@ -138,7 +138,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 	test("Mixed selection start at element end at text", function(){
 		expect(5);
 		
-		editor.setContent('<img src="about:blank" />text', {
+		editor.setContent('<p><img src="about:blank" />text</p>', {
 			format: 'raw'
 		});
 		
@@ -158,7 +158,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 	test("Mixed selection start at text end at element", function(){
 		expect(5);
 		
-		editor.setContent('text<img src="about:blank" />', {
+		editor.setContent('<p>text<img src="about:blank" /></p>', {
 			format: 'raw'
 		});
 		

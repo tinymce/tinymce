@@ -136,15 +136,15 @@ test('mceInsertContent', function() {
 
 	// Forced root block
 	editor.getBody().innerHTML = '';
-	editor.execCommand('mceInsertContent', false, '<!-- a -->test<b>123</b>');
+	editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
 	// Opera adds an extra paragraph since it adds a BR at the end of the contents pass though this for now since it's an minority browser
-	equals(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<!-- a --><p>test</p><p><strong>123</strong></p>');
+	equals(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test</p><p><strong>123</strong></p><!-- a -->');
 
 	// Forced root block
 	editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
 	setSelection('td', 0, 'td', 0);
-	editor.execCommand('mceInsertContent', false, '<!-- a -->test<b>123</b>');
-	equals(editor.getContent(), '<table><tbody><tr><td><!-- a -->test<strong>123</strong>X</td></tr></tbody></table>');
+	editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
+	equals(editor.getContent(), '<table><tbody><tr><td>test<strong>123</strong><!-- a -->X</td></tr></tbody></table>');
 });
 
 tinyMCE.init({
