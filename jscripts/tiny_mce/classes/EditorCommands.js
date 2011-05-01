@@ -461,7 +461,7 @@
 			},
 
 			mceInsertLink : function(command, ui, value) {
-				var link = dom.getParent(selection.getNode(), 'a'), img, style, float, class;
+				var link = dom.getParent(selection.getNode(), 'a'), img, style, class;
 
 				if (tinymce.is(value, 'string'))
 					value = {href : value};
