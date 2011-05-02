@@ -3141,13 +3141,13 @@
 				});
 
 				t.onKeyDown.add(function(ed, e) {
-					var keyCode = e.keyCode;
+					var keyCode = e.keyCode, sel;
 
 					if (keyCode == 8) {
 						sel = t.getDoc().selection;
 
 						// Fix IE control + backspace browser bug
-						if (sel.createRange && sel.createRange().item) {
+						if (sel && sel.createRange && sel.createRange().item) {
 							t.undoManager.beforeChange();
 							ed.dom.remove(sel.createRange().item(0));
 							addUndo();
