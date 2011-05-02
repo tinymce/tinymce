@@ -17,7 +17,7 @@
 	 * @class tinymce.UndoManager
 	 */
 	tinymce.UndoManager = function(editor) {
-		var self, index = 0, data = [];
+		var self, index = 0, data = [], beforeBookmark;
 
 		function getContent() {
 			return tinymce.trim(editor.getContent({format : 'raw', no_events : 1}));
@@ -66,9 +66,7 @@
 			 * @method beforeChange
 			 */
 			beforeChange : function() {
-				// Set before bookmark on previous level
-				if (data[index])
-					data[index].beforeBookmark = editor.selection.getBookmark(2, true);
+				beforeBookmark = editor.selection.getBookmark(2, true);
 			},
 
 			/**
@@ -88,6 +86,10 @@
 				lastLevel = data[index];
 				if (lastLevel && lastLevel.content == level.content)
 					return null;
+
+				// Set before bookmark on previous level
+				if (data[index])
+					data[index].beforeBookmark = beforeBookmark;
 
 				// Time to compress
 				if (settings.custom_undo_redo_levels) {
