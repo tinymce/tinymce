@@ -3108,21 +3108,6 @@
 						cb : cb
 					};
 				});
-
-				t.onKeyDown.add(function(ed, e) {
-					var sel;
-
-					switch (e.keyCode) {
-						case 8:
-							sel = t.getDoc().selection;
-
-							// Fix IE control + backspace browser bug
-							if (sel.createRange && sel.createRange().item) {
-								ed.dom.remove(sel.createRange().item(0));
-								return Event.cancel(e);
-							}
-					}
-				});
 			}
 
 			if (tinymce.isOpera) {
@@ -3149,69 +3134,25 @@
 				});
 
 				t.onKeyUp.add(function(ed, e) {
-					var rng, parent, bookmark;
+					var keyCode = e.keyCode;
 
-					// Fix for bug #3168, to remove odd ".." nodes from the DOM we need to get/set the HTML of the parent node.
-					if (isIE && e.keyCode == 8) {
-						rng = t.selection.getRng();
-						if (rng.parentElement) {
-							parent = rng.parentElement();
-							bookmark = t.selection.getBookmark();
-							parent.innerHTML = parent.innerHTML;
-							t.selection.moveToBookmark(bookmark);
-						}
-					}
-
-					if ((e.keyCode >= 33 && e.keyCode <= 36) || (e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode == 13 || e.keyCode == 45 || e.ctrlKey)
+					if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45 || e.ctrlKey)
 						addUndo();
 				});
 
 				t.onKeyDown.add(function(ed, e) {
-					var rng, parent, bookmark, keyCode = e.keyCode;
+					var keyCode = e.keyCode;
 
-					// IE has a really odd bug where the DOM might include an node that doesn't have
-					// a proper structure. If you try to access nodeValue it would throw an illegal value exception.
-					// This seems to only happen when you delete contents and it seems to be avoidable if you refresh the element
-					// after you delete contents from it. See: #3008923
-					if (isIE && keyCode == 46) {
-						rng = t.selection.getRng();
+					if (keyCode == 8) {
+						sel = t.getDoc().selection;
 
-						if (rng.parentElement) {
-							parent = rng.parentElement();
+						// Fix IE control + backspace browser bug
+						if (sel.createRange && sel.createRange().item) {
+							t.undoManager.beforeChange();
+							ed.dom.remove(sel.createRange().item(0));
+							addUndo();
 
-							if (!t.undoManager.typing) {
-								t.undoManager.beforeChange();
-								t.undoManager.typing = true;
-								t.undoManager.add();
-							}
-
-							// Select next word when ctrl key is used in combo with delete
-							if (e.ctrlKey) {
-								rng.moveEnd('word', 1);
-								rng.select();
-							}
-
-							// Delete contents
-							t.selection.getSel().clear();
-
-							// Check if we are within the same parent
-							if (rng.parentElement() == parent) {
-								bookmark = t.selection.getBookmark();
-
-								try {
-									// Update the HTML and hopefully it will remove the artifacts
-									parent.innerHTML = parent.innerHTML;
-								} catch (ex) {
-									// And since it's IE it can sometimes produce an unknown runtime error
-								}
-
-								// Restore the caret position
-								t.selection.moveToBookmark(bookmark);
-							}
-
-							// Block the default delete behavior since it might be broken
-							e.preventDefault();
-							return;
+							return Event.cancel(e);
 						}
 					}
 

@@ -277,7 +277,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '');
 	});
 
-	test("Caret position before table", function() {
+	/*test("Caret position before table", function() {
 		var table, rng;
 
 		editor.focus();
@@ -294,7 +294,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.startOffset, 1);
 		equals(rng.endContainer.nodeName, 'BODY');
 		equals(rng.endOffset, 1);
-	});
+	});*/
 
 	test("Selection end within empty element", function() {
 		var rng;
@@ -351,7 +351,197 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(editor.selection.getStart(), editor.getBody(), "Selection start is body.");
 		same(editor.selection.getSelectedBlocks(), [], "No blocks selected.");
 	});
-	
+
+	test("Resizable element text selection", function() {
+		var r;
+
+		editor.getBody().innerHTML = '<div style="width: 100px; height:100px;"><table><tr><td>.</td></tr></table>abc</div>';
+		editor.focus();
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().firstChild.lastChild, 1);
+		r.setEnd(editor.getBody().firstChild.lastChild, 2);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().firstChild.lastChild, "Start container is text node.");
+		equals(r.endContainer, editor.getBody().firstChild.lastChild, "End container is text node.");
+		equals(r.startOffset, 1);
+		equals(r.endOffset, 2);
+	});
+
+	test("Resizable element before table selection", function() {
+		var r;
+
+		editor.getBody().innerHTML = '<div style="width: 100px; height:100px;"><table><tr><td>.</td></tr></table></div>';
+		editor.focus();
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().firstChild, 0);
+		r.setEnd(editor.getBody().firstChild, 0);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().firstChild, "Start container is div node.");
+		equals(r.endContainer, editor.getBody().firstChild, "End container is div node.");
+		equals(r.startOffset, 0);
+		equals(r.endOffset, 0);
+	});
+
+	test("Fragmented text nodes after element", function() {
+		var r;
+
+		editor.getBody().innerHTML = '<b>x</b>';
+		editor.getBody().appendChild(editor.getDoc().createTextNode('1'));
+		editor.getBody().appendChild(editor.getDoc().createTextNode('23'));
+		editor.getBody().appendChild(editor.getDoc().createTextNode('456'));
+		editor.getBody().appendChild(editor.getDoc().createTextNode('7890'));
+		editor.focus();
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().lastChild, 1);
+		r.setEnd(editor.getBody().lastChild, 1);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().lastChild, "Start container is last text node.");
+		equals(r.endContainer, editor.getBody().lastChild, "End container is last text node.");
+		equals(r.startOffset, 1);
+		equals(r.endOffset, 1);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().childNodes[2], 2);
+		r.setEnd(editor.getBody().childNodes[2], 2);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node.");
+		equals(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");
+		equals(r.startOffset, 2);
+		equals(r.endOffset, 2);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().childNodes[3], 0);
+		r.setEnd(editor.getBody().childNodes[3], 1);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node (lean left).");
+		equals(r.endContainer, editor.getBody().childNodes[3], "End container is third text node.");
+		equals(r.startOffset, 2);
+		equals(r.endOffset, 1);
+	});
+
+	test("Fragmented text nodes before element", function() {
+		var r;
+
+		editor.getBody().innerHTML = '';
+		editor.getBody().appendChild(editor.getDoc().createTextNode('1'));
+		editor.getBody().appendChild(editor.getDoc().createTextNode('23'));
+		editor.getBody().appendChild(editor.getDoc().createTextNode('456'));
+		editor.getBody().appendChild(editor.getDoc().createTextNode('7890'));
+		editor.getBody().appendChild(editor.dom.create('b', null, 'x'));
+		editor.focus();
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().childNodes[3], 1);
+		r.setEnd(editor.getBody().childNodes[3], 1);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().childNodes[3], "Start container is last text node.");
+		equals(r.endContainer, editor.getBody().childNodes[3], "End container is last text node.");
+		equals(r.startContainer.nodeValue, '7890');
+		equals(r.startOffset, 1);
+		equals(r.endOffset, 1);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().childNodes[1], 2);
+		r.setEnd(editor.getBody().childNodes[1], 2);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node. (lean right)");
+		equals(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");
+		equals(r.startContainer.nodeValue, '456');
+		equals(r.startOffset, 0);
+		equals(r.endOffset, 0);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody().childNodes[1], 0);
+		r.setEnd(editor.getBody().childNodes[1], 1);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody().childNodes[1], "Start container is second text node.");
+		equals(r.endContainer, editor.getBody().childNodes[1], "End container is third text node.");
+		equals(r.startContainer.nodeValue, '23');
+		equals(r.endContainer.nodeValue, '23');
+		equals(r.startOffset, 0);
+		equals(r.endOffset, 1);
+	});
+
+	test("Non contentEditable elements", function() {
+		var r;
+
+		editor.getBody().innerHTML = '<span contentEditable="false">a</span><span contentEditable="false">a</span><span contentEditable="false">a</span>';
+		editor.focus();
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody(), 0);
+		r.setEnd(editor.getBody(), 0);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody(), "Start container is before first nonEditable.");
+		equals(r.endContainer, editor.getBody(), "End container is before  first nonEditable.");
+		equals(r.startOffset, 0);
+		equals(r.endOffset, 0);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody(), 0);
+		r.setEnd(editor.getBody(), 1);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody(), "Start container before first nonEditable.");
+		equals(r.endContainer, editor.getBody(), "End container is after first nonEditable.");
+		equals(r.startOffset, 0);
+		equals(r.endOffset, 1);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody(), 0);
+		r.setEnd(editor.getBody(), 2);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody(), "Start container before first nonEditable.");
+		equals(r.endContainer, editor.getBody(), "End container is after second nonEditable.");
+		equals(r.startOffset, 0);
+		equals(r.endOffset, 2);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody(), 1);
+		r.setEnd(editor.getBody(), 1);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody(), "Start container is before second nonEditable.");
+		equals(r.endContainer, editor.getBody(), "End container is div before second nonEditable.");
+		equals(r.startOffset, 1);
+		equals(r.endOffset, 1);
+
+		r = editor.dom.createRng();
+		r.setStart(editor.getBody(), 2);
+		r.setEnd(editor.getBody(), 2);
+		editor.selection.setRng(r);
+
+		r = editor.selection.getRng(true);
+		equals(r.startContainer, editor.getBody(), "Start container is after last nonEditable.");
+		equals(r.endContainer, editor.getBody(), "End container is after last nonEditable.");
+		equals(r.startOffset, 2);
+		equals(r.endOffset, 2);
+	});
 } else {
 	test("Skipped ie_selection tests as not running in IE.", function() {});
 }
