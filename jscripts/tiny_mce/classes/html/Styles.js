@@ -262,7 +262,7 @@ tinymce.html.Styles = function(settings, schema) {
 			if (element_name && schema && schema.styles) {
 				// Serialize global styles and element specific styles
 				serializeStyles('*');
-				serializeStyles(name);
+				serializeStyles(element_name);
 			} else {
 				// Output the styles in the order they are inside the object
 				for (name in styles) {
