@@ -220,16 +220,28 @@
 					element = tmpRange.parentElement();
 
 					// Get end element
-					tmpRange = ieRange.duplicate();
-					tmpRange.collapse(false);
-					element2 = tmpRange.parentElement();
+					if (!collapsed) {
+						tmpRange = ieRange.duplicate();
+						tmpRange.collapse(false);
+						element2 = tmpRange.parentElement();
+						element2.innerHTML = element2.innerHTML;
+					}
 
 					// Remove the broken elements
 					element.innerHTML = element.innerHTML;
-					element2.innerHTML = element2.innerHTML;
 
 					// Restore the selection
 					self.moveToBookmark(bookmark);
+
+					// Since the range has moved we need to re-get it
+					ieRange = selection.getRng();
+
+					// Find start point
+					findEndPoint(true);
+
+					// Find end point if needed
+					if (!collapsed)
+						findEndPoint();
 				} else
 					throw ex; // Throw other errors
 			}
