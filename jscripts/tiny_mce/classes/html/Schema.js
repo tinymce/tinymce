@@ -451,7 +451,7 @@
 			elements.img.attributesDefault = [{name: 'alt', value: ''}];
 
 			// Remove these if they are empty by default
-			each(split('ol,ul,li,sub,sup,blockquote,tr,div,span,font,a,table,tbody'), function(name) {
+			each(split('ol,ul,sub,sup,blockquote,span,font,a,table,tbody,tr'), function(name) {
 				elements[name].removeEmpty = true;
 			});
 
