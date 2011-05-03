@@ -155,17 +155,20 @@
 
 				img = ed.selection.getNode();
 				if (isMediaImg(img)) {
-					data = JSON.parse(ed.dom.getAttrib(img, 'data-mce-json'));
+					data = ed.dom.getAttrib(img, 'data-mce-json');
+					if (data) {
+						data = JSON.parse(data);
 
-					// Add some extra properties to the data object
-					tinymce.each(rootAttributes, function(name) {
-						var value = ed.dom.getAttrib(img, name);
+						// Add some extra properties to the data object
+						tinymce.each(rootAttributes, function(name) {
+							var value = ed.dom.getAttrib(img, name);
 
-						if (value)
-							data[name] = value;
-					});
+							if (value)
+								data[name] = value;
+						});
 
-					data.type = self.getType(img.className).name.toLowerCase();
+						data.type = self.getType(img.className).name.toLowerCase();
+					}
 				}
 
 				if (!data) {
@@ -363,7 +366,11 @@
 				}
 			};
 
-			data = JSON.parse(node.attr('data-mce-json'));
+			data = node.attr('data-mce-json');
+			if (!data)
+				return;
+
+			data = JSON.parse(data);
 			typeItem = this.getType(node.attr('class'));
 
 			style = node.attr('data-mce-style')
