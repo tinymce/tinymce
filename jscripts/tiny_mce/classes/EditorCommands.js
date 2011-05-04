@@ -379,12 +379,6 @@
 					}
 				}
 
-				// IE might crash if we normalize nodes and we normalize here
-				// to remove empty text nodes produced on Gecko/WebKit so IE isn't affected anyway
-				if (!tinymce.isIE) {
-					marker.parentNode.normalize();
-				}
-
 				// Move selection before marker and remove it
 				rng = dom.createRng();
 				rng.setStartBefore(marker);
