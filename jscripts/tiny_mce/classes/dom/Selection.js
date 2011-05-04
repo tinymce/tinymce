@@ -114,6 +114,7 @@
 			wb = wa = '';
 			s.get = true;
 			s.format = s.format || 'html';
+			s.forced_root_block = '';
 			t.onBeforeGetContent.dispatch(t, s);
 
 			if (s.format == 'text')
