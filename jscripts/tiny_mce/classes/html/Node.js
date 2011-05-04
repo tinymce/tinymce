@@ -431,6 +431,17 @@
 			}
 
 			return true;
+		},
+
+		/**
+		 * Walks to the next or previous node and returns that node or null if it wasn't found.
+		 *
+		 * @method walk
+		 * @param {Boolean} prev Optional previous node state defaults to false.
+		 * @return {tinymce.html.Node} Node that is next to or previous of the current node.
+		 */
+		walk : function(prev) {
+			return walk(this, null, prev);
 		}
 	});
 
