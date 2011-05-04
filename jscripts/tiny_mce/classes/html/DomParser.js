@@ -254,7 +254,7 @@
 				while (node) {
 					next = node.next;
 
-					if (node.type == 3 || (node.type == 1 && node.name !== 'p' && !blockElements[node.name])) {
+					if (node.type == 3 || (node.type == 1 && node.name !== 'p' && !blockElements[node.name] && !node.attr('data-mce-type'))) {
 						if (!rootBlockNode) {
 							// Create a new root block element
 							rootBlockNode = createNode(rootBlockName, 1);
@@ -461,6 +461,7 @@
 
 			parser.parse(html);
 
+			// Fix invalid children or report invalid children in a contextual parsing
 			if (validate && invalidChildren.length) {
 				if (!args.context)
 					fixInvalidChildren(invalidChildren);
@@ -468,31 +469,16 @@
 					args.invalid = true;
 			}
 
+			// Wrap nodes in the root into block elements if the root is body
 			if (rootBlockName && rootNode.name == 'body')
 				addRootBlocks();
 
-			// Run node filters
-			for (name in matchedNodes) {
-				list = nodeFilters[name];
-				nodes = matchedNodes[name];
-
-				// Remove already removed children
-				fi = nodes.length;
-				while (fi--) {
-					if (!nodes[fi].parent)
-						nodes.splice(fi, 1);
-				}
-
-				for (i = 0, l = list.length; i < l; i++)
-					list[i](nodes, name, args);
-			}
-
-			// Run attribute filters
-			for (i = 0, l = attributeFilters.length; i < l; i++) {
-				list = attributeFilters[i];
-
-				if (list.name in matchedAttributes) {
-					nodes = matchedAttributes[list.name];
+			// Run filters only when the contents is valid
+			if (!args.invalid) {
+				// Run node filters
+				for (name in matchedNodes) {
+					list = nodeFilters[name];
+					nodes = matchedNodes[name];
 
 					// Remove already removed children
 					fi = nodes.length;
@@ -501,8 +487,27 @@
 							nodes.splice(fi, 1);
 					}
 
-					for (fi = 0, fl = list.callbacks.length; fi < fl; fi++)
-						list.callbacks[fi](nodes, list.name, args);
+					for (i = 0, l = list.length; i < l; i++)
+						list[i](nodes, name, args);
+				}
+
+				// Run attribute filters
+				for (i = 0, l = attributeFilters.length; i < l; i++) {
+					list = attributeFilters[i];
+
+					if (list.name in matchedAttributes) {
+						nodes = matchedAttributes[list.name];
+
+						// Remove already removed children
+						fi = nodes.length;
+						while (fi--) {
+							if (!nodes[fi].parent)
+								nodes.splice(fi, 1);
+						}
+
+						for (fi = 0, fl = list.callbacks.length; fi < fl; fi++)
+							list.callbacks[fi](nodes, list.name, args);
+					}
 				}
 			}
 
