@@ -20,10 +20,10 @@ function getContent() {
 	return editor.getContent({format:'raw'}).toLowerCase().replace(/[\r\n]+/g, '');
 };
 
-test('mceInsertContent', function() {
+test('mceInsertContent - p inside text of p', function() {
 	var rng;
 	
-	expect(51);
+	expect(7);
 
 	editor.setContent('<p>1234</p>');
 	rng = editor.dom.createRng();
@@ -39,6 +39,12 @@ test('mceInsertContent', function() {
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.innerHTML, 'abc');
+});
+
+test('mceInsertContent - p inside whole p', function() {
+	var rng;
+
+	expect(7);
 
 	editor.setContent('<p>1234</p>');
 	rng = editor.dom.createRng();
@@ -54,6 +60,12 @@ test('mceInsertContent', function() {
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.innerHTML, 'abc');
+});
+
+test('mceInsertContent - pre in text of pre', function() {
+	var rng;
+	
+	expect(7);
 
 	editor.setContent('<pre>1234</pre>');
 	rng = editor.dom.createRng();
@@ -69,6 +81,12 @@ test('mceInsertContent', function() {
 	equals(rng.endContainer.nodeName, 'PRE');
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.innerHTML, 'abc');
+});
+
+test('mceInsertContent - h1 in text of h1', function() {
+	var rng;
+	
+	expect(7);
 
 	editor.setContent('<h1>1234</h1>');
 	rng = editor.dom.createRng();
@@ -84,6 +102,12 @@ test('mceInsertContent', function() {
 	equals(rng.endContainer.nodeName, 'H1');
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.innerHTML, 'abc');
+});
+
+test('mceInsertContent - li inside li', function() {
+	var rng;
+	
+	expect(7);
 
 	editor.setContent('<ul><li>1234</li></ul>');
 	rng = editor.dom.createRng();
@@ -99,6 +123,12 @@ test('mceInsertContent', function() {
 	equals(rng.endContainer.nodeName, 'LI');
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.innerHTML, 'abc');
+});
+
+test('mceInsertContent - p inside empty editor', function() {
+	var rng;
+
+	expect(7);
 
 	editor.setContent('');
 	editor.execCommand('mceInsertContent', false, '<p>abc</p>');
@@ -110,6 +140,12 @@ test('mceInsertContent', function() {
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.endOffset, 1);
 	equals(rng.startContainer.innerHTML, 'abc');
+});
+
+test('mceInsertContent - image inside p', function() {
+	var rng;
+	
+	expect(6);
 
 	editor.setContent('<p>1</p>');
 	rng = editor.dom.createRng();
@@ -124,6 +160,12 @@ test('mceInsertContent', function() {
 	equals(rng.startOffset, 1);
 	equals(rng.endContainer.nodeName, 'P');
 	equals(rng.endOffset, 1);
+});
+
+test('mceInsertContent - legacy content', function() {
+	var rng;
+	
+	expect(1);
 
 	// Convert legacy content
 	editor.setContent('<p>1</p>');
@@ -133,12 +175,24 @@ test('mceInsertContent', function() {
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<u>u</u><strike>strike</strike><font size="7">font</font>');
 	equals(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: xx-large;">font</span></p>');
+});
+
+test('mceInsertContent - forced root block', function() {
+	var rng;
+	
+	expect(1);
 
 	// Forced root block
 	editor.getBody().innerHTML = '';
 	editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
 	// Opera adds an extra paragraph since it adds a BR at the end of the contents pass though this for now since it's an minority browser
-	equals(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test</p><p><strong>123</strong></p><!-- a -->');
+	equals(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test<strong>123</strong></p><!-- a -->');
+});
+
+test('mceInsertContent - mixed inline content inside td', function() {
+	var rng;
+	
+	expect(1);
 
 	// Forced root block
 	editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
@@ -154,6 +208,7 @@ tinyMCE.init({
 	add_unload_trigger : false,
 	apply_source_formatting : false,
 	entities : 'raw',
+	convert_urls : false,
 	valid_styles : {
 		'*' : 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
 	},

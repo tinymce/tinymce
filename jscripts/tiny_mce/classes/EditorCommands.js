@@ -285,22 +285,15 @@
 			},
 
 			mceInsertContent : function(command, ui, value) {
-				var caretNode, rng, rootNode, parent, node, rng, nodeRect, viewPortRect, args;
+				var parser, serializer, parentNode, rootNode, fragment, args,
+					marker, nodeRect, viewPortRect, rng, node, bookmarkHtml;
 
-				function findSuitableCaretNode(node, root_node, next) {
-					var walker = new tinymce.dom.TreeWalker(next ? node.nextSibling : node.previousSibling, root_node);
+				// Setup parser and serializer
+				parser = editor.parser;
+				serializer = new tinymce.html.Serializer({}, editor.schema);
+				bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">\uFEFF</span>';
 
-					while ((node = walker.current())) {
-						if ((node.nodeType == 3 && tinymce.trim(node.nodeValue).length) || node.nodeName == 'BR' || node.nodeName == 'IMG')
-							return node;
-
-						if (next)
-							walker.next();
-						else
-							walker.prev();
-					}
-				};
-
+				// Run beforeSetContent handlers on the HTML to be inserted
 				args = {content: value, format: 'html'};
 				selection.onBeforeSetContent.dispatch(selection, args);
 				value = args.content;
@@ -309,89 +302,97 @@
 				if (value.indexOf('{$caret}') == -1)
 					value += '{$caret}';
 
-				// Set the content at selection to a span and replace it's contents with the value
-				selection.setContent('<span id="__mce">\uFEFF</span>', {no_events : false});
-				dom.setOuterHTML('__mce', value.replace(/\{\$caret\}/, '<span data-mce-type="bookmark" id="__mce">\uFEFF</span>'));
+				// Replace the caret marker with a span bookmark element
+				value = value.replace(/\{\$caret\}/, bookmarkHtml)
 
-				caretNode = dom.select('#__mce')[0];
-				rootNode = dom.getRoot();
+				// Insert node maker where we will insert the new HTML and get it's parent
+				if (!editor.selection.isCollapsed())
+					editor.getDoc().execCommand('Delete', false, null);
 
-				// Move the caret into the last suitable location within the previous sibling if it's a block since the block might be split
-				if (caretNode.previousSibling && dom.isBlock(caretNode.previousSibling) || caretNode.parentNode == rootNode) {
-					node = findSuitableCaretNode(caretNode, rootNode);
-					if (node) {
-						if (node.nodeName == 'BR')
-							node.parentNode.insertBefore(caretNode, node);
-						else
-							dom.insertAfter(caretNode, node);
-					}
-				}
+				parentNode = editor.selection.getNode();
 
-				// Find caret root parent and clean it up using the serializer to avoid nesting
-				while (caretNode) {
-					if (caretNode === rootNode) {
-						// Clean up the parent element by parsing and serializing it
-						// This will remove invalid elements/attributes and fix nesting issues
-						dom.setOuterHTML(parent, 
-							new tinymce.html.Serializer({}, editor.schema).serialize(
-								editor.parser.parse(dom.getOuterHTML(parent))
-							)
-						);
+				// Parse the fragment within the context of the parent node
+				args = {context : parentNode.nodeName.toLowerCase()};
+				fragment = parser.parse(value, args);
 
-						break;
-					}
+				// Move the caret to a more suitable location
+				node = fragment.lastChild;
+				if (node.attr('id') == 'mce_marker') {
+					marker = node;
 
-					parent = caretNode;
-					caretNode = caretNode.parentNode;
-				}
-
-				// Find caret after cleanup and move selection to that location
-				caretNode = dom.select('#__mce')[0];
-				if (caretNode) {
-					node = findSuitableCaretNode(caretNode, rootNode) || findSuitableCaretNode(caretNode, rootNode, true);
-					dom.remove(caretNode);
-
-					if (node) {
-						rng = dom.createRng();
-
-						if (node.nodeType == 3) {
-							rng.setStart(node, node.length);
-							rng.setEnd(node, node.length);
-						} else {
-							if (node.nodeName == 'BR') {
-								rng.setStartBefore(node);
-								rng.setEndBefore(node);
-							} else {
-								rng.setStartAfter(node);
-								rng.setEndAfter(node);
-							}
+					for (node = node.prev; node; node = node.walk(true)) {
+						if (node.type == 3 || !dom.isBlock(node.name)) {
+							node.parent.insert(marker, node, node.name === 'br');
+							break;
 						}
-
-						selection.setRng(rng);
-
-						// Scroll range into view scrollIntoView on element can't be used since it will scroll the main view port as well
-						if (!tinymce.isIE) {
-							node = dom.create('span', null, '\u00a0');
-							rng.insertNode(node);
-							nodeRect = dom.getRect(node);
-							viewPortRect = dom.getViewPort(editor.getWin());
-
-							// Check if node is out side the viewport if it is then scroll to it
-							if ((nodeRect.y > viewPortRect.y + viewPortRect.h || nodeRect.y < viewPortRect.y) ||
-								(nodeRect.x > viewPortRect.x + viewPortRect.w || nodeRect.x < viewPortRect.x)) {
-								editor.getBody().scrollLeft = nodeRect.x;
-								editor.getBody().scrollTop = nodeRect.y;
-							}
-
-							dom.remove(node);
-						}
-
-						// Make sure that the selection is collapsed after we removed the node fixes a WebKit bug
-						// where WebKit would place the endContainer/endOffset at a different location than the startContainer/startOffset
-						selection.collapse(true);
 					}
 				}
 
+				// If parser says valid we can insert the contents into that parent
+				if (!args.invalid) {
+					editor.selection.setContent(serializer.serialize(fragment));
+				} else {
+					// If the fragment was invalid within that context then we need
+					// to parse and process the parent it's inserted into
+
+					// Insert bookmark node and get the parent
+					editor.selection.setContent(bookmarkHtml);
+					parentNode = editor.selection.getNode();
+					rootNode = editor.getBody();
+
+					// Opera will return the document node when selection is in root
+					if (parentNode.nodeType == 9)
+						parentNode = node = rootNode;
+					else
+						node = parentNode;
+
+					// Find the ancestor just before the root element
+					while (node !== rootNode) {
+						parentNode = node;
+						node = node.parentNode;
+					}
+
+					// Get the outer/inner HTML depending on if we are in the root and parser and serialize that
+					value = parentNode == rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
+					value = serializer.serialize(parser.parse(value.replace(/<span (id="mce_marker"|id=mce_marker).+<\/span>/i, serializer.serialize(fragment))));
+
+					// Set the inner/outer HTML depending on if we are in the root or not
+					if (parentNode == rootNode)
+						dom.setHTML(rootNode, value);
+					else
+						dom.setOuterHTML(parentNode, value);
+				}
+
+				marker = dom.get('mce_marker');
+
+				// Scroll range into view scrollIntoView on element can't be used since it will scroll the main view port as well
+				if (!tinymce.isIE) {
+					// Scroll the node into view
+					nodeRect = dom.getRect(marker);
+					viewPortRect = dom.getViewPort(editor.getWin());
+
+					// Check if node is out side the viewport if it is then scroll to it
+					if ((nodeRect.y > viewPortRect.y + viewPortRect.h || nodeRect.y < viewPortRect.y) ||
+						(nodeRect.x > viewPortRect.x + viewPortRect.w || nodeRect.x < viewPortRect.x)) {
+						editor.getBody().scrollLeft = nodeRect.x;
+						editor.getBody().scrollTop = nodeRect.y;
+					}
+				}
+
+				// IE might crash if we normalize nodes and we normalize here
+				// to remove empty text nodes produced on Gecko/WebKit so IE isn't affected anyway
+				if (!tinymce.isIE) {
+					marker.parentNode.normalize();
+				}
+
+				// Move selection before marker and remove it
+				rng = dom.createRng();
+				rng.setStartBefore(marker);
+				rng.setEndBefore(marker);
+				selection.setRng(rng);
+				dom.remove(marker);
+
+				// Dispatch after event and add any visual elements needed
 				selection.onSetContent.dispatch(selection, args);
 				editor.addVisual();
 			},
