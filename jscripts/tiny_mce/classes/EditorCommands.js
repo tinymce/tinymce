@@ -286,7 +286,7 @@
 
 			mceInsertContent : function(command, ui, value) {
 				var parser, serializer, parentNode, rootNode, fragment, args,
-					marker, nodeRect, viewPortRect, rng, node, bookmarkHtml;
+					marker, nodeRect, viewPortRect, rng, node, node2, bookmarkHtml;
 
 				// Setup parser and serializer
 				parser = editor.parser;
@@ -306,10 +306,10 @@
 				value = value.replace(/\{\$caret\}/, bookmarkHtml)
 
 				// Insert node maker where we will insert the new HTML and get it's parent
-				if (!editor.selection.isCollapsed())
+				if (!selection.isCollapsed())
 					editor.getDoc().execCommand('Delete', false, null);
 
-				parentNode = editor.selection.getNode();
+				parentNode = selection.getNode();
 
 				// Parse the fragment within the context of the parent node
 				args = {context : parentNode.nodeName.toLowerCase()};
@@ -330,13 +330,21 @@
 
 				// If parser says valid we can insert the contents into that parent
 				if (!args.invalid) {
-					editor.selection.setContent(serializer.serialize(fragment));
+					value = serializer.serialize(fragment);
+
+					// Check if parent is empty or only has one BR element then set the innerHTML of that parent
+					node = parentNode.firstChild;
+					node2 = parentNode.lastChild;
+					if (!node || (node === node2 && node.nodeName === 'BR'))
+						dom.setHTML(parentNode, value);
+					else
+						selection.setContent(value);
 				} else {
 					// If the fragment was invalid within that context then we need
 					// to parse and process the parent it's inserted into
 
 					// Insert bookmark node and get the parent
-					editor.selection.setContent(bookmarkHtml);
+					selection.setContent(bookmarkHtml);
 					parentNode = editor.selection.getNode();
 					rootNode = editor.getBody();
 

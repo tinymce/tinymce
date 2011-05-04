@@ -142,6 +142,45 @@ test('mceInsertContent - p inside empty editor', function() {
 	equals(rng.startContainer.innerHTML, 'abc');
 });
 
+test('mceInsertContent - text inside empty p', function() {
+	var rng;
+
+	expect(7);
+
+	editor.getBody().innerHTML = '<p></p>';
+	setSelection('p', 0);
+	editor.execCommand('mceInsertContent', false, 'abc');
+	equals(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	ok(rng.collapsed);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.startOffset, 1);
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 1);
+	equals(rng.startContainer.innerHTML, 'abc');
+});
+
+test('mceInsertContent - text inside empty p with br caret node', function() {
+	var rng;
+
+	expect(7);
+
+	editor.getBody().innerHTML = '<p><br></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild, 0);
+	rng.setEnd(editor.getBody().firstChild, 0);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertContent', false, 'abc');
+	equals(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	ok(rng.collapsed);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.startOffset, 1);
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 1);
+	equals(rng.startContainer.innerHTML, 'abc');
+});
+
 test('mceInsertContent - image inside p', function() {
 	var rng;
 	
