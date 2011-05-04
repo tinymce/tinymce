@@ -150,7 +150,7 @@ test('mceInsertContent - text inside empty p', function() {
 	editor.getBody().innerHTML = '<p></p>';
 	setSelection('p', 0);
 	editor.execCommand('mceInsertContent', false, 'abc');
-	equals(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
+	equals(editor.getBody().innerHTML.toLowerCase().replace(/^<br>/, ''), '<p>abc</p>'); // Opera inserts a BR at the beginning of contents if the P is empty
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
 	equals(rng.startContainer.nodeName, 'P');

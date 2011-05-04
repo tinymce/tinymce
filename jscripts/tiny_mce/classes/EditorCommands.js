@@ -389,8 +389,18 @@
 
 				// Move selection before marker and remove it
 				rng = dom.createRng();
-				rng.setStartBefore(marker);
-				rng.setEndBefore(marker);
+
+				// If previous sibling is a text node set the selection to the end of that node
+				node = marker.previousSibling;
+				if (node && node.nodeType == 3) {
+					rng.setStart(node, node.nodeValue.length);
+				} else {
+					// If the previous sibling isn't a text node or doesn't exist set the selection before the marker node
+					rng.setStartBefore(marker);
+					rng.setEndBefore(marker);
+				}
+
+				// Remove the marker node and set the new range
 				dom.remove(marker);
 				selection.setRng(rng);
 
