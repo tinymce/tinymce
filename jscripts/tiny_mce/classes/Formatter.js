@@ -279,6 +279,19 @@
 							}
 
 							currentWrapElm.appendChild(node);
+						} else if (nodeName == 'li') {
+							// Start wrapping
+							if (!currentWrapElm) {
+								// Wrap the node
+								liTextNode = node.ownerDocument.createTextNode('');
+								each(tinymce.grep(node.childNodes), function(n) { if (n.nodeType == 3) { liTextNode.nodeValue += n.nodeValue; n.parentNode.removeChild(n); } });
+								currentWrapElm = wrapElm.cloneNode(FALSE);
+								node.insertBefore(currentWrapElm, node.firstChild);
+								newWrappers.push(currentWrapElm);
+							}
+
+							currentWrapElm.appendChild(liTextNode);
+							
 						} else {
 							// Start a new wrapper for possible children
 							currentWrapElm = 0;
