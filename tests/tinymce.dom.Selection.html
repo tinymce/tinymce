@@ -211,12 +211,11 @@ test('getBookmark/setBookmark (simple)', function() {
 	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 });
 
-test('getBookmark/setBookmark (nonintrusive)', function() {
+test('getBookmark/setBookmark (nonintrusive) - simple text selection', function() {
 	var rng, bookmark;
 
-	expect(41);
+	expect(2);
 
-	// Get non intrusive bookmark simple text selection
 	editor.setContent('text');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 1);
@@ -226,6 +225,12 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(editor.getContent(), 'text', 'Editor contents (text)');
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+});
+
+test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function() {
+	var rng, bookmark;
+
+	expect(1);
 
 	// Get non intrusive bookmark simple element selection
 	editor.setContent('<p>text<em>a<strong>b</strong>c</em></p>');
@@ -236,6 +241,12 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	bookmark = editor.selection.getBookmark(2);
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
+});
+
+test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function() {
+	var rng, bookmark;
+
+	expect(2);
 
 	// Get non intrusive bookmark multiple elements text selection
 	editor.setContent('<p>text</p>\n<p>text</p>');
@@ -247,6 +258,12 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
+});
+
+test('getBookmark/setBookmark (nonintrusive)', function() {
+	var rng, bookmark;
+
+	expect(2);
 
 	// Get non intrusive bookmark multiple elements text selection fragmented
 	editor.setContent('<p>text</p><p>text</p>');
@@ -262,6 +279,12 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+});
+
+test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function() {
+	var rng, bookmark;
+
+	expect(2);
 
 	// Get non intrusive bookmark multiple elements text selection fragmented
 	editor.setContent('<p>text</p><p>text</p>');
@@ -278,8 +301,13 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 	editor.selection.moveToBookmark(bookmark);
 	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+});
 
-	// Get bookmark before image
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function() {
+	var rng, bookmark;
+
+	expect(4);
+
 	editor.setContent('<p><img src="about:blank" /></p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 0);
@@ -293,8 +321,13 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(rng.startOffset, 0);
 	equals(rng.endContainer, editor.getBody().firstChild);
 	equals(rng.endOffset, 0);
+});
 
-	// Get bookmark before/after image
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function() {
+	var rng, bookmark;
+
+	expect(4);
+
 	editor.setContent('<p><img src="about:blank" /></p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 0);
@@ -308,8 +341,13 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(rng.startOffset, 0);
 	equals(rng.endContainer, editor.getBody().firstChild);
 	equals(rng.endOffset, 1);
+});
 
-	// Get bookmark after image
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function() {
+	var rng, bookmark;
+
+	expect(4);
+
 	editor.setContent('<p><img src="about:blank" /></p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 1);
@@ -323,8 +361,13 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(rng.startOffset, 1);
 	equals(rng.endContainer, editor.getBody().firstChild);
 	equals(rng.endOffset, 1);
+});
 
-	// Get bookmark before element
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function() {
+	var rng, bookmark;
+
+	expect(4);
+
 	editor.setContent('abc<b>123</b>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 0);
@@ -338,6 +381,12 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(rng.startOffset, 0);
 	equals(rng.endContainer, editor.getBody().firstChild);
 	equals(rng.endOffset, 2);
+});
+
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function() {
+	var rng, bookmark;
+
+	expect(4);
 
 	// Get bookmark after element
 	editor.setContent('<b>123</b>abc');
@@ -353,8 +402,13 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(rng.startOffset, 1);
 	equals(rng.endContainer, editor.getBody().lastChild);
 	equals(rng.endOffset, 2);
+});
 
-	// Get bookmark inside element
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function() {
+	var rng, bookmark;
+
+	expect(4);
+
 	editor.setContent('abc<b>123</b>abc');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().childNodes[1].firstChild, 1);
@@ -368,8 +422,13 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(rng.startOffset, 1);
 	equals(rng.endContainer, editor.getBody().childNodes[1].firstChild);
 	equals(rng.endOffset, 2);
+});
 
-	// Get bookmark inside element
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function() {
+	var rng, bookmark;
+
+	expect(4);
+
 	editor.setContent('abc');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getBody().firstChild, 1);
@@ -383,9 +442,15 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	equals(rng.startOffset, 1);
 	equals(rng.endContainer, editor.getBody().firstChild);
 	equals(rng.endOffset, 2);
+});
 
-	// Get bookmark inside complex html
+test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function() {
+	var rng, bookmark;
+
+	expect(4);
+
 	editor.setContent('<p>abc</p>123<p>123</p><p>123<b>123</b><table><tr><td>abc</td></tr></table></p>');
+	editor.execCommand('SelectAll');
 	setSelection('td', 1, 'td', 2);
 	bookmark = editor.selection.getBookmark(2, true);
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
