@@ -457,14 +457,18 @@
 				}
 			}, schema);
 
-			rootNode = node = new Node(settings.root_name, 11);
+			rootNode = node = new Node(args.context || settings.root_name, 11);
 
 			parser.parse(html);
 
-			if (validate)
-				fixInvalidChildren(invalidChildren);
+			if (validate && invalidChildren.length) {
+				if (!args.context)
+					fixInvalidChildren(invalidChildren);
+				else
+					args.invalid = true;
+			}
 
-			if (rootBlockName)
+			if (rootBlockName && rootNode.name == 'body')
 				addRootBlocks();
 
 			// Run node filters
