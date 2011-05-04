@@ -1,4 +1,5 @@
 Version 3.4.3 (2011-??-??)
+	Fixed bug where the autolink plugin didn't work with non-English keyboards when pressing ).
 	Added possibility to change properties of all table cells in a column.
 	Added external_image_list option to get images list from user-defined variable or function.
 	Fixed bug where the autoresize plugin wouldn't reduce the editors height on Chrome.

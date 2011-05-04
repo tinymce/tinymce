@@ -30,9 +30,12 @@
 		ed.onKeyDown.add(function(ed, e) {
 			if (e.keyCode == 13)
 				return t.handleEnter(ed);
-			if (e.shiftKey && e.keyCode == 48)
-				return t.handleEclipse(ed);
 			});
+
+		ed.onKeyPress.add(function(ed, e) {
+			if (e.which == 41)
+				return t.handleEclipse(ed);
+		});
 
 		// Add a key up handler
 		ed.onKeyUp.add(function(ed, e) {

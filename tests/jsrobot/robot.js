@@ -48,33 +48,30 @@
 				div.innerHTML = appletTag;
 			}
 			this.appletInstance = document.getElementById('robotApplet');
-//			var loadFunction =
-//			this.onload(loadFunction);
 		},
 		
 		callback: function() {
-			this.ready = true;
-			this.setupSymbols();
+			this.initSymbols();
 			if (this.userCallback) {
 				setTimeout(this.userCallback, 100);
 			}
 			return "Callback received.";
 		},
-		
-		setupSymbols: function(){
-			var t = this;
+
+		initSymbols: function(){
 			var input = document.createElement("input");
-			input.id="fake";
 			document.body.appendChild(input);
-			input.focus();
-			function callback(){
+			input.focus(); 
+			var t = this;
+			function loadSymbolsFromInput(){
 				t.symbols = input.value;
+				t.ready = true;
 				document.body.removeChild(input);
 			}
-			for (var i=0;i<9 ;i++) {
-				this.type(48+i, true, function(){},input);
-			}
-			this.type(48+9, true, callback,input);
+
+		  	this.appletAction(input, loadSymbolsFromInput, function() {
+				  return this.getApplet().typeSymbolsAboveNumberKeys();
+			});  
 		},
 
 		type: function(key, shiftKey, callback, focusElement) {
