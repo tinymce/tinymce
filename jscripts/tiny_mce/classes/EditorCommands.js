@@ -389,8 +389,8 @@
 				rng = dom.createRng();
 				rng.setStartBefore(marker);
 				rng.setEndBefore(marker);
-				selection.setRng(rng);
 				dom.remove(marker);
+				selection.setRng(rng);
 
 				// Dispatch after event and add any visual elements needed
 				selection.onSetContent.dispatch(selection, args);

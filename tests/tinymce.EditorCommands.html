@@ -177,6 +177,27 @@ test('mceInsertContent - legacy content', function() {
 	equals(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: xx-large;">font</span></p>');
 });
 
+test('mceInsertContent - hr', function() {
+	var rng;
+	
+	expect(7);
+
+	editor.setContent('<p>123</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertContent', false, '<hr />');
+	equals(editor.getContent(), '<p>1</p><hr /><p>3</p>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	ok(rng.collapsed);
+	equals(rng.startContainer, editor.getBody().lastChild);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.startOffset, 0);
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 0);
+});
+
 test('mceInsertContent - forced root block', function() {
 	var rng;
 	
@@ -199,6 +220,27 @@ test('mceInsertContent - mixed inline content inside td', function() {
 	setSelection('td', 0, 'td', 0);
 	editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
 	equals(editor.getContent(), '<table><tbody><tr><td>test<strong>123</strong><!-- a -->X</td></tr></tbody></table>');
+});
+
+test('InsertHorizontalRule', function() {
+	var rng;
+	
+	expect(7);
+
+	editor.setContent('<p>123</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.execCommand('InsertHorizontalRule');
+	equals(editor.getContent(), '<p>1</p><hr /><p>3</p>');
+	rng = normalizeRng(editor.selection.getRng(true));
+	ok(rng.collapsed);
+	equals(rng.startContainer, editor.getBody().lastChild);
+	equals(rng.startContainer.nodeName, 'P');
+	equals(rng.startOffset, 0);
+	equals(rng.endContainer.nodeName, 'P');
+	equals(rng.endOffset, 0);
 });
 
 tinyMCE.init({
