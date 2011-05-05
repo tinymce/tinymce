@@ -2967,13 +2967,14 @@
 			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
 			// WebKit can't even do simple things like selecting an image
 			// This also fixes so it's possible to select mceItemAnchors
-			if (tinymce.isWebKit) {
+			if (tinymce.isWebKit || tinymce.isOpera) {
 				t.onClick.add(function(ed, e) {
 					e = e.target;
+					if ((tinymce.isWebKit && e.nodeName == 'IMG') || (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor'))) {
+						t.selection.getSel().setBaseAndExtent ? 
+							t.selection.getSel().setBaseAndExtent(e, 0, e, 1) //webKit
+							: t.selection.select(e); //Opera
 
-					// Needs tobe the setBaseAndExtend or it will fail to select floated images
-					if (e.nodeName == 'IMG' || (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor'))) {
-						t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
 						t.nodeChanged();
 					}
 				});
