@@ -13,7 +13,7 @@
 		attrsCharsRegExp = /[&\"\u007E-\uD7FF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
 		textCharsRegExp = /[<>&\u007E-\uD7FF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
 		rawCharsRegExp = /[<>&\"\']/g,
-		entityRegExp = /&(#)?([\w]+);/g,
+		entityRegExp = /&(#)?(([\w])([\w]*));/g,
 		asciiMap = {
 				128 : "\u20AC", 130 : "\u201A", 131 : "\u0192", 132 : "\u201E", 133 : "\u2026", 134 : "\u2020",
 				135 : "\u2021", 136 : "\u02C6", 137 : "\u2030", 138 : "\u0160", 139 : "\u2039", 140 : "\u0152",
@@ -233,9 +233,13 @@
 		 * @return {String} Entity decoded string.
 		 */
 		decode : function(text) {
-			return text.replace(entityRegExp, function(all, numeric, value) {
+			return text.replace(entityRegExp, function(all, numeric, value, firstDigit, rest) {
 				if (numeric) {
-					value = parseInt(value, 10);
+					if (firstDigit == 'x'){
+						value = parseInt(rest, 16);
+					} else {
+						value = parseInt(value, 10);
+					}
 
 					// Support upper UTF
 					if (value > 0xFFFF) {
