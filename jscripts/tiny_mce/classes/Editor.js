@@ -1239,6 +1239,21 @@
 
 			// Setup iframe body
 			if (!isIE || !tinymce.relaxedDomain) {
+				// We need to wait for the load event on Gecko
+				if (isGecko && !s.readonly) {
+					t.getWin().onload = function() {
+						window.setTimeout(function() {
+							var b = t.getBody(), undef;
+
+							// Check if Gecko supports contentEditable mode FF2 doesn't
+							if (b.contentEditable !== undef)
+								b.contentEditable = true;
+							else
+								d.designMode = 'on';
+						}, 1);
+					};
+				}
+
 				d.open();
 				d.write(t.iframeHTML);
 				d.close();
@@ -1247,28 +1262,14 @@
 					d.domain = tinymce.relaxedDomain;
 			}
 
-			// Design mode needs to be added here Ctrl+A will fail otherwise
-			if (!isIE) {
-				try {
-					if (!s.readonly)
-						d.designMode = 'On';
-				} catch (ex) {
-					// Will fail on Gecko if the editor is placed in an hidden container element
-					// The design mode will be set ones the editor is focused
-				}
-			}
+			// It will not steal focus while setting contentEditable
+			b = t.getBody();
+			b.disabled = true;
 
-			// IE needs to use contentEditable or it will display non secure items for HTTPS
-			if (isIE) {
-				// It will not steal focus if we hide it while setting contentEditable
-				b = t.getBody();
-				DOM.hide(b);
+			if (!s.readonly)
+				b.contentEditable = true;
 
-				if (!s.readonly)
-					b.contentEditable = true;
-
-				DOM.show(b);
-			}
+			b.disabled = false;
 
 			/**
 			 * Schema instance, enables you to validate elements and it's children.
@@ -1675,53 +1676,35 @@
 				});
 
 				t.onSetContent.add(t.selection.onSetContent.add(fixLinks));
-
-				if (!s.readonly) {
-					try {
-						// Design mode must be set here once again to fix a bug where
-						// Ctrl+A/Delete/Backspace didn't work if the editor was added using mceAddControl then removed then added again
-						d.designMode = 'Off';
-						d.designMode = 'On';
-					} catch (ex) {
-						// Will fail on Gecko if the editor is placed in an hidden container element
-						// The design mode will be set ones the editor is focused
-					}
-				}
 			}
 
-			// A small timeout was needed since firefox will remove. Bug: #1838304
-			setTimeout(function () {
-				if (t.removed)
-					return;
+			t.load({initial : true, format : 'html'});
+			t.startContent = t.getContent({format : 'raw'});
+			t.undoManager.add();
+			t.initialized = true;
 
-				t.load({initial : true, format : 'html'});
-				t.startContent = t.getContent({format : 'raw'});
-				t.undoManager.add();
-				t.initialized = true;
+			t.onInit.dispatch(t);
+			t.execCallback('setupcontent_callback', t.id, t.getBody(), t.getDoc());
+			t.execCallback('init_instance_callback', t);
+			t.focus(true);
+			t.nodeChanged({initial : 1});
 
-				t.onInit.dispatch(t);
-				t.execCallback('setupcontent_callback', t.id, t.getBody(), t.getDoc());
-				t.execCallback('init_instance_callback', t);
-				t.focus(true);
-				t.nodeChanged({initial : 1});
+			// Load specified content CSS last
+			each(t.contentCSS, function(u) {
+				t.dom.loadCSS(u);
+			});
 
-				// Load specified content CSS last
-				each(t.contentCSS, function(u) {
-					t.dom.loadCSS(u);
-				});
+			// Handle auto focus
+			if (s.auto_focus) {
+				setTimeout(function () {
+					var ed = tinymce.get(s.auto_focus);
 
-				// Handle auto focus
-				if (s.auto_focus) {
-					setTimeout(function () {
-						var ed = tinymce.get(s.auto_focus);
+					ed.selection.select(ed.getBody(), 1);
+					ed.selection.collapse(1);
+					ed.getWin().focus();
+				}, 100);
+			}
 
-						ed.selection.select(ed.getBody(), 1);
-						ed.selection.collapse(1);
-						ed.getWin().focus();
-					}, 100);
-				}
-			}, 1);
-	
 			e = null;
 		},
 
@@ -2936,8 +2919,10 @@
 					if (isGecko && !s.readonly) {
 						if (t._isHidden()) {
 							try {
-								if (!s.content_editable)
-									d.designMode = 'On';
+								if (!s.content_editable) {
+									d.body.contentEditable = false;
+									d.body.contentEditable = true;
+								}
 							} catch (ex) {
 								// Fails if it's hidden
 							}
@@ -2964,20 +2949,20 @@
 				t.onMouseDown.add(setOpts);
 			}
 
-			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
-			// WebKit can't even do simple things like selecting an image
-			// This also fixes so it's possible to select mceItemAnchors
-			if (tinymce.isWebKit) {
-				t.onClick.add(function(ed, e) {
-					e = e.target;
+			t.onClick.add(function(ed, e) {
+				e = e.target;
 
-					// Needs tobe the setBaseAndExtend or it will fail to select floated images
-					if (e.nodeName == 'IMG' || (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor'))) {
-						t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
-						t.nodeChanged();
-					}
-				});
-			}
+				// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
+				// WebKit can't even do simple things like selecting an image
+				// Needs tobe the setBaseAndExtend or it will fail to select floated images
+				if (tinymce.isWebKit && e.nodeName == 'IMG')
+					t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
+
+				if (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor'))
+					t.selection.select(e);
+
+				t.nodeChanged();
+			});
 
 			// Add node change handlers
 			t.onMouseUp.add(t.nodeChanged);
