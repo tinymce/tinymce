@@ -432,7 +432,7 @@ tinyMCEPopup = {
 						return;
 
 					try {
-						// If IE is used, use the trick by Diego Perini
+						// If IE is used, use the trick by Diego Perini licensed under MIT by request to the author.
 						// http://javascript.nwbox.com/IEContentLoaded/
 						document.documentElement.doScroll("left");
 					} catch (ex) {
