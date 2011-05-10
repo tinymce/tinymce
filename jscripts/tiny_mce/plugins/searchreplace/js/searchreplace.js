@@ -11,6 +11,12 @@ var SearchReplaceDialog = {
 		// Focus input field
 		f[m + '_panel_searchstring'].focus();
 		
+		function disableReplaceBtn () {
+			tinymce.DOM.setAttrib(f['replaceBtn'], 'disabled', true);
+		}
+		tinymce.dom.Event.add(f['search_panel_searchstring'], 'keydown', disableReplaceBtn);
+		tinymce.dom.Event.add(f['replace_panel_searchstring'], 'keydown', disableReplaceBtn);
+		
 		mcTabs.onChange.add(function(tab_id, panel_id) {
 			t.switchMode(tab_id.substring(0, tab_id.indexOf('_')));
 		});
@@ -45,6 +51,8 @@ var SearchReplaceDialog = {
 		b = f[m + '_panel_backwardsu'].checked;
 		ca = f[m + '_panel_casesensitivebox'].checked;
 		rs = f['replace_panel_replacestring'].value;
+
+		f['replaceBtn'].removeAttribute('disabled');
 
 		if (tinymce.isIE) {
 			r = ed.getDoc().selection.createRange();
