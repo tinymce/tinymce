@@ -40,7 +40,19 @@
 		 * @return {tinymce.Theme/tinymce.Plugin} Theme or plugin add-on instance or undefined.
 		 */
 		get : function(n) {
-			return this.lookup[n];
+			if (this.lookup[n]) {
+				return this.lookup[n].instance;
+			} else {
+				return undefined;
+			}
+		},
+
+		dependencies : function(n) {
+			var result;
+			if (this.lookup[n]) {
+				result = this.lookup[n].dependencies;
+			}
+			return result || [];
 		},
 
 		/**
@@ -82,9 +94,9 @@
 		 *    plugins : '-test' // Init the plugin but don't try to load it
 		 * });
 		 */
-		add : function(id, o) {
+		add : function(id, o, dependencies) {
 			this.items.push(o);
-			this.lookup[id] = o;
+			this.lookup[id] = {instance:o, dependencies:dependencies};
 			this.onAdd.dispatch(this, id, o);
 
 			return o;
@@ -101,7 +113,7 @@
 		 * @example
 		 * // Loads a plugin from an external URL
 		 * tinymce.PluginManager.load('myplugin', '/some/dir/someplugin/editor_plugin.js');
-		 * 
+		 *
 		 * // Initialize TinyMCE
 		 * tinyMCE.init({
 		 *    ...
@@ -109,18 +121,35 @@
 		 * });
 		 */
 		load : function(n, u, cb, s) {
-			var t = this;
+			var t = this, url = u;
+
+			function loadDependencies() {
+				var dependencies = t.dependencies(n);
+				tinymce.each(dependencies, function(dep){
+					newUrl = {prefix: u.prefix, resource: dep, suffix: u.suffix};
+					t.load(dep, newUrl, undefined, undefined);
+				});
+				if (cb) {
+					if (s) {
+						cb.call(s);
+					} else {
+						cb.call(tinymce.ScriptLoader);
+					}
+				}
+			}
 
 			if (t.urls[n])
 				return;
+			if (typeof u === "object")
+				url = u.prefix + u.resource + u.suffix;
 
-			if (u.indexOf('/') != 0 && u.indexOf('://') == -1)
-				u = tinymce.baseURL + '/' + u;
+			if (url.indexOf('/') != 0 && url.indexOf('://') == -1)
+				url = tinymce.baseURL + '/' + url;
 
-			t.urls[n] = u.substring(0, u.lastIndexOf('/'));
+			t.urls[n] = url.substring(0, url.lastIndexOf('/'));
 
 			if (!t.lookup[n])
-				tinymce.ScriptLoader.add(u, cb, s);
+				tinymce.ScriptLoader.add(url, loadDependencies, s);
 		}
 	});
 
