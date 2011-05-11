@@ -991,7 +991,6 @@
 								PluginManager.load(dependency, {prefix:'plugins/', resource: dependency, suffix:'/editor_plugin' + tinymce.suffix + '.js'});
 								
 							});
-							console.log(p, dependencies);
 						} else {
 							// Skip safari plugin, since it is removed as of 3.3b1
 							if (p == 'safari') {
@@ -1045,7 +1044,6 @@
 			}
 			function initPlugin(p) {
 				var c = PluginManager.get(p), u = PluginManager.urls[p] || tinymce.documentBaseURL.replace(/\/$/, ''), po;
-				
 				if (c && tinymce.inArray(initializedPlugins,p) === -1) {
 					each(PluginManager.dependencies(p), function(dep){
 						initPlugin(dep);
@@ -1054,8 +1052,10 @@
 
 					t.plugins[p] = po;
 
-					if (po.init)
+					if (po.init) {
 						po.init(t, u);
+						initializedPlugins.push(p);
+					}
 				}
 			}
 			
