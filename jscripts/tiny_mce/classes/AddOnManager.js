@@ -132,8 +132,8 @@
 
 			function loadDependencies() {
 				var dependencies = t.dependencies(n);
-				tinymce.each(dependencies, function(dep){
-					var newUrl = t.createUrl( u, dep);
+				tinymce.each(dependencies, function(dep) {
+					var newUrl = t.createUrl(u, dep);
 					t.load(newUrl.resource, newUrl, undefined, undefined);
 				});
 				if (cb) {
@@ -155,8 +155,11 @@
 
 			t.urls[n] = url.substring(0, url.lastIndexOf('/'));
 
-			if (!t.lookup[n])
+			if (t.lookup[n]) {
+				loadDependencies();
+			} else {
 				tinymce.ScriptLoader.add(url, loadDependencies, s);
+			}
 		}
 	});
 

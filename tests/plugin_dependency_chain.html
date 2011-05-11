@@ -16,7 +16,7 @@ function check_plugin_loaded(name){
 	ok(depPlugin, name + " plugin should have loaded");
 	
 }
-test('Dependency Chain', function() {
+test('Dependency Chain Legacy style test', function() {
 	expect(3);
 	check_plugin_loaded("example");
 	check_plugin_loaded("example_dependency");
@@ -32,7 +32,7 @@ tinymce.create('tinymce.plugins.DependencyChain', {});
 	mode : "exact",
 	elements : "elm1",
 	add_unload_trigger : false,
-	plugins: "-depend_chain",
+	plugins: "depend_chain",
 	init_instance_callback : function(ed) {
 		editor = ed;
 
