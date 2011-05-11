@@ -101,6 +101,13 @@
 
 			return o;
 		},
+		createUrl: function(baseUrl, dep) {
+			if (typeof dep === "object") {
+				return dep
+			} else {
+				return {prefix: baseUrl.prefix, resource: dep, suffix: baseUrl.suffix};
+			}
+		},
 
 		/**
 		 * Loads an add-on from a specific url.
@@ -126,8 +133,8 @@
 			function loadDependencies() {
 				var dependencies = t.dependencies(n);
 				tinymce.each(dependencies, function(dep){
-					newUrl = {prefix: u.prefix, resource: dep, suffix: u.suffix};
-					t.load(dep, newUrl, undefined, undefined);
+					var newUrl = t.createUrl( u, dep);
+					t.load(newUrl.resource, newUrl, undefined, undefined);
 				});
 				if (cb) {
 					if (s) {

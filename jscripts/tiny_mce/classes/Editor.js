@@ -987,8 +987,10 @@
 						if (p.charAt(0) == '-') {
 							p = p.substr(1, p.length);
 							var dependencies = PluginManager.dependencies(p);
-							each(dependencies, function(dependency) {
-								PluginManager.load(dependency, {prefix:'plugins/', resource: dependency, suffix:'/editor_plugin' + tinymce.suffix + '.js'});
+							each(dependencies, function(dep) {
+								var defaultSettings = {prefix:'plugins/', resource: dep, suffix:'/editor_plugin' + tinymce.suffix + '.js'};
+								var dep = PluginManager.createUrl(defaultSettings, dep);
+								PluginManager.load(dep.resource, dep);
 								
 							});
 						} else {
