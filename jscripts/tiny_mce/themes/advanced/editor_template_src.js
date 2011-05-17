@@ -593,6 +593,7 @@
 
 				if (evt.altKey) {
 		 			if (evt.keyCode === DOM_VK_F10) {
+						window.focus();
 						t.toolbarGroup.focus();
 						return Event.cancel(evt);
 					} else if (evt.keyCode === DOM_VK_F11) {
