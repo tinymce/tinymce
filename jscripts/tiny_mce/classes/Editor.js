@@ -1262,9 +1262,22 @@
 							var b = t.getBody(), undef;
 
 							// Check if Gecko supports contentEditable mode FF2 doesn't
-							if (b.contentEditable !== undef)
+							if (b.contentEditable !== undef) {
 								b.contentEditable = true;
-							else
+
+								// Caret doesn't get rendered when you mousedown on the HTML element on FF 3.x
+								t.onMouseDown.add(function(ed, e) {
+									if (e.target.nodeName === "HTML") {
+										d.designMode = 'on'; // Render the caret
+
+										// Remove design mode again after a while so it has some time to execute
+										window.setTimeout(function() {
+											d.designMode = 'off';
+											t.getBody().focus();
+										}, 1);
+									}
+								});
+							} else
 								d.designMode = 'on';
 						}, 1);
 					};
