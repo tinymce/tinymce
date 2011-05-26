@@ -1263,6 +1263,8 @@
 
 							// Check if Gecko supports contentEditable mode FF2 doesn't
 							if (b.contentEditable !== undef) {
+								// Setting the contentEditable off/on seems to force caret mode in the editor and enabled auto focus
+								b.contentEditable = false;
 								b.contentEditable = true;
 
 								// Caret doesn't get rendered when you mousedown on the HTML element on FF 3.x
@@ -1295,7 +1297,7 @@
 			b = t.getBody();
 			b.disabled = true;
 
-			if (!s.readonly)
+			if (!isGecko && !s.readonly)
 				b.contentEditable = true;
 
 			b.disabled = false;
@@ -1732,6 +1734,7 @@
 
 					ed.selection.select(ed.getBody(), 1);
 					ed.selection.collapse(1);
+					ed.getBody().focus();
 					ed.getWin().focus();
 				}, 100);
 			}

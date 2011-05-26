@@ -474,7 +474,7 @@
 			},
 
 			mceInsertLink : function(command, ui, value) {
-				var link = dom.getParent(selection.getNode(), 'a'), img, style, class;
+				var link = dom.getParent(selection.getNode(), 'a'), img, style, cls;
 
 				if (tinymce.is(value, 'string'))
 					value = {href : value};
@@ -490,7 +490,7 @@
 
 						if (img) {
 							style = img.style.cssText;
-							class = img.className;
+							cls = img.className;
 							img.style.cssText = null;
 							img.className = null;
 						}
@@ -501,8 +501,8 @@
 					// Restore styles
 					if (style)
 						img.style.cssText = style;
-					if (class)
-						img.className = class;
+					if (cls)
+						img.className = cls;
 
 					each(dom.select("a[href='javascript:mctmp(0);']"), function(link) {
 						dom.setAttribs(link, value);
