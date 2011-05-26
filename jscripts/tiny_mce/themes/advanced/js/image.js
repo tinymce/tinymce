@@ -4,7 +4,7 @@ var ImageDialog = {
 
 		tinyMCEPopup.requireLangPack();
 
-		if (url = tinyMCEPopup.getParam("external_image_list_url"))
+		if (url = tinyMCEPopup.getParam("image_list_url"))
 			document.write('<script language="javascript" type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
 	},
 
@@ -18,7 +18,7 @@ var ImageDialog = {
 
 		e = ed.selection.getNode();
 
-		this.fillFileList('image_list', tinyMCEPopup.getParam('external_image_list', 'tinyMCEImageList'));
+		this.fillFileList('image_list', tinyMCEPopup.getParam('image_list', 'tinyMCEImageList'));
 
 		if (e.nodeName == 'IMG') {
 			f.src.value = ed.dom.getAttrib(e, 'src');

@@ -4,12 +4,12 @@ var ImageDialog = {
 
 		tinyMCEPopup.requireLangPack();
 
-		if (url = tinyMCEPopup.getParam("external_image_list_url"))
+		if (url = tinyMCEPopup.getParam("image_list_url"))
 			document.write('<script language="javascript" type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
 	},
 
 	init : function(ed) {
-		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, dom = ed.dom, n = ed.selection.getNode(), fl = tinyMCEPopup.getParam('external_image_list', 'tinyMCEImageList');
+		var f = document.forms[0], nl = f.elements, ed = tinyMCEPopup.editor, dom = ed.dom, n = ed.selection.getNode(), fl = tinyMCEPopup.getParam('image_list', 'tinyMCEImageList');
 
 		tinyMCEPopup.resizeToInnerSize();
 		this.fillClassList('class_list');

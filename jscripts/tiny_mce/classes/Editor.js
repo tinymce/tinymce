@@ -65,6 +65,17 @@
 			t.queryValueCommands = {};
 
 			/**
+			 * Map of deprecated option names.
+			 */
+			t.deprecated = {
+				'image_list' : 'external_image_list',
+				'image_list_url' : 'external_image_list_url',
+				'link_list_url' : 'external_link_list_url',
+				'media_list_url' : 'media_external_list_url',
+				'template_list_url' : 'template_external_list_url'
+			};
+
+			/**
 			 * State to force the editor to return false on a isDirty call. 
 			 *
 			 * @property isNotDirty
@@ -1973,7 +1984,12 @@
 		 * var someval2 = tinyMCE.get('my_editor').getParam('myvalue');
 		 */
 		getParam : function(n, dv, ty) {
-			var tr = tinymce.trim, v = is(this.settings[n]) ? this.settings[n] : dv, o;
+			var tr = tinymce.trim, v, o;
+
+			if (is(this.settings[n]) || ((n = this.deprecated[n]) && is(this.settings[n])))
+				v = this.settings[n];
+			else
+				v = dv;
 
 			if (ty === 'hash') {
 				o = {};

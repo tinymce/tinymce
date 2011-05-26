@@ -1,10 +1,11 @@
 Version 3.4.3 (2011-??-??)
-	Fixed bug where alt-f10 was not always giving focus to the toolbar on Safari.
 	Added new 'allow_html_in_named_anchor' option to allow html to occur within a named anchor tag.  Use at own risk.
 	Added plugin dependency support.  Will autoload plugins specified as a dependency if they haven't been loaded.
-	Fixed bug where the autolink plugin didn't work with non-English keyboards when pressing ).
 	Added possibility to change properties of all table cells in a column.
 	Added external_image_list option to get images list from user-defined variable or function.
+	Unified external list options naming. Old names are still supported.
+	Fixed bug where alt-f10 was not always giving focus to the toolbar on Safari.
+	Fixed bug where the autolink plugin didn't work with non-English keyboards when pressing ).
 	Fixed bug where the autoresize plugin wouldn't reduce the editors height on Chrome.
 	Fixed bug where table size inputs were to small for values with size units.
 	Fixed bug where table cell/row size input values were not validated.

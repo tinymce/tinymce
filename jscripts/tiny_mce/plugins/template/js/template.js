@@ -2,7 +2,7 @@ tinyMCEPopup.requireLangPack();
 
 var TemplateDialog = {
 	preInit : function() {
-		var url = tinyMCEPopup.getParam("template_external_list_url");
+		var url = tinyMCEPopup.getParam("template_list_url");
 
 		if (url != null)
 			document.write('<sc'+'ript language="javascript" type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></sc'+'ript>');
