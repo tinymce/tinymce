@@ -44,8 +44,10 @@
 				u = (s.base_uri ? s.base_uri.protocol || 'http' : 'http') + '://mce_host' + u;
 
 			// Relative path http:// or protocol relative //path
-			if (!/^\w*:?\/\//.test(u))
-				u = (s.base_uri.protocol || 'http') + '://mce_host' + t.toAbsPath(s.base_uri.path, u);
+			if (!/^\w*:?\/\//.test(u)) {
+				var base_uri = s.base_uri ? s.base_uri.path : new tinymce.util.URI(location.href).directory;
+				u = ((s.base_uri && s.base_uri.protocol) || 'http') + '://mce_host' + t.toAbsPath(base_uri, u);
+			}
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
 			u = u.replace(/@@/g, '(mce_at)'); // Zope 3 workaround, they use @@something
