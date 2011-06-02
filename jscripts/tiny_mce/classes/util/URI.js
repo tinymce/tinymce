@@ -25,7 +25,7 @@
 		 * @param {Object} s Optional settings object.
 		 */
 		URI : function(u, s) {
-			var t = this, o, a, b;
+			var t = this, o, a, b, base_url;
 
 			// Trim whitespace
 			u = tinymce.trim(u);
@@ -45,8 +45,8 @@
 
 			// Relative path http:// or protocol relative //path
 			if (!/^\w*:?\/\//.test(u)) {
-				var base_uri = s.base_uri ? s.base_uri.path : new tinymce.util.URI(location.href).directory;
-				u = ((s.base_uri && s.base_uri.protocol) || 'http') + '://mce_host' + t.toAbsPath(base_uri, u);
+				base_url = s.base_uri ? s.base_uri.path : new tinymce.util.URI(location.href).directory;
+				u = ((s.base_uri && s.base_uri.protocol) || 'http') + '://mce_host' + t.toAbsPath(base_url, u);
 			}
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
