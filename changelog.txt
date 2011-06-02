@@ -1,4 +1,5 @@
 Version 3.4.3 (2011-??-??)
+	Fixed bug where exception was thrown in tinymce.util.URI when parsing a relative URI and no base_uri setting was provided.
 	Fixed bug where alt-f10 was not always giving focus to the toolbar on Safari.
 	Added new 'allow_html_in_named_anchor' option to allow html to occur within a named anchor tag.  Use at own risk.
 	Added plugin dependency support.  Will autoload plugins specified as a dependency if they haven't been loaded.
