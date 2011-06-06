@@ -1678,6 +1678,10 @@
 									if (isCaretNode(node)) {
 										textNode = node.firstChild;
 
+										// Find the first text node within node
+										while (textNode && textNode.nodeType != 3)
+											textNode = textNode.firstChild;
+
 										if (textNode) {
 											perform(node);
 
