@@ -1,4 +1,6 @@
 Version 3.4.3 (2011-??-??)
+	Fixed bug where applied styles wouldn't be kept if you pressed enter twice to produce two paragraphs.
+	Fixed bug where a ghost like caret would appear on Gecko when pressing enter while having a text color applied.
 	Fixed bug where IE would produce absolute urls if you inserted a image/link and reloaded the page.
 	Fixed bug where applying a heading style to a list item would cascade style to children list items.
 	Fixed bug where Editor loses focus when backspacing and changing styles in WebKit.
