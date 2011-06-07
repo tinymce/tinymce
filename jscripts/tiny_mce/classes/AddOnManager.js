@@ -110,6 +110,20 @@
 		},
 
 		/**
+	 	 * Add a set of components that will make up the add-on. Using the url of the add-on name as the base url.
+		 * This should be used in development mode.  A new compressor/javascript munger process will ensure that the 
+		 * components are put together into the editor_plugin.js file and compressed correctly.
+		 * @param pluginName {String} name of the plugin to load scripts from (will be used to get the base url for the plugins).
+		 * @param scripts {Array} Array containing the names of the scripts to load.
+	 	 */
+		addComponents: function(pluginName, scripts) {
+			var pluginUrl = this.urls[pluginName];
+			tinymce.each(scripts, function(script){
+				tinymce.ScriptLoader.add(pluginUrl+"/"+script);	
+			});
+		},
+
+		/**
 		 * Loads an add-on from a specific url.
 		 *
 		 * @method load
