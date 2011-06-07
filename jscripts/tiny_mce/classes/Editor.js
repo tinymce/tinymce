@@ -1373,16 +1373,20 @@
 
 			// Convert src and href into data-mce-src, data-mce-href and data-mce-style
 			t.parser.addAttributeFilter('src,href,style', function(nodes, name) {
-				var i = nodes.length, node, dom = t.dom, value;
+				var i = nodes.length, node, dom = t.dom, value, internalName;
 
 				while (i--) {
 					node = nodes[i];
 					value = node.attr(name);
+					internalName = 'data-mce-' + name;
 
-					if (name === "style")
-						node.attr('data-mce-style', dom.serializeStyle(dom.parseStyle(value), node.name));
-					else
-						node.attr('data-mce-' + name, t.convertURL(value, name, node.name));
+					// Add internal attribute if we need to we don't on a refresh of the document
+					if (!node.attributes.map[internalName]) {	
+						if (name === "style")
+							node.attr(internalName, dom.serializeStyle(dom.parseStyle(value), node.name));
+						else
+							node.attr(internalName, t.convertURL(value, name, node.name));
+					}
 				}
 			});
 

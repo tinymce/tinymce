@@ -1,4 +1,5 @@
 Version 3.4.3 (2011-??-??)
+	Fixed bug where IE would produce absolute urls if you inserted a image/link and reloaded the page.
 	Fixed bug where applying a heading style to a list item would cascade style to children list items.
 	Fixed bug where Editor loses focus when backspacing and changing styles in WebKit.
 	Fixed bug where exception was thrown in tinymce.util.URI when parsing a relative URI and no base_uri setting was provided.
