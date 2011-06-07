@@ -1250,16 +1250,19 @@
 		 *
 		 * @method setupIframe
 		 */
-		setupIframe : function() {
+		setupIframe : function(filled) {
 			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
 			// Setup iframe body
-			if (!isIE || !tinymce.relaxedDomain) {
+			if ((!isIE || !tinymce.relaxedDomain) && !filled) {
 				// We need to wait for the load event on Gecko
 				if (isGecko && !s.readonly) {
 					t.getWin().onload = function() {
 						window.setTimeout(function() {
 							var b = t.getBody(), undef;
+
+							// Editable element needs to have some contents or backspace/delete won't work properly for some odd reason on FF 3.6 or older
+							b.innerHTML = '<br>';
 
 							// Check if Gecko supports contentEditable mode FF2 doesn't
 							if (b.contentEditable !== undef) {
@@ -1281,6 +1284,10 @@
 								});
 							} else
 								d.designMode = 'on';
+
+							// Call setup frame once the contentEditable/designMode has been initialized
+							// since the caret won't be rendered some times otherwise.
+							t.setupIframe(true);
 						}, 1);
 					};
 				}
@@ -1291,6 +1298,10 @@
 
 				if (tinymce.relaxedDomain)
 					d.domain = tinymce.relaxedDomain;
+
+				// Wait for iframe onload event on Gecko
+				if (isGecko && !s.readonly)
+					return;
 			}
 
 			// It will not steal focus while setting contentEditable
