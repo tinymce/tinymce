@@ -522,6 +522,9 @@
 				var i, l = nodes.length, node, blockElements = schema.getBlockElements(),
 					nonEmptyElements = schema.getNonEmptyElements(), parent, prev, prevName;
 
+				// Remove brs from body element as well
+				blockElements.body = 1;
+
 				// Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
 				for (i = 0; i < l; i++) {
 					node = nodes[i];

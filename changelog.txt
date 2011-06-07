@@ -26,6 +26,7 @@ Version 3.4.3 (2011-??-??)
 	Fixed bug where the mceInsertCommand didn't retain the values of links if they contained non url contents.
 	Fixed bug where the valid_styles option wouldn't be properly used on styles for specific elements.
 	Fixed so contentEditable is used for the body of the editor if it's supported.
+	Fixed so trailing BR elements gets removed even when forced_root_blocks option was set to false/null.
 	Fixed performance issue with mceInsertCommand and inserting very simple contents.
 	Fixed performance issue with older IE version and huge documents by optimizing the forced root blocks logic.
 	Fixed performance issue with table plugin where it checked for selected cells to often.
