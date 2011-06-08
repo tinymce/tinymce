@@ -44,7 +44,7 @@
 				u = (s.base_uri ? s.base_uri.protocol || 'http' : 'http') + '://mce_host' + u;
 
 			// Relative path http:// or protocol relative //path
-			if (!/^\w*:?\/\//.test(u)) {
+			if (!/^[\w-]*:?\/\//.test(u)) {
 				base_url = s.base_uri ? s.base_uri.path : new tinymce.util.URI(location.href).directory;
 				u = ((s.base_uri && s.base_uri.protocol) || 'http') + '://mce_host' + t.toAbsPath(base_url, u);
 			}
