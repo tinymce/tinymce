@@ -168,6 +168,67 @@
 				}
 			};
 
+			function imageJoiningListItem(ed, e) {
+				if (!tinymce.isGecko)
+					return;
+
+				var n = ed.selection.getStart();
+				if (e.keyCode != 8 || n.tagName !== 'IMG') 
+					return;
+
+				function lastLI(node) {
+					var child = node.firstChild;
+					var li = null;
+					do {
+						if (!child)
+							break;
+
+						if (child.tagName === 'LI')
+							li = child;
+					} while (child = child.nextSibling);
+
+					return li;
+				}
+
+				function addChildren(parentNode, destination) {
+					while (parentNode.childNodes.length > 0)
+						destination.appendChild(parentNode.childNodes[0]);
+				}
+
+				var ul;
+				if (n.parentNode.previousSibling.tagName === 'UL' || n.parentNode.previousSibling.tagName === 'OL')
+					ul = n.parentNode.previousSibling;
+				else if (n.parentNode.previousSibling.previousSibling.tagName === 'UL' || n.parentNode.previousSibling.previousSibling.tagName === 'OL')
+					ul = n.parentNode.previousSibling.previousSibling;
+				else
+					return;
+
+				var li = lastLI(ul);
+
+				// move the caret to the end of the list item
+				var rng = ed.dom.createRng();
+				rng.setStart(li, 1);
+				rng.setEnd(li, 1);
+				ed.selection.setRng(rng);
+				ed.selection.collapse(true);
+
+				// save a bookmark at the end of the list item
+				var bookmark = ed.selection.getBookmark();
+
+				// copy the image an its text to the list item
+				var clone = n.parentNode.cloneNode(true);
+				if (clone.tagName === 'P' || clone.tagName === 'DIV')
+					addChildren(clone, li);
+				else
+					li.appendChild(clone);
+					
+				// remove the old copy of the image
+				n.parentNode.parentNode.removeChild(n.parentNode);
+
+				// move the caret where we saved the bookmark
+				ed.selection.moveToBookmark(bookmark);
+			}
+
 			this.ed = ed;
 			ed.addCommand('Indent', this.indent, this);
 			ed.addCommand('Outdent', this.outdent, this);
@@ -221,6 +282,7 @@
 			});
 			ed.onKeyPress.add(cancelKeys);
 			ed.onKeyDown.add(cancelKeys);
+			ed.onKeyDown.add(imageJoiningListItem);
 		},
 		
 		applyList: function(targetListType, oppositeListType) {
