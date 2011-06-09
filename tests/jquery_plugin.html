@@ -8,7 +8,7 @@
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
-	google.load("jquery", "1.3");
+	google.load("jquery", "1.6");
 </script>
 <script type="text/javascript" src="../jscripts/tiny_mce/classes/adapter/jquery/jquery.tinymce.js"></script>
 <script>
@@ -98,8 +98,10 @@ $().ready(function() {
 		theme_advanced_resizing : true,
 
 		init_instance_callback : function(ed) {
-			// When both editors are initi
-			if (tinyMCE.get('elm1').initialized && tinyMCE.get('elm2').initialized)
+			var ed1 = tinyMCE.get('elm1'), ed2 = tinyMCE.get('elm2');
+
+			// When both editors are initialized
+			if (ed1 && ed1.initialized && ed2 && ed2.initialized)
 				QUnit.start();
 		}
 	});
