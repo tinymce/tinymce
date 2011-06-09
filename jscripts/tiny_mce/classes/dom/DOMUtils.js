@@ -867,14 +867,17 @@
 			ro = ro || d.body;
 
 			if (n) {
-				// Use getBoundingClientRect on IE, Opera has it but it's not perfect
-				if (isIE && !t.stdMode) {
+				// Use getBoundingClientRect if it exists since it's faster than looping offset nodes
+				if (n.getBoundingClientRect) {
 					n = n.getBoundingClientRect();
 					e = t.boxModel ? d.documentElement : d.body;
-					x = t.getStyle(t.select('html')[0], 'borderWidth'); // Remove border
-					x = (x == 'medium' || t.boxModel && !t.isIE6) && 2 || x;
 
-					return {x : n.left + e.scrollLeft - x, y : n.top + e.scrollTop - x};
+					// Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit
+					// Also remove the body/documentelement clientTop/clientLeft on IE 6, 7 since they offset the position
+					x = n.left + (d.documentElement.scrollLeft || d.body.scrollLeft) - e.clientTop;
+					y = n.top + (d.documentElement.scrollTop || d.body.scrollTop) - e.clientLeft;
+
+					return {x : x, y : y};
 				}
 
 				r = n;
