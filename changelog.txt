@@ -36,6 +36,8 @@ Version 3.4.3 (2011-??-??)
 	Fixed performance issue with older IE version and huge documents by optimizing the forced root blocks logic.
 	Fixed performance issue with table plugin where it checked for selected cells to often.
 	Fixed bug where creating a link on centered/floated image would produce an error on WebKit browsers.
+	Fixed bug where Gecko would remove single paragraphs if there where contents before/after it.
+	Fixed bug where the scrollbar would move up/down when pasting contents using the paste plugin.
 Version 3.4.2 (2011-04-07)
 	Added new 'paste_text_sticky_default' option to paste plugin, enables you to set the default state for paste as plain text.
 	Added new autoresize_bottom_margin option to autoresize plugin that enables you to add an extra margin at the bottom. Patch contributed by Andrew Ozz.

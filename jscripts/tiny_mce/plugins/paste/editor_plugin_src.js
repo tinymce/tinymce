@@ -76,7 +76,7 @@
 			// This function executes the process handlers and inserts the contents
 			// force_rich overrides plain text mode set by user, important for pasting with execCommand
 			function process(o, force_rich) {
-				var dom = ed.dom, rng, nodes;
+				var dom = ed.dom, rng;
 
 				// Execute pre process handlers
 				t.onPreProcess.dispatch(t, o);
@@ -89,11 +89,9 @@
 				if (tinymce.isGecko) {
 					rng = ed.selection.getRng(true);
 					if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == 3) {
-						nodes = dom.select('p,h1,h2,h3,h4,h5,h6,pre', o.node);
-
 						// Is only one block node and it doesn't contain word stuff
-						if (nodes.length == 1 && o.content.indexOf('__MCE_ITEM__') === -1)
-							dom.remove(nodes.reverse(), true);
+						if (o.node.childNodes.length === 1 && /^(p|h[1-6]|pre)$/.test(o.node.firstChild.nodeName) && o.content.indexOf('__MCE_ITEM__') === -1)
+							dom.remove(o.node.firstChild, true);
 					}
 				}
 
@@ -172,13 +170,14 @@
 				if (body != ed.getDoc().body)
 					posY = dom.getPos(ed.selection.getStart(), body).y;
 				else
-					posY = body.scrollTop + dom.getViewPort().y;
+					posY = body.scrollTop + dom.getViewPort(ed.getWin()).y;
 
 				// Styles needs to be applied after the element is added to the document since WebKit will otherwise remove all styles
+				// If also needs to be in view on IE or the paste would fail
 				dom.setStyles(n, {
 					position : 'absolute',
-					left : 0,
-					top : posY,
+					left : tinymce.isGecko ? -40 : 0, // Need to move it out of site on Gecko since it will othewise display a ghost resize rect for the div
+					top : posY - 25,
 					width : 1,
 					height : 1,
 					overflow : 'hidden'
