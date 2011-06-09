@@ -1,4 +1,5 @@
 Version 3.4.3 (2011-??-??)
+	Fixed bug where styles plugin would not apply styles across multiple selected block elements correctly.
 	Fixed bug where cursor would jump to start of document when selection contained empty table cells in IE8.
 	Fixed bug where applied styles wouldn't be kept if you pressed enter twice to produce two paragraphs.
 	Fixed bug where a ghost like caret would appear on Gecko when pressing enter while having a text color applied.

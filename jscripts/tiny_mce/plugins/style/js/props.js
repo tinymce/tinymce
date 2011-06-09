@@ -372,7 +372,7 @@ function applyAction() {
 	generateCSS();
 
 	tinyMCEPopup.restoreSelection();
-	ed.dom.setAttrib(ed.selection.getNode(), 'style', tinyMCEPopup.editor.dom.serializeStyle(tinyMCEPopup.editor.dom.parseStyle(ce.style.cssText)));
+	ed.dom.setAttrib(ed.selection.getSelectedBlocks(), 'style', tinyMCEPopup.editor.dom.serializeStyle(tinyMCEPopup.editor.dom.parseStyle(ce.style.cssText)));
 }
 
 function updateAction() {
