@@ -177,7 +177,7 @@
 				// Styles needs to be applied after the element is added to the document since WebKit will otherwise remove all styles
 				dom.setStyles(n, {
 					position : 'absolute',
-					left : -10000,
+					left : 0,
 					top : posY,
 					width : 1,
 					height : 1,
