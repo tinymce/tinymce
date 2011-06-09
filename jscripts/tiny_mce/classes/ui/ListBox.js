@@ -231,7 +231,7 @@
 		 * @method showMenu
 		 */
 		showMenu : function() {
-			var t = this, p1, p2, e = DOM.get(this.id), m;
+			var t = this, p2, e = DOM.get(this.id), m;
 
 			if (t.isDisabled() || t.items.length == 0)
 				return;
@@ -244,7 +244,6 @@
 				t.isMenuRendered = true;
 			}
 
-			p1 = DOM.getPos(this.settings.menu_container);
 			p2 = DOM.getPos(e);
 
 			m = t.menu;
