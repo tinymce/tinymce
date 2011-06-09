@@ -1,4 +1,4 @@
-Version 3.4.3 (2011-??-??)
+Version 3.4.3 (2011-06-09)
 	Fixed bug where deleting backwards before an image into a list would put the cursor in the wrong location.
 	Fixed bug where styles plugin would not apply styles across multiple selected block elements correctly.
 	Fixed bug where cursor would jump to start of document when selection contained empty table cells in IE8.
