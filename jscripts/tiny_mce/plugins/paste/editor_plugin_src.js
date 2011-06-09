@@ -90,7 +90,7 @@
 					rng = ed.selection.getRng(true);
 					if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == 3) {
 						// Is only one block node and it doesn't contain word stuff
-						if (o.node.childNodes.length === 1 && /^(p|h[1-6]|pre)$/.test(o.node.firstChild.nodeName) && o.content.indexOf('__MCE_ITEM__') === -1)
+						if (o.node.childNodes.length === 1 && /^(p|h[1-6]|pre)$/i.test(o.node.firstChild.nodeName) && o.content.indexOf('__MCE_ITEM__') === -1)
 							dom.remove(o.node.firstChild, true);
 					}
 				}
