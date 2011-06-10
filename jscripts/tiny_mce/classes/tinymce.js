@@ -129,6 +129,15 @@
 			 * @final
 			 */
 			t.isIDevice = /(iPad|iPhone)/.test(ua);
+			
+			/**
+			 * Constant that is true if the current browser is running on iOS 5 or greater.
+			 *
+			 * @property isIOS5
+			 * @type Boolean
+			 * @final
+			 */
+			t.isIOS5 = t.isIDevice && ua.match(/AppleWebKit\/(\d*)/)[1]>=534;
 
 			// TinyMCE .NET webcontrol might be setting the values for TinyMCE
 			if (win.tinyMCEPreInit) {
