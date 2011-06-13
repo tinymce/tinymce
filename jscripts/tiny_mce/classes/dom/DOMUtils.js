@@ -59,7 +59,7 @@
 		 * @param {settings} s Optional settings collection.
 		 */
 		DOMUtils : function(d, s) {
-			var t = this, globalStyle;
+			var t = this, globalStyle, name;
 
 			t.doc = d;
 			t.win = window;
@@ -90,7 +90,7 @@
 				}
 			}
 
-			if (isIE) {
+			if (isIE && s.schema) {
 				// Add missing HTML 4/5 elements to IE
 				('abbr article aside audio canvas ' +
 				'details figcaption figure footer ' +
@@ -99,6 +99,11 @@
 				'time video').replace(/\w+/g, function(name) {
 					d.createElement(name);
 				});
+
+				// Create all custom elements
+				for (name in s.schema.getCustomElements()) {
+					d.createElement(name);
+				}
 			}
 
 			tinymce.addUnload(t.destroy, t);

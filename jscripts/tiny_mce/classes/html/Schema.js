@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap,
+	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap, customElementsMap = {},
 		whiteSpaceElementsMap, selfClosingElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
 
 	function split(str, delim) {
@@ -386,10 +386,16 @@
 			if (custom_elements) {
 				each(split(custom_elements), function(rule) {
 					var matches = customElementRegExp.exec(rule),
-						cloneName = matches[1] === '~' ? 'span' : 'div',
+						inline = matches[1] === '~',
+						cloneName = inline ? 'span' : 'div',
 						name = matches[2];
 
 					children[name] = children[cloneName];
+					customElementsMap[name] = cloneName;
+
+					// If it's not marked as inline then add it to valid block elements
+					if (!inline)
+						blockElementsMap[name] = {};
 
 					// Add custom elements at span/div positions
 					each(children, function(element, child) {
@@ -596,6 +602,16 @@
 				if (element.pattern.test(name))
 					return element;
 			}
+		};
+
+		/**
+		 * Returns an map object of all custom elements.
+		 *
+		 * @method getCustomElements
+		 * @return {Object} Name/value map object of all custom elements.
+		 */
+		self.getCustomElements = function() {
+			return customElementsMap;
 		};
 
 		/**

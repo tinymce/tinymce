@@ -1,5 +1,7 @@
 Version 3.4.x (2011-??-??)
 	Added support for IOS5.
+	Fixed bug where custom_elements option wasn't working properly on IE browsers.
+	Fixed bug where custom_elements marked as block elements wouldn't get correctly treated as block elements.
 Version 3.4.3 (2011-06-09)
 	Fixed bug where deleting backwards before an image into a list would put the cursor in the wrong location.
 	Fixed bug where styles plugin would not apply styles across multiple selected block elements correctly.
