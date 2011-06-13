@@ -244,7 +244,7 @@ tinymce.html.Styles = function(settings, schema) {
 			var css = '', name, value;
 
 			function serializeStyles(name) {
-				var styleList, i, l, name, value;
+				var styleList, i, l, value;
 
 				styleList = schema.styles[name];
 				if (styleList) {
