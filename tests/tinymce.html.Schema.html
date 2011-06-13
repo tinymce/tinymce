@@ -246,6 +246,17 @@ test('addValidChildren', function() {
 	schema.addValidChildren('-body[p]');
 	ok(!schema.isValidChild('body', 'p'));
 });
+
+test('addCustomElements/getCustomElements', function() {
+	expect(4);
+
+	var schema = new tinymce.html.Schema();
+	schema.addCustomElements('~inline,block');
+	ok(schema.getBlockElements()['block']);
+	ok(!schema.getBlockElements()['inline']);
+	ok(schema.getCustomElements()['inline']);
+	ok(schema.getCustomElements()['block']);
+});
 </script>
 </head>
 <body>
