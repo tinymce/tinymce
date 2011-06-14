@@ -303,7 +303,7 @@
 					value += '{$caret}';
 
 				// Replace the caret marker with a span bookmark element
-				value = value.replace(/\{\$caret\}/, bookmarkHtml)
+				value = value.replace(/\{\$caret\}/, bookmarkHtml);
 
 				// Insert node maker where we will insert the new HTML and get it's parent
 				if (!selection.isCollapsed())
