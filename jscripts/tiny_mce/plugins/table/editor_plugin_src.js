@@ -963,6 +963,40 @@
 					cleanup();
 				});
 
+				ed.onKeyDown.add(function (ed, e) {
+					fixTableCellSelection(ed);
+				});
+
+				ed.onMouseDown.add(function (ed, e) {
+					if (e.button != 2) {
+						fixTableCellSelection(ed);
+					}
+				});
+
+				function fixTableCellSelection(ed) {
+					if (!tinymce.isWebKit)
+						return;
+
+					var rng = ed.selection.getRng();
+					var n = ed.selection.getNode();
+					var currentRow = ed.dom.getParent(rng.startContainer, 'TD');
+
+					// Detect when the user triple clicks inside of a table cell.
+					// When triple clicking inside of the cell in the last row and last column, n.nodeName will be 'BODY'.
+					if (rng.startContainer.nodeType != 3 || rng.startOffset != 0 || rng.endOffset != 0 || !currentRow ||
+					   (rng.endContainer.nodeName !== 'TD' && n.nodeName !== 'BODY'))
+						return;
+
+					// Get the very last node inside the table cell
+					var end = currentRow.lastChild;
+					while (end.lastChild)
+						end = end.lastChild;
+
+					// Select the entire table cell. Nothing outside of the table cell should be selected.
+					rng.setEnd(end, end.nodeValue.length);
+					ed.selection.setRng(rng);
+				};
+
 				// Add context menu
 				if (ed && ed.plugins.contextmenu) {
 					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
