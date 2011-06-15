@@ -98,7 +98,7 @@ test('Parse elements', function() {
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<b href=\'"&amp;<>\'></b>');
-	equals(writer.getContent(), '<b href="&quot;&amp;<>"></b>', 'Parse attributes with <> in them.');
+	equals(writer.getContent(), '<b href="&quot;&amp;&lt;&gt;"></b>', 'Parse attributes with <> in them.');
 	deepEqual(counter.counts, {start:1, end:1}, 'Parse attributes with <> in them (count).');
 
 	var counter = createCounter(writer);
@@ -210,7 +210,7 @@ test('Parse elements', function() {
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<span title="<test" data-test="test>"></span>');
-	equals(writer.getContent(), 'text1<span title="<test" data-test="test>"></span>', 'Parse element with </> in attributes.');
+	equals(writer.getContent(), 'text1<span title="&lt;test" data-test="test&gt;"></span>', 'Parse element with </> in attributes.');
 	deepEqual(counter.counts, {text: 1, start: 1, end: 1}, 'Parse element with </> in attributes counts.');
 
 	var counter = createCounter(writer);
