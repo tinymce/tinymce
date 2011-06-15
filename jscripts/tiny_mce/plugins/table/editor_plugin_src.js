@@ -928,7 +928,7 @@
 									return;
 								}
 							} while (node = (start ? walker.next() : walker.prev()));
-						};
+						}
 
 						// Try to expand text selection as much as we can only Gecko supports cell selection
 						selectedCells = dom.select('td.mceSelected,th.mceSelected');
@@ -972,30 +972,43 @@
 						fixTableCellSelection(ed);
 					}
 				});
+				
+				function tableCellSelected(ed, rng, n, currentCell) {
+					// The decision of when a table cell is selected is somewhat involved.  The fact that this code is
+					// required is actually a pointer to the root cause of this bug. A cell is selected when the start 
+					// and end offsets are 0, the start container is a text, and the selection node is either a TR (most cases),
+					// or the parent of the table (in the case of the selection containing the last cell of a table).
+					var TEXT_NODE = 3, table = ed.dom.getParent(rng.startContainer, 'TABLE'), tableParent;
 
+					if (table) 
+						tableParent = table.parentNode;
+					return rng.startContainer.nodeType == TEXT_NODE && 
+							rng.startOffset == 0 && 
+							rng.endOffset == 0 && 
+							currentCell && 
+							(n.nodeName=="TR" || n==tableParent);							
+				}
+				
 				function fixTableCellSelection(ed) {
 					if (!tinymce.isWebKit)
 						return;
 
 					var rng = ed.selection.getRng();
 					var n = ed.selection.getNode();
-					var currentRow = ed.dom.getParent(rng.startContainer, 'TD');
-
-					// Detect when the user triple clicks inside of a table cell.
-					// When triple clicking inside of the cell in the last row and last column, n.nodeName will be 'BODY'.
-					if (rng.startContainer.nodeType != 3 || rng.startOffset != 0 || rng.endOffset != 0 || !currentRow ||
-					   (rng.endContainer.nodeName !== 'TD' && n.nodeName !== 'BODY'))
+					var currentCell = ed.dom.getParent(rng.startContainer, 'TD');
+				
+					if (!tableCellSelected(ed, rng, n, currentCell))
 						return;
-
+					
 					// Get the very last node inside the table cell
-					var end = currentRow.lastChild;
+					var end = currentCell.lastChild;
 					while (end.lastChild)
 						end = end.lastChild;
 
 					// Select the entire table cell. Nothing outside of the table cell should be selected.
 					rng.setEnd(end, end.nodeValue.length);
 					ed.selection.setRng(rng);
-				};
+				}
 
 				// Add context menu
 				if (ed && ed.plugins.contextmenu) {
