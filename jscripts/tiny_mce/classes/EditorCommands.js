@@ -362,7 +362,14 @@
 
 					// Get the outer/inner HTML depending on if we are in the root and parser and serialize that
 					value = parentNode == rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
-					value = serializer.serialize(parser.parse(value.replace(/<span (id="mce_marker"|id=mce_marker).+<\/span>/i, serializer.serialize(fragment))));
+					value = serializer.serialize(
+						parser.parse(
+							// Need to replace by using a function since $ in the contents would otherwise be a problem
+							value.replace(/<span (id="mce_marker"|id=mce_marker).+<\/span>/i, function() {
+								return serializer.serialize(fragment);
+							})
+						)
+					);
 
 					// Set the inner/outer HTML depending on if we are in the root or not
 					if (parentNode == rootNode)
