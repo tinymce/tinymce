@@ -47,7 +47,7 @@ test('Urls convert urls and force format', function() {
 		return '|' + url + '|';
 	}});
 
-	expect(8);
+	expect(9);
 
 	equals(styles.serialize(styles.parse('background: url(a)')), "background: url('|a|');");
 	equals(styles.serialize(styles.parse('background: url("a")')), "background: url('|a|');");
@@ -57,6 +57,7 @@ test('Urls convert urls and force format', function() {
 	equals(styles.serialize(styles.parse("background: url(    'a'    )")), "background: url('|a|');");
 	equals(styles.serialize(styles.parse('background1: url(a); background2: url("a"); background3: url(\'a\')')), "background1: url('|a|'); background2: url('|a|'); background3: url('|a|');");
 	equals(styles.serialize(styles.parse("background: url('http://www.site.com/a?a=b&c=d')")), "background: url('|http://www.site.com/a?a=b&c=d|');");
+	equals(styles.serialize(styles.parse("background: url('http://www.site.com/a_190x144.jpg');")), "background: url('|http://www.site.com/a_190x144.jpg|');");
 });
 
 test('Compress styles', function() {

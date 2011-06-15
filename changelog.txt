@@ -1,5 +1,6 @@
 Version 3.4.x (2011-??-??)
-	Added support for IOS5.
+	Added support for iOS 5 that now supporting contentEditable in it's latest beta.
+	Fixed bug where urls in style attributes with a _ character followed by a number would cause incorrect output.
 	Fixed bug where custom_elements option wasn't working properly on IE browsers.
 	Fixed bug where custom_elements marked as block elements wouldn't get correctly treated as block elements.
 	Fixed bug where attributes with </> wasn't properly encoded as XML entities.
