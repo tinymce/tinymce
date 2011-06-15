@@ -76,7 +76,7 @@
 			// This function executes the process handlers and inserts the contents
 			// force_rich overrides plain text mode set by user, important for pasting with execCommand
 			function process(o, force_rich) {
-				var dom = ed.dom, rng;
+				var dom = ed.dom, rng, nodes;
 
 				// Execute pre process handlers
 				t.onPreProcess.dispatch(t, o);
@@ -89,9 +89,11 @@
 				if (tinymce.isGecko) {
 					rng = ed.selection.getRng(true);
 					if (rng.startContainer == rng.endContainer && rng.startContainer.nodeType == 3) {
+						nodes = dom.select('p,h1,h2,h3,h4,h5,h6,pre', o.node);
+
 						// Is only one block node and it doesn't contain word stuff
-						if (o.node.childNodes.length === 1 && /^(p|h[1-6]|pre)$/i.test(o.node.firstChild.nodeName) && o.content.indexOf('__MCE_ITEM__') === -1)
-							dom.remove(o.node.firstChild, true);
+						if (nodes.length == 1 && o.content.indexOf('__MCE_ITEM__') === -1)
+							dom.remove(nodes.reverse(), true);
 					}
 				}
 
@@ -99,7 +101,7 @@
 				t.onPostProcess.dispatch(t, o);
 
 				// Serialize content
-				o.content = ed.serializer.serialize(o.node, {getInner : 1, forced_root_block : ''});
+				o.content = ed.serializer.serialize(o.node, {getInner : 1});
 
 				// Plain text option active?
 				if ((!force_rich) && (ed.pasteAsPlainText)) {
@@ -170,14 +172,13 @@
 				if (body != ed.getDoc().body)
 					posY = dom.getPos(ed.selection.getStart(), body).y;
 				else
-					posY = body.scrollTop + dom.getViewPort(ed.getWin()).y;
+					posY = body.scrollTop + dom.getViewPort().y;
 
 				// Styles needs to be applied after the element is added to the document since WebKit will otherwise remove all styles
-				// If also needs to be in view on IE or the paste would fail
 				dom.setStyles(n, {
 					position : 'absolute',
-					left : tinymce.isGecko ? -40 : 0, // Need to move it out of site on Gecko since it will othewise display a ghost resize rect for the div
-					top : posY - 25,
+					left : -10000,
+					top : posY,
 					width : 1,
 					height : 1,
 					overflow : 'hidden'
@@ -358,17 +359,8 @@
 			}
 
 			// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
-			if (tinymce.isIE && document.documentMode >= 9) {
-				// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
+			if (tinymce.isIE && document.documentMode >= 9)
 				process([[/(?:<br>&nbsp;[\s\r\n]+|<br>)*(<\/?(h[1-6r]|p|div|address|pre|form|table|tbody|thead|tfoot|th|tr|td|li|ol|ul|caption|blockquote|center|dl|dt|dd|dir|fieldset)[^>]*>)(?:<br>&nbsp;[\s\r\n]+|<br>)*/g, '$1']]);
-
-				// IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
-				process([
-					[/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
-					[/<br>/g, ' '], // Replace single br elements with space since they are word wrap BR:s
-					[/<BR><BR>/g, '<br>'], // Replace back the double brs but into a single BR
-				]);
-			}
 
 			// Detect Word content and process it more aggressive
 			if (/class="?Mso|style="[^"]*\bmso-|w:WordDocument/i.test(h) || o.wordContent) {
@@ -380,7 +372,7 @@
 					/^\s*(&nbsp;)+/gi,				// &nbsp; entities at the start of contents
 					/(&nbsp;|<br[^>]*>)+\s*$/gi		// &nbsp; entities at the end of contents
 				]);
-
+				
 				if (getParam(ed, "paste_convert_headers_to_strong")) {
 					h = h.replace(/<p [^>]*class="?MsoHeading"?[^>]*>(.*?)<\/p>/gi, "<p><strong>$1</strong></p>");
 				}
@@ -578,7 +570,7 @@
 			o.content = h;
 		},
 
-		/**
+		/*
 		 * Various post process items.
 		 */
 		_postProcess : function(pl, o) {
@@ -587,7 +579,6 @@
 			if (ed.settings.paste_enable_default_filters == false) {
 				return;
 			}
-			
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
 				each(dom.select('a', o.node), function(a) {
@@ -624,7 +615,7 @@
 						}
 
 						// Remove all of the existing styles
-						dom.setAttrib(el, 'style', '');
+						//dom.setAttrib(el, 'style', '');
 
 						if (styleProps && npc > 0)
 							dom.setStyles(el, newStyle); // Add back the stored subset of styles
@@ -650,6 +641,11 @@
 					});
 				}
 			}
+			// Set in _convertLists, keeps OL style even if style tag is removed above.
+			each(dom.select('ol[data-mce-list-type]', o.node), function(el) {
+				el.style.setProperty('list-style-type',el.getAttribute('data-mce-list-type'),'');
+				el.removeAttribute('data-mce-list-type');
+			});
 		},
 
 		/**
@@ -659,7 +655,8 @@
 			var dom = pl.editor.dom, listElm, li, lastMargin = -1, margin, levels = [], lastType, html;
 
 			// Convert middot lists into real semantic lists
-			each(dom.select('p', o.node), function(p) {
+			each(dom.select('p', o.node), function(p,i) {
+			
 				var sib, val = '', type, html, idx, parents;
 
 				// Get text node value at beginning of paragraph
@@ -669,13 +666,31 @@
 				val = p.innerHTML.replace(/<\/?\w+[^>]*>/gi, '').replace(/&nbsp;/g, '\u00a0');
 
 				// Detect unordered lists look for bullets
-				if (/^(__MCE_ITEM__)+[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*\u00a0*/.test(val))
+				
+				if (/^[__MCE_ITEM__]+[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*\u00a0*/.test(val))
 					type = 'ul';
 
 				// Detect ordered lists 1., a. or ixv.
-				if (/^__MCE_ITEM__\s*\w+\.\s*\u00a0+/.test(val))
+				if (/^[__MCE_ITEM__]+\s*\w+[\.\)]\s*\u00a0+/.test(val))
 					type = 'ol';
 
+				var typeStyle = '';
+
+				if(type=='ol'){
+					if(/^[__MCE_ITEM__]+\s*[a-z][\.\)]\s*/.test(val))
+						typeStyle = 'lower-alpha';
+						
+					if(/^[__MCE_ITEM__]+\s*[A-Z][\.\)]\s*/.test(val))
+						typeStyle = 'upper-alpha';
+
+					if(/^[__MCE_ITEM__]+\s*[ixv][\.\)]\s*/.test(val))
+						typeStyle = 'lower-roman';	
+
+					if(/^[__MCE_ITEM__]+\s*[IXV][\.\)]\s*/.test(val))
+						typeStyle = 'upper-roman';
+			
+				};
+				
 				// Check if node value matches the list pattern: o&nbsp;&nbsp;
 				if (type) {
 					margin = parseFloat(p.style.marginLeft || 0);
@@ -686,40 +701,50 @@
 					if (!listElm || type != lastType) {
 						listElm = dom.create(type);
 						dom.insertAfter(listElm, p);
-					} else {
+						if (typeStyle.length) {
+							dom.setAttrib(listElm,'data-mce-list-type',typeStyle);
+							/*listElm.style.setProperty('list-style-type', typeStyle, '');*/
+						}
+					}
+					else {
 						// Nested list element
 						if (margin > lastMargin) {
 							listElm = li.appendChild(dom.create(type));
-						} else if (margin < lastMargin) {
-							// Find parent level based on margin value
-							idx = tinymce.inArray(levels, margin);
-							parents = dom.getParents(listElm.parentNode, type);
-							listElm = parents[parents.length - 1 - idx] || listElm;
 						}
+						else 
+							if (margin < lastMargin) {
+								// Find parent level based on margin value
+								idx = tinymce.inArray(levels, margin);
+								parents = dom.getParents(listElm.parentNode, type);
+								listElm = parents[parents.length - 1 - idx] || listElm;
+							}
 					}
-
-					// Remove middot or number spans if they exists
+				
+					
+					// Remove middot or number spans if they exists					
 					each(dom.select('span', p), function(span) {
+						//console.log(span)
 						var html = span.innerHTML.replace(/<\/?\w+[^>]*>/gi, '');
-
 						// Remove span with the middot or the number
 						if (type == 'ul' && /^__MCE_ITEM__[\u2022\u00b7\u00a7\u00d8o\u25CF]/.test(html))
 							dom.remove(span);
-						else if (/^__MCE_ITEM__[\s\S]*\w+\.(&nbsp;|\u00a0)*\s*/.test(html))
+						else if (/^__MCE_ITEM__[\s\S]*\w+[\.\)](&nbsp;|\u00a0)*\s*/.test(html))
 							dom.remove(span);
 					});
 
 					html = p.innerHTML;
-
-					// Remove middot/list items
+					
+					// Remove middot/list items	
+					//<br> is added by IE in place of newline chars				
 					if (type == 'ul')
-						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*(&nbsp;|\u00a0)+\s*/, '');
-					else
-						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^\s*\w+\.(&nbsp;|\u00a0)+\s*/, '');
-
+						html = p.innerHTML.replace(/^[__MCE_ITEM__]+/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o\u25CF](<br>|&nbsp;|\u00a0)+\s*/, '');
+					else 
+						html = p.innerHTML.replace(/[__MCE_ITEM__]+(\s|&nbsp;)+(<br>|&nbsp;|\u00a0)+/g, '').replace(/^\s*\w+[\.\)](&nbsp;|\u00a0)+\s*(<br>)*/, '');
 					// Create li and add paragraph data into the new li
 					li = listElm.appendChild(dom.create('li', 0, html));
 					dom.remove(p);
+					
+					//console.log(html);
 
 					lastMargin = margin;
 					lastType = type;
@@ -729,8 +754,10 @@
 
 			// Remove any left over makers
 			html = o.node.innerHTML;
+			
 			if (html.indexOf('__MCE_ITEM__') != -1)
 				o.node.innerHTML = html.replace(/__MCE_ITEM__/g, '');
+						
 		},
 
 		/**
