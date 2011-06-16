@@ -307,7 +307,7 @@
 				ed.onMouseDown.add(c.hideMenu, c);
 			} else {
 				cls = t._cls.button || tinymce.ui.Button;
-				c = new cls(id, s);
+				c = new cls(id, s, ed);
 			}
 
 			return t.add(c);

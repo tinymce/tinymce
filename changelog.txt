@@ -1,4 +1,5 @@
 Version 3.4.x (2011-??-??)
+	Fixed bug where custom buttons were not being rendered correctly when in high contrast mode.
 	Added support for iOS 5 that now supporting contentEditable in it's latest beta.
 	Fixed bug where urls in style attributes with a _ character followed by a number would cause incorrect output.
 	Fixed bug where custom_elements option wasn't working properly on IE browsers.
