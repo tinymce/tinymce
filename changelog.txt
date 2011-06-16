@@ -1,4 +1,4 @@
-Version 3.4.x (2011-??-??)
+Version 3.4.3.1 (2011-06-16)
 	Fixed bug where listboxes were not being handled correctly by JAWS in firefox with the o2k7 skin.
 	Fixed bug where custom buttons were not being rendered correctly when in high contrast mode.
 	Added support for iOS 5 that now supporting contentEditable in it's latest beta.
