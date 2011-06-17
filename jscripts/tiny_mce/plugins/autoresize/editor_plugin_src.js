@@ -37,8 +37,10 @@
 			function resize() {
 				var d = ed.getDoc(), b = d.body, de = d.documentElement, DOM = tinymce.DOM, resizeHeight = t.autoresize_min_height, myHeight;
 
+				DOM.setStyle(DOM.get(ed.id + '_ifr'), 'height', '0px');
+				
 				// Get height differently depending on the browser used
-				myHeight = tinymce.isIE ? b.scrollHeight : d.body.offsetHeight;
+				myHeight = tinymce.isIE ? ((tinymce.isIE6) ? b.scrollHeight : de.scrollHeight + 5) : de.body.offsetHeight;
 
 				// Don't make it smaller than the minimum height
 				if (myHeight > t.autoresize_min_height)
@@ -58,9 +60,13 @@
 				}
 
 				// if we're throbbing, we'll re-throb to match the new size
-				if (t.throbbing) {
+				if (t.throbbing && !tinymce.isIE) {
 					ed.setProgressState(false);
 					ed.setProgressState(true);
+				}
+				
+				if(ed.onResize !== null && ed.onResize !== undefined) {
+					ed.onResize(null, resizeHeight);
 				}
 			};
 
@@ -97,17 +103,27 @@
 
 				ed.onLoadContent.add(function(ed, l) {
 					resize();
-
-					// Because the content area resizes when its content CSS loads,
-					// and we can't easily add a listener to its onload event,
-					// we'll just trigger a resize after a short loading period
-					setTimeout(function() {
-						resize();
-
+					
+					var doDelayedResize = function doDelayedResize() {
+						if(ed.getDoc() !== null) {
+							resize();
+						}
 						// Disable throbber
 						ed.setProgressState(false);
 						t.throbbing = false;
-					}, 1250);
+					};
+
+					var curTimoutID = null;
+					if(Ext.isIE == true) { // use onload Event plus short timeout
+						var links = ed.dom.select("link");
+						for(var i = 0, len = links.length; i < len; i++) {
+							links.onload = function() {
+								if(curTimeoutID !== null) { clearTimeout(curTimeoutID); }
+								curTimoutID = setTimeout(doDelayedResize, 200);
+							}
+						}
+					}
+					curTimoutID = setTimeout(doDelayedResize, 500);
 				});
 			}
 
