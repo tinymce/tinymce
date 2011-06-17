@@ -1227,7 +1227,7 @@
 				allowTransparency : "true",
 				title : s.aria_label,
 				style : {
-					width : '100%',
+					width : w,
 					height : h
 				}
 			});
