@@ -1130,7 +1130,8 @@
 					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
 
 				if (re.test('' + h))
-					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
+					h = Math.max(parseInt(h) + (o.deltaHeight || 0),
+							s.theme_advanced_resizing_min_height || 100);
 
 				// Render UI
 				o = t.theme.renderUI({
@@ -1172,8 +1173,8 @@
 			}
 
 			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
-			if (h < 100)
-				h = 100;
+			if (h < s.theme_advanced_resizing_min_height || 100)
+				h = s.theme_advanced_resizing_min_height || 100;
 
 			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml">';
 
