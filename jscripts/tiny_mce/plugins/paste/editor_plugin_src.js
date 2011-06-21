@@ -267,8 +267,9 @@
 									h += n.innerHTML;
 							});
 						} else {
-							// Found WebKit weirdness so force the content into plain text mode
-							h = '<pre>' + dom.encode(textContent).replace(/\r?\n/g, '<br />') + '</pre>';
+							// Found WebKit weirdness so force the content into paragraphs this seems to happen when you paste plain text from Nodepad etc
+							// So this logic will replace double enter with paragraphs and single enter with br so it kind of looks the same
+							h = '<p>' + dom.encode(textContent).replace(/\r?\n\r?\n/g, '</p><p>').replace(/\r?\n/g, '<br />') + '</p>';
 						}
 
 						// Remove the nodes

@@ -1,6 +1,7 @@
 Version 3.4.x (2011-xx-xx)
 	Fixed bug where selection of table cells would produce an exception on Gecko.
 	Fixed bug where the caret wasn't properly rendered on Gecko when the editor was hidden.
+	Fixed bug where pasting plain text into WebKit would produce a pre element it will now produce more semantic markup.
 Version 3.4.3.1 (2011-06-16)
 	Fixed bug where listboxes were not being handled correctly by JAWS in firefox with the o2k7 skin.
 	Fixed bug where custom buttons were not being rendered correctly when in high contrast mode.
