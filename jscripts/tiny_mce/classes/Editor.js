@@ -1273,6 +1273,10 @@
 								// Caret doesn't get rendered when you mousedown on the HTML element on FF 3.x
 								t.onMouseDown.add(function(ed, e) {
 									if (e.target.nodeName === "HTML") {
+										// Setting the contentEditable off/on seems to force caret mode in the editor and enabled auto focus
+										b.contentEditable = false;
+										b.contentEditable = true;
+
 										d.designMode = 'on'; // Render the caret
 
 										// Remove design mode again after a while so it has some time to execute
