@@ -750,6 +750,16 @@
 			if (!r)
 				r = doc.createRange ? doc.createRange() : doc.body.createTextRange();
 
+			// If range is default range pointing to document move it to the first valid position
+			if (r && r.setStart && r.collapsed && r.startContainer === doc) {
+				// TODO: Add walker logic here so it finds a better node location
+				elm = doc.body.firstChild;
+				if (elm) {
+					r.setStartBefore(elm);
+					r.setEndBefore(elm);
+				}
+			}
+
 			if (t.selectedRange && t.explicitRange) {
 				if (r.compareBoundaryPoints(r.START_TO_START, t.selectedRange) === 0 && r.compareBoundaryPoints(r.END_TO_END, t.selectedRange) === 0) {
 					// Safari, Opera and Chrome only ever select text which causes the range to change.
