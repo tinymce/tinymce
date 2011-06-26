@@ -1588,12 +1588,12 @@
 						if (elements && elements[node.nodeName.toLowerCase()])
 							return false;
 
-						// Keep elements with data attributes or name attribute like <a name="1"></a>
+						// Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
 						attributes = self.getAttribs(node);
 						i = node.attributes.length;
 						while (i--) {
 							name = node.attributes[i].nodeName;
-							if (name === "name" || name.indexOf('data-') === 0)
+							if (name === "name" || name === 'data-mce-bookmark')
 								return false;
 						}
 					}

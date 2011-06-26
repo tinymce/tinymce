@@ -584,7 +584,7 @@
 		DOM.remove('test');
 	});
 
-	test('isEmpty', 10, function() {
+	test('isEmpty', 12, function() {
 		DOM.schema = new tinymce.html.Schema(); // A schema will be added when used within a editor instance
 		DOM.add(document.body, 'div', {id : 'test'}, '');
 
@@ -616,6 +616,12 @@
 
 		DOM.setHTML('test', '<img src="x">');
 		ok(!DOM.isEmpty(DOM.get('test')), 'Non empty html with img element');
+
+		DOM.setHTML('test', '<span data-mce-bookmark="1"></span>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Span with bookmark attribute.');
+
+		DOM.setHTML('test', '<span data-mce-style="color:Red"></span>');
+		ok(DOM.isEmpty(DOM.get('test')), 'Span with data-mce attribute.');
 
 		DOM.remove('test');
 	});
