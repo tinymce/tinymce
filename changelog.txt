@@ -5,6 +5,7 @@ Version 3.4.x (2011-xx-xx)
 	Fixed bug where selecting list type formats using the advlist plugin on IE8 would loose editor selection.
 	Fixed bug where forced root blocks logic wouldn't properly pad elements created if they contained data attributes.
 	Fixed bug where it would remove all contents of the editor if you inserted an image when not having a caret in the document.
+	Fixed bug where the YUI compressor wouldn't properly encode strings with only a quote in them.
 Version 3.4.3.1 (2011-06-16)
 	Fixed bug where listboxes were not being handled correctly by JAWS in firefox with the o2k7 skin.
 	Fixed bug where custom buttons were not being rendered correctly when in high contrast mode.
