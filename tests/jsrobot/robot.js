@@ -51,7 +51,9 @@
 		},
 		
 		callback: function() {
-			this.initSymbols();
+			if (window.robotUsesSymbols){
+				this.initSymbols();
+			}
 			if (this.userCallback) {
 				setTimeout(this.userCallback, 100);
 			}
@@ -82,7 +84,10 @@
 			});
 		},
 
-		typeSymbol: function(symbol, callback, focusElement) {
+		typeSymbol: function(symbol, callback, focusElement) { 
+			if (!window.robotUsesSymbols) {
+				alert("need to define the attribute\nwindow.robotUsesSymbols\nbefore using the typeSymbol function.");
+			}
 			var t = this;
 
 			var symbolNumber = t.symbols.search("\\"+symbol);
