@@ -26,7 +26,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 	 * @return {String} HTML for the toolbar control.
 	 */
 	renderHTML : function() {
-		var t = this, h = '', c, co, s = t.settings, i, pr, nx, cl;
+		var t = this, h = ['<tbody><tr>'], c, co, dom = tinymce.DOM, s = t.settings, i, pr, nx, cl;
 
 		cl = t.controls;
 		for (i=0; i<cl.length; i++) {
@@ -46,29 +46,30 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				else if (co.ListBox)
 					c += ' mceToolbarStartListBox';
 
-				h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
+				h.push(dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->')));
 			}
 
 			// Add toolbar end before list box and after the previous button
 			// This is to fix the o2k7 editor skins
 			if (pr && co.ListBox) {
 				if (pr.Button || pr.SplitButton)
-					h += dom.createHTML('td', {'class' : 'mceToolbarEnd'}, dom.createHTML('span', null, '<!-- IE -->'));
+					h.push(dom.createHTML('td', {'class' : 'mceToolbarEnd'}, dom.createHTML('span', null, '<!-- IE -->')));
 			}
 
 			// Render control HTML
-
 			// IE 8 quick fix, needed to propertly generate a hit area for anchors
 			if (dom.stdMode)
-				h += '<td style="position: relative">' + co.renderHTML() + '</td>';
+				h.push('<td style="position: relative">', co.renderHTML(), '</td>');
 			else
-				h += '<td>' + co.renderHTML() + '</td>';
+				h.push('<td>', co.renderHTML(), '</td>');
+				
+
 
 			// Add toolbar start after list box and before the next button
 			// This is to fix the o2k7 editor skins
 			if (nx && co.ListBox) {
 				if (nx.Button || nx.SplitButton)
-					h += dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->'));
+					h.push(dom.createHTML('td', {'class' : 'mceToolbarStart'}, dom.createHTML('span', null, '<!-- IE -->')));
 			}
 		}
 
@@ -81,9 +82,15 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		else if (co.ListBox)
 			c += ' mceToolbarEndListBox';
 
-		h += dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->'));
+		h.push(dom.createHTML('td', {'class' : c}, dom.createHTML('span', null, '<!-- IE -->')));
 
-		return dom.createHTML('table', {id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || '', role: 'presentation', tabindex: '-1'}, '<tbody><tr>' + h + '</tr></tbody>');
-	}
+
+		h.push('</tr></tbody>');
+		return dom.createHTML('table', 
+			{id : t.id, 'class' : 'mceToolbar' + (s['class'] ? ' ' + s['class'] : ''), cellpadding : '0', cellspacing : '0', align : t.settings.align || '', role: 'presentation', tabindex: '-1'}, 
+			h.join(""));
+			
+			
+		}
 });
 })(tinymce);

@@ -99,7 +99,7 @@ save_desc:"Save",
 cancel_desc:"Cancel all changes"
 },
 nonbreaking:{
-nonbreaking_desc:"Insert non-breaking space character"
+nonbreaking_desc:"Insert Non-Breaking Space"
 },
 iespell:{
 iespell_desc:"Run spell checking",
@@ -145,7 +145,7 @@ text_linebreaks:"Keep linebreaks",
 word_title:"Use CTRL+V on your keyboard to paste the text into the window."
 },
 table:{
-desc:"Inserts a new table",
+desc:"Inserts or Modify a Table",
 row_before_desc:"Insert row before",
 row_after_desc:"Insert row after",
 delete_row_desc:"Delete row",
@@ -172,20 +172,20 @@ restore_content:"Restore auto-saved content.",
 warning_message:"If you restore the saved content, you will lose all the content that is currently in the editor.\n\nAre you sure you want to restore the saved content?."
 },
 fullscreen:{
-desc:"Toggle fullscreen mode"
+desc:"Toggle Fullscreen Mode"
 },
 media:{
-desc:"Insert / edit embedded media",
+desc:"Insert/Edit Embedded Media",
 edit:"Edit embedded media"
 },
 fullpage:{
-desc:"Document properties"
+desc:"Document Properties"
 },
 template:{
-desc:"Insert predefined template content"
+desc:"Insert Predefined Template Content"
 },
 visualchars:{
-desc:"Visual control characters on/off."
+desc:"Visual Control Characters On/Off."
 },
 spellchecker:{
 desc:"Toggle spellchecker",
@@ -200,7 +200,7 @@ no_mpell:"No misspellings found.",
 learn_word:"Learn word" 
 },
 pagebreak:{
-desc:"Insert page break."
+desc:"Insert Page Break."
 },
 advlist:{
 types:"Types",

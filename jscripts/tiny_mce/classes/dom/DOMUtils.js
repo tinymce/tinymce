@@ -429,20 +429,23 @@
 		 * tinyMCE.activeEditor.selection.setContent(tinyMCE.activeEditor.dom.createHTML('a', {href : 'test.html'}, 'some line'));
 		 */
 		createHTML : function(n, a, h) {
-			var o = '', t = this, k;
+			var o = [], t = this, k;
 
-			o += '<' + n;
+			o.push('<', n);
 
 			for (k in a) {
+				
 				if (a.hasOwnProperty(k))
-					o += ' ' + k + '="' + t.encode(a[k]) + '"';
+					o.push(' ', k, '="', t.encode(a[k]), '"');
 			}
 
 			// A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
 			if (typeof(h) != "undefined")
-				return o + '>' + h + '</' + n + '>';
+				 o.push('>', h, '</', n, '>');
+			else 
+				o.push(' />');
 
-			return o + ' />';
+			return o.join("");
 		},
 
 		/**
