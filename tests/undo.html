@@ -19,6 +19,7 @@ function isUndoEnabled() {
 }
 
 function assertUndoEnabledWhenTyping(c, expectedContent) {
+	editor.focus();
 	editor.setContent('<p>Content</p>');
 
 	editor.undoManager.clear();
