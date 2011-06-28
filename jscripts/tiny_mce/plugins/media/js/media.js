@@ -80,7 +80,10 @@
 			this.formToData();
 			editor.execCommand('mceRepaint');
 			tinyMCEPopup.restoreSelection();
-			editor.selection.setNode(editor.plugins.media.dataToImg(this.data));
+			// editor.selection.setNode will eat the content of the editor if the cursor is not in the content,
+      // so use getNode() to retrieve the current node and add our HTML there.
+      // editor.selection.setNode(editor.plugins.media.dataToImg(this.data));
+      editor.dom.add(editor.selection.getNode(), 'div', {}, this.editor.plugins.media.dataToHtml(this.data, true))
 			tinyMCEPopup.close();
 		},
 
