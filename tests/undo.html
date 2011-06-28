@@ -18,16 +18,31 @@ function isUndoEnabled() {
 	return !editor.controlManager.get('undo').isDisabled();
 }
 
+// The following code never made it into the main codebase -- but it might be useful one day.  
+// If you're seeing this in August 2011 or later, please delete.			
+			// in webkit the iframe window needs to be given focus before selection
+			// will behave correctly.  This code assigns focus to the tinymce window, giving it back to the
+			// main window if it started with it.
+//			if (tinymce.isWebKit) {
+//				var hadFocus = document.hasFocus();
+//				t.getWin().focus();
+//				if (hadFocus) {
+//					window.focus();
+//				}
+//			}
+
+
 function assertUndoEnabledWhenTyping(c, expectedContent) {
-	editor.focus();
 	editor.setContent('<p>Content</p>');
 
 	editor.undoManager.clear();
 	editor.undoManager.add();
 	editor.execCommand('mceRepaint');
+	// Need to focus the editor before setting selection in order to get the editor typing working correctly.
+	// All evidence points to the normal APIs not needing an editor.focus() call
+	editor.focus();
 	setSelection('p', 4);
 	ok(!isUndoEnabled(), 'Undo starts disabled.');
-	editor.focus();
 	robot.type(c, false, function() {
 		equals(editor.getContent(), expectedContent);
 		ok(isUndoEnabled(), 'Undo is enabled.');
