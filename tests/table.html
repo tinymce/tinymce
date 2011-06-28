@@ -22,6 +22,8 @@ function runTest(){
 }
 asyncTest('Selecting Cell and typing should update cell correctly', function() {
 	editor.setContent('<table><tr><td><p>first cell</p></td><td><p>second cell</p></td></tr></table>');
+	// in order for the robot to work well, we need to focus the editor before performing selection on it.
+	editor.focus();
 	// in order to simulate the section on tables as per the plugin we do a select then call out to the fix table selection 
 	// (which is called by selection events).
 	editor.selection.select(editor.dom.select('td')[0]);
