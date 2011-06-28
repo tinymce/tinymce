@@ -168,8 +168,8 @@ ParagraphBeforeOlSelection = createState('<p>Before</p><ol><li>Item 1</li></ol>'
 ParagraphBeforeUlSelection = createState('<p>Before</p><ul><li>Item 1</li></ul>', 'p', 3, 'li', 4);
 ParagraphAfterOlSelection = createState('<ol><li>Item 1</li></ol><p>After</p>', 'li', 4, 'p', 3);
 ParagraphAfterUlSelection = createState('<ul><li>Item 1</li></ul><p>After</p>', 'li', 4, 'p', 3);
-ParagraphBeforeAndAfterOlSelection = createState('<p>Before</p><ol><li>Item 1</li></ol><p>After</p>', 'p:nth-child(1)', 4, 'p:nth-child(3)', 3);
-ParagraphBeforeAndAfterUlSelection = createState('<p>Before</p><ul><li>Item 1</li></ul><p>After</p>', 'p:nth-child(1)', 4, 'p:nth-child(3)', 3);
+ParagraphBeforeAndAfterOlSelection = createState('<p>Before</p><ol><li>Item 1</li></ol><p id="after">After</p>', 'p', 4, '#after', 3);
+ParagraphBeforeAndAfterUlSelection = createState('<p>Before</p><ul><li>Item 1</li></ul><p id="after">After</p>', 'p', 4, '#after', 3);
 
 SelectionEndingAtBr = createState('<p>Item<br>After</p>', 'p', 2, 'br', 'after');
 SelectionStartingAtBr = createState('<p>Before<br>Item</p>', 'p', 'after', 'br', 'afterNextCharacter');

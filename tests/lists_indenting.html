@@ -147,8 +147,8 @@ asyncTest('Expanded Selection, List Types - Indent Action', function() {
 	Indenting.a(ParagraphAfterUlSelection).enablesState('Outdent').andGives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="margin-left: 30px;">After</p>');
 
 	
-	Indenting.a(ParagraphBeforeAndAfterOlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="margin-left: 30px;">After</p>');
-	Indenting.a(ParagraphBeforeAndAfterUlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="margin-left: 30px;">After</p>');
+	Indenting.a(ParagraphBeforeAndAfterOlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p id="after" style="margin-left: 30px;">After</p>');
+	Indenting.a(ParagraphBeforeAndAfterUlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p id="after" style="margin-left: 30px;">After</p>');
 	queue.done();
 });
 
@@ -175,8 +175,8 @@ asyncTest('Expanded Selection, List Types - Outdent Action', function() {
 	Outdenting.a(ParagraphAfterUlSelection).disablesState('Outdent').andGives('<p>Item 1</p><p>After</p>');
 
 	
-	Outdenting.a(ParagraphBeforeAndAfterOlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p>After</p>');
-	Outdenting.a(ParagraphBeforeAndAfterUlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p>After</p>');
+	Outdenting.a(ParagraphBeforeAndAfterOlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p id="after">After</p>');
+	Outdenting.a(ParagraphBeforeAndAfterUlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p id="after">After</p>');
 	queue.done();
 });
 
