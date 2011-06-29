@@ -524,6 +524,11 @@ test('getNode', function() {
 test('normalize to text node from document', function() {
 	var rng;
 
+	if (tinymce.isOpera) {
+		ok(true, "Skipped on Opera since it doesn't let you to set the range to document.");
+		return;
+	}
+
 	editor.setContent('<p>text</p>');
 	rng = editor.dom.createRng();
 	rng.setStart(editor.getDoc(), 0);
@@ -557,6 +562,11 @@ test('normalize to text node from body', function() {
 
 test('normalize to br from document', function() {
 	var rng;
+
+	if (tinymce.isOpera) {
+		ok(true, "Skipped on Opera since it doesn't let you to set the range to document.");
+		return;
+	}
 
 	editor.setContent('<p><br /></p>');
 	rng = editor.dom.createRng();
