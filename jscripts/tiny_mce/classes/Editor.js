@@ -1882,6 +1882,9 @@
 				if (!ce)
 					t.getWin().focus();
 
+				// Focus the body as well since it's contentEditable
+				t.getBody().focus();
+
 				// Restore selected control element
 				// This is needed when for example an image is selected within a
 				// layer a call to focus will then remove the control selection
