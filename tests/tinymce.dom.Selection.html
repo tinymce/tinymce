@@ -521,6 +521,76 @@ test('getNode', function() {
 	same(editor.selection.getNode(), editor.dom.get('p1'), 'Detect selection wrapping multiple nodes does not collapse.');
 });
 
+test('normalize to text node from document', function() {
+	var rng;
+
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getDoc(), 0);
+	rng.setEnd(editor.getDoc(), 0);
+	editor.selection.setRng(rng);
+	editor.selection.normalize();
+
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer.nodeType, 3, 'startContainer node type');
+	equals(rng.startOffset, 0, 'startContainer offset');
+	equals(rng.endContainer.nodeType, 3, 'endContainer node type');
+	equals(rng.endOffset, 0, 'endOffset offset');
+});
+
+test('normalize to text node from body', function() {
+	var rng;
+
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 0);
+	editor.selection.setRng(rng);
+	editor.selection.normalize();
+
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer.nodeType, 3, 'startContainer node type');
+	equals(rng.startOffset, 0, 'startContainer offset');
+	equals(rng.endContainer.nodeType, 3, 'endContainer node type');
+	equals(rng.endOffset, 0, 'endOffset offset');
+});
+
+test('normalize to br from document', function() {
+	var rng;
+
+	editor.setContent('<p><br /></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getDoc(), 0);
+	rng.setEnd(editor.getDoc(), 0);
+	editor.selection.setRng(rng);
+	editor.selection.normalize();
+
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer.nodeName, 'P', 'startContainer node name');
+	equals(rng.startContainer.nodeType, 1, 'startContainer node type');
+	equals(rng.startOffset, 0, 'startContainer offset');
+	equals(rng.endContainer.nodeType, 1, 'endContainer node type');
+	equals(rng.endOffset, 0, 'endOffset offset');
+});
+
+test('normalize to br from body', function() {
+	var rng;
+
+	editor.setContent('<p><br /></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 0);
+	editor.selection.setRng(rng);
+	editor.selection.normalize();
+
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer.nodeName, 'P', 'startContainer node name');
+	equals(rng.startContainer.nodeType, 1, 'startContainer node type');
+	equals(rng.startOffset, 0, 'startContainer offset');
+	equals(rng.endContainer.nodeType, 1, 'endContainer node type');
+	equals(rng.endOffset, 0, 'endOffset offset');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

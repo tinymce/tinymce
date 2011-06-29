@@ -1869,11 +1869,11 @@
 		 * @param {Boolean} sf Skip DOM focus. Just set is as the active editor.
 		 */
 		focus : function(sf) {
-			var oed, t = this, ce = t.settings.content_editable, ieRng, controlElm, doc = t.getDoc();
+			var oed, t = this, selection = t.selection, ce = t.settings.content_editable, ieRng, controlElm, doc = t.getDoc();
 
 			if (!sf) {
 				// Get selected control element
-				ieRng = t.selection.getRng();
+				ieRng = selection.getRng();
 				if (ieRng.item) {
 					controlElm = ieRng.item(0);
 				}
@@ -1884,6 +1884,8 @@
 
 				// Focus the body as well since it's contentEditable
 				t.getBody().focus();
+
+				selection.normalize();
 
 				// Restore selected control element
 				// This is needed when for example an image is selected within a
@@ -2579,6 +2581,8 @@
 			// Do post processing
 			if (!args.no_events)
 				self.onSetContent.dispatch(self, args);
+
+			self.selection.normalize();
 
 			return args.content;
 		},
