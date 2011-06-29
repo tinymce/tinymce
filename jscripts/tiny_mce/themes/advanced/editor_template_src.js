@@ -223,7 +223,7 @@
 
 					ed.formatter.register(name, {
 						inline : 'span',
-						attributes : {'class' : o['class']},
+						classes : o['class'],
 						selector : '*'
 					});
 
