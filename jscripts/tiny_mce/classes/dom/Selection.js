@@ -157,7 +157,7 @@
 		 * // Inserts some HTML contents at the current selection
 		 * tinyMCE.activeEditor.selection.setContent('<strong>Some contents</strong>');
 		 */
-		setContent : function(content, args) { 
+		setContent : function(content, args) {
 			var self = this, rng = self.getRng(), caretNode, doc = self.win.document, frag, temp;
 
 			args = args || {format : 'html'};
@@ -772,11 +772,6 @@
 		 */
 		setRng : function(r) {
 			var s, t = this;
-			//When using content editable on webkit, the window needs to be focused before setting ranges works correctly.
-			if (tinymce.isWebKit) {
-				t.win.focus();
-			}
-
 			
 			if (!t.tridentSel) {
 				s = t.getSel();
