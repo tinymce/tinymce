@@ -704,6 +704,7 @@ test('Formatter - Bold and italics is applied to text that is not highlighted', 
 	editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
 	rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
 	rng.setEnd(editor.dom.select('strong')[0].firstChild, 11);
+	editor.focus();
 	editor.selection.setRng(rng);
 	editor.execCommand('Italic');
 	equals(editor.getContent(), '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');

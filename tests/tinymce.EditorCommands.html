@@ -26,6 +26,7 @@ test('mceInsertContent - p inside text of p', function() {
 	expect(7);
 
 	editor.setContent('<p>1234</p>');
+	editor.focus();
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 3);

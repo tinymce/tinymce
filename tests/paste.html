@@ -22,6 +22,7 @@ test("Paste simple text content", function() {
 	var rng = editor.dom.createRng();
 
 	editor.setContent('<p>1234</p>');
+	editor.focus();
 	rng.setStart(editor.getBody().firstChild.firstChild, 1);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 3);
 	editor.selection.setRng(rng);

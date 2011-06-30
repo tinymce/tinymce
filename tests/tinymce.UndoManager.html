@@ -30,6 +30,7 @@ test('One undo level', function() {
 
 	expect(3);
 
+	editor.focus();
 	editor.execCommand('SelectAll');
 	editor.execCommand('Bold');
 
