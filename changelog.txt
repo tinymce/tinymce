@@ -1,4 +1,4 @@
-Version 3.4.x (2011-xx-xx)
+Version 3.4.3.2 (2011-06-30)
 	Fixed bug where deleting all of a paragraph inside a table cell would behave badly in webkit.
 	Fixed bugs in tests in firefox5 and WebKit.
 	Fixed bug where selection of table cells would produce an exception on Gecko.
