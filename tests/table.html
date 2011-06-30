@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Basic editor functionality tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/tiny_mce_loader.js"></script>
+<script type="text/javascript" src="js/dsl/dsl.js"></script>
+<script type="text/javascript">
+QUnit.config.autostart = false;
+module('Lists - Indenting', {
+	autostart: false,
+	setup: function() {
+		window.queue = new dsl.Queue();
+	}
+});
+function runTest(){ 
+	
+}
+asyncTest('Selecting Cell and typing should update cell correctly', function() {
+	editor.setContent('<table><tr><td><p>first cell</p></td><td><p>second cell</p></td></tr></table>');
+	// in order for the robot to work well, we need to focus the editor before performing selection on it.
+	editor.focus();
+	// in order to simulate the section on tables as per the plugin we do a select then call out to the fix table selection 
+	// (which is called by selection events).
+	editor.selection.select(editor.dom.select('td')[0]);
+	editor.plugins.table.fixTableCellSelection(editor);
+	robot.type('g',false, function(){ 
+		var expected = '<table>\n<tbody>\n<tr>\n<td>\n<p>g</p>\n</td>\n<td>\n<p>second cell</p>\n</td>\n</tr>\n</tbody>\n</table>';
+		var actual = editor.getContent();
+		equals(actual, expected);
+		queue.done();
+	}, editor.getBody());
+
+
+});
+
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	cleanup: true,
+	
+	add_unload_trigger : false,
+	plugins: "table",
+	init_instance_callback : function(ed) {
+		editor = ed;
+
+	}
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Plugin Dependency Functional tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+		<div>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+		</div>
+	</div> 
+	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
+	<script>
+	initWhenTinyAndRobotAreReady();
+	</script>
+</body>
+</html>
