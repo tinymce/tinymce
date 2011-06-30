@@ -916,8 +916,8 @@
 		normalize : function() {
 			var self = this, rng, normalized;
 
-			// Normalize only on non old IE browsers for now
-			if (self.tridentSel)
+			// Normalize only on non IE browsers for now
+			if (tinymce.isIE)
 				return;
 
 			function normalizeEndPoint(start) {

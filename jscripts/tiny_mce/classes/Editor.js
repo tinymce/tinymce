@@ -1878,14 +1878,16 @@
 					controlElm = ieRng.item(0);
 				}
 
+				selection.normalize();
+
 				// Is not content editable
 				if (!ce)
 					t.getWin().focus();
 
 				// Focus the body as well since it's contentEditable
-				t.getBody().focus();
-
-				selection.normalize();
+				if (tinymce.isGecko) {
+					t.getBody().focus();
+				}
 
 				// Restore selected control element
 				// This is needed when for example an image is selected within a
