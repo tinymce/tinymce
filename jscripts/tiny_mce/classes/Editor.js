@@ -3252,10 +3252,14 @@
 
 					return function() {
 						var target = t.selection.getStart();
-						t.dom.removeAllAttribs(target);
-						each(template, function(attr) {
-							target.setAttributeNode(attr.cloneNode(true));
-						});
+
+						if (target !== t.getBody()) {
+							t.dom.removeAllAttribs(target);
+
+							each(template, function(attr) {
+								target.setAttributeNode(attr.cloneNode(true));
+							});
+						}
 					};
 				}
 
