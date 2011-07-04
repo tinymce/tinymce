@@ -434,7 +434,24 @@
 					}
 				});
 			}
-		}
+		};
+
+		function getElementRule(name) {
+			var element = elements[name], i;
+
+			// Exact match found
+			if (element)
+				return element;
+
+			// No exact match then try the patterns
+			i = patternElements.length;
+			while (i--) {
+				element = patternElements[i];
+
+				if (element.pattern.test(name))
+					return element;
+			}
+		};
 
 		if (!settings.valid_elements) {
 			// No valid elements defined then clone the elements from the transitional spec
@@ -474,6 +491,13 @@
 
 		// Todo: Remove this when we fix list handling to be valid
 		addValidChildren('+ol[ul|ol],+ul[ul|ol]');
+
+		// If the user didn't allow span only allow internal spans
+		// Todo: This doesn't solve the case if the user decided to disable specific
+		// attributes used internally like span[myattr] but that might be an edge case
+		if (!getElementRule('span')) {
+			addValidElements('span[!data-mce-type|*]');
+		}
 
 		// Delete invalid elements
 		if (settings.invalid_elements) {
@@ -587,22 +611,7 @@
 		 * @param {String} name Element name to check for.
 		 * @return {Object} Element object or undefined if the element isn't valid.
 		 */
-		self.getElementRule = function(name) {
-			var element = elements[name], i;
-
-			// Exact match found
-			if (element)
-				return element;
-
-			// No exact match then try the patterns
-			i = patternElements.length;
-			while (i--) {
-				element = patternElements[i];
-
-				if (element.pattern.test(name))
-					return element;
-			}
-		};
+		self.getElementRule = getElementRule;
 
 		/**
 		 * Returns an map object of all custom elements.
