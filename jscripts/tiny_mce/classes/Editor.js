@@ -1257,7 +1257,7 @@
 			if ((!isIE || !tinymce.relaxedDomain) && !filled) {
 				// We need to wait for the load event on Gecko
 				if (isGecko && !s.readonly) {
-					t.getWin().onload = function() {
+					t.getWin().addEventListener("DOMContentLoaded", function() {
 						window.setTimeout(function() {
 							var b = t.getBody(), undef;
 
@@ -1293,7 +1293,7 @@
 							// since the caret won't be rendered some times otherwise.
 							t.setupIframe(true);
 						}, 1);
-					};
+					}, false);
 				}
 
 				d.open();

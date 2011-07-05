@@ -1,6 +1,7 @@
 Version 3.4.3.x (2011-xx-xx)
 	Fixed bug where the contentEditable state would sometimes be removed if you deleted contents in Gecko.
 	Fixed bug where inserting contents using mceInsertContent would fail if "span" was disabled in valid_elements.
+	Fixed bug where initialization might fail if some resource on gecko wouldn't load properly and fire the onload event.
 Version 3.4.3.2 (2011-06-30)
 	Fixed bug where deleting all of a paragraph inside a table cell would behave badly in webkit.
 	Fixed bugs in tests in firefox5 and WebKit.
