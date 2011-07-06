@@ -493,11 +493,8 @@
 		addValidChildren('+ol[ul|ol],+ul[ul|ol]');
 
 		// If the user didn't allow span only allow internal spans
-		// Todo: This doesn't solve the case if the user decided to disable specific
-		// attributes used internally like span[myattr] but that might be an edge case
-		if (!getElementRule('span')) {
+		if (!getElementRule('span'))
 			addValidElements('span[!data-mce-type|*]');
-		}
 
 		// Delete invalid elements
 		if (settings.invalid_elements) {

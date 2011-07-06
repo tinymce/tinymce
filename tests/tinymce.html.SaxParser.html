@@ -474,6 +474,51 @@ test('Self closing', function() {
 	parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
 	equals(writer.getContent(), '<ul><li>1</li><li><b>2</b></li><li><em><b>3</b></em></li></ul>', 'Parse list with self closing items.');
 });
+
+test('Preserve internal elements', function() {
+	expect(2);
+
+	var schema = new tinymce.html.Schema({valid_elements : 'b'});
+	var counter = createCounter(writer);
+	counter.validate = true;
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span id="id"><b>text</b></span><span id="id" data-mce-type="something"></span>');
+	equals(writer.getContent(), '<b>text</b><span id="id" data-mce-type="something"></span>', 'Preserve internal span element without any span schema rule.');
+
+	var schema = new tinymce.html.Schema({valid_elements : 'b,span[class]'});
+	var counter = createCounter(writer);
+	counter.validate = true;
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span id="id" class="class"><b>text</b></span><span id="id" data-mce-type="something"></span>');
+	equals(writer.getContent(), '<span class="class"><b>text</b></span><span id="id" data-mce-type="something"></span>', 'Preserve internal span element with a span schema rule.');
+});
+
+test('Remove internal elements', function() {
+	expect(2);
+
+	var schema = new tinymce.html.Schema({valid_elements : 'b'});
+	var counter = createCounter(writer);
+	counter.validate = true;
+	counter.remove_internals = true;
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span id="id"><b>text</b></span><span id="id" data-mce-type="something"></span>');
+	equals(writer.getContent(), '<b>text</b>', 'Remove internal span element without any span schema rule.');
+
+	var schema = new tinymce.html.Schema({valid_elements : 'b,span[class]'});
+	var counter = createCounter(writer);
+	counter.validate = true;
+	counter.remove_internals = true;
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<span id="id" class="class"><b>text</b></span><span id="id" data-mce-type="something"></span>');
+	equals(writer.getContent(), '<span class="class"><b>text</b></span>', 'Remove internal span element with a span schema rule.');
+
+	// Reset
+	counter.remove_internals = false;
+});
 </script>
 </head>
 <body>

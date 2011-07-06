@@ -82,7 +82,7 @@
 		 * @param {String} html Html string to sax parse.
 		 */
 		self.parse = function(html) {
-			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name,
+			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name, isInternalElement, removeInternalElements,
 				shortEndedElements, fillAttrsMap, isShortEnded, validate, elementRule, isValidElement, attr, attribsValue,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced, selfClosing,
 				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode, fixSelfClosing;
@@ -134,6 +134,7 @@
 			selfClosing = schema.getSelfClosingElements();
 			fillAttrsMap = schema.getBoolAttrs();
 			validate = settings.validate;
+			removeInternalElements = settings.remove_internals;
 			fixSelfClosing = settings.fix_self_closing;
 
 			while (matches = tokenRegExp.exec(html)) {
@@ -163,6 +164,12 @@
 
 						// Parse attributes
 						if (attribsValue = matches[8]) {
+							isInternalElement = attribsValue.indexOf('data-mce-type') !== -1; // Check if the element is an internal element
+
+							// If the element has internal attributes then remove it if we are told to do so
+							if (isInternalElement && removeInternalElements)
+								isValidElement = false;
+
 							attrList = [];
 							attrList.map = {};
 
@@ -173,7 +180,7 @@
 								value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
 								// Validate name and value
-								if (validate && name.indexOf('data-') !== 0) {
+								if (validate && !isInternalElement && name.indexOf('data-') !== 0) {
 									attrRule = validAttributesMap[name];
 
 									// Find rule by pattern matching
@@ -212,7 +219,7 @@
 						}
 
 						// Process attributes if validation is enabled
-						if (validate) {
+						if (validate && !isInternalElement) {
 							attributesRequired = elementRule.attributesRequired;
 							attributesDefault = elementRule.attributesDefault;
 							attributesForced = elementRule.attributesForced;
