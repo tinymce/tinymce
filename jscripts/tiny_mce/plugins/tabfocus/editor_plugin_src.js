@@ -29,8 +29,14 @@
 							!(e.style.display == "none") &&
 							!(e.style.visibility == "hidden") && canSelectRecursive(e.parentNode));
 					}
+					function canSelectInOldIe(el) {
+						return el.attributes["tabIndex"].specified || el.nodeName == "INPUT" || el.nodeName == "TEXTAREA";
+					}
+					function isOldIe() {
+						return tinymce.isIE6 || tinymce.isIE7;
+					}
 					function canSelect(el) {
-						return el.tabIndex != '-1' && canSelectRecursive(el);
+						return ((!isOldIe() || canSelectInOldIe(el))) && el.getAttribute("tabindex") != '-1' && canSelectRecursive(el);
 					}
 
 					each(el, function(e, i) {
