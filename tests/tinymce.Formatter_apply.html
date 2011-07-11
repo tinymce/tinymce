@@ -20,6 +20,19 @@ function getContent() {
 	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
 };
 
+test('apply inline to a list', function(){
+	expect(1);
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p>1234</p><ul><li>first element</li><li>second element</li></ul><p>5678</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>1234</b></p><ul><li><b>first element</b></li><li><b>second element</b></li></ul><p><b>5678</b></p>', 'selection of a list');
+	
+});
+
 test('apply (inline)', function() {
 	var rng, format;
 
