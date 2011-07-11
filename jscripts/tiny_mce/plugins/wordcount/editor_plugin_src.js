@@ -91,11 +91,11 @@
 			t.block = 1;
 
 			setTimeout(function() {
+				if (!ed.destroyed) {
 					var tc = t._getCount(ed);
-
 					tinymce.DOM.setHTML(t.id, tc.toString());
-
 					setTimeout(function() {t.block = 0;}, 2000);
+				}
 			}, 1);
 		},
 
