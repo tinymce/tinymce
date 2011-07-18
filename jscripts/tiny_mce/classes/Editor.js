@@ -3045,11 +3045,11 @@
 				var n = ed.selection.getRng().startContainer;
 				var offset = ed.selection.getRng().startOffset;
 
-				while (n.nodeType != 1 && n.parentNode)
+				while (n && n.nodeType && n.nodeType != 1 && n.parentNode)
 					n = n.parentNode;
 					
 				// Is the cursor at the beginning of a blockquote?
-				if (n.parentNode && n.parentNode.tagName === 'BLOCKQUOTE' && n.parentNode.firstChild == n && offset == 0) {
+				if (n && n.parentNode && n.parentNode.tagName === 'BLOCKQUOTE' && n.parentNode.firstChild == n && offset == 0) {
 					// Remove the blockquote
 					ed.formatter.toggle('blockquote', null, n.parentNode);
 

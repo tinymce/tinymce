@@ -1,4 +1,6 @@
 Version 3.4.3.x (2011-xx-xx)
+	Fixed bug in IE where deleting would cause error in console.
+	Fixed tests in IE.
 	Fixed bug where the formatter was not applying formats across list elements.
 	Fixed bug where the wordcount plugin would try and update the wordcount if tinymce had been destroyed.
 	Fixed bug where tabfocus plugin would attempt to focus elements not displayed when their parent element was hidden.
