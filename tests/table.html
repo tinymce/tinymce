@@ -11,32 +11,32 @@
 <script type="text/javascript" src="js/dsl/dsl.js"></script>
 <script type="text/javascript">
 QUnit.config.autostart = false;
-module('Lists - Indenting', {
+module('Tables', {
 	autostart: false,
 	setup: function() {
 		window.queue = new dsl.Queue();
 	}
 });
-function runTest(){ 
+
+if (tinymce.isWebKit) {
+	asyncTest('Selecting Cell and typing should update cell correctly in WebKit', function() {
+		editor.setContent('<table><tr><td><p>first cell</p></td><td><p>second cell</p></td></tr></table>');
+		// in order for the robot to work well, we need to focus the editor before performing selection on it.
+		editor.focus();
+		// in order to simulate the section on tables as per the plugin we do a select then call out to the fix table selection 
+		// (which is called by selection events).
+		editor.selection.select(editor.dom.select('td')[0]);
+		editor.plugins.table.fixTableCellSelection(editor);
+		robot.type('g',false, function(){ 
+			var expected = '<table>\n<tbody>\n<tr>\n<td>\n<p>g</p>\n</td>\n<td>\n<p>second cell</p>\n</td>\n</tr>\n</tbody>\n</table>';
+			var actual = editor.getContent();
+			equals(actual, expected);
+			queue.done();
+		}, editor.getBody());
 	
+	
+	});
 }
-asyncTest('Selecting Cell and typing should update cell correctly', function() {
-	editor.setContent('<table><tr><td><p>first cell</p></td><td><p>second cell</p></td></tr></table>');
-	// in order for the robot to work well, we need to focus the editor before performing selection on it.
-	editor.focus();
-	// in order to simulate the section on tables as per the plugin we do a select then call out to the fix table selection 
-	// (which is called by selection events).
-	editor.selection.select(editor.dom.select('td')[0]);
-	editor.plugins.table.fixTableCellSelection(editor);
-	robot.type('g',false, function(){ 
-		var expected = '<table>\n<tbody>\n<tr>\n<td>\n<p>g</p>\n</td>\n<td>\n<p>second cell</p>\n</td>\n</tr>\n</tbody>\n</table>';
-		var actual = editor.getContent();
-		equals(actual, expected);
-		queue.done();
-	}, editor.getBody());
-
-
-});
 
 
 tinyMCE.init({
