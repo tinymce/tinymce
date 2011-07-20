@@ -316,6 +316,14 @@
 				return;
 			}
 
+			// If we fetch tinymce after window.load has fired, we can check for a flag
+			// on the window (set by an external script's onload handler) and still
+			// initialize properly
+			if (win.TINYMCE_PAGE_LOADED) {
+				t._pageInit(win);
+				return;
+			}
+
 			// Use IE method
 			if (doc.attachEvent) {
 				doc.attachEvent("onreadystatechange", function() {
