@@ -102,6 +102,42 @@ asyncTest('Forward delete with first paragraph indented', function() {
 	}, editor.selection.getNode());
 });
 
+asyncTest('Backward delete from paragraph to heading', function () {
+	var c, originalContent = '<h1>Heading</h1><p>text</p>';
+
+	expect(1);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	setSelection('p', 0);
+	robot.type('\b', false, function() {
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), '<h1>Headingtext</h1>', 'Delete content');
+			QUnit.start();
+		}, 100);
+	}, editor.selection.getNode());
+});
+
+asyncTest('Forward delete from heading to paragraph', function () {
+	var c, originalContent = '<h1>Heading</h1><p>text</p>';
+
+	expect(1);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	setSelection('h1', 7);
+	robot.forwardDelete(function() {
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), '<h1>Headingtext</h1>', 'Delete content');
+			QUnit.start();
+		}, 100);
+	}, editor.selection.getNode());
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
