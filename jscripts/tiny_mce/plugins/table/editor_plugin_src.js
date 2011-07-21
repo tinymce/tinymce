@@ -25,6 +25,10 @@
 		return elm.innerHTML.replace(/<(br|img|object|embed|input|textarea)[^>]*>/gi, '-').replace(/<[^>]+>/g, '').length == 0;
 	};
 
+	function getSpanVal(td, name) {
+		return parseInt(td.getAttribute(name) || 1);
+	}
+
 	/**
 	 * Table Grid class.
 	 */
@@ -98,10 +102,6 @@
 			row = grid[y];
 			if (row)
 				return row[x];
-		};
-
-		function getSpanVal(td, name) {
-			return parseInt(td.getAttribute(name) || 1);
 		};
 
 		function setSpanVal(td, name, val) {
@@ -1071,6 +1071,106 @@
 					});
 				}
 
+				// Fix to allow navigating up and down in a table in WebKit browsers.
+				if (tinymce.isWebKit) {
+					function moveSelection(ed, e) {
+
+						function moveCursorToStartOfElement(n) {
+							ed.selection.setCursorLocation(n, 0);
+						}
+
+						function getSibling(event, element) {
+							return event.keyCode == UP_ARROW ? element.previousSibling : element.nextSibling;
+						}
+
+						function getNextRow(e, row) {
+							var sibling = getSibling(e, row);
+							return sibling !== null && sibling.tagName === 'TR' ? sibling : null;
+						}
+
+						function getTable(ed, currentRow) {
+							return ed.dom.getParent(currentRow, 'table');
+						}
+
+						function getTableSibling(currentRow) {
+							var table = getTable(ed, currentRow);
+							return getSibling(e, table);
+						}
+
+						function isVerticalMovement(event) {
+							return event.keyCode == UP_ARROW || event.keyCode == DOWN_ARROW;
+						}
+
+						function isInTable(ed) {
+							var node = ed.selection.getNode();
+							var currentRow = ed.dom.getParent(node, 'tr');
+							return currentRow !== null;
+						}
+
+						function columnIndex(column) {
+							var colIndex = 0;
+							var c = column;
+							while (c.previousSibling) {
+								c = c.previousSibling;
+								colIndex = colIndex + getSpanVal(c, "colspan");
+							}
+							return colIndex;
+						}
+
+						function findColumn(rowElement, columnIndex) {
+							var c = 0;
+							var r = 0;
+							each(rowElement.children, function(cell, i) {
+								c = c + getSpanVal(cell, "colspan");
+								r = i;
+								if (c > columnIndex)
+									return false;
+							});
+							return r;
+						}
+
+						function moveCursorToRow(ed, node, row) {
+							var srcColumnIndex = columnIndex(ed.dom.getParent(node, 'td'));
+							var tgtColumnIndex = findColumn(row, srcColumnIndex)
+							var tgtNode = row.childNodes[tgtColumnIndex];
+							moveCursorToStartOfElement(tgtNode);
+						}
+
+						function escapeTable(currentRow, e) {
+							var tableSiblingElement = getTableSibling(currentRow);
+							if (tableSiblingElement !== null) {
+								moveCursorToStartOfElement(tableSiblingElement);
+								return tinymce.dom.Event.cancel(e);
+							} else {
+								var element = e.keyCode == UP_ARROW ? currentRow.firstChild : currentRow.lastChild;
+								// rely on default behaviour to escape table after we are in the last cell of the last row
+								moveCursorToStartOfElement(element);
+								return true;
+							}
+						}
+
+						var UP_ARROW = 38;
+						var DOWN_ARROW = 40;
+
+						if (isVerticalMovement(e) && isInTable(ed)) {
+							var node = ed.selection.getNode();
+							var currentRow = ed.dom.getParent(node, 'tr');
+							var nextRow = getNextRow(e, currentRow);
+
+							// If we're at the first or last row in the table, we should move the caret outside of the table
+							if (nextRow == null) {
+								return escapeTable(currentRow, e);
+							} else {
+								moveCursorToRow(ed, node, nextRow);
+								tinymce.dom.Event.cancel(e);
+								return true;
+							}
+						}
+					}
+
+					ed.onKeyDown.add(moveSelection);
+				}
+								
 				// Fixes an issue on Gecko where it's impossible to place the caret behind a table
 				// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled
 				if (!tinymce.isIE) {

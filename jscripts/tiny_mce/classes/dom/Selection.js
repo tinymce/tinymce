@@ -95,6 +95,18 @@
 		},
 
 		/**
+		 * Move the selection cursor range to the specified node and offset.
+		 * @param node Node to put the cursor in.
+		 * @param offset Offset from the start of the node to put the cursor at.
+		 */
+		setCursorLocation: function(node, offset) {
+			var t = this; var r = t.getRng();
+			r.setStart(node, offset);
+			r.setEnd(node, offset);
+			t.setRng(r);
+			t.collapse(false);
+		},
+		/**
 		 * Returns the selected contents using the DOM serializer passed in to this class.
 		 *
 		 * @method getContent

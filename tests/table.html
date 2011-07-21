@@ -18,6 +18,9 @@ module('Tables', {
 	}
 });
 
+var UP_ARROW = 0x26;
+var DOWN_ARROW = 0x28;
+
 if (tinymce.isWebKit) {
 	asyncTest('Selecting Cell and typing should update cell correctly in WebKit', function() {
 		editor.setContent('<table><tr><td><p>first cell</p></td><td><p>second cell</p></td></tr></table>');
@@ -42,6 +45,47 @@ if (tinymce.isWebKit) {
 	});
 }
 
+function testCursorKey(html, nodeToSelect, keyCode, expected) {
+	editor.setContent(html);
+	editor.focus();
+	setSelection(nodeToSelect, 0);
+	robot.type(keyCode, false, function() {
+		var node = editor.selection.getNode();
+		var actual = node.firstChild.nodeValue;
+		equals(actual, expected);
+		queue.done();
+	}, editor.getBody());
+}
+
+asyncTest('arrow up key moves to row above', function() {
+	var html = '<table><tr><td>1</td></tr><tr><td id="b">2</td></tr></table>';
+	testCursorKey(html, '#b', UP_ARROW, '1');
+});
+
+asyncTest('arrow down key moves to row below', function() {
+	var html = '<table><tr><td id="a"></td></tr><tr><td>2</td></tr></table>';
+	testCursorKey(html, '#a', DOWN_ARROW, '2');
+});
+
+asyncTest('arrow up key in cell with colspan moves to row above', function() {
+	var html = '<table><tr><td>1</td><td></td></tr><tr><td id="b" colspan="2"></td></tr></table>';
+	testCursorKey(html, '#b', UP_ARROW, '1');
+});
+
+asyncTest('arrow down key in cell with colspan moves to row below', function() {
+	var html = '<table><tr><td id="a" colspan="2"></td></tr><tr><td>2</td><td></td></tr></table>';
+	testCursorKey(html, '#a', DOWN_ARROW, '2');
+});
+
+asyncTest('arrow key up in top row escapes table', function() {
+	var html = '<p>outside</p><table><tr><td id="a"></td></tr><tr><td></td></tr></table>';
+	testCursorKey(html, '#a', UP_ARROW, 'outside');
+});
+
+asyncTest('arrow key down in bottom row escapes table', function() {
+	var html = '<table><tr><td></td></tr><tr><td id="b"></td></tr></table><p>outside</p>';
+	testCursorKey(html, '#b', DOWN_ARROW, 'outside');
+});
 
 tinyMCE.init({
 	mode : "exact",
