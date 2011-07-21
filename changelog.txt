@@ -1,5 +1,6 @@
 Version 3.4.3.x (2011-xx-xx)
 	Fixed bug in WebKit where deleting across blocks would add extra styles.
+	Fixed bug where moving cursor vertically in tables in WebKit wasn't working.
 	Fixed bug in IE where deleting would cause error in console.
 	Fixed tests in IE.
 	Fixed bug where the formatter was not applying formats across list elements.
