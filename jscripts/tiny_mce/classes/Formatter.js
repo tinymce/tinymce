@@ -471,7 +471,6 @@
 		 */
 		function remove(name, vars, node) {
 			var formatList = get(name), format = formatList[0], bookmark, i, rng;
-
 			/**
 			 * Moves the start to the first suitable text node.
 			 */
@@ -1676,38 +1675,67 @@
 				// Only register listeners once if we need to
 				if (!pendingFormats.isListening && hasPending()) {
 					pendingFormats.isListening = true;
+					function performPendingFormat(node, textNode) {
+						var rng = dom.createRng();
+						perform(node);
+
+						rng.setStart(textNode, textNode.nodeValue.length);
+						rng.setEnd(textNode, textNode.nodeValue.length);
+						selection.setRng(rng);
+						ed.nodeChanged();
+					}
+					var enterKeyPressed = false;
 
 					each('onKeyDown,onKeyUp,onKeyPress,onMouseUp'.split(','), function(event) {
 						ed[event].addToTop(function(ed, e) {
+							if (e.keyCode==13 && !e.shiftKey) {
+								enterKeyPressed = true;
+								return;
+							}
 							// Do we have pending formats and is the selection moved has moved
 							if (hasPending() && !tinymce.dom.RangeUtils.compareRanges(pendingFormats.lastRng, selection.getRng())) {
+								var foundCaret = false;
 								each(dom.select('font,span'), function(node) {
 									var textNode, rng;
 
 									// Look for marker
 									if (isCaretNode(node)) {
+										foundCaret = true;
 										textNode = node.firstChild;
 
 										// Find the first text node within node
 										while (textNode && textNode.nodeType != 3)
 											textNode = textNode.firstChild;
 
-										if (textNode) {
-											perform(node);
-
-											rng = dom.createRng();
-											rng.setStart(textNode, textNode.nodeValue.length);
-											rng.setEnd(textNode, textNode.nodeValue.length);
-											selection.setRng(rng);
-											ed.nodeChanged();
-										} else
+										if (textNode) 
+											performPendingFormat(node, textNode);
+										else
 											dom.remove(node);
 									}
 								});
+								
+								// no caret - so we are 
+								if (enterKeyPressed && !foundCaret) {
+									var node = selection.getRng().startContainer;
+									var textNode = node;
+
+									// Find the first text node within node
+									while (textNode && textNode.nodeType != 3)
+										textNode = textNode.firstChild;
+									if (textNode) {
+										node=textNode.parentNode;
+										while (!isBlock(node)){
+											node=node.parentNode;
+										}
+										performPendingFormat(node, textNode);
+									}
+								}
 
 								// Always unbind and clear pending styles on keyup
-								if (e.type == 'keyup' || e.type == 'mouseup')
+								if (e.type == 'keyup' || e.type == 'mouseup') {
 									resetPending();
+									enterKeyPressed=false;
+								}
 							}
 						});
 					});
