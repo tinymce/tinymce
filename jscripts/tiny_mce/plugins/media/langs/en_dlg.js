@@ -103,6 +103,9 @@ html5_video_options:"HTML5 Video Options",
 altsource1:"Alternative source 1",
 altsource2:"Alternative source 2",
 preload:"Preload",
+preload_none:"Don't preload",
+preload_metadata:"Preload videos metadata",
+preload_auto:"Let user's browser decide",
 poster:"Poster",
 
 source:"Source"
