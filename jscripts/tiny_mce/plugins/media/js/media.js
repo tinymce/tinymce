@@ -220,7 +220,7 @@
 			setOptions('shockwave', 'sound,progress,autostart,swliveconnect,swvolume,swstretchstyle,swstretchhalign,swstretchvalign');
 			setOptions('windowsmedia', 'autostart,enabled,enablecontextmenu,fullscreen,invokeurls,mute,stretchtofit,windowlessvideo,balance,baseurl,captioningid,currentmarker,currentposition,defaultframe,playcount,rate,uimode,volume');
 			setOptions('realmedia', 'autostart,loop,autogotourl,center,imagestatus,maintainaspect,nojava,prefetch,shuffle,console,controls,numloop,scriptcallbacks');
-			setOptions('video', 'poster,autoplay,loop,preload,controls');
+			setOptions('video', 'poster,autoplay,loop,muted,preload,controls');
 			setOptions('audio', 'autoplay,loop,preload,controls');
 			setOptions('global', 'id,name,vspace,hspace,bgcolor,align,width,height');
 
