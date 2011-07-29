@@ -47,8 +47,10 @@
 			get('filebrowsercontainer').innerHTML = getBrowserHTML('filebrowser','src','media','media');
 			get('qtsrcfilebrowsercontainer').innerHTML = getBrowserHTML('qtsrcfilebrowser','quicktime_qtsrc','media','media');
 			get('bgcolor_pickcontainer').innerHTML = getColorPickerHTML('bgcolor_pick','bgcolor');
-			get('video_altsource1_filebrowser').innerHTML = getBrowserHTML('filebrowser_altsource1','video_altsource1','media','media');
-			get('video_altsource2_filebrowser').innerHTML = getBrowserHTML('filebrowser_altsource2','video_altsource2','media','media');
+			get('video_altsource1_filebrowser').innerHTML = getBrowserHTML('video_filebrowser_altsource1','video_altsource1','media','media');
+			get('video_altsource2_filebrowser').innerHTML = getBrowserHTML('video_filebrowser_altsource2','video_altsource2','media','media');
+			get('audio_altsource1_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource1','audio_altsource1','media','media');
+			get('audio_altsource2_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource2','audio_altsource2','media','media');
 			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','media','image');
 
 			html = this.getMediaListHTML('medialist', 'src', 'media', 'media');
@@ -60,11 +62,17 @@
 			if (isVisible('filebrowser'))
 				get('src').style.width = '230px';
 
-			if (isVisible('filebrowser_altsource1'))
+			if (isVisible('video_filebrowser_altsource1'))
 				get('video_altsource1').style.width = '220px';
 
-			if (isVisible('filebrowser_altsource2'))
+			if (isVisible('video_filebrowser_altsource2'))
 				get('video_altsource2').style.width = '220px';
+
+			if (isVisible('audio_filebrowser_altsource1'))
+				get('audio_altsource1').style.width = '220px';
+
+			if (isVisible('audio_filebrowser_altsource2'))
+				get('audio_altsource2').style.width = '220px';
 
 			if (isVisible('filebrowser_poster'))
 				get('video_poster').style.width = '220px';
@@ -137,7 +145,7 @@
 
 						if (type == 'global')
 							list = data;
-						else if (type == 'video') {
+						else if (type == 'video' || type == 'audio') {
 							list = data.video.attrs;
 
 							if (!list && !to_form)
@@ -147,12 +155,12 @@
 
 						if (list) {
 							if (to_form) {
-								setVal(formItemName, list[name], type == 'video' ? name : '');
+								setVal(formItemName, list[name], type == 'video' || type == 'audio' ? name : '');
 							} else {
 								delete list[name];
 
 								value = getVal(formItemName);
-								if (type == 'video' && value === true)
+								if ((type == 'video' || type == 'audio') && value === true)
 									value = name;
 
 								if (defaultStates[formItemName]) {
@@ -185,7 +193,7 @@
 					setVal('media_type', data.type);
 				}
 
-				if (data.type == "video") {
+				if (data.type == "video" || data.type == "audio") {
 					if (!data.video.sources)
 						data.video.sources = [];
 
@@ -195,6 +203,7 @@
 
 			// Hide all fieldsets and show the one active
 			get('video_options').style.display = 'none';
+			get('audio_options').style.display = 'none';
 			get('flash_options').style.display = 'none';
 			get('quicktime_options').style.display = 'none';
 			get('shockwave_options').style.display = 'none';
@@ -212,6 +221,7 @@
 			setOptions('windowsmedia', 'autostart,enabled,enablecontextmenu,fullscreen,invokeurls,mute,stretchtofit,windowlessvideo,balance,baseurl,captioningid,currentmarker,currentposition,defaultframe,playcount,rate,uimode,volume');
 			setOptions('realmedia', 'autostart,loop,autogotourl,center,imagestatus,maintainaspect,nojava,prefetch,shuffle,console,controls,numloop,scriptcallbacks');
 			setOptions('video', 'poster,autoplay,loop,preload,controls');
+			setOptions('audio', 'autoplay,loop,preload,controls');
 			setOptions('global', 'id,name,vspace,hspace,bgcolor,align,width,height');
 
 			if (to_form) {
@@ -226,6 +236,17 @@
 					src = data.video.sources[2];
 					if (src)
 						setVal('video_altsource2', src.src);
+                } else if (data.type == 'audio') {
+                    if (data.video.sources[0])
+                        setVal('src', data.video.sources[0].src);
+                    
+                    src = data.video.sources[1];
+                    if (src)
+                        setVal('audio_altsource1', src.src);
+                    
+                    src = data.video.sources[2];
+                    if (src)
+                        setVal('audio_altsource2', src.src);
 				} else {
 					// Check flash vars
 					if (data.type == 'flash') {
@@ -274,12 +295,25 @@
 					src = getVal("video_altsource2");
 					if (src)
 						data.video.sources[2] = {src : src};
+                } else if (data.type == 'audio') {
+                    if (!data.video.sources)
+                        data.video.sources = [];
+                    
+                    data.video.sources[0] = {src : src};
+                    
+                    src = getVal("audio_altsource1");
+                    if (src)
+                        data.video.sources[1] = {src : src};
+                    
+                    src = getVal("audio_altsource2");
+                    if (src)
+                        data.video.sources[2] = {src : src};
 				} else
 					data.params.src = src;
 
 				// Set default size
-				setVal('width', data.width || 320);
-				setVal('height', data.height || 240);
+                setVal('width', data.width || (data.type == 'audio' ? 300 : 320));
+                setVal('height', data.height || (data.type == 'audio' ? 32 : 240));
 			}
 		},
 
@@ -308,16 +342,16 @@
 		},
 
 		beforeResize : function() {
-			this.width = parseInt(getVal('width') || "320", 10);
-			this.height = parseInt(getVal('height') || "240", 10);
+            this.width = parseInt(getVal('width') || (this.data.type == 'audio' ? "300" : "320"), 10);
+            this.height = parseInt(getVal('height') || (this.data.type == 'audio' ? "32" : "240"), 10);
 		},
 
 		changeSize : function(type) {
 			var width, height, scale, size;
 
 			if (get('constrain').checked) {
-				width = parseInt(getVal('width') || "320", 10);
-				height = parseInt(getVal('height') || "240", 10);
+                width = parseInt(getVal('width') || (this.data.type == 'audio' ? "300" : "320"), 10);
+                height = parseInt(getVal('height') || (this.data.type == 'audio' ? "32" : "240"), 10);
 
 				if (type == 'width') {
 					this.height = Math.round((width / this.width) * height);

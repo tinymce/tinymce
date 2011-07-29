@@ -1,4 +1,5 @@
 Version 3.4.3.x (2011-xx-xx)
+	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Fixed bug where formatting change would be lost after pressing enter.
 	Fixed bug in WebKit where deleting across blocks would add extra styles.
 	Fixed bug where moving cursor vertically in tables in WebKit wasn't working.
