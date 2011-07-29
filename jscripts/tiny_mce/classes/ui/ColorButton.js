@@ -19,10 +19,10 @@
 	 * @extends tinymce.ui.ColorSplitButton
 	 */
 	tinymce.create('tinymce.ui.ColorButton:tinymce.ui.ColorSplitButton', {
-		ColorButton: function(id, s) {
+		ColorButton: function(id, s, ed) {
 			var t = this;
 
-			t.parent(id, s);
+			t.parent(id, s, ed);
 		},
 
 		postRender: function() {
