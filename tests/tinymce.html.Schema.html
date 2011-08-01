@@ -186,7 +186,7 @@ test('getNonEmptyElements', function() {
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
 		"basefont": {}, "base": {}, "area": {}, "source" : {},
-		"td": {}, "th": {}, "iframe": {}, "video": {}, "object": {}
+		"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}
 	});
 });
 
@@ -195,7 +195,7 @@ test('getWhiteSpaceElements', function() {
 
 	var schema = new tinymce.html.Schema();
 	deepEqual(schema.getWhiteSpaceElements(), {
-		"style": {}, "script": {}, "pre": {}
+		"style": {}, "script": {}, "pre": {}, "textarea": {}
 	});
 });
 
