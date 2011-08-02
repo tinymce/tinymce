@@ -202,7 +202,49 @@
 				}
 			};
 
-			function applyRngStyle(rng) {
+			function applyStyleToList(node, bookmark, wrapElm, newWrappers, process){
+				var nodes =[], listIndex =-1, list, startIndex = -1, endIndex = -1, currentWrapElm;
+				
+				// find the index of the first child list.
+				each(node.childNodes, function(n, index) {
+					if (n.nodeName==="UL"||n.nodeName==="OL") {listIndex = index; list=n; return false; }
+				});
+				
+				// get the index of the bookmarks
+				each(node.childNodes, function(n, index) {
+					if (n.nodeName==="SPAN" &&dom.getAttrib(n, "data-mce-type")=="bookmark" && n.id==bookmark.id+"_start") {startIndex=index}
+					if (n.nodeName==="SPAN" &&dom.getAttrib(n, "data-mce-type")=="bookmark" && n.id==bookmark.id+"_end") {endIndex=index}
+				});
+				
+				// if the selection spans across an embedded list, or there isn't an embedded list - handle processing normally
+				if (listIndex<=0 || (startIndex<listIndex&&endIndex>listIndex)) {
+					each(tinymce.grep(node.childNodes), process);
+					return 0;
+				} else {
+					currentWrapElm = wrapElm.cloneNode(FALSE);
+					
+					// create a list of the nodes on the same side of the list as the selection
+					each(tinymce.grep(node.childNodes), function(n, index) {
+						if ((startIndex<listIndex && index <listIndex) || (startIndex>listIndex && index >listIndex)) {
+							nodes.push(n); 
+							n.parentNode.removeChild(n); 
+						}
+					});
+					
+					// insert the wrapping element either before or after the list.
+					if (startIndex<listIndex) {
+						node.insertBefore(currentWrapElm, list);
+					} else if (startIndex>listIndex) {
+						node.insertBefore(currentWrapElm, list.nextSibling);
+					}
+					
+					// add the new nodes to the list.
+					newWrappers.push(currentWrapElm);
+					each(nodes, function(node){currentWrapElm.appendChild(node)});
+					return currentWrapElm;
+				}
+			};
+			function applyRngStyle(rng, bookmark) {
 				var newWrappers = [], wrapName, wrapElm;
 
 				// Setup wrapper element
@@ -279,16 +321,9 @@
 							}
 
 							currentWrapElm.appendChild(node);
-						} else if (nodeName == 'li') {
-							// Start wrapping - if we are in a list node then we will always begin by wrapping in a new element.
-							liTextNode = node.ownerDocument.createTextNode('');
-							each(tinymce.grep(node.childNodes), function(n) { if (n.nodeType == 3) { liTextNode.nodeValue += n.nodeValue; n.parentNode.removeChild(n); } });
-							currentWrapElm = wrapElm.cloneNode(FALSE);
-							node.insertBefore(currentWrapElm, node.firstChild);
-							newWrappers.push(currentWrapElm);
-
-							currentWrapElm.appendChild(liTextNode);
-							
+						} else if (nodeName == 'li' && bookmark) {
+							// Start wrapping - if we are in a list node and have a bookmark, then we will always begin by wrapping in a new element.
+							currentWrapElm = applyStyleToList(node, bookmark, wrapElm, newWrappers, process);
 						} else {
 							// Start a new wrapper for possible children
 							currentWrapElm = 0;
@@ -444,7 +479,7 @@
 
 						// Apply formatting to selection
 						bookmark = selection.getBookmark();
-						applyRngStyle(expandRng(selection.getRng(TRUE), formatList));
+						applyRngStyle(expandRng(selection.getRng(TRUE), formatList), bookmark);
 
 						// Colored nodes should be underlined so that the color of the underline matches the text color.
 						if (format.styles && (format.styles.color || format.styles.textDecoration)) {

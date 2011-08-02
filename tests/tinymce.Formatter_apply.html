@@ -751,6 +751,49 @@ test('No wrapping of links', function() {
 	equals(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
 });
 
+test("Applying formats in lists", function(){
+	editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[0].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>nested</li>\n</ul>\n</li>\n</ul>', "heading should not automatically apply to sublists");
+
+	editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[1].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+
+	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].lastChild, 1);
+	rng.setEnd(editor.dom.select('li')[0].lastChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>nested</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+
+	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[1].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+
+	
+	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>\n<h1>before</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should apply correctly when selection is after a sublist");
+});
+
 test('Colored elements in a paragraph', function() {
 	editor.formatter.register('format', {inline: 'span', styles : {'color' : '#ff0000'}});
 	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;">test</span></p>');
