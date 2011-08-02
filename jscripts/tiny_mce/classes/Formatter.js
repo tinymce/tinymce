@@ -1776,7 +1776,7 @@
 								
 								// no caret - so we are 
 								if (enterKeyPressed && !foundCaret) {
-									var node = selection.getRng().startContainer;
+									var node = selection.getNode();
 									var textNode = node;
 
 									// Find the first text node within node
