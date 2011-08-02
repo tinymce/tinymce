@@ -46,6 +46,16 @@
 			checkExpectedAfterNewParagraph(expected);
 		});
 
+		asyncTest('Format selection over two lines', function(){
+			editor.setContent("<div id='a'>one</div><div id='b'>two</div>");
+			editor.focus();
+			setSelection('#a', 0, '#b', 0);
+			editor.execCommand('formatBlock', false, 'h1');
+			equals(editor.dom.select('#a')[0].tagName, 'H1');
+			equals(editor.dom.select('#b')[0].tagName, 'DIV');
+			queue.done();
+		});
+
 		tinyMCE.init({
 			mode : "exact",
 			elements : "elm1",

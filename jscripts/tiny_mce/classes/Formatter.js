@@ -201,7 +201,30 @@
 					});
 				}
 			};
+			function adjustSelectionToVisibleSelection() {
 
+				function findSelectionEnd(start, end) {
+					var walker = new TreeWalker(end);
+					for (node = walker.current(); node; node = walker.prev()) {
+						if (node.childNodes.length > 1 || node == start) {
+							return node;
+						}
+					}
+				}
+
+				// Adjust selection so that a end container with a end offset of zero is not included in the selection
+				// as this isn't visible to the user.
+				var rng = ed.selection.getRng();
+				var start = rng.startContainer;
+				var end = rng.endContainer;
+				if (start != end && rng.endOffset == 0) {
+					var newEnd = findSelectionEnd(start, end);
+					var endOffset = newEnd.nodeType == 3 ? newEnd.length : newEnd.childNodes.length;
+					rng.setEnd(newEnd, endOffset);
+				}
+				return rng;
+			}
+			
 			function applyStyleToList(node, bookmark, wrapElm, newWrappers, process){
 				var nodes =[], listIndex =-1, list, startIndex = -1, endIndex = -1, currentWrapElm;
 				
@@ -244,6 +267,7 @@
 					return currentWrapElm;
 				}
 			};
+			
 			function applyRngStyle(rng, bookmark) {
 				var newWrappers = [], wrapName, wrapElm;
 
@@ -478,6 +502,7 @@
 						var curSelNode = ed.selection.getNode();
 
 						// Apply formatting to selection
+						ed.selection.setRng(adjustSelectionToVisibleSelection());
 						bookmark = selection.getBookmark();
 						applyRngStyle(expandRng(selection.getRng(TRUE), formatList), bookmark);
 
