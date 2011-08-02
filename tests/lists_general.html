@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>List General Tests</title>
+<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/tiny_mce_loader.js"></script>
+<script type="text/javascript" src="js/dsl/dsl.js"></script>
+<script>
+QUnit.config.autostart = false;
+var ENTER = 0xA;
+
+module('Lists - General', {
+	autostart: false,
+	setup: function() {
+		window.queue = new dsl.Queue();
+	}
+});
+
+// Tests
+asyncTest('Escape unordered list by pressing enter on last empty li', function() {
+	editor.setContent("");
+	editor.execCommand('InsertUnorderedList');
+	robot.type('a', false, function(){
+		robot.type(ENTER, false, function(){
+			robot.type(ENTER, false, function() {
+				var node = editor.selection.getNode();
+				var list = editor.dom.getParent(node, 'ol,ul');
+				equals(editor.dom.select('li').length, 1);
+				ok(list === null, "selection must be outside of list");
+				queue.done();
+			}, editor.selection.getNode());
+		}, editor.selection.getNode());
+	}, editor.selection.getNode());
+});
+
+asyncTest('Escape ordered list by pressing enter on last empty li', function() {
+	editor.setContent("");
+	editor.execCommand('InsertOrderedList');
+	robot.type('a', false, function() {
+		robot.type(ENTER, false, function() {
+			robot.type(ENTER, false, function() {
+				var node = editor.selection.getNode();
+				var list = editor.dom.getParent(node, 'ol,ul');
+				equals(editor.dom.select('li').length, 1);
+				ok(list === null, "selection must be outside of list");
+				queue.done();
+			}, editor.selection.getNode());
+		}, editor.selection.getNode());
+	}, editor.selection.getNode());
+});
+
+asyncTest('Caret position correctly after pressing enter on li with text', function() {
+	editor.setContent("<ol><li>a<ol><li>b</li><li></li></ol></li></ol>");
+	setSelection('li ol li:nth-child(2)', 0);
+	robot.type(ENTER, false, function(){
+		var node = editor.selection.getNode();
+		equals(editor.getContent(), "<ol><li>a<ol><li>b</li></ol></li></ol>");
+		equals(node.parentNode.lastChild, node);
+		queue.done();
+	}, editor.selection.getNode());
+});
+
+asyncTest('Outdent on enter when setting is set', function() {
+	editor.settings.list_outdent_on_enter = true;
+	editor.setContent("<ol><li>a<ol><li>b</li><li></li></ol></li></ol>");
+	setSelection('li ol li:nth-child(2)', 0);
+	robot.type(ENTER, false, function(){
+		equals(editor.getContent(), "<ol><li>a<ol><li>b</li></ol></li><li></li></ol>");
+		queue.done();
+	}, editor.selection.getNode());
+});
+
+asyncTest('Caret positioned correctly after escaping list and applying formatting ', function() {
+	// Don't run this test on Firefox as there is a bug outdenting list items and this will fail the test.
+	// When we have outdented from a sub list item to the outmost level no marker is shown and we can't exit the list by
+	// pressing enter. Pressing enter correctly exists the list.
+	if (tinymce.isGecko) {
+		queue.done();
+	}
+
+	editor.settings.list_outdent_on_enter = true;
+	editor.setContent("<ul><li>a<ul><li>b</li></ul></li></ul>");
+	setSelection('li ul li', 1);
+	robot.type(ENTER, false, function() {
+		robot.type(ENTER, false, function() {
+			robot.type(ENTER, false, function() {
+				editor.execCommand('FormatBlock', false, 'h1');
+				var node = editor.selection.getNode();
+				var list = editor.dom.getParent(node, 'ol,ul');
+				ok(list === null, "selection must be outside of list");
+				queue.done();
+			}, editor.selection.getNode());
+		}, editor.selection.getNode());
+	}, editor.selection.getNode());
+});
+
+tinyMCE.init({
+	mode : "exact",
+	elements : "elm1",
+	theme : "advanced",
+	cleanup: true,
+	// Turn this off because we want the list actions to create the right DOM structure from the start.
+	fix_list_elements: false,
+	plugins : 'lists',
+	add_unload_trigger : false,
+	apply_source_formatting : 0,
+	init_instance_callback : function(ed) {
+		editor = ed;
+
+		ed.onNodeChange.addToTop(function() {
+			return false;
+		});
+	}
+});
+
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">List General Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+	</div>
+	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
+	<script>
+		initWhenTinyAndRobotAreReady();
+	</script>
+</body>
+</html>

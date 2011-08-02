@@ -174,8 +174,6 @@ asyncTest('Collapsed Selection - Type Enter', function() {
 	TypingEnter.inA(NonEmptyOrderedListItem).gives('<ol>\n<li>Before</li>\n<li></li>\n<li>Test</li>\n<li>After</li>\n</ol>');
 	TypingEnter.inA(NonEmptyUnorderedListItem).gives('<ul>\n<li>Before</li>\n<li></li>\n<li>Test</li>\n<li>After</li>\n</ul>');
 	
-	TypingEnter.inA(NestedEmptyOrderedListItem).gives('<ol>\n<li>Before<ol>\n<li></li>\n<li>&nbsp;</li>\n</ol></li>\n<li>After</li>\n</ol>');
-	TypingEnter.inA(NestedEmptyUnorderedListItem).gives('<ul>\n<li>Before<ul>\n<li></li>\n<li>&nbsp;</li>\n</ul></li>\n<li>After</li>\n</ul>');
 	TypingEnter.inA(NestedNonEmptyOrderedListItem).gives('<ol>\n<li>Before<ol>\n<li></li>\n<li>Test</li>\n</ol></li>\n<li>After</li>\n</ol>');
 	TypingEnter.inA(NestedNonEmptyUnorderedListItem).gives('<ul>\n<li>Before<ul>\n<li></li>\n<li>Test</li>\n</ul></li>\n<li>After</li>\n</ul>');
 

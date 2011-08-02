@@ -100,7 +100,7 @@
 		 * @param offset Offset from the start of the node to put the cursor at.
 		 */
 		setCursorLocation: function(node, offset) {
-			var t = this; var r = t.getRng();
+			var t = this; var r = t.dom.createRng();
 			r.setStart(node, offset);
 			r.setEnd(node, offset);
 			t.setRng(r);

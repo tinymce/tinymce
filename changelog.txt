@@ -1,4 +1,5 @@
 Version 3.4.3.x (2011-xx-xx)
+	Fixed browser specific bugs in lists for WebKit and IE
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Added mute option for video elements and preload options for video/audio patch contributed by Dmitry Kalinkin.
 	Fixed bug where formatting change would be lost after pressing enter.
