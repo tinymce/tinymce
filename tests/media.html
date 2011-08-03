@@ -166,8 +166,8 @@ test("Video (attributes)", function() {
 
 	editor.settings.relative_urls = true;
 
-	editor.setContent('<video src="320x240.ogg" preload autoplay loop controls></video>');
-	equals(editor.getContent(), '<p><video width="320" height="240" src="320x240.ogg" preload="preload" autoplay="autoplay" loop="loop" controls="controls"></video></p>');
+	editor.setContent('<video src="320x240.ogg" autoplay loop controls></video>');
+	equals(editor.getContent(), '<p><video width="320" height="240" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls"></video></p>');
 });
 
 test("Video (fallback html)", function() {
@@ -184,8 +184,8 @@ test("Video (attributes/source)", function() {
 
 	editor.settings.relative_urls = true;
 
-	editor.setContent('<video src="320x240.ogg" preload autoplay loop controls><source src="video.ogv" type="video/ogg; codecs=&quot;theora, vorbis&quot;" /><source src=\'video.3gp\' type=\'video/3gpp; codecs="mp4v.20.8, samr"\' /></video>');
-	equals(editor.getContent(), '<p><video width="320" height="240" src="320x240.ogg" preload="preload" autoplay="autoplay" loop="loop" controls="controls"><source src="video.ogv" type="video/ogg; codecs=&quot;theora, vorbis&quot;" /><source src="video.3gp" type="video/3gpp; codecs=&quot;mp4v.20.8, samr&quot;" /></video></p>');
+	editor.setContent('<video src="320x240.ogg" autoplay loop controls><source src="video.ogv" type="video/ogg; codecs=&quot;theora, vorbis&quot;" /><source src=\'video.3gp\' type=\'video/3gpp; codecs="mp4v.20.8, samr"\' /></video>');
+	equals(editor.getContent(), '<p><video width="320" height="240" src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls"><source src="video.ogv" type="video/ogg; codecs=&quot;theora, vorbis&quot;" /><source src="video.3gp" type="video/3gpp; codecs=&quot;mp4v.20.8, samr&quot;" /></video></p>');
 });
 
 test("Video (source tag to src attr)", function() {
