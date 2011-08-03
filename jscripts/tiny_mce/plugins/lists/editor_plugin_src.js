@@ -224,6 +224,8 @@
 			}
 
 			function imageJoiningListItem(ed, e) {
+				var prevSibling;
+
 				if (!tinymce.isGecko)
 					return;
 
@@ -250,11 +252,16 @@
 						destination.appendChild(parentNode.childNodes[0]);
 				}
 
+				// Check if there is a previous sibling
+				prevSibling = n.parentNode.previousSibling;
+				if (!prevSibling)
+					return;
+
 				var ul;
-				if (n.parentNode.previousSibling.tagName === 'UL' || n.parentNode.previousSibling.tagName === 'OL')
-					ul = n.parentNode.previousSibling;
-				else if (n.parentNode.previousSibling.previousSibling.tagName === 'UL' || n.parentNode.previousSibling.previousSibling.tagName === 'OL')
-					ul = n.parentNode.previousSibling.previousSibling;
+				if (prevSibling.tagName === 'UL' || prevSibling.tagName === 'OL')
+					ul = prevSibling;
+				else if (prevSibling.previousSibling && (prevSibling.previousSibling.tagName === 'UL' || prevSibling.previousSibling.tagName === 'OL'))
+					ul = prevSibling.previousSibling;
 				else
 					return;
 
