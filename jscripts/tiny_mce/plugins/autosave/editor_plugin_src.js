@@ -335,7 +335,7 @@
 		 * @method restoreDraft
 		 */
 		restoreDraft : function() {
-			var self = this, storage = self.storage;
+			var self = this, storage = self.storage, content;
 
 			if (storage) {
 				content = storage.getItem(self.key);
