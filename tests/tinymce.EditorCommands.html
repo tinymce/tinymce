@@ -262,6 +262,19 @@ test('mceInsertContent - mixed inline content inside td', function() {
 	equals(editor.getContent(), '<table><tbody><tr><td>test<strong>123</strong><!-- a -->X</td></tr></tbody></table>');
 });
 
+test('mceInsertContent - invalid insertion with spans on page', function(){
+	var startingContent = '<p>123 testing <span>span later in document</span></p>',
+		insertedContent = '<ul><li>u</li><li>l</li></ul>';
+	editor.setContent(startingContent);
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 0);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertContent', false, insertedContent);
+
+	equals(editor.getContent(), insertedContent + startingContent);
+});
+
 test('InsertHorizontalRule', function() {
 	var rng;
 	

@@ -175,6 +175,19 @@ test("Disable default filters", function() {
 	editor.settings.paste_enable_default_filters = true;
 });
 
+test('paste invalid content with spans on page', function(){
+	var startingContent = '<p>123 testing <span>span later in document</span></p>',
+		insertedContent = '<ul><li>u</li><li>l</li></ul>';
+	editor.setContent(startingContent);
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 0);
+	editor.selection.setRng(rng);
+	editor.execCommand('mceInsertClipboardContent', false, {content : insertedContent});
+
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), insertedContent + startingContent);
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
