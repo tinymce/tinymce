@@ -1,13 +1,14 @@
-Version 3.4.3.x (2011-xx-xx)
-	Fixed selection to match visual selection before applying formatting changes.
-	Fixed browser specific bugs in lists for WebKit and IE
+Version 3.4.4 (2011-08-04)
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Added mute option for video elements and preload options for video/audio patch contributed by Dmitry Kalinkin.
+	Fixed selection to match visual selection before applying formatting changes.
+	Fixed browser specific bugs in lists for WebKit and IE.
+	Fixed bug where IE would scroll the window if you closed an inline dialog that was larger than the viewport. Patch by Laurence Keijmel.
+	Fixed bug where pasting contents near a span element could remove parts of that span. Patch contributed by Wesley Walser.
 	Fixed bug where formatting change would be lost after pressing enter.
 	Fixed bug in WebKit where deleting across blocks would add extra styles.
 	Fixed bug where moving cursor vertically in tables in WebKit wasn't working.
 	Fixed bug in IE where deleting would cause error in console.
-	Fixed tests in IE.
 	Fixed bug where the formatter was not applying formats across list elements.
 	Fixed bug where the wordcount plugin would try and update the wordcount if tinymce had been destroyed.
 	Fixed bug where tabfocus plugin would attempt to focus elements not displayed when their parent element was hidden.
