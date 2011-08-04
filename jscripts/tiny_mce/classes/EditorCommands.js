@@ -365,7 +365,7 @@
 					value = serializer.serialize(
 						parser.parse(
 							// Need to replace by using a function since $ in the contents would otherwise be a problem
-							value.replace(/<span (id="mce_marker"|id=mce_marker).+<\/span>/i, function() {
+							value.replace(/<span (id="mce_marker"|id=mce_marker).+?<\/span>/i, function() {
 								return serializer.serialize(fragment);
 							})
 						)
