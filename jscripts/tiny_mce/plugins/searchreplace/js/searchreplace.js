@@ -71,6 +71,9 @@ var SearchReplaceDialog = {
 
 		switch (a) {
 			case 'all':
+				// remember selection
+				var selBookmark = ed.selection.getBookmark();
+				
 				// Move caret to beginning of text
 				ed.execCommand('SelectAll');
 				ed.selection.collapse(true);
@@ -79,7 +82,8 @@ var SearchReplaceDialog = {
 					ed.focus();
 					r = ed.getDoc().selection.createRange();
 
-					while (r.findText(s, b ? -1 : 1, fl)) {
+					// ignore backward search
+					while (r.findText(s, 1, fl)) {
 						r.scrollIntoView();
 						r.select();
 						replace();
@@ -92,7 +96,8 @@ var SearchReplaceDialog = {
 
 					tinyMCEPopup.storeSelection();
 				} else {
-					while (w.find(s, ca, b, false, false, false, false)) {
+					// ignore backward search
+					while (w.find(s, ca, false, false, false, false, false)) {
 						replace();
 						fo = 1;
 					}
@@ -102,6 +107,9 @@ var SearchReplaceDialog = {
 					tinyMCEPopup.alert(ed.getLang('searchreplace_dlg.allreplaced'));
 				else
 					tinyMCEPopup.alert(ed.getLang('searchreplace_dlg.notfound'));
+				
+				// set the remembered selection back
+				ed.selection.moveToBookmark(selBookmark);
 
 				return;
 
