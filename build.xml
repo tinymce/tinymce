@@ -37,7 +37,7 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="tasks.classpath" loaderref="tasks.classpath.loader" />
 
 	<!-- Generate JS documentation -->
-	<target name="moxiedoc" depends="" description="Generates HTML documentation out of js source">
+	<target name="moxiedoc" depends="" description="Generates HTML documentation out of js source" unless="nomoxiedoc">
 		<mkdir dir="docs"/>
 		<delete quiet="true">
 			<fileset dir="docs/api" includes="**/*"/>

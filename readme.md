@@ -24,6 +24,10 @@ Will generate API Documentation for the project using the Moxiedoc tool. The doc
 
 Will produce an release package of the current repository code. The release packages will be placed in the tmp directory.
 
+`ant release -Dnomoxiedoc=true`
+
+Same as above, but don't generate API Documentation.
+
 Contributing to the TinyMCE project
 ------------------------------------
 You can read more about how to contribute to this project at [http://tinymce.moxiecode.com/contributing](http://tinymce.moxiecode.com/contributing)
