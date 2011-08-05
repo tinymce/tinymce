@@ -46,9 +46,11 @@ if (tinymce.isWebKit) {
 }
 
 function testCursorKey(html, nodeToSelect, keyCode, expected) {
+	editor.focus();
 	editor.setContent(html);
 	editor.focus();
 	setSelection(nodeToSelect, 0);
+	editor.focus();
 	robot.type(keyCode, false, function() {
 		var node = editor.selection.getNode();
 		var actual = node.firstChild.nodeValue;
@@ -58,9 +60,15 @@ function testCursorKey(html, nodeToSelect, keyCode, expected) {
 }
 
 asyncTest('arrow up key moves to row above', function() {
-	var html = '<table><tr><td>1</td></tr><tr><td id="b">2</td></tr></table>';
+	var html = '<table><tr><td>0</td><td>1</td></tr><tr><td>0</td><td id="b">2</td></tr></table>';
 	testCursorKey(html, '#b', UP_ARROW, '1');
 });
+
+asyncTest('arrow up key moves to row above for heading cells', function() {
+	var html = '<table><tr><td>0</td><td>1</td></tr><tr><td>0</td><th id="b">2</th></tr></table>';
+	testCursorKey(html, '#b', UP_ARROW, '1');
+});
+
 
 asyncTest('arrow down key moves to row below', function() {
 	var html = '<table><tr><td id="a"></td></tr><tr><td>2</td></tr></table>';
