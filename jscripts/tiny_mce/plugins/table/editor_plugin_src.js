@@ -1130,7 +1130,7 @@
 						}
 
 						function moveCursorToRow(ed, node, row) {
-							var srcColumnIndex = columnIndex(ed.dom.getParent(node, 'td'));
+							var srcColumnIndex = columnIndex(ed.dom.getParent(node, 'td,th'));
 							var tgtColumnIndex = findColumn(row, srcColumnIndex)
 							var tgtNode = row.childNodes[tgtColumnIndex];
 							moveCursorToStartOfElement(tgtNode);
