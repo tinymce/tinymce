@@ -179,9 +179,21 @@
 		<for param="file">
 			<path>
 				<fileset dir="${build_dir}/plugins/" includes="*/editor_plugin_src.js" />
+				<fileset dir="${build_dir}/plugins/">
+					<include name="**/js/*.js" />
+					<filename regex="(?&lt;!.min)\.js$" />
+				</fileset>
 			</path>
 			<sequential>
-				<propertyregex property="file.compressed" input="@{file}" regexp="_src.js$" replace=".js" override="yes" />
+				<if>
+					<matches string="@{file}" pattern="_src\.js$" />
+					<then>
+						<propertyregex property="file.compressed" input="@{file}" regexp="_src.js$" replace=".js" override="yes" />
+					</then>
+					<else>
+						<propertyregex property="file.compressed" input="@{file}" regexp="\.js$" replace=".min.js" override="yes" />
+					</else>
+				</if>
 				<yuicompress infile="@{file}" outfile="${file.compressed}" />
 			</sequential>
 		</for>
@@ -217,14 +229,17 @@
 				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
 				<exclude name="build-utils/**" />
+
 				<!-- let the other FileSet take care of it -->
 				<exclude name="jscripts/tiny_mce/themes/advanced/js/*" />
+				<exclude name="jscripts/tiny_mce/plugins/**/js/*" />
 			</fileset>
 		</copy>
 
 		<move todir="${temp_dir}/tinymce">
 			<fileset dir=".">
 				<include name="jscripts/tiny_mce/themes/advanced/js/*.min.js" />
+				<include name="jscripts/tiny_mce/plugins/**/js/*.min.js" />
 			</fileset>
 			<mapper type="glob" from="*.min.js" to="*.js" />
 		</move>
