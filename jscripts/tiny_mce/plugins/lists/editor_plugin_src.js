@@ -329,6 +329,7 @@
 			ed.onKeyUp.add(function(ed, e) {
 				if (state == LIST_TABBING) {
 					ed.execCommand(e.shiftKey ? 'Outdent' : 'Indent', true, null);
+					state = LIST_UNKNOWN;
 					return Event.cancel(e);
 				} else if (state == LIST_EMPTY_ITEM) {
 					var li = getLi();
