@@ -171,9 +171,13 @@ var ImageDialog = {
 		if (el && el.nodeName == 'IMG') {
 			ed.dom.setAttribs(el, args);
 		} else {
-			ed.execCommand('mceInsertContent', false, '<img id="__mce_tmp" />', {skip_undo : 1});
-			ed.dom.setAttribs('__mce_tmp', args);
-			ed.dom.setAttrib('__mce_tmp', 'id', '');
+			tinymce.each(args, function(value, name) {
+				if (value === "") {
+					delete args[name];
+				}
+			});
+
+			ed.execCommand('mceInsertContent', false, tinyMCEPopup.editor.dom.createHTML('img', args), {skip_undo : 1});
 			ed.undoManager.add();
 		}
 

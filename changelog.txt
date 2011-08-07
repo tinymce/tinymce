@@ -1,3 +1,5 @@
+Version 3.4.4.x (2011-08-xx)
+	Fixed bug with image dialogs not inserting an image if id was omitted from valid_elements.
 Version 3.4.4 (2011-08-04)
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Added mute option for video elements and preload options for video/audio patch contributed by Dmitry Kalinkin.
