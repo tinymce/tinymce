@@ -53,6 +53,16 @@ asyncTest('Escape ordered list by pressing enter on last empty li', function() {
 	}, editor.selection.getNode());
 });
 
+asyncTest('Caret positioned correctly after outdenting on non-last empty li', function() {
+	editor.setContent("<ul><li>a</li><li id='a'></li><li>b</li></ul>");
+	setSelection("#a", 0);
+	robot.type(TAB, true, function() {
+		var tagName = editor.selection.getNode().tagName;
+		equals('P', tagName);
+		queue.done();
+	}, editor.selection.getNode());
+});
+
 asyncTest('Caret position correctly after pressing enter on li with text', function() {
 	editor.setContent("<ol><li>a<ol><li>b</li><li></li></ol></li></ol>");
 	setSelection('li ol li:nth-child(2)', 0);
