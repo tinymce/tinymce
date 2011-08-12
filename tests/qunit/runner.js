@@ -1,6 +1,8 @@
 (function() {
 	var iframe, logElement, initSettings, index, testFailures, testTotal, testLog, currentTest;
 
+	top.focus();
+
 	function log(message, display) {
 		var div;
 		
@@ -47,8 +49,8 @@
 
 	// Register done call
 	if (top != window && QUnit) {
-		QUnit.done = function(failures, total) {
-			top.QUnitRunner.done(failures, total, document.title);
+		QUnit.done = function(data) {
+			top.QUnitRunner.done(data.failed, data.total, document.title);
 		};
 	}
 
@@ -190,3 +192,7 @@
 		}
 	};
 })();
+
+function provide(tests) {
+	QUnitRunner.init({columns: tests});
+};
