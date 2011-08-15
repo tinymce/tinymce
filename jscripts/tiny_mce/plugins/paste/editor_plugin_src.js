@@ -367,7 +367,7 @@
 				process([
 					[/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
 					[/<br>/g, ' '], // Replace single br elements with space since they are word wrap BR:s
-					[/<BR><BR>/g, '<br>'], // Replace back the double brs but into a single BR
+					[/<BR><BR>/g, '<br>'] // Replace back the double brs but into a single BR
 				]);
 			}
 
