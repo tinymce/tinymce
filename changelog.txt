@@ -1,4 +1,5 @@
 Version 3.4.4.x (2011-08-xx)
+	Fixed bug in WebKit where console messages would be logged when deleting an empty document.
 	Fixed bug in IE8 where caret positioned is on list item instead of paragraph when outdent splits the list
 	Fixed bug with image dialogs not inserting an image if id was omitted from valid_elements.
 Version 3.4.4 (2011-08-04)

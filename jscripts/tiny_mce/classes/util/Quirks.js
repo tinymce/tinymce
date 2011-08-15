@@ -5,7 +5,7 @@
 				if (e.keyCode == VK.DELETE ||e.keyCode == VK.BACKSPACE) {
 					var startContainer = selection.getRng().startContainer;
 					var blockElement = startContainer;
-					while (!dom.isBlock(blockElement)) {
+					while (blockElement!=null && !dom.isBlock(blockElement)) {
 						blockElement = blockElement.parentNode;
 					}
 					var spans = dom.select("span.Apple-style-span", blockElement);
