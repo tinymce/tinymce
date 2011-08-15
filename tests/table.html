@@ -47,7 +47,6 @@ if (tinymce.isWebKit) {
 }
 
 function testCursorKey(html, nodeToSelect, keyCode, expected) {
-	editor.focus();
 	editor.setContent(html);
 	editor.focus();
 	setSelection(nodeToSelect, 0);
