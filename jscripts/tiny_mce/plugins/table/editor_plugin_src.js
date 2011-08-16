@@ -25,6 +25,10 @@
 		return elm.innerHTML.replace(/<(br|img|object|embed|input|textarea)[^>]*>/gi, '-').replace(/<[^>]+>/g, '').length == 0;
 	};
 
+	function getSpanVal(td, name) {
+		return parseInt(td.getAttribute(name) || 1);
+	}
+
 	/**
 	 * Table Grid class.
 	 */
@@ -98,10 +102,6 @@
 			row = grid[y];
 			if (row)
 				return row[x];
-		};
-
-		function getSpanVal(td, name) {
-			return parseInt(td.getAttribute(name) || 1);
 		};
 
 		function setSpanVal(td, name, val) {
@@ -928,7 +928,7 @@
 									return;
 								}
 							} while (node = (start ? walker.next() : walker.prev()));
-						};
+						}
 
 						// Try to expand text selection as much as we can only Gecko supports cell selection
 						selectedCells = dom.select('td.mceSelected,th.mceSelected');
@@ -964,6 +964,60 @@
 				ed.onKeyUp.add(function(ed, e) {
 					cleanup();
 				});
+
+				ed.onKeyDown.add(function (ed, e) {
+					fixTableCellSelection(ed);
+				});
+
+				ed.onMouseDown.add(function (ed, e) {
+					if (e.button != 2) {
+						fixTableCellSelection(ed);
+					}
+				});
+				function tableCellSelected(ed, rng, n, currentCell) {
+					// The decision of when a table cell is selected is somewhat involved.  The fact that this code is
+					// required is actually a pointer to the root cause of this bug. A cell is selected when the start 
+					// and end offsets are 0, the start container is a text, and the selection node is either a TR (most cases)
+					// or the parent of the table (in the case of the selection containing the last cell of a table).
+					var TEXT_NODE = 3, table = ed.dom.getParent(rng.startContainer, 'TABLE'), 
+					tableParent, allOfCellSelected, tableCellSelection;
+					if (table) 
+					tableParent = table.parentNode;
+					allOfCellSelected =rng.startContainer.nodeType == TEXT_NODE && 
+						rng.startOffset == 0 && 
+						rng.endOffset == 0 && 
+						currentCell && 
+						(n.nodeName=="TR" || n==tableParent);
+					tableCellSelection = (n.nodeName=="TD"||n.nodeName=="TH")&& !currentCell;       
+					return  allOfCellSelected || tableCellSelection;
+					// return false;
+				}
+				
+				// this nasty hack is here to work around some WebKit selection bugs.
+				function fixTableCellSelection(ed) {
+					if (!tinymce.isWebKit)
+						return;
+
+					var rng = ed.selection.getRng();
+					var n = ed.selection.getNode();
+					var currentCell = ed.dom.getParent(rng.startContainer, 'TD');
+				
+					if (!tableCellSelected(ed, rng, n, currentCell))
+						return;
+						if (!currentCell) {
+							currentCell=n;
+						}
+					
+					// Get the very last node inside the table cell
+					var end = currentCell.lastChild;
+					while (end.lastChild)
+						end = end.lastChild;
+                    
+					// Select the entire table cell. Nothing outside of the table cell should be selected.
+					rng.setEnd(end, end.nodeValue.length);
+					ed.selection.setRng(rng);
+				}
+				ed.plugins.table.fixTableCellSelection=fixTableCellSelection;
 
 				// Add context menu
 				if (ed && ed.plugins.contextmenu) {
@@ -1017,6 +1071,106 @@
 					});
 				}
 
+				// Fix to allow navigating up and down in a table in WebKit browsers.
+				if (tinymce.isWebKit) {
+					function moveSelection(ed, e) {
+
+						function moveCursorToStartOfElement(n) {
+							ed.selection.setCursorLocation(n, 0);
+						}
+
+						function getSibling(event, element) {
+							return event.keyCode == UP_ARROW ? element.previousSibling : element.nextSibling;
+						}
+
+						function getNextRow(e, row) {
+							var sibling = getSibling(e, row);
+							return sibling !== null && sibling.tagName === 'TR' ? sibling : null;
+						}
+
+						function getTable(ed, currentRow) {
+							return ed.dom.getParent(currentRow, 'table');
+						}
+
+						function getTableSibling(currentRow) {
+							var table = getTable(ed, currentRow);
+							return getSibling(e, table);
+						}
+
+						function isVerticalMovement(event) {
+							return event.keyCode == UP_ARROW || event.keyCode == DOWN_ARROW;
+						}
+
+						function isInTable(ed) {
+							var node = ed.selection.getNode();
+							var currentRow = ed.dom.getParent(node, 'tr');
+							return currentRow !== null;
+						}
+
+						function columnIndex(column) {
+							var colIndex = 0;
+							var c = column;
+							while (c.previousSibling) {
+								c = c.previousSibling;
+								colIndex = colIndex + getSpanVal(c, "colspan");
+							}
+							return colIndex;
+						}
+
+						function findColumn(rowElement, columnIndex) {
+							var c = 0;
+							var r = 0;
+							each(rowElement.children, function(cell, i) {
+								c = c + getSpanVal(cell, "colspan");
+								r = i;
+								if (c > columnIndex)
+									return false;
+							});
+							return r;
+						}
+
+						function moveCursorToRow(ed, node, row) {
+							var srcColumnIndex = columnIndex(ed.dom.getParent(node, 'td,th'));
+							var tgtColumnIndex = findColumn(row, srcColumnIndex)
+							var tgtNode = row.childNodes[tgtColumnIndex];
+							moveCursorToStartOfElement(tgtNode);
+						}
+
+						function escapeTable(currentRow, e) {
+							var tableSiblingElement = getTableSibling(currentRow);
+							if (tableSiblingElement !== null) {
+								moveCursorToStartOfElement(tableSiblingElement);
+								return tinymce.dom.Event.cancel(e);
+							} else {
+								var element = e.keyCode == UP_ARROW ? currentRow.firstChild : currentRow.lastChild;
+								// rely on default behaviour to escape table after we are in the last cell of the last row
+								moveCursorToStartOfElement(element);
+								return true;
+							}
+						}
+
+						var UP_ARROW = 38;
+						var DOWN_ARROW = 40;
+
+						if (isVerticalMovement(e) && isInTable(ed)) {
+							var node = ed.selection.getNode();
+							var currentRow = ed.dom.getParent(node, 'tr');
+							var nextRow = getNextRow(e, currentRow);
+
+							// If we're at the first or last row in the table, we should move the caret outside of the table
+							if (nextRow == null) {
+								return escapeTable(currentRow, e);
+							} else {
+								moveCursorToRow(ed, node, nextRow);
+								tinymce.dom.Event.cancel(e);
+								return true;
+							}
+						}
+					}
+
+					ed.onKeyDown.add(moveSelection);
+				}
+								
 				// Fixes an issue on Gecko where it's impossible to place the caret behind a table
 				// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled
 				if (!tinymce.isIE) {

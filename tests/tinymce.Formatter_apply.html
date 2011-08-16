@@ -3,8 +3,9 @@
 <head>
 <title>Unit tests for apply formatting</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
-<script type="text/javascript" src="qunit/qunit.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="qunit/connector.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/tiny_mce_loader.js"></script>
@@ -19,6 +20,19 @@ module("Apply formatting", {
 function getContent() {
 	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
 };
+
+test('apply inline to a list', function(){
+	expect(1);
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+	editor.getBody().innerHTML = '<p>1234</p><ul><li>first element</li><li>second element</li></ul><p>5678</p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.apply('format');
+	equals(getContent(), '<p><b>1234</b></p><ul><li><b>first element</b></li><li><b>second element</b></li></ul><p><b>5678</b></p>', 'selection of a list');
+	
+});
 
 test('apply (inline)', function() {
 	var rng, format;
@@ -704,6 +718,7 @@ test('Formatter - Bold and italics is applied to text that is not highlighted', 
 	editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
 	rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
 	rng.setEnd(editor.dom.select('strong')[0].firstChild, 11);
+	editor.focus();
 	editor.selection.setRng(rng);
 	editor.execCommand('Italic');
 	equals(editor.getContent(), '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
@@ -735,6 +750,49 @@ test('No wrapping of links', function() {
 	editor.formatter.apply('format');
 
 	equals(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+});
+
+test("Applying formats in lists", function(){
+	editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[0].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>nested</li>\n</ul>\n</li>\n</ul>', "heading should not automatically apply to sublists");
+
+	editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[1].firstChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+
+	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].lastChild, 1);
+	rng.setEnd(editor.dom.select('li')[0].lastChild, 2);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>nested</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+
+	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[1].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+
+	
+	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('li')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
+	editor.selection.setRng(rng);
+	editor.formatter.apply("h1");
+	equals(editor.getContent(), '<ul>\n<li>\n<h1>before</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should apply correctly when selection is after a sublist");
 });
 
 test('Colored elements in a paragraph', function() {

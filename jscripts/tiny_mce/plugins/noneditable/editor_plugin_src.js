@@ -13,7 +13,7 @@
 
 	tinymce.create('tinymce.plugins.NonEditablePlugin', {
 		init : function(ed, url) {
-			var t = this, editClass, nonEditClass;
+			var t = this, editClass, nonEditClass, state;
 
 			t.editor = ed;
 			editClass = ed.getParam("noneditable_editable_class", "mceEditable");
@@ -33,10 +33,13 @@
 
 				// Block or unblock
 				if (sc || ec) {
+					state = 1;
 					t._setDisabled(1);
 					return false;
-				} else
+				} else if (state == 1) {
 					t._setDisabled(0);
+					state = 0;
+				}
 			});
 		},
 

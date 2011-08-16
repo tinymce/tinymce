@@ -73,6 +73,8 @@
 	include('util/JSONP.js');
 	include('util/XHR.js');
 	include('util/JSONRequest.js');
+	include('util/VK.js');
+	include('util/Quirks.js');
 
 	// tinymce.html.*
 	include('html/Entities.js');

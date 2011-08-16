@@ -23,7 +23,8 @@
 		["Java", "8ad9c840-044e-11d1-b3e9-00805f499d93", "application/x-java-applet", "http://java.sun.com/products/plugin/autodl/jinstall-1_5_0-windows-i586.cab#Version=1,5,0,0"],
 		["Silverlight", "dfeaf541-f3e1-4c24-acac-99c30715084a", "application/x-silverlight-2"],
 		["Iframe"],
-		["Video"]
+		["Video"],
+		["Audio"]
 	];
 
 	function toArray(obj) {
@@ -86,11 +87,12 @@
 				"silverlight=xap;" +
 				"flash=swf,flv;" +
 				"shockwave=dcr;" +
-				"quicktime=mov,qt,mpg,mp3,mpeg;" +
+				"quicktime=mov,qt,mpg,mpeg;" +
 				"shockwave=dcr;" +
 				"windowsmedia=avi,wmv,wm,asf,asx,wmx,wvx;" +
 				"realmedia=rm,ra,ram;" +
-				"java=jar"
+				"java=jar;" +
+				"audio=mp3,ogg"
 			).split(';'), function(item) {
 				var i, extensions, type;
 
@@ -253,8 +255,8 @@
 				'data-mce-json' : JSON.serialize(data, "'")
 			});
 
-			img.width = data.width || "320";
-			img.height = data.height || "240";
+			img.width = data.width || (data.type == 'audio' ? "300" : "320");
+			img.height = data.height || (data.type == 'audio' ? "32" : "240");
 
 			return img;
 		},
@@ -323,7 +325,7 @@
 		imgToObject : function(node, args) {
 			var self = this, editor = self.editor, video, object, embed, iframe, name, value, data,
 				source, sources, params, param, typeItem, i, item, mp4Source, replacement,
-				posterSrc, style;
+				posterSrc, style, audio;
 
 			// Adds the flash player
 			function addPlayer(video_src, poster_src) {
@@ -463,6 +465,35 @@
 					data.params.src = '';
 			}
 
+			// Add HTML5 audio element
+			if (typeItem.name === 'Audio' && data.video.sources[0]) {
+				// Create new object element
+				audio = new Node('audio', 1).attr(tinymce.extend({
+					id : node.attr('id'),
+					width: node.attr('width'),
+					height: node.attr('height'),
+					style : style
+				}, data.video.attrs));
+
+				// Get poster source and use that for flash fallback
+				if (data.video.attrs)
+					posterSrc = data.video.attrs.poster;
+
+				sources = data.video.sources = toArray(data.video.sources);
+				if (!sources[0].type) {
+					audio.attr('src', sources[0].src);
+					sources.splice(0, 1);
+				}
+
+				for (i = 0; i < sources.length; i++) {
+					source = new Node('source', 1).attr(sources[i]);
+					source.shortEnded = true;
+					audio.append(source);
+				}
+
+				data.params.src = '';
+			}
+
 			// Do we have a params src then we can generate object
 			if (data.params.src) {
 				// Is flv movie add player for it
@@ -555,8 +586,18 @@
 				}
 			}
 
-			if (video || object)
-				node.replace(video || object);
+			if (audio) {
+				// Insert raw HTML
+				if (data.video_html) {
+					value = new Node('#text', 3);
+					value.raw = true;
+					value.value = data.video_html;
+					audio.append(value);
+				}
+			}
+
+			if (video || audio || object)
+				node.replace(video || audio || object);
 			else
 				node.remove();
 		},
@@ -615,7 +656,7 @@
 
 			// Video element
 			name = node.name;
-			if (name === 'video') {
+			if (name === 'video' || name == 'audio') {
 				video = node;
 				object = node.getAll('object')[0];
 				embed = node.getAll('embed')[0];
@@ -631,7 +672,7 @@
 
 				source = node.attr('src');
 				if (source)
-					data.video.sources.push({src : urlConverter.call(urlConverterScope, source, 'src', 'video')});
+					data.video.sources.push({src : urlConverter.call(urlConverterScope, source, 'src', node.name)});
 
 				// Get all sources
 				sources = video.getAll("source");
@@ -647,7 +688,7 @@
 
 				// Convert the poster URL
 				if (attrs.poster)
-					attrs.poster = urlConverter.call(urlConverterScope, attrs.poster, 'poster', 'video');
+					attrs.poster = urlConverter.call(urlConverterScope, attrs.poster, 'poster', node.name);
 			}
 
 			// Object element
@@ -728,8 +769,12 @@
 			if (data.params.src)
 				data.params.src = urlConverter.call(urlConverterScope, data.params.src, 'src', 'object');
 
-			if (video)
-				type = lookup.video.name;
+			if (video) {
+				if (node.name === 'video')
+					type = lookup.video.name;
+				else if (node.name === 'audio')
+					type = lookup.audio.name;
+			}
 
 			if (object && !type)
 				type = (lookup[(object.attr('clsid') || '').toLowerCase()] || lookup[(object.attr('type') || '').toLowerCase()] || {}).name;
@@ -765,8 +810,8 @@
 				id : id,
 				'class' : 'mceItemMedia mceItem' + (type || 'Flash'),
 				style : style,
-				width : width || "320",
-				height : height || "240",
+				width : width || (node.name == 'audio' ? "300" : "320"),
+				height : height || (node.name == 'audio' ? "32" : "240"),
 				"data-mce-json" : JSON.serialize(data, "'")
 			});
 		}

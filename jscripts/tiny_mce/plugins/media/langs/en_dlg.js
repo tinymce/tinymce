@@ -100,10 +100,13 @@ flv_showscalemodes:"Show scale modes",
 flv_smoothvideo:"Smooth video",
 flv_jscallback:"JS Callback",
 html5_video_options:"HTML5 Video Options",
+html5_audio_options:"HTML5 Audio Options",
 altsource1:"Alternative source 1",
 altsource2:"Alternative source 2",
 preload:"Preload",
 poster:"Poster",
-
+preload_none:"Don't preload",
+preload_metadata:"Preload videos metadata",
+preload_auto:"Let user's browser decide",
 source:"Source"
 });

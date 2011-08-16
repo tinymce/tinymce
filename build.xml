@@ -79,6 +79,8 @@
 			<fileset dir="${classes_dir}" includes="util/JSON.js" />
 			<fileset dir="${classes_dir}" includes="util/XHR.js" />
 			<fileset dir="${classes_dir}" includes="util/JSONRequest.js" />
+			<fileset dir="${classes_dir}" includes="util/VK.js" />
+			<fileset dir="${classes_dir}" includes="util/Quirks.js" />
 
 			<!-- tinymce.html.* -->
 			<fileset dir="${classes_dir}" includes="html/Entities.js" />

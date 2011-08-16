@@ -16,19 +16,28 @@
 			function tabCancel(ed, e) {
 				if (e.keyCode === 9)
 					return Event.cancel(e);
-			};
+			}
 
 			function tabHandler(ed, e) {
 				var x, i, f, el, v;
 
 				function find(d) {
 					el = DOM.select(':input:enabled,*[tabindex]');
-					function canSelect(e) {
-						return e.type != 'hidden' && 
-						e.tabIndex != '-1' && 
-							!(el[i].style.display == "none") && 
-							!(el[i].style.visibility == "hidden");
-				    }
+
+					function canSelectRecursive(e) {
+						return e.nodeName==="BODY" || (e.type != 'hidden' &&
+							!(e.style.display == "none") &&
+							!(e.style.visibility == "hidden") && canSelectRecursive(e.parentNode));
+					}
+					function canSelectInOldIe(el) {
+						return el.attributes["tabIndex"].specified || el.nodeName == "INPUT" || el.nodeName == "TEXTAREA";
+					}
+					function isOldIe() {
+						return tinymce.isIE6 || tinymce.isIE7;
+					}
+					function canSelect(el) {
+						return ((!isOldIe() || canSelectInOldIe(el))) && el.getAttribute("tabindex") != '-1' && canSelectRecursive(el);
+					}
 
 					each(el, function(e, i) {
 						if (e.id == ed.id) {
@@ -36,7 +45,6 @@
 							return false;
 						}
 					});
-
 					if (d > 0) {
 						for (i = x + 1; i < el.length; i++) {
 							if (canSelect(el[i]))
@@ -50,7 +58,7 @@
 					}
 
 					return null;
-				};
+				}
 
 				if (e.keyCode === 9) {
 					v = explode(ed.getParam('tab_focus', ed.getParam('tabfocus_elements', ':prev,:next')));
@@ -86,7 +94,7 @@
 						return Event.cancel(e);
 					}
 				}
-			};
+			}
 
 			ed.onKeyUp.add(tabCancel);
 
