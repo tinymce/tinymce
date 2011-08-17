@@ -70,6 +70,14 @@
 	};
 
 	QUnit.log = function(data) {
+		if (data.actual) {
+			data.actual = ('' + data.actual).substr(0, 512);
+		}
+
+		if (data.expected) {
+			data.expected = ('' + data.expected).substr(0, 512);
+		}
+
 		send("log", data);
 	};
 
