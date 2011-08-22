@@ -235,6 +235,21 @@ test('Formatter - remove and verify start element', function() {
 	equals(editor.selection.getStart().nodeName, 'P');
 });
 
+test('Formatter - remove with selection collapsed ensure correct caret position', function() {
+	var rng,
+		content = '<p>test</p><p>testing</p>';
+
+	editor.formatter.register('format', {block : 'p'});
+	rng = editor.dom.createRng();
+	editor.getBody().innerHTML = content;
+	rng.setStart(editor.dom.select('p')[0].firstChild, 4);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equals(getContent(), content);
+	equals(editor.selection.getStart(), editor.dom.select('p')[0]);
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
