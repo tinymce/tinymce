@@ -1264,8 +1264,12 @@
 							// Editable element needs to have some contents or backspace/delete won't work properly for some odd reason on FF 3.6 or older
 							b.innerHTML = '<br>';
 
-							// Check if Gecko supports contentEditable mode FF2 doesn't
-							if (b.contentEditable !== undef) {
+							// Use designMode for FF versions <= 4. Versions 3 and 4 are supposed to
+							// support contentEditable, but setting it to true causes the caret to
+							// disappear and odd selection behavior.
+							if (/Firefox\/[1-4]/.test(navigator.userAgent)) {
+								d.designMode = 'on';
+							} else {
 								// Setting the contentEditable off/on seems to force caret mode in the editor and enabled auto focus
 								b.contentEditable = false;
 								b.contentEditable = true;
@@ -1286,8 +1290,7 @@
 										}, 1);
 									}
 								});
-							} else
-								d.designMode = 'on';
+							}
 
 							// Call setup frame once the contentEditable/designMode has been initialized
 							// since the caret won't be rendered some times otherwise.
