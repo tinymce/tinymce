@@ -2976,8 +2976,12 @@
 						if (t._isHidden()) {
 							try {
 								if (!s.content_editable) {
-									d.body.contentEditable = false;
-									d.body.contentEditable = true;
+									if (/Firefox\/[1-4]/.test(navigator.userAgent)) {
+										d.body.designMode = 'on';
+									} else {
+										d.body.contentEditable = false;
+										d.body.contentEditable = true;
+									}
 								}
 							} catch (ex) {
 								// Fails if it's hidden
