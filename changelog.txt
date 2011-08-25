@@ -5,6 +5,7 @@ Version 3.4.4.x (2011-08-xx)
 	Fixed bug in IE8 where caret positioned is on list item instead of paragraph when outdent splits the list
 	Fixed bug with image dialogs not inserting an image if id was omitted from valid_elements.
 	Fixed bug where the selection normalization logic wouldn't properly handle image elements in specific config cases.
+	Fixed bug where the map elements coords attribute would be messed up by IE when serializing the DOM.
 Version 3.4.4 (2011-08-04)
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Added mute option for video elements and preload options for video/audio patch contributed by Dmitry Kalinkin.
