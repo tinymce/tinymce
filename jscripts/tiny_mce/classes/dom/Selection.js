@@ -952,26 +952,29 @@
 						container = container.childNodes[Math.min(!start && offset > 0 ? offset - 1 : offset, container.childNodes.length - 1)];
 						offset = 0;
 
-						// Walk the DOM to find a text node to place the caret at or a BR
-						node = container;
-						walker = new tinymce.dom.TreeWalker(container, body);
-						do {
-							// Found a text node use that position
-							if (node.nodeType === 3) {
-								offset = start ? 0 : node.nodeValue.length - 1;
-								container = node;
-								break;
-							}
+						// Don't walk into elements that doesn't have any child nodes like a IMG
+						if (container.hasChildNodes()) {
+							// Walk the DOM to find a text node to place the caret at or a BR
+							node = container;
+							walker = new tinymce.dom.TreeWalker(container, body);
+							do {
+								// Found a text node use that position
+								if (node.nodeType === 3) {
+									offset = start ? 0 : node.nodeValue.length - 1;
+									container = node;
+									break;
+								}
 
-							// Found a BR element that we can place the caret before
-							if (node.nodeName === 'BR') {
-								offset = dom.nodeIndex(node);
-								container = node.parentNode;
-								break;
-							}
-						} while (node = (start ? walker.next() : walker.prev()));
+								// Found a BR element that we can place the caret before
+								if (node.nodeName === 'BR') {
+									offset = dom.nodeIndex(node);
+									container = node.parentNode;
+									break;
+								}
+							} while (node = (start ? walker.next() : walker.prev()));
 
-						normalized = true;
+							normalized = true;
+						}
 					}
 				}
 
