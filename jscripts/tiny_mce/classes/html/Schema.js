@@ -10,7 +10,7 @@
 
 (function(tinymce) {
 	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap, customElementsMap = {},
-		whiteSpaceElementsMap, selfClosingElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
+		defaultWhiteSpaceElementsMap, selfClosingElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
 
 	function split(str, delim) {
 		return str.split(delim || ',');
@@ -178,7 +178,7 @@
 	boolAttrMap = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected,autoplay,loop,controls');
 	shortEndedElementsMap = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,source');
 	nonEmptyElementsMap = tinymce.extend(makeMap('td,th,iframe,video,audio,object'), shortEndedElementsMap);
-	whiteSpaceElementsMap = makeMap('pre,script,style,textarea');
+	defaultWhiteSpaceElementsMap = makeMap('pre,script,style,textarea');
 	selfClosingElementsMap = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr');
 
 	/**
@@ -204,7 +204,7 @@
 	 * @param {Object} settings Name/value settings object.
 	 */
 	tinymce.html.Schema = function(settings) {
-		var self = this, elements = {}, children = {}, patternElements = [], validStyles;
+		var self = this, elements = {}, children = {}, patternElements = [], validStyles, whiteSpaceElementsMap;
 
 		settings = settings || {};
 
@@ -221,6 +221,8 @@
 				validStyles[key] = tinymce.explode(value);
 			});
 		}
+
+		whiteSpaceElementsMap = settings.whitespace_elements ? makeMap(settings.whitespace_elements) : defaultWhiteSpaceElementsMap;
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
 		function patternToRegExp(str) {

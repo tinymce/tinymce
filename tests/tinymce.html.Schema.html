@@ -258,6 +258,19 @@ test('addCustomElements/getCustomElements', function() {
 	ok(schema.getCustomElements()['inline']);
 	ok(schema.getCustomElements()['block']);
 });
+
+test('whitespaceElements', function() {
+	expect(3);
+
+	var schema = new tinymce.html.Schema({whitespace_elements : 'pre'});
+	ok(schema.getWhiteSpaceElements()['pre']);
+	ok(!schema.getWhiteSpaceElements()['span']);
+
+	var schema = new tinymce.html.Schema({whitespace_elements : 'code'});
+	ok(schema.getWhiteSpaceElements()['code']);
+});
+
+
 </script>
 </head>
 <body>
