@@ -496,7 +496,7 @@ Version 3.2.6 (2009-08-19)
 	Fixed bug where the autoresize plugin would break the fullscreen functionality.
 	Fixed bug where tables would be chopped up running on IE using invalid contents and pasting paragraphs into a cell.
 	Fixed bug where the each method of jQuery build didn't iterate styleSheets. We now use the TinyMCE API one instead.
-	Fixed bug where auto switching to paragraphs after headers some times failed in Gecko.	
+	Fixed bug where auto switching to paragraphs after headers some times failed in Gecko.
 	Fixed so all editor options gets passed to the Serializer class. Patch contributed by Jasper Mattsson.
 	Fixed so script/style blocks isn't wrapped in paragraphs as other inline elements.
 	Fixed so the XHR requests sends the X-Requested-With HTTP header.
@@ -1293,7 +1293,7 @@ Version 3.0b1 (2007-11-21)
 	Fixed bug where the fullscreen mode of the HTML view source box threw an error.
 	Fixed bug where the mceFocus command didn't work correctly.
 	Fixed bug where the selection could get lost in IE using inlinepopups.
-	Fixed so the body of the editor area has the mceContentBody class just like the 2.x branch. 
+	Fixed so the body of the editor area has the mceContentBody class just like the 2.x branch.
 	Fixed so the media icon gets active when a media element is selected.
 Version 3.0a3 (2007-11-13)
 	Added new experimental jQuery and Prototype framework adapters to the development package.
