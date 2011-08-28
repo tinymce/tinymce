@@ -9,7 +9,275 @@
  */
 
 (function(tinymce) {
-	var each = tinymce.each;
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event, is = tinymce.is, each = tinymce.each;
+	
+	/**
+	 * This class is used to create UI table split button. A table split button will show a table grid
+	 * when you press the open menu.
+	 *
+	 * @class tinymce.ui.TableSplitButton
+	 * @extends tinymce.ui.SplitButton
+	 */
+	tinymce.create('tinymce.ui.TableSplitButton:tinymce.ui.SplitButton', {
+		/**
+		 * Constructs a new color split button control instance.
+		 *
+		 * @constructor
+		 * @method ColorSplitButton
+		 * @param {String} id Control id for the color split button.
+		 * @param {Object} s Optional name/value settings object.
+		 * @param {Editor} ed The editor instance this button is for.
+		 */
+		TableSplitButton : function(id, s, ed) {
+			var t = this;
+
+			t.parent(id, s, ed);
+
+			/**
+			 * Settings object.
+			 *
+			 * @property settings
+			 * @type Object
+			 */
+			t.settings = s = tinymce.extend({
+				cols : 4,
+				rows : 4
+			}, t.settings);
+
+			/**
+			 * Fires when the menu is shown.
+			 *
+			 * @event onShowMenu
+			 */
+			t.onShowMenu = new tinymce.util.Dispatcher(t);
+
+			/**
+			 * Fires when the menu is hidden.
+			 *
+			 * @event onHideMenu
+			 */
+			t.onHideMenu = new tinymce.util.Dispatcher(t);
+		},
+
+		/**
+		 * Shows the color menu. The color menu is a layer places under the button
+		 * and displays a table of colors for the user to pick from.
+		 *
+		 * @method showMenu
+		 */
+		showMenu : function() {
+			var t = this, r, p, e, p2;
+
+			if (t.isDisabled())
+				return;
+
+			if (!t.isMenuRendered) {
+				t.renderMenu();
+				t.isMenuRendered = true;
+			}
+
+			if (t.isMenuVisible)
+				return t.hideMenu();
+
+			e = DOM.get(t.id);
+			DOM.show(t.id + '_menu');
+			DOM.addClass(e, 'mceSplitButtonSelected');
+			p2 = DOM.getPos(e);
+			DOM.setStyles(t.id + '_menu', {
+				left : p2.x,
+				top : p2.y + e.clientHeight,
+				zIndex : 200000
+			});
+			e = 0;
+
+			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
+			t.onShowMenu.dispatch(t);
+
+			if (t._focused) {
+				t._keyHandler = Event.add(t.id + '_menu', 'keydown', function(e) {
+					if (e.keyCode == 27)
+						t.hideMenu();
+				});
+
+				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
+			}
+
+			t.isMenuVisible = 1;
+		},
+
+		/**
+		 * Hides the color menu. The optional event parameter is used to check where the event occured so it
+		 * doesn't close them menu if it was a event inside the menu.
+		 *
+		 * @method hideMenu
+		 * @param {Event} e Optional event object.
+		 */
+		hideMenu : function(e) {
+			var t = this;
+
+			if (t.isMenuVisible) {
+				// Prevent double toogles by canceling the mouse click event to the button
+				if (e && e.type == "mousedown" && DOM.getParent(e.target, function(e) {return e.id === t.id + '_open';}))
+					return;
+
+				if (!e || !DOM.getParent(e.target, '.mceSplitButtonMenu')) {
+					
+					Event.remove(t.id, 'mouseover', t.hideMenu, t);
+					DOM.removeClass(DOM.select('td.selected', t.id), 'selected');
+
+					DOM.removeClass(t.id, 'mceSplitButtonSelected');
+					Event.remove(DOM.doc, 'mousedown', t.hideMenu, t);
+					Event.remove(t.id + '_menu', 'keydown', t._keyHandler);
+					DOM.hide(t.id + '_menu');
+				}
+
+				t.isMenuVisible = 0;
+			}
+		},
+
+		/**
+		 * Renders the menu to the DOM.
+		 *
+		 * @method renderMenu
+		 */
+		renderMenu : function() {
+			var t = this, m, i = 0, s = t.settings, n, tb, tr, w, context;
+
+			w = DOM.add(s.menu_container, 'div', {role: 'listbox', id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
+			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
+			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
+
+			n = DOM.add(m, 'table', {role: 'presentation', 'class' : 'mceTableSplitMenu', 'border' : 1});
+			tb = DOM.add(n, 'tbody');
+			
+			for (i = 0; i< s.rows; i++) {
+				tr = DOM.add(tb, 'tr');
+				
+				for (x = 0; x< s.cols; x++) {
+					td = DOM.create('td', {}, '&nbsp;');
+					DOM.add(tr, td);
+				}
+			}
+			
+			var rows = tb.childNodes;
+			
+			Event.add(n, 'mouseover', function(e) {
+				var el = e.target;
+				
+				if (el.nodeName == 'TD') {
+					var row = el.parentNode, i, z;
+					var x = tinymce.inArray(row.childNodes, el), y = tinymce.inArray(rows, row);
+					
+					if (x < 0 || y < 0) {
+						return;
+					}
+
+					for(i = 0; i < rows.length; i++) {
+						cells = rows[i].childNodes;
+						
+						for(z = 0; z < cells.length; z++) {
+							if (z > x || i > y) {
+								DOM.removeClass(cells[z], 'selected');
+							} else {
+								DOM.addClass(cells[z], 'selected');
+							}
+						}
+					}
+					
+					DOM.setHTML(DOM.select('td.mceTableGridCount', n), (y + 1) + ' x ' + (x + 1));
+				}
+			});
+			
+			tf 	= DOM.add(n, 'tfoot');
+			DOM.add(DOM.add(tf, 'tr'), 'td', {colspan : s.rows, 'class' : 'mceTableGridCount'}, '&nbsp;');
+
+			DOM.addClass(m, 'mceTableSplitMenu');
+			
+			new tinymce.ui.KeyboardNavigation({
+				root: t.id + '_menu',
+				items: DOM.select('a', t.id + '_menu'),
+				onCancel: function() {
+					t.hideMenu();
+					t.focus();
+				}
+			});
+
+			// Prevent IE from scrolling and hindering click to occur #4019
+			Event.add(t.id + '_menu', 'mousedown', function(e) {return Event.cancel(e);});
+
+			Event.add(t.id + '_menu', 'click', function(e) {
+				var c, el = e.target;
+
+				if (el.nodeName.toLowerCase() == 'td') {
+					var table = DOM.getParent(el, 'table');
+					
+					var html = '<table border="0">';
+					
+					var rows = tinymce.grep(DOM.select('tr', table), function(row) {
+						return DOM.select('td.selected', row).length;
+					});
+					
+					for(var y = 0; y < rows.length; y++) {
+						html += "<tr>";
+						
+						var cols = DOM.select('td.selected', rows[y]).length;
+			
+						for(var x = 0; x < cols; x++) {
+							if(!tinymce.isIE)
+								html += '<td><br _mce_bogus="1"/></td>';
+							else
+								html += '<td></td>';
+						}
+						html += "</tr>";
+					}
+					html += "</table>";
+
+					t.createGrid(html);
+				}
+
+				return Event.cancel(e); // Prevent IE auto save warning
+			});
+
+			return w;
+		},
+
+		/**
+		 * Sets the current color for the control and hides the menu if it should be visible.
+		 *
+		 * @method setColor
+		 * @param {String} html Table HTML
+		 */
+		createGrid : function(html) {
+			this.hideMenu();
+			this.settings.onselect(html);
+		},
+
+		/**
+		 * Post render event. This will be executed after the control has been rendered and can be used to
+		 * set states, add events to the control etc. It's recommended for subclasses of the control to call this method by using this.parent().
+		 *
+		 * @method postRender
+		 */
+		postRender : function() {
+			var t = this, id = t.id;
+
+			t.parent();
+		},
+
+		/**
+		 * Destroys the control. This means it will be removed from the DOM and any
+		 * events tied to it will also be removed.
+		 *
+		 * @method destroy
+		 */
+		destroy : function() {
+			this.parent();
+
+			Event.clear(this.id + '_menu');
+			Event.clear(this.id + '_more');
+			DOM.remove(this.id + '_menu');
+		}
+	});
 
 	// Checks if the selection/caret is at the start of the specified block element
 	function isAtStart(rng, par) {
@@ -753,6 +1021,8 @@
 	tinymce.create('tinymce.plugins.TablePlugin', {
 		init : function(ed, url) {
 			var winMan, clipboardRows, hasCellSelection = true; // Might be selected cells on reload
+			
+			this.editor = ed;
 
 			function createTableGrid(node) {
 				var selection = ed.selection, tblElm = ed.dom.getParent(node || selection.getNode(), 'table');
@@ -1201,6 +1471,53 @@
 					func(val);
 				});
 			});
+		},
+		
+		createControl: function(n, cm) {
+			var t = this, ed = this.editor;
+
+			switch (n) {
+				case 'table':
+					var c = new tinymce.ui.TableSplitButton('table', {
+						title 	: 'table.desc',
+						'class' : 'mce_table',
+						'menu_class' : ed.getParam('skin') + 'Skin',
+						onclick : function(e) {
+							ed.execCommand('mceInsertTable');
+						},
+						onselect : function(html) {
+							ed.execCommand('mceInsertContent', false, html);
+						}
+					});
+					
+					ed.onMouseDown.add(c.hideMenu, c);
+					
+					// Remove the menu element when the editor is removed
+					ed.onRemove.add(function() {
+						c.destroy();
+					});
+					
+					// Fix for bug #1897785, #1898007
+					if (tinymce.isIE) {
+						c.onShowMenu.add(function() {
+							// IE 8 needs focus in order to store away a range with the current collapsed caret location
+							ed.focus();
+							bm = ed.selection.getBookmark(1);
+						});
+		
+						c.onHideMenu.add(function() {
+							if (bm) {
+								ed.selection.moveToBookmark(bm);
+								bm = 0;
+							}
+						});
+					}
+
+					return cm.add(c);
+					break;
+			}
+
+			return null;
 		}
 	});
 

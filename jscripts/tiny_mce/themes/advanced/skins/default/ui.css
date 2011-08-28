@@ -82,6 +82,12 @@
 .defaultSkin .mceColorPreview {margin-left:2px; width:16px; height:4px; overflow:hidden; background:#9a9b9a}
 .defaultSkin .mce_forecolor span.mceAction, .defaultSkin .mce_backcolor span.mceAction {overflow:hidden; height:16px}
 
+/* Table Grid SplitButton */
+.defaultSkin table.mceTableSplitMenu {width : 120px; height: 80px; background:#FFF; border:1px solid gray;}
+.defaultSkin table.mceTableSplitMenu td {border: 1px solid gray;background-color: #FFF;}
+.defaultSkin table.mceTableSplitMenu td.selected {background-color: #C2CBE0;}
+.defaultSkin table.mceTableSplitMenu tfoot td.mceTableGridCount {background-color: #FFF;text-align: center;font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px;}
+
 /* Menu */
 .defaultSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #D4D0C8}
 .defaultSkin .mceNoIcons span.mceIcon {width:0;}
