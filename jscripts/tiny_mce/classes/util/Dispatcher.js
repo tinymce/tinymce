@@ -16,7 +16,7 @@
  * @example
  * // Creates a custom event
  * this.onSomething = new tinymce.util.Dispatcher(this);
- * 
+ *
  * // Dispatch/fire the event
  * this.onSomething.dispatch('some string');
  */

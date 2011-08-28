@@ -38,12 +38,12 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 	Indenting.a(ParagraphWithMarginLeft).enablesState('outdent').andGives('<p style="margin-left: 90px;">Test</p>');
 	Indenting.a(ParagraphWithPaddingLeft).enablesState('outdent').andGives('<p style="margin-left: 90px;">Test</p>');
 	Indenting.a(ParagraphWithMarginAndPaddingLeft).enablesState('outdent').andGives('<p style="margin-left: 150px;">Test</p>');
-	
+
 	Indenting.a(EmptyOrderedListItem).enablesState('outdent').andGives('<ol><li>Before<ol><li>&nbsp;</li></ol></li><li>After</li></ol>');
 	Indenting.a(EmptyUnorderedListItem).enablesState('outdent').andGives('<ul><li>Before<ul><li>&nbsp;</li></ul></li><li>After</li></ul>');
 	Indenting.a(NonEmptyOrderedListItem).enablesState('outdent').andGives('<ol><li>Before<ol><li>Test</li></ol></li><li>After</li></ol>');
 	Indenting.a(NonEmptyUnorderedListItem).enablesState('outdent').andGives('<ul><li>Before<ul><li>Test</li></ul></li><li>After</li></ul>');
-	
+
 	// TODO: Test invalid starting point like <ol><li>Before</li><ol><li>Indented</li></ol></ol>
 	Indenting.a(NestedEmptyOrderedListItem).enablesState('outdent').andGives('<ol><li>Before<ol><li style="list-style-type: none;"><ol><li>&nbsp;</li></ol></li></ol></li><li>After</li></ol>');
 	Indenting.a(NestedEmptyUnorderedListItem).enablesState('outdent').andGives('<ul><li>Before<ul><li style="list-style-type: none;"><ul><li>&nbsp;</li></ul></li></ul></li><li>After</li></ul>');
@@ -75,7 +75,7 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 	Outdenting.a(EmptyUnorderedListItem).disablesState('outdent').andGives(EmptyULConvertedToP);
 	Outdenting.a(NonEmptyOrderedListItem).disablesState('outdent').andGives(NonEmptyOLConvertedToP);
 	Outdenting.a(NonEmptyUnorderedListItem).disablesState('outdent').andGives(NonEmptyULConvertedToP);
-	
+
 	Outdenting.a(NestedEmptyOrderedListItem).enablesState('outdent').andGives('<ol><li>Before</li><li>&nbsp;</li><li>After</li></ol>');
 	Outdenting.a(NestedEmptyUnorderedListItem).enablesState('outdent').andGives('<ul><li>Before</li><li>&nbsp;</li><li>After</li></ul>');
 	Outdenting.a(NestedNonEmptyOrderedListItem).enablesState('outdent').andGives('<ol><li>Before</li><li>Test</li><li>After</li></ol>');
@@ -119,7 +119,7 @@ function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
 		}
 	}
 	editor.onBeforeExecCommand.add(listener);
-	
+
 	fakeKeyPressAction(keystroke, shift)(function() {
 		equals(actionFired, expected, actionName + ' command triggered?');
 		editor.onBeforeExecCommand.remove(listener);
@@ -137,17 +137,17 @@ asyncTest('Expanded Selection, List Types - Indent Action', function() {
 	Indenting.a(IndentedOlInOlIncorrectSelection).enablesState('Outdent').andGives('<ol><li style="list-style-type: none;"><ol><li>Item 1<ol><li>Indented</li></ol></li></ol></li></ol>');
 
 	// TODO: Selection only in indented list.
-	
+
 	Indenting.a(IndentedUlInUlCorrectSelection).enablesState('Outdent').andGives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
 	Indenting.a(IndentedUlInUlIncorrectSelection).enablesState('Outdent').andGives('<ul><li style="list-style-type: none;"><ul><li>Item 1<ul><li>Indented</li></ul></li></ul></li></ul>');
 
 	Indenting.a(ParagraphBeforeOlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol>');
 	Indenting.a(ParagraphBeforeUlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul>');
-	
+
 	Indenting.a(ParagraphAfterOlSelection).enablesState('Outdent').andGives('<ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p style="margin-left: 30px;">After</p>');
 	Indenting.a(ParagraphAfterUlSelection).enablesState('Outdent').andGives('<ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p style="margin-left: 30px;">After</p>');
 
-	
+
 	Indenting.a(ParagraphBeforeAndAfterOlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p id="after" style="margin-left: 30px;">After</p>');
 	Indenting.a(ParagraphBeforeAndAfterUlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p id="after" style="margin-left: 30px;">After</p>');
 	queue.done();
@@ -163,7 +163,7 @@ asyncTest('Expanded Selection, List Types - Outdent Action', function() {
 	Outdenting.a(IndentedOlInOlIncorrectSelection).disablesState('Outdent').andGives('<p>Item 1</p><ol><li>Indented</li></ol>');
 
 	// TODO: Selection only in indented list.
-	
+
 	Outdenting.a(IndentedUlInUlCorrectSelection).disablesState('Outdent').andGives('<p>Item 1</p><ul><li>Indented</li></ul>');
 	Outdenting.a(IndentedUlInUlIncorrectSelection).disablesState('Outdent').andGives('<p>Item 1</p><ul><li>Indented</li></ul>');
 
@@ -171,11 +171,11 @@ asyncTest('Expanded Selection, List Types - Outdent Action', function() {
 
 	Outdenting.a(ParagraphBeforeOlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p>');
 	Outdenting.a(ParagraphBeforeUlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p>');
-	
+
 	Outdenting.a(ParagraphAfterOlSelection).disablesState('Outdent').andGives('<p>Item 1</p><p>After</p>');
 	Outdenting.a(ParagraphAfterUlSelection).disablesState('Outdent').andGives('<p>Item 1</p><p>After</p>');
 
-	
+
 	Outdenting.a(ParagraphBeforeAndAfterOlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p id="after">After</p>');
 	Outdenting.a(ParagraphBeforeAndAfterUlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p id="after">After</p>');
 	queue.done();

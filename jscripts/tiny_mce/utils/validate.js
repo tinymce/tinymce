@@ -111,7 +111,7 @@ var AutoValidator = {
 	invalidate : function(n) {
 		this.mark(n.form, n);
 	},
-	
+
 	getErrorMessages : function(f) {
 		var nl, i, s = this.settings, field, msg, values, messages = [], ed = tinyMCEPopup.editor;
 		nl = this.tags(f, "label");
@@ -129,7 +129,7 @@ var AutoValidator = {
 				} else {
 					message = ed.getLang('invalid_data');
 				}
-				
+
 				message = message.replace(/{\#([^}]+)\}/g, function(a, b) {
 					return values[b] || '{#' + b + '}';
 				});

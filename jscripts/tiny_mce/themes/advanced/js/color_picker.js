@@ -77,7 +77,7 @@ function init() {
 		if (col)
 			updateLight(col.r, col.g, col.b);
 	}
-	
+
 	for (key in named) {
 		value = named[key];
 		namedLookup[value.replace(/\s+/, '').toLowerCase()] = key.replace(/#/, '').toLowerCase();

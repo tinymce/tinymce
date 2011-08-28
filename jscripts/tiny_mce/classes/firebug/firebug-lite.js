@@ -1,16 +1,16 @@
 var firebug = {
   version:[1.23,20090309],
-  el:{}, 
-  env:{ 
+  el:{},
+  env:{
     "cache":{},
     "extConsole":null,
-    "css":"http://getfirebug.com/releases/lite/1.2/firebug-lite.css", 
+    "css":"http://getfirebug.com/releases/lite/1.2/firebug-lite.css",
     "debug":true,
     "detectFirebug":true,
-    "dIndex":"console", 
+    "dIndex":"console",
     "height":295,
     "hideDOMFunctions":false,
-    "init":false, 
+    "init":false,
     "isPopup":false,
     "liteFilename":"firebug-lite.js",
     "minimized":false,
@@ -26,7 +26,7 @@ var firebug = {
     "popupHeight":undefined
   },
   initConsole:function(){
-    /* 
+    /*
      * initialize the console - user defined values are not available within this method because FBLite is not yet initialized
      */
     var command;
@@ -65,12 +65,12 @@ var firebug = {
   },
   init:function(_css){
     var iconTitle = "Click here or press F12, (CTRL|CMD)+SHIFT+L or SHIFT+ENTER to show Firebug Lite. CTRL|CMD click this icon to hide it.";
-  
+
     with(firebug){
       if(document.getElementsByTagName('html')[0].attributes.getNamedItem('debug')){
         env.debug = document.getElementsByTagName('html')[0].attributes.getNamedItem('debug').nodeValue !== "false";
       }
-            
+
       if(env.isPopup) {
         env.openInPopup = false;
         env.targetWindow = window.opener;
@@ -83,7 +83,7 @@ var firebug = {
       }
 
       settings.readCookie();
-      
+
       if(env.init || (env.detectFirebug && window.console && window.console.firebug)) {
         return;
       }
@@ -95,13 +95,13 @@ var firebug = {
       if(env.override){
         overrideConsole();
       }
-      
-      /* 
+
+      /*
        * Firebug Icon
        */
       el.firebugIcon = new lib.element("div").attribute.set("id","firebugIconDiv").attribute.set("title",iconTitle).attribute.set("alt",iconTitle).event.addListener("mousedown",win.iconClicked).insert(document.body);
-      
-      /* 
+
+      /*
        * main interface
        */
       el.content = {};
@@ -152,7 +152,7 @@ var firebug = {
       el.nav.xhr = new lib.element("A").attribute.addClass("Tab").update("XHR").event.addListener("click",lib.util.Curry(d.navigate,window,"xhr")).insert(el.nav.container);
       el.nav.optionsdiv = new lib.element("DIV").attribute.addClass("Settings").insert(el.nav.container);
       el.nav.options = new lib.element("A").attribute.addClass("Tab").update("Options&nbsp;&or;").event.addListener("click", settings.toggle).insert(el.nav.optionsdiv);
-      
+
       /*
        * inspector
        */
@@ -352,7 +352,7 @@ var firebug = {
           buttons[i].attribute.set("href","#");
         win.refreshSize();
       }
-     
+
       if(env.showIconWhenHidden) {
         if(!env.popupWin) {
           el.firebugIcon.environment.addStyle({ "display": env.debug&&'none'||'block' });
@@ -377,7 +377,7 @@ var firebug = {
         el.main.environment.addStyle({ "display":env.debug&&'block'||'none' });
         el.mainiframe.environment.addStyle({ "display":env.debug&&'block'||'none' });
       }
-    }  
+    }
   },
   inspect:function(){
     return firebug.d.html.inspect.apply(window,arguments);
@@ -472,7 +472,7 @@ var firebug = {
       with(firebug.env){
         if(targetWindow.document.cookie.length>0) {
           cookieArr=targetWindow.document.cookie.split('; ');
-          
+
           for(i=0;i<cookieArr.length;i++) {
             if(cookieArr[i].split('=')[0]=='FBLiteSettings') {
               valueArr=cookieArr[i].split('=')[1].split(',');
@@ -483,7 +483,7 @@ var firebug = {
             for(i=0;i<valueArr.length;i++) {
               item=valueArr[i].split(':')[0];
               value=valueArr[i].split(':')[1];
-              
+
               switch(item) {
                 case 'debug':
                   debug=value=="true";
@@ -526,7 +526,7 @@ var firebug = {
     },
     writeCookie: function() {
       var values;
-      
+
       with(firebug.env){
         values='debug:'+debug+',';
         values+='detectFirebug:'+detectFirebug+',';
@@ -553,7 +553,7 @@ var firebug = {
           values+='popupWidth:'+popupWidth+',';
           values+='popupHeight:'+popupHeight+',';
         }
-        
+
         values+='height:'+(parseInt(targetWindow.firebug.el.main.element.style.height.replace(/px/,''),10)-38);
 
         exdate=new Date();
@@ -638,17 +638,17 @@ var firebug = {
 
       if (!fe.popupWin) {
         scripts = document.getElementsByTagName('script');
-        
-        fe.popupWin = window.open("", "_firebug", 
-          "status=0,menubar=0,resizable=1,top="+fe.popupTop+",left="+fe.popupLeft+",width=" + fe.popupWidth + 
+
+        fe.popupWin = window.open("", "_firebug",
+          "status=0,menubar=0,resizable=1,top="+fe.popupTop+",left="+fe.popupLeft+",width=" + fe.popupWidth +
           ",height=" + fe.popupHeight + ",scrollbars=0,addressbar=0,outerWidth="+fe.popupWidth+",outerHeight="+fe.popupHeight+
           "toolbar=0,location=0,directories=0,dialog=0");
-        
+
         if(!fe.popupWin) {
           alert("Firebug Lite could not open a pop-up window, most likely because of a popup blocker.\nPlease enable popups for this domain");
         } else {
           firebug.settings.hide();
-        
+
           for (i=0,len=scripts.length; i<len; i++) {
             if (scripts[i].src.indexOf(fe.liteFilename) > -1) {
               scriptPath = scripts[i].src;
@@ -903,7 +903,7 @@ var firebug = {
           try {
             if(_cmd==='console.firebug') {
               d.console.addLine().attribute.addClass("Arrow").update(firebug.version);
-            } else {  
+            } else {
               result = eval.call(window,_cmd);
               d.console.print(_cmd,result);
             }
@@ -1146,7 +1146,7 @@ var firebug = {
     highlight:function(_value,_inObject,_inArray,_link){
       with(firebug){
         var isArray = false, isHash, isElement = false, vtype=typeof _value, result=[];
-        
+
         if(vtype=="object"){
           if(Object.prototype.toString.call(_value) === "[object Date]"){
             vtype = "date";
@@ -1158,7 +1158,7 @@ var firebug = {
             vtype = "regexp";
           }
         }
-        
+
         try {
           isArray = lib.util.IsArray(_value);
           isHash = lib.util.IsHash(_value);
@@ -1214,7 +1214,7 @@ var firebug = {
                 result.push("</span>&#62;</span>");
               }
             }
-          } 
+          }
           // array, hash
           else if(isArray||isHash){
             if(isArray){
@@ -1235,7 +1235,7 @@ var firebug = {
               }
             } else if(_inObject){
               result.push("<span class='Gray Italic'>Object</span>");
-            } else {  
+            } else {
               result.push("<span class='Strong Green"+ ( !_link?"'":" ObjectLink' onmouseover='this.className=this.className.replace(\"ObjectLink\",\"ObjectLinkHover\")' onmouseout='this.className=this.className.replace(\"ObjectLinkHover\",\"ObjectLink\")' onclick='firebug.d.console.openObject(" +( d.console.cache.push( _value ) -1 )+")'" ) + ">Object");
               var i=0;
               for(var key in _value){
@@ -1248,12 +1248,12 @@ var firebug = {
                 i++;
               }
               result.push("</span>");
-            } 
+            }
           } else {
             result.push(["<span class'Gray Italic'>"+_value+"</span>"]);
           }
         } catch(e){
-          result.push(".."); 
+          result.push("..");
         }
         return result.join("");
       }
@@ -1336,9 +1336,9 @@ var firebug = {
       },
       openHtmlTree:function(_element,_parent,_returnParentElementByElement,_event){
         with(firebug){
-          var element = _element || env.targetWindow.document.documentElement, 
-              parent = _parent || el.left.html.container, 
-              returnParentEl = _returnParentElementByElement || null, 
+          var element = _element || env.targetWindow.document.documentElement,
+              parent = _parent || el.left.html.container,
+              returnParentEl = _returnParentElementByElement || null,
               returnParentVal = null,
               len = element.childNodes.length,
               nodeLink;
@@ -1378,12 +1378,12 @@ var firebug = {
             if(i==len){
               new lib.element("A").attribute.addClass("Block").update("<span class='DarkBlue'>&#60;/<span class='Blue'>"+element.nodeName.toLowerCase()+"</span>&#62;").insert(container);
               break;
-            } 
+            }
             var item = element.childNodes[i];
 
             if (item.nodeType != 3){
-              var container = new lib.element().attribute.addClass("Block").insert(parent), 
-              link = new lib.element("A").attribute.addClass("Link").insert(container), 
+              var container = new lib.element().attribute.addClass("Block").insert(parent),
+              link = new lib.element("A").attribute.addClass("Link").insert(container),
               spacer = new lib.element("SPAN").attribute.addClass("Spacer").update("&nbsp;").insert(link),
               html = new lib.element("SPAN").attribute.addClass("Content").update(d.highlight(item)).insert(link),
               subContainer = new lib.element("DIV").attribute.addClass("SubContainer").insert(container),
@@ -1414,7 +1414,7 @@ var firebug = {
                   html.child.add(document.createTextNode(">"));
                   continue;
                 }
-                else 
+                else
                   if (childLen > 0) {
                     link.attribute.addClass("Parent");
                   }
@@ -1455,7 +1455,7 @@ var firebug = {
         with(firebug){
           var pos = env.targetWindow.firebug.lib.util.Element.getPosition(_element);
 
-          env.targetWindow.firebug.el[_bgInspector&&"bgInspector"||"borderInspector"].environment.addStyle({ 
+          env.targetWindow.firebug.el[_bgInspector&&"bgInspector"||"borderInspector"].environment.addStyle({
             "width":_element.offsetWidth+"px", "height":_element.offsetHeight+"px",
             "top":pos.offsetTop-(_bgInspector?0:2)+"px", "left":pos.offsetLeft-(_bgInspector?0:2)+"px",
             "display":"block"
@@ -1503,8 +1503,8 @@ var firebug = {
             source = source.replace(/<|>/g,function(_ch){
               return ({"<":"&#60;",">":"&#62;"})[_ch];
             });
-          
-            if(!d.scripts.lineNumbers) 
+
+            if(!d.scripts.lineNumbers)
               el.left.scripts.container.child.add(
                   new lib.element("DIV").attribute.addClass("CodeContainer").update(source)
               );
@@ -1702,7 +1702,7 @@ var firebug = {
           var position = firebug.getSelection(_el);
           _el.value = _el.value.substring(0,position.start) + String.fromCharCode(9) + _el.value.substring(position.start+position.length,_el.value.length);
           _el.setSelectionRange(position.start+1,position.start+1);
-        } else if(document.selection) {  
+        } else if(document.selection) {
           var range = document.selection.createRange(), isCollapsed = range.text == '';
           range.text = String.fromCharCode(9);
           range.moveStart('character', -1);
@@ -1775,7 +1775,7 @@ var firebug = {
             win.newWindow();
           }
         } else if(
-            (_event.keyCode === 123 && !_event.ctrlKey && !_event.metaKey) || 
+            (_event.keyCode === 123 && !_event.ctrlKey && !_event.metaKey) ||
             (_event.keyCode === 76 && (_event.ctrlKey || _event.metaKey) && _event.shiftKey) ||
             (_event.keyCode === 13 && _event.shiftKey)) {
 
@@ -1792,7 +1792,7 @@ var firebug = {
     mouse:function(_event){
       with(firebug){
         var target;
-        
+
         if(document.elementFromPoint) {
           target = document.elementFromPoint(_event.clientX, _event.clientY);
         } else {
@@ -1802,7 +1802,7 @@ var firebug = {
             target = _event.explicitOriginalTarget || _event.target;
           }
         }
-        
+
         if( d.inspector.enabled&&
           target!=document.body&&
           target!=document.firstChild&&
@@ -1895,7 +1895,7 @@ var firebug = {
         if(_array.forEach)
           return _array.forEach(_function);
         for(var i=0,len=_array.length; i<len; i++)
-          _function.apply(_array,[_array[i],i,_array]);   
+          _function.apply(_array,[_array[i],i,_array]);
       },
       getLatest:function(_array){
         return _array[_array.length-1];
@@ -1922,8 +1922,8 @@ var firebug = {
     },
     Curry:function(_fn,_scope){
       var fn = _fn, scope = _scope||window, args = Array.prototype.slice.call(arguments,2);
-      return function(){ 
-        return fn.apply(scope,args.concat( Array.prototype.slice.call(arguments,0) )); 
+      return function(){
+        return fn.apply(scope,args.concat( Array.prototype.slice.call(arguments,0) ));
       };
     },
     Extend:function(_superClass,_prototype,_skipClonning){
@@ -1991,7 +1991,7 @@ var firebug = {
         if( pi.util.Element.hasClass(_element,_class) ){
           var names = pi.util.Element.getClass(_element,_class).split(" ");
           pi.util.Element.setClass(
-              _element, 
+              _element,
               pi.util.Array.remove(names,pi.util.Array.indexOf(names,_class)).join(" ")
           );
         }
@@ -2067,7 +2067,7 @@ var firebug = {
           }
           try {
             _element.style[key] = _style[key];
-          }catch(e){}     
+          }catch(e){}
         }
       },
       getStyle:function(_element,_property){
@@ -2163,7 +2163,7 @@ var firebug = {
               this[key] = pi.util.Array.clone( this[key] );
             } else
               if( pi.util.IsHash(this[key]) ){
-                this[key] = pi.util.Hash.clone( 
+                this[key] = pi.util.Hash.clone(
                     this[ key ],
                     function(_key,_object){
                       this[ _key ]._parent_ = this;
@@ -2197,13 +2197,13 @@ var firebug = {
           _branch[(_branch["get" + title]?"_":"")+"get" + title] = pi.util.Curry(getter,_p,name);
           _branch[(_branch["set" + title]?"_":"")+"set" + title] = pi.util.Curry(setter,_p,name);
         }
-        else 
+        else
           if (pi.util.IsHash(_p[name])){
             _branch[name]._parent_ = _branch;
             if(!_branch[name])
               _branch[name] = {};
             this.createAccessors(_p[name], _branch[name]);
-          }   
+          }
       };
     };
 
@@ -2215,7 +2215,7 @@ var firebug = {
           _branch[name] = _object[name];
           delete _object[name];
         }
-        else 
+        else
           if (pi.util.IsHash(_object[name])){
             _branch[name] = {};
             this.movePrivateMembers(_object[name], _branch[name]);
@@ -2436,7 +2436,7 @@ var firebug = {
       return this;
     },
     "send":function(){
-      var url = this.environment.getUrl(), data = this.environment.getData(),dataUrl = ""; 
+      var url = this.environment.getUrl(), data = this.environment.getData(),dataUrl = "";
 
       if(!this.environment.getCache())
         data["forceCache"] = Number(new Date);

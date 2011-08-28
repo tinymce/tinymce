@@ -81,7 +81,7 @@ test("Paste Word fake list", function() {
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul>');
 
 	editor.settings.paste_retain_style_properties = 'border';
-	
+
 	rng = editor.dom.createRng();
 	editor.setContent('<p>1234</p>');
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -169,7 +169,7 @@ test("Disable default filters", function() {
 	// Test color
 	editor.setContent('');
 	editor.execCommand('SelectAll');
-	
+
 	editor.execCommand('mceInsertClipboardContent', false, {content : '<p class="MsoNormal" style="color: #ff0000;">Test</p>'});
 	equals(trimContent(editor.getContent().replace(/[\r\n]+/g, '')), '<p class="MsoNormal" style="color: #ff0000;">Test</p>');
 

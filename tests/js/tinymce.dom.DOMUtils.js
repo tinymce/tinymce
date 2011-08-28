@@ -29,7 +29,7 @@
 			dom.serializeStyle(dom.parseStyle('border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;')),
 			'border: 1pt none black;'
 		);
-		
+
 		equals(
 			dom.serializeStyle(dom.parseStyle('border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;')),
 			'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;'

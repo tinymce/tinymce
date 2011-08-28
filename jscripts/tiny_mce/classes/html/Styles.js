@@ -183,7 +183,7 @@ tinymce.html.Styles = function(settings, schema) {
 						if (name === 'font-weight' && value === '700')
 							value = 'bold';
 						else if (name === 'color' || name === 'background-color') // Lowercase colors like RED
-							value = value.toLowerCase();		
+							value = value.toLowerCase();
 
 						// Convert RGB colors to HEX
 						value = value.replace(rgbRegExp, toHex);

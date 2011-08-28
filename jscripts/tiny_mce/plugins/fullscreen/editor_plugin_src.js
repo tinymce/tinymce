@@ -65,7 +65,7 @@
 
 					// Fixes an IE bug where the scrollbars doesn't reappear
 					if (tinymce.isIE && (s.fullscreen_html_overflow == 'visible' || s.fullscreen_html_overflow == 'scroll'))
-						s.fullscreen_html_overflow = 'auto'; 
+						s.fullscreen_html_overflow = 'auto';
 
 					if (s.fullscreen_overflow == '0px')
 						s.fullscreen_overflow = '';
@@ -85,7 +85,7 @@
 						posCss = 'fixed;top:0';
 
 					n = DOM.add(DOM.doc.body, 'div', {
-						id : 'mce_fullscreen_container', 
+						id : 'mce_fullscreen_container',
 						style : 'position:' + posCss + ';left:0;width:' + vp.w + 'px;height:' + vp.h + 'px;z-index:200000;'});
 					DOM.add(n, 'div', {id : 'mce_fullscreen'});
 

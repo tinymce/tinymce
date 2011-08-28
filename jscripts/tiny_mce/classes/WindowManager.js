@@ -25,10 +25,10 @@
 	 * }, {
 	 *    custom_param : 1
 	 * });
-	 * 
+	 *
 	 * // Displays an alert box using the active editors window manager instance
 	 * tinyMCE.activeEditor.windowManager.alert('Hello world!');
-	 * 
+	 *
 	 * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm
 	 * tinyMCE.activeEditor.windowManager.confirm("Do you want to do something", function(s) {
 	 *    if (s)
@@ -60,19 +60,19 @@
 		 *
 		 * @method open
 		 * @param {Object} s Optional name/value settings collection contains things like width/height/url etc.
-		 * @option {String} title Window title. 
-		 * @option {String} file URL of the file to open in the window. 
-		 * @option {Number} width Width in pixels. 
-		 * @option {Number} height Height in pixels. 
-		 * @option {Boolean} resizable Specifies whether the popup window is resizable or not. 
-		 * @option {Boolean} maximizable Specifies whether the popup window has a "maximize" button and can get maximized or not. 
-		 * @option {Boolean} inline Specifies whether to display in-line (set to 1 or true for in-line display; requires inlinepopups plugin). 
-		 * @option {String/Boolean} popup_css Optional CSS to use in the popup. Set to false to remove the default one. 
-		 * @option {Boolean} translate_i18n Specifies whether translation should occur or not of i18 key strings. Default is true. 
-		 * @option {String/bool} close_previous Specifies whether a previously opened popup window is to be closed or not (like when calling the file browser window over the advlink popup). 
-		 * @option {String/bool} scrollbars Specifies whether the popup window can have scrollbars if required (i.e. content larger than the popup size specified). 
+		 * @option {String} title Window title.
+		 * @option {String} file URL of the file to open in the window.
+		 * @option {Number} width Width in pixels.
+		 * @option {Number} height Height in pixels.
+		 * @option {Boolean} resizable Specifies whether the popup window is resizable or not.
+		 * @option {Boolean} maximizable Specifies whether the popup window has a "maximize" button and can get maximized or not.
+		 * @option {Boolean} inline Specifies whether to display in-line (set to 1 or true for in-line display; requires inlinepopups plugin).
+		 * @option {String/Boolean} popup_css Optional CSS to use in the popup. Set to false to remove the default one.
+		 * @option {Boolean} translate_i18n Specifies whether translation should occur or not of i18 key strings. Default is true.
+		 * @option {String/bool} close_previous Specifies whether a previously opened popup window is to be closed or not (like when calling the file browser window over the advlink popup).
+		 * @option {String/bool} scrollbars Specifies whether the popup window can have scrollbars if required (i.e. content larger than the popup size specified).
 		 * @param {Object} p Optional parameters/arguments collection can be used by the dialogs to retrive custom parameters.
-		 * @option {String} plugin_url url to plugin if opening plugin window that calls tinyMCEPopup.requireLangPack() and needs access to the plugin language js files 
+		 * @option {String} plugin_url url to plugin if opening plugin window that calls tinyMCEPopup.requireLangPack() and needs access to the plugin language js files
 		 */
 		open : function(s, p) {
 			var t = this, f = '', x, y, mo = t.editor.settings.dialog_type == 'modal', w, sw, sh, vp = tinymce.DOM.getViewPort(), u;

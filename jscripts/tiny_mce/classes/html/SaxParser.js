@@ -94,7 +94,7 @@
 				pos = stack.length;
 				while (pos--) {
 					if (stack[pos].name === name)
-						break;						
+						break;
 				}
 
 				// Found parent

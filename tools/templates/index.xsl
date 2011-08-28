@@ -114,7 +114,7 @@
 						</ul>
 					</div>
 				</div>
-			</div> 
+			</div>
 		</body>
 		</html>
 	</xsl:template>

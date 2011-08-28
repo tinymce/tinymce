@@ -264,7 +264,7 @@
 				} else {
 					var ret = "";
 					var args = arguments;
-					
+
 					(textProc ? self : self.eq(0)).each(function(i, node) {
 						var ed = tinyMCEInstance(node);
 

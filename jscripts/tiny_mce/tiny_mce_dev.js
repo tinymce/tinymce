@@ -7,7 +7,7 @@
  * License: http://tinymce.moxiecode.com/license
  * Contributing: http://tinymce.moxiecode.com/contributing
  *
- * This file should only be used while developing TinyMCE 
+ * This file should only be used while developing TinyMCE
  * tiny_mce.js or tiny_mce_src.js should be used in a production environment.
  * This file loads the js files from classes instead of a merged copy.
  */

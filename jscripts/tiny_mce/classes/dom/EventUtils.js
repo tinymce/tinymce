@@ -139,7 +139,7 @@
 		 * var func = tinymce.dom.Event.add(document, 'click', function(e) {
 		 *    console.debug(e.target);
 		 * });
-		 * 
+		 *
 		 * // Removes the click handler from the document
 		 * tinymce.dom.Event.remove(document, 'click', func);
 		 */

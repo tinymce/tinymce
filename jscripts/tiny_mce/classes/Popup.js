@@ -56,7 +56,7 @@ tinyMCEPopup = {
 		 * tinyMCEPopup.onInit.add(function(ed) {
 		 *     alert(ed.selection.getContent());
 		 * });
-		 * 
+		 *
 		 * // Executes the init method on page load in some object using the SomeObject scope
 		 * tinyMCEPopup.onInit.add(SomeObject.init, SomeObject);
 		 */
@@ -297,7 +297,7 @@ tinyMCEPopup = {
 			close();
 	},
 
-	// Internal functions	
+	// Internal functions
 
 	_restoreSelection : function() {
 		var e = window.event.srcElement;

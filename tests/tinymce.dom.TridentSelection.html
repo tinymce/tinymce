@@ -21,16 +21,16 @@ module("IE Selection", {
 if (tinyMCE.isIE && !window.getSelection) {
 	test("Selection of element containing text", function(){
 		expect(5);
-		
+
 		editor.setContent('<p>123</p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStart(editor.getBody(), 0);
 		rng.setEnd(editor.getBody(), 1);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, '#text', 'Start container is text node');
 		equals(rng.endContainer.nodeName, '#text', 'End container is text node');
@@ -38,19 +38,19 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endOffset, 3, 'End of text node');
 		equals(editor.dom.getOuterHTML(rng.cloneContents()), '123', 'Contents matches');
 	});
-	
+
 	test("Single image selection", function(){
 		expect(6);
-		
+
 		editor.setContent('<p><img src="about:blank" /></p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStartBefore(editor.dom.select('img')[0]);
 		rng.setEndAfter(editor.dom.select('img')[0]);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, 'P', 'Check startContainer');
 		equals(rng.endContainer.nodeName, 'P', 'Check endContainer');
@@ -59,19 +59,19 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">', 'Check contents');
 		ok(editor.selection.getRng().item, 'Check if it\'s a control selection');
 	});
-	
+
 	test("Multiple image selection", function(){
 		expect(6);
-		
+
 		editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStartBefore(editor.dom.select('img')[0]);
 		rng.setEndAfter(editor.dom.select('img')[1]);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, 'P');
 		equals(rng.endContainer.nodeName, 'P');
@@ -80,19 +80,19 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank"><img src="about:blank">');
 		ok(editor.selection.getRng().parentElement, 'Is text selection');
 	});
-	
+
 	test("Text node selection", function(){
 		expect(5);
-		
+
 		editor.setContent('<p>1234</p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStart(editor.getBody().firstChild.firstChild, 1);
 		rng.setEnd(editor.getBody().firstChild.firstChild, 3);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, '#text');
 		equals(rng.endContainer.nodeName, '#text');
@@ -100,26 +100,26 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endOffset, 3);
 		equals(editor.dom.getOuterHTML(rng.cloneContents()), '23');
 	});
-	
+
 	test("Text node selection between two elements", function(){
 		expect(5);
-		
+
 		editor.setContent('<p>1234</p><p>abcd</p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStart(editor.getBody().firstChild.firstChild, 1);
 		rng.setEnd(editor.getBody().childNodes[1].firstChild, 3);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, '#text');
 		equals(rng.endContainer.nodeName, '#text');
 		equals(rng.startOffset, 1);
 		equals(rng.endOffset, 3);
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>234</p><p>abc</p>');
-		
+
 		editor.setContent('<p>1</p><p>1234</p><p>abcd</p><p>2</p>', {
 			format: 'raw'
 		});
@@ -135,19 +135,19 @@ if (tinyMCE.isIE && !window.getSelection) {
 		 equals(rng.endOffset, 3, "endOffset doesn't match");
 		 equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>1234</p><p>abcd</p>');*/
 	});
-	
+
 	test("Mixed selection start at element end at text", function(){
 		expect(5);
-		
+
 		editor.setContent('<p><img src="about:blank" />text</p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStartBefore(editor.dom.select('img')[0]);
 		rng.setEnd(editor.getBody().firstChild.lastChild, 3);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, 'P');
 		equals(rng.endContainer.nodeName, '#text');
@@ -155,99 +155,99 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equals(rng.endOffset, 3);
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">tex');
 	});
-	
+
 	test("Mixed selection start at text end at element", function(){
 		expect(5);
-		
+
 		editor.setContent('<p>text<img src="about:blank" /></p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStart(editor.getBody().firstChild.firstChild, 1);
 		rng.setEndAfter(editor.getBody().firstChild.lastChild);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
-		
+
 		equals(rng.startContainer.nodeName, '#text');
 		equals(rng.startOffset, 1);
-		
+
 		equals(rng.endContainer.nodeName, 'P');
 		equals(rng.endOffset, 2);
-		
+
 		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), 'ext<img src="about:blank">');
 	});
-	
+
 	test("Caret position before image", function(){
 		expect(4);
-		
+
 		editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStartBefore(editor.dom.select('img')[0]);
 		rng.setEndBefore(editor.dom.select('img')[0]);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, 'P');
 		equals(rng.endContainer.nodeName, 'P');
 		equals(rng.startOffset, 0);
 		equals(rng.endOffset, 0);
 	});
-	
+
 	test("Caret position between images", function(){
 		expect(4);
-		
+
 		editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStartAfter(editor.dom.select('img')[0]);
 		rng.setEndAfter(editor.dom.select('img')[0]);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, 'P');
 		equals(rng.endContainer.nodeName, 'P');
 		equals(rng.startOffset, 1);
 		equals(rng.endOffset, 1);
 	});
-	
+
 	test("Caret position after image", function(){
 		expect(4);
-		
+
 		editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStartAfter(editor.dom.select('img')[1]);
 		rng.setEndAfter(editor.dom.select('img')[1]);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(1);
 		equals(rng.startContainer.nodeName, 'P');
 		equals(rng.endContainer.nodeName, 'P');
 		equals(rng.startOffset, 2);
 		equals(rng.endOffset, 2);
 	});
-	
+
 	test("Selection of empty text element", function(){
 		expect(6);
-		
+
 		editor.setContent('<div></div>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStart(editor.getBody(), 0);
 		rng.setEnd(editor.getBody(), 1);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(true);
 		equals(rng.startContainer.nodeName, 'BODY');
 		equals(rng.endContainer.nodeName, 'BODY');
@@ -259,16 +259,16 @@ if (tinyMCE.isIE && !window.getSelection) {
 
 	test("Selection of empty text element with caret inside", function(){
 		expect(6);
-		
+
 		editor.setContent('<div></div>', {
 			format: 'raw'
 		});
-		
+
 		rng = editor.dom.createRng();
 		rng.setStart(editor.getBody().firstChild, 0);
 		rng.setEnd(editor.getBody().firstChild, 0);
 		editor.selection.setRng(rng);
-		
+
 		rng = editor.selection.getRng(true);
 		equals(rng.startContainer.nodeName, 'DIV');
 		equals(rng.endContainer.nodeName, 'DIV');
@@ -333,7 +333,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 
 	test("Selection of text outside of a block element", function() {
 		var r;
-		
+
 		editor.settings.forced_root_block = '';
 		editor.focus();
 		editor.getBody().innerHTML = '<ul><li>Item</li></ul>Text';

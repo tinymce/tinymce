@@ -294,7 +294,7 @@ function addKeyboardNavigation(){
 function renderCharMapHTML() {
 	var charsPerRow = 20, tdWidth=20, tdHeight=20, i;
 	var html = '<div id="charmapgroup" aria-labelledby="charmap_label" tabindex="0" role="listbox">'+
-	'<table role="presentation" border="0" cellspacing="1" cellpadding="0" width="' + (tdWidth*charsPerRow) + 
+	'<table role="presentation" border="0" cellspacing="1" cellpadding="0" width="' + (tdWidth*charsPerRow) +
 	'"><tr height="' + tdHeight + '">';
 	var cols=-1;
 

@@ -45,9 +45,9 @@ asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', fu
 	ApplyingOL.to(PlainText).gives('<ol><li>Test</li></ol>');
 	ApplyingOL.to(SingleLiOlSelection).gives('<p>Item 1</p>');
 	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1<br />Item 2</p>');
-	
+
 	ApplyingOL.to(HeadingInOrderedListBeforeParagraph).gives('<h2>Test</h2><p>Content<br />After</p>');
-	
+
 	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1<br />Indented</p>');
 	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1<br />Indented</p>');
 	queue.done();

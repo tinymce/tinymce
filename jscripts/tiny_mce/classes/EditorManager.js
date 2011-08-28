@@ -109,7 +109,7 @@
 		 * tinymce.EditorManager.init({
 		 *    some_settings : 'some value'
 		 * });
-		 * 
+		 *
 		 * // Initializes a editor instance using the shorter version
 		 * tinyMCE.init({
 		 *    some_settings : 'some value'
@@ -223,7 +223,7 @@
 
 						// All done
 						if (l == co)
-							execCallback(s, 'oninit');					
+							execCallback(s, 'oninit');
 					});
 				}
 			});
@@ -240,7 +240,7 @@
 		 * tinyMCE.get('mytextbox').onClick.add(function(ed, e) {
 		 *    ed.windowManager.alert('Hello world!');
 		 * });
-		 * 
+		 *
 		 * // Adds an onclick event to an editor by id (longer version)
 		 * tinymce.EditorManager.get('mytextbox').onClick.add(function(ed, e) {
 		 *    ed.windowManager.alert('Hello world!');

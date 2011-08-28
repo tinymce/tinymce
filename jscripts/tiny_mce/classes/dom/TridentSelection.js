@@ -323,7 +323,7 @@
 
 				return node;
 			};
-			
+
 			function setBookmarkEndPoint(start) {
 				var endPoint = bookmark[start ? 'start' : 'end'], moveLeft, moveRng, undef;
 

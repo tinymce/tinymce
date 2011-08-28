@@ -180,7 +180,7 @@ var performanceTests = {
 		run: function() {
 			for (var i = 0; i < 200; i++) {
 				new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir1/dir3/file.html');
-				new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html'); 
+				new tinymce.util.URI('http://www.site.com/dir1/dir2/file.html').toRelative('http://www.site.com/dir3/dir4/file.html');
 				new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3');
 				new tinymce.util.URI('http://www.site.com/dir1/dir2/').toAbsolute('../dir3', 1);
 			}
@@ -238,7 +238,7 @@ tinyMCE.init({
 			tinymce.DOM.add('tests', 'li', null, '<a id="test_' + (++count) + '" href="#">' + title + '</a>');
 			tinymce.DOM.bind('test_' + count, 'click', function(e) {
 				var count = 0, numberOfRuns;
-	
+
 				numberOfRuns = parseInt(document.getElementById('runs').value);
 
 				e.preventDefault();

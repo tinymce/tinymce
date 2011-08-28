@@ -7,29 +7,29 @@
  *
  * @version
  * 2.0.320 (May 03 2009)
- * 
+ *
  * @copyright
  * Copyright (C) 2004-2009 Alex Gorbatchev.
  *
  * @license
  * This file is part of SyntaxHighlighter.
- * 
+ *
  * SyntaxHighlighter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * SyntaxHighlighter is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with SyntaxHighlighter.  If not, see <http://www.gnu.org/copyleft/lesser.html>.
  */
 /************************************
  * Default Syntax Highlighter theme.
- * 
+ *
  * Interface elements.
  ************************************/
 
@@ -65,7 +65,7 @@
 	color: #000 !important;
 }
 
-.syntaxhighlighter.printing .line .content 
+.syntaxhighlighter.printing .line .content
 {
 	border: 0 !important;
 }
@@ -120,72 +120,72 @@
  ************************************/
 .syntaxhighlighter .plain,
 .syntaxhighlighter .plain a
-{ 
+{
 	color: #000 !important;
 }
 
 .syntaxhighlighter .comments,
 .syntaxhighlighter .comments a
-{ 
+{
 	color: #008200 !important;
 }
 
 .syntaxhighlighter .string,
 .syntaxhighlighter .string a
 {
-	color: blue !important; 
+	color: blue !important;
 }
 
 .syntaxhighlighter .keyword
-{ 
-	color: #069 !important; 
-	font-weight: bold !important; 
+{
+	color: #069 !important;
+	font-weight: bold !important;
 }
 
-.syntaxhighlighter .preprocessor 
-{ 
-	color: gray !important; 
+.syntaxhighlighter .preprocessor
+{
+	color: gray !important;
 }
 
-.syntaxhighlighter .variable 
-{ 
-	color: #a70 !important; 
+.syntaxhighlighter .variable
+{
+	color: #a70 !important;
 }
 
 .syntaxhighlighter .value
-{ 
-	color: #090 !important; 
+{
+	color: #090 !important;
 }
 
 .syntaxhighlighter .functions
-{ 
-	color: #ff1493 !important; 
+{
+	color: #ff1493 !important;
 }
 
 .syntaxhighlighter .constants
-{ 
-	color: #0066CC !important; 
+{
+	color: #0066CC !important;
 }
 
 .syntaxhighlighter .script
-{ 
+{
 	background-color: yellow !important;
 }
 
 .syntaxhighlighter .color1,
 .syntaxhighlighter .color1 a
-{ 
-	color: #808080 !important; 
+{
+	color: #808080 !important;
 }
 
 .syntaxhighlighter .color2,
 .syntaxhighlighter .color2 a
-{ 
-	color: #ff1493 !important; 
+{
+	color: #ff1493 !important;
 }
 
 .syntaxhighlighter .color3,
 .syntaxhighlighter .color3 a
-{ 
-	color: red !important; 
+{
+	color: red !important;
 }

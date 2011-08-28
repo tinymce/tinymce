@@ -156,7 +156,7 @@
 			 * @final
 			 */
 			t.isIDevice = /(iPad|iPhone)/.test(ua);
-			
+
 			/**
 			 * Constant that is true if the current browser is running on iOS 5 or greater.
 			 *
@@ -290,7 +290,7 @@
 		 * tinymce.each([1,2,3], function(v, i) {
 		 *     console.debug("Value: " + v + ", Index: " + i);
 		 * });
-		 * 
+		 *
 		 * // Iterate an object
 		 * tinymce.each({a : 1, b : 2, c: 3], function(v, k) {
 		 *     console.debug("Value: " + v + ", Key: " + k);
@@ -404,7 +404,7 @@
 		 *     somefield1 : 'a',
 		 *     somefield2 : 'a'
 		 * });
-		 * 
+		 *
 		 * // Extends obj with obj2 and obj3
 		 * tinymce.extend(obj, obj2, obj3);
 		 */
@@ -450,7 +450,7 @@
 		 *     SomeClass : function() {
 		 *         // Class constructor
 		 *     },
-		 * 
+		 *
 		 *     method : function() {
 		 *         // Some method
 		 *     }
@@ -462,12 +462,12 @@
 		 *         // Class constructor
 		 *         this.parent(); // Call parent constructor
 		 *     },
-		 * 
+		 *
 		 *     method : function() {
 		 *         // Some method
 		 *         this.parent(); // Call parent method
 		 *     },
-		 * 
+		 *
 		 *     'static' : {
 		 *         staticMethod : function() {
 		 *             // Static method

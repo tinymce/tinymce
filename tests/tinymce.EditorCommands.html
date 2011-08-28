@@ -23,7 +23,7 @@ function getContent() {
 
 test('mceInsertContent - p inside text of p', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>1234</p>');
@@ -66,7 +66,7 @@ test('mceInsertContent - p inside whole p', function() {
 
 test('mceInsertContent - pre in text of pre', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<pre>1234</pre>');
@@ -87,7 +87,7 @@ test('mceInsertContent - pre in text of pre', function() {
 
 test('mceInsertContent - h1 in text of h1', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<h1>1234</h1>');
@@ -108,7 +108,7 @@ test('mceInsertContent - h1 in text of h1', function() {
 
 test('mceInsertContent - li inside li', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<ul><li>1234</li></ul>');
@@ -185,7 +185,7 @@ test('mceInsertContent - text inside empty p with br caret node', function() {
 
 test('mceInsertContent - image inside p', function() {
 	var rng;
-	
+
 	expect(6);
 
 	editor.setContent('<p>1</p>');
@@ -205,7 +205,7 @@ test('mceInsertContent - image inside p', function() {
 
 test('mceInsertContent - legacy content', function() {
 	var rng;
-	
+
 	expect(1);
 
 	// Convert legacy content
@@ -220,7 +220,7 @@ test('mceInsertContent - legacy content', function() {
 
 test('mceInsertContent - hr', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>123</p>');
@@ -241,7 +241,7 @@ test('mceInsertContent - hr', function() {
 
 test('mceInsertContent - forced root block', function() {
 	var rng;
-	
+
 	expect(1);
 
 	// Forced root block
@@ -253,7 +253,7 @@ test('mceInsertContent - forced root block', function() {
 
 test('mceInsertContent - mixed inline content inside td', function() {
 	var rng;
-	
+
 	expect(1);
 
 	// Forced root block
@@ -278,7 +278,7 @@ test('mceInsertContent - invalid insertion with spans on page', function(){
 
 test('InsertHorizontalRule', function() {
 	var rng;
-	
+
 	expect(7);
 
 	editor.setContent('<p>123</p>');

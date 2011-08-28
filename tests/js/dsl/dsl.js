@@ -25,7 +25,7 @@ function assertState(expected, message) {
     if (typeof expected == "function" || typeof expected == "object") {
         if (expected.test(content))
             equals(content, content, message);
-        else 
+        else
             equals(content, expected.toString(), message);
     } else {
         equals(content, expected, message);
@@ -36,11 +36,11 @@ tinymce.create('dsl.Queue', {
 	Queue: function() {
 		this.queue = [];
 	},
-	
+
 	add: function(task) {
 		this.queue.push(task);
 	},
-	
+
 	next: function() {
 		if (this.queue.length > 0) {
 			var task = this.queue.shift();
@@ -51,7 +51,7 @@ tinymce.create('dsl.Queue', {
 			return false;
 		}
 	},
-	
+
 	done: function() {
 		expect(this.queue.length);
 		this.next();
@@ -73,13 +73,13 @@ tinymce.create('dsl.Action', {
 			this.action = action;
 		}
 	},
-	
+
 	curryPreposition: function(preposition) {
 		return function(state) {
 			return this.go(state, preposition);
 		};
 	},
-	
+
 	go: function(state, preposition) {
 		var message = this.name + " " + preposition + " " + getFunctionName(state);
 		var action = this.action;
@@ -104,7 +104,7 @@ tinymce.create('dsl.Action', {
 				return this;
 			};
 		}
-		
+
 		var dslState = {
 			gives: defer(function(expected) {
 				assertState(expected, message);
@@ -113,7 +113,7 @@ tinymce.create('dsl.Action', {
 			enablesState: defer(function(state) {
 				ok(editor.queryCommandState(state), message + " enables " + state + " command");
 			}),
-			
+
 			disablesState: defer(function(state) {
 				ok(!editor.queryCommandState(state), message + " disables " + state + " command");
 			})

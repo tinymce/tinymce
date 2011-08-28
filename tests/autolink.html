@@ -11,9 +11,9 @@
 <script type="text/javascript" src="js/dsl/dsl.js"></script>
 <script type="text/javascript" src="js/autolink/actions.js"></script>
 <script type="text/javascript" src="js/dsl/states.js"></script>
-<script><!--  
+<script><!--
 window.robotUsesSymbols = true;
-var editor; 
+var editor;
 QUnit.config.autostart = false;
 module("Automatic Links", {
     autostart: false,
@@ -77,7 +77,7 @@ asyncTest('Typing a SSH URL', function() {
     TypingSSHURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
     TypingSSHURL.inA(TableCellWithoutBrs2).gives(new RegExp('^<table><tbody><tr><td><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test</td><td>&nbsp;</td></tr></tbody></table>$'));
     TypingSSHURL.inA(TableCellWithBrsFirstLine2).gives(new RegExp('^<table><tbody><tr><td><a href="ssh://www.ephox.com">ssh://www.ephox.com</a>(\\s|&nbsp;)Test<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
-    
+
     TypingEclipsedSSHURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ssh://www.ephox.com">ssh://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
     TypingSSHURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a></p><p>(Test|<a href=\"ssh://www.ephox.com\"></a>Test)</p>$'));
@@ -98,7 +98,7 @@ asyncTest('Typing a FTP URL', function() {
     TypingFTPURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
     TypingFTPURL.inA(TableCellWithoutBrs2).gives(new RegExp('^<table><tbody><tr><td><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test</td><td>&nbsp;</td></tr></tbody></table>$'));
     TypingFTPURL.inA(TableCellWithBrsFirstLine2).gives(new RegExp('^<table><tbody><tr><td><a href="ftp://www.ephox.com">ftp://www.ephox.com</a>(\\s|&nbsp;)Test<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
-    
+
     TypingEclipsedFTPURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="ftp://www.ephox.com">ftp://www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
     TypingFTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a></p><p>(Test|<a href=\"ftp://www.ephox.com\"></a>Test)</p>$'));
@@ -119,7 +119,7 @@ asyncTest('Typing a WWW URL', function() {
     TypingWWWURL.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</h1>$'));
     TypingWWWURL.inA(TableCellWithoutBrs2).gives(new RegExp('^<table><tbody><tr><td><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test</td><td>&nbsp;</td></tr></tbody></table>$'));
     TypingWWWURL.inA(TableCellWithBrsFirstLine2).gives(new RegExp('^<table><tbody><tr><td><a href="http://www.ephox.com">www.ephox.com</a>(\\s|&nbsp;)Test<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
-    
+
     TypingEclipsedWWWURL.inA(NonEmptyParagraph).gives(new RegExp('^<p>\\(<a href="http://www.ephox.com">www.ephox.com</a>\\)(\\s|&nbsp;)Test</p>$'));
 
     TypingWWWURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a></p><p>(Test|<a href=\"http://www.ephox.com\"></a>Test)</p>$'));

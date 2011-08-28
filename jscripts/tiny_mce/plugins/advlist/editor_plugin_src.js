@@ -131,7 +131,7 @@
 							if (!list)
 								menu.items[format.id].setSelected(1);
 						}
-	
+
 						editor.focus();
 
 						// IE looses it's selection so store it away and restore it later

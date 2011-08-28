@@ -37,7 +37,7 @@
 			var expected = '<p><strong>text</strong></p>\n<p>g</p>';
 			checkExpectedAfterNewParagraph(expected);
 		});
-		
+
 		asyncTest('Format with nested formatting turned off handled correctly', function(){
 			editor.setContent('<p><strong>bold<em>italic<span style="text-decoration: underline;">under</span></em></strong></p>');
 			editor.focus();

@@ -293,7 +293,7 @@ test('Remove empty elements', function() {
 	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[name],img'}));
 	root = parser.parse('<span></span><a name="anchor"></a>');
 	equals(serializer.serialize(root), '<span></span><a name="anchor"></a>', 'Leave a with name attribute');
-	
+
 	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: 'span,a[href],img[src]'}));
 	root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
 	equals(serializer.serialize(root), '<span></span><a href="#"><img src="about:blank" /></a>', 'Leave elements with img in it');

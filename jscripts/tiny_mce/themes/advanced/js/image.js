@@ -224,7 +224,7 @@ var ImageDialog = {
 	resetImageData : function() {
 		var f = document.forms[0];
 
-		f.width.value = f.height.value = "";	
+		f.width.value = f.height.value = "";
 	},
 
 	updateImageData : function() {

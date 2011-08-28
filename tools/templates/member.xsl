@@ -108,7 +108,7 @@
 								</xsl:when>
 
 								<xsl:when test="name() = 'option'">
-									option <xsl:value-of select="@name" /> : 
+									option <xsl:value-of select="@name" /> :
 									<xsl:call-template name="type_name">
 										<xsl:with-param	name="type"><xsl:value-of select="@type" /></xsl:with-param>
 									</xsl:call-template>

@@ -18,7 +18,7 @@
 	 * @example
 	 * // Creates an basic element for an existing element
 	 * var elm = new tinymce.dom.Element('someid');
-	 * 
+	 *
 	 * elm.setStyle('background-color', 'red');
 	 * elm.moveTo(10, 10);
 	 */
@@ -43,9 +43,9 @@
 			el = dom.get(t.id);
 
 		tinymce.each(
-				('getPos,getRect,getParent,add,setStyle,getStyle,setStyles,' + 
-				'setAttrib,setAttribs,getAttrib,addClass,removeClass,' + 
-				'hasClass,getOuterHTML,setOuterHTML,remove,show,hide,' + 
+				('getPos,getRect,getParent,add,setStyle,getStyle,setStyles,' +
+				'setAttrib,setAttribs,getAttrib,addClass,removeClass,' +
+				'hasClass,getOuterHTML,setOuterHTML,remove,show,hide,' +
 				'isHidden,setHTML,get').split(/,/)
 			, function(k) {
 				t[k] = function() {

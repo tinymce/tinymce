@@ -39,11 +39,11 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 
 		return h.join('');
 	},
-	
+
 	focus : function() {
 		this.keyNav.focus();
 	},
-	
+
 	postRender : function() {
 		var t = this, items = [];
 
@@ -64,7 +64,7 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 			excludeFromTabOrder: !t.settings.tab_focus_toolbar
 		});
 	},
-	
+
 	destroy : function() {
 		var self = this;
 

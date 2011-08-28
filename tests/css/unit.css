@@ -4,8 +4,8 @@ h1 { padding: 15px; font-size: large; background-color: #06b; color: white; }
 h1 a { color: white; }
 h2 { padding: 10px; background-color: #eee; color: black; margin: 0; font-size: small; font-weight: normal }
 
-.pass { color: green; } 
-.fail { color: red; } 
+.pass { color: green; }
+.fail { color: red; }
 p.result { margin-left: 1em; }
 
 #banner { height: 2em; border-bottom: 1px solid white; }

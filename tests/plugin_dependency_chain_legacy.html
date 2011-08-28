@@ -15,7 +15,7 @@ function check_plugin_loaded(name){
 	var pluginManager = tinyMCE.PluginManager;
 	var depPlugin = pluginManager.get(name);
 	ok(depPlugin, name + " plugin should have loaded");
-	
+
 }
 test('Dependency Chain Legacy style test', function() {
 	expect(3);

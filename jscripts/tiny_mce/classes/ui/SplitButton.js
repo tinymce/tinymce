@@ -29,23 +29,23 @@
 	 *                         alert('Button was clicked.');
 	 *                     }
 	 *                 });
-	 * 
+	 *
 	 *                 c.onRenderMenu.add(function(c, m) {
 	 *                     m.add({title : 'Some title', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
-	 * 
+	 *
 	 *                     m.add({title : 'Some item 1', onclick : function() {
 	 *                         alert('Some item 1 was clicked.');
 	 *                     }});
-	 * 
+	 *
 	 *                     m.add({title : 'Some item 2', onclick : function() {
 	 *                         alert('Some item 2 was clicked.');
 	 *                     }});
 	 *                 });
-	 * 
+	 *
 	 *               // Return the new splitbutton instance
 	 *               return c;
 	 *         }
-	 * 
+	 *
 	 *         return null;
 	 *     }
 	 * });
@@ -84,7 +84,7 @@
 
 			h1 += DOM.createHTML('span', {'class': 'mceVoiceLabel mceIconOnly', id: t.id + '_voice', style: 'display:none;'}, s.title);
 			h += '<td >' + DOM.createHTML('a', {role: 'button', id : t.id + '_action', tabindex: '-1', href : 'javascript:;', 'class' : 'mceAction ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
-	
+
 			h1 = DOM.createHTML('span', {'class' : 'mceOpen ' + s['class']}, '<span style="display:none;" class="mceIconOnly" aria-hidden="true">\u25BC</span>');
 			h += '<td >' + DOM.createHTML('a', {role: 'button', id : t.id + '_open', tabindex: '-1', href : 'javascript:;', 'class' : 'mceOpen ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 

@@ -10,7 +10,7 @@ var SearchReplaceDialog = {
 
 		// Focus input field
 		f[m + '_panel_searchstring'].focus();
-		
+
 		mcTabs.onChange.add(function(tab_id, panel_id) {
 			t.switchMode(tab_id.substring(0, tab_id.indexOf('_')));
 		});
@@ -55,7 +55,7 @@ var SearchReplaceDialog = {
 
 		function fix() {
 			// Correct Firefox graphics glitches
-			// TODO: Verify if this is actually needed any more, maybe it was for very old FF versions? 
+			// TODO: Verify if this is actually needed any more, maybe it was for very old FF versions?
 			r = se.getRng().cloneRange();
 			ed.getDoc().execCommand('SelectAll', false, null);
 			se.setRng(r);

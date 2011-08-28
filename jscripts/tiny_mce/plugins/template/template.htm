@@ -5,7 +5,7 @@
 	<script type="text/javascript" src="js/template.js?v={tinymce_version}"></script>
 	<link href="css/template.css?v={tinymce_version}" rel="stylesheet" type="text/css" />
 </head>
-<body onresize="TemplateDialog.resize();"> 
+<body onresize="TemplateDialog.resize();">
 	<form onsubmit="TemplateDialog.insert();return false;">
 		<div id="frmbody">
 			<div class="title">{#template_dlg.desc}</div>
@@ -21,11 +21,11 @@
 				<iframe id="templatesrc" name="templatesrc" src="blank.htm" width="690" height="400" frameborder="0"></iframe>
 			</fieldset>
 		</div>
-		
+
 		<div class="mceActionPanel">
 			<input type="submit" id="insert" name="insert" value="{#insert}" />
 			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
 	</form>
-</body> 
-</html> 
+</body>
+</html>

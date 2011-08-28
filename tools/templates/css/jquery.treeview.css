@@ -1,4 +1,4 @@
-.treeview, .treeview ul { 
+.treeview, .treeview ul {
 padding: 0;
 margin: 0;
 list-style: none;
@@ -28,7 +28,7 @@ cursor: pointer;
 
 }
 
-.treeview li { 
+.treeview li {
 	margin: 0;
 	padding: 3px 0pt 3px 16px;
 }
@@ -52,7 +52,7 @@ cursor: pointer;
 
 .treeview div.lastCollapsable-hitarea, .treeview div.lastExpandable-hitarea { background-position: 0; }
 
-.treeview-famfamfam .hitarea, .treeview-famfamfam li.lastCollapsable, .treeview-famfamfam li.lastExpandable { background-image: url(../img/treeview-famfamfam.gif); } 
+.treeview-famfamfam .hitarea, .treeview-famfamfam li.lastCollapsable, .treeview-famfamfam li.lastExpandable { background-image: url(../img/treeview-famfamfam.gif); }
 
 .classtree li {
 	font-family: arial,tahoma,helvetica,sans-serif;

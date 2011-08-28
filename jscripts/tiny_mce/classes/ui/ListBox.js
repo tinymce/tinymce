@@ -29,23 +29,23 @@
 	 *                          tinyMCE.activeEditor.windowManager.alert('Value selected:' + v);
 	 *                      }
 	 *                 });
-	 * 
+	 *
 	 *                 // Add some values to the list box
 	 *                 mlb.add('Some item 1', 'val1');
 	 *                 mlb.add('some item 2', 'val2');
 	 *                 mlb.add('some item 3', 'val3');
-	 * 
+	 *
 	 *                 // Return the new listbox instance
 	 *                 return mlb;
 	 *         }
-	 * 
+	 *
 	 *         return null;
 	 *     }
 	 * });
-	 * 
+	 *
 	 * // Register plugin with a short name
 	 * tinymce.PluginManager.add('example', tinymce.plugins.ExamplePlugin);
-	 * 
+	 *
 	 * // Initialize TinyMCE with the new plugin and button
 	 * tinyMCE.init({
 	 *    ...
@@ -217,7 +217,7 @@
 			var h = '', t = this, s = t.settings, cp = t.classPrefix;
 
 			h = '<span role="button" aria-haspopup="true" aria-labelledby="' + t.id +'_text" aria-describedby="' + t.id + '_voiceDesc"><table role="presentation" tabindex="0" id="' + t.id + '" cellpadding="0" cellspacing="0" class="' + cp + ' ' + cp + 'Enabled' + (s['class'] ? (' ' + s['class']) : '') + '"><tbody><tr>';
-			h += '<td>' + DOM.createHTML('span', {id: t.id + '_voiceDesc', 'class': 'voiceLabel', style:'display:none;'}, t.settings.title); 
+			h += '<td>' + DOM.createHTML('span', {id: t.id + '_voiceDesc', 'class': 'voiceLabel', style:'display:none;'}, t.settings.title);
 			h += DOM.createHTML('a', {id : t.id + '_text', tabindex : -1, href : 'javascript:;', 'class' : 'mceText', onclick : "return false;", onmousedown : 'return false;'}, DOM.encode(t.settings.title)) + '</td>';
 			h += '<td>' + DOM.createHTML('a', {id : t.id + '_open', tabindex : -1, href : 'javascript:;', 'class' : 'mceOpen', onclick : "return false;", onmousedown : 'return false;'}, '<span><span style="display:none;" class="mceIconOnly" aria-hidden="true">\u25BC</span></span>') + '</td>';
 			h += '</tr></tbody></table></span>';

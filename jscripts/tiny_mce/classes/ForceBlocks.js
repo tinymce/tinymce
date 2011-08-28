@@ -533,7 +533,7 @@
 				} else
 					e.innerHTML = isOpera ? '\u00a0' : '<br />'; // Extra space for Opera so that the caret can move there
 			};
-				
+
 			// Padd empty blocks
 			if (dom.isEmpty(bef))
 				appendStyles(bef, sn);

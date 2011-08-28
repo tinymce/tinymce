@@ -49,16 +49,16 @@
 				 *
 				 * @event onBeforeSetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
-				 * @param {Object} args Contains things like the contents that will be returned. 
+				 * @param {Object} args Contains things like the contents that will be returned.
 				 */
 				'onBeforeSetContent',
 
 				/**
-				 * This event gets executed before contents is inserted into selection. 
+				 * This event gets executed before contents is inserted into selection.
 				 *
 				 * @event onBeforeGetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
-				 * @param {Object} args Contains things like the contents that will be inserted. 
+				 * @param {Object} args Contains things like the contents that will be inserted.
 				 */
 				'onBeforeGetContent',
 
@@ -67,7 +67,7 @@
 				 *
 				 * @event onSetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
-				 * @param {Object} args Contains things like the contents that will be inserted. 
+				 * @param {Object} args Contains things like the contents that will be inserted.
 				 */
 				'onSetContent',
 
@@ -76,7 +76,7 @@
 				 *
 				 * @event onGetContent
 				 * @param {tinymce.dom.Selection} selection Selection object that fired the event.
-				 * @param {Object} args Contains things like the contents that will be returned. 
+				 * @param {Object} args Contains things like the contents that will be returned.
 				 */
 				'onGetContent'
 			], function(e) {
@@ -115,7 +115,7 @@
 		 * @example
 		 * // Alerts the currently selected contents
 		 * alert(tinyMCE.activeEditor.selection.getContent());
-		 * 
+		 *
 		 * // Alerts the currently selected contents as plain text
 		 * alert(tinyMCE.activeEditor.selection.getContent({format : 'text'}));
 		 */
@@ -335,9 +335,9 @@
 		 * @example
 		 * // Stores a bookmark of the current selection
 		 * var bm = tinyMCE.activeEditor.selection.getBookmark();
-		 * 
+		 *
 		 * tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent() + 'Some new content');
-		 * 
+		 *
 		 * // Restore the selection bookmark
 		 * tinyMCE.activeEditor.selection.moveToBookmark(bm);
 		 */
@@ -476,9 +476,9 @@
 		 * @example
 		 * // Stores a bookmark of the current selection
 		 * var bm = tinyMCE.activeEditor.selection.getBookmark();
-		 * 
+		 *
 		 * tinyMCE.activeEditor.setContent(tinyMCE.activeEditor.getContent() + 'Some new content');
-		 * 
+		 *
 		 * // Restore the selection bookmark
 		 * tinyMCE.activeEditor.selection.moveToBookmark(bm);
 		 */
@@ -784,7 +784,7 @@
 		 */
 		setRng : function(r) {
 			var s, t = this;
-			
+
 			if (!t.tridentSel) {
 				s = t.getSel();
 
@@ -863,7 +863,7 @@
 					}
 
 					// If the anchor node is a element instead of a text node then return this element
-					//if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1) 
+					//if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)
 					//	return sel.anchorNode.childNodes[sel.anchorOffset];
 
 					// Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
@@ -987,7 +987,7 @@
 
 			// Normalize the end points
 			normalizeEndPoint(true);
-			
+
 			if (rng.collapsed)
 				normalizeEndPoint();
 

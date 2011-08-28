@@ -465,16 +465,16 @@
 
 			return t.add(c);
 		},
-		
+
 		createToolbarGroup : function(id, s, cc) {
 			var c, t = this, cls;
 			id = t.prefix + id;
 			cls = cc || this._cls.toolbarGroup || tinymce.ui.ToolbarGroup;
 			c = new cls(id, s, t.editor);
-			
+
 			if (t.get(id))
 				return null;
-			
+
 			return t.add(c);
 		},
 
@@ -502,7 +502,7 @@
 		setControlType : function(n, c) {
 			return this._cls[n.toLowerCase()] = c;
 		},
-	
+
 		/**
 		 * Destroy.
 		 *

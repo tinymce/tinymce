@@ -10,7 +10,7 @@
 
 (function(tinymce) {
 	/**
-	 * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for more details and examples on how to use this class. 
+	 * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for more details and examples on how to use this class.
 	 *
 	 * @class tinymce.dom.Serializer
 	 */
@@ -54,11 +54,11 @@
 		onPreProcess = new tinymce.util.Dispatcher(self);
 
 		/**
-		 * This event gets executed after a HTML fragment has been serialized into a HTML string. This event enables you to do modifications to the HTML string like regexp replaces etc. 
+		 * This event gets executed after a HTML fragment has been serialized into a HTML string. This event enables you to do modifications to the HTML string like regexp replaces etc.
 		 *
 		 * @event onPreProcess
 		 * @param {tinymce.dom.Serializer} sender object/Serializer instance that is serializing an element.
-		 * @param {Object} args Object containing things like the current contents. 
+		 * @param {Object} args Object containing things like the current contents.
 		 * @example
 		 * // Adds an observer to the onPostProcess event
 		 * serializer.onPostProcess.add(function(se, o) {

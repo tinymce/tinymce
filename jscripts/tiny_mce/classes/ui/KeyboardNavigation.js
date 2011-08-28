@@ -13,19 +13,19 @@
 
 	/**
 	 * This class provides basic keyboard navigation using the arrow keys to children of a component.
-	 * For example, this class handles moving between the buttons on the toolbars. 
-	 * 
+	 * For example, this class handles moving between the buttons on the toolbars.
+	 *
 	 * @class tinymce.ui.KeyboardNavigation
 	 */
 	tinymce.create('tinymce.ui.KeyboardNavigation', {
 		/**
 		 * Create a new KeyboardNavigation instance to handle the focus for a specific element.
-		 * 
+		 *
 		 * @constructor
 		 * @method KeyboardNavigation
 		 * @param {Object} settings the settings object to define how keyboard navigation works.
 		 * @param {DOMUtils} dom the DOMUtils instance to use.
-		 * 
+		 *
 		 * @setting {Element/String} root the root element or ID of the root element for the control.
 		 * @setting {Array} items an array containing the items to move focus between. Every object in this array must have an id attribute which maps to the actual DOM element. If the actual elements are passed without an ID then one is automatically assigned.
 		 * @setting {Function} onCancel the callback for when the user presses escape or otherwise indicates cancelling.
@@ -45,17 +45,17 @@
 			itemFocussed = function(evt) {
 				focussedId = evt.target.id;
 			};
-			
+
 			itemBlurred = function(evt) {
 				dom.setAttrib(evt.target.id, 'tabindex', '-1');
 			};
-			
+
 			rootFocussed = function(evt) {
 				var item = dom.get(focussedId);
 				dom.setAttrib(item, 'tabindex', '0');
 				item.focus();
 			};
-			
+
 			t.focus = function() {
 				dom.get(focussedId).focus();
 			};
@@ -77,7 +77,7 @@
 				items = dom = root = t.focus = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
 				t.destroy = function() {};
 			};
-			
+
 			t.moveFocus = function(dir, evt) {
 				var idx = -1, controls = t.controls, newFocus;
 
@@ -97,7 +97,7 @@
 				} else if (idx >= items.length) {
 					idx = 0;
 				}
-				
+
 				newFocus = items[idx];
 				dom.setAttrib(focussedId, 'tabindex', '-1');
 				dom.setAttrib(newFocus.id, 'tabindex', '0');
@@ -110,19 +110,19 @@
 				if (evt)
 					Event.cancel(evt);
 			};
-			
+
 			rootKeydown = function(evt) {
 				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
-				
+
 				switch (evt.keyCode) {
 					case DOM_VK_LEFT:
 						if (enableLeftRight) t.moveFocus(-1);
 						break;
-	
+
 					case DOM_VK_RIGHT:
 						if (enableLeftRight) t.moveFocus(1);
 						break;
-	
+
 					case DOM_VK_UP:
 						if (enableUpDown) t.moveFocus(-1);
 						break;
@@ -167,14 +167,14 @@
 				dom.setAttrib(item.id, 'tabindex', tabindex);
 				dom.bind(dom.get(item.id), 'focus', itemFocussed);
 			});
-			
+
 			// Setup initial state for root element.
 			if (items[0]){
 				focussedId = items[0].id;
 			}
 
 			dom.setAttrib(root, 'tabindex', '-1');
-			
+
 			// Setup listeners for root element.
 			dom.bind(dom.get(root), 'focus', rootFocussed);
 			dom.bind(dom.get(root), 'keydown', rootKeydown);

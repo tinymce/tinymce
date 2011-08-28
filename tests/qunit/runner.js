@@ -5,7 +5,7 @@
 
 	function log(message, display) {
 		var div;
-		
+
 		if (display) {
 			div = document.createElement('div');
 			div.appendChild(document.createTextNode(message));
@@ -146,7 +146,7 @@
 
 			document.getElementById(currentTest.id).className = failures > 0 ? 'fail' : 'pass';
 			document.getElementById(currentTest.id + '_status').innerHTML = '<strong><b style="color: black;">(<b class="fail">' + failures + '</b>, <b class="pass">' + (total - failures) + '</b>, ' + total + ')</b></strong>';
-			
+
 			if (testFailures > 0)
 				document.getElementById('total_status').className = 'fail';
 

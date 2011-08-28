@@ -18,9 +18,9 @@
 		// Don't load if there's already a version of robot loaded.
 		return;
 	}
-	
+
 	window.robot = {
-			
+
 		onload: function(userCallback) {
 			if (this.ready) {
 				userCallback();
@@ -28,7 +28,7 @@
 				this.userCallback = userCallback;
 			}
 		},
-		
+
 		init: function(useDocumentWrite) {
 			var jarUrl = "JSRobot.jar";
 			var scripts = document.getElementsByTagName('script');
@@ -49,7 +49,7 @@
 			}
 			this.appletInstance = document.getElementById('robotApplet');
 		},
-		
+
 		callback: function() {
 			if (window.robotUsesSymbols){
 				this.initSymbols();
@@ -63,7 +63,7 @@
 		initSymbols: function(){
 			var input = document.createElement("input");
 			document.body.appendChild(input);
-			input.focus(); 
+			input.focus();
 			var t = this;
 			function loadSymbolsFromInput(){
 				t.symbols = input.value;
@@ -73,7 +73,7 @@
 
 		  	this.appletAction(input, loadSymbolsFromInput, function() {
 				  return this.getApplet().typeSymbolsAboveNumberKeys();
-			});  
+			});
 		},
 
 		type: function(key, shiftKey, callback, focusElement) {
@@ -84,7 +84,7 @@
 			});
 		},
 
-		typeSymbol: function(symbol, callback, focusElement) { 
+		typeSymbol: function(symbol, callback, focusElement) {
 			if (!window.robotUsesSymbols) {
 				alert("need to define the attribute\nwindow.robotUsesSymbols\nbefore using the typeSymbol function.");
 			}
@@ -96,23 +96,23 @@
 			}
 			return t.type(symbolNumber+48, true, callback, focusElement);
 		},
-		
+
 		forwardDelete: function(callback, focusElement) {
 			this.type(0x7F, false, callback, focusElement);
 		},
-		
+
 		cut: function(callback, focusElement) {
 			this.typeAsShortcut('x', callback, focusElement, 'cut');
 		},
-		
+
 		copy: function(callback, focusElement) {
 			this.typeAsShortcut('c', callback, focusElement, 'copy');
 		},
-		
+
 		paste: function(callback, focusElement) {
 			this.typeAsShortcut('v', callback, focusElement, 'paste');
 		},
-		
+
 		pasteText: function(content, callback, focusElement) {
 			var actionResult = this.getApplet().setClipboard(content);
 			if (actionResult) {
@@ -120,14 +120,14 @@
 			}
 			this.paste(callback, focusElement);
 		},
-		
+
 		typeAsShortcut: function(key, callback, focusElement, event) {
 			var keycode = this.getKeycode(key);
 			this.appletAction(focusElement, callback, function() {
 				return this.getApplet().typeAsShortcut(keycode);
 			}, event);
 		},
-		
+
 		getKeycode: function(key) {
 			if (key.toUpperCase && key.charCodeAt) {
 				if (/^[a-zA-Z\n\b\t]$/.test(key)) {
@@ -138,19 +138,19 @@
 			}
 			return key;
 		},
-		
+
 		captureScreenShot: function() {
 			return this.getApplet().captureScreenShot();
 		},
-		
+
 		setScreenShotDirectory: function(dir) {
 			this.getApplet().setScreenShotDirectory(dir);
 		},
-		
+
 		getApplet: function() {
 			return this.appletInstance;
 		},
-		
+
 		appletAction: function(focusElement, continueCallback, action, event) {
 			var actionResult, listenerActivated = false, listenerType = event || 'keyup', timeout, curEl, toFocus = [], t = this;
 
@@ -171,7 +171,7 @@
 					setTimeout(continueCallback, 100);
 				}
 			};
-			
+
 			var listener = function() {
 				if (listenerActivated) return;
 				listenerActivated = true;
@@ -191,7 +191,7 @@
 					target[add ? 'attachEvent' : 'detachEvent']('on' + listenerType, listener);
 				}
 			};
-			
+
 			if (!focusElement) {
 				focusElement = document.activeElement;
 				while (focusElement && (focusElement.contentDocument || focusElement.contentWindow)) {
@@ -223,7 +223,7 @@
 					}
 				}
 			}
-			
+
 			var focused = [];
 			var focusNext = function() {
 				if (toFocus.length > 0) {
@@ -234,7 +234,7 @@
 				} else {
 					doListeners(true);
 					focusElement.focus();
-					
+
 					setTimeout(afterFocused, 0);
 				}
 			};
@@ -245,7 +245,7 @@
 			}
 		}
 	};
-	
+
 	function robotOnload() {
 		window.robot.init();
 	}

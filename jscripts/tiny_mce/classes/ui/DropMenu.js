@@ -67,7 +67,7 @@
 
 			return m;
 		},
-		
+
 		focus : function() {
 			var t = this;
 			if (t.keyboardNav) {
@@ -210,13 +210,13 @@
 					}
 				});
 			}
-			
+
 			Event.add(co, 'keydown', t._keyHandler, t);
 
 			t.onShowMenu.dispatch(t);
 
-			if (s.keyboard_focus) { 
-				t._setupKeyboardNav(); 
+			if (s.keyboard_focus) {
+				t._setupKeyboardNav();
 			}
 		},
 
@@ -347,7 +347,7 @@
 
 		// Internal functions
 		_setupKeyboardNav : function(){
-			var contextMenu, menuItems, t=this; 
+			var contextMenu, menuItems, t=this;
 			contextMenu = DOM.select('#menu_' + t.id)[0];
 			menuItems = DOM.select('a[role=option]', 'menu_' + t.id);
 			menuItems.splice(0,0,contextMenu);

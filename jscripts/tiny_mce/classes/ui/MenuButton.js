@@ -27,23 +27,23 @@
 	 *                     title : 'My menu button',
 	 *                     image : 'some.gif'
 	 *                 });
-	 * 
+	 *
 	 *                 c.onRenderMenu.add(function(c, m) {
 	 *                     m.add({title : 'Some title', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
-	 * 
+	 *
 	 *                     m.add({title : 'Some item 1', onclick : function() {
 	 *                         alert('Some item 1 was clicked.');
 	 *                     }});
-	 * 
+	 *
 	 *                     m.add({title : 'Some item 2', onclick : function() {
 	 *                         alert('Some item 2 was clicked.');
 	 *                     }});
 	 *               });
-	 * 
+	 *
 	 *               // Return the new menubutton instance
 	 *               return c;
 	 *         }
-	 * 
+	 *
 	 *         return null;
 	 *     }
 	 * });

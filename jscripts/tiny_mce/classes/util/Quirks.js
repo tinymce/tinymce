@@ -19,7 +19,7 @@
 			if (tinymce.isWebKit) {
 				cleanupStylesWhenDeleting(ed);
 			}
-						
+
 		}
 	});
-})(tinymce);	
+})(tinymce);

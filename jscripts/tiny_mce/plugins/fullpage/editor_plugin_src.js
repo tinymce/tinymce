@@ -74,7 +74,7 @@
 			// Parse doctype
 			elm = headerFragment.getAll('#doctype')[0];
 			if (elm)
-				data.doctype = '<!DOCTYPE' + elm.value + ">"; 
+				data.doctype = '<!DOCTYPE' + elm.value + ">";
 
 			// Parse title element
 			elm = headerFragment.getAll('title')[0];
@@ -100,7 +100,7 @@
 			elm = headerFragment.getAll('html')[0];
 			if (elm)
 				data.langcode = getAttr(elm, 'lang') || getAttr(elm, 'xml:lang');
-	
+
 			// Parse stylesheet
 			elm = headerFragment.getAll('link')[0];
 			if (elm && elm.attr('rel') == 'stylesheet')

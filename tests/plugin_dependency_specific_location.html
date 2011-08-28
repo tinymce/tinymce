@@ -15,7 +15,7 @@ function check_plugin_loaded(name){
 	var pluginManager = tinyMCE.PluginManager;
 	var depPlugin = pluginManager.get(name);
 	ok(depPlugin, name + " plugin should have loaded");
-	
+
 }
 test('Plugin Dependency Loaded from a Specific location', function() {
 	expect(2);

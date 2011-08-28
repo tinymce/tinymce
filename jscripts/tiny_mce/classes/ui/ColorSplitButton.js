@@ -200,7 +200,7 @@
 			}
 
 			DOM.addClass(m, 'mceColorSplitMenu');
-			
+
 			new tinymce.ui.KeyboardNavigation({
 				root: t.id + '_menu',
 				items: DOM.select('a', t.id + '_menu'),
@@ -238,7 +238,7 @@
 			this.hideMenu();
 			this.settings.onselect(c);
 		},
-		
+
 		/**
 		 * Change the currently selected color for the control.
 		 *

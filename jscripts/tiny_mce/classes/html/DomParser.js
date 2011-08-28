@@ -340,7 +340,7 @@
 
 				doctype: function(text) {
 					var newNode;
-		
+
 					newNode = node.append(createNode('#doctype', 10));
 					newNode.value = text;
 					removeWhitespaceBefore(node);
@@ -542,7 +542,7 @@
 								// Found a non BR element
 								if (prevName !== "br")
 									break;
-	
+
 								// Found another br it's a <br><br> structure then don't remove anything
 								if (prevName === 'br') {
 									node = null;
@@ -563,7 +563,7 @@
 								// Remove or padd the element depending on schema rule
 								if (elementRule.removeEmpty)
 									parent.remove();
-								else if (elementRule.paddEmpty) 
+								else if (elementRule.paddEmpty)
 									parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
 							}
 						}

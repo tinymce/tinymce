@@ -19,10 +19,10 @@
 	 * @example
 	 * // Gets a cookie from the browser
 	 * console.debug(tinymce.util.Cookie.get('mycookie'));
-	 * 
+	 *
 	 * // Gets a hash table cookie from the browser and takes out the x parameter from it
 	 * console.debug(tinymce.util.Cookie.getHash('mycookie').x);
-	 * 
+	 *
 	 * // Sets a hash table cookie to the browser
 	 * tinymce.util.Cookie.setHash({x : '1', y : '2'});
 	 */

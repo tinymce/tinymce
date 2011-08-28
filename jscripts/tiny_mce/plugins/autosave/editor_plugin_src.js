@@ -12,11 +12,11 @@
  * and that project can be found here: http://code.google.com/p/tinyautosave/
  *
  * TECHNOLOGY DISCUSSION:
- * 
+ *
  * The plugin attempts to use the most advanced features available in the current browser to save
  * as much content as possible.  There are a total of four different methods used to autosave the
  * content.  In order of preference, they are:
- * 
+ *
  * 1. localStorage - A new feature of HTML 5, localStorage can store megabytes of data per domain
  * on the client computer. Data stored in the localStorage area has no expiration date, so we must
  * manage expiring the data ourselves.  localStorage is fully supported by IE8, and it is supposed
@@ -24,14 +24,14 @@
  * HTML 5 gets wider support, the AutoSave plugin will use it automatically. In Windows Vista/7,
  * localStorage is stored in the following folder:
  * C:\Users\[username]\AppData\Local\Microsoft\Internet Explorer\DOMStore\[tempFolder]
- * 
+ *
  * 2. sessionStorage - A new feature of HTML 5, sessionStorage works similarly to localStorage,
  * except it is designed to expire after a certain amount of time.  Because the specification
  * around expiration date/time is very loosely-described, it is preferrable to use locaStorage and
  * manage the expiration ourselves.  sessionStorage has similar storage characteristics to
  * localStorage, although it seems to have better support by Firefox 3 at the moment.  (That will
  * certainly change as Firefox continues getting better at HTML 5 adoption.)
- * 
+ *
  * 3. UserData - A very under-exploited feature of Microsoft Internet Explorer, UserData is a
  * way to store up to 128K of data per "document", or up to 1MB of data per domain, on the client
  * computer.  The feature is available for IE 5+, which makes it available for every version of IE

@@ -25,7 +25,7 @@
 
 		document.body.appendChild(script);
 	};
-	
+
 	function sendDone() {
 		sending = false;
 

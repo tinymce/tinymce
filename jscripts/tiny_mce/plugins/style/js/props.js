@@ -1,12 +1,12 @@
 tinyMCEPopup.requireLangPack();
 
-var defaultFonts = "" + 
-	"Arial, Helvetica, sans-serif=Arial, Helvetica, sans-serif;" + 
-	"Times New Roman, Times, serif=Times New Roman, Times, serif;" + 
-	"Courier New, Courier, mono=Courier New, Courier, mono;" + 
-	"Times New Roman, Times, serif=Times New Roman, Times, serif;" + 
-	"Georgia, Times New Roman, Times, serif=Georgia, Times New Roman, Times, serif;" + 
-	"Verdana, Arial, Helvetica, sans-serif=Verdana, Arial, Helvetica, sans-serif;" + 
+var defaultFonts = "" +
+	"Arial, Helvetica, sans-serif=Arial, Helvetica, sans-serif;" +
+	"Times New Roman, Times, serif=Times New Roman, Times, serif;" +
+	"Courier New, Courier, mono=Courier New, Courier, mono;" +
+	"Times New Roman, Times, serif=Times New Roman, Times, serif;" +
+	"Georgia, Times New Roman, Times, serif=Georgia, Times New Roman, Times, serif;" +
+	"Verdana, Arial, Helvetica, sans-serif=Verdana, Arial, Helvetica, sans-serif;" +
 	"Geneva, Arial, Helvetica, sans-serif=Geneva, Arial, Helvetica, sans-serif";
 
 var defaultSizes = "9;10;12;14;16;18;24;xx-small;x-small;small;medium;large;x-large;xx-large;smaller;larger";
@@ -446,7 +446,7 @@ function generateCSS() {
 		ce.style.paddingBottom = f.box_padding_bottom.value + (isNum(f.box_padding_bottom.value) ? f.box_padding_bottom_measurement.value : "");
 		ce.style.paddingLeft = f.box_padding_left.value + (isNum(f.box_padding_left.value) ? f.box_padding_left_measurement.value : "");
 	} else
-		ce.style.padding = f.box_padding_top.value + (isNum(f.box_padding_top.value) ? f.box_padding_top_measurement.value : "");		
+		ce.style.padding = f.box_padding_top.value + (isNum(f.box_padding_top.value) ? f.box_padding_top_measurement.value : "");
 
 	if (!f.box_margin_same.checked) {
 		ce.style.marginTop = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");
@@ -454,7 +454,7 @@ function generateCSS() {
 		ce.style.marginBottom = f.box_margin_bottom.value + (isNum(f.box_margin_bottom.value) ? f.box_margin_bottom_measurement.value : "");
 		ce.style.marginLeft = f.box_margin_left.value + (isNum(f.box_margin_left.value) ? f.box_margin_left_measurement.value : "");
 	} else
-		ce.style.margin = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");		
+		ce.style.margin = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");
 
 	// Build border styles
 

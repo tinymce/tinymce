@@ -10,25 +10,25 @@
 
 (function(tinymce) {
 	/**
-	 * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when various items gets loaded. This class is useful to load external JavaScript files. 
+	 * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks when various items gets loaded. This class is useful to load external JavaScript files.
 	 *
 	 * @class tinymce.dom.ScriptLoader
 	 * @example
 	 * // Load a script from a specific URL using the global script loader
 	 * tinymce.ScriptLoader.load('somescript.js');
-	 * 
+	 *
 	 * // Load a script using a unique instance of the script loader
 	 * var scriptLoader = new tinymce.dom.ScriptLoader();
-	 * 
+	 *
 	 * scriptLoader.load('somescript.js');
-	 * 
+	 *
 	 * // Load multiple scripts
 	 * var scriptLoader = new tinymce.dom.ScriptLoader();
-	 * 
+	 *
 	 * scriptLoader.add('somescript1.js');
 	 * scriptLoader.add('somescript2.js');
 	 * scriptLoader.add('somescript3.js');
-	 * 
+	 *
 	 * scriptLoader.loadQueue(function() {
 	 *    alert('All scripts are now loaded.');
 	 * });
@@ -64,7 +64,7 @@
 
 				callback();
 			};
-			
+
 			function error() {
 				// Report the error so it's easier for people to spot loading errors
 				if (typeof(console) !== "undefined" && console.log)
@@ -100,7 +100,7 @@
 
 							done();
 						},
-						
+
 						error : error
 					});
 
@@ -211,7 +211,7 @@
 
 		/**
 		 * Loads the specified queue of files and executes the callback ones they are loaded.
-		 * This method is generally not used outside this class but it might be useful in some scenarios. 
+		 * This method is generally not used outside this class but it might be useful in some scenarios.
 		 *
 		 * @method loadScripts
 		 * @param {Array} scripts Array of queue items to load.

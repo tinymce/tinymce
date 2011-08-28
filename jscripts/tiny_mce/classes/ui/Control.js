@@ -38,14 +38,14 @@
 			this.active = 0;
 			this.editor = editor;
 		},
-		
+
 		setAriaProperty : function(property, value) {
 			var element = DOM.get(this.id + '_aria') || DOM.get(this.id);
 			if (element) {
 				DOM.setAttrib(element, 'aria-' + property, !!value);
 			}
 		},
-		
+
 		focus : function() {
 			DOM.get(this.id).focus();
 		},

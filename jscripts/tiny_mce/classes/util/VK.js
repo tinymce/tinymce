@@ -6,7 +6,7 @@
 	tinymce.VK = {
 		DELETE:46,
 		BACKSPACE:8
-		
+
 	}
 
 })(tinymce);

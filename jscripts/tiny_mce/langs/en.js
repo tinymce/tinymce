@@ -197,7 +197,7 @@ wait:"Please wait...",
 sug:"Suggestions",
 no_sug:"No suggestions",
 no_mpell:"No misspellings found.",
-learn_word:"Learn word" 
+learn_word:"Learn word"
 },
 pagebreak:{
 desc:"Insert page break."

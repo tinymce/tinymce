@@ -41,9 +41,9 @@ asyncTest('Backspace with indented text', function() {
 if (!tinymce.isGecko || !/Firefox\/[12].[0-9]/.test(navigator.userAgent)) {
 	asyncTest('Cut with indented text', function() {
 		var c, originalContent = '<p>Line1</p>\n<p style="margin-left: 30px;">Line2</p>';
-	
+
 		expect(3);
-	
+
 		editor.setContent(originalContent);
 		editor.focus();
 		setSelection('p:nth-child(1)', 4, 'p:nth-child(2)', 4);

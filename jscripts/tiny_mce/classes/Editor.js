@@ -23,20 +23,20 @@
 	 * @example
 	 * // Add a class to all paragraphs in the editor.
 	 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
-	 * 
+	 *
 	 * // Gets the current editors selection as text
 	 * tinyMCE.activeEditor.selection.getContent({format : 'text'});
-	 * 
+	 *
 	 * // Creates a new editor instance
 	 * var ed = new tinymce.Editor('textareaid', {
 	 *     some_setting : 1
 	 * });
-	 * 
+	 *
 	 * // Select each item the user clicks on
 	 * ed.onClick.add(function(ed, e) {
 	 *     ed.selection.select(e.target);
 	 * });
-	 * 
+	 *
 	 * ed.render();
 	 */
 	tinymce.create('tinymce.Editor', {
@@ -53,7 +53,7 @@
 			var t = this;
 
 			/**
-			 * Editor instance id, normally the same as the div/textarea that was replaced. 
+			 * Editor instance id, normally the same as the div/textarea that was replaced.
 			 *
 			 * @property id
 			 * @type String
@@ -65,7 +65,7 @@
 			t.queryValueCommands = {};
 
 			/**
-			 * State to force the editor to return false on a isDirty call. 
+			 * State to force the editor to return false on a isDirty call.
 			 *
 			 * @property isNotDirty
 			 * @type Boolean
@@ -833,7 +833,7 @@
 			 * @example
 			 * // Get relative URL from the location of document_base_url
 			 * tinyMCE.activeEditor.documentBaseURI.toRelative('/somedir/somefile.htm');
-			 * 
+			 *
 			 * // Get absolute URL from the location of document_base_url
 			 * tinyMCE.activeEditor.documentBaseURI.toAbsolute('somefile.htm');
 			 */
@@ -849,7 +849,7 @@
 			 * @example
 			 * // Get relative URL from the location of the API
 			 * tinyMCE.activeEditor.baseURI.toRelative('/somedir/somefile.htm');
-			 * 
+			 *
 			 * // Get absolute URL from the location of the API
 			 * tinyMCE.activeEditor.baseURI.toAbsolute('somefile.htm');
 			 */
@@ -860,7 +860,7 @@
 			 *
 			 * @property contentCSS
 			 * @type Array
-			 */			
+			 */
 			t.contentCSS = [];
 
 			// Call setup
@@ -889,7 +889,7 @@
 			if (!t.getElement())
 				return;
 
-			// Is a iPad/iPhone and not on iOS5, then skip initialization. We need to sniff 
+			// Is a iPad/iPhone and not on iOS5, then skip initialization. We need to sniff
 			// here since the browser says it has contentEditable support but there is no visible
 			// caret We will remove this check ones Apple implements full contentEditable support
 			if (tinymce.isIDevice && !tinymce.isIOS5)
@@ -907,7 +907,7 @@
 			 * @example
 			 * // Shows an alert message
 			 * tinyMCE.activeEditor.windowManager.alert('Hello world!');
-			 * 
+			 *
 			 * // Opens a new dialog with the file.htm file and the size 320x240
 			 * // It also adds a custom parameter this can be retrieved by using tinyMCEPopup.getWindowArg inside the dialog.
 			 * tinyMCE.activeEditor.windowManager.open({
@@ -991,7 +991,7 @@
 								var defaultSettings = {prefix:'plugins/', resource: dep, suffix:'/editor_plugin' + tinymce.suffix + '.js'};
 								var dep = PluginManager.createUrl(defaultSettings, dep);
 								PluginManager.load(dep.resource, dep);
-								
+
 							});
 						} else {
 							// Skip safari plugin, since it is removed as of 3.3b1
@@ -1028,7 +1028,7 @@
 			s.aria_label = s.aria_label || DOM.getAttrib(e, 'aria-label', t.getLang('aria.rich_text_area'));
 
 			/**
-			 * Reference to the theme instance that was used to generate the UI. 
+			 * Reference to the theme instance that was used to generate the UI.
 			 *
 			 * @property theme
 			 * @type tinymce.Theme
@@ -1060,7 +1060,7 @@
 					}
 				}
 			}
-			
+
 			// Create all plugins
 			each(explode(s.plugins.replace(/\-/g, '')), initPlugin);
 
@@ -1215,12 +1215,12 @@
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain && (isIE || (tinymce.isOpera && parseFloat(opera.version()) < 11))) {
 				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
-				u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';				
+				u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
 			}
 
 			// Create iframe
 			// TODO: ACC add the appropriate description on this.
-			n = DOM.add(o.iframeContainer, 'iframe', { 
+			n = DOM.add(o.iframeContainer, 'iframe', {
 				id : t.id + "_ifr",
 				src : u || 'javascript:""', // Workaround for HTTPS warning in IE6/7
 				frameBorder : '0',
@@ -1357,12 +1357,12 @@
 			if (!t.settings.allow_html_in_named_anchor) {
 				t.parser.addAttributeFilter('name', function(nodes, name) {
 					var i = nodes.length, sibling, prevSibling, parent, node;
-	
+
 					while (i--) {
 						node = nodes[i];
 						if (node.name === 'a' && node.firstChild) {
 							parent = node.parent;
-	
+
 							// Move children after current node
 							sibling = node.lastChild;
 							do {
@@ -1385,7 +1385,7 @@
 					internalName = 'data-mce-' + name;
 
 					// Add internal attribute if we need to we don't on a refresh of the document
-					if (!node.attributes.map[internalName]) {	
+					if (!node.attributes.map[internalName]) {
 						if (name === "style")
 							node.attr(internalName, dom.serializeStyle(dom.parseStyle(value), node.name));
 						else
@@ -1529,7 +1529,7 @@
 			t.formatter.register(t.settings.formats);
 
 			/**
-			 * Undo manager instance, responsible for handling undo levels. 
+			 * Undo manager instance, responsible for handling undo levels.
 			 *
 			 * @property undoManager
 			 * @type tinymce.UndoManager
@@ -1681,7 +1681,7 @@
 					if (o.set)
 						o.content = t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o);
 
-					if (o.get)						
+					if (o.get)
 						o.content = t.execCallback('cleanup_callback', 'get_from_editor', o.content, o);
 				});
 			}
@@ -1999,7 +1999,7 @@
 		 * @example
 		 * // Returns a specific config value from the currently active editor
 		 * var someval = tinyMCE.activeEditor.getParam('myvalue');
-		 * 
+		 *
 		 * // Returns a specific config value from a specific editor instance by id
 		 * var someval2 = tinyMCE.get('my_editor').getParam('myvalue');
 		 */
@@ -2074,9 +2074,9 @@
 		 * // an alert box with the selected contents as plain text.
 		 * tinyMCE.init({
 		 *    ...
-		 * 
+		 *
 		 *    theme_advanced_buttons1 : 'example,..'
-		 * 
+		 *
 		 *    setup : function(ed) {
 		 *       // Register example button
 		 *       ed.addButton('example', {
@@ -2108,7 +2108,7 @@
 		 * // Adds a custom command that later can be executed using execCommand
 		 * tinyMCE.init({
 		 *    ...
-		 * 
+		 *
 		 *    setup : function(ed) {
 		 *       // Register example command
 		 *       ed.addCommand('mycommand', function(ui, v) {
@@ -2426,10 +2426,10 @@
 		 * @example
 		 * // Show progress for the active editor
 		 * tinyMCE.activeEditor.setProgressState(true);
-		 * 
+		 *
 		 * // Hide progress for the active editor
 		 * tinyMCE.activeEditor.setProgressState(false);
-		 * 
+		 *
 		 * // Show progress after 3 seconds
 		 * tinyMCE.activeEditor.setProgressState(true, 3000);
 		 */
@@ -2531,13 +2531,13 @@
 		 * @example
 		 * // Sets the HTML contents of the activeEditor editor
 		 * tinyMCE.activeEditor.setContent('<span>some</span> html');
-		 * 
+		 *
 		 * // Sets the raw contents of the activeEditor editor
 		 * tinyMCE.activeEditor.setContent('<span>some</span> html', {format : 'raw'});
-		 * 
+		 *
 		 * // Sets the content of a specific editor (my_editor in this example)
 		 * tinyMCE.get('my_editor').setContent(data);
-		 * 
+		 *
 		 * // Sets the bbcode contents of the activeEditor editor if the bbcode plugin was added
 		 * tinyMCE.activeEditor.setContent('[b]some[/b] html', {format : 'bbcode'});
 		 */
@@ -2601,10 +2601,10 @@
 		 * @example
 		 * // Get the HTML contents of the currently active editor
 		 * console.debug(tinyMCE.activeEditor.getContent());
-		 * 
+		 *
 		 * // Get the raw contents of the currently active editor
 		 * tinyMCE.activeEditor.getContent({format : 'raw'});
-		 * 
+		 *
 		 * // Get content of a specific editor:
 		 * tinyMCE.get('content id').getContent()
 		 */
@@ -3050,7 +3050,7 @@
 
 				while (n && n.nodeType && n.nodeType != 1 && n.parentNode)
 					n = n.parentNode;
-					
+
 				// Is the cursor at the beginning of a blockquote?
 				if (n && n.parentNode && n.parentNode.tagName === 'BLOCKQUOTE' && n.parentNode.firstChild == n && offset == 0) {
 					// Remove the blockquote
@@ -3064,7 +3064,7 @@
 					ed.selection.collapse(false);
 				}
 			});
- 
+
 
 
 			// Add reset handler

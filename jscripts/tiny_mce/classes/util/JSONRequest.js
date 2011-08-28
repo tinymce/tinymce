@@ -19,7 +19,7 @@
 	 * var json = new tinymce.util.JSONRequest({
 	 *     url : 'somebackend.php'
 	 * });
-	 * 
+	 *
 	 * // Send RPC call 1
 	 * json.send({
 	 *     method : 'someMethod1',
@@ -28,7 +28,7 @@
 	 *         console.dir(result);
 	 *     }
 	 * });
-	 * 
+	 *
 	 * // Send RPC call 2
 	 * json.send({
 	 *     method : 'someMethod2',

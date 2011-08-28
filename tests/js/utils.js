@@ -27,7 +27,7 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 	var startContainer = findContainer(startSelector);
 	var endContainer = findContainer(endSelector);
 	var rng = editor.dom.createRng();
-	
+
 	function setRange(container, offset, start) {
 		if (offset === 'after') {
 			if (start) {

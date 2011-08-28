@@ -63,7 +63,7 @@
 		 */
 		postRender : function() {
 			var t = this;
-			
+
 			t.parent();
 
 			// Set pending state
