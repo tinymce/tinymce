@@ -1,5 +1,4 @@
-#* crlf=crlf
-#* eol=crlf
+* text
 *.jar binary
 *.gif binary
 *.png binary
