@@ -212,7 +212,33 @@
 				if (el.nodeName.toLowerCase() == 'td') {
 					var table = DOM.getParent(el, 'table');
 					
-					var html = '<table border="' + t.settings.border + '" style="width:' + t.settings.width + ';height:' + t.settings.height + '">';
+					var styles = [];
+					
+					var width = t.settings.width;
+					
+					if (/^[0-9\.]+$/.test(width)) {
+						width += 'px';
+					}
+					// add width
+					if (width) {
+						styles.push('width:' + width);
+					}
+					
+					var height = t.settings.height;
+					
+					if (/^[0-9\.]+$/.test(height)) {
+						height += 'px';
+					}
+					// add height
+					if (height) {
+						styles.push('height:' + height);
+					}
+
+					var html = '<table border="' + t.settings.border + '"';
+					if (styles.length) {
+						html += ' style="' + styles.join(';') + ';"';	
+					}
+					html	+= '>';
 					
 					var rows = tinymce.grep(DOM.select('tr', table), function(row) {
 						return DOM.select('td.selected', row).length;
