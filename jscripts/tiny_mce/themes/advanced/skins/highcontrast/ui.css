@@ -86,6 +86,12 @@
 .highcontrastSkin .mceColorPreview {display:none;}
 .highcontrastSkin .mce_forecolor span.mceAction, .highcontrastSkin .mce_backcolor span.mceAction {height:17px;overflow:hidden}
 
+/* Table Grid SplitButton */
+.highcontrastSkin table.mceTableSplitMenu {width : 120px; height: 80px; background:#FFF; border:1px solid; color: #000}
+.highcontrastSkin table.mceTableSplitMenu td {border: 1px solid;background-color: #FFF;}
+.highcontrastSkin table.mceTableSplitMenu td.selected {background-color: #B6BDD2;}
+.highcontrastSkin table.mceTableSplitMenu tfoot td.mceTableGridCount {background-color: #FFF;text-align: center;font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px;}
+
 /* Progress,Resize */
 .highcontrastSkin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.5; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=50); background:#FFF}
 .highcontrastSkin .mceProgress {position:absolute; left:0; top:0; z-index:1001; background:url(../default/img/progress.gif) no-repeat; width:32px; height:32px; margin:-16px 0 0 -16px}
