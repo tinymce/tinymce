@@ -101,8 +101,6 @@
 					if (e.keyCode == 27)
 						t.hideMenu();
 				});
-
-				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
 			}
 
 			t.isMenuVisible = 1;
