@@ -137,9 +137,13 @@
 
 				if (n)
 					e.appendChild(n);
-			} else if (is(r.item) || is(r.htmlText))
-				e.innerHTML = r.item ? r.item(0).outerHTML : r.htmlText;
-			else
+			} else if (is(r.item) || is(r.htmlText)) {
+				// IE will produce invalid markup if elements are present that
+				// it doesn't understand like custom elements or HTML5 elements.
+				// Adding a BR in front of the contents and then remoiving it seems to fix it though.
+				e.innerHTML = '<br>' + (r.item ? r.item(0).outerHTML : r.htmlText);
+				e.removeChild(e.firstChild);
+			} else
 				e.innerHTML = r.toString();
 
 			// Keep whitespace before and after

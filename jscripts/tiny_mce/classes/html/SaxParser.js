@@ -83,9 +83,9 @@
 		 */
 		self.parse = function(html) {
 			var self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name, isInternalElement, removeInternalElements,
-				shortEndedElements, fillAttrsMap, isShortEnded, validate, elementRule, isValidElement, attr, attribsValue,
+				shortEndedElements, fillAttrsMap, isShortEnded, validate, elementRule, isValidElement, attr, attribsValue, invalidPrefixRegExp,
 				validAttributesMap, validAttributePatterns, attributesRequired, attributesDefault, attributesForced, selfClosing,
-				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode, fixSelfClosing;
+				tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0, decode = tinymce.html.Entities.decode, fixSelfClosing, isIE;
 
 			function processEndTag(name) {
 				var pos, i;
@@ -136,6 +136,8 @@
 			validate = settings.validate;
 			removeInternalElements = settings.remove_internals;
 			fixSelfClosing = settings.fix_self_closing;
+			isIE = tinymce.isIE;
+			invalidPrefixRegExp = /^:/;
 
 			while (matches = tokenRegExp.exec(html)) {
 				// Text
@@ -143,9 +145,20 @@
 					self.text(decode(html.substr(index, matches.index - index)));
 
 				if (value = matches[6]) { // End element
-					processEndTag(value.toLowerCase());
+					value = value.toLowerCase();
+
+					// IE will add a ":" in front of elements it doesn't understand like custom elements or HTML5 elements
+					if (isIE && invalidPrefixRegExp.test(value))
+						value = value.substr(1);
+
+					processEndTag(value);
 				} else if (value = matches[7]) { // Start element
 					value = value.toLowerCase();
+
+					// IE will add a ":" in front of elements it doesn't understand like custom elements or HTML5 elements
+					if (isIE && invalidPrefixRegExp.test(value))
+						value = value.substr(1);
+
 					isShortEnded = value in shortEndedElements;
 
 					// Is self closing tag for example an <li> after an open <li>

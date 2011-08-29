@@ -636,6 +636,19 @@ test('normalize ignore img', function() {
 	equals(rng.endOffset, 1, 'endOffset offset');
 });
 
+test('custom elements', function() {
+	var rng;
+
+	editor.setContent('<custom1>test</custom1><custom2>test</custom2>');
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 2);
+	editor.selection.setRng(rng);
+
+	equals(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
@@ -648,6 +661,8 @@ tinyMCE.init({
 	valid_styles : {
 		'*' : 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
 	},
+	custom_elements : 'custom1,~custom2',
+	extended_valid_elements : 'custom1,custom2',
 	init_instance_callback : function(ed) {
 		editor = ed;
 

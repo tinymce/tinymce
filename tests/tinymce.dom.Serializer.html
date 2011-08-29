@@ -377,6 +377,16 @@ test('Map elements', function() {
 	DOM.setHTML('test', '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" data-mce-href="sun.htm" target="_blank" alt="sun" /></map>');
 	equals(ser.serialize(DOM.get('test')).toLowerCase(), '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="sun" /></map>');
 });
+
+test('Custom elements', function() {
+	var ser = new tinymce.dom.Serializer({}, DOM, new tinymce.html.Schema({custom_elements: 'custom1,~custom2', valid_elements: 'custom1,custom2'}));
+
+	document.createElement('custom1');
+	document.createElement('custom2');
+
+	DOM.setHTML('test', '<p><custom1>c1</custom1><custom2>c2</custom2></p>');
+	equals(ser.serialize(DOM.get('test')), '<custom1>c1</custom1><custom2>c2</custom2>');
+});
 </script>
 
 	<h1 id="qunit-header">Unit tests for tinymce.dom.Serializer</h1>
