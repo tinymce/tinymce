@@ -1,4 +1,5 @@
 Version 3.4.4.x (2011-08-xx)
+	Fixed accessibility bug in WebKit where the right and left arrow keys would update native list boxes.
 	Added new whitespace_elements option to enable users to specify specific elements where the whitespace is preserved.
 	Fixed bug in IE where trailing comma in paste plugin would cause plugin to not run correctly.
 	Fixed bug in WebKit where console messages would be logged when deleting an empty document.

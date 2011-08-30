@@ -200,6 +200,11 @@
 					Event.remove(t.id, 'blur', bf);
 				});
 
+				//prevent default left and right keys on chrome - so that the keyboard navigation is used.
+				if (tinymce.isWebKit && (e.keyCode==37 ||e.keyCode==39)) {
+					return Event.prevent(e);
+				}
+				
 				if (e.keyCode == 13 || e.keyCode == 32) {
 					onChange(e);
 					return Event.cancel(e);
