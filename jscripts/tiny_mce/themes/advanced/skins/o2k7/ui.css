@@ -85,6 +85,12 @@
 .o2k7Skin .mceColorPreview {margin-left:2px; width:16px; height:4px; overflow:hidden; background:#9a9b9a;overflow:hidden}
 .o2k7Skin .mce_forecolor span.mceAction, .o2k7Skin .mce_backcolor span.mceAction {height:15px;overflow:hidden}
 
+/* Table Grid SplitButton */
+.o2k7Skin table.mceTableSplitMenu {width : 120px; height: 80px; background:#FFF; border:1px solid gray;}
+.o2k7Skin table.mceTableSplitMenu td {border: 1px solid gray;background-color: #FFF;}
+.o2k7Skin table.mceTableSplitMenu td.selected {background-color: #C2CBE0;}
+.o2k7Skin table.mceTableSplitMenu tfoot td.mceTableGridCount {background-color: #FFF;text-align: center;font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px;}
+
 /* Menu */
 .o2k7Skin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #ABC6DD}
 .o2k7Skin .mceNoIcons span.mceIcon {width:0;}

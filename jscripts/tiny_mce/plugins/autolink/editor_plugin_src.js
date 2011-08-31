@@ -135,7 +135,13 @@
 				bookmark = ed.selection.getBookmark();
 
 				ed.selection.setRng(r);
-				tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
+				
+				var args = {
+					href 	: matches[1] + matches[2],
+					target 	: ed.getParam('autolink_target', '') 
+				}
+				
+				tinyMCE.execCommand('mceInsertLink',false, args);
 				ed.selection.moveToBookmark(bookmark);
 
 				// TODO: Determine if this is still needed.
