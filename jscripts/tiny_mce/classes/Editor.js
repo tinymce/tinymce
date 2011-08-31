@@ -1258,40 +1258,47 @@
 				// We need to wait for the load event on Gecko
 				if (isGecko && !s.readonly) {
 					t.getWin().addEventListener("DOMContentLoaded", function() {
+						// Gecko is really really buggy when it comes to contentEditable
+						// So we first need to wait for a while until we can set the design mode
 						window.setTimeout(function() {
-							var b = t.getBody(), undef;
+							var body = t.getBody();
 
 							// Editable element needs to have some contents or backspace/delete won't work properly for some odd reason on FF 3.6 or older
-							b.innerHTML = '<br>';
+							body.innerHTML = '<br>';
+							
+							// Switch on design mode for a while otherwise caret movement using the arrow keys won't work as expected
+							d.designMode = 'on';
 
-							// Check if Gecko supports contentEditable mode FF2 doesn't
-							if (b.contentEditable !== undef) {
+							// Wait again since we can't switch of designmode instantly
+							window.setTimeout(function() {
+								// Switch of design mode
+								d.designMode = 'off';
+
 								// Setting the contentEditable off/on seems to force caret mode in the editor and enabled auto focus
-								b.contentEditable = false;
-								b.contentEditable = true;
+								body.contentEditable = false;
+								body.contentEditable = true;
 
 								// Caret doesn't get rendered when you mousedown on the HTML element on FF 3.x
 								t.onMouseDown.add(function(ed, e) {
 									if (e.target.nodeName === "HTML") {
 										// Setting the contentEditable off/on seems to force caret mode in the editor and enabled auto focus
-										b.contentEditable = false;
-										b.contentEditable = true;
+										body.contentEditable = false;
+										body.contentEditable = true;
 
 										d.designMode = 'on'; // Render the caret
 
 										// Remove design mode again after a while so it has some time to execute
 										window.setTimeout(function() {
 											d.designMode = 'off';
-											t.getBody().focus();
+											body.focus();
 										}, 1);
 									}
 								});
-							} else
-								d.designMode = 'on';
 
-							// Call setup frame once the contentEditable/designMode has been initialized
-							// since the caret won't be rendered some times otherwise.
-							t.setupIframe(true);
+								// Call setup frame once the contentEditable/designMode has been initialized
+								// since the caret won't be rendered some times otherwise.
+								t.setupIframe(true);
+							}, 0);
 						}, 1);
 					}, false);
 				}
