@@ -23,6 +23,7 @@
 			selection = editor.selection,
 			commands = {state: {}, exec : {}, value : {}},
 			settings = editor.settings,
+			formatter = editor.formatter,
 			bookmark;
 
 		/**
@@ -118,11 +119,11 @@
 		};
 
 		function isFormatMatch(name) {
-			return editor.formatter.match(name);
+			return formatter.match(name);
 		};
 
 		function toggleFormat(name, value) {
-			editor.formatter.toggle(name, value ? {value : value} : undefined);
+			formatter.toggle(name, value ? {value : value} : undefined);
 		};
 
 		function storeSelection(type) {
@@ -182,7 +183,7 @@
 				// Remove all other alignments first
 				each('left,center,right,full'.split(','), function(name) {
 					if (align != name)
-						editor.formatter.remove('align' + name);
+						formatter.remove('align' + name);
 				});
 
 				toggleFormat('align' + align);
@@ -239,7 +240,7 @@
 			},
 
 			RemoveFormat : function(command) {
-				editor.formatter.remove(command);
+				formatter.remove(command);
 			},
 
 			mceBlockQuote : function(command) {
@@ -462,7 +463,7 @@
 			},
 
 			mceToggleFormat : function(command, ui, value) {
-				editor.formatter.toggle(value);
+				formatter.toggle(value);
 			},
 
 			InsertHorizontalRule : function() {
@@ -479,47 +480,27 @@
 			},
 
 			mceInsertLink : function(command, ui, value) {
-				var link = dom.getParent(selection.getNode(), 'a'), img, style, cls;
+				var anchor;
 
-				if (tinymce.is(value, 'string'))
+				if (typeof(value) == 'string')
 					value = {href : value};
+
+				anchor = dom.getParent(selection.getNode(), 'a');
 
 				// Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
 				value.href = value.href.replace(' ', '%20');
 
-				if (!link) {
-					// WebKit can't create links on floated images for some odd reason
-					// So, just remove styles and restore it later
-					if (tinymce.isWebKit) {
-						img = dom.getParent(selection.getNode(), 'img');
+				// Remove existing links if there could be child links or that the href isn't specified
+				if (!anchor || !value.href) {
+					formatter.remove('link');
+				}		
 
-						if (img) {
-							style = img.style.cssText;
-							cls = img.className;
-							img.style.cssText = null;
-							img.className = null;
-						}
-					}
-
-					execNativeCommand('CreateLink', FALSE, 'javascript:mctmp(0);');
-
-					// Restore styles
-					if (style)
-						img.style.cssText = style;
-					if (cls)
-						img.className = cls;
-
-					each(dom.select("a[href='javascript:mctmp(0);']"), function(link) {
-						dom.setAttribs(link, value);
-					});
-				} else {
-					if (value.href)
-						dom.setAttribs(link, value);
-					else
-						editor.dom.remove(link, TRUE);
+				// Apply new link to selection
+				if (value.href) {
+					formatter.apply('link', value, anchor);
 				}
 			},
-			
+
 			selectAll : function() {
 				var root = dom.getRoot(), rng = dom.createRng();
 

@@ -1520,6 +1520,18 @@
 				subscript : {inline : 'sub'},
 				superscript : {inline : 'sup'},
 
+				link : {inline : 'a', selector : 'a', remove : 'all', split : true, deep : true,
+					onmatch : function(node) {
+						return true;
+					},
+
+					onformat : function(elm, fmt, vars) {
+						each(vars, function(value, key) {
+							t.dom.setAttrib(elm, key, value);
+						});
+					}
+				},
+
 				removeformat : [
 					{selector : 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand : true, deep : true},
 					{selector : 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
