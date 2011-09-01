@@ -1,4 +1,6 @@
+QUnit.config.reorder = false;
 QUnit.config.autostart = false;
+
 module("API", {
 	autostart: false
 });

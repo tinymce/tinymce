@@ -22,6 +22,7 @@ var EmptyULConvertedToP = '<ul><li>Before</li></ul><p>&nbsp;</p><ul><li>After</l
 var NonEmptyOLConvertedToP = '<ol><li>Before</li></ol><p>Test</p><ol><li>After</li></ol>';
 var NonEmptyULConvertedToP = '<ul><li>Before</li></ul><p>Test</p><ul><li>After</li></ul>';
 
+QUnit.config.reorder = false;
 QUnit.config.autostart = false;
 
 module('Lists - Indenting', {

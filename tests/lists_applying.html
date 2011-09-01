@@ -18,6 +18,7 @@ var EmptyULConvertedToP = '<ul>\n<li>Before</li>\n</ul>\n<p>&nbsp;</p>\n<ul>\n<l
 var NonEmptyOLConvertedToP = '<ol>\n<li>Before</li>\n</ol>\n<p>Test</p>\n<ol>\n<li>After</li>\n</ol>';
 var NonEmptyULConvertedToP = '<ul>\n<li>Before</li>\n</ul>\n<p>Test</p>\n<ul>\n<li>After</li>\n</ul>';
 
+QUnit.config.reorder = false;
 QUnit.config.autostart = false;
 
 module('Lists - Applying', {

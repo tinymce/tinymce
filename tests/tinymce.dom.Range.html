@@ -15,6 +15,7 @@ if (/Firefox\/2/.test(navigator.userAgent)) {
 	// Early versions of Firefox have various bugs that cause tests to fail if we use the native Range. So we skip the tests on this old legacy browser
 	test("Skipped for FF 2 since the native range object isn't working correctly and it's a legacy browser.", function() {});
 } else {
+	QUnit.config.reorder = false;
 	QUnit.config.autostart = false;
 	module("Range", {
 		autostart: false

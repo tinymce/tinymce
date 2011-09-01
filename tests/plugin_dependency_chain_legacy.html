@@ -10,7 +10,9 @@
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/tiny_mce_loader.js"></script>
 <script type="text/javascript">
+QUnit.config.reorder = false;
 QUnit.config.autostart = false;
+
 function check_plugin_loaded(name){
 	var pluginManager = tinyMCE.PluginManager;
 	var depPlugin = pluginManager.get(name);
