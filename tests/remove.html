@@ -139,6 +139,78 @@ asyncTest('Forward delete from heading to paragraph', function () {
 	}, editor.selection.getNode());
 });
 
+asyncTest('Forward delete from heading to paragraph with span', function () {
+	var c, originalContent = '<h1>Heading</h1><p><span style="color: #ff0000;">text</span></p>';
+
+	expect(1);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	setSelection('h1', 7);
+	robot.forwardDelete(function() {
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), '<h1>Heading<span style="color: #ff0000;">text</span></h1>', 'Delete content');
+			QUnit.start();
+		}, 100);
+	}, editor.selection.getNode());
+});
+
+asyncTest('Backward delete from paragraph with span to heading', function () {
+	var c, originalContent = '<h1>Heading</h1><p><span style="color: #ff0000;">text</span></p>';
+
+	expect(1);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	setSelection('p', 0);
+	robot.type('\b', false, function() {
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), '<h1>Heading<span style="color: #ff0000;">text</span></h1>', 'Delete content');
+			QUnit.start();
+		}, 100);
+	}, editor.selection.getNode());
+});
+
+asyncTest('Backward delete all contents', function () {
+	var c, originalContent = '<h1>Heading</h1><p><span style="color: #ff0000;">text</span></p>';
+
+	expect(1);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	editor.execCommand('SelectAll');
+	robot.type('\b', false, function() {
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), '', 'Empty contents');
+			QUnit.start();
+		}, 100);
+	}, editor.selection.getNode());
+});
+
+asyncTest('Forward delete all contents', function () {
+	var c, originalContent = '<h1>Heading</h1><p><span style="color: #ff0000;">text</span></p>';
+
+	expect(1);
+
+	editor.setContent(originalContent);
+	editor.focus();
+	editor.execCommand('SelectAll');
+	robot.forwardDelete(function() {
+		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
+		// As such we need to defer our checks as well.
+		setTimeout(function() {
+			equals(editor.getContent(), '', 'Empty contents');
+			QUnit.start();
+		}, 100);
+	}, editor.selection.getNode());
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
