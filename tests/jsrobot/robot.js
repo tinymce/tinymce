@@ -39,7 +39,7 @@
 					jarUrl = regex.exec(src)[1] + "JSRobot.jar";
 				}
 			}
-			var appletTag = '<applet archive="' + jarUrl + '" code="com.ephox.jsrobot.JSRobot" id="robotApplet" width="10" height="10" mayscript="true"><param name="mayscript" value="true" /></applet>';
+			var appletTag = '<applet archive="' + jarUrl + '" code="com.ephox.jsrobot.JSRobot" id="robotApplet" width="10" height="10" mayscript="true" initial_focus="false"><param name="initial_focus" value="false" /><param name="mayscript" value="true" /></applet>';
 			if (useDocumentWrite) {
 				document.write(appletTag);
 			} else {
