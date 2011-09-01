@@ -1,4 +1,4 @@
-Version 3.4.4.x (2011-08-xx)
+Version 3.4.5 (2011-09-01)
 	Fixed accessibility bug in WebKit where the right and left arrow keys would update native list boxes.
 	Added new whitespace_elements option to enable users to specify specific elements where the whitespace is preserved.
 	Added new merge_siblings option to formats. This option makes it possible to disable the auto merging of siblings when applying formats.
@@ -10,6 +10,9 @@ Version 3.4.4.x (2011-08-xx)
 	Fixed bug where the map elements coords attribute would be messed up by IE when serializing the DOM.
 	Fixed bug where IE wouldn't properly handle custom elements when the contents was serialized.
 	Fixed bug where you couldn't move the caret in Gecko if you focused the editor using the API or a UI control.
+	Fixed bug where adjacent links would get merged on IE due to bugs in their link command.
+	Fixed bug where the color split buttons would loose the selection on IE if the editor was placed in a frame/iframe.
+	Fixed bug where floated images in WebKit wouldn't get properly linked.
 Version 3.4.4 (2011-08-04)
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Added mute option for video elements and preload options for video/audio patch contributed by Dmitry Kalinkin.
