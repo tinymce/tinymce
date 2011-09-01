@@ -137,6 +137,7 @@
 				}
 
 				t.isMenuVisible = 0;
+				t.onHideMenu.dispatch();
 			}
 		},
 
