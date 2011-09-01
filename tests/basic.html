@@ -196,33 +196,135 @@ test('commands - blocks', function() {
 	equals(editor.getContent(), '<pre>test 123</pre>');
 });
 
-test('commands - link', function() {
-	expect(5);
+test('commands - link relative', function() {
+	expect(1);
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, 'test');
 	equals(editor.getContent(), '<p><a href="test">test 123</a></p>');
+});
+
+test('commands - link absolute', function() {
+	expect(1);
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, 'http://www.site.com');
 	equals(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
+});
+
+test('commands - link encoded', function() {
+	expect(1);
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, '"&<>');
 	equals(editor.getContent(), '<p><a href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+});
+
+test('commands - link encoded and with class', function() {
+	expect(1);
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, {href : '"&<>', 'class' : 'test'});
 	equals(editor.getContent(), '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+});
+
+test('commands - link with space', function() {
+	expect(1);
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, {href : 'foo bar'});
 	equals(editor.getContent(), '<p><a href="foo%20bar">test 123</a></p>');
+});
+
+test('commands - link floated img', function() {
+	expect(1);
+
+	editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
+	editor.execCommand('SelectAll');
+	editor.execCommand('mceInsertLink', false, 'link');
+	equals(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" alt="" /></a></p>');
+});
+
+test('commands - link adjacent text', function() {
+	var rng;
+
+	expect(1);
+
+	editor.setContent('<p><a href="#">a</a>b</p>');
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild.lastChild, 0);
+	rng.setEnd(editor.getBody().firstChild.lastChild, 1);	
+	editor.selection.setRng(rng);
+
+	editor.execCommand('mceInsertLink', false, 'link');
+	equals(editor.getContent(), '<p><a href="#">a</a><a href="link">b</a></p>');
+});
+
+test('commands - link text inside text', function() {
+	var rng;
+
+	expect(1);
+
+	editor.setContent('<p><a href="#"><em>abc</em></a></p>');
+	setSelection('em', 1, 'em', 2);
+
+	editor.execCommand('mceInsertLink', false, 'link');
+	equals(editor.getContent(), '<p><a href="link"><em>abc</em></a></p>');
+});
+
+test('commands - link around existing links', function() {
+	var rng;
+
+	expect(1);
+
+	editor.setContent('<p><a href="#1">1</a><a href="#2">2</a></p>');
+	editor.execCommand('SelectAll');
+
+	editor.execCommand('mceInsertLink', false, 'link');
+	equals(editor.getContent(), '<p><a href="link">12</a></p>');
+});
+
+test('commands - link around existing links with different attrs', function() {
+	var rng;
+
+	expect(1);
+
+	editor.setContent('<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
+	editor.execCommand('SelectAll');
+
+	editor.execCommand('mceInsertLink', false, 'link');
+	equals(editor.getContent(), '<p><a href="link">12</a></p>');
+});
+
+test('commands - link around existing complex contents with links', function() {
+	var rng;
+
+	expect(1);
+
+	editor.setContent('<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2"><em><a id="b" href="#2"><strong>2</strong></a></em></span></p>');
+	editor.execCommand('SelectAll');
+
+	editor.execCommand('mceInsertLink', false, 'link');
+	equals(editor.getContent(), '<p><a href="link"><span id="s1"><strong><em>1</em></strong></span><span id="s2"><em><strong>2</strong></em></span></a></p>');
+});
+
+test('commands - link text inside link', function() {
+	var rng;
+
+	expect(1);
+
+	editor.setContent('<p><a href="#">test</a></p>');
+	setSelection('p', 0, 'p', 1);
+	editor.execCommand('SelectAll');
+
+	editor.execCommand('mceInsertLink', false, 'link');
+	equals(editor.getContent(), '<p><a href="link">test</a></p>');
 });
 
 test('commands - unlink', function() {

@@ -185,6 +185,10 @@
 				fmt = fmt || format;
 
 				if (elm) {
+					if (fmt.onformat) {
+						fmt.onformat(elm, fmt, vars, node);
+					}
+
 					each(fmt.styles, function(value, name) {
 						dom.setStyle(elm, name, replaceVars(value, vars));
 					});
@@ -202,7 +206,6 @@
 				}
 			};
 			function adjustSelectionToVisibleSelection() {
-
 				function findSelectionEnd(start, end) {
 					var walker = new TreeWalker(end);
 					for (node = walker.current(); node; node = walker.prev()) {
@@ -210,37 +213,49 @@
 							return node;
 						}
 					}
-				}
+				};
 
 				// Adjust selection so that a end container with a end offset of zero is not included in the selection
 				// as this isn't visible to the user.
 				var rng = ed.selection.getRng();
 				var start = rng.startContainer;
 				var end = rng.endContainer;
+
 				if (start != end && rng.endOffset == 0) {
 					var newEnd = findSelectionEnd(start, end);
 					var endOffset = newEnd.nodeType == 3 ? newEnd.length : newEnd.childNodes.length;
+
 					rng.setEnd(newEnd, endOffset);
 				}
+
 				return rng;
 			}
 			
 			function applyStyleToList(node, bookmark, wrapElm, newWrappers, process){
-				var nodes =[], listIndex =-1, list, startIndex = -1, endIndex = -1, currentWrapElm;
+				var nodes = [], listIndex = -1, list, startIndex = -1, endIndex = -1, currentWrapElm;
 				
 				// find the index of the first child list.
 				each(node.childNodes, function(n, index) {
-					if (n.nodeName==="UL"||n.nodeName==="OL") {listIndex = index; list=n; return false; }
+					if (n.nodeName === "UL" || n.nodeName === "OL") {
+						listIndex = index;
+						list = n;
+						return false;
+					}
 				});
 				
 				// get the index of the bookmarks
 				each(node.childNodes, function(n, index) {
-					if (n.nodeName==="SPAN" &&dom.getAttrib(n, "data-mce-type")=="bookmark" && n.id==bookmark.id+"_start") {startIndex=index}
-					if (n.nodeName==="SPAN" &&dom.getAttrib(n, "data-mce-type")=="bookmark" && n.id==bookmark.id+"_end") {endIndex=index}
+					if (n.nodeName === "SPAN" && dom.getAttrib(n, "data-mce-type") == "bookmark") {
+						if (n.id == bookmark.id + "_start") {
+							startIndex = index;
+						} else if (n.id == bookmark.id + "_end") {
+							endIndex = index;
+						}
+					}
 				});
 				
 				// if the selection spans across an embedded list, or there isn't an embedded list - handle processing normally
-				if (listIndex<=0 || (startIndex<listIndex&&endIndex>listIndex)) {
+				if (listIndex <= 0 || (startIndex < listIndex && endIndex > listIndex)) {
 					each(tinymce.grep(node.childNodes), process);
 					return 0;
 				} else {
@@ -248,22 +263,26 @@
 					
 					// create a list of the nodes on the same side of the list as the selection
 					each(tinymce.grep(node.childNodes), function(n, index) {
-						if ((startIndex<listIndex && index <listIndex) || (startIndex>listIndex && index >listIndex)) {
+						if ((startIndex < listIndex && index < listIndex) || (startIndex > listIndex && index > listIndex)) {
 							nodes.push(n); 
-							n.parentNode.removeChild(n); 
+							n.parentNode.removeChild(n);
 						}
 					});
 					
 					// insert the wrapping element either before or after the list.
-					if (startIndex<listIndex) {
+					if (startIndex < listIndex) {
 						node.insertBefore(currentWrapElm, list);
-					} else if (startIndex>listIndex) {
+					} else if (startIndex > listIndex) {
 						node.insertBefore(currentWrapElm, list.nextSibling);
 					}
 					
 					// add the new nodes to the list.
 					newWrappers.push(currentWrapElm);
-					each(nodes, function(node){currentWrapElm.appendChild(node)});
+
+					each(nodes, function(node) {
+						currentWrapElm.appendChild(node);
+					});
+
 					return currentWrapElm;
 				}
 			};
@@ -774,6 +793,11 @@
 
 			function matchItems(node, format, item_name) {
 				var key, value, items = format[item_name], i;
+
+				// Custom match
+				if (format.onmatch) {
+					return format.onmatch(node, format, item_name);
+				}
 
 				// Check all items
 				if (items) {
