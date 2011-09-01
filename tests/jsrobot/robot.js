@@ -53,10 +53,10 @@
 		callback: function() {
 			if (window.robotUsesSymbols){
 				this.initSymbols();
-			}
-			if (this.userCallback) {
+			} else if (this.userCallback) {
 				setTimeout(this.userCallback, 100);
 			}
+
 			return "Callback received.";
 		},
 
@@ -69,6 +69,10 @@
 				t.symbols = input.value;
 				t.ready = true;
 				document.body.removeChild(input);
+
+				if (t.userCallback) {
+					setTimeout(t.userCallback, 100);
+				}
 			}
 
 		  	this.appletAction(input, loadSymbolsFromInput, function() {
