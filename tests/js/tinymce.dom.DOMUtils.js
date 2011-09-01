@@ -588,14 +588,17 @@
 		DOM.remove('test');
 	});
 
-	test('isEmpty', 12, function() {
+	test('isEmpty', 13, function() {
 		DOM.schema = new tinymce.html.Schema(); // A schema will be added when used within a editor instance
 		DOM.add(document.body, 'div', {id : 'test'}, '');
 
 		ok(DOM.isEmpty(DOM.get('test')), 'No children');
 
 		DOM.setHTML('test', '<br />');
-		ok(!DOM.isEmpty(DOM.get('test')), 'Br child');
+		ok(DOM.isEmpty(DOM.get('test')), 'Br child');
+
+		DOM.setHTML('test', '<br /><br />');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Br children');
 
 		DOM.setHTML('test', 'text');
 		ok(!DOM.isEmpty(DOM.get('test')), 'Text child');

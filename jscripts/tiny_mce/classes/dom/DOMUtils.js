@@ -1569,7 +1569,7 @@
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty : function(node, elements) {
-			var self = this, i, attributes, type, walker, name;
+			var self = this, i, attributes, type, walker, name, parentNode;
 
 			node = node.firstChild;
 			if (node) {
@@ -1585,8 +1585,16 @@
 							continue;
 
 						// Keep empty elements like <img />
-						if (elements && elements[node.nodeName.toLowerCase()])
+						name = node.nodeName.toLowerCase();
+						if (elements && elements[name]) {
+							// Ignore single BR elements in blocks like <p><br /></p>
+							parentNode = node.parentNode;
+							if (name === 'br' && self.isBlock(parentNode) && parentNode.firstChild === node && parentNode.lastChild === node) {
+								continue;
+							}
+
 							return false;
+						}
 
 						// Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>
 						attributes = self.getAttribs(node);
