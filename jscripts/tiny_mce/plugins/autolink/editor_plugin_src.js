@@ -135,7 +135,7 @@
 				bookmark = ed.selection.getBookmark();
 
 				ed.selection.setRng(r);
-				tinyMCE.execCommand('mceInsertLink',false, matches[1] + matches[2]);
+				tinyMCE.execCommand('createlink',false, matches[1] + matches[2]);
 				ed.selection.moveToBookmark(bookmark);
 
 				// TODO: Determine if this is still needed.
