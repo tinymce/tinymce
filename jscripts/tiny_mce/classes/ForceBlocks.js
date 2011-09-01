@@ -390,6 +390,11 @@
 				ra.setStart(en, 0);
 			}
 
+			// If the body is totally empty add a BR element this might happen on webkit
+			if (!d.body.hasChildNodes()) {
+				d.body.appendChild(dom.create('br'));
+			}
+
 			// Never use body as start or end node
 			sn = sn.nodeName == "HTML" ? d.body : sn; // Fix for Opera bug: https://bugs.opera.com/show_bug.cgi?id=273224&comments=yes
 			sn = sn.nodeName == "BODY" ? sn.firstChild : sn;
