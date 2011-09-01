@@ -71,10 +71,12 @@ test('tinymce.util.URI - absoluteURLs', 18, function() {
 	equals(new URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/').toAbsolute('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/', true), '/dir1/dir2/');
 });
 
-test('tinymce.util.URI - strangeURLs', 3, function() {
+test('tinymce.util.URI - strangeURLs', 5, function() {
 	equals(new URI('//www.site.com').getURI(), '//www.site.com');
 	equals(new URI('mailto:test@test.com').getURI(), 'mailto:test@test.com');
 	equals(new URI('news:somegroup').getURI(), 'news:somegroup');
+	equals(new URI('skype:somegroup').getURI(), 'skype:somegroup');
+	equals(new URI('tel:somegroup').getURI(), 'tel:somegroup');
 });
 </script>
 </head>

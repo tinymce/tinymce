@@ -33,8 +33,9 @@
 			// Default settings
 			s = t.settings = s || {};
 
-			// Strange app protocol or local anchor
-			if (/^(mailto|tel|news|javascript|about|data):/i.test(u) || /^\s*#/.test(u)) {
+			// Strange app protocol that isn't http/https or local anchor
+			// For example: mailto,skype,tel etc.
+			if (/^([\w\-]+):([^\/]{2})/i.test(u) || /^\s*#/.test(u)) {
 				t.source = u;
 				return;
 			}
