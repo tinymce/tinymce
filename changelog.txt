@@ -13,6 +13,7 @@ Version 3.4.5 (2011-09-01)
 	Fixed bug where adjacent links would get merged on IE due to bugs in their link command.
 	Fixed bug where the color split buttons would loose the selection on IE if the editor was placed in a frame/iframe.
 	Fixed bug where floated images in WebKit wouldn't get properly linked.
+	Fixed bug where the fullscreen mode in a separate window wasn't forced into IE9+ standards mode.
 Version 3.4.4 (2011-08-04)
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Added mute option for video elements and preload options for video/audio patch contributed by Dmitry Kalinkin.
