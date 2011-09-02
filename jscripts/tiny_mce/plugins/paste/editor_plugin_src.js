@@ -149,6 +149,7 @@
 			function grabContent(e) {
 				var n, or, rng, oldRng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY, textContent;
 
+				ed.undoManager.add();
 				// Check if browser supports direct plaintext access
 				if (e.clipboardData || dom.doc.dataTransfer) {
 					textContent = (e.clipboardData || dom.doc.dataTransfer).getData('Text');

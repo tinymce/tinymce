@@ -191,6 +191,29 @@ test('paste invalid content with spans on page', function(){
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), insertedContent + startingContent);
 });
 
+asyncTest('paste creates correct undo level', function(){
+	var startingContent = '123 testing',
+		pasteContent = 'foobar';
+	
+	editor.setContent(startingContent);
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 0);
+	editor.selection.setRng(rng);
+	
+	robot.type('a', false, function() {
+		robot.pasteText(pasteContent, function(){
+			QUnit.start();
+
+			//ensure content got pasted correctly
+			equals(editor.getContent(), '<p>a' + pasteContent + startingContent + '</p>');
+			editor.undoManager.undo();
+			//ensure that the character typed before the paste doesn't get removed
+			equals(editor.getContent(), '<p>a' + startingContent + '</p>');
+		});
+	});
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
@@ -199,7 +222,6 @@ tinyMCE.init({
 	plugins : 'paste',
 	init_instance_callback : function(ed) {
 		editor = ed;
-		QUnit.start();
 	}
 });
 </script>
@@ -215,5 +237,9 @@ tinyMCE.init({
 		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
 		<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
 	</div>
+	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
+	<script>
+	initWhenTinyAndRobotAreReady();
+	</script>
 </body>
 </html>
