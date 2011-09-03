@@ -35,6 +35,7 @@ scrollbar-track-color:#F5F5F5;
 
 img:-moz-broken {-moz-force-broken-image-icon:1; width:24px; height:24px}
 font[face=mceinline] {font-family:inherit !important}
+*[contentEditable]:focus {outline:0}
 
 .mceItemMedia {border:1px dotted #cc0000; background-position:center; background-repeat:no-repeat; background-color:#ffffcc}
 .mceItemShockWave {background-image:url(../../img/shockwave.gif)}
