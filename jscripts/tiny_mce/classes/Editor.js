@@ -1202,7 +1202,7 @@
 				bc = bc[t.id] || '';
 			}
 
-			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"></body></html>';
+			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"><br></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain && (isIE || (tinymce.isOpera && parseFloat(opera.version()) < 11))) {
@@ -1220,7 +1220,8 @@
 				title : s.aria_label,
 				style : {
 					width : '100%',
-					height : h
+					height : h,
+					display : 'block' // Important for Gecko to render the iframe correctly
 				}
 			});
 
@@ -1242,57 +1243,27 @@
 		 *
 		 * @method setupIframe
 		 */
-		setupIframe : function(filled) {
+		setupIframe : function() {
 			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
 			// Setup iframe body
-			if ((!isIE || !tinymce.relaxedDomain) && !filled) {
-				// We need to wait for the load event on Gecko
-				if (isGecko && !s.readonly) {
-					t.getWin().addEventListener("DOMContentLoaded", function() {
-						// Gecko is really really buggy when it comes to contentEditable
-						// So we first need to wait for a while until we can set the design mode
-						setTimeout(function() {
+			if (!isIE || !tinymce.relaxedDomain) {
+				// Fix for a focus bug in FF 3.x where the body element
+				// wouldn't get proper focus if the user clicked on the HTML element
+				if (isGecko && !Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
+					t.onMouseDown.add(function(ed, e) {
+						if (e.target.nodeName === "HTML") {
 							var body = t.getBody();
 
-							// Editable element needs to have some contents or backspace/delete won't work properly for some odd reason on FF 3.6 or older
-							body.innerHTML = '<br>';
-							
-							// Switch on design mode for a while otherwise caret movement using the arrow keys won't work as expected
-							d.designMode = 'on';
+							// Blur the body it's focused but not correctly focused
+							body.blur();
 
-							// Wait again since we can't switch of designmode instantly
+							// Refocus the body after a little while
 							setTimeout(function() {
-								// Switch of design mode
-								d.designMode = 'off';
-
-								// Setting the contentEditable off/on seems to force caret mode in the editor and enabled auto focus
-								body.contentEditable = false;
-								body.contentEditable = true;
-
-								// Caret doesn't get rendered when you mousedown on the HTML element on FF 3.x
-								t.onMouseDown.add(function(ed, e) {
-									if (e.target.nodeName === "HTML") {
-										// Setting the contentEditable off/on seems to force caret mode in the editor and enabled auto focus
-										body.contentEditable = false;
-										body.contentEditable = true;
-
-										d.designMode = 'on'; // Render the caret
-
-										// Remove design mode again after a while so it has some time to execute
-										setTimeout(function() {
-											d.designMode = 'off';
-											body.focus();
-										}, 1);
-									}
-								});
-
-								// Call setup frame once the contentEditable/designMode has been initialized
-								// since the caret won't be rendered some times otherwise.
-								t.setupIframe(true);
+								body.focus();
 							}, 0);
-						}, 1);
-					}, false);
+						}
+					});
 				}
 
 				d.open();
@@ -1301,17 +1272,13 @@
 
 				if (tinymce.relaxedDomain)
 					d.domain = tinymce.relaxedDomain;
-
-				// Wait for iframe onload event on Gecko
-				if (isGecko && !s.readonly)
-					return;
 			}
 
 			// It will not steal focus while setting contentEditable
 			b = t.getBody();
 			b.disabled = true;
 
-			if (!isGecko && !s.readonly)
+			if (!s.readonly)
 				b.contentEditable = true;
 
 			b.disabled = false;
@@ -1891,6 +1858,7 @@
 					controlElm = ieRng.item(0);
 				}
 
+				t._refreshContentEditable();
 				selection.normalize();
 
 				// Is not content editable
@@ -2992,16 +2960,7 @@
 					var t = this, d = t.getDoc(), s = t.settings;
 
 					if (isGecko && !s.readonly) {
-						if (t._isHidden()) {
-							try {
-								if (!s.content_editable) {
-									d.body.contentEditable = false;
-									d.body.contentEditable = true;
-								}
-							} catch (ex) {
-								// Fails if it's hidden
-							}
-						}
+						t._refreshContentEditable();
 
 						try {
 							// Try new Gecko method
@@ -3336,6 +3295,21 @@
 						}, 0);
 					}
 				});
+			}
+		},
+
+		_refreshContentEditable : function() {
+			var self = this, body, parent;
+
+			// Check if the editor was hidden and the re-initalize contentEditable mode by removing and adding the body again
+			if (self._isHidden()) {
+				body = self.getBody();
+				parent = body.parentNode;
+
+				parent.removeChild(body);
+				parent.appendChild(body);
+
+				body.focus();
 			}
 		},
 
