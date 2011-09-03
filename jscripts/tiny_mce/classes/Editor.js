@@ -1190,14 +1190,6 @@
 
 			t.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
-			// Firefox 2 doesn't load stylesheets correctly this way
-			if (!isGecko || !/Firefox\/2/.test(navigator.userAgent)) {
-				for (i = 0; i < t.contentCSS.length; i++)
-					t.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + t.contentCSS[i] + '" />';
-
-				t.contentCSS = [];
-			}
-
 			bi = s.body_id || 'tinymce';
 			if (bi.indexOf('=') != -1) {
 				bi = t.getParam('body_id', '', 'hash');
@@ -1260,7 +1252,7 @@
 					t.getWin().addEventListener("DOMContentLoaded", function() {
 						// Gecko is really really buggy when it comes to contentEditable
 						// So we first need to wait for a while until we can set the design mode
-						window.setTimeout(function() {
+						setTimeout(function() {
 							var body = t.getBody();
 
 							// Editable element needs to have some contents or backspace/delete won't work properly for some odd reason on FF 3.6 or older
@@ -1270,7 +1262,7 @@
 							d.designMode = 'on';
 
 							// Wait again since we can't switch of designmode instantly
-							window.setTimeout(function() {
+							setTimeout(function() {
 								// Switch of design mode
 								d.designMode = 'off';
 
@@ -1288,7 +1280,7 @@
 										d.designMode = 'on'; // Render the caret
 
 										// Remove design mode again after a while so it has some time to execute
-										window.setTimeout(function() {
+										setTimeout(function() {
 											d.designMode = 'off';
 											body.focus();
 										}, 1);
@@ -3285,7 +3277,7 @@
 			if (tinymce.isWebKit) {
 				dom.bind(t.getDoc(), 'selectionchange', function() {
 					if (t.selectionTimer) {
-						window.clearTimeout(t.selectionTimer);
+						clearTimeout(t.selectionTimer);
 						t.selectionTimer = 0;
 					}
 
