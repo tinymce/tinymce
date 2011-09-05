@@ -191,6 +191,61 @@ test('paste invalid content with spans on page', function(){
 	equals(editor.getContent().replace(/[\r\n]+/g, ''), insertedContent + startingContent);
 });
 
+test('paste plain text with space', function(){
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.plugins.paste._insertPlainText(' a ');
+
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t a xt</p>');
+});
+
+test('paste plain text with linefeeds', function(){
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.plugins.paste._insertPlainText('a\nb\n\c\n');
+
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p>ta<br />b<br />c<br />xt</p>');
+});
+
+test('paste plain text with double linefeeds', function(){
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.plugins.paste._insertPlainText('a\n\nb\n\n\c\n\n');
+
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t</p><p>a</p><p>b</p><p>c</p><p>xt</p>');
+});
+
+test('paste plain text with entities', function(){
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.plugins.paste._insertPlainText('< & >');
+
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t&lt; &amp; &gt;xt</p>');
+});
+
+test('paste plain text with paragraphs', function(){
+	editor.setContent('<p>text</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 1);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+	editor.plugins.paste._insertPlainText('<p>a</p><p>b</p><p>c</p>');
+
+	equals(editor.getContent().replace(/[\r\n]+/g, ''), '<p>t</p><p>a</p><p>b</p><p>c</p><p>xt</p>');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

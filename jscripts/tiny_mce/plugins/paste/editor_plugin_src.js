@@ -103,7 +103,7 @@
 
 				// Plain text option active?
 				if ((!force_rich) && (ed.pasteAsPlainText)) {
-					t._insertPlainText(ed, dom, o.content);
+					t._insertPlainText(o.content);
 
 					if (!getParam(ed, "paste_text_sticky")) {
 						ed.pasteAsPlainText = false;
@@ -155,7 +155,7 @@
 
 					if (ed.pasteAsPlainText) {
 						e.preventDefault();
-						process({content : textContent.replace(/\r?\n/g, '<br />')});
+						process({content : dom.encode(textContent).replace(/\r?\n/g, '<br />')});
 						return;
 					}
 				}
@@ -756,28 +756,24 @@
 		 * plugin, and requires minimal changes to add the new functionality.
 		 * Speednet - June 2009
 		 */
-		_insertPlainText : function(ed, dom, h) {
-			var i, len, pos, rpos, node, breakElms, before, after,
-				w = ed.getWin(),
-				d = ed.getDoc(),
-				sel = ed.selection,
-				is = tinymce.is,
-				inArray = tinymce.inArray,
+		_insertPlainText : function(content) {
+			var ed = this.editor,
 				linebr = getParam(ed, "paste_text_linebreaktype"),
-				rl = getParam(ed, "paste_text_replacements");
+				rl = getParam(ed, "paste_text_replacements"),
+				is = tinymce.is;
 
 			function process(items) {
 				each(items, function(v) {
 					if (v.constructor == RegExp)
-						h = h.replace(v, "");
+						content = content.replace(v, "");
 					else
-						h = h.replace(v[0], v[1]);
+						content = content.replace(v[0], v[1]);
 				});
 			};
 
-			if ((typeof(h) === "string") && (h.length > 0)) {
+			if ((typeof(content) === "string") && (content.length > 0)) {
 				// If HTML content with line-breaking tags, then remove all cr/lf chars because only tags will break a line
-				if (/<(?:p|br|h[1-6]|ul|ol|dl|table|t[rdh]|div|blockquote|fieldset|pre|address|center)[^>]*>/i.test(h)) {
+				if (/<(?:p|br|h[1-6]|ul|ol|dl|table|t[rdh]|div|blockquote|fieldset|pre|address|center)[^>]*>/i.test(content)) {
 					process([
 						/[\n\r]+/g
 					]);
@@ -794,23 +790,16 @@
 					[/<\/t[dh]>\s*<t[dh][^>]*>/gi, "\t"],		// Table cells get tabs betweem them
 					/<[a-z!\/?][^>]*>/gi,						// Delete all remaining tags
 					[/&nbsp;/gi, " "],							// Convert non-break spaces to regular spaces (remember, *plain text*)
-					[/(?:(?!\n)\s)*(\n+)(?:(?!\n)\s)*/gi, "$1"],	// Cool little RegExp deletes whitespace around linebreak chars.
-					[/\n{3,}/g, "\n\n"],							// Max. 2 consecutive linebreaks
-					/^\s+|\s+$/g									// Trim the front & back
+					[/(?:(?!\n)\s)*(\n+)(?:(?!\n)\s)*/gi, "$1"],// Cool little RegExp deletes whitespace around linebreak chars.
+					[/\n{3,}/g, "\n\n"]							// Max. 2 consecutive linebreaks
 				]);
 
-				h = dom.decode(tinymce.html.Entities.encodeRaw(h));
-
-				// Delete any highlighted text before pasting
-				if (!sel.isCollapsed()) {
-					d.execCommand("Delete", false, null);
-				}
+				content = ed.dom.decode(tinymce.html.Entities.encodeRaw(content));
 
 				// Perform default or custom replacements
 				if (is(rl, "array") || (is(rl, "array"))) {
 					process(rl);
-				}
-				else if (is(rl, "string")) {
+				} else if (is(rl, "string")) {
 					process(new RegExp(rl, "gi"));
 				}
 
@@ -819,89 +808,19 @@
 					process([
 						[/\n+/g, " "]
 					]);
-				}
-				else if (linebr == "br") {
+				} else if (linebr == "br") {
 					process([
 						[/\n/g, "<br />"]
 					]);
-				}
-				else {
+				} else {
 					process([
-						/^\s+|\s+$/g,
 						[/\n\n/g, "</p><p>"],
+						[/^(.*<\/p>)(<p>)$/, '<p>$1'],
 						[/\n/g, "<br />"]
 					]);
 				}
 
-				// This next piece of code handles the situation where we're pasting more than one paragraph of plain
-				// text, and we are pasting the content into the middle of a block node in the editor.  The block
-				// node gets split at the selection point into "Para A" and "Para B" (for the purposes of explaining).
-				// The first paragraph of the pasted text is appended to "Para A", and the last paragraph of the
-				// pasted text is prepended to "Para B".  Any other paragraphs of pasted text are placed between
-				// "Para A" and "Para B".  This code solves a host of problems with the original plain text plugin and
-				// now handles styles correctly.  (Pasting plain text into a styled paragraph is supposed to make the
-				// plain text take the same style as the existing paragraph.)
-				if ((pos = h.indexOf("</p><p>")) != -1) {
-					rpos = h.lastIndexOf("</p><p>");
-					node = sel.getNode(); 
-					breakElms = [];		// Get list of elements to break 
-
-					do {
-						if (node.nodeType == 1) {
-							// Don't break tables and break at body
-							if (node.nodeName == "TD" || node.nodeName == "BODY") {
-								break;
-							}
-
-							breakElms[breakElms.length] = node;
-						}
-					} while (node = node.parentNode);
-
-					// Are we in the middle of a block node?
-					if (breakElms.length > 0) {
-						before = h.substring(0, pos);
-						after = "";
-
-						for (i=0, len=breakElms.length; i<len; i++) {
-							before += "</" + breakElms[i].nodeName.toLowerCase() + ">";
-							after += "<" + breakElms[breakElms.length-i-1].nodeName.toLowerCase() + ">";
-						}
-
-						if (pos == rpos) {
-							h = before + after + h.substring(pos+7);
-						}
-						else {
-							h = before + h.substring(pos+4, rpos+4) + after + h.substring(rpos+7);
-						}
-					}
-				}
-
-				// Insert content at the caret, plus add a marker for repositioning the caret
-				ed.execCommand("mceInsertRawHTML", false, h + '<span id="_plain_text_marker">&nbsp;</span>');
-
-				// Reposition the caret to the marker, which was placed immediately after the inserted content.
-				// Needs to be done asynchronously (in window.setTimeout) or else it doesn't work in all browsers.
-				// The second part of the code scrolls the content up if the caret is positioned off-screen.
-				// This is only necessary for WebKit browsers, but it doesn't hurt to use for all.
-				window.setTimeout(function() {
-					var marker = dom.get('_plain_text_marker'),
-						elm, vp, y, elmHeight;
-
-					sel.select(marker, false);
-					d.execCommand("Delete", false, null);
-					marker = null;
-
-					// Get element, position and height
-					elm = sel.getStart();
-					vp = dom.getViewPort(w);
-					y = dom.getPos(elm).y;
-					elmHeight = elm.clientHeight;
-
-					// Is element within viewport if not then scroll it into view
-					if ((y < vp.y) || (y + elmHeight > vp.y + vp.h)) {
-						d.body.scrollTop = y < vp.y ? y : y - vp.h + 25;
-					}
-				}, 0);
+				ed.execCommand('mceInsertContent', false, content);
 			}
 		},
 
