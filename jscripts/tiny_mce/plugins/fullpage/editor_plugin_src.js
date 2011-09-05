@@ -351,10 +351,16 @@
 				});
 			}
 
-			if (styles)
+			dom.remove('fullpage_styles');
+
+			if (styles) {
 				dom.add(self.editor.getDoc().getElementsByTagName('head')[0], 'style', {id : 'fullpage_styles'}, styles);
-			else
-				dom.remove('fullpage_styles');
+
+				// Needed for IE 6/7
+				elm = dom.get('fullpage_styles');
+				if (elm.styleSheet)
+					elm.styleSheet.cssText = styles;
+			}
 		},
 
 		_getDefaultHeader : function() {
