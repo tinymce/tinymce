@@ -19,6 +19,7 @@ Version 3.4.5 (2011-09-01)
 	Fixed bug where the editor contents wouldn't be completely removed on backspace/delete on WebKit.
 	Fixed bug where the fullpage plugin wouldn't properly render style elements in the head on IE 6/7.
 	Fixed bug where the nonbreaking_force_tab option in the nonbreaking plugin wouldn't work on Gecko/WebKit.
+	Fixed bug where the isDirty state would become true on non IE browsers if there was an table at the end of the contents.
 Version 3.4.4 (2011-08-04)
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.
 	Added mute option for video elements and preload options for video/audio patch contributed by Dmitry Kalinkin.

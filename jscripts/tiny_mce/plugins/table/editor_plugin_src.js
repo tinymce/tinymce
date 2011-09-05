@@ -1224,6 +1224,7 @@
 					});
 
 					fixTableCaretPos();
+					ed.startContent = ed.getContent({format : 'raw'});
 				}
 			});
 
