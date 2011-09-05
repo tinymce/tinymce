@@ -130,7 +130,7 @@
 						if (getParam(ed, "paste_text_sticky")) {
 							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
 						} else {
-							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
+							ed.windowManager.alert(ed.translate('paste.plaintext_mode'));
 						}
 
 						if (!getParam(ed, "paste_text_notifyalways")) {
@@ -220,7 +220,7 @@
 				} else {
 					function block(e) {
 						e.preventDefault();
-					};
+					}
 
 					// Block mousedown and click to prevent selection change
 					dom.bind(ed.getDoc(), 'mousedown', block);
@@ -563,7 +563,7 @@
 						);
 
 						return cls.length ? ' class="' + cls.join(" ") + '"' : '';
-				};
+				}
 
 				h = h.replace(/ class="([^"]+)"/gi, removeClasses);
 				h = h.replace(/ class=([\-\w]+)/gi, removeClasses);
@@ -661,11 +661,7 @@
 
 			// Convert middot lists into real semantic lists
 			each(dom.select('p', o.node), function(p) {
-				var sib, val = '', type, html, idx, parents;
-
-				// Get text node value at beginning of paragraph
-				for (sib = p.firstChild; sib && sib.nodeType == 3; sib = sib.nextSibling)
-					val += sib.nodeValue;
+				var sib, val, type, html, idx, parents;
 
 				val = p.innerHTML.replace(/<\/?\w+[^>]*>/gi, '').replace(/&nbsp;/g, '\u00a0');
 
@@ -762,7 +758,6 @@
 				d = ed.getDoc(),
 				sel = ed.selection,
 				is = tinymce.is,
-				inArray = tinymce.inArray,
 				linebr = getParam(ed, "paste_text_linebreaktype"),
 				rl = getParam(ed, "paste_text_replacements");
 
@@ -773,7 +768,7 @@
 					else
 						h = h.replace(v[0], v[1]);
 				});
-			};
+			}
 
 			if ((typeof(h) === "string") && (h.length > 0)) {
 				// If HTML content with line-breaking tags, then remove all cr/lf chars because only tags will break a line
@@ -807,7 +802,7 @@
 				}
 
 				// Perform default or custom replacements
-				if (is(rl, "array") || (is(rl, "array"))) {
+				if (is(rl, "array")) {
 					process(rl);
 				}
 				else if (is(rl, "string")) {
