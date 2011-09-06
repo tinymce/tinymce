@@ -240,7 +240,12 @@
 					rng = self.getRng();
 				}
 
-				rng.pasteHTML(content);
+				// Explorer removes spaces from the beginning of pasted contents
+				if (/^\s+/.test(content)) {
+					rng.pasteHTML('<span id="__mce_tmp">_</span>' + content);
+					self.dom.remove('__mce_tmp');
+				} else
+					rng.pasteHTML(content);
 			}
 
 			// Dispatch set content event
