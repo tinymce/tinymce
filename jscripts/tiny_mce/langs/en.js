@@ -137,8 +137,8 @@ paste:{
 paste_text_desc:"Paste as Plain Text",
 paste_word_desc:"Paste from Word",
 selectall_desc:"Select All",
-plaintext_mode_sticky:"Paste is now in plain text mode. Click again to toggle back to regular paste mode. After you paste something you will be returned to regular paste mode.",
-plaintext_mode:"Paste is now in plain text mode. Click again to toggle back to regular paste mode."
+plaintext_mode:"Paste is now in plain text mode. Click again to toggle back to regular paste mode. After you paste something you will be returned to regular paste mode.",
+plaintext_mode_sticky:"Paste is now in plain text mode. Click again to toggle back to regular paste mode."
 },
 paste_dlg:{
 text_title:"Use CTRL+V on your keyboard to paste the text into the window.",

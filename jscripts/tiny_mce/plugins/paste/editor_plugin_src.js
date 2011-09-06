@@ -130,7 +130,7 @@
 						if (getParam(ed, "paste_text_sticky")) {
 							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
 						} else {
-							ed.windowManager.alert(ed.translate('paste.plaintext_mode_sticky'));
+							ed.windowManager.alert(ed.translate('paste.plaintext_mode'));
 						}
 
 						if (!getParam(ed, "paste_text_notifyalways")) {
@@ -797,7 +797,7 @@
 				content = ed.dom.decode(tinymce.html.Entities.encodeRaw(content));
 
 				// Perform default or custom replacements
-				if (is(rl, "array") || (is(rl, "array"))) {
+				if (is(rl, "array")) {
 					process(rl);
 				} else if (is(rl, "string")) {
 					process(new RegExp(rl, "gi"));
