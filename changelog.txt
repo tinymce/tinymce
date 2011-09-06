@@ -22,6 +22,7 @@ Version 3.4.5 (2011-09-01)
 	Fixed bug where the isDirty state would become true on non IE browsers if there was an table at the end of the contents.
 	Fixed bug where entities wasn't properly encoded on WebKit when pasting text as plain text.
 	Fixed bug where empty editors would produce an exception of valid_elements didn't include body and forced_root_blocks where disabled.
+	Fixed bug where the fullscreen mode wouldn't retain the header/footer in the fullpage plugin.
 	Fixed issue where the plaintext_mode and plaintext_mode_sticky language keys where swapped.
 Version 3.4.4 (2011-08-04)
 	Added new html5 audio support. Patch contributed by Ronald M. Clifford.

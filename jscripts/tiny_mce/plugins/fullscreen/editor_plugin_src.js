@@ -27,7 +27,7 @@
 					else {
 						DOM.win.setTimeout(function() {
 							tinymce.dom.Event.remove(DOM.win, 'resize', t.resizeFunc);
-							tinyMCE.get(ed.getParam('fullscreen_editor_id')).setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
+							tinyMCE.get(ed.getParam('fullscreen_editor_id')).setContent(ed.getContent());
 							tinyMCE.remove(ed);
 							DOM.remove('mce_fullscreen_container');
 							de.style.overflow = ed.getParam('fullscreen_html_overflow');
@@ -100,7 +100,7 @@
 					s.fullscreen_editor_id = ed.id;
 					s.theme_advanced_resizing = false;
 					s.save_onsavecallback = function() {
-						ed.setContent(tinyMCE.get(s.id).getContent({format : 'raw'}), {format : 'raw'});
+						ed.setContent(tinyMCE.get(s.id).getContent());
 						ed.execCommand('mceSave');
 					};
 
