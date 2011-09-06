@@ -1,4 +1,4 @@
-Version 3.4.5 (2011-09-01)
+Version 3.4.5 (2011-09-06)
 	Fixed accessibility bug in WebKit where the right and left arrow keys would update native list boxes.
 	Added new whitespace_elements option to enable users to specify specific elements where the whitespace is preserved.
 	Added new merge_siblings option to formats. This option makes it possible to disable the auto merging of siblings when applying formats.
