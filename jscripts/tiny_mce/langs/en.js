@@ -16,7 +16,8 @@ invalid_data:"{#field} is invalid",
 invalid_data_number:"{#field} must be a number",
 invalid_data_min:"{#field} must be a number greater than {#min}",
 invalid_data_size:"{#field} must be a number or percentage",
-more_colors:"More colors"
+more_colors:"More colors",
+value:"(value)"
 },
 colors:{
 '000000':'Black',
