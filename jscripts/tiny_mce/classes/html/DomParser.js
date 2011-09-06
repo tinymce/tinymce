@@ -561,11 +561,13 @@
 								elementRule = schema.getElementRule(parent.name);
 
 								// Remove or padd the element depending on schema rule
-								if (elementRule.removeEmpty)
-									parent.remove();
-								else if (elementRule.paddEmpty) 
-									parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
-							}
+								if (elementRule) {
+								  if (elementRule.removeEmpty)
+									  parent.remove();
+								  else if (elementRule.paddEmpty)
+									  parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+							  }
+              }
 						}
 					}
 				}
