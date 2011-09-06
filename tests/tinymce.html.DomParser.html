@@ -324,6 +324,16 @@ test('Remove redundant br elements', function() {
 	equals(serializer.serialize(root), '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
 });
 
+test('Remove br in invalid parent bug', function() {
+	var parser, root, schema = new tinymce.html.Schema({valid_elements: 'br'});
+
+	expect(1);
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<br>');
+	equals(serializer.serialize(root), '', 'Remove traling br elements.');
+});
+
 test('Forced root blocks', function() {
 	var parser, root, schema = new tinymce.html.Schema();
 
