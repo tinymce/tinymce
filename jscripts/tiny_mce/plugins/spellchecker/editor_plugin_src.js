@@ -98,14 +98,14 @@
 			});
 
 			// Find selected language
-			t.languages = {};
+			t.languages = [];
 			each(ed.getParam('spellchecker_languages', '+English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr,German=de,Italian=it,Polish=pl,Portuguese=pt,Spanish=es,Swedish=sv', 'hash'), function(v, k) {
 				if (k.indexOf('+') === 0) {
 					k = k.substring(1);
 					t.selectedLang = v;
 				}
 
-				t.languages[k] = v;
+				t.languages.push({ "displayName": k, "spellerLang": v });
 			});
 		},
 
@@ -114,36 +114,40 @@
 
 			if (n == 'spellchecker') {
 				// Use basic button if we use the native spellchecker
+
 				if (t.rpcUrl == '{backend}') {
 					// Create simple toggle button if we have native support
 					if (t.hasSupport)
 						c = cm.createButton(n, {title : 'spellchecker.desc', cmd : 'mceSpellCheck', scope : t});
 
 					return c;
+				} else if (t.languages.size() == 1){
+						t.selectedLang = t.languages[0].spellerLang;
+						return  cm.createButton(n, {title : 'spellchecker.desc', cmd : 'mceSpellCheck', scope : t});
 				}
 
 				c = cm.createSplitButton(n, {title : 'spellchecker.desc', cmd : 'mceSpellCheck', scope : t});
 
 				c.onRenderMenu.add(function(c, m) {
 					m.add({title : 'spellchecker.langs', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
-					each(t.languages, function(v, k) {
+					each(t.languages, function(language) {
 						var o = {icon : 1}, mi;
 
 						o.onclick = function() {
-							if (v == t.selectedLang) {
+							if (language.spellerLang == t.selectedLang) {
 								return;
 							}
 							mi.setSelected(1);
 							t.selectedItem.setSelected(0);
 							t.selectedItem = mi;
-							t.selectedLang = v;
+							t.selectedLang = language.spellerLang;
 						};
 
-						o.title = k;
+						o.title = language.displayName;
 						mi = m.add(o);
-						mi.setSelected(v == t.selectedLang);
+						mi.setSelected(language.spellerLang == t.selectedLang);
 
-						if (v == t.selectedLang)
+						if (language.spellerLang == t.selectedLang)
 							t.selectedItem = mi;
 					})
 				});
@@ -315,57 +319,59 @@
 						m.add({title : 'spellchecker.no_sug', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
 
 					ignoreRpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
-					m.add({
-						title : 'spellchecker.ignore_word',
-						onclick : function() {
-							var word = wordSpan.innerHTML;
-
-							dom.remove(wordSpan, 1);
-							t._checkDone();
-
-							// tell the server if we need to
-							if (ignoreRpc) {
-								ed.setProgressState(1);
-								t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
-									ed.setProgressState(0);
-								});
-							}
-						}
-					});
-
-					m.add({
-						title : 'spellchecker.ignore_words',
-						onclick : function() {
-							var word = wordSpan.innerHTML;
-
-							t._removeWords(dom.decode(word));
-							t._checkDone();
-
-							// tell the server if we need to
-							if (ignoreRpc) {
-								ed.setProgressState(1);
-								t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
-									ed.setProgressState(0);
-								});
-							}
-						}
-					});
-
-					if (t.editor.getParam("spellchecker_enable_learn_rpc")) {
+					if (t.editor.getParam("spellchecker_enable_ignore")) {
 						m.add({
-							title : 'spellchecker.learn_word',
+							title : 'spellchecker.ignore_word',
 							onclick : function() {
 								var word = wordSpan.innerHTML;
 
 								dom.remove(wordSpan, 1);
 								t._checkDone();
 
-								ed.setProgressState(1);
-								t._sendRPC('learnWord', [t.selectedLang, word], function(r) {
-									ed.setProgressState(0);
-								});
+								// tell the server if we need to
+								if (ignoreRpc) {
+									ed.setProgressState(1);
+									t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
+										ed.setProgressState(0);
+									});
+								}
 							}
 						});
+
+						m.add({
+							title : 'spellchecker.ignore_words',
+							onclick : function() {
+								var word = wordSpan.innerHTML;
+
+								t._removeWords(dom.decode(word));
+								t._checkDone();
+
+								// tell the server if we need to
+								if (ignoreRpc) {
+									ed.setProgressState(1);
+									t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
+										ed.setProgressState(0);
+									});
+								}
+							}
+						});
+
+						if (t.editor.getParam("spellchecker_enable_learn_rpc")) {
+							m.add({
+								title : 'spellchecker.learn_word',
+								onclick : function() {
+									var word = wordSpan.innerHTML;
+
+									dom.remove(wordSpan, 1);
+									t._checkDone();
+
+									ed.setProgressState(1);
+									t._sendRPC('learnWord', [t.selectedLang, word], function(r) {
+										ed.setProgressState(0);
+									});
+								}
+							});
+						}
 					}
 
 					m.update();
