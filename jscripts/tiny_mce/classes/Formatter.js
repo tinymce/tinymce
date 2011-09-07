@@ -752,7 +752,7 @@
 				selection.moveToBookmark(bookmark);
 
 				// Check if start element still has formatting then we are at: "<b>text|</b>text" and need to move the start into the next text node
-				if (match(name, vars, selection.getStart())) {
+				if (format.inline && match(name, vars, selection.getStart())) {
 					moveStart(selection.getRng(true));
 				}
 
