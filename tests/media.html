@@ -144,6 +144,16 @@ test("WindowsMedia (compatible output/relative urls)", function() {
 	equals(editor.getContent(), '<p><object id=\"test\" width="320" height="240" classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="url" value="test" /><embed id=\"test\" width="320" height="240" type="application/x-mplayer2" src="test" /></object></p>');
 });
 
+test("WindowsMedia (detect type using classid)", function() {
+	expect(1);
+
+	editor.settings.media_strict = false;
+	editor.settings.relative_urls = true;
+
+	editor.setContent('<object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="320" height="240" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701" id="test"><param name="src" value="test" /><embed id=\"test\" width="320" height="240" src="test" /></object>');
+	equals(editor.getContent(), '<p><object id=\"test\" width="320" height="240" classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"><param name="url" value="test" /><embed id=\"test\" width="320" height="240" type="application/x-mplayer2" src="test" /></object></p>');
+});
+
 test("Realmedia (compatible output/relative urls)", function() {
 	expect(1);
 

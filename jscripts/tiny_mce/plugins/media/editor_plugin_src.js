@@ -777,7 +777,7 @@
 			}
 
 			if (object && !type)
-				type = (lookup[(object.attr('clsid') || '').toLowerCase()] || lookup[(object.attr('type') || '').toLowerCase()] || {}).name;
+				type = (lookup[(object.attr('clsid') || object.attr('classid') || object.attr('type') || '').toLowerCase()] || {}).name;
 
 			if (embed && !type)
 				type = (lookup[(embed.attr('type') || '').toLowerCase()] || {}).name;
