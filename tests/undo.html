@@ -81,19 +81,19 @@ asyncTest('Forward delete triggers undo in IE', function() {
 		QUnit.start();
 	}, editor.selection.getNode());
 });
-
-tinyMCE.init({
-	mode : "exact",
-	elements : "elm1",
-	theme : "advanced",
-	cleanup: true,
-	add_unload_trigger : false,
-	apply_source_formatting : 0,
-	init_instance_callback : function(ed) {
-		editor = ed;
-	}
-});
-
+var initTinyFunction = function(){
+	tinyMCE.init({
+		mode : "exact",
+		elements : "elm1",
+		theme : "advanced",
+		cleanup: true,
+		add_unload_trigger : false,
+		apply_source_formatting : 0,
+		init_instance_callback : function(ed) {
+			editor = ed;
+		}
+	});
+}
 </script>
 </head>
 <body>
@@ -108,7 +108,7 @@ tinyMCE.init({
 	</div>
 	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
 	<script>
-	initWhenTinyAndRobotAreReady();
+	initWhenTinyAndRobotAreReady(initTinyFunction);
 	</script>
 </body>
 </html>

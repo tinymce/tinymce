@@ -294,28 +294,28 @@ asyncTest('Expanded Selection, Table Types - Unordered List Action', function() 
 	queue.done();
 	// TODO: Tables with BRs.
 });
+var initTinyFunction = function(){
+	tinyMCE.init({
+		mode : "exact",
+		elements : "elm1",
+		theme : "advanced",
+		cleanup: true,
+		// TODO: Determine why TinyMCE defaults to stripping out empty h1,ul,ol and li element since it results in invalid HTML (but only on FF3.0 and IE).
+		extended_valid_elements: 'li[style],ul[type|compact|style],ol[type|compact|style],h1',
+		// Turn this off because we want the list actions to create the right DOM structure from the start.
+		fix_list_elements: false,
+		plugins : 'lists',
+		add_unload_trigger : false,
+		apply_source_formatting : 0,
+		init_instance_callback : function(ed) {
+			editor = ed;
 
-tinyMCE.init({
-	mode : "exact",
-	elements : "elm1",
-	theme : "advanced",
-	cleanup: true,
-	// TODO: Determine why TinyMCE defaults to stripping out empty h1,ul,ol and li element since it results in invalid HTML (but only on FF3.0 and IE).
-	extended_valid_elements: 'li[style],ul[type|compact|style],ol[type|compact|style],h1',
-	// Turn this off because we want the list actions to create the right DOM structure from the start.
-	fix_list_elements: false,
-	plugins : 'lists',
-	add_unload_trigger : false,
-	apply_source_formatting : 0,
-	init_instance_callback : function(ed) {
-		editor = ed;
-
-		ed.onNodeChange.addToTop(function() {
-			return false;
-		});
-	}
-});
-
+			ed.onNodeChange.addToTop(function() {
+				return false;
+			});
+		}
+	});
+};
 </script>
 </head>
 <body>
@@ -330,7 +330,7 @@ tinyMCE.init({
 	<p><input type="text" id="state"><input type="button" value="Load state" onclick="loadState();"></p>
 	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
 	<script>
-	initWhenTinyAndRobotAreReady();
+	initWhenTinyAndRobotAreReady(initTinyFunction);
 
 	function loadState() {
 		window[document.getElementById('state').value]();

@@ -181,26 +181,26 @@ asyncTest('Expanded Selection, List Types - Outdent Action', function() {
 	Outdenting.a(ParagraphBeforeAndAfterUlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p id="after">After</p>');
 	queue.done();
 });
+var initTinyFunction = function(){
+	tinyMCE.init({
+		mode : "exact",
+		elements : "elm1",
+		theme : "advanced",
+		cleanup: true,
+		// Turn this off because we want the list actions to create the right DOM structure from the start.
+		fix_list_elements: false,
+		plugins : 'lists',
+		add_unload_trigger : false,
+		apply_source_formatting : 0,
+		init_instance_callback : function(ed) {
+			editor = ed;
 
-tinyMCE.init({
-	mode : "exact",
-	elements : "elm1",
-	theme : "advanced",
-	cleanup: true,
-	// Turn this off because we want the list actions to create the right DOM structure from the start.
-	fix_list_elements: false,
-	plugins : 'lists',
-	add_unload_trigger : false,
-	apply_source_formatting : 0,
-	init_instance_callback : function(ed) {
-		editor = ed;
-
-		ed.onNodeChange.addToTop(function() {
-			return false;
-		});
-	}
-});
-
+			ed.onNodeChange.addToTop(function() {
+				return false;
+			});
+		}
+	});
+};
 </script>
 </head>
 <body>
@@ -215,7 +215,7 @@ tinyMCE.init({
 	<p><input type="text" id="state"><input type="button" value="Load state" onclick="loadState();"></p>
 	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
 	<script>
-	initWhenTinyAndRobotAreReady();
+	initWhenTinyAndRobotAreReady(initTinyFunction);
 
 	function loadState() {
 		window[document.getElementById('state').value]();

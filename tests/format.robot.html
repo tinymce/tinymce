@@ -59,18 +59,20 @@
 			queue.done();
 		});
 
-		tinyMCE.init({
-			mode : "exact",
-			elements : "elm1",
-			cleanup: true,
+		var initTinyFunction = function(){
+			tinyMCE.init({
+				mode : "exact",
+				elements : "elm1",
+				cleanup: true,
 
-			add_unload_trigger : false,
-			plugins: "table",
-			init_instance_callback : function(ed) {
-				editor = ed;
+				add_unload_trigger : false,
+				plugins: "table",
+				init_instance_callback : function(ed) {
+					editor = ed;
 
-			}
-		});
+				}
+			});
+		};
 	</script>
 </head>
 <body>
@@ -91,7 +93,7 @@
 </div>
 <script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
 <script>
-	initWhenTinyAndRobotAreReady();
+	initWhenTinyAndRobotAreReady(initTinyFunction);
 </script>
 </body>
 </html>

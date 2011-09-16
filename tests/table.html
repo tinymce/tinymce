@@ -97,19 +97,19 @@ asyncTest('arrow key down in bottom row escapes table', function() {
 	var html = '<table><tr><td></td></tr><tr><td id="b"></td></tr></table><p>outside</p>';
 	testCursorKey(html, '#b', DOWN_ARROW, 'outside');
 });
+var initTinyFunction = function(){
+	tinyMCE.init({
+		mode : "exact",
+		elements : "elm1",
+		cleanup: true,
 
-tinyMCE.init({
-	mode : "exact",
-	elements : "elm1",
-	cleanup: true,
-	
-	add_unload_trigger : false,
-	plugins: "table",
-	init_instance_callback : function(ed) {
-		editor = ed;
-
-	}
-});
+		add_unload_trigger : false,
+		plugins: "table",
+		init_instance_callback : function(ed) {
+			editor = ed;
+		}
+	});
+};
 </script>
 </head>
 <body>
@@ -127,7 +127,7 @@ tinyMCE.init({
 	</div> 
 	<script type="text/javascript" language="JavaScript" src="jsrobot/robot.js"></script>
 	<script>
-	initWhenTinyAndRobotAreReady();
+	initWhenTinyAndRobotAreReady(initTinyFunction);
 	</script>
 </body>
 </html>

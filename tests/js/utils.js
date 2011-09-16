@@ -27,7 +27,7 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 	var startContainer = findContainer(startSelector);
 	var endContainer = findContainer(endSelector);
 	var rng = editor.dom.createRng();
-	
+
 	function setRange(container, offset, start) {
 		if (offset === 'after') {
 			if (start) {
@@ -46,27 +46,23 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 			rng.setEnd(container, offset);
 		}
 	}
+
 	setRange(startContainer, startOffset, true);
 	setRange(endContainer, endOffset, false);
 	editor.selection.setRng(rng);
 }
 
-function initWhenTinyAndRobotAreReady() {
-	var readyCount = 0;
-	function checkLoaded() {
-		readyCount++;
-		if (readyCount > 2) {
-			ok(false, "Critical error: Received too many onload events.");
-		} else if (readyCount === 2) {
-			QUnit.start();
-		}
+function initWhenTinyAndRobotAreReady(initTinyFunction) {
+	function loaded() {
+		QUnit.start();
 	}
-	window.robot.onload(checkLoaded);
+
 	tinymce.onAddEditor.add(function(tinymce, ed) {
 		ed.onInit.add(function() {
-			checkLoaded();
+			loaded();
 		});
 	});
+	window.robot.onload(initTinyFunction);
 }
 
 function trimContent(content) {
