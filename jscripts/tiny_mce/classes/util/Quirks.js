@@ -49,11 +49,7 @@
 				// Find all odd apple-style-spans
 				blockElm = dom.getParent(rng.startContainer, dom.isBlock);
 				tinymce.each(dom.select('span.Apple-style-span,font.Apple-style-span', blockElm), function(span) {
-					var rng = dom.createRng();
-
-					// Set range selection before the span we are about to remove
-					rng.setStartBefore(span);
-					rng.setEndBefore(span);
+					var bm = selection.getBookmark();
 
 					if (clonedSpan) {
 						dom.replace(clonedSpan.cloneNode(false), span, true);
@@ -62,7 +58,7 @@
 					}
 
 					// Restore the selection
-					selection.setRng(rng);
+					selection.moveToBookmark(bm);
 				});
 			}
 		});
