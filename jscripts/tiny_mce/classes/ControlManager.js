@@ -235,7 +235,12 @@
 
 			id = t.prefix + id;
 
-			if (ed.settings.use_native_selects)
+
+			function useNativeListForAccessibility(ed) {
+				return ed.settings.use_accessible_selects && !tinymce.isGecko
+			}
+
+			if (ed.settings.use_native_selects || useNativeListForAccessibility(ed))
 				c = new tinymce.ui.NativeListBox(id, s);
 			else {
 				cls = cc || t._cls.listbox || tinymce.ui.ListBox;
