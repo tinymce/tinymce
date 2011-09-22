@@ -41,7 +41,8 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 	},
 	
 	focus : function() {
-		this.keyNav.focus();
+		var t = this;
+		dom.get(t.id).focus();
 	},
 	
 	postRender : function() {
@@ -59,6 +60,10 @@ tinymce.create('tinymce.ui.ToolbarGroup:tinymce.ui.Container', {
 			root: t.id,
 			items: items,
 			onCancel: function() {
+				//Move focus if webkit so that navigation back will read the item.
+				if (tinymce.isWebKit) {
+					dom.get(t.editor.id+"_ifr").focus();
+				}
 				t.editor.focus();
 			},
 			excludeFromTabOrder: !t.settings.tab_focus_toolbar
