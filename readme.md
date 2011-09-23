@@ -30,4 +30,4 @@ Same as above, but don't generate API Documentation.
 
 Contributing to the TinyMCE project
 ------------------------------------
-You can read more about how to contribute to this project at [http://tinymce.moxiecode.com/contributing](http://tinymce.moxiecode.com/contributing)
+You can read more about how to contribute to this project at [http://www.tinymce.com/develop/contributing.php](http://www.tinymce.com/develop/contributing.php)
