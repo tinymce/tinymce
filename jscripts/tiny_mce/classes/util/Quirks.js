@@ -115,7 +115,28 @@
 			});
 		}
 	};
-	
+
+	/**
+	 * WebKit has a bug where it isn't possible to select image, hr or anchor elements
+	 * by clicking on them so we need to fake that.
+	 */
+	function selectControlElements(ed) {
+		ed.onClick.add(function(ed, e) {
+			e = e.target;
+
+			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
+			// WebKit can't even do simple things like selecting an image
+			// Needs tobe the setBaseAndExtend or it will fail to select floated images
+			if (/^(IMG|HR)$/.test(e.nodeName))
+				ed.selection.getSel().setBaseAndExtent(e, 0, e, 1);
+
+			if (e.nodeName == 'A' && ed.dom.hasClass(e, 'mceItemAnchor'))
+				ed.selection.select(e);
+
+			ed.nodeChanged();
+		});
+	};
+
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
 			// WebKit
@@ -123,6 +144,7 @@
 				cleanupStylesWhenDeleting(ed);
 				emptyEditorWhenDeleting(ed);
 				inputMethodFocus(ed);
+				selectControlElements(ed);
 			}
 
 			// IE

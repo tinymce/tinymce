@@ -2970,21 +2970,6 @@
 				t.onMouseDown.add(setOpts);
 			}
 
-			t.onClick.add(function(ed, e) {
-				e = e.target;
-
-				// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
-				// WebKit can't even do simple things like selecting an image
-				// Needs tobe the setBaseAndExtend or it will fail to select floated images
-				if (tinymce.isWebKit && e.nodeName == 'IMG')
-					t.selection.getSel().setBaseAndExtent(e, 0, e, 1);
-
-				if (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor'))
-					t.selection.select(e);
-
-				t.nodeChanged();
-			});
-
 			// Add node change handlers
 			t.onMouseUp.add(t.nodeChanged);
 			//t.onClick.add(t.nodeChanged);
