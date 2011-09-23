@@ -1193,7 +1193,6 @@
 			// Load the CSS by injecting them into the HTML this will reduce "flicker"
 			for (i = 0; i < t.contentCSS.length; i++) {
 				t.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + t.contentCSS[i] + '" />';
-				t.contentCSS = [];
 			}
 
 			bi = s.body_id || 'tinymce';
@@ -1254,24 +1253,6 @@
 
 			// Setup iframe body
 			if (!isIE || !tinymce.relaxedDomain) {
-				// Fix for a focus bug in FF 3.x where the body element
-				// wouldn't get proper focus if the user clicked on the HTML element
-				if (isGecko && !Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
-					t.onMouseDown.add(function(ed, e) {
-						if (e.target.nodeName === "HTML") {
-							var body = t.getBody();
-
-							// Blur the body it's focused but not correctly focused
-							body.blur();
-
-							// Refocus the body after a little while
-							setTimeout(function() {
-								body.focus();
-							}, 0);
-						}
-					});
-				}
-
 				d.open();
 				d.write(t.iframeHTML);
 				d.close();

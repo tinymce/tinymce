@@ -81,18 +81,58 @@
 			}
 		});
 	};
+
+	/**
+	 * WebKit on MacOS X has a weird issue where it some times fails to properly convert keypresses to input method keystrokes.
+	 * So a fix where we just get the range and set the range back seems to do the trick.
+	 */
+	function inputMethodFocus(ed) {
+		ed.dom.bind(ed.getDoc(), 'focusin', function() {
+			ed.selection.setRng(ed.selection.getRng());
+		});
+	};
+
+	/**
+	 * Firefox 3.x has an issue where the body element won't get proper focus if you click out
+	 * side it's rectangle.
+	 */
+	function focusBody(ed) {
+		// Fix for a focus bug in FF 3.x where the body element
+		// wouldn't get proper focus if the user clicked on the HTML element
+		if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
+			ed.onMouseDown.add(function(ed, e) {
+				if (e.target.nodeName === "HTML") {
+					var body = ed.getBody();
+
+					// Blur the body it's focused but not correctly focused
+					body.blur();
+
+					// Refocus the body after a little while
+					setTimeout(function() {
+						body.focus();
+					}, 0);
+				}
+			});
+		}
+	};
 	
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
-			// Load WebKit specific fixed
+			// WebKit
 			if (tinymce.isWebKit) {
 				cleanupStylesWhenDeleting(ed);
 				emptyEditorWhenDeleting(ed);
+				inputMethodFocus(ed);
 			}
 
-			// Load IE specific fixes
+			// IE
 			if (tinymce.isIE) {
 				emptyEditorWhenDeleting(ed);
+			}
+
+			// Gecko
+			if (tinymce.isGecko) {
+				focusBody(ed);
 			}
 		}
 	});
