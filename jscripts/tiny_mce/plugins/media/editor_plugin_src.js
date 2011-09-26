@@ -251,6 +251,8 @@
 				id : data.id,
 				style : data.style,
 				align : data.align,
+				hspace : data.hspace,
+				vspace : data.vspace,
 				src : self.editor.theme.url + '/img/trans.gif',
 				'class' : 'mceItemMedia mceItem' + self.getType(data.type).name,
 				'data-mce-json' : JSON.serialize(data, "'")
@@ -535,8 +537,13 @@
 				});
 
 				tinymce.each(rootAttributes, function(name) {
-					if (data[name] && name != 'type')
-						object.attr(name, data[name]);
+					var value = data[name];
+
+					if (name == 'class' && value)
+						value = value.replace(/mceItem.+ ?/g, '');
+
+					if (value && name != 'type')
+						object.attr(name, value);
 				});
 
 				// Add params
@@ -639,7 +646,8 @@
 			var object, embed, video, iframe, img, name, id, width, height, style, i, html,
 				param, params, source, sources, data, type, lookup = this.lookup,
 				matches, attrs, urlConverter = this.editor.settings.url_converter,
-				urlConverterScope = this.editor.settings.url_converter_scope;
+				urlConverterScope = this.editor.settings.url_converter_scope,
+				hspace, vspace, align, bgcolor;
 
 			function getInnerHTML(node) {
 				return new tinymce.html.Serializer({
@@ -746,6 +754,11 @@
 				height = height || object.attr('height');
 				style = style || object.attr('style');
 				id = id || object.attr('id');
+				hspace = hspace || object.attr('hspace');
+				vspace = vspace || object.attr('vspace');
+				align = align || object.attr('align');
+				bgcolor = bgcolor || object.attr('bgcolor');
+				data.name = object.attr('name');
 
 				// Get all object params
 				params = object.getAll("param");
@@ -766,6 +779,10 @@
 				height = height || embed.attr('height');
 				style = style || embed.attr('style');
 				id = id || embed.attr('id');
+				hspace = hspace || embed.attr('hspace');
+				vspace = vspace || embed.attr('vspace');
+				align = align || embed.attr('align');
+				bgcolor = bgcolor || embed.attr('bgcolor');
 
 				// Get all embed attributes
 				for (name in embed.attributes.map) {
@@ -780,6 +797,10 @@
 				height = iframe.attr('height');
 				style = style || iframe.attr('style');
 				id = iframe.attr('id');
+				hspace = iframe.attr('hspace');
+				vspace = iframe.attr('vspace');
+				align = iframe.attr('align');
+				bgcolor = iframe.attr('bgcolor');
 
 				tinymce.each(rootAttributes, function(name) {
 					img.attr(name, iframe.attr(name));
@@ -820,7 +841,6 @@
 				data.params.type = embed.attr('type');
 			}
 
-
 			// Replace the video/object/embed element with a placeholder image containing the data
 			node.replace(img);
 
@@ -844,6 +864,11 @@
 					data.video_html = html;
 			}
 
+			data.hspace = hspace;
+			data.vspace = vspace;
+			data.align = align;
+			data.bgcolor = bgcolor;
+
 			// Set width/height of placeholder
 			img.attr({
 				id : id,
@@ -851,6 +876,10 @@
 				style : style,
 				width : width || (node.name == 'audio' ? "300" : "320"),
 				height : height || (node.name == 'audio' ? "32" : "240"),
+				hspace : hspace,
+				vspace : vspace,
+				align : align,
+				bgcolor : bgcolor,
 				"data-mce-json" : JSON.serialize(data, "'")
 			});
 		}

@@ -316,6 +316,16 @@ test("Internal dataToHtml", function() {
 	);
 });
 
+test("Flash retain attribs", function() {
+	expect(1);
+
+	editor.settings.media_strict = true;
+	editor.settings.relative_urls = true;
+
+	editor.setContent('<object id="a1" name="b2" align="right" width="320" height="240" bgcolor="red" vspace="10" hspace="20" data="test" type="application/x-shockwave-flash" bgcolor="red"><param name="src" value="test" /></object>');
+	equals(editor.getContent(), '<p><object id="a1" width="320" height="240" name="b2" align="right" hspace="20" vspace="10" bgcolor="red" data="test" type="application/x-shockwave-flash"><param name="src" value="test" /></object></p>');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
