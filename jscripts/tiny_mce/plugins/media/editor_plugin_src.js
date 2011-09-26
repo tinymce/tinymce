@@ -535,8 +535,8 @@
 				});
 
 				tinymce.each(rootAttributes, function(name) {
-					if (data[name] && name != 'type')
-						object.attr(name, data[name]);
+					//if (data[name] && name != 'type')
+					//	object.attr(name, data[name]);
 				});
 
 				// Add params
@@ -621,7 +621,7 @@
 
 			var n = video || audio || object || embed;
 			if (n) {
-				n.attr('class', 'mceItemMedia mceItem' + (typeItem.name || 'Flash'));
+				//n.attr('class', 'mceItemMedia mceItem' + (typeItem.name || 'Flash'));
 				node.replace(n);
 			}
 			else
@@ -651,7 +651,7 @@
 			};
 
 			function lookupAttribute(o, attr) {
-				return lookup[o.attr(attr).toLowerCase() || ''];
+				return lookup[(o.attr(attr) || '').toLowerCase()];
 			}
 
 			function lookupExtension(src) {
