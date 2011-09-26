@@ -371,7 +371,7 @@
 
 			data = node.attr('data-mce-json');
 			if (!data)
-			return;
+				return;
 
 			data = JSON.parse(data);
 			typeItem = this.getType(node.attr('class'));
@@ -535,8 +535,8 @@
 				});
 
 				tinymce.each(rootAttributes, function(name) {
-					//if (data[name] && name != 'type')
-					//	object.attr(name, data[name]);
+					if (data[name] && name != 'type')
+						object.attr(name, data[name]);
 				});
 
 				// Add params
@@ -620,10 +620,8 @@
 			}
 
 			var n = video || audio || object || embed;
-			if (n) {
-				//n.attr('class', 'mceItemMedia mceItem' + (typeItem.name || 'Flash'));
+			if (n)
 				node.replace(n);
-			}
 			else
 				node.remove();
 		},
