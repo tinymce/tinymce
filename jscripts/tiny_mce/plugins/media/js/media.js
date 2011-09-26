@@ -8,6 +8,33 @@
 		return document.getElementById(id);
 	}
 
+	function clone(obj) {
+		var i, len, copy, attr;
+
+		if (null == obj || "object" != typeof obj)
+			return obj;
+
+		// Handle Array
+		if ('length' in obj) {
+			copy = [];
+
+			for (i = 0, len = obj.length; i < len; ++i) {
+				copy[i] = clone(obj[i]);
+			}
+
+			return copy;
+		}
+
+		// Handle Object
+		copy = {};
+		for (attr in obj) {
+			if (obj.hasOwnProperty(attr))
+				copy[attr] = clone(obj[attr]);
+		}
+
+		return copy;
+	}
+
 	function getVal(id) {
 		var elm = get(id);
 
@@ -79,7 +106,7 @@
 
 			editor.dom.setOuterHTML(get('media_type'), this.getMediaTypeHTML(editor));
 
-			this.data = tinyMCEPopup.getWindowArg('data');
+			this.data = clone(tinyMCEPopup.getWindowArg('data'));
 			this.dataToForm();
 			this.preview();
 
@@ -101,7 +128,7 @@
 		},
 
 		moveStates : function(to_form, field) {
-			var data = this.data, editor = this.editor, data = this.data,
+			var data = this.data, editor = this.editor,
 				mediaPlugin = editor.plugins.media, ext, src, typeInfo, defaultStates, src;
 
 			defaultStates = {
@@ -258,7 +285,7 @@
 					if (data.type == 'flash') {
 						tinymce.each(editor.getParam('flash_video_player_flashvars', {url : '$url', poster : '$poster'}), function(value, name) {
 							if (value == '$url')
-								data.params.src = parseQueryParams(data.params.flashvars)[name] || data.params.src;
+								data.params.src = parseQueryParams(data.params.flashvars)[name] || data.params.src || '';
 						});
 					}
 
@@ -337,7 +364,7 @@
 				this.panel = 'source';
 			} else {
 				if (this.panel == 'source') {
-					this.data = this.editor.plugins.media.htmlToData(getVal('source'));
+					this.data = clone(this.editor.plugins.media.htmlToData(getVal('source')));
 					this.dataToForm();
 					this.panel = '';
 				}
