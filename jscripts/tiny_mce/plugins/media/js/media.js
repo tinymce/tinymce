@@ -82,6 +82,8 @@
 			this.data = tinyMCEPopup.getWindowArg('data');
 			this.dataToForm();
 			this.preview();
+
+			updateColor('bgcolor_pick', 'bgcolor');
 		},
 
 		insert : function() {
