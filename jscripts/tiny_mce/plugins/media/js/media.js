@@ -293,7 +293,18 @@
 				}
 			} else {
 				src = getVal("src");
-	
+
+				// YouTube *NEW*
+				if (src.match(/youtu.be\/[a-z1-9.-_]+/)) {
+					data.width = 425;
+					data.height = 350;
+					data.params.frameborder = '0';
+					data.type = 'iframe';
+					src = 'http://www.youtube.com/embed/' + src.match(/youtu.be\/([a-z1-9.-_]+)/)[1];
+					setVal('src', src);
+					setVal('media_type', data.type);
+				}
+
 				// YouTube
 				if (src.match(/youtube.com(.+)v=([^&]+)/)) {
 					data.width = 425;
