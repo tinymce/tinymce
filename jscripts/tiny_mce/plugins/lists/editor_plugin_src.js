@@ -562,7 +562,7 @@
 				}
 			});
 
-			if (hasNonList || hasOppositeType || selectedBlocks.length === 0) {
+			if (hasNonList &&!hasSameType || hasOppositeType || selectedBlocks.length === 0) {
 				actions = {
 					'LI': changeList,
 					'H1': makeList,
