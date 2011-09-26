@@ -7,6 +7,8 @@ Version 3.4.x (2011-xx-xx)
 	Fixed bug where anchors wasn't updated properly if you edited them using IE 8.
 	Fixed bug where input method on WebKit on Mac OS X would fail to initialize when sometimes focusing the editor.
 	Fixed bug where it wasn't possible to select HR elements on WebKit by simply clicking on them.
+	Fixed bug where the media plugin wouldn't work on IE9 when not using the inlinepopups plugin.
+	Fixed bug where hspace,vspace,align and bgcolor would be removed from object elements in the media plugin.
 Version 3.4.5 (2011-09-06)
 	Fixed accessibility bug in WebKit where the right and left arrow keys would update native list boxes.
 	Added new whitespace_elements option to enable users to specify specific elements where the whitespace is preserved.
