@@ -314,42 +314,44 @@
 					} else
 						m.add({title : 'spellchecker.no_sug', 'class' : 'mceMenuItemTitle'}).setDisabled(1);
 
-					ignoreRpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
-					m.add({
-						title : 'spellchecker.ignore_word',
-						onclick : function() {
-							var word = wordSpan.innerHTML;
+					if (ed.getParam('show_ignore_words', true)) {
+						ignoreRpc = t.editor.getParam("spellchecker_enable_ignore_rpc", '');
+						m.add({
+							title : 'spellchecker.ignore_word',
+							onclick : function() {
+								var word = wordSpan.innerHTML;
 
-							dom.remove(wordSpan, 1);
-							t._checkDone();
+								dom.remove(wordSpan, 1);
+								t._checkDone();
 
-							// tell the server if we need to
-							if (ignoreRpc) {
-								ed.setProgressState(1);
-								t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
-									ed.setProgressState(0);
-								});
+								// tell the server if we need to
+								if (ignoreRpc) {
+									ed.setProgressState(1);
+									t._sendRPC('ignoreWord', [t.selectedLang, word], function(r) {
+										ed.setProgressState(0);
+									});
+								}
 							}
-						}
-					});
+						});
 
-					m.add({
-						title : 'spellchecker.ignore_words',
-						onclick : function() {
-							var word = wordSpan.innerHTML;
+						m.add({
+							title : 'spellchecker.ignore_words',
+							onclick : function() {
+								var word = wordSpan.innerHTML;
 
-							t._removeWords(dom.decode(word));
-							t._checkDone();
+								t._removeWords(dom.decode(word));
+								t._checkDone();
 
-							// tell the server if we need to
-							if (ignoreRpc) {
-								ed.setProgressState(1);
-								t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
-									ed.setProgressState(0);
-								});
+								// tell the server if we need to
+								if (ignoreRpc) {
+									ed.setProgressState(1);
+									t._sendRPC('ignoreWords', [t.selectedLang, word], function(r) {
+										ed.setProgressState(0);
+									});
+								}
 							}
-						}
-					});
+						});
+					}
 
 					if (t.editor.getParam("spellchecker_enable_learn_rpc")) {
 						m.add({
