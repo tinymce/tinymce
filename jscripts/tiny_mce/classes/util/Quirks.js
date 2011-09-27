@@ -15,6 +15,8 @@
 	 * <h1>a|b</p>
 	 *
 	 * See bug: https://bugs.webkit.org/show_bug.cgi?id=45784
+	 *
+	 * This code is a bit of a hack and hopefully it will be fixed soon in WebKit.
 	 */
 	function cleanupStylesWhenDeleting(ed) {
 		var dom = ed.dom, selection = ed.selection;
@@ -37,6 +39,10 @@
 				// Locate root span element and clone it since it would otherwise get merged by the "apple-style-span" on delete/backspace
 				if (blockElm) {
 					node = blockElm.firstChild;
+
+					// Ignore empty text nodes
+					while (node.nodeType == 3 && node.nodeValue.length == 0)
+						node = node.nextSibling;
 
 					if (node && node.nodeName === 'SPAN') {
 						clonedSpan = node.cloneNode(false);
