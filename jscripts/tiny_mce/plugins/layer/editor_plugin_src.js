@@ -37,8 +37,16 @@
 			ed.addButton('insertlayer', {title : 'layer.insertlayer_desc', cmd : 'mceInsertLayer'});
 
 			ed.onInit.add(function() {
+				var dom = ed.dom;
+
 				if (tinymce.isIE)
 					ed.getDoc().execCommand('2D-Position', false, true);
+
+				ed.serializer.onPreProcess.add(function() {
+					tinymce.each(dom.select('div.mceItemLayer,p.mceItemLayer'), function(node) {
+						dom.setAttrib(node, 'data-mce-style', '');
+					});
+				});
 			});
 
 			ed.onNodeChange.add(t._nodeChange, t);
@@ -81,11 +89,13 @@
 			var dom = ed.dom;
 
 			tinymce.each(dom.select('div,p', e), function(e) {
-				if (/^(absolute|relative|static)$/i.test(e.style.position)) {
+				if (/^(absolute|relative|fixed)$/i.test(e.style.position)) {
 					if (s)
 						dom.addClass(e, 'mceItemVisualAid');
 					else
-						dom.removeClass(e, 'mceItemVisualAid');	
+						dom.removeClass(e, 'mceItemVisualAid');
+
+					dom.addClass(e, 'mceItemLayer');
 				}
 			});
 		},
@@ -163,7 +173,7 @@
 					width : 100,
 					height : 100
 				},
-				'class' : 'mceItemVisualAid'
+				'class' : 'mceItemVisualAid mceItemLayer'
 			}, ed.selection.getContent() || ed.getLang('layer.content'));
 		},
 
@@ -184,6 +194,7 @@
 					});
 
 					ed.dom.removeClass(le, 'mceItemVisualAid');
+					ed.dom.removeClass(le, 'mceItemLayer');
 				} else {
 					if (le.style.left == "")
 						le.style.left = 20 + 'px';
