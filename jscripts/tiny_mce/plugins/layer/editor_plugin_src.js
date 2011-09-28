@@ -49,6 +49,34 @@
 				});
 			});
 
+			// Fixes edit focus issues with layers on Gecko
+			// This will enable designMode while inside a layer and disable it when outside
+			ed.onMouseDown.add(function(ed, e) {
+				var node = e.target, doc = ed.getDoc(), parent;
+
+				if (tinymce.isGecko) {
+					do {
+						if (node.className && node.className.indexOf('mceItemLayer') != -1) {
+							if (doc.designMode !== 'on') {
+								doc.designMode = 'on';
+
+								// Repaint caret
+								node = doc.body;
+								parent = node.parentNode;
+								parent.removeChild(node);
+								parent.appendChild(node);
+							}
+
+							return;
+						}
+					} while (node = node.parentNode);
+
+					if (doc.designMode == 'on') {
+						doc.designMode = 'off';
+					}
+				}
+			});
+
 			ed.onNodeChange.add(t._nodeChange, t);
 			ed.onVisualAid.add(t._visualAid, t);
 		},
