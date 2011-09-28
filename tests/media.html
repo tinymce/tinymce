@@ -326,18 +326,32 @@ test("Flash retain attribs", function() {
 	equals(editor.getContent(), '<p><object id="a1" width="320" height="240" name="b2" align="right" hspace="20" vspace="10" bgcolor="red" data="test" type="application/x-shockwave-flash"><param name="src" value="test" /></object></p>');
 });
 
-tinyMCE.init({
-	mode : "exact",
-	elements : "elm1",
-	theme : "advanced",
-	add_unload_trigger : false,
-	document_base_url : '/tinymce/tinymce/trunk/tests/',
-	plugins : 'media',
-	init_instance_callback : function(ed) {
-		editor = ed;
-		QUnit.start();
-	}
+test("Embedded Audio", function() {
+	expect(1);
+	initTiny({media_types: "embeddedaudio=wav"}, function() {
+		editor.setContent('<embed height="20" width="100" type="audio/x-wav" controller="true" src="test.wav"/>');
+		equals(editor.getContent(), '<p><embed width="100" height="20" type="audio/x-wav" src="test.wav" controller="true" /></p>');
+	});
 });
+
+function initTiny(settings, load) {
+	var default_settings = {
+		mode : "exact",
+		elements : "elm1",
+		theme : "advanced",
+		add_unload_trigger : false,
+		document_base_url : '/tinymce/tinymce/trunk/tests/',
+		plugins : 'media',
+		init_instance_callback : function(ed) {
+			editor = ed;
+			load();
+		}
+	};
+	var settings = tinymce.extend(default_settings, settings);
+	tinyMCE.init(settings);
+}
+
+initTiny({}, QUnit.start);
 </script>
 </head>
 <body>
