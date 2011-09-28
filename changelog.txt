@@ -12,6 +12,7 @@ Version 3.4.x (2011-xx-xx)
 	Fixed bug where the new youtube format wouldn't be properly parsed by the media plugin.
 	Fixed bug where the style attribute of layers wasn't properly updated on IE and Gecko.
 	Fixed bug where editing contents in a layer would fail on Gecko since contentEditable doesn't inherit properly.
+	Fixed bug where IE 6/7 would produce JS errors when serializing contents containing layers.
 Version 3.4.5 (2011-09-06)
 	Fixed accessibility bug in WebKit where the right and left arrow keys would update native list boxes.
 	Added new whitespace_elements option to enable users to specify specific elements where the whitespace is preserved.
