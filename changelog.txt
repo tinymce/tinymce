@@ -1,4 +1,4 @@
-Version 3.4.x (2011-xx-xx)
+Version 3.4.6 (2011-09-29)
 	Added support in Media plugin for audio media using the embed tag
 	Fixed accessibility bugs in WebKit and IE8 where toolbar items were not being read.
 	Added new use_accessible_selects option to ensure accessible list boxes are used in all browsers (custom widget in firefox native on other browsers)
