@@ -132,6 +132,7 @@ SingleBlockWithBrSelection = createState('<div>Item1<br />Item2</div>', 'div', 3
 MultipleBlockWithBrSelection = createState('<div>Item1<br />Item2</div><div>Item3</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
 MultipleBlockWithBrPartialSelection = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1)', 2, 'div:nth-child(2)', 3);
 MultipleBlockWithBrPartialSelectionAtEnd = createState('<div>Item1<br />Item2</div><div>Item3<br />Item4</div>', 'div:nth-child(1) br', 'afterNextCharacter', 'div:nth-child(2) br', 'afterNextCharacter');
+MultipleBlockWithEmptyDivsAllSelected = createState('<div id="start">&nbsp;</div><div>a</div><div></div><div>b</div><div></div><div id="end">&nbsp;</div>', '#start', 0, '#end', 0);
 
 CellWithoutBrSelection = createState('<table><tbody><tr><td>Cell 1</td></tr></tbody></table>', 'td', 1, 'td', 1); //selection is a single point so it will avoid table selection bugs in ie9.
 CellWithBrSingleLineSelection = createState('<table><tbody><tr><td>Cell 1<br>Line 2</td></tr></tbody></table>', 'td', 1, 'td', 4);

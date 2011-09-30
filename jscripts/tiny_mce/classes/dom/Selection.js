@@ -922,7 +922,8 @@
 			if (sb && eb && sb != eb) {
 				n = sb;
 
-				while ((n = n.nextSibling) && n != eb) {
+				var walker = new tinymce.dom.TreeWalker(sb, dom.getRoot());
+				while ((n = walker.next()) && n != eb) {
 					if (dom.isBlock(n))
 						bl.push(n);
 				}

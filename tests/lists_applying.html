@@ -37,12 +37,12 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	} else {
 		ApplyingOL.to(EmptyHeading).gives('<ol>\n<li>\n<h1></h1>\n</li>\n</ol>');
 	}
-	
+
 	ApplyingOL.to(NonEmptyParagraph).enablesState('Outdent').andGives('<ol>\n<li>Test</li>\n</ol>');
 	ApplyingOL.to(NonEmptyHeading).enablesState('Outdent').andGives('<ol>\n<li>\n<h1>Test</h1>\n</li>\n</ol>');
-	
+
 	ApplyingOL.to(TableCellWithoutBrs).enablesState('Outdent').andGives('<table><tbody><tr>\n<td><ol>\n<li>Test</li>\n</ol></td>\n<td>&nbsp;</td>\n</tr></tbody></table>');
-	
+
 	ApplyingOL.to(TableCellWithBrsFirstLine).enablesState('Outdent').andGives('<table><tbody><tr>\n<td><ol>\n<li>Test</li>\n</ol>Line 2</td>\n<td>&nbsp;</td>\n</tr></tbody></table>');
 	ApplyingOL.to(TableCellWithBrsMiddleLine).enablesState('Outdent').andGives('<table><tbody><tr>\n<td>Test<ol>\n<li>Line 2</li>\n</ol>Line 3</td>\n<td>&nbsp;</td>\n</tr></tbody></table>');
 	ApplyingOL.to(TableCellWithBrsLastLine).enablesState('Outdent').andGives('<table><tbody><tr>\n<td>Test<ol>\n<li>Line 2</li>\n</ol></td>\n<td>&nbsp;</td>\n</tr></tbody></table>');
@@ -50,12 +50,12 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 
 	ApplyingOL.to(HeadingInOrderedList).gives('<h2>Test</h2>');
 	ApplyingOL.to(HeadingInUnorderedList).gives('<ol>\n<li>\n<h2>Test</h2>\n</li>\n</ol>');
-	
+
 	ApplyingOL.to(EndOfParagraphBeforeOL).enablesState('Outdent').andGives('<ol>\n<li>Test</li>\n<li>Item</li>\n</ol>');
 	ApplyingOL.to(EndOfParagraphBeforeUL).enablesState('Outdent').andGives('<ol>\n<li>Test</li>\n</ol>\n<ul>\n<li>Item</li>\n</ul>');
 
 	ApplyingOL.to(EndOfParagraphBeforeOLWithListType).enablesState('Outdent').andGives('<ol style="list-style-type: lower-alpha;">\n<li>Test</li>\n<li>Item</li>\n</ol>');
-	
+
 	ApplyingOL.to(StartOfParagraphAfterOL).enablesState('Outdent').andGives('<ol>\n<li>Item</li>\n<li>Test</li>\n</ol>');
 	ApplyingOL.to(StartOfParagraphAfterUL).enablesState('Outdent').andGives('<ul>\n<li>Item</li>\n</ul>\n<ol>\n<li>Test</li>\n</ol>');
 	ApplyingOL.to(StartOfParagraphAfterOLWithListType).enablesState('Outdent').andGives('<ol style="list-style-type: lower-alpha;">\n<li>Item</li>\n<li>Test</li>\n</ol>');
@@ -63,10 +63,10 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(ParagraphBetweenOrderedLists).enablesState('Outdent').andGives('<ol>\n<li>Item1</li>\n<li>Test</li>\n<li>Item2</li>\n</ol>');
 	ApplyingOL.to(ParagraphBetweenUnorderedLists).enablesState('Outdent').andGives('<ul>\n<li>Item1</li>\n</ul>\n<ol>\n<li>Test</li>\n</ol>\n<ul>\n<li>Item2</li>\n</ul>');
 	ApplyingOL.to(ParagraphBetweenMixedLists).enablesState('Outdent').andGives('<ol>\n<li>Item1</li>\n<li>Test</li>\n</ol>\n<ul>\n<li>Item2</li>\n</ul>');
-	
+
 	ApplyingOL.to(EmptyOrderedListItem).disablesState('Outdent').andGives(EmptyOLConvertedToP);
 	ApplyingOL.to(EmptyUnorderedListItem).gives('<ul>\n<li>Before</li>\n</ul>\n<ol>\n<li>&nbsp;</li>\n</ol>\n<ul>\n<li>After</li>\n</ul>');
-	
+
 	ApplyingOL.to(NonEmptyOrderedListItem).disablesState('Outdent').andGives(NonEmptyOLConvertedToP);
 	ApplyingOL.to(NonEmptyUnorderedListItem).gives('<ul>\n<li>Before</li>\n</ul>\n<ol>\n<li>Test</li>\n</ol>\n<ul>\n<li>After</li>\n</ul>');
 
@@ -75,11 +75,11 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 
 	ApplyingOL.to(NestedEmptyOrderedListItem).disablesState('Outdent').andGives('<ol>\n<li>Before</li>\n</ol>\n<p>&nbsp;</p>\n<ol>\n<li>After</li>\n</ol>');
 	ApplyingOL.to(NestedEmptyUnorderedListItem).enablesState('Outdent').andGives('<ul>\n<li>Before<ol>\n<li>&nbsp;</li>\n</ol></li>\n<li>After</li>\n</ul>');
-	
+
 	ApplyingOL.to(NestedNonEmptyOrderedListItem).disablesState('Outdent').andGives('<ol>\n<li>Before</li>\n</ol>\n<p>Test</p>\n<ol>\n<li>After</li>\n</ol>');
 	ApplyingOL.to(NestedNonEmptyUnorderedListItem).enablesState('Outdent').andGives('<ul>\n<li>Before<ol>\n<li>Test</li>\n</ol></li>\n<li>After</li>\n</ul>');
 
-	
+
 	ApplyingOL.to(OrderedListItemWithNestedChild).disablesState('Outdent').andGives('<p>Item1</p>\n<ol>\n<li style="list-style-type: none;"><ol>\n<li>Nested</li>\n</ol></li>\n</ol>');
 	ApplyingOL.to(UnorderedListItemWithNestedChild).enablesState('Outdent').andGives('<ol>\n<li>Item1\n<ul>\n<li>Nested</li>\n</ul>\n</li>\n</ol>');
 
@@ -89,7 +89,7 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(ParagraphWithMarginLeft).enablesState('Outdent').andGives('<ol>\n<li style="margin-left: 30px;">Test</li>\n</ol>');
 	ApplyingOL.to(ParagraphWithPaddingLeft).enablesState('Outdent').andGives('<ol>\n<li style="margin-left: 30px;">Test</li>\n</ol>'); // TODO: Padding-left renders weird, should it be removed?
 	ApplyingOL.to(ParagraphWithMarginAndPaddingLeft).enablesState('Outdent').andGives('<ol>\n<li style="margin-left: 90px;">Test</li>\n</ol>');
-	
+
 	queue.done();
 });
 
@@ -101,10 +101,10 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	} else {
 		ApplyingUL.to(EmptyHeading).gives('<ul>\n<li>\n<h1></h1>\n</li>\n</ul>');
 	}
-	
+
 	ApplyingUL.to(NonEmptyParagraph).gives('<ul>\n<li>Test</li>\n</ul>');
 	ApplyingUL.to(NonEmptyHeading).gives('<ul>\n<li>\n<h1>Test</h1>\n</li>\n</ul>');
-	
+
 	ApplyingUL.to(TableCellWithoutBrs).gives('<table><tbody><tr>\n<td>\n<ul>\n<li>Test</li>\n</ul>\n</td>\n<td>&nbsp;</td>\n</tr></tbody></table>');
 	ApplyingUL.to(TableCellWithBrsFirstLine).gives('<table><tbody><tr>\n<td>\n<ul>\n<li>Test</li>\n</ul>\nLine 2</td>\n<td>&nbsp;</td>\n</tr></tbody></table>');
 	ApplyingUL.to(TableCellWithBrsMiddleLine).gives('<table><tbody><tr>\n<td>Test\n<ul>\n<li>Line 2</li>\n</ul>\nLine 3</td>\n<td>&nbsp;</td>\n</tr></tbody></table>');
@@ -113,20 +113,20 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 
 	ApplyingUL.to(HeadingInOrderedList).gives('<ul>\n<li>\n<h2>Test</h2>\n</li>\n</ul>');
 	ApplyingUL.to(HeadingInUnorderedList).gives('<h2>Test</h2>');
-	
+
 	ApplyingUL.to(EndOfParagraphBeforeOL).gives('<ul>\n<li>Test</li>\n</ul>\n<ol>\n<li>Item</li>\n</ol>');
 	ApplyingUL.to(EndOfParagraphBeforeUL).gives('<ul>\n<li>Test</li>\n<li>Item</li>\n</ul>');
-	
+
 	ApplyingUL.to(StartOfParagraphAfterOL).gives('<ol>\n<li>Item</li>\n</ol>\n<ul>\n<li>Test</li>\n</ul>');
 	ApplyingUL.to(StartOfParagraphAfterUL).gives('<ul>\n<li>Item</li>\n<li>Test</li>\n</ul>');
 
 	ApplyingUL.to(ParagraphBetweenOrderedLists).gives('<ol>\n<li>Item1</li>\n</ol>\n<ul>\n<li>Test</li>\n</ul>\n<ol>\n<li>Item2</li>\n</ol>');
 	ApplyingUL.to(ParagraphBetweenUnorderedLists).gives('<ul>\n<li>Item1</li>\n<li>Test</li>\n<li>Item2</li>\n</ul>');
 	ApplyingUL.to(ParagraphBetweenMixedLists).gives('<ol>\n<li>Item1</li>\n</ol>\n<ul>\n<li>Test</li>\n<li>Item2</li>\n</ul>');
-	
+
 	ApplyingUL.to(EmptyOrderedListItem).gives('<ol>\n<li>Before</li>\n</ol>\n<ul>\n<li>&nbsp;</li>\n</ul>\n<ol>\n<li>After</li>\n</ol>');
 	ApplyingUL.to(EmptyUnorderedListItem).gives(EmptyULConvertedToP);
-	
+
 	ApplyingUL.to(NonEmptyOrderedListItem).gives('<ol>\n<li>Before</li>\n</ol>\n<ul>\n<li>Test</li>\n</ul>\n<ol>\n<li>After</li>\n</ol>');
 	ApplyingUL.to(NonEmptyUnorderedListItem).gives(NonEmptyULConvertedToP);
 
@@ -140,7 +140,7 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	ApplyingUL.to(NestedNonEmptyOrderedListItem).gives('<ol>\n<li>Before<ul>\n<li>Test</li>\n</ul></li>\n<li>After</li>\n</ol>');
 	ApplyingUL.to(NestedNonEmptyUnorderedListItem).gives('<ul>\n<li>Before</li>\n</ul>\n<p>Test</p>\n<ul>\n<li>After</li>\n</ul>');
 
-	
+
 	ApplyingUL.to(OrderedListItemWithNestedChild).gives('<ul>\n<li>Item1<ol>\n<li>Nested</li>\n</ol></li>\n</ul>');
 	ApplyingUL.to(UnorderedListItemWithNestedChild).gives('<p>Item1</p>\n<ul><li style="list-style-type: none;"><ul>\n<li>Nested</li>\n</ul></li>\n</ul>');
 
@@ -176,7 +176,7 @@ asyncTest('Collapsed Selection - Type Enter', function() {
 	TypingEnter.inA(EmptyUnorderedListItem).gives('<ul>\n<li>Before</li>\n<li></li>\n<li>&nbsp;</li>\n<li>After</li>\n</ul>');
 	TypingEnter.inA(NonEmptyOrderedListItem).gives('<ol>\n<li>Before</li>\n<li></li>\n<li>Test</li>\n<li>After</li>\n</ol>');
 	TypingEnter.inA(NonEmptyUnorderedListItem).gives('<ul>\n<li>Before</li>\n<li></li>\n<li>Test</li>\n<li>After</li>\n</ul>');
-	
+
 	TypingEnter.inA(NestedNonEmptyOrderedListItem).gives('<ol>\n<li>Before<ol>\n<li></li>\n<li>Test</li>\n</ol></li>\n<li>After</li>\n</ol>');
 	TypingEnter.inA(NestedNonEmptyUnorderedListItem).gives('<ul>\n<li>Before<ul>\n<li></li>\n<li>Test</li>\n</ul></li>\n<li>After</li>\n</ul>');
 
@@ -191,12 +191,12 @@ asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	ApplyingOL.to(MultiLiOlSelection).gives('<p>Item 1</p><p>Item 2</p>');
 	ApplyingOL.to(SingleLiUlSelection).gives('<ol>\n<li>Item 1</li>\n</ol>');
 	ApplyingOL.to(MultiLiUlSelection).gives('<ol>\n<li>Item 1</li>\n<li>Item 2</li>\n</ol>');
-	
+
 	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 
 	// TODO: Selection only in indented list.
-	
+
 	ApplyingOL.to(IndentedUlInUlCorrectSelection).gives('<ol>\n<li>Item 1<ol>\n<li>Indented</li>\n</ol></li>\n</ol>');
 	ApplyingOL.to(IndentedUlInUlIncorrectSelection).gives('<ol>\n<li>Item 1<ol>\n<li>Indented</li>\n</ol></li>\n</ol>');
 
@@ -212,12 +212,12 @@ asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
 	ApplyingUL.to(MultiLiOlSelection).gives('<ul>\n<li>Item 1</li>\n<li>Item 2</li>\n</ul>');
 	ApplyingUL.to(SingleLiUlSelection).gives('<p>Item 1</p>');
 	ApplyingUL.to(MultiLiUlSelection).gives('<p>Item 1</p><p>Item 2</p>');
-	
+
 	ApplyingUL.to(IndentedOlInOlCorrectSelection).gives('<ul>\n<li>Item 1<ul>\n<li>Indented</li>\n</ul></li>\n</ul>');
 	ApplyingUL.to(IndentedOlInOlIncorrectSelection).gives('<ul>\n<li>Item 1<ul>\n<li>Indented</li>\n</ul></li>\n</ul>');
 
 	// TODO: Selection only in indented list.
-	
+
 	ApplyingUL.to(IndentedUlInUlCorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 	ApplyingUL.to(IndentedUlInUlIncorrectSelection).gives('<p>Item 1</p><p>Indented</p>');
 
@@ -236,14 +236,15 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 	ApplyingOL.to(MultipleParagraphSelection).gives('<ol>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ol>');
 	ApplyingOL.to(SingleHeadingSelection).gives('<ol>\n<li>\n<h1>This is a test</h1>\n</li>\n</ol>');
 	ApplyingOL.to(MultipleHeadingSelection).gives('<ol>\n<li>\n<h1>This is a test</h1>\n</li>\n<li>\n<h1>Second paragraph</h1>\n</li>\n</ol>');
-	
+
 	ApplyingOL.to(SingleBlockSelection).gives('\n<div><ol>\n<li>This is a test</li>\n</ol></div>');
 	ApplyingOL.to(SingleBlockWithBrSelection).gives('\n<div><ol>\n<li>Item1</li>\n<li>Item2</li>\n</ol></div>');
 	ApplyingOL.to(MultipleBlockSelection).gives('<ol>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ol>');
 	ApplyingOL.to(MultipleBlockWithBrSelection).gives('<ol>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ol>');
 	ApplyingOL.to(MultipleBlockWithBrPartialSelection).gives('<ol>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ol>\n<div>Item4</div>');
+	ApplyingOL.to(MultipleBlockWithEmptyDivsAllSelected).gives('<div id=\"start\">&nbsp;</div><ol><li>a</li></ol><div>&nbsp;</div><ol><li>b</li></ol><div>&nbsp;</div><div id=\"end\">&nbsp;</div>');
 	ApplyingOL.to(ThreeBoldDivsWithBrSelection).gives('<ol><li><strong>One</strong></li><li><strong>Two</strong></li><li><strong>Three</strong></li></ol>');
-	
+
 	ApplyingOL.to(ParagraphToHeadingSelection).gives('<ol>\n<li>This is a test</li>\n<li>\n<h1>Second paragraph</h1>\n</li>\n</ol>');
 	ApplyingOL.to(ParagraphToBlockSelection).gives('<ol>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ol>');
 	ApplyingOL.to(HeadingToParagraphSelection).gives('<ol>\n<li>\n<h1>This is a test</h1>\n</li>\n<li>Second paragraph</li>\n</ol>');
@@ -260,13 +261,14 @@ asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', functio
 	ApplyingUL.to(MultipleParagraphSelection).gives('<ul>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ul>');
 	ApplyingUL.to(SingleHeadingSelection).gives('<ul>\n<li>\n<h1>This is a test</h1>\n</li>\n</ul>');
 	ApplyingUL.to(MultipleHeadingSelection).gives('<ul>\n<li>\n<h1>This is a test</h1>\n</li>\n<li>\n<h1>Second paragraph</h1>\n</li>\n</ul>');
-	
+
 	ApplyingUL.to(SingleBlockSelection).gives('\n<div><ul>\n<li>This is a test</li>\n</ul></div>');
 	ApplyingUL.to(SingleBlockWithBrSelection).gives('\n<div><ul>\n<li>Item1</li>\n<li>Item2</li>\n</ul></div>');
 	ApplyingUL.to(MultipleBlockSelection).gives('<ul>\n<li>This is a test</li>\n<li>Second paragraph</li>\n</ul>');
 	ApplyingUL.to(MultipleBlockWithBrSelection).gives('<ul>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ul>');
 	ApplyingUL.to(MultipleBlockWithBrPartialSelection).gives('<ul>\n<li>Item1</li>\n<li>Item2</li>\n<li>Item3</li>\n</ul>\n<div>Item4</div>');
 	ApplyingUL.to(MultipleBlockWithBrPartialSelectionAtEnd).gives('\n<div>Item1</div>\n<ul>\n<li>Item2</li>\n<li>Item3</li>\n<li>Item4</li>\n</ul>');
+	ApplyingUL.to(MultipleBlockWithEmptyDivsAllSelected).gives('<div id=\"start\">&nbsp;</div><ul><li>a</li></ul><div>&nbsp;</div><ul><li>b</li></ul><div>&nbsp;</div><div id=\"end\">&nbsp;</div>');
 	ApplyingUL.to(ThreeBoldDivsWithBrSelection).gives('<ul><li><strong>One</strong></li>\n<li><strong>Two</strong></li>\n<li><strong>Three</strong></li></ul>');
 
 	// TODO: Divs with BRs and Paragraphs.

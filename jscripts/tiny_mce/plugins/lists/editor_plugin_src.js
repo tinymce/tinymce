@@ -388,10 +388,12 @@
 						adjustIndentForNewList(li);
 						cleanupBr(br);
 					});
-					if (element.tagName === 'P' || selectedBlocks.length > 1) {
+					if (li) {
+					if (li.tagName === 'LI' && (element.tagName === 'P' || selectedBlocks.length > 1)) {
 						dom.split(li.parentNode.parentNode, li.parentNode);
 					}
 					attemptMergeWithAdjacent(li.parentNode, true);
+					}
 					return;
 				} else {
 					// Put the list around the element.
@@ -560,7 +562,7 @@
 				}
 			});
 
-			if (hasNonList || hasOppositeType || selectedBlocks.length === 0) {
+			if (hasNonList &&!hasSameType || hasOppositeType || selectedBlocks.length === 0) {
 				actions = {
 					'LI': changeList,
 					'H1': makeList,
@@ -667,9 +669,17 @@
 		process: function(actions) {
 			var t = this, sel = t.ed.selection, dom = t.ed.dom, selectedBlocks, r;
 
+			function isEmptyElement(element) {
+				var excludeBrsAndBookmarks = tinymce.grep(element.childNodes, function(n) {
+					return !(n.nodeName === 'BR' || n.nodeName === 'SPAN' && dom.getAttrib(n, 'data-mce-type') == 'bookmark'
+							|| n.nodeType == 3 && (n.nodeValue == String.fromCharCode(160) || n.nodeValue == ''));
+				});
+				return excludeBrsAndBookmarks.length === 0;
+			}
+
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
-				if (!element || element.nodeType !== 1) {
+				if (!element || element.nodeType !== 1 || selectedBlocks.length > 1 && isEmptyElement(element)) {
 					return;
 				}
 				element = findItemToOperateOn(element, dom);
