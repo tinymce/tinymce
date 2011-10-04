@@ -1,6 +1,6 @@
 tinyMCEPopup.requireLangPack();
 
-var detail = 50, strhex = "0123456789ABCDEF", i, isMouseDown = false, isMouseOver = false;
+var detail = 50, strhex = "0123456789abcdef", i, isMouseDown = false, isMouseOver = false;
 
 var colors = [
 	"#000000","#000033","#000066","#000099","#0000cc","#0000ff","#330000","#330033",
