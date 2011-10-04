@@ -266,10 +266,10 @@ function dechex(n) {
 }
 
 function computeColor(e) {
-	var x, y, partWidth, partDetail, imHeight, r, g, b, coef, i, finalCoef, finalR, finalG, finalB;
+	var x, y, partWidth, partDetail, imHeight, r, g, b, coef, i, finalCoef, finalR, finalG, finalB, pos = tinyMCEPopup.dom.getPos(e.target);
 
-	x = e.offsetX ? e.offsetX : (e.target ? e.clientX - e.target.x : 0);
-	y = e.offsetY ? e.offsetY : (e.target ? e.clientY - e.target.y : 0);
+	x = e.offsetX ? e.offsetX : (e.target ? e.clientX - pos.x : 0);
+	y = e.offsetY ? e.offsetY : (e.target ? e.clientY - pos.y : 0);
 
 	partWidth = document.getElementById('colors').width / 6;
 	partDetail = detail / 2;
