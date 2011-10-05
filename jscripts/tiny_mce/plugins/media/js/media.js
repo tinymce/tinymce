@@ -66,9 +66,10 @@
 
 	window.Media = {
 		init : function() {
-			var html, editor;
+			var html, editor, self = this;
 
-			this.editor = editor = tinyMCEPopup.editor;
+			self.editor = editor = tinyMCEPopup.editor;
+			self.defaultStates = self.getDefaultValues(editor);
 
 			// Setup file browsers and color pickers
 			get('filebrowsercontainer').innerHTML = getBrowserHTML('filebrowser','src','media','media');
@@ -80,7 +81,7 @@
 			get('audio_altsource2_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource2','audio_altsource2','media','media');
 			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','media','image');
 
-			html = this.getMediaListHTML('medialist', 'src', 'media', 'media');
+			html = self.getMediaListHTML('medialist', 'src', 'media', 'media');
 			if (html == "")
 				get("linklistrow").style.display = 'none';
 			else
@@ -104,11 +105,16 @@
 			if (isVisible('filebrowser_poster'))
 				get('video_poster').style.width = '220px';
 
-			editor.dom.setOuterHTML(get('media_type'), this.getMediaTypeHTML(editor));
+			editor.dom.setOuterHTML(get('media_type'), self.getMediaTypeHTML(editor));
 
-			this.data = clone(tinyMCEPopup.getWindowArg('data'));
-			this.dataToForm();
-			this.preview();
+			// set default values
+			tinymce.each(self.defaultStates, function(v, k) {
+				setVal(k, v);
+			});
+
+			self.data = clone(tinyMCEPopup.getWindowArg('data'));
+			self.dataToForm();
+			self.preview();
 
 			updateColor('bgcolor_pick', 'bgcolor');
 		},
@@ -128,28 +134,8 @@
 		},
 
 		moveStates : function(to_form, field) {
-			var data = this.data, editor = this.editor,
+			var data = this.data, editor = this.editor, self = this,
 				mediaPlugin = editor.plugins.media, ext, src, typeInfo, defaultStates, src;
-
-			defaultStates = {
-				// QuickTime
-				quicktime_autoplay : true,
-				quicktime_controller : true,
-
-				// Flash
-				flash_play : true,
-				flash_loop : true,
-				flash_menu : true,
-
-				// WindowsMedia
-				windowsmedia_autostart : true,
-				windowsmedia_enablecontextmenu : true,
-				windowsmedia_invokeurls : true,
-
-				// RealMedia
-				realmedia_autogotourl : true,
-				realmedia_imagestatus : true
-			};
 
 			function parseQueryParams(str) {
 				var out = {};
@@ -194,8 +180,9 @@
 								if ((type == 'video' || type == 'audio') && value === true)
 									value = name;
 
-								if (defaultStates[formItemName]) {
-									if (value !== defaultStates[formItemName]) {
+								var defaultValue = self.defaultStates[formItemName]
+								if (defaultValue) {
+									if (value !== defaultValue) {
 										value = "" + value;
 										list[name] = value;
 									}
@@ -443,6 +430,30 @@
 			
 			html += '</select>';
 			return html;
+		},
+
+		getDefaultValues : function(editor) {
+			var defaultValues = {
+				// QuickTime
+				quicktime_autoplay : true,
+				quicktime_controller : true,
+
+				// Flash
+				flash_play : true,
+				flash_loop : true,
+				flash_menu : true,
+
+				// WindowsMedia
+				windowsmedia_autostart : true,
+				windowsmedia_enablecontextmenu : true,
+				windowsmedia_invokeurls : true,
+
+				// RealMedia
+				realmedia_autogotourl : true,
+				realmedia_imagestatus : true
+			};
+			var userDefaultValues = editor.getParam("media_default_values", {});
+			return tinymce.extend(defaultValues, userDefaultValues);
 		}
 	};
 
