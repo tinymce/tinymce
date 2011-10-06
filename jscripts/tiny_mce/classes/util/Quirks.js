@@ -143,6 +143,10 @@
 		});
 	};
 
+	function ensureBodyHasRoleApplication(ed) {
+		document.body.setAttribute("role", "application");
+	}
+	
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
 			// WebKit
@@ -156,6 +160,7 @@
 			// IE
 			if (tinymce.isIE) {
 				emptyEditorWhenDeleting(ed);
+				ensureBodyHasRoleApplication(ed);
 			}
 
 			// Gecko
