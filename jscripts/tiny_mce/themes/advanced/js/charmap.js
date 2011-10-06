@@ -281,13 +281,21 @@ tinyMCEPopup.onInit.add(function() {
 function addKeyboardNavigation(){
 	var tableElm, cells, settings;
 
-	cells = tinyMCEPopup.dom.select(".charmaplink", "charmapgroup");
+	cells = tinyMCEPopup.dom.select("a.charmaplink", "charmapgroup");
 
 	settings ={
 		root: "charmapgroup",
 		items: cells
 	};
-
+	cells[0].tabindex=0;
+	tinyMCEPopup.dom.addClass(cells[0], "mceFocus");
+	if (tinymce.isGecko) {
+		cells[0].focus();		
+	} else {
+		setTimeout(function(){
+			cells[0].focus();
+		}, 100);
+	}
 	tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', settings, tinyMCEPopup.dom);
 }
 
