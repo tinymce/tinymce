@@ -69,7 +69,6 @@
 			var html, editor, self = this;
 
 			self.editor = editor = tinyMCEPopup.editor;
-			self.defaultStates = self.getDefaultValues(editor);
 
 			// Setup file browsers and color pickers
 			get('filebrowsercontainer').innerHTML = getBrowserHTML('filebrowser','src','media','media');
@@ -107,11 +106,7 @@
 
 			editor.dom.setOuterHTML(get('media_type'), self.getMediaTypeHTML(editor));
 
-			// set default values
-			tinymce.each(self.defaultStates, function(v, k) {
-				setVal(k, v);
-			});
-
+			self.setDefaultDialogSettings(editor);
 			self.data = clone(tinyMCEPopup.getWindowArg('data'));
 			self.dataToForm();
 			self.preview();
@@ -134,8 +129,28 @@
 		},
 
 		moveStates : function(to_form, field) {
-			var data = this.data, editor = this.editor, self = this,
+			var data = this.data, editor = this.editor,
 				mediaPlugin = editor.plugins.media, ext, src, typeInfo, defaultStates, src;
+
+			defaultStates = {
+				// QuickTime
+				quicktime_autoplay : true,
+				quicktime_controller : true,
+
+				// Flash
+				flash_play : true,
+				flash_loop : true,
+				flash_menu : true,
+
+				// WindowsMedia
+				windowsmedia_autostart : true,
+				windowsmedia_enablecontextmenu : true,
+				windowsmedia_invokeurls : true,
+
+				// RealMedia
+				realmedia_autogotourl : true,
+				realmedia_imagestatus : true
+			};
 
 			function parseQueryParams(str) {
 				var out = {};
@@ -180,9 +195,8 @@
 								if ((type == 'video' || type == 'audio') && value === true)
 									value = name;
 
-								var defaultValue = self.defaultStates[formItemName]
-								if (defaultValue) {
-									if (value !== defaultValue) {
+								if (defaultStates[formItemName]) {
+									if (value !== defaultStates[formItemName]) {
 										value = "" + value;
 										list[name] = value;
 									}
@@ -432,28 +446,11 @@
 			return html;
 		},
 
-		getDefaultValues : function(editor) {
-			var defaultValues = {
-				// QuickTime
-				quicktime_autoplay : true,
-				quicktime_controller : true,
-
-				// Flash
-				flash_play : true,
-				flash_loop : true,
-				flash_menu : true,
-
-				// WindowsMedia
-				windowsmedia_autostart : true,
-				windowsmedia_enablecontextmenu : true,
-				windowsmedia_invokeurls : true,
-
-				// RealMedia
-				realmedia_autogotourl : true,
-				realmedia_imagestatus : true
-			};
-			var userDefaultValues = editor.getParam("media_default_values", {});
-			return tinymce.extend(defaultValues, userDefaultValues);
+		setDefaultDialogSettings : function(editor) {
+			var defaultDialogSettings = editor.getParam("media_dialog_defaults", {});
+			tinymce.each(defaultDialogSettings, function(v, k) {
+				setVal(k, v);
+			});
 		}
 	};
 
