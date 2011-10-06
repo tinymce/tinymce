@@ -66,9 +66,9 @@
 
 	window.Media = {
 		init : function() {
-			var html, editor;
+			var html, editor, self = this;
 
-			this.editor = editor = tinyMCEPopup.editor;
+			self.editor = editor = tinyMCEPopup.editor;
 
 			// Setup file browsers and color pickers
 			get('filebrowsercontainer').innerHTML = getBrowserHTML('filebrowser','src','media','media');
@@ -80,7 +80,7 @@
 			get('audio_altsource2_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource2','audio_altsource2','media','media');
 			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','media','image');
 
-			html = this.getMediaListHTML('medialist', 'src', 'media', 'media');
+			html = self.getMediaListHTML('medialist', 'src', 'media', 'media');
 			if (html == "")
 				get("linklistrow").style.display = 'none';
 			else
@@ -104,11 +104,12 @@
 			if (isVisible('filebrowser_poster'))
 				get('video_poster').style.width = '220px';
 
-			editor.dom.setOuterHTML(get('media_type'), this.getMediaTypeHTML(editor));
+			editor.dom.setOuterHTML(get('media_type'), self.getMediaTypeHTML(editor));
 
-			this.data = clone(tinyMCEPopup.getWindowArg('data'));
-			this.dataToForm();
-			this.preview();
+			self.setDefaultDialogSettings(editor);
+			self.data = clone(tinyMCEPopup.getWindowArg('data'));
+			self.dataToForm();
+			self.preview();
 
 			updateColor('bgcolor_pick', 'bgcolor');
 		},
@@ -443,6 +444,13 @@
 			
 			html += '</select>';
 			return html;
+		},
+
+		setDefaultDialogSettings : function(editor) {
+			var defaultDialogSettings = editor.getParam("media_dialog_defaults", {});
+			tinymce.each(defaultDialogSettings, function(v, k) {
+				setVal(k, v);
+			});
 		}
 	};
 
