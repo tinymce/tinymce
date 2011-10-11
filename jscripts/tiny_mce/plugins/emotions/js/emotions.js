@@ -1,8 +1,29 @@
 tinyMCEPopup.requireLangPack();
 
 var EmotionsDialog = {
+	addKeyboardNavigation: function(){
+		var tableElm, cells, settings;
+			
+		cells = tinyMCEPopup.dom.select("a.emoticon_link", "emoticon_table");
+			
+		settings ={
+			root: "emoticon_table",
+			items: cells
+		};
+		cells[0].tabindex=0;
+		tinyMCEPopup.dom.addClass(cells[0], "mceFocus");
+		if (tinymce.isGecko) {
+			cells[0].focus();		
+		} else {
+			setTimeout(function(){
+				cells[0].focus();
+			}, 100);
+		}
+		tinyMCEPopup.editor.windowManager.createInstance('tinymce.ui.KeyboardNavigation', settings, tinyMCEPopup.dom);
+	}, 
 	init : function(ed) {
 		tinyMCEPopup.resizeToInnerSize();
+		this.addKeyboardNavigation();
 	},
 
 	insert : function(file, title) {
