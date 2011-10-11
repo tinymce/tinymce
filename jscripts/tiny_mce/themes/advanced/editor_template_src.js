@@ -1221,7 +1221,7 @@
 			ed.windowManager.open({
 				url : this.url + '/charmap.htm',
 				width : 550 + parseInt(ed.getLang('advanced.charmap_delta_width', 0)),
-				height : 250 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
+				height : 260 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url
