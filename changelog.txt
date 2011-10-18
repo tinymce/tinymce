@@ -6,6 +6,7 @@ Version 3.4.x (2011-10-xx)
 	Added quirk for IE ensuring that the body of the document containing tinyMCE has a role="application" for accessibility.
 	Fixed bug where the advanced color picker wasn't working properly on FF 7.
 	Fixed issue where the advanced color picker was producing uppercase hex codes.
+	Fixed bug where IE 8 could throw exceptions if the contents contained resizable content elements.
 Version 3.4.6 (2011-09-29)
 	Fixed bug where list items were being created for empty divs.
 	Added support in Media plugin for audio media using the embed tag

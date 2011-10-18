@@ -258,7 +258,7 @@
 				parent = node.parentNode;
 				root = dom.getRoot().parentNode;
 
-				while (parent != root) {
+				while (parent != root && parent.nodeType !== 9) {
 					children = parent.children;
 
 					i = children.length;
