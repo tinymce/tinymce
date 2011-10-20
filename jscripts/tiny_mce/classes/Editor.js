@@ -3227,7 +3227,7 @@
 						var target = t.selection.getStart();
 
 						if (target !== t.getBody()) {
-							t.dom.removeAllAttribs(target);
+							t.dom.setAttrib(target, "style", null);
 
 							each(template, function(attr) {
 								target.setAttributeNode(attr.cloneNode(true));
