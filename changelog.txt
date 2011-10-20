@@ -1,4 +1,5 @@
 Version 3.4.x (2011-10-xx)
+	Fixed bug where pressing backspace would not delete HRs in Firefox and IE when next to an empty paragraph.
 	Fixed bug where deleting part of the link text can cause a link with no destination to be saved.
 	Made emoticons dialog use the keyboard naviation.
 	Added navigation instructions to the symbols dialog.

@@ -70,6 +70,11 @@ provide([
 			{"title": "Indenting lists", "url": "lists_indenting.html", "jsrobot": true},
 			{"title": "Forced BRs", "url": "lists_forced_brs.html", "jsrobot": true},
 			{"title": "General", "url": "lists_general.html", "jsrobot": true}
+		]},
+
+		{"title": "Quirks", "tests": [
+			{"title": "Firefox", "url": "quirk_firefox.html", "jsrobot": true},
+			{"title": "Internet Explorer 8", "url": "quirk_ie8.html", "jsrobot": true}
 		]}
 	]
 ]);

@@ -99,6 +99,28 @@
 	};
 
 	/**
+	 * Backspacing in FireFox/IE from a paragraph into a horizontal rule results in a floating text node because the
+	 * browser just deletes the paragraph - the browser fails to merge the text node with a horizontal rule so it is
+	 * left there. TinyMCE sees a floating text node and wraps it in a paragraph on the key up event (ForceBlocks.js
+	 * addRootBlocks), meaning the action does nothing. With this code, FireFox/IE matche the behaviour of other
+     * browsers
+	 */
+	function removeHrOnBackspace(ed) {
+		ed.onKeyDown.add(function(ed, e) {
+			if (e.keyCode === BACKSPACE) {
+				if (ed.selection.isCollapsed() && ed.selection.getRng(true).startOffset === 0) {
+					var node = ed.selection.getNode();
+					var previousSibling = node.previousSibling;
+					if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "hr") {
+						ed.dom.remove(previousSibling);
+						tinymce.dom.Event.cancel(e);
+					}
+				}
+			}
+		})
+	}
+
+	/**
 	 * Firefox 3.x has an issue where the body element won't get proper focus if you click out
 	 * side it's rectangle.
 	 */
@@ -159,12 +181,14 @@
 
 			// IE
 			if (tinymce.isIE) {
+				removeHrOnBackspace(ed);
 				emptyEditorWhenDeleting(ed);
 				ensureBodyHasRoleApplication(ed);
 			}
 
 			// Gecko
 			if (tinymce.isGecko) {
+				removeHrOnBackspace(ed);
 				focusBody(ed);
 			}
 		}
