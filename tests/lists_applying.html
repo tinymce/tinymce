@@ -94,7 +94,6 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 });
 
 asyncTest('Collapsed Selection - Apply UL Actions', function() {
-	expect(14);
 	ApplyingUL.to(EmptyParagraph).gives('<ul>\n<li></li>\n</ul>');
 	if (tinymce.isIE && !tinymce.isIE9){
 		ApplyingUL.to(EmptyHeading).gives('<ul>\n<li>\n<h1>&nbsp;</h1>\n</li>\n</ul>');

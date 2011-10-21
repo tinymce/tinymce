@@ -1,4 +1,9 @@
 Version 3.4.x (2011-10-xx)
+	Fixed bug where adding a bullet between two existing bullets adds an extra one
+	Fixed bug where trying to insert a new entry midway through a bulleted list fails dismally when the next entry is tabbed in.
+	Fixed bug where pressing enter on an empty list item does not outdent properly in FF
+	Fixed bug where adding a heading after a list item in a table cell changes all styles in that cell
+	Fixed bug where hitting enter to exit from a bullet list moves cursor to the top of the page in Firefox.
 	Fixed bug where pressing backspace would not delete HRs in Firefox and IE when next to an empty paragraph.
 	Fixed bug where deleting part of the link text can cause a link with no destination to be saved.
 	Made emoticons dialog use the keyboard naviation.

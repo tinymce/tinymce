@@ -41,7 +41,7 @@
 					node = blockElm.firstChild;
 
 					// Ignore empty text nodes
-					while (node.nodeType == 3 && node.nodeValue.length == 0)
+					while (node && node.nodeType == 3 && node.nodeValue.length == 0)
 						node = node.nextSibling;
 
 					if (node && node.nodeName === 'SPAN') {

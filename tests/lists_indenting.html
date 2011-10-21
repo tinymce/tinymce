@@ -65,7 +65,6 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 });
 
 asyncTest('Collapsed Selection - Outdent Actions', function() {
-	expect(8);
 	Outdenting.a(NonEmptyParagraph).disablesState('outdent').andGives('<p>Test</p>');
 	Outdenting.a(NonEmptyHeading).disablesState('outdent').andGives('<h1>Test</h1>');
 	Outdenting.a(ParagraphWithMarginLeft).enablesState('outdent').andGives('<p style="margin-left: 30px;">Test</p>');
