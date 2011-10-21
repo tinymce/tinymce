@@ -1778,7 +1778,8 @@
 							}
 							// Do we have pending formats and is the selection moved has moved
 							if (hasPending() && !tinymce.dom.RangeUtils.compareRanges(pendingFormats.lastRng, selection.getRng())) {
-								var foundCaret = false;
+								var foundCaret = false, sibling;
+
 								each(dom.select('font,span'), function(node) {
 									var textNode, rng;
 
@@ -1786,6 +1787,12 @@
 									if (isCaretNode(node)) {
 										foundCaret = true;
 										textNode = node.firstChild;
+										sibling = node.previousSibling;
+
+										// Move the caret node to previous sibling is it's a inline format element
+										if (sibling && /^(strong|em|b|i|span)$/i.test(sibling.nodeName)) {
+											sibling.appendChild(node);
+										}
 
 										// Find the first text node within node
 										while (textNode && textNode.nodeType != 3)

@@ -14,6 +14,7 @@ Version 3.4.x (2011-10-xx)
 	Fixed bug where the advanced color picker wasn't working properly on FF 7.
 	Fixed issue where the advanced color picker was producing uppercase hex codes.
 	Fixed bug where IE 8 could throw exceptions if the contents contained resizable content elements.
+	Fixed bug where caret formatting wouldn't be correctly applied to previous sibling on WebKit.
 Version 3.4.6 (2011-09-29)
 	Fixed bug where list items were being created for empty divs.
 	Added support in Media plugin for audio media using the embed tag
