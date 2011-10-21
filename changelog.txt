@@ -1,3 +1,5 @@
+Version 3.5 (2011-xx-xx)
+	Added new event class that is faster and enables support for faking events.
 Version 3.4.x (2011-10-xx)
 	Fixed bug where adding a bullet between two existing bullets adds an extra one
 	Fixed bug where trying to insert a new entry midway through a bulleted list fails dismally when the next entry is tabbed in.

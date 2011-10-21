@@ -2788,17 +2788,32 @@
 		remove : function() {
 			var t = this, e = t.getContainer();
 
-			t.removed = 1; // Cancels post remove event execution
-			t.hide();
+			if (!t.removed) {
+				t.removed = 1; // Cancels post remove event execution
+				t.hide();
 
-			t.execCallback('remove_instance_callback', t);
-			t.onRemove.dispatch(t);
+				// Remove all events
 
-			// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
-			t.onExecCommand.listeners = [];
+				// Don't clear the window or document if content editable
+				// is enabled since other instances might still be present
+				if (!t.settings.content_editable) {
+					Event.clear(t.getWin());
+					Event.clear(t.getDoc());
+				}
 
-			tinymce.remove(t);
-			DOM.remove(e);
+				Event.clear(t.getBody());
+				Event.clear(t.formElement);
+				Event.clear(e);
+
+				t.execCallback('remove_instance_callback', t);
+				t.onRemove.dispatch(t);
+
+				// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
+				t.onExecCommand.listeners = [];
+
+				tinymce.remove(t);
+				DOM.remove(e);
+			}
 		},
 
 		/**
@@ -2828,18 +2843,6 @@
 				t.controlManager.destroy();
 				t.selection.destroy();
 				t.dom.destroy();
-
-				// Remove all events
-
-				// Don't clear the window or document if content editable
-				// is enabled since other instances might still be present
-				if (!t.settings.content_editable) {
-					Event.clear(t.getWin());
-					Event.clear(t.getDoc());
-				}
-
-				Event.clear(t.getBody());
-				Event.clear(t.formElement);
 			}
 
 			if (t.formElement) {

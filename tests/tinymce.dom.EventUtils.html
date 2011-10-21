@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Unit tests for DOM Selection IE implementation</title>
+<title>Unit tests for the EventUtils class</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
 <script src="http://code.jquery.com/qunit/qunit-git.js"></script>
@@ -11,7 +11,345 @@
 </head>
 <body>
 <script type="text/javascript">
+var eventUtils = tinymce.dom.Event;
+
 module("tinymce.dom.Event", {
+	teardown: function() {
+		eventUtils.clean(window);
+	}
+});
+
+test("unbind all", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click = true;
+	});
+
+	eventUtils.bind(window, 'keydown', function(e) {
+		result.keydown1 = true;
+	});
+
+	eventUtils.bind(window, 'keydown', function(e) {
+		result.keydown2 = true;
+	});
+
+	result = {};
+	eventUtils.fire(window, 'click');
+	eventUtils.fire(window, 'keydown');
+	deepEqual(result, {click: true, keydown1: true, keydown2: true});
+
+	eventUtils.unbind(window);
+	result = {};
+	eventUtils.fire(window, 'click');
+	eventUtils.fire(window, 'keydown');
+	deepEqual(result, {});
+});
+
+test("unbind event", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click = true;
+	});
+
+	eventUtils.bind(window, 'keydown', function(e) {
+		result.keydown1 = true;
+	});
+
+	eventUtils.bind(window, 'keydown', function(e) {
+		result.keydown2 = true;
+	});
+
+	result = {};
+	eventUtils.fire(window, 'click');
+	eventUtils.fire(window, 'keydown');
+	deepEqual(result, {click: true, keydown1: true, keydown2: true});
+
+	eventUtils.unbind(window, 'click');
+	result = {};
+	eventUtils.fire(window, 'click');
+	eventUtils.fire(window, 'keydown');
+	deepEqual(result, {keydown1: true, keydown2: true});
+});
+
+test("unbind event non existing", function() {
+	eventUtils.unbind(window, 'noevent');
+});
+
+test("unbind callback", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click = true;
+	});
+
+	eventUtils.bind(window, 'keydown', function(e) {
+		result.keydown1 = true;
+	});
+
+	function callback2(e) {
+		result.keydown2 = true;
+	};
+
+	eventUtils.bind(window, 'keydown', callback2);
+
+	result = {};
+	eventUtils.fire(window, 'click');
+	eventUtils.fire(window, 'keydown');
+	deepEqual(result, {click: true, keydown1: true, keydown2: true});
+
+	eventUtils.unbind(window, 'keydown', callback2);
+	result = {};
+	eventUtils.fire(window, 'click');
+	eventUtils.fire(window, 'keydown');
+	deepEqual(result, {click: true, keydown1: true});
+});
+
+test("unbind multiple", function() {
+	var result;
+
+	eventUtils.bind(window, 'mouseup mousedown click', function(e) {
+		result[e.type] = true;
+	});
+
+	eventUtils.unbind(window, 'mouseup mousedown');
+
+	result = {};
+	eventUtils.fire(window, 'mouseup');
+	eventUtils.fire(window, 'mousedown');
+	eventUtils.fire(window, 'click');
+	deepEqual(result, {click: true});
+});
+
+test("bind multiple", function() {
+	var result;
+
+	eventUtils.bind(window, 'mouseup mousedown', function(e) {
+		result[e.type] = true;
+	});
+
+	result = {};
+	eventUtils.fire(window, 'mouseup');
+	eventUtils.fire(window, 'mousedown');
+	eventUtils.fire(window, 'click');
+	deepEqual(result, {mouseup: true, mousedown: true});
+});
+
+test("bind/fire bubbling", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.window = true;
+	});
+
+	eventUtils.bind(document, 'click', function() {
+		result.document = true;
+	});
+
+	eventUtils.bind(document.body, 'click', function() {
+		result.body = true;
+	});
+
+	eventUtils.bind(document.getElementById('content'), 'click', function() {
+		result.content = true;
+	});
+
+	eventUtils.bind(document.getElementById('inner'), 'click', function() {
+		result.inner = true;
+	});
+
+	result = {};
+	eventUtils.fire(window, 'click');
+	deepEqual(result, {window: true});
+
+	result = {};
+	eventUtils.fire(document, 'click');
+	deepEqual(result, {document: true, window: true});
+
+	result = {};
+	eventUtils.fire(document.body, 'click');
+	deepEqual(result, {body: true, document: true, window: true});
+
+	result = {};
+	eventUtils.fire(document.getElementById('content'), 'click');
+	deepEqual(result, {content: true, body: true, document: true, window: true});
+
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {inner: true, content: true, body: true, document: true, window: true});
+});
+
+test("bind/fire stopImmediatePropagation", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click1 = true;
+	});
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click2 = true;
+		e.stopImmediatePropagation();
+	});
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click3 = true;
+	});
+
+	result = {};
+	eventUtils.fire(window, 'click');
+	deepEqual(result, {click1: true, click2: true});
+});
+
+test("bind/fire stopPropagation", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click1 = true;
+	});
+
+	eventUtils.bind(document.body, 'click', function(e) {
+		result.click2 = true;
+	});
+
+	eventUtils.bind(document.getElementById('inner'), 'click', function(e) {
+		result.click3 = true;
+		e.stopPropagation();
+	});
+
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {click3: true});
+});
+
+test("clean window", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click1 = true;
+	});
+
+	eventUtils.bind(document.body, 'click', function(e) {
+		result.click2 = true;
+	});
+
+	eventUtils.bind(document.getElementById('content'), 'click', function(e) {
+		result.click3 = true;
+	});
+
+	eventUtils.bind(document.getElementById('inner'), 'click', function(e) {
+		result.click4 = true;
+	});
+
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {click1: true, click2: true, click3: true, click4: true});
+
+	eventUtils.clean(window);
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {});
+});
+
+test("clean document", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click1 = true;
+	});
+
+	eventUtils.bind(document, 'click', function(e) {
+		result.click2 = true;
+	});
+
+	eventUtils.bind(document.body, 'click', function(e) {
+		result.click3 = true;
+	});
+
+	eventUtils.bind(document.getElementById('content'), 'click', function(e) {
+		result.click4 = true;
+	});
+
+	eventUtils.bind(document.getElementById('inner'), 'click', function(e) {
+		result.click5 = true;
+	});
+
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {click1: true, click2: true, click3: true, click4: true, click5: true});
+
+	eventUtils.clean(document);
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {click1: true});
+});
+
+test("clean element", function() {
+	var result;
+
+	eventUtils.bind(window, 'click', function(e) {
+		result.click1 = true;
+	});
+
+	eventUtils.bind(document.body, 'click', function(e) {
+		result.click2 = true;
+	});
+
+	eventUtils.bind(document.getElementById('content'), 'click', function(e) {
+		result.click3 = true;
+	});
+
+	eventUtils.bind(document.getElementById('inner'), 'click', function(e) {
+		result.click4 = true;
+	});
+
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {click1: true, click2: true, click3: true, click4: true});
+
+	eventUtils.clean(document.getElementById('content'));
+	result = {};
+	eventUtils.fire(document.getElementById('inner'), 'click');
+	deepEqual(result, {click1: true, click2: true});
+});
+
+test("mouseenter/mouseleave bind/unbind", function() {
+	var result = {};
+
+	eventUtils.bind(document.body, 'mouseenter mouseleave', function(e) {
+		result[e.type] = true;
+	});
+
+	eventUtils.fire(document.body, 'mouseenter');
+	eventUtils.fire(document.body, 'mouseleave');
+
+	deepEqual(result, {mouseenter: true, mouseleave: true});
+
+	result = {};
+	eventUtils.clean(document.body);
+	eventUtils.fire(document.body, 'mouseenter');
+	eventUtils.fire(document.body, 'mouseleave');
+	deepEqual(result, {});
+});
+
+test("focusin/focusout bind/unbind", function() {
+	var result = {};
+
+	eventUtils.bind(document.body, 'focusin focusout', function(e) {
+		result[e.type] = result[e.type] ? ++result[e.type] : 1;
+	});
+
+	document.getElementById('inner').focus();
+	document.getElementById('content').focus();
+
+	deepEqual(result, {focusin: 2, focusout: 1});
+});
+
+test("bind unbind fire clean on null", function() {
+	eventUtils.bind(null, 'click', function() {});
+	eventUtils.unbind(null, 'click', function() {});
+	eventUtils.fire(null, {});
+	eventUtils.clean(null);
 });
 
 /**
@@ -149,6 +487,8 @@ function fakeKeyEvent(e, na, o) {
 	<div id="qunit-testrunner-toolbar"></div>
 	<h2 id="qunit-userAgent"></h2>
 	<ol id="qunit-tests"></ol>
-	<div id="content"></div>
+	<div id="content" tabindex="0">
+		<div id="inner" tabindex="0"></div>
+	</div>
 </body>
 </html>

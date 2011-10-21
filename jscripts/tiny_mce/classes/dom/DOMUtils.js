@@ -106,6 +106,7 @@
 				}
 			}
 
+			t.events = s.ownEvents ? new tinymce.dom.EventUtils() : tinymce.dom.Event;
 			tinymce.addUnload(t.destroy, t);
 		},
 
@@ -1623,9 +1624,6 @@
 		destroy : function(s) {
 			var t = this;
 
-			if (t.events)
-				t.events.destroy();
-
 			t.win = t.doc = t.root = t.events = null;
 
 			// Manual destroy then remove unload handler
@@ -1771,12 +1769,7 @@
 		 * @return {function} Function callback handler the same as the one passed in.
 		 */
 		bind : function(target, name, func, scope) {
-			var t = this;
-
-			if (!t.events)
-				t.events = new tinymce.dom.EventUtils();
-
-			return t.events.add(target, name, func, scope || this);
+			return this.events.add(target, name, func, scope || this);
 		},
 
 		/**
@@ -1789,12 +1782,7 @@
 		 * @return {bool/Array} Bool state if true if the handler was removed or an array with states if multiple elements where passed in.
 		 */
 		unbind : function(target, name, func) {
-			var t = this;
-
-			if (!t.events)
-				t.events = new tinymce.dom.EventUtils();
-
-			return t.events.remove(target, name, func);
+			return this.events.remove(target, name, func);
 		},
 
 		// #ifdef debug

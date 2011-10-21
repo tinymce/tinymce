@@ -222,7 +222,7 @@
 				if (e && e.nodeName.toLowerCase() == 'a' && (c = e.getAttribute('data-mce-color')))
 					t.setColor(c);
 
-				return Event.cancel(e); // Prevent IE auto save warning
+				return false; // Prevent IE auto save warning
 			});
 
 			return w;

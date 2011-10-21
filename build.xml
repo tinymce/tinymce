@@ -93,11 +93,11 @@
 			<fileset dir="${classes_dir}" includes="html/Serializer.js" />
 
 			<!-- tinymce.dom.* -->
+			<fileset dir="${classes_dir}" includes="dom/EventUtils.js" />
 			<fileset dir="${classes_dir}" includes="dom/DOMUtils.js" />
 			<fileset dir="${classes_dir}" includes="dom/Range.js" />
 			<fileset dir="${classes_dir}" includes="dom/TridentSelection.js" />
 			<fileset dir="${classes_dir}" includes="dom/Sizzle.js" />
-			<fileset dir="${classes_dir}" includes="dom/EventUtils.js" />
 			<fileset dir="${classes_dir}" includes="dom/Element.js" />
 			<fileset dir="${classes_dir}" includes="dom/Selection.js" />
 			<fileset dir="${classes_dir}" includes="dom/Serializer.js" />
