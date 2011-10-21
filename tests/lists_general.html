@@ -34,7 +34,7 @@ asyncTest('Escape unordered list by pressing enter on last empty li', function()
 				var list = editor.dom.getParent(node, 'ol,ul');
 				equals(editor.dom.select('li').length, 1);
 				ok(list === null, "selection must be outside of list");
-				queue.done();
+				start();
 			}, editor.selection.getNode());
 		}, editor.selection.getNode());
 	}, editor.selection.getNode());
@@ -50,7 +50,7 @@ asyncTest('Escape ordered list by pressing enter on last empty li', function() {
 				var list = editor.dom.getParent(node, 'ol,ul');
 				equals(editor.dom.select('li').length, 1);
 				ok(list === null, "selection must be outside of list");
-				queue.done();
+				start();
 			}, editor.selection.getNode());
 		}, editor.selection.getNode());
 	}, editor.selection.getNode());
@@ -62,7 +62,7 @@ asyncTest('Caret positioned correctly after outdenting on non-last empty li', fu
 	robot.type(TAB, true, function() {
 		var tagName = editor.selection.getNode().tagName;
 		equals('P', tagName);
-		queue.done();
+		start();
 	}, editor.selection.getNode());
 });
 
@@ -73,7 +73,7 @@ asyncTest('Caret position correctly after pressing enter on li with text', funct
 		var node = editor.selection.getNode();
 		equals(editor.getContent(), "<ol><li>a<ol><li>b</li></ol></li></ol>");
 		equals(node.parentNode.lastChild, node);
-		queue.done();
+		start();
 	}, editor.selection.getNode());
 });
 
@@ -83,7 +83,7 @@ asyncTest('Outdent on enter when setting is set', function() {
 	setSelection('li ol li:nth-child(2)', 0);
 	robot.type(ENTER, false, function(){
 		equals(editor.getContent(), "<ol><li>a<ol><li>b</li></ol></li><li></li></ol>");
-		queue.done();
+		start();
 	}, editor.selection.getNode());
 });
 
@@ -92,7 +92,7 @@ asyncTest('Outdent from sublist using shift-tab keys', function() {
 	setSelection('li ul li', 0);
 	robot.type(TAB, true, function(){
 		equals(editor.getContent(), "<ul><li>a</li><li>b</li></ul>");
-		queue.done();
+		start();
 	}, editor.selection.getNode());
 });
 
@@ -101,7 +101,7 @@ asyncTest('Caret positioned correctly after escaping list and applying formattin
 	// When we have outdented from a sub list item to the outmost level no marker is shown and we can't exit the list by
 	// pressing enter. Pressing enter correctly exists the list.
 	if (tinymce.isGecko) {
-		queue.done();
+		start();
 	}
 
 	editor.settings.list_outdent_on_enter = true;
@@ -114,7 +114,7 @@ asyncTest('Caret positioned correctly after escaping list and applying formattin
 				var node = editor.selection.getNode();
 				var list = editor.dom.getParent(node, 'ol,ul');
 				ok(list === null, "selection must be outside of list");
-				queue.done();
+				start();
 			}, editor.selection.getNode());
 		}, editor.selection.getNode());
 	}, editor.selection.getNode());

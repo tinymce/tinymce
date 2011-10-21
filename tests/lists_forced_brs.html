@@ -34,7 +34,7 @@ asyncTest('Force BRs - Expanded Selection, List Types - Unordered List Action', 
 
 	ApplyingUL.to(IndentedUlInUlCorrectSelection).gives('<p>Item 1<br />Indented</p>');
 	ApplyingUL.to(IndentedUlInUlIncorrectSelection).gives('<p>Item 1<br />Indented</p>');
-	queue.done();
+	start();
 });
 
 asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', function() {
@@ -49,7 +49,7 @@ asyncTest('Force BRs - Expanded Selection, List Types - Ordered List Action', fu
 	
 	ApplyingOL.to(IndentedOlInOlCorrectSelection).gives('<p>Item 1<br />Indented</p>');
 	ApplyingOL.to(IndentedOlInOlIncorrectSelection).gives('<p>Item 1<br />Indented</p>');
-	queue.done();
+	start();
 });
 
 asyncTest('Force BRs - Selection boundaries at BR', function() {
@@ -60,7 +60,7 @@ asyncTest('Force BRs - Selection boundaries at BR', function() {
 		ApplyingOL.to(SelectionStartingAtBr).gives('<p>Before</p><ol><li>Item</li></ol>');
 		ApplyingUL.to(SelectionStartingAtBr).gives('<p>Before</p><ul><li>Item</li></ul>');
 	}
-	queue.done();
+	start();
 });
 var initTinyFunction = function(){
 	tinyMCE.init({

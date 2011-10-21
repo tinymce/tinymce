@@ -26,7 +26,7 @@
 					var actual = editor.getContent();
 					var cleaned = actual.replace("<br />","");
 					equals(cleaned, expected);
-					queue.done();
+					start();
 				}, editor.getBody())
 			}, editor.getBody());
 		}
@@ -56,7 +56,7 @@
 			editor.execCommand('formatBlock', false, 'h1');
 			equals(editor.dom.select('#a')[0].tagName, 'H1');
 			equals(editor.dom.select('#b')[0].tagName, 'DIV');
-			queue.done();
+			start();
 		});
 
 		var initTinyFunction = function(){

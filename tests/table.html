@@ -38,14 +38,14 @@ if (tinymce.isWebKit) {
 			var expected = '<table>\n<tbody>\n<tr>\n<td>\n<p>g</p>\n</td>\n<td>\n<p>second cell</p>\n</td>\n</tr>\n</tbody>\n</table>';
 			var actual = editor.getContent();
 			equals(actual, expected);
-			queue.done();
+			start();
 		}, editor.getBody());
 	
 	
 	});
 } else {
 	asyncTest('Empty stub', function() {
-		queue.done();
+		start();
 	});
 }
 
@@ -58,7 +58,7 @@ function testCursorKey(html, nodeToSelect, keyCode, expected) {
 		var node = editor.selection.getNode();
 		var actual = node.firstChild.nodeValue;
 		equals(actual, expected);
-		queue.done();
+		start();
 	}, editor.getBody());
 }
 
