@@ -165,10 +165,38 @@
 		});
 	};
 
+	/**
+	 * Fire a nodeChanged when the selection is changed on WebKit this fixes selection issues on iOS5. It only fires the nodeChange
+	 * event every 50ms since it would other wise update the UI when you type and it hogs the CPU.
+	 */
+	function selectionChangeNodeChanged(ed) {
+		var lastRng, selectionTimer;
+
+		ed.dom.bind(ed.getDoc(), 'selectionchange', function() {
+			if (selectionTimer) {
+				clearTimeout(selectionTimer);
+				selectionTimer = 0;
+			}
+
+			selectionTimer = window.setTimeout(function() {
+				var rng = ed.selection.getRng();
+
+				// Compare the ranges to see if it was a real change or not
+				if (!lastRng || !tinymce.dom.RangeUtils.compareRanges(rng, lastRng)) {
+					ed.nodeChanged();
+					lastRng = rng;
+				}
+			}, 50);
+		});
+	}
+
+	/**
+	 * Screen readers on IE needs to have the role application set on the body.
+	 */
 	function ensureBodyHasRoleApplication(ed) {
 		document.body.setAttribute("role", "application");
 	}
-	
+
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
 			// WebKit
@@ -177,6 +205,11 @@
 				emptyEditorWhenDeleting(ed);
 				inputMethodFocus(ed);
 				selectControlElements(ed);
+
+				// iOS
+				if (tinymce.isIDevice) {
+					selectionChangeNodeChanged(ed);
+				}
 			}
 
 			// IE
