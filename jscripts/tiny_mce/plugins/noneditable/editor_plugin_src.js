@@ -9,37 +9,30 @@
  */
 
 (function() {
-	var Event = tinymce.dom.Event;
-
 	tinymce.create('tinymce.plugins.NonEditablePlugin', {
 		init : function(ed, url) {
-			var t = this, editClass, nonEditClass, state;
+			var t = this, editClass, nonEditClass;
 
 			t.editor = ed;
-			editClass = ed.getParam("noneditable_editable_class", "mceEditable");
-			nonEditClass = ed.getParam("noneditable_noneditable_class", "mceNonEditable");
+			editClass = " " + tinymce.trim(ed.getParam("noneditable_editable_class", "mceEditable")) + " ";
+			nonEditClass = " " + tinymce.trim(ed.getParam("noneditable_noneditable_class", "mceNonEditable")) + " ";
 
-			ed.onNodeChange.addToTop(function(ed, cm, n) {
-				var sc, ec;
+			ed.onPreInit.add(function() {
+				// Convert video elements to image placeholder
+				ed.parser.addAttributeFilter('class', function(nodes) {
+					var i = nodes.length, className, node;
 
-				// Block if start or end is inside a non editable element
-				sc = ed.dom.getParent(ed.selection.getStart(), function(n) {
-					return ed.dom.hasClass(n, nonEditClass);
+					while (i--) {
+						node = nodes[i];
+						className = " " + node.attr("class") + " ";
+
+						if (className.indexOf(editClass) !== -1) {
+							node.attr("contentEditable", "true");
+						} else if (className.indexOf(nonEditClass) !== -1) {
+							node.attr("contentEditable", "false");
+						}
+					}
 				});
-
-				ec = ed.dom.getParent(ed.selection.getEnd(), function(n) {
-					return ed.dom.hasClass(n, nonEditClass);
-				});
-
-				// Block or unblock
-				if (sc || ec) {
-					state = 1;
-					t._setDisabled(1);
-					return false;
-				} else if (state == 1) {
-					t._setDisabled(0);
-					state = 0;
-				}
 			});
 		},
 
@@ -51,42 +44,6 @@
 				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/noneditable',
 				version : tinymce.majorVersion + "." + tinymce.minorVersion
 			};
-		},
-
-		_block : function(ed, e) {
-			var k = e.keyCode;
-
-			// Don't block arrow keys, pg up/down, and F1-F12
-			if ((k > 32 && k < 41) || (k > 111 && k < 124))
-				return;
-
-			return Event.cancel(e);
-		},
-
-		_setDisabled : function(s) {
-			var t = this, ed = t.editor;
-
-			tinymce.each(ed.controlManager.controls, function(c) {
-				c.setDisabled(s);
-			});
-
-			if (s !== t.disabled) {
-				if (s) {
-					ed.onKeyDown.addToTop(t._block);
-					ed.onKeyPress.addToTop(t._block);
-					ed.onKeyUp.addToTop(t._block);
-					ed.onPaste.addToTop(t._block);
-					ed.onContextMenu.addToTop(t._block);
-				} else {
-					ed.onKeyDown.remove(t._block);
-					ed.onKeyPress.remove(t._block);
-					ed.onKeyUp.remove(t._block);
-					ed.onPaste.remove(t._block);
-					ed.onContextMenu.remove(t._block);
-				}
-
-				t.disabled = s;
-			}
 		}
 	});
 

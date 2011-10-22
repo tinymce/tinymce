@@ -288,12 +288,29 @@
 			};
 			
 			function applyRngStyle(rng, bookmark) {
-				var newWrappers = [], wrapName, wrapElm;
+				var newWrappers = [], wrapName, wrapElm, startContainer, contentEditable = true;
 
 				// Setup wrapper element
 				wrapName = format.inline || format.block;
 				wrapElm = dom.create(wrapName);
 				setElementFormat(wrapElm);
+
+				// If index based start position then resolve it
+				startContainer = rng.startContainer;
+				if (startContainer.nodeType == 1 && startContainer.hasChildNodes())
+					startContainer = startContainer.childNodes[rng.startOffset];
+
+				// Find out what contentEditable state the start container has
+				while (startContainer) {
+					contentEditable = startContainer.contentEditable;
+
+					if (startContainer.nodeType === 1 && contentEditable !== "inherit") {
+						contentEditable = contentEditable === "true";
+						break;
+					}
+
+					startContainer = startContainer.parentNode;
+				}
 
 				rangeUtils.walk(rng, function(nodes) {
 					var currentWrapElm;
@@ -302,7 +319,19 @@
 					 * Process a list of nodes wrap them.
 					 */
 					function process(node) {
-						var nodeName = node.nodeName.toLowerCase(), parentName = node.parentNode.nodeName.toLowerCase(), found;
+						var nodeName, parentName, found, localContentEditable, hasContentEditableState, lastContentEditable;
+
+						lastContentEditable = contentEditable;
+						localContentEditable = contentEditable;
+						nodeName = node.nodeName.toLowerCase();
+						parentName = node.parentNode.nodeName.toLowerCase();
+
+						// Node has a contentEditable value
+						if (node.nodeType === 1 && node.contentEditable !== "inherit") {
+							lastContentEditable = contentEditable;
+							contentEditable = localContentEditable = node.contentEditable === "true";
+							hasContentEditableState = true; // We don't want to wrap the container only it's children
+						}
 
 						// Stop wrapping on br elements
 						if (isEq(nodeName, 'br')) {
@@ -353,7 +382,7 @@
 						}
 
 						// Is it valid to wrap this item
-						if (isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
+						if (localContentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
 								!(node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279)) {
 							// Start wrapping
 							if (!currentWrapElm) {
@@ -370,8 +399,11 @@
 						} else {
 							// Start a new wrapper for possible children
 							currentWrapElm = 0;
-
-							each(tinymce.grep(node.childNodes), process);
+							
+							if (node.hasChildNodes()) {
+								each(tinymce.grep(node.childNodes), process);
+								contentEditable = lastContentEditable; // Restore last contentEditable state from stack
+							}
 
 							// End the last wrapper
 							currentWrapElm = 0;
@@ -407,6 +439,7 @@
 				}
 
 				// Cleanup
+				
 				each(newWrappers, function(node) {
 					var childCount;
 

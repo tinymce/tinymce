@@ -19,7 +19,7 @@ module("Apply formatting", {
 });
 
 function getContent() {
-	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
+	return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
 };
 
 test('apply inline to a list', function(){
@@ -760,7 +760,7 @@ test("Applying formats in lists", function(){
 	rng.setEnd(editor.dom.select('li')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>nested</li>\n</ul>\n</li>\n</ul>', "heading should not automatically apply to sublists");
+	equals(editor.getContent(), '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>', "heading should not automatically apply to sublists");
 
 	editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
 	rng = editor.dom.createRng();
@@ -768,7 +768,7 @@ test("Applying formats in lists", function(){
 	rng.setEnd(editor.dom.select('li')[1].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equals(editor.getContent(), '<ul><li><h1>text</h1><ul><li><h1>nested</h1></li></ul></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 
 	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
 	rng = editor.dom.createRng();
@@ -776,7 +776,7 @@ test("Applying formats in lists", function(){
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>nested</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equals(editor.getContent(), '<ul><li>before<ul><li>nested</li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 
 	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
 	rng = editor.dom.createRng();
@@ -784,7 +784,7 @@ test("Applying formats in lists", function(){
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equals(editor.getContent(), '<ul><li>before<ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 
 	
 	editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
@@ -793,7 +793,7 @@ test("Applying formats in lists", function(){
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>\n<h1>before</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should apply correctly when selection is after a sublist");
+	equals(editor.getContent(), '<ul><li><h1>before</h1><ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should apply correctly when selection is after a sublist");
 });
 
 test('Colored elements in a paragraph', function() {
@@ -831,7 +831,7 @@ test('Colored elements in a paragraph', function() {
 	rng.setEnd(editor.dom.select('span')[4].lastChild, 5);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\n<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\n<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
 
 	editor.formatter.register('format', {inline: 'span', exact: true, styles : {'color' : '#ff0000'}});
 	editor.setContent('<p><span style="text-decoration: underline;">This is some text.</span></p>');
@@ -851,6 +851,22 @@ test('Colored elements in a paragraph', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
+});
+
+test('format on contentEditable off', function() {
+	editor.formatter.register('format', {inline: 'b'});
+	editor.setContent('<br /><p contenteditable="false">text</p>');
+	setSelection('p', 0, 'p', 4);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<br /><p contenteditable="false">text</p>', 'Text is not bold');
+});
+
+test('format on contentEditable on inside contentEditable off', function() {
+	editor.formatter.register('format', {inline: 'b'});
+	editor.setContent('<br /><p contenteditable="false"><span contenteditable="true">text</span></p>');
+	setSelection('span', 0, 'span', 4);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<br /><p contenteditable="false"><span contenteditable="true"><b>text</b></span></p>', 'Text is bold');
 });
 
 /*
@@ -937,11 +953,12 @@ tinyMCE.init({
 	theme : "advanced",
 	add_unload_trigger : false,
 	theme_advanced_styles : 'test1=test1;test2=test2',
-	valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
+	valid_elements : '@[contenteditable|id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
 	fix_list_elements : 0,
 	fix_table_elements : 0,
 	forced_root_block : '',
 	convert_fonts_to_spans : false,
+	apply_source_formatting : false,
 	entities : 'raw',
 	valid_styles : {
 		'*' : 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display'
