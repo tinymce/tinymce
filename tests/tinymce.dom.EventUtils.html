@@ -19,6 +19,9 @@ module("tinymce.dom.Event", {
 	}
 });
 
+// Bind dummy ready so it gets the domLoaded ready state
+eventUtils.bind(window, "ready", function() {});
+
 test("unbind all", function() {
 	var result;
 
@@ -343,6 +346,38 @@ test("focusin/focusout bind/unbind", function() {
 	document.getElementById('content').focus();
 
 	deepEqual(result, {focusin: 2, focusout: 1});
+});
+
+test("bind unbind fire clean on null", function() {
+	eventUtils.bind(null, 'click', function() {});
+	eventUtils.unbind(null, 'click', function() {});
+	eventUtils.fire(null, {});
+	eventUtils.clean(null);
+});
+
+test("bind ready when page is loaded", function() {
+	var ready;
+
+	eventUtils.bind(window, 'ready', function() {ready = true;});
+
+	ok(ready, "Window is ready.");
+});
+
+test("event states when event object is fired twice", function() {
+	var result = {};
+
+	eventUtils.bind(window, 'keydown', function(e) {result[e.type] = true;e.preventDefault();e.stopPropagation();});
+	eventUtils.bind(window, 'keyup', function(e) {result[e.type] = true;e.stopImmediatePropagation();});
+
+	var event = {};
+	eventUtils.fire(window, 'keydown', event);
+	eventUtils.fire(window, 'keyup', event);	
+
+	ok(event.isDefaultPrevented(), "Default is prevented.");
+	ok(event.isPropagationStopped(), "Propagation is stopped.");
+	ok(event.isImmediatePropagationStopped(), "Immediate propagation is stopped.");
+
+	deepEqual(result, {keydown: true, keyup: true});
 });
 
 test("bind unbind fire clean on null", function() {
