@@ -97,9 +97,11 @@ tinymce.dom = {};
 		};
 
 		// Add event delegation states
-		event.isDefaultPrevented = returnFalse;
-		event.isPropagationStopped = returnFalse;
-		event.isImmediatePropagationStopped = returnFalse;
+		if (!event.isDefaultPrevented) {
+			event.isDefaultPrevented = returnFalse;
+			event.isPropagationStopped = returnFalse;
+			event.isImmediatePropagationStopped = returnFalse;
+		}
 
 		return event;
 	}
