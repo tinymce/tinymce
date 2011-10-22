@@ -110,8 +110,8 @@ tinymce.dom = {};
 	 * Bind a DOMContentLoaded event across browsers and executes the callback once the page DOM is initialized.
 	 * It will also set/check the domLoaded state of the event_utils instance so ready isn't called multiple times.
 	 */
-	function bindOnReady(callback, event_utils) {
-		var win = window, doc = win.document, event = {type: 'ready'};
+	function bindOnReady(win, callback, event_utils) {
+		var doc = win.document, event = {type: 'ready'};
 
 		// Gets called when the DOM is ready
 		function readyHandler() {
@@ -305,7 +305,7 @@ tinymce.dom = {};
 					// Check if the target has native events support
 
 					if (name === "ready") {
-						bindOnReady(nativeHandler, self);
+						bindOnReady(target, nativeHandler, self);
 					} else {
 						addEvent(target, fakeName || name, nativeHandler, capture);
 					}

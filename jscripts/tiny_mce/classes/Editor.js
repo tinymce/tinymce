@@ -2803,7 +2803,7 @@
 
 				Event.clear(t.getBody());
 				Event.clear(t.formElement);
-				Event.clear(e);
+				Event.unbind(e);
 
 				t.execCallback('remove_instance_callback', t);
 				t.onRemove.dispatch(t);
@@ -2832,6 +2832,8 @@
 				return;
 
 			if (!s) {
+				Event.unbind(t.getContainer());
+
 				tinymce.removeUnload(t.destroy);
 				tinyMCE.onBeforeUnload.remove(t._beforeUnload);
 

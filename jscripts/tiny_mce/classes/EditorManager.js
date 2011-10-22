@@ -141,7 +141,7 @@
 			t.settings = s;
 
 			// Legacy call
-			Event.add(document, 'init', function() {
+			Event.bind(window, 'ready', function() {
 				var l, co;
 
 				execCallback(s, 'onpageload');
