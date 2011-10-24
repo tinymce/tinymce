@@ -48,6 +48,19 @@
 			undefined,
 			pendingFormats = {apply : [], remove : []};
 
+		// Returns the content editable state of a node
+		function getContentEditable(node) {
+			var contentEditable = node.getAttribute("data-mce-contentEditable");
+
+			// Check for fake content editable
+			if (contentEditable && contentEditable !== "inherit") {
+				return contentEditable;
+			}
+
+			// Check for real content editable
+			return node.contentEditable !== "inherit" ? node.contentEditable : null;
+		};
+
 		function isArray(obj) {
 			return obj instanceof Array;
 		};
@@ -288,29 +301,12 @@
 			};
 			
 			function applyRngStyle(rng, bookmark) {
-				var newWrappers = [], wrapName, wrapElm, startContainer, contentEditable = true;
+				var newWrappers = [], wrapName, wrapElm, contentEditable = true;
 
 				// Setup wrapper element
 				wrapName = format.inline || format.block;
 				wrapElm = dom.create(wrapName);
 				setElementFormat(wrapElm);
-
-				// If index based start position then resolve it
-				startContainer = rng.startContainer;
-				if (startContainer.nodeType == 1 && startContainer.hasChildNodes())
-					startContainer = startContainer.childNodes[rng.startOffset];
-
-				// Find out what contentEditable state the start container has
-				while (startContainer) {
-					contentEditable = startContainer.contentEditable;
-
-					if (startContainer.nodeType === 1 && contentEditable !== "inherit") {
-						contentEditable = contentEditable === "true";
-						break;
-					}
-
-					startContainer = startContainer.parentNode;
-				}
 
 				rangeUtils.walk(rng, function(nodes) {
 					var currentWrapElm;
@@ -319,17 +315,16 @@
 					 * Process a list of nodes wrap them.
 					 */
 					function process(node) {
-						var nodeName, parentName, found, localContentEditable, hasContentEditableState, lastContentEditable;
+						var nodeName, parentName, found, hasContentEditableState, lastContentEditable;
 
 						lastContentEditable = contentEditable;
-						localContentEditable = contentEditable;
 						nodeName = node.nodeName.toLowerCase();
 						parentName = node.parentNode.nodeName.toLowerCase();
 
 						// Node has a contentEditable value
-						if (node.nodeType === 1 && node.contentEditable !== "inherit") {
+						if (node.nodeType === 1 && getContentEditable(node)) {
 							lastContentEditable = contentEditable;
-							contentEditable = localContentEditable = node.contentEditable === "true";
+							contentEditable = getContentEditable(node) === "true";
 							hasContentEditableState = true; // We don't want to wrap the container only it's children
 						}
 
@@ -382,7 +377,7 @@
 						}
 
 						// Is it valid to wrap this item
-						if (localContentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
+						if (contentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
 								!(node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279)) {
 							// Start wrapping
 							if (!currentWrapElm) {
@@ -400,8 +395,9 @@
 							// Start a new wrapper for possible children
 							currentWrapElm = 0;
 							
-							if (node.hasChildNodes()) {
-								each(tinymce.grep(node.childNodes), process);
+							each(tinymce.grep(node.childNodes), process);
+
+							if (hasContentEditableState) {
 								contentEditable = lastContentEditable; // Restore last contentEditable state from stack
 							}
 
@@ -582,7 +578,8 @@
 		 * @param {Node} node Optional node to remove the format from defaults to current selection.
 		 */
 		function remove(name, vars, node) {
-			var formatList = get(name), format = formatList[0], bookmark, i, rng;
+			var formatList = get(name), format = formatList[0], bookmark, i, rng, contentEditable = true;
+
 			/**
 			 * Moves the start to the first suitable text node.
 			 */
@@ -627,21 +624,36 @@
 
 			// Merges the styles for each node
 			function process(node) {
-				var children, i, l;
+				var children, i, l, localContentEditable, lastContentEditable, hasContentEditableState;
+
+				// Node has a contentEditable value
+				if (node.nodeType === 1 && getContentEditable(node)) {
+					lastContentEditable = contentEditable;
+					contentEditable = getContentEditable(node) === "true";
+					hasContentEditableState = true; // We don't want to wrap the container only it's children
+				}
 
 				// Grab the children first since the nodelist might be changed
 				children = tinymce.grep(node.childNodes);
 
 				// Process current node
-				for (i = 0, l = formatList.length; i < l; i++) {
-					if (removeFormat(formatList[i], vars, node, node))
-						break;
+				if (contentEditable && !hasContentEditableState) {
+					for (i = 0, l = formatList.length; i < l; i++) {
+						if (removeFormat(formatList[i], vars, node, node))
+							break;
+					}
 				}
 
 				// Process the children
 				if (format.deep) {
-					for (i = 0, l = children.length; i < l; i++)
-						process(children[i]);
+					if (children.length) {					
+						for (i = 0, l = children.length; i < l; i++)
+							process(children[i]);
+
+						if (hasContentEditableState) {
+							contentEditable = lastContentEditable; // Restore last contentEditable state from stack
+						}
+					}
 				}
 			};
 
@@ -1149,10 +1161,11 @@
 		 * @return {Object} Expanded range like object.
 		 */
 		function expandRng(rng, format, remove) {
-			var startContainer = rng.startContainer,
+			var sibling, lastIdx, leaf,
+				startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
-				endOffset = rng.endOffset, sibling, lastIdx, leaf;
+				endOffset = rng.endOffset;
 
 			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(container, child_name, sibling_name, root) {
@@ -1212,6 +1225,25 @@
 				if (endContainer.nodeType == 3)
 					endOffset = endContainer.nodeValue.length;
 			}
+
+			// Expands the node to the closes contentEditable false element if it exists
+			function findParentContentEditable(node) {
+				var parent = node;
+
+				while (parent) {
+					if (parent.nodeType === 1 && getContentEditable(parent)) {
+						return getContentEditable(parent) === "false" ? parent : node;
+					}
+
+					parent = parent.parentNode;
+				}
+
+				return node;
+			};
+
+			// Expand to closest contentEditable element
+			startContainer = findParentContentEditable(startContainer);
+			endContainer = findParentContentEditable(endContainer);
 
 			// Exclude bookmark nodes if possible
 			if (isBookmarkNode(startContainer.parentNode))
