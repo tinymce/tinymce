@@ -253,9 +253,14 @@ test('remove with selection collapsed ensure correct caret position', function()
 });
 
 test('contentEditable: false on start and contentEditable: true on end', function() {
+	var rng;
+
 	editor.formatter.register('format', {inline: 'b'});
 	editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
-	setSelection('p:nth-child(2) b', 0, 'p:nth-child(3) b', 3);
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
+	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(editor.getContent(), '<p>abc</p><p contenteditable="false"><b>def</b></p><p>ghj</p>', 'Text in last paragraph is not bold');
 });
