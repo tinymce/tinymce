@@ -226,7 +226,7 @@
 					if (m.settings.onclick)
 						m.settings.onclick(e);
 
-					return Event.cancel(e); // Cancel to fix onbeforeunload problem
+					return false; // Cancel to fix onbeforeunload problem
 				}
 			});
 
