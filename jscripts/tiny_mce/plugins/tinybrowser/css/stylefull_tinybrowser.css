@@ -1,0 +1,34 @@
+/* Generic */
+body {
+font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;
+background:#F0F0EE;
+padding:0;
+margin:8px 8px 0 8px;
+}
+
+html {background:#F0F0EE;}
+textarea {resize:none;outline:none;}
+a:link, a:visited {color:black;}
+a:hover {color:#2B6FB6;}
+
+/* Forms */
+fieldset {margin:0; padding:4px; border:1px solid #919B9C; font-family:Verdana, Arial; font-size:10px;}
+legend {color:#2B6FB6; font-weight:bold;}
+input {background:#FFF; border:1px solid #CCC;}
+input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
+input, select, textarea {border:1px solid #808080;}
+
+/* Tabs classes */
+.tabs {width:100%; height:18px; line-height:normal; background:url(../img/tabs.gif) repeat-x 0 -72px;}
+.tabs ul {margin:0; padding:0; list-style:none;}
+.tabs li {float:left; background:url(../img/tabs.gif) no-repeat 0 0; margin:0 2px 0 0; padding:0 0 0 10px; line-height:17px; height:18px; display:block;}
+.tabs li.current {background:url(../img/tabs.gif) no-repeat 0 -18px; margin-right:2px;}
+.tabs span {float:left; display:block; background:url(../img/tabs.gif) no-repeat right -36px; padding:0px 10px 0 0;}
+.tabs .current span {background:url(../img/tabs.gif) no-repeat right -54px;}
+.tabs a {text-decoration:none; font-family:Verdana, Arial; font-size:10px;}
+.tabs a:link, .tabs a:visited, .tabs a:hover {color:black;}
+
+/* Panels */
+.panel_wrapper div.panel {display:none;}
+.panel_wrapper div.current {display:block; width:100%; height:300px; overflow:visible;}
+.panel_wrapper {border:1px solid #919B9C; border-top:0px; padding:10px; padding-top:5px; clear:both; background:white;}

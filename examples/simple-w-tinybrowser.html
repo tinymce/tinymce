@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Nice Looking</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- TinyMCE -->
+<script language="javascript" type="text/javascript" src="../jscripts/tiny_mce/plugins/tinybrowser/tb_tinymce.js.php"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+	tinyMCE.init({
+		// General options
+		mode : "textareas",
+		theme : "advanced",
+		skin : "thebigreason",
+		plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,autosave",
+		file_browser_callback : "tinyBrowser",
+
+		// Theme options
+		theme_advanced_buttons1 : "formatselect,justifyleft,justifycenter,justifyright,justifyfull,|,bold,italic,underline,strikethrough,|,bullist,numlist,|,undo,redo,|,link,unlink,|,charmap,image,media,code,preview",
+		theme_advanced_buttons2 : "",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : true,
+
+		fix_list_elements : true,
+
+		// Replace values for the template plugin
+		template_replace_values : {
+			username : "Some User",
+			staffid : "991234"
+		}
+	});
+</script>
+<!-- /TinyMCE -->
+
+</head>
+<body role="application">
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+	<div>
+		<h3>Clean TinyMCE Example with TinyBrowser</h3>
+
+		<p>
+			This example uses: <br />
+            TinyMCE version 3.4.x <br />
+			<a href="http://www.lunarvis.com/products/tinymcefilebrowserwithupload.php">TinyBrowser version 1.33. GNU</a><br />
+            <a href="http://thebigreason.com/blog/2008/09/29/thebigreason-tinymce-skin">Thebigreason Interface Template</a><br />
+		</p>
+
+		<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
+		<div>
+			<textarea rows="15" cols="80" style="width: 100%">
+				&lt;p&gt;
+					This is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.
+				&lt;/p&gt;
+				&lt;p&gt;
+				Nam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.
+				&lt;/p&gt;
+			</textarea>
+		</div>
+
+		<input type="submit" name="save" value="Submit" />
+		<input type="reset" name="reset" value="Reset" />
+	</div>
+</form>
+
+</body>
+</html>
