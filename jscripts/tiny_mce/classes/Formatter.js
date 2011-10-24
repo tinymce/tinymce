@@ -346,7 +346,7 @@
 						}
 
 						// Can we rename the block
-						if (format.block && !format.wrapper && isTextBlock(nodeName)) {
+						if (contentEditable && !hasContentEditableState && format.block && !format.wrapper && isTextBlock(nodeName)) {
 							node = dom.rename(node, wrapName);
 							setElementFormat(node);
 							newWrappers.push(node);

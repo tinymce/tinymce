@@ -853,7 +853,7 @@ test('Colored elements in a paragraph', function() {
 	equals(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 });
 
-test('format on contentEditable off', function() {
+test('format inline on contentEditable: false block', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
 	setSelection('p:nth-child(2)', 0, 'p:nth-child(2)', 3);
@@ -861,7 +861,15 @@ test('format on contentEditable off', function() {
 	equals(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'Text is not bold');
 });
 
-test('contentEditable start off and end on', function() {
+test('format block on contentEditable: false block', function() {
+	editor.formatter.register('format', {block: 'h1'});
+	editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
+	setSelection('p:nth-child(2)', 0, 'p:nth-child(2)', 3);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'P is not h1');
+});
+
+test('contentEditable: false on start and contentEditable: true on end', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	editor.setContent('<p>abc</p><p contenteditable="false">def</p><p>ghi</p>');
 	setSelection('p:nth-child(2)', 0, 'p:nth-child(3)', 3);
@@ -869,7 +877,7 @@ test('contentEditable start off and end on', function() {
 	equals(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
 });
 
-test('contentEditable start on and end off', function() {
+test('contentEditable: true on start and contentEditable: false on end', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
 	setSelection('p:nth-child(1)', 0, 'p:nth-child(2)', 3);
@@ -877,7 +885,7 @@ test('contentEditable start on and end off', function() {
 	equals(editor.getContent(), '<p><b>abc</b></p><p contenteditable="false">def</p>', 'Text in first paragraph is bold');
 });
 
-test('contentEditable on inside contentEditable off', function() {
+test('contentEditable: true inside contentEditable: false', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	editor.setContent('<p>abc</p><p contenteditable="false"><span contenteditable="true">def</span></p>');
 	setSelection('span', 0, 'span', 3);
