@@ -7,7 +7,8 @@
 		DELETE:46,
 		BACKSPACE:8,
 		ENTER:13,
-		TAB:9
+		TAB:9,
+        	SPACEBAR:32
 	}
 
 })(tinymce);
