@@ -156,14 +156,14 @@ test('Parse elements', function() {
 	writer.reset();
 	parser.parse('<myns:mytag>text</myns:mytag>');
 	equals(writer.getContent(), '<myns:mytag>text</myns:mytag>', 'Parse element with namespace.');
-	deepEqual(counter.counts, {start:1, end: 1, text:1}, 'Parse element with namespace counts.');
+	deepEqual(counter.counts, {start:1, text:1, end: 1}, 'Parse element with namespace counts.');
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('<myns-mytag>text</myns-mytag>');
 	equals(writer.getContent(), '<myns-mytag>text</myns-mytag>', 'Parse element with dash name.');
-	deepEqual(counter.counts, {start:1, end:1, text:1}, 'Parse element with dash name counts.');
+	deepEqual(counter.counts, {start:1, text:1, end:1}, 'Parse element with dash name counts.');
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -183,8 +183,8 @@ test('Parse elements', function() {
 	var parser = new tinymce.html.SaxParser(counter, schema);
 	writer.reset();
 	parser.parse('text1<P>text2<B>tex<t3</p>te>xt4</b>text5');
-	equals(writer.getContent(), 'text1<p>text2<b>tex<t3 p="">te&gt;xt4</t3></b>text5</p>', 'Parse tag soup 3.');
-	deepEqual(counter.counts, {text: 5, start: 3, end: 3}, 'Parse tag soup 3 counts.');
+	equals(writer.getContent(), 'text1<p>text2<b>tex&lt;t3</b></p>te&gt;xt4text5', 'Parse tag soup 3.');
+	deepEqual(counter.counts, {text: 5, start: 2, end: 2}, 'Parse tag soup 3 counts.');
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
