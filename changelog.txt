@@ -7,6 +7,7 @@ Version 3.4.x (2011-10-xx)
 	Fixed bug where hitting enter to exit from a bullet list moves cursor to the top of the page in Firefox.
 	Fixed bug where pressing backspace would not delete HRs in Firefox and IE when next to an empty paragraph.
 	Fixed bug where deleting part of the link text can cause a link with no destination to be saved.
+	Fixed bug where css style border widths wasn't handled correctly in table dialog.
 	Made emoticons dialog use the keyboard naviation.
 	Added navigation instructions to the symbols dialog.
 	Added ability to set default values for the media plugin.
