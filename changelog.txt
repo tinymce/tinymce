@@ -11,6 +11,7 @@ Version 3.4.x (2011-10-xx)
 	Made emoticons dialog use the keyboard naviation.
 	Added navigation instructions to the symbols dialog.
 	Added ability to set default values for the media plugin.
+	Added new font_size_legacy_values option for converting old font element sizes to span with font-size properties.
 	Fixed bug where the symbols dialog was not accessible.
 	Added quirk for IE ensuring that the body of the document containing tinyMCE has a role="application" for accessibility.
 	Fixed bug where the advanced color picker wasn't working properly on FF 7.

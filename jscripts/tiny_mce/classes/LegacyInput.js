@@ -12,7 +12,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 	var filters, fontSizes, dom, settings = ed.settings;
 
 	if (settings.inline_styles) {
-		fontSizes = tinymce.explode(settings.font_size_style_values);
+		fontSizes = tinymce.explode(settings.font_size_legacy_values);
 
 		function replaceWithSpan(node, styles) {
 			tinymce.each(styles, function(value, name) {
