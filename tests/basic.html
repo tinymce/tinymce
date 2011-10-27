@@ -86,10 +86,10 @@ test('commands - xhtmlTextStyles', function() {
 	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('<p><font size="7">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
+	equals(editor.getContent(), '<p><span style="font-size: 300%;">test 123</span></p>');
 
 	editor.setContent('<p><font face="Arial" size="7">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="font-size: xx-large; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
+	equals(editor.getContent(), '<p><span style="font-size: 300%; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
 	equals(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: ' + fontFace('Arial') + ';">test</span></p>');
