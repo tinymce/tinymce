@@ -55,8 +55,9 @@
 	};
 
 	// Firebug
-	if (query.debug)
+	if (query.debug && !("console" in window)) {
 		include('firebug/firebug-lite.js');
+	}
 
 	// Core ns
 	include('tinymce.js');
