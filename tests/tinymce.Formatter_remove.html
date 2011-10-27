@@ -7,6 +7,7 @@
 <script src="http://code.jquery.com/qunit/qunit-git.js"></script>
 <script src="qunit/connector.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/tiny_mce_loader.js"></script>
 <script>
 var editor;
@@ -249,6 +250,50 @@ test('Formatter - remove with selection collapsed ensure correct caret position'
 	editor.formatter.remove('format');
 	equals(getContent(), content);
 	equals(editor.selection.getStart(), editor.dom.select('p')[0]);
+});
+
+test('Caret format at middle of text', function() {
+	editor.setContent('<p><b>abc</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 1, 'b', 1);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p>abc</p>');
+});
+
+test('Caret format at end of text', function() {
+	editor.setContent('<p><b>abc</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><b>abc</b>d</p>');
+});
+
+test('Caret format at end of text inside other format', function() {
+	editor.setContent('<p><em><b>abc</b></em></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><em><b>abc</b>d</em></p>');
+});
+
+test('Caret format at end of text inside other format with text after 1', function() {
+	editor.setContent('<p><em><b>abc</b></em>e</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><em><b>abc</b>d</em>e</p>');
+});
+
+test('Caret format at end of text inside other format with text after 2', function() {
+	editor.setContent('<p><em><b>abc</b></em>e</p>');
+	editor.formatter.register('format', {inline: 'em'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
 });
 
 tinyMCE.init({

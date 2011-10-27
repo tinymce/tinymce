@@ -1651,11 +1651,20 @@
 		};
 
 		function performCaretAction(type, name, vars) {
-			var invisibleChar = INVISIBLE_CHAR, caretContainerId = '_mce_caret', debug = true;
+			var invisibleChar, caretContainerId = '_mce_caret', debug = true;
+
+			// Setup invisible character use zero width space on Gecko since it doesn't change the heigt of the container
+			invisibleChar = tinymce.isGecko ? '\u200B' : INVISIBLE_CHAR;
 
 			// Creates a caret container bogus element
 			function createCaretContainer(fill) {
-				return dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style: debug ? 'color:red' : ''}, fill ? invisibleChar : '');
+				var caretContainer = dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style: debug ? 'color:red' : ''});
+
+				if (fill) {
+					caretContainer.appendChild(ed.getDoc().createTextNode(invisibleChar));
+				}
+
+				return caretContainer;
 			};
 
 			// Returns any parent caret container element
@@ -1685,7 +1694,7 @@
 			};
 
 			// Removes the caret container for the specified node or all on the current document
-			function removeCaretContainer(node) {
+			function removeCaretContainer(node, move_caret) {
 				var child, rng, isBogus;
 
 				if (!node) {
@@ -1693,7 +1702,7 @@
 
 					if (!node) {
 						while (node = dom.get(caretContainerId)) {
-							removeCaretContainer(node);
+							removeCaretContainer(node, false);
 						}
 					} else {
 						child = findFirstTextNode(node);
@@ -1716,8 +1725,10 @@
 					rng = selection.getRng(true);
 
 					if (!child || child.nodeValue == invisibleChar) {
-						rng.setStartBefore(node);
-						rng.setEndBefore(node);
+						if (move_caret !== false) {
+							rng.setStartBefore(node);
+							rng.setEndBefore(node);
+						}
 
 						dom.remove(node);
 					} else {
