@@ -853,6 +853,70 @@ test('Colored elements in a paragraph', function() {
 	equals(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 });
 
+test('Caret format before text', function() {
+	editor.setContent('<p>a</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 0, 'p', 0);
+	editor.formatter.apply('format');
+	type('b');
+	equals(editor.getContent(), '<p><b>b</b>a</p>');
+});
+
+test('Caret format after text', function() {
+	editor.setContent('<p>a</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 1, 'p', 1);
+	editor.formatter.apply('format');
+	type('b');
+	equals(editor.getContent(), '<p>a<b>b</b></p>');
+});
+
+test('Caret format and no key press', function() {
+	editor.setContent('<p>a</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 0, 'p', 0);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p>a</p>');
+});
+
+test('Caret format and arrow left', function() {
+	editor.setContent('<p>a</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 0, 'p', 0);
+	editor.formatter.apply('format');
+	type({keyCode: 37});
+	equals(editor.getContent(), '<p>a</p>');
+});
+
+test('Caret format and arrow right', function() {
+	editor.setContent('<p>a</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 0, 'p', 0);
+	editor.formatter.apply('format');
+	type({keyCode: 39});
+	equals(editor.getContent(), '<p>a</p>');
+});
+
+test('Caret format and backspace', function() {
+	var rng;
+
+	if (tinymce.isOpera) {
+		ok(true, "Skip Opera since faking backspace doesn't work.");
+		return;
+	}
+
+	editor.formatter.register('format', {inline: 'b'});
+
+	editor.setContent('<p>abc</p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 2);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
+	editor.selection.setRng(rng);
+
+	editor.formatter.apply('format');
+	type('\b');
+	equals(editor.getContent(), '<p>ac</p>');
+});
 /*
 test('apply (list block)', function() {
 	var rng;

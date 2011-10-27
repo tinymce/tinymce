@@ -45,8 +45,7 @@
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
-			undefined,
-			pendingFormats = {apply : [], remove : []};
+			undefined;
 
 		function isArray(obj) {
 			return obj instanceof Array;
@@ -287,7 +286,7 @@
 				}
 			};
 			
-			function applyRngStyle(rng, bookmark) {
+			function applyRngStyle(rng, bookmark, node_specific) {
 				var newWrappers = [], wrapName, wrapElm;
 
 				// Setup wrapper element
@@ -354,7 +353,7 @@
 
 						// Is it valid to wrap this item
 						if (isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
-								!(node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279)) {
+								!(!node_specific && node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279) && node.id !== '_mce_caret') {
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
@@ -514,7 +513,7 @@
 					rng.setStartBefore(node);
 					rng.setEndAfter(node);
 
-					applyRngStyle(expandRng(rng, formatList));
+					applyRngStyle(expandRng(rng, formatList), null, true);
 				} else {
 					if (!isCollapsed || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
 						// Obtain selection node before selection is unselected by applyRngStyle()
@@ -860,7 +859,7 @@
 		 * @return {boolean} true/false if the specified selection/node matches the format.
 		 */
 		function match(name, vars, node) {
-			var startNode, i;
+			var startNode;
 
 			function matchParents(node) {
 				// Find first node with similar format settings
@@ -875,21 +874,6 @@
 			// Check specified node
 			if (node)
 				return matchParents(node);
-
-			// Check pending formats
-			if (selection.isCollapsed()) {
-				for (i = pendingFormats.apply.length - 1; i >= 0; i--) {
-					if (pendingFormats.apply[i].name == name)
-						return true;
-				}
-
-				for (i = pendingFormats.remove.length - 1; i >= 0; i--) {
-					if (pendingFormats.remove[i].name == name)
-						return false;
-				}
-
-				return matchParents(selection.getNode());
-			}
 
 			// Check selected node
 			node = selection.getNode();
@@ -916,33 +900,6 @@
 		 */
 		function matchAll(names, vars) {
 			var startElement, matchedFormatNames = [], checkedMap = {}, i, ni, name;
-
-			// If the selection is collapsed then check pending formats
-			if (selection.isCollapsed()) {
-				for (ni = 0; ni < names.length; ni++) {
-					// If the name is to be removed, then stop it from being added
-					for (i = pendingFormats.remove.length - 1; i >= 0; i--) {
-						name = names[ni];
-
-						if (pendingFormats.remove[i].name == name) {
-							checkedMap[name] = true;
-							break;
-						}
-					}
-				}
-
-				// If the format is to be applied
-				for (i = pendingFormats.apply.length - 1; i >= 0; i--) {
-					for (ni = 0; ni < names.length; ni++) {
-						name = names[ni];
-
-						if (!checkedMap[name] && pendingFormats.apply[i].name == name) {
-							checkedMap[name] = true;
-							matchedFormatNames.push(name);
-						}
-					}
-				}
-			}
 
 			// Check start of selection for formats
 			startElement = selection.getStart();
@@ -1694,143 +1651,197 @@
 		};
 
 		function performCaretAction(type, name, vars) {
-			var i, currentPendingFormats = pendingFormats[type],
-				otherPendingFormats = pendingFormats[type == 'apply' ? 'remove' : 'apply'];
+			var invisibleChar = INVISIBLE_CHAR, caretContainerId = '_mce_caret', debug = true;
 
-			function hasPending() {
-				return pendingFormats.apply.length || pendingFormats.remove.length;
+			// Creates a caret container bogus element
+			function createCaretContainer(fill) {
+				return dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style: debug ? 'color:red' : ''}, fill ? invisibleChar : '');
 			};
 
-			function resetPending() {
-				pendingFormats.apply = [];
-				pendingFormats.remove = [];
-			};
-
-			function perform(caret_node) {
-				// Apply pending formats
-				each(pendingFormats.apply.reverse(), function(item) {
-					apply(item.name, item.vars, caret_node);
-
-					// Colored nodes should be underlined so that the color of the underline matches the text color.
-					if (item.name === 'forecolor' && item.vars.value)
-						processUnderlineAndColor(caret_node.parentNode);
-				});
-
-				// Remove pending formats
-				each(pendingFormats.remove.reverse(), function(item) {
-					remove(item.name, item.vars, caret_node);
-				});
-
-				dom.remove(caret_node, 1);
-				resetPending();
-			};
-
-			// Check if it already exists then ignore it
-			for (i = currentPendingFormats.length - 1; i >= 0; i--) {
-				if (currentPendingFormats[i].name == name)
-					return;
-			}
-
-			currentPendingFormats.push({name : name, vars : vars});
-
-			// Check if it's in the other type, then remove it
-			for (i = otherPendingFormats.length - 1; i >= 0; i--) {
-				if (otherPendingFormats[i].name == name)
-					otherPendingFormats.splice(i, 1);
-			}
-
-			// Pending apply or remove formats
-			if (hasPending()) {
-				ed.getDoc().execCommand('FontName', false, 'mceinline');
-				pendingFormats.lastRng = selection.getRng();
-
-				// IE will convert the current word
-				each(dom.select('font,span'), function(node) {
-					var bookmark;
-
-					if (isCaretNode(node)) {
-						bookmark = selection.getBookmark();
-						perform(node);
-						selection.moveToBookmark(bookmark);
-						ed.nodeChanged();
+			// Returns any parent caret container element
+			function getParentCaretContainer(node) {
+				while (node) {
+					if (node.id === caretContainerId) {
+						return node;
 					}
-				});
 
-				// Only register listeners once if we need to
-				if (!pendingFormats.isListening && hasPending()) {
-					pendingFormats.isListening = true;
-					function performPendingFormat(node, textNode) {
-						var rng = dom.createRng();
-						perform(node);
-
-						rng.setStart(textNode, textNode.nodeValue.length);
-						rng.setEnd(textNode, textNode.nodeValue.length);
-						selection.setRng(rng);
-						ed.nodeChanged();
-					}
-					var enterKeyPressed = false;
-
-					each('onKeyDown,onKeyUp,onKeyPress,onMouseUp'.split(','), function(event) {
-						ed[event].addToTop(function(ed, e) {
-							if (e.keyCode==13 && !e.shiftKey) {
-								enterKeyPressed = true;
-								return;
-							}
-							// Do we have pending formats and is the selection moved has moved
-							if (hasPending() && !tinymce.dom.RangeUtils.compareRanges(pendingFormats.lastRng, selection.getRng())) {
-								var foundCaret = false, sibling;
-
-								each(dom.select('font,span'), function(node) {
-									var textNode, rng;
-
-									// Look for marker
-									if (isCaretNode(node)) {
-										foundCaret = true;
-										textNode = node.firstChild;
-										sibling = node.previousSibling;
-
-										// Move the caret node to previous sibling is it's a inline format element
-										if (sibling && /^(strong|em|b|i|span)$/i.test(sibling.nodeName)) {
-											sibling.appendChild(node);
-										}
-
-										// Find the first text node within node
-										while (textNode && textNode.nodeType != 3)
-											textNode = textNode.firstChild;
-
-										if (textNode) 
-											performPendingFormat(node, textNode);
-										else
-											dom.remove(node);
-									}
-								});
-								
-								// no caret - so we are 
-								if (enterKeyPressed && !foundCaret) {
-									var node = selection.getNode();
-									var textNode = node;
-
-									// Find the first text node within node
-									while (textNode && textNode.nodeType != 3)
-										textNode = textNode.firstChild;
-									if (textNode) {
-										node=textNode.parentNode;
-										while (!isBlock(node)){
-											node=node.parentNode;
-										}
-										performPendingFormat(node, textNode);
-									}
-								}
-
-								// Always unbind and clear pending styles on keyup
-								if (e.type == 'keyup' || e.type == 'mouseup') {
-									resetPending();
-									enterKeyPressed=false;
-								}
-							}
-						});
-					});
+					node = node.parentNode;
 				}
+			};
+
+			// Finds the first text node in the specified node
+			function findFirstTextNode(node) {
+				var walker;
+
+				if (node) {
+					walker = new TreeWalker(node, node);
+
+					for (node = walker.current(); node; node = walker.next()) {
+						if (node.nodeType === 3) {
+							return node;
+						}
+					}
+				}
+			};
+
+			// Removes the caret container for the specified node or all on the current document
+			function removeCaretContainer(node) {
+				var child, rng, isBogus;
+
+				if (!node) {
+					node = getParentCaretContainer(selection.getStart());
+
+					if (!node) {
+						while (node = dom.get(caretContainerId)) {
+							removeCaretContainer(node);
+						}
+					} else {
+						child = findFirstTextNode(node);
+
+						if (child) {
+							isBogus = child.nodeValue == invisibleChar;
+
+							// Mark/unmark children as bogus
+							while (child && child != node) {
+								if (child.nodeType === 1) {
+									dom.setAttrib(child, 'data-mce-bogus', isBogus ? isBogus : null);
+								}
+
+								child = child.parentNode;
+							}
+						}
+					}
+				} else {
+					child = findFirstTextNode(node);
+					rng = selection.getRng(true);
+
+					if (!child || child.nodeValue == invisibleChar) {
+						rng.setStartBefore(node);
+						rng.setEndBefore(node);
+
+						dom.remove(node);
+					} else {
+						child = child.deleteData(0, 1);
+						dom.remove(node, 1);
+					}
+
+					selection.setRng(rng);
+				}
+			};
+			
+			// Applies formatting to the caret postion
+			function applyCaretFormat() {
+				var rng, caretContainer, textNode, offset;
+
+				rng = selection.getRng(true);
+				offset = rng.startOffset;
+				caretContainer = getParentCaretContainer(selection.getStart());
+				if (caretContainer) {
+					textNode = findFirstTextNode(caretContainer);
+				}
+
+				if (!caretContainer || textNode.nodeValue.length != 1) {
+					caretContainer = createCaretContainer(true);
+					textNode = caretContainer.firstChild;
+
+					rng.insertNode(caretContainer);
+					offset = 1;
+
+					apply(name, vars, caretContainer);
+				} else {
+					apply(name, vars, caretContainer);
+				}
+
+				// Move selection to text node
+				selection.setCursorLocation(textNode, offset);
+			};
+
+			function removeCaretFormat() {
+				var rng = selection.getRng(true), container, offset, bookmark,
+					hasContentAfter, node, formatNode, parents = [], i, caretContainer;
+
+				container = rng.startContainer;
+				offset = rng.startOffset;
+				node = container;
+
+				if (container.nodeType == 3) {
+					if (offset != container.nodeValue.length || container.nodeValue === invisibleChar) {
+						hasContentAfter = true;
+					}
+
+					node = node.parentNode;
+				}
+
+				while (node) {
+					if (matchNode(node, name, vars)) {
+						formatNode = node;
+						break;
+					}
+
+					if (node.nextSibling) {
+						hasContentAfter = true;
+					}
+
+					parents.push(node);
+					node = node.parentNode;
+				}
+
+				// Node doesn't have the specified format
+				if (!formatNode) {
+					return;
+				}
+
+				// Is there contents after the caret then remove the format on the element
+				if (hasContentAfter) {
+					bookmark = selection.getBookmark();
+
+					tinymce.each(get(name), function(format) {
+						removeFormat(format, vars, formatNode);
+					});
+
+					selection.moveToBookmark(bookmark);
+				} else {
+					caretContainer = createCaretContainer();
+
+					node = caretContainer;
+					for (i = parents.length - 1; i >= 0; i--) {
+						node.appendChild(parents[i].cloneNode(false));
+						node = node.firstChild;
+					}
+
+					// Insert invisible character into inner most format element
+					node.appendChild(dom.doc.createTextNode(invisibleChar));
+					node = node.firstChild;
+
+					// Insert caret container after the formated node
+					dom.insertAfter(caretContainer, formatNode);
+
+					// Move selection to text node
+					selection.setCursorLocation(node, 1);
+				}
+			};
+
+			// Remove caret container on mouse up and on key up
+			tinymce.each('onMouseUp onKeyUp onBeforeGetContent'.split(' '), function(name) {
+				ed[name].addToTop(function() {
+					removeCaretContainer();
+				});
+			});
+
+			// Remove caret container on keydown and it's a backspace, enter or left/right arrow keys
+			ed.onKeyDown.addToTop(function(ed, e) {
+				var keyCode = e.keyCode;
+
+				if (keyCode == 8 || keyCode == 37 || keyCode == 39 || keyCode == 13) {
+					removeCaretContainer(getParentCaretContainer(selection.getStart()));
+				}
+			});
+
+			// Do apply or remove caret format
+			if (type == "apply") {
+				applyCaretFormat();
+			} else {
+				removeCaretFormat();
 			}
 		};
 	};
