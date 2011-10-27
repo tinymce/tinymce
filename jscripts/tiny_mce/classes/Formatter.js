@@ -1651,7 +1651,7 @@
 		};
 
 		function performCaretAction(type, name, vars) {
-			var invisibleChar, caretContainerId = '_mce_caret', debug = true;
+			var invisibleChar, caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
 
 			// Setup invisible character use zero width space on Gecko since it doesn't change the heigt of the container
 			invisibleChar = tinymce.isGecko ? '\u200B' : INVISIBLE_CHAR;
