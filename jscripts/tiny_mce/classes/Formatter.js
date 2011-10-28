@@ -545,7 +545,7 @@
 		 * @method remove
 		 * @param {String} name Name of format to remove.
 		 * @param {Object} vars Optional list of variables to replace within format before removing it.
-		 * @param {Node} node Optional node to remove the format from defaults to current selection.
+		 * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
 		 */
 		function remove(name, vars, node) {
 			var formatList = get(name), format = formatList[0], bookmark, i, rng;
@@ -738,10 +738,15 @@
 
 			// Handle node
 			if (node) {
-				rng = dom.createRng();
-				rng.setStartBefore(node);
-				rng.setEndAfter(node);
-				removeRngStyle(rng);
+				if (node.nodeType) {
+					rng = dom.createRng();
+					rng.setStartBefore(node);
+					rng.setEndAfter(node);
+					removeRngStyle(rng);
+				} else {
+					removeRngStyle(node);
+				}
+
 				return;
 			}
 
@@ -1054,7 +1059,7 @@
 		};
 
 		function isWhiteSpaceNode(node) {
-			return node && node.nodeType === 3 && /^([\s\r\n]+|)$/.test(node.nodeValue);
+			return node && node.nodeType === 3 && /^([\t \r\n]+|)$/.test(node.nodeValue);
 		};
 
 		function wrap(node, name, attrs) {
@@ -1756,7 +1761,7 @@
 					textNode = findFirstTextNode(caretContainer);
 				}
 
-				if (!caretContainer || textNode.nodeValue.length != 1) {
+				if (!caretContainer || textNode.nodeValue !== invisibleChar) {
 					caretContainer = createCaretContainer(true);
 					textNode = caretContainer.firstChild;
 
