@@ -401,6 +401,16 @@
 				}
 			});
 
+			function fixListItem(parent, reference) {
+				// a zero-sized non-breaking space is placed in the empty list item so that the nested list is
+				// displayed on the below line instead of next to it
+				var n = ed.getDoc().createTextNode('\uFEFF');
+				parent.insertBefore(n, reference);
+				ed.selection.setCursorLocation(n, 0);
+				// repaint to remove rendering artifact. only visible when creating new list
+				ed.execCommand('mceRepaint');
+			}
+
 			function fixIndentedListItemForGecko(ed, e) {
 				if (isEnter(e)) {
 					var li = getLi();
@@ -408,14 +418,18 @@
 						var parent = li.parentNode;
 						var grandParent = parent && parent.parentNode;
 						if (grandParent && grandParent.nodeName == 'LI' && grandParent.firstChild == parent && li == parent.firstChild) {
-							// a zero-sized non-breaking space is placed in the empty list item so that the nested list is
-							// displayed on the below line instead of next to it
-							var n = ed.getDoc().createTextNode('\uFEFF');
-							grandParent.insertBefore(n, parent);
-							ed.selection.setCursorLocation(n, 0);
-							// repaint to remove rendering artifact. only visible when creating new list
-							ed.execCommand('mceRepaint');
+							fixListItem(grandParent, parent);
 						}
+					}
+				}
+			}
+
+			function fixIndentedListItemForIE8(ed, e) {
+				if (isEnter(e)) {
+					var li = getLi();
+					if (ed.dom.select('ul li', li).length === 1) {
+						var list = li.firstChild;
+						fixListItem(li, list);
 					}
 				}
 			}
@@ -427,6 +441,9 @@
 
 			if (tinymce.isGecko) {
 				ed.onKeyUp.add(fixIndentedListItemForGecko);
+			}
+			if (tinymce.isIE8) {
+				ed.onKeyUp.add(fixIndentedListItemForIE8);
 			}
 		},
 

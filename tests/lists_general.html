@@ -16,6 +16,7 @@ QUnit.config.autostart = false;
 var ENTER = 0xA;
 var TAB = 0x9;
 var ZERO_SIZED_NBSP = "\uFEFF";
+var LEFT = 0x26;
 
 module('Lists - General', {
 	autostart: false,
@@ -131,18 +132,30 @@ asyncTest('Outdent in nested list on enter when setting is set', function() {
 	}, editor.selection.getNode());
 });
 
-asyncTest('Nested list has zero-sized nbsp', function() {
-	if (!tinymce.isGecko) {
-		start();
-	}
-
-	editor.settings.list_outdent_on_enter = true;
-	editor.setContent("<ul><li>a<ul><li>b</li></ul></li></ul>");
-	setSelection('li', 1);
-	robot.type(ENTER, false, function(){
-		equals(editor.getContent({format: 'raw'}), "<ul><li>a</li><li>" + ZERO_SIZED_NBSP + "<ul><li>b</li></ul></li></ul>");
+function testNestedListHasZeroSizedNbsp() {
+	robot.type(ENTER, false, function() {
+		var ul = editor.dom.select('#u')[0];
+		var text = ul.parentNode.childNodes[0].nodeValue;
+		equals(text, ZERO_SIZED_NBSP);
 		start();
 	}, editor.selection.getNode());
+}
+
+asyncTest('Nested list has zero-sized nbsp in Gecko & IE8', function() {
+	if (!(tinymce.isGecko || tinymce.isIE8)) {
+		start();
+	} else {
+		editor.settings.list_outdent_on_enter = true;
+		editor.setContent("<ul><li>a<ul id='u'><li>b</li></ul></li></ul>");
+		setSelection('li', 1);
+
+		if (tinymce.isIE8) {
+			// IE8 places the caret on the nested list item so we press left to get to end of first list item
+			robot.type(LEFT, false, testNestedListHasZeroSizedNbsp, editor.selection.getNode());
+		} else {
+			testNestedListHasZeroSizedNbsp();
+		}
+	}
 });
 
 asyncTest('Outdent from sublist using shift-tab keys', function() {
@@ -160,23 +173,24 @@ asyncTest('Caret positioned correctly after escaping list and applying formattin
 	// pressing enter. Pressing enter correctly exists the list.
 	if (tinymce.isGecko) {
 		start();
-	}
-
-	editor.settings.list_outdent_on_enter = true;
-	editor.setContent("<ul><li>a<ul><li>b</li></ul></li></ul>");
-	setSelection('li ul li', 1);
-	robot.type(ENTER, false, function() {
+	} else {
+		editor.settings.list_outdent_on_enter = true;
+		editor.setContent("<ul><li>a<ul><li>b</li></ul></li></ul>");
+		setSelection('li ul li', 1);
 		robot.type(ENTER, false, function() {
 			robot.type(ENTER, false, function() {
-				editor.execCommand('FormatBlock', false, 'h1');
-				var node = editor.selection.getNode();
-				var list = editor.dom.getParent(node, 'ol,ul');
-				ok(list === null, "selection must be outside of list");
-				start();
+				robot.type(ENTER, false, function() {
+					editor.execCommand('FormatBlock', false, 'h1');
+					var node = editor.selection.getNode();
+					var list = editor.dom.getParent(node, 'ol,ul');
+					ok(list === null, "selection must be outside of list");
+					start();
+				}, editor.selection.getNode());
 			}, editor.selection.getNode());
 		}, editor.selection.getNode());
-	}, editor.selection.getNode());
+	}
 });
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
