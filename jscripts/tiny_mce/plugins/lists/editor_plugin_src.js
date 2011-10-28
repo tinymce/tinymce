@@ -434,6 +434,32 @@
 				}
 			}
 
+			function fixDeletingFirstCharOfList(ed, e) {
+				function listElements(list, li) {
+					var elements = [];
+					var walker = new tinymce.dom.TreeWalker(li, list);
+					for (var node = walker.current(); node; node = walker.next()) {
+						if (ed.dom.is(node, 'ol,ul,li')) {
+							elements.push(node);
+						}
+					}
+					return elements;
+				}
+
+				if (e.keyCode == tinymce.VK.BACKSPACE) {
+					var li = getLi();
+					if (li) {
+						var list = ed.dom.getParent(li, 'ol,ul');
+						if (list && list.firstChild === li) {
+							var elements = listElements(list, li);
+							ed.execCommand("Outdent", false, elements);
+							ed.undoManager.add();
+							return Event.cancel(e);
+						}
+					}
+				}
+			}
+
 			ed.onKeyDown.add(function(_, e) { state = getListKeyState(e); });
 			ed.onKeyDown.add(cancelDefaultEvents);
 			ed.onKeyDown.add(imageJoiningListItem);
@@ -444,6 +470,9 @@
 			}
 			if (tinymce.isIE8) {
 				ed.onKeyUp.add(fixIndentedListItemForIE8);
+			}
+			if (tinymce.isGecko || tinymce.isWebKit) {
+				ed.onKeyDown.add(fixDeletingFirstCharOfList);
 			}
 		},
 
@@ -661,11 +690,13 @@
 					'P': makeList,
 					'BODY': makeList,
 					'DIV': selectedBlocks.length > 1 ? makeList : wrapList,
-					defaultAction: wrapList
+					defaultAction: wrapList,
+					elements: this.selectedBlocks()
 				};
 			} else {
 				actions = {
-					defaultAction: convertListItemToParagraph
+					defaultAction: convertListItemToParagraph,
+					elements: this.selectedBlocks()
 				};
 			}
 			this.process(actions);
@@ -708,12 +739,13 @@
 
 			this.process({
 				'LI': indentLI,
-				defaultAction: this.adjustPaddingFunction(true)
+				defaultAction: this.adjustPaddingFunction(true),
+				elements: this.selectedBlocks()
 			});
 
 		},
 
-		outdent: function() {
+		outdent: function(ui, elements) {
 			var t = this, ed = t.ed, dom = ed.dom, outdented = [];
 
 			function outdentLI(element) {
@@ -745,9 +777,11 @@
 				}
 			}
 
+			var listElements = elements && tinymce.is(elements, 'array') ? elements : this.selectedBlocks();
 			this.process({
 				'LI': outdentLI,
-				defaultAction: this.adjustPaddingFunction(false)
+				defaultAction: this.adjustPaddingFunction(false),
+				elements: listElements
 			});
 
 			each(outdented, attemptMergeWithAdjacent);
@@ -792,10 +826,7 @@
 				return p !== null;
 			}
 
-			selectedBlocks = sel.getSelectedBlocks();
-			if (selectedBlocks.length === 0) {
-				selectedBlocks = [ dom.getRoot() ];
-			}
+			selectedBlocks = actions.elements;
 
 			r = sel.getRng(true);
 			if (!r.collapsed) {
@@ -872,6 +903,12 @@
 				ed.dom.setStyle(element, 'padding-left', '');
 				ed.dom.setStyle(element, 'margin-left', newIndentAmount > 0 ? newIndentAmount + indentUnits : '');
 			};
+		},
+
+		selectedBlocks: function() {
+			var ed = this.ed
+			var selectedBlocks = ed.selection.getSelectedBlocks();
+			return selectedBlocks.length == 0 ? [ ed.dom.getRoot() ] : selectedBlocks;
 		},
 
 		getInfo: function() {

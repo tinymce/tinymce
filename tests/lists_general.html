@@ -15,6 +15,7 @@ QUnit.config.autostart = false;
 
 var ENTER = 0xA;
 var TAB = 0x9;
+var BACKSPACE = 0x8;
 var ZERO_SIZED_NBSP = "\uFEFF";
 var LEFT = 0x26;
 
@@ -189,6 +190,15 @@ asyncTest('Caret positioned correctly after escaping list and applying formattin
 			}, editor.selection.getNode());
 		}, editor.selection.getNode());
 	}
+});
+
+asyncTest('Deleting bullet from start of list outdents inner lists items', function() {
+	editor.setContent("<p>a</p><ul><li>b<ul><li>c</li><li>d</li></ul></li></ul>");
+	setSelection('li', 0);
+	robot.type(BACKSPACE, false, function() {
+		equals(editor.getContent(), "<p>a</p><p>b</p><ul><li>c</li><li>d</li></ul>");
+		start();
+	}, editor.selection.getNode());
 });
 
 var initTinyFunction = function(){
