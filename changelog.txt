@@ -1,4 +1,5 @@
 Version 3.4.x (2011-10-xx)
+	Made media type list localisable.
 	Fix out of memory error when using prototype in media dialog.
 	Fixed bug where could not add a space in the middle of a th cell.
 	Fixed bug where adding a bullet between two existing bullets adds an extra one
