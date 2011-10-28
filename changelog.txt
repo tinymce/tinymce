@@ -1,4 +1,6 @@
 Version 3.4.x (2011-10-xx)
+	Fix for webkit and gecko so that deleting bullet from start of list outdents inner list items and moves first item into paragraph.
+	Fix new list items in IE8 not displayed on a new line when list contains nested list items.
 	Clear formatting in table cell breaks the cell.
 	Made media type list localisable.
 	Fix out of memory error when using prototype in media dialog.
