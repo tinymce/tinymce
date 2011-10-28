@@ -48,8 +48,11 @@
 
 				v = '{';
 
-				for (i in o)
-					v += typeof o[i] != 'function' ? (v.length > 1 ? ',' + quote : quote) + i + quote +':' + serialize(o[i], quote) : '';
+				for (i in o) {
+					if (o.hasOwnProperty(i)) {
+						v += typeof o[i] != 'function' ? (v.length > 1 ? ',' + quote : quote) + i + quote +':' + serialize(o[i], quote) : '';
+					}
+				}
 
 				return v + '}';
 		}
