@@ -178,7 +178,7 @@ function type(chr) {
 		preventDefault = event.preventDefault;
 		event.preventDefault = function() {
 			if (preventDefault) {
-				preventDefault();
+				preventDefault.call(this);
 			} else {
 				this.returnValue = false; // IE
 			}
