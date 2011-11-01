@@ -1121,7 +1121,7 @@
 					parent = parent.parentNode;
 				}
 
-				return parent;
+				return container;
 			};
 
 			// This function walks down the tree to find the leaf at the selection.
