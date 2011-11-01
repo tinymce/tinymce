@@ -593,7 +593,11 @@
 
 				if (evt.altKey) {
 		 			if (evt.keyCode === DOM_VK_F10) {
-						window.focus();
+						// Make sure focus is given to toolbar in Safari.
+						// We can't do this in IE as it prevents giving focus to toolbar when editor is in a frame
+						if (tinymce.isWebKit) {
+							window.focus();
+						}
 						t.toolbarGroup.focus();
 						return Event.cancel(evt);
 					} else if (evt.keyCode === DOM_VK_F11) {
