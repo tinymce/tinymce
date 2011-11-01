@@ -236,9 +236,7 @@ test('Remove span format within block with style', function() {
 	equals(getContent(), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
 });
 
-test('Temove and verify start element', function() {
-	var rng;
-
+test('Remove and verify start element', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	rng = editor.dom.createRng();
 	editor.getBody().innerHTML = '<p><b>text</b></p>';
@@ -307,6 +305,16 @@ test('Caret format at end of text inside other format with text after 2', functi
 	type('d');
 	equals(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
 });
+
+/*
+test('Remove format bug 1', function() {
+	editor.setContent('<p><b>ab<em>cde</em>fgh</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('em', 0, 'em', 2);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p><b>ab</b><em>cd</em><b><em>e</em>fgh</b></p>');
+});
+*/
 
 tinyMCE.init({
 	mode : "exact",
