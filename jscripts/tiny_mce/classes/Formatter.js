@@ -1731,7 +1731,7 @@
 		};
 
 		function getContainer(rng, start) {
-			var container, offset, lastIdx;
+			var container, offset, lastIdx, walker;
 
 			container = rng[start ? 'startContainer' : 'endContainer'];
 			offset = rng[start ? 'startOffset' : 'endOffset'];
@@ -1743,6 +1743,16 @@
 					offset--;
 
 				container = container.childNodes[offset > lastIdx ? lastIdx : offset];
+			}
+
+			// If start text node is excluded then walk to the next node
+			if (container.nodeType === 3 && start && offset >= container.nodeValue.length) {
+				container = new TreeWalker(container, ed.getBody()).next() || container;
+			}
+
+			// If end text node is excluded then walk to the previous node
+			if (container.nodeType === 3 && !start && offset == 0) {
+				container = new TreeWalker(container, ed.getBody()).prev() || container;
 			}
 
 			return container;
@@ -1765,6 +1775,23 @@
 				return caretContainer;
 			};
 
+			function isCaretContainerEmpty(node, nodes) {
+				while (node) {
+					if ((node.nodeType === 3 && node.nodeValue !== invisibleChar) || node.childNodes.length > 1) {
+						return false;
+					}
+
+					// Collect nodes
+					if (nodes && node.nodeType === 1) {
+						nodes.push(node);
+					}
+
+					node = node.firstChild;
+				}
+
+				return true;
+			};
+			
 			// Returns any parent caret container element
 			function getParentCaretContainer(node) {
 				while (node) {
@@ -1793,7 +1820,7 @@
 
 			// Removes the caret container for the specified node or all on the current document
 			function removeCaretContainer(node, move_caret) {
-				var child, rng, isBogus;
+				var child, rng;
 
 				if (!node) {
 					node = getParentCaretContainer(selection.getStart());
@@ -1802,27 +1829,11 @@
 						while (node = dom.get(caretContainerId)) {
 							removeCaretContainer(node, false);
 						}
-					} else {
-						child = findFirstTextNode(node);
-
-						if (child) {
-							isBogus = child.nodeValue == invisibleChar;
-
-							// Mark/unmark children as bogus
-							while (child && child != node) {
-								if (child.nodeType === 1) {
-									dom.setAttrib(child, 'data-mce-bogus', isBogus ? isBogus : null);
-								}
-
-								child = child.parentNode;
-							}
-						}
 					}
 				} else {
-					child = findFirstTextNode(node);
 					rng = selection.getRng(true);
 
-					if (!child || child.nodeValue == invisibleChar) {
+					if (isCaretContainerEmpty(node)) {
 						if (move_caret !== false) {
 							rng.setStartBefore(node);
 							rng.setEndBefore(node);
@@ -1830,6 +1841,7 @@
 
 						dom.remove(node);
 					} else {
+						child = findFirstTextNode(node);
 						child = child.deleteData(0, 1);
 						dom.remove(node, 1);
 					}
@@ -1960,8 +1972,21 @@
 				}
 			};
 
+			// Mark current caret container elements as bogus when getting the contents so we don't end up with empty elements
+			ed.onBeforeGetContent.addToTop(function() {
+				var nodes = [], i;
+
+				if (isCaretContainerEmpty(getParentCaretContainer(selection.getStart()), nodes)) {
+					// Mark children
+					i = nodes.length;
+					while (i--) {
+						dom.setAttrib(nodes[i], 'data-mce-bogus', '1');
+					}
+				}
+			});
+
 			// Remove caret container on mouse up and on key up
-			tinymce.each('onMouseUp onKeyUp onBeforeGetContent'.split(' '), function(name) {
+			tinymce.each('onMouseUp onKeyUp'.split(' '), function(name) {
 				ed[name].addToTop(function() {
 					removeCaretContainer();
 				});
