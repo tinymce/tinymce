@@ -147,44 +147,42 @@
 		 * @param {Range/RangeObject} rng Range to split.
 		 * @return {Object} Range position object.
 		 */
-/*		this.split = function(rng) {
+		this.split = function(rng) {
 			var startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
 				endOffset = rng.endOffset;
 
 			function splitText(node, offset) {
-				if (offset == node.nodeValue.length)
-					node.appendData(INVISIBLE_CHAR);
-
-				node = node.splitText(offset);
-
-				if (node.nodeValue === INVISIBLE_CHAR)
-					node.nodeValue = '';
-
-				return node;
+				return node.splitText(offset);
 			};
 
 			// Handle single text node
-			if (startContainer == endContainer) {
-				if (startContainer.nodeType == 3) {
-					if (startOffset != 0)
-						startContainer = endContainer = splitText(startContainer, startOffset);
-
-					if (endOffset - startOffset != startContainer.nodeValue.length)
-						splitText(startContainer, endOffset - startOffset);
+			if (startContainer == endContainer && startContainer.nodeType == 3) {
+				if (startOffset > 0) {
+					endContainer = splitText(startContainer, startOffset);
+					startContainer = endContainer.previousSibling;
+				}
+					
+				if (endOffset > startOffset) {
+					endOffset = endOffset - startOffset;
+					startContainer = endContainer = splitText(endContainer, endOffset).previousSibling;
+					endOffset = endContainer.nodeValue.length;
+					startOffset = 0;
+				} else {
+					endOffset = 0;
 				}
 			} else {
 				// Split startContainer text node if needed
-				if (startContainer.nodeType == 3 && startOffset != 0) {
+				if (startContainer.nodeType == 3 && startOffset > 0) {
 					startContainer = splitText(startContainer, startOffset);
 					startOffset = 0;
 				}
 
 				// Split endContainer text node if needed
-				if (endContainer.nodeType == 3 && endOffset != endContainer.nodeValue.length) {
+				if (endContainer.nodeType == 3 && endOffset < endContainer.nodeValue.length) {
 					endContainer = splitText(endContainer, endOffset).previousSibling;
-					endOffset = endContainer.nodeValue.length;
+					endOffset = 0;
 				}
 			}
 
@@ -195,7 +193,7 @@
 				endOffset : endOffset
 			};
 		};
-*/
+
 	};
 
 	/**
