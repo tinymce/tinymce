@@ -508,12 +508,14 @@
 
 			if (format) {
 				if (node) {
-					rng = dom.createRng();
-
-					rng.setStartBefore(node);
-					rng.setEndAfter(node);
-
-					applyRngStyle(expandRng(rng, formatList), null, true);
+					if (node.nodeType) {
+						rng = dom.createRng();
+						rng.setStartBefore(node);
+						rng.setEndAfter(node);
+						applyRngStyle(expandRng(rng, formatList), null, true);
+					} else {
+						applyRngStyle(node, null, true);
+					}
 				} else {
 					if (!isCollapsed || !format.inline || dom.select('td.mceSelected,th.mceSelected').length) {
 						// Obtain selection node before selection is unselected by applyRngStyle()
@@ -1086,34 +1088,40 @@
 			var startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
-				endOffset = rng.endOffset, sibling, lastIdx, leaf;
+				endOffset = rng.endOffset, sibling, lastIdx, leaf, endPoint;
 
 			// This function walks up the tree if there is no siblings before/after the node
-			function findParentContainer(container, child_name, sibling_name, root) {
-				var parent, child;
+			function findParentContainer(start) {
+				var container, parent, child, sibling, siblingName;
 
-				root = root || dom.getRoot();
+				container = parent = start ? startContainer : endContainer;
+				siblingName = start ? 'previousSibling' : 'nextSibling';
+				root = dom.getRoot();
 
-				for (;;) {
-					// Check if we can move up are we at root level or body level
-					parent = container.parentNode;
-
-					// Stop expanding on block elements or root depending on format
-					if (parent == root || (!format[0].block_expand && isBlock(parent)))
+				// If it's a text node and the offset is inside the text
+				if (container.nodeType == 3 && !isWhiteSpaceNode(container)) {
+					if (start ? startOffset > 0 : endOffset < container.nodeValue.length) {
 						return container;
-
-					for (sibling = parent[child_name]; sibling && sibling != container; sibling = sibling[sibling_name]) {
-						if (sibling.nodeType == 1 && !isBookmarkNode(sibling))
-							return container;
-
-						if (sibling.nodeType == 3 && !isWhiteSpaceNode(sibling))
-							return container;
 					}
-
-					container = container.parentNode;
 				}
 
-				return container;
+				for (;;) {
+					// Stop expanding on block elements or root depending on format
+					if (parent == root || (!format[0].block_expand && isBlock(parent)))
+						return parent;
+
+					// Walk left/right
+					for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
+						if (!isBookmarkNode(sibling) && !isWhiteSpaceNode(sibling)) {
+							return parent;
+						}
+					}
+
+					// Check if we can move up are we at root level or body level
+					parent = parent.parentNode;
+				}
+
+				return parent;
 			};
 
 			// This function walks down the tree to find the leaf at the selection.
@@ -1148,23 +1156,98 @@
 			}
 
 			// Exclude bookmark nodes if possible
-			if (isBookmarkNode(startContainer.parentNode))
-				startContainer = startContainer.parentNode;
-
-			if (isBookmarkNode(startContainer))
+			if (isBookmarkNode(startContainer.parentNode) || isBookmarkNode(startContainer)) {
+				startContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode;
 				startContainer = startContainer.nextSibling || startContainer;
 
-			if (isBookmarkNode(endContainer.parentNode)) {
-				endOffset = dom.nodeIndex(endContainer);
-				endContainer = endContainer.parentNode;
+				if (startContainer.nodeType == 3)
+					startOffset = 0;
 			}
 
-			if (isBookmarkNode(endContainer) && endContainer.previousSibling) {
-				endContainer = endContainer.previousSibling;
-				endOffset = endContainer.length;
+			if (isBookmarkNode(endContainer.parentNode) || isBookmarkNode(endContainer)) {
+				endContainer = isBookmarkNode(endContainer) ? endContainer : endContainer.parentNode;
+				endContainer = endContainer.previousSibling || endContainer;
+
+				if (endContainer.nodeType == 3)
+					endOffset = endContainer.length;
 			}
 
 			if (format[0].inline) {
+				if (rng.collapsed) {
+					function findWordEndPoint(container, offset, start) {
+						var walker, node, pos, lastTextNode;
+
+						function findSpace(node, offset) {
+							var str = node.nodeValue;
+
+							if (typeof(offset) == "undefined") {
+								offset = start ? str.length : 0;
+							}
+
+							if (start) {
+								pos = str.lastIndexOf(' ', offset);
+
+								if (pos !== -1) {
+									pos++;
+								}
+							} else {
+								pos = str.indexOf(' ', offset);
+							}
+
+							return pos;
+						};
+
+						walker = new TreeWalker(container, ed.getBody());
+
+						if (container.nodeType === 3) {
+							pos = findSpace(container, offset);
+
+							if (pos !== -1) {
+								return {container : container, offset : pos};
+							}
+
+							lastTextNode = container;
+						}
+
+						while (node = walker[start ? 'prev' : 'next']()) {
+							if (node.nodeType === 3) {
+								lastTextNode = node;
+								pos = findSpace(node);
+
+								if (pos !== -1) {
+									return {container : node, offset : pos};
+								}
+							} else if (isBlock(node)) {
+								break;
+							}
+						}
+
+						if (lastTextNode) {
+							if (start) {
+								offset = 0;
+							} else {
+								offset = lastTextNode.length;
+							}
+
+							return {container: lastTextNode, offset: offset};
+						}
+					}
+
+					// Expand left to closest word boundery
+					endPoint = findWordEndPoint(startContainer, startOffset, true);
+					if (endPoint) {
+						startContainer = endPoint.container;
+						startOffset = endPoint.offset;
+					}
+
+					// Expand right to closest word boundery
+					endPoint = findWordEndPoint(endContainer, endOffset);
+					if (endPoint) {
+						endContainer = endPoint.container;
+						endOffset = endPoint.offset;
+					}
+				}
+
 				// Avoid applying formatting to a trailing space.
 				leaf = findLeaf(endContainer, endOffset);
 				if (leaf.node) {
@@ -1183,14 +1266,19 @@
 					}
 				}
 			}
-			
+
 			// Move start/end point up the tree if the leaves are sharp and if we are in different containers
 			// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
 			// This will reduce the number of wrapper elements that needs to be created
 			// Move start point up the tree
 			if (format[0].inline || format[0].block_expand) {
-				startContainer = findParentContainer(startContainer, 'firstChild', 'nextSibling');
-				endContainer = findParentContainer(endContainer, 'lastChild', 'previousSibling');
+				if (!format[0].inline || (startContainer.nodeType != 3 || startOffset === 0)) {
+					startContainer = findParentContainer(true);
+				}
+
+				if (!format[0].inline || (endContainer.nodeType != 3 || endOffset === endContainer.nodeValue.length)) {
+					endContainer = findParentContainer();
+				}
 			}
 
 			// Expand start/end container to matching selector
@@ -1264,10 +1352,10 @@
 				// Non block element then try to expand up the leaf
 				if (format[0].block) {
 					if (!isBlock(startContainer))
-						startContainer = findParentContainer(startContainer, 'firstChild', 'nextSibling');
+						startContainer = findParentContainer(true);
 
 					if (!isBlock(endContainer))
-						endContainer = findParentContainer(endContainer, 'lastChild', 'previousSibling');
+						endContainer = findParentContainer();
 				}
 			}
 
@@ -1752,29 +1840,51 @@
 			
 			// Applies formatting to the caret postion
 			function applyCaretFormat() {
-				var rng, caretContainer, textNode, offset;
+				var rng, caretContainer, textNode, offset, bookmark, container, text;
 
 				rng = selection.getRng(true);
 				offset = rng.startOffset;
+				container = rng.startContainer;
+				text = container.nodeValue;
+
 				caretContainer = getParentCaretContainer(selection.getStart());
 				if (caretContainer) {
 					textNode = findFirstTextNode(caretContainer);
 				}
 
-				if (!caretContainer || textNode.nodeValue !== invisibleChar) {
-					caretContainer = createCaretContainer(true);
-					textNode = caretContainer.firstChild;
+				// Expand to word is caret is in the middle of a text node and the char before/after is a alpha numeric character
+				if (text && offset > 0 && offset < text.length && /\w/.test(text.charAt(offset)) && /\w/.test(text.charAt(offset - 1))) {
+					// Get bookmark of caret position
+					bookmark = selection.getBookmark();
 
-					rng.insertNode(caretContainer);
-					offset = 1;
+					// Collapse bookmark range (WebKit)
+					rng.collapse(true);
 
-					apply(name, vars, caretContainer);
+					// Expand the range to the closest word and split it at those points
+					rng = expandRng(rng, get(name));
+					rng = rangeUtils.split(rng);
+
+					// Apply the format to the range
+					apply(name, vars, rng);
+
+					// Move selection back to caret position
+					selection.moveToBookmark(bookmark);
 				} else {
-					apply(name, vars, caretContainer);
-				}
+					if (!caretContainer || textNode.nodeValue !== invisibleChar) {
+						caretContainer = createCaretContainer(true);
+						textNode = caretContainer.firstChild;
 
-				// Move selection to text node
-				selection.setCursorLocation(textNode, offset);
+						rng.insertNode(caretContainer);
+						offset = 1;
+
+						apply(name, vars, caretContainer);
+					} else {
+						apply(name, vars, caretContainer);
+					}
+
+					// Move selection to text node
+					selection.setCursorLocation(textNode, offset);
+				}
 			};
 
 			function removeCaretFormat() {
@@ -1814,12 +1924,20 @@
 
 				// Is there contents after the caret then remove the format on the element
 				if (hasContentAfter) {
+					// Get bookmark of caret position
 					bookmark = selection.getBookmark();
 
-					tinymce.each(get(name), function(format) {
-						removeFormat(format, vars, formatNode);
-					});
+					// Collapse bookmark range (WebKit)
+					rng.collapse(true);
 
+					// Expand the range to the closest word and split it at those points
+					rng = expandRng(rng, get(name), true);
+					rng = rangeUtils.split(rng);
+
+					// Remove the format from the range
+					remove(name, vars, rng);
+
+					// Move selection back to caret position
 					selection.moveToBookmark(bookmark);
 				} else {
 					caretContainer = createCaretContainer();
