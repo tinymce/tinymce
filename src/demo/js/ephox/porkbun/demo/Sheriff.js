@@ -22,7 +22,12 @@ define(
         return container;
       };
 
+      var watch = function(saloon) {
+        // Listen for shoot events happening in the saloon
+      };
+
       return {
+        watch: watch,
         getElement: getElement
       };
     };

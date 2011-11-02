@@ -12,22 +12,29 @@ define(
   function ($, Outlaw, Saloon, Sheriff) {
     return function () {
       $(document).ready(function() {
-        
 
-        var chuck = Sheriff.create();
 //        var moose = Horse.create();
         var saloon = Saloon.create();
 
-        var fred = Outlaw.create();
-        var barney = Outlaw.create();
+        var fred = Outlaw.create("Fred");
+        var barney = Outlaw.create("Barney");
+
+        fred.addAction("Shoot Barney", function() {
+          fred.shoot(barney);
+        });
+
+        barney.addAction("Shoot Fred", function() {
+          barney.shoot(fred);
+        });
 
         saloon.enter(fred);
         saloon.enter(barney);
 
+        var chuck = Sheriff.create();
+        chuck.watch(saloon);
+
         $('body').append(saloon.getElement());
         $('body').append(chuck.getElement());
-
-        
       });
     };
   }

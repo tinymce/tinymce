@@ -6,21 +6,38 @@ define(
   ],
 
   function($) {
-    var create = function() {
+    var create = function(name) {
       var container = $('<div />');
-      container.css({ width: "200px", textAlign: 'center' });
+      container.css({  width: '1px dashed gray' });
+
+      var character = $('<div />');
+      character.css({ width: '200px', float: 'left' });
 
       var img = $('<img src="images/outlaw.jpg" />');
       img.height('200px');
-      container.append(img);
 
-      var caption = $('<p>Outlaw</p>');
+      var actions = $('<div />');
+      actions.css({ float: 'right', width: '60px' });
+
+      var caption = $('<p>');
+      caption.text(name);
       caption.css({ textAlign: 'center', fontWeight: 'bold' });
-      container.append(caption);
+      caption.append(actions);
+
+      character.append(img, caption);
+      container.append(character);
 
       // Event for I've shot someone
 
       // Event for I've been shot
+
+      var addAction = function(text, action) {
+        var button = $('<button />');
+        button.text(text);
+        button.bind('click', action);
+        
+        actions.append(button);
+      };
 
       var shoot = function(outlaw) {
         outlaw.die();
@@ -28,7 +45,7 @@ define(
       };
 
       var die = function() {
-        img.src = "images/gravestone.jpg";
+        img.attr('src', 'images/gravestone.jpg');
         // Fire I've died event
       };
 
@@ -37,7 +54,10 @@ define(
       };
 
       return {
-        getElement: getElement
+        getElement: getElement,
+        addAction: addAction,
+        shoot: shoot,
+        die: die
       };
     };
 

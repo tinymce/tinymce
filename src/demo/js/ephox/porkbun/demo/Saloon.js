@@ -27,13 +27,15 @@ define(
         var chair = $('<div />');
         chair.css({ float: 'right', clear: 'both' });
         chair.append(outlaw.getElement());
-        // Hey this outlaw is inside me, I better listen for when/if he shoots someone
+        // Hey this outlaw is inside, I better listen for when/if he shoots someone
         saloon.append(chair);
       };
 
       var leave = function(outlaw) {
         // Not my problem anymore
+        var chair = outlaw.getElement().parent();
         outlaw.getElement().detach();
+        chair.remove();
       };
 
       return {
