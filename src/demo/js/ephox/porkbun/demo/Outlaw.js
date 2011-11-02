@@ -5,8 +5,8 @@ define(
     'ephox.wrap.JQuery'
   ],
 
-  function($) {
-    var create = function(name) {
+  function ($) {
+    var create = function (name) {
       var container = $('<div />');
       container.css({  width: '1px dashed gray' });
 
@@ -32,9 +32,10 @@ define(
       // Create Event for I've been shot
 
       // Listen to "give chase" events, listener is chaseStarted function
-      var chaseStarted = function(source, target) {
+
+      var chaseStarted = function (source, target) {
         if (alive) {
-          //TODO: check if target is me? Is that even possible?
+          // TODO: check if target is me? Is that even possible?
           // Fire a leaving event
         } else {
           throw "I am dead"
@@ -43,7 +44,7 @@ define(
 
       var alive = true;
 
-      var addAction = function(text, action) {
+      var addAction = function (text, action) {
         var button = $('<button />');
         button.text(text);
         button.bind('click', action);
@@ -51,19 +52,19 @@ define(
         actions.append(button);
       };
 
-      var shoot = function(outlaw) {
+      var shoot = function (outlaw) {
         outlaw.die();
         // Fire my shoot event
       };
 
-      var die = function() {
+      var die = function () {
         alive = false;
         img.attr('src', 'images/gravestone.jpg');
-        actions.detach();
+        actions.remove();
         // Fire I've died event
       };
 
-      var getElement = function() {
+      var getElement = function () {
         return container;
       };
 

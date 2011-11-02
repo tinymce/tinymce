@@ -5,8 +5,8 @@ define(
     'ephox.wrap.JQuery'
   ],
 
-  function($) {
-    var create = function() {
+  function ($) {
+    var create = function () {
       var container = $('<div />');
       container.css({ float: 'left', width: "200px", textAlign: 'center' });
 
@@ -15,11 +15,9 @@ define(
       container.append(img);
 
       var shooter;
-      var giveChase = $('<button />');
-      giveChase.text("give chase");
-      giveChase.attr('disabled', true);
-      giveChase.bind('click', function() {
-        //Fire a give giveChase event with shooter as the extra info
+      var giveChase = $('<button disabled="true">Give chase</button>');
+      giveChase.bind('click', function () {
+
       });
 
       var actions = $('<div />');
@@ -31,15 +29,15 @@ define(
       caption.append(actions);
       container.append(caption);
 
-      var getElement = function() {
+      var getElement = function () {
         return container;
       };
 
-      var watch = function(saloon) {
+      var watch = function (saloon) {
         // Listen for shoot events happening in the saloon, listener is heardShot function
       };
 
-      var heardShot = function(source, target) {
+      var heardShot = function (source, target) {
         giveChase.attr('disabled', false);
         shooter = source;
       };
