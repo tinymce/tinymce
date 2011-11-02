@@ -26,5 +26,16 @@ var dependencies = [
     targets: [
       { name: "compile/ephox.wrap.D.js", path: lib + "/compile" }
     ]
+  },
+
+  // Only used by demo.html
+  {
+    name: "wrap-jquery",
+    repository: "buildrepo2",
+    version: "latest",
+    source: "wrap-jquery.zip",
+    targets: [
+      { name: "compile/ephox.wrap.JQuery.js", path: lib + "/compile" }
+    ]
   }
 ];
