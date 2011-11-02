@@ -4,6 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/js" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/js/atomic" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/bolt/bootstrap" />
       <excludeFolder url="file://$MODULE_DIR$/dependency" />
     </content>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AntConfiguration">
+    <defaultAnt bundledAnt="true" />
+  </component>
   <component name="ClearCaseSharedConfig">
     <option name="myUseUcmModel" value="true" />
   </component>
@@ -190,6 +193,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/porkbun.iml" filepath="$PROJECT_DIR$/porkbun.iml" />
     </modules>
+  </component>
+  <component name="ProjectResources">
+    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="openjdk version &quot;1.7.0-internal&quot;" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
