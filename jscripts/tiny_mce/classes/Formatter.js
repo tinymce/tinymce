@@ -1187,7 +1187,8 @@
 							if (start) {
 								pos = str.lastIndexOf(' ', offset);
 
-								if (pos !== -1) {
+								// Include the space on remove to avoid tag soup
+								if (pos !== -1 && !remove) {
 									pos++;
 								}
 							} else {
