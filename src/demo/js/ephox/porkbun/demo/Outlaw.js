@@ -2,10 +2,11 @@ define(
   'ephox.porkbun.demo.Outlaw',
 
   [
-    'ephox.wrap.JQuery'
+    'ephox.wrap.JQuery',
+    'ephox.porkbun.Events'
   ],
 
-  function ($) {
+  function ($, Events) {
     var create = function (name) {
       var container = $('<div />');
       container.css({  width: '1px dashed gray' });
@@ -32,6 +33,8 @@ define(
       // Create Event for I've been shot
 
       // Listen to "give chase" events, listener is chaseStarted function
+
+      var events = Events.create(['shotFired', 'haveBeenShot']);
 
       var chaseStarted = function (source, target) {
         if (alive) {

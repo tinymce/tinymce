@@ -1,21 +1,21 @@
 define(
-  'ephox.porkbun.Event',
+  'ephox.porkbun.Events',
 
   [
     'ephox.wrap.D'
   ],
 
   function (D) {
-    var create = function (source, events) {
+    var create = function (names) {
       var registry = {};
       var trigger = {};
 
-      D(events).each(function (event) {
+      D(names).each(function (name) {
         var callbacks = [];
 
         var bind = function (callback) {
           if (callback === undefined) {
-            throw 'Event bind error: undefined callback bound for "' + event + '" event';
+            throw 'Event bind error: undefined callback bound for "' + name + '" event';
           }
           callbacks.push(callback);
         };
@@ -31,14 +31,14 @@ define(
           }
         };
 
-        registry[event] = {
+        registry[name] = {
           bind: bind,
           unbind: unbind
         };
 
-        trigger[event] = function (extra) {
+        trigger[name] = function (event) {
           D(callbacks).each(function (callback) {
-            callback(source, extra);
+            callback(event);
           });
         };
       });
@@ -46,7 +46,7 @@ define(
       return {
         registry: registry,
         trigger: trigger
-      }
+      };
     };
 
     return {
