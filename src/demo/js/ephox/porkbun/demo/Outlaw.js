@@ -9,9 +9,6 @@ define(
   ],
 
   function (D, $, Events, Struct) {
-    var shotFiredEvent = Struct.immutable('shooter', 'target');
-    var haveBeenShotEvent = Struct.immutable('source');
-
     var create = function (name) {
       var container = $('<div />');
       container.css({  width: '1px dashed gray' });
@@ -33,7 +30,10 @@ define(
       character.append(img, caption);
       container.append(character);
 
-      var events = Events.create(['shotFired', 'haveBeenShot']);
+      var events = Events.create({
+        shotFired: Struct.immutable('shooter', 'target'),
+        haveBeenShot: Struct.immutable('source')
+      });
 
       var alive = true;
 
@@ -69,7 +69,7 @@ define(
 
       var shoot = function (outlaw) {
         outlaw.die();
-        events.trigger.shotFired(shotFiredEvent(api, outlaw));
+        events.trigger.shotFired(api, outlaw);
       };
 
       var die = function () {
@@ -77,7 +77,7 @@ define(
         img.attr('src', 'images/gravestone.jpg');
         actions.remove();
         stayingAwayFrom.events.chasing.unbind(chaseStarted);
-        events.trigger.haveBeenShot(haveBeenShotEvent(api));
+        events.trigger.haveBeenShot(api);
       };
 
       var getElement = function () {

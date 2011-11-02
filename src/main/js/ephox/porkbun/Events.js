@@ -6,11 +6,11 @@ define(
   ],
 
   function (D) {
-    var create = function (types) {
+    var create = function (typeDefs) {
       var registry = {};
       var trigger = {};
 
-      D(types).each(function (type) {
+      D(typeDefs).each(function (struct, type) {
         var handlers = [];
 
         var bind = function (handler) {
@@ -36,8 +36,10 @@ define(
           unbind: unbind
         };
 
-        trigger[type] = function (event) {
+        trigger[type] = function (/* fields */) {
+          var fields = Array.prototype.slice.call(arguments);
           D(handlers).each(function (handler) {
+            var event = struct.apply(null, fields);
             handler(event);
           });
         };

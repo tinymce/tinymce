@@ -8,8 +8,6 @@ define(
   ],
 
   function ($, Events, Struct) {
-    var shotFiredEvent = Struct.immutable("saloon", "shooter", "target");
-
     var create = function () {
       var saloon = $('<div />');
       saloon.css({
@@ -24,7 +22,9 @@ define(
         return saloon;
       };
 
-      var events = Events.create(['shotFired']);
+      var events = Events.create({
+        shotFired: Struct.immutable("shooter", "target")
+      });
 
       var enter = function (outlaw) {
         var chair = $('<div />');
@@ -32,13 +32,11 @@ define(
         chair.append(outlaw.getElement());
         saloon.append(chair);
 
-        var outlawEvents = outlaw.events;
-        outlawEvents.shotFired.bind(shotFired);
-        outlawEvents.haveBeenShot.bind(outlawDied);
+        outlaw.events.shotFired.bind(shotFired);
+        outlaw.events.haveBeenShot.bind(outlawDied);
       };
 
       var leave = function (outlaw) {
-        // Not my problem anymore
         stopListening(outlaw);
 
         var element = outlaw.getElement();
@@ -48,29 +46,26 @@ define(
       };
 
       var stopListening = function (outlaw) {
-        var outlawEvents = outlaw.events;
-        outlawEvents.shotFired.unbind(shotFired);
-        outlawEvents.haveBeenShot.unbind(outlawDied);
+        outlaw.events.shotFired.unbind(shotFired);
+        outlaw.events.haveBeenShot.unbind(outlawDied);
       };
 
       var shotFired = function (event) {
-        // Potential chain event?
         var shooter = event.shooter();
         var target = event.target();
-        events.trigger.shotFired(shotFiredEvent(api, shooter, target));
+        events.trigger.shotFired(shooter, target);
       };
 
       var outlawDied = function (event) {
         stopListening(event.source());
       };
 
-      var api = {
+      return {
         getElement: getElement,
         enter: enter,
         leave: leave,
         events: events.registry
       };
-      return api;
     };
 
     return {

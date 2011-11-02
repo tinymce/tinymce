@@ -8,8 +8,6 @@ define(
   ],
 
   function ($, Events, Struct) {
-    var chasingEvent = Struct.immutable('target');
-
     var create = function () {
       var container = $('<div />');
       container.css({ float: 'left', width: "200px", textAlign: 'center' });
@@ -18,12 +16,14 @@ define(
       img.height('200px');
       container.append(img);
 
-      var events = Events.create(['chasing']);
+      var events = Events.create({
+        chasing: Struct.immutable('target')
+      });
 
       var shooter;
       var giveChase = $('<button disabled="true">Give chase</button>');
       giveChase.bind('click', function () {
-        events.trigger.chasing(chasingEvent(shooter));
+        events.trigger.chasing(shooter);
       });
 
       var actions = $('<div />');
