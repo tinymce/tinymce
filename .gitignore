@@ -1,0 +1,9 @@
+*.iws
+.DS_Store
+/out
+/lib
+/dist
+/scratch
+/dependency
+/bolt/config/bootstrap.js
+/bolt/bootstrap
