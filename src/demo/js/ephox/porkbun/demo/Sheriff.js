@@ -2,10 +2,14 @@ define(
   'ephox.porkbun.demo.Sheriff',
 
   [
-    'ephox.wrap.JQuery'
+    'ephox.wrap.JQuery',
+    'ephox.porkbun.Events',
+    'ephox.porkbun.Struct'
   ],
 
-  function ($) {
+  function ($, Events, Struct) {
+    var chasingEvent = Struct.immutable('target');
+
     var create = function () {
       var container = $('<div />');
       container.css({ float: 'left', width: "200px", textAlign: 'center' });
@@ -14,10 +18,12 @@ define(
       img.height('200px');
       container.append(img);
 
+      var events = Events.create(['chasing']);
+
       var shooter;
       var giveChase = $('<button disabled="true">Give chase</button>');
       giveChase.bind('click', function () {
-
+        events.trigger.chasing(chasingEvent(shooter));
       });
 
       var actions = $('<div />');
@@ -34,17 +40,18 @@ define(
       };
 
       var watch = function (saloon) {
-        // Listen for shoot events happening in the saloon, listener is heardShot function
+        saloon.events.shotFired.bind(heardShot);
       };
 
-      var heardShot = function (source, target) {
+      var heardShot = function (event) {
         giveChase.attr('disabled', false);
-        shooter = source;
+        shooter = event.shooter();
       };
 
       return {
         watch: watch,
-        getElement: getElement
+        getElement: getElement,
+        events: events.registry
       };
     };
 

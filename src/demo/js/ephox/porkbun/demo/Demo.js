@@ -28,14 +28,14 @@ define(
           barney.shoot(fred);
         });
 
-        saloon.enter(fred);
-        saloon.enter(barney);
+        fred.enter(saloon);
+        barney.enter(saloon);
 
         var sheriff = Sheriff.create();
         sheriff.watch(saloon);
 
-//        fred.stayAwayFrom(sheriff);
-//        barney.stayAwayFrom(sheriff);
+        fred.stayAwayFrom(sheriff);
+        barney.stayAwayFrom(sheriff);
 
         $('body').append(sheriff.getElement());
         $('body').append(saloon.getElement());

@@ -2,10 +2,14 @@ define(
   'ephox.porkbun.demo.Saloon',
 
   [
-    'ephox.wrap.JQuery'
+    'ephox.wrap.JQuery',
+    'ephox.porkbun.Events',
+    'ephox.porkbun.Struct'
   ],
 
-  function ($) {
+  function ($, Events, Struct) {
+    var shotFiredEvent = Struct.immutable("saloon", "shooter", "target");
+
     var create = function () {
       var saloon = $('<div />');
       saloon.css({
@@ -20,14 +24,17 @@ define(
         return saloon;
       };
 
-      // An event that notifies when a shot has been fired in the saloon
+      var events = Events.create(['shotFired']);
 
       var enter = function (outlaw) {
         var chair = $('<div />');
         chair.css({ border: '1px dashed green', float: 'right', clear: 'both' });
         chair.append(outlaw.getElement());
-        // Hey this outlaw is inside, listen for shoot, death, leaving - shotFired, outlawDied, outlawLeaving functions
         saloon.append(chair);
+
+        var outlawEvents = outlaw.events;
+        outlawEvents.shotFired.bind(shotFired);
+        outlawEvents.haveBeenShot.bind(outlawDied);
       };
 
       var leave = function (outlaw) {
@@ -41,27 +48,29 @@ define(
       };
 
       var stopListening = function (outlaw) {
-        // Stop listening
+        var outlawEvents = outlaw.events;
+        outlawEvents.shotFired.unbind(shotFired);
+        outlawEvents.haveBeenShot.unbind(outlawDied);
       };
 
-      var shotFired = function (source, target) {
+      var shotFired = function (event) {
         // Potential chain event?
+        var shooter = event.shooter();
+        var target = event.target();
+        events.trigger.shotFired(shotFiredEvent(api, shooter, target));
       };
 
-      var outlawDied = function (source, target) {
-        stopListening(source);
+      var outlawDied = function (event) {
+        stopListening(event.source());
       };
 
-      var outlawLeaving = function (source, target) {
-        stopListening(source);
-        leave(source);
-      };
-
-      return {
+      var api = {
         getElement: getElement,
         enter: enter,
-        leave: leave
+        leave: leave,
+        events: events.registry
       };
+      return api;
     };
 
     return {

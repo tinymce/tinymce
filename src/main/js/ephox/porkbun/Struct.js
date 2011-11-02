@@ -6,6 +6,7 @@ define(
   ],
 
   function (D) {
+    //TODO: Move into D
     var immutable = function (/* fields */) {
       var those = Array.prototype.slice.call(arguments);
       return function(/* fields */) {

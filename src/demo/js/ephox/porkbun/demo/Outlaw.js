@@ -2,11 +2,16 @@ define(
   'ephox.porkbun.demo.Outlaw',
 
   [
+    'ephox.wrap.D',
     'ephox.wrap.JQuery',
-    'ephox.porkbun.Events'
+    'ephox.porkbun.Events',
+    'ephox.porkbun.Struct'
   ],
 
-  function ($, Events) {
+  function (D, $, Events, Struct) {
+    var shotFiredEvent = Struct.immutable('shooter', 'target');
+    var haveBeenShotEvent = Struct.immutable('source');
+
     var create = function (name) {
       var container = $('<div />');
       container.css({  width: '1px dashed gray' });
@@ -28,22 +33,7 @@ define(
       character.append(img, caption);
       container.append(character);
 
-      // Create Event for I've shot someone
-
-      // Create Event for I've been shot
-
-      // Listen to "give chase" events, listener is chaseStarted function
-
       var events = Events.create(['shotFired', 'haveBeenShot']);
-
-      var chaseStarted = function (source, target) {
-        if (alive) {
-          // TODO: check if target is me? Is that even possible?
-          // Fire a leaving event
-        } else {
-          throw "I am dead"
-        }
-      };
 
       var alive = true;
 
@@ -55,28 +45,64 @@ define(
         actions.append(button);
       };
 
+      //there's a pattern here screaming to get out
+      var inSaloon;
+      var enter = function(saloon) {
+        saloon.enter(api);
+        inSaloon = saloon;
+      };
+
+      var chaseStarted = function (event) {
+        if (alive) {
+          if (event.target() === api) {
+            leave();
+          }
+        } else {
+          throw "I am dead"
+        }
+      };
+
+      var leave = function() {
+        inSaloon.leave(api);
+        inSaloon = undefined;
+      };
+
       var shoot = function (outlaw) {
         outlaw.die();
-        // Fire my shoot event
+        events.trigger.shotFired(shotFiredEvent(api, outlaw));
       };
 
       var die = function () {
         alive = false;
         img.attr('src', 'images/gravestone.jpg');
         actions.remove();
-        // Fire I've died event
+        stayingAwayFrom.events.chasing.unbind(chaseStarted);
+        events.trigger.haveBeenShot(haveBeenShotEvent(api));
       };
 
       var getElement = function () {
         return container;
       };
 
-      return {
+      //there's a pattern here screaming to get out
+      var stayingAwayFrom;
+      var stayAwayFrom = function(sherrif) {
+        sherrif.events.chasing.bind(chaseStarted);
+        stayingAwayFrom = sherrif;
+      };
+
+      var api = {
+        name: D.getConstant(name),
         getElement: getElement,
         addAction: addAction,
+        enter: enter,
+        leave: leave,
         shoot: shoot,
-        die: die
+        die: die,
+        events: events.registry,
+        stayAwayFrom: stayAwayFrom
       };
+      return api;
     };
 
     return {
