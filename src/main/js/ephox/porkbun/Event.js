@@ -5,9 +5,12 @@ define(
   ],
 
   function() {
+    var create = function() {
+      
+    };
 
     return {
-
+      create: create
     };
   }
 );

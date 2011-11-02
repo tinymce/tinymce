@@ -17,7 +17,7 @@ define(
       img.height('200px');
 
       var actions = $('<div />');
-      actions.css({ float: 'right', width: '60px' });
+      actions.css({ float: 'right' });
 
       var caption = $('<p>');
       caption.text(name);
@@ -27,9 +27,21 @@ define(
       character.append(img, caption);
       container.append(character);
 
-      // Event for I've shot someone
+      // Create Event for I've shot someone
 
-      // Event for I've been shot
+      // Create Event for I've been shot
+
+      // Listen to "give chase" events, listener is chaseStarted function
+      var chaseStarted = function(source, target) {
+        if (alive) {
+          //TODO: check if target is me? Is that even possible?
+          // Fire a leaving event
+        } else {
+          throw "I am dead"
+        }
+      };
+
+      var alive = true;
 
       var addAction = function(text, action) {
         var button = $('<button />');
@@ -45,7 +57,9 @@ define(
       };
 
       var die = function() {
+        alive = false;
         img.attr('src', 'images/gravestone.jpg');
+        actions.detach();
         // Fire I've died event
       };
 

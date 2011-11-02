@@ -12,9 +12,8 @@ define(
         border: '3px solid brown',
         backgroundImage: 'url(images/saloon.jpg)',
         backgroundRepeat: 'no-repeat',
-        height: '500px',
-        width: '700px',
-        float: 'right'
+        width: '500px',
+        float: 'left'
       });
 
       var getElement = function() {
@@ -25,16 +24,36 @@ define(
 
       var enter = function(outlaw) {
         var chair = $('<div />');
-        chair.css({ float: 'right', clear: 'both' });
+        chair.css({ border: '1px solid green', float: 'right', clear: 'both' });
         chair.append(outlaw.getElement());
-        // Hey this outlaw is inside, I better listen for when/if he shoots someone
+        // Hey this outlaw is inside, listen for shoot, death, leaving - shotFired, outlawDied, outlawLeaving functions
         saloon.append(chair);
+      };
+
+      var stopListening = function(outlaw) {
+        // Stop listening
+      };
+
+      var shotFired = function(source, target) {
+        // Potential chain event?
+      };
+
+      var outlawDied = function(source, target) {
+        stopListening(source);
+      };
+
+      var outlawLeaving = function(source, target) {
+        stopListening(source);
+        leave(source);
       };
 
       var leave = function(outlaw) {
         // Not my problem anymore
-        var chair = outlaw.getElement().parent();
-        outlaw.getElement().detach();
+        stopListening(outlaw);
+        
+        var element = outlaw.getElement();
+        var chair = element.parent();
+        element.detach();
         chair.remove();
       };
 

@@ -33,8 +33,8 @@ define(
         var chuck = Sheriff.create();
         chuck.watch(saloon);
 
-        $('body').append(saloon.getElement());
         $('body').append(chuck.getElement());
+        $('body').append(saloon.getElement());
       });
     };
   }
