@@ -7,7 +7,7 @@ define(
 
   function (D) {
     //TODO: Move into D
-    var immutable = function (/* fields */) {
+    var d_dot_immutableFactory = function (/* fields */) {
       var those = Array.prototype.slice.call(arguments);
       return function(/* fields */) {
         var these = Array.prototype.slice.call(arguments);
@@ -23,7 +23,7 @@ define(
     };
 
     return {
-      immutable: immutable
+      immutable: d_dot_immutableFactory
     };
   }
 );
