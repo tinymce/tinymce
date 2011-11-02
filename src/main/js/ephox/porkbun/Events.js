@@ -6,39 +6,39 @@ define(
   ],
 
   function (D) {
-    var create = function (names) {
+    var create = function (types) {
       var registry = {};
       var trigger = {};
 
-      D(names).each(function (name) {
-        var callbacks = [];
+      D(types).each(function (type) {
+        var handlers = [];
 
-        var bind = function (callback) {
-          if (callback === undefined) {
-            throw 'Event bind error: undefined callback bound for "' + name + '" event';
+        var bind = function (handler) {
+          if (handler === undefined) {
+            throw 'Event bind error: undefined handler bound for event type "' + type + '"';
           }
-          callbacks.push(callback);
+          handlers.push(handler);
         };
 
-        var unbind = function (callback) {
-          if (callback !== undefined) {
-            var index = callbacks.indexOf(callback);
+        var unbind = function (handler) {
+          if (handler !== undefined) {
+            var index = handlers.indexOf(handler);
             if (index !== -1) {
-              callbacks.splice(index, 1);
+              handlers.splice(index, 1);
             }
           } else {
-            callbacks = [];
+            handlers = [];
           }
         };
 
-        registry[name] = {
+        registry[type] = {
           bind: bind,
           unbind: unbind
         };
 
-        trigger[name] = function (event) {
-          D(callbacks).each(function (callback) {
-            callback(event);
+        trigger[type] = function (event) {
+          D(handlers).each(function (handler) {
+            handler(event);
           });
         };
       });
