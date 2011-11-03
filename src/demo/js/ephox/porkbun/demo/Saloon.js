@@ -35,13 +35,13 @@ define(
         chair.append(outlaw.getElement());
         saloon.append(chair);
 
-        binder.bind(outlaw.events.shooting, function (event) {
+        binder.bind(outlaw.events.shoot, function (event) {
           var shooter = outlaw;
           var target = event.target();
           events.trigger.shotFired(shooter, target);
         });
 
-        binder.bind(outlaw.events.haveBeenShot, function (event) {
+        binder.bind(outlaw.events.die, function (event) {
           stopListening(outlaw);
         });
       };
@@ -56,8 +56,8 @@ define(
       };
 
       var stopListening = function (outlaw) {
-        binder.unbind(outlaw.events.shooting);
-        binder.unbind(outlaw.events.haveBeenShot);
+        binder.unbind(outlaw.events.shoot);
+        binder.unbind(outlaw.events.die);
       };
 
       return {
