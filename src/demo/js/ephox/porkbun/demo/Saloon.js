@@ -29,16 +29,25 @@ define(
 
       var binder = Binder.create();
 
-      var enter = function (outlaw) {
+      var seat = function (patron) {
         var chair = $('<div />');
         chair.css({ border: '1px dashed green', float: 'right', clear: 'both' });
-        chair.append(outlaw.getElement());
+        chair.append(patron.getElement());
         saloon.append(chair);
+      };
+
+      var unseat = function (patron) {
+        var element = patron.getElement();
+        var chair = element.parent();
+        element.detach();
+        chair.remove();
+      };
+
+      var enter = function (outlaw) {
+        seat(outlaw);
 
         binder.bind(outlaw.events.shoot, function (event) {
-          var shooter = outlaw;
-          var target = event.target();
-          events.trigger.shooting(shooter, target);
+          events.trigger.shooting(outlaw, event.target());
         });
 
         binder.bind(outlaw.events.die, function (event) {
@@ -47,12 +56,8 @@ define(
       };
 
       var leave = function (outlaw) {
+        unseat(outlaw);
         stopListening(outlaw);
-
-        var element = outlaw.getElement();
-        var chair = element.parent();
-        element.detach();
-        chair.remove();
       };
 
       var stopListening = function (outlaw) {
@@ -62,9 +67,9 @@ define(
 
       return {
         getElement: getElement,
+        events: events.registry,
         enter: enter,
-        leave: leave,
-        events: events.registry
+        leave: leave
       };
     };
 
