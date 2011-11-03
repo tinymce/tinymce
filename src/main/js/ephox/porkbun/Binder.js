@@ -2,51 +2,40 @@ define(
   'ephox.porkbun.Binder',
 
   [
-    'ephox.wrap.D'
   ],
 
-  function (D) {
+  function () {
     var create = function() {
       var types = [];
       var handlers = [];
 
-      var newIndex = function(type) {
-        var index = types.length;
-        types.push(type);
-        handlers.push([]);
-        return index;
-      };
-
-      var safeIndexFor = function (type) {
-        var index = types.indexOf(type);
-        return index > -1 ? index : newIndex(type);
-
-      };
-
-      var bind = function(type, handler) {
-        var index = safeIndexFor(type);
-        handlers[index].push(handler);
-        type.bind(handler);
-      };
-
-      var unbindAll = function(type) {
-        var index = types.indexOf(type);
-
-        if (index < 0) {
-          throw "no listeners of type " + type;
+      var bind = function(bund, handler) {
+        var index = types.indexOf(bund);
+        if (index !== -1) {
+          throw 'Bind error: event type has already been bound';
         }
 
-        // get handlers for type
-        var typeHandlers = handlers[index];
+        bund.bind(handler);
 
-        D(typeHandlers).each(function(handler) {
-          type.unbind(handler);
-        });
+        types.push(bund);
+        handlers.push(handler);
+      };
+
+      var unbind = function(bund) {
+        var index = types.indexOf(bund);
+        if (index === -1) {
+          throw 'Unbind error: unknown event type';
+        }
+
+        bund.unbind(handlers[index]);
+
+        types.splice(index, 1);
+        handlers.splice(index, 1);
       };
 
       return {
         bind: bind,
-        unbindAll: unbindAll
+        unbind: unbind
       };
     };
 

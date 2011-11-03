@@ -28,7 +28,6 @@ define(
         };
 
         registry[type] = {
-          name: type,
           bind: bind,
           unbind: unbind
         };
@@ -39,7 +38,7 @@ define(
             try {
               var event = struct.apply(null, fields);
             } catch (e) {
-              throw 'Unable to create struct for ' + type + ', error was: \n' + e;
+              throw 'Unable to create struct for event type "' + type + '": ' + e;
             }
             handler(event);
           });

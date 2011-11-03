@@ -56,8 +56,8 @@ define(
       };
 
       var stopListening = function (outlaw) {
-        binder.unbindAll(outlaw.events.shooting);
-        binder.unbindAll(outlaw.events.haveBeenShot);
+        binder.unbind(outlaw.events.shooting);
+        binder.unbind(outlaw.events.haveBeenShot);
       };
 
       return {
