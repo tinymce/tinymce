@@ -9,7 +9,7 @@ define(
     //TODO: Move into D
     var d_dot_immutableFactory = function (/* fields */) {
       var those = Array.prototype.slice.call(arguments);
-      return function(/* fields */) {
+      return function(/* values */) {
         var these = Array.prototype.slice.call(arguments);
         if (these.length !== those.length)
           throw "Wrong number of arguments to struct";

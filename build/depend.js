@@ -19,6 +19,23 @@ var dependencies = [
   },
 
   {
+    name: "json2",
+    repository : "thirdpartyrepo",
+    source: "json2.zip",
+    targets : [
+      { name: "json2.js", path: "lib/test"}
+    ]
+  },
+
+  { name: "jssert",
+    repository: "buildrepo2",
+    source: "jssert.zip",
+    targets: [
+      {name: "jssert.js", path: "lib/test"}
+    ]
+  },
+
+  {
     name: "wrap-d",
     repository: "buildrepo2",
     version: "latest",
