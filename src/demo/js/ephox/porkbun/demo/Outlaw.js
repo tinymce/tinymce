@@ -73,7 +73,7 @@ define(
       };
 
       var stayingAwayFrom;
-      var stayAwayFrom = function(sherrif) {
+      var stayAwayFrom = function (sherrif) {
         sherrif.events.chasing.bind(chaseStarted);
         stayingAwayFrom = sherrif;
       };
