@@ -243,12 +243,11 @@ function insertTable() {
 		inst.execCommand('mceInsertContent', false, html);
 
 	tinymce.each(dom.select('table[data-mce-new]'), function(node) {
-		var td = dom.select('td', node);
+		var tdorth = dom.select('td,th', node);
 
 		try {
-			// IE9 might fail to do this selection
-			inst.selection.select(td[0], true);
-			inst.selection.collapse();
+			// IE9 might fail to do this selection 
+			inst.selection.setCursorLocation(tdorth[0], 0);
 		} catch (ex) {
 			// Ignore
 		}
