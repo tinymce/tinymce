@@ -38,7 +38,7 @@ define(
         var button = $('<button />');
         button.text(text);
         button.bind('click', action);
-        
+
         actions.append(button);
       };
 
@@ -89,13 +89,14 @@ define(
         name: D.getConstant(name),
         getElement: getElement,
         addAction: addAction,
+        events: events.registry,
         enter: enter,
         leave: leave,
         shoot: shoot,
         die: die,
-        events: events.registry,
         stayAwayFrom: stayAwayFrom
       };
+
       return api;
     };
 
