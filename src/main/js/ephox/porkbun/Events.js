@@ -21,13 +21,9 @@ define(
         };
 
         var unbind = function (handler) {
-          if (handler !== undefined) {
-            var index = handlers.indexOf(handler);
-            if (index !== -1) {
-              handlers.splice(index, 1);
-            }
-          } else {
-            handlers = [];
+          var index = handlers.indexOf(handler);
+          if (index !== -1) {
+            handlers.splice(index, 1);
           }
         };
 

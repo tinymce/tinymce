@@ -29,4 +29,15 @@ function testEvents() {
 
   jssert.assertEq(false, called);
   jssert.assertEq(false, calledEvent.hasOwnProperty("name"));
+
+  // This should not throw an error
+  events.registry.myEvent.unbind(handler);
+}
+
+function testUndefinedHandler() {
+  var events = Events.create({ emptyEvent: Struct.immutable() });
+
+  jssert.assertThrows(function() {
+    events.registry.emptyEvent.bind(undefined);
+  }, 'Event bind error: undefined handler bound for event type "emptyEvent"');
 }
