@@ -4,10 +4,11 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.porkbun.Events',
+    'ephox.porkbun.Binder',
     'ephox.scullion.Struct'
   ],
 
-  function ($, Events, Struct) {
+  function ($, Events, Binder, Struct) {
     var create = function () {
       var saloon = $('<div />');
       saloon.css({
@@ -26,14 +27,23 @@ define(
         shotFired: Struct.immutable("shooter", "target")
       });
 
+      var binder = Binder.create();
+
       var enter = function (outlaw) {
         var chair = $('<div />');
         chair.css({ border: '1px dashed green', float: 'right', clear: 'both' });
         chair.append(outlaw.getElement());
         saloon.append(chair);
 
-        outlaw.events.shotFired.bind(shotFired);
-        outlaw.events.haveBeenShot.bind(outlawDied);
+        binder.bind(outlaw.events.shooting, function (event) {
+          var shooter = outlaw;
+          var target = event.target();
+          events.trigger.shotFired(shooter, target);
+        });
+
+        binder.bind(outlaw.events.haveBeenShot, function (event) {
+          stopListening(outlaw);
+        });
       };
 
       var leave = function (outlaw) {
@@ -46,18 +56,8 @@ define(
       };
 
       var stopListening = function (outlaw) {
-        outlaw.events.shotFired.unbind(shotFired);
-        outlaw.events.haveBeenShot.unbind(outlawDied);
-      };
-
-      var shotFired = function (event) {
-        var shooter = event.shooter();
-        var target = event.target();
-        events.trigger.shotFired(shooter, target);
-      };
-
-      var outlawDied = function (event) {
-        stopListening(event.source());
+        binder.unbindAll(outlaw.events.shooting);
+        binder.unbindAll(outlaw.events.haveBeenShot);
       };
 
       return {

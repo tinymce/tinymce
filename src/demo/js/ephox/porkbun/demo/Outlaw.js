@@ -31,8 +31,8 @@ define(
       container.append(character);
 
       var events = Events.create({
-        shotFired: Struct.immutable('shooter', 'target'),
-        haveBeenShot: Struct.immutable('source')
+        shooting: Struct.immutable('target'),
+        haveBeenShot: Struct.immutable()
       });
 
       var alive = true;
@@ -69,7 +69,7 @@ define(
 
       var shoot = function (outlaw) {
         outlaw.die();
-        events.trigger.shotFired(api, outlaw);
+        events.trigger.shooting(outlaw);
       };
 
       var die = function () {
@@ -77,7 +77,7 @@ define(
         img.attr('src', 'images/gravestone.jpg');
         actions.remove();
         stayingAwayFrom.events.chasing.unbind(chaseStarted);
-        events.trigger.haveBeenShot(api);
+        events.trigger.haveBeenShot();
       };
 
       var getElement = function () {

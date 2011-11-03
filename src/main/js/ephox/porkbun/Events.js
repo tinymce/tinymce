@@ -28,6 +28,7 @@ define(
         };
 
         registry[type] = {
+          name: type,
           bind: bind,
           unbind: unbind
         };
@@ -35,7 +36,11 @@ define(
         trigger[type] = function (/* fields */) {
           var fields = Array.prototype.slice.call(arguments);
           D(handlers).each(function (handler) {
-            var event = struct.apply(null, fields);
+            try {
+              var event = struct.apply(null, fields);
+            } catch (e) {
+              throw 'Unable to create struct for ' + type + ', error was: \n' + e;
+            }
             handler(event);
           });
         };
