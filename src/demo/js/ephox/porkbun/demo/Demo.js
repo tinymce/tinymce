@@ -4,7 +4,6 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.porkbun.demo.Outlaw',
-//    'ephox.porkbun.demo.Horse',
     'ephox.porkbun.demo.Saloon',
     'ephox.porkbun.demo.Sheriff'
   ],
@@ -12,8 +11,6 @@ define(
   function ($, Outlaw, Saloon, Sheriff) {
     return function () {
       $(document).ready(function () {
-
-//        var moose = Horse.create();
 
         var saloon = Saloon.create();
 

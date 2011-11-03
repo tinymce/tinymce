@@ -1,6 +1,6 @@
 require("include/include.js");
 
-var Struct = demand("ephox.porkbun.Struct");
+var Struct = demand("ephox.scullion.Struct");
 var Events = demand("ephox.porkbun.Events");
 
 function testEvents() {

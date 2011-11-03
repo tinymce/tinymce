@@ -18,6 +18,17 @@ var dependencies = [
     ]
   },
 
+
+  {
+    name: "scullion",
+    repository: "buildrepo2",
+    source: "scullion.zip",
+    targets: [
+      {name: "module/*.js", path: lib + "/module"},
+      {name: "compile/scullion.js", path: lib + "/test"}
+    ]
+  },
+
   {
     name: "json2",
     repository : "thirdpartyrepo",

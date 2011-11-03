@@ -5,7 +5,7 @@ define(
     'ephox.wrap.D',
     'ephox.wrap.JQuery',
     'ephox.porkbun.Events',
-    'ephox.porkbun.Struct'
+    'ephox.scullion.Struct'
   ],
 
   function (D, $, Events, Struct) {
