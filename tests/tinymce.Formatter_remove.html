@@ -19,7 +19,7 @@ module("Remove formatting", {
 });
 
 function getContent() {
-	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
+	return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
 };
 
 test('Inline element on selected text', function() {
@@ -306,6 +306,14 @@ test('Caret format at end of text inside other format with text after 2', functi
 	equals(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
 });
 
+test('Caret format on second word in table cell', function() {
+	editor.setContent('<table><tbody><tr><td>one <b>two</b></td></tr></tbody></table>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 2, 'b', 2);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
+});
+
 /*
 test('Remove format bug 1', function() {
 	editor.setContent('<p><b>ab<em>cde</em>fgh</b></p>');
@@ -320,6 +328,7 @@ tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
 	theme : "advanced",
+	apply_source_formatting : false,
 	add_unload_trigger : false,
 	theme_advanced_styles : 'test1=test1;test2=test2',
 	valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',

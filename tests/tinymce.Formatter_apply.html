@@ -19,7 +19,7 @@ module("Apply formatting", {
 });
 
 function getContent() {
-	return editor.getContent().toLowerCase().replace(/[\r\n]+/g, '');
+	return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
 };
 
 test('apply inline to a list', function(){
@@ -793,7 +793,7 @@ test("Applying formats in lists", function(){
 	rng.setEnd(editor.dom.select('li')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>nested</li>\n</ul>\n</li>\n</ul>', "heading should not automatically apply to sublists");
+	equals(editor.getContent(), '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>', "heading should not automatically apply to sublists");
 });
 
 test('Block format on li element', function() {
@@ -803,7 +803,7 @@ test('Block format on li element', function() {
 	rng.setEnd(editor.dom.select('li')[1].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>\n<h1>text</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equals(editor.getContent(), '<ul><li><h1>text</h1><ul><li><h1>nested</h1></li></ul></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 });
 
 test('Block on li element 2', function() {
@@ -813,7 +813,7 @@ test('Block on li element 2', function() {
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>nested</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equals(editor.getContent(), '<ul><li>before<ul><li>nested</li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 });
 
 test('Block on li element 3', function() {
@@ -823,7 +823,7 @@ test('Block on li element 3', function() {
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>before\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equals(editor.getContent(), '<ul><li>before<ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 });
 
 test('Block on li element 4', function() {
@@ -833,7 +833,7 @@ test('Block on li element 4', function() {
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul>\n<li>\n<h1>before</h1>\n<ul>\n<li>\n<h1>nested</h1>\n</li>\n</ul>\n<h1>after</h1>\n</li>\n</ul>', "heading should apply correctly when selection is after a sublist");
+	equals(editor.getContent(), '<ul><li><h1>before</h1><ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should apply correctly when selection is after a sublist");
 });
 
 test('Underline colors 1', function() {
@@ -879,7 +879,7 @@ test('Underline colors 5', function() {
 	rng.setEnd(editor.dom.select('span')[4].lastChild, 5);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\n<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\n<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
 });
 
 test('Underline colors 6', function() {
@@ -935,6 +935,14 @@ test('Caret format inside middle block word', function() {
 	setSelection('p', 5, 'p', 5);
 	editor.formatter.apply('format');
 	equals(editor.getContent(), '<p>abc <b>123</b> 456</p>');
+});
+
+test('Caret format on word separated by non breaking space', function() {
+	editor.setContent('<p>one&nbsp;two</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('p', 1, 'p', 1);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p><b>one</b>\u00a0two</p>');
 });
 
 test('Caret format inside single inline wrapped word', function() {
@@ -1017,6 +1025,15 @@ test('Caret format and backspace', function() {
 	type('\b');
 	equals(editor.getContent(), '<p>ab</p>');
 });
+
+test('Caret format on word in li with word in parent li before it', function() {
+	editor.setContent('<ul><li>one<ul><li>two</li></ul></li></ul>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('ul li li', 1, 'ul li li', 1);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
+});
+
 /*
 test('apply (list block)', function() {
 	var rng;
@@ -1100,6 +1117,7 @@ tinyMCE.init({
 	elements : "elm1",
 	theme : "advanced",
 	add_unload_trigger : false,
+	apply_source_formatting : false,
 	theme_advanced_styles : 'test1=test1;test2=test2',
 	valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
 	fix_list_elements : 0,

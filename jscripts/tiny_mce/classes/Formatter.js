@@ -1178,7 +1178,7 @@
 						var walker, node, pos, lastTextNode;
 
 						function findSpace(node, offset) {
-							var str = node.nodeValue;
+							var pos, pos2, str = node.nodeValue;
 
 							if (typeof(offset) == "undefined") {
 								offset = start ? str.length : 0;
@@ -1186,6 +1186,8 @@
 
 							if (start) {
 								pos = str.lastIndexOf(' ', offset);
+								pos2 = str.lastIndexOf('\u00a0', offset);
+								pos = pos > pos2 ? pos : pos2;
 
 								// Include the space on remove to avoid tag soup
 								if (pos !== -1 && !remove) {
@@ -1193,12 +1195,12 @@
 								}
 							} else {
 								pos = str.indexOf(' ', offset);
+								pos2 = str.indexOf('\u00a0', offset);
+								pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
 							}
 
 							return pos;
 						};
-
-						walker = new TreeWalker(container, ed.getBody());
 
 						if (container.nodeType === 3) {
 							pos = findSpace(container, offset);
@@ -1210,6 +1212,8 @@
 							lastTextNode = container;
 						}
 
+						// Walk the nodes inside the block
+						walker = new TreeWalker(container, dom.getParent(container, isBlock) || ed.getBody());
 						while (node = walker[start ? 'prev' : 'next']()) {
 							if (node.nodeType === 3) {
 								lastTextNode = node;
