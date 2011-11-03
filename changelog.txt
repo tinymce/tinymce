@@ -1,5 +1,6 @@
 Version 3.4.7.1 (2011-11-xx)
 	Fixed bug where scrollbars where visible in the character map dialog on Gecko.
+	Fixed issue with missing translation for one of the emoticons.
 Version 3.4.7 (2011-11-03)
 	Modified the caret formatting behavior to word similar to common desktop wordprocessors like Word or Libre Office.
 	Fixed bug in Webkit - Cursor positioning does not work vertically within a table cell with multiple lines of text.
