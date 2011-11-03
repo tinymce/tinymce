@@ -40,7 +40,7 @@ define(
       };
 
       var watch = function (saloon) {
-        saloon.events.shotFired.bind(heardShot);
+        saloon.events.shooting.bind(heardShot);
       };
 
       var heardShot = function (event) {

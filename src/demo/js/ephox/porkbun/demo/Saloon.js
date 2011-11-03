@@ -24,7 +24,7 @@ define(
       };
 
       var events = Events.create({
-        shotFired: Struct.immutable("shooter", "target")
+        shooting: Struct.immutable("shooter", "target")
       });
 
       var binder = Binder.create();
@@ -38,7 +38,7 @@ define(
         binder.bind(outlaw.events.shoot, function (event) {
           var shooter = outlaw;
           var target = event.target();
-          events.trigger.shotFired(shooter, target);
+          events.trigger.shooting(shooter, target);
         });
 
         binder.bind(outlaw.events.die, function (event) {
