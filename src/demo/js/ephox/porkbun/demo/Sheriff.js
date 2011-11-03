@@ -10,48 +10,51 @@ define(
   function ($, Events, Struct) {
     var create = function () {
       var container = $('<div />');
-      container.css({ float: 'left', width: "200px", textAlign: 'center' });
+      container.css({
+        float: 'left',
+        width: "200px",
+        textAlign: 'center'
+      });
 
       var img = $('<img src="images/chuck-norris.jpg" />');
       img.height('200px');
-      container.append(img);
-
-      var events = Events.create({
-        chasing: Struct.immutable('target')
-      });
-
-      var shooter;
-      var giveChase = $('<button disabled="true">Give chase</button>');
-      giveChase.bind('click', function () {
-        events.trigger.chasing(shooter);
-      });
-
-      var actions = $('<div />');
-      actions.css({ float: 'right' });
-      actions.append(giveChase);
 
       var caption = $('<p>Sheriff</p>');
       caption.css({ textAlign: 'center', fontWeight: 'bold' });
+
+      var chaseButton = $('<button disabled="true">Give chase</button>');
+
+      var actions = $('<div />');
+      actions.css({ float: 'right' });
+
+      actions.append(chaseButton);
       caption.append(actions);
-      container.append(caption);
+      container.append(img, caption);
 
       var getElement = function () {
         return container;
       };
 
-      var watch = function (saloon) {
-        saloon.events.shooting.bind(heardShot);
+      var events = Events.create({
+        chase: Struct.immutable('target')
+      });
+
+      var watch = function (establishment) {
+        establishment.events.shooting.bind(shooting);
       };
 
-      var heardShot = function (event) {
-        giveChase.attr('disabled', false);
-        shooter = event.shooter();
+      var shooting = function (event) {
+        chaseButton.attr('disabled', false);
+        chaseButton.bind('click', function () {
+          chaseButton.detach();
+          events.trigger.chasing(event.shooter());
+        });
       };
 
       return {
-        watch: watch,
         getElement: getElement,
-        events: events.registry
+        events: events.registry,
+        watch: watch
       };
     };
 

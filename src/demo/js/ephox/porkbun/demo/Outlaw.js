@@ -68,13 +68,13 @@ define(
         alive = false;
         img.attr('src', 'images/gravestone.jpg');
         actions.remove();
-        stayingAwayFrom.events.chasing.unbind(chaseStarted);
+        stayingAwayFrom.events.chase.unbind(chaseStarted);
         events.trigger.die();
       };
 
       var stayingAwayFrom;
       var stayAwayFrom = function (sherrif) {
-        sherrif.events.chasing.bind(chaseStarted);
+        sherrif.events.chase.bind(chaseStarted);
         stayingAwayFrom = sherrif;
       };
 
