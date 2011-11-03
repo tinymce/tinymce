@@ -15,6 +15,7 @@ define(
         var saloon = Saloon.create();
 
         var sheriff = Sheriff.create();
+
         sheriff.watch(saloon);
 
         var fred = Outlaw.create("Fred");

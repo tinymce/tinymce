@@ -37,8 +37,10 @@ define(
       var addAction = function (text, action) {
         var button = $('<button />');
         button.text(text);
-        button.bind('click', action);
-
+        button.bind('click', function () {
+          action();
+          button.detach();
+        });
         actions.append(button);
       };
 
