@@ -14,6 +14,9 @@ define(
 
         var saloon = Saloon.create();
 
+        var sheriff = Sheriff.create();
+        sheriff.watch(saloon);
+
         var fred = Outlaw.create("Fred");
         var barney = Outlaw.create("Barney");
 
@@ -27,12 +30,6 @@ define(
 
         fred.enter(saloon);
         barney.enter(saloon);
-
-        var sheriff = Sheriff.create();
-        sheriff.watch(saloon);
-
-        fred.stayAwayFrom(sheriff);
-        barney.stayAwayFrom(sheriff);
 
         $('body').append(sheriff.getElement());
         $('body').append(saloon.getElement());

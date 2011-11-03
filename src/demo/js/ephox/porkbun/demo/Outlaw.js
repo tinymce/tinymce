@@ -25,8 +25,8 @@ define(
       var caption = $('<p>');
       caption.text(name);
       caption.css({ textAlign: 'center', fontWeight: 'bold' });
-      caption.append(actions);
 
+      caption.append(actions);
       character.append(img, caption);
       container.append(character);
 
@@ -63,30 +63,17 @@ define(
         events.trigger.shoot(target);
       };
 
-      var alive = true;
       var die = function () {
-        alive = false;
         img.attr('src', 'images/gravestone.jpg');
         actions.remove();
-        stayingAwayFrom.events.chase.unbind(chaseStarted);
         events.trigger.die();
       };
 
-      var stayingAwayFrom;
-      var stayAwayFrom = function (sherrif) {
-        sherrif.events.chase.bind(chaseStarted);
-        stayingAwayFrom = sherrif;
-      };
-
-      var chaseStarted = function (event) {
-        if (!alive) throw 'Cannot chase ' + name + ', he is dead!';
-        if (event.target() === api) {
-          leave();
-        }
+      var chase = function () {
+        leave();
       };
 
       var api = {
-        name: D.getConstant(name),
         getElement: getElement,
         addAction: addAction,
         events: events.registry,
@@ -94,7 +81,7 @@ define(
         leave: leave,
         shoot: shoot,
         die: die,
-        stayAwayFrom: stayAwayFrom
+        chase: chase
       };
 
       return api;

@@ -35,10 +35,6 @@ define(
         return container;
       };
 
-      var events = Events.create({
-        chase: Struct.immutable('target')
-      });
-
       var watch = function (establishment) {
         establishment.events.shooting.bind(shooting);
       };
@@ -47,13 +43,12 @@ define(
         chaseButton.attr('disabled', false);
         chaseButton.bind('click', function () {
           chaseButton.detach();
-          events.trigger.chase(event.shooter());
+          event.shooter().chase();
         });
       };
 
       return {
         getElement: getElement,
-        events: events.registry,
         watch: watch
       };
     };
