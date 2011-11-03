@@ -43,21 +43,21 @@ define(
         chair.remove();
       };
 
-      var enter = function (outlaw) {
-        seat(outlaw);
+      var enter = function (patron) {
+        seat(patron);
 
-        binder.bind(outlaw.events.shoot, function (event) {
-          events.trigger.shooting(outlaw, event.target());
+        binder.bind(patron.events.shoot, function (event) {
+          events.trigger.shooting(patron, event.target());
         });
 
-        binder.bind(outlaw.events.die, function (event) {
-          stopListening(outlaw);
+        binder.bind(patron.events.die, function (event) {
+          stopListening(patron);
         });
       };
 
-      var leave = function (outlaw) {
-        unseat(outlaw);
-        stopListening(outlaw);
+      var leave = function (patron) {
+        unseat(patron);
+        stopListening(patron);
       };
 
       var stopListening = function (outlaw) {
