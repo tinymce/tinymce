@@ -1,4 +1,5 @@
-Version 3.4.x (2011-10-xx)
+Version 3.4.7 (2011-11-03)
+	Modified the caret formatting behavior to word similar to common desktop wordprocessors like Word or Libre Office.
 	Fixed bug in Webkit - Cursor positioning does not work vertically within a table cell with multiple lines of text.
 	Fixed bug in IE where Inserting a table in IE8 places cursor in the second cell of the first row.
 	Fixed bug in IE where editor in a frame doesn't give focus to the toolbar using ALT-F10.
