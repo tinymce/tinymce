@@ -4,16 +4,12 @@
 
 (function(tinymce){
 	tinymce.VK = {
-		DELETE:46,
-		BACKSPACE:8,
-<<<<<<< HEAD
-		ENTER:13,
-		TAB:9,
-        	SPACEBAR:32
-=======
-		UP:38,
-		DOWN:40
->>>>>>> bug/42_table_caret_navigation
+		DELETE: 46,
+		BACKSPACE: 8,
+		ENTER: 13,
+		TAB: 9,
+        SPACEBAR: 32,
+		UP: 38,
+		DOWN: 40
 	}
-
 })(tinymce);
