@@ -30,12 +30,9 @@ define(
       character.append(img, caption);
       container.append(character);
 
-      var events = Events.create({
-        shoot: Struct.immutable('target'),
-        die: Struct.immutable()
-      });
-
-      var alive = true;
+      var getElement = function () {
+        return container;
+      };
 
       var addAction = function (text, action) {
         var button = $('<button />');
@@ -45,33 +42,28 @@ define(
         actions.append(button);
       };
 
-      //there's a pattern here screaming to get out
-      var inSaloon;
-      var enter = function(saloon) {
+      var events = Events.create({
+        shoot: Struct.immutable('target'),
+        die: Struct.immutable()
+      });
+
+      var establishment;
+      var enter = function (saloon) {
         saloon.enter(api);
-        inSaloon = saloon;
+        establishment = saloon;
       };
 
-      var chaseStarted = function (event) {
-        if (alive) {
-          if (event.target() === api) {
-            leave();
-          }
-        } else {
-          throw "I am dead"
-        }
+      var leave = function () {
+        establishment.leave(api);
+        establishment = undefined;
       };
 
-      var leave = function() {
-        inSaloon.leave(api);
-        inSaloon = undefined;
+      var shoot = function (target) {
+        target.die();
+        events.trigger.shoot(target);
       };
 
-      var shoot = function (outlaw) {
-        outlaw.die();
-        events.trigger.shoot(outlaw);
-      };
-
+      var alive = true;
       var die = function () {
         alive = false;
         img.attr('src', 'images/gravestone.jpg');
@@ -80,15 +72,17 @@ define(
         events.trigger.die();
       };
 
-      var getElement = function () {
-        return container;
-      };
-
-      //there's a pattern here screaming to get out
       var stayingAwayFrom;
       var stayAwayFrom = function(sherrif) {
         sherrif.events.chasing.bind(chaseStarted);
         stayingAwayFrom = sherrif;
+      };
+
+      var chaseStarted = function (event) {
+        if (!alive) throw 'Cannot chase ' + name + ', he is dead!';
+        if (event.target() === api) {
+          leave();
+        }
       };
 
       var api = {
