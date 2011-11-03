@@ -47,7 +47,7 @@ define(
         chaseButton.attr('disabled', false);
         chaseButton.bind('click', function () {
           chaseButton.detach();
-          events.trigger.chasing(event.shooter());
+          events.trigger.chase(event.shooter());
         });
       };
 
