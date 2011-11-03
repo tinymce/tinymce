@@ -1193,8 +1193,8 @@
 
 						function shouldFixCaret(preBrowserNode) {
 							var newNode = ed.selection.getNode();
-							var newParent = ed.dom.getParent(newNode, 'td');
-							var oldParent = ed.dom.getParent(preBrowserNode, 'td');
+							var newParent = ed.dom.getParent(newNode, 'td,th');
+							var oldParent = ed.dom.getParent(preBrowserNode, 'td,th');
 							return newParent && newParent !== oldParent && checkSameParentTable(newParent, oldParent)
 						}
 
