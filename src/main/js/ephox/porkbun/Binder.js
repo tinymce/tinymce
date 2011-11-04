@@ -6,30 +6,30 @@ define(
 
   function () {
     var create = function() {
-      var types = [];
+      var registrations = [];
       var handlers = [];
 
-      var bind = function(bund, handler) {
-        var index = types.indexOf(bund);
+      var bind = function(registration, handler) {
+        var index = registrations.indexOf(registration);
         if (index !== -1) {
-          throw 'Bind error: event type has already been bound';
+          throw 'Bind error: event registration has already been bound';
         }
 
-        bund.bind(handler);
+        registration.bind(handler);
 
-        types.push(bund);
+        registrations.push(registration);
         handlers.push(handler);
       };
 
-      var unbind = function(bund) {
-        var index = types.indexOf(bund);
+      var unbind = function(registration) {
+        var index = registrations.indexOf(registration);
         if (index === -1) {
-          throw 'Unbind error: unknown event type';
+          throw 'Unbind error: unknown event registration';
         }
 
-        bund.unbind(handlers[index]);
+        registration.unbind(handlers[index]);
 
-        types.splice(index, 1);
+        registrations.splice(index, 1);
         handlers.splice(index, 1);
       };
 
