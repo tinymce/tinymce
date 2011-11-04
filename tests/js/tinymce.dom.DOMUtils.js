@@ -558,17 +558,22 @@
 		equals(DOM.decode('&aring;&auml;&ouml;&amp;&lt;&gt;&quot;'), '\u00e5\u00e4\u00f6&<>"');
 	});
 
-	test('split', 1, function() {
+	test('split', 2, function() {
 		var point, parent;
+		DOM.add(document.body, 'div', {id : 'test'});
 
-		DOM.add(document.body, 'div', {id : 'test'}, '<p><b>text1<span>inner</span>text2</b></p>');
-
+		DOM.setHTML('test', '<p><b>text1<span>inner</span>text2</b></p>');
 		parent = DOM.select('p', DOM.get('test'))[0];
 		point = DOM.select('span', DOM.get('test'))[0];
-
 		DOM.split(parent, point);
 		equals(DOM.get('test').innerHTML.toLowerCase().replace(/\s+/g, ''), '<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>');
 
+		DOM.setHTML('test', '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li><li>third line<br></li></ul></li></ul>');
+		parent = DOM.select('li:nth-child(1)', DOM.get('test'))[0];
+		point = DOM.select('ul li:nth-child(2)', DOM.get('test'))[0];
+		DOM.split(parent, point);
+		equals(DOM.get('test').innerHTML, '<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li></ul></li><li>third line<br></li></ul>');
+		
 		DOM.remove('test');
 	});
 
