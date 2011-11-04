@@ -21,7 +21,7 @@ function testBinder() {
     binder.bind(events.registry.myEvent, function(event) {
       called = true;
     });
-  }, 'Bind error: event type has already been bound');
+  }, 'Bind error: event registration has already been bound');
 
   events.trigger.myEvent('a', 'b');
   jssert.assertEq(true, called);
@@ -35,5 +35,5 @@ function testBinder() {
 
   jssert.assertThrows(function () {
     binder.unbind(events.registry.myEvent);
-  }, 'Unbind error: unknown event type');
+  }, 'Unbind error: unknown event registration');
 }
