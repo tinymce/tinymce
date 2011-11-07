@@ -1978,34 +1978,39 @@
 				}
 			};
 
-			// Mark current caret container elements as bogus when getting the contents so we don't end up with empty elements
-			ed.onBeforeGetContent.addToTop(function() {
-				var nodes = [], i;
+			// Only bind the caret events once
+			if (!self._hasCaretEvents) {
+				// Mark current caret container elements as bogus when getting the contents so we don't end up with empty elements
+				ed.onBeforeGetContent.addToTop(function() {
+					var nodes = [], i;
 
-				if (isCaretContainerEmpty(getParentCaretContainer(selection.getStart()), nodes)) {
-					// Mark children
-					i = nodes.length;
-					while (i--) {
-						dom.setAttrib(nodes[i], 'data-mce-bogus', '1');
+					if (isCaretContainerEmpty(getParentCaretContainer(selection.getStart()), nodes)) {
+						// Mark children
+						i = nodes.length;
+						while (i--) {
+							dom.setAttrib(nodes[i], 'data-mce-bogus', '1');
+						}
 					}
-				}
-			});
-
-			// Remove caret container on mouse up and on key up
-			tinymce.each('onMouseUp onKeyUp'.split(' '), function(name) {
-				ed[name].addToTop(function() {
-					removeCaretContainer();
 				});
-			});
 
-			// Remove caret container on keydown and it's a backspace, enter or left/right arrow keys
-			ed.onKeyDown.addToTop(function(ed, e) {
-				var keyCode = e.keyCode;
+				// Remove caret container on mouse up and on key up
+				tinymce.each('onMouseUp onKeyUp'.split(' '), function(name) {
+					ed[name].addToTop(function() {
+						removeCaretContainer();
+					});
+				});
 
-				if (keyCode == 8 || keyCode == 37 || keyCode == 39) {
-					removeCaretContainer(getParentCaretContainer(selection.getStart()));
-				}
-			});
+				// Remove caret container on keydown and it's a backspace, enter or left/right arrow keys
+				ed.onKeyDown.addToTop(function(ed, e) {
+					var keyCode = e.keyCode;
+
+					if (keyCode == 8 || keyCode == 37 || keyCode == 39) {
+						removeCaretContainer(getParentCaretContainer(selection.getStart()));
+					}
+				});
+
+				self._hasCaretEvents = true;
+			}
 
 			// Do apply or remove caret format
 			if (type == "apply") {
