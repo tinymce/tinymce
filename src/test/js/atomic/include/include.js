@@ -5,6 +5,6 @@ require("../../../../main/js/compile/bootstrap.js");
 require("../../../../main/js/compile/porkbun.js");
 
 define = ephox.bolt.module.api.define;
-require("../../../../../lib/module/ephox.scullion.Struct.js");
+require("../../../../../lib/test/ephox.scullion.Struct.js");
 
 demand = ephox.bolt.module.api.demand;

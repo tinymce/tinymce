@@ -44,7 +44,7 @@ var dependencies = [
     source: "scullion.zip",
     targets: [
       {name: "module/*.js", path: lib + "/demo"},
-      {name: "compile/scullion.js", path: lib + "/test"}
+      {name: "module/*.js", path: lib + "/test"}
     ]
   },
 
