@@ -18,13 +18,32 @@ var dependencies = [
     ]
   },
 
+  {
+    name: "wrap-d",
+    repository: "buildrepo2",
+    version: "latest",
+    source: "wrap-d.zip",
+    targets: [
+      { name: "compile/ephox.wrap.D.js", path: lib + "/run/depend" }
+    ]
+  },
+
+  {
+    name: "wrap-jquery",
+    repository: "buildrepo2",
+    version: "latest",
+    source: "wrap-jquery.zip",
+    targets: [
+      { name: "compile/ephox.wrap.JQuery.js", path: lib + "/demo" }
+    ]
+  },
 
   {
     name: "scullion",
     repository: "buildrepo2",
     source: "scullion.zip",
     targets: [
-      {name: "module/*.js", path: lib + "/module"},
+      {name: "module/*.js", path: lib + "/demo"},
       {name: "compile/scullion.js", path: lib + "/test"}
     ]
   },
@@ -43,27 +62,6 @@ var dependencies = [
     source: "jssert.zip",
     targets: [
       {name: "jssert.js", path: "lib/test"}
-    ]
-  },
-
-  {
-    name: "wrap-d",
-    repository: "buildrepo2",
-    version: "latest",
-    source: "wrap-d.zip",
-    targets: [
-      { name: "compile/ephox.wrap.D.js", path: lib + "/compile" }
-    ]
-  },
-
-  // Only used by demo.html
-  {
-    name: "wrap-jquery",
-    repository: "buildrepo2",
-    version: "latest",
-    source: "wrap-jquery.zip",
-    targets: [
-      { name: "compile/ephox.wrap.JQuery.js", path: lib + "/compile" }
     ]
   }
 ];
