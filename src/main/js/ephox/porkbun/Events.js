@@ -32,14 +32,18 @@ define(
           unbind: unbind
         };
 
+        var mkevent = function (fields) {
+          try {
+            return struct.apply(null, fields);
+          } catch (e) {
+            throw 'Unable to create struct for event type "' + type + '": ' + e;
+          }
+        };
+
         trigger[type] = function (/* fields */) {
           var fields = Array.prototype.slice.call(arguments);
+          var event = mkevent(fields);
           D(handlers).each(function (handler) {
-            try {
-              var event = struct.apply(null, fields);
-            } catch (e) {
-              throw 'Unable to create struct for event type "' + type + '": ' + e;
-            }
             handler(event);
           });
         };
