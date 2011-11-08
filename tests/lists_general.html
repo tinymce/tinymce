@@ -201,6 +201,24 @@ asyncTest('Deleting bullet from start of list outdents inner lists items', funct
 	}, editor.selection.getNode());
 });
 
+asyncTest('Deleting empty li with nested list is deleted in Webkit', function(){
+	if (!tinymce.isWebKit) {
+		start();
+	} else {
+		editor.setContent("<ol id='a'><li>a</li><li id='b'>a<br /><ul><li>b</li><li>c</li></ul></li></ol>");
+		setSelection('#b', 0);
+		editor.focus();
+		robot.type(BACKSPACE, false, function() {
+			equal(editor.dom.select('ol ul li').length, 2);
+			var olLis = tinymce.grep(editor.dom.get('a').childNodes, function(n) {
+				return n.nodeName == 'LI'
+			});
+			equal(olLis.length, 1);
+			start();
+		}, editor.selection.getNode());
+	}
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
