@@ -237,3 +237,7 @@ function type(chr) {
 
 	fakeEvent(startElm, 'keyup', evt);
 }
+
+function cleanHtml(html) {
+	return html.toLowerCase().replace(/\n/g, '');
+}

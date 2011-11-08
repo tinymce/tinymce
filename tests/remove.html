@@ -212,6 +212,20 @@ asyncTest('Forward delete all contents', function () {
 		}, 100);
 	}, editor.selection.getNode());
 });
+
+asyncTest('Backward delete blockquote contents', function () {
+	expect(1);
+
+	editor.setContent('<blockquote><p>some text here</p></blockquote>');
+	var textNode = editor.dom.select('p')[0].firstChild;
+	setSelection(textNode, 0, textNode, 5);
+	editor.focus();
+	robot.type('\b', false, function() {
+		equals(cleanHtml(editor.getContent()), '<blockquote><p>text here</p></blockquote>');
+		QUnit.start();
+	}, editor.selection.getNode());
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",

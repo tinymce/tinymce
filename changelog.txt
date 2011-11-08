@@ -1,4 +1,5 @@
 Version 3.4.7.1 (2011-11-xx)
+	Fixed bug where selecting text in a blockquote and pressing backspace toggles the style.
 	Fixed bug where pressing enter from a heading in IE, the resulting P tag below it shares the style property. 
 	Fix white space in between spans from being deleted. 
 	Fixed bug where scrollbars where visible in the character map dialog on Gecko.
