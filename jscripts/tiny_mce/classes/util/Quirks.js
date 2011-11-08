@@ -166,6 +166,29 @@
 	};
 
 	/**
+	 * If you hit enter from a heading in IE, the resulting P tag below it shares the style property (bad)
+	 * */
+	function removeStylesOnPTagsInheritedFromHeadingTag(ed) {
+		ed.onKeyDown.add(function(ed, event) {
+			function checkInHeadingTag(ed) {
+				var currentNode = ed.selection.getNode();
+				var headingTags = 'h1,h2,h3,h4,h5,h6';
+				return ed.dom.is(currentNode, headingTags) || ed.dom.getParent(currentNode, headingTags) !== null;
+			}
+
+			if (event.keyCode === VK.ENTER && !VK.modifierPressed(event) && checkInHeadingTag(ed)) {
+				setTimeout(function() {
+					var currentNode = ed.selection.getNode();
+					if (ed.dom.is(currentNode, 'p')) {
+						ed.dom.setAttrib(currentNode, 'style', null);
+						// While tiny's content is correct after this method call, the content shown is not representative of it and needs to be 'repainted'
+						ed.execCommand('mceCleanup');
+					}
+				}, 0);
+			}
+		});
+	}
+	/**
 	 * Fire a nodeChanged when the selection is changed on WebKit this fixes selection issues on iOS5. It only fires the nodeChange
 	 * event every 50ms since it would other wise update the UI when you type and it hogs the CPU.
 	 */
@@ -196,7 +219,7 @@
 	function ensureBodyHasRoleApplication(ed) {
 		document.body.setAttribute("role", "application");
 	}
-
+	
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
 			// WebKit
@@ -217,6 +240,7 @@
 				removeHrOnBackspace(ed);
 				emptyEditorWhenDeleting(ed);
 				ensureBodyHasRoleApplication(ed);
+				removeStylesOnPTagsInheritedFromHeadingTag(ed)
 			}
 
 			// Gecko

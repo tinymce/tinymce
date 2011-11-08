@@ -10,6 +10,9 @@
 		TAB: 9,
         SPACEBAR: 32,
 		UP: 38,
-		DOWN: 40
+		DOWN: 40,
+		modifierPressed: function (e) {
+			return e.shiftKey || e.ctrlKey || e.altKey;
+		}
 	}
 })(tinymce);
