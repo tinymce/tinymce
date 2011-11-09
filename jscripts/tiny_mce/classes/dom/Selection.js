@@ -807,7 +807,8 @@
 					}
 
 					s.addRange(r);
-					t.selectedRange = s.getRangeAt(0);
+					// adding range isn't always successful so we need to check range count otherwise an exception can occur
+					t.selectedRange = s.rangeCount > 0 ? s.getRangeAt(0) : null;
 				}
 			} else {
 				// Is W3C Range
