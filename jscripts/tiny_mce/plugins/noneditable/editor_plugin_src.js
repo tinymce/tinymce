@@ -9,7 +9,10 @@
  */
 
 (function() {
-	var externalName = 'contenteditable', internalName = 'data-mce-' + externalName;
+	var externalName = 'contenteditable', internalName = 'data-mce-' + externalName, invisibleChar;
+
+	// Setup invisible character use zero width space on Gecko since it doesn't change the heigt of the container
+	invisibleChar = tinymce.isGecko ? '\u200B' : '\uFEFF';
 
 	// Checks if the specified node is uneditable
 	function isUneditable(node) {
@@ -34,6 +37,11 @@
 
 		function expandToNonEditable(collapse) {
 			var selection = ed.selection, origRng, startState, endState;
+
+			// Currently only works on IE
+			if (!tinymce.isIE) {
+				return;
+			}
 
 			function setEndPoint(start) {
 				var elm = findUneditableParent(start ? selection.getStart() : selection.getEnd());
@@ -141,7 +149,7 @@
 			var caretContainer, rng;
 
 			removeCaretContainer();
-			caretContainer = dom.create('span', {'id': '_mce_caretcontainer', 'data-mce-bogus' : true}, '\uFEFF\uFEFF');
+			caretContainer = dom.create('span', {'id': '_mce_caretcontainer', 'data-mce-bogus' : true}, invisibleChar);
 
 			if (before) {
 				node.parentNode.insertBefore(caretContainer, node);
@@ -168,7 +176,7 @@
 
 	tinymce.create('tinymce.plugins.NonEditablePlugin', {
 		init : function(ed, url) {
-			var t = this, editClass, nonEditClass, contentEditableAttrName = !tinymce.isIE ? internalName : externalName;
+			var t = this, editClass, nonEditClass, contentEditableAttrName = tinymce.isIE ? internalName : externalName;
 
 			t.editor = ed;
 			editClass = " " + tinymce.trim(ed.getParam("noneditable_editable_class", "mceEditable")) + " ";
