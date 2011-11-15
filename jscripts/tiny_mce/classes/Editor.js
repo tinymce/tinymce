@@ -2831,9 +2831,14 @@
 			if (t.destroyed)
 				return;
 
-			if (!s) {
-				Event.unbind(t.getContainer());
+			// We must unbind on Gecko since it would otherwise produce the pesky "attempt to run compile-and-go script on a cleared scope" message
+			if (isGecko) {
+				Event.unbind(t.getDoc());
+				Event.unbind(t.getWin());
+				Event.unbind(t.getBody());
+			}
 
+			if (!s) {
 				tinymce.removeUnload(t.destroy);
 				tinyMCE.onBeforeUnload.remove(t._beforeUnload);
 
