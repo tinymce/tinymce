@@ -2,15 +2,15 @@ define(
   'ephox.porkbun.Events',
 
   [
-    'ephox.wrap.D'
+    'ephox.wrap._'
   ],
 
-  function (D) {
+  function (_) {
     var create = function (typeDefs) {
       var registry = {};
       var trigger = {};
 
-      D(typeDefs).each(function (struct, type) {
+      _.each(typeDefs, function (struct, type) {
         var handlers = [];
 
         var bind = function (handler) {
@@ -43,7 +43,7 @@ define(
         trigger[type] = function (/* fields */) {
           var fields = Array.prototype.slice.call(arguments);
           var event = mkevent(fields);
-          D(handlers).each(function (handler) {
+          _.each(handlers, function (handler) {
             handler(event);
           });
         };

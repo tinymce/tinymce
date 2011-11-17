@@ -2,13 +2,12 @@ define(
   'ephox.porkbun.demo.Outlaw',
 
   [
-    'ephox.wrap.D',
     'ephox.wrap.JQuery',
     'ephox.porkbun.Events',
     'ephox.scullion.Struct'
   ],
 
-  function (D, $, Events, Struct) {
+  function ($, Events, Struct) {
     var create = function (name) {
       var container = $('<div />');
       container.css({  width: '1px dashed gray' });

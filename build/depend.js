@@ -19,16 +19,6 @@ var dependencies = [
   },
 
   {
-    name: "wrap-d",
-    repository: "buildrepo2",
-    version: "latest",
-    source: "wrap-d.zip",
-    targets: [
-      { name: "compile/ephox.wrap.D.js", path: lib + "/run/depend" }
-    ]
-  },
-
-  {
     name: "wrap-jquery",
     repository: "buildrepo2",
     version: "latest",
@@ -39,12 +29,25 @@ var dependencies = [
   },
 
   {
+    name: "wrap-underscore",
+    repository: "buildrepo2",
+    version: "latest",
+    source: "wrap-underscore.zip",
+    targets: [
+      { name: "compile/ephox.wrap._.js", path: lib + "/run/depend" },
+      { name: "licenses/underscore/license.txt", path: "lib/run/licenses/underscore"}
+    ]
+  },
+
+  {
     name: "scullion",
     repository: "buildrepo2",
     source: "scullion.zip",
     targets: [
       {name: "module/*.js", path: lib + "/demo"},
-      {name: "module/*.js", path: lib + "/test"}
+      {name: "module/*.js", path: lib + "/test"},
+      {name: "depend/*.js", path: lib + "/demo"},
+      {name: "depend/*.js", path: lib + "/test"}
     ]
   },
 
