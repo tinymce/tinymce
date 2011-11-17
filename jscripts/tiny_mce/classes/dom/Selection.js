@@ -798,16 +798,21 @@
 				s = t.getSel();
 
 				if (s) {
-					t.explicitRange = r;
+					if (s.anchorNode === null && s.focusNode === null) {
+						t.explicitRange = r;
 
-					try {
-						s.removeAllRanges();
-					} catch (ex) {
-						// IE9 might throw errors here don't know why
+						try {
+							s.removeAllRanges();
+						} catch (ex) {
+							// IE9 might throw errors here don't know why
+						}
+						
+						s.addRange(r);
 					}
 
-					s.addRange(r);
-					t.selectedRange = s.getRangeAt(0);
+					if (s.rangeCount > 0) {
+						t.selectedRange = s.getRangeAt(0);
+					}
 				}
 			} else {
 				// Is W3C Range
