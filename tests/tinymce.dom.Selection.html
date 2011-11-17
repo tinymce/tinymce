@@ -637,6 +637,30 @@ test('normalize ignore img', function() {
 	equals(rng.endOffset, 1, 'endOffset offset');
 });
 
+test('normalize to before/after img', function() {
+	var rng;
+
+	if (tinymce.isIE) {
+		ok(true, "Skipped on IE since IE will steal focus.");
+		return;
+	}
+
+	editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody(), 0);
+	rng.setEnd(editor.getBody(), 1);
+	editor.selection.setRng(rng);
+	editor.selection.normalize();
+
+	rng = editor.selection.getRng(true);
+	equals(rng.startContainer.nodeName, 'P', 'startContainer node name');
+	equals(rng.startContainer.nodeType, 1, 'startContainer node type');
+	equals(rng.startOffset, 0, 'startContainer offset');
+	equals(rng.endContainer.nodeName, 'P', 'endContainer node name');
+	equals(rng.endContainer.nodeType, 1, 'endContainer node type');
+	equals(rng.endOffset, 1, 'endOffset offset');
+});
+
 test('custom elements', function() {
 	var rng;
 

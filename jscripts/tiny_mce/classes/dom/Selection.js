@@ -975,10 +975,16 @@
 									break;
 								}
 
-								// Found a BR element that we can place the caret before
-								if (node.nodeName === 'BR') {
+								// Found a BR/IMG element that we can place the caret before
+								if (/^(BR|IMG)$/.test(node.nodeName)) {
 									offset = dom.nodeIndex(node);
 									container = node.parentNode;
+
+									// Put caret after image when moving the end point
+									if (node.nodeName ==  "IMG" && !start) {
+										offset++;
+									}
+
 									break;
 								}
 							} while (node = (start ? walker.next() : walker.prev()));
@@ -998,7 +1004,7 @@
 			// Normalize the end points
 			normalizeEndPoint(true);
 			
-			if (rng.collapsed)
+			if (!rng.collapsed)
 				normalizeEndPoint();
 
 			// Set the selection if it was normalized
