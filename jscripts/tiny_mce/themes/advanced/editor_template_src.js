@@ -593,7 +593,11 @@
 
 				if (evt.altKey) {
 		 			if (evt.keyCode === DOM_VK_F10) {
-						window.focus();
+						// Make sure focus is given to toolbar in Safari.
+						// We can't do this in IE as it prevents giving focus to toolbar when editor is in a frame
+						if (tinymce.isWebKit) {
+							window.focus();
+						}
 						t.toolbarGroup.focus();
 						return Event.cancel(evt);
 					} else if (evt.keyCode === DOM_VK_F11) {
@@ -1221,7 +1225,7 @@
 			ed.windowManager.open({
 				url : this.url + '/charmap.htm',
 				width : 550 + parseInt(ed.getLang('advanced.charmap_delta_width', 0)),
-				height : 260 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
+				height : 265 + parseInt(ed.getLang('advanced.charmap_delta_height', 0)),
 				inline : true
 			}, {
 				theme_url : this.url

@@ -60,7 +60,19 @@ function insertTable() {
 	if (action == "update") {
 		dom.setAttrib(elm, 'cellPadding', cellpadding, true);
 		dom.setAttrib(elm, 'cellSpacing', cellspacing, true);
-		dom.setAttrib(elm, 'border', border);
+
+		if (!isCssSize(border)) {
+			dom.setAttrib(elm, 'border', border);
+		} else {
+			dom.setAttrib(elm, 'border', '');
+		}
+
+		if (border == '') {
+			dom.setStyle(elm, 'border-width', '');
+			dom.setStyle(elm, 'border', '');
+			dom.setAttrib(elm, 'border', '');
+		}
+
 		dom.setAttrib(elm, 'align', align);
 		dom.setAttrib(elm, 'frame', frame);
 		dom.setAttrib(elm, 'rules', rules);
@@ -119,7 +131,7 @@ function insertTable() {
 		if (bordercolor != "") {
 			elm.style.borderColor = bordercolor;
 			elm.style.borderStyle = elm.style.borderStyle == "" ? "solid" : elm.style.borderStyle;
-			elm.style.borderWidth = border == "" ? "1px" : border;
+			elm.style.borderWidth = cssSize(border);
 		} else
 			elm.style.borderColor = '';
 
@@ -146,7 +158,10 @@ function insertTable() {
 	html += '<table';
 
 	html += makeAttrib('id', id);
-	html += makeAttrib('border', border);
+	if (!isCssSize(border)) {
+		html += makeAttrib('border', border);
+	}
+
 	html += makeAttrib('cellpadding', cellpadding);
 	html += makeAttrib('cellspacing', cellspacing);
 	html += makeAttrib('data-mce-new', '1');
@@ -228,12 +243,11 @@ function insertTable() {
 		inst.execCommand('mceInsertContent', false, html);
 
 	tinymce.each(dom.select('table[data-mce-new]'), function(node) {
-		var td = dom.select('td', node);
+		var tdorth = dom.select('td,th', node);
 
 		try {
-			// IE9 might fail to do this selection
-			inst.selection.select(td[0], true);
-			inst.selection.collapse();
+			// IE9 might fail to do this selection 
+			inst.selection.setCursorLocation(tdorth[0], 0);
 		} catch (ex) {
 			// Ignore
 		}
@@ -384,6 +398,20 @@ function changedSize() {
 	formObj.style.value = dom.serializeStyle(st);
 }
 
+function isCssSize(value) {
+	return /^[0-9.]+(%|in|cm|mm|em|ex|pt|pc|px)$/.test(value);
+}
+
+function cssSize(value, def) {
+	value = tinymce.trim(value || def);
+
+	if (!isCssSize(value)) {
+		return parseInt(value, 10) + 'px';
+	}
+
+	return value;
+}
+
 function changedBackgroundImage() {
 	var formObj = document.forms[0];
 	var st = dom.parseStyle(formObj.style.value);
@@ -398,8 +426,14 @@ function changedBorder() {
 	var st = dom.parseStyle(formObj.style.value);
 
 	// Update border width if the element has a color
-	if (formObj.border.value != "" && formObj.bordercolor.value != "")
-		st['border-width'] = formObj.border.value + "px";
+	if (formObj.border.value != "" && (isCssSize(formObj.border.value) || formObj.bordercolor.value != ""))
+		st['border-width'] = cssSize(formObj.border.value);
+	else {
+		if (!formObj.border.value) {
+			st['border'] = '';
+			st['border-width'] = '';
+		}
+	}
 
 	formObj.style.value = dom.serializeStyle(st);
 }
@@ -415,7 +449,7 @@ function changedColor() {
 
 		// Add border-width if it's missing
 		if (!st['border-width'])
-			st['border-width'] = formObj.border.value == "" ? "1px" : formObj.border.value + "px";
+			st['border-width'] = cssSize(formObj.border.value, 1);
 	}
 
 	formObj.style.value = dom.serializeStyle(st);

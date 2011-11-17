@@ -135,3 +135,109 @@ function normalizeRng(rng) {
 
 	return rng;
 }
+
+// TODO: Replace this with the new event logic in 3.5
+function type(chr) {
+	var editor = tinymce.activeEditor, keyCode, charCode, event = tinymce.dom.Event, evt, startElm;
+
+	function fakeEvent(target, type, evt) {
+		var event, preventDefault;
+
+		evt = evt || {};
+		evt.type = type;
+
+		if (target.fireEvent) {
+			var event = document.createEventObject();
+			tinymce.extend(event, evt);
+			target.fireEvent('on' + type, event);
+			return;
+		}
+
+		if (document.createEvent) {
+			try {
+				// Fails in Safari
+				event = document.createEvent('KeyEvents');
+				event.initKeyEvent(type, true, true, window, false, false, false, false, evt.keyCode, evt.charCode);
+				event.preventDefault();
+			} catch (ex) {
+				event = document.createEvent('Events');
+				event.initEvent(type, true, true);
+				event.keyCode = evt.keyCode;
+				event.charCode = evt.charCode;
+			}
+		} else {
+			event = document.createEvent('UIEvents');
+
+			if (event.initUIEvent)
+				event.initUIEvent(type, true, true, window, 1);
+
+			event.keyCode = evt.keyCode;
+			event.charCode = evt.charCode;
+		}
+
+		preventDefault = event.preventDefault;
+		event.preventDefault = function() {
+			if (preventDefault) {
+				preventDefault.call(this);
+			} else {
+				this.returnValue = false; // IE
+			}
+
+			evt.prevented = true;
+		};
+
+		target.dispatchEvent(event);
+	};
+
+	// Numeric keyCode
+	if (typeof(chr) == "number") {
+		charCode = keyCode = chr;
+	} else if (typeof(chr) == "string") {
+		// String value
+		if (chr == '\b') {
+			keyCode = 8;
+			charCode = chr.charCodeAt(0);
+		} else if (chr == '\n') {
+			keyCode = 13;
+			charCode = chr.charCodeAt(0);
+		} else {
+			charCode = chr.charCodeAt(0);
+			keyCode = charCode;
+		}
+	} else {
+		evt = chr;
+	}
+
+	evt = evt || {keyCode: keyCode, charCode: charCode};
+
+	startElm = editor.selection.getStart();
+	fakeEvent(startElm, 'keydown', evt);
+	fakeEvent(startElm, 'keypress', evt);
+
+	if (!evt.prevented) {
+		if (keyCode == 8) {
+			if (editor.getDoc().selection) {
+				var rng = editor.getDoc().selection.createRange();
+				rng.moveStart('character', -1);
+				rng.select();
+				rng.execCommand('Delete', false, null);
+			} else {
+				editor.getDoc().execCommand('Delete', false, null);
+			}
+		} else if (typeof(chr) == 'string') {
+			var rng = editor.selection.getRng(true);
+
+			if (rng.startContainer.nodeType == 3 && rng.collapsed) {
+				rng.startContainer.insertData(rng.startOffset, chr);
+			} else {
+				rng.insertNode(editor.getDoc().createTextNode(chr));
+			}
+		}
+	}
+
+	fakeEvent(startElm, 'keyup', evt);
+}
+
+function cleanHtml(html) {
+	return html.toLowerCase().replace(/\n/g, '');
+}

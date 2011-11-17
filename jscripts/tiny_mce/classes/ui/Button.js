@@ -68,6 +68,10 @@
 				if (!t.isDisabled())
 					return s.onclick.call(s.scope, e);
 			});
+			tinymce.dom.Event.add(t.id, 'keyup', function(e) {
+				if (!t.isDisabled() && e.keyCode==tinymce.VK.SPACEBAR)
+					return s.onclick.call(s.scope, e);
+			});
 		}
 	});
 })(tinymce);

@@ -43,7 +43,7 @@ asyncTest('Typing a HTTP URL', function() {
 
     TypingHTTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">http://www.ephox.com</a></p><p>(Test|<a href=\"http://www.ephox.com\"></a>Test)</p>$'));
 
-    start();
+    queue.done();
 });
 
 asyncTest('Typing a HTTPS URL', function() {
@@ -64,7 +64,7 @@ asyncTest('Typing a HTTPS URL', function() {
 
     TypingHTTPSURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="https://www.ephox.com">https://www.ephox.com</a></p><p>(Test|<a href=\"https://www.ephox.com\"></a>Test)</p>$'));
 
-    start();
+    queue.done();
 });
 
 asyncTest('Typing a SSH URL', function() {
@@ -85,7 +85,7 @@ asyncTest('Typing a SSH URL', function() {
 
     TypingSSHURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ssh://www.ephox.com">ssh://www.ephox.com</a></p><p>(Test|<a href=\"ssh://www.ephox.com\"></a>Test)</p>$'));
 
-    start();
+    queue.done();
 });
 
 asyncTest('Typing a FTP URL', function() {
@@ -106,7 +106,7 @@ asyncTest('Typing a FTP URL', function() {
 
     TypingFTPURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="ftp://www.ephox.com">ftp://www.ephox.com</a></p><p>(Test|<a href=\"ftp://www.ephox.com\"></a>Test)</p>$'));
 
-    start();
+    queue.done();
 });
 
 asyncTest('Typing a WWW URL', function() {
@@ -127,7 +127,7 @@ asyncTest('Typing a WWW URL', function() {
 
     TypingWWWURLAndNewline.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.ephox.com">www.ephox.com</a></p><p>(Test|<a href=\"http://www.ephox.com\"></a>Test)</p>$'));
 
-    start();
+    queue.done();
 });
 
 var initTinyFunction = function(){

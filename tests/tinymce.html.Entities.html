@@ -28,7 +28,7 @@ test('encodeAllRaw', function() {
 test('encodeNumeric', function() {
 	expect(2);
 
-	equals(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;', 'Numeric encoding text');
+	equals(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6\u03b8\u2170\ufa11'), '&lt;&gt;"\'&amp;&#229;&#228;&#246;&#952;&#8560;&#64017;', 'Numeric encoding text');
 	equals(tinymce.html.Entities.encodeNumeric('<>"\'&\u00e5\u00e4\u00f6', true), '&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;', 'Numeric encoding attribute');
 });
 

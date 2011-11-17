@@ -10,7 +10,7 @@
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/tiny_mce_loader.js"></script>
 <script>
-var editor;
+var editor, rng, format;
 
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
@@ -22,12 +22,7 @@ function getContent() {
 	return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
 };
 
-test('remove', function() {
-	var rng;
-
-	expect(18);
-
-	// Inline element on selected text
+test('Inline element on selected text', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234</b></p>';
 	rng = editor.dom.createRng();
@@ -36,8 +31,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p>1234</p>', 'Inline element on selected text');
+});
 
-	// Inline element on selected text with remove=all
+test('Inline element on selected text with remove=all', function() {
 	editor.formatter.register('format', {selector : 'b', remove : 'all'});
 	editor.getBody().innerHTML = '<p><b title="text">1234</b></p>';
 	rng = editor.dom.createRng();
@@ -46,8 +42,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p>1234</p>', 'Inline element on selected text with remove=all');
+});
 
-	// Inline element on selected text with remove=none
+test('Inline element on selected text with remove=none', function() {
 	editor.formatter.register('format', {selector : 'span', styles : {fontWeight : 'bold'}, remove : 'none'});
 	editor.getBody().innerHTML = '<p><span style="font-weight:bold">1234</span></p>';
 	rng = editor.dom.createRng();
@@ -56,8 +53,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><span>1234</span></p>', 'Inline element on selected text with remove=none');
+});
 
-	// Inline element style where element is format root
+test('Inline element style where element is format root', function() {
 	editor.formatter.register('format', {inline : 'span', styles : {fontWeight : 'bold'}});
 	editor.getBody().innerHTML = '<p><span style="font-weight:bold; color:#FF0000"><em>1234</em></span></p>';
 	rng = editor.dom.createRng();
@@ -71,8 +69,9 @@ test('remove', function() {
 		'<span style=\"color: #ff0000; font-weight: bold;\"><em>4' +
 		'</em></span></p>',
 	'Inline element style where element is format root');
+});
 
-	// Partially selected inline element text
+test('Partially selected inline element text', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234</b></p>';
 	rng = editor.dom.createRng();
@@ -81,8 +80,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><b>12</b>34</p>', 'Partially selected inline element text');
+});
 
-	// Partially selected inline element text with children
+test('Partially selected inline element text with children', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
 	rng = editor.dom.createRng();
@@ -91,8 +91,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><b><em><span>12</span></em></b><em><span>34</span></em></p>', 'Partially selected inline element text with children');
+});
 
-	// Partially selected inline element text with complex children
+test('Partially selected inline element text with complex children', function() {
 	editor.formatter.register('format', {inline : 'span', styles : {fontWeight : 'bold'}});
 	editor.getBody().innerHTML = '<p><span style="font-weight:bold"><em><span style="color:#ff0000;font-weight:bold">1234</span></em></span></p>';
 	rng = editor.dom.createRng();
@@ -101,8 +102,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span></em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
+});
 
-	// Inline elements with exact flag
+test('Inline elements with exact flag', function() {
 	editor.formatter.register('format', {inline : 'span', styles : {color : '#ff0000'}, exact : true});
 	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
 	rng = editor.dom.createRng();
@@ -111,8 +113,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with exact flag');
+});
 
-	// Inline elements with variables
+test('Inline elements with variables', function() {
 	editor.formatter.register('format', {inline : 'span', styles : {color : '%color'}, exact : true});
 	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
 	rng = editor.dom.createRng();
@@ -121,8 +124,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format', {color : '#ff0000'});
 	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements on selected text with variables');
+});
 
-	// Inline elements with functions and variables
+test('Inline elements with functions and variables', function() {
 	editor.formatter.register('format', {
 		inline : 'span',
 		styles : {
@@ -132,6 +136,7 @@ test('remove', function() {
 		},
 		exact : true
 	});
+
 	editor.getBody().innerHTML = '<p><span style="font-size:10px;color:#ff0000">1234</span><span style="font-size:10px;color:#00ff00">1234</span></p>';
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.select('p')[0], 0);
@@ -141,8 +146,9 @@ test('remove', function() {
 		color : '#ff00'
 	});
 	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with functions and variables');
+});
 
-	// End within start element
+test('End within start element', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b>1234<b>5678</b></b></p>';
 	rng = editor.dom.createRng();
@@ -151,8 +157,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p>12345678</p>', 'End within start element');
+});
 
-	// Start and end within similar format 1
+test('Start and end within similar format 1', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><b>1234<b>5678</b></b></em></b></p>';
 	rng = editor.dom.createRng();
@@ -161,8 +168,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>12345678</em></p>', 'Start and end within similar format 1');
+});
 
-	// Start and end within similar format 2
+test('Start and end within similar format 2', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><b>1234</b><b>5678</b></em></b></p>';
 	rng = editor.dom.createRng();
@@ -171,8 +179,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>1234</em><b><em><b>5678</b></em></b></p>', 'Start and end within similar format 2');
+});
 
-	// Start and end within similar format 3
+test('Start and end within similar format 3', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em><b>1234</b></em></b></p>';
 	rng = editor.dom.createRng();
@@ -181,8 +190,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>1234</em></p>', 'Start and end within similar format 3');
+});
 
-	// End within start
+test('End within start', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	editor.getBody().innerHTML = '<p><b><em>x<b>abc</b>y</em></b></p>';
 	rng = editor.dom.createRng();
@@ -191,8 +201,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p><em>x</em><em>abc</em><b><em>y</em></b></p>', 'End within start');
+});
 
-	// Remove block format
+test('Remove block format', function() {
 	editor.formatter.register('format', {block : 'h1'});
 	editor.getBody().innerHTML = '<h1>text</h1>';
 	rng = editor.dom.createRng();
@@ -201,8 +212,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p>text</p>', 'Remove block format');
+});
 
-	// Remove wrapper block format
+test('Remove wrapper block format', function() {
 	editor.formatter.register('format', {block : 'blockquote', wrapper : true});
 	editor.getBody().innerHTML = '<blockquote><p>text</p></blockquote>';
 	rng = editor.dom.createRng();
@@ -211,8 +223,9 @@ test('remove', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
 	equals(getContent(), '<p>text</p>', 'Remove wrapper block format');
+});
 
-	// Remove span format within block with style
+test('Remove span format within block with style', function() {
 	editor.formatter.register('format', {selector : 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true});
 	rng = editor.dom.createRng();
 	editor.getBody().innerHTML = '<p style="color:#ff0000"><span style="color:#00ff00">text</span></p>';
@@ -223,9 +236,7 @@ test('remove', function() {
 	equals(getContent(), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
 });
 
-test('remove and verify start element', function() {
-	var rng;
-
+test('Remove and verify start element', function() {
 	editor.formatter.register('format', {inline : 'b'});
 	rng = editor.dom.createRng();
 	editor.getBody().innerHTML = '<p><b>text</b></p>';
@@ -237,9 +248,8 @@ test('remove and verify start element', function() {
 	equals(editor.selection.getStart().nodeName, 'P');
 });
 
-test('remove with selection collapsed ensure correct caret position', function() {
-	var rng,
-		content = '<p>test</p><p>testing</p>';
+test('Remove with selection collapsed ensure correct caret position', function() {
+	var content = '<p>test</p><p>testing</p>';
 
 	editor.formatter.register('format', {block : 'p'});
 	rng = editor.dom.createRng();
@@ -250,6 +260,58 @@ test('remove with selection collapsed ensure correct caret position', function()
 	editor.formatter.remove('format');
 	equals(getContent(), content);
 	equals(editor.selection.getStart(), editor.dom.select('p')[0]);
+});
+
+test('Caret format at middle of text', function() {
+	editor.setContent('<p><b>abc</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 1, 'b', 1);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p>abc</p>');
+});
+
+test('Caret format at end of text', function() {
+	editor.setContent('<p><b>abc</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><b>abc</b>d</p>');
+});
+
+test('Caret format at end of text inside other format', function() {
+	editor.setContent('<p><em><b>abc</b></em></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><em><b>abc</b>d</em></p>');
+});
+
+test('Caret format at end of text inside other format with text after 1', function() {
+	editor.setContent('<p><em><b>abc</b></em>e</p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><em><b>abc</b>d</em>e</p>');
+});
+
+test('Caret format at end of text inside other format with text after 2', function() {
+	editor.setContent('<p><em><b>abc</b></em>e</p>');
+	editor.formatter.register('format', {inline: 'em'});
+	setSelection('b', 3, 'b', 3);
+	editor.formatter.remove('format');
+	type('d');
+	equals(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
+});
+
+test('Caret format on second word in table cell', function() {
+	editor.setContent('<table><tbody><tr><td>one <b>two</b></td></tr></tbody></table>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('b', 2, 'b', 2);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
 });
 
 test('contentEditable: false on start and contentEditable: true on end', function() {
@@ -289,15 +351,24 @@ test('remove format block on contentEditable: false block', function() {
 	equals(editor.getContent(), '<p>abc</p><h1 contenteditable="false">def</h1>', 'H1 is still not h1');
 });
 
+/*
+test('Remove format bug 1', function() {
+	editor.setContent('<p><b>ab<em>cde</em>fgh</b></p>');
+	editor.formatter.register('format', {inline: 'b'});
+	setSelection('em', 0, 'em', 2);
+	editor.formatter.remove('format');
+	equals(editor.getContent(), '<p><b>ab</b><em>cd</em><b><em>e</em>fgh</b></p>');
+});
+*/
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
 	theme : "advanced",
+	apply_source_formatting : false,
 	add_unload_trigger : false,
 	theme_advanced_styles : 'test1=test1;test2=test2',
 	valid_elements : '@[contenteditable|id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
-	plugins: 'noneditable',
-	apply_source_formatting : false,
 	fix_list_elements : 0,
 	fix_table_elements : 0,
 	entities : 'raw',

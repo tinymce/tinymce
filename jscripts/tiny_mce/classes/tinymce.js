@@ -408,22 +408,19 @@
 		 * // Extends obj with obj2 and obj3
 		 * tinymce.extend(obj, obj2, obj3);
 		 */
-		extend : function(obj, ext) {
-			var name, i, l, args = arguments, undef;
+		extend : function(o, e) {
+			var i, l, a = arguments;
 
-			for (i = 1, l = args.length; i < l; i++) {
-				ext = args[i];
+			for (i = 1, l = a.length; i < l; i++) {
+				e = a[i];
 
-				for (name in ext) {
-					value = ext[name];
-
-					if (value !== undef) {
-						obj[name] = value;
-					}
-				}
+				tinymce.each(e, function(v, n) {
+					if (v !== undefined)
+						o[n] = v;
+				});
 			}
 
-			return obj;
+			return o;
 		},
 
 		// #endif

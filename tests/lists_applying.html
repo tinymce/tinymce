@@ -90,7 +90,7 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(ParagraphWithPaddingLeft).enablesState('Outdent').andGives('<ol>\n<li style="margin-left: 30px;">Test</li>\n</ol>'); // TODO: Padding-left renders weird, should it be removed?
 	ApplyingOL.to(ParagraphWithMarginAndPaddingLeft).enablesState('Outdent').andGives('<ol>\n<li style="margin-left: 90px;">Test</li>\n</ol>');
 
-	start();
+	queue.done();
 });
 
 asyncTest('Collapsed Selection - Apply UL Actions', function() {
@@ -149,7 +149,7 @@ asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	ApplyingUL.to(ParagraphWithMarginLeft).gives('<ul><li style="margin-left: 30px;">Test</li>\n</ul>');
 	ApplyingUL.to(ParagraphWithPaddingLeft).gives('<ul><li style="margin-left: 30px;">Test</li>\n</ul>'); // TODO: Padding-left renders weird, should it be removed?
 	ApplyingUL.to(ParagraphWithMarginAndPaddingLeft).gives('<ul><li style="margin-left: 90px;">Test</li>\n</ul>');
-	start();
+	queue.done();
 });
 
 asyncTest('Collapsed Selection - Apply OL in Divs', function() {
@@ -158,7 +158,7 @@ asyncTest('Collapsed Selection - Apply OL in Divs', function() {
 	ApplyingOL.to(TextWithBrsInDivFirstLine).gives('\n<div><ol>\n<li>Item1</li>\n</ol>Item2</div>');
 	ApplyingOL.to(TextWithBrsInDivMiddleLine).gives('\n<div>Item1<ol>\n<li>Item2</li>\n</ol>Item3</div>');
 	ApplyingOL.to(TextWithBrsInDivLastLine).gives('\n<div>Item1<ol>\n<li>Item2</li>\n</ol></div>');
-	start();
+	queue.done();
 });
 
 asyncTest('Collapsed Selection - Apply UL in Divs', function() {
@@ -167,7 +167,7 @@ asyncTest('Collapsed Selection - Apply UL in Divs', function() {
 	ApplyingUL.to(TextWithBrsInDivFirstLine).gives('\n<div><ul>\n<li>Item1</li>\n</ul>Item2</div>');
 	ApplyingUL.to(TextWithBrsInDivMiddleLine).gives('\n<div>Item1<ul>\n<li>Item2</li>\n</ul>Item3</div>');
 	ApplyingUL.to(TextWithBrsInDivLastLine).gives('\n<div>Item1<ul>\n<li>Item2</li>\n</ul></div>');
-	start();
+	queue.done();
 });
 
 asyncTest('Collapsed Selection - Type Enter', function() {
@@ -180,7 +180,7 @@ asyncTest('Collapsed Selection - Type Enter', function() {
 	TypingEnter.inA(NestedNonEmptyUnorderedListItem).gives('<ul>\n<li>Before<ul>\n<li></li>\n<li>Test</li>\n</ul></li>\n<li>After</li>\n</ul>');
 
 	// TODO: Typing enter in correctly nested lists
-	start();
+	queue.done();
 });
 
 // TODO: Typing backspace in a paragraph between two lists should merge the lists.
@@ -203,7 +203,7 @@ asyncTest('Expanded Selection, List Types - Ordered List Action', function() {
 	ApplyingOL.to(IndentedUlInOlCorrectSelection).gives('<ol>\n<li>Item 1<ol>\n<li>Indented</li>\n</ol></li>\n</ol>');
 	ApplyingOL.to(IndentedOlInUlIncorrectSelection).gives('<ol>\n<li>Item 1<ol>\n<li>Indented</li>\n</ol></li>\n</ol>');
 	ApplyingOL.to(IndentedUlInOlIncorrectSelection).gives('<ol>\n<li>Item 1<ol>\n<li>Indented</li>\n</ol></li>\n</ol>');
-	start();
+	queue.done();
 });
 
 asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
@@ -227,7 +227,7 @@ asyncTest('Expanded Selection, List Types - Unordered List Action', function() {
 	if (!tinymce.isIE9) { // there is a IE9 selection in tables bug that this test exposes. Don't run the test in IE9
 		ApplyingUL.to(TableCellWithTextAfterUL).gives('<table><tbody><tr>\n<td><ul>\n<li>Existing</li>\n<li><span id="start">Line1</span></li>\n<li>Line2</li>\n<li>Line3</li>\n</ul>Line4</td>\n</tr></tbody></table>');
 	}
-	start();
+	queue.done();
 });
 
 asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function() {
@@ -252,7 +252,7 @@ asyncTest('Expanded Selection, Paragraph Types - Ordered List Action', function(
 
 	ApplyingOL.to(TextWithBrsInFormattingInDiv).gives('<div><strong>Before</strong><ol><li>Item1</li><li>Item2</li><li>Item3</li></ol></div>');
 	ApplyingOL.to(TextWithBrInsideFormatting).gives('<div><em><strong>Before</strong></em><ol><li><em><strong><span class="foo">Item1</span></strong></em>Item2</li><li>Item3</li></ol></div>');
-	start();
+	queue.done();
 });
 
 asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', function() {
@@ -280,19 +280,19 @@ asyncTest('Expanded Selection, Paragraph Types - Unordered List Action', functio
 	ApplyingUL.to(MultipleParagraphAndHeadingSelection).gives('<ul>\n<li>This is a test</li>\n<li>\n<h1>Second paragraph</h1>\n</li>\n<li>Third paragraph</li>\n</ul>');
 
 	ApplyingUL.to(TextWithBrsInFormattingInDiv).gives('<div><strong>Before</strong><ul><li>Item1</li>\n<li>Item2</li>\n<li>Item3</li></ul></div>');
-	start();
+	queue.done();
 });
 
 asyncTest('Expanded Selection, Table Types - Ordered List Action', function() {
 	ApplyingOL.to(CellWithoutBrSelection).gives('<table><tbody><tr>\n<td><ol>\n<li>Cell 1</li>\n</ol></td>\n</tr></tbody></table>');
 	// TODO: Cells with BR selection
-	start();
+	queue.done();
 	// TODO: Tables with BRs.
 });
 
 asyncTest('Expanded Selection, Table Types - Unordered List Action', function() {
 	ApplyingUL.to(CellWithoutBrSelection).gives('<table><tbody><tr>\n<td><ul>\n<li>Cell 1</li>\n</ul></td>\n</tr></tbody></table>');
-	start();
+	queue.done();
 	// TODO: Tables with BRs.
 });
 var initTinyFunction = function(){

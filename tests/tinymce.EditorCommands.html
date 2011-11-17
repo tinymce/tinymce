@@ -216,7 +216,7 @@ test('mceInsertContent - legacy content', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<u>u</u><strike>strike</strike><font size="7">font</font>');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: xx-large;">font</span></p>');
+	equals(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: 300%;">font</span></p>');
 });
 
 test('mceInsertContent - hr', function() {

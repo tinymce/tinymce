@@ -1,6 +1,24 @@
 Version 3.5 (2011-xx-xx)
 	Added new event class that is faster and enables support for faking events.
-Version 3.4.x (2011-10-xx)
+Version 3.4.7.1 (2011-11-xx)
+	Added spacebar onclick handler to toolbar buttons to ensure that the accessibility behaviour works correctly.
+	Fixed bug where a stranded bullet point would get created in WebKit.
+	Fixed bug where selecting text in a blockquote and pressing backspace toggles the style.
+	Fixed bug where pressing enter from a heading in IE, the resulting P tag below it shares the style property. 
+	Fix white space in between spans from being deleted. 
+	Fixed bug where scrollbars where visible in the character map dialog on Gecko.
+	Fixed issue with missing translation for one of the emoticons.
+Version 3.4.7 (2011-11-03)
+	Modified the caret formatting behavior to word similar to common desktop wordprocessors like Word or Libre Office.
+	Fixed bug in Webkit - Cursor positioning does not work vertically within a table cell with multiple lines of text.
+	Fixed bug in IE where Inserting a table in IE8 places cursor in the second cell of the first row.
+	Fixed bug in IE where editor in a frame doesn't give focus to the toolbar using ALT-F10.
+	Fix for webkit and gecko so that deleting bullet from start of list outdents inner list items and moves first item into paragraph.
+	Fix new list items in IE8 not displayed on a new line when list contains nested list items.
+	Clear formatting in table cell breaks the cell.
+	Made media type list localisable.
+	Fix out of memory error when using prototype in media dialog.
+	Fixed bug where could not add a space in the middle of a th cell.
 	Fixed bug where adding a bullet between two existing bullets adds an extra one
 	Fixed bug where trying to insert a new entry midway through a bulleted list fails dismally when the next entry is tabbed in.
 	Fixed bug where pressing enter on an empty list item does not outdent properly in FF
@@ -8,9 +26,14 @@ Version 3.4.x (2011-10-xx)
 	Fixed bug where hitting enter to exit from a bullet list moves cursor to the top of the page in Firefox.
 	Fixed bug where pressing backspace would not delete HRs in Firefox and IE when next to an empty paragraph.
 	Fixed bug where deleting part of the link text can cause a link with no destination to be saved.
+	Fixed bug where css style border widths wasn't handled correctly in table dialog.
+	Fixed bug where parsing invalid html contents on IE or WebKit could produce an infinite loop.
+	Fixed bug where scripts with custom script types wasn't properly passed though the editor.
+	Fixed issue where some Japanese kanji characters wasn't properly entity encoded when numeric entity mode was enabled.
 	Made emoticons dialog use the keyboard naviation.
 	Added navigation instructions to the symbols dialog.
 	Added ability to set default values for the media plugin.
+	Added new font_size_legacy_values option for converting old font element sizes to span with font-size properties.
 	Fixed bug where the symbols dialog was not accessible.
 	Added quirk for IE ensuring that the body of the document containing tinyMCE has a role="application" for accessibility.
 	Fixed bug where the advanced color picker wasn't working properly on FF 7.

@@ -427,19 +427,22 @@
 		},
 
 		getMediaTypeHTML : function(editor) {
+			function option(media_type){
+				return '<option value="'+media_type+'">'+tinyMCEPopup.editor.translate("media_dlg."+media_type)+'</option>'
+			}
 			var html = "";
 			html += '<select id="media_type" name="media_type" onchange="Media.formToData(\'type\');">';
-			html += '<option value="video">HTML5 Video</option>';
-			html += '<option value="audio">HTML5 Audio</option>';
-			html += '<option value="flash">Flash</option>';
-			html += '<option value="quicktime">QuickTime</option>';
-			html += '<option value="shockwave">Shockwave</option>';
-			html += '<option value="windowsmedia">Windows Media</option>';
-			html += '<option value="realmedia">Real Media</option>';
-			html += '<option value="iframe">Iframe</option>';
+			html += option("video");
+			html += option("audio");
+			html += option("flash");
+			html += option("quicktime");
+			html += option("shockwave");
+			html += option("windowsmedia");
+			html += option("realmedia");
+			html += option("iframe");
 
 			if (editor.getParam('media_embedded_audio', false)) {
-				html += '<option value="embeddedaudio">Embedded Audio</option>';
+				html += option('embeddedaudio');
 			}
 			
 			html += '</select>';

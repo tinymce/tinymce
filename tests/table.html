@@ -22,6 +22,7 @@ module('Tables', {
 	}
 });
 
+var VK;
 var UP_ARROW = 0x26;
 var DOWN_ARROW = 0x28;
 
@@ -30,18 +31,16 @@ if (tinymce.isWebKit) {
 		editor.setContent('<table><tr><td><p>first cell</p></td><td><p>second cell</p></td></tr></table>');
 		// in order for the robot to work well, we need to focus the editor before performing selection on it.
 		editor.focus();
-		// in order to simulate the section on tables as per the plugin we do a select then call out to the fix table selection 
+		// in order to simulate the section on tables as per the plugin we do a select then call out to the fix table selection
 		// (which is called by selection events).
 		editor.selection.select(editor.dom.select('td')[0]);
 		editor.plugins.table.fixTableCellSelection(editor);
-		robot.type('g',false, function(){ 
+		robot.type('g',false, function(){
 			var expected = '<table>\n<tbody>\n<tr>\n<td>\n<p>g</p>\n</td>\n<td>\n<p>second cell</p>\n</td>\n</tr>\n</tbody>\n</table>';
 			var actual = editor.getContent();
 			equals(actual, expected);
 			start();
 		}, editor.getBody());
-	
-	
 	});
 } else {
 	asyncTest('Empty stub', function() {
@@ -61,6 +60,19 @@ function testCursorKey(html, nodeToSelect, keyCode, expected) {
 		start();
 	}, editor.getBody());
 }
+
+asyncTest('space key does not nuke content in th cells', 1, function() {
+    editor.setContent('<table><tbody><tr><th id="a">abcdef</th></tr></tbody></table>');
+    editor.focus();
+    setSelection('#a', 3);
+    editor.focus();
+    robot.type(VK.SPACEBAR, false, function() {
+        var actual = editor.dom.get('a').innerHTML;
+        var expected = 'abc def';
+        equals(actual, expected);
+        start()
+    }, editor.getBody());
+});
 
 asyncTest('arrow up key moves to row above', function() {
 	var html = '<table><tr><td>0</td><td>1</td></tr><tr><td>0</td><td id="b">2</td></tr></table>';
@@ -107,6 +119,7 @@ var initTinyFunction = function(){
 		plugins: "table",
 		init_instance_callback : function(ed) {
 			editor = ed;
+            VK = tinymce.VK;
 		}
 	});
 };
