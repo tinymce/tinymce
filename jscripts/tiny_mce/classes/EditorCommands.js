@@ -289,6 +289,8 @@
 				var parser, serializer, parentNode, rootNode, fragment, args,
 					marker, nodeRect, viewPortRect, rng, node, node2, bookmarkHtml, viewportBodyElement;
 
+				//selection.normalize();
+
 				// Setup parser and serializer
 				parser = editor.parser;
 				serializer = new tinymce.html.Serializer({}, editor.schema);

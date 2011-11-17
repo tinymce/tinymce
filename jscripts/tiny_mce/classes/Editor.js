@@ -1849,7 +1849,6 @@
 				}
 
 				t._refreshContentEditable();
-				selection.normalize();
 
 				// Is not content editable
 				if (!ce)
