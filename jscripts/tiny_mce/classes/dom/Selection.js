@@ -938,6 +938,11 @@
 		normalize : function() {
 			var self = this, rng, normalized;
 
+			// TODO:
+			// Retain selection direction.
+			// Lean left/right on Gecko for inline elements.
+			// Run this on mouse up/key up when the user manually moves the selection
+			
 			// Normalize only on non IE browsers for now
 			if (tinymce.isIE)
 				return;
@@ -972,6 +977,7 @@
 								if (node.nodeType === 3) {
 									offset = start ? 0 : node.nodeValue.length - 1;
 									container = node;
+									normalized = true;
 									break;
 								}
 
@@ -985,11 +991,10 @@
 										offset++;
 									}
 
+									normalized = true;
 									break;
 								}
 							} while (node = (start ? walker.next() : walker.prev()));
-
-							normalized = true;
 						}
 					}
 				}
