@@ -434,6 +434,45 @@
 				}
 			}
 
+			function defendAgainstEmptyNewListItems(ed, e) {
+				var li = getLi(), rng, contentNode, nextContentNode, spacer;
+				if (li && isEnterWithoutShift(e)) {
+					rng = ed.selection.getRng(true);
+					contentNode = rng.endContainer; // check the end; this accounts for both caret & selections
+					if (contentNode.nodeType == 3) {
+						if (rng.endOffset !== contentNode.length) {
+							// There's text to the right of the cursor, so the new li won't be empty.
+							return;
+						}
+						nextContentNode = contentNode.nextSibling;
+					} else if (contentNode.nodeType == 1) {
+						// Grab a reference to the nodes to the right, then left of the caret.
+						nextContentNode = contentNode.childNodes[rng.endOffset];
+						contentNode = contentNode.childNodes[rng.endOffset-1];
+					} else {
+						// If the cursor ended up anywhere else, bail.
+						return;
+					}
+
+					if (nextContentNode && ed.dom.is(nextContentNode, 'ul,ol')) {
+						// Ensure that there'll be something to the right of the cursor
+						// that will end up being placed in the new list item.
+						if (tinymce.isIE) {
+							spacer = ed.dom.doc.createTextNode(String.fromCharCode(32));
+							ed.dom.insertAfter(spacer, contentNode);
+							rng = (tinymce.isIE6 || tinymce.isIE7 || tinymce.isIE8) ? rng : ed.getDoc().createRange();
+							rng.setStartBefore(spacer);
+							rng.setEndBefore(spacer);
+							rng.collapse(true);
+							ed.selection.setRng(rng);
+						} else {
+							spacer = ed.dom.create('br');
+							ed.dom.insertAfter(spacer, contentNode);
+						}
+					}
+				}
+			}
+
 			function fixDeletingFirstCharOfList(ed, e) {
 				function listElements(list, li) {
 					var elements = [];
@@ -463,14 +502,15 @@
 			ed.onKeyDown.add(function(_, e) { state = getListKeyState(e); });
 			ed.onKeyDown.add(cancelDefaultEvents);
 			ed.onKeyDown.add(imageJoiningListItem);
+			ed.onKeyDown.add(defendAgainstEmptyNewListItems);
             ed.onKeyDown.add(createNewLi);
 
-			if (tinymce.isGecko) {
-				ed.onKeyUp.add(fixIndentedListItemForGecko);
-			}
-			if (tinymce.isIE8) {
-				ed.onKeyUp.add(fixIndentedListItemForIE8);
-			}
+			// if (tinymce.isGecko) {
+			// 	ed.onKeyUp.add(fixIndentedListItemForGecko);
+			// }
+			// if (tinymce.isIE8) {
+			// 	ed.onKeyUp.add(fixIndentedListItemForIE8);
+			// }
 			if (tinymce.isGecko || tinymce.isWebKit) {
 				ed.onKeyDown.add(fixDeletingFirstCharOfList);
 			}
