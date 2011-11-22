@@ -1,4 +1,5 @@
 Version 3.4.7.1 (2011-11-xx)
+	Fixed bug where caret cannot be placed after table if table is at end of document in IE.
 	Fixed bug where adding range isn't always successful so we need to check range count otherwise an exception can occur.
 	Added spacebar onclick handler to toolbar buttons to ensure that the accessibility behaviour works correctly.
 	Fixed bug where a stranded bullet point would get created in WebKit.
