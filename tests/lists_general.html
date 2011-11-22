@@ -133,29 +133,35 @@ asyncTest('Outdent in nested list on enter when setting is set', function() {
 	}, editor.selection.getNode());
 });
 
-function testNestedListHasZeroSizedNbsp() {
+function testNewListItemCreation() {
 	robot.type(ENTER, false, function() {
-		var ul = editor.dom.select('#u')[0];
-		var text = ul.parentNode.childNodes[0].nodeValue;
-		equals(text, ZERO_SIZED_NBSP);
-		start();
+		robot.type('c', false, function() {
+			var ul = editor.dom.select('#u')[0];
+			var parentUl = editor.dom.select('ul')[0];
+			var secondLi = parentUl.childNodes[1];
+			equal(parentUl.childNodes.length, 2);
+			equal(secondLi.lastChild, ul, "the nested list has made it in to this new list item");
+			if (tinymce.isIE8) {
+				// It doesn't like calling nodeValue on this for some reason
+				ok(/^c/.test(secondLi.innerText), "should start with the letter 'c'")
+			} else {
+				equal(secondLi.firstChild.nodeValue, "c", "should start with the letter 'c'");
+			}
+			start();
+		}, editor.selection.getNode());
 	}, editor.selection.getNode());
 }
 
-asyncTest('Nested list has zero-sized nbsp in Gecko & IE8', function() {
-	if (!(tinymce.isGecko || tinymce.isIE8)) {
-		start();
-	} else {
-		editor.settings.list_outdent_on_enter = true;
-		editor.setContent("<ul><li>a<ul id='u'><li>b</li></ul></li></ul>");
-		setSelection('li', 1);
+asyncTest('Can create new list items when current li contains nested list', function() {
+	editor.settings.list_outdent_on_enter = true;
+	editor.setContent("<ul><li>a<ul id='u'><li>b</li></ul></li></ul>");
+	setSelection('li', 1);
 
-		if (tinymce.isIE8) {
-			// IE8 places the caret on the nested list item so we press left to get to end of first list item
-			robot.type(LEFT, false, testNestedListHasZeroSizedNbsp, editor.selection.getNode());
-		} else {
-			testNestedListHasZeroSizedNbsp();
-		}
+	if (tinymce.isIE8) {
+		// IE8 places the caret on the nested list item so we press left to get to end of first list item
+		robot.type(LEFT, false, testNewListItemCreation, editor.selection.getNode());
+	} else {
+		testNewListItemCreation();
 	}
 });
 
