@@ -2,35 +2,21 @@ define(
   'ephox.porkbun.Binder',
 
   [
+    'ephox.alchemy.AssocArray'
   ],
 
-  function () {
+  function (AssocArray) {
     var create = function() {
-      var registrations = [];
-      var handlers = [];
+      var registrationsAndHandlers = AssocArray();
 
       var bind = function(registration, handler) {
-        var index = registrations.indexOf(registration);
-        if (index !== -1) {
-          throw 'Bind error: event registration has already been bound';
-        }
-
+        registrationsAndHandlers.addPair(registration, handler);
         registration.bind(handler);
-
-        registrations.push(registration);
-        handlers.push(handler);
       };
 
       var unbind = function(registration) {
-        var index = registrations.indexOf(registration);
-        if (index === -1) {
-          throw 'Unbind error: unknown event registration';
-        }
-
-        registration.unbind(handlers[index]);
-
-        registrations.splice(index, 1);
-        handlers.splice(index, 1);
+        registration.unbind(registrationsAndHandlers.findByKey(registration));
+        registrationsAndHandlers.removeByKey(registration);
       };
 
       return {
