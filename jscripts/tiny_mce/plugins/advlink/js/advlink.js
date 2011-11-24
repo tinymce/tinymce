@@ -54,6 +54,18 @@ function init() {
 		document.getElementById('popupurl').style.width = '180px';
 
 	elm = inst.dom.getParent(elm, "A");
+	if (elm == null) {
+		// Fix case where selection.getNode() does not return the anchor or text node but instead the surrounding element.
+		// This occurs when one end of the selection is on a element boundary.
+		var start = inst.selection.getStart();
+		if (start.nodeName === 'A') {
+			var serialisedAnchor = inst.serializer.serialize(start, {forced_root_block: ''});
+			if (inst.selection.getContent() == serialisedAnchor) {
+				elm = start;
+			}
+		}
+	}
+
 	if (elm != null && elm.nodeName == "A")
 		action = "update";
 
