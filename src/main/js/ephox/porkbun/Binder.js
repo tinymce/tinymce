@@ -2,7 +2,7 @@ define(
   'ephox.porkbun.Binder',
 
   [
-    'ephox.alchemy.AssocArray'
+    'ephox.flute.AssocArray'
   ],
 
   function (AssocArray) {

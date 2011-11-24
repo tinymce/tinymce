@@ -29,6 +29,16 @@ var dependencies = [
   },
 
   {
+    name: "flute",
+    repository: "buildrepo2",
+    version: "latest",
+    source: "flute.zip",
+    targets: [
+      { name: "module/*.js", path: lib + "/run/depend" }
+    ]
+  },
+
+  {
     name: "wrap-underscore",
     repository: "buildrepo2",
     version: "latest",
