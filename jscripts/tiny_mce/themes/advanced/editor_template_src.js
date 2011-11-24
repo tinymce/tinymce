@@ -552,8 +552,7 @@
 
 				if (e.nodeName == 'A') {
 					t._sel(e.className.replace(/^.*mcePath_([0-9]+).*$/, '$1'));
-
-					return Event.cancel(e);
+					return false;
 				}
 			});
 /*
