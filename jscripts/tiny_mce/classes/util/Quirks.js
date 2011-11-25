@@ -24,6 +24,10 @@
 		ed.onKeyDown.add(function(ed, e) {
 			var rng, blockElm, node, clonedSpan, isDelete;
 
+			if (e.isDefaultPrevented()) {
+				return;
+			}
+
 			isDelete = e.keyCode == DELETE;
 			if (isDelete || e.keyCode == BACKSPACE) {
 				e.preventDefault();
