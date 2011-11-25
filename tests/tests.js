@@ -9,6 +9,7 @@ provide([
 
 		{"title": "Plugins tests", "tests": [
 			{"title": "Media plugin", "url": "media.html"},
+			{"title": "Noneditable plugin", "url": "noneditable.html"},
 			{"title": "Paste plugin", "url": "paste.html"},
 			{"title": "Table plugin", "url": "table.html", "jsrobot": true},
 			{"title": "jQuery plugin", "url": "jquery_plugin.html"},
@@ -20,7 +21,6 @@ provide([
 			{"title": "Plugin Dependency Chain Legacy", "url": "plugin_dependency_chain_legacy.html"},
 			{"title": "Dependency Chain Init Call Order", "url": "plugin_dependency_init_call_order.html"},
 			{"title": "Dependency With Specific Location", "url": "plugin_dependency_specific_location.html"}
-
 		]},
 
 		{"title": "tinymce.dom", "tests": [
@@ -75,7 +75,7 @@ provide([
 		{"title": "Quirks", "tests": [
 			{"title": "Firefox", "url": "quirk_firefox.html", "jsrobot": true},
 			{"title": "Internet Explorer 8", "url": "quirk_ie8.html", "jsrobot": true},
-            		{"title": "Webkit", "url": "quirk_webkit.html", "jsrobot": true}
+			{"title": "Webkit", "url": "quirk_webkit.html", "jsrobot": true}
 		]}
 	]
 ]);

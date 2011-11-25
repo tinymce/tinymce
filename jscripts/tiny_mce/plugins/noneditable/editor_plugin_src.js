@@ -9,181 +9,318 @@
  */
 
 (function() {
-	var externalName = 'contenteditable', internalName = 'data-mce-' + externalName, invisibleChar;
+	var TreeWalker = tinymce.dom.TreeWalker;
+	var externalName = 'contenteditable', internalName = 'data-mce-' + externalName;
 
-	// Setup invisible character use zero width space on Gecko since it doesn't change the heigt of the container
-	invisibleChar = tinymce.isGecko ? '\u200B' : '\uFEFF';
+	function handleContentEditableSelection(ed) {
+		var dom = ed.dom, selection = ed.selection, invisibleChar, caretContainerId = 'mce_noneditablecaret';
 
-	// Checks if the specified node is uneditable
-	function isUneditable(node) {
-		return node && node.nodeType === 1 && (node.getAttribute(internalName) || node.contentEditable) === "false";
-	};
+		// Setup invisible character use zero width space on Gecko since it doesn't change the height of the container
+		invisibleChar = tinymce.isGecko ? '\u200B' : '\uFEFF';
 
-	// Finds the first uneditable parent node
-	function findUneditableParent(node) {
-		var parent = node;
+		// Returns the content editable state of a node "true/false" or null
+		function getContentEditable(node) {
+			var contentEditable;
 
-		while (parent) {
-			if (parent.nodeType === 1 && parent.getAttribute(internalName)) {
-				return parent.getAttribute(internalName) === "false" ? parent : null;
-			}
-
-			parent = parent.parentNode;
-		}
-	};
-
-	function fakeContentEditable(ed) {
-		var dom = ed.dom;
-
-		function expandToNonEditable(collapse) {
-			var selection = ed.selection, origRng, startState, endState;
-
-			// Currently only works on IE
-			if (!tinymce.isIE) {
-				return;
-			}
-
-			function setEndPoint(start) {
-				var elm = findUneditableParent(start ? selection.getStart() : selection.getEnd());
-
-				if (elm) {
-					rng = origRng.duplicate();
-					rng.moveToElementText(elm);
-					origRng.setEndPoint(start ? 'StartToStart' : 'EndToEnd', rng);
-
-					return true;
-				}
-			};
-
-			origRng = ed.getDoc().selection.createRange();
-
-			startState = setEndPoint(true);
-			endState = setEndPoint();
-
-			if (startState || endState) {
-				if (typeof(collapse) !== "undefined") {
-					origRng.collapse(collapse);
+			// Ignore non elements
+			if (node.nodeType === 1) {
+				// Check for fake content editable
+				contentEditable = node.getAttribute(internalName);
+				if (contentEditable && contentEditable !== "inherit") {
+					return contentEditable;
 				}
 
-				origRng.select();
-
-				return startState || endState;
+				// Check for real content editable
+				contentEditable = node.contentEditable;
+				if (contentEditable !== "inherit") {
+					return contentEditable;
+				}
 			}
-		}
 
-		function swapAttributes(nodes, name1, name2) {
-			var i, node;
-
-			i = nodes.length;
-			while (i--) {
-				node = nodes[i];
-				node.attr(name2, node.attr(name1));
-				node.attr(name1, null);
-			}
+			return null;
 		};
 
-		ed.parser.addAttributeFilter('contenteditable', function(nodes, name) {
-			swapAttributes(nodes, externalName, internalName);
-		});
+		// Returns the noneditable parent or null if there is a editable before it or if it wasn't found
+		function getNonEditableParent(node) {
+			var state;
 
-		ed.serializer.addAttributeFilter('data-mce-contenteditable', function(nodes, name) {
-			swapAttributes(nodes, internalName, externalName);
-		});
-
-		ed.onKeyDown.addToTop(function(ed, e) {
-			var keyCode, shiftKey, selection = ed.selection
-
-			keyCode = e.keyCode;
-			shiftKey = e.shiftKey;
-
-			// Left/right arrow
-			if (keyCode === 37 || keyCode === 39) {
-				if (expandToNonEditable(keyCode === 37)) {
-					e.preventDefault();
-				}
-			}
-		});
-
-		ed.onNodeChange.addToTop(function() {
-			//expandToNonEditable();
-		});
-
-		ed.onClick.add(function(ed, e) {
-			var elm = findUneditableParent(e.target);
-
-			if (elm) {
-				insertCaretContainer(elm, true);
-			}
-		});
-
-		ed.onKeyDown.add(function(ed, e) {
-			var node = ed.selection.getStart(), caretContainer, keyCode = e.keyCode, sibling;
-
-			do {
-				if (node.id === '_mce_caretcontainer') {
-					caretContainer = node;
-					break;
+			while (node) {
+				state = getContentEditable(node);
+				if (state) {
+					return state  === "false" ? node : null;
 				}
 
 				node = node.parentNode;
-			} while (node);
-
-			if (caretContainer) {
-				sibling = caretContainer.previousSibling;
-				if (keyCode === 8 && isUneditable(sibling)) {
-					e.preventDefault();
-					dom.remove(sibling);
-				}
-
-				sibling = caretContainer.nextSibling;
-				if (keyCode === 46 && isUneditable(sibling)) {
-					e.preventDefault();
-					dom.remove(sibling);
-				}
-
-				removeCaretContainer();
 			}
-		});
-		
-		function insertCaretContainer(node, before) {
+		};
+
+		// Get caret container parent for the specified node
+		function getParentCaretContainer(node) {
+			while (node) {
+				if (node.id === caretContainerId) {
+					return node;
+				}
+
+				node = node.parentNode;
+			}
+		};
+
+		// Finds the first text node in the specified node
+		function findFirstTextNode(node) {
+			var walker;
+
+			if (node) {
+				walker = new TreeWalker(node, node);
+
+				for (node = walker.current(); node; node = walker.next()) {
+					if (node.nodeType === 3) {
+						return node;
+					}
+				}
+			}
+		};
+
+		// Insert caret container before/after target or expand selection to include block
+		function insertCaretContainerOrExpandToBlock(target, before) {
 			var caretContainer, rng;
 
-			removeCaretContainer();
-			caretContainer = dom.create('span', {'id': '_mce_caretcontainer', 'data-mce-bogus' : true}, invisibleChar);
+			// Select block
+			if (dom.isBlock(target)) {
+				selection.select(target);
+				return;
+			}
+
+			rng = dom.createRng();
+
+			if (getContentEditable(target) === "true") {
+				if (!target.firstChild) {
+					target.appendChild(ed.getDoc().createTextNode('\u00a0'));
+				}
+
+				target = target.firstChild;
+				before = true;
+			}
+
+			caretContainer = dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style:'border: 1px solid red'}, invisibleChar);
 
 			if (before) {
-				node.parentNode.insertBefore(caretContainer, node);
+				target.parentNode.insertBefore(caretContainer, target);
 			} else {
-				dom.insertAfter(caretContainer, node);
+				dom.insertAfter(caretContainer, target);
 			}
 
-			// Move caret in to the middle of caret container
-			rng = dom.createRng();
 			rng.setStart(caretContainer.firstChild, 1);
-			rng.setEnd(caretContainer.firstChild, 1);
-			ed.selection.setRng(rng);
-			ed.nodeChanged();
+			rng.collapse(true);
+			selection.setRng(rng);
+
+			return caretContainer;
 		};
 
-		function removeCaretContainer() {
-			var elm;
+		// Removes any caret container except the one we might be in
+		function removeCaretContainer(caretContainer) {
+			var child, currentCaretContainer, lastContainer;
 
-			while (elm = dom.get('_mce_caretcontainer')) {
-				dom.remove(elm, elm.innerHTML !== '\uFEFF\uFEFF');
+			if (caretContainer) {
+					rng = selection.getRng(true);
+					rng.setStartBefore(caretContainer);
+					rng.setEndBefore(caretContainer);
+
+					child = findFirstTextNode(caretContainer);
+					if (child && child.nodeValue.charAt(0) == invisibleChar) {
+						child = child.deleteData(0, 1);
+					}
+
+					dom.remove(caretContainer, true);
+
+					selection.setRng(rng);
+			} else {
+				currentCaretContainer = getParentCaretContainer(selection.getStart());
+				while ((caretContainer = dom.get(caretContainerId)) && caretContainer !== lastContainer) {
+					if (currentCaretContainer !== caretContainer) {
+						child = findFirstTextNode(caretContainer);
+						if (child && child.nodeValue.charAt(0) == invisibleChar) {
+							child = child.deleteData(0, 1);
+						}
+
+						dom.remove(caretContainer, true);
+					}
+
+					lastContainer = caretContainer;
+				}
 			}
 		};
+
+		// Modifies the selection to include contentEditable false elements or insert caret containers
+		function moveSelection() {
+			var nonEditableStart, nonEditableEnd, isCollapsed, rng, element;
+
+			// Checks if there is any contents to the left/right side of caret returns the noneditable element or any editable element if it finds one inside
+			function hasSideContent(element, left) {
+				var container, offset, walker, node, len;
+
+				container = rng.startContainer;
+				offset = rng.startOffset;
+
+				// If endpoint is in middle of text node then expand to beginning/end of element
+				if (container.nodeType == 3) {
+					len = container.nodeValue.length;
+					if ((offset > 0 && offset < len) || (left ? offset == len : offset == 0)) {
+						return;
+					}
+				} else {
+					// Can we resolve the node by index
+					if (offset < container.childNodes.length) {
+						container = container.childNodes[offset];
+						if (container.hasChildNodes()) {
+							container = container.firstChild;
+						}
+					} else {
+						// If not then the caret is at the last position in it's container and the caret container should be inserted after the noneditable element
+						return !left ? element : null;
+					}
+				}
+
+				// Walk left/right to look for contents
+				walker = new TreeWalker(container, element);
+				while (node = walker[left ? 'prev' : 'next']()) {
+					if (node.nodeType === 3 && node.nodeValue.length > 0) {
+						return;
+					} else if (getContentEditable(node) === "true") {
+						// Found contentEditable=true element return this one to we can move the caret inside it
+						return node;
+					}
+				}
+
+				return element;
+			};
+
+			// Remove any existing caret containers
+			removeCaretContainer();
+
+			// Get noneditable start/end elements
+			isCollapsed = selection.isCollapsed();
+			nonEditableStart = getNonEditableParent(selection.getStart());
+			nonEditableEnd = getNonEditableParent(selection.getEnd());
+
+			// Is any fo the range endpoints noneditable
+			if (nonEditableStart || nonEditableEnd) {
+				rng = selection.getRng(true);
+
+				// If it's a caret selection then look left/right to see if we need to move the caret out side or expand
+				if (isCollapsed) {
+					nonEditableStart = nonEditableStart || nonEditableEnd;
+
+					if (element = hasSideContent(nonEditableStart, true)) {
+						// We have no contents to the left of the caret then insert a caret container before the noneditable element
+						insertCaretContainerOrExpandToBlock(element, true);
+					} else if (element = hasSideContent(nonEditableStart, false)) {
+						// We have no contents to the right of the caret then insert a caret container after the noneditable element
+						insertCaretContainerOrExpandToBlock(element, false);
+					} else {
+						// We are in the middle of a noneditable so expand to select it
+						selection.select(nonEditableStart);
+					}
+				} else {
+					rng = selection.getRng(true);
+
+					// Expand selection to include start non editable element
+					if (nonEditableStart) {
+						rng.setStartBefore(nonEditableStart);
+					}
+
+					// Expand selection to include end non editable element
+					if (nonEditableEnd) {
+						rng.setEndAfter(nonEditableEnd);
+					}
+
+					selection.setRng(rng);
+				}
+			}
+		};
+
+		function handleKey(ed, e) {
+			var keyCode = e.keyCode, nonEditableParent, caretContainer, startElement, endElement;
+
+			function getNonEmptyTextNodeSibling(node, prev) {
+				while (node = node[prev ? 'previousSibling' : 'nextSibling']) {
+					if (node.nodeType !== 3 || node.nodeValue.length > 0) {
+						return node;
+					}
+				}
+			};
+
+			startElement = selection.getStart()
+			endElement = selection.getEnd();
+
+			// Disable all key presses in contentEditable=false except delete or backspace
+			nonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);
+			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != 46 && keyCode != 8) {
+				e.preventDefault();
+
+				// Arrow left/right select the element and collapse left/right
+				if (keyCode == 37 || keyCode == 39) {
+					selection.select(nonEditableParent);
+					selection.collapse(keyCode == 37);
+				}
+			} else {
+				// Is arrow left/right, backspace or delete
+				if (keyCode == 37 || keyCode == 39 || keyCode == 8 || keyCode == 46) {
+					caretContainer = getParentCaretContainer(startElement);
+					if (caretContainer) {
+						// Arrow left or backspace
+						if (keyCode == 37 || keyCode == 8) {
+							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);
+
+							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
+								e.preventDefault();
+
+								if (keyCode == 37) {
+									selection.select(nonEditableParent);
+									selection.collapse(true);
+								} else {
+									dom.remove(nonEditableParent);
+								}
+							} else {
+								removeCaretContainer(caretContainer);
+							}
+						}
+
+						// Arrow right or delete
+						if (keyCode == 39 || keyCode == 46) {
+							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer);
+
+							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
+								e.preventDefault();
+
+								if (keyCode == 39) {
+									selection.select(nonEditableParent);
+									selection.collapse(false);
+								} else {
+									dom.remove(nonEditableParent);
+								}
+							} else {
+								removeCaretContainer(caretContainer);
+							}
+						}
+					}
+				}
+			}
+		};
+
+		ed.onMouseUp.addToTop(moveSelection);
+		ed.onKeyDown.addToTop(handleKey);
+		ed.onKeyUp.addToTop(moveSelection);
 	};
 
 	tinymce.create('tinymce.plugins.NonEditablePlugin', {
 		init : function(ed, url) {
-			var t = this, editClass, nonEditClass, contentEditableAttrName = tinymce.isIE ? internalName : externalName;
+			var editClass, nonEditClass;
 
-			t.editor = ed;
 			editClass = " " + tinymce.trim(ed.getParam("noneditable_editable_class", "mceEditable")) + " ";
 			nonEditClass = " " + tinymce.trim(ed.getParam("noneditable_noneditable_class", "mceNonEditable")) + " ";
 
 			ed.onPreInit.add(function() {
-				fakeContentEditable(ed);
+				handleContentEditableSelection(ed);
 
 				// Apply contentEditable true/false on elements with the noneditable/editable classes
 				ed.parser.addAttributeFilter('class', function(nodes) {
@@ -194,10 +331,19 @@
 						className = " " + node.attr("class") + " ";
 
 						if (className.indexOf(editClass) !== -1) {
-							node.attr(contentEditableAttrName, "true");
+							node.attr(internalName, "true");
 						} else if (className.indexOf(nonEditClass) !== -1) {
-							node.attr(contentEditableAttrName, "false");
+							node.attr(internalName, "false");
 						}
+					}
+				});
+
+				// Remove internal name
+				ed.serializer.addAttributeFilter(internalName, function(nodes, name) {
+					var i = nodes.length;
+
+					while (i--) {
+						nodes[i].attr(name, null);
 					}
 				});
 			});
