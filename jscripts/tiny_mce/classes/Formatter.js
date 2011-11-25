@@ -41,7 +41,7 @@
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
 			nodeIndex = dom.nodeIndex,
-			INVISIBLE_CHAR = '\uFEFF',
+			INVISIBLE_CHAR = tinymce.isGecko ? '\u200B' : '\uFEFF',
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
@@ -49,7 +49,7 @@
 
 		// Returns the content editable state of a node
 		function getContentEditable(node) {
-			var contentEditable = node.getAttribute("data-mce-contentEditable");
+			var contentEditable = node.getAttribute("data-mce-contenteditable");
 
 			// Check for fake content editable
 			if (contentEditable && contentEditable !== "inherit") {
@@ -1830,17 +1830,14 @@
 		};
 
 		function performCaretAction(type, name, vars) {
-			var invisibleChar, caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
-
-			// Setup invisible character use zero width space on Gecko since it doesn't change the heigt of the container
-			invisibleChar = tinymce.isGecko ? '\u200B' : INVISIBLE_CHAR;
+			var caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
 
 			// Creates a caret container bogus element
 			function createCaretContainer(fill) {
 				var caretContainer = dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style: debug ? 'color:red' : ''});
 
 				if (fill) {
-					caretContainer.appendChild(ed.getDoc().createTextNode(invisibleChar));
+					caretContainer.appendChild(ed.getDoc().createTextNode(INVISIBLE_CHAR));
 				}
 
 				return caretContainer;
@@ -1848,7 +1845,7 @@
 
 			function isCaretContainerEmpty(node, nodes) {
 				while (node) {
-					if ((node.nodeType === 3 && node.nodeValue !== invisibleChar) || node.childNodes.length > 1) {
+					if ((node.nodeType === 3 && node.nodeValue !== INVISIBLE_CHAR) || node.childNodes.length > 1) {
 						return false;
 					}
 
@@ -1953,7 +1950,7 @@
 					// Move selection back to caret position
 					selection.moveToBookmark(bookmark);
 				} else {
-					if (!caretContainer || textNode.nodeValue !== invisibleChar) {
+					if (!caretContainer || textNode.nodeValue !== INVISIBLE_CHAR) {
 						caretContainer = createCaretContainer(true);
 						textNode = caretContainer.firstChild;
 
@@ -1979,7 +1976,7 @@
 				node = container;
 
 				if (container.nodeType == 3) {
-					if (offset != container.nodeValue.length || container.nodeValue === invisibleChar) {
+					if (offset != container.nodeValue.length || container.nodeValue === INVISIBLE_CHAR) {
 						hasContentAfter = true;
 					}
 
@@ -2032,7 +2029,7 @@
 					}
 
 					// Insert invisible character into inner most format element
-					node.appendChild(dom.doc.createTextNode(invisibleChar));
+					node.appendChild(dom.doc.createTextNode(INVISIBLE_CHAR));
 					node = node.firstChild;
 
 					// Insert caret container after the formated node
