@@ -1794,6 +1794,19 @@
 			return this.events.remove(target, name, func);
 		},
 
+		/**
+		 * Fires the specified event name with object on target.
+		 *
+		 * @method fire
+		 * @param {Node/Document/Window} target Target element or object to fire event on.
+		 * @param {String} name Name of the event to fire.
+		 * @param {Object} evt Event object to send.
+		 * @return {Event} Event object.
+		 */
+		fire : function(target, name, evt) {
+			return this.events.fire(target, name, evt);
+		},
+
 		// #ifdef debug
 
 		dumpRng : function(r) {
