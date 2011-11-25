@@ -67,6 +67,10 @@
 				&lt;/p&gt;
 			</textarea>
 		</div>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').getContent());return false;">[Get contents]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').getContent({format: 'raw'}));return false;">[Get contents raw]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getContent());return false;">[Get selected]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getContent({format : 'raw'}));return false;">[Get selected raw]</a>
 	</div>
 </form>
 
