@@ -20,7 +20,8 @@
 		var self, index = 0, data = [], beforeBookmark;
 
 		function getContent() {
-			return tinymce.trim(editor.getContent({format : 'raw', no_events : 1}));
+			// Remove whitespace before/after and remove pure bogus nodes
+			return tinymce.trim(editor.getContent({format : 'raw', no_events : 1}).replace(/<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>/g, ''));
 		};
 
 		return self = {
