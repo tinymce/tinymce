@@ -21,7 +21,7 @@ define(
         };
 
         var unbind = function (handler) {
-          var index = handlers.indexOf(handler);
+          var index = _.indexOf(handlers, handler);
           if (index !== -1) {
             handlers.splice(index, 1);
           }
