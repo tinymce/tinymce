@@ -54,7 +54,10 @@ tinymce.dom = {};
 
 		// Copy all properties from the original event
 		for (name in original_event) {
-			event[name] = original_event[name];
+			// layerX/layerY is deprecated in Chrome and produces a warning
+			if (name !== "layerX" && name !== "layerY") {
+				event[name] = original_event[name];
+			}
 		}
 
 		// Normalize target IE uses srcElement
