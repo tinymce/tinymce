@@ -21,7 +21,7 @@ var dependencies = [
   {
     name: "wrap-jquery",
     repository: "buildrepo2",
-    version: "1.0.0/1.0.0.13",
+    version: "latest",
     source: "wrap-jquery.zip",
     targets: [
       { name: "compile/ephox.wrap.JQuery.js", path: lib + "/demo" }
@@ -41,7 +41,7 @@ var dependencies = [
   {
     name: "wrap-underscore",
     repository: "buildrepo2",
-    version: "1.0.0/1.0.0.1",
+    version: "latest",
     source: "wrap-underscore.zip",
     targets: [
       { name: "compile/ephox.wrap._.js", path: lib + "/run/depend" },
