@@ -21,7 +21,7 @@ var dependencies = [
   {
     name: "wrap-jquery",
     repository: "buildrepo2",
-    version: "latest",
+    version: "1.0.0/1.0.0.13",
     source: "wrap-jquery.zip",
     targets: [
       { name: "compile/ephox.wrap.JQuery.js", path: lib + "/demo" }
