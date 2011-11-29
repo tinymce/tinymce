@@ -3,12 +3,12 @@ define(
 
   [
     'ephox.wrap.JQuery',
-    'ephox.porkbun.Events',
     'ephox.porkbun.Binder',
+    'ephox.porkbun.Events',
     'ephox.scullion.Struct'
   ],
 
-  function ($, Events, Binder, Struct) {
+  function ($, Binder, Events, Struct) {
     var create = function () {
       var saloon = $('<div />');
       saloon.css({
