@@ -41,7 +41,7 @@ var dependencies = [
   {
     name: "wrap-underscore",
     repository: "buildrepo2",
-    version: "latest",
+    version: "1.0.0/1.0.0.1",
     source: "wrap-underscore.zip",
     targets: [
       { name: "compile/ephox.wrap._.js", path: lib + "/run/depend" },
