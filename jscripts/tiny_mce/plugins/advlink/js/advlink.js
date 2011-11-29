@@ -58,10 +58,13 @@ function init() {
 		// Fix case where selection.getNode() does not return the anchor or text node but instead the surrounding element.
 		// This occurs when one end of the selection is on a element boundary.
 		var start = inst.selection.getStart();
-		if (start.nodeName === 'A') {
-			var serialisedAnchor = inst.serializer.serialize(start, {forced_root_block: ''});
+		var end = inst.selection.getEnd();
+		var anchor = start.nodeName === 'A' ? start : end.nodeName === 'A' ? end : null;
+		if (anchor != null) {
+			console.log("fixing anchor");
+			var serialisedAnchor = inst.serializer.serialize(anchor, {forced_root_block: ''});
 			if (inst.selection.getContent() == serialisedAnchor) {
-				elm = start;
+				elm = anchor;
 			}
 		}
 	}
