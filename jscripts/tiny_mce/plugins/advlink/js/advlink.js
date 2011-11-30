@@ -61,7 +61,6 @@ function init() {
 		var end = inst.selection.getEnd();
 		var anchor = start.nodeName === 'A' ? start : end.nodeName === 'A' ? end : null;
 		if (anchor != null) {
-			console.log("fixing anchor");
 			var serialisedAnchor = inst.serializer.serialize(anchor, {forced_root_block: ''});
 			if (inst.selection.getContent() == serialisedAnchor) {
 				elm = anchor;
