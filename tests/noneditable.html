@@ -129,6 +129,38 @@ test('type after last non editable', function() {
 	equals(editor.getContent(), '<p><span class="mceNonEditable">no</span>X</p>');
 });
 
+test('navigate left when noneditable selected adjacent to noneditable', function() {
+	editor.setContent('<p>no <span class="mceNonEditable">yes</span> no</p><p class="mceNonEditable">no</p>');
+	var container = editor.dom.select('p')[0];
+	rng = editor.dom.createRng();
+	rng.selectNode(editor.dom.select('span')[0]);
+	editor.selection.setRng(rng);
+
+	type({keyCode: 37});
+	rng = normalizeRng(editor.selection.getRng());
+
+	equals(rng.startContainer.nodeName, 'SPAN');
+	equals(rng.startContainer.parentNode.nodeName, 'P');
+	equals(editor.dom.nodeIndex(rng.startContainer), 1);
+	equals(rng.collapsed, true);
+});
+
+test('navigate right when noneditable selected adjacent to noneditable', function() {
+	editor.setContent('<p>no <span class="mceNonEditable">yes</span> no</p><p class="mceNonEditable">no</p>');
+	var container = editor.dom.select('p')[0];
+	rng = editor.dom.createRng();
+	rng.selectNode(editor.dom.select('span')[0]);
+	editor.selection.setRng(rng);
+
+	type({keyCode: 39});
+	rng = normalizeRng(editor.selection.getRng());
+
+	equals(rng.startContainer.nodeName, 'SPAN');
+	equals(rng.startContainer.parentNode.nodeName, 'P');
+	equals(editor.dom.nodeIndex(rng.startContainer), 2);
+	equals(rng.collapsed, true);
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

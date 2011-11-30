@@ -170,7 +170,10 @@
 				} else {
 					// Can we resolve the node by index
 					if (offset < container.childNodes.length) {
-						container = container.childNodes[offset];
+						// Browser represents caret position as the offset at the start of an element. When moving right
+						// this is the element we are moving into so we consider our container to be child node at offset-1
+						var pos = !left && offset > 0 ? offset-1 : offset;
+						container = container.childNodes[pos];
 						if (container.hasChildNodes()) {
 							container = container.firstChild;
 						}
