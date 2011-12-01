@@ -11,6 +11,7 @@
 (function() {
 	var TreeWalker = tinymce.dom.TreeWalker;
 	var externalName = 'contenteditable', internalName = 'data-mce-' + externalName;
+	var VK = tinymce.VK;
 
 	function handleContentEditableSelection(ed) {
 		var dom = ed.dom, selection = ed.selection, invisibleChar, caretContainerId = 'mce_noneditablecaret';
@@ -257,27 +258,27 @@
 
 			// Disable all key presses in contentEditable=false except delete or backspace
 			nonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);
-			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != 46 && keyCode != 8) {
+			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != VK.DELETE && keyCode != VK.BACKSPACE) {
 				e.preventDefault();
 
 				// Arrow left/right select the element and collapse left/right
-				if (keyCode == 37 || keyCode == 39) {
+				if (keyCode == VK.LEFT || keyCode == VK.RIGHT) {
 					selection.select(nonEditableParent);
-					selection.collapse(keyCode == 37);
+					selection.collapse(keyCode == VK.LEFT);
 				}
 			} else {
 				// Is arrow left/right, backspace or delete
-				if (keyCode == 37 || keyCode == 39 || keyCode == 8 || keyCode == 46) {
+				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {
 					caretContainer = getParentCaretContainer(startElement);
 					if (caretContainer) {
 						// Arrow left or backspace
-						if (keyCode == 37 || keyCode == 8) {
+						if (keyCode == VK.LEFT || keyCode == VK.BACKSPACE) {
 							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
 								e.preventDefault();
 
-								if (keyCode == 37) {
+								if (keyCode == VK.LEFT) {
 									selection.select(nonEditableParent);
 									selection.collapse(true);
 								} else {
@@ -289,13 +290,13 @@
 						}
 
 						// Arrow right or delete
-						if (keyCode == 39 || keyCode == 46) {
+						if (keyCode == VK.RIGHT || keyCode == VK.DELETE) {
 							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
 								e.preventDefault();
 
-								if (keyCode == 39) {
+								if (keyCode == VK.RIGHT) {
 									selection.select(nonEditableParent);
 									selection.collapse(false);
 								} else {
