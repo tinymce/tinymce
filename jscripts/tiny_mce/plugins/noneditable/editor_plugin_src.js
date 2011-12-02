@@ -86,9 +86,11 @@
 			var caretContainer, rng;
 
 			// Select block
-			if (dom.isBlock(target)) {
-				selection.select(target);
-				return;
+			if (getContentEditable(target) === "false") {
+				if (dom.isBlock(target)) {
+					selection.select(target);
+					return;
+				}
 			}
 
 			rng = dom.createRng();
@@ -213,7 +215,7 @@
 				// If it's a caret selection then look left/right to see if we need to move the caret out side or expand
 				if (isCollapsed) {
 					nonEditableStart = nonEditableStart || nonEditableEnd;
-
+					var start = selection.getStart();
 					if (element = hasSideContent(nonEditableStart, true)) {
 						// We have no contents to the left of the caret then insert a caret container before the noneditable element
 						insertCaretContainerOrExpandToBlock(element, true);
@@ -253,6 +255,11 @@
 				}
 			};
 
+			function positionCaretOnElement(element, start) {
+				selection.select(element);
+				selection.collapse(start);
+			}
+
 			startElement = selection.getStart()
 			endElement = selection.getEnd();
 
@@ -263,8 +270,16 @@
 
 				// Arrow left/right select the element and collapse left/right
 				if (keyCode == VK.LEFT || keyCode == VK.RIGHT) {
-					selection.select(nonEditableParent);
-					selection.collapse(keyCode == VK.LEFT);
+					var left = keyCode == VK.LEFT;
+					// If a block element find previous or next element to position the caret
+					if (ed.dom.isBlock(nonEditableParent)) {
+						var targetElement = left ? nonEditableParent.previousSibling : nonEditableParent.nextSibling;
+						var walker = new TreeWalker(targetElement, targetElement);
+						var caretElement = left ? walker.prev() : walker.next();
+						positionCaretOnElement(caretElement, !left);
+					} else {
+						positionCaretOnElement(nonEditableParent, left);
+					}
 				}
 			} else {
 				// Is arrow left/right, backspace or delete
@@ -279,8 +294,7 @@
 								e.preventDefault();
 
 								if (keyCode == VK.LEFT) {
-									selection.select(nonEditableParent);
-									selection.collapse(true);
+									positionCaretOnElement(nonEditableParent, true);
 								} else {
 									dom.remove(nonEditableParent);
 								}
@@ -297,8 +311,7 @@
 								e.preventDefault();
 
 								if (keyCode == VK.RIGHT) {
-									selection.select(nonEditableParent);
-									selection.collapse(false);
+									positionCaretOnElement(nonEditableParent, false);
 								} else {
 									dom.remove(nonEditableParent);
 								}
