@@ -1,4 +1,5 @@
 Version 3.4.7.1 (2011-11-xx)
+	Fix font size dropdown value not being updated when text already has a font size in the advanced template.
 	Fixed bug in IE where IE doesn't use ARIA attributes properly on options - causing labels to be read out 2 times.
 	Fixed bug where caret cannot be placed after table if table is at end of document in IE.
 	Fixed bug where adding range isn't always successful so we need to check range count otherwise an exception can occur.
