@@ -759,7 +759,25 @@
 				 *    }
 				 * });
 				 */
-				'onSetProgressState'
+				'onSetProgressState',
+
+				/**
+				 * Fires after an attribute is set using setAttrib.
+				 *
+				 * @event onSetAttrib
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onSetAttrib event using tinyMCE.init
+				 *tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onSetAttrib.add(function(ed, node, attribute, attributeValue) {
+				 *            console.log('onSetAttrib tag');
+				 *       });
+				 *    }
+				 * });
+				 */
+				'onSetAttrib'
 			], function(e) {
 				t[e] = new Dispatcher(t);
 			});
@@ -2997,7 +3015,7 @@
 
 				while (n && n.nodeType && n.nodeType != 1 && n.parentNode)
 					n = n.parentNode;
-					
+
 				// Is the cursor at the beginning of a blockquote?
 				if (n && n.parentNode && n.parentNode.tagName === 'BLOCKQUOTE' && n.parentNode.firstChild == n && offset == 0) {
 					// Remove the blockquote
@@ -3010,7 +3028,7 @@
 					ed.selection.collapse(false);
 				}
 			});
- 
+
 
 
 			// Add reset handler
@@ -3218,9 +3236,9 @@
 						if (target !== t.getBody()) {
 							t.dom.setAttrib(target, "style", null);
 
-							each(template, function(attr) {
-								target.setAttributeNode(attr.cloneNode(true));
-							});
+						each(template, function(attr) {
+							target.setAttributeNode(attr.cloneNode(true));
+						});
 						}
 					};
 				}
