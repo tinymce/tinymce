@@ -324,6 +324,13 @@
 			}
 		};
 
+		ed.onMouseDown.addToTop(function(ed, e){
+			// prevent collapsing selection to caret when clicking in a non-editable section
+			var node = ed.selection.getNode();
+			if (getContentEditable(node) === "false" && node == e.target) {
+				e.preventDefault();
+			}
+		});
 		ed.onMouseUp.addToTop(moveSelection);
 		ed.onKeyDown.addToTop(handleKey);
 		ed.onKeyUp.addToTop(moveSelection);
