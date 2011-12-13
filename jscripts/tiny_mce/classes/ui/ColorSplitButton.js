@@ -177,7 +177,7 @@
 				};
 
 				// adding a proper ARIA role = button causes JAWS to read things incorrectly on IE.
-				if (!t.editor.isIE ) {
+				if (!tinymce.isIE ) {
 					settings['role']= 'option';
 				}
 
