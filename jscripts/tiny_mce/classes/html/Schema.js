@@ -9,8 +9,7 @@
  */
 
 (function(tinymce) {
-	var transitional = {}, boolAttrMap, blockElementsMap, shortEndedElementsMap, nonEmptyElementsMap, customElementsMap = {},
-		defaultWhiteSpaceElementsMap, selfClosingElementsMap, makeMap = tinymce.makeMap, each = tinymce.each;
+	var transitional = {}, mapCache = {}, makeMap = tinymce.makeMap, each = tinymce.each;
 
 	function split(str, delim) {
 		return str.split(delim || ',');
@@ -48,12 +47,6 @@
 
 		return elements;
 	};
-
-	// Build a lookup table for block elements both lowercase and uppercase
-	blockElementsMap = 'h1,h2,h3,h4,h5,h6,hr,p,div,address,pre,form,table,tbody,thead,tfoot,' + 
-						'th,tr,td,li,ol,ul,caption,blockquote,center,dl,dt,dd,dir,fieldset,' + 
-						'noscript,menu,isindex,samp,header,footer,article,section,hgroup';
-	blockElementsMap = makeMap(blockElementsMap, ',', makeMap(blockElementsMap.toUpperCase()));
 
 	// This is the XHTML 1.0 transitional elements with it's attributes and children packed to reduce it's size
 	transitional = unpack({
@@ -175,12 +168,6 @@
 		'body[E|onload|onunload|background|bgcolor|text|link|vlink|alink][#|Y]'
 	);
 
-	boolAttrMap = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected,autoplay,loop,controls');
-	shortEndedElementsMap = makeMap('area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,source');
-	nonEmptyElementsMap = tinymce.extend(makeMap('td,th,iframe,video,audio,object'), shortEndedElementsMap);
-	defaultWhiteSpaceElementsMap = makeMap('pre,script,style,textarea');
-	selfClosingElementsMap = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr');
-
 	/**
 	 * Schema validator class.
 	 *
@@ -204,7 +191,30 @@
 	 * @param {Object} settings Name/value settings object.
 	 */
 	tinymce.html.Schema = function(settings) {
-		var self = this, elements = {}, children = {}, patternElements = [], validStyles, whiteSpaceElementsMap;
+		var self = this, elements = {}, children = {}, patternElements = [], validStyles;
+		var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, blockElementsMap, nonEmptyElementsMap, customElementsMap;
+
+		// Creates an lookup table map object for the specified option or the default value
+		function createLookupTable(option, default_value, extend) {
+			var value = settings[option];
+
+			if (!value) {
+				// Get cached default map or make it if needed
+				value = mapCache[option];
+
+				if (!value) {
+					value = makeMap(default_value, ' ', makeMap(default_value.toUpperCase(), ' '));
+					value = tinymce.extend(value, extend);
+
+					mapCache[option] = value;
+				}
+			} else {
+				// Create custom map
+				value = makeMap(value, ',', makeMap(value.toUpperCase(), ' '));
+			}
+
+			return value;
+		};
 
 		settings = settings || {};
 
@@ -222,7 +232,15 @@
 			});
 		}
 
-		whiteSpaceElementsMap = settings.whitespace_elements ? makeMap(settings.whitespace_elements) : defaultWhiteSpaceElementsMap;
+		// Setup map objects
+		whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script style textarea');
+		selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li options p td tfoot th thead tr');
+		shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link meta param embed source');
+		boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize noshade nowrap readonly selected autoplay loop controls');
+		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object', shortEndedElementsMap);
+		blockElementsMap = createLookupTable('block_elements', 'h1 h2 h3 h4 h5 h6 hr p div address pre form table tbody thead tfoot ' + 
+						'th tr td li ol ul caption blockquote center dl dt dd dir fieldset ' + 
+						'noscript menu isindex samp header footer article section hgroup');
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
 		function patternToRegExp(str) {
@@ -656,8 +674,4 @@
 		 */
 		self.addValidChildren = addValidChildren;
 	};
-
-	// Expose boolMap and blockElementMap as static properties for usage in DOMUtils
-	tinymce.html.Schema.boolAttrMap = boolAttrMap;
-	tinymce.html.Schema.blockElementsMap = blockElementsMap;
 })(tinymce);

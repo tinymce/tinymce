@@ -16,7 +16,6 @@
 		isIE = tinymce.isIE,
 		Entities = tinymce.html.Entities,
 		simpleSelectorRe = /^([a-z0-9],?)+$/i,
-		blockElementsMap = tinymce.html.Schema.blockElementsMap,
 		whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 	/**
@@ -59,7 +58,7 @@
 		 * @param {settings} s Optional settings collection.
 		 */
 		DOMUtils : function(d, s) {
-			var t = this, globalStyle, name;
+			var t = this, globalStyle, name, blockElementsMap;
 
 			t.doc = d;
 			t.win = window;
@@ -108,6 +107,25 @@
 
 			t.events = s.ownEvents ? new tinymce.dom.EventUtils() : tinymce.dom.Event;
 			tinymce.addUnload(t.destroy, t);
+			blockElementsMap = s.schema ? s.schema.getBlockElements() : {};
+
+			/**
+			 * Returns true/false if the specified element is a block element or not.
+			 *
+			 * @method isBlock
+			 * @param {Node/String} node Element/Node to check.
+			 * @return {Boolean} True/False state if the node is a block element or not.
+			 */
+			t.isBlock = function(node) {
+				// This function is called in module pattern style since it might be executed with the wrong this scope
+				var type = node.nodeType;
+
+				// If it's a node then check the type and use the nodeName
+				if (type)
+					return !!(type === 1 && blockElementsMap[node.nodeName]);
+
+				return !!blockElementsMap[node];
+			};
 		},
 
 		/**
@@ -1292,23 +1310,6 @@
 
 				return node;
 			});
-		},
-
-		/**
-		 * Returns true/false if the specified element is a block element or not.
-		 *
-		 * @method isBlock
-		 * @param {Node/String} node Element/Node to check.
-		 * @return {Boolean} True/False state if the node is a block element or not.
-		 */
-		isBlock : function(node) {
-			var type = node.nodeType;
-
-			// If it's a node then check the type and use the nodeName
-			if (type)
-				return !!(type === 1 && blockElementsMap[node.nodeName]);
-
-			return !!blockElementsMap[node];
 		},
 
 		/**
