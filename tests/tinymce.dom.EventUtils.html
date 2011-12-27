@@ -387,6 +387,17 @@ test("bind unbind fire clean on null", function() {
 	eventUtils.clean(null);
 });
 
+test("unbind inside callback", function() {
+	function a() {}
+
+	eventUtils.bind(window, 'click', function() {
+		eventUtils.unbind(window, 'click', a);
+	});
+
+	eventUtils.bind(window, 'click', a);
+	eventUtils.fire(window, 'click', {});
+});
+
 /**
  * Fakes a mouse event.
  *
