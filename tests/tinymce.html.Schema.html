@@ -144,6 +144,9 @@ test('getBoolAttrs', function() {
 
 	var schema = new tinymce.html.Schema();
 	deepEqual(schema.getBoolAttrs(), {
+		"CONTROLS": {}, "LOOP": {}, "AUTOPLAY": {}, "SELECTED": {}, "READONLY": {}, "NOWRAP": {},
+		"NOSHADE": {}, "NORESIZE": {}, "NOHREF": {}, "MULTIPLE": {}, "ISMAP": {}, "DISABLED": {}, "DEFER": {},
+		"DECLARE": {}, "COMPACT": {}, "CHECKED": {},
 		"controls": {}, "loop": {}, "autoplay": {}, "selected": {}, "readonly": {}, "nowrap": {},
 		"noshade": {}, "noresize": {}, "nohref": {}, "multiple": {}, "ismap": {}, "disabled": {}, "defer": {},
 		"declare": {}, "compact": {}, "checked": {}
@@ -173,6 +176,9 @@ test('getShortEndedElements', function() {
 
 	var schema = new tinymce.html.Schema();
 	deepEqual(schema.getShortEndedElements(), {
+		"EMBED": {}, "PARAM": {}, "META": {}, "LINK": {}, "ISINDEX": {},
+		"INPUT": {}, "IMG": {}, "HR": {}, "FRAME": {}, "COL": {}, "BR": {},
+		"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {},
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
 		"basefont": {}, "base": {}, "area": {}, "source" : {}
@@ -184,6 +190,10 @@ test('getNonEmptyElements', function() {
 
 	var schema = new tinymce.html.Schema();
 	deepEqual(schema.getNonEmptyElements(), {
+		"EMBED": {}, "PARAM": {}, "META": {}, "LINK": {}, "ISINDEX": {},
+		"INPUT": {}, "IMG": {}, "HR": {}, "FRAME": {}, "COL": {}, "BR": {},
+		"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {},
+		"TD": {}, "TH": {}, "IFRAME": {}, "VIDEO": {}, "AUDIO": {}, "OBJECT": {},
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
 		"basefont": {}, "base": {}, "area": {}, "source" : {},
@@ -196,6 +206,7 @@ test('getWhiteSpaceElements', function() {
 
 	var schema = new tinymce.html.Schema();
 	deepEqual(schema.getWhiteSpaceElements(), {
+		"STYLE": {}, "SCRIPT": {}, "PRE": {}, "TEXTAREA": {},
 		"style": {}, "script": {}, "pre": {}, "textarea": {}
 	});
 });
@@ -262,7 +273,7 @@ test('addCustomElements/getCustomElements', function() {
 test('whitespaceElements', function() {
 	expect(3);
 
-	var schema = new tinymce.html.Schema({whitespace_elements : 'pre'});
+	var schema = new tinymce.html.Schema({whitespace_elements : 'pre,p'});
 	ok(schema.getWhiteSpaceElements()['pre']);
 	ok(!schema.getWhiteSpaceElements()['span']);
 
@@ -270,7 +281,50 @@ test('whitespaceElements', function() {
 	ok(schema.getWhiteSpaceElements()['code']);
 });
 
+test('selfClosingElements', function() {
+	expect(3);
 
+	var schema = new tinymce.html.Schema({self_closing_elements : 'pre,p'});
+	ok(schema.getSelfClosingElements()['pre']);
+	ok(schema.getSelfClosingElements()['p']);
+	ok(!schema.getSelfClosingElements()['li']);
+});
+
+test('shortEndedElements', function() {
+	expect(3);
+
+	var schema = new tinymce.html.Schema({short_ended_elements : 'pre,p'});
+	ok(schema.getShortEndedElements()['pre']);
+	ok(schema.getShortEndedElements()['p']);
+	ok(!schema.getShortEndedElements()['img']);
+});
+
+test('booleanAttributes', function() {
+	expect(3);
+
+	var schema = new tinymce.html.Schema({boolean_attributes : 'href,alt'});
+	ok(schema.getBoolAttrs()['href']);
+	ok(schema.getBoolAttrs()['alt']);
+	ok(!schema.getBoolAttrs()['checked']);
+});
+
+test('nonEmptyElements', function() {
+	expect(3);
+
+	var schema = new tinymce.html.Schema({non_empty_elements : 'pre,p'});
+	ok(schema.getNonEmptyElements()['pre']);
+	ok(schema.getNonEmptyElements()['p']);
+	ok(!schema.getNonEmptyElements()['img']);
+});
+
+test('blockElements', function() {
+	expect(3);
+
+	var schema = new tinymce.html.Schema({block_elements : 'pre,p'});
+	ok(schema.getBlockElements()['pre']);
+	ok(schema.getBlockElements()['p']);
+	ok(!schema.getBlockElements()['h1']);
+});
 </script>
 </head>
 <body>

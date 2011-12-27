@@ -1,5 +1,5 @@
 (function() {
-	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
+	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true, schema : new tinymce.html.Schema()});
 
 	test('parseStyle', 11, function() {
 		var dom;
