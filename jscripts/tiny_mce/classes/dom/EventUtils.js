@@ -186,7 +186,9 @@ tinymce.dom = {};
 			if (callbackList) {
 				for (i = 0, l = callbackList.length; i < l; i++) {
 					callback = callbackList[i];
-					if (callback.func.call(callback.scope, evt) === false) {
+					
+					// Check if callback exists might be removed if a unbind is called inside the callback
+					if (callback && callback.func.call(callback.scope, evt) === false) {
 						evt.preventDefault();
 					}
 
