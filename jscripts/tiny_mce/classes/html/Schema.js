@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	var transitional = {}, mapCache = {}, makeMap = tinymce.makeMap, each = tinymce.each;
+	var mapCache = {}, makeMap = tinymce.makeMap, each = tinymce.each;
 
 	function split(str, delim) {
 		return str.split(delim || ',');
@@ -48,125 +48,257 @@
 		return elements;
 	};
 
-	// This is the XHTML 1.0 transitional elements with it's attributes and children packed to reduce it's size
-	transitional = unpack({
-		Z : 'H|K|N|O|P',
-		Y : 'X|form|R|Q',
-		ZG : 'E|span|width|align|char|charoff|valign',
-		X : 'p|T|div|U|W|isindex|fieldset|table',
-		ZF : 'E|align|char|charoff|valign',
-		W : 'pre|hr|blockquote|address|center|noframes',
-		ZE : 'abbr|axis|headers|scope|rowspan|colspan|align|char|charoff|valign|nowrap|bgcolor|width|height',
-		ZD : '[E][S]',
-		U : 'ul|ol|dl|menu|dir',
-		ZC : 'p|Y|div|U|W|table|br|span|bdo|object|applet|img|map|K|N|Q',
-		T : 'h1|h2|h3|h4|h5|h6',
-		ZB : 'X|S|Q',
-		S : 'R|P',
-		ZA : 'a|G|J|M|O|P',
-		R : 'a|H|K|N|O',
-		Q : 'noscript|P',
-		P : 'ins|del|script',
-		O : 'input|select|textarea|label|button',
-		N : 'M|L',
-		M : 'em|strong|dfn|code|q|samp|kbd|var|cite|abbr|acronym',
-		L : 'sub|sup',
-		K : 'J|I',
-		J : 'tt|i|b|u|s|strike',
-		I : 'big|small|font|basefont',
-		H : 'G|F',
-		G : 'br|span|bdo',
-		F : 'object|applet|img|map|iframe',
-		E : 'A|B|C',
-		D : 'accesskey|tabindex|onfocus|onblur',
-		C : 'onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup',
-		B : 'lang|xml:lang|dir',
-		A : 'id|class|style|title'
-	}, 'script[id|charset|type|language|src|defer|xml:space][]' + 
-		'style[B|id|type|media|title|xml:space][]' + 
-		'object[E|declare|classid|codebase|data|type|codetype|archive|standby|width|height|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' + 
-		'param[id|name|value|valuetype|type][]' + 
-		'p[E|align][#|S]' + 
-		'a[E|D|charset|type|name|href|hreflang|rel|rev|shape|coords|target][#|Z]' + 
-		'br[A|clear][]' + 
-		'span[E][#|S]' + 
-		'bdo[A|C|B][#|S]' + 
-		'applet[A|codebase|archive|code|object|alt|name|width|height|align|hspace|vspace][#|param|Y]' + 
-		'h1[E|align][#|S]' + 
-		'img[E|src|alt|name|longdesc|width|height|usemap|ismap|align|border|hspace|vspace][]' + 
-		'map[B|C|A|name][X|form|Q|area]' + 
-		'h2[E|align][#|S]' + 
-		'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height][#|Y]' + 
-		'h3[E|align][#|S]' + 
-		'tt[E][#|S]' + 
-		'i[E][#|S]' + 
-		'b[E][#|S]' + 
-		'u[E][#|S]' + 
-		's[E][#|S]' + 
-		'strike[E][#|S]' + 
-		'big[E][#|S]' + 
-		'small[E][#|S]' + 
-		'font[A|B|size|color|face][#|S]' + 
-		'basefont[id|size|color|face][]' + 
-		'em[E][#|S]' + 
-		'strong[E][#|S]' + 
-		'dfn[E][#|S]' + 
-		'code[E][#|S]' + 
-		'q[E|cite][#|S]' + 
-		'samp[E][#|S]' + 
-		'kbd[E][#|S]' + 
-		'var[E][#|S]' + 
-		'cite[E][#|S]' + 
-		'abbr[E][#|S]' + 
-		'acronym[E][#|S]' + 
-		'sub[E][#|S]' + 
-		'sup[E][#|S]' + 
-		'input[E|D|type|name|value|checked|disabled|readonly|size|maxlength|src|alt|usemap|onselect|onchange|accept|align][]' + 
-		'select[E|name|size|multiple|disabled|tabindex|onfocus|onblur|onchange][optgroup|option]' + 
-		'optgroup[E|disabled|label][option]' + 
-		'option[E|selected|disabled|label|value][]' + 
-		'textarea[E|D|name|rows|cols|disabled|readonly|onselect|onchange][]' + 
-		'label[E|for|accesskey|onfocus|onblur][#|S]' + 
-		'button[E|D|name|value|type|disabled][#|p|T|div|U|W|table|G|object|applet|img|map|K|N|Q]' + 
-		'h4[E|align][#|S]' + 
-		'ins[E|cite|datetime][#|Y]' + 
-		'h5[E|align][#|S]' + 
-		'del[E|cite|datetime][#|Y]' + 
-		'h6[E|align][#|S]' + 
-		'div[E|align][#|Y]' + 
-		'ul[E|type|compact][li]' + 
-		'li[E|type|value][#|Y]' + 
-		'ol[E|type|compact|start][li]' + 
-		'dl[E|compact][dt|dd]' + 
-		'dt[E][#|S]' + 
-		'dd[E][#|Y]' + 
-		'menu[E|compact][li]' + 
-		'dir[E|compact][li]' + 
-		'pre[E|width|xml:space][#|ZA]' + 
-		'hr[E|align|noshade|size|width][]' + 
-		'blockquote[E|cite][#|Y]' + 
-		'address[E][#|S|p]' + 
-		'center[E][#|Y]' + 
-		'noframes[E][#|Y]' + 
-		'isindex[A|B|prompt][]' + 
-		'fieldset[E][#|legend|Y]' + 
-		'legend[E|accesskey|align][#|S]' + 
-		'table[E|summary|width|border|frame|rules|cellspacing|cellpadding|align|bgcolor][caption|col|colgroup|thead|tfoot|tbody|tr]' + 
-		'caption[E|align][#|S]' + 
-		'col[ZG][]' + 
-		'colgroup[ZG][col]' + 
-		'thead[ZF][tr]' + 
-		'tr[ZF|bgcolor][th|td]' + 
-		'th[E|ZE][#|Y]' + 
-		'form[E|action|method|name|enctype|onsubmit|onreset|accept|accept-charset|target][#|X|R|Q]' + 
-		'noscript[E][#|Y]' + 
-		'td[E|ZE][#|Y]' + 
-		'tfoot[ZF][tr]' + 
-		'tbody[ZF][tr]' + 
-		'area[E|D|shape|coords|href|nohref|alt|target][]' + 
-		'base[id|href|target][]' + 
-		'body[E|onload|onunload|background|bgcolor|text|link|vlink|alink][#|Y]'
-	);
+	/**
+	 * Returns the HTML5 schema and caches it in the mapCache.
+	 */
+	function getHTML5() {
+		var html5 = mapCache.html5;
+
+		if (!html5) {
+			html5 = mapCache.html5 = unpack({
+					A : 'accesskey|class|dir|draggable|id|item|hidden|itemprop|role|spellcheck|style|subject|title',
+					B : '#|a|abbr|area|audio|b|bdo|br|button|canvas|cite|code|command|datalist|del|dfn|em|embed|i|iframe|img|input|ins|kbd|keygen|label|link|map|mark|meta|meter|noscript|object|output|progress|q|ruby|samp|script|select|small|span|strong|sub|sup|svg|textarea|time|var|video',
+					C : '#|a|abbr|area|address|article|aside|audio|b|bdo|blockquote|br|button|canvas|cite|code|command|datalist|del|details|dfn|dialog|div|dl|em|embed|fieldset|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|i|iframe|img|input|ins|kbd|keygen|label|link|map|mark|menu|meta|meter|nav|noscript|ol|object|output|p|pre|progress|q|ruby|samp|script|section|select|small|span|strong|style|sub|sup|svg|table|textarea|time|ul|var|video',
+				}, 'html[A|manifest][body|head]' +
+					'head[A][base|command|link|meta|noscript|script|style|title]' +
+					'title[A][#]' +
+					'base[A|href|target][]' +
+					'link[A|href|rel|media|type|sizes][]' +
+					'meta[A|http-equiv|name|content|charset][]' +
+					'style[A|type|media|scoped][#]' +
+					'script[A|charset|type|src|defer|async][#]' +
+					'noscript[A][C]' +
+					'body[A][C]' +
+					'section[A][C]' +
+					'nav[A][C]' +
+					'article[A][C]' +
+					'aside[A][C]' +
+					'h1[A][B]' +
+					'h2[A][B]' +
+					'h3[A][B]' +
+					'h4[A][B]' +
+					'h5[A][B]' +
+					'h6[A][B]' +
+					'hgroup[A][h1|h2|h3|h4|h5|h6]' +
+					'header[A][C]' +
+					'footer[A][C]' +
+					'address[A][C]' +
+					'p[A][B]' +
+					'br[A][]' +
+					'pre[A][B]' +
+					'dialog[A][dd|dt]' +
+					'blockquote[A|cite][C]' +
+					'ol[A|start|reversed][li]' +
+					'ul[A][li]' +
+					'li[A|value][C]' +
+					'dl[A][dd|dt]' +
+					'dt[A][B]' +
+					'dd[A][C]' +
+					'a[A|href|target|ping|rel|media|type][C]' +
+					'em[A][B]' +
+					'strong[A][B]' +
+					'small[A][B]' +
+					'cite[A][B]' +
+					'q[A|cite][B]' +
+					'dfn[A][B]' +
+					'abbr[A][B]' +
+					'code[A][B]' +
+					'var[A][B]' +
+					'samp[A][B]' +
+					'kbd[A][B]' +
+					'sub[A][B]' +
+					'sup[A][B]' +
+					'i[A][B]' +
+					'b[A][B]' +
+					'mark[A][B]' +
+					'progress[A|value|max][B]' +
+					'meter[A|value|min|max|low|high|optimum][B]' +
+					'time[A|datetime][B]' +
+					'ruby[A][B|rt|rp]' +
+					'rt[A][B]' +
+					'rp[A][B]' +
+					'bdo[A][B]' +
+					'span[A][B]' +
+					'ins[A|cite|datetime][B]' +
+					'del[A|cite|datetime][B]' +
+					'figure[A][C|legend]' +
+					'img[A|alt|src|height|width|usemap|ismap][]' +
+					'iframe[A|name|src|height|width|sandbox|seamless][]' +
+					'embed[A|src|height|width|type][]' +
+					'object[A|data|type|height|width|usemap|name|form|classid][param]' +
+					'param[A|name|value][]' +
+					'details[A|open][C|legend]' +
+					'command[A|type|label|icon|disabled|checked|radiogroup][]' +
+					'menu[A|type|label][C|li]' +
+					'legend[A][C|B]' +
+					'div[A][C]' +
+					'source[A|src|type|media][]' +
+					'audio[A|src|autobuffer|autoplay|loop|controls][source]' +
+					'video[A|src|autobuffer|autoplay|loop|controls|width|height|poster][source]' +
+					'hr[A][]' +
+					'form[A|accept-charset|action|autocomplete|enctype|method|name|novalidate|target][C]' +
+					'fieldset[A|disabled|form|name][C|legend]' +
+					'label[A|form|for][B]' +
+					'input[A|type|accept|alt|autocomplete|checked|disabled|form|formaction|formenctype|formmethod|formnovalidate|formtarget|height|list|max|maxlength|min|multiple|pattern|placeholder|readonly|required|size|src|step|width|files|value][]' +
+					'button[A|autofocus|disabled|form|formaction|formenctype|formmethod|formnovalidate|formtarget|name|value|type][B]' +
+					'select[A|autofocus|disabled|form|multiple|name|size][option|optgroup]' +
+					'datalist[A][B|option]' +
+					'optgroup[A|disabled|label][option]' +
+					'option[A|disabled|selected|label|value][]' +
+					'textarea[A|autofocus|disabled|form|maxlength|name|placeholder|readonly|required|rows|cols|wrap][]' +
+					'keygen[A|autofocus|challenge|disabled|form|keytype|name][]' +
+					'output[A|for|form|name][B]' +
+					'canvas[A|width|height][]' +
+					'map[A|name][B|C]' +
+					'area[A|shape|coords|href|alt|target|media|rel|ping|type][]' +
+					'mathml[A][]' +
+					'svg[A][]' +
+					'table[A|summary][caption|colgroup|thead|tfoot|tbody|tr]' +
+					'caption[A][C]' +
+					'colgroup[A|span][col]' +
+					'col[A|span][]' +
+					'thead[A][tr]' +
+					'tfoot[A][tr]' +
+					'tbody[A][tr]' +
+					'tr[A][th|td]' +
+					'th[A|headers|rowspan|colspan|scope][B]' +
+					'td[A|headers|rowspan|colspan][C]'
+			);
+		}
+
+		return html5;
+	};
+
+	/**
+	 * Returns the HTML4 schema and caches it in the mapCache.
+	 */
+	function getHTML4() {
+		var html4 = mapCache.html4;
+
+		if (!html4) {
+			// This is the XHTML 1.0 transitional elements with it's attributes and children packed to reduce it's size
+			html4 = mapCache.html4 = unpack({
+				Z : 'H|K|N|O|P',
+				Y : 'X|form|R|Q',
+				ZG : 'E|span|width|align|char|charoff|valign',
+				X : 'p|T|div|U|W|isindex|fieldset|table',
+				ZF : 'E|align|char|charoff|valign',
+				W : 'pre|hr|blockquote|address|center|noframes',
+				ZE : 'abbr|axis|headers|scope|rowspan|colspan|align|char|charoff|valign|nowrap|bgcolor|width|height',
+				ZD : '[E][S]',
+				U : 'ul|ol|dl|menu|dir',
+				ZC : 'p|Y|div|U|W|table|br|span|bdo|object|applet|img|map|K|N|Q',
+				T : 'h1|h2|h3|h4|h5|h6',
+				ZB : 'X|S|Q',
+				S : 'R|P',
+				ZA : 'a|G|J|M|O|P',
+				R : 'a|H|K|N|O',
+				Q : 'noscript|P',
+				P : 'ins|del|script',
+				O : 'input|select|textarea|label|button',
+				N : 'M|L',
+				M : 'em|strong|dfn|code|q|samp|kbd|var|cite|abbr|acronym',
+				L : 'sub|sup',
+				K : 'J|I',
+				J : 'tt|i|b|u|s|strike',
+				I : 'big|small|font|basefont',
+				H : 'G|F',
+				G : 'br|span|bdo',
+				F : 'object|applet|img|map|iframe',
+				E : 'A|B|C',
+				D : 'accesskey|tabindex|onfocus|onblur',
+				C : 'onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup',
+				B : 'lang|xml:lang|dir',
+				A : 'id|class|style|title'
+			}, 'script[id|charset|type|language|src|defer|xml:space][]' + 
+				'style[B|id|type|media|title|xml:space][]' + 
+				'object[E|declare|classid|codebase|data|type|codetype|archive|standby|width|height|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' + 
+				'param[id|name|value|valuetype|type][]' + 
+				'p[E|align][#|S]' + 
+				'a[E|D|charset|type|name|href|hreflang|rel|rev|shape|coords|target][#|Z]' + 
+				'br[A|clear][]' + 
+				'span[E][#|S]' + 
+				'bdo[A|C|B][#|S]' + 
+				'applet[A|codebase|archive|code|object|alt|name|width|height|align|hspace|vspace][#|param|Y]' + 
+				'h1[E|align][#|S]' + 
+				'img[E|src|alt|name|longdesc|width|height|usemap|ismap|align|border|hspace|vspace][]' + 
+				'map[B|C|A|name][X|form|Q|area]' + 
+				'h2[E|align][#|S]' + 
+				'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height][#|Y]' + 
+				'h3[E|align][#|S]' + 
+				'tt[E][#|S]' + 
+				'i[E][#|S]' + 
+				'b[E][#|S]' + 
+				'u[E][#|S]' + 
+				's[E][#|S]' + 
+				'strike[E][#|S]' + 
+				'big[E][#|S]' + 
+				'small[E][#|S]' + 
+				'font[A|B|size|color|face][#|S]' + 
+				'basefont[id|size|color|face][]' + 
+				'em[E][#|S]' + 
+				'strong[E][#|S]' + 
+				'dfn[E][#|S]' + 
+				'code[E][#|S]' + 
+				'q[E|cite][#|S]' + 
+				'samp[E][#|S]' + 
+				'kbd[E][#|S]' + 
+				'var[E][#|S]' + 
+				'cite[E][#|S]' + 
+				'abbr[E][#|S]' + 
+				'acronym[E][#|S]' + 
+				'sub[E][#|S]' + 
+				'sup[E][#|S]' + 
+				'input[E|D|type|name|value|checked|disabled|readonly|size|maxlength|src|alt|usemap|onselect|onchange|accept|align][]' + 
+				'select[E|name|size|multiple|disabled|tabindex|onfocus|onblur|onchange][optgroup|option]' + 
+				'optgroup[E|disabled|label][option]' + 
+				'option[E|selected|disabled|label|value][]' + 
+				'textarea[E|D|name|rows|cols|disabled|readonly|onselect|onchange][]' + 
+				'label[E|for|accesskey|onfocus|onblur][#|S]' + 
+				'button[E|D|name|value|type|disabled][#|p|T|div|U|W|table|G|object|applet|img|map|K|N|Q]' + 
+				'h4[E|align][#|S]' + 
+				'ins[E|cite|datetime][#|Y]' + 
+				'h5[E|align][#|S]' + 
+				'del[E|cite|datetime][#|Y]' + 
+				'h6[E|align][#|S]' + 
+				'div[E|align][#|Y]' + 
+				'ul[E|type|compact][li]' + 
+				'li[E|type|value][#|Y]' + 
+				'ol[E|type|compact|start][li]' + 
+				'dl[E|compact][dt|dd]' + 
+				'dt[E][#|S]' + 
+				'dd[E][#|Y]' + 
+				'menu[E|compact][li]' + 
+				'dir[E|compact][li]' + 
+				'pre[E|width|xml:space][#|ZA]' + 
+				'hr[E|align|noshade|size|width][]' + 
+				'blockquote[E|cite][#|Y]' + 
+				'address[E][#|S|p]' + 
+				'center[E][#|Y]' + 
+				'noframes[E][#|Y]' + 
+				'isindex[A|B|prompt][]' + 
+				'fieldset[E][#|legend|Y]' + 
+				'legend[E|accesskey|align][#|S]' + 
+				'table[E|summary|width|border|frame|rules|cellspacing|cellpadding|align|bgcolor][caption|col|colgroup|thead|tfoot|tbody|tr]' + 
+				'caption[E|align][#|S]' + 
+				'col[ZG][]' + 
+				'colgroup[ZG][col]' + 
+				'thead[ZF][tr]' + 
+				'tr[ZF|bgcolor][th|td]' + 
+				'th[E|ZE][#|Y]' + 
+				'form[E|action|method|name|enctype|onsubmit|onreset|accept|accept-charset|target][#|X|R|Q]' + 
+				'noscript[E][#|Y]' + 
+				'td[E|ZE][#|Y]' + 
+				'tfoot[ZF][tr]' + 
+				'tbody[ZF][tr]' + 
+				'area[E|D|shape|coords|href|nohref|alt|target][]' + 
+				'base[id|href|target][]' + 
+				'body[E|onload|onunload|background|bgcolor|text|link|vlink|alink][#|Y]'
+			);
+		}
+
+		return html4;
+	};
 
 	/**
 	 * Schema validator class.
@@ -191,7 +323,7 @@
 	 * @param {Object} settings Name/value settings object.
 	 */
 	tinymce.html.Schema = function(settings) {
-		var self = this, elements = {}, children = {}, patternElements = [], validStyles;
+		var self = this, elements = {}, children = {}, patternElements = [], validStyles, schemaItems;
 		var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, blockElementsMap, nonEmptyElementsMap, customElementsMap = {};
 
 		// Creates an lookup table map object for the specified option or the default value
@@ -217,6 +349,7 @@
 		};
 
 		settings = settings || {};
+		schemaItems = settings.schema == "html5" ? getHTML5() : getHTML4();
 
 		// Allow all elements and attributes if verify_html is set to false
 		if (settings.verify_html === false)
@@ -394,7 +527,7 @@
 
 			addValidElements(valid_elements);
 
-			each(transitional, function(element, name) {
+			each(schemaItems, function(element, name) {
 				children[name] = element.children;
 			});
 		};
@@ -474,8 +607,8 @@
 		};
 
 		if (!settings.valid_elements) {
-			// No valid elements defined then clone the elements from the transitional spec
-			each(transitional, function(element, name) {
+			// No valid elements defined then clone the elements from the schema spec
+			each(schemaItems, function(element, name) {
 				elements[name] = {
 					attributes : element.attributes,
 					attributesOrder : element.attributesOrder
@@ -495,7 +628,9 @@
 
 			// Remove these if they are empty by default
 			each(split('ol,ul,sub,sup,blockquote,span,font,a,table,tbody,tr'), function(name) {
-				elements[name].removeEmpty = true;
+				if (elements[name]) {
+					elements[name].removeEmpty = true;
+				}
 			});
 
 			// Padd these by default
