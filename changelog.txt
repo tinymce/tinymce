@@ -1,7 +1,8 @@
-Version 3.5 (2011-xx-xx)
+Version 3.5 (2012-xx-xx)
 	Added new event class that is faster and enables support for faking events.
 	Added new self_closing_elements, short_ended_elements, boolean_attributes, non_empty_elements and block_elements options to control the HTML Schema.
 	Added new schema option and support for the HTML5 schema.
+	Added new visualblocks plugin that shows html5 blocks with visual borders.
 	Fixed bug where content css would be loaded twice into iframe.
 Version 3.4.7.1 (2011-11-xx)
 	Added spacebar onclick handler to toolbar buttons to ensure that the accessibility behaviour works correctly.
