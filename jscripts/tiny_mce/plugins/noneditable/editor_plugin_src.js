@@ -314,14 +314,36 @@
 
 	tinymce.create('tinymce.plugins.NonEditablePlugin', {
 		init : function(ed, url) {
-			var editClass, nonEditClass;
+			var editClass, nonEditClass, nonEditableRegExps;
 
 			editClass = " " + tinymce.trim(ed.getParam("noneditable_editable_class", "mceEditable")) + " ";
 			nonEditClass = " " + tinymce.trim(ed.getParam("noneditable_noneditable_class", "mceNonEditable")) + " ";
 
+			// Setup noneditable regexps array
+			nonEditableRegExps = ed.getParam("noneditable_regexp");
+			if (nonEditableRegExps && !nonEditableRegExps.length) {
+				nonEditableRegExps = [nonEditableRegExps];
+			}
+
 			ed.onPreInit.add(function() {
 				handleContentEditableSelection(ed);
 
+				if (nonEditableRegExps) {
+					ed.onBeforeSetContent.add(function(ed, args) {
+						var i = nonEditableRegExps.length, content = args.content, cls = tinymce.trim(nonEditClass);
+
+						while (i--) {
+							content = content.replace(nonEditableRegExps[i], function() {
+								var args = arguments;
+
+								return '<span class="' + cls + '" data-mce-content="' + ed.dom.encode(args[0]) + '">' + ed.dom.encode(typeof(args[1]) === "string" ? args[1] : args[0]) + '</span>';
+							});
+						}
+
+						args.content = content;
+					});
+				}
+				
 				// Apply contentEditable true/false on elements with the noneditable/editable classes
 				ed.parser.addAttributeFilter('class', function(nodes) {
 					var i = nodes.length, className, node;
@@ -340,10 +362,19 @@
 
 				// Remove internal name
 				ed.serializer.addAttributeFilter(internalName, function(nodes, name) {
-					var i = nodes.length;
+					var i = nodes.length, node;
 
 					while (i--) {
-						nodes[i].attr(name, null);
+						node = nodes[i];
+
+						if (nonEditableRegExps && node.attr('data-mce-content')) {
+							node.name = "#text";
+							node.type = 3;
+							node.raw = true;
+							node.value = node.attr('data-mce-content');
+						} else {
+							node.attr(name, null);
+						}
 					}
 				});
 			});

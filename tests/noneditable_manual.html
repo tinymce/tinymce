@@ -25,23 +25,7 @@
 
 		// Example content CSS (should be your site CSS)
 		content_css : "css/noneditable_manual.css",
-
-		// Style formats
-		style_formats : [
-			{title : 'Bold text', inline : 'b'},
-			{title : 'Red text', inline : 'span', styles : {color : '#ff0000'}},
-			{title : 'Red header', block : 'h1', styles : {color : '#ff0000'}},
-			{title : 'Example 1', inline : 'span', classes : 'example1'},
-			{title : 'Example 2', inline : 'span', classes : 'example2'},
-			{title : 'Table styles'},
-			{title : 'Table row 1', selector : 'tr', classes : 'tablerow1'}
-		],
-
-		// Replace values for the template plugin
-		template_replace_values : {
-			username : "Some User",
-			staffid : "991234"
-		}
+		noneditable_regexp: /\[\[[^\]]+\]\]/g
 	});
 </script>
 <!-- /TinyMCE -->
@@ -65,6 +49,7 @@
 				&lt;p&gt;
 					Editable &lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt;&lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt; editable.
 				&lt;/p&gt;
+				&lt;p&gt;[[item1]][[item2]]&lt;/p&gt;
 			</textarea>
 		</div>
 		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').getContent());return false;">[Get contents]</a>
