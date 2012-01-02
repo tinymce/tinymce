@@ -440,8 +440,14 @@
 			aft.removeAttribute('id');
 
 			// Is header and cursor is at the end, then force paragraph under
-			if (/^(H[1-6])$/.test(bn) && isAtEnd(r, sb))
+			if (/^(H[1-6])$/.test(bn) && isAtEnd(r, sb)) {
 				aft = ed.dom.create(se.element);
+
+				// Use header name as copy if we are in a hgroup
+				if (t.dom.getParent(sb, 'hgroup')) {
+					aft = ed.dom.create(bn);
+				}
+			}
 
 			// Find start chop node
 			n = sc = sn;
