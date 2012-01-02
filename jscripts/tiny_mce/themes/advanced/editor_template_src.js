@@ -239,7 +239,7 @@
 			ctrl = ctrlMan.createListBox('styleselect', {
 				title : 'advanced.style_select',
 				onselect : function(name) {
-					var matches, formatNames = [];
+					var matches, formatNames = [], removedFormat;
 
 					each(ctrl.items, function(item) {
 						formatNames.push(item.value);
@@ -248,15 +248,19 @@
 					ed.focus();
 					ed.undoManager.add();
 
-					// Toggle off the current format
+					// Toggle off the current format(s)
 					matches = ed.formatter.matchAll(formatNames);
 					tinymce.each(matches, function(match) {
 						if (!name || match == name) {
-							if (match) 
+							if (match)
 								ed.formatter.remove(match);
-						} else
-							ed.formatter.apply(name);
+
+							removedFormat = true;
+						}
 					});
+
+					if (!removedFormat)
+						ed.formatter.apply(name);
 
 					ed.undoManager.add();
 					ed.nodeChanged();

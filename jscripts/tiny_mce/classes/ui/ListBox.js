@@ -118,6 +118,8 @@
 		select : function(va) {
 			var t = this, fv, f;
 
+			t.marked = {};
+
 			if (va == undefined)
 				return t.selectByIndex(-1);
 
@@ -156,6 +158,8 @@
 		selectByIndex : function(idx) {
 			var t = this, e, o, label;
 
+			t.marked = {};
+
 			if (idx != t.selectedIndex) {
 				e = DOM.get(t.id + '_text');
 				label = DOM.get(t.id + '_voiceDesc');
@@ -176,8 +180,6 @@
 					DOM.setAttrib(t.id, 'aria-valuenow', t.settings.title);
 				}
 				e = 0;
-
-				t.marked = {};
 			}
 		},
 
@@ -266,8 +268,21 @@
 			m.settings.offset_y = p2.y;
 			m.settings.keyboard_focus = !tinymce.isOpera; // Opera is buggy when it comes to auto focus
 
+			// Select in menu
 			each(t.items, function(o) {
-				m.items[o.id].setSelected(o.value === t.selectedValue || t.marked[o.value]);
+				if (m.items[o.id]) {
+					m.items[o.id].setSelected(0);
+				}
+			});
+
+			each(t.items, function(o) {
+				if (m.items[o.id] && t.marked[o.value]) {
+					m.items[o.id].setSelected(1);
+				}
+
+				if (o.value === t.selectedValue) {
+					m.items[o.id].setSelected(1);
+				}
 			});
 
 			m.showMenu(0, e.clientHeight);
