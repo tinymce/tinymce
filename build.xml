@@ -205,6 +205,7 @@
 				<include name="**"/>
 				<exclude name="**/.*/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="**/visualblocks/img/**"/>
 				<exclude name="build-utils/**" />
 			</fileset>
 		</copy>
