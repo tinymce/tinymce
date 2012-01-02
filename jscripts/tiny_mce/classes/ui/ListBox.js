@@ -105,6 +105,7 @@
 			t.onRenderMenu = new tinymce.util.Dispatcher(this);
 
 			t.classPrefix = 'mceListBox';
+			t.marked = {};
 		},
 
 		/**
@@ -175,7 +176,18 @@
 					DOM.setAttrib(t.id, 'aria-valuenow', t.settings.title);
 				}
 				e = 0;
+
+				t.marked = {};
 			}
+		},
+
+		/**
+		 * Marks a specific item by name. Marked values are optional items to mark as active.
+		 *
+		 * @param {String} value Value item to mark.
+		 */
+		mark : function(value) {
+			this.marked[value] = true;
 		},
 
 		/**
@@ -254,15 +266,8 @@
 			m.settings.offset_y = p2.y;
 			m.settings.keyboard_focus = !tinymce.isOpera; // Opera is buggy when it comes to auto focus
 
-			// Select in menu
-			if (t.oldID)
-				m.items[t.oldID].setSelected(0);
-
 			each(t.items, function(o) {
-				if (o.value === t.selectedValue) {
-					m.items[o.id].setSelected(1);
-					t.oldID = o.id;
-				}
+				m.items[o.id].setSelected(o.value === t.selectedValue || t.marked[o.value]);
 			});
 
 			m.showMenu(0, e.clientHeight);

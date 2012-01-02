@@ -250,11 +250,13 @@
 
 					// Toggle off the current format
 					matches = ed.formatter.matchAll(formatNames);
-					if (!name || matches[0] == name) {
-						if (matches[0]) 
-							ed.formatter.remove(matches[0]);
-					} else
-						ed.formatter.apply(name);
+					tinymce.each(matches, function(match) {
+						if (!name || match == name) {
+							if (match) 
+								ed.formatter.remove(match);
+						} else
+							ed.formatter.apply(name);
+					});
 
 					ed.undoManager.add();
 					ed.nodeChanged();
@@ -1003,6 +1005,11 @@
 
 				matches = ed.formatter.matchAll(formatNames);
 				c.select(matches[0]);
+				tinymce.each(matches, function(match, index) {
+					if (index > 0) {
+						c.mark(match);
+					}
+				});
 			}
 
 			if (c = cm.get('formatselect')) {
