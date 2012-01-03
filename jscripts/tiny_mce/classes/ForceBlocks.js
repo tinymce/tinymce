@@ -325,7 +325,7 @@
 
 		insertPara : function(e) {
 			var t = this, ed = t.editor, dom = ed.dom, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = s.getRangeAt(0), b = d.body;
-			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, vp = dom.getViewPort(ed.getWin()), y, ch, car;
+			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, vp = dom.getViewPort(ed.getWin()), y, ch, car, containerBlock;
 
 			ed.undoManager.beforeChange();
 
@@ -405,6 +405,17 @@
 			sb = t.getParentBlock(sn);
 			eb = t.getParentBlock(en);
 			bn = sb ? sb.nodeName : se.element; // Get block name to create
+
+			// Break container blocks on enter in empty block element (experimental feature)
+			if (ed.settings.end_container_on_empty_block) {
+				containerBlock = dom.getParent(sb, 'hgroup,blockquote,section,article');
+				if (containerBlock && (dom.isEmpty(sb) || (sb.firstChild === sb.lastChild && (!sb.firstChild || sb.firstChild.nodeName == 'BR')))) {
+					dom.split(containerBlock, sb);
+					ed.selection.select(sb, true);
+					ed.selection.collapse(true);
+					return;
+				}
+			}
 
 			// Return inside list use default browser behavior
 			if (n = t.dom.getParent(sb, 'li,pre')) {
