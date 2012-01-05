@@ -11,6 +11,8 @@ Version 3.4.7.1 (2011-11-xx)
 	Fix white space in between spans from being deleted. 
 	Fixed bug where scrollbars where visible in the character map dialog on Gecko.
 	Fixed issue with missing translation for one of the emoticons.
+	Fixed bug where dots in id:s where causing problems. Patch provided by Abhishek Dev.
+	Fixed bug where urls with an at sign in the path wouldn't be parsed correctly. Patch contributed by Jason Grout.
 Version 3.4.7 (2011-11-03)
 	Modified the caret formatting behavior to word similar to common desktop wordprocessors like Word or Libre Office.
 	Fixed bug in Webkit - Cursor positioning does not work vertically within a table cell with multiple lines of text.
