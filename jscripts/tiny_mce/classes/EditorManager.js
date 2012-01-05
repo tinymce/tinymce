@@ -118,6 +118,26 @@
 		init : function(s) {
 			var t = this, pl, sl = tinymce.ScriptLoader, e, el = [], ed;
 
+			function createId(elm) {
+				var id = elm.id;
+	
+				// Use element id, or unique name or generate a unique id
+				if (!id) {
+					id = elm.name;
+	
+					if (id && !DOM.get(id)) {
+						id = elm.name;
+					} else {
+						// Generate unique name
+						id = DOM.uniqueId();
+					}
+
+					elm.setAttribute('id', id);
+				}
+
+				return id;
+			};
+
 			function execCallback(se, n, s) {
 				var f = se[n];
 
@@ -180,26 +200,36 @@
 							return c.constructor === RegExp ? c.test(n.className) : DOM.hasClass(n, c);
 						};
 
-						each(DOM.select('textarea'), function(v) {
-							if (s.editor_deselector && hasClass(v, s.editor_deselector))
+						each(DOM.select('textarea'), function(elm) {
+							if (s.editor_deselector && hasClass(elm, s.editor_deselector))
 								return;
 
-							if (!s.editor_selector || hasClass(v, s.editor_selector)) {
-								// Can we use the name
-								e = DOM.get(v.name);
-								if (!v.id && !e)
-									v.id = v.name;
-
-								// Generate unique name if missing or already exists
-								if (!v.id || t.get(v.id))
-									v.id = DOM.uniqueId();
-
-								ed = new tinymce.Editor(v.id, s);
+							if (!s.editor_selector || hasClass(elm, s.editor_selector)) {
+								ed = new tinymce.Editor(createId(elm), s);
 								el.push(ed);
 								ed.render(1);
 							}
 						});
 						break;
+					
+					default:
+						if (s.types) {
+							// Process type specific selector
+							each(s.types, function(type) {
+								each(DOM.select(type.selector), function(elm) {
+									var editor = new tinymce.Editor(createId(elm), tinymce.extend({}, s, type));
+									el.push(editor);
+									editor.render(1);
+								});
+							});
+						} else if (s.selector) {
+							// Process global selector
+							each(DOM.select(s.selector), function(elm) {
+								var editor = new tinymce.Editor(createId(elm), s);
+								el.push(editor);
+								editor.render(1);
+							});
+						}
 				}
 
 				// Call onInit when all editors are initialized
