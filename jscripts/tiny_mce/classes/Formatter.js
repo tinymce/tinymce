@@ -1848,7 +1848,11 @@
 						dom.remove(node);
 					} else {
 						child = findFirstTextNode(node);
-						child = child.deleteData(0, 1);
+
+						if (child.nodeValue.charAt(0) === INVISIBLE_CHAR) {
+							child = child.deleteData(0, 1);
+						}
+
 						dom.remove(node, 1);
 					}
 
