@@ -4,13 +4,15 @@
 
 (function(tinymce){
 	tinymce.VK = {
-		DELETE: 46,
 		BACKSPACE: 8,
-		ENTER: 13,
-		TAB: 9,
-        SPACEBAR: 32,
-		UP: 38,
+		DELETE: 46,
 		DOWN: 40,
+		ENTER: 13,
+		LEFT: 37,
+		RIGHT: 39,
+		SPACEBAR: 32,
+		TAB: 9,
+		UP: 38,
 		modifierPressed: function (e) {
 			return e.shiftKey || e.ctrlKey || e.altKey;
 		}

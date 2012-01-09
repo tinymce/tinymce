@@ -11,6 +11,7 @@
 (function() {
 	var TreeWalker = tinymce.dom.TreeWalker;
 	var externalName = 'contenteditable', internalName = 'data-mce-' + externalName;
+	var VK = tinymce.VK;
 
 	function handleContentEditableSelection(ed) {
 		var dom = ed.dom, selection = ed.selection, invisibleChar, caretContainerId = 'mce_noneditablecaret';
@@ -85,9 +86,11 @@
 			var caretContainer, rng;
 
 			// Select block
-			if (dom.isBlock(target)) {
-				selection.select(target);
-				return;
+			if (getContentEditable(target) === "false") {
+				if (dom.isBlock(target)) {
+					selection.select(target);
+					return;
+				}
 			}
 
 			rng = dom.createRng();
@@ -170,7 +173,10 @@
 				} else {
 					// Can we resolve the node by index
 					if (offset < container.childNodes.length) {
-						container = container.childNodes[offset];
+						// Browser represents caret position as the offset at the start of an element. When moving right
+						// this is the element we are moving into so we consider our container to be child node at offset-1
+						var pos = !left && offset > 0 ? offset-1 : offset;
+						container = container.childNodes[pos];
 						if (container.hasChildNodes()) {
 							container = container.firstChild;
 						}
@@ -209,7 +215,7 @@
 				// If it's a caret selection then look left/right to see if we need to move the caret out side or expand
 				if (isCollapsed) {
 					nonEditableStart = nonEditableStart || nonEditableEnd;
-
+					var start = selection.getStart();
 					if (element = hasSideContent(nonEditableStart, true)) {
 						// We have no contents to the left of the caret then insert a caret container before the noneditable element
 						insertCaretContainerOrExpandToBlock(element, true);
@@ -249,34 +255,46 @@
 				}
 			};
 
+			function positionCaretOnElement(element, start) {
+				selection.select(element);
+				selection.collapse(start);
+			}
+
 			startElement = selection.getStart()
 			endElement = selection.getEnd();
 
 			// Disable all key presses in contentEditable=false except delete or backspace
 			nonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);
-			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != 46 && keyCode != 8) {
+			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != VK.DELETE && keyCode != VK.BACKSPACE) {
 				e.preventDefault();
 
 				// Arrow left/right select the element and collapse left/right
-				if (keyCode == 37 || keyCode == 39) {
-					selection.select(nonEditableParent);
-					selection.collapse(keyCode == 37);
+				if (keyCode == VK.LEFT || keyCode == VK.RIGHT) {
+					var left = keyCode == VK.LEFT;
+					// If a block element find previous or next element to position the caret
+					if (ed.dom.isBlock(nonEditableParent)) {
+						var targetElement = left ? nonEditableParent.previousSibling : nonEditableParent.nextSibling;
+						var walker = new TreeWalker(targetElement, targetElement);
+						var caretElement = left ? walker.prev() : walker.next();
+						positionCaretOnElement(caretElement, !left);
+					} else {
+						positionCaretOnElement(nonEditableParent, left);
+					}
 				}
 			} else {
 				// Is arrow left/right, backspace or delete
-				if (keyCode == 37 || keyCode == 39 || keyCode == 8 || keyCode == 46) {
+				if (keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {
 					caretContainer = getParentCaretContainer(startElement);
 					if (caretContainer) {
 						// Arrow left or backspace
-						if (keyCode == 37 || keyCode == 8) {
+						if (keyCode == VK.LEFT || keyCode == VK.BACKSPACE) {
 							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
 								e.preventDefault();
 
-								if (keyCode == 37) {
-									selection.select(nonEditableParent);
-									selection.collapse(true);
+								if (keyCode == VK.LEFT) {
+									positionCaretOnElement(nonEditableParent, true);
 								} else {
 									dom.remove(nonEditableParent);
 								}
@@ -286,15 +304,14 @@
 						}
 
 						// Arrow right or delete
-						if (keyCode == 39 || keyCode == 46) {
+						if (keyCode == VK.RIGHT || keyCode == VK.DELETE) {
 							nonEditableParent = getNonEmptyTextNodeSibling(caretContainer);
 
 							if (nonEditableParent && getContentEditable(nonEditableParent) === "false") {
 								e.preventDefault();
 
-								if (keyCode == 39) {
-									selection.select(nonEditableParent);
-									selection.collapse(false);
+								if (keyCode == VK.RIGHT) {
+									positionCaretOnElement(nonEditableParent, false);
 								} else {
 									dom.remove(nonEditableParent);
 								}
@@ -307,6 +324,13 @@
 			}
 		};
 
+		ed.onMouseDown.addToTop(function(ed, e){
+			// prevent collapsing selection to caret when clicking in a non-editable section
+			var node = ed.selection.getNode();
+			if (getContentEditable(node) === "false" && node == e.target) {
+				e.preventDefault();
+			}
+		});
 		ed.onMouseUp.addToTop(moveSelection);
 		ed.onKeyDown.addToTop(handleKey);
 		ed.onKeyUp.addToTop(moveSelection);
