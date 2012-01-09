@@ -1,4 +1,5 @@
 Version 3.4.7.1 (2011-11-xx)
+	Fixed bug in IE where the media plugin displayed null text when some values aren't filled in.
 	Added API method 'onSetAttrib' that fires when the attribute value on a node changes.
 	Fix font size dropdown value not being updated when text already has a font size in the advanced template.
 	Fixed bug in IE where IE doesn't use ARIA attributes properly on options - causing labels to be read out 2 times.
