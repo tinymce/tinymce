@@ -31,8 +31,6 @@
 		if (!settings.apply_source_formatting)
 			settings.indent = false;
 
-		settings.remove_trailing_brs = true;
-
 		// Default DOM and Schema if they are undefined
 		dom = dom || tinymce.DOM;
 		schema = schema || new tinymce.html.Schema(settings);
