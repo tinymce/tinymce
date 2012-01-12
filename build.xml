@@ -407,7 +407,7 @@ If you have any questions regarding your license, contact Moxiecode Systems AB (
 			</fileset>
 		</copy>
 
-		<exec executable="jscoverage.exe">
+		<exec executable="jscoverage">
 			<arg line="${temp_dir}/jscoverage_src ${temp_dir}/jscoverage"/>
 		</exec>
 
