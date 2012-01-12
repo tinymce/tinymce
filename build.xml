@@ -393,4 +393,26 @@ If you have any questions regarding your license, contact Moxiecode Systems AB (
 	<target name="addsuffixes" description="Adds version suffixes to all requests">
 		<property name="version_queries" value="true" />
 	</target>
+
+	<target name="jscoverage">
+		<delete dir="${temp_dir}/jscoverage_src" quiet="true" />
+		<delete dir="${temp_dir}/jscoverage" quiet="true" />
+
+		<copy todir="${temp_dir}/jscoverage_src">
+			<fileset dir="jscripts/tiny_mce">
+				<include name="**/classes/**"/>
+				<include name="**/editor_plugin_src.js"/>
+				<include name="**/editor_template_src.js"/>
+				<include name="**/en.js"/>
+			</fileset>
+		</copy>
+
+		<exec executable="jscoverage.exe">
+			<arg line="${temp_dir}/jscoverage_src ${temp_dir}/jscoverage"/>
+		</exec>
+
+		<concat destfile="${temp_dir}/jscoverage/jscoverage.js" append="true">
+			<filelist files="tools/jscoverage_integration.js"/>
+		</concat>
+	</target>
 </project>

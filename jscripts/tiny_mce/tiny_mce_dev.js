@@ -59,6 +59,12 @@
 		include('firebug/firebug-lite.js');
 	}
 
+	// Load coverage version
+	if (query.coverage) {
+		base = base + '/../../tmp/jscoverage';
+		window.tinyMCEPreInit = {base: base, suffix: '_src', query: ''};
+	}
+	
 	// Core ns
 	include('tinymce.js');
 

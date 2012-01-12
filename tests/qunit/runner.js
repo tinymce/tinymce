@@ -1,7 +1,7 @@
 (function() {
 	var iframe, logElement, initSettings, index, testFailures, testTotal, testLog, currentTest;
 
-	top.focus();
+	parent.focus();
 
 	function log(message, display) {
 		var div;
@@ -48,9 +48,13 @@
 	}
 
 	// Register done call
-	if (top != window && QUnit) {
+	if (parent != window && window.QUnit) {
 		QUnit.done = function(data) {
-			top.QUnitRunner.done(data.failed, data.total, document.title);
+			if (parent.QUnitRunner) {
+				parent.QUnitRunner.done(data.failed, data.total, document.title);
+			} else if (parent.jsCoverageTestDone) {
+				parent.jsCoverageTestDone();
+			}
 		};
 	}
 
