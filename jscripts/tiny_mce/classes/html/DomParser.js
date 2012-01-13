@@ -37,7 +37,6 @@
 		settings = settings || {};
 		settings.validate = "validate" in settings ? settings.validate : true;
 		settings.root_name = settings.root_name || 'body';
-		settings.remove_trailing_brs = "remove_trailing_brs" in settings ? settings.remove_trailing_brs : true;
 		self.schema = schema = schema || new tinymce.html.Schema();
 
 		function fixInvalidChildren(nodes) {

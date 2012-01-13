@@ -35,6 +35,7 @@
 		dom = dom || tinymce.DOM;
 		schema = schema || new tinymce.html.Schema(settings);
 		settings.entity_encoding = settings.entity_encoding || 'named';
+		settings.remove_trailing_brs = "remove_trailing_brs" in settings ? settings.remove_trailing_brs : true;
 
 		/**
 		 * This event gets executed before a HTML fragment gets serialized into a HTML string. This event enables you to do modifications to the DOM before the serialization occurs. It's important to know that the element that is getting serialized is cloned so it's not inside a document.
