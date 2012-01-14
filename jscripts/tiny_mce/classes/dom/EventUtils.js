@@ -14,6 +14,8 @@
 tinymce.dom = {};
 
 (function(namespace, prefix) {
+	var w3cEventModel = !!document.addEventListener;
+
 	/**
 	 * Binds a native event to a callback on the speified target.
 	 */
@@ -125,7 +127,7 @@ tinymce.dom = {};
 		}
 
 		// Use W3C method
-		if (doc.addEventListener) {
+		if (w3cEventModel) {
 			addEvent(win, 'DOMContentLoaded', readyHandler);
 		} else {
 			// Use IE method
@@ -160,7 +162,7 @@ tinymce.dom = {};
 	/**
 	 * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
 	 */
-	function EventUtils() {
+	function EventUtils(proxy) {
 		var self = this, events = {}, count, expando, isFocusBlurBound, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
 
 		expando = prefix + (+new Date()).toString(32);
@@ -312,9 +314,8 @@ tinymce.dom = {};
 					if (name === "ready") {
 						bindOnReady(target, nativeHandler, self);
 					} else {
-						addEvent(target, fakeName || name, nativeHandler, capture);
+						addEvent(target, fakeName || name, w3cEventModel ? nativeHandler : proxy(id), capture);
 					}
-
 				} else {
 					// If it already has an native handler then just push the callback
 					callbackList.push({func: callback, scope: scope});
@@ -485,6 +486,12 @@ tinymce.dom = {};
 			return self;
 		};
 
+		self.callNativeHandler = function(id, evt) {
+			if (events) {
+				events[id][evt.type].nativeHandler(evt);
+			}
+		};
+
 		/**
 		 * Destroys the event object. Call this on IE to remove memory leaks.
 		 */
@@ -571,5 +578,12 @@ tinymce.dom = {};
 	}
 
 	namespace.EventUtils = EventUtils;
-	tinymce.dom.Event = new EventUtils();
+
+	namespace.Event = new EventUtils(function(id) {
+		return function(evt) {
+			tinymce.dom.Event.callNativeHandler(id, evt);
+		};
+	});
+
+	namespace = 0;
 })(tinymce.dom, 'data-mce-expando-'); // Namespace and expando prefix

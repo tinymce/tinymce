@@ -105,7 +105,7 @@
 				}
 			}
 
-			t.events = s.ownEvents ? new tinymce.dom.EventUtils() : tinymce.dom.Event;
+			t.events = s.ownEvents ? new tinymce.dom.EventUtils(s.proxy) : tinymce.dom.Event;
 			tinymce.addUnload(t.destroy, t);
 			blockElementsMap = s.schema ? s.schema.getBlockElements() : {};
 

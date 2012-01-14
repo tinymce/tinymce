@@ -37,7 +37,7 @@ tinyMCEPopup = {
 		t.features = t.editor.windowManager.features;
 
 		// Setup local DOM
-		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document, {ownEvents: true});
+		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document, {ownEvents: true, proxy: tinyMCEPopup._eventProxy});
 		t.dom.bind(window, 'ready', t._onDOMLoaded, t);
 
 		// Enables you to skip loading the default css
@@ -410,6 +410,12 @@ tinyMCEPopup = {
 
 		if (e.keyCode == 27)
 			tinyMCEPopup.close();
+	},
+
+	_eventProxy: function(id) {
+		return function(evt) {
+			tinyMCEPopup.dom.events.callNativeHandler(id, evt);
+		};
 	}
 };
 
