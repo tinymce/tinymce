@@ -1,4 +1,5 @@
 Version 3.4.7.1 (2011-11-xx)
+	Fixed bug where selected link not showing in target field of link dialog in some selection cases.
 	Use settings for remove_trailing_br so this can be turned off instead of hard coding the value.
 	Fixed bug in IE where the media plugin displayed null text when some values aren't filled in.
 	Added API method 'onSetAttrib' that fires when the attribute value on a node changes.
