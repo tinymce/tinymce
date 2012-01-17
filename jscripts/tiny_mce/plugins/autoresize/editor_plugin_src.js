@@ -87,27 +87,17 @@
 			if (ed.getParam('autoresize_on_init', true)) {
 				// Things to do when the editor is ready
 				ed.onInit.add(function(ed, l) {
-					// Show throbber until content area is resized properly
-					ed.setProgressState(true);
-					t.throbbing = true;
-
 					// Hide scrollbars
 					ed.getBody().style.overflowY = "hidden";
+					
+					// Bind the resize event to fire when the editor is fully loaded.
+					ed.getBody().onload = function () {
+						resize();
+					}
 				});
 
 				ed.onLoadContent.add(function(ed, l) {
 					resize();
-
-					// Because the content area resizes when its content CSS loads,
-					// and we can't easily add a listener to its onload event,
-					// we'll just trigger a resize after a short loading period
-					setTimeout(function() {
-						resize();
-
-						// Disable throbber
-						ed.setProgressState(false);
-						t.throbbing = false;
-					}, 1250);
 				});
 			}
 
