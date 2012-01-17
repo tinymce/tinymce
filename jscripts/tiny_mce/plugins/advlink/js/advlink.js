@@ -54,6 +54,13 @@ function init() {
 		document.getElementById('popupurl').style.width = '180px';
 
 	elm = inst.dom.getParent(elm, "A");
+	if (elm == null) {
+		var prospect = inst.dom.create("p", null, inst.selection.getContent());
+		if (prospect.childNodes.length === 1) {
+			elm = prospect.firstChild;
+		}
+	}
+
 	if (elm != null && elm.nodeName == "A")
 		action = "update";
 

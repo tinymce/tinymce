@@ -298,6 +298,13 @@ test('InsertHorizontalRule', function() {
 	equals(rng.endOffset, 0);
 });
 
+test('Justify - multiple block elements selected - queryCommandState', function() {
+	editor.setContent('<div style="text-align: left;"><div id="a" style="text-align: right;">one</div><div id="b" style="text-align: right;">two</div></div>');
+	setSelection('#a', 0, '#b', 3);
+	equals(editor.queryCommandState('JustifyLeft'), false);
+	ok(editor.queryCommandState('JustifyRight'));
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
