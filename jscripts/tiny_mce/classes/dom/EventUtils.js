@@ -585,5 +585,8 @@ tinymce.dom = {};
 		};
 	});
 
+	// Bind ready event when tinymce script is loaded
+	namespace.Event.bind(window, 'ready', function() {});
+
 	namespace = 0;
 })(tinymce.dom, 'data-mce-expando-'); // Namespace and expando prefix
