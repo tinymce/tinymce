@@ -167,15 +167,21 @@
 				}
 
 				n = DOM.add(tr, 'td');
-				n = DOM.add(n, 'a', {
-					role : 'option',
+				var settings = {
 					href : 'javascript:;',
 					style : {
 						backgroundColor : '#' + c
 					},
 					'title': t.editor.getLang('colors.' + c, c),
 					'data-mce-color' : '#' + c
-				});
+				};
+
+				// adding a proper ARIA role = button causes JAWS to read things incorrectly on IE.
+				if (!tinymce.isIE ) {
+					settings['role']= 'option';
+				}
+
+				n = DOM.add(n, 'a', settings);
 
 				if (t.editor.forcedHighContrastMode) {
 					n = DOM.add(n, 'canvas', { width: 16, height: 16, 'aria-hidden': 'true' });

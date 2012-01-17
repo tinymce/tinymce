@@ -29,7 +29,7 @@
 			}
 
 			isDelete = e.keyCode == DELETE;
-			if (isDelete || e.keyCode == BACKSPACE) {
+			if ((isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 				e.preventDefault();
 				rng = selection.getRng();
 

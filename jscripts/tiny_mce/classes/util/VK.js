@@ -13,6 +13,7 @@
 		SPACEBAR: 32,
 		TAB: 9,
 		UP: 38,
+
 		modifierPressed: function (e) {
 			return e.shiftKey || e.ctrlKey || e.altKey;
 		}

@@ -674,6 +674,7 @@
 
 			return this.run(e, function(e) {
 				var s = t.settings;
+				var originalValue = e.getAttribute(n);
 				if (v !== null) {
 					switch (n) {
 						case "style":
@@ -720,6 +721,12 @@
 					e.setAttribute(n, '' + v, 2);
 				else
 					e.removeAttribute(n, 2);
+
+				// fire onChangeAttrib event for attributes that have changed
+				if (tinyMCE.activeEditor && originalValue != v) {
+					var ed = tinyMCE.activeEditor;
+					ed.onSetAttrib.dispatch(ed, e, n, v);
+				}
 			});
 		},
 

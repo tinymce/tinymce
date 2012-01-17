@@ -48,7 +48,7 @@
 	}
 
 	function setVal(id, value, name) {
-		if (typeof(value) != 'undefined') {
+		if (typeof(value) != 'undefined' && value != null) {
 			var elm = get(id);
 
 			if (elm.nodeName == "SELECT")
@@ -176,14 +176,14 @@
 						formItemName = type == 'global' ? name : type + '_' + name;
 
 						if (type == 'global')
-							list = data;
-						else if (type == 'video' || type == 'audio') {
+						list = data;
+					else if (type == 'video' || type == 'audio') {
 							list = data.video.attrs;
 
 							if (!list && !to_form)
-								data.video.attrs = list = {};
+							data.video.attrs = list = {};
 						} else
-							list = data.params;
+						list = data.params;
 
 						if (list) {
 							if (to_form) {
