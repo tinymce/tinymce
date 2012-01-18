@@ -44,7 +44,7 @@ var dependencies = [
     version: "latest",
     source: "wrap-underscore.zip",
     targets: [
-      { name: "compile/ephox.wrap._.js", path: lib + "/run/depend" },
+      { name: "compile/ephox.wrap.Underscore.js", path: lib + "/run/depend" },
       { name: "licenses/underscore/license.txt", path: "lib/run/licenses/underscore"}
     ]
   },

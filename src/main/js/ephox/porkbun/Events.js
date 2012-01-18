@@ -2,7 +2,7 @@ define(
   'ephox.porkbun.Events',
 
   [
-    'ephox.wrap._'
+    'ephox.wrap.Underscore'
   ],
 
   function (_) {
