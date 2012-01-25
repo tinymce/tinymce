@@ -716,7 +716,14 @@
 					});
 
 					DOM.show(e);
-					DOM.setStyle(e, 'top', 0 - DOM.getRect(ed.id + '_tblext').h - 1);
+
+					var toolbarRect = DOM.getRect(ed.id + '_tblext');
+					DOM.setStyle(e, 'top', 0 - toolbarRect.h - 1);
+
+					// Prevent the external toolbar to protude out of the document
+					if (toolbarRect.w + toolbarRect.x > window.innerWidth) {
+						DOM.setStyle(e, 'left', window.innerWidth - toolbarRect.w - toolbarRect.x - 1);
+					}
 
 					// Fixes IE rendering bug
 					DOM.hide(e);
