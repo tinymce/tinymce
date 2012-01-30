@@ -19,6 +19,7 @@ Version 3.4.7.1 (2011-11-xx)
 	Fixed bug where dots in id:s where causing problems. Patch provided by Abhishek Dev.
 	Fixed bug where urls with an at sign in the path wouldn't be parsed correctly. Patch contributed by Jason Grout.
 	Fixed bug where Opera would remove the first character of a inline formatted word if you pressed backspace.
+	Fixed bugs with the autoresize plugin on various browsers and removed the need for the throbber.
 Version 3.4.7 (2011-11-03)
 	Modified the caret formatting behavior to word similar to common desktop wordprocessors like Word or Libre Office.
 	Fixed bug in Webkit - Cursor positioning does not work vertically within a table cell with multiple lines of text.

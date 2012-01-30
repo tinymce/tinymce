@@ -99,7 +99,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 		// And this is also more efficient
 		for (i = 0; i<li.length; i++) {
 			c = li[i];
-			s = c.cb.apply(c.scope, a);
+			s = c.cb.apply(c.scope, a.length > 0 ? a : [c.scope]);
 
 			if (s === false)
 				break;

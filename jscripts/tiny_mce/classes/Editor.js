@@ -150,6 +150,24 @@
 				'onPostRender',
 
 				/**
+				 * Fires when the onload event on the body occurs.
+				 *
+				 * @event onLoad
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onLoad event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onLoad.add(function(ed, cm) {
+				 *           console.debug('Document loaded: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
+				 */
+				'onLoad',
+
+				/**
 				 * Fires after the initialization of the editor is done.
 				 *
 				 * @event onInit
@@ -1226,7 +1244,7 @@
 				bc = bc[t.id] || '';
 			}
 
-			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"><br></body></html>';
+			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '" onload="window.parent.tinyMCE.get(\'' + t.id + '\').onLoad.dispatch();"><br></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain && (isIE || (tinymce.isOpera && parseFloat(opera.version()) < 11))) {
