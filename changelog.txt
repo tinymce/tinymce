@@ -1,4 +1,5 @@
 Version 3.4.7.1 (2011-11-xx)
+	Fixed bug in IE where selected text ending with space cannot be formatted then formatted again to get original text.
 	Fixed bug in IE where images larger than editor area were being deselected when toolbar buttons are clicked.
 	Fixed bug where wrong text align buttons are active when multiple block elements are selected.
 	Fixed bug where selected link not showing in target field of link dialog in some selection cases.
