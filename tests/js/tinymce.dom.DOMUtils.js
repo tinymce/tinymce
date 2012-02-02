@@ -593,7 +593,7 @@
 		DOM.remove('test');
 	});
 
-	test('isEmpty', 13, function() {
+	test('isEmpty', 14, function() {
 		DOM.schema = new tinymce.html.Schema(); // A schema will be added when used within a editor instance
 		DOM.add(document.body, 'div', {id : 'test'}, '');
 
@@ -634,6 +634,9 @@
 
 		DOM.setHTML('test', '<span data-mce-style="color:Red"></span>');
 		ok(DOM.isEmpty(DOM.get('test')), 'Span with data-mce attribute.');
+
+		DOM.setHTML('test', '<div><!-- comment --></div>');
+		ok(!DOM.isEmpty(DOM.get('test')), 'Element with comment.');
 
 		DOM.remove('test');
 	});
