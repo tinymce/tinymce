@@ -303,7 +303,7 @@
 						}
 
 						// Handle selector patterns
-						if (format.selector) {
+						if (format.selector && node.id !== '_mce_caret') {
 							// Look for matching formats
 							each(formatList, function(format) {
 								// Check collapsed state if it exists
