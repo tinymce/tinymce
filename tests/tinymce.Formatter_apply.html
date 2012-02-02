@@ -1034,6 +1034,14 @@ test('Caret format on word in li with word in parent li before it', function() {
 	equals(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
 });
 
+test('Selector format on whole contents', function() {
+	editor.setContent('<p>a</p>');
+	editor.formatter.register('format', {inline: 'span', selector: '*', classes: 'test'});
+	setSelection('p', 0, 'p', 1);
+	editor.formatter.apply('format');
+	equals(editor.getContent(), '<p class="test">a</p>');
+});
+
 /*
 test('apply (list block)', function() {
 	var rng;

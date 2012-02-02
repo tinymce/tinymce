@@ -1,5 +1,6 @@
 Version 3.4.8.1 (2012-02-xx)
 	Fixed bug where caret formatting would be removed when moving the caret when a selector expression was used.
+	Fixed bug where formatting would be applied to the body element when all contents where selected and format had both inline and selector parts.
 	Fixed so elements with comments would be trated as non empty elements. Patch contributed by Arjan Scherpenisse.
 Version 3.4.8 (2012-02-02)
 	Fixed bug in IE where selected text ending with space cannot be formatted then formatted again to get original text.

@@ -1038,8 +1038,8 @@
 				}
 
 				for (;;) {
-					// Stop expanding on block elements or root depending on format
-					if (parent == root || (!format[0].block_expand && isBlock(parent)))
+					// Stop expanding on block elements
+					if (!format[0].block_expand && isBlock(parent))
 						return parent;
 
 					// Walk left/right
@@ -1050,6 +1050,11 @@
 					}
 
 					// Check if we can move up are we at root level or body level
+					if (parent.parentNode == root) {
+						container = parent;
+						break;
+					}
+
 					parent = parent.parentNode;
 				}
 
