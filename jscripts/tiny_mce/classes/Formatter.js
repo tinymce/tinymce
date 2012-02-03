@@ -819,6 +819,9 @@
 			if (node)
 				return matchParents(node);
 
+			// Adjust start so we can match when start is on boundary. This affects IE when selection ends with a space.
+			moveStart(selection.getRng(true));
+
 			// Check selected node
 			node = selection.getNode();
 			if (matchParents(node))
