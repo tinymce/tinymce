@@ -315,6 +315,12 @@
 				return;
 			}
 
+			// When loaded asynchronously, the DOM Content may already be loaded
+			if (doc.readyState === 'complete') {
+				t._pageInit(win);
+				return;
+			}
+
 			// Use IE method
 			if (doc.attachEvent) {
 				doc.attachEvent("onreadystatechange", function() {
