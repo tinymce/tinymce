@@ -4,7 +4,8 @@ provide([
 			{"title": "Core API", "url": "api.html"},
 			{"title": "Basic functionality", "url": "basic.html"},
 			{"title": "Remove", "url": "remove.html", "jsrobot": true},
-			{"title": "Undo", "url": "undo.html", "jsrobot": true}
+			{"title": "Undo", "url": "undo.html", "jsrobot": true},
+			{"title": "Asynchronous Loading", "url": "async.html"}
 		]},
 
 		{"title": "Plugins tests", "tests": [
