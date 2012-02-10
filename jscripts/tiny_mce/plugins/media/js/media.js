@@ -430,16 +430,26 @@
 			function option(media_type){
 				return '<option value="'+media_type+'">'+tinyMCEPopup.editor.translate("media_dlg."+media_type)+'</option>'
 			}
+
+			var invalid_elements = editor.settings.invalid_elements;
+			invalid_elements.toLowerCase();
+
 			var html = "";
 			html += '<select id="media_type" name="media_type" onchange="Media.formToData(\'type\');">';
-			html += option("video");
-			html += option("audio");
+			if (invalid_elements.indexOf("video") == -1) {
+				html += option("video");
+			}
+			if (invalid_elements.indexOf("audio") == -1) {
+				html += option("audio");
+			}
 			html += option("flash");
 			html += option("quicktime");
 			html += option("shockwave");
 			html += option("windowsmedia");
 			html += option("realmedia");
-			html += option("iframe");
+			if (invalid_elements.indexOf("iframe") == -1) {
+				html += option("iframe");
+			}
 
 			if (editor.getParam('media_embedded_audio', false)) {
 				html += option('embeddedaudio');
