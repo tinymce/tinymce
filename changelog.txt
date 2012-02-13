@@ -4,7 +4,10 @@ Version 3.5 (2012-xx-xx)
 	Added new schema option and support for the HTML5 schema.
 	Added new visualblocks plugin that shows html5 blocks with visual borders.
 	Added new types and selector options to make it easier to create editor instances with different configs.
+	Added new preview of formatting options in various listboxes.
+	Added new preview_styles option that enables control over what gets previewed.
 	Fixed bug where content css would be loaded twice into iframe. 
+	Fixed bug where start elements with only whitespace in the attribute part wouldn't be correctly parsed.
 Version 3.4.7.1 (2011-11-xx)
 	Fixed bug in IE where images larger than editor area were being deselected when toolbar buttons are clicked.
 	Fixed bug where wrong text align buttons are active when multiple block elements are selected.
