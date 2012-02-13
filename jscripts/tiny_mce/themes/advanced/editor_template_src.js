@@ -13,7 +13,7 @@
 
 	// Generates a preview for a format
 	function getPreviewCss(ed, fmt) {
-		var previewElm, dom = ed.dom, previewStyles = '', parentFontSize, previewStyles;
+		var previewElm, dom = ed.dom, previewCss = '', parentFontSize, previewStylesName;
 
 		previewStyles = ed.settings.preview_styles;
 
@@ -82,12 +82,12 @@
 				}
 			}
 
-			previewStyles += name + ':' + value + ';';
+			previewCss += name + ':' + value + ';';
 		});
 
 		dom.remove(previewElm);
 
-		return previewStyles;
+		return previewCss;
 	};
 
 	// Tell it to load theme specific language pack(s)
