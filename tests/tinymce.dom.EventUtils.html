@@ -339,6 +339,11 @@ test("focusin/focusout bind/unbind", function() {
 	var result = {};
 
 	eventUtils.bind(document.body, 'focusin focusout', function(e) {
+		// IE will fire a focusout on the parent element if you focus an element within not a big deal so lets detect it in the test
+		if (e.type == "focusout" && e.target.contains(document.activeElement)) {
+			return;
+		}
+
 		result[e.type] = result[e.type] ? ++result[e.type] : 1;
 	});
 

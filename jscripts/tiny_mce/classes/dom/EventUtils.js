@@ -232,6 +232,10 @@ tinymce.dom = {};
 				events[id] = {};
 			} else {
 				id = target[expando];
+
+				if (!events[id]) {
+					events[id] = {};
+				}
 			}
 
 			// Setup the specified scope or use the target as a default
@@ -539,7 +543,7 @@ tinymce.dom = {};
 				var i = target;
 
 				while (i--) {
-					self.add(target[i], events, func, scope);
+					self.remove(target[i], events, func, scope);
 				}
 
 				return self;
