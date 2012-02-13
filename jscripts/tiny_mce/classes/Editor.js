@@ -1739,6 +1739,16 @@
 			t.load({initial : true, format : 'html'});
 			t.startContent = t.getContent({format : 'raw'});
 			t.undoManager.add();
+			/**
+			 * Is set to true after the editor instance has been initialized
+			 *
+			 * @property initialized
+			 * @type Boolean
+			 * @example
+			 * function isEditorInitialized(editor) {
+			 *     return editor && editor.initialized;
+			 * }
+			 */
 			t.initialized = true;
 
 			t.onInit.dispatch(t);
