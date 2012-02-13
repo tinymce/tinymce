@@ -455,8 +455,12 @@
 
 			n = DOM.add(n, s.element || 'span', {'class' : 'mceText', title : o.settings.title}, o.settings.title);
 
-			if (o.settings.style)
+			if (o.settings.style) {
+				if (typeof o.settings.style == "function")
+					o.settings.style = o.settings.style();
+
 				DOM.setAttrib(n, 'style', o.settings.style);
+			}
 
 			if (tb.childNodes.length == 1)
 				DOM.addClass(ro, 'mceFirst');
