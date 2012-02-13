@@ -3183,7 +3183,8 @@
 					t.undoManager.add();
 				};
 
-				dom.bind(t.getDoc(), 'focusout', function(e) {
+				var eventHandler = tinymce.isGecko ? 'blur' : 'focusout';
+				dom.bind(t.getDoc(), eventHandler, function(e){
 					if (!t.removed && t.undoManager.typing)
 						addUndo();
 				});

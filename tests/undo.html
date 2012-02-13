@@ -12,6 +12,8 @@
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
 
+var BACKSPACE = 0x8;
+
 module('Undo', {
 	autostart: false
 });
@@ -81,6 +83,21 @@ asyncTest('Forward delete triggers undo in IE', function() {
 		QUnit.start();
 	}, editor.selection.getNode());
 });
+
+asyncTest('Undo added when losing focus', function(){
+	editor.undoManager.clear();
+	editor.setContent("<p>some text</p>");
+	setSelection('p', 4, 'p', 9);
+	robot.type(0x8, false, function(){
+		var styleMenu = editor.controlManager.controls['elm1_styleselect'];
+		styleMenu.focus();
+		editor.execCommand('FormatBlock', false, 'h1');
+		editor.undoManager.undo();
+		equals(editor.getContent(), "<p>some</p>");
+		QUnit.start();
+	});
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
