@@ -25,6 +25,7 @@ module('Tables', {
 var VK;
 var UP_ARROW = 0x26;
 var DOWN_ARROW = 0x28;
+var ENTER = 0xA;
 
 if (tinymce.isWebKit) {
 	asyncTest('Selecting Cell and typing should update cell correctly in WebKit', function() {
@@ -109,6 +110,22 @@ asyncTest('arrow key down in bottom row escapes table', function() {
 	var html = '<table><tr><td></td></tr><tr><td id="b"></td></tr></table><p>outside</p>';
 	testCursorKey(html, '#b', DOWN_ARROW, 'outside');
 });
+
+asyncTest('shift-enter in table cell ending with BR places caret on new line', function() {
+		editor.setContent('<table><tr><td>d <strong>e</strong><br></td></tr></table>');
+		setSelection('strong', 1);
+		robot.type(ENTER, true, function(){
+			var expected = '<table><tbody><tr><td>d <strong>e<br /></strong></td></tr></tbody></table>';
+			var actual = editor.getContent();
+			var range = editor.selection.getRng(true);
+			equals(cleanHtml(actual), expected);
+			equals(range.startContainer.nodeName, 'STRONG');
+			equals(range.startOffset, 2);
+			equals(range.collapsed, true);
+			start();
+		}, editor.getBody());
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",

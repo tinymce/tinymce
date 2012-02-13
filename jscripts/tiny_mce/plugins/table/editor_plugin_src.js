@@ -1267,6 +1267,24 @@
 							ed.dom.remove(last);
 					});
 
+
+					/**
+					 * Fixes bug in Gecko where shift-enter in table cell does not place caret on new line
+					 */
+					if (tinymce.isGecko) {
+						ed.onKeyDown.add(function(ed, e) {
+							if (e.keyCode === tinymce.VK.ENTER && e.shiftKey) {
+								var node = ed.selection.getRng().startContainer;
+								var tableCell = dom.getParent(node, 'td,th');
+								if (tableCell) {
+									var zeroSizedNbsp = ed.getDoc().createTextNode("\uFEFF");
+									dom.insertAfter(zeroSizedNbsp, node);
+								}
+							}
+						});
+					}
+
+
 					fixTableCaretPos();
 					ed.startContent = ed.getContent({format : 'raw'});
 				}
