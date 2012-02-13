@@ -373,7 +373,7 @@
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object', shortEndedElementsMap);
 		blockElementsMap = createLookupTable('block_elements', 'h1 h2 h3 h4 h5 h6 hr p div address pre form table tbody thead tfoot ' + 
 						'th tr td li ol ul caption blockquote center dl dt dd dir fieldset ' + 
-						'noscript menu isindex samp header footer article section hgroup');
+						'noscript menu isindex samp header footer article section hgroup aside');
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
 		function patternToRegExp(str) {
