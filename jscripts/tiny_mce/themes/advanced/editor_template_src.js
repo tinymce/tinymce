@@ -11,6 +11,85 @@
 (function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend, each = tinymce.each, Cookie = tinymce.util.Cookie, lastExtID, explode = tinymce.explode;
 
+	// Generates a preview for a format
+	function getPreviewCss(ed, fmt) {
+		var previewElm, dom = ed.dom, previewStyles = '', parentFontSize, previewStyles;
+
+		previewStyles = ed.settings.preview_styles;
+
+		// No preview forced
+		if (previewStyles === false)
+			return '';
+
+		// Default preview
+		if (!previewStyles)
+			previewStyles = 'font-family font-size font-weight text-decoration text-transform color background-color';
+
+		// Removes any variables since these can't be previewed
+		function removeVars(val) {
+			return val.replace(/%(\w+)/g, '');
+		};
+
+		// Create block/inline element to use for preview
+		name = fmt.block || fmt.inline || 'span';
+		previewElm = dom.create(name);
+
+		// Add format styles to preview element
+		each(fmt.styles, function(value, name) {
+			value = removeVars(value);
+
+			if (value)
+				dom.setStyle(previewElm, name, value);
+		});
+
+		// Add attributes to preview element
+		each(fmt.attributes, function(value, name) {
+			value = removeVars(value);
+
+			if (value)
+				dom.setAttrib(previewElm, name, value);
+		});
+
+		// Add classes to preview element
+		each(fmt.classes, function(value) {
+			value = removeVars(value);
+
+			if (!dom.hasClass(previewElm, value))
+				dom.addClass(previewElm, value);
+		});
+
+		// Add the previewElm outside the visual area
+		dom.setStyles(previewElm, {position: 'absolute', left: -0xFFFF});
+		ed.getBody().appendChild(previewElm);
+
+		// Get parent container font size so we can compute px values out of em/% for older IE:s
+		parentFontSize = dom.getStyle(ed.getBody(), 'fontSize', true);
+		parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
+
+		each(previewStyles.split(' '), function(name) {
+			var value = dom.getStyle(previewElm, name, true);
+
+			// Old IE won't calculate the font size so we need to do that manually
+			if (name == 'font-size') {
+				if (/em|%$/.test(value)) {
+					if (parentFontSize === 0) {
+						return;
+					}
+
+					// Convert font size from em/% to px
+					value = parseFloat(value, 10) / (/%$/.test(value) ? 100 : 1);
+					value = (value * parentFontSize) + 'px';
+				}
+			}
+
+			previewStyles += name + ':' + value + ';';
+		});
+
+		dom.remove(previewElm);
+
+		return previewStyles;
+	};
+
 	// Tell it to load theme specific language pack(s)
 	tinymce.ThemeManager.requireLangPack('advanced');
 
@@ -270,7 +349,7 @@
 			});
 
 			// Handle specified format
-			ed.onInit.add(function() {
+			ed.onPreInit.add(function() {
 				var counter = 0, formats = ed.getParam('style_formats');
 
 				if (formats) {
@@ -282,24 +361,32 @@
 						if (keys > 1) {
 							name = fmt.name = fmt.name || 'style_' + (counter++);
 							ed.formatter.register(name, fmt);
-							ctrl.add(fmt.title, name);
+							ctrl.add(fmt.title, name, {
+								style: function() {
+									return getPreviewCss(ed, fmt);
+								}
+							});
 						} else
 							ctrl.add(fmt.title);
 					});
 				} else {
 					each(ed.getParam('theme_advanced_styles', '', 'hash'), function(val, key) {
-						var name;
+						var name, fmt;
 
 						if (val) {
 							name = 'style_' + (counter++);
-
-							ed.formatter.register(name, {
+							fmt = {
 								inline : 'span',
 								classes : val,
 								selector : '*'
-							});
+							};
 
-							ctrl.add(t.editor.translate(key), name);
+							ed.formatter.register(name, fmt);
+							ctrl.add(t.editor.translate(key), name, {
+								style: function() {
+									return getPreviewCss(ed, fmt);
+								}
+							});
 						}
 					});
 				}
@@ -439,7 +526,9 @@
 
 			if (c) {
 				each(t.editor.getParam('theme_advanced_blockformats', t.settings.theme_advanced_blockformats, 'hash'), function(v, k) {
-					c.add(t.editor.translate(k != v ? k : fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v});
+					c.add(t.editor.translate(k != v ? k : fmts[v]), v, {'class' : 'mce_formatPreview mce_' + v, style: function() {
+						return getPreviewCss(t.editor, {block: v});
+					}});
 				});
 			}
 
