@@ -308,13 +308,15 @@ tinymce.dom = {};
 
 					// Add the nativeHandler to the callback list so that we can later unbind it
 					callbackList.nativeHandler = nativeHandler;
+					if (!w3cEventModel) {
+						callbackList.proxyHandler = proxy(id);
+					}
 
 					// Check if the target has native events support
-
 					if (name === "ready") {
 						bindOnReady(target, nativeHandler, self);
 					} else {
-						addEvent(target, fakeName || name, w3cEventModel ? nativeHandler : proxy(id), capture);
+						addEvent(target, fakeName || name, w3cEventModel ? nativeHandler : callbackList.proxyHandler, capture);
 					}
 				} else {
 					// If it already has an native handler then just push the callback
@@ -372,7 +374,7 @@ tinymce.dom = {};
 							// Remove all callbacks if there isn't a specified callback or there is no callbacks left
 							if (!callback || callbackList.length === 0) {
 								delete eventMap[name];
-								removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
+								removeEvent(target, callbackList.fakeName || name, w3cEventModel ? callbackList.nativeHandler : callbackList.proxyHandler, callbackList.capture);
 							}
 						}
 					}
@@ -380,7 +382,7 @@ tinymce.dom = {};
 					// All events for a specific element
 					for (name in eventMap) {
 						callbackList = eventMap[name];
-						removeEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);
+						removeEvent(target, callbackList.fakeName || name, w3cEventModel ? callbackList.nativeHandler : callbackList.proxyHandler, callbackList.capture);
 					}
 
 					eventMap = {};
