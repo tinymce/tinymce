@@ -23,7 +23,7 @@ module("Loading TinyMCE asynchronously", {
 // Not a robust or typical domready check, but suitable for the test.
 var attempts = 0;
 var readyStateTimer = setInterval(function() {
-	if (document.readyState !== 'complete' && attemps < 100) return;
+	if (document.readyState !== 'complete' && attempts < 100) return;
 	clearInterval(readyStateTimer);
 	loadTinyMCE();
 }, 20);
