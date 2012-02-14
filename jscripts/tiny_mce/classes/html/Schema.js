@@ -617,11 +617,13 @@
 				children[name] = element.children;
 			});
 
-			// Switch these
-			each(split('strong/b,em/i'), function(item) {
-				item = split(item, '/');
-				elements[item[1]].outputName = item[0];
-			});
+			// Switch these on HTML4
+			if (settings.schema != "html5") {
+				each(split('strong/b,em/i'), function(item) {
+					item = split(item, '/');
+					elements[item[1]].outputName = item[0];
+				});
+			}
 
 			// Add default alt attribute for images
 			elements.img.attributesDefault = [{name: 'alt', value: ''}];
