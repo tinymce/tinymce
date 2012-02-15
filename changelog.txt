@@ -1,4 +1,5 @@
 Version 3.4.8.1 (2012-02-xx)
+	Fixed edit css style dialog text-decoration none checkbox so it disables other text-decoration options when enabled.
 	Fixed bug in Gecko where undo wasn't added when focus was lost.
 	Fixed bug in Gecko where shift-enter in table cell ending with BR doesn't move caret to new line.
 	Fixed bug where right-click on formatted text in IE selected the entire line.
