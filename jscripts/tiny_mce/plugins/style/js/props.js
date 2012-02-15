@@ -144,6 +144,8 @@ function setupFormData() {
 	f.text_overline.checked = inStr(ce.style.textDecoration, 'overline');
 	f.text_linethrough.checked = inStr(ce.style.textDecoration, 'line-through');
 	f.text_blink.checked = inStr(ce.style.textDecoration, 'blink');
+	f.text_none.checked = inStr(ce.style.textDecoration, 'none');
+	updateTextDecorations();
 
 	// Setup background fields
 
@@ -630,6 +632,19 @@ function synch(fr, to) {
 
 	if (f.elements[fr + "_measurement"])
 		selectByValue(f, to + "_measurement", f.elements[fr + "_measurement"].value);
+}
+
+function updateTextDecorations(){
+	var el = document.forms[0].elements;
+
+	var textDecorations = ["text_underline", "text_overline", "text_linethrough", "text_blink"];
+	var noneChecked = el["text_none"].checked;
+	tinymce.each(textDecorations, function(id) {
+		el[id].disabled = noneChecked;
+		if (noneChecked) {
+			el[id].checked = false;
+		}
+	});
 }
 
 tinyMCEPopup.onInit.add(init);
