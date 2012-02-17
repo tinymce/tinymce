@@ -219,6 +219,31 @@ asyncTest('Deleting empty li with nested list is deleted in Webkit', function(){
 	}
 });
 
+function testCreateNewList(listItemContents) {
+
+}
+
+asyncTest('Creates new list item without surrounding element when caret at end of list item', function(){
+	function testCreateNewList(el) {
+		queue.add(function() {
+			var listItemContent = '<' + el + '>something</' + el + '>';
+			editor.setContent('<ul><li>' + listItemContent + '</li></ul>');
+			setSelection(el, 9);
+			editor.focus();
+			robot.type(ENTER, false, function() {
+				var rng = editor.selection.getRng(true);
+				var li = editor.dom.getParent(editor.selection.getStart(), 'li');
+				equal(editor.getContent(), '<ul><li>' + listItemContent + '</li><li></li></ul>');
+				queue.next();
+			});
+		});
+	}
+
+	var queue  = new dsl.Queue();
+	tinymce.map('h1,h2,h3,h4,h5,h6,p,div'.split(','), testCreateNewList);
+	queue.done();
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
