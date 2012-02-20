@@ -1,4 +1,5 @@
 Version 3.4.8.1 (2012-02-xx)
+	Fixed bug in Webkit and IE where deleting empty paragraphs would remove entire editor contents.
 	Fixed bug where pressing enter on end of list item with a heading would create a new item with heading.	
 	Fixed edit css style dialog text-decoration none checkbox so it disables other text-decoration options when enabled.
 	Fixed bug in Gecko where undo wasn't added when focus was lost.
