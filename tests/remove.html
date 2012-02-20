@@ -226,6 +226,18 @@ asyncTest('Backward delete blockquote contents', function () {
 	}, editor.selection.getNode());
 });
 
+asyncTest('Forward delete after empty paragraphs does not delete all content', function () {
+	expect(1);
+
+	editor.setContent('<p></p><p></p><p></p>');
+	setSelection('p:nth-child(3)', 0);
+	editor.focus();
+	robot.forwardDelete(function() {
+		QUnit.notEqual(editor.getContent(), '', 'Editor contents should not be empty');
+		QUnit.start();
+	}, editor.selection.getNode());
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
