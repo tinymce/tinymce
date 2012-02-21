@@ -10,6 +10,7 @@ Version 3.4.8.1 (2012-02-xx)
 	Fixed bug where formatting would be applied to the body element when all contents where selected and format had both inline and selector parts.
 	Fixed bug where the media plugin would throw errors if you had iframe set as an invalid element in config.
 	Fixed bug where the caret would be placed at the top of the document if you inserted a table and undo:ed that operation. Patch contributed by Wesley Walser.
+	Fixed bug where content css files where loaded twice into the iframe.
 	Fixed so elements with comments would be trated as non empty elements. Patch contributed by Arjan Scherpenisse.
 Version 3.4.8 (2012-02-02)
 	Fixed bug in IE where selected text ending with space cannot be formatted then formatted again to get original text.
