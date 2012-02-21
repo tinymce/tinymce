@@ -29,10 +29,10 @@ test('expand to noneditable (start)', function() {
 	editor.dom.fire(editor.getBody(), 'mouseup');
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 0);
-	equals(rng.endContainer.nodeName, '#text');
-	equals(rng.endOffset, 1);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer.nodeName, '#text');
+	equal(rng.endOffset, 1);
 });
 
 test('expand to noneditable (end)', function() {
@@ -46,10 +46,10 @@ test('expand to noneditable (end)', function() {
 	editor.dom.fire(editor.getBody(), 'mouseup');
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.nodeName, '#text');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 2);
+	equal(rng.startContainer.nodeName, '#text');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 2);
 });
 
 test('expand to noneditable (start/end)', function() {
@@ -63,10 +63,10 @@ test('expand to noneditable (start/end)', function() {
 	editor.dom.fire(editor.getBody(), 'mouseup');
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 2);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 2);
 });
 
 test('type after non editable', function() {
@@ -81,12 +81,12 @@ test('type after non editable', function() {
 	type('X');
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
-	equals(rng.startContainer.nodeName, 'SPAN');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'SPAN');
-	equals(rng.endOffset, 1);
-	equals(editor.getContent(), '<p><span class="mceNonEditable">no</span>Xyes</p>');
+	equal(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
+	equal(rng.startContainer.nodeName, 'SPAN');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'SPAN');
+	equal(rng.endOffset, 1);
+	equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>Xyes</p>');
 });
 
 test('type between non editable', function() {
@@ -101,12 +101,12 @@ test('type between non editable', function() {
 	type('X');
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
-	equals(rng.startContainer.nodeName, 'SPAN');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'SPAN');
-	equals(rng.endOffset, 1);
-	equals(editor.getContent(), '<p><span class="mceNonEditable">no</span>X<span class="mceNonEditable">no</span></p>');
+	equal(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
+	equal(rng.startContainer.nodeName, 'SPAN');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'SPAN');
+	equal(rng.endOffset, 1);
+	equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>X<span class="mceNonEditable">no</span></p>');
 });
 
 test('type after last non editable', function() {
@@ -121,12 +121,12 @@ test('type after last non editable', function() {
 	type('X');
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
-	equals(rng.startContainer.nodeName, 'SPAN');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'SPAN');
-	equals(rng.endOffset, 1);
-	equals(editor.getContent(), '<p><span class="mceNonEditable">no</span>X</p>');
+	equal(rng.startContainer.getAttribute('data-mce-bogus'), 'true');
+	equal(rng.startContainer.nodeName, 'SPAN');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'SPAN');
+	equal(rng.endOffset, 1);
+	equal(editor.getContent(), '<p><span class="mceNonEditable">no</span>X</p>');
 });
 
 test('escape noneditable inline element (left)', function() {
@@ -139,10 +139,10 @@ test('escape noneditable inline element (left)', function() {
 	type({keyCode: 37});
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.nodeName, 'SPAN');
-	equals(rng.startContainer.parentNode.nodeName, 'P');
-	equals(editor.dom.nodeIndex(rng.startContainer), 1);
-	equals(rng.collapsed, true);
+	equal(rng.startContainer.nodeName, 'SPAN');
+	equal(rng.startContainer.parentNode.nodeName, 'P');
+	equal(editor.dom.nodeIndex(rng.startContainer), 1);
+	equal(rng.collapsed, true);
 });
 
 test('escape noneditable inline element (right)', function() {
@@ -155,10 +155,10 @@ test('escape noneditable inline element (right)', function() {
 	type({keyCode: 39});
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.nodeName, 'SPAN');
-	equals(rng.startContainer.parentNode.nodeName, 'P');
-	equals(editor.dom.nodeIndex(rng.startContainer), 2);
-	equals(rng.collapsed, true);
+	equal(rng.startContainer.nodeName, 'SPAN');
+	equal(rng.startContainer.parentNode.nodeName, 'P');
+	equal(editor.dom.nodeIndex(rng.startContainer), 2);
+	equal(rng.collapsed, true);
 });
 
 test('escape noneditable block element (left)', function(){
@@ -170,10 +170,10 @@ test('escape noneditable block element (left)', function(){
 	type({keyCode: 37});
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.nodeName, "P");
-	equals(editor.dom.nodeIndex(rng.startContainer), 0);
-	equals(rng.startOffset, 1);
-	equals(rng.collapsed, true);
+	equal(rng.startContainer.nodeName, "P");
+	equal(editor.dom.nodeIndex(rng.startContainer), 0);
+	equal(rng.startOffset, 1);
+	equal(rng.collapsed, true);
 
 });
 
@@ -186,18 +186,18 @@ test('escape noneditable block element (right)', function(){
 	type({keyCode: 39});
 	rng = normalizeRng(editor.selection.getRng(true));
 
-	equals(rng.startContainer.nodeName, "P");
-	equals(editor.dom.nodeIndex(rng.startContainer), 2);
-	equals(rng.startOffset, 0);
-	equals(rng.collapsed, true);
+	equal(rng.startContainer.nodeName, "P");
+	equal(editor.dom.nodeIndex(rng.startContainer), 2);
+	equal(rng.startOffset, 0);
+	equal(rng.collapsed, true);
 
 });
 
 test('noneditable regexp', function() {
 	editor.setContent('<p>{test1}{test2}</p>');
 
-	equals(editor.dom.select('span').length, 2);
-	equals(editor.getContent(), '<p>{test1}{test2}</p>');
+	equal(editor.dom.select('span').length, 2);
+	equal(editor.getContent(), '<p>{test1}{test2}</p>');
 });
 
 
