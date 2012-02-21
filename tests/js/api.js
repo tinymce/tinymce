@@ -25,37 +25,37 @@ module("API", {
 		tinymce.each([1, 2, 3], function(v) {
 			c += v;
 		});
-		equals(c, 6);
+		equal(c, 6);
 
 		c = 0;
 		tinymce.each([1, 2, 3], function(v, i) {
 			c += i;
 		});
-		equals(c, 3);
+		equal(c, 3);
 
 		c = 0;
 		tinymce.each({a : 1, b : 2, c : 3}, function(v, i) {
 			c += v;
 		});
-		equals(c, 6);
+		equal(c, 6);
 
 		c = '';
 		tinymce.each({a : 1, b : 2, c : 3}, function(v, k) {
 			c += k;
 		});
-		equals(c, 'abc');
+		equal(c, 'abc');
 
 		c = 0;
 		tinymce.each(null, function(v) {
 			c += v;
 		});
-		equals(c, 0);
+		equal(c, 0);
 
 		c = 0;
 		tinymce.each(1, function(v) {
 			c += v;
 		});
-		equals(c, 0);
+		equal(c, 0);
 	});
 
 	test('tinymce - map', 1, function() {
@@ -64,7 +64,7 @@ module("API", {
 		c = tinymce.map([1,2,3], function(v) {
 			return v + 1;
 		});
-		equals(c.join(','), '2,3,4');
+		equal(c.join(','), '2,3,4');
 	});
 
 	test('tinymce - grep', 3, function() {
@@ -73,25 +73,25 @@ module("API", {
 		c = tinymce.grep([1,2,3,4], function(v) {
 			return v > 2;
 		});
-		equals(c.join(','), '3,4');
+		equal(c.join(','), '3,4');
 
 		c = [1,2,3,4];
 		c.test = 1
 		c = tinymce.grep(c);
 		ok(!c.test);
-		equals(c.join(','), '1,2,3,4');
+		equal(c.join(','), '1,2,3,4');
 	});
 
 	test('tinymce - explode', 2, function() {
-		equals(tinymce.explode(' a, b, c ').join(','), 'a,b,c');
-		equals(tinymce.explode(' a;  b; c ', ';').join(','), 'a,b,c');
+		equal(tinymce.explode(' a, b, c ').join(','), 'a,b,c');
+		equal(tinymce.explode(' a;  b; c ', ';').join(','), 'a,b,c');
 	});
 
 	test('tinymce - inArray', 4, function() {
-		equals(tinymce.inArray([1,2,3], 2), 1);
-		equals(tinymce.inArray([1,2,3], 7), -1);
-		equals(tinymce.inArray({a : 1, b : 2, c : 3}, 2), -1);
-		equals(tinymce.inArray(null, 7), -1);
+		equal(tinymce.inArray([1,2,3], 2), 1);
+		equal(tinymce.inArray([1,2,3], 7), -1);
+		equal(tinymce.inArray({a : 1, b : 2, c : 3}, 2), -1);
+		equal(tinymce.inArray(null, 7), -1);
 	});
 
 	test('tinymce - extend', 5, function() {
@@ -106,9 +106,9 @@ module("API", {
 			d : 4
 		});
 
-		equals(o.a, 2);
-		equals(o.b, 2);
-		equals(o.d, 4);
+		equal(o.a, 2);
+		equal(o.b, 2);
+		equal(o.d, 4);
 
 		o = tinymce.extend({
 			a : 1,
@@ -121,16 +121,16 @@ module("API", {
 			e : 5
 		});
 
-		equals(o.d, 4);
-		equals(o.e, 5);
+		equal(o.d, 4);
+		equal(o.e, 5);
 	});
 
 	test('tinymce - trim', 5, function() {
-		equals(tinymce.trim('a'), 'a');
-		equals(tinymce.trim(' \r  a'), 'a');
-		equals(tinymce.trim('a  \n  '), 'a');
-		equals(tinymce.trim('   a  \t  '), 'a');
-		equals(tinymce.trim(null), '');
+		equal(tinymce.trim('a'), 'a');
+		equal(tinymce.trim(' \r  a'), 'a');
+		equal(tinymce.trim('a  \n  '), 'a');
+		equal(tinymce.trim('   a  \t  '), 'a');
+		equal(tinymce.trim(null), '');
 	});
 
 	test('tinymce - create', 13, function() {
@@ -203,33 +203,33 @@ module("API", {
 		});
 
 		o = new tinymce.Test1(3);
-		equals(o.c, 4);
+		equal(o.c, 4);
 		o.method1();
-		equals(o.c, 5);
+		equal(o.c, 5);
 
 		o = new tinymce.Test2(3);
-		equals(o.c, 6);
+		equal(o.c, 6);
 		o.method1();
-		equals(o.c, 8);
+		equal(o.c, 8);
 		o.method2();
-		equals(o.c, 11);
+		equal(o.c, 11);
 
 		o = new tinymce.Test3(3);
-		equals(o.c, 10);
+		equal(o.c, 10);
 		o.method1();
-		equals(o.c, 12);
+		equal(o.c, 12);
 		o.method2();
-		equals(o.c, 18);
+		equal(o.c, 18);
 
 		o = new tinymce.Test4(3);
-		equals(o.c, 10);
+		equal(o.c, 10);
 		o.method1();
-		equals(o.c, 12);
+		equal(o.c, 12);
 		o.method2();
-		equals(o.c, 21);
-		equals(tinymce.Test4.method3(), 3);
+		equal(o.c, 21);
+		equal(tinymce.Test4.method3(), 3);
 
-		equals(tinymce.Test5.method1(), 3);
+		equal(tinymce.Test5.method1(), 3);
 	});
 
 	test('tinymce - create in namespace', 1, function() {
@@ -265,7 +265,7 @@ module("API", {
 			if (tinymce.is(v, 'number'))
 				c += v;
 		});
-		equals(c, 36);
+		equal(c, 36);
 
 		c = 0;
 		tinymce.walk({
@@ -278,11 +278,11 @@ module("API", {
 			if (tinymce.is(v, 'number'))
 				c += v;
 		}, 'items');
-		equals(c, 27);
+		equal(c, 27);
 
 		c = 0;
 		tinymce.walk(null);
-		equals(c, 0);
+		equal(c, 0);
 	});
 
 	test('tinymce - createNS', 2, function() {
@@ -290,14 +290,14 @@ module("API", {
 		a.b.c.d.e.x = 1;
 		tinymce.createNS('a.b.c.d.e.f');
 		a.b.c.d.e.f = 2;
-		equals(a.b.c.d.e.x, 1);
-		equals(a.b.c.d.e.f, 2);
+		equal(a.b.c.d.e.x, 1);
+		equal(a.b.c.d.e.f, 2);
 	});
 
 	test('tinymce - get', 2, function() {
 		tinymce.createNS('a.b.c.d.e');
 		a.b.c.d.e.x = 1;
-		equals(tinymce.resolve('a.b.c.d.e.x'), 1);
+		equal(tinymce.resolve('a.b.c.d.e.x'), 1);
 		ok(!tinymce.resolve('a.b.c.d.e.y'));
 	});
 })();

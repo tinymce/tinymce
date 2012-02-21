@@ -30,7 +30,7 @@ test('apply inline to a list', function(){
 	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b></p><ul><li><b>first element</b></li><li><b>second element</b></li></ul><p><b>5678</b></p>', 'selection of a list');
+	equal(getContent(), '<p><b>1234</b></p><ul><li><b>first element</b></li><li><b>second element</b></li></ul><p><b>5678</b></p>', 'selection of a list');
 	
 });
 
@@ -43,7 +43,7 @@ test('Toggle OFF - Inline element on selected text', function() {
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.toggle('format');
-	equals(getContent(), '<p><b>1234</b></p>');
+	equal(getContent(), '<p><b>1234</b></p>');
 });
 
 test('Toggle OFF - Inline element on partially selected text', function() {
@@ -55,7 +55,7 @@ test('Toggle OFF - Inline element on partially selected text', function() {
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 	editor.formatter.toggle('format');
-	equals(getContent(), '<p>1<b>23</b>4</p>');
+	equal(getContent(), '<p>1<b>23</b>4</p>');
 });
 
 test('Toggle OFF - Inline element on partially selected text in start/end elements', function() {
@@ -67,7 +67,7 @@ test('Toggle OFF - Inline element on partially selected text in start/end elemen
 	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.toggle('format');
-	equals(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>');
+	equal(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>');
 });
 
 test('Toggle ON - NO inline element on selected text', function() {
@@ -79,9 +79,9 @@ test('Toggle ON - NO inline element on selected text', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b></p>', 'Inline element on selected text');
+	equal(getContent(), '<p><b>1234</b></p>', 'Inline element on selected text');
 	editor.formatter.toggle('format');
-	equals(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on selected text');
+	equal(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on selected text');
 });
 
 test('Selection spanning from within format to outside format with toggle off', function() {
@@ -92,7 +92,7 @@ test('Selection spanning from within format to outside format with toggle off', 
 	rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
 	editor.selection.setRng(rng);
 	editor.formatter.toggle('format');
-	equals(getContent(), '<p><b>1234</b></p>', 'Extend formating if start of selection is already formatted');
+	equal(getContent(), '<p><b>1234</b></p>', 'Extend formating if start of selection is already formatted');
 });
 
 test('Inline element on partially selected text', function() {
@@ -103,9 +103,9 @@ test('Inline element on partially selected text', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p>1<b>23</b>4</p>', 'Inline element on partially selected text');
+	equal(getContent(), '<p>1<b>23</b>4</p>', 'Inline element on partially selected text');
 	editor.formatter.toggle('format');
-	equals(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on partially selected text');
+	equal(getContent(), '<p>1234</p>', 'Toggle ON - NO inline element on partially selected text');
 });
 
 test('Inline element on partially selected text in start/end elements', function() {
@@ -117,7 +117,7 @@ test('Inline element on partially selected text in start/end elements', function
 	rng.setEnd(editor.dom.select('p')[1].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>');
+	equal(getContent(), '<p>1<b>234</b></p><p><b>123</b>4</p>');
 });
 
 test('Inline element on selected element', function() {
@@ -128,7 +128,7 @@ test('Inline element on selected element', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b></p>', 'Inline element on selected element');
+	equal(getContent(), '<p><b>1234</b></p>', 'Inline element on selected element');
 });
 
 test('Inline element on multiple selected elements', function() {
@@ -139,7 +139,7 @@ test('Inline element on multiple selected elements', function() {
 	rng.setEnd(editor.getBody(), 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b></p><p><b>1234</b></p>', 'Inline element on multiple selected elements');
+	equal(getContent(), '<p><b>1234</b></p><p><b>1234</b></p>', 'Inline element on multiple selected elements');
 });
 
 test('Inline element on multiple selected elements with various childnodes', function() {
@@ -150,7 +150,7 @@ test('Inline element on multiple selected elements with various childnodes', fun
 	rng.setEnd(editor.getBody(), 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b><em>1234</em>5678<span>9</span></b></p><p><b><em>1234</em>5678<span>9</span></b></p>', 'Inline element on multiple selected elements with various childnodes');
+	equal(getContent(), '<p><b><em>1234</em>5678<span>9</span></b></p><p><b><em>1234</em>5678<span>9</span></b></p>', 'Inline element on multiple selected elements with various childnodes');
 });
 
 test('Inline element with attributes', function() {
@@ -161,7 +161,7 @@ test('Inline element with attributes', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b id="value2" title="value1">1234</b></p>', 'Inline element with attributes');
+	equal(getContent(), '<p><b id="value2" title="value1">1234</b></p>', 'Inline element with attributes');
 });
 
 test('Inline element with styles', function() {
@@ -172,7 +172,7 @@ test('Inline element with styles', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
+	equal(getContent(), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
 });
 
 test('Inline element with attributes and styles', function() {
@@ -183,7 +183,7 @@ test('Inline element with attributes and styles', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>', 'Inline element with attributes and styles');
+	equal(getContent(), '<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>', 'Inline element with attributes and styles');
 });
 
 test('Inline element with wrapable parents', function() {
@@ -194,7 +194,7 @@ test('Inline element with wrapable parents', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p>x<b><em><span>1234</span></em></b>y</p>', 'Inline element with wrapable parents');
+	equal(getContent(), '<p>x<b><em><span>1234</span></em></b>y</p>', 'Inline element with wrapable parents');
 });
 
 test('Inline element with redundant child', function() {
@@ -205,7 +205,7 @@ test('Inline element with redundant child', function() {
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b></p>', 'Inline element with redundant child');
+	equal(getContent(), '<p><b>1234</b></p>', 'Inline element with redundant child');
 });
 
 test('Inline element with redundant parent', function() {
@@ -216,7 +216,7 @@ test('Inline element with redundant parent', function() {
 	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>a<em>1234</em>b</b></p>', 'Inline element with redundant parent');
+	equal(getContent(), '<p><b>a<em>1234</em>b</b></p>', 'Inline element with redundant parent');
 });
 
 test('Inline element with redundant child of similar type 1', function() {
@@ -230,7 +230,7 @@ test('Inline element with redundant child of similar type 1', function() {
 	rng.setEnd(editor.dom.select('p')[0], 3);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>a1234b</b></p>', 'Inline element with redundant child of similar type 1');
+	equal(getContent(), '<p><b>a1234b</b></p>', 'Inline element with redundant child of similar type 1');
 });
 
 test('Inline element with redundant child of similar type 2', function() {
@@ -244,7 +244,7 @@ test('Inline element with redundant child of similar type 2', function() {
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b></p>', 'Inline element with redundant child of similar type 2');
+	equal(getContent(), '<p><b>1234</b></p>', 'Inline element with redundant child of similar type 2');
 });
 
 test('Inline element with redundant children of similar types', function() {
@@ -259,7 +259,7 @@ test('Inline element with redundant children of similar types', function() {
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>a12345678b</b></p>', 'Inline element with redundant children of similar types');
+	equal(getContent(), '<p><b>a12345678b</b></p>', 'Inline element with redundant children of similar types');
 });
 
 test('Inline element with redundant parent 1', function() {
@@ -273,7 +273,7 @@ test('Inline element with redundant parent 1', function() {
 	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><strong>a<em>1234</em>b</strong></p>', 'Inline element with redundant parent 1');
+	equal(getContent(), '<p><strong>a<em>1234</em>b</strong></p>', 'Inline element with redundant parent 1');
 });
 
 test('Inline element with redundant parent 2', function() {
@@ -287,7 +287,7 @@ test('Inline element with redundant parent 2', function() {
 	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style="font-weight: bold;">a<em>1234</em>b</span></p>', 'Inline element with redundant parent 2');
+	equal(getContent(), '<p><span style="font-weight: bold;">a<em>1234</em>b</span></p>', 'Inline element with redundant parent 2');
 });
 
 test('Inline element with redundant parents of similar types', function() {
@@ -302,7 +302,7 @@ test('Inline element with redundant parents of similar types', function() {
 	rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style="font-weight: bold;"><strong><b>a<em>1234</em>b</b></strong></span></p>', 'Inline element with redundant parents of similar types');
+	equal(getContent(), '<p><span style="font-weight: bold;"><strong><b>a<em>1234</em>b</b></strong></span></p>', 'Inline element with redundant parents of similar types');
 });
 
 test('Inline element merged with parent and child', function() {
@@ -313,7 +313,7 @@ test('Inline element merged with parent and child', function() {
 	rng.setEnd(editor.dom.select('b')[0].lastChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p>a<b>123456</b>b</p>', 'Inline element merged with parent and child');
+	equal(getContent(), '<p>a<b>123456</b>b</p>', 'Inline element merged with parent and child');
 });
 
 test('Inline element merged with child 1', function() {
@@ -324,7 +324,7 @@ test('Inline element merged with child 1', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style="font-weight: bold;">a1234b</span></p>', 'Inline element merged with child 1');
+	equal(getContent(), '<p><span style="font-weight: bold;">a1234b</span></p>', 'Inline element merged with child 1');
 });
 
 test('Inline element merged with child 2', function() {
@@ -335,7 +335,7 @@ test('Inline element merged with child 2', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style=\"font-weight: bold;\">a<span style=\"color: #ff0000;\">1234</span>b</span></p>', 'Inline element merged with child 2');
+	equal(getContent(), '<p><span style=\"font-weight: bold;\">a<span style=\"color: #ff0000;\">1234</span>b</span></p>', 'Inline element merged with child 2');
 });
 
 test('Inline element merged with child 3', function() {
@@ -346,7 +346,7 @@ test('Inline element merged with child 3', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style=\"font-weight: bold;\">a<span id=\"id\">1234</span>b</span></p>', 'Inline element merged with child 3');
+	equal(getContent(), '<p><span style=\"font-weight: bold;\">a<span id=\"id\">1234</span>b</span></p>', 'Inline element merged with child 3');
 });
 
 test('Inline element merged with child 3', function() {
@@ -357,7 +357,7 @@ test('Inline element merged with child 3', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style="color: #ff0000; font-weight: bold;">1234</span></p>', 'Inline element merged with child 3');
+	equal(getContent(), '<p><span style="color: #ff0000; font-weight: bold;">1234</span></p>', 'Inline element merged with child 3');
 });
 
 test('Inline element merged with child 4', function() {
@@ -368,7 +368,7 @@ test('Inline element merged with child 4', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style="color: #00ff00;">1234</span></p>', 'Inline element merged with child 4');
+	equal(getContent(), '<p><span style="color: #00ff00;">1234</span></p>', 'Inline element merged with child 4');
 });
 
 test('Inline element with attributes merged with child 1', function() {
@@ -379,7 +379,7 @@ test('Inline element with attributes merged with child 1', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><font face="arial" size="7">1234</font></p>', 'Inline element with attributes merged with child 1');
+	equal(getContent(), '<p><font face="arial" size="7">1234</font></p>', 'Inline element with attributes merged with child 1');
 });
 
 test('Inline element with attributes merged with child 2', function() {
@@ -390,7 +390,7 @@ test('Inline element with attributes merged with child 2', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><font size="7">a1234b</font></p>', 'Inline element with attributes merged with child 2');
+	equal(getContent(), '<p><font size="7">a1234b</font></p>', 'Inline element with attributes merged with child 2');
 });
 
 test('Inline element merged with left sibling', function() {
@@ -401,7 +401,7 @@ test('Inline element merged with left sibling', function() {
 	rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>12345678</b></p>', 'Inline element merged with left sibling');
+	equal(getContent(), '<p><b>12345678</b></p>', 'Inline element merged with left sibling');
 });
 
 test('Inline element merged with right sibling', function() {
@@ -412,7 +412,7 @@ test('Inline element merged with right sibling', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>12345678</b></p>', 'Inline element merged with right sibling');
+	equal(getContent(), '<p><b>12345678</b></p>', 'Inline element merged with right sibling');
 });
 
 test('Inline element merged with left and right siblings', function() {
@@ -423,7 +423,7 @@ test('Inline element merged with left and right siblings', function() {
 	rng.setEnd(editor.dom.select('p')[0].childNodes[1], 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
+	equal(getContent(), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
 });
 
 test('Don\'t merge siblings with whitespace between 1', function() {
@@ -434,7 +434,7 @@ test('Don\'t merge siblings with whitespace between 1', function() {
 	rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 1');
+	equal(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 1');
 });
 
 test('Don\'t merge siblings with whitespace between 1', function() {
@@ -445,7 +445,7 @@ test('Don\'t merge siblings with whitespace between 1', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 2');
+	equal(getContent(), '<p><b>a</b> <b>b</b></p>', 'Don\'t merge siblings with whitespace between 2');
 });
 
 test('Inline element not merged in exact mode', function() {
@@ -456,7 +456,7 @@ test('Inline element not merged in exact mode', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style="color: #00ff00;"><span style="color: #ff0000;">1234</span></span></p>', 'Inline element not merged in exact mode');
+	equal(getContent(), '<p><span style="color: #00ff00;"><span style="color: #ff0000;">1234</span></span></p>', 'Inline element not merged in exact mode');
 });
 
 test('Inline element merged in exact mode', function() {
@@ -467,7 +467,7 @@ test('Inline element merged in exact mode', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style="color: #ff0000;">1234</span></p>', 'Inline element merged in exact mode');
+	equal(getContent(), '<p><span style="color: #ff0000;">1234</span></p>', 'Inline element merged in exact mode');
 });
 
 test('Deep left branch', function() {
@@ -478,7 +478,7 @@ test('Deep left branch', function() {
 	rng.setEnd(editor.dom.select('p')[2].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><em><i><ins>1<b>234</b></ins></i></em><b><em>text1</em><em>text2</em></b></p><p><b><em>5678</em></b></p><p><b>9012</b></p>', 'Deep left branch');
+	equal(getContent(), '<p><em><i><ins>1<b>234</b></ins></i></em><b><em>text1</em><em>text2</em></b></p><p><b><em>5678</em></b></p><p><b>9012</b></p>', 'Deep left branch');
 });
 
 test('Deep right branch', function() {
@@ -489,7 +489,7 @@ test('Deep right branch', function() {
 	rng.setEnd(editor.dom.select('em')[3].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>9012</b></p><p><b><em>5678</em></b></p><p><b><em><i><ins>1234</ins></i></em><em>text1</em></b><em><b>text</b>2</em></p>', 'Deep right branch');
+	equal(getContent(), '<p><b>9012</b></p><p><b><em>5678</em></b></p><p><b><em><i><ins>1234</ins></i></em><em>text1</em></b><em><b>text</b>2</em></p>', 'Deep right branch');
 });
 
 test('Full element text selection on two elements with a table in the middle', function() {
@@ -500,7 +500,7 @@ test('Full element text selection on two elements with a table in the middle', f
 	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><b>1234</b></p><table><tbody><tr><td><b>123</b></td></tr></tbody></table><p><b>5678</b></p>', 'Full element text selection on two elements with a table in the middle');
+	equal(getContent(), '<p><b>1234</b></p><table><tbody><tr><td><b>123</b></td></tr></tbody></table><p><b>5678</b></p>', 'Full element text selection on two elements with a table in the middle');
 });
 
 test('Inline element on selected text with variables', function() {
@@ -511,7 +511,7 @@ test('Inline element on selected text with variables', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format', {color : '#ff0000', title : 'title'});
-	equals(getContent(), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
+	equal(getContent(), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
 });
 
 test('Remove redundant children', function() {
@@ -522,7 +522,7 @@ test('Remove redundant children', function() {
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p><span style=\"font-family: ' + fontFace('arial') + ';\">1234</span></p>', 'Remove redundant children');
+	equal(getContent(), '<p><span style=\"font-family: ' + fontFace('arial') + ';\">1234</span></p>', 'Remove redundant children');
 });
 
 test('Inline element on selected text with function values', function() {
@@ -548,7 +548,7 @@ test('Inline element on selected text with function values', function() {
 		color : '#ff',
 		title : 'title'
 	});
-	equals(getContent(), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
+	equal(getContent(), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
 });
 
 test('Block element on selected text', function() {
@@ -559,7 +559,7 @@ test('Block element on selected text', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div>1234</div>', 'Block element on selected text');
+	equal(getContent(), '<div>1234</div>', 'Block element on selected text');
 });
 
 test('Block element on partially selected text', function() {
@@ -570,7 +570,7 @@ test('Block element on partially selected text', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div>1234</div>', 'Block element on partially selected text');
+	equal(getContent(), '<div>1234</div>', 'Block element on partially selected text');
 });
 
 test('Block element on selected element', function() {
@@ -581,7 +581,7 @@ test('Block element on selected element', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div>1234</div>', 'Block element on selected element');
+	equal(getContent(), '<div>1234</div>', 'Block element on selected element');
 });
 
 test('Block element on selected elements', function() {
@@ -592,7 +592,7 @@ test('Block element on selected elements', function() {
 	rng.setEnd(editor.getBody(), 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div>1234</div><div>5678</div>', 'Block element on selected elements');
+	equal(getContent(), '<div>1234</div><div>5678</div>', 'Block element on selected elements');
 });
 
 test('Block element on selected elements with attributes', function() {
@@ -603,7 +603,7 @@ test('Block element on selected elements with attributes', function() {
 	rng.setEnd(editor.getBody(), 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div title="test">1234</div><div title="test">5678</div>', 'Block element on selected elements with attributes');
+	equal(getContent(), '<div title="test">1234</div><div title="test">5678</div>', 'Block element on selected elements with attributes');
 });
 
 test('Block element on nested element', function() {
@@ -614,7 +614,7 @@ test('Block element on nested element', function() {
 	rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div><p>1234</p></div>', 'Block element on nested element');
+	equal(getContent(), '<div><p>1234</p></div>', 'Block element on nested element');
 });
 
 test('Block element on selected non wrapped text 1', function() {
@@ -625,7 +625,7 @@ test('Block element on selected non wrapped text 1', function() {
 	rng.setEnd(editor.getBody().firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div>1234</div>', 'Block element on selected non wrapped text 1');
+	equal(getContent(), '<div>1234</div>', 'Block element on selected non wrapped text 1');
 });
 
 test('Block element on selected non wrapped text 2', function() {
@@ -636,7 +636,7 @@ test('Block element on selected non wrapped text 2', function() {
 	rng.setEnd(editor.getBody().lastChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 2');
+	equal(getContent(), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 2');
 });
 
 test('Block element on selected non wrapped text 3', function() {
@@ -647,7 +647,7 @@ test('Block element on selected non wrapped text 3', function() {
 	rng.setEnd(editor.getBody(), 7);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 3');
+	equal(getContent(), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 3');
 });
 
 test('Block element wrapper 1', function() {
@@ -658,7 +658,7 @@ test('Block element wrapper 1', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<blockquote><h1>1234</h1><p>5678</p></blockquote>', 'Block element wrapper 1');
+	equal(getContent(), '<blockquote><h1>1234</h1><p>5678</p></blockquote>', 'Block element wrapper 1');
 });
 
 test('Block element wrapper 2', function() {
@@ -669,7 +669,7 @@ test('Block element wrapper 2', function() {
 	rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 2');
+	equal(getContent(), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 2');
 });
 
 test('Block element wrapper 3', function() {
@@ -680,7 +680,7 @@ test('Block element wrapper 3', function() {
 	rng.setEnd(editor.getBody(), 3);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 3');
+	equal(getContent(), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 3');
 });
 
 test('Apply format on single element that matches a selector 1', function() {
@@ -691,7 +691,7 @@ test('Apply format on single element that matches a selector 1', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p class="a b c" style="color: #ff0000;" title="test">1234</p>', 'Apply format on single element that matches a selector');
+	equal(getContent(), '<p class="a b c" style="color: #ff0000;" title="test">1234</p>', 'Apply format on single element that matches a selector');
 });
 
 test('Apply format on single element parent that matches a selector 2', function() {
@@ -702,7 +702,7 @@ test('Apply format on single element parent that matches a selector 2', function
 	rng.setEnd(editor.dom.select('div')[0], 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div class="a b c" style="color: #ff0000;" title="test"><p>1234</p><p>test</p><p>1234</p></div>', 'Apply format on single element parent that matches a selector');
+	equal(getContent(), '<div class="a b c" style="color: #ff0000;" title="test"><p>1234</p><p>test</p><p>1234</p></div>', 'Apply format on single element parent that matches a selector');
 });
 
 test('Apply format on multiple elements that matches a selector 2', function() {
@@ -713,7 +713,7 @@ test('Apply format on multiple elements that matches a selector 2', function() {
 	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p class="a b c" style="color: #ff0000;" title="test">1234</p><div>test</div><p class="a b c" style="color: #ff0000;" title="test">1234</p>', 'Apply format on multiple elements that matches a selector');
+	equal(getContent(), '<p class="a b c" style="color: #ff0000;" title="test">1234</p><div>test</div><p class="a b c" style="color: #ff0000;" title="test">1234</p>', 'Apply format on multiple elements that matches a selector');
 });
 
 test('Apply format on top of existing selector element', function() {
@@ -724,7 +724,7 @@ test('Apply format on top of existing selector element', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>', 'Apply format on top of existing selector element');
+	equal(getContent(), '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>', 'Apply format on top of existing selector element');
 });
 
 test('Format on single li that matches a selector', function() {
@@ -735,7 +735,7 @@ test('Format on single li that matches a selector', function() {
 	rng.setEnd(editor.dom.select('div')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div><span class="a b c" style="color: #ff0000;" title="test">text</span></div>', 'Apply format on single element that matches a selector');
+	equal(getContent(), '<div><span class="a b c" style="color: #ff0000;" title="test">text</span></div>', 'Apply format on single element that matches a selector');
 });
 
 test('Format on single div that matches a selector', function() {
@@ -746,7 +746,7 @@ test('Format on single div that matches a selector', function() {
 	rng.setEnd(editor.dom.select('div')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<div class="a b c" style="color: #ff0000;" title="test">text</div>', 'Apply format on single element that matches a selector');
+	equal(getContent(), '<div class="a b c" style="color: #ff0000;" title="test">text</div>', 'Apply format on single element that matches a selector');
 });
 
 test('Bold and italics is applied to text that is not highlighted', function() {
@@ -757,7 +757,7 @@ test('Bold and italics is applied to text that is not highlighted', function() {
 	editor.focus();
 	editor.selection.setRng(rng);
 	editor.execCommand('Italic');
-	equals(editor.getContent(), '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
+	equal(editor.getContent(), '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>', 'Selected text should be bold.');
 });
 
 test('No wrapping of links', function() {
@@ -770,7 +770,7 @@ test('No wrapping of links', function() {
 	editor.formatter.register('format', {inline : 'span', styles : {color : '#FF0000'}, wrap_links : false});
 	editor.formatter.apply('format');
 
-	equals(editor.getContent(), '<p><span style="color: #ff0000;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+	equal(editor.getContent(), '<p><span style="color: #ff0000;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
 });
 
 test('Color on link element', function() {
@@ -783,7 +783,7 @@ test('Color on link element', function() {
 	editor.formatter.register('format', {inline : 'span', styles : {color : '#FF0000'}, wrap_links : false});
 	editor.formatter.apply('format');
 
-	equals(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
+	equal(editor.getContent(), '<p><span style="color: #ff0000; font-size: 10px;">123<a href="#"><span style="color: #ff0000;">abc</span></a>456</span></p>', 'Link should have it\'s own span.');
 });
 
 test("Applying formats in lists", function(){
@@ -793,7 +793,7 @@ test("Applying formats in lists", function(){
 	rng.setEnd(editor.dom.select('li')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>', "heading should not automatically apply to sublists");
+	equal(editor.getContent(), '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>', "heading should not automatically apply to sublists");
 });
 
 test('Block format on li element', function() {
@@ -803,7 +803,7 @@ test('Block format on li element', function() {
 	rng.setEnd(editor.dom.select('li')[1].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul><li><h1>text</h1><ul><li><h1>nested</h1></li></ul></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equal(editor.getContent(), '<ul><li><h1>text</h1><ul><li><h1>nested</h1></li></ul></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 });
 
 test('Block on li element 2', function() {
@@ -813,7 +813,7 @@ test('Block on li element 2', function() {
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul><li>before<ul><li>nested</li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equal(editor.getContent(), '<ul><li>before<ul><li>nested</li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 });
 
 test('Block on li element 3', function() {
@@ -823,7 +823,7 @@ test('Block on li element 3', function() {
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul><li>before<ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
+	equal(editor.getContent(), '<ul><li>before<ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should automatically apply to sublists, when selection spans the sublist");
 });
 
 test('Block on li element 4', function() {
@@ -833,7 +833,7 @@ test('Block on li element 4', function() {
 	rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
 	editor.selection.setRng(rng);
 	editor.formatter.apply("h1");
-	equals(editor.getContent(), '<ul><li><h1>before</h1><ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should apply correctly when selection is after a sublist");
+	equal(editor.getContent(), '<ul><li><h1>before</h1><ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>', "heading should apply correctly when selection is after a sublist");
 });
 
 test('Underline colors 1', function() {
@@ -841,7 +841,7 @@ test('Underline colors 1', function() {
 	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;">test</span></p>');
 	editor.execCommand('SelectAll');
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>', 'Coloring an underlined text should result in a colored underline');
+	equal(editor.getContent(), '<p><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></p>', 'Coloring an underlined text should result in a colored underline');
 });
 
 test('Underline colors 2', function() {
@@ -849,7 +849,7 @@ test('Underline colors 2', function() {
 	editor.setContent('<p><span style="font-family: \'arial black\'; color: rgb(255, 0, 0);">test</span></p>');
 	editor.execCommand('SelectAll');
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></span></p>', 'Underlining colored text should result in a colored underline');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: \'arial black\'; text-decoration: underline;">test</span></span></p>', 'Underlining colored text should result in a colored underline');
 });
 
 test('Underline colors 3', function() {
@@ -857,7 +857,7 @@ test('Underline colors 3', function() {
 	editor.setContent('<p><span style="font-family: \'arial black\'; text-decoration: underline;"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>');
 	editor.execCommand('SelectAll');
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline');
 });
 
 test('Underline colors 4', function() {
@@ -868,7 +868,7 @@ test('Underline colors 4', function() {
 	rng.setEnd(editor.dom.select('span')[1].firstChild, 9);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(getContent(), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow; text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>', 'Coloring an colored underdlined text should result in newly colored underline');
+	equal(getContent(), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow; text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>', 'Coloring an colored underdlined text should result in newly colored underline');
 });
 
 test('Underline colors 5', function() {
@@ -879,7 +879,7 @@ test('Underline colors 5', function() {
 	rng.setEnd(editor.dom.select('span')[4].lastChild, 5);
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\',\'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \'arial black\', \'avant garde\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>', 'Colored elements should be underlined when selection is across multiple paragraphs');
 });
 
 test('Underline colors 6', function() {
@@ -891,7 +891,7 @@ test('Underline colors 6', function() {
 	editor.selection.setRng(rng);
 	editor.formatter.apply('format');
 	editor.formatter.remove('format');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;">This is some text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;">This is some text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 });
 
 test('Underline colors 7', function() {
@@ -902,7 +902,7 @@ test('Underline colors 7', function() {
 	rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
+	equal(editor.getContent(), '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">some</span> text.</span></p>', 'Children nodes that are underlined should be removed if their parent nodes are underlined');
 });
 
 test('Caret format inside single block word', function() {
@@ -910,7 +910,7 @@ test('Caret format inside single block word', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('p', 2, 'p', 2);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><b>abc</b></p>');
+	equal(editor.getContent(), '<p><b>abc</b></p>');
 });
 
 test('Caret format inside first block word', function() {
@@ -918,7 +918,7 @@ test('Caret format inside first block word', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('p', 2, 'p', 2);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><b>abc</b> 123</p>');
+	equal(editor.getContent(), '<p><b>abc</b> 123</p>');
 });
 
 test('Caret format inside last block word', function() {
@@ -926,7 +926,7 @@ test('Caret format inside last block word', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('p', 5, 'p', 5);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p>abc <b>123</b></p>');
+	equal(editor.getContent(), '<p>abc <b>123</b></p>');
 });
 
 test('Caret format inside middle block word', function() {
@@ -934,7 +934,7 @@ test('Caret format inside middle block word', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('p', 5, 'p', 5);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p>abc <b>123</b> 456</p>');
+	equal(editor.getContent(), '<p>abc <b>123</b> 456</p>');
 });
 
 test('Caret format on word separated by non breaking space', function() {
@@ -942,7 +942,7 @@ test('Caret format on word separated by non breaking space', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('p', 1, 'p', 1);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p><b>one</b>\u00a0two</p>');
+	equal(editor.getContent(), '<p><b>one</b>\u00a0two</p>');
 });
 
 test('Caret format inside single inline wrapped word', function() {
@@ -950,7 +950,7 @@ test('Caret format inside single inline wrapped word', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('em', 1, 'em', 1);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
+	equal(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
 });
 
 test('Caret format inside last inline wrapped word', function() {
@@ -958,7 +958,7 @@ test('Caret format inside last inline wrapped word', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('em', 5, 'em', 5);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p>abc <em>abc <b>123</b></em> 456</p>');
+	equal(editor.getContent(), '<p>abc <em>abc <b>123</b></em> 456</p>');
 });
 
 test('Caret format before text', function() {
@@ -967,7 +967,7 @@ test('Caret format before text', function() {
 	setSelection('p', 0, 'p', 0);
 	editor.formatter.apply('format');
 	type('b');
-	equals(editor.getContent(), '<p><b>b</b>a</p>');
+	equal(editor.getContent(), '<p><b>b</b>a</p>');
 });
 
 test('Caret format after text', function() {
@@ -976,7 +976,7 @@ test('Caret format after text', function() {
 	setSelection('p', 1, 'p', 1);
 	editor.formatter.apply('format');
 	type('b');
-	equals(editor.getContent(), '<p>a<b>b</b></p>');
+	equal(editor.getContent(), '<p>a<b>b</b></p>');
 });
 
 test('Caret format and no key press', function() {
@@ -984,7 +984,7 @@ test('Caret format and no key press', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('p', 0, 'p', 0);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p>a</p>');
+	equal(editor.getContent(), '<p>a</p>');
 });
 
 test('Caret format and arrow left', function() {
@@ -993,7 +993,7 @@ test('Caret format and arrow left', function() {
 	setSelection('p', 0, 'p', 0);
 	editor.formatter.apply('format');
 	type({keyCode: 37});
-	equals(editor.getContent(), '<p>a</p>');
+	equal(editor.getContent(), '<p>a</p>');
 });
 
 test('Caret format and arrow right', function() {
@@ -1002,7 +1002,7 @@ test('Caret format and arrow right', function() {
 	setSelection('p', 0, 'p', 0);
 	editor.formatter.apply('format');
 	type({keyCode: 39});
-	equals(editor.getContent(), '<p>a</p>');
+	equal(editor.getContent(), '<p>a</p>');
 });
 
 test('Caret format and backspace', function() {
@@ -1023,7 +1023,7 @@ test('Caret format and backspace', function() {
 
 	editor.formatter.apply('format');
 	type('\b');
-	equals(editor.getContent(), '<p>ab</p>');
+	equal(editor.getContent(), '<p>ab</p>');
 });
 
 test('Caret format on word in li with word in parent li before it', function() {
@@ -1031,7 +1031,7 @@ test('Caret format on word in li with word in parent li before it', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('ul li li', 1, 'ul li li', 1);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
+	equal(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
 });
 
 test('Selector format on whole contents', function() {
@@ -1039,7 +1039,7 @@ test('Selector format on whole contents', function() {
 	editor.formatter.register('format', {inline: 'span', selector: '*', classes: 'test'});
 	setSelection('p', 0, 'p', 1);
 	editor.formatter.apply('format');
-	equals(editor.getContent(), '<p class="test">a</p>');
+	equal(editor.getContent(), '<p class="test">a</p>');
 });
 
 /*
@@ -1053,7 +1053,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>1234</li></ol>', 'Ordered list on paragraph text');
+	equal(getContent(), '<ol><li>1234</li></ol>', 'Ordered list on paragraph text');
 
 	// Ordered list on the text of two selected paragraphs
 	editor.getBody().innerHTML = '<p>1234</p><p>5678</p>';
@@ -1062,7 +1062,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>1234</li><li>5678</li></ol>', 'Ordered list on the text of two selected paragraphs');
+	equal(getContent(), '<ol><li>1234</li><li>5678</li></ol>', 'Ordered list on the text of two selected paragraphs');
 
 	// Ordered list on two selected paragraph elements
 	editor.getBody().innerHTML = '<p>1234</p><p>5678</p>';
@@ -1071,7 +1071,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.getBody(), 2);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>1234</li><li>5678</li></ol>', 'Ordered list on two selected paragraph elements');
+	equal(getContent(), '<ol><li>1234</li><li>5678</li></ol>', 'Ordered list on two selected paragraph elements');
 
 	// Ordered list on selected paragraph text before similar list
 	editor.getBody().innerHTML = '<p>1234</p><ol><li>abc</li></ol>';
@@ -1080,7 +1080,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>1234</li><li>abc</li></ol>', 'Ordered list on selected paragraph text before similar list');
+	equal(getContent(), '<ol><li>1234</li><li>abc</li></ol>', 'Ordered list on selected paragraph text before similar list');
 
 	// Ordered list on selected paragraph text after similar list
 	editor.getBody().innerHTML = '<ol><li>abc</li></ol><p>1234</p>';
@@ -1089,7 +1089,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>abc</li><li>1234</li></ol>', 'Ordered list on selected paragraph text after similar list');
+	equal(getContent(), '<ol><li>abc</li><li>1234</li></ol>', 'Ordered list on selected paragraph text after similar list');
 
 	// Ordered list on selected paragraph text between similar list
 	editor.getBody().innerHTML = '<ol><li>1234</li></ol><p>5678</p><ol><li>9123</li></ol>';
@@ -1098,7 +1098,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>1234</li><li>5678</li><li>9123</li></ol>', 'Ordered list on selected paragraph text between similar list');
+	equal(getContent(), '<ol><li>1234</li><li>5678</li><li>9123</li></ol>', 'Ordered list on selected paragraph text between similar list');
 
 	// Ordered list on selected unordered list item text
 	editor.getBody().innerHTML = '<ul><li>1234</li></ul>';
@@ -1107,7 +1107,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.dom.select('li')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>1234</li></ol>', 'Ordered list on selected unordered list item text');
+	equal(getContent(), '<ol><li>1234</li></ol>', 'Ordered list on selected unordered list item text');
 
 	// Ordered list on selected unordered list with sublists
 	editor.getBody().innerHTML = '<ul><li>1234<ul><li>1234</li></ul></li></ul>';
@@ -1116,7 +1116,7 @@ test('apply (list block)', function() {
 	rng.setEnd(editor.dom.select('li')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.apply({list_block : 'ol', replace : 'ul', list_item : 'li'});
-	equals(getContent(), '<ol><li>1234<ol><li>1234</li></ol></li></ol>', 'Ordered list on selected unordered list with sublists');
+	equal(getContent(), '<ol><li>1234<ol><li>1234</li></ol></li></ol>', 'Ordered list on selected unordered list with sublists');
 });
 */
 

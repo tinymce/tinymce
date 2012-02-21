@@ -23,7 +23,7 @@ module("tinymce.util.Dispatcher");
 			v = a + b + c;
 		});
 		ev.dispatch(1, 2, 3);
-		equals(v, 6);
+		equal(v, 6);
 
 		ev = new Dispatcher();
 		v = 0;
@@ -32,7 +32,7 @@ module("tinymce.util.Dispatcher");
 		});
 		ev.remove(f);
 		ev.dispatch(1, 2, 3);
-		equals(v, 0);
+		equal(v, 0);
 
 		ev = new Dispatcher({test : 1});
 		v = 0;
@@ -40,7 +40,7 @@ module("tinymce.util.Dispatcher");
 			v = a + b + c + this.test;
 		});
 		ev.dispatch(1, 2, 3);
-		equals(v, 7);
+		equal(v, 7);
 
 		ev = new Dispatcher();
 		v = 0;
@@ -48,7 +48,7 @@ module("tinymce.util.Dispatcher");
 			v = a + b + c + this.test;
 		}, {test : 1});
 		ev.dispatch(1, 2, 3);
-		equals(v, 7);
+		equal(v, 7);
 
 		ev = new Dispatcher();
 		v = '';
@@ -59,7 +59,7 @@ module("tinymce.util.Dispatcher");
 			v += 'a';
 		}, {test : 1});
 		ev.dispatch();
-		equals(v, 'ab');
+		equal(v, 'ab');
 	});
 })();
 </script>

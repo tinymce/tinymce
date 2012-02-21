@@ -58,7 +58,7 @@ var runTests = function(editor) {
 	test('editor initialized with async load of tinyMCE', 1, function() {
 		editor.focus();
 		editor.setContent('test 123');
-		equals(editor.getContent(), '<p>test 123</p>');
+		equal(editor.getContent(), '<p>test 123</p>');
 	});
 	QUnit.start();
 };

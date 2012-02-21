@@ -33,11 +33,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, '#text', 'Start container is text node');
-		equals(rng.endContainer.nodeName, '#text', 'End container is text node');
-		equals(rng.startOffset, 0, 'Start of text node');
-		equals(rng.endOffset, 3, 'End of text node');
-		equals(editor.dom.getOuterHTML(rng.cloneContents()), '123', 'Contents matches');
+		equal(rng.startContainer.nodeName, '#text', 'Start container is text node');
+		equal(rng.endContainer.nodeName, '#text', 'End container is text node');
+		equal(rng.startOffset, 0, 'Start of text node');
+		equal(rng.endOffset, 3, 'End of text node');
+		equal(editor.dom.getOuterHTML(rng.cloneContents()), '123', 'Contents matches');
 	});
 	
 	test("Single image selection", function(){
@@ -53,11 +53,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, 'P', 'Check startContainer');
-		equals(rng.endContainer.nodeName, 'P', 'Check endContainer');
-		equals(rng.startOffset, 0, 'Check startOffset');
-		equals(rng.endOffset, 1, 'Check endOffset');
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">', 'Check contents');
+		equal(rng.startContainer.nodeName, 'P', 'Check startContainer');
+		equal(rng.endContainer.nodeName, 'P', 'Check endContainer');
+		equal(rng.startOffset, 0, 'Check startOffset');
+		equal(rng.endOffset, 1, 'Check endOffset');
+		equal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">', 'Check contents');
 		ok(editor.selection.getRng().item, 'Check if it\'s a control selection');
 	});
 	
@@ -74,11 +74,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, 'P');
-		equals(rng.endContainer.nodeName, 'P');
-		equals(rng.startOffset, 0);
-		equals(rng.endOffset, 2);
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank"><img src="about:blank">');
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.endContainer.nodeName, 'P');
+		equal(rng.startOffset, 0);
+		equal(rng.endOffset, 2);
+		equal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank"><img src="about:blank">');
 		ok(editor.selection.getRng().parentElement, 'Is text selection');
 	});
 	
@@ -95,11 +95,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, '#text');
-		equals(rng.endContainer.nodeName, '#text');
-		equals(rng.startOffset, 1);
-		equals(rng.endOffset, 3);
-		equals(editor.dom.getOuterHTML(rng.cloneContents()), '23');
+		equal(rng.startContainer.nodeName, '#text');
+		equal(rng.endContainer.nodeName, '#text');
+		equal(rng.startOffset, 1);
+		equal(rng.endOffset, 3);
+		equal(editor.dom.getOuterHTML(rng.cloneContents()), '23');
 	});
 	
 	test("Text node selection between two elements", function(){
@@ -115,11 +115,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, '#text');
-		equals(rng.endContainer.nodeName, '#text');
-		equals(rng.startOffset, 1);
-		equals(rng.endOffset, 3);
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>234</p><p>abc</p>');
+		equal(rng.startContainer.nodeName, '#text');
+		equal(rng.endContainer.nodeName, '#text');
+		equal(rng.startOffset, 1);
+		equal(rng.endOffset, 3);
+		equal(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>234</p><p>abc</p>');
 		
 		editor.setContent('<p>1</p><p>1234</p><p>abcd</p><p>2</p>', {
 			format: 'raw'
@@ -130,11 +130,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		 rng.setEndAfter(editor.dom.select('p')[2]);
 		 editor.selection.setRng(rng);
 		 rng = editor.selection.getRng(1);
-		 equals(rng.startContainer.nodeName, 'BODY', "startContainer type check");
-		 equals(rng.startOffset, 1, "startOffset doesn't match");
-		 equals(rng.endContainer.nodeName, 'BODY', "endContainer type check");
-		 equals(rng.endOffset, 3, "endOffset doesn't match");
-		 equals(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>1234</p><p>abcd</p>');*/
+		 equal(rng.startContainer.nodeName, 'BODY', "startContainer type check");
+		 equal(rng.startOffset, 1, "startOffset doesn't match");
+		 equal(rng.endContainer.nodeName, 'BODY', "endContainer type check");
+		 equal(rng.endOffset, 3, "endOffset doesn't match");
+		 equal(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\r\n]/g, '').toLowerCase(), '<p>1234</p><p>abcd</p>');*/
 	});
 	
 	test("Mixed selection start at element end at text", function(){
@@ -150,11 +150,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, 'P');
-		equals(rng.endContainer.nodeName, '#text');
-		equals(rng.startOffset, 0);
-		equals(rng.endOffset, 3);
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">tex');
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.endContainer.nodeName, '#text');
+		equal(rng.startOffset, 0);
+		equal(rng.endOffset, 3);
+		equal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">tex');
 	});
 	
 	test("Mixed selection start at text end at element", function(){
@@ -171,13 +171,13 @@ if (tinyMCE.isIE && !window.getSelection) {
 		
 		rng = editor.selection.getRng(1);
 		
-		equals(rng.startContainer.nodeName, '#text');
-		equals(rng.startOffset, 1);
+		equal(rng.startContainer.nodeName, '#text');
+		equal(rng.startOffset, 1);
 		
-		equals(rng.endContainer.nodeName, 'P');
-		equals(rng.endOffset, 2);
+		equal(rng.endContainer.nodeName, 'P');
+		equal(rng.endOffset, 2);
 		
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), 'ext<img src="about:blank">');
+		equal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), 'ext<img src="about:blank">');
 	});
 	
 	test("Caret position before image", function(){
@@ -193,10 +193,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, 'P');
-		equals(rng.endContainer.nodeName, 'P');
-		equals(rng.startOffset, 0);
-		equals(rng.endOffset, 0);
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.endContainer.nodeName, 'P');
+		equal(rng.startOffset, 0);
+		equal(rng.endOffset, 0);
 	});
 	
 	test("Caret position between images", function(){
@@ -212,10 +212,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, 'P');
-		equals(rng.endContainer.nodeName, 'P');
-		equals(rng.startOffset, 1);
-		equals(rng.endOffset, 1);
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.endContainer.nodeName, 'P');
+		equal(rng.startOffset, 1);
+		equal(rng.endOffset, 1);
 	});
 	
 	test("Caret position after image", function(){
@@ -231,10 +231,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, 'P');
-		equals(rng.endContainer.nodeName, 'P');
-		equals(rng.startOffset, 2);
-		equals(rng.endOffset, 2);
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.endContainer.nodeName, 'P');
+		equal(rng.startOffset, 2);
+		equal(rng.endOffset, 2);
 	});
 	
 	test("Selection of empty text element", function(){
@@ -250,12 +250,12 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(true);
-		equals(rng.startContainer.nodeName, 'BODY');
-		equals(rng.endContainer.nodeName, 'BODY');
-		equals(rng.startOffset, 0);
-		equals(rng.endOffset, 1);
-		equals(rng.startContainer.childNodes[0].innerHTML, '');
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div></div>');
+		equal(rng.startContainer.nodeName, 'BODY');
+		equal(rng.endContainer.nodeName, 'BODY');
+		equal(rng.startOffset, 0);
+		equal(rng.endOffset, 1);
+		equal(rng.startContainer.childNodes[0].innerHTML, '');
+		equal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<div></div>');
 	});
 
 	test("Selection of empty text element with caret inside", function(){
@@ -271,12 +271,12 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(rng);
 		
 		rng = editor.selection.getRng(true);
-		equals(rng.startContainer.nodeName, 'DIV');
-		equals(rng.endContainer.nodeName, 'DIV');
-		equals(rng.startOffset, 0);
-		equals(rng.endOffset, 0);
-		equals(rng.startContainer.innerHTML, '');
-		equals(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '');
+		equal(rng.startContainer.nodeName, 'DIV');
+		equal(rng.endContainer.nodeName, 'DIV');
+		equal(rng.startOffset, 0);
+		equal(rng.endOffset, 0);
+		equal(rng.startContainer.innerHTML, '');
+		equal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '');
 	});
 
 	/*test("Caret position before table", function() {
@@ -292,10 +292,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		rng.select();
 
 		rng = editor.selection.getRng(1);
-		equals(rng.startContainer.nodeName, 'BODY');
-		equals(rng.startOffset, 1);
-		equals(rng.endContainer.nodeName, 'BODY');
-		equals(rng.endOffset, 1);
+		equal(rng.startContainer.nodeName, 'BODY');
+		equal(rng.startOffset, 1);
+		equal(rng.endContainer.nodeName, 'BODY');
+		equal(rng.endOffset, 1);
 	});*/
 
 	test("Selection end within empty element", function() {
@@ -307,10 +307,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		rng = editor.execCommand('SelectAll');
 
 		rng = editor.selection.getRng(true);
-		equals(rng.startContainer.nodeName, '#text');
-		equals(rng.startOffset, 0);
-		equals(rng.endContainer.nodeName, 'BODY');
-		equals(rng.endOffset, 2);
+		equal(rng.startContainer.nodeName, '#text');
+		equal(rng.startOffset, 0);
+		equal(rng.endContainer.nodeName, 'BODY');
+		equal(rng.endOffset, 2);
 	});
 
 	test("Selection after paragraph", function() {
@@ -326,10 +326,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 
 		rng = editor.selection.getRng(true);
 		ok(rng.startContainer == rng.endContainer);
-		equals(rng.startContainer.nodeName, '#text');
-		equals(rng.startOffset, 3);
-		equals(rng.endContainer.nodeName, '#text');
-		equals(rng.endOffset, 3);
+		equal(rng.startContainer.nodeName, '#text');
+		equal(rng.startOffset, 3);
+		equal(rng.endContainer.nodeName, '#text');
+		equal(rng.endOffset, 3);
 	});
 
 	test("Selection of text outside of a block element", function() {
@@ -345,12 +345,12 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().lastChild, "Start container is text node.");
-		equals(r.endContainer, editor.getBody().lastChild, "End container is text node.");
-		equals(r.startOffset, 2);
-		equals(r.endOffset, 2);
+		equal(r.startContainer, editor.getBody().lastChild, "Start container is text node.");
+		equal(r.endContainer, editor.getBody().lastChild, "End container is text node.");
+		equal(r.startOffset, 2);
+		equal(r.endOffset, 2);
 
-		equals(editor.selection.getStart(), editor.getBody(), "Selection start is body.");
+		equal(editor.selection.getStart(), editor.getBody(), "Selection start is body.");
 		same(editor.selection.getSelectedBlocks(), [], "No blocks selected.");
 	});
 
@@ -366,10 +366,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().firstChild.lastChild, "Start container is text node.");
-		equals(r.endContainer, editor.getBody().firstChild.lastChild, "End container is text node.");
-		equals(r.startOffset, 1);
-		equals(r.endOffset, 2);
+		equal(r.startContainer, editor.getBody().firstChild.lastChild, "Start container is text node.");
+		equal(r.endContainer, editor.getBody().firstChild.lastChild, "End container is text node.");
+		equal(r.startOffset, 1);
+		equal(r.endOffset, 2);
 	});
 
 	test("Resizable element before table selection", function() {
@@ -384,10 +384,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().firstChild, "Start container is div node.");
-		equals(r.endContainer, editor.getBody().firstChild, "End container is div node.");
-		equals(r.startOffset, 0);
-		equals(r.endOffset, 0);
+		equal(r.startContainer, editor.getBody().firstChild, "Start container is div node.");
+		equal(r.endContainer, editor.getBody().firstChild, "End container is div node.");
+		equal(r.startOffset, 0);
+		equal(r.endOffset, 0);
 	});
 
 	test("Fragmented text nodes after element", function() {
@@ -406,10 +406,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().lastChild, "Start container is last text node.");
-		equals(r.endContainer, editor.getBody().lastChild, "End container is last text node.");
-		equals(r.startOffset, 1);
-		equals(r.endOffset, 1);
+		equal(r.startContainer, editor.getBody().lastChild, "Start container is last text node.");
+		equal(r.endContainer, editor.getBody().lastChild, "End container is last text node.");
+		equal(r.startOffset, 1);
+		equal(r.endOffset, 1);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody().childNodes[2], 2);
@@ -417,10 +417,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node.");
-		equals(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");
-		equals(r.startOffset, 2);
-		equals(r.endOffset, 2);
+		equal(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node.");
+		equal(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");
+		equal(r.startOffset, 2);
+		equal(r.endOffset, 2);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody().childNodes[3], 0);
@@ -428,10 +428,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node (lean left).");
-		equals(r.endContainer, editor.getBody().childNodes[3], "End container is third text node.");
-		equals(r.startOffset, 2);
-		equals(r.endOffset, 1);
+		equal(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node (lean left).");
+		equal(r.endContainer, editor.getBody().childNodes[3], "End container is third text node.");
+		equal(r.startOffset, 2);
+		equal(r.endOffset, 1);
 	});
 
 	test("Fragmented text nodes before element", function() {
@@ -451,11 +451,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().childNodes[3], "Start container is last text node.");
-		equals(r.endContainer, editor.getBody().childNodes[3], "End container is last text node.");
-		equals(r.startContainer.nodeValue, '7890');
-		equals(r.startOffset, 1);
-		equals(r.endOffset, 1);
+		equal(r.startContainer, editor.getBody().childNodes[3], "Start container is last text node.");
+		equal(r.endContainer, editor.getBody().childNodes[3], "End container is last text node.");
+		equal(r.startContainer.nodeValue, '7890');
+		equal(r.startOffset, 1);
+		equal(r.endOffset, 1);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody().childNodes[1], 2);
@@ -463,11 +463,11 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node. (lean right)");
-		equals(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");
-		equals(r.startContainer.nodeValue, '456');
-		equals(r.startOffset, 0);
-		equals(r.endOffset, 0);
+		equal(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node. (lean right)");
+		equal(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");
+		equal(r.startContainer.nodeValue, '456');
+		equal(r.startOffset, 0);
+		equal(r.endOffset, 0);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody().childNodes[1], 0);
@@ -475,12 +475,12 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody().childNodes[1], "Start container is second text node.");
-		equals(r.endContainer, editor.getBody().childNodes[1], "End container is third text node.");
-		equals(r.startContainer.nodeValue, '23');
-		equals(r.endContainer.nodeValue, '23');
-		equals(r.startOffset, 0);
-		equals(r.endOffset, 1);
+		equal(r.startContainer, editor.getBody().childNodes[1], "Start container is second text node.");
+		equal(r.endContainer, editor.getBody().childNodes[1], "End container is third text node.");
+		equal(r.startContainer.nodeValue, '23');
+		equal(r.endContainer.nodeValue, '23');
+		equal(r.startOffset, 0);
+		equal(r.endOffset, 1);
 	});
 
 	test("Non contentEditable elements", function() {
@@ -495,10 +495,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody(), "Start container is before first nonEditable.");
-		equals(r.endContainer, editor.getBody(), "End container is before  first nonEditable.");
-		equals(r.startOffset, 0);
-		equals(r.endOffset, 0);
+		equal(r.startContainer, editor.getBody(), "Start container is before first nonEditable.");
+		equal(r.endContainer, editor.getBody(), "End container is before  first nonEditable.");
+		equal(r.startOffset, 0);
+		equal(r.endOffset, 0);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody(), 0);
@@ -506,10 +506,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody(), "Start container before first nonEditable.");
-		equals(r.endContainer, editor.getBody(), "End container is after first nonEditable.");
-		equals(r.startOffset, 0);
-		equals(r.endOffset, 1);
+		equal(r.startContainer, editor.getBody(), "Start container before first nonEditable.");
+		equal(r.endContainer, editor.getBody(), "End container is after first nonEditable.");
+		equal(r.startOffset, 0);
+		equal(r.endOffset, 1);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody(), 0);
@@ -517,10 +517,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody(), "Start container before first nonEditable.");
-		equals(r.endContainer, editor.getBody(), "End container is after second nonEditable.");
-		equals(r.startOffset, 0);
-		equals(r.endOffset, 2);
+		equal(r.startContainer, editor.getBody(), "Start container before first nonEditable.");
+		equal(r.endContainer, editor.getBody(), "End container is after second nonEditable.");
+		equal(r.startOffset, 0);
+		equal(r.endOffset, 2);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody(), 1);
@@ -528,10 +528,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody(), "Start container is before second nonEditable.");
-		equals(r.endContainer, editor.getBody(), "End container is div before second nonEditable.");
-		equals(r.startOffset, 1);
-		equals(r.endOffset, 1);
+		equal(r.startContainer, editor.getBody(), "Start container is before second nonEditable.");
+		equal(r.endContainer, editor.getBody(), "End container is div before second nonEditable.");
+		equal(r.startOffset, 1);
+		equal(r.endOffset, 1);
 
 		r = editor.dom.createRng();
 		r.setStart(editor.getBody(), 2);
@@ -539,10 +539,10 @@ if (tinyMCE.isIE && !window.getSelection) {
 		editor.selection.setRng(r);
 
 		r = editor.selection.getRng(true);
-		equals(r.startContainer, editor.getBody(), "Start container is after last nonEditable.");
-		equals(r.endContainer, editor.getBody(), "End container is after last nonEditable.");
-		equals(r.startOffset, 2);
-		equals(r.endOffset, 2);
+		equal(r.startContainer, editor.getBody(), "Start container is after last nonEditable.");
+		equal(r.endContainer, editor.getBody(), "End container is after last nonEditable.");
+		equal(r.startOffset, 2);
+		equal(r.endOffset, 2);
 	});
 } else {
 	test("Skipped ie_selection tests as not running in IE.", function() {});

@@ -30,7 +30,7 @@ test('Inline element on selected text', function() {
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p>1234</p>', 'Inline element on selected text');
+	equal(getContent(), '<p>1234</p>', 'Inline element on selected text');
 });
 
 test('Inline element on selected text with remove=all', function() {
@@ -41,7 +41,7 @@ test('Inline element on selected text with remove=all', function() {
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p>1234</p>', 'Inline element on selected text with remove=all');
+	equal(getContent(), '<p>1234</p>', 'Inline element on selected text with remove=all');
 });
 
 test('Inline element on selected text with remove=none', function() {
@@ -52,7 +52,7 @@ test('Inline element on selected text with remove=none', function() {
 	rng.setEnd(editor.dom.select('p')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><span>1234</span></p>', 'Inline element on selected text with remove=none');
+	equal(getContent(), '<p><span>1234</span></p>', 'Inline element on selected text with remove=none');
 });
 
 test('Inline element style where element is format root', function() {
@@ -63,7 +63,7 @@ test('Inline element style where element is format root', function() {
 	rng.setEnd(editor.dom.select('em')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(),
+	equal(getContent(),
 		'<p><span style="color: #ff0000; font-weight: bold;">' +
 		'<em>1</em></span><span style="color: #ff0000;"><em>23</em></span>' +
 		'<span style=\"color: #ff0000; font-weight: bold;\"><em>4' +
@@ -79,7 +79,7 @@ test('Partially selected inline element text', function() {
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><b>12</b>34</p>', 'Partially selected inline element text');
+	equal(getContent(), '<p><b>12</b>34</p>', 'Partially selected inline element text');
 });
 
 test('Partially selected inline element text with children', function() {
@@ -90,7 +90,7 @@ test('Partially selected inline element text with children', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><b><em><span>12</span></em></b><em><span>34</span></em></p>', 'Partially selected inline element text with children');
+	equal(getContent(), '<p><b><em><span>12</span></em></b><em><span>34</span></em></p>', 'Partially selected inline element text with children');
 });
 
 test('Partially selected inline element text with complex children', function() {
@@ -101,7 +101,7 @@ test('Partially selected inline element text with complex children', function() 
 	rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span></em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
+	equal(getContent(), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span></em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
 });
 
 test('Inline elements with exact flag', function() {
@@ -112,7 +112,7 @@ test('Inline elements with exact flag', function() {
 	rng.setEnd(editor.dom.select('p')[0], 2);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with exact flag');
+	equal(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with exact flag');
 });
 
 test('Inline elements with variables', function() {
@@ -123,7 +123,7 @@ test('Inline elements with variables', function() {
 	rng.setEnd(editor.dom.select('p')[0], 2);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format', {color : '#ff0000'});
-	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements on selected text with variables');
+	equal(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements on selected text with variables');
 });
 
 test('Inline elements with functions and variables', function() {
@@ -145,7 +145,7 @@ test('Inline elements with functions and variables', function() {
 	editor.formatter.remove('format', {
 		color : '#ff00'
 	});
-	equals(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with functions and variables');
+	equal(getContent(), '<p><span style="font-size: 10px;">1234</span><span style="color: #00ff00; font-size: 10px;">1234</span></p>', 'Inline elements with functions and variables');
 });
 
 test('End within start element', function() {
@@ -156,7 +156,7 @@ test('End within start element', function() {
 	rng.setEnd(editor.dom.select('b')[0], 2);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p>12345678</p>', 'End within start element');
+	equal(getContent(), '<p>12345678</p>', 'End within start element');
 });
 
 test('Start and end within similar format 1', function() {
@@ -167,7 +167,7 @@ test('Start and end within similar format 1', function() {
 	rng.setEnd(editor.dom.select('b')[1], 2);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><em>12345678</em></p>', 'Start and end within similar format 1');
+	equal(getContent(), '<p><em>12345678</em></p>', 'Start and end within similar format 1');
 });
 
 test('Start and end within similar format 2', function() {
@@ -178,7 +178,7 @@ test('Start and end within similar format 2', function() {
 	rng.setEnd(editor.dom.select('em')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><em>1234</em><b><em><b>5678</b></em></b></p>', 'Start and end within similar format 2');
+	equal(getContent(), '<p><em>1234</em><b><em><b>5678</b></em></b></p>', 'Start and end within similar format 2');
 });
 
 test('Start and end within similar format 3', function() {
@@ -189,7 +189,7 @@ test('Start and end within similar format 3', function() {
 	rng.setEnd(editor.dom.select('em')[0], 1);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><em>1234</em></p>', 'Start and end within similar format 3');
+	equal(getContent(), '<p><em>1234</em></p>', 'Start and end within similar format 3');
 });
 
 test('End within start', function() {
@@ -200,7 +200,7 @@ test('End within start', function() {
 	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><em>x</em><em>abc</em><b><em>y</em></b></p>', 'End within start');
+	equal(getContent(), '<p><em>x</em><em>abc</em><b><em>y</em></b></p>', 'End within start');
 });
 
 test('Remove block format', function() {
@@ -211,7 +211,7 @@ test('Remove block format', function() {
 	rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p>text</p>', 'Remove block format');
+	equal(getContent(), '<p>text</p>', 'Remove block format');
 });
 
 test('Remove wrapper block format', function() {
@@ -222,7 +222,7 @@ test('Remove wrapper block format', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p>text</p>', 'Remove wrapper block format');
+	equal(getContent(), '<p>text</p>', 'Remove wrapper block format');
 });
 
 test('Remove span format within block with style', function() {
@@ -233,7 +233,7 @@ test('Remove span format within block with style', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
+	equal(getContent(), '<p style="color: #ff0000;"><span style="color: #00ff00;">t</span>ex<span style="color: #00ff00;">t</span></p>', 'Remove span format within block with style');
 });
 
 test('Remove and verify start element', function() {
@@ -244,8 +244,8 @@ test('Remove and verify start element', function() {
 	rng.setEnd(editor.dom.select('b')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), '<p><b>t</b>ex<b>t</b></p>');
-	equals(editor.selection.getStart().nodeName, 'P');
+	equal(getContent(), '<p><b>t</b>ex<b>t</b></p>');
+	equal(editor.selection.getStart().nodeName, 'P');
 });
 
 test('Remove with selection collapsed ensure correct caret position', function() {
@@ -258,8 +258,8 @@ test('Remove with selection collapsed ensure correct caret position', function()
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.formatter.remove('format');
-	equals(getContent(), content);
-	equals(editor.selection.getStart(), editor.dom.select('p')[0]);
+	equal(getContent(), content);
+	equal(editor.selection.getStart(), editor.dom.select('p')[0]);
 });
 
 test('Caret format at middle of text', function() {
@@ -267,7 +267,7 @@ test('Caret format at middle of text', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('b', 1, 'b', 1);
 	editor.formatter.remove('format');
-	equals(editor.getContent(), '<p>abc</p>');
+	equal(editor.getContent(), '<p>abc</p>');
 });
 
 test('Caret format at end of text', function() {
@@ -276,7 +276,7 @@ test('Caret format at end of text', function() {
 	setSelection('b', 3, 'b', 3);
 	editor.formatter.remove('format');
 	type('d');
-	equals(editor.getContent(), '<p><b>abc</b>d</p>');
+	equal(editor.getContent(), '<p><b>abc</b>d</p>');
 });
 
 test('Caret format at end of text inside other format', function() {
@@ -285,7 +285,7 @@ test('Caret format at end of text inside other format', function() {
 	setSelection('b', 3, 'b', 3);
 	editor.formatter.remove('format');
 	type('d');
-	equals(editor.getContent(), '<p><em><b>abc</b>d</em></p>');
+	equal(editor.getContent(), '<p><em><b>abc</b>d</em></p>');
 });
 
 test('Caret format at end of text inside other format with text after 1', function() {
@@ -294,7 +294,7 @@ test('Caret format at end of text inside other format with text after 1', functi
 	setSelection('b', 3, 'b', 3);
 	editor.formatter.remove('format');
 	type('d');
-	equals(editor.getContent(), '<p><em><b>abc</b>d</em>e</p>');
+	equal(editor.getContent(), '<p><em><b>abc</b>d</em>e</p>');
 });
 
 test('Caret format at end of text inside other format with text after 2', function() {
@@ -303,7 +303,7 @@ test('Caret format at end of text inside other format with text after 2', functi
 	setSelection('b', 3, 'b', 3);
 	editor.formatter.remove('format');
 	type('d');
-	equals(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
+	equal(editor.getContent(), '<p><em><b>abc</b></em><b>d</b>e</p>');
 });
 
 test('Caret format on second word in table cell', function() {
@@ -311,7 +311,7 @@ test('Caret format on second word in table cell', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('b', 2, 'b', 2);
 	editor.formatter.remove('format');
-	equals(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
+	equal(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
 });
 
 /*
@@ -320,7 +320,7 @@ test('Remove format bug 1', function() {
 	editor.formatter.register('format', {inline: 'b'});
 	setSelection('em', 0, 'em', 2);
 	editor.formatter.remove('format');
-	equals(editor.getContent(), '<p><b>ab</b><em>cd</em><b><em>e</em>fgh</b></p>');
+	equal(editor.getContent(), '<p><b>ab</b><em>cd</em><b><em>e</em>fgh</b></p>');
 });
 */
 

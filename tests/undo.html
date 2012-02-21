@@ -48,7 +48,7 @@ function assertUndoEnabledWhenTyping(c, expectedContent) {
 	setSelection('p', 4);
 	ok(!isUndoEnabled(), 'Undo starts disabled.');
 	robot.type(c, false, function() {
-		equals(editor.getContent(), expectedContent);
+		equal(editor.getContent(), expectedContent);
 		ok(isUndoEnabled(), 'Undo is enabled.');
 		QUnit.start();
 	}, editor.selection.getNode());
@@ -74,11 +74,11 @@ asyncTest('Forward delete triggers undo in IE', function() {
 	editor.selection.setRng(rng);
 
 	robot.forwardDelete(function() {
-		equals(editor.getContent(), '<p>Test2</p>', 'First word has been deleted');
+		equal(editor.getContent(), '<p>Test2</p>', 'First word has been deleted');
 		ok(isUndoEnabled(), 'Undo is enabled.');
 
 		editor.undoManager.undo();
-		equals(editor.getContent(), '<p>Test1 Test2</p>', 'First word has been restored');
+		equal(editor.getContent(), '<p>Test1 Test2</p>', 'First word has been restored');
 
 		QUnit.start();
 	}, editor.selection.getNode());
@@ -93,7 +93,7 @@ asyncTest('Undo added when losing focus', function(){
 		styleMenu.focus();
 		editor.execCommand('FormatBlock', false, 'h1');
 		editor.undoManager.undo();
-		equals(editor.getContent(), "<p>some</p>");
+		equal(editor.getContent(), "<p>some</p>");
 		QUnit.start();
 	});
 });

@@ -129,7 +129,7 @@ function fakeKeyEvent(e, na, o) {
 		Event.add('test', 'keydown', keyCheck);
 		fakeKeyEvent('test', 'keydown', {keyCode : 13});
 
-		equals(c, 2, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
+		equal(c, 2, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
 
 		c = 0;
 		Event.remove('test', 'click', mouseCheck);
@@ -137,7 +137,7 @@ function fakeKeyEvent(e, na, o) {
 		fakeMouseEvent('test', 'click', {clientX : 10});
 		fakeKeyEvent('test', 'keydown', {keyCode : 13});
 
-		equals(c, 0, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
+		equal(c, 0, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
 
 		DOM.remove('test');
 	});

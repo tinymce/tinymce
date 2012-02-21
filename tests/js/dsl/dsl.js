@@ -24,11 +24,11 @@ function assertState(expected, message) {
     // Safari reports "function", while Firefox and IE report "object"
     if (typeof expected == "function" || typeof expected == "object") {
         if (expected.test(content))
-            equals(content, content, message);
+            equal(content, content, message);
         else 
-            equals(content, expected.toString(), message);
+            equal(content, expected.toString(), message);
     } else {
-        equals(content, expected, message);
+        equal(content, expected, message);
     }
 }
 
