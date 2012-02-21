@@ -3195,8 +3195,8 @@
 					t.undoManager.add();
 				};
 
-				var eventHandler = tinymce.isGecko ? 'blur' : 'focusout';
-				dom.bind(t.getDoc(), eventHandler, function(e){
+				var focusLostFunc = tinymce.isGecko ? 'blur' : 'focusout';
+				dom.bind(t.getDoc(), focusLostFunc, function(e){
 					if (!t.removed && t.undoManager.typing)
 						addUndo();
 				});
