@@ -53,7 +53,7 @@
 					}
 				}
 
-				// Do the backspace/delete actiopn
+				// Do the backspace/delete action
 				ed.getDoc().execCommand(isDelete ? 'ForwardDelete' : 'Delete', false, null);
 
 				// Find all odd apple-style-spans
@@ -79,17 +79,36 @@
 	 * like a <h1></h1> or <p></p> and then forcefully remove all contents.
 	 */
 	function emptyEditorWhenDeleting(ed) {
-		ed.onKeyUp.add(function(ed, e) {
-			var keyCode = e.keyCode;
 
+		function serializeRng(rng) {
+			var body = ed.dom.create("body");
+			var contents = rng.cloneContents();
+			body.appendChild(contents);
+			return ed.selection.serializer.serialize(body, {format: 'html'});
+		}
+
+		function allContentsSelected(rng) {
+			var selection = serializeRng(rng);
+
+			var allRng = ed.dom.createRng();
+			allRng.selectNode(ed.getBody());
+
+			var allSelection = serializeRng(allRng);
+			return selection === allSelection;
+		}
+
+		ed.onKeyDown.addToTop(function(ed, e) {
+			var keyCode = e.keyCode;
 			if (keyCode == DELETE || keyCode == BACKSPACE) {
-				if (ed.dom.isEmpty(ed.getBody())) {
+				var rng = ed.selection.getRng(true);
+				if (!rng.collapsed && allContentsSelected(rng)) {
 					ed.setContent('', {format : 'raw'});
 					ed.nodeChanged();
-					return;
+					e.preventDefault();
 				}
 			}
 		});
+
 	};
 
 	/**

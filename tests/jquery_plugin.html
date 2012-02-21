@@ -25,26 +25,26 @@ test("Get contents using jQuery", function() {
 
 	tinyMCE.get('elm1').setContent('<p>Editor 1</p>');
 
-	equals($('#elm1').html(), '<p>Editor 1</p>');
-	equals($('#elm1').val(), '<p>Editor 1</p>');
-	equals($('#elm1').attr('value'), '<p>Editor 1</p>');
-	equals($('#elm1').text(), 'Editor 1');
+	equal($('#elm1').html(), '<p>Editor 1</p>');
+	equal($('#elm1').val(), '<p>Editor 1</p>');
+	equal($('#elm1').attr('value'), '<p>Editor 1</p>');
+	equal($('#elm1').text(), 'Editor 1');
 });
 
 test("Set contents using jQuery", function() {
 	expect(4);
 
 	$('#elm1').html('Test 1');
-	equals($('#elm1').html(), '<p>Test 1</p>');
+	equal($('#elm1').html(), '<p>Test 1</p>');
 
 	$('#elm1').val('Test 2');
-	equals($('#elm1').html(), '<p>Test 2</p>');
+	equal($('#elm1').html(), '<p>Test 2</p>');
 
 	$('#elm1').text('Test 3');
-	equals($('#elm1').html(), '<p>Test 3</p>');
+	equal($('#elm1').html(), '<p>Test 3</p>');
 
 	$('#elm1').attr('value', 'Test 4');
-	equals($('#elm1').html(), '<p>Test 4</p>');
+	equal($('#elm1').html(), '<p>Test 4</p>');
 });
 
 test("append/prepend contents using jQuery", function() {
@@ -53,32 +53,32 @@ test("append/prepend contents using jQuery", function() {
 	tinyMCE.get('elm1').setContent('<p>Editor 1</p>');
 
 	$('#elm1').append('<p>Test 1</p>');
-	equals($('#elm1').html(), '<p>Editor 1</p>\n<p>Test 1</p>');
+	equal($('#elm1').html(), '<p>Editor 1</p>\n<p>Test 1</p>');
 
 	$('#elm1').prepend('<p>Test 2</p>');
-	equals($('#elm1').html(), '<p>Test 2</p>\n<p>Editor 1</p>\n<p>Test 1</p>');
+	equal($('#elm1').html(), '<p>Test 2</p>\n<p>Editor 1</p>\n<p>Test 1</p>');
 });
 
 test("Find using :tinymce selector", function() {
 	expect(1);
 
-	equals($('textarea:tinymce').length, 2);
+	equal($('textarea:tinymce').length, 2);
 });
 
 test("Set contents using :tinymce selector", function() {
 	expect(3);
 
 	$('textarea:tinymce').val('Test 1');
-	equals($('#elm1').val(), '<p>Test 1</p>');
-	equals($('#elm2').val(), '<p>Test 1</p>');
-	equals($('#elm3').val(), 'Textarea');
+	equal($('#elm1').val(), '<p>Test 1</p>');
+	equal($('#elm2').val(), '<p>Test 1</p>');
+	equal($('#elm3').val(), 'Textarea');
 });
 
 test("Get contents using :tinymce selector", function() {
 	expect(1);
 
 	$('textarea:tinymce').val('Test get');
-	equals($('textarea:tinymce').val(), '<p>Test get</p>');
+	equal($('textarea:tinymce').val(), '<p>Test get</p>');
 });
 
 $().ready(function() {

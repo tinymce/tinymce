@@ -80,6 +80,7 @@
 					t._menu.removeAll();
 					t._menu.destroy();
 					Event.remove(ed.getDoc(), 'click', hide);
+					t._menu = null;
 				}
 			};
 

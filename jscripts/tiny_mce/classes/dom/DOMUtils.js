@@ -1615,6 +1615,10 @@
 						}
 					}
 
+					// Keep comment nodes
+					if (type == 8)
+						return false;
+
 					// Keep non whitespace text nodes
 					if ((type === 3 && !whiteSpaceRegExp.test(node.nodeValue)))
 						return false;

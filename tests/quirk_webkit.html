@@ -164,7 +164,7 @@
         function getAssertFunction(expectedId) {
             return function() {
                 var actual = editor.selection.getNode().id;
-                equals(actual, expectedId);
+                equal(actual, expectedId);
                 start();
             };
         }

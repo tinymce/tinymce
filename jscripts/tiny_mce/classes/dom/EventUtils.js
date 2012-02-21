@@ -255,7 +255,8 @@ tinymce.dom = {};
 				}
 
 				// DOM is already ready
-				if (self.domLoaded && name === "ready") {
+				if ((self.domLoaded || win.document.readyState == 'complete') && name === "ready") {
+					self.domLoaded = true;
 					callback.call(scope, fix({type: name}));
 					continue;
 				}

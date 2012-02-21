@@ -144,7 +144,7 @@ function insertTable() {
 		//elm.outerHTML = elm.outerHTML;
 
 		inst.nodeChanged();
-		inst.execCommand('mceEndUndoLevel');
+		inst.execCommand('mceEndUndoLevel', false, {}, {skip_undo: true});
 
 		// Repaint if dimensions changed
 		if (formObj.width.value != orgTableWidth || formObj.height.value != orgTableHeight)
@@ -261,7 +261,7 @@ function insertTable() {
 	});
 
 	inst.addVisual();
-	inst.execCommand('mceEndUndoLevel');
+	inst.execCommand('mceEndUndoLevel', false, {}, {skip_undo: true});
 
 	tinyMCEPopup.close();
 }

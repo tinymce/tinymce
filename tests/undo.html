@@ -12,6 +12,8 @@
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
 
+var BACKSPACE = 0x8;
+
 module('Undo', {
 	autostart: false
 });
@@ -46,7 +48,7 @@ function assertUndoEnabledWhenTyping(c, expectedContent) {
 	setSelection('p', 4);
 	ok(!isUndoEnabled(), 'Undo starts disabled.');
 	robot.type(c, false, function() {
-		equals(editor.getContent(), expectedContent);
+		equal(editor.getContent(), expectedContent);
 		ok(isUndoEnabled(), 'Undo is enabled.');
 		QUnit.start();
 	}, editor.selection.getNode());
@@ -72,15 +74,30 @@ asyncTest('Forward delete triggers undo in IE', function() {
 	editor.selection.setRng(rng);
 
 	robot.forwardDelete(function() {
-		equals(editor.getContent(), '<p>Test2</p>', 'First word has been deleted');
+		equal(editor.getContent(), '<p>Test2</p>', 'First word has been deleted');
 		ok(isUndoEnabled(), 'Undo is enabled.');
 
 		editor.undoManager.undo();
-		equals(editor.getContent(), '<p>Test1 Test2</p>', 'First word has been restored');
+		equal(editor.getContent(), '<p>Test1 Test2</p>', 'First word has been restored');
 
 		QUnit.start();
 	}, editor.selection.getNode());
 });
+
+asyncTest('Undo added when losing focus', function(){
+	editor.undoManager.clear();
+	editor.setContent("<p>some text</p>");
+	setSelection('p', 4, 'p', 9);
+	robot.type(0x8, false, function(){
+		var styleMenu = editor.controlManager.controls['elm1_styleselect'];
+		styleMenu.focus();
+		editor.execCommand('FormatBlock', false, 'h1');
+		editor.undoManager.undo();
+		equal(editor.getContent(), "<p>some</p>");
+		QUnit.start();
+	});
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",

@@ -25,6 +25,7 @@ module('Tables', {
 var VK;
 var UP_ARROW = 0x26;
 var DOWN_ARROW = 0x28;
+var ENTER = 0xA;
 
 if (tinymce.isWebKit) {
 	asyncTest('Selecting Cell and typing should update cell correctly in WebKit', function() {
@@ -38,7 +39,7 @@ if (tinymce.isWebKit) {
 		robot.type('g',false, function(){
 			var expected = '<table>\n<tbody>\n<tr>\n<td>\n<p>g</p>\n</td>\n<td>\n<p>second cell</p>\n</td>\n</tr>\n</tbody>\n</table>';
 			var actual = editor.getContent();
-			equals(actual, expected);
+			equal(actual, expected);
 			start();
 		}, editor.getBody());
 	});
@@ -56,7 +57,7 @@ function testCursorKey(html, nodeToSelect, keyCode, expected) {
 	robot.type(keyCode, false, function() {
 		var node = editor.selection.getNode();
 		var actual = node.firstChild.nodeValue;
-		equals(actual, expected);
+		equal(actual, expected);
 		start();
 	}, editor.getBody());
 }
@@ -69,7 +70,7 @@ asyncTest('space key does not nuke content in th cells', 1, function() {
     robot.type(VK.SPACEBAR, false, function() {
         var actual = editor.dom.get('a').innerHTML;
         var expected = 'abc def';
-        equals(actual, expected);
+        equal(actual, expected);
         start()
     }, editor.getBody());
 });
@@ -109,6 +110,22 @@ asyncTest('arrow key down in bottom row escapes table', function() {
 	var html = '<table><tr><td></td></tr><tr><td id="b"></td></tr></table><p>outside</p>';
 	testCursorKey(html, '#b', DOWN_ARROW, 'outside');
 });
+
+asyncTest('shift-enter in table cell ending with BR places caret on new line', function() {
+		editor.setContent('<table><tr><td>d <strong>e</strong><br></td></tr></table>');
+		setSelection('strong', 1);
+		robot.type(ENTER, true, function(){
+			var expected = '<table><tbody><tr><td>d <strong>e<br /></strong></td></tr></tbody></table>';
+			var actual = editor.getContent();
+			var range = editor.selection.getRng(true);
+			equal(cleanHtml(actual), expected);
+			equal(range.startContainer.nodeName, 'STRONG');
+			equal(range.startOffset, 2);
+			equal(range.collapsed, true);
+			start();
+		}, editor.getBody());
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",

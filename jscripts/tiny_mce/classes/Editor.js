@@ -150,6 +150,24 @@
 				'onPostRender',
 
 				/**
+				 * Fires when the onload event on the body occurs.
+				 *
+				 * @event onLoad
+				 * @param {tinymce.Editor} sender Editor instance.
+				 * @example
+				 * // Adds an observer to the onLoad event using tinyMCE.init
+				 * tinyMCE.init({
+				 *    ...
+				 *    setup : function(ed) {
+				 *       ed.onLoad.add(function(ed, cm) {
+				 *           console.debug('Document loaded: ' + ed.id);
+				 *       });
+				 *    }
+				 * });
+				 */
+				'onLoad',
+
+				/**
 				 * Fires after the initialization of the editor is done.
 				 *
 				 * @event onInit
@@ -896,7 +914,7 @@
 
 			// Page is not loaded yet, wait for it
 			if (!Event.domLoaded) {
-				Event.add(document, 'init', function() {
+				Event.add(window, 'ready', function() {
 					t.render();
 				});
 				return;
@@ -1228,7 +1246,7 @@
 				bc = bc[t.id] || '';
 			}
 
-			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '"><br></body></html>';
+			t.iframeHTML += '</head><body id="' + bi + '" class="mceContentBody ' + bc + '" onload="window.parent.tinyMCE.get(\'' + t.id + '\').onLoad.dispatch();"><br></body></html>';
 
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain && (isIE || (tinymce.isOpera && parseFloat(opera.version()) < 11))) {
@@ -1723,6 +1741,16 @@
 			t.load({initial : true, format : 'html'});
 			t.startContent = t.getContent({format : 'raw'});
 			t.undoManager.add();
+			/**
+			 * Is set to true after the editor instance has been initialized
+			 *
+			 * @property initialized
+			 * @type Boolean
+			 * @example
+			 * function isEditorInitialized(editor) {
+			 *     return editor && editor.initialized;
+			 * }
+			 */
 			t.initialized = true;
 
 			t.onInit.dispatch(t);
@@ -2238,9 +2266,9 @@
 			if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint|SelectAll)$/.test(cmd) && (!a || !a.skip_focus))
 				t.focus();
 
-			o = {};
-			t.onBeforeExecCommand.dispatch(t, cmd, ui, val, o);
-			if (o.terminate)
+			a = extend({}, a);
+			t.onBeforeExecCommand.dispatch(t, cmd, ui, val, a);
+			if (a.terminate)
 				return false;
 
 			// Command callback
@@ -3177,7 +3205,8 @@
 					t.undoManager.add();
 				};
 
-				dom.bind(t.getDoc(), 'focusout', function(e) {
+				var eventHandler = tinymce.isGecko ? 'blur' : 'focusout';
+				dom.bind(t.getDoc(), eventHandler, function(e){
 					if (!t.removed && t.undoManager.typing)
 						addUndo();
 				});

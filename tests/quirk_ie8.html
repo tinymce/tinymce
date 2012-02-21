@@ -31,7 +31,7 @@ asyncTest('hr', 1, function() {
     robot.type(8, false, function() {
         var expected = '<p>one</p><p id="a">two</p>';
         var actual = editor.getContent({ format: 'raw' });
-        equals(actual, expected);
+        equal(actual, expected);
         start();
     }, editor.getBody());
 });
@@ -43,7 +43,7 @@ asyncTest('Heading text alignment', 1, function() {
 	robot.type(0xA, false, function() {
 		var expected = '<h1 id="x" style="text-align: center;">x</h1>\n<p>&nbsp;</p>';
 		var actual = editor.getContent();
-		equals(actual, expected);
+		equal(actual, expected);
 		start();
 	}, editor.getBody());
 });

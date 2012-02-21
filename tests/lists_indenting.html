@@ -121,7 +121,7 @@ function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
 	editor.onBeforeExecCommand.add(listener);
 	
 	fakeKeyPressAction(keystroke, shift)(function() {
-		equals(actionFired, expected, actionName + ' command triggered?');
+		equal(actionFired, expected, actionName + ' command triggered?');
 		editor.onBeforeExecCommand.remove(listener);
 		QUnit.start();
 	}, editor.getWin());

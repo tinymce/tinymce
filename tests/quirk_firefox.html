@@ -31,7 +31,7 @@ asyncTest('hr', 1, function() {
     robot.type(8, false, function() {
         var expected = '<p>one</p><p id="a">two</p>';
         var actual = editor.getContent({ format: 'raw' });
-        equals(actual, expected);
+        equal(actual, expected);
         start();
     }, editor.getBody());
 });

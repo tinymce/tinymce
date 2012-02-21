@@ -69,7 +69,7 @@
 		};
 
 		function isCaretNode(node) {
-			return node.nodeType === 1 && (node.face === 'mceinline' || node.style.fontFamily === 'mceinline');
+			return node.nodeType === 1 && node.id === '_mce_caret';
 		};
 
 		// Public functions
@@ -165,33 +165,6 @@
 		 */
 		function apply(name, vars, node) {
 			var formatList = get(name), format = formatList[0], bookmark, rng, i, isCollapsed = selection.isCollapsed();
-
-			/**
-			 * Moves the start to the first suitable text node.
-			 */
-			function moveStart(rng) {
-				var container = rng.startContainer,
-					offset = rng.startOffset,
-					walker, node;
-
-				// Move startContainer/startOffset in to a suitable node
-				if (container.nodeType == 1 || container.nodeValue === "") {
-					container = container.nodeType == 1 ? container.childNodes[offset] : container;
-
-					// Might fail if the offset is behind the last element in it's container
-					if (container) {
-						walker = new TreeWalker(container, container.parentNode);
-						for (node = walker.current(); node; node = walker.next()) {
-							if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
-								rng.setStart(node, 0);
-								break;
-							}
-						}
-					}
-				}
-
-				return rng;
-			};
 
 			function setElementFormat(elm, fmt) {
 				fmt = fmt || format;
@@ -377,7 +350,7 @@
 
 						// Is it valid to wrap this item
 						if (contentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
-								!(!node_specific && node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279) && node.id !== '_mce_caret') {
+								!(!node_specific && node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279) && !isCaretNode(node)) {
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
@@ -562,7 +535,7 @@
 						}
 
 						selection.moveToBookmark(bookmark);
-						selection.setRng(moveStart(selection.getRng(TRUE)));
+						moveStart(selection.getRng(TRUE));
 						ed.nodeChanged();
 					} else
 						performCaretAction('apply', name, vars);
@@ -580,48 +553,6 @@
 		 */
 		function remove(name, vars, node) {
 			var formatList = get(name), format = formatList[0], bookmark, i, rng, contentEditable = true;
-
-			/**
-			 * Moves the start to the first suitable text node.
-			 */
-			function moveStart(rng) {
-				var container = rng.startContainer,
-					offset = rng.startOffset,
-					walker, node, nodes, tmpNode;
-
-				// Convert text node into index if possible
-				if (container.nodeType == 3 && offset >= container.nodeValue.length - 1) {
-					container = container.parentNode;
-					offset = nodeIndex(container) + 1;
-				}
-
-				// Move startContainer/startOffset in to a suitable node
-				if (container.nodeType == 1) {
-					nodes = container.childNodes;
-					container = nodes[Math.min(offset, nodes.length - 1)];
-					walker = new TreeWalker(container);
-
-					// If offset is at end of the parent node walk to the next one
-					if (offset > nodes.length - 1)
-						walker.next();
-
-					for (node = walker.current(); node; node = walker.next()) {
-						if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
-							// IE has a "neat" feature where it moves the start node into the closest element
-							// we can avoid this by inserting an element before it and then remove it after we set the selection
-							tmpNode = dom.create('a', null, INVISIBLE_CHAR);
-							node.parentNode.insertBefore(tmpNode, node);
-
-							// Set selection and remove tmpNode
-							rng.setStart(node, 0);
-							selection.setRng(rng);
-							dom.remove(tmpNode);
-
-							return;
-						}
-					}
-				}
-			};
 
 			// Merges the styles for each node
 			function process(node) {
@@ -1152,8 +1083,8 @@
 				}
 
 				for (;;) {
-					// Stop expanding on block elements or root depending on format
-					if (parent == root || (!format[0].block_expand && isBlock(parent)))
+					// Stop expanding on block elements
+					if (!format[0].block_expand && isBlock(parent))
 						return parent;
 
 					// Walk left/right
@@ -1164,6 +1095,11 @@
 					}
 
 					// Check if we can move up are we at root level or body level
+					if (parent.parentNode == root) {
+						container = parent;
+						break;
+					}
+
 					parent = parent.parentNode;
 				}
 
@@ -2085,5 +2021,48 @@
 				removeCaretFormat();
 			}
 		};
+
+		/**
+		 * Moves the start to the first suitable text node.
+		 */
+		function moveStart(rng) {
+			var container = rng.startContainer,
+					offset = rng.startOffset,
+					walker, node, nodes, tmpNode;
+
+			// Convert text node into index if possible
+			if (container.nodeType == 3 && offset >= container.nodeValue.length - 1) {
+				container = container.parentNode;
+				offset = nodeIndex(container) + 1;
+			}
+
+			// Move startContainer/startOffset in to a suitable node
+			if (container.nodeType == 1) {
+				nodes = container.childNodes;
+				container = nodes[Math.min(offset, nodes.length - 1)];
+				walker = new TreeWalker(container);
+
+				// If offset is at end of the parent node walk to the next one
+				if (offset > nodes.length - 1)
+					walker.next();
+
+				for (node = walker.current(); node; node = walker.next()) {
+					if (node.nodeType == 3 && !isWhiteSpaceNode(node)) {
+						// IE has a "neat" feature where it moves the start node into the closest element
+						// we can avoid this by inserting an element before it and then remove it after we set the selection
+						tmpNode = dom.create('a', null, INVISIBLE_CHAR);
+						node.parentNode.insertBefore(tmpNode, node);
+
+						// Set selection and remove tmpNode
+						rng.setStart(node, 0);
+						selection.setRng(rng);
+						dom.remove(tmpNode);
+
+						return;
+					}
+				}
+			}
+		};
+
 	};
 })(tinymce);

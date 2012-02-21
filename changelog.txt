@@ -8,7 +8,22 @@ Version 3.5 (2012-xx-xx)
 	Added new preview_styles option that enables control over what gets previewed.
 	Fixed bug where content css would be loaded twice into iframe. 
 	Fixed bug where start elements with only whitespace in the attribute part wouldn't be correctly parsed.
-Version 3.4.7.1 (2011-11-xx)
+Version 3.4.8.1 (2012-02-xx)
+	Fixed bug in Webkit and IE where deleting empty paragraphs would remove entire editor contents.
+	Fixed bug where pressing enter on end of list item with a heading would create a new item with heading.	
+	Fixed edit css style dialog text-decoration none checkbox so it disables other text-decoration options when enabled.
+	Fixed bug in Gecko where undo wasn't added when focus was lost.
+	Fixed bug in Gecko where shift-enter in table cell ending with BR doesn't move caret to new line.
+	Fixed bug where right-click on formatted text in IE selected the entire line.
+	Fixed bug where text ending with space could not be unformatted in IE.
+	Fixed bug where caret formatting would be removed when moving the caret when a selector expression was used.
+	Fixed bug where formatting would be applied to the body element when all contents where selected and format had both inline and selector parts.
+	Fixed bug where the media plugin would throw errors if you had iframe set as an invalid element in config.
+	Fixed bug where the caret would be placed at the top of the document if you inserted a table and undo:ed that operation. Patch contributed by Wesley Walser.
+	Fixed bug where content css files where loaded twice into the iframe.
+	Fixed so elements with comments would be trated as non empty elements. Patch contributed by Arjan Scherpenisse.
+Version 3.4.8 (2012-02-02)
+	Fixed bug in IE where selected text ending with space cannot be formatted then formatted again to get original text.
 	Fixed bug in IE where images larger than editor area were being deselected when toolbar buttons are clicked.
 	Fixed bug where wrong text align buttons are active when multiple block elements are selected.
 	Fixed bug where selected link not showing in target field of link dialog in some selection cases.
@@ -29,6 +44,8 @@ Version 3.4.7.1 (2011-11-xx)
 	Fixed bug where dots in id:s where causing problems. Patch provided by Abhishek Dev.
 	Fixed bug where urls with an at sign in the path wouldn't be parsed correctly. Patch contributed by Jason Grout.
 	Fixed bug where Opera would remove the first character of a inline formatted word if you pressed backspace.
+	Fixed bugs with the autoresize plugin on various browsers and removed the need for the throbber.
+	Fixed performance issue where the contextmenu plugin would try to remove the menu even if it was removed. Patch contributed by mhu.
 Version 3.4.7 (2011-11-03)
 	Modified the caret formatting behavior to word similar to common desktop wordprocessors like Word or Libre Office.
 	Fixed bug in Webkit - Cursor positioning does not work vertically within a table cell with multiple lines of text.

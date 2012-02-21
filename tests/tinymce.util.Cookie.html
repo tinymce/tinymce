@@ -19,10 +19,10 @@ module("tinymce.util.Cookie");
 		var f = document.location.protocol == 'file:';
 
 		Cookie.set('test', 'test123');
-		equals(Cookie.get('test'), 'test123', null, f);
+		equal(Cookie.get('test'), 'test123', null, f);
 
 		Cookie.set('test', 'test1234');
-		equals(Cookie.get('test'), 'test1234', null, f);
+		equal(Cookie.get('test'), 'test1234', null, f);
 
 		Cookie.setHash('test', {a : 1, b : 2});
 		ok(Cookie.getHash('test') ? Cookie.getHash('test').b == 2 : null, null, f);

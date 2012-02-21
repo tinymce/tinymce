@@ -175,7 +175,7 @@
 	// it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
 	$.extend($.expr[":"], {
 		tinymce : function(e) {
-			return e.id && !!tinyMCE.get(e.id);
+			return !!(e.id && tinyMCE.get(e.id));
 		}
 	});
 
