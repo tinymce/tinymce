@@ -1,4 +1,4 @@
-Version 3.4.8.1 (2012-02-xx)
+Version 3.4.9 (2012-02-23)
 	Added settings to wordcount plugin to configure update rate and checking wordcount on backspace and delete using wordcount_update_rate and wordcount_update_on_delete.
 	Fixed bug in Webkit and IE where deleting empty paragraphs would remove entire editor contents.
 	Fixed bug where pressing enter on end of list item with a heading would create a new item with heading.	

@@ -24,20 +24,26 @@ module("Quirks Tests", {
 	}
 });
 
-asyncTest('hr', 1, function() {
-    editor.setContent('<p>one</p><hr /><p id="a">two</p>');
-    setSelection('#a', 0);
-    editor.focus();
-    robot.type(8, false, function() {
-        var expected = '<p>one</p><p id="a">two</p>';
-        var actual = editor.getContent({ format: 'raw' });
-        equal(actual, expected);
-        start();
-    }, editor.getBody());
-});
-var initTinyFunction = function(){
+if (tinymce.isGecko) {
+	asyncTest('hr', 1, function() {
+		editor.setContent('<p>one</p><hr /><p id="a">two</p>');
+		setSelection('#a', 0);
+		editor.focus();
+		robot.type(8, false, function() {
+			var expected = '<p>one</p><p id="a">two</p>';
+			var actual = editor.getContent({ format: 'raw' });
+			equal(actual, expected);
+			start();
+		}, editor.getBody());
+	});
+} else {
+	test('ignored', function() {
+		ok(true, "Tests ignored since the browser isn't Gecko.");
+	});
+}
 
-tinyMCE.init({
+function initTinyFunction() {
+	tinyMCE.init({
 		mode : "exact",
 		elements : "elm1",
 		init_instance_callback : function(ed) {
