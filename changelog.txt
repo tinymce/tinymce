@@ -1,4 +1,5 @@
 Version 3.4.9 (2012-02-23)
+	Fixed bug where it was possible to insert an invalid colour in the color pop-up dialog.
 	Fixed bug in Webkit where if anchor is on last line by itself caret can not be placed after it.
 	Added settings to wordcount plugin to configure update rate and checking wordcount on backspace and delete using wordcount_update_rate and wordcount_update_on_delete.
 	Fixed bug in Webkit and IE where deleting empty paragraphs would remove entire editor contents.
