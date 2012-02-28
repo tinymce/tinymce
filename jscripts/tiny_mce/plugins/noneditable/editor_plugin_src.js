@@ -104,7 +104,8 @@
 				before = true;
 			}
 
-			caretContainer = dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style:'border: 1px solid red'}, invisibleChar);
+			//caretContainer = dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style:'border: 1px solid red'}, invisibleChar);
+			caretContainer = dom.create('span', {id: caretContainerId, 'data-mce-bogus': true}, invisibleChar);
 
 			if (before) {
 				target.parentNode.insertBefore(caretContainer, target);
