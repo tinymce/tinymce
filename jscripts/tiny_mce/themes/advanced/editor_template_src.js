@@ -298,15 +298,21 @@
 
 			if (ctrl.getLength() == 0) {
 				each(ed.dom.getClasses(), function(o, idx) {
-					var name = 'style_' + idx;
+					var name = 'style_' + idx, fmt;
 
-					ed.formatter.register(name, {
+					fmt = {
 						inline : 'span',
 						attributes : {'class' : o['class']},
 						selector : '*'
-					});
+					};
 
-					ctrl.add(o['class'], name);
+					ed.formatter.register(name, fmt);
+
+					ctrl.add(o['class'], name, {
+						style: function() {
+							return getPreviewCss(ed, fmt);
+						}
+					});
 				});
 			}
 		},
