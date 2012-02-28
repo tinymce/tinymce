@@ -244,8 +244,8 @@
 					each(tinymce.grep(node.childNodes), process);
 					return 0;
 				} else {
-					currentWrapElm = wrapElm.cloneNode(FALSE);
-					
+					currentWrapElm = dom.clone(wrapElm, FALSE);
+
 					// create a list of the nodes on the same side of the list as the selection
 					each(tinymce.grep(node.childNodes), function(n, index) {
 						if ((startIndex < listIndex && index < listIndex) || (startIndex > listIndex && index > listIndex)) {
@@ -253,7 +253,7 @@
 							n.parentNode.removeChild(n);
 						}
 					});
-					
+
 					// insert the wrapping element either before or after the list.
 					if (startIndex < listIndex) {
 						node.insertBefore(currentWrapElm, list);
@@ -354,7 +354,7 @@
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
-								currentWrapElm = wrapElm.cloneNode(FALSE);
+								currentWrapElm = dom.clone(wrapElm, FALSE);
 								node.parentNode.insertBefore(currentWrapElm, node);
 								newWrappers.push(currentWrapElm);
 							}
@@ -389,7 +389,7 @@
 							var i, currentWrapElm, children;
 
 							if (node.nodeName === 'A') {
-								currentWrapElm = wrapElm.cloneNode(FALSE);
+								currentWrapElm = dom.clone(wrapElm, FALSE);
 								newWrappers.push(currentWrapElm);
 
 								children = tinymce.grep(node.childNodes);
@@ -434,7 +434,7 @@
 
 						// If child was found and of the same type as the current node
 						if (child && matchName(child, format)) {
-							clone = child.cloneNode(FALSE);
+							clone = dom.clone(child, FALSE);
 							setElementFormat(clone);
 
 							dom.replace(clone, node, TRUE);
@@ -616,7 +616,7 @@
 					formatRootParent = format_root.parentNode;
 
 					for (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {
-						clone = parent.cloneNode(FALSE);
+						clone = dom.clone(parent, FALSE);
 
 						for (i = 0; i < formatList.length; i++) {
 							if (removeFormat(formatList[i], vars, clone, clone)) {
@@ -1964,7 +1964,7 @@
 
 					node = caretContainer;
 					for (i = parents.length - 1; i >= 0; i--) {
-						node.appendChild(parents[i].cloneNode(false));
+						node.appendChild(dom.clone(parents[i], false));
 						node = node.firstChild;
 					}
 

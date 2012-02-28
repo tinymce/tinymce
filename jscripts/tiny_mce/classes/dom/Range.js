@@ -59,6 +59,10 @@
 			cloneRange : cloneRange
 		});
 
+		function createDocumentFragment() {
+			return doc.createDocumentFragment();
+		};
+
 		function setStart(n, o) {
 			_setEndPoint(TRUE, n, o);
 		};
@@ -391,10 +395,10 @@
 		};
 
 		 function _traverseSameContainer(how) {
-			var frag, s, sub, n, cnt, sibling, xferNode;
+			var frag, s, sub, n, cnt, sibling, xferNode, start, len;
 
 			if (how != DELETE)
-				frag = doc.createDocumentFragment();
+				frag = createDocumentFragment();
 
 			// If selection is empty, just return the fragment
 			if (t[START_OFFSET] == t[END_OFFSET])
@@ -408,7 +412,15 @@
 
 				// set the original text node to its new value
 				if (how != CLONE) {
-					t[START_CONTAINER].deleteData(t[START_OFFSET], t[END_OFFSET] - t[START_OFFSET]);
+					n = t[START_CONTAINER];
+					start = t[START_OFFSET];
+					len = t[END_OFFSET] - t[START_OFFSET];
+
+					if (start === 0 && len >= n.nodeValue.length - 1) {
+						n.parentNode.removeChild(n);
+					} else {
+						n.deleteData(start, len);
+					}
 
 					// Nothing is partially selected, so collapse to start point
 					t.collapse(TRUE);
@@ -425,7 +437,7 @@
 			n = _getSelectedNode(t[START_CONTAINER], t[START_OFFSET]);
 			cnt = t[END_OFFSET] - t[START_OFFSET];
 
-			while (cnt > 0) {
+			while (n && cnt > 0) {
 				sibling = n.nextSibling;
 				xferNode = _traverseFullySelected(n, how);
 
@@ -447,7 +459,7 @@
 			var frag, n, endIdx, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = doc.createDocumentFragment();
+				frag = createDocumentFragment();
 
 			n = _traverseRightBoundary(endAncestor, how);
 
@@ -494,7 +506,7 @@
 			var frag, startIdx, n, cnt, sibling, xferNode;
 
 			if (how != DELETE)
-				frag = doc.createDocumentFragment();
+				frag = createDocumentFragment();
 
 			n = _traverseLeftBoundary(startAncestor, how);
 			if (frag)
@@ -505,7 +517,7 @@
 
 			cnt = t[END_OFFSET] - startIdx;
 			n = startAncestor.nextSibling;
-			while (cnt > 0) {
+			while (n && cnt > 0) {
 				sibling = n.nextSibling;
 				xferNode = _traverseFullySelected(n, how);
 
@@ -528,7 +540,7 @@
 			var n, frag, commonParent, startOffset, endOffset, cnt, sibling, nextSibling;
 
 			if (how != DELETE)
-				frag = doc.createDocumentFragment();
+				frag = createDocumentFragment();
 
 			n = _traverseLeftBoundary(startAncestor, how);
 			if (frag)
@@ -663,7 +675,7 @@
 				if (how == DELETE)
 					return;
 
-				newNode = n.cloneNode(FALSE);
+				newNode = dom.clone(n, FALSE);
 				newNode.nodeValue = newNodeValue;
 
 				return newNode;
@@ -672,12 +684,12 @@
 			if (how == DELETE)
 				return;
 
-			return n.cloneNode(FALSE);
+			return dom.clone(n, FALSE);
 		};
 
 		function _traverseFullySelected(n, how) {
 			if (how != DELETE)
-				return how == CLONE ? n.cloneNode(TRUE) : n;
+				return how == CLONE ? dom.clone(n, TRUE) : n;
 
 			n.parentNode.removeChild(n);
 		};
