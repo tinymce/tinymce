@@ -255,7 +255,7 @@ tinymce.dom = {};
 				}
 
 				// DOM is already ready
-				if ((self.domLoaded || win.document.readyState == 'complete') && name === "ready") {
+				if ((self.domLoaded || target.readyState == 'complete') && name === "ready") {
 					self.domLoaded = true;
 					callback.call(scope, fix({type: name}));
 					continue;
@@ -515,7 +515,7 @@ tinymce.dom = {};
 			}
 
 			// Old API supported multiple targets
-			if (target instanceof Array) {
+			if (target && target instanceof Array) {
 				var i = target;
 
 				while (i--) {
