@@ -398,7 +398,7 @@
 							node.raw = true;
 							node.value = node.attr('data-mce-content');
 						} else {
-							node.attr(externalName, node.attr(internalName));
+							node.attr(externalName, null);
 							node.attr(internalName, null);
 						}
 					}
