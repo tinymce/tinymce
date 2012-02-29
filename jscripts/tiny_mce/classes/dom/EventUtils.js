@@ -515,7 +515,7 @@ tinymce.dom = {};
 			}
 
 			// Old API supported multiple targets
-			if (target instanceof Array) {
+			if (target && target instanceof Array) {
 				var i = target;
 
 				while (i--) {

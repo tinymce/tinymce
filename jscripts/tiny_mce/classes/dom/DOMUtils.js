@@ -128,6 +128,20 @@
 			};
 		},
 
+		clone: function(node, deep) {
+			var clone, self = this;
+
+			if (!isIE || node.nodeType !== 1) {
+				return node.cloneNode(deep);
+			}
+
+			if (!deep) {
+				return self.create(node.nodeName);
+			}
+
+			return node.cloneNode(deep);
+		},
+
 		/**
 		 * Returns the root node of the document this is normally the body but might be a DIV. Parents like getParent will not
 		 * go above the point of this root node.

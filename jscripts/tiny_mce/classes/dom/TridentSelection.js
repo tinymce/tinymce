@@ -400,6 +400,7 @@
 						container.appendChild(marker);
 						tmpRng.moveToElementText(marker.parentNode);
 						tmpRng.collapse(TRUE);
+						tmpRng.select();
 					}
 
 					ieRng.setEndPoint(start ? 'StartToStart' : 'EndToEnd', tmpRng);
@@ -430,7 +431,12 @@
 
 			// Set start/end point of selection
 			setEndPoint(true);
-			setEndPoint();
+
+			if (!rng.collapsed) {
+				setEndPoint();
+			} else {
+				ieRng.collapse(true);
+			}
 
 			// Select the new range and scroll it into view
 			ieRng.select();
