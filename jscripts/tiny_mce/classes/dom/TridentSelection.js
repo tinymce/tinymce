@@ -394,7 +394,7 @@
 						}
 
 						tmpRng.moveToElementText(marker);
-					} else {
+					} else if (container.canHaveHTML) {
 						// Empty node selection for example <div>|</div>
 						marker = doc.createTextNode('\uFEFF');
 						container.appendChild(marker);
