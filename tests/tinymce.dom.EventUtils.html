@@ -422,19 +422,21 @@ function fakeMouseEvent(e, na, o) {
 
 	e = tinymce.DOM.get(e);
 
-	if (e.fireEvent) {
-		ev = document.createEventObject();
-		tinymce.extend(ev, o);
-		e.fireEvent('on' + na, ev);
-		return;
+	if (document.createEvent) {
+		ev = document.createEvent('MouseEvents');
+
+		if (ev.initMouseEvent)
+			ev.initMouseEvent(na, true, true, window, 1, o.screenX, o.screenY, o.clientX, o.clientY, false, false, true, false, 0, null);
+
+		e.dispatchEvent(ev);
+	} else {
+		if (e.fireEvent) {
+			ev = document.createEventObject();
+			tinymce.extend(ev, o);
+			e.fireEvent('on' + na, ev);
+			return;
+		}
 	}
-
-	ev = document.createEvent('MouseEvents');
-
-	if (ev.initMouseEvent)
-		ev.initMouseEvent(na, true, true, window, 1, o.screenX, o.screenY, o.clientX, o.clientY, false, false, true, false, 0, null);
-
-	e.dispatchEvent(ev);
 };
 
 /**
@@ -454,13 +456,6 @@ function fakeKeyEvent(e, na, o) {
 
 	e = tinymce.DOM.get(e);
 
-	if (e.fireEvent) {
-		ev = document.createEventObject();
-		tinymce.extend(ev, o);
-		e.fireEvent('on' + na, ev);
-		return;
-	}
-
 	if (document.createEvent) {
 		try {
 			// Fails in Safari
@@ -474,6 +469,13 @@ function fakeKeyEvent(e, na, o) {
 			ev.charCode = o.charCode;
 		}
 	} else {
+		if (e.fireEvent) {
+			ev = document.createEventObject();
+			tinymce.extend(ev, o);
+			e.fireEvent('on' + na, ev);
+			return;
+		}
+
 		ev = document.createEvent('UIEvents');
 
 		if (ev.initUIEvent)
@@ -518,7 +520,7 @@ function fakeKeyEvent(e, na, o) {
 		Event.add('test', 'keydown', keyCheck);
 		fakeKeyEvent('test', 'keydown', {keyCode : 13});
 
-		equal(c, 2, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
+		equal(c, 2, 'Event count doesn\'t add up.', tinymce.isWebKit);
 
 		c = 0;
 		Event.remove('test', 'click', mouseCheck);
@@ -526,7 +528,7 @@ function fakeKeyEvent(e, na, o) {
 		fakeMouseEvent('test', 'click', {clientX : 10});
 		fakeKeyEvent('test', 'keydown', {keyCode : 13});
 
-		equal(c, 0, '[%d] Event count doesn\'t add up. Value: %d should be %d.', tinymce.isWebKit);
+		equal(c, 0, 'Event count doesn\'t add up.', tinymce.isWebKit);
 
 		DOM.remove('test');
 	});
