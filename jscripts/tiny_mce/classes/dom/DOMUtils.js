@@ -89,22 +89,7 @@
 				}
 			}
 
-			if (isIE && s.schema) {
-				// Add missing HTML 4/5 elements to IE
-				('abbr article aside audio canvas ' +
-				'details figcaption figure footer ' +
-				'header hgroup mark menu meter nav ' +
-				'output progress section summary ' +
-				'time video').replace(/\w+/g, function(name) {
-					d.createElement(name);
-				});
-
-				// Create all custom elements
-				for (name in s.schema.getCustomElements()) {
-					d.createElement(name);
-				}
-			}
-
+			t.fixDoc(d);
 			t.events = s.ownEvents ? new tinymce.dom.EventUtils(s.proxy) : tinymce.dom.Event;
 			tinymce.addUnload(t.destroy, t);
 			blockElementsMap = s.schema ? s.schema.getBlockElements() : {};
@@ -128,18 +113,61 @@
 			};
 		},
 
-		clone: function(node, deep) {
-			var clone, self = this;
+		fixDoc: function(doc) {
+			var settings = this.settings, name;
 
+			if (isIE && settings.schema) {
+				// Add missing HTML 4/5 elements to IE
+				('abbr article aside audio canvas ' +
+				'details figcaption figure footer ' +
+				'header hgroup mark menu meter nav ' +
+				'output progress section summary ' +
+				'time video').replace(/\w+/g, function(name) {
+					doc.createElement(name);
+				});
+
+				// Create all custom elements
+				for (name in settings.schema.getCustomElements()) {
+					doc.createElement(name);
+				}
+			}
+		},
+
+		clone: function(node, deep) {
+			var self = this, clone, doc;
+
+			// TODO: Add feature detection here in the future
 			if (!isIE || node.nodeType !== 1) {
 				return node.cloneNode(deep);
 			}
 
+			doc = self.doc;
+
+			// Make a HTML5 safe shallow copy
 			if (!deep) {
-				return self.create(node.nodeName);
+				clone = doc.createElement(node.nodeName);
+
+				// Copy attribs
+				each(self.getAttribs(node), function(attr) {
+					self.setAttrib(clone, attr.nodeName, self.getAttrib(node, attr.nodeName));
+				});
+
+				return clone;
 			}
 
-			return node.cloneNode(deep);
+			// Setup HTML5 patched document fragment
+			if (!self.frag) {
+				self.frag = doc.createDocumentFragment();
+				self.fixDoc(self.frag);
+			}
+
+			// Make a deep copy by adding it to the document fragment then removing it this removed the :section
+			clone = doc.createElement('div');
+			self.frag.appendChild(clone);
+			clone.innerHTML = node.outerHTML;
+			self.frag.removeChild(clone);
+
+			return clone.firstChild;
 		},
 
 		/**
@@ -1650,7 +1678,7 @@
 		destroy : function(s) {
 			var t = this;
 
-			t.win = t.doc = t.root = t.events = null;
+			t.win = t.doc = t.root = t.events = t.frag = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)
