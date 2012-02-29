@@ -396,11 +396,11 @@
 						tmpRng.moveToElementText(marker);
 					} else if (container.canHaveHTML) {
 						// Empty node selection for example <div>|</div>
-						marker = doc.createTextNode('\uFEFF');
-						container.appendChild(marker);
-						tmpRng.moveToElementText(marker.parentNode);
-						tmpRng.collapse(TRUE);
-						//tmpRng.select();
+						// Setting innerHTML with a span marker then remove that marker seems to keep empty block elements open
+						container.innerHTML = '<span>\uFEFF</span>';
+						marker = container.firstChild;
+						tmpRng.moveToElementText(marker);
+						tmpRng.collapse(FALSE); // Collapse false works better than true for some odd reason
 					}
 
 					ieRng.setEndPoint(start ? 'StartToStart' : 'EndToEnd', tmpRng);
