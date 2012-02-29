@@ -431,12 +431,7 @@
 
 			// Set start/end point of selection
 			setEndPoint(true);
-
-			if (!rng.collapsed) {
-				setEndPoint();
-			} else {
-				ieRng.collapse(true);
-			}
+			setEndPoint();
 
 			// Select the new range and scroll it into view
 			ieRng.select();
