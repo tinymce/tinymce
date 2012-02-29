@@ -398,8 +398,20 @@
 							node.raw = true;
 							node.value = node.attr('data-mce-content');
 						} else {
-							node.attr(name, null);
+							node.attr(externalName, node.attr(internalName));
+							node.attr(internalName, null);
 						}
+					}
+				});
+
+				// Convert external name into internal name
+				ed.parser.addAttributeFilter(externalName, function(nodes, name) {
+					var i = nodes.length, node;
+
+					while (i--) {
+						node = nodes[i];
+						node.attr(internalName, node.attr(externalName));
+						node.attr(externalName, null);
 					}
 				});
 			});

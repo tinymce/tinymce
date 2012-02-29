@@ -13,7 +13,7 @@
 
 tinymce.dom = {};
 
-(function(namespace, prefix) {
+(function(namespace, expando) {
 	var w3cEventModel = !!document.addEventListener;
 
 	/**
@@ -163,9 +163,8 @@ tinymce.dom = {};
 	 * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
 	 */
 	function EventUtils(proxy) {
-		var self = this, events = {}, count, expando, isFocusBlurBound, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
+		var self = this, events = {}, count, isFocusBlurBound, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
 
-		expando = prefix + (+new Date()).toString(32);
 		hasMouseEnterLeave = "onmouseenter" in document.documentElement;
 		hasFocusIn = "onfocusin" in document.documentElement;
 		mouseEnterLeave = {mouseenter: 'mouseover', mouseleave: 'mouseout'};
@@ -596,4 +595,4 @@ tinymce.dom = {};
 	namespace.Event.bind(window, 'ready', function() {});
 
 	namespace = 0;
-})(tinymce.dom, 'data-mce-expando-'); // Namespace and expando prefix
+})(tinymce.dom, 'data-mce-expando'); // Namespace and expando

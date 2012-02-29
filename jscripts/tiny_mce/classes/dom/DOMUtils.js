@@ -137,7 +137,7 @@
 			var self = this, clone, doc;
 
 			// TODO: Add feature detection here in the future
-			if (!isIE || node.nodeType !== 1) {
+			if (!isIE || node.nodeType !== 1 || deep) {
 				return node.cloneNode(deep);
 			}
 
@@ -154,7 +154,7 @@
 
 				return clone;
 			}
-
+/*
 			// Setup HTML5 patched document fragment
 			if (!self.frag) {
 				self.frag = doc.createDocumentFragment();
@@ -166,7 +166,7 @@
 			self.frag.appendChild(clone);
 			clone.innerHTML = node.outerHTML;
 			self.frag.removeChild(clone);
-
+*/
 			return clone.firstChild;
 		},
 

@@ -197,5 +197,8 @@ function type(chr) {
 }
 
 function cleanHtml(html) {
-	return html.toLowerCase().replace(/\n/g, '');
+	html = html.toLowerCase().replace(/[\r\n]+/g, '');
+	html = html.replace(/ (sizcache|nodeindex|sizset|data\-mce\-expando)="[^"]*"/g, '');
+
+	return html;
 }

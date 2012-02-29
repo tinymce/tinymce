@@ -119,6 +119,15 @@
 			}
 		});
 
+		// Remove expando attributes
+		htmlParser.addAttributeFilter('data-mce-expando', function(nodes, name, args) {
+			var i = nodes.length;
+
+			while (i--) {
+				nodes[i].attr(name, null);
+			}
+		});
+
 		// Force script into CDATA sections and remove the mce- prefix also add comments around styles
 		htmlParser.addNodeFilter('script,style', function(nodes, name) {
 			var i = nodes.length, node, value;
