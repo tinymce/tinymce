@@ -22,7 +22,8 @@
 	function splitList(selection, dom, li) {
 		var listBlock, block;
 
-		if (dom.isEmpty(li)) {
+		// TODO: Fix so this doesn't use native IE logic
+		if (dom.isEmpty(li) && !isIE) {
 			listBlock = dom.getParent(li, 'ul,ol');
 
 			if (!dom.getParent(listBlock.parentNode, 'ul,ol')) {
