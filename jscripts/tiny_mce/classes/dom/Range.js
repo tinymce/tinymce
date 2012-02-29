@@ -429,7 +429,10 @@
 				if (how == DELETE)
 					return;
 
-				frag.appendChild(doc.createTextNode(sub));
+				if (sub.length > 0) {
+					frag.appendChild(doc.createTextNode(sub));
+				}
+
 				return frag;
 			}
 
