@@ -9,6 +9,10 @@ Version 3.5 (2012-xx-xx)
 	Fixed bug where content css would be loaded twice into iframe. 
 	Fixed bug where start elements with only whitespace in the attribute part wouldn't be correctly parsed.
 Version 3.4.9 (2012-02-23)
+	Fixed bug where Ignore All in IE did not remove the underline from the selected word.
+	Fixed bug in html source editor word wrap option not wrapping text in Webkit browsers.
+	Fixed bug where it was possible to insert an invalid colour in the color pop-up dialog.
+	Fixed bug in Webkit where if anchor is on last line by itself caret can not be placed after it.
 	Added settings to wordcount plugin to configure update rate and checking wordcount on backspace and delete using wordcount_update_rate and wordcount_update_on_delete.
 	Fixed bug in Webkit and IE where deleting empty paragraphs would remove entire editor contents.
 	Fixed bug where pressing enter on end of list item with a heading would create a new item with heading.	
