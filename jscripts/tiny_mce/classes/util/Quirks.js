@@ -191,6 +191,7 @@
 	/**
 	 * If you hit enter from a heading in IE, the resulting P tag below it shares the style property (bad)
 	 * */
+	 /*
 	function removeStylesOnPTagsInheritedFromHeadingTag(ed) {
 		ed.onKeyDown.add(function(ed, event) {
 			function checkInHeadingTag(ed) {
@@ -211,6 +212,8 @@
 			}
 		});
 	}
+	*/
+
 	/**
 	 * Fire a nodeChanged when the selection is changed on WebKit this fixes selection issues on iOS5. It only fires the nodeChange
 	 * event every 50ms since it would other wise update the UI when you type and it hogs the CPU.
@@ -263,7 +266,7 @@
 				removeHrOnBackspace(ed);
 				emptyEditorWhenDeleting(ed);
 				ensureBodyHasRoleApplication(ed);
-				removeStylesOnPTagsInheritedFromHeadingTag(ed)
+				//removeStylesOnPTagsInheritedFromHeadingTag(ed)
 			}
 
 			// Gecko
