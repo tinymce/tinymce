@@ -346,22 +346,22 @@
 
 			// If selection is in empty table cell
 			if (sn === en && /^(TD|TH)$/.test(sn.nodeName)) {
-				if (sn.firstChild.nodeName == 'BR')
+				if (sn.firstChild && sn.firstChild.nodeName == 'BR')
 					dom.remove(sn.firstChild); // Remove BR
 
 				// Create two new block elements
 				if (sn.childNodes.length == 0) {
-					ed.dom.add(sn, se.element, null, '<br />');
-					aft = ed.dom.add(sn, se.element, null, '<br />');
+					dom.add(sn, se.element, null, isIE ? '' : '<br />');
+					aft = dom.add(sn, se.element, null, isIE ? '' : '<br />');
 				} else {
 					n = sn.innerHTML;
 					sn.innerHTML = '';
-					ed.dom.add(sn, se.element, null, n);
-					aft = ed.dom.add(sn, se.element, null, '<br />');
+					dom.add(sn, se.element, null, n);
+					aft = dom.add(sn, se.element, null, isIE ? '' : '<br />');
 				}
 
 				// Move caret into the last one
-				r = d.createRange();
+				r = dom.createRng();
 				r.selectNodeContents(aft);
 				r.collapse(1);
 				ed.selection.setRng(r);
@@ -370,12 +370,12 @@
 			}
 
 			// If the caret is in an invalid location in FF we need to move it into the first block
-			if (sn == b && en == b && b.firstChild && ed.dom.isBlock(b.firstChild)) {
+			if (sn == b && en == b && b.firstChild && dom.isBlock(b.firstChild)) {
 				sn = en = sn.firstChild;
 				so = eo = 0;
-				rb = d.createRange();
+				rb = dom.createRng();
 				rb.setStart(sn, 0);
-				ra = d.createRange();
+				ra = dom.createRng();
 				ra.setStart(en, 0);
 			}
 
@@ -433,19 +433,19 @@
 			}
 
 			// Setup new before and after blocks
-			bef = (sb && sb.nodeName == bn) ? sb.cloneNode(0) : ed.dom.create(bn);
-			aft = (eb && eb.nodeName == bn) ? eb.cloneNode(0) : ed.dom.create(bn);
+			bef = (sb && sb.nodeName == bn) ? dom.clone(sb, false) : dom.create(bn);
+			aft = (eb && eb.nodeName == bn) ? dom.clone(eb, false) : dom.create(bn);
 
 			// Remove id from after clone
 			aft.removeAttribute('id');
 
 			// Is header and cursor is at the end, then force paragraph under
 			if (/^(H[1-6])$/.test(bn) && isAtEnd(r, sb, dom)) {
-				aft = ed.dom.create(se.element);
+				aft = dom.create(se.element);
 
 				// Use header name as copy if we are in a hgroup
 				if (t.dom.getParent(sb, 'hgroup')) {
-					aft = ed.dom.create(bn);
+					aft = dom.create(bn);
 				}
 			}
 
@@ -555,14 +555,9 @@
 				return e;
 			};
 
-			// Padd empty blocks
-			if (dom.isEmpty(bef))
-				appendStyles(bef, sn);
-
-			// Fill empty afterblook with current style
-			if (dom.isEmpty(aft))
-				car = appendStyles(aft, en);
-
+			// IE gets messed up if the elements has empty text nodes in them this might
+			// happen when the range spits at the end/beginning of a text node.
+			// @todo: The acutal bug should be fixed in the Range.js file this is a hot patch
 			if (isIE) {
 				clean(bef);
 				clean(aft);
@@ -577,21 +572,27 @@
 				r.insertNode(bef);
 			}
 
+			// Append needs to be done after the blocks have been added to the DOM since IE won't render empty bock elements otherwise
+
+			// Padd empty blocks
+			if (dom.isEmpty(bef))
+				appendStyles(bef, sn);
+
+			// Fill empty afterblook with current style
+			if (dom.isEmpty(aft))
+				car = appendStyles(aft, en);
+
 			// Normalize on non IE browsers since IE might crash
 			if (!isIE) {
 				aft.normalize();
 				bef.normalize();
 			}
 
-			// Move cursor and scroll into view
-			/*ed.selection.select(aft, true);
-			ed.selection.collapse(true);*/
-			//ed.selection.select(d.body);
-			moveToCaretPosition(aft);
+			// Move the caret into the first text node of the caret container or aft block
+			moveToCaretPosition(car || aft);
 
 			// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
-			y = ed.dom.getPos(aft).y;
-			//ch = aft.clientHeight;
+			y = dom.getPos(aft).y;
 
 			// Is element within viewport
 			if (y < vp.y || y + 25 > vp.y + vp.h) {
