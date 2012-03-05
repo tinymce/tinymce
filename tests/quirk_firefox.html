@@ -26,15 +26,17 @@ module("Quirks Tests", {
 
 if (tinymce.isGecko) {
 	asyncTest('hr', 1, function() {
-		editor.setContent('<p>one</p><hr /><p id="a">two</p>');
-		setSelection('#a', 0);
-		editor.focus();
-		robot.type(8, false, function() {
-			var expected = '<p>one</p><p id="a">two</p>';
-			var actual = editor.getContent({ format: 'raw' });
-			equal(actual, expected);
-			start();
-		}, editor.getBody());
+		setTimeout(function() {
+			editor.setContent('<p>one</p><hr /><p id="a">two</p>');
+			setSelection('#a', 0);
+			editor.focus();
+			robot.type(8, false, function() {
+				var expected = '<p>one</p><p id="a">two</p>';
+				var actual = editor.getContent({ format: 'raw' });
+				equal(actual, expected);
+				start();
+			}, editor.getBody());
+		}, 100);
 	});
 } else {
 	test('ignored', function() {

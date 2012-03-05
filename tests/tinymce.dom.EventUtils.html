@@ -78,6 +78,7 @@ test("unbind event", function() {
 
 test("unbind event non existing", function() {
 	eventUtils.unbind(window, 'noevent');
+	ok(true, "No exception");
 });
 
 test("unbind callback", function() {
@@ -358,6 +359,7 @@ test("bind unbind fire clean on null", function() {
 	eventUtils.unbind(null, 'click', function() {});
 	eventUtils.fire(null, {});
 	eventUtils.clean(null);
+	ok(true, "No exception");
 });
 
 test("bind ready when page is loaded", function() {
@@ -385,13 +387,6 @@ test("event states when event object is fired twice", function() {
 	deepEqual(result, {keydown: true, keyup: true});
 });
 
-test("bind unbind fire clean on null", function() {
-	eventUtils.bind(null, 'click', function() {});
-	eventUtils.unbind(null, 'click', function() {});
-	eventUtils.fire(null, {});
-	eventUtils.clean(null);
-});
-
 test("unbind inside callback", function() {
 	function a() {}
 
@@ -401,6 +396,8 @@ test("unbind inside callback", function() {
 
 	eventUtils.bind(window, 'click', a);
 	eventUtils.fire(window, 'click', {});
+
+	ok(true, "No exception");
 });
 
 /**

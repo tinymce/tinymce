@@ -18,11 +18,11 @@
         QUnit.config.autostart = false;
 
         module("Quirks Tests", {
-                    autostart: false,
-                    setup: function() {
-                        window.queue = new dsl.Queue();
-                    }
-                });
+			autostart: false,
+			setup: function() {
+				window.queue = new dsl.Queue();
+			}
+        });
 
         var defaultTableContent =
                 "<p id='p'>p</p>" +
@@ -115,45 +115,51 @@
                         "</table>" +
                         "<p id='g'>g</p>";
 
-        asyncTest('tbody to tr', 1, function() {
-            check('b', 40, 'c');
-        });
-        asyncTest('tr to tr', 1, function() {
-            check('c', 40, 'd');
-        });
-        asyncTest('tr to tbody', 1, function() {
-            check('d', 40, 'e');
-        });
-        asyncTest('tbody to tfoot', 1, function() {
-            check('e', 40, 'f');
-        });
-        asyncTest('tfoot escaping down', 1, function() {
-            check('f', 40, 'g');
-        });
-        asyncTest('thead to tbody', 1, function() {
-            check('a', 40, 'b');
-        });
-        asyncTest('tfoot to tbody', 1, function() {
-            check('f', 38, 'e');
-        });
-        asyncTest('tbody to thead', 1, function() {
-            check('b', 38, 'a');
-        });
-        asyncTest('thead escaping up', 1, function() {
-            check('a', 38, 'p');
-        });
-        asyncTest('nested tbody to tfoot', 1, function() {
-            check('l', 40, 'm');
-        });
-        asyncTest('nested tfoot to tbody', 1, function() {
-            check('m', 38, 'l');
-        });
-        asyncTest('nested tfoot to tbody', 1, function() {
-            check('m', 38, 'l');
-        });
-        asyncTest('moving up around nested table', 1, function() {
-            check('d', 38, 'c');
-        });
+		if (tinymce.isWebKit) {
+			asyncTest('tbody to tr', 1, function() {
+				check('b', 40, 'c');
+			});
+			asyncTest('tr to tr', 1, function() {
+				check('c', 40, 'd');
+			});
+			asyncTest('tr to tbody', 1, function() {
+				check('d', 40, 'e');
+			});
+			asyncTest('tbody to tfoot', 1, function() {
+				check('e', 40, 'f');
+			});
+			asyncTest('tfoot escaping down', 1, function() {
+				check('f', 40, 'g');
+			});
+			asyncTest('thead to tbody', 1, function() {
+				check('a', 40, 'b');
+			});
+			asyncTest('tfoot to tbody', 1, function() {
+				check('f', 38, 'e');
+			});
+			asyncTest('tbody to thead', 1, function() {
+				check('b', 38, 'a');
+			});
+			asyncTest('thead escaping up', 1, function() {
+				check('a', 38, 'p');
+			});
+			asyncTest('nested tbody to tfoot', 1, function() {
+				check('l', 40, 'm');
+			});
+			asyncTest('nested tfoot to tbody', 1, function() {
+				check('m', 38, 'l');
+			});
+			asyncTest('nested tfoot to tbody', 1, function() {
+				check('m', 38, 'l');
+			});
+			asyncTest('moving up around nested table', 1, function() {
+				check('d', 38, 'c');
+			});
+		} else {
+			test("Skipped since the browser isn't WebKit", function() {
+				ok(true, "Skipped");
+			});
+		}
 
         function check(nodeId, keyStroke, expectedId) {
             setSelection('#' + nodeId, 0);
@@ -170,16 +176,15 @@
         }
 
         var initTinyFunction = function() {
-
-            tinyMCE.init({
-                        mode : "exact",
-                        plugins: 'table',
-                        elements : "elm1",
-                        init_instance_callback : function(ed) {
-                            editor = ed;
-                            editor.setContent(defaultTableContent);
-                        }
-                    });
+			tinyMCE.init({
+				mode : "exact",
+				plugins: 'table',
+				elements : "elm1",
+				init_instance_callback : function(ed) {
+					editor = ed;
+					editor.setContent(defaultTableContent);
+				}
+			});
         }
     </script>
 </head>

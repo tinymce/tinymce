@@ -546,7 +546,9 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equal(r.endOffset, 2);
 	});
 } else {
-	test("Skipped ie_selection tests as not running in IE.", function() {});
+	test("Skipped ie_selection tests as not running in IE.", function() {
+		ok(true, "Dummy assert");
+	});
 }
 
 function getCaretInfo() {
