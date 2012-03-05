@@ -8,6 +8,7 @@ Version 3.5 (2012-xx-xx)
 	Added new preview_styles option that enables control over what gets previewed.
 	Fixed bug where content css would be loaded twice into iframe. 
 	Fixed bug where start elements with only whitespace in the attribute part wouldn't be correctly parsed.
+	Fixed bug where the advlink dialog would produce an error about the addSelectAccessibility function not being defined.
 Version 3.4.9 (2012-02-23)
 	Fixed bug where Ignore All in IE did not remove the underline from the selected word.
 	Fixed bug in html source editor word wrap option not wrapping text in Webkit browsers.
