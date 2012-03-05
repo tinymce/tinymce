@@ -25,7 +25,7 @@ module("Quirks Tests", {
 });
 
 if (tinymce.isGecko) {
-	asyncTest('hr', 1, function() {
+	asyncTest('Remove hr between p with backspace', 1, function() {
 		setTimeout(function() {
 			editor.setContent('<p>one</p><hr /><p id="a">two</p>');
 			setSelection('#a', 0);
