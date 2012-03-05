@@ -93,7 +93,7 @@ function toHexColor(color) {
 		return value.length > 1 ? value : '0' + value; // Padd with leading zero
 	};
 
-	color = tinyMCEPopup.editor.trim(color);
+	color = tinymce.trim(color);
 	color = color.replace(/^[#]/, '').toLowerCase();  // remove leading '#'
 	color = namedLookup[color] || color;
 
