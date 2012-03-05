@@ -130,6 +130,18 @@ asyncTest('Typing a WWW URL', function() {
     queue.done();
 });
 
+asyncTest('Typing a mail address', function() {
+    if (tinyMCE.isIE) {
+        start();
+        return;
+    }
+
+    TypingMailAddr.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="mailto:user@domain.com">user@domain.com</a>(\\s|&nbsp;)Test</p>$'));
+    TypingDashedMailAddr.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>(\\s|&nbsp;)Test</p>$'));
+
+    queue.done();
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
