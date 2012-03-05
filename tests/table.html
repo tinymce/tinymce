@@ -111,6 +111,21 @@ asyncTest('arrow key down in bottom row escapes table', function() {
 	testCursorKey(html, '#b', DOWN_ARROW, 'outside');
 });
 
+asyncTest('arrow key up in bottom row to last p in above tr', 1, function() {
+	var html = "<table><tr><td><p id='a'>a</p><p id='b'>b</p></td></tr><tr><td><p id='c'>c</p><p>d</p></td></tr></table>";
+	testCursorKey(html, '#c', UP_ARROW, 'b');
+});
+
+asyncTest('arrow key down in top row to first p in below tr', 1, function() {
+	var html = "<table><tr><td><p id='a'>a</p><p id='b'>b</p></td></tr><tr><td><p id='c'>c</p><p>d</p></td></tr></table>";
+	testCursorKey(html, '#b', DOWN_ARROW, 'c');
+});
+
+asyncTest('arrow key down into table cell with br', 1, function() {
+	var html = "<table><tr><td id='a'></td></tr><tr><td>something<br></td></tr></table>";
+	testCursorKey(html, '#a', DOWN_ARROW, 'something');
+});
+
 asyncTest('shift-enter in table cell ending with BR places caret on new line', function() {
 		editor.setContent('<table><tr><td>d <strong>e</strong><br></td></tr></table>');
 		setSelection('strong', 1);
