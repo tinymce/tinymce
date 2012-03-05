@@ -279,7 +279,7 @@
 
 						if (/^(BR|IMG)$/.test(node.nodeName)) {
 							rng.setStartBefore(node);
-							rng.setEndAfter(node);
+							rng.setEndBefore(node);
 							break;
 						}
 					}
@@ -556,39 +556,47 @@
 				return e;
 			};
 
-			// IE gets messed up if the elements has empty text nodes in them this might
-			// happen when the range spits at the end/beginning of a text node.
-			// @todo: The acutal bug should be fixed in the Range.js file this is a hot patch
 			if (isIE) {
+				// IE gets messed up if the elements has empty text nodes in them this might
+				// happen when the range spits at the end/beginning of a text node.
+				// @todo: The acutal bug should be fixed in the Range.js file this is a hot patch
 				clean(bef);
 				clean(aft);
-			}
 
-			// Opera needs this one backwards for older versions
-			if (isOpera && parseFloat(opera.version()) < 9.5) {
-				r.insertNode(bef);
+				// IE needs to have the nodes inserted before we apply styles to them or enter won't work properly
 				r.insertNode(aft);
+				r.insertNode(bef);
+
+				// Padd empty blocks
+				if (dom.isEmpty(bef))
+					appendStyles(bef, sn);
+
+				// Fill empty afterblook with current style
+				if (dom.isEmpty(aft))
+					car = appendStyles(aft, en);
 			} else {
-				r.insertNode(aft);
-				r.insertNode(bef);
-			}
+				// Padd empty blocks
+				if (dom.isEmpty(bef))
+					appendStyles(bef, sn);
 
-			// Append needs to be done after the blocks have been added to the DOM since IE won't render empty bock elements otherwise
+				// Fill empty afterblook with current style
+				if (dom.isEmpty(aft))
+					car = appendStyles(aft, en);
 
-			// Padd empty blocks
-			if (dom.isEmpty(bef))
-				appendStyles(bef, sn);
+				// Opera needs this one backwards for older versions
+				if (isOpera && parseFloat(opera.version()) < 9.5) {
+					r.insertNode(bef);
+					r.insertNode(aft);
+				} else {
+					r.insertNode(aft);
+					r.insertNode(bef);
+				}
 
-			// Fill empty afterblook with current style
-			if (dom.isEmpty(aft))
-				car = appendStyles(aft, en);
-
-			// Normalize on non IE browsers since IE might crash
-			if (!isIE) {
+				// Normalize any split text nodes
 				aft.normalize();
 				bef.normalize();
 			}
-
+			
 			// Move the caret into the first text node of the caret container or aft block
 			moveToCaretPosition(car || aft);
 
