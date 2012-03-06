@@ -249,7 +249,7 @@
 
 		insertPara : function(e) {
 			var t = this, ed = t.editor, dom = ed.dom, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = ed.selection.getRng(true), b = d.body;
-			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, vp = dom.getViewPort(ed.getWin()), y, ch, car, containerBlock;
+			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, ch, car, containerBlock;
 
 			// Checks if the selection/caret is at the end of the specified block element
 			function isAtEnd(rng, par) {
@@ -263,8 +263,9 @@
 			};
 
 			function moveToCaretPosition(root) {
-				var walker, node, rng;
+				var walker, node, rng, y, vp;
 
+				vp = dom.getViewPort(ed.getWin());
 				rng = dom.createRng();
 
 				if (root.hasChildNodes()) {
@@ -289,6 +290,19 @@
 				}
 
 				ed.selection.setRng(rng);
+
+				// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
+				y = dom.getPos(root).y;
+
+				// Is element within viewport
+				if (y < vp.y || y + 25 > vp.y + vp.h) {
+					ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + 25); // Needs to be hardcoded to roughly one line of text if a huge text block is broken into two blocks
+
+					/*console.debug(
+						'Element: y=' + y + ', h=' + ch + ', ' +
+						'Viewport: y=' + vp.y + ", h=" + vp.h + ', bottom=' + (vp.y + vp.h)
+					);*/
+				}
 			};
 
 			function clean(node) {
@@ -347,25 +361,12 @@
 
 			// If selection is in empty table cell
 			if (sn === en && /^(TD|TH)$/.test(sn.nodeName)) {
-				if (sn.firstChild && sn.firstChild.nodeName == 'BR')
-					dom.remove(sn.firstChild); // Remove BR
+				sn.innerHTML = '';
 
 				// Create two new block elements
-				if (sn.childNodes.length == 0) {
-					dom.add(sn, se.element, null, isIE ? '' : '<br />');
-					aft = dom.add(sn, se.element, null, isIE ? '' : '<br />');
-				} else {
-					n = sn.innerHTML;
-					sn.innerHTML = '';
-					dom.add(sn, se.element, null, n);
-					aft = dom.add(sn, se.element, null, isIE ? '' : '<br />');
-				}
-
-				// Move caret into the last one
-				r = dom.createRng();
-				r.selectNodeContents(aft);
-				r.collapse(1);
-				ed.selection.setRng(r);
+				dom.add(sn, se.element, null, isIE ? '' : '<br />');
+				aft = dom.add(sn, se.element, null, isIE ? '' : '<br />');
+				moveToCaretPosition(aft);
 
 				return FALSE;
 			}
@@ -381,8 +382,8 @@
 			}
 
 			// If the body is totally empty add a BR element this might happen on webkit
-			if (!d.body.hasChildNodes()) {
-				d.body.appendChild(dom.create('br'));
+			if (!b.hasChildNodes()) {
+				b.appendChild(dom.create('br'));
 			}
 
 			// Never use body as start or end node
@@ -408,7 +409,7 @@
 			}
 
 			// Return inside list use default browser behavior
-			if (n = t.dom.getParent(sb, 'li,pre')) {
+			if (n = t.dom.getParent(sb, 'li')) {
 				if (n.nodeName == 'LI')
 					return splitList(ed.selection, t.dom, n);
 
@@ -506,8 +507,11 @@
 			// Delete and replace it with new block elements
 			r.deleteContents();
 
-			if (isOpera)
-				ed.getWin().scrollTo(0, vp.y);
+			// Remove range end point if it's empty
+			n = r.startContainer.childNodes[r.startOffset];
+			if (n && !n.hasChildNodes()) {
+				dom.remove(n);
+			}
 
 			// Never wrap blocks in blocks
 			if (bef.firstChild && bef.firstChild.nodeName == bn)
@@ -527,7 +531,10 @@
 					padd = isOpera ? '\u00a0' : '<br />';
 				}
 
-				e.innerHTML = '';
+				// Needs to be removed using removeChild since innerHTML adds &nbsp; on IE
+				while (e.firstChild) {
+					e.removeChild(e.firstChild);
+				}
 
 				// Make clones of style elements
 				if (se.keep_styles) {
@@ -556,63 +563,32 @@
 				return e;
 			};
 
+			// IE gets messed up if the elements has empty text nodes in them this might
+			// happen when the range spits at the end/beginning of a text node.
+			// @todo: The acutal bug should be fixed in the Range.js file this is a hot patch
 			if (isIE) {
-				// IE gets messed up if the elements has empty text nodes in them this might
-				// happen when the range spits at the end/beginning of a text node.
-				// @todo: The acutal bug should be fixed in the Range.js file this is a hot patch
 				clean(bef);
 				clean(aft);
+			}
 
-				// IE needs to have the nodes inserted before we apply styles to them or enter won't work properly
+			// Padd empty blocks
+			if (dom.isEmpty(bef))
+				appendStyles(bef, sn);
+
+			// Fill empty afterblook with current style
+			if (dom.isEmpty(aft))
+				car = appendStyles(aft, en);
+
+			// Opera needs this one backwards for older versions
+			if (isOpera && parseFloat(opera.version()) < 9.5) {
+				r.insertNode(bef);
+				r.insertNode(aft);
+			} else {
 				r.insertNode(aft);
 				r.insertNode(bef);
-
-				// Padd empty blocks
-				if (dom.isEmpty(bef))
-					appendStyles(bef, sn);
-
-				// Fill empty afterblook with current style
-				if (dom.isEmpty(aft))
-					car = appendStyles(aft, en);
-			} else {
-				// Padd empty blocks
-				if (dom.isEmpty(bef))
-					appendStyles(bef, sn);
-
-				// Fill empty afterblook with current style
-				if (dom.isEmpty(aft))
-					car = appendStyles(aft, en);
-
-				// Opera needs this one backwards for older versions
-				if (isOpera && parseFloat(opera.version()) < 9.5) {
-					r.insertNode(bef);
-					r.insertNode(aft);
-				} else {
-					r.insertNode(aft);
-					r.insertNode(bef);
-				}
-
-				// Normalize any split text nodes
-				aft.normalize();
-				bef.normalize();
 			}
-			
-			// Move the caret into the first text node of the caret container or aft block
+
 			moveToCaretPosition(car || aft);
-
-			// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
-			y = dom.getPos(aft).y;
-
-			// Is element within viewport
-			if (y < vp.y || y + 25 > vp.y + vp.h) {
-				ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + 25); // Needs to be hardcoded to roughly one line of text if a huge text block is broken into two blocks
-
-				/*console.debug(
-					'Element: y=' + y + ', h=' + ch + ', ' +
-					'Viewport: y=' + vp.y + ", h=" + vp.h + ', bottom=' + (vp.y + vp.h)
-				);*/
-			}
-
 			ed.undoManager.add();
 
 			return FALSE;
