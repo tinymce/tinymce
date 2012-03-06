@@ -248,8 +248,8 @@
 		},
 
 		insertPara : function(e) {
-			var t = this, ed = t.editor, dom = ed.dom, d = ed.getDoc(), se = ed.settings, s = ed.selection.getSel(), r = ed.selection.getRng(true), b = d.body;
-			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, ch, car, containerBlock;
+			var t = this, ed = t.editor, dom = ed.dom, selection = ed.selection, d = ed.getDoc(), se = ed.settings, s = selection.getSel(), r = selection.getRng(true), b = d.body;
+			var rb, ra, dir, sn, so, en, eo, sb, eb, bn, bef, aft, sc, ec, n, ch, containerBlock, beforeCaretNode, afterCaretNode;
 
 			// Checks if the selection/caret is at the end of the specified block element
 			function isAtEnd(rng, par) {
@@ -262,10 +262,9 @@
 				return dom.isEmpty(rng2.cloneContents());
 			};
 
-			function moveToCaretPosition(root) {
+			function moveToCaretPosition(root, scroll) {
 				var walker, node, rng, y, vp;
 
-				vp = dom.getViewPort(ed.getWin());
 				rng = dom.createRng();
 
 				if (root.hasChildNodes()) {
@@ -289,19 +288,23 @@
 					rng.setEnd(root, 0);
 				}
 
-				ed.selection.setRng(rng);
+				selection.setRng(rng);
 
-				// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
-				y = dom.getPos(root).y;
+				if (scroll !== false) {
+					vp = dom.getViewPort(ed.getWin());
 
-				// Is element within viewport
-				if (y < vp.y || y + 25 > vp.y + vp.h) {
-					ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + 25); // Needs to be hardcoded to roughly one line of text if a huge text block is broken into two blocks
+					// scrollIntoView seems to scroll the parent window in most browsers now including FF 3.0b4 so it's time to stop using it and do it our selfs
+					y = dom.getPos(root).y;
 
-					/*console.debug(
-						'Element: y=' + y + ', h=' + ch + ', ' +
-						'Viewport: y=' + vp.y + ", h=" + vp.h + ', bottom=' + (vp.y + vp.h)
-					);*/
+					// Is element within viewport
+					if (y < vp.y || y + 25 > vp.y + vp.h) {
+						ed.getWin().scrollTo(0, y < vp.y ? y : y - vp.h + 25); // Needs to be hardcoded to roughly one line of text if a huge text block is broken into two blocks
+
+						/*console.debug(
+							'Element: y=' + y + ', h=' + ch + ', ' +
+							'Viewport: y=' + vp.y + ", h=" + vp.h + ', bottom=' + (vp.y + vp.h)
+						);*/
+					}
 				}
 			};
 
@@ -402,8 +405,8 @@
 				containerBlock = dom.getParent(sb, 'hgroup,blockquote,section,article');
 				if (containerBlock && (dom.isEmpty(sb) || (sb.firstChild === sb.lastChild && (!sb.firstChild || sb.firstChild.nodeName == 'BR')))) {
 					dom.split(containerBlock, sb);
-					ed.selection.select(sb, true);
-					ed.selection.collapse(true);
+					selection.select(sb, true);
+					selection.collapse(true);
 					return;
 				}
 			}
@@ -411,7 +414,7 @@
 			// Return inside list use default browser behavior
 			if (n = t.dom.getParent(sb, 'li')) {
 				if (n.nodeName == 'LI')
-					return splitList(ed.selection, t.dom, n);
+					return splitList(selection, t.dom, n);
 
 				return TRUE;
 			}
@@ -504,8 +507,9 @@
 			else
 				r.setEnd(ra.endContainer, ra.endOffset);
 
-			// Delete and replace it with new block elements
-			r.deleteContents();
+			if (sb != eb || (sb && !dom.isEmpty(sb))) {
+				r.deleteContents();
+			}
 
 			// Remove range end point if it's empty
 			n = r.startContainer.childNodes[r.startOffset];
@@ -572,12 +576,13 @@
 			}
 
 			// Padd empty blocks
-			if (dom.isEmpty(bef))
-				appendStyles(bef, sn);
+			if (dom.isEmpty(bef)) {
+				beforeCaretNode = appendStyles(bef, sn);
+			}
 
 			// Fill empty afterblook with current style
 			if (dom.isEmpty(aft))
-				car = appendStyles(aft, en);
+				afterCaretNode = appendStyles(aft, en);
 
 			// Opera needs this one backwards for older versions
 			if (isOpera && parseFloat(opera.version()) < 9.5) {
@@ -588,7 +593,13 @@
 				r.insertNode(bef);
 			}
 
-			moveToCaretPosition(car || aft);
+			// IE doesn't render empty block elements unless you poke it with a selection
+			// So we need to detect old IE and then move the caret into that block to "render it"
+			if (selection.tridentSel && beforeCaretNode) {
+				moveToCaretPosition(beforeCaretNode, false);
+			}
+
+			moveToCaretPosition(afterCaretNode || aft);
 			ed.undoManager.add();
 
 			return FALSE;
