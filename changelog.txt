@@ -1,4 +1,5 @@
 Version 3.4.9 (2012-02-23)
+	Improved edit CSS style plugin for single and multiple block selection and provide option to apply style to only selected text.
 	Fixed bug in Chrome where moving caret down in table and pasting throws errors.
 	Corrected reference to TinyMCE trim function.
 	Fixed bug where Ignore All in IE did not remove the underline from the selected word.
