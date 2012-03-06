@@ -68,20 +68,44 @@ test('Enter at middle of EM inside P', function() {
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'EM');
 });
 
-test('Enter at beginning of P', function() {
-	editor.setContent('<p>abc</p>');
-	setSelection('p', 0);
-	pressEnter({keyCode: 13});
-	equal(editor.getContent(), '<p>\u00a0</p><p>abc</p>');
-	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'P');
-});
-
 test('Enter at beginning EM inside P', function() {
 	editor.setContent('<p><em>abc</em></p>');
 	setSelection('em', 0);
 	pressEnter({keyCode: 13});
 	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>/g, ''), '<p><em></em></p><p><em>abc</em></p>');
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'EM');
+});
+
+test('Enter at end of STRONG in EM inside P', function() {
+	editor.setContent('<p><em><strong>abc</strong></em></p>');
+	setSelection('strong', 3);
+	pressEnter({keyCode: 13});
+	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>/g, ''), '<p><em><strong>abc</strong></em></p><p><em><strong></strong></em></p>');
+	equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
+});
+
+test('Enter at middle of STRONG in EM inside P', function() {
+	editor.setContent('<p><em><strong>abcd</strong></em></p>');
+	setSelection('strong', 2);
+	pressEnter({keyCode: 13});
+	equal(editor.getContent(), '<p><em><strong>ab</strong></em></p><p><em><strong>cd</strong></em></p>');
+	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'STRONG');
+});
+
+test('Enter at beginning STRONG in EM inside P', function() {
+	editor.setContent('<p><em><strong>abc</strong></em></p>');
+	setSelection('strong', 0);
+	pressEnter({keyCode: 13});
+	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>/g, ''), '<p><em><strong></strong></em></p><p><em><strong>abc</strong></em></p>');
+	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'STRONG');
+});
+
+test('Enter at beginning of P', function() {
+	editor.setContent('<p>abc</p>');
+	setSelection('p', 0);
+	pressEnter({keyCode: 13});
+	equal(editor.getContent(), '<p>\u00a0</p><p>abc</p>');
+	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'P');
 });
 
 test('Enter at middle of P with style, id and class attributes', function() {
@@ -114,6 +138,14 @@ test('Enter inside empty TD', function() {
 	pressEnter({keyCode: 13});
 	equal(editor.getContent(), '<table><tbody><tr><td><p>\u00a0</p><p>\u00a0</p></td></tr></tbody></table>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, '#text');
+});
+
+test('Enter inside empty P with empty P siblings', function() {
+	// Tests that a workaround for an IE bug is working correctly
+	editor.getBody().innerHTML = '<p></p><p></p><p>X</p>';
+	setSelection('p', 0);
+	pressEnter({keyCode: 13});
+	equal(editor.getContent(), '<p>\u00a0</p><p>\u00a0</p><p>\u00a0</p><p>X</p>');
 });
 
 tinyMCE.init({
