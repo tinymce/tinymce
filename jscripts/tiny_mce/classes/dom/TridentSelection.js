@@ -416,7 +416,16 @@
 			ieRng = body.createTextRange();
 
 			// If single element selection then try making a control selection out of it
-			if (startContainer == endContainer && startContainer.nodeType == 1 && startOffset == endOffset - 1) {
+			if (startContainer == endContainer && startContainer.nodeType == 1) {
+				if (!startContainer.hasChildNodes()) {
+					startContainer.innerHTML = '<span>\uFEFF</span>';
+					ieRng.moveToElementText(startContainer.firstChild);
+					ieRng.select();
+					startContainer.innerHTML = '';
+					ieRng.select();
+					return;
+				}
+
 				if (startOffset == endOffset - 1) {
 					try {
 						ctrlRng = body.createControlRange();
