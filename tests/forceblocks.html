@@ -141,13 +141,15 @@ test('Enter inside empty TD', function() {
 	equal(editor.selection.getRng(true).startContainer.nodeName, '#text');
 });
 
-test('Enter inside empty P with empty P siblings', function() {
-	// Tests that a workaround for an IE bug is working correctly
-	editor.getBody().innerHTML = '<p></p><p></p><p>X</p>';
-	setSelection('p', 0);
-	pressEnter({keyCode: 13});
-	equal(editor.getContent(), '<p>\u00a0</p><p>\u00a0</p><p>\u00a0</p><p>X</p>');
-});
+if (tinymce.isIE) {
+	test('Enter inside empty P with empty P siblings', function() {
+		// Tests that a workaround for an IE bug is working correctly
+		editor.getBody().innerHTML = '<p></p><p></p><p>X</p>';
+		setSelection('p', 0);
+		pressEnter({keyCode: 13});
+		equal(editor.getContent(), '<p>\u00a0</p><p>\u00a0</p><p>\u00a0</p><p>X</p>');
+	});
+}
 
 tinyMCE.init({
 	mode : "exact",
