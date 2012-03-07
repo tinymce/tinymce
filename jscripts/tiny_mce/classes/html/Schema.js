@@ -649,10 +649,6 @@
 		// Todo: Remove this when we fix list handling to be valid
 		addValidChildren('+ol[ul|ol],+ul[ul|ol]');
 
-		// If the user didn't allow span only allow internal spans
-		if (!getElementRule('span'))
-			addValidElements('span[!data-mce-type|*]');
-
 		// Delete invalid elements
 		if (settings.invalid_elements) {
 			tinymce.each(tinymce.explode(settings.invalid_elements), function(item) {
@@ -660,6 +656,10 @@
 					delete elements[item];
 			});
 		}
+
+		// If the user didn't allow span only allow internal spans
+		if (!getElementRule('span'))
+			addValidElements('span[!data-mce-type|*]');
 
 		/**
 		 * Name/value map object with valid parents and children to those parents.
