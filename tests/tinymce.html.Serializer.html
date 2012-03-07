@@ -12,6 +12,8 @@
 <script>
 module("tinymce.html.Serializer");
 
+QUnit.config.reorder = false;
+
 test('Basic serialization', function() {
 	var serializer = new tinymce.html.Serializer();
 
@@ -30,7 +32,7 @@ test('Sorting of attributes', function() {
 
 	expect(1);
 
-	equal(serializer.serialize(new tinymce.html.DomParser().parse('<b class="class" id="id"></b>')), '<strong id="id" class="class"></strong>');
+	equal(serializer.serialize(new tinymce.html.DomParser().parse('<b class="class" id="id">x</b>')), '<strong id="id" class="class">x</strong>');
 });
 </script>
 </head>

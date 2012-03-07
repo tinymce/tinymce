@@ -12,6 +12,8 @@
 <script>
 module("tinymce.html.DomParser");
 
+QUnit.config.reorder = false;
+
 var schema = new tinymce.html.Schema({valid_elements: '*[class|title]'});
 var serializer = new tinymce.html.Serializer({}, schema);
 

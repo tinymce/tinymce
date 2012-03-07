@@ -27,12 +27,12 @@ module("Quirks Tests", {
 if (tinymce.isIE) {
 	asyncTest('Remove hr between p with backspace', 1, function() {
 		setTimeout(function() {
-			editor.setContent('<p>one</p><hr /><p id="a">two</p>');
-			setSelection('#a', 0);
+			editor.setContent('<p>one</p><hr /><p>two</p>');
+			setSelection('p:last', 0);
 			editor.focus();
 			robot.type(8, false, function() {
-				var expected = '<p>one</p><p id="a">two</p>';
-				var actual = editor.getContent({ format: 'raw' });
+				var expected = '<p>one</p><p>two</p>';
+				var actual = cleanHtml(editor.getContent({ format: 'raw' }));
 				equal(actual, expected);
 				start();
 			}, editor.getBody());

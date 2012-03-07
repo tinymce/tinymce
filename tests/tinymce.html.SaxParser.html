@@ -12,6 +12,8 @@
 <script>
 module("tinymce.html.SaxParser");
 
+QUnit.config.reorder = false;
+
 var writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();
 
 function createCounter(writer) {
