@@ -239,8 +239,29 @@
 		document.body.setAttribute("role", "application");
 	}
 	
+	/**
+	 * Backspacing into a table behaves differently depending upon browser type.
+	 * Therefore, disable Backspace when cursor immediately follows a table.
+	 */
+
+	function disableBackspaceIntoATable(ed) {
+		ed.onKeyDown.add(function(ed, e) {
+			if (e.keyCode === BACKSPACE) {
+				if (ed.selection.isCollapsed() && ed.selection.getRng(true).startOffset === 0) {
+					var previousSibling = ed.selection.getNode().previousSibling;
+					if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "table") {
+						return tinymce.dom.Event.cancel(e);
+					}
+				}
+			}
+		})
+	}
+
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
+			// All browsers
+			disableBackspaceIntoATable(ed);
+
 			// WebKit
 			if (tinymce.isWebKit) {
 				cleanupStylesWhenDeleting(ed);

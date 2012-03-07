@@ -74,9 +74,10 @@ provide([
 		]},
 
 		{"title": "Quirks", "tests": [
+			{"title": "All browser types", "url": "quirk_all.html", "jsrobot": true},
 			{"title": "Firefox", "url": "quirk_firefox.html", "jsrobot": true},
 			{"title": "Internet Explorer 8", "url": "quirk_ie8.html", "jsrobot": true},
-            		{"title": "Webkit", "url": "quirk_webkit.html", "jsrobot": true}
+ 			{"title": "Webkit", "url": "quirk_webkit.html", "jsrobot": true}
 		]}
 	]
 ]);
