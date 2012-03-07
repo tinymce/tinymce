@@ -125,6 +125,12 @@
 			if ((u.host != 'mce_host' && t.host != u.host && u.host) || t.port != u.port || t.protocol != u.protocol)
 				return u.getURI();
 
+			var tu = t.getURI(), uu = u.getURI();
+			
+			// Allow usage of the base_uri when relative_urls = true
+			if(tu == uu || (tu.substr(-1) == "/" && tu.substr(0,tu.length - 1) == uu) )
+				return tu;
+
 			o = t.toRelPath(t.path, u.path);
 
 			// Add query
