@@ -1624,7 +1624,7 @@
 
 			node = node.firstChild;
 			if (node) {
-				walker = new tinymce.dom.TreeWalker(node, node);
+				walker = new tinymce.dom.TreeWalker(node, node.parentNode);
 				elements = elements || self.schema ? self.schema.getNonEmptyElements() : null;
 
 				do {
