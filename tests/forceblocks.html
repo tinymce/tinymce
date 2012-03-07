@@ -56,7 +56,7 @@ test('Enter at end of EM inside P', function() {
 	editor.setContent('<p><em>abc</em></p>');
 	setSelection('em', 3);
 	pressEnter({keyCode: 13});
-	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>/g, ''), '<p><em>abc</em></p><p><em></em></p>');
+	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em>abc</em></p><p><em></em></p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'EM');
 });
 
@@ -72,7 +72,7 @@ test('Enter at beginning EM inside P', function() {
 	editor.setContent('<p><em>abc</em></p>');
 	setSelection('em', 0);
 	pressEnter({keyCode: 13});
-	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>/g, ''), '<p><em></em></p><p><em>abc</em></p>');
+	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em></em></p><p><em>abc</em></p>');
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'EM');
 });
 
@@ -80,7 +80,7 @@ test('Enter at end of STRONG in EM inside P', function() {
 	editor.setContent('<p><em><strong>abc</strong></em></p>');
 	setSelection('strong', 3);
 	pressEnter({keyCode: 13});
-	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>/g, ''), '<p><em><strong>abc</strong></em></p><p><em><strong></strong></em></p>');
+	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em><strong>abc</strong></em></p><p><em><strong></strong></em></p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
 });
 
@@ -96,7 +96,7 @@ test('Enter at beginning STRONG in EM inside P', function() {
 	editor.setContent('<p><em><strong>abc</strong></em></p>');
 	setSelection('strong', 0);
 	pressEnter({keyCode: 13});
-	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>/g, ''), '<p><em><strong></strong></em></p><p><em><strong>abc</strong></em></p>');
+	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em><strong></strong></em></p><p><em><strong>abc</strong></em></p>');
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'STRONG');
 });
 
