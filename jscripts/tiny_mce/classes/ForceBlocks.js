@@ -270,7 +270,7 @@
 				if (root.hasChildNodes()) {
 					walker = new tinymce.dom.TreeWalker(root, root);
 
-					while (node = walker.next()) {
+					while (node = walker.current()) {
 						if (node.nodeType == 3) {
 							rng.setStart(node, 0);
 							rng.setEnd(node, 0);
@@ -282,6 +282,8 @@
 							rng.setEndBefore(node);
 							break;
 						}
+						
+						node = walker.next();
 					}
 				} else {
 					rng.setStart(root, 0);
@@ -507,7 +509,7 @@
 			else
 				r.setEnd(ra.endContainer, ra.endOffset);
 
-			if (sb != eb || (sb && !dom.isEmpty(sb))) {
+			if (!isIE || sb != eb || (sb && !dom.isEmpty(sb))) {
 				r.deleteContents();
 			}
 
@@ -527,13 +529,8 @@
 			function appendStyles(e, en) {
 				var nl = [], nn, n, i, padd;
 
-				if (isIE) {
-					// IE needs a element that we remove so the caret won't escape
-					padd = '';
-				} else {
-					 // Extra space for Opera so that the caret can move there
-					padd = isOpera ? '\u00a0' : '<br />';
-				}
+				 // Use BR on W3C browsers and empty string on IE
+				padd = isIE ? '' : '<br />';
 
 				// Needs to be removed using removeChild since innerHTML adds &nbsp; on IE
 				while (e.firstChild) {

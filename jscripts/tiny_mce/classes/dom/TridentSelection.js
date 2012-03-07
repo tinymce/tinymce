@@ -419,11 +419,11 @@
 			if (startContainer == endContainer && startContainer.nodeType == 1) {
 				// Trick to place the caret inside an empty block element like <p></p>
 				if (!startContainer.hasChildNodes()) {
-					startContainer.innerHTML = '<span>\uFEFF</span>';
-					ieRng.moveToElementText(startContainer.firstChild);
-					ieRng.collapse(false); // Needs to be collapse false for IE8 mode in IE9
+					startContainer.innerHTML = '<span>\uFEFF</span><span>\uFEFF</span>';
+					ieRng.moveToElementText(startContainer.lastChild);
 					ieRng.select();
-					dom.remove(startContainer.firstChild);
+					dom.doc.selection.clear();
+					startContainer.innerHTML = '';
 					return;
 				}
 
