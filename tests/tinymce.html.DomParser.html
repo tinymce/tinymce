@@ -16,6 +16,7 @@ QUnit.config.reorder = false;
 
 var schema = new tinymce.html.Schema({valid_elements: '*[class|title]'});
 var serializer = new tinymce.html.Serializer({}, schema);
+var parser, root;
 
 function countNodes(node, counter) {
 	var sibling;
@@ -57,9 +58,7 @@ test('Parse element', function() {
 });
 
 test('Whitespace', function() {
-	var parser, root;
-
-	expect(14);
+	expect(12);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
@@ -70,11 +69,6 @@ test('Whitespace', function() {
 	root = parser.parse('  \t\r\n  <P>  \t\r\n   test  \t\r\n   </P>   \t\r\n  ');
 	equal(serializer.serialize(root), '<p>test</p>', 'Redundant whitespace (block element)');
 	deepEqual(countNodes(root), {body:1, p:1, '#text':1}, 'Redundant whitespace (block element) (count)');
-
-	parser = new tinymce.html.DomParser({}, schema);
-	root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
-	equal(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
-	deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   test  \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
@@ -95,6 +89,20 @@ test('Whitespace', function() {
 	root = parser.parse('\n<hr />\n<br />\n<div>\n<hr />\n<br />\n<img src="file.gif" data-mce-src="file.gif" />\n<hr />\n<br />\n</div>\n<hr />\n<br />\n');
 	equal(serializer.serialize(root), '<div><img src="file.gif" data-mce-src="file.gif" alt="" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
 	deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (count)');
+});
+
+test('Whitespace preserved in PRE', function() {
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
+	equal(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
+	deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
+});
+
+test('Whitespace preserved in SPAN inside PRE', function() {
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <PRE>  \t\r\n  <span>    test    </span> \t\r\n   </PRE>   \t\r\n  ');
+	equal(serializer.serialize(root), '<pre>  \t\r\n  <span>    test    </span> \t\r\n   </pre>', 'Whitespace around and inside PRE');
+	deepEqual(countNodes(root), {body:1, pre:1, span:1, '#text':3}, 'Whitespace around and inside PRE (count)');
 });
 
 test('Parse invalid contents', function() {
