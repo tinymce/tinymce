@@ -231,7 +231,7 @@
 		 */
 		self.parse = function(html, args) {
 			var parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate,
-				blockElements, startWhiteSpaceRegExp, invalidChildren = [],
+				blockElements, startWhiteSpaceRegExp, invalidChildren = [], isInWhiteSpacePreservedElement,
 				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements, rootBlockName;
 
 			args = args || {};
@@ -314,7 +314,7 @@
 					var textNode;
 
 					// Trim all redundant whitespace on non white space elements
-					if (!whiteSpaceElements[node.name]) {
+					if (!isInWhiteSpacePreservedElement) {
 						text = text.replace(allWhiteSpaceRegExp, ' ');
 
 						if (node.lastChild && blockElements[node.lastChild.name])
@@ -384,6 +384,11 @@
 						// Change current node if the element wasn't empty i.e not <br /> or <img />
 						if (!empty)
 							node = newNode;
+
+						// Check if we are inside a whitespace preserved element
+						if (!isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
+							isInWhiteSpacePreservedElement = true;
+						}
 					}
 				},
 
@@ -393,7 +398,7 @@
 					elementRule = validate ? schema.getElementRule(name) : {};
 					if (elementRule) {
 						if (blockElements[name]) {
-							if (!whiteSpaceElements[node.name]) {
+							if (!isInWhiteSpacePreservedElement) {
 								// Trim whitespace at beginning of block
 								for (textNode = node.firstChild; textNode && textNode.type === 3; ) {
 									text = textNode.value.replace(startWhiteSpaceRegExp, '');
@@ -433,6 +438,11 @@
 								else
 									textNode.remove();
 							}
+						}
+
+						// Check if we exited a whitespace preserved element
+						if (isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
+							isInWhiteSpacePreservedElement = false;
 						}
 
 						// Handle empty nodes
