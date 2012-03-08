@@ -27,10 +27,41 @@ var defaultBorderStyle = "none;solid;dashed;dotted;double;groove;ridge;inset;out
 var defaultBorderWidth = "thin;medium;thick";
 var defaultListType = "disc;circle;square;decimal;lower-roman;upper-roman;lower-alpha;upper-alpha;none";
 
-function init() {
+function aggregateStyles(allStyles) {
+	var mergedStyles = {};
+
+	tinymce.each(allStyles, function(style) {
+		if (style !== '') {
+			var parsedStyles = tinyMCEPopup.editor.dom.parseStyle(style);
+			for (var name in parsedStyles) {
+				if (parsedStyles.hasOwnProperty(name)) {
+					if (mergedStyles[name] === undefined) {
+						mergedStyles[name] = parsedStyles[name];
+					}
+					else if (name === 'text-decoration') {
+						if (mergedStyles[name].indexOf(parsedStyles[name]) === -1) {
+							mergedStyles[name] = mergedStyles[name] +' '+ parsedStyles[name];
+						}
+					}
+				}
+			}
+		}
+	});
+
+  return mergedStyles;
+}
+
+var applyActionIsInsert;
+var existingStyles;
+
+function init(ed) {
 	var ce = document.getElementById('container'), h;
 
-	ce.style.cssText = tinyMCEPopup.getWindowArg('style_text');
+	existingStyles = aggregateStyles(tinyMCEPopup.getWindowArg('styles'));
+	ce.style.cssText = tinyMCEPopup.editor.dom.serializeStyle(existingStyles);
+
+	applyActionIsInsert = ed.getParam("edit_css_style_insert_span", false);
+	document.getElementById('toggle_insert_span').checked = applyActionIsInsert;
 
 	h = getBrowserHTML('background_image_browser','background_image','image','advimage');
 	document.getElementById("background_image_browser").innerHTML = h;
@@ -368,13 +399,41 @@ function hasEqualValues(a) {
 	return true;
 }
 
+function toggleApplyAction() {
+	applyActionIsInsert = ! applyActionIsInsert;
+}
+
 function applyAction() {
 	var ce = document.getElementById('container'), ed = tinyMCEPopup.editor;
 
 	generateCSS();
 
 	tinyMCEPopup.restoreSelection();
-	ed.dom.setAttrib(ed.selection.getSelectedBlocks(), 'style', tinyMCEPopup.editor.dom.serializeStyle(tinyMCEPopup.editor.dom.parseStyle(ce.style.cssText)));
+
+	var newStyles = tinyMCEPopup.editor.dom.parseStyle(ce.style.cssText);
+
+	if (applyActionIsInsert) {
+		ed.formatter.register('plugin_style', {
+			inline: 'span', styles: existingStyles
+		});
+		ed.formatter.remove('plugin_style');
+
+		ed.formatter.register('plugin_style', {
+			inline: 'span', styles: newStyles
+		});
+		ed.formatter.apply('plugin_style');
+	} else {
+		var nodes;
+
+		if (tinyMCEPopup.getWindowArg('applyStyleToBlocks')) {
+			nodes = ed.selection.getSelectedBlocks();
+		}
+		else {
+			nodes = ed.selection.getNode();
+		}
+
+		ed.dom.setAttrib(nodes, 'style', tinyMCEPopup.editor.dom.serializeStyle(newStyles));
+	}
 }
 
 function updateAction() {
