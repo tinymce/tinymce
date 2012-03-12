@@ -321,7 +321,13 @@
 					newBlock = createNewBlock();
 				}
 
-				dom.insertAfter(newBlock, parentBlock);
+				// Split the current container block element if enter is pressed inside an empty inner block element
+				if (settings.end_container_on_empty_block && /^(HGROUP|BLOCKQUOTE|SECTION|ARTICLE)$/.test(containerBlockName) && dom.isEmpty(parentBlock)) {
+					// Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
+					newBlock = dom.split(containerBlock, parentBlock);
+				} else {
+					dom.insertAfter(newBlock, parentBlock);
+				}
 			} else if (isCaretAtStartOrEndOfBlock(true)) {
 				// Insert new block before
 				newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);

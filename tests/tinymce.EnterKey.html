@@ -19,6 +19,7 @@ module("tinymce.EnterKey", {
 	autostart: false,
 	setup: function() {
 		editor.settings.forced_root_block = 'p';
+		editor.settings.end_container_on_empty_block = false;
 	}
 });
 
@@ -214,6 +215,30 @@ test('Enter at the end of text in P with forced_root_block set to false', functi
 	setSelection('p', 3);
 	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML), tinymce.isIE ? '<p>abc<br></p>' : '<p>abc<br><br></p>');
+});
+
+test('Enter in empty P at the end of a blockquote and end_container_on_empty_block: true', function() {
+	editor.settings.end_container_on_empty_block = true;
+	editor.getBody().innerHTML = tinymce.isIE ? '<blockquote><p>abc</p><p></p></blockquote>' : '<blockquote><p>abc</p><p><br></p></blockquote>';
+	setSelection('p:last', 0);
+	pressEnter();
+	equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p>');
+});
+
+test('Enter in empty P at the beginning of a blockquote and end_container_on_empty_block: true', function() {
+	editor.settings.end_container_on_empty_block = true;
+	editor.getBody().innerHTML = tinymce.isIE ? '<blockquote><p></p><p>abc</p></blockquote>' : '<blockquote><p><br></p><p>abc</p></blockquote>';
+	setSelection('p', 0);
+	pressEnter();
+	equal(editor.getContent(), '<p>\u00a0</p><blockquote><p>abc</p></blockquote>');
+});
+
+test('Enter in empty P at in the middle of a blockquote and end_container_on_empty_block: true', function() {
+	editor.settings.end_container_on_empty_block = true;
+	editor.getBody().innerHTML = tinymce.isIE ? '<blockquote><p>abc</p><p></p><p>123</p></blockquote>' : '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
+	setSelection('p:nth-child(2)', 0);
+	pressEnter();
+	equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p><blockquote><p>123</p></blockquote>');
 });
 
 if (tinymce.isIE) {
