@@ -4,8 +4,7 @@ provide([
 			{"title": "Core API", "url": "api.html"},
 			{"title": "Basic functionality", "url": "basic.html"},
 			{"title": "Remove", "url": "remove.html", "jsrobot": true},
-			{"title": "Undo", "url": "undo.html", "jsrobot": true},
-			{"title": "ForceBlocks", "url": "forceblocks.html"}
+			{"title": "Undo", "url": "undo.html", "jsrobot": true}
 			//{"title": "Asynchronous Loading", "url": "async.html"}
 		]},
 
@@ -37,7 +36,9 @@ provide([
 
 		{"title": "tinymce", "tests": [
 			{"title": "UndoManager", "url": "tinymce.UndoManager.html"},
-			{"title": "EditorCommands", "url": "tinymce.EditorCommands.html"}
+			{"title": "EditorCommands", "url": "tinymce.EditorCommands.html"},
+			{"title": "ForceBlocks", "url": "tinymce.ForceBlocks.html"},
+			{"title": "EnterKey", "url": "tinymce.EnterKey.html"}
 		]}
 	], [
 		{"title": "tinymce.html", "tests": [

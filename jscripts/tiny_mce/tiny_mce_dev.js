@@ -134,6 +134,7 @@
 	include('WindowManager.js');
 	include('Formatter.js');
 	include('LegacyInput.js');
+	include('EnterKey.js');
 
 	load();
 }());

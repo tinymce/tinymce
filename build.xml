@@ -133,6 +133,7 @@
 			<fileset dir="${classes_dir}" includes="WindowManager.js" />
 			<fileset dir="${classes_dir}" includes="Formatter.js" />
 			<fileset dir="${classes_dir}" includes="LegacyInput.js" />
+			<fileset dir="${classes_dir}" includes="EnterKey.js" />
 		</concat>
 
 		<!-- Remove all jsdoc style comments -->

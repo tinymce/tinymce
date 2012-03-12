@@ -1559,9 +1559,8 @@
 				return t.onRedo.dispatch(t, l, um);
 			});
 
-			t.forceBlocks = new tinymce.ForceBlocks(t, {
-				forced_root_block : s.forced_root_block
-			});
+			t.forceBlocks = new tinymce.ForceBlocks(t);
+			t.enterKey = new tinymce.EnterKey(t);
 
 			t.editorCommands = new tinymce.EditorCommands(t);
 

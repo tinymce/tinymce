@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Unit tests for forceblocks</title>
+<title>Unit tests for EnterKey</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
 <script src="http://code.jquery.com/qunit/qunit-git.js"></script>
@@ -15,14 +15,17 @@ var editor, rng;
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
 
-module("ForceBlocks", {
-	autostart: false
+module("tinymce.EnterKey", {
+	autostart: false,
+	setup: function() {
+		editor.settings.forced_root_block = 'p';
+	}
 });
 
 function pressEnter(evt) {
 	var dom = editor.dom, target = editor.selection.getNode();
 
-	evt = tinymce.extend({}, evt);
+	evt = tinymce.extend({keyCode: 13}, evt);
 
 	dom.fire(target, 'keydown', evt);
 	dom.fire(target, 'keypress', evt);
@@ -32,7 +35,7 @@ function pressEnter(evt) {
 test('Enter at end of H1', function() {
 	editor.setContent('<h1>abc</h1>');
 	setSelection('h1', 3);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<h1>abc</h1><p>\u00a0</p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
 });
@@ -40,7 +43,7 @@ test('Enter at end of H1', function() {
 test('Enter in midde of H1', function() {
 	editor.setContent('<h1>abcd</h1>');
 	setSelection('h1', 2);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<h1>ab</h1><h1>cd</h1>');
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'H1');
 });
@@ -48,7 +51,7 @@ test('Enter in midde of H1', function() {
 test('Enter at end of P', function() {
 	editor.setContent('<p>abc</p>');
 	setSelection('p', 3);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<p>abc</p><p>\u00a0</p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
 });
@@ -56,7 +59,7 @@ test('Enter at end of P', function() {
 test('Enter at end of EM inside P', function() {
 	editor.setContent('<p><em>abc</em></p>');
 	setSelection('em', 3);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em>abc</em></p><p><em></em></p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'EM');
 });
@@ -64,7 +67,7 @@ test('Enter at end of EM inside P', function() {
 test('Enter at middle of EM inside P', function() {
 	editor.setContent('<p><em>abcd</em></p>');
 	setSelection('em', 2);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<p><em>ab</em></p><p><em>cd</em></p>');
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'EM');
 });
@@ -72,15 +75,15 @@ test('Enter at middle of EM inside P', function() {
 test('Enter at beginning EM inside P', function() {
 	editor.setContent('<p><em>abc</em></p>');
 	setSelection('em', 0);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em></em></p><p><em>abc</em></p>');
-	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'EM');
+	equal(editor.selection.getRng(true).startContainer.nodeName, 'EM');
 });
 
 test('Enter at end of STRONG in EM inside P', function() {
 	editor.setContent('<p><em><strong>abc</strong></em></p>');
 	setSelection('strong', 3);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em><strong>abc</strong></em></p><p><em><strong></strong></em></p>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
 });
@@ -88,7 +91,7 @@ test('Enter at end of STRONG in EM inside P', function() {
 test('Enter at middle of STRONG in EM inside P', function() {
 	editor.setContent('<p><em><strong>abcd</strong></em></p>');
 	setSelection('strong', 2);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<p><em><strong>ab</strong></em></p><p><em><strong>cd</strong></em></p>');
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'STRONG');
 });
@@ -96,23 +99,23 @@ test('Enter at middle of STRONG in EM inside P', function() {
 test('Enter at beginning STRONG in EM inside P', function() {
 	editor.setContent('<p><em><strong>abc</strong></em></p>');
 	setSelection('strong', 0);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em><strong></strong></em></p><p><em><strong>abc</strong></em></p>');
-	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'STRONG');
+	equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
 });
 
 test('Enter at beginning of P', function() {
 	editor.setContent('<p>abc</p>');
 	setSelection('p', 0);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<p>\u00a0</p><p>abc</p>');
-	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'P');
+	equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
 });
 
 test('Enter at middle of P with style, id and class attributes', function() {
 	editor.setContent('<p id="a" class="b" style="color:#000">abcd</p>');
 	setSelection('p', 2);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<p id="a" class="b" style="color: #000;">ab</p><p class="b" style="color: #000;">cd</p>');
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'P');
 });
@@ -120,25 +123,97 @@ test('Enter at middle of P with style, id and class attributes', function() {
 test('Enter at a range between H1 and P', function() {
 	editor.setContent('<h1>abcd</h1><p>efgh</p>');
 	setSelection('h1', 2, 'p', 2);
-	pressEnter({keyCode: 13});
-	equal(editor.getContent(), '<h1>ab</h1><p>gh</p>');
-	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'P');
+	pressEnter();
+	equal(editor.getContent(), '<h1>abgh</h1>');
+	equal(editor.selection.getNode().nodeName, 'H1');
 });
 
 test('Enter at end of H1 in HGROUP', function() {
 	editor.setContent('<hgroup><h1>abc</h1></hgroup>');
 	setSelection('h1', 3);
-	pressEnter({keyCode: 13});
+	pressEnter();
 	equal(editor.getContent(), '<hgroup><h1>abc</h1><h1>\u00a0</h1></hgroup>');
 	equal(editor.selection.getRng(true).startContainer.nodeName, 'H1');
 });
 
 test('Enter inside empty TD', function() {
-	editor.setContent('<table><tr><td></td></tr></table>');
+	editor.getBody().innerHTML = '<table><tr><td></td></tr></table>';
 	setSelection('td', 0);
-	pressEnter({keyCode: 13});
-	equal(editor.getContent(), '<table><tbody><tr><td><p>\u00a0</p><p>\u00a0</p></td></tr></tbody></table>');
-	equal(editor.selection.getRng(true).startContainer.nodeName, '#text');
+	pressEnter();
+	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<table><tbody><tr><td><p></p><p></p></td></tr></tbody></table>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside middle of text node in body', function() {
+	editor.getBody().innerHTML = 'abcd';
+	setSelection('body', 2);
+	pressEnter();
+	equal(editor.getContent(), '<p>ab</p><p>cd</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside at beginning of text node in body', function() {
+	editor.getBody().innerHTML = 'abcd';
+	setSelection('body', 0);
+	pressEnter();
+	equal(editor.getContent(), '<p>\u00a0</p><p>abcd</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside at end of text node in body', function() {
+	editor.getBody().innerHTML = 'abcd';
+	setSelection('body', 4);
+	pressEnter();
+	equal(editor.getContent(), '<p>abcd</p><p>\u00a0</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside empty body', function() {
+	editor.getBody().innerHTML = '';
+	setSelection('body', 0);
+	pressEnter();
+	equal(editor.getContent(), '<p>\u00a0</p><p>\u00a0</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside empty li in beginning of ol', function() {
+	editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
+	setSelection('li', 0);
+	pressEnter();
+	equal(editor.getContent(), '<p>\u00a0</p><ol><li>a</li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside empty li at the end of ol', function() {
+	editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
+	setSelection('li:last', 0);
+	pressEnter();
+	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside empty li in the middle of ol', function() {
+	editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
+	setSelection('li:nth-child(2)', 0);
+	pressEnter();
+	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter in the middle of text in P with forced_root_block set to false', function() {
+	editor.settings.forced_root_block = false;
+	editor.getBody().innerHTML = '<p>abc</p>';
+	setSelection('p', 2);
+	pressEnter();
+	equal(editor.getContent(), '<p>ab<br />c</p>');
+});
+
+test('Enter at the end of text in P with forced_root_block set to false', function() {
+	editor.settings.forced_root_block = false;
+	editor.getBody().innerHTML = '<p>abc</p>';
+	setSelection('p', 3);
+	pressEnter();
+	equal(cleanHtml(editor.getBody().innerHTML), tinymce.isIE ? '<p>abc<br></p>' : '<p>abc<br><br></p>');
 });
 
 if (tinymce.isIE) {
@@ -146,7 +221,7 @@ if (tinymce.isIE) {
 		// Tests that a workaround for an IE bug is working correctly
 		editor.getBody().innerHTML = '<p></p><p></p><p>X</p>';
 		setSelection('p', 0);
-		pressEnter({keyCode: 13});
+		pressEnter();
 		equal(editor.getContent(), '<p>\u00a0</p><p>\u00a0</p><p>\u00a0</p><p>X</p>');
 	});
 }
@@ -175,7 +250,7 @@ tinyMCE.init({
 </script>
 </head>
 <body>
-	<h1 id="qunit-header">Unit tests for ForceBlocks</h1>
+	<h1 id="qunit-header">Unit tests for tinymce.EnterKey</h1>
 	<h2 id="qunit-banner"></h2>
 	<div id="qunit-testrunner-toolbar"></div>
 	<h2 id="qunit-userAgent"></h2>
