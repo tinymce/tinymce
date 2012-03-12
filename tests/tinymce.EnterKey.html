@@ -177,7 +177,7 @@ test('Enter inside empty body', function() {
 });
 
 test('Enter inside empty li in beginning of ol', function() {
-	editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
+	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li></li><li>a</li></ol>' : '<ol><li><br></li><li>a</li></ol>';
 	setSelection('li', 0);
 	pressEnter();
 	equal(editor.getContent(), '<p>\u00a0</p><ol><li>a</li></ol>');
@@ -185,7 +185,7 @@ test('Enter inside empty li in beginning of ol', function() {
 });
 
 test('Enter inside empty li at the end of ol', function() {
-	editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
+	editor.getBody().innerHTML = tinymce.isIE ? '<ol><li>a</li><li></li></ol>' : '<ol><li>a</li><li><br></li></ol>';
 	setSelection('li:last', 0);
 	pressEnter();
 	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
@@ -193,7 +193,7 @@ test('Enter inside empty li at the end of ol', function() {
 });
 
 test('Enter inside empty li in the middle of ol', function() {
-	editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
+	editor.getBody().innerHTML =tinymce.isIE ? '<ol><li>a</li><li></li><li>b</li></ol>' :  '<ol><li>a</li><li><br></li><li>b</li></ol>';
 	setSelection('li:nth-child(2)', 0);
 	pressEnter();
 	equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
