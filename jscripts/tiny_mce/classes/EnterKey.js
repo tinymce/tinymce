@@ -18,6 +18,10 @@
 		function handleEnterKey(evt) {
 			var rng = selection.getRng(true), tmpRng, container, offset, parentBlock, newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName;
 
+			function canSplitBlock(node) {
+				return node && dom.isBlock(node) && !/^(TD|TH|CAPTION)$/.test(node.nodeName);
+			};
+
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
 			function moveToCaretPosition(root) {
 				var walker, node, rng, y, viewPort, lastNode = root;
@@ -138,7 +142,7 @@
 
 				// Not in a block element or in a table cell or caption
 				parentBlock = dom.getParent(container, dom.isBlock);
-				if (newBlockName && (!parentBlock || /^(TD|TH|CAPTION)$/.test(parentBlock.nodeName))) {
+				if (newBlockName && (!parentBlock || !canSplitBlock(parentBlock))) {
 					parentBlock = parentBlock || dom.getRoot();
 
 					if (!parentBlock.hasChildNodes()) {
@@ -322,7 +326,7 @@
 				}
 
 				// Split the current container block element if enter is pressed inside an empty inner block element
-				if (settings.end_container_on_empty_block && /^(HGROUP|BLOCKQUOTE|SECTION|ARTICLE)$/.test(containerBlockName) && dom.isEmpty(parentBlock)) {
+				if (settings.end_container_on_empty_block && canSplitBlock(containerBlock) && dom.isEmpty(parentBlock)) {
 					// Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
 					newBlock = dom.split(containerBlock, parentBlock);
 				} else {
