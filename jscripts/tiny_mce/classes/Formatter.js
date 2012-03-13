@@ -2031,7 +2031,15 @@
 					walker, node, nodes, tmpNode;
 
 			// Convert text node into index if possible
-			if (container.nodeType == 3 && offset >= container.nodeValue.length - 1) {
+			if (container.nodeType == 3 && offset >= container.nodeValue.length) {
+				// If we are already in a suitable text node then move the range there
+				if (!isWhiteSpaceNode(container) && offset > 0) {
+					rng.setStart(container, offset);
+					rng.setEnd(container, offset);
+					return;
+				}
+
+				// Get the parent container location and walk from there
 				container = container.parentNode;
 				offset = nodeIndex(container) + 1;
 			}
