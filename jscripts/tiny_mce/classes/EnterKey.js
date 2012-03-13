@@ -54,8 +54,8 @@
 					}
 				} else {
 					if (root.nodeName == 'BR') {
-						rng.setStartBefore(root);
-						rng.setEndBefore(root);
+						rng.setStartAfter(root);
+						rng.setEndAfter(root);
 					} else {
 						rng.setStart(root, 0);
 						rng.setEnd(root, 0);
@@ -232,30 +232,40 @@
 
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
-				var brElm = dom.create('br'), sibling, extraBr;
+				var brElm, sibling, extraBr, atTheEnd;
 
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					sibling = container.nextSibling;
 
-					// Insert extra BR element if needed on non IE browsers since they don't get rendered
-					if (!tinymce.isIE && (!sibling || dom.isBlock(sibling))) {
+					// Insert extra BR element at the end of non PRE elements unless it's WebKit since it will render that BR
+					if ((tinymce.isWebKit || parentBlockName != 'PRE') && (!sibling || sibling.nodeValue === '' || dom.isBlock(sibling))) {
 						brElm = dom.create('br')
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
 						rng.setEndAfter(brElm);
 						extraBr = true;
 					}
+	
+					atTheEnd = true;
 				}
 
 				brElm = dom.create('br')
 				rng.insertNode(brElm);
+
+				if (tinymce.isIE) {
+					if (container.nodeName == 'BR' || atTheEnd) {
+						dom.insertAfter(dom.doc.createTextNode('\r'), brElm);
+					} else {
+						brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
+					}
+				}
 
 				if (!extraBr) {
 					rng.setStartAfter(brElm);
 					rng.setEndAfter(brElm);
 				} else {
 					rng.setStartBefore(brElm);
-					rng.setEndBefore(brElm);					
+					rng.setEndBefore(brElm);
 				}
 
 				selection.setRng(rng);
@@ -278,11 +288,6 @@
 			if (container.nodeType == 1 && container.hasChildNodes()) {
 				container = container.childNodes[offset];
 				offset = 0;
-			}
-
-			// Use browsers default behavior for shift+enter in forced root block mode
-			if (newBlockName && evt.shiftKey) {
-				return false;
 			}
 
 			undoManager.beforeChange();
@@ -310,16 +315,27 @@
 				return;
 			}
 
-			// If no root block is configured then insert a BR by default
-			if (!newBlockName && !evt.shiftKey && parentBlockName != 'LI') {
-				insertBr();
-				return;
+			// Don't split PRE tags but insert a BR instead easier when writing code samples etc
+			if (parentBlockName == 'PRE' && settings.br_in_pre !== false) {
+				if (!evt.shiftKey) {
+					insertBr();
+					return;
+				}
+
+				// Default block name if
+				newBlockName = newBlockName || 'P';
+			} else if (parentBlockName != 'LI') {
+				// If no root block is configured then insert a BR by default or if the shiftKey is pressed
+				if ((!newBlockName && !evt.shiftKey) || evt.shiftKey) {
+					insertBr();
+					return;
+				}
 			}
 
 			// Insert new block before/after the parent block depending on caret location
 			if (isCaretAtStartOrEndOfBlock()) {
 				// If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
-				if (/^(H[1-6])$/.test(parentBlockName) && containerBlockName != 'HGROUP') {
+				if (/^(H[1-6]|PRE)$/.test(parentBlockName) && containerBlockName != 'HGROUP') {
 					newBlock = createNewBlock(newBlockName);
 				} else {
 					newBlock = createNewBlock();
