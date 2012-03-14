@@ -238,14 +238,14 @@
 					sibling = container.nextSibling;
 
 					// Insert extra BR element at the end block elements
-					if (!sibling || sibling.nodeValue === '' || dom.isBlock(sibling)) {
+					if (!tinymce.isIE && (!sibling || sibling.nodeValue === '' || dom.isBlock(sibling))) {
 						brElm = dom.create('br')
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
 						rng.setEndAfter(brElm);
 						extraBr = true;
 					}
-	
+
 					atTheEnd = true;
 				}
 
@@ -254,7 +254,7 @@
 
 				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
 				documentMode = dom.doc.documentMode;
-				if (tinymce.isIE && (!documentMode || documentMode < 8)) {
+				if (tinymce.isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
 					brElm.parentNode.insertBefore(dom.doc.createTextNode('\n'), brElm);
 				}
 
