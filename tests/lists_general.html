@@ -136,6 +136,8 @@ asyncTest('Outdent in nested list on enter when setting is set', function() {
 	}, editor.selection.getNode());
 });
 
+// Removed since the EnterKey.js logic seems to solve this
+/*
 function testNestedListHasZeroSizedNbsp() {
 	robot.type(ENTER, false, function() {
 		var ul = editor.dom.select('#u')[0];
@@ -162,6 +164,7 @@ asyncTest('Nested list has zero-sized nbsp in Gecko & IE8', function() {
 		}
 	}
 });
+*/
 
 asyncTest('Outdent from sublist using shift-tab keys', function() {
 	editor.setContent("<ul><li>a<ul><li>b</li></ul></li></ul>");
