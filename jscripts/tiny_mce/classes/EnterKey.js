@@ -9,6 +9,8 @@
  */
 
 (function(tinymce) {
+	var TreeWalker = tinymce.dom.TreeWalker;
+
 	/**
 	 * Contains logic for handling the enter key to split/generate block elements.
 	 */
@@ -29,7 +31,7 @@
 				rng = dom.createRng();
 
 				if (root.hasChildNodes()) {
-					walker = new tinymce.dom.TreeWalker(root, root);
+					walker = new TreeWalker(root, root);
 
 					while (node = walker.current()) {
 						if (node.nodeType == 3) {
@@ -115,7 +117,7 @@
 				}
 
 				// Walk the DOM and look for text nodes or non empty elements
-				walker = new tinymce.dom.TreeWalker(container, parentBlock);
+				walker = new TreeWalker(container, parentBlock);
 				while (node = (start ? walker.prev() : walker.next())) {
 					if (node.nodeType === 1) {
 						// Ignore bogus elements
@@ -230,23 +232,32 @@
 				undoManager.add();
 			};
 
+			// Walks the parent block to the right and look for BR elements
+			function hasRightSideBr() {
+				var walker = new TreeWalker(container, parentBlock), node;
+
+				while (node = walker.current()) {
+					if (node.nodeName == 'BR') {
+						return true;
+					}
+
+					node = walker.next();
+				}
+			}
+			
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
-				var brElm, sibling, extraBr, atTheEnd, documentMode;
+				var brElm, extraBr, documentMode;
 
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
-					sibling = container.nextSibling;
-
 					// Insert extra BR element at the end block elements
-					if (!tinymce.isIE && (!sibling || sibling.nodeValue === '' || dom.isBlock(sibling))) {
+					if (!tinymce.isIE && !hasRightSideBr()) {
 						brElm = dom.create('br')
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
 						rng.setEndAfter(brElm);
 						extraBr = true;
 					}
-
-					atTheEnd = true;
 				}
 
 				brElm = dom.create('br');
@@ -283,6 +294,11 @@
 			// Delete any selected contents
 			if (!rng.collapsed) {
 				editor.execCommand('Delete');
+				return;
+			}
+
+			// Event is blocked by some other handler
+			if (evt.isDefaultPrevented()) {
 				return;
 			}
 
@@ -374,7 +390,7 @@
 			undoManager.add();
 		}
 
-		editor.onKeyPress.add(function(ed, evt) {
+		editor.onKeyDown.add(function(ed, evt) {
 			if (evt.keyCode == 13) {
 				if (handleEnterKey(evt) !== false) {
 					evt.preventDefault();
