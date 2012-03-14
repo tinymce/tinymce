@@ -266,7 +266,7 @@
 				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
 				documentMode = dom.doc.documentMode;
 				if (tinymce.isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
-					brElm.parentNode.insertBefore(dom.doc.createTextNode('\n'), brElm);
+					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
 				}
 
 				if (!extraBr) {
