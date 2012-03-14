@@ -16,7 +16,7 @@ tinymce.ForceBlocks = function(editor) {
 		function addRootBlocks() {
 			var node = selection.getStart(), rootNode = editor.getBody(), rng, startContainer, startOffset, endContainer, endOffset, rootBlockNode, tempNode, offset = -0xFFFFFF;
 
-			if (!node || node.nodeType !== 1)
+			if (!node || node.nodeType !== 1 || !settings.forced_root_block)
 				return;
 
 			// Check if node is wrapped in block
