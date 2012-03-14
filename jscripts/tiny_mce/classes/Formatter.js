@@ -2032,13 +2032,6 @@
 
 			// Convert text node into index if possible
 			if (container.nodeType == 3 && offset >= container.nodeValue.length) {
-				// If we are already in a suitable text node then move the range there
-				if (!isWhiteSpaceNode(container) && offset > 0) {
-					rng.setStart(container, offset);
-					rng.setEnd(container, offset);
-					return;
-				}
-
 				// Get the parent container location and walk from there
 				container = container.parentNode;
 				offset = nodeIndex(container) + 1;
@@ -2048,7 +2041,7 @@
 			if (container.nodeType == 1) {
 				nodes = container.childNodes;
 				container = nodes[Math.min(offset, nodes.length - 1)];
-				walker = new TreeWalker(container);
+				walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
 
 				// If offset is at end of the parent node walk to the next one
 				if (offset > nodes.length - 1)
@@ -2071,6 +2064,5 @@
 				}
 			}
 		};
-
 	};
 })(tinymce);
