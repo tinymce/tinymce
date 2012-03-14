@@ -641,5 +641,15 @@
 		DOM.remove('test');
 	});
 
+	test('isEmpty on P with BR in EM', function() {
+		var elm = DOM.create('p', null, '<em><br></em>');
+		ok(DOM.isEmpty(elm, 'No children'));
+	});
+	
+	test('isEmpty on P with two BR in EM', function() {
+		var elm = DOM.create('p', null, '<em><br><br></em>');
+		equal(false, DOM.isEmpty(elm));
+	});
+
 	DOM.remove('test');
 })();
