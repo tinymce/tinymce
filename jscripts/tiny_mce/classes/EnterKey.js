@@ -142,7 +142,7 @@
 
 				// Not in a block element or in a table cell or caption
 				parentBlock = dom.getParent(container, dom.isBlock);
-				if (newBlockName && (!parentBlock || !canSplitBlock(parentBlock))) {
+				if (newBlockName && !evt.shiftKey && (!parentBlock || !canSplitBlock(parentBlock))) {
 					parentBlock = parentBlock || dom.getRoot();
 
 					if (!parentBlock.hasChildNodes()) {
@@ -232,13 +232,13 @@
 
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
-				var brElm, sibling, extraBr, atTheEnd;
+				var brElm, sibling, extraBr, atTheEnd, documentMode;
 
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					sibling = container.nextSibling;
 
-					// Insert extra BR element at the end of non PRE elements unless it's WebKit since it will render that BR
-					if ((tinymce.isWebKit || parentBlockName != 'PRE') && (!sibling || sibling.nodeValue === '' || dom.isBlock(sibling))) {
+					// Insert extra BR element at the end block elements
+					if (!sibling || sibling.nodeValue === '' || dom.isBlock(sibling)) {
 						brElm = dom.create('br')
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
@@ -249,15 +249,13 @@
 					atTheEnd = true;
 				}
 
-				brElm = dom.create('br')
+				brElm = dom.create('br');
 				rng.insertNode(brElm);
 
-				if (tinymce.isIE) {
-					if (container.nodeName == 'BR' || atTheEnd) {
-						dom.insertAfter(dom.doc.createTextNode('\r'), brElm);
-					} else {
-						brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
-					}
+				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
+				documentMode = dom.doc.documentMode;
+				if (tinymce.isIE && (!documentMode || documentMode < 8)) {
+					brElm.parentNode.insertBefore(dom.doc.createTextNode('\n'), brElm);
 				}
 
 				if (!extraBr) {
@@ -272,6 +270,16 @@
 				undoManager.add();
 			};
 
+			function trimLeadingLineBreaks(node) {
+				do {
+					if (node.nodeType === 3) {
+						node.nodeValue = node.nodeValue.replace(/^[\r\n]+/, '');
+					}
+
+					node = node.firstChild;
+				} while (node);
+			};
+		
 			// Delete any selected contents
 			if (!rng.collapsed) {
 				editor.execCommand('Delete');
@@ -356,6 +364,7 @@
 				tmpRng = rng.cloneRange();
 				tmpRng.setEndAfter(parentBlock);
 				fragment = tmpRng.extractContents();
+				trimLeadingLineBreaks(fragment);
 				newBlock = fragment.firstChild;
 				dom.insertAfter(fragment, parentBlock);
 			}
