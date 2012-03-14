@@ -69,30 +69,29 @@
 				} else
 					checkRng.collapse(false);
 
-				checkRng.setEndPoint(start ? 'EndToStart' : 'EndToEnd', rng);
-
-				// Fix for edge case: <div style="width: 100px; height:100px;"><table>..</table>ab|c</div>
-				if (checkRng.compareEndPoints(start ? 'StartToStart' : 'StartToEnd', rng) > 0) {
-					checkRng = rng.duplicate();
-					checkRng.collapse(start);
-
-					offset = -1;
-					while (parent == checkRng.parentElement()) {
-						if (checkRng.move('character', -1) == 0)
-							break;
-
-						offset++;
+				// Walk character by character in text node until we hit the selected range endpoint, hit the end of document or parent isn't the right one
+				// We need to walk char by char since rng.text or rng.htmlText will trim line endings
+				offset = 0;
+				while (checkRng.compareEndPoints(start ? 'StartToStart' : 'StartToEnd', rng) !== 0) {
+					if (checkRng.move('character', 1) == 0 || parent != checkRng.parentElement()) {
+						break;
 					}
-				}
 
-				offset = offset || checkRng.text.replace('\r\n', ' ').length;
+					offset++;
+				}
 			} else {
 				// Child position is after the selection endpoint
 				checkRng.collapse(true);
-				checkRng.setEndPoint(start ? 'StartToStart' : 'StartToEnd', rng);
 
-				// Get the length of the text to find where the endpoint is relative to it's container
-				offset = checkRng.text.replace('\r\n', ' ').length;
+				// Walk character by character in text node until we hit the selected range endpoint, hit the end of document or parent isn't the right one
+				offset = 0;
+				while (checkRng.compareEndPoints(start ? 'StartToStart' : 'StartToEnd', rng) !== 0) {
+					if (checkRng.move('character', -1) == 0 || parent != checkRng.parentElement()) {
+						break;
+					}
+
+					offset++;
+				}
 			}
 
 			return {node : child, position : position, offset : offset, inside : inside};
