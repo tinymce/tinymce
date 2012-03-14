@@ -37,8 +37,9 @@ tinymce.ForceBlocks = function(editor) {
 			} else {
 				// Force control range into text range
 				if (rng.item) {
+					node = rng.item(0);
 					rng = editor.getDoc().body.createTextRange();
-					rng.moveToElementText(rng.item(0));
+					rng.moveToElementText(node);
 				}
 
 				tmpRng = rng.duplicate();
