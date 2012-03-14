@@ -96,10 +96,10 @@ test('Typing state', function() {
 
 	expect(2);
 
-	fakeKeyEvent(editor.getBody(), 'keydown', {keyCode : 65});
+	editor.dom.fire(editor.getBody(), 'keydown', {keyCode : 65});
 	ok(editor.undoManager.typing)
 
-	fakeKeyEvent(editor.getBody(), 'keyup', {keyCode : 13});
+	editor.dom.fire(editor.getBody(), 'keyup', {keyCode : 13});
 	ok(!editor.undoManager.typing)
 });
 
