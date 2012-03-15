@@ -458,6 +458,11 @@
 				if (name == 'IMG')
 					return {name : name, index : findIndex(name, element)};
 
+				// Can't insert a node into the root of document WebKit defaults to document
+				if (rng.startContainer.nodeType == 9) {
+					return;
+				}
+
 				// W3C method
 				rng2 = rng.cloneRange();
 
