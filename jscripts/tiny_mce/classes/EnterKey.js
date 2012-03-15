@@ -20,8 +20,9 @@
 		function handleEnterKey(evt) {
 			var rng = selection.getRng(true), tmpRng, container, offset, parentBlock, newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName;
 
+			// Returns true if the block can be split into two blocks or not
 			function canSplitBlock(node) {
-				return node && dom.isBlock(node) && !/^(TD|TH|CAPTION)$/.test(node.nodeName);
+				return node && dom.isBlock(node) && !/^(TD|TH|CAPTION)$/.test(node.nodeName) && !/^(fixed|absolute)/i.test(node.style.position);
 			};
 
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
@@ -205,7 +206,7 @@
 					return node === parentBlock;
 				};
 
-				newBlock = createNewBlock(newBlockName || 'BR');
+				newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
 
 				if (isFirstOrLastLi(true) && isFirstOrLastLi()) {
 					// Is first and last list item then replace the OL/UL with a text block
@@ -281,6 +282,7 @@
 				undoManager.add();
 			};
 
+			// Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element
 			function trimLeadingLineBreaks(node) {
 				do {
 					if (node.nodeType === 3) {
@@ -297,7 +299,7 @@
 				return;
 			}
 
-			// Event is blocked by some other handler
+			// Event is blocked by some other handler for example the lists plugin
 			if (evt.isDefaultPrevented()) {
 				return;
 			}
@@ -345,9 +347,9 @@
 					insertBr();
 					return;
 				}
-			} else if (parentBlockName != 'LI') {
+			} else {
 				// If no root block is configured then insert a BR by default or if the shiftKey is pressed
-				if ((!newBlockName && !evt.shiftKey) || (newBlockName && evt.shiftKey)) {
+				if ((!newBlockName && !evt.shiftKey && parentBlockName != 'LI') || (newBlockName && evt.shiftKey)) {
 					insertBr();
 					return;
 				}
