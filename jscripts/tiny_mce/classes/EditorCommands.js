@@ -436,7 +436,7 @@
 
 				if (!queryCommandState('InsertUnorderedList') && !queryCommandState('InsertOrderedList')) {
 					// If forced_root_blocks is set to false we don't have a block to indent so lets create a div
-					if (!dom.getParent(selection.getNode(), dom.isBlock)) {
+					if (!settings.forced_root_block && !dom.getParent(selection.getNode(), dom.isBlock)) {
 						formatter.apply('div');
 					}
 

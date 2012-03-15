@@ -525,7 +525,7 @@
 
 						// If the formats have a default block and we can't find a parent block then start wrapping it with a DIV this is for forced_root_blocks: false
 						// It's kind of a hack but people should be using the default block type P since all desktop editors work that way
-						if (formatList[0].defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
+						if (!forcedRootBlock && formatList[0].defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
 							apply(formatList[0].defaultBlock);
 						}
 
