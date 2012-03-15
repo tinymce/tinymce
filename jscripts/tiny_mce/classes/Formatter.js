@@ -748,10 +748,13 @@
 			} else
 				performCaretAction('remove', name, vars);
 
+			// Removed this logic since it breaks unit tests and produces empty caret elements since they will be destroyed in the cleanup process
+			// Also there must be a better way to rerender a table and I couldn't reproduce the case causing this might be some old WebKit
+			/*
 			// When you remove formatting from a table cell in WebKit (cell, not the contents of a cell) there is a rendering issue with column width
 			if (tinymce.isWebKit) {
 				ed.execCommand('mceCleanup');
-			}
+			}*/
 		};
 
 		/**
