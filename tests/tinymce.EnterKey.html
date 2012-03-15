@@ -353,6 +353,30 @@ test('Shift+Enter in at the end of PRE', function() {
 	equal(editor.getContent(), '<pre>abcd</pre><p>\u00a0</p>');
 });
 
+test('Shift+Enter in beginning of P with forced_root_block set to false', function() {
+	editor.settings.forced_root_block = false;
+	editor.getBody().innerHTML = '<p>abc</p>';
+	setSelection('p', 0);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<p>\u00a0</p><p>abc</p>');
+});
+
+test('Shift+Enter in middle of P with forced_root_block set to false', function() {
+	editor.settings.forced_root_block = false;
+	editor.getBody().innerHTML = '<p>abcd</p>';
+	setSelection('p', 2);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<p>ab</p><p>cd</p>');
+});
+
+test('Shift+Enter at the end of P with forced_root_block set to false', function() {
+	editor.settings.forced_root_block = false;
+	editor.getBody().innerHTML = '<p>abc</p>';
+	setSelection('p', 3);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<p>abc</p><p>\u00a0</p>');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

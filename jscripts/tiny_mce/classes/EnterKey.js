@@ -345,16 +345,16 @@
 					insertBr();
 					return;
 				}
-
-				// Default block name if
-				newBlockName = newBlockName || 'P';
 			} else if (parentBlockName != 'LI') {
 				// If no root block is configured then insert a BR by default or if the shiftKey is pressed
-				if ((!newBlockName && !evt.shiftKey) || evt.shiftKey) {
+				if ((!newBlockName && !evt.shiftKey) || (newBlockName && evt.shiftKey)) {
 					insertBr();
 					return;
 				}
 			}
+
+			// Default block name if it's not configured
+			newBlockName = newBlockName || 'P';
 
 			// Insert new block before/after the parent block depending on caret location
 			if (isCaretAtStartOrEndOfBlock()) {
