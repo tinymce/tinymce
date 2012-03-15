@@ -357,6 +357,11 @@
 					ed.onBeforeSetContent.add(function(ed, args) {
 						var i = nonEditableRegExps.length, content = args.content, cls = tinymce.trim(nonEditClass);
 
+						// Don't replace the variables when raw is used for example on undo/redo
+						if (args.format == "raw") {
+							return;
+						}
+
 						while (i--) {
 							content = content.replace(nonEditableRegExps[i], function() {
 								var args = arguments;
