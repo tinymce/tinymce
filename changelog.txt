@@ -1,9 +1,10 @@
 Version 3.5b2 (2012-03-xx)
 	Rewrote the enter key logic to normalize browser behavior.
-	Fixed so enter within PRE elements produces a BR and shift+enter breaks/end the PRE.
+	Fixed so enter within PRE elements produces a BR and shift+enter breaks/end the PRE. Can be disabled using the br_in_pre option.
 	Fixed bug where the selection wouldn't be correct after applying formatting and having the caret at the end of the new format node.
 	Fixed bug where the noneditable plugin would process contents on raw input calls for example on undo/redo calls.
 	Fixed bug where WebKit could produce an exception when a bookmark was requested when there wasn't a proper selection.
+	Fixed bug where WebKit would fail to open the image dialog since it would be returning false for a class name instead of a string.
 	Fixed so alignment and indentation works properly when forced_root_blocks is set to false. It will produce a DIV by default.
 Version 3.5b1 (2012-03-08)
 	Added new event class that is faster and enables support for faking events.
