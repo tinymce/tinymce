@@ -207,7 +207,9 @@
 				if (isTabInList(e)) {
 					return LIST_TABBING;
 				} else if (isEnterWithoutShift(e) && isOnLastListItem()) {
-					return LIST_ESCAPE;
+					// Returns LIST_UNKNOWN since breaking out of lists is handled by the EnterKey.js logic now
+					//return LIST_ESCAPE;
+					return LIST_UNKNOWN;
 				} else if (isEnterWithoutShift(e) && isInEmptyListItem()) {
 					return LIST_EMPTY_ITEM;
 				} else {
@@ -260,15 +262,9 @@
 
 					// Move caret to new list element.
 					if (tinymce.isIE6 || tinymce.isIE7 || tinyMCE.isIE8) {
-						li.appendChild(ed.dom.create("&nbsp;")); // IE needs an element within the bullet point
+						// Removed this line since it would create an odd <&nbsp;> tag and placing the caret inside an empty LI is handled and should be handled by the selection logic
+						//li.appendChild(ed.dom.create("&nbsp;")); // IE needs an element within the bullet point
 						ed.selection.setCursorLocation(li, 1);
-					} else if (tinyMCE.isGecko) {
-						// This setTimeout is a hack as FF behaves badly if there is no content after the bullet point
-						setTimeout(function () {
-							var n = ed.getDoc().createTextNode('\uFEFF');
-							li.appendChild(n);
-							ed.selection.setCursorLocation(li, 0);
-						}, 0);
 					} else {
 						ed.selection.setCursorLocation(li, 0);
 					}
@@ -349,7 +345,8 @@
 				var list = ed.dom.getParent(li, 'ol,ul');
 				if (list != null) {
 					var lastLi = list.lastChild;
-					lastLi.appendChild(ed.getDoc().createElement(''));
+					// Removed this line since IE9 would report an DOM character error and placing the caret inside an empty LI is handled and should be handled by the selection logic
+					//lastLi.appendChild(ed.getDoc().createElement(''));
 					ed.selection.setCursorLocation(lastLi, 0);
 				}
 			}
