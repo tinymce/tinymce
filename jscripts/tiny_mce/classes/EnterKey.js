@@ -312,7 +312,7 @@
 
 			// Resolve node index
 			if (container.nodeType == 1 && container.hasChildNodes()) {
-				container = container.childNodes[offset];
+				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
 				offset = 0;
 			}
 
