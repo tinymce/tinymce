@@ -334,6 +334,38 @@ test('Remove redundant br elements', function() {
 	equal(serializer.serialize(root), '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
 });
 
+test('Replace br with nbsp when wrapped in two inline elements and one block', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<p><strong><em><br /></em></strong></p>');
+	equal(serializer.serialize(root), '<p><strong><em>\u00a0</em></strong></p>');
+});
+
+test('Replace br with nbsp when wrapped in an inline element and placed in the root', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<strong><br /></strong>');
+	equal(serializer.serialize(root), '<strong>\u00a0</strong>');
+});
+
+test('Don\'t replace br inside root element when there is multiple brs', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<strong><br /><br /></strong>');
+	equal(serializer.serialize(root), '<strong><br /><br /></strong>');
+});
+
+test('Don\'t replace br inside root element when there is siblings', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<strong><br /></strong><span>x</span>');
+	equal(serializer.serialize(root), '<strong><br /></strong><span>x</span>');
+});
+
 test('Remove br in invalid parent bug', function() {
 	var parser, root, schema = new tinymce.html.Schema({valid_elements: 'br'});
 
