@@ -267,6 +267,11 @@
 			// Disable all key presses in contentEditable=false except delete or backspace
 			nonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);
 			if (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != VK.DELETE && keyCode != VK.BACKSPACE) {
+				// Is Ctrl+c, Ctrl+v or Ctrl+x then use default browser behavior
+				if ((tinymce.isMac ? e.metaKey : e.ctrlKey) && (keyCode == 67 || keyCode == 88 || keyCode == 86)) {
+					return;
+				}
+
 				e.preventDefault();
 
 				// Arrow left/right select the element and collapse left/right
@@ -341,6 +346,31 @@
 		init : function(ed, url) {
 			var editClass, nonEditClass, nonEditableRegExps;
 
+			// Converts configured regexps to noneditable span items
+			function convertRegExpsToNonEditable(ed, args) {
+				var i = nonEditableRegExps.length, content = args.content, cls = tinymce.trim(nonEditClass);
+
+				// Don't replace the variables when raw is used for example on undo/redo
+				if (args.format == "raw") {
+					return;
+				}
+
+				while (i--) {
+					content = content.replace(nonEditableRegExps[i], function(match) {
+						var args = arguments, index = args[args.length - 2];
+
+						// Is value inside an attribute then don't replace
+						if (index > 0 && content.charAt(index - 1) == '"') {
+							return match;
+						}
+
+						return '<span class="' + cls + '" data-mce-content="' + ed.dom.encode(args[0]) + '">' + ed.dom.encode(typeof(args[1]) === "string" ? args[1] : args[0]) + '</span>';
+					});
+				}
+
+				args.content = content;
+			};
+			
 			editClass = " " + tinymce.trim(ed.getParam("noneditable_editable_class", "mceEditable")) + " ";
 			nonEditClass = " " + tinymce.trim(ed.getParam("noneditable_noneditable_class", "mceNonEditable")) + " ";
 
@@ -354,26 +384,10 @@
 				handleContentEditableSelection(ed);
 
 				if (nonEditableRegExps) {
-					ed.onBeforeSetContent.add(function(ed, args) {
-						var i = nonEditableRegExps.length, content = args.content, cls = tinymce.trim(nonEditClass);
-
-						// Don't replace the variables when raw is used for example on undo/redo
-						if (args.format == "raw") {
-							return;
-						}
-
-						while (i--) {
-							content = content.replace(nonEditableRegExps[i], function() {
-								var args = arguments;
-
-								return '<span class="' + cls + '" data-mce-content="' + ed.dom.encode(args[0]) + '">' + ed.dom.encode(typeof(args[1]) === "string" ? args[1] : args[0]) + '</span>';
-							});
-						}
-
-						args.content = content;
-					});
+					ed.selection.onBeforeSetContent.add(convertRegExpsToNonEditable);
+					ed.onBeforeSetContent.add(convertRegExpsToNonEditable);
 				}
-				
+
 				// Apply contentEditable true/false on elements with the noneditable/editable classes
 				ed.parser.addAttributeFilter('class', function(nodes) {
 					var i = nodes.length, className, node;
