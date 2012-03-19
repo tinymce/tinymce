@@ -18,11 +18,15 @@
 		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager;
 
 		function handleEnterKey(evt) {
-			var rng = selection.getRng(true), tmpRng, container, offset, parentBlock, newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName;
+			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName;
 
 			// Returns true if the block can be split into two blocks or not
 			function canSplitBlock(node) {
-				return node && dom.isBlock(node) && !/^(TD|TH|CAPTION)$/.test(node.nodeName) && !/^(fixed|absolute)/i.test(node.style.position);
+				return node &&
+					dom.isBlock(node) &&
+					!/^(TD|TH|CAPTION)$/.test(node.nodeName) &&
+					!/^(fixed|absolute)/i.test(node.style.position) && 
+					dom.getContentEditable(node) !== "true";
 			};
 
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
@@ -146,7 +150,7 @@
 				// Not in a block element or in a table cell or caption
 				parentBlock = dom.getParent(container, dom.isBlock);
 				if (newBlockName && !evt.shiftKey && (!parentBlock || !canSplitBlock(parentBlock))) {
-					parentBlock = parentBlock || dom.getRoot();
+					parentBlock = parentBlock || editableRoot;
 
 					if (!parentBlock.hasChildNodes()) {
 						newBlock = dom.create(newBlockName);
@@ -292,7 +296,23 @@
 					node = node.firstChild;
 				} while (node);
 			};
-		
+
+			function getEditableRoot(node) {
+				var root = dom.getRoot(), parent, editableRoot;
+
+				// Get all parents until we hit a non editable parent or the root
+				parent = node;
+				while (parent !== root && dom.getContentEditable(parent) !== "false") {
+					if (dom.getContentEditable(parent) === "true") {
+						editableRoot = parent;
+					}
+
+					parent = parent.parentNode;
+				}
+				
+				return parent !== root ? editableRoot : root;
+			};
+
 			// Delete any selected contents
 			if (!rng.collapsed) {
 				editor.execCommand('Delete');
@@ -316,7 +336,24 @@
 				offset = 0;
 			}
 
+			// Get editable root node normaly the body element but sometimes a div or span
+			editableRoot = getEditableRoot(container);
+
+			// If there is no editable root then enter is done inside a contentEditable false element
+			if (!editableRoot) {
+				return;
+			}
+
 			undoManager.beforeChange();
+
+			// If editable root isn't block nor the root of the editor
+			if (!dom.isBlock(editableRoot) && editableRoot != dom.getRoot()) {
+				if (!newBlockName || evt.shiftKey) {
+					insertBr();
+				}
+
+				return;
+			}
 
 			// Wrap the current node and it's sibling in a default block if it's needed.
 			// for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>
