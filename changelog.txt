@@ -1,6 +1,10 @@
 Version 3.5b3 (2012-03-xx)
 	Fixed bug where empty inline elements within block elements would sometimes produce a br child element.
 	Fixed bug where urls pointing to the same domain as the current one would cause undefined errors. Patch contributed by Paul Giberson.
+	Fixed bug where enter inside an editable element inside an non editable element would split the element.
+	Fixed bug where cut/copy/paste of noneditable elements didn't work.
+	Fixed bug where backspace would sometimes produce font elements on WebKit.
+	Fixed bug where IE9 wouldn't properly update image styles when images where resized.
 Version 3.5b2 (2012-03-15)
 	Rewrote the enter key logic to normalize browser behavior.
 	Fixed so enter within PRE elements produces a BR and shift+enter breaks/end the PRE. Can be disabled using the br_in_pre option.

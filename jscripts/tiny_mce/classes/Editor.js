@@ -3146,51 +3146,6 @@
 				});
 			}
 
-			if (tinymce.isIE) {
-				// Fix so resize will only update the width and height attributes not the styles of an image
-				// It will also block mceItemNoResize items
-				dom.bind(t.getDoc(), 'controlselect', function(e) {
-					var re = t.resizeInfo, cb;
-
-					e = e.target;
-
-					// Don't do this action for non image elements
-					if (e.nodeName !== 'IMG')
-						return;
-
-					if (re)
-						dom.unbind(re.node, re.ev, re.cb);
-
-					if (!dom.hasClass(e, 'mceItemNoResize')) {
-						ev = 'resizeend';
-						cb = dom.bind(e, ev, function(e) {
-							var v;
-
-							e = e.target;
-
-							if (v = dom.getStyle(e, 'width')) {
-								dom.setAttrib(e, 'width', v.replace(/[^0-9%]+/g, ''));
-								dom.setStyle(e, 'width', '');
-							}
-
-							if (v = dom.getStyle(e, 'height')) {
-								dom.setAttrib(e, 'height', v.replace(/[^0-9%]+/g, ''));
-								dom.setStyle(e, 'height', '');
-							}
-						});
-					} else {
-						ev = 'resizestart';
-						cb = dom.bind(e, 'resizestart', Event.cancel, Event);
-					}
-
-					re = t.resizeInfo = {
-						node : e,
-						ev : ev,
-						cb : cb
-					};
-				});
-			}
-
 			if (tinymce.isOpera) {
 				t.onClick.add(function(ed, e) {
 					Event.prevent(e);

@@ -385,6 +385,32 @@
 		});
 	}
 
+	/**
+	 * Moves style width/height to attribute width/height when the user resizes an image on IE.
+	 */
+	function removePreSerializedStylesWhenSelectingControls(editor) {
+		var dom = editor.dom;
+
+		dom.bind(editor.getDoc(), 'mouseup', function(e) {
+			var value, node = editor.selection.getNode();
+
+			// Moved styles to attributes on IMG eements
+			if (node.nodeName == 'IMG') {
+				// Convert style width to width attribute
+				if (value = dom.getStyle(node, 'width')) {
+					dom.setAttrib(node, 'width', value.replace(/[^0-9%]+/g, ''));
+					dom.setStyle(node, 'width', '');
+				}
+
+				// Convert style height to height attribute
+				if (value = dom.getStyle(node, 'height')) {
+					dom.setAttrib(node, 'height', value.replace(/[^0-9%]+/g, ''));
+					dom.setStyle(node, 'height', '');
+				}
+			}
+		});
+	}
+
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
 			// All browsers
@@ -396,6 +422,7 @@
 				emptyEditorWhenDeleting(ed);
 				inputMethodFocus(ed);
 				selectControlElements(ed);
+				setEditorCommandState(ed, 'StyleWithCSS', true);
 
 				// iOS
 				if (tinymce.isIDevice) {
@@ -410,6 +437,7 @@
 				ensureBodyHasRoleApplication(ed);
 				//removeStylesOnPTagsInheritedFromHeadingTag(ed)
 				addNewLinesBeforeBrInPre(ed);
+				removePreSerializedStylesWhenSelectingControls(ed);
 			}
 
 			// Gecko
