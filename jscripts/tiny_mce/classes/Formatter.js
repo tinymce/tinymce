@@ -45,20 +45,8 @@
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
-			undefined;
-
-		// Returns the content editable state of a node
-		function getContentEditable(node) {
-			var contentEditable = node.getAttribute("data-mce-contenteditable");
-
-			// Check for fake content editable
-			if (contentEditable && contentEditable !== "inherit") {
-				return contentEditable;
-			}
-
-			// Check for real content editable
-			return node.contentEditable !== "inherit" ? node.contentEditable : null;
-		};
+			undefined,
+			getContentEditable = dom.getContentEditable;
 
 		function isArray(obj) {
 			return obj instanceof Array;

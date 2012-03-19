@@ -1861,6 +1861,25 @@
 			return this.events.fire(target, name, evt);
 		},
 
+		// Returns the content editable state of a node
+		getContentEditable: function(node) {
+			var contentEditable;
+
+			// Check type
+			if (node.nodeType != 1) {
+				return null;
+			}
+
+			// Check for fake content editable
+			contentEditable = node.getAttribute("data-mce-contenteditable");
+			if (contentEditable && contentEditable !== "inherit") {
+				return contentEditable;
+			}
+
+			// Check for real content editable
+			return node.contentEditable !== "inherit" ? node.contentEditable : null;
+		},
+
 		// #ifdef debug
 
 		dumpRng : function(r) {
