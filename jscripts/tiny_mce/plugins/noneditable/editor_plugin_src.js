@@ -330,13 +330,15 @@
 			}
 		};
 
-		ed.onMouseDown.addToTop(function(ed, e){
-			// prevent collapsing selection to caret when clicking in a non-editable section
+		ed.onMouseDown.addToTop(function(ed, e) {
 			var node = ed.selection.getNode();
+
 			if (getContentEditable(node) === "false" && node == e.target) {
-				e.preventDefault();
+				// Expand selection on mouse down we can't block the default event since it's used for drag/drop
+				moveSelection();
 			}
 		});
+
 		ed.onMouseUp.addToTop(moveSelection);
 		ed.onKeyDown.addToTop(handleKey);
 		ed.onKeyUp.addToTop(moveSelection);
