@@ -185,6 +185,10 @@
 						if (node.childNodes.length > 1 || node == start) {
 							return node;
 						}
+						// Bug #4775
+						else if (node.childNodes.length == 1 && node.childNodes[0].tagName != 'BR') {
+							return node;
+						}
 					}
 				};
 
