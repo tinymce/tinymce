@@ -7,6 +7,7 @@ Version 3.5b3 (2012-03-xx)
 	Fixed bug where WebKit would produce spans out of various inline elements when using backspace.
 	Fixed bug where IE9 wouldn't properly update image styles when images where resized.
 	Fixed bug where drag/drop of noneditable elements didn't work correctly.
+	Fixed bug where applying formatting to all contents wouldn't work correctly when an end point was inside an empty bock. Patch contributed by Jose Luiz.
 Version 3.5b2 (2012-03-15)
 	Rewrote the enter key logic to normalize browser behavior.
 	Fixed so enter within PRE elements produces a BR and shift+enter breaks/end the PRE. Can be disabled using the br_in_pre option.
