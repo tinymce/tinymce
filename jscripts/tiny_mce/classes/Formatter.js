@@ -665,7 +665,7 @@
 			};
 
 			function removeRngStyle(rng) {
-				var startContainer, endContainer;
+				var startContainer, endContainer, node;
 
 				rng = expandRng(rng, formatList, TRUE);
 
@@ -674,6 +674,13 @@
 					endContainer = getContainer(rng);
 
 					if (startContainer != endContainer) {
+						// WebKit will render the table incorrectly if we wrap a TD in a SPAN so lets see if the can use the first child instead
+						// This will happen if you tripple click a table cell and use remove formatting
+						node = startContainer.firstChild;
+						if (startContainer.nodeName == "TD" && node) {
+							startContainer = node;
+						}
+
 						// Wrap start/end nodes in span element since these might be cloned/moved
 						startContainer = wrap(startContainer, 'span', {id : '_start', 'data-mce-type' : 'bookmark'});
 						endContainer = wrap(endContainer, 'span', {id : '_end', 'data-mce-type' : 'bookmark'});
@@ -735,14 +742,6 @@
 				ed.nodeChanged();
 			} else
 				performCaretAction('remove', name, vars);
-
-			// Removed this logic since it breaks unit tests and produces empty caret elements since they will be destroyed in the cleanup process
-			// Also there must be a better way to rerender a table and I couldn't reproduce the case causing this might be some old WebKit
-			/*
-			// When you remove formatting from a table cell in WebKit (cell, not the contents of a cell) there is a rendering issue with column width
-			if (tinymce.isWebKit) {
-				ed.execCommand('mceCleanup');
-			}*/
 		};
 
 		/**
