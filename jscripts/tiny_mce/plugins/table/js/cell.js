@@ -137,7 +137,7 @@ function updateAction() {
 			do {
 				if (cell == tdElm)
 					break;
-				col += cell.getAttribute("colspan");
+				col += cell.getAttribute("colspan")?cell.getAttribute("colspan"):1;
 			} while ((cell = nextCell(cell)) != null);
 
 			for (var i=0; i<rows.length; i++) {
@@ -152,7 +152,7 @@ function updateAction() {
 						cell = updateCell(cell, true);
 						break;
 					}
-					curr += cell.getAttribute("colspan");
+					curr += cell.getAttribute("colspan")?cell.getAttribute("colspan"):1;
 				} while ((cell = nextCell(cell)) != null);
 			}
 
