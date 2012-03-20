@@ -1210,7 +1210,7 @@
 						return;
 
 					// Handle prefix
-					if (tinymce.isIE && n.scopeName !== 'HTML')
+					if (tinymce.isIE && n.scopeName !== 'HTML' && n.scopeName)
 						na = n.scopeName + ':' + na;
 
 					// Remove internal prefix
