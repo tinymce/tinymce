@@ -171,6 +171,14 @@
 				equal(editor.getContent(), '<p><strong>&nbsp;</strong></p>');
 				equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
 			});
+
+			test('Delete last character in span with pt font size inside P', function() {
+				editor.getBody().innerHTML = '<p>&nbsp;</p><p><span style="font-size: 10pt;">b</span></p><p>&nbsp;</p>';
+				setSelection('span', 1);
+				type('\b');
+				equal(editor.getContent(), '<p>&nbsp;</p><p><span style="font-size: 10pt;">&nbsp;</span></p><p>&nbsp;</p>');
+				equal(editor.selection.getRng(true).startContainer.nodeName, 'SPAN');
+			});
 		} else {
 			test("Skipped since the browser isn't WebKit", function() {
 				ok(true, "Skipped");
@@ -196,6 +204,7 @@
 				mode : "exact",
 				plugins: 'table',
 				elements : "elm1",
+				apply_source_formatting: false,
 				init_instance_callback : function(ed) {
 					editor = ed;
 					editor.setContent(defaultTableContent);

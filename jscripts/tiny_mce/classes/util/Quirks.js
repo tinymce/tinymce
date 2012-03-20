@@ -446,14 +446,14 @@
 					// Walk up the DOM to see if parents are single or has a BR after for example <p><b><i>X</i></b><br></p>
 					root = dom.getRoot();
 					node = container.parentNode;
-					while (node != root) {
+					while (node != root && !dom.isBlock(node)) {
 						parentNode = node.parentNode;
 
 						sibling = node.nextSibling;
 						if (sibling && sibling.nodeName == 'BR') {
 							brElm = sibling;
 						} else {
-							if (parentNode.firstChild != node && parentNode.lastChild != node) {
+							if (parentNode != root && parentNode.firstChild != node && parentNode.lastChild != node) {
 								return;
 							}
 						}
