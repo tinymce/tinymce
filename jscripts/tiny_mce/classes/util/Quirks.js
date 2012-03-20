@@ -411,6 +411,76 @@
 		});
 	}
 
+	/**
+	 * Backspace or delete on WebKit will combine all visual styles in a span if the last character is deleted.
+	 *
+	 * For example backspace on:
+	 * <p><b>x|</b></p>
+	 *
+	 * Will produce:
+	 * <p><span style="font-weight: bold">|<br></span></p>
+	 *
+	 * When it should produce:
+	 * <p><b>|<br></b></p>
+	 *
+	 * See: https://bugs.webkit.org/show_bug.cgi?id=81656
+	 */
+	function keepInlineElementOnDeleteBackspace(ed) {
+		ed.onKeyDown.add(function(ed, e) {
+			var isDelete, rng, container, offset, root, dom, selection, parentNode, brElm, sibling;
+
+			if (e.isDefaultPrevented()) {
+				return;
+			}
+
+			isDelete = e.keyCode == DELETE;
+			if ((isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+				selection = ed.selection;
+				dom = ed.dom;
+				rng = selection.getRng();
+				container = rng.startContainer;
+				offset = rng.startOffset;
+
+				// Only do logic if the text node is one character and the offset is before/after that character
+				if (rng.collapsed && container.nodeType == 3 && container.nodeValue.length === 1 && offset == (isDelete ? 0 : 1)) {
+					// Walk up the DOM to see if parents are single or has a BR after for example <p><b><i>X</i></b><br></p>
+					root = dom.getRoot();
+					node = container.parentNode;
+					while (node != root) {
+						parentNode = node.parentNode;
+
+						sibling = node.nextSibling;
+						if (sibling && sibling.nodeName == 'BR') {
+							brElm = sibling;
+						} else {
+							if (parentNode.firstChild != node && parentNode.lastChild != node) {
+								return;
+							}
+						}
+
+						node = parentNode;
+					}
+
+					// Prevent default logic since it's broken
+					e.preventDefault();
+
+					// Insert br before text node
+					parentNode = container.parentNode;
+					parentNode.insertBefore(dom.create('br'), container);
+
+					// Remove next sibling BR element and text node
+					dom.remove(brElm);
+					dom.remove(container);
+
+					// Set new selection before br element
+					rng.setStart(parentNode, 0);
+					rng.setEnd(parentNode, 0);
+					selection.setRng(rng);
+				}
+			}
+		});
+	}
+
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
 			// All browsers
@@ -418,6 +488,7 @@
 
 			// WebKit
 			if (tinymce.isWebKit) {
+				keepInlineElementOnDeleteBackspace(ed);
 				cleanupStylesWhenDeleting(ed);
 				emptyEditorWhenDeleting(ed);
 				inputMethodFocus(ed);

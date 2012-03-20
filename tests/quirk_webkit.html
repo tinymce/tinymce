@@ -155,6 +155,22 @@
 			asyncTest('moving up around nested table', 1, function() {
 				check('d', 38, 'c');
 			});
+			
+			test('Delete last character in strong element inside P', function() {
+				editor.getBody().innerHTML ='<p><strong>a</strong></p>';
+				setSelection('strong', 1);
+				type('\b');
+				equal(editor.getContent(), '<p><strong>&nbsp;</strong></p>');
+				equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
+			});
+
+			test('Delete last character in strong element inside P with BR sibling', function() {
+				editor.getBody().innerHTML = '<p><strong>a</strong><br /></p>';
+				setSelection('strong', 1);
+				type('\b');
+				equal(editor.getContent(), '<p><strong>&nbsp;</strong></p>');
+				equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
+			});
 		} else {
 			test("Skipped since the browser isn't WebKit", function() {
 				ok(true, "Skipped");
