@@ -1484,50 +1484,6 @@
 				});
 			}
 
-			if (s.convert_newlines_to_brs) {
-				t.onBeforeSetContent.add(function(ed, o) {
-					if (o.initial)
-						o.content = o.content.replace(/\r?\n/g, '<br />');
-				});
-			}
-
-			if (s.preformatted) {
-				t.onPostProcess.add(function(ed, o) {
-					o.content = o.content.replace(/^\s*<pre.*?>/, '');
-					o.content = o.content.replace(/<\/pre>\s*$/, '');
-
-					if (o.set)
-						o.content = '<pre class="mceItemHidden">' + o.content + '</pre>';
-				});
-			}
-
-			if (s.verify_css_classes) {
-				t.serializer.attribValueFilter = function(n, v) {
-					var s, cl;
-
-					if (n == 'class') {
-						// Build regexp for classes
-						if (!t.classesRE) {
-							cl = t.dom.getClasses();
-
-							if (cl.length > 0) {
-								s = '';
-
-								each (cl, function(o) {
-									s += (s ? '|' : '') + o['class'];
-								});
-
-								t.classesRE = new RegExp('(' + s + ')', 'gi');
-							}
-						}
-
-						return !t.classesRE || /(\bmceItem\w+\b|\bmceTemp\w+\b)/g.test(v) || t.classesRE.test(v) ? v : '';
-					}
-
-					return v;
-				};
-			}
-
 			if (s.cleanup_callback) {
 				t.onBeforeSetContent.add(function(ed, o) {
 					o.content = t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o);
