@@ -394,6 +394,22 @@ test('Forced root blocks', function() {
 	);
 	equal(serializer.serialize(root), '<!-- a --><p>b<strong>c</strong></p><p>d</p><p>e</p><p>f<strong>g</strong>h</p>', 'Mixed text nodes, inline elements and blocks.');
 });
+
+test('Parse contents with anchors and allow_html_in_named_anchor: false', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : false}, schema);
+	root = parser.parse('<a name="x">a</a>');
+	equal(serializer.serialize(root), '<a name="x"></a>a');
+});
+
+test('Parse contents with anchors and allow_html_in_named_anchor: true', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : true}, schema);
+	root = parser.parse('<a name="x">a</a>');
+	equal(serializer.serialize(root), '<a name="x">a</a>');
+});
 </script>
 </head>
 <body>

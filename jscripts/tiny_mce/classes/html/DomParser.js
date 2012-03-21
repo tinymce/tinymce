@@ -601,5 +601,27 @@
 				}
 			});
 		}
+
+		// Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
+		if (!settings.allow_html_in_named_anchor) {
+			self.addAttributeFilter('name', function(nodes, name) {
+				var i = nodes.length, sibling, prevSibling, parent, node;
+
+				while (i--) {
+					node = nodes[i];
+					if (node.name === 'a' && node.firstChild) {
+						parent = node.parent;
+
+						// Move children after current node
+						sibling = node.lastChild;
+						do {
+							prevSibling = sibling.prev;
+							parent.insert(sibling, node);
+							sibling = prevSibling;
+						} while (sibling);
+					}
+				}
+			});
+		}
 	}
 })(tinymce);
