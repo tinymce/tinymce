@@ -1123,18 +1123,6 @@
 			 */
 			t.controlManager = new tinymce.ControlManager(t);
 
-			if (s.custom_undo_redo) {
-				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, a) {
-					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
-						t.undoManager.beforeChange();
-				});
-
-				t.onExecCommand.add(function(ed, cmd, ui, val, a) {
-					if (cmd != 'Undo' && cmd != 'Redo' && cmd != 'mceRepaint' && (!a || !a.skip_undo))
-						t.undoManager.add();
-				});
-			}
-
 			t.onExecCommand.add(function(ed, c) {
 				// Don't refresh the select lists until caret move
 				if (!/^(FontName|FontSize)$/.test(c))
@@ -1533,20 +1521,6 @@
 			 */
 			t.undoManager = new tinymce.UndoManager(t);
 
-			// Pass through
-			t.undoManager.onAdd.add(function(um, l) {
-				if (um.hasUndo())
-					return t.onChange.dispatch(t, l, um);
-			});
-
-			t.undoManager.onUndo.add(function(um, l) {
-				return t.onUndo.dispatch(t, l, um);
-			});
-
-			t.undoManager.onRedo.add(function(um, l) {
-				return t.onRedo.dispatch(t, l, um);
-			});
-
 			t.forceBlocks = new tinymce.ForceBlocks(t);
 			t.enterKey = new tinymce.EnterKey(t);
 
@@ -1707,7 +1681,7 @@
 
 			t.load({initial : true, format : 'html'});
 			t.startContent = t.getContent({format : 'raw'});
-			t.undoManager.add();
+
 			/**
 			 * Is set to true after the editor instance has been initialized
 			 *
@@ -1812,7 +1786,6 @@
 
 			//t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
 			t.startContent = t.getContent({format : 'raw'});
-			t.undoManager.add({initial : true});
 			t.initialized = true;
 
 			t.onInit.dispatch(t);
@@ -2469,12 +2442,6 @@
 			o = o || {};
 			o.save = true;
 
-			// Add undo level will trigger onchange event
-			if (!o.no_events) {
-				t.undoManager.typing = false;
-				t.undoManager.add();
-			}
-
 			o.element = e;
 			h = o.content = t.getContent(o);
 
@@ -3057,74 +3024,6 @@
 			if (tinymce.isOpera) {
 				t.onClick.add(function(ed, e) {
 					Event.prevent(e);
-				});
-			}
-
-			// Add custom undo/redo handlers
-			if (s.custom_undo_redo) {
-				function addUndo() {
-					t.undoManager.typing = false;
-					t.undoManager.add();
-				};
-
-				var focusLostFunc = tinymce.isGecko ? 'blur' : 'focusout';
-				dom.bind(t.getDoc(), focusLostFunc, function(e){
-					if (!t.removed && t.undoManager.typing)
-						addUndo();
-				});
-
-				// Add undo level when contents is drag/dropped within the editor
-				t.dom.bind(t.dom.getRoot(), 'dragend', function(e) {
-					addUndo();
-				});
-
-				t.onKeyUp.add(function(ed, e) {
-					var keyCode = e.keyCode;
-
-					if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45 || e.ctrlKey)
-						addUndo();
-				});
-
-				t.onKeyDown.add(function(ed, e) {
-					var keyCode = e.keyCode, sel;
-
-					if (keyCode == 8) {
-						sel = t.getDoc().selection;
-
-						// Fix IE control + backspace browser bug
-						if (sel && sel.createRange && sel.createRange().item) {
-							t.undoManager.beforeChange();
-							ed.dom.remove(sel.createRange().item(0));
-							addUndo();
-
-							return Event.cancel(e);
-						}
-					}
-
-					// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter
-					if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45) {
-						// Add position before enter key is pressed, used by IE since it still uses the default browser behavior
-						// Todo: Remove this once we normalize enter behavior on IE
-						if (tinymce.isIE && keyCode == 13)
-							t.undoManager.beforeChange();
-
-						if (t.undoManager.typing)
-							addUndo();
-
-						return;
-					}
-
-					// If key isn't shift,ctrl,alt,capslock,metakey
-					if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !t.undoManager.typing) {
-						t.undoManager.beforeChange();
-						t.undoManager.typing = true;
-						t.undoManager.add();
-					}
-				});
-
-				t.onMouseDown.add(function() {
-					if (t.undoManager.typing)
-						addUndo();
 				});
 			}
 		},

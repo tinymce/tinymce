@@ -581,6 +581,20 @@ tinymce.util.Quirks = function(editor) {
 		editor.onSetContent.add(repaint);
 	};
 
+	/**
+	 * Deletes the selected image on IE instead of navigating to previous page.
+	 */
+	function deleteImageOnBackSpace() {
+		editor.onKeyDown.add(function(editor, e) {
+			if (e.keyCode == 8 && selection.getNode().nodeName == 'IMG') {
+				e.preventDefault();
+				editor.undoManager.beforeChange();
+				dom.remove(selection.getNode());
+				editor.undoManager.add();
+			}
+		});
+	};
+
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
@@ -606,6 +620,7 @@ tinymce.util.Quirks = function(editor) {
 		ensureBodyHasRoleApplication();
 		addNewLinesBeforeBrInPre();
 		removePreSerializedStylesWhenSelectingControls();
+		deleteImageOnBackSpace();
 	}
 
 	// Gecko
