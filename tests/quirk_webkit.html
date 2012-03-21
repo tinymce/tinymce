@@ -187,6 +187,19 @@
 				equal(editor.getContent(), '<p>x</p>');
 				equal(editor.selection.getRng(true).startContainer.nodeName, '#text');
 			});
+	
+			test('Delete last character in P with text sibing', function() {
+				editor.getBody().innerHTML = '<p><span>1</span>2</p>';
+				var rng = editor.dom.createRng();
+				rng.setStart(editor.getBody().lastChild.lastChild, 1);
+				rng.setEnd(editor.getBody().lastChild.lastChild, 1);
+				editor.selection.setRng(rng);
+				editor.focus();
+				type('\b');
+				equal(editor.getContent(), '<p><span>1</span></p>');
+				equal(editor.selection.getRng(true).startContainer.nodeName, '#text');
+				equal(editor.selection.getRng(true).startOffset, 1);
+			});
 		} else {
 			test("Skipped since the browser isn't WebKit", function() {
 				ok(true, "Skipped");

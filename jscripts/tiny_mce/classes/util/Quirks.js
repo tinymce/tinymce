@@ -421,6 +421,11 @@ tinymce.util.Quirks = function(editor) {
 					root = dom.getRoot();
 					node = container.parentNode;
 
+					// If container isn't the first child of it's parent then do nothing
+					if (node.firstChild != container) {
+						return;
+					}
+
 					while (node != root && !dom.isBlock(node)) {
 						parentNode = node.parentNode;
 
