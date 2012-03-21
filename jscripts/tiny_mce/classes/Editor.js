@@ -2775,19 +2775,6 @@
 
 			// #endif
 
-			// Fixes bug where a specified document_base_uri could result in broken images
-			// This will also fix drag drop of images in Gecko
-			if (tinymce.isGecko) {
-				dom.bind(t.getDoc(), 'DOMNodeInserted', function(e) {
-					var v;
-
-					e = e.target;
-
-					if (e.nodeType === 1 && e.nodeName === 'IMG' && (v = e.getAttribute('data-mce-src')))
-						e.src = t.documentBaseURI.toAbsolute(v);
-				});
-			}
-
 			// Add node change handlers
 			t.onMouseUp.add(t.nodeChanged);
 			//t.onClick.add(t.nodeChanged);
