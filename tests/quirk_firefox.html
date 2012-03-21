@@ -38,6 +38,11 @@ if (tinymce.isGecko) {
 			}, editor.getBody());
 		}, 100);
 	});
+
+	test('Add BR element at end of paragraphs with single link', function() {
+		editor.setContent('<p><b><a href="#">x</a></b></p>');
+		equal(editor.getBody().innerHTML, '<p><strong><a href="#" data-mce-href="#">x</a></strong><br data-mce-bogus="1"></p>');
+	});
 } else {
 	test('ignored', function() {
 		ok(true, "Tests ignored since the browser isn't Gecko.");

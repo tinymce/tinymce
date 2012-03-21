@@ -391,7 +391,7 @@
 	function removePreSerializedStylesWhenSelectingControls(editor) {
 		var dom = editor.dom;
 
-		dom.bind(editor.getDoc(), 'mouseup', function(e) {
+		dom.bind(editor.getBody(), 'mouseup', function(e) {
 			var value, node = editor.selection.getNode();
 
 			// Moved styles to attributes on IMG eements
@@ -482,10 +482,121 @@
 		});
 	}
 
+	/**
+	 * Removes a blockquote when backspace is pressed at the beginning of it.
+	 *
+	 * For example:
+	 * <blockquote><p>|x</p></blockquote>
+	 *
+	 * Becomes:
+	 * <p>|x</p>
+	 */
+	function removeBlockQuoteOnBackSpace(ed) {
+		// Add block quote deletion handler
+		ed.onKeyDown.add(function(ed, e) {
+			var selection, rng, container, offset, root, parent;
+
+			if (e.keyCode != VK.BACKSPACE) {
+				return;
+			}
+
+			selection = ed.selection;
+			rng = selection.getRng();
+			container = rng.startContainer;
+			offset = rng.startOffset;
+			root = ed.dom.getRoot();
+			parent = container;
+
+			if (!rng.collapsed || offset != 0) {
+				return;
+			}
+
+			while (parent && parent.parentNode.firstChild == parent && parent.parentNode != root) {
+				parent = parent.parentNode;
+			}
+
+			// Is the cursor at the beginning of a blockquote?
+			if (parent.tagName === 'BLOCKQUOTE') {
+				// Remove the blockquote
+				ed.formatter.toggle('blockquote', null, parent);
+
+				// Move the caret to the beginning of container
+				rng.setStart(container, 0);
+				rng.setEnd(container, 0);
+				selection.setRng(rng);
+				selection.collapse(false);
+			}
+		});
+	};
+
+	/**
+	 * Sets various Gecko editing options on mouse down and before a execCommand to disable inline table editing that is broken etc.
+	 */
+	function setGeckoEditingOptions(ed) {
+		var settings = ed.settings;
+
+		function setOpts() {
+			ed._refreshContentEditable();
+
+			setEditorCommandState(ed, "StyleWithCSS", false);
+			setEditorCommandState(ed, "enableInlineTableEditing", false);
+
+			if (!settings.object_resizing) {
+				setEditorCommandState(ed, "enableObjectResizing", false);
+			}
+		};
+
+		if (!settings.readonly) {
+			ed.onBeforeExecCommand.add(setOpts);
+			ed.onMouseDown.add(setOpts);
+		}
+	};
+
+	/**
+	 * Fixes a gecko link bug, when a link is placed at the end of block elements there is
+	 * no way to move the caret behind the link. This fix adds a bogus br element after the link.
+	 *
+	 * For example this:
+	 * <p><b><a href="#">x</a></b></p>
+	 *
+	 * Becomes this:
+	 * <p><b><a href="#">x</a></b><br></p>
+	 */
+	function addBrAfterLastLinks(ed) {
+		function fixLinks(ed, o) {
+			var dom = ed.dom;
+
+			tinymce.each(dom.select('a'), function(node) {
+				var parentNode = node.parentNode, root = dom.getRoot();
+
+				if (parentNode.lastChild === node) {
+					while (parentNode && !dom.isBlock(parentNode)) {
+						if (parentNode.parentNode.lastChild !== parentNode || parentNode === root) {
+							return;
+						}
+
+						parentNode = parentNode.parentNode;
+					}
+
+					dom.add(parentNode, 'br', {'data-mce-bogus' : 1});
+				}
+			});
+		};
+
+		ed.onExecCommand.add(function(ed, cmd) {
+			if (cmd === 'CreateLink') {
+				fixLinks(ed);
+			}
+		});
+
+		ed.onSetContent.add(ed.selection.onSetContent.add(fixLinks));
+	};
+
 	tinymce.create('tinymce.util.Quirks', {
 		Quirks: function(ed) {
 			// All browsers
 			disableBackspaceIntoATable(ed);
+			removeBlockQuoteOnBackSpace(ed);
 
 			// WebKit
 			if (tinymce.isWebKit) {
@@ -494,7 +605,6 @@
 				emptyEditorWhenDeleting(ed);
 				inputMethodFocus(ed);
 				selectControlElements(ed);
-				setEditorCommandState(ed, 'StyleWithCSS', true);
 
 				// iOS
 				if (tinymce.isIDevice) {
@@ -517,6 +627,8 @@
 				removeHrOnBackspace(ed);
 				focusBody(ed);
 				removeStylesWhenDeletingAccrossBlockElements(ed);
+				setGeckoEditingOptions(ed);
+				addBrAfterLastLinks(ed);
 			}
 		}
 	});

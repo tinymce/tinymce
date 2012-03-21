@@ -1717,26 +1717,6 @@
 				});
 			}
 
-			if (isGecko) {
-				// Fix gecko link bug, when a link is placed at the end of block elements there is
-				// no way to move the caret behind the link. This fix adds a bogus br element after the link
-				function fixLinks(ed, o) {
-					each(ed.dom.select('a'), function(n) {
-						var pn = n.parentNode;
-
-						if (ed.dom.isBlock(pn) && pn.lastChild === n)
-							ed.dom.add(pn, 'br', {'data-mce-bogus' : 1});
-					});
-				};
-
-				t.onExecCommand.add(function(ed, cmd) {
-					if (cmd === 'CreateLink')
-						fixLinks(ed);
-				});
-
-				t.onSetContent.add(t.selection.onSetContent.add(fixLinks));
-			}
-
 			t.load({initial : true, format : 'html'});
 			t.startContent = t.getContent({format : 'raw'});
 			t.undoManager.add();
@@ -3000,35 +2980,6 @@
 				});
 			}
 
-			// Set various midas options in Gecko
-			if (isGecko) {
-				function setOpts() {
-					var t = this, d = t.getDoc(), s = t.settings;
-
-					if (isGecko && !s.readonly) {
-						t._refreshContentEditable();
-
-						try {
-							// Try new Gecko method
-							d.execCommand("styleWithCSS", 0, false);
-						} catch (ex) {
-							// Use old method
-							if (!t._isHidden())
-								try {d.execCommand("useCSS", 0, true);} catch (ex) {}
-						}
-
-						if (!s.table_inline_editing)
-							try {d.execCommand('enableInlineTableEditing', false, false);} catch (ex) {}
-
-						if (!s.object_resizing)
-							try {d.execCommand('enableObjectResizing', false, false);} catch (ex) {}
-					}
-				};
-
-				t.onBeforeExecCommand.add(setOpts);
-				t.onMouseDown.add(setOpts);
-			}
-
 			// Add node change handlers
 			t.onMouseUp.add(t.nodeChanged);
 			//t.onClick.add(t.nodeChanged);
@@ -3038,37 +2989,6 @@
 				if ((c >= 33 && c <= 36) || (c >= 37 && c <= 40) || c == 13 || c == 45 || c == 46 || c == 8 || (tinymce.isMac && (c == 91 || c == 93)) || e.ctrlKey)
 					t.nodeChanged();
 			});
-
-
-			// Add block quote deletion handler
-			t.onKeyDown.add(function(ed, e) {
-				if (e.keyCode != VK.BACKSPACE)
-					return;
-
-				var rng = ed.selection.getRng();
-				if (!rng.collapsed)
-					return;
-
-				var n = rng.startContainer;
-				var offset = rng.startOffset;
-
-				while (n && n.nodeType && n.nodeType != 1 && n.parentNode)
-					n = n.parentNode;
-
-				// Is the cursor at the beginning of a blockquote?
-				if (n && n.parentNode && n.parentNode.tagName === 'BLOCKQUOTE' && n.parentNode.firstChild == n && offset == 0) {
-					// Remove the blockquote
-					ed.formatter.toggle('blockquote', null, n.parentNode);
-
-					// Move the caret to the beginning of n
-					rng.setStart(n, 0);
-					rng.setEnd(n, 0);
-					ed.selection.setRng(rng);
-					ed.selection.collapse(false);
-				}
-			});
-
-
 
 			// Add reset handler
 			t.onReset.add(function() {
