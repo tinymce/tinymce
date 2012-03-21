@@ -427,7 +427,7 @@
 	 */
 	function keepInlineElementOnDeleteBackspace(ed) {
 		ed.onKeyDown.add(function(ed, e) {
-			var isDelete, rng, container, offset, root, dom, selection, parentNode, brElm, sibling;
+			var isDelete, rng, container, offset, root, dom, selection, parentNode, brElm, sibling, node;
 
 			if (e.isDefaultPrevented()) {
 				return;
@@ -446,6 +446,7 @@
 					// Walk up the DOM to see if parents are single or has a BR after for example <p><b><i>X</i></b><br></p>
 					root = dom.getRoot();
 					node = container.parentNode;
+
 					while (node != root && !dom.isBlock(node)) {
 						parentNode = node.parentNode;
 
@@ -453,7 +454,7 @@
 						if (sibling && sibling.nodeName == 'BR') {
 							brElm = sibling;
 						} else {
-							if (parentNode != root && parentNode.firstChild != node && parentNode.lastChild != node) {
+							if (parentNode == root || parentNode.firstChild != node || parentNode.lastChild != node) {
 								return;
 							}
 						}

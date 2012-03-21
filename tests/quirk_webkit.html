@@ -179,6 +179,14 @@
 				equal(editor.getContent(), '<p>&nbsp;</p><p><span style="font-size: 10pt;">&nbsp;</span></p><p>&nbsp;</p>');
 				equal(editor.selection.getRng(true).startContainer.nodeName, 'SPAN');
 			});
+			
+			test('Delete last character in span with text sibing', function() {
+				editor.getBody().innerHTML = '<p><span style="font-size: 10pt;">b</span>x</p>';
+				setSelection('span', 1);
+				type('\b');
+				equal(editor.getContent(), '<p>x</p>');
+				equal(editor.selection.getRng(true).startContainer.nodeName, '#text');
+			});
 		} else {
 			test("Skipped since the browser isn't WebKit", function() {
 				ok(true, "Skipped");
