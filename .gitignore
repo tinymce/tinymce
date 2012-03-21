@@ -1,9 +1,9 @@
-*.iws
 .DS_Store
-/out
+*.iws
+*.sublime-workspace
 /lib
 /dist
 /scratch
 /dependency
-/bolt/config/bootstrap.js
-/bolt/bootstrap
+/config/bolt/bootstrap*.js
+*~
