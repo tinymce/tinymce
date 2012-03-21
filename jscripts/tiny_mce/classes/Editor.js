@@ -2014,7 +2014,7 @@
 				var o = {
 					func : cmd_func,
 					scope : sc || this,
-					desc : desc,
+					desc : t.translate(desc),
 					alt : false,
 					ctrl : false,
 					shift : false
@@ -2792,24 +2792,6 @@
 
 			// Add shortcuts
 			if (s.custom_shortcuts) {
-				if (s.custom_undo_redo_keyboard_shortcuts) {
-					t.addShortcut('ctrl+z', t.getLang('undo_desc'), 'Undo');
-					t.addShortcut('ctrl+y', t.getLang('redo_desc'), 'Redo');
-				}
-
-				// Add default shortcuts for gecko
-				t.addShortcut('ctrl+b', t.getLang('bold_desc'), 'Bold');
-				t.addShortcut('ctrl+i', t.getLang('italic_desc'), 'Italic');
-				t.addShortcut('ctrl+u', t.getLang('underline_desc'), 'Underline');
-
-				// BlockFormat shortcuts keys
-				for (i=1; i<=6; i++)
-					t.addShortcut('ctrl+' + i, '', ['FormatBlock', false, 'h' + i]);
-
-				t.addShortcut('ctrl+7', '', ['FormatBlock', false, 'p']);
-				t.addShortcut('ctrl+8', '', ['FormatBlock', false, 'div']);
-				t.addShortcut('ctrl+9', '', ['FormatBlock', false, 'address']);
-
 				function find(e) {
 					var v = null;
 

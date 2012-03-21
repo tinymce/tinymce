@@ -127,6 +127,10 @@
 			}
 		});
 
+		// Add keyboard shortcuts for undo/redo keys
+		editor.addShortcut('ctrl+z', 'undo_desc', 'Undo');
+		editor.addShortcut('ctrl+y', 'redo_desc', 'Redo');
+
 		return self = {
 			/**
 			 * State if the user is currently typing or not. This will add a typing operation into one undo
