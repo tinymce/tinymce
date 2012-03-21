@@ -1,10 +1,13 @@
-(function(tinymce) {
-	var VK = tinymce.VK, BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE;
+/**
+ * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
+ */
+tinymce.util.Quirks = function(editor) {
+	var VK = tinymce.VK, BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, settings = editor.settings;
 
 	/**
 	 * Executes a command with a specific state this can be to enable/disable browser editing features.
 	 */
-	function setEditorCommandState(editor, cmd, state) {
+	function setEditorCommandState(cmd, state) {
 		try {
 			editor.getDoc().execCommand(cmd, false, state);
 		} catch (ex) {
@@ -29,10 +32,8 @@
 	 *
 	 * This code is a bit of a hack and hopefully it will be fixed soon in WebKit.
 	 */
-	function cleanupStylesWhenDeleting(ed) {
-		var dom = ed.dom, selection = ed.selection;
-
-		ed.onKeyDown.add(function(ed, e) {
+	function cleanupStylesWhenDeleting() {
+		editor.onKeyDown.add(function(editor, e) {
 			var rng, blockElm, node, clonedSpan, isDelete;
 
 			if (e.isDefaultPrevented()) {
@@ -65,7 +66,7 @@
 				}
 
 				// Do the backspace/delete action
-				ed.getDoc().execCommand(isDelete ? 'ForwardDelete' : 'Delete', false, null);
+				editor.getDoc().execCommand(isDelete ? 'ForwardDelete' : 'Delete', false, null);
 
 				// Find all odd apple-style-spans
 				blockElm = dom.getParent(rng.startContainer, dom.isBlock);
@@ -89,31 +90,33 @@
 	 * WebKit and IE doesn't empty the editor if you select all contents and hit backspace or delete. This fix will check if the body is empty
 	 * like a <h1></h1> or <p></p> and then forcefully remove all contents.
 	 */
-	function emptyEditorWhenDeleting(ed) {
+	function emptyEditorWhenDeleting() {
 		function serializeRng(rng) {
-			var body = ed.dom.create("body");
+			var body = dom.create("body");
 			var contents = rng.cloneContents();
 			body.appendChild(contents);
-			return ed.selection.serializer.serialize(body, {format: 'html'});
+			return selection.serializer.serialize(body, {format: 'html'});
 		}
 
 		function allContentsSelected(rng) {
 			var selection = serializeRng(rng);
 
-			var allRng = ed.dom.createRng();
-			allRng.selectNode(ed.getBody());
+			var allRng = dom.createRng();
+			allRng.selectNode(editor.getBody());
 
 			var allSelection = serializeRng(allRng);
 			return selection === allSelection;
 		}
 
-		ed.onKeyDown.addToTop(function(ed, e) {
+		editor.onKeyDown.addToTop(function(editor, e) {
 			var keyCode = e.keyCode;
+
 			if (keyCode == DELETE || keyCode == BACKSPACE) {
-				var rng = ed.selection.getRng(true);
+				var rng = selection.getRng(true);
+
 				if (!rng.collapsed && allContentsSelected(rng)) {
-					ed.setContent('', {format : 'raw'});
-					ed.nodeChanged();
+					editor.setContent('', {format : 'raw'});
+					editor.nodeChanged();
 					e.preventDefault();
 				}
 			}
@@ -124,9 +127,9 @@
 	 * WebKit on MacOS X has a weird issue where it some times fails to properly convert keypresses to input method keystrokes.
 	 * So a fix where we just get the range and set the range back seems to do the trick.
 	 */
-	function inputMethodFocus(ed) {
-		ed.dom.bind(ed.getDoc(), 'focusin', function() {
-			ed.selection.setRng(ed.selection.getRng());
+	function inputMethodFocus() {
+		dom.bind(editor.getDoc(), 'focusin', function() {
+			selection.setRng(selection.getRng());
 		});
 	};
 
@@ -137,14 +140,15 @@
 	 * addRootBlocks), meaning the action does nothing. With this code, FireFox/IE matche the behaviour of other
      * browsers
 	 */
-	function removeHrOnBackspace(ed) {
-		ed.onKeyDown.add(function(ed, e) {
+	function removeHrOnBackspace() {
+		editor.onKeyDown.add(function(editor, e) {
 			if (e.keyCode === BACKSPACE) {
-				if (ed.selection.isCollapsed() && ed.selection.getRng(true).startOffset === 0) {
-					var node = ed.selection.getNode();
+				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
+					var node = selection.getNode();
 					var previousSibling = node.previousSibling;
+
 					if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "hr") {
-						ed.dom.remove(previousSibling);
+						dom.remove(previousSibling);
 						tinymce.dom.Event.cancel(e);
 					}
 				}
@@ -156,13 +160,13 @@
 	 * Firefox 3.x has an issue where the body element won't get proper focus if you click out
 	 * side it's rectangle.
 	 */
-	function focusBody(ed) {
+	function focusBody() {
 		// Fix for a focus bug in FF 3.x where the body element
 		// wouldn't get proper focus if the user clicked on the HTML element
 		if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
-			ed.onMouseDown.add(function(ed, e) {
+			editor.onMouseDown.add(function(editor, e) {
 				if (e.target.nodeName === "HTML") {
-					var body = ed.getBody();
+					var body = editor.getBody();
 
 					// Blur the body it's focused but not correctly focused
 					body.blur();
@@ -180,41 +184,41 @@
 	 * WebKit has a bug where it isn't possible to select image, hr or anchor elements
 	 * by clicking on them so we need to fake that.
 	 */
-	function selectControlElements(ed) {
-		ed.onClick.add(function(ed, e) {
+	function selectControlElements() {
+		editor.onClick.add(function(editor, e) {
 			e = e.target;
 
 			// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
 			// WebKit can't even do simple things like selecting an image
 			// Needs tobe the setBaseAndExtend or it will fail to select floated images
-			if (/^(IMG|HR)$/.test(e.nodeName))
-				ed.selection.getSel().setBaseAndExtent(e, 0, e, 1);
+			if (/^(IMG|HR)$/.test(e.nodeName)) {
+				selection.getSel().setBaseAndExtent(e, 0, e, 1);
+			}
 
-			if (e.nodeName == 'A' && ed.dom.hasClass(e, 'mceItemAnchor'))
-				ed.selection.select(e);
+			if (e.nodeName == 'A' && dom.hasClass(e, 'mceItemAnchor')) {
+				selection.select(e);
+			}
 
-			ed.nodeChanged();
+			editor.nodeChanged();
 		});
 	};
 
 	/**
 	 * Fixes a Gecko bug where the style attribute gets added to the wrong element when deleting between two block elements.
 	 */
-	function removeStylesWhenDeletingAccrossBlockElements(ed) {
-		var selection = ed.selection, dom = ed.dom;
-
+	function removeStylesWhenDeletingAccrossBlockElements() {
 		function getAttributeApplyFunction() {
 			var template = dom.getAttribs(selection.getStart().cloneNode(false));
 
 			return function() {
 				var target = selection.getStart();
 
-				if (target !== ed.getBody()) {
+				if (target !== editor.getBody()) {
 					dom.setAttrib(target, "style", null);
 
-				tinymce.each(template, function(attr) {
-					target.setAttributeNode(attr.cloneNode(true));
-				});
+					tinymce.each(template, function(attr) {
+						target.setAttributeNode(attr.cloneNode(true));
+					});
 				}
 			};
 		}
@@ -223,83 +227,57 @@
 			return !selection.isCollapsed() && selection.getStart() != selection.getEnd();
 		}
 
-		function blockEvent(ed, e) {
+		function blockEvent(editor, e) {
 			e.preventDefault();
 			return false;
 		}
 
-		ed.onKeyPress.add(function(ed, e) {
+		editor.onKeyPress.add(function(editor, e) {
 			var applyAttributes;
 
 			if ((e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
 				applyAttributes = getAttributeApplyFunction();
-				ed.getDoc().execCommand('delete', false, null);
+				editor.getDoc().execCommand('delete', false, null);
 				applyAttributes();
 				e.preventDefault();
 				return false;
 			}
 		});
 
-		dom.bind(ed.getDoc(), 'cut', function(e) {
+		dom.bind(editor.getDoc(), 'cut', function(e) {
 			var applyAttributes;
 
 			if (isSelectionAcrossElements()) {
 				applyAttributes = getAttributeApplyFunction();
-				ed.onKeyUp.addToTop(blockEvent);
+				editor.onKeyUp.addToTop(blockEvent);
 
 				setTimeout(function() {
 					applyAttributes();
-					ed.onKeyUp.remove(blockEvent);
+					editor.onKeyUp.remove(blockEvent);
 				}, 0);
 			}
 		});
 	}
-	
-	/**
-	 * If you hit enter from a heading in IE, the resulting P tag below it shares the style property (bad)
-	 * */
-	 /*
-	function removeStylesOnPTagsInheritedFromHeadingTag(ed) {
-		ed.onKeyDown.add(function(ed, event) {
-			function checkInHeadingTag(ed) {
-				var currentNode = ed.selection.getNode();
-				var headingTags = 'h1,h2,h3,h4,h5,h6';
-				return ed.dom.is(currentNode, headingTags) || ed.dom.getParent(currentNode, headingTags) !== null;
-			}
-
-			if (event.keyCode === VK.ENTER && !VK.modifierPressed(event) && checkInHeadingTag(ed)) {
-				setTimeout(function() {
-					var currentNode = ed.selection.getNode();
-					if (ed.dom.is(currentNode, 'p')) {
-						ed.dom.setAttrib(currentNode, 'style', null);
-						// While tiny's content is correct after this method call, the content shown is not representative of it and needs to be 'repainted'
-						ed.execCommand('mceCleanup');
-					}
-				}, 0);
-			}
-		});
-	}
-	*/
 
 	/**
 	 * Fire a nodeChanged when the selection is changed on WebKit this fixes selection issues on iOS5. It only fires the nodeChange
 	 * event every 50ms since it would other wise update the UI when you type and it hogs the CPU.
 	 */
-	function selectionChangeNodeChanged(ed) {
+	function selectionChangeNodeChanged() {
 		var lastRng, selectionTimer;
 
-		ed.dom.bind(ed.getDoc(), 'selectionchange', function() {
+		dom.bind(editor.getDoc(), 'selectionchange', function() {
 			if (selectionTimer) {
 				clearTimeout(selectionTimer);
 				selectionTimer = 0;
 			}
 
 			selectionTimer = window.setTimeout(function() {
-				var rng = ed.selection.getRng();
+				var rng = selection.getRng();
 
 				// Compare the ranges to see if it was a real change or not
 				if (!lastRng || !tinymce.dom.RangeUtils.compareRanges(rng, lastRng)) {
-					ed.nodeChanged();
+					editor.nodeChanged();
 					lastRng = rng;
 				}
 			}, 50);
@@ -309,19 +287,19 @@
 	/**
 	 * Screen readers on IE needs to have the role application set on the body.
 	 */
-	function ensureBodyHasRoleApplication(ed) {
+	function ensureBodyHasRoleApplication() {
 		document.body.setAttribute("role", "application");
 	}
-	
+
 	/**
 	 * Backspacing into a table behaves differently depending upon browser type.
 	 * Therefore, disable Backspace when cursor immediately follows a table.
 	 */
-	function disableBackspaceIntoATable(ed) {
-		ed.onKeyDown.add(function(ed, e) {
+	function disableBackspaceIntoATable() {
+		editor.onKeyDown.add(function(editor, e) {
 			if (e.keyCode === BACKSPACE) {
-				if (ed.selection.isCollapsed() && ed.selection.getRng(true).startOffset === 0) {
-					var previousSibling = ed.selection.getNode().previousSibling;
+				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
+					var previousSibling = selection.getNode().previousSibling;
 					if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "table") {
 						return tinymce.dom.Event.cancel(e);
 					}
@@ -333,7 +311,7 @@
 	/**
 	 * Old IE versions can't properly render BR elements in PRE tags white in contentEditable mode. So this logic adds a \n before the BR so that it will get rendered.
 	 */
-	function addNewLinesBeforeBrInPre(editor) {
+	function addNewLinesBeforeBrInPre() {
 		var documentMode = editor.getDoc().documentMode;
 
 		// IE8+ rendering mode does the right thing with BR in PRE
@@ -343,8 +321,8 @@
 
 		 // Enable display: none in area and add a specific class that hides all BR elements in PRE to
 		 // avoid the caret from getting stuck at the BR elements while pressing the right arrow key
-		setEditorCommandState(editor, 'RespectVisibilityInDesign', true);
-		editor.dom.addClass(editor.getBody(), 'mceHideBrInPre');
+		setEditorCommandState('RespectVisibilityInDesign', true);
+		dom.addClass(editor.getBody(), 'mceHideBrInPre');
 
 		// Adds a \n before all BR elements in PRE to get them visual
 		editor.parser.addNodeFilter('pre', function(nodes, name) {
@@ -388,11 +366,9 @@
 	/**
 	 * Moves style width/height to attribute width/height when the user resizes an image on IE.
 	 */
-	function removePreSerializedStylesWhenSelectingControls(editor) {
-		var dom = editor.dom;
-
+	function removePreSerializedStylesWhenSelectingControls() {
 		dom.bind(editor.getBody(), 'mouseup', function(e) {
-			var value, node = editor.selection.getNode();
+			var value, node = selection.getNode();
 
 			// Moved styles to attributes on IMG eements
 			if (node.nodeName == 'IMG') {
@@ -425,9 +401,9 @@
 	 *
 	 * See: https://bugs.webkit.org/show_bug.cgi?id=81656
 	 */
-	function keepInlineElementOnDeleteBackspace(ed) {
-		ed.onKeyDown.add(function(ed, e) {
-			var isDelete, rng, container, offset, root, dom, selection, parentNode, brElm, sibling, node;
+	function keepInlineElementOnDeleteBackspace() {
+		editor.onKeyDown.add(function(editor, e) {
+			var isDelete, rng, container, offset, root, parentNode, brElm, sibling, node;
 
 			if (e.isDefaultPrevented()) {
 				return;
@@ -435,8 +411,6 @@
 
 			isDelete = e.keyCode == DELETE;
 			if ((isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
-				selection = ed.selection;
-				dom = ed.dom;
 				rng = selection.getRng();
 				container = rng.startContainer;
 				offset = rng.startOffset;
@@ -491,20 +465,19 @@
 	 * Becomes:
 	 * <p>|x</p>
 	 */
-	function removeBlockQuoteOnBackSpace(ed) {
+	function removeBlockQuoteOnBackSpace() {
 		// Add block quote deletion handler
-		ed.onKeyDown.add(function(ed, e) {
-			var selection, rng, container, offset, root, parent;
+		editor.onKeyDown.add(function(editor, e) {
+			var rng, container, offset, root, parent;
 
 			if (e.keyCode != VK.BACKSPACE) {
 				return;
 			}
 
-			selection = ed.selection;
 			rng = selection.getRng();
 			container = rng.startContainer;
 			offset = rng.startOffset;
-			root = ed.dom.getRoot();
+			root = dom.getRoot();
 			parent = container;
 
 			if (!rng.collapsed || offset != 0) {
@@ -518,7 +491,7 @@
 			// Is the cursor at the beginning of a blockquote?
 			if (parent.tagName === 'BLOCKQUOTE') {
 				// Remove the blockquote
-				ed.formatter.toggle('blockquote', null, parent);
+				editor.formatter.toggle('blockquote', null, parent);
 
 				// Move the caret to the beginning of container
 				rng.setStart(container, 0);
@@ -532,23 +505,21 @@
 	/**
 	 * Sets various Gecko editing options on mouse down and before a execCommand to disable inline table editing that is broken etc.
 	 */
-	function setGeckoEditingOptions(ed) {
-		var settings = ed.settings;
-
+	function setGeckoEditingOptions() {
 		function setOpts() {
-			ed._refreshContentEditable();
+			editor._refreshContentEditable();
 
-			setEditorCommandState(ed, "StyleWithCSS", false);
-			setEditorCommandState(ed, "enableInlineTableEditing", false);
+			setEditorCommandState("StyleWithCSS", false);
+			setEditorCommandState("enableInlineTableEditing", false);
 
 			if (!settings.object_resizing) {
-				setEditorCommandState(ed, "enableObjectResizing", false);
+				setEditorCommandState("enableObjectResizing", false);
 			}
 		};
 
 		if (!settings.readonly) {
-			ed.onBeforeExecCommand.add(setOpts);
-			ed.onMouseDown.add(setOpts);
+			editor.onBeforeExecCommand.add(setOpts);
+			editor.onMouseDown.add(setOpts);
 		}
 	};
 
@@ -562,10 +533,8 @@
 	 * Becomes this:
 	 * <p><b><a href="#">x</a></b><br></p>
 	 */
-	function addBrAfterLastLinks(ed) {
-		function fixLinks(ed, o) {
-			var dom = ed.dom;
-
+	function addBrAfterLastLinks() {
+		function fixLinks(editor, o) {
 			tinymce.each(dom.select('a'), function(node) {
 				var parentNode = node.parentNode, root = dom.getRoot();
 
@@ -583,53 +552,64 @@
 			});
 		};
 
-		ed.onExecCommand.add(function(ed, cmd) {
+		editor.onExecCommand.add(function(editor, cmd) {
 			if (cmd === 'CreateLink') {
-				fixLinks(ed);
+				fixLinks(editor);
 			}
 		});
 
-		ed.onSetContent.add(ed.selection.onSetContent.add(fixLinks));
+		editor.onSetContent.add(selection.onSetContent.add(fixLinks));
 	};
 
-	tinymce.create('tinymce.util.Quirks', {
-		Quirks: function(ed) {
-			// All browsers
-			disableBackspaceIntoATable(ed);
-			removeBlockQuoteOnBackSpace(ed);
-
-			// WebKit
-			if (tinymce.isWebKit) {
-				keepInlineElementOnDeleteBackspace(ed);
-				cleanupStylesWhenDeleting(ed);
-				emptyEditorWhenDeleting(ed);
-				inputMethodFocus(ed);
-				selectControlElements(ed);
-
-				// iOS
-				if (tinymce.isIDevice) {
-					selectionChangeNodeChanged(ed);
-				}
+	/**
+	 * Removes ghost selections from images/tables on Gecko.
+	 */
+	function removeGhostSelection() {
+		function repaint(sender, args) {
+			if (!sender || !args.initial) {
+				editor.execCommand('mceRepaint');
 			}
+		};
 
-			// IE
-			if (tinymce.isIE) {
-				removeHrOnBackspace(ed);
-				emptyEditorWhenDeleting(ed);
-				ensureBodyHasRoleApplication(ed);
-				//removeStylesOnPTagsInheritedFromHeadingTag(ed)
-				addNewLinesBeforeBrInPre(ed);
-				removePreSerializedStylesWhenSelectingControls(ed);
-			}
+		editor.onUndo.add(repaint);
+		editor.onRedo.add(repaint);
+		editor.onSetContent.add(repaint);
+	};
 
-			// Gecko
-			if (tinymce.isGecko) {
-				removeHrOnBackspace(ed);
-				focusBody(ed);
-				removeStylesWhenDeletingAccrossBlockElements(ed);
-				setGeckoEditingOptions(ed);
-				addBrAfterLastLinks(ed);
-			}
+	// All browsers
+	disableBackspaceIntoATable();
+	removeBlockQuoteOnBackSpace();
+
+	// WebKit
+	if (tinymce.isWebKit) {
+		keepInlineElementOnDeleteBackspace();
+		cleanupStylesWhenDeleting();
+		emptyEditorWhenDeleting();
+		inputMethodFocus();
+		selectControlElements();
+
+		// iOS
+		if (tinymce.isIDevice) {
+			selectionChangeNodeChanged();
 		}
-	});
-})(tinymce);
+	}
+
+	// IE
+	if (tinymce.isIE) {
+		removeHrOnBackspace();
+		emptyEditorWhenDeleting();
+		ensureBodyHasRoleApplication();
+		addNewLinesBeforeBrInPre();
+		removePreSerializedStylesWhenSelectingControls();
+	}
+
+	// Gecko
+	if (tinymce.isGecko) {
+		removeHrOnBackspace();
+		focusBody();
+		removeStylesWhenDeletingAccrossBlockElements();
+		setGeckoEditingOptions();
+		addBrAfterLastLinks();
+		removeGhostSelection();
+	}
+};

@@ -1141,18 +1141,6 @@
 					t.nodeChanged();
 			});
 
-			// Remove ghost selections on images and tables in Gecko
-			if (isGecko) {
-				function repaint(a, o) {
-					if (!o || !o.initial)
-						t.execCommand('mceRepaint');
-				};
-
-				t.onUndo.add(repaint);
-				t.onRedo.add(repaint);
-				t.onSetContent.add(repaint);
-			}
-
 			// Enables users to override the control factory
 			t.onBeforeRenderUI.dispatch(t, t.controlManager);
 
@@ -1584,7 +1572,7 @@
 			t.controlManager.onPostRender.dispatch(t, t.controlManager);
 			t.onPostRender.dispatch(t);
 
-			t.quirks = new tinymce.util.Quirks(this);
+			t.quirks = tinymce.util.Quirks(t);
 
 			if (s.directionality)
 				t.getBody().dir = s.directionality;
