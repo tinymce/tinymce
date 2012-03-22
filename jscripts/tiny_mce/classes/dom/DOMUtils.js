@@ -1020,7 +1020,7 @@
 			if (!u)
 				u = '';
 
-			head = t.select('head')[0];
+			head = d.getElementsByTagName('head')[0];
 
 			each(u.split(','), function(u) {
 				var link;
