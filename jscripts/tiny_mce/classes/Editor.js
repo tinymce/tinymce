@@ -727,7 +727,7 @@
 			t.onPreInit.dispatch(t);
 
 			if (!settings.gecko_spellcheck)
-				t.getBody().spellcheck = 0;
+				t.getDoc().body.spellcheck = false;
 
 			if (!settings.readonly) {
 				t.bindNativeEvents();
@@ -1549,6 +1549,7 @@
 			args = args || {};
 			args.format = args.format || 'html';
 			args.get = true;
+			args.getInner = true;
 
 			// Do preprocessing
 			if (!args.no_events)
