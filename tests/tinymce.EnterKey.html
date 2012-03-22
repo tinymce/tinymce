@@ -463,10 +463,10 @@ test('Enter at the end of DIV layer', function() {
 });
 
 test('Enter in div inside contentEditable:false div', function() {
-	editor.getBody().innerHTML = '<div contenteditable="false"><div>abcd</div></div>';
+	editor.getBody().innerHTML = '<div data-mce-contenteditable="false"><div>abcd</div></div>';
 	setSelection('div div', 2);
 	pressEnter();
-	equal(editor.getContent(), '<div contenteditable="false"><div>abcd</div></div>');
+	equal(cleanHtml(editor.getBody().innerHTML), '<div data-mce-contenteditable="false"><div>abcd</div></div>');
 });
 
 test('Enter in div with contentEditable:true inside contentEditable:false div', function() {
