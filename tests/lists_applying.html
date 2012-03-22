@@ -32,11 +32,7 @@ module('Lists - Applying', {
 // Tests
 asyncTest('Collapsed Selection - Apply OL Actions', function() {
 	ApplyingOL.to(EmptyParagraph).gives('<ol>\n<li></li>\n</ol>');
-	if (tinymce.isIE && !tinymce.isIE9){
-		ApplyingOL.to(EmptyHeading).gives('<ol>\n<li>\n<h1>&nbsp;</h1>\n</li>\n</ol>');
-	} else {
-		ApplyingOL.to(EmptyHeading).gives('<ol>\n<li>\n<h1></h1>\n</li>\n</ol>');
-	}
+	ApplyingOL.to(EmptyHeading).gives('<ol>\n<li>\n<h1></h1>\n</li>\n</ol>');
 
 	ApplyingOL.to(NonEmptyParagraph).enablesState('Outdent').andGives('<ol>\n<li>Test</li>\n</ol>');
 	ApplyingOL.to(NonEmptyHeading).enablesState('Outdent').andGives('<ol>\n<li>\n<h1>Test</h1>\n</li>\n</ol>');
@@ -95,11 +91,7 @@ asyncTest('Collapsed Selection - Apply OL Actions', function() {
 
 asyncTest('Collapsed Selection - Apply UL Actions', function() {
 	ApplyingUL.to(EmptyParagraph).gives('<ul>\n<li></li>\n</ul>');
-	if (tinymce.isIE && !tinymce.isIE9){
-		ApplyingUL.to(EmptyHeading).gives('<ul>\n<li>\n<h1>&nbsp;</h1>\n</li>\n</ul>');
-	} else {
-		ApplyingUL.to(EmptyHeading).gives('<ul>\n<li>\n<h1></h1>\n</li>\n</ul>');
-	}
+	ApplyingUL.to(EmptyHeading).gives('<ul>\n<li>\n<h1></h1>\n</li>\n</ul>');
 
 	ApplyingUL.to(NonEmptyParagraph).gives('<ul>\n<li>Test</li>\n</ul>');
 	ApplyingUL.to(NonEmptyHeading).gives('<ul>\n<li>\n<h1>Test</h1>\n</li>\n</ul>');
