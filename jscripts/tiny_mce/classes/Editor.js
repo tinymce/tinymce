@@ -418,7 +418,7 @@
 			t.onBeforeRenderUI.dispatch(t, t.controlManager);
 
 			// Measure box
-			if (s.render_ui) {
+			if (s.render_ui && t.theme) {
 				w = s.width || e.style.width || e.offsetWidth;
 				h = s.height || e.style.height || e.offsetHeight;
 				t.orgDisplay = e.style.display;
@@ -447,7 +447,7 @@
 			// Content editable mode ends here
 			if (s.content_editable) {
 				e = n = o = null; // Fix IE leak
-				return t.setupContentEditable();
+				return t.initContentBody();
 			}
 
 			// #endif
@@ -512,7 +512,7 @@
 			// Domain relaxing enabled, then set document domain
 			if (tinymce.relaxedDomain && (isIE || (tinymce.isOpera && parseFloat(opera.version()) < 11))) {
 				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
-				u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.setupIframe();})()';
+				u = 'javascript:(function(){document.open();document.domain="' + document.domain + '";var ed = window.parent.tinyMCE.get("' + t.id + '");document.write(ed.iframeHTML);document.close();ed.initContentBody();})()';
 			}
 
 			// Create iframe
@@ -536,7 +536,7 @@
 			DOM.setAttrib(t.id, 'aria-hidden', true);
 
 			if (!tinymce.relaxedDomain || !u)
-				t.setupIframe();
+				t.initContentBody();
 
 			e = n = o = null; // Cleanup
 		},
@@ -546,13 +546,13 @@
 		 * It will fill the iframe with contents, setups DOM and selection objects for the iframe.
 		 * This method should not be called directly.
 		 *
-		 * @method setupIframe
+		 * @method initContentBody
 		 */
-		setupIframe : function() {
-			var t = this, s = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
+		initContentBody : function() {
+			var t = this, settings = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
 
 			// Setup iframe body
-			if (!isIE || !tinymce.relaxedDomain) {
+			if ((!isIE || !tinymce.relaxedDomain) && !settings.content_editable) {
 				d.open();
 				d.write(t.iframeHTML);
 				d.close();
@@ -561,12 +561,21 @@
 					d.domain = tinymce.relaxedDomain;
 			}
 
+			if (settings.content_editable) {
+				t.contentDocument = settings.content_document || document;
+				t.contentWindow = settings.content_window || window;
+				t.bodyElement = e;
+
+				// Prevent leak in IE
+				settings.content_document = settings.content_window = null;
+			}
+
 			// It will not steal focus while setting contentEditable
 			b = t.getBody();
 			b.disabled = true;
 
-			if (!s.readonly)
-				b.contentEditable = true;
+			if (!settings.readonly)
+				b.contentEditable = t.getParam('content_editable_state', true);
 
 			b.disabled = false;
 
@@ -576,7 +585,7 @@
 			 * @property schema
 			 * @type tinymce.html.Schema
 			 */
-			t.schema = new tinymce.html.Schema(s);
+			t.schema = new tinymce.html.Schema(settings);
 
 			/**
 			 * DOM instance for the editor.
@@ -591,10 +600,11 @@
 				keep_values : true,
 				url_converter : t.convertURL,
 				url_converter_scope : t,
-				hex_colors : s.force_hex_style_colors,
-				class_filter : s.class_filter,
+				hex_colors : settings.force_hex_style_colors,
+				class_filter : settings.class_filter,
 				update_styles : 1,
 				fix_ie_paragraphs : 1,
+				root_element : settings.content_editable ? t.id : null,
 				schema : t.schema
 			});
 
@@ -604,7 +614,7 @@
 			 * @property parser
 			 * @type tinymce.html.DomParser
 			 */
-			t.parser = new tinymce.html.DomParser(s, t.schema);
+			t.parser = new tinymce.html.DomParser(settings, t.schema);
 
 			// Convert src and href into data-mce-src, data-mce-href and data-mce-style
 			t.parser.addAttributeFilter('src,href,style', function(nodes, name) {
@@ -666,7 +676,7 @@
 			 * // Serializes the first paragraph in the editor into a string
 			 * tinyMCE.activeEditor.serializer.serialize(tinyMCE.activeEditor.dom.select('p')[0]);
 			 */
-			t.serializer = new tinymce.dom.Serializer(s, t.dom, t.schema);
+			t.serializer = new tinymce.dom.Serializer(settings, t.dom, t.schema);
 
 			/**
 			 * Selection instance for the editor.
@@ -719,10 +729,10 @@
 
 			t.onPreInit.dispatch(t);
 
-			if (!s.gecko_spellcheck)
+			if (!settings.gecko_spellcheck)
 				t.getBody().spellcheck = 0;
 
-			if (!s.readonly) {
+			if (!settings.readonly) {
 				t.bindNativeEvents();
 			}
 
@@ -731,21 +741,19 @@
 
 			t.quirks = tinymce.util.Quirks(t);
 
-			if (s.directionality)
-				t.getBody().dir = s.directionality;
+			if (settings.directionality)
+				t.getBody().dir = settings.directionality;
 
-			if (s.nowrap)
+			if (settings.nowrap)
 				t.getBody().style.whiteSpace = "nowrap";
 
-			if (s.protect) {
+			if (settings.protect) {
 				t.onBeforeSetContent.add(function(ed, o) {
-					if (s.protect) {
-						each(s.protect, function(pattern) {
-							o.content = o.content.replace(pattern, function(str) {
-								return '<!--mce:protected ' + escape(str) + '-->';
-							});
+					each(s.protect, function(pattern) {
+						o.content = o.content.replace(pattern, function(str) {
+							return '<!--mce:protected ' + escape(str) + '-->';
 						});
-					}
+					});
 				});
 			}
 
@@ -755,7 +763,7 @@
 			});
 
 			// Remove empty contents
-			if (s.padd_empty_editor) {
+			if (settings.padd_empty_editor) {
 				t.onPostProcess.add(function(ed, o) {
 					o.content = o.content.replace(/^(<p[^>]*>(&nbsp;|&#160;|\s|\u00a0|)<\/p>[\r\n]*|<br \/>[\r\n]*)$/, '');
 				});
@@ -788,9 +796,9 @@
 			});
 
 			// Handle auto focus
-			if (s.auto_focus) {
+			if (settings.auto_focus) {
 				setTimeout(function () {
-					var ed = tinymce.get(s.auto_focus);
+					var ed = tinymce.get(settings.auto_focus);
 
 					ed.selection.select(ed.getBody(), 1);
 					ed.selection.collapse(1);
@@ -801,105 +809,6 @@
 
 			e = null;
 		},
-
-		// #ifdef contentEditable
-
-		/**
-		 * Sets up the contentEditable mode.
-		 *
-		 * @method setupContentEditable
-		 */
-		setupContentEditable : function() {
-			var t = this, s = t.settings, e = t.getElement();
-
-			t.contentDocument = s.content_document || document;
-			t.contentWindow = s.content_window || window;
-			t.bodyElement = e;
-
-			// Prevent leak in IE
-			s.content_document = s.content_window = null;
-
-			DOM.hide(e);
-			e.contentEditable = t.getParam('content_editable_state', true);
-			DOM.show(e);
-
-			if (!s.gecko_spellcheck)
-				t.getDoc().body.spellcheck = 0;
-
-			// Setup objects
-			t.dom = new tinymce.dom.DOMUtils(t.getDoc(), {
-				keep_values : true,
-				url_converter : t.convertURL,
-				url_converter_scope : t,
-				hex_colors : s.force_hex_style_colors,
-				class_filter : s.class_filter,
-				root_element : t.id,
-				fix_ie_paragraphs : 1,
-				update_styles : 1
-			});
-
-			t.serializer = new tinymce.dom.Serializer(s, t.dom, schema);
-
-			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
-			t.forceBlocks = new tinymce.ForceBlocks(t, {
-				forced_root_block : s.forced_root_block
-			});
-
-			t.editorCommands = new tinymce.EditorCommands(t);
-
-			// Pass through
-			t.serializer.onPreProcess.add(function(se, o) {
-				return t.onPreProcess.dispatch(t, o, se);
-			});
-
-			t.serializer.onPostProcess.add(function(se, o) {
-				return t.onPostProcess.dispatch(t, o, se);
-			});
-
-			t.onPreInit.dispatch(t);
-			t.bindNativeEvents();
-
-			t.controlManager.onPostRender.dispatch(t, t.controlManager);
-			t.onPostRender.dispatch(t);
-
-			t.onSetContent.add(function() {
-				t.addVisual(t.getBody());
-			});
-
-			//t.load({initial : true, format : (s.cleanup_on_startup ? 'html' : 'raw')});
-			t.startContent = t.getContent({format : 'raw'});
-			t.initialized = true;
-
-			t.onInit.dispatch(t);
-			t.focus(true);
-			t.nodeChanged({initial : 1});
-
-			// Load specified content CSS last
-			if (s.content_css) {
-				each(explode(s.content_css), function(u) {
-					t.dom.loadCSS(t.documentBaseURI.toAbsolute(u));
-				});
-			}
-
-			if (isIE) {
-				// Store away selection
-				t.dom.bind(t.getElement(), 'beforedeactivate', function() {
-					t.lastSelectionBookmark = t.selection.getBookmark(1);
-				});
-
-				t.onBeforeExecCommand.add(function(ed, cmd, ui, val, o) {
-					if (!DOM.getParent(ed.selection.getStart(), function(n) {return n == ed.getBody();}))
-						o.terminate = 1;
-
-					if (!DOM.getParent(ed.selection.getEnd(), function(n) {return n == ed.getBody();}))
-						o.terminate = 1;
-				});
-			}
-
-			e = null; // Cleanup
-		},
-
-		// #endif
 
 		/**
 		 * Focuses/activates the editor. This will set this editor as the activeEditor in the tinymce collection
