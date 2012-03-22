@@ -61,8 +61,13 @@
 					}
 				} else {
 					if (root.nodeName == 'BR') {
-						rng.setStartAfter(root);
-						rng.setEndAfter(root);
+						if (root.nextSibling && dom.isBlock(root.nextSibling)) {
+							rng.setStartBefore(root);
+							rng.setEndBefore(root);
+						} else {
+							rng.setStartAfter(root);
+							rng.setEndAfter(root);
+						}
 					} else {
 						rng.setStart(root, 0);
 						rng.setEnd(root, 0);
