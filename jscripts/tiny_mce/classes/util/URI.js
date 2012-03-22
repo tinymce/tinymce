@@ -128,7 +128,7 @@
 			var tu = t.getURI(), uu = u.getURI();
 			
 			// Allow usage of the base_uri when relative_urls = true
-			if(tu == uu || (tu.substr(-1) == "/" && tu.substr(0,tu.length - 1) == uu) )
+			if(tu == uu || (tu.charAt(tu.length - 1) == "/" && tu.substr(0, tu.length - 1) == uu))
 				return tu;
 
 			o = t.toRelPath(t.path, u.path);
