@@ -1,11 +1,11 @@
 /**
  * UndoManager.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -116,7 +116,7 @@
 		editor.addShortcut('ctrl+z', 'undo_desc', 'Undo');
 		editor.addShortcut('ctrl+y', 'redo_desc', 'Redo');
 
-		return self = {
+		self = {
 			// Explose for debugging reasons
 			data : data,
 
@@ -292,5 +292,7 @@
 				return index < data.length - 1 && !this.typing;
 			}
 		};
+
+		return self;
 	};
 })(tinymce);

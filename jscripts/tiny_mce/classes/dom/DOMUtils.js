@@ -1,11 +1,11 @@
 /**
  * DOMUtils.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -251,8 +251,8 @@
 				h = 0;
 
 			return {
-				w : parseInt(w) || e.offsetWidth || e.clientWidth,
-				h : parseInt(h) || e.offsetHeight || e.clientHeight
+				w : parseInt(w, 10) || e.offsetWidth || e.clientWidth,
+				h : parseInt(h, 10) || e.offsetHeight || e.clientHeight
 			};
 		},
 
@@ -1454,7 +1454,7 @@
 			var c = /^\s*rgb\s*?\(\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?\)\s*$/i.exec(s);
 
 			function hex(s) {
-				s = parseInt(s).toString(16);
+				s = parseInt(s, 10).toString(16);
 
 				return s.length > 1 ? s : '0' + s; // 0 -> 00
 			};
@@ -1772,7 +1772,7 @@
 						// Also keep text nodes with only spaces if surrounded by spans.
 						// eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
 						var trimmedLength = tinymce.trim(node.nodeValue).length;
-						if (!t.isBlock(node.parentNode) || trimmedLength > 0 || trimmedLength == 0 && surroundedBySpans(node))
+						if (!t.isBlock(node.parentNode) || trimmedLength > 0 || trimmedLength === 0 && surroundedBySpans(node))
 							return;
 					} else if (type == 1) {
 						// If the only child is a bookmark then move it up

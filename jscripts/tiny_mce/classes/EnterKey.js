@@ -1,11 +1,11 @@
 /**
  * EnterKey.js
  *
- * Copyright 2012, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -121,7 +121,7 @@
 
 			// Returns true/false if the caret is at the start/end of the parent block element
 			function isCaretAtStartOrEndOfBlock(start) {
-				var walker, node;
+				var walker, node, name;
 
 				// Caret is in the middle of a text node like "a|b"
 				if (container.nodeType == 3 && (start ? offset > 0 : offset < container.nodeValue.length)) {

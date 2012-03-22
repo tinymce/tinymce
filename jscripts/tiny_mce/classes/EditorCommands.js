@@ -1,16 +1,16 @@
 /**
  * EditorCommands.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
 	// Added for compression purposes
-	var each = tinymce.each, undefined, TRUE = true, FALSE = false;
+	var each = tinymce.each, undef, TRUE = true, FALSE = false;
 
 	/**
 	 * This class enables you to add custom editor commands and it contains
@@ -109,10 +109,10 @@
 		// Private methods
 
 		function execNativeCommand(command, ui, value) {
-			if (ui === undefined)
+			if (ui === undef)
 				ui = FALSE;
 
-			if (value === undefined)
+			if (value === undef)
 				value = null;
 
 			return editor.getDoc().execCommand(command, ui, value);
@@ -123,7 +123,7 @@
 		};
 
 		function toggleFormat(name, value) {
-			formatter.toggle(name, value ? {value : value} : undefined);
+			formatter.toggle(name, value ? {value : value} : undef);
 		};
 
 		function storeSelection(type) {

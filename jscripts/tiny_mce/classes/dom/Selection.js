@@ -1,11 +1,11 @@
 /**
  * Selection.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -197,7 +197,7 @@
 				} else {
 					rng.deleteContents();
 
-					if (doc.body.childNodes.length == 0) {
+					if (doc.body.childNodes.length === 0) {
 						doc.body.innerHTML = content;
 					} else {
 						// createContextualFragment doesn't exists in IE 9 DOMRanges
@@ -436,7 +436,7 @@
 
 							// Detect the empty space after block elements in IE and move the end back one character <p></p>] becomes <p>]</p>
 							rng.moveToElementText(rng2.parentElement());
-							if (rng.compareEndPoints('StartToEnd', rng2) == 0)
+							if (rng.compareEndPoints('StartToEnd', rng2) === 0)
 								rng2.move('character', -1);
 
 							rng2.pasteHTML('<span data-mce-type="bookmark" id="' + id + '_end" style="' + styles + '">' + chr + '</span>');
@@ -651,7 +651,7 @@
 
 				do {
 					// Text node
-					if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length != 0) {
+					if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length !== 0) {
 						if (start)
 							rng.setStart(node, 0);
 						else

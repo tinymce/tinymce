@@ -1,17 +1,17 @@
 /**
  * adapter.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 // #ifdef jquery_adapter
 
 (function($, tinymce) {
-	var is = tinymce.is, attrRegExp = /^(href|src|style)$/i, undefined;
+	var is = tinymce.is, attrRegExp = /^(href|src|style)$/i, undef;
 
 	// jQuery is undefined
 	if (!$ && window.console) {
@@ -44,7 +44,7 @@
 
 				// Update/retrive data-mce- attribute variants
 				if (attrRegExp.test(name)) {
-					if (value !== undefined) {
+					if (value !== undef) {
 						// Use TinyMCE behavior when setting the specifc attributes
 						self.each(function(i, node) {
 							editor.dom.setAttrib(node, name, value);

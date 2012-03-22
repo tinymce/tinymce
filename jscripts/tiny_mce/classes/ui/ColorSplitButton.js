@@ -1,11 +1,11 @@
 /**
  * ColorSplitButton.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -149,7 +149,7 @@
 		renderMenu : function() {
 			var t = this, m, i = 0, s = t.settings, n, tb, tr, w, context;
 
-			w = DOM.add(s.menu_container, 'div', {role: 'listbox', id : t.id + '_menu', 'class' : s['menu_class'] + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
+			w = DOM.add(s.menu_container, 'div', {role: 'listbox', id : t.id + '_menu', 'class' : s.menu_class + ' ' + s['class'], style : 'position:absolute;left:0;top:-1000px;'});
 			m = DOM.add(w, 'div', {'class' : s['class'] + ' mceSplitButtonMenu'});
 			DOM.add(m, 'span', {'class' : 'mceMenuLine'});
 
@@ -178,7 +178,7 @@
 
 				// adding a proper ARIA role = button causes JAWS to read things incorrectly on IE.
 				if (!tinymce.isIE ) {
-					settings['role']= 'option';
+					settings.role = 'option';
 				}
 
 				n = DOM.add(n, 'a', settings);

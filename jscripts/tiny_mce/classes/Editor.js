@@ -1,11 +1,11 @@
 /**
  * Editor.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -311,9 +311,8 @@
 							var dependencies = PluginManager.dependencies(p);
 							each(dependencies, function(dep) {
 								var defaultSettings = {prefix:'plugins/', resource: dep, suffix:'/editor_plugin' + tinymce.suffix + '.js'};
-								var dep = PluginManager.createUrl(defaultSettings, dep);
+								dep = PluginManager.createUrl(defaultSettings, dep);
 								PluginManager.load(dep.resource, dep);
-								
 							});
 						} else {
 							// Skip safari plugin, since it is removed as of 3.3b1
@@ -425,10 +424,10 @@
 				re = /^[0-9\.]+(|px)$/i;
 
 				if (re.test('' + w))
-					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
+					w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
 
 				if (re.test('' + h))
-					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
+					h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), 100);
 
 				// Render UI
 				o = t.theme.renderUI({
@@ -545,36 +544,36 @@
 		 * @method initContentBody
 		 */
 		initContentBody : function() {
-			var t = this, settings = t.settings, e = DOM.get(t.id), d = t.getDoc(), h, b;
+			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), html, body;
 
 			// Setup iframe body
 			if ((!isIE || !tinymce.relaxedDomain) && !settings.content_editable) {
-				d.open();
-				d.write(t.iframeHTML);
-				d.close();
+				doc.open();
+				doc.write(self.iframeHTML);
+				doc.close();
 
 				if (tinymce.relaxedDomain)
-					d.domain = tinymce.relaxedDomain;
+					doc.domain = tinymce.relaxedDomain;
 			}
 
 			if (settings.content_editable) {
-				DOM.addClass(e, 'mceContentBody');
-				t.contentDocument = settings.content_document || document;
-				t.contentWindow = settings.content_window || window;
-				t.bodyElement = e;
+				DOM.addClass(targetElm, 'mceContentBody');
+				self.contentDocument = settings.content_document || document;
+				self.contentWindow = settings.content_window || window;
+				self.bodyElement = targetElm;
 
 				// Prevent leak in IE
 				settings.content_document = settings.content_window = null;
 			}
 
 			// It will not steal focus while setting contentEditable
-			b = t.getBody();
-			b.disabled = true;
+			body = self.getBody();
+			body.disabled = true;
 
 			if (!settings.readonly)
-				b.contentEditable = t.getParam('content_editable_state', true);
+				body.contentEditable = self.getParam('content_editable_state', true);
 
-			b.disabled = false;
+			body.disabled = false;
 
 			/**
 			 * Schema instance, enables you to validate elements and it's children.
@@ -582,7 +581,7 @@
 			 * @property schema
 			 * @type tinymce.html.Schema
 			 */
-			t.schema = new tinymce.html.Schema(settings);
+			self.schema = new tinymce.html.Schema(settings);
 
 			/**
 			 * DOM instance for the editor.
@@ -593,16 +592,15 @@
 			 * // Adds a class to all paragraphs within the editor
 			 * tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('p'), 'someclass');
 			 */
-			t.dom = new tinymce.dom.DOMUtils(t.getDoc(), {
+			self.dom = new tinymce.dom.DOMUtils(doc, {
 				keep_values : true,
-				url_converter : t.convertURL,
-				url_converter_scope : t,
+				url_converter : self.convertURL,
+				url_converter_scope : self,
 				hex_colors : settings.force_hex_style_colors,
 				class_filter : settings.class_filter,
-				update_styles : 1,
-				fix_ie_paragraphs : 1,
-				root_element : settings.content_editable ? t.id : null,
-				schema : t.schema
+				update_styles : true,
+				root_element : settings.content_editable ? self.id : null,
+				schema : self.schema
 			});
 
 			/**
@@ -611,11 +609,11 @@
 			 * @property parser
 			 * @type tinymce.html.DomParser
 			 */
-			t.parser = new tinymce.html.DomParser(settings, t.schema);
+			self.parser = new tinymce.html.DomParser(settings, self.schema);
 
 			// Convert src and href into data-mce-src, data-mce-href and data-mce-style
-			t.parser.addAttributeFilter('src,href,style', function(nodes, name) {
-				var i = nodes.length, node, dom = t.dom, value, internalName;
+			self.parser.addAttributeFilter('src,href,style', function(nodes, name) {
+				var i = nodes.length, node, dom = self.dom, value, internalName;
 
 				while (i--) {
 					node = nodes[i];
@@ -627,13 +625,13 @@
 						if (name === "style")
 							node.attr(internalName, dom.serializeStyle(dom.parseStyle(value), node.name));
 						else
-							node.attr(internalName, t.convertURL(value, name, node.name));
+							node.attr(internalName, self.convertURL(value, name, node.name));
 					}
 				}
 			});
 
 			// Keep scripts from executing
-			t.parser.addNodeFilter('script', function(nodes, name) {
+			self.parser.addNodeFilter('script', function(nodes, name) {
 				var i = nodes.length, node;
 
 				while (i--) {
@@ -642,7 +640,7 @@
 				}
 			});
 
-			t.parser.addNodeFilter('#cdata', function(nodes, name) {
+			self.parser.addNodeFilter('#cdata', function(nodes, name) {
 				var i = nodes.length, node;
 
 				while (i--) {
@@ -653,8 +651,8 @@
 				}
 			});
 
-			t.parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function(nodes, name) {
-				var i = nodes.length, node, nonEmptyElements = t.schema.getNonEmptyElements();
+			self.parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function(nodes, name) {
+				var i = nodes.length, node, nonEmptyElements = self.schema.getNonEmptyElements();
 
 				while (i--) {
 					node = nodes[i];
@@ -673,7 +671,7 @@
 			 * // Serializes the first paragraph in the editor into a string
 			 * tinyMCE.activeEditor.serializer.serialize(tinyMCE.activeEditor.dom.select('p')[0]);
 			 */
-			t.serializer = new tinymce.dom.Serializer(settings, t.dom, t.schema);
+			self.serializer = new tinymce.dom.Serializer(settings, self.dom, self.schema);
 
 			/**
 			 * Selection instance for the editor.
@@ -690,7 +688,7 @@
 			 * // Selects the first paragraph found
 			 * tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.dom.select('p')[0]);
 			 */
-			t.selection = new tinymce.dom.Selection(t.dom, t.getWin(), t.serializer);
+			self.selection = new tinymce.dom.Selection(self.dom, self.getWin(), self.serializer);
 
 			/**
 			 * Formatter instance.
@@ -698,7 +696,7 @@
 			 * @property formatter
 			 * @type tinymce.Formatter
 			 */
-			t.formatter = new tinymce.Formatter(t);
+			self.formatter = new tinymce.Formatter(self);
 
 			/**
 			 * Undo manager instance, responsible for handling undo levels. 
@@ -709,44 +707,44 @@
 			 * // Undoes the last modification to the editor
 			 * tinyMCE.activeEditor.undoManager.undo();
 			 */
-			t.undoManager = new tinymce.UndoManager(t);
+			self.undoManager = new tinymce.UndoManager(self);
 
-			t.forceBlocks = new tinymce.ForceBlocks(t);
-			t.enterKey = new tinymce.EnterKey(t);
-			t.editorCommands = new tinymce.EditorCommands(t);
+			self.forceBlocks = new tinymce.ForceBlocks(self);
+			self.enterKey = new tinymce.EnterKey(self);
+			self.editorCommands = new tinymce.EditorCommands(self);
 
 			// Pass through
-			t.serializer.onPreProcess.add(function(se, o) {
-				return t.onPreProcess.dispatch(t, o, se);
+			self.serializer.onPreProcess.add(function(se, o) {
+				return self.onPreProcess.dispatch(self, o, se);
 			});
 
-			t.serializer.onPostProcess.add(function(se, o) {
-				return t.onPostProcess.dispatch(t, o, se);
+			self.serializer.onPostProcess.add(function(se, o) {
+				return self.onPostProcess.dispatch(self, o, se);
 			});
 
-			t.onPreInit.dispatch(t);
+			self.onPreInit.dispatch(self);
 
 			if (!settings.gecko_spellcheck)
-				t.getDoc().body.spellcheck = false;
+				doc.body.spellcheck = false;
 
 			if (!settings.readonly) {
-				t.bindNativeEvents();
+				self.bindNativeEvents();
 			}
 
-			t.controlManager.onPostRender.dispatch(t, t.controlManager);
-			t.onPostRender.dispatch(t);
+			self.controlManager.onPostRender.dispatch(self, self.controlManager);
+			self.onPostRender.dispatch(self);
 
-			t.quirks = tinymce.util.Quirks(t);
+			self.quirks = tinymce.util.Quirks(self);
 
 			if (settings.directionality)
-				t.getBody().dir = settings.directionality;
+				body.dir = settings.directionality;
 
 			if (settings.nowrap)
-				t.getBody().style.whiteSpace = "nowrap";
+				body.style.whiteSpace = "nowrap";
 
 			if (settings.protect) {
-				t.onBeforeSetContent.add(function(ed, o) {
-					each(s.protect, function(pattern) {
+				self.onBeforeSetContent.add(function(ed, o) {
+					each(settings.protect, function(pattern) {
 						o.content = o.content.replace(pattern, function(str) {
 							return '<!--mce:protected ' + escape(str) + '-->';
 						});
@@ -755,19 +753,19 @@
 			}
 
 			// Add visual aids when new contents is added
-			t.onSetContent.add(function() {
-				t.addVisual(t.getBody());
+			self.onSetContent.add(function() {
+				self.addVisual(self.getBody());
 			});
 
 			// Remove empty contents
 			if (settings.padd_empty_editor) {
-				t.onPostProcess.add(function(ed, o) {
+				self.onPostProcess.add(function(ed, o) {
 					o.content = o.content.replace(/^(<p[^>]*>(&nbsp;|&#160;|\s|\u00a0|)<\/p>[\r\n]*|<br \/>[\r\n]*)$/, '');
 				});
 			}
 
-			t.load({initial : true, format : 'html'});
-			t.startContent = t.getContent({format : 'raw'});
+			self.load({initial : true, format : 'html'});
+			self.startContent = self.getContent({format : 'raw'});
 
 			/**
 			 * Is set to true after the editor instance has been initialized
@@ -779,17 +777,17 @@
 			 *     return editor && editor.initialized;
 			 * }
 			 */
-			t.initialized = true;
+			self.initialized = true;
 
-			t.onInit.dispatch(t);
-			t.execCallback('setupcontent_callback', t.id, t.getBody(), t.getDoc());
-			t.execCallback('init_instance_callback', t);
-			t.focus(true);
-			t.nodeChanged({initial : 1});
+			self.onInit.dispatch(self);
+			self.execCallback('setupcontent_callback', self.id, body, doc);
+			self.execCallback('init_instance_callback', self);
+			self.focus(true);
+			self.nodeChanged({initial : true});
 
 			// Load specified content CSS last
-			each(t.contentCSS, function(u) {
-				t.dom.loadCSS(u);
+			each(self.contentCSS, function(url) {
+				self.dom.loadCSS(url);
 			});
 
 			// Handle auto focus
@@ -804,7 +802,8 @@
 				}, 100);
 			}
 
-			e = null;
+			// Clean up references for IE
+			targetElm = doc = body = null;
 		},
 
 		/**
@@ -912,7 +911,7 @@
 			if (!s)
 				return '';
 
-			return i18n[c + '.' + s] || s.replace(/{\#([^}]+)\}/g, function(a, b) {
+			return i18n[c + '.' + s] || s.replace(/\{\#([^\}]+)\}/g, function(a, b) {
 				return i18n[c + '.' + b] || '{#' + b + '}';
 			});
 		},
@@ -1859,7 +1858,7 @@
 
 			// Weird, wheres that cursor selection?
 			s = this.selection.getSel();
-			return (!s || !s.rangeCount || s.rangeCount == 0);
+			return (!s || !s.rangeCount || s.rangeCount === 0);
 		}
 	});
 })(tinymce);

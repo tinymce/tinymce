@@ -1,11 +1,11 @@
 /**
  * TridentSelection.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function() {
@@ -73,7 +73,7 @@
 				// We need to walk char by char since rng.text or rng.htmlText will trim line endings
 				offset = 0;
 				while (checkRng.compareEndPoints(start ? 'StartToStart' : 'StartToEnd', rng) !== 0) {
-					if (checkRng.move('character', 1) == 0 || parent != checkRng.parentElement()) {
+					if (checkRng.move('character', 1) === 0 || parent != checkRng.parentElement()) {
 						break;
 					}
 
@@ -86,7 +86,7 @@
 				// Walk character by character in text node until we hit the selected range endpoint, hit the end of document or parent isn't the right one
 				offset = 0;
 				while (checkRng.compareEndPoints(start ? 'StartToStart' : 'StartToEnd', rng) !== 0) {
-					if (checkRng.move('character', -1) == 0 || parent != checkRng.parentElement()) {
+					if (checkRng.move('character', -1) === 0 || parent != checkRng.parentElement()) {
 						break;
 					}
 
@@ -252,7 +252,7 @@
 			var rng = selection.getRng(), start, end, bookmark = {};
 
 			function getIndexes(node) {
-				var node, parent, root, children, i, indexes = [];
+				var parent, root, children, i, indexes = [];
 
 				parent = node.parentNode;
 				root = dom.getRoot().parentNode;

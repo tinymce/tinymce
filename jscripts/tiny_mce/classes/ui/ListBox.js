@@ -1,15 +1,15 @@
 /**
  * ListBox.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
-	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher;
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher, undef;
 
 	/**
 	 * This class is used to create list boxes/select list. This one will generate
@@ -120,7 +120,7 @@
 
 			t.marked = {};
 
-			if (va == undefined)
+			if (va == undef)
 				return t.selectByIndex(-1);
 
 			// Is string or number make function selector
@@ -250,7 +250,7 @@
 		showMenu : function() {
 			var t = this, p2, e = DOM.get(this.id), m;
 
-			if (t.isDisabled() || t.items.length == 0)
+			if (t.isDisabled() || t.items.length === 0)
 				return;
 
 			if (t.menu && t.menu.isMenuVisible)
@@ -347,7 +347,7 @@
 
 			each(t.items, function(o) {
 				// No value then treat it as a title
-				if (o.value === undefined) {
+				if (o.value === undef) {
 					m.add({
 						title : o.title,
 						role : "option",

@@ -1,4 +1,14 @@
 /**
+ * Quirks.js
+ *
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
+/**
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
  */
 tinymce.util.Quirks = function(editor) {
@@ -57,7 +67,7 @@ tinymce.util.Quirks = function(editor) {
 					node = blockElm.firstChild;
 
 					// Ignore empty text nodes
-					while (node && node.nodeType == 3 && node.nodeValue.length == 0)
+					while (node && node.nodeType == 3 && node.nodeValue.length === 0)
 						node = node.nextSibling;
 
 					if (node && node.nodeName === 'SPAN') {
@@ -138,7 +148,7 @@ tinymce.util.Quirks = function(editor) {
 	 * browser just deletes the paragraph - the browser fails to merge the text node with a horizontal rule so it is
 	 * left there. TinyMCE sees a floating text node and wraps it in a paragraph on the key up event (ForceBlocks.js
 	 * addRootBlocks), meaning the action does nothing. With this code, FireFox/IE matche the behaviour of other
-     * browsers
+	 * browsers
 	 */
 	function removeHrOnBackspace() {
 		editor.onKeyDown.add(function(editor, e) {
@@ -485,7 +495,7 @@ tinymce.util.Quirks = function(editor) {
 			root = dom.getRoot();
 			parent = container;
 
-			if (!rng.collapsed || offset != 0) {
+			if (!rng.collapsed || offset !== 0) {
 				return;
 			}
 

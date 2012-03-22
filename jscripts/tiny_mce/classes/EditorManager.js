@@ -1,11 +1,11 @@
 /**
  * EditorManager.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -18,7 +18,7 @@
 		DOM = tinymce.DOM, Event = tinymce.dom.Event,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
 		explode = tinymce.explode,
-		Dispatcher = tinymce.util.Dispatcher, undefined, instanceCounter = 0;
+		Dispatcher = tinymce.util.Dispatcher, undef, instanceCounter = 0;
 
 	// Setup some URLs where the editor API is located and where the document is
 	tinymce.documentBaseURL = window.location.href.replace(/[\?#].*$/, '').replace(/[\/\\][^\/]+$/, '');
@@ -277,7 +277,7 @@
 		 * });
 		 */
 		get : function(id) {
-			if (id === undefined)
+			if (id === undef)
 				return this.editors;
 
 			return this.editors[id];

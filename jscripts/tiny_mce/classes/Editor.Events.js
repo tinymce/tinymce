@@ -1,11 +1,11 @@
 /**
  * Editor.Events.js
  *
- * Copyright 2012, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -584,9 +584,9 @@
 			 * tinyMCE.init({
 			 *    ...
 			 *    setup : function(ed) {
-			 * 	  ed.onChange.add(function(ed, l) {
-			 * 		  console.debug('Editor contents was modified. Contents: ' + l.content);
-			 * 	  });
+			 *       ed.onChange.add(function(ed, l) {
+			 *          console.debug('Editor contents was modified. Contents: ' + l.content);
+			 *       });
 			 *    }
 			 * });
 			 */

@@ -1,11 +1,11 @@
 /**
  * Entities.js
  *
- * Copyright 2010, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -100,8 +100,7 @@
 		'rfloor,8p9,lang,8pa,rang,9ea,loz,9j0,spades,9j3,clubs,9j5,hearts,9j6,diams,ai,OElig,aj,oelig,b0,' +
 		'Scaron,b1,scaron,bo,Yuml,m6,circ,ms,tilde,802,ensp,803,emsp,809,thinsp,80c,zwnj,80d,zwj,80e,lrm,' +
 		'80f,rlm,80j,ndash,80k,mdash,80o,lsquo,80p,rsquo,80q,sbquo,80s,ldquo,80t,rdquo,80u,bdquo,810,dagger,' +
-		'811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro'
-	, 32);
+		'811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32);
 
 	tinymce.html = tinymce.html || {};
 

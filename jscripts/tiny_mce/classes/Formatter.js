@@ -1,11 +1,11 @@
 /**
  * Formatter.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -45,7 +45,7 @@
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
-			undefined,
+			undef,
 			getContentEditable = dom.getContentEditable;
 
 		function isArray(obj) {
@@ -190,15 +190,15 @@
 					each(format, function(format) {
 						// Set deep to false by default on selector formats this to avoid removing
 						// alignment on images inside paragraphs when alignment is changed on paragraphs
-						if (format.deep === undefined)
+						if (format.deep === undef)
 							format.deep = !format.selector;
 
 						// Default to true
-						if (format.split === undefined)
+						if (format.split === undef)
 							format.split = !format.selector || format.inline;
 
 						// Default to true
-						if (format.remove === undefined && format.selector && !format.inline)
+						if (format.remove === undef && format.selector && !format.inline)
 							format.remove = 'none';
 
 						// Mark format as a mixed format inline + block level
@@ -295,7 +295,7 @@
 				var start = rng.startContainer;
 				var end = rng.endContainer;
 
-				if (start != end && rng.endOffset == 0) {
+				if (start != end && rng.endOffset === 0) {
 					var newEnd = findSelectionEnd(start, end);
 					var endOffset = newEnd.nodeType == 3 ? newEnd.length : newEnd.childNodes.length;
 
@@ -856,7 +856,7 @@
 		function toggle(name, vars, node) {
 			var fmt = get(name);
 
-			if (match(name, vars, node) && (!('toggle' in fmt[0]) || fmt[0]['toggle']))
+			if (match(name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle))
 				remove(name, vars, node);
 			else
 				apply(name, vars, node);
@@ -886,7 +886,7 @@
 				// Check all items
 				if (items) {
 					// Non indexed object
-					if (items.length === undefined) {
+					if (items.length === undef) {
 						for (key in items) {
 							if (items.hasOwnProperty(key)) {
 								if (item_name === 'attributes')
@@ -1162,11 +1162,11 @@
 		 * @return {Object} Expanded range like object.
 		 */
 		function expandRng(rng, format, remove) {
-			var sibling, lastIdx, leaf,
+			var sibling, lastIdx, leaf, endPoint,
 				startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
-				endOffset = rng.endOffset, sibling, lastIdx, leaf, endPoint;
+				endOffset = rng.endOffset;
 
 			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(start) {
@@ -1210,7 +1210,7 @@
 			// This function walks down the tree to find the leaf at the selection.
 			// The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
 			function findLeaf(node, offset) {
-				if (offset === undefined)
+				if (offset === undef)
 					offset = node.nodeType === 3 ? node.length : node.childNodes.length;
 				while (node && node.hasChildNodes()) {
 					node = node.childNodes[offset];
@@ -1320,7 +1320,7 @@
 			function findSelectorEndPoint(container, sibling_name) {
 				var parents, i, y, curFormat;
 
-				if (container.nodeType == 3 && container.nodeValue.length == 0 && container[sibling_name])
+				if (container.nodeType == 3 && container.nodeValue.length === 0 && container[sibling_name])
 					container = container[sibling_name];
 
 				parents = getParents(container);
@@ -1749,7 +1749,7 @@
 							value = obj2[name];
 
 							// Obj2 doesn't have obj1 item
-							if (value === undefined)
+							if (value === undef)
 								return FALSE;
 
 							// Obj2 item has a different value
@@ -1856,7 +1856,7 @@
 			}
 
 			// If end text node is excluded then walk to the previous node
-			if (container.nodeType === 3 && !start && offset == 0) {
+			if (container.nodeType === 3 && !start && offset === 0) {
 				container = new TreeWalker(container, ed.getBody()).prev() || container;
 			}
 
