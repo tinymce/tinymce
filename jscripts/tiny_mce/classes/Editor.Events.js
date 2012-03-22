@@ -827,9 +827,11 @@
 
 		// Add DOM events
 		each(nativeToDispatcherMap, function(dispatcherName, nativeName) {
+			var root = settings.content_editable ? self.getBody() : self.getDoc();
+
 			switch (nativeName) {
 				case 'contextmenu':
-					dom.bind(self.getDoc(), nativeName, eventHandler);
+					dom.bind(root, nativeName, eventHandler);
 					break;
 
 				case 'paste':
@@ -842,7 +844,7 @@
 					break;
 
 				default:
-					dom.bind(settings.content_editable ? self.getBody() : self.getDoc(), nativeName, eventHandler);
+					dom.bind(root, nativeName, eventHandler);
 			}
 		});
 
@@ -850,8 +852,6 @@
 		dom.bind(settings.content_editable ? self.getBody() : (tinymce.isGecko ? self.getDoc() : self.getWin()), 'focus', function(e) {
 			self.focus(true);
 		});
-
-		// #ifdef contentEditable
 
 		if (settings.content_editable && tinymce.isOpera) {
 			// Opera doesn't support focus event for contentEditable elements so we need to fake it
@@ -862,8 +862,6 @@
 			dom.bind(self.getBody(), 'click', doFocus);
 			dom.bind(self.getBody(), 'keydown', doFocus);
 		}
-
-		// #endif
 
 		// Add node change handler
 		self.onMouseUp.add(self.nodeChanged);
