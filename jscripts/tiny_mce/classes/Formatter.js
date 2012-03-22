@@ -1422,9 +1422,6 @@
 						if (leaf.offset > 1) {
 							endContainer = leaf.node;
 							endContainer.splitText(leaf.offset - 1);
-						} else if (leaf.node.previousSibling) {
-							// TODO: Figure out why this is in here
-							//endContainer = leaf.node.previousSibling;
 						}
 					}
 				}

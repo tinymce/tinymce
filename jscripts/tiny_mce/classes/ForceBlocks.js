@@ -52,7 +52,8 @@ tinymce.ForceBlocks = function(editor) {
 		}
 
 		// Wrap non block elements and text nodes
-		for (node = rootNode.firstChild; node; node) {
+		node = rootNode.firstChild;
+		while (node) {
 			if (node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName])) {
 				if (!rootBlockNode) {
 					rootBlockNode = dom.create(settings.forced_root_block);
