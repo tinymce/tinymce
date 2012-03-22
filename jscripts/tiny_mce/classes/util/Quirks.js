@@ -128,7 +128,7 @@ tinymce.util.Quirks = function(editor) {
 	 * So a fix where we just get the range and set the range back seems to do the trick.
 	 */
 	function inputMethodFocus() {
-		dom.bind(editor.getDoc(), 'focusin', function() {
+		dom.bind(editor.getBody(), 'focusin', function() {
 			selection.setRng(selection.getRng());
 		});
 	};
