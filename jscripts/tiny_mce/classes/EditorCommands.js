@@ -576,16 +576,14 @@
 		}, 'value');
 
 		// Add undo manager logic
-		if (settings.custom_undo_redo) {
-			addCommands({
-				Undo : function() {
-					editor.undoManager.undo();
-				},
+		addCommands({
+			Undo : function() {
+				editor.undoManager.undo();
+			},
 
-				Redo : function() {
-					editor.undoManager.redo();
-				}
-			});
-		}
+			Redo : function() {
+				editor.undoManager.redo();
+			}
+		});
 	};
 })(tinymce);
