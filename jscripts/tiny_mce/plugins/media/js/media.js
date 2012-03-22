@@ -326,6 +326,39 @@
 					setVal('src', src);
 					setVal('media_type', data.type);
 				}
+				
+				// Vimeo
+				if (src.match(/vimeo.com\/([0-9]+)/)) {
+					data.width = 425;
+					data.height = 350;
+					data.params.frameborder = '0';
+					data.type = 'iframe';
+					src = 'http://player.vimeo.com/video/' + src.match(/vimeo.com\/([0-9]+)/)[1];
+					setVal('src', src);
+					setVal('media_type', data.type);
+				}
+            
+				// stream.cz
+				if (src.match(/stream.cz\/((?!object).)*\/([0-9]+)/)) {
+					data.width = 425;
+					data.height = 350;
+					data.params.frameborder = '0';
+					data.type = 'iframe';
+					src = 'http://www.stream.cz/object/' + src.match(/stream.cz\/[^/]+\/([0-9]+)/)[1];
+					setVal('src', src);
+					setVal('media_type', data.type);
+				}
+				
+				// Google maps
+				if (src.match(/maps.google.([a-z]{2,3})\/maps\/(.+)msid=(.+)/)) {
+					data.width = 425;
+					data.height = 350;
+					data.params.frameborder = '0';
+					data.type = 'iframe';
+					src = 'http://maps.google.com/maps/ms?msid=' + src.match(/msid=(.+)/)[1] + "&output=embed";
+					setVal('src', src);
+					setVal('media_type', data.type);
+				}
 
 				if (data.type == 'video') {
 					if (!data.video.sources)
