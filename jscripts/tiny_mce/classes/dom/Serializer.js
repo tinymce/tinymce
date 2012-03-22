@@ -339,7 +339,7 @@
 
 				// Parse and serialize HTML
 				args.content = htmlSerializer.serialize(
-					htmlParser.parse(args.getInner ? node.innerHTML : tinymce.trim(dom.getOuterHTML(node), args), args)
+					htmlParser.parse(tinymce.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)), args)
 				);
 
 				// Replace all BOM characters for now until we can find a better solution
