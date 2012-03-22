@@ -81,11 +81,6 @@
 		editor.onKeyUp.add(function(editor, e) {
 			var keyCode = e.keyCode;
 
-			// Don't add any undo level if event was blocked
-			if (e.isDefaultPrevented()) {
-				return;
-			}
-
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45 || keyCode == 13 || e.ctrlKey) {
 				addNonTypingUndoLevel();
 			}
@@ -93,11 +88,6 @@
 
 		editor.onKeyDown.add(function(editor, e) {
 			var keyCode = e.keyCode;
-
-			// Don't add any undo level if event was blocked
-			if (e.isDefaultPrevented()) {
-				return;
-			}
 
 			// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45) {
@@ -117,11 +107,6 @@
 		});
 
 		editor.onMouseDown.add(function(editor, e) {
-			// Don't add any undo level if event was blocked
-			if (e.isDefaultPrevented()) {
-				return;
-			}
-
 			if (self.typing) {
 				addNonTypingUndoLevel();
 			}
@@ -132,6 +117,9 @@
 		editor.addShortcut('ctrl+y', 'redo_desc', 'Redo');
 
 		return self = {
+			// Explose for debugging reasons
+			data : data,
+
 			/**
 			 * State if the user is currently typing or not. This will add a typing operation into one undo
 			 * level instead of one new level for each keystroke.
