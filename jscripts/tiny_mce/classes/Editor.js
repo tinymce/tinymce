@@ -442,15 +442,18 @@
 				t.editorContainer = o.editorContainer;
 			}
 
-			// #ifdef contentEditable
+			// Load specified content CSS last
+			if (s.content_css) {
+				each(explode(s.content_css), function(u) {
+					t.contentCSS.push(t.documentBaseURI.toAbsolute(u));
+				});
+			}
 
 			// Content editable mode ends here
 			if (s.content_editable) {
 				e = n = o = null; // Fix IE leak
 				return t.initContentBody();
 			}
-
-			// #endif
 
 			// User specified a document.domain value
 			if (document.domain && location.hostname != document.domain)
@@ -461,13 +464,6 @@
 				width : w,
 				height : h
 			});
-
-			// Load specified content CSS last
-			if (s.content_css) {
-				each(explode(s.content_css), function(u) {
-					t.contentCSS.push(t.documentBaseURI.toAbsolute(u));
-				});
-			}
 
 			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
 			if (h < 100)
@@ -562,6 +558,7 @@
 			}
 
 			if (settings.content_editable) {
+				DOM.addClass(e, 'mceContentBody');
 				t.contentDocument = settings.content_document || document;
 				t.contentWindow = settings.content_window || window;
 				t.bodyElement = e;
@@ -847,8 +844,6 @@
 					ieRng.select();
 				}
 
-				// #ifdef contentEditable
-
 				// Content editable mode ends here
 				if (ce) {
 					if (tinymce.isWebKit)
@@ -860,8 +855,6 @@
 							t.getElement().focus();
 					}
 				}
-
-				// #endif
 			}
 
 			if (tinymce.activeEditor != t) {
