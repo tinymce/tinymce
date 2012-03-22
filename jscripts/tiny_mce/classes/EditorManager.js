@@ -153,6 +153,10 @@
 				return f.apply(s || this, Array.prototype.slice.call(arguments, 2));
 			};
 
+			function hasClass(n, c) {
+				return c.constructor === RegExp ? c.test(n.className) : DOM.hasClass(n, c);
+			};
+
 			s = extend({
 				theme : "simple",
 				language : "en"
@@ -196,10 +200,6 @@
 
 					case "textareas":
 					case "specific_textareas":
-						function hasClass(n, c) {
-							return c.constructor === RegExp ? c.test(n.className) : DOM.hasClass(n, c);
-						};
-
 						each(DOM.select('textarea'), function(elm) {
 							if (s.editor_deselector && hasClass(elm, s.editor_deselector))
 								return;
@@ -369,6 +369,12 @@
 		execCommand : function(c, u, v) {
 			var t = this, ed = t.get(v), w;
 
+			function clr() {
+				ed.destroy();
+				w.detachEvent('onunload', clr);
+				w = w.tinyMCE = w.tinymce = null; // IE leak
+			};
+
 			// Manager commands
 			switch (c) {
 				case "mceFocus":
@@ -397,12 +403,6 @@
 
 					// Fix IE memory leaks
 					if (tinymce.isIE) {
-						function clr() {
-							ed.destroy();
-							w.detachEvent('onunload', clr);
-							w = w.tinyMCE = w.tinymce = null; // IE leak
-						};
-
 						w.attachEvent('onunload', clr);
 					}
 

@@ -825,6 +825,11 @@
 			}
 		};
 
+		// Opera doesn't support focus event for contentEditable elements so we need to fake it
+		function doOperaFocus(e) {
+			self.focus(true);
+		};
+
 		// Add DOM events
 		each(nativeToDispatcherMap, function(dispatcherName, nativeName) {
 			var root = settings.content_editable ? self.getBody() : self.getDoc();
@@ -854,13 +859,8 @@
 		});
 
 		if (settings.content_editable && tinymce.isOpera) {
-			// Opera doesn't support focus event for contentEditable elements so we need to fake it
-			function doFocus(e) {
-				self.focus(true);
-			};
-
-			dom.bind(self.getBody(), 'click', doFocus);
-			dom.bind(self.getBody(), 'keydown', doFocus);
+			dom.bind(self.getBody(), 'click', doOperaFocus);
+			dom.bind(self.getBody(), 'keydown', doOperaFocus);
 		}
 
 		// Add node change handler

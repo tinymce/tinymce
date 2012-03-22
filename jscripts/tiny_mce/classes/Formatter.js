@@ -1253,6 +1253,125 @@
 				return node;
 			};
 
+			function findWordEndPoint(container, offset, start) {
+				var walker, node, pos, lastTextNode;
+
+				function findSpace(node, offset) {
+					var pos, pos2, str = node.nodeValue;
+
+					if (typeof(offset) == "undefined") {
+						offset = start ? str.length : 0;
+					}
+
+					if (start) {
+						pos = str.lastIndexOf(' ', offset);
+						pos2 = str.lastIndexOf('\u00a0', offset);
+						pos = pos > pos2 ? pos : pos2;
+
+						// Include the space on remove to avoid tag soup
+						if (pos !== -1 && !remove) {
+							pos++;
+						}
+					} else {
+						pos = str.indexOf(' ', offset);
+						pos2 = str.indexOf('\u00a0', offset);
+						pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
+					}
+
+					return pos;
+				};
+
+				if (container.nodeType === 3) {
+					pos = findSpace(container, offset);
+
+					if (pos !== -1) {
+						return {container : container, offset : pos};
+					}
+
+					lastTextNode = container;
+				}
+
+				// Walk the nodes inside the block
+				walker = new TreeWalker(container, dom.getParent(container, isBlock) || ed.getBody());
+				while (node = walker[start ? 'prev' : 'next']()) {
+					if (node.nodeType === 3) {
+						lastTextNode = node;
+						pos = findSpace(node);
+
+						if (pos !== -1) {
+							return {container : node, offset : pos};
+						}
+					} else if (isBlock(node)) {
+						break;
+					}
+				}
+
+				if (lastTextNode) {
+					if (start) {
+						offset = 0;
+					} else {
+						offset = lastTextNode.length;
+					}
+
+					return {container: lastTextNode, offset: offset};
+				}
+			};
+
+			function findSelectorEndPoint(container, sibling_name) {
+				var parents, i, y, curFormat;
+
+				if (container.nodeType == 3 && container.nodeValue.length == 0 && container[sibling_name])
+					container = container[sibling_name];
+
+				parents = getParents(container);
+				for (i = 0; i < parents.length; i++) {
+					for (y = 0; y < format.length; y++) {
+						curFormat = format[y];
+
+						// If collapsed state is set then skip formats that doesn't match that
+						if ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed)
+							continue;
+
+						if (dom.is(parents[i], curFormat.selector))
+							return parents[i];
+					}
+				}
+
+				return container;
+			};
+
+			function findBlockEndPoint(container, sibling_name, sibling_name2) {
+				var node;
+
+				// Expand to block of similar type
+				if (!format[0].wrapper)
+					node = dom.getParent(container, format[0].block);
+
+				// Expand to first wrappable block element or any block element
+				if (!node)
+					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isBlock);
+
+				// Exclude inner lists from wrapping
+				if (node && format[0].wrapper)
+					node = getParents(node, 'ul,ol').reverse()[0] || node;
+
+				// Didn't find a block element look for first/last wrappable element
+				if (!node) {
+					node = container;
+
+					while (node[sibling_name] && !isBlock(node[sibling_name])) {
+						node = node[sibling_name];
+
+						// Break on BR but include it will be removed later on
+						// we can't remove it now since we need to check if it can be wrapped
+						if (isEq(node, 'br'))
+							break;
+					}
+				}
+
+				return node || container;
+			};
+
 			// Expand to closest contentEditable element
 			startContainer = findParentContentEditable(startContainer);
 			endContainer = findParentContentEditable(endContainer);
@@ -1276,70 +1395,6 @@
 
 			if (format[0].inline) {
 				if (rng.collapsed) {
-					function findWordEndPoint(container, offset, start) {
-						var walker, node, pos, lastTextNode;
-
-						function findSpace(node, offset) {
-							var pos, pos2, str = node.nodeValue;
-
-							if (typeof(offset) == "undefined") {
-								offset = start ? str.length : 0;
-							}
-
-							if (start) {
-								pos = str.lastIndexOf(' ', offset);
-								pos2 = str.lastIndexOf('\u00a0', offset);
-								pos = pos > pos2 ? pos : pos2;
-
-								// Include the space on remove to avoid tag soup
-								if (pos !== -1 && !remove) {
-									pos++;
-								}
-							} else {
-								pos = str.indexOf(' ', offset);
-								pos2 = str.indexOf('\u00a0', offset);
-								pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
-							}
-
-							return pos;
-						};
-
-						if (container.nodeType === 3) {
-							pos = findSpace(container, offset);
-
-							if (pos !== -1) {
-								return {container : container, offset : pos};
-							}
-
-							lastTextNode = container;
-						}
-
-						// Walk the nodes inside the block
-						walker = new TreeWalker(container, dom.getParent(container, isBlock) || ed.getBody());
-						while (node = walker[start ? 'prev' : 'next']()) {
-							if (node.nodeType === 3) {
-								lastTextNode = node;
-								pos = findSpace(node);
-
-								if (pos !== -1) {
-									return {container : node, offset : pos};
-								}
-							} else if (isBlock(node)) {
-								break;
-							}
-						}
-
-						if (lastTextNode) {
-							if (start) {
-								offset = 0;
-							} else {
-								offset = lastTextNode.length;
-							}
-
-							return {container: lastTextNode, offset: offset};
-						}
-					}
-
 					// Expand left to closest word boundery
 					endPoint = findWordEndPoint(startContainer, startOffset, true);
 					if (endPoint) {
@@ -1391,29 +1446,6 @@
 
 			// Expand start/end container to matching selector
 			if (format[0].selector && format[0].expand !== FALSE && !format[0].inline) {
-				function findSelectorEndPoint(container, sibling_name) {
-					var parents, i, y, curFormat;
-
-					if (container.nodeType == 3 && container.nodeValue.length == 0 && container[sibling_name])
-						container = container[sibling_name];
-
-					parents = getParents(container);
-					for (i = 0; i < parents.length; i++) {
-						for (y = 0; y < format.length; y++) {
-							curFormat = format[y];
-
-							// If collapsed state is set then skip formats that doesn't match that
-							if ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed)
-								continue;
-
-							if (dom.is(parents[i], curFormat.selector))
-								return parents[i];
-						}
-					}
-
-					return container;
-				};
-
 				// Find new startContainer/endContainer if there is better one
 				startContainer = findSelectorEndPoint(startContainer, 'previousSibling');
 				endContainer = findSelectorEndPoint(endContainer, 'nextSibling');
@@ -1421,38 +1453,6 @@
 
 			// Expand start/end container to matching block element or text node
 			if (format[0].block || format[0].selector) {
-				function findBlockEndPoint(container, sibling_name, sibling_name2) {
-					var node;
-
-					// Expand to block of similar type
-					if (!format[0].wrapper)
-						node = dom.getParent(container, format[0].block);
-
-					// Expand to first wrappable block element or any block element
-					if (!node)
-						node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isBlock);
-
-					// Exclude inner lists from wrapping
-					if (node && format[0].wrapper)
-						node = getParents(node, 'ul,ol').reverse()[0] || node;
-
-					// Didn't find a block element look for first/last wrappable element
-					if (!node) {
-						node = container;
-
-						while (node[sibling_name] && !isBlock(node[sibling_name])) {
-							node = node[sibling_name];
-
-							// Break on BR but include it will be removed later on
-							// we can't remove it now since we need to check if it can be wrapped
-							if (isEq(node, 'br'))
-								break;
-						}
-					}
-
-					return node || container;
-				};
-
 				// Find new startContainer/endContainer if there is better one
 				startContainer = findBlockEndPoint(startContainer, 'previousSibling');
 				endContainer = findBlockEndPoint(endContainer, 'nextSibling');
@@ -1618,14 +1618,14 @@
 		function removeNode(node, format) {
 			var parentNode = node.parentNode, rootBlockElm;
 
+			function find(node, next, inc) {
+				node = getNonWhiteSpaceSibling(node, next, inc);
+
+				return !node || (node.nodeName == 'BR' || isBlock(node));
+			};
+
 			if (format.block) {
 				if (!forcedRootBlock) {
-					function find(node, next, inc) {
-						node = getNonWhiteSpaceSibling(node, next, inc);
-
-						return !node || (node.nodeName == 'BR' || isBlock(node));
-					};
-
 					// Append BR elements if needed before we remove the block
 					if (isBlock(node) && !isBlock(parentNode)) {
 						if (!find(node, FALSE) && !find(node.firstChild, TRUE, 1))
@@ -1785,20 +1785,20 @@
 				return TRUE;
 			};
 
+			function findElementSibling(node, sibling_name) {
+				for (sibling = node; sibling; sibling = sibling[sibling_name]) {
+					if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0)
+						return node;
+
+					if (sibling.nodeType == 1 && !isBookmarkNode(sibling))
+						return sibling;
+				}
+
+				return node;
+			};
+
 			// Check if next/prev exists and that they are elements
 			if (prev && next) {
-				function findElementSibling(node, sibling_name) {
-					for (sibling = node; sibling; sibling = sibling[sibling_name]) {
-						if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0)
-							return node;
-
-						if (sibling.nodeType == 1 && !isBookmarkNode(sibling))
-							return sibling;
-					}
-
-					return node;
-				};
-
 				// If previous sibling is empty then jump over it
 				prev = findElementSibling(prev, 'previousSibling');
 				next = findElementSibling(next, 'nextSibling');

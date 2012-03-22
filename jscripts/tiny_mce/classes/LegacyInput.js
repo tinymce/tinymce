@@ -11,17 +11,27 @@
 tinymce.onAddEditor.add(function(tinymce, ed) {
 	var filters, fontSizes, dom, settings = ed.settings;
 
+	function replaceWithSpan(node, styles) {
+		tinymce.each(styles, function(value, name) {
+			if (value)
+				dom.setStyle(node, name, value);
+		});
+
+		dom.rename(node, 'span');
+	};
+
+	function convert(editor, params) {
+		dom = editor.dom;
+
+		if (settings.convert_fonts_to_spans) {
+			tinymce.each(dom.select('font,u,strike', params.node), function(node) {
+				filters[node.nodeName.toLowerCase()](ed.dom, node);
+			});
+		}
+	};
+
 	if (settings.inline_styles) {
 		fontSizes = tinymce.explode(settings.font_size_legacy_values);
-
-		function replaceWithSpan(node, styles) {
-			tinymce.each(styles, function(value, name) {
-				if (value)
-					dom.setStyle(node, name, value);
-			});
-
-			dom.rename(node, 'span');
-		};
 
 		filters = {
 			font : function(dom, node) {
@@ -42,16 +52,6 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 			strike : function(dom, node) {
 				replaceWithSpan(node, {
 					textDecoration : 'line-through'
-				});
-			}
-		};
-
-		function convert(editor, params) {
-			dom = editor.dom;
-
-			if (settings.convert_fonts_to_spans) {
-				tinymce.each(dom.select('font,u,strike', params.node), function(node) {
-					filters[node.nodeName.toLowerCase()](ed.dom, node);
 				});
 			}
 		};

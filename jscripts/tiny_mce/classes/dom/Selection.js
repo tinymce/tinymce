@@ -364,46 +364,46 @@
 				return index;
 			};
 
-			if (type == 2) {
-				function getLocation() {
-					var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
+			function getLocation() {
+				var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
 
-					function getPoint(rng, start) {
-						var container = rng[start ? 'startContainer' : 'endContainer'],
-							offset = rng[start ? 'startOffset' : 'endOffset'], point = [], node, childNodes, after = 0;
+				function getPoint(rng, start) {
+					var container = rng[start ? 'startContainer' : 'endContainer'],
+						offset = rng[start ? 'startOffset' : 'endOffset'], point = [], node, childNodes, after = 0;
 
-						if (container.nodeType == 3) {
-							if (normalized) {
-								for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling)
-									offset += node.nodeValue.length;
-							}
-
-							point.push(offset);
-						} else {
-							childNodes = container.childNodes;
-
-							if (offset >= childNodes.length && childNodes.length) {
-								after = 1;
-								offset = Math.max(0, childNodes.length - 1);
-							}
-
-							point.push(t.dom.nodeIndex(childNodes[offset], normalized) + after);
+					if (container.nodeType == 3) {
+						if (normalized) {
+							for (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling)
+								offset += node.nodeValue.length;
 						}
 
-						for (; container && container != root; container = container.parentNode)
-							point.push(t.dom.nodeIndex(container, normalized));
+						point.push(offset);
+					} else {
+						childNodes = container.childNodes;
 
-						return point;
-					};
+						if (offset >= childNodes.length && childNodes.length) {
+							after = 1;
+							offset = Math.max(0, childNodes.length - 1);
+						}
 
-					bookmark.start = getPoint(rng, true);
+						point.push(t.dom.nodeIndex(childNodes[offset], normalized) + after);
+					}
 
-					if (!t.isCollapsed())
-						bookmark.end = getPoint(rng);
+					for (; container && container != root; container = container.parentNode)
+						point.push(t.dom.nodeIndex(container, normalized));
 
-					return bookmark;
+					return point;
 				};
 
+				bookmark.start = getPoint(rng, true);
+
+				if (!t.isCollapsed())
+					bookmark.end = getPoint(rng);
+
+				return bookmark;
+			};
+
+			if (type == 2) {
 				if (t.tridentSel)
 					return t.tridentSel.getBookmark(type);
 
@@ -499,44 +499,114 @@
 		moveToBookmark : function(bookmark) {
 			var t = this, dom = t.dom, marker1, marker2, rng, root, startContainer, endContainer, startOffset, endOffset;
 
+			function setEndPoint(start) {
+				var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
+
+				if (point) {
+					offset = point[0];
+
+					// Find container node
+					for (node = root, i = point.length - 1; i >= 1; i--) {
+						children = node.childNodes;
+
+						if (point[i] > children.length - 1)
+							return;
+
+						node = children[point[i]];
+					}
+
+					// Move text offset to best suitable location
+					if (node.nodeType === 3)
+						offset = Math.min(point[0], node.nodeValue.length);
+
+					// Move element offset to best suitable location
+					if (node.nodeType === 1)
+						offset = Math.min(point[0], node.childNodes.length);
+
+					// Set offset within container node
+					if (start)
+						rng.setStart(node, offset);
+					else
+						rng.setEnd(node, offset);
+				}
+
+				return true;
+			};
+
+			function restoreEndPoint(suffix) {
+				var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
+
+				if (marker) {
+					node = marker.parentNode;
+
+					if (suffix == 'start') {
+						if (!keep) {
+							idx = dom.nodeIndex(marker);
+						} else {
+							node = marker.firstChild;
+							idx = 1;
+						}
+
+						startContainer = endContainer = node;
+						startOffset = endOffset = idx;
+					} else {
+						if (!keep) {
+							idx = dom.nodeIndex(marker);
+						} else {
+							node = marker.firstChild;
+							idx = 1;
+						}
+
+						endContainer = node;
+						endOffset = idx;
+					}
+
+					if (!keep) {
+						prev = marker.previousSibling;
+						next = marker.nextSibling;
+
+						// Remove all marker text nodes
+						each(tinymce.grep(marker.childNodes), function(node) {
+							if (node.nodeType == 3)
+								node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
+						});
+
+						// Remove marker but keep children if for example contents where inserted into the marker
+						// Also remove duplicated instances of the marker for example by a split operation or by WebKit auto split on paste feature
+						while (marker = dom.get(bookmark.id + '_' + suffix))
+							dom.remove(marker, 1);
+
+						// If siblings are text nodes then merge them unless it's Opera since it some how removes the node
+						// and we are sniffing since adding a lot of detection code for a browser with 3% of the market isn't worth the effort. Sorry, Opera but it's just a fact
+						if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !tinymce.isOpera) {
+							idx = prev.nodeValue.length;
+							prev.appendData(next.nodeValue);
+							dom.remove(next);
+
+							if (suffix == 'start') {
+								startContainer = endContainer = prev;
+								startOffset = endOffset = idx;
+							} else {
+								endContainer = prev;
+								endOffset = idx;
+							}
+						}
+					}
+				}
+			};
+
+			function addBogus(node) {
+				// Adds a bogus BR element for empty block elements
+				if (dom.isBlock(node) && !node.innerHTML && !isIE)
+					node.innerHTML = '<br data-mce-bogus="1" />';
+
+				return node;
+			};
+
 			if (bookmark) {
 				if (bookmark.start) {
 					rng = dom.createRng();
 					root = dom.getRoot();
-
-					function setEndPoint(start) {
-						var point = bookmark[start ? 'start' : 'end'], i, node, offset, children;
-
-						if (point) {
-							offset = point[0];
-
-							// Find container node
-							for (node = root, i = point.length - 1; i >= 1; i--) {
-								children = node.childNodes;
-
-								if (point[i] > children.length - 1)
-									return;
-
-								node = children[point[i]];
-							}
-
-							// Move text offset to best suitable location
-							if (node.nodeType === 3)
-								offset = Math.min(point[0], node.nodeValue.length);
-
-							// Move element offset to best suitable location
-							if (node.nodeType === 1)
-								offset = Math.min(point[0], node.childNodes.length);
-
-							// Set offset within container node
-							if (start)
-								rng.setStart(node, offset);
-							else
-								rng.setEnd(node, offset);
-						}
-
-						return true;
-					};
 
 					if (t.tridentSel)
 						return t.tridentSel.moveToBookmark(bookmark);
@@ -545,76 +615,6 @@
 						t.setRng(rng);
 					}
 				} else if (bookmark.id) {
-					function restoreEndPoint(suffix) {
-						var marker = dom.get(bookmark.id + '_' + suffix), node, idx, next, prev, keep = bookmark.keep;
-
-						if (marker) {
-							node = marker.parentNode;
-
-							if (suffix == 'start') {
-								if (!keep) {
-									idx = dom.nodeIndex(marker);
-								} else {
-									node = marker.firstChild;
-									idx = 1;
-								}
-
-								startContainer = endContainer = node;
-								startOffset = endOffset = idx;
-							} else {
-								if (!keep) {
-									idx = dom.nodeIndex(marker);
-								} else {
-									node = marker.firstChild;
-									idx = 1;
-								}
-
-								endContainer = node;
-								endOffset = idx;
-							}
-
-							if (!keep) {
-								prev = marker.previousSibling;
-								next = marker.nextSibling;
-
-								// Remove all marker text nodes
-								each(tinymce.grep(marker.childNodes), function(node) {
-									if (node.nodeType == 3)
-										node.nodeValue = node.nodeValue.replace(/\uFEFF/g, '');
-								});
-
-								// Remove marker but keep children if for example contents where inserted into the marker
-								// Also remove duplicated instances of the marker for example by a split operation or by WebKit auto split on paste feature
-								while (marker = dom.get(bookmark.id + '_' + suffix))
-									dom.remove(marker, 1);
-
-								// If siblings are text nodes then merge them unless it's Opera since it some how removes the node
-								// and we are sniffing since adding a lot of detection code for a browser with 3% of the market isn't worth the effort. Sorry, Opera but it's just a fact
-								if (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !tinymce.isOpera) {
-									idx = prev.nodeValue.length;
-									prev.appendData(next.nodeValue);
-									dom.remove(next);
-
-									if (suffix == 'start') {
-										startContainer = endContainer = prev;
-										startOffset = endOffset = idx;
-									} else {
-										endContainer = prev;
-										endOffset = idx;
-									}
-								}
-							}
-						}
-					};
-
-					function addBogus(node) {
-						// Adds a bogus BR element for empty block elements
-						if (dom.isBlock(node) && !node.innerHTML && !isIE)
-							node.innerHTML = '<br data-mce-bogus="1" />';
-
-						return node;
-					};
-
 					// Restore start/end points
 					restoreEndPoint('start');
 					restoreEndPoint('end');
@@ -646,6 +646,32 @@
 		select : function(node, content) {
 			var t = this, dom = t.dom, rng = dom.createRng(), idx;
 
+			function setPoint(node, start) {
+				var walker = new tinymce.dom.TreeWalker(node, node);
+
+				do {
+					// Text node
+					if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length != 0) {
+						if (start)
+							rng.setStart(node, 0);
+						else
+							rng.setEnd(node, node.nodeValue.length);
+
+						return;
+					}
+
+					// BR element
+					if (node.nodeName == 'BR') {
+						if (start)
+							rng.setStartBefore(node);
+						else
+							rng.setEndBefore(node);
+
+						return;
+					}
+				} while (node = (start ? walker.next() : walker.prev()));
+			};
+
 			if (node) {
 				idx = dom.nodeIndex(node);
 				rng.setStart(node.parentNode, idx);
@@ -653,32 +679,6 @@
 
 				// Find first/last text node or BR element
 				if (content) {
-					function setPoint(node, start) {
-						var walker = new tinymce.dom.TreeWalker(node, node);
-
-						do {
-							// Text node
-							if (node.nodeType == 3 && tinymce.trim(node.nodeValue).length != 0) {
-								if (start)
-									rng.setStart(node, 0);
-								else
-									rng.setEnd(node, node.nodeValue.length);
-
-								return;
-							}
-
-							// BR element
-							if (node.nodeName == 'BR') {
-								if (start)
-									rng.setStartBefore(node);
-								else
-									rng.setEndBefore(node);
-
-								return;
-							}
-						} while (node = (start ? walker.next() : walker.prev()));
-					};
-
 					setPoint(node, 1);
 					setPoint(node);
 				}
@@ -865,6 +865,14 @@
 		getNode : function() {
 			var t = this, rng = t.getRng(), sel = t.getSel(), elm, start = rng.startContainer, end = rng.endContainer;
 
+			function skipEmptyTextNodes(n, forwards) {
+				var orig = n;
+				while (n && n.nodeType === 3 && n.length === 0) {
+					n = forwards ? n.nextSibling : n.previousSibling;
+				}
+				return n || orig;
+			};
+
 			// Range maybe lost after the editor is made visible again
 			if (!rng)
 				return t.dom.getRoot();
@@ -888,13 +896,6 @@
 					// Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
 					// This happens when you double click an underlined word in FireFox.
 					if (start.nodeType === 3 && end.nodeType === 3) {
-						function skipEmptyTextNodes(n, forwards) {
-							var orig = n;
-							while (n && n.nodeType === 3 && n.length === 0) {
-								n = forwards ? n.nextSibling : n.previousSibling;
-							}
-							return n || orig;
-						}
 						if (start.length === rng.startOffset) {
 							start = skipEmptyTextNodes(start.nextSibling, true);
 						} else {
@@ -947,15 +948,6 @@
 
 		normalize : function() {
 			var self = this, rng, normalized;
-
-			// TODO:
-			// Retain selection direction.
-			// Lean left/right on Gecko for inline elements.
-			// Run this on mouse up/key up when the user manually moves the selection
-
-			// Normalize only on non IE browsers for now
-			if (tinymce.isIE)
-				return;
 
 			function normalizeEndPoint(start) {
 				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node;
@@ -1014,6 +1006,15 @@
 					rng['set' + (start ? 'Start' : 'End')](container, offset);
 			};
 
+			// TODO:
+			// Retain selection direction.
+			// Lean left/right on Gecko for inline elements.
+			// Run this on mouse up/key up when the user manually moves the selection
+
+			// Normalize only on non IE browsers for now
+			if (tinymce.isIE)
+				return;
+			
 			rng = self.getRng();
 
 			// Normalize the end points
@@ -1042,9 +1043,6 @@
 		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
 		_fixIESelection : function() {
 			var dom = this.dom, doc = dom.doc, body = doc.body, started, startRng, htmlElm;
-
-			// Make HTML element unselectable since we are going to handle selection by hand
-			doc.documentElement.unselectable = true;
 
 			// Return range from point or null if it failed
 			function rngFromPoint(x, y) {
@@ -1095,6 +1093,9 @@
 				startRng = started = 0;
 			};
 
+			// Make HTML element unselectable since we are going to handle selection by hand
+			doc.documentElement.unselectable = true;
+			
 			// Detect when user selects outside BODY
 			dom.bind(doc, ['mousedown', 'contextmenu'], function(e) {
 				if (e.target.nodeName === 'HTML') {

@@ -672,67 +672,67 @@
 		addUnload : function(f, s) {
 			var t = this;
 
+			function unload() {
+				var li = t.unloads, o, n;
+
+				if (li) {
+					// Call unload handlers
+					for (n in li) {
+						o = li[n];
+
+						if (o && o.func)
+							o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
+					}
+
+					// Detach unload function
+					if (win.detachEvent) {
+						win.detachEvent('onbeforeunload', fakeUnload);
+						win.detachEvent('onunload', unload);
+					} else if (win.removeEventListener)
+						win.removeEventListener('unload', unload, false);
+
+					// Destroy references
+					t.unloads = o = li = w = unload = 0;
+
+					// Run garbarge collector on IE
+					if (win.CollectGarbage)
+						CollectGarbage();
+				}
+			};
+
+			function fakeUnload() {
+				var d = document;
+
+				function stop() {
+					// Prevent memory leak
+					d.detachEvent('onstop', stop);
+
+					// Call unload handler
+					if (unload)
+						unload();
+
+					d = 0;
+				};
+
+				// Is there things still loading, then do some magic
+				if (d.readyState == 'interactive') {
+					// Fire unload when the currently loading page is stopped
+					if (d)
+						d.attachEvent('onstop', stop);
+
+					// Remove onstop listener after a while to prevent the unload function
+					// to execute if the user presses cancel in an onbeforeunload
+					// confirm dialog and then presses the browser stop button
+					win.setTimeout(function() {
+						if (d)
+							d.detachEvent('onstop', stop);
+					}, 0);
+				}
+			};
+
 			f = {func : f, scope : s || this};
 
 			if (!t.unloads) {
-				function unload() {
-					var li = t.unloads, o, n;
-
-					if (li) {
-						// Call unload handlers
-						for (n in li) {
-							o = li[n];
-
-							if (o && o.func)
-								o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
-						}
-
-						// Detach unload function
-						if (win.detachEvent) {
-							win.detachEvent('onbeforeunload', fakeUnload);
-							win.detachEvent('onunload', unload);
-						} else if (win.removeEventListener)
-							win.removeEventListener('unload', unload, false);
-
-						// Destroy references
-						t.unloads = o = li = w = unload = 0;
-
-						// Run garbarge collector on IE
-						if (win.CollectGarbage)
-							CollectGarbage();
-					}
-				};
-
-				function fakeUnload() {
-					var d = document;
-
-					// Is there things still loading, then do some magic
-					if (d.readyState == 'interactive') {
-						function stop() {
-							// Prevent memory leak
-							d.detachEvent('onstop', stop);
-
-							// Call unload handler
-							if (unload)
-								unload();
-
-							d = 0;
-						};
-
-						// Fire unload when the currently loading page is stopped
-						if (d)
-							d.attachEvent('onstop', stop);
-
-						// Remove onstop listener after a while to prevent the unload function
-						// to execute if the user presses cancel in an onbeforeunload
-						// confirm dialog and then presses the browser stop button
-						win.setTimeout(function() {
-							if (d)
-								d.detachEvent('onstop', stop);
-						}, 0);
-					}
-				};
-
 				// Attach unload handler
 				if (win.attachEvent) {
 					win.attachEvent('onunload', unload);
