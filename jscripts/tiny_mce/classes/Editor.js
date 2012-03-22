@@ -11,10 +11,10 @@
 (function(tinymce) {
 	// Shorten these names
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend,
-		Dispatcher = tinymce.util.Dispatcher, each = tinymce.each, isGecko = tinymce.isGecko,
+		each = tinymce.each, isGecko = tinymce.isGecko,
 		isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, is = tinymce.is,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
-		inArray = tinymce.inArray, grep = tinymce.grep, explode = tinymce.explode, VK = tinymce.VK;
+		explode = tinymce.explode;
 
 	/**
 	 * This class contains the core logic for a TinyMCE editor.
@@ -46,11 +46,63 @@
 		 * @constructor
 		 * @method Editor
 		 * @param {String} id Unique id for the editor.
-		 * @param {Object} s Optional settings string for the editor.
+		 * @param {Object} settings Optional settings string for the editor.
 		 * @author Moxiecode
 		 */
-		Editor : function(id, s) {
-			var t = this;
+		Editor : function(id, settings) {
+			var self = this, TRUE = true;
+
+			/**
+			 * Name/value collection with editor settings.
+			 *
+			 * @property settings
+			 * @type Object
+			 * @example
+			 * // Get the value of the theme setting
+			 * tinyMCE.activeEditor.windowManager.alert("You are using the " + tinyMCE.activeEditor.settings.theme + " theme");
+			 */
+			self.settings = settings = extend({
+				id : id,
+				language : 'en',
+				theme : 'simple',
+				skin : 'default',
+				delta_width : 0,
+				delta_height : 0,
+				popup_css : '',
+				plugins : '',
+				document_base_url : tinymce.documentBaseURL,
+				add_form_submit_trigger : TRUE,
+				submit_patch : TRUE,
+				add_unload_trigger : TRUE,
+				convert_urls : TRUE,
+				relative_urls : TRUE,
+				remove_script_host : TRUE,
+				table_inline_editing : false,
+				object_resizing : TRUE,
+				accessibility_focus : TRUE,
+				doctype : tinymce.isIE6 ? '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' : '<!DOCTYPE>', // Use old doctype on IE 6 to avoid horizontal scroll
+				visual : TRUE,
+				font_size_style_values : 'xx-small,x-small,small,medium,large,x-large,xx-large',
+				font_size_legacy_values : 'xx-small,small,medium,large,x-large,xx-large,300%', // See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
+				apply_source_formatting : TRUE,
+				directionality : 'ltr',
+				forced_root_block : 'p',
+				hidden_input : TRUE,
+				padd_empty_editor : TRUE,
+				render_ui : TRUE,
+				indentation : '30px',
+				fix_table_elements : TRUE,
+				inline_styles : TRUE,
+				convert_fonts_to_spans : TRUE,
+				indent : 'simple',
+				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
+				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
+				validate : TRUE,
+				entity_encoding : 'named',
+				url_converter : self.convertURL,
+				url_converter_scope : self,
+				ie7_compat : TRUE
+			}, settings);
 
 			/**
 			 * Editor instance id, normally the same as the div/textarea that was replaced. 
@@ -58,11 +110,7 @@
 			 * @property id
 			 * @type String
 			 */
-			t.id = t.editorId = id;
-
-			t.execCommands = {};
-			t.queryStateCommands = {};
-			t.queryValueCommands = {};
+			self.id = self.editorId = id;
 
 			/**
 			 * State to force the editor to return false on a isDirty call. 
@@ -79,7 +127,7 @@
 			 *     ed.isNotDirty = 1; // Force not dirty state
 			 * }
 			 */
-			t.isNotDirty = false;
+			self.isNotDirty = false;
 
 			/**
 			 * Name/Value object containting plugin instances.
@@ -90,777 +138,7 @@
 			 * // Execute a method inside a plugin directly
 			 * tinyMCE.activeEditor.plugins.someplugin.someMethod();
 			 */
-			t.plugins = {};
-
-			// Add events to the editor
-			each([
-				/**
-				 * Fires before the initialization of the editor.
-				 *
-				 * @event onPreInit
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @see #onInit
-				 * @example
-				 * // Adds an observer to the onPreInit event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onPreInit.add(function(ed) {
-				 *           console.debug('PreInit: ' + ed.id);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onPreInit',
-
-				/**
-				 * Fires before the initialization of the editor.
-				 *
-				 * @event onBeforeRenderUI
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onBeforeRenderUI event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
- 				 *      ed.onBeforeRenderUI.add(function(ed, cm) {
- 				 *          console.debug('Before render: ' + ed.id);
- 				 *      });
-				 *    }
-				 * });
-				 */
-				'onBeforeRenderUI',
-
-				/**
-				 * Fires after the rendering has completed.
-				 *
-				 * @event onPostRender
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onPostRender event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onPostRender.add(function(ed, cm) {
-				 *           console.debug('After render: ' + ed.id);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onPostRender',
-
-				/**
-				 * Fires when the onload event on the body occurs.
-				 *
-				 * @event onLoad
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onLoad event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onLoad.add(function(ed, cm) {
-				 *           console.debug('Document loaded: ' + ed.id);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onLoad',
-
-				/**
-				 * Fires after the initialization of the editor is done.
-				 *
-				 * @event onInit
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @see #onPreInit
-				 * @example
-				 * // Adds an observer to the onInit event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onInit.add(function(ed) {
-				 *           console.debug('Editor is done: ' + ed.id);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onInit',
-
-				/**
-				 * Fires when the editor instance is removed from page.
-				 *
-				 * @event onRemove
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onRemove event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onRemove.add(function(ed) {
-				 *           console.debug('Editor was removed: ' + ed.id);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onRemove',
-
-				/**
-				 * Fires when the editor is activated.
-				 *
-				 * @event onActivate
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onActivate event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onActivate.add(function(ed) {
-				 *           console.debug('Editor was activated: ' + ed.id);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onActivate',
-
-				/**
-				 * Fires when the editor is deactivated.
-				 *
-				 * @event onDeactivate
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onDeactivate event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onDeactivate.add(function(ed) {
-				 *           console.debug('Editor was deactivated: ' + ed.id);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onDeactivate',
-
-				/**
-				 * Fires when something in the body of the editor is clicked.
-				 *
-				 * @event onClick
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onClick event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onClick.add(function(ed, e) {
-				 *           console.debug('Editor was clicked: ' + e.target.nodeName);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onClick',
-
-				/**
-				 * Fires when a registered event is intercepted.
-				 *
-				 * @event onEvent
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onEvent event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onEvent.add(function(ed, e) {
- 				 *          console.debug('Editor event occured: ' + e.target.nodeName);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onEvent',
-
-				/**
-				 * Fires when a mouseup event is intercepted inside the editor.
-				 *
-				 * @event onMouseUp
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onMouseUp event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onMouseUp.add(function(ed, e) {
-				 *           console.debug('Mouse up event: ' + e.target.nodeName);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onMouseUp',
-
-				/**
-				 * Fires when a mousedown event is intercepted inside the editor.
-				 *
-				 * @event onMouseDown
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onMouseDown event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onMouseDown.add(function(ed, e) {
-				 *           console.debug('Mouse down event: ' + e.target.nodeName);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onMouseDown',
-
-				/**
-				 * Fires when a dblclick event is intercepted inside the editor.
-				 *
-				 * @event onDblClick
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onDblClick event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onDblClick.add(function(ed, e) {
- 				 *          console.debug('Double click event: ' + e.target.nodeName);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onDblClick',
-
-				/**
-				 * Fires when a keydown event is intercepted inside the editor.
-				 *
-				 * @event onKeyDown
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onKeyDown event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onKeyDown.add(function(ed, e) {
-				 *           console.debug('Key down event: ' + e.keyCode);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onKeyDown',
-
-				/**
-				 * Fires when a keydown event is intercepted inside the editor.
-				 *
-				 * @event onKeyUp
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onKeyUp event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onKeyUp.add(function(ed, e) {
-				 *           console.debug('Key up event: ' + e.keyCode);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onKeyUp',
-
-				/**
-				 * Fires when a keypress event is intercepted inside the editor.
-				 *
-				 * @event onKeyPress
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onKeyPress event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onKeyPress.add(function(ed, e) {
-				 *           console.debug('Key press event: ' + e.keyCode);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onKeyPress',
-
-				/**
-				 * Fires when a contextmenu event is intercepted inside the editor.
-				 *
-				 * @event onContextMenu
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onContextMenu event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onContextMenu.add(function(ed, e) {
-				 *            console.debug('Context menu event:' + e.target);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onContextMenu',
-
-				/**
-				 * Fires when a form submit event is intercepted.
-				 *
-				 * @event onSubmit
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onSubmit event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onSubmit.add(function(ed, e) {
-				 *            console.debug('Form submit:' + e.target);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onSubmit',
-
-				/**
-				 * Fires when a form reset event is intercepted.
-				 *
-				 * @event onReset
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onReset event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onReset.add(function(ed, e) {
-				 *            console.debug('Form reset:' + e.target);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onReset',
-
-				/**
-				 * Fires when a paste event is intercepted inside the editor.
-				 *
-				 * @event onPaste
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onPaste event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onPaste.add(function(ed, e) {
-				 *            console.debug('Pasted plain text');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onPaste',
-
-				/**
-				 * Fires when the Serializer does a preProcess on the contents.
-				 *
-				 * @event onPreProcess
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Object} obj PreProcess object.
-				 * @option {Node} node DOM node for the item being serialized.
-				 * @option {String} format The specified output format normally "html".
-				 * @option {Boolean} get Is true if the process is on a getContent operation.
-				 * @option {Boolean} set Is true if the process is on a setContent operation.
-				 * @option {Boolean} cleanup Is true if the process is on a cleanup operation.
-				 * @example
-				 * // Adds an observer to the onPreProcess event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onPreProcess.add(function(ed, o) {
-				 *            // Add a class to each paragraph in the editor
-				 *            ed.dom.addClass(ed.dom.select('p', o.node), 'myclass');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onPreProcess',
-
-				/**
-				 * Fires when the Serializer does a postProcess on the contents.
-				 *
-				 * @event onPostProcess
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Object} obj PreProcess object.
-				 * @example
-				 * // Adds an observer to the onPostProcess event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onPostProcess.add(function(ed, o) {
-				 *            // Remove all paragraphs and replace with BR
-				 *            o.content = o.content.replace(/<p[^>]+>|<p>/g, '');
-				 *            o.content = o.content.replace(/<\/p>/g, '<br />');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onPostProcess',
-
-				/**
-				 * Fires before new contents is added to the editor. Using for example setContent.
-				 *
-				 * @event onBeforeSetContent
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onBeforeSetContent event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onBeforeSetContent.add(function(ed, o) {
-				 *            // Replaces all a characters with b characters
-				 *            o.content = o.content.replace(/a/g, 'b');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onBeforeSetContent',
-
-				/**
-				 * Fires before contents is extracted from the editor using for example getContent.
-				 *
-				 * @event onBeforeGetContent
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Event} evt W3C DOM Event instance.
-				 * @example
-				 * // Adds an observer to the onBeforeGetContent event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onBeforeGetContent.add(function(ed, o) {
-				 *            console.debug('Before get content.');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onBeforeGetContent',
-
-				/**
-				 * Fires after the contents has been added to the editor using for example onSetContent.
-				 *
-				 * @event onSetContent
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onSetContent event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onSetContent.add(function(ed, o) {
-				 *            // Replaces all a characters with b characters
-				 *            o.content = o.content.replace(/a/g, 'b');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onSetContent',
-
-				/**
-				 * Fires after the contents has been extracted from the editor using for example getContent.
-				 *
-				 * @event onGetContent
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onGetContent event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onGetContent.add(function(ed, o) {
-				 *           // Replace all a characters with b
-				 *           o.content = o.content.replace(/a/g, 'b');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onGetContent',
-
-				/**
-				 * Fires when the editor gets loaded with contents for example when the load method is executed.
-				 *
-				 * @event onLoadContent
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onLoadContent event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onLoadContent.add(function(ed, o) {
-				 *           // Output the element name
-				 *           console.debug(o.element.nodeName);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onLoadContent',
-
-				/**
-				 * Fires when the editor contents gets saved for example when the save method is executed.
-				 *
-				 * @event onSaveContent
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onSaveContent event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onSaveContent.add(function(ed, o) {
-				 *           // Output the element name
-				 *           console.debug(o.element.nodeName);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onSaveContent',
-
-				/**
-				 * Fires when the user changes node location using the mouse or keyboard.
-				 *
-				 * @event onNodeChange
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onNodeChange event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onNodeChange.add(function(ed, cm, e) {
-				 *           // Activates the link button when the caret is placed in a anchor element
-				 *           if (e.nodeName == 'A')
-				 *              cm.setActive('link', true);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onNodeChange',
-
-				/**
-				 * Fires when a new undo level is added to the editor.
-				 *
-				 * @event onChange
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onChange event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 * 	  ed.onChange.add(function(ed, l) {
-				 * 		  console.debug('Editor contents was modified. Contents: ' + l.content);
-				 * 	  });
-				 *    }
-				 * });
-				 */
-				'onChange',
-
-				/**
-				 * Fires before a command gets executed for example "Bold".
-				 *
-				 * @event onBeforeExecCommand
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onBeforeExecCommand event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onBeforeExecCommand.add(function(ed, cmd, ui, val) {
-				 *           console.debug('Command is to be executed: ' + cmd);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onBeforeExecCommand',
-
-				/**
-				 * Fires after a command is executed for example "Bold".
-				 *
-				 * @event onExecCommand
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onExecCommand event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onExecCommand.add(function(ed, cmd, ui, val) {
-				 *           console.debug('Command was executed: ' + cmd);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onExecCommand',
-
-				/**
-				 * Fires when the contents is undo:ed.
-				 *
-				 * @event onUndo
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Object} level Undo level object.
-				 * @ example
-				 * // Adds an observer to the onUndo event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onUndo.add(function(ed, level) {
-				 *           console.debug('Undo was performed: ' + level.content);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onUndo',
-
-				/**
-				 * Fires when the contents is redo:ed.
-				 *
-				 * @event onRedo
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @param {Object} level Undo level object.
-				 * @example
-				 * // Adds an observer to the onRedo event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onRedo.add(function(ed, level) {
-				 *           console.debug('Redo was performed: ' +level.content);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onRedo',
-
-				/**
-				 * Fires when visual aids is enabled/disabled.
-				 *
-				 * @event onVisualAid
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onVisualAid event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onVisualAid.add(function(ed, e, s) {
-				 *           console.debug('onVisualAid event: ' + ed.id + ", State: " + s);
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onVisualAid',
-
-				/**
-				 * Fires when the progress throbber is shown above the editor.
-				 *
-				 * @event onSetProgressState
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onSetProgressState event using tinyMCE.init
-				 * tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onSetProgressState.add(function(ed, b) {
-				 *            if (b)
-				 *                 console.debug('SHOW!');
-				 *            else
-				 *                 console.debug('HIDE!');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onSetProgressState',
-
-				/**
-				 * Fires after an attribute is set using setAttrib.
-				 *
-				 * @event onSetAttrib
-				 * @param {tinymce.Editor} sender Editor instance.
-				 * @example
-				 * // Adds an observer to the onSetAttrib event using tinyMCE.init
-				 *tinyMCE.init({
-				 *    ...
-				 *    setup : function(ed) {
-				 *       ed.onSetAttrib.add(function(ed, node, attribute, attributeValue) {
-				 *            console.log('onSetAttrib tag');
-				 *       });
-				 *    }
-				 * });
-				 */
-				'onSetAttrib'
-			], function(e) {
-				t[e] = new Dispatcher(t);
-			});
-
-			/**
-			 * Name/value collection with editor settings.
-			 *
-			 * @property settings
-			 * @type Object
-			 * @example
-			 * // Get the value of the theme setting
-			 * tinyMCE.activeEditor.windowManager.alert("You are using the " + tinyMCE.activeEditor.settings.theme + " theme");
-			 */
-			t.settings = s = extend({
-				id : id,
-				language : 'en',
-				docs_language : 'en',
-				theme : 'simple',
-				skin : 'default',
-				delta_width : 0,
-				delta_height : 0,
-				popup_css : '',
-				plugins : '',
-				document_base_url : tinymce.documentBaseURL,
-				add_form_submit_trigger : 1,
-				submit_patch : 1,
-				add_unload_trigger : 1,
-				convert_urls : 1,
-				relative_urls : 1,
-				remove_script_host : 1,
-				table_inline_editing : 0,
-				object_resizing : 1,
-				cleanup : 1,
-				accessibility_focus : 1,
-				custom_shortcuts : 1,
-				custom_undo_redo_keyboard_shortcuts : 1,
-				custom_undo_redo_restore_selection : 1,
-				custom_undo_redo : 1,
-				doctype : tinymce.isIE6 ? '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' : '<!DOCTYPE>', // Use old doctype on IE 6 to avoid horizontal scroll
-				visual_table_class : 'mceItemTable',
-				visual : 1,
-				font_size_style_values : 'xx-small,x-small,small,medium,large,x-large,xx-large',
-				font_size_legacy_values : 'xx-small,small,medium,large,x-large,xx-large,300%', // See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
-				apply_source_formatting : 1,
-				directionality : 'ltr',
-				forced_root_block : 'p',
-				hidden_input : 1,
-				padd_empty_editor : 1,
-				render_ui : 1,
-				init_theme : 1,
-				force_p_newlines : 1,
-				indentation : '30px',
-				keep_styles : 1,
-				fix_table_elements : 1,
-				inline_styles : 1,
-				convert_fonts_to_spans : true,
-				indent : 'simple',
-				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
-				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
-				validate : true,
-				entity_encoding : 'named',
-				url_converter : t.convertURL,
-				url_converter_scope : t,
-				ie7_compat : true
-			}, s);
+			self.plugins = {};
 
 			/**
 			 * URI object to document configured for the TinyMCE instance.
@@ -874,7 +152,7 @@
 			 * // Get absolute URL from the location of document_base_url
 			 * tinyMCE.activeEditor.documentBaseURI.toAbsolute('somefile.htm');
 			 */
-			t.documentBaseURI = new tinymce.util.URI(s.document_base_url || tinymce.documentBaseURL, {
+			self.documentBaseURI = new tinymce.util.URI(settings.document_base_url || tinymce.documentBaseURL, {
 				base_uri : tinyMCE.baseURI
 			});
 
@@ -890,7 +168,7 @@
 			 * // Get absolute URL from the location of the API
 			 * tinyMCE.activeEditor.baseURI.toAbsolute('somefile.htm');
 			 */
-			t.baseURI = tinymce.baseURI;
+			self.baseURI = tinymce.baseURI;
 
 			/**
 			 * Array with CSS files to load into the iframe.
@@ -898,10 +176,18 @@
 			 * @property contentCSS
 			 * @type Array
 			 */			
-			t.contentCSS = [];
+			self.contentCSS = [];
+
+			// Creates all events like onClick, onSetContent etc see Editor.Events.js for the actual logic
+			self.setupEvents();
+
+			// Internal command handler objects
+			self.execCommands = {};
+			self.queryStateCommands = {};
+			self.queryValueCommands = {};
 
 			// Call setup
-			t.execCallback('setup', t);
+			self.execCallback('setup', self);
 		},
 
 		/**
@@ -927,8 +213,7 @@
 				return;
 
 			// Is a iPad/iPhone and not on iOS5, then skip initialization. We need to sniff 
-			// here since the browser says it has contentEditable support but there is no visible
-			// caret We will remove this check ones Apple implements full contentEditable support
+			// here since the browser says it has contentEditable support but there is no visible caret.
 			if (tinymce.isIDevice && !tinymce.isIOS5)
 				return;
 
@@ -1078,7 +363,7 @@
 				o = ThemeManager.get(s.theme);
 				t.theme = new o();
 
-				if (t.theme.init && s.init_theme)
+				if (t.theme.init)
 					t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
 			}
 			function initPlugin(p) {
@@ -1179,7 +464,7 @@
 
 			// Load specified content CSS last
 			if (s.content_css) {
-				tinymce.each(explode(s.content_css), function(u) {
+				each(explode(s.content_css), function(u) {
 					t.contentCSS.push(t.documentBaseURI.toAbsolute(u));
 				});
 			}
@@ -1437,8 +722,9 @@
 			if (!s.gecko_spellcheck)
 				t.getBody().spellcheck = 0;
 
-			if (!s.readonly)
-				t._addEvents();
+			if (!s.readonly) {
+				t.bindNativeEvents();
+			}
 
 			t.controlManager.onPostRender.dispatch(t, t.controlManager);
 			t.onPostRender.dispatch(t);
@@ -1451,27 +737,6 @@
 			if (s.nowrap)
 				t.getBody().style.whiteSpace = "nowrap";
 
-			if (s.handle_node_change_callback) {
-				t.onNodeChange.add(function(ed, cm, n) {
-					t.execCallback('handle_node_change_callback', t.id, n, -1, -1, true, t.selection.isCollapsed());
-				});
-			}
-
-			if (s.save_callback) {
-				t.onSaveContent.add(function(ed, o) {
-					var h = t.execCallback('save_callback', t.id, o.content, t.getBody());
-
-					if (h)
-						o.content = h;
-				});
-			}
-
-			if (s.onchange_callback) {
-				t.onChange.add(function(ed, l) {
-					t.execCallback('onchange_callback', t, l);
-				});
-			}
-
 			if (s.protect) {
 				t.onBeforeSetContent.add(function(ed, o) {
 					if (s.protect) {
@@ -1481,42 +746,6 @@
 							});
 						});
 					}
-				});
-			}
-
-			if (s.cleanup_callback) {
-				t.onBeforeSetContent.add(function(ed, o) {
-					o.content = t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o);
-				});
-
-				t.onPreProcess.add(function(ed, o) {
-					if (o.set)
-						t.execCallback('cleanup_callback', 'insert_to_editor_dom', o.node, o);
-
-					if (o.get)
-						t.execCallback('cleanup_callback', 'get_from_editor_dom', o.node, o);
-				});
-
-				t.onPostProcess.add(function(ed, o) {
-					if (o.set)
-						o.content = t.execCallback('cleanup_callback', 'insert_to_editor', o.content, o);
-
-					if (o.get)						
-						o.content = t.execCallback('cleanup_callback', 'get_from_editor', o.content, o);
-				});
-			}
-
-			if (s.save_callback) {
-				t.onGetContent.add(function(ed, o) {
-					if (o.save)
-						o.content = t.execCallback('save_callback', t.id, o.content, t.getBody());
-				});
-			}
-
-			if (s.handle_event_callback) {
-				t.onEvent.add(function(ed, e, o) {
-					if (t.execCallback('handle_event_callback', e, ed, o) === false)
-						Event.cancel(e);
 				});
 			}
 
@@ -1628,7 +857,7 @@
 			});
 
 			t.onPreInit.dispatch(t);
-			t._addEvents();
+			t.bindNativeEvents();
 
 			t.controlManager.onPostRender.dispatch(t, t.controlManager);
 			t.onPostRender.dispatch(t);
@@ -1876,8 +1105,8 @@
 		 * powerfull if you need more control use the ControlManagers factory methods instead.
 		 *
 		 * @method addButton
-		 * @param {String} n Button name to add.
-		 * @param {Object} s Settings object with title, cmd etc.
+		 * @param {String} name Button name to add.
+		 * @param {Object} settings Settings object with title, cmd etc.
 		 * @example
 		 * // Adds a custom button to the editor and when a user clicks the button it will open
 		 * // an alert box with the selected contents as plain text.
@@ -1898,11 +1127,11 @@
 		 *    }
 		 * });
 		 */
-		addButton : function(n, s) {
-			var t = this;
+		addButton : function(name, settings) {
+			var self = this;
 
-			t.buttons = t.buttons || {};
-			t.buttons[n] = s;
+			self.buttons = self.buttons || {};
+			self.buttons[name] = settings;
 		},
 
 		/**
@@ -1989,7 +1218,7 @@
 		addShortcut : function(pa, desc, cmd_func, sc) {
 			var t = this, c;
 
-			if (!t.settings.custom_shortcuts)
+			if (t.settings.custom_shortcuts === false)
 				return false;
 
 			t.shortcuts = t.shortcuts || {};
@@ -2188,11 +1417,11 @@
 		 * @method show
 		 */
 		show : function() {
-			var t = this;
+			var self = this;
 
-			DOM.show(t.getContainer());
-			DOM.hide(t.id);
-			t.load();
+			DOM.show(self.getContainer());
+			DOM.hide(self.id);
+			self.load();
 		},
 
 		/**
@@ -2201,16 +1430,16 @@
 		 * @method hide
 		 */
 		hide : function() {
-			var t = this, d = t.getDoc();
+			var self = this, doc = t.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
-			if (isIE && d)
-				d.execCommand('SelectAll');
+			if (isIE && doc)
+				doc.execCommand('SelectAll');
 
 			// We must save before we hide so Safari doesn't crash
-			t.save();
-			DOM.hide(t.getContainer());
-			DOM.setStyle(t.id, 'display', t.orgDisplay);
+			self.save();
+			DOM.hide(self.getContainer());
+			DOM.setStyle(self.id, 'display', self.orgDisplay);
 		},
 
 		/**
@@ -2461,12 +1690,12 @@
 		 * @return {Element} HTML DOM element for the editor container.
 		 */
 		getContainer : function() {
-			var t = this;
+			var self = this;
 
-			if (!t.container)
-				t.container = DOM.get(t.editorContainer || t.id + '_parent');
+			if (!self.container)
+				self.container = DOM.get(self.editorContainer || self.id + '_parent');
 
-			return t.container;
+			return self.container;
 		},
 
 		/**
@@ -2497,16 +1726,16 @@
 		 * @return {Window} Iframe DOM window object.
 		 */
 		getWin : function() {
-			var t = this, e;
+			var self = this, elm;
 
-			if (!t.contentWindow) {
-				e = DOM.get(t.id + "_ifr");
+			if (!self.contentWindow) {
+				elm = DOM.get(self.id + "_ifr");
 
-				if (e)
-					t.contentWindow = e.contentWindow;
+				if (elm)
+					self.contentWindow = elm.contentWindow;
 			}
 
-			return t.contentWindow;
+			return self.contentWindow;
 		},
 
 		/**
@@ -2516,16 +1745,16 @@
 		 * @return {Document} Iframe DOM document object.
 		 */
 		getDoc : function() {
-			var t = this, w;
+			var self = this, win;
 
-			if (!t.contentDocument) {
-				w = t.getWin();
+			if (!self.contentDocument) {
+				win = self.getWin();
 
-				if (w)
-					t.contentDocument = w.document;
+				if (win)
+					self.contentDocument = win.document;
 			}
 
-			return t.contentDocument;
+			return self.contentDocument;
 		},
 
 		/**
@@ -2544,77 +1773,79 @@
 		 * manipulation functions.
 		 *
 		 * @method convertURL
-		 * @param {string} u URL to convert.
-		 * @param {string} n Attribute name src, href etc.
-		 * @param {string/HTMLElement} Tag name or HTML DOM element depending on HTML or DOM insert.
+		 * @param {string} url URL to convert.
+		 * @param {string} name Attribute name src, href etc.
+		 * @param {string/HTMLElement} elm Tag name or HTML DOM element depending on HTML or DOM insert.
 		 * @return {string} Converted URL string.
 		 */
-		convertURL : function(u, n, e) {
-			var t = this, s = t.settings;
+		convertURL : function(url, name, elm) {
+			var self = this, settings = self.settings;
 
 			// Use callback instead
-			if (s.urlconverter_callback)
-				return t.execCallback('urlconverter_callback', u, e, true, n);
+			if (settings.urlconverter_callback)
+				return self.execCallback('urlconverter_callback', url, elm, true, name);
 
 			// Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-			if (!s.convert_urls || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
-				return u;
+			if (!settings.convert_urls || (elm && elm.nodeName == 'LINK') || url.indexOf('file:') === 0)
+				return url;
 
 			// Convert to relative
-			if (s.relative_urls)
-				return t.documentBaseURI.toRelative(u);
+			if (settings.relative_urls)
+				return self.documentBaseURI.toRelative(url);
 
 			// Convert to absolute
-			u = t.documentBaseURI.toAbsolute(u, s.remove_script_host);
+			url = self.documentBaseURI.toAbsolute(url, settings.remove_script_host);
 
-			return u;
+			return url;
 		},
 
 		/**
 		 * Adds visual aid for tables, anchors etc so they can be more easily edited inside the editor.
 		 *
 		 * @method addVisual
-		 * @param {Element} e Optional root element to loop though to find tables etc that needs the visual aid.
+		 * @param {Element} elm Optional root element to loop though to find tables etc that needs the visual aid.
 		 */
-		addVisual : function(e) {
-			var t = this, s = t.settings;
+		addVisual : function(elm) {
+			var self = this, settings = self.settings, dom = self.dom, cls;
 
-			e = e || t.getBody();
+			elm = elm || self.getBody();
 
-			if (!is(t.hasVisual))
-				t.hasVisual = s.visual;
+			if (!is(self.hasVisual))
+				self.hasVisual = settings.visual;
 
-			each(t.dom.select('table,a', e), function(e) {
-				var v;
+			each(dom.select('table,a', elm), function(elm) {
+				var value;
 
-				switch (e.nodeName) {
+				switch (elm.nodeName) {
 					case 'TABLE':
-						v = t.dom.getAttrib(e, 'border');
+						cls = settings.visual_table_class || 'mceItemTable';
+						value = dom.getAttrib(elm, 'border');
 
-						if (!v || v == '0') {
-							if (t.hasVisual)
-								t.dom.addClass(e, s.visual_table_class);
+						if (!value || value == '0') {
+							if (self.hasVisual)
+								dom.addClass(elm, cls);
 							else
-								t.dom.removeClass(e, s.visual_table_class);
+								dom.removeClass(elm, cls);
 						}
 
 						return;
 
 					case 'A':
-						v = t.dom.getAttrib(e, 'name');
+						value = dom.getAttrib(elm, 'name');
+						cls = 'mceItemAnchor';
 
-						if (v) {
-							if (t.hasVisual)
-								t.dom.addClass(e, 'mceItemAnchor');
+						if (value) {
+							if (self.hasVisual)
+								dom.addClass(elm, cls);
 							else
-								t.dom.removeClass(e, 'mceItemAnchor');
+								dom.removeClass(elm, cls);
 						}
 
 						return;
 				}
 			});
 
-			t.onVisualAid.dispatch(t, e, t.hasVisual);
+			self.onVisualAid.dispatch(self, elm, self.hasVisual);
 		},
 
 		/**
@@ -2623,33 +1854,31 @@
 		 * @method remove
 		 */
 		remove : function() {
-			var t = this, e = t.getContainer();
+			var self = this, elm = self.getContainer();
 
-			if (!t.removed) {
-				t.removed = 1; // Cancels post remove event execution
-				t.hide();
-
-				// Remove all events
+			if (!self.removed) {
+				self.removed = 1; // Cancels post remove event execution
+				self.hide();
 
 				// Don't clear the window or document if content editable
 				// is enabled since other instances might still be present
-				if (!t.settings.content_editable) {
-					Event.clear(t.getWin());
-					Event.clear(t.getDoc());
+				if (!self.settings.content_editable) {
+					Event.clear(self.getWin());
+					Event.clear(self.getDoc());
 				}
 
-				Event.clear(t.getBody());
-				Event.clear(t.formElement);
-				Event.unbind(e);
+				Event.clear(self.getBody());
+				Event.clear(self.formElement);
+				Event.unbind(elm);
 
-				t.execCallback('remove_instance_callback', t);
-				t.onRemove.dispatch(t);
+				self.execCallback('remove_instance_callback', self);
+				self.onRemove.dispatch(self);
 
 				// Clear all execCommand listeners this is required to avoid errors if the editor was removed inside another command
-				t.onExecCommand.listeners = [];
+				self.onExecCommand.listeners = [];
 
-				tinymce.remove(t);
-				DOM.remove(e);
+				tinymce.remove(self);
+				DOM.remove(elm);
 			}
 		},
 
@@ -2703,152 +1932,6 @@
 		},
 
 		// Internal functions
-
-		_addEvents : function() {
-			// 'focus', 'blur', 'dblclick', 'beforedeactivate', submit, reset
-			var t = this, i, s = t.settings, dom = t.dom, lo = {
-				mouseup : 'onMouseUp',
-				mousedown : 'onMouseDown',
-				click : 'onClick',
-				keyup : 'onKeyUp',
-				keydown : 'onKeyDown',
-				keypress : 'onKeyPress',
-				submit : 'onSubmit',
-				reset : 'onReset',
-				contextmenu : 'onContextMenu',
-				dblclick : 'onDblClick',
-				paste : 'onPaste' // Doesn't work in all browsers yet
-			};
-
-			function eventHandler(e, o) {
-				var ty = e.type;
-
-				// Don't fire events when it's removed
-				if (t.removed)
-					return;
-
-				// Generic event handler
-				if (t.onEvent.dispatch(t, e, o) !== false) {
-					// Specific event handler
-					t[lo[e.fakeType || e.type]].dispatch(t, e, o);
-				}
-			};
-
-			// Add DOM events
-			each(lo, function(v, k) {
-				switch (k) {
-					case 'contextmenu':
-						dom.bind(t.getDoc(), k, eventHandler);
-						break;
-
-					case 'paste':
-						dom.bind(t.getBody(), k, function(e) {
-							eventHandler(e);
-						});
-						break;
-
-					case 'submit':
-					case 'reset':
-						dom.bind(t.getElement().form || DOM.getParent(t.id, 'form'), k, eventHandler);
-						break;
-
-					default:
-						dom.bind(s.content_editable ? t.getBody() : t.getDoc(), k, eventHandler);
-				}
-			});
-
-			dom.bind(s.content_editable ? t.getBody() : (isGecko ? t.getDoc() : t.getWin()), 'focus', function(e) {
-				t.focus(true);
-			});
-
-			// #ifdef contentEditable
-
-			if (s.content_editable && tinymce.isOpera) {
-				// Opera doesn't support focus event for contentEditable elements so we need to fake it
-				function doFocus(e) {
-					t.focus(true);
-				};
-
-				dom.bind(t.getBody(), 'click', doFocus);
-				dom.bind(t.getBody(), 'keydown', doFocus);
-			}
-
-			// #endif
-
-			// Add node change handlers
-			t.onMouseUp.add(t.nodeChanged);
-			//t.onClick.add(t.nodeChanged);
-			t.onKeyUp.add(function(ed, e) {
-				var c = e.keyCode;
-
-				if ((c >= 33 && c <= 36) || (c >= 37 && c <= 40) || c == 13 || c == 45 || c == 46 || c == 8 || (tinymce.isMac && (c == 91 || c == 93)) || e.ctrlKey)
-					t.nodeChanged();
-			});
-
-			// Add reset handler
-			t.onReset.add(function() {
-				t.setContent(t.startContent, {format : 'raw'});
-			});
-
-			// Add shortcuts
-			if (s.custom_shortcuts) {
-				function find(e) {
-					var v = null;
-
-					if (!e.altKey && !e.ctrlKey && !e.metaKey)
-						return v;
-
-					each(t.shortcuts, function(o) {
-						if (tinymce.isMac && o.ctrl != e.metaKey)
-							return;
-						else if (!tinymce.isMac && o.ctrl != e.ctrlKey)
-							return;
-
-						if (o.alt != e.altKey)
-							return;
-
-						if (o.shift != e.shiftKey)
-							return;
-
-						if (e.keyCode == o.keyCode || (e.charCode && e.charCode == o.charCode)) {
-							v = o;
-							return false;
-						}
-					});
-
-					return v;
-				};
-
-				t.onKeyUp.add(function(ed, e) {
-					var o = find(e);
-
-					if (o)
-						return Event.cancel(e);
-				});
-
-				t.onKeyPress.add(function(ed, e) {
-					var o = find(e);
-
-					if (o)
-						return Event.cancel(e);
-				});
-
-				t.onKeyDown.add(function(ed, e) {
-					var o = find(e);
-
-					if (o) {
-						o.func.call(o.scope);
-						return Event.cancel(e);
-					}
-				});
-			}
-
-			if (tinymce.isOpera) {
-				t.onClick.add(function(ed, e) {
-					Event.prevent(e);
-				});
-			}
-		},
 
 		_refreshContentEditable : function() {
 			var self = this, body, parent;

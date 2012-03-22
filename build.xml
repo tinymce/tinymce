@@ -126,6 +126,7 @@
 			<fileset dir="${classes_dir}" includes="AddOnManager.js" />
 			<fileset dir="${classes_dir}" includes="EditorManager.js" />
 			<fileset dir="${classes_dir}" includes="Editor.js" />
+			<fileset dir="${classes_dir}" includes="Editor.Events.js" />
 			<fileset dir="${classes_dir}" includes="EditorCommands.js" />
 			<fileset dir="${classes_dir}" includes="UndoManager.js" />
 			<fileset dir="${classes_dir}" includes="ForceBlocks.js" />

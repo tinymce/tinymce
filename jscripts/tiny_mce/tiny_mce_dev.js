@@ -127,6 +127,7 @@
 	include('AddOnManager.js');
 	include('EditorManager.js');
 	include('Editor.js');
+	include('Editor.Events.js');
 	include('EditorCommands.js');
 	include('UndoManager.js');
 	include('ForceBlocks.js');
