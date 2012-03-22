@@ -89,20 +89,22 @@
 				caretNode = block;
 
 				// Clone any parent styles
-				do {
-					if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(node.nodeName)) {
-						clonedNode = node.cloneNode(false);
-						dom.setAttrib(clonedNode, 'id', ''); // Remove ID since it needs to be document unique
+				if (settings.keep_styles !== false) {
+					do {
+						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(node.nodeName)) {
+							clonedNode = node.cloneNode(false);
+							dom.setAttrib(clonedNode, 'id', ''); // Remove ID since it needs to be document unique
 
-						if (block.hasChildNodes()) {
-							clonedNode.appendChild(block.firstChild);
-							block.appendChild(clonedNode);
-						} else {
-							caretNode = clonedNode;
-							block.appendChild(clonedNode);
+							if (block.hasChildNodes()) {
+								clonedNode.appendChild(block.firstChild);
+								block.appendChild(clonedNode);
+							} else {
+								caretNode = clonedNode;
+								block.appendChild(clonedNode);
+							}
 						}
-					}
-				} while (node = node.parentNode);
+					} while (node = node.parentNode);
+				}
 
 				// BR is needed in empty blocks on non IE browsers
 				if (!tinymce.isIE) {

@@ -21,6 +21,7 @@ module("tinymce.EnterKey", {
 		editor.settings.forced_root_block = 'p';
 		editor.settings.end_container_on_empty_block = false;
 		editor.settings.br_in_pre = true;
+		editor.settings.keep_styles = true;
 	}
 });
 
@@ -502,6 +503,14 @@ test('Enter in em within contentEditable:true div inside contentEditable:false d
 	setSelection('em', 2);
 	pressEnter();
 	equal(editor.getContent(), '<div contenteditable="false"><div contenteditable="true"><p><em>ab</em></p><p><em>cd</em></p></div></div>');
+});
+
+test('Enter at end of text in a span inside a P and keep_styles: false', function() {
+	editor.settings.keep_styles = false;
+	editor.getBody().innerHTML = '<p><em><span style="font-size: 13px;">X</span></em></p>';
+	setSelection('span', 1);
+	pressEnter();
+	equal(editor.getContent(), '<p><em><span style="font-size: 13px;">X</span></em></p><p>\u00a0</p>');
 });
 
 tinyMCE.init({
