@@ -2128,14 +2128,15 @@
 		 */
 		function moveStart(rng) {
 			var container = rng.startContainer,
-					offset = rng.startOffset,
+					offset = rng.startOffset, isAtEndOfText,
 					walker, node, nodes, tmpNode;
 
 			// Convert text node into index if possible
 			if (container.nodeType == 3 && offset >= container.nodeValue.length) {
 				// Get the parent container location and walk from there
+				offset = nodeIndex(container);
 				container = container.parentNode;
-				offset = nodeIndex(container) + 1;
+				isAtEndOfText = true;
 			}
 
 			// Move startContainer/startOffset in to a suitable node
@@ -2145,7 +2146,7 @@
 				walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
 
 				// If offset is at end of the parent node walk to the next one
-				if (offset > nodes.length - 1)
+				if (offset > nodes.length - 1 || isAtEndOfText)
 					walker.next();
 
 				for (node = walker.current(); node; node = walker.next()) {
