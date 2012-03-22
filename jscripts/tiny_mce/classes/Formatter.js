@@ -1170,7 +1170,7 @@
 
 			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(start) {
-				var container, parent, child, sibling, siblingName;
+				var container, parent, child, sibling, siblingName, root;
 
 				container = parent = start ? startContainer : endContainer;
 				siblingName = start ? 'previousSibling' : 'nextSibling';
