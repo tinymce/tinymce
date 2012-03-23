@@ -811,27 +811,38 @@
 		 * it will also place DOM focus inside the editor.
 		 *
 		 * @method focus
-		 * @param {Boolean} sf Skip DOM focus. Just set is as the active editor.
+		 * @param {Boolean} skip_focus Skip DOM focus. Just set is as the active editor.
 		 */
-		focus : function(sf) {
-			var oed, t = this, selection = t.selection, ce = t.settings.content_editable, ieRng, controlElm, doc = t.getDoc();
+		focus : function(skip_focus) {
+			var oed, self = this, selection = self.selection, contentEditable = self.settings.content_editable, ieRng, controlElm, doc = self.getDoc(), body;
 
-			if (!sf) {
+			if (!skip_focus) {
 				// Get selected control element
 				ieRng = selection.getRng();
 				if (ieRng.item) {
 					controlElm = ieRng.item(0);
 				}
 
-				t._refreshContentEditable();
+				self._refreshContentEditable();
 
-				// Is not content editable
-				if (!ce)
-					t.getWin().focus();
+				// Focus the window iframe
+				if (!contentEditable) {
+					self.getWin().focus();
+				}
 
 				// Focus the body as well since it's contentEditable
-				if (tinymce.isGecko) {
-					t.getBody().focus();
+				if (tinymce.isGecko || contentEditable) {
+					body = self.getBody();
+
+					// Check for setActive since it doesn't scroll to the element
+					if (body.setActive) {
+						body.setActive();
+					} else {
+						body.focus();
+					}
+
+					// Normalize the selection since the caret can be infront of the first element in the body like "<body>|<p>"
+					selection.normalize();
 				}
 
 				// Restore selected control element
@@ -842,28 +853,16 @@
 					ieRng.addElement(controlElm);
 					ieRng.select();
 				}
-
-				// Content editable mode ends here
-				if (ce) {
-					if (tinymce.isWebKit)
-						t.getWin().focus();
-					else {
-						if (tinymce.isIE)
-							t.getElement().setActive();
-						else
-							t.getElement().focus();
-					}
-				}
 			}
 
-			if (tinymce.activeEditor != t) {
+			if (tinymce.activeEditor != self) {
 				if ((oed = tinymce.activeEditor) != null)
-					oed.onDeactivate.dispatch(oed, t);
+					oed.onDeactivate.dispatch(oed, self);
 
-				t.onActivate.dispatch(t, oed);
+				self.onActivate.dispatch(self, oed);
 			}
 
-			tinymce._setActive(t);
+			tinymce._setActive(self);
 		},
 
 		/**
