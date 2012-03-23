@@ -977,7 +977,7 @@
 							do {
 								// Found a text node use that position
 								if (node.nodeType === 3) {
-									offset = start ? 0 : node.nodeValue.length - 1;
+									offset = start ? 0 : node.nodeValue.length;
 									container = node;
 									normalized = true;
 									break;
