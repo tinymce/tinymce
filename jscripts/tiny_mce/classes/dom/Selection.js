@@ -14,7 +14,7 @@
 	};
 
 	// Shorten names
-	var is = tinymce.is, isIE = tinymce.isIE, each = tinymce.each;
+	var is = tinymce.is, isIE = tinymce.isIE, each = tinymce.each, TreeWalker = tinymce.dom.TreeWalker;
 
 	/**
 	 * This class handles text and control selection it's an crossbrowser utility class.
@@ -647,7 +647,7 @@
 			var t = this, dom = t.dom, rng = dom.createRng(), idx;
 
 			function setPoint(node, start) {
-				var walker = new tinymce.dom.TreeWalker(node, node);
+				var walker = new TreeWalker(node, node);
 
 				do {
 					// Text node
@@ -933,7 +933,7 @@
 			if (sb && eb && sb != eb) {
 				n = sb;
 
-				var walker = new tinymce.dom.TreeWalker(sb, dom.getRoot());
+				var walker = new TreeWalker(sb, dom.getRoot());
 				while ((n = walker.next()) && n != eb) {
 					if (dom.isBlock(n))
 						bl.push(n);
@@ -947,13 +947,14 @@
 		},
 
 		normalize : function() {
-			var self = this, rng, normalized;
+			var self = this, rng, normalized, collapsed;
 
 			function normalizeEndPoint(start) {
-				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node;
+				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node, nonEmptyElementsMap;
 
 				container = rng[(start ? 'start' : 'end') + 'Container'];
 				offset = rng[(start ? 'start' : 'end') + 'Offset'];
+				nonEmptyElementsMap = dom.schema.getNonEmptyElements();
 
 				// If the container is a document move it to the body element
 				if (container.nodeType === 9) {
@@ -962,7 +963,6 @@
 				}
 
 				// If the container is body try move it into the closest text node or position
-				// TODO: Add more logic here to handle element selection cases
 				if (container === body) {
 					// Resolve the index
 					if (container.hasChildNodes()) {
@@ -973,10 +973,11 @@
 						if (container.hasChildNodes()) {
 							// Walk the DOM to find a text node to place the caret at or a BR
 							node = container;
-							walker = new tinymce.dom.TreeWalker(container, body);
+							walker = new TreeWalker(container, body);
+
 							do {
 								// Found a text node use that position
-								if (node.nodeType === 3) {
+								if (node.nodeType === 3 && node.nodeValue.length > 0) {
 									offset = start ? 0 : node.nodeValue.length;
 									container = node;
 									normalized = true;
@@ -984,7 +985,7 @@
 								}
 
 								// Found a BR/IMG element that we can place the caret before
-								if (/^(BR|IMG)$/.test(node.nodeName)) {
+								if (nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
 									offset = dom.nodeIndex(node);
 									container = node.parentNode;
 
@@ -1001,6 +1002,51 @@
 					}
 				}
 
+				// Lean the caret to the left if possible
+				// So this: <b>x</b><i>|x</i>
+				// Becomes: <b>x|</b><i>x</i>
+				// Seems that only gecko has issues with this
+				if (collapsed && container.nodeType === 3 && offset === 0) {
+					walker = new TreeWalker(container, dom.getParent(container.parentNode, dom.isBlock) || body);
+
+					// Walk left until we hit a text node we can move to or a block/br/img
+					while (node = walker.prev()) {
+						if (node.nodeType === 3 && node.nodeValue.length > 0) {
+							container = node;
+							offset = node.nodeValue.length;
+							normalized = true;
+							break;
+						}
+
+						// Break if we find a block or a BR/IMG/INPUT etc
+						if (dom.isBlock(node) || nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+							break;
+						}
+					}
+				}
+
+				// Lean the start of the selection right if possible
+				// So this: x[<b>x]</b>
+				// Becomes: x<b>[x]</b>
+				if (start && !collapsed && container.nodeType === 3 && offset === container.nodeValue.length) {
+					walker = new TreeWalker(container, dom.getParent(container.parentNode, dom.isBlock) || body);
+
+					// Walk left until we hit a text node we can move to or a block/br/img
+					while (node = walker.next()) {
+						if (node.nodeType === 3 && node.nodeValue.length > 0) {
+							container = node;
+							offset = 0;
+							normalized = true;
+							break;
+						}
+
+						// Break if we find a block or a BR/IMG/INPUT etc
+						if (dom.isBlock(node) || nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+							break;
+						}
+					}
+				}
+
 				// Set endpoint if it was normalized
 				if (normalized)
 					rng['set' + (start ? 'Start' : 'End')](container, offset);
@@ -1008,23 +1054,27 @@
 
 			// TODO:
 			// Retain selection direction.
-			// Lean left/right on Gecko for inline elements.
-			// Run this on mouse up/key up when the user manually moves the selection
 
 			// Normalize only on non IE browsers for now
 			if (tinymce.isIE)
 				return;
 			
 			rng = self.getRng();
+			collapsed = rng.collapsed;
 
 			// Normalize the end points
 			normalizeEndPoint(true);
 
-			if (!rng.collapsed)
+			if (!collapsed)
 				normalizeEndPoint();
 
 			// Set the selection if it was normalized
 			if (normalized) {
+				// If it was collapsed then make sure it still is
+				if (collapsed) {
+					rng.collapse(true);
+				}
+
 				//console.log(self.dom.dumpRng(rng));
 				self.setRng(rng);
 			}

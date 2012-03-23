@@ -841,8 +841,9 @@
 						body.focus();
 					}
 
-					// Normalize the selection since the caret can be infront of the first element in the body like "<body>|<p>"
-					selection.normalize();
+					if (contentEditable) {
+						selection.normalize();
+					}
 				}
 
 				// Restore selected control element
@@ -973,27 +974,33 @@
 		 * @param {Object} o Optional object to pass along for the node changed event.
 		 */
 		nodeChanged : function(o) {
-			var t = this, s = t.selection, n = s.getStart() || t.getBody();
+			var self = this, selection = self.selection, node;
 
 			// Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-			if (t.initialized) {
+			if (self.initialized) {
 				o = o || {};
-				n = isIE && n.ownerDocument != t.getDoc() ? t.getBody() : n; // Fix for IE initial state
+
+				// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
+				selection.normalize();
+
+				// Get start node
+				node = selection.getStart() || self.getBody();
+				node = isIE && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
 
 				// Get parents and add them to object
 				o.parents = [];
-				t.dom.getParent(n, function(node) {
+				self.dom.getParent(node, function(node) {
 					if (node.nodeName == 'BODY')
 						return true;
 
 					o.parents.push(node);
 				});
 
-				t.onNodeChange.dispatch(
-					t,
-					o ? o.controlManager || t.controlManager : t.controlManager,
-					n,
-					s.isCollapsed(),
+				self.onNodeChange.dispatch(
+					self,
+					o ? o.controlManager || self.controlManager : self.controlManager,
+					node,
+					selection.isCollapsed(),
 					o
 				);
 			}
