@@ -952,6 +952,27 @@
 			function normalizeEndPoint(start) {
 				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node, nonEmptyElementsMap;
 
+				// Walks the dom left/right to find a suitable text node to move the endpoint into
+				// It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
+				function findTextNodeRelative(left) {
+					walker = new TreeWalker(container, dom.getParent(container.parentNode, dom.isBlock) || body);
+
+					// Walk left until we hit a text node we can move to or a block/br/img
+					while (node = walker[left ? 'prev' : 'next']()) {
+						if (node.nodeType === 3 && node.nodeValue.length > 0) {
+							container = node;
+							offset = left ? node.nodeValue.length : 0;
+							normalized = true;
+							return;
+						}
+
+						// Break if we find a block or a BR/IMG/INPUT etc
+						if (dom.isBlock(node) || nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+							return;
+						}
+					}
+				};
+
 				container = rng[(start ? 'start' : 'end') + 'Container'];
 				offset = rng[(start ? 'start' : 'end') + 'Offset'];
 				nonEmptyElementsMap = dom.schema.getNonEmptyElements();
@@ -1007,44 +1028,14 @@
 				// Becomes: <b>x|</b><i>x</i>
 				// Seems that only gecko has issues with this
 				if (collapsed && container.nodeType === 3 && offset === 0) {
-					walker = new TreeWalker(container, dom.getParent(container.parentNode, dom.isBlock) || body);
-
-					// Walk left until we hit a text node we can move to or a block/br/img
-					while (node = walker.prev()) {
-						if (node.nodeType === 3 && node.nodeValue.length > 0) {
-							container = node;
-							offset = node.nodeValue.length;
-							normalized = true;
-							break;
-						}
-
-						// Break if we find a block or a BR/IMG/INPUT etc
-						if (dom.isBlock(node) || nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
-							break;
-						}
-					}
+					findTextNodeRelative(true);
 				}
 
 				// Lean the start of the selection right if possible
 				// So this: x[<b>x]</b>
 				// Becomes: x<b>[x]</b>
 				if (start && !collapsed && container.nodeType === 3 && offset === container.nodeValue.length) {
-					walker = new TreeWalker(container, dom.getParent(container.parentNode, dom.isBlock) || body);
-
-					// Walk left until we hit a text node we can move to or a block/br/img
-					while (node = walker.next()) {
-						if (node.nodeType === 3 && node.nodeValue.length > 0) {
-							container = node;
-							offset = 0;
-							normalized = true;
-							break;
-						}
-
-						// Break if we find a block or a BR/IMG/INPUT etc
-						if (dom.isBlock(node) || nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
-							break;
-						}
-					}
+					findTextNodeRelative(false);
 				}
 
 				// Set endpoint if it was normalized
