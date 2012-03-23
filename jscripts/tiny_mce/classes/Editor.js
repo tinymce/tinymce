@@ -558,7 +558,7 @@
 
 			if (settings.content_editable) {
 				DOM.addClass(targetElm, 'mceContentBody');
-				self.contentDocument = settings.content_document || document;
+				self.contentDocument = doc = settings.content_document || document;
 				self.contentWindow = settings.content_window || window;
 				self.bodyElement = targetElm;
 
