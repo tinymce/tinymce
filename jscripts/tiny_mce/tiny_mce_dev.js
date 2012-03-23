@@ -95,6 +95,7 @@
 
 	// tinymce.dom.*
 	include('dom/EventUtils.js');
+	include('dom/TreeWalker.js');
 	include('dom/DOMUtils.js');
 	include('dom/Range.js');
 	include('dom/TridentSelection.js');
@@ -103,7 +104,6 @@
 	include('dom/Selection.js');
 	include('dom/Serializer.js');
 	include('dom/ScriptLoader.js');
-	include('dom/TreeWalker.js');
 	include('dom/RangeUtils.js');
 
 	// tinymce.ui.*
