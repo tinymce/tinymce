@@ -147,6 +147,14 @@ test('Enter inside empty TD', function() {
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
+test('Shift+Enter inside STRONG inside TD with BR', function() {
+	editor.getBody().innerHTML = '<table><tr><td>d <strong>e</strong><br></td></tr></table>';
+	setSelection('strong', 1);
+	pressEnter({shiftKey: true});
+	equal(cleanHtml(editor.getBody().innerHTML), '<table><tbody><tr><td>d <strong>e<br></strong><br></td></tr></tbody></table>');
+	equal(editor.selection.getNode().nodeName, 'STRONG');
+});
+
 test('Enter inside middle of text node in body', function() {
 	editor.getBody().innerHTML = 'abcd';
 	setSelection('body', 2);
