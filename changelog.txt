@@ -11,6 +11,7 @@ Version 3.5b3 (2012-03-xx)
 	Fixed bug where IE10 removed the scopeName from the DOM element interface and there for it produced an undefined string in element path.
 	Fixed bug where the caret would be placed at an incorrect location if you applied block formatting while having the caret at the end of the block.
 	Fixed bug where applying column changes using the cell dialog would only update the first column. Patch contributed by krzyko.
+	Fixed bug where the visualblocks plugin would force editor focus if it was turned on by default.
 Version 3.5b2 (2012-03-15)
 	Rewrote the enter key logic to normalize browser behavior.
 	Fixed so enter within PRE elements produces a BR and shift+enter breaks/end the PRE. Can be disabled using the br_in_pre option.

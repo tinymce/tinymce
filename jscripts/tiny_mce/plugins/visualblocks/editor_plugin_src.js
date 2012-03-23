@@ -42,7 +42,7 @@
 
 			ed.onInit.add(function() {
 				if (ed.settings.visualblocks_default_state) {
-					ed.execCommand('mceVisualBlocks');
+					ed.execCommand('mceVisualBlocks', false, null, {skip_focus : true});
 				}
 			});
 		},
