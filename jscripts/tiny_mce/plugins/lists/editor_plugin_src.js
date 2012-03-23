@@ -456,10 +456,13 @@
 					if (li) {
 						var list = ed.dom.getParent(li, 'ol,ul');
 						if (list && list.firstChild === li) {
-							var elements = listElements(list, li);
-							ed.execCommand("Outdent", false, elements);
-							ed.undoManager.add();
-							return Event.cancel(e);
+							if (ed.selection.getRng().startOffset == 0) {
+								// Make sure the list is outdented if the selection is at the beginning of the list item
+								var elements = listElements(list, li);
+								ed.execCommand("Outdent", false, elements);
+								ed.undoManager.add();
+								return Event.cancel(e);
+							}
 						}
 					}
 				}
