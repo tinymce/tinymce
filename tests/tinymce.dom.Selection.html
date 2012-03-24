@@ -730,6 +730,21 @@ if (!tinymce.isIE) {
 		equal(rng.startContainer.nodeValue, 'b');
 		equal(rng.startOffset, 0);
 	});
+
+	test('normalize lean left into empty inline elements when caret is before br', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild.lastChild);
+		rng.setEndBefore(editor.getBody().firstChild.lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'B');
+		equal(rng.startOffset, 0);
+	});
 }
 
 test('custom elements', function() {

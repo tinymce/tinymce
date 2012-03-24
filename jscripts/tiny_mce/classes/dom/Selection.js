@@ -954,11 +954,15 @@
 
 				// Walks the dom left/right to find a suitable text node to move the endpoint into
 				// It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
-				function findTextNodeRelative(left) {
-					walker = new TreeWalker(container, dom.getParent(container.parentNode, dom.isBlock) || body);
+				function findTextNodeRelative(left, startNode) {
+					var walker, lastInlineElement;
+
+					startNode = startNode || container;
+					walker = new TreeWalker(startNode, dom.getParent(startNode.parentNode, dom.isBlock) || body);
 
 					// Walk left until we hit a text node we can move to or a block/br/img
 					while (node = walker[left ? 'prev' : 'next']()) {
+						// Found text node that has a length
 						if (node.nodeType === 3 && node.nodeValue.length > 0) {
 							container = node;
 							offset = left ? node.nodeValue.length : 0;
@@ -970,6 +974,15 @@
 						if (dom.isBlock(node) || nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
 							return;
 						}
+
+						lastInlineElement = node;
+					}
+
+					// Only fetch the last inline element when in caret mode for now
+					if (collapsed && lastInlineElement) {
+						container = lastInlineElement;
+						normalized = true;
+						offset = 0;
 					}
 				};
 
@@ -1023,12 +1036,23 @@
 					}
 				}
 
+
 				// Lean the caret to the left if possible
-				// So this: <b>x</b><i>|x</i>
-				// Becomes: <b>x|</b><i>x</i>
-				// Seems that only gecko has issues with this
-				if (collapsed && container.nodeType === 3 && offset === 0) {
-					findTextNodeRelative(true);
+				if (collapsed) {
+					// So this: <b>x</b><i>|x</i>
+					// Becomes: <b>x|</b><i>x</i>
+					// Seems that only gecko has issues with this
+					if (container.nodeType === 3 && offset === 0) {
+						findTextNodeRelative(true);
+					}
+
+					// Lean left into empty inline elements when the caret is before a BR
+					// So this: <i><b></b><i>|<br></i>
+					// Becomes: <i><b>|</b><i><br></i>
+					// Seems that only gecko has issues with this
+					if (container.nodeType === 1 && container.childNodes[offset] && container.childNodes[offset].nodeName === 'BR') {
+						findTextNodeRelative(true, container.childNodes[offset]);
+					}
 				}
 
 				// Lean the start of the selection right if possible
