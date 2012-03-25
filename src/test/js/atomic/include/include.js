@@ -6,6 +6,7 @@ require("../../../../main/js/compile/porkbun.js");
 
 define = ephox.bolt.module.api.define;
 // FIX: this is crap, we need a better way to do this
+require("../../../../../lib/test/ephox.nuggets.Nuggets.js");
 require("../../../../../lib/test/ephox.scullion.Struct.js");
 require("../../../../../lib/test/ephox.scullion.Immutable.js");
 
