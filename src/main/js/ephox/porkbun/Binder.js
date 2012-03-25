@@ -7,16 +7,16 @@ define(
 
   function (AssocArray) {
     var create = function() {
-      var registrationsAndHandlers = AssocArray();
+      var registrations = AssocArray();
 
       var bind = function(registration, handler) {
-        registrationsAndHandlers.addPair(registration, handler);
+        registrations.put(registration, handler);
         registration.bind(handler);
       };
 
       var unbind = function(registration) {
-        registration.unbind(registrationsAndHandlers.findByKey(registration));
-        registrationsAndHandlers.removeByKey(registration);
+        var handler = registrations.remove(registration)
+        registration.unbind(handler);
       };
 
       return {
