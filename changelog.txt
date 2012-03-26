@@ -1,4 +1,5 @@
 Version 3.5b3 (2012-03-xx)
+	Added cancel button to colour picker dialog.
 	Fixed bug where empty inline elements within block elements would sometimes produce a br child element.
 	Fixed bug where urls pointing to the same domain as the current one would cause undefined errors. Patch contributed by Paul Giberson.
 	Fixed bug where enter inside an editable element inside an non editable element would split the element.
