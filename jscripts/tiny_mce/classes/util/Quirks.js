@@ -413,7 +413,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function keepInlineElementOnDeleteBackspace() {
 		editor.onKeyDown.add(function(editor, e) {
-			var isDelete, rng, container, offset, root, parentNode, brElm, sibling, node;
+			var isDelete, rng, container, offset, brElm, sibling;
 
 			if (e.isDefaultPrevented()) {
 				return;
@@ -425,47 +425,28 @@ tinymce.util.Quirks = function(editor) {
 				container = rng.startContainer;
 				offset = rng.startOffset;
 
-				// Only do logic if the text node is one character and the offset is before/after that character
-				if (rng.collapsed && container.nodeType == 3 && container.nodeValue.length === 1 && offset == (isDelete ? 0 : 1)) {
-					// Walk up the DOM to see if parents are single or has a BR after for example <p><b><i>X</i></b><br></p>
-					root = dom.getRoot();
-					node = container.parentNode;
-
-					// If container isn't the first child of it's parent then do nothing
-					if (node.firstChild != container) {
-						return;
-					}
-
-					while (node != root && !dom.isBlock(node)) {
-						parentNode = node.parentNode;
-
-						sibling = node.nextSibling;
-						if (sibling && sibling.nodeName == 'BR') {
-							brElm = sibling;
-						} else {
-							if (parentNode == root || parentNode.firstChild != node || parentNode.lastChild != node) {
-								return;
-							}
-						}
-
-						node = parentNode;
-					}
-
+				// Override delete if the start container is a text node and is at the beginning of text or
+				// just before/after the last character to be deleted in collapsed mode
+				if (container.nodeType == 3 && (offset === 0 || (rng.collapsed && offset === isDelete ? 0 : 1))) {
 					// Prevent default logic since it's broken
 					e.preventDefault();
 
-					// Insert br before text node
-					parentNode = container.parentNode;
-					parentNode.insertBefore(dom.create('br'), container);
+					// Insert a BR before the text node this will prevent the containing element from being deleted/converted
+					brElm = dom.create('br', {id: '__tmp'});
+					container.parentNode.insertBefore(brElm, container);
 
-					// Remove next sibling BR element and text node
-					dom.remove(brElm);
-					dom.remove(container);
+					// Do the browser delete
+					editor.getDoc().execCommand(isDelete ? 'ForwardDelete' : 'Delete', false, null);
 
-					// Set new selection before br element
-					rng.setStart(parentNode, 0);
-					rng.setEnd(parentNode, 0);
-					selection.setRng(rng);
+					// Check if the previous sibling is empty after deleting for example: <p><b></b>|</p>
+					container = selection.getRng().startContainer;
+					sibling = container.previousSibling;
+					if (sibling && sibling.nodeType == 1 && !dom.isBlock(sibling) && dom.isEmpty(sibling)) {
+						dom.remove(sibling);
+					}
+
+					// Remove the temp element we inserted
+					dom.remove('__tmp');
 				}
 			}
 		});
