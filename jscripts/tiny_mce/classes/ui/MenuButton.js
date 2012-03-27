@@ -99,7 +99,7 @@
 			m.settings.vp_offset_x = p2.x;
 			m.settings.vp_offset_y = p2.y;
 			m.settings.keyboard_focus = t._focused;
-			m.showMenu(0, e.clientHeight);
+			m.showMenu(0, e.firstChild.clientHeight);
 
 			Event.add(DOM.doc, 'mousedown', t.hideMenu, t);
 			t.setState('Selected', 1);
