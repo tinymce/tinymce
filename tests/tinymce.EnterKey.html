@@ -462,6 +462,17 @@ test('Shift+Enter at the end of P with forced_root_block set to false', function
 	equal(editor.getContent(), '<p>abc</p><p>\u00a0</p>');
 });
 
+test('Shift+Enter in body with forced_root_block set to false', function() {
+	editor.settings.forced_root_block = false;
+	editor.getBody().innerHTML = 'abcd';
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild, 2);
+	rng.setEnd(editor.getBody().firstChild, 2);
+	editor.selection.setRng(rng);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<p>ab</p><p>cd</p>');
+});
+
 test('Enter at the end of DIV layer', function() {
 	editor.settings.br_in_pre = false;
 	editor.getBody().innerHTML = '<div style="position: absolute; top: 1px; left: 2px;">abcd</div>';
@@ -520,6 +531,57 @@ test('Enter at end of text in a span inside a P and keep_styles: false', functio
 	pressEnter();
 	equal(editor.getContent(), '<p><em><span style="font-size: 13px;">X</span></em></p><p>\u00a0</p>');
 });
+
+// Only test these on modern browsers
+if (window.getSelection) {
+	test('Enter behind table element', function() {
+		var rng = editor.dom.createRng();
+
+		editor.getBody().innerHTML = '<table><tbody><td>x</td></tbody></table>';
+		rng.setStartAfter(editor.getBody().lastChild);
+		rng.setEndAfter(editor.getBody().lastChild);
+		editor.selection.setRng(rng);
+
+		pressEnter();
+		equal(editor.getContent(), '<table><tbody><tr><td>x</td></tr></tbody></table><p>\u00a0</p>');
+	});
+
+	test('Enter before table element', function() {
+		var rng = editor.dom.createRng();
+
+		editor.getBody().innerHTML = '<table><tbody><td>x</td></tbody></table>';
+		rng.setStartBefore(editor.getBody().lastChild);
+		rng.setEndBefore(editor.getBody().lastChild);
+		editor.selection.setRng(rng);
+
+		pressEnter();
+		equal(editor.getContent(), '<p>\u00a0</p><table><tbody><tr><td>x</td></tr></tbody></table>');
+	});
+
+	test('Enter behind table followed by a p', function() {
+		var rng = editor.dom.createRng();
+
+		editor.getBody().innerHTML = '<table><tbody><td>x</td></tbody></table><p>x</p>';
+		rng.setStartAfter(editor.getBody().firstChild);
+		rng.setEndAfter(editor.getBody().firstChild);
+		editor.selection.setRng(rng);
+
+		pressEnter();
+		equal(editor.getContent(), '<table><tbody><tr><td>x</td></tr></tbody></table><p>\u00a0</p><p>x</p>');
+	});
+
+	test('Enter before table element preceded by a p', function() {
+		var rng = editor.dom.createRng();
+
+		editor.getBody().innerHTML = '<p>x</p><table><tbody><td>x</td></tbody></table>';
+		rng.setStartBefore(editor.getBody().lastChild);
+		rng.setStartBefore(editor.getBody().lastChild);
+		editor.selection.setRng(rng);
+
+		pressEnter();
+		equal(editor.getContent(), '<p>x</p><p>\u00a0</p><table><tbody><tr><td>x</td></tr></tbody></table>');
+	});
+}
 
 tinyMCE.init({
 	mode : "exact",

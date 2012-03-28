@@ -18,7 +18,8 @@
 		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager;
 
 		function handleEnterKey(evt) {
-			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName;
+			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock,
+				newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
 
 			// Returns true if the block can be split into two blocks or not
 			function canSplitBlock(node) {
@@ -90,7 +91,7 @@
 			function createNewBlock(name) {
 				var node = container, block, clonedNode, caretNode;
 
-				block = name ? dom.create(name) : parentBlock.cloneNode(false);
+				block = name || parentBlockName == "TABLE" ? dom.create(name || newBlockName) : parentBlock.cloneNode(false);
 				caretNode = block;
 
 				// Clone any parent styles
@@ -128,6 +129,11 @@
 					return false;
 				}
 
+				// Caret can be before/after a table
+				if (container.nodeName === "TABLE" || (container.previousSibling && container.previousSibling.nodeName == "TABLE")) {
+					return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
+				}
+
 				// Walk the DOM and look for text nodes or non empty elements
 				walker = new TreeWalker(container, parentBlock);
 				while (node = (start ? walker.prev() : walker.next())) {
@@ -152,15 +158,15 @@
 
 			// Wraps any text nodes or inline elements in the specified forced root block name
 			function wrapSelfAndSiblingsInDefaultBlock(container, offset) {
-				var newBlock, parentBlock, startNode, node, next;
+				var newBlock, parentBlock, startNode, node, next, blockName = newBlockName || 'P';
 
 				// Not in a block element or in a table cell or caption
 				parentBlock = dom.getParent(container, dom.isBlock);
-				if (newBlockName && !evt.shiftKey && (!parentBlock || !canSplitBlock(parentBlock))) {
+				if (!parentBlock || !canSplitBlock(parentBlock)) {
 					parentBlock = parentBlock || editableRoot;
 
 					if (!parentBlock.hasChildNodes()) {
-						newBlock = dom.create(newBlockName);
+						newBlock = dom.create(blockName);
 						parentBlock.appendChild(newBlock);
 						rng.setStart(newBlock, 0);
 						rng.setEnd(newBlock, 0);
@@ -180,7 +186,7 @@
 					}
 
 					if (startNode) {
-						newBlock = dom.create(newBlockName);
+						newBlock = dom.create(blockName);
 						startNode.parentNode.insertBefore(newBlock, startNode);
 
 						// Start wrapping until we hit a block
@@ -339,6 +345,7 @@
 
 			// Resolve node index
 			if (container.nodeType == 1 && container.hasChildNodes()) {
+				isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
 				offset = 0;
 			}
@@ -364,7 +371,9 @@
 
 			// Wrap the current node and it's sibling in a default block if it's needed.
 			// for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>
-			container = wrapSelfAndSiblingsInDefaultBlock(container, offset);
+			if ((newBlockName && !evt.shiftKey) || (!newBlockName && evt.shiftKey)) {
+				container = wrapSelfAndSiblingsInDefaultBlock(container, offset);
+			}
 
 			// Find parent block and setup empty block paddings
 			parentBlock = dom.getParent(container, dom.isBlock);
