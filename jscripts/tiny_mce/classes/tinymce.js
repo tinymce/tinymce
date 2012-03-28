@@ -785,7 +785,11 @@
 		 * var arr = tinymce.explode('a, b,   c');
 		 */
 		explode : function(s, d) {
-			return s ? tinymce.map(s.split(d || ','), tinymce.trim) : s;
+			if (!s || tinymce.is(s, 'array')) {
+				return s;
+			}
+
+			return tinymce.map(s.split(d || ','), tinymce.trim);
 		},
 
 		_addVer : function(u) {
