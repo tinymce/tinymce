@@ -413,7 +413,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function keepInlineElementOnDeleteBackspace() {
 		editor.onKeyDown.add(function(editor, e) {
-			var isDelete, rng, container, offset, brElm, sibling;
+			var isDelete, rng, container, offset, brElm, sibling, collapsed;
 
 			if (e.isDefaultPrevented()) {
 				return;
@@ -424,10 +424,13 @@ tinymce.util.Quirks = function(editor) {
 				rng = selection.getRng();
 				container = rng.startContainer;
 				offset = rng.startOffset;
+				collapsed = rng.collapsed;
 
 				// Override delete if the start container is a text node and is at the beginning of text or
 				// just before/after the last character to be deleted in collapsed mode
-				if (container.nodeType == 3 && container.nodeValue.length > 0 && (offset === 0 || (rng.collapsed && offset === isDelete ? 0 : 1))) {
+				if (container.nodeType == 3 && container.nodeValue.length > 0 && ((offset === 0 && !collapsed) || (collapsed && offset === (isDelete ? 0 : 1)))) {
+					nonEmptyElements = editor.schema.getNonEmptyElements();
+
 					// Prevent default logic since it's broken
 					e.preventDefault();
 
@@ -441,7 +444,7 @@ tinymce.util.Quirks = function(editor) {
 					// Check if the previous sibling is empty after deleting for example: <p><b></b>|</p>
 					container = selection.getRng().startContainer;
 					sibling = container.previousSibling;
-					if (sibling && sibling.nodeType == 1 && !dom.isBlock(sibling) && dom.isEmpty(sibling)) {
+					if (sibling && sibling.nodeType == 1 && !dom.isBlock(sibling) && dom.isEmpty(sibling) && !nonEmptyElements[sibling.nodeName.toLowerCase()]) {
 						dom.remove(sibling);
 					}
 
