@@ -417,13 +417,18 @@
 			// If single element selection then try making a control selection out of it
 			if (startContainer == endContainer && startContainer.nodeType == 1) {
 				// Trick to place the caret inside an empty block element like <p></p>
-				if (startOffset == endOffset && !startContainer.hasChildNodes() && startContainer.canHaveHTML) {
-					startContainer.innerHTML = '<span>\uFEFF</span><span>\uFEFF</span>';
-					ieRng.moveToElementText(startContainer.lastChild);
-					ieRng.select();
-					dom.doc.selection.clear();
-					startContainer.innerHTML = '';
-					return;
+				if (startOffset == endOffset && !startContainer.hasChildNodes()) {
+					if (startContainer.canHaveHTML) {
+						startContainer.innerHTML = '<span>\uFEFF</span><span>\uFEFF</span>';
+						ieRng.moveToElementText(startContainer.lastChild);
+						ieRng.select();
+						dom.doc.selection.clear();
+						startContainer.innerHTML = '';
+						return;
+					} else {
+						startOffset = dom.nodeIndex(startContainer);
+						startContainer = startContainer.parentNode;
+					}
 				}
 
 				if (startOffset == endOffset - 1) {
