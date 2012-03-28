@@ -950,7 +950,7 @@
 			var self = this, rng, normalized, collapsed;
 
 			function normalizeEndPoint(start) {
-				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node, nonEmptyElementsMap;
+				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node, nonEmptyElementsMap, nodeName;
 
 				// Walks the dom left/right to find a suitable text node to move the endpoint into
 				// It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
@@ -998,6 +998,17 @@
 
 				// If the container is body try move it into the closest text node or position
 				if (container === body) {
+					// If start is before/after a image, table etc
+					if (start) {
+						node = container.childNodes[offset > 0 ? offset - 1 : 0];
+						if (node) {
+							nodeName = node.nodeName.toLowerCase();
+							if (nonEmptyElementsMap[node.nodeName] || node.nodeName == "TABLE") {
+								return;
+							}
+						}
+					}
+
 					// Resolve the index
 					if (container.hasChildNodes()) {
 						container = container.childNodes[Math.min(!start && offset > 0 ? offset - 1 : offset, container.childNodes.length - 1)];
