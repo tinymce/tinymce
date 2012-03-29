@@ -18,7 +18,7 @@
 		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager;
 
 		function handleEnterKey(evt) {
-			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock,
+			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, documentMode,
 				newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
 
 			// Returns true if the block can be split into two blocks or not
@@ -32,7 +32,7 @@
 
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
 			function moveToCaretPosition(root) {
-				var walker, node, rng, y, viewPort, lastNode = root;
+				var walker, node, rng, y, viewPort, lastNode = root, tempElm;
 
 				rng = dom.createRng();
 
@@ -63,6 +63,12 @@
 				} else {
 					if (root.nodeName == 'BR') {
 						if (root.nextSibling && dom.isBlock(root.nextSibling)) {
+							// Trick on older IE versions to render the caret before the BR between two lists
+							if (!documentMode || documentMode < 9) {
+								tempElm = dom.create('br');
+								root.parentNode.insertBefore(tempElm, root);
+							}
+
 							rng.setStartBefore(root);
 							rng.setEndBefore(root);
 						} else {
@@ -76,6 +82,9 @@
 				}
 
 				selection.setRng(rng);
+
+				// Remove tempElm created for old IE:s
+				dom.remove(tempElm);
 
 				viewPort = dom.getViewPort(editor.getWin());
 
@@ -265,7 +274,7 @@
 			
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
-				var brElm, extraBr, documentMode;
+				var brElm, extraBr;
 
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					// Insert extra BR element at the end block elements
@@ -282,7 +291,6 @@
 				rng.insertNode(brElm);
 
 				// Rendering modes below IE8 doesn't display BR elements in PRE unless we have a \n before it
-				documentMode = dom.doc.documentMode;
 				if (tinymce.isIE && parentBlockName == 'PRE' && (!documentMode || documentMode < 8)) {
 					brElm.parentNode.insertBefore(dom.doc.createTextNode('\r'), brElm);
 				}
@@ -342,6 +350,7 @@
 			offset = rng.startOffset;
 			newBlockName = settings.forced_root_block;
 			newBlockName = newBlockName ? newBlockName.toUpperCase() : '';
+			documentMode = dom.doc.documentMode;
 
 			// Resolve node index
 			if (container.nodeType == 1 && container.hasChildNodes()) {
@@ -371,6 +380,7 @@
 
 			// Wrap the current node and it's sibling in a default block if it's needed.
 			// for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>
+			// This won't happen if root blocks are disabled or the shiftKey is pressed
 			if ((newBlockName && !evt.shiftKey) || (!newBlockName && evt.shiftKey)) {
 				container = wrapSelfAndSiblingsInDefaultBlock(container, offset);
 			}
