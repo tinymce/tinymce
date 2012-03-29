@@ -315,21 +315,26 @@
 		jQueryFn.attr = $.fn.attr;
 
 		// Makes sure that $('#tinymce_id').attr('value') gets the editors current HTML contents
-		$.fn.attr = function(name, value, type) {
+		$.fn.attr = function(name, value) {
 			var self = this;
 
-			if ((!name) || (name !== "value") || (!containsTinyMCE(self)))
-				return jQueryFn.attr.call(self, name, value, type);
+			if ((!name) || (name !== "value") || (!containsTinyMCE(self))) {
+				if (value !== undef) {
+					return jQueryFn.attr.call(self, name, value);
+				} else {
+					return jQueryFn.attr.call(self, name);
+				}
+			}
 
 			if (value !== undef) {
 				loadOrSave.call(self.filter(":tinymce"), value);
-				jQueryFn.attr.call(self.not(":tinymce"), name, value, type);
+				jQueryFn.attr.call(self.not(":tinymce"), name, value);
 
 				return self; // return original set for chaining
 			} else {
 				var node = self[0], ed = tinyMCEInstance(node);
 
-				return ed ? ed.getContent() : jQueryFn.attr.call($(node), name, value, type);
+				return ed ? ed.getContent() : jQueryFn.attr.call($(node), name, value);
 			}
 		};
 	}

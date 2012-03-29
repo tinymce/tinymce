@@ -21,6 +21,7 @@ Version 3.5b3 (2012-03-29)
 	Fixed bug where the menu buttons/split button menus wouldn't be opened at the right location on older IE versions.
 	Fixed bug where Gecko browsers wouldn't properly display the right format when having the selection as specific places.
 	Fixed bug where shift+enter inside the body when having forced_root_blocks set to false would throw an error.
+	Fixed bug where the jQuery plugin would break the attr method of jQuery 1.7.2. Patch contributed by Markus Kemmerling.
 	Fixed so options like content_css accepts and array as well as a comma separated string as input.
 	Restructured the internal logic to make it more separate from Editor.js.
 	Updated the Sizzle engine to the latest version.
