@@ -1,5 +1,7 @@
-Version 3.5b3 (2012-03-xx)
+Version 3.5b3 (2012-03-29)
 	Added cancel button to colour picker dialog.
+	Added figure and figcaption to the html5 visualblocks plugin.
+	Added default alignment options for the figure element.
 	Fixed bug where empty inline elements within block elements would sometimes produce a br child element.
 	Fixed bug where urls pointing to the same domain as the current one would cause undefined errors. Patch contributed by Paul Giberson.
 	Fixed bug where enter inside an editable element inside an non editable element would split the element.
@@ -17,6 +19,10 @@ Version 3.5b3 (2012-03-xx)
 	Fixed bug where format drop down list wouldn't show the currently active format for a parent element.
 	Fixed bug where paste of plain text in IE 9 would remove the new line characters from text.
 	Fixed bug where the menu buttons/split button menus wouldn't be opened at the right location on older IE versions.
+	Fixed bug where Gecko browsers wouldn't properly display the right format when having the selection as specific places.
+	Fixed bug where shift+enter inside the body when having forced_root_blocks set to false would throw an error.
+	Fixed so options like content_css accepts and array as well as a comma separated string as input.
+	Restructured the internal logic to make it more separate from Editor.js.
 	Updated the Sizzle engine to the latest version.
 Version 3.5b2 (2012-03-15)
 	Rewrote the enter key logic to normalize browser behavior.
