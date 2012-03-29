@@ -279,11 +279,7 @@
 				function findSelectionEnd(start, end) {
 					var walker = new TreeWalker(end);
 					for (node = walker.current(); node; node = walker.prev()) {
-						if (node.childNodes.length > 1 || node == start) {
-							return node;
-						}
-						// Bug #4775
-						else if (node.childNodes.length == 1 && node.childNodes[0].tagName != 'BR') {
+						if (node.childNodes.length > 1 || node == start || node.tagName == 'BR') {
 							return node;
 						}
 					}
