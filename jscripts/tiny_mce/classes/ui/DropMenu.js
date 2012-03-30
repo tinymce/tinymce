@@ -127,8 +127,8 @@
 		update : function() {
 			var t = this, s = t.settings, tb = DOM.get('menu_' + t.id + '_tbl'), co = DOM.get('menu_' + t.id + '_co'), tw, th;
 
-			tw = s.max_width ? Math.min(tb.clientWidth, s.max_width) : tb.clientWidth;
-			th = s.max_height ? Math.min(tb.clientHeight, s.max_height) : tb.clientHeight;
+			tw = s.max_width ? Math.min(tb.offsetWidth, s.max_width) : tb.offsetWidth;
+			th = s.max_height ? Math.min(tb.offsetHeight, s.max_height) : tb.offsetHeight;
 
 			if (!DOM.boxModel)
 				t.element.setStyles({width : tw + 2, height : th + 2});
