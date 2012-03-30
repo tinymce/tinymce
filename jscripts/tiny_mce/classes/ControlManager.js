@@ -161,6 +161,8 @@
 			if (v = ed.getParam('skin_variant'))
 				s['class'] += ' ' + ed.getParam('skin') + 'Skin' + v.substring(0, 1).toUpperCase() + v.substring(1);
 
+			s['class'] += ed.settings.directionality == "rtl" ? ' mceRtl' : '';
+
 			id = t.prefix + id;
 			cls = cc || t._cls.dropmenu || tinymce.ui.DropMenu;
 			c = t.controls[id] = new cls(id, s);
