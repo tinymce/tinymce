@@ -83,7 +83,7 @@
 .defaultSkin .mce_forecolor span.mceAction, .defaultSkin .mce_backcolor span.mceAction {overflow:hidden; height:16px}
 
 /* Menu */
-.defaultSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #D4D0C8}
+.defaultSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #D4D0C8; direction:ltr}
 .defaultSkin .mceNoIcons span.mceIcon {width:0;}
 .defaultSkin .mceNoIcons a .mceText {padding-left:10px}
 .defaultSkin .mceMenu table {background:#FFF}
