@@ -327,7 +327,7 @@
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
 				'class' : t.classPrefix + 'Menu mceNoIcons',
-				max_width : 150,
+				max_width : 250,
 				max_height : 150
 			});
 
