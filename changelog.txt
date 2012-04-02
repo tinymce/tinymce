@@ -1,5 +1,6 @@
 Version 3.5b4 (2012-04-xx)
 	Fixed menu rendering issue if the document was in rtl mode.
+	Fixed bug where the hide function would throw an error about a missing variable.
 Version 3.5b3 (2012-03-29)
 	Added cancel button to colour picker dialog.
 	Added figure and figcaption to the html5 visualblocks plugin.

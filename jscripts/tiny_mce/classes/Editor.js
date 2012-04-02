@@ -1337,7 +1337,7 @@
 		 * @method hide
 		 */
 		hide : function() {
-			var self = this, doc = t.getDoc();
+			var self = this, doc = self.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
 			if (isIE && doc)
