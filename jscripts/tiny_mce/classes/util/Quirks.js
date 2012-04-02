@@ -103,37 +103,78 @@ tinymce.util.Quirks = function(editor) {
 
 		editor.addCommand('Delete', function() {removeMergedFormatSpans();});
 	};
-
+	
 	/**
-	 * WebKit and IE doesn't empty the editor if you select all contents and hit backspace or delete. This fix will check if the body is empty
-	 * like a <h1></h1> or <p></p> and then forcefully remove all contents.
+	 * Makes sure that the editor body becomes empty if the selection is the whole body contents.
+	 *
+	 * Example a selection like this would empty the editor:
+	 * <p><b>[text</b></p><p><i>text]</i></p>
+	 *
+	 * But not a selection like this:
+	 * <p><b>[text]</b></p>
+	 *
+	 * Since it should produce:
+	 * <p><b>|</b></p>
 	 */
 	function emptyEditorWhenDeleting() {
-		function serializeRng(rng) {
-			var body = dom.create("body");
-			var contents = rng.cloneContents();
-			body.appendChild(contents);
-			return selection.serializer.serialize(body, {format: 'html'});
-		}
+		function getEndPointNode(rng, start) {
+			var container, offset, prefix = start ? 'start' : 'end';
 
-		function allContentsSelected(rng) {
-			var selection = serializeRng(rng);
+			container = rng[prefix + 'Container'];
+			offset = rng[prefix + 'Offset'];
 
-			var allRng = dom.createRng();
-			allRng.selectNode(editor.getBody());
+			// Resolve indexed container
+			if (container.nodeType == 1 && container.hasChildNodes()) {
+				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)];
+			}
 
-			var allSelection = serializeRng(allRng);
-			return selection === allSelection;
-		}
+			return container;
+		};
+
+		function isAtStartEndOfBody(rng, start) {
+			var container, offset, root, childNode, prefix = start ? 'start' : 'end';
+
+			container = rng[prefix + 'Container'];
+			offset = rng[prefix + 'Offset'];
+			root = dom.getRoot();
+
+			// Check if start/end is in the middle of text
+			if (container.nodeType == 3 && ((start && offset > 0) || (!start && offset < container.nodeValue.length))) {
+				return false;
+			}
+
+			// Resolve indexed container
+			container = getEndPointNode(rng, start);
+
+			// Walk up the DOM tree to see if the endpoint is at the beginning/end of body
+			while (container !== root) {
+				childNode = container.parentNode[start ? 'firstChild' : 'lastChild'];
+
+				// If first/last element is a BR then jump to it's sibling in case: <p>x<br></p>
+				if (childNode.nodeName == "BR") {
+					childNode = childNode[start ? 'nextSibling' : 'previousSibling'] || childNode;
+				}
+
+				// If the childNode isn't the container node then break in case <p><span>A</span>[X]</p>
+				if (childNode !== container) {
+					return false;
+				}
+
+				container = container.parentNode;
+			}
+
+			return true;
+		};
 
 		editor.onKeyDown.addToTop(function(editor, e) {
-			var keyCode = e.keyCode;
+			var rng, keyCode = e.keyCode;
 
 			if (keyCode == DELETE || keyCode == BACKSPACE) {
-				var rng = selection.getRng(true);
+				rng = selection.getRng(true);
 
-				if (!rng.collapsed && allContentsSelected(rng)) {
-					editor.setContent('', {format : 'raw'});
+				if (isAtStartEndOfBody(rng, true) && isAtStartEndOfBody(rng, false) &&
+					(rng.collapsed || dom.findCommonAncestor(getEndPointNode(rng, true), getEndPointNode(rng)) === dom.getRoot())) {
+					editor.setContent('');
 					editor.nodeChanged();
 					e.preventDefault();
 				}
@@ -491,7 +532,7 @@ tinymce.util.Quirks = function(editor) {
 				return;
 			}
 
-			while (parent && parent.parentNode.firstChild == parent && parent.parentNode != root) {
+			while (parent && parent.parentNode && parent.parentNode.firstChild == parent && parent.parentNode != root) {
 				parent = parent.parentNode;
 			}
 
@@ -600,12 +641,12 @@ tinymce.util.Quirks = function(editor) {
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
+	emptyEditorWhenDeleting();
 
 	// WebKit
 	if (tinymce.isWebKit) {
 		keepInlineElementOnDeleteBackspace();
 		cleanupStylesWhenDeleting();
-		emptyEditorWhenDeleting();
 		inputMethodFocus();
 		selectControlElements();
 
@@ -618,7 +659,6 @@ tinymce.util.Quirks = function(editor) {
 	// IE
 	if (tinymce.isIE) {
 		removeHrOnBackspace();
-		emptyEditorWhenDeleting();
 		ensureBodyHasRoleApplication();
 		addNewLinesBeforeBrInPre();
 		removePreSerializedStylesWhenSelectingControls();
