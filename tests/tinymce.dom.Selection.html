@@ -745,6 +745,36 @@ if (!tinymce.isIE) {
 		equal(rng.startContainer.nodeName, 'B');
 		equal(rng.startOffset, 0);
 	});
+
+	test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild.lastChild);
+		rng.setEndBefore(editor.getBody().firstChild.lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.startOffset, 2);
+	});
+
+	test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild.lastChild);
+		rng.setEndBefore(editor.getBody().firstChild.lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.startOffset, 1);
+	});
 }
 
 test('custom elements', function() {

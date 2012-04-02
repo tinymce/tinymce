@@ -947,10 +947,20 @@
 		},
 
 		normalize : function() {
-			var self = this, rng, normalized, collapsed;
+			var self = this, rng, normalized, collapsed, node, sibling;
 
 			function normalizeEndPoint(start) {
 				var container, offset, walker, dom = self.dom, body = dom.getRoot(), node, nonEmptyElementsMap, nodeName;
+
+				function hasBrBeforeAfter(node, left) {
+					var walker = new TreeWalker(node, dom.getParent(node.parentNode, dom.isBlock) || body);
+
+					while (node = walker[left ? 'prev' : 'next']()) {
+						if (node.nodeName === "BR") {
+							return true;
+						}
+					}
+				};
 
 				// Walks the dom left/right to find a suitable text node to move the endpoint into
 				// It will only walk within the current parent block or body and will stop if it hits a block or a BR/IMG
@@ -1061,8 +1071,11 @@
 					// So this: <i><b></b><i>|<br></i>
 					// Becomes: <i><b>|</b><i><br></i>
 					// Seems that only gecko has issues with this
-					if (container.nodeType === 1 && container.childNodes[offset] && container.childNodes[offset].nodeName === 'BR') {
-						findTextNodeRelative(true, container.childNodes[offset]);
+					if (container.nodeType === 1) {
+						node = container.childNodes[offset];
+						if(node && node.nodeName === 'BR' && !hasBrBeforeAfter(node) && !hasBrBeforeAfter(node, true)) {
+							findTextNodeRelative(true, container.childNodes[offset]);
+						}
 					}
 				}
 
