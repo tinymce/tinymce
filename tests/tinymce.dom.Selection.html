@@ -543,28 +543,6 @@ test('normalize to text node from document', function() {
 	equal(rng.endOffset, 0, 'endOffset offset');
 });
 
-test('normalize to text node from body', function() {
-	var rng;
-
-	if (tinymce.isIE) {
-		ok(true, "Skipped on IE since IE will steal focus.");
-		return;
-	}
-
-	editor.setContent('<p>text</p>');
-	rng = editor.dom.createRng();
-	rng.setStart(editor.getBody(), 0);
-	rng.setEnd(editor.getBody(), 0);
-	editor.selection.setRng(rng);
-	editor.selection.normalize();
-
-	rng = editor.selection.getRng(true);
-	equal(rng.startContainer.nodeType, 3, 'startContainer node type');
-	equal(rng.startOffset, 0, 'startContainer offset');
-	equal(rng.endContainer.nodeType, 3, 'endContainer node type');
-	equal(rng.endOffset, 0, 'endOffset offset');
-});
-
 test('normalize to br from document', function() {
 	var rng;
 
@@ -590,6 +568,23 @@ test('normalize to br from document', function() {
 
 // Only run on non IE browsers since it's not an issue on IE
 if (!tinymce.isIE) {
+	test('normalize to text node from body', function() {
+		var rng;
+
+		editor.setContent('<p>text</p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody(), 0);
+		rng.setEnd(editor.getBody(), 0);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeType, 3, 'startContainer node type');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeType, 3, 'endContainer node type');
+		equal(rng.endOffset, 0, 'endOffset offset');
+	});
+
 	test('normalize to br from body', function() {
 		var rng;
 
@@ -774,6 +769,23 @@ if (!tinymce.isIE) {
 		rng = editor.selection.getRng(true);
 		equal(rng.startContainer.nodeName, 'P');
 		equal(rng.startOffset, 1);
+	});
+
+	test('normalize don\'t move start/end if it\'s before/after table', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild);
+		rng.setEndAfter(editor.getBody().lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'BODY');
+		equal(rng.startOffset, 0);
+		equal(rng.endContainer.nodeName, 'BODY');
+		equal(rng.endOffset, 1);
 	});
 }
 

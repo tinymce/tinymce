@@ -375,9 +375,8 @@
 						childNodes = container.childNodes;
 						container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
 						if (container) {
-							offset = start ? 0 : childNodes.length;
+							offset = start ? 0 : container.childNodes.length;
 							rng['set' + (start ? 'Start' : 'End')](container, offset);
-							console.log(container, offset, container.innerHTML);
 						}
 					}
 				};
@@ -1055,7 +1054,7 @@
 						offset = 0;
 
 						// Don't walk into elements that doesn't have any child nodes like a IMG
-						if (container.hasChildNodes()) {
+						if (container.hasChildNodes() && !/TABLE/.test(container.nodeName)) {
 							// Walk the DOM to find a text node to place the caret at or a BR
 							node = container;
 							walker = new TreeWalker(container, body);
@@ -1086,7 +1085,6 @@
 						}
 					}
 				}
-
 
 				// Lean the caret to the left if possible
 				if (collapsed) {
