@@ -773,9 +773,8 @@
 					if (startContainer != endContainer) {
 						// WebKit will render the table incorrectly if we wrap a TD in a SPAN so lets see if the can use the first child instead
 						// This will happen if you tripple click a table cell and use remove formatting
-						node = startContainer.firstChild;
-						if (startContainer.nodeName == "TD" && node) {
-							startContainer = node;
+						if (/^(TR|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
+							startContainer = (startContainer.nodeName == "TD" ? startContainer.firstChild : startContainer.firstChild.firstChild) || startContainer;
 						}
 
 						// Wrap start/end nodes in span element since these might be cloned/moved
