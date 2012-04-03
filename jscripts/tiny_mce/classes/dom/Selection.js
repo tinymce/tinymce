@@ -364,6 +364,30 @@
 				return index;
 			};
 
+			function normalizeTableCellSelection(rng) {
+				function moveEndPoint(start) {
+					var container, offset, childNodes, prefix = start ? 'start' : 'end';
+
+					container = rng[prefix + 'Container'];
+					offset = rng[prefix + 'Offset'];
+
+					if (container.nodeType == 1 && container.nodeName == "TR") {
+						childNodes = container.childNodes;
+						container = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];
+						if (container) {
+							offset = start ? 0 : childNodes.length;
+							rng['set' + (start ? 'Start' : 'End')](container, offset);
+							console.log(container, offset, container.innerHTML);
+						}
+					}
+				};
+
+				moveEndPoint(true);
+				moveEndPoint();
+
+				return rng;
+			};
+
 			function getLocation() {
 				var rng = t.getRng(true), root = dom.getRoot(), bookmark = {};
 
@@ -458,13 +482,8 @@
 				if (name == 'IMG')
 					return {name : name, index : findIndex(name, element)};
 
-				// Can't insert a node into the root of document WebKit defaults to document
-				if (rng.startContainer.nodeType == 9) {
-					return;
-				}
-
 				// W3C method
-				rng2 = rng.cloneRange();
+				rng2 = normalizeTableCellSelection(rng.cloneRange());
 
 				// Insert end marker
 				if (!collapsed) {
@@ -472,6 +491,7 @@
 					rng2.insertNode(dom.create('span', {'data-mce-type' : "bookmark", id : id + '_end', style : styles}, chr));
 				}
 
+				rng = normalizeTableCellSelection(rng);
 				rng.collapse(true);
 				rng.insertNode(dom.create('span', {'data-mce-type' : "bookmark", id : id + '_start', style : styles}, chr));
 			}
@@ -749,45 +769,55 @@
 		 * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
 		 */
 		getRng : function(w3c) {
-			var t = this, s, r, elm, doc = t.win.document;
+			var self = this, selection, rng, elm, doc = self.win.document;
 
 			// Found tridentSel object then we need to use that one
-			if (w3c && t.tridentSel)
-				return t.tridentSel.getRangeAt(0);
+			if (w3c && self.tridentSel) {
+				return self.tridentSel.getRangeAt(0);
+			}
 
 			try {
-				if (s = t.getSel())
-					r = s.rangeCount > 0 ? s.getRangeAt(0) : (s.createRange ? s.createRange() : doc.createRange());
+				if (selection = self.getSel()) {
+					rng = selection.rangeCount > 0 ? selection.getRangeAt(0) : (selection.createRange ? selection.createRange() : doc.createRange());
+				}
 			} catch (ex) {
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
 			}
 
 			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (tinymce.isIE && r && r.setStart && doc.selection.createRange().item) {
+			if (tinymce.isIE && rng && rng.setStart && doc.selection.createRange().item) {
 				elm = doc.selection.createRange().item(0);
-				r = doc.createRange();
-				r.setStartBefore(elm);
-				r.setEndAfter(elm);
+				rng = doc.createRange();
+				rng.setStartBefore(elm);
+				rng.setEndAfter(elm);
 			}
 
 			// No range found then create an empty one
 			// This can occur when the editor is placed in a hidden container element on Gecko
 			// Or on IE when there was an exception
-			if (!r)
-				r = doc.createRange ? doc.createRange() : doc.body.createTextRange();
+			if (!rng) {
+				rng = doc.createRange ? doc.createRange() : doc.body.createTextRange();
+			}
 
-			if (t.selectedRange && t.explicitRange) {
-				if (r.compareBoundaryPoints(r.START_TO_START, t.selectedRange) === 0 && r.compareBoundaryPoints(r.END_TO_END, t.selectedRange) === 0) {
+			// If range is at start of document then move it to start of body
+			if (rng.setStart && rng.startContainer.nodeType === 9 && rng.collapsed) {
+				elm = self.dom.getRoot();
+				rng.setStart(elm, 0);
+				rng.setEnd(elm, 0);
+			}
+
+			if (self.selectedRange && self.explicitRange) {
+				if (rng.compareBoundaryPoints(rng.START_TO_START, self.selectedRange) === 0 && rng.compareBoundaryPoints(rng.END_TO_END, self.selectedRange) === 0) {
 					// Safari, Opera and Chrome only ever select text which causes the range to change.
 					// This lets us use the originally set range if the selection hasn't been changed by the user.
-					r = t.explicitRange;
+					rng = self.explicitRange;
 				} else {
-					t.selectedRange = null;
-					t.explicitRange = null;
+					self.selectedRange = null;
+					self.explicitRange = null;
 				}
 			}
 
-			return r;
+			return rng;
 		},
 
 		/**
@@ -1002,7 +1032,7 @@
 
 				// If the container is a document move it to the body element
 				if (container.nodeType === 9) {
-					container = container.body;
+					container = dom.getRoot();
 					offset = 0;
 				}
 
