@@ -95,6 +95,6 @@ tinymce.ForceBlocks = function(editor) {
 	// Force root blocks
 	if (settings.forced_root_block) {
 		editor.onKeyUp.add(addRootBlocks);
-		editor.onClick.add(addRootBlocks);
+		editor.onNodeChange.add(addRootBlocks);
 	}
 };
