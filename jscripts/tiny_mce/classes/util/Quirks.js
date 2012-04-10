@@ -184,12 +184,20 @@ tinymce.util.Quirks = function(editor) {
 
 	/**
 	 * WebKit on MacOS X has a weird issue where it some times fails to properly convert keypresses to input method keystrokes.
-	 * So a fix where we just get the range and set the range back seems to do the trick.
+	 * This seems to happen when the user manages to click the HTML/documentElement item then the window doesn't get proper focus until
+	 * you enter a character into the editor. The IME doesn't initialize when it doesn't fire a proper focus event.
+	 *
+	 * See: https://bugs.webkit.org/show_bug.cgi?id=83566
 	 */
 	function inputMethodFocus() {
-		dom.bind(editor.getBody(), 'focusin', function() {
-			selection.setRng(selection.getRng());
-		});
+		if (!editor.settings.content_editable) {
+			dom.bind(editor.getDoc(), 'mousedown', function(e) {
+				if (e.target == editor.getDoc().documentElement) {
+					editor.getWin().focus();
+					selection.setRng(selection.getRng());
+				}
+			});
+		}
 	};
 
 	/**
