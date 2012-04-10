@@ -183,14 +183,24 @@ tinymce.util.Quirks = function(editor) {
 	};
 
 	/**
-	 * WebKit on MacOS X has a weird issue where it some times fails to properly convert keypresses to input method keystrokes.
-	 * This seems to happen when the user manages to click the HTML/documentElement item then the window doesn't get proper focus until
-	 * you enter a character into the editor. The IME doesn't initialize when it doesn't fire a proper focus event.
+	 * WebKit has a weird issue where it some times fails to properly convert keypresses to input method keystrokes. The IME on Mac doesn't
+	 * initialize when it doesn't fire a proper focus event.
+	 *
+	 * This seems to happen when the user manages to click the documentElement element then the window doesn't get proper focus until
+	 * you enter a character into the editor.
+	 *
+	 * It also happens when the first focus in made to the body.
 	 *
 	 * See: https://bugs.webkit.org/show_bug.cgi?id=83566
 	 */
 	function inputMethodFocus() {
 		if (!editor.settings.content_editable) {
+			// Case 1 IME doesn't initialize if you focus the document
+			dom.bind(editor.getDoc(), 'focusin', function(e) {
+				selection.setRng(selection.getRng());
+			});
+
+			// Case 2 IME doesn't initialize if you click the documentElement it also doesn't properly fire the focusin event
 			dom.bind(editor.getDoc(), 'mousedown', function(e) {
 				if (e.target == editor.getDoc().documentElement) {
 					editor.getWin().focus();
