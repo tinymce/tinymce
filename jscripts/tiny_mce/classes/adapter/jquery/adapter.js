@@ -59,18 +59,6 @@
 				return fn.attr.apply(self, arguments);
 			};
 
-			function htmlPatchFunc(func) {
-				// Returns a modified function that processes
-				// the HTML before executing the action this makes sure
-				// that href/src etc gets moved into the data-mce- variants
-				return function(content) {
-					if (content)
-						content = editor.dom.processHTML(content);
-
-					return func.call(this, content);
-				};
-			};
-
 			// Patch various jQuery functions to handle tinymce specific attribute and content behavior
 			// we don't patch the jQuery.fn directly since it will most likely break compatibility
 			// with other jQuery logic on the page. Only instances created by TinyMCE should be patched.
@@ -81,13 +69,6 @@
 					jq.css = css;
 					jq.attr = attr;
 
-					// Patch HTML functions to use the DOMUtils.processHTML filter logic
-					jq.html = htmlPatchFunc(fn.html);
-					jq.append = htmlPatchFunc(fn.append);
-					jq.prepend = htmlPatchFunc(fn.prepend);
-					jq.after = htmlPatchFunc(fn.after);
-					jq.before = htmlPatchFunc(fn.before);
-					jq.replaceWith = htmlPatchFunc(fn.replaceWith);
 					jq.tinymce = editor;
 
 					// Each pushed jQuery instance needs to be patched
