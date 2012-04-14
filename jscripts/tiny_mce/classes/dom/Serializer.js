@@ -96,13 +96,13 @@
 			}
 		});
 
-		// Remove internal classes mceItem<..>
+		// Remove internal classes mceItem<..> or mceSelected
 		htmlParser.addAttributeFilter('class', function(nodes, name) {
 			var i = nodes.length, node, value;
 
 			while (i--) {
 				node = nodes[i];
-				value = node.attr('class').replace(/\s*mce(Item\w+|Selected)\s*/g, '');
+				value = node.attr('class').replace(/(?:^|\s)mce(Item\w+|Selected)(?!\S)/g, '');
 				node.attr('class', value.length > 0 ? value : null);
 			}
 		});
