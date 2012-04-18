@@ -859,7 +859,9 @@
 				entity_encoding : 'named',
 				url_converter : t.convertURL,
 				url_converter_scope : t,
-				ie7_compat : true
+				ie7_compat : true,
+				set_container_size: true
+
 			}, s);
 
 			/**
@@ -1194,12 +1196,15 @@
 			// User specified a document.domain value
 			if (document.domain && location.hostname != document.domain)
 				tinymce.relaxedDomain = document.domain;
-
-			// Resize editor
-			DOM.setStyles(o.sizeContainer || o.editorContainer, {
-				width : w,
-				height : h
-			});
+				
+			//if the user does not want the container grown
+			if(s.set_container_size) {
+				// Resize editor
+				DOM.setStyles(o.sizeContainer || o.editorContainer, {
+					width : w,
+					height : h
+				});
+			}
 
 			// Load specified content CSS last
 			if (s.content_css) {
