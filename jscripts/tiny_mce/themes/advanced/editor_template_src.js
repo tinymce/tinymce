@@ -825,7 +825,7 @@
 		},
 
 		_addToolbars : function(c, o) {
-			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [], a, toolbarGroup;
+			var t = this, i, tb, ed = t.editor, s = t.settings, v, cf = ed.controlManager, di, n, h = [], a, toolbarGroup, toolbarsExist = false;
 
 			toolbarGroup = cf.createToolbarGroup('toolbargroup', {
 				'name': ed.getLang('advanced.toolbar'),
@@ -841,6 +841,7 @@
 
 			// Create toolbar and add the controls
 			for (i=1; (v = s['theme_advanced_buttons' + i]); i++) {
+				toolbarsExist = true;
 				tb = cf.createToolbar("toolbar" + i, {'class' : 'mceToolbarRow' + i});
 
 				if (s['theme_advanced_buttons' + i + '_add'])
@@ -854,6 +855,9 @@
 
 				o.deltaHeight -= s.theme_advanced_row_height;
 			}
+			// Handle case when there are no toolbar buttons and ensure editor height is adjusted accordingly
+			if (!toolbarsExist)
+				o.deltaHeight -= s.theme_advanced_row_height;
 			h.push(toolbarGroup.renderHTML());
 			h.push(DOM.createHTML('a', {href : '#', accesskey : 'z', title : ed.getLang("advanced.toolbar_focus"), onfocus : 'tinyMCE.getInstanceById(\'' + ed.id + '\').focus();'}, '<!-- IE -->'));
 			DOM.setHTML(n, h.join(''));
