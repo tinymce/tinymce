@@ -114,14 +114,18 @@ var ImageDialog = {
 			if (v) {
 				if (v == 'left' || v == 'right') {
 					st['float'] = v;
-					delete st['vertical-align'];
+					if (st['vertical-align'])
+						delete st['vertical-align'];
 				} else {
 					st['vertical-align'] = v;
-					delete st['float'];
+					if (st['float'])
+						delete st['float'];
 				}
 			} else {
-				delete st['float'];
-				delete st['vertical-align'];
+				if (st['float'])
+					delete st['float'];
+				if (st['vertical-align'])
+					delete st['vertical-align'];
 			}
 
 			// Handle border
@@ -132,17 +136,21 @@ var ImageDialog = {
 				else
 					st['border'] = v + 'px solid black';
 			} else
-				delete st['border'];
+				if (st['border'])
+					delete st['border'];
 
 			// Handle hspace
 			v = f.hspace.value;
 			if (v) {
-				delete st['margin'];
+				if (st['margin'])
+					delete st['margin'];
 				st['margin-left'] = v + 'px';
 				st['margin-right'] = v + 'px';
 			} else {
-				delete st['margin-left'];
-				delete st['margin-right'];
+				if (st['margin-left'])
+					delete st['margin-left'];
+				if (st['margin-right'])
+					delete st['margin-right'];
 			}
 
 			// Handle vspace
@@ -152,8 +160,10 @@ var ImageDialog = {
 				st['margin-top'] = v + 'px';
 				st['margin-bottom'] = v + 'px';
 			} else {
-				delete st['margin-top'];
-				delete st['margin-bottom'];
+				if (st['margin-top'])
+					delete st['margin-top'];
+				if (st['margin-bottom'])
+					delete st['margin-bottom'];
 			}
 
 			// Merge
