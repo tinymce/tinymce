@@ -757,12 +757,26 @@
 				// IE throws unspecified error here if TinyMCE is placed in a frame/iframe
 			}
 
-			// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
-			if (tinymce.isIE && r && r.setStart && doc.selection.createRange().item) {
-				elm = doc.selection.createRange().item(0);
-				r = doc.createRange();
-				r.setStartBefore(elm);
-				r.setEndAfter(elm);
+			try {
+				// We have W3C ranges and it's IE then fake control selection since IE9 doesn't handle that correctly yet
+				if (tinymce.isIE
+					&& r && r.setStart
+					/*
+					 * IE throws exception "Access denied" on hidden elements
+					 * and sometimes if selection.type is "None"
+					 * @see http://msdn.microsoft.com/en-us/library/ie/hh772128(v=vs.85).aspx
+					 * @see http://msdn.microsoft.com/en-us/library/ie/hh801959(v=vs.85).aspx
+					 */
+					&& doc.selection && doc.selection.type !== 'None'
+					&& doc.selection.createRange().item
+				) {
+					elm = doc.selection.createRange().item(0);
+					r = doc.createRange();
+					r.setStartBefore(elm);
+					r.setEndAfter(elm);
+				}
+			} catch(e) {
+				// Access denied exception
 			}
 
 			// No range found then create an empty one
