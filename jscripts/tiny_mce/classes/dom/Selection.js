@@ -825,7 +825,7 @@
 		 * @method setRng
 		 * @param {Range} r Range to select.
 		 */
-		setRng : function(r) {
+		setRng : function(r, forward) {
 			var s, t = this;
 
 			if (!t.tridentSel) {
@@ -841,6 +841,13 @@
 					}
 
 					s.addRange(r);
+
+					// Forward is set to false and we have an extend function
+					if (forward === false && s.extend) {
+						s.collapse(r.endContainer, r.endOffset);
+						s.extend(r.startContainer, r.startOffset);
+					}
+
 					// adding range isn't always successful so we need to check range count otherwise an exception can occur
 					t.selectedRange = s.rangeCount > 0 ? s.getRangeAt(0) : null;
 				}
@@ -973,6 +980,25 @@
 				bl.push(eb);
 
 			return bl;
+		},
+
+		isForward: function(){
+			var dom = this.dom, sel = this.getSel(), anchorRange, focusRange;
+
+			// No support for selection direction then always return true
+			if (sel.anchorNode == null || sel.focusNode == null) {
+				return true;
+			}
+
+			anchorRange = dom.createRng();
+			anchorRange.setStart(sel.anchorNode, sel.anchorOffset);
+			anchorRange.collapse(true);
+
+			focusRange = dom.createRng();
+			focusRange.setStart(sel.focusNode, sel.focusOffset);
+			focusRange.collapse(true);
+
+			return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
 		},
 
 		normalize : function() {
@@ -1119,9 +1145,6 @@
 					rng['set' + (start ? 'Start' : 'End')](container, offset);
 			};
 
-			// TODO:
-			// Retain selection direction.
-
 			// Normalize only on non IE browsers for now
 			if (tinymce.isIE)
 				return;
@@ -1143,7 +1166,7 @@
 				}
 
 				//console.log(self.dom.dumpRng(rng));
-				self.setRng(rng);
+				self.setRng(rng, self.isForward());
 			}
 		},
 
