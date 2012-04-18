@@ -1934,6 +1934,17 @@
 					}
 				});
 
+				// Remove all bogus attribute (but not remove the bogus attribute from caret container)
+				ed.onGetContent.addToTop(function(ed) {
+					var allElements = ed.getBody().getElementsByTagName('*');
+  					for (var i = 0; i < allElements.length; i++) {
+						var bogusAtt = allElements[i].getAttribute('data-mce-bogus');
+						if (bogusAtt && bogusAtt == 1 && allElements[i].id != '_mce_caret') {
+							allElements[i].removeAttribute('data-mce-bogus');
+	    					}
+  					}
+				});
+
 				// Remove caret container on mouse up and on key up
 				tinymce.each('onMouseUp onKeyUp'.split(' '), function(name) {
 					ed[name].addToTop(function() {

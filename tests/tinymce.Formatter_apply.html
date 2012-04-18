@@ -1042,6 +1042,15 @@ test('Selector format on whole contents', function() {
 	equal(editor.getContent(), '<p class="test">a</p>');
 });
 
+test('Bug #5134 - TinyMCE removes formatting tags in the getContent', function() {
+	editor.setContent('');
+	editor.formatter.register('format', {inline : 'strong', toggle: false});
+	editor.formatter.apply('format');
+	equal(getContent(), '', 'empty TinyMCE');
+	editor.selection.setContent('a');
+	equal(getContent(), '<strong>a</strong>', 'bold text inside TinyMCE');
+});
+
 /*
 test('apply (list block)', function() {
 	var rng;
