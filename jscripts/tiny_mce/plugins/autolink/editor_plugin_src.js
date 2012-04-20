@@ -22,15 +22,15 @@
 	init : function(ed, url) {
 		var t = this;
 
-		// Internet Explorer has built-in automatic linking
-		if (tinyMCE.isIE)
-			return;
-
 		// Add a key down handler
-		ed.onKeyDown.add(function(ed, e) {
+		ed.onKeyDown.addToTop(function(ed, e) {
 			if (e.keyCode == 13)
 				return t.handleEnter(ed);
-			});
+		});
+
+		// Internet Explorer has built-in automatic linking for most cases
+		if (tinyMCE.isIE)
+			return;
 
 		ed.onKeyPress.add(function(ed, e) {
 			if (e.which == 41)
