@@ -523,9 +523,7 @@
 			// Override justify commands
 			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull' : function(command) {
 				var name = 'align' + command.substring(7);
-				// Use Formatter.matchNode instead of Formatter.match so that we don't match on parent node. This fixes bug where for both left
-				// and right align buttons can be active. This could occur when selected nodes have align right and the parent has align left.
-				var nodes = selection.isCollapsed() ? [selection.getNode()] : selection.getSelectedBlocks();
+				var nodes = selection.isCollapsed() ? [dom.getParent(selection.getNode(), dom.isBlock)] : selection.getSelectedBlocks();
 				var matches = tinymce.map(nodes, function(node) {
 					return !!formatter.matchNode(node, name);
 				});
