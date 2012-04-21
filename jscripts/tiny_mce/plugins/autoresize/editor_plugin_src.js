@@ -53,6 +53,7 @@
 					body.style.overflowY = "hidden";
 					de.style.overflowY = "hidden"; // Old IE
 					body.scrollTop = 0;
+					DOM.get(ed.id + '_ifr').scrollTop = 0;
 				}
 
 				// Resize content element
