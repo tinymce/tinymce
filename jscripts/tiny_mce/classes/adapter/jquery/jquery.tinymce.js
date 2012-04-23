@@ -319,17 +319,17 @@
 			var self = this;
 
 			if ((!name) || (name !== "value") || (!containsTinyMCE(self)))
-				return jQueryFn.attr.call(self, name, value, type);
+				return jQueryFn.attr.apply(self, arguments);
 
 			if (value !== undefined) {
 				loadOrSave.call(self.filter(":tinymce"), value);
-				jQueryFn.attr.call(self.not(":tinymce"), name, value, type);
+				jQueryFn.attr.apply(self.not(":tinymce"), arguments);
 
 				return self; // return original set for chaining
 			} else {
 				var node = self[0], ed = tinyMCEInstance(node);
 
-				return ed ? ed.getContent() : jQueryFn.attr.call($(node), name, value, type);
+				return ed ? ed.getContent() : jQueryFn.attr.apply($(node), arguments);
 			}
 		};
 	}
