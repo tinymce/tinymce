@@ -2104,6 +2104,15 @@
 					}
 				});
 
+				// Remove bogus state if they got filled by contents using editor.selection.setContent
+				selection.onSetContent.add(function() {
+					dom.getParent(selection.getStart(), function(node) {
+						if (node.id !== caretContainerId && dom.getAttrib(node, 'data-mce-bogus') && !dom.isEmpty(node)) {
+							dom.setAttrib(node, 'data-mce-bogus', null);
+						}
+					});
+				});
+
 				self._hasCaretEvents = true;
 			}
 
