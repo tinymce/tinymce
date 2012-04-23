@@ -66,7 +66,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 		if (self.inDispatch) {
 			self.listeners = [listener].concat(self.listeners);
 		} else {
-			self.listeners.push(listener);
+			self.listeners.unshift(listener);
 		}
 
 		return callback;

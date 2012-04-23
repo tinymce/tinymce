@@ -17,7 +17,7 @@ QUnit.config.reorder = false;
 (function() {
 	var Dispatcher = tinymce.util.Dispatcher;
 
-	test('dispatcher', 5, function() {
+	test('dispatch with arguments', function() {
 		var ev, v, f;
 
 		ev = new Dispatcher();
@@ -26,6 +26,10 @@ QUnit.config.reorder = false;
 		});
 		ev.dispatch(1, 2, 3);
 		equal(v, 6);
+	});
+
+	test('remove callback', function() {
+		var ev, v, f;
 
 		ev = new Dispatcher();
 		v = 0;
@@ -35,6 +39,10 @@ QUnit.config.reorder = false;
 		ev.remove(f);
 		ev.dispatch(1, 2, 3);
 		equal(v, 0);
+	});
+
+	test('default scope', function() {
+		var ev, v, f;
 
 		ev = new Dispatcher({test : 1});
 		v = 0;
@@ -43,6 +51,10 @@ QUnit.config.reorder = false;
 		});
 		ev.dispatch(1, 2, 3);
 		equal(v, 7);
+	});
+
+	test('callback scope', function() {
+		var ev, v, f;
 
 		ev = new Dispatcher();
 		v = 0;
@@ -51,6 +63,10 @@ QUnit.config.reorder = false;
 		}, {test : 1});
 		ev.dispatch(1, 2, 3);
 		equal(v, 7);
+	});
+
+	test('addToTop', function() {
+		var ev, v, f;
 
 		ev = new Dispatcher();
 		v = '';
@@ -62,6 +78,23 @@ QUnit.config.reorder = false;
 		}, {test : 1});
 		ev.dispatch();
 		equal(v, 'ab');
+	});
+
+	test('addToTop in loop', function() {
+		var ev, v, f;
+
+		ev = new Dispatcher();
+		v = '';
+		f = ev.add(function(a, b, c) {
+			f = ev.addToTop(function(a, b, c) {
+				v += 'a';
+			}, {test : 1});
+
+			v += 'b';
+		}, {test : 1});
+
+		ev.dispatch();
+		equal(v, 'b');
 	});
 })();
 </script>
