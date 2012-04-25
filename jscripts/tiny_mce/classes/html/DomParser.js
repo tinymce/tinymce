@@ -232,7 +232,7 @@
 		self.parse = function(html, args) {
 			var parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate,
 				blockElements, startWhiteSpaceRegExp, invalidChildren = [], isInWhiteSpacePreservedElement,
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements, rootBlockName;
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, isAllWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements, rootBlockName;
 
 			args = args || {};
 			matchedNodes = {};
@@ -247,6 +247,7 @@
 			startWhiteSpaceRegExp = /^[ \t\r\n]+/;
 			endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 			allWhiteSpaceRegExp = /[ \t\r\n]+/g;
+			isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
 			function addRootBlocks() {
 				var node = rootNode.firstChild, next, rootBlockNode;
@@ -399,10 +400,12 @@
 					if (elementRule) {
 						if (blockElements[name]) {
 							if (!isInWhiteSpacePreservedElement) {
-								// Trim whitespace at beginning of block
-								for (textNode = node.firstChild; textNode && textNode.type === 3; ) {
+								// Trim whitespace of the first node in a block
+								textNode = node.firstChild;
+								if (textNode && textNode.type === 3) {
 									text = textNode.value.replace(startWhiteSpaceRegExp, '');
 
+									// Any characters left after trim or should we remove it
 									if (text.length > 0) {
 										textNode.value = text;
 										textNode = textNode.next;
@@ -411,18 +414,46 @@
 										textNode.remove();
 										textNode = sibling;
 									}
+
+									// Remove any pure whitespace siblings
+									while (textNode && textNode.type === 3) {
+										text = textNode.value;
+										sibling = textNode.next;
+
+										if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+											textNode.remove();
+											textNode = sibling;
+										}
+
+										textNode = sibling;
+									}
 								}
 
-								// Trim whitespace at end of block
-								for (textNode = node.lastChild; textNode && textNode.type === 3; ) {
+								// Trim whitespace of the last node in a block
+								textNode = node.lastChild;
+								if (textNode && textNode.type === 3) {
 									text = textNode.value.replace(endWhiteSpaceRegExp, '');
 
+									// Any characters left after trim or should we remove it
 									if (text.length > 0) {
 										textNode.value = text;
 										textNode = textNode.prev;
 									} else {
 										sibling = textNode.prev;
 										textNode.remove();
+										textNode = sibling;
+									}
+
+									// Remove any pure whitespace siblings
+									while (textNode && textNode.type === 3) {
+										text = textNode.value;
+										sibling = textNode.prev;
+
+										if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+											textNode.remove();
+											textNode = sibling;
+										}
+
 										textNode = sibling;
 									}
 								}

@@ -91,6 +91,18 @@ test('Whitespace', function() {
 	deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (count)');
 });
 
+test('Whitespace before/after invalid element with text in block', function() {
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'span'}));
+	root = parser.parse('<p>a <span>b</span> c</p>');
+	equal(serializer.serialize(root), '<p>a b c</p>');
+});
+
+test('Whitespace before/after invalid element whitespace element in block', function() {
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'span'}));
+	root = parser.parse('<p> <span></span> </p>');
+	equal(serializer.serialize(root), '<p>\u00a0</p>');
+});
+
 test('Whitespace preserved in PRE', function() {
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
