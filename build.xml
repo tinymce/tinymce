@@ -308,6 +308,7 @@
 	</target>
 
 	<target name="prepare-release" depends="prepare-release-files, prepare-versions, prepare-examples, prepare-version-queries" />
+
 	<!--TODO consider if the community release name is the right one for this. -->
 	<target name="community-release" depends="prepare-release" description="Builds release packages">
 		<!-- Compress development package -->
@@ -365,7 +366,6 @@
 
 	<!-- TODO does this belong here? how does this fit in with Ephox? -->
 	<target name="commercial-release" depends="prepare-release">
-
 		<!-- Remove copyright headers for commercial version -->
 		<replaceregexp match="^/\*(.*?)\*\/\s*" replace="" flags="gs" byline="false">
 			<fileset dir="${temp_dir}/tinymce">
@@ -392,6 +392,22 @@ If you have any questions regarding your license, contact Moxiecode Systems AB (
 				<exclude name="tinymce/**/advanced/about.htm" />
 			</fileset>
 		</zip>
+	</target>
+
+	<target name="nuget-release" depends="prepare-release">
+		<!-- Main package -->
+		<copy tofile="${temp_dir}\TinyMCE.nuspec" file="tools\nuget\TinyMCE.nuspec" overwrite="true" />
+		<replaceregexp file="${temp_dir}\TinyMCE.nuspec" match="@@version@@" replace="${version}" flags="g" />
+		<exec executable="NuGet.exe">
+			<arg line="pack ${temp_dir}\TinyMCE.nuspec -OutputDirectory tmp"/>
+		</exec>
+
+		<!-- jQuery package with dep to main -->
+		<copy tofile="${temp_dir}\TinyMCE.jQuery.nuspec" file="tools\nuget\TinyMCE.jQuery.nuspec" overwrite="true" />
+		<replaceregexp file="${temp_dir}\TinyMCE.jQuery.nuspec" match="@@version@@" replace="${version}" flags="g" />
+		<exec executable="NuGet.exe">
+			<arg line="pack ${temp_dir}\TinyMCE.jQuery.nuspec -OutputDirectory tmp"/>
+		</exec>
 	</target>
 
 	<target name="release" depends="community-release, production-release, jquery-release, commercial-release" />
