@@ -5,6 +5,7 @@ Version 3.5b4 (2012-04-xx)
 	Fixed bug where formatting using shortcuts like ctrl+b wouldn't work properly the first time.
 	Fixed bug where selection.setContent after a formatter call wouldn't generate formatted contents.
 	Fixed bug where whitespace would be removed before/after invalid_elements when they where removed.
+	Fixed bug where updating styles using the theme image dialog in non inline mode on IE9 would produce errors.
 Version 3.5b3 (2012-03-29)
 	Added cancel button to colour picker dialog.
 	Added figure and figcaption to the html5 visualblocks plugin.
