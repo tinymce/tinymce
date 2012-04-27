@@ -532,7 +532,11 @@ tinymce.dom = {};
 			return self.bind(target, events instanceof Array ? events.join(' ') : events, func, scope);
 		};
 
-		self.remove = function(target, events, func) {
+		self.remove = function(target, events, func, scope) {
+			if (!target) {
+				return self;
+			}
+
 			// Old API supported direct ID assignment
 			if (typeof(target) === "string") {
 				target = document.getElementById(target);
@@ -540,7 +544,7 @@ tinymce.dom = {};
 
 			// Old API supported multiple targets
 			if (target instanceof Array) {
-				var i = target;
+				var i = target.length;
 
 				while (i--) {
 					self.remove(target[i], events, func, scope);
