@@ -99,6 +99,7 @@
 					s.fullscreen_is_enabled = true;
 					s.fullscreen_editor_id = ed.id;
 					s.theme_advanced_resizing = false;
+					s.theme_advanced_resize_horizontal = true;
 					s.save_onsavecallback = function() {
 						ed.setContent(tinyMCE.get(s.id).getContent());
 						ed.execCommand('mceSave');
