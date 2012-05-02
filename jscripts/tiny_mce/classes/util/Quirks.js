@@ -125,7 +125,7 @@ tinymce.util.Quirks = function(editor) {
 
 			// Resolve indexed container
 			if (container.nodeType == 1 && container.hasChildNodes()) {
-				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)];
+				container = container.childNodes[Math.min(start ? offset : offset -1, container.childNodes.length - 1)]
 			}
 
 			return container;
