@@ -1,4 +1,4 @@
-Version 3.5b4 (2012-04-xx)
+Version 3.5 (2012-05-xx)
 	Fixed menu rendering issue if the document was in rtl mode.
 	Fixed bug where the hide function would throw an error about a missing variable.
 	Fixed bug where autolink wouldn't convert URLs when hitting enter on IE due to the new enter key logic.
@@ -55,15 +55,6 @@ Version 3.5b1 (2012-03-08)
 	Fixed bug where the advlink dialog would produce an error about the addSelectAccessibility function not being defined.
 	Fixed bug where the caret would be placed at an incorrect position if span was removed by the invalid_elements setting.
 	Fixed bug where elements inside a white space preserve element like pre didn't inherit the behavior while parsing.
-Version 3.4.9.x (2012-02-xx)
-	Improved behaviour of backspacing into a table to be consistant across browsers and disable backspace when cursor immediately follows a table.
-	Improved edit CSS style plugin for single and multiple block selection and provide option to apply style to only selected text.
-	Fixed bug in Chrome where moving caret down in table and pasting throws errors.
-	Corrected reference to TinyMCE trim function.
-	Fixed bug where Ignore All in IE did not remove the underline from the selected word.
-	Fixed bug in html source editor word wrap option not wrapping text in Webkit browsers.
-	Fixed bug where it was possible to insert an invalid colour in the color pop-up dialog.
-	Fixed bug in Webkit where if anchor is on last line by itself caret can not be placed after it.
 Version 3.4.9 (2012-02-23)
 	Added settings to wordcount plugin to configure update rate and checking wordcount on backspace and delete using wordcount_update_rate and wordcount_update_on_delete.
 	Fixed bug in Webkit and IE where deleting empty paragraphs would remove entire editor contents.
