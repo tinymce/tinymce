@@ -72,6 +72,11 @@
 			// If background is transparent then check if the body has a background color we can use
 			if (name == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
 				value = dom.getStyle(ed.getBody(), name, true);
+
+				// Ignore white since it's the default color, not the nicest fix
+				if (dom.toHex(value).toLowerCase() == '#ffffff') {
+					return;
+				}
 			}
 
 			// Old IE won't calculate the font size so we need to do that manually
