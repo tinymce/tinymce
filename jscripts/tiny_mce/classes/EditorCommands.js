@@ -1,16 +1,16 @@
 /**
  * EditorCommands.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
 	// Added for compression purposes
-	var each = tinymce.each, undefined, TRUE = true, FALSE = false;
+	var each = tinymce.each, undef, TRUE = true, FALSE = false;
 
 	/**
 	 * This class enables you to add custom editor commands and it contains
@@ -109,10 +109,10 @@
 		// Private methods
 
 		function execNativeCommand(command, ui, value) {
-			if (ui === undefined)
+			if (ui === undef)
 				ui = FALSE;
 
-			if (value === undefined)
+			if (value === undef)
 				value = null;
 
 			return editor.getDoc().execCommand(command, ui, value);
@@ -123,7 +123,7 @@
 		};
 
 		function toggleFormat(name, value) {
-			formatter.toggle(name, value ? {value : value} : undefined);
+			formatter.toggle(name, value ? {value : value} : undef);
 		};
 
 		function storeSelection(type) {
@@ -435,6 +435,11 @@
 				intentValue = parseInt(intentValue);
 
 				if (!queryCommandState('InsertUnorderedList') && !queryCommandState('InsertOrderedList')) {
+					// If forced_root_blocks is set to false we don't have a block to indent so lets create a div
+					if (!settings.forced_root_block && !dom.getParent(selection.getNode(), dom.isBlock)) {
+						formatter.apply('div');
+					}
+
 					each(selection.getSelectedBlocks(), function(element) {
 						if (command == 'outdent') {
 							value = Math.max(0, parseInt(element.style.paddingLeft || 0) - intentValue);
@@ -518,9 +523,7 @@
 			// Override justify commands
 			'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull' : function(command) {
 				var name = 'align' + command.substring(7);
-				// Use Formatter.matchNode instead of Formatter.match so that we don't match on parent node. This fixes bug where for both left
-				// and right align buttons can be active. This could occur when selected nodes have align right and the parent has align left.
-				var nodes = selection.isCollapsed() ? [selection.getNode()] : selection.getSelectedBlocks();
+				var nodes = selection.isCollapsed() ? [dom.getParent(selection.getNode(), dom.isBlock)] : selection.getSelectedBlocks();
 				var matches = tinymce.map(nodes, function(node) {
 					return !!formatter.matchNode(node, name);
 				});
@@ -571,16 +574,14 @@
 		}, 'value');
 
 		// Add undo manager logic
-		if (settings.custom_undo_redo) {
-			addCommands({
-				Undo : function() {
-					editor.undoManager.undo();
-				},
+		addCommands({
+			Undo : function() {
+				editor.undoManager.undo();
+			},
 
-				Redo : function() {
-					editor.undoManager.redo();
-				}
-			});
-		}
+			Redo : function() {
+				editor.undoManager.redo();
+			}
+		});
 	};
 })(tinymce);

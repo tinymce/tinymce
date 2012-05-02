@@ -314,6 +314,43 @@ test('Caret format on second word in table cell', function() {
 	equal(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
 });
 
+test('contentEditable: false on start and contentEditable: true on end', function() {
+	var rng;
+
+	editor.formatter.register('format', {inline: 'b'});
+	editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('b')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
+	editor.selection.setRng(rng);
+	editor.formatter.remove('format');
+	equal(editor.getContent(), '<p>abc</p><p><b>def</b></p><p>ghj</p>', 'Text in last paragraph is not bold');
+});
+
+test('contentEditable: true on start and contentEditable: false on end', function() {
+	editor.formatter.register('format', {inline: 'b'});
+	editor.setContent('<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>');
+	setSelection('p:nth-child(2) b', 0, 'p:last b', 3);
+	editor.formatter.remove('format');
+	equal(editor.getContent(), '<p>abc</p><p>def</p><p><b>ghj</b></p>', 'Text in first paragraph is not bold');
+});
+
+test('contentEditable: true inside contentEditable: false', function() {
+	editor.formatter.register('format', {inline: 'b'});
+	editor.setContent('<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>');
+	setSelection('b', 0, 'b', 3);
+	editor.formatter.remove('format');
+	equal(editor.getContent(), '<p>abc</p><p><span>def</span></p>', 'Text is not bold');
+});
+
+test('remove format block on contentEditable: false block', function() {
+	editor.formatter.register('format', {block: 'h1'});
+	editor.setContent('<p>abc</p><h1 contenteditable="false">def</h1>');
+	setSelection('h1:nth-child(2)', 0, 'h1:nth-child(2)', 3);
+	editor.formatter.remove('format');
+	equal(editor.getContent(), '<p>abc</p><h1>def</h1>', 'H1 is still not h1');
+});
+
 /*
 test('Remove format bug 1', function() {
 	editor.setContent('<p><b>ab<em>cde</em>fgh</b></p>');
@@ -328,10 +365,11 @@ tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",
 	theme : "advanced",
+	plugins: "noneditable",
 	apply_source_formatting : false,
 	add_unload_trigger : false,
 	theme_advanced_styles : 'test1=test1;test2=test2',
-	valid_elements : '@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
+	valid_elements : '@[contenteditable|id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|name|href|target|title|class|onfocus|onblur],strong,b,em,i,strike,u,#p,-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,-blockquote[cite],-table[border|cellspacing|cellpadding|width|frame|rules|height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor|scope],#th[colspan|rowspan|width|height|align|valign|scope],caption,-div,-span,-code,-pre,address,-h1,-h2,-h3,-h4,-h5,-h6,hr[size|noshade],-font[face|size|color],dd,dl,dt,cite,abbr,acronym,del[datetime|cite],ins[datetime|cite],object[classid|width|height|codebase|*],param[name|value],embed[type|width|height|src|*],script[src|type],map[name],area[shape|coords|href|alt|target],bdo,button,col[align|char|charoff|span|valign|width],colgroup[align|char|charoff|span|valign|width],dfn,fieldset,form[action|accept|accept-charset|enctype|method],input[accept|alt|checked|disabled|maxlength|name|readonly|size|src|type|value|tabindex|accesskey],kbd,label[for],legend,noscript,optgroup[label|disabled],option[disabled|label|selected|value],q[cite],samp,select[disabled|multiple|name|size],small,textarea[cols|rows|disabled|name|readonly],tt,var,big',
 	fix_list_elements : 0,
 	fix_table_elements : 0,
 	entities : 'raw',

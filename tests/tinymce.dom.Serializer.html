@@ -13,6 +13,8 @@
 <script type="text/javascript">
 var DOM = tinymce.DOM;
 
+QUnit.config.reorder = false;
+
 module("tinymce.dom.Serializer", {
 });
 
@@ -441,8 +443,6 @@ test('CDATA', function() {
 test('BR at end of blocks', function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true, dom : DOM});
 
-	expect(1);
-
 	ser.setRules('ul,li,br');
 
 	DOM.setHTML('test', '<ul><li>test<br /></li><li>test<br /></li><li>test<br /></li></ul>');
@@ -451,8 +451,6 @@ test('BR at end of blocks', function() {
 
 test('Map elements', function() {
 	var ser = new tinymce.dom.Serializer({fix_list_elements : true, dom : DOM});
-
-	expect(1);
 
 	ser.setRules('map[id|name],area[shape|coords|href|target|alt]');
 
@@ -468,6 +466,25 @@ test('Custom elements', function() {
 
 	DOM.setHTML('test', '<p><custom1>c1</custom1><custom2>c2</custom2></p>');
 	equal(ser.serialize(DOM.get('test')), '<custom1>c1</custom1><custom2>c2</custom2>');
+});
+
+test('Remove internal classes', function() {
+	var ser = new tinymce.dom.Serializer({}, DOM, new tinymce.html.Schema({valid_elements: 'span[class]'}));
+
+	DOM.setHTML('test', '<span class="a mceItemX mceSelected b"></span>');
+	equal(ser.serialize(DOM.get('test')), '<span class="a b"></span>');
+
+	DOM.setHTML('test', '<span class="a mceItemX"></span>');
+	equal(ser.serialize(DOM.get('test')), '<span class="a"></span>');
+
+	DOM.setHTML('test', '<span class="mceItemX"></span>');
+	equal(ser.serialize(DOM.get('test')), '<span></span>');
+
+	DOM.setHTML('test', '<span class="mceItemX b"></span>');
+	equal(ser.serialize(DOM.get('test')), '<span class=" b"></span>');
+
+	DOM.setHTML('test', '<span class="b mceItemX"></span>');
+	equal(ser.serialize(DOM.get('test')), '<span class="b"></span>');
 });
 </script>
 

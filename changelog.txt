@@ -1,3 +1,60 @@
+Version 3.5b4 (2012-04-xx)
+	Fixed menu rendering issue if the document was in rtl mode.
+	Fixed bug where the hide function would throw an error about a missing variable.
+	Fixed bug where autolink wouldn't convert URLs when hitting enter on IE due to the new enter key logic.
+	Fixed bug where formatting using shortcuts like ctrl+b wouldn't work properly the first time.
+	Fixed bug where selection.setContent after a formatter call wouldn't generate formatted contents.
+	Fixed bug where whitespace would be removed before/after invalid_elements when they where removed.
+	Fixed bug where updating styles using the theme image dialog in non inline mode on IE9 would produce errors.
+	Fixed bug where IE 8 would produce an error when using the contextmenu plugin.
+Version 3.5b3 (2012-03-29)
+	Added cancel button to colour picker dialog.
+	Added figure and figcaption to the html5 visualblocks plugin.
+	Added default alignment options for the figure element.
+	Fixed bug where empty inline elements within block elements would sometimes produce a br child element.
+	Fixed bug where urls pointing to the same domain as the current one would cause undefined errors. Patch contributed by Paul Giberson.
+	Fixed bug where enter inside an editable element inside an non editable element would split the element.
+	Fixed bug where cut/copy/paste of noneditable elements didn't work.
+	Fixed bug where backspace would sometimes produce font elements on WebKit.
+	Fixed bug where WebKit would produce spans out of various inline elements when using backspace.
+	Fixed bug where IE9 wouldn't properly update image styles when images where resized.
+	Fixed bug where drag/drop of noneditable elements didn't work correctly.
+	Fixed bug where applying formatting to all contents wouldn't work correctly when an end point was inside an empty bock. Patch contributed by Jose Luiz.
+	Fixed bug where IE10 removed the scopeName from the DOM element interface and there for it produced an undefined string in element path.
+	Fixed bug where the caret would be placed at an incorrect location if you applied block formatting while having the caret at the end of the block.
+	Fixed bug where applying column changes using the cell dialog would only update the first column. Patch contributed by krzyko.
+	Fixed bug where the visualblocks plugin would force editor focus if it was turned on by default.
+	Fixed bug where the tabfocus plugin would tab to iframes these are now ignored.
+	Fixed bug where format drop down list wouldn't show the currently active format for a parent element.
+	Fixed bug where paste of plain text in IE 9 would remove the new line characters from text.
+	Fixed bug where the menu buttons/split button menus wouldn't be opened at the right location on older IE versions.
+	Fixed bug where Gecko browsers wouldn't properly display the right format when having the selection as specific places.
+	Fixed bug where shift+enter inside the body when having forced_root_blocks set to false would throw an error.
+	Fixed bug where the jQuery plugin would break the attr method of jQuery 1.7.2. Patch contributed by Markus Kemmerling.
+	Fixed so options like content_css accepts and array as well as a comma separated string as input.
+	Restructured the internal logic to make it more separate from Editor.js.
+	Updated the Sizzle engine to the latest version.
+Version 3.5b2 (2012-03-15)
+	Rewrote the enter key logic to normalize browser behavior.
+	Fixed so enter within PRE elements produces a BR and shift+enter breaks/end the PRE. Can be disabled using the br_in_pre option.
+	Fixed bug where the selection wouldn't be correct after applying formatting and having the caret at the end of the new format node.
+	Fixed bug where the noneditable plugin would process contents on raw input calls for example on undo/redo calls.
+	Fixed bug where WebKit could produce an exception when a bookmark was requested when there wasn't a proper selection.
+	Fixed bug where WebKit would fail to open the image dialog since it would be returning false for a class name instead of a string.
+	Fixed so alignment and indentation works properly when forced_root_blocks is set to false. It will produce a DIV by default.
+Version 3.5b1 (2012-03-08)
+	Added new event class that is faster and enables support for faking events.
+	Added new self_closing_elements, short_ended_elements, boolean_attributes, non_empty_elements and block_elements options to control the HTML Schema.
+	Added new schema option and support for the HTML5 schema.
+	Added new visualblocks plugin that shows html5 blocks with visual borders.
+	Added new types and selector options to make it easier to create editor instances with different configs.
+	Added new preview of formatting options in various listboxes.
+	Added new preview_styles option that enables control over what gets previewed.
+	Fixed bug where content css would be loaded twice into iframe. 
+	Fixed bug where start elements with only whitespace in the attribute part wouldn't be correctly parsed.
+	Fixed bug where the advlink dialog would produce an error about the addSelectAccessibility function not being defined.
+	Fixed bug where the caret would be placed at an incorrect position if span was removed by the invalid_elements setting.
+	Fixed bug where elements inside a white space preserve element like pre didn't inherit the behavior while parsing.
 Version 3.4.9.x (2012-02-xx)
 	Improved behaviour of backspacing into a table to be consistant across browsers and disable backspace when cursor immediately follows a table.
 	Improved edit CSS style plugin for single and multiple block selection and provide option to apply style to only selected text.

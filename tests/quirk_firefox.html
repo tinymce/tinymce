@@ -25,16 +25,23 @@ module("Quirks Tests", {
 });
 
 if (tinymce.isGecko) {
-	asyncTest('hr', 1, function() {
-		editor.setContent('<p>one</p><hr /><p id="a">two</p>');
-		setSelection('#a', 0);
-		editor.focus();
-		robot.type(8, false, function() {
-			var expected = '<p>one</p><p id="a">two</p>';
-			var actual = editor.getContent({ format: 'raw' });
-			equal(actual, expected);
-			start();
-		}, editor.getBody());
+	asyncTest('Remove hr between p with backspace', 1, function() {
+		setTimeout(function() {
+			editor.setContent('<p>one</p><hr /><p id="a">two</p>');
+			setSelection('#a', 0);
+			editor.focus();
+			robot.type(8, false, function() {
+				var expected = '<p>one</p><p id="a">two</p>';
+				var actual = editor.getContent({ format: 'raw' });
+				equal(actual, expected);
+				start();
+			}, editor.getBody());
+		}, 100);
+	});
+
+	test('Add BR element at end of paragraphs with single link', function() {
+		editor.setContent('<p><b><a href="#">x</a></b></p>');
+		equal(editor.getBody().innerHTML, '<p><strong><a href="#" data-mce-href="#">x</a></strong><br data-mce-bogus="1"></p>');
 	});
 } else {
 	test('ignored', function() {

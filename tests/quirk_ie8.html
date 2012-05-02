@@ -24,29 +24,37 @@ module("Quirks Tests", {
 	}
 });
 
-asyncTest('hr', 1, function() {
-    editor.setContent('<p>one</p><hr /><p>two</p>');
-    setSelection('p:last', 0);
-    editor.focus();
-    robot.type(8, false, function() {
-        var expected = '<p>one</p><p>two</p>';
-        var actual = cleanHtml(editor.getContent({ format: 'raw' }));
-        equal(actual, expected);
-        start();
-    }, editor.getBody());
-});
+if (tinymce.isIE) {
+	asyncTest('Remove hr between p with backspace', 1, function() {
+		setTimeout(function() {
+			editor.setContent('<p>one</p><hr /><p>two</p>');
+			setSelection('p:last', 0);
+			editor.focus();
+			robot.type(8, false, function() {
+				var expected = '<p>one</p><p>two</p>';
+				var actual = cleanHtml(editor.getContent({ format: 'raw' }));
+				equal(actual, expected);
+				start();
+			}, editor.getBody());
+		}, 100);
+	});
 
-asyncTest('Heading text alignment', 1, function() {
-	editor.setContent('<h1 id="x" style="text-align: center;">x</h1>');
-	setSelection('#x', 1);
-	editor.focus();
-	robot.type(0xA, false, function() {
-		var expected = '<h1 id="x" style="text-align: center;">x</h1>\n<p>&nbsp;</p>';
-		var actual = editor.getContent();
-		equal(actual, expected);
-		start();
-	}, editor.getBody());
-});
+	asyncTest('Heading text alignment', 1, function() {
+		editor.setContent('<h1 id="x" style="text-align: center;">x</h1>');
+		setSelection('#x', 1);
+		editor.focus();
+		robot.type(0xA, false, function() {
+			var expected = '<h1 id="x" style="text-align: center;">x</h1>\n<p>&nbsp;</p>';
+			var actual = editor.getContent();
+			equal(actual, expected);
+			start();
+		}, editor.getBody());
+	});
+} else {
+	test('ignored', function() {
+		ok(true, "Tests ignored since the browser isn't IE8.");
+	});
+}
 
 var initTinyFunction = function() {
 	tinyMCE.init({

@@ -1,11 +1,11 @@
 /**
  * Formatter.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -41,11 +41,12 @@
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
 			nodeIndex = dom.nodeIndex,
-			INVISIBLE_CHAR = '\uFEFF',
+			INVISIBLE_CHAR = tinymce.isGecko ? '\u200B' : '\uFEFF',
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
-			undefined;
+			undef,
+			getContentEditable = dom.getContentEditable;
 
 		function isArray(obj) {
 			return obj instanceof Array;
@@ -57,6 +58,103 @@
 
 		function isCaretNode(node) {
 			return node.nodeType === 1 && node.id === '_mce_caret';
+		};
+
+		function defaultFormats() {
+			register({
+				alignleft : [
+					{selector : 'figure,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'left'}, defaultBlock: 'div'},
+					{selector : 'img,table', collapsed : false, styles : {'float' : 'left'}}
+				],
+
+				aligncenter : [
+					{selector : 'figure,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'center'}, defaultBlock: 'div'},
+					{selector : 'img', collapsed : false, styles : {display : 'block', marginLeft : 'auto', marginRight : 'auto'}},
+					{selector : 'table', collapsed : false, styles : {marginLeft : 'auto', marginRight : 'auto'}}
+				],
+
+				alignright : [
+					{selector : 'figure,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'right'}, defaultBlock: 'div'},
+					{selector : 'img,table', collapsed : false, styles : {'float' : 'right'}}
+				],
+
+				alignfull : [
+					{selector : 'figure,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li', styles : {textAlign : 'justify'}, defaultBlock: 'div'}
+				],
+
+				bold : [
+					{inline : 'strong', remove : 'all'},
+					{inline : 'span', styles : {fontWeight : 'bold'}},
+					{inline : 'b', remove : 'all'}
+				],
+
+				italic : [
+					{inline : 'em', remove : 'all'},
+					{inline : 'span', styles : {fontStyle : 'italic'}},
+					{inline : 'i', remove : 'all'}
+				],
+
+				underline : [
+					{inline : 'span', styles : {textDecoration : 'underline'}, exact : true},
+					{inline : 'u', remove : 'all'}
+				],
+
+				strikethrough : [
+					{inline : 'span', styles : {textDecoration : 'line-through'}, exact : true},
+					{inline : 'strike', remove : 'all'}
+				],
+
+				forecolor : {inline : 'span', styles : {color : '%value'}, wrap_links : false},
+				hilitecolor : {inline : 'span', styles : {backgroundColor : '%value'}, wrap_links : false},
+				fontname : {inline : 'span', styles : {fontFamily : '%value'}},
+				fontsize : {inline : 'span', styles : {fontSize : '%value'}},
+				fontsize_class : {inline : 'span', attributes : {'class' : '%value'}},
+				blockquote : {block : 'blockquote', wrapper : 1, remove : 'all'},
+				subscript : {inline : 'sub'},
+				superscript : {inline : 'sup'},
+
+				link : {inline : 'a', selector : 'a', remove : 'all', split : true, deep : true,
+					onmatch : function(node) {
+						return true;
+					},
+
+					onformat : function(elm, fmt, vars) {
+						each(vars, function(value, key) {
+							dom.setAttrib(elm, key, value);
+						});
+					}
+				},
+
+				removeformat : [
+					{selector : 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand : true, deep : true},
+					{selector : 'span', attributes : ['style', 'class'], remove : 'empty', split : true, expand : false, deep : true},
+					{selector : '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
+				]
+			});
+
+			// Register default block formats
+			each('p h1 h2 h3 h4 h5 h6 div address pre div code dt dd samp'.split(/\s/), function(name) {
+				register(name, {block : name, remove : 'all'});
+			});
+
+			// Register user defined formats
+			register(ed.settings.formats);
+		};
+
+		function addKeyboardShortcuts() {
+			// Add some inline shortcuts
+			ed.addShortcut('ctrl+b', 'bold_desc', 'Bold');
+			ed.addShortcut('ctrl+i', 'italic_desc', 'Italic');
+			ed.addShortcut('ctrl+u', 'underline_desc', 'Underline');
+
+			// BlockFormat shortcuts keys
+			for (var i = 1; i <= 6; i++) {
+				ed.addShortcut('ctrl+' + i, '', ['FormatBlock', false, 'h' + i]);
+			}
+
+			ed.addShortcut('ctrl+7', '', ['FormatBlock', false, 'p']);
+			ed.addShortcut('ctrl+8', '', ['FormatBlock', false, 'div']);
+			ed.addShortcut('ctrl+9', '', ['FormatBlock', false, 'address']);
 		};
 
 		// Public functions
@@ -92,15 +190,15 @@
 					each(format, function(format) {
 						// Set deep to false by default on selector formats this to avoid removing
 						// alignment on images inside paragraphs when alignment is changed on paragraphs
-						if (format.deep === undefined)
+						if (format.deep === undef)
 							format.deep = !format.selector;
 
 						// Default to true
-						if (format.split === undefined)
+						if (format.split === undef)
 							format.split = !format.selector || format.inline;
 
 						// Default to true
-						if (format.remove === undefined && format.selector && !format.inline)
+						if (format.remove === undef && format.selector && !format.inline)
 							format.remove = 'none';
 
 						// Mark format as a mixed format inline + block level
@@ -193,7 +291,7 @@
 				var start = rng.startContainer;
 				var end = rng.endContainer;
 
-				if (start != end && rng.endOffset == 0) {
+				if (start != end && rng.endOffset === 0) {
 					var newEnd = findSelectionEnd(start, end);
 					var endOffset = newEnd.nodeType == 3 ? newEnd.length : newEnd.childNodes.length;
 
@@ -231,8 +329,8 @@
 					each(tinymce.grep(node.childNodes), process);
 					return 0;
 				} else {
-					currentWrapElm = wrapElm.cloneNode(FALSE);
-					
+					currentWrapElm = dom.clone(wrapElm, FALSE);
+
 					// create a list of the nodes on the same side of the list as the selection
 					each(tinymce.grep(node.childNodes), function(n, index) {
 						if ((startIndex < listIndex && index < listIndex) || (startIndex > listIndex && index > listIndex)) {
@@ -240,7 +338,7 @@
 							n.parentNode.removeChild(n);
 						}
 					});
-					
+
 					// insert the wrapping element either before or after the list.
 					if (startIndex < listIndex) {
 						node.insertBefore(currentWrapElm, list);
@@ -258,9 +356,9 @@
 					return currentWrapElm;
 				}
 			};
-			
+
 			function applyRngStyle(rng, bookmark, node_specific) {
-				var newWrappers = [], wrapName, wrapElm;
+				var newWrappers = [], wrapName, wrapElm, contentEditable = true;
 
 				// Setup wrapper element
 				wrapName = format.inline || format.block;
@@ -274,7 +372,18 @@
 					 * Process a list of nodes wrap them.
 					 */
 					function process(node) {
-						var nodeName = node.nodeName.toLowerCase(), parentName = node.parentNode.nodeName.toLowerCase(), found;
+						var nodeName, parentName, found, hasContentEditableState, lastContentEditable;
+
+						lastContentEditable = contentEditable;
+						nodeName = node.nodeName.toLowerCase();
+						parentName = node.parentNode.nodeName.toLowerCase();
+
+						// Node has a contentEditable value
+						if (node.nodeType === 1 && getContentEditable(node)) {
+							lastContentEditable = contentEditable;
+							contentEditable = getContentEditable(node) === "true";
+							hasContentEditableState = true; // We don't want to wrap the container only it's children
+						}
 
 						// Stop wrapping on br elements
 						if (isEq(nodeName, 'br')) {
@@ -294,7 +403,7 @@
 						}
 
 						// Can we rename the block
-						if (format.block && !format.wrapper && isTextBlock(nodeName)) {
+						if (contentEditable && !hasContentEditableState && format.block && !format.wrapper && isTextBlock(nodeName)) {
 							node = dom.rename(node, wrapName);
 							setElementFormat(node);
 							newWrappers.push(node);
@@ -325,12 +434,12 @@
 						}
 
 						// Is it valid to wrap this item
-						if (isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
+						if (contentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&
 								!(!node_specific && node.nodeType === 3 && node.nodeValue.length === 1 && node.nodeValue.charCodeAt(0) === 65279) && !isCaretNode(node)) {
 							// Start wrapping
 							if (!currentWrapElm) {
 								// Wrap the node
-								currentWrapElm = wrapElm.cloneNode(FALSE);
+								currentWrapElm = dom.clone(wrapElm, FALSE);
 								node.parentNode.insertBefore(currentWrapElm, node);
 								newWrappers.push(currentWrapElm);
 							}
@@ -342,8 +451,12 @@
 						} else {
 							// Start a new wrapper for possible children
 							currentWrapElm = 0;
-
+							
 							each(tinymce.grep(node.childNodes), process);
+
+							if (hasContentEditableState) {
+								contentEditable = lastContentEditable; // Restore last contentEditable state from stack
+							}
 
 							// End the last wrapper
 							currentWrapElm = 0;
@@ -361,7 +474,7 @@
 							var i, currentWrapElm, children;
 
 							if (node.nodeName === 'A') {
-								currentWrapElm = wrapElm.cloneNode(FALSE);
+								currentWrapElm = dom.clone(wrapElm, FALSE);
 								newWrappers.push(currentWrapElm);
 
 								children = tinymce.grep(node.childNodes);
@@ -379,6 +492,7 @@
 				}
 
 				// Cleanup
+				
 				each(newWrappers, function(node) {
 					var childCount;
 
@@ -405,7 +519,7 @@
 
 						// If child was found and of the same type as the current node
 						if (child && matchName(child, format)) {
-							clone = child.cloneNode(FALSE);
+							clone = dom.clone(child, FALSE);
 							setElementFormat(clone);
 
 							dom.replace(clone, node, TRUE);
@@ -494,6 +608,12 @@
 						// Obtain selection node before selection is unselected by applyRngStyle()
 						var curSelNode = ed.selection.getNode();
 
+						// If the formats have a default block and we can't find a parent block then start wrapping it with a DIV this is for forced_root_blocks: false
+						// It's kind of a hack but people should be using the default block type P since all desktop editors work that way
+						if (!forcedRootBlock && formatList[0].defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
+							apply(formatList[0].defaultBlock);
+						}
+
 						// Apply formatting to selection
 						ed.selection.setRng(adjustSelectionToVisibleSelection());
 						bookmark = selection.getBookmark();
@@ -523,25 +643,40 @@
 		 * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
 		 */
 		function remove(name, vars, node) {
-			var formatList = get(name), format = formatList[0], bookmark, i, rng;
+			var formatList = get(name), format = formatList[0], bookmark, i, rng, contentEditable = true;
 
 			// Merges the styles for each node
 			function process(node) {
-				var children, i, l;
+				var children, i, l, localContentEditable, lastContentEditable, hasContentEditableState;
+
+				// Node has a contentEditable value
+				if (node.nodeType === 1 && getContentEditable(node)) {
+					lastContentEditable = contentEditable;
+					contentEditable = getContentEditable(node) === "true";
+					hasContentEditableState = true; // We don't want to wrap the container only it's children
+				}
 
 				// Grab the children first since the nodelist might be changed
 				children = tinymce.grep(node.childNodes);
 
 				// Process current node
-				for (i = 0, l = formatList.length; i < l; i++) {
-					if (removeFormat(formatList[i], vars, node, node))
-						break;
+				if (contentEditable && !hasContentEditableState) {
+					for (i = 0, l = formatList.length; i < l; i++) {
+						if (removeFormat(formatList[i], vars, node, node))
+							break;
+					}
 				}
 
 				// Process the children
 				if (format.deep) {
-					for (i = 0, l = children.length; i < l; i++)
-						process(children[i]);
+					if (children.length) {					
+						for (i = 0, l = children.length; i < l; i++)
+							process(children[i]);
+
+						if (hasContentEditableState) {
+							contentEditable = lastContentEditable; // Restore last contentEditable state from stack
+						}
+					}
 				}
 			};
 
@@ -572,7 +707,7 @@
 					formatRootParent = format_root.parentNode;
 
 					for (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {
-						clone = parent.cloneNode(FALSE);
+						clone = dom.clone(parent, FALSE);
 
 						for (i = 0; i < formatList.length; i++) {
 							if (removeFormat(formatList[i], vars, clone, clone)) {
@@ -627,7 +762,7 @@
 			};
 
 			function removeRngStyle(rng) {
-				var startContainer, endContainer;
+				var startContainer, endContainer, node;
 
 				rng = expandRng(rng, formatList, TRUE);
 
@@ -636,6 +771,12 @@
 					endContainer = getContainer(rng);
 
 					if (startContainer != endContainer) {
+						// WebKit will render the table incorrectly if we wrap a TD in a SPAN so lets see if the can use the first child instead
+						// This will happen if you tripple click a table cell and use remove formatting
+						if (/^(TR|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
+							startContainer = (startContainer.nodeName == "TD" ? startContainer.firstChild : startContainer.firstChild.firstChild) || startContainer;
+						}
+
 						// Wrap start/end nodes in span element since these might be cloned/moved
 						startContainer = wrap(startContainer, 'span', {id : '_start', 'data-mce-type' : 'bookmark'});
 						endContainer = wrap(endContainer, 'span', {id : '_end', 'data-mce-type' : 'bookmark'});
@@ -697,11 +838,6 @@
 				ed.nodeChanged();
 			} else
 				performCaretAction('remove', name, vars);
-
-			// When you remove formatting from a table cell in WebKit (cell, not the contents of a cell) there is a rendering issue with column width
-			if (tinymce.isWebKit) {
-				ed.execCommand('mceCleanup');
-			}
 		};
 
 		/**
@@ -715,7 +851,7 @@
 		function toggle(name, vars, node) {
 			var fmt = get(name);
 
-			if (match(name, vars, node) && (!('toggle' in fmt[0]) || fmt[0]['toggle']))
+			if (match(name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle))
 				remove(name, vars, node);
 			else
 				apply(name, vars, node);
@@ -745,7 +881,7 @@
 				// Check all items
 				if (items) {
 					// Non indexed object
-					if (items.length === undefined) {
+					if (items.length === undef) {
 						for (key in items) {
 							if (items.hasOwnProperty(key)) {
 								if (item_name === 'attributes')
@@ -907,6 +1043,10 @@
 			canApply : canApply
 		});
 
+		// Initialize
+		defaultFormats();
+		addKeyboardShortcuts();
+
 		// Private functions
 
 		/**
@@ -1017,14 +1157,15 @@
 		 * @return {Object} Expanded range like object.
 		 */
 		function expandRng(rng, format, remove) {
-			var startContainer = rng.startContainer,
+			var sibling, lastIdx, leaf, endPoint,
+				startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
-				endOffset = rng.endOffset, sibling, lastIdx, leaf, endPoint;
+				endOffset = rng.endOffset;
 
 			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(start) {
-				var container, parent, child, sibling, siblingName;
+				var container, parent, child, sibling, siblingName, root;
 
 				container = parent = start ? startContainer : endContainer;
 				siblingName = start ? 'previousSibling' : 'nextSibling';
@@ -1064,7 +1205,7 @@
 			// This function walks down the tree to find the leaf at the selection.
 			// The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
 			function findLeaf(node, offset) {
-				if (offset === undefined)
+				if (offset === undef)
 					offset = node.nodeType === 3 ? node.length : node.childNodes.length;
 				while (node && node.hasChildNodes()) {
 					node = node.childNodes[offset];
@@ -1092,6 +1233,144 @@
 					endOffset = endContainer.nodeValue.length;
 			}
 
+			// Expands the node to the closes contentEditable false element if it exists
+			function findParentContentEditable(node) {
+				var parent = node;
+
+				while (parent) {
+					if (parent.nodeType === 1 && getContentEditable(parent)) {
+						return getContentEditable(parent) === "false" ? parent : node;
+					}
+
+					parent = parent.parentNode;
+				}
+
+				return node;
+			};
+
+			function findWordEndPoint(container, offset, start) {
+				var walker, node, pos, lastTextNode;
+
+				function findSpace(node, offset) {
+					var pos, pos2, str = node.nodeValue;
+
+					if (typeof(offset) == "undefined") {
+						offset = start ? str.length : 0;
+					}
+
+					if (start) {
+						pos = str.lastIndexOf(' ', offset);
+						pos2 = str.lastIndexOf('\u00a0', offset);
+						pos = pos > pos2 ? pos : pos2;
+
+						// Include the space on remove to avoid tag soup
+						if (pos !== -1 && !remove) {
+							pos++;
+						}
+					} else {
+						pos = str.indexOf(' ', offset);
+						pos2 = str.indexOf('\u00a0', offset);
+						pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
+					}
+
+					return pos;
+				};
+
+				if (container.nodeType === 3) {
+					pos = findSpace(container, offset);
+
+					if (pos !== -1) {
+						return {container : container, offset : pos};
+					}
+
+					lastTextNode = container;
+				}
+
+				// Walk the nodes inside the block
+				walker = new TreeWalker(container, dom.getParent(container, isBlock) || ed.getBody());
+				while (node = walker[start ? 'prev' : 'next']()) {
+					if (node.nodeType === 3) {
+						lastTextNode = node;
+						pos = findSpace(node);
+
+						if (pos !== -1) {
+							return {container : node, offset : pos};
+						}
+					} else if (isBlock(node)) {
+						break;
+					}
+				}
+
+				if (lastTextNode) {
+					if (start) {
+						offset = 0;
+					} else {
+						offset = lastTextNode.length;
+					}
+
+					return {container: lastTextNode, offset: offset};
+				}
+			};
+
+			function findSelectorEndPoint(container, sibling_name) {
+				var parents, i, y, curFormat;
+
+				if (container.nodeType == 3 && container.nodeValue.length === 0 && container[sibling_name])
+					container = container[sibling_name];
+
+				parents = getParents(container);
+				for (i = 0; i < parents.length; i++) {
+					for (y = 0; y < format.length; y++) {
+						curFormat = format[y];
+
+						// If collapsed state is set then skip formats that doesn't match that
+						if ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed)
+							continue;
+
+						if (dom.is(parents[i], curFormat.selector))
+							return parents[i];
+					}
+				}
+
+				return container;
+			};
+
+			function findBlockEndPoint(container, sibling_name, sibling_name2) {
+				var node;
+
+				// Expand to block of similar type
+				if (!format[0].wrapper)
+					node = dom.getParent(container, format[0].block);
+
+				// Expand to first wrappable block element or any block element
+				if (!node)
+					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isBlock);
+
+				// Exclude inner lists from wrapping
+				if (node && format[0].wrapper)
+					node = getParents(node, 'ul,ol').reverse()[0] || node;
+
+				// Didn't find a block element look for first/last wrappable element
+				if (!node) {
+					node = container;
+
+					while (node[sibling_name] && !isBlock(node[sibling_name])) {
+						node = node[sibling_name];
+
+						// Break on BR but include it will be removed later on
+						// we can't remove it now since we need to check if it can be wrapped
+						if (isEq(node, 'br'))
+							break;
+					}
+				}
+
+				return node || container;
+			};
+
+			// Expand to closest contentEditable element
+			startContainer = findParentContentEditable(startContainer);
+			endContainer = findParentContentEditable(endContainer);
+
 			// Exclude bookmark nodes if possible
 			if (isBookmarkNode(startContainer.parentNode) || isBookmarkNode(startContainer)) {
 				startContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode;
@@ -1111,70 +1390,6 @@
 
 			if (format[0].inline) {
 				if (rng.collapsed) {
-					function findWordEndPoint(container, offset, start) {
-						var walker, node, pos, lastTextNode;
-
-						function findSpace(node, offset) {
-							var pos, pos2, str = node.nodeValue;
-
-							if (typeof(offset) == "undefined") {
-								offset = start ? str.length : 0;
-							}
-
-							if (start) {
-								pos = str.lastIndexOf(' ', offset);
-								pos2 = str.lastIndexOf('\u00a0', offset);
-								pos = pos > pos2 ? pos : pos2;
-
-								// Include the space on remove to avoid tag soup
-								if (pos !== -1 && !remove) {
-									pos++;
-								}
-							} else {
-								pos = str.indexOf(' ', offset);
-								pos2 = str.indexOf('\u00a0', offset);
-								pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
-							}
-
-							return pos;
-						};
-
-						if (container.nodeType === 3) {
-							pos = findSpace(container, offset);
-
-							if (pos !== -1) {
-								return {container : container, offset : pos};
-							}
-
-							lastTextNode = container;
-						}
-
-						// Walk the nodes inside the block
-						walker = new TreeWalker(container, dom.getParent(container, isBlock) || ed.getBody());
-						while (node = walker[start ? 'prev' : 'next']()) {
-							if (node.nodeType === 3) {
-								lastTextNode = node;
-								pos = findSpace(node);
-
-								if (pos !== -1) {
-									return {container : node, offset : pos};
-								}
-							} else if (isBlock(node)) {
-								break;
-							}
-						}
-
-						if (lastTextNode) {
-							if (start) {
-								offset = 0;
-							} else {
-								offset = lastTextNode.length;
-							}
-
-							return {container: lastTextNode, offset: offset};
-						}
-					}
-
 					// Expand left to closest word boundery
 					endPoint = findWordEndPoint(startContainer, startOffset, true);
 					if (endPoint) {
@@ -1202,9 +1417,6 @@
 						if (leaf.offset > 1) {
 							endContainer = leaf.node;
 							endContainer.splitText(leaf.offset - 1);
-						} else if (leaf.node.previousSibling) {
-							// TODO: Figure out why this is in here
-							//endContainer = leaf.node.previousSibling;
 						}
 					}
 				}
@@ -1226,29 +1438,6 @@
 
 			// Expand start/end container to matching selector
 			if (format[0].selector && format[0].expand !== FALSE && !format[0].inline) {
-				function findSelectorEndPoint(container, sibling_name) {
-					var parents, i, y, curFormat;
-
-					if (container.nodeType == 3 && container.nodeValue.length == 0 && container[sibling_name])
-						container = container[sibling_name];
-
-					parents = getParents(container);
-					for (i = 0; i < parents.length; i++) {
-						for (y = 0; y < format.length; y++) {
-							curFormat = format[y];
-
-							// If collapsed state is set then skip formats that doesn't match that
-							if ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed)
-								continue;
-
-							if (dom.is(parents[i], curFormat.selector))
-								return parents[i];
-						}
-					}
-
-					return container;
-				};
-
 				// Find new startContainer/endContainer if there is better one
 				startContainer = findSelectorEndPoint(startContainer, 'previousSibling');
 				endContainer = findSelectorEndPoint(endContainer, 'nextSibling');
@@ -1256,38 +1445,6 @@
 
 			// Expand start/end container to matching block element or text node
 			if (format[0].block || format[0].selector) {
-				function findBlockEndPoint(container, sibling_name, sibling_name2) {
-					var node;
-
-					// Expand to block of similar type
-					if (!format[0].wrapper)
-						node = dom.getParent(container, format[0].block);
-
-					// Expand to first wrappable block element or any block element
-					if (!node)
-						node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isBlock);
-
-					// Exclude inner lists from wrapping
-					if (node && format[0].wrapper)
-						node = getParents(node, 'ul,ol').reverse()[0] || node;
-
-					// Didn't find a block element look for first/last wrappable element
-					if (!node) {
-						node = container;
-
-						while (node[sibling_name] && !isBlock(node[sibling_name])) {
-							node = node[sibling_name];
-
-							// Break on BR but include it will be removed later on
-							// we can't remove it now since we need to check if it can be wrapped
-							if (isEq(node, 'br'))
-								break;
-						}
-					}
-
-					return node || container;
-				};
-
 				// Find new startContainer/endContainer if there is better one
 				startContainer = findBlockEndPoint(startContainer, 'previousSibling');
 				endContainer = findBlockEndPoint(endContainer, 'nextSibling');
@@ -1453,14 +1610,14 @@
 		function removeNode(node, format) {
 			var parentNode = node.parentNode, rootBlockElm;
 
+			function find(node, next, inc) {
+				node = getNonWhiteSpaceSibling(node, next, inc);
+
+				return !node || (node.nodeName == 'BR' || isBlock(node));
+			};
+
 			if (format.block) {
 				if (!forcedRootBlock) {
-					function find(node, next, inc) {
-						node = getNonWhiteSpaceSibling(node, next, inc);
-
-						return !node || (node.nodeName == 'BR' || isBlock(node));
-					};
-
 					// Append BR elements if needed before we remove the block
 					if (isBlock(node) && !isBlock(parentNode)) {
 						if (!find(node, FALSE) && !find(node.firstChild, TRUE, 1))
@@ -1587,7 +1744,7 @@
 							value = obj2[name];
 
 							// Obj2 doesn't have obj1 item
-							if (value === undefined)
+							if (value === undef)
 								return FALSE;
 
 							// Obj2 item has a different value
@@ -1620,20 +1777,20 @@
 				return TRUE;
 			};
 
+			function findElementSibling(node, sibling_name) {
+				for (sibling = node; sibling; sibling = sibling[sibling_name]) {
+					if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0)
+						return node;
+
+					if (sibling.nodeType == 1 && !isBookmarkNode(sibling))
+						return sibling;
+				}
+
+				return node;
+			};
+
 			// Check if next/prev exists and that they are elements
 			if (prev && next) {
-				function findElementSibling(node, sibling_name) {
-					for (sibling = node; sibling; sibling = sibling[sibling_name]) {
-						if (sibling.nodeType == 3 && sibling.nodeValue.length !== 0)
-							return node;
-
-						if (sibling.nodeType == 1 && !isBookmarkNode(sibling))
-							return sibling;
-					}
-
-					return node;
-				};
-
 				// If previous sibling is empty then jump over it
 				prev = findElementSibling(prev, 'previousSibling');
 				next = findElementSibling(next, 'nextSibling');
@@ -1694,7 +1851,7 @@
 			}
 
 			// If end text node is excluded then walk to the previous node
-			if (container.nodeType === 3 && !start && offset == 0) {
+			if (container.nodeType === 3 && !start && offset === 0) {
 				container = new TreeWalker(container, ed.getBody()).prev() || container;
 			}
 
@@ -1702,17 +1859,14 @@
 		};
 
 		function performCaretAction(type, name, vars) {
-			var invisibleChar, caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
-
-			// Setup invisible character use zero width space on Gecko since it doesn't change the heigt of the container
-			invisibleChar = tinymce.isGecko ? '\u200B' : INVISIBLE_CHAR;
+			var caretContainerId = '_mce_caret', debug = ed.settings.caret_debug;
 
 			// Creates a caret container bogus element
 			function createCaretContainer(fill) {
 				var caretContainer = dom.create('span', {id: caretContainerId, 'data-mce-bogus': true, style: debug ? 'color:red' : ''});
 
 				if (fill) {
-					caretContainer.appendChild(ed.getDoc().createTextNode(invisibleChar));
+					caretContainer.appendChild(ed.getDoc().createTextNode(INVISIBLE_CHAR));
 				}
 
 				return caretContainer;
@@ -1720,7 +1874,7 @@
 
 			function isCaretContainerEmpty(node, nodes) {
 				while (node) {
-					if ((node.nodeType === 3 && node.nodeValue !== invisibleChar) || node.childNodes.length > 1) {
+					if ((node.nodeType === 3 && node.nodeValue !== INVISIBLE_CHAR) || node.childNodes.length > 1) {
 						return false;
 					}
 
@@ -1829,7 +1983,7 @@
 					// Move selection back to caret position
 					selection.moveToBookmark(bookmark);
 				} else {
-					if (!caretContainer || textNode.nodeValue !== invisibleChar) {
+					if (!caretContainer || textNode.nodeValue !== INVISIBLE_CHAR) {
 						caretContainer = createCaretContainer(true);
 						textNode = caretContainer.firstChild;
 
@@ -1855,7 +2009,7 @@
 				node = container;
 
 				if (container.nodeType == 3) {
-					if (offset != container.nodeValue.length || container.nodeValue === invisibleChar) {
+					if (offset != container.nodeValue.length || container.nodeValue === INVISIBLE_CHAR) {
 						hasContentAfter = true;
 					}
 
@@ -1903,12 +2057,12 @@
 
 					node = caretContainer;
 					for (i = parents.length - 1; i >= 0; i--) {
-						node.appendChild(parents[i].cloneNode(false));
+						node.appendChild(dom.clone(parents[i], false));
 						node = node.firstChild;
 					}
 
 					// Insert invisible character into inner most format element
-					node.appendChild(dom.doc.createTextNode(invisibleChar));
+					node.appendChild(dom.doc.createTextNode(INVISIBLE_CHAR));
 					node = node.firstChild;
 
 					// Insert caret container after the formated node
@@ -1950,6 +2104,15 @@
 					}
 				});
 
+				// Remove bogus state if they got filled by contents using editor.selection.setContent
+				selection.onSetContent.add(function() {
+					dom.getParent(selection.getStart(), function(node) {
+						if (node.id !== caretContainerId && dom.getAttrib(node, 'data-mce-bogus') && !dom.isEmpty(node)) {
+							dom.setAttrib(node, 'data-mce-bogus', null);
+						}
+					});
+				});
+
 				self._hasCaretEvents = true;
 			}
 
@@ -1966,23 +2129,25 @@
 		 */
 		function moveStart(rng) {
 			var container = rng.startContainer,
-					offset = rng.startOffset,
+					offset = rng.startOffset, isAtEndOfText,
 					walker, node, nodes, tmpNode;
 
 			// Convert text node into index if possible
-			if (container.nodeType == 3 && offset >= container.nodeValue.length - 1) {
+			if (container.nodeType == 3 && offset >= container.nodeValue.length) {
+				// Get the parent container location and walk from there
+				offset = nodeIndex(container);
 				container = container.parentNode;
-				offset = nodeIndex(container) + 1;
+				isAtEndOfText = true;
 			}
 
 			// Move startContainer/startOffset in to a suitable node
 			if (container.nodeType == 1) {
 				nodes = container.childNodes;
 				container = nodes[Math.min(offset, nodes.length - 1)];
-				walker = new TreeWalker(container);
+				walker = new TreeWalker(container, dom.getParent(container, dom.isBlock));
 
 				// If offset is at end of the parent node walk to the next one
-				if (offset > nodes.length - 1)
+				if (offset > nodes.length - 1 || isAtEndOfText)
 					walker.next();
 
 				for (node = walker.current(); node; node = walker.next()) {
@@ -2002,6 +2167,5 @@
 				}
 			}
 		};
-
 	};
 })(tinymce);

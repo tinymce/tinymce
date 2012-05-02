@@ -7,6 +7,7 @@
 <script src="http://code.jquery.com/qunit/qunit-git.js"></script>
 <script src="qunit/connector.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/tiny_mce_loader.js"></script>
 </head>
 <body>
@@ -57,7 +58,7 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equal(rng.endContainer.nodeName, 'P', 'Check endContainer');
 		equal(rng.startOffset, 0, 'Check startOffset');
 		equal(rng.endOffset, 1, 'Check endOffset');
-		equal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), '<img src="about:blank">', 'Check contents');
+		equal(cleanHtml(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase()), '<img src="about:blank">', 'Check contents');
 		ok(editor.selection.getRng().item, 'Check if it\'s a control selection');
 	});
 	
@@ -545,7 +546,9 @@ if (tinyMCE.isIE && !window.getSelection) {
 		equal(r.endOffset, 2);
 	});
 } else {
-	test("Skipped ie_selection tests as not running in IE.", function() {});
+	test("Skipped ie_selection tests as not running in IE.", function() {
+		ok(true, "Dummy assert");
+	});
 }
 
 function getCaretInfo() {

@@ -62,12 +62,8 @@
 
 	<div class="mceActionPanel">
 		<input type="submit" id="insert" name="insert" value="{#apply}" />
-
-		<div id="preview"></div>
-
-		<div id="previewblock">
-			<label for="color">{#advanced_dlg.colorpicker_color}</label> <input id="color" type="text" size="8" class="text mceFocus" aria-required="true" />
-		</div>
+		<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();"/>
+		<div id="preview_wrapper"><div id="previewblock"><label for="color">{#advanced_dlg.colorpicker_color}</label> <input id="color" type="text" size="8" class="text mceFocus" aria-required="true" /></div><span id="preview"></span></div>
 	</div>
 </form>
 </body>

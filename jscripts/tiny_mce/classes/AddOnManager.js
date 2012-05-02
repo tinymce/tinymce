@@ -1,11 +1,11 @@
 /**
  * AddOnManager.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -110,12 +110,12 @@
 		},
 
 		/**
-	 	 * Add a set of components that will make up the add-on. Using the url of the add-on name as the base url.
+		 * Add a set of components that will make up the add-on. Using the url of the add-on name as the base url.
 		 * This should be used in development mode.  A new compressor/javascript munger process will ensure that the 
 		 * components are put together into the editor_plugin.js file and compressed correctly.
 		 * @param pluginName {String} name of the plugin to load scripts from (will be used to get the base url for the plugins).
 		 * @param scripts {Array} Array containing the names of the scripts to load.
-	 	 */
+		 */
 		addComponents: function(pluginName, scripts) {
 			var pluginUrl = this.urls[pluginName];
 			tinymce.each(scripts, function(script){
@@ -164,7 +164,7 @@
 			if (typeof u === "object")
 				url = u.prefix + u.resource + u.suffix;
 
-			if (url.indexOf('/') != 0 && url.indexOf('://') == -1)
+			if (url.indexOf('/') !== 0 && url.indexOf('://') == -1)
 				url = tinymce.baseURL + '/' + url;
 
 			t.urls[n] = url.substring(0, url.lastIndexOf('/'));
@@ -296,7 +296,7 @@
  *         return {
  *             longname : 'Example plugin',
  *             author : 'Some author',
- *             authorurl : 'http://tinymce.moxiecode.com',
+ *             authorurl : 'http://www.tinymce.com',
  *             infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/example',
  *             version : "1.0"
  *         };

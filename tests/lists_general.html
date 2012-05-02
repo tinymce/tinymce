@@ -93,12 +93,15 @@ asyncTest('Caret position correctly after pressing enter on li with text', funct
 });
 
 asyncTest('Caret positioned correctly after pressing enter multiple times to exit list', function() {
+	editor.focus();
 	editor.setContent("<ul><li>a</li><li>b</li></ul><p id='last'>some text</p>");
 	setSelection('ul li:nth-child(2)', 1);
+	
 	robot.type(ENTER, false, function(){
 		robot.type(ENTER, false, function(){
 			robot.type(ENTER, false, function(){
-				var node = editor.selection.getNode();
+				var node = editor.dom.getParent(editor.selection.getNode(), editor.dom.isBlock);
+
 				equal(node.tagName, 'P');
 				equal(node.nextSibling.tagName, 'P');
 				equal(node.nextSibling.id, 'last');
@@ -133,6 +136,8 @@ asyncTest('Outdent in nested list on enter when setting is set', function() {
 	}, editor.selection.getNode());
 });
 
+// Removed since the EnterKey.js logic seems to solve this
+/*
 function testNestedListHasZeroSizedNbsp() {
 	robot.type(ENTER, false, function() {
 		var ul = editor.dom.select('#u')[0];
@@ -145,6 +150,7 @@ function testNestedListHasZeroSizedNbsp() {
 asyncTest('Nested list has zero-sized nbsp in Gecko & IE8', function() {
 	if (!(tinymce.isGecko || tinymce.isIE8)) {
 		start();
+		ok(true, "Skupped");
 	} else {
 		editor.settings.list_outdent_on_enter = true;
 		editor.setContent("<ul><li>a<ul id='u'><li>b</li></ul></li></ul>");
@@ -158,6 +164,7 @@ asyncTest('Nested list has zero-sized nbsp in Gecko & IE8', function() {
 		}
 	}
 });
+*/
 
 asyncTest('Outdent from sublist using shift-tab keys', function() {
 	editor.setContent("<ul><li>a<ul><li>b</li></ul></li></ul>");
@@ -173,6 +180,7 @@ asyncTest('Caret positioned correctly after escaping list and applying formattin
 	// When we have outdented from a sub list item to the outmost level no marker is shown and we can't exit the list by
 	// pressing enter. Pressing enter correctly exists the list.
 	if (tinymce.isGecko) {
+		ok(true, "Skipped");
 		start();
 	} else {
 		editor.settings.list_outdent_on_enter = true;
@@ -203,6 +211,7 @@ asyncTest('Deleting bullet from start of list outdents inner lists items', funct
 
 asyncTest('Deleting empty li with nested list is deleted in Webkit', function(){
 	if (!tinymce.isWebKit) {
+		ok(true, "Skipped");
 		start();
 	} else {
 		editor.setContent("<ol id='a'><li>a</li><li id='b'>a<br /><ul><li>b</li><li>c</li></ul></li></ol>");
@@ -218,10 +227,6 @@ asyncTest('Deleting empty li with nested list is deleted in Webkit', function(){
 		}, editor.selection.getNode());
 	}
 });
-
-function testCreateNewList(listItemContents) {
-
-}
 
 asyncTest('Creates new list item without surrounding element when caret at end of list item', function(){
 	function testCreateNewList(el) {

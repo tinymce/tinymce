@@ -1,5 +1,5 @@
 (function() {
-	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true});
+	var DOM = new tinymce.dom.DOMUtils(document, {keep_values : true, schema : new tinymce.html.Schema()});
 
 	test('parseStyle', 11, function() {
 		var dom;
@@ -639,6 +639,16 @@
 		ok(!DOM.isEmpty(DOM.get('test')), 'Element with comment.');
 
 		DOM.remove('test');
+	});
+
+	test('isEmpty on P with BR in EM', function() {
+		var elm = DOM.create('p', null, '<em><br></em>');
+		ok(DOM.isEmpty(elm, 'No children'));
+	});
+	
+	test('isEmpty on P with two BR in EM', function() {
+		var elm = DOM.create('p', null, '<em><br><br></em>');
+		equal(false, DOM.isEmpty(elm));
 	});
 
 	DOM.remove('test');

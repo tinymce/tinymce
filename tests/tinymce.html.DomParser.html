@@ -12,8 +12,11 @@
 <script>
 module("tinymce.html.DomParser");
 
+QUnit.config.reorder = false;
+
 var schema = new tinymce.html.Schema({valid_elements: '*[class|title]'});
 var serializer = new tinymce.html.Serializer({}, schema);
+var parser, root;
 
 function countNodes(node, counter) {
 	var sibling;
@@ -55,9 +58,7 @@ test('Parse element', function() {
 });
 
 test('Whitespace', function() {
-	var parser, root;
-
-	expect(14);
+	expect(12);
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
@@ -68,11 +69,6 @@ test('Whitespace', function() {
 	root = parser.parse('  \t\r\n  <P>  \t\r\n   test  \t\r\n   </P>   \t\r\n  ');
 	equal(serializer.serialize(root), '<p>test</p>', 'Redundant whitespace (block element)');
 	deepEqual(countNodes(root), {body:1, p:1, '#text':1}, 'Redundant whitespace (block element) (count)');
-
-	parser = new tinymce.html.DomParser({}, schema);
-	root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
-	equal(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
-	deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
 
 	parser = new tinymce.html.DomParser({}, schema);
 	root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   test  \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
@@ -93,6 +89,32 @@ test('Whitespace', function() {
 	root = parser.parse('\n<hr />\n<br />\n<div>\n<hr />\n<br />\n<img src="file.gif" data-mce-src="file.gif" />\n<hr />\n<br />\n</div>\n<hr />\n<br />\n');
 	equal(serializer.serialize(root), '<div><img src="file.gif" data-mce-src="file.gif" alt="" /></div>', 'Whitespace where SaxParser will produce multiple whitespace nodes');
 	deepEqual(countNodes(root), {body:1, div:1, img:1}, 'Whitespace where SaxParser will produce multiple whitespace nodes (count)');
+});
+
+test('Whitespace before/after invalid element with text in block', function() {
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'span'}));
+	root = parser.parse('<p>a <span>b</span> c</p>');
+	equal(serializer.serialize(root), '<p>a b c</p>');
+});
+
+test('Whitespace before/after invalid element whitespace element in block', function() {
+	parser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : 'span'}));
+	root = parser.parse('<p> <span></span> </p>');
+	equal(serializer.serialize(root), '<p>\u00a0</p>');
+});
+
+test('Whitespace preserved in PRE', function() {
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
+	equal(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
+	deepEqual(countNodes(root), {body:1, pre:1, '#text':1}, 'Whitespace around and inside PRE (count)');
+});
+
+test('Whitespace preserved in SPAN inside PRE', function() {
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('  \t\r\n  <PRE>  \t\r\n  <span>    test    </span> \t\r\n   </PRE>   \t\r\n  ');
+	equal(serializer.serialize(root), '<pre>  \t\r\n  <span>    test    </span> \t\r\n   </pre>', 'Whitespace around and inside PRE');
+	deepEqual(countNodes(root), {body:1, pre:1, span:1, '#text':3}, 'Whitespace around and inside PRE (count)');
 });
 
 test('Parse invalid contents', function() {
@@ -324,6 +346,38 @@ test('Remove redundant br elements', function() {
 	equal(serializer.serialize(root), '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>', 'Remove traling br elements.');
 });
 
+test('Replace br with nbsp when wrapped in two inline elements and one block', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<p><strong><em><br /></em></strong></p>');
+	equal(serializer.serialize(root), '<p><strong><em>\u00a0</em></strong></p>');
+});
+
+test('Replace br with nbsp when wrapped in an inline element and placed in the root', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<strong><br /></strong>');
+	equal(serializer.serialize(root), '<strong>\u00a0</strong>');
+});
+
+test('Don\'t replace br inside root element when there is multiple brs', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<strong><br /><br /></strong>');
+	equal(serializer.serialize(root), '<strong><br /><br /></strong>');
+});
+
+test('Don\'t replace br inside root element when there is siblings', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);
+	root = parser.parse('<strong><br /></strong><span>x</span>');
+	equal(serializer.serialize(root), '<strong><br /></strong><span>x</span>');
+});
+
 test('Remove br in invalid parent bug', function() {
 	var parser, root, schema = new tinymce.html.Schema({valid_elements: 'br'});
 
@@ -351,6 +405,22 @@ test('Forced root blocks', function() {
 		'h'
 	);
 	equal(serializer.serialize(root), '<!-- a --><p>b<strong>c</strong></p><p>d</p><p>e</p><p>f<strong>g</strong>h</p>', 'Mixed text nodes, inline elements and blocks.');
+});
+
+test('Parse contents with anchors and allow_html_in_named_anchor: false', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : false}, schema);
+	root = parser.parse('<a name="x">a</a>');
+	equal(serializer.serialize(root), '<a name="x"></a>a');
+});
+
+test('Parse contents with anchors and allow_html_in_named_anchor: true', function() {
+	var parser, root, schema = new tinymce.html.Schema();
+
+	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : true}, schema);
+	root = parser.parse('<a name="x">a</a>');
+	equal(serializer.serialize(root), '<a name="x">a</a>');
 });
 </script>
 </head>

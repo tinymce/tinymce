@@ -1,11 +1,11 @@
 /**
  * Popup.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 // Some global instances
@@ -37,7 +37,8 @@ tinyMCEPopup = {
 		t.features = t.editor.windowManager.features;
 
 		// Setup local DOM
-		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document);
+		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document, {ownEvents: true, proxy: tinyMCEPopup._eventProxy});
+		t.dom.bind(window, 'ready', t._onDOMLoaded, t);
 
 		// Enables you to skip loading the default css
 		if (t.features.popup_css !== false)
@@ -317,11 +318,6 @@ tinyMCEPopup = {
 	_onDOMLoaded : function() {
 		var t = tinyMCEPopup, ti = document.title, bm, h, nv;
 
-		if (t.domLoaded)
-			return;
-
-		t.domLoaded = 1;
-
 		// Translate page
 		if (t.features.translate_i18n !== false) {
 			h = document.body.innerHTML;
@@ -362,7 +358,7 @@ tinyMCEPopup = {
 			window.focus();
 
 		if (!tinymce.isIE && !t.isWindow) {
-			tinymce.dom.Event._add(document, 'focus', function() {
+			t.dom.bind(document, 'focus', function() {
 				t.editor.windowManager.focus(t.id);
 			});
 		}
@@ -416,41 +412,11 @@ tinyMCEPopup = {
 			tinyMCEPopup.close();
 	},
 
-	_wait : function() {
-		// Use IE method
-		if (document.attachEvent) {
-			document.attachEvent("onreadystatechange", function() {
-				if (document.readyState === "complete") {
-					document.detachEvent("onreadystatechange", arguments.callee);
-					tinyMCEPopup._onDOMLoaded();
-				}
-			});
-
-			if (document.documentElement.doScroll && window == window.top) {
-				(function() {
-					if (tinyMCEPopup.domLoaded)
-						return;
-
-					try {
-						// If IE is used, use the trick by Diego Perini licensed under MIT by request to the author.
-						// http://javascript.nwbox.com/IEContentLoaded/
-						document.documentElement.doScroll("left");
-					} catch (ex) {
-						setTimeout(arguments.callee, 0);
-						return;
-					}
-
-					tinyMCEPopup._onDOMLoaded();
-				})();
-			}
-
-			document.attachEvent('onload', tinyMCEPopup._onDOMLoaded);
-		} else if (document.addEventListener) {
-			window.addEventListener('DOMContentLoaded', tinyMCEPopup._onDOMLoaded, false);
-			window.addEventListener('load', tinyMCEPopup._onDOMLoaded, false);
-		}
+	_eventProxy: function(id) {
+		return function(evt) {
+			tinyMCEPopup.dom.events.callNativeHandler(id, evt);
+		};
 	}
 };
 
 tinyMCEPopup.init();
-tinyMCEPopup._wait(); // Wait for DOM Content Loaded

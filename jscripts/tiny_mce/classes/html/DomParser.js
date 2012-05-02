@@ -1,11 +1,11 @@
 /**
  * DomParser.js
  *
- * Copyright 2010, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -231,8 +231,8 @@
 		 */
 		self.parse = function(html, args) {
 			var parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate,
-				blockElements, startWhiteSpaceRegExp, invalidChildren = [],
-				endWhiteSpaceRegExp, allWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements, rootBlockName;
+				blockElements, startWhiteSpaceRegExp, invalidChildren = [], isInWhiteSpacePreservedElement,
+				endWhiteSpaceRegExp, allWhiteSpaceRegExp, isAllWhiteSpaceRegExp, whiteSpaceElements, children, nonEmptyElements, rootBlockName;
 
 			args = args || {};
 			matchedNodes = {};
@@ -247,6 +247,7 @@
 			startWhiteSpaceRegExp = /^[ \t\r\n]+/;
 			endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 			allWhiteSpaceRegExp = /[ \t\r\n]+/g;
+			isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
 			function addRootBlocks() {
 				var node = rootNode.firstChild, next, rootBlockNode;
@@ -314,7 +315,7 @@
 					var textNode;
 
 					// Trim all redundant whitespace on non white space elements
-					if (!whiteSpaceElements[node.name]) {
+					if (!isInWhiteSpacePreservedElement) {
 						text = text.replace(allWhiteSpaceRegExp, ' ');
 
 						if (node.lastChild && blockElements[node.lastChild.name])
@@ -384,6 +385,11 @@
 						// Change current node if the element wasn't empty i.e not <br /> or <img />
 						if (!empty)
 							node = newNode;
+
+						// Check if we are inside a whitespace preserved element
+						if (!isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
+							isInWhiteSpacePreservedElement = true;
+						}
 					}
 				},
 
@@ -393,11 +399,13 @@
 					elementRule = validate ? schema.getElementRule(name) : {};
 					if (elementRule) {
 						if (blockElements[name]) {
-							if (!whiteSpaceElements[node.name]) {
-								// Trim whitespace at beginning of block
-								for (textNode = node.firstChild; textNode && textNode.type === 3; ) {
+							if (!isInWhiteSpacePreservedElement) {
+								// Trim whitespace of the first node in a block
+								textNode = node.firstChild;
+								if (textNode && textNode.type === 3) {
 									text = textNode.value.replace(startWhiteSpaceRegExp, '');
 
+									// Any characters left after trim or should we remove it
 									if (text.length > 0) {
 										textNode.value = text;
 										textNode = textNode.next;
@@ -406,18 +414,46 @@
 										textNode.remove();
 										textNode = sibling;
 									}
+
+									// Remove any pure whitespace siblings
+									while (textNode && textNode.type === 3) {
+										text = textNode.value;
+										sibling = textNode.next;
+
+										if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+											textNode.remove();
+											textNode = sibling;
+										}
+
+										textNode = sibling;
+									}
 								}
 
-								// Trim whitespace at end of block
-								for (textNode = node.lastChild; textNode && textNode.type === 3; ) {
+								// Trim whitespace of the last node in a block
+								textNode = node.lastChild;
+								if (textNode && textNode.type === 3) {
 									text = textNode.value.replace(endWhiteSpaceRegExp, '');
 
+									// Any characters left after trim or should we remove it
 									if (text.length > 0) {
 										textNode.value = text;
 										textNode = textNode.prev;
 									} else {
 										sibling = textNode.prev;
 										textNode.remove();
+										textNode = sibling;
+									}
+
+									// Remove any pure whitespace siblings
+									while (textNode && textNode.type === 3) {
+										text = textNode.value;
+										sibling = textNode.prev;
+
+										if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+											textNode.remove();
+											textNode = sibling;
+										}
+
 										textNode = sibling;
 									}
 								}
@@ -433,6 +469,11 @@
 								else
 									textNode.remove();
 							}
+						}
+
+						// Check if we exited a whitespace preserved element
+						if (isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
+							isInWhiteSpacePreservedElement = false;
 						}
 
 						// Handle empty nodes
@@ -519,8 +560,8 @@
 		// these elements and keep br elements that where intended to be there intact
 		if (settings.remove_trailing_brs) {
 			self.addNodeFilter('br', function(nodes, name) {
-				var i, l = nodes.length, node, blockElements = schema.getBlockElements(),
-					nonEmptyElements = schema.getNonEmptyElements(), parent, prev, prevName;
+				var i, l = nodes.length, node, blockElements = tinymce.extend({}, schema.getBlockElements()),
+					nonEmptyElements = schema.getNonEmptyElements(), parent, lastParent, prev, prevName;
 
 				// Remove brs from body element as well
 				blockElements.body = 1;
@@ -531,7 +572,7 @@
 					parent = node.parent;
 
 					if (blockElements[node.parent.name] && node === parent.lastChild) {
-						// Loop all nodes to the right of the current node and check for other BR elements
+						// Loop all nodes to the left of the current node and check for other BR elements
 						// excluding bookmarks since they are invisible
 						prev = node.prev;
 						while (prev) {
@@ -562,13 +603,53 @@
 
 								// Remove or padd the element depending on schema rule
 								if (elementRule) {
-								  if (elementRule.removeEmpty)
-									  parent.remove();
-								  else if (elementRule.paddEmpty)
-									  parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
-							  }
-              }
+									if (elementRule.removeEmpty)
+										parent.remove();
+									else if (elementRule.paddEmpty)
+										parent.empty().append(new tinymce.html.Node('#text', 3)).value = '\u00a0';
+								}
+							}
 						}
+					} else {
+						// Replaces BR elements inside inline elements like <p><b><i><br></i></b></p> so they become <p><b><i>&nbsp;</i></b></p> 
+						lastParent = node;
+						while (parent.firstChild === lastParent && parent.lastChild === lastParent) {
+							lastParent = parent;
+
+							if (blockElements[parent.name]) {
+								break;
+							}
+
+							parent = parent.parent;
+						}
+
+						if (lastParent === parent) {
+							textNode = new tinymce.html.Node('#text', 3);
+							textNode.value = '\u00a0';
+							node.replace(textNode);
+						}
+					}
+				}
+			});
+		}
+
+		// Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
+		if (!settings.allow_html_in_named_anchor) {
+			self.addAttributeFilter('name', function(nodes, name) {
+				var i = nodes.length, sibling, prevSibling, parent, node;
+
+				while (i--) {
+					node = nodes[i];
+					if (node.name === 'a' && node.firstChild) {
+						parent = node.parent;
+
+						// Move children after current node
+						sibling = node.lastChild;
+						do {
+							prevSibling = sibling.prev;
+							parent.insert(sibling, node);
+							sibling = prevSibling;
+						} while (sibling);
 					}
 				}
 			});

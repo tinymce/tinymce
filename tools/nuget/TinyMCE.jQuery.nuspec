@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>TinyMCE.jQuery</id>
+    <version>@@version@@</version>
+    <authors>Moxiecode Systems AB</authors>
+    <owners>Moxiecode Systems AB, Tugberk Ugurlu</owners>
+    <licenseUrl>http://www.tinymce.com/license</licenseUrl>
+    <projectUrl>http://tinymce.moxiecode.com/</projectUrl>
+    <iconUrl>http://tinymce.moxiecode.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>TinyMCE.jQuery is special jQuery build of TinyMCE and a jQuery integration plugin. TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control released as Open Source under LGPL by Moxiecode Systems AB. TinyMCE has the ability to convert HTML TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate into other Content Management Systems.</description>
+    <summary>TinyMCE.jQuery is special jQuery build of TinyMCE and a jQuery integration plugin.</summary>
+    <tags>Editor TinyMCE HTML HTMLEditor JQuery</tags>
+    <dependencies>
+      <dependency id="TinyMCE" version="@@version@@" />
+      <dependency id="JQuery" version="(1.4.3, )" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tinymce\jscripts\tiny_mce\jquery.tinymce.js" target="content\scripts\tinymce\jquery.tinymce.js" />
+    <file src="tinymce\jscripts\tiny_mce\tiny_mce_jquery.js" target="content\scripts\tinymce\tiny_mce_jquery.js" />
+  </files>
+</package>

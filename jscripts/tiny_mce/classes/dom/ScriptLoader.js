@@ -1,11 +1,11 @@
 /**
  * ScriptLoader.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -42,7 +42,7 @@
 			scriptLoadedCallbacks = {},
 			queueLoadedCallbacks = [],
 			loading = 0,
-			undefined;
+			undef;
 
 		/**
 		 * Loads a specific script directly without adding it to the load queue.
@@ -181,7 +181,7 @@
 			var item, state = states[url];
 
 			// Add url to load queue
-			if (state == undefined) {
+			if (state == undef) {
 				queue.push(url);
 				states[url] = QUEUED;
 			}
@@ -227,7 +227,7 @@
 					callback.func.call(callback.scope);
 				});
 
-				scriptLoadedCallbacks[url] = undefined;
+				scriptLoadedCallbacks[url] = undef;
 			};
 
 			queueLoadedCallbacks.push({

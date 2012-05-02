@@ -1,17 +1,17 @@
 /**
  * adapter.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 // #ifdef jquery_adapter
 
 (function($, tinymce) {
-	var is = tinymce.is, attrRegExp = /^(href|src|style)$/i, undefined;
+	var is = tinymce.is, attrRegExp = /^(href|src|style)$/i, undef;
 
 	// jQuery is undefined
 	if (!$ && window.console) {
@@ -44,7 +44,7 @@
 
 				// Update/retrive data-mce- attribute variants
 				if (attrRegExp.test(name)) {
-					if (value !== undefined) {
+					if (value !== undef) {
 						// Use TinyMCE behavior when setting the specifc attributes
 						self.each(function(i, node) {
 							editor.dom.setAttrib(node, name, value);
@@ -59,18 +59,6 @@
 				return fn.attr.apply(self, arguments);
 			};
 
-			function htmlPatchFunc(func) {
-				// Returns a modified function that processes
-				// the HTML before executing the action this makes sure
-				// that href/src etc gets moved into the data-mce- variants
-				return function(content) {
-					if (content)
-						content = editor.dom.processHTML(content);
-
-					return func.call(this, content);
-				};
-			};
-
 			// Patch various jQuery functions to handle tinymce specific attribute and content behavior
 			// we don't patch the jQuery.fn directly since it will most likely break compatibility
 			// with other jQuery logic on the page. Only instances created by TinyMCE should be patched.
@@ -81,13 +69,6 @@
 					jq.css = css;
 					jq.attr = attr;
 
-					// Patch HTML functions to use the DOMUtils.processHTML filter logic
-					jq.html = htmlPatchFunc(fn.html);
-					jq.append = htmlPatchFunc(fn.append);
-					jq.prepend = htmlPatchFunc(fn.prepend);
-					jq.after = htmlPatchFunc(fn.after);
-					jq.before = htmlPatchFunc(fn.before);
-					jq.replaceWith = htmlPatchFunc(fn.replaceWith);
 					jq.tinymce = editor;
 
 					// Each pushed jQuery instance needs to be patched

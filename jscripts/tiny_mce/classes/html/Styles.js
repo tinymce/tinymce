@@ -1,11 +1,11 @@
 /**
  * Styles.js
  *
- * Copyright 2010, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
@@ -165,7 +165,27 @@ tinymce.html.Styles = function(settings, schema) {
 					str = str.replace(/\\([\'\";:])/g, "$1");
 
 				return str;
-			}
+			};
+
+			function processUrl(match, url, url2, url3, str, str2) {
+				str = str || str2;
+
+				if (str) {
+					str = decode(str);
+
+					// Force strings into single quote format
+					return "'" + str.replace(/\'/g, "\\'") + "'";
+				}
+
+				url = decode(url || url2 || url3);
+
+				// Convert the URL to relative/absolute depending on config
+				if (urlConverter)
+					url = urlConverter.call(urlConverterScope, url, 'style');
+
+				// Output new URL format
+				return "url('" + url.replace(/\'/g, "\\'") + "')";
+			};
 
 			if (css) {
 				// Encode \" \' % and ; and : inside strings so they don't interfere with the style parsing
@@ -189,26 +209,7 @@ tinymce.html.Styles = function(settings, schema) {
 						value = value.replace(rgbRegExp, toHex);
 
 						// Convert URLs and force them into url('value') format
-						value = value.replace(urlOrStrRegExp, function(match, url, url2, url3, str, str2) {
-							str = str || str2;
-
-							if (str) {
-								str = decode(str);
-
-								// Force strings into single quote format
-								return "'" + str.replace(/\'/g, "\\'") + "'";
-							}
-
-							url = decode(url || url2 || url3);
-
-							// Convert the URL to relative/absolute depending on config
-							if (urlConverter)
-								url = urlConverter.call(urlConverterScope, url, 'style');
-
-							// Output new URL format
-							return "url('" + url.replace(/\'/g, "\\'") + "')";
-						});
-
+						value = value.replace(urlOrStrRegExp, processUrl);
 						styles[name] = isEncoded ? decode(value, true) : value;
 					}
 

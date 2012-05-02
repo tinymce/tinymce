@@ -141,52 +141,7 @@ function type(chr) {
 	var editor = tinymce.activeEditor, keyCode, charCode, event = tinymce.dom.Event, evt, startElm;
 
 	function fakeEvent(target, type, evt) {
-		var event, preventDefault;
-
-		evt = evt || {};
-		evt.type = type;
-
-		if (target.fireEvent) {
-			var event = document.createEventObject();
-			tinymce.extend(event, evt);
-			target.fireEvent('on' + type, event);
-			return;
-		}
-
-		if (document.createEvent) {
-			try {
-				// Fails in Safari
-				event = document.createEvent('KeyEvents');
-				event.initKeyEvent(type, true, true, window, false, false, false, false, evt.keyCode, evt.charCode);
-				event.preventDefault();
-			} catch (ex) {
-				event = document.createEvent('Events');
-				event.initEvent(type, true, true);
-				event.keyCode = evt.keyCode;
-				event.charCode = evt.charCode;
-			}
-		} else {
-			event = document.createEvent('UIEvents');
-
-			if (event.initUIEvent)
-				event.initUIEvent(type, true, true, window, 1);
-
-			event.keyCode = evt.keyCode;
-			event.charCode = evt.charCode;
-		}
-
-		preventDefault = event.preventDefault;
-		event.preventDefault = function() {
-			if (preventDefault) {
-				preventDefault.call(this);
-			} else {
-				this.returnValue = false; // IE
-			}
-
-			evt.prevented = true;
-		};
-
-		target.dispatchEvent(event);
+		editor.dom.fire(target, type, evt);
 	};
 
 	// Numeric keyCode
@@ -214,7 +169,7 @@ function type(chr) {
 	fakeEvent(startElm, 'keydown', evt);
 	fakeEvent(startElm, 'keypress', evt);
 
-	if (!evt.prevented) {
+	if (!evt.isDefaultPrevented()) {
 		if (keyCode == 8) {
 			if (editor.getDoc().selection) {
 				var rng = editor.getDoc().selection.createRange();
@@ -229,6 +184,9 @@ function type(chr) {
 
 			if (rng.startContainer.nodeType == 3 && rng.collapsed) {
 				rng.startContainer.insertData(rng.startOffset, chr);
+				rng.setStart(rng.startContainer, rng.startOffset + 1);
+				rng.collapse(true);
+				editor.selection.setRng(rng);
 			} else {
 				rng.insertNode(editor.getDoc().createTextNode(chr));
 			}
@@ -240,7 +198,7 @@ function type(chr) {
 
 function cleanHtml(html) {
 	html = html.toLowerCase().replace(/[\r\n]+/g, '');
-	html = html.replace(/ (sizcache|nodeindex|sizset)="[^"]*"/g, '');
+	html = html.replace(/ (sizcache|nodeindex|sizset|data\-mce\-expando)="[^"]*"/g, '');
 
 	return html;
 }

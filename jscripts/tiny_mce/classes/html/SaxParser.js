@@ -1,11 +1,11 @@
 /**
  * SaxParser.js
  *
- * Copyright 2010, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -112,6 +112,47 @@
 				}
 			};
 
+			function parseAttribute(match, name, value, val2, val3) {
+				var attrRule, i;
+
+				name = name.toLowerCase();
+				value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
+
+				// Validate name and value
+				if (validate && !isInternalElement && name.indexOf('data-') !== 0) {
+					attrRule = validAttributesMap[name];
+
+					// Find rule by pattern matching
+					if (!attrRule && validAttributePatterns) {
+						i = validAttributePatterns.length;
+						while (i--) {
+							attrRule = validAttributePatterns[i];
+							if (attrRule.pattern.test(name))
+								break;
+						}
+
+						// No rule matched
+						if (i === -1)
+							attrRule = null;
+					}
+
+					// No attribute rule found
+					if (!attrRule)
+						return;
+
+					// Validate value
+					if (attrRule.validValues && !(value in attrRule.validValues))
+						return;
+				}
+
+				// Add attribute to list and map
+				attrList.map[name] = value;
+				attrList.push({
+					name: name,
+					value: value
+				});
+			};
+
 			// Precompile RegExps and map objects
 			tokenRegExp = new RegExp('<(?:' +
 				'(?:!--([\\w\\W]*?)-->)|' + // Comment
@@ -119,7 +160,7 @@
 				'(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
 				'(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
 				'(?:\\/([^>]+)>)|' + // End element
-				'(?:([^\\s\\/<>]+)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/)>)' + // Start element
+				'(?:([A-Za-z0-9\\-\\:]+)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
 			')', 'g');
 
 			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
@@ -186,46 +227,7 @@
 							attrList = [];
 							attrList.map = {};
 
-							attribsValue.replace(attrRegExp, function(match, name, value, val2, val3) {
-								var attrRule, i;
-
-								name = name.toLowerCase();
-								value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
-
-								// Validate name and value
-								if (validate && !isInternalElement && name.indexOf('data-') !== 0) {
-									attrRule = validAttributesMap[name];
-
-									// Find rule by pattern matching
-									if (!attrRule && validAttributePatterns) {
-										i = validAttributePatterns.length;
-										while (i--) {
-											attrRule = validAttributePatterns[i];
-											if (attrRule.pattern.test(name))
-												break;
-										}
-
-										// No rule matched
-										if (i === -1)
-											attrRule = null;
-									}
-
-									// No attribute rule found
-									if (!attrRule)
-										return;
-
-									// Validate value
-									if (attrRule.validValues && !(value in attrRule.validValues))
-										return;
-								}
-
-								// Add attribute to list and map
-								attrList.map[name] = value;
-								attrList.push({
-									name: name,
-									value: value
-								});
-							});
+							attribsValue.replace(attrRegExp, parseAttribute);
 						} else {
 							attrList = [];
 							attrList.map = {};

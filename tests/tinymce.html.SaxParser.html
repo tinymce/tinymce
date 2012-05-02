@@ -12,6 +12,8 @@
 <script>
 module("tinymce.html.SaxParser");
 
+QUnit.config.reorder = false;
+
 var writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();
 
 function createCounter(writer) {
@@ -86,7 +88,7 @@ function createCounter(writer) {
 }
 
 test('Parse elements', function() {
-	expect(44);
+	expect(46);
 
 	var counter = createCounter(writer);
 	var parser = new tinymce.html.SaxParser(counter, schema);
@@ -241,6 +243,13 @@ test('Parse elements', function() {
 	parser.parse('<br><br /><br/>');
 	equal(writer.getContent(), '<br /><br /><br />', 'Parse short ended elements.');
 	deepEqual(counter.counts, {start: 3}, 'Parse short ended elements counts.');
+
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<p ></p>');
+	equal(writer.getContent(), '<p></p>', 'Parse start elements with whitespace only attribs part.');
+	deepEqual(counter.counts, {start: 1, end: 1}, 'Parse start elements with whitespace only attribs part (counts).');
 });
 
 test('Parse style elements', function() {

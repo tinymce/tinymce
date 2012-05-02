@@ -1,16 +1,16 @@
 /**
  * tinymce.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(win) {
 	var whiteSpaceRe = /^\s*|\s*$/g,
-		undefined, isRegExpBroken = 'B'.replace(/A(.)|B/, '$1') === '$1';
+		undef, isRegExpBroken = 'B'.replace(/A(.)|B/, '$1') === '$1';
 
 	/**
 	 * Core namespace with core functionality for the TinyMCE API all sub classes will be added to this namespace/object.
@@ -180,7 +180,8 @@
 			// If base element found, add that infront of baseURL
 			nl = d.getElementsByTagName('base');
 			for (i=0; i<nl.length; i++) {
-				if (v = nl[i].href) {
+				v = nl[i].href;
+				if (v) {
 					// Host only value like http://site.com or http://site.com:8008
 					if (/^https?:\/\/[^\/]+$/.test(v))
 						v += '/';
@@ -241,7 +242,7 @@
 		 */
 		is : function(o, t) {
 			if (!t)
-				return o !== undefined;
+				return o !== undef;
 
 			if (t == 'array' && (o.hasOwnProperty && o instanceof Array))
 				return true;
@@ -304,7 +305,7 @@
 
 			s = s || o;
 
-			if (o.length !== undefined) {
+			if (o.length !== undef) {
 				// Indexed arrays, needed for Safari
 				for (n=0, l = o.length; n < l; n++) {
 					if (cb.call(s, o[n], n, o) === false)
@@ -395,8 +396,8 @@
 		 * Extends an object with the specified other object(s).
 		 *
 		 * @method extend
-		 * @param {Object} o Object to extend with new items.
-		 * @param {Object} e..n Object(s) to extend the specified object with.
+		 * @param {Object} obj Object to extend with new items.
+		 * @param {Object} ext..n Object(s) to extend the specified object with.
 		 * @return {Object} o New extended object, same reference as the input object.
 		 * @example
 		 * // Extends obj1 with two new fields
@@ -408,19 +409,23 @@
 		 * // Extends obj with obj2 and obj3
 		 * tinymce.extend(obj, obj2, obj3);
 		 */
-		extend : function(o, e) {
-			var i, l, a = arguments;
+		extend : function(obj, ext) {
+			var i, l, name, args = arguments, value;
 
-			for (i = 1, l = a.length; i < l; i++) {
-				e = a[i];
+			for (i = 1, l = args.length; i < l; i++) {
+				ext = args[i];
+				for (name in ext) {
+					if (ext.hasOwnProperty(name)) {
+						value = ext[name];
 
-				tinymce.each(e, function(v, n) {
-					if (v !== undefined)
-						o[n] = v;
-				});
+						if (value !== undef) {
+							obj[name] = value;
+						}
+					}
+				}
 			}
 
-			return o;
+			return obj;
 		},
 
 		// #endif
@@ -670,69 +675,69 @@
 		 * });
 		 */
 		addUnload : function(f, s) {
-			var t = this;
+			var t = this, unload;
+
+			unload = function() {
+				var li = t.unloads, o, n;
+
+				if (li) {
+					// Call unload handlers
+					for (n in li) {
+						o = li[n];
+
+						if (o && o.func)
+							o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
+					}
+
+					// Detach unload function
+					if (win.detachEvent) {
+						win.detachEvent('onbeforeunload', fakeUnload);
+						win.detachEvent('onunload', unload);
+					} else if (win.removeEventListener)
+						win.removeEventListener('unload', unload, false);
+
+					// Destroy references
+					t.unloads = o = li = w = unload = 0;
+
+					// Run garbarge collector on IE
+					if (win.CollectGarbage)
+						CollectGarbage();
+				}
+			};
+
+			function fakeUnload() {
+				var d = document;
+
+				function stop() {
+					// Prevent memory leak
+					d.detachEvent('onstop', stop);
+
+					// Call unload handler
+					if (unload)
+						unload();
+
+					d = 0;
+				};
+
+				// Is there things still loading, then do some magic
+				if (d.readyState == 'interactive') {
+					// Fire unload when the currently loading page is stopped
+					if (d)
+						d.attachEvent('onstop', stop);
+
+					// Remove onstop listener after a while to prevent the unload function
+					// to execute if the user presses cancel in an onbeforeunload
+					// confirm dialog and then presses the browser stop button
+					win.setTimeout(function() {
+						if (d)
+							d.detachEvent('onstop', stop);
+					}, 0);
+				}
+			};
 
 			f = {func : f, scope : s || this};
 
 			if (!t.unloads) {
-				function unload() {
-					var li = t.unloads, o, n;
-
-					if (li) {
-						// Call unload handlers
-						for (n in li) {
-							o = li[n];
-
-							if (o && o.func)
-								o.func.call(o.scope, 1); // Send in one arg to distinct unload and user destroy
-						}
-
-						// Detach unload function
-						if (win.detachEvent) {
-							win.detachEvent('onbeforeunload', fakeUnload);
-							win.detachEvent('onunload', unload);
-						} else if (win.removeEventListener)
-							win.removeEventListener('unload', unload, false);
-
-						// Destroy references
-						t.unloads = o = li = w = unload = 0;
-
-						// Run garbarge collector on IE
-						if (win.CollectGarbage)
-							CollectGarbage();
-					}
-				};
-
-				function fakeUnload() {
-					var d = document;
-
-					// Is there things still loading, then do some magic
-					if (d.readyState == 'interactive') {
-						function stop() {
-							// Prevent memory leak
-							d.detachEvent('onstop', stop);
-
-							// Call unload handler
-							if (unload)
-								unload();
-
-							d = 0;
-						};
-
-						// Fire unload when the currently loading page is stopped
-						if (d)
-							d.attachEvent('onstop', stop);
-
-						// Remove onstop listener after a while to prevent the unload function
-						// to execute if the user presses cancel in an onbeforeunload
-						// confirm dialog and then presses the browser stop button
-						win.setTimeout(function() {
-							if (d)
-								d.detachEvent('onstop', stop);
-						}, 0);
-					}
-				};
-
 				// Attach unload handler
 				if (win.attachEvent) {
 					win.attachEvent('onunload', unload);
@@ -780,7 +785,11 @@
 		 * var arr = tinymce.explode('a, b,   c');
 		 */
 		explode : function(s, d) {
-			return s ? tinymce.map(s.split(d || ','), tinymce.trim) : s;
+			if (!s || tinymce.is(s, 'array')) {
+				return s;
+			}
+
+			return tinymce.map(s.split(d || ','), tinymce.trim);
 		},
 
 		_addVer : function(u) {
@@ -806,7 +815,7 @@
 					var val = replace, args = arguments, i;
 
 					for (i = 0; i < args.length - 2; i++) {
-						if (args[i] === undefined) {
+						if (args[i] === undef) {
 							val = val.replace(new RegExp('\\$' + i, 'g'), '');
 						} else {
 							val = val.replace(new RegExp('\\$' + i, 'g'), args[i]);
