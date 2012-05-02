@@ -90,12 +90,8 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyDown.add(function(editor, e) {
 			var isDelete;
 
-			if (e.isDefaultPrevented()) {
-				return;
-			}
-
 			isDelete = e.keyCode == DELETE;
-			if ((isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+			if (!e.isDefaultPrevented() && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 				e.preventDefault();
 				removeMergedFormatSpans(isDelete);
 			}
@@ -125,7 +121,7 @@ tinymce.util.Quirks = function(editor) {
 
 			// Resolve indexed container
 			if (container.nodeType == 1 && container.hasChildNodes()) {
-				container = container.childNodes[Math.min(start ? offset : offset -1, container.childNodes.length - 1)]
+				container = container.childNodes[Math.min(start ? offset : (offset > 0 ? offset - 1 : 0), container.childNodes.length - 1)]
 			}
 
 			return container;
@@ -169,7 +165,7 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyDown.addToTop(function(editor, e) {
 			var rng, keyCode = e.keyCode;
 
-			if (keyCode == DELETE || keyCode == BACKSPACE) {
+			if (!e.isDefaultPrevented() && (keyCode == DELETE || keyCode == BACKSPACE)) {
 				rng = selection.getRng(true);
 
 				if (isAtStartEndOfBody(rng, true) && isAtStartEndOfBody(rng, false) &&
@@ -219,7 +215,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function removeHrOnBackspace() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (e.keyCode === BACKSPACE) {
+			if (!e.isDefaultPrevented() && e.keyCode === BACKSPACE) {
 				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 					var node = selection.getNode();
 					var previousSibling = node.previousSibling;
@@ -374,7 +370,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function disableBackspaceIntoATable() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (e.keyCode === BACKSPACE) {
+			if (!e.isDefaultPrevented() && e.keyCode === BACKSPACE) {
 				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 					var previousSibling = selection.getNode().previousSibling;
 					if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "table") {
@@ -482,12 +478,8 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyDown.add(function(editor, e) {
 			var isDelete, rng, container, offset, brElm, sibling, collapsed;
 
-			if (e.isDefaultPrevented()) {
-				return;
-			}
-
 			isDelete = e.keyCode == DELETE;
-			if ((isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+			if (!e.isDefaultPrevented() && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 				rng = selection.getRng();
 				container = rng.startContainer;
 				offset = rng.startOffset;
@@ -536,7 +528,7 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyDown.add(function(editor, e) {
 			var rng, container, offset, root, parent;
 
-			if (e.keyCode != VK.BACKSPACE) {
+			if (e.isDefaultPrevented() || e.keyCode != VK.BACKSPACE) {
 				return;
 			}
 
@@ -647,7 +639,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function deleteImageOnBackSpace() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (e.keyCode == 8 && selection.getNode().nodeName == 'IMG') {
+			if (!e.isDefaultPrevented() && e.keyCode == 8 && selection.getNode().nodeName == 'IMG') {
 				e.preventDefault();
 				editor.undoManager.beforeChange();
 				dom.remove(selection.getNode());
