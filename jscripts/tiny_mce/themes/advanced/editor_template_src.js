@@ -69,6 +69,11 @@
 		each(previewStyles.split(' '), function(name) {
 			var value = dom.getStyle(previewElm, name, true);
 
+			// If background is transparent then check if the body has a background color we can use
+			if (name == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
+				value = dom.getStyle(ed.getBody(), name, true);
+			}
+
 			// Old IE won't calculate the font size so we need to do that manually
 			if (name == 'font-size') {
 				if (/em|%$/.test(value)) {
