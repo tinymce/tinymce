@@ -12,7 +12,7 @@ tinymce.ForceBlocks = function(editor) {
 	var settings = editor.settings, dom = editor.dom, selection = editor.selection, blockElements = editor.schema.getBlockElements();
 
 	function addRootBlocks() {
-		var node = selection.getStart(), rootNode = editor.getBody(), rng, startContainer, startOffset, endContainer, endOffset, rootBlockNode, tempNode, offset = -0xFFFFFF;
+		var node = selection.getStart(), rootNode = editor.getBody(), rng, startContainer, startOffset, endContainer, endOffset, rootBlockNode, tempNode, offset = -0xFFFFFF, wrapped;
 
 		if (!node || node.nodeType !== 1 || !settings.forced_root_block)
 			return;
@@ -58,6 +58,7 @@ tinymce.ForceBlocks = function(editor) {
 				if (!rootBlockNode) {
 					rootBlockNode = dom.create(settings.forced_root_block);
 					node.parentNode.insertBefore(rootBlockNode, node);
+					wrapped = true;
 				}
 
 				tempNode = node;
@@ -89,7 +90,10 @@ tinymce.ForceBlocks = function(editor) {
 			}
 		}
 
-		editor.nodeChanged();
+		// Only trigger nodeChange when we wrapped nodes to prevent a forever loop
+		if (wrapped) {
+			editor.nodeChanged();
+		}
 	};
 
 	// Force root blocks
