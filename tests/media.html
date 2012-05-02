@@ -328,6 +328,7 @@ test("Flash retain attribs", function() {
 
 test("Embedded Audio", function() {
 	expect(1);
+	editor.remove();
 	initTiny({media_types: "embeddedaudio=wav"}, function() {
 		editor.setContent('<embed height="20" width="100" type="audio/x-wav" controller="true" src="test.wav"/>');
 		equal(editor.getContent(), '<p><embed width="100" height="20" type="audio/x-wav" src="test.wav" controller="true" /></p>');
