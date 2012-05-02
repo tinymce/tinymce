@@ -128,19 +128,26 @@ tinymce.util.Quirks = function(editor) {
 		};
 
 		function isAtStartEndOfBody(rng, start) {
-			var container, offset, root, childNode, prefix = start ? 'start' : 'end';
+			var container, offset, root, childNode, prefix = start ? 'start' : 'end', isAfter;
 
 			container = rng[prefix + 'Container'];
 			offset = rng[prefix + 'Offset'];
 			root = dom.getRoot();
 
+			// Resolve indexed container
+			if (container.nodeType == 1) {
+				isAfter = offset >= container.childNodes.length;
+				container = getEndPointNode(rng, start);
+
+				if (container.nodeType == 3) {
+					offset = start && !isAfter ? 0 : container.nodeValue.length;
+				}
+			}
+
 			// Check if start/end is in the middle of text
 			if (container.nodeType == 3 && ((start && offset > 0) || (!start && offset < container.nodeValue.length))) {
 				return false;
 			}
-
-			// Resolve indexed container
-			container = getEndPointNode(rng, start);
 
 			// Walk up the DOM tree to see if the endpoint is at the beginning/end of body
 			while (container !== root) {
