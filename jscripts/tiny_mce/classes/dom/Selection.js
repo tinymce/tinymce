@@ -986,7 +986,7 @@
 			var dom = this.dom, sel = this.getSel(), anchorRange, focusRange;
 
 			// No support for selection direction then always return true
-			if (sel.anchorNode == null || sel.focusNode == null) {
+			if (!sel || sel.anchorNode == null || sel.focusNode == null) {
 				return true;
 			}
 
