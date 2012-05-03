@@ -1,4 +1,4 @@
-Version 3.5 (2012-05-xx)
+Version 3.5 (2012-05-03)
 	Fixed menu rendering issue if the document was in rtl mode.
 	Fixed bug where the hide function would throw an error about a missing variable.
 	Fixed bug where autolink wouldn't convert URLs when hitting enter on IE due to the new enter key logic.
