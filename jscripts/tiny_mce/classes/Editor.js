@@ -980,9 +980,6 @@
 			if (self.initialized) {
 				o = o || {};
 
-				// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
-				selection.normalize();
-
 				// Get start node
 				node = selection.getStart() || self.getBody();
 				node = isIE && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state

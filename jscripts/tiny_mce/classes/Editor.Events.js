@@ -830,6 +830,12 @@
 			self.focus(true);
 		};
 
+		function nodeChanged() {
+			// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
+			self.selection.normalize();
+			self.nodeChanged();
+		}
+
 		// Add DOM events
 		each(nativeToDispatcherMap, function(dispatcherName, nativeName) {
 			var root = settings.content_editable ? self.getBody() : self.getDoc();
@@ -864,13 +870,13 @@
 		}
 
 		// Add node change handler
-		self.onMouseUp.add(self.nodeChanged);
+		self.onMouseUp.add(nodeChanged);
 
 		self.onKeyUp.add(function(ed, e) {
 			var keyCode = e.keyCode;
 
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45 || keyCode == 46 || keyCode == 8 || (tinymce.isMac && (keyCode == 91 || keyCode == 93)) || e.ctrlKey)
-				self.nodeChanged();
+				nodeChanged();
 		});
 
 		// Add reset handler
