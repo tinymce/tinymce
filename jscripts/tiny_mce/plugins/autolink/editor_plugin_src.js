@@ -124,6 +124,12 @@
 				r.setEnd(endContainer, start);
 			}
 
+			// Exclude last . from word like "www.site.com."
+			var text = r.toString();
+			if (text.charAt(text.length - 1) == '.') {
+				r.setEnd(endContainer, start - 1);
+			}
+
 			text = r.toString();
 			matches = text.match(/^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|[A-Z0-9._%+-]+@)(.+)$/i);
 

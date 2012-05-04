@@ -29,6 +29,7 @@ createAction('Typing HTTPS URL', fakeTypeAURL('https://www.ephox.com'));
 createAction('Typing SSH URL', fakeTypeAURL('ssh://www.ephox.com'));
 createAction('Typing FTP URL', fakeTypeAURL('ftp://www.ephox.com'));
 createAction('Typing WWW URL', fakeTypeAURL('www.ephox.com'));
+createAction('Typing WWW URL With End Dot', fakeTypeAURL('www.site.com.'));
 createAction('Typing Mail Addr', fakeTypeAURL('user@domain.com'));
 createAction('Typing Dashed Mail Addr', fakeTypeAURL('first-last@domain.com'));
 createAction('Typing Eclipsed HTTP URL', fakeTypeAnEclipsedURL('http://www.ephox.com'));

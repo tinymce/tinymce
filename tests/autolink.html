@@ -106,6 +106,17 @@ if (!tinymce.isIE) {
 		queue.done();
 	});
 
+	asyncTest('Typing a WWW URL with end dot', function() {
+		TypingWWWURLWithEndDot.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="http://www.site.com">www.site.com</a>.(\\s|&nbsp;)Test</p>$'));
+		TypingWWWURLWithEndDot.inA(ParagraphWithMarginLeft).gives(new RegExp('^<p style="margin-left: 60px;"><a href="http://www.site.com">www.site.com</a>.(\\s|&nbsp;)Test</p>$'));
+		TypingWWWURLWithEndDot.inA(ParagraphWithPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px;"><a href="http://www.site.com">www.site.com</a>.(\\s|&nbsp;)Test</p>$'));
+		TypingWWWURLWithEndDot.inA(ParagraphWithMarginAndPaddingLeft).gives(new RegExp('^<p style="padding-left: 60px; margin-left: 60px;"><a href="http://www.site.com">www.site.com</a>.(\\s|&nbsp;)Test</p>$'));
+		TypingWWWURLWithEndDot.inA(NonEmptyHeading).gives(new RegExp('^<h1><a href="http://www.site.com">www.site.com</a>.(\\s|&nbsp;)Test</h1>$'));
+		TypingWWWURLWithEndDot.inA(TableCellWithoutBrs2).gives(new RegExp('^<table><tbody><tr><td><a href="http://www.site.com">www.site.com</a>.(\\s|&nbsp;)Test</td><td>&nbsp;</td></tr></tbody></table>$'));
+		TypingWWWURLWithEndDot.inA(TableCellWithBrsFirstLine2).gives(new RegExp('^<table><tbody><tr><td><a href="http://www.site.com">www.site.com</a>.(\\s|&nbsp;)Test<br />Line 2</td><td>&nbsp;</td></tr></tbody></table>$'));
+		queue.done();
+	});
+
 	asyncTest('Typing a mail address', function() {
 		TypingMailAddr.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="mailto:user@domain.com">user@domain.com</a>(\\s|&nbsp;)Test</p>$'));
 		TypingDashedMailAddr.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="mailto:first-last@domain.com">first-last@domain.com</a>(\\s|&nbsp;)Test</p>$'));
