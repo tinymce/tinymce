@@ -18,7 +18,7 @@ tinymce.ForceBlocks = function(editor) {
 			return;
 
 		// Check if node is wrapped in block
-		while (node != rootNode) {
+		while (node && node != rootNode) {
 			if (blockElements[node.nodeName])
 				return;
 
