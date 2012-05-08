@@ -223,6 +223,7 @@
 			if (!s.onselect) {
 				s.onselect = function(v) {
 					ed.execCommand(s.cmd, s.ui || false, v || s.value);
+					return false;
 				};
 			}
 
