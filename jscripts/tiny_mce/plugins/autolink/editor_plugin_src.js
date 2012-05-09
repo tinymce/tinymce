@@ -61,7 +61,7 @@
 
 			// We need at least five characters to form a URL,
 			// hence, at minimum, five characters from the beginning of the line.
-			r = ed.selection.getRng().cloneRange();
+			r = ed.selection.getRng(true).cloneRange();
 			if (r.startOffset < 5) {
 				// During testing, the caret is placed inbetween two text nodes. 
 				// The previous text node contains the URL.
