@@ -574,13 +574,16 @@ function createRng() {
 		equal(rng.toString(), "trong second e");
 	});
 
-	test("toString in start in one text node end in another", function() {
-		var rng = createRng();
+	// Run on IE only
+	if (tinymce.isIE) {
+		test("toString in start in one text node end in another", function() {
+			var rng = createRng();
 
-		rng.setStartBefore(document.getElementById('strong'));
-		rng.setEndAfter(document.getElementById('em2'));
-		equal(rng.toString(), "strong second em strong.\r\nbar\r\nsome text");
-	});
+			rng.setStartBefore(document.getElementById('strong'));
+			rng.setEndAfter(document.getElementById('em2'));
+			equal(rng.toString(), "strong second em strong.\r\nbar\r\nsome text");
+		});
+	}
 
 	tinymce.dom.Event.add(window, 'load', function() {
 		QUnit.start();
