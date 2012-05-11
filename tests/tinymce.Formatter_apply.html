@@ -1090,6 +1090,16 @@ test('Bug #5134 - TinyMCE removes formatting tags in the getContent', function()
 	editor.selection.setContent('a');
 	equal(getContent(), '<strong>a</strong>', 'bold text inside TinyMCE');
 });
+
+test('Bug #5134 - TinyMCE removes formatting tags in the getContent - typing', function() {
+	editor.setContent('');
+	editor.formatter.register('format', {inline : 'strong', toggle: false});
+	editor.formatter.apply('format');
+	equal(getContent(), '', 'empty TinyMCE');
+	type('a');
+	equal(getContent(), '<strong>a</strong>', 'bold text inside TinyMCE');
+});
+
 /*
 test('apply (list block)', function() {
 	var rng;
