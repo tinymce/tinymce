@@ -56,7 +56,8 @@
 			cloneContents : cloneContents,
 			insertNode : insertNode,
 			surroundContents : surroundContents,
-			cloneRange : cloneRange
+			cloneRange : cloneRange,
+			toString : toString
 		});
 
 		function createDocumentFragment() {
@@ -696,6 +697,10 @@
 
 			n.parentNode.removeChild(n);
 		};
+
+		function toString() {
+			return dom.create('body', null, cloneContents()).outerText;
+		}
 	};
 
 	ns.Range = Range;

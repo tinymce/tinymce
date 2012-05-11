@@ -126,7 +126,7 @@ function createRng() {
 		expect(5);
 
 		r.setStartAfter(document.getElementById('strong'));
-		r.setEndBefore(document.getElementById('em'));
+		r.setEndBefore(document.getElementById('em1'));
 
 		equal(r.startContainer.nodeName, 'P')
 		equal(r.startOffset, 5)
@@ -252,7 +252,7 @@ function createRng() {
 		r.setStart(document.getElementById('first').firstChild, 1);
 		r.setEnd(document.getElementById('two').firstChild, 2);
 
-		equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">ab</td></tr></tbody></table>')
+		equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">ab</td></tr></tbody></table>')
 		equal(r.startContainer.nodeType, 3)
 		equal(r.startOffset, 1)
 		equal(r.endContainer.nodeType, 3)
@@ -274,7 +274,7 @@ function createRng() {
 		r.setStart(document.getElementById('first').firstChild, 1);
 		r.setEnd(document.getElementById('first').lastChild, 4);
 
-		equal(getHTML(r.cloneContents()), 'irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> str')
+		equal(getHTML(r.cloneContents()), 'irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> str')
 		equal(r.startContainer.nodeType, 3)
 		equal(r.startOffset, 1)
 		equal(r.endContainer.nodeType, 3)
@@ -296,7 +296,7 @@ function createRng() {
 		r.setStart(document.getElementById('first'), 0);
 		r.setEnd(document.getElementById('last'), 0);
 
-		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
+		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
 		equal(r.startContainer.nodeType, 1)
 		equal(r.startOffset, 0)
 		equal(r.endContainer.nodeType, 1)
@@ -307,7 +307,7 @@ function createRng() {
 		r.setStart(document.getElementById('first'), 1);
 		r.setEnd(document.getElementById('last'), 1);
 
-		equal(getHTML(r.cloneContents()), '<p id="first"><!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc</p>')
+		equal(getHTML(r.cloneContents()), '<p id="first"><!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc</p>')
 		equal(r.startContainer.nodeType, 1)
 		equal(r.startOffset, 1)
 		equal(r.endContainer.nodeType, 1)
@@ -318,7 +318,7 @@ function createRng() {
 		r.setStart(document.getElementById('sample'), 0);
 		r.setEnd(document.getElementById('sample'), document.getElementById('sample').childNodes.length - 1);
 
-		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>')
+		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>')
 		equal(r.startContainer.nodeType, 1)
 		equal(r.startOffset, 0)
 		equal(r.endContainer.nodeType, 1)
@@ -329,7 +329,7 @@ function createRng() {
 		r.setStart(document.getElementById('first'), 0);
 		r.setEnd(document.getElementById('last').firstChild, 1);
 
-		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">t</p>')
+		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">t</p>')
 		equal(r.startContainer.nodeType, 1)
 		equal(r.startOffset, 0)
 		equal(r.endContainer.nodeType, 3)
@@ -340,7 +340,7 @@ function createRng() {
 		r.setStart(document.getElementById('first').firstChild, 1);
 		r.setEnd(document.getElementById('last'), 0);
 
-		equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
+		equal(getHTML(r.cloneContents()), '<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\"last\"></p>')
 		equal(r.startContainer.nodeType, 3)
 		equal(r.startOffset, 1)
 		equal(r.endContainer.nodeType, 1)
@@ -351,7 +351,7 @@ function createRng() {
 		r.setStart(document.getElementById('sample'), 0);
 		r.setEnd(document.getElementById('traverse'), 2);
 
-		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em></p>')
+		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em></p>')
 		equal(r.startContainer.nodeType, 1)
 		equal(r.startOffset, 0)
 		equal(r.endContainer.nodeType, 1)
@@ -362,7 +362,7 @@ function createRng() {
 		r.setStart(document.getElementById('sample'), 0);
 		r.setEnd(document.getElementById('traverse'), 1);
 
-		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b></p>')
+		equal(getHTML(r.cloneContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b></p>')
 		equal(r.startContainer.nodeType, 1)
 		equal(r.startOffset, 0)
 		equal(r.endContainer.nodeType, 1)
@@ -390,7 +390,7 @@ function createRng() {
 		equal(r.startContainer == r.endContainer, true)
 		equal(r.startOffset == r.endOffset, true)
 		equal(r.commonAncestorContainer.nodeType, 3)
-		equal(getHTML(document.getElementById('first')), '<p id="first">ft<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p>')
+		equal(getHTML(document.getElementById('first')), '<p id="first">ft<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p>')
 	});
 
 	test("test_extractContents2", function() {
@@ -404,11 +404,11 @@ function createRng() {
 
 		equal(getHTML(r.extractContents()), '<table id="table" width="300"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>')
 		equal(r.startContainer.nodeType, 1)
-		equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+		equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 		equal(r.startOffset, 4)
 		equal(r.endContainer.nodeType, 1)
 		equal(r.endOffset, 4)
-		equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+		equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 		equal(r.collapsed, true)
 		equal(r.commonAncestorContainer.nodeName, 'DIV')
 	});
@@ -422,7 +422,7 @@ function createRng() {
 		r.setStart(document.getElementById('sample'), 0);
 		r.setEnd(document.getElementById('traverse'), 2);
 
-		equal(getHTML(r.extractContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em></p>')
+		equal(getHTML(r.extractContents()), '<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em></p>')
 		equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse">more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 		equal(r.startOffset, 0)
 		equal(r.endContainer.nodeType, 1)
@@ -443,12 +443,12 @@ function createRng() {
 		r.setEnd(document.getElementById('last').firstChild, 2);
 		r.deleteContents();
 
-		equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+		equal(getHTML(r.startContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 		equal(r.startOffset, 4)
 		equal(r.endContainer.nodeType, 1)
 		equal(r.endOffset, 4)
-		equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
-		equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+		equal(getHTML(r.endContainer), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
+		equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>')
 		equal(r.collapsed, true)
 		equal(r.commonAncestorContainer.nodeName, 'DIV')
 	});
@@ -468,7 +468,7 @@ function createRng() {
 		equal(r.endContainer.nodeType, 1)
 		equal(r.endOffset, 1)
 		equal(getHTML(r.endContainer), '<p id="first">fong.</p>')
-		equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">fong.</p><p id="second">bar</p><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+		equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="first">fong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 		equal(r.collapsed, true)
 		equal(r.commonAncestorContainer.nodeName, 'P')
 	});
@@ -483,12 +483,12 @@ function createRng() {
 		r.setEnd(document.getElementById('sample'), 2);
 		r.deleteContents();
 
-		equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+		equal(getHTML(r.startContainer), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 		equal(r.startOffset, 0)
 		equal(r.endContainer.nodeType, 1)
 		equal(r.endOffset, 0)
-		equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
-		equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+		equal(getHTML(r.endContainer), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
+		equal(getHTML(document.getElementById('sample')), '<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table" width="300"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>')
 		equal(r.collapsed, true)
 		equal(r.commonAncestorContainer.nodeName, 'DIV')
 	});
@@ -528,8 +528,8 @@ function createRng() {
 
 		r1.setStartBefore(document.getElementById('strong'));
 		r1.setEndAfter(document.getElementById('strong'));
-		r2.setStartBefore(document.getElementById('em'));
-		r2.setEndAfter(document.getElementById('em'));
+		r2.setStartBefore(document.getElementById('em1'));
+		r2.setEndAfter(document.getElementById('em1'));
 		equal(r1.compareBoundaryPoints(START_TO_START, r2), -1, 'Start to start for range before');
 		equal(r1.compareBoundaryPoints(END_TO_END, r2), -1, 'End to end for range before');
 		equal(r1.compareBoundaryPoints(START_TO_END, r2), -1, 'Start to end for range before');
@@ -550,6 +550,38 @@ function createRng() {
 		equal(r1.compareBoundaryPoints(END_TO_START, r2), -1, 'End to start for range inside');
 	});
 
+	test("toString in part of same text node", function() {
+		var rng = createRng();
+
+		rng.setStart(document.getElementById('strong').firstChild, 1);
+		rng.setEnd(document.getElementById('strong').firstChild, 3);
+		equal(rng.toString(), "tr");
+	});
+
+	test("toString in start/end of same text node", function() {
+		var rng = createRng();
+
+		rng.setStart(document.getElementById('strong').firstChild, 0);
+		rng.setEnd(document.getElementById('strong').firstChild, 6);
+		equal(rng.toString(), "strong");
+	});
+
+	test("toString in start in one text node end in another", function() {
+		var rng = createRng();
+
+		rng.setStart(document.getElementById('strong').firstChild, 1);
+		rng.setEnd(document.getElementById('em1').firstChild, 1);
+		equal(rng.toString(), "trong second e");
+	});
+
+	test("toString in start in one text node end in another", function() {
+		var rng = createRng();
+
+		rng.setStartBefore(document.getElementById('strong'));
+		rng.setEndAfter(document.getElementById('em2'));
+		equal(rng.toString(), "strong second em strong.\r\nbar\r\nsome text");
+	});
+
 	tinymce.dom.Event.add(window, 'load', function() {
 		QUnit.start();
 	});
@@ -562,9 +594,9 @@ function createRng() {
 	<h2 id="qunit-userAgent"></h2>
 	<ol id="qunit-tests"></ol>
 	<div id="sample">
-		<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em">em</em> strong.</p>
+		<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p>
 		<p id="second">bar</p>
-		<p id="traverse"><b><em id="em">some text</em></b><em>em text</em>more text</p>
+		<p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p>
 		<table id="table" width="300">
 			<tr>
 				<td>1</td>
