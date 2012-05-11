@@ -2081,7 +2081,7 @@
 				caretContainer = getParentCaretContainer(selection.getStart());
 				if (caretContainer && !dom.isEmpty(caretContainer)) {
 					tinymce.walk(caretContainer, function(node) {
-						if (node.nodeType == 1 && !dom.isEmpty(node)) {
+						if (node.nodeType == 1 && node.id !== caretContainerId && !dom.isEmpty(node)) {
 							dom.setAttrib(node, 'data-mce-bogus', null);
 						}
 					}, 'childNodes');
