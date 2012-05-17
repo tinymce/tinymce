@@ -1,3 +1,5 @@
+Version 3.5.0.1b (2012-05-17)
+	Added onBeforeAdd event to UndoManager
 Version 3.5.0.x (2012-05-xx)
 	Fixed bug where links wasn't automatically created by the autolink plugin on old IE versions when pressing enter in BR mode.
 Version 3.5.0.1 (2012-05-10)
@@ -753,7 +755,7 @@ Version 3.2.2.1 (2009-03-19)
 	Added support for tel: URL prefixes. Even though this doesn't match any official RFC.
 	Fixed so the select method of the Selection class selects the first best suitable contents.
 	Fixed bug where the regexps for www. prefixes for link and advlink dialogs would match wwwX.
-	Fixed bug where the preview dialog would fail to open if the content_css wasn't defined. Patch contributed by David Bildström (ChronoZ).
+	Fixed bug where the preview dialog would fail to open if the content_css wasn't defined. Patch contributed by David Bildstrï¿½m (ChronoZ).
 	Fixed bug where editors wasn't converted in application/xhtml+xml mode due to an issue with Sizzle.
 	Fixed bug where alignment would fail if multiple lines where selected.
 	Updated Sizzle engine to the latest version, this version fixes a few bugs that was reported.
@@ -802,7 +804,7 @@ Version 3.2.2 (2009-03-05)
 	Removed logic for compatibility with Safari 2.x, this browser is no longer supported since no one is using it.
 	Removed the auto domain relaxing feature. If loading scripts cross sub domains it's better to specify the document.domain by hand.
 Version 3.2.1.1 (2008-11-27)
-	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildström (ChronoZ).
+	Added new theme_advanced_default_background_color/theme_advanced_default_foreground_color options. Patch contributed by David Bildstrï¿½m (ChronoZ).
 	Fixed font style formatting compatibility issue with Adobe Air.
 	Fixed so legacy font elements get converted into spans even if cleanup_on_startup isn't enabled.
 	Fixed bug where pre elements could be incorrectly modified by an IE bug workaround. Patch contributed by hu vime.
@@ -1013,7 +1015,7 @@ Version 3.0.7 (2008-04-14)
 	Fixed bug where it was possible to add style information to the body element using the style plugin.
 	Fixed bug where Gecko would add an extra undo level some times due to the blur event.
 	Fixed bug where the underline icon would get active if the caret was inside a link element.
-	Fixed bug where merging th cells not working correctly. Patch contributed by André R.
+	Fixed bug where merging th cells not working correctly. Patch contributed by Andrï¿½ R.
 	Fixed bug where forecolorpicker and backcolorpicker buttons where rendered incorrectly when the o2k7 skin was used.
 	Fixed bug where comment couldn't contain -- since it's invalid markup. It will now at least not break on those invalid comments.
 	Fixed bug where apos wasn't handled correctly in IE. It will now convert apos to &#39; on IE since that browser doesn't support that entity.
@@ -1164,8 +1166,8 @@ Version 3.0.3 (2008-03-03)
 Version 3.0.2.1 (2008-02-26)
 	Fixed alert/confirm dialogs so they display correctly.
 Version 3.0.2 (2008-02-26)
-	Added new body_id option that enables you to specify the id of the body inside the editor iframe based on ideas by David Bildström (ChronoZ).
-	Added new body_class option that enables you to set the class for the body of the editor iframe based on ideas by David Bildström (ChronoZ).
+	Added new body_id option that enables you to specify the id of the body inside the editor iframe based on ideas by David Bildstrï¿½m (ChronoZ).
+	Added new body_class option that enables you to set the class for the body of the editor iframe based on ideas by David Bildstrï¿½m (ChronoZ).
 	Added new CSS class to the default content.css files mceForceColors that forces white background and black text can be used with the body_class option.
 	Added new type parameter to the Editor.getParam function to reduce redundant logic for parsing hash tables.
 	Added new isDone method to the ScriptLoaded class, this enables you to check if a script has been loaded or not.
