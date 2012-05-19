@@ -498,18 +498,18 @@ function getLinkListHTML(elm_id, target_form_element, onchange_func) {
 
 	for (var i=0; i<tinyMCELinkList.length; i++) {
 	    if (typeof(tinyMCELinkList[i][1]) == "object") {
-		html += '<optgroup label="'+tinyMCELinkList[i][0]+'">';
-		var childCount = tinyMCELinkList[i][1].length;
-		for (var j=0; j<childCount; j++) {
-		    var child = tinyMCELinkList[i][1][j];
-		    html += '<option value="' + child[1] + '">' + child[0] + '</option>';
-		}
-		html += '</optgroup>';
+			html += '<optgroup label="'+tinyMCELinkList[i][0]+'">';
+			var childCount = tinyMCELinkList[i][1].length;
+			    for (var j=0; j<childCount; j++) {
+				var child = tinyMCELinkList[i][1][j];
+				html += '<option value="' + child[1] + '">' + child[0] + '</option>';
+				}
+			html += '</optgroup>';
 
-	    }
-	    else {
-		html += '<option value="' + tinyMCELinkList[i][1] + '">' + tinyMCELinkList[i][0] + '</option>';
-	    }
+		}
+		else {
+			html += '<option value="' + tinyMCELinkList[i][1] + '">' + tinyMCELinkList[i][0] + '</option>';
+		}
 	}
 
 	html += '</select>';
@@ -523,7 +523,7 @@ function getTargetListHTML(elm_id, target_form_element) {
 	var targets = tinyMCEPopup.getParam('theme_advanced_link_targets', '').split(';');
 	var html = '';
 
-	html += '<select id="' + elm_id + '" name="' + elm_id + '" onf2ocus="tinyMCE.addSelectAccessibility(event, this, window);" onchange="this.form.' + target_form_element + '.value=';
+	html += '<select id="' + elm_id + '" name="' + elm_id + '" onchange="this.form.' + target_form_element + '.value=';
 	html += 'this.options[this.selectedIndex].value;">';
 	html += '<option value="_self">' + tinyMCEPopup.getLang('advlink_dlg.target_same') + '</option>';
 	html += '<option value="_blank">' + tinyMCEPopup.getLang('advlink_dlg.target_blank') + ' (_blank)</option>';
