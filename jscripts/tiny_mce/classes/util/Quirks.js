@@ -627,6 +627,18 @@ tinymce.util.Quirks = function(editor) {
 	};
 
 	/**
+	 * WebKit will produce DIV elements here and there by default. But since TinyMCE uses paragraphs by
+	 * default we want to change that behavior.
+	 */
+	function setDefaultBlockType() {
+		if (settings.forced_root_block) {
+			editor.onInit.add(function() {
+				setEditorCommandState('DefaultParagraphSeparator', settings.forced_root_block);
+			});
+		}
+	}
+
+	/**
 	 * Removes ghost selections from images/tables on Gecko.
 	 */
 	function removeGhostSelection() {
@@ -666,6 +678,7 @@ tinymce.util.Quirks = function(editor) {
 		cleanupStylesWhenDeleting();
 		inputMethodFocus();
 		selectControlElements();
+		setDefaultBlockType();
 
 		// iOS
 		if (tinymce.isIDevice) {
