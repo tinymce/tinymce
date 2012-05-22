@@ -2,6 +2,7 @@ Version 3.5.0.x (2012-05-xx)
 	Fixed bug where links wasn't automatically created by the autolink plugin on old IE versions when pressing enter in BR mode.
 	Fixed bug where enter on older IE versions wouldn't produce a new paragraph if the previous sibling paragraph was empty.
 	Fixed bug where toString on a faked DOM range on older IE versions wouldn't return a proper string.
+	Fixed bug where named anchors wouldn't work properly when schema was set to HTML5.
 Version 3.5.0.1 (2012-05-10)
 	Fixed bug where selection normalization logic would break the selections of parent elements using the element path.
 	Fixed bug where the autolink plugin would include trailing dots in domain names in the link creation.

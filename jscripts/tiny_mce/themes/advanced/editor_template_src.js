@@ -1089,19 +1089,17 @@
 
 			p = getParent('A');
 			if (c = cm.get('link')) {
-				if (!p || !p.name) {
-					c.setDisabled(!p && co);
-					c.setActive(!!p);
-				}
+				c.setDisabled((!p && co) || !p.href);
+				c.setActive(!!p && (!p.name && !p.id));
 			}
 
 			if (c = cm.get('unlink')) {
 				c.setDisabled(!p && co);
-				c.setActive(!!p && !p.name);
+				c.setActive(!!p && !p.name && !p.id);
 			}
 
 			if (c = cm.get('anchor')) {
-				c.setActive(!co && !!p && p.name);
+				c.setActive(!co && !!p && (p.name || (p.id && !p.href)));
 			}
 
 			p = getParent('IMG');
