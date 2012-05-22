@@ -1089,7 +1089,7 @@
 
 			p = getParent('A');
 			if (c = cm.get('link')) {
-				c.setDisabled((!p && co) || !p.href);
+				c.setDisabled((!p && co) || (p && !p.href));
 				c.setActive(!!p && (!p.name && !p.id));
 			}
 
