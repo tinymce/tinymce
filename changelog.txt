@@ -1,4 +1,5 @@
 Version 3.5.0.x (2012-05-xx)
+	Added new onBeforeAdd event to UndoManager patch contributed by Dan Rumney.
 	Fixed bug where links wasn't automatically created by the autolink plugin on old IE versions when pressing enter in BR mode.
 	Fixed bug where enter on older IE versions wouldn't produce a new paragraph if the previous sibling paragraph was empty.
 	Fixed bug where toString on a faked DOM range on older IE versions wouldn't return a proper string.

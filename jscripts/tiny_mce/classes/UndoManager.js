@@ -30,9 +30,10 @@
 		};
 
 		// Create event instances
-		onAdd = new Dispatcher(self);
-		onUndo = new Dispatcher(self);
-		onRedo = new Dispatcher(self);
+		onBeforeAdd = new Dispatcher(self);
+		onAdd       = new Dispatcher(self);
+		onUndo      = new Dispatcher(self);
+		onRedo      = new Dispatcher(self);
 
 		// Pass though onAdd event from UndoManager to Editor as onChange
 		onAdd.add(function(undoman, level) {
@@ -127,6 +128,15 @@
 			 * @field {Boolean} typing
 			 */
 			typing : false,
+			
+			/**
+			 * This event will fire before a new undo level is added to the undo manager
+			 * 
+			 * @event onBeforeAdd
+			 * @param {tinymce.UndoManager} sender UndoManager instance that is going to add the new level
+			 * @param {Object} level The new level object containing a bookmark and contents
+			 */
+			onBeforeAdd: onBeforeAdd,
 
 			/**
 			 * This event will fire each time a new undo level is added to the undo manager.
@@ -177,6 +187,8 @@
 
 				level = level || {};
 				level.content = getContent();
+				
+				self.onBeforeAdd.dispatch(self, level);
 
 				// Add undo level if needed
 				lastLevel = data[index];
