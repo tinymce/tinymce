@@ -581,7 +581,7 @@ function createRng() {
 
 			rng.setStartBefore(document.getElementById('strong'));
 			rng.setEndAfter(document.getElementById('em2'));
-			equal(rng.toString(), "strong second em strong.\r\nbar\r\nsome text");
+			equal(rng.toString().replace(/\r\n/g, ''), "strong second em strong.barsome text");
 		});
 	}
 
