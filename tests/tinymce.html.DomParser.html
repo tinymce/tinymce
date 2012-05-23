@@ -438,6 +438,14 @@ test('Parse contents with html5 anchors and allow_html_in_named_anchor: true', f
 	root = parser.parse('<a id="x">a</a><a href="x">x</a>');
 	equal(serializer.serialize(root), '<a id="x">a</a><a href="x">x</a>');
 });
+
+test('Parse contents with html5 self closing datalist options', function() {
+	var parser, root, schema = new tinymce.html.Schema({schema: "html5"});
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<datalist><option label="a1" value="b1"><option label="a2" value="b2"><option label="a3" value="b3"></datalist>');
+	equal(serializer.serialize(root), '<datalist><option label="a1" value="b1"></option><option label="a2" value="b2"></option><option label="a3" value="b3"></option></datalist>');
+});
 </script>
 </head>
 <body>

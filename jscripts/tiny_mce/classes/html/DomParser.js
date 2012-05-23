@@ -303,9 +303,23 @@
 				}
 			};
 
+			function cloneAndExcludeBlocks(input) {
+				var name, output = {};
+
+				for (name in input) {
+					if (name !== 'li' && name != 'p') {
+						output[name] = input[name];
+					}
+				}
+
+				return output;
+			};
+
 			parser = new tinymce.html.SaxParser({
 				validate : validate,
-				fix_self_closing : !validate, // Let the DOM parser handle <li> in <li> or <p> in <p> for better results
+
+				// Exclude P and LI from DOM parsing since it's treated better by the DOM parser
+				self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
 
 				cdata: function(text) {
 					node.append(createNode('#cdata', 4)).value = text;

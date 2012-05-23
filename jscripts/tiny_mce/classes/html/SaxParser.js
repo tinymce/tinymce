@@ -172,7 +172,7 @@
 
 			// Setup lookup tables for empty elements and boolean attributes
 			shortEndedElements = schema.getShortEndedElements();
-			selfClosing = schema.getSelfClosingElements();
+			selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
 			fillAttrsMap = schema.getBoolAttrs();
 			validate = settings.validate;
 			removeInternalElements = settings.remove_internals;
