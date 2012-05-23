@@ -423,10 +423,11 @@
 
 			// Measure box
 			if (s.render_ui && t.theme) {
+				t.orgDisplay = e.style.display;
+
 				if (typeof s.theme != "function") {
 					w = s.width || e.style.width || e.offsetWidth;
 					h = s.height || e.style.height || e.offsetHeight;
-					t.orgDisplay = e.style.display;
 					re = /^[0-9\.]+(|px)$/i;
 
 					if (re.test('' + w))
@@ -449,6 +450,10 @@
 						width : w,
 						height : h
 					});
+
+					h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
+					if (h < 100)
+						h = 100;
 				} else {
 					o = s.theme(t, e);
 
@@ -482,10 +487,6 @@
 			// User specified a document.domain value
 			if (document.domain && location.hostname != document.domain)
 				tinymce.relaxedDomain = document.domain;
-
-			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
-			if (h < 100)
-				h = 100;
 
 			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml">';
 
