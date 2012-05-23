@@ -123,6 +123,12 @@ if (!tinymce.isIE) {
 
 		queue.done();
 	});
+
+	asyncTest('Typing a mail address with protocol', function() {
+		TypingMailAddrWithProtocol.inA(NonEmptyParagraph).gives(new RegExp('^<p><a href="mailto:user@domain.com">mailto:user@domain.com</a>(\\s|&nbsp;)Test</p>$'));
+
+		queue.done();
+	});
 } else {
 	test("IE has built in support", function() {
 		ok(true, "Skipped");
