@@ -1,39 +1,43 @@
-require("include/include.js");
+test(
+  'Binder',
 
-var Struct = demand("ephox.scullion.Struct");
-var Events = demand("ephox.porkbun.Events");
-var Binder = demand("ephox.porkbun.Binder");
+  [
+    'ephox.scullion.Struct',
+    'ephox.porkbun.Events',
+    'ephox.porkbun.Binder'
+  ],
 
-function testBinder() {
-  var events = Events.create({
-    myEvent: Struct.immutable('one', 'two')
-  });
+  function (Struct, Events, Binder) {
+    var events = Events.create({
+      myEvent: Struct.immutable('one', 'two')
+    });
 
-  var binder = Binder.create();
+    var binder = Binder.create();
 
-  var called = false;
+    var called = false;
 
-  binder.bind(events.registry.myEvent, function(event) {
-    called = true;
-  });
-
-  jssert.assertThrows(function () {
     binder.bind(events.registry.myEvent, function(event) {
       called = true;
     });
-  });
 
-  events.trigger.myEvent('a', 'b');
-  jssert.assertEq(true, called);
+    jssert.assertThrows(function () {
+      binder.bind(events.registry.myEvent, function(event) {
+        called = true;
+      });
+    });
 
-  called = false;
+    events.trigger.myEvent('a', 'b');
+    jssert.assertEq(true, called);
 
-  binder.unbind(events.registry.myEvent);
+    called = false;
 
-  events.trigger.myEvent('a', 'b');
-  jssert.assertEq(false, called);
-
-  jssert.assertThrows(function () {
     binder.unbind(events.registry.myEvent);
-  });
-}
+
+    events.trigger.myEvent('a', 'b');
+    jssert.assertEq(false, called);
+
+    jssert.assertThrows(function () {
+      binder.unbind(events.registry.myEvent);
+    });
+  }
+);

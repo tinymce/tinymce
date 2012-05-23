@@ -1,43 +1,51 @@
-require("include/include.js");
+test(
+  'Events',
 
-var Struct = demand("ephox.scullion.Struct");
-var Events = demand("ephox.porkbun.Events");
+  [
+    'ephox.scullion.Struct',
+    'ephox.porkbun.Events'
+  ],
 
-function testEvents() {
-  var events = Events.create({ myEvent: Struct.immutable("name") });
+  function(Struct, Events) {
 
-  var called = false;
-  var calledEvent = {};
+    (function() {
+      var events = Events.create({ myEvent: Struct.immutable("name") });
 
-  var handler = function(event) {
-    calledEvent = event;
-    called = true;
-  };
+      var called = false;
+      var calledEvent = {};
 
-  events.registry.myEvent.bind(handler)
-  events.trigger.myEvent("something");
+      var handler = function(event) {
+        calledEvent = event;
+        called = true;
+      };
 
-  jssert.assertEq(true, called);
-  jssert.assertEq(true, calledEvent.hasOwnProperty("name"));
-  jssert.assertEq("something", calledEvent.name());
+      events.registry.myEvent.bind(handler)
+      events.trigger.myEvent("something");
 
-  called = false;
-  calledEvent = {};
+      jssert.assertEq(true, called);
+      jssert.assertEq(true, calledEvent.hasOwnProperty("name"));
+      jssert.assertEq("something", calledEvent.name());
 
-  events.registry.myEvent.unbind(handler);
-  events.trigger.myEvent("something");
+      called = false;
+      calledEvent = {};
 
-  jssert.assertEq(false, called);
-  jssert.assertEq(false, calledEvent.hasOwnProperty("name"));
+      events.registry.myEvent.unbind(handler);
+      events.trigger.myEvent("something");
 
-  // This should not throw an error
-  events.registry.myEvent.unbind(handler);
-}
+      jssert.assertEq(false, called);
+      jssert.assertEq(false, calledEvent.hasOwnProperty("name"));
 
-function testUndefinedHandler() {
-  var events = Events.create({ emptyEvent: Struct.immutable() });
+      // This should not throw an error
+      events.registry.myEvent.unbind(handler);
+    })();
 
-  jssert.assertThrows(function() {
-    events.registry.emptyEvent.bind(undefined);
-  }, 'Event bind error: undefined handler bound for event type "emptyEvent"');
-}
+    (function() {
+      var events = Events.create({ emptyEvent: Struct.immutable() });
+
+      jssert.assertThrows(
+        function() { events.registry.emptyEvent.bind(undefined); }, 
+        'Event bind error: undefined handler bound for event type "emptyEvent"'
+      );
+    })();
+  }
+);

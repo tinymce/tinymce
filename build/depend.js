@@ -1,6 +1,24 @@
 var lib = 'lib';
+var run = lib + '/run';
+var depend = run + '/depend';
+var licenses = run + '/licenses';
+var demo = lib + '/demo';
+var test = lib + '/test';
+var config = lib + '/config';
+
 var cleanDirs = [ lib ];
 
+var q = function(x) {
+  return {
+    name: x,
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: x + '.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  };
+};
 var dependencies = [
   {
     name: "bolt",
@@ -25,16 +43,6 @@ var dependencies = [
     source: "wrap-jquery.zip",
     targets: [
       { name: "compile/ephox.wrap.JQuery.js", path: lib + "/demo" }
-    ]
-  },
-
-  {
-    name: "flute",
-    repository: "buildrepo2",
-    version: "latest",
-    source: "flute.zip",
-    targets: [
-      { name: "module/*.js", path: lib + "/run/depend" }
     ]
   },
 
@@ -76,5 +84,8 @@ var dependencies = [
     targets: [
       {name: "jssert.js", path: "lib/test"}
     ]
-  }
+  },
+
+  q('flute'),
+  q('nuggets')
 ];
