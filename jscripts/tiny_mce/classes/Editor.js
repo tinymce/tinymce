@@ -466,6 +466,9 @@
 					if (o.iframeContainer.nodeType) {
 						o.iframeContainer = o.iframeContainer.id = o.iframeContainer.id || t.id + "_iframecontainer";
 					}
+
+					// Use specified iframe height or the targets offsetHeight
+					h = o.iframeHeight || e.offsetHeight;
 				}
 
 				t.editorContainer = o.editorContainer;
