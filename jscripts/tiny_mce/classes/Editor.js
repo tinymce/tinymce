@@ -221,6 +221,10 @@
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
+			// Hide target element early to prevent content flashing
+			t.orgVisibility = t.getElement().style.visibility;
+			t.getElement().style.visibility = 'hidden';
+
 			/**
 			 * Window manager reference, use this to open new windows and dialogs.
 			 *
@@ -553,6 +557,9 @@
 			if (o.editorContainer) {
 				DOM.get(o.editorContainer).style.display = t.orgDisplay;
 			}
+
+			// Restore visibility on target element
+			e.style.visibility = t.orgVisibility;
 
 			DOM.get(t.id).style.display = 'none';
 			DOM.setAttrib(t.id, 'aria-hidden', true);
