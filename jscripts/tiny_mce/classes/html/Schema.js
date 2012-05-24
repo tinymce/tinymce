@@ -97,7 +97,7 @@
 					'dl[A][dd|dt]' +
 					'dt[A][B]' +
 					'dd[A][C]' +
-					'a[A|href|target|ping|rel|media|type][C]' +
+					'a[A|href|target|ping|rel|media|type][B]' +
 					'em[A][B]' +
 					'strong[A][B]' +
 					'small[A][B]' +
