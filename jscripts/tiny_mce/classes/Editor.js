@@ -222,8 +222,10 @@
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
 
 			// Hide target element early to prevent content flashing
-			t.orgVisibility = t.getElement().style.visibility;
-			t.getElement().style.visibility = 'hidden';
+			if (!s.content_editable) {
+				t.orgVisibility = t.getElement().style.visibility;
+				t.getElement().style.visibility = 'hidden';
+			}
 
 			/**
 			 * Window manager reference, use this to open new windows and dialogs.
@@ -1556,7 +1558,10 @@
 			if (!args.no_events)
 				self.onSetContent.dispatch(self, args);
 
-			self.selection.normalize();
+			// Don't normalize selection if the focused element isn't the body in content editable mode since it will steal focus otherwise
+			if (!self.settings.content_editable || document.activeElement === self.getBody()) {
+				self.selection.normalize();
+			}
 
 			return args.content;
 		},
