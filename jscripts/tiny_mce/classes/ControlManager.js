@@ -117,23 +117,22 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createControl : function(name) {
-			var ctrl, i, l, self = this, editor = self.editor, plugins, factories;
+			var ctrl, i, l, self = this, editor = self.editor, factories, ctrlName;
 
 			// Build control factory cache
 			if (!self.controlFactories) {
 				self.controlFactories = [];
-				plugins = editor.plugins;
-				for (i = 0, l = plugins.length; i < l; i++) {
-					if (plugins[i].createControl) {
-						self.controlFactories.push(plugins[i]);
+				each(editor.plugins, function(plugin) {
+					if (plugin.createControl) {
+						self.controlFactories.push(plugin);
 					}
-				}
+				});
 			}
 
 			// Create controls by asking cached factories
 			factories = self.controlFactories;
 			for (i = 0, l = factories.length; i < l; i++) {
-				ctrl = factories.createControl(name, self);
+				ctrl = factories[i].createControl(name, self);
 
 				if (ctrl) {
 					return self.add(ctrl);
