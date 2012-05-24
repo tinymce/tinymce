@@ -113,31 +113,44 @@
 		 * will be used.
 		 *
 		 * @method createControl
-		 * @param {String} n Control name to create for example "separator".
+		 * @param {String} name Control name to create for example "separator".
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
-		createControl : function(n) {
-			var c, t = this, ed = t.editor;
+		createControl : function(name) {
+			var ctrl, i, l, self = this, editor = self.editor, plugins, factories;
 
-			each(ed.plugins, function(p) {
-				if (p.createControl) {
-					c = p.createControl(n, t);
-
-					if (c)
-						return false;
+			// Build control factory cache
+			if (!self.controlFactories) {
+				self.controlFactories = [];
+				plugins = editor.plugins;
+				for (i = 0, l = plugins.length; i < l; i++) {
+					if (plugins[i].createControl) {
+						self.controlFactories.push(plugins[i]);
+					}
 				}
-			});
-
-			switch (n) {
-				case "|":
-				case "separator":
-					return t.createSeparator();
 			}
 
-			if (!c && ed.buttons && (c = ed.buttons[n]))
-				return t.createButton(n, c);
+			// Create controls by asking cached factories
+			factories = self.controlFactories;
+			for (i = 0, l = factories.length; i < l; i++) {
+				ctrl = factories.createControl(name, self);
 
-			return t.add(c);
+				if (ctrl) {
+					return self.add(ctrl);
+				}
+			}
+
+			// Create sepearator
+			if (name === "|" || name === "separator") {
+				return self.createSeparator();
+			}
+
+			// Create control from button collection
+			if (editor.buttons && (ctrl = editor.buttons[name])) {
+				return self.createButton(name, ctrl);
+			}
+
+			return self.add(ctrl);
 		},
 
 		/**
