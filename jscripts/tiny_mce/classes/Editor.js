@@ -346,7 +346,7 @@
 		 * @method init
 		 */
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re, i, initializedPlugins = [];
+			var n, t = this, s = t.settings, w, h, mh, e = t.getElement(), o, ti, u, bi, bc, re, i, initializedPlugins = [];
 
 			tinymce.add(t);
 
@@ -432,13 +432,14 @@
 				if (typeof s.theme != "function") {
 					w = s.width || e.style.width || e.offsetWidth;
 					h = s.height || e.style.height || e.offsetHeight;
+					mh = s.min_height || 100;
 					re = /^[0-9\.]+(|px)$/i;
 
 					if (re.test('' + w))
 						w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
 
 					if (re.test('' + h))
-						h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), 100);
+						h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), mh);
 
 					// Render UI
 					o = t.theme.renderUI({
@@ -456,8 +457,8 @@
 					});
 
 					h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
-					if (h < 100)
-						h = 100;
+					if (h < mh)
+						h = mh;
 				} else {
 					o = s.theme(t, e);
 
