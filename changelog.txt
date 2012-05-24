@@ -4,6 +4,7 @@ Version 3.5.x (2012-xx-xx)
 	Changed the theme_advanced_toolbar_align default value to "left".
 	Changed the theme_advanced_toolbar_location default value to "top".
 	Changed the theme_advanced_statusbar_location default value to "bottom".
+	Fixed bug where the simple link dialog would remove class and target attributes from links when updating them if the drop downs wasn't visible.
 Version 3.5.1.1 (2012-05-25)
 	Fixed bug with control creation where plugin specific controls didn't work as expected.
 Version 3.5.1 (2012-05-25)
