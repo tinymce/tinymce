@@ -64,7 +64,7 @@
 			self.settings = settings = extend({
 				id : id,
 				language : 'en',
-				theme : 'simple',
+				theme : 'advanced',
 				skin : 'default',
 				delta_width : 0,
 				delta_height : 0,

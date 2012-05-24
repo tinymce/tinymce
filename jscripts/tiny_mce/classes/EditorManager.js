@@ -157,11 +157,6 @@
 				return c.constructor === RegExp ? c.test(n.className) : DOM.hasClass(n, c);
 			};
 
-			s = extend({
-				theme : "simple",
-				language : "en"
-			}, s);
-
 			t.settings = s;
 
 			// Legacy call
