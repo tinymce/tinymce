@@ -145,6 +145,7 @@
 				ed.selection.setRng(r);
 				tinyMCE.execCommand('createlink',false, matches[1] + matches[2]);
 				ed.selection.moveToBookmark(bookmark);
+				ed.nodeChanged();
 
 				// TODO: Determine if this is still needed.
 				if (tinyMCE.isWebKit) {
