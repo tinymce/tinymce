@@ -724,7 +724,7 @@
 			 * // Selects the first paragraph found
 			 * tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.dom.select('p')[0]);
 			 */
-			self.selection = new tinymce.dom.Selection(self.dom, self.getWin(), self.serializer);
+			self.selection = new tinymce.dom.Selection(self.dom, self.getWin(), self.serializer, self);
 
 			/**
 			 * Formatter instance.

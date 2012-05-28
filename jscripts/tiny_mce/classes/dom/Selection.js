@@ -35,12 +35,13 @@
 		 * @param {Window} win Window to bind the selection object to.
 		 * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
 		 */
-		Selection : function(dom, win, serializer) {
+		Selection : function(dom, win, serializer, editor) {
 			var t = this;
 
 			t.dom = dom;
 			t.win = win;
 			t.serializer = serializer;
+			t.editor = editor;
 
 			// Add events
 			each([
@@ -1168,6 +1169,69 @@
 				//console.log(self.dom.dumpRng(rng));
 				self.setRng(rng, self.isForward());
 			}
+		},
+
+		/**
+		 * Executes callback of the current selection matches the specified selector or not and passes the state and args to the callback.
+		 *
+		 * @method selectorChanged
+		 * @param {String} selector CSS selector to check for.
+		 * @param {function} callback Callback with state and args when the selector is matches or not.
+		 */
+		selectorChanged: function(selector, callback) {
+			var self = this, currentSelectors = {};
+
+			if (!self.selectorChangedData) {
+				self.selectorChangedData = {};
+
+				self.editor.onNodeChange.addToTop(function(ed, cm, node) {
+					var dom = self.dom, parents = dom.getParents(node, null, dom.getRoot());
+
+					// Check for new matching selectors
+					each(self.selectorChangedData, function(callbacks, selector) {
+						each(parents, function(node) {
+							if (dom.is(node, selector) && !currentSelectors[selector]) {
+								// Execute callbacks
+								each(callbacks, function(callback) {
+									callback(true, {node: node, selector: selector, parents: parents});
+								});
+
+								currentSelectors[selector] = callbacks;
+								return false;
+							}
+						});
+					});
+
+					// Check if current selector still match
+					each(currentSelectors, function(callbacks, selector) {
+						var match;
+
+						each(parents, function(node) {
+							if (dom.is(node, selector)) {
+								match = true;
+								return false;
+							}
+						});
+
+						if (!match) {
+							each(callbacks, function(callback) {
+								callback(false, {node: node, selector: selector, parents: parents});
+							});
+
+							delete currentSelectors[selector];
+						}
+					});
+				});
+			}
+
+			// Add selector listeners
+			if (!self.selectorChangedData[selector]) {
+				self.selectorChangedData[selector] = [];
+			}
+
+			self.selectorChangedData[selector].push(callback);
+
+			return self;
 		},
 
 		destroy : function(s) {

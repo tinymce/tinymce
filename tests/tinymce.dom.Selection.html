@@ -802,6 +802,31 @@ test('custom elements', function() {
 	equal(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
 });
 
+test('selectorChanged', function() {
+	var newState, newArgs;
+
+	editor.selection.selectorChanged('a[@href]', function(state, args) {
+		newState = state;
+		newArgs = args;
+	});
+
+	editor.getBody().innerHTML = '<p><a href="#">text</a></p>';
+	setSelection('a', 0, 'a', 4);
+	editor.nodeChanged();
+
+	ok(newState);
+	equal(newArgs.selector, 'a[@href]');
+	equal(newArgs.node, editor.getBody().firstChild.firstChild);
+	equal(newArgs.parents.length, 2);
+
+	editor.getBody().innerHTML = '<p>text</p>';
+	setSelection('p', 0, 'p', 4);
+	editor.nodeChanged();
+	equal(newArgs.selector, 'a[@href]');
+	equal(newArgs.node, editor.getBody().firstChild);
+	equal(newArgs.parents.length, 1);
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

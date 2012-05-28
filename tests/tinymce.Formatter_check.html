@@ -8,6 +8,7 @@
 <script src="qunit/connector.js"></script>
 <script type="text/javascript" src="qunit/runner.js"></script>
 <script type="text/javascript" src="js/tiny_mce_loader.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
 <script>
 var editor, rng, format;
 
@@ -140,6 +141,64 @@ test('Selected element match with variable and function', function() {
 	rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	ok(editor.formatter.match('complex', {color : '#ff00'}), 'Selected element match with variable and function');
+});
+
+test('formatChanged simple format', function() {
+	var newState, newArgs;
+
+	editor.formatter.formatChanged('bold', function(state, args) {
+		newState = state;
+		newArgs = args;
+	});
+
+	editor.getBody().innerHTML = '<p>text</p>';
+	setSelection('p', 0, 'p', 4);
+
+	// Check apply
+	editor.formatter.apply('bold');
+	editor.nodeChanged();
+	ok(newState);
+	equal(newArgs.format, 'bold');
+	equal(newArgs.node, editor.getBody().firstChild.firstChild);
+	equal(newArgs.parents.length, 2);
+
+	// Check remove
+	editor.formatter.remove('bold');
+	editor.nodeChanged();
+	ok(!newState);
+	equal(newArgs.format, 'bold');
+	equal(newArgs.node, editor.getBody().firstChild);
+	equal(newArgs.parents.length, 1);
+});
+
+test('formatChanged complex format', function() {
+	var newState, newArgs;
+
+	editor.formatter.register('complex', {inline : 'span', styles : {color : '%color'}});
+
+	editor.formatter.formatChanged('complex', function(state, args) {
+		newState = state;
+		newArgs = args;
+	});
+
+	editor.getBody().innerHTML = '<p>text</p>';
+	setSelection('p', 0, 'p', 4);
+
+	// Check apply
+	editor.formatter.apply('complex', {color: '#FF0000'});
+	editor.nodeChanged();
+	ok(newState);
+	equal(newArgs.format, 'complex');
+	equal(newArgs.node, editor.getBody().firstChild.firstChild);
+	equal(newArgs.parents.length, 2);
+
+	// Check remove
+	editor.formatter.remove('complex', {color: '#FF0000'});
+	editor.nodeChanged();
+	ok(!newState);
+	equal(newArgs.format, 'complex');
+	equal(newArgs.node, editor.getBody().firstChild);
+	equal(newArgs.parents.length, 1);
 });
 
 tinyMCE.init({
