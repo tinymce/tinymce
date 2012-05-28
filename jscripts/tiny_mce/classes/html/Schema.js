@@ -158,7 +158,7 @@
 					'area[A|shape|coords|href|alt|target|media|rel|ping|type][]' +
 					'mathml[A][]' +
 					'svg[A][]' +
-					'table[A|summary][caption|colgroup|thead|tfoot|tbody|tr]' +
+					'table[A|border][caption|colgroup|thead|tfoot|tbody|tr]' +
 					'caption[A][C]' +
 					'colgroup[A|span][col]' +
 					'col[A|span][]' +
@@ -762,6 +762,45 @@
 			return !!(parent && parent[child]);
 		};
 
+		/**
+		 * Returns true/false if the specified element name and optional attribute is
+		 * valid according to the schema.
+		 *
+		 * @method isValid
+		 * @param {String} name Name of element to check.
+		 * @param {String} attr Optional attribute name to check for.
+		 * @return {Boolean} True/false if the element and attribute is valid.
+		 */
+		self.isValid = function(name, attr) {
+			var attrPatterns, i, rule = getElementRule(name);
+
+			// Check if it's a valid element
+			if (rule) {
+				if (attr) {
+					// Check if attribute name exists
+					if (rule.attributes[attr]) {
+						return true;
+					}
+
+					// Check if attribute matches a regexp pattern
+					attrPatterns = rule.attributePatterns;
+					if (attrPatterns) {
+						i = attrPatterns.length;
+						while (i--) {
+							if (attrPatterns[i].pattern.test(name)) {
+								return true;
+							}
+						}
+					}
+				} else {
+					return true;
+				}
+			}
+
+			// No match
+			return false;
+		};
+		
 		/**
 		 * Returns true/false if the specified element is valid or not
 		 * according to the schema.

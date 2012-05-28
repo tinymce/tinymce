@@ -329,6 +329,18 @@ test('blockElements', function() {
 	ok(schema.getBlockElements()['p']);
 	ok(!schema.getBlockElements()['h1']);
 });
+
+test('isValid', function() {
+	var schema = new tinymce.html.Schema({valid_elements : 'a[href],i[*]'});
+
+	ok(schema.isValid('a'));
+	ok(schema.isValid('a', 'href'));
+	ok(!schema.isValid('b'));
+	ok(!schema.isValid('b', 'href'));
+	ok(!schema.isValid('a', 'id'));
+	ok(schema.isValid('i'));
+	ok(schema.isValid('i', 'id'));
+});
 </script>
 </head>
 <body>

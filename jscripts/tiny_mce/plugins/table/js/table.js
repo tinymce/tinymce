@@ -304,6 +304,15 @@ function init() {
 	var formObj = document.forms[0];
 	var elm = dom.getParent(inst.selection.getNode(), "table");
 
+	// Hide advanced fields that isn't available in the schema
+	tinymce.each("summary id rules dir style frame".split(" "), function(name) {
+		var tr = tinyMCEPopup.dom.getParent(name, "tr") || tinyMCEPopup.dom.getParent("t" + name, "tr");
+
+		if (tr && !tinyMCEPopup.editor.schema.isValid("table", name)) {
+			tr.style.display = 'none';
+		}
+	});
+
 	action = tinyMCEPopup.getWindowArg('action');
 
 	if (!action)
