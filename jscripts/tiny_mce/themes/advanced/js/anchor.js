@@ -40,6 +40,7 @@ var AnchorDialog = {
 		if (elm) {
 			elm.setAttribute(attribName, name);
 			elm[attribName] = name;
+			ed.undoManager.add();
 		} else {
 			// create with zero-sized nbsp so that in Webkit where anchor is on last line by itself caret cannot be placed after it
 			var attrs =  {'class' : 'mceItemAnchor'};

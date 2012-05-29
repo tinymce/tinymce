@@ -10,6 +10,7 @@ Version 3.5.x (2012-xx-xx)
 	Fixed bug where the link/unlink buttons wouldn't get disabled once a link was created by the autolink plugin logic.
 	Fixed bug where the border attribute was missing in the HTML5 schema.
 	Fixed bug where the legacyoutput plugin would use inline styles for font color.
+	Fixed bug where editing of anchor names wouldn't produce an undo level.
 	Removed summary from HTML5 table attributes and fixed so this and other deprecated table fields gets hidden in the table dialog.
 Version 3.5.1.1 (2012-05-25)
 	Fixed bug with control creation where plugin specific controls didn't work as expected.
