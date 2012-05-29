@@ -1227,7 +1227,7 @@
 						for (last = ed.getBody().lastChild; last && last.nodeType == 3 && !last.nodeValue.length; last = last.previousSibling) ;
 
 						if (last && last.nodeName == 'TABLE')
-							ed.dom.add(ed.getBody(), 'p', null, '<br mce_bogus="1" />');
+							ed.dom.add(ed.getBody(), 'p', null, '<br data-mce-bogus="1" />');
 					};
 
 					// Fixes an bug where it's impossible to place the caret before a table in Gecko
@@ -1265,7 +1265,7 @@
 					ed.onPreProcess.add(function(ed, o) {
 						var last = o.node.lastChild;
 
-						if (last && last.childNodes.length == 1 && last.firstChild.nodeName == 'BR')
+						if (last && last.childNodes.length == 1 && last.firstChild.nodeName == 'BR' && last.previousSibling && last.previousSibling.nodeName == "TABLE")
 							ed.dom.remove(last);
 					});
 

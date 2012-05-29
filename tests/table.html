@@ -37,7 +37,7 @@ if (tinymce.isWebKit) {
 		editor.selection.select(editor.dom.select('td')[0]);
 		editor.plugins.table.fixTableCellSelection(editor);
 		robot.type('g',false, function(){
-			var expected = '<table>\n<tbody>\n<tr>\n<td>\n<p>g</p>\n</td>\n<td>\n<p>second cell</p>\n</td>\n</tr>\n</tbody>\n</table>';
+			var expected = '<table><tbody><tr><td><p>g</p></td><td><p>second cell</p></td></tr></tbody></table>';
 			var actual = editor.getContent();
 			equal(actual, expected);
 			start();
@@ -142,12 +142,18 @@ asyncTest('shift-enter in table cell ending with BR places caret on new line', f
 		}, editor.getBody());
 });
 
+test("Insert table and remove caret placeholder", function() {
+	editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+	equal(editor.getBody().innerHTML.toLowerCase(), '<table class="mceitemtable"><tbody><tr><td>x</td></tr></tbody></table><p><br data-mce-bogus="1"></p>');
+	equal(editor.getContent(), '<table><tbody><tr><td>x</td></tr></tbody></table>');
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
 		elements : "elm1",
 		cleanup: true,
-
+		apply_source_formatting: false,
 		add_unload_trigger : false,
 		plugins: "table",
 		init_instance_callback : function(ed) {
