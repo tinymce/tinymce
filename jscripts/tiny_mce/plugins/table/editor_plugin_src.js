@@ -599,6 +599,9 @@
 				else
 					dom.insertAfter(row, targetRow);
 			});
+
+			// Remove current selection
+			dom.removeClass(dom.select('td.mceSelected,th.mceSelected'), 'mceSelected');
 		};
 
 		function getPos(target) {
