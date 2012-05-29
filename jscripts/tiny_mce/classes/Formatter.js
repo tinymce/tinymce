@@ -995,7 +995,7 @@
 						matchedFormatNames.push(name);
 					}
 				}
-			});
+			}, dom.getRoot());
 
 			return matchedFormatNames;
 		};
@@ -1039,25 +1039,30 @@
 		 * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
 		 */
 		function formatChanged(formats, callback) {
-			var currentFormats = {};
+			var currentFormats;
 
 			// Setup format node change logic
 			if (!formatChangeData) {
 				formatChangeData = {};
+				currentFormats = {};
 
 				ed.onNodeChange.addToTop(function(ed, cm, node) {
-					var parents = dom.getParents(node, null, dom.getRoot());
+					var parents = getParents(node), matchedFormats = {};
 
 					// Check for new formats
 					each(formatChangeData, function(callbacks, format) {
 						each(parents, function(node) {
-							if (matchNode(node, format, {}, true) && !currentFormats[format]) {
-								// Execute callbacks
-								each(callbacks, function(callback) {
-									callback(true, {node: node, format: format, parents: parents});
-								});
+							if (matchNode(node, format, {}, true)) {
+								if (!currentFormats[format]) {
+									// Execute callbacks
+									each(callbacks, function(callback) {
+										callback(true, {node: node, format: format, parents: parents});
+									});
 
-								currentFormats[format] = callbacks;
+									currentFormats[format] = callbacks;
+								}
+
+								matchedFormats[format] = callbacks;
 								return false;
 							}
 						});
@@ -1065,21 +1070,12 @@
 
 					// Check if current formats still match
 					each(currentFormats, function(callbacks, format) {
-						var hasFormat;
+						if (!matchedFormats[format]) {
+							delete currentFormats[format];
 
-						each(parents, function(node) {
-							if (matchNode(node, format, {}, true)) {
-								hasFormat = true;
-								return false;
-							}
-						});
-
-						if (!hasFormat) {
 							each(callbacks, function(callback) {
 								callback(false, {node: node, format: format, parents: parents});
 							});
-
-							delete currentFormats[format];
 						}
 					});
 				});

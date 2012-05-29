@@ -1179,46 +1179,42 @@
 		 * @param {function} callback Callback with state and args when the selector is matches or not.
 		 */
 		selectorChanged: function(selector, callback) {
-			var self = this, currentSelectors = {};
+			var self = this, currentSelectors;
 
 			if (!self.selectorChangedData) {
 				self.selectorChangedData = {};
+				currentSelectors = {};
 
 				self.editor.onNodeChange.addToTop(function(ed, cm, node) {
-					var dom = self.dom, parents = dom.getParents(node, null, dom.getRoot());
+					var dom = self.dom, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
 
 					// Check for new matching selectors
 					each(self.selectorChangedData, function(callbacks, selector) {
 						each(parents, function(node) {
-							if (dom.is(node, selector) && !currentSelectors[selector]) {
-								// Execute callbacks
-								each(callbacks, function(callback) {
-									callback(true, {node: node, selector: selector, parents: parents});
-								});
+							if (dom.is(node, selector)) {
+								if (!currentSelectors[selector]) {
+									// Execute callbacks
+									each(callbacks, function(callback) {
+										callback(true, {node: node, selector: selector, parents: parents});
+									});
 
-								currentSelectors[selector] = callbacks;
+									currentSelectors[selector] = callbacks;
+								}
+
+								matchedSelectors[selector] = callbacks;
 								return false;
 							}
 						});
 					});
 
-					// Check if current selector still match
+					// Check if current selectors still match
 					each(currentSelectors, function(callbacks, selector) {
-						var match;
+						if (!matchedSelectors[selector]) {
+							delete currentSelectors[selector];
 
-						each(parents, function(node) {
-							if (dom.is(node, selector)) {
-								match = true;
-								return false;
-							}
-						});
-
-						if (!match) {
 							each(callbacks, function(callback) {
 								callback(false, {node: node, selector: selector, parents: parents});
 							});
-
-							delete currentSelectors[selector];
 						}
 					});
 				});
