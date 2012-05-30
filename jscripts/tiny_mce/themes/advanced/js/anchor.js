@@ -46,6 +46,7 @@ var AnchorDialog = {
 			var attrs =  {'class' : 'mceItemAnchor'};
 			attrs[attribName] = name;
 			ed.execCommand('mceInsertContent', 0, ed.dom.createHTML('a', attrs, '\uFEFF'));
+			ed.nodeChanged();
 		}
 
 		tinyMCEPopup.close();
