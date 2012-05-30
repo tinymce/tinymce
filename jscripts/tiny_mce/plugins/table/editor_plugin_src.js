@@ -287,6 +287,21 @@
 				endX = startX + (cols - 1);
 				endY = startY + (rows - 1);
 			} else {
+				startPos = endPos = null;
+
+				// Calculate start/end pos by checking for selected cells in grid works better with context menu
+				each(grid, function(row, y) {
+					each(row, function(cell, x) {
+						if (isCellSelected(cell)) {
+							if (!startPos) {
+								startPos = {x: x, y: y};
+							}
+
+							endPos = {x: x, y: y};
+						}
+					});
+				});
+
 				// Use selection
 				startX = startPos.x;
 				startY = startPos.y;
