@@ -7,7 +7,7 @@
 <script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/ui-lightness/jquery-ui.css" type="text/css" />
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/cupertino/jquery-ui.css" type="text/css" />
 <script type="text/javascript">
 	tinyMCE.init({
 		mode: "exact",
@@ -39,11 +39,7 @@
 					e.preventDefault();
 
 					// Execute editor command based on data parameters
-					editor.execCommand(
-						dom.getAttrib(e.target, 'data-mce-command'),
-						false,
-						dom.getAttrib(e.target, 'data-mce-value')
-					);					
+					editor.execCommand(dom.getAttrib(e.target, 'data-mce-command'), false, dom.getAttrib(e.target, 'data-mce-value'));
 				});
 			});
 
@@ -78,13 +74,13 @@
 		theme: function(editor, target) {
 			// Generate UI
 			var editorContainer = $(target).after(
-				'<div style="border: 1px solid gray">' +
-					'<div>' +
+				'<div class="ui-widget ui-corner-all">' +
+					'<div class="ui-widget-header" style="padding: 2px">' +
 						'<input type="checkbox" id="bold" data-mce-command="bold" /><label for="bold">B</label>' +
 						'<input type="checkbox" id="italic" data-mce-command="italic" /><label for="italic">I</label>' +
 						'<button data-mce-command="mceInsertContent" data-mce-value="Hello">Insert Hello</button>' +
 					'</div>' +
-					'<div style="border-top: 1px solid gray"></div>' +
+					'<div class="ui-widget-content ui-corner-bottom"></div>' +
 				'</div>'
 			).next();
 
@@ -93,11 +89,7 @@
 				e.preventDefault();
 
 				// Execute editor command based on data parameters
-				editor.execCommand(
-					$(this).attr('data-mce-command'),
-					false,
-					$(this).attr('data-mce-value')
-				);
+				editor.execCommand($(this).attr('data-mce-command'),false, $(this).attr('data-mce-value'));
 			});
 
 			// Register state change listeners
@@ -115,7 +107,7 @@
 			// Return editor and iframe containers
 			return {
 				editorContainer: editorContainer[0],
-				iframeContainer: editorContainer.last()[0],
+				iframeContainer: editorContainer.children().eq(-1),
 
 				// Calculate iframe height: target height - toolbar height
 				iframeHeight: $(target).height() - editorContainer.first().outerHeight()

@@ -1230,14 +1230,14 @@
 			return self;
 		},
 
-		destroy : function(s) {
-			var t = this;
+		destroy : function(manual) {
+			var self = this;
 
-			t.win = null;
+			self.win = null;
 
 			// Manual destroy then remove unload handler
-			if (!s)
-				tinymce.removeUnload(t.destroy);
+			if (!manual)
+				tinymce.removeUnload(self.destroy);
 		},
 
 		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode

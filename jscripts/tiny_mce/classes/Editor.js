@@ -476,6 +476,15 @@
 
 					// Use specified iframe height or the targets offsetHeight
 					h = o.iframeHeight || e.offsetHeight;
+
+					// Store away the selection when it's changed to it can be restored later with a editor.focus() call
+					if (isIE) {
+						t.onInit.add(function(ed) {
+							ed.dom.bind(ed.getBody(), 'beforedeactivate keydown', function() {
+								ed.lastIERng = ed.selection.getRng();
+							});
+						});
+					}
 				}
 
 				t.editorContainer = o.editorContainer;
@@ -854,6 +863,10 @@
 			var oed, self = this, selection = self.selection, contentEditable = self.settings.content_editable, ieRng, controlElm, doc = self.getDoc(), body;
 
 			if (!skip_focus) {
+				if (self.lastIERng) {
+					selection.setRng(self.lastIERng);
+				}
+
 				// Get selected control element
 				ieRng = selection.getRng();
 				if (ieRng.item) {
