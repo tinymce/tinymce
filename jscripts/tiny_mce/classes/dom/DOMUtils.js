@@ -1221,7 +1221,7 @@
 						newElement.innerHTML = '<br />' + html;
 
 						// Add all children from div to target
-						each (newElement.childNodes, function(node, i) {
+						each (tinymce.grep(newElement.childNodes), function(node, i) {
 							// Skip br element
 							if (i)
 								element.appendChild(node);
