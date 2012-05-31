@@ -1217,11 +1217,11 @@
 						// This seems to fix this problem
 
 						// Create new div with HTML contents and a BR infront to keep comments
-						element = self.create('div');
-						element.innerHTML = '<br />' + html;
+						var newElement = self.create('div');
+						newElement.innerHTML = '<br />' + html;
 
 						// Add all children from div to target
-						each (element.childNodes, function(node, i) {
+						each (newElement.childNodes, function(node, i) {
 							// Skip br element
 							if (i)
 								element.appendChild(node);

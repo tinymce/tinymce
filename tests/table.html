@@ -142,11 +142,14 @@ asyncTest('shift-enter in table cell ending with BR places caret on new line', f
 		}, editor.getBody());
 });
 
-test("Insert table and remove caret placeholder", function() {
-	editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
-	equal(editor.getBody().innerHTML.toLowerCase(), '<table class="mceitemtable"><tbody><tr><td>x</td></tr></tbody></table><p><br data-mce-bogus="1"></p>');
-	equal(editor.getContent(), '<table><tbody><tr><td>x</td></tr></tbody></table>');
-});
+// IE can place the caret below a table
+if (!tinymce.isIE) {
+	test("Insert table and remove caret placeholder", function() {
+		editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+		equal(editor.getBody().innerHTML.toLowerCase(), '<table class="mceitemtable"><tbody><tr><td>x</td></tr></tbody></table><p><br data-mce-bogus="1"></p>');
+		equal(editor.getContent(), '<table><tbody><tr><td>x</td></tr></tbody></table>');
+	});
+}
 
 var initTinyFunction = function(){
 	tinyMCE.init({

@@ -23,7 +23,7 @@ test("Font color", function() {
 	editor.setContent('<p>text</p>');
 	setSelection('p', 0, 'p', 4);
 	editor.execCommand('forecolor', false, '#FF0000');
-	equal(editor.getContent(), '<p><font color="#FF0000">text</font></p>');
+	equal(editor.getContent().toLowerCase(), '<p><font color="#ff0000">text</font></p>');
 });
 
 test("Font size", function() {
