@@ -247,7 +247,10 @@ function insertTable() {
 
 		// Fixes a bug in IE where the caret cannot be placed after the table if the table is at the end of the document
 		if (tinymce.isIE && node.nextSibling == null) {
-			dom.insertAfter(dom.create('p'), node);
+			if (inst.settings.forced_root_block)
+				dom.insertAfter(dom.create(inst.settings.forced_root_block), node);
+			else
+				dom.insertAfter(dom.create('br', {'data-mce-bogus': '1'}), node);
 		}
 
 		try {
