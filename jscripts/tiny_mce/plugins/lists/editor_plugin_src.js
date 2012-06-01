@@ -722,7 +722,8 @@
 			} else {
 				actions = {
 					defaultAction: convertListItemToParagraph,
-					elements: this.selectedBlocks()
+					elements: this.selectedBlocks(),
+					processEvenIfEmpty: true
 				};
 			}
 			this.process(actions);
@@ -826,7 +827,7 @@
 
 			function processElement(element) {
 				dom.removeClass(element, '_mce_act_on');
-				if (!element || element.nodeType !== 1 || selectedBlocks.length > 1 && isEmptyElement(element)) {
+				if (!element || element.nodeType !== 1 || ! actions.processEvenIfEmpty && selectedBlocks.length > 1 && isEmptyElement(element)) {
 					return;
 				}
 				element = findItemToOperateOn(element, dom);
