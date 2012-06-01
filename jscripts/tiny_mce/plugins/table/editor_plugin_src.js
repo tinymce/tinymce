@@ -1234,84 +1234,83 @@
 
 					ed.onKeyDown.add(moveSelection);
 				}
-								
+
 				// Fixes an issue on Gecko where it's impossible to place the caret behind a table
 				// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled
-				if (!tinymce.isIE) {
-					function fixTableCaretPos() {
-						var last;
+				function fixTableCaretPos() {
+					var last;
 
-						// Skip empty text nodes form the end
-						for (last = ed.getBody().lastChild; last && last.nodeType == 3 && !last.nodeValue.length; last = last.previousSibling) ;
+					// Skip empty text nodes form the end
+					for (last = ed.getBody().lastChild; last && last.nodeType == 3 && !last.nodeValue.length; last = last.previousSibling) ;
 
-						if (last && last.nodeName == 'TABLE') {
-							if (ed.settings.forced_root_block)
-								ed.dom.add(ed.getBody(), ed.settings.forced_root_block, null, '<br data-mce-bogus="1" />');
-							else
-								ed.dom.add(ed.getBody(), 'br', {'data-mce-bogus': '1'});
+					if (last && last.nodeName == 'TABLE') {
+						if (ed.settings.forced_root_block)
+							ed.dom.add(ed.getBody(), ed.settings.forced_root_block, null, tinymce.isIE ? '&nbsp;' : '<br data-mce-bogus="1" />');
+						else
+							ed.dom.add(ed.getBody(), 'br', {'data-mce-bogus': '1'});
+					}
+				};
+
+				// Fixes an bug where it's impossible to place the caret before a table in Gecko
+				// this fix solves it by detecting when the caret is at the beginning of such a table
+				// and then manually moves the caret infront of the table
+				if (tinymce.isGecko) {
+					ed.onKeyDown.add(function(ed, e) {
+						var rng, table, dom = ed.dom;
+
+						// On gecko it's not possible to place the caret before a table
+						if (e.keyCode == 37 || e.keyCode == 38) {
+							rng = ed.selection.getRng();
+							table = dom.getParent(rng.startContainer, 'table');
+
+							if (table && ed.getBody().firstChild == table) {
+								if (isAtStart(rng, table)) {
+									rng = dom.createRng();
+
+									rng.setStartBefore(table);
+									rng.setEndBefore(table);
+
+									ed.selection.setRng(rng);
+
+									e.preventDefault();
+								}
+							}
 						}
-					};
-
-					// Fixes an bug where it's impossible to place the caret before a table in Gecko
-					// this fix solves it by detecting when the caret is at the beginning of such a table
-					// and then manually moves the caret infront of the table
-					if (tinymce.isGecko) {
-						ed.onKeyDown.add(function(ed, e) {
-							var rng, table, dom = ed.dom;
-
-							// On gecko it's not possible to place the caret before a table
-							if (e.keyCode == 37 || e.keyCode == 38) {
-								rng = ed.selection.getRng();
-								table = dom.getParent(rng.startContainer, 'table');
-
-								if (table && ed.getBody().firstChild == table) {
-									if (isAtStart(rng, table)) {
-										rng = dom.createRng();
-
-										rng.setStartBefore(table);
-										rng.setEndBefore(table);
-
-										ed.selection.setRng(rng);
-
-										e.preventDefault();
-									}
-								}
-							}
-						});
-					}
-
-					ed.onKeyUp.add(fixTableCaretPos);
-					ed.onSetContent.add(fixTableCaretPos);
-					ed.onVisualAid.add(fixTableCaretPos);
-
-					ed.onPreProcess.add(function(ed, o) {
-						var last = o.node.lastChild;
-
-						if (last && (last.nodeName == "BR" || (last.childNodes.length == 1 && last.firstChild.nodeName == 'BR')) && last.previousSibling && last.previousSibling.nodeName == "TABLE")
-							ed.dom.remove(last);
 					});
-
-
-					/**
-					 * Fixes bug in Gecko where shift-enter in table cell does not place caret on new line
-					 */
-					if (tinymce.isGecko) {
-						ed.onKeyDown.add(function(ed, e) {
-							if (e.keyCode === tinymce.VK.ENTER && e.shiftKey) {
-								var node = ed.selection.getRng().startContainer;
-								var tableCell = dom.getParent(node, 'td,th');
-								if (tableCell) {
-									var zeroSizedNbsp = ed.getDoc().createTextNode("\uFEFF");
-									dom.insertAfter(zeroSizedNbsp, node);
-								}
-							}
-						});
-					}
-
-
-					fixTableCaretPos();
-					ed.startContent = ed.getContent({format : 'raw'});
 				}
+
+				ed.onKeyUp.add(fixTableCaretPos);
+				ed.onSetContent.add(fixTableCaretPos);
+				ed.onVisualAid.add(fixTableCaretPos);
+
+				ed.onPreProcess.add(function(ed, o) {
+					var last = o.node.lastChild;
+
+					if (last && (last.nodeName == "BR" || (last.childNodes.length == 1 && (last.firstChild.nodeName == 'BR' || last.firstChild.nodeValue == '\u00a0'))) && last.previousSibling && last.previousSibling.nodeName == "TABLE") {
+						ed.dom.remove(last);
+					}
+				});
+
+
+				/**
+				 * Fixes bug in Gecko where shift-enter in table cell does not place caret on new line
+				 */
+				if (tinymce.isGecko) {
+					ed.onKeyDown.add(function(ed, e) {
+						if (e.keyCode === tinymce.VK.ENTER && e.shiftKey) {
+							var node = ed.selection.getRng().startContainer;
+							var tableCell = dom.getParent(node, 'td,th');
+							if (tableCell) {
+								var zeroSizedNbsp = ed.getDoc().createTextNode("\uFEFF");
+								dom.insertAfter(zeroSizedNbsp, node);
+							}
+						}
+					});
+				}
+
+
+				fixTableCaretPos();
+				ed.startContent = ed.getContent({format : 'raw'});
 			});
 
 			// Register action commands
