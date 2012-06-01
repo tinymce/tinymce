@@ -26,6 +26,15 @@ tinymce.util.Quirks = function(editor) {
 	}
 
 	/**
+	 * Returns current IE document mode.
+	 */
+	function getDocumentMode() {
+		var documentMode = editor.getDoc().documentMode;
+
+		return documentMode ? documentMode : 6;
+	};
+
+	/**
 	 * Fixes a WebKit bug when deleting contents using backspace or delete key.
 	 * WebKit will produce a span element if you delete across two block elements.
 	 *
@@ -392,16 +401,15 @@ tinymce.util.Quirks = function(editor) {
 	 * Old IE versions can't properly render BR elements in PRE tags white in contentEditable mode. So this logic adds a \n before the BR so that it will get rendered.
 	 */
 	function addNewLinesBeforeBrInPre() {
-		var documentMode = editor.getDoc().documentMode;
-
 		// IE8+ rendering mode does the right thing with BR in PRE
-		if (documentMode && documentMode > 7) {
+		if (getDocumentMode() > 7) {
 			return;
 		}
 
 		 // Enable display: none in area and add a specific class that hides all BR elements in PRE to
 		 // avoid the caret from getting stuck at the BR elements while pressing the right arrow key
 		setEditorCommandState('RespectVisibilityInDesign', true);
+		editor.contentStyles.push('.mceHideBrInPre pre br {display: none}');
 		dom.addClass(editor.getBody(), 'mceHideBrInPre');
 
 		// Adds a \n before all BR elements in PRE to get them visual
@@ -667,6 +675,25 @@ tinymce.util.Quirks = function(editor) {
 		});
 	};
 
+	/**
+	 * IE10 doesn't properly render block elements with the right height until you add contents to them.
+	 * This fixes that by adding a padding-right to all empty text block elements.
+	 * See: https://connect.microsoft.com/IE/feedback/details/743881
+	 */
+	function renderEmptyBlocksFix() {
+		var emptyBlocksCSS;
+
+		// IE10+
+		if (getDocumentMode() >= 10) {
+			emptyBlocksCSS = '';
+			tinymce.each('p div h1 h2 h3 h4 h5 h6'.split(' '), function(name, i) {
+				emptyBlocksCSS += (i > 0 ? ',' : '') + name + ':empty';
+			});
+
+			editor.contentStyles.push(emptyBlocksCSS + '{padding-right: 1px !important}');
+		}
+	};
+
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
@@ -693,6 +720,7 @@ tinymce.util.Quirks = function(editor) {
 		addNewLinesBeforeBrInPre();
 		removePreSerializedStylesWhenSelectingControls();
 		deleteImageOnBackSpace();
+		renderEmptyBlocksFix();
 	}
 
 	// Gecko

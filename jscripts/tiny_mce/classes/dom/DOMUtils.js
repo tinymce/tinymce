@@ -997,6 +997,38 @@
 		},
 
 		/**
+		 * Adds a style element at the top of the document with the specified cssText content.
+		 *
+		 * @method addStyle
+		 * @param {String} cssText CSS Text style to add to top of head of document.
+		 */
+		addStyle: function(cssText) {
+			var doc = this.doc, head;
+
+			// Create style element if needed
+			styleElm = doc.getElementById('mceDefaultStyles');
+			if (!styleElm) {
+				styleElm = doc.createElement('style'),
+				styleElm.id = 'mceDefaultStyles';
+				styleElm.type = 'text/css';
+
+				head = doc.getElementsByTagName('head')[0]
+				if (head.firstChild) {
+					head.insertBefore(styleElm, head.firstChild);
+				} else {
+					head.appendChild(styleElm);
+				}
+			}
+
+			// Append style data to old or new style element
+			if (styleElm.styleSheet) {
+				styleElm.styleSheet.cssText += cssText;
+			} else {
+				styleElm.appendChild(doc.createTextNode(cssText));
+			}
+		},
+
+		/**
 		 * Imports/loads the specified CSS file into the document bound to the class.
 		 *
 		 * @method loadCSS

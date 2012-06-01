@@ -178,6 +178,14 @@
 			 */			
 			self.contentCSS = [];
 
+			/**
+			 * Array of CSS styles to add to head of document when the editor loads.
+			 *
+			 * @property contentStyles
+			 * @type Array
+			 */
+			self.contentStyles = [];
+
 			// Creates all events like onClick, onSetContent etc see Editor.Events.js for the actual logic
 			self.setupEvents();
 
@@ -590,7 +598,7 @@
 		 * @method initContentBody
 		 */
 		initContentBody : function() {
-			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), html, body;
+			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), html, body, contentCssText;
 
 			// Setup iframe body
 			if ((!isIE || !tinymce.relaxedDomain) && !settings.content_editable) {
@@ -830,6 +838,17 @@
 			self.execCallback('init_instance_callback', self);
 			self.focus(true);
 			self.nodeChanged({initial : true});
+
+			// Add editor specific CSS styles
+			if (self.contentStyles.length > 0) {
+				contentCssText = '';
+
+				each(self.contentStyles, function(style) {
+					contentCssText += style + "\r\n";
+				});
+
+				self.dom.addStyle(contentCssText);
+			}
 
 			// Load specified content CSS last
 			each(self.contentCSS, function(url) {
