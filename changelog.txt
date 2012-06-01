@@ -1,3 +1,5 @@
+Version 3.5.x (2012-xx-xx)
+	Fixed bug where the editor would get auto focused on IE running in quirks mode.
 Version 3.5.2 (2012-05-31)
 	Added new formatChanged method to tinymce.Formatter class. Enables easier state change handling of formats.
 	Added new selectorChanged method to tinymce.dom.Selection class. Enables easier state change handling of matching CSS selectors.
