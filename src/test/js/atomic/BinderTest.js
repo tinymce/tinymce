@@ -27,14 +27,14 @@ test(
     });
 
     events.trigger.myEvent('a', 'b');
-    jssert.assertEq(true, called);
+    assert.eq(true, called);
 
     called = false;
 
     binder.unbind(events.registry.myEvent);
 
     events.trigger.myEvent('a', 'b');
-    jssert.assertEq(false, called);
+    assert.eq(false, called);
 
     jssert.assertThrows(function () {
       binder.unbind(events.registry.myEvent);
