@@ -42,8 +42,8 @@ test(
     (function() {
       var events = Events.create({ emptyEvent: Struct.immutable() });
 
-      jssert.assertThrows(
-        function() { events.registry.emptyEvent.bind(undefined); }, 
+      assert.throws(
+        function() { events.registry.emptyEvent.bind(undefined); },
         'Event bind error: undefined handler bound for event type "emptyEvent"'
       );
     })();

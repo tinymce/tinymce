@@ -20,7 +20,7 @@ test(
       called = true;
     });
 
-    jssert.assertThrows(function () {
+    assert.throws(function () {
       binder.bind(events.registry.myEvent, function(event) {
         called = true;
       });
@@ -36,7 +36,7 @@ test(
     events.trigger.myEvent('a', 'b');
     assert.eq(false, called);
 
-    jssert.assertThrows(function () {
+    assert.throws(function () {
       binder.unbind(events.registry.myEvent);
     });
   }
