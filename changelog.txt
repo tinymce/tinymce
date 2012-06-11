@@ -4,6 +4,7 @@ Version 3.5.x (2012-xx-xx)
 	Fixed bug where pressing enter before an IMG or INPUT element wouldn't properly split the block.
 	Fixed bug where backspace would navigate back when selecting control types on IE.
 	Fixed bug where the editor remove method would unbind events for controls outside the editor instance UI.
+	Fixed bug where the autosave plugin would try to store a draft copy of editors that where removed.
 Version 3.5.2 (2012-05-31)
 	Added new formatChanged method to tinymce.Formatter class. Enables easier state change handling of formats.
 	Added new selectorChanged method to tinymce.dom.Selection class. Enables easier state change handling of matching CSS selectors.
