@@ -51,6 +51,60 @@ test('Enter in midde of H1', function() {
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'H1');
 });
 
+test('Enter before last IMG in P with text', function() {
+	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
+	pressEnter();
+	equal(editor.getContent(), '<p>abc</p><p><img alt="" src="about:blank" /></p>');
+	rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');	
+});
+
+test('Enter before last IMG in P with IMG sibling', function() {
+	editor.setContent('<p><img alt="" src="about:blank" /><img alt="" src="about:blank" /></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
+	pressEnter();
+	equal(editor.getContent(), '<p><img alt="" src="about:blank" /></p><p><img alt="" src="about:blank" /></p>');
+	rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');	
+});
+
+test('Enter after last IMG in P', function() {
+	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 2);
+	pressEnter();
+	equal(editor.getContent(), '<p>abc<img alt="" src="about:blank" /></p><p>\u00a0</p>');
+});
+
+test('Enter before last INPUT in P with text', function() {
+	editor.setContent('<p>abc<input type="text" /></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
+	pressEnter();
+	equal(editor.getContent(), '<p>abc</p><p><input type="text" /></p>');
+	rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');	
+});
+
+test('Enter before last INPUT in P with IMG sibling', function() {
+	editor.setContent('<p><input type="text" /><input type="text" /></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
+	pressEnter();
+	equal(editor.getContent(), '<p><input type="text" /></p><p><input type="text" /></p>');
+	rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');	
+});
+
+test('Enter after last INPUT in P', function() {
+	editor.setContent('<p>abc<input type="text" /></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 2);
+	pressEnter();
+	equal(editor.getContent(), '<p>abc<input type="text" /></p><p>\u00a0</p>');
+});
+
 test('Enter at end of P', function() {
 	editor.setContent('<p>abc</p>');
 	setSelection('p', 3);
