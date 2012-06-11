@@ -1,6 +1,8 @@
 Version 3.5.x (2012-xx-xx)
+	Added missing wbr element to HTML5 schema.
 	Fixed bug where the editor would get auto focused on IE running in quirks mode.
 	Fixed bug where pressing enter before an IMG or INPUT element wouldn't properly split the block.
+	Fixed bug where backspace would navigate back when selecting control types on IE.
 Version 3.5.2 (2012-05-31)
 	Added new formatChanged method to tinymce.Formatter class. Enables easier state change handling of formats.
 	Added new selectorChanged method to tinymce.dom.Selection class. Enables easier state change handling of matching CSS selectors.
