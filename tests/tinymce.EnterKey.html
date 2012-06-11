@@ -60,6 +60,13 @@ test('Enter before text after EM', function() {
 	equal(rng.startContainer.nodeValue, 'b');
 });
 
+test('Enter before first IMG in P', function() {
+	editor.setContent('<p><img alt="" src="about:blank" /></p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
+	pressEnter();
+	equal(editor.getContent(), '<p>\u00a0</p><p><img alt="" src="about:blank" /></p>');
+});
+
 test('Enter before last IMG in P with text', function() {
 	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);

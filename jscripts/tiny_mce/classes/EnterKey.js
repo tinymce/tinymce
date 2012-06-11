@@ -143,6 +143,11 @@
 					return true;
 				}
 
+				// If the caret if before the first element in parentBlock
+				if (start && container.nodeType == 1 && container == parentBlock.firstChild) {
+					return true;
+				}
+
 				// Caret can be before/after a table
 				if (container.nodeName === "TABLE" || (container.previousSibling && container.previousSibling.nodeName == "TABLE")) {
 					return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
