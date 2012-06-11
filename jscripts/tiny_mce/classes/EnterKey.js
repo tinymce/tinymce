@@ -134,8 +134,8 @@
 				var walker, node, name, nonEmptyElementsMap = schema.getNonEmptyElements();
 
 				// Caret is in the middle of a text node like "a|b"
-				if (container.nodeType == 3 && (start ? offset == 0 : offset == container.nodeValue.length)) {
-					return true;
+				if (container.nodeType == 3 && (start ? offset > 0 : offset < container.nodeValue.length)) {
+					return false;
 				}
 
 				// If after the last element in block node edge case for #5091
@@ -150,6 +150,16 @@
 
 				// Walk the DOM and look for text nodes or non empty elements
 				walker = new TreeWalker(container, parentBlock);
+	
+				// If caret is in beginning or end of a text block then jump to the next/previous node
+				if (container.nodeType == 3) {
+					if (start && offset == 0) {
+						walker.prev();
+					} else if (!start && offset == container.nodeValue.length) {
+						walker.next();
+					}
+				}
+
 				while (node = walker.current()) {
 					if (node.nodeType === 1) {
 						// Ignore bogus elements
@@ -367,7 +377,11 @@
 			if (container.nodeType == 1 && container.hasChildNodes()) {
 				isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
-				offset = 0;
+				if (isAfterLastNodeInContainer && container.nodeType == 3) {
+					offset = container.nodeValue.length;
+				} else {
+					offset = 0;
+				}
 			}
 
 			// Get editable root node normaly the body element but sometimes a div or span

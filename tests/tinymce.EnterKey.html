@@ -51,6 +51,15 @@ test('Enter in midde of H1', function() {
 	equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'H1');
 });
 
+test('Enter before text after EM', function() {
+	editor.setContent('<p><em>a</em>b</p>');
+	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
+	pressEnter();
+	equal(editor.getContent(), '<p><em>a</em></p><p>b</p>');
+	rng = editor.selection.getRng(true);
+	equal(rng.startContainer.nodeValue, 'b');
+});
+
 test('Enter before last IMG in P with text', function() {
 	editor.setContent('<p>abc<img alt="" src="about:blank" /></p>');
 	editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
