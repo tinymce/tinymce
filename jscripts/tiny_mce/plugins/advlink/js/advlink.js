@@ -372,10 +372,12 @@ function setAttrib(elm, attrib, value) {
 }
 
 function getAnchorListHTML(id, target) {
-	var ed = tinyMCEPopup.editor, nodes = ed.dom.select('a'), name, i, len, html = "";
+	var ed = tinyMCEPopup.editor, nodes = ed.dom.select('a, span.mceItemAnchor'), name, i, len, html = "";
 
 	for (i=0, len=nodes.length; i<len; i++) {
-		if ((name = ed.dom.getAttrib(nodes[i], "name")) != "")
+		name = ed.dom.getAttrib(nodes[i], "name") || ed.dom.getAttrib(nodes[i], "data-mce-name") || ed.dom.getAttrib(nodes[i], "id");
+		
+		if (name)
 			html += '<option value="#' + name + '">' + name + '</option>';
 	}
 
