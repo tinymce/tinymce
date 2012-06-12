@@ -30,6 +30,43 @@
 					dom.getContentEditable(node) !== "true";
 			};
 
+			// Renders empty block on IE
+			function renderBlockOnIE(block) {
+				var oldRng;
+
+				if (tinymce.isIE && dom.isBlock(block)) {
+					oldRng = selection.getRng();
+					block.appendChild(dom.create('span', null, '\u00a0'));
+					selection.select(block);
+					block.lastChild.outerHTML = '';
+					selection.setRng(oldRng);
+				}
+			};
+
+			// Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
+			function trimInlineElementsOnLeftSideOfBlock(block) {
+				var node = block, firstChilds = [], i;
+
+				// Find inner most first child ex: <p><i><b>*</b></i></p>
+				while (node = node.firstChild) {
+					if (dom.isBlock(node)) {
+						return;
+					}
+
+					if (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+						firstChilds.push(node);
+					}
+				}
+
+				i = firstChilds.length;
+				while (i--) {
+					node = firstChilds[i];
+					if (!node.hasChildNodes() || (node.firstChild == node.lastChild && node.firstChild.nodeValue === '')) {
+						dom.remove(node);
+					}
+				}
+			};
+			
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
 			function moveToCaretPosition(root) {
 				var walker, node, rng, y, viewPort, lastNode = root, tempElm;
@@ -269,6 +306,7 @@
 				} else if (isFirstOrLastLi()) {
 					// Last LI in list then temove LI and add text block after list
 					dom.insertAfter(newBlock, containerBlock);
+					renderBlockOnIE(newBlock);
 				} else {
 					// Middle LI in list the split the list and insert a text block in the middle
 					// Extract after fragment and insert it after the current block
@@ -488,7 +526,7 @@
 			} else if (isCaretAtStartOrEndOfBlock(true)) {
 				// Insert new block before
 				newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
-				moveToCaretPosition(parentBlock);
+				renderBlockOnIE(newBlock);
 			} else {
 				// Extract after fragment and insert it after the current block
 				tmpRng = rng.cloneRange();
@@ -497,6 +535,7 @@
 				trimLeadingLineBreaks(fragment);
 				newBlock = fragment.firstChild;
 				dom.insertAfter(fragment, parentBlock);
+				trimInlineElementsOnLeftSideOfBlock(newBlock);
 				addBrToBlockIfNeeded(parentBlock);
 				moveToCaretPosition(newBlock);
 			}
