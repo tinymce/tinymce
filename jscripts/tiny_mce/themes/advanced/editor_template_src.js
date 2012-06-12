@@ -141,7 +141,6 @@
 			backcolorpicker : ['backcolor_desc', 'mceBackColor'],
 			charmap : ['charmap_desc', 'mceCharMap'],
 			visualaid : ['visualaid_desc', 'mceToggleVisualAid'],
-			anchor : ['anchor_desc', 'mceInsertAnchor'],
 			newdocument : ['newdocument_desc', 'mceNewDocument'],
 			blockquote : ['blockquote_desc', 'mceBlockQuote']
 		},
@@ -163,7 +162,7 @@
 			if (!s.theme_advanced_buttons1) {
 				s = extend({
 					theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect",
-					theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code",
+					theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,image,cleanup,help,code",
 					theme_advanced_buttons3 : "hr,removeformat,visualaid,|,sub,sup,|,charmap"
 				}, s);
 			}
@@ -1106,10 +1105,6 @@
 				c.setActive(!!p && !p.name && !p.id);
 			}
 
-			if (c = cm.get('anchor')) {
-				c.setActive(!co && !!p && (p.name || (p.id && !p.href)));
-			}
-
 			p = getParent('IMG');
 			if (c = cm.get('image'))
 				c.setActive(!co && !!p && n.className.indexOf('mceItem') == -1);
@@ -1253,11 +1248,6 @@
 							break;
 
 						case 'a':
-							if (v = DOM.getAttrib(n, 'name')) {
-								ti += 'name: ' + v + ' ';
-								na += '#' + v;
-							}
-
 							if (v = DOM.getAttrib(n, 'href'))
 								ti += 'href: ' + v + ' ';
 
@@ -1329,19 +1319,6 @@
 
 		_sel : function(v) {
 			this.editor.execCommand('mceSelectNodeDepth', false, v);
-		},
-
-		_mceInsertAnchor : function(ui, v) {
-			var ed = this.editor;
-
-			ed.windowManager.open({
-				url : this.url + '/anchor.htm',
-				width : 320 + parseInt(ed.getLang('advanced.anchor_delta_width', 0)),
-				height : 90 + parseInt(ed.getLang('advanced.anchor_delta_height', 0)),
-				inline : true
-			}, {
-				theme_url : this.url
-			});
 		},
 
 		_mceCharMap : function() {
