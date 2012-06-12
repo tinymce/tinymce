@@ -15,7 +15,7 @@
 	 * Contains logic for handling the enter key to split/generate block elements.
 	 */
 	tinymce.EnterKey = function(editor) {
-		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager, schema = editor.schema;
+		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager, nonEmptyElementsMap = editor.schema.getNonEmptyElements();
 
 		function handleEnterKey(evt) {
 			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, documentMode,
@@ -32,7 +32,7 @@
 
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
 			function moveToCaretPosition(root) {
-				var walker, node, rng, y, viewPort, lastNode = root, tempElm, nonEmptyElementsMap = schema.getNonEmptyElements();
+				var walker, node, rng, y, viewPort, lastNode = root, tempElm;
 
 				rng = dom.createRng();
 
@@ -131,7 +131,7 @@
 
 			// Returns true/false if the caret is at the start/end of the parent block element
 			function isCaretAtStartOrEndOfBlock(start) {
-				var walker, node, name, nonEmptyElementsMap = schema.getNonEmptyElements();
+				var walker, node, name;
 
 				// Caret is in the middle of a text node like "a|b"
 				if (container.nodeType == 3 && (start ? offset > 0 : offset < container.nodeValue.length)) {
@@ -360,6 +360,22 @@
 				return parent !== root ? editableRoot : root;
 			};
 
+			// Adds a BR at the end of blocks that only contains an IMG or INPUT since these might be floated and then they won't expand the block
+			function addBrToBlockIfNeeded(block) {
+				var lastChild;
+
+				// IE will render the blocks correctly other browsers needs a BR
+				if (!tinymce.isIE) {
+					block.normalize(); // Remove empty text nodes that got left behind by the extract
+
+					// Check if the block is empty or contains a floated last child
+					lastChild = block.lastChild;
+					if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true)))) {
+						dom.add(block, 'br');
+					}
+				}
+			};
+
 			// Delete any selected contents
 			if (!rng.collapsed) {
 				editor.execCommand('Delete');
@@ -478,6 +494,7 @@
 				trimLeadingLineBreaks(fragment);
 				newBlock = fragment.firstChild;
 				dom.insertAfter(fragment, parentBlock);
+				addBrToBlockIfNeeded(parentBlock);
 			}
 
 			dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
