@@ -1808,7 +1808,7 @@
 						return;
 
 					case 'A':
-						if (!elm.href) {
+						if (!dom.getAttrib(elm, 'href', false)) {
 							value = dom.getAttrib(elm, 'name') || elm.id;
 							cls = 'mceItemAnchor';
 
