@@ -7,6 +7,7 @@ Version 3.5.x (2012-xx-xx)
 	Fixed bug where the autosave plugin would try to store a draft copy of editors that where removed.
 	Fixed bug where floated elements wouldn't expand the block created when pressing enter on non IE browsers.
 	Fixed bug where the caret would be placed in the wrong location when pressing enter at the beginning of a block.
+	Fixed bug where it wasn't possible to block events using the handle_event_callback option.
 Version 3.5.2 (2012-05-31)
 	Added new formatChanged method to tinymce.Formatter class. Enables easier state change handling of formats.
 	Added new selectorChanged method to tinymce.dom.Selection class. Enables easier state change handling of matching CSS selectors.
