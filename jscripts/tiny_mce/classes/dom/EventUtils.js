@@ -515,7 +515,7 @@ tinymce.dom = {};
 
 			// Old API supported multiple targets
 			if (target && target instanceof Array) {
-				var i = target;
+				var i = target.length;
 
 				while (i--) {
 					self.add(target[i], events, func, scope);
