@@ -187,6 +187,7 @@ tinymce.util.Quirks = function(editor) {
 				if (isAtStartEndOfBody(rng, true) && isAtStartEndOfBody(rng, false) &&
 					(rng.collapsed || dom.findCommonAncestor(getEndPointNode(rng, true), getEndPointNode(rng)) === dom.getRoot())) {
 					editor.setContent('');
+					editor.selection.setCursorLocation(editor.getBody(), 0);
 					editor.nodeChanged();
 					e.preventDefault();
 				}
