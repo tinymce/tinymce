@@ -205,14 +205,12 @@
 				while (node = walker.current()) {
 					if (node.nodeType === 1) {
 						// Ignore bogus elements
-						if (node.getAttribute('data-mce-bogus')) {
-							continue;
-						}
-
-						// Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
-						name = node.nodeName.toLowerCase();
-						if (nonEmptyElementsMap[name] && name !== 'br') {
-							return false;
+						if (!node.getAttribute('data-mce-bogus')) {
+							// Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
+							name = node.nodeName.toLowerCase();
+							if (nonEmptyElementsMap[name] && name !== 'br') {
+								return false;
+							}
 						}
 					} else if (node.nodeType === 3 && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
 						return false;
