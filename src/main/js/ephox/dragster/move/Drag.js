@@ -26,21 +26,19 @@ define(
       };
 
       var mousedown = function (event, ui) {
-        console.log('event.mousedown');
         var target = getTarget(event);
         moving = true;
       };
 
       var mouseup = function (event, ui) {
-        console.log('event.mouseup');
         moving = false;
       };
 
-
-
+      // TODO: Cursor switching not working properly in Chrome. Haven't tried others.
       var mousemove = function (event, ui) {
         if (moving) {
           mover.update(element, event.x, event.y);
+          Css.set(dialog, 'cursor', 'move');
         } else {
           var target = getTarget(event);
           if (Equal.eq(target, anchor)) {
