@@ -1,0 +1,10 @@
+.DS_Store
+*~
+*.iws
+*.sublime-workspace
+/lib
+/dist
+/scratch
+/dependency
+/config/bolt/bootstrap*.js
+
