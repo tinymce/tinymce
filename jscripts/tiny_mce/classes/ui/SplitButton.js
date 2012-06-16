@@ -73,7 +73,7 @@
 		 * @return {String} HTML for the split button control element.
 		 */
 		renderHTML : function() {
-			var h, t = this, s = t.settings, h1;
+			var h, t = this, s = t.settings, h1, l;
 
 			l = DOM.encode(s.label || '');
 			h = '<tbody><tr>';
