@@ -75,10 +75,12 @@
 		renderHTML : function() {
 			var h, t = this, s = t.settings, h1;
 
+			l = DOM.encode(s.label || '');
 			h = '<tbody><tr>';
 
 			if (s.image)
 				h1 = DOM.createHTML('img ', {src : s.image, role: 'presentation', 'class' : 'mceAction ' + s['class']});
+				h1 = DOM.createHTML('span ', {'class' : 'mceIcon ' + s['class']}, h1) + (l ? DOM.createHTML('span ', {'class' : 'mceSplitButtonLabel'}, l) : '');
 			else
 				h1 = DOM.createHTML('span', {'class' : 'mceAction ' + s['class']}, '');
 
@@ -89,7 +91,7 @@
 			h += '<td >' + DOM.createHTML('a', {role: 'button', id : t.id + '_open', tabindex: '-1', href : 'javascript:;', 'class' : 'mceOpen ' + s['class'], onclick : "return false;", onmousedown : 'return false;', title : s.title}, h1) + '</td>';
 
 			h += '</tr></tbody>';
-			h = DOM.createHTML('table', { role: 'presentation',   'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'], cellpadding : '0', cellspacing : '0', title : s.title}, h);
+			h = DOM.createHTML('table', { role: 'presentation',   'class' : 'mceSplitButton mceSplitButtonEnabled ' + s['class'] + (l ? ' ' + 'mceSplitButtonLabeled' : ''), cellpadding : '0', cellspacing : '0', title : s.title}, h);
 			return DOM.createHTML('div', {id : t.id, role: 'button', tabindex: '0', 'aria-labelledby': t.id + '_voice', 'aria-haspopup': 'true'}, h);
 		},
 
