@@ -37,7 +37,7 @@ define(
       var mousemove = function (event, ui) {
         if (moving) {
           mover.update(element, event.x, event.y);
-          Css.set(dialog, 'cursor', 'move');
+          Css.set(element, 'cursor', 'move');
         } else {
           var target = getTarget(event);
           if (Equal.eq(target, anchor)) {
