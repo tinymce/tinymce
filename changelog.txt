@@ -12,6 +12,7 @@ Version 3.5.x (2012-xx-xx)
 	Fixed bug where keyboard navigation didn't work correctly on split buttons.
 	Fixed bug where the legacy Event.add function didn't properly handle multiple id:s passed in.
 	Fixed bug where the caret would disappear on IE when selecting all contents and pressing backspace/delete.
+	Fixed bug where the getStart/getEnd methods would sometimes return elements from the wrong document on IE.
 	Fixed so paragraphs gets created if you press enter inside a form element.
 Version 3.5.2 (2012-05-31)
 	Added new formatChanged method to tinymce.Formatter class. Enables easier state change handling of formats.

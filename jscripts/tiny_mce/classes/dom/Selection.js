@@ -273,7 +273,7 @@
 				checkRng = rng.duplicate();
 				checkRng.collapse(1);
 				startElement = checkRng.parentElement();
-				if (startElement.ownerDocument !== self.doc) {
+				if (startElement.ownerDocument !== self.dom.doc) {
 					startElement = self.dom.getRoot();
 				}
 
@@ -318,7 +318,7 @@
 				rng = rng.duplicate();
 				rng.collapse(0);
 				endElement = rng.parentElement();
-				if (endElement.ownerDocument !== self.doc) {
+				if (endElement.ownerDocument !== self.dom.doc) {
 					endElement = self.dom.getRoot();
 				}
 
