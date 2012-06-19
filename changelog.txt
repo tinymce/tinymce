@@ -1,11 +1,21 @@
-Version 3.5.x (2012-xx-xx)
+Version 3.5.3 (2012-06-19)
 	Added missing wbr element to HTML5 schema.
+	Added new mceToggleFormat command. Enabled you to toggle a specific format on/off.
+	Fixed bug where undo/redo state didn't update correctly after executing an execCommand call.
 	Fixed bug where the editor would get auto focused on IE running in quirks mode.
 	Fixed bug where pressing enter before an IMG or INPUT element wouldn't properly split the block.
 	Fixed bug where backspace would navigate back when selecting control types on IE.
 	Fixed bug where the editor remove method would unbind events for controls outside the editor instance UI.
 	Fixed bug where the autosave plugin would try to store a draft copy of editors that where removed.
 	Fixed bug where floated elements wouldn't expand the block created when pressing enter on non IE browsers.
+	Fixed bug where the caret would be placed in the wrong location when pressing enter at the beginning of a block.
+	Fixed bug where it wasn't possible to block events using the handle_event_callback option.
+	Fixed bug where keyboard navigation of the ColorSplitButton.js didn't work correctly.
+	Fixed bug where keyboard navigation didn't work correctly on split buttons.
+	Fixed bug where the legacy Event.add function didn't properly handle multiple id:s passed in.
+	Fixed bug where the caret would disappear on IE when selecting all contents and pressing backspace/delete.
+	Fixed bug where the getStart/getEnd methods would sometimes return elements from the wrong document on IE.
+	Fixed so paragraphs gets created if you press enter inside a form element.
 Version 3.5.2 (2012-05-31)
 	Added new formatChanged method to tinymce.Formatter class. Enables easier state change handling of formats.
 	Added new selectorChanged method to tinymce.dom.Selection class. Enables easier state change handling of matching CSS selectors.

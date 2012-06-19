@@ -760,8 +760,10 @@
 		// Handle legacy handle_event_callback option
 		if (settings.handle_event_callback) {
 			self.onEvent.add(function(ed, e, o) {
-				if (self.execCallback('handle_event_callback', e, ed, o) === false)
-					Event.cancel(e);
+				if (self.execCallback('handle_event_callback', e, ed, o) === false) {
+					e.preventDefault();
+					e.stopPropagation();
+				}
 			});
 		}
 

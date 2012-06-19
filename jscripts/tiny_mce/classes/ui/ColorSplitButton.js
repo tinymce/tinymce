@@ -111,6 +111,16 @@
 				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
 			}
 
+			t.keyboardNav = new tinymce.ui.KeyboardNavigation({
+				root: t.id + '_menu',
+				items: DOM.select('a', t.id + '_menu'),
+				onCancel: function() {
+					t.hideMenu();
+					t.focus();
+				}
+			});
+
+			t.keyboardNav.focus();
 			t.isMenuVisible = 1;
 		},
 
@@ -138,6 +148,7 @@
 
 				t.isMenuVisible = 0;
 				t.onHideMenu.dispatch();
+				t.keyboardNav.destroy();
 			}
 		},
 
@@ -207,15 +218,6 @@
 			}
 
 			DOM.addClass(m, 'mceColorSplitMenu');
-			
-			new tinymce.ui.KeyboardNavigation({
-				root: t.id + '_menu',
-				items: DOM.select('a', t.id + '_menu'),
-				onCancel: function() {
-					t.hideMenu();
-					t.focus();
-				}
-			});
 
 			// Prevent IE from scrolling and hindering click to occur #4019
 			Event.add(t.id + '_menu', 'mousedown', function(e) {return Event.cancel(e);});
@@ -281,11 +283,17 @@
 		 * @method destroy
 		 */
 		destroy : function() {
-			this.parent();
+			var self = this;
 
-			Event.clear(this.id + '_menu');
-			Event.clear(this.id + '_more');
-			DOM.remove(this.id + '_menu');
+			self.parent();
+
+			Event.clear(self.id + '_menu');
+			Event.clear(self.id + '_more');
+			DOM.remove(self.id + '_menu');
+
+			if (self.keyboardNav) {
+				self.keyboardNav.destroy();
+			}
 		}
 	});
 })(tinymce);

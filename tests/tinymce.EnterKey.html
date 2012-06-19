@@ -150,7 +150,7 @@ test('Enter at beginning EM inside P', function() {
 	setSelection('em', 0);
 	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em></em></p><p><em>abc</em></p>');
-	equal(editor.selection.getRng(true).startContainer.nodeName, 'EM');
+	equal(editor.selection.getRng(true).startContainer.nodeValue, 'abc');
 });
 
 test('Enter at end of STRONG in EM inside P', function() {
@@ -174,7 +174,7 @@ test('Enter at beginning STRONG in EM inside P', function() {
 	setSelection('strong', 0);
 	pressEnter();
 	equal(cleanHtml(editor.getBody().innerHTML).replace(/<br>|&nbsp;/g, ''), '<p><em><strong></strong></em></p><p><em><strong>abc</strong></em></p>');
-	equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
+	equal(editor.selection.getRng(true).startContainer.nodeValue, 'abc');
 });
 
 test('Enter at beginning of P', function() {
@@ -182,7 +182,7 @@ test('Enter at beginning of P', function() {
 	setSelection('p', 0);
 	pressEnter();
 	equal(editor.getContent(), '<p>\u00a0</p><p>abc</p>');
-	equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
+	equal(editor.selection.getRng(true).startContainer.nodeValue, 'abc');
 });
 
 test('Enter at middle of P with style, id and class attributes', function() {

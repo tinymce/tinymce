@@ -262,7 +262,7 @@
 		 * @return {Element} Start element of selection range.
 		 */
 		getStart : function() {
-			var rng = this.getRng(), startElement, parentElement, checkRng, node;
+			var self = this, rng = self.getRng(), startElement, parentElement, checkRng, node;
 
 			if (rng.duplicate || rng.item) {
 				// Control selection, return first item
@@ -273,6 +273,9 @@
 				checkRng = rng.duplicate();
 				checkRng.collapse(1);
 				startElement = checkRng.parentElement();
+				if (startElement.ownerDocument !== self.dom.doc) {
+					startElement = self.dom.getRoot();
+				}
 
 				// Check if range parent is inside the start element, then return the inner parent element
 				// This will fix issues when a single element is selected, IE would otherwise return the wrong start element
@@ -306,31 +309,34 @@
 		 * @return {Element} End element of selection range.
 		 */
 		getEnd : function() {
-			var t = this, r = t.getRng(), e, eo;
+			var self = this, rng = self.getRng(), endElement, endOffset;
 
-			if (r.duplicate || r.item) {
-				if (r.item)
-					return r.item(0);
+			if (rng.duplicate || rng.item) {
+				if (rng.item)
+					return rng.item(0);
 
-				r = r.duplicate();
-				r.collapse(0);
-				e = r.parentElement();
+				rng = rng.duplicate();
+				rng.collapse(0);
+				endElement = rng.parentElement();
+				if (endElement.ownerDocument !== self.dom.doc) {
+					endElement = self.dom.getRoot();
+				}
 
-				if (e && e.nodeName == 'BODY')
-					return e.lastChild || e;
+				if (endElement && endElement.nodeName == 'BODY')
+					return endElement.lastChild || endElement;
 
-				return e;
+				return endElement;
 			} else {
-				e = r.endContainer;
-				eo = r.endOffset;
+				endElement = rng.endContainer;
+				endOffset = rng.endOffset;
 
-				if (e.nodeType == 1 && e.hasChildNodes())
-					e = e.childNodes[eo > 0 ? eo - 1 : eo];
+				if (endElement.nodeType == 1 && endElement.hasChildNodes())
+					endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
 
-				if (e && e.nodeType == 3)
-					return e.parentNode;
+				if (endElement && endElement.nodeType == 3)
+					return endElement.parentNode;
 
-				return e;
+				return endElement;
 			}
 		},
 
