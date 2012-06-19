@@ -19,7 +19,6 @@ define(
       return Element(document.createTextNode(value));
     };
 
-    // TODO: Sugarise this.
     var setPosition = function (element, x, y) {
       Css.set(element, 'left', x);
       Css.set(element, 'top', y);

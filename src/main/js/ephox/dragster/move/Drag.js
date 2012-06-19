@@ -34,7 +34,6 @@ define(
         moving = false;
       };
 
-      // TODO: Cursor switching not working properly in Chrome. Haven't tried others.
       var mousemove = function (event, ui) {
         if (moving) {
           mover.update(element, event.x, event.y);
