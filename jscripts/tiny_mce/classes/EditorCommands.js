@@ -422,6 +422,10 @@
 				editor.setContent(editor.getContent().replace(/tiny_mce_marker/g, function() { return value }));
 			},
 
+			mceToggleFormat : function(command, ui, value) {
+				toggleFormat(value);
+			},
+
 			mceSetContent : function(command, ui, value) {
 				editor.setContent(value);
 			},
