@@ -1,4 +1,4 @@
-Version 3.5.x (2012-xx-xx)
+Version 3.5.3 (2012-06-19)
 	Added missing wbr element to HTML5 schema.
 	Added new mceToggleFormat command. Enabled you to toggle a specific format on/off.
 	Fixed bug where undo/redo state didn't update correctly after executing an execCommand call.
