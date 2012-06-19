@@ -1,7 +1,7 @@
 {
     "name": "tinymce",
     "version":"3.5.x",
-    "main": "jscripts/tiny_mce/tiny_mce_dev.js",
+    "main": "tiny_mce_dev",
     "description": "The JavaScript Rich Text editor",
     "licenses": [
         {
@@ -9,7 +9,25 @@
             "url": "https://github.com/tinymce/tinymce/master/jscripts/tiny_mce/license.txt"
         }
     ],
+    "directories": {
+        "lib": "./jscripts/tiny_mce"
+    },
     "bugs": "http://www.tinymce.com/develop/bugtracker_bugs.php",
     "keywords": ["JavaScript", "TinyMCE", "Wysiwyg", "Editor"],
-    "homepage": "http://www.tinymce.com/"
+    "homepage": "http://www.tinymce.com",
+    "maintainers":[ {
+        "name": "Johan Sörlin",
+        "email": "spocke@moxiecode.com",
+        "web": "http://tinymce.moxiecode.com"
+    }],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/tinymce/tinymce.git"
+        }
+    ],
+    "dependencies": {
+        "java": "1.6",
+        "ant": "1.8.4"
+    }
 }
