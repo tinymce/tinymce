@@ -1,0 +1,15 @@
+{
+    "name": "tinymce",
+    "version":"3.5.x",
+    "main": "jscripts/tiny_mce/tiny_mce_dev.js",
+    "description": "The JavaScript Rich Text editor",
+    "licenses": [
+        {
+            "type": "GPLv2.1",
+            "url": "https://github.com/tinymce/tinymce/master/jscripts/tiny_mce/license.txt"
+        }
+    ],
+    "bugs": "http://www.tinymce.com/develop/bugtracker_bugs.php",
+    "keywords": ["JavaScript", "TinyMCE", "Wysiwyg", "Editor"],
+    "homepage": "http://www.tinymce.com/"
+}
