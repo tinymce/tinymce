@@ -1255,7 +1255,7 @@
 						// Add all children from div to target
 						each (tinymce.grep(newElement.childNodes), function(node, i) {
 							// Skip br element
-							if (i)
+							if (i && element.canHaveHTML)
 								element.appendChild(node);
 						});
 					}
