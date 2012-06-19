@@ -1,7 +1,7 @@
 test('Dragster', 
 
   [
-    'ephox.dragster.Dragster'
+    'ephox.dragster.api.Dragster'
   ],
 
   function(Dragster) {
