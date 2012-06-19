@@ -26,6 +26,15 @@ tinymce.util.Quirks = function(editor) {
 	}
 
 	/**
+	 * Returns current IE document mode.
+	 */
+	function getDocumentMode() {
+		var documentMode = editor.getDoc().documentMode;
+
+		return documentMode ? documentMode : 6;
+	};
+
+	/**
 	 * Fixes a WebKit bug when deleting contents using backspace or delete key.
 	 * WebKit will produce a span element if you delete across two block elements.
 	 *
@@ -178,6 +187,7 @@ tinymce.util.Quirks = function(editor) {
 				if (isAtStartEndOfBody(rng, true) && isAtStartEndOfBody(rng, false) &&
 					(rng.collapsed || dom.findCommonAncestor(getEndPointNode(rng, true), getEndPointNode(rng)) === dom.getRoot())) {
 					editor.setContent('');
+					editor.selection.setCursorLocation(editor.getBody(), 0);
 					editor.nodeChanged();
 					e.preventDefault();
 				}
@@ -392,16 +402,15 @@ tinymce.util.Quirks = function(editor) {
 	 * Old IE versions can't properly render BR elements in PRE tags white in contentEditable mode. So this logic adds a \n before the BR so that it will get rendered.
 	 */
 	function addNewLinesBeforeBrInPre() {
-		var documentMode = editor.getDoc().documentMode;
-
 		// IE8+ rendering mode does the right thing with BR in PRE
-		if (documentMode && documentMode > 7) {
+		if (getDocumentMode() > 7) {
 			return;
 		}
 
 		 // Enable display: none in area and add a specific class that hides all BR elements in PRE to
 		 // avoid the caret from getting stuck at the BR elements while pressing the right arrow key
 		setEditorCommandState('RespectVisibilityInDesign', true);
+		editor.contentStyles.push('.mceHideBrInPre pre br {display: none}');
 		dom.addClass(editor.getBody(), 'mceHideBrInPre');
 
 		// Adds a \n before all BR elements in PRE to get them visual
@@ -627,6 +636,18 @@ tinymce.util.Quirks = function(editor) {
 	};
 
 	/**
+	 * WebKit will produce DIV elements here and there by default. But since TinyMCE uses paragraphs by
+	 * default we want to change that behavior.
+	 */
+	function setDefaultBlockType() {
+		if (settings.forced_root_block) {
+			editor.onInit.add(function() {
+				setEditorCommandState('DefaultParagraphSeparator', settings.forced_root_block);
+			});
+		}
+	}
+
+	/**
 	 * Removes ghost selections from images/tables on Gecko.
 	 */
 	function removeGhostSelection() {
@@ -644,15 +665,39 @@ tinymce.util.Quirks = function(editor) {
 	/**
 	 * Deletes the selected image on IE instead of navigating to previous page.
 	 */
-	function deleteImageOnBackSpace() {
+	function deleteControlItemOnBackSpace() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (!e.isDefaultPrevented() && e.keyCode == 8 && selection.getNode().nodeName == 'IMG') {
-				e.preventDefault();
-				editor.undoManager.beforeChange();
-				dom.remove(selection.getNode());
-				editor.undoManager.add();
+			var rng;
+
+			if (!e.isDefaultPrevented() && e.keyCode == BACKSPACE) {
+				rng = editor.getDoc().selection.createRange();
+				if (rng && rng.item) {
+					e.preventDefault();
+					editor.undoManager.beforeChange();
+					dom.remove(rng.item(0));
+					editor.undoManager.add();
+				}
 			}
 		});
+	};
+
+	/**
+	 * IE10 doesn't properly render block elements with the right height until you add contents to them.
+	 * This fixes that by adding a padding-right to all empty text block elements.
+	 * See: https://connect.microsoft.com/IE/feedback/details/743881
+	 */
+	function renderEmptyBlocksFix() {
+		var emptyBlocksCSS;
+
+		// IE10+
+		if (getDocumentMode() >= 10) {
+			emptyBlocksCSS = '';
+			tinymce.each('p div h1 h2 h3 h4 h5 h6'.split(' '), function(name, i) {
+				emptyBlocksCSS += (i > 0 ? ',' : '') + name + ':empty';
+			});
+
+			editor.contentStyles.push(emptyBlocksCSS + '{padding-right: 1px !important}');
+		}
 	};
 
 	// All browsers
@@ -666,6 +711,7 @@ tinymce.util.Quirks = function(editor) {
 		cleanupStylesWhenDeleting();
 		inputMethodFocus();
 		selectControlElements();
+		setDefaultBlockType();
 
 		// iOS
 		if (tinymce.isIDevice) {
@@ -679,7 +725,8 @@ tinymce.util.Quirks = function(editor) {
 		ensureBodyHasRoleApplication();
 		addNewLinesBeforeBrInPre();
 		removePreSerializedStylesWhenSelectingControls();
-		deleteImageOnBackSpace();
+		deleteControlItemOnBackSpace();
+		renderEmptyBlocksFix();
 	}
 
 	// Gecko

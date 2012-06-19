@@ -407,20 +407,44 @@ test('Forced root blocks', function() {
 	equal(serializer.serialize(root), '<!-- a --><p>b<strong>c</strong></p><p>d</p><p>e</p><p>f<strong>g</strong>h</p>', 'Mixed text nodes, inline elements and blocks.');
 });
 
-test('Parse contents with anchors and allow_html_in_named_anchor: false', function() {
+test('Parse contents with html4 anchors and allow_html_in_named_anchor: false', function() {
 	var parser, root, schema = new tinymce.html.Schema();
 
 	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : false}, schema);
-	root = parser.parse('<a name="x">a</a>');
-	equal(serializer.serialize(root), '<a name="x"></a>a');
+	root = parser.parse('<a name="x">a</a><a href="x">x</a>');
+	equal(serializer.serialize(root), '<a name="x"></a>a<a href="x">x</a>');
 });
 
-test('Parse contents with anchors and allow_html_in_named_anchor: true', function() {
+test('Parse contents with html5 anchors and allow_html_in_named_anchor: false', function() {
+	var parser, root, schema = new tinymce.html.Schema({schema: "html5"});
+
+	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : false}, schema);
+	root = parser.parse('<a id="x">a</a><a href="x">x</a>');
+	equal(serializer.serialize(root), '<a id="x"></a>a<a href="x">x</a>');
+});
+
+test('Parse contents with html4 anchors and allow_html_in_named_anchor: true', function() {
 	var parser, root, schema = new tinymce.html.Schema();
 
 	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : true}, schema);
-	root = parser.parse('<a name="x">a</a>');
-	equal(serializer.serialize(root), '<a name="x">a</a>');
+	root = parser.parse('<a name="x">a</a><a href="x">x</a>');
+	equal(serializer.serialize(root), '<a name="x">a</a><a href="x">x</a>');
+});
+
+test('Parse contents with html5 anchors and allow_html_in_named_anchor: true', function() {
+	var parser, root, schema = new tinymce.html.Schema({schema: "html5"});
+
+	parser = new tinymce.html.DomParser({allow_html_in_named_anchor : true}, schema);
+	root = parser.parse('<a id="x">a</a><a href="x">x</a>');
+	equal(serializer.serialize(root), '<a id="x">a</a><a href="x">x</a>');
+});
+
+test('Parse contents with html5 self closing datalist options', function() {
+	var parser, root, schema = new tinymce.html.Schema({schema: "html5"});
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<datalist><option label="a1" value="b1"><option label="a2" value="b2"><option label="a3" value="b3"></datalist>');
+	equal(serializer.serialize(root), '<datalist><option label="a1" value="b1"></option><option label="a2" value="b2"></option><option label="a3" value="b3"></option></datalist>');
 });
 </script>
 </head>

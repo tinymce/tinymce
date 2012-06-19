@@ -68,7 +68,7 @@
 					},
 
 					// Setup font elements for colors as well
-					forecolor : {inline : 'font', styles : {color : '%value'}},
+					forecolor : {inline : 'font', attributes : {color : '%value'}},
 					hilitecolor : {inline : 'font', styles : {backgroundColor : '%value'}}
 				});
 

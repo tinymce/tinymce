@@ -64,7 +64,7 @@
 			self.settings = settings = extend({
 				id : id,
 				language : 'en',
-				theme : 'simple',
+				theme : 'advanced',
 				skin : 'default',
 				delta_width : 0,
 				delta_height : 0,
@@ -95,8 +95,8 @@
 				inline_styles : TRUE,
 				convert_fonts_to_spans : TRUE,
 				indent : 'simple',
-				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
-				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
+				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure,option,optgroup,datalist',
+				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure,option,optgroup,datalist',
 				validate : TRUE,
 				entity_encoding : 'named',
 				url_converter : self.convertURL,
@@ -178,6 +178,14 @@
 			 */			
 			self.contentCSS = [];
 
+			/**
+			 * Array of CSS styles to add to head of document when the editor loads.
+			 *
+			 * @property contentStyles
+			 * @type Array
+			 */
+			self.contentStyles = [];
+
 			// Creates all events like onClick, onSetContent etc see Editor.Events.js for the actual logic
 			self.setupEvents();
 
@@ -220,6 +228,12 @@
 			// Add hidden input for non input elements inside form elements
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
+
+			// Hide target element early to prevent content flashing
+			if (!s.content_editable) {
+				t.orgVisibility = t.getElement().style.visibility;
+				t.getElement().style.visibility = 'hidden';
+			}
 
 			/**
 			 * Window manager reference, use this to open new windows and dialogs.
@@ -301,7 +315,7 @@
 				if (s.language && s.language_load !== false)
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
-				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
+				if (s.theme && typeof s.theme != "function" && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(explode(s.plugins), function(p) {
@@ -342,7 +356,7 @@
 		 * @method init
 		 */
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re, i, initializedPlugins = [];
+			var n, t = this, s = t.settings, w, h, mh, e = t.getElement(), o, ti, u, bi, bc, re, i, initializedPlugins = [];
 
 			tinymce.add(t);
 
@@ -358,13 +372,18 @@
 			 * tinyMCE.activeEditor.theme.someMethod();
 			 */
 			if (s.theme) {
-				s.theme = s.theme.replace(/-/, '');
-				o = ThemeManager.get(s.theme);
-				t.theme = new o();
+				if (typeof s.theme != "function") {
+					s.theme = s.theme.replace(/-/, '');
+					o = ThemeManager.get(s.theme);
+					t.theme = new o();
 
-				if (t.theme.init)
-					t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+					if (t.theme.init)
+						t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+				} else {
+					t.theme = s.theme;
+				}
 			}
+
 			function initPlugin(p) {
 				var c = PluginManager.get(p), u = PluginManager.urls[p] || tinymce.documentBaseURL.replace(/\/$/, ''), po;
 				if (c && tinymce.inArray(initializedPlugins,p) === -1) {
@@ -418,25 +437,63 @@
 
 			// Measure box
 			if (s.render_ui && t.theme) {
-				w = s.width || e.style.width || e.offsetWidth;
-				h = s.height || e.style.height || e.offsetHeight;
 				t.orgDisplay = e.style.display;
-				re = /^[0-9\.]+(|px)$/i;
 
-				if (re.test('' + w))
-					w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
+				if (typeof s.theme != "function") {
+					w = s.width || e.style.width || e.offsetWidth;
+					h = s.height || e.style.height || e.offsetHeight;
+					mh = s.min_height || 100;
+					re = /^[0-9\.]+(|px)$/i;
 
-				if (re.test('' + h))
-					h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), 100);
+					if (re.test('' + w))
+						w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
 
-				// Render UI
-				o = t.theme.renderUI({
-					targetNode : e,
-					width : w,
-					height : h,
-					deltaWidth : s.delta_width,
-					deltaHeight : s.delta_height
-				});
+					if (re.test('' + h))
+						h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), mh);
+
+					// Render UI
+					o = t.theme.renderUI({
+						targetNode : e,
+						width : w,
+						height : h,
+						deltaWidth : s.delta_width,
+						deltaHeight : s.delta_height
+					});
+
+					// Resize editor
+					DOM.setStyles(o.sizeContainer || o.editorContainer, {
+						width : w,
+						height : h
+					});
+
+					h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
+					if (h < mh)
+						h = mh;
+				} else {
+					o = s.theme(t, e);
+
+					// Convert element type to id:s
+					if (o.editorContainer.nodeType) {
+						o.editorContainer = o.editorContainer.id = o.editorContainer.id || t.id + "_parent";
+					}
+
+					// Convert element type to id:s
+					if (o.iframeContainer.nodeType) {
+						o.iframeContainer = o.iframeContainer.id = o.iframeContainer.id || t.id + "_iframecontainer";
+					}
+
+					// Use specified iframe height or the targets offsetHeight
+					h = o.iframeHeight || e.offsetHeight;
+
+					// Store away the selection when it's changed to it can be restored later with a editor.focus() call
+					if (isIE) {
+						t.onInit.add(function(ed) {
+							ed.dom.bind(ed.getBody(), 'beforedeactivate keydown', function() {
+								ed.lastIERng = ed.selection.getRng();
+							});
+						});
+					}
+				}
 
 				t.editorContainer = o.editorContainer;
 			}
@@ -457,16 +514,6 @@
 			// User specified a document.domain value
 			if (document.domain && location.hostname != document.domain)
 				tinymce.relaxedDomain = document.domain;
-
-			// Resize editor
-			DOM.setStyles(o.sizeContainer || o.editorContainer, {
-				width : w,
-				height : h
-			});
-
-			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
-			if (h < 100)
-				h = 100;
 
 			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml">';
 
@@ -526,7 +573,14 @@
 			});
 
 			t.contentAreaContainer = o.iframeContainer;
-			DOM.get(o.editorContainer).style.display = t.orgDisplay;
+
+			if (o.editorContainer) {
+				DOM.get(o.editorContainer).style.display = t.orgDisplay;
+			}
+
+			// Restore visibility on target element
+			e.style.visibility = t.orgVisibility;
+
 			DOM.get(t.id).style.display = 'none';
 			DOM.setAttrib(t.id, 'aria-hidden', true);
 
@@ -544,7 +598,7 @@
 		 * @method initContentBody
 		 */
 		initContentBody : function() {
-			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), html, body;
+			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), html, body, contentCssText;
 
 			// Setup iframe body
 			if ((!isIE || !tinymce.relaxedDomain) && !settings.content_editable) {
@@ -688,7 +742,7 @@
 			 * // Selects the first paragraph found
 			 * tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.dom.select('p')[0]);
 			 */
-			self.selection = new tinymce.dom.Selection(self.dom, self.getWin(), self.serializer);
+			self.selection = new tinymce.dom.Selection(self.dom, self.getWin(), self.serializer, self);
 
 			/**
 			 * Formatter instance.
@@ -724,7 +778,7 @@
 
 			self.onPreInit.dispatch(self);
 
-			if (!settings.gecko_spellcheck)
+			if (!settings.browser_spellcheck && !settings.gecko_spellcheck)
 				doc.body.spellcheck = false;
 
 			if (!settings.readonly) {
@@ -785,6 +839,17 @@
 			self.focus(true);
 			self.nodeChanged({initial : true});
 
+			// Add editor specific CSS styles
+			if (self.contentStyles.length > 0) {
+				contentCssText = '';
+
+				each(self.contentStyles, function(style) {
+					contentCssText += style + "\r\n";
+				});
+
+				self.dom.addStyle(contentCssText);
+			}
+
 			// Load specified content CSS last
 			each(self.contentCSS, function(url) {
 				self.dom.loadCSS(url);
@@ -817,6 +882,10 @@
 			var oed, self = this, selection = self.selection, contentEditable = self.settings.content_editable, ieRng, controlElm, doc = self.getDoc(), body;
 
 			if (!skip_focus) {
+				if (self.lastIERng) {
+					selection.setRng(self.lastIERng);
+				}
+
 				// Get selected control element
 				ieRng = selection.getRng();
 				if (ieRng.item) {
@@ -1522,7 +1591,10 @@
 			if (!args.no_events)
 				self.onSetContent.dispatch(self, args);
 
-			self.selection.normalize();
+			// Don't normalize selection if the focused element isn't the body in content editable mode since it will steal focus otherwise
+			if (!self.settings.content_editable || document.activeElement === self.getBody()) {
+				self.selection.normalize();
+			}
 
 			return args.content;
 		},
@@ -1736,14 +1808,16 @@
 						return;
 
 					case 'A':
-						value = dom.getAttrib(elm, 'name');
-						cls = 'mceItemAnchor';
+						if (!dom.getAttrib(elm, 'href', false)) {
+							value = dom.getAttrib(elm, 'name') || elm.id;
+							cls = 'mceItemAnchor';
 
-						if (value) {
-							if (self.hasVisual)
-								dom.addClass(elm, cls);
-							else
-								dom.removeClass(elm, cls);
+							if (value) {
+								if (self.hasVisual)
+									dom.addClass(elm, cls);
+								else
+									dom.removeClass(elm, cls);
+							}
 						}
 
 						return;
@@ -1768,13 +1842,12 @@
 				// Don't clear the window or document if content editable
 				// is enabled since other instances might still be present
 				if (!self.settings.content_editable) {
-					Event.clear(self.getWin());
-					Event.clear(self.getDoc());
+					Event.unbind(self.getWin());
+					Event.unbind(self.getDoc());
 				}
 
-				Event.clear(self.getBody());
-				Event.clear(self.formElement);
-				Event.unbind(elm);
+				Event.unbind(self.getBody());
+				Event.clear(elm);
 
 				self.execCallback('remove_instance_callback', self);
 				self.onRemove.dispatch(self);

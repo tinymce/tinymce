@@ -515,7 +515,7 @@ tinymce.dom = {};
 
 			// Old API supported multiple targets
 			if (target && target instanceof Array) {
-				var i = target;
+				var i = target.length;
 
 				while (i--) {
 					self.add(target[i], events, func, scope);
@@ -575,12 +575,20 @@ tinymce.dom = {};
 		};
 
 		self.prevent = function(e) {
+			if (!e.preventDefault) {
+				e = fix(e);
+			}
+
 			e.preventDefault();
 
 			return false;
 		};
 
 		self.stop = function(e) {
+			if (!e.stopPropagation) {
+				e = fix(e);
+			}
+
 			e.stopPropagation();
 
 			return false;

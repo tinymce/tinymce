@@ -15,7 +15,7 @@
 	 * Contains logic for handling the enter key to split/generate block elements.
 	 */
 	tinymce.EnterKey = function(editor) {
-		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager;
+		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager, nonEmptyElementsMap = editor.schema.getNonEmptyElements();
 
 		function handleEnterKey(evt) {
 			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, documentMode,
@@ -25,11 +25,48 @@
 			function canSplitBlock(node) {
 				return node &&
 					dom.isBlock(node) &&
-					!/^(TD|TH|CAPTION)$/.test(node.nodeName) &&
+					!/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
 					!/^(fixed|absolute)/i.test(node.style.position) && 
 					dom.getContentEditable(node) !== "true";
 			};
 
+			// Renders empty block on IE
+			function renderBlockOnIE(block) {
+				var oldRng;
+
+				if (tinymce.isIE && dom.isBlock(block)) {
+					oldRng = selection.getRng();
+					block.appendChild(dom.create('span', null, '\u00a0'));
+					selection.select(block);
+					block.lastChild.outerHTML = '';
+					selection.setRng(oldRng);
+				}
+			};
+
+			// Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
+			function trimInlineElementsOnLeftSideOfBlock(block) {
+				var node = block, firstChilds = [], i;
+
+				// Find inner most first child ex: <p><i><b>*</b></i></p>
+				while (node = node.firstChild) {
+					if (dom.isBlock(node)) {
+						return;
+					}
+
+					if (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+						firstChilds.push(node);
+					}
+				}
+
+				i = firstChilds.length;
+				while (i--) {
+					node = firstChilds[i];
+					if (!node.hasChildNodes() || (node.firstChild == node.lastChild && node.firstChild.nodeValue === '')) {
+						dom.remove(node);
+					}
+				}
+			};
+			
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
 			function moveToCaretPosition(root) {
 				var walker, node, rng, y, viewPort, lastNode = root, tempElm;
@@ -46,7 +83,7 @@
 							break;
 						}
 
-						if (/^(BR|IMG)$/.test(node.nodeName)) {
+						if (nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
 							rng.setStartBefore(node);
 							rng.setEndBefore(node);
 							break;
@@ -143,6 +180,11 @@
 					return true;
 				}
 
+				// If the caret if before the first element in parentBlock
+				if (start && container.nodeType == 1 && container == parentBlock.firstChild) {
+					return true;
+				}
+
 				// Caret can be before/after a table
 				if (container.nodeName === "TABLE" || (container.previousSibling && container.previousSibling.nodeName == "TABLE")) {
 					return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
@@ -150,20 +192,34 @@
 
 				// Walk the DOM and look for text nodes or non empty elements
 				walker = new TreeWalker(container, parentBlock);
-				while (node = (start ? walker.prev() : walker.next())) {
+	
+				// If caret is in beginning or end of a text block then jump to the next/previous node
+				if (container.nodeType == 3) {
+					if (start && offset == 0) {
+						walker.prev();
+					} else if (!start && offset == container.nodeValue.length) {
+						walker.next();
+					}
+				}
+
+				while (node = walker.current()) {
 					if (node.nodeType === 1) {
 						// Ignore bogus elements
-						if (node.getAttribute('data-mce-bogus')) {
-							continue;
-						}
-
-						// Keep empty elements like <img />
-						name = node.nodeName.toLowerCase();
-						if (name === 'IMG') {
-							return false;
+						if (!node.getAttribute('data-mce-bogus')) {
+							// Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
+							name = node.nodeName.toLowerCase();
+							if (nonEmptyElementsMap[name] && name !== 'br') {
+								return false;
+							}
 						}
 					} else if (node.nodeType === 3 && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
 						return false;
+					}
+
+					if (start) {
+						walker.prev();
+					} else {
+						walker.next();
 					}
 				}
 
@@ -248,6 +304,7 @@
 				} else if (isFirstOrLastLi()) {
 					// Last LI in list then temove LI and add text block after list
 					dom.insertAfter(newBlock, containerBlock);
+					renderBlockOnIE(newBlock);
 				} else {
 					// Middle LI in list the split the list and insert a text block in the middle
 					// Extract after fragment and insert it after the current block
@@ -339,6 +396,22 @@
 				return parent !== root ? editableRoot : root;
 			};
 
+			// Adds a BR at the end of blocks that only contains an IMG or INPUT since these might be floated and then they won't expand the block
+			function addBrToBlockIfNeeded(block) {
+				var lastChild;
+
+				// IE will render the blocks correctly other browsers needs a BR
+				if (!tinymce.isIE) {
+					block.normalize(); // Remove empty text nodes that got left behind by the extract
+
+					// Check if the block is empty or contains a floated last child
+					lastChild = block.lastChild;
+					if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true)))) {
+						dom.add(block, 'br');
+					}
+				}
+			};
+
 			// Delete any selected contents
 			if (!rng.collapsed) {
 				editor.execCommand('Delete');
@@ -361,7 +434,11 @@
 			if (container.nodeType == 1 && container.hasChildNodes()) {
 				isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
-				offset = 0;
+				if (isAfterLastNodeInContainer && container.nodeType == 3) {
+					offset = container.nodeValue.length;
+				} else {
+					offset = 0;
+				}
 			}
 
 			// Get editable root node normaly the body element but sometimes a div or span
@@ -442,9 +519,12 @@
 				} else {
 					dom.insertAfter(newBlock, parentBlock);
 				}
+
+				moveToCaretPosition(newBlock);
 			} else if (isCaretAtStartOrEndOfBlock(true)) {
 				// Insert new block before
 				newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
+				renderBlockOnIE(newBlock);
 			} else {
 				// Extract after fragment and insert it after the current block
 				tmpRng = rng.cloneRange();
@@ -453,10 +533,12 @@
 				trimLeadingLineBreaks(fragment);
 				newBlock = fragment.firstChild;
 				dom.insertAfter(fragment, parentBlock);
+				trimInlineElementsOnLeftSideOfBlock(newBlock);
+				addBrToBlockIfNeeded(parentBlock);
+				moveToCaretPosition(newBlock);
 			}
 
 			dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
-			moveToCaretPosition(newBlock);
 			undoManager.add();
 		}
 

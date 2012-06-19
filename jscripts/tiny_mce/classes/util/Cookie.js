@@ -124,15 +124,16 @@
 		 * Removes/deletes a cookie by name.
 		 *
 		 * @method remove
-		 * @param {String} n Cookie name to remove/delete.
-		 * @param {Strong} p Optional path to remove the cookie from.
+		 * @param {String} name Cookie name to remove/delete.
+		 * @param {Strong} path Optional path to remove the cookie from.
+		 * @param {Strong} domain Optional domain to restrict the cookie to.
 		 */
-		remove : function(n, p) {
-			var d = new Date();
+		remove : function(name, path, domain) {
+			var date = new Date();
 
-			d.setTime(d.getTime() - 1000);
+			date.setTime(date.getTime() - 1000);
 
-			this.set(n, '', d, p, d);
+			this.set(name, '', date, path, domain);
 		}
 	});
 })();

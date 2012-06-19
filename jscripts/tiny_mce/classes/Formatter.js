@@ -45,6 +45,7 @@
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
+			formatChangeData,
 			undef,
 			getContentEditable = dom.getContentEditable;
 
@@ -994,7 +995,7 @@
 						matchedFormatNames.push(name);
 					}
 				}
-			});
+			}, dom.getRoot());
 
 			return matchedFormatNames;
 		};
@@ -1030,6 +1031,68 @@
 			return FALSE;
 		};
 
+		/**
+		 * Executes the specified callback when the current selection matches the formats or not.
+		 *
+		 * @method formatChanged
+		 * @param {String} formats Comma separated list of formats to check for.
+		 * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
+		 */
+		function formatChanged(formats, callback) {
+			var currentFormats;
+
+			// Setup format node change logic
+			if (!formatChangeData) {
+				formatChangeData = {};
+				currentFormats = {};
+
+				ed.onNodeChange.addToTop(function(ed, cm, node) {
+					var parents = getParents(node), matchedFormats = {};
+
+					// Check for new formats
+					each(formatChangeData, function(callbacks, format) {
+						each(parents, function(node) {
+							if (matchNode(node, format, {}, true)) {
+								if (!currentFormats[format]) {
+									// Execute callbacks
+									each(callbacks, function(callback) {
+										callback(true, {node: node, format: format, parents: parents});
+									});
+
+									currentFormats[format] = callbacks;
+								}
+
+								matchedFormats[format] = callbacks;
+								return false;
+							}
+						});
+					});
+
+					// Check if current formats still match
+					each(currentFormats, function(callbacks, format) {
+						if (!matchedFormats[format]) {
+							delete currentFormats[format];
+
+							each(callbacks, function(callback) {
+								callback(false, {node: node, format: format, parents: parents});
+							});
+						}
+					});
+				});
+			}
+
+			// Add format listeners
+			each(formats.split(','), function(format) {
+				if (!formatChangeData[format]) {
+					formatChangeData[format] = [];
+				}
+
+				formatChangeData[format].push(callback);
+			});
+
+			return this;
+		};
+
 		// Expose to public
 		tinymce.extend(this, {
 			get : get,
@@ -1040,7 +1103,8 @@
 			match : match,
 			matchAll : matchAll,
 			matchNode : matchNode,
-			canApply : canApply
+			canApply : canApply,
+			formatChanged: formatChanged
 		});
 
 		// Initialize

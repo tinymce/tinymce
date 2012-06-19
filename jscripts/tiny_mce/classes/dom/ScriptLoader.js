@@ -109,11 +109,10 @@
 			}
 
 			// Create new script element
-			elm = dom.create('script', {
-				id : id,
-				type : 'text/javascript',
-				src : tinymce._addVer(url)
-			});
+			elm = document.createElement('script');
+			elm.id = id;
+			elm.type = 'text/javascript';
+			elm.src = tinymce._addVer(url);
 
 			// Add onload listener for non IE browsers since IE9
 			// fires onload event before the script is parsed and executed

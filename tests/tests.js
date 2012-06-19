@@ -17,6 +17,7 @@ provide([
 			{"title": "Autolink plugin", "url": "autolink.html", "jsrobot": true},
 			{"title": "Wordcount plugin", "url": "wordcount.html"},
 			{"title": "Fullpage plugin", "url": "fullpage.html"},
+			{"title": "Legacyoutput plugin", "url": "legacyoutput.html"},
 			{"title": "Plugin Dependencies", "url": "plugin_dependency_simple.html"},
 			{"title": "Plugin Dependency Chain", "url": "plugin_dependency_chain.html"},
 			{"title": "Plugin Dependency Chain Legacy", "url": "plugin_dependency_chain_legacy.html"},

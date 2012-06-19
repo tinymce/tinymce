@@ -396,10 +396,10 @@ tinyMCEPopup = {
 		e = e || window.event;
 
 		if (e.keyCode == 13 || e.keyCode == 32) {
-			e = e.target || e.srcElement;
+			var elm = e.target || e.srcElement;
 
-			if (e.onchange)
-				e.onchange();
+			if (elm.onchange)
+				elm.onchange();
 
 			return tinymce.dom.Event.cancel(e);
 		}

@@ -160,16 +160,18 @@ test('getBlockElements', function() {
 
 	var schema = new tinymce.html.Schema();
 	deepEqual(schema.getBlockElements(), {
-		"ASIDE": {}, "HGROUP": {}, "SECTION": {}, "ARTICLE": {}, "FOOTER": {}, "HEADER": {}, "SAMP": {},
-		"ISINDEX": {}, "MENU": {}, "NOSCRIPT": {}, "FIELDSET": {}, "DIR": {}, "DD": {}, "DT": {},
-		"DL": {}, "CENTER": {}, "BLOCKQUOTE": {}, "CAPTION": {}, "UL": {}, "OL": {}, "LI": {},
-		"TD": {}, "TR": {}, "TH": {}, "TFOOT": {}, "THEAD": {}, "TBODY": {}, "TABLE": {}, "FORM": {},
-		"PRE": {}, "ADDRESS": {}, "DIV": {}, "P": {}, "HR": {}, "H6": {}, "H5": {}, "H4": {}, "H3": {},
-		"H2": {}, "H1": {}, "NAV": {}, "FIGURE": {}, "aside": {}, "hgroup": {}, "section": {}, "article": {}, "footer": {}, "header": {}, "samp": {},
-		"isindex": {}, "menu": {}, "noscript": {}, "fieldset": {}, "dir": {}, "dd": {}, "dt": {}, "dl": {}, "center": {},
-		"blockquote": {}, "caption": {}, "ul": {}, "ol": {}, "li": {}, "td": {}, "tr": {}, "th": {}, "tfoot": {}, "thead": {},
-		"tbody": {}, "table": {}, "form": {}, "pre": {}, "address": {}, "div": {}, "p": {}, "hr": {}, "h6": {},
-		"h5": {}, "h4": {}, "h3": {}, "h2": {}, "h1": {}, "nav": {}, "figure": {}
+		ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {}, SAMP: {},
+		ISINDEX: {}, MENU: {}, NOSCRIPT: {}, FIELDSET: {}, DIR: {}, DD: {}, DT: {},
+		DL: {}, CENTER: {}, BLOCKQUOTE: {}, CAPTION: {}, UL: {}, OL: {}, LI: {},
+		TD: {}, TR: {}, TH: {}, TFOOT: {}, THEAD: {}, TBODY: {}, TABLE: {}, FORM: {},
+		PRE: {}, ADDRESS: {}, DIV: {}, P: {}, HR: {}, H6: {}, H5: {}, H4: {}, H3: {},
+		H2: {}, H1: {}, NAV: {}, FIGURE: {}, DATALIST: {}, OPTGROUP: {}, OPTION: {}, SELECT: {},
+		aside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {}, samp: {},
+		isindex: {}, menu: {}, noscript: {}, fieldset: {}, dir: {}, dd: {}, dt: {}, dl: {}, center: {},
+		blockquote: {}, caption: {}, ul: {}, ol: {}, li: {}, td: {}, tr: {}, th: {}, tfoot: {}, thead: {},
+		tbody: {}, table: {}, form: {}, pre: {}, address: {}, div: {}, p: {}, hr: {}, h6: {},
+		h5: {}, h4: {}, h3: {}, h2: {}, h1: {}, nav: {}, figure: {}, datalist: {}, optgroup: {},
+		option: {}, select: {}
 	});
 });
 
@@ -180,10 +182,10 @@ test('getShortEndedElements', function() {
 	deepEqual(schema.getShortEndedElements(), {
 		"EMBED": {}, "PARAM": {}, "META": {}, "LINK": {}, "ISINDEX": {},
 		"INPUT": {}, "IMG": {}, "HR": {}, "FRAME": {}, "COL": {}, "BR": {},
-		"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {},
+		"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {}, "WBR" : {}, 
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
-		"basefont": {}, "base": {}, "area": {}, "source" : {}
+		"basefont": {}, "base": {}, "area": {}, "source" : {}, "wbr" : {}
 	});
 });
 
@@ -195,11 +197,11 @@ test('getNonEmptyElements', function() {
 		"EMBED": {}, "PARAM": {}, "META": {}, "LINK": {}, "ISINDEX": {},
 		"INPUT": {}, "IMG": {}, "HR": {}, "FRAME": {}, "COL": {}, "BR": {},
 		"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {},
-		"TD": {}, "TH": {}, "IFRAME": {}, "VIDEO": {}, "AUDIO": {}, "OBJECT": {},
+		"TD": {}, "TH": {}, "IFRAME": {}, "VIDEO": {}, "AUDIO": {}, "OBJECT": {}, "WBR": {},
 		"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},
 		"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},
 		"basefont": {}, "base": {}, "area": {}, "source" : {},
-		"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}
+		"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}, "wbr" : {}
 	});
 });
 
@@ -326,6 +328,18 @@ test('blockElements', function() {
 	ok(schema.getBlockElements()['pre']);
 	ok(schema.getBlockElements()['p']);
 	ok(!schema.getBlockElements()['h1']);
+});
+
+test('isValid', function() {
+	var schema = new tinymce.html.Schema({valid_elements : 'a[href],i[*]'});
+
+	ok(schema.isValid('a'));
+	ok(schema.isValid('a', 'href'));
+	ok(!schema.isValid('b'));
+	ok(!schema.isValid('b', 'href'));
+	ok(!schema.isValid('a', 'id'));
+	ok(schema.isValid('i'));
+	ok(schema.isValid('i', 'id'));
 });
 </script>
 </head>
