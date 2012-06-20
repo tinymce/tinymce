@@ -47,10 +47,15 @@ define(
         }
       };
 
+      var stop = function () {
+        moving = false;
+      };
+
       return {
         mousedown: runIfActive(mousedown),
         mouseup: runIfActive(mouseup),
-        mousemove: runIfActive(mousemove)
+        mousemove: runIfActive(mousemove),
+        stop: stop
       };
     };
   }

@@ -66,6 +66,7 @@ define(
 
       var hide = function () {
         Visibility.hide(dialog);
+        drag.stop();
       };
 
       return {
