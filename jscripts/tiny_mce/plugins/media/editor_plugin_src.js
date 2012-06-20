@@ -28,6 +28,10 @@
 		["Audio"]
 	];
 
+	function normalizeSize(size) {
+		return typeof(size) == "string" ? size.replace(/[^0-9%]/g, '') : size;
+	}
+
 	function toArray(obj) {
 		var undef, out, i;
 
@@ -258,8 +262,8 @@
 				'data-mce-json' : JSON.serialize(data, "'")
 			});
 
-			img.width = data.width || (data.type == 'audio' ? "300" : "320");
-			img.height = data.height || (data.type == 'audio' ? "32" : "240");
+			img.width = data.width = normalizeSize(data.width || (data.type == 'audio' ? "300" : "320"));
+			img.height = data.height = normalizeSize(data.height || (data.type == 'audio' ? "32" : "240"));
 
 			return img;
 		},
@@ -434,8 +438,8 @@
 				// Create new object element
 				video = new Node('video', 1).attr(tinymce.extend({
 					id : node.attr('id'),
-					width: node.attr('width'),
-					height: node.attr('height'),
+					width: normalizeSize(node.attr('width')),
+					height: normalizeSize(node.attr('height')),
 					style : style
 				}, data.video.attrs));
 
@@ -473,8 +477,8 @@
 				// Create new object element
 				audio = new Node('audio', 1).attr(tinymce.extend({
 					id : node.attr('id'),
-					width: node.attr('width'),
-					height: node.attr('height'),
+					width: normalizeSize(node.attr('width')),
+					height: normalizeSize(node.attr('height')),
 					style : style
 				}, data.video.attrs));
 
@@ -502,8 +506,8 @@
 				embed.shortEnded = true;
 				embed.attr({
 					id: node.attr('id'),
-					width: node.attr('width'),
-					height: node.attr('height'),
+					width: normalizeSize(node.attr('width')),
+					height: normalizeSize(node.attr('height')),
 					style : style,
 					type: node.attr('type')
 				});
@@ -531,8 +535,8 @@
 				// Create new object element
 				object = new Node('object', 1).attr({
 					id : node.attr('id'),
-					width: node.attr('width'),
-					height: node.attr('height'),
+					width: normalizeSize(node.attr('width')),
+					height: normalizeSize(node.attr('height')),
 					style : style
 				});
 
@@ -576,8 +580,8 @@
 					embed.shortEnded = true;
 					embed.attr({
 						id: node.attr('id'),
-						width: node.attr('width'),
-						height: node.attr('height'),
+						width: normalizeSize(node.attr('width')),
+						height: normalizeSize(node.attr('height')),
 						style : style,
 						type: typeItem.mimes[0]
 					});
@@ -793,8 +797,8 @@
 
 			if (iframe) {
 				// Get width/height
-				width = iframe.attr('width');
-				height = iframe.attr('height');
+				width = normalizeSize(iframe.attr('width'));
+				height = normalizeSize(iframe.attr('height'));
 				style = style || iframe.attr('style');
 				id = iframe.attr('id');
 				hspace = iframe.attr('hspace');

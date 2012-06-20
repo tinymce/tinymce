@@ -299,6 +299,13 @@ test("Iframe (absolute urls)", function() {
 	equal(editor.getContent(), '<p><iframe id="id" style="color: #ff0000;" src="/tinymce/tinymce/trunk/tests/test" frameborder="0" align="right" width="100" height="200"></iframe></p>');
 });
 
+test("Iframe invalid width/height", function() {
+	editor.settings.relative_urls = false;
+
+	editor.setContent('<iframe src="test" width="100px" height="200px"></iframe>');
+	equal(editor.getContent(), '<p><iframe src="/tinymce/tinymce/trunk/tests/test" width="100" height="200"></iframe></p>');
+});
+
 test("Internal dataToHtml", function() {
 	expect(1);
 
