@@ -668,6 +668,10 @@ tinymce.util.Quirks = function(editor) {
 					} else {
 						dom.setAttrib(mouseDownImg, 'height', height);
 					}
+
+					if (!dom.hasClass(editor.getBody(), 'mceResizeImages')) {
+						dom.addClass(editor.getBody(), 'mceResizeImages');
+					}
 				}
 			}
 		};
@@ -686,14 +690,13 @@ tinymce.util.Quirks = function(editor) {
 			}
 		});
 
-		editor.onMouseUp.add(function() {
+		// Unbind events on node change and restore resize cursor
+		editor.onNodeChange.add(function() {
 			if (mouseDownImg) {
 				mouseDownImg = null;
 				dom.unbind(editor.getDoc(), 'mousemove', resizeImage);
 			}
-		});
 
-		editor.onNodeChange.add(function() {
 			if (selection.getNode().nodeName == "IMG") {
 				dom.addClass(editor.getBody(), 'mceResizeImages');
 			} else {
