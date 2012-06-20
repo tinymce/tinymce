@@ -3,6 +3,8 @@ Version 3.5.x (2012-xx-xx)
 	Added image resizing for WebKit browsers by faking the whole resize behavior.
 	Fixed bug in context menu plugin where listener to hide menu wasn't removed correctly.
 	Fixed bug where media plugin wouldn't use placeholder size for the object/video elements.
+	Fixed bug where jQuery plugin would break attr function in jQuery 1.7.2.
+	Fixed so encoding option gets applied when using jQuery val() or attr() to extract the contents.
 	Fixed so any non valid width/height passed to media plugin would get parsed to proper integer or percent values.
 Version 3.5.3 (2012-06-19)
 	Added missing wbr element to HTML5 schema.
