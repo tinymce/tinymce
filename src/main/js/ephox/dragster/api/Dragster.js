@@ -44,8 +44,6 @@ define(
       Events.bind(dialog, 'mouseup', drag.mouseup);
       Events.bind(dialog, 'mousemove', drag.mousemove);
 
-      hide();
-
       var element = function () {
         return dialog;
       };
@@ -70,6 +68,8 @@ define(
         Visibility.hide(dialog);
         drag.stop();
       };
+
+      hide();
 
       return {
         element: element,
