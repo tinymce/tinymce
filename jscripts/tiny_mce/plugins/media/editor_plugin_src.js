@@ -390,6 +390,10 @@
 					style = editor.dom.serializeStyle(editor.dom.parseStyle(style, 'img'));
 			}
 
+			// Use node width/height to override the data width/height when the placeholder is resized
+			data.width = node.attr('width') || data.width;
+			data.height = node.attr('height') || data.height;
+
 			// Handle iframe
 			if (typeItem.name === 'Iframe') {
 				replacement = new Node('iframe', 1);
