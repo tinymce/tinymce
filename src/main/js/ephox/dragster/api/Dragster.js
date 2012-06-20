@@ -2,7 +2,6 @@ define(
   'ephox.dragster.api.Dragster',
 
   [
-    'ephox.wrap.JQuery',
     'ephox.dragster.move.Drag',
     'ephox.dragster.move.Mover',
     'ephox.dragster.style.Styles',
@@ -11,34 +10,29 @@ define(
     'ephox.sugar.Element',
     'ephox.sugar.Events',
     'ephox.sugar.Insert',
+    'ephox.sugar.Remove',
     'ephox.sugar.Visibility'
   ],
 
-  function ($, Drag, Mover, Styles, Class, Css, Element, Events, Insert, Visibility) {
-
-    var textNode = function (value) {
-      return Element(document.createTextNode(value));
-    };
+  function (Drag, Mover, Styles, Class, Css, Element, Events, Insert, Remove, Visibility) {
 
     var setPosition = function (element, x, y) {
       Css.set(element, 'left', x);
       Css.set(element, 'top', y);
     };
 
-    return function (title) {
+    var container = function (clazz) {
+      var div = document.createElement('div');
+      var element = Element(div);
+      Class.add(element, Styles.resolve(clazz));
+      return element;
+    };
 
-      var dialog = Element(document.createElement('div'));
-      var titlebar = Element(document.createElement('div'));
+    return function () {
 
-      Insert.append(textNode(title), titlebar);
-
-      var content = Element(document.createElement('div'));
-
-      Insert.append(textNode('Hi. Look at me.'), content);
-
-      Class.add(dialog, Styles.resolve('dialog'));
-      Class.add(titlebar, Styles.resolve('titlebar'));
-      Class.add(content, Styles.resolve('content'));
+      var dialog = container('dialog');
+      var titlebar = container('titlebar');
+      var content = container('content');
 
       Insert.append(titlebar, dialog);
       Insert.append(content, dialog);
@@ -54,10 +48,14 @@ define(
         return dialog;
       };
 
-       var setContent = function (newContent) {
-        // TODO: Remove JQuery. Sugarise remove.
-        $(content.dom()).empty();
+      var setContent = function (newContent) {
+        Remove.clear(content);
         Insert.append(newContent, content);
+      };
+
+      var setHeader = function (newHeader) {
+        Remove.clear(titlebar);
+        Insert.append(newHeader, titlebar);
       };
 
       var show = function (x, y) {
@@ -73,6 +71,7 @@ define(
       return {
         element: element,
         setContent: setContent,
+        setHeader: setHeader,
         show: show,
         hide: hide
       };

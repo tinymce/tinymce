@@ -21,8 +21,9 @@ define(
       };
 
       var getTarget = function (event) {
-        // TODO: Check if event.target is cross-browser
-        return Element(event.target);
+        // TODO: Check this is cross-browser.
+        var sEvent = event || window.event;
+        return Element(sEvent.target || sEvent.srcElement);
       };
 
       var mousedown = function (event, ui) {
