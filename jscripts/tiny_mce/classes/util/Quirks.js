@@ -638,7 +638,11 @@ tinymce.util.Quirks = function(editor) {
 
 	function fakeImageResize() {
 		var mouseDownImg, startX, startY, startW, startH;
-		
+
+		if (!settings.object_resizing) {
+			return;
+		}
+
 		editor.contentStyles.push('.mceResizeImages img {cursor: se-resize !important}');
 
 		function resizeImage(e) {
