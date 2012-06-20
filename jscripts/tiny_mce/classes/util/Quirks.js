@@ -636,6 +636,72 @@ tinymce.util.Quirks = function(editor) {
 		}
 	};
 
+	function fakeImageResize() {
+		var mouseDownImg, startX, startY, startW, startH;
+		
+		editor.contentStyles.push('.mceResizeImages img {cursor: se-resize !important}');
+
+		function resizeImage(e) {
+			var deltaX, deltaY, ratio, width, height;
+
+			if (mouseDownImg) {
+				deltaX = e.screenX - startX;
+				deltaY = e.screenY - startY;
+				ratio = Math.max((startW + deltaX) / startW, (startH + deltaY) / startH);
+
+				// Only update styles if the user draged one pixel or more
+				if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+					// Constrain proportions
+					width = Math.round(startW * ratio);
+					height = Math.round(startH * ratio);
+
+					// Resize by using style or attribute
+					if (mouseDownImg.style.width) {
+						mouseDownImg.style.width = width + 'px';
+					} else {
+						dom.setAttrib(mouseDownImg, 'width', width);
+					}
+
+					// Resize by using style or attribute
+					if (mouseDownImg.style.height) {
+						mouseDownImg.style.height = height + 'px';
+					} else {
+						dom.setAttrib(mouseDownImg, 'height', height);
+					}
+				}
+			}
+		};
+
+		editor.onMouseDown.add(function(editor, e) {
+			var target = e.target;
+
+			if (target.nodeName == "IMG") {
+				mouseDownImg = target;
+				startX = e.screenX;
+				startY = e.screenY;
+				startW = mouseDownImg.clientWidth;
+				startH = mouseDownImg.clientHeight;
+				dom.bind(editor.getDoc(), 'mousemove', resizeImage);
+				e.preventDefault();
+			}
+		});
+
+		editor.onMouseUp.add(function() {
+			if (mouseDownImg) {
+				mouseDownImg = null;
+				dom.unbind(editor.getDoc(), 'mousemove', resizeImage);
+			}
+		});
+
+		editor.onNodeChange.add(function() {
+			if (selection.getNode().nodeName == "IMG") {
+				dom.addClass(editor.getBody(), 'mceResizeImages');
+			} else {
+				dom.removeClass(editor.getBody(), 'mceResizeImages');
+			}
+		});
+	};
+
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
@@ -652,6 +718,8 @@ tinymce.util.Quirks = function(editor) {
 		// iOS
 		if (tinymce.isIDevice) {
 			selectionChangeNodeChanged();
+		} else {
+			fakeImageResize();
 		}
 	}
 

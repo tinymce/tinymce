@@ -1,5 +1,6 @@
 Version 3.5.x (2012-xx-xx)
 	Added missing mouse events to HTML5 schema. Some events needs to be manually defined though since the spec is huge.
+	Added image resizing for WebKit browsers by faking the whole resize behavior.
 	Fixed bug in context menu plugin where listener to hide menu wasn't removed correctly.
 	Fixed so any non valid width/height passed to media plugin would get parsed to proper integer or percent values.
 Version 3.5.3 (2012-06-19)
