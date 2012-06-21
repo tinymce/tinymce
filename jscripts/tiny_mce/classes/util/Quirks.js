@@ -715,14 +715,14 @@ tinymce.util.Quirks = function(editor) {
 
 					// Resize by using style or attribute
 					if (mouseDownImg.style.width) {
-						mouseDownImg.style.width = width + 'px';
+						dom.setStyle(mouseDownImg, 'width', width);
 					} else {
 						dom.setAttrib(mouseDownImg, 'width', width);
 					}
 
 					// Resize by using style or attribute
 					if (mouseDownImg.style.height) {
-						mouseDownImg.style.height = height + 'px';
+						dom.setStyle(mouseDownImg, 'height', height);
 					} else {
 						dom.setAttrib(mouseDownImg, 'height', height);
 					}
