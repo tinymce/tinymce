@@ -832,9 +832,12 @@
 			self.focus(true);
 		};
 
-		function nodeChanged() {
-			// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
-			self.selection.normalize();
+		function nodeChanged(ed, e) {
+			// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything
+			if (e.keyCode != 65 || !tinymce.VK.modifierPressed(e)) {
+				self.selection.normalize();
+			}
+
 			self.nodeChanged();
 		}
 
@@ -878,7 +881,7 @@
 			var keyCode = e.keyCode;
 
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45 || keyCode == 46 || keyCode == 8 || (tinymce.isMac && (keyCode == 91 || keyCode == 93)) || e.ctrlKey)
-				nodeChanged();
+				nodeChanged(ed, e);
 		});
 
 		// Add reset handler

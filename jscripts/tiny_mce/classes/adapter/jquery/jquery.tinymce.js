@@ -175,7 +175,7 @@
 	// it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
 	$.extend($.expr[":"], {
 		tinymce : function(e) {
-			return !!(e.id && tinyMCE.get(e.id));
+			return !!(e.id && "tinyMCE" in window && tinyMCE.get(e.id));
 		}
 	});
 
@@ -268,7 +268,7 @@
 					(textProc ? self : self.eq(0)).each(function(i, node) {
 						var ed = tinyMCEInstance(node);
 
-						ret += ed ? (textProc ? ed.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : ed.getContent()) : origFn.apply($(node), args);
+						ret += ed ? (textProc ? ed.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : ed.getContent({save: true})) : origFn.apply($(node), args);
 					});
 
 					return ret;
@@ -316,25 +316,25 @@
 
 		// Makes sure that $('#tinymce_id').attr('value') gets the editors current HTML contents
 		$.fn.attr = function(name, value) {
-			var self = this;
+			var self = this, args = arguments;
 
 			if ((!name) || (name !== "value") || (!containsTinyMCE(self))) {
 				if (value !== undef) {
-					return jQueryFn.attr.call(self, name, value);
+					return jQueryFn.attr.apply(self, args);
 				} else {
-					return jQueryFn.attr.call(self, name);
+					return jQueryFn.attr.apply(self, args);
 				}
 			}
 
 			if (value !== undef) {
 				loadOrSave.call(self.filter(":tinymce"), value);
-				jQueryFn.attr.call(self.not(":tinymce"), name, value);
+				jQueryFn.attr.apply(self.not(":tinymce"), args);
 
 				return self; // return original set for chaining
 			} else {
 				var node = self[0], ed = tinyMCEInstance(node);
 
-				return ed ? ed.getContent() : jQueryFn.attr.call($(node), name, value);
+				return ed ? ed.getContent({save: true}) : jQueryFn.attr.apply($(node), args);
 			}
 		};
 	}

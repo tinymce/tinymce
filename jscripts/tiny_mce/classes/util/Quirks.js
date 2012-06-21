@@ -110,87 +110,74 @@ tinymce.util.Quirks = function(editor) {
 	};
 	
 	/**
-	 * Makes sure that the editor body becomes empty if the selection is the whole body contents.
+	 * Makes sure that the editor body becomes empty when backspace or delete is pressed in empty editors.
 	 *
-	 * Example a selection like this would empty the editor:
-	 * <p><b>[text</b></p><p><i>text]</i></p>
-	 *
-	 * But not a selection like this:
-	 * <p><b>[text]</b></p>
-	 *
-	 * Since it should produce:
+	 * For example:
 	 * <p><b>|</b></p>
+	 *
+	 * Or:
+	 * <h1>|</h1>
+	 *
+	 * Or:
+	 * [<h1></h1>]
 	 */
 	function emptyEditorWhenDeleting() {
-		function getEndPointNode(rng, start) {
-			var container, offset, prefix = start ? 'start' : 'end';
+		function serializeRng(rng) {
+			var body = dom.create("body");
+			var contents = rng.cloneContents();
+			body.appendChild(contents);
+			return selection.serializer.serialize(body, {format: 'html'});
+		}
 
-			container = rng[prefix + 'Container'];
-			offset = rng[prefix + 'Offset'];
+		function allContentsSelected(rng) {
+			var selection = serializeRng(rng);
 
-			// Resolve indexed container
-			if (container.nodeType == 1 && container.hasChildNodes()) {
-				container = container.childNodes[Math.min(start ? offset : (offset > 0 ? offset - 1 : 0), container.childNodes.length - 1)]
-			}
+			var allRng = dom.createRng();
+			allRng.selectNode(editor.getBody());
 
-			return container;
-		};
+			var allSelection = serializeRng(allRng);//console.log(selection, "----", allSelection);
+			return selection === allSelection;
+		}
 
-		function isAtStartEndOfBody(rng, start) {
-			var container, offset, root, childNode, prefix = start ? 'start' : 'end', isAfter;
+		editor.onKeyDown.add(function(editor, e) {
+			var keyCode = e.keyCode, isCollapsed;
 
-			container = rng[prefix + 'Container'];
-			offset = rng[prefix + 'Offset'];
-			root = dom.getRoot();
-
-			// Resolve indexed container
-			if (container.nodeType == 1) {
-				isAfter = offset >= container.childNodes.length;
-				container = getEndPointNode(rng, start);
-
-				if (container.nodeType == 3) {
-					offset = start && !isAfter ? 0 : container.nodeValue.length;
-				}
-			}
-
-			// Check if start/end is in the middle of text
-			if (container.nodeType == 3 && ((start && offset > 0) || (!start && offset < container.nodeValue.length))) {
-				return false;
-			}
-
-			// Walk up the DOM tree to see if the endpoint is at the beginning/end of body
-			while (container !== root) {
-				childNode = container.parentNode[start ? 'firstChild' : 'lastChild'];
-
-				// If first/last element is a BR then jump to it's sibling in case: <p>x<br></p>
-				if (childNode.nodeName == "BR") {
-					childNode = childNode[start ? 'nextSibling' : 'previousSibling'] || childNode;
-				}
-
-				// If the childNode isn't the container node then break in case <p><span>A</span>[X]</p>
-				if (childNode !== container) {
-					return false;
-				}
-
-				container = container.parentNode;
-			}
-
-			return true;
-		};
-
-		editor.onKeyDown.addToTop(function(editor, e) {
-			var rng, keyCode = e.keyCode;
-
+			// Empty the editor if it's needed for example backspace at <p><b>|</b></p>
 			if (!e.isDefaultPrevented() && (keyCode == DELETE || keyCode == BACKSPACE)) {
-				rng = selection.getRng(true);
+				isCollapsed = editor.selection.isCollapsed();
 
-				if (isAtStartEndOfBody(rng, true) && isAtStartEndOfBody(rng, false) &&
-					(rng.collapsed || dom.findCommonAncestor(getEndPointNode(rng, true), getEndPointNode(rng)) === dom.getRoot())) {
-					editor.setContent('');
-					editor.selection.setCursorLocation(editor.getBody(), 0);
-					editor.nodeChanged();
-					e.preventDefault();
+				// Selection is collapsed but the editor isn't empty
+				if (isCollapsed && !dom.isEmpty(editor.getBody())) {
+					return;
 				}
+
+				// IE deletes all contents correctly when everything is selected
+				if (tinymce.isIE && !isCollapsed) {
+					return;
+				}
+
+				// Selection isn't collapsed but not all the contents is selected
+				if (!isCollapsed && !allContentsSelected(editor.selection.getRng())) {
+					return;
+				}
+
+				// Manually empty the editor
+				editor.setContent('');
+				editor.selection.setCursorLocation(editor.getBody(), 0);
+				editor.nodeChanged();
+			}
+		});
+	};
+
+	/**
+	 * WebKit doesn't select all the nodes in the body when you press Ctrl+A.
+	 * This selects the whole body so that backspace/delete logic will delete everything
+	 */
+	function selectAll() {
+		editor.onKeyDown.add(function(editor, e) {
+			if (e.keyCode == 65 && VK.modifierPressed(e)) {
+				e.preventDefault();
+				editor.execCommand('SelectAll');
 			}
 		});
 	};
@@ -700,6 +687,82 @@ tinymce.util.Quirks = function(editor) {
 		}
 	};
 
+	/**
+	 * Fakes image resizing on WebKit by adding a resize state to images when they are selected.
+	 */
+	function fakeImageResize() {
+		var mouseDownImg, startX, startY, startW, startH;
+
+		if (!settings.object_resizing || settings.webkit_fake_resize === false) {
+			return;
+		}
+
+		editor.contentStyles.push('.mceResizeImages img {cursor: se-resize !important}');
+
+		function resizeImage(e) {
+			var deltaX, deltaY, ratio, width, height;
+
+			if (mouseDownImg) {
+				deltaX = e.screenX - startX;
+				deltaY = e.screenY - startY;
+				ratio = Math.max((startW + deltaX) / startW, (startH + deltaY) / startH);
+
+				// Only update styles if the user draged one pixel or more
+				if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+					// Constrain proportions
+					width = Math.round(startW * ratio);
+					height = Math.round(startH * ratio);
+
+					// Resize by using style or attribute
+					if (mouseDownImg.style.width) {
+						dom.setStyle(mouseDownImg, 'width', width);
+					} else {
+						dom.setAttrib(mouseDownImg, 'width', width);
+					}
+
+					// Resize by using style or attribute
+					if (mouseDownImg.style.height) {
+						dom.setStyle(mouseDownImg, 'height', height);
+					} else {
+						dom.setAttrib(mouseDownImg, 'height', height);
+					}
+
+					if (!dom.hasClass(editor.getBody(), 'mceResizeImages')) {
+						dom.addClass(editor.getBody(), 'mceResizeImages');
+					}
+				}
+			}
+		};
+
+		editor.onMouseDown.add(function(editor, e) {
+			var target = e.target;
+
+			if (target.nodeName == "IMG") {
+				mouseDownImg = target;
+				startX = e.screenX;
+				startY = e.screenY;
+				startW = mouseDownImg.clientWidth;
+				startH = mouseDownImg.clientHeight;
+				dom.bind(editor.getDoc(), 'mousemove', resizeImage);
+				e.preventDefault();
+			}
+		});
+
+		// Unbind events on node change and restore resize cursor
+		editor.onNodeChange.add(function() {
+			if (mouseDownImg) {
+				mouseDownImg = null;
+				dom.unbind(editor.getDoc(), 'mousemove', resizeImage);
+			}
+
+			if (selection.getNode().nodeName == "IMG") {
+				dom.addClass(editor.getBody(), 'mceResizeImages');
+			} else {
+				dom.removeClass(editor.getBody(), 'mceResizeImages');
+			}
+		});
+	};
+
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
@@ -716,6 +779,9 @@ tinymce.util.Quirks = function(editor) {
 		// iOS
 		if (tinymce.isIDevice) {
 			selectionChangeNodeChanged();
+		} else {
+			fakeImageResize();
+			selectAll();
 		}
 	}
 
