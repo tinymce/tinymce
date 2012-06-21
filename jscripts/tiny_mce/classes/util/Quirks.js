@@ -117,16 +117,67 @@ tinymce.util.Quirks = function(editor) {
 	 *
 	 * Or:
 	 * <h1>|</h1>
+	 *
+	 * Or:
+	 * [<h1></h1>]
 	 */
 	function emptyEditorWhenDeleting() {
+		function serializeRng(rng) {
+			var body = dom.create("body");
+			var contents = rng.cloneContents();
+			body.appendChild(contents);
+			return selection.serializer.serialize(body, {format: 'html'});
+		}
+
+		function allContentsSelected(rng) {
+			var selection = serializeRng(rng);
+
+			var allRng = dom.createRng();
+			allRng.selectNode(editor.getBody());
+
+			var allSelection = serializeRng(allRng);//console.log(selection, "----", allSelection);
+			return selection === allSelection;
+		}
+
 		editor.onKeyDown.add(function(editor, e) {
-			var keyCode = e.keyCode;
+			var keyCode = e.keyCode, isCollapsed;
 
 			// Empty the editor if it's needed for example backspace at <p><b>|</b></p>
-			if (!e.isDefaultPrevented() && (keyCode == DELETE || keyCode == BACKSPACE) && editor.selection.isCollapsed() && dom.isEmpty(editor.getBody())) {
+			if (!e.isDefaultPrevented() && (keyCode == DELETE || keyCode == BACKSPACE)) {
+				isCollapsed = editor.selection.isCollapsed();
+
+				// Selection is collapsed but the editor isn't empty
+				if (isCollapsed && !dom.isEmpty(editor.getBody())) {
+					return;
+				}
+
+				// IE deletes all contents correctly when everything is selected
+				if (tinymce.isIE && !isCollapsed) {
+					return;
+				}
+
+				// Selection isn't collapsed but not all the contents is selected
+				if (!isCollapsed && !allContentsSelected(editor.selection.getRng())) {
+					return;
+				}
+
+				// Manually empty the editor
 				editor.setContent('');
 				editor.selection.setCursorLocation(editor.getBody(), 0);
 				editor.nodeChanged();
+			}
+		});
+	};
+
+	/**
+	 * WebKit doesn't select all the nodes in the body when you press Ctrl+A.
+	 * This selects the whole body so that backspace/delete logic will delete everything
+	 */
+	function selectAll() {
+		editor.onKeyDown.add(function(editor, e) {
+			if (e.keyCode == 65 && VK.modifierPressed(e)) {
+				e.preventDefault();
+				editor.execCommand('SelectAll');
 			}
 		});
 	};
@@ -636,10 +687,13 @@ tinymce.util.Quirks = function(editor) {
 		}
 	};
 
+	/**
+	 * Fakes image resizing on WebKit by adding a resize state to images when they are selected.
+	 */
 	function fakeImageResize() {
 		var mouseDownImg, startX, startY, startW, startH;
 
-		if (!settings.object_resizing) {
+		if (!settings.object_resizing || settings.webkit_fake_resize === false) {
 			return;
 		}
 
@@ -727,6 +781,7 @@ tinymce.util.Quirks = function(editor) {
 			selectionChangeNodeChanged();
 		} else {
 			fakeImageResize();
+			selectAll();
 		}
 	}
 
