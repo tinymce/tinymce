@@ -175,7 +175,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function selectAll() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (e.keyCode == 65 && VK.modifierPressed(e)) {
+			if (e.keyCode == 65 && VK.metaKeyPressed(e)) {
 				e.preventDefault();
 				editor.execCommand('SelectAll');
 			}

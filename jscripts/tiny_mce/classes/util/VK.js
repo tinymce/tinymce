@@ -26,6 +26,10 @@
 
 		modifierPressed: function (e) {
 			return e.shiftKey || e.ctrlKey || e.altKey;
+		},
+
+		metaKeyPressed: function(e) {
+			return tinymce.isMac ? e.metaKey : e.ctrlKey;
 		}
 	};
 })(tinymce);
