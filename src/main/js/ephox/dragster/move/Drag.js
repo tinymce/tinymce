@@ -7,18 +7,18 @@ define(
     'ephox.sugar.Css',
     'ephox.sugar.Element',
     'ephox.sugar.Equal',
+    'ephox.sugar.Insert',
     'ephox.sugar.Location',
+    'ephox.sugar.Remove',
     'ephox.sugar.Visibility'
   ],
 
-  function (Block, Delta, Css, Element, Equal, Location, Visibility) {
+  function (Block, Delta, Css, Element, Equal, Insert, Location, Remove, Visibility) {
 
-    return function (element, anchor, mover) {
+    return function (element, anchor, blocker) {
 
       var moving = false;
-
-      var blocker = Block();
-      var doc = Element(document);
+      var doc = Element(document.body);
 
       var delta = Delta();
 
@@ -36,21 +36,29 @@ define(
 
       var mousedown = function (event, ui) {
         var target = getTarget(event);
+        Insert.append(blocker, doc);
         moving = true;
       };
 
-      var mouseup = function (event, ui) {
+      var drop = function () {
         moving = false;
+        Remove.remove(blocker);
+        delta.reset();
+      };
+
+      var mouseup = function (event, ui) {
+        drop();
       };
 
       var mousemove = function (event, ui) {
         if (moving) {
           var offset = delta.update(event.x, event.y);
-          var location = Location.absolute(element);
-          Css.setAll(element, {
-            cursor: 'move',
-            left: location.left() + offset.left(),
-            top: location.top() + offset.top()
+          offset.each(function (v) {
+            var location = Location.absolute(element);
+            Css.setAll(element, {
+              left: location.left() + v.left(),
+              top: location.top() + v.top()
+            });
           });
         } else {
           var target = getTarget(event);
@@ -60,9 +68,7 @@ define(
         }
       };
 
-      var stop = function () {
-        moving = false;
-      };
+      var stop = drop;
 
       return {
         mousedown: runIfActive(mousedown),

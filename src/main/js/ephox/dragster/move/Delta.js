@@ -12,11 +12,13 @@ define(
 
       var position = Option.none();
 
-      var update = function (newX, newY) {
+      var reset = function () {
+        position = Option.none();
+      };
 
-        var result = position.fold(function () {
-          return Position(0, 0);
-        }, function (v) {
+      var update = function (newX, newY) {
+        
+        var result = position.map(function (v) {
           return Position(newX - v.left(), newY - v.top());
         });
 
@@ -25,7 +27,8 @@ define(
       };
 
       return {
-        update: update
+        update: update,
+        reset: reset
       };
     };
   }

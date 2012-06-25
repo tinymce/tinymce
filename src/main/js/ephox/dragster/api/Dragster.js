@@ -2,8 +2,8 @@ define(
   'ephox.dragster.api.Dragster',
 
   [
+    'ephox.dragster.move.Blocker',
     'ephox.dragster.move.Drag',
-    'ephox.dragster.move.Mover',
     'ephox.dragster.style.Styles',
     'ephox.sugar.Class',
     'ephox.sugar.Css',
@@ -14,7 +14,7 @@ define(
     'ephox.sugar.Visibility'
   ],
 
-  function (Drag, Mover, Styles, Class, Css, Element, Events, Insert, Remove, Visibility) {
+  function (Blocker, Drag, Styles, Class, Css, Element, Events, Insert, Remove, Visibility) {
 
     var setPosition = function (element, x, y) {
       Css.set(element, 'left', x);
@@ -36,13 +36,14 @@ define(
 
       Insert.append(titlebar, dialog);
       Insert.append(content, dialog);
-
-      var mover = Mover();
-      var drag = Drag(dialog, titlebar, mover);
+   
+      var blocker = Blocker();
+      var drag = Drag(dialog, titlebar, blocker);
 
       Events.bind(dialog, 'mousedown', drag.mousedown);
-      Events.bind(dialog, 'mouseup', drag.mouseup);
-      Events.bind(dialog, 'mousemove', drag.mousemove);
+      Events.bind(blocker, 'mouseup', drag.mouseup);
+      Events.bind(blocker, 'mousemove', drag.mousemove);
+      Events.bind(blocker, 'mouseout', drag.stop);
 
       var element = function () {
         return dialog;
