@@ -2,17 +2,25 @@ define(
   'ephox.dragster.move.Drag',
 
   [
+    'ephox.dragster.move.Blocker',
+    'ephox.dragster.move.Delta',
     'ephox.sugar.Css',
     'ephox.sugar.Element',
     'ephox.sugar.Equal',
+    'ephox.sugar.Location',
     'ephox.sugar.Visibility'
   ],
 
-  function (Css, Element, Equal, Visibility) {
+  function (Block, Delta, Css, Element, Equal, Location, Visibility) {
 
     return function (element, anchor, mover) {
 
       var moving = false;
+
+      var blocker = Block();
+      var doc = Element(document);
+
+      var delta = Delta();
 
       var runIfActive = function (f) {
         return function (event, ui) {
@@ -37,8 +45,13 @@ define(
 
       var mousemove = function (event, ui) {
         if (moving) {
-          mover.update(element, event.x, event.y);
-          Css.set(element, 'cursor', 'move');
+          var offset = delta.update(event.x, event.y);
+          var location = Location.absolute(element);
+          Css.setAll(element, {
+            cursor: 'move',
+            left: location.left() + offset.left(),
+            top: location.top() + offset.top()
+          });
         } else {
           var target = getTarget(event);
           if (Equal.eq(target, anchor)) {

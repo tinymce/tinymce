@@ -33,24 +33,6 @@ define(
         dialog.setContent(Element(document.createTextNode('new content')));
       }, 5000);
 
-
-
-      var blocker = $('<div/>').css({
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        width: '100%',
-        height: '100%',
-        'z-index': 1000
-      }).addClass('blocker');
-      console.log('blocker', blocker);
-
-      $(document.body).append(blocker);
-
-      $(blocker).mouseout(function () {
-        console.log('exited document');
-      });
-
       container.append(dialog.element().dom());
 
       $('#ephox-ui').append(container);
