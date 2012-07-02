@@ -5,16 +5,16 @@ define(
     'ephox.dragster.move.Blocker',
     'ephox.dragster.move.Drag',
     'ephox.dragster.style.Styles',
-    'ephox.sugar.Class',
-    'ephox.sugar.Css',
-    'ephox.sugar.Element',
-    'ephox.sugar.Events',
-    'ephox.sugar.Insert',
-    'ephox.sugar.Remove',
-    'ephox.sugar.Visibility'
+    'ephox.sugar.api.Class',
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.Event',
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Visibility'
   ],
 
-  function (Blocker, Drag, Styles, Class, Css, Element, Events, Insert, Remove, Visibility) {
+  function (Blocker, Drag, Styles, Class, Css, Element, Event, Insert, Remove, Visibility) {
 
     var setPosition = function (element, x, y) {
       Css.set(element, 'left', x);
@@ -22,8 +22,7 @@ define(
     };
 
     var container = function (clazz) {
-      var div = document.createElement('div');
-      var element = Element(div);
+      var element = Element.fromTag('div');
       Class.add(element, Styles.resolve(clazz));
       return element;
     };
@@ -34,39 +33,41 @@ define(
       var titlebar = container('titlebar');
       var content = container('content');
 
-      Insert.append(titlebar, dialog);
-      Insert.append(content, dialog);
+      var viewer = Visibility.displayToggler(dialog, 'block');
+
+      Insert.append(dialog, titlebar);
+      Insert.append(dialog, content);
    
       var blocker = Blocker();
       var drag = Drag(dialog, titlebar, blocker);
 
-      Events.bind(dialog, 'mousedown', drag.mousedown);
-      Events.bind(blocker, 'mouseup', drag.mouseup);
-      Events.bind(blocker, 'mousemove', drag.mousemove);
-      Events.bind(blocker, 'mouseout', drag.stop);
+      Event.bind(dialog, 'mousedown', drag.mousedown);
+      Event.bind(blocker, 'mouseup', drag.mouseup);
+      Event.bind(blocker, 'mousemove', drag.mousemove);
+      Event.bind(blocker, 'mouseout', drag.stop);
 
       var element = function () {
         return dialog;
       };
 
       var setContent = function (newContent) {
-        Remove.clear(content);
-        Insert.append(newContent, content);
+        Remove.empty(content);
+        Insert.append(content, newContent);
       };
 
       var setHeader = function (newHeader) {
-        Remove.clear(titlebar);
-        Insert.append(newHeader, titlebar);
+        Remove.empty(titlebar);
+        Insert.append(titlebar, newHeader);
       };
 
       var show = function (x, y) {
         Css.set(dialog, 'position', 'absolute');
         setPosition(dialog, x, y);
-        Visibility.show(dialog);
+        viewer.show();
       };
 
       var hide = function () {
-        Visibility.hide(dialog);
+        viewer.hide();
         drag.stop();
       };
 

@@ -2,15 +2,15 @@ define(
   'ephox.dragster.move.Blocker',
 
   [
-    'ephox.sugar.Css',
-    'ephox.sugar.Element'
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Element'
   ],
 
   function (Css, Element) {
 
     return function () {
 
-      var div = Element(document.createElement('div'));
+      var div = Element.fromTag('div');
       Css.setAll(div, {
         'z-index': 10000,
         position: 'fixed',

@@ -4,23 +4,22 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.dragster.api.Dragster',
-    'ephox.sugar.Element',
-    'ephox.sugar.Insert',
-    'ephox.sugar.TextNode'
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.Insert'
   ],
 
-  function ($, Dragster, Element, Insert, TextNode) {
+  function ($, Dragster, Element, Insert) {
     return function () {
       var container = $('<div/>').append('Hi.');
 
       var dialog = Dragster();
 
-      var titlebar = TextNode('title', document);
+      var titlebar = Element.fromText('title', document);
 
       var content = (function () {
-        var text = TextNode('This is the body of the text ...', document);
-        var p = Element(document.createElement('p'));
-        Insert.append(text, p);
+        var text = Element.fromText('This is the body of the text ...', document);
+        var p = Element.fromTag('p');
+        Insert.append(p, text);
         return p;
       })();
 
@@ -29,8 +28,8 @@ define(
 
       // Demonstrate that dialog can change after being created.
       setTimeout(function () {
-        dialog.setHeader(Element(document.createTextNode('blah')));
-        dialog.setContent(Element(document.createTextNode('new content')));
+        dialog.setHeader(Element.fromText('blah'));
+        dialog.setContent(Element.fromText('new content'));
       }, 5000);
 
       container.append(dialog.element().dom());

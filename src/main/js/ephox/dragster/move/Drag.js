@@ -4,21 +4,21 @@ define(
   [
     'ephox.dragster.move.Blocker',
     'ephox.dragster.move.Delta',
-    'ephox.sugar.Css',
-    'ephox.sugar.Element',
-    'ephox.sugar.Equal',
-    'ephox.sugar.Insert',
-    'ephox.sugar.Location',
-    'ephox.sugar.Remove',
-    'ephox.sugar.Visibility'
+    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.Css',
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.Insert',
+    'ephox.sugar.api.Location',
+    'ephox.sugar.api.Remove',
+    'ephox.sugar.api.Visibility'
   ],
 
-  function (Block, Delta, Css, Element, Equal, Insert, Location, Remove, Visibility) {
+  function (Block, Delta, Compare, Css, Element, Insert, Location, Remove, Visibility) {
 
     return function (element, anchor, blocker) {
 
       var moving = false;
-      var doc = Element(document.body);
+      var doc = Element.fromDom(document.body);
 
       var delta = Delta();
 
@@ -31,12 +31,12 @@ define(
       var getTarget = function (event) {
         // TODO: Check this is cross-browser.
         var sEvent = event || window.event;
-        return Element(sEvent.target || sEvent.srcElement);
+        return Element.fromDom(sEvent.target || sEvent.srcElement);
       };
 
       var mousedown = function (event, ui) {
         var target = getTarget(event);
-        Insert.append(blocker, doc);
+        Insert.append(doc, blocker);
         moving = true;
       };
 
@@ -62,7 +62,7 @@ define(
           });
         } else {
           var target = getTarget(event);
-          if (Equal.eq(target, anchor)) {
+          if (Compare.eq(target, anchor)) {
             Css.set(target, 'cursor', 'pointer');
           }
         }

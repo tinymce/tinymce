@@ -3,7 +3,7 @@ define(
 
   [
     'ephox.perhaps.Option',
-    'ephox.sugar.Position'
+    'ephox.sugar.alien.Position'
   ],
 
   function (Option, Position) {
