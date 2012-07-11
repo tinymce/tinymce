@@ -170,7 +170,10 @@
 				if (body != ed.getDoc().body)
 					posY = dom.getPos(ed.selection.getStart(), body).y;
 				else
-					posY = body.scrollTop + dom.getViewPort(ed.getWin()).y;
+					posY = (function() {
+						var vp = dom.getViewPort(ed.getWin());
+						return vp.y + parseInt(vp.h/2, 10);
+					}());
 
 				// Styles needs to be applied after the element is added to the document since WebKit will otherwise remove all styles
 				// If also needs to be in view on IE or the paste would fail
