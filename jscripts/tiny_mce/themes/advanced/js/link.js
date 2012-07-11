@@ -152,6 +152,11 @@ var LinkDialog = {
 				lst.options[lst.options.length] = new Option(v[0], v[1]);
 			});
 		}
+    if (v = tinyMCEPopup.getParam('theme_advanced_link_default_target')) {
+       tinymce.each(lst.options, function(option) {
+          option.selected = option.value == v;
+       });
+    }
 	}
 };
 
