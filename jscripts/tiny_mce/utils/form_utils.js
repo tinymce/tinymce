@@ -119,7 +119,7 @@ function addClassesToList(list_id, specific_option) {
 	styles = tinyMCEPopup.getParam(specific_option, styles);
 
 	if (styles) {
-		var stylesAr = styles.split(';');
+		var stylesAr = styles.split(',');
 
 		for (var i=0; i<stylesAr.length; i++) {
 			if (stylesAr != "") {
