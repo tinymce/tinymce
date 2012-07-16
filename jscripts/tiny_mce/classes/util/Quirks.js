@@ -687,81 +687,212 @@ tinymce.util.Quirks = function(editor) {
 		}
 	};
 
-	/**
-	 * Fakes image resizing on WebKit by adding a resize state to images when they are selected.
-	 */
 	function fakeImageResize() {
-		var mouseDownImg, startX, startY, startW, startH;
+		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, marginLeft, marginTop,
+			startX, startY, startW, startH, resizeHandles, width, height, rootDocument = document;
 
-		if (!settings.object_resizing || settings.webkit_fake_resize === false) {
-			return;
-		}
-
-		editor.contentStyles.push('.mceResizeImages img {cursor: se-resize !important}');
-
-		function resizeImage(e) {
-			var deltaX, deltaY, ratio, width, height;
-
-			if (mouseDownImg) {
-				deltaX = e.screenX - startX;
-				deltaY = e.screenY - startY;
-				ratio = Math.max((startW + deltaX) / startW, (startH + deltaY) / startH);
-
-				// Only update styles if the user draged one pixel or more
-				if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
-					// Constrain proportions
-					width = Math.round(startW * ratio);
-					height = Math.round(startH * ratio);
-
-					// Resize by using style or attribute
-					if (mouseDownImg.style.width) {
-						dom.setStyle(mouseDownImg, 'width', width);
-					} else {
-						dom.setAttrib(mouseDownImg, 'width', width);
-					}
-
-					// Resize by using style or attribute
-					if (mouseDownImg.style.height) {
-						dom.setStyle(mouseDownImg, 'height', height);
-					} else {
-						dom.setAttrib(mouseDownImg, 'height', height);
-					}
-
-					if (!dom.hasClass(editor.getBody(), 'mceResizeImages')) {
-						dom.addClass(editor.getBody(), 'mceResizeImages');
-					}
-				}
-			}
+		// Details about each resize handle how to scale etc
+		resizeHandles = {
+			// Name: x multiplier, y multiplier, delta size x, delta size y
+			n: [.5, 0, 0, -1],
+			e: [1, .5, 1, 0],
+			s: [.5, 1, 0, 1],
+			w: [0, .5, -1, 0],
+			nw: [0, 0, -1, -1],
+			ne: [1, 0, 1, -1],
+			se: [1, 1, 1, 1],
+			sw : [0, 1, -1, 1]
 		};
 
-		editor.onMouseDown.add(function(editor, e) {
-			var target = e.target;
+		function resizeElement(e) {
+			var deltaX, deltaY, ratio;
 
-			if (target.nodeName == "IMG") {
-				mouseDownImg = target;
-				startX = e.screenX;
-				startY = e.screenY;
-				startW = mouseDownImg.clientWidth;
-				startH = mouseDownImg.clientHeight;
-				dom.bind(editor.getDoc(), 'mousemove', resizeImage);
-				e.preventDefault();
-			}
-		});
+			// Calc new width/height
+			deltaX = e.screenX - startX;
+			deltaY = e.screenY - startY;
+			ratio = Math.max((startW + deltaX) / startW, (startH + deltaY) / startH);
 
-		// Unbind events on node change and restore resize cursor
-		editor.onNodeChange.add(function() {
-			if (mouseDownImg) {
-				mouseDownImg = null;
-				dom.unbind(editor.getDoc(), 'mousemove', resizeImage);
-			}
-
-			if (selection.getNode().nodeName == "IMG") {
-				dom.addClass(editor.getBody(), 'mceResizeImages');
+			if (VK.modifierPressed(e)) {
+				// Constrain proportions
+				width = Math.round(startW * ratio);
+				height = Math.round(startH * ratio);
 			} else {
-				dom.removeClass(editor.getBody(), 'mceResizeImages');
+				// Calc new size
+				width = deltaX * selectedHandle[2] + startW;
+				height = deltaY * selectedHandle[3] + startH;
+			}
+
+			// Never scale down lower than 5 pixels
+			width = width < 5 ? 5 : width;
+			height = height < 5 ? 5 : height;
+
+			// Update ghost size
+			dom.setStyles(selectedElmGhost, {
+				width: width,
+				height: height
+			});
+
+			// Update ghost X position if needed
+			if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
+				dom.setStyle(selectedElmGhost, 'left', selectedElmX + deltaX - marginLeft);
+			}
+
+			// Update ghost Y position if needed
+			if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
+				dom.setStyle(selectedElmGhost, 'top', selectedElmY + deltaY - marginTop);
+			}
+		}
+
+		function endResize() {
+			var doc = editor.getDoc();
+
+			if (width) {
+				// Resize by using style or attribute
+				if (selectedElm.style.width) {
+					dom.setStyle(selectedElm, 'width', width);
+				} else {
+					dom.setAttrib(selectedElm, 'width', width);
+				}
+			}
+
+			// Resize by using style or attribute
+			if (height) {
+				if (selectedElm.style.height) {
+					dom.setStyle(selectedElm, 'height', height);
+				} else {
+					dom.setAttrib(selectedElm, 'height', height);
+				}
+			}
+
+			dom.unbind(doc, 'mousemove', resizeElement);
+			dom.unbind(doc, 'mouseup', endResize);
+
+			if (rootDocument != doc) {
+				dom.unbind(rootDocument, 'mousemove', resizeElement);
+				dom.unbind(rootDocument, 'mouseup', endResize);
+			}
+
+			// Remove ghost and update resize handle positions
+			dom.remove(selectedElmGhost);
+			showResizeRect(selectedElm);
+		}
+
+		function showResizeRect(targetElm) {
+			var position, targetWidth, targetHeight;
+
+			hideResizeRect();
+
+			// Get position and size of target
+			position = dom.getPos(targetElm);
+			selectedElmX = position.x;
+			selectedElmY = position.y;
+			targetWidth = targetElm.offsetWidth;
+			targetHeight = targetElm.offsetHeight;
+
+			// Reset width/height if user selects a new image/table
+			if (selectedElm != targetElm) {
+				selectedElm = targetElm;
+				width = height = 0;
+			}
+
+			tinymce.each(resizeHandles, function(handle, name) {
+				var handleElm;
+
+				// Get existing or render resize handle
+				handleElm = dom.get('mceResizeHandle' + name);
+				if (!handleElm) {
+					handleElm = dom.add(editor.getDoc().documentElement, 'div', {
+						id: 'mceResizeHandle' + name,
+						'class': 'mceResizeHandle',
+						style: 'cursor: ' + name + '-resize'
+					});
+
+					dom.bind(handleElm, 'mousedown', function(e) {
+						var doc = editor.getDoc();
+
+						e.preventDefault();
+
+						endResize();
+
+						startX = e.screenX;
+						startY = e.screenY;
+						startW = selectedElm.clientWidth;
+						startH = selectedElm.clientHeight;
+						marginLeft = parseInt(dom.getStyle(selectedElm, 'margin-left', true), 10);
+						marginTop = parseInt(dom.getStyle(selectedElm, 'margin-top', true), 10);
+						selectedHandle = handle;
+
+						selectedElmGhost = selectedElm.cloneNode(true);
+						dom.addClass(selectedElmGhost, 'mceClonedResizable');
+						dom.setStyles(selectedElmGhost, {
+							left: selectedElmX - marginLeft,
+							top: selectedElmY - marginTop
+						});
+
+						doc.documentElement.appendChild(selectedElmGhost);
+
+						dom.bind(doc, 'mousemove', resizeElement);
+						dom.bind(doc, 'mouseup', endResize);
+
+						if (rootDocument != doc) {
+							dom.bind(rootDocument, 'mousemove', resizeElement);
+							dom.bind(rootDocument, 'mouseup', endResize);
+						}
+					});
+				} else {
+					dom.show(handleElm);
+				}
+
+				// Position element
+				dom.setStyles(handleElm, {
+					left: (targetWidth * handle[0] + selectedElmX) - (handleElm.offsetWidth / 2),
+					top: (targetHeight * handle[1] + selectedElmY) - (handleElm.offsetHeight / 2)
+				});
+			});
+
+			dom.addClass(selectedElm, 'mceResizeSelected');
+		}
+
+		function hideResizeRect() {
+			dom.removeClass(selectedElm, 'mceResizeSelected');
+
+			for (var name in resizeHandles) {
+				dom.hide('mceResizeHandle' + name);
+			}
+		}
+
+		// Add CSS for resize handles, cloned element and selected
+		editor.contentStyles.push(
+			'.mceResizeHandle {' +
+				'position: absolute;' +
+				'border: 1px solid black;' +
+				'background: #FFF;' +
+				'width: 5px;' +
+				'height: 5px;' +
+				'z-index: 10000' +
+			'}' +
+			'img.mceResizeSelected {' +
+				'outline: 1px solid black' +
+			'}' +
+			'img.mceClonedResizable, table.mceClonedResizable {' +
+				'position: absolute;' +
+				'outline: 1px dashed black;' +
+				'opacity: .5;' +
+				'z-index: 10000' +
+			'}'
+		);
+
+		// Show/hide resize rect when image is selected
+		editor.onNodeChange.add(function() {
+			var controlElm = dom.getParent(selection.getNode(), 'table,img');
+
+			if (controlElm) {
+				showResizeRect(controlElm);
+			} else {
+				hideResizeRect();
 			}
 		});
-	};
+	}
 
 	// All browsers
 	disableBackspaceIntoATable();
