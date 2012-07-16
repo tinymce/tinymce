@@ -687,9 +687,19 @@ tinymce.util.Quirks = function(editor) {
 		}
 	};
 
+	/**
+	 * Fakes image/table resizing on WebKit.
+	 */
 	function fakeImageResize() {
 		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, marginLeft, marginTop,
-			startX, startY, startW, startH, resizeHandles, width, height, rootDocument = document;
+			startX, startY, startW, startH, resizeHandles, width, height, rootDocument = document, editableDoc = editor.getDoc();
+
+		if (!settings.object_resizing || settings.webkit_fake_resize === false) {
+			return;
+		}
+
+		// Try disabling object resizing if WebKit implements resizing in the future
+		setEditorCommandState("enableObjectResizing", false);
 
 		// Details about each resize handle how to scale etc
 		resizeHandles = {
@@ -744,8 +754,6 @@ tinymce.util.Quirks = function(editor) {
 		}
 
 		function endResize() {
-			var doc = editor.getDoc();
-
 			if (width) {
 				// Resize by using style or attribute
 				if (selectedElm.style.width) {
@@ -764,10 +772,10 @@ tinymce.util.Quirks = function(editor) {
 				}
 			}
 
-			dom.unbind(doc, 'mousemove', resizeElement);
-			dom.unbind(doc, 'mouseup', endResize);
+			dom.unbind(editableDoc, 'mousemove', resizeElement);
+			dom.unbind(editableDoc, 'mouseup', endResize);
 
-			if (rootDocument != doc) {
+			if (rootDocument != editableDoc) {
 				dom.unbind(rootDocument, 'mousemove', resizeElement);
 				dom.unbind(rootDocument, 'mouseup', endResize);
 			}
@@ -801,15 +809,13 @@ tinymce.util.Quirks = function(editor) {
 				// Get existing or render resize handle
 				handleElm = dom.get('mceResizeHandle' + name);
 				if (!handleElm) {
-					handleElm = dom.add(editor.getDoc().documentElement, 'div', {
+					handleElm = dom.add(editableDoc.documentElement, 'div', {
 						id: 'mceResizeHandle' + name,
 						'class': 'mceResizeHandle',
 						style: 'cursor: ' + name + '-resize'
 					});
 
 					dom.bind(handleElm, 'mousedown', function(e) {
-						var doc = editor.getDoc();
-
 						e.preventDefault();
 
 						endResize();
@@ -829,12 +835,12 @@ tinymce.util.Quirks = function(editor) {
 							top: selectedElmY - marginTop
 						});
 
-						doc.documentElement.appendChild(selectedElmGhost);
+						editableDoc.documentElement.appendChild(selectedElmGhost);
 
-						dom.bind(doc, 'mousemove', resizeElement);
-						dom.bind(doc, 'mouseup', endResize);
+						dom.bind(editableDoc, 'mousemove', resizeElement);
+						dom.bind(editableDoc, 'mouseup', endResize);
 
-						if (rootDocument != doc) {
+						if (rootDocument != editableDoc) {
 							dom.bind(rootDocument, 'mousemove', resizeElement);
 							dom.bind(rootDocument, 'mouseup', endResize);
 						}
@@ -887,14 +893,18 @@ tinymce.util.Quirks = function(editor) {
 
 			if (controlElm) {
 				showResizeRect(controlElm);
-			} else {
+			} else if (selectedElm) {
+				// Remove mceResizeSelected from all elements since they might have been copied using Ctrl+c/v
+				dom.removeClass(dom.select('img.mceResizeSelected'), 'mceResizeSelected');
 				hideResizeRect();
 			}
 		}
 
 		// Show/hide resize rect when image is selected
 		editor.onNodeChange.add(updateResizeRect);
-		editor.onKeyUp.add(updateResizeRect);
+
+		// Fixes WebKit quirk where it returns IMG on getNode if caret is after last image in container
+		dom.bind(editableDoc, 'selectionchange', updateResizeRect);
 	}
 
 	// All browsers
