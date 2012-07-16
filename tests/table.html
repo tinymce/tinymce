@@ -156,10 +156,11 @@ var initTinyFunction = function(){
 		cleanup: true,
 		apply_source_formatting: false,
 		add_unload_trigger : false,
+		webkit_fake_resize: false,
 		plugins: "table",
 		init_instance_callback : function(ed) {
 			editor = ed;
-            VK = tinymce.VK;
+			VK = tinymce.VK;
 		}
 	});
 };
