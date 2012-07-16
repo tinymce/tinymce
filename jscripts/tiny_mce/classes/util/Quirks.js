@@ -880,6 +880,9 @@ tinymce.util.Quirks = function(editor) {
 				'height: 5px;' +
 				'z-index: 10000' +
 			'}' +
+			'.mceResizeHandle:hover {' +
+				'background: #000' +
+			'}' +
 			'.mceResizeSelected {' +
 				'outline: 1px solid black' +
 			'}' +
