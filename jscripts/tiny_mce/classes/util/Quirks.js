@@ -882,8 +882,7 @@ tinymce.util.Quirks = function(editor) {
 			'}'
 		);
 
-		// Show/hide resize rect when image is selected
-		editor.onNodeChange.add(function() {
+		function updateResizeRect() {
 			var controlElm = dom.getParent(selection.getNode(), 'table,img');
 
 			if (controlElm) {
@@ -891,7 +890,11 @@ tinymce.util.Quirks = function(editor) {
 			} else {
 				hideResizeRect();
 			}
-		});
+		}
+
+		// Show/hide resize rect when image is selected
+		editor.onNodeChange.add(updateResizeRect);
+		editor.onKeyUp.add(updateResizeRect);
 	}
 
 	// All browsers
