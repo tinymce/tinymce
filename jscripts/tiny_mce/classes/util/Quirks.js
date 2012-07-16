@@ -688,7 +688,7 @@ tinymce.util.Quirks = function(editor) {
 	};
 
 	/**
-	 * Fakes image/table resizing on WebKit.
+	 * Fakes image/table resizing on WebKit/Opera.
 	 */
 	function fakeImageResize() {
 		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, marginLeft, marginTop,
@@ -856,7 +856,10 @@ tinymce.util.Quirks = function(editor) {
 				});
 			});
 
-			dom.addClass(selectedElm, 'mceResizeSelected');
+			// Only add resize rectangle on WebKit and only on images
+			if (!tinymce.isOpera && selectedElm.nodeName == "IMG") {
+				dom.addClass(selectedElm, 'mceResizeSelected');
+			}
 		}
 
 		function hideResizeRect() {
@@ -877,7 +880,7 @@ tinymce.util.Quirks = function(editor) {
 				'height: 5px;' +
 				'z-index: 10000' +
 			'}' +
-			'img.mceResizeSelected {' +
+			'.mceResizeSelected {' +
 				'outline: 1px solid black' +
 			'}' +
 			'img.mceClonedResizable, table.mceClonedResizable {' +
@@ -947,5 +950,10 @@ tinymce.util.Quirks = function(editor) {
 		setGeckoEditingOptions();
 		addBrAfterLastLinks();
 		removeGhostSelection();
+	}
+
+	// Opera
+	if (tinymce.isOpera) {
+		fakeImageResize();
 	}
 };
