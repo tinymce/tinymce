@@ -395,12 +395,14 @@ var ImageDialog = {
 					if (v == '0')
 						img.style.border = isIE ? '0' : '0 none none';
 					else {
-						if (b.length == 3 && b[isIE ? 2 : 1])
-							bStyle = b[isIE ? 2 : 1];
+						var isOldIE = tinymce.isIE && (!document.documentMode || document.documentMode < 9);
+
+						if (b.length == 3 && b[isOldIE ? 2 : 1])
+							bStyle = b[isOldIE ? 2 : 1];
 						else if (!bStyle || bStyle == 'none')
 							bStyle = 'solid';
 						if (b.length == 3 && b[isIE ? 0 : 2])
-							bColor = b[isIE ? 0 : 2];
+							bColor = b[isOldIE ? 0 : 2];
 						else if (!bColor || bColor == 'none')
 							bColor = 'black';
 						img.style.border = v + 'px ' + bStyle + ' ' + bColor;
