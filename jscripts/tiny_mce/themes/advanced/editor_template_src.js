@@ -13,7 +13,7 @@
 
 	// Generates a preview for a format
 	function getPreviewCss(ed, fmt) {
-		var previewElm, dom = ed.dom, previewCss = '', parentFontSize, previewStylesName;
+		var name, previewElm, dom = ed.dom, previewCss = '', parentFontSize, previewStylesName;
 
 		previewStyles = ed.settings.preview_styles;
 
