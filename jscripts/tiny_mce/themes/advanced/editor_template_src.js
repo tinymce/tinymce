@@ -31,23 +31,23 @@
 		};
 
 		// Create block/inline element to use for preview
-		name = fmt.block || fmt.inline || 'span';
-		previewElm = dom.create(name);
+		ename = fmt.block || fmt.inline || 'span';
+		previewElm = dom.create(ename);
 
 		// Add format styles to preview element
-		each(fmt.styles, function(value, name) {
+		each(fmt.styles, function(value, ename) {
 			value = removeVars(value);
 
 			if (value)
-				dom.setStyle(previewElm, name, value);
+				dom.setStyle(previewElm, ename, value);
 		});
 
 		// Add attributes to preview element
-		each(fmt.attributes, function(value, name) {
+		each(fmt.attributes, function(value, ename) {
 			value = removeVars(value);
 
 			if (value)
-				dom.setAttrib(previewElm, name, value);
+				dom.setAttrib(previewElm, ename, value);
 		});
 
 		// Add classes to preview element
@@ -66,12 +66,12 @@
 		parentFontSize = dom.getStyle(ed.getBody(), 'fontSize', true);
 		parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
 
-		each(previewStyles.split(' '), function(name) {
-			var value = dom.getStyle(previewElm, name, true);
+		each(previewStyles.split(' '), function(ename) {
+			var value = dom.getStyle(previewElm, ename, true);
 
 			// If background is transparent then check if the body has a background color we can use
-			if (name == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
-				value = dom.getStyle(ed.getBody(), name, true);
+			if (ename == 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
+				value = dom.getStyle(ed.getBody(), ename, true);
 
 				// Ignore white since it's the default color, not the nicest fix
 				if (dom.toHex(value).toLowerCase() == '#ffffff') {
@@ -80,7 +80,7 @@
 			}
 
 			// Old IE won't calculate the font size so we need to do that manually
-			if (name == 'font-size') {
+			if (ename == 'font-size') {
 				if (/em|%$/.test(value)) {
 					if (parentFontSize === 0) {
 						return;
@@ -92,7 +92,7 @@
 				}
 			}
 
-			previewCss += name + ':' + value + ';';
+			previewCss += ename + ':' + value + ';';
 		});
 
 		dom.remove(previewElm);
