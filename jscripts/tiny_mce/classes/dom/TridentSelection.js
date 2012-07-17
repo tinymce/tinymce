@@ -361,7 +361,8 @@
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, ctrlRng, startContainer, startOffset, endContainer, endOffset, sibling, doc = selection.dom.doc, body = doc.body;
+			var ieRng, ctrlRng, startContainer, startOffset, endContainer, endOffset, sibling,
+				doc = selection.dom.doc, body = doc.body, nativeRng, ctrlElm;
 
 			function setEndPoint(start) {
 				var container, offset, marker, tmpRng, nodes;
@@ -447,10 +448,17 @@
 
 				if (startOffset == endOffset - 1) {
 					try {
+						ctrlElm = startContainer.childNodes[startOffset];
 						ctrlRng = body.createControlRange();
-						ctrlRng.addElement(startContainer.childNodes[startOffset]);
+						ctrlRng.addElement(ctrlElm);
 						ctrlRng.select();
-						return;
+
+						// Check if the range produced is on the correct element and is a control range
+						// On IE 8 it will select the parent contentEditable container if you select an inner element see: #5398
+						nativeRng = selection.getRng();
+						if (nativeRng.item && ctrlElm === nativeRng.item(0)) {
+							return;
+						}
 					} catch (ex) {
 						// Ignore
 					}
