@@ -895,11 +895,14 @@ tinymce.util.Quirks = function(editor) {
 		function updateResizeRect() {
 			var controlElm = dom.getParent(selection.getNode(), 'table,img');
 
+			// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
+			tinymce.each(dom.select('img[data-mce-selected]'), function(img) {
+				img.removeAttribute('data-mce-selected');
+			});
+
 			if (controlElm) {
 				showResizeRect(controlElm);
-			} else if (selectedElm) {
-				// Remove mceResizeSelected from all elements since they might have been copied using Ctrl+c/v
-				dom.removeClass(dom.select('img.mceResizeSelected'), 'mceResizeSelected');
+			} else {
 				hideResizeRect();
 			}
 		}
