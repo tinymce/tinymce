@@ -691,8 +691,8 @@ tinymce.util.Quirks = function(editor) {
 	 * Fakes image/table resizing on WebKit/Opera.
 	 */
 	function fakeImageResize() {
-		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, marginLeft, marginTop,
-			startX, startY, startW, startH, resizeHandles, width, height, rootDocument = document, editableDoc = editor.getDoc();
+		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, startX, startY, startW, startH,
+			resizeHandles, width, height, rootDocument = document, editableDoc = editor.getDoc();
 
 		if (!settings.object_resizing || settings.webkit_fake_resize === false) {
 			return;
@@ -744,33 +744,30 @@ tinymce.util.Quirks = function(editor) {
 
 			// Update ghost X position if needed
 			if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
-				dom.setStyle(selectedElmGhost, 'left', selectedElmX + deltaX - marginLeft);
+				dom.setStyle(selectedElmGhost, 'left', selectedElmX + deltaX);
 			}
 
 			// Update ghost Y position if needed
 			if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
-				dom.setStyle(selectedElmGhost, 'top', selectedElmY + deltaY - marginTop);
+				dom.setStyle(selectedElmGhost, 'top', selectedElmY + deltaY);
 			}
 		}
 
 		function endResize() {
-			if (width) {
-				// Resize by using style or attribute
-				if (selectedElm.style.width) {
-					dom.setStyle(selectedElm, 'width', width);
-				} else {
-					dom.setAttrib(selectedElm, 'width', width);
+			function setSizeProp(name, value) {
+				if (value) {
+					// Resize by using style or attribute
+					if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
+						dom.setStyle(selectedElm, name, value);
+					} else {
+						dom.setAttrib(selectedElm, name, value);
+					}
 				}
 			}
 
-			// Resize by using style or attribute
-			if (height) {
-				if (selectedElm.style.height) {
-					dom.setStyle(selectedElm, 'height', height);
-				} else {
-					dom.setAttrib(selectedElm, 'height', height);
-				}
-			}
+			// Set width/height properties
+			setSizeProp('width', width);
+			setSizeProp('height', height);
 
 			dom.unbind(editableDoc, 'mousemove', resizeElement);
 			dom.unbind(editableDoc, 'mouseup', endResize);
@@ -812,7 +809,7 @@ tinymce.util.Quirks = function(editor) {
 					handleElm = dom.add(editableDoc.documentElement, 'div', {
 						id: 'mceResizeHandle' + name,
 						'class': 'mceResizeHandle',
-						style: 'cursor: ' + name + '-resize'
+						style: 'cursor:' + name + '-resize; margin:0',
 					});
 
 					dom.bind(handleElm, 'mousedown', function(e) {
@@ -824,15 +821,14 @@ tinymce.util.Quirks = function(editor) {
 						startY = e.screenY;
 						startW = selectedElm.clientWidth;
 						startH = selectedElm.clientHeight;
-						marginLeft = parseInt(dom.getStyle(selectedElm, 'margin-left', true), 10);
-						marginTop = parseInt(dom.getStyle(selectedElm, 'margin-top', true), 10);
 						selectedHandle = handle;
 
 						selectedElmGhost = selectedElm.cloneNode(true);
 						dom.addClass(selectedElmGhost, 'mceClonedResizable');
 						dom.setStyles(selectedElmGhost, {
-							left: selectedElmX - marginLeft,
-							top: selectedElmY - marginTop
+							left: selectedElmX,
+							top: selectedElmY,
+							margin: 0
 						});
 
 						editableDoc.documentElement.appendChild(selectedElmGhost);
@@ -858,12 +854,14 @@ tinymce.util.Quirks = function(editor) {
 
 			// Only add resize rectangle on WebKit and only on images
 			if (!tinymce.isOpera && selectedElm.nodeName == "IMG") {
-				dom.addClass(selectedElm, 'mceResizeSelected');
+				selectedElm.setAttribute('data-mce-selected', '1');
 			}
 		}
 
 		function hideResizeRect() {
-			dom.removeClass(selectedElm, 'mceResizeSelected');
+			if (selectedElm) {
+				selectedElm.removeAttribute('data-mce-selected');
+			}
 
 			for (var name in resizeHandles) {
 				dom.hide('mceResizeHandle' + name);
@@ -883,7 +881,7 @@ tinymce.util.Quirks = function(editor) {
 			'.mceResizeHandle:hover {' +
 				'background: #000' +
 			'}' +
-			'.mceResizeSelected {' +
+			'img[data-mce-selected] {' +
 				'outline: 1px solid black' +
 			'}' +
 			'img.mceClonedResizable, table.mceClonedResizable {' +
@@ -911,6 +909,15 @@ tinymce.util.Quirks = function(editor) {
 
 		// Fixes WebKit quirk where it returns IMG on getNode if caret is after last image in container
 		dom.bind(editableDoc, 'selectionchange', updateResizeRect);
+
+		// Remove the internal attribute when serializing the DOM
+		editor.serializer.addAttributeFilter('data-mce-selected', function(nodes, name) {
+			var i = nodes.length;
+
+			while (i--) {
+				nodes[i].attr(name, null);
+			}
+		});
 	}
 
 	// All browsers
