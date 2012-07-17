@@ -831,6 +831,7 @@
 					var f = Event.add(ed.id + '_external_close', 'click', function() {
 						DOM.hide(ed.id + '_external');
 						Event.remove(ed.id + '_external_close', 'click', f);
+						return false;
 					});
 
 					DOM.show(e);
