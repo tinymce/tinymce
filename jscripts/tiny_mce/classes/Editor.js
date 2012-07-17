@@ -499,6 +499,11 @@
 				});
 			}
 
+			// Load specified content CSS last
+			if (s.content_style) {
+				t.contentStyles.push(s.content_style);
+			}
+
 			// Content editable mode ends here
 			if (s.content_editable) {
 				e = n = o = null; // Fix IE leak
