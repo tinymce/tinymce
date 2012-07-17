@@ -78,7 +78,7 @@
 			get('video_altsource2_filebrowser').innerHTML = getBrowserHTML('video_filebrowser_altsource2','video_altsource2','media','media');
 			get('audio_altsource1_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource1','audio_altsource1','media','media');
 			get('audio_altsource2_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource2','audio_altsource2','media','media');
-			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','media','image');
+			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','image','media');
 
 			html = self.getMediaListHTML('medialist', 'src', 'media', 'media');
 			if (html == "")
