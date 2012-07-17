@@ -809,7 +809,7 @@ tinymce.util.Quirks = function(editor) {
 					handleElm = dom.add(editableDoc.documentElement, 'div', {
 						id: 'mceResizeHandle' + name,
 						'class': 'mceResizeHandle',
-						style: 'cursor:' + name + '-resize; margin:0',
+						style: 'cursor:' + name + '-resize; margin:0; padding:0',
 					});
 
 					dom.bind(handleElm, 'mousedown', function(e) {
