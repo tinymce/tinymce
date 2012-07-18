@@ -839,7 +839,7 @@
 			}
 
 			function recurse(element) {
-				t.splitSafeEach(element.childNodes, processElement);
+				t.splitSafeEach(element.childNodes, processElement, true);
 			}
 
 			function brAtEdgeOfSelection(container, offset) {
@@ -890,9 +890,11 @@
 			}
 		},
 
-		splitSafeEach: function(elements, f) {
-			if (tinymce.isGecko && (/Firefox\/[12]\.[0-9]/.test(navigator.userAgent) ||
-					/Firefox\/3\.[0-4]/.test(navigator.userAgent))) {
+		splitSafeEach: function(elements, f, forceClassBase) {
+			if (forceClassBase ||
+				(tinymce.isGecko &&
+					(/Firefox\/[12]\.[0-9]/.test(navigator.userAgent) ||
+					 /Firefox\/3\.[0-4]/.test(navigator.userAgent)))) {
 				this.classBasedEach(elements, f);
 			} else {
 				each(elements, f);

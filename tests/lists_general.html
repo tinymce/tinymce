@@ -249,6 +249,28 @@ asyncTest('Creates new list item without surrounding element when caret at end o
 	queue.done();
 });
 
+asyncTest('Select the entire document, and apply and remove ordered list', function() {
+  editor.setContent("<p>a</p><p>b</p>");
+  editor.focus();
+  robot.typeAsShortcut('a', function() {
+	  editor.execCommand('InsertOrderedList');
+	  editor.execCommand('InsertOrderedList');
+	  equal(editor.getContent(), "<p>a</p><p>b</p>");
+	  start();
+  });
+});
+
+asyncTest('Select the entire document, and apply and remove unordered list', function() {
+  editor.setContent("<p>a</p><p>b</p>");
+  editor.focus();
+  robot.typeAsShortcut('a', function() {
+	  editor.execCommand('InsertUnorderedList');
+	  editor.execCommand('InsertUnorderedList');
+	  equal(editor.getContent(), "<p>a</p><p>b</p>");
+	  start();
+  });
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",
