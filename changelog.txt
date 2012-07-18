@@ -1,5 +1,8 @@
 Version 3.5.x (2012-xx-xx)
 	Added full resize support for images and tables on WebKit/Opera. It now behaves just like Gecko.
+	Fixed bug where the lists plugin wouldn't properly remove all li elements when toggling selected items of. Patched by Taku AMANO.
+	Fixed bug where the lists plugin would remove the entire list if you pressed deleted at the beginning of the first element. Patched by Taku AMANO.
+	Fixed bug where the ordered/unordered list buttons could both be enabled if you nested lists. Patch contributed by Craig Petchell.
 	Fixed bug where shift+enter wouldn't produce a BR in a LI when having forced_root_blocks set to false.
 	Fixed bug where scrollbars aren't visible in fullscreen when window is resized.
 	Fixed bug with updating the border size using the advimage dialog on IE 9.
