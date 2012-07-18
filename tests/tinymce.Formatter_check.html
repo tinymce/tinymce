@@ -179,7 +179,7 @@ test('formatChanged complex format', function() {
 	editor.formatter.formatChanged('complex', function(state, args) {
 		newState = state;
 		newArgs = args;
-	});
+	}, true);
 
 	editor.getBody().innerHTML = '<p>text</p>';
 	setSelection('p', 0, 'p', 4);
