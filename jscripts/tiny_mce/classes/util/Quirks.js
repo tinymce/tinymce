@@ -744,12 +744,12 @@ tinymce.util.Quirks = function(editor) {
 
 			// Update ghost X position if needed
 			if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
-				dom.setStyle(selectedElmGhost, 'left', selectedElmX + deltaX);
+				dom.setStyle(selectedElmGhost, 'left', selectedElmX + (startW - width));
 			}
 
 			// Update ghost Y position if needed
 			if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
-				dom.setStyle(selectedElmGhost, 'top', selectedElmY + deltaY);
+				dom.setStyle(selectedElmGhost, 'top', selectedElmY + (startH - height));
 			}
 		}
 
