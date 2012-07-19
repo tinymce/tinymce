@@ -135,7 +135,7 @@ tinymce.util.Quirks = function(editor) {
 			var allRng = dom.createRng();
 			allRng.selectNode(editor.getBody());
 
-			var allSelection = serializeRng(allRng);//console.log(selection, "----", allSelection);
+			var allSelection = serializeRng(allRng);
 			return selection === allSelection;
 		}
 
