@@ -691,7 +691,7 @@ tinymce.util.Quirks = function(editor) {
 	 * Fakes image/table resizing on WebKit/Opera.
 	 */
 	function fakeImageResize() {
-		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, startX, startY, startW, startH,
+		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, startX, startY, startW, startH, ratio,
 			resizeHandles, width, height, rootDocument = document, editableDoc = editor.getDoc();
 
 		if (!settings.object_resizing || settings.webkit_fake_resize === false) {
@@ -715,26 +715,25 @@ tinymce.util.Quirks = function(editor) {
 		};
 
 		function resizeElement(e) {
-			var deltaX, deltaY, ratio;
+			var deltaX, deltaY;
 
 			// Calc new width/height
 			deltaX = e.screenX - startX;
 			deltaY = e.screenY - startY;
-			ratio = Math.max((startW + deltaX) / startW, (startH + deltaY) / startH);
 
-			if (VK.modifierPressed(e)) {
-				// Constrain proportions
-				width = Math.round(startW * ratio);
-				height = Math.round(startH * ratio);
-			} else {
-				// Calc new size
-				width = deltaX * selectedHandle[2] + startW;
-				height = deltaY * selectedHandle[3] + startH;
-			}
+			// Calc new size
+			width = deltaX * selectedHandle[2] + startW;
+			height = deltaY * selectedHandle[3] + startH;
 
 			// Never scale down lower than 5 pixels
 			width = width < 5 ? 5 : width;
 			height = height < 5 ? 5 : height;
+
+			// Constrain proportions when modifier key is pressed or if the nw, ne, sw, se corners are moved on an image
+			if (VK.modifierPressed(e) || (selectedElm.nodeName == "IMG" && selectedHandle[2] * selectedHandle[3] !== 0)) {
+				width = Math.round(height / ratio);
+				height = Math.round(width * ratio);
+			}
 
 			// Update ghost size
 			dom.setStyles(selectedElmGhost, {
@@ -821,6 +820,7 @@ tinymce.util.Quirks = function(editor) {
 						startY = e.screenY;
 						startW = selectedElm.clientWidth;
 						startH = selectedElm.clientHeight;
+						ratio = startH / startW;
 						selectedHandle = handle;
 
 						selectedElmGhost = selectedElm.cloneNode(true);
