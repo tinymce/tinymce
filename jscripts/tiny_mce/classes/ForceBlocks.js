@@ -56,6 +56,14 @@ tinymce.ForceBlocks = function(editor) {
 		node = rootNode.firstChild;
 		while (node) {
 			if (node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName])) {
+				// Remove empty text nodes
+				if (node.nodeType === 3 && node.nodeValue.length == 0) {
+					tempNode = node;
+					node = node.nextSibling;
+					dom.remove(tempNode);
+					continue;
+				}
+
 				if (!rootBlockNode) {
 					rootBlockNode = dom.create(settings.forced_root_block);
 					node.parentNode.insertBefore(rootBlockNode, node);
