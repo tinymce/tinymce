@@ -1,0 +1,1 @@
+tinyMCE.addI18n('en.anchor_dlg',{"anchor_name":"Anchor Name","anchor_title":"Insert/Edit Anchor","anchor_invalid":"Please specify a valid anchor name."});
