@@ -440,9 +440,9 @@
 			}
 
 			function fixDeletingFirstCharOfList(ed, e) {
-				function listElements(list, li) {
+				function listElements(li) {
 					var elements = [];
-					var walker = new tinymce.dom.TreeWalker(li, list);
+					var walker = new tinymce.dom.TreeWalker(li.firstChild, li);
 					for (var node = walker.current(); node; node = walker.next()) {
 						if (ed.dom.is(node, 'ol,ul,li')) {
 							elements.push(node);
@@ -454,9 +454,11 @@
 				if (e.keyCode == tinymce.VK.BACKSPACE) {
 					var li = getLi();
 					if (li) {
-						var list = ed.dom.getParent(li, 'ol,ul');
-						if (list && list.firstChild === li) {
-							var elements = listElements(list, li);
+						var list = ed.dom.getParent(li, 'ol,ul'),
+							rng  = ed.selection.getRng();
+						if (list && list.firstChild === li && rng.startOffset == 0) {
+							var elements = listElements(li);
+							elements.unshift(li)
 							ed.execCommand("Outdent", false, elements);
 							ed.undoManager.add();
 							return Event.cancel(e);
@@ -839,7 +841,7 @@
 			}
 
 			function recurse(element) {
-				t.splitSafeEach(element.childNodes, processElement);
+				t.splitSafeEach(element.childNodes, processElement, true);
 			}
 
 			function brAtEdgeOfSelection(container, offset) {
@@ -890,9 +892,11 @@
 			}
 		},
 
-		splitSafeEach: function(elements, f) {
-			if (tinymce.isGecko && (/Firefox\/[12]\.[0-9]/.test(navigator.userAgent) ||
-					/Firefox\/3\.[0-4]/.test(navigator.userAgent))) {
+		splitSafeEach: function(elements, f, forceClassBase) {
+			if (forceClassBase ||
+				(tinymce.isGecko &&
+					(/Firefox\/[12]\.[0-9]/.test(navigator.userAgent) ||
+					 /Firefox\/3\.[0-4]/.test(navigator.userAgent)))) {
 				this.classBasedEach(elements, f);
 			} else {
 				each(elements, f);

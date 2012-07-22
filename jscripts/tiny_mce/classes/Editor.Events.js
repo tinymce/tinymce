@@ -834,7 +834,7 @@
 
 		function nodeChanged(ed, e) {
 			// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything
-			if (e.keyCode != 65 || !tinymce.VK.modifierPressed(e)) {
+			if (e.keyCode != 65 || !tinymce.VK.metaKeyPressed(e)) {
 				self.selection.normalize();
 			}
 

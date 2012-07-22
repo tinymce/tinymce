@@ -5,6 +5,7 @@ docs
 .settings
 .idea
 .project
+*.sublime-*
 .externalToolBuilders
 *~
 *.diff

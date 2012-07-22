@@ -344,7 +344,7 @@
 
 				// Replace all BOM characters for now until we can find a better solution
 				if (!args.cleanup)
-					args.content = args.content.replace(/\uFEFF|\u200B/g, '');
+					args.content = args.content.replace(/\uFEFF/g, '');
 
 				// Post process
 				if (!args.no_events)

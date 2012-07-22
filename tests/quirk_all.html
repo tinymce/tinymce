@@ -25,12 +25,15 @@ module("Quirks Tests", {
 	}
 });
 
-test('Backspace when whole body contents is selected', function() {
-	editor.getBody().innerHTML = '<p><b>1</b></p><p><b>2</b></p>';
-	setSelection('p:first b', 0, 'p:last b', 1);
-	editor.dom.fire(editor.getBody(), 'keydown', {keyCode: BACKSPACE});
-	equal(editor.getContent(), '');
-});
+// IE does the right thing
+if (!tinymce.isIE) {
+	test('Backspace when whole body contents is selected', function() {
+		editor.getBody().innerHTML = '<p><b>1</b></p><p><b>2</b></p>';
+		setSelection('p:first b', 0, 'p:last b', 1);
+		editor.dom.fire(editor.getBody(), 'keydown', {keyCode: BACKSPACE});
+		equal(editor.getContent(), '');
+	});
+}
 
 asyncTest('Backspace into <table> should be disabled', 1, function() {
   	var testContent = '<table class="mceItemTable" border="1"><tbody><tr><th><p>Table heading</p></th></tr><tr><td><p>Table contents</p></td></tr></tbody></table><h2 id="a">Paragraph Heading</h2>';

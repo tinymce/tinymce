@@ -602,6 +602,14 @@ test('Enter at end of text in a span inside a P and keep_styles: false', functio
 	equal(editor.getContent(), '<p><em><span style="font-size: 13px;">X</span></em></p><p>\u00a0</p>');
 });
 
+test('Shift+enter in LI when forced_root_block: false', function() {
+	editor.settings.forced_root_block = false;
+	editor.getBody().innerHTML = '<ul><li>text</li></ul>';
+	setSelection('li', 2);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
+});
+
 // Only test these on modern browsers
 if (window.getSelection) {
 	test('Enter behind table element', function() {

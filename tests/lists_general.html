@@ -200,6 +200,24 @@ asyncTest('Caret positioned correctly after escaping list and applying formattin
 	}
 });
 
+asyncTest('Deleting text-node from start of list', function() {
+	editor.setContent("<ul><li>a</li><li>b</li></ul>");
+	setSelection('li', 1);
+	robot.type(BACKSPACE, false, function() {
+		equal(editor.getContent(), "<ul><li></li><li>b</li></ul>");
+		start();
+	}, editor.selection.getNode());
+});
+
+asyncTest('Deleting bullet from start of list', function() {
+	editor.setContent("<ul><li>a</li><li>b</li></ul>");
+	setSelection('li', 0);
+	robot.type(BACKSPACE, false, function() {
+		equal(editor.getContent(), "<p>a</p><ul><li>b</li></ul>");
+		start();
+	}, editor.selection.getNode());
+});
+
 asyncTest('Deleting bullet from start of list outdents inner lists items', function() {
 	editor.setContent("<p>a</p><ul><li>b<ul><li>c</li><li>d</li></ul></li></ul>");
 	setSelection('li', 0);
@@ -247,6 +265,28 @@ asyncTest('Creates new list item without surrounding element when caret at end o
 	var queue  = new dsl.Queue();
 	tinymce.map('h1,h2,h3,h4,h5,h6,p,div'.split(','), testCreateNewList);
 	queue.done();
+});
+
+asyncTest('Select the entire document, and apply and remove ordered list', function() {
+  editor.setContent("<p>a</p><p>b</p>");
+  editor.focus();
+  robot.typeAsShortcut('a', function() {
+	  editor.execCommand('InsertOrderedList');
+	  editor.execCommand('InsertOrderedList');
+	  equal(editor.getContent(), "<p>a</p><p>b</p>");
+	  start();
+  });
+});
+
+asyncTest('Select the entire document, and apply and remove unordered list', function() {
+  editor.setContent("<p>a</p><p>b</p>");
+  editor.focus();
+  robot.typeAsShortcut('a', function() {
+	  editor.execCommand('InsertUnorderedList');
+	  editor.execCommand('InsertUnorderedList');
+	  equal(editor.getContent(), "<p>a</p><p>b</p>");
+	  start();
+  });
 });
 
 var initTinyFunction = function(){

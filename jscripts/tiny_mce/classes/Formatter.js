@@ -41,7 +41,7 @@
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
 			nodeIndex = dom.nodeIndex,
-			INVISIBLE_CHAR = tinymce.isGecko ? '\u200B' : '\uFEFF',
+			INVISIBLE_CHAR = '\uFEFF',
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
@@ -1037,8 +1037,9 @@
 		 * @method formatChanged
 		 * @param {String} formats Comma separated list of formats to check for.
 		 * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
+		 * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
 		 */
-		function formatChanged(formats, callback) {
+		function formatChanged(formats, callback, similar) {
 			var currentFormats;
 
 			// Setup format node change logic
@@ -1052,7 +1053,7 @@
 					// Check for new formats
 					each(formatChangeData, function(callbacks, format) {
 						each(parents, function(node) {
-							if (matchNode(node, format, {}, true)) {
+							if (matchNode(node, format, {}, callbacks.similar)) {
 								if (!currentFormats[format]) {
 									// Execute callbacks
 									each(callbacks, function(callback) {
@@ -1085,6 +1086,7 @@
 			each(formats.split(','), function(format) {
 				if (!formatChangeData[format]) {
 					formatChangeData[format] = [];
+					formatChangeData[format].similar = similar;
 				}
 
 				formatChangeData[format].push(callback);
