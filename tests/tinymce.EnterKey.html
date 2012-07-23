@@ -22,6 +22,7 @@ module("tinymce.EnterKey", {
 		editor.settings.end_container_on_empty_block = false;
 		editor.settings.br_in_pre = true;
 		editor.settings.keep_styles = true;
+		delete editor.settings.force_p_newlines;
 	}
 });
 
@@ -608,6 +609,15 @@ test('Shift+enter in LI when forced_root_block: false', function() {
 	setSelection('li', 2);
 	pressEnter({shiftKey: true});
 	equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
+});
+
+test('Enter when forced_root_block: false and force_p_newlines : true', function() {
+	editor.settings.forced_root_block = false;
+	editor.settings.force_p_newlines = true;
+	editor.getBody().innerHTML = 'text';
+	setSelection('body', 2);
+	pressEnter();
+	equal(editor.getContent(), '<p>te</p><p>xt</p>');
 });
 
 // Only test these on modern browsers
