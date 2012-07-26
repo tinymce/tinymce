@@ -1039,6 +1039,8 @@
 							width = startWidth + (e.screenX - startX);
 							height = startHeight + (e.screenY - startY);
 							t.resizeTo(width, height, true);
+
+							ed.nodeChanged();
 						};
 
 						e.preventDefault();
