@@ -1622,7 +1622,7 @@
 		 * tinyMCE.get('content id').getContent()
 		 */
 		getContent : function(args) {
-			var self = this, content;
+			var self = this, content, body = self.getBody();
 
 			// Setup args object
 			args = args || {};
@@ -1636,11 +1636,18 @@
 
 			// Get raw contents or by default the cleaned contents
 			if (args.format == 'raw')
-				content = self.getBody().innerHTML;
+				content = body.innerHTML;
+			else if (args.format == 'text')
+				content = body.innerText || body.textContent;
 			else
-				content = self.serializer.serialize(self.getBody(), args);
+				content = self.serializer.serialize(body, args);
 
-			args.content = tinymce.trim(content);
+			// Trim whitespace in beginning/end of HTML
+			if (args.format != 'text') {
+				args.content = tinymce.trim(content);
+			} else {
+				args.content = content;
+			}
 
 			// Do post processing
 			if (!args.no_events)
