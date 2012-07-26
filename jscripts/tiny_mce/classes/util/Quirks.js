@@ -282,6 +282,15 @@ tinymce.util.Quirks = function(editor) {
 
 	/**
 	 * Fixes a Gecko bug where the style attribute gets added to the wrong element when deleting between two block elements.
+	 *
+	 * Fixes do backspace/delete on this:
+	 * <p>bla[ck</p><p style="color:red">r]ed</p>
+	 *
+	 * Would become:
+	 * <p>bla|ed</p>
+	 *
+	 * Instead of:
+	 * <p style="color:red">bla|ed</p>
 	 */
 	function removeStylesWhenDeletingAccrossBlockElements() {
 		function getAttributeApplyFunction() {
@@ -301,7 +310,7 @@ tinymce.util.Quirks = function(editor) {
 		}
 
 		function isSelectionAcrossElements() {
-			return !selection.isCollapsed() && selection.getStart() != selection.getEnd();
+			return !selection.isCollapsed() && dom.getParent(selection.getStart(), dom.isBlock) != dom.getParent(selection.getEnd(), dom.isBlock);
 		}
 
 		function blockEvent(editor, e) {
