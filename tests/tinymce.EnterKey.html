@@ -620,6 +620,16 @@ test('Enter when forced_root_block: false and force_p_newlines : true', function
 	equal(editor.getContent(), '<p>te</p><p>xt</p>');
 });
 
+test('Enter before BR between DIVs', function() {
+	editor.getBody().innerHTML = '<div>a<span>b</span>c</div><br /><div>d</div>';
+	var rng = editor.dom.createRng();
+	rng.setStartBefore(editor.dom.select('br')[0]);
+	rng.setEndBefore(editor.dom.select('br')[0]);
+	editor.selection.setRng(rng);
+	pressEnter();
+	equal(editor.getContent(), '<div>a<span>b</span>c</div><p>\u00a0</p><p>\u00a0</p><div>d</div>');
+});
+
 // Only test these on modern browsers
 if (window.getSelection) {
 	test('Enter behind table element', function() {
