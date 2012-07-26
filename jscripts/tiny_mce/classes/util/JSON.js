@@ -39,7 +39,7 @@
 		}
 
 		if (t == 'object') {
-			if (o.hasOwnProperty && o instanceof Array) {
+			if (o.hasOwnProperty && Object.prototype.toString.call(o) === '[object Array]') {
 					for (i=0, v = '['; i<o.length; i++)
 						v += (i > 0 ? ',' : '') + serialize(o[i], quote);
 
