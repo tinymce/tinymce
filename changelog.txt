@@ -3,6 +3,7 @@ Version 3.5.x (2012-07-xx)
 	Fixed bug where the remove format button would produce extra paragraphs on WebKit if all of the contents was selected.
 	Fixed issue where edge resize handles on images of wouldn't scale it with the same aspect ratio.
 	Fixed so force_p_newlines option works again since some users want mixed mode paragraphs.
+	Fixed so directionality plugin modifies the dir attribute of all selected blocks in the editor.
 Version 3.5.5 (2012-07-19)
 	Added full resize support for images and tables on WebKit/Opera. It now behaves just like Gecko.
 	Added automatic embed support for Vimeo, Stream.cz and Google Maps in media plugin. Patch contributed by Jakub Matas.
