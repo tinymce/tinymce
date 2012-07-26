@@ -458,7 +458,7 @@
 							rng  = ed.selection.getRng();
 						if (list && list.firstChild === li && rng.startOffset == 0) {
 							var elements = listElements(li);
-							elements.unshift(li)
+							elements.unshift(li);
 							ed.execCommand("Outdent", false, elements);
 							ed.undoManager.add();
 							return Event.cancel(e);
@@ -476,7 +476,7 @@
 						ed.dom.remove(li, true);
 						var textNodes = tinymce.grep(prevLi.childNodes, function(n){ return n.nodeType === 3 });
 						if (textNodes.length === 1) {
-							var textNode = textNodes[0]
+							var textNode = textNodes[0];
 							ed.selection.setCursorLocation(textNode, textNode.length);
 						}
 						ed.undoManager.add();
@@ -937,8 +937,7 @@
 		},
 
 		selectedBlocks: function() {
-			var ed = this.ed
-			var selectedBlocks = ed.selection.getSelectedBlocks();
+			var ed = this.ed, selectedBlocks = ed.selection.getSelectedBlocks();
 			return selectedBlocks.length == 0 ? [ ed.dom.getRoot() ] : selectedBlocks;
 		},
 

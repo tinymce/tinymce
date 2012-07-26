@@ -1012,7 +1012,7 @@
 				styleElm.id = 'mceDefaultStyles';
 				styleElm.type = 'text/css';
 
-				head = doc.getElementsByTagName('head')[0]
+				head = doc.getElementsByTagName('head')[0];
 				if (head.firstChild) {
 					head.insertBefore(styleElm, head.firstChild);
 				} else {

@@ -346,7 +346,7 @@
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					// Insert extra BR element at the end block elements
 					if (!tinymce.isIE && !hasRightSideBr()) {
-						brElm = dom.create('br')
+						brElm = dom.create('br');
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
 						rng.setEndAfter(brElm);
