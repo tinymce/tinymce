@@ -474,7 +474,8 @@
 							}
 
 							// Trim start white space
-							textNode = node.prev;
+							// Removed due to: #5424
+							/*textNode = node.prev;
 							if (textNode && textNode.type === 3) {
 								text = textNode.value.replace(startWhiteSpaceRegExp, '');
 
@@ -482,7 +483,7 @@
 									textNode.value = text;
 								else
 									textNode.remove();
-							}
+							}*/
 						}
 
 						// Check if we exited a whitespace preserved element
