@@ -455,7 +455,7 @@ test('Parse inline contents before block bug #5424', function() {
 	equal(serializer.serialize(root), '<b>1</b> 2<p>3</p>');
 });
 
-test('Parse inline contents before block bug #5424', function() {
+test('Invalid text blocks within a li', function() {
 	var parser, root, schema = new tinymce.html.Schema({schema: "html5", valid_children: '-li[p]'});
 
 	parser = new tinymce.html.DomParser({}, schema);
