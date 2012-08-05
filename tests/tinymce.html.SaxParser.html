@@ -529,6 +529,14 @@ test('Remove internal elements', function() {
 	// Reset
 	counter.remove_internals = false;
 });
+
+test('Parse attr with backslash #5436', function() {
+	var counter = createCounter(writer);
+	var parser = new tinymce.html.SaxParser(counter, schema);
+	writer.reset();
+	parser.parse('<a title="\\" href="h">x</a>');
+	equal(writer.getContent(), '<a title="\\" href="h">x</a>');
+});
 </script>
 </head>
 <body>

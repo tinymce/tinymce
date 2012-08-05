@@ -1,5 +1,6 @@
 Version 3.5.7 (2012-0x-xx)
 	Fixed bug where some white space would be removed after inline elements before block elements.
+	Fixed bug where it wouldn't properly parse attributes with a single backslash as it's contents.
 	Fixed issue where enter inside a block contained within an LI element wouldn't produce a new LI.
 Version 3.5.6 (2012-07-26)
 	Added "text" as a valid option to the editor.getContent format option. Makes it easier to get a text representation of the editor contents.
