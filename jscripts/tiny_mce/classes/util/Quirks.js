@@ -12,7 +12,8 @@
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
  */
 tinymce.util.Quirks = function(editor) {
-	var VK = tinymce.VK, BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, settings = editor.settings;
+	var VK = tinymce.VK, BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
+		settings = editor.settings, parser = editor.parser, serializer = editor.serializer;
 
 	/**
 	 * Executes a command with a specific state this can be to enable/disable browser editing features.
@@ -410,7 +411,7 @@ tinymce.util.Quirks = function(editor) {
 		dom.addClass(editor.getBody(), 'mceHideBrInPre');
 
 		// Adds a \n before all BR elements in PRE to get them visual
-		editor.parser.addNodeFilter('pre', function(nodes, name) {
+		parser.addNodeFilter('pre', function(nodes, name) {
 			var i = nodes.length, brNodes, j, brElm, sibling;
 
 			while (i--) {
@@ -431,7 +432,7 @@ tinymce.util.Quirks = function(editor) {
 		});
 
 		// Removes any \n before BR elements in PRE since other browsers and in contentEditable=false mode they will be visible
-		editor.serializer.addNodeFilter('pre', function(nodes, name) {
+		serializer.addNodeFilter('pre', function(nodes, name) {
 			var i = nodes.length, brNodes, j, brElm, sibling;
 
 			while (i--) {
@@ -932,6 +933,50 @@ tinymce.util.Quirks = function(editor) {
 		});
 	}
 
+	/**
+	 * Old IE versions can't retain contents within noscript elements so this logic will store the contents
+	 * as a attribute and the insert that value as it's raw text when the DOM is serialized.
+	 */
+	function keepNoScriptContents() {
+		if (getDocumentMode() < 9) {
+			parser.addNodeFilter('noscript', function(nodes) {
+				var i = nodes.length, node, textNode;
+
+				while (i--) {
+					node = nodes[i];
+					textNode = node.firstChild;
+
+					if (textNode) {
+						node.attr('data-mce-innertext', textNode.value);
+					}
+				}
+			});
+
+			serializer.addNodeFilter('noscript', function(nodes) {
+				var i = nodes.length, node, textNode, value;
+
+				while (i--) {
+					node = nodes[i];
+					textNode = nodes[i].firstChild;
+
+					if (textNode) {
+						textNode.value = tinymce.html.Entities.decode(textNode.value);
+					} else {
+						// Old IE can't retain noscript value so an attribute is used to store it
+						value = node.attributes.map['data-mce-innertext'];
+						if (value) {
+							node.attr('data-mce-innertext', null);
+							textNode = new tinymce.html.Node('#text', 3);
+							textNode.value = value;
+							textNode.raw = true;
+							node.append(textNode);
+						}
+					}
+				}
+			});
+		}
+	}
+
 	// All browsers
 	disableBackspaceIntoATable();
 	removeBlockQuoteOnBackSpace();
@@ -962,6 +1007,7 @@ tinymce.util.Quirks = function(editor) {
 		removePreSerializedStylesWhenSelectingControls();
 		deleteControlItemOnBackSpace();
 		renderEmptyBlocksFix();
+		keepNoScriptContents();
 	}
 
 	// Gecko

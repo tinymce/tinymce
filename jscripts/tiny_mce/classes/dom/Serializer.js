@@ -128,6 +128,18 @@
 			}
 		});
 
+		htmlParser.addNodeFilter('noscript', function(nodes) {
+			var i = nodes.length, node;
+
+			while (i--) {
+				node = nodes[i].firstChild;
+
+				if (node) {
+					node.value = tinymce.html.Entities.decode(node.value);
+				}
+			}
+		});
+
 		// Force script into CDATA sections and remove the mce- prefix also add comments around styles
 		htmlParser.addNodeFilter('script,style', function(nodes, name) {
 			var i = nodes.length, node, value;

@@ -210,8 +210,8 @@ test('getWhiteSpaceElements', function() {
 
 	var schema = new tinymce.html.Schema();
 	deepEqual(schema.getWhiteSpaceElements(), {
-		"STYLE": {}, "SCRIPT": {}, "PRE": {}, "TEXTAREA": {},
-		"style": {}, "script": {}, "pre": {}, "textarea": {}
+		"STYLE": {}, "SCRIPT": {}, "PRE": {}, "TEXTAREA": {}, "NOSCRIPT": {},
+		"style": {}, "script": {}, "pre": {}, "textarea": {}, "noscript": {}
 	});
 });
 
