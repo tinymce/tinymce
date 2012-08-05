@@ -377,9 +377,10 @@
 		shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link meta param embed source wbr');
 		boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize noshade nowrap readonly selected autoplay loop controls');
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object', shortEndedElementsMap);
-		blockElementsMap = createLookupTable('block_elements', 'h1 h2 h3 h4 h5 h6 hr p div address pre form table tbody thead tfoot ' + 
-						'th tr td li ol ul caption blockquote center dl dt dd dir fieldset ' + 
-						'noscript menu isindex samp header footer article section hgroup aside nav figure option datalist select optgroup');
+		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' + 
+						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
+		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' + 
+						'th tr td li ol ul caption dl dt dd noscript menu isindex samp option datalist select optgroup', textBlockElementsMap);
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
 		function patternToRegExp(str) {
@@ -700,11 +701,21 @@
 		/**
 		 * Returns a map with block elements.
 		 *
-		 * @method getBoolAttrs
+		 * @method getBlockElements
 		 * @return {Object} Name/value lookup map for block elements.
 		 */
 		self.getBlockElements = function() {
 			return blockElementsMap;
+		};
+
+		/**
+		 * Returns a map with text block elements. Such as: p,h1-h6,div,address
+		 *
+		 * @method getTextBlockElements
+		 * @return {Object} Name/value lookup map for block elements.
+		 */
+		self.getTextBlockElements = function() {
+			return textBlockElementsMap;
 		};
 
 		/**

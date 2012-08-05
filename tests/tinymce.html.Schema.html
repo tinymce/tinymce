@@ -215,6 +215,18 @@ test('getWhiteSpaceElements', function() {
 	});
 });
 
+test('getTextBlockElements', function() {
+	expect(1);
+
+	var schema = new tinymce.html.Schema();
+	deepEqual(schema.getTextBlockElements(), {
+		"ADDRESS": {}, "ARTICLE": {}, "ASIDE": {}, "BLOCKQUOTE": {}, "CENTER": {}, "DIR": {}, "DIV": {}, "FIELDSET": {}, "FIGURE": {}, "FOOTER": {}, "FORM": {},
+		"H1": {}, "H2": {}, "H3": {}, "H4": {}, "H5": {}, "H6": {}, "HEADER": {}, "HGROUP": {}, "NAV": {}, "P": {}, "PRE": {}, "SECTION": {},
+		"address": {}, "article": {}, "aside": {}, "blockquote": {}, "center": {}, "dir": {}, "div": {}, "fieldset": {}, "figure": {}, "footer": {}, "form": {},
+		"h1": {}, "h2": {}, "h3": {}, "h4": {}, "h5": {}, "h6": {}, "header": {}, "hgroup": {}, "nav": {}, "p": {}, "pre": {}, "section": {}
+	});
+});
+
 test('isValidChild', function() {
 	expect(4);
 
