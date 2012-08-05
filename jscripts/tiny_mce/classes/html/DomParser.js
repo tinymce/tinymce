@@ -41,17 +41,40 @@
 
 		function fixInvalidChildren(nodes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i,
-				childClone, nonEmptyElements, nonSplitableElements, sibling, nextNode;
+				childClone, nonEmptyElements, nonSplitableElements, textBlockElements, sibling, nextNode;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
 			nonEmptyElements = schema.getNonEmptyElements();
+			textBlockElements = schema.getTextBlockElements();
 
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
 
-				// Already removed
-				if (!node.parent)
+				// Already removed or fixed
+				if (!node.parent || node.fixed)
 					continue;
+
+				// If the invalid element is a text block and the text block is within a parent LI element
+				// Then unwrap the first text block and convert other sibling text blocks to LI elements similar to Word/Open Office
+				if (textBlockElements[node.name] && node.parent.name == 'li') {
+					// Move sibling text blocks after LI element
+					sibling = node.next;
+					while (sibling) {
+						if (textBlockElements[sibling.name]) {
+							sibling.name = 'li';
+							sibling.fixed = true;
+							node.parent.insert(sibling, node.parent);
+						} else {
+							break;
+						}
+
+						sibling = sibling.next;
+					}
+
+					// Unwrap current text block
+					node.unwrap(node);
+					continue;
+				}
 
 				// Get list of all parent nodes until we find a valid parent to stick the child into
 				parents = [node];

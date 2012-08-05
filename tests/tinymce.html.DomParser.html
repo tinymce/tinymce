@@ -454,6 +454,14 @@ test('Parse inline contents before block bug #5424', function() {
 	root = parser.parse('<b>1</b> 2<p>3</p>');
 	equal(serializer.serialize(root), '<b>1</b> 2<p>3</p>');
 });
+
+test('Parse inline contents before block bug #5424', function() {
+	var parser, root, schema = new tinymce.html.Schema({schema: "html5", valid_children: '-li[p]'});
+
+	parser = new tinymce.html.DomParser({}, schema);
+	root = parser.parse('<ul><li>1<p>2</p></li><li>a<p>b</p><p>c</p></li></ul>');
+	equal(serializer.serialize(root), '<ul><li>12</li><li>ab</li><li>c</li></ul>');
+});
 </script>
 </head>
 <body>
