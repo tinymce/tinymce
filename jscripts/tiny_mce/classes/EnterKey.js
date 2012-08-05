@@ -481,6 +481,12 @@
 			parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 			containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
+			// Enter inside block contained within a LI then split or insert before/after LI
+			if (containerBlockName == 'LI' && !evt.ctrlKey) {
+				parentBlock = containerBlock;
+				parentBlockName = containerBlockName;
+			}
+
 			// Handle enter in LI
 			if (parentBlockName == 'LI') {
 				if (!newBlockName && shiftKey) {

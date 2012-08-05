@@ -333,6 +333,82 @@ test('Enter inside empty li in the middle of ol', function() {
 	equal(editor.selection.getNode().nodeName, 'P');
 });
 
+
+test('Enter at beginning of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 0);
+	pressEnter();
+	equal(editor.getContent(), '<ol><li></li><li><p>abcd</p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter inside middle of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 2);
+	pressEnter();
+	equal(editor.getContent(), '<ol><li><p>ab</p></li><li><p>cd</p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Enter at end of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 4);
+	pressEnter();
+	equal(editor.getContent(), '<ol><li><p>abcd</p></li><li></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'LI');
+});
+
+
+test('Shift+Enter at beginning of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 0);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<ol><li><p><br />abcd</p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Shift+Enter inside middle of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 2);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<ol><li><p>ab<br />cd</p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Shift+Enter at end of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 4);
+	pressEnter({shiftKey: true});
+	equal(editor.getContent(), '<ol><li><p>abcd<br /><br /></p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+
+test('Ctrl+Enter at beginning of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 0);
+	pressEnter({ctrlKey: true});
+	equal(editor.getContent(), '<ol><li><p>\u00a0</p><p>abcd</p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Ctrl+Enter inside middle of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 2);
+	pressEnter({ctrlKey: true});
+	equal(editor.getContent(), '<ol><li><p>ab</p><p>cd</p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+test('Ctrl+Enter at end of P inside LI', function() {
+	editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
+	setSelection('p', 4);
+	pressEnter({ctrlKey: true});
+	equal(editor.getContent(), '<ol><li><p>abcd</p><p>\u00a0</p></li></ol>');
+	equal(editor.selection.getNode().nodeName, 'P');
+});
+
+
 test('Enter in the middle of text in P with forced_root_block set to false', function() {
 	editor.settings.forced_root_block = false;
 	editor.getBody().innerHTML = '<p>abc</p>';
