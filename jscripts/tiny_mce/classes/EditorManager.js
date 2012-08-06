@@ -275,6 +275,9 @@
 			if (id === undef)
 				return this.editors;
 
+			if (!this.editors.hasOwnProperty(id))
+				return undef;
+
 			return this.editors[id];
 		},
 
