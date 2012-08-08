@@ -31,13 +31,12 @@ var dependencies = [
   },
 
   {
-    name: "wrap-underscore",
-    repository: "buildrepo2",
-    version: "latest",
-    source: "wrap-underscore.zip",
+    name: 'compass',
+    repository: 'buildrepo2',
+    source: 'compass.zip',
     targets: [
-      { name: "compile/ephox.wrap.Underscore.js", path: lib + "/run/depend" },
-      { name: "licenses/underscore/license.txt", path: "lib/run/licenses/underscore"}
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
     ]
   },
 
@@ -62,14 +61,17 @@ var dependencies = [
     ]
   },
 
-  { name: "jssert",
-    repository: "buildrepo2",
-    source: "jssert.zip",
-    targets: [
-      {name: "jssert.js", path: "lib/test"}
-    ]
-  },
-
   q('flute'),
-  q('nuggets')
+
+  {
+    name: 'exhibition',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'exhibition.zip',
+    targets: [
+      { name: 'module/*.js', path: demo },
+      { name: 'depend/*.js', path: demo },
+      { name: 'exhibition.js', path: config }
+    ]
+  }
 ];

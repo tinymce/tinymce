@@ -2,15 +2,16 @@ define(
   'ephox.porkbun.Events',
 
   [
-    'ephox.wrap.Underscore'
+    'ephox.compass.Arr',
+    'ephox.compass.Obj'
   ],
 
-  function (_) {
+  function (Arr, Obj) {
     var create = function (typeDefs) {
       var registry = {};
       var trigger = {};
 
-      _.each(typeDefs, function (struct, type) {
+      Obj.each(typeDefs, function (struct, type) {
         var handlers = [];
 
         var bind = function (handler) {
@@ -21,7 +22,7 @@ define(
         };
 
         var unbind = function (handler) {
-          var index = _.indexOf(handlers, handler);
+          var index = Arr.indexOf(handlers, handler);
           if (index !== -1) {
             handlers.splice(index, 1);
           }
@@ -43,7 +44,7 @@ define(
         trigger[type] = function (/* fields */) {
           var fields = Array.prototype.slice.call(arguments);
           var event = mkevent(fields);
-          _.each(handlers, function (handler) {
+          Arr.each(handlers, function (handler) {
             handler(event);
           });
         };
