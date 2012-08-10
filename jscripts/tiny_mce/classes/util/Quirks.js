@@ -565,10 +565,10 @@ tinymce.util.Quirks = function(editor) {
 				editor.formatter.toggle('blockquote', null, parent);
 
 				// Move the caret to the beginning of container
+				rng = dom.createRng();
 				rng.setStart(container, 0);
 				rng.setEnd(container, 0);
 				selection.setRng(rng);
-				selection.collapse(false);
 			}
 		});
 	};
