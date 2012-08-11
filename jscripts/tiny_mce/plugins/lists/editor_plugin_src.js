@@ -173,8 +173,15 @@
 				return ed.selection.isCollapsed() && isEmptyListItem(getLi());
 			}
 
-			function getLi() {
+			function getLi(ignore_empty_child_nodes) {
 				var n = ed.selection.getStart();
+
+				if (ignore_empty_child_nodes) {
+					while ((n.innerText || n.textContent).replace(/[\s\r\n]+/, '') == '' && n.tagName != 'LI' && n.parentNode) {
+						n = n.parentNode;
+					}
+				}
+
 				// Get start will return BR if the LI only contains a BR or an empty element as we use these to fix caret position
 				return ((n.tagName == 'BR' || n.tagName == '') && n.parentNode.tagName == 'LI') ? n.parentNode : n;
 			}
@@ -452,7 +459,7 @@
 				}
 
 				if (e.keyCode == tinymce.VK.BACKSPACE) {
-					var li = getLi();
+					var li = getLi(true);
 					if (li) {
 						var list = ed.dom.getParent(li, 'ol,ul'),
 							rng  = ed.selection.getRng();
