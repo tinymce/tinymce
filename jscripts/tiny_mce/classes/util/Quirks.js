@@ -36,6 +36,16 @@ tinymce.util.Quirks = function(editor) {
 	};
 
 	/**
+	 * Returns true/false if the event is prevented or not.
+	 *
+	 * @param {Event} e Event object.
+	 * @return {Boolean} true/false if the event is prevented or not.
+	 */
+	function isDefaultPrevented(e) {
+		return e.isDefaultPrevented();
+	};
+
+	/**
 	 * Fixes a WebKit bug when deleting contents using backspace or delete key.
 	 * WebKit will produce a span element if you delete across two block elements.
 	 *
@@ -101,7 +111,7 @@ tinymce.util.Quirks = function(editor) {
 			var isDelete;
 
 			isDelete = e.keyCode == DELETE;
-			if (!e.isDefaultPrevented() && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+			if (!isDefaultPrevented(e) && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 				e.preventDefault();
 				removeMergedFormatSpans(isDelete);
 			}
@@ -144,7 +154,7 @@ tinymce.util.Quirks = function(editor) {
 			var keyCode = e.keyCode, isCollapsed;
 
 			// Empty the editor if it's needed for example backspace at <p><b>|</b></p>
-			if (!e.isDefaultPrevented() && (keyCode == DELETE || keyCode == BACKSPACE)) {
+			if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
 				isCollapsed = editor.selection.isCollapsed();
 
 				// Selection is collapsed but the editor isn't empty
@@ -176,7 +186,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function selectAll() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (e.keyCode == 65 && VK.metaKeyPressed(e)) {
+			if (!isDefaultPrevented(e) && e.keyCode == 65 && VK.metaKeyPressed(e)) {
 				e.preventDefault();
 				editor.execCommand('SelectAll');
 			}
@@ -220,7 +230,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function removeHrOnBackspace() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (!e.isDefaultPrevented() && e.keyCode === BACKSPACE) {
+			if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
 				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 					var node = selection.getNode();
 					var previousSibling = node.previousSibling;
@@ -243,7 +253,7 @@ tinymce.util.Quirks = function(editor) {
 		// wouldn't get proper focus if the user clicked on the HTML element
 		if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
 			editor.onMouseDown.add(function(editor, e) {
-				if (e.target.nodeName === "HTML") {
+				if (!isDefaultPrevented(e) && e.target.nodeName === "HTML") {
 					var body = editor.getBody();
 
 					// Blur the body it's focused but not correctly focused
@@ -322,7 +332,7 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyPress.add(function(editor, e) {
 			var applyAttributes;
 
-			if ((e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
+			if (!isDefaultPrevented(e) && (e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
 				applyAttributes = getAttributeApplyFunction();
 				editor.getDoc().execCommand('delete', false, null);
 				applyAttributes();
@@ -334,7 +344,7 @@ tinymce.util.Quirks = function(editor) {
 		dom.bind(editor.getDoc(), 'cut', function(e) {
 			var applyAttributes;
 
-			if (isSelectionAcrossElements()) {
+			if (!isDefaultPrevented(e) && isSelectionAcrossElements()) {
 				applyAttributes = getAttributeApplyFunction();
 				editor.onKeyUp.addToTop(blockEvent);
 
@@ -384,7 +394,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function disableBackspaceIntoATable() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (!e.isDefaultPrevented() && e.keyCode === BACKSPACE) {
+			if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
 				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 					var previousSibling = selection.getNode().previousSibling;
 					if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "table") {
@@ -492,7 +502,7 @@ tinymce.util.Quirks = function(editor) {
 			var isDelete, rng, container, offset, brElm, sibling, collapsed;
 
 			isDelete = e.keyCode == DELETE;
-			if (!e.isDefaultPrevented() && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+			if (!isDefaultPrevented(e) && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 				rng = selection.getRng();
 				container = rng.startContainer;
 				offset = rng.startOffset;
@@ -541,7 +551,7 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyDown.add(function(editor, e) {
 			var rng, container, offset, root, parent;
 
-			if (e.isDefaultPrevented() || e.keyCode != VK.BACKSPACE) {
+			if (isDefaultPrevented(e) || e.keyCode != VK.BACKSPACE) {
 				return;
 			}
 
@@ -666,7 +676,7 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyDown.add(function(editor, e) {
 			var rng;
 
-			if (!e.isDefaultPrevented() && e.keyCode == BACKSPACE) {
+			if (!isDefaultPrevented(e) && e.keyCode == BACKSPACE) {
 				rng = editor.getDoc().selection.createRange();
 				if (rng && rng.item) {
 					e.preventDefault();
