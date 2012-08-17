@@ -1100,6 +1100,14 @@ test('Bug #5134 - TinyMCE removes formatting tags in the getContent - typing', f
 	equal(getContent(), '<strong>a</strong>', 'bold text inside TinyMCE');
 });
 
+test('Bug #5453 - TD contents with BR gets wrapped in block format', function() {
+	editor.setContent('<table><tr><td>abc<br />123</td></tr></table>');
+	setSelection('td', 1, 'td', 1);
+	editor.formatter.register('format', {block : 'h1'});
+	editor.formatter.apply('format');
+	equal(getContent(), '<table><tbody><tr><td><h1>abc</h1>123</td></tr></tbody></table>');
+});
+
 /*
 test('apply (list block)', function() {
 	var rng;

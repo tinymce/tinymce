@@ -244,10 +244,21 @@
 			if (!t)
 				return o !== undef;
 
-			if (t == 'array' && (o.hasOwnProperty && o instanceof Array))
+			if (t == 'array' && tinymce.isArray(o))
 				return true;
 
 			return typeof(o) == t;
+		},
+
+		/**
+		 * Returns true/false if the object is an array or not.
+		 *
+		 * @method isArray
+		 * @param {Object} obj Object to check.
+		 * @return {boolean} true/false state if the object is an array or not.
+		 */
+		isArray: Array.isArray || function(obj) {
+			return Object.prototype.toString.call(obj) === "[object Array]";
 		},
 
 		/**

@@ -38,6 +38,7 @@
 			TreeWalker = tinymce.dom.TreeWalker,
 			rangeUtils = new tinymce.dom.RangeUtils(dom),
 			isValid = ed.schema.isValidChild,
+			isArray = tinymce.isArray,
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
 			nodeIndex = dom.nodeIndex,
@@ -49,9 +50,9 @@
 			undef,
 			getContentEditable = dom.getContentEditable;
 
-		function isArray(obj) {
-			return obj instanceof Array;
-		};
+		function isTextBlock(name) {
+			return !!ed.schema.getTextBlocks()[name.toLowerCase()];
+		}
 
 		function getParents(node, selector) {
 			return dom.getParents(node, selector, dom.getRoot());
@@ -1410,7 +1411,7 @@
 
 				// Expand to first wrappable block element or any block element
 				if (!node)
-					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isBlock);
+					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isTextBlock);
 
 				// Exclude inner lists from wrapping
 				if (node && format[0].wrapper)
