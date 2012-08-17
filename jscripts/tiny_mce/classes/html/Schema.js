@@ -554,8 +554,15 @@
 					customElementsMap[name] = cloneName;
 
 					// If it's not marked as inline then add it to valid block elements
-					if (!inline)
+					if (!inline) {
+						blockElementsMap[name.toUpperCase()] = {};
 						blockElementsMap[name] = {};
+					}
+
+					// Add elements clone if needed
+					if (!elements[name]) {
+						elements[name] = elements[cloneName];
+					}
 
 					// Add custom elements at span/div positions
 					each(children, function(element, child) {
@@ -866,5 +873,7 @@
 		 * @param {String} valid_children Valid children elements string to parse
 		 */
 		self.addValidChildren = addValidChildren;
+
+		self.elements = elements;
 	};
 })(tinymce);
