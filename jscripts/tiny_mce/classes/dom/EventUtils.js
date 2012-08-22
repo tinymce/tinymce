@@ -126,6 +126,12 @@ tinymce.dom = {};
 			}
 		}
 
+		// Page already loaded then fire it directly
+		if (doc.readyState == "complete") {
+			readyHandler();
+			return;
+		}
+
 		// Use W3C method
 		if (w3cEventModel) {
 			addEvent(win, 'DOMContentLoaded', readyHandler);
