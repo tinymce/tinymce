@@ -1,4 +1,5 @@
 Version 3.5.7 (2012-0x-xx)
+	Fixed bug in hyperlink dialog for IE9 where links with no target attr set had target value of --
 	Changing toolbars to have a toolbar role for FF keyboard navigation works correctly.
 	Fixed bug where loading TinyMCE using an async script wouldn't properly initialize editors.
 	Fixed bug where some white space would be removed after inline elements before block elements.
