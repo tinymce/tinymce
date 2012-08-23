@@ -64,13 +64,14 @@ function init() {
 	if (elm != null && elm.nodeName == "A")
 		action = "update";
 
-	formObj.insert.value = tinyMCEPopup.getLang(action, 'Insert', true); 
+	formObj.insert.value = tinyMCEPopup.getLang(action, 'Insert', true);
 
 	setPopupControlsDisabled(true);
 
 	if (action == "update") {
 		var href = inst.dom.getAttrib(elm, 'href');
 		var onclick = inst.dom.getAttrib(elm, 'onclick');
+		var linkTarget = inst.dom.getAttrib(elm, 'target') ? inst.dom.getAttrib(elm, 'target') : "_self";
 
 		// Setup form data
 		setFormValue('href', href);
@@ -98,7 +99,7 @@ function init() {
 		setFormValue('onkeypress', inst.dom.getAttrib(elm, 'onkeypress'));
 		setFormValue('onkeydown', inst.dom.getAttrib(elm, 'onkeydown'));
 		setFormValue('onkeyup', inst.dom.getAttrib(elm, 'onkeyup'));
-		setFormValue('target', inst.dom.getAttrib(elm, 'target'));
+		setFormValue('target', linkTarget);
 		setFormValue('classes', inst.dom.getAttrib(elm, 'class'));
 
 		// Parse onclick data
@@ -119,7 +120,7 @@ function init() {
 		addClassesToList('classlist', 'advlink_styles');
 
 		selectByValue(formObj, 'classlist', inst.dom.getAttrib(elm, 'class'), true);
-		selectByValue(formObj, 'targetlist', inst.dom.getAttrib(elm, 'target'), true);
+		selectByValue(formObj, 'targetlist', linkTarget, true);
 	} else
 		addClassesToList('classlist', 'advlink_styles');
 }
