@@ -61,7 +61,7 @@ asyncTest('Collapsed Selection - Indent Actions', function() {
 
 	Indenting.a(OrderedLowerAlphaListItem).enablesState('outdent').andGives('<ol style="list-style-type: lower-alpha;"><li>Item 1<ol style="list-style-type: lower-alpha;"><li>Item 2</li></ol></li></ol>');
 	Indenting.a(UnorderedSquareListItem).enablesState('outdent').andGives('<ul style="list-style-type: square;"><li>Item 1<ul style="list-style-type: square;"><li>Item 2</li></ul></li></ul>');
-	start();
+	queue.done();
 });
 
 asyncTest('Collapsed Selection - Outdent Actions', function() {
@@ -94,7 +94,7 @@ asyncTest('Collapsed Selection - Outdent Actions', function() {
 	Outdenting.a(ItemInCenteredList).enablesState('outdent').andGives('<ul style="text-align: center;"><li style="text-align: left;">Item1</li><li>Item2</li></ul>');
 	Outdenting.a(RightAlignedListItem).enablesState('outdent').andGives('<ul><li style="text-align: left;">Item1</li><li>Item2</li></ul>');
 	Outdenting.a(ItemInRightAlignedList).enablesState('outdent').andGives('<ul style="text-align: right;"><li style="text-align: left;">Item1</li><li>Item2</li></ul>');
-	start();
+	queue.done();
 });
 
 asyncTest('Type Tab in List', function() {
@@ -121,7 +121,7 @@ function checkIfKeystrokeFiresAction(keystroke, shift, actionName, expected) {
 	editor.onBeforeExecCommand.add(listener);
 	
 	fakeKeyPressAction(keystroke, shift)(function() {
-		equals(actionFired, expected, actionName + ' command triggered?');
+		equal(actionFired, expected, actionName + ' command triggered?');
 		editor.onBeforeExecCommand.remove(listener);
 		QUnit.start();
 	}, editor.getWin());
@@ -150,7 +150,7 @@ asyncTest('Expanded Selection, List Types - Indent Action', function() {
 	
 	Indenting.a(ParagraphBeforeAndAfterOlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ol><li style="list-style-type: none;"><ol><li>Item 1</li></ol></li></ol><p id="after" style="margin-left: 30px;">After</p>');
 	Indenting.a(ParagraphBeforeAndAfterUlSelection).enablesState('Outdent').andGives('<p style="margin-left: 30px;">Before</p><ul><li style="list-style-type: none;"><ul><li>Item 1</li></ul></li></ul><p id="after" style="margin-left: 30px;">After</p>');
-	start();
+	queue.done();
 });
 
 asyncTest('Expanded Selection, List Types - Outdent Action', function() {
@@ -178,7 +178,7 @@ asyncTest('Expanded Selection, List Types - Outdent Action', function() {
 	
 	Outdenting.a(ParagraphBeforeAndAfterOlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p id="after">After</p>');
 	Outdenting.a(ParagraphBeforeAndAfterUlSelection).disablesState('Outdent').andGives('<p>Before</p><p>Item 1</p><p id="after">After</p>');
-	start();
+	queue.done();
 });
 var initTinyFunction = function(){
 	tinyMCE.init({

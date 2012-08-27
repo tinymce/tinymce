@@ -1,16 +1,16 @@
 /**
  * JSON.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function() {
 	function serialize(o, quote) {
-		var i, v, t;
+		var i, v, t, name;
 
 		quote = quote || '"';
 
@@ -39,7 +39,7 @@
 		}
 
 		if (t == 'object') {
-			if (o.hasOwnProperty && o instanceof Array) {
+			if (o.hasOwnProperty && Object.prototype.toString.call(o) === '[object Array]') {
 					for (i=0, v = '['; i<o.length; i++)
 						v += (i > 0 ? ',' : '') + serialize(o[i], quote);
 
@@ -48,8 +48,11 @@
 
 				v = '{';
 
-				for (i in o)
-					v += typeof o[i] != 'function' ? (v.length > 1 ? ',' + quote : quote) + i + quote +':' + serialize(o[i], quote) : '';
+				for (name in o) {
+					if (o.hasOwnProperty(name)) {
+						v += typeof o[name] != 'function' ? (v.length > 1 ? ',' + quote : quote) + name + quote +':' + serialize(o[name], quote) : '';
+					}
+				}
 
 				return v + '}';
 		}

@@ -287,6 +287,21 @@
 				endX = startX + (cols - 1);
 				endY = startY + (rows - 1);
 			} else {
+				startPos = endPos = null;
+
+				// Calculate start/end pos by checking for selected cells in grid works better with context menu
+				each(grid, function(row, y) {
+					each(row, function(cell, x) {
+						if (isCellSelected(cell)) {
+							if (!startPos) {
+								startPos = {x: x, y: y};
+							}
+
+							endPos = {x: x, y: y};
+						}
+					});
+				});
+
 				// Use selection
 				startX = startPos.x;
 				startY = startPos.y;
@@ -599,6 +614,9 @@
 				else
 					dom.insertAfter(row, targetRow);
 			});
+
+			// Remove current selection
+			dom.removeClass(dom.select('td.mceSelected,th.mceSelected'), 'mceSelected');
 		};
 
 		function getPos(target) {
@@ -988,7 +1006,7 @@
 						rng.endOffset == 0 && 
 						currentCell && 
 						(n.nodeName=="TR" || n==tableParent);
-					tableCellSelection = (n.nodeName=="TD"||n.nodeName=="TH")&& !currentCell;       
+					tableCellSelection = (n.nodeName=="TD"||n.nodeName=="TH")&& !currentCell;	   
 					return  allOfCellSelected || tableCellSelection;
 					// return false;
 				}
@@ -1000,7 +1018,7 @@
 
 					var rng = ed.selection.getRng();
 					var n = ed.selection.getNode();
-					var currentCell = ed.dom.getParent(rng.startContainer, 'TD');
+					var currentCell = ed.dom.getParent(rng.startContainer, 'TD,TH');
 				
 					if (!tableCellSelected(ed, rng, n, currentCell))
 						return;
@@ -1012,7 +1030,7 @@
 					var end = currentCell.lastChild;
 					while (end.lastChild)
 						end = end.lastChild;
-                    
+					
 					// Select the entire table cell. Nothing outside of the table cell should be selected.
 					rng.setEnd(end, end.nodeValue.length);
 					ed.selection.setRng(rng);
@@ -1074,31 +1092,87 @@
 				// Fix to allow navigating up and down in a table in WebKit browsers.
 				if (tinymce.isWebKit) {
 					function moveSelection(ed, e) {
+						var VK = tinymce.VK;
+						var key = e.keyCode;
+
+						function handle(upBool, sourceNode, event) {
+							var siblingDirection = upBool ? 'previousSibling' : 'nextSibling';
+							var currentRow = ed.dom.getParent(sourceNode, 'tr');
+							var siblingRow = currentRow[siblingDirection];
+
+							if (siblingRow) {
+								moveCursorToRow(ed, sourceNode, siblingRow, upBool);
+								tinymce.dom.Event.cancel(event);
+								return true;
+							} else {
+								var tableNode = ed.dom.getParent(currentRow, 'table');
+								var middleNode = currentRow.parentNode;
+								var parentNodeName = middleNode.nodeName.toLowerCase();
+								if (parentNodeName === 'tbody' || parentNodeName === (upBool ? 'tfoot' : 'thead')) {
+									var targetParent = getTargetParent(upBool, tableNode, middleNode, 'tbody');
+									if (targetParent !== null) {
+										return moveToRowInTarget(upBool, targetParent, sourceNode, event);
+									}
+								}
+								return escapeTable(upBool, currentRow, siblingDirection, tableNode, event);
+							}
+						}
+
+						function getTargetParent(upBool, topNode, secondNode, nodeName) {
+							var tbodies = ed.dom.select('>' + nodeName, topNode);
+							var position = tbodies.indexOf(secondNode);
+							if (upBool && position === 0 || !upBool && position === tbodies.length - 1) {
+								return getFirstHeadOrFoot(upBool, topNode);
+							} else if (position === -1) {
+								var topOrBottom = secondNode.tagName.toLowerCase() === 'thead' ? 0 : tbodies.length - 1;
+								return tbodies[topOrBottom];
+							} else {
+								return tbodies[position + (upBool ? -1 : 1)];
+							}
+						}
+
+						function getFirstHeadOrFoot(upBool, parent) {
+							var tagName = upBool ? 'thead' : 'tfoot';
+							var headOrFoot = ed.dom.select('>' + tagName, parent);
+							return headOrFoot.length !== 0 ? headOrFoot[0] : null;
+						}
+
+						function moveToRowInTarget(upBool, targetParent, sourceNode, event) {
+							var targetRow = getChildForDirection(targetParent, upBool);
+							targetRow && moveCursorToRow(ed, sourceNode, targetRow, upBool);
+							tinymce.dom.Event.cancel(event);
+							return true;
+						}
+
+						function escapeTable(upBool, currentRow, siblingDirection, table, event) {
+							var tableSibling = table[siblingDirection];
+							if (tableSibling) {
+								moveCursorToStartOfElement(tableSibling);
+								return true;
+							} else {
+								var parentCell = ed.dom.getParent(table, 'td,th');
+								if (parentCell) {
+									return handle(upBool, parentCell, event);
+								} else {
+									var backUpSibling = getChildForDirection(currentRow, !upBool);
+									moveCursorToStartOfElement(backUpSibling);
+									return tinymce.dom.Event.cancel(event);
+								}
+							}
+						}
+
+						function getChildForDirection(parent, up) {
+							var child =  parent && parent[up ? 'lastChild' : 'firstChild'];
+							// BR is not a valid table child to return in this case we return the table cell
+							return child && child.nodeName === 'BR' ? ed.dom.getParent(child, 'td,th') : child;
+						}
 
 						function moveCursorToStartOfElement(n) {
 							ed.selection.setCursorLocation(n, 0);
 						}
 
-						function getSibling(event, element) {
-							return event.keyCode == UP_ARROW ? element.previousSibling : element.nextSibling;
-						}
-
-						function getNextRow(e, row) {
-							var sibling = getSibling(e, row);
-							return sibling !== null && sibling.tagName === 'TR' ? sibling : null;
-						}
-
-						function getTable(ed, currentRow) {
-							return ed.dom.getParent(currentRow, 'table');
-						}
-
-						function getTableSibling(currentRow) {
-							var table = getTable(ed, currentRow);
-							return getSibling(e, table);
-						}
-
-						function isVerticalMovement(event) {
-							return event.keyCode == UP_ARROW || event.keyCode == DOWN_ARROW;
+						function isVerticalMovement() {
+							return key == VK.UP || key == VK.DOWN;
 						}
 
 						function isInTable(ed) {
@@ -1129,103 +1203,114 @@
 							return r;
 						}
 
-						function moveCursorToRow(ed, node, row) {
+						function moveCursorToRow(ed, node, row, upBool) {
 							var srcColumnIndex = columnIndex(ed.dom.getParent(node, 'td,th'));
-							var tgtColumnIndex = findColumn(row, srcColumnIndex)
+							var tgtColumnIndex = findColumn(row, srcColumnIndex);
 							var tgtNode = row.childNodes[tgtColumnIndex];
-							moveCursorToStartOfElement(tgtNode);
+							var rowCellTarget = getChildForDirection(tgtNode, upBool);
+							moveCursorToStartOfElement(rowCellTarget || tgtNode);
 						}
 
-						function escapeTable(currentRow, e) {
-							var tableSiblingElement = getTableSibling(currentRow);
-							if (tableSiblingElement !== null) {
-								moveCursorToStartOfElement(tableSiblingElement);
-								return tinymce.dom.Event.cancel(e);
-							} else {
-								var element = e.keyCode == UP_ARROW ? currentRow.firstChild : currentRow.lastChild;
-								// rely on default behaviour to escape table after we are in the last cell of the last row
-								moveCursorToStartOfElement(element);
-								return true;
-							}
+						function shouldFixCaret(preBrowserNode) {
+							var newNode = ed.selection.getNode();
+							var newParent = ed.dom.getParent(newNode, 'td,th');
+							var oldParent = ed.dom.getParent(preBrowserNode, 'td,th');
+							return newParent && newParent !== oldParent && checkSameParentTable(newParent, oldParent)
 						}
 
-						var UP_ARROW = 38;
-						var DOWN_ARROW = 40;
+						function checkSameParentTable(nodeOne, NodeTwo) {
+							return ed.dom.getParent(nodeOne, 'TABLE') === ed.dom.getParent(NodeTwo, 'TABLE');
+						}
 
-						if (isVerticalMovement(e) && isInTable(ed)) {
-							var node = ed.selection.getNode();
-							var currentRow = ed.dom.getParent(node, 'tr');
-							var nextRow = getNextRow(e, currentRow);
-
-							// If we're at the first or last row in the table, we should move the caret outside of the table
-							if (nextRow == null) {
-								return escapeTable(currentRow, e);
-							} else {
-								moveCursorToRow(ed, node, nextRow);
-								tinymce.dom.Event.cancel(e);
-								return true;
-							}
+						if (isVerticalMovement() && isInTable(ed)) {
+							var preBrowserNode = ed.selection.getNode();
+							setTimeout(function() {
+								if (shouldFixCaret(preBrowserNode)) {
+									handle(!e.shiftKey && key === VK.UP, preBrowserNode, e);
+								}
+							}, 0);
 						}
 					}
 
 					ed.onKeyDown.add(moveSelection);
 				}
-								
+
 				// Fixes an issue on Gecko where it's impossible to place the caret behind a table
 				// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled
-				if (!tinymce.isIE) {
-					function fixTableCaretPos() {
-						var last;
+				function fixTableCaretPos() {
+					var last;
 
-						// Skip empty text nodes form the end
-						for (last = ed.getBody().lastChild; last && last.nodeType == 3 && !last.nodeValue.length; last = last.previousSibling) ;
+					// Skip empty text nodes form the end
+					for (last = ed.getBody().lastChild; last && last.nodeType == 3 && !last.nodeValue.length; last = last.previousSibling) ;
 
-						if (last && last.nodeName == 'TABLE')
-							ed.dom.add(ed.getBody(), 'p', null, '<br mce_bogus="1" />');
-					};
+					if (last && last.nodeName == 'TABLE') {
+						if (ed.settings.forced_root_block)
+							ed.dom.add(ed.getBody(), ed.settings.forced_root_block, null, tinymce.isIE ? '&nbsp;' : '<br data-mce-bogus="1" />');
+						else
+							ed.dom.add(ed.getBody(), 'br', {'data-mce-bogus': '1'});
+					}
+				};
 
-					// Fixes an bug where it's impossible to place the caret before a table in Gecko
-					// this fix solves it by detecting when the caret is at the beginning of such a table
-					// and then manually moves the caret infront of the table
-					if (tinymce.isGecko) {
-						ed.onKeyDown.add(function(ed, e) {
-							var rng, table, dom = ed.dom;
+				// Fixes an bug where it's impossible to place the caret before a table in Gecko
+				// this fix solves it by detecting when the caret is at the beginning of such a table
+				// and then manually moves the caret infront of the table
+				if (tinymce.isGecko) {
+					ed.onKeyDown.add(function(ed, e) {
+						var rng, table, dom = ed.dom;
 
-							// On gecko it's not possible to place the caret before a table
-							if (e.keyCode == 37 || e.keyCode == 38) {
-								rng = ed.selection.getRng();
-								table = dom.getParent(rng.startContainer, 'table');
+						// On gecko it's not possible to place the caret before a table
+						if (e.keyCode == 37 || e.keyCode == 38) {
+							rng = ed.selection.getRng();
+							table = dom.getParent(rng.startContainer, 'table');
 
-								if (table && ed.getBody().firstChild == table) {
-									if (isAtStart(rng, table)) {
-										rng = dom.createRng();
+							if (table && ed.getBody().firstChild == table) {
+								if (isAtStart(rng, table)) {
+									rng = dom.createRng();
 
-										rng.setStartBefore(table);
-										rng.setEndBefore(table);
+									rng.setStartBefore(table);
+									rng.setEndBefore(table);
 
-										ed.selection.setRng(rng);
+									ed.selection.setRng(rng);
 
-										e.preventDefault();
-									}
+									e.preventDefault();
 								}
 							}
-						});
-					}
-
-					ed.onKeyUp.add(fixTableCaretPos);
-					ed.onSetContent.add(fixTableCaretPos);
-					ed.onVisualAid.add(fixTableCaretPos);
-
-					ed.onPreProcess.add(function(ed, o) {
-						var last = o.node.lastChild;
-
-						if (last && last.childNodes.length == 1 && last.firstChild.nodeName == 'BR')
-							ed.dom.remove(last);
+						}
 					});
-
-					fixTableCaretPos();
-					ed.startContent = ed.getContent({format : 'raw'});
 				}
+
+				ed.onKeyUp.add(fixTableCaretPos);
+				ed.onSetContent.add(fixTableCaretPos);
+				ed.onVisualAid.add(fixTableCaretPos);
+
+				ed.onPreProcess.add(function(ed, o) {
+					var last = o.node.lastChild;
+
+					if (last && (last.nodeName == "BR" || (last.childNodes.length == 1 && (last.firstChild.nodeName == 'BR' || last.firstChild.nodeValue == '\u00a0'))) && last.previousSibling && last.previousSibling.nodeName == "TABLE") {
+						ed.dom.remove(last);
+					}
+				});
+
+
+				/**
+				 * Fixes bug in Gecko where shift-enter in table cell does not place caret on new line
+				 */
+				if (tinymce.isGecko) {
+					ed.onKeyDown.add(function(ed, e) {
+						if (e.keyCode === tinymce.VK.ENTER && e.shiftKey) {
+							var node = ed.selection.getRng().startContainer;
+							var tableCell = dom.getParent(node, 'td,th');
+							if (tableCell) {
+								var zeroSizedNbsp = ed.getDoc().createTextNode("\uFEFF");
+								dom.insertAfter(zeroSizedNbsp, node);
+							}
+						}
+					});
+				}
+
+
+				fixTableCaretPos();
+				ed.startContent = ed.getContent({format : 'raw'});
 			});
 
 			// Register action commands

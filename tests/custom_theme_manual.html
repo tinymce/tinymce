@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Custom theme manual test</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- TinyMCE -->
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/cupertino/jquery-ui.css" type="text/css" />
+<script type="text/javascript">
+	tinyMCE.init({
+		mode: "exact",
+		elements: "elm1",
+		plugins: "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview," +
+				"media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template," +
+				"wordcount,advlist,autosave,visualblocks",
+		content_css: "css/custom_theme_content.css",
+
+		theme: function(editor, target) {
+			var dom = tinymce.DOM, editorContainer;
+
+			// Generate UI
+			editorContainer = dom.insertAfter(dom.create('div', {style: 'border: 1px solid gray'},
+				'<div>' +
+					'<button data-mce-command="bold">B</button>' +
+					'<button data-mce-command="italic">I</button>' +
+					'<button data-mce-command="mceInsertContent" data-mce-value="Hello">Insert Hello</button>' +
+				'</div>' +
+				'<div style="border-top: 1px solid gray"></div>'
+			), target);
+
+			// Set editor container size to target element size
+			dom.setStyle(editorContainer, 'width', target.offsetWidth);
+
+			// Bind events for each button
+			tinymce.each(dom.select('button', editorContainer), function(button) {
+				dom.bind(button, 'click', function(e) {
+					e.preventDefault();
+
+					// Execute editor command based on data parameters
+					editor.execCommand(dom.getAttrib(e.target, 'data-mce-command'), false, dom.getAttrib(e.target, 'data-mce-value'));
+				});
+			});
+
+			// Register state change listeners
+			editor.onInit.add(function() {
+				tinymce.each(dom.select('button', editorContainer), function(button) {
+					editor.formatter.formatChanged(dom.getAttrib(button, 'data-mce-command'), function(state) {
+						button.style.color = state ? "red" : "";
+					});
+				});
+			});
+			
+			// Return editor and iframe containers
+			return {
+				editorContainer: editorContainer,
+				iframeContainer: editorContainer.lastChild,
+
+				// Calculate iframe height: target height - toolbar height
+				iframeHeight: target.offsetHeight - editorContainer.firstChild.offsetHeight
+			};
+		}
+	});
+
+	tinyMCE.init({
+		mode: "exact",
+		elements: "elm2",
+		plugins: "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview," +
+				"media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template," +
+				"wordcount,advlist,autosave,visualblocks",
+		content_css: "css/custom_theme_content.css",
+
+		theme: function(editor, target) {
+			// Generate UI
+			var editorContainer = $(target).after(
+				'<div class="ui-widget ui-corner-all">' +
+					'<div class="ui-widget-header" style="padding: 2px">' +
+						'<input type="checkbox" id="bold" data-mce-command="bold" /><label for="bold">B</label>' +
+						'<input type="checkbox" id="italic" data-mce-command="italic" /><label for="italic">I</label>' +
+						'<button data-mce-command="mceInsertContent" data-mce-value="Hello">Insert Hello</button>' +
+					'</div>' +
+					'<div class="ui-widget-content ui-corner-bottom"></div>' +
+				'</div>'
+			).next();
+
+			// Bind events for each button
+			$("button,input", editorContainer).button().click(function(e) {
+				e.preventDefault();
+
+				// Execute editor command based on data parameters
+				editor.execCommand($(this).attr('data-mce-command'),false, $(this).attr('data-mce-value'));
+			});
+
+			// Register state change listeners
+			editor.onInit.add(function() {
+				$("input", editorContainer).each(function(i, button) {
+					editor.formatter.formatChanged($(button).attr('data-mce-command'), function(state) {
+						$(button).attr('checked', state).button('refresh');
+					});
+				});
+			});
+
+			// Set editor container with to target width
+			editorContainer.css('width', $(target).width());
+
+			// Return editor and iframe containers
+			return {
+				editorContainer: editorContainer[0],
+				iframeContainer: editorContainer.children().eq(-1),
+
+				// Calculate iframe height: target height - toolbar height
+				iframeHeight: $(target).height() - editorContainer.first().outerHeight()
+			};
+		}
+	});
+</script>
+<!-- /TinyMCE -->
+
+</head>
+<body>
+
+<form method="post" action="http://tinymce.moxiecode.com/dump.php?example=true">
+	<div>
+		<h4>Custom UI using TinyMCE API</h4>
+
+		<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
+		<div>
+			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+				&lt;p&gt;
+					This is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.
+				&lt;/p&gt;
+				&lt;p&gt;
+				Nam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.
+				&lt;/p&gt;
+			</textarea>
+		</div>
+
+		<!-- Some integration calls -->
+		<a href="javascript:;" onclick="tinyMCE.get('elm1').show();return false;">[Show]</a>
+		<a href="javascript:;" onclick="tinyMCE.get('elm1').hide();return false;">[Hide]</a>
+		<a href="javascript:;" onclick="tinyMCE.get('elm1').execCommand('Bold');return false;">[Bold]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').getContent());return false;">[Get contents]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getContent());return false;">[Get selected HTML]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getContent({format : 'text'}));return false;">[Get selected text]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getNode().nodeName);return false;">[Get selected element]</a>
+		<a href="javascript:;" onclick="tinyMCE.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
+		<a href="javascript:;" onclick="tinyMCE.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
+	</div>
+
+	<div>
+		<h4>Custom UI using jQuery/jQueryUI APIs</h4>
+
+		<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
+		<div>
+			<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 80%">
+				&lt;p&gt;
+					This is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.
+				&lt;/p&gt;
+				&lt;p&gt;
+				Nam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.
+				&lt;/p&gt;
+			</textarea>
+		</div>
+
+		<!-- Some integration calls -->
+		<a href="javascript:;" onclick="tinyMCE.get('elm2').show();return false;">[Show]</a>
+		<a href="javascript:;" onclick="tinyMCE.get('elm2').hide();return false;">[Hide]</a>
+		<a href="javascript:;" onclick="tinyMCE.get('elm2').execCommand('Bold');return false;">[Bold]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm2').getContent());return false;">[Get contents]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm2').selection.getContent());return false;">[Get selected HTML]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm2').selection.getContent({format : 'text'}));return false;">[Get selected text]</a>
+		<a href="javascript:;" onclick="alert(tinyMCE.get('elm2').selection.getNode().nodeName);return false;">[Get selected element]</a>
+		<a href="javascript:;" onclick="tinyMCE.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
+		<a href="javascript:;" onclick="tinyMCE.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
+	</div>
+</form>
+</body>
+</html>

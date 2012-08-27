@@ -16,6 +16,7 @@ var editor;
 
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
+
 module("_getCount", { 
 	autostart: false
 });
@@ -25,7 +26,7 @@ test("Blank document has 0 words", function() {
 
 	editor.setContent('');
 	var result = editor.plugins.wordcount._getCount(editor);
-	equals(result, 0);
+	equal(result, 0);
 });
 
 test("Simple word count", function() {
@@ -33,7 +34,7 @@ test("Simple word count", function() {
 
 	editor.setContent('<p>My sentence is this.</p>');
 	var result = editor.plugins.wordcount._getCount(editor);
-	equals(result, 4);
+	equal(result, 4);
 });
 
 test("Does not count dashes", function() {
@@ -41,7 +42,7 @@ test("Does not count dashes", function() {
 
 	editor.setContent('<p>Something -- ok</p>');
 	var result = editor.plugins.wordcount._getCount(editor);
-	equals(result, 2);
+	equal(result, 2);
 });
 
 test("Does not count asterisks, non-word characters", function() {
@@ -49,7 +50,7 @@ test("Does not count asterisks, non-word characters", function() {
 
 	editor.setContent('<p>* something\n· something else</p>');
 	var result = editor.plugins.wordcount._getCount(editor);
-	equals(result, 3);
+	equal(result, 3);
 });
 
 test("Does not count htmlentities", function() {
@@ -57,7 +58,7 @@ test("Does not count htmlentities", function() {
 
 	editor.setContent('<p>It&rsquo;s my life &ndash; don\'t you forget.</p>');
 	var result = editor.plugins.wordcount._getCount(editor);
-	equals(result, 6);
+	equal(result, 6);
 });
 
 test("Counts hyphenated words as one word", function() {
@@ -65,7 +66,7 @@ test("Counts hyphenated words as one word", function() {
 
 	editor.setContent('<p>Hello some-word here.</p>');
 	var result = editor.plugins.wordcount._getCount(editor);
-	equals(result, 3);
+	equal(result, 3);
 });
 
 /*
@@ -78,7 +79,7 @@ anything crucial, and should be ripped out, so this module can be tested.
 test("should set the word count in the target html element", function() {
 	expect(1);
 	editor.setContent('<p>Hey, it\'s me!</p>');
-	equals(parseInt(document.getElementById('elm1-word-count').innerHTML), 3);
+	equal(parseInt(document.getElementById('elm1-word-count').innerHTML), 3);
 });
 */
 

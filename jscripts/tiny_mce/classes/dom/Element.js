@@ -1,11 +1,11 @@
 /**
  * Element.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -46,20 +46,20 @@
 				('getPos,getRect,getParent,add,setStyle,getStyle,setStyles,' + 
 				'setAttrib,setAttribs,getAttrib,addClass,removeClass,' + 
 				'hasClass,getOuterHTML,setOuterHTML,remove,show,hide,' + 
-				'isHidden,setHTML,get').split(/,/)
-			, function(k) {
-				t[k] = function() {
-					var a = [id], i;
+				'isHidden,setHTML,get').split(/,/), function(k) {
+					t[k] = function() {
+						var a = [id], i;
 
-					for (i = 0; i < arguments.length; i++)
-						a.push(arguments[i]);
+						for (i = 0; i < arguments.length; i++)
+							a.push(arguments[i]);
 
-					a = dom[k].apply(dom, a);
-					t.update(k);
+						a = dom[k].apply(dom, a);
+						t.update(k);
 
-					return a;
-				};
-		});
+						return a;
+					};
+			}
+		);
 
 		tinymce.extend(t, {
 			/**

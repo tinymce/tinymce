@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Resize logic manual tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript">
+tinyMCE.init({
+	selector : "textarea",
+	init_instance_callback: function(ed) {
+		ed.onNodeChange.add(function() {
+			tinymce.DOM.setHTML('dump', tinymce.DOM.encode(ed.getContent()));
+		});
+	},
+	content_style: 'div {margin: 10px; border: 5px solid red; padding: 3px}'
+});
+</script>
+</head>
+<body>
+<textarea style="width: 100%; height: 300px;">
+	<h3>Images</h3>
+	<h4>Auto size</h4>
+	<img src="../examples/media/logo.jpg" />
+	<h4>Style size</h4>
+	<img src="../examples/media/logo.jpg" style="width: 100px; height: 100px" />
+	<h4>Attr size</h4>
+	<img src="../examples/media/logo.jpg" width="100" height="100" />
+	<h4>Mixed attr/style size</h4>
+	<img src="../examples/media/logo.jpg" width="100" style="height:100px" />
+	<h4>Margin and border</h4>
+	<img src="../examples/media/logo.jpg" style="margin: 10px; border: 5px solid red" />
+	<h4>Margin and border in div</h4>
+	<div><img src="../examples/media/logo.jpg" style="margin: 10px; border: 5px solid red" /></div>
+
+	<h3>Tables</h3>
+	<h4>Auto size</h4>
+	<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
+	<h4>Style size</h4>
+	<table style="width: 100px; height: 100px"><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
+	<h4>Attr size</h4>
+	<table width="100" height="100"><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
+	<h4>Mixed attr/style size</h4>
+	<table width="100" style="height:100px"><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
+	<h4>Margin and border</h4>
+	<table style="margin: 10px; border: 5px solid red"><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>
+	<h4>Table with image inside</h4>
+	<table><tr><td>1</td><td>2</td></tr><tr><td><img src="../examples/media/logo.jpg" style="margin: 10px; border: 5px solid red" /></td><td>4</td></tr></table>
+</textarea>
+<pre id="dump" style="height: 300px; overflow: auto">
+</pre>
+</body>
+</html>

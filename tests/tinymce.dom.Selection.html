@@ -27,7 +27,7 @@ test('getContent', function() {
 	rng.setStart(editor.getBody(), 0);
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
-	equals(editor.selection.getContent(), '<p>text</p>', 'Get selected contents');
+	equal(editor.selection.getContent(), '<p>text</p>', 'Get selected contents');
 
 	// Get selected contents (collapsed)
 	editor.setContent('<p>text</p>');
@@ -35,7 +35,7 @@ test('getContent', function() {
 	rng.setStart(editor.getBody(), 0);
 	rng.setEnd(editor.getBody(), 0);
 	editor.selection.setRng(rng);
-	equals(editor.selection.getContent(), '', 'Get selected contents (collapsed)');
+	equal(editor.selection.getContent(), '', 'Get selected contents (collapsed)');
 
 	// Get selected contents, onGetContent event
 	eventObj = {};
@@ -51,7 +51,7 @@ test('getContent', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.selection.getContent();
-	equals(eventObj.content, '<p>text</p>', 'Get selected contents, onGetContent event');
+	equal(eventObj.content, '<p>text</p>', 'Get selected contents, onGetContent event');
 	editor.selection.onGetContent.remove(handler);
 });
 
@@ -65,7 +65,7 @@ test('setContent', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.selection.setContent('<div>test</div>');
-	equals(editor.getContent(), '<div>test</div>', 'Set contents at selection');
+	equal(editor.getContent(), '<div>test</div>', 'Set contents at selection');
 
 	// Set contents at selection (collapsed)
 	editor.setContent('<p>text</p>');
@@ -74,7 +74,7 @@ test('setContent', function() {
 	rng.setEnd(editor.getBody(), 0);
 	editor.selection.setRng(rng);
 	editor.selection.setContent('<div>test</div>');
-	equals(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
+	equal(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
 
 	// Insert in middle of paragraph
 	editor.setContent('<p>beforeafter</p>');
@@ -83,21 +83,21 @@ test('setContent', function() {
 	rng.setEnd(editor.getBody().firstChild.firstChild, 'before'.length);
 	editor.selection.setRng(rng);
 	editor.selection.setContent('<br />');
-	equals(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
+	equal(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
 
 	// Check the caret is left in the correct position.
 	rng = editor.selection.getRng(true);
 	if (document.createRange) {
-		equals(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
-		equals(rng.startOffset, 2, 'Selection start offset');
-		equals(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
-		equals(rng.endOffset, 2, 'Selection end offset');
+		equal(rng.startContainer, editor.getBody().firstChild, 'Selection start container');
+		equal(rng.startOffset, 2, 'Selection start offset');
+		equal(rng.endContainer, editor.getBody().firstChild, 'Selection end container');
+		equal(rng.endOffset, 2, 'Selection end offset');
 	} else {
 		// TridentSelection resolves indexed text nodes
-		equals(rng.startContainer, editor.getBody().firstChild.lastChild, 'Selection start container');
-		equals(rng.startOffset, 0, 'Selection start offset');
-		equals(rng.endContainer, editor.getBody().firstChild.lastChild, 'Selection end container');
-		equals(rng.endOffset, 0, 'Selection end offset');
+		equal(rng.startContainer, editor.getBody().firstChild.lastChild, 'Selection start container');
+		equal(rng.startOffset, 0, 'Selection start offset');
+		equal(rng.endContainer, editor.getBody().firstChild.lastChild, 'Selection end container');
+		equal(rng.endOffset, 0, 'Selection end offset');
 	}
 
 	editor.setContent('<p>text</p>');
@@ -106,19 +106,19 @@ test('setContent', function() {
 	rng.setEnd(editor.getBody(), 0);
 	editor.selection.setRng(rng);
 	editor.selection.setContent('');
-	equals(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
+	equal(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
 	rng = editor.selection.getRng(true);
 	if (!document.createRange) {
 		// The old IE selection can only be positioned in text nodes
-		equals(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
-		equals(rng.startOffset, 0, 'Selection start offset');
-		equals(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
-		equals(rng.endOffset, 0, 'Selection end offset');
+		equal(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
+		equal(rng.startOffset, 0, 'Selection start offset');
+		equal(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
+		equal(rng.endOffset, 0, 'Selection end offset');
 	} else {
-		equals(rng.startContainer, editor.getBody(), 'Selection start container');
-		equals(rng.startOffset, 0, 'Selection start offset');
-		equals(rng.endContainer, editor.getBody(), 'Selection end container');
-		equals(rng.endOffset, 0, 'Selection end offset');
+		equal(rng.startContainer, editor.getBody(), 'Selection start container');
+		equal(rng.startOffset, 0, 'Selection start offset');
+		equal(rng.endContainer, editor.getBody(), 'Selection end container');
+		equal(rng.endOffset, 0, 'Selection end offset');
 	}
 	
 	// Set selected contents, onSetContent event
@@ -135,7 +135,7 @@ test('setContent', function() {
 	rng.setEnd(editor.getBody(), 1);
 	editor.selection.setRng(rng);
 	editor.selection.setContent('<div>text</div>');
-	equals(eventObj.content, '<div>text</div>', 'Set selected contents, onSetContent event');
+	equal(eventObj.content, '<div>text</div>', 'Set selected contents, onSetContent event');
 	editor.selection.onSetContent.remove(handler);
 });
 
@@ -148,8 +148,8 @@ test('getStart/getEnd', function() {
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
 	rng.setEnd(editor.getBody().lastChild.firstChild, 0);
 	editor.selection.setRng(rng);
-	equals(editor.selection.getStart().id, 'a', 'Selected contents (getStart)');
-	equals(editor.selection.getEnd().id, 'b', 'Selected contents (getEnd)');
+	equal(editor.selection.getStart().id, 'a', 'Selected contents (getStart)');
+	equal(editor.selection.getEnd().id, 'b', 'Selected contents (getEnd)');
 
 	// Selected contents (collapsed)
 	editor.setContent('<p id="a">text</p>\n<p id="b">text</p>');
@@ -157,8 +157,8 @@ test('getStart/getEnd', function() {
 	rng.setStart(editor.getBody().firstChild.firstChild, 0);
 	rng.setEnd(editor.getBody().firstChild.firstChild, 0);
 	editor.selection.setRng(rng);
-	equals(editor.selection.getStart().id, 'a', 'Selected contents (getStart, collapsed)');
-	equals(editor.selection.getEnd().id, 'a', 'Selected contents (getEnd, collapsed)');
+	equal(editor.selection.getStart().id, 'a', 'Selected contents (getStart, collapsed)');
+	equal(editor.selection.getEnd().id, 'a', 'Selected contents (getEnd, collapsed)');
 });
 
 test('getBookmark/setBookmark (persistent)', function() {
@@ -171,9 +171,9 @@ test('getBookmark/setBookmark (persistent)', function() {
 	rng.setEnd(editor.getBody().firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark();
-	equals(editor.getContent(), 'text', 'Editor contents (text)');
+	equal(editor.getContent(), 'text', 'Editor contents (text)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+	equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
 	// Get persistent bookmark multiple elements text selection
 	editor.setContent('<p>text</p>\n<p>text</p>');
@@ -182,9 +182,9 @@ test('getBookmark/setBookmark (persistent)', function() {
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark();
-	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
+	equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
+	equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 });
 
 test('getBookmark/setBookmark (simple)', function() {
@@ -197,9 +197,9 @@ test('getBookmark/setBookmark (simple)', function() {
 	rng.setEnd(editor.getBody().firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(1);
-	equals(editor.getContent(), 'text', 'Editor contents (text)');
+	equal(editor.getContent(), 'text', 'Editor contents (text)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+	equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 
 	// Get persistent bookmark multiple elements text selection
 	editor.setContent('<p>text</p>\n<p>text</p>');
@@ -208,9 +208,9 @@ test('getBookmark/setBookmark (simple)', function() {
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(1);
-	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
+	equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
+	equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 });
 
 test('getBookmark/setBookmark (nonintrusive) - simple text selection', function() {
@@ -224,9 +224,9 @@ test('getBookmark/setBookmark (nonintrusive) - simple text selection', function(
 	rng.setEnd(editor.getBody().firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
-	equals(editor.getContent(), 'text', 'Editor contents (text)');
+	equal(editor.getContent(), 'text', 'Editor contents (text)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), 'ex', 'Selected contents (text)');
+	equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function() {
@@ -242,7 +242,7 @@ test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
+	equal(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function() {
@@ -257,9 +257,9 @@ test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multip
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
-	equals(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
+	equal(editor.getContent(), '<p>text</p>\n<p>text</p>', 'Editor contents (elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
+	equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
 });
 
 test('getBookmark/setBookmark (nonintrusive)', function() {
@@ -278,9 +278,9 @@ test('getBookmark/setBookmark (nonintrusive)', function() {
 	rng.setEnd(editor.getBody().lastChild.firstChild, 3);
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2);
-	equals(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
+	equal(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+	equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 });
 
 test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function() {
@@ -300,9 +300,9 @@ test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', f
 	editor.selection.setRng(rng);
 	bookmark = editor.selection.getBookmark(2, true);
 	editor.setContent(editor.getContent());
-	equals(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
+	equal(editor.getContent(), '<p>textaaatext</p>\n<p>text</p>', 'Editor contents (fragmented, elements)');
 	editor.selection.moveToBookmark(bookmark);
-	equals(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
+	equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function() {
@@ -319,10 +319,10 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', funct
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.getBody().firstChild);
-	equals(rng.startOffset, 0);
-	equals(rng.endContainer, editor.getBody().firstChild);
-	equals(rng.endOffset, 0);
+	equal(rng.startContainer, editor.getBody().firstChild);
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer, editor.getBody().firstChild);
+	equal(rng.endOffset, 0);
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function() {
@@ -339,10 +339,10 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image',
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.getBody().firstChild);
-	equals(rng.startOffset, 0);
-	equals(rng.endContainer, editor.getBody().firstChild);
-	equals(rng.endOffset, 1);
+	equal(rng.startContainer, editor.getBody().firstChild);
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer, editor.getBody().firstChild);
+	equal(rng.endOffset, 1);
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function() {
@@ -359,10 +359,10 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', functi
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.getBody().firstChild);
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer, editor.getBody().firstChild);
-	equals(rng.endOffset, 1);
+	equal(rng.startContainer, editor.getBody().firstChild);
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer, editor.getBody().firstChild);
+	equal(rng.endOffset, 1);
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function() {
@@ -379,10 +379,10 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', fun
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.getBody().firstChild);
-	equals(rng.startOffset, 0);
-	equals(rng.endContainer, editor.getBody().firstChild);
-	equals(rng.endOffset, 2);
+	equal(rng.startContainer, editor.getBody().firstChild);
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer, editor.getBody().firstChild);
+	equal(rng.endOffset, 2);
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function() {
@@ -400,10 +400,10 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', func
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.getBody().lastChild);
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer, editor.getBody().lastChild);
-	equals(rng.endOffset, 2);
+	equal(rng.startContainer, editor.getBody().lastChild);
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer, editor.getBody().lastChild);
+	equal(rng.endOffset, 2);
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function() {
@@ -420,10 +420,10 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', fun
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.getBody().childNodes[1].firstChild);
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer, editor.getBody().childNodes[1].firstChild);
-	equals(rng.endOffset, 2);
+	equal(rng.startContainer, editor.getBody().childNodes[1].firstChild);
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer, editor.getBody().childNodes[1].firstChild);
+	equal(rng.endOffset, 2);
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function() {
@@ -440,10 +440,10 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', f
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.getBody().firstChild);
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer, editor.getBody().firstChild);
-	equals(rng.endOffset, 2);
+	equal(rng.startContainer, editor.getBody().firstChild);
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer, editor.getBody().firstChild);
+	equal(rng.endOffset, 2);
 });
 
 test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function() {
@@ -458,40 +458,38 @@ test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html'
 	editor.getBody().innerHTML = editor.getBody().innerHTML;
 	editor.selection.moveToBookmark(bookmark);
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer, editor.dom.select('td')[0].firstChild);
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer, editor.dom.select('td')[0].firstChild);
-	equals(rng.endOffset, 2);
+	equal(rng.startContainer, editor.dom.select('td')[0].firstChild);
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer, editor.dom.select('td')[0].firstChild);
+	equal(rng.endOffset, 2);
 });
 
-test('select', function() {
-	var rng;
-
-	expect(8);
-
-	// Select simple element
+test('select first p', 2, function() {
 	editor.setContent('<p>text1</p><p>text2</p>');
 	editor.selection.select(editor.dom.select('p')[0]);
-	equals(editor.selection.getContent(), '<p>text1</p>', 'Select simple element, content');
-	equals(editor.selection.getStart().nodeName, 'P', 'Select simple element, nodeName');
+	equal(editor.selection.getContent(), '<p>text1</p>', 'Select simple element, content');
+	equal(editor.selection.getStart().nodeName, 'P', 'Select simple element, nodeName');
+});
 
-	// Select complex element
+test('select table', 2, function() {
 	editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
 	editor.selection.select(editor.dom.select('table')[0]);
-	equals(editor.selection.getContent(), '<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>', 'Select complex element, content');
-	equals(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
+	equal(editor.selection.getContent(), '<table>\n<tbody>\n<tr>\n<td>text1</td>\n</tr>\n</tbody>\n</table>', 'Select complex element, content');
+	equal(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
+});
 
-	// Select contents 1
+test('select table text 1', 2, function() {
 	editor.setContent('<table><tbody><tr><td id="a">text1</td><td id="b">text2</td></tr></tbody></table>');
 	editor.selection.select(editor.dom.select('table')[0], true);
-	equals(editor.selection.getStart().id, 'a', 'Expand to text content 1 (start)');
-	equals(editor.selection.getEnd().id, 'b', 'Expand to text content 1 (end)');
+	equal(editor.selection.getStart().id, 'a', 'Expand to text content 1 (start)');
+	equal(editor.selection.getEnd().id, 'b', 'Expand to text content 1 (end)');
+});
 
-	// Select contents 2
+test('select table text 2', 2, function() {
 	editor.setContent('<table><tbody><tr><td id="a"><br /></td><td id="b"><br /></td></tr></tbody></table>');
 	editor.selection.select(editor.dom.select('table')[0], true);
-	equals(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
-	equals(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
+	equal(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
+	equal(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
 });
 
 test('getNode', function() {
@@ -502,25 +500,25 @@ test('getNode', function() {
 	rng.setStart(editor.dom.get('s1').firstChild, 0);
 	rng.setEnd(editor.dom.get('s1').nextSibling, 0);
 	editor.selection.setRng(rng);
-	same(editor.selection.getNode(), editor.dom.get('s1'), 'Detect selection ends immediately after node at start of paragraph.');
+	deepEqual(editor.selection.getNode(), editor.dom.get('s1'), 'Detect selection ends immediately after node at start of paragraph.');
 
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
 	rng.setEnd(editor.dom.get('s2').nextSibling, 0);
 	editor.selection.setRng(rng);
-	same(editor.selection.getNode(), editor.dom.get('s2'), 'Detect selection immediately surrounds node in middle of paragraph.');
+	deepEqual(editor.selection.getNode(), editor.dom.get('s2'), 'Detect selection immediately surrounds node in middle of paragraph.');
 
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.get('s3').previousSibling, editor.dom.get('s3').previousSibling.length);
 	rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
 	editor.selection.setRng(rng);
-	same(editor.selection.getNode(), editor.dom.get('s3'), 'Detect selection starts immediately before node at end of paragraph.');
+	deepEqual(editor.selection.getNode(), editor.dom.get('s3'), 'Detect selection starts immediately before node at end of paragraph.');
 
 	rng = editor.dom.createRng();
 	rng.setStart(editor.dom.get('s2').previousSibling, editor.dom.get('s2').previousSibling.length);
 	rng.setEnd(editor.dom.get('s3').lastChild, editor.dom.get('s3').lastChild.length);
 	editor.selection.setRng(rng);
-	same(editor.selection.getNode(), editor.dom.get('p1'), 'Detect selection wrapping multiple nodes does not collapse.');
+	deepEqual(editor.selection.getNode(), editor.dom.get('p1'), 'Detect selection wrapping multiple nodes does not collapse.');
 });
 
 test('normalize to text node from document', function() {
@@ -539,32 +537,10 @@ test('normalize to text node from document', function() {
 	editor.selection.normalize();
 
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer.nodeType, 3, 'startContainer node type');
-	equals(rng.startOffset, 0, 'startContainer offset');
-	equals(rng.endContainer.nodeType, 3, 'endContainer node type');
-	equals(rng.endOffset, 0, 'endOffset offset');
-});
-
-test('normalize to text node from body', function() {
-	var rng;
-
-	if (tinymce.isIE) {
-		ok(true, "Skipped on IE since IE will steal focus.");
-		return;
-	}
-
-	editor.setContent('<p>text</p>');
-	rng = editor.dom.createRng();
-	rng.setStart(editor.getBody(), 0);
-	rng.setEnd(editor.getBody(), 0);
-	editor.selection.setRng(rng);
-	editor.selection.normalize();
-
-	rng = editor.selection.getRng(true);
-	equals(rng.startContainer.nodeType, 3, 'startContainer node type');
-	equals(rng.startOffset, 0, 'startContainer offset');
-	equals(rng.endContainer.nodeType, 3, 'endContainer node type');
-	equals(rng.endOffset, 0, 'endOffset offset');
+	equal(rng.startContainer.nodeType, 3, 'startContainer node type');
+	equal(rng.startOffset, 0, 'startContainer offset');
+	equal(rng.endContainer.nodeType, 3, 'endContainer node type');
+	equal(rng.endOffset, 0, 'endOffset offset');
 });
 
 test('normalize to br from document', function() {
@@ -583,59 +559,235 @@ test('normalize to br from document', function() {
 	editor.selection.normalize();
 
 	rng = editor.selection.getRng(true);
-	equals(rng.startContainer.nodeName, 'P', 'startContainer node name');
-	equals(rng.startContainer.nodeType, 1, 'startContainer node type');
-	equals(rng.startOffset, 0, 'startContainer offset');
-	equals(rng.endContainer.nodeType, 1, 'endContainer node type');
-	equals(rng.endOffset, 0, 'endOffset offset');
+	equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+	equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+	equal(rng.startOffset, 0, 'startContainer offset');
+	equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+	equal(rng.endOffset, 0, 'endOffset offset');
 });
 
-test('normalize to br from body', function() {
-	var rng;
+// Only run on non IE browsers since it's not an issue on IE
+if (!tinymce.isIE) {
+	test('normalize to text node from body', function() {
+		var rng;
 
-	if (tinymce.isIE) {
-		ok(true, "Skipped on IE since IE will steal focus.");
-		return;
-	}
+		editor.setContent('<p>text</p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody(), 0);
+		rng.setEnd(editor.getBody(), 0);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
 
-	editor.setContent('<p><br /></p>');
-	rng = editor.dom.createRng();
-	rng.setStart(editor.getBody(), 0);
-	rng.setEnd(editor.getBody(), 0);
-	editor.selection.setRng(rng);
-	editor.selection.normalize();
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeType, 3, 'startContainer node type');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeType, 3, 'endContainer node type');
+		equal(rng.endOffset, 0, 'endOffset offset');
+	});
 
-	rng = editor.selection.getRng(true);
-	equals(rng.startContainer.nodeName, 'P', 'startContainer node name');
-	equals(rng.startContainer.nodeType, 1, 'startContainer node type');
-	equals(rng.startOffset, 0, 'startContainer offset');
-	equals(rng.endContainer.nodeType, 1, 'endContainer node type');
-	equals(rng.endOffset, 0, 'endOffset offset');
-});
+	test('normalize to br from body', function() {
+		var rng;
 
-test('normalize ignore img', function() {
-	var rng;
+		editor.setContent('<p><br /></p>');
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody(), 0);
+		rng.setEnd(editor.getBody(), 0);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
 
-	if (tinymce.isIE) {
-		ok(true, "Skipped on IE since IE will steal focus.");
-		return;
-	}
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+		equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+		equal(rng.endOffset, 0, 'endOffset offset');
+	});
 
-	editor.getBody().innerHTML = '<img src="about:blank " />';
-	rng = editor.dom.createRng();
-	rng.setStart(editor.getBody(), 0);
-	rng.setEnd(editor.getBody(), 1);
-	editor.selection.setRng(rng);
-	editor.selection.normalize();
+	test('normalize ignore img', function() {
+		var rng;
 
-	rng = editor.selection.getRng(true);
-	equals(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
-	equals(rng.startContainer.nodeType, 1, 'startContainer node type');
-	equals(rng.startOffset, 0, 'startContainer offset');
-	equals(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
-	equals(rng.endContainer.nodeType, 1, 'endContainer node type');
-	equals(rng.endOffset, 1, 'endOffset offset');
-});
+		editor.getBody().innerHTML = '<img src="about:blank " />';
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody(), 0);
+		rng.setEnd(editor.getBody(), 1);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'BODY', 'startContainer node name');
+		equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeName, 'BODY', 'endContainer node name');
+		equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+		equal(rng.endOffset, 1, 'endOffset offset');
+	});
+
+	test('normalize to before/after img', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody(), 0);
+		rng.setEnd(editor.getBody(), 1);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P', 'startContainer node name');
+		equal(rng.startContainer.nodeType, 1, 'startContainer node type');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeName, 'P', 'endContainer node name');
+		equal(rng.endContainer.nodeType, 1, 'endContainer node type');
+		equal(rng.endOffset, 1, 'endOffset offset');
+	});
+
+	test('normalize to text node inside P', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p>abc</p>';
+		rng = editor.dom.createRng();
+		rng.setStart(editor.getBody(), 0);
+		rng.setEnd(editor.getBody(), 1);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeName, '#text', 'endContainer node name');
+		equal(rng.endOffset, 3, 'endOffset offset');
+	});
+
+	test('normalize lean left if at the start of text node', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
+		setSelection('i', 0);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+		equal(rng.startContainer.parentNode.nodeName, 'B');
+		equal(rng.startOffset, 1, 'startContainer offset');
+		equal(rng.endContainer.nodeName, '#text');
+		equal(rng.endContainer.parentNode.nodeName, 'B');
+		equal(rng.endOffset, 1, 'endOffset offset');
+	});
+
+	test('normalize lean start to the right if at end of text node', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
+		setSelection('b', 1, 'i', 1);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, '#text', 'startContainer node name');
+		equal(rng.startContainer.parentNode.nodeName, 'I');
+		equal(rng.startOffset, 0, 'startContainer offset');
+		equal(rng.endContainer.nodeName, '#text');
+		equal(rng.endContainer.parentNode.nodeName, 'I');
+		equal(rng.endOffset, 1, 'endOffset offset');
+	});
+
+	test('normalize lean left but break before br', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p>a<br><b>b</b></p>';
+		setSelection('b', 0);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeValue, 'b');
+		equal(rng.startOffset, 0);
+	});
+
+	test('normalize lean left but break before img', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p>a<img><b>b</b></p>';
+		setSelection('b', 0);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeValue, 'b');
+		equal(rng.startOffset, 0);
+	});
+
+	test('normalize lean left but don\'t walk out the parent block', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p>a</p><p><b>b</b></p>';
+		setSelection('b', 0);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeValue, 'b');
+		equal(rng.startOffset, 0);
+	});
+
+	test('normalize lean left into empty inline elements when caret is before br', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild.lastChild);
+		rng.setEndBefore(editor.getBody().firstChild.lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'B');
+		equal(rng.startOffset, 0);
+	});
+
+	test('normalize don\'t lean left into empty inline elements if there is a br element after caret', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild.lastChild);
+		rng.setEndBefore(editor.getBody().firstChild.lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.startOffset, 2);
+	});
+
+	test('normalize don\'t lean left into empty inline elements if there is a br element before caret', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild.lastChild);
+		rng.setEndBefore(editor.getBody().firstChild.lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'P');
+		equal(rng.startOffset, 1);
+	});
+
+	test('normalize don\'t move start/end if it\'s before/after table', function() {
+		var rng;
+
+		editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
+		rng = editor.dom.createRng();
+		rng.setStartBefore(editor.getBody().firstChild);
+		rng.setEndAfter(editor.getBody().lastChild);
+		editor.selection.setRng(rng);
+		editor.selection.normalize();
+
+		rng = editor.selection.getRng(true);
+		equal(rng.startContainer.nodeName, 'BODY');
+		equal(rng.startOffset, 0);
+		equal(rng.endContainer.nodeName, 'BODY');
+		equal(rng.endOffset, 1);
+	});
+}
 
 test('custom elements', function() {
 	var rng;
@@ -647,7 +799,32 @@ test('custom elements', function() {
 	rng.setEnd(editor.getBody(), 2);
 	editor.selection.setRng(rng);
 
-	equals(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
+	equal(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
+});
+
+test('selectorChanged', function() {
+	var newState, newArgs;
+
+	editor.selection.selectorChanged('a[@href]', function(state, args) {
+		newState = state;
+		newArgs = args;
+	});
+
+	editor.getBody().innerHTML = '<p><a href="#">text</a></p>';
+	setSelection('a', 0, 'a', 4);
+	editor.nodeChanged();
+
+	ok(newState);
+	equal(newArgs.selector, 'a[@href]');
+	equal(newArgs.node, editor.getBody().firstChild.firstChild);
+	equal(newArgs.parents.length, 2);
+
+	editor.getBody().innerHTML = '<p>text</p>';
+	setSelection('p', 0, 'p', 4);
+	editor.nodeChanged();
+	equal(newArgs.selector, 'a[@href]');
+	equal(newArgs.node, editor.getBody().firstChild);
+	equal(newArgs.parents.length, 1);
 });
 
 tinyMCE.init({

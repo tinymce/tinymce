@@ -12,6 +12,8 @@
 <script>
 module("tinymce.util.JSONRequest");
 
+QUnit.config.reorder = false;
+
 asyncTest("Successful request - send method", function() {
 	expect(1);
 
@@ -24,7 +26,7 @@ asyncTest("Successful request - send method", function() {
 			type : 'GET',
 			url : 'json_rpc_ok.js',
 			success: function(data) {
-				equals(data, 'Hello JSON-RPC');
+				equal(data, 'Hello JSON-RPC');
 				start();
 			}
 		});
@@ -43,7 +45,7 @@ asyncTest("Successful request - sendRPC static method", function() {
 			type : 'GET',
 			url : 'json_rpc_ok.js',
 			success: function(data) {
-				equals(data, 'Hello JSON-RPC');
+				equal(data, 'Hello JSON-RPC');
 				start();
 			}
 		});
@@ -62,7 +64,7 @@ asyncTest("Error request - send method", function() {
 			type : 'GET',
 			url : 'json_rpc_error.js',
 			error: function(error) {
-				equals(error.code, 42);
+				equal(error.code, 42);
 				start();
 			}
 		});
@@ -81,7 +83,7 @@ asyncTest("Error request - sendRPC static method", function() {
 			type : 'GET',
 			url : 'json_rpc_error.js',
 			error: function(error) {
-				equals(error.code, 42);
+				equal(error.code, 42);
 				start();
 			}
 		});

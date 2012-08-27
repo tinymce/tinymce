@@ -118,7 +118,7 @@
 							<td><label for="text_blink">{#style_dlg.text_blink}</label></td>
 						</tr>
 						<tr>
-							<td><input id="text_none" name="text_none" class="checkbox" type="checkbox" /></td>
+							<td><input id="text_none" name="text_none" class="checkbox" type="checkbox" onclick="updateTextDecorations();"/></td>
 							<td><label for="text_none">{#style_dlg.text_none}</label></td>
 						</tr>
 					</table>
@@ -823,6 +823,11 @@
 </div>
 <br style="clear: both" />
 </div>
+</div>
+
+<div class="panel_toggle_insert_span">
+	<input type="checkbox" class="checkbox" id="toggle_insert_span" name="toggle_insert_span" onClick="toggleApplyAction();" />
+	<label for="toggle_insert_span">{#style_dlg.toggle_insert_span}</label>
 </div>
 
 <div class="mceActionPanel">

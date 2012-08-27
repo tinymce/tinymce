@@ -3,7 +3,9 @@ obj
 tmp
 docs
 .settings
+.idea
 .project
+*.sublime-*
 .externalToolBuilders
 *~
 *.diff

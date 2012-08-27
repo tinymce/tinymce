@@ -11,7 +11,7 @@
 (function() {
 	/**
 	 * Auto Resize
-	 * 
+	 *
 	 * This plugin automatically resizes the content area to fit its content height.
 	 * It will retain a minimum height, which is the height of the content area when
 	 * it's initialized.
@@ -35,10 +35,10 @@
 			 * This method gets executed each time the editor needs to resize.
 			 */
 			function resize() {
-				var d = ed.getDoc(), b = d.body, de = d.documentElement, DOM = tinymce.DOM, resizeHeight = t.autoresize_min_height, myHeight;
+				var deltaSize, d = ed.getDoc(), body = d.body, de = d.documentElement, DOM = tinymce.DOM, resizeHeight = t.autoresize_min_height, myHeight;
 
 				// Get height differently depending on the browser used
-				myHeight = tinymce.isIE ? b.scrollHeight : d.body.offsetHeight;
+				myHeight = tinymce.isIE ? body.scrollHeight : (tinymce.isWebKit && body.clientHeight == 0 ? 0 : body.offsetHeight);
 
 				// Don't make it smaller than the minimum height
 				if (myHeight > t.autoresize_min_height)
@@ -47,30 +47,34 @@
 				// If a maximum height has been defined don't exceed this height
 				if (t.autoresize_max_height && myHeight > t.autoresize_max_height) {
 					resizeHeight = t.autoresize_max_height;
-					ed.getBody().style.overflowY = "auto";
-				} else
-					ed.getBody().style.overflowY = "hidden";
+					body.style.overflowY = "auto";
+					de.style.overflowY = "auto"; // Old IE
+				} else {
+					body.style.overflowY = "hidden";
+					de.style.overflowY = "hidden"; // Old IE
+					body.scrollTop = 0;
+				}
 
 				// Resize content element
 				if (resizeHeight !== oldSize) {
+					deltaSize = resizeHeight - oldSize;
 					DOM.setStyle(DOM.get(ed.id + '_ifr'), 'height', resizeHeight + 'px');
 					oldSize = resizeHeight;
-				}
 
-				// if we're throbbing, we'll re-throb to match the new size
-				if (t.throbbing) {
-					ed.setProgressState(false);
-					ed.setProgressState(true);
+					// WebKit doesn't decrease the size of the body element until the iframe gets resized
+					// So we need to continue to resize the iframe down until the size gets fixed
+					if (tinymce.isWebKit && deltaSize < 0)
+						resize();
 				}
 			};
 
 			t.editor = ed;
 
 			// Define minimum height
-			t.autoresize_min_height = parseInt( ed.getParam('autoresize_min_height', ed.getElement().offsetHeight) );
+			t.autoresize_min_height = parseInt(ed.getParam('autoresize_min_height', ed.getElement().offsetHeight));
 
-			// Define maximum height	
-			t.autoresize_max_height = parseInt( ed.getParam('autoresize_max_height', 0) );
+			// Define maximum height
+			t.autoresize_max_height = parseInt(ed.getParam('autoresize_max_height', 0));
 
 			// Add padding at the bottom for better UX
 			ed.onInit.add(function(ed){
@@ -85,30 +89,8 @@
 			ed.onPostRender.add(resize);
 
 			if (ed.getParam('autoresize_on_init', true)) {
-				// Things to do when the editor is ready
-				ed.onInit.add(function(ed, l) {
-					// Show throbber until content area is resized properly
-					ed.setProgressState(true);
-					t.throbbing = true;
-
-					// Hide scrollbars
-					ed.getBody().style.overflowY = "hidden";
-				});
-
-				ed.onLoadContent.add(function(ed, l) {
-					resize();
-
-					// Because the content area resizes when its content CSS loads,
-					// and we can't easily add a listener to its onload event,
-					// we'll just trigger a resize after a short loading period
-					setTimeout(function() {
-						resize();
-
-						// Disable throbber
-						ed.setProgressState(false);
-						t.throbbing = false;
-					}, 1250);
-				});
+				ed.onLoad.add(resize);
+				ed.onLoadContent.add(resize);
 			}
 
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');

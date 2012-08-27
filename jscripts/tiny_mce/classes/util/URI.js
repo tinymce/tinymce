@@ -1,11 +1,11 @@
 /**
  * URI.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function() {
@@ -45,14 +45,14 @@
 				u = (s.base_uri ? s.base_uri.protocol || 'http' : 'http') + '://mce_host' + u;
 
 			// Relative path http:// or protocol relative //path
-			if (!/^[\w-]*:?\/\//.test(u)) {
+			if (!/^[\w\-]*:?\/\//.test(u)) {
 				base_url = s.base_uri ? s.base_uri.path : new tinymce.util.URI(location.href).directory;
 				u = ((s.base_uri && s.base_uri.protocol) || 'http') + '://mce_host' + t.toAbsPath(base_url, u);
 			}
 
 			// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)
 			u = u.replace(/@@/g, '(mce_at)'); // Zope 3 workaround, they use @@something
-			u = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(u);
+			u = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*):?([^:@\/]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(u);
 			each(["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"], function(v, i) {
 				var s = u[i];
 
@@ -63,17 +63,18 @@
 				t[v] = s;
 			});
 
-			if (b = s.base_uri) {
+			b = s.base_uri;
+			if (b) {
 				if (!t.protocol)
 					t.protocol = b.protocol;
 
 				if (!t.userInfo)
 					t.userInfo = b.userInfo;
 
-				if (!t.port && t.host == 'mce_host')
+				if (!t.port && t.host === 'mce_host')
 					t.port = b.port;
 
-				if (!t.host || t.host == 'mce_host')
+				if (!t.host || t.host === 'mce_host')
 					t.host = b.host;
 
 				t.source = '';
@@ -125,6 +126,12 @@
 			if ((u.host != 'mce_host' && t.host != u.host && u.host) || t.port != u.port || t.protocol != u.protocol)
 				return u.getURI();
 
+			var tu = t.getURI(), uu = u.getURI();
+			
+			// Allow usage of the base_uri when relative_urls = true
+			if(tu == uu || (tu.charAt(tu.length - 1) == "/" && tu.substr(0, tu.length - 1) == uu))
+				return tu;
+
 			o = t.toRelPath(t.path, u.path);
 
 			// Add query
@@ -150,7 +157,7 @@
 		 * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
 		 */
 		toAbsolute : function(u, nh) {
-			var u = new tinymce.util.URI(u, {base_uri : this});
+			u = new tinymce.util.URI(u, {base_uri : this});
 
 			return u.getURI(this.host == u.host && this.protocol == u.protocol ? nh : 0);
 		},
@@ -188,7 +195,7 @@
 				}
 			}
 
-			if (bp == 1)
+			if (bp === 1)
 				return path;
 
 			for (i = 0, l = base.length - (bp - 1); i < l; i++)
@@ -230,11 +237,11 @@
 			// Merge relURLParts chunks
 			for (i = path.length - 1, o = []; i >= 0; i--) {
 				// Ignore empty or .
-				if (path[i].length == 0 || path[i] == ".")
+				if (path[i].length === 0 || path[i] === ".")
 					continue;
 
 				// Is parent
-				if (path[i] == '..') {
+				if (path[i] === '..') {
 					nb++;
 					continue;
 				}

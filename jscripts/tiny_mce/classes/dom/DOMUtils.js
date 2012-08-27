@@ -1,11 +1,11 @@
 /**
  * DOMUtils.js
  *
- * Copyright 2009, Moxiecode Systems AB
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *
- * License: http://tinymce.moxiecode.com/license
- * Contributing: http://tinymce.moxiecode.com/contributing
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 (function(tinymce) {
@@ -16,7 +16,6 @@
 		isIE = tinymce.isIE,
 		Entities = tinymce.html.Entities,
 		simpleSelectorRe = /^([a-z0-9],?)+$/i,
-		blockElementsMap = tinymce.html.Schema.blockElementsMap,
 		whiteSpaceRegExp = /^[ \t\r\n]*$/;
 
 	/**
@@ -59,7 +58,7 @@
 		 * @param {settings} s Optional settings collection.
 		 */
 		DOMUtils : function(d, s) {
-			var t = this, globalStyle, name;
+			var t = this, globalStyle, name, blockElementsMap;
 
 			t.doc = d;
 			t.win = window;
@@ -90,23 +89,85 @@
 				}
 			}
 
-			if (isIE && s.schema) {
+			t.fixDoc(d);
+			t.events = s.ownEvents ? new tinymce.dom.EventUtils(s.proxy) : tinymce.dom.Event;
+			tinymce.addUnload(t.destroy, t);
+			blockElementsMap = s.schema ? s.schema.getBlockElements() : {};
+
+			/**
+			 * Returns true/false if the specified element is a block element or not.
+			 *
+			 * @method isBlock
+			 * @param {Node/String} node Element/Node to check.
+			 * @return {Boolean} True/False state if the node is a block element or not.
+			 */
+			t.isBlock = function(node) {
+				// This function is called in module pattern style since it might be executed with the wrong this scope
+				var type = node.nodeType;
+
+				// If it's a node then check the type and use the nodeName
+				if (type)
+					return !!(type === 1 && blockElementsMap[node.nodeName]);
+
+				return !!blockElementsMap[node];
+			};
+		},
+
+		fixDoc: function(doc) {
+			var settings = this.settings, name;
+
+			if (isIE && settings.schema) {
 				// Add missing HTML 4/5 elements to IE
 				('abbr article aside audio canvas ' +
 				'details figcaption figure footer ' +
 				'header hgroup mark menu meter nav ' +
 				'output progress section summary ' +
 				'time video').replace(/\w+/g, function(name) {
-					d.createElement(name);
+					doc.createElement(name);
 				});
 
 				// Create all custom elements
-				for (name in s.schema.getCustomElements()) {
-					d.createElement(name);
+				for (name in settings.schema.getCustomElements()) {
+					doc.createElement(name);
 				}
 			}
+		},
 
-			tinymce.addUnload(t.destroy, t);
+		clone: function(node, deep) {
+			var self = this, clone, doc;
+
+			// TODO: Add feature detection here in the future
+			if (!isIE || node.nodeType !== 1 || deep) {
+				return node.cloneNode(deep);
+			}
+
+			doc = self.doc;
+
+			// Make a HTML5 safe shallow copy
+			if (!deep) {
+				clone = doc.createElement(node.nodeName);
+
+				// Copy attribs
+				each(self.getAttribs(node), function(attr) {
+					self.setAttrib(clone, attr.nodeName, self.getAttrib(node, attr.nodeName));
+				});
+
+				return clone;
+			}
+/*
+			// Setup HTML5 patched document fragment
+			if (!self.frag) {
+				self.frag = doc.createDocumentFragment();
+				self.fixDoc(self.frag);
+			}
+
+			// Make a deep copy by adding it to the document fragment then removing it this removed the :section
+			clone = doc.createElement('div');
+			self.frag.appendChild(clone);
+			clone.innerHTML = node.outerHTML;
+			self.frag.removeChild(clone);
+*/
+			return clone.firstChild;
 		},
 
 		/**
@@ -190,8 +251,8 @@
 				h = 0;
 
 			return {
-				w : parseInt(w) || e.offsetWidth || e.clientWidth,
-				h : parseInt(h) || e.offsetHeight || e.clientHeight
+				w : parseInt(w, 10) || e.offsetWidth || e.clientWidth,
+				h : parseInt(h, 10) || e.offsetHeight || e.clientHeight
 			};
 		},
 
@@ -655,6 +716,7 @@
 
 			return this.run(e, function(e) {
 				var s = t.settings;
+				var originalValue = e.getAttribute(n);
 				if (v !== null) {
 					switch (n) {
 						case "style":
@@ -701,6 +763,12 @@
 					e.setAttribute(n, '' + v, 2);
 				else
 					e.removeAttribute(n, 2);
+
+				// fire onChangeAttrib event for attributes that have changed
+				if (tinyMCE.activeEditor && originalValue != v) {
+					var ed = tinyMCE.activeEditor;
+					ed.onSetAttrib.dispatch(ed, e, n, v);
+				}
 			});
 		},
 
@@ -929,6 +997,38 @@
 		},
 
 		/**
+		 * Adds a style element at the top of the document with the specified cssText content.
+		 *
+		 * @method addStyle
+		 * @param {String} cssText CSS Text style to add to top of head of document.
+		 */
+		addStyle: function(cssText) {
+			var doc = this.doc, head;
+
+			// Create style element if needed
+			styleElm = doc.getElementById('mceDefaultStyles');
+			if (!styleElm) {
+				styleElm = doc.createElement('style'),
+				styleElm.id = 'mceDefaultStyles';
+				styleElm.type = 'text/css';
+
+				head = doc.getElementsByTagName('head')[0];
+				if (head.firstChild) {
+					head.insertBefore(styleElm, head.firstChild);
+				} else {
+					head.appendChild(styleElm);
+				}
+			}
+
+			// Append style data to old or new style element
+			if (styleElm.styleSheet) {
+				styleElm.styleSheet.cssText += cssText;
+			} else {
+				styleElm.appendChild(doc.createTextNode(cssText));
+			}
+		},
+
+		/**
 		 * Imports/loads the specified CSS file into the document bound to the class.
 		 *
 		 * @method loadCSS
@@ -952,7 +1052,7 @@
 			if (!u)
 				u = '';
 
-			head = t.select('head')[0];
+			head = d.getElementsByTagName('head')[0];
 
 			each(u.split(','), function(u) {
 				var link;
@@ -1149,13 +1249,13 @@
 						// This seems to fix this problem
 
 						// Create new div with HTML contents and a BR infront to keep comments
-						element = self.create('div');
-						element.innerHTML = '<br />' + html;
+						var newElement = self.create('div');
+						newElement.innerHTML = '<br />' + html;
 
 						// Add all children from div to target
-						each (element.childNodes, function(node, i) {
+						each (tinymce.grep(newElement.childNodes), function(node, i) {
 							// Skip br element
-							if (i)
+							if (i && element.canHaveHTML)
 								element.appendChild(node);
 						});
 					}
@@ -1294,23 +1394,6 @@
 		},
 
 		/**
-		 * Returns true/false if the specified element is a block element or not.
-		 *
-		 * @method isBlock
-		 * @param {Node/String} node Element/Node to check.
-		 * @return {Boolean} True/False state if the node is a block element or not.
-		 */
-		isBlock : function(node) {
-			var type = node.nodeType;
-
-			// If it's a node then check the type and use the nodeName
-			if (type)
-				return !!(type === 1 && blockElementsMap[node.nodeName]);
-
-			return !!blockElementsMap[node];
-		},
-
-		/**
 		 * Replaces the specified element or elements with the specified element, the new element will
 		 * be cloned if multiple inputs elements are passed.
 		 *
@@ -1403,7 +1486,7 @@
 			var c = /^\s*rgb\s*?\(\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?,\s*?([0-9]+)\s*?\)\s*$/i.exec(s);
 
 			function hex(s) {
-				s = parseInt(s).toString(16);
+				s = parseInt(s, 10).toString(16);
 
 				return s.length > 1 ? s : '0' + s; // 0 -> 00
 			};
@@ -1569,11 +1652,11 @@
 		 * @return {Boolean} true/false if the node is empty or not.
 		 */
 		isEmpty : function(node, elements) {
-			var self = this, i, attributes, type, walker, name, parentNode;
+			var self = this, i, attributes, type, walker, name, brCount = 0;
 
 			node = node.firstChild;
 			if (node) {
-				walker = new tinymce.dom.TreeWalker(node);
+				walker = new tinymce.dom.TreeWalker(node, node.parentNode);
 				elements = elements || self.schema ? self.schema.getNonEmptyElements() : null;
 
 				do {
@@ -1587,9 +1670,9 @@
 						// Keep empty elements like <img />
 						name = node.nodeName.toLowerCase();
 						if (elements && elements[name]) {
-							// Ignore single BR elements in blocks like <p><br /></p>
-							parentNode = node.parentNode;
-							if (name === 'br' && self.isBlock(parentNode) && parentNode.firstChild === node && parentNode.lastChild === node) {
+							// Ignore single BR elements in blocks like <p><br /></p> or <p><span><br /></span></p>
+							if (name === 'br') {
+								brCount++;
 								continue;
 							}
 
@@ -1606,13 +1689,17 @@
 						}
 					}
 
+					// Keep comment nodes
+					if (type == 8)
+						return false;
+
 					// Keep non whitespace text nodes
 					if ((type === 3 && !whiteSpaceRegExp.test(node.nodeValue)))
 						return false;
 				} while (node = walker.next());
 			}
 
-			return true;
+			return brCount <= 1;
 		},
 
 		/**
@@ -1623,10 +1710,7 @@
 		destroy : function(s) {
 			var t = this;
 
-			if (t.events)
-				t.events.destroy();
-
-			t.win = t.doc = t.root = t.events = null;
+			t.win = t.doc = t.root = t.events = t.frag = null;
 
 			// Manual destroy then remove unload handler
 			if (!s)
@@ -1701,6 +1785,12 @@
 			function trim(node) {
 				var i, children = node.childNodes, type = node.nodeType;
 
+				function surroundedBySpans(node) {
+					var previousIsSpan = node.previousSibling && node.previousSibling.nodeName == 'SPAN';
+					var nextIsSpan = node.nextSibling && node.nextSibling.nodeName == 'SPAN';
+					return previousIsSpan && nextIsSpan;
+				}
+
 				if (type == 1 && node.getAttribute('data-mce-type') == 'bookmark')
 					return;
 
@@ -1711,7 +1801,10 @@
 					// Keep non whitespace text nodes
 					if (type == 3 && node.nodeValue.length > 0) {
 						// If parent element isn't a block or there isn't any useful contents for example "<p>   </p>"
-						if (!t.isBlock(node.parentNode) || tinymce.trim(node.nodeValue).length > 0)
+						// Also keep text nodes with only spaces if surrounded by spans.
+						// eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b
+						var trimmedLength = tinymce.trim(node.nodeValue).length;
+						if (!t.isBlock(node.parentNode) || trimmedLength > 0 || trimmedLength === 0 && surroundedBySpans(node))
 							return;
 					} else if (type == 1) {
 						// If the only child is a bookmark then move it up
@@ -1748,9 +1841,9 @@
 
 				// Insert middle chunk
 				if (re)
-					pa.replaceChild(re, e);
-				else
-					pa.insertBefore(e, pe);
+				pa.replaceChild(re, e);
+			else
+				pa.insertBefore(e, pe);
 
 				// Insert after chunk
 				pa.insertBefore(trim(aft), pe);
@@ -1771,12 +1864,7 @@
 		 * @return {function} Function callback handler the same as the one passed in.
 		 */
 		bind : function(target, name, func, scope) {
-			var t = this;
-
-			if (!t.events)
-				t.events = new tinymce.dom.EventUtils();
-
-			return t.events.add(target, name, func, scope || this);
+			return this.events.add(target, name, func, scope || this);
 		},
 
 		/**
@@ -1789,12 +1877,39 @@
 		 * @return {bool/Array} Bool state if true if the handler was removed or an array with states if multiple elements where passed in.
 		 */
 		unbind : function(target, name, func) {
-			var t = this;
+			return this.events.remove(target, name, func);
+		},
 
-			if (!t.events)
-				t.events = new tinymce.dom.EventUtils();
+		/**
+		 * Fires the specified event name with object on target.
+		 *
+		 * @method fire
+		 * @param {Node/Document/Window} target Target element or object to fire event on.
+		 * @param {String} name Name of the event to fire.
+		 * @param {Object} evt Event object to send.
+		 * @return {Event} Event object.
+		 */
+		fire : function(target, name, evt) {
+			return this.events.fire(target, name, evt);
+		},
 
-			return t.events.remove(target, name, func);
+		// Returns the content editable state of a node
+		getContentEditable: function(node) {
+			var contentEditable;
+
+			// Check type
+			if (node.nodeType != 1) {
+				return null;
+			}
+
+			// Check for fake content editable
+			contentEditable = node.getAttribute("data-mce-contenteditable");
+			if (contentEditable && contentEditable !== "inherit") {
+				return contentEditable;
+			}
+
+			// Check for real content editable
+			return node.contentEditable !== "inherit" ? node.contentEditable : null;
 		},
 
 		// #ifdef debug

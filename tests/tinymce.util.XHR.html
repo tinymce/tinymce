@@ -12,6 +12,8 @@
 <script>
 module("tinymce.util.XHR");
 
+QUnit.config.reorder = false;
+
 asyncTest("Successful request", function() {
 	expect(3);
 
@@ -25,9 +27,9 @@ asyncTest("Successful request", function() {
 		tinymce.util.XHR.send({
 			url : 'json_rpc_ok.js',
 			success: function(data, xhr, input) {
-				equals(tinymce.trim(data), '{"result": "Hello JSON-RPC", "error": null, "id": 1}');
+				equal(tinymce.trim(data), '{"result": "Hello JSON-RPC", "error": null, "id": 1}');
 				ok(!!xhr.status);
-				equals(input.url, 'json_rpc_ok.js');
+				equal(input.url, 'json_rpc_ok.js');
 				start();
 			}
 		});
@@ -47,9 +49,9 @@ asyncTest("Unsuccessful request", function() {
 		tinymce.util.XHR.send({
 			url : '404.js',
 			error: function(type, xhr, input) {
-				equals(type, 'GENERAL');
+				equal(type, 'GENERAL');
 				ok(!!xhr.status);
-				equals(input.url, '404.js');
+				equal(input.url, '404.js');
 				start();
 			}
 		});

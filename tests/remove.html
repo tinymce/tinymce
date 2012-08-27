@@ -31,9 +31,9 @@ asyncTest('Backspace with indented text', function() {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
+			equal(editor.getContent(), "<p>Line2</p>", 'Delete content');
 			editor.execCommand('undo', false, null);
-			equals(editor.getContent(), originalContent, 'Undo deletion');
+			equal(editor.getContent(), originalContent, 'Undo deletion');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -52,9 +52,9 @@ if (!tinymce.isGecko || !/Firefox\/[12].[0-9]/.test(navigator.userAgent)) {
 		robot.cut(function() {
 			// The fix for this bug happens in a timeout after cut so we need to make sure that happens first by adding an additional delay.
 			setTimeout(function() {
-				equals(editor.getContent(), "<p>Line2</p>", 'Cut text');
+				equal(editor.getContent(), "<p>Line2</p>", 'Cut text');
 				editor.execCommand('undo', false, null);
-				equals(editor.getContent(), originalContent, 'Undo cut');
+				equal(editor.getContent(), originalContent, 'Undo cut');
 				editor.execCommand('SelectAll');
 				robot.paste(function() {
 					ok(/Line/.test(editor.getContent()), 'Content should have been on clipboard. Got: ' + editor.getContent());
@@ -79,9 +79,9 @@ asyncTest('Forward delete with indented text', function() {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), "<p>Line2</p>", 'Delete content');
+			equal(editor.getContent(), "<p>Line2</p>", 'Delete content');
 			editor.execCommand('undo', false, null);
-			equals(editor.getContent(), originalContent, 'Undo deletion');
+			equal(editor.getContent(), originalContent, 'Undo deletion');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -99,7 +99,7 @@ asyncTest('Forward delete with first paragraph indented', function() {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>', 'Delete content');
+			equal(editor.getContent(), '<p style="margin-left: 30px;">Line2</p>', 'Delete content');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -117,7 +117,7 @@ asyncTest('Backward delete from paragraph to heading', function () {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), '<h1>Headingtext</h1>', 'Delete content');
+			equal(editor.getContent(), '<h1>Headingtext</h1>', 'Delete content');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -135,7 +135,7 @@ asyncTest('Forward delete from heading to paragraph', function () {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), '<h1>Headingtext</h1>', 'Delete content');
+			equal(editor.getContent(), '<h1>Headingtext</h1>', 'Delete content');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -153,7 +153,7 @@ asyncTest('Forward delete from heading to paragraph with span', function () {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), '<h1>Heading<span style="color: #ff0000;">text</span></h1>', 'Delete content');
+			equal(editor.getContent(), '<h1>Heading<span style="color: #ff0000;">text</span></h1>', 'Delete content');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -171,7 +171,7 @@ asyncTest('Backward delete from paragraph with span to heading', function () {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), '<h1>Heading<span style="color: #ff0000;">text</span></h1>', 'Delete content');
+			equal(editor.getContent(), '<h1>Heading<span style="color: #ff0000;">text</span></h1>', 'Delete content');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -189,7 +189,7 @@ asyncTest('Backward delete all contents', function () {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), '', 'Empty contents');
+			equal(editor.getContent(), '', 'Empty contents');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
@@ -207,11 +207,37 @@ asyncTest('Forward delete all contents', function () {
 		// The content is fixed up after a small timeout to let the browser default behaviour kick in.
 		// As such we need to defer our checks as well.
 		setTimeout(function() {
-			equals(editor.getContent(), '', 'Empty contents');
+			equal(editor.getContent(), '', 'Empty contents');
 			QUnit.start();
 		}, 100);
 	}, editor.selection.getNode());
 });
+
+asyncTest('Backward delete blockquote contents', function () {
+	expect(1);
+
+	editor.setContent('<blockquote><p>some text here</p></blockquote>');
+	var textNode = editor.dom.select('p')[0].firstChild;
+	setSelection(textNode, 0, textNode, 5);
+	editor.focus();
+	robot.type('\b', false, function() {
+		equal(cleanHtml(editor.getContent()), '<blockquote><p>text here</p></blockquote>');
+		QUnit.start();
+	}, editor.selection.getNode());
+});
+
+asyncTest('Forward delete after empty paragraphs does not delete all content', function () {
+	expect(1);
+
+	editor.setContent('<p></p><p></p><p></p>');
+	setSelection('p:nth-child(3)', 0);
+	editor.focus();
+	robot.forwardDelete(function() {
+		QUnit.notEqual(editor.getContent(), '', 'Editor contents should not be empty');
+		QUnit.start();
+	}, editor.selection.getNode());
+});
+
 var initTinyFunction = function(){
 	tinyMCE.init({
 		mode : "exact",

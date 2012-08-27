@@ -27,75 +27,75 @@ test('commands - xhtmlTextStyles', function() {
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Bold');
-	equals(editor.getContent(), "<p><strong>test 123</strong></p>");
+	equal(editor.getContent(), "<p><strong>test 123</strong></p>");
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Italic');
-	equals(editor.getContent(), "<p><em>test 123</em></p>");
+	equal(editor.getContent(), "<p><em>test 123</em></p>");
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Underline');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Strikethrough');
-	equals(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('FontName',false,'Arial');
-	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('FontSize',false,'7');
-	equals(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('ForeColor', false, '#FF0000');
-	equals(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('HiliteColor', false, '#FF0000');
-	equals(editor.getContent(), '<p><span style="background-color: #ff0000;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="background-color: #ff0000;">test 123</span></p>');
 
 	editor.setContent('<p><span style="text-decoration: underline;">test 123</span></p>');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
 
 	editor.setContent('<p><span style="text-decoration: line-through;">test 123</span></p>');
-	equals(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
 
 	editor.setContent('<p><span style="font-family: Arial;">test 123</span></p>');
-	equals(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
 
 	editor.setContent('<p><span style="font-size: xx-large;">test 123</span></p>');
-	equals(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
 
 	editor.setContent('<p><u>test 123</u></p>');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
 
 	editor.setContent('<p><strike>test 123</strike></p>');
-	equals(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
 
 	editor.setContent('<p><font face="Arial">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('<p><font size="7">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="font-size: 300%;">test 123</span></p>');
 
 	editor.setContent('<p><font face="Arial" size="7">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="font-size: xx-large; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="font-size: 300%; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 
 	editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
-	equals(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: ' + fontFace('Arial') + ';">test</span></p>');
+	equal(editor.getContent(), '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: ' + fontFace('Arial') + ';">test</span></p>');
 
 	editor.setContent('<p><font face="Arial" style="color: #ff0000">test 123</font></p>');
-	equals(editor.getContent(), '<p><span style="color: #ff0000; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
+	equal(editor.getContent(), '<p><span style="color: #ff0000; font-family: ' + fontFace('Arial') + ';">test 123</span></p>');
 });
 
 test('commands - alignInline', function() {
@@ -104,37 +104,37 @@ test('commands - alignInline', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('JustifyLeft');
-	equals(editor.getContent(), '<p style="text-align: left;">test 123</p>');
+	equal(editor.getContent(), '<p style="text-align: left;">test 123</p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('JustifyCenter');
-	equals(editor.getContent(), '<p style="text-align: center;">test 123</p>');
+	equal(editor.getContent(), '<p style="text-align: center;">test 123</p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('JustifyRight');
-	equals(editor.getContent(), '<p style="text-align: right;">test 123</p>');
+	equal(editor.getContent(), '<p style="text-align: right;">test 123</p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('JustifyFull');
-	equals(editor.getContent(), '<p style="text-align: justify;">test 123</p>');
+	equal(editor.getContent(), '<p style="text-align: justify;">test 123</p>');
 
 	editor.setContent('<img src="../media/logo.jpg" />');
 	editor.selection.select(editor.dom.select('img')[0]);
 	editor.execCommand('JustifyLeft');
-	equals(editor.getContent(), '<p><img style="float: left;" src="../media/logo.jpg" alt="" /></p>');
+	equal(editor.getContent(), '<p><img style="float: left;" src="../media/logo.jpg" alt="" /></p>');
 
 	editor.setContent('<img src="../media/logo.jpg" />');
 	editor.selection.select(editor.dom.select('img')[0]);
 	editor.execCommand('JustifyCenter');
-	equals(editor.getContent(), '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="../media/logo.jpg" alt="" /></p>');
+	equal(editor.getContent(), '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="../media/logo.jpg" alt="" /></p>');
 
 	editor.setContent('<img src="../media/logo.jpg" />');
 	editor.selection.select(editor.dom.select('img')[0]);
 	editor.execCommand('JustifyRight');
-	equals(editor.getContent(), '<p><img style="float: right;" src="../media/logo.jpg" alt="" /></p>');
+	equal(editor.getContent(), '<p><img style="float: right;" src="../media/logo.jpg" alt="" /></p>');
 });
 
 test('commands - blockquote', function() {
@@ -143,12 +143,12 @@ test('commands - blockquote', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceBlockQuote');
-	equals(editor.getContent().replace(/\s+/g, ''), '<blockquote><p>test123</p></blockquote>');
+	equal(editor.getContent().replace(/\s+/g, ''), '<blockquote><p>test123</p></blockquote>');
 
 	editor.setContent('<p>test 123</p><p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceBlockQuote');
-	equals(editor.getContent().replace(/\s+/g, ''), '<blockquote><p>test123</p><p>test123</p></blockquote>');
+	equal(editor.getContent().replace(/\s+/g, ''), '<blockquote><p>test123</p><p>test123</p></blockquote>');
 });
 
 test('commands - blocks', function() {
@@ -157,27 +157,27 @@ test('commands - blocks', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'h1');
-	equals(editor.getContent(), '<h1>test 123</h1>');
+	equal(editor.getContent(), '<h1>test 123</h1>');
 
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'h2');
-	equals(editor.getContent(), '<h2>test 123</h2>');
+	equal(editor.getContent(), '<h2>test 123</h2>');
 
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'h3');
-	equals(editor.getContent(), '<h3>test 123</h3>');
+	equal(editor.getContent(), '<h3>test 123</h3>');
 
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'h4');
-	equals(editor.getContent(), '<h4>test 123</h4>');
+	equal(editor.getContent(), '<h4>test 123</h4>');
 
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'h5');
-	equals(editor.getContent(), '<h5>test 123</h5>');
+	equal(editor.getContent(), '<h5>test 123</h5>');
 
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'h6');
-	equals(editor.getContent(), '<h6>test 123</h6>');
+	equal(editor.getContent(), '<h6>test 123</h6>');
 
 	editor.execCommand('SelectAll');
 
@@ -187,15 +187,15 @@ test('commands - blocks', function() {
 		//t.log('Failed: ' + ex.message);
 	}
 
-	equals(editor.getContent(), '<div>test 123</div>');
+	equal(editor.getContent(), '<div>test 123</div>');
 
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'address');
-	equals(editor.getContent(), '<address>test 123</address>');
+	equal(editor.getContent(), '<address>test 123</address>');
 
 	editor.execCommand('SelectAll');
 	editor.execCommand('FormatBlock', false, 'pre');
-	equals(editor.getContent(), '<pre>test 123</pre>');
+	equal(editor.getContent(), '<pre>test 123</pre>');
 });
 
 test('commands - link relative', function() {
@@ -204,7 +204,7 @@ test('commands - link relative', function() {
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, 'test');
-	equals(editor.getContent(), '<p><a href="test">test 123</a></p>');
+	equal(editor.getContent(), '<p><a href="test">test 123</a></p>');
 });
 
 test('commands - link absolute', function() {
@@ -213,7 +213,7 @@ test('commands - link absolute', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, 'http://www.site.com');
-	equals(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
+	equal(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
 });
 
 test('commands - link encoded', function() {
@@ -222,7 +222,7 @@ test('commands - link encoded', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, '"&<>');
-	equals(editor.getContent(), '<p><a href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+	equal(editor.getContent(), '<p><a href="&quot;&amp;&lt;&gt;">test 123</a></p>');
 });
 
 test('commands - link encoded and with class', function() {
@@ -231,7 +231,7 @@ test('commands - link encoded and with class', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, {href : '"&<>', 'class' : 'test'});
-	equals(editor.getContent(), '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+	equal(editor.getContent(), '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
 });
 
 test('commands - link with space', function() {
@@ -240,7 +240,7 @@ test('commands - link with space', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, {href : 'foo bar'});
-	equals(editor.getContent(), '<p><a href="foo%20bar">test 123</a></p>');
+	equal(editor.getContent(), '<p><a href="foo%20bar">test 123</a></p>');
 });
 
 test('commands - link floated img', function() {
@@ -249,7 +249,7 @@ test('commands - link floated img', function() {
 	editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('mceInsertLink', false, 'link');
-	equals(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" alt="" /></a></p>');
+	equal(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" alt="" /></a></p>');
 });
 
 test('commands - link adjacent text', function() {
@@ -265,7 +265,7 @@ test('commands - link adjacent text', function() {
 	editor.selection.setRng(rng);
 
 	editor.execCommand('mceInsertLink', false, 'link');
-	equals(editor.getContent(), '<p><a href="#">a</a><a href="link">b</a></p>');
+	equal(editor.getContent(), '<p><a href="#">a</a><a href="link">b</a></p>');
 });
 
 test('commands - link text inside text', function() {
@@ -277,7 +277,7 @@ test('commands - link text inside text', function() {
 	setSelection('em', 1, 'em', 2);
 
 	editor.execCommand('mceInsertLink', false, 'link');
-	equals(editor.getContent(), '<p><a href="link"><em>abc</em></a></p>');
+	equal(editor.getContent(), '<p><a href="link"><em>abc</em></a></p>');
 });
 
 test('commands - link around existing links', function() {
@@ -289,7 +289,7 @@ test('commands - link around existing links', function() {
 	editor.execCommand('SelectAll');
 
 	editor.execCommand('mceInsertLink', false, 'link');
-	equals(editor.getContent(), '<p><a href="link">12</a></p>');
+	equal(editor.getContent(), '<p><a href="link">12</a></p>');
 });
 
 test('commands - link around existing links with different attrs', function() {
@@ -301,7 +301,7 @@ test('commands - link around existing links with different attrs', function() {
 	editor.execCommand('SelectAll');
 
 	editor.execCommand('mceInsertLink', false, 'link');
-	equals(editor.getContent(), '<p><a href="link">12</a></p>');
+	equal(editor.getContent(), '<p><a href="link">12</a></p>');
 });
 
 test('commands - link around existing complex contents with links', function() {
@@ -313,7 +313,7 @@ test('commands - link around existing complex contents with links', function() {
 	editor.execCommand('SelectAll');
 
 	editor.execCommand('mceInsertLink', false, 'link');
-	equals(editor.getContent(), '<p><a href="link"><span id="s1"><strong><em>1</em></strong></span><span id="s2"><em><strong>2</strong></em></span></a></p>');
+	equal(editor.getContent(), '<p><a href="link"><span id="s1"><strong><em>1</em></strong></span><span id="s2"><em><strong>2</strong></em></span></a></p>');
 });
 
 test('commands - link text inside link', function() {
@@ -326,7 +326,7 @@ test('commands - link text inside link', function() {
 	editor.execCommand('SelectAll');
 
 	editor.execCommand('mceInsertLink', false, 'link');
-	equals(editor.getContent(), '<p><a href="link">test</a></p>');
+	equal(editor.getContent(), '<p><a href="link">test</a></p>');
 });
 
 test('commands - unlink', function() {
@@ -335,7 +335,7 @@ test('commands - unlink', function() {
 	editor.setContent('<p><a href="test">test</a> <a href="test">123</a></p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('unlink');
-	equals(editor.getContent(), '<p>test 123</p>');
+	equal(editor.getContent(), '<p>test 123</p>');
 });
 
 test('commands - subscriptSuperscript', function() {
@@ -344,24 +344,24 @@ test('commands - subscriptSuperscript', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('subscript');
-	equals(editor.getContent(), '<p><sub>test 123</sub></p>');
+	equal(editor.getContent(), '<p><sub>test 123</sub></p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('superscript');
-	equals(editor.getContent(), '<p><sup>test 123</sup></p>');
+	equal(editor.getContent(), '<p><sup>test 123</sup></p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('subscript');
 	editor.execCommand('subscript');
-	equals(editor.getContent(), '<p>test 123</p>');
+	equal(editor.getContent(), '<p>test 123</p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('superscript');
 	editor.execCommand('superscript');
-	equals(editor.getContent(), '<p>test 123</p>');
+	equal(editor.getContent(), '<p>test 123</p>');
 });
 
 test('commands - indentOutdent', function() {
@@ -370,25 +370,25 @@ test('commands - indentOutdent', function() {
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Indent');
-	equals(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
+	equal(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Indent');
 	editor.execCommand('Indent');
-	equals(editor.getContent(), '<p style="padding-left: 60px;">test 123</p>');
+	equal(editor.getContent(), '<p style="padding-left: 60px;">test 123</p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Indent');
 	editor.execCommand('Indent');
 	editor.execCommand('Outdent');
-	equals(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
+	equal(editor.getContent(), '<p style="padding-left: 30px;">test 123</p>');
 
 	editor.setContent('<p>test 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('Outdent');
-	equals(editor.getContent(), '<p>test 123</p>');
+	equal(editor.getContent(), '<p>test 123</p>');
 });
 
 test('commands - removeFormat', function() {
@@ -399,17 +399,17 @@ test('commands - removeFormat', function() {
 	editor.setContent('<p><span>test</span> <strong>123</strong> <a href="123">123</a> 123</p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('RemoveFormat');
-	equals(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>');
+	equal(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>');
 
 	editor.setContent('<p><span><span>test</span> <strong>123</strong> <a href="123">123</a> 123</span></p>');
 	editor.execCommand('SelectAll');
 	editor.execCommand('RemoveFormat');
-	equals(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>');
+	equal(editor.getContent(), '<p>test 123 <a href="123">123</a> 123</p>');
 
 	editor.setContent('<p><span>test<span id="x">test <strong>123</strong></span><a href="123">123</a> 123</span></p>');
 	editor.selection.select(editor.dom.get('x'));
 	editor.execCommand('RemoveFormat');
-	equals(editor.getContent(), '<p><span>test</span><span id="x">test 123</span><span><a href="123">123</a> 123</span></p>');
+	equal(editor.getContent(), '<p><span>test</span><span id="x">test 123</span><span><a href="123">123</a> 123</span></p>');
 });
 
 test('commands - customCommands', function() {
@@ -418,34 +418,34 @@ test('commands - customCommands', function() {
 	expect(1);
 
 	editor.execCommand('mceSetContent', false, '<p>test 123 abc</p>');
-	equals(editor.getContent(), '<p>test 123 abc</p>');
+	equal(editor.getContent(), '<p>test 123 abc</p>');
 
 /*		editor.setContent('<p>test <span>1<span>2</span>3</span> abc</p>');
 	editor.selection.select(editor.dom.select('span')[0], 1);
 	editor.execCommand('mceReplaceContent', false, '<p>test <span>aaa1<span>2</span>3bbb</span></p>');
-	equals(editor.getContent(), '<div>aaatest 123bbb</div>');
+	equal(editor.getContent(), '<div>aaatest 123bbb</div>');
 
 	editor.setContent('test 123');
 	editor.execCommand('SelectAll');
 	editor.selection.collapse(1);
 	editor.execCommand('mceInsertContent', false, 'abc');
-	equals(editor.getContent(), '<p>test 123 abc</p>');*/
+	equal(editor.getContent(), '<p>test 123 abc</p>');*/
 });
 
 test('internals - forcedBlocks', function() {
 	expect(4);
 
 	editor.setContent('<p></p><p>&nbsp;</p><p /><p id="x"></p><p id="y">&nbsp;</p><p id="z" />');
-	equals(editor.getContent(), '<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p id="x">&nbsp;</p>\n<p id="y">&nbsp;</p>\n<p id="z">&nbsp;</p>');
+	equal(editor.getContent(), '<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p id="x">&nbsp;</p>\n<p id="y">&nbsp;</p>\n<p id="z">&nbsp;</p>');
 
 	editor.setContent('test <strong>test2</strong> <em>test3</em>');
-	equals(editor.getContent(), '<p>test <strong>test2</strong> <em>test3</em></p>');
+	equal(editor.getContent(), '<p>test <strong>test2</strong> <em>test3</em></p>');
 
 	editor.setContent('<p>test</p>test <strong>test2</strong> <em>test3</em>');
-	equals(editor.getContent(), '<p>test</p>\n<p>test <strong>test2</strong> <em>test3</em></p>');
+	equal(editor.getContent(), '<p>test</p>\n<p>test <strong>test2</strong> <em>test3</em></p>');
 
 	editor.setContent('<p>test 1</p>test <strong>test2</strong> <em>test3</em><p>test 2</p>test');
-	equals(editor.getContent(), '<p>test 1</p>\n<p>test <strong>test2</strong> <em>test3</em></p>\n<p>test 2</p>\n<p>test</p>');
+	equal(editor.getContent(), '<p>test 1</p>\n<p>test <strong>test2</strong> <em>test3</em></p>\n<p>test 2</p>\n<p>test</p>');
 });
 
 test('urls - relativeURLs', function() {
@@ -455,19 +455,19 @@ test('urls - relativeURLs', function() {
 	editor.documentBaseURI = new tinymce.util.URI('http://www.site.com/dirA/dirB/dirC/');
 
 	editor.setContent('<a href="test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="test.html">test</a></p>');
 
 	editor.setContent('<a href="../test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="../test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="../test.html">test</a></p>');
 
 	editor.setContent('<a href="test/test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="test/test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="test/test.html">test</a></p>');
 
 	editor.setContent('<a href="/test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="../../../test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="../../../test.html">test</a></p>');
 
 	editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-	equals(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+	equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
 });
 
 test('urls - absoluteURLs', function() {
@@ -478,50 +478,50 @@ test('urls - absoluteURLs', function() {
 	editor.documentBaseURI = new tinymce.util.URI('http://www.site.com/dirA/dirB/dirC/');
 
 	editor.setContent('<a href="test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>');
 
 	editor.setContent('<a href="../test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="/dirA/dirB/test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="/dirA/dirB/test.html">test</a></p>');
 
 	editor.setContent('<a href="test/test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>');
 
 	editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-	equals(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+	equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
 
 	editor.settings.relative_urls = false;
 	editor.settings.remove_script_host = false;
 
 	editor.setContent('<a href="test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>');
 
 	editor.setContent('<a href="../test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>');
 
 	editor.setContent('<a href="test/test.html">test</a>');
-	equals(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>');
+	equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>');
 
 	editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-	equals(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
+	equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>');
 });
 
 test('editor_methods - getParam', function() {
 	expect(5);
 
 	editor.settings.test = 'a,b,c';
-	equals(editor.getParam('test', '', 'hash')['c'], 'c');
+	equal(editor.getParam('test', '', 'hash')['c'], 'c');
 
 	editor.settings.test = 'a';
-	equals(editor.getParam('test', '', 'hash')['a'], 'a');
+	equal(editor.getParam('test', '', 'hash')['a'], 'a');
 
 	editor.settings.test = 'a=b';
-	equals(editor.getParam('test', '', 'hash')['a'], 'b');
+	equal(editor.getParam('test', '', 'hash')['a'], 'b');
 
 	editor.settings.test = 'a=b;c=d,e';
-	equals(editor.getParam('test', '', 'hash')['c'], 'd,e');
+	equal(editor.getParam('test', '', 'hash')['c'], 'd,e');
 
 	editor.settings.test = 'a=b,c=d';
-	equals(editor.getParam('test', '', 'hash')['c'], 'd');
+	equal(editor.getParam('test', '', 'hash')['c'], 'd');
 });
 
 test('WebKit Serialization range bug', function() {
@@ -535,7 +535,7 @@ test('WebKit Serialization range bug', function() {
 		var p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
 		editor.dom.replace(p, editor.getBody().firstChild);
 
-		equals(editor.getContent(), '<p>123</p>\n<table>\n<tbody>\n<tr>\n<td>X</td>\n</tr>\n</tbody>\n</table>\n<p>456</p>');
+		equal(editor.getContent(), '<p>123</p>\n<table>\n<tbody>\n<tr>\n<td>X</td>\n</tr>\n</tbody>\n</table>\n<p>456</p>');
 	}
 });
 
@@ -553,22 +553,22 @@ test('setContent', function() {
 	editor.onBeforeSetContent.add(callback);
 	count = 0;
 	editor.setContent('<p>test</p>');
-	equals(editor.getContent(), "<p>X</p>");
-	equals(count, 2);
+	equal(editor.getContent(), "<p>X</p>");
+	equal(count, 2);
 	editor.onSetContent.remove(callback);
 	editor.onBeforeSetContent.remove(callback);
 
 	count = 0;
 	editor.setContent('<p>test</p>');
-	equals(editor.getContent(), "<p>test</p>");
-	equals(count, 0);
+	equal(editor.getContent(), "<p>test</p>");
+	equal(count, 0);
 });
 
 test('custom elements', function() {
 	expect(1);
 
 	editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');
-	equals(editor.getContent().replace(/[\r\n]/g, ''), '<custom1>c1</custom1><p><custom2>c1</custom2></p>');
+	equal(editor.getContent().replace(/[\r\n]/g, ''), '<custom1>c1</custom1><p><custom2>c1</custom2></p>');
 });
 
 tinyMCE.init({

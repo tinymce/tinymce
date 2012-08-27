@@ -48,7 +48,7 @@
 	}
 
 	function setVal(id, value, name) {
-		if (typeof(value) != 'undefined') {
+		if (typeof(value) != 'undefined' && value != null) {
 			var elm = get(id);
 
 			if (elm.nodeName == "SELECT")
@@ -78,7 +78,7 @@
 			get('video_altsource2_filebrowser').innerHTML = getBrowserHTML('video_filebrowser_altsource2','video_altsource2','media','media');
 			get('audio_altsource1_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource1','audio_altsource1','media','media');
 			get('audio_altsource2_filebrowser').innerHTML = getBrowserHTML('audio_filebrowser_altsource2','audio_altsource2','media','media');
-			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','media','image');
+			get('video_poster_filebrowser').innerHTML = getBrowserHTML('filebrowser_poster','video_poster','image','media');
 
 			html = self.getMediaListHTML('medialist', 'src', 'media', 'media');
 			if (html == "")
@@ -176,14 +176,14 @@
 						formItemName = type == 'global' ? name : type + '_' + name;
 
 						if (type == 'global')
-							list = data;
-						else if (type == 'video' || type == 'audio') {
+						list = data;
+					else if (type == 'video' || type == 'audio') {
 							list = data.video.attrs;
 
 							if (!list && !to_form)
-								data.video.attrs = list = {};
+							data.video.attrs = list = {};
 						} else
-							list = data.params;
+						list = data.params;
 
 						if (list) {
 							if (to_form) {
@@ -326,6 +326,39 @@
 					setVal('src', src);
 					setVal('media_type', data.type);
 				}
+				
+				// Vimeo
+				if (src.match(/vimeo.com\/([0-9]+)/)) {
+					data.width = 425;
+					data.height = 350;
+					data.params.frameborder = '0';
+					data.type = 'iframe';
+					src = 'http://player.vimeo.com/video/' + src.match(/vimeo.com\/([0-9]+)/)[1];
+					setVal('src', src);
+					setVal('media_type', data.type);
+				}
+            
+				// stream.cz
+				if (src.match(/stream.cz\/((?!object).)*\/([0-9]+)/)) {
+					data.width = 425;
+					data.height = 350;
+					data.params.frameborder = '0';
+					data.type = 'iframe';
+					src = 'http://www.stream.cz/object/' + src.match(/stream.cz\/[^/]+\/([0-9]+)/)[1];
+					setVal('src', src);
+					setVal('media_type', data.type);
+				}
+				
+				// Google maps
+				if (src.match(/maps.google.([a-z]{2,3})\/maps\/(.+)msid=(.+)/)) {
+					data.width = 425;
+					data.height = 350;
+					data.params.frameborder = '0';
+					data.type = 'iframe';
+					src = 'http://maps.google.com/maps/ms?msid=' + src.match(/msid=(.+)/)[1] + "&output=embed";
+					setVal('src', src);
+					setVal('media_type', data.type);
+				}
 
 				if (data.type == 'video') {
 					if (!data.video.sources)
@@ -427,21 +460,30 @@
 		},
 
 		getMediaTypeHTML : function(editor) {
+			function option(media_type, element) {
+				if (!editor.schema.getElementRule(element || media_type)) {
+					return '';
+				}
+
+				return '<option value="'+media_type+'">'+tinyMCEPopup.editor.translate("media_dlg."+media_type)+'</option>'
+			}
+
 			var html = "";
+
 			html += '<select id="media_type" name="media_type" onchange="Media.formToData(\'type\');">';
-			html += '<option value="video">HTML5 Video</option>';
-			html += '<option value="audio">HTML5 Audio</option>';
-			html += '<option value="flash">Flash</option>';
-			html += '<option value="quicktime">QuickTime</option>';
-			html += '<option value="shockwave">Shockwave</option>';
-			html += '<option value="windowsmedia">Windows Media</option>';
-			html += '<option value="realmedia">Real Media</option>';
-			html += '<option value="iframe">Iframe</option>';
+			html += option("video");
+			html += option("audio");
+			html += option("flash", "object");
+			html += option("quicktime", "object");
+			html += option("shockwave", "object");
+			html += option("windowsmedia", "object");
+			html += option("realmedia", "object");
+			html += option("iframe");
 
 			if (editor.getParam('media_embedded_audio', false)) {
-				html += '<option value="embeddedaudio">Embedded Audio</option>';
+				html += option('embeddedaudio', "object");
 			}
-			
+
 			html += '</select>';
 			return html;
 		},

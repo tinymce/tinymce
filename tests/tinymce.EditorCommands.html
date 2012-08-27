@@ -34,14 +34,14 @@ test('mceInsertContent - p inside text of p', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<p>abc</p>');
-	equals(getContent(), '<p>1</p><p>abc</p><p>4</p>');
+	equal(getContent(), '<p>1</p><p>abc</p><p>4</p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - p inside whole p', function() {
@@ -55,14 +55,14 @@ test('mceInsertContent - p inside whole p', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<p>abc</p>');
-	equals(getContent(), '<p>abc</p>');
+	equal(getContent(), '<p>abc</p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - pre in text of pre', function() {
@@ -76,14 +76,14 @@ test('mceInsertContent - pre in text of pre', function() {
 	rng.setEnd(editor.dom.select('pre')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<pre>abc</pre>');
-	equals(getContent(), '<pre>1</pre><pre>abc</pre><pre>4</pre>');
+	equal(getContent(), '<pre>1</pre><pre>abc</pre><pre>4</pre>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'PRE');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'PRE');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'PRE');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'PRE');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - h1 in text of h1', function() {
@@ -97,14 +97,14 @@ test('mceInsertContent - h1 in text of h1', function() {
 	rng.setEnd(editor.dom.select('h1')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<h1>abc</h1>');
-	equals(getContent(), '<h1>1</h1><h1>abc</h1><h1>4</h1>');
+	equal(getContent(), '<h1>1</h1><h1>abc</h1><h1>4</h1>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'H1');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'H1');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'H1');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'H1');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - li inside li', function() {
@@ -118,14 +118,14 @@ test('mceInsertContent - li inside li', function() {
 	rng.setEnd(editor.dom.select('li')[0].firstChild, 3);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<li>abc</li>');
-	equals(getContent(), '<ul><li>1</li><li>abc</li><li>4</li></ul>');
+	equal(getContent(), '<ul><li>1</li><li>abc</li><li>4</li></ul>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'LI');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'LI');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'LI');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'LI');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - p inside empty editor', function() {
@@ -135,14 +135,14 @@ test('mceInsertContent - p inside empty editor', function() {
 
 	editor.setContent('');
 	editor.execCommand('mceInsertContent', false, '<p>abc</p>');
-	equals(getContent(), '<p>abc</p>');
+	equal(getContent(), '<p>abc</p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - text inside empty p', function() {
@@ -153,14 +153,14 @@ test('mceInsertContent - text inside empty p', function() {
 	editor.getBody().innerHTML = '<p></p>';
 	setSelection('p', 0);
 	editor.execCommand('mceInsertContent', false, 'abc');
-	equals(editor.getBody().innerHTML.toLowerCase().replace(/^<br>/, ''), '<p>abc</p>'); // Opera inserts a BR at the beginning of contents if the P is empty
+	equal(editor.getBody().innerHTML.toLowerCase().replace(/^<br>/, ''), '<p>abc</p>'); // Opera inserts a BR at the beginning of contents if the P is empty
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - text inside empty p with br caret node', function() {
@@ -174,14 +174,14 @@ test('mceInsertContent - text inside empty p with br caret node', function() {
 	rng.setEnd(editor.getBody().firstChild, 0);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, 'abc');
-	equals(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
+	equal(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 1);
-	equals(rng.startContainer.innerHTML, 'abc');
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 1);
+	equal(rng.startContainer.innerHTML, 'abc');
 });
 
 test('mceInsertContent - image inside p', function() {
@@ -195,13 +195,13 @@ test('mceInsertContent - image inside p', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
-	equals(editor.getContent(), '<p><img src="about:blank" alt="" /></p>');
+	equal(editor.getContent(), '<p><img src="about:blank" alt="" /></p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 1);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 1);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 1);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 1);
 });
 
 test('mceInsertContent - legacy content', function() {
@@ -216,7 +216,7 @@ test('mceInsertContent - legacy content', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<u>u</u><strike>strike</strike><font size="7">font</font>');
-	equals(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: xx-large;">font</span></p>');
+	equal(editor.getContent(), '<p><span style="text-decoration: underline;">u</span><span style="text-decoration: line-through;">strike</span><span style="font-size: 300%;">font</span></p>');
 });
 
 test('mceInsertContent - hr', function() {
@@ -230,14 +230,14 @@ test('mceInsertContent - hr', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, '<hr />');
-	equals(editor.getContent(), '<p>1</p><hr /><p>3</p>');
+	equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer, editor.getBody().lastChild);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 0);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 0);
+	equal(rng.startContainer, editor.getBody().lastChild);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 0);
 });
 
 test('mceInsertContent - forced root block', function() {
@@ -249,7 +249,7 @@ test('mceInsertContent - forced root block', function() {
 	editor.getBody().innerHTML = '';
 	editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
 	// Opera adds an extra paragraph since it adds a BR at the end of the contents pass though this for now since it's an minority browser
-	equals(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test<strong>123</strong></p><!-- a -->');
+	equal(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test<strong>123</strong></p><!-- a -->');
 });
 
 test('mceInsertContent - mixed inline content inside td', function() {
@@ -261,7 +261,7 @@ test('mceInsertContent - mixed inline content inside td', function() {
 	editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
 	setSelection('td', 0, 'td', 0);
 	editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
-	equals(editor.getContent(), '<table><tbody><tr><td>test<strong>123</strong><!-- a -->X</td></tr></tbody></table>');
+	equal(editor.getContent(), '<table><tbody><tr><td>test<strong>123</strong><!-- a -->X</td></tr></tbody></table>');
 });
 
 test('mceInsertContent - invalid insertion with spans on page', function(){
@@ -274,7 +274,7 @@ test('mceInsertContent - invalid insertion with spans on page', function(){
 	editor.selection.setRng(rng);
 	editor.execCommand('mceInsertContent', false, insertedContent);
 
-	equals(editor.getContent(), insertedContent + startingContent);
+	equal(editor.getContent(), insertedContent + startingContent);
 });
 
 test('InsertHorizontalRule', function() {
@@ -288,14 +288,21 @@ test('InsertHorizontalRule', function() {
 	rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
 	editor.selection.setRng(rng);
 	editor.execCommand('InsertHorizontalRule');
-	equals(editor.getContent(), '<p>1</p><hr /><p>3</p>');
+	equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
 	rng = normalizeRng(editor.selection.getRng(true));
 	ok(rng.collapsed);
-	equals(rng.startContainer, editor.getBody().lastChild);
-	equals(rng.startContainer.nodeName, 'P');
-	equals(rng.startOffset, 0);
-	equals(rng.endContainer.nodeName, 'P');
-	equals(rng.endOffset, 0);
+	equal(rng.startContainer, editor.getBody().lastChild);
+	equal(rng.startContainer.nodeName, 'P');
+	equal(rng.startOffset, 0);
+	equal(rng.endContainer.nodeName, 'P');
+	equal(rng.endOffset, 0);
+});
+
+test('Justify - multiple block elements selected - queryCommandState', function() {
+	editor.setContent('<div style="text-align: left;"><div id="a" style="text-align: right;">one</div><div id="b" style="text-align: right;">two</div></div>');
+	setSelection('#a', 0, '#b', 3);
+	equal(editor.queryCommandState('JustifyLeft'), false);
+	ok(editor.queryCommandState('JustifyRight'));
 });
 
 tinyMCE.init({

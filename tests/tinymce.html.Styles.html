@@ -12,22 +12,24 @@
 <script>
 module("tinymce.html.Styles");
 
+QUnit.config.reorder = false;
+
 test('Basic parsing/serializing', function() {
 	var styles = new tinymce.html.Styles();
 
 	expect(11);
 
-	equals(styles.serialize(styles.parse('FONT-SIZE:10px')), "font-size: 10px;");
-	equals(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), "font-size: 10px; color: red;");
-	equals(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  red   ')), "font-size: 10px; color: red;");
-	equals(styles.serialize(styles.parse('key:"value"')), "key: 'value';");
-	equals(styles.serialize(styles.parse('key:"value1" \'value2\'')), "key: 'value1' 'value2';");
-	equals(styles.serialize(styles.parse('key:"val\\"ue1" \'val\\\'ue2\'')), "key: 'val\"ue1' 'val\\'ue2';");
-	equals(styles.serialize(styles.parse('width:100%')), 'width: 100%;');
-	equals(styles.serialize(styles.parse('value:_; value2:"_"')), 'value: _; value2: \'_\';');
-	equals(styles.serialize(styles.parse('value: "&amp;"')), "value: '&amp;';");
-	equals(styles.serialize(styles.parse('value: "&"')), "value: '&';");
-	equals(styles.serialize(styles.parse('value: ')), "");
+	equal(styles.serialize(styles.parse('FONT-SIZE:10px')), "font-size: 10px;");
+	equal(styles.serialize(styles.parse('FONT-SIZE:10px;COLOR:red')), "font-size: 10px; color: red;");
+	equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  red   ')), "font-size: 10px; color: red;");
+	equal(styles.serialize(styles.parse('key:"value"')), "key: 'value';");
+	equal(styles.serialize(styles.parse('key:"value1" \'value2\'')), "key: 'value1' 'value2';");
+	equal(styles.serialize(styles.parse('key:"val\\"ue1" \'val\\\'ue2\'')), "key: 'val\"ue1' 'val\\'ue2';");
+	equal(styles.serialize(styles.parse('width:100%')), 'width: 100%;');
+	equal(styles.serialize(styles.parse('value:_; value2:"_"')), 'value: _; value2: \'_\';');
+	equal(styles.serialize(styles.parse('value: "&amp;"')), "value: '&amp;';");
+	equal(styles.serialize(styles.parse('value: "&"')), "value: '&';");
+	equal(styles.serialize(styles.parse('value: ')), "");
 });
 
 test('Colors force hex and lowercase', function() {
@@ -35,12 +37,12 @@ test('Colors force hex and lowercase', function() {
 
 	expect(6);
 
-	equals(styles.serialize(styles.parse('color: rgb(1,2,3)')), "color: #010203;");
-	equals(styles.serialize(styles.parse('color: RGB(1,2,3)')), "color: #010203;");
-	equals(styles.serialize(styles.parse('color: #FF0000')), "color: #ff0000;");
-	equals(styles.serialize(styles.parse('  color:   RGB  (  1  ,  2  ,  3  )  ')), "color: #010203;");
-	equals(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   ')), "font-size: 10px; color: #010203;");
-	equals(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RED   ')), "font-size: 10px; color: red;");
+	equal(styles.serialize(styles.parse('color: rgb(1,2,3)')), "color: #010203;");
+	equal(styles.serialize(styles.parse('color: RGB(1,2,3)')), "color: #010203;");
+	equal(styles.serialize(styles.parse('color: #FF0000')), "color: #ff0000;");
+	equal(styles.serialize(styles.parse('  color:   RGB  (  1  ,  2  ,  3  )  ')), "color: #010203;");
+	equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   ')), "font-size: 10px; color: #010203;");
+	equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RED   ')), "font-size: 10px; color: red;");
 });
 
 test('Urls convert urls and force format', function() {
@@ -50,15 +52,15 @@ test('Urls convert urls and force format', function() {
 
 	expect(9);
 
-	equals(styles.serialize(styles.parse('background: url(a)')), "background: url('|a|');");
-	equals(styles.serialize(styles.parse('background: url("a")')), "background: url('|a|');");
-	equals(styles.serialize(styles.parse("background: url('a')")), "background: url('|a|');");
-	equals(styles.serialize(styles.parse('background: url(   a   )')), "background: url('|a|');");
-	equals(styles.serialize(styles.parse('background: url(   "a"   )')), "background: url('|a|');");
-	equals(styles.serialize(styles.parse("background: url(    'a'    )")), "background: url('|a|');");
-	equals(styles.serialize(styles.parse('background1: url(a); background2: url("a"); background3: url(\'a\')')), "background1: url('|a|'); background2: url('|a|'); background3: url('|a|');");
-	equals(styles.serialize(styles.parse("background: url('http://www.site.com/a?a=b&c=d')")), "background: url('|http://www.site.com/a?a=b&c=d|');");
-	equals(styles.serialize(styles.parse("background: url('http://www.site.com/a_190x144.jpg');")), "background: url('|http://www.site.com/a_190x144.jpg|');");
+	equal(styles.serialize(styles.parse('background: url(a)')), "background: url('|a|');");
+	equal(styles.serialize(styles.parse('background: url("a")')), "background: url('|a|');");
+	equal(styles.serialize(styles.parse("background: url('a')")), "background: url('|a|');");
+	equal(styles.serialize(styles.parse('background: url(   a   )')), "background: url('|a|');");
+	equal(styles.serialize(styles.parse('background: url(   "a"   )')), "background: url('|a|');");
+	equal(styles.serialize(styles.parse("background: url(    'a'    )")), "background: url('|a|');");
+	equal(styles.serialize(styles.parse('background1: url(a); background2: url("a"); background3: url(\'a\')')), "background1: url('|a|'); background2: url('|a|'); background3: url('|a|');");
+	equal(styles.serialize(styles.parse("background: url('http://www.site.com/a?a=b&c=d')")), "background: url('|http://www.site.com/a?a=b&c=d|');");
+	equal(styles.serialize(styles.parse("background: url('http://www.site.com/a_190x144.jpg');")), "background: url('|http://www.site.com/a_190x144.jpg|');");
 });
 
 test('Compress styles', function() {
@@ -66,17 +68,17 @@ test('Compress styles', function() {
 
 	expect(3);
 
-	equals(
+	equal(
 		styles.serialize(styles.parse('border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;')),
 		'border: 1px solid red;'
 	);
 
-	equals(
+	equal(
 		styles.serialize(styles.parse('border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;')),
 		'border: 1pt none black;'
 	);
 	
-	equals(
+	equal(
 		styles.serialize(styles.parse('border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;')),
 		'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;'
 	);
@@ -87,7 +89,7 @@ test('Font weight', function() {
 
 	expect(1);
 
-	equals(styles.serialize(styles.parse('font-weight: 700')), "font-weight: bold;");
+	equal(styles.serialize(styles.parse('font-weight: 700')), "font-weight: bold;");
 });
 
 test('Valid styles', function() {
@@ -95,8 +97,8 @@ test('Valid styles', function() {
 
 	expect(2);
 
-	equals(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 1;'), 'b'), "color: #ff0000; font-size: 10px;");
-	equals(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 2;'), 'a'), "color: #ff0000; font-size: 10px; margin-left: 10px;");
+	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 1;'), 'b'), "color: #ff0000; font-size: 10px;");
+	equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 2;'), 'a'), "color: #ff0000; font-size: 10px; margin-left: 10px;");
 });
 </script>
 </head>

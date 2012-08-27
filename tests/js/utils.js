@@ -135,3 +135,70 @@ function normalizeRng(rng) {
 
 	return rng;
 }
+
+// TODO: Replace this with the new event logic in 3.5
+function type(chr) {
+	var editor = tinymce.activeEditor, keyCode, charCode, event = tinymce.dom.Event, evt, startElm;
+
+	function fakeEvent(target, type, evt) {
+		editor.dom.fire(target, type, evt);
+	};
+
+	// Numeric keyCode
+	if (typeof(chr) == "number") {
+		charCode = keyCode = chr;
+	} else if (typeof(chr) == "string") {
+		// String value
+		if (chr == '\b') {
+			keyCode = 8;
+			charCode = chr.charCodeAt(0);
+		} else if (chr == '\n') {
+			keyCode = 13;
+			charCode = chr.charCodeAt(0);
+		} else {
+			charCode = chr.charCodeAt(0);
+			keyCode = charCode;
+		}
+	} else {
+		evt = chr;
+	}
+
+	evt = evt || {keyCode: keyCode, charCode: charCode};
+
+	startElm = editor.selection.getStart();
+	fakeEvent(startElm, 'keydown', evt);
+	fakeEvent(startElm, 'keypress', evt);
+
+	if (!evt.isDefaultPrevented()) {
+		if (keyCode == 8) {
+			if (editor.getDoc().selection) {
+				var rng = editor.getDoc().selection.createRange();
+				rng.moveStart('character', -1);
+				rng.select();
+				rng.execCommand('Delete', false, null);
+			} else {
+				editor.getDoc().execCommand('Delete', false, null);
+			}
+		} else if (typeof(chr) == 'string') {
+			var rng = editor.selection.getRng(true);
+
+			if (rng.startContainer.nodeType == 3 && rng.collapsed) {
+				rng.startContainer.insertData(rng.startOffset, chr);
+				rng.setStart(rng.startContainer, rng.startOffset + 1);
+				rng.collapse(true);
+				editor.selection.setRng(rng);
+			} else {
+				rng.insertNode(editor.getDoc().createTextNode(chr));
+			}
+		}
+	}
+
+	fakeEvent(startElm, 'keyup', evt);
+}
+
+function cleanHtml(html) {
+	html = html.toLowerCase().replace(/[\r\n]+/g, '');
+	html = html.replace(/ (sizcache|nodeindex|sizset|data\-mce\-expando)="[^"]*"/g, '');
+
+	return html;
+}

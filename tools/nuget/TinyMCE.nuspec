@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>TinyMCE</id>
+    <version>@@version@@</version>
+    <authors>Moxiecode Systems AB</authors>
+    <owners>Moxiecode Systems AB, Tugberk Ugurlu</owners>
+    <licenseUrl>http://www.tinymce.com/license</licenseUrl>
+    <projectUrl>http://tinymce.moxiecode.com/</projectUrl>
+    <iconUrl>http://tinymce.moxiecode.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control released as Open Source under LGPL by Moxiecode Systems AB. TinyMCE has the ability to convert HTML TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate into other Content Management Systems.</description>
+    <summary>TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control released as Open Source under LGPL by Moxiecode Systems AB.</summary>
+    <tags>Editor TinyMCE HTML HTMLEditor</tags>
+  </metadata>
+  <files>
+    <file src="tinymce\jscripts\tiny_mce\langs\**\*.*" target="content\scripts\tinymce\langs" />
+	<file src="tinymce\jscripts\tiny_mce\plugins\**\*.*" target="content\scripts\tinymce\plugins" />
+	<file src="tinymce\jscripts\tiny_mce\themes\**\*.*" target="content\scripts\tinymce\themes" />
+	<file src="tinymce\jscripts\tiny_mce\utils\**\*.*" target="content\scripts\tinymce\utils" />
+	<file src="tinymce\jscripts\tiny_mce\tiny_mce.js" target="content\scripts\tinymce\tiny_mce.js" />
+	<file src="tinymce\jscripts\tiny_mce\tiny_mce_src.js" target="content\scripts\tinymce\tiny_mce_src.js" />
+	<file src="tinymce\jscripts\tiny_mce\tiny_mce_popup.js" target="content\scripts\tinymce\tiny_mce_popup.js" />
+	<file src="tinymce\jscripts\tiny_mce\license.txt" target="content\scripts\tinymce\license.txt" />
+  </files>
+</package>
