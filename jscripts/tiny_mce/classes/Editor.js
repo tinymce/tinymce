@@ -2416,7 +2416,11 @@
 
 			// We must save before we hide so Safari doesn't crash
 			t.save();
-			DOM.hide(t.getContainer());
+
+			// defer the call to hide to prevent an IE9 crash
+			setTimeout(function() {
+				DOM.hide(t.getContainer());
+			}, 1);
 			DOM.setStyle(t.id, 'display', t.orgDisplay);
 		},
 
