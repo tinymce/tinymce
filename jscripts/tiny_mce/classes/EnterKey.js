@@ -149,6 +149,11 @@
 				if (settings.keep_styles !== false) {
 					do {
 						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(node.nodeName)) {
+							// Never clone a caret containers
+							if (node.id == '_mce_caret') {
+								continue;
+							}
+
 							clonedNode = node.cloneNode(false);
 							dom.setAttrib(clonedNode, 'id', ''); // Remove ID since it needs to be document unique
 
@@ -165,7 +170,7 @@
 
 				// BR is needed in empty blocks on non IE browsers
 				if (!tinymce.isIE) {
-					caretNode.innerHTML = '<br>';
+					caretNode.innerHTML = '<br data-mce-bogus="1">';
 				}
 
 				return block;

@@ -1,6 +1,8 @@
 Version 3.5.7 (2012-0x-xx)
 	Fixed bug in hyperlink dialog for IE9 where links with no target attr set had target value of --
 	Changing toolbars to have a toolbar role for FF keyboard navigation works correctly.
+	Fixed bug where applying formatting to an empty block element would produce redundant spans.
+	Fixed bug where caret formatting on IE wouldn't properly apply if you pressed enter/return.
 	Fixed bug where loading TinyMCE using an async script wouldn't properly initialize editors.
 	Fixed bug where some white space would be removed after inline elements before block elements.
 	Fixed bug where it wouldn't properly parse attributes with a single backslash as it's contents.
