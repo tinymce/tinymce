@@ -419,7 +419,7 @@
 						i = node.attributes.length;
 						while (i--) {
 							name = node.attributes[i].name;
-							if (name === "name" || name.indexOf('data-') === 0)
+							if (name === "name" || name.indexOf('data-mce-') === 0)
 								return false;
 						}
 					}
