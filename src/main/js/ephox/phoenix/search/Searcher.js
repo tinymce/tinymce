@@ -23,8 +23,6 @@ define(
       var text = Arr.map(input, Text.get).join('');
       var indices = Find.all(text, pattern.term());
 
-      console.log('found: ', pattern.term(), ' at: ', indices);
-
       var structure = PositionArray.make(input, function (x, offset) {
         var finish = offset + Text.get(x).length;
         return Option.from(Spot.range(x, offset, finish));
