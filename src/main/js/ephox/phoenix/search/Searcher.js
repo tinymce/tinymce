@@ -21,7 +21,7 @@ define(
       var input = List.justText(elements);
 
       var text = Arr.map(input, Text.get).join('');
-      var indices = Find.all(text, pattern.term());
+      var indices = Find.all(text, pattern);
 
       var structure = PositionArray.make(input, function (x, offset) {
         var finish = offset + Text.get(x).length;
