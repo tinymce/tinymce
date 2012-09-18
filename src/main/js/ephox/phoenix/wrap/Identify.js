@@ -10,6 +10,7 @@ define(
 
   function (Split, Range, Struct, Compare) {
 
+    // FIX: Rename me.
     var zz = Struct.immutable('element', 'offset');
 
     var diff = function (base, baseOffset, end, endOffset) {
