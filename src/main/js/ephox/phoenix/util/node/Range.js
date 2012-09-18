@@ -14,8 +14,8 @@ define(
     var curry = Fun.curry;
     
     var range = function (e1, e2) {
-      if (e1 === e2) return [e1];
-      var parent = Parents.common(e1, e2);
+      if (Compare.eq(e1.element(), e2.element())) return [e1.element()];
+      var parent = Parents.common(e1.element(), e2.element());
       return parent.fold(function () {
         return [];
       }, function (v) {
@@ -25,10 +25,10 @@ define(
           return x.fold(no, no, Fun.identity);
         });
 
-        var i1 = Arr.findIndex(nodes, curry(Compare.eq, e1));
-        var i2 = Arr.findIndex(nodes, curry(Compare.eq, e2));
+        var i1 = Arr.findIndex(nodes, curry(Compare.eq, e1.element())) + e1.offset();
+        var i2 = Arr.findIndex(nodes, curry(Compare.eq, e2.element())) + e2.offset();
 
-        return nodes.slice(i1, i2 + 1);
+        return nodes.slice(i1, i2);
       });
     };
 

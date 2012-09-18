@@ -19,11 +19,14 @@ test(
       assert.eq(true, Find.find(pNode, pOffset).isNone());
     };
 
-    check(Page.t1, 1, Page.p1, 1);
-    check(Page.t1, 5, Page.p1, 5);
-    check(Page.t4, 1, Page.p2, 12);
-    check(Page.t5, 1, Page.p2, 16);
+    var page = Page();
 
-    checkNone(Page.p1, 16);
+
+    check(page.t1, 1, page.p1, 1);
+    check(page.t1, 5, page.p1, 5);
+    check(page.t4, 1, page.p2, 12);
+    check(page.t5, 1, page.p2, 16);
+
+    checkNone(page.p1, 16);
   }
 );

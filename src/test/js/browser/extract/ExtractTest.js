@@ -14,11 +14,13 @@ test(
       assert.eq(true, Compare.eq(eNode, actual.element()));
       assert.eq(eOffset, actual.offset());
     };
-    
-    check(Page.p1, 1, Page.t1, 1);
-    check(Page.p1, 5, Page.t1, 5);
-    check(Page.s2, 1, Page.t4, 1);
-    check(Page.s3, 0, Page.t5, 0);
+
+    var page = Page();
+        
+    check(page.p1, 1, page.t1, 1);
+    check(page.p1, 5, page.t1, 5);
+    check(page.s2, 1, page.t4, 1);
+    check(page.s3, 0, page.t5, 0);
   }
 );
 
@@ -49,12 +51,13 @@ test(
     };
 
     // IMPORTANT: Otherwise CSS display does not work.
-    Page.connect();
+    var page = Page();
+    page.connect();
 
     check('', Element.fromText(''));
-    check('\\wFirst paragraph\\w', Page.p1);
-    check('\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w', Page.div1);
-    check('\\w\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w\\wNext \\wSection now\\w\\w\\w', Page.container);
+    check('\\wFirst paragraph\\w', page.p1);
+    check('\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w', page.div1);
+    check('\\w\\w\\wFirst paragraph\\w\\wSecond here is something\\w\\wMore data\\w\\w\\wNext \\wSection now\\w\\w\\w', page.container);
   }
 );
 
