@@ -12,6 +12,8 @@ Version 3.5.7 (2012-0x-xx)
 	Fixed bug where the custom_elements option didn't properly setup the block elements schema structure.
 	Fixed bug where the custom_elements option didn't auto populate the extended_valid_elements.
 	Fixed bug where the whole TD element would get blcok formatted when there where BR elements in it.
+	Fixed bug where IE 9 might crash if the editor was hidden and specific styles where applied to surrounding contents.
+	Fixed issue with missing autofocus attribute on input element when using the HTML5 schema.
 	Fixed issue where enter inside a block contained within an LI element wouldn't produce a new LI.
 Version 3.5.6 (2012-07-26)
 	Added "text" as a valid option to the editor.getContent format option. Makes it easier to get a text representation of the editor contents.
