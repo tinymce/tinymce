@@ -41,6 +41,9 @@
 	 * ed.render();
 	 */
 	tinymce.create('tinymce.Editor', {
+        /** minium height and width of our editor */
+        MIN_HEIGHT : 100,
+        MIN_WIDTH  : 100,
 		/**
 		 * Constructs a editor instance by id.
 		 *
@@ -684,10 +687,10 @@
 				re = /^[0-9\.]+(|px)$/i;
 
 				if (re.test('' + w))
-					w = Math.max(parseInt(w) + (o.deltaWidth || 0), 100);
+					w = Math.max(parseInt(w) + (o.deltaWidth || 0), t.MIN_WIDTH);
 
 				if (re.test('' + h))
-					h = Math.max(parseInt(h) + (o.deltaHeight || 0), 100);
+					h = Math.max(parseInt(h) + (o.deltaHeight || 0), t.MIN_HEIGHT);
 
 				// Render UI
 				o = t.theme.renderUI({
@@ -722,8 +725,8 @@
 			});
 
 			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
-			if (h < 100)
-				h = 100;
+			if (h < t.MIN_HEIGHT)
+				h = t.MIN_HEIGHT;
 
 			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml">';
 
