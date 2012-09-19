@@ -1417,7 +1417,7 @@
 			// We must save before we hide so Safari doesn't crash
 			self.save();
 
-			// defer the call to hide to prevent an IE9 crash
+			// defer the call to hide to prevent an IE9 crash #4921
 			setTimeout(function() {
 				DOM.hide(self.getContainer());
 			}, 1);
