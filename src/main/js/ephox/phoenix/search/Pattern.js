@@ -8,13 +8,14 @@ define(
 
   function (Fun, Chars) {
     
-    var custom = function (regex, preOffset, postOffset) {
+    var custom = function (regex, length, preOffset, postOffset) {
       var term = function () {
         return new RegExp(regex, 'gi');
       };
 
       return {
         term: term,
+        length: Fun.constant(length),
         preOffset: preOffset,
         postOffset: postOffset
       };
@@ -22,7 +23,7 @@ define(
     
     var token = function (x) {
       // FIX: This will need to be sanitised.
-      return custom(x, Fun.constant(0), Fun.constant(0));
+      return custom(x, x.length, Fun.constant(0), Fun.constant(0));
     };
 
     var word = function (w) {
@@ -37,7 +38,7 @@ define(
         return match.length > 2 ? match[2].length : 0;
       };
 
-      return custom(regex, prefix, suffix);
+      return custom(regex, w.length, prefix, suffix);
     };
 
     return {
