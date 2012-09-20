@@ -27,8 +27,8 @@ define(
     };
 
     var word = function (w) {
-      // FIX: This will need to be sanitised.
-      var regex = '(^|' + Chars.wordbreak() + '+)' + w + '($|' + Chars.wordbreak() + '+)';
+      // FIX: This will need to be sanitised. It is also heavily based on English.
+      var regex = '((?:^\'?)|(?:' + Chars.wordbreak() + '+\'?))' + w + '((?:\'?$)|(?:\'?' + Chars.wordbreak() + '+))';
 
       var prefix = function (match) {
         return match.length > 1 ? match[1].length : 0;
