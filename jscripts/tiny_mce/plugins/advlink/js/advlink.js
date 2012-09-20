@@ -378,6 +378,9 @@ function getAnchorListHTML(id, target) {
 	for (i=0, len=nodes.length; i<len; i++) {
 		if ((name = ed.dom.getAttrib(nodes[i], "name")) != "")
 			html += '<option value="#' + name + '">' + name + '</option>';
+
+		if ((name = nodes[i].id) != "" && !nodes[i].href)
+			html += '<option value="#' + name + '">' + name + '</option>';
 	}
 
 	if (html == "")
