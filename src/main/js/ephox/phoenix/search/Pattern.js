@@ -3,30 +3,47 @@ define(
 
   [
     'ephox.peanut.Fun',
-    'ephox.phoenix.search.Chars',
-    'ephox.scullion.Struct'
+    'ephox.phoenix.search.Chars'
   ],
 
-  function (Fun, Chars, Struct) {
-    var nu = Struct.immutable('term', 'length', 'offset');
+  function (Fun, Chars) {
+    
+    var custom = function (regex, preOffset, postOffset) {
+      var term = function () {
+        return new RegExp(regex, 'gi');
+      };
 
+      return {
+        term: term,
+        preOffset: preOffset,
+        postOffset: postOffset
+      };
+    };
+    
     var token = function (x) {
-      return nu(x, x.length, Fun.constant(0));
+      // FIX: This will need to be sanitised.
+      return custom(x, Fun.constant(0), Fun.constant(0));
     };
 
     var word = function (w) {
-      var term = new RegExp('(^|' + Chars.wordbreak() + '+)' + w + '($|' + Chars.wordbreak() + '+)', 'g');
-      var plain = new RegExp('(?:^|' + Chars.wordbreak() + '+)' + w + '(?:$|' + Chars.wordbreak() + '+)', 'g');
+      // FIX: This will need to be sanitised.
+      var regex = '(^|' + Chars.wordbreak() + '+)' + w + '($|' + Chars.wordbreak() + '+)';
 
-      return nu(plain, w.length, function (s) {
-        var matches = term.exec(s);
-        return matches && matches.length > 1 ? matches[1].length : 0;
-      });
+      var prefix = function (match) {
+        return match.length > 1 ? match[1].length : 0;
+      };
+
+      var suffix = function (match) {
+        return match.length > 2 ? match[2].length : 0;
+      };
+
+      return custom(regex, prefix, suffix);
     };
 
     return {
       token: token,
-      word: word
+      word: word,
+      custom: custom
     };
   }
 );

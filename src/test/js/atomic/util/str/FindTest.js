@@ -20,5 +20,14 @@ test(
 
     check([3, 10], "no it's i it's done.", Pattern.token("it's"));
     check([0], "catastrophe'", Pattern.token("catastrophe'"));
+
+    check([0], 'sre', Pattern.word('sre'));
+    check([0], 'sre ', Pattern.word('sre'));
+    check([1], ' sre', Pattern.word('sre'));
+    check([1], ' sre ', Pattern.word('sre'));
+    check([0, 4], 'sre sre', Pattern.word('sre'));
+    check([1, 5], ' sre sre', Pattern.word('sre'));
+    check([1, 5, 9], ' sre sre sre', Pattern.word('sre'));
+    check([1, 5, 9], ' sre sre sre ', Pattern.word('sre'));
   }
 );
