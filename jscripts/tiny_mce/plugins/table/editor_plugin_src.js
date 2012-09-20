@@ -1294,7 +1294,10 @@
 
 				/**
 				 * Fixes bug in Gecko where shift-enter in table cell does not place caret on new line
+				 *
+				 * Removed: Since the new enter logic seems to fix this one.
 				 */
+				/*
 				if (tinymce.isGecko) {
 					ed.onKeyDown.add(function(ed, e) {
 						if (e.keyCode === tinymce.VK.ENTER && e.shiftKey) {
@@ -1307,7 +1310,7 @@
 						}
 					});
 				}
-
+				*/
 
 				fixTableCaretPos();
 				ed.startContent = ed.getContent({format : 'raw'});
