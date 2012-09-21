@@ -1418,9 +1418,7 @@
 			self.save();
 
 			// defer the call to hide to prevent an IE9 crash #4921
-			setTimeout(function() {
-				DOM.hide(self.getContainer());
-			}, 1);
+			DOM.hide(self.getContainer());
 			DOM.setStyle(self.id, 'display', self.orgDisplay);
 		},
 
@@ -1849,11 +1847,19 @@
 		 * @method remove
 		 */
 		remove : function() {
-			var self = this, elm = self.getContainer();
+			var self = this, elm = self.getContainer(), doc = self.getDoc();
 
 			if (!self.removed) {
 				self.removed = 1; // Cancels post remove event execution
-				self.hide();
+
+				// Fixed bug where IE has a blinking cursor left from the editor
+				if (isIE && doc)
+					doc.execCommand('SelectAll');
+
+				// We must save before we hide so Safari doesn't crash
+				self.save();
+
+				DOM.setStyle(self.id, 'display', self.orgDisplay);
 
 				// Don't clear the window or document if content editable
 				// is enabled since other instances might still be present
