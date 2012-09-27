@@ -15,8 +15,7 @@ var dependencies = [
     repository: 'buildrepo2',
     source: 'compass.zip',
     targets: [
-      { name: 'module/*.js', path: depend },
-      { name: 'depend/*.js', path: depend }
+      { name: 'module/*.js', path: depend }
     ]
   },
 
