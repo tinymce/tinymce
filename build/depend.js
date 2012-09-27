@@ -15,7 +15,8 @@ var q = function(x) {
     version: 'latest',
     source: x + '.zip',
     targets: [
-      { name: 'module/*.js', path: depend }
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
     ]
   };
 };
