@@ -37,13 +37,19 @@ define(
     };
 
     var extract = function (child, offset) {
-      var parent = Traverse.parent(child).getOrDie('No parent for element.');
-      return extractToElem(child, offset, parent);
+      return Traverse.parent(child).fold(function () {
+        return Spot.point(child, offset);
+      }, function (v) {
+        return extractToElem(child, offset, v);
+      });
     };
 
     var extractTo = function (child, offset, pred) {
-      var parent = PredicateFind.ancestor(child, pred).getOrDie('No parent matching predicate.');
-      return extractToElem(child, offset, parent);
+      return PredicateFind.ancestor(child, pred).fold(function () {
+        return Spot.point(child, offset);
+      }, function (v) {
+        return extractToElem(child, offset, v);
+      });
     };
 
     return {
