@@ -25,6 +25,7 @@ function init() {
 	var dir = dom.getAttrib(trElm, 'dir');
 
 	selectByValue(formObj, 'rowtype', rowtype);
+	setActionforRowType(formObj, rowtype);
 
 	// Any cells selected
 	if (dom.select('td.mceSelected,th.mceSelected', trElm).length == 0) {
@@ -234,4 +235,20 @@ function changedColor() {
 	formObj.style.value = dom.serializeStyle(st);
 }
 
+function changedRowType() {
+	var formObj = document.forms[0], dom = tinyMCEPopup.editor.dom;
+	var rowtype = getSelectValue(formObj, 'rowtype');
+
+	setActionforRowType(formObj, rowtype);
+
+}
+
+function setActionforRowType(formObj, rowtype) {
+	if (rowtype === "tbody") {
+		formObj.action.disabled = false;
+	} else {
+		selectByValue(formObj, 'action', "row");
+		formObj.action.disabled = true;
+	}
+}
 tinyMCEPopup.onInit.add(init);
