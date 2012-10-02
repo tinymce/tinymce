@@ -236,7 +236,7 @@ function changedColor() {
 }
 
 function changedRowType() {
-	var formObj = document.forms[0], dom = tinyMCEPopup.editor.dom;
+	var formObj = document.forms[0];
 	var rowtype = getSelectValue(formObj, 'rowtype');
 
 	setActionforRowType(formObj, rowtype);
