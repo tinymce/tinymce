@@ -37,7 +37,8 @@ define(
 
     return {
       wrap: wrap,
-      wrapWith: wrapWith
+      wrapWith: wrapWith,
+      wrapper: wrapper
     };
   }
 );

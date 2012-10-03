@@ -2,9 +2,10 @@ define(
   'ephox.phoenix.util.str.Find',
 
   [
+    'ephox.perhaps.Option'
   ],
 
-  function () {
+  function (Option) {
 
     var all = function (input, pattern) {
       var term = pattern.term();
@@ -21,8 +22,20 @@ define(
       return r;
     };
 
+    var from = function (input, pattern, index) {
+      var term = pattern.term();
+      var match = term.exec(input);
+      if (match && match.index >= index) {
+        var start = match.index + pattern.preOffset(match);
+        return Option.some([start, start + pattern.length() - pattern.postOffset(match)]);
+      } else {
+        return Option.none();
+      }
+    };
+
     return {
-      all: all
+      all: all,
+      from: from
     };
   }
 );
