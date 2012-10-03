@@ -13,15 +13,16 @@ define(
   function (Arr, Fun, Focus, GatherResult, Traversal, Traverse) {
     var curry = Fun.curry;
     
-    var gather = function (element, prune, f) {
-      var lefts = across(Traversal.left(), element, prune, f);
-      var l = chain(lefts, curry(up, Traversal.left(), element, prune, f));
-      
-      var rights = across(Traversal.right(), element, prune, f);
-      var r = chain(rights, curry(up, Traversal.right(), element, prune, f));
+    var traverse = function(traversal, element, prune, f) {
+      var siblings = across(traversal, element, prune, f);
+      return chain(siblings, curry(up, traversal, element, prune, f));
+    };
 
-      var rLeft = Arr.reverse(l);
-      return Focus(rLeft, element, r);
+    var gather = function (element, prune, f) {
+      var lefts = traverse(Traversal.left(), element, prune, f);
+      var rights = traverse(Traversal.right(), element, prune, f);
+      var rLeft = Arr.reverse(lefts);
+      return Focus(rLeft, element, rights);
     };
 
     var chain = function (result, f) {
@@ -47,6 +48,7 @@ define(
     };
 
     return {
+      traverse: traverse,
       gather: gather
     };
 
