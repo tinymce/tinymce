@@ -1,4 +1,5 @@
 Version 3.5.7 (2012-09-20)
+	Fixed bug where toolbar was annouced multiple times with JAWS on Firefox
 	Changed table row properties dialog to not update multiple rows when row type is header or footer.
 	Fixed bug in hyperlink dialog for IE9 where links with no target attr set had target value of --
 	Changing toolbars to have a toolbar role for FF keyboard navigation works correctly.
