@@ -69,7 +69,7 @@ define(
 
 
       var r = first > -1 && last >- 1 ? list.slice(first, last) :
-        list[list.length - 1] && list[list.length - 1].finish() === finish && first >- 1 ? list.slice(first) : [];
+        list[list.length - 1] && list[list.length - 1].finish() === finish && first > -1 ? list.slice(first) : [];
 
       return r;
 
