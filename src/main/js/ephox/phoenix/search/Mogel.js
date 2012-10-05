@@ -57,6 +57,7 @@ define(
         var matches = [];
 
         while (start < text.length) {
+          
           var candidates = Arr.bind(patterns, function (y) {
             var found = Find.from(text, y.pattern, start);
             return found.fold(function () {

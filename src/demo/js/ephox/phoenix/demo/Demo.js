@@ -10,7 +10,8 @@ define(
   function ($, Console, Examples) {
     return function () {
       var examples = Examples.add([
-        { name: 'Search and Highlight Demo', module: 'ephox.phoenix.demo.SearchDemo' }
+        { name: 'Search and Highlight Demo', module: 'ephox.phoenix.demo.SearchDemo' },
+        { name: 'Latin Demo', module: 'ephox.phoenix.demo.LatinDemo' }
       ]);
 
       var consoleUI = Console.use();
