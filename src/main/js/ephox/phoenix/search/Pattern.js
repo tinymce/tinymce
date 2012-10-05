@@ -10,7 +10,7 @@ define(
     
     var custom = function (regex, length, preOffset, postOffset) {
       var term = function () {
-        return new RegExp(regex, 'gi');
+        return new RegExp(regex, 'g');
       };
 
       return {
