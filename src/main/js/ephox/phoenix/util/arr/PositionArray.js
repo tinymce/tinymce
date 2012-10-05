@@ -38,15 +38,7 @@ define(
       return Option.from(item);
     };
 
-    var log = function (label, list) {
-      var data = Arr.map(list, function (x) {
-        return '["' + Text.get(x.element()) + '" ' + x.start() + '->' + x.finish() + ']';
-      }).join(', ');
-      // console.log(label, data);
-    };
-
     var splitAt = function (list, start, finish, first, last) {
-      log('splitAt: ' + start + ', ' + finish, list);
       return Arr.foldr(list, function (b, a) {
         if (start >= a.start() && start <= a.finish()) {
           var rest = first(start, a);
@@ -67,8 +59,6 @@ define(
     };
 
     var sub = function (list, start, finish) {
-      log('sub: ', list);
-
       var first = Arr.findIndex(list, function (x) {
         return x.start() === start;
       });
