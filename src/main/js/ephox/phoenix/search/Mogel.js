@@ -47,7 +47,6 @@ define(
       var result = Arr.bind(sections, function (x) {
         var input = List.justText(x);
         var text = Arr.map(input, Text.get).join('');
-
         var structure = PositionArray.make(input, function (x, offset) {
           var finish = offset + Text.get(x).length;
           return Option.from(Spot.range(x, offset, finish));
@@ -56,8 +55,9 @@ define(
         var start = 0;
         var matches = [];
 
+        var newbie = structure;
+
         while (start < text.length) {
-          
           var candidates = Arr.bind(patterns, function (y) {
             var found = Find.from(text, y.pattern, start);
             return found.fold(function () {
@@ -78,14 +78,13 @@ define(
             // FIX this (need to use structs. Check offset by one)
 
             var first = v.range[0];
-            var last = v.range[1] + 1;
+            var last = v.range[1];
 
-            var newbie = PositionArray.splitAt(structure, first, last, splitter, splitter);
+            newbie = PositionArray.splitAt(newbie, first, last, splitter, splitter);
       
             var sub = PositionArray.sub(newbie, first, last);
              
             var subelements = Arr.map(sub, function (z) {
-
               return z.element();
             });
 

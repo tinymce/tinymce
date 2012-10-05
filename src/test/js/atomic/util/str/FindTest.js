@@ -50,5 +50,10 @@ test(
     checkFrom(Option.none(), ' hello', Pattern.word('he'), 0);
     checkFrom(Option.none(), ' hello', Pattern.word('hello'), 1);
     checkFrom(Option.some([1, 6]), ' hello', Pattern.word('hello'), 0);
+
+
+    checkFrom(Option.some([11, 21]), 'doloremque laudantium, totam rem aperiam, eaque', Pattern.word('laudantium'), 10);
+    checkFrom(Option.some([48, 58]), 'doloremque laudantium, totam rem aperiam, eaque doloremque', Pattern.word('doloremque'), 15);
+
   }
 );

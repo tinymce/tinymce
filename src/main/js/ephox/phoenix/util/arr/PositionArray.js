@@ -4,10 +4,11 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
-    'ephox.perhaps.Option'
+    'ephox.perhaps.Option',
+    'ephox.sugar.api.Text'
   ],
 
-  function (Arr, Fun, Option) {
+  function (Arr, Fun, Option, Text) {
 
     var make = function (xs, f) {
 
@@ -37,7 +38,15 @@ define(
       return Option.from(item);
     };
 
+    var log = function (label, list) {
+      var data = Arr.map(list, function (x) {
+        return '["' + Text.get(x.element()) + '" ' + x.start() + '->' + x.finish() + ']';
+      }).join(', ');
+      // console.log(label, data);
+    };
+
     var splitAt = function (list, start, finish, first, last) {
+      log('splitAt: ' + start + ', ' + finish, list);
       return Arr.foldr(list, function (b, a) {
         if (start >= a.start() && start <= a.finish()) {
           var rest = first(start, a);
@@ -58,6 +67,7 @@ define(
     };
 
     var sub = function (list, start, finish) {
+      log('sub: ', list);
 
       var first = Arr.findIndex(list, function (x) {
         return x.start() === start;
@@ -67,8 +77,11 @@ define(
         return x.start() === finish;
       });
 
-      return first > -1 && last >- 1 ? list.slice(first, last) :
+
+      var r = first > -1 && last >- 1 ? list.slice(first, last) :
         list[list.length - 1] && list[list.length - 1].finish() === finish && first >- 1 ? list.slice(first) : [];
+
+      return r;
 
       // if (start > finish) throw 'Start must be lower than finish. ' + start + ' > ' + finish;
       // var r = Arr.foldr(list, function (b, a) {

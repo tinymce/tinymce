@@ -20,7 +20,9 @@ define(
 
   function (Arr, Obj, Matcher, Mogel, Wrapper, Wraps, Struct, Attr, Class, Css, Element, Event, Insert, Text) {
     return function () {
-      var text = Element.fromText('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur');
+      var text = Element.fromText('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur');
+
+      // var text = Element.fromText('doloremque laudantium, totam rem aperiam, eaque');
 
       var p = Element.fromTag('p');
       Insert.append(p, text);
@@ -33,33 +35,31 @@ define(
       Attr.set(button2, 'type', 'button');
       Insert.append(button2, Element.fromText('Old'));
 
-      var nu = function () {
+      var underline = function () {
         var c = Element.fromTag('span');
         Css.set(c, 'text-decoration', 'underline');
         return Wraps.basic(c);
       };
 
-      var getWords = function () {
-        var duplicates = Text.get(text).split(' ');
+      var allWords = (function () {
+        var duplicates = Text.get(text).split(/\W/);
         var set = {};
         Arr.each(duplicates, function (x) {
-          set[x] = x;
+          if (x.length) set[x] = x;
         });
 
         return Obj.keys(set);
-      };
+      })();
 
       Event.bind(button, 'click', function (event) {
-        var words = getWords();
-        highlightNew(words);
+        highlightNew(allWords, underline);
       });
 
       Event.bind(button2, 'click', function (event) {
-        var words = getWords();
-        highlightOld(words);
+        highlightOld(allWords, underline);
       });
 
-      var highlightNew = function (words) {
+      var highlightNew = function (words, nu) {
         var mogel = Mogel.mogel([p], words);
         
         Arr.each(mogel, function (x) {
@@ -67,7 +67,7 @@ define(
         });
       };
 
-      var highlightOld = function (words) {
+      var highlightOld = function (words, nu) {
         var set = {};
         var matches = Arr.bind(words, function (x) {
           if (set[x]) return [];
@@ -86,6 +86,8 @@ define(
           });
         });
       };
+
+      // highlightOld(allWords, Wraps.simple);
 
       var ephoxUi = Element.fromDom(document.getElementById('ephox-ui'));
       Insert.append(ephoxUi, p);
