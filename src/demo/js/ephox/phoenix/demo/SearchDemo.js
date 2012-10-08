@@ -4,7 +4,7 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.compass.Arr',
-    'ephox.phoenix.search.Matcher',
+    'ephox.phoenix.search.Searcher',
     'ephox.phoenix.wrap.Wrapper',
     'ephox.phoenix.wrap.Wraps',
     'ephox.sugar.api.Attr',
@@ -17,7 +17,7 @@ define(
     'text!html/content.html'
   ],
 
-  function ($, Arr, Matcher, Wrapper, Wraps, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
+  function ($, Arr, Searcher, Wrapper, Wraps, Attr, Class, Css, Element, Event, Insert, InsertAll, ContentHtml) {
     return function () {
       var container = Element.fromTag('div');
 
@@ -40,22 +40,19 @@ define(
 
       Event.bind(button, 'click', function (event) {
         var token = Attr.get(input, 'value');
-        var matches = Matcher.token([content], token);
+        var matches = Searcher.safeToken([content], token);
         highlight(matches);
       });
 
       Event.bind(buttonWord, 'click', function (event) {
         var word = Attr.get(input, 'value');
-        var matches = Matcher.word([content], word);
+        var matches = Searcher.safeWords([content], [word]);
         highlight(matches);
       });
 
       var highlight = function (matches) {
         Arr.each(matches, function (x) {
-          var match = x.get();
-          match.each(function (v) {
-            Wrapper.wrapWith(v.begin().element(), v.begin().offset(), v.end().element(), v.end().offset(), wrapper);
-          });
+          Wrapper.wrapper(x.elements(), wrapper);
         });
       };
       

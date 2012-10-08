@@ -22,12 +22,10 @@ define(
     };
     
     var token = function (x) {
-      // FIX: This will need to be sanitised.
       return custom(x, x.length, Fun.constant(0), Fun.constant(0));
     };
 
     var word = function (w) {
-      // FIX: This will need to be sanitised. It is also heavily based on English.
       var regex = '((?:^\'?)|(?:' + Chars.wordbreak() + '+\'?))' + w + '((?:\'?$)|(?:\'?' + Chars.wordbreak() + '+))';
 
       var prefix = function (match) {
