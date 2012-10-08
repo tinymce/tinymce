@@ -3,7 +3,7 @@ test(
 
   [
     'ephox.compass.Arr',
-    'ephox.phoenix.search.Mogel',
+    'ephox.phoenix.search.Matches',
     'ephox.phoenix.wrap.Wrapper',
     'ephox.phoenix.wrap.Wraps',
     'ephox.sugar.api.Attr',
@@ -14,7 +14,7 @@ test(
     'ephox.sugar.api.Remove'
   ],
 
-  function (Arr, Mogel, Wrapper, Wraps, Attr, Element, Html, Insert, InsertAll, Remove) {
+  function (Arr, Matches, Wrapper, Wraps, Attr, Element, Html, Insert, InsertAll, Remove) {
     
     var text = Element.fromText('Sed ut perspiciatis unde omnis iste natus error sit voluptatem');
     var body = Element.fromDom(document.body);
@@ -29,8 +29,7 @@ test(
       Remove.empty(container);
       InsertAll.append(container, elements);
 
-      console.log('initially: ', Html.get(container));
-      var snapshots = Mogel.mogel(elements, words);
+      var snapshots = Matches.run(elements, words);
 
       Arr.each(snapshots, function (x) {
         Wrapper.wrapper(x.elements(), function () {
@@ -43,9 +42,9 @@ test(
       assert.eq(expected, Html.get(container));
     };
 
-    // check('<span data-word="Sed">Sed</span>', ['Sed'], ['Sed']);
+    check('<span data-word="Sed">Sed</span>', ['Sed'], ['Sed']);
     check('<span data-word="Sed">Sed</span> ut perspiciatis <span data-word="unde">u</span><span data-word="unde">nde</span>' +
       ' omnis <span data-word="iste">iste</span> natus error <span data-word="sit">sit</span> voluptatem', ['Sed', ' ut per', 'spiciatis u', 'nde om', 'ni', 's iste', ' natus', ' error', ' sit voluptatem'], ['Sed', 'iste', 'unde', 'sit']);
-    // check('<span data-word="Sed">Sed</span> <span>ut</span>', ['Sed', ' ut per'], ['Sed', 'ut']);
+    check('<span data-word="Sed">Sed</span> <span data-word="ut">ut</span> per', ['Sed', ' ut per'], ['Sed', 'ut']);
   }
 );

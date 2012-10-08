@@ -74,8 +74,6 @@ define(
           else return 0;
         });
 
-        console.log('magic: ', magikclone);
-
         /* Not great that newbie changes outside and inside the map */
         return Arr.map(magikclone, function (y) {
           newbie = PositionArray.splitAt(newbie, y.start, y.finish, splitter, splitter);
