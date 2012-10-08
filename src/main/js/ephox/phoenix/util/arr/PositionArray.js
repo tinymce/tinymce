@@ -72,20 +72,6 @@ define(
         list[list.length - 1] && list[list.length - 1].finish() === finish && first > -1 ? list.slice(first) : [];
 
       return r;
-
-      // if (start > finish) throw 'Start must be lower than finish. ' + start + ' > ' + finish;
-      // var r = Arr.foldr(list, function (b, a) {
-      //   if (a.start() === start) {
-      //     return { done: b.done, started: true, v: [a].concat(b.v) };
-      //   } else if (a.start() === finish) {
-      //     return { done: true, v: [a] };
-      //   } else {
-      //     return { done: b.done, started: b.started, v: b.v };
-      //   }
-      // }, { done: false, started: false, v: []});
-
-      // return r.done && r.started ? r.v :
-      //   r.started && list[list.length - 1] && list[list.length - 1].finish() === finish ? r.v : [];
     };
 
     return {
