@@ -20,5 +20,7 @@ test(
     check('twas', '\'twas(twas)this', 6);
     check('this', 'it is this', 'it is this'.length);
 
+
+    check('café', 'café', 1);
   }
 );

@@ -7,10 +7,10 @@ define(
 
   function (Fun) {
 
-    var chars = '\\w\'\\-';
+    var chars = '\\w\'\\-\\u00C0-\\u00FF';
     var wordbreak = '[^' + chars + ']';
     var wordchar = '[' + chars + ']';
-
+    
     return {
       chars: Fun.constant(chars),
       wordbreak: Fun.constant(wordbreak),
