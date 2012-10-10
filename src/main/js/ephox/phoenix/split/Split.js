@@ -8,10 +8,11 @@ define(
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
+    'ephox.sugar.api.Node',
     'ephox.sugar.api.Text'
   ],
 
-  function (Option, TextSplit, Split, Element, Insert, InsertAll, Text) {
+  function (Option, TextSplit, Split, Element, Insert, InsertAll, Node, Text) {
 
     var tokens = function (element, ps) {
       var text = Text.get(element);
@@ -21,6 +22,7 @@ define(
     var splitByPair = function (element, start, end) {
       if (start === end) return element;
       if (start > end) throw 'Invalid split operation. Value for start ('  + start + ') must be lower than end (' + end + ')';
+      if (!Node.isText(element)) return element;
 
       var len = Text.get(element).length;
       var parts = tokens(element, [start, end]);
@@ -40,6 +42,7 @@ define(
     };
 
     var split = function (element, position) {
+      if (!Node.isText(element)) return TextSplit.bisect(Option.none(), Option.some(element));
       if (position === 0) return TextSplit.bisect(Option.none(), Option.some(element));
       if (position === Text.get(element).length) return TextSplit.bisect(Option.some(element), Option.none());
 
