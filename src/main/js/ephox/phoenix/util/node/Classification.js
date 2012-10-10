@@ -11,6 +11,7 @@ define(
 
     var isBoundary = function (element) {
       if (!Node.isElement(element)) return false;
+      if (Node.name(element) === 'body') return true;
       var display = Css.get(element, 'display');
       return Arr.contains(['block', 'table-cell', 'table-row', 'table', 'list-item'], display);
     };
