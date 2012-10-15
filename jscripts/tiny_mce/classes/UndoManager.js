@@ -85,6 +85,13 @@
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45 || keyCode == 13 || e.ctrlKey) {
 				addNonTypingUndoLevel();
 			}
+			
+			// If key isn't shift,ctrl,alt,capslock,metakey
+			if ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !self.typing) {
+				self.beforeChange();
+				self.typing = true;
+				self.add();
+			}
 		});
 
 		editor.onKeyDown.add(function(editor, e) {
