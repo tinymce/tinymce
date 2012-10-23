@@ -27,8 +27,12 @@ define(
 
     var look = function (element, g, pruner) {
       var f = function (iter, element, p) {
-        return Node.isText(element) ? GatherResult([], false) : iter(Traverse.children(element), f, p);
+        var stopped = stop(element);
+        return Node.isText(element) || stopped ? 
+          GatherResult([], stopped) : 
+          iter(Traverse.children(element), f, p);
       };
+      
       var gathered = Gather.gather(element, pruner, f);
       var r = g(gathered);
       return Option.from(r[0]);

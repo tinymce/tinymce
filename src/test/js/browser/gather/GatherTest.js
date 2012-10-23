@@ -56,6 +56,8 @@ test(
     check(Option.some(' '), Option.some('w'), te, 0);
     check(Option.some(' '), Option.some('w'), tb, 6);
     check(Option.some('e'), Option.none(), tf, 5);
+    check(Option.none(), Option.some('r'), ta, 0);
+    check(Option.none(), Option.some('a'), tg, 0);
 
   }
 );
