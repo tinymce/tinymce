@@ -5,14 +5,13 @@ define(
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
     'ephox.phoenix.data.Focus',
-    'ephox.phoenix.gather.GatherResult',
     'ephox.phoenix.gather.Traversal',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Focus, GatherResult, Traversal, Traverse) {
+  function (Arr, Fun, Focus, Traversal, Traverse) {
     var curry = Fun.curry;
-    
+  
     var traverse = function(traversal, element, prune, f) {
       var siblings = across(traversal, element, prune, f);
       return chain(siblings, curry(up, traversal, element, prune, f));
