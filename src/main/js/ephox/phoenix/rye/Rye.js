@@ -52,26 +52,29 @@ define(
       });
     };
 
-    var pruneLeft = {
-      left: function (element) {
-        return Text.getOption(element).bind(function (v) {
-          return v.length > 0 ? Option.some(v[v.length - 1]) : Option.none();
-        });
-      },
+    var first = Fun.constant(0);
+    var last = function (text) {
+      return text.length - 1;
+    };
 
+    var prunes = function (offseter) {
+      return function (element) {
+        return Text.getOption(element).bind(function (v) {
+          var offset = offseter(v);
+          return v.length > 0 ? Option.some(v[offset]) : Option.none();
+        });
+      }
+    };
+
+    var pruneLeft = {
+      left: prunes(last),
       right: ignore,
       stop: stop
     };
 
     var pruneRight = {
       left: ignore,
-
-      right: function (element) {
-        return Text.getOption(element).bind(function (v) {
-          return v.length > 0 ? Option.some(v[0]) : Option.none();
-        });
-      },
-
+      right: prunes(first),
       stop: stop
     }
 
