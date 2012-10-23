@@ -43,12 +43,15 @@ test(
 
     var check = function (left, right, element, offset) {
       var rleft = Rye.left(element, offset);
+      var rright = Rye.right(element, offset);
       assert.eq(true, rleft.equals(left));
+      assert.eq(true, rright.equals(right));
     };
 
     check(Option.some('a'), Option.some('l'), ta, 3);
-    check(Option.some(' '), Option.some('t'), tb, 0);
-    check(Option.some(' '), Option.some('o'), te, 0);
+    check(Option.some(' '), Option.some('o'), tb, 0);
+    check(Option.some(' '), Option.some('w'), te, 0);
+    check(Option.some(' '), Option.some('w'), tb, 6);
 
   }
 );
