@@ -15,46 +15,19 @@ define(
 
     var stop = Fun.constant(false);
     var ignore = Fun.constant(Option.some([]));
+    var first = Fun.constant(0);
+    var last = function (text) { return text.length - 1; };
 
-    var gleft = function (gathered) {
-      return gathered.left();
-    };
+    var gleft = function (gathered) { return gathered.left(); };
+    var gright = function (gathered) { return gathered.right(); };
 
-    var gright = function (gathered) {
-      return gathered.right();
-    };
-
-    var look = function (element, pruner, g) {
+    var look = function (element, g, pruner) {
+      var f = function (iter, element, p) {
+        return Node.isText(element) ? GatherResult([], false) : iter(Traverse.children(element), f, p);
+      };
       var gathered = Gather.gather(element, pruner, f);
       var r = g(gathered);
       return Option.from(r[0]);
-    };
-
-    var left = function (element, offset) {
-      return Text.getOption(element).bind(function (v) {
-        if (offset > v.length) 
-          return Option.none();
-        else if (offset === 0) 
-          return look(element, pruneLeft, gleft);
-        else 
-          return Option.some(v[offset - 1]);
-      });
-    };
-
-    var right = function (element, offset) {
-      return Text.getOption(element).bind(function (v) {
-        if (offset > v.length) 
-          return Option.none();
-        else if (offset === v.length)
-          return look(element, pruneRight, gright);
-        else 
-          return Option.some(v[offset]);
-      });
-    };
-
-    var first = Fun.constant(0);
-    var last = function (text) {
-      return text.length - 1;
     };
 
     var prunes = function (offseter) {
@@ -66,20 +39,34 @@ define(
       }
     };
 
-    var pruneLeft = {
-      left: prunes(last),
-      right: ignore,
-      stop: stop
+    var left = function (element, offset) {
+      return Text.getOption(element).bind(function (v) {
+        if (offset > v.length) 
+          return Option.none();
+        else if (offset === 0) 
+          return look(element, gleft, {
+            left: prunes(last),
+            right: ignore,
+            stop: stop
+          });
+        else 
+          return Option.some(v[offset - 1]);
+      });
     };
 
-    var pruneRight = {
-      left: ignore,
-      right: prunes(first),
-      stop: stop
-    }
-
-    var f = function (iter, element, p) {
-      return Node.isText(element) ? GatherResult([], false) : iter(Traverse.children(element), f, p);
+    var right = function (element, offset) {
+      return Text.getOption(element).bind(function (v) {
+        if (offset > v.length) 
+          return Option.none();
+        else if (offset === v.length)
+          return look(element, gright, {
+            left: ignore,
+            right: prunes(first),
+            stop: stop
+          });
+        else 
+          return Option.some(v[offset]);
+      });
     };
 
     return {
