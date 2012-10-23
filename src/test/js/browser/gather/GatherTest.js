@@ -12,12 +12,13 @@ test(
 
   function (Option, Rye, Element, Insert, InsertAll, SelectorFind) {
 
-    var div = Element.fromTag('container');
+    
 
     var body = SelectorFind.first('body').getOrDie();
-
+    var div = Element.fromTag('div');
     Insert.append(body, div);
 
+    var block = Element.fromTag('div');
     var a = Element.fromTag('span');
     var b = Element.fromTag('span');
     var c = Element.fromTag('span');
@@ -30,8 +31,10 @@ test(
     var td = Element.fromText('');
     var te = Element.fromText('word');
     var tf = Element.fromText(' some');
-    
-    InsertAll.append(div, [a, d]);
+    var tg = Element.fromText('a');
+
+    InsertAll.append(div, [block, tg]);
+    InsertAll.append(block, [a, d]);
     InsertAll.append(a, [ta, b, c]);
     InsertAll.append(b, [tb, tc]);
     Insert.append(c, td);
@@ -39,7 +42,7 @@ test(
     Insert.append(e, te);
     Insert.append(f, tf);
 
-    assert.eq('<span>really <span>other </span><span></span></span><span><span>word</span><span> some</span></span>', div.dom().innerHTML);
+    assert.eq('<div><span>really <span>other </span><span></span></span><span><span>word</span><span> some</span></span></div>a', div.dom().innerHTML);
 
     var check = function (left, right, element, offset) {
       var rleft = Rye.left(element, offset);
@@ -52,6 +55,7 @@ test(
     check(Option.some(' '), Option.some('o'), tb, 0);
     check(Option.some(' '), Option.some('w'), te, 0);
     check(Option.some(' '), Option.some('w'), tb, 6);
+    check(Option.some('e'), Option.none(), tf, 5);
 
   }
 );

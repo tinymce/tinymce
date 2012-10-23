@@ -6,14 +6,18 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.gather.Gather',
     'ephox.phoenix.gather.GatherResult',
+    'ephox.phoenix.util.node.Classification',
     'ephox.sugar.api.Node',
     'ephox.sugar.api.Text',
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Fun, Option, Gather, GatherResult, Node, Text, Traverse) {
+  function (Fun, Option, Gather, GatherResult, Classification, Node, Text, Traverse) {
 
-    var stop = Fun.constant(false);
+    var stop = function (element) {
+      return Classification.isBoundary(element) || Classification.isEmpty(element);
+    };
+
     var ignore = Fun.constant(Option.some([]));
     var first = Fun.constant(0);
     var last = function (text) { return text.length - 1; };
