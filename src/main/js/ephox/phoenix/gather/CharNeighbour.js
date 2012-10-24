@@ -1,5 +1,5 @@
 define(
-  'ephox.phoenix.rye.Rye',
+  'ephox.phoenix.gather.CharNeighbour',
 
   [
     'ephox.peanut.Fun',

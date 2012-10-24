@@ -29,6 +29,15 @@ define(
       }
     };
 
+    var leaves = function (element) {
+      if (Node.isElement(element)) {
+        var children = Traverse.children(element);
+        return children.length === 0 ? [element] : Arr.bind(children, leaves);
+      } else {
+        return [element];
+      }
+    };
+
     var extractToElem = function (child, offset, element) {
       var extractions = from(element);
       var prior = List.dropUntil(extractions, child);
@@ -55,6 +64,7 @@ define(
     return {
       extract: extract,
       extractTo: extractTo,
+      leaves: leaves,
       from: from
     };
   }

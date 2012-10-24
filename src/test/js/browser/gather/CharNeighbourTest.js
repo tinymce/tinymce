@@ -1,16 +1,16 @@
 test(
-  'GatherTest',
+  'CharNeighbour',
 
   [
     'ephox.perhaps.Option',
-    'ephox.phoenix.rye.Rye',
+    'ephox.phoenix.gather.CharNeighbour',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.InsertAll',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function (Option, Rye, Element, Insert, InsertAll, SelectorFind) {
+  function (Option, CharNeighbour, Element, Insert, InsertAll, SelectorFind) {
 
     
 
@@ -45,8 +45,8 @@ test(
     assert.eq('<div><span>really <span>other </span><span></span></span><span><span>word</span><span> some</span></span></div>a', div.dom().innerHTML);
 
     var check = function (left, right, element, offset) {
-      var rleft = Rye.left(element, offset);
-      var rright = Rye.right(element, offset);
+      var rleft = CharNeighbour.left(element, offset);
+      var rright = CharNeighbour.right(element, offset);
       assert.eq(true, rleft.equals(left));
       assert.eq(true, rright.equals(right));
     };
