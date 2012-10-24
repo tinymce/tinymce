@@ -29,12 +29,18 @@ define(
       }
     };
 
-    var leaves = function (element) {
-      if (Node.isElement(element)) {
+    var all = function (element) {
+      if (Node.isText(element)) {
+        return [ element ];
+      } else if (Classification.isEmpty(element)) {
+        return [ element ];
+      } else if (Node.isElement(element)) {
         var children = Traverse.children(element);
-        return children.length === 0 ? [element] : Arr.bind(children, leaves);
+        var current = Classification.isBoundary(element) ? [element] : [];
+        var rest = Arr.bind(children, all);
+        return current.concat(rest).concat(current);
       } else {
-        return [element];
+        return [];
       }
     };
 
@@ -64,7 +70,7 @@ define(
     return {
       extract: extract,
       extractTo: extractTo,
-      leaves: leaves,
+      all: all,
       from: from
     };
   }
