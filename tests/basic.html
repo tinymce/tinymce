@@ -571,6 +571,25 @@ test('custom elements', function() {
 	equal(editor.getContent().replace(/[\r\n]/g, ''), '<custom1>c1</custom1><p><custom2>c1</custom2></p>');
 });
 
+test('commands - mceSelectNodeDepth', function() {
+	var t = this;
+	function getContent() {
+		return editor.selection.getContent({format: 'text'}).replace(/\r\n|\r|\n/, '');
+	}
+
+	expect(2);
+
+	editor.execCommand('mceSetContent', false, '<ul><li>a</li><li>b</li></p>');
+
+	editor.selection.select(editor.dom.select('li')[0]);
+	editor.selection.collapse(1);
+	editor.execCommand('mceSelectNodeDepth', false, 0);
+	equal(getContent(), 'a');
+
+	editor.execCommand('mceSelectNodeDepth', false, 1);
+	equal(getContent(), 'ab');
+});
+
 tinyMCE.init({
 	mode : "exact",
 	elements : "elm1",

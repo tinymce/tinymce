@@ -272,10 +272,14 @@
 
 			mceSelectNodeDepth : function(command, ui, value) {
 				var counter = 0;
+				var content = false;
+				if ( tinymce.isIE6 || tinymce.isIE7 || tinymce.isIE8 ) {
+					content = true;
+				}
 
 				dom.getParent(selection.getNode(), function(node) {
 					if (node.nodeType == 1 && counter++ == value) {
-						selection.select(node);
+						selection.select(node, content);
 						return FALSE;
 					}
 				}, editor.getBody());
