@@ -69,6 +69,9 @@
 .o2k7Skin .mceSplitButton span.mceAction {width:22px; background-image:url(../../img/icons.gif)}
 .o2k7Skin .mceSplitButton a.mceOpen {width:10px; background:url(img/button_bg.png) -44px 0}
 .o2k7Skin .mceSplitButton span.mceOpen {display:none}
+.o2k7Skin .mceSplitButtonLabeled , .o2k7Skin .mceSplitButton a.mceAction {width:auto}
+.o2k7Skin .mceSplitButtonLabeled span.mceIcon {float:left}
+.o2k7Skin span.mceSplitButtonLabel {display:block; font-size:10px; padding:4px 6px 0 22px; font-family:Tahoma,Verdana,Arial,Helvetica}
 .o2k7Skin table.mceSplitButtonEnabled:hover a.mceAction, .o2k7Skin .mceSplitButtonHover a.mceAction, .o2k7Skin .mceSplitButtonSelected {background:url(img/button_bg.png) 0 -22px}
 .o2k7Skin table.mceSplitButtonEnabled:hover a.mceOpen, .o2k7Skin .mceSplitButtonHover a.mceOpen, .o2k7Skin .mceSplitButtonSelected a.mceOpen {background-position:-44px -44px}
 .o2k7Skin .mceSplitButtonDisabled .mceAction {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
