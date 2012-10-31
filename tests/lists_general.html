@@ -246,6 +246,18 @@ asyncTest('Deleting empty li with nested list is deleted in Webkit', function(){
 	}
 });
 
+asyncTest('Deleting li containing empty a', function(){
+	editor.setContent('<ul><li><a href="#" id="a">a</a></li><li>b</li></ul>');
+	setSelection('#a', 0, '#a', 1);
+	editor.focus();
+	robot.type(BACKSPACE, false, function() {
+		robot.type(BACKSPACE, false, function() {
+			equal(editor.dom.select('span').length, 0);
+			start();
+		});
+	}, editor.selection.getNode());
+});
+
 asyncTest('Creates new list item without surrounding element when caret at end of list item', function(){
 	function testCreateNewList(el) {
 		queue.add(function() {
