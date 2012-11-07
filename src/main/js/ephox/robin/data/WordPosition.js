@@ -1,5 +1,5 @@
 define(
-  'ephox.robin.data.PreviousWord',
+  'ephox.robin.data.WordPosition',
 
   [
     'ephox.scullion.Struct'

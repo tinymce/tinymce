@@ -41,6 +41,26 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'violin',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'violin.zip',
+    targets: [
+      { name: 'module/*.js', path: test }
+    ]
+  },
+
+  {
+    name: 'wrap-json',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'wrap-json.zip',
+    targets: [
+      { name: 'module/*.js', path: test }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',
