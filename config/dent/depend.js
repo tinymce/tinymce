@@ -10,6 +10,37 @@ var cleanDirs = [ lib ];
 
 var dependencies = [
 
+  {
+    name: 'phoenix',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'phoenix.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'compass',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'compass.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'peanut',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'peanut.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',
