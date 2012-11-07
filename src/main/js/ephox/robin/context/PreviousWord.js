@@ -6,6 +6,7 @@ define(
     'ephox.perhaps.Option',
     'ephox.phoenix.gather.CharNeighbour',
     'ephox.phoenix.gather.Gather',
+    'ephox.phoenix.search.Chars',
     'ephox.phoenix.search.Pattern',
     'ephox.phoenix.util.str.Find',
     'ephox.robin.data.WordPosition',
@@ -13,10 +14,20 @@ define(
     'ephox.robin.prune.PotentialWord',
     'ephox.sugar.api.Text',
     'ephox.violin.Strings',
-    'global!Math'
+    'global!Math',
+    'global!RegExp'
   ],
 
-  function (Arr, Option, CharNeighbour, Gather, Pattern, Find, WordPosition, Transform, PotentialWord, Text, Strings, Math) {
+  function (Arr, Option, CharNeighbour, Gather, Chars, Pattern, Find, WordPosition, Transform, PotentialWord, Text, Strings, Math, RegExp) {
+
+    var trimSpaces = function (position) {
+      var text = position.text();
+      var offset = position.offset();
+      var regex = new RegExp(Chars.wordbreak());
+      return offset < text.length && text[0].search(regex) > -1 ? 
+        WordPosition(position.start(), offset + 1, Strings.trim(text.substring(1))) :
+        WordPosition(position.start(), offset, Strings.trim(text));
+    };
 
     var prevWord = function (element, offset) {
       var next = CharNeighbour.right(element, offset);
@@ -26,9 +37,7 @@ define(
         return v.search(/\s/) > -1 ? left(element, offset) : Option.none();
       });
 
-      return r.map(function (v) {
-        return WordPosition(v.start(), v.offset(), Strings.trim(v.text()));
-      });
+      return r.map(trimSpaces);
     };
 
     var subNode = function (element, offset) {
