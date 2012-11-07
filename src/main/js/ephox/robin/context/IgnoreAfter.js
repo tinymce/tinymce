@@ -25,7 +25,6 @@ define(
     };
 
     return {
-      deep: deep,
       shallow: shallow,
       context: context
     };
