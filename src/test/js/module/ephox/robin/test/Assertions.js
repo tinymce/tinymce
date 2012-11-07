@@ -2,24 +2,43 @@ define(
   'ephox.robin.test.Assertions',
 
   [
+    'ephox.compass.Arr',
+    'ephox.wrap.Json'
   ],
 
-  function () {
+  function (Arr, Json) {
 
     var assertOpt = function (o1, o2) {
+      assertOptComp(o1, o2, function (a, b) {
+        assert.eq(a, b);
+      });
+    };
+
+    var assertOptTextList = function (o1, o2) {
+      assertOptComp(o1, o2, function (a, b) {
+        assert.eq(a.length,  b.length);
+        Arr.each(a, function (x, i) {
+          assert.eq(a[i], b[i].text());
+        });
+      });
+    };
+
+    var assertOptComp = function (o1, o2, f) {
       o1.fold(function () {
         assert.eq(true, o2.isNone());
       }, function (v) {
         o2.fold(function () {
-          assert.fail('Expected some, was none.' + JSON.stringify(v));
+          assert.fail('Expected some, was none. ' + Json.stringify(v));
         }, function (vv) {
-          assert.eq(v, vv);
+          f(v, vv);
         });
       });
     };
 
     return {
-      assertOpt: assertOpt
+      assertOpt: assertOpt,
+      assertOptTextList: assertOptTextList,
+      assertOptComp: assertOptComp
     };
   }
 );
