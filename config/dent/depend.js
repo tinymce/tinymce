@@ -47,7 +47,7 @@ var dependencies = [
     version: 'latest',
     source: 'violin.zip',
     targets: [
-      { name: 'module/*.js', path: test }
+      { name: 'module/*.js', path: depend }
     ]
   },
 
@@ -57,7 +57,7 @@ var dependencies = [
     version: 'latest',
     source: 'wrap-json.zip',
     targets: [
-      { name: 'module/*.js', path: test }
+      { name: 'compile/*.js', path: test }
     ]
   },
 
