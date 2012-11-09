@@ -275,8 +275,12 @@
 
 			if (s.add_unload_trigger) {
 				t._beforeUnload = tinyMCE.onBeforeUnload.add(function() {
-					if (t.initialized && !t.destroyed && !t.isHidden())
-						t.save({format : 'raw', no_events : true});
+					try {
+						if (t.initialized && !t.destroyed && !t.isHidden())
+							t.save({format : 'raw', no_events : true});
+					} catch(e) {
+						// fails in IE8 on page close
+					}
 				});
 			}
 
