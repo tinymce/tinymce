@@ -47,8 +47,10 @@ var dependencies = [
     targets: [
       {name: "module/*.js", path: lib + "/demo"},
       {name: "module/*.js", path: lib + "/test"},
+      {name: "module/*.js", path: depend},
       {name: "depend/*.js", path: lib + "/demo"},
-      {name: "depend/*.js", path: lib + "/test"}
+      {name: "depend/*.js", path: lib + "/test"},
+      {name: "depend/*.js", path: depend}
     ]
   },
 
