@@ -52,5 +52,21 @@ test(
         'Event bind error: undefined handler'
       );
     })();
+
+    (function() {
+      var ea = Events.create({
+        chook: Event(['a' ,'b', 'c'])
+      });
+
+      var eb = Events.create({
+        quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
+      });
+
+      assert.throws(
+        function() { eb.trigger.eb('hay', 'bee', 'quee'); },
+        'SourceEvent can\'t trigger'
+      );
+
+    })();
   }
 );
