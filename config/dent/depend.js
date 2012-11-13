@@ -20,18 +20,9 @@ var dependencies = [
   },
 
   {
-    name: 'epithet',
+    name: 'scullion',
     repository: 'buildrepo2',
-    source: 'epithet.zip',
-    targets: [
-      { name: 'module/*.js', path: depend }
-    ]
-  },
-
-  {
-    name: 'flour',
-    repository: 'buildrepo2',
-    source: 'flour.zip',
+    source: 'scullion.zip',
     targets: [
       { name: 'module/*.js', path: depend },
       { name: 'depend/*.js', path: depend }
@@ -39,9 +30,18 @@ var dependencies = [
   },
 
   {
-    name: 'scullion',
+    name: 'peanut',
     repository: 'buildrepo2',
-    source: 'scullion.zip',
+    source: 'peanut.zip',
+    targets: [
+      { name: 'module/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'perhaps',
+    repository: 'buildrepo2',
+    source: 'perhaps.zip',
     targets: [
       { name: 'module/*.js', path: depend },
       { name: 'depend/*.js', path: depend }
