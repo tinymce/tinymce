@@ -4,10 +4,11 @@ test(
   [
     'ephox.porkbun.Event',
     'ephox.porkbun.Events',
+    'ephox.porkbun.SourceEvent',
     'ephox.scullion.Struct'
   ],
 
-  function(Event, Events, Struct) {
+  function(Event, Events, SourceEvent, Struct) {
 
     (function() {
       var events = Events.create({
@@ -63,10 +64,9 @@ test(
       });
 
       assert.throws(
-        function() { eb.trigger.eb('hay', 'bee', 'quee'); },
-        'SourceEvent can\'t trigger'
+        function() { eb.trigger.quack('hay', 'bee', 'quee'); },
+        'Cannot trigger a source event.'
       );
-
     })();
   }
 );
