@@ -22,6 +22,26 @@ var dependencies = [
   },
 
   {
+    name: 'perhaps',
+    repository: 'buildrepo2',
+    source: 'perhaps.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
+    name: 'scullion',
+    repository: 'buildrepo2',
+    source: 'scullion.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
+  {
     name: 'compass',
     repository: 'buildrepo2',
     version: 'latest',
@@ -58,6 +78,16 @@ var dependencies = [
     source: 'wrap-json.zip',
     targets: [
       { name: 'compile/*.js', path: test }
+    ]
+  },
+
+  {
+    name: 'sugar',
+    repository: 'buildrepo2',
+    source: 'sugar.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
     ]
   },
 
