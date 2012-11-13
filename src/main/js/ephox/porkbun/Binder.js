@@ -1,5 +1,5 @@
 define(
-  'ephox.porkbun.api.Binder',
+  'ephox.porkbun.Binder',
 
   [
     'ephox.flute.AssocArray'

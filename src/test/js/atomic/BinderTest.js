@@ -2,14 +2,15 @@ test(
   'Binder',
 
   [
-    'ephox.scullion.Struct',
+    'ephox.porkbun.Binder',
+    'ephox.porkbun.Event',
     'ephox.porkbun.Events',
-    'ephox.porkbun.Binder'
+    'ephox.scullion.Struct'
   ],
 
-  function (Struct, Events, Binder) {
+  function (Binder, Event, Events, Struct) {
     var events = Events.create({
-      myEvent: Struct.immutable('one', 'two')
+      myEvent: Event(['one', 'two'])
     });
 
     var binder = Binder.create();

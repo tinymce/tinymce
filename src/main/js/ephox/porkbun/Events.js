@@ -9,7 +9,7 @@ define(
   function (Obj, Event) {
 
     /** :: {name : Event} -> Events */
-    return function (typeDefs) {
+    var create = function (typeDefs) {
       var registry = Obj.map(typeDefs, function (event) {
         return {
           bind: event.bind,
@@ -25,6 +25,9 @@ define(
         registry: registry,
         trigger: trigger
       };
+    };
+    return {
+      create: create
     };
   }
 );

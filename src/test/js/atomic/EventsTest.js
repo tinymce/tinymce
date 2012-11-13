@@ -2,14 +2,17 @@ test(
   'Events',
 
   [
-    'ephox.scullion.Struct',
-    'ephox.porkbun.Events'
+    'ephox.porkbun.Event',
+    'ephox.porkbun.Events',
+    'ephox.scullion.Struct'
   ],
 
-  function(Struct, Events) {
+  function(Event, Events, Struct) {
 
     (function() {
-      var events = Events.create({ myEvent: Struct.immutable("name") });
+      var events = Events.create({
+        myEvent: Event(["name"])
+      });
 
       var called = false;
       var calledEvent = {};
@@ -40,11 +43,13 @@ test(
     })();
 
     (function() {
-      var events = Events.create({ emptyEvent: Struct.immutable() });
+      var events = Events.create({
+        emptyEvent: Event([])
+      });
 
       assert.throws(
         function() { events.registry.emptyEvent.bind(undefined); },
-        'Event bind error: undefined handler bound for event type "emptyEvent"'
+        'Event bind error: undefined handler'
       );
     })();
   }
