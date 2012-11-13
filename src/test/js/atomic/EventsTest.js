@@ -69,11 +69,11 @@ test(
       );
 
       var called = false;
-      eb.registry.quack.bind(function(a, b, c) {
+      eb.registry.quack.bind(function(evt) {
         called = true;
-        assert.eq('ay', a);
-        assert.eq('bee', b);
-        assert.eq('sea', c);
+        assert.eq('ay', evt.a());
+        assert.eq('bee', evt.b());
+        assert.eq('sea', evt.c());
       });
       ea.trigger.chook('ay', 'bee', 'sea');
 
