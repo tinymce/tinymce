@@ -67,6 +67,17 @@ test(
         function() { eb.trigger.quack('hay', 'bee', 'quee'); },
         'Cannot trigger a source event.'
       );
+
+      var called = false;
+      eb.registry.quack.bind(function(a, b, c) {
+        called = true;
+        assert.eq('ay', a);
+        assert.eq('bee', b);
+        assert.eq('sea', c);
+      });
+      ea.trigger.chook('ay', 'bee', 'sea');
+
+
     })();
   }
 );
