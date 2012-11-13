@@ -27,17 +27,17 @@ define(
         }
       };
 
-      var mkevent = function (fields) {
+      var mkevent = function (values) {
         try {
-          return struct.apply(null, fields);
+          return struct.apply(null, values);
         } catch (e) {
-          throw 'Unable to create struct for event type ' + e;
+          throw 'Unable to create struct for event. ' + e;
         }
       };
 
-      var trigger = function (/* fields */) {
-        var fields = Array.prototype.slice.call(arguments);
-        var event = mkevent(fields);
+      var trigger = function (/* values */) {
+        var values = Array.prototype.slice.call(arguments);
+        var event = mkevent(values);
         Arr.each(handlers, function (handler) {
           handler(event);
         });

@@ -77,7 +77,6 @@ test(
       });
       ea.trigger.chook('ay', 'bee', 'sea');
 
-
     })();
   }
 );
