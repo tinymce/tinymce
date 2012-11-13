@@ -1,5 +1,5 @@
 define(
-  'ephox.porkbun.Event',
+  'ephox.porkbun.api.Event',
 
   [
     'ephox.compass.Arr',
@@ -7,44 +7,27 @@ define(
   ],
   function (Arr, Struct) {
 
-    var handlerSet = function () {
-
-      var handlers = [];
-
-      var add = function (handler) {
-        handlers.push(handler);
-      };
-
-      var remove = function (handler) {
-        var index = Arr.indexOf(handlers, handler);
+    var arrayRemove = function (array) {
+      return function(element) {
+        var index = Arr.indexOf(array, element);
         if (index !== -1) {
-          handlers.splice(index, 1);
+          array.splice(index, 1);
         }
-      };
-
-      var isEmpty = function () {
-        return handlers.length === 0;
-      };
-
-      return {
-        add: add,
-        remove: remove,
-        isEmpty: isEmpty
       };
     };
 
     var simple = function (name, struct) {
 
-      var handlers = handlerSet();
+      var handlers = [];
 
       var bind = function (handler) {
         if (handler === undefined) {
           throw 'Event bind error: undefined handler bound for event type "' + name + '"';
         }
-        handlers.add(handler);
+        handlers.push(handler);
       };
 
-      var unbind = handlers.remove;
+      var unbind = arrayRemove(handlers);
 
       var mkevent = function (fields) {
         try {
@@ -62,46 +45,42 @@ define(
         });
       };
 
-      var getHandlers = function() {
-        return handlers;
-      };
-
-      var hasHandlers = function() {
-        return !handlers.isEmpty();
-      };
-
       return {
         name: name,
         bind: bind,
         unbind: unbind,
-        trigger: trigger,
-        hasHandlers: hasHandlers
+        trigger: trigger
       };
     };
 
     var delegating = function (name, fields, delegateRegistry, delegateName) {
       var mine = simple(name, fields);
+      var numHandlers = 0;
 
-      var bindDelegate = function () {
+      var maybeBindDelegate = function () {
         delegateRegistry[delegateName].bind(mine.trigger);
+        if (numHandlers === 1) {
+          bindDelegate();
+        }
       };
 
       var unbindDelegate = function () {
-        delegateRegistry[delegateName].unbine(mine.trigger);
+        delegateRegistry[delegateName].unbind(mine.trigger);
+        if (numHandlers === 0) {
+          unbindDelegate();
+        }
       };
 
       var bind = function (handler) {
-        if (!mine.hasHandlers()) {
-          bindDelegate();
-        }
         mine.bind(handler);
+        numHandlers++;
+        maybeBindDelegate();
       };
 
       var unbind = function (handler) {
         mine.unbind(handler);
-        if (!mine.hasHandlers()) {
-          unbindDelegate();
-        }
+        numHandlers--;
+        maybeUnbindDelegate();
       };
     };
 
