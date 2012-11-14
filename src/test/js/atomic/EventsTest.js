@@ -78,5 +78,26 @@ test(
       ea.trigger.chook('ay', 'bee', 'sea');
 
     })();
+
+
+    (function() {
+      var ea = Events.create({
+        chook: Event(['a' ,'b', 'c', 'd', 'e']) // superset of arguments
+      });
+
+      var eb = Events.create({
+        quack: SourceEvent(['a', 'b', 'c'], ea.registry.chook)
+      });
+
+      var called = false;
+      eb.registry.quack.bind(function(evt) {
+        called = true;
+        assert.eq('ay', evt.a());
+        assert.eq('bee', evt.b());
+        assert.eq('sea', evt.c());
+      });
+      ea.trigger.chook('ay', 'bee', 'sea', 'dee', 'eee');
+
+    })();
   }
 );
