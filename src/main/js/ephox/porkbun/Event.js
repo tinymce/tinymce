@@ -3,9 +3,10 @@ define(
 
   [
     'ephox.compass.Arr',
-    'ephox.scullion.Struct'
+    'ephox.scullion.Struct',
+    'global!Array'
   ],
-  function (Arr, Struct) {
+  function (Arr, Struct, Array) {
 
     /** :: ([String]) -> Event */
     return function (fields) {
