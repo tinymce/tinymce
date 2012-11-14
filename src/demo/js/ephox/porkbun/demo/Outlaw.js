@@ -3,11 +3,12 @@ define(
 
   [
     'ephox.wrap.JQuery',
+    'ephox.porkbun.Event',
     'ephox.porkbun.Events',
     'ephox.scullion.Struct'
   ],
 
-  function ($, Events, Struct) {
+  function ($, Event, Events, Struct) {
     var create = function (name) {
       var container = $('<div />');
       container.css({  width: '1px dashed gray' });
@@ -44,8 +45,8 @@ define(
       };
 
       var events = Events.create({
-        shoot: Struct.immutable('target'),
-        die: Struct.immutable()
+        shoot: Event(['target']),
+        die:   Event([])
       });
 
       var establishment;

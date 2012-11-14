@@ -3,11 +3,10 @@ define(
 
   [
     'ephox.wrap.JQuery',
-    'ephox.porkbun.Events',
     'ephox.scullion.Struct'
   ],
 
-  function ($, Events, Struct) {
+  function ($, Struct) {
     var create = function () {
       var container = $('<div />');
       container.css({

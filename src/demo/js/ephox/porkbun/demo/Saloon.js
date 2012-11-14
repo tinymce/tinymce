@@ -24,7 +24,7 @@ define(
       };
 
       var events = Events.create({
-        shooting: Struct.immutable("shooter", "target")
+        shooting: Event(["shooter", "target"])
       });
 
       var binder = Binder.create();
