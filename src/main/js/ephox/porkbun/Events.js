@@ -2,11 +2,10 @@ define(
   'ephox.porkbun.Events',
 
   [
-    'ephox.compass.Obj',
-    'ephox.porkbun.Event'
+    'ephox.compass.Obj'
   ],
 
-  function (Obj, Event) {
+  function (Obj) {
 
     /** :: {name : Event} -> Events */
     var create = function (typeDefs) {
