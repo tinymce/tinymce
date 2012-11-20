@@ -632,7 +632,7 @@
 							prev = prev.prev;
 						}
 
-						if (node) {
+						if (node && (node.attributes.length == 0 || node.attr('data-mce-bogus'))) {
 							node.remove();
 
 							// Is the parent to be considered empty after we removed the BR
