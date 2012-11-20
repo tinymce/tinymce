@@ -73,7 +73,7 @@
 		// Add undo level on save contents, drag end and blur/focusout
 		editor.onSaveContent.add(addNonTypingUndoLevel);
 		editor.dom.bind(editor.dom.getRoot(), 'dragend', addNonTypingUndoLevel);
-		editor.dom.bind(editor.getDoc(), tinymce.isGecko ? 'blur' : 'focusout', function(e) {
+		editor.dom.bind(editor.getBody(), 'focusout', function(e) {
 			if (!editor.removed && self.typing) {
 				addNonTypingUndoLevel();
 			}

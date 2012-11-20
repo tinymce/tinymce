@@ -8,6 +8,8 @@ Version 3.5.8 (2012-11-20)
 	Fixed bug where the latest WebKit versions would produce span elements when deleting text between blocks.
 	Fixed bug where the autolink plugin would produce DOM exceptions when pressing shift+enter inside a block element.
 	Fixed bug where toggling of blockquotes when using br enter mode would produce an exception.
+	Fixed bug where focusing out of the body of the editor wouldn't properly add an undo level.
+	Fixed issue with warning message being displayed on IE 9+ about the meta header fix for IE 8.
 Version 3.5.7 (2012-09-20)
 	Changed table row properties dialog to not update multiple rows when row type is header or footer.
 	Fixed bug in hyperlink dialog for IE9 where links with no target attr set had target value of --
