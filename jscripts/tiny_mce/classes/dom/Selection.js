@@ -1236,6 +1236,16 @@
 			return self;
 		},
 
+		scrollIntoView: function(elm) {
+			var y, viewPort, self = this, dom = self.dom;
+
+			viewPort = dom.getViewPort(self.editor.getWin());
+			y = dom.getPos(elm).y;
+			if (y < viewPort.y || y + 25 > viewPort.y + viewPort.h) {
+				self.editor.getWin().scrollTo(0, y < viewPort.y ? y : y - viewPort.h + 25);
+			}
+		},
+
 		destroy : function(manual) {
 			var self = this;
 
