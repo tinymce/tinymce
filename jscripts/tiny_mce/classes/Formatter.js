@@ -651,6 +651,11 @@
 			function process(node) {
 				var children, i, l, localContentEditable, lastContentEditable, hasContentEditableState;
 
+				// Skip on text nodes as they have neither format to remove nor children
+				if (node.nodeType === 3) {
+					return;
+				}
+
 				// Node has a contentEditable value
 				if (node.nodeType === 1 && getContentEditable(node)) {
 					lastContentEditable = contentEditable;
