@@ -1,3 +1,5 @@
+Version 3.5.x (2012-xx-xx)
+	Fixed bug where applying ins/del as inline elements would apply them as blocks.
 Version 3.5.8 (2012-11-20)
 	Fixed bug where html5 data attributes where stripped from contents.
 	Fixed bug where toolbar was annouced multiple times with JAWS on Firefox.
