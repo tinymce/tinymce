@@ -13,7 +13,7 @@
  */
 tinymce.util.Quirks = function(editor) {
 	var VK = tinymce.VK, BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
-		settings = editor.settings, parser = editor.parser, serializer = editor.serializer;
+		settings = editor.settings, parser = editor.parser, serializer = editor.serializer, each = tinymce.each;
 
 	/**
 	 * Executes a command with a specific state this can be to enable/disable browser editing features.
@@ -72,40 +72,48 @@ tinymce.util.Quirks = function(editor) {
 			blockElm = dom.getParent(rng.startContainer, dom.isBlock);
 
 			// On delete clone the root span of the next block element
-			if (isDelete)
+			if (isDelete) {
 				blockElm = dom.getNext(blockElm, dom.isBlock);
+			}
 
 			// Locate root span element and clone it since it would otherwise get merged by the "apple-style-span" on delete/backspace
 			if (blockElm) {
 				node = blockElm.firstChild;
 
 				// Ignore empty text nodes
-				while (node && node.nodeType == 3 && node.nodeValue.length === 0)
+				while (node && node.nodeType == 3 && node.nodeValue.length === 0) {
 					node = node.nextSibling;
+				}
 
 				if (node && node.nodeName === 'SPAN') {
 					clonedSpan = node.cloneNode(false);
 				}
 			}
 
+			each(dom.select('span', blockElm), function(span) {
+				span.setAttribute('data-mce-mark', '1');
+			});
+
 			// Do the backspace/delete action
 			editor.getDoc().execCommand(isDelete ? 'ForwardDelete' : 'Delete', false, null);
 
 			// Find all odd apple-style-spans
 			blockElm = dom.getParent(rng.startContainer, dom.isBlock);
-			tinymce.each(dom.select('span.Apple-style-span,font.Apple-style-span', blockElm), function(span) {
+			each(dom.select('span', blockElm), function(span) {
 				var bm = selection.getBookmark();
 
 				if (clonedSpan) {
 					dom.replace(clonedSpan.cloneNode(false), span, true);
-				} else {
+				} else if (!span.getAttribute('data-mce-mark')) {
 					dom.remove(span, true);
+				} else {
+					span.removeAttribute('data-mce-mark');
 				}
 
 				// Restore the selection
 				selection.moveToBookmark(bm);
 			});
-		};
+		}
 
 		editor.onKeyDown.add(function(editor, e) {
 			var isDelete;
@@ -313,7 +321,7 @@ tinymce.util.Quirks = function(editor) {
 				if (target !== editor.getBody()) {
 					dom.setAttrib(target, "style", null);
 
-					tinymce.each(template, function(attr) {
+					each(template, function(attr) {
 						target.setAttributeNode(attr.cloneNode(true));
 					});
 				}
@@ -616,7 +624,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function addBrAfterLastLinks() {
 		function fixLinks(editor, o) {
-			tinymce.each(dom.select('a'), function(node) {
+			each(dom.select('a'), function(node) {
 				var parentNode = node.parentNode, root = dom.getRoot();
 
 				if (parentNode.lastChild === node) {
@@ -699,7 +707,7 @@ tinymce.util.Quirks = function(editor) {
 		// IE10+
 		if (getDocumentMode() >= 10) {
 			emptyBlocksCSS = '';
-			tinymce.each('p div h1 h2 h3 h4 h5 h6'.split(' '), function(name, i) {
+			each('p div h1 h2 h3 h4 h5 h6'.split(' '), function(name, i) {
 				emptyBlocksCSS += (i > 0 ? ',' : '') + name + ':empty';
 			});
 
@@ -819,7 +827,7 @@ tinymce.util.Quirks = function(editor) {
 				width = height = 0;
 			}
 
-			tinymce.each(resizeHandles, function(handle, name) {
+			each(resizeHandles, function(handle, name) {
 				var handleElm;
 
 				// Get existing or render resize handle
@@ -916,7 +924,7 @@ tinymce.util.Quirks = function(editor) {
 			var controlElm = dom.getParent(selection.getNode(), 'table,img');
 
 			// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
-			tinymce.each(dom.select('img[data-mce-selected]'), function(img) {
+			each(dom.select('img[data-mce-selected]'), function(img) {
 				img.removeAttribute('data-mce-selected');
 			});
 
