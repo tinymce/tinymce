@@ -611,6 +611,17 @@
 					doc.domain = tinymce.relaxedDomain;
 			}
 
+			// Active Design mode for Firefox to fix Ajax problems see here: http://www.tinymce.com/forum/viewtopic.php?id=29909
+			if (!isIE) {
+				try {
+					if (!settings.readonly)
+						doc.designMode = 'On';
+				} catch (ex) {
+					// Will fail on Gecko if the editor is placed in an hidden container element
+					// The design mode will be set ones the editor is focused
+				}
+			}
+
 			if (settings.content_editable) {
 				DOM.addClass(targetElm, 'mceContentBody');
 				self.contentDocument = doc = settings.content_document || document;
