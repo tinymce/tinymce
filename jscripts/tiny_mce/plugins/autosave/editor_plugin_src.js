@@ -106,6 +106,7 @@
 			ed.addButton(RESTORE_DRAFT, {
 				title : PLUGIN_NAME + ".restore_content",
 				onclick : function() {
+					ed.focus(); //Bug #5608 - partial fix
 					if (ed.getContent({draft: true}).replace(/\s|&nbsp;|<\/?p[^>]*>|<br[^>]*>/gi, "").length > 0) {
 						// Show confirm dialog if the editor isn't empty
 						ed.windowManager.confirm(
