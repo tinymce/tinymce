@@ -150,6 +150,19 @@
 			function grabContent(e) {
 				var n, or, rng, oldRng, sel = ed.selection, dom = ed.dom, body = ed.getBody(), posY, textContent;
 
+				// jh@xlhost.de: grab image content from clipboard via new chromium API
+				if (ed.isWebKit) {
+					var items = e.clipboardData.items;
+					if ((items[0]['kind'] == 'file') && (items[0]['type'].search('^image/') != -1)) {
+						var reader = new FileReader();
+						reader.onload = function(event) {
+							ed.execCommand("mceInsertRawHTML", false, '<img src="' + event.target.result + '" />');
+						}
+						reader.readAsDataURL(items[0].getAsFile());
+						return;
+					}
+				}
+
 				// Check if browser supports direct plaintext access
 				if (e.clipboardData || dom.doc.dataTransfer) {
 					textContent = (e.clipboardData || dom.doc.dataTransfer).getData('Text');
