@@ -120,18 +120,22 @@
 				switch (evt.keyCode) {
 					case DOM_VK_LEFT:
 						if (enableLeftRight) t.moveFocus(-1);
+						Event.cancel(evt);
 						break;
 	
 					case DOM_VK_RIGHT:
 						if (enableLeftRight) t.moveFocus(1);
+						Event.cancel(evt);
 						break;
 	
 					case DOM_VK_UP:
 						if (enableUpDown) t.moveFocus(-1);
+						Event.cancel(evt);
 						break;
 
 					case DOM_VK_DOWN:
 						if (enableUpDown) t.moveFocus(1);
+						Event.cancel(evt);
 						break;
 
 					case DOM_VK_ESCAPE:
