@@ -1,6 +1,6 @@
 Version 3.5.x (2012-xx-xx)
-	Fixed bug where up/down arrow keys scroll entire webpage when using keyboard nav in menu ui.
 	Fixed bug where applying ins/del as inline elements would apply them as blocks.
+	Fixed bug where backspace on a space after an image would produce a BR on WebKit.
 Version 3.5.8 (2012-11-20)
 	Fixed bug where html5 data attributes where stripped from contents.
 	Fixed bug where toolbar was annouced multiple times with JAWS on Firefox.

@@ -519,6 +519,12 @@ tinymce.util.Quirks = function(editor) {
 				// Override delete if the start container is a text node and is at the beginning of text or
 				// just before/after the last character to be deleted in collapsed mode
 				if (container.nodeType == 3 && container.nodeValue.length > 0 && ((offset === 0 && !collapsed) || (collapsed && offset === (isDelete ? 0 : 1)))) {
+					// Edge case when deleting <p><b><img> |x</b></p>
+					sibling = container.previousSibling;
+					if (sibling && sibling.nodeName == "IMG") {
+						return;
+					}
+
 					nonEmptyElements = editor.schema.getNonEmptyElements();
 
 					// Prevent default logic since it's broken
