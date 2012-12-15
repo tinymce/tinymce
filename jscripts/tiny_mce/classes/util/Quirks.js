@@ -64,55 +64,54 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function cleanupStylesWhenDeleting() {
 		function removeMergedFormatSpans(isDelete) {
-			var rng, blockElm, node, clonedSpan;
+			var rng, blockElm, wrapperElm, bookmark, container, offset;
+
+			function isAtStartOrEndOfElm() {
+				if (container.nodeType == 3) {
+					if (isDelete && offset == container.length) {
+						return true;
+					}
+
+					if (!isDelete && offset === 0) {
+						return true;
+					}
+				}
+			}
 
 			rng = selection.getRng();
+			container = rng[(isDelete ? 'start' : 'end') + 'Container'];
+			offset = rng[(isDelete ? 'start' : 'end') + 'Offset'];
 
-			// Find root block
-			blockElm = dom.getParent(rng.startContainer, dom.isBlock);
+			if (container.nodeType == 3) {
+				blockElm = dom.getParent(rng.startContainer, dom.isBlock);
 
-			// On delete clone the root span of the next block element
-			if (isDelete) {
-				blockElm = dom.getNext(blockElm, dom.isBlock);
-			}
-
-			// Locate root span element and clone it since it would otherwise get merged by the "apple-style-span" on delete/backspace
-			if (blockElm) {
-				node = blockElm.firstChild;
-
-				// Ignore empty text nodes
-				while (node && node.nodeType == 3 && node.nodeValue.length === 0) {
-					node = node.nextSibling;
+				// On delete clone the root span of the next block element
+				if (isDelete) {
+					blockElm = dom.getNext(blockElm, dom.isBlock);
 				}
 
-				if (node && node.nodeName === 'SPAN') {
-					clonedSpan = node.cloneNode(false);
+				if (blockElm && isAtStartOrEndOfElm()) {
+					// Wrap children of block in a EM and let WebKit stick is
+					// runtime styles junk into that EM
+					wrapperElm = dom.create('em', {'id': '__mceDel'});
+
+					each(tinymce.grep(blockElm.childNodes), function(node) {
+						wrapperElm.appendChild(node);
+					});
+
+					blockElm.appendChild(wrapperElm);
 				}
 			}
-
-			each(dom.select('span', blockElm), function(span) {
-				span.setAttribute('data-mce-mark', '1');
-			});
 
 			// Do the backspace/delete action
 			editor.getDoc().execCommand(isDelete ? 'ForwardDelete' : 'Delete', false, null);
 
-			// Find all odd apple-style-spans
-			blockElm = dom.getParent(rng.startContainer, dom.isBlock);
-			each(dom.select('span', blockElm), function(span) {
-				var bm = selection.getBookmark();
-
-				if (clonedSpan) {
-					dom.replace(clonedSpan.cloneNode(false), span, true);
-				} else if (!span.getAttribute('data-mce-mark')) {
-					dom.remove(span, true);
-				} else {
-					span.removeAttribute('data-mce-mark');
-				}
-
-				// Restore the selection
-				selection.moveToBookmark(bm);
-			});
+			// Remove temp wrapper element
+			if (wrapperElm) {
+				bookmark = selection.getBookmark();
+				dom.remove(dom.get('__mceDel'), true);
+				selection.moveToBookmark(bookmark);
+			}
 		}
 
 		editor.onKeyDown.add(function(editor, e) {
