@@ -65,6 +65,7 @@
 			rep(/<em class=\"quoteStyle\">(.*?)<\/em>/gi,"[quote][i]$1[/i][/quote]");
 			rep(/<u class=\"codeStyle\">(.*?)<\/u>/gi,"[code][u]$1[/u][/code]");
 			rep(/<u class=\"quoteStyle\">(.*?)<\/u>/gi,"[quote][u]$1[/u][/quote]");
+			rep(/<p class=\"codeStyle\">(.*?)<\/p>/gi,"[code]$1[/code]");
 			rep(/<\/(strong|b)>/gi,"[/b]");
 			rep(/<(strong|b)>/gi,"[b]");
 			rep(/<\/(em|i)>/gi,"[/i]");
