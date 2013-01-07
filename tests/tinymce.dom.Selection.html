@@ -492,6 +492,15 @@ test('select table text 2', 2, function() {
 	equal(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
 });
 
+test('select from very top of the document', function() {
+	expect(1);
+
+	editor.setContent("<p>test 123</p>");
+	setSelection('html', 0, 'p', 8);
+	editor.execCommand('Bold');
+	equal(editor.getContent(), "<p><strong>test 123</strong></p>");
+});
+
 test('getNode', function() {
 	var rng;
 
