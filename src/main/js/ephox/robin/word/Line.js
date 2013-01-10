@@ -73,8 +73,13 @@ define(
       return Classification.isBoundary(element) ? all(element) : inlineLine(element);
     };
 
+    var local = function (element) {
+      return Classification.isBoundary(element) ? LineInfo(Zone.basic([]), []) : inlineLine(element);
+    };
+
     return {
-      line: line
+      line: line,
+      local: local
     };
   }
 );
