@@ -13,13 +13,13 @@
 
 	tinymce.create('tinymce.plugins.FullScreenPlugin', {
 		init : function(ed, url) {
-			var t = this, s = {}, vp, posCss;
+			var t = this, s = {}, vp, posCss, bookmark;
 
 			t.editor = ed;
 
 			// Register commands
 			ed.addCommand('mceFullScreen', function() {
-				var win, de = DOM.doc.documentElement;
+				var win, de = DOM.doc.documentElement, oed;
 
 				if (ed.getParam('fullscreen_is_enabled')) {
 					if (ed.getParam('fullscreen_new_window'))
@@ -27,7 +27,12 @@
 					else {
 						DOM.win.setTimeout(function() {
 							tinymce.dom.Event.remove(DOM.win, 'resize', t.resizeFunc);
-							tinyMCE.get(ed.getParam('fullscreen_editor_id')).setContent(ed.getContent());
+							bookmark = ed.selection.getBookmark();
+							oed = tinyMCE.get(ed.getParam('fullscreen_editor_id'));
+							oed.setContent(ed.getContent({format: 'raw'}));
+							oed.selection.moveToBookmark(bookmark);
+							oed.focus();
+
 							tinyMCE.remove(ed);
 							DOM.remove('mce_fullscreen_container');
 							de.style.overflow = ed.getParam('fullscreen_html_overflow');
@@ -49,6 +54,7 @@
 					}
 				} else {
 					tinyMCE.oldSettings = tinyMCE.settings; // Store old settings
+					var bookmark = ed.selection.getBookmark();
 					s.fullscreen_overflow = DOM.getStyle(DOM.doc.body, 'overflow', 1) || 'auto';
 					s.fullscreen_html_overflow = DOM.getStyle(de, 'overflow', 1);
 					vp = DOM.getViewPort();
@@ -113,7 +119,8 @@
 
 					t.fullscreenEditor = new tinymce.Editor('mce_fullscreen', s);
 					t.fullscreenEditor.onInit.add(function() {
-						t.fullscreenEditor.setContent(ed.getContent());
+						t.fullscreenEditor.setContent(ed.getContent({format : 'raw'}));
+						t.fullscreenEditor.selection.moveToBookmark(bookmark);
 						t.fullscreenEditor.focus();
 					});
 
