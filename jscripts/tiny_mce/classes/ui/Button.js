@@ -50,7 +50,7 @@
 			else
 				h += '<span class="mceIcon ' + s['class'] + '"></span>' + (l ? '<span class="' + cp + 'Label">' + l + '</span>' : '');
 
-			h += '<span class="mceVoiceLabel mceIconOnly" style="display: none;" id="' + this.id + '_voice">' + s.title + '</span>'; 
+			h += '<span class="mceVoiceLabel mceIconOnly" style="display: none;" id="' + this.id + '_voice">' + s.title + '</span>';
 			h += '</a>';
 			return h;
 		},
@@ -81,9 +81,11 @@
 					return s.onclick.call(s.scope, e);
 				}
 			});
-			tinymce.dom.Event.add(t.id, 'keyup', function(e) {
-				if (!t.isDisabled() && e.keyCode==tinymce.VK.SPACEBAR)
+			tinymce.dom.Event.add(t.id, 'keydown', function(e) {
+				if (!t.isDisabled() && e.keyCode==tinymce.VK.SPACEBAR) {
+					tinymce.dom.Event.cancel(e);
 					return s.onclick.call(s.scope, e);
+				}
 			});
 		}
 	});
