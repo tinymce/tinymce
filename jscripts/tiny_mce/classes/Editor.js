@@ -1747,7 +1747,7 @@
 					self.contentDocument = win.document;
 			}
 
-			return self.contentDocument;
+			return self.contentDocument || document;
 		},
 
 		/**
