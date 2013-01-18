@@ -38,7 +38,11 @@
 				var deltaSize, d = ed.getDoc(), body = d.body, de = d.documentElement, DOM = tinymce.DOM, resizeHeight = t.autoresize_min_height, myHeight;
 
 				// Get height differently depending on the browser used
-				myHeight = tinymce.isIE ? body.scrollHeight : (tinymce.isWebKit && body.clientHeight == 0 ? 0 : body.offsetHeight);
+				if(tinymce.isIE10) {
+					myHeight = body.offsetHeight;
+				} else {
+					myHeight = tinymce.isIE ? body.scrollHeight : (tinymce.isWebKit && body.clientHeight == 0 ? 0 : body.offsetHeight);
+				}
 
 				// Don't make it smaller than the minimum height
 				if (myHeight > t.autoresize_min_height)
