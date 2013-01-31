@@ -285,8 +285,6 @@
 		_showMenu : function(ed, e) {
 			var t = this, ed = t.editor, m = t._menu, p1, dom = ed.dom, vp = dom.getViewPort(ed.getWin()), wordSpan = e.target;
 
-			e = 0; // Fixes IE memory leak
-
 			if (!m) {
 				m = ed.controlManager.createDropMenu('spellcheckermenu', {'class' : 'mceNoIcons'});
 				t._menu = m;
@@ -381,8 +379,12 @@
 				p1 = dom.getPos(wordSpan);
 				m.showMenu(p1.x, p1.y + wordSpan.offsetHeight - vp.y);
 
-				return tinymce.dom.Event.cancel(e);
+				tinymce.dom.Event.cancel(e);
+				e = 0; // Fixes IE memory leak
+
+				return false;
 			} else
+				e = 0; // Fixes IE memory leak
 				m.hideMenu();
 		},
 
