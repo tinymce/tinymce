@@ -331,26 +331,24 @@
 				undoManager.add();
 			};
 
-			// Walks the parent block to the right and look for BR elements
-			function hasRightSideBr() {
+			// Walks the parent block to the right and look for any contents
+			function hasRightSideContent() {
 				var walker = new TreeWalker(container, parentBlock), node;
 
-				while (node = walker.current()) {
-					if (node.nodeName == 'BR') {
+				while (node = walker.next()) {
+					if (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {
 						return true;
 					}
-
-					node = walker.next();
 				}
 			}
-			
+
 			// Inserts a BR element if the forced_root_block option is set to false or empty string
 			function insertBr() {
 				var brElm, extraBr, marker;
 
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					// Insert extra BR element at the end block elements
-					if (!tinymce.isIE && !hasRightSideBr()) {
+					if (!tinymce.isIE && !hasRightSideContent()) {
 						brElm = dom.create('br');
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
