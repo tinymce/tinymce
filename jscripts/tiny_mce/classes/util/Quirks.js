@@ -64,7 +64,7 @@ tinymce.util.Quirks = function(editor) {
 	 */
 	function cleanupStylesWhenDeleting() {
 		function removeMergedFormatSpans(isDelete) {
-			var rng, blockElm, wrapperElm, bookmark, container, offset;
+			var rng, blockElm, wrapperElm, bookmark, container, offset, elm;
 
 			function isAtStartOrEndOfElm() {
 				if (container.nodeType == 3) {
@@ -79,6 +79,12 @@ tinymce.util.Quirks = function(editor) {
 			}
 
 			rng = selection.getRng();
+			var tmpRng = [rng.startContainer, rng.startOffset, rng.endContainer, rng.endOffset];
+
+			if (!rng.collapsed) {
+				isDelete = true;
+			}
+
 			container = rng[(isDelete ? 'start' : 'end') + 'Container'];
 			offset = rng[(isDelete ? 'start' : 'end') + 'Offset'];
 
@@ -90,7 +96,7 @@ tinymce.util.Quirks = function(editor) {
 					blockElm = dom.getNext(blockElm, dom.isBlock);
 				}
 
-				if (blockElm && isAtStartOrEndOfElm()) {
+				if (blockElm && (isAtStartOrEndOfElm() || !rng.collapsed)) {
 					// Wrap children of block in a EM and let WebKit stick is
 					// runtime styles junk into that EM
 					wrapperElm = dom.create('em', {'id': '__mceDel'});
@@ -104,12 +110,20 @@ tinymce.util.Quirks = function(editor) {
 			}
 
 			// Do the backspace/delete action
+			rng = dom.createRng();
+			rng.setStart(tmpRng[0], tmpRng[1]);
+			rng.setEnd(tmpRng[2], tmpRng[3]);
+			selection.setRng(rng);
 			editor.getDoc().execCommand(isDelete ? 'ForwardDelete' : 'Delete', false, null);
 
 			// Remove temp wrapper element
 			if (wrapperElm) {
 				bookmark = selection.getBookmark();
-				dom.remove(dom.get('__mceDel'), true);
+
+				while (elm = dom.get('__mceDel')) {
+					dom.remove(elm, true);
+				}
+
 				selection.moveToBookmark(bookmark);
 			}
 		}
