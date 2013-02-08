@@ -6,10 +6,11 @@ define(
     'ephox.peanut.Fun',
     'ephox.phoenix.extract.Extract',
     'ephox.phoenix.util.node.Parents',
-    'ephox.sugar.api.Compare'
+    'ephox.sugar.api.Compare',
+    'ephox.sugar.api.Node'
   ],
 
-  function (Arr, Fun, Extract, Parents, Compare) {
+  function (Arr, Fun, Extract, Parents, Compare, Node) {
 
     var curry = Fun.curry;
     
@@ -22,13 +23,14 @@ define(
 
         var nodes = Arr.bind(Extract.from(v), function (x) {
           var no = Fun.constant([]);
-          return x.fold(no, no, Fun.identity);
+          return x.fold(no, Fun.identity, Fun.identity);
         });
 
         var i1 = Arr.findIndex(nodes, curry(Compare.eq, e1.element())) + e1.offset();
         var i2 = Arr.findIndex(nodes, curry(Compare.eq, e2.element())) + e2.offset();
 
-        return nodes.slice(i1, i2);
+        var result = nodes.slice(i1, i2);
+        return Arr.filter(result, Node.isText);
       });
     };
 
