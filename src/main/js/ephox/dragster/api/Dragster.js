@@ -33,7 +33,7 @@ define(
       var titlebar = container('titlebar');
       var content = container('content');
 
-      var viewer = Visibility.displayToggler(dialog, 'block');
+      var viewHide = Visibility.displayToggler(dialog, 'block');
 
       Insert.append(dialog, titlebar);
       Insert.append(dialog, content);
@@ -63,11 +63,11 @@ define(
       var show = function (x, y) {
         Css.set(dialog, 'position', 'absolute');
         setPosition(dialog, x, y);
-        viewer.show();
+        viewHide.off();
       };
 
       var hide = function () {
-        viewer.hide();
+        viewHide.on();
         drag.stop();
       };
 

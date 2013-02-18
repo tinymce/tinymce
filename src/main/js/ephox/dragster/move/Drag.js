@@ -28,14 +28,9 @@ define(
         };
       };
 
-      var getTarget = function (event) {
-        // TODO: Check this is cross-browser.
-        var sEvent = event || window.event;
-        return Element.fromDom(sEvent.target || sEvent.srcElement);
-      };
-
       var mousedown = function (event, ui) {
-        var target = getTarget(event);
+        console.log('here we are.');
+        // var target = getTarget(event);
         Insert.append(doc, blocker);
         moving = true;
       };
@@ -51,9 +46,11 @@ define(
       };
 
       var mousemove = function (event, ui) {
+        console.log('moving mouse: ', moving);
         if (moving) {
-          var offset = delta.update(event.x, event.y);
+          var offset = delta.update(event.x(), event.y());
           offset.each(function (v) {
+            console.log('has offset: ', v, element.dom(), v.left(), v.top());
             var location = Location.absolute(element);
             Css.setAll(element, {
               left: location.left() + v.left(),
@@ -61,7 +58,7 @@ define(
             });
           });
         } else {
-          var target = getTarget(event);
+          var target = event.target();
           if (Compare.eq(target, anchor)) {
             Css.set(target, 'cursor', 'pointer');
           }
