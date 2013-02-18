@@ -1,5 +1,5 @@
 define(
-  'ephox.dragster.move.Delta',
+  'ephox.dragster.detect.Delta',
 
   [
     'ephox.perhaps.Option',
@@ -17,7 +17,6 @@ define(
       };
 
       var update = function (newX, newY) {
-        console.log('newX: ', newX, 'newY: ', newY);
         var result = position.map(function (v) {
           return Position(newX - v.left(), newY - v.top());
         });
