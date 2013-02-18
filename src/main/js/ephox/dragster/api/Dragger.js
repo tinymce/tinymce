@@ -28,9 +28,11 @@ define(
       var movement = Movement(anchor);
 
       var drop = function () {
-        movement.off();
         Remove.remove(blocker);
-        events.trigger.stop();
+        if (movement.isOn()) {
+          movement.off();
+          events.trigger.stop();
+        }
       };
 
       var mousedown = function (event, ui) {

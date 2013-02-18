@@ -55,11 +55,11 @@ define(
       });
 
       // will need closers.
-      var sizers = Sizers(div);
+      var sizers = Sizers();
 
       Event.bind(div, 'mousedown', function () {
         sizers.show();
-        sizers.update();
+        sizers.update(div);
         relocater.on();
       });
 
@@ -77,9 +77,9 @@ define(
         sizers.hide();
       });
 
-      var grower = Dragger.transform(Element.fromDom(document.body), sizers.northeast().element(), neGrow);
+      var grower = Dragger.transform(Element.fromDom(document.body), sizers.southeast().element(), neGrow);
       grower.events.stop.bind(function () {
-        sizers.update();
+        sizers.update(div);
         sizers.show();
         relocater.on();
       });
@@ -87,7 +87,7 @@ define(
 
       var relocater = Dragger.transform(Element.fromDom(document.body), div, relocate);
       relocater.events.stop.bind(function () {
-        sizers.update();
+        sizers.update(div);
         sizers.show();
       });
       relocater.off();

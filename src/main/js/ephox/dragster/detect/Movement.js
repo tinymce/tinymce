@@ -27,9 +27,14 @@ define(
         dragState.onEvent(event);
       };
 
+      var isOn = function () {
+        return dragState === inDragState;
+      };
+
       return {
         on: on,
         off: off,
+        isOn: isOn,
         onEvent: onEvent,
         events: inDragState.events
       };

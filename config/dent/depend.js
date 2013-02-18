@@ -62,6 +62,17 @@ var dependencies = [
     ]
   },
 
+  {
+    name: 'photon',
+    repository: 'buildrepo2',
+    version: 'latest',
+    source: 'photon.zip',
+    targets: [
+      { name: 'module/*.js', path: depend },
+      { name: 'depend/*.js', path: depend }
+    ]
+  },
+
   /**** demo dependencies ****/
   {
     name: 'exhibition',
