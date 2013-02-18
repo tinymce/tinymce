@@ -3,17 +3,18 @@ define(
 
   [
     'ephox.wrap.JQuery',
-    'ephox.dragster.api.Dragster',
+    'ephox.dragster.api.Dragger',
     'ephox.dragster.transform.Grow',
     'ephox.dragster.transform.Relocate',
-    'ephox.dragster.viper.Asp',
+    'ephox.dragster.util.Sizers',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
+    'ephox.sugar.api.Event',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function ($, Dragster, Grow, Relocate, Asp, Css, Element, Insert, SelectorFind) {
+  function ($, Dragger, Grow, Relocate, Sizers, Css, Element, Event, Insert, SelectorFind) {
     return function () {
       // var container = $('<div/>').append('Hi.');
 
@@ -53,10 +54,44 @@ define(
         background: 'blue'
       });
 
+      // will need closers.
+      var sizers = Sizers(div);
+
+      Event.bind(div, 'mousedown', function () {
+        sizers.show();
+        sizers.update();
+        relocater.on();
+      });
+
       var ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
       Insert.append(ephoxUi, div);
 
-      Asp.transform(Element.fromDom(document.body), div, Relocate.both(div));
+      var neGrow = Grow.both(div);
+      neGrow.events.grow.bind(function () {
+        sizers.hide();
+        relocater.off();
+      });
+
+      var relocate = Relocate.both(div);
+      relocate.events.relocate.bind(function () {
+        sizers.hide();
+      });
+
+      var grower = Dragger.transform(Element.fromDom(document.body), sizers.northeast().element(), neGrow);
+      grower.events.stop.bind(function () {
+        sizers.update();
+        sizers.show();
+        relocater.on();
+      });
+      grower.on();
+
+      var relocater = Dragger.transform(Element.fromDom(document.body), div, relocate);
+      relocater.events.stop.bind(function () {
+        sizers.update();
+        sizers.show();
+      });
+      relocater.off();
+      
     };
   }
 );

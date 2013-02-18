@@ -25,6 +25,8 @@ define(
       Class.add(div, Styles.resolve('blocker'));
 
       return div;
+
+      // probably add a destroy method
     };
 
 
