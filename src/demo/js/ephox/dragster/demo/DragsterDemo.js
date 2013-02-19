@@ -4,9 +4,9 @@ define(
   [
     'ephox.wrap.JQuery',
     'ephox.dragster.api.Dragger',
+    'ephox.dragster.demo.Sizers',
     'ephox.dragster.transform.Grow',
     'ephox.dragster.transform.Relocate',
-    'ephox.dragster.util.Sizers',
     'ephox.sugar.api.Css',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Event',
@@ -14,7 +14,7 @@ define(
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function ($, Dragger, Grow, Relocate, Sizers, Css, Element, Event, Insert, SelectorFind) {
+  function ($, Dragger, Sizers, Grow, Relocate, Css, Element, Event, Insert, SelectorFind) {
     return function () {
       // var container = $('<div/>').append('Hi.');
 

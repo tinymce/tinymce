@@ -23,9 +23,7 @@ define(
         left: 0,
         top: 0,
         width: '100%',
-        height: '100%',
-        background: 'black',
-        opacity: '0.2'
+        height: '100%'
       });
 
       Class.add(div, Styles.resolve('blocker'));

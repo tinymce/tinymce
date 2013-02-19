@@ -1,5 +1,5 @@
 define(
-  'ephox.dragster.util.Sizers',
+  'ephox.dragster.demo.Sizers',
 
   [
     'ephox.compass.Arr',
