@@ -28,3 +28,7 @@
   padding-left: 5px;
   padding-right: 5px;
 }
+
+.ephox-dragster-blocker {
+  z-index: 10000;
+}

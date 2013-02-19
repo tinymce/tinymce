@@ -2,18 +2,17 @@ define(
   'ephox.dragster.detect.NoDrag',
 
   [
-    'ephox.peanut.Fun',
-    'ephox.sugar.api.Compare',
-    'ephox.sugar.api.Css'
+    'ephox.peanut.Fun'
   ],
 
-  function (Fun, Compare, Css) {
+  function (Fun) {
     return function (anchor) {
       var onEvent = function (event) {
         var target = event.target();
-        if (Compare.eq(target, anchor)) {
-          Css.set(target, 'cursor', 'pointer');
-        }
+        // Might want this later, but not now.
+        // if (Compare.eq(target, anchor)) {
+        //   Css.set(target, 'cursor', 'pointer');
+        // }
       };
 
       return {

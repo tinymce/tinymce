@@ -14,12 +14,11 @@ define(
 
     return function (options) {
       var settings = Merger.merge({
-        'z-index': 100000
+        'layerClass': Styles.resolve('blocker')
       }, options);
 
       var div = Element.fromTag('div');
       Css.setAll(div, {
-        'z-index': settings['z-index'],
         position: 'fixed',
         left: 0,
         top: 0,
@@ -30,6 +29,7 @@ define(
       });
 
       Class.add(div, Styles.resolve('blocker'));
+      Class.add(div, settings.layerClass);
 
       var element = function () {
         return div;
