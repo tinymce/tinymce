@@ -14,8 +14,8 @@ define(
 
   function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, Array) {
     
-    var transform = function (body, anchor, mutation) {
-
+    var transform = function (body, anchor, mutation, options) {
+      var settings = options !== undefined ? options : {};
       var active = false;
 
       var events = Events.create({
@@ -23,12 +23,11 @@ define(
         stop: Event([])
       });
 
-      // ASSUMPTION: it's z-index won't be a problem where it is used.
-      var blocker = Blocker();
+      var blocker = Blocker(settings);
       var movement = Movement(anchor);
 
       var drop = function () {
-        Remove.remove(blocker);
+        Remove.remove(blocker.element());
         if (movement.isOn()) {
           movement.off();
           events.trigger.stop();
@@ -36,7 +35,7 @@ define(
       };
 
       var mousedown = function (event, ui) {
-        Insert.append(body, blocker);
+        Insert.append(body, blocker.element());
         movement.on();
         events.trigger.start();
       };
@@ -72,12 +71,12 @@ define(
       };
 
       var mdown = DomEvent.bind(anchor, 'mousedown', runIfActive(mousedown));
-      var mup = DomEvent.bind(blocker, 'mouseup', runIfActive(mouseup));
-      var mmove = DomEvent.bind(blocker, 'mousemove', runIfActive(mousemove));
-      var mout = DomEvent.bind(blocker, 'mouseout', runIfActive(drop));
+      var mup = DomEvent.bind(blocker.element(), 'mouseup', runIfActive(mouseup));
+      var mmove = DomEvent.bind(blocker.element(), 'mousemove', runIfActive(mousemove));
+      var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(drop));
 
       var destroy = function () {
-        Remove.remove(blocker);
+        blocker.destroy();
         mdown.unbind();
         mup.unbind();
         mmove.unbind();
@@ -90,8 +89,6 @@ define(
         destroy: destroy,
         events: events.registry
       };
-
-      // need to have a destroy somehow.
     };
     
     return {

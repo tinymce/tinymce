@@ -3,30 +3,46 @@ define(
 
   [
     'ephox.dragster.style.Styles',
+    'ephox.highway.Merger',
     'ephox.sugar.api.Class',
     'ephox.sugar.api.Css',
-    'ephox.sugar.api.Element'
+    'ephox.sugar.api.Element',
+    'ephox.sugar.api.Remove'
   ],
 
-  function (Styles, Class, Css, Element) {
+  function (Styles, Merger, Class, Css, Element, Remove) {
 
-    return function () {
+    return function (options) {
+      var settings = Merger.merge({
+        'z-index': 100000
+      }, options);
 
       var div = Element.fromTag('div');
       Css.setAll(div, {
-        'z-index': 10000,
+        'z-index': settings['z-index'],
         position: 'fixed',
         left: 0,
         top: 0,
         width: '100%',
-        height: '100%'
+        height: '100%',
+        background: 'black',
+        opacity: '0.2'
       });
 
       Class.add(div, Styles.resolve('blocker'));
 
-      return div;
+      var element = function () {
+        return div;
+      };
 
-      // probably add a destroy method
+      var destroy = function () {
+        Remove.remove(blocker);
+      };
+
+      return {
+        element: element,
+        destroy: destroy
+      };
     };
 
 
