@@ -36,7 +36,7 @@ define(
       };
 
       var destroy = function () {
-        Remove.remove(blocker);
+        Remove.remove(div);
       };
 
       return {
