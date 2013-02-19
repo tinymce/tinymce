@@ -1011,9 +1011,9 @@
 			var doc = this.doc, head;
 
 			// Create style element if needed
-			styleElm = doc.getElementById('mceDefaultStyles');
+			var styleElm = doc.getElementById('mceDefaultStyles');
 			if (!styleElm) {
-				styleElm = doc.createElement('style'),
+				styleElm = doc.createElement('style');
 				styleElm.id = 'mceDefaultStyles';
 				styleElm.type = 'text/css';
 
