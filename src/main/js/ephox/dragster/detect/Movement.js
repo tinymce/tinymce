@@ -8,8 +8,8 @@ define(
 
   function (InDrag, NoDrag) {
 
-    return function (anchor) {
-      var noDragState = NoDrag(anchor);
+    return function () {
+      var noDragState = NoDrag();
       var inDragState = InDrag();
       var dragState = noDragState;
 

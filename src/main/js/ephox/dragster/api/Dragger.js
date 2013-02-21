@@ -14,7 +14,7 @@ define(
 
   function (Blocker, Movement, Event, Events, DomEvent, Insert, Remove, Array) {
     
-    var transform = function (body, anchor, mutation, options) {
+    var transform = function (mutation, options) {
       var settings = options !== undefined ? options : {};
       var active = false;
 
@@ -24,7 +24,7 @@ define(
       });
 
       var blocker = Blocker(settings);
-      var movement = Movement(anchor);
+      var movement = Movement();
 
       var drop = function () {
         Remove.remove(blocker.element());
@@ -34,8 +34,8 @@ define(
         }
       };
 
-      var mousedown = function (event, ui) {
-        Insert.append(body, blocker.element());
+      var go = function (parent) {
+        Insert.append(parent, blocker.element());
         movement.on();
         events.trigger.start();
       };
@@ -70,20 +70,19 @@ define(
         };
       };
 
-      var mdown = DomEvent.bind(anchor, 'mousedown', runIfActive(mousedown));
       var mup = DomEvent.bind(blocker.element(), 'mouseup', runIfActive(mouseup));
       var mmove = DomEvent.bind(blocker.element(), 'mousemove', runIfActive(mousemove));
       var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(drop));
 
       var destroy = function () {
         blocker.destroy();
-        mdown.unbind();
         mup.unbind();
         mmove.unbind();
         mout.unbind();
       };
 
       return {
+        go: go,
         on: on,
         off: off,
         destroy: destroy,
