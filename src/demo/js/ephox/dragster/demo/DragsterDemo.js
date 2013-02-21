@@ -8,13 +8,14 @@ define(
     'ephox.dragster.transform.Grow',
     'ephox.dragster.transform.Relocate',
     'ephox.sugar.api.Css',
+    'ephox.sugar.api.DomEvent',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Event',
     'ephox.sugar.api.Insert',
     'ephox.sugar.api.SelectorFind'
   ],
 
-  function ($, Dragger, Sizers, Grow, Relocate, Css, Element, Event, Insert, SelectorFind) {
+  function ($, Dragger, Sizers, Grow, Relocate, Css, DomEvent, Element, Event, Insert, SelectorFind) {
     return function () {
       // var container = $('<div/>').append('Hi.');
 
@@ -77,18 +78,24 @@ define(
         sizers.hide();
       });
 
-      var grower = Dragger.transform(Element.fromDom(document.body), sizers.southeast().element(), neGrow);
+      var grower = Dragger.transform(neGrow);
       grower.events.stop.bind(function () {
         sizers.update(div);
         sizers.show();
         relocater.on();
       });
       grower.on();
+      DomEvent.bind(sizers.southeast().element(), 'mousedown', function () {
+        grower.go(ephoxUi);
+      });
 
-      var relocater = Dragger.transform(Element.fromDom(document.body), div, relocate);
+      var relocater = Dragger.transform(relocate);
       relocater.events.stop.bind(function () {
         sizers.update(div);
         sizers.show();
+      });
+      DomEvent.bind(div, 'mousedown', function () {
+        relocater.go(Element.fromDom(document.body));
       });
       relocater.off();
       
