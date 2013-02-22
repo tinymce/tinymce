@@ -86,6 +86,7 @@ define(
       };
 
       return {
+        element: blocker.element,
         go: go,
         on: on,
         off: off,
