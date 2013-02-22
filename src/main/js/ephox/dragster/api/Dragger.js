@@ -70,6 +70,9 @@ define(
         };
       };
 
+      // ASSUMPTION: runIfActive is not needed for mousedown. This is pretty much a safety measure for
+      // inconsistent situations so that we don't block input.
+      var mdown = DomEvent.bind(blocker.element(), 'mousedown', drop);
       var mup = DomEvent.bind(blocker.element(), 'mouseup', runIfActive(mouseup));
       var mmove = DomEvent.bind(blocker.element(), 'mousemove', runIfActive(mousemove));
       var mout = DomEvent.bind(blocker.element(), 'mouseout', runIfActive(drop));
@@ -79,6 +82,7 @@ define(
         mup.unbind();
         mmove.unbind();
         mout.unbind();
+        mdown.unbind();
       };
 
       return {
