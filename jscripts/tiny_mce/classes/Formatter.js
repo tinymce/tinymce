@@ -1233,7 +1233,8 @@
 				startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,
-				endOffset = rng.endOffset;
+				endOffset = rng.endOffset,
+				safeEndOffset;
 
 			// This function walks up the tree if there is no siblings before/after the node
 			function findParentContainer(start) {
@@ -1303,7 +1304,13 @@
 			// If index based end position then resolve it
 			if (endContainer.nodeType == 1 && endContainer.hasChildNodes()) {
 				lastIdx = endContainer.childNodes.length - 1;
-				endContainer = endContainer.childNodes[endOffset > lastIdx ? lastIdx : endOffset - 1];
+
+				// In some odd, barely-reproducible scenarios, IE will have an endOffset of 0. Check for a -1 index
+				safeEndOffset = endOffset > lastIdx ? lastIdx : endOffset - 1;
+				if(safeEndOffset < 0) {
+					safeEndOffset = 0;
+				}
+				endContainer = endContainer.childNodes[safeEndOffset];
 
 				if (endContainer.nodeType == 3)
 					endOffset = endContainer.nodeValue.length;
