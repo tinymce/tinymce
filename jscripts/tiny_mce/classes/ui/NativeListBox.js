@@ -200,12 +200,14 @@
 					Event.remove(t.id, 'blur', bf);
 				});
 
+				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
+
 				//prevent default left and right keys on chrome - so that the keyboard navigation is used.
-				if (tinymce.isWebKit && (e.keyCode==37 ||e.keyCode==39)) {
+				if (tinymce.isWebKit && (e.keyCode == DOM_VK_LEFT || e.keyCode == DOM_VK_RIGHT)) {
 					return Event.prevent(e);
 				}
-				
-				if (e.keyCode == 13 || e.keyCode == 32) {
+
+				if (e.keyCode == DOM_VK_RETURN || e.keyCode == DOM_VK_SPACE) {
 					onChange(e);
 					return Event.cancel(e);
 				}
