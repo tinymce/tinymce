@@ -15,30 +15,22 @@
 		init : function(ed, url) {
 			var t = this, s = {}, vp, posCss, bookmark;
 
-			t.editor = ed;
-
 			// Register commands
 			ed.addCommand('mceFullScreen', function() {
-				var win, de = DOM.doc.documentElement, oed;
+				var win, oed;
 
 				if (ed.getParam('fullscreen_is_enabled')) {
 					if (ed.getParam('fullscreen_new_window'))
-						closeFullscreen(); // Call to close in new window
+						closeFullscreen(); // Call to close in fullscreen.htm
 					else {
 						DOM.win.setTimeout(function() {
-							tinymce.dom.Event.remove(DOM.win, 'resize', t.resizeFunc);
-							bookmark = ed.selection.getBookmark();
-							oed = tinyMCE.get(ed.getParam('fullscreen_editor_id'));
-							oed.setContent(ed.getContent({format: 'raw'}));
-							oed.selection.moveToBookmark(bookmark);
-							oed.focus();
+							var fullscreenEditor = ed;
 
-							tinyMCE.remove(ed);
-							DOM.remove('mce_fullscreen_container');
-							de.style.overflow = ed.getParam('fullscreen_html_overflow');
-							DOM.setStyle(DOM.doc.body, 'overflow', ed.getParam('fullscreen_overflow'));
-							DOM.win.scrollTo(ed.getParam('fullscreen_scrollx'), ed.getParam('fullscreen_scrolly'));
-							tinyMCE.settings = tinyMCE.oldSettings; // Restore old settings
+							// find the editor that opened this one, execute restore function there
+							var originalEditor = tinyMCE.get(fullscreenEditor.getParam('fullscreen_editor_id'));
+							originalEditor.plugins.fullscreen.restoreState(fullscreenEditor);
+
+							tinyMCE.remove(fullscreenEditor);
 						}, 10);
 					}
 
@@ -46,6 +38,9 @@
 				}
 
 				if (ed.getParam('fullscreen_new_window')) {
+					t.fullscreenSettings = {
+						bookmark: ed.selection.getBookmark()
+					};
 					win = DOM.win.open(url + "/fullscreen.htm", "mceFullScreenPopup", "fullscreen=yes,menubar=no,toolbar=no,scrollbars=no,resizable=yes,left=0,top=0,width=" + screen.availWidth + ",height=" + screen.availHeight);
 					try {
 						win.resizeTo(screen.availWidth, screen.availHeight);
@@ -53,28 +48,27 @@
 						// Ignore
 					}
 				} else {
-					tinyMCE.oldSettings = tinyMCE.settings; // Store old settings
-					var bookmark = ed.selection.getBookmark();
-					s.fullscreen_overflow = DOM.getStyle(DOM.doc.body, 'overflow', 1) || 'auto';
-					s.fullscreen_html_overflow = DOM.getStyle(de, 'overflow', 1);
+					var de = DOM.doc.documentElement;
+					var fullscreen_overflow = DOM.getStyle(DOM.doc.body, 'overflow', 1) || 'auto';
+					var fullscreen_html_overflow = DOM.getStyle(de, 'overflow', 1);
 					vp = DOM.getViewPort();
-					s.fullscreen_scrollx = vp.x;
-					s.fullscreen_scrolly = vp.y;
+					var fullscreen_scrollx = vp.x;
+					var fullscreen_scrolly = vp.y;
 
 					// Fixes an Opera bug where the scrollbars doesn't reappear
-					if (tinymce.isOpera && s.fullscreen_overflow == 'visible')
-						s.fullscreen_overflow = 'auto';
+					if (tinymce.isOpera && fullscreen_overflow == 'visible')
+						fullscreen_overflow = 'auto';
 
 					// Fixes an IE bug where horizontal scrollbars would appear
-					if (tinymce.isIE && s.fullscreen_overflow == 'scroll')
-						s.fullscreen_overflow = 'auto';
+					if (tinymce.isIE && fullscreen_overflow == 'scroll')
+						fullscreen_overflow = 'auto';
 
 					// Fixes an IE bug where the scrollbars doesn't reappear
-					if (tinymce.isIE && (s.fullscreen_html_overflow == 'visible' || s.fullscreen_html_overflow == 'scroll'))
-						s.fullscreen_html_overflow = 'auto';
+					if (tinymce.isIE && (fullscreen_html_overflow == 'visible' || fullscreen_html_overflow == 'scroll'))
+						fullscreen_html_overflow = 'auto';
 
-					if (s.fullscreen_overflow == '0px')
-						s.fullscreen_overflow = '';
+					if (fullscreen_overflow == '0px')
+						fullscreen_overflow = '';
 
 					DOM.setStyle(DOM.doc.body, 'overflow', 'hidden');
 					de.style.overflow = 'hidden'; //Fix for IE6/7
@@ -114,14 +108,21 @@
 						s[k] = v;
 					});
 
+					t.fullscreenSettings = {
+						bookmark: ed.selection.getBookmark(),
+						fullscreen_overflow: fullscreen_overflow,
+						fullscreen_html_overflow: fullscreen_html_overflow,
+						fullscreen_scrollx: fullscreen_scrollx,
+						fullscreen_scrolly: fullscreen_scrolly
+					};
+
 					if (s.theme_advanced_toolbar_location === 'external')
 						s.theme_advanced_toolbar_location = 'top';
 
+					tinyMCE.oldSettings = tinyMCE.settings; // Store old settings, the Editor constructor overwrites them
 					t.fullscreenEditor = new tinymce.Editor('mce_fullscreen', s);
 					t.fullscreenEditor.onInit.add(function() {
-						t.fullscreenEditor.setContent(ed.getContent({format : 'raw'}));
-						t.fullscreenEditor.selection.moveToBookmark(bookmark);
-						t.fullscreenEditor.focus();
+						t.loadState(t.fullscreenEditor);
 					});
 
 					t.fullscreenEditor.render();
@@ -148,6 +149,56 @@
 			ed.onNodeChange.add(function(ed, cm) {
 				cm.setActive('fullscreen', ed.getParam('fullscreen_is_enabled'));
 			});
+
+			// fullscreenEditor is a param here because in window mode we don't create it
+			t.loadState = function(fullscreenEditor) {
+				if (!(fullscreenEditor && t.fullscreenSettings)) {
+					throw "No fullscreen editor to load";
+				}
+
+				fullscreenEditor.setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
+				fullscreenEditor.selection.moveToBookmark(t.fullscreenSettings.bookmark);
+				fullscreenEditor.focus();
+
+			};
+
+			// fullscreenEditor is a param here because in window mode we don't create it
+			t.restoreState = function(fullscreenEditor) {
+				if (!(fullscreenEditor && t.fullscreenSettings)) {
+					throw "No fullscreen editor to restore";
+				}
+
+				var bookmark = fullscreenEditor.selection.getBookmark();
+
+				ed.setContent(fullscreenEditor.getContent({format: 'raw'}), {format : 'raw'});
+
+				// cleanup only required if window mode isn't used
+				if (!ed.getParam('fullscreen_new_window')) {
+					tinymce.dom.Event.remove(DOM.win, 'resize', t.resizeFunc);
+					delete t.resizeFunc;
+
+					DOM.remove('mce_fullscreen_container');
+
+					var s = t.fullscreenSettings;
+
+					DOM.doc.documentElement.style.overflow = s.fullscreen_html_overflow;
+					DOM.setStyle(DOM.doc.body, 'overflow', s.fullscreen_overflow);
+					DOM.win.scrollTo(s.fullscreen_scrollx, s.fullscreen_scrolly);
+				}
+				tinyMCE.settings = tinyMCE.oldSettings; // Restore old settings
+
+				// clear variables
+				delete tinyMCE.oldSettings;
+				delete t.fullscreenEditor;
+				delete t.fullscreenElement;
+				delete t.fullscreenSettings;
+
+				// allow the fullscreen editor to be removed before restoring focus and selection
+				DOM.win.setTimeout(function() {
+					ed.selection.moveToBookmark(bookmark);
+					ed.focus();
+				}, 10);
+			};
 		},
 
 		getInfo : function() {
