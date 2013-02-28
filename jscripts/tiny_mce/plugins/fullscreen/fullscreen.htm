@@ -57,7 +57,7 @@
 
 		function moveContent() {
 			// find the original editor, execute restore state in it's plugin instance
-			window.opener.tinyMCE.get(oeID).plugins.fullscreen.restoreState(tinyMCE.activeEditor);
+			window.opener.tinyMCE.get(oeID).plugins.fullscreen.saveState(tinyMCE.activeEditor);
 
 			// prevent moveContent from being called twice - e.g. if the unloadHandler runs after moveContent()
 			tinymce.dom.Event.remove(window, "beforeunload", unloadHandler);

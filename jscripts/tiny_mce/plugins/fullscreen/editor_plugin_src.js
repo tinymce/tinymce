@@ -11,6 +11,24 @@
 (function() {
 	var DOM = tinymce.DOM;
 
+	// State Transfer function
+	var transferState = function(oldEditor, newEditor, bookmark) {
+		var transferColorButtonState = function(swapme) {
+			var c = oldEditor.controlManager.get(swapme);
+			var newC = newEditor.controlManager.get(swapme);
+
+			if (c && newC) {
+				newC.displayColor(c.value);
+			}
+
+		};
+
+		transferColorButtonState('forecolor');
+		transferColorButtonState('backcolor');
+		newEditor.setContent(oldEditor.getContent({format : 'raw'}), {format : 'raw'});
+		newEditor.selection.moveToBookmark(bookmark);
+	};
+
 	tinymce.create('tinymce.plugins.FullScreenPlugin', {
 		init : function(ed, url) {
 			var t = this, s = {}, vp, posCss, bookmark;
@@ -28,7 +46,7 @@
 
 							// find the editor that opened this one, execute restore function there
 							var originalEditor = tinyMCE.get(fullscreenEditor.getParam('fullscreen_editor_id'));
-							originalEditor.plugins.fullscreen.restoreState(fullscreenEditor);
+							originalEditor.plugins.fullscreen.saveState(fullscreenEditor);
 
 							tinyMCE.remove(fullscreenEditor);
 						}, 10);
@@ -156,21 +174,18 @@
 					throw "No fullscreen editor to load";
 				}
 
-				fullscreenEditor.setContent(ed.getContent({format : 'raw'}), {format : 'raw'});
-				fullscreenEditor.selection.moveToBookmark(t.fullscreenSettings.bookmark);
+				transferState(ed, fullscreenEditor, t.fullscreenSettings.bookmark);
 				fullscreenEditor.focus();
 
 			};
 
 			// fullscreenEditor is a param here because in window mode we don't create it
-			t.restoreState = function(fullscreenEditor) {
+			t.saveState = function(fullscreenEditor) {
 				if (!(fullscreenEditor && t.fullscreenSettings)) {
 					throw "No fullscreen editor to restore";
 				}
 
-				var bookmark = fullscreenEditor.selection.getBookmark();
-
-				ed.setContent(fullscreenEditor.getContent({format: 'raw'}), {format : 'raw'});
+				transferState(fullscreenEditor, ed, fullscreenEditor.selection.getBookmark());
 
 				// cleanup only required if window mode isn't used
 				if (!ed.getParam('fullscreen_new_window')) {
