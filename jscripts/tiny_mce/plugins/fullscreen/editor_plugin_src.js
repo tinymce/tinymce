@@ -27,6 +27,10 @@
 		transferColorButtonState('backcolor');
 		newEditor.setContent(oldEditor.getContent({format : 'raw'}), {format : 'raw'});
 		newEditor.selection.moveToBookmark(bookmark);
+
+		if (oldEditor.plugins.spellchecker && newEditor.plugins.spellchecker) {
+			newEditor.plugins.spellchecker.setLanguage(oldEditor.plugins.spellchecker.selectedLang);
+		}
 	};
 
 	tinymce.create('tinymce.plugins.FullScreenPlugin', {
