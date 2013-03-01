@@ -1,4 +1,5 @@
 Version 3.5.x (2012-xx-xx)
+	Fixed full screen plugin state migration from original editor.
 	Fixed edgecase on up/down arrow keys scrolling with native lists.
 	Fixed bug where space can scroll webpage when using keyboard to access toolbar buttons.
 	Fixed bug where up/down arrow keys scroll entire webpage when using keyboard nav in menu ui.
