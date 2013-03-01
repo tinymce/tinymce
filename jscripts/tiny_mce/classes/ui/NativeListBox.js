@@ -188,7 +188,7 @@
 
 			// Accessibility keyhandler
 			Event.add(t.id, 'keydown', function(e) {
-				var bf;
+				var bf, DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
 
 				Event.remove(t.id, 'change', ch);
 				changeListenerAdded = false;
@@ -199,8 +199,6 @@
 					Event.add(t.id, 'change', onChange);
 					Event.remove(t.id, 'blur', bf);
 				});
-
-				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
 
 				if (e.keyCode == DOM_VK_RETURN || e.keyCode == DOM_VK_SPACE) {
 					onChange(e);
