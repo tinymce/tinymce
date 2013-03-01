@@ -35,7 +35,7 @@
 
 	tinymce.create('tinymce.plugins.FullScreenPlugin', {
 		init : function(ed, url) {
-			var t = this, s = {}, vp, posCss, bookmark;
+			var t = this, s = {}, de = DOM.doc.documentElement, vp, fullscreen_overflow, fullscreen_html_overflow, fullscreen_scrollx, fullscreen_scrolly, posCss, bookmark;
 
 			// Register commands
 			ed.addCommand('mceFullScreen', function() {
@@ -70,12 +70,11 @@
 						// Ignore
 					}
 				} else {
-					var de = DOM.doc.documentElement;
-					var fullscreen_overflow = DOM.getStyle(DOM.doc.body, 'overflow', 1) || 'auto';
-					var fullscreen_html_overflow = DOM.getStyle(de, 'overflow', 1);
+					fullscreen_overflow = DOM.getStyle(DOM.doc.body, 'overflow', 1) || 'auto';
+					fullscreen_html_overflow = DOM.getStyle(de, 'overflow', 1);
 					vp = DOM.getViewPort();
-					var fullscreen_scrollx = vp.x;
-					var fullscreen_scrolly = vp.y;
+					fullscreen_scrollx = vp.x;
+					fullscreen_scrolly = vp.y;
 
 					// Fixes an Opera bug where the scrollbars doesn't reappear
 					if (tinymce.isOpera && fullscreen_overflow == 'visible')
@@ -175,7 +174,7 @@
 			// fullscreenEditor is a param here because in window mode we don't create it
 			t.loadState = function(fullscreenEditor) {
 				if (!(fullscreenEditor && t.fullscreenSettings)) {
-					throw "No fullscreen editor to load";
+					throw "No fullscreen editor to load to";
 				}
 
 				transferState(ed, fullscreenEditor, t.fullscreenSettings.bookmark);
@@ -186,8 +185,9 @@
 			// fullscreenEditor is a param here because in window mode we don't create it
 			t.saveState = function(fullscreenEditor) {
 				if (!(fullscreenEditor && t.fullscreenSettings)) {
-					throw "No fullscreen editor to restore";
+					throw "No fullscreen editor to restore from";
 				}
+				var settings = t.fullscreenSettings;
 
 				transferState(fullscreenEditor, ed, fullscreenEditor.selection.getBookmark());
 
@@ -198,11 +198,9 @@
 
 					DOM.remove('mce_fullscreen_container');
 
-					var s = t.fullscreenSettings;
-
-					DOM.doc.documentElement.style.overflow = s.fullscreen_html_overflow;
-					DOM.setStyle(DOM.doc.body, 'overflow', s.fullscreen_overflow);
-					DOM.win.scrollTo(s.fullscreen_scrollx, s.fullscreen_scrolly);
+					DOM.doc.documentElement.style.overflow = settings.fullscreen_html_overflow;
+					DOM.setStyle(DOM.doc.body, 'overflow', settings.fullscreen_overflow);
+					DOM.win.scrollTo(settings.fullscreen_scrollx, settings.fullscreen_scrolly);
 				}
 				tinyMCE.settings = tinyMCE.oldSettings; // Restore old settings
 
