@@ -669,15 +669,15 @@
 					val += sib.nodeValue;
 
 				val = p.innerHTML.replace(/<\/?\w+[^>]*>/gi, '').replace(/&nbsp;/g, '\u00a0');
-
+				
 				// Detect unordered lists look for bullets
-				if (/^(__MCE_ITEM__)+[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*\u00a0*/.test(val))
+				if (/^(__MCE_ITEM__)+[\u2022\u00b7\u00a7\u00d8o\u25CF\-]\s*\u00a0*/.test(val))
 					type = 'ul';
 
 				// Detect ordered lists 1., a. or ixv.
 				if (/^__MCE_ITEM__\s*\w+\.\s*\u00a0+/.test(val))
 					type = 'ol';
-
+					
 				// Check if node value matches the list pattern: o&nbsp;&nbsp;
 				if (type) {
 					margin = parseFloat(p.style.marginLeft || 0);
@@ -705,7 +705,7 @@
 						var html = span.innerHTML.replace(/<\/?\w+[^>]*>/gi, '');
 
 						// Remove span with the middot or the number
-						if (type == 'ul' && /^__MCE_ITEM__[\u2022\u00b7\u00a7\u00d8o\u25CF]/.test(html))
+						if (type == 'ul' && /^__MCE_ITEM__[\u2022\u00b7\u00a7\u00d8o\u25CF\-]/.test(html))
 							dom.remove(span);
 						else if (/^__MCE_ITEM__[\s\S]*\w+\.(&nbsp;|\u00a0)*\s*/.test(html))
 							dom.remove(span);
@@ -715,7 +715,7 @@
 
 					// Remove middot/list items
 					if (type == 'ul')
-						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*(&nbsp;|\u00a0)+\s*/, '');
+						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o\u25CF\-]\s*(&nbsp;|\u00a0)+\s*/, '');
 					else
 						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^\s*\w+\.(&nbsp;|\u00a0)+\s*/, '');
 
