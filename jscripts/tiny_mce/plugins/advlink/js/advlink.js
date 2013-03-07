@@ -500,8 +500,21 @@ function getLinkListHTML(elm_id, target_form_element, onchange_func) {
 
 	html += '"><option value="">---</option>';
 
-	for (var i=0; i<tinyMCELinkList.length; i++)
-		html += '<option value="' + tinyMCELinkList[i][1] + '">' + tinyMCELinkList[i][0] + '</option>';
+	for (var i=0; i<tinyMCELinkList.length; i++) {
+	    if (typeof(tinyMCELinkList[i][1]) == "object") {
+			html += '<optgroup label="'+tinyMCELinkList[i][0]+'">';
+			var childCount = tinyMCELinkList[i][1].length;
+			    for (var j=0; j<childCount; j++) {
+				var child = tinyMCELinkList[i][1][j];
+				html += '<option value="' + child[1] + '">' + child[0] + '</option>';
+				}
+			html += '</optgroup>';
+
+		}
+		else {
+			html += '<option value="' + tinyMCELinkList[i][1] + '">' + tinyMCELinkList[i][0] + '</option>';
+		}
+	}
 
 	html += '</select>';
 

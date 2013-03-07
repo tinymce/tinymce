@@ -4,6 +4,11 @@
 
 var tinyMCELinkList = new Array(
 	// Name, URL
+	["Github", [
+	    ["TinyMCE", "https://github.com/tinymce/tinymce"],
+	    ["jQuery", "https://github.com/jquery/jquery"],
+	    ["Twitter Bootstrap", "https://github.com/twitter/bootstrap"]
+	]],
 	["Moxiecode", "http://www.moxiecode.com"],
 	["Freshmeat", "http://www.freshmeat.com"],
 	["Sourceforge", "http://www.sourceforge.com"]
