@@ -60,7 +60,8 @@ define(
           var sub = PositionArray.sub(structure, y.start(), y.finish());
           return {
             elements: Fun.constant(Arr.map(sub, function (z) { return z.element(); })),
-            word: y.word
+            word: y.word,
+            exact: Fun.constant(text.substring(y.start(), y.finish()))
           };
         });
       });
