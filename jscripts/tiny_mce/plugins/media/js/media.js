@@ -210,26 +210,19 @@
 				}
 			}
 
+            src = getVal('src');
 			if (!to_form) {
 				data.type = get('media_type').options[get('media_type').selectedIndex].value;
 				data.width = getVal('width');
 				data.height = getVal('height');
 
 				// Switch type based on extension
-				src = getVal('src');
 				if (field == 'src') {
 					ext = src.replace(/^.*\.([^.]+)$/, '$1');
 					if (typeInfo = mediaPlugin.getType(ext))
 						data.type = typeInfo.name.toLowerCase();
 
 					setVal('media_type', data.type);
-				}
-
-				if (data.type == "video" || data.type == "audio") {
-					if (!data.video.sources)
-						data.video.sources = [];
-
-					data.video.sources[0] = {src: getVal('src')};
 				}
 			}
 
@@ -259,26 +252,23 @@
 			setOptions('global', 'id,name,vspace,hspace,bgcolor,align,width,height');
 
 			if (to_form) {
+                if ((data.type == 'video' || data.type == 'audio') && typeof data.video.attrs != 'undefined' && typeof data.video.attrs.src != 'undefined') {
+                    setVal('src', data.video.attrs.src);
+                }
 				if (data.type == 'video') {
-					if (data.video.sources[0])
-						setVal('src', data.video.sources[0].src);
-
-					src = data.video.sources[1];
+					src = data.video.sources[0];
 					if (src)
 						setVal('video_altsource1', src.src);
 
-					src = data.video.sources[2];
+					src = data.video.sources[1];
 					if (src)
 						setVal('video_altsource2', src.src);
                 } else if (data.type == 'audio') {
-                    if (data.video.sources[0])
-                        setVal('src', data.video.sources[0].src);
-                    
-                    src = data.video.sources[1];
+                    src = data.video.sources[0];
                     if (src)
                         setVal('audio_altsource1', src.src);
-                    
-                    src = data.video.sources[2];
+
+                    src = data.video.sources[1];
                     if (src)
                         setVal('audio_altsource2', src.src);
 				} else {
@@ -293,8 +283,6 @@
 					setVal('src', data.params.src);
 				}
 			} else {
-				src = getVal("src");
-
 				// YouTube Embed
 				if (src.match(/youtube\.com\/embed\/\w+/)) {
 					data.width = 425;
@@ -354,7 +342,7 @@
 					data.height = 350;
 					data.params.frameborder = '0';
 					data.type = 'iframe';
-					src = 'http://www.stream.cz/object/' + src.match(/stream.cz\/[^/]+\/([0-9]+)/)[1];
+					src = 'http://www.stream.cz/object/' + src.match(/stream.cz\/[^\/]+\/([0-9]+)/)[1];
 					setVal('src', src);
 					setVal('media_type', data.type);
 				}
@@ -371,31 +359,23 @@
 				}
 
 				if (data.type == 'video') {
-					if (!data.video.sources)
-						data.video.sources = [];
-
-					data.video.sources[0] = {src : src};
-
+				    data.video.sources = [];
 					src = getVal("video_altsource1");
 					if (src)
-						data.video.sources[1] = {src : src};
+						data.video.sources[0] = {src : src};
 
 					src = getVal("video_altsource2");
 					if (src)
-						data.video.sources[2] = {src : src};
+						data.video.sources[1] = {src : src};
                 } else if (data.type == 'audio') {
-                    if (!data.video.sources)
-                        data.video.sources = [];
-                    
-                    data.video.sources[0] = {src : src};
-                    
+                    data.video.sources = [];
                     src = getVal("audio_altsource1");
                     if (src)
-                        data.video.sources[1] = {src : src};
-                    
+                        data.video.sources[0] = {src : src};
+
                     src = getVal("audio_altsource2");
                     if (src)
-                        data.video.sources[2] = {src : src};
+                        data.video.sources[1] = {src : src};
 				} else
 					data.params.src = src;
 
@@ -475,7 +455,7 @@
 					return '';
 				}
 
-				return '<option value="'+media_type+'">'+tinyMCEPopup.editor.translate("media_dlg."+media_type)+'</option>'
+				return '<option value="'+media_type+'">'+tinyMCEPopup.editor.translate("media_dlg."+media_type)+'</option>';
 			}
 
 			var html = "";

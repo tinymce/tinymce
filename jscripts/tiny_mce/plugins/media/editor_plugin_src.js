@@ -438,7 +438,7 @@
 			}
 
 			// Add HTML5 video element
-			if (typeItem.name === 'Video' && data.video.sources[0]) {
+            if (typeItem.name === 'Video' && ((typeof data.video.attrs != 'undefined' && typeof data.video.attrs.src != 'undefined') || data.video.sources[0])) {
 				// Create new object element
 				video = new Node('video', 1).attr(tinymce.extend({
 					id : node.attr('id'),
@@ -457,11 +457,6 @@
 						mp4Source = sources[i].src;
 				}
 
-				if (!sources[0].type) {
-					video.attr('src', sources[0].src);
-					sources.splice(0, 1);
-				}
-
 				for (i = 0; i < sources.length; i++) {
 					source = new Node('source', 1).attr(sources[i]);
 					source.shortEnded = true;
@@ -472,12 +467,13 @@
 				if (mp4Source) {
 					addPlayer(mp4Source, posterSrc);
 					typeItem = self.getType('flash');
-				} else
+                } else {
 					data.params.src = '';
-			}
+                }
+            }
 
 			// Add HTML5 audio element
-			if (typeItem.name === 'Audio' && data.video.sources[0]) {
+            if (typeItem.name === 'Audio' && ((typeof data.video.attrs != 'undefined' && typeof data.video.attrs.src != 'undefined') || data.video.sources[0])) {
 				// Create new object element
 				audio = new Node('audio', 1).attr(tinymce.extend({
 					id : node.attr('id'),
@@ -491,11 +487,6 @@
 					posterSrc = data.video.attrs.poster;
 
 				sources = data.video.sources = toArray(data.video.sources);
-				if (!sources[0].type) {
-					audio.attr('src', sources[0].src);
-					sources.splice(0, 1);
-				}
-
 				for (i = 0; i < sources.length; i++) {
 					source = new Node('source', 1).attr(sources[i]);
 					source.shortEnded = true;
