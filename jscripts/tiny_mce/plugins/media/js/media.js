@@ -359,6 +359,7 @@
 				}
 
 				if (data.type == 'video') {
+				    data.video.attrs.src = src || null;
 				    data.video.sources = [];
 					src = getVal("video_altsource1");
 					if (src)
@@ -368,6 +369,7 @@
 					if (src)
 						data.video.sources[1] = {src : src};
                 } else if (data.type == 'audio') {
+                    data.video.attrs.src = src || null;
                     data.video.sources = [];
                     src = getVal("audio_altsource1");
                     if (src)

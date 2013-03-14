@@ -710,10 +710,6 @@
 				for (name in video.attributes.map)
 					attrs[name] = video.attributes.map[name];
 
-				source = node.attr('src');
-				if (source)
-					data.video.sources.push({src : urlConverter.call(urlConverterScope, source, 'src', node.name)});
-
 				// Get all sources
 				sources = video.getAll("source");
 				for (i = 0; i < sources.length; i++) {
