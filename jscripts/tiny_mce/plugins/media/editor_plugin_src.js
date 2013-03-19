@@ -346,8 +346,10 @@
 					// Convert the movie url to absolute urls
 					if (editor.getParam('flash_video_player_absvideourl', true)) {
 						video_src = baseUri.toAbsolute(video_src || '', true);
-						poster_src = baseUri.toAbsolute(poster_src || '', true);
-					}
+                        if (poster_src) {
+                            poster_src = baseUri.toAbsolute(poster_src, true);
+                        }
+                    }
 
 					// Generate flash vars
 					flashVarsOutput = '';
@@ -355,7 +357,10 @@
 					tinymce.each(flashVars, function(value, name) {
 						// Replace $url and $poster variables in flashvars value
 						value = value.replace(/\$url/, video_src || '');
-						value = value.replace(/\$poster/, poster_src || '');
+                        //value = value.replace(/\$poster/, poster_src || '');
+                        if (name == 'poster' && poster_src) {
+                            value = poster_src;
+                        }
 
 						if (value.length > 0)
 							flashVarsOutput += (flashVarsOutput ? '&' : '') + name + '=' + escape(value);
@@ -438,7 +443,7 @@
 			}
 
 			// Add HTML5 video element
-			if (typeItem.name === 'Video' && data.video.sources[0]) {
+            if (typeItem.name === 'Video' && ((typeof data.video.attrs != 'undefined' && typeof data.video.attrs.src != 'undefined') || data.video.sources[0])) {
 				// Create new object element
 				video = new Node('video', 1).attr(tinymce.extend({
 					id : node.attr('id'),
@@ -448,18 +453,13 @@
 				}, data.video.attrs));
 
 				// Get poster source and use that for flash fallback
-				if (data.video.attrs)
+                if (data.video.attrs.poster)
 					posterSrc = data.video.attrs.poster;
 
 				sources = data.video.sources = toArray(data.video.sources);
 				for (i = 0; i < sources.length; i++) {
 					if (/\.mp4$/.test(sources[i].src))
 						mp4Source = sources[i].src;
-				}
-
-				if (!sources[0].type) {
-					video.attr('src', sources[0].src);
-					sources.splice(0, 1);
 				}
 
 				for (i = 0; i < sources.length; i++) {
@@ -472,12 +472,13 @@
 				if (mp4Source) {
 					addPlayer(mp4Source, posterSrc);
 					typeItem = self.getType('flash');
-				} else
+                } else {
 					data.params.src = '';
-			}
+                }
+            }
 
 			// Add HTML5 audio element
-			if (typeItem.name === 'Audio' && data.video.sources[0]) {
+            if (typeItem.name === 'Audio' && ((typeof data.video.attrs != 'undefined' && typeof data.video.attrs.src != 'undefined') || data.video.sources[0])) {
 				// Create new object element
 				audio = new Node('audio', 1).attr(tinymce.extend({
 					id : node.attr('id'),
@@ -491,11 +492,6 @@
 					posterSrc = data.video.attrs.poster;
 
 				sources = data.video.sources = toArray(data.video.sources);
-				if (!sources[0].type) {
-					audio.attr('src', sources[0].src);
-					sources.splice(0, 1);
-				}
-
 				for (i = 0; i < sources.length; i++) {
 					source = new Node('source', 1).attr(sources[i]);
 					source.shortEnded = true;
@@ -718,10 +714,6 @@
 				attrs = data.video.attrs;
 				for (name in video.attributes.map)
 					attrs[name] = video.attributes.map[name];
-
-				source = node.attr('src');
-				if (source)
-					data.video.sources.push({src : urlConverter.call(urlConverterScope, source, 'src', node.name)});
 
 				// Get all sources
 				sources = video.getAll("source");

@@ -138,7 +138,7 @@
 					'div[A][C]' +
 					'source[A|src|type|media][]' +
 					'audio[A|src|autobuffer|autoplay|loop|controls][source]' +
-					'video[A|src|autobuffer|autoplay|loop|controls|width|height|poster][source]' +
+					'video[A|src|autobuffer|autoplay|loop|controls|width|height|poster][source|object]' +
 					'hr[A][]' +
 					'form[A|accept-charset|action|autocomplete|enctype|method|name|novalidate|target][C]' +
 					'fieldset[A|disabled|form|name][C|legend]' +
@@ -216,89 +216,89 @@
 				C : 'onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup',
 				B : 'lang|xml:lang|dir',
 				A : 'id|class|style|title'
-			}, 'script[id|charset|type|language|src|defer|xml:space][]' + 
-				'style[B|id|type|media|title|xml:space][]' + 
-				'object[E|declare|classid|codebase|data|type|codetype|archive|standby|width|height|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' + 
-				'param[id|name|value|valuetype|type][]' + 
-				'p[E|align][#|S]' + 
-				'a[E|D|charset|type|name|href|hreflang|rel|rev|shape|coords|target][#|Z]' + 
-				'br[A|clear][]' + 
-				'span[E][#|S]' + 
-				'bdo[A|C|B][#|S]' + 
-				'applet[A|codebase|archive|code|object|alt|name|width|height|align|hspace|vspace][#|param|Y]' + 
-				'h1[E|align][#|S]' + 
-				'img[E|src|alt|name|longdesc|width|height|usemap|ismap|align|border|hspace|vspace][]' + 
-				'map[B|C|A|name][X|form|Q|area]' + 
-				'h2[E|align][#|S]' + 
-				'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height][#|Y]' + 
-				'h3[E|align][#|S]' + 
-				'tt[E][#|S]' + 
-				'i[E][#|S]' + 
-				'b[E][#|S]' + 
-				'u[E][#|S]' + 
-				's[E][#|S]' + 
-				'strike[E][#|S]' + 
-				'big[E][#|S]' + 
-				'small[E][#|S]' + 
-				'font[A|B|size|color|face][#|S]' + 
-				'basefont[id|size|color|face][]' + 
-				'em[E][#|S]' + 
-				'strong[E][#|S]' + 
-				'dfn[E][#|S]' + 
-				'code[E][#|S]' + 
-				'q[E|cite][#|S]' + 
-				'samp[E][#|S]' + 
-				'kbd[E][#|S]' + 
-				'var[E][#|S]' + 
-				'cite[E][#|S]' + 
-				'abbr[E][#|S]' + 
-				'acronym[E][#|S]' + 
-				'sub[E][#|S]' + 
-				'sup[E][#|S]' + 
-				'input[E|D|type|name|value|checked|disabled|readonly|size|maxlength|src|alt|usemap|onselect|onchange|accept|align][]' + 
-				'select[E|name|size|multiple|disabled|tabindex|onfocus|onblur|onchange][optgroup|option]' + 
-				'optgroup[E|disabled|label][option]' + 
-				'option[E|selected|disabled|label|value][]' + 
-				'textarea[E|D|name|rows|cols|disabled|readonly|onselect|onchange][]' + 
-				'label[E|for|accesskey|onfocus|onblur][#|S]' + 
-				'button[E|D|name|value|type|disabled][#|p|T|div|U|W|table|G|object|applet|img|map|K|N|Q]' + 
-				'h4[E|align][#|S]' + 
-				'ins[E|cite|datetime][#|Y]' + 
-				'h5[E|align][#|S]' + 
-				'del[E|cite|datetime][#|Y]' + 
-				'h6[E|align][#|S]' + 
-				'div[E|align][#|Y]' + 
-				'ul[E|type|compact][li]' + 
-				'li[E|type|value][#|Y]' + 
-				'ol[E|type|compact|start][li]' + 
-				'dl[E|compact][dt|dd]' + 
-				'dt[E][#|S]' + 
-				'dd[E][#|Y]' + 
-				'menu[E|compact][li]' + 
-				'dir[E|compact][li]' + 
-				'pre[E|width|xml:space][#|ZA]' + 
-				'hr[E|align|noshade|size|width][]' + 
-				'blockquote[E|cite][#|Y]' + 
-				'address[E][#|S|p]' + 
-				'center[E][#|Y]' + 
-				'noframes[E][#|Y]' + 
-				'isindex[A|B|prompt][]' + 
-				'fieldset[E][#|legend|Y]' + 
-				'legend[E|accesskey|align][#|S]' + 
-				'table[E|summary|width|border|frame|rules|cellspacing|cellpadding|align|bgcolor][caption|col|colgroup|thead|tfoot|tbody|tr]' + 
-				'caption[E|align][#|S]' + 
-				'col[ZG][]' + 
-				'colgroup[ZG][col]' + 
-				'thead[ZF][tr]' + 
-				'tr[ZF|bgcolor][th|td]' + 
-				'th[E|ZE][#|Y]' + 
-				'form[E|action|method|name|enctype|onsubmit|onreset|accept|accept-charset|target][#|X|R|Q]' + 
-				'noscript[E][#|Y]' + 
-				'td[E|ZE][#|Y]' + 
-				'tfoot[ZF][tr]' + 
-				'tbody[ZF][tr]' + 
-				'area[E|D|shape|coords|href|nohref|alt|target][]' + 
-				'base[id|href|target][]' + 
+			}, 'script[id|charset|type|language|src|defer|xml:space][]' +
+				'style[B|id|type|media|title|xml:space][]' +
+				'object[E|declare|classid|codebase|data|type|codetype|archive|standby|width|height|usemap|name|tabindex|align|border|hspace|vspace][#|param|Y]' +
+				'param[id|name|value|valuetype|type][]' +
+				'p[E|align][#|S]' +
+				'a[E|D|charset|type|name|href|hreflang|rel|rev|shape|coords|target][#|Z]' +
+				'br[A|clear][]' +
+				'span[E][#|S]' +
+				'bdo[A|C|B][#|S]' +
+				'applet[A|codebase|archive|code|object|alt|name|width|height|align|hspace|vspace][#|param|Y]' +
+				'h1[E|align][#|S]' +
+				'img[E|src|alt|name|longdesc|width|height|usemap|ismap|align|border|hspace|vspace][]' +
+				'map[B|C|A|name][X|form|Q|area]' +
+				'h2[E|align][#|S]' +
+				'iframe[A|longdesc|name|src|frameborder|marginwidth|marginheight|scrolling|align|width|height][#|Y]' +
+				'h3[E|align][#|S]' +
+				'tt[E][#|S]' +
+				'i[E][#|S]' +
+				'b[E][#|S]' +
+				'u[E][#|S]' +
+				's[E][#|S]' +
+				'strike[E][#|S]' +
+				'big[E][#|S]' +
+				'small[E][#|S]' +
+				'font[A|B|size|color|face][#|S]' +
+				'basefont[id|size|color|face][]' +
+				'em[E][#|S]' +
+				'strong[E][#|S]' +
+				'dfn[E][#|S]' +
+				'code[E][#|S]' +
+				'q[E|cite][#|S]' +
+				'samp[E][#|S]' +
+				'kbd[E][#|S]' +
+				'var[E][#|S]' +
+				'cite[E][#|S]' +
+				'abbr[E][#|S]' +
+				'acronym[E][#|S]' +
+				'sub[E][#|S]' +
+				'sup[E][#|S]' +
+				'input[E|D|type|name|value|checked|disabled|readonly|size|maxlength|src|alt|usemap|onselect|onchange|accept|align][]' +
+				'select[E|name|size|multiple|disabled|tabindex|onfocus|onblur|onchange][optgroup|option]' +
+				'optgroup[E|disabled|label][option]' +
+				'option[E|selected|disabled|label|value][]' +
+				'textarea[E|D|name|rows|cols|disabled|readonly|onselect|onchange][]' +
+				'label[E|for|accesskey|onfocus|onblur][#|S]' +
+				'button[E|D|name|value|type|disabled][#|p|T|div|U|W|table|G|object|applet|img|map|K|N|Q]' +
+				'h4[E|align][#|S]' +
+				'ins[E|cite|datetime][#|Y]' +
+				'h5[E|align][#|S]' +
+				'del[E|cite|datetime][#|Y]' +
+				'h6[E|align][#|S]' +
+				'div[E|align][#|Y]' +
+				'ul[E|type|compact][li]' +
+				'li[E|type|value][#|Y]' +
+				'ol[E|type|compact|start][li]' +
+				'dl[E|compact][dt|dd]' +
+				'dt[E][#|S]' +
+				'dd[E][#|Y]' +
+				'menu[E|compact][li]' +
+				'dir[E|compact][li]' +
+				'pre[E|width|xml:space][#|ZA]' +
+				'hr[E|align|noshade|size|width][]' +
+				'blockquote[E|cite][#|Y]' +
+				'address[E][#|S|p]' +
+				'center[E][#|Y]' +
+				'noframes[E][#|Y]' +
+				'isindex[A|B|prompt][]' +
+				'fieldset[E][#|legend|Y]' +
+				'legend[E|accesskey|align][#|S]' +
+				'table[E|summary|width|border|frame|rules|cellspacing|cellpadding|align|bgcolor][caption|col|colgroup|thead|tfoot|tbody|tr]' +
+				'caption[E|align][#|S]' +
+				'col[ZG][]' +
+				'colgroup[ZG][col]' +
+				'thead[ZF][tr]' +
+				'tr[ZF|bgcolor][th|td]' +
+				'th[E|ZE][#|Y]' +
+				'form[E|action|method|name|enctype|onsubmit|onreset|accept|accept-charset|target][#|X|R|Q]' +
+				'noscript[E][#|Y]' +
+				'td[E|ZE][#|Y]' +
+				'tfoot[ZF][tr]' +
+				'tbody[ZF][tr]' +
+				'area[E|D|shape|coords|href|nohref|alt|target][]' +
+				'base[id|href|target][]' +
 				'body[E|onload|onunload|background|bgcolor|text|link|vlink|alink][#|Y]'
 			);
 		}
@@ -377,9 +377,9 @@
 		shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link meta param embed source wbr');
 		boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize noshade nowrap readonly selected autoplay loop controls');
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object', shortEndedElementsMap);
-		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' + 
+		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
 						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
-		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' + 
+		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
 						'th tr td li ol ul caption dl dt dd noscript menu isindex samp option datalist select optgroup', textBlockElementsMap);
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
@@ -819,7 +819,7 @@
 			// No match
 			return false;
 		};
-		
+
 		/**
 		 * Returns true/false if the specified element is valid or not
 		 * according to the schema.
