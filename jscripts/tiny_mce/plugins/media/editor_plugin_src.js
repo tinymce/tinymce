@@ -346,8 +346,10 @@
 					// Convert the movie url to absolute urls
 					if (editor.getParam('flash_video_player_absvideourl', true)) {
 						video_src = baseUri.toAbsolute(video_src || '', true);
-						poster_src = baseUri.toAbsolute(poster_src || '', true);
-					}
+                        if (poster_src) {
+                            poster_src = baseUri.toAbsolute(poster_src, true);
+                        }
+                    }
 
 					// Generate flash vars
 					flashVarsOutput = '';
@@ -355,7 +357,10 @@
 					tinymce.each(flashVars, function(value, name) {
 						// Replace $url and $poster variables in flashvars value
 						value = value.replace(/\$url/, video_src || '');
-						value = value.replace(/\$poster/, poster_src || '');
+                        //value = value.replace(/\$poster/, poster_src || '');
+                        if (name == 'poster' && poster_src) {
+                            value = poster_src;
+                        }
 
 						if (value.length > 0)
 							flashVarsOutput += (flashVarsOutput ? '&' : '') + name + '=' + escape(value);
@@ -448,7 +453,7 @@
 				}, data.video.attrs));
 
 				// Get poster source and use that for flash fallback
-				if (data.video.attrs)
+                if (data.video.attrs.poster)
 					posterSrc = data.video.attrs.poster;
 
 				sources = data.video.sources = toArray(data.video.sources);
