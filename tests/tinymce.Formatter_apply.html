@@ -34,6 +34,22 @@ test('apply inline to a list', function(){
 	
 });
 
+test('apply to completely selected list item', function(){
+	editor.formatter.register('format', {inline : 'b', toggle: false});
+
+    // The third list item needs to have > 1 children to exercise the problem
+	editor.setContent('<ul><li>Item 1</li><li>Item 2</li><li>Item <i>3</i></li></ul>');
+
+    // Select the entire second list item through to just the start of the third. This simulates triple-clicking in Safari.
+	rng = editor.dom.createRng();
+	rng.setStart(editor.getBody().firstChild.children[1], 0);
+	rng.setEnd(editor.getBody().firstChild.children[2], 0);	
+	editor.selection.setRng(rng);
+
+	editor.formatter.apply('format');
+	equal(editor.getContent(), '<ul><li>Item 1</li><li><b>Item 2</b></li><li>Item <i>3</i></li></ul>');
+});
+
 test('Toggle OFF - Inline element on selected text', function() {
 	// Toggle OFF - Inline element on selected text
 	editor.formatter.register('format', {inline : 'b', toggle: false});
