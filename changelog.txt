@@ -1,4 +1,5 @@
 Version 3.5.x (2012-xx-xx)
+	Fixed bug where script tag was removed when nested inside a div or p.
 	Fixed full screen plugin state migration from original editor.
 	Fixed edgecase on up/down arrow keys scrolling with native lists.
 	Fixed bug where space can scroll webpage when using keyboard to access toolbar buttons.
