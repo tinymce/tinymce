@@ -1,4 +1,5 @@
 Version 3.5.x (2012-xx-xx)
+	Fixed bug in spelling plugin where misspelt words are not always marked.
 	Fixed bug where script tag was removed when nested inside a div or p.
 	Fixed full screen plugin state migration from original editor.
 	Fixed edgecase on up/down arrow keys scrolling with native lists.
