@@ -269,6 +269,7 @@
 			each(nl, function(n) {
 				var node, elem, txt, pos, v = n.nodeValue;
 
+				rx.lastIndex = 0;
 				if (rx.test(v)) {
 					// Encode the content
 					v = dom.encode(v);
