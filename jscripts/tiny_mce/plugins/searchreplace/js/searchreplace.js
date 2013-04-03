@@ -106,7 +106,7 @@ var SearchReplaceDialog = {
 				return;
 
 			case 'current':
-				if (!ed.selection.isCollapsed())
+				if (!ed.selection.isCollapsed() && ed.selection.getContent() == s)
 					replace();
 
 				break;
