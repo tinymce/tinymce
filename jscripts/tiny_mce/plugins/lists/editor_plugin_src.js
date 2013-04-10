@@ -667,30 +667,33 @@
 					return;
 				}
 				element = splitNestedLists(element, dom);
-				while (dom.is(element.parentNode, 'ol,ul,li')) {
-					dom.split(element.parentNode, element);
-				}
-				// Push the original element we have from the selection, not the renamed one.
-				applied.push(element);
-				element = dom.rename(element, 'p');
-				mergedElement = attemptMergeWithAdjacent(element, false, ed.settings.force_br_newlines);
-				if (mergedElement === element) {
-					// Now split out any block elements that can't be contained within a P.
-					// Manually iterate to ensure we handle modifications correctly (doesn't work with tinymce.each)
-					child = element.firstChild;
-					while (child) {
-						if (dom.isBlock(child)) {
-							child = dom.split(child.parentNode, child);
-							splitLast = true;
-							nextChild = child.nextSibling && child.nextSibling.firstChild;
-						} else {
-							nextChild = child.nextSibling;
-							if (splitLast && child.tagName === 'BR') {
-								dom.remove(child);
+
+				if(element && element.parentNode) {
+					while (dom.is(element.parentNode, 'ol,ul,li')) {
+						dom.split(element.parentNode, element);
+					}
+					// Push the original element we have from the selection, not the renamed one.
+					applied.push(element);
+					element = dom.rename(element, 'p');
+					mergedElement = attemptMergeWithAdjacent(element, false, ed.settings.force_br_newlines);
+					if (mergedElement === element) {
+						// Now split out any block elements that can't be contained within a P.
+						// Manually iterate to ensure we handle modifications correctly (doesn't work with tinymce.each)
+						child = element.firstChild;
+						while (child) {
+							if (dom.isBlock(child)) {
+								child = dom.split(child.parentNode, child);
+								splitLast = true;
+								nextChild = child.nextSibling && child.nextSibling.firstChild;
+							} else {
+								nextChild = child.nextSibling;
+								if (splitLast && child.tagName === 'BR') {
+									dom.remove(child);
+								}
+								splitLast = false;
 							}
-							splitLast = false;
+							child = nextChild;
 						}
-						child = nextChild;
 					}
 				}
 			}
@@ -758,11 +761,13 @@
 			function indentLI(element) {
 				if (!hasParentInList(ed, element, indented)) {
 					element = splitNestedLists(element, dom);
-					var wrapList = createWrapList(element);
-					wrapList.appendChild(element);
-					attemptMergeWithAdjacent(wrapList.parentNode, false);
-					attemptMergeWithAdjacent(wrapList, false);
-					indented.push(element);
+					if(element) {
+						var wrapList = createWrapList(element);
+						wrapList.appendChild(element);
+						attemptMergeWithAdjacent(wrapList.parentNode, false);
+						attemptMergeWithAdjacent(wrapList, false);
+						indented.push(element);
+					}
 				}
 			}
 
@@ -789,20 +794,22 @@
 						return;
 					}
 					element = splitNestedLists(element, dom);
-					listElement = element.parentNode;
-					targetParent = element.parentNode.parentNode;
-					if (targetParent.tagName === 'P') {
-						dom.split(targetParent, element.parentNode);
-					} else {
-						dom.split(listElement, element);
-						if (targetParent.tagName === 'LI') {
-							// Nested list, need to split the LI and go back out to the OL/UL element.
-							dom.split(targetParent, element);
-						} else if (!dom.is(targetParent, 'ol,ul')) {
-							dom.rename(element, 'p');
+					if(element && element.parentNode) {
+						listElement = element.parentNode;
+						targetParent = element.parentNode.parentNode;
+						if (targetParent.tagName === 'P') {
+							dom.split(targetParent, element.parentNode);
+						} else {
+							dom.split(listElement, element);
+							if (targetParent.tagName === 'LI') {
+								// Nested list, need to split the LI and go back out to the OL/UL element.
+								dom.split(targetParent, element);
+							} else if (!dom.is(targetParent, 'ol,ul')) {
+								dom.rename(element, 'p');
+							}
 						}
+						outdented.push(element);
 					}
-					outdented.push(element);
 				}
 			}
 
