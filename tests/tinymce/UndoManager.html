@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>tinymce.UndoManager tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../js/qunit/reporter.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/tinymce_loader.js"></script>
+<script>
+var editor;
+
+QUnit.config.reorder = false;
+QUnit.config.autostart = false;
+
+module("tinymce.UndoManager", {
+	autostart: false
+});
+
+test('Initial states', function() {
+	expect(3);
+
+	ok(!editor.undoManager.hasUndo());
+	ok(!editor.undoManager.hasRedo());
+	ok(!editor.undoManager.typing)
+});
+
+test('One undo level', function() {
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	expect(3);
+
+	editor.focus();
+	editor.execCommand('SelectAll');
+	editor.execCommand('Bold');
+
+	ok(editor.undoManager.hasUndo());
+	ok(!editor.undoManager.hasRedo());
+	ok(!editor.undoManager.typing)
+});
+
+test('Two undo levels', function() {
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	expect(3);
+
+	editor.execCommand('SelectAll');
+	editor.execCommand('Bold');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Italic');
+
+	ok(editor.undoManager.hasUndo());
+	ok(!editor.undoManager.hasRedo());
+	ok(!editor.undoManager.typing)
+});
+
+test('No undo levels and one redo', function() {
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	expect(3);
+
+	editor.execCommand('SelectAll');
+	editor.execCommand('Bold');
+	editor.undoManager.undo();
+
+	ok(!editor.undoManager.hasUndo());
+	ok(editor.undoManager.hasRedo());
+	ok(!editor.undoManager.typing)
+});
+
+test('One undo levels and one redo', function() {
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	expect(3);
+
+	editor.execCommand('SelectAll');
+	editor.execCommand('Bold');
+	editor.execCommand('SelectAll');
+	editor.execCommand('Italic');
+	editor.undoManager.undo();
+
+	ok(editor.undoManager.hasUndo());
+	ok(editor.undoManager.hasRedo());
+	ok(!editor.undoManager.typing)
+});
+
+test('Typing state', function() {
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	expect(2);
+
+	editor.dom.fire(editor.getBody(), 'keydown', {keyCode : 65});
+	ok(editor.undoManager.typing)
+
+	editor.dom.fire(editor.getBody(), 'keyup', {keyCode : 13});
+	ok(!editor.undoManager.typing)
+});
+
+test('Undo and add new level', function() {
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	expect(3);
+
+	editor.execCommand('SelectAll');
+	editor.execCommand('Bold');
+	editor.undoManager.undo();
+	editor.execCommand('SelectAll');
+	editor.execCommand('Italic');
+
+	ok(editor.undoManager.hasUndo());
+	ok(!editor.undoManager.hasRedo());
+	ok(!editor.undoManager.typing)
+});
+
+test('Events', function() {
+	var add, undo, redo;
+
+	editor.undoManager.clear();
+	editor.setContent('test');
+
+	expect(6);
+
+	editor.on('AddUndo', function(e) {
+		add = e.level;
+	});
+
+	editor.on('Undo', function(e) {
+		undo = e.level;
+	});
+
+	editor.on('Redo', function(e) {
+		redo = e.level;
+	});
+
+	editor.execCommand('SelectAll');
+	editor.execCommand('Bold');
+	ok(add.content);
+	ok(add.bookmark);
+
+	editor.undoManager.undo();
+	ok(undo.content);
+	ok(undo.bookmark);
+
+	editor.undoManager.redo();
+	ok(redo.content);
+	ok(redo.bookmark);
+});
+
+test('Undo added when typing and losing focus', function() {
+	editor.focus();
+	editor.undoManager.clear();
+	editor.setContent("<p>some text</p>");
+	setSelection('p', 4, 'p', 9);
+	type('\b');
+	window.focus();
+	editor.dom.fire(editor.getBody(), 'focusout');
+	editor.execCommand('FormatBlock', false, 'h1');
+	editor.undoManager.undo();
+	equal(editor.getContent(), "<p>some</p>");
+});
+
+tinymce.init({
+	mode : "exact",
+	elements : "elm1",
+	add_unload_trigger : false,
+	theme_advanced_styles : 'test1=test1;test2=test2',
+	init_instance_callback : function(ed) {
+		editor = ed;
+		QUnit.start();
+	}
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">tinymce.UndoManager tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content"><textarea id="elm1" name="elm1"></textarea></div>
+</body>
+</html>

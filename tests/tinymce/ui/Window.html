@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ui.Window</title>
+<link type="text/css" rel="stylesheet" href="../../../js/tinymce/skins/lightgray/skin.min.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="stylesheet" href="css/ui-overrides.css" type="text/css" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../../js/qunit/reporter.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/tinymce_loader.js"></script>
+<script type="text/javascript">
+var win;
+
+QUnit.config.autostart = false;
+QUnit.config.reorder = false;
+
+module("ui.Window", {
+	setup: function() {
+		document.getElementById('view').innerHTML = '';
+	},
+
+	teardown: function() {
+		//document.getElementById('view').innerHTML = '';
+	}
+});
+
+window.onload = function() {
+	QUnit.start();
+};
+
+function createWindow(settings) {
+	return tinymce.ui.Factory.create(tinymce.extend({
+		type: 'window'
+	}, settings)).renderTo(document.getElementById('view')).reflow();
+}
+
+test("window x, y, w, h", function() {
+	win = createWindow({x: 100, y: 120, width: 200, height: 210});
+
+	deepEqual(rect(win), [100, 120, 200, 210]);
+});
+
+test("no title, no buttonbar, autoResize", function() {
+	win = createWindow({
+		x: 100,
+		y: 120,
+		items: [
+			{type: 'spacer', classes: 'red'}
+		]
+	});
+
+	deepEqual(rect(win), [100, 120, 22, 22]);
+	deepEqual(rect(win.find("spacer")[0]), [101, 121, 20, 20]);
+});
+
+test("title, no buttonbar, autoResize, title is widest", function() {
+	win = createWindow({
+		x: 100,
+		y: 120,
+		title: "X",
+		items: [
+			{type: 'spacer', classes: 'red', flex: 1}
+		]
+	});
+
+	deepEqual(rect(win), [100, 120, 154, 61]);
+	deepEqual(rect(win.find("spacer")[0]), [101, 160, 152, 20]);
+});
+
+test("buttonbar, autoResize, buttonbar is widest", function() {
+	win = createWindow({
+		x: 100,
+		y: 120,
+		items: [
+			{type: 'spacer', classes: 'red', flex: 1}
+		],
+		buttons: [
+			{type: 'spacer', classes: 'green', minWidth: 100}
+		]
+	});
+
+	deepEqual(rect(win), [100, 120, 122, 63]);
+	deepEqual(rect(win.find("spacer")[0]), [101, 121, 120, 20]);
+	deepEqual(rect(win.statusbar.find("spacer")[0]), [111, 152, 100, 20]);
+});
+
+test("buttonbar, title, autoResize, content is widest", function() {
+	win = createWindow({
+		x: 100,
+		y: 120,
+		title: "X",
+		items: [
+			{type: 'spacer', classes: 'red', minWidth: 200}
+		],
+		buttons: [
+			{type: 'spacer', classes: 'green'}
+		]
+	});
+
+	deepEqual(rect(win), [100, 120, 202, 102]);
+	deepEqual(rect(win.getEl("head")), [101, 121, 200, 39]);
+	deepEqual(rect(win.find("spacer")[0]), [101, 160, 200, 20]);
+	deepEqual(rect(win.statusbar.find("spacer")[0]), [271, 191, 20, 20]);
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">ui.Window Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests">
+	</ol>
+	<div id="view" style="position: absolute; right: 0; top: 0"></div>
+</body>
+</html>

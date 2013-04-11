@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Undo Tests</title>
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../js/qunit/reporter.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/tinymce_loader.js"></script>
+<script src="../js/jsrobot/robot.js"></script>
+<script>
+QUnit.config.reorder = false;
+QUnit.config.autostart = false;
+
+var BACKSPACE = 0x8;
+
+module('Undo', {
+	autostart: false
+});
+
+function isUndoEnabled() {
+	return editor.undoManager.hasUndo();
+}
+
+// The following code never made it into the main codebase -- but it might be useful one day.  
+// If you're seeing this in August 2011 or later, please delete.			
+			// in webkit the iframe window needs to be given focus before selection
+			// will behave correctly.  This code assigns focus to the tinymce window, giving it back to the
+			// main window if it started with it.
+//			if (tinymce.isWebKit) {
+//				var hadFocus = document.hasFocus();
+//				t.getWin().focus();
+//				if (hadFocus) {
+//					window.focus();
+//				}
+//			}
+
+
+function assertUndoEnabledWhenTyping(c, expectedContent) {
+	editor.setContent('<p>Content</p>');
+
+	editor.undoManager.clear();
+	editor.undoManager.add();
+	editor.execCommand('mceRepaint');
+	// Need to focus the editor before setting selection in order to get the editor typing working correctly.
+	// All evidence points to the normal APIs not needing an editor.focus() call
+	editor.focus();
+	setSelection('p', 4);
+	ok(!isUndoEnabled(), 'Undo starts disabled.');
+	robot.type(c, false, function() {
+		equal(editor.getContent(), expectedContent);
+		ok(isUndoEnabled(), 'Undo is enabled.');
+		QUnit.start();
+	}, editor.selection.getNode());
+}
+
+asyncTest('Undo added when typing character', function() {
+	assertUndoEnabledWhenTyping('b', '<p>Contbent</p>');
+});
+
+asyncTest('Undo added when typing enter', function() {
+	assertUndoEnabledWhenTyping('\n', '<p>Cont</p><p>ent</p>');
+});
+
+asyncTest('Forward delete triggers undo in IE', function() {
+	editor.setContent('<p>Test1 Test2</p>');
+	editor.undoManager.clear();
+	editor.execCommand('mceRepaint');
+	ok(!isUndoEnabled(), 'Undo is disabled.');
+
+	rng = editor.dom.createRng();
+	rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+	rng.setEnd(editor.dom.select('p')[0].firstChild, 6);
+	editor.selection.setRng(rng);
+
+	robot.forwardDelete(function() {
+		equal(editor.getContent(), '<p>Test2</p>', 'First word has been deleted');
+		ok(isUndoEnabled(), 'Undo is enabled.');
+
+		editor.undoManager.undo();
+		equal(editor.getContent(), '<p>Test1 Test2</p>', 'First word has been restored');
+
+		QUnit.start();
+	}, editor.selection.getNode());
+});
+
+var initTinyFunction = function(){
+	tinymce.init({
+		mode : "exact",
+		elements : "elm1",
+		cleanup: true,
+		add_unload_trigger : false,
+		indent : 0,
+		init_instance_callback : function(ed) {
+			editor = ed;
+		}
+	});
+}
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Undo Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1">Content
+		</textarea>
+	</div>
+	<script>
+	initWhenTinyAndRobotAreReady(initTinyFunction);
+	</script>
+</body>
+</html>

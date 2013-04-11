@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Table plugin tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../js/qunit/reporter.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/tinymce_loader.js"></script>
+<script src="../js/jsrobot/robot.js"></script>
+<script>
+
+QUnit.config.reorder = false;
+QUnit.config.autostart = false;
+
+module('Table plugin', {
+	autostart: false
+});
+
+var VK;
+var UP_ARROW = 0x26;
+var DOWN_ARROW = 0x28;
+var ENTER = 0xA;
+
+if (tinymce.isWebKit) {
+	asyncTest('Selecting Cell and typing should update cell correctly in WebKit', function() {
+		editor.setContent('<table><tr><td><p>first cell</p></td><td><p>second cell</p></td></tr></table>');
+		// in order for the robot to work well, we need to focus the editor before performing selection on it.
+		editor.focus();
+		// in order to simulate the section on tables as per the plugin we do a select then call out to the fix table selection
+		// (which is called by selection events).
+		editor.selection.select(editor.dom.select('td')[0]);
+		editor.fire('keydown');
+		robot.type('g',false, function(){
+			var expected = '<table><tbody><tr><td><p>g</p></td><td><p>second cell</p></td></tr></tbody></table>';
+			var actual = editor.getContent();
+			equal(actual, expected);
+			start();
+		}, editor.getBody());
+	});
+} else {
+	asyncTest('Empty stub', function() {
+		start();
+		ok(true, "Dummy");
+	});
+}
+
+function testCursorKey(html, nodeToSelect, keyCode, expected) {
+	editor.setContent(html);
+	editor.focus();
+	setSelection(nodeToSelect, 0);
+	editor.focus();
+	robot.type(keyCode, false, function() {
+		var node = editor.selection.getNode();
+		var actual = node.firstChild.nodeValue;
+		equal(actual, expected);
+		start();
+	}, editor.getBody());
+}
+
+asyncTest('space key does not nuke content in th cells', 1, function() {
+    editor.setContent('<table><tbody><tr><th id="a">abcdef</th></tr></tbody></table>');
+    editor.focus();
+    setSelection('#a', 3);
+    editor.focus();
+    robot.type(VK.SPACEBAR, false, function() {
+        var actual = editor.dom.get('a').innerHTML;
+        var expected = 'abc def';
+        equal(actual, expected);
+        start()
+    }, editor.getBody());
+});
+
+asyncTest('arrow up key moves to row above', function() {
+	var html = '<table><tr><td>0</td><td>1</td></tr><tr><td>0</td><td id="b">2</td></tr></table>';
+	testCursorKey(html, '#b', UP_ARROW, '1');
+});
+
+asyncTest('arrow up key moves to row above for heading cells', function() {
+	var html = '<table><tr><td>0</td><td>1</td></tr><tr><td>0</td><th id="b">2</th></tr></table>';
+	testCursorKey(html, '#b', UP_ARROW, '1');
+});
+
+
+asyncTest('arrow down key moves to row below', function() {
+	var html = '<table><tr><td id="a"></td></tr><tr><td>2</td></tr></table>';
+	testCursorKey(html, '#a', DOWN_ARROW, '2');
+});
+
+asyncTest('arrow up key in cell with colspan moves to row above', function() {
+	var html = '<table><tr><td>1</td><td></td></tr><tr><td id="b" colspan="2"></td></tr></table>';
+	testCursorKey(html, '#b', UP_ARROW, '1');
+});
+
+asyncTest('arrow down key in cell with colspan moves to row below', function() {
+	var html = '<table><tr><td id="a" colspan="2"></td></tr><tr><td>2</td><td></td></tr></table>';
+	testCursorKey(html, '#a', DOWN_ARROW, '2');
+});
+
+asyncTest('arrow key up in top row escapes table', function() {
+	var html = '<p>outside</p><table><tr><td id="a"></td></tr><tr><td></td></tr></table>';
+	testCursorKey(html, '#a', UP_ARROW, 'outside');
+});
+
+asyncTest('arrow key down in bottom row escapes table', function() {
+	var html = '<table><tr><td></td></tr><tr><td id="b"></td></tr></table><p>outside</p>';
+	testCursorKey(html, '#b', DOWN_ARROW, 'outside');
+});
+
+asyncTest('arrow key up in bottom row to last p in above tr', 1, function() {
+	var html = "<table><tr><td><p id='a'>a</p><p id='b'>b</p></td></tr><tr><td><p id='c'>c</p><p>d</p></td></tr></table>";
+	testCursorKey(html, '#c', UP_ARROW, 'b');
+});
+
+asyncTest('arrow key down in top row to first p in below tr', 1, function() {
+	var html = "<table><tr><td><p id='a'>a</p><p id='b'>b</p></td></tr><tr><td><p id='c'>c</p><p>d</p></td></tr></table>";
+	testCursorKey(html, '#b', DOWN_ARROW, 'c');
+});
+
+asyncTest('arrow key down into table cell with br', 1, function() {
+	var html = "<table><tr><td id='a'></td></tr><tr><td>something<br></td></tr></table>";
+	testCursorKey(html, '#a', DOWN_ARROW, 'something');
+});
+
+asyncTest('shift-enter in table cell ending with BR places caret on new line', function() {
+		editor.setContent('<table><tr><td>d <strong>e</strong><br></td></tr></table>');
+		setSelection('strong', 1);
+		robot.type(ENTER, true, function(){
+			var expected = '<table><tbody><tr><td>d <strong>e<br /></strong></td></tr></tbody></table>';
+			var actual = editor.getContent();
+			var range = editor.selection.getRng(true);
+			equal(cleanHtml(actual), expected);
+			equal(range.startContainer.nodeName, 'STRONG');
+			equal(range.startOffset, 2);
+			equal(range.collapsed, true);
+			start();
+		}, editor.getBody());
+});
+
+// Only run on Gecko since WebKit and IE can place a caret after a table
+if (tinymce.Env.gecko) {
+	test("Insert table and remove caret placeholder", function() {
+		editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+		equal(editor.getBody().firstChild.nodeName, "TABLE");
+		equal(editor.getBody().lastChild.nodeName, "P");
+		equal(editor.getContent(), '<table><tbody><tr><td>x</td></tr></tbody></table>');
+	});
+} else {
+	test("Skipped since it works in this browser", function() {
+		ok(true, "Dummy assert");
+	});
+}
+
+var initTinyFunction = function(){
+	tinymce.init({
+		mode : "exact",
+		elements : "elm1",
+		cleanup: true,
+		indent: false,
+		add_unload_trigger : false,
+		webkit_fake_resize: false,
+		plugins: "table",
+		init_instance_callback : function(ed) {
+			editor = ed;
+			VK = tinymce.util.VK;
+		}
+	});
+};
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Table plugin tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+		<div>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+		</div>
+	</div> 
+	<script>
+	initWhenTinyAndRobotAreReady(initTinyFunction);
+	</script>
+</body>
+</html>

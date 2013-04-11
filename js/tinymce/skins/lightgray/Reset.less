@@ -1,0 +1,36 @@
+// Reset
+
+.mce-container, .mce-container *, .mce-widget, .mce-widget * {
+	margin: 0; padding: 0; border: 0; outline: 0;
+	vertical-align: top; background: transparent;
+	text-decoration: none; color: @text-color;
+	font-family: @font-family;
+	font-size: @font-size; text-shadow: none; float: none;
+	position: static; width: auto; height: auto;
+	white-space: nowrap; cursor: inherit;
+	-webkit-tap-highlight-color: transparent;
+	line-height: normal;
+}
+
+.mce-container *[unselectable] {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.mce-container ::-webkit-scrollbar {  
+	width: 8px; height: 8px;
+	-webkit-border-radius: 4px;
+}
+
+.mce-container ::-webkit-scrollbar-track,
+.mce-container ::-webkit-scrollbar-track-piece {
+	background-color:transparent;
+}
+
+.mce-container ::-webkit-scrollbar-thumb {  
+	background-color: rgba(053, 057, 071, 0.3);
+	width: 6px; height: 6px;
+	-webkit-border-radius: 4px;
+}

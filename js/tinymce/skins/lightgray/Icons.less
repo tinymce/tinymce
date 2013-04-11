@@ -1,0 +1,91 @@
+/* Icons */
+
+@font-face {
+	font-family: 'tinymce';
+	src:url('fonts/icomoon.eot');
+	src:url('fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.svg#icomoon') format('svg'),
+		url('fonts/icomoon.woff') format('woff'),
+		url('fonts/icomoon.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@iconSize: 16px;
+
+.mce-ico {
+	font-family: 'tinymce', Arial;
+	font-style: normal;
+	font-weight: normal;
+	font-size: @iconSize;
+	line-height: 16px;
+	vertical-align: text-top;
+	-webkit-font-smoothing: antialiased;
+
+	display: inline-block;
+	background: transparent center center;
+	width: 16px;
+	height: 16px;
+	color: @btn-text-color;
+}
+
+.mce-i-save:before           { content: "\e000"; }
+.mce-i-newdocument:before    { content: "\e001"; }
+.mce-i-fullpage:before       { content: "\e002"; }
+.mce-i-alignleft:before      { content: "\e003"; }
+.mce-i-aligncenter:before    { content: "\e004"; }
+.mce-i-alignright:before     { content: "\e005"; }
+.mce-i-alignjustify:before   { content: "\e006"; }
+.mce-i-cut:before            { content: "\e007"; }
+.mce-i-paste:before          { content: "\e008"; }
+.mce-i-searchreplace:before  { content: "\e009"; }
+.mce-i-bullist:before        { content: "\e00a"; }
+.mce-i-numlist:before        { content: "\e00b"; }
+.mce-i-indent:before         { content: "\e00c"; }
+.mce-i-outdent:before        { content: "\e00d"; }
+.mce-i-blockquote:before     { content: "\e00e"; }
+.mce-i-undo:before           { content: "\e00f"; }
+.mce-i-redo:before           { content: "\e010"; }
+.mce-i-link:before           { content: "\e011"; }
+.mce-i-unlink:before         { content: "\e012"; }
+.mce-i-anchor:before         { content: "\e013"; }
+.mce-i-image:before          { content: "\e014"; }
+.mce-i-media:before          { content: "\e015"; }
+.mce-i-help:before           { content: "\e016"; }
+.mce-i-code:before           { content: "\e017"; }
+.mce-i-inserttime:before     { content: "\e018"; }
+.mce-i-preview:before        { content: "\e019"; }
+.mce-i-forecolor:before      { content: "\e01a"; }
+.mce-i-backcolor:before      { content: "\e01a"; }
+.mce-i-table:before          { content: "\e01b"; }
+.mce-i-hr:before             { content: "\e01c"; }
+.mce-i-removeformat:before   { content: "\e01d"; }
+.mce-i-subscript:before      { content: "\e01e"; }
+.mce-i-superscript:before    { content: "\e01f"; }
+.mce-i-charmap:before        { content: "\e020"; }
+.mce-i-emoticons:before      { content: "\e021"; }
+.mce-i-print:before          { content: "\e022"; }
+.mce-i-fullscreen:before     { content: "\e023"; }
+.mce-i-spellchecker:before   { content: "\e024"; }
+.mce-i-nonbreaking:before    { content: "\e025"; }
+.mce-i-template:before       { content: "\e026"; }
+.mce-i-pagebreak:before      { content: "\e027"; }
+.mce-i-restoredraft:before   { content: "\e028"; }
+.mce-i-untitled:before       { content: "\e029"; }
+.mce-i-bold:before           { content: "\e02a"; }
+.mce-i-italic:before         { content: "\e02b"; }
+.mce-i-underline:before      { content: "\e02c"; }
+.mce-i-strikethrough:before  { content: "\e02d"; }
+.mce-i-visualchars:before    { content: "\e02e"; }
+.mce-i-ltr:before            { content: "\e02f"; }
+.mce-i-rtl:before            { content: "\e030"; }
+.mce-i-copy:before           { content: "\e031"; }
+.mce-i-resize:before         { content: "\e032"; }
+.mce-i-browse:before         { content: "\e034"; }
+
+.mce-i-checkbox:before, .mce-i-selected:before {
+	content: "\e033";
+}
+
+.mce-i-selected              { visibility: hidden; }
+i.mce-i-backcolor            { text-shadow: none; background: #BBB; }

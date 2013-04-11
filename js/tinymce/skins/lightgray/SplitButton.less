@@ -1,0 +1,23 @@
+// SplitButton
+
+.mce-splitbtn .mce-open {
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
+}
+
+.mce-splitbtn:hover .mce-open {
+	border-left-color: @btn-border-color;
+	border-right-color: @btn-border-color;
+}
+
+.mce-splitbtn button {
+	padding-right: 4px;
+}
+
+.mce-splitbtn .mce-open {
+	padding-left: 4px;
+}
+
+.mce-splitbtn .mce-open.mce-active {
+	.box-shadow(inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0 ,.05));
+}

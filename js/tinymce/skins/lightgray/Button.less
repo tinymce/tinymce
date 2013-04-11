@@ -1,0 +1,115 @@
+// Button
+
+.mce-btn {
+	border: 1px solid @btn-border-color;
+	position: relative;
+	text-shadow: @textShadow;
+	.button-background(@btn-background, @btn-background-highlight, @btn-text-color, 0 1px 1px rgba(255, 255, 255, .75));
+	.inline-block();
+
+	.border-radius(3px);
+	.box-shadow(inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05));
+
+	&:hover, &:focus {
+		color: @btn-text-color;
+		text-decoration: none;
+		.button-background(darken(@btn-background, 5%), darken(@btn-background-highlight, 5%), @btn-text-color, 0 1px 1px rgba(255, 255, 255, .75));
+	}
+
+	&.mce-disabled, &.mce-disabled:hover {
+		cursor: default;
+		background-image: none;
+		.box-shadow(none);
+		.opacity(0.65);
+	}
+
+	&.mce-active, &.mce-active:hover {
+		.button-background(darken(@btn-background, 10%), darken(@btn-background-highlight, 10%), @btn-text-color, 0 1px 1px rgba(255, 255, 255, .75));
+		.box-shadow(inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0 ,.05));
+	}
+}
+
+.mce-btn button {
+	padding: 4px 10px;
+	font-size: @font-size;
+	line-height: @line-height;
+	*line-height: @line-height - 4px;
+	cursor: pointer;
+	color: @btn-text-color;
+
+	// Fixes for default inner padding of button
+	overflow: visible; // IE7
+	-webkit-appearance: none; // WebKit
+	&::-moz-focus-inner { // Gecko
+		border: 0;
+		padding: 0;
+	}
+}
+
+.mce-btn i {
+	text-shadow: 1px 1px @btn-text-shadow;
+}
+
+.mce-primary {
+	.button-background(@btn-background-primary, @btn-background-primary-highlight, white, 0 1px 1px rgba(255, 255, 255, .75));
+
+	&:hover, &:focus {
+		.button-background(darken(#0088cc, 5%), darken(#0044cc, 5%), white, 0 1px 1px rgba(255, 255, 255, .75));
+	}
+}
+
+.mce-primary button {
+	color: @btn-text-color-primary;
+}
+
+.mce-btn-large button {
+	padding: 9px 14px;
+	font-size: @font-size + 2px;
+	line-height: normal;
+	.border-radius(5px);
+}
+
+.mce-btn-large i {
+	margin-top: 2px;
+}
+
+.mce-btn-small button {
+	padding: 3px 5px;
+	font-size: @font-size - 2px;
+	line-height: @line-height - 5px;
+}
+
+.mce-btn-small i {
+	margin-top: 0;
+}
+
+.mce-btn .mce-caret {
+	margin-top: 8px;
+	*margin-top: 6px;
+	margin-left: 0;
+}
+
+.mce-btn-small .mce-caret {
+	margin-top: 6px;
+	*margin-top: 4px;
+	margin-left: 0;
+}
+
+.mce-caret {
+	.inline-block();
+	width: 0; height: 0;
+	vertical-align: top;
+	border-top: 4px solid @btn-caret-color;
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
+	content: "";
+}
+
+.mce-disabled .mce-caret {
+	border-top-color: @text-color-disabled;
+}
+
+.mce-caret.mce-up {
+	border-bottom: 4px solid @btn-caret-color;
+	border-top: 0;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inline</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+		selector: "div.edit",
+		theme: "modern",
+		plugins: [
+			["advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker"],
+			["searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking"],
+			["save table contextmenu directionality emoticons template paste"]
+		],
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+		schema: "html5",
+		inline: true,
+		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media",
+		statusbar: false
+	});
+
+	tinymce.init({
+		selector: "h1.edit",
+		theme: "modern",
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+		schema: "html5",
+		inline: true,
+		toolbar: "undo redo",
+		statusbar: false
+	});
+</script>
+</head>
+<body role="application">
+<style>
+.mce-fixed-top {
+	width: 100%;
+}
+
+div.edit {
+	float: left;
+	margin-right: 20px;
+	width: 400px;
+	overflow: auto;
+}
+</style>
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<div>
+		<div>
+			<h1 class="edit">Edit me</h1>
+			<div class="edit">Simple content</div>
+
+			<div class="edit">
+				<p>This is some example text that you can edit inside the <strong>TinyMCE editor</strong>. <img style="float: right;" alt="" src="http://moxiecode.cachefly.net/tinymce/v6/images/logo.png" /></p>
+<p>Nam nisi elit, <a href="http://www.tinymce.com">cursus</a> in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.</p>
+			</div>
+		</div>
+
+		<br />
+		<input type="submit" name="save" value="Submit" />
+		<input type="reset" name="reset" value="Reset" />
+	</div>
+</form>
+
+</body>
+</html>

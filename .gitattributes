@@ -1,5 +1,4 @@
-#* crlf=crlf
-#* eol=crlf
+* eol=lf
 *.jar binary
 *.gif binary
 *.png binary
@@ -7,6 +6,9 @@
 *.swf binary
 *.xap binary
 *.zip binary
+*.eot binary
+*.woff binary
+*.ttf binary
 *.mov binary
 *.avi binary
 *.flv binary

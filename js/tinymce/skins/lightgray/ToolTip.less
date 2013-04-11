@@ -1,0 +1,135 @@
+// Tooltip
+
+.mce-tooltip {
+	position: absolute;
+	padding: 5px;
+	.opacity(0.8);
+}
+
+.mce-tooltip-inner {
+	font-size: 11px;
+	background-color: @tooltip-background;
+	color: @tooltip-text-color;
+	max-width: 200px;
+	padding: 5px 8px 4px 8px;
+	text-align: center;
+	white-space: normal;
+}
+
+.mce-tooltip-inner {
+	.border-radius(3px);
+}
+
+.mce-tooltip-inner {
+	.box-shadow(0 0 5px @tooltip-background);
+}
+
+.mce-tooltip-arrow {
+	position: absolute;
+	width: 0;
+	height: 0;
+	line-height: 0;
+	border: 5px dashed @tooltip-background;
+}
+
+.mce-tooltip-arrow-n {
+	border-bottom-color: @tooltip-background;
+}
+
+.mce-tooltip-arrow-s {
+	border-top-color: @tooltip-background;
+}
+
+.mce-tooltip-arrow-e {
+	border-left-color: @tooltip-background;
+}
+
+.mce-tooltip-arrow-w {
+	border-right-color: @tooltip-background;
+}
+
+.mce-tooltip-n .mce-tooltip-arrow {
+	top: 0px;
+	left: 50%;
+	margin-left: -5px;
+	border-bottom-style: solid;
+	border-top: none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+
+.mce-tooltip-nw .mce-tooltip-arrow {
+	top: 0;
+	left: 10px;
+	border-bottom-style: solid;
+	border-top: none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+
+.mce-tooltip-ne .mce-tooltip-arrow {
+	top: 0;
+	right: 10px;
+	border-bottom-style: solid;
+	border-top: none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+
+.mce-tooltip-s .mce-tooltip-arrow {
+	bottom: 0;
+	left: 50%;
+	margin-left: -5px;
+	border-top-style: solid;
+	border-bottom: none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+
+.mce-tooltip-sw .mce-tooltip-arrow {
+	bottom: 0;
+	left: 10px;
+	border-top-style: solid;
+	border-bottom: none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+
+.mce-tooltip-se .mce-tooltip-arrow {
+	bottom: 0;
+	right: 10px;
+	border-top-style: solid;
+	border-bottom: none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+
+.mce-tooltip-e .mce-tooltip-arrow {
+	right: 0;
+	top: 50%;
+	margin-top: -5px;
+	border-left-style: solid;
+	border-right: none;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+}
+
+.mce-tooltip-w .mce-tooltip-arrow {
+	left: 0;
+	top: 50%;
+	margin-top: -5px;
+	border-right-style: solid;
+	border-left: none;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+}
+
+// Invalid field tooltip
+/*
+.mce-tooltip-inner { background: #aa0000; }
+.mce-tooltip-arrow-n { border-bottom-color: #aa0000; }
+.mce-tooltip-arrow-s { border-top-color: #aa0000; }
+.mce-tooltip-arrow-e { border-left-color: #aa0000; }
+.mce-tooltip-arrow-w { border-right-color: #aa0000; }
+.mce-tooltip-arrow { border: 5px dashed #aa0000; }
+*/

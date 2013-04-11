@@ -1,0 +1,44 @@
+// ColorButton
+
+.mce-colorbutton .mce-ico {
+	position: relative;
+}
+
+.mce-colorpicker {
+	background: #FFF;
+}
+
+.mce-colorbutton-grid {
+	margin: 4px;	
+}
+
+.mce-grid td div {
+	border: 1px solid #808080;
+	width: 12px; height: 12px;
+	margin: 2px;
+	cursor: pointer;
+	&:hover {
+		border-color: black;
+	}
+	&:focus {
+		border-color: red;
+		outline: 1px solid rgba(82, 168, 236, .8);
+		border-color: rgba(82, 168, 236, .8)
+	}
+}
+
+.mce-colorbutton {
+	position: relative;
+}
+
+.mce-colorbutton .mce-preview {
+	display: block;
+	position: absolute;
+	left: 50%; top: 50%;
+	margin-left: -8px;
+	margin-top: 7px;
+	background: gray;
+	width: 16px;
+	height: 2px;
+	overflow: hidden;
+}

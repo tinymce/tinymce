@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Media test file</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<script src="../../js/tinymce/tinymce.dev.js"></script>
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
+<script>
+	tinymce.init({
+		selector: "textarea",
+		theme: "modern",
+		plugins: "media link image code preview",
+		content_css: "css/development.css",
+		add_unload_trigger: false,
+		toolbar: "media link image code preview"
+	});
+</script>
+</head>
+<body role="application">
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">
+	<div>
+		<div>
+			<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+				<iframe src="http://www.tinymce.com"></iframe>
+				<video src="video"></video>
+				<video>
+					<source src="1" />
+					<source src="2" />
+				</video>
+				<video src="1">
+					<source src="2" />
+					<source src="3" />
+				</video>
+				<video src="1">
+					<source src="2" />
+					<source src="3" />
+					<source src="4" />
+				</video>
+			</textarea>
+			<div>
+				<a href="javascript:;" onclick="tinymce.get('elm1').show();return false;">[Show]</a>
+				<a href="javascript:;" onclick="tinymce.get('elm1').hide();return false;">[Hide]</a>
+				<a href="javascript:;" onclick="tinymce.execCommand('mceAddEditor', false, 'elm1');return false;">[Add]</a>
+				<a href="javascript:;" onclick="tinymce.get('elm1').remove();return false;">[Remove]</a>
+				<a href="javascript:;" onclick="tinymce.get('elm1').execCommand('Bold');return false;">[Bold]</a>
+				<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent());return false;">[Get contents]</a>
+				<a href="javascript:;" onclick="alert(tinymce.get('elm1').getContent({format: 'raw'}));return false;">[Get raw]</a>
+				<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent());return false;">[Get selected HTML]</a>
+				<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getContent({format : 'text'}));return false;">[Get selected text]</a>
+				<a href="javascript:;" onclick="alert(tinymce.get('elm1').selection.getNode().nodeName);return false;">[Get selected element]</a>
+				<a href="javascript:;" onclick="tinymce.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
+				<a href="javascript:;" onclick="tinymce.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
+			</div>
+		<br />
+		<input type="submit" name="save" value="Submit" />
+		<input type="reset" name="reset" value="Reset" />
+	</div>
+</form>
+
+</body>
+</html>

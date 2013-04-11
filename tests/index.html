@@ -1,49 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8" />
-	<title>TinyMCE Unit Tests</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<link rel="stylesheet" href="qunit/qunit.css" type="text/css"/>
-	<style type="text/css">
-	ol { font-family: 'trebuchet ms', verdana, arial; }
-	h2, ol {font-size: 10pt; }
-	h2 {
-		color:black;
-		font-size:small;
-		font-weight:bold;
-		margin:0;
-	}
-	#total_status.pass {
-		background-color:#C6E746; 
-	}
-	li.pass {
-	}
-	li.fail, #total_status.fail {
-		background-color:#EE5757; 
-	}
-	#total_status {
-		height: 5px;
-	}
-	.column {
-		float: left;
-		width: 300px;
-		margin-right: 10px;
-	}
-	#menu {
-		margin: 10px;
-	}
-	</style>
-	<script type="text/javascript" src="qunit/runner.js"></script>
-	<script type="text/javascript" src="tests.js"></script>
+<meta charset="UTF-8" />
+<title>Test Runner</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="js/qunit/testrunner.css" type="text/css" />
+<script src="js/qunit/testrunner.js"></script>
+<script>
+TestRunner.addSuites([
+	"tinymce/tests.js",
+	"tinymce/dom/tests.js",
+	"tinymce/html/tests.js",
+	"tinymce/ui/tests.js",
+	"tinymce/util/tests.js",
+	"plugins/tests.js"
+]);
+</script>
 </head>
 <body>
-
-<h1 id="qunit-header">TinyMCE Unit Tests</h1>
-<div id="total_status"></div>
-<div id="menu"></div>
-<div><input type="button" value="Run all" onclick="QUnitRunner.run();" /><input type="checkbox" id="min" name="min" checked="checked" /> Run on minified code <input type="checkbox" id="jsrobot" name="jsrobot" checked="checked" /> JSRobot tests</div>
-<div id="log"></div>
-
 </body>
 </html>

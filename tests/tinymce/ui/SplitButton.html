@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ui.SplitButton Test Suite</title>
+<link type="text/css" rel="stylesheet" href="../../../js/tinymce/skins/lightgray/skin.min.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="stylesheet" href="css/ui-overrides.css" type="text/css" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../../js/qunit/reporter.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/tinymce_loader.js"></script>
+<script type="text/javascript">
+QUnit.config.autostart = false;
+QUnit.config.reorder = false;
+
+module("ui.SplitButton", {
+	setup: function() {
+		document.getElementById('view').innerHTML = '';
+	},
+
+	teardown: function() {
+		//document.getElementById('view').innerHTML = '';
+	}
+});
+
+window.onload = function() {
+	QUnit.start();
+};
+
+function createSplitButton(settings) {
+	return tinymce.ui.Factory.create(tinymce.extend({
+		type: 'splitbutton'
+	}, settings)).renderTo(document.getElementById('view'));
+}
+
+test("splitbutton text, size default", function() {
+	var splitButton = createSplitButton({text: 'X'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 42, 30], 4);
+});
+
+test("splitbutton text, size large", function() {
+	var splitButton = createSplitButton({text: 'X', size: 'large'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 49, 39], 4);
+});
+
+test("splitbutton text, size small", function() {
+	var splitButton = createSplitButton({text: 'X', size: 'small'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 36, 23], 4);
+});
+
+test("splitbutton text, width 100, height 100", function() {
+	var splitButton = createSplitButton({text: 'X', width: 100, height: 100});
+
+	deepEqual(rect(splitButton), [0, 0, 100, 100]);
+	deepEqual(rect(splitButton.getEl().firstChild), [1, 1, 98, 98]);
+});
+
+test("splitbutton icon, size default", function() {
+	var splitButton = createSplitButton({icon: 'test'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 50, 30], 4);
+});
+
+test("splitbutton icon, size small", function() {
+	var splitButton = createSplitButton({icon: 'test', size: 'small'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 45, 24], 4);
+});
+
+test("splitbutton icon, size large", function() {
+	var splitButton = createSplitButton({icon: 'test', size: 'large'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 54, 40], 4);
+});
+
+test("splitbutton icon, width 100, height 100", function() {
+	var splitButton = createSplitButton({icon: 'test', width: 100, height: 100});
+
+	deepEqual(rect(splitButton), [0, 0, 100, 100]);
+	deepEqual(rect(splitButton.getEl().firstChild), [1, 1, 98, 98]);
+});
+
+test("splitbutton text & icon, size default", function() {
+	var splitButton = createSplitButton({text: 'X', icon: 'test'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 62, 30], 4);
+});
+
+test("splitbutton text & icon, size large", function() {
+	var splitButton = createSplitButton({text: 'X', icon: 'test', size: 'large'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 69, 40], 4);
+});
+
+test("splitbutton text & icon, size small", function() {
+	var splitButton = createSplitButton({text: 'X', icon: 'test', size: 'small'});
+
+	nearlyEqualRects(rect(splitButton), [0, 0, 55, 24], 4);
+});
+
+test("splitbutton text & icon, width 100, height 100", function() {
+	var splitButton = createSplitButton({text: 'X', icon: 'test', width: 100, height: 100});
+
+	deepEqual(rect(splitButton), [0, 0, 100, 100]);
+	deepEqual(rect(splitButton.getEl().firstChild), [1, 1, 98, 98]);
+});
+
+test("splitbutton click event", function() {
+	var splitButton, clicks = {};
+
+	splitButton = createSplitButton({text: 'X', onclick: function() {clicks.a = 'a';}});
+	splitButton.on('click', function() {clicks.b = 'b';});
+	splitButton.on('click', function() {clicks.c = 'c';});
+	splitButton.fire('click');
+
+	deepEqual(clicks, {a: 'a', b: 'b', c: 'c'});
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Button Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests">
+	</ol>
+	<div id="view" style="position: absolute; right: 0; top: 0"></div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿// FloatPanel
+
+.mce-floatpanel {
+	position: absolute;
+	.box-shadow(#ccc 5px 5px 5px);
+}
+
+// Popover panel
+
+.mce-floatpanel .mce-arrow,
+.mce-floatpanel .mce-arrow:after {
+	position: absolute;
+	display: block;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+}
+
+.mce-floatpanel .mce-arrow {
+	border-width: @popover-arrow-outer-width;
+}
+
+.mce-floatpanel .mce-arrow:after {
+	border-width: @popover-arrow-width;
+	content: "";
+}
+
+.mce-floatpanel.mce-popover {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: @popover-background;
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0,0,0,.2);
+	.border-radius(6px);
+	.box-shadow(0 5px 10px rgba(0,0,0,.2));
+
+	&.mce-bottom {
+		margin-top: 10px;
+
+		& > .mce-arrow {
+			left: 50%;
+			margin-left: -@popover-arrow-outer-width;
+			border-top-width: 0;
+			border-bottom-color: #999; // IE8 fallback
+			border-bottom-color: @popover-arrow-outer-color;
+			top: -@popover-arrow-outer-width;
+
+			&:after {
+				top: 1px;
+				margin-left: -@popover-arrow-width;
+				border-top-width: 0;
+				border-bottom-color: @popover-arrow-color;
+			}
+		}
+
+		&.mce-start { margin-left: -22px; }
+		&.mce-start > .mce-arrow { left: 20px; }
+
+		&.mce-end { margin-left: 22px; }
+		&.mce-end > .mce-arrow { right: 10px; left: auto; }
+	}
+}

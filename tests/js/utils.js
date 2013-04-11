@@ -29,6 +29,8 @@ function setSelection(startSelector, startOffset, endSelector, endOffset) {
 	var rng = editor.dom.createRng();
 
 	function setRange(container, offset, start) {
+		offset = offset || 0;
+
 		if (offset === 'after') {
 			if (start) {
 				rng.setStartAfter(container);
@@ -57,11 +59,12 @@ function initWhenTinyAndRobotAreReady(initTinyFunction) {
 		QUnit.start();
 	}
 
-	tinymce.onAddEditor.add(function(tinymce, ed) {
-		ed.onInit.add(function() {
+	tinymce.on('AddEditor', function(e) {
+		e.editor.on('Init', function() {
 			loaded();
 		});
 	});
+
 	window.robot.onload(initTinyFunction);
 }
 
@@ -173,8 +176,12 @@ function type(chr) {
 		if (keyCode == 8) {
 			if (editor.getDoc().selection) {
 				var rng = editor.getDoc().selection.createRange();
-				rng.moveStart('character', -1);
-				rng.select();
+
+				if (rng.text.length == 0) {
+					rng.moveStart('character', -1);
+					rng.select();
+				}
+
 				rng.execCommand('Delete', false, null);
 			} else {
 				editor.getDoc().execCommand('Delete', false, null);
@@ -197,8 +204,50 @@ function type(chr) {
 }
 
 function cleanHtml(html) {
-	html = html.toLowerCase().replace(/[\r\n]+/g, '');
-	html = html.replace(/ (sizcache|nodeindex|sizset|data\-mce\-expando)="[^"]*"/g, '');
+	html = html.toLowerCase().replace(/[\r\n]+/gi, '');
+	html = html.replace(/ (sizcache|nodeindex|sizset|data\-mce\-expando|data\-mce\-selected)="[^"]*"/gi, '');
+	html = html.replace(/<span[^>]+data-mce-bogus[^>]+>[\u200B\uFEFF]+<\/span>|<div[^>]+data-mce-bogus[^>]+><\/div>/gi, '');
 
 	return html;
+}
+
+/**
+ * Measures the x, y, w, h of the specified element/control relative to the view element.
+ */
+function rect(ctrl) {
+	var outerRect, innerRect;
+
+	if (ctrl.nodeType) {
+		innerRect = ctrl.getBoundingClientRect();
+	} else {
+		innerRect = ctrl.getEl().getBoundingClientRect();
+	}
+
+	outerRect = document.getElementById('view').getBoundingClientRect();
+
+	return [
+		Math.round(innerRect.left - outerRect.left),
+		Math.round(innerRect.top - outerRect.top),
+		Math.round(innerRect.right - innerRect.left),
+		Math.round(innerRect.bottom - innerRect.top)
+	];
+}
+
+function resetScroll(elm) {
+	elm.scrollTop = 0;
+	elm.scrollLeft = 0;
+}
+
+// Needed since fonts render differently on different platforms
+function nearlyEqualRects(rect1, rect2, diff) {
+	diff = diff || 1;
+
+	for (var i = 0; i < 4; i++) {
+		if (Math.abs(rect1[i] - rect2[i]) > diff) {
+			deepEqual(rect1, rect2);
+			return;
+		}
+	}
+
+	ok(true);
 }

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ui.FitLayout Test Suite</title>
+<link type="text/css" rel="stylesheet" href="../../../js/tinymce/skins/lightgray/skin.min.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="stylesheet" href="css/ui-overrides.css" type="text/css" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../../js/qunit/reporter.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/tinymce_loader.js"></script>
+<script type="text/javascript">
+var panel;
+
+QUnit.config.autostart = false;
+QUnit.config.reorder = false;
+
+module("ui.FitLayout", {
+	setup: function() {
+		document.getElementById('view').innerHTML = '';
+	},
+
+	teardown: function() {
+		//document.getElementById('view').innerHTML = '';
+	}
+});
+
+window.onload = function() {
+	QUnit.start();
+};
+
+function createFitPanel(settings) {
+	return tinymce.ui.Factory.create(tinymce.extend({
+		type: 'panel',
+		layout: 'fit',
+		width: 200,
+		height: 200,
+		border: 1
+	}, settings)).renderTo(document.getElementById('view')).reflow();
+}
+
+test("fit with spacer inside", function() {
+	panel = createFitPanel({
+		items: [
+			{type: 'spacer', classes: 'red'}
+		]
+	});
+
+	deepEqual(rect(panel), [0, 0, 200, 200]);
+	deepEqual(rect(panel.find('spacer')[0]), [1, 1, 198, 198]);
+});
+
+test("fit with padding and spacer inside", function() {
+	panel = createFitPanel({
+		padding: 3,
+		items: [
+			{type: 'spacer', classes: 'red'}
+		]
+	});
+
+	deepEqual(rect(panel), [0, 0, 200, 200]);
+	deepEqual(rect(panel.find('spacer')[0]), [4, 4, 192, 192]);
+});
+
+test("fit with panel inside", function() {
+	panel = createFitPanel({
+		items: [
+			{type: 'panel', border: 1}
+		]
+	});
+
+	deepEqual(rect(panel), [0, 0, 200, 200]);
+	deepEqual(rect(panel.find('panel')[0]), [1, 1, 198, 198]);
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">ui.FitLayout Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests">
+	</ol>
+	<div id="view" style="position: absolute; right: 0; top: 0"></div>
+</body>
+</html>

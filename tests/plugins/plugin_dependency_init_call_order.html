@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Basic editor functionality tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../js/qunit/reporter.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/tinymce_loader.js"></script>
+<script>
+QUnit.config.reorder = false;
+QUnit.config.autostart = false;
+
+function check_plugin_order(order){
+	deepEqual(plugin_load_order, order, "Load order for plugins");
+}
+test('PluginDependencyIsLoaded', function() {
+	expect(1);
+	check_plugin_order(["one", "two", "three", "four"]);
+});
+var plugin_load_order =[];
+tinymce.create('tinymce.plugins.One', {
+	init: function(ed, url) {plugin_load_order.push("one");}
+});
+
+tinymce.create('tinymce.plugins.Two', {
+	init: function(ed, url) {plugin_load_order.push("two");}
+});
+tinymce.create('tinymce.plugins.Three', {
+	init: function(ed, url) {plugin_load_order.push("three");}
+});
+tinymce.create('tinymce.plugins.Four', {
+	init: function(ed, url) {plugin_load_order.push("four");}
+});
+
+// Register plugin
+	tinymce.PluginManager.add('two', tinymce.plugins.Two, ["one"]);
+	tinymce.PluginManager.add('three', tinymce.plugins.Three, ["two"]);
+	tinymce.PluginManager.add('one', tinymce.plugins.One);
+	tinymce.PluginManager.add('four', tinymce.plugins.Four, ["one", "two"]);
+
+	tinymce.init({
+	mode : "exact",
+	elements : "elm1",
+	add_unload_trigger : false,
+	plugins: "-three,-four",
+	init_instance_callback : function(ed) {
+		editor = ed;
+		QUnit.start();
+	}
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">Plugin Dependency Functional tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1"></textarea>
+		<div>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent({format : 'raw'}));">[getRawContents]</a>
+			<a href="javascript:alert(tinymce.EditorManager.get('elm1').getContent());">[getContents]</a>
+		</div>
+	</div>
+</body>
+</html>

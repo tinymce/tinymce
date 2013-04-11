@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>jQuery Plugin tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../js/qunit/reporter.js"></script>
+<script src="http://www.google.com/jsapi"></script>
+<script>
+	google.load("jquery", "1");
+</script>
+<script src="../../js/tinymce/classes/jquery.tinymce.js"></script>
+<script>
+QUnit.config.reorder = false;
+QUnit.config.autostart = false;
+
+module("jQuery plugin", {
+	autostart: false
+});
+
+test("Get contents using jQuery", function() {
+	expect(4);
+
+	tinymce.get('elm1').setContent('<p>Editor 1</p>');
+
+	equal($('#elm1').html(), '<p>Editor 1</p>');
+	equal($('#elm1').val(), '<p>Editor 1</p>');
+	equal($('#elm1').attr('value'), '<p>Editor 1</p>');
+	equal($('#elm1').text(), 'Editor 1');
+});
+
+test("Set contents using jQuery", function() {
+	expect(4);
+
+	$('#elm1').html('Test 1');
+	equal($('#elm1').html(), '<p>Test 1</p>');
+
+	$('#elm1').val('Test 2');
+	equal($('#elm1').html(), '<p>Test 2</p>');
+
+	$('#elm1').text('Test 3');
+	equal($('#elm1').html(), '<p>Test 3</p>');
+
+	$('#elm1').attr('value', 'Test 4');
+	equal($('#elm1').html(), '<p>Test 4</p>');
+});
+
+test("append/prepend contents using jQuery", function() {
+	expect(2);
+
+	tinymce.get('elm1').setContent('<p>Editor 1</p>');
+
+	$('#elm1').append('<p>Test 1</p>');
+	equal($('#elm1').html(), '<p>Editor 1</p>\n<p>Test 1</p>');
+
+	$('#elm1').prepend('<p>Test 2</p>');
+	equal($('#elm1').html(), '<p>Test 2</p>\n<p>Editor 1</p>\n<p>Test 1</p>');
+});
+
+test("Find using :tinymce selector", function() {
+	expect(1);
+
+	equal($('textarea:tinymce').length, 2);
+});
+
+test("Set contents using :tinymce selector", function() {
+	expect(3);
+
+	$('textarea:tinymce').val('Test 1');
+	equal($('#elm1').val(), '<p>Test 1</p>');
+	equal($('#elm2').val(), '<p>Test 1</p>');
+	equal($('#elm3').val(), 'Textarea');
+});
+
+test("Get contents using :tinymce selector", function() {
+	expect(1);
+
+	$('textarea:tinymce').val('Test get');
+	equal($('textarea:tinymce').val(), '<p>Test get</p>');
+});
+
+$(function() {
+	$('textarea.tinymce').tinymce({
+		// Location of TinyMCE script
+		script_url : location.search.indexOf('min=true') > 0 ? '../../js/tinymce/tinymce.min.js' : '../../js/tinymce/tinymce.js',
+
+		// General options
+		plugins : "pagebreak,layer,table,save,emoticons,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template",
+
+		// Theme options
+		theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emoticons,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+		theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_statusbar_location : "bottom",
+		theme_advanced_resizing : true,
+
+		init_instance_callback : function(ed) {
+			var ed1 = tinymce.get('elm1'), ed2 = tinymce.get('elm2');
+
+			// When both editors are initialized
+			if (ed1 && ed1.initialized && ed2 && ed2.initialized)
+				QUnit.start();
+		}
+	});
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">TinyMCE jQuery plugin tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content">
+		<textarea id="elm1" name="elm1" class="tinymce">Editor 1</textarea>
+		<textarea id="elm2" name="elm2" class="tinymce">Editor 2</textarea>
+		<textarea id="elm3" name="elm3">Textarea</textarea>
+	</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ui.MenuButton Test Suite</title>
+<link type="text/css" rel="stylesheet" href="../../../js/tinymce/skins/lightgray/skin.min.css" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="stylesheet" href="css/ui-overrides.css" type="text/css" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../../js/qunit/reporter.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/tinymce_loader.js"></script>
+<script type="text/javascript">
+QUnit.config.autostart = false;
+QUnit.config.reorder = false;
+
+module("ui.MenuButton", {
+	setup: function() {
+		document.getElementById('view').innerHTML = '';
+	},
+
+	teardown: function() {
+		//document.getElementById('view').innerHTML = '';
+	}
+});
+
+window.onload = function() {
+	QUnit.start();
+};
+
+function createMenuButton(settings) {
+	return tinymce.ui.Factory.create(tinymce.extend({
+		type: 'menubutton',
+		menu: [
+			{text: '1'},
+			{text: '2'},
+			{text: '3'}
+		]
+	}, settings)).renderTo(document.getElementById('view'));
+}
+
+test("menubutton text, size default", function() {
+	var menuButton = createMenuButton({text: 'X'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 46, 30], 4);
+});
+
+test("menubutton text, size large", function() {
+	var menuButton = createMenuButton({text: 'X', size: 'large'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 53, 39], 4);
+});
+
+test("menubutton text, size small", function() {
+	var menuButton = createMenuButton({text: 'X', size: 'small'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 30, 23], 4);
+});
+
+test("menubutton text, width 100, height 100", function() {
+	var menuButton = createMenuButton({text: 'X', width: 100, height: 100});
+
+	deepEqual(rect(menuButton), [0, 0, 100, 100]);
+	deepEqual(rect(menuButton.getEl().firstChild), [1, 1, 98, 98]);
+});
+
+test("menubutton icon, size default", function() {
+	var menuButton = createMenuButton({icon: 'test'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 52, 30], 4);
+});
+
+test("menubutton icon, size small", function() {
+	var menuButton = createMenuButton({icon: 'test', size: 'small'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 39, 24], 4);
+});
+
+test("menubutton icon, size large", function() {
+	var menuButton = createMenuButton({icon: 'test', size: 'large'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 56, 40], 4);
+});
+
+test("menubutton icon, width 100, height 100", function() {
+	var menuButton = createMenuButton({icon: 'test', width: 100, height: 100});
+
+	deepEqual(rect(menuButton), [0, 0, 100, 100]);
+	deepEqual(rect(menuButton.getEl().firstChild), [1, 1, 98, 98]);
+});
+
+test("menubutton text & icon, size default", function() {
+	var menuButton = createMenuButton({text: 'X', icon: 'test'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 64, 30], 4);
+});
+
+test("menubutton text & icon, size large", function() {
+	var menuButton = createMenuButton({text: 'X', icon: 'test', size: 'large'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 71, 40], 4);
+});
+
+test("menubutton text & icon, size small", function() {
+	var menuButton = createMenuButton({text: 'X', icon: 'test', size: 'small'});
+
+	nearlyEqualRects(rect(menuButton), [0, 0, 49, 24], 4);
+});
+
+test("menubutton text & icon, width 100, height 100", function() {
+	var menuButton = createMenuButton({text: 'X', icon: 'test', width: 100, height: 100});
+
+	deepEqual(rect(menuButton), [0, 0, 100, 100]);
+	deepEqual(rect(menuButton.getEl().firstChild), [1, 1, 98, 98]);
+});
+
+test("menubutton click event", function() {
+	var menuButton, clicks = {};
+
+	menuButton = createMenuButton({text: 'X', onclick: function() {clicks.a = 'a';}});
+	menuButton.on('click', function() {clicks.b = 'b';});
+	menuButton;
+	menuButton.on('click', function() {clicks.c = 'c';});
+	menuButton.fire('click');
+
+	deepEqual(clicks, {a: 'a', b: 'b', c: 'c'});
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">MenuButton Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests">
+	</ol>
+	<div id="view" style="position: absolute; right: 0; top: 0"></div>
+</body>
+</html>

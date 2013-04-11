@@ -1,0 +1,117 @@
+/**
+ * Env.js
+ *
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
+define("tinymce/Env", [], function() {
+	var nav = navigator, userAgent = nav.userAgent;
+	var opera, webkit, ie, gecko, mac, iDevice;
+
+	opera = window.opera && window.opera.buildNumber;
+	webkit = /WebKit/.test(userAgent);
+	ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
+	ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
+	gecko = !webkit && /Gecko/.test(userAgent);
+	mac = userAgent.indexOf('Mac') != -1;
+	iDevice = /(iPad|iPhone)/.test(userAgent);
+
+	// Is a iPad/iPhone and not on iOS5 sniff the WebKit version since older iOS WebKit versions
+	// says it has contentEditable support but there is no visible caret.
+	var contentEditable = !iDevice || userAgent.match(/AppleWebKit\/(\d*)/)[1] >= 534;
+
+	return {
+		/**
+		 * Constant that is true if the browser is Opera.
+		 *
+		 * @property opera
+		 * @type Boolean
+		 * @final
+		 */
+		opera: opera,
+
+		/**
+		 * Constant that is true if the browser is WebKit (Safari/Chrome).
+		 *
+		 * @property webKit
+		 * @type Boolean
+		 * @final
+		 */
+		webkit: webkit,
+
+		/**
+		 * Constant that is more than zero if the browser is IE.
+		 *
+		 * @property ie
+		 * @type Boolean
+		 * @final
+		 */
+		ie: ie,
+
+		/**
+		 * Constant that is true if the browser is Gecko.
+		 *
+		 * @property gecko
+		 * @type Boolean
+		 * @final
+		 */
+		gecko: gecko,
+
+		/**
+		 * Constant that is true if the os is Mac OS.
+		 *
+		 * @property mac
+		 * @type Boolean
+		 * @final
+		 */
+		mac: mac,
+
+		/**
+		 * Constant that is true if the os is iOS.
+		 *
+		 * @property iOS
+		 * @type Boolean
+		 * @final
+		 */
+		iOS: iDevice,
+
+		/**
+		 * Constant that is true if the browser supports editing.
+		 *
+		 * @property contentEditable
+		 * @type Boolean
+		 * @final
+		 */
+		contentEditable: contentEditable,
+
+		/**
+		 * Transparent image data url.
+		 *
+		 * @property transparentSrc
+		 * @type Boolean
+		 * @final
+		 */
+		transparentSrc: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+
+		/**
+		 * Returns true/false if the browser can or can't place the caret after a inline block like an image.
+		 *
+		 * @property noCaretAfter
+		 * @type Boolean
+		 * @final
+		 */
+		caretAfter: ie != 8,
+
+		/**
+		 * Constant that is true if the browser supports native DOM Ranges. IE 9+.
+		 *
+		 * @property range
+		 * @type Boolean
+		 */
+		range: window.getSelection && "Range" in window
+	};
+});

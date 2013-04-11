@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>tinymce.util.JSONRequest tests</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
+<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
+<script src="../../js/qunit/reporter.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/tinymce_loader.js"></script>
+<script>
+module("tinymce.util.JSONRequest");
+
+QUnit.config.reorder = false;
+
+asyncTest("Successful request - send method", function() {
+	expect(1);
+
+	new tinymce.util.JSONRequest({}).send({
+		type : 'GET',
+		url : 'json_rpc_ok.js',
+		success: function(data) {
+			equal(data, 'Hello JSON-RPC');
+			start();
+		}
+	});
+});
+
+asyncTest("Successful request - sendRPC static method", function() {
+	expect(1);
+
+	tinymce.util.JSONRequest.sendRPC({
+		type : 'GET',
+		url : 'json_rpc_ok.js',
+		success: function(data) {
+			equal(data, 'Hello JSON-RPC');
+			start();
+		}
+	});
+});
+
+asyncTest("Error request - send method", function() {
+	expect(1);
+
+	new tinymce.util.JSONRequest({}).send({
+		type : 'GET',
+		url : 'json_rpc_error.js',
+		error: function(error) {
+			equal(error.code, 42);
+			start();
+		}
+	});
+});
+
+asyncTest("Error request - sendRPC static method", function() {
+	expect(1);
+
+	tinymce.util.JSONRequest.sendRPC({
+		type : 'GET',
+		url : 'json_rpc_error.js',
+		error: function(error) {
+			equal(error.code, 42);
+			start();
+		}
+	});
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">tinymce.util.JSONRequest tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="content"></div>
+</body>
+</html>
