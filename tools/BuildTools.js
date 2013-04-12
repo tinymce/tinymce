@@ -272,8 +272,8 @@ exports.jshint = function (options) {
 };
 
 exports.zip = function (options) {
-	var zip = require("node-native-zip");
-	var archive = new zip();
+	var AdmZip = require('adm-zip');
+	var archive = new AdmZip();
 
 	function process(filePath, zipFilePath) {
 		var args, stat = fs.statSync(filePath);
@@ -313,7 +313,7 @@ exports.zip = function (options) {
 				data = args.data;
 			}
 
-			archive.add(path.join(options.baseDir, zipFilePath), data);
+			archive.addFile(path.join(options.baseDir, zipFilePath), data);
 		} else if (stat.isDirectory()) {
 			fs.readdirSync(filePath).forEach(function(fileName) {
 				process(path.join(filePath, fileName), path.join(zipFilePath, fileName));
@@ -331,7 +331,7 @@ exports.zip = function (options) {
 		}
 	});
 
-	fs.writeFileSync(options.to, archive.toBuffer());
+	archive.writeZip(options.to);
 };
 
 exports.compileAmd = function (options) {
