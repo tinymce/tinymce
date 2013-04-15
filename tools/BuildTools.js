@@ -272,8 +272,8 @@ exports.jshint = function (options) {
 };
 
 exports.zip = function (options) {
-	var AdmZip = require('node-zip');
-	var archive = new AdmZip();
+	var ZipWriter = require('moxie-zip').ZipWriter;
+	var archive = new ZipWriter();
 
 	function process(filePath, zipFilePath) {
 		var args, stat = fs.statSync(filePath);
@@ -305,7 +305,7 @@ exports.zip = function (options) {
 		}
 
 		if (stat.isFile()) {
-			var data = fs.readFileSync(filePath, 'binary');
+			var data = fs.readFileSync(filePath);
 
 			if (options.dataFilter) {
 				args = {filePath: filePath, zipFilePath: zipFilePath, data: data};
@@ -313,7 +313,7 @@ exports.zip = function (options) {
 				data = args.data;
 			}
 
-			archive.file(path.join(options.baseDir, zipFilePath), data);
+			archive.addData(path.join(options.baseDir, zipFilePath), data);
 		} else if (stat.isDirectory()) {
 			fs.readdirSync(filePath).forEach(function(fileName) {
 				process(path.join(filePath, fileName), path.join(zipFilePath, fileName));
@@ -331,7 +331,7 @@ exports.zip = function (options) {
 		}
 	});
 
-	fs.writeFileSync(options.to, archive.generate({base64: false, compression: 'DEFLATE'}), 'binary');
+	archive.saveAs(options.to);
 };
 
 exports.compileAmd = function (options) {
