@@ -19,8 +19,9 @@ define("tinymce/EditorManager", [
 	"tinymce/util/URI",
 	"tinymce/Env",
 	"tinymce/util/Tools",
-	"tinymce/util/Observable"
-], function(Editor, DOMUtils, URI, Env, Tools, Observable) {
+	"tinymce/util/Observable",
+	"tinymce/util/I18n"
+], function(Editor, DOMUtils, URI, Env, Tools, Observable, I18n) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
 	var instanceCounter = 0, beforeUnloadDelegate;
@@ -67,7 +68,7 @@ define("tinymce/EditorManager", [
 		 * @property i18n
 		 * @type Object
 		 */
-		i18n: {},
+		i18n: I18n,
 
 		/**
 		 * Currently active editor instance.
@@ -472,21 +473,17 @@ define("tinymce/EditorManager", [
 		 * @param {Object} items Name/value object with translations.
 		 */
 		addI18n: function(code, items) {
-			extend(this.i18n, items || code);
+			I18n.add(code, items);
 		},
 
 		/**
 		 * Translates the specified string using the language pack items.
 		 *
-		 * @param {String/Array} str String to translate
+		 * @param {String/Array/Object} text String to translate
 		 * @return {String} Translated string.
 		 */
-		translate: function(str) {
-			if (typeof(str) !== "string") {
-				return (this.i18n[str[0]] || str[0]).replace(/%d/, str[1]);
-			}
-
-			return this.i18n[str] || str;
+		translate: function(text) {
+			return I18n.translate(text);
 		}
 	};
 
