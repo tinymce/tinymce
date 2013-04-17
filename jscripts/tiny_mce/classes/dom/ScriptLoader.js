@@ -53,6 +53,9 @@
 		 * @param {Object} scope Optional scope to execute callback in.
 		 */
 		function loadScript(url, callback) {
+			// Fix for Rails asset pipeline. All assets are already loaded.
+			callback(); return;
+
 			var t = this, dom = tinymce.DOM, elm, uri, loc, id;
 
 			// Execute callback when script is loaded
