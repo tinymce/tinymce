@@ -90,7 +90,7 @@ tinymce.PluginManager.add('autosave', function(editor) {
 	}
 
 	editor.addButton('restoredraft', {
-		title: 'Restore draft',
+		title: 'Restore last draft',
 		onclick: restoreLastDraft,
 		onPostRender: postRender
 	});
