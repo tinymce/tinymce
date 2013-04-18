@@ -27,8 +27,10 @@ define(
     // FIX: Horribly inefficient.
     var simplify = function (elements) {
       return Arr.filter(elements, function (x, i) {
-        var rest = elements.slice(0, i).concat(elements.slice(i+1));
-        return !(isDuplicate(rest, x) || isChild(rest, x));
+        var left = elements.slice(0, i);
+        var right = elements.slice(i + 1);
+        var rest = left.concat(right);
+        return !(isDuplicate(right, x) || isChild(rest, x));
       });
     };
 

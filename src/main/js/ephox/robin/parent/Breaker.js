@@ -17,13 +17,10 @@ define(
     var bisect = function (parent, child) {
       var children = Traverse.children(parent);
       var index = Arr.findIndex(children, Fun.curry(Compare.eq, child));
-      return index > -1 ? {
+      return index > -1 ? Option.some({
         before: Fun.constant(children.slice(0, index)),
         after: Fun.constant(children.slice(index + 1))
-      } : {
-        before: Fun.constant(children),
-        after: Fun.constant([])
-      };
+      }) : Option.none();
     };
 
     var unsafeBreakAt = function (parent, parts) {
@@ -31,12 +28,14 @@ define(
       var second = Element.fromTag(tag);
       InsertAll.append(second, parts.after());
       Insert.after(parent, second);
-      return Option.some(second);
+      return second;
     };
 
     var breakAt = function (parent, child) {
       var parts = bisect(parent, child);
-      return parts.after().length > 0 ? unsafeBreakAt(parent, parts) : Option.none();
+      return parts.map(function (ps) {
+        return unsafeBreakAt(parent, ps);
+      });
     };
 
     return {
