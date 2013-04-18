@@ -17,8 +17,8 @@ define(
     var unsafeSubset = function (common, ps1, ps2) {
       var children = Traverse.children(common);
 
-      if (Compare.eq(common, ps1[0])) return [ ps1[0] ];
-      if (Compare.eq(common, ps2[0])) return [ ps2[0] ];
+      if (Compare.eq(common, ps1[0])) return Option.some([ ps1[0] ]);
+      if (Compare.eq(common, ps2[0])) return Option.some([ ps2[0] ]);
 
       var finder = function (ps) {
         var index = Arr.findIndex(ps, eq(common));
