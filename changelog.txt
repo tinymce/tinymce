@@ -1,6 +1,9 @@
 Version 4.0b2 (2013-04-xx)
 	Fixed so the width setting applies to the editor panel in modern theme.
 	Fixed bug where alignment of images wasn't working properly on Firefox.
+	Fixed bug where IE 8 would throw error when inserting a table.
+	Fixed bug where IE 8 wouldn't render the element path properly.
+	Fixed bug where old IE versions would render a red focus border.
 Version 4.0b1 (2013-04-11)
 	Added new node.js based build process used uglify, amdlc, jake etc.
 	Added new package.json to enable easy installation of dependent npm packages used for building.
