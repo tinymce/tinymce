@@ -17,24 +17,11 @@ define(
       return all(look, elements, unsafeOne);
     };
 
-    var manyAll = function (look, elements) {
-      return all(look, elements, unsafeMany);
-    };
-
     var unsafeOne = function (look, head, tail) {
       var start = look(head);
       return Arr.foldr(tail, function (b, a) {
         var current = look(a);
         return commonElement(b, current);
-      }, start);
-    };
-
-    var unsafeMany = function (look, head, tail) {
-      var start = look(head);
-      return Arr.foldr(tail, function (b, a) {
-        return b.bind(function () {
-          return look(a);
-        });
       }, start);
     };
 
@@ -45,8 +32,7 @@ define(
     };
 
     return {
-      oneAll: oneAll,
-      manyAll: manyAll
+      oneAll: oneAll
     };
   }
 );

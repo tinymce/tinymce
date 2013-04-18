@@ -4,6 +4,7 @@ define(
   [
     'ephox.compass.Arr',
     'ephox.peanut.Fun',
+    'ephox.perhaps.Option',
     'ephox.sugar.api.Compare',
     'ephox.sugar.api.Element',
     'ephox.sugar.api.Insert',
@@ -12,7 +13,7 @@ define(
     'ephox.sugar.api.Traverse'
   ],
 
-  function (Arr, Fun, Compare, Element, Insert, InsertAll, Node, Traverse) {
+  function (Arr, Fun, Option, Compare, Element, Insert, InsertAll, Node, Traverse) {
     var bisect = function (parent, child) {
       var children = Traverse.children(parent);
       var index = Arr.findIndex(children, Fun.curry(Compare.eq, child));
@@ -25,14 +26,17 @@ define(
       };
     };
 
+    var unsafeBreakAt = function (parent, parts) {
+      var tag = Node.name(parent);
+      var second = Element.fromTag(tag);
+      InsertAll.append(second, parts.after());
+      Insert.after(parent, second);
+      return Option.some(second);
+    };
+
     var breakAt = function (parent, child) {
       var parts = bisect(parent, child);
-      if (parts.after().length > 0) {
-        var tag = Node.name(parent);
-        var second = Element.fromTag(tag);
-        InsertAll.append(second, parts.after());
-        Insert.after(parent, second);
-      }
+      return parts.after().length > 0 ? unsafeBreakAt(parent, parts) : Option.none();
     };
 
     return {
