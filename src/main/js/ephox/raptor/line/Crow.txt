@@ -1,0 +1,48 @@
+define(
+  'ephox.raptor.line.Crow',
+
+  [
+  ],
+
+  function () {
+
+    var context = function (element, offset) {
+      var gathered = deep(element);
+      return ContextUtil.analyse(gathered, element, offset);
+    };
+
+    var get = function (elements) {
+      var list =  PositionArray.make(elements, function (x, start) {
+        return Node.isText(x) ? Option.some(Spot.range(x, start, start + Text.get(x).length)) : Option.none();
+      });
+
+      var allText = Arr.foldr(list, function (b, a) {
+        return Text.get(a.element()) + b;
+      }, '');
+
+      return {
+        list: Fun.constant(list),
+        allText: Fun.constant(allText)
+      };
+    };
+
+    var cursor = function (data, current, offset) {
+      // FIX: Breaking abstraction.
+      var element = Option.from(Arr.find(data.list(), function (x) {
+        return Compare.eq(x.element(), current);
+      }));
+
+      var position = element.map(function (v) {
+        return v.start() + offset;
+      });
+
+      return {
+        list: data.list,
+        allText: data.allText,
+        position: Fun.constant(position)
+      };
+    };
+
+
+  }
+);
