@@ -45,7 +45,7 @@ test(
             '<li class="four">four</li>' +
             '<li class="five">five</li>' +
           '</ol>' +
-          '<ol>' +
+          '<ol class="three-five" style="list-style-type: lower-alpha;">' +
           '</ol>' +
           '<li class="six">six</li>' +
           '<ol class="seven-nine" style="list-style-type: lower-alpha;">' +
@@ -68,7 +68,7 @@ test(
           '</ol>' +
           '<li class="six">six</li>' +
         '</ol>' +
-        '<ol>' +
+        '<ol class="one-nine" style="list-style-type: decimal;">' +
           '<ol class="seven-nine" style="list-style-type: lower-alpha;">' +
             '<ol class="seven-eight" style="list-style-type: lower-roman;">' +
               '<li class="seven">seven</li>' +

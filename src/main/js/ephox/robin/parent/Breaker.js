@@ -24,8 +24,7 @@ define(
     };
 
     var unsafeBreakAt = function (parent, parts) {
-      var tag = Node.name(parent);
-      var second = Element.fromTag(tag);
+      var second = Element.fromDom(parent.dom().cloneNode(false));
       InsertAll.append(second, parts.after());
       Insert.after(parent, second);
       return second;
