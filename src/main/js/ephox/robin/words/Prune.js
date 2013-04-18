@@ -24,6 +24,7 @@ define(
     };
 
     var prune = function (word, element) {
+      console.log('considering: ', element.dom(), word);
       var include = inc(element, word);
       return include.fold(function () {
         return stop(element) ? Option.some([]) : Option.none();
