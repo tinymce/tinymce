@@ -1,3 +1,5 @@
+Version 4.0b2 (2013-04-xx)
+	Fixed so the width setting applies to the editor panel in modern theme.
 Version 4.0b1 (2013-04-11)
 	Added new node.js based build process used uglify, amdlc, jake etc.
 	Added new package.json to enable easy installation of dependent npm packages used for building.

@@ -420,6 +420,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		// Render before the target textarea/div
 		panel.renderBefore(args.targetNode).reflow();
 
+		if (settings.width) {
+			tinymce.DOM.setStyle(panel.getEl(), 'width', settings.width);
+		}
+
 		// Remove the panel when the editor is removed
 		editor.on('remove', function() {
 			panel.remove();
