@@ -841,7 +841,11 @@ define("tinymce/ui/Control", [
 		},
 
 		focus: function() {
-			this.getEl().focus();
+			try {
+				this.getEl().focus();
+			} catch (ex) {
+				// Ignore IE error
+			}
 		},
 
 		blur: function() {
