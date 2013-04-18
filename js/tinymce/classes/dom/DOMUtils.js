@@ -610,6 +610,11 @@ define("tinymce/dom/DOMUtils", [
 							style.filter = value === '' ? '' : "alpha(opacity=" + (value * 100) + ")";
 						}
 
+						if (name == "float") {
+							// Old IE vs modern browsers
+							name = "cssFloat" in elm.style ? "cssFloat" : "styleFloat";
+						}
+
 						try {
 							style[name] = value;
 						} catch (ex) {
