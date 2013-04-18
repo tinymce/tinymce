@@ -65,17 +65,7 @@ define("tinymce/ui/Path", [
 		},
 
 		update: function() {
-			var self = this, parts = self._data, i, l, html = '', prefix = self.classPrefix;
-
-			for (i = 0, l = parts.length; i < l; i++) {
-				html += (
-					(i > 0 ? '<div class="'+ prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
-					'<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
-					i + '" tabindex="-1" id="' + self._id + '-' + i +'">' + parts[i].name + '</div>'
-				);
-			}
-
-			self.getEl().innerHTML = html;
+			this.getEl().innerHTML = this._getPathHtml();
 		},
 
 		postRender: function() {
@@ -86,27 +76,37 @@ define("tinymce/ui/Path", [
 			self.data(self.settings.data);
 		},
 
-		repa2int: function() {
-			var self = this;
-
-			self.getEl('text').style.lineHeight = self.layoutRect().h + 'px';
-
-			return self._super();
-		},
-
 		/**
 		 * ...
 		 *
 		 * @method render
 		 */
 		renderHtml: function() {
-			var self = this, prefix = self.classPrefix;
+			var self = this;
 
 			return (
-				'<div id="' + self._id + '" class="' + prefix + 'path">' +
-					'<div class="' + prefix + 'path-item">&nbsp;</div>' +
+				'<div id="' + self._id + '" class="' + self.classPrefix + 'path">' +
+					self._getPathHtml() +
 				'</div>'
 			);
+		},
+
+		_getPathHtml: function() {
+			var self = this, parts = self._data || [], i, l, html = '', prefix = self.classPrefix;
+
+			for (i = 0, l = parts.length; i < l; i++) {
+				html += (
+					(i > 0 ? '<div class="'+ prefix + 'divider" aria-hidden="true"> ' + self.settings.delimiter + ' </div>' : '') +
+					'<div role="button" class="' + prefix + 'path-item' + (i == l - 1 ? ' ' + prefix + 'last' : '') + '" data-index="' +
+					i + '" tabindex="-1" id="' + self._id + '-' + i +'">' + parts[i].name + '</div>'
+				);
+			}
+
+			if (!html) {
+				html = '<div class="' + prefix + 'path-item">&nbsp;</div>';
+			}
+
+			return html;
 		}
 	});
 });
