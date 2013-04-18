@@ -17,7 +17,7 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 	cleanre = editor.getParam('wordcount_cleanregex', /[0-9.(),;:!?%#$?\x27\x22_+=\\\/\-]*/g);
 
 	function update() {
-		editor.theme.panel.find('#wordcount').text(['Words: %d', self.getCount()]);
+		editor.theme.panel.find('#wordcount').text(['Words: {0}', self.getCount()]);
 	}
 
 	editor.on('init', function() {
@@ -27,7 +27,7 @@ tinymce.PluginManager.add('wordcount', function(editor) {
 			statusbar.insert({
 				type: 'label',
 				name: 'wordcount',
-				text: ['Words: %d', self.getCount()],
+				text: ['Words: {0}', self.getCount()],
 				classes: 'wordcount'
 			}, 0);
 
