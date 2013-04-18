@@ -16,7 +16,7 @@ tinymce.PluginManager.add('preview', function(editor) {
 			title: 'Preview',
 			width : parseInt(editor.getParam("plugin_preview_width", "650"), 10),
 			height : parseInt(editor.getParam("plugin_preview_height", "500"), 10),
-			html: '<iframe src="javascript:\'\'"></iframe>',
+			html: '<iframe src="javascript:\'\'" frameborder="0"></iframe>',
 			buttons: {
 				text: 'Close',
 				onclick: function() {
