@@ -17,9 +17,11 @@ define(
       return result.pruned() ? result : GatherResult([element], false);
     };
 
-    return function (iterator, element, prune) {
+    var traverse = function (iterator, element, prune) {
       var f = Traverse.children(element).length === 0 ? Fun.constant(GatherResult([element], false)) : descend;
       return f(iterator, element, prune);
     };
+
+    return traverse;
   }
 );

@@ -11,10 +11,10 @@ define(
     var range = function (start, finish) {
       var abort = Fun.constant(Option.some([]));
       var scour = function (element) {
-        return Compare.eq(element, end) ? Option.some([element]) : Option.none();
+        return Compare.eq(element, finish) ? Option.some([element]) : Option.none();
       };
 
-      var direction = start.dom().compareDocumentPosition(end.dom());
+      var direction = start.dom().compareDocumentPosition(finish.dom());
       return {
         left: direction & 2 ? scour : abort,
         right: direction & 4 ? scour : abort,

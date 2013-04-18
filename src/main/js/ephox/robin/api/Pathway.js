@@ -9,9 +9,9 @@ define(
   ],
 
   function (Gather, Prune, Simplify, Transform) {
-    var between = function (start, end) {
-      var prune = Prune.between(start, end);
-      var actual = Gather.gather(start, pruner, Transform);
+    var between = function (start, finish) {
+      var prune = Prune.range(start, finish);
+      var actual = Gather.gather(start, prune, Transform);
       return actual.left().concat([start]).concat(actual.right());
     };
 
