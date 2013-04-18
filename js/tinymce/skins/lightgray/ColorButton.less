@@ -21,9 +21,9 @@
 		border-color: black;
 	}
 	&:focus {
-		border-color: red;
-		outline: 1px solid rgba(82, 168, 236, .8);
-		border-color: rgba(82, 168, 236, .8)
+		border-color: @focus-border-color-fallback;
+		outline: 1px solid @focus-border-color;
+		border-color: @focus-border-color
 	}
 }
 
