@@ -13,7 +13,21 @@
 tinymce.PluginManager.add('image', function(editor) {
 	function showDialog() {
 		var win, data, dom = editor.dom, imgElm = editor.selection.getNode();
-		var width, height;
+		var width, height, imageListCtrl;
+
+		function buildImageList() {
+			var linkImageItems = [{text: 'None', value: ''}];
+
+			tinymce.each(editor.settings.image_list, function(link) {
+				linkImageItems.push({
+					text: link.text || link.title,
+					value: link.value || link.url,
+					menu: link.menu
+				});
+			});
+
+			return linkImageItems;
+		}
 
 		function recalcSize(e) {
 			var widthCtrl, heightCtrl, newWidth, newHeight;
@@ -52,11 +66,30 @@ tinymce.PluginManager.add('image', function(editor) {
 			imgElm = null;
 		}
 
+		if (editor.settings.link_list) {
+			imageListCtrl = {
+				name: 'target',
+				type: 'listbox',
+				label: 'Image list',
+				values: buildImageList(),
+				onselect: function(e) {
+					var altCtrl = win.find('#alt');
+
+					if (!altCtrl.value() || (e.lastControl && altCtrl.value() == e.lastControl.text())) {
+						altCtrl.value(e.control.text());
+					}
+
+					win.find('#src').value(e.control.value());
+				}
+			};
+		}
+
 		win = editor.windowManager.open({
 			title: "Edit image",
 			data: data,
 			body: [
 				{name: 'src', type: 'filepicker', filetype: 'image', label: 'Source', autofocus: true},
+				imageListCtrl,
 				{name: 'alt', type: 'textbox', label: 'Image description'},
 				{
 					type: 'container',
