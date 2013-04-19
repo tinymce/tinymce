@@ -59,17 +59,25 @@ define("tinymce/ui/ListBox", [
 		value: function(value) {
 			var self = this, active, selectedText, menu, i;
 
+			function activateByValue(menu, value) {
+				menu.items().each(function(ctrl) {
+					active = ctrl.value() === value;
+
+					if (active) {
+						selectedText = selectedText || ctrl.text();
+					}
+
+					ctrl.active(active);
+
+					if (ctrl.menu) {
+						activateByValue(ctrl.menu, value);
+					}
+				});
+			}
+
 			if (typeof(value) != "undefined") {
 				if (self.menu) {
-					self.menu.items().each(function(ctrl) {
-						active = ctrl.value() === value;
-
-						if (active) {
-							selectedText = selectedText || ctrl.text();
-						}
-
-						ctrl.active(active);
-					});
+					activateByValue(self.menu, value);
 				} else {
 					menu = self.settings.menu;
 					for (i = 0; i < menu.length; i++) {
