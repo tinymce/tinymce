@@ -203,7 +203,7 @@ define("tinymce/ui/FormatControls", [
 
 				each(formats, function(format) {
 					var menuItem = {
-						text: format.title,
+						text: {raw: format.title},
 						icon: format.icon
 					};
 
@@ -492,7 +492,7 @@ define("tinymce/ui/FormatControls", [
 
 			each(blocks, function(block) {
 				items.push({
-					text: block[0],
+					text: {raw: block[0]},
 					format: block[1],
 					textStyle: function() {
 						return getPreviewCss(editor, block[1]);
@@ -501,7 +501,7 @@ define("tinymce/ui/FormatControls", [
 			});
 
 			return Factory.create('listbox', Tools.extend({
-				text: blocks[0][0],
+				text: {raw: blocks[0][0]},
 				menu: items,
 				onclick: toggleFormat
 			}, settings));
@@ -530,7 +530,7 @@ define("tinymce/ui/FormatControls", [
 
 			each(fonts, function(font) {
 				items.push({
-					text: font[0],
+					text: {raw: font[0]},
 					format: font[1],
 					style: font[1].indexOf('dings') == -1 ? 'font-family:' + font[1] : ''
 				});

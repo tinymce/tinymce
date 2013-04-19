@@ -112,6 +112,8 @@ define("tinymce/AddOnManager", [
 		 * Add a set of components that will make up the add-on. Using the url of the add-on name as the base url.
 		 * This should be used in development mode.  A new compressor/javascript munger process will ensure that the
 		 * components are put together into the plugin.js file and compressed correctly.
+		 *
+		 * @method addComponents
 		 * @param pluginName {String} name of the plugin to load scripts from (will be used to get the base url for the plugins).
 		 * @param scripts {Array} Array containing the names of the scripts to load.
 		 */

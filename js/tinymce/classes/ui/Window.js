@@ -70,51 +70,7 @@ define("tinymce/ui/Window", [
 					self.close();
 				}
 			});
-/*
-			self.on('postrender show', function(e) {
-				if (e.control == self) {
-					var parentWin = getTopMostWindow(), zIndex = FloatPanel.zIndex;
 
-					if (parentWin) {
-						zIndex = parentWin.zIndex;
-					}
-
-					if (!DomUtils.get(prefix + 'modal-block')) {
-						var modalBlockEl = DomUtils.createFragment('<div id="' + prefix + 'modal-block" class="' +
-						prefix + 'reset ' + prefix + 'fade"></div>');
-
-						modalBlockEl = modalBlockEl.firstChild;
-
-						self.getContainerElm().appendChild(modalBlockEl);
-
-						setTimeout(function() {
-							DomUtils.addClass(modalBlockEl, prefix + 'in');
-							DomUtils.addClass(self.getEl(), prefix + 'in');
-						}, 0);
-
-						FloatPanel.zOrder.push({zIndex: zIndex});
-						DomUtils.css(self.getEl(), 'z-index', zIndex + 1);
-					}
-
-					DomUtils.css(DomUtils.get(prefix + 'modal-block'), 'z-index', zIndex - 1);
-				}
-			});
-
-			self.on('close hide', function(e) {
-				if (e.control == self) {
-					var topWin = getTopMostWindow();
-
-					if (!topWin) {
-						var modalBlockEl = document.getElementById(prefix + 'modal-block');
-						if (modalBlockEl) {
-							modalBlockEl.parentNode.removeChild(modalBlockEl);
-						}
-					} else {
-						DomUtils.css(DomUtils.get(prefix + 'modal-block'), 'z-index', topWin.zIndex - 1);
-					}
-				}
-			});
-*/
 			self.aria('label', settings.title);
 			self._fullscreen = false;
 		},

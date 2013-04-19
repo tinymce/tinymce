@@ -17,7 +17,7 @@
 define("tinymce/util/I18n", [], function() {
 	"use strict";
 
-	var data = {}, hack = {};
+	var data = {};
 
 	return {
 		/**
@@ -46,8 +46,6 @@ define("tinymce/util/I18n", [], function() {
 		 * @return {String} String that got translated.
 		 */
 		translate: function(text) {
-			hack[text] = text;
-
 			if (typeof(text) == "undefined") {
 				return text;
 			}
@@ -67,7 +65,6 @@ define("tinymce/util/I18n", [], function() {
 			return data[text] || text;
 		},
 
-		data: data,
-		hack: hack
+		data: data
 	};
 });
