@@ -150,7 +150,7 @@ define("tinymce/ui/Container", [
 
 			// Add default type to each child control
 			Tools.each(items, function(item) {
-				if (item !== null) {
+				if (item) {
 					// Construct item if needed
 					if (!(item instanceof Control)) {
 						// Name only then convert it to an object
