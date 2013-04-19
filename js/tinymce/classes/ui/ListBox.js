@@ -18,7 +18,7 @@ define("tinymce/ui/ListBox", [
 
 	return MenuButton.extend({
 		init: function(settings) {
-			var self = this, values, i, selected, selectedText;
+			var self = this, values, i, selected, selectedText, lastItemCtrl;
 
 			self._values = values = settings.values;
 			if (values) {
@@ -40,11 +40,19 @@ define("tinymce/ui/ListBox", [
 			self.addClass('listbox');
 
 			self.on('select', function(e) {
+				var ctrl = e.control;
+
+				if (lastItemCtrl) {
+					e.lastControl = lastItemCtrl;
+				}
+
 				if (settings.multiple) {
-					e.control.active(!e.control.active());
+					ctrl.active(!ctrl.active());
 				} else {
 					self.value(e.control.settings.value);
 				}
+
+				lastItemCtrl = ctrl;
 			});
 		},
 

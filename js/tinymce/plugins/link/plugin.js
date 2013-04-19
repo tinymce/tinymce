@@ -13,6 +13,7 @@
 tinymce.PluginManager.add('link', function(editor) {
 	function showDialog() {
 		var data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;
+		var win, linkListCtrl = null;
 
 		function updateText() {
 			if (!initialText && data.text.length === 0) {
@@ -34,7 +35,34 @@ tinymce.PluginManager.add('link', function(editor) {
 			data.text = initialText = " ";
 		}
 
-		editor.windowManager.open({
+		if (editor.settings.link_list) {
+			var linkListItems = [{text: 'None', value: ''}];
+
+			tinymce.each(editor.settings.link_list, function(link) {
+				linkListItems.push({
+					text: link.title,
+					value: link.url
+				});
+			});
+
+			linkListCtrl = {
+				name: 'target',
+				type: 'listbox',
+				label: 'Link list',
+				values: linkListItems,
+				onselect: function(e) {
+					var textCtrl = win.find('#text');
+
+					if (!textCtrl.value() || textCtrl.value() == e.lastControl.text()) {
+						textCtrl.value(e.control.text());
+					}
+
+					win.find('#href').value(e.control.value());
+				}
+			};
+		}
+
+		win = editor.windowManager.open({
 			title: 'Insert link',
 			data: data,
 			body: [
@@ -51,6 +79,7 @@ tinymce.PluginManager.add('link', function(editor) {
 					onchange: updateText,
 					onkeyup: updateText
 				},
+				linkListCtrl,
 				{name: 'target', type: 'listbox', label: 'Target', values: [
 					{text: 'None', value: ''},
 					{text: 'New window', value: '_blank'}
