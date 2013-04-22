@@ -43,7 +43,7 @@ define("tinymce/tableplugin/Plugin", [
 		function tableDialog() {
 			var dom = editor.dom, tableElm, data;
 
-			tableElm = editor.dom.getParent(editor.selection.getNode(), 'table');
+			tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
 
 			data = {
 				width: removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
@@ -167,7 +167,7 @@ define("tinymce/tableplugin/Plugin", [
 
 			// Get selected cells or the current cell
 			cells = editor.dom.select('td.mce-item-selected,th.mce-item-selected');
-			cellElm = editor.dom.getParent(editor.selection.getNode(), 'td,th');
+			cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');
 			if (!cells.length && cellElm) {
 				cells.push(cellElm);
 			}
@@ -282,8 +282,8 @@ define("tinymce/tableplugin/Plugin", [
 		function rowDialog() {
 			var dom = editor.dom, tableElm, cellElm, rowElm, data, rows = [];
 
-			tableElm = editor.dom.getParent(editor.selection.getNode(), 'table');
-			cellElm = editor.dom.getParent(editor.selection.getNode(), 'td,th');
+			tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
+			cellElm = editor.dom.getParent(editor.selection.getStart(), 'td,th');
 
 			each(tableElm.rows, function(row) {
 				each(row.cells, function(cell) {
@@ -427,7 +427,7 @@ define("tinymce/tableplugin/Plugin", [
 			var self = this;
 
 			function bindStateListener() {
-				self.disabled(!editor.dom.getParent(editor.selection.getNode(), 'table'));
+				self.disabled(!editor.dom.getParent(editor.selection.getStart(), 'table'));
 
 				editor.selection.selectorChanged('table', function(state) {
 					self.disabled(!state);
@@ -619,7 +619,7 @@ define("tinymce/tableplugin/Plugin", [
 			mceTableMergeCells: function(grid) {
 				var rowSpan, colSpan, cell;
 
-				cell = editor.dom.getParent(editor.selection.getNode(), 'th,td');
+				cell = editor.dom.getParent(editor.selection.getStart(), 'th,td');
 				if (cell) {
 					rowSpan = cell.rowSpan;
 					colSpan = cell.colSpan;
