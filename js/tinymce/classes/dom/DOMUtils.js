@@ -497,7 +497,7 @@ define("tinymce/dom/DOMUtils", [
 			outHtml += '<' + name;
 
 			for (key in attrs) {
-				if (attrs.hasOwnProperty(key)) {
+				if (attrs.hasOwnProperty(key) && attrs[key] !== null) {
 					outHtml += ' ' + key + '="' + this.encode(attrs[key]) + '"';
 				}
 			}

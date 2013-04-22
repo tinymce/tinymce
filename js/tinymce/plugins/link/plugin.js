@@ -72,7 +72,7 @@ tinymce.PluginManager.add('link', function(editor) {
 			data: data,
 			body: [
 				{name: 'text', type: 'textbox', size: 40, label: 'Text to display', onchange: function() {
-					initialText = this.value();
+					data.text = this.value();
 				}},
 				{
 					name: 'href',
@@ -105,14 +105,14 @@ tinymce.PluginManager.add('link', function(editor) {
 
 						dom.setAttribs(anchorElm, {
 							href: data.href,
-							target: data.target
+							target: data.target ? data.target : null
 						});
 
 						selection.select(anchorElm);
 					} else {
 						editor.insertContent(dom.createHTML('a', {
 							href: data.href,
-							target: data.target
+							target: data.target ? data.target : null
 						}, data.text));
 					}
 				} else {
