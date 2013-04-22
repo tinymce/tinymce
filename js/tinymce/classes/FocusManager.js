@@ -34,8 +34,7 @@ define("tinymce/FocusManager", [
 				return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
 			}
 
-			// Handle selectionchange on IE+WebKit and nodechange on Gecko
-			editor.on('selectionchange nodechange', function() {
+			editor.on('nodechange', function() {
 				var node = editor.selection.getStart();
 
 				// Check if selection is within editor body

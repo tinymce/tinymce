@@ -666,7 +666,9 @@ define("tinymce/Editor", [
 			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), body, contentCssText;
 
 			// Restore visibility on target element
-			self.getElement().style.visibility = self.orgVisibility;
+			if (!settings.inline) {
+				self.getElement().style.visibility = self.orgVisibility;
+			}
 
 			// Setup iframe body
 			if ((!isIE || !self.editorManager.relaxedDomain) && !settings.content_editable) {
