@@ -24,8 +24,9 @@ define("tinymce/ui/FormatControls", [
 	};
 
 	// Generates a preview for a format
-	function getPreviewCss(editor, format) {
-		var name, previewElm, dom = editor.dom, previewCss = '', parentFontSize, previewStyles;
+	function getPreviewCss(format) {
+		var editor = EditorManager.activeEditor, name, previewElm, dom = editor.dom;
+		var previewCss = '', parentFontSize, previewStyles;
 
 		previewStyles = editor.settings.preview_styles;
 
@@ -218,11 +219,11 @@ define("tinymce/ui/FormatControls", [
 						}
 
 						menuItem.textStyle = function() {
-							return getPreviewCss(editor, formatName);
+							return getPreviewCss(formatName);
 						};
 
 						menuItem.onclick = function() {
-							editor.execCommand('mceToggleFormat', false, formatName);
+							toggleFormat(formatName);
 						};
 					}
 
@@ -273,7 +274,7 @@ define("tinymce/ui/FormatControls", [
 					}
 				},
 				onclick: function() {
-					editor.execCommand('mceToggleFormat', false, name);
+					toggleFormat(name);
 				}
 			});
 		});
@@ -451,9 +452,13 @@ define("tinymce/ui/FormatControls", [
 			FloatPanel.hideAll();
 		});
 
-		function toggleFormat(e) {
-			if (e.control.settings.format) {
-				EditorManager.activeEditor.execCommand('mceToggleFormat', false, e.control.settings.format);
+		function toggleFormat(fmt) {
+			if (fmt.control) {
+				fmt = fmt.control.settings.format;
+			}
+
+			if (fmt) {
+				EditorManager.activeEditor.execCommand('mceToggleFormat', false, fmt);
 			}
 		}
 
@@ -495,7 +500,7 @@ define("tinymce/ui/FormatControls", [
 					text: {raw: block[0]},
 					format: block[1],
 					textStyle: function() {
-						return getPreviewCss(editor, block[1]);
+						return getPreviewCss(block[1]);
 					}
 				});
 			});
