@@ -20,8 +20,9 @@ define("tinymce/EditorManager", [
 	"tinymce/Env",
 	"tinymce/util/Tools",
 	"tinymce/util/Observable",
-	"tinymce/util/I18n"
-], function(Editor, DOMUtils, URI, Env, Tools, Observable, I18n) {
+	"tinymce/util/I18n",
+	"tinymce/FocusManager"
+], function(Editor, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {
 	var DOM = DOMUtils.DOM;
 	var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
 	var instanceCounter = 0, beforeUnloadDelegate;
@@ -143,6 +144,8 @@ define("tinymce/EditorManager", [
 			 * @type {String}
 			 */
 			self.suffix = suffix;
+
+			self.focusManager = new FocusManager(self);
 		},
 
 		/**
@@ -487,12 +490,12 @@ define("tinymce/EditorManager", [
 		}
 	};
 
+	extend(EditorManager, Observable);
+
 	EditorManager.setup();
 
 	// Export EditorManager as tinymce/tinymce in global namespace
 	window.tinymce = window.tinyMCE = EditorManager;
-
-	extend(EditorManager, Observable);
 
 	return EditorManager;
 });

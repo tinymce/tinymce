@@ -46,19 +46,6 @@ define("tinymce/dom/Selection", [
 
 		self.controlSelection = new ControlSelection(self, editor);
 
-		editor.on('nodechange', function() {
-			var rng;
-
-			// Use old style IE range since we want to restore control selections
-			if (editor.getDoc().selection) {
-				rng = editor.getDoc().selection.createRange();
-			} else {
-				rng = self.getRng();
-			}
-
-			self.lastRng = rng;
-		});
-
 		// No W3C Range support
 		if (!self.win.getSelection) {
 			self.tridentSel = new TridentSelection(self);
@@ -865,8 +852,6 @@ define("tinymce/dom/Selection", [
 		setRng: function(rng, forward) {
 			var self = this, sel;
 
-			self.lastRng = null;
-
 			// Is IE specific range
 			if (rng.select) {
 				try {
@@ -1305,7 +1290,7 @@ define("tinymce/dom/Selection", [
 		},
 
 		destroy: function() {
-			this.win = this.lastRng = null;
+			this.win = null;
 			this.controlSelection.destroy();
 		}
 	};

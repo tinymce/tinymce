@@ -319,7 +319,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 					show();
 				}
 
-				editor.focus();
 				return;
 			}
 
@@ -351,31 +350,12 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			editor.on('nodeChange', reposition);
 			editor.on('activate', show);
 			editor.on('deactivate', hide);
-
-			editor.on('focusout', function() {
-				setTimeout(function() {
-					// TODO: Fix this, hack to see if focus is within a editor element or not
-					var activeElm = document.activeElement;
-
-					while (activeElm) {
-						if (activeElm.nodeType == 1 && activeElm.className.indexOf('mce-') != -1 &&
-							activeElm.className.indexOf('mce-content-body') === -1) {
-							return;
-						}
-
-						activeElm = activeElm.parentNode;
-					}
-
-					hide();
-				}, 0);
-			});
-
-			editor.focus();
 		}
 
 		settings.content_editable = true;
 
-		editor.on('focusin', render);
+		editor.on('focus', render);
+		editor.on('blur', hide);
 
 		// Remove the panel when the editor is removed
 		editor.on('remove', function() {
