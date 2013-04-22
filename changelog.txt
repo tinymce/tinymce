@@ -8,6 +8,7 @@ Version 4.0b2 (2013-04-xx)
 	Fixed bug where WebKit wouldn't properly open the cell properties dialog on edge case selection.
 	Fixed bug where charmap wouldn't correctly render all characters in grid.
 	Fixed bug where link dialog wouldn't update the link text properly.
+	Fixed bug where the focus/blur states on inline editors wasn't handled correctly on IE.
 Version 4.0b1 (2013-04-11)
 	Added new node.js based build process used uglify, amdlc, jake etc.
 	Added new package.json to enable easy installation of dependent npm packages used for building.
