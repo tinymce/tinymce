@@ -288,12 +288,13 @@ tinymce.PluginManager.add('charmap', function(editor) {
 
 		gridHtml = '<table role="presentation" cellspacing="0" class="mce-charmap"><tbody>';
 
+		var width = 25;
 		for (y = 0; y < 10; y++) {
 			gridHtml += '<tr>';
 
-			for (x = 0; x < 20; x++) {
-				var chr = charmap[y * 10 + x];
-				var id = 'g' + (y * 10 + x);
+			for (x = 0; x < width; x++) {
+				var chr = charmap[y * width + x];
+				var id = 'g' + (y * width + x);
 
 				gridHtml += '<td title="' + chr[1] + '"><div id="' + id + '" tabIndex="-1">' +
 					(chr ? String.fromCharCode(parseInt(chr[0], 10)) : '&nbsp;') + '</div></td>';
