@@ -83,7 +83,9 @@ define("tinymce/ui/Widget", [
 			}
 
 			if (settings.autofocus) {
-				self.focus();
+				setTimeout(function() {
+					self.focus();
+				}, 0);
 			}
 		},
 

@@ -15,6 +15,7 @@ Version 4.0b2 (2013-04-24)
 	Fixed bug where the focus/blur states on inline editors wasn't handled correctly on IE.
 	Fixed bug where IE would throw "unknown error" exception sometimes in ForceBlocks logic.
 	Fixed bug where IE would't properly render disabled buttons in button groups.
+	Fixed bug where tab key wouldn't properly move to next input field in dialogs.
 	Fixed so the text to display is after the URL field in the link dialog.
 	Fixed so the width setting applies to the editor panel in modern theme.
 	Fixed so it's easier to make custom icons for buttons using plain old images.

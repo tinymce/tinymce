@@ -252,6 +252,16 @@ define("tinymce/ui/Window", [
 				self.addClass('in');
 			}, 0);
 
+			self.keyboardNavigation = new KeyboardNavigation({
+				root: self,
+				enableLeftRight: false,
+				enableUpDown: false,
+				items: items,
+				onCancel: function() {
+					self.close();
+				}
+			});
+
 			self.find('*').each(function(ctrl) {
 				if (ctrl.canFocus) {
 					autoFocusFound = autoFocusFound || ctrl.settings.autofocus;
@@ -279,16 +289,6 @@ define("tinymce/ui/Window", [
 					}
 				});
 			}
-
-			self.keyboardNavigation = new KeyboardNavigation({
-				root: self,
-				enableLeftRight: false,
-				enableUpDown: false,
-				items: items,
-				onCancel: function() {
-					self.close();
-				}
-			});
 
 			self._super();
 

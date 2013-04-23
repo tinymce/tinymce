@@ -23,6 +23,7 @@ define("tinymce/ui/Label", [
 			self._super(settings);
 			self.addClass('widget');
 			self.addClass('label');
+			self.canFocus = false;
 
 			if (settings.multiline) {
 				self.addClass('autoscroll');
