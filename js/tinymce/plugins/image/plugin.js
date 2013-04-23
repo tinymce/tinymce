@@ -66,7 +66,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			imgElm = null;
 		}
 
-		if (editor.settings.link_list) {
+		if (editor.settings.image_list) {
 			imageListCtrl = {
 				name: 'target',
 				type: 'listbox',
