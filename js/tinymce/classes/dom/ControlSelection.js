@@ -170,8 +170,8 @@ define("tinymce/dom/ControlSelection", [
 			selectedElmX = position.x;
 			selectedElmY = position.y;
 			rect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption
-			targetWidth = rect.width;
-			targetHeight = rect.height;
+			targetWidth = rect.width || (rect.right - rect.left);
+			targetHeight = rect.height || (rect.bottom - rect.top);
 
 			// Reset width/height if user selects a new image/table
 			if (selectedElm != targetElm) {
