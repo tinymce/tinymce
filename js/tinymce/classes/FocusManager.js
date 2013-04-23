@@ -34,21 +34,32 @@ define("tinymce/FocusManager", [
 				return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
 			}
 
-			editor.on('nodechange', function() {
-				var node = editor.selection.getStart();
+			editor.on('init', function() {
+				// On IE take selection snapshot onbeforedeactivate
+				if ("onbeforedeactivate" in document) {
+					editor.dom.bind(editor.getBody(), 'beforedeactivate', function() {
+						var ieSelection = editor.getDoc().selection;
+						lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+					});
+				} else if (editor.inline) {
+					// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes
+					editor.on('nodechange', function() {
+						var isInBody, node = document.activeElement;
 
-				// Check if selection is within editor body
-				while (node) {
-					if (node == editor.getBody()) {
-						break;
-					}
+						// Check if selection is within editor body
+						while (node) {
+							if (node == editor.getBody()) {
+								isInBody = true;
+								break;
+							}
 
-					node = node.parentNode;
-				}
+							node = node.parentNode;
+						}
 
-				if (node) {
-					var ieSelection = editor.getDoc().selection;
-					lastRng = ieSelection && ieSelection.createRange ? ieSelection.createRange() : editor.selection.getRng();
+						if (isInBody) {
+							lastRng = editor.selection.getRng();
+						}
+					});
 				}
 			});
 

@@ -117,6 +117,9 @@ define("tinymce/WindowManager", [
 				});
 			}
 
+			// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog
+			editor.nodeChanged();
+
 			return win.renderTo(document.body).reflow();
 		};
 
