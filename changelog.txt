@@ -1,4 +1,8 @@
 Version 4.0b2 (2013-04-xx)
+	Added new rel_list option to link plugin. Enables you to specify values for a rel drop down.
+	Added new target_list option to link plugin. Enables you to add to or disable the link targets.
+	Added new link_list option to link plugin. Enables you to specify a list of links to pick from.
+	Added new image_list option to image pluigin. Enables you to specify a list of images to pick from.
 	Fixed so the width setting applies to the editor panel in modern theme.
 	Fixed bug where alignment of images wasn't working properly on Firefox.
 	Fixed bug where IE 8 would throw error when inserting a table.
