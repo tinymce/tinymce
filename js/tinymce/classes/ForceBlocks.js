@@ -41,7 +41,12 @@ define("tinymce/ForceBlocks", [], function() {
 				startOffset = rng.startOffset;
 				endContainer = rng.endContainer;
 				endOffset = rng.endOffset;
-				restoreSelection = editor.getDoc().activeElement === rootNode;
+
+				try {
+					restoreSelection = editor.getDoc().activeElement === rootNode;
+				} catch (ex) {
+					// IE throws unspecified error here sometimes
+				}
 			} else {
 				// Force control range into text range
 				if (rng.item) {
