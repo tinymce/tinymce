@@ -27,6 +27,16 @@ define("tinymce/FocusManager", [
 	 * @param {tinymce.EditorManager} editorManager Editor manager instance to handle focus for.
 	 */
 	function FocusManager(editorManager) {
+		function getActiveElement() {
+			try {
+				return document.activeElement;
+			} catch (ex) {
+				// IE sometimes fails to get the activeElement when resizing table
+				// TODO: Investigate this
+				return document.body;
+			}
+		}
+
 		function registerEvents(e) {
 			var editor = e.editor, restoreRng, lastRng;
 
@@ -94,7 +104,7 @@ define("tinymce/FocusManager", [
 					}
 
 					// Still the same editor the the blur was outside any editor
-					if (!isUIElement(document.activeElement) && focusedEditor == editor) {
+					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
 						restoreRng = null;
