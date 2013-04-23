@@ -51,8 +51,14 @@ define("tinymce/ui/Button", [
 
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
-			var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
-			var image = self.settings.image ? ' style="background-image: url(\'' + self.settings.image + '\')"' : '';
+			var icon = self.settings.icon, image = '';
+
+			if (self.settings.image) {
+				icon = 'none';
+				image = ' style="background-image: url(\'' + self.settings.image + '\')"';
+			}
+
+			icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + icon : '';
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +

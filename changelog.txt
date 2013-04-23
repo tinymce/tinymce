@@ -1,11 +1,9 @@
-Version 4.0b2 (2013-04-23)
+Version 4.0b2 (2013-04-24)
 	Added new rel_list option to link plugin. Enables you to specify values for a rel drop down.
 	Added new target_list option to link plugin. Enables you to add to or disable the link targets.
 	Added new link_list option to link plugin. Enables you to specify a list of links to pick from.
 	Added new image_list option to image pluigin. Enables you to specify a list of images to pick from.
 	Added new textcolor plugin. This plugin holds the text color and text background color buttons.
-	Fixed so the text to display is after the URL field in the link dialog.
-	Fixed so the width setting applies to the editor panel in modern theme.
 	Fixed bug where alignment of images wasn't working properly on Firefox.
 	Fixed bug where IE 8 would throw error when inserting a table.
 	Fixed bug where IE 8 wouldn't render the element path properly.
@@ -17,6 +15,9 @@ Version 4.0b2 (2013-04-23)
 	Fixed bug where the focus/blur states on inline editors wasn't handled correctly on IE.
 	Fixed bug where IE would throw "unknown error" exception sometimes in ForceBlocks logic.
 	Fixed bug where IE would't properly render disabled buttons in button groups.
+	Fixed so the text to display is after the URL field in the link dialog.
+	Fixed so the width setting applies to the editor panel in modern theme.
+	Fixed so it's easier to make custom icons for buttons using plain old images.
 Version 4.0b1 (2013-04-11)
 	Added new node.js based build process used uglify, amdlc, jake etc.
 	Added new package.json to enable easy installation of dependent npm packages used for building.
