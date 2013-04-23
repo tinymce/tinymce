@@ -288,7 +288,7 @@ define("tinymce/dom/DOMUtils", [
 			collect = collect === undefined;
 
 			// Default root on inline mode
-			root = root || self.getRoot().nodeName != 'BODY' ? self.getRoot().parentNode : null;
+			root = root || (self.getRoot().nodeName != 'BODY' ? self.getRoot().parentNode : null);
 
 			// Wrap node name as func
 			if (is(selector, 'string')) {
