@@ -90,9 +90,8 @@ define("tinymce/ui/Window", [
 			// Resize window based on title width
 			if (self.settings.title && !self._fullscreen) {
 				width = layoutRect.headerW;
-				if (width > layoutRect.minW) {
-					layoutRect.minW = layoutRect.w = width + (layoutRect.w - layoutRect.innerW);
-					layoutRect.innerW = layoutRect.w - layoutRect.deltaW;
+				if (width > layoutRect.w) {
+					self.layoutRect({w: width});
 					needsRecalc = true;
 				}
 			}
@@ -102,9 +101,8 @@ define("tinymce/ui/Window", [
 				statusbar.layoutRect({w: self.layoutRect().innerW}).recalc();
 
 				width = statusbar.layoutRect().minW + layoutRect.deltaW;
-				if (width > layoutRect.minW) {
-					layoutRect.minW = layoutRect.w = width;
-					layoutRect.innerW = layoutRect.w - layoutRect.deltaW;
+				if (width > layoutRect.w) {
+					self.layoutRect({w: width});
 					needsRecalc = true;
 				}
 			}
@@ -112,7 +110,6 @@ define("tinymce/ui/Window", [
 			// Recalc body and disable auto resize
 			if (needsRecalc) {
 				self.recalc();
-				return;
 			}
 		},
 
