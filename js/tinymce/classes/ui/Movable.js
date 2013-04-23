@@ -87,6 +87,8 @@ define("tinymce/ui/Movable", [
 				self.settings.y = y;
 			}
 
+			self.fire('move', {x: x, y: y});
+
 			return self;
 		}
 	};

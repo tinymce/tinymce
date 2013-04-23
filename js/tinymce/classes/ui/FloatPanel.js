@@ -19,7 +19,7 @@ define("tinymce/ui/FloatPanel", [
 ], function(Panel, Movable, Resizable, DomUtils) {
 	"use strict";
 
-	var documentClickHandler, autoHidePanels = [];
+	var documentClickHandler, documentScrollHandler, visiblePanels = [];
 	var zOrder = [], hasModal;
 
 	var FloatPanel = Panel.extend({
@@ -66,6 +66,21 @@ define("tinymce/ui/FloatPanel", [
 				}
 			}
 
+			function repositionPanel(panel) {
+				var scrollY = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+
+				if (panel.settings.autofix) {
+					if (scrollY > (panel._absY || panel.layoutRect().y)) {
+						panel._absY = panel._absY || panel.layoutRect().y;
+						panel.getEl().style.position = 'fixed';
+						panel.layoutRect({y: 0}).repaint();
+					} else {
+						panel.getEl().style.position = 'absolute';
+						panel.layoutRect({y: panel._absY}).repaint();
+					}
+				}
+			}
+
 			self._super(settings);
 			self._eventsRoot = self;
 
@@ -79,22 +94,45 @@ define("tinymce/ui/FloatPanel", [
 
 						// Hide any float panel when a click is out side that float panel and the
 						// float panels direct parent for example a click on a menu button
-						i = autoHidePanels.length;
+						i = visiblePanels.length;
 						while (i--) {
-							if (clickCtrl) {
-								if (isChildOf(clickCtrl, autoHidePanels[i]) || autoHidePanels[i].parent() === clickCtrl) {
-									continue;
-								}
-							}
+							var panel = visiblePanels[i];
 
-							autoHidePanels[i].hide();
+							if (panel.settings.autohide) {
+								if (clickCtrl) {
+									if (isChildOf(clickCtrl, panel) || panel.parent() === clickCtrl) {
+										continue;
+									}
+								}
+
+								panel.hide();
+							}
 						}
 					};
 
 					DomUtils.on(document, 'click', documentClickHandler);
 				}
 
-				autoHidePanels.push(self);
+				visiblePanels.push(self);
+			}
+
+			if (settings.autofix) {
+				if (!documentScrollHandler) {
+					documentScrollHandler = function() {
+						var i;
+
+						i = visiblePanels.length;
+						while (i--) {
+							repositionPanel(visiblePanels[i]);
+						}
+					};
+
+					DomUtils.on(window, 'scroll', documentScrollHandler);
+				}
+
+				self.on('move', function() {
+					repositionPanel(this);
+				});
 			}
 
 			self.on('postrender show', function(e) {
@@ -144,30 +182,22 @@ define("tinymce/ui/FloatPanel", [
 		show: function() {
 			var self = this, i, state = self._super();
 
-			i = autoHidePanels.length;
+			i = visiblePanels.length;
 			while (i--) {
-				if (autoHidePanels[i] === self) {
+				if (visiblePanels[i] === self) {
 					break;
 				}
 			}
 
-			if (self.settings.autohide && i === -1) {
-				autoHidePanels.push(self);
+			if (i === -1) {
+				visiblePanels.push(self);
 			}
 
 			return state;
 		},
 
 		hide: function() {
-			var i;
-
-			i = autoHidePanels.length;
-			while (i--) {
-				if (autoHidePanels[i] === this) {
-					autoHidePanels.splice(i, 1);
-				}
-			}
-
+			removeVisiblePanel(this);
 			return this._super();
 		},
 
@@ -184,21 +214,35 @@ define("tinymce/ui/FloatPanel", [
 		},
 
 		remove: function() {
-			var self = this;
-
-			self._super();
+			removeVisiblePanel(this);
+			this._super();
 		}
 	});
 
 	FloatPanel.hideAll = function() {
-		var i = autoHidePanels.length;
+		var i = visiblePanels.length;
 
 		while (i--) {
-			autoHidePanels[i].fire('cancel', {}, false);
-			autoHidePanels[i].hide();
-			autoHidePanels.splice(i, 1);
+			var panel = visiblePanels[i];
+
+			if (panel.settings.autohide) {
+				panel.fire('cancel', {}, false);
+				panel.hide();
+				visiblePanels.splice(i, 1);
+			}
 		}
 	};
+
+	function removeVisiblePanel(panel) {
+		var i;
+
+		i = visiblePanels.length;
+		while (i--) {
+			if (visiblePanels[i] === panel) {
+				visiblePanels.splice(i, 1);
+			}
+		}
+	}
 
 	return FloatPanel;
 });

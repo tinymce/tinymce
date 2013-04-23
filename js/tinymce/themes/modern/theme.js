@@ -328,6 +328,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				layout: 'flex',
 				direction: 'column',
 				autohide: false,
+				autofix: true,
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
