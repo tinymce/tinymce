@@ -301,6 +301,7 @@ function init() {
 	document.getElementById('bgcolor_pickcontainer').innerHTML = getColorPickerHTML('bgcolor_pick','bgcolor');
 
 	var cols = 2, rows = 2, border = tinyMCEPopup.getParam('table_default_border', '0'), cellpadding = tinyMCEPopup.getParam('table_default_cellpadding', ''), cellspacing = tinyMCEPopup.getParam('table_default_cellspacing', '');
+	var tabledefaultstyle = tinyMCEPopup.getParam('table_default_style', false);
 	var align = "", width = "", height = "", bordercolor = "", bgcolor = "", className = "";
 	var id = "", summary = "", style = "", dir = "", lang = "", background = "", bgcolor = "", bordercolor = "", rules = "", frame = "";
 	var inst = tinyMCEPopup.editor, dom = inst.dom;
@@ -365,7 +366,11 @@ function init() {
 	selectByValue(formObj, 'align', align);
 	selectByValue(formObj, 'tframe', frame);
 	selectByValue(formObj, 'rules', rules);
-	selectByValue(formObj, 'class', className, true, true);
+	if (elm) {
+		selectByValue(formObj, 'class', className, true, true);
+	} else if (tabledefaultstyle) {
+		selectByValue(formObj, 'class', tabledefaultstyle, true, true);
+	}
 	formObj.cols.value = cols;
 	formObj.rows.value = rows;
 	formObj.border.value = border;
