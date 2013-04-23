@@ -369,22 +369,6 @@ define("tinymce/ui/FormatControls", [
 			self.active(editor.hasVisual);
 		}
 
-		editor.addButton('forecolor', {
-			type: 'colorbutton',
-			tooltip: 'Text color',
-			onselect: function(e) {
-				editor.execCommand('ForeColor', false, e.value);
-			}
-		});
-
-		editor.addButton('backcolor', {
-			type: 'colorbutton',
-			tooltip: 'Background color',
-			onselect: function(e) {
-				editor.execCommand('HiliteColor', false, e.value);
-			}
-		});
-
 		editor.addButton('undo', {
 			tooltip: 'Undo',
 			onPostRender: toggleUndoState,

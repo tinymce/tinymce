@@ -63,7 +63,7 @@ define("tinymce/ui/Panel", [
 				);
 			} else {
 				if (typeof(innerHtml) == 'function') {
-					innerHtml = innerHtml();
+					innerHtml = innerHtml.call(self);
 				}
 
 				self._hasBody = false;

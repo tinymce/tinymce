@@ -21,6 +21,7 @@ define("tinymce/ui/PanelButton", [
 			var self = this, settings = self.settings;
 
 			settings.panel.popover = true;
+			settings.panel.autohide = true;
 			self.active(true);
 
 			if (!self.panel) {
