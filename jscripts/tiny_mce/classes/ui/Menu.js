@@ -172,7 +172,7 @@
 		 * Created a new sub menu for the menu control.
 		 *
 		 * @method createMenu
-		 * @param {Object} s Optional name/value settings object.
+		 * @param {Object} o Optional name/value settings object.
 		 * @return {tinymce.ui.Menu} New drop menu instance.
 		 */
 		createMenu : function(o) {

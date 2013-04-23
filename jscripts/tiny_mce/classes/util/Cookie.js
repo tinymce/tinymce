@@ -125,8 +125,8 @@
 		 *
 		 * @method remove
 		 * @param {String} name Cookie name to remove/delete.
-		 * @param {Strong} path Optional path to remove the cookie from.
-		 * @param {Strong} domain Optional domain to restrict the cookie to.
+		 * @param {String} path Optional path to remove the cookie from.
+		 * @param {String} domain Optional domain to restrict the cookie to.
 		 */
 		remove : function(name, path, domain) {
 			var date = new Date();

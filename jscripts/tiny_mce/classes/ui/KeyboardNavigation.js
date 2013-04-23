@@ -82,7 +82,7 @@
 			};
 			
 			t.moveFocus = function(dir, evt) {
-				var idx = -1, controls = t.controls, newFocus;
+				var idx = -1, newFocus;
 
 				if (!focussedId)
 					return;

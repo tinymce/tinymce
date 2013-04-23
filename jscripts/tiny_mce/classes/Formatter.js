@@ -38,7 +38,6 @@
 			TreeWalker = tinymce.dom.TreeWalker,
 			rangeUtils = new tinymce.dom.RangeUtils(dom),
 			isValid = ed.schema.isValidChild,
-			isArray = tinymce.isArray,
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
 			nodeIndex = dom.nodeIndex,
@@ -1229,7 +1228,7 @@
 		 * @return {Object} Expanded range like object.
 		 */
 		function expandRng(rng, format, remove) {
-			var sibling, lastIdx, leaf, endPoint,
+			var lastIdx, leaf, endPoint,
 				startContainer = rng.startContainer,
 				startOffset = rng.startOffset,
 				endContainer = rng.endContainer,

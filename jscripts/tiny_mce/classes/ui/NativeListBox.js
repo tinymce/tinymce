@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, Dispatcher = tinymce.util.Dispatcher, undef;
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, undef;
 
 	/**
 	 * This class is used to create list boxes/select list. This one will generate
@@ -111,7 +111,7 @@
 		 * @method add
 		 * @param {String} n Title for the new option.
 		 * @param {String} v Value for the new option.
-		 * @param {Object} o Optional object with settings like for example class.
+		 * @param {Object} a Optional object with settings like for example class.
 		 */
 		add : function(n, v, a) {
 			var o, t = this;
@@ -188,7 +188,7 @@
 
 			// Accessibility keyhandler
 			Event.add(t.id, 'keydown', function(e) {
-				var bf, DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
+				var bf, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
 
 				Event.remove(t.id, 'change', ch);
 				changeListenerAdded = false;

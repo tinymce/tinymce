@@ -199,7 +199,7 @@
 		 *		}
 		 * });
 		 * @method addNodeFilter
-		 * @method {String} name Comma separated list of nodes to collect.
+		 * @param {String} name Comma separated list of nodes to collect.
 		 * @param {function} callback Callback function to execute once it has collected nodes.
 		 */
 		self.addNodeFilter = function(name, callback) {
@@ -385,7 +385,7 @@
 				},
 
 				start: function(name, attrs, empty) {
-					var newNode, attrFiltersLen, elementRule, textNode, attrName, text, sibling, parent;
+					var newNode, attrFiltersLen, elementRule, attrName, parent;
 
 					elementRule = validate ? schema.getElementRule(name) : {};
 					if (elementRule) {
@@ -637,7 +637,7 @@
 
 							// Is the parent to be considered empty after we removed the BR
 							if (parent.isEmpty(nonEmptyElements)) {
-								elementRule = schema.getElementRule(parent.name);
+								var elementRule = schema.getElementRule(parent.name);
 
 								// Remove or padd the element depending on schema rule
 								if (elementRule) {
@@ -662,7 +662,7 @@
 						}
 
 						if (lastParent === parent) {
-							textNode = new tinymce.html.Node('#text', 3);
+							var textNode = new tinymce.html.Node('#text', 3);
 							textNode.value = '\u00a0';
 							node.replace(textNode);
 						}

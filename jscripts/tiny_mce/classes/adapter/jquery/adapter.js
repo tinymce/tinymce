@@ -11,7 +11,7 @@
 // #ifdef jquery_adapter
 
 (function($, tinymce) {
-	var is = tinymce.is, attrRegExp = /^(href|src|style)$/i, undef;
+	var attrRegExp = /^(href|src|style)$/i, undef;
 
 	// jQuery is undefined
 	if (!$ && window.console) {

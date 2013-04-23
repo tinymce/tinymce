@@ -10,7 +10,7 @@
 
 (function(tinymce) {
 	// Shorten names
-	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each, extend = tinymce.extend;
+	var Event = tinymce.dom.Event, each = tinymce.each, extend = tinymce.extend;
 
 	/**
 	 * This class is responsible for managing UI control instances. It's both a factory and a collection for the controls.
@@ -27,7 +27,7 @@
 		 * @param {Object} s Optional settings object for the control manager.
 		 */
 		ControlManager : function(ed, s) {
-			var t = this, i;
+			var t = this;
 
 			s = s || {};
 			t.editor = ed;
@@ -117,7 +117,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createControl : function(name) {
-			var ctrl, i, l, self = this, editor = self.editor, factories, ctrlName;
+			var ctrl, i, l, self = this, editor = self.editor, factories;
 
 			// Build control factory cache
 			if (!self.controlFactories) {
@@ -226,7 +226,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createListBox : function(id, s, cc) {
-			var t = this, ed = t.editor, cmd, c, cls;
+			var t = this, ed = t.editor, c, cls;
 
 			if (t.get(id))
 				return null;
@@ -295,7 +295,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createButton : function(id, s, cc) {
-			var t = this, ed = t.editor, o, c, cls;
+			var t = this, ed = t.editor, c, cls;
 
 			if (t.get(id))
 				return null;
@@ -358,7 +358,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createSplitButton : function(id, s, cc) {
-			var t = this, ed = t.editor, cmd, c, cls;
+			var t = this, ed = t.editor, c, cls;
 
 			if (t.get(id))
 				return null;
@@ -403,7 +403,7 @@
 		 * @return {tinymce.ui.Control} Control instance that got created and added.
 		 */
 		createColorSplitButton : function(id, s, cc) {
-			var t = this, ed = t.editor, cmd, c, cls, bm;
+			var t = this, ed = t.editor, c, cls, bm;
 
 			if (t.get(id))
 				return null;

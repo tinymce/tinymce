@@ -41,7 +41,7 @@ tinymce.ForceBlocks = function(editor) {
 			}
 
 			isInEditorDocument = rng.parentElement().ownerDocument === editor.getDoc();
-			tmpRng = rng.duplicate();
+			var tmpRng = rng.duplicate();
 			tmpRng.collapse(true);
 			startOffset = tmpRng.move('character', offset) * -1;
 

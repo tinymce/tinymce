@@ -12,7 +12,7 @@
 	// Shorten these names
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event, extend = tinymce.extend,
 		each = tinymce.each, isGecko = tinymce.isGecko,
-		isIE = tinymce.isIE, isWebKit = tinymce.isWebKit, is = tinymce.is,
+		isIE = tinymce.isIE, is = tinymce.is,
 		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
 		explode = tinymce.explode;
 

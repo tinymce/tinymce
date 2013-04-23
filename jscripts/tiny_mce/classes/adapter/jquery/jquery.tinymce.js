@@ -15,7 +15,7 @@
 		win = window;
 
 	$.fn.tinymce = function(settings) {
-		var self = this, url, ed, base, pos, lang, query = "", suffix = "";
+		var self = this, url, base, pos, lang, query = "", suffix = "";
 
 		// No match then just ignore the call
 		if (!self.length)
@@ -109,7 +109,7 @@
 
 				// Check if compressor script is already loaded otherwise setup a basic one
 				if (!win.tinyMCE_GZ) {
-					tinyMCE_GZ = {
+					win.tinyMCE_GZ = {
 						start : function() {
 							tinymce.suffix = suffix;
 

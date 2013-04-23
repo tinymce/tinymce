@@ -152,10 +152,10 @@
 		 * @method showMenu
 		 * @param {Number} x Horizontal position of the menu.
 		 * @param {Number} y Vertical position of the menu.
-		 * @param {Numner} px Optional parent X position used when menus are cascading.
+		 * @param {Number} px Optional parent X position used when menus are cascading.
 		 */
 		showMenu : function(x, y, px) {
-			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot = 2, dm, tb, cp = t.classPrefix;
+			var t = this, s = t.settings, co, vp = DOM.getViewPort(), w, h, mx, my, ot = 2, dm, cp = t.classPrefix;
 
 			t.collapse(1);
 
@@ -407,7 +407,7 @@
 		},
 
 		_keyHandler : function(evt) {
-			var t = this, e;
+			var t = this;
 			switch (evt.keyCode) {
 				case 37: // Left
 					if (t.settings.parent) {

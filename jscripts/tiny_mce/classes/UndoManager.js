@@ -17,7 +17,7 @@
 	 * @class tinymce.UndoManager
 	 */
 	tinymce.UndoManager = function(editor) {
-		var self, index = 0, data = [], beforeBookmark, onAdd, onUndo, onRedo;
+		var self, index = 0, data = [], beforeBookmark, onAdd, onUndo, onRedo, onBeforeAdd;
 
 		function getContent() {
 			// Remove whitespace before/after and remove pure bogus nodes
@@ -179,7 +179,7 @@
 			 * Adds a new undo level/snapshot to the undo list.
 			 *
 			 * @method add
-			 * @param {Object} l Optional undo level object to add.
+			 * @param {Object} level Optional undo level object to add.
 			 * @return {Object} Undo level that got added or null it a level wasn't needed.
 			 */
 			add : function(level) {
@@ -233,7 +233,7 @@
 			 * @return {Object} Undo level or null if no undo was performed.
 			 */
 			undo : function() {
-				var level, i;
+				var level;
 
 				if (self.typing) {
 					self.add();

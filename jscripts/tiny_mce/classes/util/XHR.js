@@ -30,7 +30,7 @@ tinymce.create('static tinymce.util.XHR', {
 	 * @param {Object} o Object will target URL, callbacks and other info needed to make the request.
 	 */
 	send : function(o) {
-		var x, t, w = window, c = 0;
+		var x, w = window, c = 0;
 
 		function ready() {
 			if (!o.async || x.readyState == 4 || c++ > 10000) {
@@ -48,7 +48,7 @@ tinymce.create('static tinymce.util.XHR', {
 		o.scope = o.scope || this;
 		o.success_scope = o.success_scope || o.scope;
 		o.error_scope = o.error_scope || o.scope;
-		o.async = o.async === false ? false : true;
+		o.async = o.async !== false;
 		o.data = o.data || '';
 
 		function get(s) {
@@ -82,7 +82,7 @@ tinymce.create('static tinymce.util.XHR', {
 				return ready();
 
 			// Wait for response, onReadyStateChange can not be used since it leaks memory in IE
-			t = w.setTimeout(ready, 10);
+			w.setTimeout(ready, 10);
 		}
 	}
 });
