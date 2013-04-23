@@ -72,8 +72,8 @@ define("tinymce/tableplugin/Plugin", [
 						maxWidth: 50
 					},
 					items: [
-						{label: 'Cols', name: 'cols'},
-						{label: 'Rows', name: 'rows'},
+						{label: 'Cols', name: 'cols', disabled: true},
+						{label: 'Rows', name: 'rows', disabled: true},
 						{label: 'Width', name: 'width'},
 						{label: 'Height', name: 'height'},
 						{label: 'Cell spacing', name: 'cellspacing'},
@@ -422,15 +422,12 @@ define("tinymce/tableplugin/Plugin", [
 			editor.insertContent(html);
 		}
 
-		function postRender() {
-			/*jshint validthis:true*/
-			var self = this;
-
+		function handleDisabledState(ctrl, selector) {
 			function bindStateListener() {
-				self.disabled(!editor.dom.getParent(editor.selection.getStart(), 'table'));
+				ctrl.disabled(!editor.dom.getParent(editor.selection.getStart(), selector));
 
-				editor.selection.selectorChanged('table', function(state) {
-					self.disabled(!state);
+				editor.selection.selectorChanged(selector, function(state) {
+					ctrl.disabled(!state);
 				});
 			}
 
@@ -441,25 +438,35 @@ define("tinymce/tableplugin/Plugin", [
 			}
 		}
 
+		function postRender() {
+			/*jshint validthis:true*/
+			handleDisabledState(this, 'table');
+		}
+
+		function postRenderCell() {
+			/*jshint validthis:true*/
+			handleDisabledState(this, 'td,th');
+		}
+
 		// Register buttons
 		each([
-			['table', 'Insert/edit table', 'mceInsertTable'],
-			['delete_table', 'Delete table', 'mceTableDelete'],
-			['delete_col', 'Delete column', 'mceTableDeleteCol'],
-			['delete_row', 'Delete row', 'mceTableDeleteRow'],
-			['col_after', 'Insert column after', 'mceTableInsertColAfter'],
-			['col_before', 'Insert column before', 'mceTableInsertColBefore'],
-			['row_after', 'Insert row after', 'mceTableInsertRowAfter'],
-			['row_before', 'Insert row before', 'mceTableInsertRowBefore'],
-			['row_props', 'Row properties', 'mceTableRowProps'],
-			['cell_props', 'Cell properties', 'mceTableCellProps'],
-			['split_cells', 'Split cells', 'mceTableSplitCells'],
-			['merge_cells', 'Merge cells', 'mceTableMergeCells']
+			['table', 'Insert/edit table', 'mceInsertTable', postRender],
+			['delete_table', 'Delete table', 'mceTableDelete', postRender],
+			['delete_col', 'Delete column', 'mceTableDeleteCol', postRenderCell],
+			['delete_row', 'Delete row', 'mceTableDeleteRow', postRenderCell],
+			['col_after', 'Insert column after', 'mceTableInsertColAfter', postRenderCell],
+			['col_before', 'Insert column before', 'mceTableInsertColBefore', postRenderCell],
+			['row_after', 'Insert row after', 'mceTableInsertRowAfter', postRenderCell],
+			['row_before', 'Insert row before', 'mceTableInsertRowBefore', postRenderCell],
+			['row_props', 'Row properties', 'mceTableRowProps', postRenderCell],
+			['cell_props', 'Cell properties', 'mceTableCellProps', postRenderCell],
+			['split_cells', 'Split cells', 'mceTableSplitCells', postRenderCell],
+			['merge_cells', 'Merge cells', 'mceTableMergeCells', postRenderCell]
 		], function(c) {
 			editor.addButton(c[0], {
 				title : c[1],
 				cmd : c[2],
-				onPostRender: postRender
+				onPostRender: c[3]
 			});
 		});
 
@@ -559,9 +566,9 @@ define("tinymce/tableplugin/Plugin", [
 			text: 'Cell',
 			context: 'table',
 			menu: [
-				{text: 'Cell properties', onclick: cmd('mceTableCellProps'), onPostRender: postRender},
-				{text: 'Merge cells', onclick: cmd('mceTableMergeCells'), onPostRender: postRender},
-				{text: 'Split cell', onclick: cmd('mceTableSplitCells'), onPostRender: postRender}
+				{text: 'Cell properties', onclick: cmd('mceTableCellProps'), onPostRender: postRenderCell},
+				{text: 'Merge cells', onclick: cmd('mceTableMergeCells'), onPostRender: postRenderCell},
+				{text: 'Split cell', onclick: cmd('mceTableSplitCells'), onPostRender: postRenderCell}
 			]
 		});
 
@@ -569,15 +576,15 @@ define("tinymce/tableplugin/Plugin", [
 			text: 'Row',
 			context: 'table',
 			menu: [
-				{text: 'Insert row before', onclick: cmd('mceTableInsertRowBefore'), onPostRender: postRender},
-				{text: 'Insert row after', onclick: cmd('mceTableInsertRowAfter'), onPostRender: postRender},
-				{text: 'Delete row', onclick: cmd('mceTableDeleteRow'), onPostRender: postRender},
-				{text: 'Row properties', onclick: cmd('mceTableRowProps'), onPostRender: postRender},
+				{text: 'Insert row before', onclick: cmd('mceTableInsertRowBefore'), onPostRender: postRenderCell},
+				{text: 'Insert row after', onclick: cmd('mceTableInsertRowAfter'), onPostRender: postRenderCell},
+				{text: 'Delete row', onclick: cmd('mceTableDeleteRow'), onPostRender: postRenderCell},
+				{text: 'Row properties', onclick: cmd('mceTableRowProps'), onPostRender: postRenderCell},
 				{text: '-'},
-				{text: 'Cut row', onclick: cmd('mceTableCutRow'), onPostRender: postRender},
-				{text: 'Copy row', onclick: cmd('mceTableCopyRow'), onPostRender: postRender},
-				{text: 'Paste row before', onclick: cmd('mceTablePasteRowBefore'), onPostRender: postRender},
-				{text: 'Paste row after', onclick: cmd('mceTablePasteRowAfter'), onPostRender: postRender}
+				{text: 'Cut row', onclick: cmd('mceTableCutRow'), onPostRender: postRenderCell},
+				{text: 'Copy row', onclick: cmd('mceTableCopyRow'), onPostRender: postRenderCell},
+				{text: 'Paste row before', onclick: cmd('mceTablePasteRowBefore'), onPostRender: postRenderCell},
+				{text: 'Paste row after', onclick: cmd('mceTablePasteRowAfter'), onPostRender: postRenderCell}
 			]
 		});
 
@@ -585,9 +592,9 @@ define("tinymce/tableplugin/Plugin", [
 			text: 'Column',
 			context: 'table',
 			menu: [
-				{text: 'Insert column before', onclick: cmd('mceTableInsertColBefore'), onPostRender: postRender},
-				{text: 'Insert column after', onclick: cmd('mceTableInsertColAfter'), onPostRender: postRender},
-				{text: 'Delete column', onclick: cmd('mceTableDeleteCol'), onPostRender: postRender}
+				{text: 'Insert column before', onclick: cmd('mceTableInsertColBefore'), onPostRender: postRenderCell},
+				{text: 'Insert column after', onclick: cmd('mceTableInsertColAfter'), onPostRender: postRenderCell},
+				{text: 'Delete column', onclick: cmd('mceTableDeleteCol'), onPostRender: postRenderCell}
 			]
 		});
 

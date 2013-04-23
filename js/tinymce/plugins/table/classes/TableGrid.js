@@ -781,7 +781,7 @@ define("tinymce/tableplugin/TableGrid", [
 			}
 		}
 
-		table = table || dom.getParent(selection.getNode(), 'table');
+		table = table || dom.getParent(selection.getStart(), 'table');
 
 		buildGrid();
 
