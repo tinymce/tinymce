@@ -72,7 +72,7 @@ define("tinymce/ui/Checkbox", [
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" unselectable="on" aria-labeledby="' + id + '-al" tabindex="-1">' +
 					'<i class="' + prefix + 'ico ' + prefix + 'i-checkbox"></i>' +
-					'<span id="' + id +'-al" class="' + prefix + 'label">' + self._text + '</span>' +
+					'<span id="' + id +'-al" class="' + prefix + 'label">' + self.encode(self._text) + '</span>' +
 				'</div>'
 			);
 		}

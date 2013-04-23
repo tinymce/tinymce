@@ -155,7 +155,7 @@ define("tinymce/ui/Window", [
 			if (settings.title) {
 				headerHtml = (
 					'<div id="' + id + '-head" class="' + prefix + 'window-head">' +
-						'<div class="' + prefix + 'title">' + settings.title + '</div>' +
+						'<div class="' + prefix + 'title">' + self.encode(settings.title) + '</div>' +
 						'<button type="button" class="' + prefix + 'close" aria-hidden="true">&times;</button>' +
 						'<div id="' + id + '-dragh" class="' + prefix + 'dragh"></div>' +
 					'</div>'

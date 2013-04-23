@@ -54,7 +54,7 @@ define("tinymce/ui/TabPanel", [
 			self.items().each(function(ctrl, i) {
 				tabsHtml += (
 					'<div id="' + self._id + '-t' + i + '" class="' + prefix + 'tab" unselectable="on">' +
-						ctrl.settings.title +
+						self.encode(ctrl.settings.title) +
 					'</div>'
 				);
 			});

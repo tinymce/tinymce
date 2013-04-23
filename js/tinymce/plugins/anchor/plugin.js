@@ -13,7 +13,7 @@
 tinymce.PluginManager.add('anchor', function(editor) {
 	function showDialog() {
 		editor.windowManager.open({
-			title: 'Insert anchor',
+			title: 'Anchor',
 			body: {type: 'textbox', name: 'name', size: 40, label: 'Name', value: editor.selection.getNode().id},
 			onsubmit: function(e) {
 				editor.execCommand('mceInsertContent', false, editor.dom.createHTML('a', {
@@ -25,7 +25,7 @@ tinymce.PluginManager.add('anchor', function(editor) {
 
 	editor.addButton('anchor', {
 		icon: 'anchor',
-		tooltip: 'Insert anchor',
+		tooltip: 'Anchor',
 		onclick: showDialog,
 		stateSelector: 'a:not([href])'
 	});

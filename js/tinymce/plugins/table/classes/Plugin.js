@@ -149,8 +149,8 @@ define("tinymce/tableplugin/Plugin", [
 			editor.windowManager.open({
 				title: "Merge cells",
 				body: [
-					{label: 'Columns', name: 'cols', type: 'textbox', size: 5},
-					{label: 'Rows', name: 'rows', type: 'textbox', size: 5}
+					{label: 'Cols', name: 'cols', type: 'textbox', size: 10},
+					{label: 'Rows', name: 'rows', type: 'textbox', size: 10}
 				],
 				onsubmit: function() {
 					var data = this.toJSON();
@@ -326,9 +326,9 @@ define("tinymce/tableplugin/Plugin", [
 							text: 'None',
 							maxWidth: null,
 							menu: [
-								{text: 'header', value: 'thead'},
-								{text: 'body', value: 'tbody'},
-								{text: 'footer', value: 'tfoot'}
+								{text: 'Header', value: 'thead'},
+								{text: 'Body', value: 'tbody'},
+								{text: 'Footer', value: 'tfoot'}
 							]
 						},
 						{

@@ -74,7 +74,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		height = data.height;
 
 		win = editor.windowManager.open({
-			title: 'Insert media',
+			title: 'Insert/edit video',
 			data: data,
 			bodyType: 'tabpanel',
 			body: [

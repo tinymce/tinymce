@@ -162,7 +162,7 @@ define("tinymce/ui/MenuButton", [
 				children = self.getEl('open').childNodes;
 				for (i = 0; i < children.length; i++) {
 					if (children[i].nodeType == 3) {
-						children[i].data = text;
+						children[i].data = self.encode(text);
 					}
 				}
 			}
