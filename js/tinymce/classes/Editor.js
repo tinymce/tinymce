@@ -122,7 +122,6 @@ define("tinymce/Editor", [
 			convert_urls: true,
 			relative_urls: true,
 			remove_script_host: true,
-			table_inline_editing: false,
 			object_resizing: true,
 			doctype: '<!DOCTYPE html>',
 			visual: true,
@@ -130,7 +129,6 @@ define("tinymce/Editor", [
 
 			// See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
 			font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
-			apply_source_formatting: true,
 			directionality: 'ltr',
 			forced_root_block: 'p',
 			hidden_input: true,
