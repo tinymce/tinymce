@@ -95,12 +95,16 @@ define("tinymce/dom/ScriptLoader", [
 			elm.type = 'text/javascript';
 			elm.src = url;
 
-			elm.onload = done;
-			elm.onreadystatechange = function() {
-				if (/loaded|complete/.test(elm.readyState)) {
-					done();
-				}
-			};
+			// Seems that onreadystatechange works better on IE 10 onload seems to fire incorrectly
+			if ("onreadystatechange" in elm) {
+				elm.onreadystatechange = function() {
+					if (/loaded|complete/.test(elm.readyState)) {
+						done();
+					}
+				};
+			} else {
+				elm.onload = done;
+			}
 
 			// Add onerror event will get fired on some browsers but not all of them
 			elm.onerror = error;
