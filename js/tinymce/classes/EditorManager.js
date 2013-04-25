@@ -360,8 +360,8 @@ define("tinymce/EditorManager", [
 		 * @param  {Object} settings Editor instance settings.
 		 * @return {tinymce.Editor} Editor instance that got created.
 		 */
-		createEditor: function(settings) {
-			return this.add(new Editor(settings));
+		createEditor: function(id, settings) {
+			return this.add(new Editor(id, settings, this));
 		},
 
 		/**
