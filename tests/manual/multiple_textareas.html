@@ -24,30 +24,24 @@ for (var i=0; i < 4; i++) {
 }
 
 function closeActiveEditor() {
-    if (!tinymce.activeEditor) return;
+    if (!tinymce.activeEditor) return
 
-    tinymce.activeEditor.off('blur');
+    tinymce.activeEditor.off('blur')
     $(tinymce.activeEditor.id).removeClass('activeEditor')
-    tinymce.activeEditor.remove();
-    console.warn('removed');
+    tinymce.activeEditor.remove()
 }
 
 $('body').on('focus', 'textarea', function(focusEvent) {
-    console.warn("CREATE");
-    closeActiveEditor();
+    closeActiveEditor()
 
     var thisTextarea = this
-    if ($(thisTextarea).hasClass('activeEditor')) {
-        console.log("WEFWEFWEF");
-    }
     $(thisTextarea).addClass('activeEditor')
     tinymce.createEditor(thisTextarea, {
         auto_focus: true
     })
     tinymce.activeEditor.render();
     tinymce.activeEditor.on('blur', function(blurEvent) {
-        console.warn("BLURRRRRRRRR");
-        closeActiveEditor($(thisTextarea));
+        closeActiveEditor($(thisTextarea))
     })
 })
 </script>
