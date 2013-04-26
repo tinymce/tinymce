@@ -1,13 +1,15 @@
 {
 	"name": "tinymce",
 	"version": "4.0.0",
+	"private": true,
 	"description": "TinyMCE rich text editor",
 	"author": "Johan Sörlin <spocke@moxiecode.com>",
 	"bugs": { "url" : "http://www.tinymce.com/develop/bugtracker.php" },
+	"files": ["js/tinymce"],
 	"engines": {
 		"node" : ">=0.8.0"
 	},
-	"dependencies": {
+	"devDependencies": {
 		"amdlc": ">= 0.0.2",
 		"jshint": ">= 0.9.1",
 		"uglify-js": ">= 2.0.0",
