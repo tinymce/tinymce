@@ -11,6 +11,17 @@
 	font-style: normal;
 }
 
+@font-face {
+	font-family: 'tinymce-small';
+	src:url('fonts/icomoon-small.eot');
+	src:url('fonts/icomoon-small.eot?#iefix') format('embedded-opentype'),
+		url('fonts/icomoon-small.svg#icomoon') format('svg'),
+		url('fonts/icomoon-small.woff') format('woff'),
+		url('fonts/icomoon-small.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
 @iconSize: 16px;
 
 .mce-ico {
@@ -27,6 +38,10 @@
 	width: 16px;
 	height: 16px;
 	color: @btn-text-color;
+}
+
+.mce-btn-small .mce-ico {
+	font-family: 'tinymce-small', Arial;
 }
 
 .mce-i-save:before           { content: "\e000"; }
