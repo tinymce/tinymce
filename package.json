@@ -5,7 +5,7 @@
 	"description": "TinyMCE rich text editor",
 	"author": "Johan Sörlin <spocke@moxiecode.com>",
 	"bugs": { "url" : "http://www.tinymce.com/develop/bugtracker.php" },
-	"files": ["js", "changelog.txt", "LICENSE.TXT", "tests"],
+	"files": ["js", "tests", "changelog.txt", "LICENSE.TXT", "Jakefile.js"],
 	"engines": {
 		"node" : ">=0.8.0"
 	},
