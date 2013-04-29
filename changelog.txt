@@ -1,5 +1,6 @@
 Version 4.0b3 (2013-0x-xx)
 	Fixed bug where IE 10 wouldn't load files properly from cache.
+	Fixed so bodyId/bodyClass is applied to preview as it's done to the editor iframe.
 Version 4.0b2 (2013-04-24)
 	Added new rel_list option to link plugin. Enables you to specify values for a rel drop down.
 	Added new target_list option to link plugin. Enables you to add to or disable the link targets.
