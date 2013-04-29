@@ -11,6 +11,17 @@
 	font-style: normal;
 }
 
+@font-face {
+	font-family: 'icomoon-small';
+	src:url('fonts/icomoon-small.eot');
+	src:url('fonts/icomoon-small.eot?#iefix') format('embedded-opentype'),
+		url('fonts/icomoon-small.svg#icomoon') format('svg'),
+		url('fonts/icomoon-small.woff') format('woff'),
+		url('fonts/icomoon-small.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
 @iconSize: 16px;
 
 .mce-ico {
@@ -28,6 +39,10 @@
 	height: 16px;
 	color: #333;
 	-ie7-icon: ' ';
+}
+
+.mce-btn-small .mce-ico {
+	font-family: 'icomoon-small';
 }
 
 // .mce-i-checkbox needs to have zoom overridden since it's set by the gradient mixin

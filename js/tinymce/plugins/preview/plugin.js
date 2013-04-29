@@ -11,6 +11,8 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('preview', function(editor) {
+	var settings = editor.settings;
+
 	editor.addCommand('mcePreview', function() {
 		editor.windowManager.open({
 			title: 'Preview',
@@ -26,9 +28,21 @@ tinymce.PluginManager.add('preview', function(editor) {
 			onPostRender: function() {
 				var doc = this.getEl('body').firstChild.contentWindow.document, previewHtml, headHtml = '';
 
-				tinymce.each(tinymce.explode(editor.settings.content_css), function(url) {
+				tinymce.each(tinymce.explode(settings.content_css), function(url) {
 					headHtml += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
 				});
+
+				var bodyId = settings.body_id || 'tinymce';
+				if (bodyId.indexOf('=') != -1) {
+					bodyId = editor.getParam('body_id', '', 'hash');
+					bodyId = bodyId[editor.id] || bodyId;
+				}
+
+				var bodyClass = settings.body_class || '';
+				if (bodyClass.indexOf('=') != -1) {
+					bodyClass = editor.getParam('body_class', '', 'hash');
+					bodyClass = bodyClass[editor.id] || '';
+				}
 
 				previewHtml = (
 					'<!DOCTYPE html>' +
@@ -36,7 +50,7 @@ tinymce.PluginManager.add('preview', function(editor) {
 					'<head>' +
 						headHtml +
 					'</head>' +
-					'<body>' +
+					'<body id="' + bodyId + '" class="mce-content-body ' + bodyClass + '">' +
 						editor.getContent() +
 					'</body>' +
 					'</html>'
