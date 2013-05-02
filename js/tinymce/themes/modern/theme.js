@@ -157,7 +157,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	 * @return {Array} Menu buttons array.
 	 */
 	function createMenuButtons() {
-		var menuButtons = [];
+		var name, menuButtons = [];
 
 		function createMenuItem(name) {
 			var menuItem;
@@ -234,14 +234,24 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			return menuButton;
 		}
 
-		var enabledMenuNames = settings.menubar ? tinymce.makeMap(settings.menubar, /[ ,]/) : false;
-		for (var menu in defaultMenus) {
-			if (!enabledMenuNames || enabledMenuNames[menu]) {
-				menu = createMenu(menu);
+		var defaultMenuBar = [];
+		if (settings.menu) {
+			for (name in settings.menu) {
+				defaultMenuBar.push(name);
+			}
+		} else {
+			for (name in defaultMenus) {
+				defaultMenuBar.push(name);
+			}
+		}
 
-				if (menu) {
-					menuButtons.push(menu);
-				}
+		var enabledMenuNames = settings.menubar ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
+		for (var i = 0; i < enabledMenuNames.length; i++) {
+			var menu = enabledMenuNames[i];
+			menu = createMenu(menu);
+
+			if (menu) {
+				menuButtons.push(menu);
 			}
 		}
 
