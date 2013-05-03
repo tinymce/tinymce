@@ -71,7 +71,7 @@ define("tinymce/ui/Collection", [
 		 *
 		 * @method set
 		 * @param {Array} items Array with items to set into the Collection.
-		 * @return {tinymce.ui.Collection}
+		 * @return {tinymce.ui.Collection} Collection instance.
 		 */
 		set: function(items) {
 			var self = this, len = self.length, i;

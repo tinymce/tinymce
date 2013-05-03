@@ -1525,7 +1525,7 @@ define("tinymce/dom/DOMUtils", [
 		 * @method rename
 		 * @param {Element} elm Element to rename.
 		 * @param {String} name Name of the new element.
-		 * @return New element or the old element if it needed renaming.
+		 * @return {Element} New element or the old element if it needed renaming.
 		 */
 		rename: function(elm, name) {
 			var self = this, newElm;
@@ -2063,7 +2063,6 @@ define("tinymce/dom/DOMUtils", [
 	 * Instance of DOMUtils for the current document.
 	 *
 	 * @property DOM
-	 * @member tinymce
 	 * @type tinymce.dom.DOMUtils
 	 * @example
 	 * // Example of how to add a class to some element by id
