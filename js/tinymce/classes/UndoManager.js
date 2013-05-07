@@ -287,7 +287,7 @@ define("tinymce/UndoManager", [
 			 * it will add a new undo level.
 			 *
 			 * @method transact
-			 * @params {function} callback
+			 * @param {function} callback Function to execute dom manipulation logic in.
 			 */
 			transact: function(callback) {
 				self.beforeChange();

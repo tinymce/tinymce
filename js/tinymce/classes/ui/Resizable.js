@@ -4,6 +4,11 @@
  * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
  */
 
+/**
+ * Resizable.
+ *
+ * @mixin tinymce.ui.Resizable
+ */
 define("tinymce/ui/Resizable", [
 	"tinymce/ui/DomUtils"
 ], function(DomUtils) {

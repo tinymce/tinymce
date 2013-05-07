@@ -13,7 +13,7 @@
  *  align=start|end|center|stretch
  *  pack=start|end|justify
  *
- * @class tinymce.ui.layout.FlexLayout
+ * @class tinymce.ui.FlexLayout
  * @extends tinymce.ui.AbsoluteLayout
  */
 define("tinymce/ui/FlexLayout", [

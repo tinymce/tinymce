@@ -1714,7 +1714,7 @@ define("tinymce/Editor", [
 		 * Inserts content at caret position.
 		 *
 		 * @method insertContent
-		 * @params {String} content Content to insert.
+		 * @param {String} content Content to insert.
 		 */
 		insertContent: function(content) {
 			this.execCommand('mceInsertContent', false, content);

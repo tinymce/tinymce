@@ -8,6 +8,12 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * RangeUtils
+ *
+ * @class tinymce.dom.RangeUtils
+ * @internal
+ */
 define("tinymce/dom/RangeUtils", [
 	"tinymce/util/Tools"
 ], function(Tools) {

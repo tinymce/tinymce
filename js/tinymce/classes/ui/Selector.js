@@ -74,7 +74,7 @@ define("tinymce/ui/Selector", [
 		/**
 		 * Constructs a new Selector instance.
 		 *
-		 * @contructor
+		 * @constructor
 		 * @method init
 		 * @param {String} selector CSS like selector expression.
 		 */

@@ -8,6 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * ..
+ *
+ * @class tinymce.Env
+ */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
 	var opera, webkit, ie, gecko, mac, iDevice;

@@ -26,8 +26,6 @@ define("tinymce/ui/Control", [
 
 	/**
 	 * Base control. All controls extend this class.
-	 *
-	 * @class tinymce.ui.Control
 	 */
 	var Control = Class.extend({
 		Statics: {

@@ -10,6 +10,8 @@
  * @-x-less FloatPanel.less
  * @class tinymce.ui.FloatPanel
  * @extends tinymce.ui.Panel
+ * @mixes tinymce.ui.Movable
+ * @mixes tinymce.ui.Resizable
  */
 define("tinymce/ui/FloatPanel", [
 	"tinymce/ui/Panel",

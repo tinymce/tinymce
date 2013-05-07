@@ -8,6 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * TreeWalker.
+ *
+ * @class tinymce.dom.TreeWalker
+ */
 define("tinymce/dom/TreeWalker", [], function() {
 	return function(start_node, root_node) {
 		var node = start_node;
@@ -42,6 +47,7 @@ define("tinymce/dom/TreeWalker", [], function() {
 		/**
 		 * Returns the current node.
 		 *
+		 * @method current
 		 * @return {Node} Current node where the walker is.
 		 */
 		this.current = function() {
@@ -51,6 +57,7 @@ define("tinymce/dom/TreeWalker", [], function() {
 		/**
 		 * Walks to the next node in tree.
 		 *
+		 * @method next
 		 * @return {Node} Current node where the walker is after moving to the next node.
 		 */
 		this.next = function(shallow) {
@@ -61,6 +68,7 @@ define("tinymce/dom/TreeWalker", [], function() {
 		/**
 		 * Walks to the previous node in tree.
 		 *
+		 * @method prev
 		 * @return {Node} Current node where the walker is after moving to the previous node.
 		 */
 		this.prev = function(shallow) {

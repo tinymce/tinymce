@@ -1,5 +1,5 @@
 /**
- * Quirks.js
+ * Tools.js
  *
  * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
@@ -8,6 +8,11 @@
  * Contributing: http://www.tinymce.com/contributing
  */
 
+/**
+ * ...
+ *
+ * @class tinymce.util.Tools
+ */
 define("tinymce/util/Tools", [], function() {
 	/**
 	 * Removes whitespace from the beginning and end of a string.

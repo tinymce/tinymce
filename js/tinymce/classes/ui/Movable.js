@@ -4,12 +4,25 @@
  * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
  */
 
+/**
+ * Movable.
+ *
+ * @mixin tinymce.ui.Movable
+ */
 define("tinymce/ui/Movable", [
 	"tinymce/ui/DomUtils"
 ], function(DomUtils) {
 	"use strict";
 
 	return {
+		/**
+		 * Move rel.
+		 *
+		 * @method moveRel
+		 * @param {Element} elm [description]
+		 * @param {String} rel [description]
+		 * @return {this} ...
+		 */
 		moveRel: function(elm, rel) {
 			var self = this, ctrlElm, pos, x, y, selfW, selfH, targetW, targetH;
 

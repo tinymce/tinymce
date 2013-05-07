@@ -114,8 +114,8 @@ define("tinymce/AddOnManager", [
 		 * components are put together into the plugin.js file and compressed correctly.
 		 *
 		 * @method addComponents
-		 * @param pluginName {String} name of the plugin to load scripts from (will be used to get the base url for the plugins).
-		 * @param scripts {Array} Array containing the names of the scripts to load.
+		 * @param {String} pluginName name of the plugin to load scripts from (will be used to get the base url for the plugins).
+		 * @param {Array} scripts Array containing the names of the scripts to load.
 		 */
 		addComponents: function(pluginName, scripts) {
 			var pluginUrl = this.urls[pluginName];
