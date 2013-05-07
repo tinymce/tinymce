@@ -357,7 +357,8 @@ define("tinymce/EditorManager", [
 		/**
 		 * Creates an editor instance and adds it to the EditorManager collection.
 		 *
-		 * @param  {Object} settings Editor instance settings.
+		 * @method createEditor
+		 * @param {Object} settings Editor instance settings.
 		 * @return {tinymce.Editor} Editor instance that got created.
 		 */
 		createEditor: function(settings) {
@@ -482,6 +483,7 @@ define("tinymce/EditorManager", [
 		/**
 		 * Translates the specified string using the language pack items.
 		 *
+		 * @method translate
 		 * @param {String/Array/Object} text String to translate
 		 * @return {String} Translated string.
 		 */

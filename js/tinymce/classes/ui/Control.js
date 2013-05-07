@@ -683,6 +683,7 @@ define("tinymce/ui/Control", [
 		/**
 		 * Returns true/false if the specific control has the specific class.
 		 *
+		 * @method hasClass
 		 * @param {String} cls Class to check for.
 		 * @return {Boolean} True/false if the control has the specified class.
 		 */
@@ -697,6 +698,7 @@ define("tinymce/ui/Control", [
 		/**
 		 * Adds the specified class to the control
 		 *
+		 * @method addClass
 		 * @param {String} cls Class to check for.
 		 * @return {tinymce.ui.Control} Current control object.
 		 */
@@ -731,6 +733,7 @@ define("tinymce/ui/Control", [
 		/**
 		 * Removed the specified class from the control.
 		 *
+		 * @method removeClass
 		 * @param {String} cls Class to remove.
 		 * @return {tinymce.ui.Control} Current control object.
 		 */
@@ -823,6 +826,7 @@ define("tinymce/ui/Control", [
 		/**
 		 * Sets the visible state to true.
 		 *
+		 * @method show
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		show: function() {
@@ -832,6 +836,7 @@ define("tinymce/ui/Control", [
 		/**
 		 * Sets the visible state to false.
 		 *
+		 * @method hide
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		hide: function() {

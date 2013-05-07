@@ -65,6 +65,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns the currently focused element.
 		 *
+		 * @private
 		 * @return {Element} Currently focused element.
 		 */
 		function getFocusElement() {
@@ -74,6 +75,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns the currently focused elements wai aria role.
 		 *
+		 * @private
 		 * @param {Element} elm Optional element to get role from.
 		 * @return {String} Role of specified element.
 		 */
@@ -86,6 +88,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns the role of the parent element.
 		 *
+		 * @private
 		 * @param {Element} elm Optional element to get parent role from.
 		 * @return {String} Role of the first parent that has a role.
 		 */
@@ -102,6 +105,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Returns an wai aria property by name.
 		 *
+		 * @private
 		 * @param {String} name Name of the aria property to get for example "disabled".
 		 * @return {String} Aria property value.
 		 */
@@ -115,6 +119,8 @@ define("tinymce/ui/KeyboardNavigation", [
 
 		/**
 		 * Executes the onAction event callback. This is when the user presses enter/space.
+		 *
+		 * @private
 		 */
 		function action() {
 			var focusElm = getFocusElement();
@@ -134,6 +140,8 @@ define("tinymce/ui/KeyboardNavigation", [
 
 		/**
 		 * Cancels the current navigation. The same as pressing the Esc key.
+		 *
+		 * @method cancel
 		 */
 		function cancel() {
 			var focusElm;
@@ -152,6 +160,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Moves the focus to the next or previous item. It will wrap to start/end if it can't move.
 		 *
+		 * @method moveFocus
 		 * @param {Number} dir Direction for move -1 or 1.
 		 */
 		function moveFocus(dir) {
@@ -186,6 +195,7 @@ define("tinymce/ui/KeyboardNavigation", [
 		/**
 		 * Moves focus to the first item or the last focused item if root is a toolbar.
 		 *
+		 * @method focusFirst
 		 * @return {[type]} [description]
 		 */
 		function focusFirst() {

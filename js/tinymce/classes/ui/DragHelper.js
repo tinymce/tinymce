@@ -18,6 +18,8 @@
  *     end: function(evt) {
  *     }
  * });
+ *
+ * @class tinymce.ui.DragHelper
  */
 define("tinymce/ui/DragHelper", [
 	"tinymce/ui/DomUtils"

@@ -35,6 +35,7 @@ define("tinymce/html/Schema", [
 	/**
 	 * Builds a schema lookup table
 	 *
+	 * @private
 	 * @param {String} type html4, html5 or html5-strict schema type.
 	 * @return {Object} Schema lookup table.
 	 */

@@ -51,6 +51,7 @@ define("tinymce/util/Quirks", [
 		/**
 		 * Returns true/false if the event is prevented or not.
 		 *
+		 * @private
 		 * @param {Event} e Event object.
 		 * @return {Boolean} true/false if the event is prevented or not.
 		 */

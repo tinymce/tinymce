@@ -1860,6 +1860,7 @@ define("tinymce/Formatter", [
 		/**
 		 * Checks if the specified node is a bookmark node or not.
 		 *
+		 * @private
 		 * @param {Node} node Node to check if it's a bookmark node or not.
 		 * @return {Boolean} true/false if the node is a bookmark node.
 		 */

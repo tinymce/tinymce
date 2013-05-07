@@ -186,7 +186,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		/**
 		 * Executes all event handler callbacks for a specific event.
 		 *
-		 * @internal
+		 * @private
 		 * @param {Event} evt Event object.
 		 * @param {String} id Expando id value to look for.
 		 */
