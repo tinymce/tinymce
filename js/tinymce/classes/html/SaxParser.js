@@ -130,7 +130,7 @@ define("tinymce/html/SaxParser", [
 				value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
 				// Validate name and value
-				if (validate && !isInternalElement && name.indexOf('data-mce-') !== 0) {
+				if (validate && !isInternalElement && name.indexOf('data-') !== 0) {
 					attrRule = validAttributesMap[name];
 
 					// Find rule by pattern matching
@@ -231,7 +231,7 @@ define("tinymce/html/SaxParser", [
 
 						// Parse attributes
 						if ((attribsValue = matches[8])) {
-							isInternalElement = attribsValue.indexOf('data-mce-type') !== -1; // Check if the element is an internal element
+							isInternalElement = attribsValue.indexOf('data-') !== -1; // Check if the element is an internal element
 
 							// If the element has internal attributes then remove it if we are told to do so
 							if (isInternalElement && removeInternalElements) {

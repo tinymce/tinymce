@@ -62,7 +62,7 @@ exports.uglify = function(options) {
 		});
 
 		fs.writeFileSync(options.to, result.code);
-		setFileModTime(options.to, fromFileModTime);
+		// setFileModTime(options.to, fromFileModTime);
 	}
 };
 
@@ -73,8 +73,8 @@ exports.less = function (options) {
 	var outputFile = options.toCss;
 
 	options = extend({
-		compress: true,
-		yuicompress: true,
+		compress: false,
+		yuicompress: false,
 		optimization: 1,
 		silent: false,
 		paths: [],
