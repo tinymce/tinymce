@@ -131,7 +131,7 @@
 		},
 
 		/**
-		 * Hides the menu. The optional event parameter is used to check where the event occured so it
+		 * Hides the menu. The optional event parameter is used to check where the event occurred so it
 		 * doesn't close them menu if it was a event inside the menu.
 		 *
 		 * @method hideMenu
