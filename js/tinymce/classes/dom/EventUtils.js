@@ -504,7 +504,7 @@ define("tinymce/dom/EventUtils", [], function() {
 		/**
 		 * Destroys the event object. Call this on IE to remove memory leaks.
 		 */
-		self.destory = function() {
+		self.destroy = function() {
 			events = {};
 		};
 
