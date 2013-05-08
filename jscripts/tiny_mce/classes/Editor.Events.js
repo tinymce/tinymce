@@ -197,7 +197,7 @@
 			 *    ...
 			 *    setup : function(ed) {
 			 *       ed.onEvent.add(function(ed, e) {
-			 *          console.debug('Editor event occured: ' + e.target.nodeName);
+			 *          console.debug('Editor event occurred: ' + e.target.nodeName);
 			 *       });
 			 *    }
 			 * });

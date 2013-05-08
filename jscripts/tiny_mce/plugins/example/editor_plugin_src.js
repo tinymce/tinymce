@@ -49,7 +49,7 @@
 		},
 
 		/**
-		 * Creates control instances based in the incomming name. This method is normally not
+		 * Creates control instances based in the incoming name. This method is normally not
 		 * needed since the addButton method of the tinymce.Editor class is a more easy way of adding buttons
 		 * but you sometimes need to create more complex controls like listboxes, split buttons etc then this
 		 * method can be used to create those.
