@@ -930,12 +930,10 @@ define("tinymce/Editor", [
 			// Handle auto focus
 			if (settings.auto_focus) {
 				setTimeout(function () {
-					var ed = self.editorManager.get(settings.auto_focus);
-
-					ed.selection.select(ed.getBody(), 1);
-					ed.selection.collapse(1);
-					ed.getBody().focus();
-					ed.getWin().focus();
+					self.selection.select(self.getBody(), 1);
+					self.selection.collapse(1);
+					self.getBody().focus();
+					self.getWin().focus();
 				}, 100);
 			}
 
@@ -1997,7 +1995,7 @@ define("tinymce/Editor", [
 			}
 
 			if (!automatic) {
-				self.editorManager.off(self._beforeUnload);
+				self.editorManager.off('BeforeUnload', self._beforeUnload);
 
 				// Manual destroy
 				if (self.theme && self.theme.destroy) {
