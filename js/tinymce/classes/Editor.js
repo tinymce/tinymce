@@ -1997,7 +1997,7 @@ define("tinymce/Editor", [
 			}
 
 			if (!automatic) {
-				self.editorManager.off(self._beforeUnload);
+				self.editorManager.off('beforeunload', self._beforeUnload);
 
 				// Manual destroy
 				if (self.theme && self.theme.destroy) {
