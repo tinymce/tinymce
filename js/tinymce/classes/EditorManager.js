@@ -358,11 +358,12 @@ define("tinymce/EditorManager", [
 		 * Creates an editor instance and adds it to the EditorManager collection.
 		 *
 		 * @method createEditor
+		 * @param {String} id Instance id to use for editor.
 		 * @param {Object} settings Editor instance settings.
 		 * @return {tinymce.Editor} Editor instance that got created.
 		 */
-		createEditor: function(settings) {
-			return this.add(new Editor(settings));
+		createEditor: function(id, settings) {
+			return this.add(new Editor(id, settings, this));
 		},
 
 		/**
