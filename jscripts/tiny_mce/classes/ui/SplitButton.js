@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event;
 
 	/**
 	 * This class is used to create a split button. A button with a menu attached to it.
@@ -111,7 +111,7 @@
 				};
 				Event.add(t.id + '_action', 'click', activate);
 				Event.add(t.id, ['click', 'keydown'], function(evt) {
-					var DOM_VK_SPACE = 32, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_UP = 38, DOM_VK_DOWN = 40;
+					var DOM_VK_DOWN = 40;
 					if ((evt.keyCode === 32 || evt.keyCode === 13 || evt.keyCode === 14) && !evt.altKey && !evt.ctrlKey && !evt.metaKey) {
 						activate();
 						Event.cancel(evt);

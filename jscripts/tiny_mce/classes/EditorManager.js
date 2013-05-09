@@ -16,7 +16,6 @@
 	// Shorten names
 	var each = tinymce.each, extend = tinymce.extend,
 		DOM = tinymce.DOM, Event = tinymce.dom.Event,
-		ThemeManager = tinymce.ThemeManager, PluginManager = tinymce.PluginManager,
 		explode = tinymce.explode,
 		Dispatcher = tinymce.util.Dispatcher, undef, instanceCounter = 0;
 
@@ -116,7 +115,7 @@
 		 * });
 		 */
 		init : function(s) {
-			var t = this, pl, sl = tinymce.ScriptLoader, e, el = [], ed;
+			var t = this, el = [], ed;
 
 			function createId(elm) {
 				var id = elm.id;
@@ -326,7 +325,7 @@
 		 * Removes a editor instance from the collection.
 		 *
 		 * @method remove
-		 * @param {tinymce.Editor} e Editor instance to remove.
+		 * @param {tinymce.Editor} editor Editor instance to remove.
 		 * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
 		 */
 		remove : function(editor) {
@@ -478,7 +477,7 @@
 		 * @param {Object} o Name/Value collection with items to add to the language group.
 		 */
 		addI18n : function(p, o) {
-			var lo, i18n = this.i18n;
+			var i18n = this.i18n;
 
 			if (!tinymce.is(p, 'string')) {
 				each(p, function(o, lc) {

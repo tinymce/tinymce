@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	var Dispatcher = tinymce.util.Dispatcher, each = tinymce.each;
+	var Dispatcher = tinymce.util.Dispatcher;
 
 	/**
 	 * This class handles the loading of themes/plugins or other add-ons and their language packs.

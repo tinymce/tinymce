@@ -42,7 +42,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 	 *
 	 * @method add
 	 * @param {function} callback Callback function to execute when a dispatch event occurs.
-	 * @param {Object} s Optional execution scope, defaults to the one specified in the class constructor.
+	 * @param {Object} scope Optional execution scope, defaults to the one specified in the class constructor.
 	 * @return {function} Returns the same function as the one passed on.
 	 */
 	add : function(callback, scope) {

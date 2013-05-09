@@ -217,7 +217,7 @@
 		 * Returns the number of items inside the list box.
 		 *
 		 * @method getLength
-		 * @param {Number} Number of items inside the list box.
+		 * @returns {Number} Number of items inside the list box.
 		 */
 		getLength : function() {
 			return this.items.length;

@@ -815,8 +815,6 @@
 
 		// Handler that takes a native event and sends it out to a dispatcher like onKeyDown
 		function eventHandler(evt, args) {
-			var type = evt.type;
-
 			// Don't fire events when it's removed
 			if (self.removed)
 				return;

@@ -9,7 +9,7 @@
  */
 
 (function(tinymce) {
-	var DOM = tinymce.DOM, Event = tinymce.dom.Event, each = tinymce.each;
+	var DOM = tinymce.DOM, Event = tinymce.dom.Event;
 
 	/**
 	 * This class is used to create a UI button. A button is basically a link

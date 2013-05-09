@@ -75,7 +75,7 @@
 		 * @method showMenu
 		 */
 		showMenu : function() {
-			var t = this, r, p, e, p2;
+			var t = this, e, p2;
 
 			if (t.isDisabled())
 				return;

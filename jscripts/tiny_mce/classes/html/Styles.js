@@ -31,7 +31,6 @@ tinymce.html.Styles = function(settings, schema) {
 		urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi,
 		styleRegExp = /\s*([^:]+):\s*([^;]+);?/g,
 		trimRightRegExp = /\s+$/,
-		urlColorRegExp = /rgb/,
 		undef, i, encodingLookup = {}, encodingItems;
 
 	settings = settings || {};

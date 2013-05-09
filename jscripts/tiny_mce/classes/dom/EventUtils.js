@@ -169,7 +169,7 @@ tinymce.dom = {};
 	 * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.
 	 */
 	function EventUtils(proxy) {
-		var self = this, events = {}, count, isFocusBlurBound, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
+		var self = this, events = {}, count, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;
 
 		hasMouseEnterLeave = "onmouseenter" in document.documentElement;
 		hasFocusIn = "onfocusin" in document.documentElement;

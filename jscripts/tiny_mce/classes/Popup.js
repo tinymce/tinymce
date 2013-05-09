@@ -26,7 +26,7 @@ tinyMCEPopup = {
 	 * @method init
 	 */
 	init : function() {
-		var t = this, w, ti;
+		var t = this, w;
 
 		// Find window & API
 		w = t.getWin();
@@ -316,7 +316,7 @@ tinyMCEPopup = {
 	},*/
 
 	_onDOMLoaded : function() {
-		var t = tinyMCEPopup, ti = document.title, bm, h, nv;
+		var t = tinyMCEPopup, ti = document.title, h, nv;
 
 		// Translate page
 		if (t.features.translate_i18n !== false) {

@@ -25,7 +25,7 @@
 		 * @param {Object} s Optional settings object.
 		 */
 		URI : function(u, s) {
-			var t = this, o, a, b, base_url;
+			var t = this, b, base_url;
 
 			// Trim whitespace
 			u = tinymce.trim(u);

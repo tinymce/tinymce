@@ -132,7 +132,7 @@
 			 *
 			 * @method resizeTo
 			 * @param {Number} w New width of element.
-			 * @param {Numner} h New height of element.
+			 * @param {Number} h New height of element.
 			 */
 			resizeTo : function(w, h) {
 				t.setStyles({width : w, height : h});
@@ -143,7 +143,7 @@
 			 *
 			 * @method resizeBy
 			 * @param {Number} w Relative width of element.
-			 * @param {Numner} h Relative height of element.
+			 * @param {Number} h Relative height of element.
 			 */
 			resizeBy : function(w, h) {
 				var s = t.getSize();

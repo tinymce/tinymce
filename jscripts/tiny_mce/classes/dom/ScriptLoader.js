@@ -162,7 +162,7 @@
 		 * the script loader or to skip it from loading some script.
 		 *
 		 * @method markDone
-		 * @param {string} u Absolute URL to the script to mark as loaded.
+		 * @param {string} url Absolute URL to the script to mark as loaded.
 		 */
 		this.markDone = function(url) {
 			states[url] = LOADED;
@@ -177,7 +177,7 @@
 		 * @param {Object} scope Optional scope to execute callback in.
 		 */
 		this.add = this.load = function(url, callback, scope) {
-			var item, state = states[url];
+			var state = states[url];
 
 			// Add url to load queue
 			if (state == undef) {
