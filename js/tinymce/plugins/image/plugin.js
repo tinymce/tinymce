@@ -110,11 +110,11 @@ tinymce.PluginManager.add('image', function(editor) {
 				var data = e.data;
 
 				if (data.width === '') {
-					delete data.width;
+					data.width = null;
 				}
 
 				if (data.height === '') {
-					delete data.height;
+					data.height = null;
 				}
 
 				if (imgElm) {

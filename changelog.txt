@@ -1,5 +1,6 @@
 Version 4.0b3 (2013-0x-xx)
 	Fixed bug where IE 10 wouldn't load files properly from cache.
+	Fixed bug where image dialog wouldn't properly remove width/height if blanked.
 	Fixed so it's easier to configure the menu and menubar.
 	Fixed so bodyId/bodyClass is applied to preview as it's done to the editor iframe.
 Version 4.0b2 (2013-04-24)
