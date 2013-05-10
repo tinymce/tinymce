@@ -1,11 +1,23 @@
 /**
  * Checkbox.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This control creates a custom checkbox.
+ *
+ * @example
+ * // Create and render a checkbox to the body element
+ * tinymce.ui.Factory({
+ *     type: 'checkbox',
+ *     checked: true,
+ *     text: 'My checkbox'
+ * }).renderTo(document.body);
  *
  * @-x-less Checkbox.less
  * @class tinymce.ui.Checkbox
@@ -23,6 +35,12 @@ define("tinymce/ui/Checkbox", [
 			checked: false
 		},
 
+		/**
+		 * Constructs a new Checkbox instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -43,6 +61,13 @@ define("tinymce/ui/Checkbox", [
 			self.checked(self.settings.checked);
 		},
 
+		/**
+		 * Getter/setter function for the checked state.
+		 *
+		 * @method checked
+		 * @param {Boolean} [state] State to be set.
+		 * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
+		 */
 		checked: function(state) {
 			var self = this;
 
@@ -62,10 +87,23 @@ define("tinymce/ui/Checkbox", [
 			return self._checked;
 		},
 
+		/**
+		 * Getter/setter function for the value state.
+		 *
+		 * @method value
+		 * @param {Boolean} [state] State to be set.
+		 * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it's a set operation.
+		 */
 		value: function(state) {
 			return this.checked(state);
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
 

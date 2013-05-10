@@ -1,10 +1,15 @@
 /**
  * Widget.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
+ * Widget base class a widget is a control that has a tooltip and some basic states.
  *
  * @class tinymce.ui.Widget
  * @extends tinymce.ui.Control
@@ -18,6 +23,12 @@ define("tinymce/ui/Widget", [
 	var tooltip;
 
 	return Control.extend({
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -37,6 +48,12 @@ define("tinymce/ui/Widget", [
 			self.aria('label', settings.tooltip);
 		},
 
+		/**
+		 * Returns the current tooltip instance.
+		 *
+		 * @method tooltip
+		 * @return {tinymce.ui.Tooltip} Tooltip instance.
+		 */
 		tooltip: function() {
 			var self = this;
 
@@ -48,6 +65,13 @@ define("tinymce/ui/Widget", [
 			return tooltip;
 		},
 
+		/**
+		 * Sets/gets the active state of the widget.
+		 *
+		 * @method active
+		 * @param {Boolean} [state] State if the control is active.
+		 * @return {Boolean|tinymce.ui.Widget} True/false or current widget instance.
+		 */
 		active: function(state) {
 			var self = this, undef;
 
@@ -59,6 +83,13 @@ define("tinymce/ui/Widget", [
 			return self._super(state);
 		},
 
+		/**
+		 * Sets/gets the disabled state of the widget.
+		 *
+		 * @method disabled
+		 * @param {Boolean} [state] State if the control is disabled.
+		 * @return {Boolean|tinymce.ui.Widget} True/false or current widget instance.
+		 */
 		disabled: function(state) {
 			var self = this, undef;
 
@@ -70,6 +101,11 @@ define("tinymce/ui/Widget", [
 			return self._super(state);
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this, settings = self.settings;
 
@@ -89,6 +125,12 @@ define("tinymce/ui/Widget", [
 			}
 		},
 
+		/**
+		 * Removes the current control from DOM and from UI collections.
+		 *
+		 * @method remove
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		remove: function() {
 			this._super();
 

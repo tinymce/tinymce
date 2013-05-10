@@ -1,15 +1,20 @@
 /**
  * Label.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class creates a label element. A label is a simple text control
+ * that can be bound to other controls.
  *
  * @-x-less Label.less
  * @class tinymce.ui.Label
- * @extends tinymce.ui.Control
+ * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Label", [
 	"tinymce/ui/Widget"
@@ -17,6 +22,12 @@ define("tinymce/ui/Label", [
 	"use strict";
 
 	return Widget.extend({
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -34,6 +45,14 @@ define("tinymce/ui/Label", [
 			}
 		},
 
+		/**
+		 * Initializes the current controls layout rect.
+		 * This will be executed by the layout managers to determine the
+		 * default minWidth/minHeight etc.
+		 *
+		 * @method initLayoutRect
+		 * @return {Object} Layout rect instance.
+		 */
 		initLayoutRect: function() {
 			var self = this, layoutRect = self._super();
 
@@ -51,6 +70,13 @@ define("tinymce/ui/Label", [
 			return layoutRect;
 		},
 
+		/**
+		 * Sets/gets the disabled state on the control.
+		 *
+		 * @method disabled
+		 * @param {Boolean} state Value to set to control.
+		 * @return {Boolean/tinymce.ui.Label} Current control on a set operation or current state on a get.
+		 */
 		disabled: function(state) {
 			var self = this, undef;
 
@@ -65,6 +91,11 @@ define("tinymce/ui/Label", [
 			return self._super(state);
 		},
 
+		/**
+		 * Repaints the control after a layout operation.
+		 *
+		 * @method repaint
+		 */
 		repaint: function() {
 			var self = this;
 
@@ -75,6 +106,13 @@ define("tinymce/ui/Label", [
 			return self._super();
 		},
 
+		/**
+		 * Sets/gets the current label text.
+		 *
+		 * @method text
+		 * @param {String} [text] New label text.
+		 * @return {String|tinymce.ui.Label} Current text or current label instance.
+		 */
 		text: function(text) {
 			var self = this;
 
@@ -86,9 +124,10 @@ define("tinymce/ui/Label", [
 		},
 
 		/**
-		 * ...
+		 * Renders the control as a HTML string.
 		 *
-		 * @method render
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
 			var self = this, forId = self.settings.forId;

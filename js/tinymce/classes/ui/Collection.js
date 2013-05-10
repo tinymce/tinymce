@@ -1,12 +1,19 @@
 /**
  * Collection.js
  *
- * Copyright 2003-2013, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * Control collection, this class contains control instances and it
- * enables you to perform actions on all the contained items. This is very similar to how jQuery works.
+ * Control collection, this class contains control instances and it enables you to
+ * perform actions on all the contained items. This is very similar to how jQuery works.
+ *
+ * @example
+ * someCollection.show().disabled(true);
  *
  * @class tinymce.ui.Collection
  */
@@ -391,7 +398,7 @@ define("tinymce/ui/Collection", [
 	});
 
 	// Extend tinymce.ui.Collection prototype with some property methods
-	Tools.each('text name width height disabled active selected checked visible parent value data'.split(' '), function(name) {
+	Tools.each('text name disabled active selected checked visible parent value data'.split(' '), function(name) {
 		proto[name] = function(value) {
 			return this.prop(name, value);
 		};

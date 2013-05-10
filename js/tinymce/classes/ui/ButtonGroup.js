@@ -1,11 +1,26 @@
 /**
  * ButtonGroup.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This control enables you to put multiple buttons into a group. This is
+ * useful when you want to combine similar toolbar buttons into a group.
+ *
+ * @example
+ * // Create and render a buttongroup with two buttons to the body element
+ * tinymce.ui.Factory({
+ *     type: 'buttongroup',
+ *     items: [
+ *         {text: 'Button A'},
+ *         {text: 'Button B'}
+ *     ]
+ * }).renderTo(document.body);
  *
  * @-x-less ButtonGroup.less
  * @class tinymce.ui.ButtonGroup
@@ -22,6 +37,12 @@ define("tinymce/ui/ButtonGroup", [
 			role: 'toolbar'
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, layout = self._layout;
 

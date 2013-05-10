@@ -1,11 +1,16 @@
 /**
  * Control.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ...
+ * This is the base class for all controls and containers. All UI control instances inherit
+ * from this one as it has the base logic needed by all of them.
  *
  * @class tinymce.ui.Control
  */
@@ -24,41 +29,23 @@ define("tinymce/ui/Control", [
 	var hasMouseWheelEventSupport = "onmousewheel" in document;
 	var hasWheelEventSupport = false;
 
-	/**
-	 * Base control. All controls extend this class.
-	 */
 	var Control = Class.extend({
 		Statics: {
 			controlIdLookup: {}
 		},
 
+		/**
+		 * Class/id prefix to use for all controls.
+		 *
+		 * @const {String} classPrefix
+		 */
 		classPrefix: "mce-",
 
-		getContainerElm: function() {
-			return document.body;
-		},
-
-		getParentCtrl: function(elm) {
-			var ctrl;
-
-			while (elm) {
-				ctrl = Control.controlIdLookup[elm.id];
-				if (ctrl) {
-					break;
-				}
-
-				elm = elm.parentNode;
-			}
-
-			return ctrl;
-		},
-
 		/**
-		 * Constructor for the control.
+		 * Constructs a new control instance with the specified settings.
 		 *
 		 * @constructor
-		 * @method init
-		 * @param {Object} settings Settings name/value object.
+		 * @param {Object} settings Name/value object with settings.
 		 */
 		init: function(settings) {
 			var self = this, classes, i;
@@ -108,6 +95,11 @@ define("tinymce/ui/Control", [
 				});
 			}
 
+			/**
+			 * Name/value object with settings for the current control.
+			 *
+			 * @field {Object} settings
+			 */
 			self.settings = settings;
 
 			self._borderBox = self.parseBox(settings.border);
@@ -123,8 +115,47 @@ define("tinymce/ui/Control", [
 		Properties: 'parent,title,text,width,height,disabled,active,name,value',
 
 		// Will generate empty dummy functions for these
-		Methods: 'renderHtml,refresh',
+		Methods: 'renderHtml',
 
+		/**
+		 * Returns the root element to render controls into.
+		 *
+		 * @method getContainerElm
+		 * @return {Element} HTML DOM element to render into.
+		 */
+		getContainerElm: function() {
+			return document.body;
+		},
+
+		/**
+		 * Returns a control instance for the current DOM element.
+		 *
+		 * @method getParentCtrl
+		 * @param {Element} elm HTML dom element to get parent control from.
+		 * @return {tinymce.ui.Control} Control instance or undefined.
+		 */
+		getParentCtrl: function(elm) {
+			var ctrl;
+
+			while (elm) {
+				ctrl = Control.controlIdLookup[elm.id];
+				if (ctrl) {
+					break;
+				}
+
+				elm = elm.parentNode;
+			}
+
+			return ctrl;
+		},
+
+		/**
+		 * Parses the specified box value. A box value contains 1-4 properties in clockwise order.
+		 *
+		 * @method parseBox
+		 * @param {String/Number} value Box value "0 1 2 3" or "0" etc.
+		 * @return {Object} Object with top/right/bottom/left properties.
+		 */
 		parseBox: function(value) {
 			var len, radix = 10;
 
@@ -205,6 +236,14 @@ define("tinymce/ui/Control", [
 			};
 		},
 
+		/**
+		 * Initializes the current controls layout rect.
+		 * This will be executed by the layout managers to determine the
+		 * default minWidth/minHeight etc.
+		 *
+		 * @method initLayoutRect
+		 * @return {Object} Layout rect instance.
+		 */
 		initLayoutRect: function() {
 			var self = this, settings = self.settings, borderBox, layoutRect;
 			var elm = self.getEl(), width, height, minWidth, minHeight, autoResize;
@@ -261,6 +300,13 @@ define("tinymce/ui/Control", [
 			return layoutRect;
 		},
 
+		/**
+		 * Getter/setter for the current layout rect.
+		 *
+		 * @method layoutRect
+		 * @param {Object} [newRect] Optional new layout rect.
+		 * @return {tinymce.ui.Control/Object} Current control or rect object.
+		 */
 		layoutRect: function(newRect) {
 			var self = this, curRect = self._layoutRect, lastLayoutRect, size, deltaWidth, deltaHeight, undef, repaintControls;
 
@@ -366,6 +412,11 @@ define("tinymce/ui/Control", [
 			return curRect;
 		},
 
+		/**
+		 * Repaints the control after a layout operation.
+		 *
+		 * @method repaint
+		 */
 		repaint: function() {
 			var self = this, style, bodyStyle, rect, borderBox, borderW = 0, borderH = 0, lastRepaintRect;
 
@@ -492,8 +543,8 @@ define("tinymce/ui/Control", [
 		 * by the specified name will be removed.
 		 *
 		 * @method off
-		 * @param {String} name Optional name for the event to unbind.
-		 * @param {function} callback Optional callback function to unbind.
+		 * @param {String} [name] Name for the event to unbind.
+		 * @param {function} [callback] Callback function to unbind.
 		 * @return {mxex.ui.Control} Current control object.
 		 */
 		off: function(name, callback) {
@@ -545,9 +596,9 @@ define("tinymce/ui/Control", [
 		 *
 		 * @method fire
 		 * @param {String} name Name of the event to fire.
-		 * @param {Object} args Optional arguments to pass to the event.
-		 * @param {Boolean} bubble Optional value to control bubbeling. Defaults to true.
-		 * @return {tinymce.ui.Control} Current control object.
+		 * @param {Object} [args] Arguments to pass to the event.
+		 * @param {Boolean} [bubble] Value to control bubbeling. Defaults to true.
+		 * @return {Object} Current arguments object.
 		 */
 		fire: function(name, args, bubble) {
 			var self = this, i, l, handlers, parentCtrl;
@@ -648,18 +699,38 @@ define("tinymce/ui/Control", [
 			return parents;
 		},
 
+		/**
+		 * Returns the control next to the current control.
+		 *
+		 * @method next
+		 * @return {tinymce.ui.Control} Next control instance.
+		 */
 		next: function() {
 			var parentControls = this.parent().items();
 
 			return parentControls[parentControls.indexOf(this) + 1];
 		},
 
+		/**
+		 * Returns the control previous to the current control.
+		 *
+		 * @method prev
+		 * @return {tinymce.ui.Control} Previous control instance.
+		 */
 		prev: function() {
 			var parentControls = this.parent().items();
 
 			return parentControls[parentControls.indexOf(this) - 1];
 		},
 
+		/**
+		 * Find the common ancestor for two control instances.
+		 *
+		 * @method findCommonAncestor
+		 * @param {tinymce.ui.Control} ctrl1 First control.
+		 * @param {tinymce.ui.Control} ctrl2 Second control.
+		 * @return {tinymce.ui.Control} Ancestor control instance.
+		 */
 		findCommonAncestor: function(ctrl1, ctrl2) {
 			var parentCtrl;
 
@@ -685,6 +756,7 @@ define("tinymce/ui/Control", [
 		 *
 		 * @method hasClass
 		 * @param {String} cls Class to check for.
+		 * @param {String} [group] Sub element group name.
 		 * @return {Boolean} True/false if the control has the specified class.
 		 */
 		hasClass: function(cls, group) {
@@ -700,6 +772,7 @@ define("tinymce/ui/Control", [
 		 *
 		 * @method addClass
 		 * @param {String} cls Class to check for.
+		 * @param {String} [group] Sub element group name.
 		 * @return {tinymce.ui.Control} Current control object.
 		 */
 		addClass: function(cls, group) {
@@ -731,10 +804,11 @@ define("tinymce/ui/Control", [
 		},
 
 		/**
-		 * Removed the specified class from the control.
+		 * Removes the specified class from the control.
 		 *
 		 * @method removeClass
 		 * @param {String} cls Class to remove.
+		 * @param {String} [group] Sub element group name.
 		 * @return {tinymce.ui.Control} Current control object.
 		 */
 		removeClass: function(cls, group) {
@@ -764,6 +838,15 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Toggles the specified class on the control.
+		 *
+		 * @method toggleClass
+		 * @param {String} cls Class to remove.
+		 * @param {Boolean} state True/false state to add/remove class.
+		 * @param {String} [group] Sub element group name.
+		 * @return {tinymce.ui.Control} Current control object.
+		 */
 		toggleClass: function(cls, state, group) {
 			var self = this;
 
@@ -776,12 +859,27 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Returns the class string for the specified group name.
+		 *
+		 * @method classes
+		 * @param {String} [group] Group to get clases by.
+		 * @return {String} Classes for the specified group.
+		 */
 		classes: function(group) {
 			var classes = this._classes[group || 'control'];
 
 			return classes ? classes.join(' ') : '';
 		},
 
+		/**
+		 * Returns the control DOM element or sub element.
+		 *
+		 * @method getEl
+		 * @param {String} [suffix] Suffix to get element by.
+		 * @param {Boolean} [dropCache] True if the cache for the element should be dropped.
+		 * @return {Element} HTML DOM element for the current control or it's children.
+		 */
 		getEl: function(suffix, dropCache) {
 			var elm, id = suffix ? this._id + '-' + suffix : this._id;
 
@@ -843,18 +941,42 @@ define("tinymce/ui/Control", [
 			return this.visible(false);
 		},
 
+		/**
+		 * Focuses the current control.
+		 *
+		 * @method focus
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		focus: function() {
 			try {
 				this.getEl().focus();
 			} catch (ex) {
 				// Ignore IE error
 			}
+
+			return this;
 		},
 
+		/**
+		 * Blurs the current control.
+		 *
+		 * @method blur
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		blur: function() {
 			this.getEl().blur();
+
+			return this;
 		},
 
+		/**
+		 * Sets the specified aria property.
+		 *
+		 * @method aria
+		 * @param {String} name Name of the aria property to set.
+		 * @param {String} value Value of the aria property.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		aria: function(name, value) {
 			var self = this, elm = self.getEl();
 
@@ -875,6 +997,15 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Encodes the specified string with HTML entities. It will also
+		 * translate the string to different languages.
+		 *
+		 * @method encode
+		 * @param {String/Object/Array} text Text to entity encode.
+		 * @param {Boolean} [translate=true] False if the contents shouldn't be translated.
+		 * @return {String} Encoded and possible traslated string. 
+		 */
 		encode: function(text, translate) {
 			if (translate !== false && Control.translate) {
 				text = Control.translate(text);
@@ -885,6 +1016,13 @@ define("tinymce/ui/Control", [
 			});
 		},
 
+		/**
+		 * Adds items before the current control.
+		 *
+		 * @method before
+		 * @param {Array/tinymce.ui.Collection} items Array of items to prepend before this control.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		before: function(items) {
 			var self = this, parent = self.parent();
 
@@ -895,6 +1033,13 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Adds items after the current control.
+		 *
+		 * @method after
+		 * @param {Array/tinymce.ui.Collection} items Array of items to append after this control.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		after: function(items) {
 			var self = this, parent = self.parent();
 
@@ -905,6 +1050,12 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Removes the current control from DOM and from UI collections.
+		 *
+		 * @method remove
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		remove: function() {
 			var self = this, elm = self.getEl(), parent = self.parent(), newItems;
 
@@ -942,6 +1093,13 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Renders the control before the specified element.
+		 *
+		 * @method renderBefore
+		 * @param {Element} elm Element to render before.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		renderBefore: function(elm) {
 			var self = this;
 
@@ -951,6 +1109,13 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Renders the control to the specified element.
+		 *
+		 * @method renderBefore
+		 * @param {Element} elm Element to render to.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		renderTo: function(elm) {
 			var self = this;
 
@@ -961,6 +1126,12 @@ define("tinymce/ui/Control", [
 			return self;
 		},
 
+		/**
+		 * Post render method. Called after the control has been rendered to the target.
+		 *
+		 * @method postRender
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		postRender: function() {
 			var self = this, settings = self.settings, elm, box, parent, name, parentEventsRoot;
 
@@ -1017,6 +1188,13 @@ define("tinymce/ui/Control", [
 			self.fire('postrender', {}, false);
 		},
 
+		/**
+		 * Scrolls the current control into view.
+		 *
+		 * @method scrollIntoView
+		 * @param {String} align Alignment in view top|center|bottom.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		scrollIntoView: function(align) {
 			function getOffset(elm, rootElm) {
 				var x, y, parent = elm;
@@ -1052,8 +1230,15 @@ define("tinymce/ui/Control", [
 
 			parentElm.scrollLeft = x;
 			parentElm.scrollTop = y;
+
+			return this;
 		},
 
+		/**
+		 * Binds pending DOM events.
+		 *
+		 * @private
+		 */
 		bindPendingEvents: function() {
 			var self = this, i, l, parents, eventRootCtrl, nativeEvents, name;
 
@@ -1190,6 +1375,17 @@ define("tinymce/ui/Control", [
 			}
 		},
 
+		/**
+		 * Reflows the current control and it's parents.
+		 * This should be used after you for example append children to the current control so
+		 * that the layout managers know that they need to reposition everything.
+		 *
+		 * @example
+		 * container.append({type: 'button', text: 'My button'}).reflow();
+		 *
+		 * @method reflow
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		reflow: function() {
 			this.repaint();
 
@@ -1233,7 +1429,7 @@ define("tinymce/ui/Control", [
 		// height: function(value) {} -- Generated
 
 		/**
-		 * Sets/gets the disabled for the control.
+		 * Sets/gets the disabled state on the control.
 		 *
 		 * @method disabled
 		 * @param {Boolean} state Value to set to control.

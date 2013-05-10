@@ -1,12 +1,17 @@
 /**
  * Container.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * Base container control. This will be extended by all controls
- * that can have children such as panels etc.
+ * Container control. This is extended by all controls that can have
+ * children such as panels etc. You can also use this class directly as an
+ * generic container instance. The container doesn't have any specific role or style.
  *
  * @-x-less Container.less
  * @class tinymce.ui.Container
@@ -29,11 +34,10 @@ define("tinymce/ui/Container", [
 		innerClass: 'container-inner',
 
 		/**
-		 * Constructor for the control.
+		 * Constructs a new control instance with the specified settings.
 		 *
 		 * @constructor
-		 * @method init
-		 * @param {Object} settings Settings name/value object.
+		 * @param {Object} settings Name/value object with settings.
 		 */
 		init: function(settings) {
 			var self = this;
@@ -99,6 +103,13 @@ define("tinymce/ui/Container", [
 			return self;
 		},
 
+		/**
+		 * Focuses the current container instance. This will look
+		 * for the first control in the container and focus that.
+		 *
+		 * @method focus
+		 * @return {tinymce.ui.Collection} Current instance.
+		 */
 		focus: function() {
 			var self = this;
 
@@ -111,6 +122,13 @@ define("tinymce/ui/Container", [
 			return self;
 		},
 
+		/**
+		 * Replaces the specified child control with a new control.
+		 *
+		 * @method replace
+		 * @param {tinymce.ui.Control} oldItem Old item to be replaced.
+		 * @param {tinymce.ui.Control} newItem New item to be inserted.
+		 */
 		replace: function(oldItem, newItem) {
 			var ctrlElm, items = this.items(), i = items.length;
 
@@ -140,6 +158,14 @@ define("tinymce/ui/Container", [
 			newItem.parent(this);
 		},
 
+		/**
+		 * Creates the specified items. If any of the items is plain JSON style objects
+		 * it will convert these into real tinymce.ui.Control instances.
+		 *
+		 * @method create
+		 * @param {Array} items Array of items to convert into control instances.
+		 * @return {Array} Array with control instances.
+		 */
 		create: function(items) {
 			var self = this, settings, ctrlItems = [];
 
@@ -172,6 +198,11 @@ define("tinymce/ui/Container", [
 			return ctrlItems;
 		},
 
+		/**
+		 * Renders new control instances.
+		 *
+		 * @private
+		 */
 		renderNew: function() {
 			var self = this;
 
@@ -202,10 +233,24 @@ define("tinymce/ui/Container", [
 			return self;
 		},
 
+		/**
+		 * Appends new instances to the current container.
+		 *
+		 * @method append
+		 * @param {Array/tinymce.ui.Collection} items Array if controls to append.
+		 * @return {tinymce.ui.Container} Current container instance.
+		 */
 		append: function(items) {
 			return this.add(items).renderNew();
 		},
 
+		/**
+		 * Prepends new instances to the current container.
+		 *
+		 * @method prepend
+		 * @param {Array/tinymce.ui.Collection} items Array if controls to prepend.
+		 * @return {tinymce.ui.Container} Current container instance.
+		 */
 		prepend: function(items) {
 			var self = this;
 
@@ -214,6 +259,14 @@ define("tinymce/ui/Container", [
 			return self.renderNew();
 		},
 
+		/**
+		 * Inserts an control at a specific index.
+		 *
+		 * @method insert
+		 * @param {Array/tinymce.ui.Collection} items Array if controls to insert.
+		 * @param {Number} index Index to insert controls at.
+		 * @param {Boolean} [before=false] Inserts controls before the index.
+		 */
 		insert: function(items, index, before) {
 			var self = this, curItems, beforeItems, afterItems;
 
@@ -233,9 +286,55 @@ define("tinymce/ui/Container", [
 			return self.renderNew();
 		},
 
+		/**
+		 * Populates the form fields from the specified JSON data object.
+		 *
+		 * Control items in the form that matches the data will have it's value set.
+		 *
+		 * @method fromJSON
+		 * @param {Object} data JSON data object to set control values by.
+		 * @return {tinymce.ui.Container} Current form instance.
+		 */
+		fromJSON: function(data) {
+			var self = this;
+
+			for (var name in data) {
+				self.find('#' + name).value(data[name]);
+			}
+
+			return self;
+		},
+
+		/**
+		 * Serializes the form into a JSON object by getting all items
+		 * that has a name and a value.
+		 *
+		 * @method toJSON
+		 * @return {Object} JSON object with form data.
+		 */
+		toJSON: function() {
+			var self = this, data = {};
+
+			self.find('*').each(function(ctrl) {
+				var name = ctrl.name(), value = ctrl.value();
+
+				if (name && typeof(value) != "undefined") {
+					data[name] = value;
+				}
+			});
+
+			return data;
+		},
+
 		preRender: function() {
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, layout = self._layout;
 
@@ -251,6 +350,12 @@ define("tinymce/ui/Container", [
 			);
 		},
 
+		/**
+		 * Post render method. Called after the control has been rendered to the target.
+		 *
+		 * @method postRender
+		 * @return {tinymce.ui.Container} Current combobox instance.
+		 */
 		postRender: function() {
 			var self = this, box;
 
@@ -277,6 +382,14 @@ define("tinymce/ui/Container", [
 			return self;
 		},
 
+		/**
+		 * Initializes the current controls layout rect.
+		 * This will be executed by the layout managers to determine the
+		 * default minWidth/minHeight etc.
+		 *
+		 * @method initLayoutRect
+		 * @return {Object} Layout rect instance.
+		 */
 		initLayoutRect: function() {
 			var self = this, layoutRect = self._super();
 
@@ -286,6 +399,12 @@ define("tinymce/ui/Container", [
 			return layoutRect;
 		},
 
+		/**
+		 * Recalculates the positions of the controls in the current container.
+		 * This is invoked by the reflow method and shouldn't be called directly.
+		 *
+		 * @method recalc
+		 */
 		recalc: function() {
 			var self = this, rect = self._layoutRect, lastRect = self._lastRect;
 
@@ -297,6 +416,17 @@ define("tinymce/ui/Container", [
 			}
 		},
 
+		/**
+		 * Reflows the current container and it's children and possible parents.
+		 * This should be used after you for example append children to the current control so
+		 * that the layout managers know that they need to reposition everything.
+		 *
+		 * @example
+		 * container.append({type: 'button', text: 'My button'}).reflow();
+		 *
+		 * @method reflow
+		 * @return {tinymce.ui.Container} Current container instance.
+		 */
 		reflow: function() {
 			var i, items;
 

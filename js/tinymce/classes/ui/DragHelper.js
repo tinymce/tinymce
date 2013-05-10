@@ -1,7 +1,11 @@
 /**
  * DragHelper.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
@@ -118,6 +122,11 @@ define("tinymce/ui/DragHelper", [
 			}
 		};
 
+		/**
+		 * Destroys the drag/drop helper instance.
+		 *
+		 * @method destroy
+		 */
 		this.destroy = function() {
 			DomUtils.off(getHandleElm());
 		};

@@ -1,11 +1,15 @@
 /**
  * FloatPanel.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class creates a floating panel.
  *
  * @-x-less FloatPanel.less
  * @class tinymce.ui.FloatPanel
@@ -27,6 +31,12 @@ define("tinymce/ui/FloatPanel", [
 	var FloatPanel = Panel.extend({
 		Mixins: [Movable, Resizable],
 
+		/**
+		 * Constructs a new control instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -181,6 +191,12 @@ define("tinymce/ui/FloatPanel", [
 			}
 		},
 
+		/**
+		 * Shows the current float panel.
+		 *
+		 * @method show
+		 * @return {tinymce.ui.FloatPanel} Current floatpanel instance.
+		 */
 		show: function() {
 			var self = this, i, state = self._super();
 
@@ -198,15 +214,31 @@ define("tinymce/ui/FloatPanel", [
 			return state;
 		},
 
+		/**
+		 * Hides the current float panel.
+		 *
+		 * @method hide
+		 * @return {tinymce.ui.FloatPanel} Current floatpanel instance.
+		 */
 		hide: function() {
 			removeVisiblePanel(this);
 			return this._super();
 		},
 
+		/**
+		 * Hides all visible the float panels.
+		 *
+		 * @method hideAll
+		 */
 		hideAll: function() {
 			FloatPanel.hideAll();
 		},
 
+		/**
+		 * Closes the float panel. This will remove the float panel from page and fire the close event.
+		 *
+		 * @method close
+		 */
 		close: function() {
 			var self = this;
 
@@ -215,12 +247,23 @@ define("tinymce/ui/FloatPanel", [
 			return self.remove();
 		},
 
+		/**
+		 * Removes the float panel from page.
+		 *
+		 * @method remove
+		 */
 		remove: function() {
 			removeVisiblePanel(this);
 			this._super();
 		}
 	});
 
+	/**
+	 * Hides all visible the float panels.
+	 *
+	 * @static
+	 * @method hideAll
+	 */
 	FloatPanel.hideAll = function() {
 		var i = visiblePanels.length;
 

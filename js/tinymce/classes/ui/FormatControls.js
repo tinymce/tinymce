@@ -1,12 +1,16 @@
 /**
  * FormatControls.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
- *
+ * Internal class containing all TinyMCE specific control types such as
+ * format listboxes, fontlist boxes, toolbar buttons etc.
  *
  * @class tinymce.ui.FormatControls
  */

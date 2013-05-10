@@ -1,11 +1,24 @@
 /**
  * GridLayout.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This layout manager places controls in a grid.
+ *
+ * @setting {Number} spacing Spacing between controls.
+ * @setting {Number} spacingH Horizontal spacing between controls.
+ * @setting {Number} spacingV Vertical spacing between controls.
+ * @setting {Number} columns Number of columns to use.
+ * @setting {String} align start|end|center|stretch
+ * @setting {String} alignH start|end|center|stretch
+ * @setting {String} alignV start|end|center|stretch
+ * @setting {String} pack start|end
  *
  * @class tinymce.ui.GridLayout
  * @extends tinymce.ui.AbsoluteLayout
@@ -16,6 +29,12 @@ define("tinymce/ui/GridLayout", [
 	"use strict";
 
 	return AbsoluteLayout.extend({
+		/**
+		 * Recalculates the positions of the controls in the specified container.
+		 *
+		 * @method recalc
+		 * @param {tinymce.ui.Container} container Container instance to recalc.
+		 */
 		recalc: function(container) {
 			var settings = container.settings, rows, cols, items, contLayoutRect, width, height, rect,
 				ctrlLayoutRect, ctrl, x, y, posX, posY, ctrlSettings, contPaddingBox, align, spacingH, spacingV, alignH, alignV, maxX, maxY,

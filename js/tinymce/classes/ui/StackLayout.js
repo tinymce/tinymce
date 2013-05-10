@@ -1,11 +1,15 @@
 /**
  * StackLayout.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This layout uses the browsers layout when the items are blocks.
  *
  * @-x-less StackLayout.less
  * @class tinymce.ui.StackLayout

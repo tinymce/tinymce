@@ -1,11 +1,15 @@
 /**
  * TextBox.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new textbox.
  *
  * @-x-less TextBox.less
  * @class tinymce.ui.TextBox
@@ -18,6 +22,12 @@ define("tinymce/ui/TextBox", [
 	"use strict";
 
 	return Widget.extend({
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -45,6 +55,13 @@ define("tinymce/ui/TextBox", [
 			}
 		},
 
+		/**
+		 * Getter/setter function for the control value.
+		 *
+		 * @method value
+		 * @param {String} [value] Value to be set.
+		 * @return {String|tinymce.ui.ComboBox} Value or self if it's a set operation.
+		 */
 		value: function(value) {
 			var self = this;
 
@@ -65,6 +82,11 @@ define("tinymce/ui/TextBox", [
 			return self._value;
 		},
 
+		/**
+		 * Repaints the control after a layout operation.
+		 *
+		 * @method repaint
+		 */
 		repaint: function() {
 			var self = this, style, rect, borderBox, borderW = 0, borderH = 0, lastRepaintRect;
 
@@ -106,6 +128,12 @@ define("tinymce/ui/TextBox", [
 			return self;
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, value = self.encode(self._value, false), extraAttrs = '';
 
@@ -137,6 +165,11 @@ define("tinymce/ui/TextBox", [
 			return '<input id="' + id + '" class="' + self.classes() + '" value="' + value + '" hidefocus="true"' + extraAttrs + '>';
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this;
 

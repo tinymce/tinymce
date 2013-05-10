@@ -1,7 +1,11 @@
 /**
  * Selector.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
@@ -27,6 +31,7 @@
  *  element:even
  *  element element
  *  element > element
+ *
  * @class tinymce.ui.Selector
  */
 define("tinymce/ui/Selector", [
@@ -39,6 +44,7 @@ define("tinymce/ui/Selector", [
 	 * Produces an array with a unique set of objects. It will not compare the values
 	 * but the references of the objects.
 	 *
+	 * @private
 	 * @method unqiue
 	 * @param {Array} array Array to make into an array with unique items.
 	 * @return {Array} Array with unique items.

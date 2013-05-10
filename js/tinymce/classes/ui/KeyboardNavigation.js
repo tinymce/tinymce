@@ -1,11 +1,15 @@
 /**
- * KeyboardFocus.js
+ * KeyboardNavigation.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class handles keyboard navigation of controls and elements.
  *
  * @class tinymce.ui.KeyboardNavigation
  */
@@ -18,7 +22,6 @@ define("tinymce/ui/KeyboardNavigation", [
 	 * Create a new KeyboardNavigation instance to handle the focus for a specific element.
 	 *
 	 * @constructor
-	 * @method KeyboardNavigation
 	 * @param {Object} settings the settings object to define how keyboard navigation works.
 	 *
 	 * @setting {tinymce.ui.Control} root the root control navigation focus movement is scoped to this root.

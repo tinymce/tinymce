@@ -1,11 +1,15 @@
 /**
  * MenuItem.js
  *
- * Copyright 2003-2013, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new menu item.
  *
  * @-x-less MenuItem.less
  * @class tinymce.ui.MenuItem
@@ -23,6 +27,12 @@ define("tinymce/ui/MenuItem", [
 			role: 'menuitem'
 		},
 
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -79,10 +89,21 @@ define("tinymce/ui/MenuItem", [
 			}
 		},
 
+		/**
+		 * Returns true/false if the menuitem has sub menu.
+		 *
+		 * @method hasMenus
+		 * @return {Boolean} True/false state if it has submenu.
+		 */
 		hasMenus: function() {
 			return !!this.settings.menu;
 		},
 
+		/**
+		 * Shows the menu for the menu item.
+		 *
+		 * @method showMenu
+		 */
 		showMenu: function() {
 			var self = this, settings = self.settings, menu;
 
@@ -131,6 +152,11 @@ define("tinymce/ui/MenuItem", [
 			}
 		},
 
+		/**
+		 * Hides the menu for the menu item.
+		 *
+		 * @method hideMenu
+		 */
 		hideMenu: function() {
 			var self = this;
 
@@ -148,6 +174,12 @@ define("tinymce/ui/MenuItem", [
 			return self;
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.encode(self._text);
 			var icon = self.settings.icon;
@@ -169,6 +201,11 @@ define("tinymce/ui/MenuItem", [
 			);
 		},
 
+		/**
+		 * Gets invoked after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this, settings = self.settings;
 
@@ -187,6 +224,11 @@ define("tinymce/ui/MenuItem", [
 			return self._super();
 		},
 
+		/**
+		 * Removes the control and it's menus.
+		 *
+		 * @method remove
+		 */
 		remove: function() {
 			this._super();
 

@@ -1,13 +1,20 @@
 /**
  * Factory.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /*global tinymce:true */
 
 /**
- * ..
+ * This class is a factory for control instances. This enables you
+ * to create instances of controls without having to require the UI controls directly.
+ *
+ * It also allow you to override or add new control types.
  *
  * @class tinymce.ui.Factory
  */
@@ -17,20 +24,40 @@ define("tinymce/ui/Factory", [], function() {
 	var types = {}, namespaceInit;
 
 	return {
+		/**
+		 * Adds a new control instance type to the factory.
+		 *
+		 * @method add
+		 * @param {String} type Type name for example "button".
+		 * @param {function} typeClass Class type function.
+		 */
 		add: function(type, typeClass) {
 			types[type.toLowerCase()] = typeClass;
 		},
 
+		/**
+		 * Returns true/false if the specified type exists or not.
+		 *
+		 * @method has
+		 * @param {String} type Type to look for.
+		 * @return {Boolean} true/false if the control by name exists.
+		 */
 		has: function(type) {
 			return !!types[type.toLowerCase()];
 		},
 
 		/**
 		 * Creates a new control instance based on the settings provided. The instance created will be
-		 * based on the specified type property.
+		 * based on the specified type property it can also create whole structures of components out of
+		 * the specified JSON object.
+		 *
+		 * @example
+		 * tinymce.ui.Factory.create({
+		 *     type: 'button',
+		 *     text: 'Hello world!'
+		 * });
 		 *
 		 * @method create
-		 * @example tinymce.ui.Factory.create({type: 'button', text: 'Hello world!'});
 		 * @param {Object/String} settings Name/Value object with items used to create the type.
 		 * @return {tinymce.ui.Control} Control instance based on the specified type.
 		 */

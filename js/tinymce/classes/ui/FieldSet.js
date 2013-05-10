@@ -1,11 +1,15 @@
 /**
  * FieldSet.js
  *
- * Copyright 2003-2013, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class creates fieldset containers.
  *
  * @-x-less FieldSet.less
  * @class tinymce.ui.FieldSet
@@ -29,6 +33,12 @@ define("tinymce/ui/FieldSet", [
 			border: 1
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, layout = self._layout, prefix = self.classPrefix;
 

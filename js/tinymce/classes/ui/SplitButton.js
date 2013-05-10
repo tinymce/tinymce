@@ -1,11 +1,15 @@
 /**
  * SplitButton.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a split button.
  *
  * @-x-less SplitButton.less
  * @class tinymce.ui.SplitButton
@@ -23,6 +27,11 @@ define("tinymce/ui/SplitButton", [
 			role: "splitbutton"
 		},
 
+		/**
+		 * Repaints the control after a layout operation.
+		 *
+		 * @method repaint
+		 */
 		repaint: function() {
 			var self = this, elm = self.getEl(), rect = self.layoutRect(), mainButtonElm, menuButtonElm, btnStyle;
 
@@ -49,12 +58,23 @@ define("tinymce/ui/SplitButton", [
 			return self;
 		},
 
+		/**
+		 * Sets the active menu state.
+		 *
+		 * @private
+		 */
 		activeMenu: function(state) {
 			var self = this;
 
 			DOM.toggleClass(self.getEl().lastChild, self.classPrefix + 'active', state);
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
 			var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
@@ -74,6 +94,11 @@ define("tinymce/ui/SplitButton", [
 			);
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this, onClickHandler = self.settings.onclick;
 

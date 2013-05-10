@@ -1,11 +1,15 @@
 /**
  * Toolbar.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new toolbar.
  *
  * @class tinymce.ui.Toolbar
  * @extends tinymce.ui.Container
@@ -22,6 +26,12 @@ define("tinymce/ui/Toolbar", [
 			layout: 'flow'
 		},
 
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -29,6 +39,11 @@ define("tinymce/ui/Toolbar", [
 			self.addClass('toolbar');
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this;
 

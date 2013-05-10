@@ -1,11 +1,15 @@
 /**
  * Movable.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * Movable.
+ * Movable mixin. Makes controls movable absolute and relative to other elements.
  *
  * @mixin tinymce.ui.Movable
  */
@@ -16,12 +20,12 @@ define("tinymce/ui/Movable", [
 
 	return {
 		/**
-		 * Move rel.
+		 * Move relative to the specified element.
 		 *
 		 * @method moveRel
-		 * @param {Element} elm [description]
-		 * @param {String} rel [description]
-		 * @return {this} ...
+		 * @param {Element} elm Element to move relative to.
+		 * @param {String} rel Relative mode. For example: br-tl.
+		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		moveRel: function(elm, rel) {
 			var self = this, ctrlElm, pos, x, y, selfW, selfH, targetW, targetH;
@@ -82,6 +86,14 @@ define("tinymce/ui/Movable", [
 			return self;
 		},
 
+		/**
+		 * Move by a relative x, y values.
+		 *
+		 * @method moveBy
+		 * @param {Number} dx Relative x position.
+		 * @param {Number} dy Relative y position.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		moveBy: function(dx, dy) {
 			var self = this, rect = self.layoutRect();
 
@@ -90,6 +102,14 @@ define("tinymce/ui/Movable", [
 			return self;
 		},
 
+		/**
+		 * Move to absolute position.
+		 *
+		 * @method moveTo
+		 * @param {Number} x Absolute x position.
+		 * @param {Number} y Absolute y position.
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		moveTo: function(x, y) {
 			var self = this;
 

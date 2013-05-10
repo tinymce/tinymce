@@ -1,11 +1,15 @@
 /**
  * Path.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new path control.
  *
  * @-x-less Path.less
  * @class tinymce.ui.Path
@@ -22,6 +26,12 @@ define("tinymce/ui/Path", [
 			delimiter: "\u00BB"
 		},
 
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -38,6 +48,12 @@ define("tinymce/ui/Path", [
 			});
 		},
 
+		/**
+		 * Focuses the current control.
+		 *
+		 * @method focus
+		 * @return {tinymce.ui.Control} Current control instance.
+		 */
 		focus: function() {
 			var self = this;
 
@@ -51,6 +67,12 @@ define("tinymce/ui/Path", [
 			return self;
 		},
 
+		/**
+		 * Sets/gets the data to be used for the path.
+		 *
+		 * @method data
+		 * @param {Array} data Array with items name is rendered to path.
+		 */
 		data: function(data) {
 			var self = this;
 
@@ -64,10 +86,20 @@ define("tinymce/ui/Path", [
 			return self._data;
 		},
 
+		/**
+		 * Updated the path.
+		 *
+		 * @private
+		 */
 		update: function() {
 			this.getEl().innerHTML = this._getPathHtml();
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this;
 
@@ -77,9 +109,10 @@ define("tinymce/ui/Path", [
 		},
 
 		/**
-		 * ...
+		 * Renders the control as a HTML string.
 		 *
-		 * @method render
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
 		 */
 		renderHtml: function() {
 			var self = this;

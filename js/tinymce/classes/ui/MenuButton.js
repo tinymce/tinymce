@@ -1,11 +1,15 @@
 /**
  * MenuButton.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new menu button.
  *
  * @-x-less MenuButton.less
  * @class tinymce.ui.MenuButton
@@ -32,6 +36,12 @@ define("tinymce/ui/MenuButton", [
 	}
 
 	var MenuButton = Button.extend({
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -44,6 +54,11 @@ define("tinymce/ui/MenuButton", [
 			self.hasPopup = true;
 		},
 
+		/**
+		 * Shows the menu for the button.
+		 *
+		 * @method showMenu
+		 */
 		showMenu: function() {
 			var self = this, settings = self.settings, menu;
 
@@ -83,6 +98,11 @@ define("tinymce/ui/MenuButton", [
 			self.menu.moveRel(self.getEl(), 'bl-tl');
 		},
 
+		/**
+		 * Hides the menu for the button.
+		 *
+		 * @method hideMenu
+		 */
 		hideMenu: function() {
 			var self = this;
 
@@ -98,10 +118,21 @@ define("tinymce/ui/MenuButton", [
 			}
 		},
 
+		/**
+		 * Sets the active menu state.
+		 *
+		 * @private
+		 */
 		activeMenu: function(state) {
 			this.toggleClass('active', state);
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
 			var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';
@@ -119,6 +150,11 @@ define("tinymce/ui/MenuButton", [
 			);
 		},
 
+		/**
+		 * Gets invoked after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this;
 
@@ -155,6 +191,13 @@ define("tinymce/ui/MenuButton", [
 			return self._super();
 		},
 
+		/**
+		 * Sets/gets the current button text.
+		 *
+		 * @method text
+		 * @param {String} [text] New button text.
+		 * @return {String|tinymce.ui.MenuButton} Current text or current MenuButton instance.
+		 */
 		text: function(text) {
 			var self = this, i, children;
 
@@ -170,6 +213,11 @@ define("tinymce/ui/MenuButton", [
 			return this._super(text);
 		},
 
+		/**
+		 * Removes the control and it's menus.
+		 *
+		 * @method remove
+		 */
 		remove: function() {
 			this._super();
 

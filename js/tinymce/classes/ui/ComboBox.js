@@ -1,11 +1,16 @@
 /**
- * ComboBox.js
+ * ColorButton.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class creates a combobox control. Select box that you select a value from or
+ * type a value into.
  *
  * @-x-less ComboBox.less
  * @class tinymce.ui.ComboBox
@@ -18,6 +23,12 @@ define("tinymce/ui/ComboBox", [
 	"use strict";
 
 	return Widget.extend({
+		/**
+		 * Constructs a new control instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -78,6 +89,13 @@ define("tinymce/ui/ComboBox", [
 			}
 		},
 
+		/**
+		 * Getter/setter function for the control value.
+		 *
+		 * @method value
+		 * @param {String} [value] Value to be set.
+		 * @return {String|tinymce.ui.ComboBox} Value or self if it's a set operation.
+		 */
 		value: function(value) {
 			var self = this;
 
@@ -105,6 +123,37 @@ define("tinymce/ui/ComboBox", [
 			return self._value;
 		},
 
+		/**
+		 * Getter/setter function for the disabled state.
+		 *
+		 * @method value
+		 * @param {Boolean} [state] State to be set.
+		 * @return {Boolean|tinymce.ui.ComboBox} True/false or self if it's a set operation.
+		 */
+		disabled: function(state) {
+			var self = this;
+
+			self._super(state);
+
+			if (self._rendered) {
+				self.getEl('inp').disabled = state;
+			}
+		},
+
+		/**
+		 * Focuses the input area of the control.
+		 *
+		 * @method focus
+		 */
+		focus: function() {
+			this.getEl('inp').focus();
+		},
+
+		/**
+		 * Repaints the control after a layout operation.
+		 *
+		 * @method repaint
+		 */
 		repaint: function() {
 			var self = this, elm = self.getEl(), openElm = self.getEl('open'), rect = self.layoutRect();
 
@@ -124,20 +173,12 @@ define("tinymce/ui/ComboBox", [
 			return self;
 		},
 
-		disabled: function(state) {
-			var self = this;
-
-			self._super(state);
-
-			if (self._rendered) {
-				self.getEl().disabled = state;
-			}
-		},
-
-		focus: function() {
-			this.getEl('inp').focus();
-		},
-
+		/**
+		 * Post render method. Called after the control has been rendered to the target.
+		 *
+		 * @method postRender
+		 * @return {tinymce.ui.ComboBox} Current combobox instance.
+		 */
 		postRender: function() {
 			var self = this;
 
@@ -148,6 +189,12 @@ define("tinymce/ui/ComboBox", [
 			return self._super();
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, settings = self.settings, prefix = self.classPrefix;
 			var value = settings.value || settings.placeholder || '';

@@ -1,11 +1,17 @@
 /**
  * ColorButton.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class creates a color button control. This is a button that has a visual representation
+ * of the currently selected color. It will also display a color picker if you click the control
+ * allowing the user to select a new color.
  *
  * @-x-less ColorButton.less
  * @class tinymce.ui.ColorButton
@@ -17,15 +23,40 @@ define("tinymce/ui/ColorButton", [
 	"use strict";
 
 	return PanelButton.extend({
+		/**
+		 * Constructs a new ColorButton instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			this._super(settings);
 			this.addClass('colorbutton');
 		},
 
-		showPreview: function(color) {
-			this.getEl('preview').style.backgroundColor = color;
+		/**
+		 * Getter/setter for the current color.
+		 *
+		 * @method color
+		 * @param {String} [color] Color to set.
+		 * @return {String|tinymce.ui.ColorButton} Current color or current instance.
+		 */
+		color: function(color) {
+			if (color) {
+				this._color = color;
+				this.getEl('preview').style.backgroundColor = color;
+				return this;
+			}
+
+			return this._color;
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, id = self._id, prefix = self.classPrefix;
 			var icon = self.settings.icon ? prefix + 'ico ' + prefix + 'i-' + self.settings.icon : '';

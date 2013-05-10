@@ -1,11 +1,15 @@
 /**
  * MessageBox.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This class is used to create MessageBoxes like alerts/confirms etc.
  *
  * @class tinymce.ui.Window
  * @extends tinymce.ui.FloatPanel
@@ -16,6 +20,12 @@ define("tinymce/ui/MessageBox", [
 	"use strict";
 
 	var MessageBox = Window.extend({
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			settings = {
 				border: 1,
@@ -38,11 +48,45 @@ define("tinymce/ui/MessageBox", [
 		},
 
 		Statics: {
+			/**
+			 * Ok buttons constant.
+			 *
+			 * @static
+			 * @const {Number} OK
+			 */
 			OK: 1,
+
+			/**
+			 * Ok/cancel buttons constant.
+			 *
+			 * @static
+			 * @const {Number} OK_CANCEL
+			 */
 			OK_CANCEL: 2,
+
+			/**
+			 * yes/no buttons constant.
+			 *
+			 * @static
+			 * @const {Number} YES_NO
+			 */
 			YES_NO: 3,
+
+			/**
+			 * yes/no/cancel buttons constant.
+			 *
+			 * @static
+			 * @const {Number} YES_NO_CANCEL
+			 */
 			YES_NO_CANCEL: 4,
 
+			/**
+			 * Constructs a new message box and renders it to the body element.
+			 *
+			 * @static
+			 * @method msgBox
+			 * @param {Object} settings Name/value object with settings.
+			 */
 			msgBox: function(settings) {
 				var buttons, callback = settings.callback || function() {};
 
@@ -109,6 +153,13 @@ define("tinymce/ui/MessageBox", [
 				}).renderTo(document.body).reflow();
 			},
 
+			/**
+			 * Creates a new alert dialog.
+			 *
+			 * @method alert
+			 * @param {Object} settings Settings for the alert dialog.
+			 * @param {function} [callback] Callback to execute when the user makes a choice.
+			 */
 			alert: function(settings, callback) {
 				if (typeof(settings) == "string") {
 					settings = {text: settings};
@@ -118,6 +169,13 @@ define("tinymce/ui/MessageBox", [
 				return MessageBox.msgBox(settings);
 			},
 
+			/**
+			 * Creates a new confirm dialog.
+			 *
+			 * @method confirm
+			 * @param {Object} settings Settings for the confirm dialog.
+			 * @param {function} [callback] Callback to execute when the user makes a choice.
+			 */
 			confirm: function(settings, callback) {
 				if (typeof(settings) == "string") {
 					settings = {text: settings};

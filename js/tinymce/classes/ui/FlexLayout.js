@@ -1,17 +1,20 @@
 /**
  * FlexLayout.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * This layout manager works similar to the CSS flex box.
  *
- * Settings:
- *  direction=row|row-reverse|column|column-reverse
- *  flex=<positive-number>
- *  align=start|end|center|stretch
- *  pack=start|end|justify
+ * @setting {String} direction row|row-reverse|column|column-reverse
+ * @setting {Number} flex A positive-number to flex by.
+ * @setting {String} align start|end|center|stretch
+ * @setting {String} pack start|end|justify
  *
  * @class tinymce.ui.FlexLayout
  * @extends tinymce.ui.AbsoluteLayout
@@ -22,7 +25,14 @@ define("tinymce/ui/FlexLayout", [
 	"use strict";
 
 	return AbsoluteLayout.extend({
+		/**
+		 * Recalculates the positions of the controls in the specified container.
+		 *
+		 * @method recalc
+		 * @param {tinymce.ui.Container} container Container instance to recalc.
+		 */
 		recalc: function(container) {
+			// A ton of variables, needs to be in the same scope for performance
 			var i, l, items, contLayoutRect, contPaddingBox, contSettings, align, pack, spacing, totalFlex, availableSpace, direction;
 			var ctrl, ctrlLayoutRect, ctrlSettings, flex, maxSizeItems = [], size, maxSize, ratio, rect, pos, maxAlignEndPos;
 			var sizeName, minSizeName, posName, maxSizeName, beforeName, innerSizeName, afterName, deltaSizeName, contentSizeName;

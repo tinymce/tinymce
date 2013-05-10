@@ -1,11 +1,15 @@
 /**
  * Menu.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new menu.
  *
  * @-x-less Menu.less
  * @class tinymce.ui.Menu
@@ -26,6 +30,12 @@ define("tinymce/ui/Menu", [
 			role: 'menu'
 		},
 
+		/**
+		 * Constructs a instance with the specified settings.
+		 *
+		 * @constructor
+		 * @param {Object} settings Name/value object with settings.
+		 */
 		init: function(settings) {
 			var self = this;
 
@@ -52,6 +62,11 @@ define("tinymce/ui/Menu", [
 			});
 		},
 
+		/**
+		 * Repaints the control after a layout operation.
+		 *
+		 * @method repaint
+		 */
 		repaint: function() {
 			this.toggleClass('menu-align', true);
 
@@ -63,6 +78,11 @@ define("tinymce/ui/Menu", [
 			return this;
 		},
 
+		/**
+		 * Hides/closes the menu.
+		 *
+		 * @method cancel
+		 */
 		cancel: function() {
 			var self = this;
 
@@ -71,6 +91,11 @@ define("tinymce/ui/Menu", [
 			self.fire('select');
 		},
 
+		/**
+		 * Hide menu and all sub menus.
+		 *
+		 * @method hideAll
+		 */
 		hideAll: function() {
 			var self = this;
 
@@ -79,6 +104,11 @@ define("tinymce/ui/Menu", [
 			return self._super();
 		},
 
+		/**
+		 * Invoked before the menu is rendered.
+		 *
+		 * @method preRender
+		 */
 		preRender: function() {
 			var self = this;
 

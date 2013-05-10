@@ -1,11 +1,15 @@
 /**
  * TabPanel.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a tab panel control.
  *
  * @-x-less TabPanel.less
  * @class tinymce.ui.TabPanel
@@ -27,6 +31,12 @@ define("tinymce/ui/TabPanel", [
 			}
 		},
 
+		/**
+		 * Activates the specified tab by index.
+		 *
+		 * @method activateTab
+		 * @param {Number} idx Index of the tab to activate.
+		 */
 		activateTab: function(idx) {
 			if (this.activeTabId) {
 				DomUtils.removeClass(this.getEl(this.activeTabId), this.classPrefix + 'active');
@@ -45,6 +55,12 @@ define("tinymce/ui/TabPanel", [
 			this.reflow();
 		},
 
+		/**
+		 * Renders the control as a HTML string.
+		 *
+		 * @method renderHtml
+		 * @return {String} HTML representing the control.
+		 */
 		renderHtml: function() {
 			var self = this, layout = self._layout, tabsHtml = '', prefix = self.classPrefix;
 
@@ -71,6 +87,11 @@ define("tinymce/ui/TabPanel", [
 			);
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this;
 
@@ -94,6 +115,14 @@ define("tinymce/ui/TabPanel", [
 			});
 		},
 
+		/**
+		 * Initializes the current controls layout rect.
+		 * This will be executed by the layout managers to determine the
+		 * default minWidth/minHeight etc.
+		 *
+		 * @method initLayoutRect
+		 * @return {Object} Layout rect instance.
+		 */
 		initLayoutRect: function() {
 			var self = this, rect, minW, minH;
 

@@ -11,7 +11,7 @@
 /**
  * This class handles control selection of elements. Controls are elements
  * that can be resized and needs to be selected as a whole. It adds custom resize handles
- * to all browser engines that support properly disabling the built in logic.
+ * to all browser engines that support properly disabling the built in resize logic.
  *
  * @class tinymce.dom.ControlSelection
  */

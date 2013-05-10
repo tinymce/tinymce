@@ -1,13 +1,17 @@
 /**
- * MenuButton.js
+ * PanelButton.js
  *
- * Copyright 2003-2012, Moxiecode Systems AB, All rights reserved.
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
 
 /**
- * ..
+ * Creates a new panel button.
  *
- * @class tinymce.ui.MenuButton
+ * @class tinymce.ui.PanelButton
  * @extends tinymce.ui.Button
  */
 define("tinymce/ui/PanelButton", [
@@ -16,7 +20,12 @@ define("tinymce/ui/PanelButton", [
 ], function(Button, FloatPanel) {
 	"use strict";
 
-	var PanelButton = Button.extend({
+	return Button.extend({
+		/**
+		 * Shows the panel for the button.
+		 *
+		 * @method showPanel
+		 */
 		showPanel: function() {
 			var self = this, settings = self.settings;
 
@@ -33,6 +42,11 @@ define("tinymce/ui/PanelButton", [
 			}
 		},
 
+		/**
+		 * Hides the panel for the button.
+		 *
+		 * @method hidePanel
+		 */
 		hidePanel: function() {
 			var self = this;
 
@@ -41,6 +55,11 @@ define("tinymce/ui/PanelButton", [
 			}
 		},
 
+		/**
+		 * Called after the control has been rendered.
+		 *
+		 * @method postRender
+		 */
 		postRender: function() {
 			var self = this;
 
@@ -53,6 +72,4 @@ define("tinymce/ui/PanelButton", [
 			return self._super();
 		}
 	});
-
-	return PanelButton;
 });
