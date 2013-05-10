@@ -52,7 +52,8 @@ define("tinymce/ui/MessageBox", [
 			 * Ok buttons constant.
 			 *
 			 * @static
-			 * @const {Number} OK
+			 * @final
+			 * @field {Number} OK
 			 */
 			OK: 1,
 
@@ -60,7 +61,8 @@ define("tinymce/ui/MessageBox", [
 			 * Ok/cancel buttons constant.
 			 *
 			 * @static
-			 * @const {Number} OK_CANCEL
+			 * @final
+			 * @field {Number} OK_CANCEL
 			 */
 			OK_CANCEL: 2,
 
@@ -68,7 +70,8 @@ define("tinymce/ui/MessageBox", [
 			 * yes/no buttons constant.
 			 *
 			 * @static
-			 * @const {Number} YES_NO
+			 * @final
+			 * @field {Number} YES_NO
 			 */
 			YES_NO: 3,
 
@@ -76,7 +79,8 @@ define("tinymce/ui/MessageBox", [
 			 * yes/no/cancel buttons constant.
 			 *
 			 * @static
-			 * @const {Number} YES_NO_CANCEL
+			 * @final
+			 * @field {Number} YES_NO_CANCEL
 			 */
 			YES_NO_CANCEL: 4,
 

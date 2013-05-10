@@ -37,7 +37,8 @@ define("tinymce/ui/Control", [
 		/**
 		 * Class/id prefix to use for all controls.
 		 *
-		 * @const {String} classPrefix
+		 * @final
+		 * @field {String} classPrefix
 		 */
 		classPrefix: "mce-",
 
