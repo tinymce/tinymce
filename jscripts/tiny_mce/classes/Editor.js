@@ -865,7 +865,7 @@
 			// Handle auto focus
 			if (settings.auto_focus) {
 				setTimeout(function () {
-					var ed = tinymce.get(settings.auto_focus);
+					var ed = tinymce.get(self.id);
 
 					ed.selection.select(ed.getBody(), 1);
 					ed.selection.collapse(1);
