@@ -14,7 +14,10 @@ QUnit.config.reorder = false;
 QUnit.config.autostart = false;
 
 module("Fullpage plugin", {
-	autostart: false
+	autostart: false,
+	teardown: function() {
+		editor.getBody().dir = 'ltr';
+	}
 });
 
 function normalizeHTML(html) {
@@ -59,6 +62,18 @@ test('Parse body attributes', function() {
 	equal(editor.getBody().style.color, '', 'No color on body.');
 	equal(editor.getBody().dir, '', 'No dir on body.');
 	equal(editor.dom.getStyle(editor.getBody().firstChild, 'display', true), 'block', 'No styles added to iframe document');
+});
+
+test('fullpage_hide_in_source_view: false', function() {
+	editor.settings.fullpage_hide_in_source_view = false;
+	editor.setContent('<html><body><p>1</p></body></html>');
+	equal(editor.getContent({source_view: true}), '<html><body>\n<p>1</p>\n</body></html>');
+});
+
+test('fullpage_hide_in_source_view: false', function() {
+	editor.settings.fullpage_hide_in_source_view = true;
+	editor.setContent('<html><body><p>1</p></body></html>');
+	equal(editor.getContent({source_view: true}), '<p>1</p>');
 });
 
 tinymce.init({

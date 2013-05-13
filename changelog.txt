@@ -7,6 +7,7 @@ Version 4.0b3 (2013-0x-xx)
 	Fixed bug where Gecko wouldn't properly render broken images.
 	Fixed bug where Gecko wouldn't produce the same error dialog on paste as other browsers.
 	Fixed bug where is wasn't possible to prevent execCommands in beforeExecCommand event.
+	Fixed bug where the fullpage_hide_in_source_view option wasn't working in the fullpage plugin.
 	Fixed so it's easier to configure the menu and menubar.
 	Fixed so bodyId/bodyClass is applied to preview as it's done to the editor iframe.
 Version 4.0b2 (2013-04-24)
