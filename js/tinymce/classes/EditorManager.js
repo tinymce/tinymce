@@ -208,6 +208,29 @@ define("tinymce/EditorManager", [
 
 				execCallback(settings, 'onpageload');
 
+				if (settings.types) {
+					// Process type specific selector
+					each(settings.types, function(type) {
+						each(DOM.select(type.selector), function(elm) {
+							var editor = new Editor(createId(elm), extend({}, settings, type), self);
+							editors.push(editor);
+							editor.render(1);
+						});
+					});
+
+					return;
+				} else if (settings.selector) {
+					// Process global selector
+					each(DOM.select(settings.selector), function(elm) {
+						var editor = new Editor(createId(elm), settings, self);
+						editors.push(editor);
+						editor.render(1);
+					});
+
+					return;
+				}
+
+				// Fallback to old setting
 				switch (settings.mode) {
 					case "exact":
 						l = settings.elements || '';
@@ -250,25 +273,6 @@ define("tinymce/EditorManager", [
 							}
 						});
 						break;
-
-					default:
-						if (settings.types) {
-							// Process type specific selector
-							each(settings.types, function(type) {
-								each(DOM.select(type.selector), function(elm) {
-									var editor = new Editor(createId(elm), extend({}, settings, type), self);
-									editors.push(editor);
-									editor.render(1);
-								});
-							});
-						} else if (settings.selector) {
-							// Process global selector
-							each(DOM.select(settings.selector), function(elm) {
-								var editor = new Editor(createId(elm), settings, self);
-								editors.push(editor);
-								editor.render(1);
-							});
-						}
 				}
 
 				// Call onInit when all editors are initialized

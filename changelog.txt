@@ -9,6 +9,7 @@ Version 4.0b3 (2013-0x-xx)
 	Fixed bug where is wasn't possible to prevent execCommands in beforeExecCommand event.
 	Fixed bug where the fullpage_hide_in_source_view option wasn't working in the fullpage plugin.
 	Fixed bug where the WindowManager close method wouldn't properly close the top most window.
+	Fixed issue where selector wouldn't disable existing mode setting.
 	Fixed so it's easier to configure the menu and menubar.
 	Fixed so bodyId/bodyClass is applied to preview as it's done to the editor iframe.
 Version 4.0b2 (2013-04-24)
