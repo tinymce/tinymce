@@ -195,8 +195,14 @@ define("tinymce/UndoManager", [
 				data.push(level);
 				index = data.length - 1;
 
-				editor.fire('AddUndo', {level: level, lastLevel: lastLevel});
+				var args = {level: level, lastLevel: lastLevel};
+
+				editor.fire('AddUndo', args);
 				editor.isNotDirty = 0;
+
+				if (index > 0) {
+					editor.fire('change', args);
+				}
 
 				return level;
 			},
