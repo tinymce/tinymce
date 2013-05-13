@@ -172,7 +172,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		}
 
 		function createMenu(context) {
-			var menuButton, menu, menuItems, isUserDefined;
+			var menuButton, menu, menuItems, isUserDefined, removedMenuItems;
+
+			removedMenuItems = tinymce.makeMap((settings.removed_menuitems || '').split(/[ ,]/));
 
 			// User defined menu
 			if (settings.menu) {
@@ -190,7 +192,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				each((menu.items || '').split(/[ ,]/), function(item) {
 					var menuItem = createMenuItem(item);
 
-					if (menuItem) {
+					if (menuItem && !removedMenuItems[item]) {
 						menuItems.push(createMenuItem(item));
 					}
 				});

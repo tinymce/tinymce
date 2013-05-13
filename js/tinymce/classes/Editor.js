@@ -374,7 +374,11 @@ define("tinymce/Editor", [
 				var scriptLoader = ScriptLoader.ScriptLoader;
 
 				if (settings.language) {
-					scriptLoader.add(self.editorManager.baseURL + '/langs/' + settings.language + '.js');
+					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
+				}
+
+				if (settings.language_url) {
+					scriptLoader.add(settings.language_url);
 				}
 
 				if (settings.theme && typeof settings.theme != "function" &&
@@ -385,6 +389,11 @@ define("tinymce/Editor", [
 				if (Tools.isArray(settings.plugins)) {
 					settings.plugins = settings.plugins.join(' ');
 				}
+
+				each(settings.external_plugins, function(url, name) {
+					PluginManager.load(name, url);
+					settings.plugins += ' ' + name;
+				});
 
 				each(settings.plugins.split(/[ ,]/), function(plugin) {
 					plugin = trim(plugin);

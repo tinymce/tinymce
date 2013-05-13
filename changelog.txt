@@ -1,5 +1,9 @@
 Version 4.0b3 (2013-0x-xx)
 	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
+	Added new change event that gets fired when undo levels are added to editor instances.
+	Added new removed_menuitems option enables you to list menu items to remove from menus.
+	Added new external_plugins option enables you to specify external locations for plugins.
+	Added new language_url option enables you to specify an external location for the language pack.
 	Fixed bug where IE 10 wouldn't load files properly from cache.
 	Fixed bug where image dialog wouldn't properly remove width/height if blanked.
 	Fixed bug where all events wasn't properly unbound when editor instances where removed.
@@ -10,6 +14,7 @@ Version 4.0b3 (2013-0x-xx)
 	Fixed bug where the fullpage_hide_in_source_view option wasn't working in the fullpage plugin.
 	Fixed bug where the WindowManager close method wouldn't properly close the top most window.
 	Fixed bug where it wasn't possible to paste in IE 10 due to JS exception.
+	Fixed bug where tab key didn't move to the right child control in tabpanels.
 	Fixed issue where selector wouldn't disable existing mode setting.
 	Fixed so it's easier to configure the menu and menubar.
 	Fixed so bodyId/bodyClass is applied to preview as it's done to the editor iframe.
