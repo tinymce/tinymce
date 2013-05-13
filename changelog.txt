@@ -1,4 +1,5 @@
 Version 4.0b3 (2013-0x-xx)
+	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
 	Fixed bug where IE 10 wouldn't load files properly from cache.
 	Fixed bug where image dialog wouldn't properly remove width/height if blanked.
 	Fixed bug where all events wasn't properly unbound when editor instances where removed.
