@@ -15,9 +15,8 @@
  * @setting {Number} spacingH Horizontal spacing between controls.
  * @setting {Number} spacingV Vertical spacing between controls.
  * @setting {Number} columns Number of columns to use.
- * @setting {String} align start|end|center|stretch
- * @setting {String} alignH start|end|center|stretch
- * @setting {String} alignV start|end|center|stretch
+ * @setting {String/Array} alignH start|end|center|stretch or array of values for each column.
+ * @setting {String/Array} alignV start|end|center|stretch or array of values for each column.
  * @setting {String} pack start|end
  *
  * @class tinymce.ui.GridLayout
@@ -51,6 +50,14 @@ define("tinymce/ui/GridLayout", [
 			alignH = settings.alignH || settings.align;
 			alignV = settings.alignV || settings.align;
 			contPaddingBox = container._paddingBox;
+
+			if (alignH && typeof(alignH) == "string") {
+				alignH = [alignH];
+			}
+
+			if (alignV && typeof(alignV) == "string") {
+				alignV = [alignV];
+			}
 
 			// Zero padd columnWidths
 			for (x = 0; x < cols; x++) {
@@ -185,7 +192,7 @@ define("tinymce/ui/GridLayout", [
 					ctrlLayoutRect.y = posY;
 
 					// Align control horizontal
-					align = ctrlSettings.alignH || alignH;
+					align = ctrlSettings.alignH || (alignH ? (alignH[x] || alignH[0]) : null);
 					if (align == "center") {
 						ctrlLayoutRect.x = posX + (width / 2) - (ctrlLayoutRect.w / 2);
 					} else if (align == "right") {
@@ -195,7 +202,7 @@ define("tinymce/ui/GridLayout", [
 					}
 
 					// Align control vertical
-					align = ctrlSettings.alignV || alignV;
+					align = ctrlSettings.alignV || (alignV ? (alignV[x] || alignV[0]) : null);
 					if (align == "center") {
 						ctrlLayoutRect.y = posY + (height / 2) - (ctrlLayoutRect.h / 2);
 					} else  if (align == "bottom") {
