@@ -169,18 +169,10 @@ define("tinymce/EditorCommands", [
 
 				// Present alert message about clipboard access not being available
 				if (failed || !doc.queryCommandSupported(command)) {
-					if (isGecko) {
-						editor.windowManager.confirm(editor.getLang('clipboard_msg'), function(state) {
-							if (state) {
-								window.open('http://www.mozilla.org/editor/midasdemo/securityprefs.html', '_blank');
-							}
-						});
-					} else {
-						editor.windowManager.alert(
-							"Your browser doesn't support direct access to the clipboard. " +
-							"Please use the Ctrl+X/C/V keyboard shortcuts instead."
-						);
-					}
+					editor.windowManager.alert(
+						"Your browser doesn't support direct access to the clipboard. " +
+						"Please use the Ctrl+X/C/V keyboard shortcuts instead."
+					);
 				}
 			},
 
