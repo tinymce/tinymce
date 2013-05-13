@@ -1308,8 +1308,8 @@ define("tinymce/Editor", [
 			}
 
 			args = extend({}, args);
-			self.fire('BeforeExecCommand', {command: cmd, ui: ui, value: value});
-			if (args.terminate) {
+			args = self.fire('BeforeExecCommand', {command: cmd, ui: ui, value: value});
+			if (args.isDefaultPrevented()) {
 				return false;
 			}
 
