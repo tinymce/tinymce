@@ -15,6 +15,7 @@ Version 4.0b3 (2013-0x-xx)
 	Fixed bug where the WindowManager close method wouldn't properly close the top most window.
 	Fixed bug where it wasn't possible to paste in IE 10 due to JS exception.
 	Fixed bug where tab key didn't move to the right child control in tabpanels.
+	Fixed bug in searchreplace plugin where it would remove all spans instead of the marker spans.
 	Fixed issue where selector wouldn't disable existing mode setting.
 	Fixed so it's easier to configure the menu and menubar.
 	Fixed so bodyId/bodyClass is applied to preview as it's done to the editor iframe.
