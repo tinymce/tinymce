@@ -886,6 +886,19 @@ define("tinymce/util/Quirks", [
 			});
 		}
 
+		/**
+		 * Forces Gecko to render a broken image icon if it fails to load an image.
+		 */
+		function showBrokenImageIcon() {
+			editor.contentStyles.push(
+				'img:-moz-broken {' +
+					'-moz-force-broken-image-icon:1;' +
+					'min-width:24px;' +
+					'min-height:24px' +
+				'}'
+			);
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -928,6 +941,7 @@ define("tinymce/util/Quirks", [
 			setGeckoEditingOptions();
 			addBrAfterLastLinks();
 			removeGhostSelection();
+			showBrokenImageIcon();
 		}
 	};
 });
