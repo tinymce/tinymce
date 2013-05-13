@@ -168,12 +168,35 @@ define("tinymce/ui/KeyboardNavigation", [
 		 */
 		function moveFocus(dir) {
 			var idx = -1, focusElm, i;
+			var visibleItems = [];
+
+			function isVisible(elm) {
+				var rootElm = root ? root.getEl() : document.body;
+
+				while (elm && elm != rootElm) {
+					if (elm.style.display == 'none') {
+						return false;
+					}
+
+					elm = elm.parentNode;
+				}
+
+				return true;
+			}
 
 			initItems();
 
-			i = items.length;
+			// TODO: Optimize this, will be slow on lots of items
+			i = visibleItems.length;
+			for (i = 0; i < items.length; i++) {
+				if (isVisible(items[i])) {
+					visibleItems.push(items[i]);
+				}
+			}
+
+			i = visibleItems.length;
 			while (i--) {
-				if (items[i].id === focussedId) {
+				if (visibleItems[i].id === focussedId) {
 					idx = i;
 					break;
 				}
@@ -181,12 +204,12 @@ define("tinymce/ui/KeyboardNavigation", [
 
 			idx += dir;
 			if (idx < 0) {
-				idx = items.length - 1;
-			} else if (idx >= items.length) {
+				idx = visibleItems.length - 1;
+			} else if (idx >= visibleItems.length) {
 				idx = 0;
 			}
 
-			focusElm = items[idx];
+			focusElm = visibleItems[idx];
 			focusElm.focus();
 			focussedId = focusElm.id;
 
