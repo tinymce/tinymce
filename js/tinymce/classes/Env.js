@@ -9,9 +9,12 @@
  */
 
 /**
- * ..
+ * This class contains various environment constrants like browser versions etc.
+ * Normally you don't want to sniff specific browser versions but sometimes you have
+ * to when it's impossible to feature detect. So use this with care.
  *
  * @class tinymce.Env
+ * @static
  */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
