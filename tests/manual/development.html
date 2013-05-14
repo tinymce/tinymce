@@ -9,8 +9,6 @@
 <script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>
 <script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>
 <script>
-	//tinymce.PluginManager.load('moxiemanager', '/moxiemanager-php/plugin.js');
-
 	tinymce.init({
 		selector: "textarea#elm1",
 		theme: "modern",
@@ -19,6 +17,9 @@
 			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
 			"save table contextmenu directionality emoticons template paste textcolor"
 		],
+		external_plugins: {
+			//"moxiemanager": "/moxiemanager-php/plugin.js"
+		},
 		content_css: "css/development.css",
 		add_unload_trigger: false,
 
