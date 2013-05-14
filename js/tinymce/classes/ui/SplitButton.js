@@ -81,11 +81,11 @@ define("tinymce/ui/SplitButton", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '">' +
-					'<button hidefocus tabindex="-1">' +
+					'<button type="button" hidefocus tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"></i>' : '') +
 						(self._text ? (icon ? ' ' : '') + self._text : '') +
 					'</button>' +
-					'<button class="' + prefix + 'open" hidefocus tabindex="-1">' +
+					'<button type="button" class="' + prefix + 'open" hidefocus tabindex="-1">' +
 						//(icon ? '<i class="' + icon + '"></i>' : '') +
 						(self._menuBtnText ? (icon ? ' ' : '') + self._menuBtnText : '') +
 						' <i class="' + prefix + 'caret"></i>' +

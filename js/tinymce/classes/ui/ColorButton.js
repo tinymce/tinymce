@@ -64,7 +64,7 @@ define("tinymce/ui/ColorButton", [
 
 			return (
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
-					'<button role="presentation" tabindex="-1">' +
+					'<button role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"' + image + '></i>' : '') +
 						'<span id="' + id + '-preview" class="' + prefix + 'preview"></span>' +
 						(self._text ? (icon ? ' ' : '') + self.encode(self._text) : '') +
