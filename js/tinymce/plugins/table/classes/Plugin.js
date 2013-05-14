@@ -448,28 +448,6 @@ define("tinymce/tableplugin/Plugin", [
 			handleDisabledState(this, 'td,th');
 		}
 
-		// Register buttons
-		each([
-			['table', 'Insert/edit table', 'mceInsertTable', postRender],
-			['delete_table', 'Delete table', 'mceTableDelete', postRender],
-			['delete_col', 'Delete column', 'mceTableDeleteCol', postRenderCell],
-			['delete_row', 'Delete row', 'mceTableDeleteRow', postRenderCell],
-			['col_after', 'Insert column after', 'mceTableInsertColAfter', postRenderCell],
-			['col_before', 'Insert column before', 'mceTableInsertColBefore', postRenderCell],
-			['row_after', 'Insert row after', 'mceTableInsertRowAfter', postRenderCell],
-			['row_before', 'Insert row before', 'mceTableInsertRowBefore', postRenderCell],
-			['row_props', 'Row properties', 'mceTableRowProps', postRenderCell],
-			['cell_props', 'Cell properties', 'mceTableCellProps', postRenderCell],
-			['split_cells', 'Split cells', 'mceTableSplitCells', postRenderCell],
-			['merge_cells', 'Merge cells', 'mceTableMergeCells', postRenderCell]
-		], function(c) {
-			editor.addButton(c[0], {
-				title : c[1],
-				cmd : c[2],
-				onPostRender: c[3]
-			});
-		});
-
 		function generateTableGrid() {
 			var html = '';
 
@@ -596,6 +574,21 @@ define("tinymce/tableplugin/Plugin", [
 				{text: 'Insert column after', onclick: cmd('mceTableInsertColAfter'), onPostRender: postRenderCell},
 				{text: 'Delete column', onclick: cmd('mceTableDeleteCol'), onPostRender: postRenderCell}
 			]
+		});
+
+		var menuItems = [];
+		each("inserttable tableprops deletetable | cell row column".split(' '), function(name) {
+			if (name == '|') {
+				menuItems.push({text: '-'});
+			} else {
+				menuItems.push(editor.menuItems[name]);
+			}
+		});
+
+		editor.addButton("table", {
+			type: "menubutton",
+			title: "Table",
+			menu: menuItems
 		});
 
 		// Select whole table is a table border is clicked

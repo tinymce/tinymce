@@ -4,6 +4,7 @@ Version 4.0b3 (2013-0x-xx)
 	Added new removed_menuitems option enables you to list menu items to remove from menus.
 	Added new external_plugins option enables you to specify external locations for plugins.
 	Added new language_url option enables you to specify an external location for the language pack.
+	Added new table toolbar control that displays a menu for inserting/editing menus.
 	Fixed bug where IE 10 wouldn't load files properly from cache.
 	Fixed bug where image dialog wouldn't properly remove width/height if blanked.
 	Fixed bug where all events wasn't properly unbound when editor instances where removed.
