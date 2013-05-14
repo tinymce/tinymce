@@ -106,7 +106,7 @@ define("tinymce/EditorManager", [
 				for (var i = 0; i < scripts.length; i++) {
 					var src = scripts[i].src;
 
-					if (/tinymce(\.jquery|)(\.min|\.dev|).js/.test(src)) {
+					if (/tinymce(\.jquery|)(\.min|\.dev|)\.js/.test(src)) {
 						if (src.indexOf('.min') != -1) {
 							suffix = '.min';
 						}
