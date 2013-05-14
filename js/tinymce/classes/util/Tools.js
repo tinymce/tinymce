@@ -9,7 +9,8 @@
  */
 
 /**
- * ...
+ * This class contains various utlity functions. These are also exposed
+ * directly on the tinymce namespace.
  *
  * @class tinymce.util.Tools
  */

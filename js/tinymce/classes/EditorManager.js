@@ -11,7 +11,11 @@
 /**
  * This class used as a factory for manager for tinymce.Editor instaces.
  *
+ * @example
+ * tinymce.EditorManager.init({});
+ *
  * @class tinymce.EditorManager
+ * @static
  */
 define("tinymce/EditorManager", [
 	"tinymce/Editor",

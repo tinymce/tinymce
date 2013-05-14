@@ -9,7 +9,7 @@
  */
 
 /**
- * TreeWalker.
+ * TreeWalker class enables you to walk the DOM in a linear manner.
  *
  * @class tinymce.dom.TreeWalker
  */
