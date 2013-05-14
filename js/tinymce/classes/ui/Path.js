@@ -31,6 +31,7 @@ define("tinymce/ui/Path", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {String} delimiter Delimiter to display between items in path.
 		 */
 		init: function(settings) {
 			var self = this;

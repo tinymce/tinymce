@@ -32,6 +32,9 @@ define("tinymce/ui/MenuItem", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Boolean} selectable Selectable menu.
+		 * @setting {Array} menu Submenu array with items.
+		 * @setting {String} shortcut Shortcut to display for menu item. Example: Ctrl+X
 		 */
 		init: function(settings) {
 			var self = this;

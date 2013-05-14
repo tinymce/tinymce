@@ -36,6 +36,7 @@ define("tinymce/ui/FloatPanel", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Boolean} autohide Automatically hide the panel.
 		 */
 		init: function(settings) {
 			var self = this;

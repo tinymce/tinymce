@@ -28,6 +28,7 @@ define("tinymce/ui/ComboBox", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {String} placeholder Placeholder text to display.
 		 */
 		init: function(settings) {
 			var self = this;

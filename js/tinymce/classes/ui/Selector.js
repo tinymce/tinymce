@@ -13,6 +13,7 @@
  * We currently only support basic CSS expressions to reduce the size of the core
  * and the ones we support should be enough for most cases.
  *
+ * @example
  * Supported expressions:
  *  element
  *  element#name

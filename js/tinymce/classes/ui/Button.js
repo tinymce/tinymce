@@ -20,7 +20,7 @@
  *
  * @-x-less Button.less
  * @class tinymce.ui.Button
- * @extends tinymce.ui.Control
+ * @extends tinymce.ui.Widget
  */
 define("tinymce/ui/Button", [
 	"tinymce/ui/Widget"
@@ -38,6 +38,9 @@ define("tinymce/ui/Button", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {String} size Size of the button small|medium|large.
+		 * @setting {String} image Image to use for icon.
+		 * @setting {String} icon Icon to use for button.
 		 */
 		init: function(settings) {
 			var self = this, size;

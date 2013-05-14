@@ -6,13 +6,14 @@
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
+ *
+ * @ignore-file
  */
 
 /**
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
  *
  * @class tinymce.util.Quirks
- * @private
  */
 define("tinymce/util/Quirks", [
 	"tinymce/util/VK",

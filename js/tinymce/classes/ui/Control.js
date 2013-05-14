@@ -47,6 +47,17 @@ define("tinymce/ui/Control", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {String} style Style CSS properties to add.
+		 * @setting {String} border Border box values example: 1 1 1 1
+		 * @setting {String} padding Padding box values example: 1 1 1 1
+		 * @setting {String} margin Margin box values example: 1 1 1 1
+		 * @setting {Number} minWidth Minimal width for the control.
+		 * @setting {Number} minHeight Minimal height for the control.
+		 * @setting {String} classes Space separated list of classes to add.
+		 * @setting {String} role WAI-ARIA role to use for control.
+		 * @setting {Boolean} hidden Is the control hidden by default.
+		 * @setting {Boolean} disabled Is the control disabled by default.
+		 * @setting {String} name Name of the control instance.
 		 */
 		init: function(settings) {
 			var self = this, classes, i;
@@ -90,6 +101,7 @@ define("tinymce/ui/Control", [
 				}
 			});
 
+			// TODO: Is this needed duplicate code see above?
 			if (settings.classes) {
 				Tools.each(settings.classes.split(' '), function(cls) {
 					self.addClass(cls);
@@ -156,6 +168,7 @@ define("tinymce/ui/Control", [
 		 * @method parseBox
 		 * @param {String/Number} value Box value "0 1 2 3" or "0" etc.
 		 * @return {Object} Object with top/right/bottom/left properties.
+		 * @private
 		 */
 		parseBox: function(value) {
 			var len, radix = 10;

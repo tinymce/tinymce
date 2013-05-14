@@ -26,6 +26,7 @@ define("tinymce/ui/ListBox", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Array} values Array with values to add to list box.
 		 */
 		init: function(settings) {
 			var self = this, values, i, selected, selectedText, lastItemCtrl;
@@ -71,7 +72,7 @@ define("tinymce/ui/ListBox", [
 		 *
 		 * @method value
 		 * @param {String} [value] Value to be set.
-		 * @return {Boolean|tinymce.ui.ListBox} Value or self if it's a set operation.
+		 * @return {Boolean/tinymce.ui.ListBox} Value or self if it's a set operation.
 		 */
 		value: function(value) {
 			var self = this, active, selectedText, menu, i;

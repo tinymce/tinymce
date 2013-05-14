@@ -14,6 +14,8 @@
  * @-x-less TabPanel.less
  * @class tinymce.ui.TabPanel
  * @extends tinymce.ui.Panel
+ *
+ * @setting {Number} activeTab Active tab index.
  */
 define("tinymce/ui/TabPanel", [
 	"tinymce/ui/Panel",

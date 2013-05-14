@@ -707,7 +707,7 @@ define("tinymce/html/Schema", [
 		 *    div:{p:{}, h1:{}}
 		 * };
 		 * @field children
-		 * @type {Object}
+		 * @type Object
 		 */
 		self.children = children;
 
@@ -715,7 +715,7 @@ define("tinymce/html/Schema", [
 		 * Name/value map object with valid styles for each element.
 		 *
 		 * @field styles
-		 * @type {Object}
+		 * @type Object
 		 */
 		self.styles = validStyles;
 

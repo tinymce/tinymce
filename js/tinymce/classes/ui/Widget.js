@@ -28,6 +28,9 @@ define("tinymce/ui/Widget", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {String} tooltip Tooltip text to display when hovering.
+		 * @setting {Boolean} autofocus True if the control should be focused when rendered.
+		 * @setting {String} text Text to display inside widget.
 		 */
 		init: function(settings) {
 			var self = this;

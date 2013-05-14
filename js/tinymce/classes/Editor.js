@@ -84,6 +84,12 @@ define("tinymce/Editor", [
 	}
 
 	/**
+	 * Include documentation for all the events.
+	 *
+	 * @include ../../../tools/docs/tinymce.Editor.js
+	 */
+
+	/**
 	 * Constructs a editor instance by id.
 	 *
 	 * @constructor

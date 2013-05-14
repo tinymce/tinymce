@@ -117,7 +117,7 @@ define("tinymce/EditorManager", [
 			 * Base URL where the root directory if TinyMCE is located.
 			 *
 			 * @property baseURL
-			 * @type {String}
+			 * @type String
 			 */
 			self.baseURL = new URI(documentBaseURL).toAbsolute(baseURL);
 
@@ -125,7 +125,7 @@ define("tinymce/EditorManager", [
 			 * Document base URL where the current document is located.
 			 *
 			 * @property documentBaseURL
-			 * @type {String}
+			 * @type String
 			 */
 			self.documentBaseURL = documentBaseURL;
 
@@ -141,7 +141,7 @@ define("tinymce/EditorManager", [
 			 * Current suffix to add to each plugin/theme that gets loaded for example ".min".
 			 *
 			 * @property suffix
-			 * @type {String}
+			 * @type String
 			 */
 			self.suffix = suffix;
 
@@ -345,6 +345,13 @@ define("tinymce/EditorManager", [
 			editors.push(editor);
 
 			self.activeEditor = editor;
+
+			/**
+			 * Fires when an editor is added to the EditorManager collection.
+			 *
+			 * @event AddEditor
+			 * @param {Object} e Event arguments.
+			 */
 			self.fire('AddEditor', {editor: editor});
 
 			if (!beforeUnloadDelegate) {
@@ -400,6 +407,13 @@ define("tinymce/EditorManager", [
 			}
 
 			editor.destroy();
+
+			/**
+			 * Fires when an editor is removed from EditorManager collection.
+			 *
+			 * @event RemoveEditor
+			 * @param {Object} e Event arguments.
+			 */
 			self.fire('RemoveEditor', {editor: editor});
 
 			if (!editors.length) {

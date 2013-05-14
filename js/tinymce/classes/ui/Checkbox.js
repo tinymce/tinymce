@@ -40,6 +40,7 @@ define("tinymce/ui/Checkbox", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Boolean} checked True if the checkbox should be checked by default.
 		 */
 		init: function(settings) {
 			var self = this;

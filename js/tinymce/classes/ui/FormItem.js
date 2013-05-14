@@ -14,6 +14,7 @@
  *
  * @class tinymce.ui.FormItem
  * @extends tinymce.ui.Container
+ * @setting {String} label Label to display for the form item.
  */
 define("tinymce/ui/FormItem", [
 	"tinymce/ui/Container"

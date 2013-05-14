@@ -38,6 +38,9 @@ define("tinymce/ui/Container", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Array} items Items to add to container in JSON format or control instances.
+		 * @setting {String} layout Layout manager by name to use.
+		 * @setting {Object} defaults Default settings to apply to all items.
 		 */
 		init: function(settings) {
 			var self = this;

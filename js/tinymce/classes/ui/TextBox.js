@@ -27,6 +27,9 @@ define("tinymce/ui/TextBox", [
 		 *
 		 * @constructor
 		 * @param {Object} settings Name/value object with settings.
+		 * @setting {Boolean} multiline True if the textbox is a multiline control.
+		 * @setting {Number} maxLength Max length for the textbox.
+		 * @setting {Number} size Size of the textbox in characters.
 		 */
 		init: function(settings) {
 			var self = this;
