@@ -48,7 +48,7 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 	});
 
 	editor.addButton('visualblocks', {
-		title: 'visualblocks.desc',
+		title: 'Show blocks',
 		cmd: 'mceVisualBlocks'
 	});
 
