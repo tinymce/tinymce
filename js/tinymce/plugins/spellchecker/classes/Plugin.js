@@ -128,7 +128,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 					url: editor.settings.spellchecker_rpc_url,
 					method: method,
 					params: {
-						lang: "en",
+						lang: editor.settings.spellchecker_language || "en",
 						words: words
 					},
 					success: function(result) {
