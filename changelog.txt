@@ -18,6 +18,7 @@ Version 4.0b3 (2013-0x-xx)
 	Fixed bug where tab key didn't move to the right child control in tabpanels.
 	Fixed bug where enter inside a form would focus the first button like control in TinyMCE.
 	Fixed bug where it would match scripts that looked like the tinymce base directory incorrectly.
+	Fixed bug where the spellchecker wouldn't properly toggle off the spellcheck mode if no errors where found.
 	Fixed bug in searchreplace plugin where it would remove all spans instead of the marker spans.
 	Fixed issue where selector wouldn't disable existing mode setting.
 	Fixed so it's easier to configure the menu and menubar.

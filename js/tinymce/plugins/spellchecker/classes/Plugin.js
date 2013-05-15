@@ -99,6 +99,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 				if (isEmpty(suggestions)) {
 					editor.windowManager.alert('No misspellings found');
+					started = false;
 					return;
 				}
 
