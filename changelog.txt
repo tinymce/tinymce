@@ -1,4 +1,4 @@
-Version 4.0b3 (2013-0x-xx)
+Version 4.0b3 (2013-05-15)
 	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
 	Added new change event that gets fired when undo levels are added to editor instances.
 	Added new removed_menuitems option enables you to list menu items to remove from menus.
