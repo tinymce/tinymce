@@ -134,8 +134,14 @@ define("tinymce/spellcheckerplugin/Plugin", [
 					success: function(result) {
 						doneCallback(result);
 					},
-					error: function(result, xhr) {
-						editor.windowManager.alert("Error: " + result + "\nData:" + xhr.responseText);
+					error: function(error, xhr) {
+						if (error == "JSON Parse error.") {
+							error = "Non JSON response:" + xhr.responseText;
+						} else {
+							error = "Error: " + error;
+						}
+
+						editor.windowManager.alert(error);
 						editor.setProgressState(false);
 						textFilter = null;
 					}
