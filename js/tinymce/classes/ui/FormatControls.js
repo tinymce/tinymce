@@ -542,8 +542,10 @@ define("tinymce/ui/FormatControls", [
 
 		Factory.add('fontsizeselect', function(settings) {
 			var items = [];
-
-			each('8pt 10pt 12pt 14pt 18pt 24pt 36pt'.split(' '), function(item) {
+            var defaultVal = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
+            var setting = 'fontsizeselect_options';
+            var options = setting in EditorManager.settings ? EditorManager.settings[setting] : defaultVal;
+			each(options.split(' '), function(item) {
 				items.push({text: item, format: item});
 			});
 
