@@ -604,11 +604,12 @@ define("tinymce/Editor", [
 			self.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 			// Load the CSS by injecting them into the HTML this will reduce "flicker"
+			self.loadedCSS = {};
 			for (i = 0; i < self.contentCSS.length; i++) {
-				self.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + self.contentCSS[i] + '" />';
+				var cssUrl = self.contentCSS[i];
+				self.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + cssUrl + '" />';
+				self.loadedCSS[cssUrl] = true;
 			}
-
-			self.contentCSS = [];
 
 			bodyId = settings.body_id || 'tinymce';
 			if (bodyId.indexOf('=') != -1) {
@@ -938,8 +939,11 @@ define("tinymce/Editor", [
 			}
 
 			// Load specified content CSS last
-			each(self.contentCSS, function(url) {
-				self.dom.loadCSS(url);
+			each(self.contentCSS, function(cssUrl) {
+				if (!self.loadedCSS[cssUrl]) {
+					self.dom.loadCSS(cssUrl);
+					self.loadedCSS[cssUrl] = true;
+				}
 			});
 
 			// Handle auto focus
