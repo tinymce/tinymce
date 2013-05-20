@@ -372,8 +372,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Remove the panel when the editor is removed
 		editor.on('remove', function() {
-			panel.remove();
-			panel = null;
+			if (panel) {
+				panel.remove();
+				panel = null;
+			}
 		});
 
 		return {};

@@ -118,7 +118,10 @@ define("tinymce/ui/FloatPanel", [
 									}
 								}
 
-								panel.hide();
+								e = panel.fire('autohide', {target: e.target});
+								if (!e.isDefaultPrevented()) {
+									panel.hide();
+								}
 							}
 						}
 					};

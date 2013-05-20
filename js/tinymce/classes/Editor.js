@@ -135,7 +135,6 @@ define("tinymce/Editor", [
 
 			// See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
 			font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
-			directionality: 'ltr',
 			forced_root_block: 'p',
 			hidden_input: true,
 			padd_empty_editor: true,
@@ -248,6 +247,7 @@ define("tinymce/Editor", [
 		self.execCommands = {};
 		self.queryStateCommands = {};
 		self.queryValueCommands = {};
+		self.loadedCSS = {};
 
 		self.suffix = editorManager.suffix;
 		self.editorManager = editorManager;
@@ -604,7 +604,6 @@ define("tinymce/Editor", [
 			self.iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 			// Load the CSS by injecting them into the HTML this will reduce "flicker"
-			self.loadedCSS = {};
 			for (i = 0; i < self.contentCSS.length; i++) {
 				var cssUrl = self.contentCSS[i];
 				self.iframeHTML += '<link type="text/css" rel="stylesheet" href="' + cssUrl + '" />';
@@ -696,6 +695,15 @@ define("tinymce/Editor", [
 			}
 
 			if (settings.content_editable) {
+				self.on('remove', function() {
+					var body = this.getBody();
+
+					DOM.removeClass(body, 'mce-content-body');
+					DOM.removeClass(body, 'mce-edit-focus');
+					DOM.setAttrib(body, 'tabIndex', null);
+					DOM.setAttrib(body, 'contentEditable', null);
+				});
+
 				DOM.addClass(targetElm, 'mce-content-body');
 				targetElm.tabIndex = -1;
 				self.contentDocument = doc = settings.content_document || document;

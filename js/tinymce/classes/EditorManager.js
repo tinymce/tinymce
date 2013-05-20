@@ -382,14 +382,50 @@ define("tinymce/EditorManager", [
 		},
 
 		/**
-		 * Removes a editor instance from the collection.
+		 * Removes a editor or editors form page.
+		 *
+		 * @example
+		 * // Remove all editors bound to divs
+		 * tinymce.remove('div');
+		 *
+		 * // Remove all editors bound to textareas
+		 * tinymce.remove('textarea');
+		 *
+		 * // Remove all editors
+		 * tinymce.remove();
+		 *
+		 * // Remove specific instance by id
+		 * tinymce.remove('#id');
 		 *
 		 * @method remove
-		 * @param {tinymce.Editor} e Editor instance to remove.
+		 * @param {tinymce.Editor/String/Object} [selector] CSS selector or editor instance to remove.
 		 * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.
 		 */
-		remove: function(editor) {
-			var self = this, i, editors = self.editors;
+		remove: function(selector) {
+			var self = this, i, editors = self.editors, editor;
+
+			// Remove all editors
+			if (!selector) {
+				for (i = editors.length - 1; i >= 0; i--) {
+					self.remove(editors[i]);
+				}
+
+				return;
+			}
+
+			// Remove editors by selector
+			if (typeof(selector) == "string") {
+				selector = selector.selector || selector;
+
+				each(DOM.select(selector), function(elm) {
+					self.remove(editors[elm.id]);
+				});
+
+				return;
+			}
+
+			// Remove specific editor
+			editor = selector;
 
 			// Not in the collection
 			if (!editors[editor.id]) {
@@ -410,6 +446,12 @@ define("tinymce/EditorManager", [
 				self.activeEditor = editors[0];
 			}
 
+			// Don't remove missing editor or removed instances
+			if (!editor || editor.removed) {
+				return;
+			}
+
+			editor.remove();
 			editor.destroy();
 
 			/**

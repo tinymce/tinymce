@@ -69,4 +69,8 @@ tinymce.PluginManager.add('visualblocks', function(editor, url) {
 			editor.execCommand('mceVisualBlocks', false, null, {skip_focus: true});
 		}
 	});
+
+	editor.on('remove', function() {
+		editor.dom.removeClass(editor.getBody(), 'mce-visualblocks');
+	});
 });

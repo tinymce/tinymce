@@ -66,6 +66,10 @@ define("tinymce/ui/MenuButton", [
 		showMenu: function() {
 			var self = this, settings = self.settings, menu;
 
+			if (self.menu && self.menu.visible()) {
+				return self.hideMenu();
+			}
+
 			if (!self.menu) {
 				menu = settings.menu || [];
 
