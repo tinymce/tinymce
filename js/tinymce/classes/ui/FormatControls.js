@@ -501,7 +501,7 @@ define("tinymce/ui/FormatControls", [
 		});
 
 		Factory.add('fontselect', function(settings) {
-			var items = [], fonts = createFormats(
+			var defaultFontsFormats =
 				'Andale Mono=andale mono,times;' +
 				'Arial=arial,helvetica,sans-serif;' +
 				'Arial Black=arial black,avant garde;' +
@@ -518,8 +518,11 @@ define("tinymce/ui/FormatControls", [
 				'Trebuchet MS=trebuchet ms,geneva;' +
 				'Verdana=verdana,geneva;' +
 				'Webdings=webdings;' +
-				'Wingdings=wingdings,zapf dingbats'
-			);
+				'Wingdings=wingdings,zapf dingbats';
+
+			var fonts_formats = editor.settings.fonts_formats||defaultFontsFormats;
+
+			var items = [], fonts = createFormats(fonts_formats);
 
 			each(fonts, function(font) {
 				items.push({
@@ -541,9 +544,10 @@ define("tinymce/ui/FormatControls", [
 		});
 
 		Factory.add('fontsizeselect', function(settings) {
-			var items = [];
+			var items = [], defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
+			var fontsize_formats = editor.settings.fontsize_formats||defaultFontsizeFormats;
 
-			each('8pt 10pt 12pt 14pt 18pt 24pt 36pt'.split(' '), function(item) {
+			each(fontsize_formats.split(' '), function(item) {
 				items.push({text: item, format: item});
 			});
 
