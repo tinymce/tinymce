@@ -16,7 +16,7 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 
 	pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {
 		return '\\' + a;
-	}), 'g');
+	}), 'gi');
 
 	// Register commands
 	editor.addCommand('mcePageBreak', function() {
@@ -50,26 +50,11 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 		}
 	});
 
+	editor.on('BeforeSetContent', function(e) {
+		e.content = e.content.replace(pbRE, pb);
+	});
+
 	editor.on('PreInit', function() {
-		editor.parser.addNodeFilter('#comment', function(nodes) {
-			var i = nodes.length, node, img;
-
-			while (i--) {
-				node = nodes[i];
-				if (node.value.indexOf('pagebreak') !== -1) {
-					img = new tinymce.html.Node('img', 1);
-
-					img.attr({
-						src: tinymce.Env.transparentSrc,
-						'class': 'mce-pagebreak',
-						'data-mce-resize': 'false'
-					});
-
-					node.replace(img);
-				}
-			}
-		});
-
 		editor.serializer.addNodeFilter('img', function(nodes) {
 			var i = nodes.length, node, className;
 
@@ -77,8 +62,9 @@ tinymce.PluginManager.add('pagebreak', function(editor) {
 				node = nodes[i];
 				className = node.attr('class');
 				if (className && className.indexOf('mce-pagebreak') !== -1) {
-					node.type = 8;
-					node.value = 'pagebreak';
+					node.type = 3;
+					node.value = sep;
+					node.raw = true;
 				}
 			}
 		});
