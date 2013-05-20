@@ -192,8 +192,9 @@ tinymce.PluginManager.add('link', function(editor) {
 						function(state) {
 							if (state) {
 								href = 'mailto:' + href;
-								insertLink();
 							}
+
+							insertLink();
 						}
 					);
 
@@ -207,8 +208,9 @@ tinymce.PluginManager.add('link', function(editor) {
 						function(state) {
 							if (state) {
 								href = 'http://' + href;
-								insertLink();
 							}
+
+							insertLink();
 						}
 					);
 
