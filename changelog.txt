@@ -1,5 +1,7 @@
 Version 4.0 (2013-05-xx)
 	Added new insertdate_dateformat, insertdate_timeformat and insertdate_formats options to insertdatetime.
+	Added new font_formats, fontsize_formats and block_formats options to configure fontselect, fontsizeselect and formatselect.
+	Fixed so font name, font size and block format select boxes gets updated with the current format.
 	Fixed bug where the theme content css wasn't loaded into the preview dialog.
 	Fixed bug where the template description in template dialog wouldn't display the text correctly.
 Version 4.0b3 (2013-05-15)

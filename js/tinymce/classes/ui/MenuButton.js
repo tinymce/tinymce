@@ -50,6 +50,10 @@ define("tinymce/ui/MenuButton", [
 
 			self.addClass('menubtn');
 
+			if (settings.fixedWidth) {
+				self.addClass('fixed-width');
+			}
+
 			self.aria('haspopup', true);
 			self.hasPopup = true;
 		},
@@ -143,7 +147,7 @@ define("tinymce/ui/MenuButton", [
 				'<div id="' + id + '" class="' + self.classes() + '" tabindex="-1">' +
 					'<button id="' + id + '-open" role="presentation" type="button" tabindex="-1">' +
 						(icon ? '<i class="' + icon + '"></i>' : '') +
-						(self._text ? (icon ? ' ' : '') + self.encode(self._text) : '') +
+						'<span>' + (self._text ? (icon ? ' ' : '') + self.encode(self._text) : '') + '</span>' +
 						' <i class="' + prefix + 'caret"></i>' +
 					'</button>' +
 				'</div>'
@@ -202,11 +206,9 @@ define("tinymce/ui/MenuButton", [
 			var self = this, i, children;
 
 			if (self._rendered) {
-				children = self.getEl('open').childNodes;
+				children = self.getEl('open').getElementsByTagName('span');
 				for (i = 0; i < children.length; i++) {
-					if (children[i].nodeType == 3) {
-						children[i].data = self.encode(text);
-					}
+					children[i].innerHTML = self.encode(text);
 				}
 			}
 

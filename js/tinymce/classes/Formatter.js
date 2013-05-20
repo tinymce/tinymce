@@ -954,7 +954,7 @@ define("tinymce/Formatter", [
 									return;
 								}
 
-								if ((!similar || format.exact) && !isEq(value, replaceVars(items[key], vars))) {
+								if ((!similar || format.exact) && !isEq(value, normalizeStyleValue(replaceVars(items[key], vars), key))) {
 									return;
 								}
 							}
@@ -1248,19 +1248,35 @@ define("tinymce/Formatter", [
 		 * @return {String} Style item value.
 		 */
 		function getStyle(node, name) {
-			var styleVal = dom.getStyle(node, name);
+			return normalizeStyleValue(dom.getStyle(node, name), name);
+		}
 
+		/**
+		 * Normalize style value by name. This method modifies the style contents
+		 * to make it more easy to match. This will resolve a few browser issues.
+		 *
+		 * @private
+		 * @param {Node} node to get style from.
+		 * @param {String} name Style name to get.
+		 * @return {String} Style item value.
+		 */
+		function normalizeStyleValue(value, name) {
 			// Force the format to hex
 			if (name == 'color' || name == 'backgroundColor') {
-				styleVal = dom.toHex(styleVal);
+				value = dom.toHex(value);
 			}
 
 			// Opera will return bold as 700
-			if (name == 'fontWeight' && styleVal == 700) {
-				styleVal = 'bold';
+			if (name == 'fontWeight' && value == 700) {
+				value = 'bold';
 			}
 
-			return '' + styleVal;
+			// Normalize fontFamily so "'Font name', Font" becomes: "Font name,Font"
+			if (name == 'fontFamily') {
+				value = value.replace(/[\'\"]/g, '').replace(/,\s+/g, ',');
+			}
+
+			return '' + value;
 		}
 
 		/**
@@ -1676,7 +1692,7 @@ define("tinymce/Formatter", [
 			if (format.remove != 'all') {
 				// Remove styles
 				each(format.styles, function(value, name) {
-					value = replaceVars(value, vars);
+					value = normalizeStyleValue(replaceVars(value, vars), name);
 
 					// Indexed array
 					if (typeof(name) === 'number') {

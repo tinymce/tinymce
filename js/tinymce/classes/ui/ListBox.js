@@ -109,7 +109,7 @@ define("tinymce/ui/ListBox", [
 					}
 				}
 
-				self.text(selectedText);
+				self.text(selectedText || this.settings.text);
 			}
 
 			return self._super(value);

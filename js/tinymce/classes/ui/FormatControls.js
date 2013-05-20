@@ -147,6 +147,41 @@ define("tinymce/ui/FormatControls", [
 		return previewCss;
 	}
 
+	function createListBoxChangeHandler(items, formatName) {
+		return function() {
+			var self = this;
+
+			EditorManager.activeEditor.on('nodeChange', function(e) {
+				var formatter = EditorManager.activeEditor.formatter;
+				var value = null;
+
+				each(e.parents, function(node) {
+					each(items, function(item) {
+						if (formatName) {
+							if (formatter.matchNode(node, formatName, {value: item.value})) {
+								value = item.value;
+							}
+						} else {
+							if (formatter.matchNode(node, item.value)) {
+								value = item.value;
+							}
+						}
+
+						if (value) {
+							return false;
+						}
+					});
+
+					if (value) {
+						return false;
+					}
+				});
+
+				self.value(value);
+			});
+		};
+	}
+
 	function createFormats(formats) {
 		formats = formats.split(';');
 
@@ -442,7 +477,7 @@ define("tinymce/ui/FormatControls", [
 
 		function toggleFormat(fmt) {
 			if (fmt.control) {
-				fmt = fmt.control.settings.format;
+				fmt = fmt.control.value();
 			}
 
 			if (fmt) {
@@ -471,7 +506,7 @@ define("tinymce/ui/FormatControls", [
 		});
 
 		Factory.add('formatselect', function(settings) {
-			var items = [], blocks = createFormats(
+			var items = [], blocks = createFormats(editor.settings.block_formats ||
 				'Paragraph=p;' +
 				'Address=address;' +
 				'Pre=pre;' +
@@ -486,7 +521,7 @@ define("tinymce/ui/FormatControls", [
 			each(blocks, function(block) {
 				items.push({
 					text: {raw: block[0]},
-					format: block[1],
+					value: block[1],
 					textStyle: function() {
 						return getPreviewCss(block[1]);
 					}
@@ -495,8 +530,10 @@ define("tinymce/ui/FormatControls", [
 
 			return Factory.create('listbox', Tools.extend({
 				text: {raw: blocks[0][0]},
-				menu: items,
-				onclick: toggleFormat
+				values: items,
+				fixedWidth: true,
+				onselect: toggleFormat,
+				onPostRender: createListBoxChangeHandler(items)
 			}, settings));
 		});
 
@@ -520,24 +557,25 @@ define("tinymce/ui/FormatControls", [
 				'Webdings=webdings;' +
 				'Wingdings=wingdings,zapf dingbats';
 
-			var fonts_formats = editor.settings.fonts_formats||defaultFontsFormats;
-
-			var items = [], fonts = createFormats(fonts_formats);
+			var items = [], fonts = createFormats(editor.settings.font_formats || defaultFontsFormats);
 
 			each(fonts, function(font) {
 				items.push({
 					text: {raw: font[0]},
-					format: font[1],
-					style: font[1].indexOf('dings') == -1 ? 'font-family:' + font[1] : ''
+					value: font[1],
+					textStyle: font[1].indexOf('dings') == -1 ? 'font-family:' + font[1] : ''
 				});
 			});
 
 			return Factory.create('listbox', Tools.extend({
 				text: 'Font Family',
-				menu: items,
-				onclick: function(e) {
-					if (e.control.settings.format) {
-						EditorManager.activeEditor.execCommand('FontName', false, e.control.settings.format);
+				tooltip: 'Font Family',
+				values: items,
+				fixedWidth: true,
+				onPostRender: createListBoxChangeHandler(items, 'fontname'),
+				onselect: function(e) {
+					if (e.control.settings.value) {
+						EditorManager.activeEditor.execCommand('FontName', false, e.control.settings.value);
 					}
 				}
 			}, settings));
@@ -545,18 +583,21 @@ define("tinymce/ui/FormatControls", [
 
 		Factory.add('fontsizeselect', function(settings) {
 			var items = [], defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
-			var fontsize_formats = editor.settings.fontsize_formats||defaultFontsizeFormats;
+			var fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;
 
 			each(fontsize_formats.split(' '), function(item) {
-				items.push({text: item, format: item});
+				items.push({text: item, value: item});
 			});
 
 			return Factory.create('listbox', Tools.extend({
 				text: 'Font Sizes',
-				menu: items,
+				tooltip: 'Font Sizes',
+				values: items,
+				fixedWidth: true,
+				onPostRender: createListBoxChangeHandler(items, 'fontsize'),
 				onclick: function(e) {
-					if (e.control.settings.format) {
-						EditorManager.activeEditor.execCommand('FontSize', false, e.control.settings.format);
+					if (e.control.settings.value) {
+						EditorManager.activeEditor.execCommand('FontSize', false, e.control.settings.value);
 					}
 				}
 			}, settings));
