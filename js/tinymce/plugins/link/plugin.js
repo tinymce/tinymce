@@ -67,6 +67,9 @@ tinymce.PluginManager.add('link', function(editor) {
 			}
 		}
 
+		// Focus the editor since selection is lost on WebKit in inline mode
+		editor.focus();
+
 		selectedElm = selection.getNode();
 		anchorElm = dom.getParent(selectedElm, 'a[href]');
 		if (anchorElm) {
