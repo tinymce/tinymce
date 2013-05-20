@@ -135,34 +135,39 @@ define("tinymce/tableplugin/TableGrid", [
 			dom.remove(table);
 		}
 
-		function cloneCell(cell) {
+		function cloneCell(cell, children) {
 			var formatNode;
+			if (children === undefined){
+				children = true; // Assume we want to clone children unless otherwise told
+			}
+			//If we want to clone children
+			if (children){
+				// Clone formats
+				Tools.walk(cell, function(node) {
+					var curNode;
 
-			// Clone formats
-			Tools.walk(cell, function(node) {
-				var curNode;
+					if (node.nodeType == 3) {
+						each(dom.getParents(node.parentNode, null, cell).reverse(), function(node) {
+							node = cloneNode(node, false);
 
-				if (node.nodeType == 3) {
-					each(dom.getParents(node.parentNode, null, cell).reverse(), function(node) {
-						node = cloneNode(node, false);
+							if (!formatNode) {
+								formatNode = curNode = node;
+							} else if (curNode) {
+								curNode.appendChild(node);
+							}
 
-						if (!formatNode) {
-							formatNode = curNode = node;
-						} else if (curNode) {
-							curNode.appendChild(node);
+							curNode = node;
+						});
+
+						// Add something to the inner node
+						if (curNode) {
+							curNode.innerHTML = Env.ie ? '&nbsp;' : '<br data-mce-bogus="1" />';
 						}
 
-						curNode = node;
-					});
-
-					// Add something to the inner node
-					if (curNode) {
-						curNode.innerHTML = Env.ie ? '&nbsp;' : '<br data-mce-bogus="1" />';
+						return false;
 					}
-
-					return false;
-				}
-			}, 'childNodes');
+				}, 'childNodes');
+			}
 
 			cell = cloneNode(cell, false);
 			setSpanVal(cell, 'rowSpan', 1);
@@ -411,7 +416,7 @@ define("tinymce/tableplugin/TableGrid", [
 					}
 
 					// Insert new cell into new row
-					newCell = cloneCell(cell);
+					newCell = cloneCell(cell, false);
 					setSpanVal(newCell, 'colSpan', cell.colSpan);
 
 					newRow.appendChild(newCell);
@@ -463,10 +468,10 @@ define("tinymce/tableplugin/TableGrid", [
 
 					if (colSpan == 1) {
 						if (!before) {
-							dom.insertAfter(cloneCell(cell), cell);
+							dom.insertAfter(cloneCell(cell,false), cell);
 							fillLeftDown(posX, y, rowSpan - 1, colSpan);
 						} else {
-							cell.parentNode.insertBefore(cloneCell(cell), cell);
+							cell.parentNode.insertBefore(cloneCell(cell,false), cell);
 							fillLeftDown(posX, y, rowSpan - 1, colSpan);
 						}
 					} else {
