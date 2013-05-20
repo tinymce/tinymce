@@ -142,39 +142,80 @@ tinymce.PluginManager.add('link', function(editor) {
 				targetListCtrl
 			],
 			onSubmit: function(e) {
-				var data = e.data;
+				var data = e.data, href = data.href;
 
-				if (!data.href) {
+				// Delay confirm since onSubmit will move focus
+				function delayedConfirm(message, callback) {
+					window.setTimeout(function() {
+						editor.windowManager.confirm(message, callback);
+					}, 0);
+				}
+
+				function insertLink() {
+					if (data.text != initialText) {
+						if (anchorElm) {
+							editor.focus();
+							anchorElm.innerHTML = data.text;
+
+							dom.setAttribs(anchorElm, {
+								href: href,
+								target: data.target ? data.target : null,
+								rel: data.rel ? data.rel : null
+							});
+
+							selection.select(anchorElm);
+						} else {
+							editor.insertContent(dom.createHTML('a', {
+								href: href,
+								target: data.target ? data.target : null,
+								rel: data.rel ? data.rel : null
+							}, data.text));
+						}
+					} else {
+						editor.execCommand('mceInsertLink', false, {
+							href: href,
+							target: data.target,
+							rel: data.rel ? data.rel : null
+						});
+					}
+				}
+
+				if (!href) {
 					editor.execCommand('unlink');
 					return;
 				}
 
-				if (data.text != initialText) {
-					if (anchorElm) {
-						editor.focus();
-						anchorElm.innerHTML = data.text;
+				// Is email and not //user@domain.com
+				if (href.indexOf('@') > 0 && href.indexOf('//') == -1) {
+					delayedConfirm(
+						'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
+						function(state) {
+							if (state) {
+								href = 'mailto:' + href;
+								insertLink();
+							}
+						}
+					);
 
-						dom.setAttribs(anchorElm, {
-							href: data.href,
-							target: data.target ? data.target : null,
-							rel: data.rel ? data.rel : null
-						});
-
-						selection.select(anchorElm);
-					} else {
-						editor.insertContent(dom.createHTML('a', {
-							href: data.href,
-							target: data.target ? data.target : null,
-							rel: data.rel ? data.rel : null
-						}, data.text));
-					}
-				} else {
-					editor.execCommand('mceInsertLink', false, {
-						href: data.href,
-						target: data.target,
-						rel: data.rel ? data.rel : null
-					});
+					return;
 				}
+
+				// Is www. prefixed
+				if (/^\s*www\./i.test(href)) {
+					delayedConfirm(
+						'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
+						function(state) {
+							if (state) {
+								href = 'http://' + href;
+								insertLink();
+							}
+						}
+					);
+
+					return;
+				}
+
+				insertLink();
 			}
 		});
 	}
