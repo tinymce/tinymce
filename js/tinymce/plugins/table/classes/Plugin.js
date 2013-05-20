@@ -677,7 +677,7 @@ define("tinymce/tableplugin/Plugin", [
 			}
 		}, function(func, name) {
 			editor.addCommand(name, function() {
-				var grid = new TableGrid(editor.selection);
+				var grid = new TableGrid(editor);
 
 				if (grid) {
 					func(grid);

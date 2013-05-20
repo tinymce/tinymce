@@ -26,8 +26,8 @@ define("tinymce/tableplugin/TableGrid", [
 		return parseInt(td.getAttribute(name) || 1, 10);
 	}
 
-	return function(selection, table) {
-		var grid, startPos, endPos, selectedCell, dom = selection.dom;
+	return function(editor, table) {
+		var grid, startPos, endPos, selectedCell, selection = editor.selection, dom = selection.dom;
 
 		function buildGrid() {
 			var startY = 0;
@@ -136,7 +136,14 @@ define("tinymce/tableplugin/TableGrid", [
 		}
 
 		function cloneCell(cell) {
-			var formatNode;
+			var formatNode, cloneFormats = {};
+
+			if (editor.settings.table_clone_elements !== false) {
+				cloneFormats = Tools.makeMap(
+					(editor.settings.table_clone_elements || 'strong em b i span font h1 h2 h3 h4 h5 h6 p div').toUpperCase(),
+					/[ ,]/
+				);
+			}
 
 			// Clone formats
 			Tools.walk(cell, function(node) {
@@ -144,6 +151,10 @@ define("tinymce/tableplugin/TableGrid", [
 
 				if (node.nodeType == 3) {
 					each(dom.getParents(node.parentNode, null, cell).reverse(), function(node) {
+						if (!cloneFormats[node.nodeName]) {
+							return;
+						}
+
 						node = cloneNode(node, false);
 
 						if (!formatNode) {
