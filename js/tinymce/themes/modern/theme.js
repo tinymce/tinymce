@@ -344,7 +344,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-					{type: 'panel', name: 'toolbar', layout: 'stack', items: createToolbars()}
+					settings.toolbar === false ? null : {type: 'panel', name: 'toolbar', layout: 'stack', items: createToolbars()}
 				]
 			});
 
@@ -399,7 +399,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			border: 1,
 			items: [
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				{type: 'panel', layout: 'stack', items: createToolbars()},
+				settings.toolbar === false ? null : {type: 'panel', layout: 'stack', items: createToolbars()},
 				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
 			]
 		});
