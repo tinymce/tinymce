@@ -1,6 +1,7 @@
 Version 4.0 (2013-05-xx)
 	Added new insertdate_dateformat, insertdate_timeformat and insertdate_formats options to insertdatetime.
 	Fixed bug where the theme content css wasn't loaded into the preview dialog.
+	Fixed bug where the template description in template dialog wouldn't display the text correctly.
 Version 4.0b3 (2013-05-15)
 	Added new optional advanced tab for image dialog with hspace, vspace, border and style.
 	Added new change event that gets fired when undo levels are added to editor instances.
