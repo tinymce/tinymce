@@ -35,6 +35,10 @@ define("tinymce/ui/DomUtils", [
 			return DOMUtils.DOM.getPos(elm, root);
 		},
 
+		getViewPort: function(win) {
+			return DOMUtils.DOM.getViewPort(win);
+		},
+
 		get: function(id) {
 			return document.getElementById(id);
 		},

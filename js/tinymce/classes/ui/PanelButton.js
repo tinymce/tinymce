@@ -36,7 +36,9 @@ define("tinymce/ui/PanelButton", [
 			if (!self.panel) {
 				self.panel = new FloatPanel(settings.panel).on('hide', function() {
 					self.active(false);
-				}).parent(self).renderTo(self.getContainerElm()).reflow().moveRel(self.getEl(), settings.popoverAlign || 'bc-tc');
+				}).parent(self).renderTo(self.getContainerElm());
+				self.panel.fire('show');
+				self.panel.reflow().moveRel(self.getEl(), settings.popoverAlign || 'bc-tc');
 			} else {
 				self.panel.show();
 			}

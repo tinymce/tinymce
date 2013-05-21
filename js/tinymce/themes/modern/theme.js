@@ -300,9 +300,8 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		var panel;
 
 		function reposition() {
-			if (panel && panel.visible()) {
-				var pos = DOM.getPos(editor.getBody());
-				panel.moveTo(pos.x, pos.y - panel.layoutRect().h);
+			if (panel && panel.visible() && !panel._fixed) {
+				panel.moveRel(editor.getBody(), 'tl-bl');
 			}
 		}
 

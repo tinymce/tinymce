@@ -79,17 +79,42 @@ define("tinymce/ui/FloatPanel", [
 				}
 			}
 
+			/**
+			 * Repositions the panel to the top of page if the panel is outside of the visual viewport. It will
+			 * also reposition all child panels of the current panel.
+			 */
 			function repositionPanel(panel) {
-				var scrollY = document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+				var scrollY = DomUtils.getViewPort().y;
+
+				function toggleFixedChildPanels(fixed, deltaY) {
+					var parent;
+
+					for (var i = 0; i < visiblePanels.length; i++) {
+						if (visiblePanels[i] != panel) {
+							parent = visiblePanels[i].parent();
+
+							while ((parent = parent.parent())) {
+								if (parent == panel) {
+									visiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();
+								}
+							}
+						}
+					}
+				}
 
 				if (panel.settings.autofix) {
-					if (scrollY > (panel._absY || panel.layoutRect().y)) {
-						panel._absY = panel._absY || panel.layoutRect().y;
-						panel.getEl().style.position = 'fixed';
-						panel.layoutRect({y: 0}).repaint();
+					if (!panel._fixed) {
+						panel._autoFixY = panel.layoutRect().y;
+
+						if (panel._autoFixY < scrollY) {
+							panel.fixed(true).layoutRect({y: 0}).repaint();
+							toggleFixedChildPanels(true, scrollY - panel._autoFixY);
+						}
 					} else {
-						panel.getEl().style.position = 'absolute';
-						panel.layoutRect({y: panel._absY}).repaint();
+						if (panel._autoFixY > scrollY) {
+							panel.fixed(false).layoutRect({y: panel._autoFixY}).repaint();
+							toggleFixedChildPanels(false, panel._autoFixY - scrollY);
+						}
 					}
 				}
 			}
@@ -189,10 +214,40 @@ define("tinymce/ui/FloatPanel", [
 				}
 			});
 
+			self.on('show', function() {
+				self.parents().each(function(ctrl) {
+					if (ctrl._fixed) {
+						self.fixed(true);
+						return false;
+					}
+				});
+			});
+
 			if (settings.popover) {
 				self._preBodyHtml = '<div class="' + self.classPrefix + 'arrow"></div>';
 				self.addClass('popover').addClass('bottom').addClass('start');
 			}
+		},
+
+		fixed: function(state) {
+			var self = this;
+
+			if (self._fixed != state) {
+				if (self._rendered) {
+					var viewport = DomUtils.getViewPort();
+
+					if (state) {
+						self.layoutRect().y -= viewport.y;
+					} else {
+						self.layoutRect().y += viewport.y;
+					}
+				}
+
+				self.toggleClass('fixed', state);
+				self._fixed = state;
+			}
+
+			return self;
 		},
 
 		/**

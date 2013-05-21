@@ -9,6 +9,8 @@ Version 4.0 (2013-05-xx)
 	Fixed bug where various UI elements wasn't properly removed when an editor instance was removed.
 	Fixed bug where editing links in inline mode would fail on WebKit.
 	Fixed bug where the pagebreak_separator option in the pagebreak plugin wasn't working properly.
+	Fixed bug where the child panels of the float panel in inline mode wasn't properly placed.
+	Fixed bug where the float panel children of windows wasn't position fixed.
 	Fixed so it's possible to disable the toolbar by setting it to false.
 Version 4.0b3 (2013-05-15)
 	Added new optional advanced tab for image dialog with hspace, vspace, border and style.

@@ -55,6 +55,7 @@ define("tinymce/ui/Window", [
 			self._super(settings);
 
 			self.addClass('window');
+			self._fixed = true;
 
 			// Create statusbar
 			if (settings.buttons) {

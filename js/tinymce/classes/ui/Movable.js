@@ -28,12 +28,19 @@ define("tinymce/ui/Movable", [
 		 * @return {tinymce.ui.Control} Current control instance.
 		 */
 		moveRel: function(elm, rel) {
-			var self = this, ctrlElm, pos, x, y, selfW, selfH, targetW, targetH;
+			var self = this, ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport;
+
+			viewport = DomUtils.getViewPort();
 
 			// Get pos of target
 			pos = DomUtils.getPos(elm);
 			x = pos.x;
 			y = pos.y;
+
+			if (self._fixed) {
+				x -= viewport.x;
+				y -= viewport.y;
+			}
 
 			// Get size of self
 			ctrlElm = self.getEl();
@@ -112,6 +119,28 @@ define("tinymce/ui/Movable", [
 		 */
 		moveTo: function(x, y) {
 			var self = this;
+
+			// TODO: Move this to some global class
+			function contrain(value, max, size) {
+				if (value < 0) {
+					return 0;
+				}
+
+				if (value + size > max) {
+					value = value - size;
+					return value < 0 ? 0 : value;
+				}
+
+				return value;
+			}
+
+			if (self.settings.contrainToViewport) {
+				var viewPortRect = DomUtils.getViewPort(window);
+				var layoutRect = self.layoutRect();
+
+				x = contrain(x, viewPortRect.w + viewPortRect.x, layoutRect.w);
+				y = contrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);
+			}
 
 			if (self._rendered) {
 				self.layoutRect({x: x, y: y}).repaint();
