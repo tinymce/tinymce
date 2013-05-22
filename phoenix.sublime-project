@@ -3,16 +3,16 @@
 	[
 		{
 			"file_exclude_patterns":
-			[
-				"config/bolt/bootstrap*.js"
-			],
-			"folder_exclude_patterns":
-			[
-				"dist",
-				"scratch",
-				"dependency"
-			],
-			"path": "."
+      [
+        "config/bolt/bootstrap*.js"
+      ],
+      "folder_exclude_patterns":
+      [
+        "dist",
+        "scratch",
+        "dependency"
+      ],
+      "path": "."
 		}
 	]
 }
